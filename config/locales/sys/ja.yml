@@ -1,0 +1,10 @@
+ja:
+  sys:
+    site: サイト
+    user: ユーザー
+    group: グループ
+    http_test: HTTPテスト
+    db_tool: DBツール
+
+  modules:
+    sys: システム

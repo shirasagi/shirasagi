@@ -1,0 +1,8 @@
+<% controller.instance_variable_set :@form, f %>
+
+<% addons.each do |addon| %>
+<div class="addon-view" id="addon-<%= addon.id %>">
+  <header><h2><%= addon.name %></h2></header>
+  <%= render_cell "#{addon.path}/edit", params[:action] %>
+</div>
+<% end %>

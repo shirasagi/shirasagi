@@ -1,0 +1,12 @@
+<%= form_for :item, url: { action: :show }, html: { method: :delete, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-view" id="addon-basic">
+<%= render file: "_delete" %>
+</div>
+
+<footer class="send">
+<%= f.submit t(:delete), class: :delete %>
+<%= f.button t(:cancel), onclick: "location.href='#{url_for(action: :show, filename: @item.filename, do: "show")}'; return false;" %>
+</footer>
+<% end %>

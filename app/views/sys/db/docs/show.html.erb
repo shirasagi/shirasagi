@@ -1,0 +1,17 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th>field</th>
+      <th>value</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <% @item.each do |key, val| %>
+    <tr>
+      <th style="width: 160px; color: #b38; font-weight: bold;"><%= key %></th>
+      <td><%= val %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

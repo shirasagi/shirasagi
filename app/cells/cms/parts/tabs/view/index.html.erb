@@ -1,0 +1,25 @@
+<%= jquery do %>
+SS_Tabs.render("#cms-tabs-<%= @cur_part.id %>");
+<% end %>
+
+<div class="cms-tabs tabs" id="cms-tabs-<%= @cur_part.id %>">
+  <% @tabs.each do |tab| %>
+  <article class="tab" id="cms-tab-<%= tab.object_id %>">
+    <header><h1><%= tab[:name] %></h1></header>
+    <div class="pages">
+      <% tab[:pages].each do |item| %>
+      <article class="<%= 'new' if @cur_part.in_new_days?(item.date) %>">
+        <header>
+          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+          <h2><%= link_to item.name, item.url %></h2>
+        </header>
+      </article>
+      <% end %>
+    </div>
+    <nav class="feed">
+      <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
+      <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
+    </nav>
+  </article>
+  <% end %>
+</div>

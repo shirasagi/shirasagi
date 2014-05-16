@@ -1,0 +1,21 @@
+<div class="index">
+  <% @items.each do |item| %>
+  <article class="file-view">
+    <a class="thumb" href="<%= url_for action: :show, id: item %>">
+      <% if item.image? %>
+      <img src="<%= url_for(action: :thumb, id: item) %>" alt="<%= item.basename %>" />
+      <% else %>
+      <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+      <% end %>
+    </a>
+    <div class="name">
+      <!-- <input type="checkbox" /> -->
+      <%= item.basename %>
+    </div>
+  </article>
+  <% end %>
+</div>
+
+<br style="clear: both;" />
+
+<%= paginate @items if @items.try(:current_page) %>

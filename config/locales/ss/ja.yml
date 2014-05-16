@@ -1,0 +1,71 @@
+ja:
+  ss:
+    addon: "アドオン"
+    action: "アクション"
+    all: すべて
+    login: ログイン
+    logout: ログアウト
+    config: 設定
+    basic_info: 基本情報
+    
+    create: 作成
+    edit: 編集
+    delete: 削除
+    save: 保存
+    cancel: キャンセル
+    saved: 保存しました。
+    deleted: 削除しました。
+    upload: アップロード
+    image: 画像
+
+  views:
+    links:
+      new: 新規作成
+      show: 詳細を見る
+      edit: 編集する
+      delete: 削除する
+      back_to_show: 詳細へ戻る
+      back_to_index: 一覧へ戻る
+      parent_directory: 上の階層へ
+      preview: プレビュー
+      open: 開く
+      change: 変更する
+      more: もっと見る
+    confirm:
+      delete: 削除してよろしいですか？
+      unload: 入力したデータは保存されません。
+
+  mongoid:
+    models:
+      ss/site: サイト
+      ss/user: ユーザー
+      ss/temp_file: 一時ファイル
+      ss/user_file: ユーザーファイル
+      ss/group_file: グループファイル
+    attributes:
+      ss/document:
+        created: 作成日時
+        updated: 更新日時
+        state: ステータス
+        filepath: ファイルパス
+        filename: ファイル名
+        basename: ファイル名
+        sort: 並び順
+        limit: 表示件数
+        layout_id: レイアウト
+        shortcut: ショートカット
+      ss/site:
+        name: サイト名
+        host: ホスト名
+        domains: ドメイン
+        group_id: グループ
+      ss/user:
+        name: 氏名
+        email: メールアドレス
+        password: パスワード
+        in_password: パスワード
+        group_ids: グループ
+      ss/group:
+        name: グループ名
+      ss/reference/site:
+        site_id: サイト

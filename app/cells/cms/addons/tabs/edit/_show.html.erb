@@ -1,0 +1,10 @@
+<dl class="see mod-cms-tabs">
+  <dt><%= @model.t :conditions %></dt>
+  <dd><%=br @item.conditions.join("\n") %></dd>
+  
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.send :limit %></dd>
+  
+  <dt><%= @model.t :new_days %></dt>
+  <dd><%= @item.send :new_days %> <%= t "datetime.prompts.day" %></dd>
+</dl>

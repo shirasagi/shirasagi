@@ -1,0 +1,9 @@
+<% addons = @model && @model.addons %>
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <% if addons.size > 0 %><header><h2><%= t :basic_info %></h2></header><% end %>
+    <%= render file: "_show" %>
+  </div>
+</div>
+
+<%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>

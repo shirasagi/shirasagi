@@ -1,0 +1,21 @@
+<nav class="act-menu">
+  <header><h1><%= t :"ss.action" %></h1></header>
+  <div>
+    <% if params[:action] =~ /index/ %>
+      <%= link_to :new, action: :new %>
+    <% elsif params[:action] =~ /new|create/ %>
+      <%= link_to :back_to_index, action: :index %>
+    <% elsif params[:action] =~ /edit|update|delete/ %>
+      <%= link_to :back_to_show, action: :show, id: @item if @cur_user.allowed?(read: @item) %>
+      <%= link_to :back_to_index, action: :index %>
+    <% else %>
+      <%= link_to :edit, action: :edit, id: @item if @cur_user.allowed?(update: @item) %>
+      <%= link_to :delete, action: :delete, id: @item if @cur_user.allowed?(delete: @item) %>
+      <%= link_to :back_to_index, action: :index %>
+    <% end %>
+  </div>
+</nav>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
+<%= render file: "_addons_menu" %>
+<% end %>

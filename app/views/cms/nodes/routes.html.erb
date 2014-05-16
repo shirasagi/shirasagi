@@ -1,0 +1,44 @@
+<%= scss do %>
+.routes-view {
+  article {
+    clear: both;
+  }
+  h1 {
+    clear: both;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+  }
+  div {
+    float: left;
+    padding: 10px 10px 15px;
+    a {
+      display: inline-block;
+      float: left;
+      margin: 0px 0px 0px 0px;
+      padding: 5px 10px;
+      border-right: 1px solid #ddd;
+      //background-color: #eee;
+      text-decoration: none;
+      &:last-child {
+        border: none;
+      }
+      &:hover {
+        background-color: #eee;
+      }
+    }
+  }
+}
+<% end %>
+
+<article class="routes-view">
+  <% @items.each do |mod_name, mod| %>
+  <article>
+    <h1><%= mod[:name] %></h1>
+    <div>
+      <% mod[:items].each do |name, path| %>
+      <%= link_to name, "?route=#{path}", target: "_self" %>
+      <% end %>
+    </div>
+  </article>
+  <% end %>
+</article>

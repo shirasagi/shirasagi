@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+
+`rake assets:precompile RAILS_ENV=production`

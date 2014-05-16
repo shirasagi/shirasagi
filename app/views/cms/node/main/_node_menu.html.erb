@@ -1,0 +1,19 @@
+<%= render partial: "ss/crud/menu" %>
+
+<% if params[:action] =~ /index/ %>
+<nav class="page-menu">
+  <header><h1><%= t :"cms.node" %></h1></header>
+  <div>
+    <% if @cur_node.parent %>
+    <%= link_to :parent_directory, { action: :index, cid: @cur_node.parent }, { class: "icon-node-up" } %>
+    <% else %>
+    <% resource = params[:controller].sub(/.*\//, "") %>
+    <%= link_to :parent_directory, send("cms_#{resource}_path"), { class: "icon-node-up" } %>
+    <% end %>
+    
+    <% @cur_node.children.sort(filename: 1).limit(20).each do |item| %>
+    <%= link_to item.name, { action: :index, cid: item }, { class: "icon-node" } %>
+    <% end %>
+  </div>
+</nav>
+<% end %>

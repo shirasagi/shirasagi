@@ -1,0 +1,23 @@
+// -------------------------------------------------------------------------------------------------
+// sns
+
+@import "ss/init";
+
+#sns-mypage {
+  .sites {
+    width: 300px;
+    .name {
+    }
+    .url {
+      text-align: right;
+      a { color: #080; }
+    }
+  }
+  
+  @include mb {
+    .sites {
+      width: 100%;
+    }
+  }
+}
+

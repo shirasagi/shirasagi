@@ -1,0 +1,28 @@
+ja:
+  event:
+    page: イベントページ
+    add_date: 日付フォームを追加する
+    del_date: 削除
+
+  modules:
+    event: イベント
+    addons:
+      event/date: イベント
+
+  cms:
+    nodes:
+      event/page: イベントリスト
+
+  mongoid:
+    attributes:
+      cms/page/model:
+        event_name: イベントタイトル
+        event_dates: イベント日
+
+  datetime:
+    prompts:
+      wday: 曜日
+
+  errors:
+    messages:
+      too_many_event_dates: の設定日が多すぎます。

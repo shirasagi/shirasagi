@@ -1,0 +1,15 @@
+<%= jquery do %> SS.confirmUnloading(); <% end %>
+
+<%= form_for :item, url: { action: :create, filename: @item.filename }, html: { multipart: true } do |f| %>
+<%= error_messages_for :item %>
+<div class="addon-view">
+  <dl class="see">
+    <dt><%= @model.t :directory %></dt>
+    <dd><%= text_field_tag 'item[directory]', 'item[directory]', value: @directory %></dd>
+  </dl>
+</div>
+<footer class="send">
+<%= f.submit t(:save), class: :save %>
+<%= f.button t(:cancel), onclick: "location.href='#{url_for(action: :show, filename: @item.filename)}'; return false;" %>
+</footer>
+<% end %>

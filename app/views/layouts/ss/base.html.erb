@@ -1,0 +1,104 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
+<title>SHIRASAGI</title>
+<%= stylesheet_link_tag "ss/style", media: "all" %>
+<%= stylesheet_link_tag "jquery-ui/pepper-grinder/custom.min.css", media: "all", "data-turbolinks-track" => true %>
+<%= stylesheet_link_tag "colorbox/colorbox.css", media: "all", "data-turbolinks-track" => true %>
+<%= stylesheet_link_tag "datetimepicker/jquery.datetimepicker.css", media: "all", "data-turbolinks-track" => true %>
+<% controller.stylesheets.each do |path| %>
+<%= stylesheet_link_tag path, media: "all", "data-turbolinks-track" => true %>
+<% end %>
+<%= javascript_include_tag "ss/ss", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "jquery.form.js", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "jquery.colorbox.js", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "jquery-ui-1.10.4.custom.min.js", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "jquery.datetimepicker.js", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "ckeditor/ckeditor.js", "data-turbolinks-track" => true %>
+<% if SS.config.cms.html_editor == "ckeditor" %>
+<%= javascript_include_tag "ckeditor/adapters/jquery.js", "data-turbolinks-track" => true %>
+<% elsif SS.config.cms.html_editor == "tinymce" %>
+<%= javascript_include_tag "tinymce/tinymce.min.js", "data-turbolinks-track" => true %>
+<% end %>
+<%= javascript_include_tag "ace/ace.js", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "ace/theme-chrome.js", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "jquery-ace.min.js", "data-turbolinks-track" => true %>
+<% controller.javascripts.each do |path| %>
+<%= javascript_include_tag path %>
+<% end %>
+<%= csrf_meta_tags %>
+</head>
+<body>
+
+<div id="page">
+
+<header id="ss-mb" style="display: none">Mobile View</header>
+
+<header id="head">
+  <div class="wrap">
+    <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
+    <% if @cur_user %>
+    <nav>
+      <%= link_to "dev", "#", onclick: "alert('#{Rails.env}'); return false;" unless Rails.env.production? %>
+      <%= link_to @cur_user.name, sns_user_profile_path(@cur_user) %>
+      <%= link_to :logout, sns_logout_path %>
+    </nav>
+    <% end %>
+  </div>
+<!-- /#head --></header>
+
+<% if @crumbs.size > 0 %>
+<nav id="crumbs">
+  <% @crumbs.each_with_index do |item, idx| %>
+    <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
+    <span class="link"><%= link_to *item %></span>
+  <% end %>
+</nav>
+<% end %>
+
+<% if notice %>
+<aside id="notice">
+  <div class="wrap"><%= notice %></div>
+</aside>
+<script> setTimeout(function() { $('#notice').slideUp("fast"); }, 1500); </script>
+<% end %>
+
+<div id="wrap">
+  <div class="wrap">
+    
+    <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+    <div id="navi"><div class="wrap"><%= render partial: "navi" %></div></div>
+    <% elsif controller.navi_view_file %>
+    <div id="navi"><div class="wrap"><%= render partial: controller.navi_view_file %></div></div>
+    <% end %>
+    
+    <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+    <div id="menu"><div class="wrap"><%= render partial: "menu" %></div></div>
+    <% elsif controller.menu_view_file %>
+    <div id="menu"><div class="wrap"><%= render partial: controller.menu_view_file %></div></div>
+    <% end %>
+    
+    <article id="main">
+      <div class="wrap">
+      <%= yield %>
+      </div>
+    <!-- /#main --></article>
+    
+  <!-- /.wrap --></div>
+<!-- /#wrap --></div>
+
+<footer id="foot">
+  <div class="wrap">
+    SHIRASAGI Project
+  </div>
+<!-- /#foot --></footer>
+
+<footer id="ss-pc" style="display: none">PC View</footer>
+
+<!-- /#page --></div>
+
+
+</body>
+</html>

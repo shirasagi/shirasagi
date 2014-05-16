@@ -1,0 +1,11 @@
+# kana
+
+production: &production
+  disable: false
+  location: /kana
+
+test:
+  <<: *production
+
+development:
+  <<: *production

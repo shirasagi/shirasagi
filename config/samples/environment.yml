@@ -1,0 +1,3 @@
+# default environment
+
+RAILS_ENV: production

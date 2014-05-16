@@ -1,0 +1,42 @@
+// -------------------------------------------------------------------------------------------------
+// init
+
+@import "compass/css3";
+@import "compass/typography/text/ellipsis";
+
+// -------------------------------------------------------------------------------------------------
+// define
+
+$font-base: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-head: Optima, Futura, Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+
+@mixin pc {
+  @media only screen and (min-width: 800px) { @content; }
+}
+@mixin mb {
+  @media only screen and (max-width: 800px) { @content; }
+}
+@mixin clear {
+    zoom:1;
+    &:before, &:after {
+        content: "\0020"; 
+        display: block; 
+        height: 0; 
+        overflow: hidden; 
+    }
+    &:after {
+        clear: both;
+    }
+}
+@mixin lgrad($position, $value...) {
+  @include background(linear-gradient($position, $value));
+}
+
+@mixin main-view {
+  @include clear;
+  //position: relative;
+  margin: 0px 0px 10px;
+  padding: 15px;
+  @include box-shadow(0px 0px 2px #bbb);
+  background-color: #fff;
+}

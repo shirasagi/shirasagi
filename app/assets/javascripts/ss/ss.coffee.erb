@@ -1,0 +1,224 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery.cookie
+#//= #require jquery.turbolinks
+#//= #require turbolinks
+
+<% environment.context_class.instance_eval { include ApplicationHelper } %>
+
+##
+#  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
+##
+
+$ ->
+  # $.ajaxSetup
+  #   headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
+  
+  SS.render()
+  
+  # navi
+  path = location.pathname + "/"
+  $("#navi .main-menu a, #navi .sub-menu a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
+  
+  # pulldown menu
+  if $(window).width() >= 800
+    menu = $(".pulldown-menu")
+    link = menu.find("a")
+    menu.each ->
+      link.not(".current").hide()
+      link.filter(".current").prependTo(menu).click ->
+        link.not(".current").slideToggle("fast")
+        return false
+  
+  SS_ListUI.render("table.index")
+  SS_Mobile.render()
+  SS_AddonTabs.render()
+
+class @SS
+  @loading = '<img style="vertical-align:middle" src="/images/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+  
+  @render:(box = null) ->
+    if box
+      $(box).find("a").each ->
+        elem = $(this)
+        if !elem.attr("target") && !elem.data("target")
+          elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+    
+    # default
+    box = $(document)
+    
+    # external links
+    box.find("a[href^=http]").each ->
+      $(this).addClass("external")
+    
+    # ajax to (color)box
+    box.find(".ajax-box").each ->
+      elem = $(this)
+      return true if elem.hasClass("cboxElement")
+      if !elem.attr("target") && !elem.data("target")
+        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+    
+  @ajaxForm:(elem, params = {}) ->
+    elem = $(elem)
+    defaults = {
+      url: elem.attr("action") + ".json"
+      dataType: "json"
+      success: ->
+        #
+      error: (data, status) ->
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+    }
+    elem.on "submit", (e) ->
+      $(this).ajaxSubmit $.extend(defaults, params)
+      e.preventDefault();
+    
+  @ajax:(elem, params = {}) ->
+    $(elem).click (e) ->
+      self = $(this)
+      defaults = {
+        url: self.attr("href")
+        beforeSend: ->
+          self.html SS.loading
+        success: ->
+          console.log "success"
+        error: (data, status) ->
+          alert("== Error ==");
+      }
+      $.ajax $.extend(defaults, params)
+      e.preventDefault();
+      return false
+    
+  @ajaxDelete:(elem, params = {}) ->
+    $(elem).click (e) ->
+      return false if !confirm("<%= t "views.confirm.delete" %>")
+      self = $(this)
+      defaults = {
+        type: "DELETE",
+        data: "_method=delete",
+        url: self.attr("href") + ".json"
+        dataType: "json"
+        beforeSend: ->
+          self.html SS.loading
+        success: ->
+          $(self.data("remove")).remove() if self.data("remove")
+        error: (data, status) ->
+          alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+      $.ajax $.extend(defaults, params)
+      e.preventDefault();
+      return false
+  
+  @confirmUnloading: ->
+    $("input[type=text],textarea,select").change ->
+      $(window).on "beforeunload", ->
+        return "<%= t('views.confirm.unload') %>"
+    $("input[type=submit]").click ->
+      $(window).off "beforeunload"
+
+class @SS_Mobile
+  @render: ->
+    if navigator.userAgent.match(/(Android|iPad|iPhone)/)
+      console.log $.cookie("switchView")
+      if $.cookie("switchView") == "pc"
+        $("head meta[name=viewport]").remove
+        $("head").append '<meta name="viewport" content="width=1024" />'
+        sp = $("#ss-mb")
+        sp.html('<a href="" onclick="SS_Mobile.renderMb()">' + sp.text() + '</a>').show()
+      else
+        pc = $("#ss-pc")
+        pc.html('<a href="" onclick="SS_Mobile.renderPc()">' + pc.text() + '</a>').show()
+      
+  @renderPc: ->
+    $.cookie("switchView", "pc", { expires: 7, path: '/' })
+    location.reload()
+    
+  @renderMb: ->
+    $.removeCookie("switchView", { expires: 7, path: '/' })
+    location.reload()
+
+class @SS_ListUI
+  @render: (list)->
+    $("table.index tbody tr").each ->
+      tr    = $(this)
+      tbody = tr.parent()
+      tr.find("input[type=checkbox]").each ->
+        tr.toggleClass("checked", $(this).prop("checked"))
+      tr.find("input[type=checkbox]").change ->
+        tr.toggleClass("checked", $(this).prop("checked"))
+      tr.mouseup (e) ->
+        if !$(e.target).is('a') && !$(e.target).is("input")
+          tbody.find("input[type=checkbox]").attr("checked", false)
+          tbody.find("tr").removeClass("checked")
+          tr.find(".row-menu").css("left", e.pageX + 2).css("top", e.pageY).show()
+          tr.find("input[type=checkbox]").trigger("click")
+      tr.mouseleave ->
+        tr.find(".row-menu").hide()
+
+class @SS_AddonTabs
+  @render: ->
+    tabs = $(".addon-tab")
+    tabs.filter("[data-id=#addon-all]").addClass("current");
+    tabs.click (ev) ->
+      cur = $(this)
+      $(tabs).each ->
+        tab = $(this)
+        if cur.attr("data-id") == "#addon-all"
+          $(tab.attr("data-id")).fadeIn(150)
+          tab.removeClass("current");
+        else if cur.attr("data-id") == tab.attr("data-id")
+          $(tab.attr("data-id")).fadeIn(150)
+        else
+          $(tab.attr("data-id")).hide(0)
+        tab.removeClass("current");
+      cur.addClass("current");
+      ev.preventDefault();
+
+class @SS_Debug
+  @doing = false
+  
+  @run: ->
+    $("#log").val("")
+    $("#err").val("")
+    $("#queue").val("0")
+    @doing = true
+    @connect_url location.href
+  
+  @stop: ->
+    @doing = false
+    
+  @connect_url: (url)->
+    return if @doing == false
+    return if @testing
+    return if url.match(/^#/)
+    return if url.match(/\/logout$/)
+    return if url.match(/^\/\..*?\/uploader/)
+    return if url.match(/^\/\..*?\/db/)
+    if url.match(/^https?:/)
+      return unless url.match(new RegExp(location.host))
+      url = url.replace(/^https?:\/\/.*?\//, "/")
+    else if url.match(/^[^\/]/)
+      return
+    
+    view = $("#log")
+    path = url.replace(/\d+/g, "123")
+    return true if view.val().match(new RegExp("^" + path + "$", "m"))
+    view.val view.val() + path + "\n"
+    view.scrollTop view[0].scrollHeight - view.height()
+    
+    queue = $("#queue")
+    queue.val parseInt(queue.val()) + 1
+    
+    $.ajax {
+      type: "GET", url: url, dataType: "html", cache: false
+      success: (data, status, xhr)->
+        queue.val parseInt(queue.val()) - 1
+        $(data).find("a").each ->
+          SS_Debug.connect_url $(this).attr("href")
+      error: (xhr, status, error)->
+        queue.val parseInt(queue.val()) - 1
+        view = $("#err")
+        view.val view.val() + " [" + xhr.status + "] " + url + "\n"
+        view.scrollTop view[0].scrollHeight - view.height()
+    }

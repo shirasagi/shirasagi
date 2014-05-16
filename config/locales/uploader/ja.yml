@@ -1,0 +1,27 @@
+ja:
+  uploader:
+    files: ファイル
+
+  views:
+    links:
+      new_directory: 新規フォルダー
+      upload: アップロード
+
+  modules:
+    uploader: アップローダー
+
+  cms:
+    nodes:
+      uploader/file: アップローダー
+
+  mongoid:
+    models:
+      uploader/file: アップローダー
+    attributes:
+      uploader/file:
+        name: タイトル
+        filename: ファイル名
+        content_type: MIME
+        size: ファイルサイズ
+        text: 内容
+        image: 画像

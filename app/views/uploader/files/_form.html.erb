@@ -1,0 +1,22 @@
+<%= code_editor ".mod-uploader textarea", filename: @item.filename %>
+
+<div class="addon-view">
+  <dl class="see mod-uploader">
+    <dt><%= @model.t :filename %></dt>
+    <dd><%= f.text_field :filename, class: :code, required: true,  pattern: "^#{@cur_node.filename}\/.+" %></dd>
+    
+    <% if !@item.directory? %>
+      <% if @item.image? %>
+      <dt><%= @model.t :image %></dt>
+      <dd><%= image_tag @item.link %></dd>
+      <% end %>
+      
+      <% if @item.text? %>
+      <% begin %>
+      <dt class="wide"><%= @model.t :text %></dt>
+      <dd class="wide"><%= f.text_area :text, style: "height: 500px;"  %></dd>
+      <% rescue => e %>Error (<%= e %>)<% end %>
+      <% end%>
+    <% end %>
+  </dl>
+</div>

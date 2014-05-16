@@ -1,0 +1,37 @@
+<%
+
+@cur_item = @cur_part || @cur_page || @cur_node
+title = @cur_site.name
+title = "#{@cur_item.name} - #{@cur_site.name}" if @cur_item.filename != "index.html"
+
+%><!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title><%= title %></title>
+<% if @cur_item.respond_to?(:keywords) %>
+<meta name="keywords" content="<%= @cur_item.keywords %>" />
+<% end %>
+<% if @cur_item.respond_to?(:description) %>
+<meta name="description" content="<%= @cur_item.description.to_s.gsub(/\s+/, " ") %>" />
+<% end %>
+<%= javascript_include_tag "cms/public" %>
+<%= csrf_meta_tags if @cur_node %>
+</head>
+<body>
+
+<header id="head">
+  <h1><%= link_to @cur_site.name, @cur_site.url, id: "ss-site-name" %></h1>
+  <h2><%= link_to @cur_item.name, @cur_item.url, id: "ss-page-name" %></h2>
+  <% if @cur_layout %><nav><%= link_to "Layout", @cur_layout.url %></nav><% end %>
+</header>
+
+<article>
+<div id="page" data-layout="<%= @cur_layout.json_url if @cur_layout %>">
+<script> $(function(){ SS.load(); }) </script>
+<!-- yield --><%= yield %><!-- /yield -->
+</div>
+</article>
+
+</body>
+</html>

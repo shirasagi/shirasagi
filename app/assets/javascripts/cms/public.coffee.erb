@@ -1,0 +1,201 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery.cookie
+#//= #require jquery.turbolinks
+#//= #require turbolinks
+
+class @SS
+  @head = ""
+  @page = ""
+  @href = ""
+  @siteName = null
+  @pageName = null
+  @viewPort = 'width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0'
+  @loading  = '<img style="vertical-align:middle" src="/images/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+  
+  @load: ->
+    if layout = $("#page").attr("data-layout")
+      SS.siteName = $("#ss-site-name").html()
+      SS.pageName = $("#ss-page-name").html()
+      SS.renderLayout(layout)
+    else
+      SS.renderTools()
+    
+  @renderTools: ->
+    SS_Kana.render()
+    SS_Font.render()
+    SS_Mobile.render()
+    
+  @renderLayout: (url) ->
+    head = $("head")
+    body = $("body")
+    
+    SS.head = head.html()
+    SS.page = $("#page").html()
+    
+    body.html ""
+    
+    $.ajax {
+      type: "GET", url: SS_Kana.url(url), dataType: "json", cache: false
+      success: (data) ->
+        body.hide()
+        
+        body.append data.body.replace("</ yield />", SS.page)
+        #body.append data.body
+        #$("#ss-yield").replaceWith SS.page
+        
+        $("#ss-site-name").html SS.siteName
+        $("#ss-page-name").html SS.pageName
+        SS.renderTools()
+        
+        if data.href != SS.href
+          if SS.href
+            head.children("link").remove()
+            head.children("script").remove()
+          head.append data.head.replace(/\$now/g, $.now())
+          if !head.children("meta[name=viewport]").length
+            head.append '<meta name="viewport" content="' + SS.viewPort + '" />'
+        SS.href = data.href
+        
+        body.fadeIn(200)
+      error: (req, status, error) ->
+        body.html SS.page
+      complete: ->
+        $(".ss-part").each ->
+          SS.renderPart $(this)
+    }
+  
+  @renderPart: (elem) ->
+    url = elem.data("href") || elem.attr("href")
+    url = SS_Kana.url url.replace(/\.html/, ".json")
+    
+    elem.append " " + SS.loading
+    $.ajax
+      type: "GET", url: url, dataType: "json" #, cache: false
+      data: "ref=" + SS_Kana.url(location.pathname, false)
+      success: (data) ->
+        $(elem).replaceWith data
+      error: ->
+        $(elem).find("img").remove()
+  
+class @SS_Kana
+  @dir = "<%= SS.config.kana.location %>"
+  
+  @render: ->
+    bind = 'onclick="return SS_Kana.loadPage($(this))"'
+    if $("body").data("kana")
+      url = SS_Kana.url(location.pathname, false)
+      $("#ss-kana").html '<a class="off" href="' + url + '" ' + bind + '>ふりがなをはずす</a>'
+    else
+      url = SS_Kana.url(location.pathname, true)
+      $("#ss-kana").html '<a class="on" href="' + url + '" ' + bind + '>ふりがなをつける</a>'
+  
+  @url: (url, bool = null) ->
+    bool = $("body").data("kana") if bool == null
+    if bool
+      url = @dir + url
+    else
+      url = url.replace(new RegExp("^" + @dir.replace("/", "\/") + "\/"), "/")
+    return url
+    
+  @loadPage: (elem) ->
+    $.ajax
+      type: "GET", url: elem.attr("href"), dataType: "html" #, cache: false
+      success: (data) ->
+        body = $("body")
+        body.data("kana", elem.hasClass("on"))
+        body.html data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1")
+    return false
+  
+class @SS_Font
+  @size = null # %
+  
+  @render: ->
+    @size = parseInt($.cookie("ss-font")) || 100
+    @set(@size) if @size != 100
+    
+    vr = $("#ss-medium")
+    vr.html '<a href="#" onclick="return SS_Font.set(100)">' + vr.text() + '</a>'
+    vr = $("#ss-small")
+    vr.html '<a href="#" onclick="return SS_Font.set(false)">' + vr.text() + '</a>'
+    vr = $("#ss-large")
+    vr.html '<a href="#" onclick="return SS_Font.set(true)">' + vr.text() + '</a>'
+    
+  @set: (size) ->
+    if size ==  true
+      size = @size + 20
+      return false if size > 200
+    else if size == false
+      size = @size - 20
+      return false if size < 60
+    
+    @size = size
+    $("body").css "font-size", size + "%"
+    $.cookie("ss-font", size, { expires: 7, path: '/' })
+    return false
+  
+class @SS_Mobile
+  @render: ->
+    if navigator.userAgent.match(/(Android|iPad|iPhone)/)
+      if $.cookie("ss-mobile") == "pc"
+        head = $("head")
+        head.children("meta[name=viewport]").remove
+        head.append '<meta name="viewport" content="width=1024" />'
+        vr = $("#ss-mb")
+        vr.html('<a href="#" onclick="return SS_Mobile.unset()">' + vr.text() + '</a>').show()
+      else
+        vr = $("#ss-pc")
+        vr.html('<a href="#" onclick="return SS_Mobile.setPc()">' + vr.text() + '</a>').show()
+    
+  @unset: ->
+    $.removeCookie("ss-mobile", { expires: 7, path: '/' })
+    location.reload()
+    return false
+      
+  @setPc: ->
+    $.cookie("ss-mobile", "pc", { expires: 7, path: '/' })
+    location.reload()
+    return false
+
+class @SS_Tabs
+  @render: (elem) ->
+    box  = $(elem)
+    tabs = ""
+    
+    box.find(".tab").each (i) ->
+      tab  = $(this)
+      name = tab.find('header > h1').html()
+      nav  = tab.find('nav')
+      url  = nav.find(".more").attr("href")
+      
+      base_id = tab.attr("id")
+      name_id = base_id + "-name"
+      view_id = base_id + "-view"
+      
+      cls   = "name"
+      cls   = "name current" if i == 0
+      bind  = 'return SS_Tabs.select("' + elem + '", "#' + name_id + '", "#' + view_id + '")'
+      tabs += "<a id='" + name_id + "' onclick='" + bind + "' class='" + cls + "' href='" + url + "'>" + name + "</a>"
+      
+      disp = ""
+      disp = "style='display: none;'" if i != 0
+      
+      html  = "<article id='" + view_id + "' class='view' " + disp + ">"
+      html += "<h1 style='display: none'>" + name + "</h1>"
+      html += "<div class='pages'>" + tab.find(".pages").html() + "</div>"
+      html += "<nav>" + tab.find('nav').html() + "</nav>"
+      html += "</article>"
+      
+      box.append html
+      tab.remove()
+      
+    box.prepend "<nav class='names'>" + tabs + "</nav>"
+    
+  @select: (box, name, view) ->
+    $(box).find(".name").each ->
+      $(this).removeClass "current"
+    $(box).find(".view").each ->
+      $(this).hide()
+    $(name).addClass "current"
+    $(view).show()
+    return false

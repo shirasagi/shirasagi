@@ -1,0 +1,80 @@
+ja:
+  cms:
+    modules: モジュール
+    site: サイト
+    content: コンテンツ
+    node: フォルダー
+    page: 固定ページ
+    layout: レイアウト
+    part: パーツ
+    config: 設定
+    root_menu: メインメニュー
+    site_menu: サイトメニュー
+    view_site: サイト確認
+    preview_site: サイトプレビュー
+
+    nodes:
+      cms/node: フォルダーリスト
+      cms/page: ページリスト
+    parts:
+      cms/free: HTML記述
+      cms/node: フォルダーリスト
+      cms/page: ページリスト
+      cms/tabs: 新着タブ
+      cms/crumb: パンくずリスト
+
+  modules:
+    cms: 標準機能
+    addons:
+      cms/meta: メタ情報
+      cms/html: HTML
+      cms/body: 本文
+      cms/file: ファイル
+      cms/release: 公開設定
+      cms/node_list: リスト表示
+      cms/page_list: リスト表示
+      cms/tabs: タブ表示
+
+  mongoid:
+    models:
+      cms/node: フォルダー
+      cms/page: ページ
+    attributes:
+      cms/node/model:
+        name: タイトル
+        filename: フォルダー名
+        basename: フォルダー名
+        route: フォルダー属性
+        summary_html: Summary
+      cms/page/model:
+        name: タイトル
+        route: ページ属性
+        summary_html: Summary
+        html: 本文
+        files: ファイル
+        released: 公開日時
+        release_date: 公開開始日時(予約)
+        close_date: 公開終了日時(予約)
+      cms/part/model:
+        name: パーツ名
+        route: パーツ属性
+        mobile_view: 携帯向け表示
+      cms/layout:
+        name: レイアウト名
+        html: HTML
+      cms/page:
+        html: 本文
+      cms/part/crumb:
+        home_label: ホームラベル
+      cms/reference/layout:
+        layout_id: レイアウト
+      
+      cms/addon/list/model:
+        conditions: 検索条件(URL)
+        loop_html: ループHTML
+        upper_html: 上部HTML
+        lower_html: 下部HTML
+        new_days: NEWマーク期間
+      cms/addon/tabs:
+        conditions: タブ設定(URL)
+        new_days: NEWマーク期間

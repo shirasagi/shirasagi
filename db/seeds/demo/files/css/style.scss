@@ -1,0 +1,1579 @@
+@import "init";
+@import "part";
+
+// -----------------------------------------------------------------------------
+// element
+
+html {
+  height: 100%;
+  font-family: $font-base;
+}
+body {
+  margin: 0 auto;
+  font-family: $font-base;
+  font-size: 100%;
+  color: $text;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 100%;
+  font-weight: normal;
+}
+a {
+  color: $link;
+  &:hover {
+    color: $hover;
+    text-decoration: none;
+  }
+  &:visited {
+    color: $visited;
+  }
+}
+rp, rt {
+  background: #fff;
+  color: $text;
+  font-size: $px12;
+  font-weight: normal;
+}
+rp {
+  margin: 0px;
+}
+img {
+  vertical-align: middle;
+}
+
+// -----------------------------------------------------------------------------
+// layout
+#page {
+  margin: 0 auto;
+  font-size: 87.5%;
+}
+// -----------------------------------------------------------------------------
+// tool
+#tool {
+  border-bottom: 3px solid $orange;
+  nav {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 5px 10px;
+    #nocssread {
+      float: left;
+      padding-right: 10px;
+      border-right: $border-hgry;
+      @include u-arrow;
+    }
+    #size, #read, #ss-kana, #info {
+      float: right;
+      border-left: $border-hgry;
+    }
+    #size {
+      padding-left: 10px;
+      span a {
+        margin-left: 5px;
+        padding: 3px;
+        background: $hblue;
+        @include border-radius(3px);
+        color: $text;
+        text-decoration: none;
+        &:hover {
+          @include grd-blue;
+          color: $t-white;
+        }
+      }
+    }
+    #read {
+      padding: 0 10px 0 35px;
+      background: url(../img/voice.png) no-repeat 10px center;
+    }
+    #ss-kana {
+      padding: 0 10px;
+      background: url(../img/kana.png) no-repeat 10px center;
+      a {
+        padding-left: 23px;
+      }
+    }
+    #info {
+      padding: 0 10px;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// head
+#head {
+  width: $page-width;
+  margin: 0 auto;
+  padding: 0 10px;
+  @include clear;
+  .logo {
+    float: left;
+    padding: 17px 0;
+  }
+  .menu {
+    float: right;
+    .u-menu {
+      padding: 12px 0;
+      .smart {
+        padding-left: 15px;
+        background: url(../img/smart.png) no-repeat left center;
+      }
+      .inquiry {
+        margin-left: 12px;
+        padding-left: 20px;
+        background: url(../img/inquiry.png) no-repeat left center;
+      }
+      .sitemap {
+        margin-left: 12px;
+        padding-left: 20px;
+        background: url(../img/sitemap.png) no-repeat left center;
+      }
+    }
+    .l-menu {
+      text-align: right;
+      padding-bottom: 10px;
+      form {
+        float: right;
+        border: $border-hgry
+      }
+      #search-box {
+        margin-right: -10px;
+        padding: 5px;
+        border: none;
+        color: $text;
+      }
+      #search-button {
+        padding: 5px 10px;
+        border: none;
+        background: #333;
+        color: $t-white;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// navi
+#navi {
+  @include grd-blue;
+  @include clear;
+  min-width: 1100px;
+  border-bottom: 3px solid $orange;
+  .wrap {
+    @include clear;
+    width: 1078px;
+    margin: 0 auto;
+    border-left: $border-lblue;
+    border-right: $border-hblue;
+    li {
+      position: relative;
+      float: left;
+      color: #202020;
+    }
+    a {
+      display: inline-block;
+      width: 178px;
+      padding: 5px 0 4px;
+      border-left: $border-hblue;
+      border-right: $border-lblue;
+      color: $t-white;
+      font-size: $px16;
+      text-decoration: none;
+      text-align: center;
+      &:hover {
+        background: $hblue;
+        color: #202020;
+      }
+    }
+    .current {
+      background: $hblue;
+      color: #202020;
+    }
+    .sangyo a, .shsiei a {
+      width: 176px;
+    }
+    .current a {
+      background: $hblue;
+      color: #202020;
+    }
+  }
+}
+#navi .wrap li ul, #navi .wrap .current ul {
+  position: absolute;
+  left: -1px;
+  display: none;
+  width: 180px;
+  border-left: $border-lblue;
+  border-right: $border-hblue;
+  border-bottom: 2px solid $orange;
+  background: $hblue;
+  z-index: 100;
+  li {
+    float: none;
+    border: none;
+    border-left: $border-hblue;
+    border-right: $border-lblue;
+    padding: 0;
+    a {
+      display: block;
+      @include li;
+      width: auto;
+      padding: 5px 10px 3px 25px;
+      border: none;
+      background-position: 12px 14px;
+      color: $link;
+      font-size: $px14;
+      text-align: left;
+      &:hover {
+        @include li;
+        padding: 5px 10px 3px 25px;
+        color: $link;
+        text-decoration: none;
+        background-color: #fff;
+        background-position: 12px 14px;
+      }
+    }
+  }
+}
+#navi .wrap .sangyo ul, #navi .wrap .shsiei ul {
+  width: 178px;
+  li a {
+    width: auto;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// wrap
+#wrap {
+  @include clear;
+  width: $page-width;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+// -----------------------------------------------------------------------------
+// main addition
+#main {
+  float: left;
+  width: 712px;
+}
+.one #main {
+  width: 100%;
+}
+#main .left, #addition .left,
+#main .center, #addition .center {
+  float: left;
+  width: 344px;
+  margin-right: $box-margin;
+}
+#main .center {
+  margin: 0;
+}
+#addition {
+  @include clear;
+  width: $page-width;
+  margin: 0 auto;
+  padding: 24px 10px 0;
+  border-top: $border-hgry;
+}
+#addition .right {
+  float: right;
+  width: 344px;
+}
+// -----------------------------------------------------------------------------
+// side
+#side {
+  float: right;
+  width: 344px;
+}
+
+// -----------------------------------------------------------------------------
+// foot
+#foot {
+  margin-top: $box-margin;
+}
+#address {
+  @include clear;
+  min-width: 1100px;
+  padding: 6px 0;
+  border-top: 2px solid $orange;
+  background: #ededed;
+  dl {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+    dt {
+      float: left;
+      clear: both;
+      width: 148px;
+      margin-right: 12px;
+      font-weight: bold;
+    }
+    dd {
+      float: left;
+      width: 920px;
+      a {
+        display: inline-block;
+        margin-left: 12px;
+        padding: 3px 4px 0 13px;
+        border: 1px solid #999;
+        line-height: 1;
+        background: $hgry url(../img/r-arrow-w.png) no-repeat 4px 4px;
+        color: $text;
+        text-decoration: none;
+      }
+    }
+  }
+}
+#footer-navi {
+  width: $page-width;
+  margin: 0 auto;
+  padding: 6px 10px;
+  a {
+    margin-right: 12px;
+    @include r-arrow;
+  }
+}
+#copyright {
+  min-width: 1100px;
+  padding: 6px 0;
+  @include grd-blue;
+  color: $t-white;
+  text-align: center;
+}
+#sp-view {
+  padding: 10px;
+  a {
+    @include box-sizing(border-box);
+    display: block;
+    width: 100%;
+    min-width: $page-width;
+    padding: 8px 8px 5px;
+    border: 1px solid #999;
+    background: $hgry;
+    color: $text;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+// -----------------------------------------------------------------------------
+// slideshow
+#slideshow {
+  margin: $box-margin 0;
+  border-top: 5px solid #333;
+  #slide-photo {
+    position: relative;
+    height: 210px;
+    margin-bottom: 1px solid #fff;
+    div {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+  #slide-controll {
+    @include clear;
+    padding: 6px;
+    border-bottom: 3px solid $orange;
+    background: #333;
+    #slide-list {
+      float: left;
+      a {
+        float: left;
+        margin-right: 6px;
+        line-height: 1;
+      }
+    }
+    #pause-play {
+      float: right;
+      line-height: 1;
+      .pause a {
+        padding-left: 15px;
+        background: url(../img/stop.png) no-repeat left center;
+      }
+      .play a {
+        margin-left: 12px;
+        padding-left: 15px;
+        background: url(../img/play.png) no-repeat left center;
+      }
+      a {
+        color: $t-white;
+        text-decoration: none;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// guide about safety oline propose useful population relations ranking topics
+#guide, #about, #safety, #online, #propose, #useful, #population, #relations, #ranking, #topics {
+  margin-bottom: $box-margin;
+  h1 {
+    margin-bottom: 6px;
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    @include grd-blue;
+    color: $t-white;
+  }
+}
+#safety h1 {
+  @include grd-red;
+}
+#guide {
+  h1 {
+    margin: 0;
+  }
+  ul {
+    @include clear;
+  }
+  li.kekkon a {
+    background: url(../img/ic-marriage.png) no-repeat 5px center;
+  }
+  li.ninshin a {
+    background: url(../img/ic-pregnancy.png) no-repeat 9px center;
+  }
+  li.kosodate a {
+    background: url(../img/ic-child.png) no-repeat 9px center;
+  }
+  li.kyoiku a {
+    background: url(../img/ic-education.png) no-repeat 5px center;
+  }
+  li.sumai a {
+    background: url(../img/ic-house.png) no-repeat 7px center;
+  }
+  li.shushoku a {
+    background: url(../img/ic-work.png) no-repeat 7px center;
+  }
+  li.fukushi a {
+    background: url(../img/ic-welfare.png) no-repeat 9px center;
+  }
+  li.okuyami a {
+    background: url(../img/ic-death.png) no-repeat 10px center;
+  }
+  li {
+    float: left;
+    width: 166px;
+    padding: 4px 0;
+    border-bottom: $border-hgry;
+    &:nth-child(2n+1) {
+      margin-right: $item-margin;
+    }
+    a {
+      display: block;
+      padding: 8px 0 5px 45px;
+      color: $text;
+      text-decoration: none;
+      &:hover {
+        background-color: $hblue;
+      }
+    }
+  }
+}
+#about {
+  h1 {
+    margin: 0;
+  }
+  ul {
+    @include clear;
+  }
+  li.about a {
+    background: url(../img/ic-about.png) no-repeat 5px center;
+  }
+  li.event a {
+    background: url(../img/ic-event.png) no-repeat 5px center;
+  }
+  li.mayor a {
+    background: url(../img/ic-mayor.png) no-repeat 5px center;
+  }
+  li.gikai a {
+    background: url(../img/ic-assembly.png) no-repeat 5px center;
+  }
+  li.shisetsu a {
+    background: url(../img/ic-institution.png) no-repeat 5px center;
+  }
+  li.kanko a {
+    background: url(../img/ic-sight.png) no-repeat 5px center;
+  }
+  li.sodan a {
+    background: url(../img/ic-consultation.png) no-repeat 5px center;
+  }
+  li.faq a {
+    background: url(../img/ic-qa.png) no-repeat 5px center;
+  }
+  li {
+    float: left;
+    width: 166px;
+    padding: 4px 0;
+    border-bottom: $border-hgry;
+    &:nth-child(2n+1) {
+      margin-right: $item-margin;
+    }
+    a {
+      display: block;
+      padding: 8px 0 5px 45px;
+      color: $text;
+      text-decoration: none;
+      &:hover {
+        background-color: $hblue;
+      }
+    }
+  }
+}
+#safety {
+  ul {
+    @include clear;
+  }
+  li {
+    float: left;
+    width: 166px;
+    &:nth-child(2n+1) {
+      margin-right: $item-margin;
+    }
+  }
+}
+#safety li a, #online li a, #propose li a, #attention li a, #useful li a, #relations li a, #ranking li a {
+  @include r-arrow;
+}
+#ranking li a {
+  padding-left: 22px;
+  background: url(../img/ic-ranking.png) no-repeat left 5px;
+}
+#online nav, #propose nav {
+  padding-left: 132px;
+}
+#online nav {
+  background: url(../img/online.gif) no-repeat left top;
+}
+#propose nav {
+  padding-bottom: 40px;
+  background: url(../img/comment.gif) no-repeat left top;
+}
+#useful, #relations, #topics {
+  min-height: 165px;
+}
+#population {
+  dt {
+    float: left;
+    width: 58px;
+    margin: 0 12px 3px 0;
+    padding: 0 3px;
+    background: #ffeacc;
+    &:nth-child(4) {
+      clear: both;
+    }
+  }
+  dd {
+    float: left;
+    width: 90px;
+    margin: 0 0 3px 0;
+    padding: 0 3px;
+    background: #fff;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
+  }
+  p {
+    float: right;
+  }
+}
+#topics {
+  @include clear;
+  .thumb {
+    float: left;
+    margin-right: $item-margin;
+  }
+  h2 {
+    margin-bottom: $item-margin;
+  }
+  .more {
+    float: right;
+    a {
+      @include r-arrow;
+    }
+  }
+}
+#connect a {
+  float: left;
+  display: block;
+  margin-bottom: $item-margin;
+  &:nth-child(2n+1) {
+    margin-right: $item-margin;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// attention
+#attention {
+  margin: $box-margin 0;
+  h1{
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    @include grd-org;
+    color: #282828;
+  }
+  article {
+    padding: 6px 0 3px;
+    border-bottom: $border-hgry;
+    a {
+      @include r-arrow;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// cms-tabs
+.cms-tabs {
+  margin-bottom: $box-margin;
+  border-bottom: 2px solid $orange;
+  .names {
+    padding: 0;
+    border-bottom: 2px solid $orange;
+    .name {
+      display: inline-block;
+      width: 109px;
+      padding: 3px 0 0;
+      border-left: 5px solid #ddd;
+      @include grd-gry;
+      color: $text;
+      text-align: center;
+      text-decoration: none;
+    }
+    .name:hover, .current {
+      border-left: 5px solid $orange;
+      @include grd-blue;
+      color: $t-white;
+    }
+    .name:last-child {
+      width: 111px;
+    }
+  }
+  h1 {
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    border-bottom: 2px solid $orange;
+    @include grd-blue;
+    color: $t-white;
+  }
+  .pages header {
+    padding: 3px 0;
+    border-bottom: $border-hgry;
+  }
+  time {
+    display: block;
+  }
+  h2 {
+    display: inline;
+  }
+  .new h2:after {
+    content: "NEW";
+    margin-left: 5px;
+    color: #e03300;
+  }
+  nav {
+    @include clear;
+    padding: 3px 0;
+  }
+  .rss {
+    float: left;
+    display: inline-block;
+    padding-left: 20px;
+    background: url(../img/ic-rss.png) no-repeat left center;
+  }
+  .more {
+    float: right;
+    @include r-arrow;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// add
+#add {
+  position: relative;
+  @include clear;
+  width: $page-width;
+  margin: 20px auto 0;
+  padding: 0 10px;
+  h1 {
+    margin-bottom: 10px;
+    padding: 3px 12px 0;
+    background: $hgry;
+    color: #444;
+  }
+  .info {
+    position: absolute;
+    top: 3px;
+    right: 22px;
+    a {
+      @include r-arrow;
+    }
+  }
+  nav {
+    @include clear;
+    a {
+      display: block;
+      float: left;
+      margin-right: 12px;
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// pageg-top
+.pagetop {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  @include border-radius(5px 0 0 0);
+  background: rgba(0,0,0,0.6);
+  a {
+    display: block;
+    padding: 8px 15px 5px 30px;
+    background: url(../img/t-arrow-w.png) no-repeat 15px 18px;
+    color: #fff;
+    text-decoration: none;
+    span {
+      display: block;
+      font-size: $px11;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// ss-page-name
+#ss-page-name {
+  margin-bottom: $item-margin;
+  padding: 3px 6px 0;
+  border-left: 5px solid $orange;
+  @include grd-blue;
+  font-size: $px18;
+  color: $t-white;
+}
+
+// -----------------------------------------------------------------------------
+// crumbs
+.crumbs {
+  padding: 12px 0 10px;
+  .separator {
+    padding: 0 3px;
+  }
+}
+// -----------------------------------------------------------------------------
+// recent-oshirase
+#recent-oshirase{
+  margin-bottom: $box-margin;
+  border-bottom: 2px solid $orange;
+  h1 {
+    padding: 0 0 0 40px;
+    border-bottom: 2px solid $orange;
+    background: url(../img/ic-info.png) no-repeat left 1px;
+    font-size: $px16;
+  }
+  article header {
+    padding: 6px 0 3px;
+    border-bottom: $border-hgry;
+  }
+  time {
+    display: inline-block;
+    width: 120px;
+  }
+  h2 {
+    display: inline;
+    margin-left: 10px;
+  }
+  .new h2:after {
+    content: "NEW";
+    margin-left: 5px;
+    color: #e03300;
+  }
+}
+// -----------------------------------------------------------------------------
+// feed
+.feed {
+  padding: 6px 0 3px;
+  .rss {
+    display: inline-block;
+    padding-left: 20px;
+    background: url(../img/ic-rss.png) no-repeat left center;
+  }
+  .more {
+    float: right;
+    @include r-arrow;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// links-life
+#links-life {
+  margin-bottom: $box-margin;
+  h1 {
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    @include grd-blue;
+    color: $t-white;
+  }
+  li {
+    padding: 3px 0;
+    border-bottom: $border-hgry;
+    a {
+      display: block;
+      padding: 0 6px;
+      &:hover {
+        background: $hblue;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// category-nodes
+#main .category-nodes {
+  margin-bottom: $box-margin;
+  article {
+    float: left;
+    width: 325px;
+    margin: 0 24px 24px 0;
+    padding: 6px;
+    border: $border-hgry;
+    border-left: 5px solid $blue;
+    cursor: pointer;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
+    &:hover {
+      background: $hblue;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// category-pages .article-pages
+.category-pages, .article-pages {
+  margin-bottom: $box-margin;
+  a {
+    @include r-arrow;
+  }
+  .new h2:after {
+    content: "NEW";
+    margin-left: 5px;
+    color: #e03300;
+  }
+}
+.page .category-pages article,
+.page .article-pages article, {
+  padding: 12px 0 9px;
+  border-bottom: $border-hgry;
+  time {
+    display: inline-block;
+    width: 120px;
+  }
+  h2 {
+    display: inline;
+    margin: 0 0 0 10px;
+    border: none;
+    font-size: $px14;
+    font-weight: normal;
+    a {
+     padding: 0;
+     background: none;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// category-list
+#category-list {
+  margin-bottom: $box-margin;
+  h1 {
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    @include grd-blue;
+    color: $t-white;
+  }
+  h2 {
+    padding: 3px 0;
+    border-bottom: $border-hgry;
+    a {
+      display: block;
+      padding: 0 6px;
+      background: none;
+      &:hover {
+        background: $hblue;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// categories
+.categories {
+  border-top: $border-hgry;
+  padding: 5px 0;
+  text-align: right;
+  .separator {
+    color: $hgry;
+  }
+}
+// -----------------------------------------------------------------------------
+//  page sitemap
+.page header.released, .one header.released {
+  margin-bottom: $item-margin;
+  text-align: right;
+}
+.page article h1, .one article.body h1 {
+  margin: $item-margin 0 6px;
+  padding: 3px 10px 0;
+  background: $hblue;
+  font-size: $px16;
+  font-weight: bold;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+.page article h2, .one article.body h2 {
+  margin-bottom: 6px;
+  padding: 0 10px;
+  border-bottom: 2px solid $blue;
+  color: $blue;
+  font-size: $px16;
+  font-weight: bold;
+}
+.page article h3, .one article.body h3 {
+  margin-bottom: 6px;
+  padding: 0 10px;
+  border-left: 5px solid $blue;
+  color: $blue;
+  font-weight: bold;
+}
+.page article h4, .one article.body h4 {
+  color: $blue;
+  font-weight: bold;
+}
+.page article h5, .pages article h6, .one article.body h5, .one article.body h6 {
+  font-weight: bold;
+}
+.page article p, .one article.body p {
+  margin-bottom: $item-margin;
+}
+.page article ul, .one article.body ul {
+  margin-bottom: $item-margin;
+  list-style: none;
+  li {
+    @include li;
+  }
+}
+#sitemap ul {
+  @include clear;
+}
+#sitemap li {
+  float: left;
+  margin-bottom: 10px;
+  padding:  0 10px;
+  border-right: $border-hgry;
+  background: none;
+  list-style: none;
+}
+.page article ol, .one article.body ol {
+  margin-bottom: $item-margin;
+  padding-left: 23px;
+}
+.page article dl, .one article.body dl {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: $border-hgry;
+  dt {
+    float: left;
+    min-width: 15%;
+    font-weight: bold;
+  }
+}
+.page article table, .one article.body table {
+  width: 100%;
+  margin-bottom: $item-margin;
+  caption {
+    color: $blue;
+    text-align: left;
+  }
+  th {
+    padding: 3px 8px 0;
+    border: $border-hgry;
+    background: $hblue;
+  }
+  td {
+    padding: 3px 8px 0;
+    border: $border-hgry;
+  }
+}
+// -----------------------------------------------------------------------------
+// calendar
+#wrap .one {
+  width:  100%;
+}
+.event-date {
+  position: relative;
+  h1 {
+    margin-bottom: $item-margin;
+    padding: 7px 0 4px 50px;
+    border-bottom: 2px solid $orange;
+    font-size: $px16;
+  }
+  h1.jan {
+    background: url(../img/ic-january.png) no-repeat 10px bottom;
+  }
+  h1.feb {
+    background: url(../img/ic-february.png) no-repeat left bottom;
+  }
+  h1.may {
+    background: url(../img/ic-may.png) no-repeat left bottom;
+  }
+  h1.apr {
+    background: url(../img/ic-april.png) no-repeat left bottom;
+  }
+  h1.mar {
+    background: url(../img/ic-march.png) no-repeat left bottom;
+  }
+  h1.jun {
+    background: url(../img/ic-june.png) no-repeat 10px bottom;
+  }
+  h1.jul {
+    background: url(../img/ic-july.png) no-repeat left bottom;
+  }
+  h1.aug {
+    background: url(../img/ic-august.png) no-repeat 5px bottom;
+  }
+  h1.sep {
+    background: url(../img/ic-september.png) no-repeat 9px bottom;
+  }
+  h1.oct {
+    background: url(../img/ic-october.png) no-repeat 10px bottom;
+  }
+  h1.nov {
+    background: url(../img/ic-november.png) no-repeat 8px bottom;
+  }
+  h1.dec {
+    background: url(../img/ic-december.png) no-repeat 10px bottom;
+  }
+  ul {
+    position: absolute;
+    top: 9px;
+    right: 0;
+    .prev {
+      @include l-arrow;
+      margin-right: 10px;
+      padding: 0 15px;
+      border-right: $border-hgry;
+    }
+    .next {
+      display: inline-block;
+      padding-right: 13px;
+      background: url(../img/r-arrow.png) no-repeat right 7px;
+    }
+  }
+}
+#event-list {
+  clear: both;
+  margin-bottom: 2em;
+  border-top: 1px solid #ccc;
+  dl {
+    margin: 0;
+    padding: 6px 10px 3px;
+    border-bottom: 1px solid #ccc;
+    zoom:1;
+    &:before {
+      content: "\0020";
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+    &:after {
+      content: "\0020";
+      clear: both;
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+  }
+  dl.sat {
+    background: #e1ebf1;
+    color: #039;
+  }
+  dl.sun, dl.holiday {
+    background: #ffeeee;
+    color: #d90000;
+  }
+  dt {
+    float: left;
+    width: 20%;
+  }
+  dt .wday {
+    display: none;
+  }
+  dd {
+    margin-left: 20%;
+    h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 100%;
+      font-weight: normal;
+    }
+  }
+}
+#ss-mb {
+  padding: 10px;
+  a {
+    @include box-sizing(border-box);
+    display: block;
+    width: 100%;
+    min-width: $page-width;
+    padding: 8px 8px 5px;
+    border: 1px solid #999;
+    background: $hgry;
+    color: $text;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+// -----------------------------------------------------------------------------
+// smart phone
+// -----------------------------------------------------------------------------
+@media only screen and (max-width: 600px) {
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
+  #main .left, #addition .left, #main .center, #addition .center, #addition .right,
+  #address dl, #address dl dt, #address dl dd, #footer-navi,
+  #main .category-nodes article  {
+    float: none;
+    width: 100%;
+    padding: 0;
+  }
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+// -----------------------------------------------------------------------------
+// display:none
+  #tool, #head .u-menu, #slideshow #slide-controll #pause-play,
+  #population, #add .info, .crumbs {
+    display: none;
+  }
+// -----------------------------------------------------------------------------
+// head
+  #head .logo {
+    float: none;
+    display: block;
+    padding: 10px;
+    img {
+      width: 180px;
+      height: auto;
+    }
+  }
+  #head .menu {
+    float: none;
+    padding: 0 10px;
+  }
+  #head .menu .l-menu {
+    width: 100%;
+    text-align: left;
+    form {
+      float: none;
+      position: relative;
+      @include border-radius(0px);
+      #search-box {
+        width: 80%;
+        @include border-radius(0px);
+      }
+      #search-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 6px 10px;
+        @include border-radius(0);
+        -webkit-appearance: none;
+      }
+    }
+  }
+
+// -----------------------------------------------------------------------------
+// navi
+  #navi {
+    min-width: 100%;
+  }
+  #navi .wrap {
+    border-top: $border-lblue;
+    border-bottom: $border-hblue;
+    @include box-sizing(border-box);
+    li {
+      width: 50%;
+      a {
+        width: auto;
+        display: block;
+        @include box-sizing(border-box);
+        border-top: $border-hblue;
+        border-bottom: $border-lblue;
+        font-size: 100%;
+      }
+    }
+    .sangyo a, .shsiei a {
+      width: auto;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  slideshow
+  #slideshow {
+    margin: 0 0 $smart-margin;
+    #slide-photo {
+      height: auto;
+      div:first-child {
+        position: relative;
+      }
+      img {
+        width: 100%;
+      }
+    }
+  }
+// -----------------------------------------------------------------------------
+//  guide about
+  #guide, #about {
+    margin: 0;
+  }
+  #guide ul, #about ul {
+    padding: 10px 10px 0;
+    li {
+      width: 50%;
+      margin-bottom: $smart-margin;
+      padding: 0;
+      border: none;
+      &:nth-child(2n+1) {
+        margin: 0;
+      }
+      &:nth-child(2n+1) a {
+        margin-right: 5px;
+      }
+      &:nth-child(2n) a {
+        margin-left: 5px;
+      }
+      a {
+        border: $border-hgry;
+        padding: 5px 0 2px 40px;
+      }
+    }
+    li.kekkon a, li.ninshin a, li.kosodate a, li.kyoiku a, li.sumai a,
+    li.shushoku a, li.fukushi a, li.okuyami a,
+    li.about a, li.event a, li.mayor a, li.gikai a, li.shisetsu a,
+    li.kanko a, li.sodan a, li.faq a {
+      background-size: auto 24px;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  safety online propose attention recent useful relations ranking topics connect add links-life
+  #safety, #online, #propose, #attention, #recent, #useful, #connect
+  #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list {
+    margin-bottom: $smart-margin;
+    margin-top: 0;
+    header h1 {
+      margin-bottom: 0;
+    }
+  }
+  #recent-oshirase {
+    margin-top: 10px;
+    margin-bottom: 0;
+    .new h2:after {
+      display: none;
+    }
+  }
+  #safety li {
+    width: 50%;
+    &:nth-child(2n+1) {
+      margin: 0;
+      a {
+        border-right: $border-hgry
+      }
+    }
+    a {
+      display: block;
+      @include r-arrow-s;
+      border-bottom: $border-hgry;
+    }
+  }
+  #online nav, #propose nav {
+    background: none;
+    padding: 0;
+  }
+  #online li a, #propose li a, #useful li a,
+  #relations li a, #ranking li a {
+    display: block;
+    @include r-arrow-s;
+    border-bottom: $border-hgry;
+  }
+  #ranking li a {
+    padding-left: 32px;
+    background: url(../img/ic-ranking.png) no-repeat 10px 8px;
+  }
+  #recent-oshirase article header {
+    padding: 0;
+  }
+  #attention h2, #recent h2, #recent-oshirase h2 {
+    display: block;
+    margin: 0;
+    padding: 0;
+    a {
+      display: block;
+      @include ic-doc;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  #attention time, #recent time, #recent-oshirase time, .cms-tabs time {
+    display: none;
+  }
+  #topics article {
+    padding: 10px 10px 0;
+  }
+  #useful, #relations, #topics {
+    min-height: 0;
+  }
+  #connect nav, #add nav {
+    padding: 0 10px;
+    a {
+      @include box-sizing(border-box);
+      width: 50%;
+      margin: 0 0 10px;
+      &:nth-child(2n+1) {
+        margin-right: 0;
+        padding-right: 5px;
+      }
+      &:nth-child(2n) {
+        padding-left: 5px;
+      }
+    }
+  }
+  #add nav {
+    padding: 10px 10px 0;
+    border: none;
+  }
+  #links-life li, #category-list h2 {
+    padding: 0;
+    a {
+      padding: 3px 10px;
+    }
+  }
+  .cms-tabs {
+    padding: 0;
+    .names {
+      @include clear;
+      .name {
+        display: block;
+        float: left;
+        width: 33%;
+        @include box-sizing(border-box);
+      }
+      .name:last-child {
+        width: 34%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include box-sizing(border-box);
+      }
+    }
+    .pages header {
+      padding: 3px 10px;
+    }
+    nav {
+      padding: 3px 10px;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  feed
+  .feed {
+    @include clear;
+    padding: 0;
+    background: $hgry;
+    .rss {
+    float: left;
+    width: 30%;
+    display: inline-block;
+    padding: 3px 0 3px 30px;
+    background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
+    }
+    .more {
+      float: left;
+      width: 70%;
+      padding: 3px 0 3px 15px;
+      @include r-arrow-s;
+    }
+  }
+  .cms-tabs {
+    nav {
+      padding: 0;
+      background: #ccc;
+    }
+    .rss {
+      width: 30%;
+      display: inline-block;
+      padding: 3px 0 3px 30px;
+      background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
+      @include box-sizing(border-box);
+    }
+    .more {
+      width: 70%;
+      padding: 3px 0 3px 15px;
+      @include r-arrow-s;
+      @include box-sizing(border-box);
+    }
+  }
+// -----------------------------------------------------------------------------
+//  footer
+  #foot {
+    margin-top: 0;
+  }
+  #address {
+    width: 100%;
+    min-width: 50%;
+    padding: 10px;
+    @include box-sizing(border-box);
+    dl dt {
+      font-weight: normal;
+      color: $blue;
+    }
+    dl dd a {
+      display: block;
+      margin: 0;
+      padding: 8px 8px 5px;
+      text-align: center;
+      background-position: 28% center;
+    }
+  }
+  #footer-navi nav {
+    @include clear;
+    border-top: 1px solid #999;
+    a {
+      float: left;
+      display: block;
+      width: 50%;
+      @include box-sizing(border-box);
+      @include r-arrow-s;
+      margin: 0;
+      padding-left: 22px;
+      border: 1px solid #999;
+      border-top: none;
+      background-color: $hgry;
+      background-position: 9px 10px;
+      color: $text;
+      text-decoration: none;
+      &:nth-child(2n+1) {
+        border-right: none;
+      }
+      &:last-child {
+        border-right: 1px solid #999;
+      }
+      &:nth-child(4) {
+        display: none;
+      }
+    }
+  }
+  #copyright {
+    min-width: 100%;
+    font-size: $px12;
+  }
+  #ss-pc, #ss-mb {
+    padding: 10px;
+    a {
+      @include box-sizing(border-box);
+      display: block;
+      width: 100%;
+      padding: 8px 8px 5px;
+      border: 1px solid #999;
+      background: $hgry;
+      color: $text;
+      text-align: center;
+      text-decoration: none;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  pagetop
+  .pagetop {
+    right: 20px;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    @include border-radius(10px);
+    a {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      padding: 0;
+      overflow: hidden;
+      background-position: center center;
+      text-indent: -9999px;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  ss-page-name
+  #ss-page-name {
+    margin: $smart-margin 0 0 0;
+  }
+// -----------------------------------------------------------------------------
+//  category-nodes
+  #main .category-nodes {
+    margin: $smart-margin 0 0 0;
+    padding: 0 10px;
+    article {
+      @include box-sizing(border-box);
+      margin: 0 0 10px 0;
+      padding: 5px;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  category-pages article-pages
+  .category-pages, .article-pages {
+    margin-bottom: $smart-margin;
+    a {
+      display: block;
+      width: 100%;
+      @include box-sizing(border-box);
+      @include r-arrow-s;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .new h2:after {
+      display: none;
+    }
+  }
+  .page .category-pages, .page .article-pages {
+    article {
+      padding: 3px 10px;
+      h2 {
+        display: block;
+        margin:0;
+        padding: 0;
+      }
+    }
+  }
+  .one .page .category-pages,
+  .one .page .article-pages {
+    article {
+      padding: 3px 10px;
+      border-bottom: $border-hgry;
+      time {
+        float: none;
+      }
+      h2 {
+        padding: 0;
+        border: none;
+        a {
+          border: none;
+        }
+      }
+    }
+  }
+// -----------------------------------------------------------------------------
+//  page sitemap
+  .page article, .one article.body {
+    padding: 10px 10px 0;
+  }
+  .page header.released {
+    margin: 3px 0;
+  }
+  .page article dl dt, .one article.body dl dt {
+    float: none;
+  }
+}

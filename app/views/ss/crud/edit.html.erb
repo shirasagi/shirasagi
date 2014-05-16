@@ -1,0 +1,20 @@
+<%= jquery do %> SS.confirmUnloading(); <% end %>
+
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<% addons = @model && @model.addons %>
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <% if addons.size > 0 %><header><h2><%= t :basic_info %></h2></header><% end %>
+    <%= render file: '_form', locals: { f: f } %>
+  </div>
+  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+</div>
+
+<footer class="send">
+  <%= f.submit t(:save), class: :save %>
+  <%= f.button t(:cancel), onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+
+<% end %>

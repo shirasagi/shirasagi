@@ -1,0 +1,12 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+  
+  <dt><%= @model.t :basename %></dt>
+  <dd><%= f.text_field :basename, class: "filename" %></dd>
+  
+  <!--
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+  -->
+</dl>

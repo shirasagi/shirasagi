@@ -1,0 +1,70 @@
+<%
+
+def v2c(item, field)
+  return "empty" unless item.key?(field)
+  return "blank" if item[field] == ""
+  item[field].class.to_s.downcase.dasherize
+end
+
+def v2s(item, field)
+  return "" unless item.key?(field)
+  
+  value = item[field]
+  if value == nil
+    value = "NULL"
+  elsif value == ""
+    value = "''"
+  elsif value.is_a?(Time)
+    value = I18n.l value, format: :short
+  else
+    value
+  end
+  
+  value.to_s.truncate 16
+end
+
+%><style>
+.table-wrap {
+  overflow-x: auto;
+}
+table.index {
+  width: auto;
+}
+table.index th, table.index td {
+  overflow: visible;
+  max-width: 200px;
+  text-overflow: clip;
+  word-wrap: normal;
+  word-break: normal;
+  white-space: nowrap;
+}
+table.index td.nilclass { color: #999; }
+table.index td.blank    { color: #999; }
+table.index td.time     { color: #080; }
+table.index td.fixnum   { color: #999; }
+table.index td.array    { color: #a00; }
+
+</style>
+<div class="table-wrap">
+  <table class="index">
+    <thead>
+      <tr>
+        <th></th>
+        <% @fields.each do |field| %>
+        <th><%= field %></th>
+        <% end %>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @items.each do |item| %>
+      <tr>
+        <td><%= link_to :show, { action: :show, id: item["_id"] } %></td>
+        <% @fields.each do |field| %>
+        <td class="<%= v2c(item, field) %>"><%= v2s(item, field) %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

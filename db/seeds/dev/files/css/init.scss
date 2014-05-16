@@ -1,0 +1,29 @@
+@import "compass/css3";
+
+// -----------------------------------------------------------------------------
+// html5
+
+header, footer, nav, section, article, figure, aside {
+  display: block;
+  margin: 0px;
+}
+
+// -----------------------------------------------------------------------------
+// mixin
+
+@mixin clear {
+    zoom:1;
+    &:before, &:after {
+        content: "\0020"; 
+        display: block; 
+        height: 0; 
+        overflow: hidden; 
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+@mixin lgrad($position, $value...) {
+  //include background(linear-gradient($position, $value));
+}

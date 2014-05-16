@@ -1,0 +1,13 @@
+<div class="file-view">
+  <div class="thumb">
+    <% if @item.image? %>
+    <img src="<%= thumb_sns_user_temp_file_path(id: @item) %>" alt="<%= @item.basename %>" />
+    <% else %>
+    <span class="ext icon-<%= @item.extname %>"><%= @item.extname %></span>
+    <% end %>
+  </div>
+  <div class="name">
+    <input type="checkbox" name="item[file_ids][]" value="<%= @item.id %>" checked="checked" />
+    <%= @item.basename %>
+  </div>
+</div>

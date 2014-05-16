@@ -1,0 +1,281 @@
+@import "init";
+
+$page-max-width: 1080px;
+$font-base: Tahoma, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-head: "Arial Black", Futura, Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+
+// -----------------------------------------------------------------------------
+// element
+
+html {
+  color: #444;
+  font-size: 75.0%;
+  font-family: $font-base;
+  line-height: 1.4;
+}
+body {
+  background-color: #fff;
+  font-family: $font-base;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 100%;
+}
+rp, rt {
+  background-color: #fff;
+  color: #080;
+  font-size: 80%;
+  font-weight: normal;
+}
+time {
+  color: #070;
+}
+a {
+  color: #06b;
+  text-decoration: none;
+}
+a:hover {
+  color: #e00;
+  text-decoration: underline;
+}
+
+// -----------------------------------------------------------------------------
+// layout
+
+html, body {
+  height: 100%;
+  margin: 0px;
+}
+#head {
+  max-width: $page-max-width;
+  margin: 0px auto;
+  padding: 10px 15px;
+  h1 {
+    padding: 10px 10px 5px;
+    a {
+      color: #444;
+      font-size: 200%;
+      font-family: $font-head;
+      text-decoration: none;
+    }
+  }
+  nav {
+    float: right;
+    margin-top: -35px;
+  }
+}
+#navi {
+  @include clear;
+  margin: 0px 0px 20px;
+  background-color: #259;
+  .wrap {
+    @include clear;
+    max-width: $page-max-width;
+    margin: 0px auto;
+    padding: 0px 15px;
+  }
+  a {
+    float: left;
+    display: block;
+    min-width: 120px;
+    padding: 0px 10px;
+    border-right: 1px solid #eee;
+    color: #fff;
+    font-size: 120%;
+    text-align: center;
+    text-decoration: none;
+    line-height: 2.5;
+    &:first-child {
+      border-left: 1px solid #eee;
+    }
+    &:hover {
+      background-color: #27b;
+    }
+  }
+}
+#crumbs {
+  @include clear;
+  margin: -10px 0px 10px;
+  .wrap {
+    @include clear;
+    max-width: $page-max-width;
+    margin: 0px auto;
+    padding: 0px 15px;
+  }
+  .separator {
+    margin: 0px 5px;
+  }
+}
+#wrap {
+  //@include clear;
+  display: table;
+  width: 100%;
+  max-width: $page-max-width;
+  height: auto;
+  margin: 0px auto;
+  padding: 0px 15px;
+  #main {
+    display: table-cell;
+    .wrap {
+      //margin-bottom: -32768px;
+      //padding-bottom: 32778px;
+    }
+  }
+  #menu { 
+    display: table-cell;
+    width: 350px;
+    padding-left: 15px; 
+  }
+  #side {
+    display: table-cell;
+    width: 350px;
+    padding-left: 15px; 
+  }
+}
+#foot {
+  @include clear;
+  margin: 40px 0px 0px;
+  border-top: 1px solid #bbb;
+  .wrap {
+    max-width: $page-max-width;
+    margin: 0px auto;
+    padding: 20px 15px;
+    text-align: center;
+  }
+  a {
+    margin: 0px 10px;
+  }
+}
+#ss-pc, #ss-mb {
+  padding: 15px;
+  border-top: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  background-color: #fff;
+  text-align: center;
+  a {
+    color: #888;
+  }
+}
+#ss-mb {
+  font-size: 300%;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+#wrap {
+  .wrap {
+    > header h1 {
+      margin: 0px 0px 10px;
+      padding: 5px 10px;
+      background-color: #259;
+      color: #fff;
+    }
+    > section {
+      margin: 0px 0px 20px;
+      > header h1 {
+        margin: 0px 0px 10px;
+        padding: 5px 10px;
+        background-color: #259;
+        color: #fff;
+      }
+    }
+  }
+}
+aside h2 {
+  margin: 0px 0px 10px;
+  padding: 5px 10px;
+  background-color: #ddd;
+}
+.nodes, .pages {
+  article {
+    padding: 5px 5px;
+    border-bottom: 1px solid #ddd;
+    &.current {
+      background-color: #ffd;
+    }
+    time {
+      display: inline;
+      margin: 0px 10px 0px 0px;
+    }
+    h2 {
+      display: inline;
+    }
+  }
+  article.new {
+    h2:after {
+      margin-left: 4px;
+      color: #e00;
+      font-size: 90%;
+      font-weight: bold;
+      content: "NEW";
+    }
+  }
+}
+.tabs {
+  margin: 0px 0px 20px;
+  .name {
+    display: inline-block;
+    margin: 0px 4px 0px 0px;
+    padding: 4px 8px;
+    border: 1px solid #bbb;
+    background-color: #eee;
+    &.current {
+      border-bottom: 1px solid #fff;
+      background-color: #fff;
+    }
+  }
+  .view {
+    min-height: 170px;
+    margin: -1px 0px 0px;
+    padding: 8px;
+    border: 1px solid #bbb;
+    nav {
+      margin: 8px 0px 0px;
+      text-align: right;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+
+@media only screen and (max-width: 800px) {
+  body {
+    //background-color: red;
+  }
+  #head {
+    padding: 0px;
+    h1 {
+      float: none;
+      padding: 10px 10px 5px;
+    }
+    nav {
+      float: none;
+      margin: 0px;
+      padding: 0px 10px 5px;
+      text-align: right;
+    }
+  }
+  #navi {
+    .wrap {
+      padding: 0px 8px;
+    }
+    a {
+      min-width: initial;
+      min-width: auto;
+      margin: 0px 0px 0px 0px;
+      padding: 5px 5px;
+      font-size: 90%;
+    }
+  }
+  #wrap {
+    display: block;
+    width: auto;
+    margin: 0px 8px;
+    padding: 0px;
+    #main, #menu, #side {
+      display: block;
+      width: auto;
+      padding: 0px;
+    }
+  }
+}

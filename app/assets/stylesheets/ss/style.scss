@@ -1,0 +1,367 @@
+// -------------------------------------------------------------------------------------------------
+// ss
+
+@import "init";
+
+// -------------------------------------------------------------------------------------------------
+// base
+
+html, body {
+  height: 100%;
+  margin: 0px;
+}
+header, footer, nav, section, article, figure, aside {
+  display: block;
+  margin: 0px;
+}
+body {
+  font-family: $font-base;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+h1, h2, h3, h4, h5, p {
+  margin: 0px;
+  font-size: 100%;
+  font-weight: normal;
+}
+a {
+  color: #05d;
+  text-decoration: none;
+}
+a:hover {
+  color: #e00;
+  text-decoration: underline;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+  line-height: 0;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+}
+th {
+  font-size: 100%;
+  font-weight: normal;
+  text-align: left;
+}
+td {
+  font-size: 100%;
+}
+
+// -------------------------------------------------------------------------------------------------
+// form
+
+@mixin input {
+  border: 1px solid #ccc;
+  @include box-sizing(border-box);
+  background-color: #fbfbfb;
+  @include box-shadow(inset 1px 1px 4px #eee);
+  &:focus {
+    background-color: #ffffe7;
+    @include box-shadow(inset 1px 1px 3px #cc9);
+  }
+}
+select, input, textarea, button {
+  font-size: 100%;
+  font-family: $font-base;
+}
+select {
+  @include input;
+  max-width: 95%;
+  padding: 4px;
+}
+input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
+input[type=email], input[type=number] {
+  @include input;
+  width: 80%;
+  height: 2.5em;
+  padding: 3px 5px;
+}
+input[type=number] {
+  width: 12em;
+}
+input.filename {
+  width: 25em;
+  ime-mode: disabled;
+}
+input.date {
+  width: 9em;
+  text-align: center;
+}
+input.datetime {
+  width: 12em;
+  text-align: center;
+}
+textarea {
+  @include input;
+  width: 100%;
+  height: 6.5em;
+  padding: 5px 5px;
+  line-height: 1.4;
+}
+textarea.code {
+  height: 30em;
+  font-size: 120%;
+  font-family: monospace;
+}
+.ace_editor {
+  border: 1px solid #ddd;
+  @include box-sizing(border-box);
+}
+form .ace_editor {
+  border: 1px solid #bbb;
+}
+textarea.ace_text-input {
+  padding: 0px;
+}
+
+// -------------------------------------------------------------------------------------------------
+// common view
+
+#ajax-box {
+  margin: 10px;
+}
+.main-view  {
+  @include main-view;
+}
+.addon-view {
+  margin: 0px 0px 20px;
+  padding: 0px 0px 0px 15px;
+  header {
+    margin: 0px 0px 10px -20px;
+    padding: 15px 5px;
+    border-top: 1px solid #ddd;
+    color: #444;
+    h2 { font-weight: bold; }
+  }
+  &:first-child header {
+    //padding-top: 0px;
+    //border: none;
+  }
+  + footer.send {
+    border-top: 1px solid #ddd;
+  }
+}
+.file-view {
+  float:left;
+  width: 140px;
+  margin: 0px 15px 15px 0px;
+  .thumb {
+    display: block;
+    height: 110px;
+    border: 1px solid #ddd;
+    color: #888;
+    text-align: center;
+    line-height: 110px;
+    &:hover {
+      background-color: #eee;
+      text-decoration: none;
+    }
+    img {
+      vertical-align: middle;
+    }
+    .ext {
+      display: block;
+      overflow: hidden;
+      color: #484;
+      font-size: 200%;
+      font-weight: bold;
+    }
+  }
+  .name {
+    overflow: hidden;
+    padding: 5px;
+    font-size: 90%;
+    @include ellipsis;
+    word-wrap: nowrap;
+  }
+  .menu {
+    float: right;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// form
+
+#notice {
+  display: table;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 40px;
+  padding: 0px 10px;
+  @include box-sizing(border-box);
+  box-shadow: 0px 1px 2px #888;
+  background-color: #48f;
+  background-color:rgba(40, 80, 120, 0.8);
+  color: #fff;
+  line-height: 2.4;
+  .wrap {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+#errorExplanation {
+  margin: 0px 0px 20px;
+  padding: 20px 20px;
+  border-bottom: 1px solid #fbc;
+  background-color: #fff;
+  h2 {
+    margin: -20px -20px 25px;
+    padding: 4px 8px;
+    background-color: #e78;
+    color: #fff;
+  }
+  p, ul {
+    color: #822;
+  }
+}
+.field_with_errors {
+  input {
+    display: inline;
+    border: 1px solid #e00;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// common
+
+.pagination {
+  @include clear;
+  margin: 10px 0px;
+  span a, .current, .gap {
+    float: left;
+    min-width: 20px;
+    margin: 0px 4px 0px 0px;
+    padding: 6px 2px;
+    @include box-shadow(0px 0px 3px #aaa);
+    background-color: #fff;
+    color: #444;
+    text-align: center;
+  }
+  span:first-child {
+    margin-left: 0px;
+    a { margin-left: 0px; }
+  }
+  .first a, .last a {
+    min-width: 20px;
+  }
+  .prev a, .next a  {
+    min-width: 50px;
+  }
+  .current {
+    background-color: #777;
+    color: #fff;
+  }
+  a:hover {
+    //background-color: #ddd;
+    color: #e00;
+    text-decoration: none;
+  }
+}
+dl.see {
+  margin: 0px;
+  > dt {
+    @include clear;
+    float: left;
+    width: 120px;
+    min-height: 1.0em;
+    margin: 0px 0px -1px 0px;
+    padding: 15px 0px;
+    //border-top: 1px solid #eee;
+    color: #b38;
+    font-weight: bold;
+  }
+  > dd {
+    min-height: 1.41em;
+    margin: 0px 0px -1px 140px;
+    padding: 15px 0px;
+    //border-top: 1px solid #eee;
+  }
+  > dt.wide {
+    float: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  > dd.wide {
+    float: none;
+    margin-left: 0px;
+    padding-top: 0px;
+    border-top: 0px;
+  }
+}
+footer.send {
+  padding: 20px 0px;
+  text-align: center;
+  input, button {
+    min-width: 120px;
+    margin: 0px 5px;
+    padding: 10px 10px;
+    border-style: none;
+    @include border-radius(4px);
+    @include box-shadow(0px 1px 1px #bbb);
+    background-color: #777;
+    color: #fff;
+    //cursor: pointer;
+    &:hover {
+      background-color: #888;
+      color: #fff;
+    }
+  }
+  input.save, button.save, input.delete {
+    background-color: #b58;
+    &:hover {
+      background-color: #c69;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// icon
+
+@mixin ss-icon {
+  &:before {
+    display: inline-block;
+    position: relative;
+    bottom: -1px;
+    width: 12px;
+    height: 12px;
+    margin: 0px 4px 0px 0px;
+    text-indent: -99px;
+    background-image: image-url("ss/icons.png");
+    content: " ";
+    @content;
+  }
+}
+a.icon-content { @include ss-icon { background-position: -0px 0px; } }
+a.icon-node    { @include ss-icon { background-position: -15px 0px; } }
+a.icon-node-up { @include ss-icon { background-position: -30px 0px; } }
+a.icon-page    { @include ss-icon { background-position: -45px 0px; } }
+a.icon-layout  { @include ss-icon { background-position: -60px 0px; } }
+a.icon-part    { @include ss-icon { background-position: -75px 0px; } }
+a.icon-conf    { @include ss-icon { background-position: -90px 0px; } }
+a.external {
+  &:after {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+    text-indent: -99px;
+    background-image: image-url("ss/icons.png");
+    background-position: -0px -15px;
+    content: " ";
+  }
+}
+
+// -----------------------------------------------------------------------------
+// import
+
+@import "pc";
+@import "mb";
+@import "sns/style";

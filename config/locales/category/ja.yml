@@ -1,0 +1,21 @@
+ja:
+  category:
+    node: カテゴリー
+
+  modules:
+    category: カテゴリー
+    addons:
+      category/category: カテゴリー
+
+  cms:
+    nodes:
+      category/node: カテゴリーリスト
+      category/page: ページリスト
+    parts:
+      category/node: カテゴリーリスト
+
+  mongoid:
+    attributes:
+      cms/page/model:
+        categories: カテゴリー
+        category_ids: カテゴリー

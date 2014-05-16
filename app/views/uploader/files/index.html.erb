@@ -1,0 +1,38 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th><%= @model.t :name %></th>
+      <th><%= @model.t :filename %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% if @cur_node.filename != @item.filename %>
+    <tr>
+      <td></td>
+      <td><%= link_to :parent_directory, { action: :show, filename: @item.dirname }, class: "icon-node" %></td>
+      <td></td>
+    </tr>
+    <% end %>
+    <% @items.each do |item| %>
+    <tr>
+      <td>
+        <input type="checkbox" name="ids[]" />
+        <nav class="row-menu">
+        <%= link_to :show, action: :show, filename: item.filename, do: :show %>
+        <%= link_to :edit, action: :show, filename: item.filename, do: :edit %>
+        <%= link_to :delete, action: :show, filename: item.filename, do: :delete %>
+        </nav>
+      </td>
+      <% if item.directory? %>
+      <td><%= link_to item.name, { action: :show, filename: item.filename }, class: "icon-node" %></td>
+      <% else %>
+      <td><%= link_to item.name, { action: :show, filename: item.filename, do: :show }, class: "icon-page" %></td>
+      <% end %>
+      <td class="filename"><%= item.name %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+

@@ -1,0 +1,237 @@
+/* mobile */
+
+/* ---------------------------------- */
+
+body {
+  margin: 0;
+  line-height: 1.6;
+  color: #666;
+  font-size: 12px;
+  font-family: sans-serif;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 120%;
+}
+a {
+  color: #0066cc;
+}
+a:hover {
+  color: #d00000;
+  text-decoration: none;
+}
+a:visited {
+  color: #9000ff;
+}
+ul, ol {
+  margin: 0 0 10px 0;
+  padding: 0 10px 0 20px;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: 10px;
+}
+/* ---------------------------------- */
+
+#ss-small, #ss-medium, #ss-large, #ss-kana, #ss-pc, #ss-mb {
+  display: none;
+}
+
+/* ---------------------------------- */
+#head {
+  background-color: #ffffff;
+}
+#head .logo {
+  padding: 10px;
+}
+#head .logo img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+}
+#head .menu {
+  padding: 0 10px 10px;
+}
+#head .u-menu {
+  display: none;
+}
+#search-box {
+  width:75%;
+}
+#search-button {
+  width: 20%;
+}
+/* ---------------------------------- */
+#navi {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-top: 1px solid #007acd;
+  border-bottom: 1px solid #f08300;
+  background-color: #cee;
+}
+#navi ul {
+  margin: 0;
+  padding-left: 10px;
+}
+#navi ul li ul {
+  display:none;
+}
+/* ---------------------------------- */
+#foot #address {
+  margin: 20px 0 0;
+  padding: 10px;
+  background-color: #ededed;
+}
+#foot #address dl {
+  margin: 0;
+}
+#foot #footer-navi {
+  padding: 10px;
+  text-align: center;
+}
+#foot #footer-navi a {
+  padding: 0 10px;
+  border-right: 1px solid #666;
+}
+#foot #copyright {
+  background: #007acd;
+  color: #fff;
+  text-align: center;
+}
+/* ---------------------------------- */
+#guide h1, #about h1, #online h1, #propose h1,
+#safety h1, #attention h1, .cms-tabs h1,
+#useful h1, #population h1, #relations h1, #ranking h1, #topics h1,
+#ss-page-name, #links-life h1, #category-list h1 {
+  margin-bottom: 5px;
+  padding: 0 10px;
+  border-left: 5px solid #f08300;
+  background: #007acd;
+  color: #fff;
+}
+#safety h1 {
+  background: #e03300
+}
+#attention h1 {
+  background: #f08300;
+}
+#attention, .cms-tabs .tag-article {
+  margin-bottom: 10px;
+}
+.pages div h2 {
+  margin: 0px 0px 5px;
+  padding: 0px 10px 5px;
+  border-bottom: 1px solid #ddd;
+  font-size: 100%;
+  font-weight: normal;
+}
+.pages div span {
+  margin: 5px 0 0;
+  padding: 0 10px;
+}
+#topics .thumb {
+  margin: 0;
+  padding: 10px;
+}
+#topics h2 {
+  padding: 0 10px;
+  font-size: 100%;
+  font-weight: normal;
+}
+#topics .more {
+  padding: 0 10px;
+  text-align: right;
+}
+.pagetop {
+  padding: 0 10px;
+}
+.pages .tag-article .tag-time {
+  margin: 0px 0px 5px;
+  color: #080;
+}
+/* ---------------------------------- */
+#recent-oshirase h1 {
+  margin-bottom: 5px;
+  padding: 0 10px;
+  border-bottom: 1px solid #f08300;
+}
+.feed {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #f08300;
+  text-align: right;
+}
+.feed .rss {
+  display: none;
+}
+/* ---------------------------------- */
+.category-nodes {
+  margin-bottom: 10px;
+  padding-top: 5px;
+  border-bottom: 1px solid #ddd;
+}
+.nodes .tag-article {
+  margin: 0px 0px 5px;
+  padding: 5px 10px 0;
+  border-top: 1px solid #ddd;
+}
+#category-list h2 {
+  font-size: 100%;
+  font-weight: normal;
+}
+/* ---------------------------------- */
+.tag-aside {
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+.page .body {
+  padding: 0 10px;
+}
+.page .body h1 {
+  padding: 0 10px;
+  background: #cee;
+}
+.page .body h2 {
+  border-bottom: 1px solid #007acd;
+  color: #007acd;
+}
+.page .body h3 {
+  padding-left: 10px;
+  border-left: 5px solid #007acd;
+  color: #007acd;
+}
+.page .body h4 {
+  color: #007acd;
+}
+.page .body table {
+  margin-bottom: 10px;
+  border-collapse:collapse;
+  border-spacing:0;
+}
+.page .body th, .page .body td {
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+.page .body th {
+  background: #cee;
+}
+.page .released {
+  padding: 0 10px;
+  text-align: right;
+}
+.page .categories {
+  padding: 0 10px;
+  border-top: 1px solid #ddd;
+  text-align: right;
+}
+/* ---------------------------------- */
+.event-date h1 {
+  margin-bottom: 5px;
+  padding: 0 10px;
+  border-bottom: 1px solid #f08300;
+}
+#event-list dl {
+  padding: 0 10px;
+}

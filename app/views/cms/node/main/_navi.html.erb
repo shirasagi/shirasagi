@@ -1,0 +1,9 @@
+<% if params[:controller] =~ /^cms/ && @cur_node.route =~ /^cms/%>
+  <%= node_navi %>
+<% else %>
+  <% begin %>
+    <%= render partial: @cur_node.route.sub(/\/.*/, "/main/navi") %>
+  <% rescue ActionView::MissingTemplate %>
+    <%= node_navi %>
+  <% end %>
+<% end %>

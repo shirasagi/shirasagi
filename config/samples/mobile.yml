@@ -1,0 +1,10 @@
+# mobile
+
+production: &production
+  location: /mobile
+
+test:
+  <<: *production
+
+development:
+  <<: *production

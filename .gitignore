@@ -1,0 +1,14 @@
+# Ignore
+
+/.bundle
+/.project
+
+/config/*.yml
+/log/*.log
+/tmp
+/public/sites
+/vendor/eggs
+
+.DS_Store
+Thumbs.db
+ehthumbs.db

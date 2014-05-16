@@ -1,0 +1,12 @@
+ja:
+  article:
+    page: 記事ページ
+
+  modules:
+    article: 記事
+
+  cms:
+    nodes:
+      article/page: 記事リスト
+    parts:
+      article/page: 記事リスト

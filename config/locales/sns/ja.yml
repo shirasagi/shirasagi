@@ -1,0 +1,18 @@
+ja:
+  sns:
+    profile: プロフィール
+    file: ファイル
+    user_file: "ユーザーファイル"
+    group_file: グループファイル
+    account: アカウント
+
+  modules:
+    sns: SNS
+
+  mongoid:
+    attributes:
+      ss/file/model: #?
+        in_file: ファイル
+        in_files: ファイル
+        image: 画像
+        download: ダウンロード

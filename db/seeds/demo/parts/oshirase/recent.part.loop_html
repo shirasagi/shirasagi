@@ -1,0 +1,6 @@
+<article class="#{class}">
+  <header>
+    <time>#{date.long}</time>
+    <h2><a href="#{url}">#{name}</a></h2>
+  </header>
+</article>

@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+Dir.glob("#{File.dirname(__dir__)}/log/*.log") do |file|
+  File.write(file, "")
+end

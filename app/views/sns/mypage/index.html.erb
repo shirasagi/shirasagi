@@ -1,0 +1,25 @@
+<div id="sns-mypage">
+  
+  <table class="index sites">
+    <thead>
+      <tr>
+        <th><%= t :"cms.site" %></h1></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% SS::Site.all.each do |item| %>
+      <tr>
+        <td>
+          <div class="name"><%= link_to item.name, "/.#{item.host}" %></div>
+          <div class="url"><%= link_to item.full_url, item.full_url, target: :_blank %></div>
+          <nav class="row-menu">
+            <%= link_to :"cms.content", "/.#{item.host}" %>
+            <%= link_to :"cms.view_site", item.full_url, target: :_blank %>
+          </nav>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+</div>
