@@ -40,7 +40,7 @@ CentOS 6.5/64bit
   bundle install
   bin/deploy
   thin start -d
-  
+
   Access to http://localhost:3000/.mypage
 
 --------------------
@@ -91,9 +91,9 @@ CentOS 6.5/64bit
 
   ## 静的ページ書き出し
   rake cms:page:generate site=www
-  
+
   ## 静的ページ削除
-  rake cms:page:generate site=www
+  rake cms:page:remove site=www
 
 --------------------
 # 開発ツール
