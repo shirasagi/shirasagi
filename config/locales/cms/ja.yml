@@ -12,6 +12,13 @@ ja:
     site_menu: サイトメニュー
     view_site: サイト確認
     preview_site: サイトプレビュー
+    config: 設定
+    site: サイト
+    role: 権限/ロール
+    user: ユーザー
+    group: グループ
+    syntax_check: HTMLチェック
+    link_check: リンクチェック
 
     nodes:
       cms/node: フォルダーリスト
@@ -26,6 +33,8 @@ ja:
   modules:
     cms: 標準機能
     addons:
+      cms/role: ロール
+      cms/permission: 権限
       cms/meta: メタ情報
       cms/html: HTML
       cms/body: 本文
@@ -46,6 +55,7 @@ ja:
         basename: フォルダー名
         route: フォルダー属性
         summary_html: Summary
+        order: 並び順
       cms/page/model:
         name: タイトル
         route: ページ属性
@@ -55,6 +65,7 @@ ja:
         released: 公開日時
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
+        order: 並び順
       cms/part/model:
         name: パーツ名
         route: パーツ属性
@@ -68,7 +79,16 @@ ja:
         home_label: ホームラベル
       cms/reference/layout:
         layout_id: レイアウト
-      
+      cms/role:
+        name: ロール名
+        permission_level: 権限レベル
+        permissions: 権限設定
+
+      cms/addon/role:
+        role_ids: ロール
+      cms/addon/permission:
+        group_ids: 所有グループ
+        permission_level: 権限レベル
       cms/addon/list/model:
         conditions: 検索条件(URL)
         loop_html: ループHTML
@@ -78,3 +98,16 @@ ja:
       cms/addon/tabs:
         conditions: タブ設定(URL)
         new_days: NEWマーク期間
+
+  errors:
+    messages:
+      set_img_alt: 画像に代替テキストが設定されていません。
+      set_table_summary: 表にサマリ属性が設定されていません。
+      set_table_caption: 表にキャプションが設定されていません。
+      link_check_success: 成功
+      link_check_failure: 失敗
+      link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
+    template:
+      no_errors: エラーは見つかりませんでした。
+      no_links: リンクは見つかりませんでした。
+      check_links: 次のリンクを確認しました。

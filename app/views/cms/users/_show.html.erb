@@ -1,0 +1,14 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+  
+  <dt><%= @model.t :email %></dt>
+  <dd><%= @item.send :email %></dd>
+  
+  <dt><%= @model.t :group_ids %></dt>
+  <dd>
+    <% @item.groups.each do |group| %>
+    <div><%= link_to group.name, cms_group_path(id: group) %></div>
+    <% end %>
+  </dd>
+</dl>

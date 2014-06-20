@@ -5,8 +5,8 @@
 // base
 
 body {
-  background-color: #ebebeb;
-  color: #333;
+  background-color: #fbfbfb;
+  color: #433;
   font-size: 75.0%;
   font-family: $font-base;
   line-height: 1.4;
@@ -17,28 +17,32 @@ body {
 // outline
 
 #page {
-  position: relative;
-  height: auto !important;
+  //position: relative;
+  //height: auto !important;
   height: 100%;
-  min-height: 100%;
+  //min-height: 100%;
+  @include box-sizing(border-box);
 }
 #head {
-  @include clear;
-  margin: 0px 0px 20px;
-  //border-bottom: 2px solid #bbb;
-  @include box-shadow(0px 1px 2px #aaa);
-  background-color: #333;
-  .wrap {
-    padding: 0px 10px;
-  }
+  //@include clear;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  height: 40px;
+  border-bottom: 1px solid #bbb;
+  @include box-shadow(0px 1px 3px #bbb);
+  background-color: #fff;
+  //line-height: 40px;
+  z-index: 10;
   h1 {
     float: left;
-    background-image: image-url("ss/logo.png");
-    background-repeat: no-repeat;
-    background-position: 5px center;
     a {
       float: left;
-      width: 180px;
+      width: 150px;
+      background-image: image-url("ss/logo.png");
+      background-repeat: no-repeat;
+      background-position: center center;
       color: #fff;
       text-indent: -9999px;
       text-decoration: none;
@@ -47,110 +51,148 @@ body {
   }
   nav {
     float: right;
-    margin: 12px 0px 0px 0px;
+    margin: 12px 10px 0px;
     a {
+      display: block;
       float: left;
       padding: 0px 20px;
-      border-left: 1px solid #ccc;
-      color: #fff;
-      text-decoration: none;
-      &:hover { color: #e00; }
+      color: #433;
     }
   }
 }
 #crumbs {
-  @include clear;
-  margin: -20px 10px 15px;
-  padding: 0px 5px;
-  //border-bottom: 1px solid #ccc;
-  font-size: 120%;
+  overflow: hidden;
+  position: absolute;
+  z-index: 10;
+  top: 13px;
+  left: 165px;
+  //height: 40px;
+  //line-height: 2;
   span {
     float: left;
+    color: #888;
     a {
       display: block;
-      padding: 10px 0px 2px;
-      border-bottom: 1px solid transparent;
-      color: #777;
-      text-decoration: none;
-    }
-    &:first-child a {
+      max-width: 120px;
+      //padding: 0px 6px;
+      //border: 1px solid #ddd;
+      @include border-radius(4px);
+      @include box-sizing(border-box);
+      color: #433;
+      @include ellipsis;
     }
     a:hover {
-      color: #000;
-      border-color: #000;
+      //color: #fff;
     }
   }
   span.separator {
-    margin: 10px 10px 0px;
-    color: #bbb;
+    margin: 0px 10px;
+  }
+}
+#crumbs2 { //TODO:
+  margin: 0px 0px 15px;
+  a {
+    display: block;
+    margin: 0px 0px 5px -11px;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    @include box-shadow(0px 1px 2px #ddd);
+    color: #433;
+    @include ellipsis;
+  }
+  a:hover {
+    background-color: #eee;
+    text-decoration: none;
   }
 }
 #wrap {
   @include clear;
-  padding: 0px 10px 80px 10px;
+  height: auto !important;
+  height: 100%;
+  min-height: 100%;
+  margin-bottom: -40px;
+  padding: 55px 0px 50px;
+  @include box-sizing(border-box);
+}
+#navi-back, #menu-back {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: 0;
+  @include box-sizing(border-box);
+  //@include box-shadow(0px 0px 2px #ddd);
+}
+#navi-back {
+  width: 150px;
+  border-right: 1px solid #ddd;
+  background-color: #fff;
+}
+#menu-back {
+  left: 150px;
+  width: 150px;
 }
 #navi {
   position: relative;
+  z-index: 1;
   float: left;
   width: 150px;
-  margin: 0px 10px 0px 0px;
-  //margin-bottom: -32768px;
-  //padding-bottom: 32768px;
-  .wrap {
-    //@include main-view;
-  }
+  min-height: 1px;
+  padding: 0px 10px;
+  @include box-sizing(border-box);
 }
 #menu {
   position: relative;
+  z-index: 1;
   float: left;
   width: 150px;
-  .wrap {
-    //@include main-view;
-  }
+  min-height: 1px;
+  padding: 0px 0px 0px 10px;
+  @include box-sizing(border-box);
 }
-#navi + #main {
+#main {
+  //position: relative;
   float: right;
   width: 100%;
+  min-height: 1px;
+  padding: 0px 10px;
+  @include box-sizing(border-box);
+}
+#navi + #main {
   margin: 0px 0px 0px -100%;
   .wrap {
-    @include main-view;
-    min-height: 400px;
-    margin-left: 160px;
+    //@include main-view;
+    margin-left: 150px;
   }
 }
 #menu + #main {
-  float: right;
-  width: 100%;
   margin: 0px 0px 0px -100%;
   .wrap {
-    @include main-view;
-    min-height: 400px;
-    margin-left: 310px;
+    //@include main-view;
+    margin-left: 300px;
   }
 }
 #foot {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 50px;
-  margin: 20px 0px 0px;
-  .wrap {
-    margin: 0px 20px;
-    border-top: 1px solid #ccc;
-    color: #888;
-    text-align: center;
-    line-height: 48px;
-  }
+  position: relative;
+  height: 40px;
+  padding: 12px 20px 0px;
+  //border-top: 1px solid #ddd;
+  @include box-sizing(border-box);
+  //background-color: #eee;
+  color: #888;
+  text-align: right;
 }
 #ss-mb {
-  padding: 2px 0px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  background-color: #fff;
-  text-align: center;
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  z-index: 100;
   a {
+    display: block;
+    //border: 1px solid #ddd;
+    //background-color: #fff;
     color: #888;
-    font-size: 350%;
+    font-size: 300%;
     font-weight: bold;
   }
 }
@@ -163,38 +205,36 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
   header {
     display: block;
     margin-bottom: 10px;
-    border-bottom: 1px solid #f7f7f7;
-    font-size: 120%;
-    h1 {
-      padding: 0px 2px 5px;
-      border-bottom: 1px solid #ccc;
-      color: #c38;
-    }
+    padding: 5px 2px;
+    border-bottom: 1px solid #ccc;
+    color: #c38;
   }
   div {
     a {
       display: block;
-      min-width: 120px; //TODO: http://bugs.jquery.com/ticket/14824
+      width: 100%;
       margin: 0px 0px 0px;
-      padding: 4px 8px;
-      color: #333;
+      padding: 4px 6px;
+      @include box-sizing(border-box);
+      color: #433;
       @include ellipsis;
       &[class ^= "icon"] {
         background-position: 10px center;
       }
       &:hover {
-        background-color: #ddd;
+        background-color: #eee;
         text-decoration: none;
       }
       &.current {
-        background-color: #ddd;
+        background-color: #eee;
       }
     }
   }
   div.pulldown-menu a.current {
+    position: relative;
     background-color: transparent;
     &:hover {
-      background-color: #ddd;
+      background-color: #eee;
     }
     &:after {
       position: absolute;
@@ -206,6 +246,19 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
     //&:hover:after { color: #fff; }
   }
 }
+nav.act-menu {
+  margin: 0px 0px 20px;
+  border: 1px solid #ccc;
+  @include box-shadow(0px 1px 2px #ddd);
+  background-color: #fff;
+  header {
+    margin: 0px;
+    padding: 4px 6px;
+    background-color: #fff;
+    @include lgrad(top, #fff, #e7e7e7);
+    //color: #644;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // common
@@ -213,16 +266,20 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
 table.index {
   table-layout:fixed;
   width: 100%;
-  @include border-radius(2px);
-  //@include box-shadow(0px 0px 1px #aaa);
-  background-color: #fff;
+  //@include border-radius(2px);
+  //border: 1px solid #ddd;
+  //@include box-shadow(0px 1px 2px #ddd);
+  //background-color: #fff;
   th, td {
     padding: 4px 8px;
   }
   thead {
     tr {
       border-bottom: 1px solid #ccc;
-      color: #777;
+      color: #644;
+    }
+    th {
+      padding: 4px 8px 4px;
     }
     &:after {
       display: block;
@@ -234,15 +291,16 @@ table.index {
   }
   tbody {
     tr {
-      //border-bottom: 1px solid #ebebeb;
-      background-color: #fff;
-      &:nth-child(even) { background-color: #f7f7f7; }
+      //border-bottom: 1px solid #eee;
+      //background-color: #fff;
+      &:nth-child(even) { background-color: #fff; }
       &:hover { background-color: #eee; }
     }
     tr.checked {
-      border-color: #eee;
-      background-color: #ddd;
-      &:hover { background-color: #d4d4d4; }
+      background-color: #eee;
+      @include box-shadow(inset 0px 0px 2px #ccc);
+      //@include lgrad(top, #eee, #ddd);
+      //&:hover { background-color: #bdf; }
     }
   }
   th.checkbox, td.checkbox {
@@ -288,6 +346,28 @@ table.index {
       &:hover {
         background-color: #f7f7f7;
       }
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// features
+
+.login-box {
+  display: table;
+  margin: 10px;
+  padding: 20px 20px 0px;
+  border: 1px solid #ddd;
+  @include box-shadow(0px 1px 3px #bbb);
+  header {
+    @include clear;
+    margin: 0px 0px 20px;
+    h1 {
+      float: left;
+    }
+    .version {
+      float: right;
+      color: #888;
     }
   }
 }

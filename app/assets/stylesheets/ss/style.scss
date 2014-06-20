@@ -58,11 +58,11 @@ td {
 @mixin input {
   border: 1px solid #ccc;
   @include box-sizing(border-box);
-  background-color: #fbfbfb;
-  @include box-shadow(inset 1px 1px 4px #eee);
+  background-color: #fff;
+  @include box-shadow(inset 1px 1px 3px #eee);
   &:focus {
     background-color: #ffffe7;
-    @include box-shadow(inset 1px 1px 3px #cc9);
+    @include box-shadow(inset 1px 1px 2px #cca);
   }
 }
 select, input, textarea, button {
@@ -129,18 +129,17 @@ textarea.ace_text-input {
   @include main-view;
 }
 .addon-view {
-  margin: 0px 0px 20px;
-  padding: 0px 0px 0px 15px;
+  margin: 0px 0px 10px;
+  padding: 0px 15px 10px;
+  //border-bottom: 1px solid #ddd;
   header {
-    margin: 0px 0px 10px -20px;
-    padding: 15px 5px;
-    border-top: 1px solid #ddd;
+    display: table;
+    min-width: 130px;
+    margin: 0px 0px 20px -15px;
+    padding: 5px 2px;
+    border-bottom: 1px solid #ccc;
     color: #444;
-    h2 { font-weight: bold; }
-  }
-  &:first-child header {
-    //padding-top: 0px;
-    //border: none;
+    font-size: 120%;
   }
   + footer.send {
     border-top: 1px solid #ddd;
@@ -192,6 +191,7 @@ textarea.ace_text-input {
   position: fixed;
   top: 0px;
   left: 0px;
+  z-index: 100;
   width: 100%;
   height: 40px;
   padding: 0px 10px;
@@ -207,7 +207,7 @@ textarea.ace_text-input {
     vertical-align: middle;
   }
 }
-#errorExplanation {
+.errorExplanation {
   margin: 0px 0px 20px;
   padding: 20px 20px;
   border-bottom: 1px solid #fbc;
@@ -221,12 +221,22 @@ textarea.ace_text-input {
   p, ul {
     color: #822;
   }
+  code {
+    font-size: 100.0%;
+    font-family: monospace, sans-serif;
+  }
 }
 .field_with_errors {
   input {
     display: inline;
     border: 1px solid #e00;
   }
+}
+.errorExplanation span.success {
+  color: #06f;
+}
+.errorExplanation span.failure {
+  color: #e00;
 }
 
 // -------------------------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ return false;
 });
 
 // ExternalIcon
-$("div#wrap a[href^='http'], div#addition a[href^='http']").not("[href*='sample.ss-proj.org']").append(" <img src='/img/external.png' alt='外部のサイトに移動します' title='外部のサイトに移動します' width='16' height='16' class='external' />");
+$("div#wrap a[href^='http'], div#addition a[href^='http']").not("[href^='http://"+location.host+"'],[href^='https://"+location.host+"']").append(" <img src='/img/external.png' alt='外部のサイトに移動します' title='外部のサイトに移動します' width='16' height='16' class='external' />");
 $("#img.external").remove();
 
 // current
@@ -51,7 +51,7 @@ var agent = navigator.userAgent;
 if(agent.match(/(iPhone|iPad|Android)/)){
   $('#navi li').children('ul').remove();
 }
-
+ 
 // block link
 $(".category-nodes article").click(function(){
   window.location=$(this).find("a").attr("href");

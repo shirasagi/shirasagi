@@ -1,0 +1,204 @@
+## cms form
+
+$ ->
+  ## syntax checker
+  $(".mod-cms-body button.syntax-check").click ->
+    Syntax_Checker.reset()
+
+    if (typeof tinymce != 'undefined')
+      html = "<div>" + tinymce.get('item_html').getContent() + "</div>"
+    else if (typeof CKEDITOR != 'undefined')
+      html = "<div>" + CKEDITOR.instances.item_html.getData() + "</div>"
+    else
+      html = "<div></div>"
+
+    Syntax_Checker.checkTagImg html
+    Syntax_Checker.checkTable  html
+
+    result = $("<div>")
+    result.attr('id', 'errorSyntaxChecker')
+    result.attr('class', 'errorExplanation')
+    result.append("<h2>" + Syntax_Checker.message["header"] + "</h2>")
+
+    if Object.keys(Syntax_Checker.errors).length == 0
+      result.append("<p>" + Syntax_Checker.message["noErrors"] + "</p>")
+    else
+      result.append("<p>" + Syntax_Checker.message["body"] + "</p>")
+      result.append('<ul>')
+      ul = result.find('ul')
+      
+      for key, err of Syntax_Checker.errors
+        ul.append('<li>')
+        ul.find('li:last').append('<code>')
+        ul.find('li:last code').text(err["code"])
+        ul.append('<ul>')        
+        for msg in err["msg"]
+          ul.find('ul:last').append('<li>')
+          ul.find('ul li:last').text(msg)
+
+    $('.mod-cms-body div#errorSyntaxChecker').remove()
+    $('.mod-cms-body dd:last').after(result)
+    return
+
+  ## link checker
+  $(".mod-cms-body button.link-check").click ->
+    $.support.cors = true
+    button = this
+    $(button).attr('disabled', true)
+    Link_Checker.reset()
+
+    if (typeof tinymce != 'undefined')
+      html = "<div>" + tinymce.get('item_html').getContent() + "</div>"
+    else if (typeof CKEDITOR != 'undefined')
+      html = "<div>" + CKEDITOR.instances.item_html.getData() + "</div>"
+    else
+      html = "<div></div>"
+
+    Link_Checker.check html, ()->
+      result = $("<div>")
+      result.attr('id', 'errorLinkChecker')
+      result.attr('class', 'errorExplanation')
+      result.append("<h2>" + Link_Checker.message["header"] + "</h2>")
+
+      if Link_Checker.error != ""
+        result.append(Link_Checker.error)
+      else
+        result.append("<p>" + Link_Checker.message["checkLinks"] + "</p>")
+        result.append('<ul>')
+        ul = result.find('ul')
+        for link, msg of Link_Checker.links
+          ul.append('<li>')
+          ul.find('li:last').append(msg)
+
+      $('.mod-cms-body div#errorLinkChecker').remove()
+      $('.mod-cms-body').append(result)
+      $(button).removeAttr('disabled')
+      return
+    return
+
+class @Syntax_Checker
+  @message = {
+    header             : "<%= I18n.t('cms.syntax_check') %>"
+    body               : "<%= I18n.t('errors.template.body') %>"
+    noErrors           : "<%= I18n.t('errors.template.no_errors') %>"
+
+    notSetImgAlt       : "<%= I18n.t('errors.messages.set_img_alt') %>"
+    notSetTableSummary : "<%= I18n.t('errors.messages.set_table_summary') %>"
+    notSetTableCaption : "<%= I18n.t('errors.messages.set_table_caption') %>"
+  }
+
+  @errors
+  @count
+
+  @reset: ()->
+    @errors = {}
+    @count  = 0
+    return
+
+  @pushError: (key, code, msg) ->
+    if @errors[key]
+      Syntax_Checker.errors[key]["msg"].push msg
+      return
+    else
+      Syntax_Checker.errors[key] = {}
+      Syntax_Checker.errors[key]["code"] = code
+      Syntax_Checker.errors[key]["msg"] = []
+      Syntax_Checker.errors[key]["msg"].push msg
+      return
+
+  @getFirstTag: (html)->
+    dummy = $("<p>")
+    dummy.append($(html).clone())
+    return dummy.html().match(/<.*?>/)[0].toString()
+
+  @checkTagImg: (html)->
+    $(html).find('img').each ->
+      alt = $(this).attr('alt')
+
+      key = Syntax_Checker.count + 1
+      code = Syntax_Checker.getFirstTag(this)
+      check = false
+
+      if !alt || alt.trim() == ""
+        Syntax_Checker.pushError key, code, Syntax_Checker.message["notSetImgAlt"]
+        check = true
+
+      Syntax_Checker.count += 1 if check
+      return
+    return
+
+  @checkTable: (html)->
+    $(html).find("table").each ->
+      summary = $(this).attr('summary')
+      caption = $(this).find('caption')
+
+      key = Syntax_Checker.count + 1
+      code = Syntax_Checker.getFirstTag(this)
+      check = false
+
+      if !summary || summary.trim() == ""
+        Syntax_Checker.pushError key, code, Syntax_Checker.message["notSetTableSummary"]
+        check = true
+
+      if !caption || caption.text().trim() == ""
+        Syntax_Checker.pushError key, code, Syntax_Checker.message["notSetTableCaption"]
+        check = true
+
+      Syntax_Checker.count += 1 if check
+      return
+    return
+
+class @Link_Checker
+  @message = {
+    header            : "<%= I18n.t('cms.link_check') %>"
+    noLinks           : "<%= I18n.t('errors.template.no_links') %>"
+    checkLinks        : "<%= I18n.t('errors.template.check_links') %>"
+
+    success           : "<%= I18n.t('errors.messages.link_check_success') %>"
+    failure           : "<%= I18n.t('errors.messages.link_check_failure') %>"
+    linkCheckerError  : "<%= I18n.t('errors.messages.link_check_failed_to_connect') %>"
+  }
+
+  @links = {}
+  @error = ""
+  @url = "<%= SS.config.cms.link_check_url %>" || "/.cms/link_check/check.json"
+
+  @reset: ()->
+    @links = {}
+    @error = ""
+    return
+
+  @check: (html, complete)->
+    numOfLinks = $(html).find('a[href]').length
+    if numOfLinks == 0
+      Link_Checker.error = "<p>" + Link_Checker.message["noLinks"] + "</p>"
+      complete()
+      return
+
+    links = {}
+    for href, i in $(html).find('a[href]')
+      links[i + 1] = $(href).attr('href')
+
+    $.ajax {
+      type: "POST", url: Link_Checker.url, cache: false,
+      data: JSON.stringify({"url" : links}),
+      contentType: 'application/json',
+      dataType: "json",
+      crossDomain: true,
+      success: (res, status) ->
+        for link, code of res
+          if code == 200
+            msg =  '<span class="success">' + Link_Checker.message["success"] + '</span>'
+            Link_Checker.links[link] = link + " " + msg
+          else
+            msg =  '<span class="failure">' + Link_Checker.message["failure"] + '</span>'
+            Link_Checker.links[link] = link + " " + msg
+        return
+      error: (xhr, status, error) ->
+        Link_Checker.error = "<p>" + Link_Checker.message["linkCheckerError"] + ": " + Link_Checker.url + "</p>"
+        return
+      complete: (xhr, status) ->
+        complete()
+        return
+    }
+    return

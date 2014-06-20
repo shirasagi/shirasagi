@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :permission_level %></dt>
+  <dd><%= f.select :permission_level, @item.permission_level_options %></dd>
+  
+  <dt><%= @model.t :group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "group_ids[]", value: "" %>
+    
+    <% SS::Group.order_by(name: 1).each do |role| %>
+    <label><%= f.check_box("group_ids[]", {}, role.id) %> <%= role.name %></label><br />
+    <% end %>
+  </dd>
+</dl>

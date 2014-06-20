@@ -36,7 +36,7 @@ module Mobile::PublicFilter
       # css
       dir = "#{@cur_site.path}/css"
       css = Fs.exists?("#{dir}/mobile.css") || Fs.exists?("#{dir}/mobile.scss")
-      css = css ? "/css/mobile.css" : "/stylesheets/cms/mobile.css"
+      css = css ? "/css/mobile.css" : "#{Rails.application.config.assets.prefix}/cms/mobile.css"
       
       # doctype
       head  = []

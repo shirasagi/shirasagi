@@ -4,7 +4,7 @@ module Cms::Page::Feature
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
-  include Cms::Permission::Resource
+  include Cms::Addon::Permission
   
   attr_accessor :cur_node, :basename
   
@@ -19,9 +19,10 @@ module Cms::Page::Feature
     field :filename, type: String
     field :depth, type: Integer, metadata: { form: :none }
     field :released, type: DateTime
+    field :order, type: Integer, default: 0
     embeds_ids :categories, class_name: "Cms::Node"
     
-    permit_params :state, :name, :filename, :basename, category_ids: []
+    permit_params :state, :name, :filename, :basename, :order, category_ids: []
     
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }
@@ -44,7 +45,7 @@ module Cms::Page::Feature
   
   public
     def dirname(basename = nil)
-      dir = filename.index("/") ? filename.to_s.sub(/\/.*$/, "").presence : nil
+      dir = filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
       basename ? (dir ? "#{dir}/" : "") + basename : dir
     end
     
@@ -93,6 +94,11 @@ module Cms::Page::Feature
     
     def state_options
       [ %w[公開 public], %w[非公開 closed] ]
+    end
+    
+    def order
+      value = read_attribute(:order).to_i
+      value < 0 ? 0 : value
     end
     
   private

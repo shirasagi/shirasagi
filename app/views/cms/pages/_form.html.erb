@@ -10,4 +10,7 @@
   
   <dt><%= @model.t :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item.node), include_blank: " " %></dd>
+  
+  <dt><%= @model.t :order %></dt>
+  <dd><%= f.number_field :order %></dd>
 </dl>

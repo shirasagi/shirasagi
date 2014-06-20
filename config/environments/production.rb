@@ -14,10 +14,11 @@ Rails.application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :sass
-  config.assets.compile = false
-  config.assets.digest = true
+  config.assets.compile = true
+  config.assets.digest = false
   config.assets.version = '1.0'
-  config.sass.debug_info = true # for cms
+  config.sass.debug_info = false # for cms
+  #config.sass.line_comments = true
   
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache

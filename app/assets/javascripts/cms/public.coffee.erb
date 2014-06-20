@@ -10,8 +10,7 @@ class @SS
   @href = ""
   @siteName = null
   @pageName = null
-  @viewPort = 'width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0'
-  @loading  = '<img style="vertical-align:middle" src="/images/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+  @loading  = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
   
   @load: ->
     if layout = $("#page").attr("data-layout")
@@ -19,7 +18,7 @@ class @SS
       SS.pageName = $("#ss-page-name").html()
       SS.renderLayout(layout)
     else
-      SS.renderTools()
+      #SS.renderTools()
     
   @renderTools: ->
     SS_Kana.render()
@@ -46,16 +45,14 @@ class @SS
         
         $("#ss-site-name").html SS.siteName
         $("#ss-page-name").html SS.pageName
-        SS.renderTools()
         
         if data.href != SS.href
           if SS.href
             head.children("link").remove()
             head.children("script").remove()
           head.append data.head.replace(/\$now/g, $.now())
-          if !head.children("meta[name=viewport]").length
-            head.append '<meta name="viewport" content="' + SS.viewPort + '" />'
         SS.href = data.href
+        SS.renderTools()
         
         body.fadeIn(200)
       error: (req, status, error) ->
@@ -139,7 +136,7 @@ class @SS_Mobile
     if navigator.userAgent.match(/(Android|iPad|iPhone)/)
       if $.cookie("ss-mobile") == "pc"
         head = $("head")
-        head.children("meta[name=viewport]").remove
+        head.children("meta[name=viewport]").remove()
         head.append '<meta name="viewport" content="width=1024" />'
         vr = $("#ss-mb")
         vr.html('<a href="#" onclick="return SS_Mobile.unset()">' + vr.text() + '</a>').show()

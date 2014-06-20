@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+  
+  <dt><%= @model.t :permission_level %></dt>
+  <dd><%= @item.label :permission_level %></dd>
+  
+  <dt><%= @model.t :permissions %></dt>
+  <dd><%=br @item.permissions.compact.join("\n") %></dd>
+</dl>

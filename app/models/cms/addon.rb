@@ -1,5 +1,44 @@
 # coding: utf-8
 module Cms::Addon
+  module Role
+    extend ActiveSupport::Concern
+    extend SS::Addon
+    
+    set_order 600
+    
+    included do
+      embeds_ids :roles, class_name: "Cms::Role"
+      permit_params role_ids: []
+    end
+  end
+  
+  module Permission
+    extend ActiveSupport::Concern
+    extend SS::Addon
+    
+    set_order 600
+    
+    included do
+      field :permission_level, type: Integer, default: 1
+      embeds_ids :groups, class_name: "SS::Group"
+      permit_params :permission_level, group_ids: []
+    end
+    
+    module ClassMethods
+      def allow(permit)
+        where({})
+      end
+    end
+    
+    def permission_level_options
+      Cms::Role.new.permission_level_options
+    end
+    
+    def allowed?(permit)
+      true
+    end
+  end
+  
   module Meta
     extend ActiveSupport::Concern
     extend SS::Addon
@@ -65,8 +104,8 @@ module Cms::Addon
         self.released = Time.now
       end
       
-      if close_date.present? 
-        if release_date.present? && release_date >= close_date 
+      if close_date.present?
+        if release_date.present? && release_date >= close_date
           errors.add close_date, :greater_than, count: t(:release_date)
         end
       end
@@ -93,7 +132,7 @@ module Cms::Addon
         value = read_attribute(:limit).to_i
         (value < 1 || 100 < value) ? 100 : value
       end
-    
+      
       def new_days
         value = read_attribute(:new_days).to_i
         (value < 0 || 30 < value) ? 30 : value
@@ -121,7 +160,8 @@ module Cms::Addon
     public
       def sort_options
         [ ["タイトル", "name"], ["ファイル名", "filename"],
-          ["作成日時", "created"], ["更新日時", "updated -1"] ]
+          ["作成日時", "created"], ["更新日時", "updated -1"],
+          ["指定順", "order"] ]
       end
       
       def sort_hash
@@ -140,7 +180,8 @@ module Cms::Addon
     public
       def sort_options
         [ ["タイトル", "name"], ["ファイル名", "filename"],
-          ["作成日時", "created"], ["更新日時", "updated -1"], ["公開日時", "released -1"] ]
+          ["作成日時", "created"], ["更新日時", "updated -1"],
+          ["公開日時", "released -1"], ["指定順", "order"] ]
       end
       
       def sort_hash

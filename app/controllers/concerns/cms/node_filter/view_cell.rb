@@ -5,6 +5,7 @@ module Cms::NodeFilter::ViewCell
   
   included do
     helper ApplicationHelper
+    helper Cms::PublicHelper
     before_action :prepend_current_view_path
     before_action :inherit_variables
     before_action :set_item
@@ -19,6 +20,7 @@ module Cms::NodeFilter::ViewCell
   private
     def prepend_current_view_path
       prepend_view_path "app/cells/#{controller_path}"
+      prepend_view_path ApplicationController.view_paths
     end
     
     def inherit_variables

@@ -39,7 +39,7 @@ class SS::Site
   
   class << self
     def root
-      "#{Rails.root}/public/sites"
+      "#{Rails.public_path}/sites"
     end
   end
 end

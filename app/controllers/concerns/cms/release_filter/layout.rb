@@ -21,8 +21,8 @@ module Cms::ReleaseFilter::Layout
     def send_layout(body)
       respond_to do |format|
         format.html do
-          body.sub!(/(<[^>]+ id="ss-site-name".*?>)[^<]+/, "\\1#{@cur_site.name}")
-          body.sub!(/(<[^>]+ id="ss-page-name".*?>)[^<]+/, "\\1Layout")
+          body.sub!(/(<[^>]+ id="ss-site-name".*?>)[^<]*/, "\\1#{@cur_site.name}")
+          body.sub!(/(<[^>]+ id="ss-page-name".*?>)[^<]*/, "\\1Layout")
           render inline: body
         end
         format.json { render json: body }
@@ -83,8 +83,8 @@ module Cms::ReleaseFilter::Layout
         main = body =~ /<!-- yield -->(.*)<!-- \/yield -->/m ? $1 : body
         body = html.sub(/<\/ yield \/>/, main)
         
-        body.sub!(/(<[^>]+ id="ss-site-name".*?>)[^<]+/, "\\1#{site_name}")
-        body.sub!(/(<[^>]+ id="ss-page-name".*?>)[^<]+/, "\\1#{page_name}")
+        body.sub!(/(<[^>]+ id="ss-site-name".*?>)[^<]*/, "\\1#{site_name}")
+        body.sub!(/(<[^>]+ id="ss-page-name".*?>)[^<]*/, "\\1#{page_name}")
         body.sub!(/.*?<head>/m, meta)
       end
       

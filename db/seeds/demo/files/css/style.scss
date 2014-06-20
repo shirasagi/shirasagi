@@ -110,7 +110,7 @@ img {
     padding: 17px 0;
   }
   .menu {
-    float: right;
+    @include float(right);
     .u-menu {
       padding: 12px 0;
       .smart {
@@ -903,11 +903,62 @@ img {
 // -----------------------------------------------------------------------------
 // categories
 .categories {
+  margin-bottom: $box-margin;
   border-top: $border-hgry;
-  padding: 5px 0;
   text-align: right;
-  .separator {
-    color: $hgry;
+  header {
+    @include inline-block;
+    margin: 5px 0;
+  }
+  .nodes {
+    @include inline-block;
+    margin: 5px 0;
+    header {
+      margin: 0;
+      h2 {
+        @include inline-block;
+        margin: 0;
+        padding: 0 10px;
+        border-left: $border-hgry;
+        border-bottom: none;
+        font-size: $px14;
+        font-weight: normal;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+//  pagination
+.pagination {
+  margin-bottom: $box-margin;
+  text-align: center;
+  a {
+    @include inline-block;
+    padding: 4px 10px;
+    background: #ededed;
+    color: $text;
+    text-decoration: none;
+    &:hover {
+      background: $hblue;
+    }
+  }
+  .current {
+    @include inline-block;
+    padding: 4px 10px;
+    background: $hblue;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//  related-pages
+.page .related-pages {
+  article h2 {
+    padding: 0 0 0 15px;
+    margin-bottom: $item-margin;
+    border: none;
+    background: url("../img/ic-li.png") no-repeat 2px 8px;
+    font-size: $px14;
+    font-weight: normal;
   }
 }
 // -----------------------------------------------------------------------------
@@ -916,7 +967,8 @@ img {
   margin-bottom: $item-margin;
   text-align: right;
 }
-.page article h1, .one article.body h1 {
+.page article h1, .one article.body h1,
+.page .related-pages h1 {
   margin: $item-margin 0 6px;
   padding: 3px 10px 0;
   background: $hblue;
@@ -1101,9 +1153,6 @@ img {
     float: left;
     width: 20%;
   }
-  dt .wday {
-    display: none;
-  }
   dd {
     margin-left: 20%;
     h2 {
@@ -1134,7 +1183,7 @@ img {
 // smart phone
 // -----------------------------------------------------------------------------
 @media only screen and (max-width: 600px) {
-  #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #add, 
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
   #main .category-nodes article  {
@@ -1567,7 +1616,7 @@ img {
   }
 // -----------------------------------------------------------------------------
 //  page sitemap
-  .page article, .one article.body {
+  .page article, .one article.body, .related-pages {
     padding: 10px 10px 0;
   }
   .page header.released {
@@ -1575,5 +1624,16 @@ img {
   }
   .page article dl dt, .one article.body dl dt {
     float: none;
+  }
+// -----------------------------------------------------------------------------
+//  event
+  #event-list {
+    dt {
+      float: none;
+      width:100%;
+    }
+    dd {
+      margin: 0;
+    }
   }
 }

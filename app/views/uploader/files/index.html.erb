@@ -1,7 +1,7 @@
 <table class="index">
   <thead>
     <tr>
-      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th class="checkbox"><input type="checkbox" /></th>
       <th><%= @model.t :name %></th>
       <th><%= @model.t :filename %></th>
     </tr>
@@ -17,7 +17,7 @@
     <% end %>
     <% @items.each do |item| %>
     <tr>
-      <td>
+      <td class="checkbox">
         <input type="checkbox" name="ids[]" />
         <nav class="row-menu">
         <%= link_to :show, action: :show, filename: item.filename, do: :show %>
@@ -35,4 +35,3 @@
     <% end %>
   </tbody>
 </table>
-

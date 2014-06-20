@@ -22,6 +22,9 @@
   <dd><%= tryb { @item.layout.name }%></dd>
   <% end %>
   
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+  
   <% if fields[:shortcut] != -1 %>
   <dt><%= @model.t :shortcut %></dt>
   <dd><%= @item.label :shortcut %></dd>

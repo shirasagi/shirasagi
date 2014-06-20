@@ -9,6 +9,8 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module SS
+  mattr_reader(:version) { "0.2.0" }
+  
   class Application < Rails::Application
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/app/validators"

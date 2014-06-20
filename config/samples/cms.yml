@@ -3,13 +3,16 @@
 production: &production
   # Ajax layout
   ajax_layout: true
-  
+
   # Static files
   serve_static_pages: true
   serve_static_layouts: false
-  
+
   # HTML editor (ckeditor, tinymce)
   html_editor: ckeditor
+
+  # Link Check Ajax URL
+  link_check_url: /.cms/link_check/check.json
 
 test:
   <<: *production

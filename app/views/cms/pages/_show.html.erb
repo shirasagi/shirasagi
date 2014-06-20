@@ -12,4 +12,7 @@
   <dt><%= @model.t :layout_id %></dt>
   <dd><%= tryb{@item.layout.name} %></dd>
   <% end %>
+  
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
 </dl>

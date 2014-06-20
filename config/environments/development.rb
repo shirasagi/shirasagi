@@ -19,6 +19,7 @@ Rails.application.configure do
   #config.assets.raise_runtime_errors = true
   config.assets.compress = false
   config.sass.debug_info = true
+  config.assets.prefix = "/assets-dev"
   
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

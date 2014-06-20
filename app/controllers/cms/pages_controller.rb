@@ -23,6 +23,6 @@ class Cms::PagesController < ApplicationController
         where(depth: 1).
         where(route: "cms/page").
         order_by(updated: -1).
-        page(params[:page]).per(100)
+        page(params[:page]).per(50)
     end
 end

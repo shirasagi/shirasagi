@@ -160,7 +160,7 @@ module Cms::PublicFilter
         end
       end
       
-      dir = "#{Rails.root}/public"
+      dir = Rails.public_path.to_s
       ["#{status}.html", "500.html"].each do |name|
         file = "#{dir}/#{name}"
         render(status: status, file: file, layout: false) and return if Fs.exists?(file)

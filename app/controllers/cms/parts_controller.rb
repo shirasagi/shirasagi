@@ -26,7 +26,7 @@ class Cms::PartsController < ApplicationController
       @items = @model.site(@cur_site).allow(read: @cur_user).
         where(depth: 1).
         order_by(filename: 1).
-        page(params[:page]).per(100)
+        page(params[:page]).per(50)
     end
     
     def routes

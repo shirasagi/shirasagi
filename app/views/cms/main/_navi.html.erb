@@ -4,8 +4,8 @@
     <%= link_to :"cms.content", cms_contents_path, class: "icon-content" %>
     <%= link_to :"cms.node", cms_nodes_path, class: "icon-node" %>
     <%= link_to :"cms.page", cms_pages_path, class: "icon-page" %>
-    <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" %>
     <%= link_to :"cms.part", cms_parts_path, class: "icon-part" %>
+    <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" %>
   </div>
 </nav>
 
@@ -14,5 +14,15 @@
   <div>
     <%= link_to :"cms.view_site", @cur_site.full_url, target: "_blank" %>
     <%= link_to :"cms.preview_site", cms_preview_path, target: "_blank" %>
+  </div>
+</nav>
+
+<nav class="main-menu">
+  <header><h1><%= t :"cms.config" %></h1></header>
+  <div>
+    <%= link_to :"cms.role", cms_roles_path %>
+    <%= link_to :"cms.user", cms_users_path %>
+    <%= link_to :"cms.group", cms_groups_path %>
+    <%= link_to :"cms.site", cms_site_path %>
   </div>
 </nav>

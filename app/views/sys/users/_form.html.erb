@@ -8,7 +8,7 @@
   <dt><%= @model.t :in_password %></dt>
   <dd><%= f.text_field :in_password %></dd>
   
-  <dt><%= @model.t :groups %></dt>
+  <dt><%= @model.t :group_ids %></dt>
   <dd>
     <%= hidden_field_tag "item[group_ids][]" %>
     <% SS::Group.all.each do |item| %>

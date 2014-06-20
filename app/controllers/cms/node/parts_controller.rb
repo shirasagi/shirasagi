@@ -22,6 +22,6 @@ class Cms::Node::PartsController < ApplicationController
     def index
       @items = Cms::Part.site(@cur_site).node(@cur_node).allow(read: @cur_user).
         order_by(filename: 1).
-        page(params[:page]).per(100)
+        page(params[:page]).per(50)
     end
 end

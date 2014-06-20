@@ -1,10 +1,11 @@
 <% if @cur_page.categories.present? %>
 <nav class="categories">
-  <!-- <header><h2>カテゴリー</h2></header> -->
-  <div>
-    <% @cur_page.categories.each_with_index do |m, idx| %>
-    <% if idx != 0 %><span class="separator">|</span><% end %>
-    <span class="item"><%= link_to m.name, m.url %></span>
+  <header><h1>カテゴリー</h1></header>
+  <div class="nodes">
+    <% @cur_page.categories.each do |item| %>
+    <article>
+      <header><h2><%= link_to item.name, item.url %></h2></header>
+    </article>
     <% end %>
   </div>
 </nav>

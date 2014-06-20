@@ -31,7 +31,7 @@ class Cms::PreviewController < ApplicationController
       
       body.gsub!(/(href|src)=".*?"/) do |m|
         url = m.match(/.*?="(.*?)"/)[1]
-        if url =~ /^\/(assets|images|javascripts|stylesheets)\//
+        if url =~ /^\/(assets|assets-dev)\//
           m
         elsif url =~ /^\//
           m.sub(/="/, "=\"#{cms_preview_path}")

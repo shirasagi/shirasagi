@@ -26,6 +26,9 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <dd><%= f.select :layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
   <% end %>
   
+  <dt><%= @model.t :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+  
   <% if fields[:shortcut] != -1 %>
   <dt><%= @model.t :shortcut %></dt>
   <dd><%= f.select :shortcut, @item.shortcut_options %></dd>

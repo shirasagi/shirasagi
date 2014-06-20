@@ -38,7 +38,6 @@ CentOS 6.5/64bit
   cd /var/www/shirasagi
   cp config/samples/* config/
   bundle install
-  bin/deploy
   thin start -d
 
   Access to http://localhost:3000/.mypage
@@ -63,7 +62,7 @@ CentOS 6.5/64bit
   tar xvzf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996
   ruby extconf.rb && make && make install
 
-  echo "/usr/local/lib" >>  /etc/ld.so.conf
+  echo "/usr/local/lib" >> /etc/ld.so.conf
   ldconfig
 
 ----------------------------------------------------------------------------------------------------
@@ -71,6 +70,8 @@ CentOS 6.5/64bit
 --------------------
 # データベース操作
 
+  cd /var/www/shirasagi
+  
   ## インデックスの作成
   rake db:create_indexes
 

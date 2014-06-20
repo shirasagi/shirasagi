@@ -179,6 +179,14 @@ html, body {
         color: #fff;
       }
     }
+    > nav {
+      > header h1 {
+        margin: 20px 0px 10px;
+        padding: 4px 8px;
+        border: 1px solid #259;
+        border-width: 0px 0px 1px 5px;
+      }
+    }
   }
 }
 aside h2 {

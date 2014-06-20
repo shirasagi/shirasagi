@@ -88,15 +88,10 @@ body {
   line-height: 35px;
 }
 #ss-pc {
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  padding: 20px 10px;
-  @include box-shadow(0px 0px 2px #888);
-  background-color: #fff;
   text-align: center;
   a {
-    color: #000;
+    color: #888;
+    font-weight: bold;
   }
 }
 
@@ -122,7 +117,7 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
       max-width: 200px;
       margin: 0px 2px;
       padding: 8px 1px 3px;
-      border-bottom: 4px solid #ddd;
+      border-bottom: 2px solid #ddd;
       color: #000;
       @include ellipsis;
       &.current {
@@ -230,5 +225,22 @@ dl.see {
   }
 }
 
+// -------------------------------------------------------------------------------------------------
+// features
+
+.login-box {
+  padding: 10px 10px 0px;
+  header {
+    @include clear;
+    margin: 0px 0px 20px;
+    h1 {
+      float: left;
+    }
+    .version {
+      float: right;
+      color: #888;
+    }
+  }
+}
 // -------------------------------------------------------------------------------------------------
 }

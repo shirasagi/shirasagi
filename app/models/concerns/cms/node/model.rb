@@ -6,7 +6,7 @@ module Cms::Node::Model
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::Reference::Layout
-  include Cms::Permission::Resource
+  include Cms::Addon::Permission
   include Cms::Addon::Meta
   
   attr_accessor :cur_node, :basename
@@ -25,8 +25,9 @@ module Cms::Node::Model
     field :depth, type: Integer
     field :route, type: String
     field :shortcut, type: String, default: "hide"
+    field :order, type: Integer, default: 0
     
-    permit_params :state, :name, :filename, :basename, :route, :shortcut
+    permit_params :state, :name, :filename, :basename, :route, :shortcut, :order
     
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }
@@ -65,7 +66,7 @@ module Cms::Node::Model
     end
     
     def dirname
-      filename.index("/") ? filename.to_s.sub(/\/.*$/, "").presence : nil
+      filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
     end
     
     def basename
@@ -144,6 +145,11 @@ module Cms::Node::Model
     
     def shortcut_options
       [ %w[表示 show], %w[非表示 hide] ]
+    end
+    
+    def order
+      value = read_attribute(:order).to_i
+      value < 0 ? 0 : value
     end
     
   private

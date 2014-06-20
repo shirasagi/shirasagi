@@ -1,7 +1,8 @@
 ja:
   ss:
-    addon: "アドオン"
-    action: "アクション"
+    module: モジュール
+    addon: アドオン
+    action: アクション
     all: すべて
     login: ログイン
     logout: ログアウト
@@ -59,7 +60,7 @@ ja:
         host: ホスト名
         domains: ドメイン
         group_id: グループ
-      ss/user:
+      ss/user/model:
         name: 氏名
         email: メールアドレス
         password: パスワード
