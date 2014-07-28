@@ -274,6 +274,9 @@ textarea.ace_text-input {
 }
 dl.see {
   margin: 0px;
+  + dl.see {
+      margin-top: 20px;
+  }
   > dt {
     float: left;
     width: 120px;

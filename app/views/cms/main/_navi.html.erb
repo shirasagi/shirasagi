@@ -24,5 +24,6 @@
     <%= link_to :"cms.role", cms_roles_path if Cms::Role.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.user", cms_users_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :"history.log", history_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
   </div>
 </nav>

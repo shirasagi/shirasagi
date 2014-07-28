@@ -80,8 +80,17 @@ ja:
 
   mongoid:
     models:
+      cms/user: ユーザー
       cms/node: フォルダー
+      cms/node/node: フォルダーリスト
+      cms/node/page: ページリスト
       cms/page: ページ
+      cms/part/free: HTML記述
+      cms/part/node: フォルダーリスト
+      cms/part/page: ページリスト
+      cms/part/tabs: 新着タブ
+      cms/part/crumb: パンくずリスト
+      cms/layout: レイアウト
     attributes:
       cms/node/model:
         name: タイトル

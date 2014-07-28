@@ -1,99 +1,86 @@
 # coding: utf-8
 module SS::CrudFilter
   extend ActiveSupport::Concern
-  
+
   included do
-    cattr_accessor :model_class
     before_action :prepend_current_view_path
     before_action :append_view_paths
-    before_action :set_model
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   end
-  
-  module ClassMethods
-    private
-      def model(cls)
-        self.model_class = cls if cls
-      end
-  end
-  
+
   private
     def prepend_current_view_path
       prepend_view_path "app/views/#{params[:controller]}"
     end
-    
+
     def append_view_paths
       append_view_path "app/views/ss/crud"
     end
-    
+
     def render(*args)
       args.size == 0 ? super(file: params[:action]) : super
     end
-    
-    def set_model
-      @model = self.class.model_class
-    end
-    
+
     def set_item
       @item = @model.find params[:id]
       @item.attributes = fix_params
     end
-    
+
     def fix_params
       {}
     end
-    
+
     def pre_params
       {}
     end
-    
+
     def permit_fields
       @model.permitted_fields
     end
-    
+
     def get_params
       params.require(:item).permit(permit_fields).merge(fix_params)
     end
-    
+
   public
     def index
       @items = @model.all.order_by(_id: -1).page(params[:page]).per(100)
     end
-    
+
     def show
       render
     end
-    
+
     def new
       @item = @model.new pre_params.merge(fix_params)
     end
-    
+
     def create
       @item = @model.new get_params
       render_create @item.save
     end
-    
+
     def edit
       render
     end
-    
+
     def update
       @item.attributes = get_params
       render_update @item.update
     end
-    
+
     def delete
       render
     end
-    
+
     def destroy
       render_destroy @item.destroy
     end
-    
+
   private
     def render_create(result, opts = {})
       location = opts[:location].presence || { action: :show, id: @item }
-      
+
       if result
         respond_to do |format|
           format.html { redirect_to location, notice: t(:saved) }
@@ -106,10 +93,10 @@ module SS::CrudFilter
         end
       end
     end
-    
+
     def render_update(result, opts = {})
       location = opts[:location].presence || { action: :show }
-      
+
       if result
         respond_to do |format|
           format.html { redirect_to location, notice: t(:saved) }
@@ -122,10 +109,10 @@ module SS::CrudFilter
         end
       end
     end
-    
+
     def render_destroy(result, opts = {})
       location = opts[:location].presence || { action: :index }
-      
+
       if result
         respond_to do |format|
           format.html { redirect_to location, notice: t(:deleted) }
