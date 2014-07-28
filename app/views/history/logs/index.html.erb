@@ -1,0 +1,29 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t :"history.user" %></th>
+      <th><%= t :"history.item" %></th>
+      <th><%= t :"history.action" %></th>
+      <th class="datetime"><%= @model.t :created %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+    <tr>
+      <td><%= item.user ? link_to(item.user.name, cms_user_path(item.user)) : item.user_id %>
+        <nav class="row-menu">
+          <%= link_to item.url, item.url %>
+        </nav>
+      </td>
+      <td>
+        <% model = item.item_class.to_s.underscore %>
+        <%= model.present? ? I18n.t(:"mongoid.models.#{model}", default: model) : "unknown" %>
+        <%= "(#{item.item_id})" if item.item_id.present? %></td>
+      <td><%= item.action %></td>
+      <td><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

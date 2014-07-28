@@ -1,0 +1,16 @@
+ja:
+  history:
+    log: 操作履歴
+    user: ユーザー
+    item: 対象アイテム
+    action: アクション
+
+  modules:
+    history: 履歴
+
+  mongoid:
+    models:
+      history/log: 操作履歴
+    attributes:
+      history/log:
+        created: 操作日時

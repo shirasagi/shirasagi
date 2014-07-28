@@ -18,3 +18,9 @@ ja:
     edit_private_article_pages: 記事ページの編集（所有）
     delete_other_article_pages: 記事ページの削除（全て）
     delete_private_article_pages: 記事ページの削除（所有）
+
+  mongoid:
+    models:
+      article/page: 記事ページ
+      article/node/page: 記事リスト
+      article/part/node: 記事リスト
