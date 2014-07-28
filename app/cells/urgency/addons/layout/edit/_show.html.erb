@@ -1,0 +1,4 @@
+<dl class="see mod-event">
+  <dt><%= @model.t :urgency_default_layout %></dt>
+  <dd><%= @item.send(:urgency_default_layout).try(:name).to_s %></dd>
+</dl>

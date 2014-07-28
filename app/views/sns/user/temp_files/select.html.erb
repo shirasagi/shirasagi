@@ -8,6 +8,13 @@
   </div>
   <div class="name">
     <input type="checkbox" name="item[file_ids][]" value="<%= @item.id %>" checked="checked" />
-    <%= @item.basename %>
+    <%= @item.basename %><br />
+    <% content = link_to "#{@item.filename} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", "/fs/#{@item.id}/#{@item.filename}", class: "icon-#{@item.extname}" %>
+    <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+    <% if @item.image? %>
+    <% content = image_tag "/fs/#{@item.id}/#{@item.filename}", alt: "#{@item.basename}" %>
+    &nbsp;<%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+    <% end %>
+    <br /><%= link_to :"sns.delete", "#", :onclick => "deleteContent('#{@item.id}'); return false;" %>
   </div>
 </div>

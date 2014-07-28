@@ -6,6 +6,6 @@ class Sys::MainController < ApplicationController
   
   public
     def index
-      redirect_to sys_sites_path
+      redirect_to sys_info_path
     end
 end

@@ -1,7 +1,7 @@
 <dl class="see">
-  <dt><%= @model.t :role_ids %></dt>
+  <dt><%= @model.t :cms_role_ids %></dt>
   <dd>
-    <% @item.roles.site(@cur_site).order_by(name: 1).each do |role| %>
+    <% @item.cms_roles.site(@cur_site).order_by(name: 1).each do |role| %>
     <div><%= link_to role.name, cms_role_path(id: role) %>
     <% end %>
   </dd>

@@ -1,0 +1,43 @@
+ja:
+  workflow:
+    request: 承認申請
+    request_to: 申請先
+    selectable_users: 選択候補
+    state:
+      request: 申請
+      approve: 承認
+      remand: 差し戻し
+    mail:
+      subject:
+        request: 承認申請
+        approve: 最終承認完了
+        remand: 承認差し戻し
+
+  modules:
+    addons:
+      workflow/approver: 承認
+
+  mongoid:
+    attributes:
+      article/page: &article_page
+        workflow_user_id: 申請者
+        workflow_state: 承認状態
+        workflow_comment: 申請コメント
+        workflow_approvers: 承認者
+        comment: 差し戻しコメント
+      cms/page:
+        <<: *article_page
+
+  errors:
+    messages:
+      not_select: "が選択されていません。"
+
+  cms_role:
+    release_other_article_pages: 記事ページの公開（全て）
+    release_private_article_pages: 記事ページの公開（所有）
+    release_other_cms_pages: 固定ページの公開（全て）
+    release_private_cms_pages: 固定ページの公開（所有）
+    approve_other_article_pages: 記事ページの承認（全て）
+    approve_private_article_pages: 記事ページの承認（所有）
+    approve_other_cms_pages: 固定ページの承認（全て）
+    approve_private_cms_pages: 固定ページの承認（所有）

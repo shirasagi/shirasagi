@@ -1,0 +1,17 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t :basic_info %></h2></header>
+    <%= render file: "_show" %>
+  </div>
+</div>
+
+<footer class="send">
+  <%= form_for :item, url: { action: :update }, html: { id: "switch-layout", method: :put, multipart: true } do |f| %>
+    <% if selected_layout? %>
+      <%= f.submit t('urgency.selected_layout'), disabled: true %>
+    <% else %>
+      <%= f.submit t('urgency.switch_layout'), class: :save,
+        onclick: "return confirm('#{t('urgency.confirm_message')}')" %>
+    <% end %>
+  <% end %>
+</footer>

@@ -10,3 +10,11 @@ ja:
       article/page: 記事リスト
     parts:
       article/page: 記事リスト
+
+  cms_role:
+    read_other_article_pages: 記事ページの閲覧（全て）
+    read_private_article_pages: 記事ページの閲覧（所有）
+    edit_other_article_pages: 記事ページの編集（全て）
+    edit_private_article_pages: 記事ページの編集（所有）
+    delete_other_article_pages: 記事ページの削除（全て）
+    delete_private_article_pages: 記事ページの削除（所有）

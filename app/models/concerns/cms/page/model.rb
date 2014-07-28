@@ -7,6 +7,7 @@ module Cms::Page::Model
   
   included do
     store_in collection: "cms_pages"
+    set_permission_name "cms_pages"
     
     field :route, type: String, default: ->{ "cms/page" }
     permit_params :route

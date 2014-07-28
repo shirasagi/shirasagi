@@ -20,7 +20,11 @@ def save_layout(data)
   html = File.read("layouts/" + data[:filename]) rescue nil
 
   item = Cms::Layout.find_or_create_by cond
-  item.update data.merge html: html
+  item.attributes = data.merge html: html
+  item.update
+  
+  item.add_to_set group_ids: @site.group_ids
+  item.update
 end
 
 save_layout filename: "category-kanko.layout.html", name: "カテゴリー：観光・文化・スポーツ"
@@ -58,7 +62,11 @@ def save_part(data)
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
-  item.update data
+  item.attributes = data
+  item.update
+  
+  item.add_to_set group_ids: @site.group_ids
+  item.update
 end
 
 save_part route: "cms/free", filename: "about.part.html", name: "SHIRASAGI市について"
@@ -113,7 +121,11 @@ def save_node(data)
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
-  item.update data
+  item.attributes = data
+  item.update
+  
+  item.add_to_set group_ids: @site.group_ids
+  item.update
 end
 
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
@@ -293,7 +305,12 @@ def save_page(data)
 
   item = Cms::Page.find_or_create_by cond
   item.html = html if html
-  item.update data
+  
+  item.attributes = data
+  item.update
+  
+  item.add_to_set group_ids: @site.group_ids
+  item.update
 end
 
 save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id

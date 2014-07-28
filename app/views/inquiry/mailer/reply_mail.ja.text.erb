@@ -1,0 +1,15 @@
+<% message.subject = @subject %>
+<% if @node.reply_upper_text.present? %>
+<%= @node.reply_upper_text %>
+<%= "" %>
+<% end %>
+<% @answer.data.each do |data| %>
+<%= "- #{data.column.name}" %>
+<%= "#{data.value}" %>
+<%= "" %>
+<% end %>
+<% if @node.reply_lower_text.present? %>
+<%= "" %>
+<%= @node.reply_lower_text %>
+<%= "" %>
+<% end %>

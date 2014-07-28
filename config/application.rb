@@ -9,25 +9,18 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "0.2.0" }
-  
+  mattr_reader(:version) { "0.3.0" }
+
   class Application < Rails::Application
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/app/validators"
-    
+
     I18n.enforce_available_locales = true
     config.time_zone = 'Tokyo'
     config.i18n.default_locale = :ja
-    
-    %w[ss sys cms].each do |name|
-      config.i18n.load_path += Dir["#{config.root}/config/locales/#{name}/*.{rb,yml}"]
-    end
+
     Dir["#{config.root}/config/locales/*/*.{rb,yml}"].each do |file|
       config.i18n.load_path << file unless config.i18n.load_path.index(file)
-    end
-    
-    %w[sys sns cms].each do |name|
-      config.paths["config/routes.rb"] << "#{config.root}/config/routes/#{name}/routes.rb"
     end
     Dir["#{config.root}/config/routes/*/routes.rb"].sort.each do |file|
       config.paths["config/routes.rb"] << file

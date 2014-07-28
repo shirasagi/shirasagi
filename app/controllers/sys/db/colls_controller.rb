@@ -18,8 +18,14 @@ class Sys::Db::CollsController < ApplicationController
     
   public
     def index
+      raise "403" unless Sys::User.allowed?(:edit, @cur_user)
+      
       @items = @db.collections
       @items = @items.select {|m| m.name !~ /^fs\./ }
+    end
+    
+    def new
+      raise
     end
     
     def create

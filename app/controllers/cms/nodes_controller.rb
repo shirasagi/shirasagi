@@ -22,7 +22,7 @@ class Cms::NodesController < ApplicationController
     
   public
     def index
-      @items = @model.site(@cur_site).allow(read: @cur_user).
+      @items = @model.site(@cur_site).allow(:read, @cur_user).
         where(depth: 1).
         order_by(filename: 1).
         page(params[:page]).per(50)

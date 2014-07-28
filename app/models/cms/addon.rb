@@ -7,35 +7,8 @@ module Cms::Addon
     set_order 600
     
     included do
-      embeds_ids :roles, class_name: "Cms::Role"
-      permit_params role_ids: []
-    end
-  end
-  
-  module Permission
-    extend ActiveSupport::Concern
-    extend SS::Addon
-    
-    set_order 600
-    
-    included do
-      field :permission_level, type: Integer, default: 1
-      embeds_ids :groups, class_name: "SS::Group"
-      permit_params :permission_level, group_ids: []
-    end
-    
-    module ClassMethods
-      def allow(permit)
-        where({})
-      end
-    end
-    
-    def permission_level_options
-      Cms::Role.new.permission_level_options
-    end
-    
-    def allowed?(permit)
-      true
+      embeds_ids :cms_roles, class_name: "Cms::Role"
+      permit_params cms_role_ids: []
     end
   end
   

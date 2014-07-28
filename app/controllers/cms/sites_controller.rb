@@ -3,29 +3,30 @@ class Cms::SitesController < ApplicationController
   include Cms::BaseFilter
   include SS::CrudFilter
   
-  model SS::Site
+  model Cms::Site
   
   navi_view "cms/main/navi"
-  menu_view "ss/crud/resource_menu"
+  menu_view "cms/crud/resource_menu"
   
   private
     def set_crumbs
       @crumbs << [:"cms.site", action: :show]
     end
     
-    def fix_params
-      {}
-    end
-    
     def set_item
-      @item = @cur_site
+      @item = Cms::Site.find(@cur_site.id)
       @item.attributes = fix_params
     end
     
   public
-    def index
-      @items = @model.
-        order_by(name: 1).
-        page(params[:page]).per(50)
+    def edit
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render
+    end
+    
+    def update
+      @item.attributes = get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render_update @item.update
     end
 end

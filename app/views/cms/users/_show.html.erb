@@ -6,9 +6,6 @@
   <dd><%= @item.send :email %></dd>
   
   <dt><%= @model.t :group_ids %></dt>
-  <dd>
-    <% @item.groups.each do |group| %>
-    <div><%= link_to group.name, cms_group_path(id: group) %></div>
-    <% end %>
-  </dd>
+  <dd><%=br @item.groups.order_by(name: 1).select{ |c| Cms::Group.site(@cur_site).pluck(:id).include?(c.id) }.map{|c| c.name}.join("\n") %></dd>
+  
 </dl>

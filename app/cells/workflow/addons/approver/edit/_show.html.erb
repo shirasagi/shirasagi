@@ -1,0 +1,134 @@
+<%= scss do %>
+.mod-workflow-approve, .mod-workflow-request {
+  margin: 0px 0px 15px;
+  padding: 5px 15px;
+  border: 1px solid #ccc;
+  h1 {
+    margin: -5px -15px 15px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+  }
+  .buttons {
+    margin: 10px 0px 10px;
+    button {
+      margin: 0px 10px 0px 0px;
+      padding: 0px 30px;
+    }
+  }
+}
+<% end %>
+
+<%= coffee do %>
+$ ->
+
+  $(".update-item").on "click", (e) ->
+    if !$("#multi-select").val() && $(this).attr("type") == "request"
+      alert "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>"
+      return
+    uri = "<%= request.path_info %>".split("/")
+    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
+    $.ajax
+      type: "post"
+      url: uri.join("/")  + "/" + $(this).attr("updatetype") + "_update"
+      async: false
+      data:
+        workflow_comment: $("#workflow_comment").prop("value")
+        workflow_approvers: $("#multi-select").val()
+        remand_comment: $("#remand_comment").prop("value")
+        url: "<%= request.url %>"
+      success: (msg) ->
+        location.reload()
+      error: (msg, status) ->
+        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
+
+  $(".mod-workflow-approve").insertBefore("#addon-basic")
+
+  $(".mod-workflow .toggle-label").on "click", (e) ->
+    $(".mod-workflow .request-setting").slideToggle()
+    return false
+
+  $("#multi-select").multiSelect
+    selectionHeader: "<div class='selectionHeader'><%= t "workflow.request_to" %></div>"
+    selectableHeader: "<div class='selectableHeader'><%= t "workflow.selectable_users" %></div>"
+
+<% end %>
+
+<link data-turbolinks-track="true" href="/assets/css/multi-select/css/multi-select.css" media="all" rel="stylesheet" />
+<script data-turbolinks-track="true" src="/assets/js/jquery.multi-select.js"></script>
+
+<div class="mod-workflow">
+
+  <% if (@item.group_ids & @cur_user.group_ids).length > 0 && @item.state == "closed" %>
+    <% if @item.allowed?(:approve, @cur_user) && @item.workflow_state == "request" %>
+      <% @item.workflow_approvers.split(/\r\n/).each do |d| %>
+        <% next if @cur_user._id != d.split(",")[1].to_i || d.split(",")[2] != "request" %>
+        <section class="mod-workflow-approve">
+          <h1><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %></h1>
+          <%= text_area :remand, :comment, value: "" %>
+          <div class="buttons">
+            <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
+            <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item" } %>
+          </div>
+        </section>
+      <% end %>
+    <% end %>
+
+    <% if @item.allowed?(:edit, @cur_user) %>
+    <section class="mod-workflow-request">
+      <h1><%= link_to t("workflow.request"), '#', class: "toggle-label" %></h1>
+      <dl class="see request-setting" style="display: none;">
+        <dt><%= @model.t :workflow_comment %></dt>
+        <dd><%= text_area :workflow, :comment, value: @item.workflow_comment %></dd>
+
+        <% userids = [] %>
+        <% @item.workflow_approvers.split(/\r\n/).each {|d| userids << d.split(",")[1].to_i} if @item.workflow_approvers.present? %>
+        <dt><%= @model.t :workflow_approvers %></dt>
+        <dd>
+          <select id="multi-select" multiple="multiple" name="multiselect">
+            <% SS::User.where( :group_ids.in => Cms::Group.site(@cur_site).pluck(:id), :_id.ne => @cur_user._id ).each do |user| %>
+              <% next unless @item.allowed?(:approve, user, site: @cur_site) %>
+              <option value="<%= user._id %>" <%= 'selected="selected"' if userids.index(user._id) %>>
+                <%= "#{user.name}(#{(SS::User.find user._id).email.split("@")[0]})" %></option>
+            <% end %>
+          </select>
+          <div class="buttons">
+            <%= button_tag t("workflow.state.request"), { updatetype: :request, class: "update-item" } %>
+          </div>
+        </dd>
+      </dl>
+    </section>
+    <% end %>
+  <% end %>
+
+  <% if @item.workflow_state? %>
+  <div class="mod-workflow-view">
+    <dl class="see">
+      <dt><%= @model.t :workflow_user_id %></dt>
+      <dd>
+        <% if @item.workflow_user_id.present? %>
+        <% user = SS::User.find(@item.workflow_user_id) %>
+        <%= "#{user.name}(#{user.email.split('@')[0]})" %>
+        <% end %>
+      </dd>
+
+      <dt><%= @model.t :workflow_state %></dt>
+      <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
+
+      <dt><%= @model.t :workflow_comment %></dt>
+      <dd><%= @item.workflow_comment if @item.workflow_comment.present? %></dd>
+
+      <dt><%= @model.t :workflow_approvers %></dt>
+      <dd>
+        <% @item.workflow_approvers.split(/\r\n/).each do |d| %>
+          <% cols  = d.split(",") %>
+          <% user  = SS::User.find cols[1].to_i %>
+          <% state = t("workflow.state.#{cols[2]}") %>
+          <%= "#{user.name}(#{user.email.split('@')[0]})：#{state}" %><br /><%= cols[3] %>
+        <% end if @item.workflow_approvers.present? %>
+      </dd>
+    </dl>
+  </div>
+  <% end %>
+
+</div>

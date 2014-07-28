@@ -60,38 +60,39 @@ module Cms::NodeFilter::EditCell
     
   public
     def show
-      raise "403" unless @item.allowed?(read: @cur_user)
+      raise "403" unless @item.allowed?(:read, @cur_user)
       render
     end
     
     def new
+      raise "403" unless @item.allowed?(:edit, @cur_user)
       render
     end
     
     def create
       @item.attributes = get_params
-      raise "403" unless @item.allowed?(create: @cur_user)
+      raise "403" unless @item.allowed?(:edit, @cur_user)
       @item.save ? @item : render(file: :new)
     end
     
     def edit
-      raise "403" unless @item.allowed?(update: @cur_user)
+      raise "403" unless @item.allowed?(:edit, @cur_user)
       render
     end
     
     def update
       @item.attributes = get_params
-      raise "403" unless @item.allowed?(update: @cur_user)
+      raise "403" unless @item.allowed?(:edit, @cur_user)
       @item.update ? @item : render(file: :edit)
     end
     
     def delete
-      raise "403" unless @item.allowed?(delete: @cur_user)
+      raise "403" unless @item.allowed?(:delete, @cur_user)
       render
     end
     
     def destroy
-      raise "403" unless @item.allowed?(delete: @cur_user)
+      raise "403" unless @item.allowed?(:delete, @cur_user)
       @item.destroy ? @item : render(file: :delete)
     end
 end

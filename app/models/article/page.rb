@@ -3,6 +3,7 @@ class Article::Page
   include Cms::Page::Model
   
   default_scope ->{ where(route: "article/page") }
+  set_permission_name "article_pages"
   
   before_save :seq_filename, if: ->{ basename.blank? }
   
@@ -12,7 +13,7 @@ class Article::Page
     end
     
     def seq_filename
-      self.filename = dirname ? "#{dirname}/#{id}.html" : "#{id}.html"
+      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
     
   class << self

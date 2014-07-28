@@ -4,6 +4,9 @@ Rails.application.configure do
   config.cache_classes = true
   config.eager_load = true
 
+  # Don't include all helpers
+  # config.action_controller.include_all_helpers = false
+
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -18,8 +21,9 @@ Rails.application.configure do
   config.assets.digest = false
   config.assets.version = '1.0'
   config.sass.debug_info = false # for cms
-  #config.sass.line_comments = true
-  
+  config.sass.line_comments = false
+  config.sass.line_numbers = false
+
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
   config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx

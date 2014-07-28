@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :permissions %></dt>
+  <dd>
+    <%= hidden_field_tag "item[permissions][]" %>
+
+    <% @model.permission_names.each do |name, value| %>
+    <label><%= f.check_box("permissions[]", {}, value) %> <%= @model.t(name) %></label><br />
+    <% end %>
+  </dd>
+</dl>

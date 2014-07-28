@@ -1,0 +1,20 @@
+<%= coffee do %>
+$ ->
+  $('.inquiry-form input').keypress (ev) ->
+    if (ev.which and ev.which is 13) or (ev.keyCode and ev.keyCode is 13)
+      return false
+    else
+      return true
+  return
+<% end %>
+
+<div class="inquiry-html"><%= raw @cur_node.send :inquiry_html %></div>
+<div class="inquiry-form">
+<%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
+  <%= error_messages_for :answer, header_message: false %>
+  <%= render partial: "form", locals: { f: f, confirm: false }  %>
+  <footer class="send">
+  <%= f.submit t('inquiry.confirm'), name: :confirm %>
+  </footer>
+</div>
+<% end %>

@@ -6,6 +6,7 @@ module Cms::Part::Model
   
   included do |mod|
     store_in collection: "cms_parts"
+    set_permission_name "cms_parts"
     
     field :route, type: String
     field :mobile_view, type: String, default: "show"

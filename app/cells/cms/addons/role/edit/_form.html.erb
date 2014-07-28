@@ -1,10 +1,10 @@
 <dl class="see">
-  <dt><%= @model.t :role_ids %></dt>
+  <dt><%= @model.t :cms_role_ids %></dt>
   <dd>
-    <%= f.hidden_field "role_ids[]", value: "" %>
+    <%= f.hidden_field "cms_role_ids[]", value: "" %>
     
     <% Cms::Role.site(@cur_site).order_by(name: 1).each do |role| %>
-    <label><%= f.check_box("role_ids[]", {}, role.id) %> <%= role.name %></label><br />
+    <label><%= f.check_box("cms_role_ids[]", {}, role.id) %> <%= role.name %></label><br />
     <% end %>
   </dd>
 </dl>

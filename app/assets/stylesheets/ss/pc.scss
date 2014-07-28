@@ -169,7 +169,7 @@ body {
   margin: 0px 0px 0px -100%;
   .wrap {
     //@include main-view;
-    margin-left: 300px;
+    margin-left: 305px;
   }
 }
 #foot {
@@ -329,6 +329,29 @@ table.index {
   nav.row-menu {
     display: none;
     position: absolute;
+    min-width: 10em;
+    border: 1px solid #bbb;
+    //@include border-radius(2px);
+    @include box-shadow(0px 2px 10px #aaa);
+    background-color: #fff;
+    a {
+      display: block;
+      padding: 0px 12px;
+      border-top: 1px solid #bbb;
+      text-align: left;
+      line-height: 2.6;
+      &:first-child {
+        border-width: 0px;
+      }
+      &:hover {
+        background-color: #f7f7f7;
+      }
+    }
+  }
+  nav.multiple-menu {
+    display: none;
+    position: absolute;
+    z-index: 1;
     min-width: 10em;
     border: 1px solid #bbb;
     //@include border-radius(2px);

@@ -1,0 +1,10 @@
+<dl class="see mod-inquiry-input-setting">
+  <dt><%= @model.t :input_type %></dt>
+  <dd><%= f.select :input_type, @item.input_type_options %></dd>
+  <dt><%= @model.t :select_options %></dt>
+  <dd><%= f.text_area :select_options, value: @item.select_options.join("\n"), style: "height: 180px;" %></dd>
+  <dt><%= @model.t :required %></dt>
+  <dd><%= f.select :required, @item.required_options %></dd>
+  <dt><%= @model.t :additional_attr %></dt>
+  <dd><%= f.text_field :additional_attr %></dd>
+</dl>

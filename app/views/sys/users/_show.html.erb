@@ -6,5 +6,9 @@
   <dd><%= @item.send :email %></dd>
   
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%= @item.groups.map {|m| m.name }.join(", ") %></dd>
+   <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+  
+  <dt><%= @model.t :type %></dt>
+  <dd><%= @item.send :type %></dd>
+  
 </dl>

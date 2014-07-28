@@ -8,6 +8,7 @@ module Cms::BaseFilter
     before_action :set_site
     before_action :set_node
     before_action :set_crumbs
+    before_action :set_group
   end
   
   private
@@ -25,6 +26,12 @@ module Cms::BaseFilter
     
     def set_crumbs
       #
+    end
+    
+    def set_group
+      cur_groups = @cur_user.groups.in(name: @cur_site.groups.pluck(:name).map{ |name| /^#{name}(\/|$)/ })
+      @cur_group = cur_groups.first # select one group
+      raise "403" unless @cur_group
     end
     
   public

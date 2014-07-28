@@ -9,6 +9,6 @@ class Sys::TestController < ApplicationController
   
   public
     def index
-      #
+      raise "403" unless Sys::User.allowed?(:edit, @cur_user)
     end
 end

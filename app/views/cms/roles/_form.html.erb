@@ -1,16 +1,33 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
-  
+
   <dt><%= @model.t :permission_level %></dt>
   <dd><%= f.select :permission_level, @item.permission_level_options %></dd>
-  
+
   <dt><%= @model.t :permissions %></dt>
   <dd>
     <%= hidden_field_tag "item[permissions][]" %>
-    
-    <% @model.permission_names.each do |name, value| %>
-    <label><%= f.check_box("permissions[]", {}, value) %> <%= name %></label><br />
-    <% end %>
+    <% names = @model.permission_names.sort %>
+    <table>
+      <tr>
+        <td style="padding: 0px 20px 0px 0px; vertical-align: top;">
+          <% names.select {|k,v| k =~ /_private_/ }.each do |name, value| %>
+          <label><%= f.check_box("permissions[]", {}, value) %> <%= t("cms_role.#{name}") %></label><br />
+          <% end %>
+        </td>
+        <td style="padding: 0px 20px 0px 0px; vertical-align: top;">
+          <% names.select {|k,v| k =~ /_other_/ }.each do |name, value| %>
+          <label><%= f.check_box("permissions[]", {}, value) %> <%= t("cms_role.#{name}") %></label><br />
+          <% end %>
+        </td>
+        <td style="padding: 0px 20px 0px 0px; vertical-align: top;">
+          <% names.select {|k,v| k !~ /_private_/ && k !~ /_other_/ }.each do |name, value| %>
+          <label><%= f.check_box("permissions[]", {}, value) %> <%= t("cms_role.#{name}") %></label><br />
+          <% end %>
+        </td>
+      </tr>
+    </table>
+
   </dd>
 </dl>

@@ -1,0 +1,16 @@
+<dl class="see mod-inquiry-message">
+  <dt><%= @model.t :inquiry_html %></dt>
+  <dd>
+  <% if @item.send(:inquiry_html).present?  %>
+    <%= html_editor "#inquiry_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry_html", @item.inquiry_html, style: "height: 200px;" %>
+  <% end %>
+  </dd>
+  <dt><%= @model.t :inquiry_sent_html %></dt>
+  <dd>
+  <% if @item.send(:inquiry_sent_html).present?  %>
+    <%= html_editor "#inquiry_sent_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry_sent_html", @item.inquiry_sent_html, style: "height: 200px;" %>
+  <% end %>
+  </dd>  
+</dl>

@@ -1,0 +1,11 @@
+<% message.subject = @subject %>
+<% @answer.data.each do |data| %>
+<%= "- #{data.column.name}" %>
+<%= "#{data.value}" %>
+<%= "" %>
+<% end %>
+<%= "- " + @answer.class.t('remote_addr') %>
+<%= @answer.remote_addr %>
+<%= "" %>
+<%= "- " + @answer.class.t('user_agent') %>
+<%= @answer.user_agent %>

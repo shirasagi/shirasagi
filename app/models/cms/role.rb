@@ -3,6 +3,9 @@ class Cms::Role
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
+  include Cms::Addon::Permission
+  
+  set_permission_name "cms_users"
   
   cattr_accessor(:permission_names) { [] }
   
@@ -16,13 +19,15 @@ class Cms::Role
   validates :permission_level, presence: true
   #validates :permissions, presence: true
   
-  def permission_level_options
-    [%w[1 1], %w[2 2], %w[3 3]]
-  end
-  
+  public
+    def permission_level_options
+      [%w[1 1], %w[2 2], %w[3 3]]
+    end
+    
   class << self
     def permission(name)
       self.permission_names << [name, name.to_s]
     end
+    
   end
 end

@@ -1,0 +1,61 @@
+ja:
+  inquiry:
+    form: メールフォーム
+    column: 質問項目
+    answer: 回答データ    
+    required_field: ※必須入力
+    confirm_message: 下記事項をご確認の上、送信ボタンを押してください。
+    submit: 送信する
+    cancel: 変更する
+    confirm: 確認画面へ
+    notify: 自動通知
+    reply: 自動返信
+  
+  modules:
+    inquiry: メールフォーム
+    addons:
+      inquiry/message: メッセージ
+      inquiry/captcha: 認証
+      inquiry/notice: メール通知
+      inquiry/reply: 自動返信メール
+      inquiry/input_setting: 入力設定
+  
+  cms:
+    nodes:
+      inquiry/form: フォーム
+  
+  mongoid:
+    attributes:
+      inquiry/node/form:
+        inquiry_html: 説明テキスト
+        inquiry_sent_html: 送信完了テキスト
+        inquiry_captcha: 画像認証        
+        notice_state: 通知設定
+        notice_email: 通知メールアドレス
+        from_name: 差出人名
+        from_email: 差出人メールアドレス
+        reply_state: 返信設定
+        reply_subject: 返信件名
+        reply_upper_text: 上部返信テキスト
+        reply_lower_text: 下部返信テキスト
+      inquiry/column:
+        name: 項目名
+        html: 説明テキスト
+        state: ステータス
+        order: 並び順
+        input_type: 入力形式
+        select_options: 選択肢
+        required: 必須入力
+        additional_attr: 追加属性
+      inquiry/answer:
+        remote_addr: IPアドレス
+        user_agent: ユーザーエージェント
+        data_summary: 回答内容
+        captcha: 画像の数字        
+        
+  simple_captcha:
+    placeholder: ""
+    refresh_button_text: 違う画像
+    label: 画像の数字を入力してください
+    message:
+      default: が正しくありません

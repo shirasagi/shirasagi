@@ -9,18 +9,27 @@ class Uploader::FilesController < ApplicationController
 
   public
     def index
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+      
       if !@model.file @cur_node.path
         cur_dir = @model.new path: @cur_node.path, is_dir: true
         raise "404" if !cur_dir.save
       end
         redirect_to action: :show, filename: @cur_node.filename
     end
-
+    
     def show
+      
       if @item.filename == @cur_node.filename && params[:do] =~ /edit|show|delete/
         raise "404"
       end
-
+      
+      if params[:do] =~ /show/ || @item.directory?
+        raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+      else
+        raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+      end
+      
       if params[:do] == "edit"
         render file: :edit
       elsif params[:do] == "show"
@@ -40,6 +49,8 @@ class Uploader::FilesController < ApplicationController
     end
 
     def create
+      raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+      
       set_item
       if params[:item].present?
         if params[:item][:directory]
@@ -56,6 +67,8 @@ class Uploader::FilesController < ApplicationController
     end
 
     def update
+      raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+      
       filename = params[:item][:filename]
       text = params[:item][:text]
 
@@ -78,6 +91,8 @@ class Uploader::FilesController < ApplicationController
     end
 
     def destroy
+      raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+      
       dirname = @item.dirname
       @item.destroy
       render_destroy true, location: "#{uploader_files_path}/#{dirname}"

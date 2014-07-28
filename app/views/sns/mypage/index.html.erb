@@ -7,7 +7,7 @@
       </tr>
     </thead>
     <tbody>
-      <% SS::Site.all.each do |item| %>
+      <% @sites.each do |item| %>
       <tr>
         <td>
           <div class="name"><%= link_to item.name, "/.#{item.host}" %></div>

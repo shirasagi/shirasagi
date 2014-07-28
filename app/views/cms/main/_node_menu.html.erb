@@ -1,11 +1,11 @@
-<%= render partial: "ss/crud/menu" %>
+<%= render partial: "cms/crud/menu" %>
 
 <% if params[:action] =~ /index/ %>
 <nav class="page-menu">
   <header><h1><%= t :"cms.node" %></h1></header>
   <div>
     <% resource = params[:controller].sub(/.*\//, "") %>
-    <% Cms::Node.site(@cur_site).root.sort(filename: 1).limit(20).each do |item| %>
+    <% Cms::Node.site(@cur_site).allow(:read, @cur_user).root.sort(filename: 1).limit(20).each do |item| %>
     <%= link_to item.name, send("node_#{resource}_path", cid: item), { class: "icon-node" } %>
     <% end %>
   </div>

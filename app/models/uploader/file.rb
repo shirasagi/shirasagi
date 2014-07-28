@@ -33,7 +33,7 @@ class Uploader::File
           end
           compile_scss if @css
           compile_coffee if @js
-          
+
           @saved_path = @path
           return true
         rescue => e
@@ -60,7 +60,7 @@ class Uploader::File
     def content_type
       Fs.content_type path
     end
-    
+
     def ext
       if !directory? && path =~ /\./
         ".#{path.sub(/^.*\./, '')}"
@@ -154,8 +154,8 @@ class Uploader::File
           sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
             syntax: :scss, cache: false,
             load_paths: opts.load_paths[1..-1],
-            style: (opts.debug_info ? :expanded : :compressed),
-            debug_info: opts.debug_info
+            style: :expanded,
+            debug_info: true
           @css = sass.render
         rescue Sass::SyntaxError => e
           msg = e.backtrace[0].sub(/.*?\/_\//, "")

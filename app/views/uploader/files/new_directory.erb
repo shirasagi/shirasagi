@@ -4,7 +4,7 @@
 <%= error_messages_for :item %>
 <div class="addon-view">
   <dl class="see">
-    <dt><%= @model.t :directory %></dt>
+    <dt><%= t('uploader.new_directory') %></dt>
     <dd><%= text_field_tag 'item[directory]', 'item[directory]', value: @directory %></dd>
   </dl>
 </div>

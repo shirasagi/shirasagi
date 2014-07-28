@@ -1,6 +1,8 @@
 ja:
   uploader:
     files: ファイル
+    new_directory: 新規フォルダー名
+    new_files: アップロード
 
   views:
     links:
@@ -14,7 +16,7 @@ ja:
     nodes:
       uploader/file: アップローダー
 
-  mongoid:
+  activemodel:
     models:
       uploader/file: アップローダー
     attributes:
@@ -25,3 +27,4 @@ ja:
         size: ファイルサイズ
         text: 内容
         image: 画像
+        

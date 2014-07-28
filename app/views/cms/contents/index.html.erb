@@ -6,7 +6,7 @@
       <th class="route"><%= t "ss.module" %></th>
     </tr>
   </thead>
-  
+
   <tbody>
     <% @items.each do |item| %>
     <tr>
@@ -15,7 +15,10 @@
         <%= link_to item.name, "/.#{@cur_site.host}/#{route.sub(/\/.*/, '')}#{item.id}", class: "icon-node"%>
         <nav class="row-menu">
           <%= link_to :"cms.content", "/.#{@cur_site.host}/#{route.sub(/\/.*/, '')}#{item.id}" %>
-          <%= link_to :show, node_conf_path(cid: item) %>
+          <%= link_to :show, node_conf_path(cid: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to :edit, edit_node_conf_path(cid: item) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
+          <%= link_to :view_site, item.full_url, target: :_blank %>
         </nav>
       </td>
       <td class="filename"><%= item.filename %></td>
@@ -23,7 +26,7 @@
     </tr>
     <% end %>
   </tbody>
-  
+
 </table>
 
 <%= paginate @items if @items.try(:current_page) %>

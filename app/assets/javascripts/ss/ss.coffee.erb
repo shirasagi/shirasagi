@@ -13,15 +13,15 @@
 $ ->
   # $.ajaxSetup
   #   headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
-  
+
   SS.render()
-  
+
   # navi
   path = location.pathname + "/"
   $("#navi .main-menu a, #navi .sub-menu a").each ->
     menu = $(this)
     menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
-  
+
   # pulldown menu
   if $(window).width() >= 800
     menu = $(".pulldown-menu")
@@ -31,35 +31,35 @@ $ ->
       link.filter(".current").prependTo(menu).click ->
         link.not(".current").slideToggle("fast")
         return false
-  
+
   SS_ListUI.render("table.index")
   SS_Mobile.render()
   SS_AddonTabs.render()
 
 class @SS
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
-  
+
   @render:(box = null) ->
     if box
       $(box).find("a").each ->
         elem = $(this)
         if !elem.attr("target") && !elem.data("target")
           elem.colorbox({ fixed: true, width: "90%", height: "90%" })
-    
+
     # default
     box = $(document)
-    
+
     # external links
     box.find("a[href^=http]").each ->
       $(this).addClass("external")
-    
+
     # ajax to (color)box
     box.find(".ajax-box").each ->
       elem = $(this)
       return true if elem.hasClass("cboxElement")
       if !elem.attr("target") && !elem.data("target")
         elem.colorbox({ fixed: true, width: "90%", height: "90%" })
-    
+
   @ajaxForm:(elem, params = {}) ->
     elem = $(elem)
     defaults = {
@@ -73,7 +73,7 @@ class @SS
     elem.on "submit", (e) ->
       $(this).ajaxSubmit $.extend(defaults, params)
       e.preventDefault();
-    
+
   @ajax:(elem, params = {}) ->
     $(elem).click (e) ->
       self = $(this)
@@ -89,7 +89,7 @@ class @SS
       $.ajax $.extend(defaults, params)
       e.preventDefault();
       return false
-    
+
   @ajaxDelete:(elem, params = {}) ->
     $(elem).click (e) ->
       return false if !confirm("<%= t "views.confirm.delete" %>")
@@ -109,7 +109,7 @@ class @SS
       $.ajax $.extend(defaults, params)
       e.preventDefault();
       return false
-  
+
   @confirmUnloading: ->
     $("input[type=text],textarea,select").change ->
       $(window).on "beforeunload", ->
@@ -129,11 +129,11 @@ class @SS_Mobile
       else
         pc = $("#ss-pc")
         pc.html('<a href="" onclick="SS_Mobile.renderPc()">' + pc.text() + '</a>').show()
-      
+
   @renderPc: ->
     $.cookie("switchView", "pc", { expires: 7, path: '/' })
     location.reload()
-    
+
   @renderMb: ->
     $.removeCookie("switchView", { expires: 7, path: '/' })
     location.reload()
@@ -143,10 +143,21 @@ class @SS_ListUI
     $("table.index tbody tr").each ->
       tr    = $(this)
       tbody = tr.parent()
+      tr.find(".row-menu a").each ->
+        if $(this).attr("href")[-7..-1] == "/delete"
+          tr.find(".row-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= t 'views.links.delete_all' %></a></nav>")
       tr.find("input[type=checkbox]").each ->
         tr.toggleClass("checked", $(this).prop("checked"))
       tr.find("input[type=checkbox]").change ->
         tr.toggleClass("checked", $(this).prop("checked"))
+        chkcnt = 0
+        for chkbox in $("input[name='ids[]']")
+          chkcnt++ if chkbox.checked
+        $("thead input[type=checkbox]").
+          prop("checked", (chkcnt > 0 && $("input[name='ids[]']").length == chkcnt) )
+        tr.find(".multiple-menu").hide() if !@checked
+      tr.find("input[type=checkbox]").mouseover ->
+        tr.find(".multiple-menu").show() if @checked
       tr.mouseup (e) ->
         if !$(e.target).is('a') && !$(e.target).is("input")
           tbody.find("input[type=checkbox]").attr("checked", false)
@@ -155,6 +166,29 @@ class @SS_ListUI
           tr.find("input[type=checkbox]").trigger("click")
       tr.mouseleave ->
         tr.find(".row-menu").hide()
+        tr.find(".multiple-menu").hide()
+      tr.find(".multiple-menu a").on "click", (e) ->
+        if $(this).attr("href") == "multipleDelete"
+          e.preventDefault();
+          for chkbox in $("input[name='ids[]']")
+            if chkbox.checked
+              return if SS_ListUI.deleteitem( chkbox.value ).status != 200
+              chkbox.checked = false
+          location.reload()
+    $("thead input[type=checkbox]").change ->
+      for chkbox in $("input[name='ids[]']")
+        chkbox.checked = @checked
+
+  @deleteitem: (id)->
+    $.ajax
+      type: "post"
+      url: location.pathname + "/" + id
+      async: false
+      data: "_method=delete"
+      success: (msg) ->
+        #
+      error: (msg, status) ->
+        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
 
 class @SS_AddonTabs
   @render: ->
@@ -177,18 +211,18 @@ class @SS_AddonTabs
 
 class @SS_Debug
   @doing = false
-  
+
   @run: ->
     $("#log").val("")
     $("#err").val("")
     $("#queue").val("0")
     @doing = true
     @connect_url location.href
-  
+
   @stop: ->
     @doing = false
-    
-  @connect_url: (url)->
+
+  @connect_url: (url, ref = null)->
     return if @doing == false
     return if @testing
     return if url.match(/^#/)
@@ -200,25 +234,26 @@ class @SS_Debug
       url = url.replace(/^https?:\/\/.*?\//, "/")
     else if url.match(/^[^\/]/)
       return
-    
+
     view = $("#log")
     path = url.replace(/\d+/g, "123")
-    return true if view.val().match(new RegExp("^" + path + "$", "m"))
+    patt = path.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    return true if view.val().match(new RegExp("^" + patt + "$", "m"))
     view.val view.val() + path + "\n"
     view.scrollTop view[0].scrollHeight - view.height()
-    
+
     queue = $("#queue")
     queue.val parseInt(queue.val()) + 1
-    
+
     $.ajax {
       type: "GET", url: url, dataType: "html", cache: false
       success: (data, status, xhr)->
         queue.val parseInt(queue.val()) - 1
         $(data).find("a").each ->
-          SS_Debug.connect_url $(this).attr("href")
+          SS_Debug.connect_url $(this).attr("href"), url
       error: (xhr, status, error)->
         queue.val parseInt(queue.val()) - 1
         view = $("#err")
-        view.val view.val() + " [" + xhr.status + "] " + url + "\n"
+        view.val view.val() + " [" + xhr.status + "] " + url + " - Referer: " + ref + "\n"
         view.scrollTop view[0].scrollHeight - view.height()
     }

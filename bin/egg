@@ -28,6 +28,7 @@ class Frypan
     "config/routes",
     "config/samples",
     "db",
+    "db/seeds",
     "doc",
     "lib",
     "lib/tasks/",

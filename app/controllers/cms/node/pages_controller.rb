@@ -20,7 +20,8 @@ class Cms::Node::PagesController < ApplicationController
     
   public
     def index
-      @items = Cms::Page.site(@cur_site).node(@cur_node).allow(read: @cur_user).
+      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      @items = Cms::Page.site(@cur_site).node(@cur_node).allow(:read, @cur_user).
         where(route: "cms/page").
         order_by(filename: 1).
         page(params[:page]).per(50)

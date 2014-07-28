@@ -19,6 +19,11 @@ ja:
     group: グループ
     syntax_check: HTMLチェック
     link_check: リンクチェック
+    search_groups:
+      index: 所有グループを選択する
+      search: 所有グループを検索
+      select: 所有グループを設定する
+      deselect: 削除
 
     nodes:
       cms/node: フォルダーリスト
@@ -30,10 +35,39 @@ ja:
       cms/tabs: 新着タブ
       cms/crumb: パンくずリスト
 
+  cms_role:
+    edit_cms_sites: サイトの編集
+    edit_cms_users: ユーザーの編集
+    read_other_cms_nodes: フォルダーの閲覧（全て）
+    read_other_cms_pages: 固定ページの閲覧（全て）
+    read_other_cms_parts: パーツの閲覧（全て）
+    read_other_cms_layouts: レイアウトの閲覧（全て）
+    read_private_cms_nodes: フォルダーの閲覧（所有）
+    read_private_cms_pages: 固定ページの閲覧（所有）
+    read_private_cms_parts: パーツの閲覧（所有）
+    read_private_cms_layouts: レイアウトの閲覧（所有）
+    edit_other_cms_nodes: フォルダーの編集（全て）
+    edit_other_cms_pages: 固定ページの編集（全て）
+    edit_other_cms_parts: パーツの編集（全て）
+    edit_other_cms_layouts: レイアウトの編集（全て）
+    edit_private_cms_nodes: フォルダーの編集（所有）
+    edit_private_cms_pages: 固定ページの編集（所有）
+    edit_private_cms_parts: パーツの編集（所有）
+    edit_private_cms_layouts: レイアウトの編集（所有）
+    delete_other_cms_nodes: フォルダーの削除（全て）
+    delete_other_cms_pages: 固定ページの削除（全て）
+    delete_other_cms_parts: パーツの削除（全て）
+    delete_other_cms_layouts: レイアウトの削除（全て）
+    delete_private_cms_nodes: フォルダーの削除（所有）
+    delete_private_cms_pages: 固定ページの削除（所有）
+    delete_private_cms_parts: パーツの削除（所有）
+    delete_private_cms_layouts: レイアウトの削除（所有）
+
   modules:
     cms: 標準機能
     addons:
       cms/role: ロール
+      cms/owner_permission: 権限
       cms/permission: 権限
       cms/meta: メタ情報
       cms/html: HTML
@@ -79,14 +113,24 @@ ja:
         home_label: ホームラベル
       cms/reference/layout:
         layout_id: レイアウト
+      cms/site:
+        name: サイト名
+        host: ホスト名
+        domains: ドメイン
+        group_ids: グループ
       cms/role:
         name: ロール名
         permission_level: 権限レベル
         permissions: 権限設定
+      cms/group:
+        name: グループ名
 
       cms/addon/role:
-        role_ids: ロール
+        cms_role_ids: ロール
       cms/addon/permission:
+        group_ids: 所有グループ
+        permission_level: 権限レベル
+      cms/addon/owner_permission:
         group_ids: 所有グループ
         permission_level: 権限レベル
       cms/addon/list/model:

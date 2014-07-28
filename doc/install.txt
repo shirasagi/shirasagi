@@ -29,12 +29,12 @@ CentOS 6.5/64bit
 
   \curl -sSL https://get.rvm.io | sudo bash -s stable
   source /etc/profile
-  rvm install 2.1.1
+  rvm install 2.1.2
 
 --------------------
 # SHIRASAGI
 
-  git clone --depth 1 https://github.com/shirasagi/shirasagi /var/www/shirasagi
+  git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi /var/www/shirasagi
   cd /var/www/shirasagi
   cp config/samples/* config/
   bundle install
@@ -71,29 +71,35 @@ CentOS 6.5/64bit
 # データベース操作
 
   cd /var/www/shirasagi
-  
-  ## インデックスの作成
+
+  # インデックスの作成
   rake db:create_indexes
 
-  ## ユーザーの作成
-  rake ss:user:create data='{ name: "user", email: "user@example.jp", password: "pass" }'
+  # 管理者ユーザーの作成
+  rake ss:user:create data='{ name: "システム管理者", email: "sys@example.jp", password: "pass" }'
 
   # サイトの作成
-  rake ss:site:create data='{ name: "Your Site", host: "www", domains: "localhost:3000" }'
+  rake ss:site:create data='{ name: "サンプルサイト", host: "www", domains: "localhost:3000" }'
 
-  # サンプルデータの投入
+--------------------
+# サンプルデータ
+
+  # ユーザー、グループデータの登録
+  rake db:seed name=users site=www
+
+  # サイトデータの登録
   rake db:seed name=demo site=www
 
 --------------------
 # CMS管理
 
-  ## 予約公開/非公開
+  # 予約公開/非公開
   rake cms:page:release
 
-  ## 静的ページ書き出し
+  # 静的ページ書き出し
   rake cms:page:generate site=www
 
-  ## 静的ページ削除
+  # 静的ページ削除
   rake cms:page:remove site=www
 
 --------------------

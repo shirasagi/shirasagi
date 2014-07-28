@@ -6,13 +6,15 @@ module Cms::Node::Model
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::Reference::Layout
-  include Cms::Addon::Permission
+  include Cms::Addon::OwnerPermission
   include Cms::Addon::Meta
   
   attr_accessor :cur_node, :basename
   
   included do
     store_in collection: "cms_nodes"
+    set_permission_name "cms_nodes"
+    
     index({ site_id: 1, filename: 1 }, { unique: true })
     
     scope :root, ->{ where(depth: 1) }

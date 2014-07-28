@@ -1,0 +1,36 @@
+<table class="index">
+  <thead>
+    <tr>
+      <% @model.fields.select {|k, v| k =~ /^(name|filename)/ }.keys.each do |key| %>
+      <th><%= @model.t key %></th>
+      <% end %>
+      <th class="datetime"><%= @model.t :updated %></th>
+      <th class="preview"><%= t 'urgency.preview' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+    <% layout_path = "#{@cur_node.filename}/layout-#{item.id}.html" %>
+    <tr<%= raw( default_layout?(item) ? ' class="default-layout"' : "" ) %>>
+      <td>
+        <nav class="row-menu">
+          <%= link_to :show, action: :show, id: item %>
+          <% unless selected_layout?(item) %>
+            <%= link_to t('urgency.preview'), cms_preview_path(path: layout_path), target: "_blank" %>
+          <% end %>
+        </nav>
+        <%= link_to item.name, { action: :show, id: item }, class: "icon-layout" %>
+      </td>
+      <td class="filename"><%= File.basename item.filename %></td>
+      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      <% if selected_layout?(item) %>
+      <td><%= t 'urgency.selected_layout' %></td>
+      <% else %>
+      <td><%= link_to t('urgency.preview'), cms_preview_path(path: layout_path), target: "_blank" %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

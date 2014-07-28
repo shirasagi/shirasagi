@@ -1,3 +1,17 @@
+<%= coffee do %>
+$ ->
+  @insertContent = (cont) ->
+    if (typeof tinymce) != "undefined"
+      tinymce.get("item_html").execCommand("mceInsertContent", false, cont)
+    else if (typeof CKEDITOR != "undefined")
+      CKEDITOR.instances.item_html.insertHtml(cont)
+
+  @deleteContent = (id) ->
+    $(".file-view").each ->
+      $(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
+
+<% end %>
+
 <dl class="see">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
@@ -17,7 +31,14 @@
         </a>
         <div class="name">
           <%= f.check_box "file_ids[]", {}, file.id %>
-          <%= file.basename %>
+          <%= file.basename %><br />
+          <% content = link_to "#{file.filename} (#{file.extname.upcase} #{number_to_human_size(file.size)})", "/fs/#{file.id}/#{file.filename}", class: "icon-#{file.extname}" %>
+          <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+          <% if file.image? %>
+          <% content = image_tag "/fs/#{file.id}/#{file.filename}", alt: "#{file.basename}" %>
+          &nbsp;<%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+          <% end %>
+          <br /><%= link_to :"sns.delete", "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
         </div>
       </div>
       <% end %>

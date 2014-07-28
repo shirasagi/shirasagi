@@ -1,0 +1,9 @@
+<article id="info">
+  <dl class="see">
+    <dt><%= t("sys.server_name") %></dt>
+    <dd><%= request.env['SERVER_NAME'] %></dd>
+    
+    <dt><%= t("sys.remote_addr") %></dt>
+    <dd><%= request.env['REMOTE_ADDR'] %></dd>
+  </dl>
+</article>

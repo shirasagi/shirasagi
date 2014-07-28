@@ -6,7 +6,6 @@ class Cms::RolesController < ApplicationController
   model Cms::Role
   
   navi_view "cms/main/navi"
-  menu_view "ss/crud/menu"
   
   private
     def set_crumbs
@@ -19,8 +18,46 @@ class Cms::RolesController < ApplicationController
     
   public
     def index
-      @items = @model.
-        order_by(name: 1).
+      raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+      @items = @model.site(@cur_site).
+        order_by(name: 1).allow(:edit, @cur_user, site: @cur_site).
         page(params[:page]).per(50)
+    end
+    
+    def show
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render
+    end
+    
+    def new
+      @item = @model.new pre_params.merge(fix_params)
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    end
+    
+    def create
+      @item = @model.new get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render_create @item.save
+    end
+    
+    def edit
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render
+    end
+    
+    def update
+      @item.attributes = get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render_update @item.update
+    end
+    
+    def delete
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render
+    end
+    
+    def destroy
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render_destroy @item.destroy
     end
 end

@@ -28,10 +28,20 @@ class Sys::Db::DocsController < ApplicationController
     
   public
     def index
+      raise "403" unless Sys::User.allowed?(:edit, @cur_user)
+      
       @items = @coll.find
       
       @fields = []
       @items.each { |item| @fields |= item.keys }
+    end
+    
+    def show
+      raise "403" unless Sys::User.allowed?(:edit, @cur_user)
+    end
+    
+    def new
+      raise
     end
     
     def create

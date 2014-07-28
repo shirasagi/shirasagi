@@ -6,5 +6,7 @@
   <dd><%= @item.label :permission_level %></dd>
   
   <dt><%= @model.t :permissions %></dt>
-  <dd><%=br @item.permissions.compact.join("\n") %></dd>
+  <dd>
+    <%=br @item.permissions.compact.map{ |permit| t("cms_role.#{permit}") }.join("\n") %>
+  </dd>
 </dl>

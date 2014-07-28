@@ -7,6 +7,7 @@ module Cms::Layout::Model
   
   included do
     store_in collection: "cms_layouts"
+    set_permission_name "cms_layouts"
     
     field :part_paths, type: SS::Extensions::Words, metadata: { form: :none }
     field :css_paths, type: SS::Extensions::Words, metadata: { form: :none }

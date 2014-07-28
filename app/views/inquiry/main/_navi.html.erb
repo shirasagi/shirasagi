@@ -1,0 +1,11 @@
+<%= node_navi do %>
+
+<nav class="sub-menu">
+  <header><h1><%= t "modules.inquiry" %></h1></header>
+  <div>
+    <%= link_to :"inquiry.column", inquiry_columns_path, class: "icon-page" %>
+    <%= link_to :"inquiry.answer", inquiry_answers_path, class: "icon-page" %>
+  </div>
+</nav>
+
+<% end %>

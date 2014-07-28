@@ -3,9 +3,9 @@
   <div>
     <%= link_to :"cms.content", cms_contents_path, class: "icon-content" %>
     <%= link_to :"cms.node", cms_nodes_path, class: "icon-node" %>
-    <%= link_to :"cms.page", cms_pages_path, class: "icon-page" %>
-    <%= link_to :"cms.part", cms_parts_path, class: "icon-part" %>
-    <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" %>
+    <%= link_to :"cms.page", cms_pages_path, class: "icon-page" if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= link_to :"cms.part", cms_parts_path, class: "icon-part" if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
   </div>
 </nav>
 
@@ -20,9 +20,9 @@
 <nav class="main-menu">
   <header><h1><%= t :"cms.config" %></h1></header>
   <div>
-    <%= link_to :"cms.role", cms_roles_path %>
-    <%= link_to :"cms.user", cms_users_path %>
-    <%= link_to :"cms.group", cms_groups_path %>
-    <%= link_to :"cms.site", cms_site_path %>
+    <%= link_to :"cms.site", cms_site_path  %>
+    <%= link_to :"cms.role", cms_roles_path if Cms::Role.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :"cms.user", cms_users_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
   </div>
 </nav>

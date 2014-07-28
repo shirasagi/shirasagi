@@ -4,7 +4,7 @@ module Cms::Page::Feature
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
-  include Cms::Addon::Permission
+  include Cms::Addon::OwnerPermission
   
   attr_accessor :cur_node, :basename
   

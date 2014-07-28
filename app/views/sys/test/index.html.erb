@@ -9,12 +9,12 @@
     float: left; width: 120px;
     button { width: 100%; min-height: 3em; margin: 0px 0px 15px; }
   }
-  
+
   .view {
     margin-left: 140px;
     #queue { width: 120px; text-align: right; }
     div { margin: 10px 0px; }
-    textarea { height: 200px; }
+    textarea { width: 90% !important; height: 200px; }
   }
 }
 <% end %>
@@ -24,14 +24,14 @@
     <button onclick="SS_Debug.run()">Run HTTP</button>
     <button onclick="SS_Debug.stop()">Stop</button>
   </div>
-  
+
   <div class="view">
     <h2>Queue</h2>
     <div><input type="text" id="queue" value="" readonly="readonly" /></div>
-    
+
     <h2>Try URL</h2>
     <div><textarea id="log" readonly="readonly" style="olor: #080"></textarea></div>
-      
+
     <h2>Error URL</h2>
     <div><textarea id="err" readonly="readonly" style="color: #e00;"></textarea></div>
   </div>

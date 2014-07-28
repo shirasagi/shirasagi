@@ -15,9 +15,9 @@
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         <nav class="row-menu">
-          <%= link_to :show, action: :show, id: item %>
-          <%= link_to :edit, action: :edit, id: item %>
-          <%= link_to :delete, action: :delete, id: item %>
+          <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         </nav>
       </td>
       <td><%= link_to item.name, { action: :show, id: item }, class: "icon-part" %></td>

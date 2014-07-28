@@ -129,12 +129,9 @@ textarea.ace_text-input {
   @include main-view;
 }
 .addon-view {
-  margin: 0px 0px 10px;
-  padding: 0px 15px 10px;
-  //border-bottom: 1px solid #ddd;
+  margin: 0px 0px 30px;
+  padding: 0px 15px;
   header {
-    display: table;
-    min-width: 130px;
     margin: 0px 0px 20px -15px;
     padding: 5px 2px;
     border-bottom: 1px solid #ccc;
@@ -278,22 +275,18 @@ textarea.ace_text-input {
 dl.see {
   margin: 0px;
   > dt {
-    @include clear;
     float: left;
     width: 120px;
-    min-height: 1.0em;
-    margin: 0px 0px -1px 0px;
-    padding: 15px 0px;
-    //border-top: 1px solid #eee;
     color: #b38;
     font-weight: bold;
   }
   > dd {
-    min-height: 1.41em;
-    margin: 0px 0px -1px 140px;
-    padding: 15px 0px;
-    //border-top: 1px solid #eee;
+    @include clear;
+    margin: 0px 0px 0px 140px;
   }
+  > dt ~ dt { margin-top: 20px; }
+  > dd ~ dd { margin-top: 20px; }
+  > dd + dd { margin-top: 10px; }
   > dt.wide {
     float: none;
     width: 100%;
@@ -325,6 +318,12 @@ footer.send {
     }
   }
   input.save, button.save, input.delete {
+    background-color: #b58;
+    &:hover {
+      background-color: #c69;
+    }
+  }
+  input.publish_save, button.save, input.delete {
     background-color: #b58;
     &:hover {
       background-color: #c69;

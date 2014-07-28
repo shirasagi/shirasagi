@@ -1,0 +1,10 @@
+<dl class="see mod-inquiry-reply">
+  <dt><%= @model.t :reply_state %></dt>
+  <dd><%= f.select :reply_state, @item.reply_state_options %></dd>
+  <dt><%= @model.t :reply_subject %></dt>
+  <dd><%= f.text_field :reply_subject %></dd>
+  <dt><%= @model.t :reply_upper_text %></dt>
+  <dd><%= f.text_area :reply_upper_text %></dd>
+  <dt><%= @model.t :reply_lower_text %></dt>
+  <dd><%= f.text_area :reply_lower_text %></dd>
+</dl>

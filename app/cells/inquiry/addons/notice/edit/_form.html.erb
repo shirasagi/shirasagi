@@ -1,0 +1,10 @@
+<dl class="see mod-inquiry-notice">
+  <dt><%= @model.t :notice_state %></dt>
+  <dd><%= f.select :notice_state, @item.notice_state_options %></dd>
+  <dt><%= @model.t :notice_email %></dt>
+  <dd><%= f.text_field :notice_email %></dd>
+  <dt><%= @model.t :from_name %></dt>
+  <dd><%= f.text_field :from_name %></dd>
+  <dt><%= @model.t :from_email %></dt>
+  <dd><%= f.text_field :from_email %></dd>
+</dl>

@@ -1,0 +1,26 @@
+<%= coffee do %>
+$ ->
+  $('.inquiry-form input').keypress (ev) ->
+    if (ev.which and ev.which is 13) or (ev.keyCode and ev.keyCode is 13)
+      return false
+    else
+      return true
+  return
+<% end %>
+
+<div class="inquiry-form confirm">
+<%= form_for :item, url: "#{@cur_node.url}create.html", html: { multipart: true } do |f| %>
+  <% if @answer.errors.empty? %>
+  <div class="inquiry-confirm-message"><%= t('inquiry.confirm_message') %></div>
+  <% end %>
+  <%= error_messages_for :answer, header_message: false %>  
+  <%= render partial: "form", locals: { f: f, confirm: true }  %>
+  <% if @cur_node.captcha_enabled? %>
+    <%= show_simple_captcha(object: :answer, code_type: 'numeric', input_html: { required: nil }) %>
+  <% end %>
+  <footer class="send">
+  <%= f.submit t('inquiry.cancel'), name: :cancel %>
+  <%= f.submit t('inquiry.submit'), name: :submit %>
+  </footer>
+</div>
+<% end %>
