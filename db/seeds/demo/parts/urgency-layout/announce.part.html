@@ -1,0 +1,17 @@
+<script type="text/javascript">
+var get_current_timestamp = function() {
+    var weeks = new Array('日', '月', '火', '水', '木', '金', '土');
+    var d = new Date();
+    var month  = d.getMonth() + 1;
+    var day    = d.getDate();
+    var week   = weeks[ d.getDay() ];
+    return d.getFullYear()  + "年" + month + "月" + day + "日" + "(" + week + "曜日" + ")" ;
+}
+$(".announce-date").prepend(get_current_timestamp());
+</script>
+<article id="announce">
+  <header>
+  <h1>緊急アナウンス</h1>
+  </header>
+  <p class="announce-date">18時から24時の間サーバーメンテナンスのンため、シラサギ市ホームページが閲覧できなくなります。</p>
+</article>

@@ -112,6 +112,7 @@ img {
   .menu {
     @include float(right);
     .u-menu {
+      @include float(right);
       padding: 12px 0;
       .smart {
         padding-left: 15px;
@@ -129,6 +130,7 @@ img {
       }
     }
     .l-menu {
+      clear: both;
       text-align: right;
       padding-bottom: 10px;
       form {
@@ -169,7 +171,7 @@ img {
       color: #202020;
     }
     a {
-      display: inline-block;
+      @include inline-block;
       width: 178px;
       padding: 5px 0 4px;
       border-left: $border-hblue;
@@ -312,7 +314,7 @@ img {
       float: left;
       width: 920px;
       a {
-        display: inline-block;
+        @include inline-block;
         margin-left: 12px;
         padding: 3px 4px 0 13px;
         border: 1px solid #999;
@@ -404,7 +406,8 @@ img {
 }
 // -----------------------------------------------------------------------------
 // guide about safety oline propose useful population relations ranking topics
-#guide, #about, #safety, #online, #propose, #useful, #population, #relations, #ranking, #topics {
+#guide, #about, #safety, #online, #propose, #useful, #population, #relations, #ranking, #topics,
+#announce, #emergency {
   margin-bottom: $box-margin;
   h1 {
     margin-bottom: 6px;
@@ -414,8 +417,27 @@ img {
     color: $t-white;
   }
 }
-#safety h1 {
+#announce {
+  margin-top: $box-margin;
+}
+#safety h1, #announce h1, #emergency h1 {
   @include grd-red;
+}
+#emergency {
+  margin-top: $box-margin;
+  h1 {
+    margin-bottom: 0;
+  }
+  article {
+    padding: $item-margin $item-margin 0 $item-margin;
+    border-left: 2px solid #c42c00;
+    border-right: 2px solid #c42c00;
+    background: #ffffa4;
+    &:last-child {
+      padding-bottom: $item-margin;
+      border-bottom: 2px solid #c42c00;
+    }
+  }
 }
 #guide {
   h1 {
@@ -626,7 +648,7 @@ img {
     padding: 0;
     border-bottom: 2px solid $orange;
     .name {
-      display: inline-block;
+      @include inline-block;
       width: 109px;
       padding: 3px 0 0;
       border-left: 5px solid #ddd;
@@ -672,7 +694,7 @@ img {
   }
   .rss {
     float: left;
-    display: inline-block;
+    @include inline-block;
     padding-left: 20px;
     background: url(../img/ic-rss.png) no-repeat left center;
   }
@@ -772,7 +794,7 @@ img {
     border-bottom: $border-hgry;
   }
   time {
-    display: inline-block;
+    @include inline-block;
     width: 120px;
   }
   h2 {
@@ -790,7 +812,7 @@ img {
 .feed {
   padding: 6px 0 3px;
   .rss {
-    display: inline-block;
+    @include inline-block;
     padding-left: 20px;
     background: url(../img/ic-rss.png) no-repeat left center;
   }
@@ -862,7 +884,7 @@ img {
   padding: 12px 0 9px;
   border-bottom: $border-hgry;
   time {
-    display: inline-block;
+    @include inline-block;
     width: 120px;
   }
   h2 {
@@ -913,6 +935,9 @@ img {
   .nodes {
     @include inline-block;
     margin: 5px 0;
+    article {
+      display: inline-block;
+    }
     header {
       margin: 0;
       h2 {
@@ -968,7 +993,7 @@ img {
   text-align: right;
 }
 .page article h1, .one article.body h1,
-.page .related-pages h1 {
+.page .related-pages h1, .inquiry-html h1, .inquiry-form h1 {
   margin: $item-margin 0 6px;
   padding: 3px 10px 0;
   background: $hblue;
@@ -978,7 +1003,8 @@ img {
     margin-top: 0;
   }
 }
-.page article h2, .one article.body h2 {
+.page article h2, .one article.body h2,
+.inquiry-html h2, .inquiry-form h2 {
   margin-bottom: 6px;
   padding: 0 10px;
   border-bottom: 2px solid $blue;
@@ -986,24 +1012,29 @@ img {
   font-size: $px16;
   font-weight: bold;
 }
-.page article h3, .one article.body h3 {
+.page article h3, .one article.body h3,
+.inquiry-html h3, .inquiry-form h3 {
   margin-bottom: 6px;
   padding: 0 10px;
   border-left: 5px solid $blue;
   color: $blue;
   font-weight: bold;
 }
-.page article h4, .one article.body h4 {
+.page article h4, .one article.body h4,
+.inquiry-html h4, .inquiry-form h4 {
   color: $blue;
   font-weight: bold;
 }
-.page article h5, .pages article h6, .one article.body h5, .one article.body h6 {
+.page article h5, .pages article h6, .one article.body h5, .one article.body h6,
+.inquiry-html h5, .inquiry-html  h6, .inquiry-form h5, .inquiry-form h6 {
   font-weight: bold;
 }
-.page article p, .one article.body p {
+.page article p, .one article.body p,
+.inquiry-html p, .inquiry-form p {
   margin-bottom: $item-margin;
 }
-.page article ul, .one article.body ul {
+.page article ul, .one article.body ul,
+.inquiry-html ul, .inquiry-form ul {
   margin-bottom: $item-margin;
   list-style: none;
   li {
@@ -1021,7 +1052,7 @@ img {
   background: none;
   list-style: none;
 }
-.page article ol, .one article.body ol {
+.page article ol, .one article.body ol, .inquiry-form ol {
   margin-bottom: $item-margin;
   padding-left: 23px;
 }
@@ -1107,12 +1138,13 @@ img {
     right: 0;
     .prev {
       @include l-arrow;
+      @include inline-block;
       margin-right: 10px;
       padding: 0 15px;
       border-right: $border-hgry;
     }
     .next {
-      display: inline-block;
+      @include inline-block;
       padding-right: 13px;
       background: url(../img/r-arrow.png) no-repeat right 7px;
     }
@@ -1147,7 +1179,7 @@ img {
   }
   dl.sun, dl.holiday {
     background: #ffeeee;
-    color: #d90000;
+    color: $red;
   }
   dt {
     float: left;
@@ -1180,10 +1212,83 @@ img {
   }
 }
 // -----------------------------------------------------------------------------
+// inquiry
+.inquiry-form {
+  dl {
+    @include clear;
+    clear: both;
+    width: 100%;
+    margin-bottom: $box-margin;
+    dt {
+      clear: both;
+      float: left;
+      width: 200px;
+      padding: 6px $item-margin;
+      font-weight: bold;
+      background: $hblue;
+      @include border-radius(3px);
+      .required {
+        display: block;
+        color: $red;
+        font-weight: normal;
+      }
+    }
+    dd {
+      float: left;
+      width: 832px;
+      padding: 0 $item-margin;
+      p {
+        margin-bottom: 0;
+      }
+      input[type="text"] {
+        width: 250px;
+      }
+      input[type="email"] {
+        width: 350px;
+      }
+      textarea {
+        width: 800px;
+        min-height: 200px;
+      }
+      label {
+        margin-right: $item-margin;
+      }
+    }
+  }
+  .send {
+    padding-left: 236px;
+    input {
+      margin-right: $item-margin;
+      @include btn-org;
+    }
+    input[name="cancel"] {
+      @include btn-gry;
+    }
+  }
+  #errorExplanation {
+    margin-bottom: $box-margin;
+    padding: $item-margin $item-margin 0;
+    border: 2px solid $red;
+    @include border-radius(5px);
+    background: #ffffa4;
+  }
+  .inquiry-confirm-message {
+    margin-bottom: $box-margin;
+    &~dd {
+      padding-bottom:2em;
+    }
+  }
+  .simple-captcha {
+    padding-left: 236px;
+    margin-bottom: $box-margin;
+  }
+}
+
+// -----------------------------------------------------------------------------
 // smart phone
 // -----------------------------------------------------------------------------
 @media only screen and (max-width: 600px) {
-  #head, #navi .wrap, #wrap, #main, #side, #addition, #add, 
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
   #main .category-nodes article  {
@@ -1197,7 +1302,7 @@ img {
   }
 // -----------------------------------------------------------------------------
 // display:none
-  #tool, #head .u-menu, #slideshow #slide-controll #pause-play,
+  #tool, #head .menu .u-menu, #slideshow #slide-controll #pause-play,
   #population, #add .info, .crumbs {
     display: none;
   }
@@ -1214,10 +1319,12 @@ img {
   }
   #head .menu {
     float: none;
+    display: block;
     padding: 0 10px;
   }
   #head .menu .l-menu {
     width: 100%;
+    @include box-sizing(border-box);
     text-align: left;
     form {
       float: none;
@@ -1326,6 +1433,9 @@ img {
     .new h2:after {
       display: none;
     }
+  }
+  #announce p {
+    padding: 0 10px;
   }
   #safety li {
     width: 50%;
@@ -1438,7 +1548,7 @@ img {
     .rss {
     float: left;
     width: 30%;
-    display: inline-block;
+    @include inline-block;
     padding: 3px 0 3px 30px;
     background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
     }
@@ -1456,7 +1566,7 @@ img {
     }
     .rss {
       width: 30%;
-      display: inline-block;
+      @include inline-block;
       padding: 3px 0 3px 30px;
       background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
       @include box-sizing(border-box);
@@ -1634,6 +1744,38 @@ img {
     }
     dd {
       margin: 0;
+    }
+  }
+// -----------------------------------------------------------------------------
+// inquiry
+  .inquiry-html {
+    margin-bottom: $box-margin;
+    padding: 0 $smart-margin;
+  }
+  .inquiry-form {
+    margin-bottom: $box-margin;
+    padding: 0 $smart-margin;
+    dl {
+      dt {
+        width: 100%;
+        margin-bottom: $smart-margin;
+        @include box-sizing(border-box);
+        .required {
+          display: inline;
+        }
+      }
+      dd {
+        width: 100%;
+        @include box-sizing(border-box);
+        input[type="text"], input[type="email"], textarea {
+          width: 100%;
+          @include box-sizing(border-box);
+        }
+      }
+    }
+    .send, .simple-captcha {
+      padding: 0;
+      text-align: center;
     }
   }
 }
