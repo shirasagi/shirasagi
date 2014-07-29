@@ -362,6 +362,8 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /\//).
   update_all(layout_id: layouts["category-middle"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /^oshirase\//).
   update_all(layout_id: layouts["more"].id)
+Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "urgency").
+  update_all(layout_id: layouts["more"].id)
 Cms::Node.where(site_id: @site._id, filename: /^inquiry$/).
   update_all(layout_id: layouts["one"].id)
 
