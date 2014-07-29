@@ -104,15 +104,34 @@ dd {
 #guide h1, #about h1, #online h1, #propose h1,
 #safety h1, #attention h1, .cms-tabs h1,
 #useful h1, #population h1, #relations h1, #ranking h1, #topics h1,
-#ss-page-name, #links-life h1, #category-list h1 {
+#ss-page-name, #links-life h1, #category-list h1,
+#emergency h1, #announce h1 {
   margin-bottom: 5px;
   padding: 0 10px;
   border-left: 5px solid #f08300;
   background: #007acd;
   color: #fff;
 }
-#safety h1 {
+#safety h1, #emergency h1, #announce h1 {
   background: #e03300
+}
+#announce p {
+  padding: 0 10px;
+}
+#emergency {
+  margin-bottom: 10px;
+}
+#emergency .tag-article {
+  padding: 0 10px;
+  border-bottom: 1px solid #ddd;
+}
+.pages #emergency div h2 {
+  padding: 0;
+  margin: 10px 0 5px;
+  border: none;
+}
+#emergency .tag-article p {
+  margin: 5px 0;
 }
 #attention h1 {
   background: #f08300;

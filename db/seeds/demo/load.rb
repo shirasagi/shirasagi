@@ -22,9 +22,11 @@ def save_layout(data)
   item = Cms::Layout.find_or_create_by cond
   item.attributes = data.merge html: html
   item.update
-  
+
   item.add_to_set group_ids: @site.group_ids
   item.update
+
+  item
 end
 
 save_layout filename: "category-kanko.layout.html", name: "カテゴリー：観光・文化・スポーツ"
@@ -39,6 +41,9 @@ save_layout filename: "oshirase.layout.html", name: "お知らせ"
 save_layout filename: "pages.layout.html", name: "記事レイアウト"
 save_layout filename: "top.layout.html", name: "トップレイアウト"
 save_layout filename: "one.layout.html", name: "1カラム"
+save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
+save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
+save_layout filename: "urgency-layout/top-level3.layout.html", name: "緊急災害3：トップページ"
 
 array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 layouts = Hash[*array.flatten]
@@ -64,9 +69,11 @@ def save_part(data)
 
   item.attributes = data
   item.update
-  
+
   item.add_to_set group_ids: @site.group_ids
   item.update
+
+  item
 end
 
 save_part route: "cms/free", filename: "about.part.html", name: "SHIRASAGI市について"
@@ -101,6 +108,13 @@ save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンく
 save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト"
 save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
   conditions: %w[oshirase oshirase/event shisei/jinji], limit: 6
+save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
+save_part route: "cms/free", filename: "urgency-layout/calamity.part.html", name: "災害関係ホームページ"
+save_part route: "cms/free", filename: "urgency-layout/connect.part.html", name: "関連サイト"
+save_part route: "cms/free", filename: "urgency-layout/head.part.html", name: "ヘッダー"
+save_part route: "cms/free", filename: "urgency-layout/mode.part.html", name: "緊急災害表示"
+save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "グローバルナビ"
+save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報", limit: 20
 
 ## -------------------------------------
 puts "nodes:"
@@ -123,9 +137,11 @@ def save_node(data)
 
   item.attributes = data
   item.update
-  
+
   item.add_to_set group_ids: @site.group_ids
   item.update
+
+  item
 end
 
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
@@ -265,6 +281,58 @@ save_node route: "category/page", filename: "shisei/soshiki", name: "組織案�
 save_node route: "category/page", filename: "shisei/toke", name: "統計・人口"
 save_node route: "category/page", filename: "shisei/toshi", name: "都市整備"
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革"
+save_node route: "category/page", filename: "urgency", name: "緊急情報", shortcut: "show"
+
+## urgency
+save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災害レイアウト",
+  urgency_default_layout_id: layouts["top"].id, shortcut: "show"
+
+## inquiry
+inquiry_html = File.read("nodes/inquiry.inquiry_html") rescue nil
+inquiry_sent_html  = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
+inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市へのお問い合わせ", shortcut: "show",
+  from_name: "シラサギサンプルサイト",
+  inquiry_captcha: "enabled", notice_state: "disabled",
+  inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
+  reply_state: "disabled",
+  reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+  reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
+  reply_lower_text: "以上。"
+
+def save_inquiry_column(data)
+  puts "  #{data[:name]}"
+  cond = { node_id: data[:node_id], name: data[:name] }
+  item = Inquiry::Column.find_or_create_by cond
+
+  item.attributes = data
+  item.update
+
+  item
+end
+
+puts "columns:"
+
+column_name_html = File.read("columns/name.html") rescue nil
+column_company_html = File.read("columns/company.html") rescue nil
+column_email_html = File.read("columns/email.html") rescue nil
+column_gender_html = File.read("columns/gender.html") rescue nil
+column_age_html = File.read("columns/age.html") rescue nil
+column_category_html = File.read("columns/category.html") rescue nil
+column_question_html = File.read("columns/question.html") rescue nil
+save_inquiry_column node_id: inquiry_node.id, name: "お名前", order: 0, input_type: "text_field",
+  html: column_name_html, select_options: [], required: "required", site_id: @site._id
+save_inquiry_column node_id: inquiry_node.id, name: "企業・団体名", order: 10, input_type: "text_field",
+  html: column_company_html, select_options: [], required: "optional", site_id: @site._id
+save_inquiry_column node_id: inquiry_node.id, name: "メールアドレス", order: 20, input_type: "email_field",
+  html: column_email_html, select_options: [], required: "required", site_id: @site._id
+save_inquiry_column node_id: inquiry_node.id, name: "性別", order: 30, input_type: "radio_button",
+  html: column_gender_html, select_options: %w[ 男性 女性 ], required: "required", site_id: @site._id
+save_inquiry_column node_id: inquiry_node.id, name: "年齢", order: 40, input_type: "select",
+  html: column_age_html, select_options: %w[ 10代 20代 30代 40代 50代 60代 70代 80代 ], required: "required", site_id: @site._id
+save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ区分", order: 50, input_type: "check_box",
+  html: column_category_html, select_options: %w[ 市政について ご意見・ご要望 申請について その他 ], required: "required", site_id: @site._id
+save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
+  html: column_question_html, select_options: [], required: "required", site_id: @site._id
 
 array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 categories = Hash[*array.flatten]
@@ -294,6 +362,10 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /\//).
   update_all(layout_id: layouts["category-middle"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /^oshirase\//).
   update_all(layout_id: layouts["more"].id)
+Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "urgency").
+  update_all(layout_id: layouts["more"].id)
+Cms::Node.where(site_id: @site._id, filename: /^inquiry$/).
+  update_all(layout_id: layouts["one"].id)
 
 ## -------------------------------------
 puts "pages:"
@@ -302,15 +374,19 @@ def save_page(data)
   puts "  #{data[:name]}"
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("pages/" + data[:filename]) rescue nil
+  summary_html = File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
   item = Cms::Page.find_or_create_by cond
   item.html = html if html
-  
+  item.summary_html = summary_html if summary_html
+
   item.attributes = data
   item.update
-  
+
   item.add_to_set group_ids: @site.group_ids
   item.update
+
+  item
 end
 
 save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id
@@ -372,6 +448,10 @@ save_page route: "article/page", filename: "oshirase/kurashi/27.html", name: "�
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
 save_page route: "article/page", filename: "oshirase/kurashi/28.html", name: "平成26年4月より国民健康保険税率が改正されます",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
+save_page route: "article/page", filename: "urgency/29.html", name: "黒鷺県沖で発生した地震による当市への影響について。",
+  layout_id: layouts["oshirase"].id, category_ids: [categories["urgency"].id]
+save_page route: "article/page", filename: "urgency/30.html", name: "黒鷺県沖で発生した地震による津波被害について。",
+  layout_id: layouts["more"].id, category_ids: [categories["urgency"].id]
 
 dates = (Date.today..(Date.today + 12)).map { |d| d.mongoize }
 save_page route: "article/page", filename: "docs/29.html", name: "ふれあいフェスティバル", layout_id: layouts["oshirase"].id,
