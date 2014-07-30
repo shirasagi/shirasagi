@@ -1,0 +1,16 @@
+<%= html_editor ".mod-faq-body .html", height: "300px", readonly: true %>
+
+<dl class="see mod-faq-body">
+  <dt><%= @model.t :question_html %></dt>
+  <dd>
+    <% if @item.send(:question_html).present?  %>
+    <%= text_area_tag "mod-faq-question", @item.question_html, class: "html", style: "height: 400px;" %>
+    <% end %>
+  </dd>
+  <dt><%= @model.t :answer_html %></dt>
+  <dd>
+    <% if @item.send(:answer_html).present?  %>
+    <%= text_area_tag "mod-faq-answer", @item.answer_html, class: "html", style: "height: 400px;" %>
+    <% end %>
+  </dd>
+</dl>

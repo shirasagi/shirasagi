@@ -1,0 +1,10 @@
+<% if @cur_page.question_html.present? %>
+<article class="faq-question">
+  <%== @cur_page.question_html %>
+</article>
+<% end %>
+<% if @cur_page.answer_html.present? %>
+<article class="faq-answer">
+  <%== @cur_page.answer_html %>
+</article>
+<% end %>

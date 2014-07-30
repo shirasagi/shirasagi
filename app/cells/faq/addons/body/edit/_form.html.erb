@@ -1,0 +1,8 @@
+<%= html_editor ".mod-faq-body .html", height: "300px" %>
+
+<dl class="see mod-faq-body">
+  <dt><%= @model.t :question_html %></dt>
+  <dd><%= f.text_area :question_html, class: "html", style: "height: 300px;" %></dd>
+  <dt><%= @model.t :answer_html %></dt>
+  <dd><%= f.text_area :answer_html, id: "#{f.object_name}_html", class: "html", style: "height: 300px;" %></dd>
+</dl>
