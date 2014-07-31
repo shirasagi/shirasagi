@@ -7,6 +7,7 @@
     <%= link_to :"sys.group", sys_groups_path if Sys::Group.allowed?(:edit, @cur_user) %>
     <%= link_to :"sys.http_test", sys_test_path if Sys::User.allowed?(:edit, @cur_user) %>
     <%= link_to :"sys.db_tool", sys_db_path if Sys::User.allowed?(:edit, @cur_user) %>
+    <%= link_to :"history.log", history_sys_logs_path if Sys::User.allowed?(:edit, @cur_user,) %>
     <%= link_to :"sys.info", sys_info_path %>
   </div>
 </nav>

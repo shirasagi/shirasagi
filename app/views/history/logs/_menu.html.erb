@@ -2,6 +2,7 @@
   <header><h1><%= t :"ss.action" %></h1></header>
   <div>
     <% if params[:action] =~ /index/ %>
+      <%= link_to :download, action: :download %>
       <%= link_to :delete, action: :delete %>
     <% else %>
       <%= link_to :back_to_index, action: :index %>

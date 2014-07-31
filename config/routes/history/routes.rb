@@ -7,12 +7,19 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
-  namespace "history", path: ".:host/history" do
-    get "/" => "main#index"
+  sys "history" do
+    get "logs" => "logs#index", as: :logs
+    get "logs/delete" => "logs#delete", as: :delete
+    delete "logs" => "logs#destroy", as: :destroy
+    get "logs/download" => "logs#download", as: :download
+    post "logs/download" => "logs#download"
+  end
 
-    #resources :logs, concerns: :deletion
+  namespace "history", path: ".:host/history" do
     get "logs" => "logs#index"
     get "logs/delete" => "logs#delete", as: :delete
     delete "logs" => "logs#destroy", as: :destroy
+    get "logs/download" => "logs#download", as: :download
+    post "logs/download" => "logs#download"
   end
 end

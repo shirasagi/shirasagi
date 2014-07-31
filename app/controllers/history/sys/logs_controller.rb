@@ -1,13 +1,10 @@
 # coding: utf-8
-class History::LogsController < ApplicationController
-  include Cms::BaseFilter
+class History::Sys::LogsController < ApplicationController
+  include Sys::BaseFilter
 
   model History::Log
 
-  navi_view "cms/main/navi"
-
   before_action :filter_permission
-  skip_filter :put_log
 
   private
     def set_crumbs
@@ -15,26 +12,25 @@ class History::LogsController < ApplicationController
     end
 
     def filter_permission
-      raise "403" unless Cms::User.allowed?(:edit, @cur_user, site: @cur_site)
+      raise "403" unless Sys::User.allowed?(:edit, @cur_user)
     end
 
   public
     def index
-      @items = @model.site(@cur_site).
+      @items = @model.
+        where(site_id: nil).
         order_by(created: -1).
         page(params[:page]).per(50)
     end
 
     def download
-      dump @model.term_to_date "month"
-
       @item = @model.new
       return if request.get?
 
       from = @model.term_to_date params[:item][:save_term]
       raise "500" if from == false
 
-      cond = { site_id: @cur_site.id }
+      cond = { }
       cond[:created] = { "$gte" => from } if from
 
       require "csv"
@@ -51,7 +47,7 @@ class History::LogsController < ApplicationController
         end
       end
 
-      send_data csv.encode("SJIS"), filename: "history_logs_#{Time.now.to_i}.csv"
+      send_data csv.encode("SJIS"), filename: "history_sys_logs_#{Time.now.to_i}.csv"
     end
 
     def delete
@@ -62,7 +58,7 @@ class History::LogsController < ApplicationController
       from = @model.term_to_date params[:item][:save_term]
       raise "500" if from == false
 
-      cond = { site_id: @cur_site.id }
+      cond = { site_id: nil }
       cond[:created] = { "$lt" => from }
 
       num  = @model.delete_all(cond)

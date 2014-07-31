@@ -2,7 +2,6 @@
 module Cms::BaseFilter
   extend ActiveSupport::Concern
   include SS::BaseFilter
-  include History::LogFilter
 
   included do
     helper Cms::NodeHelper

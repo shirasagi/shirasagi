@@ -22,8 +22,8 @@ ja:
 
   mongoid:
     models:
-      ss/site: サイト
-      ss/user: ユーザー
+      sys/site: サイト
+      sys/user: ユーザー
     attributes:
       sys/role:
         name: ロール名

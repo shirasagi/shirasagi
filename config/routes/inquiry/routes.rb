@@ -13,7 +13,7 @@ SS::Application.routes.draw do
     resources :columns, concerns: :deletion
     resources :answers, concerns: :deletion, only: [:index, :show, :destroy]
   end
-  
+
   node "inquiry" do
     get "form/(index.:format)" => "public#new", cell: "nodes/form"
     get "form/sent.html" => "public#sent", cell: "nodes/form"

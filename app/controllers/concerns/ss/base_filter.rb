@@ -2,12 +2,14 @@
 module SS::BaseFilter
   extend ActiveSupport::Concern
   include SS::LayoutFilter
+  include History::LogFilter
 
   included do
     helper EditorHelper
     cattr_accessor :model_class
     before_action :set_model
     before_action :logged_in?
+    after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
     layout "ss/base"
   end
 

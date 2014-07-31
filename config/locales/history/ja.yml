@@ -2,8 +2,14 @@ ja:
   history:
     log: 操作履歴
     user: ユーザー
-    item: 対象アイテム
+    taget: 操作対象
     action: アクション
+    save_term:
+      day: １日
+      month: １ヶ月
+      year: １年
+      all_save: すべて保存
+      all_delete: すべて削除
 
   modules:
     history: 履歴
@@ -14,3 +20,4 @@ ja:
     attributes:
       history/log:
         created: 操作日時
+        save_term: 保存期間
