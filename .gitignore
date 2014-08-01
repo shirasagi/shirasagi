@@ -7,7 +7,6 @@
 /log/*.log
 /tmp
 /public/sites
-/vendor/eggs
 
 .DS_Store
 Thumbs.db
