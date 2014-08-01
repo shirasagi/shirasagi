@@ -1,0 +1,21 @@
+<div class="opendata-sparql">
+  <form method="get" action="">
+    <table>
+      <tr>
+        <th>Query</th>
+        <td>
+          <textarea name="query"
+           style="width: 400px; height: 100px;">select distinct * where { ?p ?o . }</textarea>
+        </td>
+      </tr>
+      <tr>
+        <th>Format</th>
+        <td><select><option>JSON</option></select></td>
+      </tr>
+    </table>
+    
+    <div style="margin: 20px 50px;">
+      <input type="submit" value="Run Query" />
+    </div>
+  </form>
+</div>

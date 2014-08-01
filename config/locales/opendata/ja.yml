@@ -1,0 +1,24 @@
+ja:
+  opendata:
+
+  modules:
+    opendata: オープンデータ
+
+  cms:
+    nodes:
+      opendata/dataset: データセット
+      opendata/app: アプリストア
+      opendata/idea: アイデアボックス
+      
+  mongoid:
+    models:
+      opendata/dataset: データセット
+      opendata/app: アプリ
+      opendata/idea: アイデア
+    attributes:
+      opendata/dataset:
+        name: データ名
+      opendata/app:
+        name: アプリ名
+      opendata/idea:
+        name: タイトル
