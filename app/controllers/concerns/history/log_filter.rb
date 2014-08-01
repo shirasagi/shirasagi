@@ -10,8 +10,14 @@ module History::LogFilter
       log.action       = params[:action]
       log.user_id      = @cur_user.id
       log.site_id      = @cur_site.id if @cur_site
-      log.target_id    = @item.id if @item
-      log.target_class = @item.class if @item
+
+      if @item && @item.respond_to?(:new_record?)
+        if !@item.new_record?
+          log.target_id    = @item.id
+          log.target_class = @item.class
+        end
+      end
+
       log.save
     end
 end
