@@ -9,7 +9,7 @@ ja:
       opendata/dataset: データセット
       opendata/app: アプリストア
       opendata/idea: アイデアボックス
-      
+
   mongoid:
     models:
       opendata/dataset: データセット
@@ -18,7 +18,29 @@ ja:
     attributes:
       opendata/dataset:
         name: データ名
+        site_id: サイト
+        user_id: 作成者ユーザー
+        group_id: 所属グループ
+        categry_ids: カテゴリー
+        point: 評価
+        text: 説明
+        license: ライセンス
       opendata/app:
+        site_id: サイト
         name: アプリ名
+        user_id: 作成者ユーザー
+        group_id: 所属グループ
+        categry_ids: カテゴリー
+        dataset_ids: データセット
+        point: 評価
+        text: 説明
+        license: ライセンス
       opendata/idea:
         name: タイトル
+        site_id: サイト
+        user_id: 作成者
+        categry_ids: カテゴリー
+        dataset_ids: データセット
+        app_ids: アプリ
+        point: 評価
+        text: 内容

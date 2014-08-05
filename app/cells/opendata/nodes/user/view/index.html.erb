@@ -1,3 +1,22 @@
+<header>
+  <h1><%= t(:login) %></h1>
+</header>
+
+<p style="color: Red"><%= @error %></p>
+<%= form_tag action: :login do %>
+    <%= error_messages_for :item %>
+    <%= hidden_field_tag :ref, params[:ref] %>
+
+    Email<br />
+    <%= email_field :item, :email %><br />
+    <br />
+    Password<br />
+    <%= password_field :item, :password %><br />
+
+    <%= submit_tag t(:login) %>
+
+<% end %>
+
 <form method="get" action="<%= @cur_node.url %>1/dataset/">
   <input type="text">
   <input type="submit" value="Login" />

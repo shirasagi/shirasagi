@@ -1,20 +1,25 @@
+<%= render partial: "opendata/nodes/user/view/navi" %>
+
+<%= form_for :item do |f| %>
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
   <dt><%= @model.t :site_id %></dt>
   <dd><%= f.number_field :site_id %></dd>
-  <dt><%= @model.t :user_id %></dt>
-  <dd><%= f.number_field :user_id %></dd>
   <dt><%= @model.t :group_id %></dt>
   <dd><%= f.number_field :group_id %></dd>
   <dt><%= @model.t :categry_ids %></dt>
   <dd></dd>
-  <dt><%= @model.t :dataset_ids %></dt>
-  <dd></dd>
   <dt><%= @model.t :point %></dt>
-  <dd><%= f.number_field :point %></dd>
+  <dd><%= f.number_field :point, readonly: true %></dd>
   <dt><%= @model.t :text %></dt>
   <dd><%= f.text_field :text %></dd>
   <dt><%= @model.t :license %></dt>
   <dd><%= f.text_field :license %></dd>
 </dl>
+
+<footer class="send">
+  <%= f.submit t(:save), class: :save %>
+  <%= f.button t(:cancel), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>

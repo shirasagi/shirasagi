@@ -1,3 +1,8 @@
+<div class="wrap">
+  <a href="/dataset/new.html">Upload</a>
+</div>
+<br>
+
 <div class="opendata-datasets">
 <% @items.each do |item| %>
   <article>
@@ -9,3 +14,7 @@
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+<%= session[:user] %>
+
+<%= #render partial: "opendata/nodes/dataset/edit/form"
+ %>
