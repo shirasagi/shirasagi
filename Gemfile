@@ -12,7 +12,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 #gem 'spring', group: :development
 
 # gem 'bcrypt', '~> 3.1.7'
-# gem "unicorn"
+gem "unicorn"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
@@ -42,7 +42,7 @@ gem 'simple_captcha2', require: 'simple_captcha'
 
 group :development, :test do
   gem 'spring'
-  gem 'rspec'  
+  gem 'rspec'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
 end

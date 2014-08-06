@@ -4,6 +4,7 @@
 /.project
 
 /config/*.yml
+/config/unicorn.rb
 /log/*.log
 /tmp
 /public/sites
