@@ -3,8 +3,8 @@ SS_Tabs.render("#cms-tabs-<%= @cur_part.id %>");
 <% end %>
 
 <div class="cms-tabs tabs" id="cms-tabs-<%= @cur_part.id %>">
-  <% @tabs.each do |tab| %>
-  <article class="tab" id="cms-tab-<%= tab.object_id %>">
+  <% @tabs.each_with_index do |tab, idx| %>
+  <article class="tab" id="cms-tab-<%= @cur_part.id %>-<%= idx %>">
     <header><h1><%= tab[:name] %></h1></header>
     <div class="pages">
       <% tab[:pages].each do |item| %>
