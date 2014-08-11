@@ -50,7 +50,7 @@ module EditorHelper
       opts[:readOnly] = true
       opts.delete :readonly
     end
-    opts[:extraPlugins]  << ",templates"
+    opts[:extraPlugins]  << ",templates,justify"
     opts[:enterMode] = 2 #BR
     opts[:shiftEnterMode] = 1 #P
     opts[:allowedContent] = true
