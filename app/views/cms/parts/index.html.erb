@@ -8,7 +8,7 @@
       <th class="datetime"><%= @model.t :updated %></th>
     </tr>
   </thead>
-  
+
   <tbody>
     <% @items.each do |item| %>
     <tr>
@@ -28,3 +28,5 @@
     <% end %>
   </tbody>
 </table>
+
+<%= paginate @items if @items.try(:current_page) %>

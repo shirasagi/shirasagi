@@ -28,3 +28,5 @@
     <% end %>
   </tbody>
 </table>
+
+<%= paginate @items if @items.try(:current_page) %>
