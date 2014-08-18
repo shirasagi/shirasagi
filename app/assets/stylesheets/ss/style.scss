@@ -241,13 +241,14 @@ textarea.ace_text-input {
 
 .pagination {
   @include clear;
-  margin: 10px 0px;
+  margin: 20px 0px;
   span a, .current, .gap {
     float: left;
     min-width: 20px;
     margin: 0px 4px 0px 0px;
     padding: 6px 2px;
-    @include box-shadow(0px 0px 3px #aaa);
+    border: 1px solid #ccc;
+    //@include box-shadow(0px 0px 3px #aaa);
     background-color: #fff;
     color: #444;
     text-align: center;

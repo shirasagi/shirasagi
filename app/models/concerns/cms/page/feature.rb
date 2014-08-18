@@ -41,6 +41,17 @@ module Cms::Page::Feature
     def node(node)
       node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
     end
+    
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
+      
+      if params[:name].present?
+        words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
+        criteria = criteria.all_in name: words
+      end
+      criteria
+    end
   end
   
   public

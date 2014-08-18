@@ -12,7 +12,7 @@ class RelatedPages::SearchController < ApplicationController
       @query = params[:q]
 
       if @query.present? && @cur_site.present?
-        @query = @query.split(/[\s　]+/).map { |q| { name: /#{q}/ } }
+        @query = @query.split(/[\s　]+/).map { |q| { name: /\Q#{q}\E/ } }
         @model = Cms::Page
         @items = @model.site(@cur_site).
           where(deleted: nil).

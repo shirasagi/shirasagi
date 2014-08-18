@@ -23,6 +23,7 @@ class Cms::PagesController < ApplicationController
       @items = @model.site(@cur_site).allow(:read, @cur_user).
         where(depth: 1).
         where(route: "cms/page").
+        search(params[:s]).
         order_by(updated: -1).
         page(params[:page]).per(50)
     end
