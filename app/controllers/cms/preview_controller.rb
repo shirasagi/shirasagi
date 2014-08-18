@@ -21,8 +21,16 @@ class Cms::PreviewController < ApplicationController
 
     def x_sendfile(file = @file)
       return if file =~ /\.(ht|x)ml$/
-      raise "404" unless Fs.exists?(file)
       super
+      return if response.body.present?
+
+      if @path =~ /^fs\// # TODO:
+        filename = ::File.basename(@path)
+        id = ::File.basename(::File.dirname(@path))
+        @item = SS::File.find_by id: id, filename: filename
+        return send_data @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline
+      end
+      raise "404" unless Fs.exists?(file)
     end
 
     def render_preview
