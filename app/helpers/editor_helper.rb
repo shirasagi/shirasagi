@@ -51,8 +51,8 @@ module EditorHelper
       opts.delete :readonly
     end
     opts[:extraPlugins]  << ",templates,justify"
-    opts[:enterMode] = 2 #BR
-    opts[:shiftEnterMode] = 1 #P
+    #opts[:enterMode] = 2 #BR
+    #opts[:shiftEnterMode] = 1 #P
     opts[:allowedContent] = true
     opts[:height] ||= "360px"
 
