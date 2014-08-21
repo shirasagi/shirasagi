@@ -1,9 +1,5 @@
-<header>
-  <h1><%= t(:login) %></h1>
-</header>
-
-<p style="color: Red"><%= @error %></p>
-<%= form_tag action: :login do %>
+<% if session[:user] == nil %>
+  <%= form_for :item, url: "#{@cur_node.url}login.html", html: { multipart: true } do |f| %>
     <%= error_messages_for :item %>
     <%= hidden_field_tag :ref, params[:ref] %>
 
@@ -13,11 +9,12 @@
     Password<br />
     <%= password_field :item, :password %><br />
 
-    <%= submit_tag t(:login) %>
+    <%= submit_tag t(:login), name: :submit %>
 
+  <% end %>
+<% else %>
+  <%= render partial: "opendata/nodes/user/view/navi" %>
+  <%= form_for :item, url: "#{@cur_node.url}logout.html", html: { multipart: true } do |f| %>
+    <%= submit_tag t(:logout), name: :submit %>
+  <% end %>
 <% end %>
-
-<form method="get" action="<%= @cur_node.url %>1/dataset/">
-  <input type="text">
-  <input type="submit" value="Login" />
-</form>
