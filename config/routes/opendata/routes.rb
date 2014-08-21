@@ -32,14 +32,20 @@ SS::Application.routes.draw do
     get "sparql/*path" => "public#index", cell: "nodes/sparql"
     get "api/*path" => "public#index", cell: "nodes/api"
 
-    get "dataset/new/(index.:format)" => "public#new", cell: "nodes/dataset"
-    post "dataset/(index.:format)" => "public#create", cell: "nodes/dataset"
-    get "dataset/:id/edit/(index.:format)" => "public#edit", cell: "nodes/dataset"
-    patch "dataset/:id/(index.:format)" => "public#update", cell: "nodes/dataset"
-    put "dataset/:id/(index.:format)" => "public#update", cell: "nodes/dataset"
-    delete "dataset/:id/(index.:format)" => "public#delete", cell: "nodes/dataset"
+    get "dataset/new.html" => "public#new", cell: "nodes/dataset"
+    post "dataset/create.html" => "public#create", cell: "nodes/dataset"
+    get "dataset/file.html" => "public#file", cell: "nodes/dataset"
+    post "dataset/upload.html" => "public#upload", cell: "nodes/dataset"
+
+    #get "dataset/:id/edit/(index.:format)" => "public#edit", cell: "nodes/dataset"
+    #patch "dataset/:id/(index.:format)" => "public#update", cell: "nodes/dataset"
+    #put "dataset/:id/(index.:format)" => "public#update", cell: "nodes/dataset"
+    #delete "dataset/:id/(index.:format)" => "public#delete", cell: "nodes/dataset"
 
     get "user/(index.:format)" => "public#index", cell: "nodes/user"
+    post "user/login.html" => "public#login", cell: "nodes/user"
+    post "user/logout.html" => "public#logout", cell: "nodes/user"
+
     get "user/:user/dataset/(index.:format)" => "public#index", cell: "nodes/user_dataset"
     get "user/:user/dataset/:id/(index.:format)" => "public#show", cell: "nodes/user_dataset"
     get "user/:user/app/(index.:format)" => "public#index", cell: "nodes/user_app"
@@ -54,14 +60,6 @@ SS::Application.routes.draw do
     put "user/:user/dataset/:id/(index.:format)" => "public#update", cell: "nodes/user_dataset"
     delete "user/:user/dataset/:id/(index.:format)" => "public#delete", cell: "nodes/user_dataset"
 
-    resources :dataset, concerns: :deletion, controller: :public, cell:"nodes/dataset"
-    resources :app, concerns: :deletion, controller: :public, cell:"nodes/app"
-    resources :idea, concerns: :deletion, controller: :public, cell:"nodes/idea"
-    resources :user do
-      resources :dataset, concerns: :deletion, controller: :public, cell:"nodes/user_dataset"
-      resources :app, concerns: :deletion, controller: :public, cell:"nodes/user_app"
-      resources :idea, concerns: :deletion, controller: :public, cell:"nodes/user_idea"
-    end
   end
 
 #  part "opendata" do

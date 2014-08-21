@@ -6,9 +6,7 @@ class Opendata::App
 
   seqid :id
   field :state, type: String, default: "public"
-  field :site_id, type: Integer
   field :name, type: String
-  field :user_id, type: Integer
   field :group_id, type: Integer
   embeds_ids :categry_ids, class_name: "Cms::Node"
   embeds_ids :dataset_ids, class_name: "Cms::Node"
