@@ -156,7 +156,7 @@
 
                                         // console.log('>>> Remove Webkit Span', nodeAfterKey.getOuterHtml());
                                         nodeAfterKey.remove(true);
-
+                                        nextNodeSiblingsOnKeyUp.redoSelection();
                                     // modify style attribute of inline element
                                     } else if (nodeBeforeKey instanceof CKEDITOR.dom.element
                                             && nodeAfterKey instanceof CKEDITOR.dom.element
@@ -176,10 +176,10 @@
                                             nodeAfterKey.removeAttribute('style');
 
                                         }
-
+                                        nextNodeSiblingsOnKeyUp.redoSelection();
                                     }
                                     // Bugfix => restore selection
-                                    nextNodeSiblingsOnKeyUp.redoSelection();
+                                    // nextNodeSiblingsOnKeyUp.redoSelection();
                                 }
                             }
                         });
