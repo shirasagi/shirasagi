@@ -32,5 +32,17 @@
       <th><%= @model.t :license %></th>
       <td><%= @item.license %></td>
     </tr>
+      <th><%= @model.t :license %></th>
+      <td><%= @item.file_ids %></td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+    <% @file.each do |f| %>
+      <th><%= "aaa" %></th>
+      <td><%= f.filename %></td>
+    <% end %>
+    </tr>
   </table>
 </div>

@@ -1,13 +1,14 @@
 ja:
   opendata:
+    create: 新規登録
 
   modules:
     opendata: オープンデータ
 
   cms:
     nodes:
-      opendata/dataset: データセット
-      opendata/app: アプリストア
+      opendata/dataset: データカタログ
+      opendata/app: アプリマーケット
       opendata/idea: アイデアボックス
 
   mongoid:
@@ -17,13 +18,13 @@ ja:
       opendata/idea: アイデア
     attributes:
       opendata/dataset:
-        name: データ名
+        name: データセット名
         site_id: サイト
         user_id: 作成者ユーザー
         group_id: 所属グループ
         categry_ids: カテゴリー
         point: 評価
-        text: 説明
+        text: データセット説明
         license: ライセンス
       opendata/app:
         site_id: サイト
