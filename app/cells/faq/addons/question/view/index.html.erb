@@ -1,0 +1,9 @@
+<% if @cur_page.question.present? %>
+<article class="faq-question">
+  <%== @cur_page.question %>
+</article>
+<% else %>
+<article class="faq-question">
+  <%== @cur_page.name %>
+</article>
+<% end %>

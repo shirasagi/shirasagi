@@ -19,5 +19,5 @@ ja:
   mongoid:
     attributes:
       cms/page/model:
-        categories: カテゴリー
-        category_ids: カテゴリー
+        st_categories: カテゴリー
+        st_category_ids: カテゴリー

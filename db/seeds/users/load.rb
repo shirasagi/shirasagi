@@ -48,6 +48,10 @@ role2 = save_cms_role name: "記事編集権限", permission_level: 1,
     release_other_cms_pages release_private_cms_pages
     approve_other_article_pages approve_private_article_pages
     approve_other_cms_pages approve_private_cms_pages
+    read_private_faq_pages edit_private_faq_pages
+    delete_private_faq_pages approve_other_faq_pages
+    approve_private_faq_pages release_private_faq_pages
+    release_other_faq_pages
   ]
 
 ## -------------------------------------

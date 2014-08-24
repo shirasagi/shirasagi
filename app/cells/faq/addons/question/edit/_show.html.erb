@@ -1,0 +1,15 @@
+<%= html_editor ".mod-faq-question .html", height: "300px", readonly: true %>
+
+<%= coffee do %>
+$ ->
+  $("dl.mod-cms-body").prevAll("header").text("<%= @model.t :answer %>")
+  $(".addon-tab[data-id='#addon-cms-addons-body']").text("<%= @model.t :answer %>")
+<% end %>
+
+<dl class="see mod-faq-question">
+  <dd class="wide">
+    <% if @item.send(:question).present?  %>
+    <%= text_area_tag "mod-faq-question", @item.question, class: "html", style: "height: 300px;" %>
+    <% end %>
+  </dd>
+</dl>

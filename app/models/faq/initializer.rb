@@ -3,7 +3,7 @@ module Faq
   class Initializer
     Cms::Node.plugin "faq/page"
 
-    Faq::Page.addon "faq/body"
+    Faq::Page.addon "faq/question"
     Faq::Node::Page.addon "category/setting"
 
     Cms::Role.permission :read_other_faq_pages
@@ -14,10 +14,10 @@ module Faq
     Cms::Role.permission :delete_private_faq_pages
   end
 
-  #Cms::Page.instance_exec do
-  #  def addon(*args)
-  #    Faq::Page.addon(*args) and super
-  #  end
-  #end
-  Faq::Page.inherit_addons Cms::Page, except: "cms/body"
+  Cms::Page.instance_exec do
+    def addon(*args)
+      Faq::Page.addon(*args) and super
+    end
+  end
+  Faq::Page.inherit_addons Cms::Page
 end

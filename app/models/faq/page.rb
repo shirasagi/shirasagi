@@ -4,7 +4,7 @@ class Faq::Page
 
   default_scope ->{ where(route: "faq/page") }
   set_permission_name "article_pages"
-  #set_permission_name "faq_pages"
+  set_permission_name "faq_pages"
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
@@ -27,12 +27,12 @@ class Faq::Page
         include addon.klass unless names.include?(addon.klass)
       end
 
-      #mod.instance_eval do
-      #  def addon(*args)
-      #    Faq::Page.addon *args
-      #    super
-      #  end
-      #end
+      mod.instance_eval do
+        def addon(*args)
+          Faq::Page.addon *args
+          super
+        end
+      end
     end
   end
 end

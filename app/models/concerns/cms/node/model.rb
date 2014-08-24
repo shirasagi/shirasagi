@@ -6,7 +6,7 @@ module Cms::Node::Model
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::Reference::Layout
-  include Cms::Reference::Category
+  include Cms::Reference::StCategory
   include Cms::Addon::OwnerPermission
   include Cms::Addon::Meta
 

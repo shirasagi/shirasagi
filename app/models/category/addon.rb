@@ -12,8 +12,8 @@ module Category::Addon
     extend ActiveSupport::Concern
 
     included do
-      embeds_ids :categories, class_name: "Category::Node::Base"
-      permit_params category_ids: []
+      embeds_ids :st_categories, class_name: "Category::Node::Base"
+      permit_params st_category_ids: []
     end
 
     set_order 200

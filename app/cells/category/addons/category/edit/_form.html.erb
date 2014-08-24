@@ -1,28 +1,13 @@
 <%
 
-if @cur_node.route == @item.route && @cur_node.categories.present?
-
+if @cur_node.st_categories.present?
   categories = []
-  parents = @cur_node.categories.sort_by { |cate| cate.filename.count("/") }
-
+  parents = @cur_node.st_categories.sort_by { |cate| cate.filename.count("/") }
   while parents.present?
     parent = parents.shift
     parents = parents.map { |c| c.filename !~ /^#{parent.filename}\// ? c : nil }.compact
     categories << parent
   end
-
-
-  #@cur_node.categories.sort(filename: 1).each do |cate|
-  #  parents = []
-  #  path = []
-  #  cate.filename.split(/\//).each do |s|
-  #    path << s
-  #    parents << path.join("\/")
-  #  end
-  #  categories << @cur_node.categories.in(filename: parents).pluck(:filename).min_by { |s| s.size }
-  #end
-  #categories.uniq!
-  #categories = categories.map { |filename| @cur_node.categories.where(filename: filename).first }
 else
   categories = Category::Node::Base.site(@cur_site).where(depth: 1).sort(filename: 1)
 end
@@ -51,7 +36,8 @@ end
 
     <% categories.each do |cate| %>
     <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;">
-      <%= cate_form cate %></div>
+      <%= cate_form cate %>
+    </div>
     <% end %>
   </dd>
 </dl>

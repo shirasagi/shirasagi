@@ -5,7 +5,7 @@ ja:
   modules:
     faq: FAQ
     addons:
-      faq/body: 質問回答
+      faq/question: 質問
 
   cms:
     nodes:
@@ -14,8 +14,8 @@ ja:
   mongoid:
     attributes:
       cms/page/model:
-        question_html: 質問
-        answer_html: 回答
+        question: 質問
+        answer: 回答
 
   cms_role:
     read_other_faq_pages: FAQページ閲覧

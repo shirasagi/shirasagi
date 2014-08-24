@@ -4,6 +4,7 @@ module Cms::Page::Model
   extend SS::Translation
   include Cms::Page::Feature
   include Cms::Reference::Layout
+  include Faq::Reference::Question
   
   included do
     store_in collection: "cms_pages"

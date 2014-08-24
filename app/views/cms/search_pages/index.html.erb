@@ -26,10 +26,9 @@ searchPages =(elem) ->
     elem.find("input").attr "disabled", true
     url = "<%= request.url %>"
     query = elem.find("input.query").val().trim()
-    site =
     $.ajax {
       type: "POST", url: url, cache: false,
-      data: { q: query, site: site },
+      data: { q: query },
       success: (data) ->
         $("div.search-pages").children().remove()
         $("div.search-pages").append data
@@ -68,12 +67,13 @@ $ ->
   $("button.select-pages").click ->
     pages = []
     $(".search-pages tbody input:checkbox").filter(":checked").each ->
-      name = $(this).parents("tr:first").text()
+      name = $(this).parents("tr:first").find("td.name").text()
       id = $(this).parents("tr:first").attr("data-id")
       pages.push { id: id,  name: name }
     selectPages(pages)
     $.colorbox.close()
     return false
+  $("form.search-pages").trigger('submit');
   toggleSelectButton()
 
 <% end %>

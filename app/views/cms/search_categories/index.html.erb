@@ -1,20 +1,23 @@
 <%= coffee do %>
 
 selectCategories =(categories) ->
+  $(".search-categories input:checkbox").each ->
+    $("table.selected-categories tr[data-id=#{$(this).val()}]").remove();
+
   for category in categories
     tr = $("<tr>").attr("data-id", category["id"])
     input = $("<td>").append($("input:hidden.hidden-categories-ids:first").clone(false))
     input.find("input").val(category["id"])
     input.append(category["name"])
     deselect = $("<td>").append('<%= link_to t("cms.search_categories.deselect"), "#", class: :deselect %>')
-    deselect.find("a.deselect").click(deselectGroup)
+    deselect.find("a.deselect").click(deselectCategory)
     tr.append(input)
     tr.append(deselect)
     $("table.selected-categories tbody").append(tr)
     $("table.selected-categories").show()
   return
 
-deselectGroup =() ->
+deselectCategory =() ->
   $(this).parents("tr:first").remove()
   if $("table.selected-categories tr[data-id]").size() == 0
     $("table.selected-categories table.index").hide()
@@ -26,10 +29,9 @@ searchCategories =(elem) ->
     elem.find("input").attr "disabled", true
     url = "<%= request.url %>"
     query = elem.find("input.query").val().trim()
-    site =
     $.ajax {
       type: "POST", url: url, cache: false,
-      data: { q: query, site: site },
+      data: { q: query },
       success: (data) ->
         $("div.search-categories").children().remove()
         $("div.search-categories").append data
@@ -38,7 +40,7 @@ searchCategories =(elem) ->
         $("table.selected-categories tbody tr").each ->
           selected.push $(this).attr("data-id")
         for id in selected
-          $(".search-categories tbody tr[data-id=#{id}]").remove()
+          $(".search-categories input:checkbox[value=#{id}]").prop("checked", true);
 
         return
       complete: (xhr, status) ->
@@ -52,13 +54,13 @@ searchCategories =(elem) ->
           $.colorbox.close()
           return false
 
-        $(".search-categories table").change(toggleSelectButton)
+        #$(".search-categories").change(toggleSelectButton)
     }
     return false
   return
 
 toggleSelectButton =()->
-  if $(".search-categories tbody input:checkbox").filter(":checked").size() > 0
+  if $(".search-categories input:checkbox").filter(":checked").size() > 0
     $("button.select-categories").parent("div:first").show()
   else
     $("button.select-categories").parent("div:first").hide()
@@ -67,14 +69,15 @@ $ ->
   searchCategories "form.search-categories"
   $("button.select-categories").click ->
     categories = []
-    $(".search-categories tbody input:checkbox").filter(":checked").each ->
-      name = $(this).parents("tr:first").text()
-      id = $(this).parents("tr:first").attr("data-id")
+    $(".search-categories input:checkbox").filter(":checked").each ->
+      name = $(this).parent().text();
+      id = $(this).val();
       categories.push { id: id,  name: name }
     selectCategories(categories)
     $.colorbox.close()
     return false
-  toggleSelectButton()
+  $("form.search-categories").trigger('submit');
+  #toggleSelectButton()
 
 <% end %>
 
@@ -86,14 +89,6 @@ $ ->
 </div>
 
 <div class="search-categories">
-  <table class="index">
-    <thead>
-      <tr>
-        <th style="width: 20px;"><input type="checkbox" /></th>
-        <th class="name"><%= @model.t :name %></th>
-      </tr>
-    </thead>
-  </table>
 </div>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">

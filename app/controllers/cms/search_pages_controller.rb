@@ -16,8 +16,7 @@ class Cms::SearchPagesController < ApplicationController
 
       @items = @model.site(@cur_site).
         and(@query).
-        order_by(_id: -1).
-        page(params[:page]).per(20)
+        order_by(_id: -1)
 
       render layout: !request.xhr?
     end

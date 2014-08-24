@@ -15,7 +15,7 @@ $ ->
 
 <dl class="see mod-category">
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "category_ids[]", value: "", class: "hidden-categories-ids" %>
+    <%= f.hidden_field "st_category_ids[]", value: "", class: "hidden-categories-ids" %>
     <%= link_to t("cms.search_categories.index"), cms_search_categories_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -27,9 +27,9 @@ $ ->
         </tr>
       </thead>
       <tbody>
-        <% @item.categories.each do |cate| %>
+        <% @item.st_categories.each do |cate| %>
         <tr data-id="<%= cate.id %>">
-          <td><%= f.hidden_field "category_ids[]", value: cate.id %> <%= cate.name %></td>
+          <td><%= f.hidden_field "st_category_ids[]", value: cate.id %> <%= cate.name %></td>
           <td><%= link_to t("cms.search_categories.deselect"), "#", class: :deselect %></td>
         </tr>
         <% end %>
