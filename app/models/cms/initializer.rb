@@ -6,7 +6,8 @@ module Cms
     Cms::Page.addon "cms/body"
     Cms::Page.addon "cms/file"
     Cms::Page.addon "cms/release"
-    
+    Cms::Page.addon "cms/related_page"
+
     Cms::Node.plugin "cms/node"
     Cms::Node.plugin "cms/page"
     Cms::Part.plugin "cms/free"
@@ -14,7 +15,7 @@ module Cms
     Cms::Part.plugin "cms/page"
     Cms::Part.plugin "cms/tabs"
     Cms::Part.plugin "cms/crumb"
-    
+
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_users
     Cms::Role.permission :read_other_cms_nodes

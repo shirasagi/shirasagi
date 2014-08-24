@@ -1,0 +1,33 @@
+<%
+
+categories = @items.map { |item| item.parents.present? ? item.parents.first : item }
+categories = categories.uniq { |item| item.filename }
+
+def cate_form(item)
+
+ children = Category::Node::Base.site(@cur_site).
+    where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+
+  h = ""
+  if item.depth == 1 || children.size > 0
+    h = %Q[<label style="margin-right: 10px;">]
+    h << check_box_tag("category_ids[]", item._id)
+    h << %Q[#{item.name}</label>]
+  end
+
+  if children.size > 0
+    h << %Q[<div style="padding: 0px 0px 0px 40px;">].html_safe
+    children.each { |c| h += cate_form c }
+    h << %Q[</div>].html_safe
+  end
+
+  h.html_safe
+end
+
+%>
+
+<% categories.each do |cate| %>
+<div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;">
+  <%= cate_form cate %>
+</div>
+<% end %>

@@ -1,0 +1,26 @@
+ja:
+  faq:
+    page: FAQページ
+
+  modules:
+    faq: FAQ
+    addons:
+      faq/question: 質問
+
+  cms:
+    nodes:
+      faq/page: FAQページリスト
+
+  mongoid:
+    attributes:
+      cms/page/model:
+        question: 質問
+        answer: 回答
+
+  cms_role:
+    read_other_faq_pages: FAQページ閲覧
+    read_private_faq_pages: 所有FAQページ閲覧
+    edit_other_faq_pages: FAQページ編集
+    edit_private_faq_pages: 所有FAQページ編集
+    delete_other_faq_pages: FAQページ削除
+    delete_private_faq_pages: 所有FAQページ削除

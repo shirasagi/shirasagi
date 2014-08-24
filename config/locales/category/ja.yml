@@ -1,11 +1,13 @@
 ja:
   category:
     node: カテゴリー
+    name: カテゴリー名
 
   modules:
     category: カテゴリー
     addons:
       category/category: カテゴリー
+      category/setting: カテゴリー設定
 
   cms:
     nodes:
@@ -17,5 +19,5 @@ ja:
   mongoid:
     attributes:
       cms/page/model:
-        categories: カテゴリー
-        category_ids: カテゴリー
+        st_categories: カテゴリー
+        st_category_ids: カテゴリー

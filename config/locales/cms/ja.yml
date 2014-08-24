@@ -24,6 +24,16 @@ ja:
       search: 所有グループを検索
       select: 所有グループを設定する
       deselect: 削除
+    search_pages:
+      index: 関連記事を選択する
+      search: 関連記事を検索
+      select: 関連記事を設定する
+      deselect: 削除
+    search_categories:
+      index: カテゴリを選択する
+      search: カテゴリを検索
+      select: カテゴリを設定する
+      deselect: 削除
 
     nodes:
       cms/node: フォルダーリスト
@@ -77,6 +87,7 @@ ja:
       cms/node_list: リスト表示
       cms/page_list: リスト表示
       cms/tabs: タブ表示
+      cms/related_page: 関連記事
 
   mongoid:
     models:
@@ -109,6 +120,7 @@ ja:
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
         order: 並び順
+        related_pages: 関連記事
       cms/part/model:
         name: パーツ名
         route: パーツ属性

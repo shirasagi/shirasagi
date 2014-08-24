@@ -1,5 +1,5 @@
 # coding: utf-8
-module RelatedPages::Addons::Pages
+module Cms::Addons::RelatedPage
   class EditCell < Cell::Rails
     include SS::AddonFilter::EditCell
   end
