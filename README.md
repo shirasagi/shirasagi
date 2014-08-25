@@ -1,6 +1,6 @@
 SHIRASAGI
 =========
-
+[![Coverage Status](https://coveralls.io/repos/gouf/shirasagi/badge.png)](https://coveralls.io/r/gouf/shirasagi)
 SHIRASAGI is Contents Management System.
 
 Platform
