@@ -4,19 +4,50 @@ ja:
 
   modules:
     opendata: オープンデータ
+    addons:
+      opendata/category: 分野
+      opendata/data_group: データグループ
+      opendata/area: 地域
+      opendata/dataset: データセット
+      opendata/app: アプリ
 
   cms:
     nodes:
+      opendata/category: 分野
+      opendata/area: 地域
       opendata/dataset: データカタログ
       opendata/app: アプリマーケット
       opendata/idea: アイデアボックス
 
+  cms_role:
+    read_other_opendata_datasets: OpenData/データセットの閲覧（全て）
+    read_private_opendata_datasets: OpenData/データセットの閲覧（所有）
+    edit_other_opendata_datasets: OpenData/データセットの編集（全て）
+    edit_private_opendata_datasets: OpenData/データセットの編集（所有）
+    delete_other_opendata_datasets: OpenData/データセットの削除（全て）
+    delete_private_opendata_datasets: OpenData/データセットの削除（所有）
+    read_other_opendata_apps: OpenData/アプリの閲覧（全て）
+    read_private_opendata_apps: OpenData/アプリの閲覧（所有）
+    edit_other_opendata_apps: OpenData/アプリの編集（全て）
+    edit_private_opendata_apps: OpenData/アプリの編集（所有）
+    delete_other_opendata_apps: OpenData/アプリの削除（全て）
+    delete_private_opendata_apps: OpenData/アプリの削除（所有）
+    read_other_opendata_ideas: OpenData/アイデアの閲覧（全て）
+    read_private_opendata_ideas: OpenData/アイデアの閲覧（所有）
+    edit_other_opendata_ideas: OpenData/アイデアの編集（全て）
+    edit_private_opendata_ideas: OpenData/アイデアの編集（所有）
+    delete_other_opendata_ideas: OpenData/アイデアの削除（全て）
+    delete_private_opendata_ideas: OpenData/アイデアの削除（所有）
+
   mongoid:
     models:
+      opendata/data_group: グループ
       opendata/dataset: データセット
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
+      opendata/data_group:
+        name: グループ名
       opendata/dataset:
         name: データセット名
         site_id: サイト
@@ -24,7 +55,7 @@ ja:
         group_id: 所属グループ
         categry_ids: カテゴリー
         point: 評価
-        text: データセット説明
+        text: 説明
         license: ライセンス
       opendata/app:
         site_id: サイト

@@ -1,0 +1,14 @@
+<%= form_tag "" do |f| %>
+  <%= error_messages_for :item %>
+  <%= hidden_field_tag :ref, params[:ref] %>
+
+  <dl>
+    <dt>Email</dt>
+    <dd><%= email_field :item, :email %></dd>
+
+    <dt>Password</dt>
+    <dd><%= password_field :item, :password %></dd>
+  </dl>
+
+  <%= submit_tag t(:login), name: :login %>
+<% end %>

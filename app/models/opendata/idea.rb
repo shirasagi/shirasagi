@@ -3,29 +3,29 @@ class Opendata::Idea
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
+  include Cms::Addon::OwnerPermission
+  include Opendata::Addon::Category
+  include Opendata::Addon::Dataset
+  include Opendata::Addon::App
 
   seqid :id
   field :state, type: String, default: "public"
   field :name, type: String
-  embeds_ids :categry_ids, class_name: "Cms::Node"
-  embeds_ids :dataset_ids, class_name: "Cms::Node"
-  embeds_ids :app_ids, class_name: "Cms::Node"
   field :point, type: Integer
   field :text, type: String
+  field :tags, type: Array
 
-  permit_params :state, :name, :categry_ids, :dataset_ids, :app_ids, :text
+  belongs_to :dataset, class_name: "Opendata::Dataset"
+  belongs_to :app, class_name: "Opendata::App"
+
+  permit_params :state, :name, :dataset_id, :app_id, :text, :point, tags: []
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
-  public
-    # dummy
-    def allowed?(premit)
-      true
-    end
-
   class << self
-    public
-      # def
+    def public
+      where(state: "public")
+    end
   end
 end

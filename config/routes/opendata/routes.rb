@@ -17,6 +17,7 @@ SS::Application.routes.draw do
 
   content "opendata" do
     get "/" => "main#index", as: :main
+    resources :data_groups, concerns: :deletion
     resources :datasets, concerns: :deletion
     resources :apps, concerns: :deletion
     resources :ideas, concerns: :deletion
@@ -42,6 +43,11 @@ SS::Application.routes.draw do
     #put "dataset/:id/(index.:format)" => "public#update", cell: "nodes/dataset"
     #delete "dataset/:id/(index.:format)" => "public#delete", cell: "nodes/dataset"
 
+    get "mypage/index.html" => "public#index", cell: "nodes/mypage"
+    get "mypage/login/index.html" => "public#login", cell: "nodes/mypage"
+    post "mypage/login/index.html" => "public#login", cell: "nodes/mypage"
+    get "mypage/logout/index.html" => "public#logout", cell: "nodes/mypage"
+
     get "user/(index.:format)" => "public#index", cell: "nodes/user"
     post "user/login.html" => "public#login", cell: "nodes/user"
     post "user/logout.html" => "public#logout", cell: "nodes/user"
@@ -62,9 +68,12 @@ SS::Application.routes.draw do
 
   end
 
-#  part "opendata" do
-#    get "page" => "public#index", cell: "parts/page"
-#  end
+ part "opendata" do
+   get "mypage"  => "public#index", cell: "parts/mypage"
+   get "dataset" => "public#index", cell: "parts/dataset"
+   get "app"     => "public#index", cell: "parts/app"
+   get "idea"    => "public#index", cell: "parts/idea"
+ end
 
 #  page "opendata" do
 #    get "page/:filename.:format" => "public#index", cell: "pages/page"

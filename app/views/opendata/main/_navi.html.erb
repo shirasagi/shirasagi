@@ -3,6 +3,7 @@
 <nav class="main-menu">
   <header><h1><%= t :"modules.opendata" %></h1></header>
   <div>
+    <%= link_to :"mongoid.models.opendata/data_group", opendata_data_groups_path, class: "icon-node" %>
     <%= link_to :"mongoid.models.opendata/dataset", opendata_datasets_path, class: "icon-node" %>
     <%= link_to :"mongoid.models.opendata/app", opendata_apps_path, class: "icon-node" %>
     <%= link_to :"mongoid.models.opendata/idea", opendata_ideas_path, class: "icon-node" %>
