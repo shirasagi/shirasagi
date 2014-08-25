@@ -17,6 +17,7 @@ ja:
     role: 権限/ロール
     user: ユーザー
     group: グループ
+    member: メンバー
     syntax_check: HTMLチェック
     link_check: リンクチェック
     search_groups:
@@ -81,6 +82,7 @@ ja:
   mongoid:
     models:
       cms/user: ユーザー
+      cms/member: メンバー
       cms/node: フォルダー
       cms/node/node: フォルダーリスト
       cms/node/page: ページリスト
@@ -133,6 +135,13 @@ ja:
         permissions: 権限設定
       cms/group:
         name: グループ名
+      cms/member:
+        name: 氏名
+        email: メールアドレス
+        in_password: パスワード
+        oauth_type: OAuth Type
+        oauth_id: OAuth ID
+        oauth_token: OAuth トークン
 
       cms/addon/role:
         cms_role_ids: ロール
