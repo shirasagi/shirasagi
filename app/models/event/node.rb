@@ -8,6 +8,7 @@ module Event::Node
 
   class Page
     include Cms::Node::Model
+    include Event::Addon::PageList
 
     default_scope ->{ where(route: "event/page") }
   end

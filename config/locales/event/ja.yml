@@ -8,6 +8,7 @@ ja:
     event: イベント
     addons:
       event/date: イベント
+      event/page_list: リスト表示
 
   cms:
     nodes:

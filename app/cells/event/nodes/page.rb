@@ -9,8 +9,15 @@ module  Event::Nodes::Page
     include Cms::NodeFilter::ViewCell
     include Event::EventHelper
     helper Event::EventHelper
-    
+
     public
+      # for tabs
+      def pages
+        Cms::Page.site(@cur_site).public.
+          where(@cur_node.condition_hash).
+          where(:"event_dates.0".exists => true)
+      end
+
       def index
         if params[:year].present? && params[:month].present?
           if Date.valid_date?(params[:year].to_i, params[:month].to_i, 1)
@@ -21,7 +28,7 @@ module  Event::Nodes::Page
           @year  = Date.today.year.to_i
           @month = Date.today.month.to_i
         end
-        
+
         if @year && @month && within_one_year?(Date.new(@year, @month, 1))
           index_monthly
         else
@@ -37,7 +44,8 @@ module  Event::Nodes::Page
 
         (start_date...close_date).each do |d|
           @events[d] = Cms::Page.site(@cur_site).
-            where(:'event_dates'.in => [d.mongoize]).
+            where(@cur_node.condition_hash).
+            where(:"event_dates".in => [d.mongoize]).
             entries.
             sort_by{ |page| page.event_dates.size }
         end
