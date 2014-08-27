@@ -1,0 +1,23 @@
+<%= code_editor ".mod-event-pagelist .html", filename: @item.filename, readonly: true %>
+
+<dl class="see mod-event-pagelist">
+  <dt><%= @model.t :conditions %></dt>
+  <dd><%=br @item.conditions.join("\n") %></dd>
+
+  <dt><%= @model.t :upper_html %></dt>
+  <dd>
+    <% if @item.upper_html.present? %>
+    <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :lower_html %></dt>
+  <dd>
+    <% if @item.lower_html.present? %>
+    <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :new_days %></dt>
+  <dd><%= @item.send :new_days %> <%= t "datetime.prompts.day" %></dd>
+</dl>

@@ -3,7 +3,7 @@ module Urgency::Addons::Layout
   class EditCell < Cell::Rails
     include SS::AddonFilter::EditCell
     helper_method :selectable_layouts_options
-    
+
     private
       def selectable_layouts_options
         opts = []
@@ -13,7 +13,7 @@ module Urgency::Addons::Layout
         opts
       end
   end
-  
+
   class ViewCell < Cell::Rails
     include SS::AddonFilter::ViewCell
   end

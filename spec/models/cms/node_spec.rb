@@ -6,56 +6,56 @@ describe Cms::Node do
       item = build(:cms_node)
       item.valid?.should be_true
     end
-    
+
     it "abnormal state should be false" do
       item = build(:cms_node)
       item.state = nil
       item.valid?.should be_false
     end
-    
+
     it "abnormal name should be false" do
       item = build(:cms_node)
       item.name = nil
       item.valid?.should be_false
     end
-    
+
     it "abnormal filename should be false" do
       item = build(:cms_node)
       item.filename = nil
       item.valid?.should be_false
     end
-    
+
     it "abnormal route should be false" do
       item = build(:cms_node)
       item.route = nil
       item.valid?.should be_false
     end
   end
-  
+
   describe "save method" do
     it "normal item should be true" do
       item = build(:cms_node)
       item.save.should be_true
     end
-    
+
     it "abnormal state should be false" do
       item = build(:cms_node)
       item.state = nil
       item.save.should be_false
     end
-    
+
     it "abnormal name should be false" do
       item = build(:cms_node)
       item.name = nil
       item.save.should be_false
     end
-    
+
     it "abnormal filename should be false" do
       item = build(:cms_node)
       item.filename = nil
       item.save.should be_false
     end
-    
+
     it "abnormal route should be false" do
       item = build(:cms_node)
       item.route = nil
@@ -67,7 +67,7 @@ describe Cms::Node do
     before do
       @items = Cms::Node.all
     end
-    
+
     it "items shoud be loaded" do
       @items.size.should_not be_nil
     end

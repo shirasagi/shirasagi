@@ -1,14 +1,14 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
-  
+
   <dt><%= @model.t :email %></dt>
   <dd><%= @item.send :email %></dd>
-  
+
   <dt><%= @model.t :group_ids %></dt>
    <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
-  
+
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.send :type %></dd>
-  
+
 </dl>

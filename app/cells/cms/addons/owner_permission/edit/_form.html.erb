@@ -14,10 +14,10 @@ $ ->
 <% end %>
 
 <dl class="see mod-owner">
-  <dt><%= @model.t :permission_level %></dt>
+  <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
   <dd><%= f.select :permission_level, (1..@cur_user.cms_role_level(@cur_site)).map { |i| %W[#{i} #{i}] } %></dd>
 
-  <dt><%= @model.t :group_ids %></dt>
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-groups-ids" %>
     <%= link_to t("cms.search_groups.index"), cms_search_groups_path, class: "ajax-box" %>

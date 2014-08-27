@@ -3,7 +3,7 @@
   <% form_type = tryb{ field.metadata[:form] } %>
   <% next if form_type == :none %>
   <% next if key =~ /^(_id|id|created|updated|state|site_id)$/ %>
-  
+
   <dt><%= @model.t key %></dt>
   <dd>
     <%# if field.type <= Mongoid::Relations::Metadata %>

@@ -5,26 +5,26 @@
 %><dl class="see">
   <dt><%= @model.t :route %></dt>
   <dd><%= @item.label :route %></dd>
-  
+
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
-  
+
   <% if fields[:filename] != -1 %>
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
   <% end %>
-  
+
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
-  
+
   <% if fields[:layout_id] != -1 %>
   <dt><%= @model.t :layout_id %></dt>
   <dd><%= tryb { @item.layout.name }%></dd>
   <% end %>
-  
+
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
-  
+
   <% if fields[:shortcut] != -1 %>
   <dt><%= @model.t :shortcut %></dt>
   <dd><%= @item.label :shortcut %></dd>

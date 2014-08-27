@@ -8,7 +8,7 @@ end
 
 def v2s(item, field)
   return "" unless item.key?(field)
-  
+
   value = item[field]
   if value == nil
     value = "NULL"
@@ -19,7 +19,7 @@ def v2s(item, field)
   else
     value
   end
-  
+
   value.to_s.truncate 16
 end
 
@@ -55,7 +55,7 @@ table.index td.array    { color: #a00; }
         <% end %>
       </tr>
     </thead>
-    
+
     <tbody>
       <% @items.each do |item| %>
       <tr>

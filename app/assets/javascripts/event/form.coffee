@@ -128,7 +128,7 @@ class @Event_Form
     cln = $(".mod-event dd.dates:last").clone(false).insertAfter($(".mod-event dd.dates:last"))
     cln.find(".start").val ""
     cln.find(".close").val ""
-    
+
     cln.find(".clear").click ->
       start = $(this).parent("dd").find(".start").val()
       close = $(this).parent("dd").find(".close").val()

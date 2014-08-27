@@ -1,7 +1,7 @@
 production:
   # smtp or sendmail
   delivery_method: sendmail
-  
+
   # smtp settings
   address: localhost
   port: 25
@@ -9,17 +9,17 @@ production:
   user_name:
   password:
   authentication:
-  
+
   # sendmail settings
   location:
   arguments:
-  
-  # message settings 
+
+  # message settings
   default_from:
   default_charset: iso-2022-jp
-  
+
 test:
   <<: *production
-  
+
 development:
   <<: *production

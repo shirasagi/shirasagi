@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :email %></dt>
+  <dd><%= @item.send :email %></dd>
+
+  <dt><%= @model.t :oauth_type %></dt>
+  <dd><%= @item.send :oauth_type %></dd>
+
+  <dt><%= @model.t :oauth_id %></dt>
+  <dd><%= @item.send :oauth_id %></dd>
+
+  <dt><%= @model.t :oauth_token %></dt>
+  <dd><%= @item.send :oauth_token %></dd>
+</dl>

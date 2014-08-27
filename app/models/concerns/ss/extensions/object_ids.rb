@@ -3,12 +3,12 @@ class SS::Extensions::ObjectIds < Array
   def mongoize
     self.to_a
   end
-  
+
   class << self
     def demongoize(object)
       self.new(object.to_a)
     end
-    
+
     def mongoize(object)
       case object
       when self.class then object.mongoize
@@ -20,7 +20,7 @@ class SS::Extensions::ObjectIds < Array
       else object
       end
     end
-    
+
     def evolve(object)
       case object
       when self.class then object.mongoize

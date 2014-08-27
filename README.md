@@ -1,6 +1,6 @@
 SHIRASAGI
 =========
-
+[![Code Climate](https://codeclimate.com/github/shirasagi/shirasagi/badges/gpa.svg)](https://codeclimate.com/github/shirasagi/shirasagi)
 SHIRASAGI is Contents Management System.
 
 Platform
@@ -13,7 +13,7 @@ Documentation
 
 * [Official](http://ss-proj.org)
 * [Install](https://github.com/shirasagi/shirasagi/blob/master/doc/install.txt)
- 
+
 License
 -------
 
@@ -36,3 +36,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+

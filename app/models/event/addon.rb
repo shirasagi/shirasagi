@@ -10,7 +10,7 @@ module Event::Addon
       field :event_name, type: String
       field :event_dates, type: Event::Extensions::EventDates
       permit_params :event_name, :event_dates
-      
+
       validate :validate_event
     end
 
@@ -22,5 +22,13 @@ module Event::Addon
         errors.add :event_dates, :too_many_event_dates if event_array.size >= 180
       end
     end
+  end
+
+  module PageList
+    extend ActiveSupport::Concern
+    extend SS::Addon
+    include Cms::Addon::List::Model
+
+    set_order 200
   end
 end

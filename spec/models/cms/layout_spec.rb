@@ -6,32 +6,32 @@ describe Cms::Layout do
       item = build(:cms_layout)
       item.valid?.should be_true
     end
-    
+
     it "abnormal state should be false" do
       item = build(:cms_layout)
       item.state = nil
       item.valid?.should be_false
     end
-    
+
     it "abnormal name should be false" do
       item = build(:cms_layout)
       item.name = nil
       item.valid?.should be_false
     end
   end
-  
+
   describe "save method" do
     it "normal item should be true" do
       item = build(:cms_layout)
       item.save.should be_true
     end
-    
+
     it "abnormal state should be false" do
       item = build(:cms_layout)
       item.state = nil
       item.save.should be_false
     end
-    
+
     it "abnormal name should be false" do
       item = build(:cms_layout)
       item.name = nil
@@ -43,7 +43,7 @@ describe Cms::Layout do
     before do
       @items = Cms::Layout.all
     end
-    
+
     it "items shoud be loaded" do
       @items.size.should_not be_nil
     end

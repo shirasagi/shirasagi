@@ -4,13 +4,13 @@
   <dd><a href="<%= url_for action: :view %>" target="_blank">
     <img src="<%= url_for action: :thumb %>"></a></dd>
   <% end %>
-  
+
   <dt><%= @model.t :filename %></dt>
   <dd><%= @item.send :filename %></dd>
-  
+
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
-  
+
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to :download, action: :download %></dd>
 </dl>

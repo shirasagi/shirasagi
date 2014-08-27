@@ -21,5 +21,5 @@ SS::Application.routes.draw do
   page "event" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
   end
-  
+
 end

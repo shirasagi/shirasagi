@@ -5,26 +5,26 @@ namespace :cms do
     task :generate => :environment do
       Cms::Task::LayoutsController.new.generate
     end
-    
+
     task :remove => :environment  do
       Cms::Task::LayoutsController.new.remove
     end
   end
-  
+
   namespace :page do
     task :release => :environment do
       Cms::Task::PagesController.new.release
     end
-    
+
     task :generate => :environment do
       Cms::Task::PagesController.new.generate
     end
-    
+
     task :remove => :environment do
       Cms::Task::PagesController.new.remove
     end
   end
-  
+
   namespace :role do
     namespace :admin do
       task :create => :environment do
@@ -49,11 +49,11 @@ namespace :cms do
           delete_other_article_pages
         ]
         data = { site_id: site.id, name: "admin",  permissions: permissions, permission_level: 3 }
-        
+
         puts "Create role ..."
         item = Cms::Role.find_or_create_by data
         puts item.errors.empty? ? "  created  #{item.name}" : item.errors.full_messages.join("\n  ")
-        
+
         puts "Update user ..."
         user = SS::User.find_by name: ENV["user"]
         user.add_to_set cms_role_ids: item.id
@@ -62,5 +62,5 @@ namespace :cms do
       end
     end
   end
-  
+
 end

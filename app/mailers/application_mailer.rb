@@ -4,12 +4,12 @@ class ApplicationMailer
    def set(option)
       if option == :load_settings
         begin
-          yml = YAML.load_file(File.join(Rails.root, 'config', 'mail.yml')) 
+          yml = YAML.load_file(File.join(Rails.root, 'config', 'mail.yml'))
           raise "empty" if yml.blank?
         rescue => e
           return nil
         end
-        
+
         mail = yml[Rails.env.to_s]
         ActionMailer::Base.delivery_method = mail['delivery_method']
         ActionMailer::Base.default from: mail['default_from'], charset: mail['default_charset']

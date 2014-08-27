@@ -1,0 +1,26 @@
+ja:
+  modules:
+    addons:
+      related_pages/pages: "関連記事"
+
+  mongoid:
+    attributes:
+      cms/page:
+        related_pages: "関連記事"
+      article/page:
+        related_pages: "関連記事"
+
+  related_pages_views:
+    link:
+      index: "関連記事を選択する"
+      search_pages: "関連記事を検索する"
+      select_pages: "選択記事を設定する"
+      remove_page: "削除"
+    button:
+      search_pages: "関連記事を検索"
+
+  tooltip:
+    related_pages/addon/pages:
+      page_ids:
+        - このページの内容に関連するページへのリンクを選択します。
+        - 選択したページへのリンクが本文の下部に表示されます。

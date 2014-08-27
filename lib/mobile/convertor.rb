@@ -27,7 +27,7 @@ class Mobile::Convertor < String
       gsub_wbr!
       gsub_br!
     end
-    
+
   private
     def s_to_attr(str)
       str.scan(/\S+?=".+?"/m).
@@ -90,7 +90,7 @@ class Mobile::Convertor < String
           href = src_attr["src"].presence
           name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
           cls  = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
-          
+
           html  = name
           html += %Q( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("ss.image")}]</a>) if href
           html

@@ -4,11 +4,11 @@ module Category::Nodes::Node
     include Cms::NodeFilter::EditCell
     model Category::Node::Node
   end
-  
+
   class ViewCell < Cell::Rails
     include Cms::NodeFilter::ViewCell
     helper Cms::ListHelper
-    
+
     public
       def index
         @items = Category::Node::Base.site(@cur_site).public.
@@ -16,7 +16,7 @@ module Category::Nodes::Node
           order_by(@cur_node.sort_hash).
           page(params[:page]).
           per(@cur_node.limit)
-        
+
         @items.empty? ? "" : render
       end
   end

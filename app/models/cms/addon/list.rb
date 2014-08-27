@@ -3,7 +3,7 @@ module Cms::Addon::List
   module Model
     extend ActiveSupport::Concern
     extend SS::Translation
-    
+
     included do |mod|
       field :conditions, type: SS::Extensions::Words
       field :sort, type: String
@@ -13,37 +13,37 @@ module Cms::Addon::List
       field :lower_html, type: String
       field :new_days, type: Integer, default: 1
       permit_params :conditions, :sort, :limit, :loop_html, :upper_html, :lower_html, :new_days
-      
+
       before_validation :validate_conditions
     end
-    
+
     public
       def sort_options
         []
       end
-      
+
       def sort_hash
         {}
       end
-      
+
       def limit
         value = read_attribute(:limit).to_i
         (value < 1 || 100 < value) ? 100 : value
       end
-      
+
       def new_days
         value = read_attribute(:new_days).to_i
         (value < 0 || 30 < value) ? 30 : value
       end
-      
+
       def in_new_days?(date)
         date + new_days > Time.now
       end
-      
+
       def condition_hash
         cond = []
         cids = []
-        
+
         if respond_to?(:node) # parts
           if node
             cond << { filename: /^#{node.filename}\//, depth: depth }
@@ -55,7 +55,7 @@ module Cms::Addon::List
           cond << { filename: /^#{filename}\//, depth: depth + 1 }
           cids << id
         end
-        
+
         conditions.each do |url|
           node = Cms::Node.where(filename: url).first
           next unless node
@@ -63,17 +63,17 @@ module Cms::Addon::List
           cids << node.id
         end
         cond << { :category_ids.in => cids } if cids.present?
-        
+
         { '$or' => cond }
       end
-      
+
       def render_loop_html(item, opts = {})
         (opts[:html] || loop_html).gsub(/\#\{(.*?)\}/) do |m|
           str = template_variable_get(item, $1) rescue false
           str == false ? m : str
         end
       end
-      
+
       def template_variable_get(item, name)
         if name =~ /^(name|url|summary)$/
           item.send name
@@ -93,7 +93,7 @@ module Cms::Addon::List
           false
         end
       end
-      
+
     private
       def validate_conditions
         self.conditions = conditions.map do |m|

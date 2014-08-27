@@ -6,32 +6,32 @@ describe Cms::Page do
       item = build(:cms_page)
       item.valid?.should be_true
     end
-    
+
     it "abnormal state should be false" do
       item = build(:cms_page)
       item.state = nil
       item.valid?.should be_false
     end
-    
+
     it "abnormal name should be false" do
       item = build(:cms_page)
       item.name = nil
       item.valid?.should be_false
     end
   end
-  
+
   describe "save method" do
     it "normal item should be true" do
       item = build(:cms_page)
       item.save.should be_true
     end
-    
+
     it "abnormal state should be false" do
       item = build(:cms_page)
       item.state = nil
       item.save.should be_false
     end
-    
+
     it "abnormal name should be false" do
       item = build(:cms_page)
       item.name = nil
@@ -43,7 +43,7 @@ describe Cms::Page do
     before do
       @items = Cms::Page.all
     end
-    
+
     it "items shoud be loaded" do
       @items.size.should_not be_nil
     end

@@ -4,16 +4,16 @@
   <dl class="see">
     <dt><%= @model.t :filename %></dt>
     <dd><%= @item.filename %></dd>
-    
+
     <% if !@item.directory? %>
       <dt><%= @model.t :size %></dt>
       <dd><%= @item.size %></dd>
-      
+
       <% if @item.image? %>
       <dt><%= @model.t :image %></dt>
       <dd><%= image_tag @item.link %></dd>
       <% end %>
-      
+
       <% if @item.text? %>
       <% begin %>
       <dt class="wide"><%= @model.t :text %></dt>

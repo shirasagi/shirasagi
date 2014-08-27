@@ -2,21 +2,21 @@
 class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  
+
   model Cms::Layout
-  
+
   navi_view "cms/main/navi"
   menu_view "cms/main/node_menu"
-  
+
   private
     def set_crumbs
       #@crumbs << [:"cms.layout", action: :index]
     end
-    
+
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
     end
-    
+
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)

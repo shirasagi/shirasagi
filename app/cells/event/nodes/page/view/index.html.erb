@@ -1,3 +1,5 @@
+<%== @cur_node.upper_html %>
+
 <nav class="event-date">
   <h1 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h1>
   <ul>
@@ -22,7 +24,7 @@
 
     <% pages.each do |page| %>
     <dd class="page">
-      <article>
+      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <header>
           <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
         </header>
@@ -32,3 +34,5 @@
   </dl>
   <% end %>
 </div>
+
+<%== @cur_node.lower_html %>

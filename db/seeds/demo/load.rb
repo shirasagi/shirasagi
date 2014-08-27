@@ -145,7 +145,7 @@ def save_node(data)
 end
 
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー"
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w[docs]
 save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
 save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
 save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
