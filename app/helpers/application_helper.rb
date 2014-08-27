@@ -22,6 +22,14 @@ module ApplicationHelper
     "#{str.to_s[0..len-1]}#{str.to_s.size > len ? ".." : ""}".html_safe
   end
 
+  def current_url?(url)
+    current = @request_url || request.env["REQUEST_PATH"].sub(/\?.*/, "")
+    return nil if current.gsub("/", "").blank?
+    return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
+    return :current if current =~ /^#{Regexp.escape(url)}(\/|\?|$)/
+    nil
+  end
+
   def link_to(*args)
     if args[0].class == Symbol
       args[0] = I18n.t "views.links.#{args[0]}", default: nil || t(args[0])
