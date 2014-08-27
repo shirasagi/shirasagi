@@ -20,7 +20,7 @@ module Cms::ListHelper
           ih << '</article>'
           ih = cur_item.render_loop_html(item, html: ih.join("\n"))
         end
-        h << ih.gsub!('#{current}', current_url?(item.url).to_s)
+        h << ih.gsub('#{current}', current_url?(item.url).to_s)
       end
     end
     h << cur_item.lower_html.html_safe if cur_item.lower_html.present?
@@ -49,7 +49,7 @@ module Cms::ListHelper
           ih << '</article>'
           ih = cur_item.render_loop_html(item, html: ih.join("\n"))
         end
-        h << ih.gsub!('#{current}', current_url?(item.url).to_s)
+        h << ih.gsub('#{current}', current_url?(item.url).to_s)
       end
     end
     h << cur_item.lower_html.html_safe if cur_item.lower_html.present?
