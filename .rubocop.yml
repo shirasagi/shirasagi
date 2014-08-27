@@ -1,0 +1,15 @@
+inherit_from: .rubocop_todo.yml
+AllCops:
+  RunRailsCops: true
+
+# Rails default check path
+Rails/DefaultScope:
+  Include:
+    - app/controllers/
+    - app/models/
+    - app/helpers/
+    - app/validators/
+    - app/cells/
+
+# Offense count: 1
+# Cop supports --auto-correct.
