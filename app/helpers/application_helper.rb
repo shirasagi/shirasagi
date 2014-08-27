@@ -23,9 +23,12 @@ module ApplicationHelper
   end
 
   def current_url?(url)
-    target = @request_url || request.url.sub(/\?.*/, "")
-    return nil if target.gsub("/", "").blank?
-    return "current" if url =~ /^#{Regexp.escape(target)}(\/|\?|$)/
+    current = @request_url || request.url.sub(/\?.*/, "")
+    return nil if current.gsub("/", "").blank?
+
+    current.sub!(/\/index\.html$/, "")
+    url.sub!(/\/index\.html$/, "")
+    return :current if url =~ /^#{Regexp.escape(current)}(\/|\?|$)/
     nil
   end
 
