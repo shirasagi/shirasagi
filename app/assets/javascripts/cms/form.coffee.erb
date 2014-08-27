@@ -26,12 +26,12 @@ $ ->
       result.append("<p>" + Syntax_Checker.message["body"] + "</p>")
       result.append('<ul>')
       ul = result.find('ul')
-      
+
       for key, err of Syntax_Checker.errors
         ul.append('<li>')
         ul.find('li:last').append('<code>')
         ul.find('li:last code').text(err["code"])
-        ul.append('<ul>')        
+        ul.append('<ul>')
         for msg in err["msg"]
           ul.find('ul:last').append('<li>')
           ul.find('ul li:last').text(msg)

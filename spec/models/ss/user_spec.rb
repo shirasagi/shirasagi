@@ -6,20 +6,20 @@ describe SS::User do
       item = build(:ss_user)
       item.valid?.should be_true
     end
-    
+
     it "abnormal item should be false" do
       item = build(:ss_user)
       item.email = nil
       item.valid?.should be_false
     end
   end
-  
+
   describe "save method" do
     it "normal item should be true" do
       item = build(:ss_user)
       item.save.should be_true
     end
-    
+
     it "abnormal_item should be false" do
       item = build(:ss_user)
       item.email = nil
@@ -31,7 +31,7 @@ describe SS::User do
     before do
       @items = SS::User.all
     end
-    
+
     it "items shoud be loaded" do
       @items.size.should_not be_nil
     end

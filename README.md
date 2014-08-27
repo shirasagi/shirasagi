@@ -13,7 +13,7 @@ Documentation
 
 * [Official](http://ss-proj.org)
 * [Install](https://github.com/shirasagi/shirasagi/blob/master/doc/install.txt)
- 
+
 License
 -------
 

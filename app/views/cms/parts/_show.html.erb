@@ -6,20 +6,20 @@
 <dl class="see">
   <dt><%= @model.t :route %></dt>
   <dd><%= @item.label :route %></dd>
-  
+
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
-  
+
   <% if fields[:filename] != -1 %>
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
   <% end %>
-  
+
   <!--
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
   -->
-  
+
   <dt><%= @model.t :mobile_view %></dt>
   <dd><%= @item.label :mobile_view %></dd>
 </dl>

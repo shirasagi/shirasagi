@@ -12,7 +12,7 @@
       <%= link_to :parent_directory, send("cms_#{resource}_path"), { class: "icon-node-up" } %>
       <% end %>
     <% end %>
-    
+
     <% @cur_node.children.sort(filename: 1).limit(20).each do |item| %>
     <%= link_to item.name, { action: :index, cid: item }, { class: "icon-node" } %>
     <% end %>

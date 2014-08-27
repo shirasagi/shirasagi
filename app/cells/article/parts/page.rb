@@ -4,11 +4,11 @@ module Article::Parts::Page
     include Cms::PartFilter::EditCell
     model Article::Part::Page
   end
-  
+
   class ViewCell < Cell::Rails
     include Cms::PartFilter::ViewCell
     helper Cms::ListHelper
-    
+
     public
       def index
         @items = Article::Page.site(@cur_site).public.
@@ -16,7 +16,7 @@ module Article::Parts::Page
           order_by(@cur_part.sort_hash).
           page(params[:page]).
           per(@cur_part.limit)
-        
+
         @items.empty? ? "" : render
       end
   end

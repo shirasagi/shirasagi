@@ -2,7 +2,7 @@
 module I18n
   module Backend
     module Base
-      
+
       protected
         def load_erb(filename)
           begin
@@ -13,7 +13,7 @@ module I18n
             raise InvalidLocaleData.new(filename, e.inspect)
           end
         end
-        #alias_method :load_yml, :load_erb 
+        #alias_method :load_yml, :load_erb
     end
   end
 end

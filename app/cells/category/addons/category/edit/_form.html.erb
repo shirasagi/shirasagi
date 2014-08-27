@@ -15,16 +15,16 @@ def cate_form(item)
   h  = %Q[<label style="margin-right: 10px;">]
   h << f.check_box("category_ids[]", {}, item._id)
   h << %Q[#{item.name}</label>]
-  
+
   children = Category::Node::Base.site(@cur_site).
     where(filename: /^#{item.filename}\//, depth: item.depth + 1)
-  
+
   if children.size > 0
     h << %Q[<div style="padding: 0px 0px 0px 40px;">].html_safe
     children.each { |c| h += cate_form c }
     h << %Q[</div>].html_safe
   end
-  
+
   h.html_safe
 end
 
@@ -32,7 +32,7 @@ end
 <dl class="see mod-category">
   <dd class="wide" style="line-height: 2.5">
     <%= f.hidden_field "category_ids[]", value: "" %>
-    
+
     <% categories.each do |cate| %>
     <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;">
       <%= cate_form cate %></div>

@@ -1,13 +1,13 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
-  
+
   <dt><%= @model.t :email %></dt>
   <dd><%= f.email_field :email %></dd>
-  
+
   <dt><%= @model.t :in_password %></dt>
   <dd><%= f.text_field :in_password %></dd>
-  
+
   <dt><%= @model.t :group_ids %></dt>
   <dd>
     <%= hidden_field_tag "item[group_ids][]" %>
@@ -15,7 +15,7 @@
     <label><%= f.check_box "group_ids[]", {}, item._id %><%= item.name %></label><br />
     <% end %>
   </dd>
-  
+
   <dt><%= @model.t :type %></dt>
   <dd><%= f.select :type, @item.type_options %></dd>
 </dl>

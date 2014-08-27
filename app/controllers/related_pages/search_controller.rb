@@ -1,7 +1,7 @@
 # coding: utf-8
 class RelatedPages::SearchController < ApplicationController
   include Cms::BaseFilter
-  
+
   public
     def index
       render layout: "ss/ajax"
@@ -24,7 +24,7 @@ class RelatedPages::SearchController < ApplicationController
             { name: item.name,
               filename: item.filename,
               updated: item.updated.strftime("%Y/%m/%d %H:%M"),
-              url: "http://#{@cur_site.domain}#{item.url}" } 
+              url: "http://#{@cur_site.domain}#{item.url}" }
           ]
         end.to_h.to_json
       else

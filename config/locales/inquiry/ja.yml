@@ -2,7 +2,7 @@ ja:
   inquiry:
     form: メールフォーム
     column: 質問項目
-    answer: 回答データ    
+    answer: 回答データ
     required_field: ※必須入力
     confirm_message: 下記事項をご確認の上、送信ボタンを押してください。
     submit: 送信する
@@ -10,7 +10,7 @@ ja:
     confirm: 確認画面へ
     notify: 自動通知
     reply: 自動返信
-  
+
   modules:
     inquiry: メールフォーム
     addons:
@@ -19,17 +19,17 @@ ja:
       inquiry/notice: メール通知
       inquiry/reply: 自動返信メール
       inquiry/input_setting: 入力設定
-  
+
   cms:
     nodes:
       inquiry/form: フォーム
-  
+
   mongoid:
     attributes:
       inquiry/node/form:
         inquiry_html: 説明テキスト
         inquiry_sent_html: 送信完了テキスト
-        inquiry_captcha: 画像認証        
+        inquiry_captcha: 画像認証
         notice_state: 通知設定
         notice_email: 通知メールアドレス
         from_name: 差出人名
@@ -51,8 +51,8 @@ ja:
         remote_addr: IPアドレス
         user_agent: ユーザーエージェント
         data_summary: 回答内容
-        captcha: 画像の数字        
-        
+        captcha: 画像の数字
+
   simple_captcha:
     placeholder: ""
     refresh_button_text: 違う画像

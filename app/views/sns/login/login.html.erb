@@ -9,13 +9,13 @@
   <article>
     <%= error_messages_for :item %>
     <%= hidden_field_tag :ref, params[:ref] %>
-    
+
     Email<br />
     <%= email_field :item, :email %><br />
     <br />
     Password<br />
     <%= password_field :item, :password %><br />
-    
+
     <footer class="send" style="margin: 20px 0px;">
       <%= submit_tag t(:login), class: :save %>
     </footer>

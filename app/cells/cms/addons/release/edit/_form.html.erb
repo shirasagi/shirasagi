@@ -10,10 +10,10 @@ $ ->
 <dl class="see mod-cms-release">
   <dt><%= @model.t :released %></dt>
   <dd><%= f.text_field :released, class: "datetime", value: tryb{@item.released.strftime("%Y/%m/%d %H:%M")} %>
-  
+
   <dt><%= @model.t :release_date %></dt>
   <dd><%= f.text_field :release_date, class: "datetime", value: tryb{@item.release_date.strftime("%Y/%m/%d %H:%M")} %>
-  
+
   <dt><%= @model.t :close_date %></dt>
   <dd><%= f.text_field :close_date, class: "datetime", value: tryb{@item.close_date.strftime("%Y/%m/%d %H:%M")} %>
 </dl>

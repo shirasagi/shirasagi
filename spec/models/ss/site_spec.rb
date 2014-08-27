@@ -6,20 +6,20 @@ describe SS::Site do
       item = build(:ss_site)
       item.valid?.should be_true
     end
-    
+
     it "abnormal item should be false" do
       item = build(:ss_site)
       item.name = nil
       item.valid?.should be_false
     end
   end
-  
+
   describe "save method" do
     it "normal item should be true" do
       item = build(:ss_site)
       item.save.should be_true
     end
-    
+
     it "abnormal_item should be false" do
       item = build(:ss_site)
       item.name = nil
@@ -31,7 +31,7 @@ describe SS::Site do
     before do
       @items = SS::Site.all
     end
-    
+
     it "items shoud be loaded" do
       @items.size.should_not be_nil
     end

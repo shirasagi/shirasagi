@@ -19,7 +19,7 @@ createSearchedElement = (id, result) ->
       if $(this).prop("checked")
         checked += 1
       size += 1
-    
+
     if checked == size
       $(".related-pages div.set-pages").show()
       tr.parents("table").find("th input[type=checkbox]").attr "checked", true
@@ -50,7 +50,7 @@ createSearchedElement = (id, result) ->
     jQuery.colorbox.close()
     return false
   return tr
-  
+
 createFormElement = (tr) ->
   tr.removeClass "checked"
   $(tr).find("td:not(:eq(1))").remove()
@@ -69,21 +69,21 @@ createFormElement = (tr) ->
     if $(".mod-related table tr[data-id]").size() == 1
       $(".mod-related table.index").hide()
     return
-  
+
   deletelink.append input
   tr.append deletelink
   return tr
-  
+
 selectPages = ->
   $(".related-pages table.index tbody tr").each ->
     if $(this).find("input[type=checkbox]").prop("checked")
       $(".mod-related table.index").prepend(createFormElement($(this).clone(false)))
     return
-  
+
   $(".mod-related table.index").show()
   jQuery.colorbox.close()
   return
-  
+
 searchPages = ->
   url = "<%= raw related_pages_search_path %>"
   query = $(".related-pages input.search").val().trim()
@@ -91,7 +91,7 @@ searchPages = ->
   return  unless query
   button = this
   $(button).attr "disabled", true
-  
+
   $.ajax {
     type: "GET", url: url, cache: false, dataType: "json",
     data: { q: query },
@@ -102,7 +102,7 @@ searchPages = ->
       $(".mod-related table.index tbody tr").each (i) ->
         selected.push $(this).attr("data-id")
         return
-      
+
       for id of json
         if $.inArray(id.toString(), selected) < 0
           tr = createSearchedElement(id, json[id])
@@ -115,7 +115,7 @@ searchPages = ->
       return
   }
   return
-  
+
 stopEnterSubmit = (inputText, callback) ->
   inputText.keypress (ev) ->
     if (ev.which and ev.which is 13) or (ev.keyCode and ev.keyCode is 13)
@@ -124,12 +124,12 @@ stopEnterSubmit = (inputText, callback) ->
     else
       return true
   return
-  
+
 $ ->
   stopEnterSubmit $(".related-pages input.search"), ->
     $(".search-pages").trigger "click"
     return
-  
+
   $(".related-pages .search-pages").click searchPages
   $(".related-pages div.set-pages").hide()
   $(".related-pages table th input[type=checkbox]").click ->
@@ -139,14 +139,14 @@ $ ->
     else
       $(".related-pages table tbody tr input[type=checkbox]").each ->
         $(this).prop("checked", false )
-        
+
     checked = 0
     size = 0
     $(".related-pages table tbody tr input[type=checkbox]").each ->
       if $(this).prop("checked")
         checked += 1
       size += 1
-    
+
     if size > 0 and checked == size
       $(".related-pages div.set-pages").show()
     else
@@ -155,7 +155,7 @@ $ ->
       else
         $(".related-pages div.set-pages").hide()
     return
-    
+
   $(".related-pages button.set-pages").click selectPages
   return
 <% end %>

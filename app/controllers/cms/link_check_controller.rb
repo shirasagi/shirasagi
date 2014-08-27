@@ -32,7 +32,7 @@ class Cms::LinkCheckController < ApplicationController
             raise "200"
           end
       }
-      
+
       begin
         timeout(2) do
           open(url, opts) { |f| return f.status[0].to_i }
@@ -44,7 +44,7 @@ class Cms::LinkCheckController < ApplicationController
       end
       return 0
     end
-    
+
     def allow_cors_requests
       headers["Access-Control-Allow-Origin"] = request.env["HTTP_ORIGIN"]
       headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"

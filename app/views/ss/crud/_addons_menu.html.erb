@@ -4,7 +4,7 @@
   <div>
     <%= link_to :all, "#", class: "addon-tab", "data-id" => "#addon-all" %>
     <%= link_to :basic_info, "#basic", class: "addon-tab", "data-id" => "#addon-basic" %>
-    
+
     <% addons.each do |addon| %>
       <%= link_to addon.name, "##{addon.id}", class: "addon-tab",
         "data-id" => "#addon-#{addon.id}" %>

@@ -3,19 +3,19 @@
 <dl class="see mod-cms-nodelist">
   <dt><%= @model.t :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
-  
+
   <dt><%= @model.t :sort %></dt>
   <dd><%= f.select :sort, @item.sort_options, include_blank: " " %></dd>
-  
+
   <dt><%= @model.t :limit %></dt>
   <dd><%= f.number_field :limit %></dd>
-  
+
   <dt><%= @model.t :upper_html %></dt>
   <dd><%= f.text_area :upper_html, class: :html %></dd>
-  
+
   <dt><%= @model.t :loop_html %></dt>
   <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
-  
+
   <dt><%= @model.t :lower_html %></dt>
   <dd><%= f.text_area :lower_html, class: :html %></dd>
 </dl>

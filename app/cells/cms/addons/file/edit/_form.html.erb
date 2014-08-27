@@ -15,10 +15,10 @@ $ ->
 <dl class="see">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
-    
+
     <%= link_to :upload, sns_user_temp_files_path(@cur_user), class: "ajax-box" %>
     | <%= link_to :"sns.user_file", sns_user_ajax_files_path(@cur_user), class: "ajax-box" %>
-    
+
     <div id="selected-files" style="margin-top: 10px;">
       <% @item.files.each do |file| %>
       <div class="file-view">
