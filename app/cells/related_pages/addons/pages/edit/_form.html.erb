@@ -46,7 +46,7 @@ $ ->
 <% end %>
 
 <dl class="see mod-related pages">
-  <dt><%= @model.t :related_pages %></dt>
+  <dt><%= @model.t :related_pages %><%= @model.tt :page_ids %></dt>
   <dd>
   <%= f.hidden_field "related_page_ids[]", value: "" %>
   <%= link_to t('related_pages_views.link.index'), related_pages_path, class: "ajax-box" %>

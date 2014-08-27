@@ -18,6 +18,26 @@ module SS::Document
       human_attribute_name *args
     end
 
+    def tt(key, html_wrap = true)
+      modelnames = ancestors.select { |x| x.respond_to?(:model_name) }
+      msg = ""
+      modelnames.each do |modelname|
+        msg = I18n.t("tooltip.#{modelname.model_name.i18n_key}.#{key}", default: "")
+        break if msg.present?
+      end
+      return msg if msg.blank? || !html_wrap
+      msg = [msg] if msg.class.to_s == "String"
+      list = msg.map {|d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>"}
+
+      h  = []
+      h << %Q[<div class="tooltip">?]
+      h << %Q[<ul>]
+      h << list
+      h << %Q[</ul>]
+      h << %Q[</div>]
+      h.join("\n").html_safe
+    end
+
     def seqid(name = :id, opts = {})
       sequence_field name
 
@@ -71,6 +91,10 @@ module SS::Document
   public
     def t(name)
       self.class.t name
+    end
+
+    def tt(key, html_wrap = true)
+      self.class.tt key, html_wrap
     end
 
     def label(name)

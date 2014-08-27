@@ -18,3 +18,9 @@ ja:
       remove_page: "削除"
     button:
       search_pages: "関連記事を検索"
+
+  tooltip:
+    related_pages/addon/pages:
+      page_ids:
+        - このページの内容に関連するページへのリンクを選択します。
+        - 選択したページへのリンクが本文の下部に表示されます。

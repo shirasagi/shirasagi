@@ -398,5 +398,46 @@ form.index-search {
   }
 }
 
+.tooltip {
+  display:inline-block;
+  position:relative;
+  width:16px;
+  left:5px;
+  height:16px;
+  @include border-radius(8px);
+  background:#b58;
+  color:#fff;
+  font-weight:bold;
+  text-decoration:none;
+  text-align:center;
+  ul {
+    display: none;
+    list-style-position: inside;
+    position: absolute; 
+    bottom:18px;
+    left:-300px;
+    width: 27em;
+    z-index: 90;
+    padding: 2px 3px;
+    border: 1px solid #bbb;
+    @include box-shadow(0px 2px 10px #aaa);
+    background-color: #fff;
+    color: #888;
+    text-align: left;
+    line-height: 1.6em;
+    li {
+      padding-left: 1em;
+      text-indent: -1em;
+    }
+    &:after {
+      position: absolute;
+      left: 300px;
+      height:0;
+      width:0;
+      content: " ";
+    }
+  }
+}
+
 // -------------------------------------------------------------------------------------------------
 }

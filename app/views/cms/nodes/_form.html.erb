@@ -6,31 +6,31 @@ bind  = "$(this).parent().parent().parent().parent().hide();"
 bind << "location.href = '#{url}?route=' + $(this).val();"
 
 %><dl class="see">
-  <dt><%= @model.t :route %></dt>
+  <dt><%= @model.t :route %><%= @model.tt :route %></dt>
   <dd><%= f.hidden_field :route %>
     <%= @item.label :route %> &nbsp;[<%= link_to :change, routes_cms_nodes_path, class: "ajax-box" %>]</dd>
 
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <% if fields[:filename] != -1 %>
-  <dt><%= @model.t :basename %></dt>
+  <dt><%= @model.t :basename %><%= @model.tt :foldername %></dt>
   <dd><%= f.text_field :basename, class: "filename" %></dd>
   <% end %>
 
-  <dt><%= @model.t :state %></dt>
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
 
   <% if fields[:layout_id] != -1 %>
-  <dt><%= @model.t :layout_id %></dt>
+  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
   <% end %>
 
-  <dt><%= @model.t :order %></dt>
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
   <% if fields[:shortcut] != -1 %>
-  <dt><%= @model.t :shortcut %></dt>
+  <dt><%= @model.t :shortcut %><%= @model.tt :shortcut %></dt>
   <dd><%= f.select :shortcut, @item.shortcut_options %></dd>
   <% end %>
 </dl>
