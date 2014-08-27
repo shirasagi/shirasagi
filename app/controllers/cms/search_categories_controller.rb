@@ -12,7 +12,7 @@ class Cms::SearchCategoriesController < ApplicationController
 
     def search
       @query = params[:q]
-      @query = @query.blank? ? {} : @query.split(/[\s　]+/).map { |q| { name: /#{q}/ } }
+      @query = @query.blank? ? {} : @query.split(/[\s　]+/).uniq.compact.map { |q| { name: /\Q#{q}\E/ } }
 
       @items = @model.site(@cur_site).
         and(@query).

@@ -74,6 +74,7 @@ $ ->
     selectGroups(groups)
     $.colorbox.close()
     return false
+  $("form.search-groups").trigger('submit');
   toggleSelectButton()
 
 <% end %>
