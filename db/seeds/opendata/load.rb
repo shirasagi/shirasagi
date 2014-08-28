@@ -23,7 +23,9 @@ def save_layout(data)
   item.update data.merge html: html
 end
 
-save_layout filename: "home.layout.html", name: "オープンデータレイアウト"
+save_layout filename: "home.layout.html", name: "トップレイアウト"
+save_layout filename: "page.layout.html", name: "汎用レイアウト"
+save_layout filename: "mypage.layout.html", name: "マイページレイアウト"
 
 array   = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/, '\1'), m] }
 layouts = Hash[*array.flatten]
@@ -48,6 +50,9 @@ save_node filename: "api", name: "API", route: "opendata/api", shortcut: "show"
 save_node filename: "user", name: "ユーザーページ", route: "opendata/user", shortcut: "show"
 
 save_node filename: "mypage", name: "マイページ", route: "opendata/mypage"
+save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset"
+save_node filename: "mypage/app", name: "アプリ", route: "opendata/my_app"
+save_node filename: "mypage/idea", name: "アイデア", route: "opendata/my_idea"
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
 save_node filename: "bunya/kurashi", name: "くらし", route: "opendata/category", order: 1
@@ -71,8 +76,11 @@ save_node filename: "chiiki/mimashi", name: "美馬市", route: "opendata/area",
 save_node filename: "chiiki/miyoshishi", name: "三好市", route: "opendata/area", order: 9
 
 ## layout
-%w[dataset app idea sparql api user].each do |name|
-  Cms::Node.where(site_id: @site._id, filename: name).update_all(layout_id: layouts["opendata"].id)
+%w[dataset app idea sparql api mypage].each do |name|
+  Cms::Node.where(site_id: @site._id, filename: name).update_all(layout_id: layouts["page"].id)
+end
+[/^mypage\//].each do |name|
+  Cms::Node.where(site_id: @site._id, filename: name).update_all(layout_id: layouts["mypage"].id)
 end
 
 ## -------------------------------------
@@ -94,6 +102,8 @@ save_part filename: "mypage.part.html" , name: "マイページ", route: "openda
 save_part filename: "dataset/pages.part.html" , name: "データセットリスト", route: "opendata/dataset"
 save_part filename: "app/pages.part.html" , name: "アプリリスト", route: "opendata/app"
 save_part filename: "idea/pages.part.html" , name: "アイデアリスト", route: "opendata/idea"
+
+save_part filename: "mypage/head.part.html" , name: "マイページメニュー", route: "cms/free"
 
 ## -------------------------------------
 puts "pages:"

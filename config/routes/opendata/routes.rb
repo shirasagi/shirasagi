@@ -43,10 +43,12 @@ SS::Application.routes.draw do
     #put "dataset/:id/(index.:format)" => "public#update", cell: "nodes/dataset"
     #delete "dataset/:id/(index.:format)" => "public#delete", cell: "nodes/dataset"
 
-    get "mypage/index.html" => "public#index", cell: "nodes/mypage"
-    get "mypage/login/index.html" => "public#login", cell: "nodes/mypage"
-    post "mypage/login/index.html" => "public#login", cell: "nodes/mypage"
-    get "mypage/logout/index.html" => "public#logout", cell: "nodes/mypage"
+    get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
+    get "mypage/login"  => "public#login", cell: "nodes/mypage"
+    post "mypage/login" => "public#login", cell: "nodes/mypage"
+    get "mypage/logout" => "public#logout", cell: "nodes/mypage"
+
+    resources :datasets, path: "my_dataset", controller: "public", cell: "nodes/my_dataset", concerns: :deletion
 
     get "user/(index.:format)" => "public#index", cell: "nodes/user"
     post "user/login.html" => "public#login", cell: "nodes/user"

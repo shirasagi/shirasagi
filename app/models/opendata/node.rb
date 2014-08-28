@@ -59,4 +59,22 @@ module Opendata::Node
 
     default_scope ->{ where(route: "opendata/mypage") }
   end
+
+  class MyDataset
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/my_dataset") }
+  end
+
+  class MyApp
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/my_app") }
+  end
+
+  class MyIdea
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/my_idea") }
+  end
 end
