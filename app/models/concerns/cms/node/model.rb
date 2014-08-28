@@ -151,7 +151,7 @@ module Cms::Node::Model
     end
 
     def order
-      value = read_attribute(:order).to_i
+      value = self[:order].to_i
       value < 0 ? 0 : value
     end
 

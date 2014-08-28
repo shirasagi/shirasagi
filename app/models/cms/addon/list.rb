@@ -27,12 +27,12 @@ module Cms::Addon::List
       end
 
       def limit
-        value = read_attribute(:limit).to_i
+        value = self[:limit].to_i
         (value < 1 || 100 < value) ? 100 : value
       end
 
       def new_days
-        value = read_attribute(:new_days).to_i
+        value = self[:new_days].to_i
         (value < 0 || 30 < value) ? 30 : value
       end
 

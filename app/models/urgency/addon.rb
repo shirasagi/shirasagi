@@ -14,7 +14,7 @@ module Urgency::Addon
 
       public
         def urgency_default_layout
-          Cms::Layout.find(read_attribute(:urgency_default_layout_id).to_i) rescue return nil
+          Cms::Layout.find(self[:urgency_default_layout_id].to_i) rescue return nil
         end
     end
   end
