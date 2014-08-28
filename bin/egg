@@ -9,7 +9,7 @@ require "fileutils"
 require 'zipruby'
 
 class Frypan
-  
+
   TARGETS = [
     "app/assets/images",
     "app/assets/javascripts",
@@ -33,44 +33,44 @@ class Frypan
     "lib",
     "lib/tasks/",
   ]
-  
+
   private
     def root
       "#{File.dirname(__dir__)}"
     end
-    
+
     def zip_dir
       "#{root}/vendor/eggs"
     end
-    
+
     def zip_file
-      v = ver ? "-#{ver}" : nil 
+      v = ver ? "-#{ver}" : nil
       "#{zip_dir}/#{ARGV[1]}#{v}.zip"
     end
-    
+
     def name
       ARGV[1]
     end
-    
+
     def mod
       name.gsub("-", "_")
     end
-    
+
     def ver
       ARGV.each_with_index {|arg, i| return ARGV[i+1] if arg == "-v" && ARGV[i+1] }
       nil
     end
-    
+
   public
     def install
       puts "Installing #{mod} (#{ver})"
       puts ""
-      
+
       Dir.chdir(root)
       TARGETS.each do |dir|
         return puts "    Module exists: #{dir}/#{mod}" if File.exists?("#{dir}/#{mod}")
       end
-      
+
       Zip::Archive.open(zip_file) do |ar|
         entry_names = ar.map do |f|
           path = f.name.sub(/^#{name}\//, '')
@@ -84,11 +84,11 @@ class Frypan
         end
       end
     end
-    
+
     def uninstall
       puts "Uninstalling #{mod}"
       puts ""
-      
+
       Dir.chdir(root)
       TARGETS.each do |dir|
         Dir.glob("#{dir}/#{mod}{/,/**/*,.*}").each do |f|
@@ -97,11 +97,11 @@ class Frypan
         end
       end
     end
-    
+
     def pack
       puts "Packing #{mod} (#{ver})"
       puts ""
-      
+
       Dir.chdir(root)
       Zip::Archive.open("#{zip_file}.tmp", Zip::CREATE) do |ar|
         TARGETS.each do |dir|
@@ -117,9 +117,9 @@ class Frypan
           end
         end
       end
-      
+
       return puts "    No such module: #{mod}" if !File.exists?("#{zip_file}.tmp")
-      
+
       puts "\n    create  #{zip_file}"
       FileUtils.mv "#{zip_file}.tmp", zip_file
     end
