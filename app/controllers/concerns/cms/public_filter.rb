@@ -64,6 +64,7 @@ module Cms::PublicFilter
     end
 
     def redirect_slash
+      return unless request.get?
       redirect_to "#{request.env["REQUEST_PATH"]}/"
     end
 
