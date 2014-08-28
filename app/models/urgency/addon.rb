@@ -10,7 +10,7 @@ module Urgency::Addon
       field :urgency_default_layout_id, type: Integer
       permit_params :urgency_default_layout_id
 
-      validates_presence_of :urgency_default_layout_id
+      validates :urgency_default_layout_id, presence: true
 
       public
         def urgency_default_layout

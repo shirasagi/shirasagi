@@ -13,7 +13,7 @@ class Inquiry::Column
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   permit_params :id, :node_id, :state, :name, :html, :order
 
-  validates_presence_of :node_id, :state, :name
+  validates :node_id, :state, :name, presence: true
 
   public
     def state_options
