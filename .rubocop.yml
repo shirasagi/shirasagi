@@ -1,6 +1,8 @@
 inherit_from: .rubocop_todo.yml
 AllCops:
   RunRailsCops: true
+  Exclude:
+    - Guardfile
 
 # Rails default check path
 Rails/DefaultScope:
