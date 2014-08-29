@@ -49,4 +49,5 @@ group :development, :test do
   gem 'rubocop', require: false
   gem 'guard'
   gem 'guard-rubocop', '~> 1.1.0'
+  gem 'guard-rspec', '~> 4.3.1'
 end
