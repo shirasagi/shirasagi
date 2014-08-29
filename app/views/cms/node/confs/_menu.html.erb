@@ -1,15 +1,12 @@
 <nav class="act-menu">
-  <header><h1><%= t :"ss.action" %></h1></header>
-  <div>
-    <% if params[:action] =~ /edit|update|delete/ %>
-      <%= link_to :back_to_show, action: :show %>
-      <%= link_to :back_to_index, controller: :nodes %>
-    <% else %>
-      <%= link_to :edit, action: :edit if @item.allowed?(:edit, @cur_user)  %>
-      <%= link_to :delete, action: :delete if @item.allowed?(:edit, @cur_user)  %>
-      <%= link_to :back_to_index, controller: :nodes %>
-    <% end %>
-  </div>
+  <% if params[:action] =~ /edit|update|delete/ %>
+    <%= link_to :back_to_show, action: :show %>
+    <%= link_to :back_to_index, controller: :nodes %>
+  <% else %>
+    <%= link_to :edit, action: :edit if @item.allowed?(:edit, @cur_user)  %>
+    <%= link_to :delete, action: :delete if @item.allowed?(:edit, @cur_user)  %>
+    <%= link_to :back_to_index, controller: :nodes %>
+  <% end %>
 </nav>
 
 <% if params[:action] =~ /show|new|edit|create|update/ %>

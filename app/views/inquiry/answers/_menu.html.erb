@@ -1,10 +1,7 @@
 <nav class="act-menu">
-  <header><h1><%= t :"ss.action" %></h1></header>
-  <div>
   <% if params[:action] =~ /show/ %>
     <%= link_to :back_to_index, action: :index %>
   <% end %>
-  </div>
 </nav>
 
 <% if params[:action] =~ /show/ %>
