@@ -23,7 +23,7 @@ module Cms::Reference
       permit_params :layout_id
     end
   end
-  
+
   module StCategory
     extend ActiveSupport::Concern
 
