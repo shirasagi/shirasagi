@@ -30,7 +30,8 @@ SS::Application.routes.draw do
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"
     get "idea/(index.:format)" => "public#index", cell: "nodes/idea"
     get "idea/:id/(index.:format)" => "public#show", cell: "nodes/idea"
-    get "sparql/*path" => "public#index", cell: "nodes/sparql"
+
+    get "sparql/(*path)" => "public#index", cell: "nodes/sparql"
     get "api/*path" => "public#index", cell: "nodes/api"
 
     get "dataset/new.html" => "public#new", cell: "nodes/dataset"
@@ -70,12 +71,12 @@ SS::Application.routes.draw do
 
   end
 
- part "opendata" do
-   get "mypage"  => "public#index", cell: "parts/mypage"
-   get "dataset" => "public#index", cell: "parts/dataset"
-   get "app"     => "public#index", cell: "parts/app"
-   get "idea"    => "public#index", cell: "parts/idea"
- end
+  part "opendata" do
+    get "mypage"  => "public#index", cell: "parts/mypage"
+    get "dataset" => "public#index", cell: "parts/dataset"
+    get "app"     => "public#index", cell: "parts/app"
+    get "idea"    => "public#index", cell: "parts/idea"
+  end
 
 #  page "opendata" do
 #    get "page/:filename.:format" => "public#index", cell: "pages/page"

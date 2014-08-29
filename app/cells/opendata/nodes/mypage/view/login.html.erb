@@ -1,4 +1,11 @@
-<%= form_tag "" do |f| %>
+<ul>
+  <li><a href="#">Facebook</a></li>
+  <li><a href="#">Google</a></li>
+  <li><a href="#">Twitter</a></li>
+  <li><a href="#">Yahoo! Japan</a></li>
+</ul>
+
+<%= form_tag "", class: "member-login" do |f| %>
   <%= error_messages_for :item %>
   <%= hidden_field_tag :ref, params[:ref] %>
 
