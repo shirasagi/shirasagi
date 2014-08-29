@@ -15,7 +15,7 @@ class Inquiry::Answer
   permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_key
 
   apply_simple_captcha
-  validates_presence_of :node_id
+  validates :node_id, presence: true
   validate :validate_data
 
   public
