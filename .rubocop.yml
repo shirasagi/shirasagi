@@ -13,5 +13,8 @@ Rails/DefaultScope:
     - app/validators/
     - app/cells/
 
+Rails/Output:
+  Enabled: false
+
 # Offense count: 1
 # Cop supports --auto-correct.
