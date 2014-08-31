@@ -29,7 +29,20 @@ describe SS::Debug do
       expect(result).to eq expectied_result
     end
 
-    it 'receives Hash data, returns "<Hash> {...}" format string'
+    it 'receives Hash data, returns "<Hash> {...}" format string' do
+      result = subject.dump({a: 1, b: '2', c: [10]}, 2)
+      expectied_result = <<-EOF.gsub(/^\s+\|/, '').gsub(/\n$/, '')
+        |<Hash> {
+        |    a \t=> 1 <Fixnum>
+        |    b \t=> 2 <String>
+        |    c \t=> <Array> [
+        |      0 \t=> 10 <Fixnum>
+        |    ]
+        |  }
+      EOF
+      expect(result.class).to eq String
+      expect(result).to eq expectied_result
+    end
 
     it 'receives 1, returns "1 <Fixnum>"'
   end
