@@ -8,7 +8,12 @@ describe SS::Debug do
   subject { SS::Debug }
 
   describe '.debug' do
-    it 'receives String "test", returns "test <String>"'
+    it 'receives String "test", returns "test <String>"' do
+      target = 'test'
+      result = subject.dump(target, 2)
+      expect(result.class).to eq String
+      expect(result).to eq 'test <String>'
+    end
 
     it 'receives Array data, returns "<Array> [...]" format string'
 
