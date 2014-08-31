@@ -1,7 +1,6 @@
 FactoryGirl.define do
-  factory :article_page, class: Article::Page, traits: [:ss_site, :ss_user] do
-    sequence(:name) { |n| "name#{n}" }
-    sequence(:filename) { |n| "docs/file#{n}.html" }
+  factory :article_page, class: Article::Page, traits: [:cms_page] do
+    filename { "dir/#{unique_id}" }
     route "article/page"
   end
 end

@@ -32,6 +32,10 @@ class Frypan
     "doc",
     "lib",
     "lib/tasks/",
+    "spec/controllers/",
+    "spec/factories/",
+    "spec/models/",
+    "spec/support/",
   ]
 
   private

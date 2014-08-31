@@ -4,8 +4,7 @@ shared_examples "mongoid#save" do |opts = {}|
     context "invalid" do
       opts[:presence].each do |name|
         it name do
-          item = factory
-          item = build(factory) if Symbol === item
+          item = build(factory)
           item.send("#{name}=", nil)
           expect(item.save).to eq false
         end
@@ -14,8 +13,7 @@ shared_examples "mongoid#save" do |opts = {}|
   else
     context "valid" do
       it do
-        item = factory
-        item = build(factory) if Symbol === item
+        item = build(factory)
         expect(item.save).to eq true
       end
     end
@@ -24,7 +22,5 @@ end
 
 shared_examples "mongoid#find" do
   it { expect(model.first).not_to eq nil }
-  it { expect(model.where({ id: -1 }).first).to eq nil }
-  it { expect(model.all.size).not_to eq 0 }
-  it { expect(model.where({ id: -1 }).all.size).to eq 0 }
+  #it { expect(model.all.size).not_to eq 0 }
 end

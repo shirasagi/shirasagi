@@ -3,14 +3,14 @@ require 'spec_helper'
 describe Cms::Node do
   subject(:model) { Cms::Node }
   subject(:factory) { :cms_node }
-  
+
   it_behaves_like "mongoid#save", presence: %w[name state filename]
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 
   describe "#attributes" do
-    subject(:item) { model.first }
-    
+    subject(:item) { model.last }
+
     it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq nil }
     it { expect(item.basename).not_to eq nil }
@@ -30,7 +30,7 @@ end
 describe Cms::Node::Base do
   subject(:model) { Cms::Node::Base }
   subject(:factory) { :cms_node_base }
-  
+
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 end
@@ -38,7 +38,7 @@ end
 describe Cms::Node::Node do
   subject(:model) { Cms::Node::Node }
   subject(:factory) { :cms_node_node }
-  
+
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 end
@@ -46,7 +46,7 @@ end
 describe Cms::Node::Page do
   subject(:model) { Cms::Node::Page }
   subject(:factory) { :cms_node_page }
-  
+
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 end

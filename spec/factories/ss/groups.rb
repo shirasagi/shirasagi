@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :ss_group, class: SS::Group do
-    sequence(:name) { |n| "name#{n}" }
+    name "#{unique_id}"
   end
 end

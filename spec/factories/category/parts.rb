@@ -1,9 +1,9 @@
 FactoryGirl.define do
-  factory :category_part_base, class: Category::Part::Base, traits: [:ss_site, :ss_user, :cms_part] do
+  factory :category_part_base, class: Category::Part::Base, traits: [:cms_part] do
     route "category/base"
   end
-  
-  factory :category_part_node, class: Category::Part::Node, traits: [:ss_site, :ss_user, :cms_part] do
+
+  factory :category_part_node, class: Category::Part::Node, traits: [:cms_part] do
     route "category/node"
   end
 end

@@ -1,5 +1,7 @@
 FactoryGirl.define do
-  factory :history_log, class: History::Log, traits: [:ss_site, :ss_user] do
+  factory :history_log, class: History::Log do
+    site_id { create(:ss_site).id }
+    user_id { create(:ss_user).id }
     url "/path/to"
     controller "module/controller"
     action "create"

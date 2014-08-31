@@ -49,7 +49,7 @@ RSpec.configure do |config|
   end
   %x[rake db:drop]
 end
-  
+
 def unique_id
   Time.now.to_f.to_s.delete('.').to_i.to_s(36)
 end
