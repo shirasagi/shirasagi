@@ -44,6 +44,7 @@ group :development, :test do
   gem 'spring'
   gem 'rspec'
   gem 'rspec-rails'
+  gem 'capybara'
   gem 'factory_girl_rails'
   gem 'coveralls', require: false
   gem 'rubocop', require: false
