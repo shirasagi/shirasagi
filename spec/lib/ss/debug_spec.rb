@@ -7,7 +7,7 @@ describe SS::Debug do
   # data will accept type of String, Hash, Array and Fixnum
   subject { SS::Debug }
 
-  describe '.debug' do
+  describe '.dump' do
     it 'receives String "test", returns "test <String>"' do
       target = 'test'
       result = subject.dump(target, 2)
