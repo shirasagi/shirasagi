@@ -15,7 +15,19 @@ describe SS::Debug do
       expect(result).to eq 'test <String>'
     end
 
-    it 'receives Array data, returns "<Array> [...]" format string'
+    it 'receives Array data, returns "<Array> [...]" format string' do
+      result = subject.dump([1, 2, 3], 2)
+      # manipulate String to WYSIWYG
+      expectied_result = <<-EOF.gsub(/^\s+\|/, '').gsub(/\n$/, '')
+        |<Array> [
+        |    0 \t=> 1 <Fixnum>
+        |    1 \t=> 2 <Fixnum>
+        |    2 \t=> 3 <Fixnum>
+        |  ]
+      EOF
+      expect(result.class).to eq String
+      expect(result).to eq expectied_result
+    end
 
     it 'receives Hash data, returns "<Hash> {...}" format string'
 
