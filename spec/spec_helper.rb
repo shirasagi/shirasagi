@@ -43,10 +43,13 @@ RSpec.configure do |config|
   #config.order = "random"
   config.order = "order"
 
-  #FactoryGirl
   config.include FactoryGirl::Syntax::Methods
-  config.before(:all) do
+  config.before do
     FactoryGirl.reload
   end
-
+  %x[rake db:drop]
+end
+  
+def unique_id
+  Time.now.to_f.to_s.delete('.').to_i.to_s(36)
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe SS::Group do
-  subject(:model) { SS::Group }
+describe Cms::Group do
+  subject(:model) { Cms::Group }
   subject(:factory) { :ss_group }
   
   it_behaves_like "mongoid#save", presence: %w[name]

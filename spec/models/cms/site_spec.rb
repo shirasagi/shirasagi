@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe SS::Site do
-  subject(:model) { SS::Site }
+describe Cms::Site do
+  subject(:model) { Cms::Site }
   subject(:factory) { :ss_site }
   
   it_behaves_like "mongoid#save", presence: %w[name host]

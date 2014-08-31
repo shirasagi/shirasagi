@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe SS::User do
-  subject(:model) { SS::User }
+describe Cms::User do
+  subject(:model) { Cms::User }
   subject(:factory) { :ss_user }
   
   it_behaves_like "mongoid#save", presence: %w[name email in_password]

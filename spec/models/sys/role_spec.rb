@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe SS::Group do
-  subject(:model) { SS::Group }
-  subject(:factory) { :ss_group }
+describe Sys::Role do
+  subject(:model) { Sys::Role }
+  subject(:factory) { :sys_role }
   
   it_behaves_like "mongoid#save", presence: %w[name]
   it_behaves_like "mongoid#save"
