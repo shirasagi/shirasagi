@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe SS::User do
-  subject(:model) { SS::User }
-  subject(:factory) { :ss_user }
+describe Sys::Group do
+  subject(:model) { Sys::Group }
+  subject(:factory) { :ss_group }
 
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"

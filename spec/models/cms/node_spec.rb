@@ -4,7 +4,6 @@ describe Cms::Node do
   subject(:model) { Cms::Node }
   subject(:factory) { :cms_node }
 
-  it_behaves_like "mongoid#save", presence: %w[name state filename]
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 
@@ -17,7 +16,6 @@ describe Cms::Node do
     it { expect(item.path).not_to eq nil }
     it { expect(item.url).not_to eq nil }
     it { expect(item.full_url).not_to eq nil }
-    it { expect(item.public?).not_to eq nil }
     it { expect(item.parents).not_to eq nil }
     it { expect(item.nodes).not_to eq nil }
     it { expect(item.children).not_to eq nil }

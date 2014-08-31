@@ -4,7 +4,6 @@ describe Cms::Layout do
   subject(:model) { Cms::Layout }
   subject(:factory) { :cms_layout }
 
-  it_behaves_like "mongoid#save", presence: %w[name state filename]
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 
@@ -22,6 +21,5 @@ describe Cms::Layout do
     it { expect(item.json_path).not_to eq nil }
     it { expect(item.public?).not_to eq nil }
     it { expect(item.node).to eq nil }
-    it { expect(item.state_options).not_to eq nil }
   end
 end

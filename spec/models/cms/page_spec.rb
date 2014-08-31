@@ -4,7 +4,6 @@ describe Cms::Page do
   subject(:model) { Cms::Page }
   subject(:factory) { :cms_page }
 
-  it_behaves_like "mongoid#save", presence: %w[name state filename]
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 

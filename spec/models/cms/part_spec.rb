@@ -4,7 +4,6 @@ describe Cms::Part do
   subject(:model) { Cms::Part }
   subject(:factory) { :cms_part }
 
-  it_behaves_like "mongoid#save", presence: %w[name state filename]
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 
@@ -18,7 +17,6 @@ describe Cms::Part do
     it { expect(item.json_path).not_to eq nil }
     it { expect(item.url).not_to eq nil }
     it { expect(item.full_url).not_to eq nil }
-    it { expect(item.public?).not_to eq nil }
     it { expect(item.node).to eq nil }
   end
 end

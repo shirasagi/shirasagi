@@ -4,7 +4,6 @@ describe SS::Site do
   subject(:model) { SS::Site }
   subject(:factory) { :ss_site }
 
-  it_behaves_like "mongoid#save", presence: %w[name host]
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 
