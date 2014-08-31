@@ -44,6 +44,13 @@ describe SS::Debug do
       expect(result).to eq expectied_result
     end
 
-    it 'receives 1, returns "1 <Fixnum>"'
+    it 'receives 1, returns "1 <Fixnum>"' do
+      result = subject.dump(1, 2)
+      expectied_result = <<-EOF.gsub(/^\s+\|/, '').gsub(/\n$/, '')
+        |1 <Fixnum>
+      EOF
+      expect(result.class).to eq String
+      expect(result).to eq expectied_result
+    end
   end
 end
