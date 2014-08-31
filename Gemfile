@@ -40,7 +40,7 @@ gem 'simple_captcha2', require: 'simple_captcha'
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
 group :development, :test do
-  gem 'spring'
+  gem 'spring', '~> 1.1.3'
   gem 'rspec'
   gem 'rspec-rails'
   gem 'factory_girl_rails'
