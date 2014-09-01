@@ -3,7 +3,6 @@ class Faq::Page
   include Cms::Page::Model
 
   default_scope ->{ where(route: "faq/page") }
-  set_permission_name "article_pages"
   set_permission_name "faq_pages"
 
   before_save :seq_filename, if: ->{ basename.blank? }
