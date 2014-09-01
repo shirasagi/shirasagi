@@ -1,0 +1,4 @@
+<dl class="see mod-faq-search">
+  <dt><%= @model.t :search_node %></dt>
+  <dd><%= @item.send(:search_node).try(:name).to_s %></dd>
+</dl>

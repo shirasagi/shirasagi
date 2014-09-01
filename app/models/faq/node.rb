@@ -12,4 +12,11 @@ module Faq::Node
 
     default_scope ->{ where(route: "faq/page") }
   end
+
+  class Search
+    include Cms::Node::Model
+    include Cms::Addon::PageList
+
+    default_scope ->{ where(route: "faq/search") }
+  end
 end

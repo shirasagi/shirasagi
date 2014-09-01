@@ -2,9 +2,10 @@
 module Faq
   class Initializer
     Cms::Node.plugin "faq/page"
+    Cms::Node.plugin "faq/search"
+    Cms::Part.plugin "faq/search"
 
     Faq::Page.addon "faq/question"
-    Faq::Node::Page.addon "category/setting"
 
     Cms::Role.permission :read_other_faq_pages
     Cms::Role.permission :read_private_faq_pages

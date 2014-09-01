@@ -4,6 +4,7 @@ module Category
     Cms::Page.addon "category/category"
     Article::Node::Page.addon "category/setting"
     Faq::Node::Page.addon "category/setting"
+    Faq::Node::Search.addon "category/setting"
 
     Cms::Node.plugin "category/node"
     Cms::Node.plugin "category/page"

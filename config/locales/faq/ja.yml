@@ -1,26 +1,37 @@
 ja:
   faq:
     page: FAQページ
+    search: 検索
+    reset: リセット
+    query:
+      category: カテゴリー
+      keyword: キーワード
 
   modules:
     faq: FAQ
     addons:
       faq/question: 質問
+      faq/search: FAQ記事検索
 
   cms:
     nodes:
       faq/page: FAQページリスト
+      faq/search: FAQ記事検索
+    parts:
+      faq/search: FAQ記事検索
 
   mongoid:
     attributes:
       cms/page/model:
         question: 質問
         answer: 回答
+      faq/part/search:
+        search_node: 検索フォルダー
 
   cms_role:
-    read_other_faq_pages: FAQページ閲覧
-    read_private_faq_pages: 所有FAQページ閲覧
-    edit_other_faq_pages: FAQページ編集
-    edit_private_faq_pages: 所有FAQページ編集
-    delete_other_faq_pages: FAQページ削除
-    delete_private_faq_pages: 所有FAQページ削除
+    read_other_faq_pages: FAQページ閲覧（全て）
+    read_private_faq_pages: FAQページ閲覧（所有）
+    edit_other_faq_pages: FAQページ編集（全て）
+    edit_private_faq_pages: FAQページ編集（所有）
+    delete_other_faq_pages: FAQページ削除（全て）
+    delete_private_faq_pages: FAQページ削除（所有）
