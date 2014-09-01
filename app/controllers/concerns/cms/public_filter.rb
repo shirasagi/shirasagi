@@ -64,6 +64,7 @@ module Cms::PublicFilter
     end
 
     def redirect_slash
+      return unless request.get?
       redirect_to "#{request.env["REQUEST_PATH"]}/"
     end
 
@@ -123,7 +124,7 @@ module Cms::PublicFilter
     end
 
     def render_node(node, path = @path)
-      rest = path.sub(/^#{node.filename}/, "")
+      rest = path.sub(/^#{node.filename}/, "").sub(/\/index\.html$/, "")
       cell = recognize_path "/.#{@cur_site.host}/nodes/#{node.route}#{rest}"
       return unless cell
 

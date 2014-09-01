@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+=begin
 describe Sys::UsersController do
 
   before(:all) do
@@ -39,4 +40,4 @@ describe Sys::UsersController do
     end
   end
 end
-
+=end

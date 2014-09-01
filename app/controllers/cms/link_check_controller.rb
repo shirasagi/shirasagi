@@ -4,7 +4,7 @@ require "open-uri"
 
 class Cms::LinkCheckController < ApplicationController
   protect_from_forgery except: :check
-  before_filter :allow_cors_requests
+  before_action :allow_cors_requests
 
   public
     def check

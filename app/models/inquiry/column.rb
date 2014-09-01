@@ -13,7 +13,7 @@ class Inquiry::Column
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   permit_params :id, :node_id, :state, :name, :html, :order
 
-  validates_presence_of :node_id, :state, :name
+  validates :node_id, :state, :name, presence: true
 
   public
     def state_options
@@ -21,7 +21,7 @@ class Inquiry::Column
     end
 
     def order
-      value = read_attribute(:order).to_i
+      value = self[:order].to_i
       value < 0 ? 0 : value
     end
 end

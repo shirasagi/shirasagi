@@ -7,15 +7,10 @@ module Urgency::Addon
     set_order 10
 
     included do
-      field :urgency_default_layout_id, type: Integer
+      belongs_to :urgency_default_layout, class_name: "Cms::Layout"
       permit_params :urgency_default_layout_id
 
-      validates_presence_of :urgency_default_layout_id
-
-      public
-        def urgency_default_layout
-          Cms::Layout.find(read_attribute(:urgency_default_layout_id).to_i) rescue return nil
-        end
+      validates :urgency_default_layout_id, presence: true
     end
   end
 end

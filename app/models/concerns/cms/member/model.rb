@@ -27,8 +27,8 @@ module Cms::Member::Model
     validates :name, presence: true, length: { maximum: 40 }
 
     validates :email, uniqueness: { scope: :site_id }, presence: true, email: true,
-      length: { maximum: 80 }, if: ->{ oauth_type.present? }
-    validates :password, presence: true, if: ->{ oauth_type.present? }
+      length: { maximum: 80 }, if: ->{ oauth_type.blank? }
+    validates :password, presence: true, if: ->{ oauth_type.blank? }
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
   end

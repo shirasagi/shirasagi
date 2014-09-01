@@ -52,7 +52,7 @@ class Cms::Part
     permit_params :home_label
 
     def home_label
-      read_attribute(:home_label).presence || "HOME"
+      self[:home_label].presence || "HOME"
     end
 
     def render_html

@@ -8,6 +8,7 @@ module Urgency::Node
 
   class Layout
     include Cms::Node::Model
+    include Urgency::Addon::Layout
 
     default_scope ->{ where(route: "urgency/layout") }
   end

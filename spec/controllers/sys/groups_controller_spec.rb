@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+=begin
 describe Sys::GroupsController do
 
   before(:all) do
@@ -42,4 +43,4 @@ describe Sys::GroupsController do
     end
   end
 end
-
+=end
