@@ -6,9 +6,32 @@
 // -------------------------------------------------------------------------------------------------
 // base
 
+.login-box {
+    display: table;
+    padding: 20px 20px;
+    background: $white;
+    header {
+      @include clear;
+      margin-bottom: 20px;
+      h1 {
+        float: left;
+      }
+      .version {
+        float: right;
+        color: $gray5;
+      }
+    }
+    input[type="email"], input[type="password"] {
+      background: $gray2;
+    }
+    footer.send {
+      padding-bottom: 0;
+    }
+}
 html, body {
   height: 100%;
   margin: 0px;
+  color: $black;
 }
 header, footer, nav, section, article, figure, aside {
   display: block;
@@ -25,11 +48,10 @@ h1, h2, h3, h4, h5, p {
   font-weight: normal;
 }
 a {
-  color: #05d;
+  color: $blue;
   text-decoration: none;
 }
 a:hover {
-  color: #e00;
   text-decoration: underline;
 }
 img {
@@ -56,18 +78,19 @@ td {
 // form
 
 @mixin input {
-  border: 1px solid #ccc;
+  border: 1px solid $gray4;
   @include box-sizing(border-box);
   background-color: #fff;
-  @include box-shadow(inset 1px 1px 3px #eee);
   &:focus {
-    background-color: #ffffe7;
-    @include box-shadow(inset 1px 1px 2px #cca);
+    @include box-shadow(inset 0 0 3px $gray4);
   }
 }
 select, input, textarea, button {
   font-size: 100%;
   font-family: $font-base;
+}
+button {
+  @include btn;
 }
 select {
   @include input;
@@ -129,14 +152,18 @@ textarea.ace_text-input {
   @include main-view;
 }
 .addon-view {
-  margin: 0px 0px 30px;
-  padding: 0px 15px;
+  margin: 0px 0px 10px;
   header {
-    margin: 0px 0px 20px -15px;
-    padding: 5px 2px;
-    border-bottom: 1px solid #ccc;
-    color: #444;
+    min-width: 130px;
+    margin-bottom: 15px;
+    border-bottom: $border-white;
+    color: $black;
     font-size: 120%;
+    h2 {
+      padding: 5px 2px;
+      border-bottom: $border-gray4;
+      color: $gray5;
+    }
   }
   + footer.send {
     border-top: 1px solid #ddd;
@@ -170,7 +197,7 @@ textarea.ace_text-input {
   }
   .name {
     overflow: hidden;
-    padding: 5px;
+    padding: 10px 0;
     font-size: 90%;
     @include ellipsis;
     word-wrap: nowrap;
@@ -204,7 +231,7 @@ textarea.ace_text-input {
     vertical-align: middle;
   }
 }
-.errorExplanation {
+#errorExplanation {
   margin: 0px 0px 20px;
   padding: 20px 20px;
   border-bottom: 1px solid #fbc;
@@ -218,22 +245,12 @@ textarea.ace_text-input {
   p, ul {
     color: #822;
   }
-  code {
-    font-size: 100.0%;
-    font-family: monospace, sans-serif;
-  }
 }
 .field_with_errors {
   input {
     display: inline;
     border: 1px solid #e00;
   }
-}
-.errorExplanation span.success {
-  color: #06f;
-}
-.errorExplanation span.failure {
-  color: #e00;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -247,8 +264,7 @@ textarea.ace_text-input {
     min-width: 20px;
     margin: 0px 4px 0px 0px;
     padding: 6px 2px;
-    border: 1px solid #ccc;
-    //@include box-shadow(0px 0px 3px #aaa);
+    @include box-shadow(0px 0px 3px #aaa);
     background-color: #fff;
     color: #444;
     text-align: center;
@@ -275,16 +291,19 @@ textarea.ace_text-input {
 }
 dl.see {
   margin: 0px;
-  + dl.see {
-      margin-top: 20px;
-  }
   > dt {
+    @include clear;
     float: left;
-    width: 120px;
-    color: #b38;
+    width: 130px;
+    min-height: 1.0em;
+    color: $black;
     font-weight: bold;
   }
   > dd {
+    min-height: 1.41em;
+    margin: 0 0 0 140px;
+    padding: 0 0 30px;
+    //border-top: 1px solid #eee;
     @include clear;
     margin: 0px 0px 0px 140px;
   }
@@ -310,27 +329,64 @@ footer.send {
     min-width: 120px;
     margin: 0px 5px;
     padding: 10px 10px;
-    border-style: none;
+    border: 1px solid #ccc;
     @include border-radius(4px);
-    @include box-shadow(0px 1px 1px #bbb);
-    background-color: #777;
-    color: #fff;
-    //cursor: pointer;
+    @include box-shadow(0 1px 0 $white);
+    @include grd-btn;
+    cursor: pointer;
     &:hover {
-      background-color: #888;
-      color: #fff;
+      background: $gray1;
     }
   }
-  input.save, button.save, input.delete {
-    background-color: #b58;
+  input.publish_save, input.save, button.save, input.delete {
+    border: 1px solid #c1447d;
+    @include grd-pink;
+    color: $white;
     &:hover {
-      background-color: #c69;
+      background: $pink;
     }
   }
-  input.publish_save, button.save, input.delete {
-    background-color: #b58;
-    &:hover {
-      background-color: #c69;
+}
+
+// -------------------------------------------------------------------------------------------------
+// addon
+
+#addon-cms-addons-file .see, .addon-view .see {
+  a {
+    @include btn;
+  }
+  #selected-files {
+    margin-top: 30px;
+    @include clear;
+  }
+}
+#addon-category-addons-category {
+  label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  div.parent {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: $border-gray4;
+    font-weight: bold;
+    .child {
+      position: relative;
+      padding: 5px 0 5px 30px;
+      border-top: $border-gray4;
+      font-weight: normal;
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-top: $border-white;
+      }
+    }
+    .grandchild > label {
+      clear: both;
+      display: block;
     }
   }
 }
@@ -371,6 +427,10 @@ a.external {
     content: " ";
   }
 }
+input.date, input.datetime {
+  padding-left: 20px;
+  background: $white image-url("ss/calendar.png") no-repeat 5px center;
+}
 
 // -----------------------------------------------------------------------------
 // import
@@ -378,3 +438,4 @@ a.external {
 @import "pc";
 @import "mb";
 @import "sns/style";
+
