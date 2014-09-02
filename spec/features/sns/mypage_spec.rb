@@ -2,13 +2,12 @@
 require 'spec_helper'
 
 describe "sns_mypage" do
-  before(:all) do
-    login_sys_user
-  end
+  before(:all) { login_sys_user }
+  subject(:url) { sns_mypage_path }
 
   it "#index" do
-    visit sns_mypage_path
+    visit url
     expect(status_code).to eq 200
-    expect(current_path).not_to eq sns_login_path
+    expect(current_path).to eq url
   end
 end

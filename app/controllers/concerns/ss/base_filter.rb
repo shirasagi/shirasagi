@@ -10,6 +10,7 @@ module SS::BaseFilter
     before_action :set_model
     before_action :logged_in?
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
+    rescue_from RuntimeError, with: :rescue_action
     layout "ss/base"
   end
 
@@ -55,5 +56,12 @@ module SS::BaseFilter
       session[:user] = nil
       redirect_to sns_login_path if opt[:redirect]
       @cur_user = nil
+    end
+
+    def rescue_action(e)
+      if e.to_s == "403"
+        return render(status: 403, file: "#{Rails.public_path}/500.html", layout: false)
+      end
+      raise e
     end
 end
