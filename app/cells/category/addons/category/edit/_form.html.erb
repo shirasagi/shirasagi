@@ -13,7 +13,7 @@ else
 end
 
 def cate_form(item)
-  h  = %Q[<label style="margin-right: 10px;">]
+  h  = %Q[<label>]
   h << f.check_box("category_ids[]", {}, item._id)
   h << %Q[#{item.name}</label>]
 
@@ -21,7 +21,11 @@ def cate_form(item)
     where(filename: /^#{item.filename}\//, depth: item.depth + 1)
 
   if children.size > 0
-    h << %Q[<div style="padding: 0px 0px 0px 40px;">].html_safe
+    cc = children.map { |c| c.children.size }.max != 0
+    h = %Q[<label class="parent">]
+    h << f.check_box("category_ids[]", {}, item._id)
+    h << %Q[#{item.name}</label>]
+    h << %Q[<div class="child #{cc ? 'grandchild' : ''}">].html_safe
     children.each { |c| h += cate_form c }
     h << %Q[</div>].html_safe
   end
@@ -35,9 +39,8 @@ end
     <%= f.hidden_field "category_ids[]", value: "" %>
 
     <% categories.each do |cate| %>
-    <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;">
-      <%= cate_form cate %>
-    </div>
+    <div class="parent">
+      <%= cate_form cate %></div>
     <% end %>
   </dd>
 </dl>

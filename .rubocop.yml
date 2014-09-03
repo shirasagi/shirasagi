@@ -3,6 +3,7 @@ AllCops:
   RunRailsCops: true
   Exclude:
     - Guardfile
+    - bin/*
 
 # Rails default check path
 Rails/DefaultScope:

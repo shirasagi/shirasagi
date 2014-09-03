@@ -18,9 +18,8 @@ $ ->
 
     <%= link_to :upload, sns_user_temp_files_path(@cur_user), class: "ajax-box" %>
     | <%= link_to :"sns.user_file", sns_user_ajax_files_path(@cur_user), class: "ajax-box" %>
-    <%= @model.tt :upload %>
 
-    <div id="selected-files" style="margin-top: 10px;">
+    <div id="selected-files">
       <% @item.files.each do |file| %>
       <div class="file-view">
         <a class="thumb" href="/fs/<%= file.id %>/<%= file.filename %>" target="_blank">
@@ -32,6 +31,7 @@ $ ->
         </a>
         <div class="name">
           <%= f.check_box "file_ids[]", {}, file.id %>
+          <%= f.check_box "file_ids[]", {}, file.id %>
           <%= file.basename %><br />
           <% content = link_to "#{file.filename} (#{file.extname.upcase} #{number_to_human_size(file.size)})", "/fs/#{file.id}/#{file.filename}", class: "icon-#{file.extname}" %>
           <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
@@ -39,11 +39,9 @@ $ ->
           <% content = image_tag "/fs/#{file.id}/#{file.filename}", alt: "#{file.basename}" %>
           &nbsp;<%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
           <% end %>
-          <br /><%= link_to :"sns.delete", "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
         </div>
       </div>
       <% end %>
     </div>
-    <div style="clear: both;"></div>
   </dd>
 </dl>

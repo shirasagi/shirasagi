@@ -1,12 +1,9 @@
 <nav class="act-menu">
-  <header><h1><%= t :"ss.action" %></h1></header>
-  <div>
-    <% if params[:action] =~ /edit|update|delete/ %>
-      <%= link_to :back_to_show, action: :show %>
-    <% else %>
-      <%= link_to :edit, action: :edit, id: @item %>
-    <% end %>
-  </div>
+  <% if params[:action] =~ /edit|update|delete/ %>
+    <%= link_to :back_to_show, action: :show %>
+  <% else %>
+    <%= link_to :edit, action: :edit, id: @item %>
+  <% end %>
 </nav>
 
 <% if params[:action] =~ /show|new|edit|create|update/ %>

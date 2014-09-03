@@ -9,14 +9,18 @@
     .name {
     }
     .url {
-      text-align: right;
-      a { color: #080; }
+      float: right;
+      a { color: $green; }
     }
   }
 
   @include mb {
     .sites {
       width: 100%;
+      td {
+        width: 100%;
+        max-width: 100%;
+      }
     }
   }
 }

@@ -3,5 +3,13 @@ FactoryGirl.define do
     name "sys_user"
     email "sys@example.jp"
     in_password "pass"
+    #sys_role_ids
+  end
+end
+
+FactoryGirl.define do
+  factory :sys_user_role, class: Sys::Role do
+    name "sys_user_role"
+    permissions ["edit_sys_users", "edit_sys_sites"]
   end
 end

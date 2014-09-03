@@ -35,7 +35,6 @@ module Sys::Addon
 
         return where({_id: -1})
       end
-
     end
 
     def allowed?(action, user)
@@ -45,6 +44,5 @@ module Sys::Addon
       role = user.sys_roles.in(permissions: permit).first
       role ? true : false
     end
-
   end
 end

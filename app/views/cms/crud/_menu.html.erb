@@ -1,19 +1,16 @@
 <nav class="act-menu">
-  <header><h1><%= t :"ss.action" %></h1></header>
-  <div>
-    <% if params[:action] =~ /index/ %>
-      <%= link_to :new, action: :new if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <% elsif params[:action] =~ /new|create/ %>
-      <%= link_to :back_to_index, action: :index %>
-    <% elsif params[:action] =~ /edit|update|delete/ %>
-      <%= link_to :back_to_show, action: :show, id: @item if @item.allowed?(:read, @cur_user) %>
-      <%= link_to :back_to_index, action: :index %>
-    <% else %>
-      <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user) %>
-      <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:delete, @cur_user) %>
-      <%= link_to :back_to_index, action: :index %>
-    <% end %>
-  </div>
+  <% if params[:action] =~ /index/ %>
+    <%= link_to :new, action: :new if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to :back_to_show, action: :show, id: @item if @item.allowed?(:read, @cur_user) %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user) %>
+    <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:delete, @cur_user) %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
 </nav>
 
 <% if params[:action] =~ /show|new|edit|create|update/ %>

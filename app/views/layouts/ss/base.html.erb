@@ -37,6 +37,11 @@
 <header id="head">
   <div class="wrap">
     <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
+    <% SS::Site.all.each do |item| %>
+    <% if @crumbs.size > 0 %>
+    <h2><%= link_to item.name, "/.#{item.host}" %></h2>
+    <% end %>
+    <% end %>
     <% if @cur_user %>
     <nav>
       <%= link_to "dev", "#", onclick: "alert('#{Rails.env}'); return false;" unless Rails.env.production? %>
@@ -48,13 +53,17 @@
 <!-- /#head --></header>
 
 <% if @crumbs.size > 0 %>
-<nav id="crumbs">
-  <% @crumbs.each_with_index do |item, idx| %>
-    <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
-    <span class="link"><%= link_to *item %></span>
+<div id="crumbs">
+  <% if @crumbs.size != 1 %>
+    <div class="up"><%= link_to image_tag('/assets/ss/up-folder.png'), @crumbs[-2][1] %></div>
   <% end %>
-</nav>
-<% @crumbs2 = %Q[<div id="crumbs2">#{@crumbs.map{|k,v| link_to(k,v) }.join}</div>] %>
+  <nav>
+    <% @crumbs.each_with_index do |item, idx| %>
+      <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
+      <span class="link"><%= link_to *item %></span>
+    <% end %>
+  </nav>
+</div>
 <% end %>
 
 <% if notice %>
@@ -69,10 +78,10 @@
 
     <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
     <div id="navi-back"></div>
-    <div id="navi"><div class="wrap"><%== @crumbs2 %><%= render partial: "navi" %></div></div>
+    <div id="navi"><div class="wrap"><%= render partial: "navi" %></div></div>
     <% elsif controller.navi_view_file %>
     <div id="navi-back"></div>
-    <div id="navi"><div class="wrap"><%== @crumbs2 %><%= render partial: controller.navi_view_file %></div></div>
+    <div id="navi"><div class="wrap"><%= render partial: controller.navi_view_file %></div></div>
     <% end %>
 
     <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>

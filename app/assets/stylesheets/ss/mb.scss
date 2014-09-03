@@ -35,6 +35,9 @@ body {
       font-weight: bold;
     }
   }
+  h2 {
+    display: none;
+  }
   nav {
     float: right;
     a {
@@ -47,13 +50,23 @@ body {
   }
 }
 #crumbs {
-  padding: 0px 5px;
+  @include clear;
+  padding: 5px;
   background-color: #023;
   @include lgrad(left, #023, #035);
-  color: #fff;
+  .up {
+    width: 10%;
+    float: left;
+  }
+  nav {
+    width: 90%;
+    float: left;
+    @include box-sizing(border-box);
+    padding: 0 5px;
+    background: $white;
+  }
   a {
     display: inline-block;
-    color: #fff;
     padding: 12px 2px;
     font-size: 90%;
     &:hover { text-decoration: none; }
@@ -131,10 +144,26 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
 #mod-menu a {
   display: block !important;
 }
-
+.act-menu {
+  @include clear;
+  padding: 10px;
+}
+.act-menu a {
+  display: inline-block;
+  @include btn;
+  padding: 3px 15px;
+}
 // -------------------------------------------------------------------------------------------------
 // common
-
+.index-search {
+  margin-bottom: 10px;
+  input[type="text"] {
+    width: 80% !important;
+  }
+  input[type="submit"] {
+    width: 18%;
+  }
+}
 table.index {
   table-layout: fixed;
   width: 100%;

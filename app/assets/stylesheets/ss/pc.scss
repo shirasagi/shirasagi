@@ -5,8 +5,7 @@
 // base
 
 body {
-  background-color: #fbfbfb;
-  color: #433;
+  background-color: $gray2;
   font-size: 75.0%;
   font-family: $font-base;
   line-height: 1.4;
@@ -17,92 +16,128 @@ body {
 // outline
 
 #page {
-  //position: relative;
-  //height: auto !important;
   height: 100%;
-  //min-height: 100%;
   @include box-sizing(border-box);
 }
 #head {
-  //@include clear;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  left: 0px;
-  height: 40px;
-  border-bottom: 1px solid #bbb;
-  @include box-shadow(0px 1px 3px #bbb);
-  background-color: #fff;
-  //line-height: 40px;
+  position: relative;
+  height: 30px;
+  border-bottom: $border-gray3;
+  background: $white;
   z-index: 10;
   h1 {
     float: left;
+    width: 159px;
+    border-right: $border-gray3;
     a {
       float: left;
-      width: 150px;
+      width: 148px;
       background-image: image-url("ss/logo.png");
       background-repeat: no-repeat;
       background-position: center center;
       color: #fff;
       text-indent: -9999px;
       text-decoration: none;
-      line-height: 40px;
+      line-height: 30px;
+    }
+  }
+  h2 {
+    float: left;
+    border-right: $border-gray3;
+    overflow: hidden;
+    a {
+      display: block;
+      padding: 7px 10px;
+      color: $black;
+      &:hover {
+        background: $gray2;
+        @include box-shadow(0 0 6px $gray3 inset);
+        text-decoration: none;
+      }
     }
   }
   nav {
     float: right;
-    margin: 12px 10px 0px;
+    margin: 4px 10px 0;
     a {
       display: block;
       float: left;
-      padding: 0px 20px;
-      color: #433;
+      padding: 3px 20px;
+      color: $black;
+      &:hover {
+        background: $gray1;
+        @include border-radius(3px);
+        @include box-shadow(0 0 6px $gray3 inset);
+        text-decoration: none;
+      }
     }
   }
 }
 #crumbs {
-  overflow: hidden;
-  position: absolute;
+  position: relative;
+  @include clear;
+  padding: 5px 10px;
+  background: $gray3;
   z-index: 10;
-  top: 13px;
-  left: 165px;
-  //height: 40px;
-  //line-height: 2;
-  span {
+  .up {
     float: left;
-    color: #888;
     a {
       display: block;
-      max-width: 120px;
-      //padding: 0px 6px;
-      //border: 1px solid #ddd;
-      @include border-radius(4px);
-      @include box-sizing(border-box);
-      color: #433;
-      @include ellipsis;
+      width: 20px;
+      height: 20px;
+      margin: 1px 10px 0 0;
+      border: $border-white;
+      @include border-radius(10px);
+      background: $white;
+      img {
+        display: block;
+        margin: 6px 4px;
+      }
+      &:hover {
+        background: $gray3;
+      }
     }
-    a:hover {
-      //color: #fff;
+  }
+  nav {
+    overflow: hidden;
+    position: relative;
+    background: $white;
+    &:before {
+      float: left;
+      display: inline-block;
+      position: relative;
+      bottom: -1px;
+      width: 12px;
+      height: 12px;
+      margin: 4px;
+      text-indent: -99px;
+      background-image: image-url("ss/icons.png");
+      background-position:  -15px 0;
+      content: " ";
     }
-  }
-  span.separator {
-    margin: 0px 10px;
-  }
-}
-#crumbs2 { //TODO:
-  margin: 0px 0px 15px;
-  a {
-    display: block;
-    margin: 0px 0px 5px -11px;
-    padding: 4px 6px;
-    border: 1px solid #ccc;
-    @include box-shadow(0px 1px 2px #ddd);
-    color: #433;
-    @include ellipsis;
-  }
-  a:hover {
-    background-color: #eee;
-    text-decoration: none;
+    span {
+      float: left;
+      a {
+        display: block;
+        max-width: 120px;
+       padding: 4px 5px 2px;
+        color: $black;
+        @include ellipsis;
+        &:hover {
+          background: $gray3;
+          text-decoration: none;
+        }
+      }
+    }
+    span.separator {
+      width: 0;
+      height: 0;
+      margin: 6px 5px;
+      border-top: 5px solid transparent;
+      border-left: 6px solid $gray4;
+      border-bottom: 5px solid transparent;
+      overflow: hidden;
+    }
   }
 }
 #wrap {
@@ -111,75 +146,69 @@ body {
   height: 100%;
   min-height: 100%;
   margin-bottom: -40px;
-  padding: 55px 0px 50px;
+  padding: 0 0 50px;
   @include box-sizing(border-box);
+  background: image-url("ss/back.png") no-repeat 98% 98%;
 }
 #navi-back, #menu-back {
   position: fixed;
-  top: 0px;
+  top: 0;
   bottom: 0px;
   left: 0px;
   z-index: 0;
   @include box-sizing(border-box);
-  //@include box-shadow(0px 0px 2px #ddd);
 }
 #navi-back {
-  width: 150px;
-  border-right: 1px solid #ddd;
-  background-color: #fff;
+  width: 160px;
+  background-color: $white;
 }
 #menu-back {
-  left: 150px;
-  width: 150px;
+  left: 160px;
+  width: 155px;
 }
 #navi {
   position: relative;
   z-index: 1;
   float: left;
-  width: 150px;
+  width: 160px;
   min-height: 1px;
-  padding: 0px 10px;
   @include box-sizing(border-box);
 }
 #menu {
   position: relative;
   z-index: 1;
   float: left;
-  width: 150px;
+  width: 155px;
   min-height: 1px;
-  padding: 0px 0px 0px 10px;
+  padding: 15px 0 0 15px;
   @include box-sizing(border-box);
 }
 #main {
-  //position: relative;
   float: right;
   width: 100%;
   min-height: 1px;
-  padding: 0px 10px;
+  padding: 15px;
   @include box-sizing(border-box);
 }
 #navi + #main {
   margin: 0px 0px 0px -100%;
   .wrap {
-    //@include main-view;
-    margin-left: 150px;
+    margin-left: 160px;
   }
 }
 #menu + #main {
   margin: 0px 0px 0px -100%;
   .wrap {
-    //@include main-view;
-    margin-left: 305px;
+    margin-left: 315px;
   }
 }
 #foot {
   position: relative;
   height: 40px;
   padding: 12px 20px 0px;
-  //border-top: 1px solid #ddd;
   @include box-sizing(border-box);
-  //background-color: #eee;
-  color: #888;
+  color: $gray4;
+  @include text-shadow(1px 1px 0 $white);
   text-align: right;
 }
 #ss-mb {
@@ -189,8 +218,6 @@ body {
   z-index: 100;
   a {
     display: block;
-    //border: 1px solid #ddd;
-    //background-color: #fff;
     color: #888;
     font-size: 300%;
     font-weight: bold;
@@ -205,81 +232,112 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
   header {
     display: block;
     margin-bottom: 10px;
-    padding: 5px 2px;
-    border-bottom: 1px solid #ccc;
-    color: #c38;
+    border-bottom: $border-gray3;
+    h1 {
+      padding: 5px 10px;
+      color: $gray5;
+    }
   }
   div {
     a {
       display: block;
       width: 100%;
       margin: 0px 0px 0px;
-      padding: 4px 6px;
+      padding: 4px 10px;
       @include box-sizing(border-box);
-      color: #433;
+      color: $black;
       @include ellipsis;
       &[class ^= "icon"] {
         background-position: 10px center;
       }
       &:hover {
-        background-color: #eee;
+        padding-left: 5px;
+        border-left: $border-pink;
+        background-color: $gray2;
+        color: $pink;
         text-decoration: none;
       }
       &.current {
-        background-color: #eee;
+        padding-left: 5px;
+        border-left: $border-pink;
+        background-color: $gray2;
+        color: $pink;
       }
     }
   }
   div.pulldown-menu a.current {
     position: relative;
     background-color: transparent;
+    color: $black;
     &:hover {
-      background-color: #eee;
+      background-color: $gray2;
+      color: $black;
     }
     &:after {
+      content: "";
       position: absolute;
+      top: 7px;
       right: 5px;
-      margin: -1px 0px 0px 0px;
-      color: #bbb;
-      content: "▼";
+      border-top: 10px solid $gray5;
+      border-right: 6px solid transparent;
+      border-left: 6px solid transparent;
     }
-    //&:hover:after { color: #fff; }
   }
+}
+nav.sub-menu {
+  margin-top: 10px;
 }
 nav.act-menu {
   margin: 0px 0px 20px;
-  border: 1px solid #ccc;
-  @include box-shadow(0px 1px 2px #ddd);
-  background-color: #fff;
+  a {
+    display: block;
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    border: $border-gray4;
+    @include border-radius(3px);
+    background: $gray3;
+    color: $black;
+    &:hover {
+      background: $pink;
+      color: $white;
+      text-decoration: none;
+    }
+    &.current {
+      border-left: none;
+      background-color: $gray2;
+      color: $pink;
+    }
+  }
+}
+nav.addon-menu, nav.page-menu {
   header {
-    margin: 0px;
-    padding: 4px 6px;
-    background-color: #fff;
-    @include lgrad(top, #fff, #e7e7e7);
-    //color: #644;
+    border-bottom: $border-white;
+    h1 {
+      border-bottom: $border-gray4;
+    }
+  }
+  div a {
+    color: $black;
   }
 }
 
 // -------------------------------------------------------------------------------------------------
 // common
-
 table.index {
   table-layout:fixed;
   width: 100%;
-  //@include border-radius(2px);
-  //border: 1px solid #ddd;
-  //@include box-shadow(0px 1px 2px #ddd);
-  //background-color: #fff;
   th, td {
     padding: 4px 8px;
   }
   thead {
     tr {
-      border-bottom: 1px solid #ccc;
+      position: relative;
+      border-bottom: $border-gray4;
       color: #644;
     }
     th {
       padding: 4px 8px 4px;
+      color: $gray5;
     }
     &:after {
       display: block;
@@ -291,16 +349,11 @@ table.index {
   }
   tbody {
     tr {
-      //border-bottom: 1px solid #eee;
-      //background-color: #fff;
       &:nth-child(even) { background-color: #fff; }
-      &:hover { background-color: #eee; }
+      &:hover { background-color: $gray3; }
     }
     tr.checked {
-      background-color: #eee;
-      @include box-shadow(inset 0px 0px 2px #ccc);
-      //@include lgrad(top, #eee, #ddd);
-      //&:hover { background-color: #bdf; }
+      background-color: $gray4;
     }
   }
   th.checkbox, td.checkbox {
@@ -324,80 +377,56 @@ table.index {
     @include ellipsis;
   }
   td.filename {
-    color: #080;
+    color: $green;
   }
-  nav.row-menu {
+  nav.row-menu, nav.multiple-menu {
     display: none;
     position: absolute;
     min-width: 10em;
-    border: 1px solid #bbb;
-    //@include border-radius(2px);
-    @include box-shadow(0px 2px 10px #aaa);
+    border: $border-gray3;
     background-color: #fff;
+    z-index: 100;
     a {
       display: block;
       padding: 0px 12px;
-      border-top: 1px solid #bbb;
       text-align: left;
       line-height: 2.6;
-      &:first-child {
-        border-width: 0px;
-      }
       &:hover {
-        background-color: #f7f7f7;
-      }
-    }
-  }
-  nav.multiple-menu {
-    display: none;
-    position: absolute;
-    z-index: 1;
-    min-width: 10em;
-    border: 1px solid #bbb;
-    //@include border-radius(2px);
-    @include box-shadow(0px 2px 10px #aaa);
-    background-color: #fff;
-    a {
-      display: block;
-      padding: 0px 12px;
-      border-top: 1px solid #bbb;
-      text-align: left;
-      line-height: 2.6;
-      &:first-child {
-        border-width: 0px;
-      }
-      &:hover {
-        background-color: #f7f7f7;
+        background-color: $gray3;
       }
     }
   }
 }
-form.index-search {
-  margin: 0px 0px 20px;
-}
-
-// -------------------------------------------------------------------------------------------------
-// features
-
-.login-box {
-  display: table;
-  margin: 10px;
-  padding: 20px 20px 0px;
-  border: 1px solid #ddd;
-  @include box-shadow(0px 1px 3px #bbb);
-  header {
+.search-form {
+  @include clear;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+  background: $gray3;
+  form.index-search {
     @include clear;
-    margin: 0px 0px 20px;
-    h1 {
+    float: left;
+    border: 2px solid $white;
+    #s_name {
       float: left;
+      height: 2em;
+      border: none;
+      &:focus {
+        @include box-shadow(none);
+      }
     }
-    .version {
-      float: right;
-      color: #888;
+    input[type="submit"] {
+      float: left;
+      margin: 0;
+      padding: 2px 20px 1px;
+      border: none;
+      background: $gray3;
+      &:hover {
+        background: $pink;
+        color: $white;
+      }
     }
   }
 }
-
 .tooltip {
   display:inline-block;
   position:relative;
@@ -405,39 +434,55 @@ form.index-search {
   left:5px;
   height:16px;
   @include border-radius(8px);
-  background:#b58;
+  background: $pink;
   color:#fff;
   font-weight:bold;
   text-decoration:none;
   text-align:center;
+  cursor: pointer;
+  &:hover {
+     background-color: #f9c;
+  }
   ul {
     display: none;
     list-style-position: inside;
-    position: absolute; 
+    position: absolute;
     bottom:18px;
-    left:-300px;
-    width: 27em;
+    left:-220px;
+    width: 22em;
     z-index: 90;
-    padding: 2px 3px;
-    border: 1px solid #bbb;
-    @include box-shadow(0px 2px 10px #aaa);
+    padding: 10px;
+    border: $border-gray3;
     background-color: #fff;
-    color: #888;
+    color: $black;
     text-align: left;
     line-height: 1.6em;
+    list-style-position: inside;
+    list-style-type: disc;cursor: text;
     li {
       padding-left: 1em;
+      font-weight: normal;
       text-indent: -1em;
     }
-    &:after {
+    &:before {
+      content: "";
       position: absolute;
-      left: 300px;
+      left: 222px;
+      bottom: -6px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid $gray3;
+      border-right: 6px solid transparent;
+      border-left: 6px solid transparent;
+    }
+    &:after {
+      content: " ";
+      position: absolute;
+      left: 220px;
       height:0;
       width:0;
-      content: " ";
     }
   }
 }
-
 // -------------------------------------------------------------------------------------------------
 }

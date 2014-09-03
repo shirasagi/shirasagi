@@ -26,8 +26,6 @@ class History::LogsController < ApplicationController
     end
 
     def download
-      dump @model.term_to_date "month"
-
       @item = @model.new
       return if request.get?
 
