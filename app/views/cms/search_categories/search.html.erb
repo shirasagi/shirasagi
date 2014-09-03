@@ -1,6 +1,9 @@
 <%
 
-categories = @items.map { |item| item.parents.present? ? item.parents.first : item }
+categories = @items.map do |item|
+  parent = item.parents.select{ |cate| cate.route =~ /^category\// }.shift
+  parent.present? ? parent : item
+end
 categories = categories.uniq { |item| item.filename }
 
 def cate_form(item)
