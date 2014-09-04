@@ -10,4 +10,10 @@ FactoryGirl.define do
   factory :cms_role, class: Cms::Role, traits: [:cms_role] do
     permissions ["release_private_cms_pages"]
   end
+
+  factory :cms_user_role, class: Cms::Role do
+    name "cms_user_role"
+    permissions Cms::Role.permission_names.map { |k, v| v }
+    site_id 1
+  end
 end
