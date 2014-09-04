@@ -9,9 +9,7 @@ module Cms::PublicHelper
         options[:params][k] = nil unless keys.key? k
       end
       options[:params]["public_path"] = "#{request.env['REQUEST_PATH']}".sub(/^\//, "")
-      super(scope, options, &block)
-    else
-      super(scope, options, &block)
     end
+    super(scope, options, &block)
   end
 end
