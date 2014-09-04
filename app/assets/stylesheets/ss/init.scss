@@ -64,7 +64,8 @@ $border-gray5: 1px solid $gray5;
 $border-gray6: 1px solid $gray6;
 
 @mixin pc {
-  @media only screen and (min-width: 800px) { @content; }
+  //@media only screen and (min-width: 800px) { @content; }
+  @content;
 }
 @mixin mb {
   @media only screen and (max-width: 800px) { @content; }

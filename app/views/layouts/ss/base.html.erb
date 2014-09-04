@@ -11,6 +11,10 @@
 <% controller.stylesheets.each do |path| %>
 <%= stylesheet_link_tag path, media: "all", "data-turbolinks-track" => true %>
 <% end %>
+<!--[if lt IE 9]>
+<script src="/assets/js/IE9.js"></script>
+<script src="/assets/js/selectivizr-min.js"></script>
+<![endif]-->
 <%= javascript_include_tag "ss/ss", "data-turbolinks-track" => true %>
 <script data-turbolinks-track="true" src="/assets/js/jquery.form.js"></script>
 <script data-turbolinks-track="true" src="/assets/js/jquery.colorbox.js"></script>
