@@ -52,6 +52,10 @@ $ ->
     selectionHeader: "<div class='selectionHeader'><%= t "workflow.request_to" %></div>"
     selectableHeader: "<div class='selectableHeader'><%= t "workflow.selectable_users" %></div>"
 
+  $("#ms-multi-select").each ->
+    $(this).find(".selectableHeader").css("background-color", "#f0f3f3")
+    $(this).find(".selectionHeader").css("background-color", "#f0f3f3")
+
 <% end %>
 
 <link data-turbolinks-track="true" href="/assets/css/multi-select/css/multi-select.css" media="all" rel="stylesheet" />
