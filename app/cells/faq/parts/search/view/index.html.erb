@@ -1,6 +1,6 @@
 <%
   categories = []
-  @cur_part.search_node.st_parent_categories.each do |parent|
+  @search_node.st_parent_categories.each do |parent|
     categories << parent
     categories += Category::Node::Base.site(@cur_site).
       where(filename: /^#{parent.filename}\//).entries
@@ -9,18 +9,20 @@
 %>
 
 <div class="faq-search">
-<%= form_tag @cur_part.search_node.url, multipart: true, method: "get" do |f| %>
+<%= form_tag @search_node.url, multipart: true, method: "get" do |f| %>
+  <% if categories.present? %>
   <div class="category">
-  <%= t('faq.query.category') %>
-  <%= select_tag :category,  options_for_select(category_options), include_blank: true %>
+    <%= t('faq.query.category') %>
+    <%= select_tag :category,  options_for_select(category_options), include_blank: true %>
   </div>
+  <% end %>
   <div class="keyword">
-  <%= t('faq.query.keyword') %>
-  <%= text_field_tag :keyword %>
+    <%= t('faq.query.keyword') %>
+    <%= text_field_tag :keyword %>
   </div>
   <div class="submitters">
-  <%= submit_tag t('faq.search'), name: :search %>
-  <%= submit_tag t('faq.reset'), name: :reset %>
+    <%= submit_tag t('faq.search'), name: :search %>
+    <%= submit_tag t('faq.reset'), name: :reset %>
   </div>
 <% end %>
 </div>

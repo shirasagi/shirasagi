@@ -1,8 +1,10 @@
 ja:
   faq:
-    page: FAQページ
+    page: FAQ記事
     search: 検索
     reset: リセット
+    result: 検索結果
+    count: 件
     query:
       category: カテゴリー
       keyword: キーワード
@@ -15,7 +17,7 @@ ja:
 
   cms:
     nodes:
-      faq/page: FAQページリスト
+      faq/page: FAQ記事リスト
       faq/search: FAQ記事検索
     parts:
       faq/search: FAQ記事検索

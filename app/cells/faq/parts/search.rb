@@ -11,7 +11,8 @@ module Faq::Parts::Search
 
     public
       def index
-        @cur_part.search_node.blank? ?  "" : render
+        @search_node = @cur_part.search_node.present? ?  @cur_part.search_node : @cur_part.node
+        @search_node.blank? ? "" : render
       end
   end
 end

@@ -15,3 +15,11 @@ describe Faq::Node::Page do
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
 end
+
+describe Faq::Node::Search do
+  subject(:model) { Faq::Node::Search }
+  subject(:factory) { :faq_node_search }
+
+  it_behaves_like "mongoid#save"
+  it_behaves_like "mongoid#find"
+end
