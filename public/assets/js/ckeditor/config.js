@@ -37,4 +37,6 @@ CKEDITOR.editorConfig = function( config ) {
 	config.removeDialogTabs = 'image:advanced;link:advanced';
 	
 	config.image_previewText = ' ';
+	
+	config.removePlugins = 'iframe';
 };
