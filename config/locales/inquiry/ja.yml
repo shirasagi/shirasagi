@@ -59,3 +59,53 @@ ja:
     label: 画像の数字を入力してください
     message:
       default: が正しくありません
+
+  tooltip:
+    inquiry/addon/message:
+      inquiry_html:
+        - フォームが画面の上部に表示されるフォームの説明テキストを入力します。
+      inquiry_sent_html:
+        - 送信完了画面に表示される画面の内容を入力します。
+    inquiry/addon/captcha:
+      inquiry_captcha:
+        - フォームに画像認証を利用する場合は「使用する」を選択してください。
+    inquiry/addon/notice:
+      notice_state:
+        - フォームへの投稿があったことを通知することが可能です。
+      notice_email:
+        - フォームへの投稿があったことを通知する先のメールアドレスを入力します。
+      from_name:
+        - 通知メールに記載される差出人名を入力します。
+      from_email:
+        - 通知メールの差出人メールアドレスを入力します。
+    inquiry/addon/reply:
+      reply_state:
+        - フォームへ投稿した利用者に自動返信メールを送ることが可能です。
+        - 本文にはフォームに入力された内容が記載されます。
+      reply_subject:
+        - 自動返信メールの件名を設定します。
+      reply_upper_text:
+        - 自動返信メールの本文上部のテキストを設定します。
+        - 挨拶文等の記載に利用します。
+      reply_lower_text:
+        - 自動返信メールの本文下部のテキストを設定します。
+        - 署名等の記載に利用します。
+    inquiry/column:
+      name: 項目名
+        - 質問項目の名称を入力します。
+      state:
+        - 公開画面への公開、非公開を選択します。
+        - 非公開を選択することで公開画面から取り下げることが可能です。
+      order:
+        - 質問項目の並び順を指定します。
+        - 数字が大きいほどの後ろに表示されます。
+    inquiry/addon/input_setting:
+      input_type:
+        - 回答欄の入力形式を選択します。
+      select_options:
+        - 入力形式で「ラジオボタン選択」「プルダウン選択」「チェックボックス選択」を選択した場合の回答の選択肢を入力します。
+        - 改行で複数の選択肢を入力します。
+      required:
+        - 項目の入力が必須か任意かを選択します。
+      additional_attr:
+        - 出力される入力形式のHTMLに属性を追加することが可能です。

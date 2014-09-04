@@ -20,7 +20,7 @@ ja:
       search_pages: "関連記事を検索"
 
   tooltip:
-    related_pages/addon/pages:
+    cms/addon/related_page:
       page_ids:
         - このページの内容に関連するページへのリンクを選択します。
         - 選択したページへのリンクが本文の下部に表示されます。

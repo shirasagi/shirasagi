@@ -2,8 +2,8 @@
 <%= html_editor ".mod-inquiry-message .inquiry-sent-html", height: "180px" %>
 
 <dl class="see mod-inquiry-message">
-  <dt><%= @model.t :inquiry_html %></dt>
+  <dt><%= @model.t :inquiry_html %><%= @model.tt :inquiry_html %></dt>
   <dd><%= f.text_area :inquiry_html, class: "inquiry-html", style: "height: 180px;" %></dd>
-  <dt><%= @model.t :inquiry_sent_html %></dt>
+  <dt><%= @model.t :inquiry_sent_html %><%= @model.tt :inquiry_sent_html %></dt>
   <dd><%= f.text_area :inquiry_sent_html, class: "inquiry-sent-html", style: "height: 180px;" %></dd>
 </dl>

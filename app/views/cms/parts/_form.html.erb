@@ -7,14 +7,14 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
 
 %>
 <dl class="see">
-  <dt><%= @model.t :route %></dt>
+  <dt><%= @model.t :route %><%= @model.tt :route %></dt>
   <dd><%= f.hidden_field :route %>
     <%= @item.label :route %> &nbsp;[<%= link_to :change, routes_cms_parts_path, class: "ajax-box" %>]</dd>
 
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :basename %></dt>
+  <dt><%= @model.t :basename %><%= @model.tt :basename %></dt>
   <dd><%= f.text_field :basename, class: "filename" %></dd>
 
   <!--
@@ -22,6 +22,6 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <dd><%= f.select :state, @item.state_options %></dd>
   -->
 
-  <dt><%= @model.t :mobile_view %></dt>
+  <dt><%= @model.t :mobile_view %><%= @model.tt :mobile_view %></dt>
   <dd><%= f.select :mobile_view, @item.mobile_view_options %></dd>
 </dl>

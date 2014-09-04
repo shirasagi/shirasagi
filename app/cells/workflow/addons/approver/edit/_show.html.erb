@@ -64,7 +64,7 @@ $ ->
       <% @item.workflow_approvers.split(/\r\n/).each do |d| %>
         <% next if @cur_user._id != d.split(",")[1].to_i || d.split(",")[2] != "request" %>
         <section class="mod-workflow-approve">
-          <h1><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %></h1>
+          <h1><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h1>
           <%= text_area :remand, :comment, value: "" %>
           <div class="buttons">
             <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
@@ -78,12 +78,12 @@ $ ->
     <section class="mod-workflow-request">
       <h1><%= link_to t("workflow.request"), '#', class: "toggle-label" %></h1>
       <dl class="see request-setting" style="display: none;">
-        <dt><%= @model.t :workflow_comment %></dt>
+        <dt><%= @model.t :workflow_comment %><%= @model.tt :workflow_comment %></dt>
         <dd><%= text_area :workflow, :comment, value: @item.workflow_comment %></dd>
 
         <% userids = [] %>
         <% @item.workflow_approvers.split(/\r\n/).each {|d| userids << d.split(",")[1].to_i} if @item.workflow_approvers.present? %>
-        <dt><%= @model.t :workflow_approvers %></dt>
+        <dt><%= @model.t :workflow_approvers %><%= @model.tt :workflow_approvers %></dt>
         <dd>
           <select id="multi-select" multiple="multiple" name="multiselect">
             <% SS::User.where( :group_ids.in => Cms::Group.site(@cur_site).pluck(:id), :_id.ne => @cur_user._id ).each do |user| %>

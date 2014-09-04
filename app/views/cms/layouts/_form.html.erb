@@ -1,8 +1,8 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :basename %></dt>
+  <dt><%= @model.t :basename %><%= @model.tt :basename %></dt>
   <dd><%= f.text_field :basename, class: "filename" %></dd>
 
   <!--

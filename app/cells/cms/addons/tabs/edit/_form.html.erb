@@ -1,10 +1,10 @@
 <dl class="see mod-cms-tabs">
-  <dt><%= @model.t :conditions %></dt>
+  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
-  <dt><%= @model.t :limit %></dt>
+  <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
   <dd><%= f.number_field :limit %></dd>
 
-  <dt><%= @model.t :new_days %></dt>
+  <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
   <dd><%= f.number_field :new_days %> <%= t "datetime.prompts.day" %></dd>
 </dl>
