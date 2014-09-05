@@ -41,6 +41,7 @@ save_layout filename: "oshirase.layout.html", name: "お知らせ"
 save_layout filename: "pages.layout.html", name: "記事レイアウト"
 save_layout filename: "top.layout.html", name: "トップレイアウト"
 save_layout filename: "one.layout.html", name: "1カラム"
+save_layout filename: "faq.layout.html", name: "FAQ"
 save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
 save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
 save_layout filename: "urgency-layout/top-level3.layout.html", name: "緊急災害3：トップページ"
@@ -115,6 +116,7 @@ save_part route: "cms/free", filename: "urgency-layout/head.part.html", name: "�
 save_part route: "cms/free", filename: "urgency-layout/mode.part.html", name: "緊急災害表示"
 save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "グローバルナビ"
 save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報", limit: 20
+save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
 
 ## -------------------------------------
 puts "nodes:"
@@ -283,6 +285,17 @@ save_node route: "category/page", filename: "shisei/toshi", name: "都市整備"
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革"
 save_node route: "category/page", filename: "urgency", name: "緊急情報", shortcut: "show"
 
+## faq
+save_node route: "faq/page", filename: "faq/docs", name: "FAQ記事"
+save_node route: "category/node", filename: "faq", name: "よくある質問", shortcut: "show", sort: "order"
+save_node route: "category/page", filename: "faq/kurashi", name: "くらし・手続き", order: 10
+save_node route: "category/page", filename: "faq/kosodate", name: "子育て・教育", order: 20
+save_node route: "category/page", filename: "faq/kenko", name: "健康・福祉", order: 30
+save_node route: "category/page", filename: "faq/kanko", name: "観光・文化・スポーツ", order: 40
+save_node route: "category/page", filename: "faq/sangyo", name: "産業・仕事", order: 50
+save_node route: "category/page", filename: "faq/shisei", name: "市政情報", order: 60
+
+
 ## urgency
 save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災害レイアウト",
   urgency_default_layout_id: layouts["top"].id, shortcut: "show"
@@ -366,6 +379,10 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "urgency").
   update_all(layout_id: layouts["more"].id)
 Cms::Node.where(site_id: @site._id, filename: /^inquiry$/).
   update_all(layout_id: layouts["one"].id)
+Cms::Node.where(site_id: @site._id, filename: /^faq$/).
+  update_all(layout_id: layouts["faq"].id)
+Cms::Node.where(site_id: @site._id, filename: /faq\//).
+  update_all(layout_id: layouts["faq"].id)
 
 ## -------------------------------------
 puts "pages:"
@@ -438,22 +455,27 @@ save_page route: "article/page", filename: "docs/22.html", name: "自動交付�
   layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届",
   layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
-save_page route: "article/page", filename: "oshirase/kurashi/24.html", name: "犬・猫を譲り受けたい方",
+save_page route: "article/page", filename: "oshirase/kurashi/23.html", name: "犬・猫を譲り受けたい方",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
-save_page route: "article/page", filename: "oshirase/kurashi/25.html", name: "平成26年度住宅補助金の募集について掲載しました。",
+save_page route: "article/page", filename: "oshirase/kurashi/24.html", name: "平成26年度住宅補助金の募集について掲載しました。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
-save_page route: "article/page", filename: "oshirase/kurashi/26.html", name: "休日臨時窓口を開設します。",
+save_page route: "article/page", filename: "oshirase/kurashi/25.html", name: "休日臨時窓口を開設します。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
-save_page route: "article/page", filename: "oshirase/kurashi/27.html", name: "身体障害者手帳の認定基準が変更",
+save_page route: "article/page", filename: "oshirase/kurashi/26.html", name: "身体障害者手帳の認定基準が変更",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
-save_page route: "article/page", filename: "oshirase/kurashi/28.html", name: "平成26年4月より国民健康保険税率が改正されます",
+save_page route: "article/page", filename: "oshirase/kurashi/27.html", name: "平成26年4月より国民健康保険税率が改正されます",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
-save_page route: "article/page", filename: "urgency/29.html", name: "黒鷺県沖で発生した地震による当市への影響について。",
+save_page route: "article/page", filename: "urgency/28.html", name: "黒鷺県沖で発生した地震による当市への影響について。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["urgency"].id]
-save_page route: "article/page", filename: "urgency/30.html", name: "黒鷺県沖で発生した地震による津波被害について。",
+save_page route: "article/page", filename: "urgency/29.html", name: "黒鷺県沖で発生した地震による津波被害について。",
   layout_id: layouts["more"].id, category_ids: [categories["urgency"].id]
 
 dates = (Date.today..(Date.today + 12)).map { |d| d.mongoize }
-save_page route: "article/page", filename: "docs/29.html", name: "ふれあいフェスティバル", layout_id: layouts["oshirase"].id,
+save_page route: "article/page", filename: "docs/30.html", name: "ふれあいフェスティバル", layout_id: layouts["oshirase"].id,
   category_ids: [categories["oshirase"].id, categories["oshirase/event"].id], event_dates: dates
+
+puts "faq pages:"
+save_page route: "faq/page", filename: "faq/docs/31.html", name: "休日や夜間の戸籍の届出について",
+  layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id], question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
+
 

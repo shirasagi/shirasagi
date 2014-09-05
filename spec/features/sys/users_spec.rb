@@ -25,6 +25,7 @@ describe "sys_users" do
 
     it "#index" do
       visit index_path
+      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -36,12 +37,14 @@ describe "sys_users" do
         fill_in "item[in_password]", with: "sample"
         click_button "保存"
       end
+      expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).not_to have_css("form#item-form")
     end
 
     it "#show" do
       visit show_path
+      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 

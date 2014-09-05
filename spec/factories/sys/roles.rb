@@ -5,4 +5,9 @@ FactoryGirl.define do
     permissions ["edit_sys_users"]
     #permission_level 1
   end
+
+  factory :sys_user_role, class: Sys::Role do
+    name "sys_user_role"
+    permissions ["edit_sys_users", "edit_sys_sites"]
+  end
 end

@@ -921,6 +921,9 @@ img {
       }
     }
   }
+  .current a {
+    background: $hblue;
+  }
 }
 // -----------------------------------------------------------------------------
 // categories
@@ -988,57 +991,85 @@ img {
 }
 // -----------------------------------------------------------------------------
 //  page sitemap
-.page header.released, .one header.released {
+.page header.released, .one header.released, .faq header.released {
   margin-bottom: $item-margin;
   text-align: right;
 }
-.page article h1, .one article.body h1,
-.page .related-pages h1, .inquiry-html h1, .inquiry-form h1 {
-  margin: $item-margin 0 6px;
-  padding: 3px 10px 0;
-  background: $hblue;
-  font-size: $px16;
-  font-weight: bold;
-  &:first-child {
-    margin-top: 0;
+.page article, .one article.body,
+.page .related-pages, .inquiry-html, .inquiry-form,
+.faq-question, .faq .body {
+  h1 {
+    margin: $item-margin 0 6px;
+    padding: 3px 10px 0;
+    background: $hblue;
+    font-size: $px16;
+    font-weight: bold;
+    &:first-child {
+      margin-top: 0;
+    }
   }
-}
-.page article h2, .one article.body h2,
-.inquiry-html h2, .inquiry-form h2 {
-  margin-bottom: 6px;
-  padding: 0 10px;
-  border-bottom: 2px solid $blue;
-  color: $blue;
-  font-size: $px16;
-  font-weight: bold;
-}
-.page article h3, .one article.body h3,
-.inquiry-html h3, .inquiry-form h3 {
-  margin-bottom: 6px;
-  padding: 0 10px;
-  border-left: 5px solid $blue;
-  color: $blue;
-  font-weight: bold;
-}
-.page article h4, .one article.body h4,
-.inquiry-html h4, .inquiry-form h4 {
-  color: $blue;
-  font-weight: bold;
-}
-.page article h5, .pages article h6, .one article.body h5, .one article.body h6,
-.inquiry-html h5, .inquiry-html  h6, .inquiry-form h5, .inquiry-form h6 {
-  font-weight: bold;
-}
-.page article p, .one article.body p,
-.inquiry-html p, .inquiry-form p {
-  margin-bottom: $item-margin;
-}
-.page article ul, .one article.body ul,
-.inquiry-html ul, .inquiry-form ul {
-  margin-bottom: $item-margin;
-  list-style: none;
-  li {
-    @include li;
+  h2 {
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px16;
+    font-weight: bold;
+  }
+  h3 {
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-left: 5px solid $blue;
+    color: $blue;
+    font-weight: bold;
+  }
+  h4 {
+    color: $blue;
+    font-weight: bold;
+  }
+  h5, h6 {
+    font-weight: bold;
+  }
+  p {
+    margin-bottom: $item-margin;
+  }
+  ul {
+    margin-bottom: $item-margin;
+    list-style: none;
+    li {
+      @include li;
+    }
+  }
+  ol {
+    margin-bottom: $item-margin;
+    padding-left: 23px;
+  }
+  dl {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: $border-hgry;
+    dt {
+      float: left;
+      min-width: 15%;
+      font-weight: bold;
+    }
+  }
+  table {
+    width: 100%;
+    margin-bottom: $item-margin;
+    caption {
+      color: $blue;
+      text-align: left;
+    }
+    th {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+      background: $hblue;
+    }
+    td {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+    }
   }
 }
 #sitemap ul {
@@ -1052,37 +1083,7 @@ img {
   background: none;
   list-style: none;
 }
-.page article ol, .one article.body ol, .inquiry-form ol {
-  margin-bottom: $item-margin;
-  padding-left: 23px;
-}
-.page article dl, .one article.body dl {
-  margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: $border-hgry;
-  dt {
-    float: left;
-    min-width: 15%;
-    font-weight: bold;
-  }
-}
-.page article table, .one article.body table {
-  width: 100%;
-  margin-bottom: $item-margin;
-  caption {
-    color: $blue;
-    text-align: left;
-  }
-  th {
-    padding: 3px 8px 0;
-    border: $border-hgry;
-    background: $hblue;
-  }
-  td {
-    padding: 3px 8px 0;
-    border: $border-hgry;
-  }
-}
+
 // -----------------------------------------------------------------------------
 // calendar
 #wrap .one {
@@ -1283,7 +1284,35 @@ img {
     margin-bottom: $box-margin;
   }
 }
-
+// -----------------------------------------------------------------------------
+// faq
+.faq-question {
+  position: relative;
+  padding: $item-margin $item-margin 0 50px;
+  border: 2px solid $hblue;
+  &:before {
+    content: "Q:";
+    position: absolute;
+    display: block;
+    left: 12px;
+    color: $blue;
+    font-size: $px16;
+    font-weight: bold;
+  }
+}
+.faq .body {
+  position: relative;
+  padding: $item-margin $item-margin 0 50px;
+  &:before {
+    content: "A:";
+    position: absolute;
+    display: block;
+    left: 12px;
+    color: $red;
+    font-size: $px16;
+    font-weight: bold;
+  }
+}
 // -----------------------------------------------------------------------------
 // smart phone
 // -----------------------------------------------------------------------------
@@ -1776,6 +1805,14 @@ img {
     .send, .simple-captcha {
       padding: 0;
       text-align: center;
+    }
+  }
+// -----------------------------------------------------------------------------
+// faq
+  .faq-question, .faq .body {
+    padding: $smart-margin;
+    &:before {
+      position: static;
     }
   }
 }

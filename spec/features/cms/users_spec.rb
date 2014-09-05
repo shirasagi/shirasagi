@@ -1,13 +1,13 @@
 # coding: utf-8
 require 'spec_helper'
 
-describe "sys_users" do
-  subject(:item) { SS::Site.last }
-  subject(:index_path) { sys_sites_path }
-  subject(:new_path) { new_sys_site_path }
-  subject(:show_path) { sys_site_path item }
-  subject(:edit_path) { edit_sys_site_path item }
-  subject(:delete_path) { delete_sys_site_path item }
+describe "cms_users" do
+  subject(:item) { Cms::User.last }
+  subject(:index_path) { "/.#{cms_site.host}/cms/users" }
+  subject(:new_path) { "#{index_path}/new" }
+  subject(:show_path) { "#{index_path}/#{item.id}" }
+  subject(:edit_path) { "#{show_path}/edit" }
+  subject(:delete_path) { "#{show_path}/delete" }
 
   it "without login" do
     visit index_path
@@ -21,11 +21,10 @@ describe "sys_users" do
   end
 
   context "with auth" do
-    before { login_sys_user }
+    before { login_cms_user }
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -33,8 +32,10 @@ describe "sys_users" do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        fill_in "item[host]", with: "sample"
-        fill_in "item[domains]", with: "example.jp"
+        fill_in "item[email]", with: "cms_sample@example.jp"
+        fill_in "item[in_password]", with: "pass"
+        check "item[group_ids][]"
+        check "item[cms_role_ids][]"
         click_button "保存"
       end
       expect(status_code).to eq 200
