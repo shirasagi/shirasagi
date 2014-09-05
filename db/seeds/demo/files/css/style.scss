@@ -867,8 +867,8 @@ img {
 }
 
 // -----------------------------------------------------------------------------
-// category-pages .article-pages
-.category-pages, .article-pages {
+// category-pages .article-pages faq-search
+.category-pages, .article-pages, .faq-search {
   margin-bottom: $box-margin;
   a {
     @include r-arrow;
@@ -923,6 +923,7 @@ img {
   }
   .current a {
     background: $hblue;
+    text-decoration: none;
   }
 }
 // -----------------------------------------------------------------------------
@@ -1311,6 +1312,35 @@ img {
     color: $red;
     font-size: $px16;
     font-weight: bold;
+  }
+}
+.faq-search form {
+  @include clear;
+  margin-bottom: $box-margin;
+  padding: $item-margin;
+  background: $hblue;
+  .category {
+    float: left;
+    margin-right: $box-margin;
+    margin-bottom: $item-margin;
+    select {
+      padding: 5px;
+    }
+  }
+  .keyword {
+    float: left;
+    margin-bottom: $item-margin;
+    input {
+      width: 300px;
+      padding: 5px;
+    }
+  }
+  .submitters {
+    clear: both;
+    text-align: center;
+    input {
+      @include btn-gry;
+    }
   }
 }
 // -----------------------------------------------------------------------------
@@ -1710,8 +1740,8 @@ img {
     }
   }
 // -----------------------------------------------------------------------------
-//  category-pages article-pages
-  .category-pages, .article-pages {
+//  category-pages article-pages faq-search
+  .category-pages, .article-pages, .faq-search {
     margin-bottom: $smart-margin;
     a {
       display: block;
@@ -1813,6 +1843,11 @@ img {
     padding: $smart-margin;
     &:before {
       position: static;
+    }
+  }
+  .faq-search form {
+    keyword input {
+      width: 200px;
     }
   }
 }

@@ -41,6 +41,7 @@ save_layout filename: "oshirase.layout.html", name: "お知らせ"
 save_layout filename: "pages.layout.html", name: "記事レイアウト"
 save_layout filename: "top.layout.html", name: "トップレイアウト"
 save_layout filename: "one.layout.html", name: "1カラム"
+save_layout filename: "faq-top.layout.html", name: "FAQトップ"
 save_layout filename: "faq.layout.html", name: "FAQ"
 save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
 save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
@@ -117,6 +118,7 @@ save_part route: "cms/free", filename: "urgency-layout/mode.part.html", name: "�
 save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "グローバルナビ"
 save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報", limit: 20
 save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
+save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
 
 ## -------------------------------------
 puts "nodes:"
@@ -146,13 +148,7 @@ def save_node(data)
   item
 end
 
-save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w[docs]
-save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
-save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
-save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
-save_node route: "cms/node", filename: "sitemap", name: "サイトマップ"
-save_node route: "cms/node", filename: "use", name: "ご利用案内"
+## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド"
 save_node route: "category/node", filename: "kanko", name: "観光・文化・スポーツ"
 save_node route: "category/node", filename: "kenko", name: "健康・福祉"
@@ -284,9 +280,6 @@ save_node route: "category/page", filename: "shisei/toke", name: "統計・人�
 save_node route: "category/page", filename: "shisei/toshi", name: "都市整備"
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革"
 save_node route: "category/page", filename: "urgency", name: "緊急情報", shortcut: "show"
-
-## faq
-save_node route: "faq/page", filename: "faq/docs", name: "FAQ記事"
 save_node route: "category/node", filename: "faq", name: "よくある質問", shortcut: "show", sort: "order"
 save_node route: "category/page", filename: "faq/kurashi", name: "くらし・手続き", order: 10
 save_node route: "category/page", filename: "faq/kosodate", name: "子育て・教育", order: 20
@@ -295,6 +288,27 @@ save_node route: "category/page", filename: "faq/kanko", name: "観光・文化�
 save_node route: "category/page", filename: "faq/sangyo", name: "産業・仕事", order: 50
 save_node route: "category/page", filename: "faq/shisei", name: "市政情報", order: 60
 
+array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
+categories = Hash[*array.flatten]
+
+## node
+save_node route: "cms/node", filename: "sitemap", name: "サイトマップ"
+save_node route: "cms/node", filename: "use", name: "ご利用案内"
+
+## article
+save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
+
+## event
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w[docs]
+
+## uploader
+save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
+save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
+save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
+
+## faq
+save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", st_category_ids: [categories["faq"].id]
+save_node route: "faq/search", filename: "faq/faq-search", name: "よくある質問検索", st_category_ids: [categories["faq"].id]
 
 ## urgency
 save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災害レイアウト",
@@ -347,9 +361,6 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ区分", 
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
   html: column_question_html, select_options: [], required: "required", site_id: @site._id
 
-array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
-categories = Hash[*array.flatten]
-
 ## layout
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: layouts["pages"].id)
 Cms::Node.where(site_id: @site._id, route: /^event\//).update_all(layout_id: layouts["one"].id)
@@ -380,7 +391,7 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "urgency").
 Cms::Node.where(site_id: @site._id, filename: /^inquiry$/).
   update_all(layout_id: layouts["one"].id)
 Cms::Node.where(site_id: @site._id, filename: /^faq$/).
-  update_all(layout_id: layouts["faq"].id)
+  update_all(layout_id: layouts["faq-top"].id)
 Cms::Node.where(site_id: @site._id, filename: /faq\//).
   update_all(layout_id: layouts["faq"].id)
 
