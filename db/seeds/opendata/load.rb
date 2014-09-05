@@ -50,6 +50,7 @@ save_node filename: "api", name: "API", route: "opendata/api", shortcut: "show"
 save_node filename: "user", name: "ユーザーページ", route: "opendata/user", shortcut: "show"
 
 save_node filename: "mypage", name: "マイページ", route: "opendata/mypage"
+save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile"
 save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset"
 save_node filename: "mypage/app", name: "アプリ", route: "opendata/my_app"
 save_node filename: "mypage/idea", name: "アイデア", route: "opendata/my_idea"

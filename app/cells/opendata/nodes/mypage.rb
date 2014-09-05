@@ -18,7 +18,7 @@ module Opendata::Nodes::Mypage
 
     public
       def index
-        controller.redirect_to "/mypage/dataset/"
+        controller.redirect_to "/mypage/dataset/" if @cur_member
       end
 
       def login

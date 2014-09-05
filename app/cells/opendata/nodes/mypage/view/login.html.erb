@@ -7,7 +7,6 @@
 
 <%= form_tag "", class: "member-login" do |f| %>
   <%= error_messages_for :item %>
-  <%= hidden_field_tag :ref, params[:ref] %>
 
   <dl>
     <dt>Email</dt>
@@ -17,5 +16,7 @@
     <dd><%= password_field :item, :password %></dd>
   </dl>
 
-  <%= submit_tag t(:login), name: :login %>
+  <footer class="send">
+    <%= submit_tag t(:login), name: :login %>
+  </footer>
 <% end %>

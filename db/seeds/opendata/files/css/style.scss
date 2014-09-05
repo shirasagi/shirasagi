@@ -51,16 +51,20 @@ img {
 }
 #head {
   padding: 10px;
-  background-color: #eee;
+  background-color: #ddd;
   h1 {
     color: #000;
-    font-size: 200%;
+    font-size: 150%;
   }
 }
 #mypage {
   position: absolute;
   top: 10px;
   right: 20px;
+}
+#mypage-head {
+  padding: 10px;
+  background-color: #eee;
 }
 #wrap {
   margin: 10px;
@@ -69,4 +73,14 @@ section {
   margin: 0px 0px 10px;
   padding: 10px;
   border: 1px solid #ccc;
+}
+
+.member-login {
+  display: table;
+  margin: 20px;
+  padding: 20px;
+  background-color: #eee;
+  input[type=submit] {
+    margin: 10px 0px 0px;
+  }
 }

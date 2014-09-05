@@ -1,8 +1,8 @@
 # coding: utf-8
-module Opendata::Nodes::MyDataset
+module Opendata::Nodes::MyProfile
   class EditCell < Cell::Rails
     include Cms::NodeFilter::EditCell
-    model Opendata::Node::MyDataset
+    model Opendata::Node::MyProfile
   end
 
   class ViewCell < Cell::Rails
@@ -14,16 +14,15 @@ module Opendata::Nodes::MyDataset
 
     protected
       def set_model
-        @model = Opendata::Dataset
+        @model = Cms::Member
       end
 
       def set_item
-        @item = @model.site(@cur_site).find params[:id]
-        @item.attributes = fix_params
+        @item = @cur_member
       end
 
       def fix_params
-        { site_id: @cur_site.id }
+        {}
       end
 
       def pre_params
@@ -40,12 +39,6 @@ module Opendata::Nodes::MyDataset
 
     public
       def index
-        @items = Opendata::Dataset.site(@cur_site).
-          order_by(updated: -1).
-          page(params[:page]).
-          per(20)
-
-        @items.empty? ? "" : render
       end
 
       def show
@@ -75,21 +68,9 @@ module Opendata::Nodes::MyDataset
         @item.attributes = get_params
 
         if @item.update
-          controller.redirect_to "#{@cur_node.url}#{@item.id}", notice: t(:saved)
+          controller.redirect_to @cur_node.url, notice: t(:saved)
         else
           render file: :edit
-        end
-      end
-
-      def delete
-        render
-      end
-
-      def destroy
-        if @item.destroy
-          controller.redirect_to @cur_node.url, notice: t(:delete)
-        else
-          render file: :delete
         end
       end
   end
