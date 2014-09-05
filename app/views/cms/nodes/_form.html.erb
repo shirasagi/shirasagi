@@ -8,7 +8,7 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
 %><dl class="see">
   <dt><%= @model.t :route %><%= @model.tt :route %></dt>
   <dd><%= f.hidden_field :route %>
-    <%= @item.label :route %> &nbsp;[<%= link_to :change, routes_cms_nodes_path, class: "ajax-box" %>]</dd>
+    <%= @item.label :route %> &nbsp;<%= link_to :change, routes_cms_nodes_path, class: "ajax-box" %></dd>
 
   <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>

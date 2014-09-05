@@ -8,6 +8,7 @@
 
 .login-box {
     display: table;
+    width: 300px;
     padding: 20px 20px;
     background: $white;
     header {
@@ -155,7 +156,6 @@ textarea.ace_text-input {
   margin: 0px 0px 10px;
   header {
     min-width: 130px;
-    margin-bottom: 15px;
     border-bottom: $border-white;
     color: $black;
     font-size: 120%;
@@ -164,6 +164,9 @@ textarea.ace_text-input {
       border-bottom: $border-gray4;
       color: $gray5;
     }
+  }
+  .see {
+    margin-top: 15px;
   }
   + footer.send {
     border-top: 1px solid #ddd;
@@ -294,7 +297,7 @@ dl.see {
   > dt {
     @include clear;
     float: left;
-    width: 130px;
+    min-width: 140px;
     min-height: 1.0em;
     color: $black;
     font-weight: bold;
@@ -354,6 +357,7 @@ footer.send {
 #addon-cms-addons-file .see, .addon-view .see {
   a {
     @include btn;
+    display: inline-block;
   }
   #selected-files {
     margin-top: 30px;

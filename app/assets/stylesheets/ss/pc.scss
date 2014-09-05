@@ -238,31 +238,29 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
       color: $gray5;
     }
   }
-  div {
-    a {
-      display: block;
-      width: 100%;
-      margin: 0px 0px 0px;
-      padding: 4px 10px;
-      @include box-sizing(border-box);
-      color: $black;
-      @include ellipsis;
-      &[class ^= "icon"] {
-        background-position: 10px center;
-      }
-      &:hover {
-        padding-left: 5px;
-        border-left: $border-pink;
-        background-color: $gray2;
-        color: $pink;
-        text-decoration: none;
-      }
-      &.current {
-        padding-left: 5px;
-        border-left: $border-pink;
-        background-color: $gray2;
-        color: $pink;
-      }
+  a {
+    display: block;
+    width: 100%;
+    margin: 0px 0px 0px;
+    padding: 4px 10px;
+    @include box-sizing(border-box);
+    color: $black;
+    @include ellipsis;
+    &[class ^= "icon"] {
+      background-position: 10px center;
+    }
+    &:hover {
+      padding-left: 5px;
+      border-left: $border-pink;
+      background-color: $gray2;
+      color: $pink;
+      text-decoration: none;
+    }
+    &.current {
+      padding-left: 5px;
+      border-left: $border-pink;
+      background-color: $gray2;
+      color: $pink;
     }
   }
   div.pulldown-menu a.current {
@@ -289,6 +287,9 @@ nav.sub-menu {
 }
 nav.act-menu {
   margin: 0px 0px 20px;
+  header {
+    display: none;
+  }
   a {
     display: block;
     margin-bottom: 10px;
