@@ -41,10 +41,8 @@
 <header id="head">
   <div class="wrap">
     <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
-    <% SS::Site.all.each do |item| %>
-    <% if @crumbs.size > 0 %>
-    <h2><%= link_to item.name, "/.#{item.host}" %></h2>
-    <% end %>
+    <% if @cur_site.present? %>
+    <h2><%= link_to @cur_site.name, "/.#{@cur_site.host}" %></h2>
     <% end %>
     <% if @cur_user %>
     <nav>
