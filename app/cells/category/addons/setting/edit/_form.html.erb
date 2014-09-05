@@ -14,6 +14,7 @@ $ ->
 <% end %>
 
 <dl class="see mod-category">
+  <dt><%= t("category.setting") %><%= @model.tt :st_categories %></dt>
   <dd class="wide" style="line-height: 2.5">
     <%= f.hidden_field "st_category_ids[]", value: "", class: "hidden-categories-ids" %>
     <%= link_to t("cms.search_categories.index"), cms_search_categories_path, class: "ajax-box" %>
@@ -22,7 +23,7 @@ $ ->
     <table class="index selected-categories">
       <thead>
         <tr>
-          <th class="name"><%=t("category.name") %></th>
+          <th class="name"><%= t("category.name") %></th>
           <th></th>
         </tr>
       </thead>

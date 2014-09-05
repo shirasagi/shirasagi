@@ -2,12 +2,13 @@ ja:
   category:
     node: カテゴリー
     name: カテゴリー名
+    setting: カテゴリー設定
 
   modules:
     category: カテゴリー
     addons:
       category/category: カテゴリー
-      category/setting: カテゴリー設定
+      category/setting: カテゴリー
 
   cms:
     nodes:
