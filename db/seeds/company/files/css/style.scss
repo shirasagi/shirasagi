@@ -1,0 +1,1335 @@
+@import "init";
+@import "part";
+
+// -----------------------------------------------------------------------------
+// element
+
+html {
+  height: 100%;
+  font-family: $font-base;
+}
+body {
+  margin: 0 auto;
+  font-family: $font-base;
+  font-size: 100%;
+  color: $black;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 100%;
+  font-weight: normal;
+}
+a {
+  color: $black;
+  &:hover {
+    color: $black;
+    text-decoration: none;
+  }
+  &:visited {
+    color: $black;
+  }
+}
+rp, rt {
+  background: #fff;
+  color: $black;
+  font-size: $px12;
+  font-weight: normal;
+}
+rp {
+  margin: 0px;
+}
+img {
+  vertical-align: middle;
+}
+
+// -----------------------------------------------------------------------------
+// layout
+#page {
+  margin: 0 auto;
+  font-size: 87.5%;
+}
+// -----------------------------------------------------------------------------
+// head
+#head {
+  width: 100%;
+  margin: 0 auto;
+  border-top: $border-red5;
+  @include clear;
+  .wrap {
+    width: $page-width;
+    margin: 0 auto;
+    padding: 10px;
+    @include clear;
+  }
+  h1 {
+    float: left;
+    padding: 12px 0;
+  }
+  #search {
+    float: right;
+    @include clear;
+    margin-bottom: $item-margin;
+    h2 {
+      display: none;
+    }
+    form {
+      @include clear;
+      border: $border-gray;
+    }
+    #search-box {
+      float: left;
+      width: 220px;
+      padding: 4px 5px;
+      border: none;
+    }
+    #search-button {
+      float: left;
+      padding: 3px 10px;
+      border: none;
+      background: #333333;
+      color: $white;
+      &:hover {
+        background: $black;
+      }
+    }
+  }
+  #gnav {
+    float: right;
+    width: 640px;
+    @include clear;
+    border-right: $border-gray;
+    h2 {
+      display: none;
+    }
+    li {
+      float: left;
+      a {
+        display: block;
+        width: 127px;
+        padding: 5px 0;
+        border-left: $border-gray;
+        text-align: center;
+        text-decoration: none;
+        &:hover {
+          background: $red;
+          color: $white;
+        }
+      }
+      &.current a {
+        background: $red;
+        color: $white;
+      }
+    }
+    li.top {
+      display: none;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// keyvisual
+#keyvisual {
+  @include clear;
+  position: relative;
+  margin-bottom: 40px;
+  .camera_caption {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    & > div {
+      width: 50%;
+      background: #fff;
+      background: rgba(255, 255, 255, 0.8);
+      color: $black;
+      font-size: $px24;
+      @include text-shadow(1px 1px 0 #fff);
+    }
+  }
+  .camera_wrap .camera_pag .camera_pag_ul {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    li {
+      margin: 0 5px;
+      background: $red;
+      & > span {
+        top: 2px;
+        left: 2px;
+        width: 12px;
+        height: 12px;
+      }
+      &.cameracurrent > span {
+        background: $white;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// wrap
+#wrap {
+  @include clear;
+  width: $page-width;
+  margin: 0 auto 40px;
+}
+#tabs header, #inquiry header, #product header {
+  margin-bottom: $item-margin;
+  padding-bottom: 5px;
+  border-bottom: $border-red2;
+  h1 {
+    position: relative;
+    padding-left: 20px;
+    border-left: $border-red2;
+    overflow: hidden;
+    font-size: $px16;
+    &:before {
+      content: ".";
+      position: absolute;
+      top: 0;
+      left: 2px;
+      border-left: $border-red2;
+      text-indent: -9999px;
+    }
+  }
+}
+#tabs {
+  float: left;
+  width: 630px;
+  margin-bottom: 40px;
+  header h1:after {
+    content: "NEWS";
+    margin-left: $box-margin;
+    color: $gray3;
+    font-size: 85%;
+  }
+  .names {
+    @include clear;
+    border-bottom: $border-red1;
+    a {
+      float: left;
+      display: block;
+      margin: 0 10px -1px 0;
+      padding: 3px 15px 2px;
+      border-bottom: $border-red1;
+      background: $hred;
+      text-align: center;
+      text-decoration: none;
+      &.current {
+        background: $red;
+        color: $white;
+      }
+    }
+  }
+  .pages {
+    margin-bottom: $item-margin;
+    header {
+      margin-bottom: 0;
+      padding: 10px 0;
+      border-bottom: $border-dotted;
+    }
+    time {
+      @include inline-block;
+      width: 120px;
+    }
+    h2 {
+      @include inline-block;
+      margin-left: 30px;
+    }
+  }
+  .view nav {
+    @include clear;
+  }
+  .more {
+    float: right;
+    width: 100px;
+    @include btn;
+    @include look;
+  }
+  .rss {
+    float: left;
+    width: 40px;
+    @include btn;
+    padding-left: 25px;
+    background: $orange url(../img/ic-rss.png) no-repeat 5px center;
+    &:hover {
+      backgroud: $horange;
+    }
+  }
+}
+#inquiry {
+  float: right;
+  width: 310px;
+  margin-bottom: 40px;
+  .tel {
+    padding: 10px 0 10px 30px;
+    font-size: $px24;
+    background: url(../img/tel.png) no-repeat left center;
+  }
+  .button a {
+    display: block;
+    margin-top: $item-margin;
+    padding: 20px 0 20px 50px;
+    border: $border-gray;
+    background: url(../img/email.png) no-repeat 10px center;
+    font-size: $px16;
+    text-decoration: none;
+    &:hover {
+      background-color: $hred;
+    }
+  }
+}
+#product {
+  clear: both;
+  @include clear;
+  margin-bottom: 40px;
+  article {
+    float: left;
+    width: 220px;
+    margin: 0 10px;
+    cursor: pointer;
+    &:hover h2 a {
+      background: $hred;
+      color: $black;
+    }
+    &:last-child {
+      margin: 0;
+    }
+    &.item-solution {
+      background: url(../img/bg-solution.jpg) no-repeat;
+    }
+    &.item-software {
+      background: url(../img/bg-software.jpg) no-repeat;
+    }
+    &.item-office {
+      background: url(../img/bg-office.jpg) no-repeat;
+    }
+    &.item-marketing {
+      background: url(../img/bg-marketing.jpg) no-repeat;
+    }
+    header {
+      margin: 0;
+      padding: 100px 0 0;
+      border: none;
+      h2 a {
+        position: relative;
+        display: block;
+        padding: 5px 10px;
+        background: $red;
+        color: $white;
+        text-decoration: none;
+        &:after {
+          content: ">";
+          position: absolute;
+          top: 5px;
+          right: 10px;
+        }
+        &:hover {
+          background: $hred;
+          color: $black;
+        }
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// connect
+#connect {
+  @include clear;
+  padding: 10px;
+  background: $gray1;
+  h1 {
+    font-size: $px16;
+  }
+  li {
+    float: left;
+    margin-right: $box-margin;
+    &:last-child {
+      margin: 0;
+    }
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// pagetop
+.pagetop {
+  display: none;
+  position: fixed;
+  bottom: 50px;
+  right: 0;
+    a {
+      position: relative;
+      display: block;
+      width: 70px;
+      padding: 35px 5px 10px;
+      @include border-radius(5px 0 0 5px);
+      background: $black;
+      background: rgba(0, 0, 0, 0.8);
+      text-align: center;
+      color: #fff;
+      font-size: $px10;
+      text-decoration: none;
+      &:after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 25px;
+        width: 0;
+        height: 0;
+        border-right: 15px solid transparent;
+        border-bottom: 20px solid $white;
+        border-left: 15px solid transparent;
+      }
+    }
+}
+
+// -----------------------------------------------------------------------------
+// foot
+#foot {
+  border-top: $border-gray;
+  border-bottom: $border-red5;
+  & > nav {
+    width: 100%;
+    padding: $item-margin 0;
+    border-bottom: $border-gray;
+    ul {
+      @include clear;
+      width: $page-width;
+      margin: 0 auto;
+      li {
+        float: left;
+        padding:  0 $item-margin;
+        border-right: $border-gray;
+        &:last-child {
+          border: none;
+        }
+      }
+    }
+  }
+  .addr {
+    padding: $item-margin 0;
+    border-bottom: $border-gray;
+    background: $gray1;
+    .wrap {
+      @include clear;
+      width: $page-width;
+      margin: 0 auto;
+      dt {
+        float: left;
+        width: 70px;
+        margin-right: $box-margin;
+        font-weight: bold;
+      }
+      dd {
+        float: left;
+      }
+      p {
+        float: right;
+        margin-left: $item-margin;
+      }
+    }
+  }
+  .copyright {
+    padding: 5px 0;
+    text-align: center;
+  }
+}
+// -----------------------------------------------------------------------------
+// main
+.two #main {
+  float: right;
+  width: 710px;
+  .released {
+    margin-bottom: $item-margin;
+    text-align: right;
+  }
+}
+.two #main, .one #main {
+  .body {
+    h1 {
+      margin-bottom: $item-margin;
+      padding: 5px 10px 3px;
+      border-bottom: $border-red1;
+      background: $hred;
+      font-size: $px16;
+    }
+    h2 {
+      margin-bottom: $item-margin;
+      padding: 3px 0 1px 10px;
+      border-left: $border-red3;
+      font-size: $px16;
+    }
+    h3 {
+      position: relative;
+      margin-bottom: $item-margin;
+      padding-left: 15px;
+      font-size: $px16;
+      &:after {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 0;
+        display: block;
+        width: 10px;
+        height: 3px;
+        background: $red;
+      }
+    }
+    ul {
+      margin-bottom: $box-margin;
+      li {
+        position: relative;
+        padding-left: 18px;
+        list-style-type: none;
+        &:after {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 6px;
+          left: 2px;
+          width: 10px;
+          height: 10px;
+          background: $red;
+          @include border-radius(5px);
+        }
+      }
+    }
+    ol {
+      margin-bottom: $box-margin;
+      padding-left: 24px;
+    }
+    table {
+      margin-bottom: $box-margin;
+      caption {
+        text-align: left;
+      }
+      th, td {
+        padding: 3px 10px 1px;
+        border: $border-gray;
+      }
+      th {
+        background: $hred;
+        font-weight: normal;
+        text-align: left;
+      }
+    }
+    p {
+    margin-bottom: $box-margin;
+    }
+  }
+  .categories {
+    margin-bottom: $box-margin;
+    border-top: $border-gray;
+    text-align: right;
+    header {
+      @include inline-block;
+      margin: 5px 0;
+    }
+    .nodes {
+      @include inline-block;
+      margin: 5px 0;
+      article {
+        @include inline-block;
+      }
+      header {
+        margin: 0;
+        h2 {
+          @include inline-block;
+          margin: 0;
+          padding: 0 10px;
+          border-left: $border-gray;
+          border-bottom: none;
+          font-size: $px14;
+          font-weight: normal;
+        }
+      }
+    }
+  }
+}
+.two #side {
+  float: left;
+  width: 230px;
+}
+.sitemap #main .body ul {
+  @include clear;
+  margin-bottom: $item-margin;
+  li {
+    float: left;
+    margin-bottom: $item-margin;
+    padding: 0 $box-margin;
+    border-right: $border-gray;
+    &:after {
+      display: none;
+    }
+    &:first-child {
+      border-left: $border-gray;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// crumbs
+.crumbs {
+  margin-bottom: $box-margin;
+}
+// -----------------------------------------------------------------------------
+// side-menu
+#side-menu {
+  header h1 {
+    margin-bottom: $box-margin;
+    padding: 5px 10px;
+    border-top: $border-red3;
+    border-bottom: $border-red3;
+    font-size: $px18;
+    &.news:after {
+      content: "NEWS";
+      display: block;
+      color: $gray3;
+      font-size: 75%;
+    }
+    &.company:after {
+      content: "COMPANY";
+      display: block;
+      color: $gray3;
+      font-size: 75%;
+    }
+    &.product:after {
+      content: "PRODUCT";
+      display: block;
+      color: $gray3;
+      font-size: 75%;
+    }
+    &.recruit:after {
+      content: "RECRUIT";
+      display: block;
+      color: $gray3;
+      font-size: 75%;
+    }
+  }
+  .menu {
+    padding: 5px;
+    background: $hred;
+    .cms-pages {
+      margin-bottom: 2px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    h2 a {
+      display: block;
+      padding: 5px 10px 3px;
+      background: $white;
+      text-decoration: none;
+      &:hover {
+        background: $red;
+        color: $white;
+      }
+    }
+    li {
+      display: none;
+    }
+    li a {
+      position: relative;
+      display: none;
+      background: $white;
+      padding: 3px 10px 3px 30px;
+      text-decoration: none;
+      &:hover {
+        color: $red;
+        &:after {
+          content: "";
+          position: absolute;
+          top: 12px;
+          left: 10px;
+          display: block;
+          width: 10px;
+          height: 3px;
+          background: $red;
+        }
+      }
+    }
+    .current {
+      & > header h2 a {
+        background: $red;
+        color: $white;
+      }
+      li {
+        display: block;
+      }
+      li a {
+        display: block;
+      }
+      li.current {
+        display: block;
+      }
+      li.current a {
+        color: $red;
+        &:after {
+          content: "";
+          position: absolute;
+          top: 12px;
+          left: 10px;
+          display: block;
+          width: 10px;
+          height: 3px;
+          background: $red;
+        }
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// ss-page-name
+#ss-page-name {
+  position: relative;
+  margin-bottom: $box-margin;
+  padding: 7px 10px 5px 25px;
+  background: $black;
+  color: $white;
+  font-size: $px16;
+  &:before {
+    content: ".";
+    position: absolute;
+    top: 6px;
+    left: 10px;
+    border-left: $border-red2;
+    text-indent: -9999px;
+  }
+  &:after {
+    content: ".";
+    position: absolute;
+    top: 6px;
+    left: 14px;
+    border-left: $border-red2;
+    text-indent: -9999px;
+  }
+}
+// -----------------------------------------------------------------------------
+// article-pages category-pages
+.article-pages article, .category-pages article {
+  padding: $item-margin 0;
+  border-bottom: $border-gray;
+  time {
+    @include inline-block;
+    width: 120px;
+  }
+  h2 {
+    @include inline-block;
+    margin: 0 0 0 10px;
+  }
+}
+// -----------------------------------------------------------------------------
+// product
+.product .cms-pages, .product .category-pages {
+  @include clear;
+  position: relative;
+  margin-bottom: $item-margin;
+  h1 {
+    margin-bottom: $item-margin;
+    padding: 5px 10px 3px;
+    border-bottom: $border-red1;
+    background: $hred;
+    font-size: $px16;
+  }
+  & > p {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    a {
+      @include btn;
+      @include look;
+      &:hover {
+        @include box-shadow(0 0 3px rgba(0,0,0,0.5) inset);
+      }
+    }
+  }
+  div article, article {
+    position: relative;
+    float: left;
+    width: 210px;
+    margin: 0 0 $item-margin $item-margin;
+    padding: 140px $item-margin $item-margin;
+    border: none;
+    cursor: pointer;
+    &.item-consulting {
+      background: $gray2 url(../img/bg-consulting.jpg) no-repeat left 10px;
+    }
+    &.item-introduction {
+      background: $gray2 url(../img/bg-introduction.jpg) no-repeat left 10px;
+    }
+    &.item-sales {
+      background: $gray2 url(../img/bg-sales.jpg) no-repeat left 10px;
+    }
+    &.item-map {
+      background: $gray2 url(../img/bg-map.jpg) no-repeat left 10px;
+    }
+    &.item-img {
+      background: $gray2 url(../img/bg-img.jpg) no-repeat left 10px;
+    }
+    &.item-word {
+      background: $gray2 url(../img/bg-word.jpg) no-repeat left 10px;
+    }
+    &.item-database {
+      background: $gray2 url(../img/bg-database.jpg) no-repeat left 10px;
+    }
+    &.item-printer {
+      background: $gray2 url(../img/bg-printer.jpg) no-repeat left 10px;
+    }
+    &.item-network {
+      background: $gray2 url(../img/bg-network.jpg) no-repeat left 10px;
+    }
+    &.item-web {
+      background: $gray2 url(../img/bg-web.jpg) no-repeat left 10px;
+    }
+    &.item-research {
+      background: $gray2 url(../img/bg-research.jpg) no-repeat left 10px;
+    }
+    &.item-mobile {
+      background: $gray2 url(../img/bg-mobile.jpg) no-repeat left 10px;
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-bottom: 20px solid $white;
+    }
+    h2 a {
+      display: block;
+      padding-right: 20px;
+      background: url(../img/ic-arrow.gif) no-repeat right center;
+      color: $red;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    &:hover {
+      background-color: $red;
+      color: $white;
+      h2 a {
+        background: url(../img/ic-arrow-w.gif) no-repeat right center;
+        color: $white;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// inquiry
+.inquiry-html {
+  margin-bottom: $box-margin;
+}
+.inquiry-form {
+  .columns {
+    margin-bottom: $box-margin;
+  }
+  dl {
+    @include clear;
+    padding: 15px 0;
+    border-bottom: $border-dotted;
+    dt {
+      float: left;
+      width: 230px;
+      padding: 0 10px;
+      .required {
+        display: block;
+        margin-top: 5px;
+        color: $red;
+      }
+    }
+    dd {
+      float: left;
+      padding: 0 $item-margin;
+      input[type=text], input[type=email] {
+        width: 300px;
+        padding: 5px;
+      }
+      input#item_20 {
+        width: 500px;
+      }
+      textarea {
+        width: 600px;
+        min-height: 200px;
+      }
+    }
+  }
+  .send {
+    @include clear;
+    margin-left: 260px;
+    input {
+      display: block;
+      float: left;
+      margin-right: $box-margin;
+      padding: 10px 20px;
+      border: none;
+      background: $red;
+      color: $white;
+      @include border-radius(3px);
+      cursor: pointer;
+      &:hover {
+        background: $hred;
+        color: $black;
+      }
+    }
+  }
+  .errorExplanation {
+    padding: $item-margin;
+    border: $border-red2;
+    background: #ffffa4;
+    @include border-radius(3px);
+    ul {
+      li {
+        position: relative;
+        padding-left: 18px;
+        list-style-type: none;
+        &:after {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 6px;
+          left: 2px;
+          width: 10px;
+          height: 10px;
+          background: $red;
+          @include border-radius(5px);
+        }
+      }
+    }
+  }
+  .simple-captcha {
+    .image {
+      margin-bottom: $item-margin;
+      img {
+        border: $border-gray;
+      }
+    }
+    .field input {
+      padding: 5px;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// ss-mb
+#ss-mb {
+  padding: 10px;
+  a {
+    @include box-sizing(border-box);
+    display: block;
+    width: 100%;
+    min-width: $page-width;
+    padding: 8px 8px 5px;
+    border: $border-gray;
+    background: $gray1;
+    color: $black;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+// -----------------------------------------------------------------------------
+// smart phone
+// -----------------------------------------------------------------------------
+@media only screen and (max-width: 600px) {
+  #head .wrap {
+    width: 100%;
+  }
+// -----------------------------------------------------------------------------
+// clear
+  #head .wrap, #head #gnav, #wrap, #tabs, #inquiry, #foot nav ul, #foot .addr .wrap {
+    float: none;
+    width: 100%;
+    @include box-sizing(border-box);
+  }
+// -----------------------------------------------------------------------------
+// display: none
+  .crumbs {
+    display: none;
+  }
+// -----------------------------------------------------------------------------
+// head
+#head {
+  position: relative;
+  .wrap {
+    padding: $item-margin 0;
+  }
+  h1 {
+    margin-bottom: 10px;
+    padding: 0 10px;
+    img {
+      width: 75%;
+      height: auto;
+    }
+  }
+  #gnav {
+    ul {
+      display: none;
+      border-top: $border-gray;
+      li {
+        float: none;
+        a {
+          width: 100%;
+          padding: 8px 0 5px;
+          border-bottom: $border-gray;
+          text-align: center;
+        }
+      }
+      .top {
+        display: block;
+      }
+    }
+    h2 {
+      display: block;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      overflow: hidden;
+      background-color: $hred;
+      @include border-radius(3px);
+      text-indent: -9999px;
+      pointer: cursor;
+      &:after, &:before {
+        content: "";
+        position: absolute;
+        top: 35%;
+        left: 25%;
+        right: 25%;
+        border: 2px solid #fff;
+      }
+      &.open {
+        background-color: $red;
+      }
+      &:after {
+        top: 60%;
+      }
+    }
+  }
+  #search {
+    float: none;
+    clear: both;
+    width: auto;
+    margin-bottom: 0;
+    padding: 0 10px;
+    border: none;
+    @include box-sizing(border-box);
+    h2 {
+      display: block;
+      position: absolute;
+      top: 10px;
+      right: 52px;
+      width: 32px;
+      height: 32px;
+      overflow: hidden;
+      background-color: $hred;
+      background-image: url(../img/ic-sr.png);
+      background-repeat: no-repeat;
+      background-position: 7px 6px;
+      background-size: 18px 18px;
+      @include border-radius(3px);
+      text-indent: -9999px;
+      pointer: cursor;
+      &.open {
+        background-color: $red;
+      }
+    }
+    form {
+      display: none;
+      float: none;
+      position: relative;
+      @include clear;
+      #search-box {
+        width: 90%;
+        @include border-radius(0);
+        -webkit-appearance: none;
+      }
+      #search-button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        float: none;
+        margin: 0;
+        padding: 4px 10px 3px;
+        @include border-radius(0);
+        -webkit-appearance: none;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// keyvisual
+  #camera_wrap_1 {
+    height: 150px !important;
+  }
+  #keyvisual .camera_caption {
+    top: 15px;
+    & > div {
+      width: 70%;
+      font-size: $px14;
+    }
+  }
+  #keyvisual .cameraSlide {
+    margin-top: 0 !important;
+  }
+// -----------------------------------------------------------------------------
+// tabs
+  #tabs {
+    .names a {
+      margin-right: 0;
+      padding: 3px 0 2px;
+      border-right: $border-red1;
+      @include box-sizing(border-box);
+      &:first-child {
+        width: 30%;
+      }
+      &:nth-child(2) {
+        width: 40%;
+      }
+      &:nth-child(3) {
+        width: 30%;
+        border-right: none;
+      }
+    }
+    .pages {
+      margin: 0;
+    }
+    .pages header {
+      padding: 5px $item-margin;
+    }
+    .pages time {
+      width: 100%;
+    }
+    .pages h2 {
+      margin: 0;
+    }
+    .more {
+      width: 70%;
+      text-align: right;
+      @include box-sizing(border-box);
+      @include border-radius(0);
+    }
+    .rss {
+      width: 30%;
+      @include box-sizing(border-box);
+      @include border-radius(0);
+    }
+  }
+  #inquiry {
+    margin-bottom: $item-margin;
+  }
+  #inquiry p {
+    padding: 0 10px;
+    &.button a {
+      padding: 10px 0 10px 50px;
+    }
+  }
+// -----------------------------------------------------------------------------
+// product
+  #product article {
+    margin: 0;
+    width: 50%;
+    &.item-solution {
+      background: none;
+      header {
+        background : url(../img/bg-solution.jpg) no-repeat left top;
+      }
+    }
+    &.item-software {
+      background: none;
+      header {
+        margin: 0 10px 10px 5px;
+        background : url(../img/bg-software.jpg) no-repeat left top;
+      }
+    }
+    &.item-office {
+      background: none;
+      header {
+        background : url(../img/bg-office.jpg) no-repeat left top;
+      }
+    }
+    &.item-marketing {
+      background: none;
+      header {
+        margin: 0 10px 10px 5px;
+        background : url(../img/bg-marketing.jpg) no-repeat left top;
+      }
+    }
+    header {
+      margin: 0 5px 10px 10px;
+      h2 a {
+        padding-right: 25px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+// -----------------------------------------------------------------------------
+// connect
+  #connect {
+    padding-bottom: 0;
+  }
+  #connect li {
+    width: 50%;
+    margin: 0;
+    padding: 0 5px 10px 0;
+    @include box-sizing(border-box);
+    &:nth-child(2n) {
+      padding: 0 0 10px 5px;
+    }
+    img {
+      max-width: 100%;
+    }
+  }
+// -----------------------------------------------------------------------------
+// pagetop
+  .pagetop a {
+    width: 40px;
+    padding-top: 25px;
+    color: transparent;
+    text-indent: -9999px;
+    &:after {
+      top: 15px;
+      left: 13px;
+    }
+  }
+// -----------------------------------------------------------------------------
+// foot
+  #foot .addr, #foot .copyright {
+    padding: 10px;
+  }
+// -----------------------------------------------------------------------------
+// side
+  .two #side {
+    width: 100%;
+    #side-menu h1 {
+      margin-bottom: $item-margin;
+    }
+    #side-menu h1:after {
+      display: inline-block !important;
+      margin-left: $item-margin;
+    }
+    .menu {
+      margin-bottom: $item-margin;
+      padding-bottom: 3px;
+      @include clear;
+      .cms-pages {
+        @include clear;
+        .cms-pages {
+          float: left;
+          width: 50%;
+          padding-right: 2px;
+          @include box-sizing(border-box);
+          a {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          &:nth-child(2n) {
+            padding: 0;
+          }
+        }
+      }
+    }
+    .product-menu .cms-pages {
+      float: left;
+      width: 50%;
+      padding-right: 2px;
+      @include box-sizing(border-box);
+      &:nth-child {
+        padding: 0;
+      }
+      a {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  #side-menu .menu .current li,
+  #side-menu .menu .current li.current {
+    display: none;
+  }
+// -----------------------------------------------------------------------------
+// main
+  .two #main {
+    width: 100%;
+    @include box-sizing(border-box);
+  }
+  .article-pages article, .category-pages article {
+    padding: 5px $item-margin;
+    time {
+      display: block;
+      width: 100%;
+    }
+    h2 {
+      margin: 0;
+    }
+  }
+  #main .body {
+    padding: $item-margin;
+  }
+  .product .cms-pages, .product .category-pages {
+    div article, article {
+      width: 100%;
+      @include box-sizing(border-box);
+      margin: 0 0 10px !important;
+      padding: 10px 10px 10px 130px;
+      background-size: 120px auto !important;
+    }
+  }
+  .inquiry-html {
+    width: 100%;
+    @include box-sizing(border-box);
+    margin: $item-margin 0;
+    padding: 0 10px;
+  }
+  .inquiry-form {
+    width: 100%;
+    @include box-sizing(border-box);
+    padding: 0 10px;
+    dl dt, dl dd {
+      float: none;
+      width: 100%;
+      padding: 0;
+      input, textarea {
+        width: 100% !important;
+        @include box-sizing(border-box);
+      }
+      textarea {
+        min-height: 100px;
+      }
+    }
+    .send {
+      margin: 0;
+      input {
+        margin: 0;
+        @include border-radius(0);
+        -webkit-appearance: none;
+      }
+    }
+  }
+// -----------------------------------------------------------------------------
+// ss-page-name
+  #ss-page-name {
+    margin-bottom: 0;
+  }
+// -----------------------------------------------------------------------------
+// ss-pc, ss-mb
+  #ss-pc, #ss-mb {
+    padding: 10px;
+    a {
+      @include box-sizing(border-box);
+      display: block;
+      width: 100%;
+      padding: 8px 8px 5px;
+      border: $border-gray;
+      background: $gray1;
+      color: $black;
+      text-align: center;
+      text-decoration: none;
+    }
+  }
+
+}

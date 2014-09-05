@@ -1,0 +1,264 @@
+/* mobile */
+
+/* ---------------------------------- */
+
+body {
+  margin: 0;
+  line-height: 1.6;
+  color: #333333;
+  font-size: 12px;
+  font-family: sans-serif;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 120%;
+}
+a {
+  color: #006699;
+}
+a:hover {
+  color: #ff0000;
+  text-decoration: none;
+}
+a:visited {
+  color: #993366;
+}
+ul, ol {
+  margin: 0 0 10px 0;
+  padding: 0 10px 0 20px;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: 10px;
+}
+
+/* ---------------------------------- */
+#head {
+  background-color: #ffffff;
+}
+#head h1 {
+  padding: 10px;
+}
+#head h1 img {
+  width: 180px;
+  height: auto;
+}
+#head #search {
+  padding: 0 10px;
+}
+#head #search a {
+  display: none;
+}
+#search-box {
+  width:70%;
+}
+#search-button {
+  width: 20%;
+}
+#gnav {
+  margin: 10px 0;
+  padding: 10px 0 0;
+  border-top: 1px solid #dd0000;
+  border-bottom: 1px solid #dd0000;
+}
+#gnav .inquiry {
+  display: none;
+}
+#gnav .op, #gnav .cl {
+  display: none;
+}
+/* ---------------------------------- */
+#foot {
+  margin-top: 20px;
+  padding-top: 10px;
+  background: #dedede;
+}
+#foot .addr {
+  padding: 0 10px;
+}
+#foot .addr p {
+  margin: 0;
+}
+#foot .copyright {
+  padding: 0 10px;
+  text-align: center;
+}
+#ss-pc, #ss-mb {
+  display: none;
+}
+/* ---------------------------------- */
+#tabs h1 {
+  display: none;
+}
+#tabs .cms-tabs h1, #product h1, #connect h1,
+#ss-page-name, #side-menu h1 {
+  display: block;
+  margin-bottom: 5px;
+  padding: 0 10px;
+  background: #dd0000;
+  color: #ffffff;
+}
+#tabs {
+  padding: 0;
+}
+#tabs .tab {
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
+}
+#product {
+  margin-bottom: 10px;
+  padding: 0;
+  border: none;
+}
+#product .tag-article {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+#product h2 {
+  margin-bottom: 5px;
+  padding: 0 10px 5px;
+  border-bottom: 1px solid #ccc;
+  font-size: 100%;
+  font-weigth: normal;
+}
+#connect ul {
+  margin: 0;
+  padding: 0 10px;
+}
+#connect li {
+  list-style: none;
+}
+#side-menu {
+  margin-bottom: 5px;
+  padding: 0;
+  border: none;
+}
+#side-menu .news, #side-menu .product, #side-menu .recruit {
+  display: none;
+}
+.pages div h2 {
+  margin: 0px 0px 5px;
+  padding: 0px 10px 5px;
+  border-bottom: 1px solid #999;
+  font-size: 100%;
+  font-weight: normal;
+}
+.pages div span {
+  margin: 5px 0 0;
+}
+.pagetop {
+  padding: 0 10px;
+  text-align: right;
+}
+.pages .tag-article .tag-time {
+  margin: 0px 0px 5px;
+  color: #444444;
+}
+
+/* ---------------------------------- */
+.feed {
+  margin: 0 10px 10px 0;
+  padding-bottom: 5px;
+  text-align: right;
+}
+.feed .rss {
+  display: none;
+}
+/* ---------------------------------- */
+.product .cms-pages h1 {
+  margin-bottom: 5px;
+  padding: 0 10px;
+  background: #ffcfcf;
+}
+.product .cms-pages .more {
+  display: none;
+}
+.tag-article {
+  margin-bottom: 10px;
+  padding: 0 10px 10px;
+  border-bottom: 1px solid #999999;
+}
+.pages .tag-article h2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.tag-article p {
+  margin: 0;
+}
+/* ---------------------------------- */
+.category-nodes {
+  margin-bottom: 10px;
+  padding-top: 5px;
+  border-bottom: 1px solid #999;
+}
+#category-list h2 {
+  font-size: 100%;
+  font-weight: normal;
+}
+/* ---------------------------------- */
+.page .released {
+  display: none;
+}
+.body {
+  padding: 0 10px;
+}
+.body h1 {
+  margin-top: 10px;
+  padding: 0 10px;
+  border-bottom: 1px solid #dd0000;
+  background: #ffcfcf;
+}
+.body h2 {
+  padding-left: 8px;
+  border-left: 3px solid #dd0000;
+}
+.body h3 {
+  border-bottom: 1px solid #dd0000;
+}
+.body h4 {
+  font-weight: bold
+}
+.body table {
+  margin-bottom: 10px;
+  border-collapse:collapse;
+  border-spacing:0;
+}
+.body th, .body td {
+  padding: 5px;
+  border: 1px solid #cccccc;
+}
+.body th {
+  background: #ffcfcf;
+}
+.body ul ol {
+  margin: 10px 0;
+}
+.categories {
+  padding: 0 10px;
+  border-top: 1px solid #cccccc;
+  text-align: right;
+}
+.categories h2 {
+  font-size: 12px;
+  font-weight: normal;
+}
+/* ---------------------------------- */
+.inquiry-html {
+  padding:  0 10px;
+}
+.inquiry-form {
+  padding: 0 10px;
+}
+.inquiry-form dt {
+  margin-bottom: 5px;
+  padding: 0 10px;
+  background: #ffcfcf;
+}
+.send {
+  text-align: center;
+}

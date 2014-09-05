@@ -1,0 +1,80 @@
+$page-width: 960px;
+
+// -----------------------------------------------------------------------------
+// font
+$px10:72%;
+$px11:79%;
+$px12:86%;
+$px13:93%;
+$px14:100%;
+$px15:108%;
+$px16:115%;
+$px17:122%;
+$px18:129%;
+$px19:136%;
+$px20:143%;
+$px21:150%;
+$px22:158%;
+$px23:165%;
+$px24:172%;
+$px25:179%;
+$px26:186%;
+$px27:193%;
+$px28:200%;
+$px29:208%;
+$px30:215%;
+$px31:222%;
+$px32:229%;
+
+$font-base: Meiryo, "メイリオ", Tahoma, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-head: Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+
+// -----------------------------------------------------------------------------
+// color
+$white: #ffffff;
+$black: #444444;
+$red: #dd0000;
+$hred: #ffcfcf;
+$orange: #f08300;
+$horange: #f0b445;
+$gray1:#f4f4f4;
+$gray2:#dedede;
+$gray3:#cccccc;
+
+$border-gray: 1px solid $gray3;
+$border-red1: 1px solid $red;
+$border-red2: 2px solid $red;
+$border-red3: 3px solid $red;
+$border-red5: 5px solid $red;
+$border-dotted: 1px dotted $gray3;
+
+// -----------------------------------------------------------------------------
+// margin
+$box-margin: 20px;
+$item-margin: 10px;
+
+// -----------------------------------------------------------------------------
+// mixin
+@mixin btn {
+  display: block;
+  padding: 3px 10px 0;
+  @include border-radius(3px);
+  color: $white;
+  text-decoration: none;
+}
+@mixin look {
+  position: relative;
+  @include btn;
+  padding-right: 30px;
+  background: $red;
+  &:after {
+    content: ">";
+    position: absolute;
+    top: 3px;
+    right:10px;
+  }
+  &:hover {
+    background: $hred;
+    color: $black;
+  }
+}
