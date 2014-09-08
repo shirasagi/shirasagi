@@ -67,6 +67,10 @@ gem 'ruby-saml'
 # JWT/JWS
 gem 'json-jwt'
 
+# SPARQL
+gem 'sparql'
+gem 'sparql-client'
+
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
 group :development, :test do
