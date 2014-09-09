@@ -11,7 +11,7 @@ class Cms::User
 
   public
     def allowed?(action, user, opts = {})
-      return true if Sys::Site.allowed?(action, user)
+      return true if Sys::User.allowed?(action, user)
       super
     end
 
@@ -23,7 +23,7 @@ class Cms::User
   class << self
     public
       def allow(action, user, opts = {})
-        return self if Sys::Site.allowed?(action, user)
+        return self if Sys::User.allowed?(action, user)
         super
       end
   end

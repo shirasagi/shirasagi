@@ -24,10 +24,20 @@ class Cms::Role
       [%w[1 1], %w[2 2], %w[3 3]]
     end
 
-  class << self
-    def permission(name)
-      self.permission_names << [name, name.to_s]
+    def allowed?(action, user, opts = {})
+      return true if Sys::User.allowed?(action, user)
+      super
     end
 
+  class << self
+    public
+      def permission(name)
+        self.permission_names << [name, name.to_s]
+      end
+
+      def allow(action, user, opts = {})
+        return self if Sys::User.allowed?(action, user)
+        super
+      end
   end
 end
