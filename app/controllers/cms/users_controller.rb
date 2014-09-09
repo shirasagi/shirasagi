@@ -47,12 +47,15 @@ class Cms::UsersController < ApplicationController
     end
 
     def update
-      other_ids = Cms::Group.nin(id: Cms::Group.site(@cur_site).pluck(:id)).in(id: @item.group_ids).pluck(:id)
+      other_group_ids = Cms::Group.nin(id: Cms::Group.site(@cur_site).pluck(:id)).in(id: @item.group_ids).pluck(:id)
+      other_role_ids = Cms::Role.nin(id: Cms::Role.site(@cur_site).pluck(:id)).in(id: @item.cms_role_ids).pluck(:id)
+
       @item.attributes = get_params
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
       @item.update
 
-      @item.add_to_set(group_ids: other_ids)
+      @item.add_to_set(group_ids: other_group_ids)
+      @item.add_to_set(cms_role_ids: other_role_ids)
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
       render_update @item.update
     end
