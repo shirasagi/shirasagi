@@ -485,5 +485,43 @@ table.index {
     }
   }
 }
+#addon-cms-addons-file .see #selected-files {
+  a {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    border: $border-gray4;
+    @include border-radius(3px);
+    background: $gray3;
+    @include box-shadow(none);
+    color: $black;
+    &:hover {
+      background: $pink;
+      color: $white;
+      text-decoration: none;
+    }
+    &.current {
+      border-left: none;
+      background-color: $gray2;
+      color: $pink;
+    }
+  }
+}
+#errorSyntaxChecker, #errorLinkChecker {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $pink;
+  background: $white;
+  h2 {
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    background: $pink;
+    color: $white;
+  }
+  p, li {
+    margin: 0 15px;
+    color: #822;
+  }
+}
 // -------------------------------------------------------------------------------------------------
 }
