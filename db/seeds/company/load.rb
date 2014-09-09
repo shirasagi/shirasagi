@@ -94,28 +94,43 @@ def save_part(data)
   item
 end
 
-save_part route: "cms/crumb", filename: "breadcrumbs.part.html", name: "パンくず", home_label: "トップ" , mobile_view: "hide"
+save_part route: "cms/crumb", filename: "breadcrumbs.part.html", name: "パンくず",
+  home_label: "トップ" , mobile_view: "hide"
 save_part route: "cms/free", filename: "connection.part.html", name: "関連サイト"
 save_part route: "cms/free", filename: "foot-top.part.html", name: "フッター：トップ"
 save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
 save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー"
-save_part route: "cms/free", filename: "inquiry.part.html", name: "お問い合わせ", mobile_view: "hide"
+save_part route: "cms/free", filename: "inquiry.part.html", name: "お問い合わせ",
+  mobile_view: "hide"
 save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル"
-save_part route: "cms/tabs", filename: "news.part.html", name: "ニュース", new_days: 7, conditions: %w[ oshirase product recruit ]
+save_part route: "cms/tabs", filename: "news.part.html", name: "ニュース",
+  new_days: 7, conditions: %w[ oshirase product recruit ]
 save_part route: "cms/free", filename: "page-top.part.html", name: "ページトップ"
-save_part route: "cms/page", filename: "news/side-menu.part.html", name: "サイドメニュー", new_days: 0, limit: 10, mobile_view: "hide",
+save_part route: "cms/page", filename: "news/side-menu.part.html", name: "サイドメニュー",
+  new_days: 0, limit: 10, mobile_view: "hide",
   conditions: %w[ product/solution product/software product/office product/marketing recruit ]
-save_part route: "cms/page", filename: "company/side-menu.part.html", name: "サイドメニュー", sort: "order", new_days: 0, limit: 10
-save_part route: "cms/page", filename: "recruit/side-menu.part.html", name: "サイドメニュー", new_days: 0,  limit: 10, mobile_view: "hide"
-save_part route: "cms/node", filename: "product/folder-list.part.html", name: "製品サービスカテゴリー", sort: "order",  limit: 4
-save_part route: "cms/page", filename: "product/marketing/marketing.part.html", name: "ページ一覧", sort: "order", new_days: 0,  limit: 20
-save_part route: "cms/page", filename: "product/marketing/side-menu.part.html", name: "サイドメニュー", sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
-save_part route: "cms/page", filename: "product/office/office.part.html", name: "ページ一覧", sort: "order", new_days: 0,  limit: 20
-save_part route: "cms/page", filename: "product/office/side-menu.part.html", name: "サイドメニュー", sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
-save_part route: "cms/page", filename: "product/software/software.part.html", name: "ページ一覧", sort: "order", new_days: 0,  limit: 20
-save_part route: "cms/page", filename: "product/software/side-menu.part.html", name: "サイドメニュー", sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
-save_part route: "cms/page", filename: "product/solution/solution.part.html", name: "ページ一覧", sort: "order", new_days: 0,  limit: 20
-save_part route: "cms/page", filename: "product/solution/side-menu.part.html", name: "サイドメニュー", sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+save_part route: "cms/page", filename: "company/side-menu.part.html", name: "サイドメニュー",
+  sort: "order", new_days: 0, limit: 10
+save_part route: "cms/page", filename: "recruit/side-menu.part.html", name: "サイドメニュー",
+  new_days: 0, limit: 10, mobile_view: "hide"
+save_part route: "cms/node", filename: "product/folder-list.part.html", name: "製品サービスカテゴリー",
+  sort: "order",  limit: 4
+save_part route: "cms/page", filename: "product/marketing/marketing.part.html", name: "ページ一覧",
+  sort: "order", new_days: 0,  limit: 20
+save_part route: "cms/page", filename: "product/marketing/side-menu.part.html", name: "サイドメニュー",
+  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+save_part route: "cms/page", filename: "product/office/office.part.html", name: "ページ一覧",
+  sort: "order", new_days: 0,  limit: 20
+save_part route: "cms/page", filename: "product/office/side-menu.part.html", name: "サイドメニュー",
+  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+save_part route: "cms/page", filename: "product/software/software.part.html", name: "ページ一覧",
+  sort: "order", new_days: 0,  limit: 20
+save_part route: "cms/page", filename: "product/software/side-menu.part.html", name: "サイドメニュー",
+  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+save_part route: "cms/page", filename: "product/solution/solution.part.html", name: "ページ一覧",
+  sort: "order", new_days: 0,  limit: 20
+save_part route: "cms/page", filename: "product/solution/side-menu.part.html", name: "サイドメニュー",
+  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
 
 ## -------------------------------------
 puts "nodes:"
@@ -163,7 +178,8 @@ save_node route: "category/page", name: "ビジネスソリューション", fil
 ## inquiry
 inquiry_html = File.read("nodes/inquiry.inquiry_html") rescue nil
 inquiry_sent_html  = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
-inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "お問い合わせ", shortcut: "show", layout_id: layouts["one"].id,
+inquiry_node = save_node route: "inquiry/form", filename: "inquiry",
+  name: "お問い合わせ", shortcut: "show", layout_id: layouts["one"].id,
   inquiry_captcha: "enabled", notice_state: "disabled",
   inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
   reply_state: "disabled",
@@ -253,25 +269,46 @@ save_page route: "article/page", name: "中途採用", filename: "news/335.html"
 
 puts "pages:"
 
-save_page route: "cms/page", name: "シラサギ株式会社", filename: "index.html", layout_id: layouts["top"].id
-save_page route: "cms/page", name: "リンク集", filename: "link.html", layout_id: layouts["one"].id
-save_page route: "cms/page", name: "個人情報保護方針", filename: "privacy.html", layout_id: layouts["one"].id
-save_page route: "cms/page", name: "サイトマップ", filename: "sitemap.html", layout_id: layouts["sitemap"].id
-save_page route: "cms/page", name: "アクセス", filename: "company/access.html", order: 40, layout_id: layouts["company"].id
-save_page route: "cms/page", name: "ご挨拶", filename: "company/greeting.html", order: 20, layout_id: layouts["company"].id
-save_page route: "cms/page", name: "沿革", filename: "company/history.html", order: 30, layout_id: layouts["company"].id
-save_page route: "cms/page", name: "会社概要",  filename: "company/index.html", order: 10, layout_id: layouts["company"].id
-save_page route: "cms/page", name: "製品・サービス", filename: "product/index.html", layout_id: layouts["product-top"].id
-save_page route: "cms/page", name: "WEBマーケティング", filename: "product/marketing/web.html", order: 0, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "マーケティングリサーチ", filename: "product/marketing/research.html", order: 10, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "モバイルマーケティング", filename: "product/marketing/mobile.html", order: 20, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "データベース構築・運用", filename: "product/office/database.html", order: 0, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "複合機販売", filename: "product/office/printer.html", order: 10, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "社内ネットワーク構築", filename: "product/office/network.html", order: 20, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "画像編集ソフト", filename: "product/software/img.html", order: 0, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "地図ソフト", filename: "product/software/map.html", order: 10, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "ワープロソフト", filename: "product/software/word.html", order: 20, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "コンサルティングサービス", filename: "product/solution/consulting.html", order: 0, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "人材紹介サービス", filename: "product/solution/introduction.html", order: 10, layout_id: layouts["product"].id
-save_page route: "cms/page", name: "販売促進支援", filename: "product/solution/sales.html", order: 20, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "シラサギ株式会社", filename: "index.html",
+  layout_id: layouts["top"].id
+save_page route: "cms/page", name: "リンク集", filename: "link.html",
+  layout_id: layouts["one"].id
+save_page route: "cms/page", name: "個人情報保護方針", filename: "privacy.html",
+  layout_id: layouts["one"].id
+save_page route: "cms/page", name: "サイトマップ", filename: "sitemap.html",
+  layout_id: layouts["sitemap"].id
+save_page route: "cms/page", name: "アクセス", filename: "company/access.html",
+  order: 40, layout_id: layouts["company"].id
+save_page route: "cms/page", name: "ご挨拶", filename: "company/greeting.html",
+  order: 20, layout_id: layouts["company"].id
+save_page route: "cms/page", name: "沿革", filename: "company/history.html",
+  order: 30, layout_id: layouts["company"].id
+save_page route: "cms/page", name: "会社概要",  filename: "company/index.html",
+  order: 10, layout_id: layouts["company"].id
+save_page route: "cms/page", name: "製品・サービス", filename: "product/index.html",
+  layout_id: layouts["product-top"].id
+save_page route: "cms/page", name: "WEBマーケティング", filename: "product/marketing/web.html",
+  order: 0, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "マーケティングリサーチ", filename: "product/marketing/research.html",
+  order: 10, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "モバイルマーケティング", filename: "product/marketing/mobile.html",
+  order: 20, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "データベース構築・運用", filename: "product/office/database.html",
+  order: 0, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "複合機販売", filename: "product/office/printer.html",
+  order: 10, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "社内ネットワーク構築", filename: "product/office/network.html",
+  order: 20, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "画像編集ソフト", filename: "product/software/img.html",
+  order: 0, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "地図ソフト", filename: "product/software/map.html",
+  order: 10, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "ワープロソフト", filename: "product/software/word.html",
+  order: 20, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "コンサルティングサービス", filename: "product/solution/consulting.html",
+  order: 0, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "人材紹介サービス", filename: "product/solution/introduction.html",
+  order: 10, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "販売促進支援", filename: "product/solution/sales.html",
+  order: 20, layout_id: layouts["product"].id
 
