@@ -47,18 +47,15 @@ module Cms::Addon
         permit = "#{action}_other_#{permission_name}"
         level = user.cms_roles.where(site_id:  site_id).in(permissions: permit).pluck(:permission_level).max
         if level
-          #dump "cms_allow " +  permit
-          return where(permission_level: {"$lte" => level })
+          return where("$or" =>  [{permission_level: {"$lte" => level }}, {permission_level:  nil}])
         end
 
         permit = "#{action}_private_#{permission_name}"
         level = user.cms_roles.where(site_id:  site_id).in(permissions: permit).pluck(:permission_level).max
         if level
-          #dump "cms_allow " +  permit
           return self.in(group_ids: user.group_ids).where(permission_level: {"$lte" => level })
         end
 
-        #dump "cms_allow " +  permit
         return where({_id: -1})
       end
 
