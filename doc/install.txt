@@ -38,7 +38,7 @@ CentOS 6.5/64bit
   cd /var/www/shirasagi
   cp config/samples/* config/
   bundle install
-  thin start -d
+  rake unicorn:start
 
   Access to http://localhost:3000/.mypage
 
