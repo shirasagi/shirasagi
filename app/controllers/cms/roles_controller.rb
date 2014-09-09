@@ -19,9 +19,8 @@ class Cms::RolesController < ApplicationController
   public
     def index
       raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
-      @items = @model.site(@cur_site).
-        order_by(name: 1).allow(:edit, @cur_user, site: @cur_site).
-        page(params[:page]).per(50)
+      @items = @model.site(@cur_site).allow(:edit, @cur_user, site: @cur_site).
+        order_by(name: 1).page(params[:page]).per(50)
     end
 
     def show

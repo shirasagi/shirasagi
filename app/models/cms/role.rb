@@ -36,7 +36,7 @@ class Cms::Role
       end
 
       def allow(action, user, opts = {})
-        return self if Sys::User.allowed?(action, user)
+        return where({}) if Sys::User.allowed?(action, user)
         super
       end
   end
