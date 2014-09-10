@@ -22,7 +22,7 @@ Lint/BlockAlignment:
 # Offense count: 2
 # Configuration parameters: AlignWith, SupportedStyles.
 Lint/DefEndAlignment:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 7
 # Cop supports --auto-correct.
