@@ -1,0 +1,13 @@
+# coding: utf-8
+class Map::Point
+  include SS::Document
+
+  field :page_id, type: Integer
+  field :loc, type: SS::Extensions::Array
+  field :name, type: String
+  field :text, type: String
+
+  belongs_to :page, foreign_key: :page_id, class_name: "Cms::Page"
+
+  permit_params :page_id, :loc, :name, :text
+end

@@ -142,6 +142,21 @@ form .ace_editor {
 textarea.ace_text-input {
   padding: 0px;
 }
+input.loc {
+  width: 20em;
+}
+input.query {
+  width: 20em;
+}
+input.zoom {
+  width: 3em;
+}
+input.marker-name {
+  width: 20em
+}
+textarea.marker-text {
+  width: 40em
+}
 
 // -------------------------------------------------------------------------------------------------
 // common view
@@ -254,6 +269,36 @@ textarea.ace_text-input {
     display: inline;
     border: 1px solid #e00;
   }
+}
+.mod-map {
+  overflow: hidden; /*floatの解除、ここがポイント*/
+  position: relative; /*DWで正常にプレビューできるようになります。*/
+  zoom:1; /*IE6でレイアウト崩れを防ぐためのものです。*/
+}
+#map_container {
+  float: left
+}
+#map-canvas {
+  width: 600px;
+  height: 400px;
+//  float: left
+}
+#map-markers {
+  width: 600px;
+  float: left;
+}
+.marker {
+  margin-bottom: 40px;
+  p:nth-child(1) {
+    margin-left: 12px;
+  }
+  p:nth-child(2) {
+    margin-left: 48px;
+  }
+  p:nth-child(3) {
+//    margin-left: 35px;
+  }
+
 }
 
 // -------------------------------------------------------------------------------------------------

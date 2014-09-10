@@ -2,6 +2,7 @@
 class Article::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::ApproveFilter
 
   model Article::Page
 
@@ -24,19 +25,5 @@ class Article::PagesController < ApplicationController
         search(params[:s]).
         order_by(updated: -1).
         page(params[:page]).per(50)
-    end
-
-    def create
-      @item = @model.new get_params
-      raise "403" unless @item.allowed?(:edit, @cur_user)
-      raise "403" unless @item.allowed?(:release, @cur_user) if @item.state == "public"
-      render_create @item.save
-    end
-
-    def update
-      @item.attributes = get_params
-      raise "403" unless @item.allowed?(:edit, @cur_user)
-      raise "403" unless @item.allowed?(:release, @cur_user) if @item.state == "public"
-      render_update @item.update
     end
 end
