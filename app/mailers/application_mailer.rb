@@ -1,7 +1,7 @@
 # coding: utf-8
 class ApplicationMailer
   class << self
-   def set(option)
+    def set(option)
       if option == :load_settings
         begin
           yml = YAML.load_file(File.join(Rails.root, 'config', 'mail.yml'))
