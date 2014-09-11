@@ -106,7 +106,7 @@ class Uploader::FilesController < ApplicationController
       if item.save
         render_create true, location: "#{uploader_files_path}/#{@item.filename}"
       else
-        item.errors.each do |n, |
+        item.errors.each do |n, e|
           @item.errors.add :path, e
         end
         @directory = params[:item][:directory]
