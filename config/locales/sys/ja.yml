@@ -6,7 +6,7 @@ ja:
     site: サイト
     user: ユーザー
     group: グループ
-    http_test: HTTPテスト
+    test: テスト
     db_tool: DBツール
     role: 権限/ロール
     search_groups:

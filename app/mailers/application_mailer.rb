@@ -10,33 +10,33 @@ class ApplicationMailer
           return nil
         end
 
-        mail = yml[Rails.env.to_s]
-        ActionMailer::Base.delivery_method = mail['delivery_method']
-        ActionMailer::Base.default from: mail['default_from'], charset: mail['default_charset']
-        if  mail['delivery_method'] == :smtp
-          smtp(mail)
-        elsif mail['delivery_method'] == :sendmail
-          sendmail(mail)
+        conf = yml[Rails.env.to_s]
+        ActionMailer::Base.delivery_method = conf['delivery_method']
+        ActionMailer::Base.default from: conf['default_from'], charset: conf['default_charset']
+        if conf['delivery_method'] == :smtp
+          set_smtp conf
+        elsif conf['delivery_method'] == :sendmail
+          set_sendmail conf
         end
       end
     end
 
-    def smtp(mail)
+    def set_smtp(conf)
       ActionMailer::Base.smtp_settings = {
-        address: mail['address'],
-        port: mail['port'],
-        domain: mail['domain'],
-        user_name: mail['user_name'],
-        password: mail['password'],
-        authentication: mail['authentication'],
+        address: conf['address'],
+        port: conf['port'],
+        domain: conf['domain'],
+        user_name: conf['user_name'],
+        password: conf['password'],
+        authentication: conf['authentication'],
         enable_starttls_auto: true
       }
     end
 
-    def sendmail(mail)
+    def set_sendmail(conf)
       ActionMailer::Base.sendmail_settings = {
-        location: mail['location'],
-        arguments:  mail['arguments']
+        location: conf['location'],
+        arguments: conf['arguments']
       }
     end
   end
