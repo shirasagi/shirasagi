@@ -52,3 +52,6 @@ group :development, :test do
   gem 'guard-rspec', '~> 4.3.1'
   gem 'fuubar'
 end
+
+gem 'brakeman', require: false, group: :development
+gem 'guard-brakeman', require: false, group: :development
