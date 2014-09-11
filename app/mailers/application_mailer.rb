@@ -3,21 +3,21 @@ class ApplicationMailer
   class << self
    def set(option)
       return unless option.eql?(:load_settings)
-        begin
-          yml = YAML.load_file(File.join(Rails.root, 'config', 'mail.yml'))
-          raise "empty" if yml.blank?
-        rescue => e
-          return nil
-        end
+      begin
+        yml = YAML.load_file(File.join(Rails.root, 'config', 'mail.yml'))
+        raise "empty" if yml.blank?
+      rescue => e
+        return nil
+      end
 
-        mail = yml[Rails.env.to_s]
-        ActionMailer::Base.delivery_method = mail['delivery_method']
-        ActionMailer::Base.default from: mail['default_from'], charset: mail['default_charset']
-        if  mail['delivery_method'] == :smtp
-          smtp(mail)
-        elsif mail['delivery_method'] == :sendmail
-          sendmail(mail)
-        end
+      mail = yml[Rails.env.to_s]
+      ActionMailer::Base.delivery_method = mail['delivery_method']
+      ActionMailer::Base.default from: mail['default_from'], charset: mail['default_charset']
+      if  mail['delivery_method'] == :smtp
+        smtp(mail)
+      elsif mail['delivery_method'] == :sendmail
+        sendmail(mail)
+      end
     end
 
     def smtp(mail)
