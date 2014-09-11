@@ -2,7 +2,7 @@
 class ApplicationMailer
   class << self
    def set(option)
-      if option == :load_settings
+      return unless option.eql?(:load_settings)
         begin
           yml = YAML.load_file(File.join(Rails.root, 'config', 'mail.yml'))
           raise "empty" if yml.blank?
@@ -18,7 +18,6 @@ class ApplicationMailer
         elsif mail['delivery_method'] == :sendmail
           sendmail(mail)
         end
-      end
     end
 
     def smtp(mail)
