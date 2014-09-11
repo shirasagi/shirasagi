@@ -32,10 +32,11 @@ class Uploader::FilesController < ApplicationController
 
       actions = %w(edit show delete new_directory new_files)
       if actions.include?(params[:do])
-        render file: params[:do].to_sym
+        index = actions.index(prams[:do])
+        render actions[index].to_sym
       elsif @item.directory?
         set_items
-        render file: :index
+        render :index
       else
         raise "404"
       end
