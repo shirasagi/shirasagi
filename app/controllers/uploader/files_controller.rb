@@ -106,7 +106,7 @@ class Uploader::FilesController < ApplicationController
       if item.save
         render_create true, location: "#{uploader_files_path}/#{@item.filename}"
       else
-        item.errors.each do |n,e|
+        item.errors.each do |n, |
           @item.errors.add :path, e
         end
         @directory = params[:item][:directory]
@@ -120,7 +120,7 @@ class Uploader::FilesController < ApplicationController
         item = @model.new(path: path, binary: file.read)
 
         if !item.save
-          item.errors.each do |n,e|
+          item.errors.each do |n, e|
             @item.errors.add item.name, e
           end
         end

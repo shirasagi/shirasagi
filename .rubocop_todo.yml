@@ -307,7 +307,7 @@ Style/SpaceAfterColon:
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/SpaceAfterComma:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 6
 # Cop supports --auto-correct.

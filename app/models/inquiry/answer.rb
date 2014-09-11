@@ -22,7 +22,7 @@ class Inquiry::Answer
     def set_data(hash={})
       self.data = []
       hash.each do |key, value|
-        value = value.kind_of?(Hash) ? value.map {|k,v| v}.join("\n") : value.to_s
+        value = value.kind_of?(Hash) ? value.map {|k, v| v}.join("\n") : value.to_s
         self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value)
       end
     end
