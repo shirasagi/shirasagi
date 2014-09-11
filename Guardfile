@@ -2,7 +2,7 @@ group :red_green_refactor, halt_on_fail: false do
   # A sample Guardfile
   # More info at https://github.com/guard/guard#readme
 
-  guard :rubocop, cli: '--rails' do
+  guard :rubocop, cli: '--rails --format fuubar' do
     watch(/.+\.rb$/)
     watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
   end

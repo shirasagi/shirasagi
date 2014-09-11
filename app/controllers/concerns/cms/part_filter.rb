@@ -60,7 +60,7 @@ module Cms::PartFilter
       def destroy
         render_route
         render_destroy @resp.blank?, location: redirect_url
-    end
+      end
   end
 
   include Controller
