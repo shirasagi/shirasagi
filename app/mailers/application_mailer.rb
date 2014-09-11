@@ -19,7 +19,6 @@ class ApplicationMailer
           sendmail(mail)
         end
       end
-
     end
 
     def smtp(mail)
