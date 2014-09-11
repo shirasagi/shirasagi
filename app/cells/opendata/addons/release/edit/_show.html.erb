@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :released %></dt>
+  <dd><%= tryb{@item.send(:released).strftime("%Y/%m/%d %H:%M")} %></dd>
+</dl>

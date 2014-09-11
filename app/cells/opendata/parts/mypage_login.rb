@@ -1,8 +1,8 @@
 # coding: utf-8
-module Opendata::Parts::Mypage
+module Opendata::Parts::MypageLogin
   class EditCell < Cell::Rails
     include Cms::PartFilter::EditCell
-    model Opendata::Part::Mypage
+    model Opendata::Part::MypageLogin
   end
 
   class ViewCell < Cell::Rails

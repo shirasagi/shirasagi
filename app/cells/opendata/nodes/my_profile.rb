@@ -38,26 +38,8 @@ module Opendata::Nodes::MyProfile
       end
 
     public
-      def index
-      end
-
       def show
         render
-      end
-
-      def new
-        @item = @model.new
-        render
-      end
-
-      def create
-        @item = @model.new get_params
-
-        if @item.save
-          controller.redirect_to @cur_node.url, notice: t(:saved)
-        else
-          render file: :new
-        end
       end
 
       def edit

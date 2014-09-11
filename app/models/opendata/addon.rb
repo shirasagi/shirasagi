@@ -59,4 +59,33 @@ module Opendata::Addon
       permit_params app_ids: []
     end
   end
+
+  module Tag
+    extend SS::Addon
+    extend ActiveSupport::Concern
+
+    set_order 500
+
+    included do
+      field :tags, type: SS::Extensions::Words
+      permit_params :tags, keywords: []
+    end
+  end
+
+  module Release
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 501
+
+    included do
+      validate :validate_release_date
+    end
+
+    def validate_release_date
+      if public? && released.blank?
+        self.released = Time.now
+      end
+    end
+  end
 end

@@ -10,6 +10,8 @@ ja:
       opendata/area: 地域
       opendata/dataset: データセット
       opendata/app: アプリ
+      opendata/tag: タグ
+      opendata/release: 公開設定
 
   cms:
     nodes:
@@ -46,6 +48,8 @@ ja:
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
+      opendata/addon/tag:
+        tags: タグ
       opendata/data_group:
         name: グループ名
       opendata/dataset:
@@ -53,10 +57,10 @@ ja:
         site_id: サイト
         user_id: 作成者ユーザー
         group_id: 所属グループ
-        categry_ids: カテゴリー
+        categry_ids: 分野
         point: 評価
-        text: 説明
         license: ライセンス
+        related_url: 関連URL
       opendata/app:
         site_id: サイト
         name: アプリ名

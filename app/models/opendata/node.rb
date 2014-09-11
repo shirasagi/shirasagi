@@ -21,7 +21,25 @@ module Opendata::Node
   class Dataset
     include Cms::Node::Model
 
-    default_scope ->{ where(route: "opendata/data") }
+    default_scope ->{ where(route: "opendata/dataset") }
+  end
+
+  class DatasetCategory
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/dataset_category") }
+  end
+
+  class SearchGroup
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/search_group") }
+  end
+
+  class SearchDataset
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/search_dataset") }
   end
 
   class App

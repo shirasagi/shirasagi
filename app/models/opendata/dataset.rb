@@ -1,34 +1,65 @@
 # coding: utf-8
 class Opendata::Dataset
-  include SS::Document
-  include SS::Reference::User
-  include SS::Reference::Site
-  include Cms::Addon::OwnerPermission
+  include Cms::Page::Model
+  include Cms::Addon::Body
   include Opendata::Addon::Category
   include Opendata::Addon::DataGroup
   include Opendata::Addon::Area
+  include Opendata::Addon::Tag
+  include Opendata::Addon::Release
 
-  seqid :id
-  field :state, type: String, default: "public"
-  field :name, type: String
+  default_scope ->{ where(route: "opendata/dataset") }
+  set_permission_name "opendata_datasets"
+
   field :point, type: Integer, default: "0"
-  field :text, type: String
   field :license, type: String
-  field :url, type: String
+  field :related_url, type: String
   field :downloaded, type: Integer
 
-  embeds_ids :categories, class_name: "Cms::Node"
   embeds_ids :files, class_name: "Opendata::DatasetFile"
 
-  permit_params file_ids: []
-  permit_params :state, :name, :text, :license, :url
+  permit_params :license, :related_url, file_ids: []
 
-  validates :state, presence: true
-  validates :name, presence: true, length: { maximum: 80 }
+  before_save :seq_filename, if: ->{ basename.blank? }
+
+  public
+    def generate_file
+      true
+    end
+
+  private
+    def validate_filename
+      @basename.blank? ? nil : super
+    end
+
+    def seq_filename
+      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+    end
 
   class << self
-    def public
-      where(state: "public")
-    end
+    public
+      def total_field(key, cond = {})
+        collection.aggregate(
+          { "$match" => cond.merge(key => { "$exists" => 1 }) },
+          #{ "$project" => { _id: 0, "#{key}" => 1 } },
+          #{ "$unwind" => "$#{key}" },
+          { "$group" => { _id: "$#{key}", count: { "$sum" =>  1 } }},
+          { "$project" => { _id: 0, id: "$_id", count: 1 } },
+          { "$sort" => { count: -1 } },
+          { "$limit" => 5 }
+        )
+      end
+
+      def total_array_field(key, cond = {})
+        collection.aggregate(
+          { "$match" => cond.merge(key => { "$exists" => 1 }) },
+          { "$project" => { _id: 0, key => 1 } },
+          { "$unwind" => "$#{key}" },
+          { "$group" => { _id: "$#{key}", count: { "$sum" =>  1 } }},
+          { "$project" => { _id: 0, id: "$_id", count: 1 } },
+          { "$sort" => { count: -1 } },
+          { "$limit" => 5 }
+        )
+      end
   end
 end

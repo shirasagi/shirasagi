@@ -1,0 +1,16 @@
+<%= coffee do%>
+$ ->
+  $(".mod-opendata-release .datetime").datetimepicker
+    lang: "ja"
+    roundTime: 'ceil'
+    step: 15
+
+<% end %>
+
+<dl class="see mod-opendata-release">
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+
+  <dt><%= @model.t :released %><%= @model.tt :released %></dt>
+  <dd><%= f.text_field :released, class: "datetime", value: tryb{@item.released.strftime("%Y/%m/%d %H:%M")} %>
+</dl>

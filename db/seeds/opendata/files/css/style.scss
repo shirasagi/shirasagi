@@ -1,42 +1,19 @@
-@import "init";
-@import "part";
-
 // -----------------------------------------------------------------------------
 // element
 
 html {
-  height: 100%;
-  font-family: $font-base;
+  font-family: Meiryo;
 }
 body {
-  margin: 0 auto;
-  font-family: $font-base;
-  font-size: 100%;
-  color: $text;
+  margin: 10px;
+  font-family: Meiryo;
+  font-size: 75%;
+  color: #444;
 }
 h1, h2, h3, h4, h5 {
   margin: 0px;
   font-size: 100%;
   font-weight: normal;
-}
-a {
-  color: $link;
-  &:hover {
-    color: $hover;
-    text-decoration: none;
-  }
-  &:visited {
-    color: $visited;
-  }
-}
-rp, rt {
-  background: #fff;
-  color: $text;
-  font-size: $px12;
-  font-weight: normal;
-}
-rp {
-  margin: 0px;
 }
 img {
   vertical-align: middle;
@@ -45,42 +22,27 @@ img {
 // -----------------------------------------------------------------------------
 // layout
 
-#page {
-  margin: 0px;
-  font-size: 87.5%;
-}
-#head {
-  padding: 10px;
-  background-color: #ddd;
-  h1 {
-    color: #000;
-    font-size: 150%;
-  }
-}
-#mypage {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-}
-#mypage-head {
-  padding: 10px;
+.example, .tabs, .pages, .nodes {
+  margin: 5px 0px;
+  padding: 5px;
+  border: 1px solid #ddd;
   background-color: #eee;
 }
-#wrap {
-  margin: 10px;
-}
-section {
-  margin: 0px 0px 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-}
 
-.member-login {
+.opendata-mypage-login {
   display: table;
   margin: 20px;
   padding: 20px;
   background-color: #eee;
   input[type=submit] {
     margin: 10px 0px 0px;
+  }
+}
+dl.see {
+  margin: 0px 0px 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  dd {
+    margin: 0px 0px 0px 20px;
   }
 }

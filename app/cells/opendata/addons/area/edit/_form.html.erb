@@ -16,8 +16,7 @@ end
     <%= f.hidden_field "area_ids[]", value: "" %>
 
     <% categories.each do |cate| %>
-    <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;">
-      <%= cate_form cate %></div>
+    <span style="inline-block"><%= cate_form cate %></span>
     <% end %>
   </dd>
 </dl>

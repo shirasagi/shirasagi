@@ -23,9 +23,14 @@ def save_layout(data)
   item.update data.merge html: html
 end
 
-save_layout filename: "home.layout.html", name: "トップレイアウト"
-save_layout filename: "page.layout.html", name: "汎用レイアウト"
-save_layout filename: "mypage.layout.html", name: "マイページレイアウト"
+save_layout filename: "portal-top.layout.html", name: "ポータル：トップ"
+save_layout filename: "portal-info.layout.html", name: "ポータル：お知らせ"
+save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
+save_layout filename: "dataset-bunya.layout.html", name: "データ：分野、データ検索"
+save_layout filename: "dataset-group.layout.html", name: "データ：グループ検索"
+save_layout filename: "dataset-page.layout.html", name: "データ：詳細ページ"
+save_layout filename: "mypage-login.layout.html", name: "マイページ：トップ"
+save_layout filename: "mypage-general.layout.html", name: "マイページ：トップ汎用"
 
 array   = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/, '\1'), m] }
 layouts = Hash[*array.flatten]
@@ -42,14 +47,29 @@ def save_node(data)
   item.update data
 end
 
-save_node filename: "dataset", name: "データセット", route: "opendata/dataset", shortcut: "show"
+save_node filename: "css", name: "CSS", route: "uploader/file", shortcut: "show"
+
+save_node filename: "info", name: "お知らせ", route: "article/page", shortcut: "show",
+  layout_id: layouts["portal-info"].id
+save_node filename: "event", name: "イベント", route: "event/page", shortcut: "show",
+  layout_id: layouts["portal-info"].id
+
+save_node filename: "dataset", name: "データセット", route: "opendata/dataset", shortcut: "show",
+  layout_id: layouts["dataset-top"].id
+save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category", shortcut: "show",
+  layout_id: layouts["dataset-bunya"].id
+save_node filename: "dataset/search_group", name: "グループ検索", route: "opendata/search_group", shortcut: "show",
+  layout_id: layouts["dataset-group"].id
+save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset", shortcut: "show",
+  layout_id: layouts["dataset-bunya"].id
+
 save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "show"
 save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortcut: "show"
 save_node filename: "sparql", name: "SPARQL", route: "opendata/sparql", shortcut: "show"
 save_node filename: "api", name: "API", route: "opendata/api", shortcut: "show"
-save_node filename: "user", name: "ユーザーページ", route: "opendata/user", shortcut: "show"
 
-save_node filename: "mypage", name: "マイページ", route: "opendata/mypage"
+save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
+  layout_id: layouts["mypage-login"].id
 save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile"
 save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset"
 save_node filename: "mypage/app", name: "アプリ", route: "opendata/my_app"
@@ -76,12 +96,10 @@ save_node filename: "chiiki/awashi", name: "阿波市", route: "opendata/area", 
 save_node filename: "chiiki/mimashi", name: "美馬市", route: "opendata/area", order: 8
 save_node filename: "chiiki/miyoshishi", name: "三好市", route: "opendata/area", order: 9
 
-## layout
-%w[dataset app idea sparql api mypage].each do |name|
-  Cms::Node.where(site_id: @site._id, filename: name).update_all(layout_id: layouts["page"].id)
-end
+## set layout
 [/^mypage\//].each do |name|
-  Cms::Node.where(site_id: @site._id, filename: name).update_all(layout_id: layouts["mypage"].id)
+  Cms::Node.where(site_id: @site._id, filename: name).
+    update_all(layout_id: layouts["mypage-general"].id)
 end
 
 ## -------------------------------------
@@ -98,13 +116,26 @@ def save_part(data)
   item.update data
 end
 
-save_part filename: "head.part.html"  , name: "ヘッダー", route: "cms/free"
-save_part filename: "mypage.part.html" , name: "マイページ", route: "opendata/mypage"
-save_part filename: "dataset/pages.part.html" , name: "データセットリスト", route: "opendata/dataset"
-save_part filename: "app/pages.part.html" , name: "アプリリスト", route: "opendata/app"
-save_part filename: "idea/pages.part.html" , name: "アイデアリスト", route: "opendata/idea"
-
-save_part filename: "mypage/head.part.html" , name: "マイページメニュー", route: "cms/free"
+save_part filename: "tab.part.html" , name: "サイト切り替えタブ", route: "cms/free"
+save_part filename: "mypage-login.part.html" , name: "ログイン", route: "opendata/mypage_login"
+save_part filename: "crumbs.part.html" , name: "パンくず", route: "cms/crumb"
+save_part filename: "foot.part.html" , name: "フッター", route: "cms/free"
+save_part filename: "add.part.html" , name: "広告", route: "cms/free"
+save_part filename: "twitter.part.html" , name: "twitter", route: "cms/free"
+save_part filename: "facebook.part.html" , name: "facebook", route: "cms/free"
+save_part filename: "portal-kv.part.html" , name: "ポータル：キービジュアル", route: "cms/free"
+save_part filename: "portal-about.part.html" , name: "ポータル：Our Open Dateとは", route: "cms/free"
+save_part filename: "portal-tab.part.html" , name: "ポータル：新着タブ", route: "cms/tabs", conditions: %w[info event], limit: 5
+save_part filename: "portal-dataset.part.html" , name: "ポータル：オープンデータカタログ", route: "opendata/dataset"
+save_part filename: "portal-plan.part.html" , name: "ポータル：公開予定", route: "cms/free"
+save_part filename: "portal-fb.part.html" , name: "ポータル：facebook", route: "cms/free"
+save_part filename: "dataset-head.part.html" , name: "データ：ヘッダー", route: "cms/free"
+save_part filename: "dataset-kv.part.html" , name: "データ：キービジュアル", route: "cms/free"
+save_part filename: "dataset-group.part.html" , name: "データ：グループ", route: "opendata/group"
+save_part filename: "dataset-news.part.html" , name: "データ：新着順", route: "opendata/dataset"
+save_part filename: "dataset-popular.part.html" , name: "データ：人気順", route: "opendata/dataset"
+save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset"
+save_part filename: "mypage-head.part.html" , name: "マイページ：ヘッダー", route: "cms/free"
 
 ## -------------------------------------
 puts "pages:"
@@ -119,8 +150,16 @@ end
 
 body = "<p></p>"
 
-save_page filename: "index.html", name: "トップページ", layout_id: layouts["home"].id
-#save_page filename: "product/index2.html", name: "仕様について", layout_id: layouts["product/index"].id, html: body
+save_page filename: "index.html", name: "トップページ", layout_id: layouts["portal-top"].id
+
+## -------------------------------------
+puts "articles:"
+
+1.step(3) do |i|
+  save_page filename: "info/#{i}.html", name: "サンプル記事#{i}", html: body,
+    route: "article/page", layout_id: layouts["portal-info"].id,
+    category_ids: Category::Node::Base.site(@site).pluck(:_id).sample(2)
+end
 
 ## -------------------------------------
 puts "opendata data_groups:"
@@ -142,13 +181,15 @@ puts "opendata datasets:"
 
 def save_data(data)
   puts "  #{data[:name]}"
-  cond = { site_id: @site._id, name: data[:name] }
+  cond = { site_id: @site.id, filename: data[:filename] }
+
   item = Opendata::Dataset.find_or_create_by cond
-  item.update data
+  puts item.errors.full_messages unless item.update data
 end
 
 1.step(3) do |i|
-  save_data name: "データセット#{i}", text: "aaaaaa",
+  save_data filename: "dataset/#{i}.html", name: "データセット#{i}", html: body,
+    route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     data_group_ids: Opendata::DataGroup.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
@@ -165,9 +206,9 @@ def save_app(data)
 end
 
 1.step(3) do |i|
-  save_app name: "アプリ#{i}", text: "aaaaaa",
-    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1)
+#  save_app name: "アプリ#{i}", text: "aaaaaa",
+#    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
+#    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1)
 end
 
 ## -------------------------------------
@@ -181,8 +222,8 @@ def save_idea(data)
 end
 
 1.step(3) do |i|
-  save_idea name: "アイデア#{i}", text: "aaaaaa",
-    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
-    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1)
+#  save_idea name: "アイデア#{i}", text: "aaaaaa",
+#    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
+#    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
+#    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1)
 end

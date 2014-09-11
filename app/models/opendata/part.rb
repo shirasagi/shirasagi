@@ -1,9 +1,9 @@
 # coding: utf-8
 module Opendata::Part
-  class Mypage
+  class MypageLogin
     include Cms::Part::Model
 
-    default_scope ->{ where(route: "opendata/mypage") }
+    default_scope ->{ where(route: "opendata/mypage_login") }
   end
 
   class Dataset
@@ -11,6 +11,17 @@ module Opendata::Part
     include Cms::Addon::PageList
 
     default_scope ->{ where(route: "opendata/dataset") }
+
+    def condition_hash
+      {} # TODO:
+    end
+  end
+
+  class Group
+    include Cms::Part::Model
+    include Cms::Addon::NodeList
+
+    default_scope ->{ where(route: "opendata/group") }
 
     def condition_hash
       {} # TODO:

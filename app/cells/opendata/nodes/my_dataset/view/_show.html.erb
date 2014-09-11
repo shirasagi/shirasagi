@@ -1,13 +1,13 @@
 <dl class="see opendata-idea">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.name %></dd>
+  <dd><%= @item.send :name %></dd>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= @item.text %></dd>
+  <dt><%= @model.t :html %></dt>
+  <dd><%= @item.send :html %></dd>
 
   <dt><%= @model.t :license %></dt>
-  <dd><%= @item.license %></dd>
+  <dd><%= @item.send :license %></dd>
 
   <dt><%= @model.t :point %></dt>
-  <dd><%= @item.point %></dd>
+  <dd><%= @item.send :point %></dd>
 </dl>
