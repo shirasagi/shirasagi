@@ -1,7 +1,7 @@
 # coding: utf-8
 class Opendata::MainController < ApplicationController
   include Cms::BaseFilter
-  
+
   public
     def index
       type = @cur_node.route.sub(/^.*\//, '')

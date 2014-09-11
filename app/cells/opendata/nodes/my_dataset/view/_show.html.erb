@@ -1,12 +1,24 @@
-<dl class="see opendata-idea">
+<dl class="see opendata-dataset">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
-  <dt><%= @model.t :html %></dt>
-  <dd><%= @item.send :html %></dd>
+  <dt><%= @model.t :text %></dt>
+  <dd><%=br @item.send :text %></dd>
 
   <dt><%= @model.t :license %></dt>
   <dd><%= @item.send :license %></dd>
+
+  <dt><%= @model.t :related_url %></dt>
+  <dd><%= @item.send :related_url %></dd>
+
+  <dt><%= @model.t :category_ids %></dt>
+  <dd><%= @item.categories.map { |m| m.name }.join(", ") %></dd>
+
+  <dt><%= @model.t :area_ids %></dt>
+  <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
+
+  <dt><%= @model.t :tags %></dt>
+  <dd><%= @item.tags.join(", ") %></dd>
 
   <dt><%= @model.t :point %></dt>
   <dd><%= @item.send :point %></dd>

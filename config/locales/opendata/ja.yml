@@ -1,6 +1,7 @@
 ja:
   opendata:
     create: 新規登録
+    manage_resources: リソースを管理する
 
   modules:
     opendata: オープンデータ
@@ -12,6 +13,7 @@ ja:
       opendata/app: アプリ
       opendata/tag: タグ
       opendata/release: 公開設定
+      opendata/resource: リソース
 
   cms:
     nodes:
@@ -54,6 +56,7 @@ ja:
         name: グループ名
       opendata/dataset:
         name: データセット名
+        text: 説明
         site_id: サイト
         user_id: 作成者ユーザー
         group_id: 所属グループ
@@ -61,6 +64,14 @@ ja:
         point: 評価
         license: ライセンス
         related_url: 関連URL
+        category_ids: 分野
+        area_ids: 地域
+        resources: リソース
+      opendata/resource:
+        file_id: ファイル
+        name: リソース名
+        text: 説明
+        format: フォーマット
       opendata/app:
         site_id: サイト
         name: アプリ名

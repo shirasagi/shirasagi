@@ -18,12 +18,12 @@ module Opendata::Nodes::MyDataset
       end
 
       def set_item
-        @item = @model.site(@cur_site).find params[:id]
+        @item = @model.site(@cur_site).member(@cur_member).find params[:id]
         @item.attributes = fix_params
       end
 
       def fix_params
-        { site_id: @cur_site.id }
+        { site_id: @cur_site.id, member_id: @cur_member.id }
       end
 
       def pre_params
@@ -40,7 +40,7 @@ module Opendata::Nodes::MyDataset
 
     public
       def index
-        @items = Opendata::Dataset.site(@cur_site).
+        @items = Opendata::Dataset.site(@cur_site).member(@cur_member).
           order_by(updated: -1).
           page(params[:page]).
           per(20)

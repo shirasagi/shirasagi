@@ -18,7 +18,9 @@ SS::Application.routes.draw do
   content "opendata" do
     get "/" => "main#index", as: :main
     resources :data_groups, concerns: :deletion
-    resources :datasets, concerns: :deletion
+    resources :datasets, concerns: :deletion do
+      resources :resources, concerns: :deletion
+    end
     resources :apps, concerns: :deletion
     resources :ideas, concerns: :deletion
   end

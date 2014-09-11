@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%=br @item.send :text %></dd>
+
+  <dt><%= @model.t :format %></dt>
+  <dd><%= @item.send :format %></dd>
+</dl>

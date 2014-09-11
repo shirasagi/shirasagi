@@ -2,16 +2,16 @@
 class Opendata::AppsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  
+
   model Opendata::App
-  
+
   navi_view "opendata/main/navi"
-  
+
   private
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site }
     end
-    
+
   public
     def index
       @items = @model.site(@cur_site).

@@ -173,7 +173,7 @@ end
 
 1.step(3) do |i|
   save_data_group name: "データグループ#{i}",
-    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
+                  category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
 end
 
 ## -------------------------------------
@@ -188,7 +188,7 @@ def save_data(data)
 end
 
 1.step(3) do |i|
-  save_data filename: "dataset/#{i}.html", name: "データセット#{i}", html: body,
+  save_data filename: "dataset/#{i}.html", name: "データセット#{i}", text: "<s>s</s>",
     route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     data_group_ids: Opendata::DataGroup.site(@site).pluck(:_id).sample(1),

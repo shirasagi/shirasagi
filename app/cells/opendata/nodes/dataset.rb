@@ -44,16 +44,16 @@ module Opendata::Nodes::Dataset
         }
 
         @areas = []
-        Opendata::Dataset.total_array_field(:area_ids, cond).each do |m|
+        Opendata::Dataset.total_field(:area_ids, cond).each do |m|
           if item = Opendata::Node::Area.site(@cur_site).public.where(id: m["id"]).first
             item[:count] = m["count"]
             @areas << item
           end
         end
 
-        @tags = Opendata::Dataset.total_array_field(:tags, cond)
-        @formats = Opendata::Dataset.total_array_field("resources.format", cond)
-        @licenses = Opendata::Dataset.total_field("license", cond)
+        @tags = Opendata::Dataset.total_field(:tags, cond)
+        @formats = Opendata::Dataset.total_field("resources.format", cond)
+        @licenses = Opendata::Dataset.total_field(:license, cond)
 
         @items.empty? ? "" : render
       end
