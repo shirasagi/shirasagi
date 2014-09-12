@@ -2,8 +2,8 @@
 require 'spec_helper'
 
 describe "cms_sites" do
-  subject(:index_path) { "/.#{cms_site.host}/cms/site" }
-  subject(:edit_path) { "#{index_path}/edit" }
+  subject(:index_path) { cms_site_path(cms_site.host) }
+  subject(:edit_path) { edit_cms_site_path(cms_site.host) }
 
   it "without login" do
     visit index_path
