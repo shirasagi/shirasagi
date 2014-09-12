@@ -154,19 +154,21 @@ module Cms::PublicFilter
       raise e if Rails.application.config.consider_all_requests_local
       status = opts[:status].presence || 500
 
-      if @cur_site
-        dir = "#{@cur_site.path}"
-        ["#{status}.html", "500.html"].each do |name|
+      # create proc object
+      render_status = proc { |status, dir|
+        %W(#{status}.html 500.html).each do |name|
           file = "#{dir}/#{name}"
           render(status: status, file: file, layout: false) and return if Fs.exists?(file)
         end
+      }
+
+      if @cur_site
+        dir = "#{@cur_site.path}"
+        render_status.call(status, dir)
       end
 
       dir = Rails.public_path.to_s
-      ["#{status}.html", "500.html"].each do |name|
-        file = "#{dir}/#{name}"
-        render(status: status, file: file, layout: false) and return if Fs.exists?(file)
-      end
+      render_status.call(status, dir)
 
       render status: status, nothing: true
     end
