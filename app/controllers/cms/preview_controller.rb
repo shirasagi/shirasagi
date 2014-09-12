@@ -51,7 +51,7 @@ class Cms::PreviewController < ApplicationController
 
       css  = "position: fixed; top: 0px; left: 0px; padding: 5px;"
       css << "background-color: rgba(0, 150, 100, 0.6); color: #fff; font-weight: bold;"
-      mark = %Q(<div id="ss-preview" style="#{css}">Preview</div>)
+      mark = %(<div id="ss-preview" style="#{css}">Preview</div>)
       body.sub!("</body>", "#{mark}</body>")
 
       response.body = body

@@ -88,7 +88,7 @@ module Cms::ReleaseFilter::Layout
         body.sub!(/.*?<head>/m, meta) if meta
       end
 
-      body.sub!("</body>", %Q(<script> $(function(){ SS.load(); }) </script></body>))
+      body.sub!("</body>", %(<script> $(function(){ SS.load(); }) </script></body>))
 
       body
     end

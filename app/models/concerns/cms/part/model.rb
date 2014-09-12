@@ -31,7 +31,7 @@ module Cms::Part::Model
     end
 
     def render_html
-      %Q(<a class="ss-part" href="#{url}">#{name}</a>)
+      %(<a class="ss-part" href="#{url}">#{name}</a>)
     end
 
     def mobile_view_options

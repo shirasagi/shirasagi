@@ -110,7 +110,7 @@ Style/AsciiComments:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/BarePercentLiterals:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -257,7 +257,7 @@ Style/PercentLiteralDelimiters:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/PercentQLiterals:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 14
 # Cop supports --auto-correct.
@@ -390,7 +390,7 @@ Style/TrivialAccessors:
 # Offense count: 44
 # Cop supports --auto-correct.
 Style/UnneededPercentQ:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 8
 # Cop supports --auto-correct.
