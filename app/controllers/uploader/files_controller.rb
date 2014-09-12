@@ -32,7 +32,7 @@ class Uploader::FilesController < ApplicationController
 
       actions = %w(edit show delete new_directory new_files)
       if actions.include?(params[:do])
-        index = actions.index(prams[:do])
+        index = actions.index(params[:do])
         render actions[index].to_sym
       elsif @item.directory?
         set_items
