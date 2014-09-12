@@ -5,12 +5,12 @@ SS::Application.routes.draw do
     get :delete, :on => :member
   end
 
-  namespace "cms", path: ".:host" do
+  namespace "cms", path: ".:site" do
     get "/" => "main#index", as: :main
     get "preview/(*path)" => "preview#index", as: :preview
   end
 
-  namespace "cms", path: ".:host/cms" do
+  namespace "cms", path: ".:site/cms" do
     get "/" => "main#index"
     resource  :site, concerns: :deletion
     resources :roles, concerns: :deletion

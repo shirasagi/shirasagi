@@ -13,7 +13,7 @@ module Cms::BaseFilter
 
   private
     def set_site
-      @cur_site = SS::Site.find_by host: params[:host]
+      @cur_site = SS::Site.find_by host: params[:site]
       @crumbs << [@cur_site.name, cms_main_path]
     end
 
@@ -21,7 +21,7 @@ module Cms::BaseFilter
       return unless params[:cid]
       @cur_node = Cms::Node.site(@cur_site).find params[:cid]
       @cur_node.parents.each {|node| @crumbs << [node.name, node_nodes_path(node)] }
-      @crumbs << [@cur_node.name, node_nodes_path(@cur_node)]
+      @crumbs << [@cur_node.name, node_nodes_path(cid: @cur_node)]
     end
 
     def set_crumbs
