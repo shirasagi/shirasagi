@@ -1,6 +1,7 @@
 # coding: utf-8
 module Cms::PartFilter::ViewCell
   extend ActiveSupport::Concern
+  include SS::CellFilter
 
   included do
     helper ApplicationHelper
@@ -15,11 +16,7 @@ module Cms::PartFilter::ViewCell
     end
 
     def inherit_variables
-      controller.instance_variables.select {|m| m =~ /^@[a-z]/ }.each do |name|
-        next if instance_variable_defined?(name)
-        instance_variable_set name, controller.instance_variable_get(name)
-      end
-
+      super
       @request_url ||= params[:ref]
       @request_url.sub!(/\.kana\.html$/, ".html") if @request_url
     end
