@@ -7,7 +7,7 @@ module SS
           s = []
 
           if data.kind_of?(Array)
-            s << "<#{data.class}> {#{scan_array(data, lev)}]"
+            s << "<#{data.class}> [#{scan_array(data, lev)}]"
           elsif data.kind_of?(Hash)
             s << "<#{data.class}> {#{scan_hash(data, lev)}}"
           else

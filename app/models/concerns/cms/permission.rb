@@ -26,7 +26,7 @@ module Cms::Permission
       permit = "#{action}_#{permission_name}"
 
       role = user.cms_roles.where(site_id:  site_id).in(permissions: permit).first
-      role ? where({}) : where({_id: -1})
+      role ? where({}) : where({ _id: -1 })
     end
   end
 end

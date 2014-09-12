@@ -28,13 +28,11 @@ module SS::Role::Model
       end
 
       def permission_names
-        return @permission_names if @permission_names
-        @permission_names = _permission_names.sort
+        _permission_names.sort
       end
 
       def module_permission_names
-        return @module_permission_names if @module_permission_names
-        @module_permission_names = _module_permission_names.sort_by { |k, v| k }.map do |k, v|
+        _module_permission_names.sort_by { |k, v| k }.map do |k, v|
           [k, v.sort_by { |name| I18n.t("cms_role.#{name}") } ]
         end
       end
