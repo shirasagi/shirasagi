@@ -20,8 +20,8 @@ class Cms::UsersController < ApplicationController
   public
     def index
       raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
-      @items = @model.
-        order_by(name: 1).allow(:edit, @cur_user, site: @cur_site).site(@cur_site).
+      @items = @model.allow(:edit, @cur_user, site: @cur_site).site(@cur_site).
+        order_by(name: 1).
         page(params[:page]).per(50)
     end
 
