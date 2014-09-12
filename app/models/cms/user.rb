@@ -1,7 +1,9 @@
 # coding: utf-8
 class Cms::User
   include SS::User::Model
+  include Cms::Addon::Role
   include Cms::Addon::Permission
+
 
   set_permission_name "cms_users"
 

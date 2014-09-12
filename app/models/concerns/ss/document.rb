@@ -81,11 +81,6 @@ module SS::Document
     def lookup_addons
       ancestors.select { |x| x.respond_to?(:addon_name) }
     end
-
-    def inherit_addons(mod)
-      names = addons.map {|m| m.klass }
-      mod.addons.each {|addon| include addon.klass unless names.include?(addon.klass) }
-    end
   end
 
   public

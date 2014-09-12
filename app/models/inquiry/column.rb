@@ -2,6 +2,7 @@
 class Inquiry::Column
   include SS::Document
   include SS::Reference::Site
+  include Inquiry::Addon::InputSetting
 
   seqid :id
   field :node_id, type: Integer

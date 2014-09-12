@@ -8,6 +8,10 @@ module Inquiry::Node
 
   class Form
     include Cms::Node::Model
+    include Inquiry::Addon::Message
+    include Inquiry::Addon::Captcha
+    include Inquiry::Addon::Notice
+    include Inquiry::Addon::Reply
 
     default_scope ->{ where(route: "inquiry/form") }
   end

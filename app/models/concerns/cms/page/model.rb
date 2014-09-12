@@ -4,7 +4,6 @@ module Cms::Page::Model
   extend SS::Translation
   include Cms::Page::Feature
   include Cms::Reference::Layout
-  include Faq::Reference::Question
 
   included do
     store_in collection: "cms_pages"
@@ -29,10 +28,6 @@ module Cms::Page::Model
       instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
       item
     end
-
-    #def current?(path)
-    #  "/#{filename}" == "#{path.sub(/\.[^\.]+?$/, '.html')}" ? :current : nil
-    #end
 
     def generate_file
       return unless public?

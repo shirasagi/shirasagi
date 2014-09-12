@@ -8,6 +8,7 @@ module Cms::ReleaseFilter::Page
     def find_page(path)
       page = Cms::Page.site(@cur_site).find_by(filename: path) rescue nil
       return unless page
+      page = page.becomes_with_route
       @preview || page.public? ? page : nil
     end
 
