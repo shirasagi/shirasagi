@@ -18,7 +18,8 @@ class Event::PagesController < ApplicationController
     def index
       render inline: "", layout: true
 
-      #@items = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user).
+      #@items = @model.site(@cur_site).node(@cur_node).
+      #  allow(:read, @cur_user).
       #  order_by(updated: -1).
       #  page(params[:page]).per(50)
     end
