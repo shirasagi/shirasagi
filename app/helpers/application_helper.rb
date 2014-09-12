@@ -72,11 +72,11 @@ module ApplicationHelper
     list = msg.map {|d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>"}
 
     h  = []
-    h << %Q[<div class="tooltip">?]
-    h << %Q[<ul>]
+    h << %Q(<div class="tooltip">?)
+    h << %Q(<ul>)
     h << list
-    h << %Q[</ul>]
-    h << %Q[</div>]
+    h << %Q(</ul>)
+    h << %Q(</div>)
     h.join("\n").html_safe
   end
 end

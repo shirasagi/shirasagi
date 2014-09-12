@@ -29,7 +29,7 @@ namespace :cms do
     namespace :admin do
       task :create => :environment do
         site = SS::Site.find_by host: ENV["site"]
-        permissions = %w[
+        permissions = %w(
           edit_cms_sites
           edit_cms_users
           read_other_cms_nodes
@@ -47,7 +47,7 @@ namespace :cms do
           read_other_article_pages
           edit_other_article_pages
           delete_other_article_pages
-        ]
+        )
         data = { site_id: site.id, name: "admin",  permissions: permissions, permission_level: 3 }
 
         puts "Create role ..."

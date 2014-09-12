@@ -17,7 +17,7 @@ class Inquiry::Column
 
   public
     def state_options
-      [ %w[公開 public], %w[非公開 closed] ]
+      [ %w(公開 public), %w(非公開 closed) ]
     end
 
     def order

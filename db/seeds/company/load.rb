@@ -30,38 +30,38 @@ def save_layout(data)
 end
 
 save_layout filename: "company.layout.html", name: "会社案内",
-  css_paths: %w[ /css/style.css ],  js_paths: %w[ /js/common.js /js/selectivizr.js ],
-  part_paths: %w[ head.part.html breadcrumbs.part.html company/side-menu.part.html page-top.part.html foot.part.html ]
+  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  part_paths: %w(head.part.html breadcrumbs.part.html company/side-menu.part.html page-top.part.html foot.part.html)
 save_layout filename: "news.layout.html", name: "ニュース",
-  css_paths: %w[ /css/style.css ], js_paths: %w[ /js/common.js /js/selectivizr.js ],
-  part_paths: %w[ head.part.html breadcrumbs.part.html news/side-menu.part.html page-top.part.html, foot.part.html ]
+  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  part_paths: %w(head.part.html breadcrumbs.part.html news/side-menu.part.html page-top.part.html, foot.part.html)
 save_layout filename: "one.layout.html", name: "1カラム",
-  css_paths: %w[ /css/style.css ], js_paths: %w[ /js/common.js /js/selectivizr.js ],
-  part_paths: %w[ head.part.html breadcrumbs.part.html page-top.part.html foot.part.html ]
+  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  part_paths: %w(head.part.html breadcrumbs.part.html page-top.part.html foot.part.html)
 save_layout filename: "product-top.layout.html", name: "製品サービス:トップ",
-  css_paths: %w[ /css/style.css ], js_paths: %w[ /js/common.js /js/selectivizr.js ],
-  part_paths: %w[
+  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  part_paths: %w(
     head.part.html breadcrumbs.part.html product/solution/side-menu.part.html product/software/side-menu.part.html
     product/office/side-menu.part.html product/marketing/side-menu.part.html product/solution/solution.part.html
     product/software/software.part.html product/office/office.part.html product/marketing/marketing.part.html
-    page-top.part.html foot.part.html ]
+    page-top.part.html foot.part.html)
 save_layout filename: "product.layout.html", name: "製品サービス",
-  css_paths: %w[ /css/style.css ], js_paths: %w[ /js/common.js /js/selectivizr.js ],
-  part_paths: %w[
+  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  part_paths: %w(
     head.part.html breadcrumbs.part.html product/solution/side-menu.part.html product/software/side-menu.part.html
-    product/office/side-menu.part.html product/marketing/side-menu.part.html page-top.part.html foot.part.html ]
+    product/office/side-menu.part.html product/marketing/side-menu.part.html page-top.part.html foot.part.html)
 save_layout filename: "recruit.layout.html", name: "採用情報",
-  css_paths: %w[ /css/style.css ], js_paths: %w[ /js/common.js /js/selectivizr.js ],
-  part_paths: %w[ head.part.html breadcrumbs.part.html recruit/side-menu.part.html page-top.part.html foot.part.html ]
+  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  part_paths: %w(head.part.html breadcrumbs.part.html recruit/side-menu.part.html page-top.part.html foot.part.html)
 save_layout filename: "sitemap.layout.html", name: "サイトマップ",
-  css_paths: %w[ /css/style.css ], js_paths: %w[ /js/common.js /js/selectivizr.js ],
-  part_paths: %w[ head.part.html breadcrumbs.part.html page-top.part.html foot.part.html ]
+  css_paths: %w(/css/style.css), js_paths: %w(/js/common.js /js/selectivizr.js),
+  part_paths: %w(head.part.html breadcrumbs.part.html page-top.part.html foot.part.html)
 save_layout filename: "top.layout.html", name: "トップページ",
-  css_paths: %w[ /css/style.css ], js_paths: %w[ /js/camera.min.js /js/keyvisual.js /js/common.js /js/selectivizr.js ],
-  part_paths: %w[
+  css_paths: %w(/css/style.css), js_paths: %w(/js/camera.min.js /js/keyvisual.js /js/common.js /js/selectivizr.js),
+  part_paths: %w(
     head.part.html keyvisual.part.html news.part.html inquiry.part.html
     product/folder-list.part.html connection.part.html page-top.part.html
-    foot-top.part.html ]
+    foot-top.part.html)
 
 array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 layouts = Hash[*array.flatten]
@@ -104,11 +104,11 @@ save_part route: "cms/free", filename: "inquiry.part.html", name: "お問い合�
   mobile_view: "hide"
 save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル"
 save_part route: "cms/tabs", filename: "news.part.html", name: "ニュース",
-  new_days: 7, conditions: %w[ oshirase product recruit ]
+  new_days: 7, conditions: %w(oshirase product recruit)
 save_part route: "cms/free", filename: "page-top.part.html", name: "ページトップ"
 save_part route: "cms/page", filename: "news/side-menu.part.html", name: "サイドメニュー",
   new_days: 0, limit: 10, mobile_view: "hide",
-  conditions: %w[ product/solution product/software product/office product/marketing recruit ]
+  conditions: %w(product/solution product/software product/office product/marketing recruit)
 save_part route: "cms/page", filename: "company/side-menu.part.html", name: "サイドメニュー",
   sort: "order", new_days: 0, limit: 10
 save_part route: "cms/page", filename: "recruit/side-menu.part.html", name: "サイドメニュー",
@@ -165,10 +165,10 @@ save_node route: "uploader/file", name: "CSS", filename: "css", shortcut: "show"
 save_node route: "uploader/file", name: "画像", filename: "img", shortcut: "show"
 save_node route: "uploader/file", name: "JavaScript", filename: "js", shortcut: "show"
 save_node route: "article/page", name: "ニュース", filename: "news", shortcut: "show", layout_id: layouts["news"].id, new_days: 1,
-  conditions: %w[ product/solution product/software product/office product/marketing recruit ]
+  conditions: %w(product/solution product/software product/office product/marketing recruit)
 save_node route: "category/page", name: "お知らせ", filename: "oshirase", shortcut: "show", layout_id: layouts["news"].id
 save_node route: "category/page", name: "製品・サービス", filename: "product", shortcut: "show", layout_id: layouts["product"].id,
-  sort: "order", new_days: 1, conditions: %w[ product/solution product/software product/office product/marketing ]
+  sort: "order", new_days: 1, conditions: %w(product/solution product/software product/office product/marketing)
 save_node route: "category/page", name: "採用情報", filename: "recruit", shortcut: "show", layout_id: layouts["recruit"].id
 save_node route: "category/page", name: "マーケティング", filename: "product/marketing", order: 40, layout_id: layouts["product"].id
 save_node route: "category/page", name: "オフィス機器", filename: "product/office", order: 30, layout_id: layouts["product"].id

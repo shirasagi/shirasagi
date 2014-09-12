@@ -57,7 +57,7 @@ class Cms::Part
 
     def render_html
       h = super.sub("ss-part", "")
-      %Q[<div class="ss-part crumbs" data-href="#{url}"><span class="node">#{h}</span></div>]
+      %Q(<div class="ss-part crumbs" data-href="#{url}"><span class="node">#{h}</span></div>)
     end
   end
 

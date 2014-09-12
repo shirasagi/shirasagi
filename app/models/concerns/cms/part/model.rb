@@ -31,11 +31,11 @@ module Cms::Part::Model
     end
 
     def render_html
-      %Q[<a class="ss-part" href="#{url}">#{name}</a>]
+      %Q(<a class="ss-part" href="#{url}">#{name}</a>)
     end
 
     def mobile_view_options
-      [ %w[表示 show], %w[非表示 hide] ]
+      [%w(表示 show), %w(非表示 hide)]
     end
 
   private

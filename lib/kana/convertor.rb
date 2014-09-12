@@ -16,7 +16,7 @@ module Kana::Convertor
         return html unless @@mecab
 
         text = html.gsub(/[\r\n\t]/, " ")
-        tags = %w[head ruby script style]
+        tags = %w(head ruby script style)
         text.gsub!(/<!\[CDATA\[.*?\]\]>/m) {|m| mpad(m) }
         text.gsub!(/<!--.*?-->/m) {|m| mpad(m) }
         tags.each {|t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) {|m| mpad(m) } }

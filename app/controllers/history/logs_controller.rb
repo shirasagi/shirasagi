@@ -37,7 +37,7 @@ class History::LogsController < ApplicationController
 
       require "csv"
       csv = CSV.generate do |data|
-        data << %w[Date User Target Action URL]
+        data << %w(Date User Target Action URL)
         @model.where(cond).sort(created: 1).each do |item|
           line = []
           line << item.created.strftime("%Y-%m-%d %H:%m")

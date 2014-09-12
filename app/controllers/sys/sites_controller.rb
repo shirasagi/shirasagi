@@ -24,7 +24,7 @@ class Sys::SitesController < ApplicationController
       raise "403" unless @item.allowed?(:edit, @cur_user)
       result = @item.save
       if result
-        permissions = %w[
+        permissions = %w(
           edit_cms_sites
           edit_cms_users
           read_other_cms_nodes
@@ -42,7 +42,7 @@ class Sys::SitesController < ApplicationController
           read_other_article_pages
           edit_other_article_pages
           delete_other_article_pages
-        ]
+        )
 
         cond = {
           site_id: @item.id,

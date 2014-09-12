@@ -40,14 +40,14 @@ module Mobile::PublicFilter
 
       # doctype
       head  = []
-      head << %Q[<?xml version="1.0" encoding="UTF-8"?>]
-      head << %Q[<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">]
-      head << %Q[<html xmlns="http://www.w3.org/1999/xhtml">]
-      head << %Q[<head>]
-      head << %Q[<title>#{body.match(/<title>(.*?)<\/title>/)[1]}</title>]
-      head << %Q[<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />]
-      head << %Q[<link rel="stylesheet" href="#{css}" />]
-      head << %Q[</head>]
+      head << %Q(<?xml version="1.0" encoding="UTF-8"?>)
+      head << %Q(<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">)
+      head << %Q(<html xmlns="http://www.w3.org/1999/xhtml">)
+      head << %Q(<head>)
+      head << %Q(<title>#{body.match(/<title>(.*?)<\/title>/)[1]}</title>)
+      head << %Q(<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />)
+      head << %Q(<link rel="stylesheet" href="#{css}" />)
+      head << %Q(</head>)
 
       body.sub!(/.*?<\/head>/m, head.join("\n"))
 

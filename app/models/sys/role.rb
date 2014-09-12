@@ -19,7 +19,7 @@ class Sys::Role
   validates :permissions, presence: true
 
   #def permission_level_options
-  #  [%w[1 1], %w[2 2], %w[3 3]]
+  #  [%w(1 1), %w(2 2), %w(3 3)]
   #end
 
   class << self

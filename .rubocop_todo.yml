@@ -251,7 +251,7 @@ Style/NonNilCheck:
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
 Style/PercentLiteralDelimiters:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 60
 # Cop supports --auto-correct.
