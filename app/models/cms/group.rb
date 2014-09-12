@@ -1,7 +1,7 @@
 # coding: utf-8
 class Cms::Group
   include SS::Group::Model
-  include Cms::Addon::Permission
+  include Cms::Permission
 
   set_permission_name "cms_users", :edit
 

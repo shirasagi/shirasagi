@@ -3,7 +3,7 @@ module Cms::Addon
   module OwnerPermission
     extend ActiveSupport::Concern
     extend SS::Addon
-    include Cms::Addon::Permission
+    include Cms::Permission
 
     set_order 600
 

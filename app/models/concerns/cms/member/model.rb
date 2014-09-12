@@ -4,7 +4,7 @@ module Cms::Member::Model
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Addon::Permission
+  include Cms::Permission
 
   attr_accessor :in_password
 

@@ -2,7 +2,7 @@
 class Cms::User
   include SS::User::Model
   include Cms::Addon::Role
-  include Cms::Addon::Permission
+  include Cms::Permission
 
   set_permission_name "cms_users", :edit
 

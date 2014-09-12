@@ -79,7 +79,6 @@ ja:
     addons:
       cms/role: ロール
       cms/owner_permission: 権限
-      cms/permission: 権限
       cms/meta: メタ情報
       cms/html: HTML
       cms/body: 本文

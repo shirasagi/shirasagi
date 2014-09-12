@@ -1,9 +1,9 @@
 # coding: utf-8
 class Sys::Role
   include SS::Role::Model
-  include Sys::Addon::Permission
+  include Sys::Permission
 
-  set_permission_name "sys_users"
+  set_permission_name "sys_users", :edit
 
   field :permissions, type: SS::Extensions::Array
 

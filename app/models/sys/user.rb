@@ -2,7 +2,7 @@
 class Sys::User
   include SS::User::Model
   include Sys::Addon::Role
-  include Sys::Addon::Permission
+  include Sys::Permission
 
-  set_permission_name "sys_users"
+  set_permission_name "sys_users", :edit
 end
