@@ -2,6 +2,7 @@
 class Inquiry::Column
   include SS::Document
   include SS::Reference::Site
+  include Cms::Addon::Permission
   include Inquiry::Addon::InputSetting
 
   seqid :id
@@ -12,6 +13,7 @@ class Inquiry::Column
   field :order, type: Integer, default: 0
 
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
+
   permit_params :id, :node_id, :state, :name, :html, :order
 
   validates :node_id, :state, :name, presence: true

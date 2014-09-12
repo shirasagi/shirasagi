@@ -13,7 +13,7 @@ FactoryGirl.define do
 
   factory :cms_user_role, class: Cms::Role do
     name "cms_user_role"
-    permissions Cms::Role.permission_names.map { |k, v| v }
+    permissions Cms::Role.permission_names
     site_id 1
   end
 end

@@ -20,5 +20,4 @@ class Cms::SearchCategoriesController < ApplicationController
 
       render layout: !request.xhr?
     end
-
 end

@@ -8,6 +8,21 @@ module Cms::Addon
       class_variable_set(:@@_permission_action, nil)
     end
 
+    def allowed?(action, user, opts = {})
+      site = opts[:site] || @cur_site
+      node = opts[:node] || @cur_node
+
+      action = self.class.class_variable_get(:@@_permission_action) || action
+      permit = "#{action}_#{self.class.permission_name}"
+
+      if !Cms::Role.permission_names.include?(permit)
+        return node.allowed?(action, user, opts) if node
+        return false
+      end
+
+      role = user.cms_roles.site(site).in(permissions: permit).first
+    end
+
     module ClassMethods
       def set_permission_name(name, fix_action = nil)
          class_variable_set(:@@_permission_name, name)
@@ -15,11 +30,7 @@ module Cms::Addon
       end
 
       def permission_name
-        if name = class_variable_get(:@@_permission_name)
-          name
-        else
-          self.to_s.tableize.gsub(/\//, "_")
-        end
+        class_variable_get(:@@_permission_name) || self.to_s.tableize.gsub(/\//, "_")
       end
 
       def allowed?(action, user, opts = {})
@@ -29,29 +40,12 @@ module Cms::Addon
       def allow(action, user, opts = {})
         site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
-        if fix_action = class_variable_get(:@@_permission_action)
-          permit = "#{fix_action}_#{permission_name}"
-        else
-          permit = "#{action}_#{permission_name}"
-        end
+        action = class_variable_get(:@@_permission_action) || action
+        permit = "#{action}_#{permission_name}"
 
         role = user.cms_roles.where(site_id:  site_id).in(permissions: permit).first
         role ? where({}) : where({_id: -1})
       end
-    end
-
-    def allowed?(action, user, opts = {})
-      site = opts[:site] ? opts[:site] : @cur_site
-      node = opts[:node] ? opts[:node] : @cur_node
-
-      if fix_action = self.class.class_variable_get(:@@_permission_action)
-        permit = "#{fix_action}_#{self.class.permission_name}"
-      else
-        permit = "#{action}_#{self.class.permission_name}"
-      end
-
-      role = user.cms_roles.site(site).in(permissions: permit).first
-      role ? true : false
     end
   end
 end

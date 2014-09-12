@@ -24,7 +24,7 @@ class Sys::Role
 
   class << self
     def permission(name)
-      self.permission_names << [name, name.to_s]
+      self.permission_names << name.to_s
     end
   end
 end

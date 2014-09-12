@@ -10,6 +10,7 @@ module Cms::Member::Model
 
   included do
     store_in collection: "cms_members"
+
     index({ email: 1 }, { unique: true, sparse: true })
 
     set_permission_name :cms_users, :edit

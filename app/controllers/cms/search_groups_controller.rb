@@ -20,5 +20,4 @@ class Cms::SearchGroupsController < ApplicationController
 
       render layout: !request.xhr?
     end
-
 end

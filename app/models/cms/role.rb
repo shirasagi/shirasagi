@@ -5,7 +5,7 @@ class Cms::Role
   include SS::Reference::Site
   include Cms::Addon::Permission
 
-  set_permission_name "cms_users"
+  set_permission_name "cms_users", :edit
 
   cattr_accessor(:permission_names) { [] }
 
@@ -13,11 +13,11 @@ class Cms::Role
   field :name, type: String
   field :permission_level, type: Integer, default: 1
   field :permissions, type: SS::Extensions::Array
+
   permit_params :name, :permission_level, permissions: []
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :permission_level, presence: true
-  #validates :permissions, presence: true
 
   public
     def permission_level_options
@@ -32,7 +32,7 @@ class Cms::Role
   class << self
     public
       def permission(name)
-        self.permission_names << [name, name.to_s]
+        self.permission_names << name.to_s
       end
 
       def allow(action, user, opts = {})
