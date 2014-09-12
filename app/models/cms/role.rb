@@ -1,22 +1,15 @@
 # coding: utf-8
 class Cms::Role
-  include SS::Document
-  include SS::Reference::User
+  include SS::Role::Model
   include SS::Reference::Site
   include Cms::Addon::Permission
 
   set_permission_name "cms_users", :edit
 
-  cattr_accessor(:permission_names) { [] }
-
-  seqid :id
-  field :name, type: String
   field :permission_level, type: Integer, default: 1
-  field :permissions, type: SS::Extensions::Array
 
-  permit_params :name, :permission_level, permissions: []
+  permit_params :permission_level
 
-  validates :name, presence: true, length: { maximum: 80 }
   validates :permission_level, presence: true
 
   public
@@ -31,10 +24,6 @@ class Cms::Role
 
   class << self
     public
-      def permission(name)
-        self.permission_names << name.to_s
-      end
-
       def allow(action, user, opts = {})
         return where({}) if Sys::User.allowed?(action, user)
         super
