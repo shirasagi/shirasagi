@@ -6,13 +6,13 @@
     <%= link_to :"mongoid.models.opendata/data_group", opendata_data_groups_path, class: "icon-node" %>
 
     <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
-    <%= link_to item.name, opendata_datasets_path(item), class: "icon-node" %>
+    <%= link_to item.name, opendata_datasets_path(item, @cur_node), class: "icon-node" %>
     <% end %>
     <% Opendata::Node::App.site(@cur_site).each do |item| %>
-    <%= link_to item.name, opendata_apps_path(item), class: "icon-node" %>
+    <%= link_to item.name, opendata_apps_path(item, @cur_node), class: "icon-node" %>
     <% end %>
     <% Opendata::Node::Idea.site(@cur_site).each do |item| %>
-    <%= link_to item.name, opendata_ideas_path(item), class: "icon-node" %>
+    <%= link_to item.name, opendata_ideas_path(item, @cur_node), class: "icon-node" %>
     <% end %>
   </div>
 </nav>

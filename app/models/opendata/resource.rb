@@ -1,6 +1,7 @@
 # coding: utf-8
 class Opendata::Resource
   include SS::Document
+  include SS::Relation::File
 
   seqid :id
   #field :file_id, type:
@@ -9,6 +10,7 @@ class Opendata::Resource
   field :format, type: String
 
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
+  belongs_to_file :file, class: "Opendata::ResourceFile"
 
   permit_params :name, :text, :format
 
