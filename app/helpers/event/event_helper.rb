@@ -20,9 +20,14 @@ module Event::EventHelper
   end
 
   def within_one_year?(date)
-    start_date = Date.new(Date.today.year - 1, Date.today.month, 1)
-    close_date = Date.new(Date.today.year + 1, Date.today.month + 1, 1)
-    date >= start_date && date < close_date
+    # get current date and change day to 1
+    current = Date.current.change(day: 1)
+
+    # manipulate year from current date
+    start_date = current.advance(years: -1)
+    close_date = current.advance(years:  1)
+
+    date.between?(start_date, close_date)
   end
 
   def link_to_prev_month
