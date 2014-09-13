@@ -3,6 +3,11 @@ require 'timecop'
 
 include Event::EventHelper
 
+def date_when(date_opts = {})
+  return Date.current if date_opts.empty?
+  Date.current.change(date_opts)
+end
+
 describe Event::EventHelper do
 
   before { Timecop.freeze(date_when(year: 2014, month: 9, day: 14)) }
