@@ -25,7 +25,7 @@ module Event::EventHelper
 
     # manipulate year from current date
     start_date = current.advance(years: -1)
-    close_date = current.advance(years:  1)
+    close_date = current.advance(years:  1, month: 1)
 
     date.between?(start_date, close_date)
   end
