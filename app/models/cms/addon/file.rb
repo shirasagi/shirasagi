@@ -17,7 +17,7 @@ module Cms::Addon
     def save_files
       return unless file_ids_changed?
 
-      add_ids = file_ids - file_ids_was
+      add_ids = file_ids - file_ids_was.to_a
 
       ids = []
       files.each do |file|
@@ -33,7 +33,7 @@ module Cms::Addon
       end
       self.file_ids = ids
 
-      del_ids = file_ids_was - ids
+      del_ids = file_ids_was.to_a - ids
       del_ids.each do |id|
         file = SS::File.where(id: id).first
         file.destroy if file
