@@ -20,6 +20,7 @@ module Cms::Node::Model
 
     scope :root, ->{ where(depth: 1) }
     #scope :public, ->{ where(state: "public") }
+    scope :in_path, ->(path) { where :filename.in => Cms::Node.split_path(path) }
 
     seqid :id
     field :state, type: String, default: "public"
@@ -111,11 +112,8 @@ module Cms::Node::Model
       return @parent unless @parent.nil?
       return @parent = false if depth == 1 || !filename.to_s.index("/")
 
-      dirs  = []
-      names = File.dirname(filename).split('/')
-      names.each {|name| dirs << (dirs.size == 0 ? name : "#{dirs.last}/#{name}") }
-
-      @parent = Cms::Node.where(site_id: site_id, :filename.in => dirs).sort(depth: -1).first
+      path = File.dirname(filename)
+      @parent = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
     end
 
     def nodes

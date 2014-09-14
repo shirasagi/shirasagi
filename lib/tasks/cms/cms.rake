@@ -17,7 +17,12 @@ namespace :cms do
     end
 
     task :generate => :environment do
-      Cms::Task::PagesController.new.generate
+      cond = ENV["site"] ? { host: ENV["site"] } : {}
+      SS::Site.where(cond).each do |site|
+        puts site.name
+        node = Cms::Node.site(site).where(filename: ENV["node"]).first
+        Cms::Task.run "cms:page:generate", site: site, node: node
+      end
     end
 
     task :remove => :environment do

@@ -88,6 +88,11 @@ module Cms::Page::Feature
       state == "public"
     end
 
+    def public_node?
+      return true unless dirname
+      Cms::Node.where(site_id: site_id).in_path(dirname).ne(state: "public").size == 0
+    end
+
     def date
       released || updated || created
     end
@@ -97,10 +102,8 @@ module Cms::Page::Feature
       return @node if @node
       return nil if depth.to_i <= 1
 
-      dirs  = []
-      names = File.dirname(filename).split('/')
-      names.each {|name| dirs << (dirs.size == 0 ? name : "#{dirs.last}/#{name}") }
-      @node = Cms::Node.where(site_id: site_id, :filename.in => dirs).sort(depth: -1).first
+      path = File.dirname(filename)
+      @node = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
     end
 
     def state_options

@@ -76,6 +76,10 @@ ja:
         name: グループ名
       ss/reference/site:
         site_id: サイト
+      ss/task/model:
+        name: タスク名
+        started: 開始日時
+        closed: 終了日時
 
   tooltip:
     ss/document:
