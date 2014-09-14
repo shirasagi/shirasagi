@@ -51,6 +51,7 @@ group :development, :test do
   gem 'guard-rubocop', '~> 1.1.0'
   gem 'guard-rspec', '~> 4.3.1'
   gem 'fuubar'
+  gem 'timecop'
 end
 
 gem 'brakeman', require: false, group: :development
