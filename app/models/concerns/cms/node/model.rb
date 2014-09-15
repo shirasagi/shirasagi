@@ -1,6 +1,7 @@
 # coding: utf-8
 module Cms::Node::Model
   extend ActiveSupport::Concern
+  extend SS::Translation
   include Cms::Content
   include Cms::Reference::Layout
   include Cms::Reference::StCategory
