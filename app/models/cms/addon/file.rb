@@ -15,7 +15,7 @@ module Cms::Addon
     end
 
     def save_files
-      return unless file_ids_changed?
+      return true unless file_ids_changed?
 
       add_ids = file_ids - file_ids_was.to_a
 

@@ -2,7 +2,7 @@
 module Cms::Layout::Model
   extend ActiveSupport::Concern
   extend SS::Translation
-  include Cms::Page::Feature
+  include Cms::Content
   include Cms::Addon::Html
 
   included do

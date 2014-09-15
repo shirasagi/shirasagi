@@ -1,6 +1,7 @@
 # coding: utf-8
-module Cms::Page::Feature
+module Cms::Content
   extend ActiveSupport::Concern
+  extend SS::Translation
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
@@ -9,20 +10,19 @@ module Cms::Page::Feature
   attr_accessor :cur_node, :basename
 
   included do
-    index({ site_id: 1, filename: 1 }, { unique: true })
-
-    #scope :public, ->{ where(state: "public") }
+    scope :public, ->{ where state: "public" }
+    scope :node, ->(node) {
+      node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+    }
 
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String
     field :filename, type: String
-    field :depth, type: Integer, metadata: { form: :none }
-    field :released, type: DateTime
+    field :depth, type: Integer
     field :order, type: Integer, default: 0
-    embeds_ids :categories, class_name: "Cms::Node"
 
-    permit_params :state, :name, :filename, :basename, :order, category_ids: []
+    permit_params :state, :name, :filename, :basename, :order, :route
 
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }
@@ -34,34 +34,32 @@ module Cms::Page::Feature
   end
 
   module ClassMethods
-    def public
-      where(state: "public")
-    end
-
-    def node(node)
-      node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
-    end
-
-    def search(params)
-      criteria = self.where({})
-      return criteria if params.blank?
-
-      if params[:name].present?
-        words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
-        criteria = criteria.all_in name: words
+    public
+      def split_path(path)
+        last = nil
+        dirs = path.split('/').map {|n| last = last ? "#{last}/#{n}" : n }
       end
-      criteria
-    end
+
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        if params[:name].present?
+          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
+          criteria = criteria.all_in name: words
+        end
+        criteria
+      end
   end
 
   public
+    def basename
+      @basename.presence || filename.to_s.sub(/.*\//, "").presence
+    end
+
     def dirname(basename = nil)
       dir = filename.index("/") ? filename.to_s.sub(/\/[^\/]+$/, "").presence : nil
       basename ? (dir ? "#{dir}/" : "") + basename : dir
-    end
-
-    def basename
-      @basename.presence || filename.to_s.sub(/.*\//, "").presence
     end
 
     def path
@@ -77,24 +75,24 @@ module Cms::Page::Feature
     end
 
     def json_path
-      "#{site.path}/" + filename.sub(/\.html/, ".json")
+      "#{site.path}/" + filename.sub(/(\/|\.html)?$/, ".json")
     end
 
     def json_url
-      site.url + filename.sub(/\.html/, ".json")
+      site.url + filename.sub(/(\/|\.html)?$/, ".json")
     end
 
     def public?
       state == "public"
     end
 
-    def public_node?
-      return true unless dirname
-      Cms::Node.where(site_id: site_id).in_path(dirname).ne(state: "public").size == 0
+    def order
+      value = self[:order].to_i
+      value < 0 ? 0 : value
     end
 
-    def date
-      released || updated || created
+    def state_options
+      [%w(公開 public), %w(非公開 closed)]
     end
 
     def node
@@ -106,26 +104,32 @@ module Cms::Page::Feature
       @node = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
     end
 
-    def state_options
-      [%w(公開 public), %w(非公開 closed)]
-    end
+    def becomes_with_route(name = nil)
+      name ||= route
+      klass = name.camelize.constantize rescue nil
+      return self unless klass
 
-    def order
-      value = self[:order].to_i
-      value < 0 ? 0 : value
+      item = klass.new
+      item.instance_variable_set(:@new_record, nil) unless new_record?
+      instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
+      item
     end
 
   private
-    def fix_extname
-      ".html"
-    end
-
     def set_filename
       if @cur_node
         self.filename = "#{@cur_node.filename}/#{basename}"
       elsif @basename
         self.filename = basename
       end
+    end
+
+    def set_depth
+      self.depth = filename.scan("/").size + 1
+    end
+
+    def fix_extname
+      nil
     end
 
     def validate_filename
@@ -136,11 +140,8 @@ module Cms::Page::Feature
         return errors.add :filename, :empty if filename.blank?
         errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
       end
-      self.filename = filename.sub(/\..*$/, "") + fix_extname if basename.present?
-      @basename = filename.sub(/.*\//, "") if @basename
-    end
 
-    def set_depth
-      self.depth = filename.scan("/").size + 1
+      self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
+      @basename = filename.sub(/.*\//, "") if @basename
     end
 end

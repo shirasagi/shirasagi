@@ -8,6 +8,8 @@ SS::Application.routes.draw do
   namespace "cms", path: ".:site" do
     get "/" => "main#index", as: :main
     get "preview/(*path)" => "preview#index", as: :preview
+    get "generate_pages" => "generate_pages#index"
+    post "generate_pages" => "generate_pages#run"
   end
 
   namespace "cms", path: ".:site/cms" do
@@ -40,6 +42,8 @@ SS::Application.routes.draw do
 
   content "cms", name: "node", module: "cms/node" do
     get "/" => "main#index", as: :main
+    get "generate_pages" => "generate_pages#index"
+    post "generate_pages" => "generate_pages#run"
     resource :conf, concerns: :deletion
     resources :nodes, concerns: :deletion
     resources :pages, concerns: :deletion

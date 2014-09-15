@@ -1,0 +1,18 @@
+run cms:page:generate..
+write /index.html
+write /product/index3.html
+write /docs/1.html
+write /docs/9.html
+write /product/index2.html
+write /product/word/page1.html
+write /product/word/page2.html
+write /product/calc/page3.html
+write /product/calc/page4.html
+write /docs/2.html
+write /docs/3.html
+write /docs/4.html
+write /docs/5.html
+write /docs/6.html
+write /docs/7.html
+write /docs/8.html
+end.

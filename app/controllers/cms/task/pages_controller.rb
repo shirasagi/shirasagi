@@ -3,19 +3,28 @@ class Cms::Task::PagesController < ApplicationController
   include Cms::ReleaseFilter::Page
 
   public
-    def generate(params)
+    def generate(opts)
       return puts "config.cms.serve_static_pages is false" unless SS.config.cms.serve_static_pages
 
-      @cur_site = params[:site]
-      @cur_node = params[:node]
+      SS::Site.where(opts[:site] ? { host: opts[:site] } : {}).each do |site|
+        @cur_site = site
+        task_cond = { name: "cms:page:generate", site_id: @cur_site.id, node_id: nil }
+        page_cond = {}
 
-      cond = {}
-      cond = { filename: /^#{@cur_node.filename}\// } if @cur_node
+        if opts[:node]
+          @cur_node = Cms::Node.site(site).find_by filename: opts[:node]
+          task_cond[:node_id]  = @cur_node.id
+          page_cond[:filename] = /^#{@cur_node.filename}\//
+        end
 
-      Cms::Page.site(@cur_site).where(cond).public.each do |page|
-        next unless page.public_node?
-        puts "write  #{page.url}"
-        generate_page page
+        @task = Cms::Task.find_or_create_by task_cond
+        @task.run do
+          Cms::Page.site(@cur_site).where(page_cond).public.each do |page|
+            next unless page.public_node?
+            @task.puts_log "#{page.url}"
+            generate_page page
+          end
+        end
       end
     end
 

@@ -5,6 +5,8 @@ class Cms::Node
 
   include Cms::Node::Model
 
+  index({ site_id: 1, filename: 1 }, { unique: true })
+
   class Base
     include Cms::Node::Model
 
@@ -29,13 +31,6 @@ class Cms::Node
     @@plugins = []
 
     public
-      def split_path(path)
-        dirs  = []
-        names = path.sub(/\/[^\/]+$/, "").split('/')
-        names.each {|name| dirs << (dirs.size == 0 ? name : "#{dirs.last}/#{name}") }
-        dirs
-      end
-
       def plugin(path)
         name  = I18n.t("modules.#{path.sub(/\/.*/, '')}", default: path.titleize)
         name << "/" + I18n.t("cms.nodes.#{path}", default: path.titleize)

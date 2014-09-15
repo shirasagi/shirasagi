@@ -2,7 +2,7 @@
 module Cms::Part::Model
   extend ActiveSupport::Concern
   extend SS::Translation
-  include Cms::Page::Feature
+  include Cms::Content
 
   included do |mod|
     store_in collection: "cms_parts"
@@ -21,13 +21,7 @@ module Cms::Part::Model
     end
 
     def becomes_with_route
-      klass = route.sub("/", "/part/").camelize.constantize rescue nil
-      return self unless klass
-
-      item = klass.new
-      item.instance_variable_set(:@new_record, nil) unless new_record?
-      instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
-      item
+      super route.sub("/", "/part/")
     end
 
     def render_html

@@ -114,7 +114,7 @@ module Cms::PublicFilter
     end
 
     def find_node(path)
-      node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
+      node = Cms::Node.site(@cur_site).in_path(path.sub(/\/[^\/]+$/, "")).sort(depth: -1).first
       return unless node
       @preview || node.public? ? node : nil
     end

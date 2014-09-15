@@ -1,7 +1,6 @@
 ja:
   article:
     page: 記事ページ
-    generate: 再構築
 
   modules:
     article: 記事

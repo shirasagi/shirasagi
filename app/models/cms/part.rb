@@ -5,6 +5,8 @@ class Cms::Part
 
   include Cms::Part::Model
 
+  index({ site_id: 1, filename: 1 }, { unique: true })
+
   class Base
     include Cms::Part::Model
 
