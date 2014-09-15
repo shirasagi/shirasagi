@@ -15,12 +15,6 @@ module Cms::PartFilter::ViewCell
       prepend_view_path "app/cells/#{controller_path}"
     end
 
-    def inherit_variables
-      super
-      @request_url ||= params[:ref]
-      @request_url.sub!(/\.kana\.html$/, ".html") if @request_url
-    end
-
     def set_item
       @cur_part = @cur_part.becomes_with_route
     end

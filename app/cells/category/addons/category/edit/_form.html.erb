@@ -17,8 +17,7 @@ def cate_form(item)
   h << f.check_box("category_ids[]", {}, item._id)
   h << %(#{item.name}</label>)
 
-  children = Category::Node::Base.site(@cur_site).
-    where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+  children = Category::Node::Base.site(@cur_site).node(item)
 
   if children.size > 0
     cc = children.map { |c| c.children.size }.max != 0

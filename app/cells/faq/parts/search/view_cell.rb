@@ -6,7 +6,7 @@ module Faq::Parts::Search
 
     public
       def index
-        @search_node = @cur_part.search_node.present? ?  @cur_part.search_node : @cur_part.node
+        @search_node = @cur_part.search_node.present? ?  @cur_part.search_node : @cur_part.parent
         @search_node.blank? ? "" : render
       end
   end

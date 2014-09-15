@@ -24,10 +24,6 @@ module Cms::Part::Model
       super route.sub("/", "/part/")
     end
 
-    def render_html
-      %(<a class="ss-part" href="#{url}">#{name}</a>)
-    end
-
     def mobile_view_options
       [%w(表示 show), %w(非表示 hide)]
     end

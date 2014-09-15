@@ -21,7 +21,7 @@ class Cms::Task::PagesController < ApplicationController
         @task.run do
           Cms::Page.site(@cur_site).where(page_cond).public.each do |page|
             next unless page.public_node?
-            @task.puts_log "#{page.url}"
+            @task.log "#{page.url}"
             generate_page page
           end
         end
@@ -33,19 +33,18 @@ class Cms::Task::PagesController < ApplicationController
       generate_page page
     end
 
-    def remove
-      set_site
-      return puts "Site is unselected." unless @cur_site
-
-      puts "Remove pages"
-
-      Cms::Page.site(@cur_site).each do |page|
-        puts "remove  #{page.url}"
-        Fs.rm_rf page.path
+    def remove(opts)
+      puts "start remove pages.."
+      SS::Site.where(opts[:site] ? { host: opts[:site] } : {}).each do |site|
+        Cms::Page.site(site).each do |page|
+          puts page.url
+          Fs.rm_rf page.path
+        end
       end
+      puts "end."
     end
 
-    def release
+    def release(opts)
       time = Time.now
 
       cond  = { state: "closed", release_date: { "$lte" => time } }

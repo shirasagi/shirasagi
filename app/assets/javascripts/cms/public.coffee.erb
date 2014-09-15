@@ -18,7 +18,7 @@ class @SS
       SS.pageName = $("#ss-page-name").html()
       SS.renderLayout(layout)
     else
-      #SS.renderTools()
+      SS.renderTools()
 
   @renderTools: ->
     SS_Kana.render()
@@ -80,12 +80,14 @@ class @SS_Kana
   @dir = "<%= SS.config.kana.location %>"
 
   @render: ->
-    bind = 'onclick="return SS_Kana.loadPage($(this))"'
+    #bind = 'onclick="return SS_Kana.loadPage($(this))"'
     if $("body").data("kana")
       url = SS_Kana.url(location.pathname, false)
+      bind = 'onclick="location.href=\'' + url + '\'; return false"'
       $("#ss-kana").html '<a class="off" href="#' + url + '" ' + bind + '>ふりがなをはずす</a>'
     else
       url = SS_Kana.url(location.pathname, true)
+      bind = 'onclick="location.href=\'' + url + '\'; return false"'
       $("#ss-kana").html '<a class="on" href="#' + url + '" ' + bind + '>ふりがなをつける</a>'
 
   @url: (url, bool = null) ->

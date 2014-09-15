@@ -1,19 +1,8 @@
 # coding: utf-8
 namespace :cms do
-
-  namespace :layout do
-    task :generate => :environment do
-      Cms::Task::LayoutsController.new.generate
-    end
-
-    task :remove => :environment  do
-      Cms::Task::LayoutsController.new.remove
-    end
-  end
-
   namespace :page do
     task :release => :environment do
-      Cms::Task::PagesController.new.release
+      Cms::Task::PagesController.new.release site: ENV["site"]
     end
 
     task :generate => :environment do
@@ -21,7 +10,7 @@ namespace :cms do
     end
 
     task :remove => :environment do
-      Cms::Task::PagesController.new.remove
+      Cms::Task::PagesController.new.remove site: ENV["site"]
     end
   end
 
@@ -62,5 +51,4 @@ namespace :cms do
       end
     end
   end
-
 end

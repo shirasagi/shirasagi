@@ -18,10 +18,6 @@ class Cms::Part
     include Cms::Addon::Html
 
     default_scope ->{ where(route: "cms/free") }
-
-    def render_html
-      SS.config.cms.ajax_free_part ? super : html
-    end
   end
 
   class Node
@@ -56,11 +52,6 @@ class Cms::Part
 
     def home_label
       self[:home_label].presence || "HOME"
-    end
-
-    def render_html
-      h = super.sub("ss-part", "")
-      %(<div class="ss-part crumbs" data-href="#{url}"><span class="node">#{h}</span></div>)
     end
   end
 

@@ -20,10 +20,7 @@ module Mobile::PublicFilter
   private
     def render_mobile
       body = response.body
-
-      if @cur_layout
-        body = embed_layout(body, @cur_layout, { part_condition: { mobile_view: "show"} })
-      end
+      body = render_layout(body, part_condition: { mobile_view: "show"}) if @cur_layout
 
       # links
       body.gsub!(/href="\/(?!#{SS.config.mobile.directory}\/)/, "href=\"/mobile/")

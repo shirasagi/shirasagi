@@ -9,7 +9,7 @@ module Cms::PublicFilter
   included do
     rescue_from StandardError, with: :rescue_action
     before_action :set_site
-    before_action :set_path
+    before_action :set_request_path
     before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
     before_action :deny_path
     before_action :parse_path
@@ -19,12 +19,7 @@ module Cms::PublicFilter
 
   public
     def index
-      if @html =~ /\.layout\.html$/
-        layout = find_layout(@html)
-        raise "404" unless layout
-        send_layout render_layout(layout)
-
-      elsif @html =~ /\.part\.html$/
+      if @html =~ /\.part\.html$/
         part = find_part(@html)
         raise "404" unless part
         send_part render_part(part)
@@ -36,7 +31,7 @@ module Cms::PublicFilter
         if response.body.blank?
           node = find_node(@html)
           raise "404" unless node
-          send_node render_node(node)
+          send_page render_node(node)
         end
       end
       raise "404" if response.body.blank?
@@ -50,7 +45,7 @@ module Cms::PublicFilter
       raise "404" if !@cur_site
     end
 
-    def set_path
+    def set_request_path
       @path ||= request.env["REQUEST_PATH"]
 
       path = @path.dup
@@ -61,6 +56,8 @@ module Cms::PublicFilter
           break
         end
       end
+
+      @cur_path = @path
     end
 
     def redirect_slash
@@ -113,27 +110,18 @@ module Cms::PublicFilter
       send_file file, disposition: :inline, x_sendfile: true
     end
 
-    def find_node(path)
-      node = Cms::Node.site(@cur_site).in_path(path.sub(/\/[^\/]+$/, "")).sort(depth: -1).first
-      return unless node
-      @preview || node.public? ? node : nil
-    end
-
-    def render_node(node, path = @path)
-      rest = path.sub(/^#{node.filename}/, "").sub(/\/index\.html$/, "")
-      cell = recognize_path "/.#{@cur_site.host}/nodes/#{node.route}#{rest}"
-      return unless cell
-
-      @cur_node   = node
-      @cur_layout = node.layout
-      render_cell node.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
-    end
-
-    def send_node(body)
+    def send_page(body)
       return unless body
       return if response.body.present?
+
       respond_to do |format|
-        format.html { render inline: body, layout: "cms/page" }
+        format.html {
+          if @cur_layout
+            render inline: render_layout(body), layout: (request.xhr? ? false : "cms/page")
+          else
+            render inline: body
+          end
+        }
         format.json { render json: body }
         format.xml  { render xml: body }
       end

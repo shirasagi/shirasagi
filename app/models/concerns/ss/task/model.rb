@@ -10,9 +10,13 @@ module SS::Task::Model
 
     seqid :id
     field :name, type: String
-    field :state, type: String
+    #field :command, type: String
+    field :state, type: String, default: "stop"
     field :started, type: DateTime
     field :closed, type: DateTime
+
+    validates :name, presence: true
+    validates :state, presence: true
   end
 
   public
@@ -44,28 +48,31 @@ module SS::Task::Model
       @log = "#{Rails.root}/log/tasks/#{id.to_s.split(//).join('/')}/_/#{name.gsub(/\W/, '_')}.log"
     end
 
-    def puts_log(msg)
+    def log(msg)
       dump msg if Rails.env.development?
-      File.open(log_file, "a") { |file| file.puts msg.force_encoding("utf-8").strip }
+      @logs << msg
     end
 
     def clear_log
       dir = File.dirname(log_file)
       Fs.mkdir_p(dir) unless Fs.exists?(dir)
       Fs.write log_file, ""
+      @logs = []
     end
 
     def run(&block)
       if start
         clear_log
         begin
-          puts_log "run #{name}.."
+          log "run #{name}.."
           yield
-          puts_log "end."
+          log "end."
         rescue => e
-          puts_log e.to_s
+          log e.to_s
+          log e.backtrace.join("\n")
         end
         close
+        Fs.write log_file, @logs.join("\n")
       end
     end
 end

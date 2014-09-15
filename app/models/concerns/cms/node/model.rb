@@ -53,14 +53,6 @@ module Cms::Node::Model
       Cms::Node.where(site_id: site_id, :filename.in => dirs).sort(depth: 1)
     end
 
-    def parent
-      return @parent unless @parent.nil?
-      return @parent = false if depth == 1 || !filename.to_s.index("/")
-
-      path = File.dirname(filename)
-      @parent = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
-    end
-
     def nodes
       Cms::Node.where(site_id: site_id, filename: /^#{filename}\//)
     end

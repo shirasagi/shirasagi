@@ -9,8 +9,8 @@ class Cms::PreviewController < ApplicationController
 
   private
     def set_site
-      @cur_site    = SS::Site.find_by host: params[:site]
-      @preview     = true
+      @cur_site = SS::Site.find_by host: params[:site]
+      @preview  = true
     end
 
     def set_path_with_preview
@@ -35,8 +35,6 @@ class Cms::PreviewController < ApplicationController
 
     def render_preview
       body = response.body
-
-      body = embed_layout(body, @cur_layout) if @cur_layout
 
       body.gsub!(/(href|src)=".*?"/) do |m|
         url = m.match(/.*?="(.*?)"/)[1]

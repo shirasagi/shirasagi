@@ -95,13 +95,13 @@ module Cms::Content
       [%w(公開 public), %w(非公開 closed)]
     end
 
-    def node
+    def parent
       return @cur_node if @cur_node
-      return @node if @node
-      return nil if depth.to_i <= 1
+      return @parent unless @parent.nil?
+      return @parent = false if depth == 1 || filename !~ /\//
 
       path = File.dirname(filename)
-      @node = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
+      @parent = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
     end
 
     def becomes_with_route(name = nil)

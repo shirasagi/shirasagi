@@ -5,9 +5,9 @@ module Cms::Parts::Node
     helper Cms::ListHelper
 
     def index
-      @cur_node = @cur_part.node
+      @cur_node = @cur_part.parent
 
-      path = @request_url.present? ? @request_url.sub(/^\//, "").sub(/\/[^\/]*$/, "") : nil
+      path = @cur_path.present? ? @cur_path.sub(/^\//, "").sub(/\/[^\/]*$/, "") : nil
       node = path ? Category::Node::Base.site(@cur_site).where(filename: path).first : nil
       node ||= @cur_node
 
