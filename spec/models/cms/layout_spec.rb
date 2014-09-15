@@ -18,6 +18,6 @@ describe Cms::Layout do
     it { expect(item.full_url).not_to eq nil }
     it { expect(item.json_path).not_to eq nil }
     it { expect(item.public?).not_to eq nil }
-    it { expect(item.node).to eq nil }
+    it { expect(item.parent).to eq false }
   end
 end

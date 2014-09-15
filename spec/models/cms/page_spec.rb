@@ -17,6 +17,6 @@ describe Cms::Page do
     it { expect(item.url).not_to eq nil }
     it { expect(item.full_url).not_to eq nil }
     it { expect(item.public?).not_to eq nil }
-    it { expect(item.node).to eq nil }
+    it { expect(item.parent).to eq false }
   end
 end

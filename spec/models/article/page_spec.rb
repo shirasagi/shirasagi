@@ -16,6 +16,6 @@ describe Article::Page do
     it { expect(item.path).not_to eq nil }
     it { expect(item.url).not_to eq nil }
     it { expect(item.full_url).not_to eq nil }
-    it { expect(item.node).to eq nil }
+    it { expect(item.parent).to eq nil }
   end
 end
