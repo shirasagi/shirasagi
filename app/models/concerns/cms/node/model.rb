@@ -10,9 +10,6 @@ module Cms::Node::Model
     store_in collection: "cms_nodes"
     set_permission_name "cms_nodes"
 
-    scope :root, ->{ where(depth: 1) }
-    scope :in_path, ->(path) { where :filename.in => Cms::Node.split_path(path) }
-
     field :route, type: String
     field :shortcut, type: String, default: "hide"
 
@@ -24,6 +21,9 @@ module Cms::Node::Model
     after_save :remove_directory, if: ->{ @db_changes && @db_changes["state"] && !public? }
     after_destroy :remove_directory
     after_destroy :destroy_children
+
+    scope :root, ->{ where(depth: 1) }
+    scope :in_path, ->(path) { where :filename.in => Cms::Node.split_path(path) }
   end
 
   public

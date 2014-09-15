@@ -2,9 +2,9 @@
 class Event::Page
   include Cms::Page::Model
 
-  default_scope ->{ where(route: "event/page") }
-
   before_save :seq_filename, if: ->{ basename.blank? }
+
+  default_scope ->{ where(route: "event/page") }
 
   private
     def validate_filename

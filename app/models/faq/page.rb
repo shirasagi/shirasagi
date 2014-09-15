@@ -12,11 +12,11 @@ class Faq::Page
   include Faq::Addon::Question
   include Faq::Reference::Question
 
-  default_scope ->{ where(route: "faq/page") }
-
   set_permission_name "faq_pages"
 
   before_save :seq_filename, if: ->{ basename.blank? }
+
+  default_scope ->{ where(route: "faq/page") }
 
   private
     def validate_filename

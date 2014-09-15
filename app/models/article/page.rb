@@ -10,11 +10,11 @@ class Article::Page
   include Event::Addon::Date
   include Workflow::Addon::Approver
 
-  default_scope ->{ where(route: "article/page") }
-
   set_permission_name "article_pages"
 
   before_save :seq_filename, if: ->{ basename.blank? }
+
+  default_scope ->{ where(route: "article/page") }
 
   private
     def validate_filename

@@ -10,11 +10,6 @@ module Cms::Content
   attr_accessor :cur_node, :basename
 
   included do
-    scope :public, ->{ where state: "public" }
-    scope :node, ->(node) {
-      node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
-    }
-
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String
@@ -31,6 +26,11 @@ module Cms::Content
     before_validation :set_filename
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
+
+    scope :public, ->{ where state: "public" }
+    scope :node, ->(node) {
+      node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+    }
   end
 
   module ClassMethods
