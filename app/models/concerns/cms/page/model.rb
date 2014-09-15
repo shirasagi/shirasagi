@@ -24,11 +24,6 @@ module Cms::Page::Model
   end
 
   public
-    def public_node?
-      return true unless dirname
-      Cms::Node.where(site_id: site_id).in_path(dirname).ne(state: "public").size == 0
-    end
-
     def date
       released || updated || created
     end

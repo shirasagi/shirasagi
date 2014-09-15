@@ -40,7 +40,7 @@ class Urgency::LayoutsController < ApplicationController
       end
 
       @items = [ @default_layout ]
-      @model.site(@cur_site)..node(node).
+      @model.site(@cur_site).node(@cur_node).
         ne(id: @default_layout.id).order_by(name: 1).each do |item|
         @items << item
       end

@@ -39,13 +39,13 @@ module SS::Task::Model
       save
     end
 
-    def log
-      Fs.exists?(log_file) ? Fs.read(log_file).force_encoding("utf-8") : nil
-    end
-
     def log_file
       return @log if @log
       @log = "#{Rails.root}/log/tasks/#{id.to_s.split(//).join('/')}/_/#{name.gsub(/\W/, '_')}.log"
+    end
+
+    def read_log
+      Fs.exists?(log_file) ? Fs.read(log_file).force_encoding("utf-8") : nil
     end
 
     def log(msg)
@@ -64,9 +64,9 @@ module SS::Task::Model
       if start
         clear_log
         begin
-          log "run #{name}.."
+          log "# run #{name}.."
           yield
-          log "end."
+          log "# end."
         rescue => e
           log e.to_s
           log e.backtrace.join("\n")

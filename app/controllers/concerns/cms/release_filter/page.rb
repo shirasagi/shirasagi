@@ -37,15 +37,37 @@ module Cms::ReleaseFilter::Page
       render_cell page.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
     end
 
+    def generate_node(node)
+      return unless SS.config.cms.serve_static_pages
+
+      self.params   = ActionController::Parameters.new format: "html"
+      self.request  = ActionDispatch::Request.new method: "GET"
+      self.response = ActionDispatch::Response.new
+
+      @path       = node.url
+      @cur_path   = @path
+      @cur_layout = node.layout
+      @cur_site   = node.site
+
+      html = render_node(node, "#{node.filename}/index.html")
+      return unless html
+
+      html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
+
+      file = "#{node.path}/index.html"
+      keep = html.to_s == File.read(file).to_s rescue false # prob: csrf-token
+      Fs.write file, html unless keep
+    end
+
     def generate_page(page)
       return unless SS.config.cms.serve_static_pages
 
-      self.params = ActionController::Parameters.new format: "html"
-      self.request = ActionDispatch::Request.new method: "GET"
+      self.params   = ActionController::Parameters.new format: "html"
+      self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
-      @path = page.url
-      @cur_path = @path
+      @path       = page.url
+      @cur_path   = @path
       @cur_layout = page.layout
 
       html = render_page(page, method: "GET")

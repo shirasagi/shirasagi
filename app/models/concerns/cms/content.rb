@@ -86,6 +86,11 @@ module Cms::Content
       state == "public"
     end
 
+    def public_node?
+      return true unless dirname
+      Cms::Node.where(site_id: site_id).in_path(dirname).ne(state: "public").size == 0
+    end
+
     def order
       value = self[:order].to_i
       value < 0 ? 0 : value

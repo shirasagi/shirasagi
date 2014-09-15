@@ -14,7 +14,7 @@
   <dd><%= tryb { @item.closed.strftime("%Y-%m-%d %H:%M:%S") } %></dd>
 
   <dt><%= @item.t :log %></dt>
-  <dd><textarea style="height: 200px;" readonly="readonly"><%= @item.log %></textarea></dd>
+  <dd><textarea style="height: 200px;" readonly="readonly"><%= @item.read_log %></textarea></dd>
 </dl>
 
 <footer class="send">
