@@ -22,7 +22,7 @@ class Cms::Task::PagesController < ApplicationController
           Cms::Page.site(@cur_site).where(page_cond).public.each do |page|
             next unless page.public_node?
             @task.log "#{page.url}"
-            generate_page page
+            generate_page page.becomes_with_route
           end
         end
       end

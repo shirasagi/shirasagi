@@ -19,7 +19,7 @@ class Cms::Task::NodesController < ApplicationController
             klass = cname.constantize rescue nil
             next if klass.nil? || klass.to_s != cname
 
-            klass.new.generate(@task, node)
+            klass.new.generate(@task, node.becomes_with_route)
           end
         end
       end
