@@ -21,9 +21,8 @@ class Cms::Task::PagesController < ApplicationController
         end
 
         @task = Cms::Task.find_or_create_by task_cond
-        @task.log "#{site.name}"
-
         @task.run do
+          @task.log "#{site.name}"
           Cms::Page.site(@cur_site).where(page_cond).public.each do |page|
             next unless page.public_node?
             @task.log "#{page.url}"
