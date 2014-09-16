@@ -18,9 +18,10 @@ module Cms::ReleaseFilter::Page
       @preview || page.public? ? page : nil
     end
 
-    def render_node(node, path = @path)
-      rest = path.sub(/^#{node.filename}/, "").sub(/\/index\.html$/, "")
-      cell = recognize_path "/.#{@cur_site.host}/nodes/#{node.route}#{rest}"
+    def render_node(node, env = {})
+      rest = @path.sub(/^#{node.filename}/, "").sub(/\/index\.html$/, "")
+      path = "/.#{@cur_site.host}/nodes/#{node.route}#{rest}"
+      cell = recognize_path path
       return unless cell
 
       @cur_node   = node
@@ -29,7 +30,8 @@ module Cms::ReleaseFilter::Page
     end
 
     def render_page(page, env = {})
-      cell = recognize_path "/.#{@cur_site.host}/pages/#{page.route}/#{page.basename}", env
+      path = "/.#{@cur_site.host}/pages/#{page.route}/#{page.basename}"
+      cell = recognize_path path, env
       return unless cell
 
       @cur_page   = page
@@ -49,7 +51,7 @@ module Cms::ReleaseFilter::Page
       @cur_layout = node.layout
       @cur_site   = node.site
 
-      html = render_node(node, "#{node.filename}/index.html")
+      html = render_node(node, method: "GET")
       return unless html
 
       html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout

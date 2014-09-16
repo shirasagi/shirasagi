@@ -7,13 +7,17 @@ module Cms::ReleaseFilter::Layout
     def find_part(path)
       part = Cms::Part.site(@cur_site).find_by(filename: path) rescue nil
       return unless part
+
       @preview || part.public?  ? part : nil
     end
 
-    def render_part(part, path)
+    def render_part(part)
       return part.html if part.route == "cms/frees"
-      cell = recognize_path "/.#{@cur_site.host}/parts/#{part.route}.#{path.sub(/.*\./, '')}"
+
+      path = "/.#{@cur_site.host}/parts/#{part.route}"
+      cell = recognize_path path, method: "GET"
       return unless cell
+
       @cur_part = part
       render_cell part.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
     end
@@ -34,7 +38,7 @@ module Cms::ReleaseFilter::Layout
         part = part.where mobile_view: "show" if @filter == :mobile
         part = part.where(filename: path).first
         part = part.becomes_with_route if part
-        part ? render_part(part, path) : ""
+        part ? render_part(part) : ""
       end
 
       html.gsub!('#{page_name}', @cur_item.name)
