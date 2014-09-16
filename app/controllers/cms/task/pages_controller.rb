@@ -10,7 +10,6 @@ class Cms::Task::PagesController < ApplicationController
       cond = { host: opts[:site] } if opts[:site]
 
       SS::Site.where(cond).each do |site|
-        @task.log "#{site.name}"
         @cur_site = site
         task_cond = { name: "cms:page:generate", site_id: @cur_site.id, node_id: nil }
         page_cond = {}
@@ -22,6 +21,8 @@ class Cms::Task::PagesController < ApplicationController
         end
 
         @task = Cms::Task.find_or_create_by task_cond
+        @task.log "#{site.name}"
+
         @task.run do
           Cms::Page.site(@cur_site).where(page_cond).public.each do |page|
             next unless page.public_node?
