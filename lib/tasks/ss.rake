@@ -13,7 +13,7 @@ namespace :ss do
   namespace :user do
     task :create => :environment do
       puts "Create role ..."
-      cond = { name: "システム管理", permissions: Sys::Role.permission_names.map { |k, v| v } }
+      cond = { name: "システム管理", permissions: Sys::Role.permission_names }
       role = Sys::Role.find_or_create_by cond
 
       puts "Create user ..."

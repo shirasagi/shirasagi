@@ -7,7 +7,7 @@ module Cms::RssFilter
     def render_rss(node, items)
       rss = RSS::Maker.make("2.0") do |rss|
         summary = nil
-        %w[description name].each do |m|
+        %w(description name).each do |m|
           summary = node.send(m) if summary.blank? && node.respond_to?(m)
         end
 
@@ -20,10 +20,10 @@ module Cms::RssFilter
 
         items.each do |item|
           date = nil
-          %w[released updated created].each {|m| date ||= item.send(m) if item.respond_to?(m) }
+          %w(released updated created).each {|m| date ||= item.send(m) if item.respond_to?(m) }
 
           summary = nil
-          #%w[summary description].each {|m| summary ||= item.send(m) if item.respond_to?(m) }
+          #%w(summary description).each {|m| summary ||= item.send(m) if item.respond_to?(m) }
 
           rss.items.new_item do |entry|
             entry.title       = item.name

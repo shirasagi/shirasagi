@@ -2,13 +2,49 @@
 class Cms::Task::PagesController < ApplicationController
   include Cms::ReleaseFilter::Page
 
-  private
-    def set_site
-      @cur_site = SS::Site.where(host: ENV["site"]).first
+  public
+    def generate(opts)
+      return puts "config.cms.serve_static_pages is false" unless SS.config.cms.serve_static_pages
+
+      SS::Site.where(opts[:site] ? { host: opts[:site] } : {}).each do |site|
+        @cur_site = site
+        task_cond = { name: "cms:page:generate", site_id: @cur_site.id, node_id: nil }
+        page_cond = {}
+
+        if opts[:node]
+          @cur_node = Cms::Node.site(site).find_by filename: opts[:node]
+          task_cond[:node_id]  = @cur_node.id
+          page_cond[:filename] = /^#{@cur_node.filename}\//
+        end
+
+        @task = Cms::Task.find_or_create_by task_cond
+        @task.run do
+          Cms::Page.site(@cur_site).where(page_cond).public.each do |page|
+            next unless page.public_node?
+            @task.log "#{page.url}"
+            generate_page page
+          end
+        end
+      end
     end
 
-  public
-    def release
+    def generate_file(page)
+      @cur_site = page.site
+      generate_page page
+    end
+
+    def remove(opts)
+      puts "start remove pages.."
+      SS::Site.where(opts[:site] ? { host: opts[:site] } : {}).each do |site|
+        Cms::Page.site(site).each do |page|
+          puts page.url
+          Fs.rm_rf page.path
+        end
+      end
+      puts "end."
+    end
+
+    def release(opts)
       time = Time.now
 
       cond  = { state: "closed", release_date: { "$lte" => time } }
@@ -35,36 +71,6 @@ class Cms::Task::PagesController < ApplicationController
         if !page.save
           puts "  #{page.filename}: #{page.errors.full_messages.join(', ')}"
         end
-      end
-    end
-
-    def generate
-      set_site
-      return puts "Site is unselected." unless @cur_site
-      return puts "config.cms.serve_static_pages is false" unless SS.config.cms.serve_static_pages
-
-      puts "Generate pages"
-
-      Cms::Page.site(@cur_site).public.each do |page|
-        puts "write  #{page.url}"
-        generate_page page
-      end
-    end
-
-    def generate_file(page)
-      @cur_site = page.site
-      generate_page page
-    end
-
-    def remove
-      set_site
-      return puts "Site is unselected." unless @cur_site
-
-      puts "Remove pages"
-
-      Cms::Page.site(@cur_site).each do |page|
-        puts "remove  #{page.url}"
-        Fs.rm_rf page.path
       end
     end
 end

@@ -9,6 +9,7 @@ module Faq::Node
   class Page
     include Cms::Node::Model
     include Cms::Addon::PageList
+    include Category::Addon::Setting
 
     default_scope ->{ where(route: "faq/page") }
   end
@@ -16,6 +17,7 @@ module Faq::Node
   class Search
     include Cms::Node::Model
     include Cms::Addon::PageList
+    include Category::Addon::Setting
 
     default_scope ->{ where(route: "faq/search") }
   end

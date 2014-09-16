@@ -9,6 +9,8 @@ SS::Application.routes.draw do
 
   content "article" do
     get "/" => "main#index", as: :main
+    get "generate" => "generate#index"
+    post "generate" => "generate#run"
     resources :pages, concerns: :deletion
   end
 

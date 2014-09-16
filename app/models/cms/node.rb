@@ -5,6 +5,8 @@ class Cms::Node
 
   include Cms::Node::Model
 
+  index({ site_id: 1, filename: 1 }, { unique: true })
+
   class Base
     include Cms::Node::Model
 
@@ -28,19 +30,20 @@ class Cms::Node
   class << self
     @@plugins = []
 
-    def plugin(path)
-      name  = I18n.t("modules.#{path.sub(/\/.*/, '')}", default: path.titleize)
-      name << "/" + I18n.t("cms.nodes.#{path}", default: path.titleize)
-      @@plugins << [name, path]
-    end
+    public
+      def plugin(path)
+        name  = I18n.t("modules.#{path.sub(/\/.*/, '')}", default: path.titleize)
+        name << "/" + I18n.t("cms.nodes.#{path}", default: path.titleize)
+        @@plugins << [name, path]
+      end
 
-    def plugins
-      @@plugins
-    end
+      def plugins
+        @@plugins
+      end
 
-    def modules
-      keys = @@plugins.map {|m| m[1].sub(/\/.*/, "") }.uniq
-      keys.map {|key| [I18n.t("modules.#{key}", default: key.to_s.titleize), key] }
-    end
+      def modules
+        keys = @@plugins.map {|m| m[1].sub(/\/.*/, "") }.uniq
+        keys.map {|key| [I18n.t("modules.#{key}", default: key.to_s.titleize), key] }
+      end
   end
 end

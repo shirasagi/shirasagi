@@ -6,8 +6,6 @@ class History::Log
 
   index({ created: 1 })
 
-  scope :site, ->(site) { where(site_id: site.id) }
-
   attr_accessor :save_term
 
   field :url, type: String
@@ -18,11 +16,11 @@ class History::Log
 
   belongs_to :site, class_name: "SS::Site"
 
-  #permit_params :controller, :action
-
   validates :url, presence: true
   validates :controller, presence: true
   validates :action, presence: true
+
+  scope :site, ->(site) { where(site_id: site.id) }
 
   public
     def save_term_options

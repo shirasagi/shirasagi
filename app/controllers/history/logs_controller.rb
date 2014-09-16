@@ -1,6 +1,7 @@
 # coding: utf-8
 class History::LogsController < ApplicationController
   include Cms::BaseFilter
+  include History::BaseFilter
 
   model History::Log
 
@@ -35,25 +36,8 @@ class History::LogsController < ApplicationController
       cond = { site_id: @cur_site.id }
       cond[:created] = { "$gte" => from } if from
 
-      require "csv"
-      csv = CSV.generate do |data|
-        data << %w[Date User Target Action URL]
-        @model.where(cond).sort(created: 1).each do |item|
-          line = []
-          line << item.created.strftime("%Y-%m-%d %H:%m")
-          line << item.user_label
-          line << item.target_label
-          line << item.action
-          line << item.url
-          data << line
-        end
-      end
-
-      send_data csv.encode("SJIS"), filename: "history_logs_#{Time.now.to_i}.csv"
-    end
-
-    def delete
-      @item = @model.new
+      @items = @model.where(cond).sort(created: 1)
+      send_csv @items
     end
 
     def destroy
@@ -68,18 +52,6 @@ class History::LogsController < ApplicationController
       coll = @model.new.collection
       coll.session.command({ compact: coll.name })
 
-      location = { action: :index }
-
-      if num
-        respond_to do |format|
-          format.html { redirect_to location, notice: t(:deleted) }
-          format.json { head :no_content }
-        end
-      else
-        respond_to do |format|
-          format.html { render file: :delete }
-          format.json { render json: :error, status: :unprocessable_entity }
-        end
-      end
+      render_destroy num
     end
 end

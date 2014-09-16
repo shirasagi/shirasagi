@@ -1,6 +1,7 @@
 # coding: utf-8
 module Cms::NodeFilter::EditCell
   extend ActiveSupport::Concern
+  include SS::CellFilter
   include SS::CrudFilter
 
   included do
@@ -28,10 +29,7 @@ module Cms::NodeFilter::EditCell
     end
 
     def inherit_variables
-      controller.instance_variables.select {|m| m =~ /^@[a-z]/ }.each do |name|
-        next if instance_variable_defined?(name)
-        instance_variable_set name, controller.instance_variable_get(name)
-      end
+      super
       @base = @item
     end
 

@@ -1,13 +1,6 @@
 # coding: utf-8
 module Cms
   class Initializer
-    Cms::User.addon "cms/role"
-    Cms::Page.addon "cms/meta"
-    Cms::Page.addon "cms/body"
-    Cms::Page.addon "cms/file"
-    Cms::Page.addon "cms/release"
-    Cms::Page.addon "cms/related_page"
-
     Cms::Node.plugin "cms/node"
     Cms::Node.plugin "cms/page"
     Cms::Part.plugin "cms/free"

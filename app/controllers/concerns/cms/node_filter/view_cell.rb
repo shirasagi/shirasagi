@@ -1,6 +1,7 @@
 # coding: utf-8
 module Cms::NodeFilter::ViewCell
   extend ActiveSupport::Concern
+  include SS::CellFilter
   include Cms::RssFilter
 
   included do
@@ -21,13 +22,6 @@ module Cms::NodeFilter::ViewCell
     def prepend_current_view_path
       prepend_view_path "app/cells/#{controller_path}"
       prepend_view_path ApplicationController.view_paths
-    end
-
-    def inherit_variables
-      controller.instance_variables.select {|m| m =~ /^@[a-z]/ }.each do |name|
-        next if instance_variable_defined?(name)
-        instance_variable_set name, controller.instance_variable_get(name)
-      end
     end
 
     def set_model

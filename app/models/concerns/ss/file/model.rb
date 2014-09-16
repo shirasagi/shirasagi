@@ -37,8 +37,7 @@ module SS::File::Model
 
   public
     def state_options
-      #[ %w[公開 public], %w[非公開 closed] ]
-      [ %w[公開 public] ]
+      [%w(公開 public)]
     end
 
     def name

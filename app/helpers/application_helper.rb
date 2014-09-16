@@ -23,7 +23,7 @@ module ApplicationHelper
   end
 
   def current_url?(url)
-    current = @request_url || request.env["REQUEST_PATH"].sub(/\?.*/, "")
+    current = @cur_path.sub(/\?.*/, "")
     return nil if current.gsub("/", "").blank?
     return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
     return :current if current =~ /^#{Regexp.escape(url)}(\/|\?|$)/
@@ -72,11 +72,11 @@ module ApplicationHelper
     list = msg.map {|d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>"}
 
     h  = []
-    h << %Q[<div class="tooltip">?]
-    h << %Q[<ul>]
+    h << %(<div class="tooltip">?)
+    h << %(<ul>)
     h << list
-    h << %Q[</ul>]
-    h << %Q[</div>]
+    h << %(</ul>)
+    h << %(</div>)
     h.join("\n").html_safe
   end
 end

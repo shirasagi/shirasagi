@@ -44,7 +44,9 @@ module SS::CrudFilter
 
   public
     def index
-      @items = @model.all.order_by(_id: -1).page(params[:page]).per(100)
+      @items = @model.all.
+        order_by(_id: -1).
+        page(params[:page]).per(100)
     end
 
     def show

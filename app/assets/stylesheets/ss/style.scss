@@ -189,10 +189,10 @@ textarea.marker-text {
 }
 .file-view {
   float:left;
-  width: 140px;
+  width: 150px;
   margin: 0px 15px 15px 0px;
   .thumb {
-    display: block;
+    display: block !important;
     height: 110px;
     border: 1px solid #ddd;
     color: #888;

@@ -19,14 +19,12 @@ ja:
 
   mongoid:
     attributes:
-      article/page: &article_page
+      cms/page/model:
         workflow_user_id: 申請者
         workflow_state: 承認状態
         workflow_comment: 申請コメント
         workflow_approvers: 承認者
         comment: 差し戻しコメント
-      cms/page:
-        <<: *article_page
 
   errors:
     messages:

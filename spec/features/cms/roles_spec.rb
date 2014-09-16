@@ -3,11 +3,11 @@ require 'spec_helper'
 
 describe "cms_roles" do
   subject(:item) { Cms::Role.last }
-  subject(:index_path) { "/.#{cms_site.host}/cms/roles" }
-  subject(:new_path) { "#{index_path}/new" }
-  subject(:show_path) { "#{index_path}/#{item.id}" }
-  subject(:edit_path) { "#{show_path}/edit" }
-  subject(:delete_path) { "#{show_path}/delete" }
+  subject(:index_path) { cms_roles_path(cms_site.host) }
+  subject(:new_path) { new_cms_role_path(cms_site.host) }
+  subject(:show_path) { cms_role_path(cms_site.host, item) }
+  subject(:edit_path) { edit_cms_role_path(cms_site.host, item) }
+  subject(:delete_path) { delete_cms_role_path(cms_site.host, item) }
 
   it "without login" do
     visit index_path

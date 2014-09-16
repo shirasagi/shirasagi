@@ -22,7 +22,7 @@ Lint/BlockAlignment:
 # Offense count: 2
 # Configuration parameters: AlignWith, SupportedStyles.
 Lint/DefEndAlignment:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 7
 # Cop supports --auto-correct.
@@ -110,7 +110,7 @@ Style/AsciiComments:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/BarePercentLiterals:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -251,13 +251,13 @@ Style/NonNilCheck:
 # Cop supports --auto-correct.
 # Configuration parameters: PreferredDelimiters.
 Style/PercentLiteralDelimiters:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 60
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/PercentQLiterals:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 14
 # Cop supports --auto-correct.
@@ -307,7 +307,7 @@ Style/SpaceAfterColon:
 # Offense count: 3
 # Cop supports --auto-correct.
 Style/SpaceAfterComma:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 6
 # Cop supports --auto-correct.
@@ -390,7 +390,7 @@ Style/TrivialAccessors:
 # Offense count: 44
 # Cop supports --auto-correct.
 Style/UnneededPercentQ:
-  Enabled: false
+  Enabled: true
 
 # Offense count: 8
 # Cop supports --auto-correct.

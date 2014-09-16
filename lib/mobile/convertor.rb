@@ -1,16 +1,16 @@
 # coding: utf-8
 class Mobile::Convertor < String
   @@tags = {
-    remove: %w[
+    remove: %w(
       area audio canvas caption col colgroup embed iframe keygen map noscript
-      object optgroup output param progress script source track video ],
-    strip: %w[
-      command datalist link rp rt style tbody tfoot thead ],
-    div: %w[
-      article aside figure footer header nav section ],
-    span: %w[
+      object optgroup output param progress script source track video),
+    strip: %w(
+      command datalist link rp rt style tbody tfoot thead),
+    div: %w(
+      article aside figure footer header nav section),
+    span: %w(
       abbr address b bdi bdo code del detail dfn em fieldset figcaption figure hgroup i ins kbd
-      label legend mark menu meter ruby s samp small strong sub summary sup time u var ]
+      label legend mark menu meter ruby s samp small strong sub summary sup time u var)
   }
 
   public
@@ -92,7 +92,7 @@ class Mobile::Convertor < String
           cls  = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
 
           html  = name
-          html += %Q( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("ss.image")}]</a>) if href
+          html += %( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("ss.image")}]</a>) if href
           html
         else
           match

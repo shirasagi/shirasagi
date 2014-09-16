@@ -7,12 +7,11 @@ module SS::Reference
     attr_accessor :cur_user
 
     included do
-      scope :user, ->(user) { where(user_id: user.id) }
-
       belongs_to :user, class_name: "SS::User"
 
-      #validates :user_id, presence: true
       before_validation :set_user_id, if: ->{ @cur_user }
+
+      scope :user, ->(user) { where(user_id: user.id) }
     end
 
     private
@@ -28,12 +27,12 @@ module SS::Reference
     attr_accessor :cur_site
 
     included do
-      scope :site, ->(site) { where(site_id: site.id) }
-
       belongs_to :site, class_name: "SS::Site"
 
       validates :site_id, presence: true
       before_validation :set_site_id, if: ->{ @cur_site }
+
+      scope :site, ->(site) { where(site_id: site.id) }
     end
 
     private

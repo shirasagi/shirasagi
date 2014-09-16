@@ -9,7 +9,9 @@ module Sys::CrudFilter
 
   public
     def index
-      @items = @model.allow(:edit, @cur_user).order_by(_id: -1).page(params[:page]).per(100)
+      @items = @model.allow(:edit, @cur_user).
+        order_by(_id: -1).
+        page(params[:page]).per(100)
     end
 
     def show

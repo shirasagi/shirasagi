@@ -2,7 +2,7 @@ group :red_green_refactor, halt_on_fail: false do
   # A sample Guardfile
   # More info at https://github.com/guard/guard#readme
 
-  guard :rubocop, cli: '--rails' do
+  guard :rubocop, cli: '--rails --format fuubar' do
     watch(/.+\.rb$/)
     watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
   end
@@ -36,4 +36,11 @@ group :red_green_refactor, halt_on_fail: false do
     watch(%r{^spec/acceptance/(.+)\.feature$})
     watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance' }
   end
+end
+
+guard 'brakeman', :run_on_start => true do
+  watch(%r{^app/.+\.(erb|haml|rhtml|rb)$})
+  watch(%r{^config/.+\.rb$})
+  watch(%r{^lib/.+\.rb$})
+  watch('Gemfile')
 end

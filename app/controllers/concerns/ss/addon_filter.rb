@@ -21,6 +21,7 @@ module SS::AddonFilter
 
   module EditCell
     extend ActiveSupport::Concern
+    include SS::CellFilter
     include SS::AddonFilter::Layout
 
     included do
@@ -29,14 +30,6 @@ module SS::AddonFilter
       helper AddonHelper
       before_action :inherit_variables
     end
-
-    private
-      def inherit_variables
-        controller.instance_variables.select {|m| m =~ /^@[a-z]/ }.each do |name|
-          next if instance_variable_defined?(name)
-          instance_variable_set name, controller.instance_variable_get(name)
-        end
-      end
 
     public
       def show
@@ -62,20 +55,13 @@ module SS::AddonFilter
 
   module ViewCell
     extend ActiveSupport::Concern
+    include SS::CellFilter
 
     included do
       helper ApplicationHelper
       helper EditorHelper
       before_action :inherit_variables
     end
-
-    private
-      def inherit_variables
-        controller.instance_variables.select {|m| m =~ /^@[a-z]/ }.each do |name|
-          next if instance_variable_defined?(name)
-          instance_variable_set name, controller.instance_variable_get(name)
-        end
-      end
 
     public
       def index

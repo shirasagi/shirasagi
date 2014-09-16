@@ -9,8 +9,8 @@ class Cms::PreviewController < ApplicationController
 
   private
     def set_site
-      @cur_site    = SS::Site.find_by host: params[:host]
-      @preview     = true
+      @cur_site = SS::Site.find_by host: params[:site]
+      @preview  = true
     end
 
     def set_path_with_preview
@@ -36,8 +36,6 @@ class Cms::PreviewController < ApplicationController
     def render_preview
       body = response.body
 
-      body = embed_layout(body, @cur_layout) if @cur_layout
-
       body.gsub!(/(href|src)=".*?"/) do |m|
         url = m.match(/.*?="(.*?)"/)[1]
         if url =~ /^\/(assets|assets-dev)\//
@@ -51,7 +49,7 @@ class Cms::PreviewController < ApplicationController
 
       css  = "position: fixed; top: 0px; left: 0px; padding: 5px;"
       css << "background-color: rgba(0, 150, 100, 0.6); color: #fff; font-weight: bold;"
-      mark = %Q[<div id="ss-preview" style="#{css}">Preview</div>]
+      mark = %(<div id="ss-preview" style="#{css}">Preview</div>)
       body.sub!("</body>", "#{mark}</body>")
 
       response.body = body

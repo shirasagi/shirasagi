@@ -109,7 +109,7 @@ save_part route: "article/page", filename: "oshirase/shisei/recent.part.html", n
 save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンくず", mobile_view: "hide"
 save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト"
 save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
-  conditions: %w[oshirase oshirase/event shisei/jinji], limit: 6
+  conditions: %w(oshirase oshirase/event shisei/jinji), limit: 6
 save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
 save_part route: "cms/free", filename: "urgency-layout/calamity.part.html", name: "災害関係ホームページ"
 save_part route: "cms/free", filename: "urgency-layout/connect.part.html", name: "関連サイト"
@@ -299,7 +299,7 @@ save_node route: "cms/node", filename: "use", name: "ご利用案内"
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
 
 ## event
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w[docs]
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs)
 
 ## uploader
 save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
@@ -353,11 +353,11 @@ save_inquiry_column node_id: inquiry_node.id, name: "企業・団体名", order:
 save_inquiry_column node_id: inquiry_node.id, name: "メールアドレス", order: 20, input_type: "email_field",
   html: column_email_html, select_options: [], required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "性別", order: 30, input_type: "radio_button",
-  html: column_gender_html, select_options: %w[ 男性 女性 ], required: "required", site_id: @site._id
+  html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "年齢", order: 40, input_type: "select",
-  html: column_age_html, select_options: %w[ 10代 20代 30代 40代 50代 60代 70代 80代 ], required: "required", site_id: @site._id
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ区分", order: 50, input_type: "check_box",
-  html: column_category_html, select_options: %w[ 市政について ご意見・ご要望 申請について その他 ], required: "required", site_id: @site._id
+  html: column_category_html, select_options: %w(市政について ご意見・ご要望 申請について その他), required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
   html: column_question_html, select_options: [], required: "required", site_id: @site._id
 

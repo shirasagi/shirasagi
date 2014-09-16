@@ -8,26 +8,16 @@
   <dt><%= @model.t :permissions %></dt>
   <dd>
     <%= hidden_field_tag "item[permissions][]" %>
-    <% names = @model.permission_names.sort %>
-    <table>
-      <tr>
-        <td style="padding: 0px 20px 0px 0px; vertical-align: top;">
-          <% names.select {|k,v| k =~ /_private_/ }.each do |name, value| %>
-          <label><%= f.check_box("permissions[]", {}, value) %> <%= t("cms_role.#{name}") %></label><br />
-          <% end %>
-        </td>
-        <td style="padding: 0px 20px 0px 0px; vertical-align: top;">
-          <% names.select {|k,v| k =~ /_other_/ }.each do |name, value| %>
-          <label><%= f.check_box("permissions[]", {}, value) %> <%= t("cms_role.#{name}") %></label><br />
-          <% end %>
-        </td>
-        <td style="padding: 0px 20px 0px 0px; vertical-align: top;">
-          <% names.select {|k,v| k !~ /_private_/ && k !~ /_other_/ }.each do |name, value| %>
-          <label><%= f.check_box("permissions[]", {}, value) %> <%= t("cms_role.#{name}") %></label><br />
-          <% end %>
-        </td>
-      </tr>
-    </table>
 
+    <% @model.module_permission_names.each do |mod, names| %>
+      <div class="module-box" style="padding: 10px 0px; border-top: 1px solid #ccc;">
+        <p class="module-name" style="margin: 0px 0px 10px;"><%= t("modules.#{mod}") %></p>
+        <div class="permission-names" style="margin: 10px 20px">
+          <% names.each do |name| %>
+            <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("cms_role.#{name}") %></label><br />
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </dd>
 </dl>

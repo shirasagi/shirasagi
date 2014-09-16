@@ -17,7 +17,7 @@ $ ->
     <%= f.hidden_field "file_ids[]", value: "" %>
 
     <%= link_to :upload, sns_user_temp_files_path(@cur_user), class: "ajax-box" %>
-    | <%= link_to :"sns.user_file", sns_user_ajax_files_path(@cur_user), class: "ajax-box" %>
+    <%= link_to :"sns.user_file", sns_user_ajax_files_path(@cur_user), class: "ajax-box" %>
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
@@ -30,14 +30,17 @@ $ ->
           <% end %>
         </a>
         <div class="name">
-          <%= f.check_box "file_ids[]", {}, file.id %>
-          <%= f.check_box "file_ids[]", {}, file.id %>
-          <%= file.basename %><br />
+          <label>
+            <%= f.check_box "file_ids[]", {}, file.id %>
+            <%= file.basename %>
+          </label><br />
+        </div>
+        <div class="action paste">
           <% content = link_to "#{file.filename} (#{file.extname.upcase} #{number_to_human_size(file.size)})", "/fs/#{file.id}/#{file.filename}", class: "icon-#{file.extname}" %>
           <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
           <% if file.image? %>
-          <% content = image_tag "/fs/#{file.id}/#{file.filename}", alt: "#{file.basename}" %>
-          &nbsp;<%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <% content = image_tag "/fs/#{file.id}/#{file.filename}", alt: "#{file.basename}" %>
+            <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
           <% end %>
         </div>
       </div>

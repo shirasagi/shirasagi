@@ -15,7 +15,7 @@ SS::Application.routes.draw do
     post "logs/download" => "logs#download"
   end
 
-  namespace "history", path: ".:host/history" do
+  namespace "history", path: ".:site/history" do
     get "logs" => "logs#index"
     get "logs/delete" => "logs#delete", as: :delete
     delete "logs" => "logs#destroy", as: :destroy

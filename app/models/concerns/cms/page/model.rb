@@ -2,16 +2,20 @@
 module Cms::Page::Model
   extend ActiveSupport::Concern
   extend SS::Translation
-  include Cms::Page::Feature
+  extend SS::Translation
+  include Cms::Content
   include Cms::Reference::Layout
-  include Faq::Reference::Question
 
   included do
     store_in collection: "cms_pages"
     set_permission_name "cms_pages"
 
     field :route, type: String, default: ->{ "cms/page" }
-    permit_params :route
+    field :released, type: DateTime
+
+    embeds_ids :categories, class_name: "Cms::Node"
+
+    permit_params category_ids: []
 
     after_save :rename_file, if: ->{ @db_changes }
     after_save :generate_file, if: ->{ @db_changes }
@@ -20,19 +24,9 @@ module Cms::Page::Model
   end
 
   public
-    def becomes_with_route
-      klass = route.camelize.constantize rescue nil
-      return self unless klass
-
-      item = klass.new
-      item.instance_variable_set(:@new_record, nil) unless new_record?
-      instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
-      item
+    def date
+      released || updated || created
     end
-
-    #def current?(path)
-    #  "/#{filename}" == "#{path.sub(/\.[^\.]+?$/, '.html')}" ? :current : nil
-    #end
 
     def generate_file
       return unless public?
@@ -40,6 +34,10 @@ module Cms::Page::Model
     end
 
   private
+    def fix_extname
+      ".html"
+    end
+
     def rename_file
       return unless @db_changes["filename"]
       return unless @db_changes["filename"][0]

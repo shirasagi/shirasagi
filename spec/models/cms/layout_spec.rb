@@ -10,8 +10,6 @@ describe Cms::Layout do
   describe "#attributes" do
     subject(:item) { model.last }
 
-    it { expect(item.render_html).not_to eq nil }
-    it { expect(item.render_json).not_to eq nil }
     it { expect(item.dirname).to eq nil }
     it { expect(item.basename).not_to eq nil }
     it { expect(item.path).not_to eq nil }
@@ -20,6 +18,6 @@ describe Cms::Layout do
     it { expect(item.full_url).not_to eq nil }
     it { expect(item.json_path).not_to eq nil }
     it { expect(item.public?).not_to eq nil }
-    it { expect(item.node).to eq nil }
+    it { expect(item.parent).to eq false }
   end
 end

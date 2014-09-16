@@ -1,27 +1,22 @@
 # coding: utf-8
 namespace :cms do
-
-  namespace :layout do
+  namespace :node do
     task :generate => :environment do
-      Cms::Task::LayoutsController.new.generate
-    end
-
-    task :remove => :environment  do
-      Cms::Task::LayoutsController.new.remove
+      Cms::Task::NodesController.new.generate site: ENV["site"]
     end
   end
 
   namespace :page do
     task :release => :environment do
-      Cms::Task::PagesController.new.release
+      Cms::Task::PagesController.new.release site: ENV["site"]
     end
 
     task :generate => :environment do
-      Cms::Task::PagesController.new.generate
+      Cms::Task::PagesController.new.generate site: ENV["site"], node: ENV["node"]
     end
 
     task :remove => :environment do
-      Cms::Task::PagesController.new.remove
+      Cms::Task::PagesController.new.remove site: ENV["site"]
     end
   end
 
@@ -29,7 +24,7 @@ namespace :cms do
     namespace :admin do
       task :create => :environment do
         site = SS::Site.find_by host: ENV["site"]
-        permissions = %w[
+        permissions = %w(
           edit_cms_sites
           edit_cms_users
           read_other_cms_nodes
@@ -47,7 +42,7 @@ namespace :cms do
           read_other_article_pages
           edit_other_article_pages
           delete_other_article_pages
-        ]
+        )
         data = { site_id: site.id, name: "admin",  permissions: permissions, permission_level: 3 }
 
         puts "Create role ..."
@@ -62,5 +57,4 @@ namespace :cms do
       end
     end
   end
-
 end

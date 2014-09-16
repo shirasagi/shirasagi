@@ -1,6 +1,5 @@
 # coding: utf-8
 module Cms::FormHelper
-
   def ancestral_layouts(node)
     node  = @cur_node if !node || node.new_record?
     items = []

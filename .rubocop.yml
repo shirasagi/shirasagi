@@ -13,6 +13,7 @@ Rails/DefaultScope:
     - app/helpers/
     - app/validators/
     - app/cells/
+    - lib/
 
 Rails/Output:
   Enabled: false

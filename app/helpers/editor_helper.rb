@@ -9,19 +9,19 @@ module EditorHelper
     end
 
     h  = []
-    h << %Q[<script data-turbolinks-track="true" src="/assets/js/ace/mode-#{mode}.js"></script>] if mode
+    h << %(<script data-turbolinks-track="true" src="/assets/js/ace/mode-#{mode}.js"></script>) if mode
     h <<  coffee do
       j  = []
-      j << %Q[$ ->]
-      j << %Q[  editor = $("#{elem}").ace({ theme: "chrome", lang: "#{mode}" })]
-      j << %Q[  ace = editor.data("ace").editor.ace]
+      j << %($ ->)
+      j << %(  editor = $\("#{elem}"\).ace({ theme: "chrome", lang: "#{mode}" }))
+      j << %(  ace = editor.data("ace").editor.ace)
 
       if opts[:readonly]
-        j << %Q[  ace.setReadOnly(true)]
-        j << %Q[  h = ace.getSession().getScreenLength() * 16 + ace.renderer.scrollBar.getWidth()]
-        j << %Q[  $(ace["container"]).css("line-height", "16px")]
-        j << %Q[  $(ace["container"]).height(h + "px")]
-        j << %Q[  $(ace["container"]).find(".ace_scrollbar").hide()]
+        j << %(  ace.setReadOnly(true))
+        j << %(  h = ace.getSession().getScreenLength() * 16 + ace.renderer.scrollBar.getWidth())
+        j << %(  $(ace["container"]).css("line-height", "16px"))
+        j << %(  $(ace["container"]).height(h + "px"))
+        j << %(  $(ace["container"]).find(".ace_scrollbar").hide())
       end
 
       j.join("\n").html_safe
@@ -59,32 +59,32 @@ module EditorHelper
     h  = []
     h <<  coffee do
       j = []
-      j << %Q[$ ->]
-      j << %Q[  $("#{elem}").ckeditor #{opts.to_json}]
+      j << %($ ->)
+      j << %(  $\("#{elem}"\).ckeditor #{opts.to_json})
 
-      j << %Q[  CKEDITOR.on 'dialogDefinition', (ev) -> ]
-      j << %Q[    name = ev.data.name]
-      j << %Q[    def  = ev.data.definition]
-      j << %Q[    if name == 'table']
-      j << %Q[      info = def.getContents('info')]
-      j << %Q[      text = info.get('txtWidth')]
-      j << %Q[      text['default'] = ""]
-      j << %Q[      text = info.get('txtCellSpace')]
-      j << %Q[      text['controlStyle'] = "display: none"]
-      j << %Q[      text['label'] = ""]
-      j << %Q[      text['default'] = ""]
-      j << %Q[      text = info.get('txtCellPad')]
-      j << %Q[      text['controlStyle'] = "display: none"]
-      j << %Q[      text['label'] = ""]
-      j << %Q[      text['default'] = ""]
-      j << %Q[      text = info.get('txtBorder')]
-      j << %Q[      text['controlStyle'] = "display: none"]
-      j << %Q[      text['label'] = ""]
-      j << %Q[      text['default'] = ""]
-      j << %Q[      text = info.get('txtSummary')]
-      j << %Q[      text['controlStyle'] = "display: none"]
-      j << %Q[      text['label'] = ""]
-      j << %Q[      text['default'] = ""]
+      j << %(  CKEDITOR.on 'dialogDefinition', (ev) -> )
+      j << %(    name = ev.data.name)
+      j << %(    def  = ev.data.definition)
+      j << %(    if name == 'table')
+      j << %(      info = def.getContents('info'))
+      j << %(      text = info.get('txtWidth'))
+      j << %(      text['default'] = "")
+      j << %(      text = info.get('txtCellSpace'))
+      j << %(      text['controlStyle'] = "display: none")
+      j << %(      text['label'] = "")
+      j << %(      text['default'] = "")
+      j << %(      text = info.get('txtCellPad'))
+      j << %(      text['controlStyle'] = "display: none")
+      j << %(      text['label'] = "")
+      j << %(      text['default'] = "")
+      j << %(      text = info.get('txtBorder'))
+      j << %(      text['controlStyle'] = "display: none")
+      j << %(      text['label'] = "")
+      j << %(      text['default'] = "")
+      j << %(      text = info.get('txtSummary'))
+      j << %(      text['controlStyle'] = "display: none")
+      j << %(      text['label'] = "")
+      j << %(      text['default'] = "")
 
       j.join("\n").html_safe
     end
@@ -96,25 +96,25 @@ module EditorHelper
     h  = []
     h <<  coffee do
       j = []
-      j << %Q[$ ->]
-      j << %Q[  tinymce.init]
-      j << %Q[    selector: "#{elem}"]
-      j << %Q[    language: "ja"]
+      j << %($ ->)
+      j << %(  tinymce.init)
+      j << %(    selector: "#{elem}")
+      j << %(    language: "ja")
 
       if opts[:readonly]
-      j << %Q[    readonly: true]
-      j << %Q[    plugins: \[\]]
-      j << %Q[    toolbar: false]
-      j << %Q[    menubar: false]
-      #j << %Q[    statusbar: false]
+      j << %(    readonly: true)
+      j << %(    plugins: \[\])
+      j << %(    toolbar: false)
+      j << %(    menubar: false)
+      #j << %(    statusbar: false)
       else
-      j << %Q[    plugins: \[ ]
-      j << %Q[      "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",]
-      j << %Q[      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",]
-      j << %Q[      "save table contextmenu directionality emoticons template paste textcolor"]
-      j << %Q[    \],]
-      j << %Q[    toolbar: "insertfile undo redo | styleselect | bold italic | forecolor backcolor" +]
-      j << %Q[      " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"]
+      j << %(    plugins: \[ )
+      j << %(      "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",)
+      j << %(      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",)
+      j << %(      "save table contextmenu directionality emoticons template paste textcolor")
+      j << %(    \],)
+      j << %(    toolbar: "insertfile undo redo | styleselect | bold italic | forecolor backcolor" +)
+      j << %(      " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media")
       end
 
       j.join("\n").html_safe

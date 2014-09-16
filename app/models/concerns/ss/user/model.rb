@@ -29,7 +29,7 @@ module SS::User::Model
 
     public
       def type_options
-        [ %w[SNSユーザー sns], %w[LDAPユーザー ldap] ]
+        [%w(SNSユーザー sns), %w(LDAPユーザー ldap)]
       end
   end
 

@@ -30,19 +30,13 @@ class Uploader::FilesController < ApplicationController
         raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
       end
 
-      if params[:do] == "edit"
-        render file: :edit
-      elsif params[:do] == "show"
-        render file: :show
-      elsif params[:do] == "delete"
-        render file: :delete
-      elsif params[:do] == "new_directory"
-        render file: :new_directory
-      elsif params[:do] == "new_files"
-        render file: :new_files
+      actions = %w(edit show delete new_directory new_files)
+      if actions.include?(params[:do])
+        index = actions.index(params[:do])
+        render actions[index].to_sym
       elsif @item.directory?
         set_items
-        render file: :index
+        render :index
       else
         raise "404"
       end
@@ -106,7 +100,7 @@ class Uploader::FilesController < ApplicationController
       if item.save
         render_create true, location: "#{uploader_files_path}/#{@item.filename}"
       else
-        item.errors.each do |n,e|
+        item.errors.each do |n, e|
           @item.errors.add :path, e
         end
         @directory = params[:item][:directory]
@@ -120,7 +114,7 @@ class Uploader::FilesController < ApplicationController
         item = @model.new(path: path, binary: file.read)
 
         if !item.save
-          item.errors.each do |n,e|
+          item.errors.each do |n, e|
             @item.errors.add item.name, e
           end
         end

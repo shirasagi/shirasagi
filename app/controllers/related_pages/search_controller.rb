@@ -8,7 +8,7 @@ class RelatedPages::SearchController < ApplicationController
     end
 
     def search
-      @cur_site = SS::Site.find_by host: params[:host]
+      @cur_site = SS::Site.find_by host: params[:site]
       @query = params[:q]
 
       if @query.present? && @cur_site.present?

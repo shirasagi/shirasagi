@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "4.1.5"
+gem "rails", "4.1.6"
 gem "sass-rails", "~> 4.0.3"
 gem "uglifier", ">= 1.3.0"
 gem "coffee-rails", "~> 4.0.0"
@@ -51,4 +51,8 @@ group :development, :test do
   gem 'guard-rubocop', '~> 1.1.0'
   gem 'guard-rspec', '~> 4.3.1'
   gem 'fuubar'
+  gem 'timecop'
 end
+
+gem 'brakeman', require: false, group: :development
+gem 'guard-brakeman', require: false, group: :development

@@ -1,5 +1,4 @@
 <nav class="act-menu">
-  <header><h1><%= t :"ss.action" %></h1></header>
   <div>
     <% if params[:action] =~ /index/ %>
       <%= link_to :new, action: :new if @model.allowed?(:edit, @cur_user, site: @cur_site) %>

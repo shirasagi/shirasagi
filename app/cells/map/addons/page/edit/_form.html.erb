@@ -1,6 +1,6 @@
 <%
-  map_loc = @item.map_loc.present? ? @item.map_loc : [ 34.074598, 134.55141 ]
-  map_zoom = @item.map_zoom.present? ? @item.map_zoom : 14
+  map_loc = @item.map_loc.present? ? @item.map_loc : [ 35.392915, 139.442888 ]
+  map_zoom = @item.map_zoom.present? ? @item.map_zoom : 5
 %>
 <%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap" %>
 <%= coffee do %>
@@ -23,6 +23,19 @@ setMapLoc = (ele, lat, lon) ->
 getMapLoc = (ele) ->
   latlon = ele.val().split(',')
   return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
+
+geocoderSearch = ->
+  geocoder = new google.maps.Geocoder()
+  geocoder.geocode(
+    { "address" : $(".mod-map .query").val(), "region" : "jp" },
+    (results, status) ->
+      if(status==google.maps.GeocoderStatus.OK)
+        window.map.setCenter(results[0].geometry.location)
+      else
+        alert(Map_Form.searchFailedMessage)
+      return
+  )
+  return false
 
 window.initmap = ->
   #googleMap api v3
@@ -82,14 +95,13 @@ window.initmap = ->
     return false
 
   $(".mod-map .search").on 'click', ->
-    geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ "address" : $(".mod-map .query").val(), "region" : "jp" },
-      (results, status) ->
-        if(status==google.maps.GeocoderStatus.OK)
-          map.setCenter(results[0].geometry.location)
-        else
-          alert(Map_Form.searchFailedMessage)
-    )
+    geocoderSearch()
+    return false
+
+  $(".mod-map .query").on 'submit', (e) ->
+    alert("this")
+    geocoderSearch()
+    e.preventDefault();
     return false
 
   # markers
@@ -114,12 +126,6 @@ window.initmap = ->
       map: window.map
     )
     Map_Form.dataID += 1
-
-  #$(".settingIcon").draggable(
-  #  containment: '.mod-map',
-  #  scroll: false
-  #  stop: (event, ui) ->
-  #);
 
   return;
 
@@ -208,13 +214,10 @@ class @Map_Form
       <dd class="marker">
         <p>
           マーカー名
+          <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
           <%= text_field_tag "item[map_points][][name]", nil, class: "marker-name" %>
           <%= button_tag t("map.set-marker"), { type: :button, class: "set-marker" } %>
           <%= button_tag t("map.clear-marker"), { type: :button, class: "clear-marker" } %>
-        </p>
-        <p>
-          <%= t("map.loc") %>
-          <%= text_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
         </p>
         <p>
           マーカー説明
@@ -227,12 +230,9 @@ class @Map_Form
         <p>
           マーカー名
           <%= text_field_tag "item[map_points][][name]", point["name"], class: "marker-name" %>
+          <%= hidden_field_tag "item[map_points][][loc]", point["loc"].join(","), class: "loc marker-loc" %>
           <%= button_tag t("map.set-marker"), { type: :button, class: "set-marker" } %>
           <%= button_tag t("map.clear-marker"), { type: :button, class: "clear-marker" } %>
-        </p>
-        <p>
-          <%= t("map.loc") %>
-          <%= text_field_tag "item[map_points][][loc]", point["loc"].join(","), class: "loc marker-loc" %>
         </p>
         <p>
           マーカー説明

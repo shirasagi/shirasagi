@@ -38,10 +38,10 @@ def save_cms_role(data)
 end
 
 role1 = save_cms_role name: "サイト管理者", permission_level: 3,
-  permissions: Cms::Role.permission_names.map { |key, value| value }
+  permissions: Cms::Role.permission_names
 
 role2 = save_cms_role name: "記事編集権限", permission_level: 1,
-  permissions: %w[
+  permissions: %w(
     read_private_article_pages edit_private_article_pages
     delete_private_article_pages read_private_cms_nodes
     release_other_article_pages release_private_article_pages
@@ -52,7 +52,7 @@ role2 = save_cms_role name: "記事編集権限", permission_level: 1,
     delete_private_faq_pages approve_other_faq_pages
     approve_private_faq_pages release_private_faq_pages
     release_other_faq_pages
-  ]
+  )
 
 ## -------------------------------------
 puts "users:"

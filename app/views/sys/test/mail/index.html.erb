@@ -1,0 +1,40 @@
+<%= scss do %>
+#http-tester {
+  h2 {
+    padding: 5px 10px;
+    background-color: #888;
+    color: #fff;
+  }
+  .buttons {
+    margin: 0px 0px 15px;
+    button { width: 100px; min-height: 3em; margin: 0px 10px 0px 0px; }
+  }
+
+  .view {
+    #queue { width: 120px; text-align: right; }
+    div { margin: 10px 0px; }
+    textarea { width: 90% !important; height: 200px; }
+  }
+}
+<% end %>
+
+<%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true } do |f| %>
+<%#= error_messages_for :item %>
+
+<article id="http-tester">
+  <div class="view">
+    <h2>Mail To</h2>
+    <div><%= f.text_field :to, required: true %></div>
+
+    <h2>Subject</h2>
+    <div><%= f.text_field :subject, required: true %></div>
+
+    <h2>Body</h2>
+    <div><%= f.text_area :body, required: true %></div>
+  </div>
+</article>
+
+<footer class="send">
+  <%= f.submit t(:send), class: :send %>
+</footer>
+<% end %>

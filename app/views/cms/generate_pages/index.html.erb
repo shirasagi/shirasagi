@@ -1,0 +1,24 @@
+<%= form_tag action: :run do |f| %>
+
+<dl class="see">
+  <dt><%= @item.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @item.t :state %></dt>
+  <dd><%= @item.send :state %></dd>
+
+  <dt><%= @item.t :started %></dt>
+  <dd><%= tryb { @item.started.strftime("%Y-%m-%d %H:%M:%S") } %></dd>
+
+  <dt><%= @item.t :closed %></dt>
+  <dd><%= tryb { @item.closed.strftime("%Y-%m-%d %H:%M:%S") } %></dd>
+
+  <dt><%= @item.t :log %></dt>
+  <dd><textarea style="height: 200px;" readonly="readonly"><%= @item.read_log %></textarea></dd>
+</dl>
+
+<footer class="send">
+  <%= submit_tag t(:run), class: :save %>
+</footer>
+
+<% end %>

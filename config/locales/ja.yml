@@ -212,3 +212,13 @@ ja:
       next: "Next &rsaquo;"
       last: "&raquo;"
       truncate: "..."
+
+
+  mongoid:
+    errors:
+      messages:
+        unknown_attribute:
+          message: "unknown_attribute %{klass}.%{name}"
+          summary: "unknown_attribute %{klass}.%{name}"
+          resolution: "You can include Mongoid::Attributes::Dynamic if you
+            expect to be writing values for undefined fields often."

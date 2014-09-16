@@ -15,7 +15,7 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion
   end
 
-  namespace "workflow", path: ".:host/workflow" do
+  namespace "workflow", path: ".:site/workflow" do
     get "/" => "main#index"
     resources :pages, concerns: :deletion
   end

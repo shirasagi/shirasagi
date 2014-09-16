@@ -5,6 +5,8 @@ class Cms::Part
 
   include Cms::Part::Model
 
+  index({ site_id: 1, filename: 1 }, { unique: true })
+
   class Base
     include Cms::Part::Model
 
@@ -16,10 +18,6 @@ class Cms::Part
     include Cms::Addon::Html
 
     default_scope ->{ where(route: "cms/free") }
-
-    def render_html
-      SS.config.cms.ajax_free_part ? super : html
-    end
   end
 
   class Node
@@ -46,18 +44,14 @@ class Cms::Part
   class Crumb
     include Cms::Part::Model
 
-    default_scope ->{ where(route: "cms/crumb") }
-
     field :home_label, type: String
+
     permit_params :home_label
+
+    default_scope ->{ where(route: "cms/crumb") }
 
     def home_label
       self[:home_label].presence || "HOME"
-    end
-
-    def render_html
-      h = super.sub("ss-part", "")
-      %Q[<div class="ss-part crumbs" data-href="#{url}"><span class="node">#{h}</span></div>]
     end
   end
 

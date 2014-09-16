@@ -5,10 +5,27 @@ module Cms::ReleaseFilter::Page
   include Cms::ReleaseFilter::Layout
 
   private
+    def find_node(path)
+      node = Cms::Node.site(@cur_site).in_path(path.sub(/\/[^\/]+$/, "")).sort(depth: -1).first
+      return unless node
+      @preview || node.public? ? node : nil
+    end
+
     def find_page(path)
       page = Cms::Page.site(@cur_site).find_by(filename: path) rescue nil
       return unless page
+      page = page.becomes_with_route
       @preview || page.public? ? page : nil
+    end
+
+    def render_node(node, path = @path)
+      rest = path.sub(/^#{node.filename}/, "").sub(/\/index\.html$/, "")
+      cell = recognize_path "/.#{@cur_site.host}/nodes/#{node.route}#{rest}"
+      return unless cell
+
+      @cur_node   = node
+      @cur_layout = node.layout
+      render_cell node.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
     end
 
     def render_page(page, env = {})
@@ -20,30 +37,41 @@ module Cms::ReleaseFilter::Page
       render_cell page.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
     end
 
-    def send_page(body)
-      return unless body
-      respond_to do |format|
-        format.html { render inline: body, layout: "cms/page" }
-        format.json { render json: body }
-        format.xml  { render xml: body }
-      end
+    def generate_node(node)
+      return unless SS.config.cms.serve_static_pages
+
+      self.params   = ActionController::Parameters.new format: "html"
+      self.request  = ActionDispatch::Request.new method: "GET"
+      self.response = ActionDispatch::Response.new
+
+      @path       = node.url
+      @cur_path   = @path
+      @cur_layout = node.layout
+      @cur_site   = node.site
+
+      html = render_node(node, "#{node.filename}/index.html")
+      return unless html
+
+      html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
+
+      file = "#{node.path}/index.html"
+      keep = html.to_s == File.read(file).to_s rescue false # prob: csrf-token
+      Fs.write file, html unless keep
     end
 
     def generate_page(page)
       return unless SS.config.cms.serve_static_pages
 
-      self.params = ActionController::Parameters.new format: "html"
-      self.request = ActionDispatch::Request.new method: "GET"
+      self.params   = ActionController::Parameters.new format: "html"
+      self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
-      @path = page.url
+      @path       = page.url
+      @cur_path   = @path
+      @cur_layout = page.layout
 
       html = render_page(page, method: "GET")
-      html = render_to_string inline: html, layout: "cms/page"
-
-      if page.layout
-        html = embed_layout(html, page.layout) unless SS.config.cms.ajax_layout
-      end
+      html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
 
       keep = html.to_s == File.read(page.path).to_s rescue false # prob: csrf-token
       Fs.write page.path, html unless keep

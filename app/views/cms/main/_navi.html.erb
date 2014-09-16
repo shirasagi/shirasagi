@@ -6,6 +6,7 @@
     <%= link_to :"cms.page", cms_pages_path, class: "icon-page" if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <%= link_to :"cms.part", cms_parts_path, class: "icon-part" if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= link_to :"cms.generate_page", cms_generate_pages_path, class: "icon-conf" if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
   </div>
 </nav>
 
@@ -24,7 +25,7 @@
     <%= link_to :"cms.role", cms_roles_path if Cms::Role.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.user", cms_users_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.member", cms_members_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) if Rails.env.development? %>
+    <%= link_to :"cms.member", cms_members_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) && Rails.env.development? %>
     <%= link_to :"history.log", history_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
   </div>
 </nav>

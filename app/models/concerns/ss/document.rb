@@ -30,11 +30,11 @@ module SS::Document
       list = msg.map {|d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>"}
 
       h  = []
-      h << %Q[<div class="tooltip">?]
-      h << %Q[<ul>]
+      h << %(<div class="tooltip">?)
+      h << %(<ul>)
       h << list
-      h << %Q[</ul>]
-      h << %Q[</div>]
+      h << %(</ul>)
+      h << %(</div>)
       h.join("\n").html_safe
     end
 
@@ -80,11 +80,6 @@ module SS::Document
 
     def lookup_addons
       ancestors.select { |x| x.respond_to?(:addon_name) }
-    end
-
-    def inherit_addons(mod)
-      names = addons.map {|m| m.klass }
-      mod.addons.each {|addon| include addon.klass unless names.include?(addon.klass) }
     end
   end
 

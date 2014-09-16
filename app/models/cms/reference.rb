@@ -1,6 +1,5 @@
 # coding: utf-8
 module Cms::Reference
-
   module Role
     extend ActiveSupport::Concern
 

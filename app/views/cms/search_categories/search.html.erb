@@ -8,20 +8,19 @@ categories = categories.uniq { |item| item.filename }
 
 def cate_form(item)
 
- children = Category::Node::Base.site(@cur_site).
-    where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+  children = Category::Node::Base.site(@cur_site).node(item)
 
   h = ""
   if item.depth == 1 || children.size > 0
-    h = %Q[<label style="margin-right: 10px;">]
+    h = %(<label style="margin-right: 10px;">)
     h << check_box_tag("category_ids[]", item._id)
-    h << %Q[#{item.name}</label>]
+    h << %(#{item.name}</label>)
   end
 
   if children.size > 0
-    h << %Q[<div style="padding: 0px 0px 0px 40px;">].html_safe
+    h << %(<div style="padding: 0px 0px 0px 40px;">).html_safe
     children.each { |c| h += cate_form c }
-    h << %Q[</div>].html_safe
+    h << %(</div>).html_safe
   end
 
   h.html_safe
