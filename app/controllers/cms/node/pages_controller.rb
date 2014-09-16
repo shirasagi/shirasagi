@@ -1,7 +1,7 @@
 # coding: utf-8
 class Cms::Node::PagesController < ApplicationController
   include Cms::BaseFilter
-  include Cms::CrudFilter
+  include Cms::PageFilter
 
   model Cms::Page
 
@@ -22,9 +22,9 @@ class Cms::Node::PagesController < ApplicationController
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-      @items = Cms::Page.site(@cur_site).node(@cur_node).
-        allow(:read, @cur_user).
+      @items = @model.site(@cur_site).node(@cur_node).
         where(route: "cms/page").
+        allow(:read, @cur_user).
         search(params[:s]).
         order_by(filename: 1).
         page(params[:page]).per(50)
