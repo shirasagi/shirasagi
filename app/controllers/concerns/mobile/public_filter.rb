@@ -18,10 +18,6 @@ module Mobile::PublicFilter
     end
 
   private
-    def render_layout(body, opts = {})
-      super body, part_condition: { mobile_view: "show"}
-    end
-
     def render_mobile
       body = response.body
 
