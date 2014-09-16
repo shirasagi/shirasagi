@@ -33,8 +33,8 @@ $(function() {
   var urlsprit = "/"+url.split("/")[1]+"/";
   $('#gnav li a[href="'+urlsprit+'index.html"]').parent().addClass('current');
 
-  
-  $("#side").on('DOMNodeInserted', '#side-menu .cms-pages', function() {
+
+  $("#side-menu .cms-pages").each(function() {
     var menu = $(this).find("a");
     if (path == menu.attr("href")) {
       return $(this).addClass("current");
@@ -53,14 +53,12 @@ $(function() {
     });
   });
 
-  $(document).bind('DOMNodeInserted', function() {
-    var path2 = location.pathname;
-    $(".cms-pages .cms-pages").each(function() {
-      var menu = $(this).find("a");
-      if (path2 == menu.attr("href")) {
-        return $(this).addClass("current");
-      }
-    });
+  var path2 = location.pathname;
+  $(".cms-pages .cms-pages").each(function() {
+    var menu = $(this).find("a");
+    if (path2 == menu.attr("href")) {
+      return $(this).addClass("current");
+    }
   });
 
 // block link
@@ -69,25 +67,25 @@ $(function() {
     return false;
   });
 // smartphone
-        var w = $(window).width();
-        var x = 600;
-        if (w <= x) {
-          $("#search form, #gnav ul").hide();
-          $('#search h2, #gnav h2').click(function(e){
-            $('+form, +ul',this).slideToggle();
-            $("#search h2, #gnav h2").toggleClass("open");
-          });
-          $('#search h2').click(function(e){
-            $("#gnav ul").hide();
-            $("#gnav h2").removeClass("open");
-          });
-          $('#gnav h2').click(function(e){
-            $("#search form").hide();
-            $("#search h2").removeClass("open");
-          });
-        }else {
-          $("#search form, #gnav ul").show();
-        }
+  var w = $(window).width();
+  var x = 600;
+  if (w <= x) {
+    $("#search form, #gnav ul").hide();
+    $('#search h2, #gnav h2').click(function(e){
+      $('+form, +ul',this).slideToggle();
+      $("#search h2, #gnav h2").toggleClass("open");
+    });
+    $('#search h2').click(function(e){
+      $("#gnav ul").hide();
+      $("#gnav h2").removeClass("open");
+    });
+    $('#gnav h2').click(function(e){
+      $("#search form").hide();
+      $("#search h2").removeClass("open");
+    });
+  }else {
+    $("#search form, #gnav ul").show();
+  }
 
 });
 
