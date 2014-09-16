@@ -18,8 +18,8 @@ module Cms::Part::Model
       Cms::Part.plugins
     end
 
-    def becomes_with_route
-      super route.sub("/", "/part/")
+    def becomes_with_route(name = nil)
+      super (name || route).sub("/", "/part/")
     end
 
     def mobile_view_options

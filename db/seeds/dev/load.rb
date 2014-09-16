@@ -39,7 +39,7 @@ def save_node(data)
   puts "  #{data[:name]}"
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
+  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.update data
 end
 
@@ -73,7 +73,7 @@ def save_part(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("parts/" + data[:filename]) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route
+  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.html = html if html
   item.update data
 end
