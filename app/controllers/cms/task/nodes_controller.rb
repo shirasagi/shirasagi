@@ -3,7 +3,7 @@ class Cms::Task::NodesController < ApplicationController
   include Cms::ReleaseFilter::Page
 
   public
-   def generate(opts)
+    def generate(opts)
       @task = opts[:task]
       #return unless @cur_site.serve_static_file?
 

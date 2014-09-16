@@ -3,7 +3,7 @@ class Cms::Task::PagesController < ApplicationController
   include Cms::ReleaseFilter::Page
 
   public
-   def generate(opts)
+    def generate(opts)
       @task = opts[:task]
       #return unless @cur_site.serve_static_file?
 
@@ -12,9 +12,9 @@ class Cms::Task::PagesController < ApplicationController
         @task.log page.url if @task
         generate_page page.becomes_with_route
       end
-   end
+    end
 
-   def generate_with_node(opts)
+    def generate_with_node(opts)
       @task = opts[:task]
       #return unless @cur_site.serve_static_file?
 

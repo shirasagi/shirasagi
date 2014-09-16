@@ -32,7 +32,7 @@ module SS::Task::Model
         rescue StandardError => e
           task.log e.to_s
           task.log e.backtrace.join("\n")
-          dump "#{e.to_s}\n#{e.backtrace.join("\n")}" if Rails.env.development?
+          dump "#{e}\n#{e.backtrace.join("\n")}" if Rails.env.development?
         end
         task.close
       end
