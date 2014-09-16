@@ -39,16 +39,17 @@ module Cms::ReleaseFilter::Page
       render_cell page.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
     end
 
+  public
     def generate_node(node)
-      return unless SS.config.cms.serve_static_pages
+      return unless node.serve_static_file?
 
       self.params   = ActionController::Parameters.new format: "html"
       self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
-      @cur_path   = "/#{node.url}"
-      @cur_layout = node.layout
+      @cur_path   = node.url
       @cur_site   = node.site
+      @cur_layout = node.layout
 
       html = render_node(node, method: "GET")
       return unless html
@@ -61,19 +62,25 @@ module Cms::ReleaseFilter::Page
     end
 
     def generate_page(page)
-      return unless SS.config.cms.serve_static_pages
+      return unless page.serve_static_file?
 
       self.params   = ActionController::Parameters.new format: "html"
       self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
-      @cur_path   = "/#{page.url}"
+      @cur_path   = page.url
+      @cur_site   = page.site
       @cur_layout = page.layout
 
       html = render_page(page, method: "GET")
       html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
 
-      keep = html.to_s == File.read(page.path).to_s rescue false # prob: csrf-token
-      Fs.write page.path, html unless keep
+      digest = Digest::MD5.hexdigest(html)
+      if diff = (digest != page.digest)
+        page.class.where(id: page.id).update_all digest: digest
+      end
+      if diff || !Fs.exists?(page.path)
+        Fs.write page.path, html
+      end
     end
 end

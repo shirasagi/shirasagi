@@ -7,7 +7,7 @@ class Cms::GeneratePagesController < ApplicationController
 
   private
     def task_name
-      "cms:page:generate"
+      "cms:generate_pages"
     end
 
     def set_item

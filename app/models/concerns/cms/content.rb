@@ -16,6 +16,7 @@ module Cms::Content
     field :filename, type: String
     field :depth, type: Integer
     field :order, type: Integer, default: 0
+    field :digest, type: String
 
     permit_params :state, :name, :filename, :basename, :order, :route
 
@@ -119,6 +120,10 @@ module Cms::Content
       item.instance_variable_set(:@new_record, nil) unless new_record?
       instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
       item
+    end
+
+    def serve_static_file?
+      SS.config.cms.serve_static_pages
     end
 
   private

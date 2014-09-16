@@ -1,25 +1,5 @@
 # coding: utf-8
 namespace :cms do
-  namespace :node do
-    task :generate => :environment do
-      Cms::Task::NodesController.new.generate site: ENV["site"]
-    end
-  end
-
-  namespace :page do
-    task :release => :environment do
-      Cms::Task::PagesController.new.release site: ENV["site"]
-    end
-
-    task :generate => :environment do
-      Cms::Task::PagesController.new.generate site: ENV["site"], node: ENV["node"]
-    end
-
-    task :remove => :environment do
-      Cms::Task::PagesController.new.remove site: ENV["site"]
-    end
-  end
-
   namespace :role do
     namespace :admin do
       task :create => :environment do

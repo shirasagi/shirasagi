@@ -76,10 +76,10 @@ CentOS 6.5/64bit
   rake db:create_indexes
 
   # 管理者ユーザーの作成
-  rake ss:user:create data='{ name: "システム管理者", email: "sys@example.jp", password: "pass" }'
+  rake ss:create_user data='{ name: "システム管理者", email: "sys@example.jp", password: "pass" }'
 
   # サイトの作成
-  rake ss:site:create data='{ name: "サンプルサイト", host: "www", domains: "localhost:3000" }'
+  rake ss:site:create data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
 
 --------------------
 # サンプルデータ
@@ -94,13 +94,16 @@ CentOS 6.5/64bit
 # CMS管理
 
   # 予約公開/非公開
-  rake cms:page:release
+  rake cms:release_pages
 
-  # 静的ページ書き出し
-  rake cms:page:generate site=www
+  # 静的ページ書き出し（フォルダ＋ページ）
+  rake cms:generate_nodes site=www
+
+  # 静的ページ書き出し（ページ）
+  rake cms:generate_pages site=www
 
   # 静的ページ削除
-  rake cms:page:remove site=www
+  rake cms:remove_pages site=www
 
 --------------------
 # 開発ツール

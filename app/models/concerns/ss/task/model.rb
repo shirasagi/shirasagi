@@ -19,6 +19,25 @@ module SS::Task::Model
     validates :state, presence: true
   end
 
+  module ClassMethods
+    public
+      def run(cond, &block)
+        task = Cms::Task.find_or_create_by(cond)
+        return puts "already running. ##{cond[:name]}" unless task.start
+
+        begin
+          require 'benchmark'
+          time = Benchmark.realtime { yield task }
+          task.log sprintf("(%.3fms)", time)
+        rescue StandardError => e
+          task.log e.to_s
+          task.log e.backtrace.join("\n")
+          dump "#{e.to_s}\n#{e.backtrace.join("\n")}" if Rails.env.development?
+        end
+        task.close
+      end
+  end
+
   public
     def running?
       state == "running"
@@ -26,6 +45,7 @@ module SS::Task::Model
 
     def start
       return false if running?
+      @logs = []
 
       self.started = Time.now
       self.closed  = nil
@@ -40,8 +60,7 @@ module SS::Task::Model
     end
 
     def log_file
-      return @log if @log
-      @log = "#{Rails.root}/log/tasks/#{id.to_s.split(//).join('/')}/_/#{name.gsub(/\W/, '_')}.log"
+      "#{Rails.root}/log/tasks/#{id.to_s.split(//).join('/')}/_/#{name.gsub(/\W/, '_')}.log"
     end
 
     def read_log
@@ -49,30 +68,14 @@ module SS::Task::Model
     end
 
     def log(msg)
-      dump msg if Rails.env.development?
       @logs << msg
+      puts msg
+      dump msg if Rails.env.development?
     end
 
-    def clear_log
+    def log_dump
       dir = File.dirname(log_file)
       Fs.mkdir_p(dir) unless Fs.exists?(dir)
-      Fs.write log_file, ""
-      @logs = []
-    end
-
-    def run(&block)
-      if start
-        clear_log
-        begin
-          log "# run #{name}.."
-          yield
-          log "# end."
-        rescue => e
-          log e.to_s
-          log e.backtrace.join("\n")
-        end
-        close
-        Fs.write log_file, @logs.join("\n")
-      end
+      Fs.write log_file, @logs.join("\n")
     end
 end

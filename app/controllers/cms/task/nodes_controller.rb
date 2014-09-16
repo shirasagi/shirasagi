@@ -3,28 +3,43 @@ class Cms::Task::NodesController < ApplicationController
   include Cms::ReleaseFilter::Page
 
   public
-    def generate(opts)
-      return puts "config.cms.serve_static_pages is false" unless SS.config.cms.serve_static_pages
+   def generate(opts)
+      @task = opts[:task]
+      #return unless @cur_site.serve_static_file?
 
-      cond = {}
-      cond = { host: opts[:site] } if opts[:site]
+      Cms::Node.site(opts[:site]).public.each do |node|
+        generate_node node
+      end
+    end
 
-      SS::Site.where(cond).each do |site|
-        @cur_site = site
-        task_cond = { name: "cms:node:generate", site_id: @cur_site.id }
+    def generate_with_node(opts)
+      @task = opts[:task]
+      #return unless @cur_site.serve_static_file?
 
-        @task = Cms::Task.find_or_create_by task_cond
-        @task.run do
-          Cms::Node.site(@cur_site).public.each do |node|
-            next unless node.public_node?
+      Cms::Node.site(opts[:site]).where(filename: /^#{opts[:node].filename}\/?$/).public.each do |node|
+        generate_node node
+      end
+    end
 
-            cname = node.route.sub("/", "/task/node/").camelize.pluralize + "Controller"
-            klass = cname.constantize rescue nil
-            next if klass.nil? || klass.to_s != cname
+  private
+    def generate_node(node)
+      return unless node.public_node?
 
-            klass.new.generate(@task, node.becomes_with_route)
-          end
-        end
+      cname = node.route.sub("/", "/task/node/").camelize.pluralize + "Controller"
+      klass = cname.constantize rescue nil
+      return if klass.nil? || klass.to_s != cname
+      klass.new.generate task: @task, node: node.becomes_with_route
+
+      generate_pages(node.pages)
+    end
+
+    def generate_pages(pages)
+      return if pages.size > 50
+
+      pages.each do |page|
+        next unless page.public_node?
+        @task.log page.url if @task
+        generate_page page.becomes_with_route
       end
     end
 end
