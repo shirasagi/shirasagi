@@ -19,12 +19,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by cond
+  item = Cms::Layout.find_or_create_by(cond)
   item.attributes = data.merge html: html
   item.update
-
   item.add_to_set group_ids: @site.group_ids
-  item.update
 
   item
 end
@@ -55,15 +53,14 @@ puts "parts:"
 
 def save_part(data)
   puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/part/").camelize.constantize
-
   cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
+
   html = File.read("parts/" + data[:filename]) rescue nil
   upper_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".upper_html")) rescue nil
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
+  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route
   item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
@@ -71,9 +68,7 @@ def save_part(data)
 
   item.attributes = data
   item.update
-
   item.add_to_set group_ids: @site.group_ids
-  item.update
 
   item
 end
@@ -125,15 +120,14 @@ puts "nodes:"
 
 def save_node(data)
   puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/node/").singularize.camelize.constantize
-
   cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
+
   upper_html = File.read("nodes/" + data[:filename] + ".upper_html") rescue nil
   loop_html  = File.read("nodes/" + data[:filename] + ".loop_html") rescue nil
   lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
+  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
@@ -141,9 +135,7 @@ def save_node(data)
 
   item.attributes = data
   item.update
-
   item.add_to_set group_ids: @site.group_ids
-  item.update
 
   item
 end
@@ -329,8 +321,8 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市�
 def save_inquiry_column(data)
   puts "  #{data[:name]}"
   cond = { node_id: data[:node_id], name: data[:name] }
-  item = Inquiry::Column.find_or_create_by cond
 
+  item = Inquiry::Column.find_or_create_by(cond)
   item.attributes = data
   item.update
 
@@ -401,18 +393,17 @@ puts "pages:"
 def save_page(data)
   puts "  #{data[:name]}"
   cond = { site_id: @site._id, filename: data[:filename] }
+
   html = File.read("pages/" + data[:filename]) rescue nil
   summary_html = File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = Cms::Page.find_or_create_by cond
+  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
   item.update
-
   item.add_to_set group_ids: @site.group_ids
-  item.update
 
   item
 end
@@ -485,8 +476,8 @@ dates = (Date.today..(Date.today + 12)).map { |d| d.mongoize }
 save_page route: "article/page", filename: "docs/30.html", name: "ふれあいフェスティバル", layout_id: layouts["oshirase"].id,
   category_ids: [categories["oshirase"].id, categories["oshirase/event"].id], event_dates: dates
 
+## -------------------------------------
 puts "faq pages:"
+
 save_page route: "faq/page", filename: "faq/docs/31.html", name: "休日や夜間の戸籍の届出について",
   layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id], question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
-
-

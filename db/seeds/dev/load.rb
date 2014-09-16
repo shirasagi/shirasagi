@@ -19,7 +19,7 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by cond
+  item = Cms::Layout.find_or_create_by(cond)
   item.update data.merge html: html
 end
 
@@ -37,10 +37,9 @@ puts "nodes:"
 
 def save_node(data)
   puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/node/").camelize.constantize
-
   cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
+
+  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
   item.update data
 end
 
@@ -71,11 +70,10 @@ puts "parts:"
 
 def save_part(data)
   puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/part/").camelize.constantize
-
   cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
   html = File.read("parts/" + data[:filename]) rescue nil
+
+  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route
   item.html = html if html
   item.update data
 end
@@ -102,7 +100,7 @@ def save_page(data)
   puts "  #{data[:name]}"
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = Cms::Page.find_or_create_by cond
+  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
   item.update data
 end
 
