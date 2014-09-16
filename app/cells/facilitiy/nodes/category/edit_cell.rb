@@ -1,7 +1,7 @@
 # coding: utf-8
-module Map::Nodes::Page
+module Facilitiy::Nodes::Category
   class EditCell < Cell::Rails
     include Cms::NodeFilter::EditCell
-    model Map::Node::Page
+    model Facilitiy::Node::Category
   end
 end
