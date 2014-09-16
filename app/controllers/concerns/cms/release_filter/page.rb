@@ -6,20 +6,20 @@ module Cms::ReleaseFilter::Page
 
   private
     def find_node(path)
-      node = Cms::Node.site(@cur_site).in_path(path.sub(/\/[^\/]+$/, "")).sort(depth: -1).first
+      node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
       return unless node
       @preview || node.public? ? node : nil
     end
 
     def find_page(path)
-      page = Cms::Page.site(@cur_site).find_by(filename: path) rescue nil
+      page = Cms::Page.site(@cur_site).filename(path).first
       return unless page
       page = page.becomes_with_route
       @preview || page.public? ? page : nil
     end
 
     def render_node(node, env = {})
-      rest = @path.sub(/^#{node.filename}/, "").sub(/\/index\.html$/, "")
+      rest = @cur_path.sub(/^\/#{node.filename}/, "").sub(/\/index\.html$/, "")
       path = "/.#{@cur_site.host}/nodes/#{node.route}#{rest}"
       cell = recognize_path path
       return unless cell
@@ -46,8 +46,7 @@ module Cms::ReleaseFilter::Page
       self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
-      @path       = node.url
-      @cur_path   = @path
+      @cur_path   = "/#{node.url}"
       @cur_layout = node.layout
       @cur_site   = node.site
 
@@ -68,8 +67,7 @@ module Cms::ReleaseFilter::Page
       self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
-      @path       = page.url
-      @cur_path   = @path
+      @cur_path   = "/#{page.url}"
       @cur_layout = page.layout
 
       html = render_page(page, method: "GET")

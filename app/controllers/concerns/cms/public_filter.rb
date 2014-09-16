@@ -46,18 +46,16 @@ module Cms::PublicFilter
     end
 
     def set_request_path
-      @path ||= request.env["REQUEST_PATH"]
+      @cur_path ||= request.env["REQUEST_PATH"]
 
-      path = @path.dup
+      path = @cur_path.dup
       @@filters.each do |name|
         send("set_path_with_#{name}")
-        if path != @path
+        if path != @cur_path
           @filter = name
           break
         end
       end
-
-      @cur_path = @path
     end
 
     def redirect_slash
@@ -66,18 +64,18 @@ module Cms::PublicFilter
     end
 
     def deny_path
-      raise "404" if @path =~ /^\/sites\/.\//
+      raise "404" if @cur_path =~ /^\/sites\/.\//
     end
 
     def parse_path
-      @path = @path.sub(/\/$/, "/index.html").sub(/^\//, "")
-      @html = @path.sub(/^\//, "").sub(/\.\w+$/, ".html")
-      @file = File.join(@cur_site.path, @path)
+      @cur_path.sub!(/\/$/, "/index.html")
+      @html = @cur_path.sub(/\.\w+$/, ".html")
+      @file = File.join(@cur_site.path, @cur_path)
     end
 
     def compile_scss
-      return if @path !~ /\.css$/
-      return if @path =~ /(^|\/)_[^\/]*$/
+      return if @cur_path !~ /\.css$/
+      return if @cur_path =~ /\/_[^\/]*$/
       return unless Fs.exists? @scss = @file.sub(/\.css$/, ".scss")
 
       css_mtime = Fs.exists?(@file) ? Fs.stat(@file).mtime : 0

@@ -10,10 +10,10 @@ module Cms::Parts::Crumb
         @root  = @cur_node || @cur_site
         @items = []
 
-        if @cur_path =~ /^#{@root.url}/
+        if "#{@cur_path}" =~ /^#{@root.url}/
           url = @cur_path.sub(/^#{@cur_site.url}/, "").sub(/\/([\w\-]+\.[\w\-]+)?$/, "")
 
-          if node = Cms::Node.site(@cur_site).where(filename: url).first
+          if node = Cms::Node.site(@cur_site).filename(url).first
             @items.unshift [node.name, node.url]
             while parent = node.parent
               break if @cur_node && @cur_node.id == parent.id
@@ -23,7 +23,7 @@ module Cms::Parts::Crumb
           end
 
           if @cur_path =~ /\/[\w\-]+\.[\w\-]+$/
-            page = Cms::Page.site(@cur_site).where(filename: @cur_path.sub(/^\//, "")).first
+            page = Cms::Page.site(@cur_site).filename(@cur_path).first
             @items << [page.name, nil] if page
           end
         end

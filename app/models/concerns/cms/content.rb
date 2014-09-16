@@ -28,6 +28,7 @@ module Cms::Content
     after_validation :set_depth, if: ->{ filename.present? }
 
     scope :public, ->{ where state: "public" }
+    scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node) {
       node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
     }

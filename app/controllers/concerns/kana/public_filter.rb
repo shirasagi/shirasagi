@@ -13,8 +13,8 @@ module Kana::PublicFilter
 
   public
     def set_path_with_kana
-      return if @path !~ /^#{SS.config.kana.location}\//
-      @path.sub!(/^#{SS.config.kana.location}\//, "/")
+      return if @cur_path !~ /^#{SS.config.kana.location}\//
+      @cur_path.sub!(/^#{SS.config.kana.location}\//, "/")
     end
 
   private

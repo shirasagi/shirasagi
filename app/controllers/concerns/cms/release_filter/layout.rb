@@ -5,7 +5,7 @@ module Cms::ReleaseFilter::Layout
 
   private
     def find_part(path)
-      part = Cms::Part.site(@cur_site).find_by(filename: path) rescue nil
+      part = Cms::Part.site(@cur_site).filename(path).first
       return unless part
 
       @preview || part.public?  ? part : nil
@@ -36,7 +36,7 @@ module Cms::ReleaseFilter::Layout
 
         part = Cms::Part.site(@cur_site)
         part = part.where mobile_view: "show" if @filter == :mobile
-        part = part.where(filename: path).first
+        part = part.filename(path).first
         part = part.becomes_with_route if part
         part ? render_part(part) : ""
       end
