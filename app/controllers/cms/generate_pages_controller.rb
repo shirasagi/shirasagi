@@ -3,6 +3,8 @@ class Cms::GeneratePagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::TaskFilter
 
+  navi_view "cms/main/navi"
+
   private
     def task_name
       "cms:page:generate"

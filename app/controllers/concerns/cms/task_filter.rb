@@ -3,7 +3,6 @@ module Cms::TaskFilter
   extend ActiveSupport::Concern
 
   included do
-    navi_view "cms/main/navi"
     before_action :set_item
     before_action :set_command
   end
