@@ -6,7 +6,9 @@ class Cms::Task::PagesController < ApplicationController
     def generate(opts)
       return puts "config.cms.serve_static_pages is false" unless SS.config.cms.serve_static_pages
 
-      cond = opts[:site] ? { host: opts[:site] } : {}
+      cond = {}
+      cond = { host: opts[:site] } if opts[:site]
+
       SS::Site.where(cond).each do |site|
         @task.log "#{site.name}"
         @cur_site = site
