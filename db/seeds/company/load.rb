@@ -4,18 +4,18 @@ Dir.chdir @root = File.dirname(__FILE__)
 @site = SS::Site.find_by host: ENV["site"]
 
 ## -------------------------------------
-puts "files:"
+puts "# files"
 
 Dir.glob "files/**/*.*" do |file|
-  puts "  " + name = file.sub(/^files\//, "")
+  puts name = file.sub(/^files\//, "")
   Fs.binwrite "#{@site.path}/#{name}", File.binread(file)
 end
 
 ## -------------------------------------
-puts "layouts:"
+puts "# layouts"
 
 def save_layout(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
@@ -65,10 +65,10 @@ array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/
 layouts = Hash[*array.flatten]
 
 ## -------------------------------------
-puts "nodes:"
+puts "# nodes"
 
 def save_node(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   klass = data[:route].sub("/", "/node/").singularize.camelize.constantize
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -118,7 +118,7 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry",
   reply_lower_text: "以上。"
 
 def save_inquiry_column(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { node_id: data[:node_id], name: data[:name] }
 
   item = Inquiry::Column.find_or_create_by(cond)
@@ -128,7 +128,7 @@ def save_inquiry_column(data)
   item
 end
 
-puts "columns:"
+puts "# inquiery"
 
 column_company_html = File.read("columns/company.html") rescue nil
 column_position_html = File.read("columns/position.html") rescue nil
@@ -163,10 +163,10 @@ array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename,
 categories = Hash[*array.flatten]
 
 ## -------------------------------------
-puts "parts:"
+puts "# parts"
 
 def save_part(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
   html = File.read("parts/" + data[:filename]) rescue nil
@@ -226,10 +226,10 @@ save_part route: "cms/page", filename: "product/solution/side-menu.part.html", n
   sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
 
 ## -------------------------------------
-puts "pages:"
+puts "# pages"
 
 def save_page(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
   html = File.read("pages/" + data[:filename]) rescue nil
@@ -246,7 +246,7 @@ def save_page(data)
   item
 end
 
-puts "articles:"
+puts "# articles"
 
 save_page route: "article/page", name: "お知らせ情報が入ります。",  filename: "news/314.html",
   layout_id: layouts["news"].id, category_ids: [categories["oshirase"].id]
@@ -259,7 +259,7 @@ save_page route: "article/page", name: "新卒採用", filename: "news/334.html"
 save_page route: "article/page", name: "中途採用", filename: "news/335.html",
   layout_id: layouts["recruit"].id, category_ids: [categories["oshirase"].id, categories["recruit"].id]
 
-puts "pages:"
+puts "# pages"
 
 save_page route: "cms/page", name: "シラサギ株式会社", filename: "index.html",
   layout_id: layouts["top"].id
@@ -304,3 +304,7 @@ save_page route: "cms/page", name: "人材紹介サービス", filename: "produc
 save_page route: "cms/page", name: "販売促進支援", filename: "product/solution/sales.html",
   order: 20, layout_id: layouts["product"].id
 
+## -------------------------------------
+puts "# generate pages"
+
+Cms::Task::PagesController.new.generate site: @site

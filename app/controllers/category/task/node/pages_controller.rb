@@ -3,9 +3,9 @@ class Category::Task::Node::PagesController < ApplicationController
   include Cms::ReleaseFilter::Page
 
   public
-    def generate(task, node)
-      task.log "#{node.url}"
+    def generate(opts)
+      opts[:task].log "#{opts[:node].url}"
 
-      generate_node node
+      generate_node opts[:node]
     end
 end

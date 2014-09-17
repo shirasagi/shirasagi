@@ -24,7 +24,7 @@ module Cms::Node::Model
     after_destroy :destroy_children
 
     scope :root, ->{ where(depth: 1) }
-    scope :in_path, ->(path) { where :filename.in => Cms::Node.split_path(path) }
+    scope :in_path, ->(path) { where :filename.in => Cms::Node.split_path(path.sub(/^\//, "")) }
   end
 
   public

@@ -12,5 +12,4 @@ end
 
 if name = ENV["name"].presence
   require "#{Rails.root}/db/seeds/#{name}/load.rb"
-  puts "\ndata imported."
 end

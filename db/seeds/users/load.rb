@@ -4,10 +4,10 @@ Dir.chdir @root = File.dirname(__FILE__)
 @site = SS::Site.find_by host: ENV["site"]
 
 ## -------------------------------------
-puts "groups:"
+puts "# groups"
 
 def save_group(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { name: data[:name] }
 
   item = SS::Group.find_or_create_by cond
@@ -26,10 +26,10 @@ g1_22 = save_group name: "シラサギ市/危機管理部/防災課"
 @site.add_to_set group_ids: g1_00.id
 
 ## -------------------------------------
-puts "roles:"
+puts "# roles"
 
 def save_cms_role(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { name: data[:name], site_id: @site.id }
 
   item = Cms::Role.find_or_create_by cond
@@ -55,10 +55,10 @@ role2 = save_cms_role name: "記事編集権限", permission_level: 1,
   )
 
 ## -------------------------------------
-puts "users:"
+puts "# users"
 
 def save_user(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   data[:in_password] = data[:password]
   data.delete(:password)
 
@@ -87,10 +87,10 @@ end
   group_ids: [g1_22.id], cms_role_ids: [role2.id]
 
 ## -------------------------------------
-puts "nodes:"
+puts "# nodes"
 
 def save_node(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   klass = data[:route].sub("/", "/node/").singularize.camelize.constantize
 
   cond = { site_id: @site._id, filename: data[:filename] }

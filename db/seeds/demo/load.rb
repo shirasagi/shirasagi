@@ -4,18 +4,18 @@ Dir.chdir @root = File.dirname(__FILE__)
 @site = SS::Site.find_by host: ENV["site"]
 
 ## -------------------------------------
-puts "files:"
+puts "# files"
 
 Dir.glob "files/**/*.*" do |file|
-  puts "  " + name = file.sub(/^files\//, "")
+  puts name = file.sub(/^files\//, "")
   Fs.binwrite "#{@site.path}/#{name}", File.binread(file)
 end
 
 ## -------------------------------------
-puts "layouts:"
+puts "# layouts"
 
 def save_layout(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
@@ -49,10 +49,10 @@ array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/
 layouts = Hash[*array.flatten]
 
 ## -------------------------------------
-puts "nodes:"
+puts "# nodes"
 
 def save_node(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
   upper_html = File.read("nodes/" + data[:filename] + ".upper_html") rescue nil
@@ -252,7 +252,7 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市�
   reply_lower_text: "以上。"
 
 def save_inquiry_column(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { node_id: data[:node_id], name: data[:name] }
 
   item = Inquiry::Column.find_or_create_by(cond)
@@ -262,7 +262,7 @@ def save_inquiry_column(data)
   item
 end
 
-puts "columns:"
+puts "# inquiry"
 
 column_name_html = File.read("columns/name.html") rescue nil
 column_company_html = File.read("columns/company.html") rescue nil
@@ -321,10 +321,10 @@ Cms::Node.where(site_id: @site._id, filename: /faq\//).
   update_all(layout_id: layouts["faq"].id)
 
 ## -------------------------------------
-puts "parts:"
+puts "# parts"
 
 def save_part(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
   html = File.read("parts/" + data[:filename]) rescue nil
@@ -388,10 +388,10 @@ save_part route: "category/node", filename: "faq/category-list.part.html", name:
 save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
 
 ## -------------------------------------
-puts "pages:"
+puts "# pages"
 
 def save_page(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
   html = File.read("pages/" + data[:filename]) rescue nil
@@ -415,7 +415,7 @@ save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内"
 save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
 
 ## -------------------------------------
-puts "articles:"
+puts "# articles"
 
 save_page route: "article/page", filename: "docs/1.html", name: "インフルエンザによる学級閉鎖状況",
   layout_id: layouts["pages"].id, category_ids: [categories["attention"].id]
@@ -477,7 +477,12 @@ save_page route: "article/page", filename: "docs/30.html", name: "ふれあい�
   category_ids: [categories["oshirase"].id, categories["oshirase/event"].id], event_dates: dates
 
 ## -------------------------------------
-puts "faq pages:"
+puts "# faq"
 
 save_page route: "faq/page", filename: "faq/docs/31.html", name: "休日や夜間の戸籍の届出について",
   layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id], question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
+
+## -------------------------------------
+puts "# generate pages"
+
+Cms::Task::PagesController.new.generate site: @site

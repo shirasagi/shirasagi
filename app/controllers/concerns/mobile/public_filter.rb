@@ -13,8 +13,8 @@ module Mobile::PublicFilter
 
   public
     def set_path_with_mobile
-      return if @path !~ /^#{SS.config.mobile.location}\//
-      @path.sub!(/^#{SS.config.mobile.location}\//, "/")
+      return if @cur_path !~ /^#{SS.config.mobile.location}\//
+      @cur_path.sub!(/^#{SS.config.mobile.location}\//, "/")
     end
 
   private

@@ -30,7 +30,8 @@ module Cms::Page::Model
 
     def generate_file
       return unless public?
-      Cms::Task::PagesController.new.generate_file(self)
+      return unless public_node?
+      Cms::Task::PagesController.new.generate_page(self)
     end
 
   private

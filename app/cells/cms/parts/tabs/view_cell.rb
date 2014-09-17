@@ -9,7 +9,7 @@ module Cms::Parts::Tabs
         @tabs = []
 
         @cur_part.conditions.each do |path|
-          node = Cms::Node.site(@cur_site).public.find_by filename: path
+          node = Cms::Node.site(@cur_site).public.filename(path).first
           next unless node
 
           node = node.becomes_with_route
