@@ -31,6 +31,13 @@ SS::Application.routes.draw do
       get :download, on: :member
     end
 
+    resources :image_files, concerns: :deletion do
+      get :select, on: :member
+      get :view, on: :member
+      get :thumb, on: :member
+      get :download, on: :member
+    end
+
   end
 
 end

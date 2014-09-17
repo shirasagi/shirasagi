@@ -1,0 +1,67 @@
+<style type="text/css">
+dl.see {
+  margin: 0px;
+}
+dl.see > dt {
+  float: left;
+  min-width: 140px;
+  min-height: 1.0em;
+  color: black;
+  font-weight: bold;
+}
+dl.see > dd {
+  min-height: 1.41em;
+  margin: 0 0 0 140px;
+  padding: 0 0 30px;
+  margin: 0px 0px 0px 140px;
+}
+dl.see > dt ~ dt {
+  margin-top: 20px;
+}
+dl.see > dd ~ dd {
+  margin-top: 20px;
+}
+dl.see > dd + dd {
+  margin-top: 10px;
+}
+dl.see > dt.wide {
+  float: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+dl.see > dd.wide {
+  float: none;
+  margin-left: 0px;
+  padding-top: 0px;
+  border-top: 0px;
+}
+</style>
+
+<dl class="see body">
+  <dt><%= @cur_page.class.t :kana %></dt>
+  <dd><%= @cur_page.kana %></dd>
+
+  <dt><%= @cur_page.class.t :address %></dt>
+  <dd><%= @cur_page.address %></dd>
+
+  <dt><%= @cur_page.class.t :tel %></dt>
+  <dd><%= @cur_page.tel %></dd>
+
+  <dt><%= @cur_page.class.t :fax %></dt>
+  <dd><%= @cur_page.fax %></dd>
+
+  <dt><%= @cur_page.class.t :homepage %></dt>
+  <dd><%= @cur_page.homepage %></dd>
+
+  <dt><%= @cur_page.class.t :hours %></dt>
+  <dd><%=br @cur_page.hours %></dd>
+
+  <dt><%= @cur_page.class.t :holiday %></dt>
+  <dd><%=br @cur_page.holiday %></dd>
+
+  <dt><%= @cur_page.class.t :principal %></dt>
+  <dd><%= @cur_page.principal %></dd>
+
+  <dt><%= @cur_page.class.t :extended_day_care %></dt>
+  <dd><%=br @cur_page.extended_day_care %></dd>
+</dl>

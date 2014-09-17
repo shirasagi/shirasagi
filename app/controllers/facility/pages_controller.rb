@@ -1,11 +1,12 @@
 # coding: utf-8
-class Map::PagesController < ApplicationController
+class Facility::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
-  model Map::Page
+
+  model Facility::Page
 
   append_view_path "app/views/cms/pages"
-  navi_view "map/main/navi"
+  navi_view "facility/main/navi"
 
   private
     def fix_params
@@ -16,6 +17,6 @@ class Map::PagesController < ApplicationController
       { layout_id: @cur_node.layout_id }
     end
 
-  public
+  #public
     #Cms::PageFilter
 end
