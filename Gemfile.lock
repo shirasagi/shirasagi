@@ -334,6 +334,9 @@ GEM
     rdf (1.1.4.3)
     rdf-aggregate-repo (1.1.0)
       rdf (>= 1.1)
+    rdf-turtle (1.1.4)
+      ebnf (~> 0.3, >= 0.3.6)
+      rdf (~> 1.1, >= 1.1.4)
     rdf-xsd (1.1.1)
       rdf (~> 1.1)
     rdoc (4.2.2)
@@ -528,6 +531,7 @@ DEPENDENCIES
   pry-stack_explorer
   rails (= 4.2.5.2)
   rails_autolink
+  rdf-turtle
   rmagick
   rspec
   rspec-collection_matchers
