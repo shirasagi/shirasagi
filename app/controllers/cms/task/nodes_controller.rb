@@ -6,7 +6,10 @@ class Cms::Task::NodesController < ApplicationController
     def generate(opts)
       return puts "config.cms.serve_static_pages is false" unless SS.config.cms.serve_static_pages
 
-      SS::Site.where(opts[:site] ? { host: opts[:site] } : {}).each do |site|
+      cond = {}
+      cond = { host: opts[:site] } if opts[:site]
+
+      SS::Site.where(cond).each do |site|
         @cur_site = site
         task_cond = { name: "cms:node:generate", site_id: @cur_site.id }
 
@@ -19,7 +22,7 @@ class Cms::Task::NodesController < ApplicationController
             klass = cname.constantize rescue nil
             next if klass.nil? || klass.to_s != cname
 
-            klass.new.generate(@task, node)
+            klass.new.generate(@task, node.becomes_with_route)
           end
         end
       end

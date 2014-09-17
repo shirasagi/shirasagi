@@ -11,8 +11,6 @@ module Cms::Part::Model
     field :route, type: String
     field :mobile_view, type: String, default: "show"
     permit_params :route, :mobile_view
-
-    after_save :update_layouts
   end
 
   public
@@ -20,8 +18,8 @@ module Cms::Part::Model
       Cms::Part.plugins
     end
 
-    def becomes_with_route
-      super route.sub("/", "/part/")
+    def becomes_with_route(name = nil)
+      super (name || route).sub("/", "/part/")
     end
 
     def mobile_view_options
@@ -31,15 +29,5 @@ module Cms::Part::Model
   private
     def fix_extname
       ".part.html"
-    end
-
-    def update_layouts
-      return if @db_changes.blank?
-
-      cond = { :part_paths.in => ( @db_changes["filename"] || [filename] ) }
-
-      Cms::Layout.site(site).public.where(cond).each do |layout|
-        layout.generate_file
-      end
     end
 end

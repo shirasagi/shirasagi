@@ -31,7 +31,7 @@ module Cms::ReleaseFilter::Layout
         path = path[0] == "/" ? path.sub(/^\//, "") : @cur_layout.dirname(path)
 
         part = Cms::Part.site(@cur_site)
-        part = part.where opts[:part_condition] if opts[:part_condition]
+        part = part.where mobile_view: "show" if @filter == :mobile
         part = part.where(filename: path).first
         part = part.becomes_with_route if part
         part ? render_part(part, path) : ""

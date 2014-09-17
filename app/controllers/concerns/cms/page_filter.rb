@@ -1,17 +1,32 @@
 # coding: utf-8
 module Cms::PageFilter
-  module ViewCell
-    extend ActiveSupport::Concern
-    include SS::CellFilter
+  extend ActiveSupport::Concern
+  include Cms::CrudFilter
 
-    included do
-      helper ApplicationHelper
-      before_action :inherit_variables
+  public
+    def index
+      if @cur_node
+        raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+        @items = @model.site(@cur_site).node(@cur_node).
+          allow(:read, @cur_user).
+          search(params[:s]).
+          order_by(updated: -1).
+          page(params[:page]).per(50)
+      end
     end
 
-    public
-      def index
-        render
-      end
-  end
+    def create
+      @item = @model.new get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user)
+      raise "403" unless @item.allowed?(:release, @cur_user) if @item.state == "public"
+      render_create @item.save
+    end
+
+    def update
+      @item.attributes = get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user)
+      raise "403" unless @item.allowed?(:release, @cur_user) if @item.state == "public"
+      render_update @item.update
+    end
 end

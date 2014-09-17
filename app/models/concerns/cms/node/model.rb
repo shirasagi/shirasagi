@@ -28,8 +28,8 @@ module Cms::Node::Model
   end
 
   public
-    def becomes_with_route
-      super route.sub("/", "/node/")
+    def becomes_with_route(name = nil)
+      super (name || route).sub("/", "/node/")
     end
 
     def dirname

@@ -19,12 +19,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by cond
+  item = Cms::Layout.find_or_create_by(cond)
   item.attributes = data.merge html: html
   item.update
-
   item.add_to_set group_ids: @site.group_ids
-  item.update
 
   item
 end
@@ -51,89 +49,18 @@ array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/
 layouts = Hash[*array.flatten]
 
 ## -------------------------------------
-puts "parts:"
-
-def save_part(data)
-  puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/part/").camelize.constantize
-
-  cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
-  html = File.read("parts/" + data[:filename]) rescue nil
-  upper_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".upper_html")) rescue nil
-  loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
-  lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
-
-  item.html = html if html
-  item.upper_html = upper_html if upper_html
-  item.loop_html = loop_html if loop_html
-  item.lower_html = lower_html if lower_html
-
-  item.attributes = data
-  item.update
-
-  item.add_to_set group_ids: @site.group_ids
-  item.update
-
-  item
-end
-
-save_part route: "cms/free", filename: "about.part.html", name: "SHIRASAGI市について"
-save_part route: "cms/free", filename: "add.part.html", name: "広告", mobile_view: "hide"
-save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
-save_part route: "cms/free", filename: "guide.part.html", name: "くらしのガイド"
-save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー"
-save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル", mobile_view: "hide"
-save_part route: "cms/free", filename: "links-life.part.html", name: "関連リンク：くらし・手続き"
-save_part route: "cms/free", filename: "navi.part.html", name: "グローバルナビ"
-save_part route: "cms/free", filename: "online.part.html", name: "オンラインサービス"
-save_part route: "cms/free", filename: "connect.part.html", name: "関連サイト", mobile_view: "hide"
-save_part route: "cms/free", filename: "page-top.part.html", name: "ページトップ"
-save_part route: "cms/free", filename: "population.part.html", name: "人口・世帯数", mobile_view: "hide"
-save_part route: "cms/free", filename: "propose.part.html", name: "ご意見・ご提案"
-save_part route: "cms/free", filename: "ranking.part.html", name: "アクセスランキング", mobile_view: "hide"
-save_part route: "cms/free", filename: "relations.part.html", name: "広報"
-save_part route: "cms/free", filename: "safety.part.html", name: "安心安全情報"
-save_part route: "cms/free", filename: "tool.part.html", name: "アクセシビリティーツール", mobile_view: "hide"
-save_part route: "cms/free", filename: "topics.part.html", name: "街の話題"
-save_part route: "cms/free", filename: "useful.part.html", name: "お役立ち情報"
-save_part route: "article/page", filename: "attention/recent.part.html", name: "注目情報", limit: 5
-save_part route: "article/page", filename: "docs/recent.part.html", name: "新着情報"
-save_part route: "article/page", filename: "oshirase/kanko/recent.part.html", name: "お知らせ", limit: 6
-save_part route: "article/page", filename: "oshirase/kenko/recent.part.html", name: "お知らせ", limit: 5
-save_part route: "article/page", filename: "oshirase/kosodate/recent.part.html", name: "お知らせ", limit: 5
-save_part route: "article/page", filename: "oshirase/kurashi/recent.part.html", name: "お知らせ", limit: 5
-save_part route: "article/page", filename: "oshirase/recent.part.html", name: "お知らせ", limit: 5
-save_part route: "article/page", filename: "oshirase/sangyo/recent.part.html", name: "お知らせ", limit: 5
-save_part route: "article/page", filename: "oshirase/shisei/recent.part.html", name: "お知らせ", limit: 5
-save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンくず", mobile_view: "hide"
-save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト"
-save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
-  conditions: %w(oshirase oshirase/event shisei/jinji), limit: 6
-save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
-save_part route: "cms/free", filename: "urgency-layout/calamity.part.html", name: "災害関係ホームページ"
-save_part route: "cms/free", filename: "urgency-layout/connect.part.html", name: "関連サイト"
-save_part route: "cms/free", filename: "urgency-layout/head.part.html", name: "ヘッダー"
-save_part route: "cms/free", filename: "urgency-layout/mode.part.html", name: "緊急災害表示"
-save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "グローバルナビ"
-save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報", limit: 20
-save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
-save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
-
-## -------------------------------------
 puts "nodes:"
 
 def save_node(data)
   puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/node/").singularize.camelize.constantize
-
   cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
+
   upper_html = File.read("nodes/" + data[:filename] + ".upper_html") rescue nil
   loop_html  = File.read("nodes/" + data[:filename] + ".loop_html") rescue nil
   lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
+  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
@@ -141,9 +68,7 @@ def save_node(data)
 
   item.attributes = data
   item.update
-
   item.add_to_set group_ids: @site.group_ids
-  item.update
 
   item
 end
@@ -329,8 +254,8 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市�
 def save_inquiry_column(data)
   puts "  #{data[:name]}"
   cond = { node_id: data[:node_id], name: data[:name] }
-  item = Inquiry::Column.find_or_create_by cond
 
+  item = Inquiry::Column.find_or_create_by(cond)
   item.attributes = data
   item.update
 
@@ -396,23 +321,89 @@ Cms::Node.where(site_id: @site._id, filename: /faq\//).
   update_all(layout_id: layouts["faq"].id)
 
 ## -------------------------------------
+puts "parts:"
+
+def save_part(data)
+  puts "  #{data[:name]}"
+  cond = { site_id: @site._id, filename: data[:filename] }
+
+  html = File.read("parts/" + data[:filename]) rescue nil
+  upper_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".upper_html")) rescue nil
+  loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
+  lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
+
+  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item.html = html if html
+  item.upper_html = upper_html if upper_html
+  item.loop_html = loop_html if loop_html
+  item.lower_html = lower_html if lower_html
+
+  item.attributes = data
+  item.update
+  item.add_to_set group_ids: @site.group_ids
+
+  item
+end
+
+save_part route: "cms/free", filename: "about.part.html", name: "SHIRASAGI市について"
+save_part route: "cms/free", filename: "add.part.html", name: "広告", mobile_view: "hide"
+save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
+save_part route: "cms/free", filename: "guide.part.html", name: "くらしのガイド"
+save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー"
+save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル", mobile_view: "hide"
+save_part route: "cms/free", filename: "links-life.part.html", name: "関連リンク：くらし・手続き"
+save_part route: "cms/free", filename: "navi.part.html", name: "グローバルナビ"
+save_part route: "cms/free", filename: "online.part.html", name: "オンラインサービス"
+save_part route: "cms/free", filename: "connect.part.html", name: "関連サイト", mobile_view: "hide"
+save_part route: "cms/free", filename: "page-top.part.html", name: "ページトップ"
+save_part route: "cms/free", filename: "population.part.html", name: "人口・世帯数", mobile_view: "hide"
+save_part route: "cms/free", filename: "propose.part.html", name: "ご意見・ご提案"
+save_part route: "cms/free", filename: "ranking.part.html", name: "アクセスランキング", mobile_view: "hide"
+save_part route: "cms/free", filename: "relations.part.html", name: "広報"
+save_part route: "cms/free", filename: "safety.part.html", name: "安心安全情報"
+save_part route: "cms/free", filename: "tool.part.html", name: "アクセシビリティーツール", mobile_view: "hide"
+save_part route: "cms/free", filename: "topics.part.html", name: "街の話題"
+save_part route: "cms/free", filename: "useful.part.html", name: "お役立ち情報"
+save_part route: "article/page", filename: "attention/recent.part.html", name: "注目情報", limit: 5
+save_part route: "article/page", filename: "docs/recent.part.html", name: "新着情報"
+save_part route: "article/page", filename: "oshirase/kanko/recent.part.html", name: "お知らせ", limit: 6
+save_part route: "article/page", filename: "oshirase/kenko/recent.part.html", name: "お知らせ", limit: 5
+save_part route: "article/page", filename: "oshirase/kosodate/recent.part.html", name: "お知らせ", limit: 5
+save_part route: "article/page", filename: "oshirase/kurashi/recent.part.html", name: "お知らせ", limit: 5
+save_part route: "article/page", filename: "oshirase/recent.part.html", name: "お知らせ", limit: 5
+save_part route: "article/page", filename: "oshirase/sangyo/recent.part.html", name: "お知らせ", limit: 5
+save_part route: "article/page", filename: "oshirase/shisei/recent.part.html", name: "お知らせ", limit: 5
+save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンくず", mobile_view: "hide"
+save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト"
+save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
+  conditions: %w(oshirase oshirase/event shisei/jinji), limit: 6
+save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
+save_part route: "cms/free", filename: "urgency-layout/calamity.part.html", name: "災害関係ホームページ"
+save_part route: "cms/free", filename: "urgency-layout/connect.part.html", name: "関連サイト"
+save_part route: "cms/free", filename: "urgency-layout/head.part.html", name: "ヘッダー"
+save_part route: "cms/free", filename: "urgency-layout/mode.part.html", name: "緊急災害表示"
+save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "グローバルナビ"
+save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報", limit: 20
+save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
+save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
+
+## -------------------------------------
 puts "pages:"
 
 def save_page(data)
   puts "  #{data[:name]}"
   cond = { site_id: @site._id, filename: data[:filename] }
+
   html = File.read("pages/" + data[:filename]) rescue nil
   summary_html = File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = Cms::Page.find_or_create_by cond
+  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
   item.update
-
   item.add_to_set group_ids: @site.group_ids
-  item.update
 
   item
 end
@@ -485,8 +476,8 @@ dates = (Date.today..(Date.today + 12)).map { |d| d.mongoize }
 save_page route: "article/page", filename: "docs/30.html", name: "ふれあいフェスティバル", layout_id: layouts["oshirase"].id,
   category_ids: [categories["oshirase"].id, categories["oshirase/event"].id], event_dates: dates
 
+## -------------------------------------
 puts "faq pages:"
+
 save_page route: "faq/page", filename: "faq/docs/31.html", name: "休日や夜間の戸籍の届出について",
   layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id], question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
-
-

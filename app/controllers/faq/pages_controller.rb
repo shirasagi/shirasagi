@@ -1,8 +1,7 @@
 # coding: utf-8
 class Faq::PagesController < ApplicationController
   include Cms::BaseFilter
-  include Cms::CrudFilter
-  include Cms::ApproveFilter
+  include Cms::PageFilter
 
   model Faq::Page
 
@@ -19,13 +18,5 @@ class Faq::PagesController < ApplicationController
     end
 
   public
-    def index
-      raise "404" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-
-      @items = @model.site(@cur_site).node(@cur_node).
-        allow(:read, @cur_user).
-        search(params[:s]).
-        order_by(updated: -1).
-        page(params[:page]).per(50)
-    end
+    # Cms::PageFilter
 end
