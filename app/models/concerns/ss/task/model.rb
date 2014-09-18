@@ -28,7 +28,7 @@ module SS::Task::Model
         begin
           require 'benchmark'
           time = Benchmark.realtime { yield task }
-          task.log sprintf("(%.3fms)", time)
+          task.log sprintf("(%.3fsec)", time)
         rescue StandardError => e
           task.log e.to_s
           task.log e.backtrace.join("\n")
