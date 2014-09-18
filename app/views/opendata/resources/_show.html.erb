@@ -2,6 +2,14 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
+  <% if @item.file %>
+  <dt><%= @model.t :file_id %></dt>
+  <dd>
+    <%= link_to @item.filename, opendata_dataset_resource_file_path(resource_id: @item.id) %>
+    (<%= number_to_human_size @item.size %>)
+  </dd>
+  <% end %>
+
   <dt><%= @model.t :text %></dt>
   <dd><%=br @item.send :text %></dd>
 

@@ -19,7 +19,9 @@ SS::Application.routes.draw do
     get "/" => "main#index", as: :main
     resources :data_groups, concerns: :deletion
     resources :datasets, concerns: :deletion do
-      resources :resources, concerns: :deletion
+      resources :resources, concerns: :deletion do
+        get "file" => "resources#download"
+      end
     end
     resources :apps, concerns: :deletion
     resources :ideas, concerns: :deletion
@@ -29,6 +31,7 @@ SS::Application.routes.draw do
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
     get "dataset/:id.:format" => "public#show", cell: "nodes/dataset"
+    #get "dataset/:id/:filename" => "files#index", as: :file
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"
