@@ -7,7 +7,6 @@
 <%= javascript_include_tag "cms/public" %>
 <%== @cur_layout.head %>
 <%= csrf_meta_tags if @cur_node %>
-<script> $(function(){ SS.load(); }) </script>
 </head>
 
 <%= yield %>
