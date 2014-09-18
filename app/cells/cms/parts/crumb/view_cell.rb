@@ -13,13 +13,9 @@ module Cms::Parts::Crumb
         if "#{@cur_path}" =~ /^#{@root.url}/
           url = @cur_path.sub(/^#{@cur_site.url}/, "").sub(/\/([\w\-]+\.[\w\-]+)?$/, "")
 
-          if node = Cms::Node.site(@cur_site).filename(url).first
+          Cms::Node.site(@cur_site).in_path(url).order(depth: -1).each do |node|
+            break if @cur_node && @cur_node.id == node.id
             @items.unshift [node.name, node.url]
-            while parent = node.parent
-              break if @cur_node && @cur_node.id == parent.id
-              @items.unshift [parent.name, parent.url]
-              node = parent
-            end
           end
 
           if @cur_path =~ /\/[\w\-]+\.[\w\-]+$/
