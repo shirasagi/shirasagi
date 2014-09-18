@@ -11,7 +11,12 @@ class Workflow::PagesController < ApplicationController
     end
 
     def set_model
-       @model = params[:cid]? Article::Page : Cms::Page
+       @model = Cms::Page
+    end
+
+    def set_item
+      @item = @model.find(params[:id]).becomes_with_route
+      @item.attributes = fix_params
     end
 
     def fix_params
