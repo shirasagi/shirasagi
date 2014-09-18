@@ -2,6 +2,14 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
+  <dt><%= @model.t :resources %></dt>
+  <dd><%= link_to :"opendata.manage_resources", "resources/" %></dd>
+  <dd>
+    <% @item.resources.each do |rs| %>
+    <div><%= rs.name %></div>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :text %></dt>
   <dd><%=br @item.send :text %></dd>
 

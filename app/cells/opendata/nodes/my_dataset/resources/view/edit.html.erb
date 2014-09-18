@@ -1,0 +1,10 @@
+<%= form_for :item, url: @item_url, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<%= render file: '_form', locals: { f: f } %>
+
+<footer class="send">
+  <%= f.submit t(:save), class: :save %>
+</footer>
+
+<% end %>

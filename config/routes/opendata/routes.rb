@@ -31,7 +31,6 @@ SS::Application.routes.draw do
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
     get "dataset/:id.:format" => "public#show", cell: "nodes/dataset"
-    #get "dataset/:id/:filename" => "files#index", as: :file
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"
@@ -47,7 +46,11 @@ SS::Application.routes.draw do
     get "mypage/logout" => "public#logout", cell: "nodes/mypage"
 
     resource :profile, path: "my_profile", controller: "public", cell: "nodes/my_profile", concerns: :deletion
-    resources :datasets, path: "my_dataset", controller: "public", cell: "nodes/my_dataset", concerns: :deletion
+    resources :datasets, path: "my_dataset", controller: "public", cell: "nodes/my_dataset", concerns: :deletion do
+      resources :resources, controller: "public", cell: "nodes/my_dataset/resources", concerns: :deletion do
+        get "file" => "public#download"
+      end
+    end
   end
 
   part "opendata" do

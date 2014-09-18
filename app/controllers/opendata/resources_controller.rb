@@ -36,7 +36,7 @@ class Opendata::ResourcesController < ApplicationController
     end
 
     def download
-      @item = dataset.resources.find params[:resource_id]
+      @item = @dataset.resources.find params[:resource_id]
       send_data @item.file.data, type: @item.content_type, filename: @item.filename, disposition: :attachment
     end
 end
