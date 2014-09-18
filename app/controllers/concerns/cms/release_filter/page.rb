@@ -40,11 +40,11 @@ module Cms::ReleaseFilter::Page
     end
 
     def write_file(item, data, opts = {})
-      digest = Digest::MD5.hexdigest(data)
-      diff   = (digest != item.digest)
-      file   = opts[:file] || item.path
+      md5  = Digest::MD5.hexdigest(data)
+      diff = (md5 != item.md5)
+      file = opts[:file] || item.path
 
-      item.class.where(id: item.id).update_all digest: digest if diff
+      item.class.where(id: item.id).update_all md5: md5 if diff
 
       if diff || !Fs.exists?(file)
         Fs.write file, data

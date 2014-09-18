@@ -16,7 +16,7 @@ module Cms::Content
     field :filename, type: String
     field :depth, type: Integer
     field :order, type: Integer, default: 0
-    field :digest, type: String
+    field :md5, type: String
 
     permit_params :state, :name, :filename, :basename, :order, :route
 
