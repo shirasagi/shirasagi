@@ -26,6 +26,7 @@ SS::Application.routes.draw do
   end
 
   node "opendata" do
+    get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
     get "dataset/:id.:format" => "public#show", cell: "nodes/dataset"
 

@@ -9,7 +9,6 @@ class Opendata::Dataset
   include Opendata::Addon::Release
   include Opendata::Reference::Member
 
-  default_scope ->{ where(route: "opendata/dataset") }
   set_permission_name "opendata_datasets"
 
   field :text, type: String
@@ -24,6 +23,8 @@ class Opendata::Dataset
   permit_params :text, :license, :related_url, file_ids: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
+
+  default_scope ->{ where(route: "opendata/dataset") }
 
   public
     def generate_file

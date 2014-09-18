@@ -4,22 +4,22 @@ Dir.chdir @root = File.dirname(__FILE__)
 @site = SS::Site.find_by host: ENV["site"]
 
 ## -------------------------------------
-puts "files:"
+puts "# files"
 
 Dir.glob "files/**/*.*" do |file|
-  puts "  " + name = file.sub(/^files\//, "")
+  puts name = file.sub(/^files\//, "")
   Fs.binwrite "#{@site.path}/#{name}", File.binread(file)
 end
 
 ## -------------------------------------
-puts "layouts:"
+puts "# layouts"
 
 def save_layout(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by cond
+  item = Cms::Layout.find_or_create_by(cond)
   item.update data.merge html: html
 end
 
@@ -36,14 +36,13 @@ array   = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/
 layouts = Hash[*array.flatten]
 
 ## -------------------------------------
-puts "nodes:"
+puts "# nodes"
 
 def save_node(data)
-  puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/node/").camelize.constantize
-
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
+
+  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.update data
 end
 
@@ -103,15 +102,14 @@ save_node filename: "chiiki/miyoshishi", name: "三好市", route: "opendata/are
 end
 
 ## -------------------------------------
-puts "parts:"
+puts "# parts"
 
 def save_part(data)
-  puts "  #{data[:name]}"
-  klass = data[:route].sub("/", "/part/").camelize.constantize
-
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
-  item = klass.unscoped.find_or_create_by cond
   html = File.read("parts/" + data[:filename]) rescue nil
+
+  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.html = html if html
   item.update data
 end
@@ -125,7 +123,7 @@ save_part filename: "twitter.part.html" , name: "twitter", route: "cms/free"
 save_part filename: "facebook.part.html" , name: "facebook", route: "cms/free"
 save_part filename: "portal-kv.part.html" , name: "ポータル：キービジュアル", route: "cms/free"
 save_part filename: "portal-about.part.html" , name: "ポータル：Our Open Dateとは", route: "cms/free"
-save_part filename: "portal-tab.part.html" , name: "ポータル：新着タブ", route: "cms/tabs", conditions: %w[info event], limit: 5
+save_part filename: "portal-tab.part.html" , name: "ポータル：新着タブ", route: "cms/tabs", conditions: %w(info event), limit: 5
 save_part filename: "portal-dataset.part.html" , name: "ポータル：オープンデータカタログ", route: "opendata/dataset"
 save_part filename: "portal-plan.part.html" , name: "ポータル：公開予定", route: "cms/free"
 save_part filename: "portal-fb.part.html" , name: "ポータル：facebook", route: "cms/free"
@@ -138,13 +136,13 @@ save_part filename: "dataset-attention.part.html" , name: "データ：注目順
 save_part filename: "mypage-head.part.html" , name: "マイページ：ヘッダー", route: "cms/free"
 
 ## -------------------------------------
-puts "pages:"
+puts "# pages"
 
 def save_page(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = Cms::Page.find_or_create_by cond
+  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
   item.update data
 end
 
@@ -153,7 +151,7 @@ body = "<p></p>"
 save_page filename: "index.html", name: "トップページ", layout_id: layouts["portal-top"].id
 
 ## -------------------------------------
-puts "articles:"
+puts "# articles"
 
 1.step(3) do |i|
   save_page filename: "info/#{i}.html", name: "サンプル記事#{i}", html: body,
@@ -162,10 +160,10 @@ puts "articles:"
 end
 
 ## -------------------------------------
-puts "opendata data_groups:"
+puts "# opendata data_groups"
 
 def save_data_group(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Opendata::DataGroup.find_or_create_by cond
   item.update data
@@ -177,10 +175,10 @@ end
 end
 
 ## -------------------------------------
-puts "opendata datasets:"
+puts "# opendata datasets"
 
 def save_data(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site.id, filename: data[:filename] }
 
   item = Opendata::Dataset.find_or_create_by cond
@@ -192,15 +190,17 @@ end
     route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     data_group_ids: Opendata::DataGroup.site(@site).pluck(:_id).sample(1),
-    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
+    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1),
+    license: "CC"
 end
 
 ## -------------------------------------
-puts "opendata apps:"
+puts "# opendata apps"
 
 def save_app(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
+
   item = Opendata::App.find_or_create_by cond
   item.update data
 end
@@ -212,11 +212,12 @@ end
 end
 
 ## -------------------------------------
-puts "opendata ideas:"
+puts "# opendata ideas"
 
 def save_idea(data)
-  puts "  #{data[:name]}"
+  puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
+
   item = Opendata::Idea.find_or_create_by cond
   item.update data
 end

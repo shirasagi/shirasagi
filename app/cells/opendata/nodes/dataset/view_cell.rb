@@ -10,6 +10,7 @@ module Opendata::Nodes::Dataset
       end
 
       def index
+        @count = pages.size
         @search_url = search_datasets_path
 
         @items = pages.
@@ -50,7 +51,7 @@ module Opendata::Nodes::Dataset
         @formats = Opendata::Dataset.total_field("resources.format", cond)
         @licenses = Opendata::Dataset.total_field(:license, cond)
 
-        @items.empty? ? "" : render
+        render
       end
   end
 end
