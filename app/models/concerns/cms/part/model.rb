@@ -10,7 +10,8 @@ module Cms::Part::Model
 
     field :route, type: String
     field :mobile_view, type: String, default: "show"
-    permit_params :route, :mobile_view
+    field :ajax_view, type: String, default: "disabled"
+    permit_params :route, :mobile_view, :ajax_view
   end
 
   public
@@ -24,6 +25,15 @@ module Cms::Part::Model
 
     def mobile_view_options
       [%w(表示 show), %w(非表示 hide)]
+    end
+
+    def ajax_view_options
+      [%w(有効 enabled), %w(無効 disabled)]
+    end
+
+    def ajax_html
+      json = url.sub(/\.html$/, ".json")
+      %(<a class="ss-part" href="#{json}">#{name}</a>)
     end
 
   private

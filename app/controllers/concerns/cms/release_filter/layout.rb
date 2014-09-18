@@ -11,8 +11,9 @@ module Cms::ReleaseFilter::Layout
       @preview || part.public?  ? part : nil
     end
 
-    def render_part(part)
+    def render_part(part, opts = {})
       return part.html if part.route == "cms/frees"
+      return part.ajax_html if part.ajax_view == "enabled" && !opts[:xhr]
 
       path = "/.#{@cur_site.host}/parts/#{part.route}"
       cell = recognize_path path, method: "GET"

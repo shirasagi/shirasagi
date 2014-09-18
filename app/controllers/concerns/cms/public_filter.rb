@@ -22,7 +22,7 @@ module Cms::PublicFilter
       if @html =~ /\.part\.html$/
         part = find_part(@html)
         raise "404" unless part
-        send_part render_part(part)
+        send_part render_part(part, xhr: true)
 
       else
         page = find_page(@html)
@@ -106,6 +106,13 @@ module Cms::PublicFilter
       response.headers["Expires"] = 1.days.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
       response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
       send_file file, disposition: :inline, x_sendfile: true
+    end
+
+    def send_part(body)
+      respond_to do |format|
+        format.html { render inline: body, layout: false }
+        format.json { render json: body.to_json }
+      end
     end
 
     def send_page(body)

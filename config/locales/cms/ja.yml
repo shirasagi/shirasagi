@@ -127,6 +127,7 @@ ja:
         name: パーツ名
         route: パーツ属性
         mobile_view: 携帯向け表示
+        ajax_view: 動的表示
       cms/layout:
         name: レイアウト名
         html: HTML
@@ -292,6 +293,8 @@ ja:
         - .htmlなどの拡張子の記述は不要です。
       mobile_view:
         - 携帯画面で表示するか否かを選択します。
+      ajax_view:
+        - Ajaxを使用して動的に表示するか否かを選択します。
 
     cms/addon/list/model:
       conditions:

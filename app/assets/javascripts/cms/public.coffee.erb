@@ -8,6 +8,8 @@ $ ->
   SS_Kana.render()
   SS_Font.render()
   SS_Mobile.render()
+  $(".ss-part").each ->
+    SS.renderPart $(this)
 
 class @SS
   @head = ""
@@ -69,6 +71,7 @@ class @SS
       success: (data) ->
         $(elem).replaceWith data
       error: ->
+        console.log "err"
         $(elem).find("img").remove()
 
 class @SS_Kana

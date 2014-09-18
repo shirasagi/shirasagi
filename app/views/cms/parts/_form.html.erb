@@ -24,4 +24,7 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
 
   <dt><%= @model.t :mobile_view %><%= @model.tt :mobile_view %></dt>
   <dd><%= f.select :mobile_view, @item.mobile_view_options %></dd>
+
+  <dt><%= @model.t :ajax_view %><%= @model.tt :ajax_view %></dt>
+  <dd><%= f.select :ajax_view, @item.ajax_view_options %></dd>
 </dl>
