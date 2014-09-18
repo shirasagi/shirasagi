@@ -39,6 +39,18 @@ module Cms::ReleaseFilter::Page
       render_cell page.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
     end
 
+    def write_file(item, data, opts = {})
+      digest = Digest::MD5.hexdigest(data)
+      diff   = (digest != item.digest)
+      file   = opts[:file] || item.path
+
+      item.class.where(id: item.id).update_all digest: digest if diff
+
+      if diff || !Fs.exists?(file)
+        Fs.write file, data
+      end
+    end
+
   public
     def generate_node(node)
       return unless node.serve_static_file?
@@ -53,12 +65,9 @@ module Cms::ReleaseFilter::Page
 
       html = render_node(node, method: "GET")
       return unless html
-
       html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
 
-      file = "#{node.path}/index.html"
-      keep = html.to_s == File.read(file).to_s rescue false # prob: csrf-token
-      Fs.write file, html unless keep
+      write_file node, html, file: "#{node.path}/index.html"
     end
 
     def generate_page(page)
@@ -73,14 +82,9 @@ module Cms::ReleaseFilter::Page
       @cur_layout = page.layout
 
       html = render_page(page, method: "GET")
+      return unless html
       html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
 
-      digest = Digest::MD5.hexdigest(html)
-      if diff = (digest != page.digest)
-        page.class.where(id: page.id).update_all digest: digest
-      end
-      if diff || !Fs.exists?(page.path)
-        Fs.write page.path, html
-      end
+      write_file page, html
     end
 end
