@@ -1,0 +1,37 @@
+ja:
+  facility:
+    page: 施設記事
+    category: 施設カテゴリー
+    search: 施設検索
+    image: 施設写真
+
+  modules:
+    facility: 施設
+    addons:
+      facility/body: 施設情報
+      facility/file: 施設画像
+      facility/location/setting: 地域カテゴリー設定
+      facility/location/category: 地域カテゴリー
+      facility/use/setting: 用途カテゴリー設定
+      facility/use/category: 用途カテゴリー
+      facility/type/setting: 種類カテゴリー設定
+      facility/type/category: 種類カテゴリー
+
+  cms:
+    nodes:
+      facility/page: 施設リスト
+      facility/category: 施設カテゴリー
+      facility/search: 施設検索
+
+  mongoid:
+    attributes:
+      facility/page:
+        address: 住所
+        tel: 電話番号
+        fax: FAX
+        homepage: URL
+        hours: 開所時間
+        holiday: 休園日
+        kana: 施設名ふりがな
+        principal: 園長名
+        extended_day_care: 延長保育

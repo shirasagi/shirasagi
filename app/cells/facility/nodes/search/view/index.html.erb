@@ -1,0 +1,35 @@
+<%
+  categories = []
+  @cur_node.st_parent_categories.each do |parent|
+    categories << parent
+    categories += Category::Node::Base.site(@cur_site).
+      where(filename: /^#{parent.filename}\//).entries
+  end
+  category_options = categories.map { |c| [c.name, c.id] }
+%>
+
+<div class="faq-search">
+  <%= form_tag @cur_node.url, multipart: true, method: "get" do |f| %>
+    <% if categories.present? %>
+    <div class="category">
+      <%= t('faq.query.category') %>
+      <%= select_tag :category,  options_for_select(category_options, @category.try(:to_i)), include_blank: true %>
+    </div>
+    <% end %>
+    <div class="keyword">
+      <%= t('faq.query.keyword') %>
+      <%= text_field_tag :keyword, @keyword %>
+    </div>
+    <div class="submitters">
+      <%= submit_tag t('faq.search'), name: :search %>
+      <%= submit_tag t('faq.reset'), name: :reset %>
+    </div>
+  <% end %>
+</div>
+
+<h2 class="result"><%= t("faq.result") %><span><%= @items.count %></span><%= t("faq.count") %></h2>
+<div class="faq-search pages">
+  <%= render_page_list %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

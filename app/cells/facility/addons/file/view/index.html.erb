@@ -1,0 +1,10 @@
+<h2><%= t("facility.image") %></h2>
+<div class="images">
+  <% @cur_page.files.each do |file| %>
+    <% if file.image? %>
+      <%= link_to file.url do %>
+        <%= image_tag file.thumb_url %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,63 @@
+<%
+  map_loc = @item.map_loc.present? ? @item.map_loc : [ 34.074598, 134.55141 ]
+  map_zoom = @item.map_zoom.present? ? @item.map_zoom : 14
+%>
+
+<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap" %>
+<%= coffee do %>
+
+#loadScript = ->
+#  alert("loadscript")
+#  script = document.createElement("script");
+#  script.type = "text/javascript";
+#  script.src = "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap"
+#  document.body.appendChild script;
+
+#$(window).load ->
+#  loadScript()
+
+setMapLoc = (ele, lat, lon) ->
+  lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6);
+  lon = Math.ceil(lon * Math.pow(10,6)) / Math.pow(10,6);
+  ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
+
+getMapLoc = (ele) ->
+  latlon = ele.val().split(',')
+  return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
+
+window.initmap = ->
+  #googleMap api v3
+  mapOptions = {
+    center: new google.maps.LatLng(<%= raw map_loc[0] %>, <%= raw map_loc[1] %>),
+    zoom: <%= raw map_zoom %>,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    panControl: false,
+    zoomControl: true,
+    zoomControlOptions: {
+      style: google.maps.ZoomControlStyle.LARGE
+    },
+    mapTypeControl: true,
+    scaleControl: true,
+    scrollwheel: true,
+    streetViewControl: true,
+    overviewMapControl: true,
+    overviewMapControlOptions: {
+        opened: true
+    }
+  };
+
+  window.map = new google.maps.Map(document.getElementById("map-canvas"),  mapOptions)
+  markers = <%= raw @item.map_points.to_json %>
+  $.each markers, (i, value) ->
+    new google.maps.Marker(
+      position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
+      map: window.map
+    )
+    return
+  return
+
+<% end %>
+
+<dl class="see mod-page">
+  <div id="map-canvas"></div>
+</dl>

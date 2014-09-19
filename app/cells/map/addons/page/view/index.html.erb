@@ -1,0 +1,49 @@
+<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap" %>
+<%= coffee do %>
+
+setMapLoc = (ele, lat, lon) ->
+  lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6);
+  lon = Math.ceil(lon * Math.pow(10,6)) / Math.pow(10,6);
+  ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
+
+getMapLoc = (ele) ->
+  latlon = ele.val().split(',')
+  return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
+
+window.initmap = ->
+  #googleMap api v3
+  mapOptions = {
+    center: new google.maps.LatLng(<%= raw @cur_page.map_loc[0] %>, <%= raw @cur_page.map_loc[1] %>),
+    zoom: <%= raw @cur_page.map_zoom %>,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    panControl: false,
+    zoomControl: true,
+    zoomControlOptions: {
+      style: google.maps.ZoomControlStyle.LARGE
+    },
+    mapTypeControl: true,
+    scaleControl: true,
+    scrollwheel: true,
+    streetViewControl: true,
+    overviewMapControl: true,
+    overviewMapControlOptions: {
+        opened: true
+    }
+  };
+
+  window.map = new google.maps.Map(document.getElementById("map-canvas"),  mapOptions)
+  markers = <%= raw @cur_page.map_points.to_json %>
+  $.each markers, (i, value) ->
+    new google.maps.Marker(
+      position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
+      map: window.map
+    )
+    return
+  return
+
+<% end %>
+
+<h2><%= t("map.map") %></h2>
+<dl>
+  <div id="map-canvas" style="width: 600px; height: 400px"></div>
+</dl>
