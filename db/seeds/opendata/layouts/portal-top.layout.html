@@ -1,29 +1,48 @@
 <html>
 <head>
-  <meta name="viewport"
-    content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
 </head>
 <body>
 <div id="page">
 
-<h1><a href="/">Our Opend Data</a></h1>
-</ part "tab" />
-</ part "mypage-login" />
-</ part "portal-kv" />
+  <div id="hedder">
+    <div class="inner">
+      <div class="logo">
+        <h1><a href="/"><img src="/img/hedder-logo.png" alt="Our Open Data" title="Our Open Data" /></a></h1>
+      </div>
+      <div class="tab">
+        </ part "tab" />
+      </div>
+      <div class="login">
+        </ part "mypage-login" />
+      </div>
+    </div>
+  </div>
 
-<div>
-  </ yield />
-  </ part "portal-about" />
-  </ part "portal-tab" />
-  </ part "portal-dataset" />
-  </ part "portal-plan" />
-  </ part "add" />
-  </ part "twitter" />
-  </ part "portal-fb" />
-</div>
+  <div id="top">
+    </ part "portal-kv" />
+  </div>
 
-</ part "foot" />
+  <div id="contents">
+    <div id="main">
+      </ part "portal-about" />
+      <section id="portal-tab">
+        </ part "portal-tab" />
+      </section>
+      <section id="portal-dataset">
+        </ part "portal-dataset" />
+      </section>
+      </ part "portal-plan" />
+    </div>
+    <div id="sidebar">
+      </ part "add" />
+      </ part "twitter" />
+      </ part "portal-fb" />
+    </div>
+  </div>
+
+  </ part "foot" />
 
 </div>
 </body>
