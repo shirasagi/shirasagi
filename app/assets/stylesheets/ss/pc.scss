@@ -523,5 +523,14 @@ table.index {
     color: #822;
   }
 }
+.permission-names {
+  @include clear;
+  margin: 10px 0 10px 20px;
+  label {
+    float: left;
+    min-width: 180px;
+    margin-right: 10px;
+  }
+}
 // -------------------------------------------------------------------------------------------------
 }
