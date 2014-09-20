@@ -4,7 +4,6 @@ module Cms::TaskFilter
 
   included do
     before_action :set_item
-    before_action :set_command
   end
 
   public
@@ -13,8 +12,10 @@ module Cms::TaskFilter
     end
 
     def run
+      cmd = "bundle exec #{task_command} &"
+
       require "open3"
-      stdin, stdout, stderr = Open3.popen3(@cmd)
+      stdin, stdout, stderr = Open3.popen3(cmd)
 
       redirect_to({ action: :index }, { notice: t(:started) })
     end
