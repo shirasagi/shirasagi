@@ -54,6 +54,8 @@ group :development, :test do
   gem 'timecop'
 end
 
-gem 'brakeman', require: false, group: :development
-gem 'guard-brakeman', require: false, group: :development
-gem 'yard', group: :development
+group :development do
+  gem 'brakeman', require: false
+  gem 'guard-brakeman', require: false
+  gem 'yard', require: false
+end
