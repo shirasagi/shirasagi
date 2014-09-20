@@ -15,7 +15,6 @@ gem "unicorn"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
-gem "thin"
 gem "mongoid", git: "https://github.com/mongoid/mongoid.git"
 gem "mongoid-rspec"
 gem "mongo_mapper"
