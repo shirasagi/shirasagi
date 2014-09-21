@@ -19,11 +19,6 @@ Lint/AssignmentInCondition:
 Lint/BlockAlignment:
   Enabled: false
 
-# Offense count: 2
-# Configuration parameters: AlignWith, SupportedStyles.
-Lint/DefEndAlignment:
-  Enabled: true
-
 # Offense count: 7
 # Cop supports --auto-correct.
 Lint/DeprecatedClassMethods:
@@ -105,12 +100,6 @@ Style/AndOr:
 # Offense count: 1
 Style/AsciiComments:
   Enabled: false
-
-# Offense count: 70
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/BarePercentLiterals:
-  Enabled: true
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -247,18 +236,6 @@ Style/Next:
 Style/NonNilCheck:
   Enabled: false
 
-# Offense count: 108
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Enabled: true
-
-# Offense count: 60
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-Style/PercentQLiterals:
-  Enabled: true
-
 # Offense count: 14
 # Cop supports --auto-correct.
 Style/PerlBackrefs:
@@ -303,11 +280,6 @@ Style/SingleSpaceBeforeFirstArg:
 # Cop supports --auto-correct.
 Style/SpaceAfterColon:
   Enabled: false
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Style/SpaceAfterComma:
-  Enabled: true
 
 # Offense count: 6
 # Cop supports --auto-correct.
@@ -376,21 +348,11 @@ Style/TrailingBlankLines:
 Style/TrailingComma:
   Enabled: false
 
-# Offense count: 21
-# Cop supports --auto-correct.
-Style/TrailingWhitespace:
-  Enabled: true
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: ExactNameMatch, AllowPredicates, AllowDSLWriters, Whitelist.
 Style/TrivialAccessors:
   Enabled: false
-
-# Offense count: 44
-# Cop supports --auto-correct.
-Style/UnneededPercentQ:
-  Enabled: true
 
 # Offense count: 8
 # Cop supports --auto-correct.
