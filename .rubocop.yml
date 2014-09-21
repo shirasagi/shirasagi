@@ -18,5 +18,4 @@ Rails/DefaultScope:
 Rails/Output:
   Enabled: false
 
-# Offense count: 1
 # Cop supports --auto-correct.
