@@ -15,8 +15,37 @@ Rails/DefaultScope:
     - app/cells/
     - lib/
 
+# Cop supports --auto-correct.
 Rails/Output:
   Enabled: false
 
-# Offense count: 1
+# Configuration parameters: AlignWith, SupportedStyles.
+Lint/DefEndAlignment:
+  Enabled: true
+
 # Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/BarePercentLiterals:
+  Enabled: true
+
+# Cop supports --auto-correct.
+# Configuration parameters: PreferredDelimiters.
+Style/PercentLiteralDelimiters:
+  Enabled: true
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/PercentQLiterals:
+  Enabled: true
+
+# Cop supports --auto-correct.
+Style/SpaceAfterComma:
+  Enabled: true
+
+# Cop supports --auto-correct.
+Style/TrailingWhitespace:
+  Enabled: true
+
+# Cop supports --auto-correct.
+Style/UnneededPercentQ:
+  Enabled: true
