@@ -3,9 +3,9 @@ class Rdf::Sparql
   require "sparql/client"
 
   # Fuseki Server
-  SERVER  = "192.168.230.128" # local
-  PORT    = "3030"
-  DATASET = "sample"
+  SERVER  = SS.config.opendata.server_address
+  PORT    = SS.config.opendata.server_port
+  DATASET = SS.config.opendata.dataset_name
 
   QUERY_SITE  = "http://#{SERVER}:#{PORT}/#{DATASET}/query"
   UPDATE_SITE = "http://#{SERVER}:#{PORT}/#{DATASET}/update"

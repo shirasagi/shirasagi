@@ -1,0 +1,13 @@
+# opendata
+
+production: &production
+  # SPARQL Endpoint
+  server_address: 192.168.230.128
+  server_port: 3030
+  dataset_name: opendata
+
+test:
+  <<: *production
+
+development:
+  <<: *production
