@@ -22,6 +22,7 @@ module Cms::PublicFilter
       if @html =~ /\.part\.html$/
         part = find_part(@html)
         raise "404" unless part
+        @cur_path = params[:ref]
         send_part render_part(part, xhr: true)
 
       else
