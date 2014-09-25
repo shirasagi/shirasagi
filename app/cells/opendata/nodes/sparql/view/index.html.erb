@@ -1,5 +1,6 @@
 <div class="opendata-sparql">
-  <form method="get" action="">
+
+  <%= form_tag("", method: :post) do %>
     <table>
       <tr>
         <th>Query</th>
@@ -11,7 +12,7 @@
       <tr>
         <th>Format</th>
         <td>
-          <select>
+          <select name="format">
             <option>HTML</option>
             <option>JSON</option>
             <option>CSV</option>
@@ -23,7 +24,7 @@
     </table>
 
     <div style="margin: 20px 50px;">
-      <input type="submit" value="Run Query" />
+      <%= submit_tag "Run Query" %>
     </div>
-  </form>
+  <% end %>
 </div>

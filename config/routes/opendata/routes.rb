@@ -38,6 +38,7 @@ SS::Application.routes.draw do
     get "idea/:id/(index.:format)" => "public#show", cell: "nodes/idea"
 
     get "sparql/(*path)" => "public#index", cell: "nodes/sparql"
+    post "sparql/(*path)" => "public#index", cell: "nodes/sparql"
     get "api/*path" => "public#index", cell: "nodes/api"
 
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
