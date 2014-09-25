@@ -1,19 +1,26 @@
+@import "init";
+@import "part";
+
 // -----------------------------------------------------------------------------
 // element
 
 html {
+  height: 100%;
   font-family: Meiryo;
 }
 body {
-  margin: 10px;
+  margin: 0 auto;
   font-family: Meiryo;
   font-size: 75%;
-  color: #444;
+  color: $text;
 }
 h1, h2, h3, h4, h5 {
   margin: 0px;
   font-size: 100%;
   font-weight: normal;
+}
+a {
+  color: $link;
 }
 img {
   vertical-align: middle;
@@ -22,12 +29,319 @@ img {
 // -----------------------------------------------------------------------------
 // layout
 
-.example, .tabs, .pages, .nodes {
-  margin: 5px 0px;
-  padding: 5px;
-  border: 1px solid #ddd;
-  background-color: #eee;
+
+
+#hedder {
+  @include clear;
+  height: 50px;
+  border-bottom: #ddcfcc 2px solid;
+  @include grd-gray;
+  .inner {
+    width: 1200px;
+    height: 50px;
+    margin: 0 auto;
+    .logo {
+      float: left;
+      padding: 13px 28px 0 11px;
+    }
+    .tab {
+      float: left;
+      ul {
+        li {
+          display: block;
+          float: left;
+          width: 190px;
+          height: 40px;
+          margin: 10px 10px 0 0;
+          @include border_radius_top();
+          background: #ddcfcc;
+          a {
+            display: block;
+            color: $text;
+            text-decoration: none;
+            span {
+              display: block;
+              height: 40px;
+              h1 {
+                padding: 10px 0 0 38px;
+              }
+            }
+            #data {
+              background: url(../img/ic-data-s.png) no-repeat 10px center;
+            }
+            #app {
+              background: url(../img/ic-app-s.png) no-repeat 10px center;
+            }
+            #idea {
+              background: url(../img/ic-idea-s.png) no-repeat 10px center;
+            }
+          }
+        }
+      }
+      .tab02, .tab03 {
+        width: 150px;
+        opacity: 0.5;
+      }
+
+    }
+    .login {
+      float: right;
+      padding: 15px 0;
+      a {
+        display: block;
+        height: 50px;
+        padding-left: 18px;
+        background: url(../img/ic-login.png) no-repeat top left;
+        color: $white;
+      }
+    }
+  }
 }
+
+
+
+#top {
+  height: 324px;
+  margin-bottom: 14px;
+  @include grd-aqua;
+  @include box-shadow;
+  #portal-kv {
+    width: $page-width;
+    margin: 0 auto;
+    #portal-kv-img {
+      display: block;
+      float: left;
+      padding: 10px;
+      img {
+        width: 721px;
+        height: auto;
+      }
+    }
+    #portal-kv-nav {
+      float: right;
+      margin-top: 28px;
+      li.gnav01 a {
+        background: #00b2c4;
+      }
+      li.gnav02 a {
+        background: #90cd4c;
+        opacity: 0.4
+      }
+      li.gnav03 a {
+        background: #ffd400;
+        opacity: 0.4
+      }
+      a {
+        display:block;
+        width: 249px;
+        height: 80px;
+        margin-bottom: 14px;
+        text-decoration: none;
+        span {
+          display: block;
+        }
+        #title-data, #title-app, #title-idea {
+          height: 56px;
+          color: $text;
+          h1 {
+            padding: 22px 0 0 55px;
+          }
+        }
+        #contents-data, #contents-app, #contents-idea {
+          height: 24px;
+          color: $white;
+          text-align: center;
+        }
+        #title-data {
+          background: url(../img/ic-data-m.png) no-repeat 15px center;
+        }
+        #contents-data {
+          background: #00686b;
+        }
+        #title-app {
+          background: url(../img/ic-app-m.png) no-repeat 15px center;
+        }
+        #contents-app {
+          background: #68931d;
+        }
+        #title-idea {
+          background: url(../img/ic-idea-m.png) no-repeat 15px center;
+        }
+        #contents-idea {
+          background: #c79d00;
+        }
+      }
+    }
+  }
+}
+
+
+#about, #portal-tab, #portal-dataset, #portal-plan,
+#add, #twitter, #portal-fb {
+  margin-bottom: $box-margin;
+}
+
+#contents {
+  width: $page-width;
+  margin: 0 auto;
+  #main {
+    float: left;
+    width: 803px;
+    margin-right: $box-margin;
+    #about {
+      h1 {
+        margin-bottom: 6px;
+        padding: 6px 10px;
+        @include grd-blue;
+        color:$white;
+      }
+    }
+  }
+  #sidebar {
+    float: right;
+    width: 249px;
+  }
+}
+
+#add {
+  height: 429px;
+  background: #eeeeee;
+  h1 {
+    padding: 14px;
+  }
+  nav {
+    @include clear;
+    a {
+      display: block;
+      height: 50px;
+      margin-bottom: 14px;
+      padding-left: 39px;
+    }
+  }
+}
+
+#twitter {
+  .twitter-timeline {
+    height: 436px;
+  }
+}
+
+.cms-tabs {
+  .names {
+    padding: 0;
+    border-bottom: $blue 2px solid;
+    .name {
+      display: inline-block;
+      width: 120px;
+      margin-right: 10px;
+      padding: 6px 0;
+      @include border_radius_top();
+      background: #ddcfcc;
+      color: $text;
+      text-decoration: none;
+      text-align: center;
+    }
+    .current {
+      @include border_radius_top();
+      @include grd-blue;
+      color: $white;
+    }
+    #cms-tab-53-0-name {
+      margin-left: 18px;
+    }
+  }
+  .pages header {
+    padding: 16px 0 16px 16px;
+    border-bottom: $border-hgry;
+  }
+  h2, time {
+    display: inline;
+    padding-right: 5px;
+  }
+  nav {
+    @include clear;
+    padding-top: 8px;
+  }
+  .rss {
+    display: inline-block;
+    float: left;
+    padding-left: 24px;
+    background: url(../img/ic-rss.png) no-repeat left center;
+  }
+  .more {
+    float: right;
+    @include r-arrow;
+    @include border_radius();
+  }
+}
+
+#portal-dataset {
+  header h1 {
+    margin-bottom: 6px;
+    padding: 6px 38px;
+    background: $data-blue;
+    color:$white;
+    }
+  .opendata-datasets header {
+    padding: 16px 0 16px 16px;
+    border-bottom: $border-hgry;
+  }
+  time, h2 {
+    display: inline;
+    padding-right: 5px;
+  }
+  nav {
+    @include clear;
+    padding-top: 8px;
+  }
+  .opendata {
+    @include r-arrow;
+    float: right;
+    @include border_radius();
+  }
+}
+
+#foot {
+  clear: both;
+  margin: 0 auto;
+}
+
+#footer-navi {
+  height: 40px;
+  border-top: $gray 1px solid;
+  background: #eeeeee;
+  .inner {
+    width: $page-width;
+    margin: 0 auto;
+    padding-top: 10px;
+    text-align: center;
+    nav {
+      @include clear;
+      a {
+        padding: 0 20px;
+      }
+    }
+  }
+}
+
+#copyright {
+  height: 30px;
+  @include grd-gray;
+  .inner {
+    width: $page-width;
+    margin: 0 auto;
+    padding-top: 5px;
+    color: $white;
+    text-align: center;
+  }
+}
+
+#s-portal-top {
+  #copyright {
+    @include grd-blue;
+  }
+}
+
 
 .opendata-mypage-login {
   display: table;
@@ -38,6 +352,8 @@ img {
     margin: 10px 0px 0px;
   }
 }
+
+
 dl.see {
   margin: 0px 0px 10px;
   padding: 10px;

@@ -1,11 +1,11 @@
 <html>
 <head>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+  <meta name="viewport"
+  content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
 </head>
-<body>
+<body id="s-portal-top">
 <div id="page">
-
   <div id="hedder">
     <div class="inner">
       <div class="logo">
@@ -25,13 +25,20 @@
   </div>
 
   <div id="contents">
+  </ yield />
     <div id="main">
       </ part "portal-about" />
       <section id="portal-tab">
         </ part "portal-tab" />
       </section>
       <section id="portal-dataset">
+        <header>
+          <h1>オープンデータカタログ</h1>
+        </header>
         </ part "portal-dataset" />
+        <nav>
+          <a class="opendata" href="/dataset/">オープンデータカタログサイトへ</a>
+        </nav>
       </section>
       </ part "portal-plan" />
     </div>
