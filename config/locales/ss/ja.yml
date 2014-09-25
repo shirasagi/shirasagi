@@ -22,6 +22,11 @@ ja:
     download: ダウンロード
     image: 画像
 
+    task:
+      started: 開始しました。
+      interrupted: 中断命令を送信しました。
+      confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
+
   views:
     links:
       new: 新規作成

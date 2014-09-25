@@ -20,7 +20,7 @@ class Cms::Task::PagesController < ApplicationController
 
       pages.each do |page|
         page = page.becomes_with_route
-        @task.current_count += 1
+        @task += 1
         @task.log page.full_url
 
         if page.public?
@@ -47,8 +47,8 @@ class Cms::Task::PagesController < ApplicationController
       @task.total_count = pages.size
 
       pages.each do |page|
+        @task += 1
         next unless page.public_node?
-        @task.current_count += 1
         if generate_page page.becomes_with_route
           @task.log page.url
         end
@@ -66,8 +66,8 @@ class Cms::Task::PagesController < ApplicationController
       @task.total_count = pages.size
 
       pages.each do |page|
+        @task += 1
         next unless page.public_node?
-        @task.current_count += 1
         if generate_page page.becomes_with_route
           @task.log page.url
         end
@@ -82,7 +82,7 @@ class Cms::Task::PagesController < ApplicationController
       @task.total_count = pages.size
 
       pages.each do |page|
-        @task.current_count += 1
+        @task += 1
         if Fs.rm_rf page.path
           @task.log page.path
         end

@@ -43,8 +43,8 @@ class Cms::Task::NodesController < ApplicationController
       return if pages.size > @limit
 
       pages.each do |page|
+        @task += 1
         next unless page.public_node?
-        @task.current_count += 1
         if generate_page page.becomes_with_route
           @task.log page.url
         end

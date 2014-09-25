@@ -14,6 +14,7 @@ module SS::Task::Model
     field :name, type: String
     #field :command, type: String
     field :state, type: String, default: "stop"
+    field :interrupt, type: String
     field :started, type: DateTime
     field :closed, type: DateTime
     field :total_count, type: Integer, default: 0
@@ -36,6 +37,8 @@ module SS::Task::Model
           require 'benchmark'
           time = Benchmark.realtime { yield task }
           task.log sprintf("# %d sec\n\n", time)
+        rescue Exception => e
+          task.log "-- #{e}"
         rescue StandardError => e
           task.log "-- Error"
           task.log e.to_s
@@ -46,6 +49,16 @@ module SS::Task::Model
   end
 
   public
+    def +(num)
+      self.current_count += num
+      if (self.current_count % log_buffer) == 0
+        save
+        interrupt = self.class.find_by(id: id, select: interrupt).interrupt
+        raise Exception.new "interrupted: stop" if interrupt.to_s == "stop"
+      end
+      self
+    end
+
     def init_variables
       self.log_buffer = 50
     end
@@ -63,6 +76,7 @@ module SS::Task::Model
       self.started       = Time.now
       self.closed        = nil
       self.state         = "running"
+      self.interrupt     = nil
       self.total_count   = 0
       self.current_count = 0
       self.logs          = []
@@ -83,6 +97,5 @@ module SS::Task::Model
     def log(msg)
       puts msg
       self.logs << msg
-      save if (self.logs.size % @log_buffer) == 0
     end
 end
