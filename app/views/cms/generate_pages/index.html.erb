@@ -21,13 +21,16 @@
 </div>
 
 <footer class="send">
+  <%= button_tag t(:reload), name: :reload, type: :button, onclick: "location.reload()" %>
   <% if @item.running? %>
     <%= submit_tag t(:stop), name: "stop" %>
     <div style="margin: 20px 0px 0px; text-align: right;">
-      <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t('ss.task.confirm_reset')}');" %>
+      <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t('ss.task.confirm_reset')}')" %>
     </div>
   <% else %>
-    <%= submit_tag t(:run), class: :save %>
+    <% if !flash[:notice] %>
+    <%= submit_tag t(:run), class: :save unless flash[:notice] %>
+    <% end %>
   <% end %>
 </footer>
 
