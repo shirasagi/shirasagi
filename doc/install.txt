@@ -109,7 +109,7 @@ CentOS 6.5/64bit
 # 定期実行設定(cron)
 
   # ページ公開＆書き出し
-  */15 * * * * /bin/bash -l -c 'cd /var/www/ss && bundle exec rake cms:release_pages && bundle exec rake cms:generate_nodes'
+  */15 * * * * /bin/bash -l -c 'cd /var/www/shirasagi && bundle exec rake cms:release_pages && bundle exec rake cms:generate_nodes'
 
 --------------------
 # 開発ツール

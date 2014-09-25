@@ -19,14 +19,20 @@ module Cms::PageFilter
     def create
       @item = @model.new get_params
       raise "403" unless @item.allowed?(:edit, @cur_user)
-      raise "403" unless @item.allowed?(:release, @cur_user) if @item.state == "public"
+      if @item.state == "public"
+        raise "403" unless @item.allowed?(:release, @cur_user)
+        @item.state = "ready" if @item.release_date
+      end
       render_create @item.save
     end
 
     def update
       @item.attributes = get_params
       raise "403" unless @item.allowed?(:edit, @cur_user)
-      raise "403" unless @item.allowed?(:release, @cur_user) if @item.state == "public"
+      if @item.state == "public"
+        raise "403" unless @item.allowed?(:release, @cur_user)
+        @item.state = "ready" if @item.release_date
+      end
       render_update @item.update
     end
 end

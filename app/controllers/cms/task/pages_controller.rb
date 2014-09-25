@@ -11,7 +11,7 @@ class Cms::Task::PagesController < ApplicationController
 
       time = Time.now
       cond = [
-        { state: "closed", release_date: { "$lte" => time } },
+        { state: "ready", release_date: { "$lte" => time } },
         { state: "public", close_date: { "$lte" => time } }
       ]
 
@@ -26,7 +26,7 @@ class Cms::Task::PagesController < ApplicationController
         if page.public?
           page.state = "closed"
           page.close_date = nil
-        else
+        elsif page.state == "ready"
           page.state = "public"
           page.release_date = nil
         end
