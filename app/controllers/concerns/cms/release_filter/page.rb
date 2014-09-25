@@ -48,6 +48,8 @@ module Cms::ReleaseFilter::Page
 
       if diff || !Fs.exists?(file)
         Fs.write file, data
+      else
+        nil
       end
     end
 

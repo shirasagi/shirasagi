@@ -5,24 +5,30 @@ class Cms::Task::NodesController < ApplicationController
   public
     def generate(opts)
       @task = opts[:task]
+      @site = opts[:site]
+      @limit = (opts[:limit] || 50).to_i
+
+      @task.log "# #{@site.name}"
       #return unless @cur_site.serve_static_file?
 
-      Cms::Node.site(opts[:site]).public.each do |node|
-        generate_node node
-      end
+      nodes = Cms::Node.site(opts[:site]).public
+      nodes.each { |node| route_node node }
     end
 
     def generate_with_node(opts)
       @task = opts[:task]
+      @site = opts[:site]
+      @limit = (opts[:limit] || 50).to_i
+
+      @task.log "# #{@site.name}"
       #return unless @cur_site.serve_static_file?
 
-      Cms::Node.site(opts[:site]).where(filename: /^#{opts[:node].filename}\/?$/).public.each do |node|
-        generate_node node
-      end
+      nodes = Cms::Node.site(opts[:site]).where(filename: /^#{opts[:node].filename}\/?$/).public
+      nodes.each { |node| route_node node }
     end
 
   private
-    def generate_node(node)
+    def route_node(node)
       return unless node.public_node?
 
       cname = node.route.sub("/", "/task/node/").camelize.pluralize + "Controller"
@@ -30,16 +36,18 @@ class Cms::Task::NodesController < ApplicationController
       return if klass.nil? || klass.to_s != cname
       klass.new.generate task: @task, node: node.becomes_with_route
 
-      generate_pages(node.pages)
+      generate_pages(node.pages.public)
     end
 
     def generate_pages(pages)
-      return if pages.size > 50
+      return if pages.size > @limit
 
       pages.each do |page|
         next unless page.public_node?
-        @task.log page.url if @task
-        generate_page page.becomes_with_route
+        @task.current_count += 1
+        if generate_page page.becomes_with_route
+          @task.log page.url
+        end
       end
     end
 end

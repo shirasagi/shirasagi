@@ -398,6 +398,16 @@ table.index {
     }
   }
 }
+table.see {
+  border: 1px solid #ccc;
+  th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+  th {
+    background-color: #ddd;
+  }
+}
 .search-form {
   @include clear;
   margin-bottom: 20px;

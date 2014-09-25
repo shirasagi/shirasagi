@@ -1,7 +1,7 @@
 # coding: utf-8
 namespace :cms do
   task :generate_nodes => :environment do
-    Cms::Task.generate_nodes site: ENV["site"], node: ENV["node"]
+    Cms::Task.generate_nodes site: ENV["site"], node: ENV["node"], limit: ENV["limit"]
   end
 
   task :generate_pages => :environment do

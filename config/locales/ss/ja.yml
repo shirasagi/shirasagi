@@ -80,6 +80,8 @@ ja:
         name: タスク名
         started: 開始日時
         closed: 終了日時
+        total_count: 全体件数
+        current_count: 処理件数
         log: ログ
 
   tooltip:
