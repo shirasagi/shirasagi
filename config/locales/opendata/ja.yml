@@ -7,7 +7,7 @@ ja:
     opendata: オープンデータ
     addons:
       opendata/category: 分野
-      opendata/data_group: データグループ
+      opendata/dataset_group: データグループ
       opendata/area: 地域
       opendata/dataset: データセット
       opendata/app: アプリ
@@ -19,10 +19,14 @@ ja:
     nodes:
       opendata/category: 分野
       opendata/area: 地域
-      opendata/dataset: データカタログ
+      opendata/dataset: データセット
       opendata/dataset_category: データセット分野
       opendata/app: アプリマーケット
       opendata/idea: アイデアボックス
+    parts:
+      opendata/mypage_login: ログイン
+      opendata/dataset: データセット
+      opendata/dataset_group: データグループ
 
   cms_role:
     read_other_opendata_datasets: OpenData/データセットの閲覧（全て）
@@ -46,14 +50,14 @@ ja:
 
   mongoid:
     models:
-      opendata/data_group: グループ
+      opendata/dataset_group: グループ
       opendata/dataset: データセット
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
       opendata/addon/tag:
         tags: タグ
-      opendata/data_group:
+      opendata/dataset_group:
         name: グループ名
       opendata/dataset:
         name: データセット名

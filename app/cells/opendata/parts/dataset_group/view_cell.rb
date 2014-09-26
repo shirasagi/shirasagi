@@ -1,16 +1,14 @@
 # coding: utf-8
-module Opendata::Nodes::SearchGroup
+module Opendata::Parts::DatasetGroup
   class ViewCell < Cell::Rails
-    include Cms::NodeFilter::ViewCell
+    include Cms::PartFilter::ViewCell
     helper Opendata::UrlHelper
 
     public
       def index
         @items = Opendata::DatasetGroup.site(@cur_site).public.
-          search(params[:s]).
           order_by(name: 1).
-          page(params[:page]).
-          per(20)
+          limit(10)
 
         render
       end

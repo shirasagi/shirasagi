@@ -3,7 +3,7 @@ class Opendata::Dataset
   include Cms::Page::Model
   include Opendata::Addon::Resource
   include Opendata::Addon::Category
-  include Opendata::Addon::DataGroup
+  include Opendata::Addon::DatasetGroup
   include Opendata::Addon::Area
   include Opendata::Addon::Tag
   include Opendata::Addon::Release

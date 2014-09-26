@@ -17,11 +17,11 @@ module Opendata::Part
     end
   end
 
-  class Group
+  class DatasetGroup
     include Cms::Part::Model
-    include Cms::Addon::NodeList
+    #include Cms::Addon::NodeList
 
-    default_scope ->{ where(route: "opendata/group") }
+    default_scope ->{ where(route: "opendata/dataset_group") }
 
     def condition_hash
       {} # TODO:

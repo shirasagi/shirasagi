@@ -50,7 +50,7 @@ module Opendata::Nodes::MyDataset::Resources
         order_by(name: 1).
         page(params[:page]).per(50)
 
-        @items.empty? ? "" : render
+        render
       end
 
       def show

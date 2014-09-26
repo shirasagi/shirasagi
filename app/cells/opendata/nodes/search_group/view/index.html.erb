@@ -1,1 +1,34 @@
+<%
 
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+@s = OpenStruct.new params[:s]
+
+%>
+<%= form_for :s, url: "", html: { class: "opendata-search_groups-form", method: :get } do |f| %>
+  <dl class="keyword">
+    <dt>キーワード</dt>
+    <dd><%= f.text_field :name %></dd>
+  </dl>
+  <dl class="category">
+    <dt>分野</dt>
+    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
+  </dl>
+
+  <div class="send">
+    <%= submit_tag t(:search), name: :search %>
+  </div>
+<% end %>
+
+<%= paginate @items %>
+
+<div class="opendata-search_groups nodes">
+  <% @items.each do |item| %>
+  <article>
+    <header>
+      <h2><%= link_to item.name, search_datasets_path + "?s[dataset_group_id]=#{item.id}" %></h2>
+    </header>
+  </article>
+  <% end %>
+</div>
+
+<%= paginate @items %>

@@ -17,7 +17,7 @@ SS::Application.routes.draw do
 
   content "opendata" do
     get "/" => "main#index", as: :main
-    resources :data_groups, concerns: :deletion
+    resources :dataset_groups, concerns: :deletion
     resources :datasets, concerns: :deletion do
       resources :resources, concerns: :deletion do
         get "file" => "resources#download"
@@ -31,6 +31,8 @@ SS::Application.routes.draw do
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
     get "dataset/:id.:format" => "public#show", cell: "nodes/dataset"
+
+    match "search_group/(index.:format)" => "public#index", cell: "nodes/search_group", via: [:get, :post]
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"
@@ -57,6 +59,8 @@ SS::Application.routes.draw do
   part "opendata" do
     get "mypage_login" => "public#index", cell: "parts/mypage_login"
     get "dataset" => "public#index", cell: "parts/dataset"
+    get "dataset_group" => "public#index", cell: "parts/dataset_group"
+
     get "app" => "public#index", cell: "parts/app"
     get "idea" => "public#index", cell: "parts/idea"
   end

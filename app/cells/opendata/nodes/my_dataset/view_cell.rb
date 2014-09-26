@@ -40,7 +40,7 @@ module Opendata::Nodes::MyDataset
           page(params[:page]).
           per(20)
 
-        @items.empty? ? "" : render
+        render
       end
 
       def show

@@ -12,15 +12,15 @@ module Opendata::Addon
     end
   end
 
-  module DataGroup
+  module DatasetGroup
     extend SS::Addon
     extend ActiveSupport::Concern
 
     set_order 301
 
     included do
-      embeds_ids :data_groups, class_name: "Opendata::DataGroup"
-      permit_params data_group_ids: []
+      embeds_ids :dataset_groups, class_name: "Opendata::DatasetGroup"
+      permit_params dataset_group_ids: []
     end
   end
 

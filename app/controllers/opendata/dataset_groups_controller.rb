@@ -1,9 +1,9 @@
 # coding: utf-8
-class Opendata::DataGroupsController < ApplicationController
+class Opendata::DatasetGroupsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Opendata::DataGroup
+  model Opendata::DatasetGroup
 
   navi_view "opendata/main/navi"
 

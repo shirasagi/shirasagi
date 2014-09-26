@@ -115,7 +115,7 @@ def save_part(data)
 end
 
 save_part filename: "tab.part.html" , name: "サイト切り替えタブ", route: "cms/free"
-save_part filename: "mypage-login.part.html" , name: "ログイン", route: "opendata/mypage_login"
+save_part filename: "mypage-login.part.html" , name: "ログイン", route: "opendata/mypage_login", ajax_view: "enabled"
 save_part filename: "crumbs.part.html" , name: "パンくず", route: "cms/crumb"
 save_part filename: "foot.part.html" , name: "フッター", route: "cms/free"
 save_part filename: "add.part.html" , name: "広告", route: "cms/free"
@@ -129,7 +129,7 @@ save_part filename: "portal-plan.part.html" , name: "ポータル：公開予定
 save_part filename: "portal-fb.part.html" , name: "ポータル：facebook", route: "cms/free"
 save_part filename: "dataset-head.part.html" , name: "データ：ヘッダー", route: "cms/free"
 save_part filename: "dataset-kv.part.html" , name: "データ：キービジュアル", route: "cms/free"
-save_part filename: "dataset-group.part.html" , name: "データ：グループ", route: "opendata/group"
+save_part filename: "dataset-group.part.html" , name: "データ：グループ", route: "opendata/dataset_group"
 save_part filename: "dataset-news.part.html" , name: "データ：新着順", route: "opendata/dataset"
 save_part filename: "dataset-popular.part.html" , name: "データ：人気順", route: "opendata/dataset"
 save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset"
@@ -160,17 +160,17 @@ puts "# articles"
 end
 
 ## -------------------------------------
-puts "# opendata data_groups"
+puts "# opendata dataset_groups"
 
-def save_data_group(data)
+def save_dataset_group(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
-  item = Opendata::DataGroup.find_or_create_by cond
+  item = Opendata::DatasetGroup.find_or_create_by cond
   item.update data
 end
 
 1.step(3) do |i|
-  save_data_group name: "データグループ#{i}",
+  save_dataset_group name: "データグループ#{i}",
                   category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
 end
 
@@ -189,7 +189,7 @@ end
   save_data filename: "dataset/#{i}.html", name: "データセット#{i}", text: "<s>s</s>",
     route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-    data_group_ids: Opendata::DataGroup.site(@site).pluck(:_id).sample(1),
+    dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1),
     license: "CC"
 end

@@ -10,7 +10,7 @@ module Opendata::Nodes::App
           page(params[:page]).
           per(20)
 
-        @items.empty? ? "" : render
+        render
       end
 
       def show

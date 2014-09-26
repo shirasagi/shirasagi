@@ -1,11 +1,11 @@
 <div class="opendata-ideas">
-<% @items.each do |item| %>
+  <% @items.each do |item| %>
   <article>
     <header>
       <h2><a href="<%= "#{item.id}/" %>"><%= item.name %></a></h2>
     </header>
   </article>
-<% end %>
+  <% end %>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

@@ -12,7 +12,7 @@ module Opendata::Parts::App
           page(params[:page]).
           per(@cur_part.limit)
 
-        @items.empty? ? "" : render
+        render
       end
   end
 end
