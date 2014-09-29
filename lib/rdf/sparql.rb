@@ -46,19 +46,35 @@ module Rdf::Sparql
         results = client.query(sparql_query)
 
         if format == "HTML"
-          list = results.to_html
+          type = "text/html"
+          ext = "html"
+          data = results.to_html
         elsif format == "JSON"
-          list = results.to_json
+          type = "application/json"
+          ext = "json"
+          data = results.to_json
         elsif format == "CSV"
-          list = results.to_csv
+          type = "text/csv"
+          ext = "csv"
+          data = results.to_csv
         elsif format == "TSV"
-          list = results.to_tsv
+          type = "text/plain"
+          ext = "txt"
+          data = results.to_tsv
         elsif format == "XML"
-          list = results.to_xml
+          type = "application/xml"
+          ext = "xml"
+          data = results.to_xml
         end
 
-        return list
+        result = {
+          type: type,
+          ext: ext,
+          data: data
+        }
+
+        return result
       end
 
-end
+  end
 end

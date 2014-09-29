@@ -8,25 +8,16 @@ module Opendata::Nodes::Sparql
         return render if params[:query].blank?
 
         file_format = "#{params[:format]}"
-        sparql = Rdf::Sparql.new
-        data = sparql.select("#{params[:query]}", file_format)
+        result = Rdf::Sparql.select("#{params[:query]}", file_format)
 
         if file_format == "HTML"
-          controller.render inline: data
-        elsif file_format == "JSON" then
-          controller.render json: data.to_s
-        elsif file_format == "CSV" then
-          controller.render text: data
-        elsif file_format == "TSV" then
-          controller.render text: data
-        elsif file_format == "XML" then
-          controller.render xml: data.to_s
+          controller.render inline: "#{result[:data]}"
+        else
+          controller.send_data "#{result[:data]}", type: "#{result[:type]}", filename: "sparql.#{result[:ext]}",
+            disposition: :attachment
         end
 
       end
 
-      def query
-        render
-      end
   end
 end
