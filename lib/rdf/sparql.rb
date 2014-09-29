@@ -1,4 +1,4 @@
-class Rdf::Sparql
+module Rdf::Sparql
   require "rdf/turtle"
   require "sparql/client"
 
@@ -11,46 +11,54 @@ class Rdf::Sparql
   UPDATE_SITE = "http://#{SERVER}:#{PORT}/#{DATASET}/update"
   DATE_SITE   = "http://#{SERVER}:#{PORT}/#{DATASET}/data"
 
-  def save(graph_name, ttl_url)
+  class << self
+    public
+      def save(graph_name, ttl_url)
 
-    client = SPARQL::Client.new(UPDATE_SITE)
+        client = SPARQL::Client.new(UPDATE_SITE)
 
-    triples = []
+         triples = []
 
-    graph = RDF::Graph.load(ttl_url)
-    graph.each do |statement|
-      triples << statement.to_s
-    end
+         graph = RDF::Graph.load(ttl_url)
+         graph.each do |statement|
+          triples << statement.to_s
+         end
 
-    sparql = "INSERT DATA { GRAPH <#{graph_name}> { #{triples.join(" ")} } }"
-    client.update(sparql)
+         sparql = "INSERT DATA { GRAPH <#{graph_name}> { #{triples.join(" ")} } }"
+         client.update(sparql)
 
-    return triples
-  end
+         return triples
+      end
 
-  def clear(graph_name)
-    client = SPARQL::Client.new(UPDATE_SITE)
-    client.clear_graph(graph_name)
-  end
+      def clear(graph_name)
+        client = SPARQL::Client.new(UPDATE_SITE)
+        client.clear_graph(graph_name)
+      end
 
-  def select(sparql_query, format = "HTML")
+      def clear_all
+        client = SPARQL::Client.new(UPDATE_SITE)
+        client.clear(:all)
+      end
 
-    client = SPARQL::Client.new(QUERY_SITE)
-    results = client.query(sparql_query)
+      def select(sparql_query, format = "HTML")
 
-    if format == "HTML"
-      list = results.to_html
-    elsif format == "JSON" then
-      list = results.to_json
-    elsif format == "CSV" then
-      list = results.to_csv
-    elsif format == "TSV" then
-      list = results.to_tsv
-    elsif format == "XML" then
-      list = results.to_xml
-    end
+        client = SPARQL::Client.new(QUERY_SITE)
+        results = client.query(sparql_query)
 
-    return list
-  end
+        if format == "HTML"
+          list = results.to_html
+        elsif format == "JSON"
+          list = results.to_json
+        elsif format == "CSV"
+          list = results.to_csv
+        elsif format == "TSV"
+          list = results.to_tsv
+        elsif format == "XML"
+          list = results.to_xml
+        end
 
+        return list
+      end
+
+end
 end

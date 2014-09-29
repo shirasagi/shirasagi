@@ -2,7 +2,7 @@
 
 production: &production
   # SPARQL Endpoint
-  server_address: 172.16.20.233
+  server_address: 192.168.1.10
   server_port: 3030
   dataset_name: opendata
 
