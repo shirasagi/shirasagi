@@ -61,11 +61,41 @@ module Cms::ReleaseFilter::Page
     end
 
   public
-    def generate_node(node)
+    def generate_node_with_pagination(node)
+      generate_node node
+
+      max = 9999
+      num = max
+
+      2.upto(max) do |i|
+        file = "#{node.path}/index.p#{i}.html"
+        begin
+          generate_node node, file: file, params: { page: i }
+        rescue StandardError => e
+          raise e if "#{e}" != "404"
+          num = i
+          break
+        end
+      end
+
+      dump num
+
+      num.upto(max) do |i|
+        file = "#{node.path}/index.p#{i}.html"
+        break unless Fs.exists?(file)
+        dump i
+        Fs.rm_rf file
+      end
+    end
+
+    def generate_node(node, opts = {})
       return unless node.serve_static_file?
       return if Cms::Page.site(node.site).public.where(filename: "#{node.filename}/index.html").first
 
-      self.params   = ActionController::Parameters.new format: "html"
+      locals = opts[:params] || {}
+      locals[:format] ||= "html"
+
+      self.params   = ActionController::Parameters.new locals
       self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
@@ -77,7 +107,8 @@ module Cms::ReleaseFilter::Page
       return unless html
       html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
 
-      write_file node, html, file: "#{node.path}/index.html"
+      file = opts[:file] || "#{node.path}/index.html"
+      write_file node, html, file: file
     end
 
     def generate_page(page)

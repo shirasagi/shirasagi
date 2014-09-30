@@ -6,7 +6,7 @@ class Cms::Task::NodesController < ApplicationController
     def generate(opts)
       @task = opts[:task]
       @site = opts[:site]
-      @limit = (opts[:limit] || 50).to_i
+      @limit = (opts[:limit] || 100).to_i
 
       @task.log "# #{@site.name}"
       #return unless @cur_site.serve_static_file?
@@ -18,7 +18,7 @@ class Cms::Task::NodesController < ApplicationController
     def generate_with_node(opts)
       @task = opts[:task]
       @site = opts[:site]
-      @limit = (opts[:limit] || 50).to_i
+      @limit = (opts[:limit] || 100).to_i
 
       @task.log "# #{@site.name}"
       #return unless @cur_site.serve_static_file?

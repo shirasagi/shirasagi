@@ -39,6 +39,7 @@ module SS::Task::Model
           task.log sprintf("# %d sec\n\n", time)
         rescue Exception => e
           task.log "-- #{e}"
+          #task.log e.backtrace.join("\n")
         rescue StandardError => e
           task.log "-- Error"
           task.log e.to_s
