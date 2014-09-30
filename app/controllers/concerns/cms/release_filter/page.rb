@@ -78,12 +78,9 @@ module Cms::ReleaseFilter::Page
         end
       end
 
-      dump num
-
       num.upto(max) do |i|
         file = "#{node.path}/index.p#{i}.html"
         break unless Fs.exists?(file)
-        dump i
         Fs.rm_rf file
       end
     end
