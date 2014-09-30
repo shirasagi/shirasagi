@@ -208,11 +208,10 @@ ja:
   views:
     pagination:
       first: "&laquo;"
-      previous: "&lsaquo; Prev"
-      next: "Next &rsaquo;"
+      previous: 前のページ # "&lsaquo; Prev"
+      next: 次のページ # "Next &rsaquo;"
       last: "&raquo;"
       truncate: "..."
-
 
   mongoid:
     errors:

@@ -12,7 +12,7 @@ module Cms::Nodes::Node
           page(params[:page]).
           per(@cur_node.limit)
 
-        @items.empty? ? "" : render
+        render_with_pagination @items
       end
   end
 end

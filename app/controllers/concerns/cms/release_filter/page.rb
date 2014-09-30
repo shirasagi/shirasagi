@@ -40,22 +40,30 @@ module Cms::ReleaseFilter::Page
     end
 
     def write_file(item, data, opts = {})
-      md5  = Digest::MD5.hexdigest(data)
-      diff = (md5 != item.md5)
       file = opts[:file] || item.path
 
-      item.class.where(id: item.id).update_all md5: md5 if diff
+      #data_md5 = Digest::MD5.hexdigest(data)
+      #if data_md5 != item.md5
+      #  item.class.where(id: item.id).update_all md5: data_md5
+      #end
 
-      if diff || !Fs.exists?(file)
-        Fs.write file, data
-      else
-        nil
+      #updated = true
+      #if Fs.exists?(file)
+      #  updated = false if data_md5 == Digest::MD5.hexdigest(Fs.read(file))
+      #end
+
+      updated = true
+      if Fs.exists?(file)
+        updated = false if data == Fs.read(file)
       end
+
+      updated ? Fs.write(file, data) : nil
     end
 
   public
     def generate_node(node)
       return unless node.serve_static_file?
+      return if Cms::Page.site(node.site).public.where(filename: "#{node.filename}/index.html").first
 
       self.params   = ActionController::Parameters.new format: "html"
       self.request  = ActionDispatch::Request.new method: "GET"
