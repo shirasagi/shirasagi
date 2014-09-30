@@ -11,7 +11,8 @@ module Opendata::Nodes::Sparql
         result = Rdf::Sparql.select(params[:query], file_format)
 
         if file_format == "HTML"
-          style = "<style type='text/css'>"
+          style = "<meta http-equiv='content-type' content='text/html; charset=utf-8'>\n"
+          style += "<style type='text/css'>"
           style += "table, td, th { border: 1px silver solid ; border-collapse: collapse;}"
           style += "</style>"
           data_html = "#{style}\n#{result[:data]}"
