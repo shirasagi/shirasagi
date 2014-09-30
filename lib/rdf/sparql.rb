@@ -48,29 +48,35 @@ module Rdf::Sparql
         if format == "HTML"
           type = "text/html"
           ext = "html"
+          encoding = "utf-8"
           data = results.to_html
         elsif format == "JSON"
           type = "application/json"
           ext = "json"
+          encoding = "utf-8"
           data = results.to_json
         elsif format == "CSV"
           type = "text/csv"
           ext = "csv"
+          encoding = "sjis"
           data = results.to_csv
         elsif format == "TSV"
           type = "text/plain"
           ext = "txt"
+          encoding = "sjis"
           data = results.to_tsv
         elsif format == "XML"
           type = "application/xml"
           ext = "xml"
+          encoding = "utf-8"
           data = results.to_xml
         end
 
         result = {
           type: type,
           ext: ext,
-          data: data
+          encoding: encoding,
+          data: data.encode(encoding)
         }
 
         return result
