@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/ahoward/mongoid-grid_fs.git
-  revision: 4dbecf14dce0a221888e2f8883c6cfce3c481647
-  specs:
-    mongoid-grid_fs (2.1.0)
-      mime-types (>= 1.0, < 3.0)
-      mongoid (>= 3.0, < 5.0)
-
-GIT
   remote: https://github.com/mongoid/mongoid.git
   revision: e93a4837b0266db46c24aae172e184f57c847b04
   specs:
@@ -172,6 +164,9 @@ GEM
       activesupport (>= 2.3.4)
       jnunemaker-validatable (~> 1.8.4)
       plucky (~> 0.3.6)
+    mongoid-grid_fs (2.1.0)
+      mime-types (>= 1.0, < 3.0)
+      mongoid (>= 3.0, < 5.0)
     mongoid-rspec (1.10.0)
       mongoid (>= 3.0.1)
       rake
@@ -345,7 +340,7 @@ DEPENDENCIES
   mail-iso-2022-jp
   mongo_mapper
   mongoid!
-  mongoid-grid_fs!
+  mongoid-grid_fs
   mongoid-rspec
   non-stupid-digest-assets
   rails (= 4.1.6)
