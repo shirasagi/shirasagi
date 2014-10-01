@@ -5,7 +5,7 @@ Rails.application.configure do
   config.eager_load = true
 
   # Don't include all helpers
-  # config.action_controller.include_all_helpers = false
+  config.action_controller.include_all_helpers = false
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false

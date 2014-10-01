@@ -21,6 +21,7 @@ class Cms::PreviewController < ApplicationController
 
     def x_sendfile(file = @file)
       return if file =~ /\.(ht|x)ml$/
+      return if file =~ /\.part\.json$/
       super
       return if response.body.present?
 

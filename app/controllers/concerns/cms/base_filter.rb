@@ -5,6 +5,7 @@ module Cms::BaseFilter
 
   included do
     helper Cms::NodeHelper
+    helper Cms::FormHelper
     before_action :set_site
     before_action :set_node
     before_action :set_group
