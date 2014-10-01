@@ -3,8 +3,9 @@ module Cms::PublicHelper
   public
     def paginate(*args)
       super.gsub(/href=".*?"/) do |m|
-        url = convert_static_url m.sub(/href="(.*?)"/, '\\1')
-        m.sub /href=".*?"/, %(href="#{url}")
+        url  = convert_static_url m.sub(/href="(.*?)"/, '\\1')
+        href = %(href="#{url}")
+        m.sub(/href=".*?"/, href)
       end.html_safe
     end
 
@@ -20,7 +21,7 @@ module Cms::PublicHelper
       path = path.sub(/\/$/, "/index.html").sub(".html", ".p#{page}.html") if page
 
       if params.size > 0
-        path = "#{path}?" + params.map { |k ,v| "#{k}=#{v}" }.join("&amp;")
+        path = "#{path}?" + params.map { |k, v| "#{k}=#{v}" }.join("&amp;")
       end
 
       path

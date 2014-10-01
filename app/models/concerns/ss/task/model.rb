@@ -27,6 +27,9 @@ module SS::Task::Model
     after_initialize :init_variables
   end
 
+  class Interrupt < StandardError
+  end
+
   module ClassMethods
     public
       def run(cond, &block)
@@ -37,7 +40,7 @@ module SS::Task::Model
           require 'benchmark'
           time = Benchmark.realtime { yield task }
           task.log sprintf("# %d sec\n\n", time)
-        rescue Exception => e
+        rescue Interrupt => e
           task.log "-- #{e}"
           #task.log e.backtrace.join("\n")
         rescue StandardError => e
@@ -50,12 +53,12 @@ module SS::Task::Model
   end
 
   public
-    def +(num)
-      self.current_count += num
+    def +(other)
+      self.current_count += other
       if (self.current_count % log_buffer) == 0
         save
         interrupt = self.class.find_by(id: id, select: interrupt).interrupt
-        raise Exception.new "interrupted: stop" if interrupt.to_s == "stop"
+        raise Interrupt, "interrupted: stop" if interrupt.to_s == "stop"
       end
       self
     end
