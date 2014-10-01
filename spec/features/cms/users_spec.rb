@@ -2,12 +2,13 @@
 require 'spec_helper'
 
 describe "cms_users" do
+  subject(:site) { cms_site }
   subject(:item) { Cms::User.last }
-  subject(:index_path) { cms_users_path(cms_site.host) }
-  subject(:new_path) { new_cms_user_path(cms_site.host) }
-  subject(:show_path) { cms_user_path(cms_site.host, item) }
-  subject(:edit_path) { edit_cms_user_path(cms_site.host, item) }
-  subject(:delete_path) { delete_cms_user_path(cms_site.host, item) }
+  subject(:index_path) { cms_users_path site.host }
+  subject(:new_path) { new_cms_user_path site.host }
+  subject(:show_path) { cms_user_path site.host, item }
+  subject(:edit_path) { edit_cms_user_path site.host, item }
+  subject(:delete_path) { delete_cms_user_path site.host, item }
 
   it "without login" do
     visit index_path

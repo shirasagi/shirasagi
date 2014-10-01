@@ -1,10 +1,9 @@
 # coding: utf-8
 require 'spec_helper'
 
-describe "cms_sites" do
+describe "history_logs" do
   subject(:site) { cms_site }
-  subject(:index_path) { cms_site_path site.host }
-  subject(:edit_path) { edit_cms_site_path site.host }
+  subject(:index_path) { history_logs_path site.host }
 
   it "without login" do
     visit index_path
@@ -22,18 +21,7 @@ describe "cms_sites" do
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
-    end
-
-    it "#edit" do
-      visit edit_path
-      within "form#item-form" do
-        fill_in "item[name]", with: "modify"
-        click_button "保存"
-      end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).not_to have_css("form#item-form")
     end
   end
 end

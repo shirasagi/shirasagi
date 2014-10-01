@@ -1,14 +1,14 @@
 # coding: utf-8
 require 'spec_helper'
 
-describe "cms_groups" do
+describe "cms_pages" do
   subject(:site) { cms_site }
-  subject(:item) { Cms::Group.last }
-  subject(:index_path) { cms_groups_path site.host }
-  subject(:new_path) { new_cms_group_path site.host }
-  subject(:show_path) { cms_group_path site.host, item }
-  subject(:edit_path) { edit_cms_group_path site.host, item }
-  subject(:delete_path) { delete_cms_group_path site.host, item }
+  subject(:item) { Cms::Page.last }
+  subject(:index_path) { cms_pages_path site.host }
+  subject(:new_path) { new_cms_page_path site.host }
+  subject(:show_path) { cms_page_path site.host, item }
+  subject(:edit_path) { edit_cms_page_path site.host, item }
+  subject(:delete_path) { delete_cms_page_path site.host, item }
 
   it "without login" do
     visit index_path
@@ -32,7 +32,8 @@ describe "cms_groups" do
     it "#new" do
       visit new_path
       within "form#item-form" do
-        fill_in "item[name]", with: "cms_group/sample"
+        fill_in "item[name]", with: "sample"
+        fill_in "item[basename]", with: "sample"
         click_button "保存"
       end
       expect(status_code).to eq 200
@@ -49,7 +50,7 @@ describe "cms_groups" do
     it "#edit" do
       visit edit_path
       within "form#item-form" do
-        fill_in "item[name]", with: "cms_group/modify"
+        fill_in "item[name]", with: "modify"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path
