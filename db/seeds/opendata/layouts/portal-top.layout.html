@@ -4,33 +4,27 @@
   content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
 </head>
-<body id="s-portal-top">
+<body class="s-portal">
 <div id="page">
-  <div id="hedder">
+  <header id="head">
     <div class="inner">
-      <div class="logo">
-        <h1><a href="/"><img src="/img/hedder-logo.png" alt="Our Open Data" title="Our Open Data" /></a></h1>
-      </div>
-      <div class="tab">
-        </ part "tab" />
-      </div>
+      </ part "tab" />
       <div class="login">
         </ part "mypage-login" />
       </div>
     </div>
-  </div>
+  </header>
 
   <div id="top">
-    </ part "portal-kv" />
+    <div id="shadow">
+      </ part "portal-kv" />
+    </div>
   </div>
 
   <div id="contents">
-  </ yield />
     <div id="main">
       </ part "portal-about" />
-      <section id="portal-tab">
-        </ part "portal-tab" />
-      </section>
+      </ part "portal-tab" />
       <section id="portal-dataset">
         <header>
           <h1>オープンデータカタログ</h1>

@@ -3,25 +3,76 @@
   <meta name="viewport"
     content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
+  <script src="/js/common.js"></script>
 </head>
-<body>
+<body class="s-dataset">
 <div id="page">
 
-<h1><a href="/">Our Opend Data</a></h1>
-</ part "tab" />
-</ part "mypage-login" />
-</ part "dataset-head" />
-</ part "crumbs" />
+  <header id="head">
+    <div class="inner">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
+      </div>
+    </div>
+  </header>
 
-<div>
-  </ yield />
-  </ part "dataset-news" />
-  </ part "dataset-popular" />
-  </ part "dataset-attention" />
-</div>
+  <div id="dataset-title">
+    <div class="inner">
+      <div class="logo">
+        <a href="/dataset/"><img src="/img/dataset-head01.png" alt="データカタログサイト"></a>
+      </div>
+      <div class="menu">
+        <div class="l-menu">
+          <form action="/search.html">
+            <input type="hidden" value="004872735012777302794:zesv_a96vza" name="cx">
+            <input type="hidden" value="FORID:10" name="cof">
+            <input type="hidden" value="UTF-8" name="ie">
+            <input type="text" name="q" size="40" id="search-box" class="text" title="サイト内検索" placeholder="サイト内検索">
+            <input type="submit" name="sa" value="検索" id="search-button">
+          </form>
+        </div>
+        <div class="u-menu">
+          <nav>
+            <a class="group-search" href="/dataset/search_group/">グループ検索</a>
+            <a class="inquiry" href="#">お問い合わせ</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  </ part "dataset-head" />
+  </ part "crumbs" />
 
+  <div id="contents">
+    <div id="main">
+      <section id="search_group">
+        <header><h1 id="od-searchgroup-name">#{page_name}</h1></header>
+        </ yield />
+      </section>
+    </div>
+    <div id="sidebar">
+      <section id="dataset-news">
+        <header>
+          <h1>新着順</h1>
+        </header>
+        </ part "dataset-news" />
+      </section>
+      <section id="dataset-popular">
+        <header>
+          <h1>人気順</h1>
+        </header>
+        </ part "dataset-popular" />
+      </section>
+      <section id="dataset-attention">
+        <header>
+          <h1>新着順</h1>
+        </header>
+        </ part "dataset-attention" />
+      </section>
+    </div>
+  </div>
 </ part "foot" />
-
 </div>
 </body>
 </html>

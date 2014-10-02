@@ -3,24 +3,65 @@
   <meta name="viewport"
     content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
+  <script src="/js/common.js"></script>
 </head>
-<body>
+<body class="s-dataset s-dataset-top">
 <div id="page">
+  <header id="head">
+    <div class="inner">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
+      </div>
+    </div>
+  </header>
 
-<h1><a href="/">Our Opend Data</a></h1>
-</ part "tab" />
-</ part "mypage-login" />
-</ part "dataset-head" />
-</ part "dataset-kv" />
+  <div id="dataset-title">
+    <div class="inner">
+      <div class="logo">
+        <a href="/dataset/"><img src="/img/dataset-head01.png" alt="データカタログサイト"></a>
+      </div>
+      <div class="menu">
+        <div class="l-menu">
+          <form action="/search.html">
+            <input type="hidden" value="004872735012777302794:zesv_a96vza" name="cx">
+            <input type="hidden" value="FORID:10" name="cof">
+            <input type="hidden" value="UTF-8" name="ie">
+            <input type="text" name="q" size="40" id="search-box" class="text" title="サイト内検索" placeholder="サイト内検索">
+            <input type="submit" name="sa" value="検索" id="search-button">
+          </form>
+        </div>
+        <div class="u-menu">
+          <nav>
+            <a class="group-search" href="/dataset/search_group/">グループ検索</a>
+            <a class="inquiry" href="#">お問い合わせ</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div>
-  </ yield />
-  </ part "facebook" />
-  </ part "add" />
-  </ part "twitter" />
-</div>
+  </ part "dataset-head" />
 
-</ part "foot" />
+  <div id="top">
+    <div id="shadow">
+      </ part "dataset-kv" />
+    </div>
+  </div>
+
+  <div id="data-top-contents">
+    <div id="main">
+      </ yield />
+      </ part "facebook" />
+    </div>
+    <div id="sidebar">
+      </ part "add" />
+      </ part "twitter" />
+    </div>
+    <div class="clear"></div>
+  </div>
+
+  </ part "foot" />
 
 </div>
 </body>

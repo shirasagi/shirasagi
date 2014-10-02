@@ -3,21 +3,29 @@
   <meta name="viewport"
     content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
+  <script src="/js/common.js"></script>
 </head>
-<body>
+<body id="s-mypage">
 <div id="page">
 
-<h1><a href="/">Our Opend Data</a></h1>
-</ part "tab" />
-</ part "mypage-login" />
-</ part "crumbs" />
-</ part "mypage-head" />
+  <header id="head">
+    <div class="inner">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
+      </div>
+    </div>
+  </header>
+  </ part "crumbs" />
 
-<div>
-  </ yield />
-</div>
+  <div id="contents">
+    </ part "mypage-head" />
+    <div class="inner">
+      </ yield />
+    </div>
+  </div>
 
-</ part "foot" />
+  </ part "foot" />
 
 </div>
 </body>

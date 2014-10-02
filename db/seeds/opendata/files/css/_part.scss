@@ -62,7 +62,7 @@ $box-margin: 24px;
 @mixin grd-blue {
   background: #0069ac;
   @include background-image(linear-gradient(top, #0069ac, $blue));
-  @include filter-gradient(#0069ac, $blue, vertical);
+  //@include filter-gradient(#0069ac, $blue, vertical);
   background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc0MjUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDY5QUMiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMwMDVBOTYiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c0MjUpIiAvPgo8L3N2Zz4=);
 }
 
@@ -73,39 +73,6 @@ $box-margin: 24px;
   color: $white;
   text-decoration: none;
 }
-@mixin border_radius_top($value: 5px) {
-    -webkit-border-top-left-radius: $value;
-    -webkit-border-top-right-radius: $value;
-       -moz-border-top-left-radius: $value;
-       -moz-border-top-right-radius: $value;
-        -ms-border-top-left-radius: $value;
-        -ms-border-top-right-radius: $value;
-            border-top-left-radius: $value;
-            border-top-right-radius: $value;
-}
-@mixin border_radius($value: 5px) {
-    -webkit-border-top-left-radius: $value;
-    -webkit-border-top-right-radius: $value;
-       -moz-border-top-left-radius: $value;
-       -moz-border-top-right-radius: $value;
-        -ms-border-top-left-radius: $value;
-        -ms-border-top-right-radius: $value;
-            border-top-left-radius: $value;
-            border-top-right-radius: $value;
-    -webkit-border-bottom-left-radius: $value;
-    -webkit-border-bottom-right-radius: $value;
-       -moz-border-bottom-left-radius: $value;
-       -moz-border-bottom-right-radius: $value;
-        -ms-border-bottom-left-radius: $value;
-        -ms-border-bottom-right-radius: $value;
-            border-bottom-left-radius: $value;
-            border-bottom-right-radius: $value;
-}
 
-@mixin box_shadow {
-    -webkit-box-shadow: 0 -12px 10px -10px rgba(0, 0, 0, 0.2) inset;
-       -moz-box-shadow: 0 -12px 10px -10px rgba(0, 0, 0, 0.2) inset;
-        -ms-box-shadow: 0 -12px 10px -10px rgba(0, 0, 0, 0.2) inset;
-            box-shadow: 0 -12px 10px -10px rgba(0, 0, 0, 0.2) inset;
-}
+
 

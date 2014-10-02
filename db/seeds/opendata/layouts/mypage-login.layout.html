@@ -4,19 +4,24 @@
     content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
 </head>
-<body>
+<body id="s-mypage-login">
 <div id="page">
+  <header id="head">
+    <div class="inner">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
+      </div>
+    </div>
+  </header>
+  </ part "crumbs" />
 
-<h1><a href="/">Our Opend Data</a></h1>
-</ part "tab" />
-</ part "mypage-login" />
-</ part "crumbs" />
+  <div id="contents">
+    <header><h1 id="login">ログイン</h1></header>
+    </ yield />
+  </div>
 
-<div>
-  </ yield />
-</div>
-
-</ part "foot" />
+  </ part "foot" />
 
 </div>
 </body>

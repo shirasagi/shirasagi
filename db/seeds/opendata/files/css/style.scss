@@ -9,6 +9,7 @@ html {
   font-family: Meiryo;
 }
 body {
+  height: 100%;
   margin: 0 auto;
   font-family: Meiryo;
   font-size: 75%;
@@ -28,174 +29,219 @@ img {
 
 // -----------------------------------------------------------------------------
 // layout
+#page {
+  margin: 0 auto;
+}
 
-
-
-#hedder {
+// -----------------------------------------------------------------------------
+// head
+#head {
   @include clear;
-  height: 50px;
-  border-bottom: #ddcfcc 2px solid;
+  border-bottom: 2px solid #ddcfcc;
   @include grd-gray;
   .inner {
-    width: 1200px;
-    height: 50px;
+    @include clear;
+    overflow: visible;
+    width: 1160px;
     margin: 0 auto;
     .logo {
       float: left;
-      padding: 13px 28px 0 11px;
+      padding: 13px 28px 3px 11px;
     }
     .tab {
       float: left;
       ul {
+        @include clear;
+        padding-top: 10px;
+        li.tab01 a {
+          background: url(../img/ic-data-s.png) no-repeat 10px center;
+        }
+        li.tab02 a {
+          background: url(../img/ic-app-s.png) no-repeat 4px center;
+        }
+        li.tab03 a {
+          background: url(../img/ic-idea-s.png) no-repeat 11px center;
+        }
         li {
           display: block;
           float: left;
           width: 190px;
-          height: 40px;
-          margin: 10px 10px 0 0;
-          @include border_radius_top();
-          background: #ddcfcc;
+          margin-right: 10px;
+          @include border-top-radius(5px);
           a {
             display: block;
+            height: 25px;
+            padding: 9px 0 7px 33px;
             color: $text;
             text-decoration: none;
-            span {
-              display: block;
-              height: 40px;
-              h1 {
-                padding: 10px 0 0 38px;
-              }
-            }
-            #data {
-              background: url(../img/ic-data-s.png) no-repeat 10px center;
-            }
-            #app {
-              background: url(../img/ic-app-s.png) no-repeat 10px center;
-            }
-            #idea {
-              background: url(../img/ic-idea-s.png) no-repeat 10px center;
-            }
           }
         }
       }
+      .tab01, .tab02, .tab03 {
+        background: #ddcfcc;;
+      }
       .tab02, .tab03 {
         width: 150px;
-        opacity: 0.5;
+        @include opacity(.5);
       }
-
     }
     .login {
       float: right;
-      padding: 15px 0;
+      padding: 13px 0;
+      background: url(../img/ic-login.png) no-repeat left 13px;
       a {
-        display: block;
-        height: 50px;
-        padding-left: 18px;
-        background: url(../img/ic-login.png) no-repeat top left;
+        display: inline-block;
+        height: 24px;
+        padding-left: 20px;
         color: $white;
       }
     }
   }
 }
 
+.s-dataset #head {
+  .inner {
+    position: relative;
+    .tab .tab01 {
+      position: absolute;
+      left: 250px;
+      bottom: -2px;
+      width: 186px;
+      border: 2px solid #ddcfcc;
+      border-bottom: 2px solid $white;
+      background: $white;
+    }
+    .tab .tab02 {
+      margin-left: 200px;
+    }
+  }
+  .inner .tab ul li.tab01 a {
+    padding: 8px 0 6px 33px;
+    background: url(../img/ic-data-s-bk.png) no-repeat 10px center;
+  }
+}
 
-
+// -----------------------------------------------------------------------------
+// top
 #top {
-  height: 324px;
+  display: block;
   margin-bottom: 14px;
   @include grd-aqua;
-  @include box-shadow;
-  #portal-kv {
-    width: $page-width;
-    margin: 0 auto;
-    #portal-kv-img {
-      display: block;
-      float: left;
-      padding: 10px;
-      img {
-        width: 721px;
-        height: auto;
-      }
+  #shadow {
+    display: block;
+    @include box-shadow(0px -5px 4px #ccc inset);
+    #portal-kv, #dataset-kv {
+      width: $page-width;
+      margin: 0 auto;
     }
-    #portal-kv-nav {
-      float: right;
-      margin-top: 28px;
-      li.gnav01 a {
-        background: #00b2c4;
-      }
-      li.gnav02 a {
-        background: #90cd4c;
-        opacity: 0.4
-      }
-      li.gnav03 a {
-        background: #ffd400;
-        opacity: 0.4
-      }
-      a {
-        display:block;
-        width: 249px;
-        height: 80px;
-        margin-bottom: 14px;
-        text-decoration: none;
-        span {
-          display: block;
-        }
-        #title-data, #title-app, #title-idea {
-          height: 56px;
-          color: $text;
-          h1 {
-            padding: 22px 0 0 55px;
-          }
-        }
-        #contents-data, #contents-app, #contents-idea {
-          height: 24px;
-          color: $white;
-          text-align: center;
-        }
-        #title-data {
-          background: url(../img/ic-data-m.png) no-repeat 15px center;
-        }
-        #contents-data {
-          background: #00686b;
-        }
-        #title-app {
-          background: url(../img/ic-app-m.png) no-repeat 15px center;
-        }
-        #contents-app {
-          background: #68931d;
-        }
-        #title-idea {
-          background: url(../img/ic-idea-m.png) no-repeat 15px center;
-        }
-        #contents-idea {
-          background: #c79d00;
-        }
-      }
+    #portal-kv {
+      overflow: hidden;
     }
   }
 }
 
+#portal-kv-img {
+  float: left;
+  padding: 15px 10px;
+}
 
-#about, #portal-tab, #portal-dataset, #portal-plan,
-#add, #twitter, #portal-fb {
+#portal-kv-nav {
+  float: right;
+  padding: 28px 0 14px 0;
+  li {
+    width: 249px;
+    height: 80px;
+    margin-bottom: 14px;
+  }
+  li.gnav01 {
+    background: #00b2c4;
+  }
+  li.gnav02 {
+    background: #90cd4c;
+    @include opacity(.4);
+  }
+  li.gnav03 {
+    background: #ffd400;
+    @include opacity(.4);
+  }
+  a {
+    display:block;
+    text-decoration: none;
+    span {
+      display: block;
+    }
+    #title-data, #title-app, #title-idea {
+      padding: 17px 0 17px 53px;
+      color: $text;
+      font-size: $px15;
+      font-weight: bold;
+    }
+    #contents-data, #contents-app, #contents-idea {
+      height: 24px;
+      color: $white;
+      text-align: center;
+    }
+    #title-data {
+      background: url(../img/ic-data-m.png) no-repeat 15px center;
+    }
+    #contents-data {
+      background: #00686b;
+    }
+    #title-app {
+      background: url(../img/ic-app-m.png) no-repeat 15px center;
+    }
+    #contents-app {
+      background: #68931d;
+    }
+    #title-idea {
+      background: url(../img/ic-idea-m.png) no-repeat 15px center;
+    }
+    #contents-idea {
+      background: #c79d00;
+    }
+  }
+}
+
+#dataset-kv {
+  overflow: hidden;
+}
+
+#dataset-kv-left {
+  float: left;
+  margin-top: 28px;
+  a {
+    display: block;
+    margin: 75px 0 0 290px;
+    padding: 15px 15px 15px 45px;
+    @include border-radius(5px);
+    background: url(../img/ic-add.png) no-repeat 20px center;
+    background-color: #383838;
+    color: $white;
+    text-decoration: none;
+    }
+}
+
+#dataset-kv-right {
+  float: right;
+  padding: 5px 0;
+}
+
+// -----------------------------------------------------------------------------
+// about .cms-tabs portal-dataset add twitter
+#about, .cms-tabs, #portal-dataset, #add, #twitter {
   margin-bottom: $box-margin;
 }
 
-#contents {
+// -----------------------------------------------------------------------------
+// contents
+#contents, #data-top-contents {
   width: $page-width;
   margin: 0 auto;
+  padding-bottom: 28px;
   #main {
     float: left;
     width: 803px;
     margin-right: $box-margin;
-    #about {
-      h1 {
-        margin-bottom: 6px;
-        padding: 6px 10px;
-        @include grd-blue;
-        color:$white;
-      }
-    }
   }
   #sidebar {
     float: right;
@@ -203,29 +249,176 @@ img {
   }
 }
 
-#add {
-  height: 429px;
-  background: #eeeeee;
-  h1 {
-    padding: 14px;
-  }
-  nav {
-    @include clear;
-    a {
-      display: block;
-      height: 50px;
-      margin-bottom: 14px;
-      padding-left: 39px;
+#contents {
+  overflow: hidden;
+}
+
+#data-top-contents .clear {
+  clear: both;
+}
+
+
+.dataset-count {
+  padding: 15px 0;
+  text-align: right;
+}
+
+.s-dataset-top #main {
+  position: relative;
+  .dataset-count {
+    display: block;
+    position: absolute;
+    top: -150px;
+    width: 249px;
+    padding: 10px 10px;
+    border: $border-hgry;
+    background-color: $white;
+    text-align: left;
+    span {
+      display: inline-block;
+      width: 110px;
+      padding: 10px 10px 10px 80px;
+      background: url(../img/ic-data-m-bl.png) no-repeat left center;
+      font-size: $px28;
     }
   }
 }
 
+
+// -----------------------------------------------------------------------------
+// add
+#add {
+  width: 249px;
+  background: #eeeeee;
+  h2 {
+    padding: 10px;
+    font-size: $px15;
+  }
+  nav {
+    padding: 10px 0;
+    text-align: center;
+    a {
+      display: block;
+      margin-bottom: 14px;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// twitter
 #twitter {
   .twitter-timeline {
     height: 436px;
   }
 }
 
+// -----------------------------------------------------------------------------
+// contents
+#about, .cms-tabs, #portal-dataset {
+  width: 803px;
+}
+
+#about, .s-portal #contents, #s-mypage-login #contents , #s-mypage #contents{
+  h1 {
+    margin-bottom: 6px;
+    padding: 6px 10px;
+    @include grd-blue;
+    color:$white;
+    font-size: $px15;
+  }
+  #portal-dataset header h1 {
+    padding: 6px 38px;
+    background: url(../img/ic-data-s.png) no-repeat 10px center;
+    background-color: $data-blue;
+    color:$white;
+    font-size: $px15;
+  }
+}
+
+#contents header.released {
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+
+#contents article.body {
+   h1 {
+    margin: 12px 0 6px;
+    padding: 3px 10px 0;
+    background: $blue;
+    font-size: $px16;
+    font-weight: bold;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  h2 {
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px16;
+    font-weight: bold;
+  }
+  h3 {
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-left: 5px solid $blue;
+    color: $blue;
+    font-weight: bold;
+  }
+  h4 {
+    color: $blue;
+    font-weight: bold;
+  }
+  h5, h6 {
+    font-weight: bold;
+  }
+  p {
+    margin-bottom: 12px;
+  }
+  ul {
+    margin-bottom: 12px;
+    list-style: none;
+    li {
+      padding-left: 15px;
+    }
+  }
+  ol {
+    margin-bottom: 12px;
+    padding-left: 23px;
+  }
+  dl {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: $border-hgry;
+    dt {
+      float: left;
+      min-width: 15%;
+      font-weight: bold;
+    }
+  }
+  table {
+    width: 100%;
+    margin-bottom: 12px;
+    caption {
+      color: $blue;
+      text-align: left;
+    }
+    th {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+      background: $blue;
+    }
+    td {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// cms-tabs
 .cms-tabs {
   .names {
     padding: 0;
@@ -235,28 +428,19 @@ img {
       width: 120px;
       margin-right: 10px;
       padding: 6px 0;
-      @include border_radius_top();
+      @include border-top-radius(5px);
       background: #ddcfcc;
       color: $text;
       text-decoration: none;
       text-align: center;
     }
     .current {
-      @include border_radius_top();
       @include grd-blue;
       color: $white;
     }
     #cms-tab-53-0-name {
       margin-left: 18px;
     }
-  }
-  .pages header {
-    padding: 16px 0 16px 16px;
-    border-bottom: $border-hgry;
-  }
-  h2, time {
-    display: inline;
-    padding-right: 5px;
   }
   nav {
     @include clear;
@@ -268,28 +452,11 @@ img {
     padding-left: 24px;
     background: url(../img/ic-rss.png) no-repeat left center;
   }
-  .more {
-    float: right;
-    @include r-arrow;
-    @include border_radius();
-  }
 }
 
+// -----------------------------------------------------------------------------
+// portal-dataset
 #portal-dataset {
-  header h1 {
-    margin-bottom: 6px;
-    padding: 6px 38px;
-    background: $data-blue;
-    color:$white;
-    }
-  .opendata-datasets header {
-    padding: 16px 0 16px 16px;
-    border-bottom: $border-hgry;
-  }
-  time, h2 {
-    display: inline;
-    padding-right: 5px;
-  }
   nav {
     @include clear;
     padding-top: 8px;
@@ -297,52 +464,372 @@ img {
   .opendata {
     @include r-arrow;
     float: right;
-    @include border_radius();
+    @include border-radius(5px);
   }
 }
 
+// -----------------------------------------------------------------------------
+// article header
+.cms-tabs, #portal-dataset, .opendata-tabs, .article-pages {
+  article header {
+    padding: 8px 0 8px 16px;
+    border-bottom: $border-hgry;
+  }
+  time, h2 {
+    display: inline;
+    padding-right: 5px;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// more
+.more {
+  float: right;
+  @include r-arrow;
+  @include border-radius(5px);
+}
+
+//-----------------------------------------------------------------------------------------
+// dataset
+#dataset-title {
+  display: block;
+  .inner {
+    width: $page-width;
+    margin: 0 auto;
+    overflow: hidden;
+    .logo {
+      float: left;
+      padding: 18px 0;
+    }
+    .menu {
+      float: right;
+      .l-menu {
+        margin: 15px 0;
+      }
+      .u-menu {
+        margin-bottom: 15px;
+        a.group-search {
+          margin-right: 30px;
+          padding: 5px 10px 5px 30px;
+          @include border-radius(5px);
+          background: url(../img/ic-groupsearch.png) no-repeat 5px center;
+          background-color: #282828;
+          color: $white;
+          text-decoration: none;
+        }
+        a.inquiry {
+          padding: 5px 0 5px 20px;
+          background: url(../img/ic-inquiry.png) no-repeat left center;
+        }
+      }
+    }
+  }
+}
+
+#gnav {
+  border-bottom: #ffcf38 2px solid;
+  background: $data-blue;
+  ul {
+    width: 1079px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-right: 1px solid $white;
+  }
+  li {
+    float: left;
+    width: 134px;
+    border-left: 1px solid $white;
+    &:hover {
+      background: #cef3ff;
+    }
+  }
+  li.kurashi {
+    width: 133px;
+  }
+  li.current {
+    background: #cef3ff;
+  }
+  a {
+    display: block;
+    padding: 10px 0;
+    text-decoration: none;
+    text-align: center;
+    color: $text;
+    font-size: $px16;
+  }
+}
+
+.crumbs {
+  width: $page-width;
+  margin: 0 auto;
+  padding: 15px 0;
+}
+
+#od-searchgroup-name {
+  margin-bottom: $box-margin;
+  padding: 6px 35px;
+  background: url(../img/ic-groupsearch-b.png) no-repeat 8px center;
+  background-color: #ffe7a5;
+  font-size: $px15;
+}
+
+.pagination {
+  margin-bottom: $box-margin;
+  a {
+    @include inline-block;
+    padding: 2px 6px;
+    background: #ccd6d6;
+    color: $text;
+    text-decoration: none;
+    &:hover {
+      background: $data-blue;
+    }
+  }
+  .current {
+    @include inline-block;
+    padding: 2px 6px;
+    background: $data-blue;
+  }
+}
+
+form.opendata-search_groups-form {
+  margin-bottom: 24px;
+  padding: 10px;
+  border: 2px solid $data-blue;
+  overflow: hidden;
+  dl.keyword, dl.category {
+    @include inline-block;
+    margin-right: 70px;
+  }
+  .send {
+    width: 40px;
+    margin-left: auto;
+    padding: 10px;
+  }
+}
+
+.opendata-tabs {
+  display: block;
+  width: 803px;
+  margin-bottom: $box-margin;
+  .names {
+    padding: 0;
+    border-bottom: 2px solid $data-blue;
+    .name {
+      display: inline-block;
+      width: 120px;
+      margin-right: 10px;
+      padding: 6px 0;
+      @include border-top-radius(5px);
+      background: #ccd6d6;
+      color: $text;
+      text-decoration: none;
+      text-align: center;
+    }
+    .current {
+      background: $data-blue;
+    }
+    #cms-tab-174-0-name {
+      margin-left: 18px;
+    }
+  }
+  nav {
+    @include clear;
+    padding-top: 8px;
+  }
+}
+
+#dataset-news, #dataset-popular, #dataset-attention {
+  margin-bottom: $box-margin;
+  .opendata-datasets {
+    ul {
+      list-style: none;
+      li {
+        border-bottom: $border-hgry;
+        a {
+          display: block;
+          padding: 8px 0 8px 16px;
+          &:hover {
+            background: #ccd6d6;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+article.areas h1, article.tags h1, #od-page-name, #dataset-news h1,
+#dataset-popular h1, #dataset-attention h1 {
+  padding: 6px 10px;
+  border-bottom: 2px solid #ffcf38;
+  background: $data-blue;
+  color:text;
+  font-size: $px15;
+}
+
+article.areas, article.tags, .opendata-search_groups {
+  display: block;
+  float: left;
+  width: 803px;
+  margin-bottom: $box-margin;
+  article header {
+    border-bottom: 1px solid #ddcfcc;
+    a {
+      display: block;
+      padding: 8px 0 8px 16px;
+      &:hover {
+        background: #ccd6d6;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+article.areas, article.tags {
+  width: 395px;
+  height: 275px;
+}
+
+.s-dataset-top {
+  //#main article:nth-child(5), #main article:nth-child(7) {
+    //margin-left: 13px;
+  //}
+  .fb {
+    clear: left;
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+//login
+#s-mypage-login #contents li {
+  margin-bottom: $box-margin;
+  a {
+    display: block;
+    width: 400px;
+    margin-top: $box-margin;
+    padding: 30px 0;
+    border: $border-hgry;
+    color: $text;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+//mypage
+#mypage-tabs {
+  margin: $box-margin 0;
+  padding: 0;
+  border-bottom: $blue 2px solid;
+  a {
+    display: inline-block;
+    width: 150px;
+    margin-right: 10px;
+    padding: 6px 0;
+    @include border-top-radius(5px);
+    background: #ddcfcc;
+    color: $text;
+    text-decoration: none;
+    text-align: center;
+  }
+  .current {
+    @include grd-blue;
+    color: $white;
+  }
+  .dataset {
+    margin-left: 18px;
+  }
+  .app, .idea {
+    @include opacity(.5);
+  }
+}
+
+#s-mypage #contents .inner {
+  nav {
+    margin-bottom: $box-margin;
+    padding-top: 8px;
+    a {
+      @include r-arrow;
+      @include border-radius(5px);
+    }
+  }
+  dl.see {
+    overflow: hidden;
+    dt {
+      min-width: 150px;
+      min-height: 1em;
+      float: left;
+      clear: both;
+      padding-right: 10px;
+      background: #ddcfcc;
+      text-align: right;
+      &:not(:first-child) {
+        margin-top: $box-margin;
+      }
+    }
+    dd {
+      min-height: 1.4em;
+      margin-left: 180px;
+      &:not(:nth-child(2)) {
+        margin-top: $box-margin;
+      }
+    }
+  }
+  #item-form {
+    dl.see dd {
+      input, textarea {
+        border: 1px solid #ddcfcc;;
+      }
+    }
+    .send {
+      text-align: center;
+      input {
+        padding: 10px 50px;
+        border: none;
+        @include border-radius(5px);
+        @include grd-blue;
+        color: $white;
+        text-align: center;
+        font-family: Meiryo;
+      }
+    }
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+//footer
 #foot {
   clear: both;
   margin: 0 auto;
 }
 
 #footer-navi {
-  height: 40px;
-  border-top: $gray 1px solid;
+  padding: 10px 0;
+  border-top: 1px solid $gray;
   background: #eeeeee;
-  .inner {
-    width: $page-width;
-    margin: 0 auto;
-    padding-top: 10px;
-    text-align: center;
-    nav {
-      @include clear;
-      a {
-        padding: 0 20px;
-      }
-    }
+  text-align: center;
+  nav a {
+    padding: 0 20px;
   }
 }
 
 #copyright {
-  height: 30px;
+  padding: 5px 0;
   @include grd-gray;
-  .inner {
-    width: $page-width;
-    margin: 0 auto;
-    padding-top: 5px;
-    color: $white;
-    text-align: center;
-  }
+  color: $white;
+  font-size: $px12;
+  text-align: center;
 }
 
-#s-portal-top {
+.s-portal, #s-mypage-login, #s-mypage {
   #copyright {
     @include grd-blue;
   }
 }
 
-
+/*
 .opendata-mypage-login {
   display: table;
   margin: 20px;
@@ -362,3 +849,5 @@ dl.see {
     margin: 0px 0px 0px 20px;
   }
 }
+*/
+
