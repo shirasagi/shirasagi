@@ -7,10 +7,9 @@
     <% end %>
   </a>
   <div class="name">
-    <label>
-      <input type="checkbox" name="item[file_ids][]" value="<%= @item.id %>" checked="checked" />
-      <%= @item.basename %>
-    </label><br />
+    <input type="hidden" name="item[image_id]" value="<%= @item.id %>" />
+    <%= @item.basename %>
+    <br />
   </div>
   <div class="action paste">
     <% content = link_to "#{@item.filename} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", "/fs/#{@item.id}/#{@item.filename}", class: "icon-#{@item.extname}" %>

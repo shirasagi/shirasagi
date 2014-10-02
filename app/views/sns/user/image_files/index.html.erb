@@ -6,6 +6,7 @@ SS.ajaxForm "form.user-file",
 
 SS.ajax ".user-files .select",
   success: (data) ->
+    $("#selected-files").html("")
     $("#selected-files").append data
     $.colorbox.close()
 

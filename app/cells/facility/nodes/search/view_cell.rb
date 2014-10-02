@@ -10,23 +10,30 @@ module Facility::Nodes::Search
       end
 
       def index
-        if params[:reset].present?
-          controller.redirect_to "#{@cur_node.url}"
-        end
-        @category = params[:category]
-        @keyword = params[:keyword]
+        #raise "index"
+        #if params[:reset].present?
+        #  controller.redirect_to "#{@cur_node.url}"
+        #end
+        #@category = params[:category]
+        #@keyword = params[:keyword]
 
-        @query = {}
-        @query[:category] = @category.blank? ? {} : { :"category_ids".in =>  [@category.to_i] }
-        @query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map { |q| { name: /\Q#{q}\E/ } }
+        #@query = {}
+        #@query[:category] = @category.blank? ? {} : { :"category_ids".in =>  [@category.to_i] }
+        #@query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map { |q| { name: /\Q#{q}\E/ } }
 
-        @items = pages.
-          order_by(@cur_node.sort_hash).
-          and(@query[:category]).
-          and(@query[:keyword]).
-          page(params[:page]).
-          per(@cur_node.limit)
+        #@items = pages.
+        #  order_by(@cur_node.sort_hash).
+        #  and(@query[:category]).
+        #  and(@query[:keyword]).
+        #  page(params[:page]).
+        #  per(@cur_node.limit)
+        #render
+        @search_path = "./search.html"
         render
+      end
+
+      def search
+        raise "search"
       end
 
       def rss

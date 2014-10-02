@@ -1,35 +1,36 @@
-<%
-  categories = []
-  @cur_node.st_parent_categories.each do |parent|
-    categories << parent
-    categories += Category::Node::Base.site(@cur_site).
-      where(filename: /^#{parent.filename}\//).entries
-  end
-  category_options = categories.map { |c| [c.name, c.id] }
-%>
+<h1>子育て施設検索</h1>
 
-<div class="faq-search">
-  <%= form_tag @cur_node.url, multipart: true, method: "get" do |f| %>
-    <% if categories.present? %>
-    <div class="category">
-      <%= t('faq.query.category') %>
-      <%= select_tag :category,  options_for_select(category_options, @category.try(:to_i)), include_blank: true %>
-    </div>
+<%= form_tag(@search_path, {:method => "get" } ) do %>
+  <div class="type">
+    <h2>施設の種類を選択</h2>
+    <% @cur_node.st_type_categories.each do |cate| %>
+      <div class="element">
+        <%= check_box_tag 'query[type_category_ids][]', cate.id, nil,
+          { :id => "query_type_category_ids_#{cate.id}", :class => "prop"} %>
+        <label for=<%= "query_type_category_ids_#{cate.id}" %>><%= cate.name %></label>
+      </div>
     <% end %>
-    <div class="keyword">
-      <%= t('faq.query.keyword') %>
-      <%= text_field_tag :keyword, @keyword %>
-    </div>
-    <div class="submitters">
-      <%= submit_tag t('faq.search'), name: :search %>
-      <%= submit_tag t('faq.reset'), name: :reset %>
-    </div>
-  <% end %>
-</div>
+  </div>
 
-<h2 class="result"><%= t("faq.result") %><span><%= @items.count %></span><%= t("faq.count") %></h2>
-<div class="faq-search pages">
-  <%= render_page_list %>
-</div>
+  <div class="use">
+    <h2>施設の用途を選択</h2>
+    <% @cur_node.st_use_categories.each do |cate| %>
+      <div class="element">
+        <%= check_box_tag 'query[use_category_ids][]', cate.id, nil,
+          { :id => "query_use_category_ids_#{cate.id}", :class => "prop"} %>
+        <label for=<%= "query_use_category_ids_#{cate.id}" %>><%= cate.name %></label>
+      </div>
+    <% end %>
+  </div>
 
-<%= paginate @items if @items.try(:current_page) %>
+  <div class="location">
+    <h2>施設のある地域を選択</h2>
+    <% @cur_node.st_location_categories.each do |cate| %>
+      <div class="element">
+        <%= check_box_tag 'query[location_category_ids][]', cate.id, nil,
+          { :id => "query_location_category_ids_#{cate.id}", :class => "prop"} %>
+      <label for=<%= "query_location_category_ids_#{cate.id}" %>><%= cate.name %></label>
+      </div>
+    <% end %>
+  </div>
+<% end %>

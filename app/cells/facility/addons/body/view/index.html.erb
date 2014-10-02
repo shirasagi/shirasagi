@@ -38,30 +38,18 @@ dl.see > dd.wide {
 </style>
 
 <dl class="see body">
-  <dt><%= @cur_page.class.t :kana %></dt>
-  <dd><%= @cur_page.kana %></dd>
+  <dt><%= @cur_node.class.t :kana %></dt>
+  <dd><%= @cur_node.kana %></dd>
 
-  <dt><%= @cur_page.class.t :address %></dt>
-  <dd><%= @cur_page.address %></dd>
+  <dt><%= @cur_node.class.t :address %></dt>
+  <dd><%= @cur_node.address %></dd>
 
-  <dt><%= @cur_page.class.t :tel %></dt>
-  <dd><%= @cur_page.tel %></dd>
+  <dt><%= @cur_node.class.t :tel %></dt>
+  <dd><%= @cur_node.tel %></dd>
 
-  <dt><%= @cur_page.class.t :fax %></dt>
-  <dd><%= @cur_page.fax %></dd>
+  <dt><%= @cur_node.class.t :fax %></dt>
+  <dd><%= @cur_node.fax %></dd>
 
-  <dt><%= @cur_page.class.t :homepage %></dt>
-  <dd><%= @cur_page.homepage %></dd>
-
-  <dt><%= @cur_page.class.t :hours %></dt>
-  <dd><%=br @cur_page.hours %></dd>
-
-  <dt><%= @cur_page.class.t :holiday %></dt>
-  <dd><%=br @cur_page.holiday %></dd>
-
-  <dt><%= @cur_page.class.t :principal %></dt>
-  <dd><%= @cur_page.principal %></dd>
-
-  <dt><%= @cur_page.class.t :extended_day_care %></dt>
-  <dd><%=br @cur_page.extended_day_care %></dd>
+  <dt><%= @cur_node.class.t :homepage %></dt>
+  <dd><%= link_to(@cur_node.homepage, @cur_node.homepage, target: "_blank") if @cur_node.homepage.present? %></dd>
 </dl>

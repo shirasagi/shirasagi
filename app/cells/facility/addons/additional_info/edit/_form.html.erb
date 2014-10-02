@@ -1,0 +1,69 @@
+<%= coffee do %>
+$ ->
+  $(".mod-additional-info .add-info").on 'click', ->
+    if $(".mod-additional-info dt").length < 10
+      dd = $(".mod-additional-info dd:first").clone(true)
+      dt = $(".mod-additional-info dt:first").clone(true)
+      dd.find("input").val("")
+      dd.find("textarea").val("")
+      $(".mod-additional-info dt:last").before(dt)
+      $(".mod-additional-info dt:last").before(dd)
+    return false
+
+  $(".mod-additional-info .clear").on 'click', ->
+    dd = $(this).closest("dd")
+    dt = dd.prev("dt")
+
+    if $(".mod-additional-info dt").length > 2
+      if dd.find("input").val() != "" || dd.find("textarea").val() != ""
+        if confirm("項目を削除してよろしいですか？")
+          dd.remove()
+          dt.remove()
+      else
+        dd.remove()
+        dt.remove()
+    else
+      if dd.find("input").val() != "" || dd.find("textarea").val() != ""
+        if confirm("項目を削除してよろしいですか？")
+          dd.find("input").val("")
+          dd.find("textarea").val("")
+      else
+        dd.find("input").val("")
+        dd.find("textarea").val("")
+    return false
+
+<% end %>
+
+<dl class="see mod-additional-info">
+  <% if @item.additional_info.blank? %>
+    <dt>
+      <p><%= "項目名" %></p>
+      <p><%= "内容" %></p>
+    </dt>
+    <dd>
+      <p>
+        <%= text_field_tag "item[additional_info][][field]" %>
+        <%= button_tag t("facility.button.del_info"), { type: :button, class: "clear" } %>
+      </p>
+      <p><%= text_area_tag "item[additional_info][][value]" %></p>
+    </dd>
+  <% end %>
+
+  <% @item.additional_info.each do |info| %>
+    <dt>
+      <p><%= "項目名" %></p>
+      <p><%= "内容" %></p>
+    </dt>
+    <dd>
+      <p>
+        <%= text_field_tag "item[additional_info][][field]", info[:field] %>
+        <%= button_tag t("facility.button.del_info"), { type: :button, class: "clear" } %>
+      </p>
+      <p><%= text_area_tag "item[additional_info][][value]", info[:value] %></p>
+    </dd>
+  <% end %>
+
+  <dt></dt>
+  <dd><%= link_to t("facility.button.add_info"), "#", class: "add-info" %></dd>
+</dl>
+

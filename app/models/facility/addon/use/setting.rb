@@ -5,8 +5,8 @@ module Facility::Addon::Use
     extend ActiveSupport::Concern
 
     included do
-      embeds_ids :st_use_categories, class_name: "Facility::Node::Category"
-      permit_params st_use_category_ids: []
+      embeds_ids :st_uses, class_name: "Facility::Node::Use"
+      permit_params st_use_ids: []
     end
 
     set_order 510

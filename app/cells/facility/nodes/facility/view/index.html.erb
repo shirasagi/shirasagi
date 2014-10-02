@@ -1,0 +1,24 @@
+<% Facility::Node::Facility.addons.each do |addon| %>
+  <% next unless addon.exists?(:view) %>
+  <%= render_cell "#{addon.path}/view", params[:action] %>
+<% end %>
+
+<% if @summary_image.present? %>
+  <%= link_to @summary_image.url do %>
+    <%= image_tag @summary_image.thumb_url + "?" + { width: 256, height: 192 }.to_query %>
+  <% end %>
+<% end %>
+
+<% if @merged_map.present? %>
+  <% addon = @merged_map.class.addons.select { |addon| addon.klass == Map::Addon::Page }.shift %>
+  <% if addon.exists?(:view) %>
+    <% @cur_page = @merged_map %>
+    <%= render file: "#{addon.path}/view/index" %>
+  <% end %>
+<% end %>
+
+<% @body_images.each do |img| %>
+  <%= link_to img.url do %>
+    <%= image_tag img.thumb_url + "?" + { width: 256, height: 192 }.to_query %>
+  <% end %>
+<% end %>

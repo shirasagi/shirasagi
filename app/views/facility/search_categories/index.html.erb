@@ -84,7 +84,7 @@ $ ->
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
 <%= form_for :item, url: { action: :search }, html: { class: "search-categories", multipart: true } do |f| %>
   <%= text_field_tag :query, nil, { id: nil, class: "query" } %>
-  <%= f.submit t("cms.search_categories.search"), class: :search %>
+  <%= f.submit t("facility.category.search"), class: :search %>
 <% end %>
 </div>
 
@@ -92,6 +92,6 @@ $ ->
 </div>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-  <%= button_tag t("cms.search_categories.select"), { type: :button, class: "select-categories" } %>
+  <%= button_tag t("facility.category.index"), { type: :button, class: "select-categories" } %>
 </div>
 

@@ -1,9 +1,10 @@
 # coding: utf-8
-module Facility::Nodes::Page
+module Facility::Nodes::Cateogry
   class ViewCell < Cell::Rails
     include Cms::NodeFilter::ViewCell
     helper Cms::ListHelper
 
+=begin
     public
       def pages
         Map::Page.site(@cur_site).public.
@@ -26,5 +27,7 @@ module Facility::Nodes::Page
 
         render_rss @cur_node, @items
       end
+  end
+=end
   end
 end

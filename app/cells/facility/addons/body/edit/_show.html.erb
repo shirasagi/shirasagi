@@ -12,17 +12,5 @@
   <dd><%= @item.send :fax %></dd>
 
   <dt><%= @model.t :homepage %></dt>
-  <dd><%= @item.send :homepage %></dd>
-
-  <dt><%= @model.t :hours %></dt>
-  <dd><%=br @item.send :hours %></dd>
-
-  <dt><%= @model.t :holiday %></dt>
-  <dd><%=br @item.send :holiday %></dd>
-
-  <dt><%= @model.t :principal %></dt>
-  <dd><%= @item.send :principal %></dd>
-
-  <dt><%= @model.t :extended_day_care %></dt>
-  <dd><%=br @item.send :extended_day_care %></dd>
+  <dd><%= link_to(@item.homepage, @item.homepage, target: "_blank") if @item.homepage.present? %></dd>
 </dl>

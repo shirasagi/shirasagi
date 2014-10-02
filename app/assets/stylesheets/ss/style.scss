@@ -152,10 +152,11 @@ input.zoom {
   width: 3em;
 }
 input.marker-name {
-  width: 20em
+  width: 20em;
 }
 textarea.marker-text {
-  width: 40em
+  width: 40em;
+  height: 5em;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -271,9 +272,9 @@ textarea.marker-text {
   }
 }
 .mod-map {
-  overflow: hidden; /*floatの解除、ここがポイント*/
-  position: relative; /*DWで正常にプレビューできるようになります。*/
-  zoom:1; /*IE6でレイアウト崩れを防ぐためのものです。*/
+  overflow: hidden;
+  position: relative;
+  zoom:1;
 }
 #map_container {
   float: left
@@ -288,17 +289,10 @@ textarea.marker-text {
   float: left;
 }
 .marker {
-  margin-bottom: 40px;
+  margin-bottom: 25px;
   p:nth-child(1) {
     margin-left: 12px;
   }
-  p:nth-child(2) {
-    margin-left: 48px;
-  }
-  p:nth-child(3) {
-//    margin-left: 35px;
-  }
-
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -347,6 +341,11 @@ dl.see {
     color: $black;
     font-weight: bold;
   }
+  > dt p {
+    margin-bottom: 20px;
+    color: $black;
+    font-weight: bold;
+  }
   > dd {
     min-height: 1.41em;
     margin: 0 0 0 140px;
@@ -354,6 +353,9 @@ dl.see {
     //border-top: 1px solid #eee;
     @include clear;
     margin: 0px 0px 0px 140px;
+  }
+  > dd p {
+    margin-bottom: 10px;
   }
   > dt ~ dt { margin-top: 20px; }
   > dd ~ dd { margin-top: 20px; }
@@ -369,6 +371,8 @@ dl.see {
     padding-top: 0px;
     border-top: 0px;
   }
+
+
 }
 footer.send {
   padding: 20px 0px;

@@ -18,16 +18,6 @@ class Map::Page
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
-#  public
-#    def set_points(array)
-#      map_points = []
-#      array.each do |point|
-#        if point[:loc].present?
-#          map_points << point
-#        end
-#      end
-#    end
-
   private
     def validate_filename
       (@basename && @basename.blank?) ? nil : super

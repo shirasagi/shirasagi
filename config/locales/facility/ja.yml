@@ -1,31 +1,54 @@
 ja:
   facility:
-    page: 施設記事
-    category: 施設カテゴリー
+    facility: 施設
+    category:
+      setting: 種類設定
+      index: 施設の種類を設定する
+      search: 施設の種類を検索
+      name: 種類
+    location:
+      setting: 地域設定
+      index: 施設の地域を設定する
+      search: 施設の地域を検索
+      name: 地域
+    use:
+      setting: 用途設定
+      index: 施設の用途を設定する
+      search: 施設の用途を検索
+      name: 用途
+
     search: 施設検索
-    image: 施設写真
+    image: 施設画像
+    map: 施設地図
+    button:
+      add_info: 項目を追加する
+      del_info: 削除
 
   modules:
     facility: 施設
     addons:
       facility/body: 施設情報
-      facility/file: 施設画像
-      facility/location/setting: 地域カテゴリー設定
-      facility/location/category: 地域カテゴリー
-      facility/use/setting: 用途カテゴリー設定
-      facility/use/category: 用途カテゴリー
-      facility/type/setting: 種類カテゴリー設定
-      facility/type/category: 種類カテゴリー
+      facility/additional_info: 追加情報
+      facility/image: 施設画像
+      facility/location/location: 施設の地域
+      facility/location/setting: 施設の地域
+      facility/use/use: 施設の用途
+      facility/use/setting: 施設の用途
+      facility/category/category: 施設の種類
+      facility/category/setting: 施設の種類
 
   cms:
     nodes:
-      facility/page: 施設リスト
-      facility/category: 施設カテゴリー
+      facility/facility: 施設
+      facility/node: 施設リスト
+      facility/category: 施設の種類
+      facility/use: 施設の用途
+      facility/location: 施設のある地域
       facility/search: 施設検索
 
   mongoid:
     attributes:
-      facility/page:
+      facility/node/facility:
         address: 住所
         tel: 電話番号
         fax: FAX

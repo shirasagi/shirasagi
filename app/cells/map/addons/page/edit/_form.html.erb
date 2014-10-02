@@ -184,26 +184,26 @@ class @Map_Form
 <% end %>
 
 <dl class="see mod-map">
-  <dt><%= t("map.setting") %></dt>
-  <dd>
-    <p>
-      <%= t("map.loc") %>
-      <%= f.text_field :map_loc, class: "loc", value: map_loc.join(",") %>
-      <%= t("map.zoom") %>
-      <%= f.text_field :map_zoom, class: "zoom", value: map_zoom %>
-      <%= button_tag t("map.set_loc"), { type: :button, class: "set-center" } %>
-      <%= button_tag t("map.set_center"), { type: :button, class: "reset-center" } %>
-      <%= hidden_field_tag :map_loc, map_loc.join(","), class: "map-loc" %>
-      <%= hidden_field_tag :map_zoom, map_zoom, class: "map-zoom" %>
-    </p>
-    <p>
-      <%= t("map.search") %>
-      <%= text_field_tag :query, nil, class: "query" %>
-      <%= button_tag t("map.search"), { type: :button, class: "search" } %>
-    </p>
-  </dd>
   <div id="map_container">
     <div id="map-canvas"></div>
+    <dt><%= t("map.setting") %></dt>
+    <dd>
+      <p>
+        <%= t("map.search") %>
+        <%= text_field_tag :query, nil, class: "query" %>
+        <%= button_tag t("map.button.search"), { type: :button, class: "search" } %>
+      </p>
+      <p>
+        <%= t("map.loc") %>
+        <%= f.text_field :map_loc, class: "loc", value: map_loc.join(",") %>
+        <%= t("map.zoom") %>
+        <%= f.text_field :map_zoom, class: "zoom", value: map_zoom %>
+        <%= button_tag t("map.button.set_loc"), { type: :button, class: "set-center" } %>
+        <%= button_tag t("map.button.set_center"), { type: :button, class: "reset-center" } %>
+        <%= hidden_field_tag :map_loc, map_loc.join(","), class: "map-loc" %>
+        <%= hidden_field_tag :map_zoom, map_zoom, class: "map-zoom" %>
+      </p>
+    </dd>
   </div>
   <div id="map-markers">
     <dt>
@@ -214,10 +214,10 @@ class @Map_Form
       <dd class="marker">
         <p>
           マーカー名
+          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
           <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
           <%= text_field_tag "item[map_points][][name]", nil, class: "marker-name" %>
-          <%= button_tag t("map.set-marker"), { type: :button, class: "set-marker" } %>
-          <%= button_tag t("map.clear-marker"), { type: :button, class: "clear-marker" } %>
+          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
         </p>
         <p>
           マーカー説明
@@ -229,17 +229,17 @@ class @Map_Form
       <dd class="marker">
         <p>
           マーカー名
-          <%= text_field_tag "item[map_points][][name]", point["name"], class: "marker-name" %>
-          <%= hidden_field_tag "item[map_points][][loc]", point["loc"].join(","), class: "loc marker-loc" %>
-          <%= button_tag t("map.set-marker"), { type: :button, class: "set-marker" } %>
-          <%= button_tag t("map.clear-marker"), { type: :button, class: "clear-marker" } %>
+          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
+          <%= text_field_tag "item[map_points][][name]", point[:name], class: "marker-name" %>
+          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
         </p>
         <p>
           マーカー説明
-          <%= text_area_tag "item[map_points][][text]", point["text"], class: "marker-text" %>
+          <%= text_area_tag "item[map_points][][text]", point[:text], class: "marker-text" %>
         </p>
       </dd>
     <% end %>
-    <dd><%= link_to "マーカーを追加する", "#", class: "add-marker" %></dd>
+    <dd><%= link_to t("map.button.add_marker"), "#", class: "add-marker" %></dd>
   </div>
 </dl>

@@ -16,6 +16,6 @@ class Map::PagesController < ApplicationController
       { layout_id: @cur_node.layout_id }
     end
 
-  public
+  #public
     #Cms::PageFilter
 end
