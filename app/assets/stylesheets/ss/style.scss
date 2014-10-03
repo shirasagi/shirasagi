@@ -349,7 +349,6 @@ dl.see {
   > dd {
     min-height: 1.41em;
     margin: 0 0 0 140px;
-    padding: 0 0 30px;
     //border-top: 1px solid #eee;
     @include clear;
     margin: 0px 0px 0px 140px;
@@ -404,9 +403,10 @@ footer.send {
 // addon
 
 #addon-cms-addons-file .see, .addon-view .see {
-  a {
+  .cboxElement {
     @include btn;
     display: inline-block;
+    line-height: 1.4;
   }
   #selected-files {
     margin-top: 30px;

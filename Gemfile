@@ -15,7 +15,6 @@ gem "unicorn"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
-gem "thin"
 gem "mongoid", git: "https://github.com/mongoid/mongoid.git"
 gem "mongoid-rspec"
 gem "mongo_mapper"
@@ -29,7 +28,7 @@ gem "redcarpet"
 gem "compass-rails"
 gem "kaminari"
 gem "non-stupid-digest-assets"
-gem "mongoid-grid_fs", github: "ahoward/mongoid-grid_fs"
+gem "mongoid-grid_fs"
 #gem "carrierwave"
 #gem "carrierwave-mongoid", require: "carrierwave/mongoid"
 gem "rmagick"
@@ -54,6 +53,8 @@ group :development, :test do
   gem 'timecop'
 end
 
-gem 'brakeman', require: false, group: :development
-gem 'guard-brakeman', require: false, group: :development
-gem 'yard', group: :development
+group :development do
+  gem 'brakeman', require: false
+  gem 'guard-brakeman', require: false
+  gem 'yard', require: false
+end

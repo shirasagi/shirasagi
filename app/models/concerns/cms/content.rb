@@ -102,6 +102,10 @@ module Cms::Content
       [%w(公開 public), %w(非公開 closed)]
     end
 
+    def state_private_options
+      [%w(公開待ち ready)]
+    end
+
     def parent
       return @cur_node if @cur_node
       return @parent unless @parent.nil?

@@ -2,6 +2,7 @@
 class Article::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
+  include Workflow::PageFilter
 
   model Article::Page
 

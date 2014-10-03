@@ -3,8 +3,8 @@
 <nav class="event-date">
   <h1 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h1>
   <ul>
-    <li class="prev"><%= link_to_prev_month %></li>
-    <li class="next"><%= link_to_next_month %></li>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: -1) %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months:  1) %></li>
   </ul>
 </nav>
 

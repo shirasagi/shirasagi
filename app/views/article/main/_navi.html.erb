@@ -4,6 +4,16 @@
   <header><h1><%= t "modules.article" %></h1></header>
   <div>
     <%= link_to :"article.page", article_pages_path, class: "icon-page" %>
+    <%= link_to :"workflow.page.ready", article_index_ready_path, class: "search-page" %>
+    <%= link_to :"workflow.page.closed", article_index_closed_path, class: "search-page" %>
+  </div>
+</nav>
+
+<nav class="sub-menu">
+  <header><h1><%= t "workflow.pages" %></h1></header>
+  <div>
+    <%= link_to :"workflow.page.approve", article_index_approve_path, class: "icon-page" %>
+    <%= link_to :"workflow.page.request", article_index_request_path, class: "icon-page" %>
   </div>
 </nav>
 

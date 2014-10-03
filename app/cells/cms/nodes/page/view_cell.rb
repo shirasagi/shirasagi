@@ -16,7 +16,7 @@ module Cms::Nodes::Page
           page(params[:page]).
           per(@cur_node.limit)
 
-        @items.empty? ? "" : render
+        render_with_pagination @items
       end
 
       def rss

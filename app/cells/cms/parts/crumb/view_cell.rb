@@ -26,7 +26,7 @@ module Cms::Parts::Crumb
 
         @items.unshift [@cur_part.home_label, @root.url]
 
-        @items.empty? ? "" : render
+        render
       end
   end
 end

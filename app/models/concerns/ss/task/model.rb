@@ -5,6 +5,8 @@ module SS::Task::Model
   include SS::Document
   include SS::Reference::User
 
+  attr_accessor :log_buffer
+
   included do
     store_in collection: "ss_tasks"
 
@@ -12,44 +14,76 @@ module SS::Task::Model
     field :name, type: String
     #field :command, type: String
     field :state, type: String, default: "stop"
+    field :interrupt, type: String
     field :started, type: DateTime
     field :closed, type: DateTime
+    field :total_count, type: Integer, default: 0
+    field :current_count, type: Integer, default: 0
+    field :logs, type: Array, default: []
 
     validates :name, presence: true
     validates :state, presence: true
+
+    after_initialize :init_variables
+  end
+
+  class Interrupt < StandardError
   end
 
   module ClassMethods
     public
       def run(cond, &block)
         task = Cms::Task.find_or_create_by(cond)
-        return puts "already running. ##{cond[:name]}" unless task.start
+        return false unless task.start
 
         begin
           require 'benchmark'
           time = Benchmark.realtime { yield task }
-          task.log sprintf("(%.3fsec)", time)
+          task.log sprintf("# %d sec\n\n", time)
+        rescue Interrupt => e
+          task.log "-- #{e}"
+          #task.log e.backtrace.join("\n")
         rescue StandardError => e
+          task.log "-- Error"
           task.log e.to_s
           task.log e.backtrace.join("\n")
-          dump "#{e}\n#{e.backtrace.join("\n")}" if Rails.env.development?
         end
         task.close
       end
   end
 
   public
+    def +(other)
+      self.current_count += other
+      if (self.current_count % log_buffer) == 0
+        save
+        interrupt = self.class.find_by(id: id, select: interrupt).interrupt
+        raise Interrupt, "interrupted: stop" if interrupt.to_s == "stop"
+      end
+      self
+    end
+
+    def init_variables
+      self.log_buffer = 50
+    end
+
     def running?
       state == "running"
     end
 
     def start
-      return false if running?
-      @logs = []
+      if running?
+        log "already running."
+        return false
+      end
 
-      self.started = Time.now
-      self.closed  = nil
-      self.state   = "running"
+      self.started       = Time.now
+      self.closed        = nil
+      self.state         = "running"
+      self.interrupt     = nil
+      self.total_count   = 0
+      self.current_count = 0
+      self.logs          = []
       save
     end
 
@@ -59,23 +93,13 @@ module SS::Task::Model
       save
     end
 
-    def log_file
-      "#{Rails.root}/log/tasks/#{id.to_s.split(//).join('/')}/_/#{name.gsub(/\W/, '_')}.log"
-    end
-
-    def read_log
-      Fs.exists?(log_file) ? Fs.read(log_file).force_encoding("utf-8") : nil
+    def clear_log(msg = nil)
+      self.logs = []
+      self.logs << msg if msg
     end
 
     def log(msg)
-      @logs << msg
       puts msg
-      dump msg if Rails.env.development?
-    end
-
-    def log_dump
-      dir = File.dirname(log_file)
-      Fs.mkdir_p(dir) unless Fs.exists?(dir)
-      Fs.write log_file, @logs.join("\n")
+      self.logs << msg
     end
 end

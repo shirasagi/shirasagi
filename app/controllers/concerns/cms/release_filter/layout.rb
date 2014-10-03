@@ -20,7 +20,9 @@ module Cms::ReleaseFilter::Layout
       return unless cell
 
       @cur_part = part
-      render_cell part.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
+      resp = render_cell part.route.sub(/\/.*/, "/#{cell[:controller]}/view"), cell[:action]
+      @cur_part = nil
+      resp
     end
 
     def render_layout(body, opts = {})

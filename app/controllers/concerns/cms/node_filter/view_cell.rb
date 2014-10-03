@@ -32,4 +32,9 @@ module Cms::NodeFilter::ViewCell
     def set_item
       @cur_node = @cur_node.becomes_with_route
     end
+
+    def render_with_pagination(items)
+      raise "404" if params[:page].to_i > 1 && items.empty?
+      render
+    end
 end

@@ -40,22 +40,59 @@ module Cms::ReleaseFilter::Page
     end
 
     def write_file(item, data, opts = {})
-      md5  = Digest::MD5.hexdigest(data)
-      diff = (md5 != item.md5)
       file = opts[:file] || item.path
 
-      item.class.where(id: item.id).update_all md5: md5 if diff
+      #data_md5 = Digest::MD5.hexdigest(data)
+      #if data_md5 != item.md5
+      #  item.class.where(id: item.id).update_all md5: data_md5
+      #end
 
-      if diff || !Fs.exists?(file)
-        Fs.write file, data
+      #updated = true
+      #if Fs.exists?(file)
+      #  updated = false if data_md5 == Digest::MD5.hexdigest(Fs.read(file))
+      #end
+
+      updated = true
+      if Fs.exists?(file)
+        updated = false if data == Fs.read(file)
       end
+
+      updated ? Fs.write(file, data) : nil
     end
 
   public
-    def generate_node(node)
-      return unless node.serve_static_file?
+    def generate_node_with_pagination(node)
+      generate_node node
 
-      self.params   = ActionController::Parameters.new format: "html"
+      max = 9999
+      num = max
+
+      2.upto(max) do |i|
+        file = "#{node.path}/index.p#{i}.html"
+        begin
+          generate_node node, file: file, params: { page: i }
+        rescue StandardError => e
+          raise e if "#{e}" != "404"
+          num = i
+          break
+        end
+      end
+
+      num.upto(max) do |i|
+        file = "#{node.path}/index.p#{i}.html"
+        break unless Fs.exists?(file)
+        Fs.rm_rf file
+      end
+    end
+
+    def generate_node(node, opts = {})
+      return unless node.serve_static_file?
+      return if Cms::Page.site(node.site).public.where(filename: "#{node.filename}/index.html").first
+
+      locals = opts[:params] || {}
+      locals[:format] ||= "html"
+
+      self.params   = ActionController::Parameters.new locals
       self.request  = ActionDispatch::Request.new method: "GET"
       self.response = ActionDispatch::Response.new
 
@@ -67,7 +104,8 @@ module Cms::ReleaseFilter::Page
       return unless html
       html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
 
-      write_file node, html, file: "#{node.path}/index.html"
+      file = opts[:file] || "#{node.path}/index.html"
+      write_file node, html, file: file
     end
 
     def generate_page(page)

@@ -14,7 +14,7 @@ class Cms::Task
 
       Cms::Site.where(cond).each do |site|
         run name: "cms:generate_nodes", site_id: site.id, node_id: nil do |task|
-          Cms::Task::NodesController.new.generate task: task, site: site
+          Cms::Task::NodesController.new.generate task: task, site: site, limit: opts[:limit]
         end
       end
     end
@@ -24,7 +24,7 @@ class Cms::Task
       node = Cms::Node.site(site).find_by filename: opts[:node]
 
       run name: "cms:generate_nodes", site_id: site.id, node_id: node.id do |task|
-        Cms::Task::NodesController.new.generate_with_node task: task, site: site, node: node
+        Cms::Task::NodesController.new.generate_with_node task: task, site: site, node: node, limit: opts[:limit]
       end
     end
 

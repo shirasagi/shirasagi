@@ -93,10 +93,13 @@ module SS::Document
     end
 
     def label(name)
+      opts  = send("#{name}_options")
+      opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
+
       if send(name).blank?
-        send("#{name}_options").each {|m| return m[0] if m[1].blank? }
+        opts.each {|m| return m[0] if m[1].blank? }
       else
-        send("#{name}_options").each {|m| return m[0] if m[1].to_s == send(name).to_s }
+        opts.each {|m| return m[0] if m[1].to_s == send(name).to_s }
       end
       nil
     end

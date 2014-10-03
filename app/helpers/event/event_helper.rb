@@ -30,37 +30,15 @@ module Event::EventHelper
     date.between?(start_date, close_date)
   end
 
-  def link_to_prev_month
-    if @month != 1
-      if within_one_year?(Date.new(@year, @month - 1, 1))
-        link_to "#{@month - 1}#{t_date('month')}",
-          "#{@cur_node.url}#{'%04d' % @year}#{'%02d' % (@month - 1)}.html"
-      else
-        "#{@month - 1}#{t_date('month')}"
-      end
+  def link_to_monthly(date)
+    year  = date.year
+    month = date.month
+
+    if within_one_year?(date)
+      link_to "#{month}#{t_date('month')}", "#{@cur_node.url}#{'%04d' % year}#{'%02d' % month}.html"
     else
-      if within_one_year?(Date.new(@year - 1, 12, 1))
-        link_to "12#{t_date('month')}", "#{@cur_node.url}#{'%04d' % (@year - 1)}12.html"
-      else
-        "12#{t_date('month')}"
-      end
+      "#{month}#{t_date('month')}"
     end
   end
 
-  def link_to_next_month
-    if @month != 12
-      if within_one_year? Date.new(@year, @month + 1, 1)
-        link_to "#{@month + 1}#{t_date('month')}",
-          "#{@cur_node.url}#{'%04d' % @year}#{'%02d' % (@month + 1)}.html"
-      else
-        "#{@month + 1}#{t_date('month')}"
-      end
-    else
-      if within_one_year? Date.new(@year + 1, 1, 1)
-        link_to "1#{t_date('month')}", "#{@cur_node.url}#{'%04d' % (@year + 1)}01.html"
-      else
-        "1#{t_date('month')}"
-      end
-    end
-  end
 end

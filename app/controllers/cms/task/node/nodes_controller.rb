@@ -6,6 +6,6 @@ class Cms::Task::Node::NodesController < ApplicationController
     def generate(opts)
       opts[:task].log "#{opts[:node].url}"
 
-      generate_node opts[:node]
+      generate_node_with_pagination opts[:node]
     end
 end

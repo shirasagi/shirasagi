@@ -79,7 +79,7 @@ CentOS 6.5/64bit
   rake ss:create_user data='{ name: "システム管理者", email: "sys@example.jp", password: "pass" }'
 
   # サイトの作成
-  rake ss:site:create data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
+  rake ss:create_site data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
 
 --------------------
 # サンプルデータ
@@ -104,6 +104,12 @@ CentOS 6.5/64bit
 
   # 静的ページ削除
   rake cms:remove_pages site=www
+
+--------------------
+# 定期実行設定(cron)
+
+  # ページ公開＆書き出し
+  */15 * * * * /bin/bash -l -c 'cd /var/www/shirasagi && bundle exec rake cms:release_pages && bundle exec rake cms:generate_nodes' >/dev/null
 
 --------------------
 # 開発ツール

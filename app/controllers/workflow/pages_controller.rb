@@ -60,8 +60,12 @@ class Workflow::PagesController < ApplicationController
       @item.workflow_approvers = sel
       if stfg == 1
         @item.workflow_state = "approve"
-        @item.state = "public"
-        @item.release_date = nil
+        if @item.release_date
+          @item.state = "ready"
+        else
+          @item.state = "public"
+          @item.release_date = nil
+        end
       end
       if @item.update && @item.workflow_state == "approve"
         args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,

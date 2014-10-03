@@ -2,6 +2,7 @@
 class Faq::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
+  include Workflow::PageFilter
 
   model Faq::Page
 

@@ -12,9 +12,9 @@
     <% @model.module_permission_names.each do |mod, names| %>
       <div class="module-box" style="padding: 10px 0px; border-top: 1px solid #ccc;">
         <p class="module-name" style="margin: 0px 0px 10px;"><%= t("modules.#{mod}") %></p>
-        <div class="permission-names" style="margin: 10px 20px">
+        <div class="permission-names">
           <% names.each do |name| %>
-            <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("cms_role.#{name}") %></label><br />
+            <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("cms_role.#{name}") %></label>
           <% end %>
         </div>
       </div>
