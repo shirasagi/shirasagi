@@ -13,11 +13,22 @@
       <th><%= @model.t :name %></th>
       <th class="filename"><%= @model.t :filename %></th>
       <th class="datetime"><%= @model.t :updated %></th>
+      <th class="list-state"><%= @model.t :list_state %></th>
     </tr>
   </thead>
 
   <tbody>
     <% @items.each do |item| %>
+    <% if item.state == "public" || item.state == "ready"
+         view_status = t("views.list_state.#{item.state}")
+       elsif item.workflow_state.present?
+         view_status = t("views.list_state.#{item.workflow_state}")
+       elsif item.state == "closed"
+         view_status = t("views.list_state.#{item.state}")
+       else
+         view_status = ""
+       end
+    %>
     <tr>
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
@@ -32,6 +43,7 @@
       <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
       <td class="filename"><%= File.basename item.filename %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      <td class="list-state"><%= view_status %></td>
     </tr>
     <% end %>
   </tbody>

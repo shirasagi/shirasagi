@@ -14,6 +14,13 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion
   end
 
+  content "article" do
+    get "index_approve" => "pages#index_approve"
+    get "index_request" => "pages#index_request"
+    get "index_ready" => "pages#index_ready"
+    get "index_closed" => "pages#index_closed"
+  end
+
   node "article" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"

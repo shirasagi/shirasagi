@@ -42,6 +42,13 @@ ja:
       change: 変更する
       more: もっと見る
       delete_all: すべて削除する
+    list_state:
+      public: 公開中
+      closed: 非公開
+      ready: 公開待ち
+      request: 申請中
+      approve: 承認
+      remand: 差し戻し
     confirm:
       delete: 削除してよろしいですか？
       unload: 入力したデータは保存されません。
@@ -65,6 +72,7 @@ ja:
         limit: 表示件数
         layout_id: レイアウト
         shortcut: ショートカット
+        list_state: 状態
       ss/site:
         name: サイト名
         host: ホスト名

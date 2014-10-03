@@ -3,6 +3,7 @@ ja:
     request: 承認申請
     request_to: 申請先
     selectable_users: 選択候補
+    pages: 承認
     state:
       request: 申請
       approve: 承認
@@ -12,6 +13,11 @@ ja:
         request: 承認申請
         approve: 最終承認完了
         remand: 承認差し戻し
+    page:
+      ready: 公開待ち
+      closed: 非公開
+      approve: 依頼されたもの
+      request: 申請したもの
 
   modules:
     addons:
