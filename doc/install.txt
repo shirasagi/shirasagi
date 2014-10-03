@@ -79,7 +79,7 @@ CentOS 6.5/64bit
   rake ss:create_user data='{ name: "システム管理者", email: "sys@example.jp", password: "pass" }'
 
   # サイトの作成
-  rake ss:site:create data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
+  rake ss:create_site data='{ name: "サイト名", host: "www", domains: "localhost:3000" }'
 
 --------------------
 # サンプルデータ
