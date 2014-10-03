@@ -53,5 +53,13 @@ module Opendata::Nodes::Dataset
 
         render
       end
+
+      def show
+        @item = Opendata::Dataset.site(@cur_site).node(@cur_node).public.
+          filename(@cur_path).
+          first
+
+        render
+      end
   end
 end

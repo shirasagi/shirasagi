@@ -3,9 +3,9 @@ module Rdf::Sparql
   require "sparql/client"
 
   # Fuseki Server
-  SERVER  = SS.config.opendata.server_address
-  PORT    = SS.config.opendata.server_port
-  DATASET = SS.config.opendata.dataset_name
+  SERVER  = SS.config.opendata.fuseki["host"]
+  PORT    = SS.config.opendata.fuseki["port"]
+  DATASET = SS.config.opendata.fuseki["database"]
 
   QUERY_SITE  = "http://#{SERVER}:#{PORT}/#{DATASET}/query"
   UPDATE_SITE = "http://#{SERVER}:#{PORT}/#{DATASET}/update"
@@ -14,33 +14,39 @@ module Rdf::Sparql
   class << self
     public
       def save(graph_name, ttl_url)
+        return if SS.config.opendata.fuseki["disable"]
 
         client = SPARQL::Client.new(UPDATE_SITE)
 
-         triples = []
+        triples = []
 
-         graph = RDF::Graph.load(ttl_url)
-         graph.each do |statement|
+        graph = RDF::Graph.load(ttl_url)
+        graph.each do |statement|
           triples << statement.to_s
-         end
+        end
 
-         sparql = "INSERT DATA { GRAPH <#{graph_name}> { #{triples.join(" ")} } }"
-         client.update(sparql)
+        sparql = "INSERT DATA { GRAPH <#{graph_name}> { #{triples.join(" ")} } }"
+        client.update(sparql)
 
-         return triples
+        return triples
       end
 
       def clear(graph_name)
+        return if SS.config.opendata.fuseki["disable"]
+
         client = SPARQL::Client.new(UPDATE_SITE)
         client.clear_graph(graph_name)
       end
 
       def clear_all
+        return if SS.config.opendata.fuseki["disable"]
+
         client = SPARQL::Client.new(UPDATE_SITE)
         client.clear(:all)
       end
 
       def select(sparql_query, format = "HTML")
+        return if SS.config.opendata.fuseki["disable"]
 
         client = SPARQL::Client.new(QUERY_SITE)
         results = client.query(sparql_query)
@@ -81,6 +87,5 @@ module Rdf::Sparql
 
         return result
       end
-
   end
 end

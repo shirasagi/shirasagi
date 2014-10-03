@@ -3,6 +3,7 @@
     <tr>
       <th class="checkbox"><input type="checkbox" /></th>
       <th><%= @model.t :name %></th>
+      <th class="filename"><%= @model.t :filename %></th>
       <th class="datetime"><%= @model.t :updated %></th>
     </tr>
   </thead>
@@ -18,6 +19,7 @@
         </nav>
       </td>
       <td><%= link_to item.name, { action: :show, id: item } %></td>
+      <td class="filename"><%= item.filename %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>

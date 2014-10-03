@@ -6,7 +6,7 @@
   <dd><%= link_to :"opendata.manage_resources", "resources/" %></dd>
   <dd>
     <% @item.resources.each do |rs| %>
-    <div><%= rs.name %></div>
+    <div><%= link_to rs.name, "resources/#{rs.id}/file", target: "_blank" %></div>
     <% end %>
   </dd>
 

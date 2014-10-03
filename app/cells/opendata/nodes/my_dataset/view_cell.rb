@@ -18,7 +18,7 @@ module Opendata::Nodes::MyDataset
       end
 
       def fix_params
-        { site_id: @cur_site.id, member_id: @cur_member.id }
+        { site_id: @cur_site.id, member_id: @cur_member.id, cur_node: @cur_node }
       end
 
       def pre_params
