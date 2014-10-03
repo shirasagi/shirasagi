@@ -566,7 +566,6 @@ img {
 }
 
 #od-searchgroup-name {
-  margin-bottom: $box-margin;
   padding: 6px 35px;
   background: url(../img/ic-groupsearch-b.png) no-repeat 8px center;
   background-color: #ffe7a5;
@@ -593,7 +592,7 @@ img {
 }
 
 form.opendata-search_groups-form {
-  margin-bottom: 24px;
+  margin: $box-margin 0 ;
   padding: 10px;
   border: 2px solid $data-blue;
   overflow: hidden;
@@ -668,7 +667,7 @@ article.areas h1, article.tags h1, #od-page-name, #dataset-news h1,
   font-size: $px15;
 }
 
-article.areas, article.tags, .opendata-search_groups {
+article.areas, article.tags, .opendata-search_groups, .opendata-dataset_groups {
   display: block;
   float: left;
   width: 803px;
@@ -689,6 +688,10 @@ article.areas, article.tags, .opendata-search_groups {
 article.areas, article.tags {
   width: 395px;
   height: 275px;
+}
+
+.opendata-dataset_groups {
+  width: 249px;
 }
 
 .s-dataset-top {
