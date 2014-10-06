@@ -59,19 +59,23 @@ class Opendata::Resource
     end
 
     def save_static_file
+      logger.warn("登録パス:#{path}")
       Fs.rm_rf File.dirname(path)
       Fs.binwrite path, file.data
     end
 
     def remove_static_file
+      logger.warn("削除パス:#{path}")
       Fs.rm_rf path
     end
 
     def save_fuseki_rdf
+      logger.warn("登録グラフ:#{full_url} ロードパス:#{path}")
       Rdf::Sparql.save full_url, path
     end
 
     def remove_fuseki_rdf
+      logger.warn("削除グラフ:#{full_url}")
       Rdf::Sparql.clear full_url
     end
 

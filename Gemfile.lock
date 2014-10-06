@@ -506,6 +506,7 @@ DEPENDENCIES
   jquery-turbolinks
   jquery-ui-rails
   json-jwt
+  json_pure
   kaminari
   kramdown
   mail-iso-2022-jp
