@@ -5,7 +5,7 @@ module Rdf::Sparql
   # Fuseki Server
   SERVER  = SS.config.opendata.fuseki["host"]
   PORT    = SS.config.opendata.fuseki["port"]
-  DATASET = SS.config.opendata.fuseki["database"]
+  DATASET = SS.config.opendata.fuseki["dataset"]
 
   QUERY_SITE  = "http://#{SERVER}:#{PORT}/#{DATASET}/query"
   UPDATE_SITE = "http://#{SERVER}:#{PORT}/#{DATASET}/update"
