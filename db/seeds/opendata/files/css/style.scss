@@ -6,12 +6,12 @@
 
 html {
   height: 100%;
-  font-family: Meiryo;
+  font-family: $font-base;
 }
 body {
   height: 100%;
   margin: 0 auto;
-  font-family: Meiryo;
+  font-family: $font-base;
   font-size: 75%;
   color: $text;
 }
@@ -22,6 +22,10 @@ h1, h2, h3, h4, h5 {
 }
 a {
   color: $link;
+  &:hover {
+    color: #005c7b;
+    text-decoration: none;
+  }
 }
 img {
   vertical-align: middle;
@@ -30,6 +34,8 @@ img {
 // -----------------------------------------------------------------------------
 // layout
 #page {
+  position: relative;
+  min-height: 100%;
   margin: 0 auto;
 }
 
@@ -173,7 +179,7 @@ img {
     #title-data, #title-app, #title-idea {
       padding: 17px 0 17px 53px;
       color: $text;
-      font-size: $px15;
+      font-size: $px16;
       font-weight: bold;
     }
     #contents-data, #contents-app, #contents-idea {
@@ -215,8 +221,8 @@ img {
     padding: 15px 15px 15px 45px;
     @include border-radius(5px);
     background: url(../img/ic-add.png) no-repeat 20px center;
-    background-color: #383838;
-    color: $white;
+    @include fill-gray;
+    font-size: $px16;
     text-decoration: none;
     }
 }
@@ -237,15 +243,17 @@ img {
 #contents, #data-top-contents {
   width: $page-width;
   margin: 0 auto;
-  padding-bottom: 28px;
+  padding-bottom: 71px;
   #main {
     float: left;
     width: 803px;
     margin-right: $box-margin;
+    margin-bottom: $box-margin;
   }
   #sidebar {
     float: right;
     width: 249px;
+    margin-bottom: $box-margin;
   }
 }
 
@@ -291,8 +299,8 @@ img {
   width: 249px;
   background: #eeeeee;
   h2 {
-    padding: 10px;
-    font-size: $px15;
+    padding: 10px 15px;
+    font-size: $px16;
   }
   nav {
     padding: 10px 0;
@@ -324,14 +332,20 @@ img {
     padding: 6px 10px;
     @include grd-blue;
     color:$white;
-    font-size: $px15;
+    font-size: $px16;
   }
   #portal-dataset header h1 {
     padding: 6px 38px;
     background: url(../img/ic-data-s.png) no-repeat 10px center;
     background-color: $data-blue;
     color:$white;
-    font-size: $px15;
+    font-size: $px16;
+  }
+}
+
+.cms-tabs, .opendata-tabs {
+  .names .name {
+    font-size: $px16;
   }
 }
 
@@ -342,7 +356,7 @@ img {
 
 
 #contents article.body {
-   h1 {
+  h1 {
     margin: 12px 0 6px;
     padding: 3px 10px 0;
     background: $blue;
@@ -433,6 +447,10 @@ img {
       color: $text;
       text-decoration: none;
       text-align: center;
+      &:hover {
+        @include grd-blue;
+        color: $white;
+      }
     }
     .current {
       @include grd-blue;
@@ -487,10 +505,13 @@ img {
   float: right;
   @include r-arrow;
   @include border-radius(5px);
+  &:hover {
+    color: $white;
+  }
 }
 
 //-----------------------------------------------------------------------------------------
-// dataset
+// dataset-head
 #dataset-title {
   display: block;
   .inner {
@@ -510,11 +531,12 @@ img {
         margin-bottom: 15px;
         a.group-search {
           margin-right: 30px;
-          padding: 5px 10px 5px 30px;
+          padding: 3px 10px 3px 30px;
           @include border-radius(5px);
           background: url(../img/ic-groupsearch.png) no-repeat 5px center;
-          background-color: #282828;
+          @include fill-gray;
           color: $white;
+          font-size: $px16;
           text-decoration: none;
         }
         a.inquiry {
@@ -525,6 +547,33 @@ img {
     }
   }
 }
+
+#dataset-title .menu .l-menu {
+    width: 100%;
+    @include box-sizing(border-box);
+    text-align: left;
+    form {
+      float: none;
+      position: relative;
+      @include border-radius(5px);
+      border: 1px solid #ddcfcc;
+      #search-box {
+        width: 85%;
+        margin: 2px 10px 2px 2px;
+        padding: 5px;
+        @include border-radius(0px);
+        border: none;
+        outline-color: $white;
+      }
+      img {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 2px;
+        padding: 2px 5px;
+      }
+    }
+  }
 
 #gnav {
   border-bottom: #ffcf38 2px solid;
@@ -551,11 +600,11 @@ img {
   }
   a {
     display: block;
-    padding: 10px 0;
+    padding: 6px 0 5px 0;
     text-decoration: none;
     text-align: center;
     color: $text;
-    font-size: $px16;
+    font-size: $px18;
   }
 }
 
@@ -569,7 +618,7 @@ img {
   padding: 6px 35px;
   background: url(../img/ic-groupsearch-b.png) no-repeat 8px center;
   background-color: #ffe7a5;
-  font-size: $px15;
+  font-size: $px16;
 }
 
 .pagination {
@@ -624,6 +673,9 @@ form.opendata-search_groups-form {
       color: $text;
       text-decoration: none;
       text-align: center;
+      &:hover {
+        background: $data-blue;
+      }
     }
     .current {
       background: $data-blue;
@@ -650,6 +702,7 @@ form.opendata-search_groups-form {
           padding: 8px 0 8px 16px;
           &:hover {
             background: #ccd6d6;
+            color: $link;
             text-decoration: none;
           }
         }
@@ -658,16 +711,16 @@ form.opendata-search_groups-form {
   }
 }
 
-article.areas h1, article.tags h1, #od-page-name, #dataset-news h1,
+article.areas h1, article.tags h1, article.formats h1, article.licenses h1, #od-page-name, #dataset-news h1,
 #dataset-popular h1, #dataset-attention h1 {
   padding: 6px 10px;
   border-bottom: 2px solid #ffcf38;
   background: $data-blue;
   color:text;
-  font-size: $px15;
+  font-size: $px16;
 }
 
-article.areas, article.tags, .opendata-search_groups, .opendata-dataset_groups {
+article.areas, article.tags, article.formats, article.licenses, .opendata-search_groups, .opendata-dataset_groups {
   display: block;
   float: left;
   width: 803px;
@@ -679,15 +732,20 @@ article.areas, article.tags, .opendata-search_groups, .opendata-dataset_groups {
       padding: 8px 0 8px 16px;
       &:hover {
         background: #ccd6d6;
+        color: $link;
         text-decoration: none;
       }
     }
   }
 }
 
-article.areas, article.tags {
+article.areas, article.tags, article.formats, article.licenses {
   width: 395px;
   height: 275px;
+}
+
+article.areas, article.formats {
+  margin-right: 13px;
 }
 
 .opendata-dataset_groups {
@@ -695,9 +753,6 @@ article.areas, article.tags {
 }
 
 .s-dataset-top {
-  //#main article:nth-child(5), #main article:nth-child(7) {
-    //margin-left: 13px;
-  //}
   .fb {
     clear: left;
   }
@@ -705,18 +760,21 @@ article.areas, article.tags {
 
 //-----------------------------------------------------------------------------------------
 //login
-#s-mypage-login #contents li {
-  margin-bottom: $box-margin;
-  a {
-    display: block;
-    width: 400px;
-    margin-top: $box-margin;
-    padding: 30px 0;
-    border: $border-hgry;
-    color: $text;
-    text-align: center;
-    vertical-align: middle;
-    text-decoration: none;
+#s-mypage-login #contents ul {
+  list-style: none;
+  li {
+    margin-bottom: $box-margin;
+    a {
+      display: block;
+      width: 400px;
+      margin-top: $box-margin;
+      padding: 30px 0;
+      border: $border-hgry;
+      color: $text;
+      text-align: center;
+      vertical-align: middle;
+      text-decoration: none;
+    }
   }
 }
 
@@ -736,6 +794,10 @@ article.areas, article.tags {
     color: $text;
     text-decoration: none;
     text-align: center;
+    &:hover {
+      @include grd-blue;
+      color: $white;
+    }
   }
   .current {
     @include grd-blue;
@@ -746,6 +808,10 @@ article.areas, article.tags {
   }
   .app, .idea {
     @include opacity(.5);
+    &:hover {
+      background: #ddcfcc;
+      color: $text;
+    }
   }
 }
 
@@ -768,22 +834,24 @@ article.areas, article.tags {
       padding-right: 10px;
       background: #ddcfcc;
       text-align: right;
-      &:not(:first-child) {
-        margin-top: $box-margin;
-      }
+      margin-bottom: $box-margin;
     }
     dd {
-      min-height: 1.4em;
+      min-height: 1.9em;
       margin-left: 180px;
-      &:not(:nth-child(2)) {
-        margin-top: $box-margin;
-      }
+      margin-bottom: $box-margin;
     }
   }
   #item-form {
     dl.see dd {
       input, textarea {
         border: 1px solid #ddcfcc;;
+      }
+      input[type="text"], input[type="email"], input[type="password"], textarea {
+        width: 70%;
+      }
+      textarea {
+        height: 6.5em;
       }
     }
     .send {
@@ -796,6 +864,9 @@ article.areas, article.tags {
         color: $white;
         text-align: center;
         font-family: Meiryo;
+        &:hover {
+          background: $blue;
+        }
       }
     }
   }
@@ -805,6 +876,10 @@ article.areas, article.tags {
 //footer
 #foot {
   clear: both;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 71px;
   margin: 0 auto;
 }
 
@@ -853,4 +928,3 @@ dl.see {
   }
 }
 */
-

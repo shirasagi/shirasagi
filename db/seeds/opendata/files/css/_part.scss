@@ -55,7 +55,7 @@ $box-margin: 24px;
 @mixin grd-gray {
   background: $gray;
   @include background-image(linear-gradient(top, $gray, #383838));
-  @include filter-gradient($gray, #383838, vertical);
+  //@include filter-gradient($gray, #383838, vertical);
   background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc1ODgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiM2NjY2NjYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMzODM4MzgiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c1ODgpIiAvPgo8L3N2Zz4=);
 }
 
@@ -69,10 +69,20 @@ $box-margin: 24px;
 @mixin r-arrow {
   display: inline-block;
   padding: 1px 8px 2px 30px;
-  background: #282828 url(../img/r-arrow.png) no-repeat 14px 6px;
+  border: 1px solid #282828;
+  background: #383838 url(../img/r-arrow.png) no-repeat 14px 6px;
   color: $white;
   text-decoration: none;
+  &:hover {
+    background-color: #666666;
+  }
 }
 
-
-
+@mixin fill-gray {
+  border: 1px solid #282828;
+  background-color: #383838;
+  color: $white;
+  &:hover {
+    background-color: #666666;
+  }
+}
