@@ -1,7 +1,6 @@
 module Rdf::Sparql
   require "rdf/turtle"
   require "sparql/client"
-  require "json/pure"
 
   # Fuseki Server
   SERVER  = SS.config.opendata.fuseki["host"]
@@ -61,9 +60,7 @@ module Rdf::Sparql
           type = "application/json"
           ext = "json"
           encoding = Encoding::UTF_8
-          json = JSON.parse(results.to_json)
-          json_encoded = encode_json(json)
-          data = JSON.fast_generate(json_encoded)
+          data = results.to_json
         elsif format == "CSV"
           type = "text/csv"
           ext = "csv"
@@ -91,28 +88,5 @@ module Rdf::Sparql
         return result
       end
 
-    private
-      def encode_json(json)
-        bindings = json["results"]["bindings"]
-        bindings.each do |triple|
-          keys = triple.keys
-          keys.each {|key|
-            value_hash = triple[key]
-            value_hash["value"] = JSON.utf8_to_json_ascii(value_hash["value"].to_s)
-            key_encoded = JSON.utf8_to_json_ascii(key)
-            triple.delete(key)
-            triple[key_encoded] = value_hash
-          }
-        end
-        json["results"]["bindings"] = bindings
-
-        vars = json["head"]["vars"]
-        vars.each_with_index {|var_name, i|
-          vars[i] = JSON.utf8_to_json_ascii(var_name)
-        }
-        json["head"]["vars"] = vars
-
-        return json
-      end
   end
 end
