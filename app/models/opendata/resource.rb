@@ -51,7 +51,7 @@ class Opendata::Resource
   private
     def set_filename
       self.filename = in_file.original_filename
-      self.format = in_file.original_filename.sub(/.*(\w+)$/, '\\1') if format.blank?
+      self.format = filename.sub(/.*\./, "").upcase if format.blank?
     end
 
     def save_static_file
