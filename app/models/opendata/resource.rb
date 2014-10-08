@@ -24,10 +24,6 @@ class Opendata::Resource
   before_destroy :remove_fuseki_rdf
 
   public
-    def filename
-      file ? file.filename : nil
-    end
-
     def path
       dataset.path.sub(/\/[^\/]+$/, "/resource/#{id}/#{filename}")
     end
