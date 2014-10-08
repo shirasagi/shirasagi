@@ -13,7 +13,8 @@ module Cms::PublicHelper
     def convert_static_url(url)
       path, query = url.split("?")
 
-      params = query.to_s.split("&amp;").map {|m| m.split("=") }.to_h
+      params = Rack::Utils.parse_nested_query(query)
+      params.delete("amp")
       params.delete("public_path")
       page = params.delete("page")
 
@@ -21,7 +22,7 @@ module Cms::PublicHelper
       path = path.sub(/\/$/, "/index.html").sub(".html", ".p#{page}.html") if page
 
       if params.size > 0
-        path = "#{path}?" + params.map { |k, v| "#{k}=#{v}" }.join("&amp;")
+        path = "#{path}?" + params.to_query
       end
 
       path
