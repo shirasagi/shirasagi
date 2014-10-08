@@ -78,6 +78,12 @@ $box-margin: 24px;
   }
 }
 
+@mixin l-arrow-bk {
+  display: inline-block;
+  padding-left: 15px;
+  background: url(../img/l-arrow-bk.png) no-repeat 2px 5px;
+}
+
 @mixin fill-gray {
   border: 1px solid #282828;
   background-color: #383838;

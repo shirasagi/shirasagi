@@ -12,7 +12,7 @@ body {
   height: 100%;
   margin: 0 auto;
   font-family: $font-base;
-  font-size: 75%;
+  font-size: 100%;
   color: $text;
 }
 h1, h2, h3, h4, h5 {
@@ -37,6 +37,7 @@ img {
   position: relative;
   min-height: 100%;
   margin: 0 auto;
+  font-size: 87.5%;
 }
 
 // -----------------------------------------------------------------------------
@@ -56,6 +57,7 @@ img {
     }
     .tab {
       float: left;
+      padding-top: 1px;
       ul {
         @include clear;
         padding-top: 10px;
@@ -71,7 +73,7 @@ img {
         li {
           display: block;
           float: left;
-          width: 190px;
+          width: 200px;
           margin-right: 10px;
           @include border-top-radius(5px);
           a {
@@ -112,13 +114,13 @@ img {
       position: absolute;
       left: 250px;
       bottom: -2px;
-      width: 186px;
+      width: 196px;
       border: 2px solid #ddcfcc;
       border-bottom: 2px solid $white;
       background: $white;
     }
     .tab .tab02 {
-      margin-left: 200px;
+      margin-left: 210px;
     }
   }
   .inner .tab ul li.tab01 a {
@@ -179,7 +181,7 @@ img {
     #title-data, #title-app, #title-idea {
       padding: 17px 0 17px 53px;
       color: $text;
-      font-size: $px16;
+      font-size: $px15;
       font-weight: bold;
     }
     #contents-data, #contents-app, #contents-idea {
@@ -222,7 +224,7 @@ img {
     @include border-radius(5px);
     background: url(../img/ic-add.png) no-repeat 20px center;
     @include fill-gray;
-    font-size: $px16;
+    font-size: $px15;
     text-decoration: none;
     }
 }
@@ -300,7 +302,7 @@ img {
   background: #eeeeee;
   h2 {
     padding: 10px 15px;
-    font-size: $px16;
+    font-size: $px15;
   }
   nav {
     padding: 10px 0;
@@ -326,32 +328,42 @@ img {
   width: 803px;
 }
 
-#about, .s-portal #contents, #s-mypage-login #contents , #s-mypage #contents{
+#about, .s-portal #contents header, #s-mypage-login #contents , #s-mypage #contents{
   h1 {
     margin-bottom: 6px;
     padding: 6px 10px;
     @include grd-blue;
     color:$white;
-    font-size: $px16;
+    font-size: $px15;
   }
+}
+
+.s-portal #contents {
   #portal-dataset header h1 {
     padding: 6px 38px;
     background: url(../img/ic-data-s.png) no-repeat 10px center;
     background-color: $data-blue;
     color:$white;
-    font-size: $px16;
+    font-size: $px15;
+  }
+  #info-page-name {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: $px17;
   }
 }
 
+
+
 .cms-tabs, .opendata-tabs {
   .names .name {
-    font-size: $px16;
+    font-size: $px15;
   }
 }
 
 #contents header.released {
   margin-bottom: 12px;
-  text-align: left;
+  text-align: right;
 }
 
 
@@ -359,9 +371,9 @@ img {
   h1 {
     margin: 12px 0 6px;
     padding: 3px 10px 0;
-    background: $blue;
-    font-size: $px16;
-    font-weight: bold;
+    background: #3386bb;
+    color: $white;
+    font-size: $px15;
     &:first-child {
       margin-top: 0;
     }
@@ -369,20 +381,20 @@ img {
   h2 {
     margin-bottom: 6px;
     padding: 0 10px;
-    border-bottom: 2px solid $blue;
-    color: $blue;
-    font-size: $px16;
+    border-bottom: 2px solid #3386bb;
+    color: #3386bb;
+    font-size: $px15;
     font-weight: bold;
   }
   h3 {
     margin-bottom: 6px;
     padding: 0 10px;
-    border-left: 5px solid $blue;
-    color: $blue;
+    border-left: 5px solid #3386bb;
+    color: #3386bb;;
     font-weight: bold;
   }
   h4 {
-    color: $blue;
+    color: #3386bb;
     font-weight: bold;
   }
   h5, h6 {
@@ -396,6 +408,7 @@ img {
     list-style: none;
     li {
       padding-left: 15px;
+      background: url(../img/ic-info-list.png) no-repeat left center;
     }
   }
   ol {
@@ -416,17 +429,92 @@ img {
     width: 100%;
     margin-bottom: 12px;
     caption {
-      color: $blue;
+      color: #3386bb;
       text-align: left;
     }
     th {
       padding: 3px 8px 0;
       border: $border-hgry;
-      background: $blue;
+      background: #3386bb;
     }
     td {
       padding: 3px 8px 0;
       border: $border-hgry;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// calendar
+.event-date {
+  position: relative;
+  h1 {
+    margin-bottom: 15px;
+    padding: 7px 0 4px 15px;
+    border-bottom: 2px solid #3386bb;
+    font-size: $px15;
+  }
+  ul {
+    position: absolute;
+    top: 9px;
+    right: 0;
+    .prev {
+      @include l-arrow-bk;
+      @include inline-block;
+      margin-right: 10px;
+      padding: 0 15px;
+      border-right: $border-hgry;
+    }
+    .next {
+      @include inline-block;
+      padding-right: 13px;
+      background: url(../img/r-arrow-bk.png) no-repeat right 5px;
+    }
+  }
+}
+#event-list {
+  clear: both;
+  margin-bottom: 2em;
+  border-top: 1px solid #ccc;
+  dl {
+    margin: 0;
+    padding: 6px 10px 3px;
+    border-bottom: 1px solid #ccc;
+    zoom:1;
+    &:before {
+      content: "\0020";
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+    &:after {
+      content: "\0020";
+      clear: both;
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+  }
+  dl.sat {
+    background: #e1ebf1;
+    color: #039;
+  }
+  dl.sun, dl.holiday {
+    background: #ffeeee;
+    color: #d90000;
+  }
+  dt {
+    float: left;
+    width: 20%;
+  }
+  dd {
+    margin-left: 10%;
+    h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: $px14;
+      font-weight: normal;
     }
   }
 }
@@ -447,10 +535,6 @@ img {
       color: $text;
       text-decoration: none;
       text-align: center;
-      &:hover {
-        @include grd-blue;
-        color: $white;
-      }
     }
     .current {
       @include grd-blue;
@@ -536,7 +620,7 @@ img {
           background: url(../img/ic-groupsearch.png) no-repeat 5px center;
           @include fill-gray;
           color: $white;
-          font-size: $px16;
+          font-size: $px15;
           text-decoration: none;
         }
         a.inquiry {
@@ -604,7 +688,7 @@ img {
     text-decoration: none;
     text-align: center;
     color: $text;
-    font-size: $px18;
+    font-size: $px17;
   }
 }
 
@@ -618,7 +702,7 @@ img {
   padding: 6px 35px;
   background: url(../img/ic-groupsearch-b.png) no-repeat 8px center;
   background-color: #ffe7a5;
-  font-size: $px16;
+  font-size: $px15;
 }
 
 .pagination {
@@ -673,9 +757,6 @@ form.opendata-search_groups-form {
       color: $text;
       text-decoration: none;
       text-align: center;
-      &:hover {
-        background: $data-blue;
-      }
     }
     .current {
       background: $data-blue;
@@ -717,7 +798,7 @@ article.areas h1, article.tags h1, article.formats h1, article.licenses h1, #od-
   border-bottom: 2px solid #ffcf38;
   background: $data-blue;
   color:text;
-  font-size: $px16;
+  font-size: $px15;
 }
 
 article.areas, article.tags, article.formats, article.licenses, .opendata-search_groups, .opendata-dataset_groups {
@@ -794,10 +875,6 @@ article.areas, article.formats {
     color: $text;
     text-decoration: none;
     text-align: center;
-    &:hover {
-      @include grd-blue;
-      color: $white;
-    }
   }
   .current {
     @include grd-blue;
@@ -808,10 +885,6 @@ article.areas, article.formats {
   }
   .app, .idea {
     @include opacity(.5);
-    &:hover {
-      background: #ddcfcc;
-      color: $text;
-    }
   }
 }
 
