@@ -33,7 +33,6 @@ class Opendata::DatasetGroup
           criteria = criteria.all_in name: words
         end
         if params[:category_id].present?
-          words = params[:category_id].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
           criteria = criteria.where category_ids: params[:category_id].to_i
         end
 

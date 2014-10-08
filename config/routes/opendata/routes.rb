@@ -30,11 +30,11 @@ SS::Application.routes.draw do
   node "opendata" do
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
-    #get "dataset/:id.:format" => "public#show", cell: "nodes/dataset"
     get "dataset/:dataset.html/resource/:id/" => "public#index", cell: "nodes/resource"
     get "dataset/:dataset.html/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
 
     match "search_group/(index.:format)" => "public#index", cell: "nodes/search_group", via: [:get, :post]
+    match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"

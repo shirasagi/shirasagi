@@ -61,5 +61,41 @@ class Opendata::Dataset
 
         collection.aggregate(pipes)
       end
+
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        if params[:keyword].present?
+          words = params[:keyword].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
+          criteria = criteria.all_in name: words #TODO:
+          #dump criteria.selector
+        end
+        if params[:name].present?
+          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
+          criteria = criteria.all_in name: words
+        end
+        if params[:area_id].present?
+          criteria = criteria.where area_ids: params[:area_id].to_i
+        end
+        if params[:category_id].present?
+          criteria = criteria.where category_ids: params[:category_id].to_i
+        end
+        if params[:dataset_group_id].present?
+          criteria = criteria.where dataset_group_ids: params[:dataset_group_id].to_i
+        end
+        if params[:tag].present?
+          criteria = criteria.where tags: params[:tag]
+        end
+        if params[:format].present?
+          criteria = criteria.where "resources.format" => params[:format].upcase
+        end
+        criteria = criteria.order(name: 1)
+        if params[:license].present?
+          criteria = criteria.where license: params[:license]
+        end
+
+        criteria
+      end
   end
 end

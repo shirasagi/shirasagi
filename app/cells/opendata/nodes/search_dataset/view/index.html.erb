@@ -1,0 +1,57 @@
+<%
+
+areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+@s = OpenStruct.new params[:s]
+
+%>
+<%= form_for :s, url: "", html: { class: "opendata-search_groups-form", method: :get } do |f| %>
+  <dl class="keyword">
+    <dt>キーワード</dt>
+    <dd><%= f.text_field :keyword %></dd>
+  </dl>
+  <dl class="category">
+    <dt>地域</dt>
+    <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
+  </dl>
+  <dl class="tag">
+    <dt>タグ</dt>
+    <dd><%= f.text_field :tag %></dd>
+  </dl>
+  <dl class="tag">
+    <dt>フォーマット</dt>
+    <dd><%= f.text_field :format, value: tryb { params[:s][:format] } %></dd>
+  </dl>
+  <dl class="tag">
+    <dt>ライセンス</dt>
+    <dd><%= f.text_field :license %></dd>
+  </dl>
+  <dl class="category">
+    <dt>分野</dt>
+    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
+  </dl>
+  <dl class="group">
+    <dt>グループ</dt>
+    <dd><%= f.select :dataset_group_id, groups, include_blank: "" %></dd>
+  </dl>
+
+  <div class="send">
+    <%= submit_tag t(:search), name: :search %>
+  </div>
+<% end %>
+
+<%= paginate @items %>
+
+<div class="opendata-search_datasets pages">
+  <% @items.each do |item| %>
+  <article>
+    <header>
+      <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+      <h2><%= link_to item.name, item.url %></h2>
+    </header>
+  </article>
+  <% end %>
+</div>
+
+<%= paginate @items %>
