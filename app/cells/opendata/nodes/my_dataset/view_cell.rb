@@ -8,6 +8,10 @@ module Opendata::Nodes::MyDataset
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
 
     protected
+      def dataset_node
+        @dataset_node ||= Opendata::Node::Dataset.site(@cur_site).public.first
+      end
+
       def set_model
         @model = Opendata::Dataset
       end
@@ -18,7 +22,7 @@ module Opendata::Nodes::MyDataset
       end
 
       def fix_params
-        { site_id: @cur_site.id, member_id: @cur_member.id, cur_node: @cur_node }
+        { site_id: @cur_site.id, member_id: @cur_member.id, cur_node: dataset_node }
       end
 
       def pre_params

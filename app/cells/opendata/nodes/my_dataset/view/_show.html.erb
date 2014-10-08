@@ -6,7 +6,8 @@
   <dd><%= link_to :"opendata.manage_resources", "resources/" %></dd>
   <dd>
     <% @item.resources.each do |rs| %>
-    <div><%= link_to rs.name, "resources/#{rs.id}/file" %></div>
+    <div><%= link_to rs.name, "resources/#{rs.id}/" %>
+      (<%= rs.format.upcase %> <%= number_to_human_size rs.size %>)</div>
     <% end %>
   </dd>
 

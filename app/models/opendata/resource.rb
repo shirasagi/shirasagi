@@ -18,6 +18,7 @@ class Opendata::Resource
   validates :format, presence: true
 
   before_validation :set_filename, if: ->{ in_file.present? }
+  before_validation :set_format
   before_save :save_static_file, if: ->{ in_file.present? }
   before_save :save_fuseki_rdf, if: ->{ in_file.present? }
   before_destroy :remove_static_file
@@ -60,6 +61,10 @@ class Opendata::Resource
     def set_filename
       self.filename = in_file.original_filename
       self.format = filename.sub(/.*\./, "").upcase if format.blank?
+    end
+
+    def set_format
+      self.format = format.upcase if format.present?
     end
 
     def save_static_file
