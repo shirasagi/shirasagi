@@ -128,7 +128,7 @@ $ ->
           <% cols  = d.split(",") %>
           <% user  = SS::User.find cols[1].to_i %>
           <% state = t("workflow.state.#{cols[2]}") %>
-          <%= "#{user.name}(#{user.email.split('@')[0]})：#{state}" %><br /><%= cols[3] %>
+          <%= "#{user.name}(#{user.email.split('@')[0]})：#{state}" %><br /><%= cols[3] %><br />
         <% end if @item.workflow_approvers.present? %>
       </dd>
     </dl>

@@ -23,6 +23,20 @@ class Workflow::PagesController < ApplicationController
       { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
     end
 
+    def set_userstate(state)
+      ret = {approve_flg: 1, workflow_approvers: ""}
+      @item.workflow_approvers.split(/\r\n|\n/).each do |d|
+        col = d.split(",")
+        if col[1].to_i == @cur_user._id
+           col[2] = state
+           col[3] = params[:remand_comment].gsub(/\n|\r\n/, " ")
+        end
+        ret[:workflow_approvers] << col.join(",") + "\r\n"
+        ret[:approve_flg] = 0 if col[2] != "approve"
+      end
+      ret
+    end
+
   public
     def request_update
       raise "403" unless @item.allowed?(:edit, @cur_user)
@@ -46,19 +60,9 @@ class Workflow::PagesController < ApplicationController
 
     def approve_update
       raise "403" unless @item.allowed?(:approve, @cur_user)
-      sel = ""
-      stfg = 1
-      @item.workflow_approvers.split(/\r\n|\n/).each do |d|
-        col = d.split(",")
-        if col[1].to_i == @cur_user._id
-           col[2] = "approve"
-           col[3] = params[:remand_comment].gsub(/\n|\r\n/, " ")
-        end
-        sel << col.join(",") + "\r\n"
-        stfg = 0 if col[2] != "approve"
-      end
-      @item.workflow_approvers = sel
-      if stfg == 1
+      updinf = set_userstate("approve")
+      @item.workflow_approvers = updinf[:workflow_approvers]
+      if updinf[:approve_flg] == 1
         @item.workflow_state = "approve"
         if @item.release_date
           @item.state = "ready"
@@ -77,16 +81,8 @@ class Workflow::PagesController < ApplicationController
 
     def remand_update
       raise "403" unless @item.allowed?(:approve, @cur_user)
-      sel = ""
-      @item.workflow_approvers.split(/\r\n|\n/).each do |d|
-        col = d.split(",")
-        if col[1].to_i == @cur_user._id
-           col[2] = "remand"
-           col[3] = params[:remand_comment].gsub(/\n|\r\n/, " ")
-        end
-        sel << col.join(",") + "\r\n"
-      end
-      @item.workflow_approvers = sel
+      updinf = set_userstate("remand")
+      @item.workflow_approvers = updinf[:workflow_approvers]
       @item.workflow_state = "remand"
       if @item.update && @item.workflow_state == "remand"
         args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
