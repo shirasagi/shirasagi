@@ -30,7 +30,9 @@ SS::Application.routes.draw do
   node "opendata" do
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
-    get "dataset/:id.:format" => "public#show", cell: "nodes/dataset"
+    #get "dataset/:id.:format" => "public#show", cell: "nodes/dataset"
+    get "dataset/:dataset.html/resource/:id/" => "public#index", cell: "nodes/resource"
+    get "dataset/:dataset.html/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
 
     match "search_group/(index.:format)" => "public#index", cell: "nodes/search_group", via: [:get, :post]
 
@@ -65,8 +67,8 @@ SS::Application.routes.draw do
     get "idea" => "public#index", cell: "parts/idea"
   end
 
-#  page "opendata" do
-#    get "page/:filename.:format" => "public#index", cell: "pages/page"
-#  end
+  page "opendata" do
+    get "dataset/:filename.:format" => "public#index", cell: "pages/dataset"
+  end
 
 end

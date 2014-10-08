@@ -9,6 +9,13 @@ puts "# files"
 Dir.glob "files/**/*.*" do |file|
   puts name = file.sub(/^files\//, "")
   Fs.binwrite "#{@site.path}/#{name}", File.binread(file)
+
+  { scss: "css", coffee: "js" }.each_pair do |src, dst|
+    if file =~ /\.#{src}$/
+      site_file = "#{@site.path}/" + name.sub(/\.#{src}$/, ".#{dst}")
+      Fs.rm_rf site_file
+    end
+  end
 end
 
 ## -------------------------------------
@@ -46,7 +53,9 @@ def save_node(data)
   item.update data
 end
 
-save_node filename: "css", name: "CSS", route: "uploader/file", shortcut: "show"
+save_node filename: "css", name: "CSS", route: "uploader/file"
+save_node filename: "js", name: "CSS", route: "uploader/file"
+save_node filename: "img", name: "CSS", route: "uploader/file"
 
 save_node filename: "info", name: "お知らせ", route: "article/page", shortcut: "show",
   layout_id: layouts["portal-info"].id
@@ -54,7 +63,8 @@ save_node filename: "event", name: "イベント", route: "event/page", shortcut
   layout_id: layouts["portal-info"].id
 
 save_node filename: "dataset", name: "データセット", route: "opendata/dataset", shortcut: "show",
-  layout_id: layouts["dataset-top"].id
+  layout_id: layouts["dataset-top"].id,
+  dataset_layout_id: layouts["dataset-page"].id
 save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category", shortcut: "show",
   layout_id: layouts["dataset-bunya"].id
 save_node filename: "dataset/search_group", name: "グループ検索", route: "opendata/search_group", shortcut: "show",

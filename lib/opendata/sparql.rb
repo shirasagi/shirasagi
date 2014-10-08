@@ -1,4 +1,4 @@
-module Rdf::Sparql
+module Opendata::Sparql
   require "rdf/turtle"
   require "sparql/client"
 
@@ -87,6 +87,5 @@ module Rdf::Sparql
 
         return result
       end
-
   end
 end

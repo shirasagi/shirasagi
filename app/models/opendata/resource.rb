@@ -19,21 +19,29 @@ class Opendata::Resource
 
   before_validation :set_filename, if: ->{ in_file.present? }
   before_save :save_static_file, if: ->{ in_file.present? }
-  before_save :save_fuseki_rdf, if: ->{ in_file.present? && format.upcase == "TTL" }
+  before_save :save_fuseki_rdf, if: ->{ in_file.present? }
   before_destroy :remove_static_file
   before_destroy :remove_fuseki_rdf
 
   public
+    def file_dir
+      "#{Rails.root}/file/#{collection_name}"
+    end
+
     def path
-      dataset.path.sub(/\/[^\/]+$/, "/resource/#{id}/#{filename}")
+      "#{file_dir}/" + id.to_s.split(//).join("/") + "/_/#{filename}"
     end
 
     def url
-      dataset.url.sub(/\/[^\/]+$/, "/resource/#{id}/#{filename}")
+      "#{dataset.url}/resource/#{id}/#{filename}"
     end
 
     def full_url
-      dataset.full_url.sub(/\/[^\/]+$/, "/resource/#{id}/#{filename}")
+      "#{dataset.full_url}/resource/#{id}/#{filename}"
+    end
+
+    def graph_name
+      "#{dataset.full_url}/resource/#{id}/"
     end
 
     def content_type
@@ -64,11 +72,15 @@ class Opendata::Resource
     end
 
     def save_fuseki_rdf
-      Rdf::Sparql.save full_url, path
+      if format.upcase == "TTL"
+        Opendata::Sparql.save graph_name, path
+      else
+        remove_fuseki_rdf
+      end
     end
 
     def remove_fuseki_rdf
-      Rdf::Sparql.clear full_url
+      Opendata::Sparql.clear graph_name
     end
 
   class << self

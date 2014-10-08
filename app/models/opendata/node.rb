@@ -20,6 +20,7 @@ module Opendata::Node
 
   class Dataset
     include Cms::Node::Model
+    include Opendata::Addon::DatasetNode
 
     default_scope ->{ where(route: "opendata/dataset") }
   end

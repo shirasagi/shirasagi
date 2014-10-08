@@ -9,6 +9,7 @@ ja:
       opendata/category: 分野
       opendata/dataset_group: データグループ
       opendata/area: 地域
+      opendata/dataset_node: データセット
       opendata/dataset: データセット
       opendata/app: アプリ
       opendata/tag: タグ
@@ -55,6 +56,8 @@ ja:
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
+      opendata/addon/dataset_node:
+        dataset_layout_id: レイアウト
       opendata/addon/tag:
         tags: タグ
       opendata/dataset_group:
@@ -72,6 +75,7 @@ ja:
         category_ids: 分野
         area_ids: 地域
         resources: リソース
+        downloaded: 合計ダウンロード数
       opendata/resource:
         file_id: ファイル
         name: リソース名

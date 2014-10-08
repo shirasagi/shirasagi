@@ -6,7 +6,7 @@ module Opendata::Nodes::DatasetCategory
 
     public
       def pages
-        @item = Opendata::Node::Category.site(@cur_site).
+        @item ||= Opendata::Node::Category.site(@cur_site).
           where(filename: /\/#{params[:name]}$/).first
 
         raise "404" unless @item
@@ -17,6 +17,8 @@ module Opendata::Nodes::DatasetCategory
       def index
         @count = pages.size
         @search_url = search_datasets_path
+
+        controller.instance_variable_set :@cur_node, @item
 
         @items = pages.
           order_by(released: -1).

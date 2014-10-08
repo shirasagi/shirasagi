@@ -8,7 +8,7 @@ module Opendata::Nodes::Sparql
         return render if params[:query].blank?
 
         file_format = params[:format]
-        result = Rdf::Sparql.select(params[:query], file_format)
+        result = Opendata::Sparql.select(params[:query], file_format)
 
         if file_format == "HTML"
           html_page =  "<html>\n"
