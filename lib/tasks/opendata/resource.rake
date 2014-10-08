@@ -24,7 +24,7 @@ namespace :opendata do
         next unless resource.file
         puts "  #{resource.filename}"
         begin
-          Opendata::Sparql.save resource.graph_name, resource.path
+          resource.save_fuseki_rdf
         rescue => e
           puts "Error: #{e}"
         end

@@ -57,6 +57,18 @@ class Opendata::Resource
       true
     end
 
+    def save_fuseki_rdf
+      if format.upcase == "TTL"
+        Opendata::Sparql.save graph_name, path
+      else
+        remove_fuseki_rdf
+      end
+    end
+
+    def remove_fuseki_rdf
+      Opendata::Sparql.clear graph_name
+    end
+
   private
     def set_filename
       self.filename = in_file.original_filename
@@ -74,18 +86,6 @@ class Opendata::Resource
 
     def remove_static_file
       Fs.rm_rf path
-    end
-
-    def save_fuseki_rdf
-      if format.upcase == "TTL"
-        Opendata::Sparql.save graph_name, path
-      else
-        remove_fuseki_rdf
-      end
-    end
-
-    def remove_fuseki_rdf
-      Opendata::Sparql.clear graph_name
     end
 
   class << self
