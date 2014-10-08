@@ -8,6 +8,7 @@
 /config/environments
 /config/unicorn.rb
 /coverage
+/file
 /log
 /tmp
 /private
