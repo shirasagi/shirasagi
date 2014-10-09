@@ -505,10 +505,10 @@ img {
   }
   dt {
     float: left;
-    width: 20%;
+    width: 15%;
   }
   dd {
-    margin-left: 10%;
+    margin-left: 15%;
     h2 {
       margin: 0;
       padding: 0;
@@ -529,7 +529,7 @@ img {
       display: inline-block;
       width: 120px;
       margin-right: 10px;
-      padding: 6px 0;
+      padding: 4px 0;
       @include border-top-radius(5px);
       background: #ddcfcc;
       color: $text;
@@ -546,7 +546,7 @@ img {
   }
   nav {
     @include clear;
-    padding-top: 8px;
+    padding-top: 14px;
   }
   .rss {
     display: inline-block;
@@ -561,7 +561,7 @@ img {
 #portal-dataset {
   nav {
     @include clear;
-    padding-top: 8px;
+    padding-top: 14px;
   }
   .opendata {
     @include r-arrow;
@@ -572,7 +572,7 @@ img {
 
 // -----------------------------------------------------------------------------
 // article header
-.cms-tabs, #portal-dataset, .opendata-tabs, .article-pages {
+.cms-tabs, #portal-dataset, .opendata-tabs, .article-pages, .opendata-search_datasets {
   article header {
     padding: 8px 0 8px 16px;
     border-bottom: $border-hgry;
@@ -583,14 +583,38 @@ img {
   }
 }
 
+.opendata-search_datasets {
+  margin-bottom: $box-margin;
+}
+
 // -----------------------------------------------------------------------------
 // more
-.more {
-  float: right;
-  @include r-arrow;
-  @include border-radius(5px);
-  &:hover {
-    color: $white;
+.cms-tabs, #portal-dataset, .opendata-tabs, #dataset-news,
+#dataset-popular, #dataset-attention {
+  nav {
+    padding-top: 14px;
+  }
+  .more {
+    float: right;
+    @include r-arrow;
+    @include border-radius(5px);
+    &:hover {
+      color: $white;
+    }
+  }
+}
+
+.opendata-tabs .more, #dataset-news .more, #dataset-popular .more, #dataset-attention .more {
+  padding-right: 60px;
+}
+
+article.areas, article.tags, article.formats, article.licenses, #search_group,  {
+  nav {
+    padding-top: 14px;
+  }
+  .more {
+    padding: 1px 8px 2px 28px;
+    background: url(../img/r-arrow-or.png) no-repeat 16px 6px;
   }
 }
 
@@ -705,8 +729,9 @@ img {
   font-size: $px15;
 }
 
-.pagination {
-  margin-bottom: $box-margin;
+#search_group nav.pagination, #search_datasets nav.pagination {
+  margin-bottom: 18px;
+  padding-top: 0;
   a {
     @include inline-block;
     padding: 2px 6px;
@@ -728,10 +753,9 @@ form.opendata-search_groups-form {
   margin: $box-margin 0 ;
   padding: 10px;
   border: 2px solid $data-blue;
-  overflow: hidden;
-  dl.keyword, dl.category {
+  dl.keyword, dl.category, dl.group, dl.tag {
     @include inline-block;
-    margin-right: 70px;
+    margin:0 70px 15px 0;
   }
   .send {
     width: 40px;
@@ -751,7 +775,7 @@ form.opendata-search_groups-form {
       display: inline-block;
       width: 120px;
       margin-right: 10px;
-      padding: 6px 0;
+      padding: 4px 0;
       @include border-top-radius(5px);
       background: #ccd6d6;
       color: $text;
@@ -767,7 +791,7 @@ form.opendata-search_groups-form {
   }
   nav {
     @include clear;
-    padding-top: 8px;
+    padding-top: 14px;
   }
 }
 
@@ -801,7 +825,8 @@ article.areas h1, article.tags h1, article.formats h1, article.licenses h1, #od-
   font-size: $px15;
 }
 
-article.areas, article.tags, article.formats, article.licenses, .opendata-search_groups, .opendata-dataset_groups {
+article.areas, article.tags, article.formats, article.licenses, .opendata-search_groups,
+.opendata-dataset_groups {
   display: block;
   float: left;
   width: 803px;
@@ -822,7 +847,7 @@ article.areas, article.tags, article.formats, article.licenses, .opendata-search
 
 article.areas, article.tags, article.formats, article.licenses {
   width: 395px;
-  height: 275px;
+  height: 288px;
 }
 
 article.areas, article.formats {
@@ -830,12 +855,129 @@ article.areas, article.formats {
 }
 
 .opendata-dataset_groups {
+  float: none;
+  margin-bottom: 0;
   width: 249px;
+}
+
+.opendata-search_groups, .opendata-search_datasets {
+  float: none;
 }
 
 .s-dataset-top {
   .fb {
     clear: left;
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+//dataset-page
+#contents {
+  position: relative;
+  header h1.name {
+    padding: 0 0 5px 10px;
+    color: #005c7b;
+    font-size: $px28;
+    font-weight: bold;
+  }
+  .point, .text, .detail nav {
+    margin-bottom: $box-margin;
+  }
+  .point {
+    float: right;
+    .count {
+      margin: 40px 0 10px 0;
+      padding: 5px 80px;
+      border: 1px solid #ddcfcc;
+      text-align: center;
+      span.number {
+        font-size: $px28;
+      }
+      span.label {
+        display: block;
+        font-size: 50%;
+      }
+    }
+    .add {
+      display: inline-block;
+      padding: 2px 20px 1px 40px;
+      border: 1px solid #282828;
+      @include border-radius(5px);
+      background: #383838 url(../img/ic-like.png) no-repeat 10px 4px;
+      color: $white;
+      text-decoration: none;
+      &:hover {
+        background-color: #666666;
+      }
+    }
+  }
+  .text {
+    float: left;
+    width: 803px;
+    margin: 40px 0 10px 0;
+  }
+  .categories {
+    position: absolute;
+    top: 56px;
+    a {
+      display: inline-block;
+      margin-right: 15px;
+      padding: 1px 10px;
+      border: 1px solid #ddcfcc;
+      @include border-radius(5px);
+      background: #ffcf38;
+      color: $text;
+      text-decoration: none;
+    }
+  }
+  .detail {
+    margin-bottom: $box-margin;
+    clear: both;
+    nav {
+      border-bottom: 2px solid $data-blue;
+      a {
+        display: inline-block;
+        margin-right: 10px;
+        padding: 4px 10px;
+        @include border-top-radius(5px);
+        background: #ccd6d6;
+        color: $text;
+        text-decoration: none;
+        text-align: center;
+      }
+      .current {
+        background: $data-blue;
+      }
+      .info {
+        margin-left: 18px;
+      }
+      .app, .idea {
+        @include opacity(.5);
+      }
+    }
+    section.info {
+      overflow: hidden;
+      .download {
+        float: left;
+        width: 799px;
+        border: 2px solid #00b2c4;
+      }
+      dl.author {
+        float: right;
+        padding: 10px;
+        border: 2px solid #00b2c4;
+        dt, dd {
+          width: 215px;
+        }
+        dt {
+          padding: 5px;
+          background: #ffe7a5;
+        }
+        dd {
+          padding: 10px 0;
+        }
+      }
+    }
   }
 }
 
@@ -859,6 +1001,12 @@ article.areas, article.formats {
   }
 }
 
+///-----------------------------------------------------------------------------------------
+//s-mypage-login #contents .inner, s-mypage #contents .inner
+#s-mypage-login #contents .inner, #s-mypage #contents .inner {
+  margin-bottom: $box-margin;
+}
+
 //-----------------------------------------------------------------------------------------
 //mypage
 #mypage-tabs {
@@ -869,7 +1017,7 @@ article.areas, article.formats {
     display: inline-block;
     width: 150px;
     margin-right: 10px;
-    padding: 6px 0;
+    padding: 4px 0;
     @include border-top-radius(5px);
     background: #ddcfcc;
     color: $text;
@@ -891,16 +1039,17 @@ article.areas, article.formats {
 #s-mypage #contents .inner {
   nav {
     margin-bottom: $box-margin;
-    padding-top: 8px;
+    padding-top: 14px;
     a {
       @include r-arrow;
       @include border-radius(5px);
+      padding-right: 60px;
     }
   }
   dl.see {
     overflow: hidden;
     dt {
-      min-width: 150px;
+      min-width: 240px;
       min-height: 1em;
       float: left;
       clear: both;
@@ -911,13 +1060,14 @@ article.areas, article.formats {
     }
     dd {
       min-height: 1.9em;
-      margin-left: 180px;
+      margin-left: 270px;
       margin-bottom: $box-margin;
     }
   }
   #item-form {
     dl.see dd {
       input, textarea {
+        height: 1.8em;
         border: 1px solid #ddcfcc;;
       }
       input[type="text"], input[type="email"], input[type="password"], textarea {
@@ -957,7 +1107,7 @@ article.areas, article.formats {
 }
 
 #footer-navi {
-  padding: 10px 0;
+  padding: 5px 0;
   border-top: 1px solid $gray;
   background: #eeeeee;
   text-align: center;
