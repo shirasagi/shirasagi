@@ -2,10 +2,8 @@
 class Facility::Map
   include Cms::Page::Model
   include Cms::Addon::Meta
+  include Cms::Addon::Release
   include Map::Addon::Page
-
-  #set_permission_name "facility_pages"
-  set_permission_name "article_pages"
 
   default_scope ->{ where(route: "facility/map") }
 

@@ -75,6 +75,7 @@ td {
   font-size: 100%;
 }
 
+
 // -------------------------------------------------------------------------------------------------
 // form
 
@@ -141,22 +142,6 @@ form .ace_editor {
 }
 textarea.ace_text-input {
   padding: 0px;
-}
-input.loc {
-  width: 20em;
-}
-input.query {
-  width: 20em;
-}
-input.zoom {
-  width: 3em;
-}
-input.marker-name {
-  width: 20em;
-}
-textarea.marker-text {
-  width: 40em;
-  height: 5em;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -271,29 +256,6 @@ textarea.marker-text {
     border: 1px solid #e00;
   }
 }
-.mod-map {
-  overflow: hidden;
-  position: relative;
-  zoom:1;
-}
-#map_container {
-  float: left
-}
-#map-canvas {
-  width: 600px;
-  height: 400px;
-//  float: left
-}
-#map-markers {
-  width: 600px;
-  float: left;
-}
-.marker {
-  margin-bottom: 25px;
-  p:nth-child(1) {
-    margin-left: 12px;
-  }
-}
 
 // -------------------------------------------------------------------------------------------------
 // common
@@ -341,20 +303,12 @@ dl.see {
     color: $black;
     font-weight: bold;
   }
-  > dt p {
-    margin-bottom: 20px;
-    color: $black;
-    font-weight: bold;
-  }
   > dd {
     min-height: 1.41em;
     margin: 0 0 0 140px;
     //border-top: 1px solid #eee;
     @include clear;
     margin: 0px 0px 0px 140px;
-  }
-  > dd p {
-    margin-bottom: 10px;
   }
   > dt ~ dt { margin-top: 20px; }
   > dd ~ dd { margin-top: 20px; }
@@ -370,8 +324,6 @@ dl.see {
     padding-top: 0px;
     border-top: 0px;
   }
-
-
 }
 footer.send {
   padding: 20px 0px;
@@ -483,6 +435,117 @@ a.external {
 input.date, input.datetime {
   padding-left: 20px;
   background: $white image-url("ss/calendar.png") no-repeat 5px center;
+}
+
+// -------------------------------------------------------------------------------------------------
+// map
+
+.mod-map {
+  overflow: hidden;
+  position: relative;
+  zoom:1;
+}
+#map-container {
+  width: 610px;
+  float: left;
+}
+#map-markers {
+  width: 610px;
+  float: left;
+}
+#map-canvas {
+  width: 600px;
+  height: 400px;
+
+  img {
+    max-width: none;
+  }
+}
+.map-setting {
+  dt {
+    font-weight: bold;
+  }
+  dd p {
+    margin-top: 5px;
+  }
+}
+.marker-setting {
+  dt {
+    font-weight: bold;
+  }
+  dd p {
+    margin-top: 5px;
+  }
+}
+dd.map-markers {
+  margin-top: 15px;
+}
+.marker {
+  margin-bottom: 25px;
+  span.text {
+    padding-right: 12px;
+    position: relative;
+    bottom: 23px;
+  }
+}
+input.loc {
+  width: 20em;
+}
+input.query {
+  width: 20em;
+}
+input.zoom {
+  width: 3em;
+}
+input.marker-name {
+  width: 20em;
+}
+textarea.marker-text {
+  width: 40em;
+  height: 5em;
+}
+
+// -------------------------------------------------------------------------------------------------
+// facility
+
+.mod-facility-additional-info {
+  dd.value {
+    font-weight: bold;
+    padding-left: 40px;
+  }
+  textarea {
+    width: 80%;
+  }
+  .clear {
+    position: relative;
+    bottom: 60px;
+  }
+}
+#facility-info {
+  dl.body {
+    float: left;
+    width: 540px;
+    margin-bottom: 10px;
+  }
+  .clear {
+    clear:both;
+  }
+  .image {
+    margin-top: 15px;
+  }
+  .images .image {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+  }
+  #map-canvas {
+    margin-top: 20px;
+    float: left;
+  }
+  .map-pages {
+    margin-top: 20px;
+    margin-right: 10px;
+  }
 }
 
 // -----------------------------------------------------------------------------

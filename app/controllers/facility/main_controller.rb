@@ -2,10 +2,20 @@
 class Facility::MainController < ApplicationController
   include Cms::BaseFilter
 
-  prepend_before_action ->{ redirect_to facility_facilities_path }, only: :index
-
   public
     def index
-      # redirect
+      if @cur_node.route =~ /\/category/
+        redirect_to facility_categories_path
+        return
+      elsif @cur_node.route =~ /\/location/
+        redirect_to facility_locations_path
+        return
+      elsif @cur_node.route =~ /\/use/
+        redirect_to facility_uses_path
+        return
+      else
+        redirect_to facility_pages_path
+        return
+      end
     end
 end

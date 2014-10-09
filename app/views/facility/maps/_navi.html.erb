@@ -1,0 +1,13 @@
+<%= node_navi do %>
+
+<nav class="sub-menu">
+  <header><h1><%= t "facility.page" %></h1></header>
+  <div>
+    <%= link_to :"facility.image", facility_images_path, class: "icon-page" %>
+  </div>
+  <div>
+    <%= link_to :"facility.map", facility_maps_path, class: "icon-page" %>
+  </div>
+</nav>
+
+<% end %>

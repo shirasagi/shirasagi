@@ -1,0 +1,122 @@
+<div class="addon-views">
+  <div id="facility-info" class="addon-view">
+    <header>
+      <h2><%= t("modules.addons.facility/body") %></h2>
+    </header>
+    <dl class="see body">
+      <dt><%= @item.class.t :name %></dt>
+      <dd><%= @item.name %></dd>
+
+      <dt><%= @item.class.t :kana %></dt>
+      <dd><%= @item.kana %></dd>
+
+      <dt><%= @item.class.t :address %></dt>
+      <dd><%= @item.address %></dd>
+
+      <dt><%= @item.class.t :tel %></dt>
+      <dd><%= @item.tel %></dd>
+
+      <dt><%= @item.class.t :fax %></dt>
+      <dd><%= @item.fax %></dd>
+
+      <dt><%= @item.class.t :homepage %></dt>
+      <dd><%= link_to(@item.homepage, @item.homepage, target: "_blank") if @item.homepage.present? %></dd>
+
+      <% @item.additional_info.each do |info| %>
+        <dt><%=br info[:field] %></dt>
+        <dd><%=br info[:value] %></dd>
+      <% end %>
+
+      <dt><%= t("modules.addons.facility/category/category") %></dt>
+      <dd><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
+
+      <dt><%= t("modules.addons.facility/use/use") %></dt>
+      <dd><%= @item.send(:uses).pluck(:name).join(", ") %></dd>
+
+      <dt><%= t("modules.addons.facility/location/location") %></dt>
+      <dd><%= @item.send(:locations).pluck(:name).join(", ") %></dd>
+    </dl>
+
+    <div class="summary image">
+      <% if @summary_image.present? %>
+        <p>
+          <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to edit_facility_image_path(cid: @item.id, id: @summary_image.id) do %>
+              <% if @summary_image.image_alt.present? %>
+                <%= image_tag @summary_image.image.thumb_url + "?" + { width: 256, height: 192 }.to_query, alt: @summary_image.image_alt %>
+              <% else %>
+                <%= image_tag @summary_image.image.thumb_url + "?" + { width: 256, height: 192 }.to_query %>
+              <% end %>
+            <% end %>
+          <% else %>
+            <%= link_to facility_image_path(cid: @item.id, id: @summary_image.id) do %>
+              <% if @summary_image.image_alt.present? %>
+                <%= image_tag @summary_image.image.thumb_url + "?" + { width: 256, height: 192 }.to_query, alt: @summary_image.image_alt %>
+              <% else %>
+                <%= image_tag @summary_image.image.thumb_url + "?" + { width: 256, height: 192 }.to_query %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </p>
+        <% if @summary_image.image_comment.present? %>
+          <p><%= @summary_image.image_comment %></p>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="clear"></div>
+    <% if @images.present? %>
+      <header>
+        <h2><%= t("facility.image") %></h2>
+      </header>
+      <div class="images">
+        <% @images.each do |img| %>
+          <div class="image">
+            <p>
+              <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+                <%= link_to edit_facility_image_path(cid: @item.id, id: img.id) do %>
+                  <% if img.image_alt.present? %>
+                    <%= image_tag img.image.thumb_url + "?" + { width: 256, height: 192 }.to_query, alt: img.image_alt %>
+                  <% else %>
+                    <%= image_tag img.image.thumb_url + "?" + { width: 256, height: 192 }.to_query %>
+                  <% end %>
+                <% end %>
+              <% else %>
+                <%= link_to facility_image_path(cid: @item.id, id: img.id) do %>
+                  <% if img.image_alt.present? %>
+                    <%= image_tag img.image.thumb_url + "?" + { width: 256, height: 192 }.to_query, alt: img.image_alt %>
+                  <% else %>
+                    <%= image_tag img.image.thumb_url + "?" + { width: 256, height: 192 }.to_query %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </p>
+            <% if img.image_comment.present? %>
+              <p><%= img.image_comment %></p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @merged_map.present? %>
+      <% @cur_page = @merged_map %>
+      <%= render file: "app/cells/map/addons/page/view/index" %>
+    <% end %>
+
+    <% if @maps.present? %>
+      <div class="map-pages">
+        <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <% @maps.each do |map| %>
+            <p><%= link_to map.name, edit_facility_map_path(cid: @item.id, id: map.id), class: "icon-page" %></p>
+          <% end %>
+        <% else %>
+          <% @maps.each do |map| %>
+            <p><%= link_to map.name, facility_map_path(cid: @item.id, id: map.id), class: "icon-page" %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="clear"></div>
+  </div>
+</div>

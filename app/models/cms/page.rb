@@ -12,6 +12,7 @@ class Cms::Page
   include Cms::Addon::RelatedPage
   include Category::Addon::Category
   include Event::Addon::Date
+  include Map::Addon::Page
   include Workflow::Addon::Approver
 
   index({ site_id: 1, filename: 1 }, { unique: true })

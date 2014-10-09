@@ -9,20 +9,29 @@ SS::Application.routes.draw do
 
   content "facility" do
     get "/" => "main#index", as: :main
-    resources :facilities, concerns: :deletion
+    resources :pages, concerns: :deletion
+    resources :uses, concerns: :deletion
+    resources :locations, concerns: :deletion
+    resources :categories, concerns: :deletion
+
     resources :images, concerns: :deletion
     resources :maps, concerns: :deletion
   end
 
   node "facility" do
-    get "facility/(index.:format)" => "public#index", cell: "nodes/facility"
-    get "facility/rss.xml" => "public#rss", cell: "nodes/facility", format: "xml"
-
+    get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
-    get "node/rss.xml" => "public#rss", cell: "nodes/node", format: "xml"
+    get "category/(index.:format)" => "public#index", cell: "nodes/category"
+    get "use/(index.:format)" => "public#index", cell: "nodes/use"
+    get "location/(index.:format)" => "public#index", cell: "nodes/location"
 
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
-    get "search/(search.:format)" => "public#search", cell: "nodes/search"
+    get "search/(map.:format)" => "public#map", cell: "nodes/search"
+    get "search/(result.:format)" => "public#result", cell: "nodes/search"
+  end
+
+  page "facility" do
+    get "image/:filename.:format" => "public#index", cell: "pages/image"
   end
 
   namespace "facility", path: ".:site/facility" do
@@ -33,5 +42,4 @@ SS::Application.routes.draw do
     get "/search_uses" => "search_uses#index"
     post "/search_uses" => "search_uses#search"
   end
-
 end

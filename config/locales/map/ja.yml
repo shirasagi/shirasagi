@@ -12,7 +12,7 @@ ja:
       search: 地図検索
       set_loc: 設定
       set_center: 移動
-      set_marker: クリックした座標を設定する
+      set_marker: マーカーの位置を設定
       add_marker: マーカーを追加
       clear_marker: 削除
 
@@ -30,6 +30,9 @@ ja:
       cms/page/model:
         map_loc: 緯度,経度
         map_zoom: 縮尺
+        marker_name: マーカー名
+        marker_text: 説明
+        marker_link: リンク
 
   cms_role:
     read_other_map_pages: 地図ページ閲覧（全て）

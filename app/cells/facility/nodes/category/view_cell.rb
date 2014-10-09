@@ -1,33 +1,18 @@
 # coding: utf-8
-module Facility::Nodes::Cateogry
+module Facility::Nodes::Category
   class ViewCell < Cell::Rails
     include Cms::NodeFilter::ViewCell
     helper Cms::ListHelper
 
-=begin
     public
-      def pages
-        Map::Page.site(@cur_site).public.
-          where(@cur_node.condition_hash)
-      end
-
       def index
-        @items = pages.
+        @items = Facility::Node::Page.site(@cur_site).public.
+          in(category_ids: @cur_node.id).
           order_by(@cur_node.sort_hash).
           page(params[:page]).
           per(@cur_node.limit)
 
         @items.empty? ? "" : render
       end
-
-      def rss
-        @items = pages.
-          order_by(released: -1).
-          limit(@cur_node.limit)
-
-        render_rss @cur_node, @items
-      end
-  end
-=end
   end
 end

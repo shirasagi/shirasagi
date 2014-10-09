@@ -11,7 +11,7 @@ module Map::Addon
       field :map_zoom, type: Integer
       field :map_points, type: Map::Extensions::MapPoints, default: []
 
-      permit_params :map_loc, :map_zoom, map_points: [ :name, :loc, :text ]
+      permit_params :map_loc, :map_zoom, map_points: [ :name, :loc, :text, :link, :pointer_image ]
     end
   end
 

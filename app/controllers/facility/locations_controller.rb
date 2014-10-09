@@ -1,9 +1,9 @@
 # coding: utf-8
-class Facility::FacilitiesController < ApplicationController
+class Facility::LocationsController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
 
-  model Facility::Node::Facility
+  model Facility::Node::Location
 
   prepend_view_path "app/views/cms/node/nodes"
   navi_view "facility/main/navi"
@@ -19,7 +19,7 @@ class Facility::FacilitiesController < ApplicationController
     end
 
     def pre_params
-      { route: "facility/facility" }
+      { route: "facility/location" }
     end
 
   public

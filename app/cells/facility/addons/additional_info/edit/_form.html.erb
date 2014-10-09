@@ -1,69 +1,60 @@
 <%= coffee do %>
 $ ->
-  $(".mod-additional-info .add-info").on 'click', ->
-    if $(".mod-additional-info dt").length < 10
-      dd = $(".mod-additional-info dd:first").clone(true)
-      dt = $(".mod-additional-info dt:first").clone(true)
+  $(".mod-facility-additional-info .add-info").on 'click', ->
+    if $(".mod-facility-additional-info").length < 10
+      dd = $(".mod-facility-additional-info dd:last").clone(true)
+      dt = $(".mod-facility-additional-info dt:last").clone(true)
       dd.find("input").val("")
       dd.find("textarea").val("")
-      $(".mod-additional-info dt:last").before(dt)
-      $(".mod-additional-info dt:last").before(dd)
+      dt.find("input").val("")
+      dt.find("textarea").val("")
+      $(".mod-facility-additional-info dd:last").after(dt)
+      $(".mod-facility-additional-info dt:last").after(dd)
     return false
 
-  $(".mod-additional-info .clear").on 'click', ->
+  $(".mod-facility-additional-info .clear").on 'click', ->
     dd = $(this).closest("dd")
     dt = dd.prev("dt")
 
-    if $(".mod-additional-info dt").length > 2
-      if dd.find("input").val() != "" || dd.find("textarea").val() != ""
+    if $(".mod-facility-additional-info dt").length > 2
+      if dt.find("input").val() != "" || dd.find("textarea").val() != ""
         if confirm("項目を削除してよろしいですか？")
-          dd.remove()
           dt.remove()
+          dd.remove()
       else
-        dd.remove()
         dt.remove()
+        dd.remove()
     else
-      if dd.find("input").val() != "" || dd.find("textarea").val() != ""
+      if dt.find("input").val() != "" || dd.find("textarea").val() != ""
         if confirm("項目を削除してよろしいですか？")
-          dd.find("input").val("")
+          dt.find("input").val("")
           dd.find("textarea").val("")
       else
-        dd.find("input").val("")
+        dt.find("input").val("")
         dd.find("textarea").val("")
     return false
 
 <% end %>
 
-<dl class="see mod-additional-info">
+<dl class="see mod-facility-additional-info">
+  <dt class="field"><%= @item.t :field %></dt>
+  <dd class="value"><%= @item.t :value %></dd>
+
   <% if @item.additional_info.blank? %>
-    <dt>
-      <p><%= "項目名" %></p>
-      <p><%= "内容" %></p>
-    </dt>
+    <dt><%= text_field_tag "item[additional_info][][field]" %></dt>
     <dd>
-      <p>
-        <%= text_field_tag "item[additional_info][][field]" %>
-        <%= button_tag t("facility.button.del_info"), { type: :button, class: "clear" } %>
-      </p>
-      <p><%= text_area_tag "item[additional_info][][value]" %></p>
+      <%= text_area_tag "item[additional_info][][value]" %>
+      <%= button_tag t("facility.button.del_info"), { type: :button, class: "clear" } %>
     </dd>
   <% end %>
 
   <% @item.additional_info.each do |info| %>
-    <dt>
-      <p><%= "項目名" %></p>
-      <p><%= "内容" %></p>
-    </dt>
+    <dt><%= text_field_tag "item[additional_info][][field]", info[:field] %></dt>
     <dd>
-      <p>
-        <%= text_field_tag "item[additional_info][][field]", info[:field] %>
-        <%= button_tag t("facility.button.del_info"), { type: :button, class: "clear" } %>
-      </p>
-      <p><%= text_area_tag "item[additional_info][][value]", info[:value] %></p>
+      <%= text_area_tag "item[additional_info][][value]", info[:value] %>
+      <%= button_tag t("facility.button.del_info"), { type: :button, class: "clear" } %>
     </dd>
   <% end %>
 
-  <dt></dt>
-  <dd><%= link_to t("facility.button.add_info"), "#", class: "add-info" %></dd>
+  <%= button_tag t("facility.button.add_info"), { type: :button, class: "add-info" }  %>
 </dl>
-

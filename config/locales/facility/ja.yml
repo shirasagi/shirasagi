@@ -1,6 +1,6 @@
 ja:
   facility:
-    facility: 施設
+    page: 施設
     category:
       setting: 種類設定
       index: 施設の種類を設定する
@@ -18,18 +18,25 @@ ja:
       name: 用途
 
     search: 施設検索
-    image: 施設画像
+    image: 施設写真
     map: 施設地図
+    edit_page: 施設情報を編集する
+    empty: 上記の条件では施設が見つかりませんでした。
     button:
       add_info: 項目を追加する
       del_info: 削除
+    submit:
+      search: この条件で検索する
+      reset: 検索条件をリセットする
 
   modules:
     facility: 施設
     addons:
       facility/body: 施設情報
       facility/additional_info: 追加情報
-      facility/image: 施設画像
+      facility/image: 施設写真
+      facility/image_info: 写真情報
+      facility/pointer_image: ポインタ画像
       facility/location/location: 施設の地域
       facility/location/setting: 施設の地域
       facility/use/use: 施設の用途
@@ -39,7 +46,7 @@ ja:
 
   cms:
     nodes:
-      facility/facility: 施設
+      facility/page: 施設情報
       facility/node: 施設リスト
       facility/category: 施設の種類
       facility/use: 施設の用途
@@ -48,7 +55,8 @@ ja:
 
   mongoid:
     attributes:
-      facility/node/facility:
+      facility/node/page:
+        name: 施設名
         address: 住所
         tel: 電話番号
         fax: FAX
@@ -58,3 +66,8 @@ ja:
         kana: 施設名ふりがな
         principal: 園長名
         extended_day_care: 延長保育
+        field: 項目名
+        value: 内容
+      facility/image:
+        image_alt: ALT属性
+        image_comment: 説明文

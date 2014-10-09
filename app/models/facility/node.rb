@@ -16,7 +16,7 @@ module Facility::Node
     default_scope ->{ where(route: "facility/node") }
   end
 
-  class Facility
+  class Page
     include Cms::Node::Model
     include ::Facility::Addon::Body
     include ::Facility::Addon::AdditionalInfo
@@ -24,11 +24,12 @@ module Facility::Node
     include ::Facility::Addon::Use::Use
     include ::Facility::Addon::Location::Location
 
-    default_scope ->{ where(route: "facility/facility") }
+    default_scope ->{ where(route: "facility/page") }
   end
 
   class Search
     include Cms::Node::Model
+    include Cms::Addon::NodeList
     include ::Facility::Addon::Category::Setting
     include ::Facility::Addon::Use::Setting
     include ::Facility::Addon::Location::Setting
@@ -38,18 +39,22 @@ module Facility::Node
 
   class Category
     include Cms::Node::Model
+    include Cms::Addon::NodeList
+    include ::Facility::Addon::PointerImage
 
     default_scope ->{ where(route: "facility/category") }
   end
 
   class Use
     include Cms::Node::Model
+    include Cms::Addon::NodeList
 
     default_scope ->{ where(route: "facility/use") }
   end
 
   class Location
     include Cms::Node::Model
+    include Cms::Addon::NodeList
 
     default_scope ->{ where(route: "facility/location") }
   end

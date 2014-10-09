@@ -29,4 +29,45 @@ module Facility::Addon
 
     set_order 210
   end
+
+  module Image
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 200
+
+    included do
+      belongs_to :image, class_name: "SS::File"
+
+      permit_params :image_id
+    end
+  end
+
+  module ImageInfo
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 210
+
+    included do
+      field :image_alt, type: String
+      field :image_comment, type: String
+
+      permit_params :image_alt, :image_comment
+    end
+  end
+
+  module PointerImage
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 200
+
+    included do
+      belongs_to :image, class_name: "SS::File"
+
+      permit_params :image_id
+    end
+  end
+
 end

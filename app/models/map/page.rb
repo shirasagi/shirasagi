@@ -11,7 +11,6 @@ class Map::Page
   include Workflow::Addon::Approver
   include Map::Addon::Page
 
-  #set_permission_name "map_pages"
   set_permission_name "article_pages"
 
   default_scope ->{ where(route: "map/page") }

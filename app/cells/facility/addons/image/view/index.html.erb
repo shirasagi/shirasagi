@@ -1,10 +1,14 @@
-<h2><%= t("facility.image") %></h2>
-<div class="images">
-  <% @cur_page.files.each do |file| %>
-    <% if file.image? %>
-      <%= link_to file.url do %>
-        <%= image_tag file.thumb_url %>
+<div class="image">
+  <p>
+    <% if @cur_page.image.present? %>
+      <% if @cur_page.image_alt.present? %>
+        <%= image_tag @cur_page.image.url, alt: @cur_page.image_alt %>
+      <% else %>
+        <%= image_tag @cur_page.image.url %>
       <% end %>
     <% end %>
+  </p>
+  <% if @cur_page.image_comment.present? %>
+    <p><%= @cur_page.image_comment %></p>
   <% end %>
 </div>

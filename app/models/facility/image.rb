@@ -2,10 +2,9 @@
 class Facility::Image
   include Cms::Page::Model
   include Cms::Addon::Meta
+  include Cms::Addon::Release
   include Facility::Addon::Image
-
-  #set_permission_name "facility_pages"
-  set_permission_name "article_pages"
+  include Facility::Addon::ImageInfo
 
   default_scope ->{ where(route: "facility/image") }
 

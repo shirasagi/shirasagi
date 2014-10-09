@@ -6,7 +6,7 @@ module Facility::Nodes::Node
 
     public
       def index
-        @items = Facility::Node::Base.site(@cur_site).public.
+        @items = Facility::Node::Page.site(@cur_site).public.
           where(@cur_node.condition_hash).
           order_by(@cur_node.sort_hash).
           page(params[:page]).
