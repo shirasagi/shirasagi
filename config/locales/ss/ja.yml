@@ -42,7 +42,7 @@ ja:
       change: 変更する
       more: もっと見る
       delete_all: すべて削除する
-    list_state:
+    state:
       public: 公開中
       closed: 非公開
       ready: 公開待ち
@@ -72,7 +72,7 @@ ja:
         limit: 表示件数
         layout_id: レイアウト
         shortcut: ショートカット
-        list_state: 状態
+        view_state: 状態
       ss/site:
         name: サイト名
         host: ホスト名
