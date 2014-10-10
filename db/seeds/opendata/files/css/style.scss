@@ -78,7 +78,7 @@ img {
           @include border-top-radius(5px);
           a {
             display: block;
-            height: 25px;
+            min-height: 25px;
             padding: 9px 0 7px 33px;
             color: $text;
             text-decoration: none;
@@ -96,10 +96,10 @@ img {
     .login {
       float: right;
       padding: 13px 0;
-      background: url(../img/ic-login.png) no-repeat left 13px;
+      background: url(../img/ic-login.png) no-repeat left center;
       a {
         display: inline-block;
-        height: 24px;
+        min-height: 24px;
         padding-left: 20px;
         color: $white;
       }
@@ -158,7 +158,6 @@ img {
   padding: 28px 0 14px 0;
   li {
     width: 249px;
-    height: 80px;
     margin-bottom: 14px;
   }
   li.gnav01 {
@@ -185,7 +184,7 @@ img {
       font-weight: bold;
     }
     #contents-data, #contents-app, #contents-idea {
-      height: 24px;
+      padding: 3px 0;
       color: $white;
       text-align: center;
     }
@@ -368,6 +367,7 @@ img {
 
 
 #contents article.body {
+  margin-bottom: $box-margin;
   h1 {
     margin: 12px 0 6px;
     padding: 3px 10px 0;
@@ -468,13 +468,13 @@ img {
     .next {
       @include inline-block;
       padding-right: 13px;
-      background: url(../img/r-arrow-bk.png) no-repeat right 5px;
+      background: url(../img/r-arrow-bk.png) no-repeat right center;
     }
   }
 }
 #event-list {
   clear: both;
-  margin-bottom: 2em;
+  margin-bottom: $box-margin;
   border-top: 1px solid #ccc;
   dl {
     margin: 0;
@@ -583,7 +583,7 @@ img {
   }
 }
 
-.opendata-search_datasets {
+.opendata-search_datasets, .article-pages {
   margin-bottom: $box-margin;
 }
 
@@ -598,9 +598,6 @@ img {
     float: right;
     @include r-arrow;
     @include border-radius(5px);
-    &:hover {
-      color: $white;
-    }
   }
 }
 
@@ -614,7 +611,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
   }
   .more {
     padding: 1px 8px 2px 28px;
-    background: url(../img/r-arrow-or.png) no-repeat 16px 6px;
+    background: url(../img/r-arrow-or.png) no-repeat 16px center;
   }
 }
 
@@ -639,7 +636,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
         margin-bottom: 15px;
         a.group-search {
           margin-right: 30px;
-          padding: 3px 10px 3px 30px;
+          padding: 4px 10px 3px 32px;
           @include border-radius(5px);
           background: url(../img/ic-groupsearch.png) no-repeat 5px center;
           @include fill-gray;
@@ -753,14 +750,28 @@ form.opendata-search_groups-form {
   margin: $box-margin 0 ;
   padding: 10px;
   border: 2px solid $data-blue;
-  dl.keyword, dl.category, dl.group, dl.tag {
+  overflow: hidden;
+  dl {
     @include inline-block;
     margin:0 70px 15px 0;
+    dd input, dd select {
+      width: 160px;
+      height: 1.8em;
+    }
   }
   .send {
+    float: right;
     width: 40px;
-    margin-left: auto;
+    margin-top: 3em;
+    margin-right: 2em;
     padding: 10px;
+    input {
+      @include r-arrow;
+      @include border-radius(5px);
+      padding: 4px 8px 4px 30px;
+      font-family: $font-base;
+      font-size: $px14;
+    }
   }
 }
 
@@ -847,7 +858,7 @@ article.areas, article.tags, article.formats, article.licenses, .opendata-search
 
 article.areas, article.tags, article.formats, article.licenses {
   width: 395px;
-  height: 288px;
+  min-height: 288px;
 }
 
 article.areas, article.formats {
@@ -900,10 +911,10 @@ article.areas, article.formats {
     }
     .add {
       display: inline-block;
-      padding: 2px 20px 1px 40px;
+      padding: 2px 20px 2px 40px;
       border: 1px solid #282828;
       @include border-radius(5px);
-      background: #383838 url(../img/ic-like.png) no-repeat 10px 4px;
+      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
       color: $white;
       text-decoration: none;
       &:hover {
@@ -1086,7 +1097,8 @@ article.areas, article.formats {
         @include grd-blue;
         color: $white;
         text-align: center;
-        font-family: Meiryo;
+        font-family: $font-base;
+        font-size: $px14;
         &:hover {
           background: $blue;
         }

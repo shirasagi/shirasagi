@@ -68,9 +68,9 @@ $box-margin: 24px;
 
 @mixin r-arrow {
   display: inline-block;
-  padding: 1px 8px 2px 30px;
+  padding: 2px 8px 2px 30px;
   border: 1px solid #282828;
-  background: #383838 url(../img/r-arrow.png) no-repeat 14px 7px;
+  background: #383838 url(../img/r-arrow.png) no-repeat 14px center;
   color: $white;
   text-decoration: none;
   &:hover {
@@ -81,7 +81,7 @@ $box-margin: 24px;
 @mixin l-arrow-bk {
   display: inline-block;
   padding-left: 15px;
-  background: url(../img/l-arrow-bk.png) no-repeat 2px 5px;
+  background: url(../img/l-arrow-bk.png) no-repeat 2px center;
 }
 
 @mixin fill-gray {
