@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::TaskFilter
   extend ActiveSupport::Concern
 

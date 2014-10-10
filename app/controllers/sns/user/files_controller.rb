@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sns::User::FilesController < ApplicationController
   include Sns::UserFilter
   include Sns::CrudFilter

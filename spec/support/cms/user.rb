@@ -1,4 +1,3 @@
-# coding: utf-8
 def cms_user
   return @cms_user if @cms_user ||= Cms::User.where(email: build(:cms_user).email).first
   @cms_user = create(:cms_user, group_ids: [cms_group.id], cms_role_ids: [cms_role.id])

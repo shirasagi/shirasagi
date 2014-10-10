@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::Task::Node::NodesController < ApplicationController
   include Cms::ReleaseFilter::Page
 

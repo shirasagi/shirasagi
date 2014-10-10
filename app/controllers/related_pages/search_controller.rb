@@ -1,4 +1,3 @@
-# coding: utf-8
 class RelatedPages::SearchController < ApplicationController
   include Cms::BaseFilter
 

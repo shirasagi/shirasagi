@@ -1,4 +1,3 @@
-# coding: utf-8
 module Faq::Addons::Search
   class EditCell < Cell::Rails
     include SS::AddonFilter::EditCell

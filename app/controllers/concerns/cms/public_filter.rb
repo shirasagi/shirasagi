@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::PublicFilter
   extend ActiveSupport::Concern
   include Cms::ReleaseFilter::Layout

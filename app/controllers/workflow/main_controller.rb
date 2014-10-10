@@ -1,4 +1,3 @@
-# coding: utf-8
 class Workflow::MainController < ApplicationController
   include Cms::BaseFilter
 

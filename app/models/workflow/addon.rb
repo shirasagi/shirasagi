@@ -1,4 +1,3 @@
-# coding: utf-8
 module Workflow::Addon
   module Approver
     extend ActiveSupport::Concern

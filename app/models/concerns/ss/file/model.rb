@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::File::Model
   extend ActiveSupport::Concern
   extend SS::Translation

@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::SitesController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter

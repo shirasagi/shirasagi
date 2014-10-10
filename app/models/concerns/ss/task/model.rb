@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::Task::Model
   extend ActiveSupport::Concern
   extend SS::Translation

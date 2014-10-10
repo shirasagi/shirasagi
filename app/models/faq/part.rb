@@ -1,4 +1,3 @@
-# coding: utf-8
 module Faq::Part
   class Search
     include Cms::Part::Model

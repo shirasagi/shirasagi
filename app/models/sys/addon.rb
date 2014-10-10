@@ -1,4 +1,3 @@
-# coding: utf-8
 module Sys::Addon
   module Role
     extend ActiveSupport::Concern

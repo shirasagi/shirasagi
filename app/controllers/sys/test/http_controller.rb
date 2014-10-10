@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::Test::HttpController < ApplicationController
   include Sys::BaseFilter
 

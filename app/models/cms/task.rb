@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::Task
   include SS::Task::Model
   include SS::Reference::Site

@@ -1,4 +1,3 @@
-# coding: utf-8
 namespace :ss do
   task :create_user => :environment do
     cond = { name: "システム管理", permissions: Sys::Role.permission_names }

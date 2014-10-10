@@ -1,4 +1,3 @@
-# coding: utf-8
 class Mobile::Convertor < String
   @@tags = {
     remove: %w(

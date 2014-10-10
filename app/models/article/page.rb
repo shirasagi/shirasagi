@@ -1,4 +1,3 @@
-# coding: utf-8
 class Article::Page
   include Cms::Page::Model
   include Cms::Addon::Meta

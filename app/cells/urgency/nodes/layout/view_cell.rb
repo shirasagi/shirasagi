@@ -1,4 +1,3 @@
-# coding: utf-8
 module  Urgency::Nodes::Layout
   class ViewCell < Cell::Rails
     include Cells::Rails::ActionController

@@ -1,4 +1,3 @@
-# coding: utf-8
 module Sys::BaseFilter
   extend ActiveSupport::Concern
   include SS::BaseFilter

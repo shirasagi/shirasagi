@@ -1,4 +1,3 @@
-# coding: utf-8
 module Urgency::Addon
   module Layout
     extend ActiveSupport::Concern

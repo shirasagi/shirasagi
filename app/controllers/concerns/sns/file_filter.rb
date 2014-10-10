@@ -1,4 +1,3 @@
-# coding: utf-8
 module Sns::FileFilter
   extend ActiveSupport::Concern
 

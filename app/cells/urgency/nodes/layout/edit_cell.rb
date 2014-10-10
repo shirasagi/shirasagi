@@ -1,4 +1,3 @@
-# coding: utf-8
 module  Urgency::Nodes::Layout
   class EditCell < Cell::Rails
     include Cms::NodeFilter::EditCell

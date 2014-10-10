@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::Extensions::Words < Array
   def to_s
     join(", ")

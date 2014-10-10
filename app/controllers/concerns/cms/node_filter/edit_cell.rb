@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::NodeFilter::EditCell
   extend ActiveSupport::Concern
   include SS::CellFilter

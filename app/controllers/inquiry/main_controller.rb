@@ -1,4 +1,3 @@
-# coding: utf-8
 class Inquiry::MainController < ApplicationController
   include Cms::BaseFilter
 

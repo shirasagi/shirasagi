@@ -1,4 +1,3 @@
-# coding: utf-8
 module Kana::PublicFilter
   extend ActiveSupport::Concern
 

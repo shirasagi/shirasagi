@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::Parts::Page
   class EditCell < Cell::Rails
     include Cms::PartFilter::EditCell

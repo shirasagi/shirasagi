@@ -1,4 +1,3 @@
-# coding: utf-8
 class ApplicationMailer
   class << self
     def set(option)

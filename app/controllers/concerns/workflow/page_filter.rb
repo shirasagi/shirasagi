@@ -1,4 +1,3 @@
-# coding: utf-8
 module Workflow::PageFilter
   extend ActiveSupport::Concern
   include Cms::CrudFilter

@@ -1,4 +1,3 @@
-# coding: utf-8
 namespace :unicorn do
   desc "Start unicorn"
   task(:start) {

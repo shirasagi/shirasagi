@@ -1,4 +1,3 @@
-# coding: utf-8
 module Sys
   class Initializer
     Sys::Role.permission :edit_sys_sites

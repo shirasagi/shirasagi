@@ -1,4 +1,3 @@
-# coding: utf-8
 class Article::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter

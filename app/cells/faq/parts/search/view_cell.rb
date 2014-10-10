@@ -1,4 +1,3 @@
-# coding: utf-8
 module Faq::Parts::Search
   class ViewCell < Cell::Rails
     include Cms::PartFilter::ViewCell

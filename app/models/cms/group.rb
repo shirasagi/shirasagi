@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::Group
   include SS::Group::Model
   include Cms::Permission

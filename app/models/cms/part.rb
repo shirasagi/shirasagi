@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::Part
   extend ActiveSupport::Autoload
   autoload :Model

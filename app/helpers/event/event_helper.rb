@@ -1,4 +1,3 @@
-# coding: utf-8
 module Event::EventHelper
   require "holiday_japan"
 

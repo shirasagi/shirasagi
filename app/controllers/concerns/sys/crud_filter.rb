@@ -1,4 +1,3 @@
-# coding: utf-8
 module Sys::CrudFilter
   extend ActiveSupport::Concern
   include SS::CrudFilter

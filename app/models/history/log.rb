@@ -1,4 +1,3 @@
-# coding: utf-8
 class History::Log
   include SS::Document
   include SS::Reference::User

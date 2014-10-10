@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::ContentsController < ApplicationController
   include Cms::BaseFilter
 

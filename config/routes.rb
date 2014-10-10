@@ -1,4 +1,3 @@
-# coding: utf-8
 class ActionDispatch::Routing::Mapper
   def content(ns, opts = {}, &block)
     name = opts[:name] || ns.gsub("/", "_")

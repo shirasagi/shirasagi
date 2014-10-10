@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::PageFilter::ViewCell
   extend ActiveSupport::Concern
   include SS::CellFilter

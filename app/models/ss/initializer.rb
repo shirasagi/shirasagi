@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS
   class Initializer
     SS::Config

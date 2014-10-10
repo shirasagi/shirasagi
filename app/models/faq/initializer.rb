@@ -1,4 +1,3 @@
-# coding: utf-8
 module Faq
   class Initializer
     Cms::Node.plugin "faq/page"

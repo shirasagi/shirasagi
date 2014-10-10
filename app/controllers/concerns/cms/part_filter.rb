@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::PartFilter
   extend ActiveSupport::Concern
   include Cms::CrudFilter

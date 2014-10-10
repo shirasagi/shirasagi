@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'spec_helper'
 
 describe "cms_node_pages" do

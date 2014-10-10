@@ -1,4 +1,3 @@
-# coding: utf-8
 module Faq::Addon
   module Question
     extend ActiveSupport::Concern

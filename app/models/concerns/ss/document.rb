@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::Document
   extend ActiveSupport::Concern
   extend SS::Translation

@@ -1,4 +1,3 @@
-# coding: utf-8
 module Category::Node
   class Base
     include Cms::Node::Model

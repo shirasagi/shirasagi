@@ -1,4 +1,3 @@
-# coding: utf-8
 class Uploader::MainController < ApplicationController
   include Cms::BaseFilter
 

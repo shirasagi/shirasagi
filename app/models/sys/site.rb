@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::Site
   include SS::Site::Model
   include Sys::Permission

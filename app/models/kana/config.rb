@@ -1,4 +1,3 @@
-# encoding: utf-8
 class Kana::Config
   cattr_reader(:default_values) do
     {

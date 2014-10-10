@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::GroupFile
   include SS::File::Model
 

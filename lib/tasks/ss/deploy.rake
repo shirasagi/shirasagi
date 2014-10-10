@@ -1,4 +1,3 @@
-# coding: utf-8
 namespace :ss do
   task :deploy => :environment  do
     assets_path = "#{Rails.public_path}#{Rails.application.config.assets.prefix}"

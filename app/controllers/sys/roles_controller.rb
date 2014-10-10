@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::RolesController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter

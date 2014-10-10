@@ -1,4 +1,3 @@
-# coding: utf-8
 namespace :cms do
   namespace :role do
     namespace :admin do

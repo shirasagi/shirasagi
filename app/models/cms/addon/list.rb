@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::Addon::List
   module Model
     extend ActiveSupport::Concern

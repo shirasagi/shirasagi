@@ -1,4 +1,3 @@
-# coding: utf-8
 def ss_user
   return @ss_user if @ss_user ||= Sys::User.where(email: build(:ss_user).email).first
   @ss_user = create(:ss_user)

@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::BaseFilter
   extend ActiveSupport::Concern
   include SS::LayoutFilter

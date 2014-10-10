@@ -1,4 +1,3 @@
-# coding: utf-8
 namespace :ss do
   task :crypt => :environment  do
     puts SS::Crypt.crypt(ENV["value"])

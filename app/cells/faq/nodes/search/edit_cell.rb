@@ -1,4 +1,3 @@
-# coding: utf-8
 module Faq::Nodes::Search
   class EditCell < Cell::Rails
     include Cms::NodeFilter::EditCell

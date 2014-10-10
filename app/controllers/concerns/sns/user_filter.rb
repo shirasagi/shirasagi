@@ -1,4 +1,3 @@
-# coding: utf-8
 module Sns::UserFilter
   extend ActiveSupport::Concern
   include Sns::BaseFilter

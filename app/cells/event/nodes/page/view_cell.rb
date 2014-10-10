@@ -1,4 +1,3 @@
-# coding: utf-8
 module  Event::Nodes::Page
   class ViewCell < Cell::Rails
     include Cms::NodeFilter::ViewCell

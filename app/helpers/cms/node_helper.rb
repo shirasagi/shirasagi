@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::NodeHelper
   def node_navi(opts = {}, &block)
     h  = []

@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::Content
   extend ActiveSupport::Concern
   extend SS::Translation
