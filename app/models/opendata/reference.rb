@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Reference
   module Member
     extend ActiveSupport::Concern

@@ -1,4 +1,3 @@
-# coding: utf-8
 class Opendata::App
   include SS::Document
   include SS::Reference::User

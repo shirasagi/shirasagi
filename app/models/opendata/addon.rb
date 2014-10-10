@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Addon
   module Category
     extend SS::Addon

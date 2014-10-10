@@ -1,4 +1,3 @@
-# coding: utf-8
 class Opendata::DatasetGroupsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter

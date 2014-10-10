@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Nodes::Area
   class EditCell < Cell::Rails
     include Cms::NodeFilter::EditCell

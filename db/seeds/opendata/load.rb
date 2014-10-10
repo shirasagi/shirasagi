@@ -1,5 +1,3 @@
-# coding: utf-8
-
 Dir.chdir @root = File.dirname(__FILE__)
 @site = SS::Site.find_by host: ENV["site"]
 

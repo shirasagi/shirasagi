@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::UrlHelper
   def search_datasets_path
     node = Opendata::Node::SearchDataset.site(@cur_site).public.first

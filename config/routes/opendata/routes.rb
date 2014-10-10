@@ -1,4 +1,3 @@
-# coding: utf-8
 SS::Application.routes.draw do
 
   Opendata::Initializer

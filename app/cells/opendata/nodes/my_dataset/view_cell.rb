@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Nodes::MyDataset
   class ViewCell < Cell::Rails
     include Cms::NodeFilter::ViewCell

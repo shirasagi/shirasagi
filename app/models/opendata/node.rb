@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Node
   class Base
     include Cms::Node::Model

@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Part
   class MypageLogin
     include Cms::Part::Model

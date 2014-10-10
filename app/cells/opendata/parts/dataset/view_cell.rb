@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Parts::Dataset
   class ViewCell < Cell::Rails
     include Cms::PartFilter::ViewCell

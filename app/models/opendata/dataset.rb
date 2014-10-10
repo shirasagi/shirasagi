@@ -1,4 +1,3 @@
-# coding: utf-8
 class Opendata::Dataset
   include Cms::Page::Model
   include Opendata::Addon::Resource

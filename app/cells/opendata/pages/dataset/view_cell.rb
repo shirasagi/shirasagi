@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Pages::Dataset
   class ViewCell < Cell::Rails
     include Cms::PageFilter::ViewCell

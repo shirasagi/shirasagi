@@ -1,4 +1,3 @@
-# coding: utf-8
 module Opendata::Addon::Resource
   extend SS::Addon
   extend ActiveSupport::Concern

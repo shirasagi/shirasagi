@@ -1,4 +1,3 @@
-# coding: utf-8
 class Opendata::Resource
   include SS::Document
   include SS::Relation::File

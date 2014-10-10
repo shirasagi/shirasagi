@@ -1,4 +1,3 @@
-# coding: utf-8
 namespace :opendata do
   task :export_resources => :environment do
     Opendata::Dataset.each do |dataset|
