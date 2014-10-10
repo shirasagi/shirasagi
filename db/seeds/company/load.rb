@@ -306,4 +306,4 @@ save_page route: "cms/page", name: "販売促進支援", filename: "product/solu
 ## -------------------------------------
 puts "# generate pages"
 
-Cms::Task::PagesController.new.generate site: @site
+#Cms::Task::PagesController.new.generate site: @site

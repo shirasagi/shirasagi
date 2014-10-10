@@ -125,4 +125,4 @@ end
 ## -------------------------------------
 puts "# generate pages"
 
-Cms::Task::PagesController.new.generate site: @site
+#Cms::Task::PagesController.new.generate site: @site
