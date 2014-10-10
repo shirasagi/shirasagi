@@ -1,4 +1,3 @@
-# coding: utf-8
 module Category::Part
   class Base
     include Cms::Part::Model

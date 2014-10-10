@@ -1,4 +1,3 @@
-# coding: utf-8
 class History::Sys::LogsController < ApplicationController
   include Sys::BaseFilter
   include History::BaseFilter

@@ -1,4 +1,3 @@
-# coding: utf-8
 class Workflow::Extensions::WorkflowApprovers < Array
   def mongoize
     self.to_a

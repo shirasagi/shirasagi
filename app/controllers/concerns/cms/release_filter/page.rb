@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::ReleaseFilter::Page
   extend ActiveSupport::Concern
   include Cms::ReleaseFilter

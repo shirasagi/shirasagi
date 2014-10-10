@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::SearchGroupsController < ApplicationController
   include SS::BaseFilter
   include SS::CrudFilter

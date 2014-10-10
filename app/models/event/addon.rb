@@ -1,4 +1,3 @@
-# coding: utf-8
 module Event::Addon
   module Date
     extend ActiveSupport::Concern

@@ -1,4 +1,3 @@
-# coding: utf-8
 class Inquiry::Answer
   include SS::Document
   include SS::Reference::Site

@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::Fields::Sequencer
   extend ActiveSupport::Concern
 

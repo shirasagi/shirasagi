@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::UserFile
   include SS::File::Model
 

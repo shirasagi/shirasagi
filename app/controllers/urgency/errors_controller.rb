@@ -1,4 +1,3 @@
-# coding: utf-8
 class Urgency::ErrorsController < ApplicationController
   include Cms::BaseFilter
 

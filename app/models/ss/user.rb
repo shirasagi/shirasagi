@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::User
   extend ActiveSupport::Autoload
   autoload :Model

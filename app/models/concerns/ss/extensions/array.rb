@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::Extensions::Array < Array
   class << self
     def mongoize(object)

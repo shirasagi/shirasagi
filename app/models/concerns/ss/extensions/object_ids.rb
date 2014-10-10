@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::Extensions::ObjectIds < Array
   def mongoize
     self.to_a

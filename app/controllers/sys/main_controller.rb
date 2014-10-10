@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::MainController < ApplicationController
   include Sys::BaseFilter
 

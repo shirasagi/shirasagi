@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sns::User::AjaxFilesController < ApplicationController
   include Sns::UserFilter
   include Sns::CrudFilter

@@ -1,4 +1,3 @@
-# coding: utf-8
 class Event::Extensions::EventDates < Array
   def mongoize
     self.to_a

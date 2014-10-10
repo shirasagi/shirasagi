@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::Reference
   module User
     extend ActiveSupport::Concern

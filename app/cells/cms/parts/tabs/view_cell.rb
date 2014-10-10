@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::Parts::Tabs
   class ViewCell < Cell::Rails
     include Cms::PartFilter::ViewCell

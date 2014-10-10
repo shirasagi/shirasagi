@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::User
   include SS::User::Model
   include Sys::Addon::Role

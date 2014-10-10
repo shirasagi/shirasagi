@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::TempFile
   include SS::File::Model
 

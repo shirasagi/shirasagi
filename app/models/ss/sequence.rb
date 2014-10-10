@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::Sequence
   include Mongoid::Document
 

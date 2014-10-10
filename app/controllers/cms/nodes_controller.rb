@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::NodesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter

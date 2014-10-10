@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::Permission
   extend ActiveSupport::Concern
   include SS::Permission

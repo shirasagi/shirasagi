@@ -1,4 +1,3 @@
-# coding: utf-8
 module Workflow
   class Initializer
     Cms::Role.permission :release_other_article_pages

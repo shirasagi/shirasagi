@@ -1,4 +1,3 @@
-# coding: utf-8
 module  Inquiry::Nodes::Form
   class ViewCell < Cell::Rails
     include Cms::NodeFilter::ViewCell

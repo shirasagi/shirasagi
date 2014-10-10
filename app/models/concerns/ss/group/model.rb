@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::Group::Model
   extend ActiveSupport::Concern
   extend SS::Translation

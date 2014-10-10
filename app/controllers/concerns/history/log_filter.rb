@@ -1,4 +1,3 @@
-# coding: utf-8
 module History::LogFilter
   extend ActiveSupport::Concern
 

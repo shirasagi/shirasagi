@@ -1,4 +1,3 @@
-# coding: utf-8
 module Urgency::Addons::Layout
   class EditCell < Cell::Rails
     include SS::AddonFilter::EditCell

@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms
   class Initializer
     Cms::Node.plugin "cms/node"

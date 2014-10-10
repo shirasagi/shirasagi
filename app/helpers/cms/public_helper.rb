@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::PublicHelper
   public
     def paginate(*args)

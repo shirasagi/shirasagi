@@ -1,4 +1,3 @@
-# coding: utf-8
 module Category
   class Initializer
     Cms::Node.plugin "category/node"

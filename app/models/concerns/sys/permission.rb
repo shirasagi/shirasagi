@@ -1,4 +1,3 @@
-# coding: utf-8
 module Sys::Permission
   extend ActiveSupport::Concern
   include SS::Permission

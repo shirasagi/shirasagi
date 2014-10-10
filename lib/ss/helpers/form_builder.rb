@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::Helpers
   class FormBuilder < ActionView::Helpers::FormBuilder
     public

@@ -1,4 +1,3 @@
-# coding: utf-8
 worker_processes Integer(ENV["WEB_CONCURRENCY"] || 2)
 listen 3000
 timeout 15

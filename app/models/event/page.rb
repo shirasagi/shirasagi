@@ -1,4 +1,3 @@
-# coding: utf-8
 class Event::Page
   include Cms::Page::Model
 

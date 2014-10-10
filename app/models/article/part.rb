@@ -1,4 +1,3 @@
-# coding: utf-8
 module Article::Part
   class Page
     include Cms::Part::Model

@@ -1,4 +1,3 @@
-# coding: utf-8
 class Inquiry::AnswersController < ApplicationController
   include Cms::BaseFilter
   include SS::CrudFilter

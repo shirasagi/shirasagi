@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::GeneratePagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::TaskFilter

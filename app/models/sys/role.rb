@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sys::Role
   include SS::Role::Model
   include Sys::Permission

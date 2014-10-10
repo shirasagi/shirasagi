@@ -1,4 +1,3 @@
-# coding: utf-8
 module Cms::ListHelper
   def render_node_list(&block)
     cur_item = @cur_part || @cur_node

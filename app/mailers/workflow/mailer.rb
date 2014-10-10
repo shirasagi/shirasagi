@@ -1,4 +1,3 @@
-# coding: utf-8
 class Workflow::Mailer < ActionMailer::Base
   public
     def request_mail(args)

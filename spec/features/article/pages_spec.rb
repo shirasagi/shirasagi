@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'spec_helper'
 
 describe "article_pages" do

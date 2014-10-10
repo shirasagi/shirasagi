@@ -1,4 +1,3 @@
-# coding: utf-8
 module Inquiry::Addon
 
   module Message

@@ -1,4 +1,3 @@
-# coding: utf-8
 module SS::AddonFilter
   module Layout
     extend ActiveSupport::Concern

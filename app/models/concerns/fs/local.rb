@@ -1,4 +1,3 @@
-# coding: utf-8
 require "mime/types"
 module Fs::Local
   extend ActiveSupport::Concern

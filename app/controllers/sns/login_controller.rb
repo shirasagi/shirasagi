@@ -1,4 +1,3 @@
-# coding: utf-8
 class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
 

@@ -1,4 +1,3 @@
-# coding: utf-8
 module Inquiry
   class Initializer
     Cms::Node.plugin "inquiry/form"

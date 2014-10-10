@@ -1,4 +1,3 @@
-# coding: utf-8
 class Inquiry::Mailer < ActionMailer::Base
   public
     def notify_mail(site, node, answer)

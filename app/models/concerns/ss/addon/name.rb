@@ -1,4 +1,3 @@
-# coding: utf-8
 class SS::Addon::Name
   def initialize(mod, params = {})
     @klass = mod

@@ -1,4 +1,3 @@
-# coding: utf-8
 namespace :ss do
   task :create_site => :environment do
     item = SS::Site.create eval(ENV["data"])

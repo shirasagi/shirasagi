@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::Role
   include SS::Role::Model
   include SS::Reference::Site

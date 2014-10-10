@@ -1,4 +1,3 @@
-# coding: utf-8
 module Kana::Convertor
   @@mecab = nil
 

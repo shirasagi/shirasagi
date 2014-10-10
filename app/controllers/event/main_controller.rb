@@ -1,4 +1,3 @@
-# coding: utf-8
 class Event::MainController < ApplicationController
   include Cms::BaseFilter
 

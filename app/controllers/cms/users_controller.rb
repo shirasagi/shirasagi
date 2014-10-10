@@ -1,4 +1,3 @@
-# coding: utf-8
 class Cms::UsersController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter

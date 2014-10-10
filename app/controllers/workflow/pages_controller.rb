@@ -1,4 +1,3 @@
-# coding: utf-8
 class Workflow::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter

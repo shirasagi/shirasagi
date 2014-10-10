@@ -1,4 +1,3 @@
-# coding: utf-8
 require "rss/maker"
 module Cms::RssFilter
   extend ActiveSupport::Concern
