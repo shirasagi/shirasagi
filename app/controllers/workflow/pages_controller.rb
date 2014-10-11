@@ -23,7 +23,8 @@ class Workflow::PagesController < ApplicationController
     end
 
     def set_userstate(state)
-      ret = {approve_flg: 1, workflow_approvers: ""}
+      ret = { approve_flg: 1, workflow_approvers: "" }
+
       @item.workflow_approvers.split(/\r\n|\n/).each do |d|
         col = d.split(",")
         if col[1].to_i == @cur_user._id
@@ -39,14 +40,17 @@ class Workflow::PagesController < ApplicationController
   public
     def request_update
       raise "403" unless @item.allowed?(:edit, @cur_user)
+
       @item.workflow_user_id = @cur_user._id
-      @item.workflow_state = "request"
+      @item.workflow_state   = "request"
       @item.workflow_comment = params[:workflow_comment]
+
       sel = ""
       params[:workflow_approvers].each do |d|
         sel << "1,#{d},request,\r\n"
       end
       @item.workflow_approvers = sel
+
       if @item.update
         params[:workflow_approvers].each do |d|
           args = { f_uid: @cur_user._id, t_uid: d,
@@ -59,8 +63,10 @@ class Workflow::PagesController < ApplicationController
 
     def approve_update
       raise "403" unless @item.allowed?(:approve, @cur_user)
+
       updinf = set_userstate("approve")
       @item.workflow_approvers = updinf[:workflow_approvers]
+
       if updinf[:approve_flg] == 1
         @item.workflow_state = "approve"
         if @item.release_date
@@ -70,6 +76,7 @@ class Workflow::PagesController < ApplicationController
           @item.release_date = nil
         end
       end
+
       if @item.update && @item.workflow_state == "approve"
         args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                  site: @cur_site, page: @item,
@@ -80,9 +87,11 @@ class Workflow::PagesController < ApplicationController
 
     def remand_update
       raise "403" unless @item.allowed?(:approve, @cur_user)
+
       updinf = set_userstate("remand")
       @item.workflow_approvers = updinf[:workflow_approvers]
       @item.workflow_state = "remand"
+
       if @item.update && @item.workflow_state == "remand"
         args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                  site: @cur_site, page: @item,
