@@ -5,3 +5,7 @@ module SS
     ApplicationMailer.set :load_settings
   end
 end
+
+#> Use RbConfig instead of obsolete and deprecated Config.
+Object.send :remove_const, :Config
+Config = RbConfig
