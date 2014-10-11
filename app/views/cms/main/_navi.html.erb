@@ -6,6 +6,7 @@
     <%= link_to :"cms.page", cms_pages_path, class: "icon-page" if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <%= link_to :"cms.part", cms_parts_path, class: "icon-part" if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= link_to :"cms.generate_node", cms_generate_nodes_path, class: "icon-conf" if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <%= link_to :"cms.generate_page", cms_generate_pages_path, class: "icon-conf" if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
   </div>
 </nav>

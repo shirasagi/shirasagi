@@ -1,12 +1,36 @@
 class Cms::Task::PagesController < ApplicationController
+  include SS::Task::BaseFilter
   include Cms::ReleaseFilter::Page
 
-  public
-    def release(opts)
-      @task = opts[:task]
-      @site = opts[:site]
+  before_action :set_params
 
-      @task.log "# #{@site.name}"
+  private
+    def set_params
+      @site = params[:site]
+      @node = params[:node]
+    end
+
+  public
+    def generate
+      task.log "# #{@site.name}"
+      #return unless @cur_site.serve_static_file?
+
+      pages = Cms::Page.site(@site).public
+      pages = pages.node(@node) if @node
+      task.total_count = pages.size
+
+      pages.each do |page|
+        task.count
+        next unless page.public_node?
+
+        if generate_page page.becomes_with_route
+          task.log page.url
+        end
+      end
+    end
+
+    def release
+      task.log "# #{@site.name}"
 
       time = Time.now
       cond = [
@@ -15,12 +39,12 @@ class Cms::Task::PagesController < ApplicationController
       ]
 
       pages = Cms::Page.site(@site).or(cond)
-      @task.total_count = pages.size
+      task.total_count = pages.size
 
       pages.each do |page|
         page = page.becomes_with_route
-        @task += 1
-        @task.log page.full_url
+        task.count
+        task.log page.full_url
 
         if page.public?
           page.state = "closed"
@@ -35,55 +59,14 @@ class Cms::Task::PagesController < ApplicationController
       end
     end
 
-    def generate(opts)
-      @task = opts[:task]
-      @site = opts[:site]
-
-      @task.log "# #{@site.name}"
-      #return unless @cur_site.serve_static_file?
-
-      pages = Cms::Page.site(@site).public
-      @task.total_count = pages.size
-
-      pages.each do |page|
-        @task += 1
-        next unless page.public_node?
-        if generate_page page.becomes_with_route
-          @task.log page.url
-        end
-      end
-    end
-
-    def generate_with_node(opts)
-      @task = opts[:task]
-      @site = opts[:site]
-
-      @task.log "# #{@site.name}"
-      #return unless @cur_site.serve_static_file?
-
-      pages = Cms::Page.site(@site).node(opts[:node]).public
-      @task.total_count = pages.size
-
-      pages.each do |page|
-        @task += 1
-        next unless page.public_node?
-        if generate_page page.becomes_with_route
-          @task.log page.url
-        end
-      end
-    end
-
-    def remove(opts)
-      @task = opts[:task]
-      @site = opts[:site]
-
+    def remove
       pages = Cms::Page.site(@site)
-      @task.total_count = pages.size
+      task.total_count = pages.size
 
       pages.each do |page|
-        @task += 1
+        task.count
         if Fs.rm_rf page.path
-          @task.log page.path
+          task.log page.path
         end
       end
     end

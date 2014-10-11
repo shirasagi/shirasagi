@@ -19,7 +19,12 @@ module Workflow::PageFilter
 
   public
     def index_approve
-      cond = { workflow_state: "request", workflow_approvers: { "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" } } }
+      cond = {
+        workflow_state: "request",
+        workflow_approvers: {
+          "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" }
+        }
+      }
       render_items(cond)
     end
 

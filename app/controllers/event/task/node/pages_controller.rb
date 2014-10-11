@@ -3,8 +3,6 @@ class Event::Task::Node::PagesController < ApplicationController
 
   public
     def generate(opts)
-      opts[:task].log "#{opts[:node].url}"
-
       generate_node opts[:node]
     end
 end

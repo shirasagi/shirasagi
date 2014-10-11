@@ -1,0 +1,79 @@
+<%= scss do %>
+#task-form {
+  .info {
+    margin: 0px 0px 15px;
+    dt, dd {
+      display: inline-block;
+      padding: 5px 10px;
+    }
+    dt {
+      background-color: #888;
+      color: #fff;
+    }
+    dd {
+      min-width: 60px;
+      margin: 0px;
+    }
+  }
+  .logs {
+    textarea {
+      height: 300px;
+      background-color: #eee;
+    }
+  }
+}
+<% end %>
+
+<%= coffee do %>
+$ ->
+  reload = ->
+    if $("#task-form .state").html().match(/(ready|running)/)
+      $.ajax
+        url: "<%= url_for(action: :index, format: :json) %>"
+        success: (data)->
+          started = data["started"] + ""
+          closed  = data["closed"] + ""
+          $("#task-form .state").html data["state"]
+          $("#task-form .count").html data["current_count"] + " / " + data["total_count"]
+          $("#task-form .started").html started.replace(/\..*/, "").replace("T", " ")
+          $("#task-form .closed").html closed.replace(/\..*/, "").replace("T", " ")
+          $("#task-form .log").val data["logs"].join("\n")
+          if data["state"] == "stop"
+            $("#task-form .stop").hide()
+  setInterval reload, 10000
+<% end %>
+
+<%= form_tag({ action: :run }, { id: "task-form" }) do |f| %>
+
+<dl class="info">
+  <dt><%= @item.t :state %></dt>
+  <dd class="state"><%= @item.send :state %></dd>
+
+  <dt><%= @item.t :current_count %></dt>
+  <dd class="count"><%= @item.send :current_count %> / <%= @item.send :total_count %></dd>
+
+  <dt><%= @item.t :started %></dt>
+  <dd class="started"><%= tryb { @item.started.strftime("%Y-%m-%d %H:%M:%S") } %></dd>
+
+  <dt><%= @item.t :closed %></dt>
+  <dd class="closed"><%= tryb { @item.closed.strftime("%Y-%m-%d %H:%M:%S") } %></dd>
+</dl>
+
+<div class="logs">
+  <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
+</div>
+
+<footer class="send">
+  <% if @item.running? || @item.state == "ready" %>
+    <%= submit_tag t(:stop), name: "stop", class: "stop" %>
+    <div style="margin: 20px 0px 0px; text-align: right;">
+      <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t('ss.task.confirm_reset')}')" %>
+    </div>
+  <% else %>
+    <% if !flash[:notice] %>
+    <%= submit_tag t(:run), class: :save unless flash[:notice] %>
+    <% end %>
+  <% end %>
+</footer>
+
+<% end %>

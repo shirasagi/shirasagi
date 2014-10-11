@@ -61,7 +61,9 @@ module Cms::ReleaseFilter::Page
 
   public
     def generate_node_with_pagination(node)
-      generate_node node
+      if generate_node node
+        task.log "#{node.url}index.html" if task
+      end
 
       max = 9999
       num = max
@@ -69,7 +71,9 @@ module Cms::ReleaseFilter::Page
       2.upto(max) do |i|
         file = "#{node.path}/index.p#{i}.html"
         begin
-          generate_node node, file: file, params: { page: i }
+          if generate_node node, file: file, params: { page: i }
+            task.log "#{node.url}index.p#{i}.html" if task
+          end
         rescue StandardError => e
           raise e if "#{e}" != "404"
           num = i
@@ -91,19 +95,21 @@ module Cms::ReleaseFilter::Page
       locals = opts[:params] || {}
       locals[:format] ||= "html"
 
-      self.params   = ActionController::Parameters.new locals
-      self.request  = ActionDispatch::Request.new method: "GET"
-      self.response = ActionDispatch::Response.new
+      self.params   = ActionController::Parameters.new params.merge(locals)
+      #self.request  = ActionDispatch::Request.new method: "GET"
+      #self.response = ActionDispatch::Response.new
 
       @cur_path   = node.url
       @cur_site   = node.site
       @cur_layout = node.layout
+      @csrf_token = false
 
       html = render_node(node, method: "GET")
       return unless html
       html = render_to_string inline: render_layout(html), layout: "cms/page" if @cur_layout
 
       file = opts[:file] || "#{node.path}/index.html"
+
       write_file node, html, file: file
     end
 
@@ -112,11 +118,12 @@ module Cms::ReleaseFilter::Page
 
       self.params   = ActionController::Parameters.new format: "html"
       self.request  = ActionDispatch::Request.new method: "GET"
-      self.response = ActionDispatch::Response.new
+      #self.response = ActionDispatch::Response.new
 
       @cur_path   = page.url
       @cur_site   = page.site
       @cur_layout = page.layout
+      @csrf_token = false
 
       html = render_page(page, method: "GET")
       return unless html

@@ -20,6 +20,7 @@ ja:
     member: メンバー
     syntax_check: HTMLチェック
     link_check: リンクチェック
+    generate_node: フォルダ書き出し
     generate_page: ページ書き出し
     search_groups:
       index: 所有グループを選択する

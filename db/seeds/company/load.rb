@@ -302,8 +302,3 @@ save_page route: "cms/page", name: "人材紹介サービス", filename: "produc
   order: 10, layout_id: layouts["product"].id
 save_page route: "cms/page", name: "販売促進支援", filename: "product/solution/sales.html",
   order: 20, layout_id: layouts["product"].id
-
-## -------------------------------------
-puts "# generate pages"
-
-#Cms::Task::PagesController.new.generate site: @site

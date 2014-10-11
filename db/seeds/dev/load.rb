@@ -81,7 +81,8 @@ save_part filename: "head.part.html"  , name: "ヘッダー", route: "cms/free"
 save_part filename: "navi.part.html"  , name: "ナビ"    , route: "cms/free"
 save_part filename: "foot.part.html"  , name: "フッター", route: "cms/free"
 save_part filename: "crumbs.part.html", name: "パンくず", route: "cms/crumb"
-save_part filename: "tabs.part.html"  , name: "新着タブ", route: "cms/tabs", conditions: %w(topics product recruit), limit: 5
+save_part filename: "tabs.part.html"  , name: "新着タブ", route: "cms/tabs",
+  conditions: %w(topics product recruit), limit: 5, ajax_view: "enabled"
 
 save_part filename: "docs/pages.part.html"  , name: "新着記事リスト", route: "article/page"
 save_part filename: "topics/pages.part.html", name: "注目記事リスト", route: "cms/page", conditions: %w(product)
@@ -121,8 +122,3 @@ puts "# articles"
     route: "article/page", layout_id: layouts["page"].id,
     category_ids: Category::Node::Base.site(@site).pluck(:_id).sample(2)
 end
-
-## -------------------------------------
-puts "# generate pages"
-
-#Cms::Task::PagesController.new.generate site: @site

@@ -1,4 +1,4 @@
-module Cms::TaskFilter
+module SS::TaskFilter
   extend ActiveSupport::Concern
 
   included do
@@ -7,7 +7,10 @@ module Cms::TaskFilter
 
   public
     def index
-      render file: "cms/generate_pages/index"
+      respond_to do |format|
+        format.html { render file: "ss/tasks/index" }
+        format.json { render json: @item.to_json }
+      end
     end
 
     def run
@@ -15,9 +18,10 @@ module Cms::TaskFilter
       return reset if params[:reset]
       return redirect_to({ action: :index }) if @item.running?
 
-      cmd = "bundle exec #{task_command} &"
+      @item.update_attributes state: "ready"
 
       require "open3"
+      cmd = "bundle exec #{task_command} &"
       stdin, stdout, stderr = Open3.popen3(cmd)
 
       redirect_to({ action: :index }, { notice: t("ss.task.started") })

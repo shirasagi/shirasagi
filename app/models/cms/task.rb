@@ -5,70 +5,54 @@ class Cms::Task
   belongs_to :node, class_name: "Cms::Node"
 
   class << self
-    def generate_nodes(opts = {})
-      return generate_nodes_with_node opts if opts[:node]
+    private
+      def find_sites(opts)
+        return Cms::Site unless opts[:host]
+        Cms::Site.where host: opts[:host]
+      end
 
-      cond = {}
-      cond[:host] = opts[:site] if opts[:site]
+      def find_node(site, opts)
+        return nil unless opts[:node]
+        Cms::Node.site(site).find_by filename: opts[:node]
+      end
 
-      Cms::Site.where(cond).each do |site|
-        run name: "cms:generate_nodes", site_id: site.id, node_id: nil do |task|
-          Cms::Task::NodesController.new.generate task: task, site: site, limit: opts[:limit]
+    public
+      def generate_nodes(opts = {})
+        find_sites(opts).each do |site|
+          node    = find_node site, opts
+          node_id = node ? node.id : nil
+
+          ready name: "cms:generate_nodes", site_id: site.id, node_id: node_id do |task|
+            task.process Cms::Task::NodesController, :generate, site: site, node: node
+          end
         end
       end
-    end
 
-    def generate_nodes_with_node(opts = {})
-      site = Cms::Site.find_by host: opts[:site]
-      node = Cms::Node.site(site).find_by filename: opts[:node]
+      def generate_pages(opts = {})
+        find_sites(opts).each do |site|
+          node    = find_node site, opts
+          node_id = node ? node.id : nil
 
-      run name: "cms:generate_nodes", site_id: site.id, node_id: node.id do |task|
-        Cms::Task::NodesController.new.generate_with_node task: task, site: site, node: node, limit: opts[:limit]
-      end
-    end
-
-    def generate_pages(opts = {})
-      return generate_pages_with_node opts if opts[:node]
-
-      cond = {}
-      cond[:host] = opts[:site] if opts[:site]
-
-      Cms::Site.where(cond).each do |site|
-        run name: "cms:generate_pages", site_id: site.id, node_id: nil do |task|
-          Cms::Task::PagesController.new.generate task: task, site: site
+          ready name: "cms:generate_pages", site_id: site.id, node_id: node_id do |task|
+            task.process Cms::Task::PagesController, :generate, site: site, node: node
+          end
         end
       end
-    end
 
-    def generate_pages_with_node(opts = {})
-      site = Cms::Site.find_by host: opts[:site]
-      node = Cms::Node.site(site).find_by filename: opts[:node]
-
-      run name: "cms:generate_pages", site_id: site.id, node_id: node.id do |task|
-        Cms::Task::PagesController.new.generate_with_node task: task, site: site, node: node
-      end
-    end
-
-    def release_pages(opts = {})
-      cond = {}
-      cond[:host] = opts[:site] if opts[:site]
-
-      Cms::Site.where(cond).each do |site|
-        run name: "cms:release_pages", site_id: site.id do |task|
-          Cms::Task::PagesController.new.release task: task, site: site
+      def release_pages(opts = {})
+        find_sites(opts).each do |site|
+          ready name: "cms:release_pages", site_id: site.id do |task|
+            task.process Cms::Task::PagesController, :release, site: site
+          end
         end
       end
-    end
 
-    def remove_pages(opts = {})
-      cond = {}
-      cond[:host] = opts[:site] if opts[:site]
-
-      Cms::Site.where(cond).each do |site|
-        run name: "cms:remove_pages", site_id: site.id do |task|
-          Cms::Task::PagesController.new.remove task: task, site: site
+      def remove_pages(opts = {})
+        find_sites(opts).each do |site|
+          ready name: "cms:remove_pages", site_id: site.id do |task|
+            task.process Cms::Task::PagesController, :remove, site: site
+          end
         end
       end
-    end
   end
 end

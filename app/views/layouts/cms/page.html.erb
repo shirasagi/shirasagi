@@ -6,7 +6,7 @@
 <title><%= @window_name %></title>
 <%= javascript_include_tag "cms/public" %>
 <%== @cur_layout.head %>
-<%= csrf_meta_tags if @cur_node %>
+<%= csrf_meta_tags if @csrf_token != false %>
 </head>
 
 <%= yield %>

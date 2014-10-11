@@ -1,4 +1,4 @@
-class Cms::GeneratePagesController < ApplicationController
+class Cms::GenerateNodesController < ApplicationController
   include Cms::BaseFilter
   include SS::TaskFilter
 
@@ -6,7 +6,7 @@ class Cms::GeneratePagesController < ApplicationController
 
   private
     def task_name
-      "cms:generate_pages"
+      "cms:generate_nodes"
     end
 
     def task_command

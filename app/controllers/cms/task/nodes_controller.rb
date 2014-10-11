@@ -1,28 +1,25 @@
 class Cms::Task::NodesController < ApplicationController
+  include SS::Task::BaseFilter
   include Cms::ReleaseFilter::Page
 
-  public
-    def generate(opts)
-      @task = opts[:task]
-      @site = opts[:site]
-      @limit = (opts[:limit] || 100).to_i
+  before_action :set_params
 
-      @task.log "# #{@site.name}"
-      #return unless @cur_site.serve_static_file?
-
-      nodes = Cms::Node.site(opts[:site]).public
-      nodes.each { |node| route_node node }
+  private
+    def set_params
+      @site  = params[:site]
+      @node  = params[:node]
+      @limit = params[:limit] || 100
+      @limit = @limit.to_i
     end
 
-    def generate_with_node(opts)
-      @task = opts[:task]
-      @site = opts[:site]
-      @limit = (opts[:limit] || 100).to_i
-
-      @task.log "# #{@site.name}"
+  public
+    def generate
+      task.log "# #{@site.name}"
       #return unless @cur_site.serve_static_file?
 
-      nodes = Cms::Node.site(opts[:site]).where(filename: /^#{opts[:node].filename}\/?$/).public
+      nodes = Cms::Node.site(@site).public
+      nodes = nodes.where(filename: /^#{@node.filename}\/?$/) if @node
+
       nodes.each { |node| route_node node }
     end
 
@@ -33,19 +30,26 @@ class Cms::Task::NodesController < ApplicationController
       cname = node.route.sub("/", "/task/node/").camelize.pluralize + "Controller"
       klass = cname.constantize rescue nil
       return if klass.nil? || klass.to_s != cname
-      klass.new.generate task: @task, node: node.becomes_with_route
 
-      generate_pages(node.pages.public)
+      cont = klass.new
+      #cont.generate task: task, node: node.becomes_with_route
+      cont.params   = ActionController::Parameters.new task: task, node: node.becomes_with_route
+      cont.request  = ActionDispatch::Request.new "rack.input" => "", "REQUEST_METHOD" => "GET"
+      cont.response = ActionDispatch::Response.new
+      cont.process :generate
+
+      generate_node_pages(node.pages.public)
     end
 
-    def generate_pages(pages)
+    def generate_node_pages(pages)
       return if pages.size > @limit
 
       pages.each do |page|
-        @task += 1
+        task.count
         next unless page.public_node?
+
         if generate_page page.becomes_with_route
-          @task.log page.url
+          task.log page.url
         end
       end
     end
