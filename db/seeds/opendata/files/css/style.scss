@@ -44,23 +44,24 @@ img {
 // head
 #head {
   @include clear;
+  min-width: 1200px;
   border-bottom: 2px solid #ddcfcc;
   @include grd-gray;
   .inner {
     @include clear;
     overflow: visible;
-    width: 1160px;
+    width: 1200px;
     margin: 0 auto;
     .logo {
       float: left;
-      padding: 13px 28px 3px 11px;
+      padding: 13px 28px 3px 10px;
     }
     .tab {
       float: left;
       padding-top: 1px;
       ul {
         @include clear;
-        padding-top: 10px;
+        padding-top: 8px;
         li.tab01 a {
           background: url(../img/ic-data-s.png) no-repeat 10px center;
         }
@@ -95,7 +96,7 @@ img {
     }
     .login {
       float: right;
-      padding: 13px 0;
+      padding: 12px 10px 12px 0;
       background: url(../img/ic-login.png) no-repeat left center;
       a {
         display: inline-block;
@@ -133,10 +134,12 @@ img {
 // top
 #top {
   display: block;
+  min-width: 1200px;
   margin-bottom: 14px;
   @include grd-aqua;
   #shadow {
     display: block;
+    min-width: 1200px;
     @include box-shadow(0px -5px 4px #ccc inset);
     #portal-kv, #dataset-kv {
       width: $page-width;
@@ -155,7 +158,7 @@ img {
 
 #portal-kv-nav {
   float: right;
-  padding: 28px 0 14px 0;
+  padding: 10px 0;
   li {
     width: 249px;
     margin-bottom: 14px;
@@ -330,7 +333,7 @@ img {
 #about, .s-portal #contents header, #s-mypage-login #contents , #s-mypage #contents{
   h1 {
     margin-bottom: 6px;
-    padding: 6px 10px;
+    padding: 4px 10px;
     @include grd-blue;
     color:$white;
     font-size: $px15;
@@ -681,6 +684,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
   }
 
 #gnav {
+  min-width: 1200px;
   border-bottom: #ffcf38 2px solid;
   background: $data-blue;
   ul {
@@ -829,7 +833,7 @@ form.opendata-search_groups-form {
 
 article.areas h1, article.tags h1, article.formats h1, article.licenses h1, #od-page-name, #dataset-news h1,
 #dataset-popular h1, #dataset-attention h1 {
-  padding: 6px 10px;
+  padding: 4px 10px;
   border-bottom: 2px solid #ffcf38;
   background: $data-blue;
   color:text;
@@ -1114,12 +1118,12 @@ article.areas, article.formats {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 71px;
   margin: 0 auto;
 }
 
 #footer-navi {
-  padding: 5px 0;
+  min-width: 1200px;
+  padding: 7px 0;
   border-top: 1px solid $gray;
   background: #eeeeee;
   text-align: center;
@@ -1129,7 +1133,8 @@ article.areas, article.formats {
 }
 
 #copyright {
-  padding: 5px 0;
+  min-width: 1200px;
+  padding: 4px 0;
   @include grd-gray;
   color: $white;
   font-size: $px12;
