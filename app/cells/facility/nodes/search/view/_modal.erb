@@ -7,7 +7,7 @@ $ ->
 
 <%= form_tag search_path, multipart: true, method: "get" do %>
   <div class="category">
-    <h2>施設の種類を選択</h2>
+    <h2><%= t("facility.category.setting") %></h2>
     <%= hidden_field_tag 'q[category_ids][]', "" %>
     <% @cur_node.st_categories.each do |cate| %>
       <div class="<%= cate.basename %>">
@@ -19,7 +19,7 @@ $ ->
   </div>
 
   <div class="use">
-    <h2>施設の用途を選択</h2>
+    <h2><%= t("facility.use.setting") %></h2>
     <%= hidden_field_tag 'q[use_ids][]', "" %>
     <% @cur_node.st_uses.each do |cate| %>
       <div class="<%= cate.basename %>">
@@ -31,7 +31,7 @@ $ ->
   </div>
 
   <div class="location">
-    <h2>施設のある地域を選択</h2>
+    <h2><%= t("facility.location.setting") %></h2>
     <%= hidden_field_tag 'q[location_ids][]', "" %>
     <% @cur_node.st_locations.each do |cate| %>
       <div class="<%= cate.basename %>">

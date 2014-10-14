@@ -5,29 +5,38 @@ ja:
       setting: 種類設定
       index: 施設の種類を設定する
       search: 施設の種類を検索
+      setting: 施設の種類を選択
       name: 種類
     location:
       setting: 地域設定
       index: 施設の地域を設定する
       search: 施設の地域を検索
+      setting: 施設の地域を選択
       name: 地域
     use:
       setting: 用途設定
       index: 施設の用途を設定する
       search: 施設の用途を検索
+      setting: 施設の用途を選択
       name: 用途
 
     search: 施設検索
+    result: 検索結果
+    count: 件
     image: 施設写真
     map: 施設地図
     edit_page: 施設情報を編集する
     empty: 上記の条件では施設が見つかりませんでした。
+    tab:
+      map: 地図表示
+      result: 一覧表示
     button:
       add_info: 項目を追加する
       del_info: 削除
     submit:
       search: この条件で検索する
       reset: 検索条件をリセットする
+      change: 検索条件を変更する
 
   modules:
     facility: 施設
