@@ -1,0 +1,36 @@
+<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
+<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
+
+<%= coffee do %>
+
+$ ->
+  $(".filters a").on "click", ->
+    dataID = parseInt($(this).attr("data-id"))
+    $.each markers, (id, value) ->
+      if $.inArray(dataID, markers[id]["location"]) >= 0
+        markers[id]["marker"].setVisible(true)
+      else
+        markers[id]["marker"].setVisible(false)
+        markers[id]["window"].close()
+    return false;
+
+  $(".ajax-box").on "click", ->
+    $.colorbox({ html: "<%=j render(file: "_modal", locals: { search_path: "./result.html" }) %>"})
+    return false
+
+<% end %>
+
+<%= render file: "_navi", locals: { current: "result" } %>
+
+<div class="columns">
+  <% @items.each do |item| %>
+    <div class="column">
+      <p class="name"><%= link_to item.name, item.url %></p>
+      <p class="category"><%= item.categories.pluck(:name).join(", ") %></p>
+      <p class="address"><%= item.address %></p>
+    </div>
+  <% end %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
+

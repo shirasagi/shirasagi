@@ -1,0 +1,24 @@
+<dl class="condition">
+  <dt class="category">種類</dt>
+  <dd><%= @categories.pluck(:name).join("、") %></dd>
+  <dt class="use">用途</dt>
+  <dd><%= @uses.pluck(:name).join("、") %></dd>
+  <dt class="location">地域</dt>
+  <dd><%= @locations.pluck(:name).join("、") %></dd>
+</dl>
+
+<p><%= link_to "検索条件を変更する", "#", class: "ajax-box" %></p>
+
+<h2 class="result">検索結果<span><%= @items.count %></span>件</h2>
+
+<nav>
+  <span class="number"></span>
+  <ul>
+    <li class="tab<%= current == "map" ? " current" : "" %>">
+      <%= link_to "地図表示", "./map.html?#{{q: params[:q]}.to_query}" %>
+    </li>
+    <li class="tab<%= current == "result" ? " current" : "" %>">
+      <%= link_to "一覧表示", "./result.html?#{{q: params[:q]}.to_query}" %>
+    </li>
+  </ul>
+</nav>

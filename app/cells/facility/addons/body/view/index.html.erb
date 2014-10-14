@@ -1,0 +1,16 @@
+<dl class="see body">
+  <dt><%= @cur_node.class.t :kana %></dt>
+  <dd><%= @cur_node.kana %></dd>
+
+  <dt><%= @cur_node.class.t :address %></dt>
+  <dd><%= @cur_node.address %></dd>
+
+  <dt><%= @cur_node.class.t :tel %></dt>
+  <dd><%= @cur_node.tel %></dd>
+
+  <dt><%= @cur_node.class.t :fax %></dt>
+  <dd><%= @cur_node.fax %></dd>
+
+  <dt><%= @cur_node.class.t :homepage %></dt>
+  <dd><%= link_to(@cur_node.homepage, @cur_node.homepage, target: "_blank") if @cur_node.homepage.present? %></dd>
+</dl>
