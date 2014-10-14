@@ -1,13 +1,8 @@
-<html>
-<head>
-  <title>SPARQL Endpoint</title>
-  <meta http-equiv='content-type' content='text/html; charset=utf-8'>
-</head>
-<body>
+
 <div class="opendata-sparql">
   <h1>SPARQL Endpoint</h1>
 
-  <%= form_tag("", method: :post) do %>
+  <%= form_tag("", method: :get) do %>
     <table>
       <tr>
         <th>Query</th>
@@ -35,5 +30,3 @@
     </div>
   <% end %>
 </div>
-</body>
-</html>
