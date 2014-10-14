@@ -32,7 +32,7 @@ module Cms::Part::Model
 
     def ajax_html
       json = url.sub(/\.html$/, ".json")
-      %(<a class="ss-part" href="#{json}">#{name}</a>)
+      %(<a class="ss-part" data-href="#{json}">#{name}</a>)
     end
 
   private

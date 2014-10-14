@@ -23,7 +23,7 @@ class Cms::Task
           node_id = node ? node.id : nil
 
           ready name: "cms:generate_nodes", site_id: site.id, node_id: node_id do |task|
-            task.process Cms::Task::NodesController, :generate, site: site, node: node
+            task.process Cms::Agents::Tasks::NodesController, :generate, site: site, node: node
           end
         end
       end
@@ -34,7 +34,7 @@ class Cms::Task
           node_id = node ? node.id : nil
 
           ready name: "cms:generate_pages", site_id: site.id, node_id: node_id do |task|
-            task.process Cms::Task::PagesController, :generate, site: site, node: node
+            task.process Cms::Agents::Tasks::PagesController, :generate, site: site, node: node
           end
         end
       end
@@ -42,7 +42,7 @@ class Cms::Task
       def release_pages(opts = {})
         find_sites(opts).each do |site|
           ready name: "cms:release_pages", site_id: site.id do |task|
-            task.process Cms::Task::PagesController, :release, site: site
+            task.process Cms::Agents::Tasks::PagesController, :release, site: site
           end
         end
       end
@@ -50,7 +50,7 @@ class Cms::Task
       def remove_pages(opts = {})
         find_sites(opts).each do |site|
           ready name: "cms:remove_pages", site_id: site.id do |task|
-            task.process Cms::Task::PagesController, :remove, site: site
+            task.process Cms::Agents::Tasks::PagesController, :remove, site: site
           end
         end
       end

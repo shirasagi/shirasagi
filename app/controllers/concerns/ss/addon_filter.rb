@@ -12,22 +12,20 @@ module SS::AddonFilter
         controller.stylesheets << path unless controller.stylesheets.include?(path)
       end
       javascripts.each do |path|
-        ctrl = controller.is_a?(Cell::Rails) ? controller.controller : controller
-        ctrl.javascripts << path unless ctrl.javascripts.include?(path)
+        #ctrl = controller.is_a?(Cell::Rails) ? controller.controller : controller
+        controller.javascripts << path unless controller.javascripts.include?(path)
       end
     end
   end
 
-  module EditCell
+  module Edit
     extend ActiveSupport::Concern
-    include SS::CellFilter
+    include SS::AgentFilter
     include SS::AddonFilter::Layout
 
     included do
-      helper ApplicationHelper
-      helper EditorHelper
       helper AddonHelper
-      before_action :inherit_variables
+      helper EditorHelper
     end
 
     public
@@ -52,14 +50,12 @@ module SS::AddonFilter
       end
   end
 
-  module ViewCell
+  module View
     extend ActiveSupport::Concern
-    include SS::CellFilter
+    include SS::AgentFilter
 
     included do
-      helper ApplicationHelper
       helper EditorHelper
-      before_action :inherit_variables
     end
 
     public

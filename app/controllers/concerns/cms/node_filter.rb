@@ -11,14 +11,12 @@ module Cms::NodeFilter
       @item.route = params[:route] if params[:route].present?
       @fix_params = fix_params
 
-      cell = "#{@item.route.sub('/', '/nodes/')}/edit"
-      resp = render_cell cell, params[:action]
+      controller = "#{@item.route.sub('/', '/agents/nodes/')}/edit"
+      resp = render_agent controller, params[:action]
 
-      if resp.is_a?(String)
-        @resp = resp
-      else
-        @item = resp
-      end
+      @resp = resp.body.html_safe
+
+      resp.code != "200"
     end
 
     def redirect_url
@@ -35,36 +33,40 @@ module Cms::NodeFilter
 
   public
     def show
+      raise "403" unless @item.allowed?(:read, @cur_user)
       render_route
     end
 
     def new
       @item = @model.new pre_params.merge(fix_params)
+      raise "403" unless @item.allowed?(:edit, @cur_user)
       render_route
     end
 
     def create
       @item = @model.new get_params
-      render_route
-      render_create @resp.blank?, location: redirect_url
+      raise "403" unless @item.allowed?(:edit, @cur_user)
+      render_create render_route, location: redirect_url
     end
 
     def edit
+      raise "403" unless @item.allowed?(:edit, @cur_user)
       render_route
     end
 
     def update
+      raise "403" unless @item.allowed?(:edit, @cur_user)
       @item.attributes = get_params
-      render_route
-      render_update @resp.blank?, location: redirect_url
+      render_update render_route, location: redirect_url
     end
 
     def delete
+      raise "403" unless @item.allowed?(:delete, @cur_user)
       render_route
     end
 
     def destroy
-      render_route
-      render_destroy @resp.blank?, location: redirect_url
+      raise "403" unless @item.allowed?(:delete, @cur_user)
+      render_destroy render_route, location: redirect_url
     end
 end

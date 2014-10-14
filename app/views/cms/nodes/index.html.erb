@@ -22,7 +22,7 @@
           <%= link_to :view_site, item.full_url, target: :_blank %>
         </nav>
       </td>
-      <td><%= link_to item.name, node_nodes_path(cid: item), class: "icon-node" %></td>
+      <td><%= link_to item.name, "/.#{@cur_site.host}/#{item.route.sub(/\/.*/, '')}#{item.id}", class: "icon-node"%></td>
       <td class="filename"><%= File.basename item.filename %></td>
       <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>

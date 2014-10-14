@@ -13,7 +13,7 @@ class SS::Addon::Name
   end
 
   def path
-    @name.sub("/", "/addons/")#.pluralize
+    @name.sub("/", "/agents/addons/")#.pluralize
   end
 
   def id
@@ -22,7 +22,7 @@ class SS::Addon::Name
 
   def exists?(type = :view)
     begin
-      klass = "#{path}/#{type}_cell".camelize.constantize
+      klass = "#{path}/#{type}_controller".camelize.constantize
       klass.is_a?(Class)
     rescue => e
       return false

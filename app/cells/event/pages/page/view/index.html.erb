@@ -1,4 +1,0 @@
-<% Event::Page.addons.each do |addon| %>
-  <% next unless addon.exists?(:view) %>
-  <%= render_cell "#{addon.path}/view", params[:action] %>
-<% end %>

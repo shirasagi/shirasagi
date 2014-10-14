@@ -1,7 +1,7 @@
 module Cms::PublicFilter
   extend ActiveSupport::Concern
-  include Cms::ReleaseFilter::Layout
-  include Cms::ReleaseFilter::Page
+  include Cms::PublicFilter::Node
+  include Cms::PublicFilter::Page
 
   cattr_accessor(:filters) { [] }
 
@@ -27,20 +27,17 @@ module Cms::PublicFilter
       if @html =~ /\.part\.html$/
         part = find_part(@html)
         raise "404" unless part
-        @cur_path = params[:ref]
+        @cur_path = params[:ref] || "/"
         send_part render_part(part, xhr: true)
-
+      elsif page = find_page(@html)
+        self.response = render_page page
+        send_page page
+      elsif node = find_node(@html)
+        self.response = render_node node
+        send_page node
       else
-        page = find_page(@html)
-        send_page render_page(page) if page
-
-        if response.body.blank?
-          node = find_node(@html)
-          raise "404" unless node
-          send_page render_node(node)
-        end
+        raise "404"
       end
-      raise "404" if response.body.blank?
     end
 
   private
@@ -121,20 +118,13 @@ module Cms::PublicFilter
       end
     end
 
-    def send_page(body)
-      return unless body
-      return if response.body.present?
+    def send_page(page)
+      raise "404" unless response
 
-      respond_to do |format|
-        format.html {
-          if @cur_layout
-            render inline: render_layout(body), layout: (request.xhr? ? false : "cms/page")
-          else
-            render inline: body
-          end
-        }
-        format.json { render json: body }
-        format.xml  { render xml: body }
+      if response.content_type == "text/html" && page.layout
+        render inline: render_layout(page.layout), layout: (request.xhr? ? false : "cms/page")
+      else
+        @_response_body = response.body
       end
     end
 

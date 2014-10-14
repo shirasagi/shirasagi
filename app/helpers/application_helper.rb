@@ -78,4 +78,8 @@ module ApplicationHelper
     h << %(</div>)
     h.join("\n").html_safe
   end
+
+  def render_agent(controller_name, action)
+    controller.render_agent(controller_name, action).body.html_safe
+  end
 end

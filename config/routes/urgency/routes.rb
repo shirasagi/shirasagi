@@ -13,8 +13,8 @@ SS::Application.routes.draw do
   end
 
   node "urgency" do
-    get "layout/layout-:layout.html" => "public#index", cell: "nodes/layout",
-      layout: /\d+/
+    get "layout/(index.html)" => "public#empty", cell: "nodes/layout"
+    get "layout/layout-:layout.html" => "public#index", cell: "nodes/layout", layout: /\d+/
   end
 
 end

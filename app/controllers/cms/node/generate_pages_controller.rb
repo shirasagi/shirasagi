@@ -1,6 +1,6 @@
 class Cms::Node::GeneratePagesController < ApplicationController
   include Cms::BaseFilter
-  include SS::TaskFilter
+  include SS::ExecFilter
 
   navi_view "cms/node/main/navi"
 

@@ -1,6 +1,11 @@
 module History::BaseFilter
   extend ActiveSupport::Concern
 
+  public
+    def delete
+      @item = @model.new
+    end
+
   private
     def send_csv(items)
       require "csv"
@@ -19,10 +24,6 @@ module History::BaseFilter
       end
 
       send_data csv.encode("SJIS"), filename: "history_logs_#{Time.now.to_i}.csv"
-    end
-
-    def delete
-      @item = @model.new
     end
 
     def render_destroy(result, opts = {})

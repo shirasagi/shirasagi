@@ -103,10 +103,11 @@ module SS::Task::Model
     end
 
     def process(controller, action, params = {})
-      cont = controller.new
-      cont.params   = ActionController::Parameters.new params.merge(task: self)
-      cont.request  = ActionDispatch::Request.new "rack.input" => "", "REQUEST_METHOD" => "GET"
-      cont.response = ActionDispatch::Response.new
-      cont.process action
+      agent = SS::Agent.new controller
+      agent.controller.instance_variable_set :@task, self
+      params.each do |k, v|
+        agent.controller.instance_variable_set :"@#{k}", v
+      end
+      agent.invoke action
     end
 end

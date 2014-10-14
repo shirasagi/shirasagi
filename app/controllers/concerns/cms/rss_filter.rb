@@ -33,6 +33,6 @@ module Cms::RssFilter
         end
       end
 
-      rss.to_s
+      render xml: rss.to_xml
     end
 end

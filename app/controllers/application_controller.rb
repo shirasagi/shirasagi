@@ -11,6 +11,22 @@ class ApplicationController < ActionController::Base
       I18n.t key, opts.merge(default: key.to_s.humanize)
     end
 
+    def new_agent(controller_name)
+      agent = SS::Agent.new controller_name
+      agent.controller.params  = params
+      agent.controller.request = request
+      agent.controller.instance_variable_set :@controller, self
+      agent
+    end
+
+    def render_agent(controller_name, action)
+      new_agent(controller_name).render(action)
+    end
+
+    def invoke_agent(controller_name, action)
+      new_agent(controller_name).invoke(action)
+    end
+
   private
     def remote_addr
       request.env["HTTP_X_REAL_IP"] || request.remote_addr

@@ -1,10 +1,12 @@
 <dl class="see">
    <% @item.data.each do |data| %>
-    <dt><%= data.column.name %></dt>
-    <dd><%= data.value %></dd>
+   <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
+   <dd><%= data.value %></dd>
    <% end %>
+
    <dt><%= @model.t :remote_addr %></dt>
    <dd><%= @item.send(:remote_addr) %></dd>
+
    <dt><%= @model.t :user_agent %></dt>
    <dd><%= @item.send(:user_agent) %></dd>
 </dl>
