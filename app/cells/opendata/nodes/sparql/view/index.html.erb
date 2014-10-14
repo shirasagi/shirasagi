@@ -5,14 +5,14 @@
   <%= form_tag("", method: :get) do %>
     <table>
       <tr>
-        <th style="text-align: left;vertical-align: top;">Query</th>
+        <th style="text-align: left;vertical-align: middle;">Query</th>
         <td>
           <textarea name="query"
            style="width: 400px; height: 100px;">select distinct * where { graph ?g { ?s ?p ?o . } }</textarea>
         </td>
       </tr>
       <tr>
-        <th style="text-align: left;vertical-align: top;">Format</th>
+        <th style="text-align: left;vertical-align: middle;">Format</th>
         <td>
           <select name="format">
             <option>HTML</option>
