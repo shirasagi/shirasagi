@@ -233,11 +233,12 @@ table.index {
       float: right;
       color: #888;
     }
-    nav.row-menu {
+    nav.tap-menu {
       display: none;
       position: absolute;
       z-index: 100;
       border: $border-gray3;
+      @include box-shadow(1px 1px 3px #bbb);
       a {
         display: block;
         padding: 5px 15px 2px;

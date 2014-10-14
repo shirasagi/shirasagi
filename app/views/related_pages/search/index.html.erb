@@ -42,7 +42,7 @@ createSearchedElement = (id, result) ->
       #tr.parents("table").find("th input[type=checkbox]").attr "checked", false
     return
   tr.mouseleave ->
-    tr.find(".row-menu").hide()
+    tr.find(".tap-menu").hide()
     return
   tr.find("a[href]").click ->
     $(".mod-related table.index").prepend(createFormElement(tr.clone(false)))

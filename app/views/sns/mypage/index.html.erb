@@ -12,7 +12,7 @@
         <td>
           <div class="name"><%= link_to item.name, "/.#{item.host}" %></div>
           <div class="url"><%= link_to item.full_url, item.full_url, target: :_blank %></div>
-          <nav class="row-menu">
+          <nav class="tap-menu">
             <%= link_to :"cms.content", "/.#{item.host}" %>
             <%= link_to :"cms.view_site", item.full_url, target: :_blank %>
           </nav>

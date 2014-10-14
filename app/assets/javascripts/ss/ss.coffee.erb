@@ -144,9 +144,9 @@ class @SS_ListUI
     $("table.index tbody tr").each ->
       tr    = $(this)
       tbody = tr.parent()
-      tr.find(".row-menu a").each ->
+      tr.find(".tap-menu a").each ->
         if $(this).attr("href")[-7..-1] == "/delete"
-          tr.find(".row-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= t 'views.links.delete_all' %></a></nav>")
+          tr.find(".tap-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= t 'views.links.delete_all' %></a></nav>")
       tr.find("input[type=checkbox]").each ->
         tr.toggleClass("checked", $(this).prop("checked"))
       tr.find("input[type=checkbox]").change ->
@@ -157,16 +157,16 @@ class @SS_ListUI
         $("thead input[type=checkbox]").
           prop("checked", (chkcnt > 0 && $("input[name='ids[]']").length == chkcnt) )
         tr.find(".multiple-menu").hide() if !@checked
-      tr.find("input[type=checkbox]").mouseover ->
-        tr.find(".multiple-menu").show() if @checked
+      tr.find("input[type=checkbox]").mouseover (e) ->
+        tr.find(".multiple-menu").css("left", e.pageX + 15).css("top", e.pageY - 5).show() if @checked
       tr.mouseup (e) ->
         if !$(e.target).is('a') && !$(e.target).is("input")
           tbody.find("input[type=checkbox]").attr("checked", false)
           tbody.find("tr").removeClass("checked")
-          tr.find(".row-menu").css("left", e.pageX + 2).css("top", e.pageY).show()
+          tr.find(".tap-menu").css("left", e.pageX + 2).css("top", e.pageY).show()
           tr.find("input[type=checkbox]").trigger("click")
       tr.mouseleave ->
-        tr.find(".row-menu").hide()
+        tr.find(".tap-menu").hide()
         tr.find(".multiple-menu").hide()
       tr.find(".multiple-menu a").on "click", (e) ->
         if $(this).attr("href") == "multipleDelete"

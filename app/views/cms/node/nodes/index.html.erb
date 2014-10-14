@@ -13,14 +13,14 @@
     <tr>
       <% if @cur_node.parent %>
       <td class="checkbox">
-        <nav class="row-menu">
+        <nav class="tap-menu">
           <%= link_to :parent_directory, cid: @cur_node.parent %>
         </nav>
       </td>
       <td><%= link_to :parent_directory, { cid: @cur_node.parent }, class: "icon-node-up" %></td>
       <% else %>
       <td class="checkbox">
-        <nav class="row-menu">
+        <nav class="tap-menu">
           <%= link_to :parent_directory, cms_nodes_path %>
         </nav>
       </td>
@@ -35,7 +35,7 @@
     <tr>
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="row-menu">
+        <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site)  %>
           <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site)  %>
           <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site)  %>

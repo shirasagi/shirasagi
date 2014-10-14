@@ -13,7 +13,7 @@
     <% layout_path = "#{@cur_node.filename}/layout-#{item.id}.html" %>
     <tr<%= raw( default_layout?(item) ? ' class="default-layout"' : "" ) %>>
       <td>
-        <nav class="row-menu">
+        <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>
           <% unless selected_layout?(item) %>
             <%= link_to t('urgency.preview'), cms_preview_path(path: layout_path), target: "_blank" %>

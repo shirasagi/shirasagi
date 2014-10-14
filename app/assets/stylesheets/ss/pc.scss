@@ -392,11 +392,12 @@ table.index {
   td.filename {
     color: $green;
   }
-  nav.row-menu, nav.multiple-menu {
+  nav.tap-menu, nav.multiple-menu {
     display: none;
     position: absolute;
     min-width: 10em;
     border: $border-gray3;
+    @include box-shadow(1px 1px 3px #bbb);
     background-color: #fff;
     z-index: 100;
     a {

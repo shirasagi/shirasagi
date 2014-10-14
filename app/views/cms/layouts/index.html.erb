@@ -13,7 +13,7 @@
     <tr>
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="row-menu">
+        <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
           <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
