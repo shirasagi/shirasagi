@@ -1,0 +1,8 @@
+<dl class="see">
+  <dt><%= @model.t :contact_tel %></dt>
+  <dd class="contact-tel"><%= @item.contact_tel if @item.contact_tel.present? %></dd>
+  <dt><%= @model.t :contact_fax %></dt>
+  <dd class="contact-fax"><%= @item.contact_fax if @item.contact_fax.present? %></dd>
+  <dt><%= @model.t :contact_email %></dt>
+  <dd class="contact-email"><%= @item.contact_email if @item.contact_email.present? %></dd>
+</dl>

@@ -10,6 +10,7 @@ class Faq::Page
   include Workflow::Addon::Approver
   include Faq::Addon::Question
   include Faq::Reference::Question
+  include Contact::Addon::Page
 
   set_permission_name "faq_pages"
 

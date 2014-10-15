@@ -12,6 +12,7 @@ class Cms::Page
   include Category::Addon::Category
   include Event::Addon::Date
   include Workflow::Addon::Approver
+  include Contact::Addon::Page
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 end

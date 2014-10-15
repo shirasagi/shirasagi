@@ -1,0 +1,11 @@
+<% telptn = "\\d{1,4}-\\d{4}$|\\d{1,5}-\\d{1,4}-\\d{4,5}" %>
+<dl class="see">
+  <dt><%= @model.t :contact_tel %><%= @model.tt :contact_tel %></dt>
+  <dd><%= f.telephone_field :contact_tel, pattern: telptn %></dd>
+
+  <dt><%= @model.t :contact_fax %><%= @model.tt :contact_fax %></dt>
+  <dd><%= f.telephone_field :contact_fax, pattern: telptn %></dd>
+
+  <dt><%= @model.t :contact_email %><%= @model.tt :contact_email %></dt>
+  <dd><%= f.email_field :contact_email %></dd>
+</dl>

@@ -8,6 +8,7 @@ class Article::Page
   include Category::Addon::Category
   include Event::Addon::Date
   include Workflow::Addon::Approver
+  include Contact::Addon::Page
 
   set_permission_name "article_pages"
 
