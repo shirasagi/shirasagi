@@ -1,0 +1,82 @@
+ja:
+  facility:
+    page: 施設
+    category:
+      setting: 種類設定
+      index: 施設の種類を設定する
+      search: 施設の種類を検索
+      setting: 施設の種類を選択
+      name: 種類
+    location:
+      setting: 地域設定
+      index: 施設の地域を設定する
+      search: 施設の地域を検索
+      setting: 施設の地域を選択
+      name: 地域
+    use:
+      setting: 用途設定
+      index: 施設の用途を設定する
+      search: 施設の用途を検索
+      setting: 施設の用途を選択
+      name: 用途
+
+    search: 施設検索
+    result: 検索結果
+    count: 件
+    image: 施設写真
+    map: 施設地図
+    edit_page: 施設情報を編集する
+    empty: 上記の条件では施設が見つかりませんでした。
+    tab:
+      map: 地図表示
+      result: 一覧表示
+    button:
+      add_info: 項目を追加する
+      del_info: 削除
+    submit:
+      search: この条件で検索する
+      reset: 検索条件をリセットする
+      change: 検索条件を変更する
+
+  modules:
+    facility: 施設
+    addons:
+      facility/body: 施設情報
+      facility/additional_info: 追加情報
+      facility/image: 施設写真
+      facility/image_info: 写真情報
+      facility/pointer_image: ポインタ画像
+      facility/location/location: 施設の地域
+      facility/location/setting: 施設の地域
+      facility/use/use: 施設の用途
+      facility/use/setting: 施設の用途
+      facility/category/category: 施設の種類
+      facility/category/setting: 施設の種類
+
+  cms:
+    nodes:
+      facility/page: 施設情報
+      facility/node: 施設リスト
+      facility/category: 施設の種類
+      facility/use: 施設の用途
+      facility/location: 施設のある地域
+      facility/search: 施設検索
+
+  mongoid:
+    attributes:
+      facility/node/page:
+        name: 施設名
+        address: 住所
+        tel: 電話番号
+        fax: FAX
+        homepage: URL
+        hours: 開所時間
+        holiday: 休園日
+        kana: 施設名ふりがな
+        principal: 園長名
+        extended_day_care: 延長保育
+        field: 項目名
+        value: 内容
+      facility/image:
+        image_alt: ALT属性
+        image_comment: 説明文

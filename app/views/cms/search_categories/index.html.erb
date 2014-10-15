@@ -2,25 +2,25 @@
 
 selectCategories =(categories) ->
   $(".search-categories input:checkbox").each ->
-    $("table.selected-categories tr[data-id=#{$(this).val()}]").remove();
+    $.colorbox.element().closest("dl").find("table.selected-categories tr[data-id=#{$(this).val()}]").remove();
 
   for category in categories
     tr = $("<tr>").attr("data-id", category["id"])
-    input = $("<td>").append($("input:hidden.hidden-categories-ids:first").clone(false))
+    input = $("<td>").append($.colorbox.element().closest("dl").find("input:hidden.hidden-categories-ids:first").clone(false))
     input.find("input").val(category["id"])
     input.append(category["name"])
     deselect = $("<td>").append('<%= link_to t("cms.search_categories.deselect"), "#", class: :deselect %>')
     deselect.find("a.deselect").click(deselectCategory)
     tr.append(input)
     tr.append(deselect)
-    $("table.selected-categories tbody").append(tr)
-    $("table.selected-categories").show()
+    $.colorbox.element().closest("dl").find("table.selected-categories tbody").append(tr)
+    $.colorbox.element().closest("dl").find("table.selected-categories").show()
   return
 
 deselectCategory =() ->
   $(this).parents("tr:first").remove()
-  if $("table.selected-categories tr[data-id]").size() == 0
-    $("table.selected-categories table.index").hide()
+  if $.colorbox.element().closest("dl").find("table.selected-categories tr[data-id]").size() == 0
+    $.colorbox.element().closest("dl").find("table.selected-categories").hide()
   return false
 
 searchCategories =(elem) ->
@@ -37,7 +37,7 @@ searchCategories =(elem) ->
         $("div.search-categories").append data
 
         selected = []
-        $("table.selected-categories tbody tr").each ->
+        $.colorbox.element().closest("dl").find("table.selected-categories tbody tr").each ->
           selected.push $(this).attr("data-id")
         for id in selected
           $(".search-categories input:checkbox[value=#{id}]").prop("checked", true);
@@ -94,3 +94,4 @@ $ ->
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= button_tag t("cms.search_categories.select"), { type: :button, class: "select-categories" } %>
 </div>
+

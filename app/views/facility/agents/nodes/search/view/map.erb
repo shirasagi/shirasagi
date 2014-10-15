@@ -1,0 +1,106 @@
+<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
+<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
+
+<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap" %>
+<%= coffee do %>
+
+attachMessage = (id) ->
+  google.maps.event.addListener markers[id]["marker"], 'click', (event) ->
+    if(window.opened)
+      window.opened.close()
+    markers[id]["window"].open(markers[id]["marker"].getMap(), markers[id]["marker"])
+    window.opened = markers[id]["window"]
+    return
+  return
+
+window.initmap = ->
+  #googleMap api v3
+  mapOptions = {
+    center: new google.maps.LatLng(<%= raw @map_loc[0] %>, <%= raw @map_loc[1] %>),
+    zoom: <%= raw @map_zoom %>,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    panControl: false,
+    zoomControl: true,
+    zoomControlOptions: {
+      style: google.maps.ZoomControlStyle.LARGE
+    },
+    mapTypeControl: true,
+    scaleControl: true,
+    scrollwheel: true,
+    streetViewControl: true,
+    overviewMapControl: true,
+    overviewMapControlOptions: {
+        opened: true
+    }
+  };
+
+  window.map = new google.maps.Map(document.getElementById("map-canvas"),  mapOptions)
+  window.markers = <%= raw @markers.to_json %>
+  window.opened = null
+
+  $.each markers, (id, value) ->
+    if markers[id]["pointer_image"]
+      markers[id]["marker"] = new google.maps.Marker(
+        position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
+        icon: markers[id]["pointer_image"],
+        map: window.map
+      )
+    else
+      markers[id]["marker"] = new google.maps.Marker(
+        position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
+        map: window.map
+      )
+    markers[id]["window"] = new google.maps.InfoWindow(
+      content: markers[id]["info"]
+    )
+    attachMessage(id)
+    return
+  return
+
+$ ->
+  $(".filters a").on "click", ->
+    if $(this).hasClass("clicked")
+       $(this).removeClass("clicked")
+    else
+      $(this).addClass("clicked")
+
+    dataIDs = []
+    $(".filters a.clicked").each ->
+      dataIDs.push parseInt($(this).attr("data-id"))
+
+    $.each markers, (id, value) ->
+      visible = false
+      $.each dataIDs, ->
+        if $.inArray(parseInt(this), markers[id]["location"]) >= 0
+          visible = true
+          return false
+      if visible
+        markers[id]["marker"].setVisible(true)
+      else
+        markers[id]["marker"].setVisible(false)
+        markers[id]["window"].close()
+
+    return false;
+
+  $(".ajax-box").on "click", ->
+    $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "./map.html" }) %>"})
+    return false
+
+<% end %>
+
+<%= render partial: "navi", locals: { current: "map" } %>
+
+<div id="map-canvas"></div>
+
+<nav class="filters">
+  <% locations = @locations.present? ? @locations : @cur_node.st_locations %>
+  <% if locations.present? %>
+    <ul>
+      <% locations.each do |cate| %>
+        <li class="<%= cate.basename %>">
+          <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</nav>

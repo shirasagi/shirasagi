@@ -1,0 +1,40 @@
+<%= coffee do %>
+$ ->
+  @deleteContent = (id) ->
+    $(".file-view").each ->
+      $(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
+
+<% end %>
+
+<dl class="see">
+  <dd class="wide">
+    <%= f.hidden_field "image_id", value: "" %>
+
+    <%= link_to :upload, sns_user_image_files_path(@cur_user), class: "ajax-box" %>
+
+    <div id="selected-files">
+      <% if @item.image.present? %>
+        <div class="file-view">
+          <a class="thumb" href="<%= view_sns_user_temp_file_path(user: @cur_user, id: @item.image) %>" target="_blank">
+            <% if @item.image.image? %>
+              <img src="<%= thumb_sns_user_temp_file_path(user: @cur_user, id: @item.image) %>" alt="<%= @item.image.basename %>" />
+            <% else %>
+              <span class="ext icon-<%= @item.image.extname %>"><%= @item.image.extname %></span>
+            <% end %>
+          </a>
+          <div class="name">
+            <input type="hidden" name="item[image_id]" value="<%= @item.image.id %>" />
+            <%= @item.image.basename %>
+            <br />
+          </div>
+          <div class="action paste">
+            <% content = link_to "#{@item.image.filename} (#{@item.image.extname.upcase} #{number_to_human_size(@item.image.size)})", "/fs/#{@item.image.id}/#{@item.image.filename}", class: "icon-#{@item.image.extname}" %>
+          </div>
+          <div class="action delete">
+            <%= link_to :"sns.delete", "#", :onclick => "deleteContent('#{@item.image.id}'); return false;" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </dd>
+</dl>

@@ -86,6 +86,14 @@ module SS::File::Model
       file
     end
 
+    def url
+      "/fs/#{id}/#{filename}"
+    end
+
+    def thumb_url
+      "/fs/#{id}/thumb/#{filename}"
+    end
+
   private
     def set_filename
       self.filename   ||= in_file.original_filename

@@ -1,5 +1,6 @@
 module Workflow
   class Initializer
+
     Cms::Role.permission :release_other_article_pages
     Cms::Role.permission :release_private_article_pages
     Cms::Role.permission :release_other_cms_pages
