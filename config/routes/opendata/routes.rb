@@ -48,6 +48,7 @@ SS::Application.routes.draw do
     get "mypage/login"  => "public#login", cell: "nodes/mypage"
     post "mypage/login" => "public#login", cell: "nodes/mypage"
     get "mypage/logout" => "public#logout", cell: "nodes/mypage"
+    get "mypage/:provider" => "public#provider", cell: "nodes/mypage"
 
     resource :profile, path: "my_profile", controller: "public", cell: "nodes/my_profile", concerns: :deletion
     resources :datasets, path: "my_dataset", controller: "public", cell: "nodes/my_dataset", concerns: :deletion do

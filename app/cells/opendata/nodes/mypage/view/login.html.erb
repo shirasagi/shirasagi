@@ -1,8 +1,8 @@
 <ul>
-  <li><a href="#">Facebook</a></li>
-  <li><a href="#">Google</a></li>
-  <li><a href="#">Twitter</a></li>
-  <li><a href="#">Yahoo! Japan</a></li>
+  <li class="Twitter"><%= link_to :twitter,"/mypage/twitter" %></li>
+  <li class="facebook"><%= link_to :facebook, "/mypage/facebook" %></li>
+  <li class="Yahoo"><%= link_to :yahoo,"/mypage/yahoojp" %></li>
+  <li class="Google"><%= link_to :google,"/mypage/google_oauth2" %></li>
 </ul>
 
 <%= form_tag "", class: "member-login" do |f| %>
