@@ -173,6 +173,7 @@ textarea {
     #portal-kv, #dataset-kv {
       width: $page-width;
       margin: 0 auto;
+      padding: 0 60px;
     }
     #portal-kv {
       overflow: hidden;
@@ -276,7 +277,7 @@ textarea {
 #contents, #data-top-contents {
   width: $page-width;
   margin: 0 auto;
-  padding-bottom: 71px;
+  padding: 0 60px 71px 60px;
   #main {
     float: left;
     width: 803px;
@@ -657,6 +658,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
   .inner {
     width: $page-width;
     margin: 0 auto;
+    padding: 0 60px;
     overflow: hidden;
     .logo {
       float: left;
@@ -754,7 +756,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
 .crumbs {
   width: $page-width;
   margin: 0 auto;
-  padding: 15px 0;
+  padding: 15px 60px;
 }
 
 #od-searchgroup-name {
