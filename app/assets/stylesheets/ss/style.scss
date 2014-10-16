@@ -436,6 +436,23 @@ input.date, input.datetime {
   background: $white image-url("ss/calendar.png") no-repeat 5px center;
 }
 
+// -------------------------------------------------------------------------------------------------
+// event
+
+.mod-event-additional-info {
+  dd.value {
+    font-weight: bold;
+    padding-left: 40px;
+  }
+  textarea {
+    width: 80%;
+  }
+  .clear {
+    position: relative;
+    bottom: 60px;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // import
 

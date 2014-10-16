@@ -9,6 +9,10 @@ module Event::EventHelper
     t("date.abbr_day_names")[date.wday]
   end
 
+  def t_wdays
+    t("date.abbr_day_names")
+  end
+
   def event_h1_class(month)
     %w(jan feb mar apr may jun jul aug sep oct nov dec)[month - 1]
   end
@@ -18,9 +22,26 @@ module Event::EventHelper
     date.national_holiday? ? "#{cls} holiday" : cls
   end
 
+  def event_td_class(date, cdate)
+    cls = event_dl_class(date)
+    cls = "#{cls} today" if date == Date.today
+
+    if date.month > cdate.month
+      "#{cls} next-month"
+    elsif date.month < cdate.month
+      "#{cls} prev-month"
+    else
+      cls
+    end
+  end
+
+  def event_category_class(page)
+    page.categories.entries.map { |cate| cate.basename }.join(" ")
+  end
+
   def within_one_year?(date)
-    # get current date and change day to 1
-    current = Date.current.change(day: 1)
+    # get current date
+    current = Date.current
 
     # manipulate year from current date
     start_date = current.advance(years: -1)
@@ -29,14 +50,30 @@ module Event::EventHelper
     date.between?(start_date, close_date)
   end
 
-  def link_to_monthly(date)
+  def link_to_monthly(date, opts = {})
     year  = date.year
     month = date.month
+    name = opts[:name].present? ? opts[:name] : "#{month}#{t_date('month')}"
+    path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
 
     if within_one_year?(date)
-      link_to "#{month}#{t_date('month')}", "#{@cur_node.url}#{'%04d' % year}#{'%02d' % month}.html"
+      link_to name , "#{path}#{'%04d' % year}#{'%02d' % month}.html"
     else
-      "#{month}#{t_date('month')}"
+      name
+    end
+  end
+
+  def link_to_daily(date, opts = {})
+    year  = date.year
+    month = date.month
+    day   = date.day
+    name = opts[:name].present? ? opts[:name] : "#{day}#{t_date('day')}"
+    path = opts[:path].present? ? opts[:path] :  @cur_node.try(:url).to_s
+
+    if within_one_year?(date)
+      link_to name, "#{path}#{'%04d' % year}#{'%02d' % month}#{'%02d' % day}.html"
+    else
+      name
     end
   end
 

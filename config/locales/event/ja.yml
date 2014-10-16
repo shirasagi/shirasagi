@@ -3,22 +3,51 @@ ja:
     page: イベントページ
     add_date: 日付フォームを追加する
     del_date: 削除
+    add_info: 項目を追加する
+    del_info: 削除
+    next_month: 次の月へ
+    prev_month: 前の月へ
+    next_day: 次の日へ
+    prev_day: 前の日へ
+    current_month: 今月
+    filter_all: 全て
 
   modules:
     event: イベント
     addons:
       event/date: イベント
       event/page_list: リスト表示
+      event/body: イベント情報
+      event/additional_info: 追加情報
+      event/category/category: カテゴリー
+      event/category/setting: カテゴリー
 
   cms:
     nodes:
       event/page: イベントリスト
+    parts:
+      event/calendar: カレンダー
+
+  cms_role:
+    read_other_event_pages: イベントページの閲覧（全て）
+    read_private_event_pages: イベントページの閲覧（所有）
+    edit_other_event_pages: イベントページの編集（全て）
+    edit_private_event_pages: イベントページの編集（所有）
+    delete_other_event_pages: イベントページの削除（全て）
+    delete_private_event_pages: イベントページの削除（所有）
 
   mongoid:
     attributes:
       cms/page/model:
         event_name: イベントタイトル
         event_dates: イベント日
+        schedule: 日時
+        venue: 開催場所
+        content: 内容
+        cost: 費用
+        homepage: URL
+        field: 項目名
+        value: 内容
 
   datetime:
     prompts:

@@ -1,0 +1,22 @@
+<%
+  st_categories = @cur_page.parent.try(:st_categories)
+  if st_categories
+    event_categories = @cur_page.categories.
+      in(id: st_categories.pluck(:id)).order_by(order: -1)
+  else
+    event_categories = []
+  end
+%>
+
+<% if event_categories.present? %>
+<nav class="categories">
+  <header><h1>カテゴリー</h1></header>
+  <div class="nodes">
+    <% event_categories.each do |item| %>
+    <article>
+      <header><h2><%= link_to item.name, item.url %></h2></header>
+    </article>
+    <% end %>
+  </div>
+</nav>
+<% end %>
