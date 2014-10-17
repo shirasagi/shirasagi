@@ -77,6 +77,7 @@ textarea {
   border-bottom: 2px solid #ddcfcc;
   @include grd-gray;
   .inner {
+    position: relative;
     @include clear;
     overflow: visible;
     width: 1200px;
@@ -87,7 +88,6 @@ textarea {
     }
     .tab {
       float: left;
-      padding-top: 1px;
       ul {
         @include clear;
         padding-top: 8px;
@@ -101,10 +101,10 @@ textarea {
           background: url(../img/ic-idea-s.png) no-repeat 11px center;
         }
         li {
-          display: block;
-          float: left;
+          display: inline-block;
+          position: absolute;
+          bottom: 0;
           width: 200px;
-          margin-right: 10px;
           @include border-top-radius(5px);
           a {
             display: block;
@@ -122,9 +122,22 @@ textarea {
         width: 150px;
         @include opacity(.5);
       }
+      .tab01 {
+        position: absolute;
+        left: 250px;
+      }
+      .tab02 {
+        position: absolute;
+        left: 460px;
+      }
+      .tab03 {
+        position: absolute;
+        left: 620px;
+      }
     }
     .login {
       float: right;
+      max-width: 400px;
       padding: 12px 10px 12px 0;
       background: url(../img/ic-login.png) no-repeat left center;
       a {
@@ -138,24 +151,17 @@ textarea {
 }
 
 .s-dataset #head {
-  .inner {
-    position: relative;
-    .tab .tab01 {
-      position: absolute;
-      left: 250px;
-      bottom: -2px;
-      width: 196px;
-      border: 2px solid #ddcfcc;
-      border-bottom: 2px solid $white;
-      background: $white;
+  .inner .tab .tab01 {
+    position: absolute;
+    bottom: -2px;
+    width: 196px;
+    border: 2px solid #ddcfcc;
+    border-bottom: 2px solid $white;
+    background: $white;
+    a {
+      padding: 8px 0 6px 33px;
+      background: url(../img/ic-data-s-bk.png) no-repeat 10px center;
     }
-    .tab .tab02 {
-      margin-left: 210px;
-    }
-  }
-  .inner .tab ul li.tab01 a {
-    padding: 8px 0 6px 33px;
-    background: url(../img/ic-data-s-bk.png) no-repeat 10px center;
   }
 }
 
