@@ -2,14 +2,31 @@
   <a href="new/">新規作成</a>
 </nav>
 
-<div class="opendata-datasets">
-  <% @items.each do |item| %>
-  <article>
-    <header>
-      <h2><a href="<%= "#{item.id}/" %>"><%= item.name %></a></h2>
-    </header>
-  </article>
-  <% end %>
-</div>
+<table class="opendata-datasets index">
+  <thead>
+    <tr>
+      <th class="name">データセット名</th>
+      <th class="updated">更新日時</th>
+      <th class="state">状態</th>
+      <th class="point">いいね</th>
+      <th class="downloaded">ダウンロード</th>
+      <th class="app">アプリ</th>
+      <th class="idea">アイデア</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+    <tr>
+      <td><a href="<%= "#{item.id}/" %>"><%= item.name %></a></td>
+      <td><%= l item.updated.to_date, format: :long %></td>
+      <td><%= item.label :state %></td>
+      <td><%= item.point %></td>
+      <td><%= item.downloaded %></td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <%= paginate @items if @items.try(:current_page) %>

@@ -73,13 +73,6 @@ gem 'sparql-client'
 gem 'rdf-turtle'
 gem 'json_pure'
 
-# OAuth
-gem 'omniauth'
-gem 'omniauth-twitter'
-gem 'omniauth-facebook'
-gem 'omniauth-yahoojp'
-gem 'omniauth-google-oauth2'
-
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
 group :development, :test do

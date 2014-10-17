@@ -2,6 +2,27 @@
   <a href="new/">新規作成</a>
 </nav>
 
+<table class="opendata-resources index">
+  <thead>
+    <tr>
+      <th class="name">リソース名</th>
+      <th class="updated">更新日時</th>
+      <th class="format">フォーマット</th>
+      <th class="size">サイズ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+    <tr>
+      <td><a href="<%= "#{item.id}/" %>"><%= item.name %></a></td>
+      <td><%= l item.updated.to_date, format: :long %></td>
+      <td><%= item.format %></td>
+      <td><%= number_to_human_size item.size %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <div class="opendata-resources">
   <% @items.each do |item| %>
   <article>

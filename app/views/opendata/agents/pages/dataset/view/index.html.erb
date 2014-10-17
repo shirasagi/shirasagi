@@ -45,7 +45,7 @@
           <%= rs.name %>
           (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
         </div>
-        <div><%= link_to "ダウンロード", rs.url, class: "download" %> 回</div>
+        <div><%= link_to "ダウンロード", rs.url, class: "download" %></div>
         <div class="text"><%= rs.text %></div>
         <% end %>
       </div>
@@ -64,7 +64,7 @@
       <dd><%= @cur_page.send :related_url %></dd>
 
       <dt><%= @cur_page.t :downloaded %></dt>
-      <dd><%= @cur_page.send :downloaded %></dd>
+      <dd><%= @cur_page.send :downloaded %> 回</dd>
 
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %></dd>
