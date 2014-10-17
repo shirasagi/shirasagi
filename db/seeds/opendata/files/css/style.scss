@@ -251,8 +251,8 @@ textarea {
   margin-top: 28px;
   a {
     display: block;
-    margin: 75px 0 0 290px;
-    padding: 15px 15px 15px 45px;
+    margin: 90px 0 0 290px;
+    padding: 10px 60px 10px 45px;
     @include border-radius(5px);
     background: url(../img/ic-add.png) no-repeat 20px center;
     @include fill-gray;
@@ -312,16 +312,17 @@ textarea {
     position: absolute;
     top: -150px;
     width: 249px;
-    padding: 10px 10px;
+    padding: 5px 10px;
     border: $border-hgry;
     background-color: $white;
     text-align: left;
     span {
       display: inline-block;
-      width: 110px;
-      padding: 10px 10px 10px 80px;
+      min-width: 110px;
+      padding: 5px 10px 5px 40px;
       background: url(../img/ic-data-m-bl.png) no-repeat left center;
       font-size: $px28;
+      text-align: center;
     }
   }
 }
@@ -610,12 +611,17 @@ textarea {
     padding: 8px 0 8px 16px;
     border-bottom: $border-hgry;
   }
-  time, h2 {
+  time {
     display: inline-block;
-    padding-right: 5px;
+    width: 120px;
   }
   h2 {
     display: inline;
+    margin-right: 10px;
+    padding: 0 5px;
+    a {
+      display: inline-block;
+    }
   }
 }
 
@@ -1077,30 +1083,31 @@ article.areas, article.formats {
 #s-mypage-login #contents ul {
   list-style: none;
   li {
+    width: 526px;
     margin-bottom: $box-margin;
     a {
       display: block;
-      width: 526px;
+      //width: 350px;
       margin-top: $box-margin;
-      padding: 16px 0;
+      padding: 16px 0 16px 170px;
       border: $border-hgry;
       color: $text;
-      text-align: center;
       vertical-align: middle;
       text-decoration: none;
     }
   }
+  li.Twitter {
+    margin-top: $box-margin;
+    background: url(../img/logo_Twitter.png) no-repeat 50px center;
+  }
   li.facebook {
     background: url(../img/logo_Facebook.png) no-repeat 50px center;
   }
-  li.Google {
-    background: url(../img/logo_Google.png) no-repeat 10px center;
-  }
-  li.Twitter {
-    background: url(../img/logo_Twitter.png) no-repeat 50px center;
-  }
   li.Yahoo {
     background: url(../img/logo_Yahoo.png) no-repeat 10px center;
+  }
+  li.Google {
+    background: url(../img/logo_Google.png) no-repeat 10px center;
   }
 }
 
