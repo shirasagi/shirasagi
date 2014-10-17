@@ -33,7 +33,8 @@ module Cms::Agents::Parts::Tabs
             @cur_node = node
             cont  = invoke_agent node_class, :index
             pages = cont.instance_variable_get(:@items)
-            pages = nil unless pages.klass.include?(Cms::Page::Model)
+            pages = nil if pages && !pages.include?(Mongoid::Criteria)
+            pages = nil if pages && !pages.klass.include?(Cms::Page::Model)
           end
 
           if pages.nil?
