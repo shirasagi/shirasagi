@@ -28,13 +28,13 @@ module Opendata::MypageFilter
       if opt[:session]
         session[:member] = SS::Crypt.encrypt("#{member._id},#{remote_addr},#{request.user_agent}")
       end
-      controller.redirect_to "/mypage/" if opt[:redirect]
+      redirect_to "/mypage/" if opt[:redirect]
       @cur_member = member
     end
 
     def unset_member(opt = {})
       session[:member] = nil
-      controller.redirect_to "/mypage/login" if opt[:redirect]
+      redirect_to "/mypage/login" if opt[:redirect]
       @cur_member = nil
     end
 end

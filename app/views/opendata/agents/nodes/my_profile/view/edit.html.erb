@@ -1,0 +1,18 @@
+<%= form_for :item, url: @cur_node.url, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <dl class="see">
+    <dt><%= @model.t :name %></dt>
+    <dd><%= f.text_field :name %></dd>
+
+    <dt><%= @model.t :email %></dt>
+    <dd><%= f.email_field :email %></dd>
+
+    <dt><%= @model.t :in_password %></dt>
+    <dd><%= f.password_field :in_password %></dd>
+  </dl>
+
+  <footer class="send">
+    <%= submit_tag t(:save), name: :save %>
+  </footer>
+<% end %>

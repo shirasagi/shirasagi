@@ -1,0 +1,10 @@
+<%= form_for :item, url: @item_url, html: { id: "item-form", method: :delete, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<%= render partial: "show" %>
+
+<footer class="send">
+  <%= f.submit t(:delete), class: :delete %>
+</footer>
+
+<% end %>

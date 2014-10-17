@@ -1,0 +1,13 @@
+<dl class="see opendata-dataset-resources">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :file_id %></dt>
+  <dd><%= f.file_field :in_file %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :format %></dt>
+  <dd><%= f.text_field :format %></dd>
+</dl>
