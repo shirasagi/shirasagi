@@ -38,10 +38,6 @@ $ ->
   <%= link_to "いいね！", "#", class: "add" %>
 </div>
 
-<div class="text">
-  <%=br @cur_page.send :text %>
-</div>
-
 <nav class="categories">
   <% @cur_page.categories.each do |c| %>
     <%= link_to c.name, @search_url + "?s[category_id]=#{c.id}", class: "category" %>
@@ -53,6 +49,10 @@ $ ->
     <%= link_to c, @search_url + "?s[tag]=#{c}", class: "tag" %>
   <% end %>
 </nav>
+
+<div class="text">
+  <%=br @cur_page.send :text %>
+</div>
 
 <div class="detail">
   <nav>
