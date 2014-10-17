@@ -1,10 +1,38 @@
+<%= coffee do %>
+$ ->
+  point_link = $(".point .add")
+
+  $.ajax
+    url: "<%= @cur_page.url + '/point/index.json' %>"
+    success: (data)->
+      $(".point .count .number").text data["point"]
+      if data["mode"] == "entry"
+        # add
+      else if data["mode"] == "cancel"
+        point_link.removeClass("add").addClass("cancel")
+      else
+        point_link.remove()
+
+  point_link.click (event)->
+    $.ajax
+      url: "<%= @cur_page.url + '/point/add.json' %>"
+      success: (data)->
+        $(".point .count .number").text data["point"]
+        if data["mode"] == "cancel"
+          point_link.removeClass("add").addClass("cancel")
+        else
+          point_link.removeClass("cancel").addClass("add")
+    event.preventDefault()
+<% end %>
+
+
 <header>
   <h1 class="name"><%= @cur_page.send :name %></h1>
 </header>
 
 <div class="point">
   <div class="count">
-    <span class="number"><%= @cur_page.send :point %><span>
+    <span class="number"><%#= @cur_page.send :point %><span>
     <span class="label">いいね！数</span>
   </div>
   <%= link_to "いいね！", "#", class: "add" %>

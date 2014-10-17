@@ -2,6 +2,21 @@ module Opendata::Agents::Nodes::Dataset
   class ViewController < ApplicationController
     include Cms::NodeFilter::View
     include Opendata::UrlHelper
+    include Opendata::MypageFilter
+
+    before_action :set_dataset, only: [:show_point, :add_point]
+    skip_filter :logged_in?
+
+    private
+      def set_dataset
+        @dataset_path = @cur_path.sub(/\/point\/.*/, "")
+
+        @dataset = Opendata::Dataset.site(@cur_site).public.
+          filename(@dataset_path).
+          first
+
+        raise "404" unless @dataset
+      end
 
     public
       def pages
@@ -51,6 +66,36 @@ module Opendata::Agents::Nodes::Dataset
         @licenses = Opendata::Dataset.total_field(:license, cond)
 
         render
+      end
+
+      def show_point
+        if logged_in?(redirect: false)
+          mode = :entry
+          cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
+          mode = :cancel if point = Opendata::DatasetPoint.where(cond).first
+        else
+          mode = :login
+        end
+
+        render json: { point: @dataset.point, mode: mode }.to_json
+      end
+
+      def add_point
+        raise "403" unless logged_in?(redirect: false)
+
+        cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
+
+        if point = Opendata::DatasetPoint.where(cond).first
+          point.destroy
+          @dataset.inc point: -1
+          mode = :entry
+        else
+          Opendata::DatasetPoint.new(cond).save
+          @dataset.inc point: 1
+          mode = :cancel
+        end
+
+        render json: { point: @dataset.point, mode: mode }.to_json
       end
   end
 end

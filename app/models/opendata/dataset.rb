@@ -16,6 +16,9 @@ class Opendata::Dataset
   field :related_url, type: String
   field :downloaded, type: Integer
 
+  has_many :points, primary_key: :dataset_id, class_name: "Opendata::DatasetPoint",
+    dependent: :destroy
+
   validates :license, presence: true
   validates :category_ids, presence: true
 
