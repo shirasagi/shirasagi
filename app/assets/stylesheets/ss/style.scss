@@ -353,7 +353,7 @@ footer.send {
 // -------------------------------------------------------------------------------------------------
 // addon
 
-#addon-cms-addons-file .see, .addon-view .see {
+#addon-cms-agents-addons-file .see, .addon-view .see {
   .cboxElement {
     @include btn;
     display: inline-block;
@@ -364,7 +364,7 @@ footer.send {
     @include clear;
   }
 }
-#addon-category-addons-category {
+#addon-category-agents-addons-category {
   label {
     display: inline-block;
     margin-right: 10px;
