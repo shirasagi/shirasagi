@@ -5,8 +5,8 @@ module Opendata::Agents::Pages::Dataset
 
     public
       def index
-        @cur_node   = @cur_page.parent.becomes_with_route
-        instance_variable_set(:@cur_layout, @cur_node.dataset_layout)
+        @cur_node = @cur_page.parent.becomes_with_route
+        @cur_page.layout_id = @cur_node.dataset_layout_id
 
         @search_url = search_datasets_path
 
