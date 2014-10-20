@@ -3,7 +3,7 @@ module Opendata::Agents::Nodes::Mypage
     include Cms::NodeFilter::View
     include Opendata::MypageFilter
 
-    skip_filter :logged_in?, only: [:login, :logout, :provider]
+    skip_filter :logged_in?, only: [:login, :logout, :provide]
 
     private
       def get_params
@@ -30,8 +30,8 @@ module Opendata::Agents::Nodes::Mypage
         unset_member redirect: true
       end
 
-      def provider
-        session[:site] = SS::Site.find_by host: params[:site]
+      def provide
+        session[:auth_site] = @cur_site
         if request.path_info.include?("twitter")
           redirect_to "/auth/twitter"
         elsif request.path_info.include?("facebook")
