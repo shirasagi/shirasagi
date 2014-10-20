@@ -42,16 +42,25 @@ role1 = save_cms_role name: "サイト管理者", permission_level: 3,
 role2 = save_cms_role name: "記事編集権限", permission_level: 1,
   permissions: %w(
     read_private_article_pages edit_private_article_pages
-    delete_private_article_pages read_private_cms_nodes
-    release_other_article_pages release_private_article_pages
-    release_other_cms_pages release_private_cms_pages
+    delete_private_article_pages read_other_article_pages
+    edit_other_article_pages delete_other_article_pages
+
+    read_private_faq_pages edit_private_faq_pages
+    delete_private_faq_pages read_other_faq_pages
+    edit_other_faq_pages delete_other_faq_pages
+
     approve_other_article_pages approve_private_article_pages
     approve_other_cms_pages approve_private_cms_pages
-    read_private_faq_pages edit_private_faq_pages
-    delete_private_faq_pages approve_other_faq_pages
-    approve_private_faq_pages release_private_faq_pages
-    release_other_faq_pages
+    approve_other_faq_pages approve_private_faq_pages
+
+    read_private_cms_nodes read_other_cms_nodes
   )
+
+@sys_user = SS::User.where(email: "sys@example.jp").first
+if @sys_user
+  @sys_user.add_to_set group_ids: g1_00.id
+  @sys_user.add_to_set cms_role_ids: role1.id
+end
 
 ## -------------------------------------
 puts "# users"

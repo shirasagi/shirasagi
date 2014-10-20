@@ -27,21 +27,26 @@ module Cms::Agents::Parts::Tabs
           node_class = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}/view")
           node_class = "#{node_class}_controller".camelize.constantize
 
-          if node_class.method_defined?(:pages)
+          pages = nil
+
+          if node_class.method_defined?(:index)
             @cur_node = node
-            node_cont = invoke_agent node_class, :index
-            pages = node_cont.instance_variable_get(:@items) || []
-          elsif node.class.method_defined?(:condition_hash)
-            pages = Cms::Page.site(@cur_site).public.where(node.condition_hash)
-          else
-            pages = Cms::Page.site(@cur_site).public.where(cond).node(node)
+            cont  = invoke_agent node_class, :index
+            pages = cont.instance_variable_get(:@items)
+            pages = nil if pages && !pages.include?(Mongoid::Criteria)
+            pages = nil if pages && !pages.klass.include?(Cms::Page::Model)
           end
 
-          if node_class.method_defined?(:rss)
-            tab[:rss] = "#{node.url}rss.xml"
+          if pages.nil?
+            if node.class.method_defined?(:condition_hash)
+              pages = Cms::Page.site(@cur_site).public.where(node.condition_hash)
+            else
+              pages = Cms::Page.site(@cur_site).public.where(cond).node(node)
+            end
           end
 
-          tab[:pages] = pages.order_by(released: -1).limit(@cur_part.limit)
+          tab[:pages] = pages ? pages.order_by(released: -1).limit(@cur_part.limit) : []
+          tab[:rss]   = "#{node.url}rss.xml" if node_class.method_defined?(:rss)
         end
 
         render
