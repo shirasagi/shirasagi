@@ -63,6 +63,10 @@ $ ->
   </nav>
 
   <section class="info">
+    <header>
+      <h1>ダウンロード</h1>
+    </header>
+
     <div class="download">
       <div class="license">
         <%= @cur_page.send :license %>
@@ -97,4 +101,5 @@ $ ->
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %></dd>
     </dl>
+  </section>
 </div>
