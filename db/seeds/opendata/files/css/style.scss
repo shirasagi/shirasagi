@@ -46,7 +46,8 @@ input[type=text], input[type=password], input[type=date], input[type=datetime], 
 input[type=email], input[type=number] {
   @include input;
   width: 70%;
-  height: 1.8em;
+  min-height: 1.8em;
+  margin: 0 0;
   padding: 3px 5px;
 }
 input[type=number] {
@@ -934,14 +935,14 @@ article.areas, article.formats {
 
 //-----------------------------------------------------------------------------------------
 //dataset-page
-#contents {
+.s-dataset #contents {
     header h1.name {
     padding: 0 0 5px 10px;
     color: #005c7b;
     font-size: $px28;
     font-weight: bold;
   }
-  .point, .text, .detail nav {
+  .point, .text, .detail, .detail nav {
     margin-bottom: $box-margin;
   }
   .point {
@@ -956,7 +957,6 @@ article.areas, article.formats {
       }
       span.label {
         display: block;
-        font-size: 50%;
       }
     }
     .add {
@@ -971,11 +971,22 @@ article.areas, article.formats {
         background-color: #666666;
       }
     }
+    .cancel {
+      display: inline-block;
+      padding: 2px 20px 2px 40px;
+      border: 1px solid #bdbdbd;
+      @include border-radius(5px);
+      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
+      color: $text;
+      text-decoration: none;
+      &:hover {
+        background-color: #dedede;
+      }
+    }
   }
   .text {
     float: left;
     width: 803px;
-    margin-bottom: 10px;
   }
   .categories {
     width: 803px;
@@ -1009,7 +1020,6 @@ article.areas, article.formats {
     }
   }
   .detail {
-    margin-bottom: $box-margin;
     clear: both;
     nav {
       border-bottom: 2px solid $data-blue;
@@ -1020,6 +1030,7 @@ article.areas, article.formats {
         @include border-top-radius(5px);
         background: #ccd6d6;
         color: $text;
+        font-size: $px15;
         text-decoration: none;
         text-align: center;
       }
@@ -1038,15 +1049,29 @@ article.areas, article.formats {
     }
     section.info {
       overflow: hidden;
+      header {
+        float: left;
+        width: 803px;
+        h1 {
+          padding: 4px 0 4px 45px;
+          background: $data-blue url(../img/ic-download.png) no-repeat 10px center;
+          font-size: $px15;
+        }
+      }
       .download {
         float: left;
         width: 767px;
         padding: 16px;
         border: 2px solid #00b2c4;
+        .license {
+          padding-bottom: 10px;
+        }
         .resources {
           .name {
             float: left;
             width: 600px;
+            padding-left: 40px;
+            background: url(../img/ic-text.png) no-repeat 5px center;
             word-wrap: break-word;
           }
           .download {
@@ -1066,7 +1091,7 @@ article.areas, article.formats {
         }
       }
       dl.author {
-        float: right;
+        margin-left: 830px;
         padding: 10px;
         border: 2px solid #00b2c4;
         dt, dd {
@@ -1078,6 +1103,9 @@ article.areas, article.formats {
         }
         dd {
           padding: 10px 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -1159,6 +1187,7 @@ article.areas, article.formats {
     a {
       @include r-arrow;
       @include border-radius(5px);
+      margin-right: 15px;
       padding-right: 60px;
     }
   }
@@ -1166,7 +1195,7 @@ article.areas, article.formats {
     overflow: hidden;
     dt {
       min-width: 240px;
-      min-height: 1em;
+      min-height: 2em;
       float: left;
       clear: both;
       padding-right: 10px;
@@ -1175,7 +1204,7 @@ article.areas, article.formats {
       margin-bottom: $box-margin;
     }
     dd {
-      min-height: 1.9em;
+      min-height: 2em;
       margin-left: 270px;
       margin-bottom: $box-margin;
     }
@@ -1196,6 +1225,38 @@ article.areas, article.formats {
           background: $blue;
         }
       }
+    }
+  }
+}
+
+table.index th, table.index td {
+  padding: 4px 8px;
+}
+table.index {
+  width: 100%;
+  thead {
+    tr {
+      border-bottom: $border-hgry;
+    }
+    th {
+      font-weight: normal;
+      text-align: left;
+    }
+    th.name {
+      width: 40%;
+    }
+  }
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background: #ededed;
+      }
+    }
+    td {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
