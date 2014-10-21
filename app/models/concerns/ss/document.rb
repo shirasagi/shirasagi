@@ -6,10 +6,25 @@ module SS::Document
 
   included do
     class_variable_set(:@@_permit_params, [])
+    class_variable_set(:@@_text_index_fields, [])
+
     field :created, type: DateTime, default: -> { Time.now }
     field :updated, type: DateTime, default: -> { Time.now }
+    field :text_index, type: String
+
     before_save :set_db_changes
     before_save :set_updated
+    before_save :set_text_index
+
+    scope :search_text, ->(words) {
+      words = words.split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ } if words.is_a?(String)
+
+      if self.class_variable_get(:@@_text_index_fields).present?
+        all_in text_index: words
+      else
+        all_in name: words
+      end
+    }
   end
 
   module ClassMethods
@@ -80,6 +95,23 @@ module SS::Document
     def lookup_addons
       ancestors.select { |x| x.respond_to?(:addon_name) }
     end
+
+    def text_index(*args)
+      fields = class_variable_get(:@@_text_index_fields)
+
+      if args[0].is_a?(Hash)
+        opts = args[0]
+        if opts[:only]
+          fields = opts[:only]
+        elsif opts[:except]
+          fields.reject! { |m| opts[:except].include?(m) }
+        end
+      else
+        fields += args
+      end
+
+      class_variable_set(:@@_text_index_fields, fields)
+    end
   end
 
   public
@@ -111,5 +143,20 @@ module SS::Document
     def set_updated
       return true if !changed?
       self.updated = Time.now
+    end
+
+    def set_text_index
+      fields = self.class.class_variable_get(:@@_text_index_fields)
+      return if fields.blank?
+
+      texts = []
+      fields.map do |name|
+        text = send(name)
+        next if text.blank?
+        text.gsub!(/<("[^"]*"|'[^']*'|[^'">])*>/, " ") if name =~ /html$/
+        text.gsub!(/\s+/, " ")
+        texts << text
+      end
+      self.text_index = texts.join(" ")
     end
 end

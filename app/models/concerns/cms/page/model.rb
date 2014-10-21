@@ -1,13 +1,14 @@
 module Cms::Page::Model
   extend ActiveSupport::Concern
   extend SS::Translation
-  extend SS::Translation
   include Cms::Content
   include Cms::Reference::Layout
 
   included do
     store_in collection: "cms_pages"
     set_permission_name "cms_pages"
+
+    #text_index :name, :html
 
     field :route, type: String, default: ->{ "cms/page" }
     field :released, type: DateTime
