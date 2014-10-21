@@ -166,6 +166,10 @@ textarea {
   }
 }
 
+.s-sparql #head {
+  margin-bottom: $box-margin;
+}
+
 // -----------------------------------------------------------------------------
 // top
 #top {
@@ -1294,6 +1298,17 @@ table.index {
 .s-portal, #s-mypage-login, #s-mypage {
   #copyright {
     @include grd-blue;
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+//table.sparql
+table.sparql {
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+  th, td {
+    padding: 5px;
   }
 }
 
