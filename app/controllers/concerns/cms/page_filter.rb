@@ -2,6 +2,16 @@ module Cms::PageFilter
   extend ActiveSupport::Concern
   include Cms::CrudFilter
 
+  private
+    def pre_params
+      if @cur_node
+        layout_id = @cur_node.page_layout_id || @cur_node.layout_id
+        { layout_id: layout_id }
+      else
+        {}
+      end
+    end
+
   public
     def index
       if @cur_node

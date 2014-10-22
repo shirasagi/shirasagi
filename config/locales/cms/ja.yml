@@ -139,6 +139,8 @@ ja:
         home_label: ホームラベル
       cms/reference/layout:
         layout_id: レイアウト
+      cms/reference/page_layout:
+        page_layout_id: ページレイアウト
       cms/site:
         name: サイト名
         host: ホスト名
@@ -224,6 +226,11 @@ ja:
         - ファイル名はURLに利用します。
         - 半角英数字で入力してください。
         - .htmlなどの拡張子の記述は不要です。
+      layout_id:
+        - フォルダーのレイアウトを選択します。
+      page_layout_id:
+        - ページのレイアウトを選択します。
+        - 初期値は上位のフォルダの設定を継承しています。
       shortcut:
         - 表示を選択することで管理画面のサイトトップ「コンテンツ」に表示されます。
       conditions:

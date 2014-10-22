@@ -20,6 +20,9 @@
   <% if fields[:layout_id] != -1 %>
   <dt><%= @model.t :layout_id %></dt>
   <dd><%= tryb { @item.layout.name }%></dd>
+
+  <dt><%= @model.t :page_layout_id %></dt>
+  <dd><%= tryb { @item.page_layout.name }%></dd>
   <% end %>
 
   <dt><%= @model.t :order %></dt>

@@ -24,6 +24,9 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <% if fields[:layout_id] != -1 %>
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
+
+  <dt><%= @model.t :page_layout_id %><%= @model.tt :page_layout_id %></dt>
+  <dd><%= f.select :page_layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
   <% end %>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>

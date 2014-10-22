@@ -13,10 +13,6 @@ class Article::PagesController < ApplicationController
       { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
     end
 
-    def pre_params
-      { layout_id: @cur_node.layout_id }
-    end
-
   #public
     # Cms::PageFilter
 end
