@@ -56,8 +56,6 @@ ja:
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
-      opendata/addon/dataset_node:
-        dataset_layout_id: レイアウト
       opendata/addon/tag:
         tags: タグ
       opendata/dataset_group:

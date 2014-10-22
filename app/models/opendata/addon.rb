@@ -35,18 +35,6 @@ module Opendata::Addon
     end
   end
 
-  module DatasetNode
-    extend SS::Addon
-    extend ActiveSupport::Concern
-
-    set_order 10
-
-    included do
-      belongs_to :dataset_layout, class_name: "Cms::Layout"
-      permit_params :dataset_layout_id
-    end
-  end
-
   module Dataset
     extend SS::Addon
     extend ActiveSupport::Concern

@@ -63,7 +63,7 @@ save_node filename: "event", name: "イベント", route: "event/page", shortcut
 
 save_node filename: "dataset", name: "データセット", route: "opendata/dataset", shortcut: "show",
   layout_id: layouts["dataset-top"].id,
-  dataset_layout_id: layouts["dataset-page"].id
+  page_layout_id: layouts["dataset-page"].id
 save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category", shortcut: "show",
   layout_id: layouts["dataset-bunya"].id
 save_node filename: "dataset/search_group", name: "グループ検索", route: "opendata/search_group", shortcut: "show",
@@ -131,6 +131,7 @@ save_part filename: "foot.part.html" , name: "フッター", route: "cms/free"
 save_part filename: "add.part.html" , name: "広告", route: "cms/free"
 save_part filename: "twitter.part.html" , name: "twitter", route: "cms/free"
 save_part filename: "facebook.part.html" , name: "facebook", route: "cms/free"
+save_part filename: "sns-share.part.html" , name: "SNSシェアボタン", route: "cms/sns_share"
 save_part filename: "portal-kv.part.html" , name: "ポータル：キービジュアル", route: "cms/free"
 save_part filename: "portal-about.part.html" , name: "ポータル：Our Open Dateとは", route: "cms/free"
 save_part filename: "portal-tab.part.html" , name: "ポータル：新着タブ", route: "cms/tabs", conditions: %w(info event), limit: 5
