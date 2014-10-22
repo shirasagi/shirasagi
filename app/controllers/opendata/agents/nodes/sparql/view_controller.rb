@@ -15,7 +15,7 @@ module Opendata::Agents::Nodes::Sparql
           html_page += "<head>\n"
           html_page += "<meta charset='utf-8'>\n"
           html_page += "<style type='text/css'>"
-          html_page += " table, td, th { border: 1px silver solid ; border-collapse: collapse;}"
+          html_page += " table, td, th { border: 1px silver solid ; border-collapse: collapse; white-space: nowrap;}"
           html_page += "</style>\n"
           html_page += "<title>SPARQL Results</title>\n"
           html_page += "</head>\n"
