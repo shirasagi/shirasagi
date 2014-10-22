@@ -7,6 +7,7 @@ module Cms
     Cms::Part.plugin "cms/page"
     Cms::Part.plugin "cms/tabs"
     Cms::Part.plugin "cms/crumb"
+    Cms::Part.plugin "cms/sns_share"
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_users

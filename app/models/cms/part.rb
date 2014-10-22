@@ -54,6 +54,13 @@ class Cms::Part
     end
   end
 
+  class SnsShare
+    include Cms::Part::Model
+    #include Cms::Addon::SnsShare
+
+    default_scope ->{ where(route: "cms/sns_share") }
+  end
+
   class << self
     @@plugins = []
 

@@ -66,6 +66,7 @@ SS::Application.routes.draw do
     get "page"  => "public#index", cell: "parts/page"
     get "tabs"  => "public#index", cell: "parts/tabs"
     get "crumb" => "public#index", cell: "parts/crumb"
+    get "sns_share" => "public#index", cell: "parts/sns_share"
   end
 
   page "cms" do
