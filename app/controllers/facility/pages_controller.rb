@@ -24,12 +24,12 @@ class Facility::PagesController < ApplicationController
 
     def map_pages
       Facility::Map.site(@cur_site).public.
-        where(filename: /^#{@item.filename}\//, depth: @item.depth + 1)
+        where(filename: /^#{@item.filename}\//, depth: @item.depth + 1).order_by(order: -1)
     end
 
     def image_pages
       Facility::Image.site(@cur_site).public.
-        where(filename: /^#{@item.filename}\//, depth: @item.depth + 1)
+        where(filename: /^#{@item.filename}\//, depth: @item.depth + 1).order_by(order: -1)
     end
 
   public
@@ -61,7 +61,7 @@ class Facility::PagesController < ApplicationController
         end
       end
 
-      @summary_image= nil
+      @summary_image = nil
       @images = []
       image_pages.each do |page|
         next if page.image.blank?

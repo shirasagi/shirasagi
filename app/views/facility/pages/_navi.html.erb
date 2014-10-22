@@ -1,7 +1,7 @@
 <%= node_navi do %>
 
 <nav class="sub-menu">
-  <header><h1><%= t "facility.page" %></h1></header>
+  <header><h1><%= t "facility.facility" %></h1></header>
   <% if params[:action] =~ /show|edit/ %>
   <div>
     <%= link_to :"facility.image", facility_images_path(cid: @item.id), class: "icon-page" %>

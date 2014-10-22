@@ -23,6 +23,7 @@ $ ->
             <% end %>
           </a>
           <div class="name">
+            <input type="hidden" name="item[image_id]" value="<%= @item.image.id %>"/>
             <%= @item.image.basename %>
           </div>
           <div class="action delete">

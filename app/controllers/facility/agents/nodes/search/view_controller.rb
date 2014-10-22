@@ -25,7 +25,6 @@ module Facility::Agents::Nodes::Search
       end
 
       def index
-        render
       end
 
       def map
@@ -57,16 +56,12 @@ module Facility::Agents::Nodes::Search
 
         @map_loc =  [ 35.392915, 139.442888 ] if @map_loc.blank?
         @map_zoom = 5 if @map_zoom.blank?
-
-        render
       end
 
       def result
         set_items
         @items = @items.page(params[:page]).
           per(@cur_node.limit)
-
-        render
       end
   end
 end

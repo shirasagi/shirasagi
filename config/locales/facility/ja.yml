@@ -1,5 +1,6 @@
 ja:
   facility:
+    facility: 施設
     page: 施設情報
     category:
       setting: 種類設定
@@ -66,17 +67,18 @@ ja:
     attributes:
       facility/node/page:
         name: 施設名
+        kana: 施設名ふりがな
         address: 住所
         tel: 電話番号
         fax: FAX
         homepage: URL
-        hours: 開所時間
-        holiday: 休園日
-        kana: 施設名ふりがな
-        principal: 園長名
-        extended_day_care: 延長保育
         field: 項目名
         value: 内容
       facility/image:
         image_alt: ALT属性
         image_comment: 説明文
+        image_thumb_size: サムネイルサイズ
+        image_thumb_width: 幅
+        image_thumb_height: 高さ
+
+

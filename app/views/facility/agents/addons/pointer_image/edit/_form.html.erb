@@ -24,6 +24,7 @@ $ ->
           </a>
           <div class="name">
             <%= @item.image.basename %>
+            <input type="hidden" name="item[image_id]" value="<%= @item.image.id %>"/>
           </div>
           <div class="action delete">
             <%= link_to :"sns.delete", "#", onclick: "deleteContent();" %>

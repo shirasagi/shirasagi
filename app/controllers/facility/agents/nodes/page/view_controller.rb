@@ -44,8 +44,6 @@ module Facility::Agents::Nodes::Page
             @summary_image = page
           end
         end
-
-        render
       end
   end
 end
