@@ -47,7 +47,7 @@ ja:
       cms/page: ページリスト
       cms/tabs: 新着タブ
       cms/crumb: パンくずリスト
-      cms/sns_share: SNS共有リンク
+      cms/sns_share: SNSシェアボタン
 
   cms_role:
     edit_cms_sites: サイトの編集
