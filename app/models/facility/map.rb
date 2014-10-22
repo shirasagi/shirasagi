@@ -3,6 +3,7 @@ class Facility::Map
   include Cms::Addon::Meta
   include Cms::Addon::Release
   include Map::Addon::Page
+  include Workflow::Addon::Approver
 
   default_scope ->{ where(route: "facility/map") }
 

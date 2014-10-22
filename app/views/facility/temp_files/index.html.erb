@@ -1,20 +1,20 @@
 <%= coffee do %>
 
-SS.ajaxForm "form.user-file",
+SS.ajaxForm "form.temp-file",
   success: ->
     $("#cboxLoadedContent").load "<%= url_for(action: :index) %>"
 
-SS.ajax ".user-files .select",
+SS.ajax ".temp-files .select",
   success: (data) ->
-    $("#selected-files").html("")
+    $("#selected-files .file-view").remove()
     $("#selected-files").append data
     $.colorbox.close()
 
-SS.ajaxDelete ".user-files .delete"
+SS.ajaxDelete ".temp-files .delete"
 
 <% end %>
 
-<%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
+<%= form_for :item, url: { action: :create }, html: { class: "temp-file", multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
   <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
@@ -24,9 +24,9 @@ SS.ajaxDelete ".user-files .delete"
 
 <% end %>
 
-<div class="index user-files">
+<div class="index temp-files">
   <% @items.each do |item| %>
-  <article class="file-view" id="user-file<%= item.id %>">
+  <article class="file-view" id="temp-file<%= item.id %>">
     <a class="thumb select" href="<%= url_for action: :select, id: item %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item) %>" alt="<%= item.basename %>" />
@@ -38,7 +38,7 @@ SS.ajaxDelete ".user-files .delete"
       <%= item.basename %>
     </div>
     <nav class="menu">
-      <%= link_to t("ss.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
+      <%= link_to t("ss.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#temp-file#{item.id}" %>
     </nav>
   </article>
   <% end %>

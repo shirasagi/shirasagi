@@ -31,6 +31,7 @@ SS::Application.routes.draw do
 
   page "facility" do
     get "image/:filename.:format" => "public#index", cell: "pages/image"
+    get "map/:filename.:format" => "public#index", cell: "pages/map"
   end
 
   namespace "facility", path: ".:site/facility" do
@@ -40,5 +41,14 @@ SS::Application.routes.draw do
     post "/search_locations" => "search_locations#search"
     get "/search_uses" => "search_uses#index"
     post "/search_uses" => "search_uses#search"
+  end
+
+  namespace "facility", path: ".u:user/facility", module: "facility", user: /\d+/ do
+    resources :temp_files, concerns: :deletion do
+      get :select, on: :member
+      get :view, on: :member
+      get :thumb, on: :member
+      get :download, on: :member
+    end
   end
 end

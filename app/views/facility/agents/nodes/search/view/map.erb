@@ -92,15 +92,17 @@ $ ->
 
 <div id="map-canvas"></div>
 
+
+<% locations = @locations.present? ? @locations : @cur_node.st_locations %>
+<% if locations.present? %>
 <nav class="filters">
-  <% locations = @locations.present? ? @locations : @cur_node.st_locations %>
-  <% if locations.present? %>
-    <ul>
-      <% locations.each do |cate| %>
-        <li class="<%= cate.basename %>">
-          <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
-        </li>
-      <% end %>
-    </ul>
-  <% end %>
+  <ul>
+    <% locations.each do |cate| %>
+      <li class="<%= cate.basename %>">
+        <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
+      </li>
+    <% end %>
+  </ul>
 </nav>
+<% end %>
+

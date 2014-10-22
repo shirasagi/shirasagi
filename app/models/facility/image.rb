@@ -4,6 +4,7 @@ class Facility::Image
   include Cms::Addon::Release
   include Facility::Addon::Image
   include Facility::Addon::ImageInfo
+  include Workflow::Addon::Approver
 
   default_scope ->{ where(route: "facility/image") }
 

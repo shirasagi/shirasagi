@@ -2,6 +2,11 @@
 
 <nav class="sub-menu">
   <header><h1><%= t "facility.page" %></h1></header>
+  <% if @cur_node.parent.present? %>
+    <div>
+      <%= link_to :"facility.page", facility_page_path(cid: @cur_node.parent.id, id: @cur_node.id), class: "icon-node" %>
+    </div>
+  <% end %>
   <div>
     <%= link_to :"facility.image", facility_images_path, class: "icon-page" %>
   </div>

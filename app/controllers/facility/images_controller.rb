@@ -39,13 +39,13 @@ class Facility::ImagesController < ApplicationController
     end
 
     def create
-        @item = @model.new get_params
+      @item = @model.new get_params
+      raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+      if @item.state == "public"
         raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
-        if @item.state == "public"
-          raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
-          @item.state = "ready" if @item.release_date
-        end
-        render_create @item.save
+        @item.state = "ready" if @item.release_date
+      end
+      render_create @item.save
     end
 
     def edit

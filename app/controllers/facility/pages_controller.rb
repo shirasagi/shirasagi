@@ -49,8 +49,8 @@ class Facility::PagesController < ApplicationController
         map.map_points.each_with_index do |point, i|
           points.push point
 
-          image_ids = @cur_node.categories.pluck(:image_id)
-          points[i][:pointer_image] = SS::File.find(image_ids.first).url if image_ids.present?
+          image_ids = @item.categories.pluck(:image_id)
+          points[i][:pointer_image] = Facility::TempFile.find(image_ids.first).url if image_ids.present?
         end
         map.map_points = points
 

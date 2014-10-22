@@ -36,7 +36,20 @@ module Facility::Addon
     set_order 200
 
     included do
-      belongs_to :image, class_name: "SS::File"
+      belongs_to :image, class_name: "Facility::TempFile"
+
+      permit_params :image_id
+    end
+  end
+
+  module PointerImage
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 200
+
+    included do
+      belongs_to :image, class_name: "Facility::TempFile"
 
       permit_params :image_id
     end
@@ -55,18 +68,4 @@ module Facility::Addon
       permit_params :image_alt, :image_comment
     end
   end
-
-  module PointerImage
-    extend ActiveSupport::Concern
-    extend SS::Addon
-
-    set_order 200
-
-    included do
-      belongs_to :image, class_name: "SS::File"
-
-      permit_params :image_id
-    end
-  end
-
 end
