@@ -25,8 +25,8 @@ module Opendata::Agents::Nodes::Resource
         @item = @dataset.resources.find_by id: params[:id], filename: params[:filename]
         @item.dataset.inc downloaded: 1
 
-        send_data @item.file.data, type: @item.content_type, filename: @item.filename,
-          disposition: :attachment
+        send_file @item.file.path, type: @item.content_type, filename: @item.filename,
+          disposition: :attachment, x_sendfile: true
       end
   end
 end

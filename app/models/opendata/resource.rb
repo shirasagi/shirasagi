@@ -18,20 +18,10 @@ class Opendata::Resource
 
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :set_format
-  before_save :save_static_file, if: ->{ in_file.present? }
   before_save :save_fuseki_rdf, if: ->{ in_file.present? }
-  before_destroy :remove_static_file
   before_destroy :remove_fuseki_rdf
 
   public
-    def file_dir
-      "#{Rails.root}/file/#{collection_name}"
-    end
-
-    def path
-      "#{file_dir}/" + id.to_s.split(//).join("/") + "/_/#{filename}"
-    end
-
     def url
       "#{dataset.url}/resource/#{id}/#{filename}"
     end
@@ -44,12 +34,16 @@ class Opendata::Resource
       "#{dataset.full_url}/resource/#{id}/"
     end
 
+    def path
+      file ? file.path : nil
+    end
+
     def content_type
       file ? file.content_type : nil
     end
 
     def size
-      file ? file.length : nil
+      file ? file.size : nil
     end
 
     def allowed?(action, user, opts = {})
@@ -76,15 +70,6 @@ class Opendata::Resource
 
     def set_format
       self.format = format.upcase if format.present?
-    end
-
-    def save_static_file
-      Fs.rm_rf File.dirname(path)
-      Fs.binwrite path, file.data
-    end
-
-    def remove_static_file
-      Fs.rm_rf path
     end
 
   class << self
