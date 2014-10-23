@@ -83,6 +83,7 @@ module SS::File::Model
       file = Fs::UploadedFile.new("ss_file")
       file.binmode
       file.write(read)
+      file.rewind
       file.original_filename = basename
       file.content_type = content_type
       file

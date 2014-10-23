@@ -1,8 +1,8 @@
 module Fs
   class Initializer
     require "yaml"
-    file = File.expand_path('../../config/environment.yml', __FILE__)
-    env  = File::exist?(file) ? YAML.load_file(file) : {}
+    file = "#{Rails.root}/config/environment.yml"
+    env  = ::File::exist?(file) ? YAML.load_file(file) : {}
     type = env["storage"] || "file"
 
     if type == "grid_fs"

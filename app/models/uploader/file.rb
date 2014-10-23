@@ -116,7 +116,6 @@ class Uploader::File
     end
 
     def initialize(attributes={})
-
       if attributes[:saved_path] != nil
         @saved_path = attributes[:saved_path]
         attributes.delete :saved_path
@@ -149,31 +148,25 @@ class Uploader::File
     end
 
     def validate_scss
-      if ext == ".scss"
-        begin
-          opts = Rails.application.config.sass
-          sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
-            syntax: :scss, cache: false,
-            load_paths: opts.load_paths[1..-1],
-            style: :expanded,
-            debug_info: true
-          @css = sass.render
-        rescue Sass::SyntaxError => e
-          msg = e.backtrace[0].sub(/.*?\/_\//, "")
-          msg = "[#{msg}] #{e}"
-          errors.add :scss, msg
-        end
-      end
+      return if ext != ".scss"
+      opts = Rails.application.config.sass
+      sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
+        syntax: :scss, cache: false,
+        load_paths: opts.load_paths[1..-1],
+        style: :expanded,
+        debug_info: true
+      @css = sass.render
+    rescue Sass::SyntaxError => e
+      msg = e.backtrace[0].sub(/.*?\/_\//, "")
+      msg = "[#{msg}] #{e}"
+      errors.add :scss, msg
     end
 
     def validate_coffee
-      if ext == ".coffee"
-        begin
-          @js = CoffeeScript.compile @binary
-        rescue => e
-          errors.add :coffee, e.message
-        end
-      end
+      return if ext != ".coffee"
+      @js = CoffeeScript.compile @binary
+    rescue => e
+      errors.add :coffee, e.message
     end
 
     def compile_scss
