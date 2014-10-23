@@ -1,3 +1,6 @@
 # default environment
 
 RAILS_ENV: production
+
+# File storage ('file' or 'grid_fs')
+storage: file

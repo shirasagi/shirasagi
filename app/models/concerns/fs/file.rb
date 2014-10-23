@@ -1,8 +1,12 @@
 require "mime/types"
-module Fs::Local
+module Fs::File
   extend ActiveSupport::Concern
 
   module ClassMethods
+    def mode
+      :file
+    end
+
     def exists?(path)
       FileTest.exists? path
     end
