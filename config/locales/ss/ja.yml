@@ -13,6 +13,7 @@ ja:
     edit: 編集
     delete: 削除
     save: 保存
+    draft_save: 下書き保存
     publish_save: 公開保存
     cancel: キャンセル
     saved: 保存しました。
