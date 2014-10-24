@@ -1,4 +1,3 @@
-
 if ENV["name"].blank?
   puts "Please input seed name. ( name= )"
   exit
