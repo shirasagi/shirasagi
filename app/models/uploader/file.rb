@@ -90,10 +90,12 @@ class Uploader::File
     end
 
     def link
+      return path.sub(/.*?\/_\//, "/") if Fs.mode == :grid_fs
       "/sites#{path.sub(/^#{SS::Site.root}/, '')}"
     end
 
     def filename
+      return path.sub(/.*?\/_\//, "") if Fs.mode == :grid_fs
       path.sub(/^#{SS::Site.root}.+?\/_\//, "")
     end
 
@@ -114,7 +116,6 @@ class Uploader::File
     end
 
     def initialize(attributes={})
-
       if attributes[:saved_path] != nil
         @saved_path = attributes[:saved_path]
         attributes.delete :saved_path
@@ -147,31 +148,25 @@ class Uploader::File
     end
 
     def validate_scss
-      if ext == ".scss"
-        begin
-          opts = Rails.application.config.sass
-          sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
-            syntax: :scss, cache: false,
-            load_paths: opts.load_paths[1..-1],
-            style: :expanded,
-            debug_info: true
-          @css = sass.render
-        rescue Sass::SyntaxError => e
-          msg = e.backtrace[0].sub(/.*?\/_\//, "")
-          msg = "[#{msg}] #{e}"
-          errors.add :scss, msg
-        end
-      end
+      return if ext != ".scss"
+      opts = Rails.application.config.sass
+      sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
+        syntax: :scss, cache: false,
+        load_paths: opts.load_paths[1..-1],
+        style: :expanded,
+        debug_info: true
+      @css = sass.render
+    rescue Sass::SyntaxError => e
+      msg = e.backtrace[0].sub(/.*?\/_\//, "")
+      msg = "[#{msg}] #{e}"
+      errors.add :scss, msg
     end
 
     def validate_coffee
-      if ext == ".coffee"
-        begin
-          @js = CoffeeScript.compile @binary
-        rescue => e
-          errors.add :coffee, e.message
-        end
-      end
+      return if ext != ".coffee"
+      @js = CoffeeScript.compile @binary
+    rescue => e
+      errors.add :coffee, e.message
     end
 
     def compile_scss
@@ -191,13 +186,13 @@ class Uploader::File
       end
 
       def file(path)
-        return nil if !Fs.exists? path
+        return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
         Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
       end
 
       def find(path)
         items = []
-        return items if !Fs.exists? path
+        return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
 
         if Fs.directory? path
           Fs.glob("#{path}/*").each do |f|
@@ -208,4 +203,3 @@ class Uploader::File
       end
   end
 end
-

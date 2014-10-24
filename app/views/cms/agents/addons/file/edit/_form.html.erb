@@ -43,7 +43,7 @@ $ ->
             <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
           <% end %>
           <div class="action delete">
-            <%= link_to :"sns.delete", "#", :onclick => "deleteContent('#{@item.id}'); return false;" %>
+            <%= link_to :"sns.delete", "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>
         </div>
       </div>

@@ -30,11 +30,17 @@ module SS::File::Model
     before_destroy :remove_file
   end
 
-  class UploadedFile < ::Tempfile
-    attr_accessor :original_filename, :content_type
+  module ClassMethods
+    def root
+      "#{Rails.root}/private/files"
+    end
   end
 
   public
+    def path
+      "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+    end
+
     def state_options
       [%w(公開 public)]
     end
@@ -55,12 +61,8 @@ module SS::File::Model
       filename =~ /\.(bmp|gif|jpe?g|png)$/i
     end
 
-    def file
-      file_id.blank? ? nil : Mongoid::GridFs.get(file_id) rescue nil
-    end
-
     def read
-      file.data
+      Fs.exists?(path) ? Fs.binread(path) : nil
     end
 
     def save_files
@@ -78,9 +80,10 @@ module SS::File::Model
     end
 
     def uploaded_file
-      file = UploadedFile.new("aa")
+      file = Fs::UploadedFile.new("ss_file")
       file.binmode
       file.write(read)
+      file.rewind
       file.original_filename = basename
       file.content_type = content_type
       file
@@ -106,18 +109,12 @@ module SS::File::Model
       return false if errors.present?
       return if in_file.blank?
 
-      if fs = file
-        fs.delete
-        fs = Mongoid::GridFs.put in_file, _id: file_id
-      else
-        fs = Mongoid::GridFs.put in_file
-        self.file_id = fs.id
-      end
+      dir = ::File.dirname(path)
+      Fs.mkdir_p(dir) unless Fs.exists?(dir)
+      Fs.binwrite(path, in_file.read)
     end
 
     def remove_file
-      if file_id.present?
-        Mongoid::GridFs.delete(file_id) rescue nil
-      end
+      Fs.rm_rf(path)
     end
 end

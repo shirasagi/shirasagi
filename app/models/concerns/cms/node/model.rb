@@ -3,6 +3,7 @@ module Cms::Node::Model
   extend SS::Translation
   include Cms::Content
   include Cms::Reference::Layout
+  include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
   include Cms::Addon::Meta
   include Facility::Reference::Category

@@ -46,8 +46,7 @@ module Cms::Content
         return criteria if params.blank?
 
         if params[:name].present?
-          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
-          criteria = criteria.all_in name: words
+          criteria = criteria.search_text params[:name]
         end
         criteria
       end

@@ -8,6 +8,7 @@ $ ->
   state.remove()
 
   <% if @item.allowed?(:release, @cur_user) %>
+  $(".save").val "<%= t 'draft_save' %>"
   $("<input />").attr("type", "submit")
     .attr("name", "publish_save")
     .attr("value", "<%= t 'publish_save' %>")
