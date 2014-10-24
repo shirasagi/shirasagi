@@ -57,7 +57,7 @@ module Event::EventHelper
     path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
 
     if within_one_year?(date)
-      link_to name , "#{path}#{'%04d' % year}#{'%02d' % month}.html"
+      link_to name , sprintf("#{path}%04d%02d.html", year, month)
     else
       name
     end
@@ -71,7 +71,7 @@ module Event::EventHelper
     path = opts[:path].present? ? opts[:path] :  @cur_node.try(:url).to_s
 
     if within_one_year?(date)
-      link_to name, "#{path}#{'%04d' % year}#{'%02d' % month}#{'%02d' % day}.html"
+      link_to name, sprintf("#{path}%04d%02d%02d.html", year, month, day)
     else
       name
     end

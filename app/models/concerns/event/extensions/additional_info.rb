@@ -17,8 +17,8 @@ class Event::Extensions::AdditionalInfo < Array
       when self.class then object.mongoize
       when Array then
         object.select { |ary| ary[:field].present? }
-      else object
-        []
+      else
+        object
       end
     end
   end

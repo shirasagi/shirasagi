@@ -32,9 +32,9 @@ module Event::Addon
       field :venue, type: String
       field :content, type: String
       field :cost, type: String
-      field :homepage, type: String
+      field :related_url, type: String
 
-      permit_params :schedule, :venue, :content, :cost, :homepage
+      permit_params :schedule, :venue, :content, :cost, :related_url
     end
 
     set_order 180

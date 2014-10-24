@@ -1,6 +1,7 @@
 ja:
   event:
     page: イベントページ
+    category: カテゴリー
     add_date: 日付フォームを追加する
     del_date: 削除
     add_info: 項目を追加する
@@ -45,7 +46,7 @@ ja:
         venue: 開催場所
         content: 内容
         cost: 費用
-        homepage: URL
+        related_url: URL
         field: 項目名
         value: 内容
 

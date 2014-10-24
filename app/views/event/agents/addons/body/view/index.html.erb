@@ -19,8 +19,8 @@
     <dd><%=br @cur_page.cost.to_s %></dd>
   <% end %>
 
-  <% if @cur_page.homepage.present? %>
-    <dt><%= @cur_page.class.t :homepage %></dt>
-    <dd><%= link_to(@cur_page.homepage, @cur_page.homepage, target: "_blank") if @cur_page.homepage.present? %></dd>
+  <% if @cur_page.related_url.present? %>
+    <dt><%= @cur_page.class.t :related_url %></dt>
+    <dd><%= link_to(@cur_page.related_url, @cur_page.related_url, target: "_blank") if @cur_page.related_url.present? %></dd>
   <% end %>
 </dl>
