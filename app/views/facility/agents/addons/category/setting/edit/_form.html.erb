@@ -14,7 +14,7 @@ $ ->
 <% end %>
 
 <dl class="see mod-category">
-  <dt><%= t("facility.category.setting") %><%#= @model.tt :st_categories %></dt>
+  <dt><%= t("facility.category.setting") %><%= @model.tt :st_categories %></dt>
   <dd class="wide" style="line-height: 2.5">
     <%= f.hidden_field "st_category_ids[]", value: "", class: "hidden-categories-ids" %>
     <%= link_to t("facility.category.index"), facility_search_categories_path, class: "ajax-box" %>

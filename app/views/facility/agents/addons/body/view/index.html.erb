@@ -1,15 +1,23 @@
 <dl class="see body">
-  <dt><%= @cur_node.class.t :kana %></dt>
-  <dd><%= @cur_node.kana %></dd>
+  <% if @cur_node.kana.present? %>
+    <dt><%= @cur_node.class.t :kana %></dt>
+    <dd><%= @cur_node.kana %></dd>
+  <% end %>
 
-  <dt><%= @cur_node.class.t :address %></dt>
-  <dd><%= @cur_node.address %></dd>
+  <% if @cur_node.address.present? %>
+    <dt><%= @cur_node.class.t :address %></dt>
+    <dd><%= @cur_node.address %></dd>
+  <% end %>
 
-  <dt><%= @cur_node.class.t :tel %></dt>
-  <dd><%= @cur_node.tel %></dd>
+  <% if @cur_node.tel.present? %>
+    <dt><%= @cur_node.class.t :tel %></dt>
+    <dd><%= @cur_node.tel %></dd>
+  <% end %>
 
-  <dt><%= @cur_node.class.t :fax %></dt>
-  <dd><%= @cur_node.fax %></dd>
+  <% if @cur_node.fax.present? %>
+    <dt><%= @cur_node.class.t :fax %></dt>
+    <dd><%= @cur_node.fax %></dd>
+  <% end %>
 
   <dt><%= @cur_node.class.t :homepage %></dt>
   <dd><%= link_to(@cur_node.homepage, @cur_node.homepage, target: "_blank") if @cur_node.homepage.present? %></dd>

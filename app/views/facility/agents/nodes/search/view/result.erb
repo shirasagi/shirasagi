@@ -26,7 +26,7 @@ $ ->
   <% @items.each do |item| %>
     <div class="column">
       <p class="name"><%= link_to item.name, item.url %></p>
-      <p class="category"><%= item.categories.pluck(:name).join(", ") %></p>
+      <p class="categories"><%= item.categories.pluck(:name).join(", ") %></p>
       <p class="address"><%= item.address %></p>
     </div>
   <% end %>

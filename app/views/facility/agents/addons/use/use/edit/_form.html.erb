@@ -1,4 +1,5 @@
 <dl class="see mod-use">
+  <dt><%= t("facility.use.name") %><%= @model.tt :uses %></dt>
   <dd class="wide" style="line-height: 2.5">
     <%= f.hidden_field "use_ids[]", value: "" %>
     <% if @cur_node.present? %>

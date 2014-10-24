@@ -37,8 +37,8 @@ $ ->
 <% end %>
 
 <dl class="see mod-facility-additional-info">
-  <dt class="field"><%= @item.t :field %></dt>
-  <dd class="value"><%= @item.t :value %></dd>
+  <dt class="field"><%= @item.t :field %><%= @item.tt :field %></dt>
+  <dd class="value"><%= @item.t :value %><%= @item.tt :value %></dd>
 
   <% if @item.additional_info.blank? %>
     <dt><%= text_field_tag "item[additional_info][][field]" %></dt>

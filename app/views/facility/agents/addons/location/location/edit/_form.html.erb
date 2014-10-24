@@ -1,4 +1,5 @@
 <dl class="see mod-location">
+  <dt><%= t("facility.location.name") %><%= @model.tt :locations %></dt>
   <dd class="wide" style="line-height: 2.5">
     <%= f.hidden_field "location_ids[]", value: "" %>
     <% if @cur_node.present? %>
