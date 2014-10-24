@@ -1,2 +1,1 @@
-
 Mobile::Initializer
