@@ -37,6 +37,7 @@ module Cms::PageFilter
 
     def update
       @item.attributes = get_params
+      @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
       raise "403" unless @item.allowed?(:edit, @cur_user)
       if @item.state == "public"
         raise "403" unless @item.allowed?(:release, @cur_user)

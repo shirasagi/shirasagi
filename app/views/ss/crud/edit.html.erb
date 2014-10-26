@@ -1,6 +1,8 @@
 <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
+<%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
 <% addons = @model && @model.addons %>
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">

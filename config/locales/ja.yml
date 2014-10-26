@@ -124,6 +124,7 @@ ja:
       wrong_length: は%{count}文字で入力してください。
       other_than: "は%{count}以外の値にしてください。"
       email: はメールアドレスを入力してください。
+      invalid_updated: 他のユーザーによって更新されています。編集をやり直してください。
     template:
       body: 次の項目を確認してください。
       header:
