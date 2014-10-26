@@ -12,6 +12,8 @@ ja:
     site_menu: サイトメニュー
     view_site: サイト確認
     preview_site: サイトプレビュー
+    view_page: 公開画面
+    preview_page: プレビュー
     config: 設定
     site: サイト
     role: 権限/ロール
