@@ -1,0 +1,60 @@
+<%= coffee do %>
+$ ->
+  $(".mod-event-additional-info .add-info").on 'click', ->
+    if $(".mod-event-additional-info").length < 10
+      dd = $(".mod-event-additional-info dd:last").clone(true)
+      dt = $(".mod-event-additional-info dt:last").clone(true)
+      dd.find("input").val("")
+      dd.find("textarea").val("")
+      dt.find("input").val("")
+      dt.find("textarea").val("")
+      $(".mod-event-additional-info dd:last").after(dt)
+      $(".mod-event-additional-info dt:last").after(dd)
+    return false
+
+  $(".mod-event-additional-info .clear").on 'click', ->
+    dd = $(this).closest("dd")
+    dt = dd.prev("dt")
+
+    if $(".mod-event-additional-info dt").length > 2
+      if dt.find("input").val() != "" || dd.find("textarea").val() != ""
+        if confirm("項目を削除してよろしいですか？")
+          dt.remove()
+          dd.remove()
+      else
+        dt.remove()
+        dd.remove()
+    else
+      if dt.find("input").val() != "" || dd.find("textarea").val() != ""
+        if confirm("項目を削除してよろしいですか？")
+          dt.find("input").val("")
+          dd.find("textarea").val("")
+      else
+        dt.find("input").val("")
+        dd.find("textarea").val("")
+    return false
+
+<% end %>
+
+<dl class="see mod-event-additional-info">
+  <dt class="field"><%= @item.t :field %><%= @item.tt :field %></dt>
+  <dd class="value"><%= @item.t :value %><%= @item.tt :value %></dd>
+
+  <% if @item.additional_info.blank? %>
+    <dt><%= text_field_tag "item[additional_info][][field]" %></dt>
+    <dd>
+      <%= text_area_tag "item[additional_info][][value]" %>
+      <%= button_tag t("event.del_info"), { type: :button, class: "clear" } %>
+    </dd>
+  <% end %>
+
+  <% @item.additional_info.each do |info| %>
+    <dt><%= text_field_tag "item[additional_info][][field]", info[:field] %></dt>
+    <dd>
+      <%= text_area_tag "item[additional_info][][value]", info[:value] %>
+      <%= button_tag t("event.del_info"), { type: :button, class: "clear" } %>
+    </dd>
+  <% end %>
+
+  <%= button_tag t("event.add_info"), { type: :button, class: "add-info" }  %>
+</dl>

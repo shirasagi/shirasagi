@@ -1,0 +1,99 @@
+<%= coffee do %>
+$ ->
+  $(".event-pages-filter a[data-id!=all]").on 'click', ->
+    $(".event-pages-filter a[data-id=all]").removeClass("clicked")
+
+    if $(this).hasClass("clicked")
+       $(this).removeClass("clicked")
+    else
+      $(this).addClass("clicked")
+
+    dataIds = []
+    $(".event-pages-filter a.clicked").each ->
+      dataId = parseInt($(this).attr("data-id"))
+      dataIds.push(dataId) unless isNaN(dataId)
+
+    $("#event-list .page").each ->
+      pageDataIds = []
+      $.each $(this).attr("data-id").split(" "), ->
+        pageDataIds.push(parseInt(this))
+
+      visible = false
+      $.each dataIds, ->
+        if $.inArray(parseInt(this), pageDataIds) >= 0
+          visible = true
+          return false
+
+      if visible
+        $(this).show()
+      else
+        $(this).hide()
+    return false
+
+  $(".event-pages-filter a[data-id=all]").on 'click', ->
+    unless $(this).hasClass("clicked")
+      $(this).addClass("clicked")
+      $(".event-pages-filter a[data-id!=all]").removeClass("clicked")
+      $("#event-list .page").show()
+    return false
+<% end %>
+
+<%== @cur_node.upper_html %>
+
+<% if @cur_node.st_categories.present? %>
+  <nav class="event-pages-filter">
+    <ul>
+      <li class="all">
+        <%= link_to t("event.filter_all"), "#", class: "clicked", "data-id" => "all" %>
+      </li>
+      <% @cur_node.st_categories.each do |cate| %>
+        <li class="<%= cate.basename %>">
+          <%= link_to cate.name, "#", "data-id" => cate.id %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>
+
+<nav class="event-date">
+  <h1 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h1>
+  <ul>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1) %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months:  1) %></li>
+  </ul>
+</nav>
+
+<div id="event-list">
+  <% @events.each do |date, pages| %>
+  <dl class="<%= event_dl_class date %>">
+    <dt>
+      <%= time_tag(date) do %>
+      <%= link_to_daily date, name: "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}" %>
+      <span class="wday">(<%= t_wday(date) %><span class="unit"><%= t_date('wday') %></span>)</span>
+      <% end %>
+    </dt>
+
+    <% if date.national_holiday? %>
+    <dd class="holiday"><%= HolidayJapan.name date %></dd>
+    <% end %>
+
+    <% pages.each do |page, categories| %>
+    <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
+        <% if categories.present? %>
+          <% cate = categories.first %>
+          <div class="<%= event_category_class(page) %>">
+            <%= link_to cate.name, cate.url %>
+          </div>
+        <% end %>
+        <header>
+          <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
+        </header>
+      </article>
+    </dd>
+    <% end %>
+  </dl>
+  <% end %>
+</div>
+
+<%== @cur_node.lower_html %>

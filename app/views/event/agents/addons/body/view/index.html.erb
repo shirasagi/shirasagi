@@ -1,0 +1,26 @@
+<dl class="see body">
+  <% if @cur_page.schedule.present? %>
+    <dt><%= @cur_page.class.t :schedule %></dt>
+    <dd><%=br @cur_page.schedule.to_s %></dd>
+  <% end %>
+
+  <% if @cur_page.venue.present? %>
+    <dt><%= @cur_page.class.t :venue %></dt>
+    <dd><%=br @cur_page.venue.to_s %></dd>
+  <% end %>
+
+  <% if @cur_page.content.present? %>
+    <dt><%= @cur_page.class.t :content %></dt>
+    <dd><%=br @cur_page.content.to_s %></dd>
+  <% end %>
+
+  <% if @cur_page.cost.present? %>
+    <dt><%= @cur_page.class.t :cost %></dt>
+    <dd><%=br @cur_page.cost.to_s %></dd>
+  <% end %>
+
+  <% if @cur_page.related_url.present? %>
+    <dt><%= @cur_page.class.t :related_url %></dt>
+    <dd><%= link_to(@cur_page.related_url, @cur_page.related_url, target: "_blank") if @cur_page.related_url.present? %></dd>
+  <% end %>
+</dl>
