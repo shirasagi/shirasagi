@@ -5,15 +5,10 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
     def generate
       generate_node @node
 
-      if @change_dates
-        ym = @change_dates.map { |date| [ date.year, date.month ] }.uniq
-        ym = ym.map { |year, month| [ sprintf("%02d", year), sprintf("%02d", month) ] }
-      else
-        start_date = Date.current.advance(years: -1)
-        close_date = Date.current.advance(years:  1, month: 1)
-        ym = (start_date..close_date).map{ |date| [ date.year, date.month ] }.uniq
-        ym = ym.map { |year, month| [ sprintf("%02d", year), sprintf("%02d", month) ] }
-      end
+      start_date = Date.current.advance(years: -1)
+      close_date = Date.current.advance(years:  1, month: 1)
+      ym = (start_date..close_date).map{ |date| [ date.year, date.month ] }.uniq
+      ym = ym.map { |year, month| [ sprintf("%02d", year), sprintf("%02d", month) ] }
 
       ym.each do |year, month|
         generate_node @node, file: "#{@node.path}/#{year}#{month}.html", params: { year: year, month: month }
