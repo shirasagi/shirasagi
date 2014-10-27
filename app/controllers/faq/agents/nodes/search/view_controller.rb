@@ -5,7 +5,7 @@ module Faq::Agents::Nodes::Search
 
     public
       def pages
-        Faq::Page.site(@cur_site).public
+        Faq::Page.site(@cur_site).public(@cur_date)
       end
 
       def index

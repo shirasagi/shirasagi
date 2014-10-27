@@ -3,6 +3,8 @@ module Cms::Addon::List
     extend ActiveSupport::Concern
     extend SS::Translation
 
+    attr_accessor :cur_date
+
     included do |mod|
       field :conditions, type: SS::Extensions::Words
       field :sort, type: String
@@ -36,7 +38,7 @@ module Cms::Addon::List
       end
 
       def in_new_days?(date)
-        date + new_days > Time.now
+        date + new_days > (@cur_date || Time.now)
       end
 
       def condition_hash

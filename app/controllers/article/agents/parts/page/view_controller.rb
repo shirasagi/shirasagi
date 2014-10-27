@@ -5,7 +5,7 @@ module Article::Agents::Parts::Page
 
     public
       def index
-        @items = Article::Page.site(@cur_site).public.
+        @items = Article::Page.site(@cur_site).public(@cur_date).
           where(@cur_part.condition_hash).
           order_by(@cur_part.sort_hash).
           page(params[:page]).

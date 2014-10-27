@@ -45,7 +45,7 @@ module Event::Agents::Parts::Calendar
     private
       def events(date)
         condition_hash = @cur_part.parent.try(:condition_hash) ? @cur_part.parent.try(:condition_hash) : {}
-        events = Cms::Page.site(@cur_site).public.
+        events = Cms::Page.site(@cur_site).public(@cur_date).
           where(condition_hash).
           where(:"event_dates".in => [date.mongoize]).
           entries.

@@ -7,7 +7,7 @@ module  Event::Agents::Nodes::Page
     public
       # for tabs
       def pages
-        Cms::Page.site(@cur_site).public.
+        Cms::Page.site(@cur_site).public(@cur_date).
           where(@cur_node.condition_hash).
           where(:"event_dates.0".exists => true)
       end
@@ -46,7 +46,7 @@ module  Event::Agents::Nodes::Page
 
     private
       def events(date)
-        events = Cms::Page.site(@cur_site).public.
+        events = Cms::Page.site(@cur_site).public(@cur_date).
           where(@cur_node.condition_hash).
           where(:"event_dates".in => [date.mongoize]).
           entries.

@@ -31,8 +31,9 @@ module Cms::Content
       if date.nil?
         where state: "public"
       else
+        date = date.dup
         where("$and" => [
-          { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
+          { :released.lte => date },
           { "$or" => [ { release_date: nil }, { :release_date.lte => date } ] },
           { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
         ])
