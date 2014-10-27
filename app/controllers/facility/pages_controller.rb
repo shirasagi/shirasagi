@@ -29,7 +29,8 @@ class Facility::PagesController < ApplicationController
 
     def image_pages
       Facility::Image.site(@cur_site).public.
-        where(filename: /^#{@item.filename}\//, depth: @item.depth + 1).order_by(order: -1)
+        where(filename: /^#{@item.filename}\//, depth: @item.depth + 1).order_by(order: -1).
+        select { |page| page.image.present? }
     end
 
   public
@@ -42,6 +43,7 @@ class Facility::PagesController < ApplicationController
 
     def show
       raise "403" unless @item.allowed?(:read, @cur_user)
+      action = @cur_node.allowed?(:edit, @cur_user, site: @cur_site) ? :edit : :show
 
       @maps = map_pages
       @maps.each do |map|
@@ -61,16 +63,14 @@ class Facility::PagesController < ApplicationController
         end
       end
 
-      @summary_image = nil
-      @images = []
-      image_pages.each do |page|
-        next if page.image.blank?
-
-        if @summary_image
-          @images.push page
-        else
-          @summary_image = page
-        end
+      pages = image_pages.map do |page|
+        [
+          page,
+          send("#{action}_facility_image_path", cid: @item.id, id: page.id ),
+          { width: page.image_thumb_width, height: page.image_thumb_height }
+        ]
       end
+      @summary_image = [ pages.shift ]
+      @images = pages
     end
 end

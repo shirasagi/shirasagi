@@ -34,6 +34,7 @@ ja:
     button:
       add_info: 項目を追加する
       del_info: 削除
+      del_info_confirm: 項目を削除してよろしいですか？
     submit:
       search: この条件で検索する
       reset: 検索条件をリセットする

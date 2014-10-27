@@ -10,11 +10,8 @@ class Facility::SearchLocationsController < ApplicationController
     end
 
     def search
-      @query = params[:q]
-      @query = @query.blank? ? {} : @query.split(/[\s　]+/).uniq.compact.map { |q| { name: /\Q#{q}\E/ } }
-
       @items = @model.site(@cur_site).
-        and(@query).
+        search(params[:q]).
         order_by(_id: -1)
 
       render layout: !request.xhr?

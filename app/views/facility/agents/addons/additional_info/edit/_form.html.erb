@@ -18,7 +18,7 @@ $ ->
 
     if $(".mod-facility-additional-info dt").length > 2
       if dt.find("input").val() != "" || dd.find("textarea").val() != ""
-        if confirm("項目を削除してよろしいですか？")
+        if confirm("<%= t("facility.button.del_info_confirm") %>")
           dt.remove()
           dd.remove()
       else
@@ -26,7 +26,7 @@ $ ->
         dd.remove()
     else
       if dt.find("input").val() != "" || dd.find("textarea").val() != ""
-        if confirm("項目を削除してよろしいですか？")
+        if confirm("<%= t("facility.button.del_info_confirm") %>")
           dt.find("input").val("")
           dd.find("textarea").val("")
       else

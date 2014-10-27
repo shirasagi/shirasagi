@@ -39,21 +39,15 @@
 
     <div class="summary image">
       <% if @summary_image.present? %>
-        <p>
-          <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to edit_facility_image_path(cid: @item.id, id: @summary_image.id) do %>
-              <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
-              <%= image_tag @summary_image.image.thumb_url + "?" + thumb_size, alt: @summary_image.image_alt %>
+        <% @summary_image.each do |page, path, thumb_size| %>
+          <p>
+            <%= link_to path do %>
+              <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
             <% end %>
-          <% else %>
-            <%= link_to facility_image_path(cid: @item.id, id: @summary_image.id) do %>
-              <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
-              <%= image_tag @summary_image.image.thumb_url + "?" + thumb_size, alt: @summary_image.image_alt %>
-            <% end %>
+          </p>
+          <% if page.image_comment.present? %>
+            <p><%= page.image_comment %></p>
           <% end %>
-        </p>
-        <% if @summary_image.image_comment.present? %>
-          <p><%= @summary_image.image_comment %></p>
         <% end %>
       <% end %>
     </div>
@@ -64,23 +58,15 @@
         <h2><%= t("facility.image") %></h2>
       </header>
       <div class="images">
-        <% @images.each do |img| %>
+        <% @images.each do |page, path, thumb_size| %>
           <div class="image">
             <p>
-              <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-                <%= link_to edit_facility_image_path(cid: @item.id, id: img.id) do %>
-                  <% thumb_size = { width: img.image_thumb_width, height: img.image_thumb_height }.to_query %>
-                  <%= image_tag img.image.thumb_url + "?" + thumb_size, alt: img.image_alt %>
-                <% end %>
-              <% else %>
-                <%= link_to facility_image_path(cid: @item.id, id: img.id) do %>
-                  <% thumb_size = { width: img.image_thumb_width, height: img.image_thumb_height }.to_query %>
-                  <%= image_tag img.image.thumb_url + "?" + thumb_size, alt: img.image_alt %>
-                <% end %>
+              <%= link_to path do %>
+                <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
               <% end %>
             </p>
-            <% if img.image_comment.present? %>
-              <p><%= img.image_comment %></p>
+            <% if page.image_comment.present? %>
+              <p><%= page.image_comment %></p>
             <% end %>
           </div>
         <% end %>
