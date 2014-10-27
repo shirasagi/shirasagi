@@ -11,6 +11,9 @@ module Event::Addon
       permit_params :event_name, :event_dates
 
       validate :validate_event
+
+      after_save :generate_event_node, if: ->{ @db_changes }
+      after_destroy :generate_event_node
     end
 
     def validate_event
@@ -19,6 +22,27 @@ module Event::Addon
       if event_dates.present?
         event_array = Event::Extensions::EventDates.mongoize event_dates
         errors.add :event_dates, :too_many_event_dates if event_array.size >= 180
+      end
+    end
+
+    def generate_event_node
+      return unless serve_static_file?
+
+      Event::Node::Page.public.each do |node|
+        agent = SS::Agent.new Event::Agents::Tasks::Node::PagesController
+        agent.controller.instance_variable_set :@node, node
+
+        if  @db_changes["event_dates"]
+          before_dates = @db_changes["event_dates"][0].to_a
+          after_dates  = @db_changes["event_dates"][1].to_a
+
+          if before_dates.present? || after_dates.present?
+            change_dates = before_dates + after_dates
+            agent.controller.instance_variable_set :@change_dates, change_dates
+          end
+        end
+
+        agent.invoke :generate
       end
     end
   end
