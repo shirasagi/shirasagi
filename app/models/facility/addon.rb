@@ -8,9 +8,9 @@ module Facility::Addon
       field :address, type: String
       field :tel, type: String
       field :fax, type: String
-      field :homepage, type: String
+      field :related_url, type: String
 
-      permit_params :kana, :address, :tel, :fax, :homepage
+      permit_params :kana, :address, :tel, :fax, :related_url
     end
 
     set_order 200

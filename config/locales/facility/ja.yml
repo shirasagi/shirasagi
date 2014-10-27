@@ -72,7 +72,7 @@ ja:
         address: 住所
         tel: 電話番号
         fax: FAX
-        homepage: URL
+        related_url: URL
         field: 項目名
         value: 内容
       facility/image:
