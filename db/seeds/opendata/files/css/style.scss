@@ -1071,13 +1071,6 @@ article.areas, article.formats {
           padding-bottom: 10px;
         }
         .resources {
-          .name {
-            float: left;
-            width: 600px;
-            padding-left: 40px;
-            background: url(../img/ic-text.png) no-repeat 5px center;
-            word-wrap: break-word;
-          }
           .download {
             float: right;
             width: auto;
@@ -1113,6 +1106,47 @@ article.areas, article.formats {
         }
       }
     }
+  }
+}
+// icon
+.resources {
+  .name {
+    float: left;
+    width: 600px;
+    padding-left: 40px;
+    background: url(../img/ic-text.png) no-repeat 5px center;
+    word-wrap: break-word;
+  }
+  .name.format-bmp, .name.format-gif, .name.format-jpg, .name.format-jpe, .name.format-jpeg,
+  .name.format-png {
+    background: url(../img/ic-image.png) no-repeat 5px center;
+  }
+  .name.format-xls, .name.format-xlsx {
+    background: url(../img/ic-excel.png) no-repeat 5px center;
+  }
+  .name.format-csv, .name.format-tsv {
+    background: url(../img/ic-csv.png) no-repeat 5px center;
+  }
+  .name.format-doc, .name.format-docx, .name.format-jtd {
+    background: url(../img/ic-word.png) no-repeat 5px center;
+  }
+  .name.format-zip, .name.format-lzh {
+    background: url(../img/ic-zip.png) no-repeat 5px center;
+  }
+  .name.format-pdf {
+    background: url(../img/ic-pdf.png) no-repeat 5px center;
+  }
+  .name.format-pptx, .name.format-ppt {
+    background: url(../img/ic-ppt.png) no-repeat 5px center;
+  }
+  .name.format-rdf {
+    background: url(../img/ic-rdf.png) no-repeat left center;
+  }
+  .name.format-html {
+    background: url(../img/ic-html.png) no-repeat 5px center;
+  }
+  .name.format-kml {
+    background: url(../img/ic-kml.png) no-repeat 5px center;
   }
 }
 
@@ -1331,27 +1365,3 @@ table.sparql {
     padding: 5px;
   }
 }
-
-
-
-/*
-.opendata-mypage-login {
-  display: table;
-  margin: 20px;
-  padding: 20px;
-  background-color: #eee;
-  input[type=submit] {
-    margin: 10px 0px 0px;
-  }
-}
-
-
-dl.see {
-  margin: 0px 0px 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  dd {
-    margin: 0px 0px 0px 20px;
-  }
-}
-*/
