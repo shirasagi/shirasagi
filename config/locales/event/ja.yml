@@ -1,24 +1,54 @@
 ja:
   event:
     page: イベントページ
+    category: カテゴリー
     add_date: 日付フォームを追加する
     del_date: 削除
+    add_info: 項目を追加する
+    del_info: 削除
+    next_month: 次の月へ
+    prev_month: 前の月へ
+    next_day: 次の日へ
+    prev_day: 前の日へ
+    current_month: 今月
+    filter_all: 全て
 
   modules:
     event: イベント
     addons:
       event/date: イベント
       event/page_list: リスト表示
+      event/body: イベント情報
+      event/additional_info: 追加情報
+      event/category/category: カテゴリー
+      event/category/setting: カテゴリー
 
   cms:
     nodes:
       event/page: イベントリスト
+    parts:
+      event/calendar: カレンダー
+
+  cms_role:
+    read_other_event_pages: イベントページの閲覧（全て）
+    read_private_event_pages: イベントページの閲覧（所有）
+    edit_other_event_pages: イベントページの編集（全て）
+    edit_private_event_pages: イベントページの編集（所有）
+    delete_other_event_pages: イベントページの削除（全て）
+    delete_private_event_pages: イベントページの削除（所有）
 
   mongoid:
     attributes:
       cms/page/model:
         event_name: イベントタイトル
         event_dates: イベント日
+        schedule: 日時
+        venue: 開催場所
+        content: 内容
+        cost: 費用
+        related_url: URL
+        field: 項目名
+        value: 内容
 
   datetime:
     prompts:
@@ -36,3 +66,19 @@ ja:
       event_dates:
         - イベントページにリンクを表示する場合はイベントの期間を入力してください。
         - 「日付フォームを追加する」を選択することで複数の期間を設定することが可能です。
+    event/addon/body:
+      schedule:
+        - イベントの日時をテキスト形式にて入力できます。
+      venue:
+        - イベントの開催場所を入力できます。
+      related_url:
+        - イベントの関連ＵＲＬを入力できます。
+      content:
+        - イベントの内容を入力できます。
+      cost:
+        - イベント参加に必要な費用を入力できます。
+    event/addon/additional_info:
+      field:
+        - 追加情報の項目名を設定します。
+      value:
+        - 項目の内容を設定します。

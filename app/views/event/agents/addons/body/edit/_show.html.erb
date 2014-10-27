@@ -1,0 +1,16 @@
+<dl class="see mod-event-body">
+  <dt><%= @model.t :schedule %></dt>
+  <dd><%=br @item.schedule.to_s %></dd>
+
+  <dt><%= @model.t :venue %></dt>
+  <dd><%=br @item.venue.to_s %></dd>
+
+  <dt><%= @model.t :content %></dt>
+  <dd><%=br @item.content.to_s %></dd>
+
+  <dt><%= @model.t :related_url %></dt>
+  <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank") if @item.related_url.present? %></dd>
+
+  <dt><%= @model.t :cost %></dt>
+  <dd><%=br @item.cost.to_s %></dd>
+</dl>

@@ -16,14 +16,16 @@ class SS::Extensions::Words < Array
       case object
       when self.class then object.mongoize
       when String then self.new(object.gsub(/[, 　、\r\n]+/, ",").split(",").compact.uniq).mongoize
-      else object
+      else
+        object
       end
     end
 
     def evolve(object)
       case object
       when self.class then object.mongoize
-      else object
+      else
+        object
       end
     end
   end

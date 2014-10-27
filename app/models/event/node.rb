@@ -8,7 +8,25 @@ module Event::Node
   class Page
     include Cms::Node::Model
     include Event::Addon::PageList
+    include Event::Addon::Category::Setting
 
     default_scope ->{ where(route: "event/page") }
+
+    public
+      def condition_hash
+        cond = []
+        cids = []
+
+        cond << {} if conditions.blank?
+        conditions.each do |url|
+          node = Cms::Node.filename(url).first
+          next unless node
+          cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+          cids << node.id
+        end
+        cond << { :category_ids.in => cids } if cids.present?
+
+        { '$or' => cond }
+      end
   end
 end

@@ -1,0 +1,44 @@
+<%== @cur_node.upper_html %>
+
+<nav class="event-date">
+  <h1 class="<%= event_h1_class(@month) + " " + event_dl_class(@date) %>">
+    <%= time_tag(@date) do %>
+      <%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}#{@day}#{t_date('day')}" %>
+      <span class="wday">(<%= t_wday(@date) %><span class="unit"><%= t_date('wday') %></span>)</span>
+
+      <% if @date.national_holiday? %>
+        <span class="holiday"><%= HolidayJapan.name @date %></span>
+      <% end %>
+    <% end %>
+  </h1>
+  <ul>
+    <li class="prev"><%= link_to_daily @date.advance(days: -1), name: t("event.prev_day") %></li>
+    <li class="next"><%= link_to_daily @date.advance(days:  1), name: t("event.next_day") %></li>
+  </ul>
+</nav>
+
+<div id="event-list">
+  <% @events.each do |page, categories| %>
+    <div class="page">
+      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
+        <header>
+          <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
+          <% if page.summary_html.present? %>
+            <%= raw page.summary_html %>
+          <% end %>
+        </header>
+        <nav class="catetories">
+          <ul>
+            <% categories.each do |cate| %>
+              <li class="<%= cate.basename %>">
+                <%= link_to cate.name, cate.url %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      </article>
+    </div>
+  <% end %>
+</div>
+
+<%== @cur_node.lower_html %>
