@@ -6,7 +6,7 @@ SS::Application.routes.draw do
 
   namespace "cms", path: ".:site" do
     get "/" => "main#index", as: :main
-    get "preview/(*path)" => "preview#index", as: :preview
+    get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     get "generate_nodes" => "generate_nodes#index"
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"

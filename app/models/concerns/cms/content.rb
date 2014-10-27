@@ -27,7 +27,17 @@ module Cms::Content
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
 
-    scope :public, ->{ where state: "public" }
+    scope :public, ->(date = nil) {
+      if date.nil?
+        where state: "public"
+      else
+        where("$and" => [
+          { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
+          { "$or" => [ { release_date: nil }, { :release_date.lte => date } ] },
+          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+        ])
+      end
+    }
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node) {
       node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)

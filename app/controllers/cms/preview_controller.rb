@@ -14,8 +14,9 @@ class Cms::PreviewController < ApplicationController
 
     def set_path_with_preview
       @cur_path ||= request.env["REQUEST_PATH"]
-      @cur_path.sub!(/^#{cms_preview_path}/, "")
+      @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
+      @cur_date = Time.parse params[:preview_date] if params[:preview_date]
     end
 
     def x_sendfile(file = @file)
@@ -34,14 +35,15 @@ class Cms::PreviewController < ApplicationController
     end
 
     def render_preview
-      body = response.body
+      preview_url = cms_preview_path preview_date: params[:preview_date]
 
+      body = response.body
       body.gsub!(/(href|src)=".*?"/) do |m|
         url = m.match(/.*?="(.*?)"/)[1]
         if url =~ /^\/(assets|assets-dev)\//
           m
         elsif url =~ /^\//
-          m.sub(/="/, "=\"#{cms_preview_path}")
+          m.sub(/="/, "=\"#{preview_url}")
         else
           m
         end
