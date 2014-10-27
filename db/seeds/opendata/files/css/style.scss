@@ -1116,6 +1116,26 @@ article.areas, article.formats {
   }
 }
 
+nav.cms-sns_share {
+  padding: 10px 0;
+  overflow: hidden;
+  .site {
+    float: left !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin-right: 10px !important;
+    min-height: 30px !important;
+    line-height: 18px !important;
+    text-indent: 0 !important;
+  }
+  .site.twitter {
+    width: 95px !important;
+  }
+  .site.google {
+    width: 70px !important;
+  }
+}
+
 //-----------------------------------------------------------------------------------------
 //login
 #s-mypage-login #contents ul {
