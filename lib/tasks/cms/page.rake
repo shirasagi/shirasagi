@@ -7,6 +7,10 @@ namespace :cms do
     Cms::Task.generate_pages site: ENV["site"], node: ENV["node"]
   end
 
+  task :update_pages => :environment do
+    Cms::Task.update_pages site: ENV["site"], node: ENV["node"]
+  end
+
   task :release_pages => :environment do
     Cms::Task.release_pages site: ENV["site"]
   end
