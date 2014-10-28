@@ -1,6 +1,6 @@
 <% if @cur_member %>
 <a href="/mypage/"><%= @cur_member.name %>さん</a>
-<a href="/mypage/logout">Logout</a>
+<a href="/mypage/logout"><%= t :"ss.logout" %></a>
 <% else %>
-<a href="/mypage/login">Login</a>
+<a href="/mypage/login"><%= t :"ss.login" %></a>
 <% end %>
