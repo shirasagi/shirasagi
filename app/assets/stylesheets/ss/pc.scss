@@ -284,8 +284,8 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
 }
 nav.sub-menu {
   margin-top: 10px;
-  div {
-    .narrow-page a {
+  .narrow-page {
+    a {
       padding-left: 25px;
       &:hover {
         padding-left: 20px;
