@@ -40,6 +40,8 @@ module Opendata::Agents::Nodes::Mypage
           redirect_to "/auth/yahoojp"
         elsif request.path_info.include?("google_oauth2")
           redirect_to "/auth/google_oauth2"
+        elsif request.path_info.include?("github")
+          redirect_to "/auth/github"
         end
       end
   end
