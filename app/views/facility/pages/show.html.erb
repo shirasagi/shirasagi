@@ -27,13 +27,13 @@
         <dd><%=br info[:value] %></dd>
       <% end %>
 
-      <dt><%= t("modules.addons.facility/category/category") %></dt>
+      <dt><%= t("modules.addons.facility/category") %></dt>
       <dd><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
 
-      <dt><%= t("modules.addons.facility/use/use") %></dt>
+      <dt><%= t("modules.addons.facility/use") %></dt>
       <dd><%= @item.send(:uses).pluck(:name).join(", ") %></dd>
 
-      <dt><%= t("modules.addons.facility/location/location") %></dt>
+      <dt><%= t("modules.addons.facility/location") %></dt>
       <dd><%= @item.send(:locations).pluck(:name).join(", ") %></dd>
     </dl>
 
