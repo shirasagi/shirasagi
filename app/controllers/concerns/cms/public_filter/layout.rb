@@ -41,16 +41,24 @@ module Cms::PublicFilter::Layout
       html = @cur_layout.body.to_s.gsub(/<\/ part ".+?" \/>/) do |m|
         path = m.sub(/<\/ part "(.+)?" \/>/, '\\1') + ".part.html"
         path = path[0] == "/" ? path.sub(/^\//, "") : @cur_layout.dirname(path)
-
-        part = Cms::Part.site(@cur_site)
-        part = part.where mobile_view: "show" if @filter == :mobile
-        part = part.filename(path).first
-        part = part.becomes_with_route if part
-        part ? render_part(part) : ""
+        render_layout_part(path)
       end
 
       html.gsub!('#{page_name}', @cur_item.name)
       html.sub!("</ yield />", response.body)
       html
+    end
+
+    def render_layout_part(path)
+      part = Cms::Part.site(@cur_site)
+      part = part.where(mobile_view: "show") if @filter == :mobile
+      part = part.filename(path).first
+      return unless part
+
+      if part.ajax_view == "enabled"
+        render_part(part.becomes_with_route, xhr: true)
+      else
+        render_part(part.becomes_with_route)
+      end
     end
 end
