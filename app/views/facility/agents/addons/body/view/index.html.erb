@@ -19,6 +19,8 @@
     <dd><%= @cur_node.fax %></dd>
   <% end %>
 
-  <dt><%= @cur_node.class.t :homepage %></dt>
-  <dd><%= link_to(@cur_node.homepage, @cur_node.homepage, target: "_blank") if @cur_node.homepage.present? %></dd>
+  <% if @cur_node.related_url.present? %>
+    <dt><%= @cur_node.class.t :related_url %></dt>
+    <dd><%= link_to(@cur_node.related_url, @cur_node.related_url, target: "_blank") %></dd>
+  <% end %>
 </dl>

@@ -1,8 +1,8 @@
 <dl class="condition">
   <dt class="category"><%= t("facility.category.name") %></dt>
   <dd><%= @categories.pluck(:name).join("、") %></dd>
-  <dt class="use"><%= t("facility.use.name") %></dt>
-  <dd><%= @uses.pluck(:name).join("、") %></dd>
+  <dt class="feature"><%= t("facility.feature.name") %></dt>
+  <dd><%= @features.pluck(:name).join("、") %></dd>
   <dt class="location"><%= t("facility.location.name") %></dt>
   <dd><%= @locations.pluck(:name).join("、") %></dd>
 </dl>

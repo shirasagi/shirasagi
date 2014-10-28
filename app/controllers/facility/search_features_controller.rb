@@ -1,9 +1,9 @@
-class Facility::SearchUsesController < ApplicationController
+class Facility::SearchFeaturesController < ApplicationController
   include Cms::BaseFilter
   include SS::CrudFilter
   include SS::AjaxFilter
 
-  model Facility::Node::Use
+  model Facility::Node::Feature
 
   public
     def index

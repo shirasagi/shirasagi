@@ -1,7 +1,7 @@
 <%
 
 categories = @items.map do |item|
-  parent = item.parents.select{ |cate| cate.route == "facility/use" }.shift
+  parent = item.parents.select{ |cate| cate.route == "facility/feature" }.shift
   parent.present? ? parent : item
 end
 categories = categories.uniq { |item| item.filename }
@@ -11,7 +11,7 @@ def cate_form(item)
   h << check_box_tag("category_ids[]", item._id)
   h << %(#{item.name}</label>)
 
-  children = Facility::Node::Use.site(@cur_site).node(item)
+  children = Facility::Node::Feature.site(@cur_site).node(item)
 
   if children.size > 0
     h << %(<div style="padding: 0px 0px 0px 40px;">).html_safe

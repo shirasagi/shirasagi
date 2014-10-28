@@ -1,4 +1,4 @@
-module Facility::Agents::Addons::UseSetting
+module Facility::Agents::Addons::FeatureSetting
   class ViewController < ApplicationController
     include SS::AddonFilter::View
   end

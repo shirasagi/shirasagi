@@ -1,11 +1,11 @@
 module Facility::Addon
-  module UseSetting
+  module FeatureSetting
     extend SS::Addon
     extend ActiveSupport::Concern
 
     included do
-      embeds_ids :st_uses, class_name: "Facility::Node::Use"
-      permit_params st_use_ids: []
+      embeds_ids :st_features, class_name: "Facility::Node::Feature"
+      permit_params st_feature_ids: []
     end
 
     set_order 510

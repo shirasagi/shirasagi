@@ -23,15 +23,15 @@ module Facility::Reference
     end
   end
 
-  module Use
+  module Feature
     extend ActiveSupport::Concern
 
     included do
-      embeds_ids :uses, class_name: "Facility::Node::Use"
-      permit_params use_ids: []
+      embeds_ids :features, class_name: "Facility::Node::Feature"
+      permit_params feature_ids: []
 
-      embeds_ids :st_uses, class_name: "Facility::Node::Use"
-      permit_params st_use_ids: []
+      embeds_ids :st_features, class_name: "Facility::Node::Feature"
+      permit_params st_feature_ids: []
     end
   end
 end

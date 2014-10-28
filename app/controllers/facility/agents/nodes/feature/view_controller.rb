@@ -6,7 +6,7 @@ module Facility::Agents::Nodes::Use
     public
       def index
         @items = Facility::Node::Page.site(@cur_site).public.
-          in(use_ids: @cur_node.id).
+          in(feature_ids: @cur_node.id).
           order_by(@cur_node.sort_hash).
           page(params[:page]).
           per(@cur_node.limit)
