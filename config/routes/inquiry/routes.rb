@@ -8,7 +8,7 @@ SS::Application.routes.draw do
 
   content "inquiry" do
     get "/" => "main#index", as: :main
-    resources :forms, concerns: :deletion, only: :show
+    resources :forms, concerns: :deletion
     resources :columns, concerns: :deletion
     resources :answers, concerns: :deletion, only: [:index, :show, :destroy]
   end

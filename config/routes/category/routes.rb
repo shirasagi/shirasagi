@@ -9,6 +9,7 @@ SS::Application.routes.draw do
   content "category" do
     get "/" => "main#index", as: :main
     resources :nodes, concerns: :deletion
+    resources :pages, concerns: :deletion
   end
 
   node "category" do

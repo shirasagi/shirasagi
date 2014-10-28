@@ -9,6 +9,7 @@ SS::Application.routes.draw do
   content "faq" do
     get "/" => "main#index", as: :main
     resources :pages, concerns: :deletion
+    resources :searches, concerns: :deletion
   end
 
   content "faq" do
