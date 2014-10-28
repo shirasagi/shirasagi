@@ -58,7 +58,7 @@ module Opendata::Agents::Nodes::MyDataset::Resources
 
       def download
         @item = @dataset.resources.find params[:resource_id]
-        send_data @item.file.path, type: @item.content_type, filename: @item.filename,
+        send_file @item.file.path, type: @item.content_type, filename: @item.filename,
           disposition: :attachment, x_sendfile: true
       end
 
