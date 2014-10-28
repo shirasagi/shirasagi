@@ -74,14 +74,15 @@ textarea {
 // head
 #head {
   @include clear;
-  min-width: 1200px;
+  min-width: $page-width;
   border-bottom: 2px solid #ddcfcc;
   @include grd-gray;
   .inner {
     position: relative;
     @include clear;
     overflow: visible;
-    width: 1200px;
+    max-width: 1200px;
+    min-width: $page-width;
     margin: 0 auto;
     .logo {
       float: left;
@@ -174,17 +175,16 @@ textarea {
 // top
 #top {
   display: block;
-  min-width: 1200px;
+  min-width: $page-width;
   margin-bottom: 14px;
   @include grd-aqua;
   #shadow {
     display: block;
-    min-width: 1200px;
+    min-width: $page-width;
     @include box-shadow(0px -5px 4px #ccc inset);
     #portal-kv, #dataset-kv {
       width: $page-width;
       margin: 0 auto;
-      padding: 0 60px;
     }
     #portal-kv {
       overflow: hidden;
@@ -288,7 +288,7 @@ textarea {
 #contents, #data-top-contents {
   width: $page-width;
   margin: 0 auto;
-  padding: 0 60px 71px 60px;
+  padding-bottom: 71px;
   #main {
     float: left;
     width: 803px;
@@ -675,7 +675,6 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
   .inner {
     width: $page-width;
     margin: 0 auto;
-    padding: 0 60px;
     overflow: hidden;
     .logo {
       float: left;
@@ -737,7 +736,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
   }
 
 #gnav {
-  min-width: 1200px;
+  min-width: $page-width;
   border-bottom: #ffcf38 2px solid;
   background: $data-blue;
   ul {
@@ -773,7 +772,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
 .crumbs {
   width: $page-width;
   margin: 0 auto;
-  padding: 15px 60px;
+  padding: 15px 0;
 }
 
 #od-searchgroup-name {
@@ -1330,7 +1329,7 @@ table.index {
 }
 
 #footer-navi {
-  min-width: 1200px;
+  min-width: $page-width;
   padding: 7px 0;
   border-top: 1px solid $gray;
   background: #eeeeee;
@@ -1341,7 +1340,7 @@ table.index {
 }
 
 #copyright {
-  min-width: 1200px;
+  min-width: $page-width;
   padding: 4px 0;
   @include grd-gray;
   color: $white;
