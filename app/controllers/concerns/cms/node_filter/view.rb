@@ -1,7 +1,7 @@
 module Cms::NodeFilter::View
   extend ActiveSupport::Concern
   include SS::AgentFilter
-  include Cms::RssFilter
+  include Cms::FeedFilter
 
   included do
     helper Cms::PublicHelper

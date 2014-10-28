@@ -1,22 +1,18 @@
 module Mobile::PublicFilter
   extend ActiveSupport::Concern
 
-  def self.prepended(mod)
-    mod.include self
-  end
-
   included do
-    Cms::PublicFilter.filter :mobile
+    Cms::PublicFilter.filter :set_path_with_mobile
     after_action :render_mobile, if: ->{ @filter == :mobile }
   end
 
-  public
+  private
     def set_path_with_mobile
       return if @cur_path !~ /^#{SS.config.mobile.location}\//
       @cur_path.sub!(/^#{SS.config.mobile.location}\//, "/")
+      @filter = :mobile
     end
 
-  private
     def render_mobile
       body = response.body
 

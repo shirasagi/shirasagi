@@ -2,6 +2,8 @@ module Cms::PublicFilter
   extend ActiveSupport::Concern
   include Cms::PublicFilter::Node
   include Cms::PublicFilter::Page
+  include Mobile::PublicFilter
+  include Kana::PublicFilter
 
   cattr_accessor(:filters) { [] }
 
@@ -50,14 +52,11 @@ module Cms::PublicFilter
 
     def set_request_path
       @cur_path ||= request.env["REQUEST_PATH"]
+      cur_path = @cur_path.dup
 
-      path = @cur_path.dup
-      @@filters.each do |name|
-        send("set_path_with_#{name}")
-        if path != @cur_path
-          @filter = name
-          break
-        end
+      @@filters.each do |filter|
+        send(filter)
+        break if cur_path != @cur_path
       end
     end
 
