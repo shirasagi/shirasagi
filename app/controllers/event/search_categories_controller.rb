@@ -1,5 +1,5 @@
 class Event::SearchCategoriesController < ApplicationController
-  include Cms::SearchCollectionFilter
+  include Cms::SearchFilter
 
   model Category::Node::Base
 end

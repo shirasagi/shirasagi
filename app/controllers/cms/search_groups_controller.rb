@@ -1,5 +1,5 @@
 class Cms::SearchGroupsController < ApplicationController
-  include Cms::SearchCollectionFilter
+  include Cms::SearchFilter
 
   model Cms::Group
 end

@@ -19,7 +19,6 @@ SS::Application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     get "/search_groups" => "search_groups#index"
-    post "/search_groups" => "search_groups#search"
 
     namespace "db" do
       get "/" => "main#index"

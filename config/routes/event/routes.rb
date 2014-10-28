@@ -29,7 +29,6 @@ SS::Application.routes.draw do
 
   namespace "event", path: ".:site/event" do
     get "/search_categories" => "search_categories#index"
-    post "/search_categories" => "search_categories#search"
   end
 
 end

@@ -1,5 +1,5 @@
 class Cms::SearchPagesController < ApplicationController
-  include Cms::SearchCollectionFilter
+  include Cms::SearchFilter
 
   model Cms::Page
 end
