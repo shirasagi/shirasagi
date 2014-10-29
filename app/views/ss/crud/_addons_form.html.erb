@@ -2,7 +2,14 @@
 
 <% addons.each do |addon| %>
 <div class="addon-view" id="addon-<%= addon.id %>">
-  <header><h2><%= addon.name %></h2></header>
-  <%= render_agent "#{addon.path}/edit", params[:action] %>
+  <% buf = render_agent "#{addon.path}/edit", params[:action] %>
+  <% if buf.size == 0%>
+    <%= jquery do %>
+    $(".addon-menu").find("[data-id=#addon-<%= addon.id %>]").remove()
+    <% end %>
+  <% else %>
+    <header><h2><%= addon.name %></h2></header>
+    <%= buf %>
+  <% end %>
 </div>
 <% end %>
