@@ -12,7 +12,7 @@
         <%= tryb{ @item.send(field.metadata[:name]).name } %>
       <% end %>
     <% elsif @item.send(key).instance_of?(DateTime) %>
-      <%= @item.send(key).strftime("%Y/%-m/%-d %-H:%M") %>
+      <%= @item.send(key).strftime("%Y/%m/%d %H:%M") %>
     <% elsif tryb{ field.metadata[:form] } == :code  %>
       <code><%=br @item.send(key) %></code>
     <% else %>

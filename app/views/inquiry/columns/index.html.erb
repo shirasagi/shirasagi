@@ -2,9 +2,8 @@
   <thead>
     <tr>
       <th style="width: 20px;"><input type="checkbox" /></th>
-      <% @model.fields.select {|k, v| k =~ /^(name|order)/ }.keys.each do |key| %>
-      <th><%= @model.t key %></th>
-      <% end %>
+      <th><%= @model.t :name %></th>
+      <th><%= @model.t :order %></th>
       <th class="datetime"><%= @model.t :updated %></th>
     </tr>
   </thead>
@@ -20,18 +19,9 @@
           <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
         </nav>
       </td>
-      <% @model.fields.select {|k, v| k =~ /^(name|order)/ }.keys.each_with_index do |key, idx| %>
-        <% if idx == 0 %>
-        <td><%= link_to item.send(key), action: :show, id: item %></td>
-        <% elsif item.send(key).instance_of?(DateTime) %>
-        <td><%= item.send(key).strftime("%Y/%-m/%-d %H:%M") %></td>
-        <% elsif key == "filename" %>
-        <td><%= File.basename item.send(key) %></td>
-        <% else %>
-        <td><%= item.send(key) %></td>
-        <% end %>
-      <% end %>
-      <td><%= item.updated.strftime("%Y/%m/%d") %></td>
+      <td><%= item.name %></td>
+      <td><%= item.order %></td>
+      <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>
   </tbody>

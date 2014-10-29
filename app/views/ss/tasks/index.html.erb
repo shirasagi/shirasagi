@@ -53,10 +53,10 @@ $ ->
   <dd class="count"><%= @item.send :current_count %> / <%= @item.send :total_count %></dd>
 
   <dt><%= @item.t :started %></dt>
-  <dd class="started"><%= tryb { @item.started.strftime("%Y-%m-%d %H:%M:%S") } %></dd>
+  <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
 
   <dt><%= @item.t :closed %></dt>
-  <dd class="closed"><%= tryb { @item.closed.strftime("%Y-%m-%d %H:%M:%S") } %></dd>
+  <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
 </dl>
 
 <div class="logs">

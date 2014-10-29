@@ -22,7 +22,7 @@
         <% if idx == 0 %>
         <td><%= link_to item.send(key), action: :show, id: item %></td>
         <% elsif item.send(key).instance_of?(DateTime) %>
-        <td><%= item.send(key).strftime("%Y/%-m/%-d %H:%M") %></td>
+        <td><%= item.send(key).strftime("%Y/%m/%d %H:%M") %></td>
         <% elsif key == "filename" %>
         <td><%= File.basename item.send(key) %></td>
         <% else %>
