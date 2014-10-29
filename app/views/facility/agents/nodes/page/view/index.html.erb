@@ -1,0 +1,40 @@
+<% Facility::Node::Page.addons.each do |addon| %>
+  <% next unless addon.exists?(:view) %>
+  <%= render_agent "#{addon.path}/view", params[:action] %>
+<% end %>
+
+<% if @summary_image.present? %>
+  <p>
+    <%= link_to @summary_image.url do %>
+      <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
+      <%= image_tag @summary_image.image.thumb_url + "?" + thumb_size, alt: @summary_image.image_alt %>
+    <% end %>
+  </p>
+  <% if @summary_image.image_comment.present? %>
+    <p><%= @summary_image.image_comment %></p>
+  <% end %>
+<% end %>
+
+<h2><%= t("facility.image") %></h2>
+<% if @images.present? %>
+  <div class="images">
+    <% @images.each do |img| %>
+      <div class="image">
+        <p>
+          <%= link_to img.url do %>
+            <% thumb_size = { width: img.image_thumb_width, height: img.image_thumb_height }.to_query %>
+            <%= image_tag img.image.thumb_url + "?" + thumb_size, alt: img.image_alt %>
+          <% end %>
+        </p>
+        <% if img.image_comment.present? %>
+          <p><%= img.image_comment %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @merged_map.present? %>
+  <% @cur_page = @merged_map %>
+  <%= render file: "map/agents/addons/page/view/index" %>
+<% end %>

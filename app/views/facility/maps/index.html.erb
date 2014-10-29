@@ -1,0 +1,42 @@
+<% @s = OpenStruct.new params[:s] %>
+<div class="search-form">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.text_field :name, style: "width: 300px;" %>
+    <input type="submit" value="<%= t :search %>" />
+  <% end %>
+</div>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th><%= @model.t :name %></th>
+      <th class="filename"><%= @model.t :filename %></th>
+      <th class="datetime"><%= @model.t :updated %></th>
+      <th class="state"><%= @model.t :view_state %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |item| %>
+    <tr>
+      <td class="checkbox">
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to :edit, action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to :delete, action: :delete, id: item  if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
+          <%= link_to :view_site, item.full_url, target: :_blank %>
+        </nav>
+      </td>
+      <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
+      <td class="filename"><%= File.basename item.filename %></td>
+      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      <td class="state"><%= t :"views.state.#{item.status}" %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>
