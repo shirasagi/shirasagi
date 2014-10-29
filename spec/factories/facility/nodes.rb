@@ -19,8 +19,8 @@ FactoryGirl.define do
     route "facility/category"
   end
 
-  factory :facility_node_feature, class: Facility::Node::Feature, traits: [:cms_node] do
-    route "facility/feature"
+  factory :facility_node_service, class: Facility::Node::Service, traits: [:cms_node] do
+    route "facility/service"
   end
 
   factory :facility_node_location, class: Facility::Node::Location, traits: [:cms_node] do

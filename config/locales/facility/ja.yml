@@ -14,7 +14,7 @@ ja:
       search: 施設の地域を検索
       setting: 施設の地域を選択
       name: 地域
-    feature:
+    service:
       setting: 用途設定
       index: 施設の用途を設定する
       search: 施設の用途を検索
@@ -50,8 +50,8 @@ ja:
       facility/pointer_image: ポインタ画像
       facility/location: 施設の地域
       facility/location_setting: 施設の地域
-      facility/feature: 施設の用途
-      facility/feature_setting: 施設の用途
+      facility/service: 施設の用途
+      facility/service_setting: 施設の用途
       facility/category: 施設の種類
       facility/category_setting: 施設の種類
 
@@ -60,7 +60,7 @@ ja:
       facility/page: 施設情報
       facility/node: 施設リスト
       facility/category: 施設の種類
-      facility/feature: 施設の用途
+      facility/service: 施設の用途
       facility/location: 施設のある地域
       facility/search: 施設検索
 
@@ -116,10 +116,10 @@ ja:
     facility/addon/location_setting:
       st_locations:
         - 検索または施設作成時に使用する施設地域を設定します。
-    facility/addon/feature:
-      features:
+    facility/addon/service:
+      services:
         - 施設の用途を設定します。
-    facility/addon/feature_setting:
-      st_features:
+    facility/addon/service_setting:
+      st_services:
         - 検索または施設作成時に使用する施設用途を設定します。
 

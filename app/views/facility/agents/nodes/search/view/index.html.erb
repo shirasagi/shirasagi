@@ -18,14 +18,14 @@ $ ->
     <% end %>
   </div>
 
-  <div class="feature">
-    <h2><%= t("facility.feature.setting") %></h2>
-    <%= hidden_field_tag 'q[feature_ids][]', "" %>
-    <% @cur_node.st_features.each do |cate| %>
+  <div class="service">
+    <h2><%= t("facility.service.setting") %></h2>
+    <%= hidden_field_tag 'q[service_ids][]', "" %>
+    <% @cur_node.st_services.each do |cate| %>
       <div class="<%= cate.basename %>">
-        <%= check_box_tag 'q[feature_ids][]', cate.id, nil,
-          { :id => "q_feature_ids_#{cate.id}", :class => "prop"} %>
-        <label for=<%= "q_feature_ids_#{cate.id}" %>><%= cate.name %></label>
+        <%= check_box_tag 'q[service_ids][]', cate.id, nil,
+          { :id => "q_service_ids_#{cate.id}", :class => "prop"} %>
+        <label for=<%= "q_service_ids_#{cate.id}" %>><%= cate.name %></label>
       </div>
     <% end %>
   </div>

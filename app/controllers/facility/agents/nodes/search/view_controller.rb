@@ -6,20 +6,20 @@ module Facility::Agents::Nodes::Search
     public
       def set_items
         category_ids = params[:q][:category_ids].select{ |id| id.present? }.map{ |id| id.to_i }
-        feature_ids      = params[:q][:feature_ids].select{ |id| id.present? }.map{ |id| id.to_i }
+        service_ids      = params[:q][:service_ids].select{ |id| id.present? }.map{ |id| id.to_i }
         location_ids = params[:q][:location_ids].select{ |id| id.present? }.map{ |id| id.to_i }
 
         q_category = category_ids.present? ? { category_ids: category_ids } : {}
-        q_feature      = feature_ids.present? ? { feature_ids: feature_ids } : {}
+        q_service      = service_ids.present? ? { service_ids: service_ids } : {}
         q_location = location_ids.present? ? { location_ids: location_ids } : {}
 
         @categories = Facility::Node::Category.in(_id: category_ids)
-        @features   = Facility::Node::Feature.in(_id: feature_ids)
+        @services   = Facility::Node::Service.in(_id: service_ids)
         @locations  = Facility::Node::Location.in(_id: location_ids)
 
         @items = Facility::Node::Page.site(@cur_site).public.
           in(q_category).
-          in(q_feature).
+          in(q_service).
           in(q_location).
           order_by(name: 1)
       end

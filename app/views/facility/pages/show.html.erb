@@ -30,8 +30,8 @@
       <dt><%= t("modules.addons.facility/category") %></dt>
       <dd><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
 
-      <dt><%= t("modules.addons.facility/feature") %></dt>
-      <dd><%= @item.send(:features).pluck(:name).join(", ") %></dd>
+      <dt><%= t("modules.addons.facility/service") %></dt>
+      <dd><%= @item.send(:services).pluck(:name).join(", ") %></dd>
 
       <dt><%= t("modules.addons.facility/location") %></dt>
       <dd><%= @item.send(:locations).pluck(:name).join(", ") %></dd>

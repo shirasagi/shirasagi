@@ -40,9 +40,9 @@ describe Facility::Node::Category do
   it_behaves_like "mongoid#find"
 end
 
-describe Facility::Node::Feature do
-  subject(:model) { Facility::Node::Feature }
-  subject(:factory) { :facility_node_feature }
+describe Facility::Node::Service do
+  subject(:model) { Facility::Node::Service }
+  subject(:factory) { :facility_node_service }
 
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"

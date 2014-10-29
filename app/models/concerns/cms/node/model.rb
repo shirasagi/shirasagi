@@ -7,7 +7,7 @@ module Cms::Node::Model
   include Cms::Reference::StCategory
   include Cms::Addon::Meta
   include Facility::Reference::Category
-  include Facility::Reference::Feature
+  include Facility::Reference::Service
   include Facility::Reference::Location
 
   included do

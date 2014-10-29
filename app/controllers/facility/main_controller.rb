@@ -9,8 +9,8 @@ class Facility::MainController < ApplicationController
       elsif @cur_node.route =~ /\/location/
         redirect_to facility_locations_path
         return
-      elsif @cur_node.route =~ /\/feature/
-        redirect_to facility_features_path
+      elsif @cur_node.route =~ /\/service/
+        redirect_to facility_services_path
         return
       else
         redirect_to facility_pages_path

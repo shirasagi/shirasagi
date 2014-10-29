@@ -10,7 +10,7 @@ SS::Application.routes.draw do
     get "/" => "main#index", as: :main
     resources :pages, concerns: :deletion
     resources :nodes, concerns: :deletion
-    resources :features, concerns: :deletion
+    resources :services, concerns: :deletion
     resources :locations, concerns: :deletion
     resources :categories, concerns: :deletion
 
@@ -22,7 +22,7 @@ SS::Application.routes.draw do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "category/(index.:format)" => "public#index", cell: "nodes/category"
-    get "feature/(index.:format)" => "public#index", cell: "nodes/feature"
+    get "service/(index.:format)" => "public#index", cell: "nodes/service"
     get "location/(index.:format)" => "public#index", cell: "nodes/location"
 
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
@@ -40,11 +40,11 @@ SS::Application.routes.draw do
     post "/search_categories" => "search_categories#search"
     get "/search_locations" => "search_locations#index"
     post "/search_locations" => "search_locations#search"
-    get "/search_features" => "search_features#index"
-    post "/search_features" => "search_features#search"
+    get "/search_services" => "search_services#index"
+    post "/search_services" => "search_services#search"
   end
 
-  namespace "facility", path: ".u:user/facility", module: "facility", featurer: /\d+/ do
+  namespace "facility", path: ".u:user/facility", module: "facility", servicer: /\d+/ do
     resources :temp_files, concerns: :deletion do
       get :select, on: :member
       get :view, on: :member
