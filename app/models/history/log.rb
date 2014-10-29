@@ -3,7 +3,7 @@ class History::Log
   include SS::Reference::User
   #include SS::Reference::Site
 
-  index({ created: 1 })
+  index({ created: -1 })
 
   attr_accessor :save_term
 
