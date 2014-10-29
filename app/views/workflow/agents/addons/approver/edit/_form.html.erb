@@ -8,10 +8,10 @@ $ ->
   state.remove()
 
   <% if @item.allowed?(:release, @cur_user) %>
-  $(".save").val "<%= t 'draft_save' %>"
+  $(".save").val "<%= t("views.button.draft_save") %>"
   $("<input />").attr("type", "submit")
     .attr("name", "publish_save")
-    .attr("value", "<%= t 'publish_save' %>")
+    .attr("value", "<%= t("views.button.publish_save") %>")
     .attr("class", "publish_save")
     .insertAfter("#item-form input.save")
   <% end %>

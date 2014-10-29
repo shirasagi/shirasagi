@@ -7,7 +7,6 @@ ja:
     account: アカウント
     file_attach: 添付貼付
     image_paste: 画像貼付
-    delete: 削除
 
   modules:
     sns: SNS

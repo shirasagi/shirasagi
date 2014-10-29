@@ -67,7 +67,7 @@ $ ->
   <% if @item.running? || @item.state == "ready" %>
     <%= submit_tag t(:stop), name: "stop", class: "stop" %>
     <div style="margin: 20px 0px 0px; text-align: right;">
-      <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t('ss.task.confirm_reset')}')" %>
+      <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t("views.task.confirm_reset")}')" %>
     </div>
   <% else %>
     <% if !flash[:notice] %>

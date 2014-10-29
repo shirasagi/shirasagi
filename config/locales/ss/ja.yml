@@ -1,5 +1,5 @@
 ja:
-  ss:
+  views:
     module: モジュール
     addon: アドオン
     action: アクション
@@ -8,27 +8,16 @@ ja:
     logout: ログアウト
     config: 設定
     basic_info: 基本情報
-
-    create: 作成
-    edit: 編集
-    delete: 削除
-    save: 保存
-    draft_save: 下書き保存
-    publish_save: 公開保存
-    cancel: キャンセル
-    search: 検索
     upload: アップロード
     download: ダウンロード
     image: 画像
-    notice:
-      saved: 保存しました。
-      deleted: 削除しました。
-    task:
-      started: 開始しました。
-      interrupted: 中断命令を送信しました。
-      confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
-
-  views:
+    state:
+      public: 公開中
+      closed: 非公開
+      ready: 公開待ち
+      request: 申請中
+      approve: 承認
+      remand: 差し戻し
     links:
       new: 新規作成
       show: 詳細を見る
@@ -43,16 +32,23 @@ ja:
       change: 変更する
       more: もっと見る
       delete_all: すべて削除する
-    state:
-      public: 公開中
-      closed: 非公開
-      ready: 公開待ち
-      request: 申請中
-      approve: 承認
-      remand: 差し戻し
+    button:
+      save: 保存
+      draft_save: 下書き保存
+      publish_save: 公開保存
+      cancel: キャンセル
+      delete: 削除
+      search: 検索
     confirm:
       delete: 削除してよろしいですか？
       unload: 入力したデータは保存されません。
+    notice:
+      saved: 保存しました。
+      deleted: 削除しました。
+    task:
+      started: 開始しました。
+      interrupted: 中断命令を送信しました。
+      confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
 
   mongoid:
     models:

@@ -85,7 +85,7 @@ module SS::CrudFilter
 
       if result
         respond_to do |format|
-          format.html { redirect_to location, notice: t("ss.notice.saved") }
+          format.html { redirect_to location, notice: t("views.notice.saved") }
           format.json { render json: @item.to_json, status: :created }
         end
       else
@@ -101,7 +101,7 @@ module SS::CrudFilter
 
       if result
         respond_to do |format|
-          format.html { redirect_to location, notice: t("ss.notice.saved") }
+          format.html { redirect_to location, notice: t("views.notice.saved") }
           format.json { head :no_content }
         end
       else
@@ -117,7 +117,7 @@ module SS::CrudFilter
 
       if result
         respond_to do |format|
-          format.html { redirect_to location, notice: t("ss.notice.deleted") }
+          format.html { redirect_to location, notice: t("views.notice.deleted") }
           format.json { head :no_content }
         end
       else

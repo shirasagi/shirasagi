@@ -31,7 +31,7 @@ module History::LogFilter::View
 
       if result
         respond_to do |format|
-          format.html { redirect_to location, notice: t("ss.notice.deleted") }
+          format.html { redirect_to location, notice: t("views.notice.deleted") }
           format.json { head :no_content }
         end
       else

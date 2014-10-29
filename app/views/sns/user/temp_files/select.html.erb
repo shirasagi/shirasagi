@@ -21,6 +21,6 @@
     <% end %>
   </div>
   <div class="action delete">
-    <%= link_to :"sns.delete", "#", :onclick => "deleteContent('#{@item.id}'); return false;" %>
+    <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{@item.id}'); return false;" %>
   </div>
 </div>

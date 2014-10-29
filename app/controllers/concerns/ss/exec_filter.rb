@@ -24,16 +24,16 @@ module SS::ExecFilter
       cmd = "bundle exec #{task_command} &"
       stdin, stdout, stderr = Open3.popen3(cmd)
 
-      redirect_to({ action: :index }, { notice: t("ss.task.started") })
+      redirect_to({ action: :index }, { notice: t("views.task.started") })
     end
 
     def stop
       @item.update_attributes interrupt: "stop"
-      redirect_to({ action: :index }, { notice: t("ss.task.interrupted") })
+      redirect_to({ action: :index }, { notice: t("views.task.interrupted") })
     end
 
     def reset
       @item.destroy
-      redirect_to({ action: :index }, { notice: t("ss.notice.deleted") })
+      redirect_to({ action: :index }, { notice: t("views.notice.deleted") })
     end
 end

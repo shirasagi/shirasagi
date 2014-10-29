@@ -8,7 +8,7 @@ module ApplicationHelper
   end
 
   def t(key, opts = {})
-    opts[:scope] = [:ss] if key !~ /\./ && !opts[:scope]
+    opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
     I18n.t key, opts.merge(default: key.to_s.humanize)
   end
 

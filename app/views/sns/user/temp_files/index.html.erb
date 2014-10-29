@@ -37,7 +37,7 @@ SS.ajaxDelete ".user-files .delete"
       <%= item.basename %>
     </div>
     <nav class="menu">
-      <%= link_to t("ss.delete"), { action: :destroy, id: item }, class: "delete",
+      <%= link_to t("views.button.delete"), { action: :destroy, id: item }, class: "delete",
         "data-remove" => "#user-file#{item.id}" %>
     </nav>
   </article>

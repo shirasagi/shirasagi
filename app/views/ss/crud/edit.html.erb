@@ -13,8 +13,8 @@
 </div>
 
 <footer class="send">
-  <%= f.submit t(:save), class: :save %>
-  <%= f.button t(:cancel), onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  <%= f.submit t("views.button.save"), class: :save %>
+  <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>
 
 <% end %>
