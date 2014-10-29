@@ -34,6 +34,6 @@ module SS::ExecFilter
 
     def reset
       @item.destroy
-      redirect_to({ action: :index }, { notice: t(:deleted) })
+      redirect_to({ action: :index }, { notice: t("ss.notice.deleted") })
     end
 end

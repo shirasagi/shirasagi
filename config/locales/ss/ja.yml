@@ -16,13 +16,13 @@ ja:
     draft_save: 下書き保存
     publish_save: 公開保存
     cancel: キャンセル
-    saved: 保存しました。
-    deleted: 削除しました。
     search: 検索
     upload: アップロード
     download: ダウンロード
     image: 画像
-
+    notice:
+      saved: 保存しました。
+      deleted: 削除しました。
     task:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
