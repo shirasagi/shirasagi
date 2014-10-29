@@ -33,7 +33,7 @@
       <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
       <td class="filename"><%= File.basename item.filename %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-      <td class="state"><%= item.t_state %></td>
+      <td class="state"><%= t :"views.state.#{item.status}" %></td>
     </tr>
     <% end %>
   </tbody>

@@ -20,15 +20,13 @@ module Workflow::Addon
     end
 
     public
-      def t_state
+      def status
         if state == "public" || state == "ready"
-          I18n.t("views.state.#{state}")
+          state
         elsif workflow_state.present?
-          I18n.t("views.state.#{workflow_state}")
-        elsif state == "closed"
-          I18n.t("views.state.#{state}")
+          workflow_state
         else
-          ""
+          state
         end
       end
 

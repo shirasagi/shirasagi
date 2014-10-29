@@ -114,12 +114,8 @@ module Cms::Content
       [%w(公開待ち ready)]
     end
 
-    def t_state
-      if state == "public" || state == "ready" || state == "closed"
-        I18n.t("views.state.#{state}")
-      else
-        ""
-      end
+    def status
+      state
     end
 
     def parent
