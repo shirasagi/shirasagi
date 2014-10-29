@@ -7,6 +7,7 @@ class Article::Page
   include Cms::Addon::RelatedPage
   include Category::Addon::Category
   include Event::Addon::Date
+  include Map::Addon::Page
   include Workflow::Addon::Approver
   include Contact::Addon::Page
 

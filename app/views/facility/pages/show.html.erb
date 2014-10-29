@@ -1,0 +1,96 @@
+<div class="addon-views">
+  <div id="facility-info" class="addon-view">
+    <header>
+      <h2><%= t("modules.addons.facility/body") %></h2>
+    </header>
+    <dl class="see body">
+      <dt><%= @item.class.t :name %></dt>
+      <dd><%= @item.name %></dd>
+
+      <dt><%= @item.class.t :kana %></dt>
+      <dd><%= @item.kana %></dd>
+
+      <dt><%= @item.class.t :address %></dt>
+      <dd><%= @item.address %></dd>
+
+      <dt><%= @item.class.t :tel %></dt>
+      <dd><%= @item.tel %></dd>
+
+      <dt><%= @item.class.t :fax %></dt>
+      <dd><%= @item.fax %></dd>
+
+      <dt><%= @item.class.t :related_url %></dt>
+      <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank") if @item.related_url.present? %></dd>
+
+      <% @item.additional_info.each do |info| %>
+        <dt><%=br info[:field] %></dt>
+        <dd><%=br info[:value] %></dd>
+      <% end %>
+
+      <dt><%= t("modules.addons.facility/category") %></dt>
+      <dd><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
+
+      <dt><%= t("modules.addons.facility/service") %></dt>
+      <dd><%= @item.send(:services).pluck(:name).join(", ") %></dd>
+
+      <dt><%= t("modules.addons.facility/location") %></dt>
+      <dd><%= @item.send(:locations).pluck(:name).join(", ") %></dd>
+    </dl>
+
+    <div class="summary image">
+      <% if @summary_image.present? %>
+        <% @summary_image.each do |page, path, thumb_size| %>
+          <p>
+            <%= link_to path do %>
+              <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
+            <% end %>
+          </p>
+          <% if page.image_comment.present? %>
+            <p><%= page.image_comment %></p>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="clear"></div>
+    <% if @images.present? %>
+      <header>
+        <h2><%= t("facility.image") %></h2>
+      </header>
+      <div class="images">
+        <% @images.each do |page, path, thumb_size| %>
+          <div class="image">
+            <p>
+              <%= link_to path do %>
+                <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
+              <% end %>
+            </p>
+            <% if page.image_comment.present? %>
+              <p><%= page.image_comment %></p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @merged_map.present? %>
+      <% @cur_page = @merged_map %>
+      <%= render file: "map/agents/addons/page/view/index" %>
+    <% end %>
+
+    <% if @maps.present? %>
+      <div class="map-pages">
+        <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <% @maps.each do |map| %>
+            <p><%= link_to map.name, edit_facility_map_path(cid: @item.id, id: map.id), class: "icon-page" %></p>
+          <% end %>
+        <% else %>
+          <% @maps.each do |map| %>
+            <p><%= link_to map.name, facility_map_path(cid: @item.id, id: map.id), class: "icon-page" %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="clear"></div>
+  </div>
+</div>

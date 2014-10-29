@@ -6,6 +6,9 @@ module Cms::Node::Model
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
   include Cms::Addon::Meta
+  include Facility::Reference::Category
+  include Facility::Reference::Service
+  include Facility::Reference::Location
 
   included do
     store_in collection: "cms_nodes"

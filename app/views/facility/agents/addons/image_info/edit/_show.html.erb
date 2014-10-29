@@ -1,0 +1,15 @@
+<dl class="see">
+  <dt><%= @model.t :image_alt %></dt>
+  <dd><%= @item.send :image_alt %></dd>
+
+  <dt><%= @model.t :image_thumb_size %></dt>
+  <dd>
+    <span class: "thumb-width"><%= @model.t :image_thumb_width %></span>
+    <%= @item.send :image_thumb_width %>
+    <span class: "thumb-height"><%= @model.t :image_thumb_height %></span>
+    <%= @item.send :image_thumb_height %>
+  </dd>
+
+  <dt><%= @model.t :image_comment %></dt>
+  <dd><%= @item.send :image_comment %></dd>
+</dl>

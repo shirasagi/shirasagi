@@ -1,0 +1,49 @@
+<%= coffee do %>
+
+SS.ajaxForm "form.temp-file",
+  success: ->
+    $("#cboxLoadedContent").load "<%= url_for(action: :index) %>"
+
+SS.ajax ".temp-files .select",
+  success: (data) ->
+    $("#selected-files .file-view").remove()
+    $("#selected-files").append data
+    $.colorbox.close()
+
+SS.ajaxDelete ".temp-files .delete"
+
+<% end %>
+
+<%= form_for :item, url: { action: :create }, html: { class: "temp-file", multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+  <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+    <%= f.file_field :in_files, multiple: :multiple, required: :required, accept: 'image/png,image/gif,image/jpeg' %>
+    <%= f.submit :upload, class: :save %>
+  </div>
+
+<% end %>
+
+<div class="index temp-files">
+  <% @items.each do |item| %>
+  <article class="file-view" id="temp-file<%= item.id %>">
+    <a class="thumb select" href="<%= url_for action: :select, id: item %>">
+      <% if item.image? %>
+      <img src="<%= url_for(action: :thumb, id: item) %>" alt="<%= item.basename %>" />
+      <% else %>
+      <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+      <% end %>
+    </a>
+    <div class="name">
+      <%= item.basename %>
+    </div>
+    <nav class="menu">
+      <%= link_to t("ss.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#temp-file#{item.id}" %>
+    </nav>
+  </article>
+  <% end %>
+</div>
+
+<div style="clear: both;"></div>
+
+<%= paginate @items if @items.try(:current_page) %>

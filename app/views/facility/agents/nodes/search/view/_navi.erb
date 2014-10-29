@@ -1,0 +1,24 @@
+<dl class="condition">
+  <dt class="category"><%= t("facility.category.name") %></dt>
+  <dd><%= @categories.pluck(:name).join("、") %></dd>
+  <dt class="service"><%= t("facility.service.name") %></dt>
+  <dd><%= @services.pluck(:name).join("、") %></dd>
+  <dt class="location"><%= t("facility.location.name") %></dt>
+  <dd><%= @locations.pluck(:name).join("、") %></dd>
+</dl>
+
+<p><%= link_to t("facility.submit.change"), "#", class: "ajax-box" %></p>
+
+<h2 class="result"><%= t("facility.result") %><span><%= @items.count %></span><%= t("facility.count") %></h2>
+
+<nav>
+  <span class="number"></span>
+  <ul>
+    <li class="tab<%= current == "map" ? " current" : "" %>">
+      <%= link_to t("facility.tab.map"), "./map.html?#{{q: params[:q]}.to_query}" %>
+    </li>
+    <li class="tab<%= current == "result" ? " current" : "" %>">
+      <%= link_to t("facility.tab.result"), "./result.html?#{{q: params[:q]}.to_query}" %>
+    </li>
+  </ul>
+</nav>

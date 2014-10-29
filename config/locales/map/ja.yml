@@ -1,0 +1,43 @@
+ja:
+  map:
+    map: 地図
+    page: 地図記事
+    loc: 位置
+    zoom: ズーム
+    search: 検索
+    setting: マップ設定
+    markers: マーカー設定
+    clicked: クリック座標
+    button:
+      search: 地図検索
+      set_loc: 設定
+      set_center: 移動
+      set_marker: マーカーの位置を設定
+      add_marker: マーカーを追加
+      clear_marker: 削除
+
+  modules:
+    map: 地図
+    addons:
+      map/page: 地図
+
+  cms:
+    nodes:
+      map/page: 地図記事リスト
+
+  mongoid:
+    attributes:
+      cms/page/model:
+        map_loc: 緯度,経度
+        map_zoom: 縮尺
+        marker_name: マーカー名
+        marker_text: 説明
+        marker_link: リンク
+
+  cms_role:
+    read_other_map_pages: 地図ページ閲覧（全て）
+    read_private_map_pages: 地図ページ閲覧（所有）
+    edit_other_map_pages: 地図ページ編集（全て）
+    edit_private_map_pages: 地図ページ編集（所有）
+    delete_other_map_pages: 地図ページ削除（全て）
+    delete_private_map_pages: 地図ページ削除（所有）
