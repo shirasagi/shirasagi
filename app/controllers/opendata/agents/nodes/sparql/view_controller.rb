@@ -11,7 +11,11 @@ module Opendata::Agents::Nodes::Sparql
 
         if file_format == "HTML"
           html_page = result[:data]
-          html_page = html_page.gsub(/<table class="sparql">/, "<table class='sparql' border='1'>")
+          if html_page.include?("<td>")
+            html_page = html_page.gsub(/<table class="sparql">/, "<table class='sparql' border='1'>")
+          else
+            html_page = "<h1>No Data</h1>"
+          end
 
           @cur_node.layout_id = nil
           headers["Content-Type"] = "text/html; charset='Shift_JIS'"
