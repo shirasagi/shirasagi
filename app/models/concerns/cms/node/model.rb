@@ -6,6 +6,7 @@ module Cms::Node::Model
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
   include Cms::Addon::Meta
+  include History::Addon::Backup
   include Facility::Reference::Category
   include Facility::Reference::Service
   include Facility::Reference::Location

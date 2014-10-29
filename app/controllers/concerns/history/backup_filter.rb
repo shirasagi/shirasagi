@@ -11,7 +11,10 @@ module History::BackupFilter
     end
 
     def update
-      @item.restore
-      redirect_to({ action: :show }, { notice: I18n.t("history.notice.restored") })
+      if @item.restore
+        redirect_to({ action: :show }, { notice: I18n.t("history.notice.restored") })
+      else
+        render action: :restore
+      end
     end
 end

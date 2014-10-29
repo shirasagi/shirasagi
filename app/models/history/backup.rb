@@ -23,7 +23,21 @@ class History::Backup
     end
 
     def restore
-      resp = coll.find(_id: data["_id"]).update(data)
-      resp["err"].blank?
+      data  = self.data.dup
+      query = coll.find _id: data["_id"]
+      if query.count != 1
+        errors.add :base, "#{query.count} documents were found."
+        return false
+      end
+
+      data.delete("_id")
+      data.delete("file_id")
+      data.delete("file_ids")  # TODO: for attachment files
+
+      resp = query.update('$set' => data)
+      return true if resp["err"].blank?
+
+      errors.add :base, "error. #{resp['err']}"
+      false
     end
 end

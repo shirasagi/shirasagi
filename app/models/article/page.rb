@@ -10,6 +10,7 @@ class Article::Page
   include Map::Addon::Page
   include Workflow::Addon::Approver
   include Contact::Addon::Page
+  include History::Addon::Backup
 
   set_permission_name "article_pages"
 

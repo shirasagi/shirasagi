@@ -3,6 +3,7 @@ module Cms::Layout::Model
   extend SS::Translation
   include Cms::Content
   include Cms::Addon::Html
+  include History::Addon::Backup
 
   attr_accessor :keywords, :description
 

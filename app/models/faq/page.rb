@@ -11,6 +11,7 @@ class Faq::Page
   include Faq::Addon::Question
   include Faq::Reference::Question
   include Contact::Addon::Page
+  include History::Addon::Backup
 
   set_permission_name "faq_pages"
 
