@@ -9,6 +9,7 @@ SS::Application.routes.draw do
   content "facility" do
     get "/" => "main#index", as: :main
     resources :pages, concerns: :deletion
+    resources :nodes, concerns: :deletion
     resources :features, concerns: :deletion
     resources :locations, concerns: :deletion
     resources :categories, concerns: :deletion

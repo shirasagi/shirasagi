@@ -19,16 +19,6 @@
 
   <tbody>
     <% @items.each do |item| %>
-    <% if item.state == "public" || item.state == "ready"
-         view_state = t("views.state.#{item.state}")
-       elsif item.workflow_state.present?
-         view_state = t("views.state.#{item.workflow_state}")
-       elsif item.state == "closed"
-         view_state = t("views.state.#{item.state}")
-       else
-         view_state = ""
-       end
-    %>
     <tr>
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
