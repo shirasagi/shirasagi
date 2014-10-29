@@ -3,6 +3,7 @@ module Opendata::Agents::Nodes::MyDataset::Resources
     include Cms::NodeFilter::View
     include Opendata::MypageFilter
 
+    before_action :accept_cors_request
     before_action :set_dataset
     before_action :set_model
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
@@ -58,6 +59,7 @@ module Opendata::Agents::Nodes::MyDataset::Resources
 
       def download
         @item = @dataset.resources.find params[:resource_id]
+
         send_file @item.file.path, type: @item.content_type, filename: @item.filename,
           disposition: :attachment, x_sendfile: true
       end

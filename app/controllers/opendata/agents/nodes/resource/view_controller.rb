@@ -3,6 +3,7 @@ module Opendata::Agents::Nodes::Resource
     include Cms::NodeFilter::View
     include Opendata::UrlHelper
 
+    before_action :accept_cors_request
     before_action :set_dataset
 
     private

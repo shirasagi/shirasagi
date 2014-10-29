@@ -2,6 +2,8 @@ module Opendata::Agents::Nodes::Sparql
   class ViewController < ApplicationController
     include Cms::NodeFilter::View
 
+    before_action :accept_cors_request
+
     public
       def index
         return render if params[:query].blank?
