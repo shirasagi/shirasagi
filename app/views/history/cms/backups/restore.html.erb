@@ -1,0 +1,26 @@
+<%= form_for :item, url: { action: :update }, html: { method: :put } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-view">
+  <header><h2><%= t("history.confirm.restore") %></h2></header>
+  <dl class="see">
+    <dt class="wide"><%= t :"history.current_version" %></dt>
+    <dd><%= SS.version %></dd>
+
+    <dt class="wide"><%= t :"history.backup_version" %></dt>
+    <dd><%= @item.version %></dd>
+  </dl>
+
+  <% if SS.version != @item.version || Rails.env.development? %>
+  <div style="margin: 20px 0px 0px; text-align: center;">
+    <%= t "history.notice.restore" %>
+  </div>
+  <% end %>
+</div>
+
+<footer class="send">
+  <%= f.submit t("history.buttons.restore"), class: :save %>
+  <%= f.button t(:cancel), onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+
+<% end %>

@@ -1,4 +1,4 @@
-module History::BaseFilter
+module History::LogFilter::View
   extend ActiveSupport::Concern
 
   public

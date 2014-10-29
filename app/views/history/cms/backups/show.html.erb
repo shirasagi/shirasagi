@@ -1,0 +1,21 @@
+<%= scss do %>
+.history-backup {
+  th {
+    width: auto;
+  }
+  td.diff {
+    background-color: #ffc;
+  }
+}
+<% end %>
+
+<div class="addon-view">
+  <table class="see history-backup">
+    <% @item.data.each do |k, v| %>
+    <tr>
+      <th><%= k %></th>
+      <td class="<%= 'diff' if @data[k] != v %>"><%= v.inspect %></td>
+    </tr>
+    <% end %>
+  </table>
+</div>

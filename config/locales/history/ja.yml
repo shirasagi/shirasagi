@@ -4,15 +4,28 @@ ja:
     user: ユーザー
     taget: 操作対象
     action: アクション
+    current_version: 現在のバージョン
+    backup_version: バックアップ時のバージョン
     save_term:
       day: １日
       month: １ヶ月
       year: １年
       all_save: すべて保存
       all_delete: すべて削除
+    view_diff: 差分を見る
+    restore: 復元する
+    confirm:
+      restore: 復元してよろしいですか？
+    notice:
+      restore: システムのバージョンが異なる場合、正常に動作しなくなる可能性があります。
+      restored: 復元しました。
+    buttons:
+      restore: 復元
 
   modules:
     history: 履歴
+    addons:
+      history/backup: 更新履歴
 
   mongoid:
     models:
@@ -21,3 +34,7 @@ ja:
       history/log:
         created: 操作日時
         save_term: 保存期間
+      history/backup:
+        version: バージョン
+        ref_coll: 保存コレクション
+        data: 保存データ

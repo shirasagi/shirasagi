@@ -27,6 +27,6 @@
     <%= link_to :"cms.user", cms_users_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.member", cms_members_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"history.log", history_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :"history.log", history_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
   </div>
 </nav>

@@ -1,0 +1,4 @@
+<nav class="act-menu">
+  <%= link_to :show, action: :show %>
+  <%= link_to :"history.restore", action: :restore if @item.data != @data %>
+</nav>

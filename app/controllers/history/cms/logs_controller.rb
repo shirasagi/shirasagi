@@ -1,6 +1,6 @@
-class History::LogsController < ApplicationController
+class History::Cms::LogsController < ApplicationController
   include Cms::BaseFilter
-  include History::BaseFilter
+  include History::LogFilter::View
 
   model History::Log
 

@@ -1,6 +1,6 @@
 class History::Sys::LogsController < ApplicationController
   include Sys::BaseFilter
-  include History::BaseFilter
+  include History::LogFilter::View
 
   model History::Log
 

@@ -1,0 +1,5 @@
+<dl class="see mod-history-backup">
+  <% @item.backups.each do |item| %>
+  <dd><%= link_to l(item.created), history_cms_backup_path(id: item.id) %></dd>
+  <% end %>
+</dl>

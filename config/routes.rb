@@ -1,4 +1,16 @@
 class ActionDispatch::Routing::Mapper
+  def sys(ns, opts = {}, &block)
+    name = opts[:name] || ns.gsub("/", "_")
+    mod  = opts[:module] || ns
+    namespace(name, as: "#{name}_sys", path: ".sys/#{ns}", module: "#{mod}/sys") { yield }
+  end
+
+  def cms(ns, opts = {}, &block)
+    name = opts[:name] || ns.gsub("/", "_")
+    mod  = opts[:module] || ns
+    namespace(name, as: "#{name}_cms", path: ".:site/#{ns}", module: "#{mod}/cms") { yield }
+  end
+
   def content(ns, opts = {}, &block)
     name = opts[:name] || ns.gsub("/", "_")
     mod  = opts[:module] || ns
@@ -21,12 +33,6 @@ class ActionDispatch::Routing::Mapper
     name = ns.gsub("/", "_")
     path = ".:site/parts/#{ns}"
     namespace(name, as: "#{name}_part", path: path, module: "cms") { yield }
-  end
-
-  def sys(ns, opts = {}, &block)
-    name = opts[:name] || ns.gsub("/", "_")
-    mod  = opts[:module] || ns
-    namespace(name, as: "#{name}_sys", path: ".sys/#{ns}", module: "#{mod}/sys") { yield }
   end
 end
 
