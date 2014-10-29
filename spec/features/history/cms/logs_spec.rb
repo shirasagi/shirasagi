@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "history_logs" do
+describe "history_cms_logs" do
   subject(:site) { cms_site }
-  subject(:index_path) { history_logs_path site.host }
+  subject(:index_path) { history_cms_logs_path site.host }
 
   it "without login" do
     visit index_path
