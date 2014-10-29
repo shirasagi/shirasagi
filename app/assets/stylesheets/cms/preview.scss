@@ -1,0 +1,30 @@
+@import "compass/css3";
+
+// -------------------------------------------------------------------------------------------------
+// preview
+
+#ss-preview {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  padding: 5px;
+  @include box-shadow(0px 1px 5px #666);
+  background-color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  input.date {
+    width: 120px;
+    margin: 0px;
+    padding: 2px 0px;
+    border: none;
+    background-color: rgba(200, 200, 200, 0.5);
+    font-size: 12px;
+    font-family: Meiryo, sans-serif;
+    text-align: center;
+  }
+  input.preview {
+    margin: 0px 0px 0px 2px;
+    padding: 0px;
+    font-size: 12px;
+    font-family: Meiryo, sans-serif;
+  }
+}

@@ -6,7 +6,7 @@ SS::Application.routes.draw do
 
   namespace "cms", path: ".:site" do
     get "/" => "main#index", as: :main
-    get "preview/(*path)" => "preview#index", as: :preview
+    get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     get "generate_nodes" => "generate_nodes#index"
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
@@ -30,11 +30,8 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion
     resources :layouts, concerns: :deletion
     get "/search_groups" => "search_groups#index"
-    post "/search_groups" => "search_groups#search"
     get "/search_pages" => "search_pages#index"
-    post "/search_pages" => "search_pages#search"
     get "/search_categories" => "search_categories#index"
-    post "/search_categories" => "search_categories#search"
   end
 
   namespace "cms", path: ".cms" do

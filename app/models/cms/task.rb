@@ -39,6 +39,17 @@ class Cms::Task
         end
       end
 
+      def update_pages(opts = {})
+        find_sites(opts).each do |site|
+          node    = find_node site, opts
+          node_id = node ? node.id : nil
+
+          ready name: "cms:update_pages", site_id: site.id, node_id: node_id do |task|
+            task.process Cms::Agents::Tasks::PagesController, :update, site: site, node: node
+          end
+        end
+      end
+
       def release_pages(opts = {})
         find_sites(opts).each do |site|
           ready name: "cms:release_pages", site_id: site.id do |task|

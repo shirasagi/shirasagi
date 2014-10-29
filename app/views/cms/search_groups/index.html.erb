@@ -28,7 +28,7 @@ searchGroups =(elem) ->
     query = elem.find("input.query").val().trim()
     site =
     $.ajax {
-      type: "POST", url: url, cache: false,
+      type: "GET", url: url, cache: false,
       data: { q: query, site: site },
       success: (data) ->
         $("div.search-groups").children().remove()
@@ -80,7 +80,7 @@ $ ->
 <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-<%= form_for :item, url: { action: :search }, html: { class: "search-groups", multipart: true } do |f| %>
+<%= form_for :item, url: { action: :index }, html: { method: "GET", class: "search-groups", multipart: true } do |f| %>
   <%= text_field_tag :query, nil, { id: nil, class: "query" } %>
   <%= f.submit t("cms.search_groups.search"), class: :search %>
 <% end %>

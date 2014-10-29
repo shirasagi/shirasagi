@@ -7,43 +7,79 @@ module  Event::Agents::Nodes::Page
     public
       # for tabs
       def pages
-        Cms::Page.site(@cur_site).public.
+        Cms::Page.site(@cur_site).public(@cur_date).
           where(@cur_node.condition_hash).
           where(:"event_dates.0".exists => true)
       end
 
       def index
-        if params[:year].present? && params[:month].present?
-          if Date.valid_date?(params[:year].to_i, params[:month].to_i, 1)
-            @year  = params[:year].to_i
-            @month = params[:month].to_i
-          end
-        elsif params[:year].blank? && params[:month].blank?
-          @year  = Date.today.year.to_i
-          @month = Date.today.month.to_i
-        end
+        @year  = Date.today.year.to_i
+        @month = Date.today.month.to_i
 
-        if @year && @month && within_one_year?(Date.new(@year, @month, 1))
+        monthly
+      end
+
+      def monthly
+        @year  = params[:year].to_i if @year.blank?
+        @month = params[:month].to_i if @month.blank?
+
+        if within_one_year?(Date.new(@year, @month, 1))
+          index_monthly
+        elsif within_one_year?(Date.new(@year, @month, 1).advance(months:  1, days: -1))
           index_monthly
         else
           raise "404"
         end
       end
 
+      def daily
+        @year  = params[:year].to_i
+        @month = params[:month].to_i
+        @day   = params[:day].to_i
+
+        if within_one_year?(Date.new(@year, @month, @day))
+          index_daily
+        else
+          raise "404"
+        end
+      end
+
     private
+      def events(date)
+        events = Cms::Page.site(@cur_site).public(@cur_date).
+          where(@cur_node.condition_hash).
+          where(:"event_dates".in => [date.mongoize]).
+          entries.
+          sort_by{ |page| page.event_dates.size }
+      end
+
       def index_monthly
         @events = {}
         start_date = Date.new(@year, @month, 1)
         close_date = @month != 12 ? Date.new(@year, @month + 1, 1) : Date.new(@year + 1, 1, 1)
 
         (start_date...close_date).each do |d|
-          @events[d] = Cms::Page.site(@cur_site).
-            where(@cur_node.condition_hash).
-            where(:"event_dates".in => [d.mongoize]).
-            entries.
-            sort_by{ |page| page.event_dates.size }
+          @events[d] = events(d).map { |page|
+            [
+              page,
+              page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: -1)
+            ]
+          }
         end
-        render
+
+        render :monthly
+      end
+
+      def index_daily
+        @date = Date.new(@year, @month, @day)
+        @events = events(@date).map { |page|
+          [
+            page,
+            page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: -1)
+          ]
+        }
+
+        render :daily
       end
   end
 end

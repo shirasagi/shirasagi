@@ -1,0 +1,53 @@
+ja:
+  contact:
+    group_name: グループ
+    charge: 担当
+    tel: 電話番号
+    fax: ファックス番号
+    email: メールアドレス
+    search_groups:
+      index: 連絡先グループを選択する
+      search: 連絡先グループを検索
+      select: 連絡先グループを設定する
+      deselect: 削除
+    state:
+      show: 表示
+      hide: 非表示
+    view:
+      title: お問い合わせ
+      tel: 電話
+      fax: Fax
+      email: E-Mail
+
+  modules:
+    contact: 連絡先
+    addons:
+      contact/page: 連絡先
+      contact/group: 連絡先
+
+  mongoid:
+    attributes:
+      cms/page/model: &cmspage
+        contact_state: 表示設定
+        contact_group_id: 所属
+        contact_charge: 担当
+        contact_tel: 電話番号
+        contact_fax: ファックス番号
+        contact_email: メールアドレス
+      contact/addon/group:
+        <<: *cmspage
+
+  tooltip:
+    contact/addon/page:
+      contact_state:
+        - 公開画面への表示、非表示を選択します。
+      contact_group_id:
+        - 連絡先に表示する担当部署を選択します。
+      contact_charge:
+        - 連絡先に表示する担当者名または部署名を記述してください。
+      contact_tel:
+        - 連絡先に表示する部署または担当者の電話番号を記述してください。
+      contact_fax:
+        - 連絡先に表示する部署のファックス番号を記述してください。
+      contact_email:
+        - 連絡先に表示する部署または担当者のメールアドレスを記述してください。

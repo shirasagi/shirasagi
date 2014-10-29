@@ -4,6 +4,8 @@ module SS::Document
   include Mongoid::Document
   include SS::Fields::Sequencer
 
+  attr_accessor :in_updated
+
   included do
     class_variable_set(:@@_permit_params, [])
     class_variable_set(:@@_text_index_fields, [])
@@ -12,6 +14,7 @@ module SS::Document
     field :updated, type: DateTime, default: -> { Time.now }
     field :text_index, type: String
 
+    validate :validate_updated, if: -> { in_updated.present? }
     before_save :set_db_changes
     before_save :set_updated
     before_save :set_text_index
@@ -133,6 +136,10 @@ module SS::Document
         opts.each {|m| return m[0] if m[1].to_s == send(name).to_s }
       end
       nil
+    end
+
+    def validate_updated
+      errors.add :base, :invalid_updated if in_updated.to_s != updated.to_s
     end
 
   private

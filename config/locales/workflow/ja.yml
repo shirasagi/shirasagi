@@ -43,12 +43,16 @@ ja:
     release_private_cms_pages: 固定ページの公開（所有）
     release_other_faq_pages: FAQページの公開（全て）
     release_private_faq_pages: FAQページの公開（所有）
+    release_other_event_pages: イベントページの公開（全て）
+    release_private_event_pages: イベントページの公開（所有）
     approve_other_article_pages: 記事ページの承認（全て）
     approve_private_article_pages: 記事ページの承認（所有）
     approve_other_cms_pages: 固定ページの承認（全て）
     approve_private_cms_pages: 固定ページの承認（所有）
     approve_other_faq_pages: FAQページの承認（全て）
     approve_private_faq_pages: FAQページの承認（所有）
+    approve_other_event_pages: イベントページの承認（全て）
+    approve_private_event_pages: イベントページの承認（所有）
 
   tooltip:
     workflow/addon/approver:

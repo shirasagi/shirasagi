@@ -23,6 +23,36 @@ module Event::Addon
     end
   end
 
+  module Body
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    included do
+      field :schedule, type: String
+      field :venue, type: String
+      field :content, type: String
+      field :cost, type: String
+      field :related_url, type: String
+
+      permit_params :schedule, :venue, :content, :cost, :related_url
+    end
+
+    set_order 180
+  end
+
+  module AdditionalInfo
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    included do
+      field :additional_info, type: Event::Extensions::AdditionalInfo
+
+      permit_params additional_info: [ :field, :value ]
+    end
+
+    set_order 190
+  end
+
   module PageList
     extend ActiveSupport::Concern
     extend SS::Addon

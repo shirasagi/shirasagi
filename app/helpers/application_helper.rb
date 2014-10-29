@@ -82,4 +82,12 @@ module ApplicationHelper
   def render_agent(controller_name, action)
     controller.render_agent(controller_name, action).body.html_safe
   end
+
+  def mail_to_entity(email_address, name = nil, html_options = {})
+    return "" if email_address.blank?
+    email_address = email_address.gsub(/@/, "&#64;").gsub(/\./, "&#46;").html_safe
+    name = email_address if name.blank?
+    mail_to(email_address, name, html_options).html_safe
+  end
+
 end

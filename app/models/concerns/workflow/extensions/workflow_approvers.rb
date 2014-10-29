@@ -34,14 +34,16 @@ class Workflow::Extensions::WorkflowApprovers < Array
           self.new([]).mongoize
         end
 
-      else object
+      else
+        object
       end
     end
 
     def evolve(object)
       case object
       when self.class then object.mongoize
-      else object
+      else
+        object
       end
     end
   end

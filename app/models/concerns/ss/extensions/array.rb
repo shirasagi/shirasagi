@@ -4,7 +4,7 @@ class SS::Extensions::Array < Array
       case object
       when self.class then object.mongoize
       when String then self.new(object.gsub(/[, 　、\r\n]+/, ",").split(",").compact.uniq).mongoize
-      else object
+      else
         object.delete("")
         object.compact.uniq
       end

@@ -1,22 +1,18 @@
 module Kana::PublicFilter
   extend ActiveSupport::Concern
 
-  def self.prepended(mod)
-    mod.include self
-  end
-
   included do
-    Cms::PublicFilter.filter :kana
+    Cms::PublicFilter.filter :set_path_with_kana
     after_action :render_kana, if: ->{ @filter == :kana }
   end
 
-  public
+  private
     def set_path_with_kana
       return if @cur_path !~ /^#{SS.config.kana.location}\//
       @cur_path.sub!(/^#{SS.config.kana.location}\//, "/")
+      @filter = :kana
     end
 
-  private
     def render_kana
       body = response.body
 

@@ -1,0 +1,30 @@
+<% if @cur_page.contact_state == "show" %>
+  <footer class="contact">
+    <h1><%= t("contact.view.title") %></h1>
+    <% if @cur_page.contact_group_id? %>
+      <% group_names = (SS::Group.find_by id: @cur_page.contact_group_id).name.split("/") %>
+      <p class="group"><%= group_names[group_names.length - 1] %></p>
+    <% end %>
+    <% if @cur_page.contact_charge.present? %>
+      <p class="charge"><%= @cur_page.contact_charge %></p>
+    <% end %>
+    <% if @cur_page.contact_tel.present? %>
+      <dl class="tel">
+        <dt><%= "#{t("contact.view.tel")}:" %></dt>
+        <dd><a href="tel:<%= @cur_page.contact_tel.delete("-") %>"><%= @cur_page.contact_tel %></a></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.contact_fax.present? %>
+      <dl class="fax">
+        <dt><%= "#{t("contact.view.fax")}:" %></dt>
+        <dd><%= @cur_page.contact_fax %></dd>
+      </dl>
+    <% end %>
+    <% if @cur_page.contact_email.present? %>
+      <dl class="email">
+        <dt><%= "#{t("contact.view.email")}:" %></dt>
+        <dd><%= mail_to_entity @cur_page.contact_email %></dd>
+      </dl>
+    <% end %>
+  </footer>
+<% end %>

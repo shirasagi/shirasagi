@@ -437,6 +437,23 @@ input.date, input.datetime {
 }
 
 // -------------------------------------------------------------------------------------------------
+// event
+
+.mod-event-additional-info {
+  dd.value {
+    font-weight: bold;
+    padding-left: 40px;
+  }
+  textarea {
+    width: 80%;
+  }
+  .clear {
+    position: relative;
+    bottom: 60px;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
 // map
 
 .mod-map {

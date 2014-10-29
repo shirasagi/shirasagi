@@ -19,16 +19,6 @@
 
   <tbody>
     <% @items.each do |item| %>
-    <% if item.state == "public" || item.state == "ready"
-         view_state = t("views.state.#{item.state}")
-       elsif item.workflow_state.present?
-         view_state = t("views.state.#{item.workflow_state}")
-       elsif item.state == "closed"
-         view_state = t("views.state.#{item.state}")
-       else
-         view_state = ""
-       end
-    %>
     <tr>
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
@@ -37,13 +27,13 @@
           <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
           <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
-          <%= link_to :view_site, item.full_url, target: :_blank %>
+          <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
         </nav>
       </td>
       <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
       <td class="filename"><%= File.basename item.filename %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-      <td class="state"><%= view_state %></td>
+      <td class="state"><%= item.t_state %></td>
     </tr>
     <% end %>
   </tbody>

@@ -25,9 +25,10 @@ module Cms::PublicFilter::Node
 
   public
     def generate_node(node, opts = {})
-      return if Cms::Page.site(node.site).public.where(filename: "#{node.filename}/index.html").first
+      path = opts[:url] || "#{node.filename}/index.html"
+      return if Cms::Page.site(node.site).public.filename(path).first
 
-      @cur_path   = node.url
+      @cur_path   = opts[:url] || node.url
       @cur_site   = node.site
       @csrf_token = false
 

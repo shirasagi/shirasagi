@@ -5,7 +5,7 @@ module Faq::Agents::Nodes::Page
 
     public
       def pages
-        Faq::Page.site(@cur_site).public.
+        Faq::Page.site(@cur_site).public(@cur_date).
           where(@cur_node.condition_hash)
       end
 

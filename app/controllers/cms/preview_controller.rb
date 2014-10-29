@@ -14,8 +14,9 @@ class Cms::PreviewController < ApplicationController
 
     def set_path_with_preview
       @cur_path ||= request.env["REQUEST_PATH"]
-      @cur_path.sub!(/^#{cms_preview_path}/, "")
+      @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
+      @cur_date = params[:preview_date].present? ? Time.parse(params[:preview_date]) : Time.now
     end
 
     def x_sendfile(file = @file)
@@ -34,23 +35,31 @@ class Cms::PreviewController < ApplicationController
     end
 
     def render_preview
-      body = response.body
+      preview_url = cms_preview_path preview_date: params[:preview_date]
 
+      body = response.body
       body.gsub!(/(href|src)=".*?"/) do |m|
         url = m.match(/.*?="(.*?)"/)[1]
         if url =~ /^\/(assets|assets-dev)\//
           m
         elsif url =~ /^\//
-          m.sub(/="/, "=\"#{cms_preview_path}")
+          m.sub(/="/, "=\"#{preview_url}")
         else
           m
         end
       end
 
-      css  = "position: fixed; top: 0px; left: 0px; padding: 5px;"
-      css << "background-color: rgba(0, 150, 100, 0.6); color: #fff; font-weight: bold;"
-      mark = %(<div id="ss-preview" style="#{css}">Preview</div>)
-      body.sub!("</body>", "#{mark}</body>")
+      h  = []
+      h << view_context.stylesheet_link_tag("cms/preview")
+      h << view_context.javascript_include_tag("cms/preview")
+      h << '<link href="/assets/css/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />'
+      h << '<script src="/assets/js/jquery.datetimepicker.js"></script>'
+      h << '<div id="ss-preview">'
+      h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
+      h << '<input type="button" class="preview" value="Preview">'
+      h << '</div>'
+
+      body.sub!("</body>", h.join("\n") + "</body>")
 
       response.body = body
     end

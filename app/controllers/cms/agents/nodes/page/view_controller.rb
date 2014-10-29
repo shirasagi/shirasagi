@@ -5,7 +5,7 @@ module Cms::Agents::Nodes::Page
 
     public
       def pages
-        Cms::Page.site(@cur_site).public.
+        Cms::Page.site(@cur_site).public(@cur_date).
           where(@cur_node.condition_hash)
       end
 

@@ -5,6 +5,10 @@ describe "event_pages" do
   subject(:node) { create_once :event_node_page, name: "event" }
   subject(:item) { Event::Page.last }
   subject(:index_path) { event_pages_path site.host, node }
+  subject(:new_path) { new_event_page_path site.host, node }
+  subject(:show_path) { event_page_path site.host, node, item }
+  subject(:edit_path) { edit_event_page_path site.host, node, item }
+  subject(:delete_path) { delete_event_page_path site.host, node, item }
 
   it "without login" do
     visit index_path
@@ -23,6 +27,42 @@ describe "event_pages" do
     it "#index" do
       visit index_path
       expect(current_path).not_to eq sns_login_path
+    end
+
+    it "#new" do
+      visit new_path
+      within "form#item-form" do
+        fill_in "item[name]", with: "sample"
+        fill_in "item[basename]", with: "sample"
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).not_to eq new_path
+      expect(page).not_to have_css("form#item-form")
+    end
+
+    it "#show" do
+      visit show_path
+      expect(status_code).to eq 200
+      expect(current_path).not_to eq sns_login_path
+    end
+
+    it "#edit" do
+      visit edit_path
+      within "form#item-form" do
+        fill_in "item[name]", with: "modify"
+        click_button "保存"
+      end
+      expect(current_path).not_to eq sns_login_path
+      expect(page).not_to have_css("form#item-form")
+    end
+
+    it "#delete" do
+      visit delete_path
+      within "form" do
+        click_button "削除"
+      end
+      expect(current_path).to eq index_path
     end
   end
 end

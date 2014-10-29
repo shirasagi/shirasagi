@@ -17,6 +17,10 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :delete, action: :delete, id: @item %>
     <% end %>
+    <% if @item.class.include?(Cms::Page::Model) %>
+      <%= link_to :"cms.view_page", @item.url, target: "_blank" if @item.public? %>
+      <%= link_to :"cms.preview_page", cms_preview_path(path: @item.filename), target: "_blank" %>
+    <% end %>
     <%= link_to :back_to_index, action: :index %>
   <% end %>
 </nav>

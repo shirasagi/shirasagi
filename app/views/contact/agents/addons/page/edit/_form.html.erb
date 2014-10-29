@@ -1,0 +1,63 @@
+<%= coffee do %>
+
+deselectGroup=() ->
+  $(this).parents("tr:first").remove()
+  if $("table.selected-contact-group tr[data-id]").size() == 0
+    $("table.selected-contact-group").hide()
+  return false
+
+$ ->
+  $("table.selected-contact-group a.deselect").click(deselectGroup)
+  if $("table.selected-contact-group tbody .deselect").size() == 0
+    $("table.selected-contact-group").hide()
+
+<% end %>
+
+<dl class="see mod-contact">
+  <dt><%= @model.t :contact_state %><%= @model.tt :contact_state %></dt>
+  <dd><%= f.select :contact_state, @item.contact_state_options %></dd>
+
+  <dt><%= @model.t :contact_group_id %><%= @model.tt :contact_group_id %></dt>
+  <dd>
+    <%= f.hidden_field "contact_group_id", value: "", class: "hidden-contact_group_id" %>
+    <%= link_to :"contact.search_groups.index", contact_search_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index selected-contact-group">
+      <thead>
+        <tr>
+          <th class="name"><%= Cms::Group.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if params[:action] =~ /new/ %>
+          <tr data-id="<%= @cur_group.id %>">
+            <td><%= f.hidden_field "contact_group_id", value: @cur_group.id %> <%= @cur_group.name %></td>
+            <td><%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %></td>
+          </tr>
+        <% else %>
+          <% if @item.contact_group_id.present? %>
+            <% group = SS::Group.find_by id: @item.contact_group_id %>
+            <tr data-id="<%= @item.contact_group_id %>">
+              <td><%= f.hidden_field "contact_group_id", value: @item.contact_group_id %> <%= group.name %></td>
+              <td><%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :contact_charge %><%= @model.tt :contact_charge %></dt>
+  <dd><%= f.text_field :contact_charge %></dd>
+
+  <dt><%= @model.t :contact_tel %><%= @model.tt :contact_tel %></dt>
+  <dd><%= f.text_field :contact_tel, value: (params[:action] =~ /new/) ? @cur_group[:contact_tel] : @item.contact_tel %></dd>
+
+  <dt><%= @model.t :contact_fax %><%= @model.tt :contact_fax %></dt>
+  <dd><%= f.text_field :contact_fax, value: (params[:action] =~ /new/) ? @cur_group[:contact_fax] : @item.contact_fax %></dd>
+
+  <dt><%= @model.t :contact_email %><%= @model.tt :contact_email %></dt>
+  <dd><%= f.text_field :contact_email, value: (params[:action] =~ /new/) ? @cur_group[:contact_email] : @item.contact_email %></dd>
+</dl>

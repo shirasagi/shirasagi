@@ -1,0 +1,85 @@
+<%= coffee do %>
+
+selectGroup =(group) ->
+  $("table.selected-contact-group tbody tr").remove()
+  tr = $("<tr>").attr("data-id", group["id"])
+  input = $("<td>").append($("input:hidden.hidden-contact_group_id:first").clone(false))
+  input.find("input").val(group["id"])
+  input.append(group["name"])
+  deselect = $("<td>").append('<%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %>')
+  deselect.find("a.deselect").click(deselectGroup)
+  tr.append(input)
+  tr.append(deselect)
+  $("table.selected-contact-group tbody").append(tr)
+  $("table.selected-contact-group").show()
+  if $("#item_contact_tel").val() == ""
+    $("#item_contact_tel").prop("value", group["tel"])
+  if $("#item_contact_fax").val() == ""
+    $("#item_contact_fax").prop("value", group["fax"])
+  if $("#item_contact_email").val() == ""
+    $("#item_contact_email").prop("value", group["email"])
+
+  return
+
+deselectGroup =() ->
+  $(this).parents("tr:first").remove()
+  if $("table.selected-contact-group tr[data-id]").size() == 0
+    $("table.selected-contact-group table.index").hide()
+  return false
+
+searchGroups =(elem) ->
+  elem = $(elem)
+  elem.on "submit", (e) ->
+    elem.find("input").attr "disabled", true
+    url = "<%= request.url %>"
+    query = elem.find("input.query").val().trim()
+    site =
+    $.ajax {
+      type: "GET", url: url, cache: false,
+      data: { q: query, site: site },
+      success: (data) ->
+        $("div.search-groups").children().remove()
+        $("div.search-groups").append data
+        return
+      complete: (xhr, status) ->
+        elem.find("input").removeAttr "disabled"
+        SS_ListUI.render($(".search-groups table"))
+
+        $(".search-groups tbody a[href]").click ->
+          name = $(this).text()
+          id = $(this).parents("tr:first").attr("data-id")
+          tel = $(this).parents("tr:first").find(".contact-tel").text()
+          fax = $(this).parents("tr:first").find(".contact-fax").text()
+          email = $(this).parents("tr:first").find(".contact-email").text()
+          selectGroup({id : id, name : name, tel : tel, fax : fax, email : email})
+          $.colorbox.close()
+          return false
+    }
+    return false
+  return
+
+$ ->
+  searchGroups "form.search-groups"
+  $("form.search-groups").trigger('submit');
+
+<% end %>
+
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<%= form_for :item, url: { action: :index }, html: { method: "GET", class: "search-groups", multipart: true } do |f| %>
+  <%= text_field_tag :query, nil, { id: nil, class: "query" } %>
+  <%= f.submit t("contact.search_groups.search"), class: :search %>
+<% end %>
+</div>
+
+<div class="search-groups">
+  <table class="index">
+    <thead>
+      <tr>
+        <th style="width: 25%;" class="name"><%= t("contact.group_name") %></th>
+        <th class="contact-tel"><%= t("contact.tel") %></th>
+        <th class="contact-fax"><%= t("contact.fax") %></th>
+        <th class="contact-email"><%= t("contact.email") %></th>
+      </tr>
+    </thead>
+  </table>
+</div>

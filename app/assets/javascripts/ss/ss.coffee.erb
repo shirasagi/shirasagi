@@ -257,7 +257,7 @@ class @SS_Debug
     return if url.match(/^\/\..*?\/db/)
     return if url.match(/^\/\..*?\/history/)
     if url.match(/^https?:/)
-      return unless url.match(new RegExp(location.host))
+      return unless url.match(new RegExp("^https?://" + location.host))
       url = url.replace(/^https?:\/\/.*?\//, "/")
     else if url.match(/^[^\/]/)
       return

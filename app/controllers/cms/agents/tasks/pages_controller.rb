@@ -15,6 +15,21 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       end
     end
 
+    def update
+      @task.log "# #{@site.name}"
+
+      pages = Cms::Page.site(@site).public
+      pages = pages.node(@node) if @node
+
+      pages.each do |page|
+        page = page.becomes_with_route
+        if !page.update
+          @task.log page.url
+          @task.log page.errors.full_messages.join("/")
+        end
+      end
+    end
+
     def release
       @task.log "# #{@site.name}"
 

@@ -9,6 +9,7 @@ class Article::Page
   include Event::Addon::Date
   include Map::Addon::Page
   include Workflow::Addon::Approver
+  include Contact::Addon::Page
 
   set_permission_name "article_pages"
 

@@ -1,0 +1,17 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery.cookie
+#//= #require jquery.turbolinks
+#//= #require turbolinks
+
+$ ->
+  $("#ss-preview .date").datetimepicker
+    lang: "ja", roundTime: "ceil", step: 15
+
+  $("#ss-preview .preview").click ->
+    date = $("#ss-preview .date").val()
+    return if date == ""
+
+    date = date.replace(/[^\d]/g, "")
+    path = location.pathname.replace(/\/preview\d*/, "/preview" + date) + location.search
+    location.href = path

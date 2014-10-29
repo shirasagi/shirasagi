@@ -1,4 +1,3 @@
-
 Dir.chdir @root = File.dirname(__FILE__)
 @site = SS::Site.find_by host: ENV["site"]
 
@@ -49,9 +48,14 @@ role2 = save_cms_role name: "記事編集権限", permission_level: 1,
     delete_private_faq_pages read_other_faq_pages
     edit_other_faq_pages delete_other_faq_pages
 
+    read_private_event_pages edit_private_event_pages
+    delete_private_event_pages read_other_event_pages
+    edit_other_event_pages delete_other_event_pages
+
     approve_other_article_pages approve_private_article_pages
     approve_other_cms_pages approve_private_cms_pages
     approve_other_faq_pages approve_private_faq_pages
+    approve_other_event_pages approve_private_event_pages
 
     read_private_cms_nodes read_other_cms_nodes
   )

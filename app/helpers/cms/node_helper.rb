@@ -1,4 +1,8 @@
 module Cms::NodeHelper
+  def contents_path(item)
+    "/.#{item.site.host}/" + item.route.pluralize.sub("/", "#{item.id}/")
+  end
+
   def node_navi(opts = {}, &block)
     h  = []
 

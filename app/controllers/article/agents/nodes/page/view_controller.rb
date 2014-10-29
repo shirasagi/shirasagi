@@ -5,7 +5,7 @@ module Article::Agents::Nodes::Page
 
     public
       def pages
-        Article::Page.site(@cur_site).public.
+        Article::Page.site(@cur_site).public(@cur_date).
           where(@cur_node.condition_hash)
       end
 

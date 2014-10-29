@@ -84,9 +84,7 @@ module Cms::Addon
     end
 
     def validate_release_date
-      if public? && released.blank?
-        self.released = Time.now
-      end
+      self.released ||= release_date
 
       if close_date.present?
         if release_date.present? && release_date >= close_date

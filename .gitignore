@@ -11,6 +11,11 @@
 /private
 /public/sites
 
+# YARD
+/doc
+!/doc/install.txt
+/.yardoc
+
 .DS_Store
 Thumbs.db
 ehthumbs.db

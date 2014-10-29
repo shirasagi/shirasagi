@@ -19,10 +19,10 @@
           <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
           <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
-          <%= link_to :view_site, item.full_url, target: :_blank %>
+          <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
         </nav>
       </td>
-      <td><%= link_to item.name, "/.#{@cur_site.host}/#{item.route.sub(/\/.*/, '')}#{item.id}", class: "icon-node"%></td>
+      <td><%= link_to item.name, contents_path(item), class: "icon-node"%></td>
       <td class="filename"><%= File.basename item.filename %></td>
       <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>

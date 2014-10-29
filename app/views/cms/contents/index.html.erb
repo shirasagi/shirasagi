@@ -12,9 +12,9 @@
     <tr>
       <td>
         <% route = item.route.presence || "cms/nodes" %>
-        <%= link_to item.name, "/.#{@cur_site.host}/#{route.sub(/\/.*/, '')}#{item.id}", class: "icon-node"%>
+        <%= link_to item.name, contents_path(item), class: "icon-node"%>
         <nav class="tap-menu">
-          <%= link_to :"cms.content", "/.#{@cur_site.host}/#{route.sub(/\/.*/, '')}#{item.id}" %>
+          <%= link_to :"cms.content", contents_path(item) %>
           <%= link_to :show, node_conf_path(cid: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
           <%= link_to :edit, edit_node_conf_path(cid: item) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>

@@ -1,6 +1,6 @@
 <% if @cur_page.categories.present? %>
 <nav class="categories">
-  <header><h1>カテゴリー</h1></header>
+  <header><h1><%= t('event.category') %></h1></header>
   <div class="nodes">
     <% @cur_page.categories.each do |item| %>
     <article>

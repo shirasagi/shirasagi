@@ -1,2 +1,0 @@
-
-Kana::Initializer

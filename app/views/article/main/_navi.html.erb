@@ -4,8 +4,10 @@
   <header><h1><%= t "modules.article" %></h1></header>
   <div>
     <%= link_to :"article.page", article_pages_path, class: "icon-page" %>
-    <%= link_to :"workflow.page.ready", article_index_ready_path, class: "search-page" %>
-    <%= link_to :"workflow.page.closed", article_index_closed_path, class: "search-page" %>
+  </div>
+  <div class="narrow-page">
+    <%= link_to :"workflow.page.ready", article_index_ready_path, class: "icon-page" %>
+    <%= link_to :"workflow.page.closed", article_index_closed_path, class: "icon-page" %>
   </div>
 </nav>
 

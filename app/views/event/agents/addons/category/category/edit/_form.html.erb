@@ -1,0 +1,11 @@
+<dl class="see mod-category">
+  <dd class="wide" style="line-height: 2.5">
+    <%= f.hidden_field "category_ids[]", value: "" %>
+    <% @cur_node.st_categories.each do |cate| %>
+    <label>
+      <%= f.check_box("category_ids[]", {}, cate._id) %>
+      <%= cate.name %>
+    </label>
+    <% end %>
+  </dd>
+</dl>

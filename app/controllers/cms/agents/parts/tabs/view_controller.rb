@@ -39,9 +39,9 @@ module Cms::Agents::Parts::Tabs
 
           if pages.nil?
             if node.class.method_defined?(:condition_hash)
-              pages = Cms::Page.site(@cur_site).public.where(node.condition_hash)
+              pages = Cms::Page.site(@cur_site).public(@cur_date).where(node.condition_hash)
             else
-              pages = Cms::Page.site(@cur_site).public.where(cond).node(node)
+              pages = Cms::Page.site(@cur_site).public(@cur_date).where(cond).node(node)
             end
           end
 

@@ -1,6 +1,7 @@
 module Cms::ListHelper
   def render_node_list(&block)
     cur_item = @cur_part || @cur_node
+    cur_item.cur_date = @cur_date
 
     h  = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
@@ -29,6 +30,7 @@ module Cms::ListHelper
 
   def render_page_list(&block)
     cur_item = @cur_part || @cur_node
+    cur_item.cur_date = @cur_date
 
     h  = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?

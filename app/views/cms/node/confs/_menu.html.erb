@@ -5,6 +5,10 @@
   <% else %>
     <%= link_to :edit, action: :edit if @item.allowed?(:edit, @cur_user)  %>
     <%= link_to :delete, action: :delete if @item.allowed?(:edit, @cur_user)  %>
+    <% if @item.respond_to?(:url) %>
+      <%= link_to :"cms.view_page", @item.url, target: "_blank" if @item.public? %>
+      <%= link_to :"cms.preview_page", cms_preview_path(path: @item.filename), target: "_blank" %>
+    <% end %>
     <%= link_to :back_to_index, controller: :nodes %>
   <% end %>
 </nav>

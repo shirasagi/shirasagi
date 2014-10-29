@@ -1,5 +1,5 @@
 require "rss/maker"
-module Cms::RssFilter
+module Cms::FeedFilter
   extend ActiveSupport::Concern
 
   private

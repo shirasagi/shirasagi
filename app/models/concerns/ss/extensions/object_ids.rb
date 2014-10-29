@@ -16,14 +16,16 @@ class SS::Extensions::ObjectIds < Array
         ids = object.reject {|m| m.blank? }.uniq.map {|m| m =~ /[a-z]/ ? m.to_s : m.to_i }
         #ids = object.reject {|m| m.blank? }.uniq.map {|m| BSON::ObjectId.from_string(m) }
         self.new(ids).mongoize
-      else object
+      else
+        object
       end
     end
 
     def evolve(object)
       case object
       when self.class then object.mongoize
-      else object
+      else
+        object
       end
     end
   end

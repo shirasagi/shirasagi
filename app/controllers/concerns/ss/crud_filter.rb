@@ -67,6 +67,7 @@ module SS::CrudFilter
 
     def update
       @item.attributes = get_params
+      @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
       render_update @item.update
     end
 
