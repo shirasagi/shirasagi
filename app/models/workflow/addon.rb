@@ -19,6 +19,19 @@ module Workflow::Addon
       validate :validate_workflow_approvers
     end
 
+    public
+      def t_state
+        if state == "public" || state == "ready"
+          I18n.t("views.state.#{state}")
+        elsif workflow_state.present?
+          I18n.t("views.state.#{workflow_state}")
+        elsif state == "closed"
+          I18n.t("views.state.#{state}")
+        else
+          ""
+        end
+      end
+
     private
       def validate_workflow_approvers
         if workflow_reset
