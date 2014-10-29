@@ -31,4 +31,19 @@ class ApplicationController < ActionController::Base
     def remote_addr
       request.env["HTTP_X_REAL_IP"] || request.remote_addr
     end
+
+    # Accepts the request for Cross-Origin Resource Sharing.
+    # @return boolean
+    def accept_cors_request
+      headers["Access-Control-Allow-Origin"] = request.env["HTTP_ORIGIN"]
+      headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+      headers["Access-Control-Allow-Headers"] = "Content-Type, Origin, Accept"
+
+      if request.request_method == "OPTIONS"
+        headers["Access-Control-Max-Age"] = "86400"
+        headers["Content-Length"] = "0"
+        headers["Content-Type"] = "text/plain"
+        render text: ""
+      end
+    end
 end

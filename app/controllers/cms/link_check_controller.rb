@@ -3,7 +3,7 @@ require "open-uri"
 
 class Cms::LinkCheckController < ApplicationController
   protect_from_forgery except: :check
-  before_action :allow_cors_requests
+  before_action :accept_cors_request
 
   public
     def check
@@ -42,18 +42,5 @@ class Cms::LinkCheckController < ApplicationController
         return 200 if progress_data_size
       end
       return 0
-    end
-
-    def allow_cors_requests
-      headers["Access-Control-Allow-Origin"] = request.env["HTTP_ORIGIN"]
-      headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-      headers["Access-Control-Allow-Headers"] = "Content-Type, Origin, Accept"
-
-      if request.request_method == "OPTIONS"
-        headers["Access-Control-Max-Age"] = "86400"
-        headers["Content-Length"] = "0"
-        headers["Content-Type"] = "text/plain"
-        render text: ""
-      end
     end
 end
