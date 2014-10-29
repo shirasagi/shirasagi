@@ -1,7 +1,7 @@
 module Opendata::Agents::Parts::Dataset
   class ViewController < ApplicationController
     include Cms::PartFilter::View
-    helper Cms::ListHelper
+    helper Opendata::ListHelper
 
     public
       def index
