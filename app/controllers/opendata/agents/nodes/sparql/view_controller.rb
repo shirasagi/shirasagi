@@ -14,7 +14,7 @@ module Opendata::Agents::Nodes::Sparql
           html_page = html_page.gsub(/<table class="sparql">/, "<table class='sparql' border='1'>")
 
           @cur_node.layout_id = nil
-          headers["Content-Type"] = "text/html; charset='utf-8'"
+          headers["Content-Type"] = "text/html; charset='Shift_JIS'"
           send_data html_page, type: result[:type], disposition: :inline
         else
           send_data result[:data], type: result[:type], filename: "sparql.#{result[:ext]}",
