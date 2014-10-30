@@ -36,7 +36,7 @@ CentOS 6.5/64bit
 
   git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi /var/www/shirasagi
   cd /var/www/shirasagi
-  cp config/samples/* config/
+  cp -n config/samples/* config/
   bundle install
   rake unicorn:start
 
