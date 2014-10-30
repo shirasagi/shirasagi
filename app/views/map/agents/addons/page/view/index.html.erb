@@ -37,6 +37,9 @@ window.initmap = ->
   };
 
   window.map = new google.maps.Map(document.getElementById("map-canvas"),  mapOptions)
+  $("#map-canvas").width(600) unless $("#map-canvas").width()
+  $("#map-canvas").height(400) unless $("#map-canvas").height()
+
   window.markers = <%= raw @cur_page.map_points.to_json %>
   window.opened = null
   $.each markers, (id, value) ->
