@@ -35,7 +35,7 @@ module Cms::BaseFilter
     end
 
   public
-    def url_options
-      {}.merge(super)
-    end
+    #def url_options
+    #  {}.merge(super)
+    #end
 end
