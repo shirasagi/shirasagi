@@ -59,7 +59,7 @@ module Opendata::Agents::Nodes::MyDataset
         @item = @model.new get_params
 
         if @item.save
-          redirect_to @cur_node.url, notice: t(:saved)
+          redirect_to @cur_node.url, notice: t("views.notice.saved")
         else
           render action: :new
         end
@@ -73,7 +73,7 @@ module Opendata::Agents::Nodes::MyDataset
         @item.attributes = get_params
 
         if @item.update
-          redirect_to "#{@cur_node.url}#{@item.id}", notice: t(:saved)
+          redirect_to "#{@cur_node.url}#{@item.id}", notice: t("views.notice.saved")
         else
           render action: :edit
         end
@@ -85,7 +85,7 @@ module Opendata::Agents::Nodes::MyDataset
 
       def destroy
         if @item.destroy
-          redirect_to @cur_node.url, notice: t(:delete)
+          redirect_to @cur_node.url, notice: t("views.notice.deleted")
         else
           render action: :delete
         end

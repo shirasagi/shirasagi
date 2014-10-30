@@ -73,7 +73,7 @@ module Opendata::Agents::Nodes::MyDataset::Resources
         @item = @dataset.resources.create get_params
 
         if @item.valid?
-          redirect_to "#{@dataset_url}resources/", notice: t(:saved)
+          redirect_to "#{@dataset_url}resources/", notice: t("views.notice.saved")
         else
           render action: :new
         end
@@ -87,7 +87,7 @@ module Opendata::Agents::Nodes::MyDataset::Resources
         @item.attributes = get_params
 
         if @item.update
-          redirect_to "#{@dataset_url}resources/#{@item.id}", notice: t(:saved)
+          redirect_to "#{@dataset_url}resources/#{@item.id}", notice: t("views.notice.saved")
         else
           render action: :edit
         end
@@ -99,7 +99,7 @@ module Opendata::Agents::Nodes::MyDataset::Resources
 
       def destroy
         if @item.destroy
-          redirect_to @resource_url, notice: t(:delete)
+          redirect_to @resource_url, notice: t("views.notice.deleted")
         else
           render action: :delete
         end

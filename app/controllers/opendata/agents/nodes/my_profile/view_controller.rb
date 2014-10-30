@@ -44,7 +44,7 @@ module Opendata::Agents::Nodes::MyProfile
         @item.attributes = get_params
 
         if @item.update
-          redirect_to @cur_node.url, notice: t(:saved)
+          redirect_to @cur_node.url, notice: t("views.notice.saved")
         else
           render action: :edit
         end

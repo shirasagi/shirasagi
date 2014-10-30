@@ -37,7 +37,7 @@ groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name
   </dl>
 
   <div class="send">
-    <%= submit_tag t(:search), name: :search %>
+    <%= submit_tag t("views.button.search"), name: :search %>
   </div>
 <% end %>
 
