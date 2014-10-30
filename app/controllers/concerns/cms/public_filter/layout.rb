@@ -44,6 +44,11 @@ module Cms::PublicFilter::Layout
         render_layout_part(path)
       end
 
+      if notice
+        notice_html   = %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
+        response.body = %(#{notice_html}#{response.body})
+      end
+
       html.gsub!('#{page_name}', @cur_item.name)
       html.sub!("</ yield />", response.body)
       html
