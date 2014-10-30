@@ -69,13 +69,11 @@ class Opendata::Dataset
         return criteria if params.blank?
 
         if params[:keyword].present?
-          words = params[:keyword].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
-          criteria = criteria.all_in name: words #TODO:
-          #dump criteria.selector
+          criteria = criteria.keyword_in params[:keyword],
+            :name, :text, "resources.name", "resources.filename", "resources.text"
         end
         if params[:name].present?
-          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
-          criteria = criteria.all_in name: words
+          criteria = criteria.keyword_in params[:keyword], :name
         end
         if params[:area_id].present?
           criteria = criteria.where area_ids: params[:area_id].to_i
