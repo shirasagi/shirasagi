@@ -70,7 +70,7 @@ class Facility::PagesController < ApplicationController
           { width: page.image_thumb_width, height: page.image_thumb_height }
         ]
       end
-      @summary_image = [ pages.shift ]
+      @summary_image = [ pages.shift ].compact
       @images = pages
     end
 end
