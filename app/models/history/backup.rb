@@ -1,6 +1,6 @@
 class History::Backup
   include SS::Document
-  #include SS::Reference::User
+  include SS::Reference::User
 
   cattr_reader(:max_age) { 5 }
 
@@ -8,6 +8,7 @@ class History::Backup
 
   field :version, type: String, default: SS.version
   field :ref_coll, type: String
+  field :ref_class, type: String
   field :data, type: Hash
 
   validates :ref_coll, presence: true

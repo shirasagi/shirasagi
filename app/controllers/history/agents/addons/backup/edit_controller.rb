@@ -4,7 +4,6 @@ module History::Agents::Addons::Backup
 
     def show
       return render(text: "") if @item.backups.size == 0
-      return render(text: "") unless @item.allowed?(:edit, @cur_user)
       super
     end
   end

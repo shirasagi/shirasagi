@@ -153,9 +153,12 @@ textarea.ace_text-input {
   @include main-view;
 }
 .addon-view {
-  margin: 0px 0px 15px;
+  margin: 0px 0px 20px;
+  padding-left: 10px;
   header {
     min-width: 130px;
+    margin-left: -10px;
+    margin-bottom: 10px;
     border-bottom: $border-white;
     color: $black;
     font-size: 120%;
