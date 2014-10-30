@@ -20,8 +20,8 @@
       <td><a href="<%= "#{item.id}/" %>"><%= item.name %></a></td>
       <td><%= l item.updated.to_date, format: :long %></td>
       <td><%= item.label :state %></td>
-      <td><%= item.point %></td>
-      <td><%= item.downloaded %></td>
+      <td><%= item.point.to_i %></td>
+      <td><%= item.downloaded.to_i %></td>
       <td>0</td>
       <td>0</td>
     </tr>
