@@ -54,8 +54,8 @@ module Opendata::Sparql
         if format == "HTML"
           type = "text/html"
           ext = "html"
-          encoding = Encoding::SJIS
-          data = results.to_html.encode(encoding)
+          encoding = Encoding::UTF_8
+          data = results.to_html
         elsif format == "JSON"
           type = "application/json"
           ext = "json"
