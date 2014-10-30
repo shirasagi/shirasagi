@@ -3,7 +3,7 @@ module Map::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 500
+    set_order 320
 
     included do
       field :map_loc, type: SS::Extensions::Array, default: []

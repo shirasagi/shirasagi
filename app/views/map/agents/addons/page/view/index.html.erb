@@ -71,7 +71,9 @@ window.initmap = ->
 
 <% end %>
 
+<% if @cur_page.map_points.present? %>
 <header>
   <h2><%= t("map.map") %></h2>
 </header>
 <div id="map-canvas"></div>
+<% end %>
