@@ -21,13 +21,10 @@ module Cms::NodeFilter
 
     def redirect_url
       if params[:action] == "destroy"
-        return cms_nodes_path unless @item.parent
-        diff = @item.route.split("/")[0] != @item.parent.route.split("/")[0]
-        return node_nodes_path(cid: @item.parent) if diff
-        { controller: params[:controller], cid: @item.parent.id }
+        { action: :index }
       else
         diff = @item.route.split("/")[0] != params[:controller].split("/")[0]
-        diff ? { action: :show, id: @item } : nil
+        diff ? node_node_path(cid: @cur_node, id: @item) : nil
       end
     end
 
