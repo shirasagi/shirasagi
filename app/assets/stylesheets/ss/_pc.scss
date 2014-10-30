@@ -1,0 +1,562 @@
+@import "ss/init";
+@include pc {
+
+// -------------------------------------------------------------------------------------------------
+// base
+
+body {
+  background-color: $gray2;
+  font-size: 75.0%;
+  font-family: $font-base;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+// -------------------------------------------------------------------------------------------------
+// outline
+
+#page {
+  height: 100%;
+  @include box-sizing(border-box);
+}
+#head {
+  position: relative;
+  height: 30px;
+  border-bottom: $border-gray3;
+  background: $white;
+  z-index: 10;
+  h1 {
+    float: left;
+    width: 159px;
+    border-right: $border-gray3;
+    a {
+      float: left;
+      width: 148px;
+      background-image: image-url("ss/logo.png");
+      background-repeat: no-repeat;
+      background-position: center center;
+      color: #fff;
+      text-indent: -9999px;
+      text-decoration: none;
+      line-height: 30px;
+    }
+  }
+  h2 {
+    float: left;
+    border-right: $border-gray3;
+    overflow: hidden;
+    a {
+      display: block;
+      padding: 7px 10px;
+      color: $black;
+      &:hover {
+        background: $gray2;
+        @include box-shadow(0 0 6px $gray3 inset);
+        text-decoration: none;
+      }
+    }
+  }
+  nav {
+    float: right;
+    margin: 4px 10px 0;
+    a {
+      display: block;
+      float: left;
+      padding: 3px 20px;
+      color: $black;
+      &:hover {
+        background: $gray1;
+        @include border-radius(3px);
+        @include box-shadow(0 0 6px $gray3 inset);
+        text-decoration: none;
+      }
+    }
+  }
+}
+#crumbs {
+  position: relative;
+  @include clear;
+  padding: 5px 10px;
+  background: $gray3;
+  z-index: 10;
+  .up {
+    float: left;
+    a {
+      display: block;
+      width: 20px;
+      height: 20px;
+      margin: 1px 10px 0 0;
+      border: $border-white;
+      @include border-radius(10px);
+      background: $white;
+      img {
+        display: block;
+        margin: 6px 4px;
+      }
+      &:hover {
+        background: $gray3;
+      }
+    }
+  }
+  nav {
+    overflow: hidden;
+    position: relative;
+    background: $white;
+    &:before {
+      float: left;
+      display: inline-block;
+      position: relative;
+      bottom: -1px;
+      width: 12px;
+      height: 12px;
+      margin: 4px;
+      text-indent: -99px;
+      background-image: image-url("ss/icons.png");
+      background-position:  -15px 0;
+      content: " ";
+    }
+    span {
+      float: left;
+      a {
+        display: block;
+        max-width: 120px;
+       padding: 4px 5px 2px;
+        color: $black;
+        @include ellipsis;
+        &:hover {
+          background: $gray3;
+          text-decoration: none;
+        }
+      }
+    }
+    span.separator {
+      width: 0;
+      height: 0;
+      margin: 6px 5px;
+      border-top: 5px solid transparent;
+      border-left: 6px solid $gray4;
+      border-bottom: 5px solid transparent;
+      overflow: hidden;
+    }
+  }
+}
+#wrap {
+  @include clear;
+  height: auto !important;
+  height: 100%;
+  min-height: 100%;
+  margin-bottom: -40px;
+  padding: 0 0 50px;
+  @include box-sizing(border-box);
+  background: image-url("ss/back.png") no-repeat 98% 98%;
+}
+#navi-back, #menu-back {
+  position: fixed;
+  top: 0;
+  bottom: 0px;
+  left: 0px;
+  z-index: 0;
+  @include box-sizing(border-box);
+}
+#navi-back {
+  width: 160px;
+  background-color: $white;
+}
+#menu-back {
+  left: 160px;
+  width: 155px;
+}
+#navi {
+  position: relative;
+  z-index: 1;
+  float: left;
+  width: 160px;
+  min-height: 1px;
+  @include box-sizing(border-box);
+}
+#menu {
+  position: relative;
+  z-index: 1;
+  float: left;
+  width: 155px;
+  min-height: 1px;
+  padding: 15px 0 0 15px;
+  @include box-sizing(border-box);
+}
+#main {
+  float: right;
+  width: 100%;
+  min-height: 1px;
+  padding: 15px;
+  @include box-sizing(border-box);
+}
+#navi + #main {
+  margin: 0px 0px 0px -100%;
+  .wrap {
+    margin-left: 160px;
+  }
+}
+#menu + #main {
+  margin: 0px 0px 0px -100%;
+  .wrap {
+    margin-left: 315px;
+  }
+}
+#foot {
+  position: relative;
+  height: 40px;
+  padding: 12px 20px 0px;
+  @include box-sizing(border-box);
+  color: $gray4;
+  @include text-shadow(1px 1px 0 $white);
+  text-align: right;
+}
+#ss-mb {
+  position: absolute;
+  bottom: 5px;
+  left: 10px;
+  z-index: 100;
+  a {
+    display: block;
+    color: #888;
+    font-size: 300%;
+    font-weight: bold;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// menu
+
+nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
+  margin-bottom: 20px;
+  header {
+    display: block;
+    margin-bottom: 10px;
+    border-bottom: $border-gray3;
+    h1 {
+      padding: 5px 10px;
+      color: $gray5;
+    }
+  }
+  a {
+    display: block;
+    width: 100%;
+    margin: 0px 0px 0px;
+    padding: 4px 10px;
+    @include box-sizing(border-box);
+    color: $black;
+    @include ellipsis;
+    &[class ^= "icon"] {
+      background-position: 10px center;
+    }
+    &:hover {
+      padding-left: 5px;
+      border-left: $border-pink;
+      background-color: $gray2;
+      color: $pink;
+      text-decoration: none;
+    }
+    &.current {
+      padding-left: 5px;
+      border-left: $border-pink;
+      background-color: $gray2;
+      color: $pink;
+    }
+  }
+  div.pulldown-menu a.current {
+    position: relative;
+    background-color: transparent;
+    color: $black;
+    &:hover {
+      background-color: $gray2;
+      color: $black;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 7px;
+      right: 5px;
+      border-top: 10px solid $gray5;
+      border-right: 6px solid transparent;
+      border-left: 6px solid transparent;
+    }
+  }
+}
+nav.sub-menu {
+  margin-top: 10px;
+  .narrow-page {
+    a {
+      padding-left: 25px;
+      &:hover {
+        padding-left: 20px;
+      }
+      &.current {
+        padding-left: 20px;
+      }
+    }
+  }
+}
+nav.act-menu {
+  margin: 0px 0px 20px;
+  header {
+    display: none;
+  }
+  a {
+    display: block;
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    border: $border-gray4;
+    @include border-radius(3px);
+    background: $gray3;
+    color: $black;
+    &:hover {
+      background: $pink;
+      color: $white;
+      text-decoration: none;
+    }
+    &.current {
+      border-left: none;
+      background-color: $gray2;
+      color: $pink;
+    }
+  }
+}
+nav.addon-menu, nav.page-menu {
+  header {
+    border-bottom: $border-white;
+    h1 {
+      border-bottom: $border-gray4;
+    }
+  }
+  div a {
+    color: $black;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// common
+table.index {
+  table-layout:fixed;
+  width: 100%;
+  th, td {
+    padding: 4px 8px;
+  }
+  thead {
+    tr {
+      position: relative;
+      border-bottom: $border-gray4;
+      color: #644;
+    }
+    th {
+      padding: 4px 8px 4px;
+      color: $gray5;
+    }
+    &:after {
+      display: block;
+      overflow: hidden;
+      height: 10px;
+      visibility: hidden;
+      content: "-";
+    }
+  }
+  tbody {
+    tr {
+      &:nth-child(even) { background-color: #fff; }
+      &:hover { background-color: $gray3; }
+    }
+    tr.checked {
+      background-color: $gray4;
+    }
+  }
+  th.checkbox, td.checkbox {
+    width: 35px;
+    padding: 0px;
+    text-align: center;
+  }
+  th.filename {
+    width: 20%;
+  }
+  th.route {
+    width: 20%;
+  }
+  th.datetime {
+    width: 10em;
+    width: 20%;
+  }
+  th.state {
+    width: 10%;
+  }
+  td {
+    overflow: hidden;
+    max-width: 100%;
+    @include ellipsis;
+  }
+  td.filename {
+    color: $green;
+  }
+  nav.tap-menu, nav.multiple-menu {
+    display: none;
+    position: absolute;
+    min-width: 10em;
+    border: $border-gray3;
+    @include box-shadow(1px 1px 3px #bbb);
+    background-color: #fff;
+    z-index: 100;
+    a {
+      display: block;
+      padding: 0px 12px;
+      text-align: left;
+      line-height: 2.6;
+      &:hover {
+        background-color: $gray3;
+      }
+    }
+  }
+}
+table.see {
+  border: 1px solid #ccc;
+  th, td {
+    padding: 5px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+  }
+  th {
+    background-color: #e4e4e4;
+  }
+}
+.search-form {
+  @include clear;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+  background: $gray3;
+  form.index-search {
+    @include clear;
+    float: left;
+    border: 2px solid $white;
+    input[type="text"] {
+      float: left;
+      height: 2em;
+      border: none;
+      &:focus {
+        @include box-shadow(none);
+      }
+    }
+    input[type="submit"] {
+      float: left;
+      margin: 0;
+      padding: 2px 20px 1px;
+      border: none;
+      background: $gray3;
+      &:hover {
+        background: $pink;
+        color: $white;
+      }
+    }
+  }
+}
+.tooltip {
+  display:inline-block;
+  position:relative;
+  width:16px;
+  left:5px;
+  height:16px;
+  @include border-radius(8px);
+  background: $pink;
+  color:#fff;
+  font-weight:bold;
+  text-decoration:none;
+  text-align:center;
+  cursor: pointer;
+  &:hover {
+     background-color: #f9c;
+  }
+  ul {
+    display: none;
+    list-style-position: inside;
+    position: absolute;
+    bottom:18px;
+    left:-220px;
+    width: 22em;
+    z-index: 90;
+    padding: 10px;
+    border: $border-gray3;
+    background-color: #fff;
+    color: $black;
+    text-align: left;
+    line-height: 1.6em;
+    list-style-position: inside;
+    list-style-type: disc;cursor: text;
+    li {
+      padding-left: 1em;
+      font-weight: normal;
+      text-indent: -1em;
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      left: 222px;
+      bottom: -6px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid $gray3;
+      border-right: 6px solid transparent;
+      border-left: 6px solid transparent;
+    }
+    &:after {
+      content: " ";
+      position: absolute;
+      left: 220px;
+      height:0;
+      width:0;
+    }
+  }
+}
+#addon-cms-addons-file .see #selected-files .action {
+  a {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 3px 10px;
+    border: $border-gray4;
+    @include border-radius(3px);
+    background: $gray3;
+    @include box-shadow(none);
+    color: $black;
+    &:hover {
+      background: $pink;
+      color: $white;
+      text-decoration: none;
+    }
+    &.current {
+      border-left: none;
+      background-color: $gray2;
+      color: $pink;
+    }
+  }
+}
+#errorSyntaxChecker, #errorLinkChecker {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $pink;
+  background: $white;
+  h2 {
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    background: $pink;
+    color: $white;
+  }
+  p, li {
+    margin: 0 15px;
+    color: #822;
+  }
+}
+.permission-names {
+  @include clear;
+  margin: 10px 0 10px 20px;
+  label {
+    float: left;
+    min-width: 180px;
+    margin-right: 10px;
+  }
+}
+// -------------------------------------------------------------------------------------------------
+}
