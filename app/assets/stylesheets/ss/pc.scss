@@ -433,7 +433,7 @@ table.see {
     @include clear;
     float: left;
     border: 2px solid $white;
-    #s_name {
+    input[type="text"] {
       float: left;
       height: 2em;
       border: none;
