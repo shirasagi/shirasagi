@@ -23,10 +23,10 @@
       <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <header>
           <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
-          <% if page.summary_html.present? %>
-            <%= raw page.summary_html %>
-          <% end %>
         </header>
+        <% if page.summary_html.present? %>
+          <p><%= raw page.summary_html %></p>
+        <% end %>
         <nav class="categories">
           <ul>
             <% categories.entries.sort_by{ |c| c.order }.each do |cate| %>
