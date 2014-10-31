@@ -106,7 +106,7 @@ textarea {
           display: inline-block;
           position: absolute;
           bottom: 0;
-          width: 200px;
+          width: 150px;
           @include border-top-radius(5px);
           a {
             display: block;
@@ -121,7 +121,6 @@ textarea {
         background: #ddcfcc;;
       }
       .tab02, .tab03 {
-        width: 150px;
         @include opacity(.5);
       }
       .tab01 {
@@ -130,11 +129,11 @@ textarea {
       }
       .tab02 {
         position: absolute;
-        left: 460px;
+        left: 410px;
       }
       .tab03 {
         position: absolute;
-        left: 620px;
+        left: 570px;
       }
     }
     .login {
@@ -156,7 +155,7 @@ textarea {
   .inner .tab .tab01 {
     position: absolute;
     bottom: -2px;
-    width: 196px;
+    width: 146px;
     border: 2px solid #ddcfcc;
     border-bottom: 2px solid $white;
     background: $white;
