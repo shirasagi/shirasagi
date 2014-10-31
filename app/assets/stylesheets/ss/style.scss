@@ -443,16 +443,17 @@ input.date, input.datetime {
 // event
 
 .mod-event-additional-info {
+  dt {
+    width: 140px;
+  }
   dd.value {
     font-weight: bold;
-    padding-left: 40px;
   }
-  textarea {
-    width: 80%;
+  dd textarea {
+    width: 70%;
   }
   .clear {
-    position: relative;
-    bottom: 60px;
+    vertical-align: top;
   }
 }
 
@@ -528,16 +529,17 @@ textarea.marker-text {
 // facility
 
 .mod-facility-additional-info {
+  dt {
+    width: 140px;
+  }
   dd.value {
     font-weight: bold;
-    padding-left: 40px;
   }
-  textarea {
-    width: 80%;
+  dd textarea {
+    width: 70%;
   }
   .clear {
-    position: relative;
-    bottom: 60px;
+    vertical-align: top;
   }
 }
 #facility-info {
