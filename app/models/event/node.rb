@@ -17,7 +17,12 @@ module Event::Node
         cond = []
         cids = []
 
-        cond << {} if conditions.blank?
+        if conditions.present?
+          cond << { filename: /^#{filename}\//, depth: depth + 1 }
+        else
+          cond << {}
+        end
+
         conditions.each do |url|
           node = Cms::Node.filename(url).first
           next unless node

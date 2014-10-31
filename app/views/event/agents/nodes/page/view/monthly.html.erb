@@ -81,8 +81,8 @@ $ ->
     <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
       <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <% if categories.present? %>
-          <% cate = categories.first %>
-          <div class="<%= event_category_class(page) %>">
+          <% cate = categories.entries.sort_by{ |c| c.order }.first %>
+          <div class="<%= cate.basename %>">
             <%= link_to cate.name, cate.url %>
           </div>
         <% end %>

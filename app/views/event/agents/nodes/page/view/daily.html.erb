@@ -27,9 +27,9 @@
             <%= raw page.summary_html %>
           <% end %>
         </header>
-        <nav class="catetories">
+        <nav class="categories">
           <ul>
-            <% categories.each do |cate| %>
+            <% categories.entries.sort_by{ |c| c.order }.each do |cate| %>
               <li class="<%= cate.basename %>">
                 <%= link_to cate.name, cate.url %>
               </li>
