@@ -20,12 +20,8 @@ module Cms::NodeFilter
     end
 
     def redirect_url
-      if params[:action] == "destroy"
-        { action: :index }
-      else
-        diff = @item.route.split("/")[0] != params[:controller].split("/")[0]
-        diff ? node_node_path(cid: @cur_node, id: @item) : nil
-      end
+      diff = @item.route.pluralize != params[:controller]
+      diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
     end
 
   public
@@ -64,6 +60,6 @@ module Cms::NodeFilter
 
     def destroy
       raise "403" unless @item.allowed?(:delete, @cur_user)
-      render_destroy render_route, location: redirect_url
+      render_destroy render_route
     end
 end

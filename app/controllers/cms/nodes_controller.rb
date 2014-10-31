@@ -19,6 +19,10 @@ class Cms::NodesController < ApplicationController
       { route: "cms/node" }
     end
 
+    def redirect_url
+      nil
+    end
+
   public
     def index
       @items = @model.site(@cur_site).
