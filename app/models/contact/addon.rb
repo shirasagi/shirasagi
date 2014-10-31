@@ -21,7 +21,7 @@ module Contact::Addon
         [%w(表示 show), %w(非表示 hide)]
       end
 
-      def any_present?
+      def contact_present?
         [contact_group_id,
          contact_charge,
          contact_tel,

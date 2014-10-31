@@ -1,4 +1,4 @@
-<% if @cur_page.contact_state == "show" && @cur_page.any_present? %>
+<% if @cur_page.contact_state == "show" && @cur_page.contact_present? %>
   <footer class="contact">
     <h1><%= t("contact.view.title") %></h1>
     <% if @cur_page.contact_group_id.present? %>
