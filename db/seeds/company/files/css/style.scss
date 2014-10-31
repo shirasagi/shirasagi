@@ -545,6 +545,30 @@ img {
     }
   }
 }
+footer.contact {
+  h1 {
+    margin-bottom: $item-margin;
+    padding: 5px 10px 3px;
+    border-bottom: $border-red1;
+    background: $hred;
+    font-size: $px16;
+  }
+  .group {
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+  dl {
+    display: inline-block;
+    border: none;
+    margin: 0 $item-margin 0 0;
+    padding: 0;
+    dt, dd {
+      float: none;
+      display: inline;
+      font-weight: normal;
+    }
+  }
+}
 .two #side {
   float: left;
   width: 230px;
@@ -910,12 +934,6 @@ img {
     }
   }
 }
-// -------------------------------------------------------------------------------------------------
-// map
-#map-canvas {
-  width: 600px;
-  height: 400px;
-}
 // -----------------------------------------------------------------------------
 // ss-mb
 #ss-mb {
@@ -1273,7 +1291,7 @@ img {
       margin: 0;
     }
   }
-  #main .body {
+  #main .body, footer.contact {
     padding: $item-margin;
   }
   .product .cms-pages, .product .category-pages {

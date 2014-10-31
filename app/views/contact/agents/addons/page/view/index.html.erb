@@ -1,7 +1,7 @@
-<% if @cur_page.contact_state == "show" %>
+<% if @cur_page.contact_state == "show" && @cur_page.any_present? %>
   <footer class="contact">
     <h1><%= t("contact.view.title") %></h1>
-    <% if @cur_page.contact_group_id? %>
+    <% if @cur_page.contact_group_id.present? %>
       <% group_names = (SS::Group.find_by id: @cur_page.contact_group_id).name.split("/") %>
       <p class="group"><%= group_names[group_names.length - 1] %></p>
     <% end %>

@@ -20,6 +20,15 @@ module Contact::Addon
       def contact_state_options
         [%w(表示 show), %w(非表示 hide)]
       end
+
+      def any_present?
+        [contact_group_id,
+         contact_charge,
+         contact_tel,
+         contact_fax,
+         contact_email
+        ].map(&:present?).any?
+      end
   end
 
   module Group
