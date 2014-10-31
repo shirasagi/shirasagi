@@ -944,47 +944,8 @@ article.areas, article.formats {
     font-size: $px28;
     font-weight: bold;
   }
-  .point, .text, .detail, .detail nav {
+  .text, .detail, .detail nav {
     margin-bottom: $box-margin;
-  }
-  .point {
-    float: right;
-    .count {
-      margin: 40px 0 10px 0;
-      padding: 5px 80px;
-      border: 1px solid #ddcfcc;
-      text-align: center;
-      span.number {
-        font-size: $px28;
-      }
-      span.label {
-        display: block;
-      }
-    }
-    .add {
-      display: inline-block;
-      padding: 2px 20px 2px 40px;
-      border: 1px solid #282828;
-      @include border-radius(5px);
-      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
-      color: $white;
-      text-decoration: none;
-      &:hover {
-        background-color: #666666;
-      }
-    }
-    .cancel {
-      display: inline-block;
-      padding: 2px 20px 2px 40px;
-      border: 1px solid #bdbdbd;
-      @include border-radius(5px);
-      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
-      color: $text;
-      text-decoration: none;
-      &:hover {
-        background-color: #dedede;
-      }
-    }
   }
   .text {
     float: left;
@@ -1106,6 +1067,51 @@ article.areas, article.formats {
     }
   }
 }
+//-----------------------------------------------------------------------------------------
+// .data-page-contents point
+.s-dataset .data-page-contents {
+  .point {
+    float: right;
+    margin-bottom: $box-margin;
+    .count {
+      margin: 40px 0 10px 0;
+      padding: 5px 80px;
+      border: 1px solid #ddcfcc;
+      text-align: center;
+      span.number {
+        font-size: $px28;
+      }
+      span.label {
+        display: block;
+      }
+    }
+    .add {
+      display: inline-block;
+      padding: 2px 20px 2px 40px;
+      border: 1px solid #282828;
+      @include border-radius(5px);
+      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
+      color: $white;
+      text-decoration: none;
+      &:hover {
+        background-color: #666666;
+      }
+    }
+    .cancel {
+      display: inline-block;
+      padding: 2px 20px 2px 40px;
+      border: 1px solid #bdbdbd;
+      @include border-radius(5px);
+      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
+      color: $text;
+      text-decoration: none;
+      &:hover {
+        background-color: #dedede;
+      }
+    }
+  }
+}
+//-----------------------------------------------------------------------------------------
 // icon
 .resources {
   .name {
