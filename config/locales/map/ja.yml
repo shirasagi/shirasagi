@@ -21,10 +21,6 @@ ja:
     addons:
       map/page: 地図
 
-  cms:
-    nodes:
-      map/page: 地図記事リスト
-
   mongoid:
     attributes:
       cms/page/model:
@@ -33,11 +29,3 @@ ja:
         marker_name: マーカー名
         marker_text: 説明
         marker_link: リンク
-
-  cms_role:
-    read_other_map_pages: 地図ページ閲覧（全て）
-    read_private_map_pages: 地図ページ閲覧（所有）
-    edit_other_map_pages: 地図ページ編集（全て）
-    edit_private_map_pages: 地図ページ編集（所有）
-    delete_other_map_pages: 地図ページ削除（全て）
-    delete_private_map_pages: 地図ページ削除（所有）
