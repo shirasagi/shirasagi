@@ -16,10 +16,14 @@ class Cms::Node::ConfsController < ApplicationController
       { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node.parent }
     end
 
+    def redirect_url
+      { action: :show }
+    end
+
   public
     def destroy
       raise "403" unless @item.allowed?(:delete, @cur_user)
-      location = @item.parent ? view_context.contents_path(@item.parent) : cms_nodes_path
-      render_destroy @item.destroy, location: location
+      url = @item.parent ? view_context.contents_path(@item.parent) : cms_nodes_path
+      render_destroy @item.destroy, location: url
     end
 end

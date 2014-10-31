@@ -77,7 +77,7 @@ module Cms::Addon::List
 
       def template_variable_get(item, name)
         if name =~ /^(name|url|summary)$/
-          item.send name
+          ERB::Util.html_escape item.send(name)
         elsif name == "class"
           item.basename.sub(/\..*/, "").dasherize
         elsif name == "new"

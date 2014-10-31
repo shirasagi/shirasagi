@@ -997,7 +997,8 @@ img {
   text-align: right;
 }
 .page article, .one article.body,
-.page .related-pages, .inquiry-html, .inquiry-form,
+.page .related-pages, .page footer.contact,
+.inquiry-html, .inquiry-form,
 .faq-question, .faq .body {
   h1 {
     margin: $item-margin 0 6px;
@@ -1083,6 +1084,23 @@ img {
   border-right: $border-hgry;
   background: none;
   list-style: none;
+}
+.page footer.contact {
+  .group {
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+  dl {
+    display: inline-block;
+    border: none;
+    margin: 0 $item-margin 0 0;
+    padding: 0;
+    dt, dd {
+      float: none;
+      display: inline;
+      font-weight: normal;
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1343,17 +1361,11 @@ img {
     }
   }
 }
-// -------------------------------------------------------------------------------------------------
-// map
-#map-canvas {
-  width: 600px;
-  height: 400px;
-}
 // -----------------------------------------------------------------------------
 // smart phone
 // -----------------------------------------------------------------------------
 @media only screen and (max-width: 600px) {
-  #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #add, 
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
   #main .category-nodes article  {
@@ -1791,7 +1803,7 @@ img {
   }
 // -----------------------------------------------------------------------------
 //  page sitemap
-  .page article, .one article.body, .related-pages {
+  .page article, .one article.body, .related-pages, .page footer.contact {
     padding: 10px 10px 0;
   }
   .page header.released {

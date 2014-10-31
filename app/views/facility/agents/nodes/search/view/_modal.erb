@@ -40,9 +40,10 @@ $ ->
       <label for=<%= "q_location_ids_#{cate.id}" %>><%= cate.name %></label>
       </div>
     <% end %>
-    <footer class="send">
-      <%= submit_tag t('facility.submit.search'), name: nil %>
-      <%= submit_tag t('facility.submit.reset'), name: nil, class: :reset %>
-    </footer>
   </div>
+
+   <footer class="send">
+    <%= submit_tag t('facility.submit.search'), name: nil %>
+    <%= submit_tag t('facility.submit.reset'), name: nil, class: :reset %>
+  </footer>
 <% end %>

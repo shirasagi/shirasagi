@@ -8,24 +8,175 @@
 <body>
 <div id="page">
 
-</ part "tool" />
-</ part "head" />
-</ part "navi" />
+<div id="tool">
+<nav>
+  <a id="nocssread" href="#wrap">本文へ</a>
+  <div id="size">文字サイズ<span id="ss-small">小さく</span><span id="ss-medium">標準</span><span id="ss-large">大きく</span></div>
+  <!-- <a id="read" href="#">読み上げる</a> -->
+  <span id="ss-kana">ふりがなをつける</span>
+  <a id="info" href="/use/">ご利用案内</a>
+</nav>
+</div>
+
+<header id="head">
+  <div class="logo">
+    <h1><a id="xss-site-name" href="/"><img src="/img/logo.png" alt="SHIRASAGI市" title="SHIRASAGI市" /></a></h1>
+  </div>
+  <div class="menu">
+    <div class="u-menu">
+      <nav>
+        <a class="smart" href="/mobile.html">スマホ・携帯サイト</a>
+        <a class="inquiry" href="/inquiry/">お問い合わせ</a>
+        <a class="sitemap" href="/sitemap/">サイトマップ</a>
+      </nav>
+    </div>
+    <div class="l-menu">
+      <form action="http://www.google.com/search">
+        <input type="hidden" value="ja" name="hl">
+        <input type="text" title="サイト内検索" placeholder="サイト内検索" class="text" id="search-box" size="40" name="q">
+        <input type="submit" id="search-button" value="検索" name="sa">
+      </form>
+    </div>
+  </div>
+</header>
+<nav id="navi">
+  <div class="wrap">
+    <ul>
+      <li class="kurashi"><a href="/kurashi/">くらし・手続き</a>
+        <ul>
+          <li><a href="/kurashi/koseki/">戸籍・印鑑登録・住民登録</a></li>
+          <li><a href="/kurashi/bosai/">防災情報</a></li>
+          <li><a href="/kurashi/nenkin/">年金・保険</a></li>
+          <li><a href="/kurashi/zeikin/">税金</a></li>
+          <li><a href="/kurashi/sumai/">住まい</a></li>
+          <li><a href="/kurashi/gomi/">ごみ・リサイクル</a></li>
+          <li><a href="/kurashi/suido/">上水道・下水道</a></li>
+          <li><a href="/kurashi/anzen/">交通安全・防犯</a></li>
+          <li><a href="/kurashi/kankyo/">環境</a></li>
+          <li><a href="/kurashi/shimin/">市民活動</a></li>
+          <li><a href="/kurashi/sodan/">相談窓口</a></li>
+        </ul>
+      </li>
+      <li class="kosodate"><a href="/kosodate/">子育て・教育</a>
+        <ul>
+          <li><a href="/kosodate/shien/">子育て支援</a></li>
+          <li><a href="/kosodate/kenko/">母子の健康・予防接種</a></li>
+          <li><a href="/kosodate/hoken/">母子の保健</a></li>
+          <li><a href="/kosodate/hoikuen/">保育園・幼稚園</a></li>
+          <li><a href="/kosodate/shogakko/">小学校・中学校</a></li>
+          <li><a href="/kosodate/shogai/">生涯学習</a></li>
+          <li><a href="/kosodate/kyoikuiinkai/">教育委員会</a></li>
+          <li><a href="/kosodate/sodan/">教育相談</a></li>
+          <li><a href="/kosodate/jinken/">人権・平和啓発</a></li>
+        </ul>
+      </li>
+      <li class="kenko"><a href="/kenko/">健康・福祉</a>
+        <ul>
+          <li><a href="/kenko/korei/">高齢者福祉</a></li>
+          <li><a href="/kenko/kaigo/">介護保険</a></li>
+          <li><a href="/kenko/shogai/">障害福祉</a></li>
+          <li><a href="/kenko/kyukyu/">救急医療</a></li>
+          <li><a href="/kenko/hoken/">保健・健康・医療</a></li>
+          <li><a href="/kenko/boshi/">母子保健</a></li>
+          <li><a href="/kenko/zoshin/">健康増進</a></li>
+          <li><a href="/kenko/yobo/">予防接種</a></li>
+          <li><a href="/kenko/shokuiku/">食育</a></li>
+        </ul>
+      </li>
+      <li class="kanko"><a href="/kanko/">観光・文化・スポーツ</a>
+        <ul>
+          <li><a href="/kanko/kanko/">観光</a></li>
+          <li><a href="/kanko/geijyutsu/">文化・芸術</a></li>
+          <li><a href="/kanko/bunkazai/">文化財</a></li>
+          <li><a href="/kanko/sports/">レジャー・スポーツ</a></li>
+          <li><a href="/kanko/koryu/">国内・国際交流</a></li>
+        </ul>
+      </li>
+      <li class="sangyo"><a href="/sangyo/">産業・仕事</a>
+        <ul>
+          <li><a href="/sangyo/keiei/">経営支援・金融支援・企業立地</a></li>
+          <li><a href="/sangyo/shuro/">就労支援</a></li>
+          <li><a href="/sangyo/shinko/">産業振興</a></li>
+          <li><a href="/sangyo/todokede/">届出・証明・法令・規制</a></li>
+          <li><a href="/sangyo/zeikin/">企業の税金</a></li>
+          <li><a href="/sangyo/nyusatsu/">入札・契約</a></li>
+          <li><a href="/sangyo/shitei/">指定管理者制度</a></li>
+          <li><a href="/sangyo/jinzai/">人材募集</a></li>
+        </ul>
+      </li>
+      <li class="shisei"><a href="/shisei/">市政情報</a>
+        <ul>
+          <li><a href="/shisei/gaiyo/">市の概要</a></li>
+          <li><a href="/shisei/soshiki/">組織案内</a></li>
+          <li><a href="/shisei/chosha/">庁舎案内</a></li>
+          <li><a href="/shisei/shicho/">市長の部屋</a></li>
+          <li><a href="/shisei/shisaku/">施策・計画</a></li>
+          <li><a href="/shisei/toshi/">都市整備</a></li>
+          <li><a href="/shisei/senkyo/">選挙</a></li>
+          <li><a href="/shisei/zaisei/">財政・行政改革</a></li>
+          <li><a href="/shisei/jinji/">人事・職員募集</a></li>
+          <li><a href="/shisei/toke/">統計・人口</a></li>
+          <li><a href="/shisei/koho/">広報・広聴</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
 
 <div id="wrap">
-  </ part "breadcrumb" />
+  <div class="ss-part crumbs" data-href="/breadcrumb.part.html"><span class="node"><a class="" href="/breadcrumb.part.html">パンくず</a></span></div>
   <div id="main">
-    <header><h1 id="ss-page-name">#{page_name}</h1></header>
-    </ part "oshirase/kanko/recent" />
+    <header><h1 id="ss-page-name">Page Name</h1></header>
+    <a class="ss-part" href="/oshirase/kanko/recent.part.html">お知らせ</a>
     </ yield />
-    </ part "page-top" />
+    <p class="pagetop"><a href="#page">このページの先頭へ</a></p>
   </div>
   <div id="side">
-    </ part "links-life" />
+    <section id="links-life">
+  <header>
+    <h1>関連リンク</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#">電子申請・届出</a></li>
+      <li><a href="#">申請書ダウンロード</a></li>
+      <li><a href="#">施設予約</a></li>
+      <li><a href="#">水道仕様開始・停止受付</a></li>
+      <li><a href="#">ゴミ収集日</a></li>
+      <li><a href="#">公共交通機関</a></li>
+      <li><a href="#">広報「SHIRASAGI」</a></li>
+      <li><a href="#">各種相談窓口</a></li>
+    </ul>
+  </nav>
+</section>
   </div>
 </div>
 
-</ part "foot" />
+<footer id="foot">
+  <div id="address">
+    <dl>
+      <dt>SHIRASAGI市役所</dt>
+      <dd>〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号<span><a href="#">市役所のご案内</a></span><br />
+      <address>電話番号：00-000-0000　ファクシミリ：00-000-0000</address></dd>
+      <dt>開庁時間</dt>
+      <dd>月曜日から金曜日の午前8時30分から午後5時(祝日・休日、12月29日から1月3日を除く)<br />
+      (注)部署、施設によっては、開庁・開館の日・時間が異なるところがあります。</dd>
+    </dl>
+  </div>
+  <div id="footer-navi">
+    <nav>
+      <a href="#">個人情報の取り扱い</a>
+      <a href="#">リンク</a>
+      <a href="#">著作権・免責事項</a>
+      <a href="#">webアクセシビリティ</a>
+      <a href="/use/">RSSについて</a>
+    </nav>
+  </div>
+  <div id="copyright"><small>Copyright &copy; City of Shirasagi All rights Reserved.</small></div>
+</footer>
+<footer id="ss-pc" style="display: none">PC表示</footer>
+<footer id="ss-mb" style="display: none">スマートフォン表示</footer>
+
 
 </div>
 </body>

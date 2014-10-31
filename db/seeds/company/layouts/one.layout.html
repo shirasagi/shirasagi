@@ -8,16 +8,56 @@
 </head>
 <body>
 <div id="page">
-  </ part "head" />
+  <header id="head">
+  <div class="wrap">
+    <h1><a href="/"><img src="/img/logo.png" alt="シラサギ株式会社" title="シラサギ株式会社" /></a></h1>
+    <div id="search">
+      <h2>検索</h2>
+      <form action="/search.html">
+        <input type="hidden" value="" name="cx" />
+        <input type="hidden" value="FORID:10" name="cof" />
+        <input type="hidden" value="UTF-8" name="ie" />
+        <input type="text" name="q" size="40" id="search-box" class="text" title="サイト内検索" placeholder="サイト内検索">
+        <input type="submit" align="top" id="search-button" value="検索" name="sa">
+      </form>
+    </div>
+    <nav id="gnav">
+      <h2>メニュー</h2>
+      <ul>
+        <li class="top"><a href="/">トップ</a></li>
+        <li class="news"><a href="/news/">ニュース</a></li>
+        <li class="company"><a href="/company/index.html">会社案内</a></li>
+        <li class="product"><a href="/product/index.html">製品・サービス</a></li>
+        <li class="recruit"><a href="/recruit/index.html">採用情報</a></li>
+        <li class="inquiry"><a href="/inquiry/index.html">お問い合わせ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
   <div id="wrap" class="one">
-    </ part "breadcrumbs" />
+    <div class="ss-part crumbs" data-href="/breadcrumbs.part.html"><span class="node"><a class="" href="/breadcrumbs.part.html">パンくず</a></span></div>
     <div id="main">
-      <header><h1 id="ss-page-name">#{page_name}</h1></header>
+      <header><h1 id="ss-page-name">Page Name</h1></header>
       </ yield />
     </div>
   </div>
-  </ part "page-top" />
-  </ part "foot" />
+  <p class="pagetop"><a href="#page">このページの先頭へ</a></p>
+  <footer id="foot">
+  <nav>
+    <ul>
+      <li><a href="/link.html">リンク集</a></li>
+      <li><a href="/privacy.html">個人情報保護方針</a></li>
+      <li><a href="/sitemap.html">サイトマップ</a></li>
+    </ul>
+  </nav>
+  <div class="copyright">
+    <p><small>Copyright &copy; 2014- SHIRASAGI Project All Rights Reserved.</small></p>
+  </div>
+</footer>
+
+<footer id="ss-pc" style="display: none">PC表示</footer>
+<footer id="ss-mb" style="display: none">スマートフォン表示</footer>
 </div>
 </body>
 </html>
