@@ -9,10 +9,9 @@
 
 <p><%= link_to t("facility.submit.change"), "#", class: "ajax-box" %></p>
 
-<h2 class="result"><%= t("facility.result") %><span><%= @items.count %></span><%= t("facility.count") %></h2>
+<h2 class="result"><%= t("facility.result") %><span class="number"><%= @items.count %></span><%= t("facility.count") %></h2>
 
-<nav>
-  <span class="number"></span>
+<nav class="tabs">
   <ul>
     <li class="tab<%= current == "map" ? " current" : "" %>">
       <%= link_to t("facility.tab.map"), "./map.html?#{{q: params[:q]}.to_query}" %>
