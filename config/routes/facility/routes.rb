@@ -10,6 +10,7 @@ SS::Application.routes.draw do
     get "/" => "main#index", as: :main
     resources :pages, concerns: :deletion
     resources :nodes, concerns: :deletion
+    resources :searches, concerns: :deletion
     resources :services, concerns: :deletion
     resources :locations, concerns: :deletion
     resources :categories, concerns: :deletion
