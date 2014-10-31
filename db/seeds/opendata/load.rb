@@ -182,7 +182,7 @@ end
 
 1.step(3) do |i|
   save_dataset_group name: "データグループ#{i}",
-                  category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
+                     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
 end
 
 ## -------------------------------------
