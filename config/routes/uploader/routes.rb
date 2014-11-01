@@ -3,7 +3,7 @@ SS::Application.routes.draw do
   Uploader::Initializer
 
   content "uploader" do
-    get "/" => "main#index", as: :main
+    get "/" => redirect { |p, req| "#{req.path}/files" }, as: :main
 
     resources :files, only: [:index]
     resource :files, path: '/files/*filename', as: :files,

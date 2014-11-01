@@ -7,7 +7,7 @@ SS::Application.routes.draw do
   end
 
   content "urgency" do
-    get "/" => "main#index", as: :main
+    get "/" => redirect { |p, req| "#{req.path}/layouts" }, as: :main
     resources :layouts, only: [:index, :show, :update]
     resources :errors, only: :show
   end

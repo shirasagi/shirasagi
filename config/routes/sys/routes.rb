@@ -21,7 +21,7 @@ SS::Application.routes.draw do
     get "/search_groups" => "search_groups#index"
 
     namespace "db" do
-      get "/" => "main#index"
+      get "/" => redirect { |p, req| "#{req.path}/colls" }
       resources :colls, concerns: :deletion
       resources :docs, concerns: :deletion, path: "colls/:coll/docs"
     end

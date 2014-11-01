@@ -7,7 +7,7 @@ SS::Application.routes.draw do
   end
 
   content "inquiry" do
-    get "/" => "main#index", as: :main
+    get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
     resources :forms, concerns: :deletion
     resources :columns, concerns: :deletion
     resources :answers, concerns: :deletion, only: [:index, :show, :destroy]

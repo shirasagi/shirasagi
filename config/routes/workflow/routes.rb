@@ -10,7 +10,7 @@ SS::Application.routes.draw do
   end
 
   content "workflow" do
-    get "/" => "main#index", as: :main
+    get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: :deletion
   end
 

@@ -39,7 +39,7 @@ SS::Application.routes.draw do
   end
 
   content "cms", name: "node", module: "cms/node" do
-    get "/" => "main#index", as: :main
+    get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
     get "generate_nodes" => "generate_nodes#index"
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"

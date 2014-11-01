@@ -7,7 +7,7 @@ SS::Application.routes.draw do
   end
 
   content "category" do
-    get "/" => "main#index", as: :main
+    get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
     resources :nodes, concerns: :deletion
     resources :pages, concerns: :deletion
   end

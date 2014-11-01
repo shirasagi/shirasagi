@@ -6,7 +6,7 @@ SS::Application.routes.draw do
   end
 
   namespace "sns_user", path: ".u:user", module: "sns/user", user: /\d+/ do
-    get "/" => "main#index"
+    get "/" => redirect { |p, req| "#{req.path}/profile" }
 
     resource :profile
     resource :account
