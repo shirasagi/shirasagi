@@ -1,0 +1,1 @@
+(function(){$(function(){return $(".ads-banners a").click(function(){return $.ajax({url:$(this).data("count")})})})}).call(this);
