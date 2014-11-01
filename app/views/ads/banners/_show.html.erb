@@ -1,0 +1,15 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :link_url %></dt>
+  <dd><%= link_to @item.link_url, @item.link_url, target: "_blank" %></dd>
+
+  <dt><%= @model.t :file_id %></dt>
+  <dd>
+    <% if file = @item.file %>
+    <div><%= image_tag file.url, alt: @item.name %></div>
+    (<%= file.filename %> <%= number_to_human_size file.size %>)
+    <% end %>
+  </dd>
+</dl>

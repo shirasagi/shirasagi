@@ -1,0 +1,7 @@
+## ads
+
+$ ->
+  ## puts access log
+  $(".ads-banners a").click (e) ->
+    $.ajax
+      url: $(this).data("count")

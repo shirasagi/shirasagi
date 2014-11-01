@@ -1,0 +1,11 @@
+<%= node_navi do %>
+
+<nav class="sub-menu">
+  <header><h1><%= t "modules.ads" %></h1></header>
+  <div>
+    <%= link_to :"ads.banner", ads_banners_path, class: "icon-page" %>
+    <%= link_to :"ads.access_log", ads_access_logs_path, class: "icon-conf" %>
+  </div>
+</nav>
+
+<% end %>

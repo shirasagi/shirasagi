@@ -1,0 +1,34 @@
+ja:
+  ads:
+    banner: 広告バナー
+    access_log: アクセス集計
+
+  modules:
+    ads: 広告管理
+
+  cms:
+    nodes:
+      ads/banner: 広告バナー
+    parts:
+      ads/banner: 広告バナー
+
+  cms_role:
+    read_other_ads_banners: 広告バナーの閲覧（全て）
+    read_private_ads_banners: 広告バナーの閲覧（所有）
+    edit_other_ads_banners: 広告バナーの編集（全て）
+    edit_private_ads_banners: 広告バナーの編集（所有）
+    delete_other_ads_banners: 広告バナーの削除（全て）
+    delete_private_ads_banners: 広告バナーの削除（所有）
+
+  mongoid:
+    models:
+      ads/banner: 広告バナー
+    attributes:
+      ads/banner:
+        name: サイト名
+        link_url: リンクURL
+        file_id: バナー画像
+      ads/access_log:
+        date: アクセス日
+        link_url: リンクURL
+        count: アクセス数

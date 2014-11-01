@@ -1,0 +1,13 @@
+<%= javascript_include_tag "ads/banner" %>
+
+<div class="ads-banners">
+  <% @items.each do |item| %>
+  <a href="<%= item.url %>" date-href="<%= item.link_url %>" data-count="<%= item.count_url %>" target="_blank">
+    <% if file = item.file %>
+      <%= image_tag file.url, alt: item.name, title: item.name %>
+    <% else %>
+      <%= item.name %>
+    <% end %>
+  </a>
+  <% end %>
+</div>

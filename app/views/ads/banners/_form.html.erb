@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :link_url %></dt>
+  <dd><%= f.url_field :link_url, class: "url" %></dd>
+
+  <dt><%= @model.t :file_id %></dt>
+  <dd><%= f.file_field :in_file %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>

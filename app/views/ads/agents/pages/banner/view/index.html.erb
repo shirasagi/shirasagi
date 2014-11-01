@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="refresh" content="0; URL=<%= @cur_page.link_url %>">
+<title><%= @cur_page.name %></title>
+</head>
+<body>
+  <%= @cur_page.name %><br />
+  <%= link_to @cur_page.link_url, @cur_page.link_url %>
+</body>
+</html>
