@@ -42,16 +42,9 @@ class Cms::Part
 
   class Crumb
     include Cms::Part::Model
-
-    field :home_label, type: String
-
-    permit_params :home_label
+    include Cms::Addon::Crumb
 
     default_scope ->{ where(route: "cms/crumb") }
-
-    def home_label
-      self[:home_label].presence || "HOME"
-    end
   end
 
   class SnsShare

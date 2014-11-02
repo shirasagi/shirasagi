@@ -94,6 +94,22 @@ module Cms::Addon
     end
   end
 
+  module Crumb
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 200
+
+    included do
+      field :home_label, type: String
+      permit_params :home_label
+    end
+
+    def home_label
+      self[:home_label].presence || "HOME"
+    end
+  end
+
   module Tabs
     extend ActiveSupport::Concern
     extend SS::Addon

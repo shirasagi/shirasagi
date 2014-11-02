@@ -89,6 +89,7 @@ ja:
       cms/body: 本文
       cms/file: ファイル
       cms/release: 公開設定
+      cms/crumb: パンくず設定
       cms/node_list: リスト表示
       cms/page_list: リスト表示
       cms/tabs: タブ表示
@@ -137,7 +138,7 @@ ja:
         html: HTML
       cms/page:
         html: 本文
-      cms/part/crumb:
+      cms/addon/crumb:
         home_label: ホームラベル
       cms/reference/layout:
         layout_id: レイアウト
@@ -357,7 +358,7 @@ ja:
       new_days:
         - 設定した期間内に作成されたページへのリンクにNEWマークが付与されます。
 
-    cms/part/crumb:
+    cms/addon/crumb:
       home_label:
         - パンくずのトップに表示するサイトトップの名称を記述します。
 
