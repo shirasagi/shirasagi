@@ -11,6 +11,11 @@ module Cms::NodeFilter
       append_view_path ["app/views/cms/nodes", "app/views/ss/crud"]
     end
 
+    def set_item
+      super
+      raise "404" if @cur_node && @item.id == @cur_node.id
+    end
+
     def change_item_class
       @item.route = params[:route] if params[:route]
       @item  = @item.becomes_with_route rescue @item

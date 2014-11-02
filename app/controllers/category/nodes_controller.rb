@@ -8,17 +8,17 @@ class Category::NodesController < ApplicationController
   navi_view "category/main/navi"
 
   private
-    def set_item
-      super
-      raise "404" if @item.id == @cur_node.id
-    end
-
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
     end
 
     def pre_params
       { route: "category/node" }
+    end
+
+    def redirect_url
+      diff = @item.route !~ /^category\//
+      diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
     end
 
   public
