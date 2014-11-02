@@ -1,0 +1,12 @@
+<%
+
+def selectable_layouts_options
+  Cms::Layout.site(@cur_site).map do |layout|
+    [layout.name, layout.id]
+  end
+end
+
+%><dl class="see mod-event">
+  <dt><%= @model.t :urgency_default_layout %></dt>
+  <dd><%= f.select :urgency_default_layout_id, selectable_layouts_options %></dd>
+</dl>

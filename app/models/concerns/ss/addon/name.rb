@@ -20,12 +20,23 @@ class SS::Addon::Name
     path.gsub('/', '-')
   end
 
-  def exists?(type = :view)
-    begin
-      klass = "#{path}/#{type}_controller".camelize.constantize
-      klass.is_a?(Class)
-    rescue => e
-      return false
-    end
+  def controller_file
+    file = "#{Rails.root}/app/controllers/#{self.path}_controller.rb"
+    File.exists?(file) ? path : nil
+  end
+
+  def show_file
+    file = "#{Rails.root}/app/views/#{path}/_show.html.erb"
+    File.exists?(file) ? file : nil
+  end
+
+  def form_file
+    file = "#{Rails.root}/app/views/#{path}/_form.html.erb"
+    File.exists?(file) ? file : nil
+  end
+
+  def view_file
+    file = "#{Rails.root}/app/views/#{path}/view/index.html.erb"
+    File.exists?(file) ? file : nil
   end
 end

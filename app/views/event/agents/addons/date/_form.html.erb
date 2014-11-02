@@ -1,0 +1,21 @@
+<% controller.class.javascript "event/form" %>
+<%= coffee do%>
+$ ->
+  $(".mod-event .date").datetimepicker
+    lang: "ja", timepicker: false, scrollInput: false, closeOnDateSelect: true, format: "Y/m/d"
+
+<% end %>
+
+<dl class="see mod-event">
+  <dt><%= @model.t :event_name %><%= @model.tt :event_name %></dt>
+  <dd><%= f.text_field :event_name %></dd>
+
+  <dt><%= @model.t :event_dates %><%= @model.tt :event_dates %></dt>
+  <dd class="dates">
+    <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date start" } %>
+    - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date close" } %>
+    <%= button_tag t("event.del_date"), { type: :button, class: "clear" } %>
+  </dd>
+  <dd><%= button_tag t("event.add_date"), { type: :button, class: "add-date" } %></dd>
+  <dd style="display: none;"><%= f.text_area :event_dates, class: "event-dates" %></dd>
+</dl>

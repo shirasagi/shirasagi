@@ -1,7 +1,8 @@
+<% addons = @item ? @item.class.addons : [] %>
+
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
-<% addons = @item ? @item.class.addons : [] %>
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
     <% if addons.size > 0 %><header><h2><%= t :basic_info %></h2></header><% end %>

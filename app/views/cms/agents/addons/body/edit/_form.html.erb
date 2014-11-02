@@ -1,9 +1,0 @@
-<%= html_editor ".mod-cms-body .html" %>
-
-<dl class="see mod-cms-body">
-  <dd class="wide"><%= f.text_area :html, class: "html", style: "height: 400px;" %></dd>
-  <dd class="wide">
-  <%= button_tag t("cms.syntax_check"), { type: :button, class: "syntax-check" } %>
-  <%= button_tag t("cms.link_check"), { type: :button, class: "link-check" } %>
-  </dd>
-</dl>

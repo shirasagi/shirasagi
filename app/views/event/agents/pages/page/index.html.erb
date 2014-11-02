@@ -1,6 +1,1 @@
-<% Event::Page.addons.to_s %>
-
-<% Event::Page.addons.each do |addon| %>
-  <% next unless addon.exists?(:view) %>
-  <%= render_agent "#{addon.path}/view", params[:action] %>
-<% end %>
+<%= render file: "cms/agents/pages/page/index" %>

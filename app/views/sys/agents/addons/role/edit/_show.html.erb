@@ -1,8 +1,0 @@
-<dl class="see">
-  <dt><%= @model.t :sys_role_ids %></dt>
-  <dd>
-    <% @item.sys_roles.order_by(name: 1).each do |role| %>
-    <div><%= link_to role.name, sys_role_path(id: role) %>
-    <% end %>
-  </dd>
-</dl>
