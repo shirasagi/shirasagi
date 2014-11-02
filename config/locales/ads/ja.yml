@@ -5,6 +5,8 @@ ja:
 
   modules:
     ads: 広告管理
+    addons:
+      ads/banner_setting: バナー設定
 
   cms:
     nodes:
@@ -32,3 +34,5 @@ ja:
         date: アクセス日
         link_url: リンクURL
         count: アクセス数
+      ads/addon/banner_setting:
+        sort: バナー表示順

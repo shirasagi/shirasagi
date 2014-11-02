@@ -3,7 +3,11 @@ class Ads::Agents::Parts::BannerController < ApplicationController
 
   public
     def index
+      sort = @cur_part.sort_hash
+
       @items = Ads::Banner.site(@cur_site).public(@cur_date).
-        order_by(order: 1)
+        order_by(sort)
+
+      @items = @items.shuffle if sort[:random]
     end
 end
