@@ -2,6 +2,7 @@ ja:
   ads:
     banner: 広告バナー
     access_log: アクセス集計
+    yearly: 年間
 
   modules:
     ads: 広告管理

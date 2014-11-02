@@ -5,7 +5,7 @@ module Cms::Addon::List
 
     attr_accessor :cur_date
 
-    included do |mod|
+    included do
       field :conditions, type: SS::Extensions::Words
       field :sort, type: String
       field :limit, type: Integer, default: 20

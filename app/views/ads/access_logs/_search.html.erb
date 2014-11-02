@@ -1,0 +1,17 @@
+<%
+
+@s = OpenStruct.new params[:s]
+@s[:year]  ||= Date.today.year
+@s[:month] ||= Date.today.month
+
+%>
+<div class="search-form">
+  <%= form_for :s, url: "", html: { class: "search", method: :get } do |f| %>
+    <span style="margin-right: 10px;">
+      <%= f.select :year, @years %>
+      <%= f.select :month, @months, include_blank: t("ads.yearly") %>
+    </span>
+    <input type="submit" value="<%= t('views.button.search') %>" />
+    <input type="button" value="<%= t('views.button.reset') %>" onclick="location.href='?'" />
+  <% end %>
+</div>

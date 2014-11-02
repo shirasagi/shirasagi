@@ -1,9 +1,11 @@
+<%= render "search" %>
+
 <table class="index">
   <thead>
     <tr>
-      <th><%= @model.t :date %></th>
-      <th><%= @model.t :link_url %></th>
-      <th><%= @model.t :count %></th>
+      <th><%= t("mongoid.attributes.ads/access_log.date") %></th>
+      <th><%= t("mongoid.attributes.ads/access_log.link_url") %></th>
+      <th><%= t("mongoid.attributes.ads/access_log.count") %></th>
     </tr>
   </thead>
 

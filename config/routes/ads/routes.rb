@@ -13,6 +13,7 @@ SS::Application.routes.draw do
   end
 
   node "ads" do
+    get "banner/" => "public#index", cell: "nodes/banner"
     get "banner/:filename.:format.count" => "public#count", cell: "nodes/banner"
   end
 

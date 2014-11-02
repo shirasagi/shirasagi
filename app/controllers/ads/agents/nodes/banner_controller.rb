@@ -2,6 +2,10 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
   include Cms::NodeFilter::View
 
   public
+    def index
+      render nothing: true
+    end
+
     def count
       filename = @cur_path.sub(".count", "")
 

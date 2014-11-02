@@ -1,0 +1,47 @@
+<%= scss do %>
+.ads-total {
+  overflow-x: auto;
+  padding: 0px 0px 10px;
+  table {
+    caption {
+      font-size: 120%;;
+      text-align: left;
+    }
+    th, td {
+      //overflow-x: visible;
+      //text-overflow: clip;
+      white-space: nowrap;
+    }
+  }
+}
+<% end %>
+<%= render "search" %>
+
+<div class="ads-total">
+  <table class="see">
+    <caption>
+      <%= "#{@year}#{t('datetime.prompts.year')}" %>
+      <%= "#{@month}#{t('datetime.prompts.month')}" if @month %>
+    </caption>
+    <thead>
+      <tr>
+        <th><%= t("mongoid.attributes.ads/access_log.link_url") %></th>
+        <% (1..@max_cell).each do |day| %>
+        <th><%= day %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @totals.each do |link_url, counts| %>
+      <tr>
+        <td><%= link_url %></td>
+        <% (1..@max_cell).each do |day| %>
+        <td><%= counts[day] %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
