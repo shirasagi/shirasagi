@@ -12,6 +12,8 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     def generate
       @task.log "# #{@site.name}"
 
+      generate_root_pages
+
       nodes = Cms::Node.site(@site).public
       nodes = nodes.where(filename: /^#{@node.filename}\/?$/) if @node
 
@@ -31,6 +33,15 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
         agent.invoke :generate
 
         generate_node_pages node
+      end
+    end
+
+    def generate_root_pages
+      pages = Cms::Page.site(@site).public.where(depth: 1)
+
+      pages.each do |page|
+        @task.count
+        @task.log page.url if page.becomes_with_route.generate_file
       end
     end
 
