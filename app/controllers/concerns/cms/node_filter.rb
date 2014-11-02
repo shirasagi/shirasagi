@@ -2,21 +2,19 @@ module Cms::NodeFilter
   extend ActiveSupport::Concern
   include Cms::CrudFilter
 
+  included do
+    before_action :change_item_class, if: -> { @item.present? }
+  end
+
   private
     def append_view_paths
       append_view_path ["app/views/cms/nodes", "app/views/ss/crud"]
     end
 
-    def render_route
-      @item.route = params[:route] if params[:route].present?
-      @fix_params = fix_params
-
-      controller = "#{@item.route.sub('/', '/agents/nodes/')}/edit"
-      resp = render_agent controller, params[:action]
-
-      @resp = resp.body.html_safe
-
-      resp.code != "200"
+    def change_item_class
+      @item.route = params[:route] if params[:route]
+      @item  = @item.becomes_with_route rescue @item
+      @model = @item.class
     end
 
     def redirect_url
@@ -25,41 +23,25 @@ module Cms::NodeFilter
     end
 
   public
-    def show
-      raise "403" unless @item.allowed?(:read, @cur_user)
-      render_route
-    end
-
     def new
       @item = @model.new pre_params.merge(fix_params)
-      raise "403" unless @item.allowed?(:edit, @cur_user)
-      render_route
+      change_item_class
+
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     end
 
     def create
       @item = @model.new get_params
-      raise "403" unless @item.allowed?(:edit, @cur_user)
-      render_create render_route, location: redirect_url
-    end
+      change_item_class
 
-    def edit
-      raise "403" unless @item.allowed?(:edit, @cur_user)
-      render_route
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      render_create @item.save, location: redirect_url
     end
 
     def update
-      raise "403" unless @item.allowed?(:edit, @cur_user)
       @item.attributes = get_params
-      render_update render_route, location: redirect_url
-    end
-
-    def delete
-      raise "403" unless @item.allowed?(:delete, @cur_user)
-      render_route
-    end
-
-    def destroy
-      raise "403" unless @item.allowed?(:delete, @cur_user)
-      render_destroy render_route
+      @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      render_update @item.update, location: redirect_url
     end
 end

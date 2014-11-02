@@ -1,12 +1,12 @@
 <%
 
-#fields = {} #local-variable
+file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/parts/') + "/edit/_form.html.erb"
+
 url = params[:action] =~ /new|create/ ? url_for(action: :new) : url_for(action: :edit)
 bind  = "$(this).parent().parent().parent().parent().hide();"
 bind << "location.href = '#{url}?route=' + $(this).val();"
 
-%>
-<dl class="see">
+%><dl class="see">
   <dt><%= @model.t :route %><%= @model.tt :route %></dt>
   <dd><%= f.hidden_field :route %>
     <%= @item.label :route %> &nbsp;<%= link_to :change, routes_cms_parts_path, class: "ajax-box" %></dd>
@@ -28,3 +28,5 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <dt><%= @model.t :ajax_view %><%= @model.tt :ajax_view %></dt>
   <dd><%= f.select :ajax_view, @item.ajax_view_options %></dd>
 </dl>
+
+<%= render file: file, locals: { f: f } if File.exists?(file) %>

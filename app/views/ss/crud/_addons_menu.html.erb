@@ -1,4 +1,5 @@
-<% if @model && (addons = @model.addons).size > 0 %>
+<% addons = @item ? @item.class.addons : [] %>
+<% if addons.size > 0 %>
 <nav class="addon-menu">
   <header><h1><%= t :"addon" %></h1></header>
   <div>

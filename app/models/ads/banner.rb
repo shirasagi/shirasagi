@@ -18,7 +18,7 @@ class Ads::Banner
 
   public
     def url
-      super + "?#{link_url}"
+      super + "?redirect=#{link_url}"
     end
 
     def count_url

@@ -1,19 +1,16 @@
 <%
 
-#fields = {} #local-variable
+file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/parts/') + "/edit/_show.html.erb"
 
-%>
-<dl class="see">
+%><dl class="see">
   <dt><%= @model.t :route %></dt>
   <dd><%= @item.label :route %></dd>
 
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
-  <% if fields[:filename] != -1 %>
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
-  <% end %>
 
   <!--
   <dt><%= @model.t :state %></dt>
@@ -26,3 +23,5 @@
   <dt><%= @model.t :ajax_view %></dt>
   <dd><%= @item.label :ajax_view %></dd>
 </dl>
+
+<%= render file: file if File.exists?(file) %>

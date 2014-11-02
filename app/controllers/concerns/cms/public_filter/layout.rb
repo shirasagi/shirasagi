@@ -18,7 +18,7 @@ module Cms::PublicFilter::Layout
       return unless spec
 
       @cur_part = part
-      controller = part.route.sub(/\/.*/, "/agents/#{spec[:cell]}/view")
+      controller = part.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
       agent = new_agent controller
       agent.controller.params.merge! spec

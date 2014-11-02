@@ -1,6 +1,6 @@
 <%
 
-#fields = {} #local-variable
+file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/edit/_show.html.erb"
 
 %><dl class="see">
   <dt><%= @model.t :route %></dt>
@@ -9,27 +9,23 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
-  <% if fields[:filename] != -1 %>
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
-  <% end %>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
 
-  <% if fields[:layout_id] != -1 %>
   <dt><%= @model.t :layout_id %></dt>
   <dd><%= tryb { @item.layout.name }%></dd>
 
   <dt><%= @model.t :page_layout_id %></dt>
   <dd><%= tryb { @item.page_layout.name }%></dd>
-  <% end %>
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
 
-  <% if fields[:shortcut] != -1 %>
   <dt><%= @model.t :shortcut %></dt>
   <dd><%= @item.label :shortcut %></dd>
-  <% end %>
 </dl>
+
+<%= render file: file if File.exists?(file) %>

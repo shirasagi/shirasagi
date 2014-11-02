@@ -16,7 +16,7 @@ module Cms::PublicFilter::Node
       return unless spec
 
       @cur_node = node
-      controller = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}/view")
+      controller = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
       agent = new_agent controller
       agent.controller.params.merge! spec

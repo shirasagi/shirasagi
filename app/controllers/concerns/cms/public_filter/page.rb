@@ -15,7 +15,7 @@ module Cms::PublicFilter::Page
       return unless spec
 
       @cur_page = page
-      controller = page.route.sub(/\/.*/, "/agents/#{spec[:cell]}/view")
+      controller = page.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
       agent = new_agent controller
       agent.controller.params.merge! spec
