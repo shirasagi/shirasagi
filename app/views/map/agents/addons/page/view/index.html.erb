@@ -1,4 +1,6 @@
 <%
+  return if @cur_page.map_points.blank?
+
   @cur_page.map_loc  = [ 35.392915, 139.442888 ] if @cur_page.map_loc.blank?
   @cur_page.map_zoom = 5 if @cur_page.map_zoom.blank?
 %>
