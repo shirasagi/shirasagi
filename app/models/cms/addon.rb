@@ -88,7 +88,7 @@ module Cms::Addon
 
       if close_date.present?
         if release_date.present? && release_date >= close_date
-          errors.add close_date, :greater_than, count: t(:release_date)
+          errors.add :close_date, :greater_than, count: t(:release_date)
         end
       end
     end
