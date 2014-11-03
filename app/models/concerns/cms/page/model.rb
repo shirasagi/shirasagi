@@ -17,6 +17,7 @@ module Cms::Page::Model
 
     permit_params category_ids: []
 
+    after_validation :set_released, if: -> { public? }
     after_save :rename_file, if: ->{ @db_changes }
     after_save :generate_file, if: ->{ @db_changes }
     after_save :remove_file, if: ->{ @db_changes && @db_changes["state"] && !public? }
@@ -36,6 +37,10 @@ module Cms::Page::Model
     end
 
   private
+    def set_released
+      self.released ||= Time.now
+    end
+
     def fix_extname
       ".html"
     end
