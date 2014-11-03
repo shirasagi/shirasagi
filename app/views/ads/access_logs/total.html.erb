@@ -12,6 +12,12 @@
       //text-overflow: clip;
       white-space: nowrap;
     }
+    thead th {
+      text-align: center;
+    }
+    tbody td {
+      text-align: right;
+    }
   }
 }
 <% end %>
@@ -29,16 +35,20 @@
         <% (1..@max_cell).each do |day| %>
         <th><%= day %></th>
         <% end %>
+        <th><%= t("ads.total") %></th>
       </tr>
     </thead>
 
     <tbody>
       <% @totals.each do |link_url, counts| %>
+      <% total = 0 %>
       <tr>
-        <td><%= link_url %></td>
+        <th><%= link_url %></th>
         <% (1..@max_cell).each do |day| %>
-        <td><%= counts[day] %></td>
+        <% total += counts[day].to_i %>
+        <td><%= counts[day].to_i %></td>
         <% end %>
+        <td><%= total %></td>
       </tr>
       <% end %>
     </tbody>

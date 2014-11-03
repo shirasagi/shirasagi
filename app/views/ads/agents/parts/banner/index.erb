@@ -6,7 +6,7 @@ wrap_id = "ads-banners-#{@items[0].id}"
 
 %><div class="ads-banners" id="<%= wrap_id %>">
   <% @items.each do |item| %>
-  <a href="<%= item.url %>" date-href="<%= item.link_url %>" data-count="<%= item.count_url %>" target="_blank">
+  <a href="<%= item.url %>" target="_blank">
     <% if file = item.file %>
       <%= image_tag file.url, alt: item.name, title: item.name %>
     <% else %>
