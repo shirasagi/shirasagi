@@ -1,6 +1,10 @@
-<%= javascript_include_tag "ads/banner" %>
+<%
 
-<div class="ads-banners">
+return if @items.blank?
+
+wrap_id = "ads-banners-#{@items[0].id}"
+
+%><div class="ads-banners" id="<%= wrap_id %>">
   <% @items.each do |item| %>
   <a href="<%= item.url %>" date-href="<%= item.link_url %>" data-count="<%= item.count_url %>" target="_blank">
     <% if file = item.file %>
@@ -11,3 +15,14 @@
   </a>
   <% end %>
 </div>
+
+<% if @random %>
+<%= coffee do %>
+wrap = $("#<%= wrap_id %>")
+list = wrap.find("a")
+list = list.sort ->
+  return Math.random() - .5
+list.each ->
+  wrap.append $(this)
+<% end %>
+<% end %>
