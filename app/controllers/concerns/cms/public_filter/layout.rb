@@ -55,11 +55,11 @@ module Cms::PublicFilter::Layout
 
     def render_layout_part(path)
       part = Cms::Part.site(@cur_site)
-      part = part.where(mobile_view: "show") if @filter == :mobile
+      part = part.where(mobile_view: "show") if @filters.include?(:mobile)
       part = part.filename(path).first
       return unless part
 
-      if part.ajax_view == "enabled" && @filter != :mobile
+      if part.ajax_view == "enabled" && !@filters.include?(:mobile)
         part.ajax_html
       else
         render_part(part.becomes_with_route)

@@ -5,17 +5,16 @@ module Cms::PublicFilter
   include Mobile::PublicFilter
   include Kana::PublicFilter
 
-  cattr_accessor(:filters) { [] }
-
   included do
     rescue_from StandardError, with: :rescue_action
+    before_action -> { @filters = [] }
     before_action :set_site
     before_action :set_request_path
     before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
     before_action :deny_path
     before_action :parse_path
     before_action :compile_scss
-    before_action :x_sendfile, if: ->{ !@filter }
+    before_action :x_sendfile, if: ->{ @filters.blank? }
   end
 
   public
@@ -54,8 +53,9 @@ module Cms::PublicFilter
       @cur_path ||= request.env["REQUEST_PATH"]
       cur_path = @cur_path.dup
 
-      @@filters.each do |filter|
-        send(filter)
+      filter_methods = self.class.private_instance_methods.select { |m| m =~ /^set_request_path_with_/ }
+      filter_methods.each do |name|
+        send(name)
         break if cur_path != @cur_path
       end
     end
@@ -160,10 +160,4 @@ module Cms::PublicFilter
 
       render status: status, nothing: true
     end
-
-  class << self
-    def filter(name)
-      @@filters << name
-    end
-  end
 end
