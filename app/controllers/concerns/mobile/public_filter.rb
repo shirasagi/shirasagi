@@ -2,14 +2,14 @@ module Mobile::PublicFilter
   extend ActiveSupport::Concern
 
   included do
-    after_action :render_mobile, if: ->{ @filters.include?(:mobile) }
+    after_action :render_mobile, if: ->{ filters.include?(:mobile) }
   end
 
   private
     def set_request_path_with_mobile
       return if @cur_path !~ /^#{SS.config.mobile.location}\//
       @cur_path.sub!(/^#{SS.config.mobile.location}\//, "/")
-      @filters << :mobile
+      filters << :mobile
     end
 
     def render_mobile

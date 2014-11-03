@@ -7,14 +7,13 @@ module Cms::PublicFilter
 
   included do
     rescue_from StandardError, with: :rescue_action
-    before_action -> { @filters = [] }
     before_action :set_site
     before_action :set_request_path
     before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
     before_action :deny_path
     before_action :parse_path
     before_action :compile_scss
-    before_action :x_sendfile, if: ->{ @filters.blank? }
+    before_action :x_sendfile, if: ->{ filters.blank? }
   end
 
   public
