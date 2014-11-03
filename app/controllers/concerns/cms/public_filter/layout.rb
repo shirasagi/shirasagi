@@ -11,7 +11,6 @@ module Cms::PublicFilter::Layout
 
     def render_part(part, opts = {})
       return part.html if part.route == "cms/frees"
-      return part.ajax_html if part.ajax_view == "enabled" && !opts[:xhr]
 
       path = "/.#{@cur_site.host}/parts/#{part.route}"
       spec = recognize_agent path, method: "GET"
@@ -60,8 +59,8 @@ module Cms::PublicFilter::Layout
       part = part.filename(path).first
       return unless part
 
-      if part.ajax_view == "enabled"
-        render_part(part.becomes_with_route, xhr: true)
+      if part.ajax_view == "enabled" && @filter != :mobile
+        part.ajax_html
       else
         render_part(part.becomes_with_route)
       end
