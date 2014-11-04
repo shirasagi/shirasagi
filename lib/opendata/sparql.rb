@@ -51,7 +51,7 @@ module Opendata::Sparql
         client = SPARQL::Client.new(QUERY_SITE)
         results = client.query(sparql_query)
 
-        if format == "HTML"
+        if format == "HTML" || format == "HTML_TABLE"
           type = "text/html"
           ext = "html"
           encoding = Encoding::UTF_8
