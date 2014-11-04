@@ -39,11 +39,10 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
             points = []
             map.map_points.each do |point|
               point[:info] = render_to_string(partial: "marker_info", locals: {item: item})
-              point[:location] = item.locations.pluck(:_id)
+              point[:category] = item.categories.pluck(:_id)
 
               image_ids = item.categories.pluck(:image_id)
               point[:pointer_image] = SS::File.find(image_ids.first).url if image_ids.present?
-
               points.push point
             end
             @markers += points

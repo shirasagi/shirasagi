@@ -71,7 +71,7 @@ $ ->
     $.each markers, (id, value) ->
       visible = false
       $.each dataIDs, ->
-        if $.inArray(parseInt(this), markers[id]["location"]) >= 0
+        if $.inArray(parseInt(this), markers[id]["category"]) >= 0
           visible = true
           return false
       if visible
@@ -92,11 +92,11 @@ $ ->
 
 <div id="map-canvas"></div>
 
-<% locations = @locations.present? ? @locations : @cur_node.st_locations %>
-<% if locations.present? %>
+<% categories = @categories.present? ? @categories : @cur_node.st_categories %>
+<% if categories.present? %>
 <nav class="filters">
   <ul>
-    <% locations.each do |cate| %>
+    <% categories.each do |cate| %>
       <li class="<%= cate.basename %>">
         <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
       </li>
@@ -104,4 +104,3 @@ $ ->
   </ul>
 </nav>
 <% end %>
-
