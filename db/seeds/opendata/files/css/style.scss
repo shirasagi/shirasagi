@@ -626,12 +626,16 @@ textarea {
     width: 120px;
   }
   h2 {
-    display: inline;
     margin-right: 10px;
+    display: inline;
     padding: 0 5px;
     a {
       display: inline-block;
     }
+  }
+  .point {
+    padding-left: 15px;
+    background: url(../img/ic-like-s.png) no-repeat left 5px;
   }
 }
 
