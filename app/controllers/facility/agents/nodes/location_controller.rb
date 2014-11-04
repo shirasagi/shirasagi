@@ -5,7 +5,7 @@ class Facility::Agents::Nodes::LocationController < ApplicationController
   public
     def index
       @items = Facility::Node::Page.site(@cur_site).public.
-        in(location_ids: @cur_node.id).
+        where(@cur_node.condition_hash).
         order_by(@cur_node.sort_hash).
         page(params[:page]).
         per(@cur_node.limit)
