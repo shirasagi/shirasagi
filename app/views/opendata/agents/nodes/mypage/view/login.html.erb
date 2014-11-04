@@ -1,9 +1,10 @@
 <ul>
-  <li class="Twitter"><%= link_to "twitter ID でログイン","/mypage/twitter" %></li>
-  <li class="facebook"><%= link_to "Facebook ID でログイン", "/mypage/facebook" %></li>
-  <li class="Yahoo"><%= link_to "YAHOO!JAPAN ID でログイン","/mypage/yahoojp" %></li>
-  <li class="Google"><%= link_to "Google アカウントでログイン","/mypage/google_oauth2" %></li>
-  <li class="github"><%= link_to "GitHub アカウントでログイン","/mypage/github" %></li>
+  <% secrets = Rails.application.secrets %>
+  <% if secrets.twitter_key %><li class="Twitter"><%= link_to "twitter ID でログイン","/mypage/twitter" %></li><% end %>
+  <% if secrets.facebook_key %><li class="facebook"><%= link_to "Facebook ID でログイン", "/mypage/facebook" %></li><% end %>
+  <% if secrets.yahoo_key %><li class="Yahoo"><%= link_to "YAHOO!JAPAN ID でログイン","/mypage/yahoojp" %></li><% end %>
+  <% if secrets.google_key %><li class="Google"><%= link_to "Google アカウントでログイン","/mypage/google_oauth2" %></li><% end %>
+  <% if secrets.github_key %><li class="github"><%= link_to "GitHub アカウントでログイン","/mypage/github" %></li><% end %>
 </ul>
 
 <%= form_tag "", class: "member-login" do |f| %>
