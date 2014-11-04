@@ -4,7 +4,7 @@
   @cur_page.map_loc  = [ 35.392915, 139.442888 ] if @cur_page.map_loc.blank?
   @cur_page.map_zoom = 5 if @cur_page.map_zoom.blank?
 %>
-<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap" %>
+<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
 <%= coffee do %>
 
 attachMessage = (id) ->
@@ -39,8 +39,6 @@ window.initmap = ->
   };
 
   window.map = new google.maps.Map(document.getElementById("map-canvas"),  mapOptions)
-  $("#map-canvas").width(600) unless $("#map-canvas").width()
-  $("#map-canvas").height(400) unless $("#map-canvas").height()
 
   window.markers = <%= raw @cur_page.map_points.to_json %>
   window.opened = null
@@ -73,6 +71,9 @@ window.initmap = ->
 
     return
   return
+
+$(window).on "load", ->
+  window.initmap()
 
 <% end %>
 

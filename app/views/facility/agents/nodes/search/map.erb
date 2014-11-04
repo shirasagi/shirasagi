@@ -1,7 +1,7 @@
 <%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
 
-<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap" %>
+<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
 <%= coffee do %>
 
 attachMessage = (id) ->
@@ -56,6 +56,9 @@ window.initmap = ->
     attachMessage(id)
     return
   return
+
+$(window).on "load", ->
+  window.initmap()
 
 $ ->
   $(".filters a").on "click", ->

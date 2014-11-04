@@ -2,7 +2,7 @@
   map_loc = @item.map_loc.present? ? @item.map_loc : [ 35.392915, 139.442888 ]
   map_zoom = @item.map_zoom.present? ? @item.map_zoom : 5
 %>
-<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false&callback=initmap" %>
+<%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
 <%= coffee do %>
 
 setMapLoc = (ele, lat, lon) ->
@@ -118,6 +118,9 @@ window.initmap = ->
     Map_Form.dataID += 1
 
   return;
+
+$(window).on "load", ->
+  window.initmap()
 
 class @Map_Form
   @maxPointForm = 10

@@ -11,6 +11,6 @@
   <dt><%= @model.t :fax %></dt>
   <dd><%= @item.send :fax %></dd>
 
-  <dt><%= @model.t :homepage %></dt>
-  <dd><%= link_to(@item.homepage, @item.homepage, target: "_blank") if @item.homepage.present? %></dd>
+  <dt><%= @model.t :related_url %></dt>
+  <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank") if @item.related_url.present? %></dd>
 </dl>
