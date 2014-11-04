@@ -1,20 +1,23 @@
-<table class="facility-nodes">
-  <thead>
-    <tr>
-      <th><%= Facility::Node::Page.t :name %></th>
-      <th><%= Facility::Node::Page.t :address %></th>
-      <th><%= Facility::Node::Page.t :tel %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
-    <tr>
-      <td><%= link_to item.name, item.url %></td>
-      <td><%= item.address %></td>
-      <td><%= item.tel %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<% locations = @items.map(&:locations).flatten.uniq.sort_by{ |item| -1 * item.order } %>
 
-<%= paginate @items if @items.try(:current_page) %>
+<% locations.each do |loc| %>
+  <table class="<%= loc.basename %>">
+    <caption><%= loc.name %></caption>
+    <thead>
+      <tr>
+        <th><%= Facility::Node::Page.t :name %></th>
+        <th><%= Facility::Node::Page.t :address %></th>
+        <th><%= Facility::Node::Page.t :tel %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @items.in(location_ids: loc.id).order_by(address: -1).each do |item| %>
+      <tr>
+        <td><%= link_to item.name, item.url %></td>
+        <td><%= item.address %></td>
+        <td><%= item.tel %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
