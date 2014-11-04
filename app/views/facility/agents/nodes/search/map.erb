@@ -16,8 +16,8 @@ attachMessage = (id) ->
 window.initmap = ->
   #googleMap api v3
   mapOptions = {
-    center: new google.maps.LatLng(<%= raw @map_loc[0] %>, <%= raw @map_loc[1] %>),
-    zoom: <%= raw @map_zoom %>,
+    center: new google.maps.LatLng(35.392915, 139.442888),
+    zoom: 5,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     panControl: false,
     zoomControl: true,
@@ -37,6 +37,7 @@ window.initmap = ->
   window.map = new google.maps.Map(document.getElementById("map-canvas"),  mapOptions)
   window.markers = <%= raw @markers.to_json %>
   window.opened = null
+  window.markerBounds = new google.maps.LatLngBounds()
 
   $.each markers, (id, value) ->
     if markers[id]["pointer_image"]
@@ -50,11 +51,24 @@ window.initmap = ->
         position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
         map: window.map
       )
+
+    markerBounds.extend(new google.maps.LatLng(value["loc"][0],value["loc"][1]))
     markers[id]["window"] = new google.maps.InfoWindow(
       content: markers[id]["info"]
     )
     attachMessage(id)
     return
+
+  unless $.isEmptyObject(markers)
+    zoomChangeBoundsListener = google.maps.event.addListener map, 'bounds_changed', ( event ) ->
+      if this.getZoom() > 13 && this.initialZoom == true
+        this.setZoom(13)
+        this.initialZoom = false
+      google.maps.event.removeListener(zoomChangeBoundsListener)
+
+    map.initialZoom = true
+    map.fitBounds(markerBounds)
+
   return
 
 $(window).on "load", ->

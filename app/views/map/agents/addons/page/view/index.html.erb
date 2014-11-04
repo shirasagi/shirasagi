@@ -1,8 +1,5 @@
 <%
   return if @cur_page.map_points.blank?
-
-  @cur_page.map_loc  = [ 35.392915, 139.442888 ] if @cur_page.map_loc.blank?
-  @cur_page.map_zoom = 5 if @cur_page.map_zoom.blank?
 %>
 <%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
 <%= coffee do %>
@@ -20,8 +17,8 @@ attachMessage = (id) ->
 window.initmap = ->
   #googleMap api v3
   mapOptions = {
-    center: new google.maps.LatLng(<%= raw @cur_page.map_loc[0] %>, <%= raw @cur_page.map_loc[1] %>),
-    zoom: <%= raw @cur_page.map_zoom %>,
+    center: new google.maps.LatLng(35.392915, 139.442888),
+    zoom: 5,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     panControl: false,
     zoomControl: true,
@@ -39,9 +36,10 @@ window.initmap = ->
   };
 
   window.map = new google.maps.Map(document.getElementById("map-canvas"),  mapOptions)
-
   window.markers = <%= raw @cur_page.map_points.to_json %>
   window.opened = null
+  window.markerBounds = new google.maps.LatLngBounds()
+
   $.each markers, (id, value) ->
     if markers[id]["pointer_image"]
       markers[id]["marker"] = new google.maps.Marker(
@@ -54,6 +52,8 @@ window.initmap = ->
         position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
         map: window.map
       )
+
+    markerBounds.extend(new google.maps.LatLng(value["loc"][0],value["loc"][1]))
 
     if markers[id]["text"]
       marker_html = '<div class="marker-info">'
@@ -68,8 +68,18 @@ window.initmap = ->
         content: marker_html
       )
     attachMessage(id)
-
     return
+
+  unless $.isEmptyObject(markers)
+    zoomChangeBoundsListener = google.maps.event.addListener map, 'bounds_changed', ( event ) ->
+      if this.getZoom() > 13 && this.initialZoom == true
+        this.setZoom(13)
+        this.initialZoom = false
+      google.maps.event.removeListener(zoomChangeBoundsListener)
+
+    map.initialZoom = true
+    map.fitBounds(markerBounds)
+
   return
 
 $(window).on "load", ->
