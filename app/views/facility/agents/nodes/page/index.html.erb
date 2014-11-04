@@ -1,17 +1,19 @@
+<div class="summary-image">
+  <% if @summary_image.present? %>
+    <p>
+      <%= link_to @summary_image.url do %>
+        <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
+        <%= image_tag @summary_image.image.thumb_url + "?" + thumb_size, alt: @summary_image.image_alt %>
+      <% end %>
+    </p>
+    <% if @summary_image.image_comment.present? %>
+      <p><%= @summary_image.image_comment %></p>
+    <% end %>
+  <% end %>
+</div>
+
 <% Facility::Node::Page.addons.each do |addon| %>
   <%= render file: addon.view_file if addon.view_file %>
-<% end %>
-
-<% if @summary_image.present? %>
-  <p>
-    <%= link_to @summary_image.url do %>
-      <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
-      <%= image_tag @summary_image.image.thumb_url + "?" + thumb_size, alt: @summary_image.image_alt %>
-    <% end %>
-  </p>
-  <% if @summary_image.image_comment.present? %>
-    <p><%= @summary_image.image_comment %></p>
-  <% end %>
 <% end %>
 
 <h2><%= t("facility.image") %></h2>
