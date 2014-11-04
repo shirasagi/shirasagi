@@ -16,8 +16,8 @@
   <%= render file: addon.view_file if addon.view_file %>
 <% end %>
 
-<h2><%= t("facility.image") %></h2>
 <% if @images.present? %>
+  <h2><%= t("facility.image") %></h2>
   <div class="images">
     <% @images.each do |img| %>
       <div class="image">

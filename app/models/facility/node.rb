@@ -34,6 +34,20 @@ module Facility::Node
     include Facility::Addon::LocationSetting
 
     default_scope ->{ where(route: "facility/search") }
+
+    public
+      def condition_hash
+        cond = []
+
+        cond << { filename: /^#{filename}\// } if conditions.blank?
+        conditions.each do |url|
+          node = Cms::Node.filename(url).first
+          next unless node
+          cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        end
+
+        { '$or' => cond }
+      end
   end
 
   class Category

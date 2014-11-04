@@ -17,6 +17,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       @locations  = Facility::Node::Location.in(_id: location_ids)
 
       @items = Facility::Node::Page.site(@cur_site).public.
+        where(@cur_node.condition_hash).
         in(q_category).
         in(q_service).
         in(q_location).
