@@ -1,10 +1,10 @@
-<% locations = @items.map(&:locations).flatten.uniq.sort_by{ |item| -1 * item.order } %>
+<% locations = @items.map(&:locations).flatten.uniq.sort_by{ |item| item.order } %>
 
 <div class="facility-nodes">
   <% locations.each do |loc| %>
     <% items = @items.in(location_ids: loc.id).order_by(address: -1) %>
     <% if items.present? %>
-      <table class="<%= loc.basename %>">
+      <table id="<%= loc.basename %>">
         <caption><%= loc.name %></caption>
         <thead>
           <tr>
