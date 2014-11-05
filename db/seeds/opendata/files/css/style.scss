@@ -1330,6 +1330,32 @@ table.index {
   }
 }
 
+#errorExplanation {
+  margin-bottom: $box-margin;
+  padding: 20px 20px;
+  border: 1px solid #D88888;
+  h2 {
+    margin: -20px -20px 25px;
+    padding: 0 10px;
+    background: #D88888;
+    color: #fff;
+  }
+  ul {
+    padding: 10px 40px 0;
+  }
+}
+
+.field_with_errors input {
+  border: 1px solid #ee0000;
+}
+
+#ss-notice {
+  margin-bottom: $box-margin;
+  padding: 10px 20px;
+  background: #ebf6f9;
+  border: 1px solid #8bb9da;
+}
+
 //-----------------------------------------------------------------------------------------
 //footer
 #foot {
