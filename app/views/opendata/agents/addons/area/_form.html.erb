@@ -1,11 +1,12 @@
 <%
 
+@f = f
 categories = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 
 def cate_form(item)
-  h  = %Q[<label style="margin-right: 10px;">]
-  h << f.check_box("area_ids[]", {}, item._id)
-  h << %Q[#{item.name}</label>]
+  h  = %(<label style="margin-right: 10px;">)
+  h << @f.check_box("area_ids[]", {}, item._id)
+  h << %(#{item.name}</label>)
 
   h.html_safe
 end

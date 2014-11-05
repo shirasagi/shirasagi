@@ -1,5 +1,7 @@
 <%
 
+@f = f
+
 last = nil
 categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).select do |cate|
   if last == nil
@@ -12,17 +14,17 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).select do |
 end
 
 def cate_form(item)
-  h  = %Q[<label style="margin-right: 10px;">]
-  h << f.check_box("category_ids[]", {}, item._id)
-  h << %Q[#{item.name}</label>]
+  h  = %(<label style="margin-right: 10px;">)
+  h << @f.check_box("category_ids[]", {}, item._id)
+  h << %(#{item.name}</label>)
 
   children = Category::Node::Base.site(@cur_site).
     where(filename: /^#{item.filename}\//, depth: item.depth + 1)
 
   if children.size > 0
-    h << %Q[<div style="padding: 0px 0px 0px 40px;">].html_safe
+    h << %(<div style="padding: 0px 0px 0px 40px;">).html_safe
     children.each { |c| h += cate_form c }
-    h << %Q[</div>].html_safe
+    h << %(</div>).html_safe
   end
 
   h.html_safe
