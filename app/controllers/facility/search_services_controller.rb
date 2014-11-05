@@ -11,7 +11,7 @@ class Facility::SearchServicesController < ApplicationController
 
     def search
       @items = @model.site(@cur_site).
-        search(params[:q]).
+        search(params[:s]).
         order_by(_id: -1)
 
       render layout: !request.xhr?

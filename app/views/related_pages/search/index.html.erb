@@ -94,7 +94,7 @@ searchPages = ->
 
   $.ajax {
     type: "GET", url: url, cache: false, dataType: "json",
-    data: { q: query },
+    data: { s: { name: query } },
     success: (json) ->
       $(".related-pages table.index tbody").remove()
       $(".related-pages table.index").append "<tbody>"
