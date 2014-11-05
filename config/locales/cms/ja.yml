@@ -189,6 +189,7 @@ ja:
       link_check_success: 成功
       link_check_failure: 失敗
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
+      not_a_child_group: はサイトに所属するグループを設定してください。
     template:
       no_errors: エラーは見つかりませんでした。
       no_links: リンクは見つかりませんでした。
