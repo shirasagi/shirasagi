@@ -6,7 +6,7 @@ selectGroups =(groups) ->
     input = $("<td>").append($("input:hidden.hidden-groups-ids:first").clone(false))
     input.find("input").val(group["id"])
     input.append(group["name"])
-    deselect = $("<td>").append('<%= link_to t("sys.search_groups.deselect"), "#", class: :deselect %>')
+    deselect = $("<td>").append('<%= link_to t("cms.search_groups.deselect"), "#", class: :deselect %>')
     deselect.find("a.deselect").click(deselectGroup)
     tr.append(input)
     tr.append(deselect)
@@ -74,6 +74,7 @@ $ ->
     selectGroups(groups)
     $.colorbox.close()
     return false
+  $("form.search-groups").trigger('submit');
   toggleSelectButton()
 
 <% end %>

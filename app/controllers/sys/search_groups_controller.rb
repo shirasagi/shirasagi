@@ -7,6 +7,7 @@ class Sys::SearchGroupsController < ApplicationController
 
   public
     def index
+      search if params[:q]
     end
 
     def search
@@ -18,7 +19,7 @@ class Sys::SearchGroupsController < ApplicationController
         order_by(_id: -1).
         page(params[:page]).per(20)
 
-      render layout: !request.xhr?
+      render :search, layout: !request.xhr?
     end
 
 end
