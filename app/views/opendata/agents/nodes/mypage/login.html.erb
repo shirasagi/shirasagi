@@ -7,18 +7,20 @@
   <% if secrets.github_key %><li class="github"><%= link_to "GitHub アカウントでログイン","/mypage/github" %></li><% end %>
 </ul>
 
-<%= form_tag "", class: "member-login" do |f| %>
-  <%= error_messages_for :item %>
+<% if Rails.env.development? %>
+  <%= form_tag "", class: "member-login" do |f| %>
+    <%= error_messages_for :item %>
 
-  <dl>
-    <dt>Email</dt>
-    <dd><%= email_field :item, :email %></dd>
+    <dl>
+      <dt>Email</dt>
+      <dd><%= email_field :item, :email %></dd>
 
-    <dt>Password</dt>
-    <dd><%= password_field :item, :password %></dd>
-  </dl>
+      <dt>Password</dt>
+      <dd><%= password_field :item, :password %></dd>
+    </dl>
 
-  <div class="send">
-    <%= submit_tag t("views.login"), name: :login %>
-  </div>
+    <div class="send">
+      <%= submit_tag t("views.login"), name: :login %>
+    </div>
+  <% end %>
 <% end %>
