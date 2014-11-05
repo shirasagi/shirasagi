@@ -367,7 +367,8 @@ footer.send {
     @include clear;
   }
 }
-#addon-category-agents-addons-category {
+.category-form {
+  line-height: 2.5;
   label {
     display: inline-block;
     margin-right: 10px;
