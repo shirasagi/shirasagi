@@ -14,6 +14,8 @@ class Cms::Group
   private
     def validate_sites
       if cur_site.present?
+        return if cur_site.group_ids.index(id)
+
         cond = cur_site.groups.map { |group| name =~ /^#{group.name}\// }.compact
         self.errors.add :name, :not_a_child_group if cond.blank?
       end
