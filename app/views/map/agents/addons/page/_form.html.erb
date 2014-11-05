@@ -1,164 +1,22 @@
 <%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
+<% controller.class.javascript "map/public" %>
+<% controller.class.javascript "map/form" %>
 <%= coffee do %>
 
-setMapLoc = (ele, lat, lon) ->
-  lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6);
-  lon = Math.ceil(lon * Math.pow(10,6)) / Math.pow(10,6);
-  ele.val(lat.toFixed(6) + "," + lon.toFixed(6));
-
-getMapLoc = (ele) ->
-  latlon = ele.val().split(',')
-  return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
-
-geocoderSearch = ->
-  geocoder = new google.maps.Geocoder()
-  geocoder.geocode(
-    { "address" : $(".mod-map .query").val(), "region" : "jp" },
-    (results, status) ->
-      if(status==google.maps.GeocoderStatus.OK)
-        window.map.setCenter(results[0].geometry.location)
-      else
-        alert(Map_Form.searchFailedMessage)
-      return
-  )
-  return false
-
-window.initmap = ->
-  #googleMap api v3
-  mapOptions = {
-    center: new google.maps.LatLng(35.392915, 139.442888),
-    zoom: 5,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    panControl: false,
-    zoomControl: true,
-    zoomControlOptions: {
-      style: google.maps.ZoomControlStyle.LARGE
-    },
-    mapTypeControl: true,
-    scaleControl: true,
-    scrollwheel: true,
-    streetViewControl: true,
-    overviewMapControl: true,
-    overviewMapControlOptions: {
-        opened: true
-    }
-  };
-
-  window.map = new google.maps.Map($("#map-canvas")[0],  mapOptions)
-  window.clickIcon = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-  window.clickMarker = null
-
-  google.maps.event.addListener map, 'click', ( event ) ->
-    setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng())
-    if window.clickMarker != null
-      window.clickMarker.setMap(null)
-
-    window.clickMarker = new google.maps.Marker(
-      position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
-      icon: clickIcon,
-      map: map,
-    );
-
-  # markers
-  $(".mod-map .add-marker").on 'click', ->
-    Map_Form.clonePointForm()
-    return false
-
-  $(".mod-map .clear-marker").on 'click', ->
-    Map_Form.clearPointForm($(this).closest("dd.marker"))
-    return false
-
-  $(".mod-map .set-marker").on 'click', ->
-    Map_Form.setMarker($(this).closest("dd.marker"))
-    return false
-
-  window.markers = []
-  window.markerBounds = new google.maps.LatLngBounds()
-
-  $(".mod-map dd.marker").each ->
-    $(this).attr("data-id", Map_Form.dataID)
-    Map_Form.dataID += 1
-
-    if $(this).find(".marker-loc").val() != ""
-      loc = getMapLoc($(this).find(".marker-loc"))
-      window.markers[Map_Form.dataID] = new google.maps.Marker(
-        position: loc,
-        map: window.map
-      )
-      markerBounds.extend(loc)
-
-  if window.markers.length > 0
-    zoomChangeBoundsListener = google.maps.event.addListener map, 'bounds_changed', ( event ) ->
-      if this.getZoom() > 13 && this.initialZoom == true
-        this.setZoom(13)
-        this.initialZoom = false
-      google.maps.event.removeListener(zoomChangeBoundsListener)
-
-    map.initialZoom = true
-    map.fitBounds(markerBounds)
-
-  return
-
 $(window).on "load", ->
-  window.initmap()
-
-class @Map_Form
-  @maxPointForm = 10
-  @deleteMessage = "マーカーを削除してよろしいですか？"
-  @searchFailedMessage = "座標を取得できませんでした。"
-  @dataID = 0
-
-  @clonePointForm: ()->
-    if $(".mod-map dd.marker").length < Map_Form.maxPointForm
-      cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"))
-      cln.attr("data-id",Map_Form.dataID)
-      Map_Form.dataID += 1
-      cln.find("input,textarea").val ""
-      cln.find(".marker-name").val("<%= @item.t :marker_name %>")
-      cln.find(".clear-marker").on 'click', ->
-        Map_Form.clearPointForm(cln)
-
-      cln.find(".set-marker").on 'click', ->
-        Map_Form.setMarker(cln)
-
-  @clearPointForm: (ele)->
-    if $(".mod-map dd.marker").length > 1
-      if ele.find(".marker-loc").val() != ""
-        if confirm(Map_Form.deleteMessage)
-          if window.markers[parseInt(ele.attr("data-id"))]
-            window.markers[parseInt(ele.attr("data-id"))].setMap(null)
-          ele.find("input,textarea").val ""
-          ele.remove()
-      else
-        if window.markers[parseInt(ele.attr("data-id"))]
-          window.markers[parseInt(ele.attr("data-id"))].setMap(null)
-        ele.remove()
-    else
-      if ele.find(".marker-loc").val() != ""
-        if confirm(Map_Form.deleteMessage)
-          if window.markers[parseInt(ele.attr("data-id"))]
-            window.markers[parseInt(ele.attr("data-id"))].setMap(null)
-          ele.find("input,textarea").val ""
-
-  @setMarker: (ele)->
-    if $(".mod-map .clicked").val() != ""
-      ele.find(".marker-loc").val $(".mod-map .clicked").val()
-
-      if window.markers[parseInt(ele.attr("data-id"))]
-        window.markers[parseInt(ele.attr("data-id"))].setMap(null)
-      window.markers[parseInt(ele.attr("data-id"))] = new google.maps.Marker(
-        position: getMapLoc(ele.find(".marker-loc")),
-        map: map
-      )
+  Map.load(document.getElementById("map-canvas"))
+  Map_Form.setMarkers()
 
 <% end %>
 
 <div class="mod-map">
-  <div id="map-canvas"></div>
+  <div id="map-container">
+    <div id="map-canvas"></div>
+  </div>
   <div id="map-markers">
     <dl class="marker-setting">
       <dt>
-        <%= t("map.markers") %><%= @item.tt :map_setting %>
+        <%= t("map.markers") %><%= @item.tt :map_points %>
         <%= hidden_field_tag :clicked, nil, class: "loc clicked" %>
       </dt>
       <% if @item.map_points.blank? %>

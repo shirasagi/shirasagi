@@ -36,7 +36,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
           where(filename: /^#{item.filename}\//, depth: item.depth + 1).order_by(order: -1).each do |map|
             points = []
             map.map_points.each do |point|
-              point[:info] = render_to_string(partial: "marker_info", locals: {item: item})
+              point[:html] = render_to_string(partial: "marker_info", locals: {item: item})
               point[:category] = item.categories.pluck(:_id)
 
               image_ids = item.categories.pluck(:image_id)

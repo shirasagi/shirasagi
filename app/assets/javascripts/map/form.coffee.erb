@@ -1,0 +1,115 @@
+## map form
+
+class @Map_Form
+  @maxPointForm = 10
+  @deleteMessage = "マーカーを削除してよろしいですか？"
+  @dataID = 0
+  @clickIcon = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+  @clickMarker = null
+
+  @setMapLoc: (ele, lat, lon) ->
+    lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6)
+    lon = Math.ceil(lon * Math.pow(10,6)) / Math.pow(10,6)
+    ele.val(lat.toFixed(6) + "," + lon.toFixed(6))
+    return
+
+  @getMapLoc: (ele) ->
+    latlon = ele.val().split(',')
+    return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
+
+  @clonePointForm: ()->
+    if $(".mod-map dd.marker").length < Map_Form.maxPointForm
+      cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"))
+      cln.attr("data-id",Map_Form.dataID)
+      Map_Form.dataID += 1
+      cln.find("input,textarea").val ""
+      cln.find(".marker-name").val("マーカー名")
+      cln.find(".clear-marker").on 'click', ->
+        Map_Form.clearPointForm(cln)
+
+      cln.find(".set-marker").on 'click', ->
+        Map_Form.createMarker(cln)
+    return
+
+  @clearPointForm: (ele)->
+    if $(".mod-map dd.marker").length > 1
+      if ele.find(".marker-loc").val() != ""
+        if confirm(Map_Form.deleteMessage)
+          if Map.markers[parseInt(ele.attr("data-id"))]
+            Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
+          ele.find("input,textarea").val ""
+          ele.remove()
+      else
+        if Map.markers[parseInt(ele.attr("data-id"))]
+          Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
+        ele.remove()
+    else
+      if ele.find(".marker-loc").val() != ""
+        if confirm(Map_Form.deleteMessage)
+          if Map.markers[parseInt(ele.attr("data-id"))]
+            Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
+          ele.find("input,textarea").val ""
+    return
+
+  @createMarker: (ele)->
+    if $(".mod-map .clicked").val() != ""
+      ele.find(".marker-loc").val $(".mod-map .clicked").val()
+
+      if Map.markers[parseInt(ele.attr("data-id"))]
+        Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
+      Map.markers[parseInt(ele.attr("data-id"))] = new google.maps.Marker(
+        position: Map_Form.getMapLoc(ele.find(".marker-loc")),
+        map: Map.map
+      )
+    return
+
+  @setMarkers: ()->
+    google.maps.event.addListener Map.map, 'click', (event) ->
+      Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng())
+      if Map_Form.clickMarker != null
+        Map_Form.clickMarker.setMap(null)
+
+      Map_Form.clickMarker = new google.maps.Marker(
+        position: new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()),
+        icon: Map_Form.clickIcon,
+        map: Map.map,
+      )
+
+    $(".mod-map .add-marker").on 'click', ->
+      Map_Form.clonePointForm()
+      return false
+
+    $(".mod-map .clear-marker").on 'click', ->
+      Map_Form.clearPointForm($(this).closest("dd.marker"))
+      return false
+
+    $(".mod-map .set-marker").on 'click', ->
+      Map_Form.createMarker($(this).closest("dd.marker"))
+      return false
+
+    Map.markers = []
+    markerBounds = new google.maps.LatLngBounds()
+
+    $(".mod-map dd.marker").each ->
+      $(this).attr("data-id", Map_Form.dataID)
+
+      if $(this).find(".marker-loc").val() != ""
+        loc = Map_Form.getMapLoc($(this).find(".marker-loc"))
+        Map.markers[Map_Form.dataID] = new google.maps.Marker(
+          position: loc,
+          map: Map.map
+        )
+        markerBounds.extend(loc)
+        Map_Form.dataID += 1
+
+    if Map.markers.length > 0
+      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', ( event ) ->
+        if this.getZoom() > 13 && this.initialZoom == true
+          this.setZoom(13)
+          this.initialZoom = false
+        google.maps.event.removeListener(zoomChangeBoundsListener)
+
+      Map.map.initialZoom = true
+      Map.map.fitBounds(markerBounds)
+    return
+

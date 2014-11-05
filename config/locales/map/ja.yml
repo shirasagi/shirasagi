@@ -9,11 +9,8 @@ ja:
     markers: マーカー設定
     clicked: クリック座標
     button:
-      search: 地図検索
-      set_loc: 設定
-      set_center: 移動
       set_marker: マーカーの位置を設定
-      add_marker: マーカーを追加
+      add_marker: マーカーを追加する
       clear_marker: 削除
 
   modules:
@@ -29,3 +26,11 @@ ja:
         marker_name: マーカー名
         marker_text: 説明
         marker_link: リンク
+
+  tooltip:
+    map/addon/page:
+      map_points:
+        - 地図内に表示するマーカーを設定できます。
+        - 地図をクリックし「マーカーの位置を設定」を選択することでマーカーを地図上に配置します。
+        - 説明にはマーカーの吹き出しテキストを入力できます。
+        - 「マーカーを追加する」を選択することで複数のマーカーを設定することが可能です。

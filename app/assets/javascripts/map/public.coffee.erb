@@ -1,0 +1,89 @@
+## map
+
+class @Map
+  @map
+  @markers
+  @openedInfo = null
+
+  @attachMessage: (id) ->
+    google.maps.event.addListener Map.markers[id]["marker"], 'click', (event) ->
+      if(Map.openedInfo)
+        Map.openedInfo.close()
+      if Map.markers[id]["window"]
+        Map.markers[id]["window"].open(Map.markers[id]["marker"].getMap(), Map.markers[id]["marker"])
+      Map.openedInfo = Map.markers[id]["window"]
+      return
+    return
+
+  @load: (element) ->
+    mapOptions = {
+      center: new google.maps.LatLng(35.392915, 139.442888),
+      zoom: 5,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      panControl: false,
+      zoomControl: true,
+      zoomControlOptions: {
+        style: google.maps.ZoomControlStyle.LARGE
+      },
+      mapTypeControl: true,
+      scaleControl: true,
+      scrollwheel: true,
+      streetViewControl: true,
+      overviewMapControl: true,
+      overviewMapControlOptions: {
+        opened: true
+      }
+    }
+    Map.map = new google.maps.Map(element,  mapOptions)
+    return
+
+  @setMarkers: (markers) ->
+    Map.markers = markers
+    markerBounds = new google.maps.LatLngBounds()
+
+    $.each Map.markers, (id, value) ->
+      if value["pointer_image"]
+        Map.markers[id]["marker"] = new google.maps.Marker(
+          position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
+          icon: value["pointer_image"],
+          map: Map.map
+        )
+      else
+        Map.markers[id]["marker"] = new google.maps.Marker(
+          position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
+          map: Map.map
+        )
+
+      markerBounds.extend(new google.maps.LatLng(value["loc"][0],value["loc"][1]))
+
+      if value["html"]
+        marker_html = value["html"]
+        Map.markers[id]["window"] = new google.maps.InfoWindow(
+          content: marker_html
+        )
+      else if value["text"]
+        marker_html = '<div class="marker-info">'
+        $.each value["text"].split(/[\r\n]+/), ->
+          if this.match(/^https?:\/\//)
+            marker_html += '<p><a href="' + this + '">' + this + '</a></p>'
+          else
+            marker_html += '<p>' + this + '</p>'
+
+        marker_html += '</div>'
+        Map.markers[id]["window"] = new google.maps.InfoWindow(
+          content: marker_html
+        )
+      Map.attachMessage(id)
+      return
+
+    unless $.isEmptyObject(Map.markers)
+      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', (event) ->
+        if this.getZoom() > 13 && this.initialZoom == true
+          this.setZoom(13)
+          this.initialZoom = false
+        google.maps.event.removeListener(zoomChangeBoundsListener)
+
+      Map.map.initialZoom = true
+      Map.map.fitBounds(markerBounds)
+    return
+
