@@ -100,7 +100,7 @@ class @Map_Form
           map: Map.map
         )
         markerBounds.extend(loc)
-        Map_Form.dataID += 1
+      Map_Form.dataID += 1
 
     if Map.markers.length > 0
       zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', ( event ) ->
@@ -112,4 +112,3 @@ class @Map_Form
       Map.map.initialZoom = true
       Map.map.fitBounds(markerBounds)
     return
-
