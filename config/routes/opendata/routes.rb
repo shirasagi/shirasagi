@@ -29,10 +29,10 @@ SS::Application.routes.draw do
   node "opendata" do
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
-    get "dataset/:dataset.html/resource/:id/" => "public#index", cell: "nodes/resource"
-    get "dataset/:dataset.html/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
-    get "dataset/:dataset.html/point/index.json" => "public#show_point", cell: "nodes/dataset", format: false
-    get "dataset/:dataset.html/point/add.json" => "public#add_point", cell: "nodes/dataset", format: false
+    get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
+    get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
+    get "dataset/:dataset/point/index.json" => "public#show_point", cell: "nodes/dataset", format: false
+    get "dataset/:dataset/point/add.json" => "public#add_point", cell: "nodes/dataset", format: false
 
     match "search_group/(index.:format)" => "public#index", cell: "nodes/search_group", via: [:get, :post]
     match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]

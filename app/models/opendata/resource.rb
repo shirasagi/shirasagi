@@ -1,6 +1,7 @@
 class Opendata::Resource
   include SS::Document
   include SS::Relation::File
+  include Opendata::Addon::RdfStore
 
   seqid :id
   field :name, type: String
@@ -18,20 +19,14 @@ class Opendata::Resource
 
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :set_format
-  before_save :save_fuseki_rdf, if: ->{ in_file.present? }
-  before_destroy :remove_fuseki_rdf
 
   public
     def url
-      "#{dataset.url}/resource/#{id}/#{filename}"
+      dataset.full_url.sub(/\.html$/, "") + "/resource/#{id}/#{filename}"
     end
 
     def full_url
-      "#{dataset.full_url}/resource/#{id}/#{filename}"
-    end
-
-    def graph_name
-      "#{dataset.full_url}/resource/#{id}/"
+      dataset.full_url.sub(/\.html$/, "") + "/resource/#{id}/#{filename}"
     end
 
     def path
@@ -48,20 +43,6 @@ class Opendata::Resource
 
     def allowed?(action, user, opts = {})
       true
-    end
-
-    def save_fuseki_rdf
-      if format.upcase == "TTL"
-        Opendata::Sparql.save graph_name, path
-      else
-        remove_fuseki_rdf
-      end
-    rescue => e
-      errors.add(:base, e.message)
-    end
-
-    def remove_fuseki_rdf
-      Opendata::Sparql.clear graph_name
     end
 
   private

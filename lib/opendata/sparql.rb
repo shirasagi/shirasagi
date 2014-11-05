@@ -14,8 +14,6 @@ module Opendata::Sparql
   class << self
     public
       def save(graph_name, ttl_url)
-        return if SS.config.opendata.fuseki["disable"]
-
         client = SPARQL::Client.new(UPDATE_SITE)
 
         triples = []
@@ -32,15 +30,11 @@ module Opendata::Sparql
       end
 
       def clear(graph_name)
-        return if SS.config.opendata.fuseki["disable"]
-
         client = SPARQL::Client.new(UPDATE_SITE)
         client.clear_graph(graph_name)
       end
 
       def clear_all
-        return if SS.config.opendata.fuseki["disable"]
-
         client = SPARQL::Client.new(UPDATE_SITE)
         client.clear(:all)
       end

@@ -2,6 +2,9 @@ ja:
   opendata:
     create: 新規登録
     manage_resources: リソースを管理する
+    errors:
+      messages:
+        invalid_rdf: RDFストアの登録に失敗しました。
 
   modules:
     opendata: オープンデータ
@@ -15,6 +18,7 @@ ja:
       opendata/tag: タグ
       opendata/release: 公開設定
       opendata/resource: リソース
+      opendata/rdf_store: RDFストア
 
   cms:
     nodes:
@@ -58,6 +62,9 @@ ja:
     attributes:
       opendata/addon/tag:
         tags: タグ
+      opendata/addon/rdf_store:
+        rdf_iri: グラフ名
+        rdf_error: RDF登録エラー
       opendata/dataset_group:
         name: グループ名
       opendata/dataset:

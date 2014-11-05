@@ -1,6 +1,7 @@
 class Opendata::Agents::Nodes::MyDataset::ResourcesController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::MypageFilter
+  helper Opendata::UrlHelper
 
   before_action :accept_cors_request
   before_action :set_dataset

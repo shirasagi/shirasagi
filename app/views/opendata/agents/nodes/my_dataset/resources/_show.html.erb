@@ -15,4 +15,14 @@
 
   <dt><%= @model.t :format %></dt>
   <dd><%= @item.send :format %></dd>
+
+  <% if @item.rdf_iri.present? %>
+  <dt><%= @model.t :rdf_iri %></dt>
+  <dd><%= link_to @item.rdf_iri, "#{sparql_path}?graph_name=#{@item.rdf_iri}" %></dd>
+  <% end %>
+
+  <% if @item.rdf_error.present? %>
+  <dt><%= @model.t :rdf_error %></dt>
+  <dd><%= @item.send :rdf_error %></dd>
+  <% end %>
 </dl>

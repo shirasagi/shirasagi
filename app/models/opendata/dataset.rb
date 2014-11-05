@@ -30,6 +30,14 @@ class Opendata::Dataset
   default_scope ->{ where(route: "opendata/dataset") }
 
   public
+    def point_url
+      url.sub(/\.html$/, "") + "/point/index.json"
+    end
+
+    def point_add_url
+      url.sub(/\.html$/, "") + "/point/add.json"
+    end
+
     def generate_file
       true
     end

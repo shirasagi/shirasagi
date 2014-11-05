@@ -3,7 +3,7 @@ $ ->
   point_link = $(".point .add")
 
   $.ajax
-    url: "<%= @cur_page.url + '/point/index.json' %>"
+    url: "<%= @cur_page.point_url %>"
     success: (data)->
       $(".point .count .number").text data["point"]
       if data["mode"] == "entry"
@@ -15,7 +15,7 @@ $ ->
 
   point_link.click (event)->
     $.ajax
-      url: "<%= @cur_page.url + '/point/add.json' %>"
+      url: "<%= @cur_page.point_add_url %>"
       success: (data)->
         $(".point .count .number").text data["point"]
         if data["mode"] == "cancel"
@@ -76,6 +76,9 @@ $ ->
         <div class="name format-<%= rs.format.downcase %>">
           <%= rs.name %>
           (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
+          <% if rs.rdf_iri.present? %>
+          <div><%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %></div>
+          <% end %>
         </div>
         <div><%= link_to "ダウンロード", rs.url, class: "download" %></div>
         <div class="text"><%= rs.text %></div>

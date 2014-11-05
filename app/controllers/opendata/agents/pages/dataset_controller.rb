@@ -1,6 +1,7 @@
 class Opendata::Agents::Pages::DatasetController < ApplicationController
   include Cms::PageFilter::View
   include Opendata::UrlHelper
+  helper Opendata::UrlHelper
 
   public
     def index
