@@ -41,7 +41,4 @@ class Opendata::Agents::Nodes::SparqlController < ApplicationController
 
     end
 
-    def query
-      render
-    end
 end
