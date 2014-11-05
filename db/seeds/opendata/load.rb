@@ -95,15 +95,36 @@ save_node filename: "bunya/bosai", name: "防災", route: "opendata/category", o
 save_node filename: "bunya/tokei", name: "統計", route: "opendata/category", order: 8
 
 save_node filename: "chiiki", name: "地域", route: "cms/node"
-save_node filename: "chiiki/tokushimaken", name: "徳島県", route: "opendata/area", order: 1
-save_node filename: "chiiki/tokushimashi", name: "徳島市", route: "opendata/area", order: 2
-save_node filename: "chiiki/narutoshi", name: "鳴門市", route: "opendata/area", order: 3
-save_node filename: "chiiki/komatsushimashi", name: "小松島市", route: "opendata/area", order: 4
-save_node filename: "chiiki/ananshi", name: "阿南市", route: "opendata/area", order: 5
-save_node filename: "chiiki/yoshinogawashi", name: "吉野川市", route: "opendata/area", order: 6
-save_node filename: "chiiki/awashi", name: "阿波市", route: "opendata/area", order: 7
-save_node filename: "chiiki/mimashi", name: "美馬市", route: "opendata/area", order: 8
-save_node filename: "chiiki/miyoshishi", name: "三好市", route: "opendata/area", order: 9
+save_node filename: "chiiki/tokushima", name: "徳島県", route: "opendata/area", order: 1
+#save_node filename: "chiiki/tokushima/tokushimashi", name: "徳島市", route: "opendata/area", order: 2
+
+[ %w(徳島市 tokushima),
+  %w(鳴門市 naruto),
+  %w(小松島市 komatsushima),
+  %w(阿南市 anan),
+  %w(吉野川市 yoshinogawa),
+  %w(阿波市 awa),
+  %w(美馬市 mima),
+  %w(三好市 miyoshi),
+  %w(勝浦町 katsuura),
+  %w(上勝町 kamikatsu),
+  %w(佐那河内村 sanagochi),
+  %w(石井町 ishii),
+  %w(神山町 kamiyama),
+  %w(那賀町 naka),
+  %w(牟岐町 mugi),
+  %w(美波町 minami),
+  %w(海陽町 kaiyo),
+  %w(松茂町 matsushige),
+  %w(北島町 kitajima),
+  %w(藍住町 aizumi),
+  %w(板野町 itano),
+  %w(上板町 kamiita),
+  %w(つるぎ町 tsurugi),
+  %w(東みよし町 higashimiyoshi),
+].each_with_index do |data, idx|
+  save_node filename: "chiiki/tokushima/#{data[1]}", name: data[0], route: "opendata/area", order: idx + 1
+end
 
 ## set layout
 [/^mypage\//].each do |name|

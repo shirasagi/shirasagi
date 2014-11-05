@@ -11,27 +11,27 @@ module Opendata::Addon
     end
   end
 
-  module DatasetGroup
+  module Area
     extend SS::Addon
     extend ActiveSupport::Concern
 
     set_order 301
 
     included do
-      embeds_ids :dataset_groups, class_name: "Opendata::DatasetGroup"
-      permit_params dataset_group_ids: []
+      embeds_ids :areas, class_name: "Opendata::Node::Area"
+      permit_params area_ids: []
     end
   end
 
-  module Area
+  module DatasetGroup
     extend SS::Addon
     extend ActiveSupport::Concern
 
     set_order 302
 
     included do
-      embeds_ids :areas, class_name: "Opendata::Node::Area"
-      permit_params area_ids: []
+      embeds_ids :dataset_groups, class_name: "Opendata::DatasetGroup"
+      permit_params dataset_group_ids: []
     end
   end
 
