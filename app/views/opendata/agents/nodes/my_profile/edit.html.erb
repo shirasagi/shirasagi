@@ -8,8 +8,10 @@
     <dt><%= @model.t :email %></dt>
     <dd><%= f.email_field :email %></dd>
 
+    <% if @item.oauth_type.blank? %>
     <dt><%= @model.t :in_password %></dt>
     <dd><%= f.password_field :in_password %></dd>
+    <% end %>
   </dl>
 
   <footer class="send">
