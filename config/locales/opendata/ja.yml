@@ -2,6 +2,11 @@ ja:
   opendata:
     create: 新規登録
     manage_resources: リソースを管理する
+    search_dataset_groups:
+      index: データセットグループを選択する
+      search: データセットグループを検索
+      select: データセットグループを設定する
+      deselect: 削除
     errors:
       messages:
         invalid_rdf: RDFストアの登録に失敗しました。
@@ -10,7 +15,7 @@ ja:
     opendata: オープンデータ
     addons:
       opendata/category: 分野
-      opendata/dataset_group: データグループ
+      opendata/dataset_group: データセットグループ
       opendata/area: 地域
       opendata/dataset_node: データセット
       opendata/dataset: データセット
@@ -31,7 +36,7 @@ ja:
     parts:
       opendata/mypage_login: ログイン
       opendata/dataset: データセット
-      opendata/dataset_group: データグループ
+      opendata/dataset_group: データセットグループ
 
   cms_role:
     read_other_opendata_datasets: データセットの閲覧（全て）
@@ -78,6 +83,7 @@ ja:
         license: ライセンス
         related_url: 関連URL
         category_ids: 分野
+        dataset_group_ids: グループ
         area_ids: 地域
         resources: リソース
         downloaded: 合計ダウンロード数

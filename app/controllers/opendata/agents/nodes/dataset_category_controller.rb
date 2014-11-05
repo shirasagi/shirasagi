@@ -55,6 +55,6 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
       @formats = Opendata::Dataset.total_field("resources.format", cond)
       @licenses = Opendata::Dataset.total_field(:license, cond)
 
-      render file: "opendata/agents/nodes/dataset/view/index"
+      render file: "opendata/agents/nodes/dataset/index"
     end
 end

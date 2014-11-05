@@ -6,16 +6,9 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
-#  namespace "opendata", path: ".opendata" do
-#    get "/" => "main#index", as: :main
-#
-#    resources :datasets, concerns: :deletion
-#    resources :apps, concerns: :deletion
-#    resources :ideas, concerns: :deletion
-#  end
-
   content "opendata" do
     get "/" => "main#index", as: :main
+    get "/search_dataset_groups" => "search_dataset_groups#index"
     resources :dataset_groups, concerns: :deletion
     resources :datasets, concerns: :deletion do
       resources :resources, concerns: :deletion do
