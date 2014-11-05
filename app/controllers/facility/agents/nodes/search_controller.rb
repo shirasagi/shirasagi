@@ -31,9 +31,6 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       set_items
 
       @markers = []
-      @map_loc  = []
-      @map_zoom = nil
-
       @items.each do |item|
         Facility::Map.site(@cur_site).public.
           where(filename: /^#{item.filename}\//, depth: item.depth + 1).order_by(order: -1).each do |map|
@@ -47,14 +44,8 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
               points.push point
             end
             @markers += points
-
-            @map_loc = map.map_loc if @map_loc.blank?
-            @map_zoom = map.map_zoom if @map_zoom.blank?
         end
       end
-
-      @map_loc =  [ 35.392915, 139.442888 ] if @map_loc.blank?
-      @map_zoom = 5 if @map_zoom.blank?
     end
 
     def result

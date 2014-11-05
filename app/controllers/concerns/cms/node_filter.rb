@@ -38,6 +38,7 @@ module Cms::NodeFilter
     def create
       @item = @model.new get_params
       change_item_class
+      @item.attributes = get_params
 
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
       render_create @item.save, location: redirect_url

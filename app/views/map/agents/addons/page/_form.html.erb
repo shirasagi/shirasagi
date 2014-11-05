@@ -1,7 +1,3 @@
-<%
-  map_loc = @item.map_loc.present? ? @item.map_loc : [ 35.392915, 139.442888 ]
-  map_zoom = @item.map_zoom.present? ? @item.map_zoom : 5
-%>
 <%= javascript_include_tag "http://maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
 <%= coffee do %>
 
@@ -30,8 +26,8 @@ geocoderSearch = ->
 window.initmap = ->
   #googleMap api v3
   mapOptions = {
-    center: new google.maps.LatLng(<%= raw map_loc[0] %>, <%= raw map_loc[1] %>),
-    zoom: <%= raw map_zoom %>,
+    center: new google.maps.LatLng(35.392915, 139.442888),
+    zoom: 5,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     panControl: false,
     zoomControl: true,
@@ -63,37 +59,6 @@ window.initmap = ->
       map: map,
     );
 
-  google.maps.event.addListener map, 'dragend', (event) ->
-    center = map.getCenter();
-    setMapLoc $(".mod-map .map-loc"), center.lat(), center.lng()
-
-  google.maps.event.addListener map, 'zoom_changed', ->
-    level = map.getZoom();
-    $(".mod-map .map-zoom").val(level)
-
-  # map
-  $(".mod-map .set-center").on 'click', ->
-    $("input[name='item[map_loc]']").val $(".mod-map .map-loc").val()
-    $("input[name='item[map_zoom]']").val $(".mod-map .map-zoom").val()
-    return false
-
-  $(".mod-map .reset-center").on 'click', ->
-    $(".mod-map .map-loc").val $("input[name='item[map_loc]']").val()
-    $(".mod-map .map-zoom").val $("input[name='item[map_zoom]']").val()
-    window.map.setCenter(getMapLoc($("input[name='item[map_loc]']")))
-    window.map.setZoom(parseInt($("input[name='item[map_zoom]']").val()))
-    return false
-
-  $(".mod-map .search").on 'click', ->
-    geocoderSearch()
-    return false
-
-  $(".mod-map .query").on 'submit', (e) ->
-    alert("this")
-    geocoderSearch()
-    e.preventDefault();
-    return false
-
   # markers
   $(".mod-map .add-marker").on 'click', ->
     Map_Form.clonePointForm()
@@ -108,16 +73,31 @@ window.initmap = ->
     return false
 
   window.markers = []
+  window.markerBounds = new google.maps.LatLngBounds()
+
   $(".mod-map dd.marker").each ->
     $(this).attr("data-id", Map_Form.dataID)
-    loc = getMapLoc($(this).find(".marker-loc"))
-    window.markers[Map_Form.dataID] = new google.maps.Marker(
-      position: loc,
-      map: window.map
-    )
     Map_Form.dataID += 1
 
-  return;
+    if $(this).find(".marker-loc").val() != ""
+      loc = getMapLoc($(this).find(".marker-loc"))
+      window.markers[Map_Form.dataID] = new google.maps.Marker(
+        position: loc,
+        map: window.map
+      )
+      markerBounds.extend(loc)
+
+  if window.markers.length > 0
+    zoomChangeBoundsListener = google.maps.event.addListener map, 'bounds_changed', ( event ) ->
+      if this.getZoom() > 13 && this.initialZoom == true
+        this.setZoom(13)
+        this.initialZoom = false
+      google.maps.event.removeListener(zoomChangeBoundsListener)
+
+    map.initialZoom = true
+    map.fitBounds(markerBounds)
+
+  return
 
 $(window).on "load", ->
   window.initmap()
@@ -174,29 +154,7 @@ class @Map_Form
 <% end %>
 
 <div class="mod-map">
-  <div id="map-container">
-    <div id="map-canvas"></div>
-    <dl class="map-setting">
-      <dt><%= t("map.setting") %><%= @item.tt :map_setting %></dt>
-      <dd>
-        <p>
-          <%= t("map.search") %>
-          <%= text_field_tag :query, nil, class: "query" %>
-          <%= button_tag t("map.button.search"), { type: :button, class: "search" } %>
-        </p>
-        <p>
-          <%= t("map.loc") %>
-          <%= f.text_field :map_loc, class: "loc", value: map_loc.join(",") %>
-          <%= t("map.zoom") %>
-          <%= f.text_field :map_zoom, class: "zoom", value: map_zoom %>
-          <%= button_tag t("map.button.set_loc"), { type: :button, class: "set-center" } %>
-          <%= button_tag t("map.button.set_center"), { type: :button, class: "reset-center" } %>
-          <%= hidden_field_tag :map_loc, map_loc.join(","), class: "map-loc" %>
-          <%= hidden_field_tag :map_zoom, map_zoom, class: "map-zoom" %>
-        </p>
-      </dd>
-    </dl>
-  </div>
+  <div id="map-canvas"></div>
   <div id="map-markers">
     <dl class="marker-setting">
       <dt>
