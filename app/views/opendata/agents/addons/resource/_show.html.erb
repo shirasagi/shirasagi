@@ -1,10 +1,10 @@
 <dl class="see">
-  <dt><%= @model.t :resources %></dt>
-  <dd><%= link_to :"opendata.manage_resources", opendata_dataset_resources_path(dataset_id: @item) %></dd>
+  <dd class="wide"><%= link_to :"opendata.manage_resources", opendata_dataset_resources_path(dataset_id: @item) %></dd>
+
   <% if @item.resources.present? %>
   <dd>
     <% @item.resources.each do |rs| %>
-    <div><%= rs.name %></div>
+    <div><%= rs.name %> (<%= rs.format.upcase %> <%= number_to_human_size rs.size %>)</div>
     <% end %>
   </dd>
   <% end %>

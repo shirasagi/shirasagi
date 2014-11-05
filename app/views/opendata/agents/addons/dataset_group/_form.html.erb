@@ -7,13 +7,12 @@ def cate_form(item)
   h  = %(<label style="margin-right: 10px;">)
   h << @f.check_box("dataset_group_ids[]", {}, item._id)
   h << %(#{item.name}</label>)
-
   h.html_safe
 end
 
 %>
 <dl class="see mod-opendata-dataset_group">
-  <dd class="wide" style="line-height: 2.5">
+  <dd class="wide">
     <%= f.hidden_field "dataset_group_ids[]", value: "" %>
 
     <% categories.each do |cate| %>
