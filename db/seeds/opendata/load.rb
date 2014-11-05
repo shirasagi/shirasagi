@@ -96,7 +96,6 @@ save_node filename: "bunya/tokei", name: "統計", route: "opendata/category", o
 
 save_node filename: "chiiki", name: "地域", route: "cms/node"
 save_node filename: "chiiki/tokushima", name: "徳島県", route: "opendata/area", order: 1
-#save_node filename: "chiiki/tokushima/tokushimashi", name: "徳島市", route: "opendata/area", order: 2
 
 [ %w(徳島市 tokushima),
   %w(鳴門市 naruto),
