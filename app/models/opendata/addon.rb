@@ -63,7 +63,7 @@ module Opendata::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    set_order 500
+    set_order 310
 
     included do
       field :tags, type: SS::Extensions::Words

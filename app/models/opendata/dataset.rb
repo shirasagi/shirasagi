@@ -1,5 +1,6 @@
 class Opendata::Dataset
   include Cms::Page::Model
+  include Contact::Addon::Page
   include Opendata::Addon::Resource
   include Opendata::Addon::Category
   include Opendata::Addon::DatasetGroup
