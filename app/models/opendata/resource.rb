@@ -52,10 +52,12 @@ class Opendata::Resource
 
     def save_fuseki_rdf
       if format.upcase == "TTL"
-        Opendata::Sparql.save graph_name, path
+          Opendata::Sparql.save graph_name, path
       else
         remove_fuseki_rdf
       end
+    rescue => e
+      errors.add(:base, e.message)
     end
 
     def remove_fuseki_rdf
