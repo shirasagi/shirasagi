@@ -11,11 +11,11 @@
     <% end %>
   </dd>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%=br @item.send :text %></dd>
-
   <dt><%= @model.t :license %></dt>
   <dd><%= @item.send :license %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%=br @item.send :text %></dd>
 
   <dt><%= @model.t :related_url %></dt>
   <dd><%= @item.send :related_url %></dd>
@@ -28,7 +28,4 @@
 
   <dt><%= @model.t :tags %></dt>
   <dd><%= @item.tags.join(", ") %></dd>
-
-  <dt><%= @model.t :point %></dt>
-  <dd><%= @item.send :point %></dd>
 </dl>

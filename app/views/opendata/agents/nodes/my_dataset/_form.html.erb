@@ -8,11 +8,11 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= f.text_area :text %></dd>
-
   <dt><%= @model.t :license %></dt>
   <dd><%= f.text_field :license %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :related_url %></dt>
   <dd><%= f.text_field :related_url %></dd>
@@ -27,10 +27,7 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 
   <dt><%= @model.t :area_ids %></dt>
   <dd>
-    <%= f.hidden_field "area_ids[]", value: "" %>
-    <% areas.each do |c| %>
-      <label><%= f.check_box("area_ids[]", {}, c.id) %> <%= c.name %></label>
-    <% end %>
+    <%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %>
   </dd>
 
   <dt><%= @model.t :tags %></dt>
