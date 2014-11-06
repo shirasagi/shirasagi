@@ -5,7 +5,6 @@ class Facility::PagesController < ApplicationController
   model Facility::Node::Page
 
   prepend_view_path "app/views/cms/node/nodes"
-  navi_view "facility/main/navi"
   menu_view "facility/page/menu"
 
   private

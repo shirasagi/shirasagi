@@ -5,7 +5,6 @@ class Facility::LocationsController < ApplicationController
   model Facility::Node::Location
 
   prepend_view_path "app/views/cms/node/nodes"
-  navi_view "facility/main/navi"
 
   private
     def fix_params

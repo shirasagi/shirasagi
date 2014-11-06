@@ -5,8 +5,6 @@ class Facility::SearchesController < ApplicationController
   model Facility::Node::Search
 
   prepend_view_path "app/views/cms/node/nodes"
-  navi_view "facility/main/navi"
-  menu_view "facility/page/menu"
 
   private
     def fix_params
