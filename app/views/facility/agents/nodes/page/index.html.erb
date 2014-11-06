@@ -1,5 +1,5 @@
-<div class="summary-image">
-  <% if @summary_image.present? %>
+<% if @summary_image.present? %>
+  <div class="summary-image">
     <p>
       <%= link_to @summary_image.url do %>
         <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
@@ -9,8 +9,8 @@
     <% if @summary_image.image_comment.present? %>
       <p><%= @summary_image.image_comment %></p>
     <% end %>
-  <% end %>
-</div>
+  </div>
+<% end %>
 
 <% Facility::Node::Page.addons.each do |addon| %>
   <%= render file: addon.view_file if addon.view_file %>
