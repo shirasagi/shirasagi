@@ -8,7 +8,7 @@ module Opendata::Addon::RdfStore
     field :rdf_iri, type: String
     field :rdf_error, type: String
 
-    before_save :save_rdf_store, if: ->{ in_file.present? || format_change.present? }
+    after_save :save_rdf_store, if: ->{ in_file.present? || format_change.present? }
     before_destroy :remove_rdf_store
   end
 
