@@ -28,7 +28,7 @@ searchPages =(elem) ->
     query = elem.find("input.query").val().trim()
     $.ajax {
       type: "GET", url: url, cache: false,
-      data: { q: { name: query } },
+      data: { s: { name: query } },
       success: (data) ->
         $("div.search-pages").children().remove()
         $("div.search-pages").append data

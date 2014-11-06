@@ -17,6 +17,19 @@ module SS::Group::Model
     after_save :rename_children, if: ->{ @db_changes }
   end
 
+  module ClassMethods
+    public
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        if params[:name].present?
+          criteria = criteria.search_text params[:name]
+        end
+        criteria
+      end
+  end
+
   private
     def validate_name
       if name =~ /\/$/ || name =~ /^\// || name =~ /\/\//

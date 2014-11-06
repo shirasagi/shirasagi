@@ -29,7 +29,7 @@ searchGroups =(elem) ->
     site =
     $.ajax {
       type: "GET", url: url, cache: false,
-      data: { q: query, site: site },
+      data: { s: { name: query }, site: site },
       success: (data) ->
         $("div.search-groups").children().remove()
         $("div.search-groups").append data

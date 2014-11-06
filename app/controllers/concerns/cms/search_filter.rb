@@ -6,12 +6,12 @@ module Cms::SearchFilter
 
   public
     def index
-      search if params[:q]
+      search if params[:s]
     end
 
     def search
       @items = @model.site(@cur_site).
-        search(params[:q]).
+        search(params[:s]).
         order_by(_id: -1)
 
       render :search, layout: !request.xhr?
