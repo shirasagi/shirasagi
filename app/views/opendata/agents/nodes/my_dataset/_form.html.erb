@@ -4,12 +4,24 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
 areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 
 %>
+<%= coffee do %>
+$ ->
+  data = <%== @model.licenses.inspect %>
+
+  $("#item_license").autocomplete
+    source: (request, response) ->
+      response(
+        $.grep data, (value) ->
+          return value.match(new RegExp("^" + request.term, "i"))
+      )
+<% end %>
+
 <dl class="see opendata-dataset">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :license %></dt>
-  <dd><%= f.text_field :license %></dd>
+  <dd><%= f.text_field :license, style: "ime-mode: disabled;" %></dd>
 
   <dt><%= @model.t :text %></dt>
   <dd><%= f.text_area :text %></dd>

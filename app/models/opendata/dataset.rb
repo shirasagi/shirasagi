@@ -53,6 +53,10 @@ class Opendata::Dataset
 
   class << self
     public
+      def licenses
+        %w(Creative\ Commons BSD GPL LGPL MIT)
+      end
+
       def total_field(key, cond = {})
         key = key.to_s
         pre = key.sub(/\..*/, '')

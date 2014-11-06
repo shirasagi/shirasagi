@@ -1,3 +1,20 @@
+<%= coffee do %>
+$ ->
+  data = <%== @model.formats.inspect %>
+
+  $("#item_format").autocomplete
+    source: (request, response) ->
+      response(
+        $.grep data, (value) ->
+          return value.match(new RegExp("^" + request.term, "i"))
+      )
+
+  $("#item_in_file").change ->
+    filename = $(this).val()
+    if filename.match(/\./)
+      $("#item_format").val filename.replace(/.*\./, "").toUpperCase()
+<% end %>
+
 <dl class="see opendata-dataset-resources">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -9,5 +26,5 @@
   <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :format %></dt>
-  <dd><%= f.text_field :format %></dd>
+  <dd><%= f.text_field :format, style: "ime-mode: disabled;" %></dd>
 </dl>

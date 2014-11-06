@@ -64,5 +64,10 @@ class Opendata::Resource
       def allow(action, user, opts = {})
         true
       end
+
+      def formats
+        %W(AVI BMP CSV DOC DOCX DOT GIF HTML JPG LZH MOV MP3 MPG ODS
+           ODT OTS OTT RAR RTF RDF TAR TGZ TTL TXT WAV XLS XLT XLSX XML ZIP)
+      end
   end
 end
