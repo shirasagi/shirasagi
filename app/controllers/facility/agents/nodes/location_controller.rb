@@ -6,9 +6,7 @@ class Facility::Agents::Nodes::LocationController < ApplicationController
     def index
       @items = Facility::Node::Page.site(@cur_site).public.
         where(@cur_node.condition_hash).
-        order_by(@cur_node.sort_hash).
-        page(params[:page]).
-        per(@cur_node.limit)
+        order_by(@cur_node.sort_hash)
 
       @items.empty? ? "" : render
     end
