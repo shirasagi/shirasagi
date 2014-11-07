@@ -650,8 +650,10 @@ textarea {
     }
   }
   .point {
-    padding-left: 15px;
-    background: url(../img/ic-like-s.png) no-repeat left 5px;
+    padding: 2px 5px 2px 30px;
+    background: url(../img/ic-like-bk.png) no-repeat 5px 2px;
+    border: $border-hgry;
+    font-size: $px12;
   }
 }
 
