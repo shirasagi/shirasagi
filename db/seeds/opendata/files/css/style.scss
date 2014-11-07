@@ -501,6 +501,27 @@ textarea {
   }
 }
 
+#contents footer.contact {
+  margin-bottom: $box-margin;
+  h1 {
+    margin: 12px 0 6px;
+    padding: 3px 10px 0;
+    background: #3386bb;
+    color: $white;
+    font-size: $px15;
+  }
+  p {
+    padding-left: 10px;
+  }
+  dl {
+    display: inline;
+    padding-left: 20px;
+    dt, dd {
+      display: inline;
+    }
+  }
+}
+
 // -----------------------------------------------------------------------------
 // calendar
 .event-date {
