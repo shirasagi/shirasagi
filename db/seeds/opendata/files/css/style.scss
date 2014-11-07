@@ -126,6 +126,18 @@ textarea {
       .tab01 {
         position: absolute;
         left: 250px;
+        &:hover {
+          position: absolute;
+          bottom: -2px;
+          width: 146px;
+          border: 2px solid #ddcfcc;
+          border-bottom: 2px solid $white;
+          background: $white;
+          a {
+            padding: 8px 0 6px 33px;
+            background: url(../img/ic-data-s-bk.png) no-repeat 10px center;
+          }
+        }
       }
       .tab02 {
         position: absolute;
@@ -579,6 +591,10 @@ textarea {
       color: $text;
       text-decoration: none;
       text-align: center;
+      &:hover {
+        @include grd-blue;
+        color: $white;
+      }
     }
     .current {
       @include grd-blue;
