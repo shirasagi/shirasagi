@@ -217,6 +217,9 @@ textarea {
   }
   li.gnav01 {
     background: #00b2c4;
+    &:hover {
+      background: #54d6e0;
+    }
   }
   li.gnav02 {
     background: #90cd4c;
