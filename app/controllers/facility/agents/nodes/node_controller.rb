@@ -7,7 +7,5 @@ class Facility::Agents::Nodes::NodeController < ApplicationController
       @items = Facility::Node::Page.site(@cur_site).public.
         where(@cur_node.condition_hash).
         order_by(@cur_node.sort_hash)
-
-      @items.empty? ? "" : render
     end
 end

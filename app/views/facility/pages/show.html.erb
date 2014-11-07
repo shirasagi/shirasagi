@@ -10,6 +10,9 @@
       <dt><%= @item.class.t :kana %></dt>
       <dd><%= @item.kana %></dd>
 
+      <dt><%= @model.t :postcode %></dt>
+      <dd><%= @item.send :postcode %></dd>
+
       <dt><%= @item.class.t :address %></dt>
       <dd><%= @item.address %></dd>
 

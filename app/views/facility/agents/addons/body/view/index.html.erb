@@ -4,6 +4,11 @@
     <dd><%= @cur_node.kana %></dd>
   <% end %>
 
+  <% if @cur_node.postcode.present? %>
+    <dt><%= @cur_node.class.t :postcode %></dt>
+    <dd><%= @cur_node.postcode %></dd>
+  <% end %>
+
   <% if @cur_node.address.present? %>
     <dt><%= @cur_node.class.t :address %></dt>
     <dd><%= @cur_node.address %></dd>
