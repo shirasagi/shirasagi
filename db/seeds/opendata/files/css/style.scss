@@ -302,6 +302,7 @@ textarea {
 #contents, #data-top-contents {
   width: $page-width;
   margin: 0 auto;
+  padding: 0 10px;
   padding-bottom: 71px;
   #main {
     float: left;
@@ -773,7 +774,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
       }
       img {
         position: absolute;
-        top: 0;
+        top: 2px;
         right: 0;
         margin: 2px;
         padding: 2px 5px;
@@ -818,7 +819,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
 .crumbs {
   width: $page-width;
   margin: 0 auto;
-  padding: 15px 0;
+  padding: 15px 10px;
 }
 
 #od-searchgroup-name {
