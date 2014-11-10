@@ -2,7 +2,7 @@
   <footer class="contact">
     <h1><%= t("contact.view.title") %></h1>
     <% if @cur_page.contact_group_id.present? %>
-      <% group_names = (SS::Group.find_by id: @cur_page.contact_group_id).name.split("/") %>
+      <% group_names = (SS::Group.find_by id: @cur_page.contact_group_id).name.split("/") rescue [] %>
       <p class="group"><%= group_names[group_names.length - 1] %></p>
     <% end %>
     <% if @cur_page.contact_charge.present? %>

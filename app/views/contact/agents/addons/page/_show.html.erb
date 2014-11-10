@@ -4,7 +4,7 @@
   <dt><%= @model.t :contact_group_id %></dt>
   <dd class="contact-group-id">
   <% if @item.contact_group_id.present? %>
-    <%= (SS::Group.find_by id: @item.contact_group_id).name %>
+    <%= (SS::Group.find_by id: @item.contact_group_id).name rescue "" %>
   <% end %>
   </dd>
   <dt><%= @model.t :contact_charge %></dt>

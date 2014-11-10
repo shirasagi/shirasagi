@@ -37,8 +37,8 @@ $ ->
             <td><%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %></td>
           </tr>
         <% else %>
-          <% if @item.contact_group_id.present? %>
-            <% group = SS::Group.find_by id: @item.contact_group_id %>
+          <% group = SS::Group.find_by id: @item.contact_group_id rescue nil %>
+          <% if group.present? %>
             <tr data-id="<%= @item.contact_group_id %>">
               <td><%= f.hidden_field "contact_group_id", value: @item.contact_group_id %> <%= group.name %></td>
               <td><%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %></td>
