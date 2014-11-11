@@ -65,7 +65,10 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       @formats = Opendata::Dataset.total_field("resources.format", cond)
       @licenses = Opendata::Dataset.total_field(:license, cond)
 
-      render
+      respond_to do |format|
+        format.html { render }
+        format.rss  { render_rss @cur_node, @items }
+      end
     end
 
     def show_point
