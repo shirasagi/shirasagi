@@ -4,7 +4,7 @@ class Opendata::Agents::Nodes::SearchDatasetController < ApplicationController
 
   public
     def index
-      case params[:sort] #TODO:
+      case params[:sort]
       when "released"
         sort = { released: -1 }
       when "popular"
