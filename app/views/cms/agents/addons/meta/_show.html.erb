@@ -1,3 +1,5 @@
+<% return "" unless @item.meta_present? %>
+
 <%= coffee do %>
 $ ->
   $("dl.meta").hide()

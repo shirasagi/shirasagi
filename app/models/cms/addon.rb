@@ -41,6 +41,10 @@ module Cms::Addon
       return nil unless respond_to?(:html)
       html.gsub(/<("[^"]*"|'[^']*'|[^'">])*>/m, "").gsub(/\s+/, " ").truncate(120)
     end
+
+    def meta_present?
+      [keywords, description, summary_html].map(&:present?).any?
+    end
   end
 
   module Html

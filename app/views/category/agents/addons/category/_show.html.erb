@@ -1,3 +1,5 @@
+<% return "" if @item.categories.blank? %>
+
 <dl class="see">
   <dd class="wide"><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
 </dl>

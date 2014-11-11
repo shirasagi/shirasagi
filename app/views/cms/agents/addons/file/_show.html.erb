@@ -1,3 +1,5 @@
+<% return "" if @item.files.blank? %>
+
 <dl class="see">
   <dd class="wide">
     <% @item.files.each do |file| %>

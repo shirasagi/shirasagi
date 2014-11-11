@@ -1,3 +1,5 @@
+<% return "" if @item.event_dates.blank? %>
+
 <dl class="see mod-event">
   <dt><%= @model.t :event_name %></dt>
   <dd class="event-name"><%= @item.send :event_name %></dd>
