@@ -4,13 +4,6 @@ class Event::Agents::Nodes::PageController < ApplicationController
   helper Event::EventHelper
 
   public
-    # for tabs
-    def pages
-      Cms::Page.site(@cur_site).public(@cur_date).
-        where(@cur_node.condition_hash).
-        where(:"event_dates.0".exists => true)
-    end
-
     def index
       @year  = Date.today.year.to_i
       @month = Date.today.month.to_i
