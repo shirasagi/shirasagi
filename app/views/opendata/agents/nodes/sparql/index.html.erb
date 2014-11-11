@@ -5,15 +5,14 @@
   <%= form_tag("", method: :get) do %>
     <table>
       <tr>
-        <th style="width: 80px; text-align: left;vertical-align: middle;">Query</th>
+        <th>Query</th>
         <td>
-          <textarea name="query"
-           style="width: 400px; height: 100px;">select distinct * where { graph ?g { ?s ?p ?o . } }</textarea>
+          <textarea name="query">select distinct * where { graph ?g { ?s ?p ?o . } } limit 100</textarea>
         </td>
       </tr>
       <tr>
-        <th style="height: 50px;text-align: left;vertical-align: middle;">Format</th>
-        <td style="text-align: left;vertical-align: middle;">
+        <th>Format</th>
+        <td>
           <select name="format">
             <option value="HTML">HTML</option>
             <option value="HTML_TABLE">HTML (TABLE Only)</option>
@@ -26,7 +25,7 @@
       </tr>
     </table>
 
-    <div style="margin: 10px 80px;">
+    <div>
       <%= submit_tag "Run Query" %>
     </div>
   <% end %>
