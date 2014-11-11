@@ -31,7 +31,7 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
 
     def provide
       session[:auth_site] = @cur_site
-      %w[twitter facebook yahoojp google_oauth2 github].each do |name|
+      %w(twitter facebook yahoojp google_oauth2 github).each do |name|
         redirect_to "/auth/#{name}" if request.path_info.include?(name)
       end
     end

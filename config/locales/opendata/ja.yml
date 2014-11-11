@@ -31,6 +31,10 @@ ja:
       opendata/area: 地域
       opendata/dataset: データセット
       opendata/dataset_category: データセット分野
+      opendata/search_dataset: データセット検索
+      opendata/search_dataset_group: データセットグループ検索
+      opendata/mypage: マイページ
+      opendata/my_dataset: マイデータセット
       opendata/app: アプリマーケット
       opendata/idea: アイデアボックス
     parts:

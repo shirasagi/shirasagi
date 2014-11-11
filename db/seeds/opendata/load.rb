@@ -66,7 +66,7 @@ save_node filename: "dataset", name: "データセット", route: "opendata/data
   page_layout_id: layouts["dataset-page"].id
 save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category", shortcut: "show",
   layout_id: layouts["dataset-bunya"].id
-save_node filename: "dataset/search_group", name: "グループ検索", route: "opendata/search_group", shortcut: "show",
+save_node filename: "dataset/search_group", name: "データセットグループ検索", route: "opendata/search_dataset_group", shortcut: "show",
   layout_id: layouts["dataset-group"].id
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset", shortcut: "show",
   layout_id: layouts["dataset-bunya"].id

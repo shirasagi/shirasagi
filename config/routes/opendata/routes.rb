@@ -8,13 +8,18 @@ SS::Application.routes.draw do
 
   content "opendata" do
     get "/" => "main#index", as: :main
-    get "/search_dataset_groups" => "search_dataset_groups#index"
-    resources :dataset_groups, concerns: :deletion
+    resources :dataset_groups, concerns: :deletion do
+      get "search" => "dataset_groups/search#index", on: :collection
+    end
     resources :datasets, concerns: :deletion do
       resources :resources, concerns: :deletion do
         get "file" => "resources#download"
       end
     end
+    resources :search_datasets, concerns: :deletion
+    resources :search_dataset_groups, concerns: :deletion
+    resources :mypages, concerns: :deletion
+    resources :my_datasets, concerns: :deletion
     resources :apps, concerns: :deletion
     resources :ideas, concerns: :deletion
   end
@@ -27,7 +32,7 @@ SS::Application.routes.draw do
     get "dataset/:dataset/point/index.json" => "public#show_point", cell: "nodes/dataset", format: false
     get "dataset/:dataset/point/add.json" => "public#add_point", cell: "nodes/dataset", format: false
 
-    match "search_group/(index.:format)" => "public#index", cell: "nodes/search_group", via: [:get, :post]
+    match "search_dataset_group/(index.:format)" => "public#index", cell: "nodes/search_dataset_group", via: [:get, :post]
     match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"

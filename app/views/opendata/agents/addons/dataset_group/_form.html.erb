@@ -17,7 +17,7 @@ $ ->
   <dt><%= @model.t :dataset_group_ids %></dt>
   <dd>
     <%= f.hidden_field "dataset_group_ids[]", value: "", class: "hidden-groups-ids" %>
-    <%= link_to t("opendata.search_dataset_groups.index"), opendata_search_dataset_groups_path, class: "ajax-box" %>
+    <%= link_to t("opendata.search_dataset_groups.index"), search_opendata_dataset_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index selected-dataset-groups">

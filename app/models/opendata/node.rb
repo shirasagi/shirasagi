@@ -29,10 +29,10 @@ module Opendata::Node
     default_scope ->{ where(route: "opendata/dataset_category") }
   end
 
-  class SearchGroup
+  class SearchDatasetGroup
     include Cms::Node::Model
 
-    default_scope ->{ where(route: "opendata/search_group") }
+    default_scope ->{ where(route: "opendata/search_dataset_group") }
   end
 
   class SearchDataset

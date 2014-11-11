@@ -6,7 +6,7 @@ module Opendata::UrlHelper
   end
 
   def search_groups_path
-    node = Opendata::Node::SearchGroup.site(@cur_site).public.first
+    node = Opendata::Node::SearchDatasetGroup.site(@cur_site).public.first
     return nil unless node
     node.url
   end
