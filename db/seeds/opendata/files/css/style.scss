@@ -1393,6 +1393,10 @@ nav.cms-sns_share {
       min-height: 2em;
       margin-left: 270px;
       margin-bottom: $box-margin;
+      label {
+        display: inline-block;
+        margin-right: 10px;
+      }
     }
   }
   #item-form {
@@ -1404,6 +1408,19 @@ nav.cms-sns_share {
         font-family: $font-base;
         font-size: $px14;
       }
+    }
+  }
+}
+
+.category-form {
+  padding: 10px;
+  border: 1px solid #ddcfcc;
+  .parent {
+    font-weight: bold;
+    .child {
+      padding: 5px 0 5px 30px;
+      border-top: 1px solid #ddcfcc;
+      font-weight: normal;
     }
   }
 }
