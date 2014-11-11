@@ -14,24 +14,8 @@ module Event::Node
 
     public
       def condition_hash
-        cond = []
-        cids = []
-
-        if conditions.present?
-          cond << { filename: /^#{filename}\//, depth: depth + 1 }
-        else
-          cond << {}
-        end
-
-        conditions.each do |url|
-          node = Cms::Node.filename(url).first
-          next unless node
-          cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
-          cids << node.id
-        end
-        cond << { :category_ids.in => cids } if cids.present?
-
-        { '$or' => cond }
+        cond = super
+        cond.merge "event_dates.0" => { "$exists" => true }
       end
   end
 end
