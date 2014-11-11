@@ -36,15 +36,23 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
           where(filename: /^#{item.filename}\//, depth: item.depth + 1).order_by(order: -1).each do |map|
             points = []
             map.map_points.each do |point|
-              point[:html] = render_to_string(partial: "marker_info", locals: {item: item})
-              point[:category] = item.categories.pluck(:_id)
+
+              html = []
+              html << %(<div class="maker-info" data-id="#{item.id}">)
+              html << %(<p class="name">#{item.name}</p>)
+              html << %(<p class="address">#{item.address}</p>)
+              html << %(<p class="show">#{view_context.link_to :show, item.url}</p>)
+              html << %(</div>)
 
               image_ids = item.categories.pluck(:image_id)
+
+              point[:html] = html.join("\n")
+              point[:category] = item.categories.pluck(:_id)
               point[:pointer_image] = SS::File.find(image_ids.first).url if image_ids.present?
               points.push point
             end
             @markers += points
-        end
+          end
       end
     end
 

@@ -69,6 +69,7 @@ ja:
       facility/node/page:
         name: 施設名
         kana: 施設名ふりがな
+        postcode: 郵便番号
         address: 住所
         tel: 電話番号
         fax: FAX
@@ -86,6 +87,8 @@ ja:
     facility/addon/body:
       kana:
         - ページタイトル（施設名）のふりがなを設定します。
+      postcode:
+        - 施設の郵便番号を設定します。
       address:
         - 施設の住所を設定します。
       tel:

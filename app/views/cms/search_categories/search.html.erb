@@ -28,7 +28,7 @@ end
 
 %>
 
-<% categories.each do |cate| %>
+<% categories.select{ |cate| cate.children.present? }.each do |cate| %>
 <div style="margin-bottom: 10px; padding: 10px; border: 1px solid #ddd;">
   <%= cate_form cate %>
 </div>

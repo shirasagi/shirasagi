@@ -2,9 +2,9 @@
 
 @f = f
 
-if @cur_node && @cur_node.st_categories.present?
+if @cur_node && @cur_node.becomes_with_route.st_categories.present?
   categories = []
-  parents = @cur_node.st_categories.sort_by { |cate| cate.filename.count("/") }
+  parents = @cur_node.becomes_with_route.st_categories.sort_by { |cate| cate.filename.count("/") }
   while parents.present?
     parent = parents.shift
     parents = parents.map { |c| c.filename !~ /^#{parent.filename}\// ? c : nil }.compact
