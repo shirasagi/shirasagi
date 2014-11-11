@@ -35,6 +35,10 @@ groups = Opendata::DatasetGroup.site(@cur_site).sort(order: 1).map { |m| [m.name
     <dt>グループ</dt>
     <dd><%= f.select :dataset_group_id, groups, include_blank: "" %></dd>
   </dl>
+  <dl class="sort">
+    <dt>並び順</dt>
+    <dd><%= select_tag :sort, options_for_select(@model.sort_options, params[:sort]) %></dd>
+  </dl>
 
   <div class="send">
     <%= submit_tag t("views.button.search"), name: :search %>

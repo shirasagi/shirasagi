@@ -1,6 +1,6 @@
 <%= coffee do %>
 $ ->
-  data = <%== @model.formats.inspect %>
+  data = <%== @model.format_options.to_json %>
 
   $("#item_format").autocomplete
     source: (request, response) ->

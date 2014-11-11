@@ -6,7 +6,7 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 %>
 <%= coffee do %>
 $ ->
-  data = <%== @model.licenses.inspect %>
+  data = <%== @model.license_options.to_json %>
 
   $("#item_license").autocomplete
     source: (request, response) ->

@@ -65,7 +65,7 @@ class Opendata::Resource
         true
       end
 
-      def formats
+      def format_options
         %w(AVI BMP CSV DOC DOCX DOT GIF HTML JPG LZH MOV MP3 MPG ODS
            ODT OTS OTT RAR RTF RDF TAR TGZ TTL TXT WAV XLS XLT XLSX XML ZIP)
       end

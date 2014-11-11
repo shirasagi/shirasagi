@@ -53,8 +53,12 @@ class Opendata::Dataset
 
   class << self
     public
-      def licenses
+      def license_options
         %w(Creative\ Commons BSD GPL LGPL MIT)
+      end
+
+      def sort_options
+        [%w(新着順 released), %w(人気順 popular), %w(注目順 attention)]
       end
 
       def total_field(key, cond = {})
@@ -103,7 +107,6 @@ class Opendata::Dataset
         if params[:format].present?
           criteria = criteria.where "resources.format" => params[:format].upcase
         end
-        criteria = criteria.order(name: 1)
         if params[:license].present?
           criteria = criteria.where license: params[:license]
         end
