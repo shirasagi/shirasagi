@@ -42,7 +42,7 @@ $ ->
 
 <%= render partial: "navi", locals: { current: "map" } %>
 
-<div id="map-canvas"></div>
+<div id="map-canvas" style="height: 400px; width: 100%"></div>
 
 <% categories = @categories.present? ? @categories : @cur_node.st_categories %>
 <% if categories.present? %>
