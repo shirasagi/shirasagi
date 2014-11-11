@@ -17,9 +17,8 @@ module Opendata::Addon::RdfStore
   end
 
   def save_rdf_store
-    return if SS.config.opendata.fuseki["disable"]
-
     if format.upcase == "TTL"
+      remove_rdf_store
       begin
         if Opendata::Sparql.save graph_name, path
           set rdf_iri: graph_name, rdf_error: nil
@@ -27,15 +26,14 @@ module Opendata::Addon::RdfStore
       rescue => e
         set rdf_iri: nil, rdf_error: I18n.t("opendata.errors.messages.invalid_rdf")
       end
-    elsif rdf_iri
+    elsif rdf_iri.present?
       remove_rdf_store
       set rdf_iri: nil, rdf_error: nil
     end
   end
 
   def remove_rdf_store
-    return if SS.config.opendata.fuseki["disable"]
-
-    Opendata::Sparql.clear graph_name
+    name = rdf_iri || graph_name
+    Opendata::Sparql.clear name if name
   end
 end

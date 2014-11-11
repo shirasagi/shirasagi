@@ -13,7 +13,18 @@ module Opendata::Sparql
 
   class << self
     public
+      def disable?
+        SS.config.opendata.fuseki["disable"].presence
+      end
+
+      def test?
+        SS.config.opendata.fuseki["disable"] == "test"
+      end
+
       def save(graph_name, ttl_url)
+        dump("sparql#save:  #{graph_name}, #{ttl_url}") if test?
+        return true if disable?
+
         client = SPARQL::Client.new(UPDATE_SITE)
 
         triples = []
@@ -30,17 +41,22 @@ module Opendata::Sparql
       end
 
       def clear(graph_name)
+        dump("sparql#clear: #{graph_name}") if test?
+        return true if disable?
+
         client = SPARQL::Client.new(UPDATE_SITE)
         client.clear_graph(graph_name)
       end
 
       def clear_all
+        return true if disable?
+
         client = SPARQL::Client.new(UPDATE_SITE)
         client.clear(:all)
       end
 
       def select(sparql_query, format = "HTML")
-        return if SS.config.opendata.fuseki["disable"]
+        return true if disable?
 
         client = SPARQL::Client.new(QUERY_SITE)
         results = client.query(sparql_query)
