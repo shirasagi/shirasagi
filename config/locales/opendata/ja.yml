@@ -33,6 +33,8 @@ ja:
       opendata/dataset_category: データセット分野
       opendata/search_dataset: データセット検索
       opendata/search_dataset_group: データセットグループ検索
+      opendata/sparql: SPARQL
+      opendata/api: API
       opendata/mypage: マイページ
       opendata/my_dataset: マイデータセット
       opendata/app: アプリマーケット

@@ -2,9 +2,11 @@
 
 categories = Opendata::Dataset.site(@cur_site).sort(order: 1)
 
+@f = f
+
 def cate_form(item)
   h  = %(<label style="margin-right: 10px;">)
-  h << f.check_box("dataset_ids[]", {}, item._id)
+  h << @f.check_box("dataset_ids[]", {}, item._id)
   h << %(#{item.name}</label>)
 
   h.html_safe

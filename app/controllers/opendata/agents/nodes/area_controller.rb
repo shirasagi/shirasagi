@@ -3,6 +3,6 @@ class Opendata::Agents::Nodes::AreaController < ApplicationController
 
   public
     def index
-      ""
+      render nothing: true
     end
 end

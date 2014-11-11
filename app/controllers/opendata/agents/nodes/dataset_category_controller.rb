@@ -58,4 +58,8 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
 
       render file: "opendata/agents/nodes/dataset/index"
     end
+
+    def nothing
+      render nothing: true
+    end
 end

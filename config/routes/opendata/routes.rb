@@ -8,6 +8,7 @@ SS::Application.routes.draw do
 
   content "opendata" do
     get "/" => "main#index", as: :main
+    resources :dataset_categories, concerns: :deletion
     resources :dataset_groups, concerns: :deletion do
       get "search" => "dataset_groups/search#index", on: :collection
     end
@@ -18,6 +19,8 @@ SS::Application.routes.draw do
     end
     resources :search_datasets, concerns: :deletion
     resources :search_dataset_groups, concerns: :deletion
+    resources :sparqls, concerns: :deletion
+    resources :apis, concerns: :deletion
     resources :mypages, concerns: :deletion
     resources :my_datasets, concerns: :deletion
     resources :apps, concerns: :deletion
@@ -25,6 +28,10 @@ SS::Application.routes.draw do
   end
 
   node "opendata" do
+    get "category/" => "public#index", cell: "nodes/category"
+    get "area/" => "public#index", cell: "nodes/area"
+
+    get "dataset_category/" => "public#nothing", cell: "nodes/dataset_category"
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
     get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
@@ -42,7 +49,7 @@ SS::Application.routes.draw do
 
     get "sparql/(*path)" => "public#index", cell: "nodes/sparql"
     post "sparql/(*path)" => "public#index", cell: "nodes/sparql"
-    get "api/*path" => "public#index", cell: "nodes/api"
+    get "api/(*path)" => "public#index", cell: "nodes/api"
 
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
     get "mypage/login"  => "public#login", cell: "nodes/mypage"
@@ -56,6 +63,8 @@ SS::Application.routes.draw do
         get "file" => "public#download"
       end
     end
+    resources :apps, path: "my_app", controller: "public", cell: "nodes/my_app", concerns: :deletion
+    resources :ideas, path: "my_idea", controller: "public", cell: "nodes/my_idea", concerns: :deletion
   end
 
   part "opendata" do
