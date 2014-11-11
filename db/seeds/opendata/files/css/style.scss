@@ -1226,6 +1226,75 @@ nav.cms-sns_share {
   }
 }
 
+// -----------------------------------------------------------------------------
+// inquiry
+.inquiry-form {
+  margin-bottom: $box-margin;
+  dl {
+    @include clear;
+    clear: both;
+    width: 100%;
+    margin-bottom: $box-margin;
+    dt {
+      clear: both;
+      float: left;
+      width: 200px;
+      padding: 6px 12px;
+      background: #cef3ff;
+      font-weight: bold;
+      @include border-radius(3px);
+      .required {
+        display: block;
+        color: #d90000;
+        font-weight: normal;
+      }
+    }
+    dd {
+      float: left;
+      width: 832px;
+      padding: 0 12px;
+      p {
+        margin-bottom: 0;
+      }
+      input[type="text"] {
+        width: 250px;
+      }
+      input[type="email"] {
+        width: 350px;
+      }
+      textarea {
+        width: 800px;
+        min-height: 200px;
+      }
+      label {
+        margin-right: 12px;
+      }
+    }
+  }
+  .send {
+    padding-left: 236px;
+    input {
+      margin-right: 12px;
+      padding: 6px 12px;
+      @include btn-blue-left;
+    }
+    input[name="cancel"] {
+      @include btn-gry;
+      color: $text;
+    }
+  }
+  .inquiry-confirm-message {
+    margin-bottom: $box-margin;
+    &~dd {
+      padding-bottom:2em;
+    }
+  }
+  .simple-captcha {
+    padding-left: 236px;
+    margin-bottom: $box-margin;
+  }
+}
+
 //-----------------------------------------------------------------------------------------
 //login
 #s-mypage-login #contents ul {
@@ -1331,16 +1400,9 @@ nav.cms-sns_share {
       text-align: center;
       input {
         padding: 10px 50px;
-        border: none;
-        @include border-radius(5px);
-        @include grd-blue-left;
-        color: $white;
-        text-align: center;
+        @include btn-blue-left;
         font-family: $font-base;
         font-size: $px14;
-        &:hover {
-          background: $blue;
-        }
       }
     }
   }
