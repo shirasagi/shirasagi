@@ -5,7 +5,14 @@ class Opendata::Agents::Nodes::SparqlController < ApplicationController
 
   public
     def index
-      return render if params[:query].blank?
+      if params[:query].blank?
+
+        graph_name = params[:graph_name].blank? ? "?g" : "<#{params[:graph_name]}>"
+
+        @default_query = "select distinct * where { graph #{graph_name} { ?s ?p ?o . } } limit 100"
+
+        return render
+      end
 
       file_format = params[:format]
       result = Opendata::Sparql.select(params[:query], file_format)
