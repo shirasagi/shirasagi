@@ -15,6 +15,7 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
     def index
       @count = pages.size
       @search_url = search_datasets_path + "?s[category_id]=#{@item.id}"
+      @rss_url = search_datasets_path + "index.rss?s[category_id]=#{@item.id}"
 
       controller.instance_variable_set :@cur_node, @item
 
@@ -31,9 +32,9 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
         limit(10)
 
       @tabs = [
-        { name: "新着順", url: "#{@search_url}&sort=released", pages: @items },
-        { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items },
-        { name: "注目順", url: "#{@search_url}&sort=attention", pages: @download_items }
+        { name: "新着順", url: "#{@search_url}&sort=released", pages: @items, rss: "#{@rss_url}&sort=released" },
+        { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items, rss: "#{@rss_url}&sort=popular" },
+        { name: "注目順", url: "#{@search_url}&sort=attention", pages: @download_items, rss: "#{@rss_url}&sort=attention" }
       ]
 
       cond = {
