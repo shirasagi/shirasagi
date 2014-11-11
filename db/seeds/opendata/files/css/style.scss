@@ -388,7 +388,7 @@ textarea {
   width: 803px;
 }
 
-#about, .s-portal #contents header, #s-mypage-login #contents , #s-mypage #contents{
+#about, .s-portal #contents header, #s-mypage-login #contents , #s-mypage #contents, .opendata-sparql {
   h1 {
     margin-bottom: 6px;
     padding: 4px 10px;
@@ -1520,5 +1520,31 @@ table.index {
 .s-portal, #s-mypage-login, #s-mypage {
   #copyright {
     @include grd-blue;
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+//sparql
+.opendata-sparql {
+  h1 {
+    margin-bottom: $box-margin;
+  }
+  table {
+    margin-bottom: $box-margin;
+    th {
+      padding: 0 20px 20px 0;
+      vertical-align: middle;
+    }
+    td {
+      width: 100%;
+      padding-bottom: 20px;
+      textarea {
+        width: 100%;
+        padding: 10px;
+      }
+    }
+  }
+  div {
+    text-align: center;
   }
 }
