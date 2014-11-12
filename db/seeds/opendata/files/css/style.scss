@@ -635,12 +635,15 @@ textarea {
     @include clear;
     padding-top: 14px;
   }
-  .rss {
-    display: inline-block;
-    float: left;
-    padding-left: 24px;
-    background: url(../img/ic-rss.png) no-repeat left center;
-  }
+}
+
+// -----------------------------------------------------------------------------
+// rss
+.rss {
+  display: inline-block;
+  float: left;
+  padding-left: 24px;
+  background: url(../img/ic-rss.png) no-repeat left center;
 }
 
 // -----------------------------------------------------------------------------
