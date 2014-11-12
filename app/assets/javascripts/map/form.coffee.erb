@@ -17,6 +17,26 @@ class @Map_Form
     latlon = ele.val().split(',')
     return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
 
+  @attachMessage: (id) ->
+    google.maps.event.addListener Map.markers[id], 'click', (event) ->
+      if(Map.openedInfo)
+        Map.openedInfo.close()
+      $('dd[data-id = "' + id + '"]').each ->
+        text = $(this).find(".marker-text").val()
+        if text != ""
+          marker_html = '<div class="marker-info">'
+          $.each text.split(/[\r\n]+/), ->
+            if this.match(/^https?:\/\//)
+              marker_html += '<p><a href="' + this + '">' + this + '</a></p>'
+            else
+              marker_html += '<p>' + this + '</p>'
+
+          Map.openedInfo = new google.maps.InfoWindow(content: marker_html)
+          Map.openedInfo.open(Map.markers[id].getMap(), Map.markers[id])
+        return false
+      return
+    return
+
   @clonePointForm: ()->
     if $(".mod-map dd.marker").length < Map_Form.maxPointForm
       cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"))
@@ -53,14 +73,16 @@ class @Map_Form
 
   @createMarker: (ele)->
     if $(".mod-map .clicked").val() != ""
-      ele.find(".marker-loc").val $(".mod-map .clicked").val()
+      ele.find(".marker-loc").val($(".mod-map .clicked").val())
+      dataId = parseInt(ele.attr("data-id"))
 
-      if Map.markers[parseInt(ele.attr("data-id"))]
-        Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
-      Map.markers[parseInt(ele.attr("data-id"))] = new google.maps.Marker(
+      if Map.markers[dataId]
+        Map.markers[dataId].setMap(null)
+      Map.markers[dataId] = new google.maps.Marker(
         position: Map_Form.getMapLoc(ele.find(".marker-loc")),
         map: Map.map
       )
+      Map_Form.attachMessage(dataId)
     return
 
   @setMarkers: ()->
@@ -99,6 +121,7 @@ class @Map_Form
           position: loc,
           map: Map.map
         )
+        Map_Form.attachMessage(Map_Form.dataID)
         markerBounds.extend(loc)
       Map_Form.dataID += 1
 

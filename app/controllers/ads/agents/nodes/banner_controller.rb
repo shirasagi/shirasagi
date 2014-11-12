@@ -18,12 +18,12 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
 
       raise "404" unless @item
 
-      log = Ads::AccessLog.find_or_create_by({
+      log = Ads::AccessLog.find_or_create_by(
         site_id: @item.site_id,
         node_id: @item.parent.id,
         link_url: @item.link_url,
         date: Date.today
-      })
+      )
       log.inc count: 1
 
       response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
