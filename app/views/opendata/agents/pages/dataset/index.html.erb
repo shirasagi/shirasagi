@@ -23,8 +23,13 @@ $ ->
         else
           point_link.removeClass("cancel").addClass("add")
     event.preventDefault()
-<% end %>
 
+  $(".categories a[data-class=other]").click ->
+    type = $(this).attr("class")
+    $(".categories a." + type).show()
+    $(this).remove()
+    return false
+<% end %>
 
 <header>
   <h1 class="name"><%= @cur_page.send :name %></h1>
@@ -38,15 +43,25 @@ $ ->
   <%= link_to "いいね！", "#", class: "add" %>
 </div>
 
+<%
+max = 3
+categories = [
+  { items: @cur_page.categories, type: :category, name: :name, id: :id },
+  { items: @cur_page.areas, type: :area, name: :name, id: :id },
+  { items: @cur_page.tags, type: :tag, name: :to_s, id: :to_s },
+]
+%>
 <nav class="categories">
-  <% @cur_page.categories.each do |c| %>
-    <%= link_to c.name, @search_url + "?s[category_id]=#{c.id}", class: "category" %>
-  <% end %>
-  <% @cur_page.areas.each do |c| %>
-    <%= link_to c.name, @search_url + "?s[area_id]=#{c.id}", class: "area" %>
-  <% end %>
-  <% @cur_page.tags.each do |c| %>
-    <%= link_to c, @search_url + "?s[tag]=#{c}", class: "tag" %>
+  <% categories.each do |cate| %>
+    <% cate[:items].each_with_index do |item, idx| %>
+      <% hide = (idx >= max) ? "display: none" : nil %>
+      <%= link_to item.send(cate[:name]), "#{@search_url}?s[#{cate[:type]}_id]=#{item.send(cate[:id])}",
+        class: cate[:type], style: hide %>
+    <% end %>
+    <% if cate[:items].size > max %>
+      <%= link_to "他#{cate[:items].size-max}件", "#",
+        class: "#{cate[:type]}", "data-class" => "other" %>
+    <% end %>
   <% end %>
 </nav>
 
