@@ -6,7 +6,7 @@
 
 $ ->
   $("#ss-preview .date").datetimepicker
-    lang: "ja", roundTime: "ceil", step: 15
+    lang: "ja", roundTime: "ceil", step: 15, closeOnDateSelect: true
 
   $("#ss-preview .preview").click ->
     date = $("#ss-preview .date").val()

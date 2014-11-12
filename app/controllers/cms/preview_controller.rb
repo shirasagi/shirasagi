@@ -16,6 +16,7 @@ class Cms::PreviewController < ApplicationController
       @cur_path ||= request.env["REQUEST_PATH"]
       @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
+      @cur_path = URI.decode(@cur_path)
       @cur_date = params[:preview_date].present? ? Time.parse(params[:preview_date]) : Time.now
     end
 
