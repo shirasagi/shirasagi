@@ -1,0 +1,6 @@
+<%= coffee do %>
+$ ->
+  $(".crumbs .node:last a").html '<%= link_to @item.name, "#{@cur_node.url}#{@item.basename}/" %>'
+<% end %>
+
+<%= render file: "opendata/agents/nodes/dataset/index" %>

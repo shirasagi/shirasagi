@@ -55,8 +55,6 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
       @tags = Opendata::Dataset.total_field(:tags, cond)
       @formats = Opendata::Dataset.total_field("resources.format", cond)
       @licenses = Opendata::Dataset.total_field(:license, cond)
-
-      render file: "opendata/agents/nodes/dataset/index"
     end
 
     def nothing
