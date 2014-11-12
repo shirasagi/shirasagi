@@ -21,8 +21,8 @@ class Opendata::Agents::Nodes::SparqlController < ApplicationController
 
         html_result = result[:data]
         if html_result.include?("<td>")
-          html_page =  "<html>\n<head><meta charset='utf-8'></head>\n<body>\n"
-          html_page += html_result.gsub(/<table class="sparql">/, "<table class='sparql' border='1'>")
+          html_page =  %Q{<html>\n<head><meta charset="utf-8"></head>\n<body>\n}
+          html_page += html_result.gsub(/<table class="sparql">/, %Q{<table class="sparql" border="1">} )
           html_page += "</body>\n</html>\n"
         else
           html_page = "<h1>No Data</h1>"
@@ -34,7 +34,7 @@ class Opendata::Agents::Nodes::SparqlController < ApplicationController
 
         html_result = result[:data]
         if html_result.include?("<td>")
-          html_page = html_result.gsub(/<table class="sparql">/, "<table class='sparql' border='1'>")
+          html_page = html_result.gsub(/<table class="sparql">/, %Q{<table class="sparql" border="1">} )
         else
           html_page = "<h1>No Data</h1>"
         end
