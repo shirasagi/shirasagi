@@ -36,7 +36,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       @items.each do |item|
         category_ids = item.categories.pluck(:_id)
         image_ids    = item.categories.pluck(:image_id)
-        image_url    = image_ids.present? ? SS::File.find(image_ids.first).url : nil
+        image_url    = SS::File.find(image_ids.first).url rescue nil
 
         html = []
         html << %(<div class="maker-info" data-id="#{item.id}">)
@@ -45,17 +45,17 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
         html << %(<p class="show">#{view_context.link_to :show, item.url}</p>)
         html << %(</div>)
 
-        Facility::Map.site(@cur_site).public.
-          where(filename: /^#{item.filename}\//, depth: item.depth + 1).order_by(order: -1).each do |map|
-            points = []
-            map.map_points.each do |point|
-              point[:html] = html.join("\n")
-              point[:category] = category_ids
-              point[:pointer_image] = image_url if image_url.present?
-              points.push point
-            end
-            @markers += points
+        maps = Facility::Map.site(@cur_site).public.
+          where(filename: /^#{item.filename}\//, depth: item.depth + 1).order_by(order: -1)
+
+        maps.each do |map|
+          map.map_points.each do |point|
+            point[:html] = html.join("\n")
+            point[:category] = category_ids
+            point[:pointer_image] = image_url if image_url.present?
+            @markers.push point
           end
+        end
       end
     end
 
