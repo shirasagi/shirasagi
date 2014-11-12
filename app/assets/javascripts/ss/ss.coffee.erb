@@ -36,6 +36,7 @@ $ ->
   SS_Mobile.render()
   SS_AddonTabs.render()
   SS_Tooltips.render()
+  SS_SearchUI.render()
 
 class @SS
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
@@ -284,3 +285,74 @@ class @SS_Debug
         view.val view.val() + " [" + xhr.status + "] " + url + " - Referer: " + ref + "\n"
         view.scrollTop view[0].scrollHeight - view.height()
     }
+
+class @SS_SearchUI
+  @select: (item) ->
+    # create tr element and append to form
+
+    tr    = $("<tr>").attr("data-id", item["id"])
+    input = $.colorbox.element().closest("dl").find(".hidden-ids").clone(false)
+    input = input.val(item["id"]).removeClass("hidden-ids")
+    a     = $('<a class="deselect" href="#">削除</a>').on "click", SS_SearchUI.deselect
+
+    tr.append($('<td>').append($(input)).append(item["name"]))
+    tr.append($('<td>').append($(a)))
+    $.colorbox.element().closest("dl").find(".ajax-selected tbody").prepend(tr)
+    return
+
+  @deselect: (e)->
+    $(this).parents("tr:first").remove()
+    e.preventDefault()
+
+  @toggleSelectButton: ()->
+    if $("#ajax-box .items input:checkbox").filter(":checked").size() > 0
+      $("#ajax-box .select-items").parent("div").show()
+    else
+      $("#ajax-box .select-items").parent("div").hide()
+
+  @render: ()->
+    $(".ajax-selected").each ->
+      $(this).find(".deselect").on "click", SS_SearchUI.deselect
+      if $(this).find(".deselect").size() == 0
+        $(this).hide()
+
+  @modal: ()->
+    $("#ajax-box form.search").on "submit", (e)->
+      $(this).ajaxSubmit(
+        url: $(this).attr("action")
+        success: (data) ->
+          $("#cboxLoadedContent").html data
+        error: (data, status) ->
+          alert("== Error ==")
+      )
+      e.preventDefault()
+
+    $.colorbox.element().closest("dl").find(".ajax-selected tr[data-id]").each ->
+      id = $(this).attr("data-id")
+      $("#ajax-box .items [data-id=#{id}]").remove()
+
+    SS_ListUI.render("table.index")
+
+    $("#ajax-box a.select-item").on "click", (e)->
+      id = $(this).closest("[data-id]").attr("data-id")
+      name = $(this).text()
+      SS_SearchUI.select({ id: id, name: name })
+
+      $.colorbox.element().closest("dl").find(".ajax-selected").show()
+      e.preventDefault()
+      $.colorbox.close()
+
+    $("#ajax-box .select-items").on "click", (e)->
+      $("#ajax-box .items input:checkbox").filter(":checked").each ->
+        id = $(this).closest("[data-id]").attr("data-id")
+        name = $(this).closest("[data-id]").find(".select-item").text()
+        name = $(this).closest("[data-id]").text() if name == ""
+        SS_SearchUI.select({ id: id, name: name })
+
+      $.colorbox.element().closest("dl").find(".ajax-selected").show()
+      e.preventDefault()
+      $.colorbox.close()
+
+    $("#ajax-box .index").on "change", (e)->
+      SS_SearchUI.toggleSelectButton()
+    SS_SearchUI.toggleSelectButton()

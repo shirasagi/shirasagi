@@ -1,29 +1,14 @@
-<%= coffee do %>
-
-deselectGroup=() ->
-  $(this).parents("tr:first").remove()
-  if $("table.selected-contact-group tr[data-id]").size() == 0
-    $("table.selected-contact-group").hide()
-  return false
-
-$ ->
-  $("table.selected-contact-group a.deselect").click(deselectGroup)
-  if $("table.selected-contact-group tbody .deselect").size() == 0
-    $("table.selected-contact-group").hide()
-
-<% end %>
-
 <dl class="see mod-contact">
   <dt><%= @model.t :contact_state %><%= @model.tt :contact_state %></dt>
   <dd><%= f.select :contact_state, @item.contact_state_options %></dd>
 
   <dt><%= @model.t :contact_group_id %><%= @model.tt :contact_group_id %></dt>
   <dd>
-    <%= f.hidden_field "contact_group_id", value: "", class: "hidden-contact_group_id" %>
+    <%= f.hidden_field "contact_group_id", value: "", class: "hidden-ids" %>
     <%= link_to :"contact.search_groups.index", contact_search_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index selected-contact-group">
+    <table class="index ajax-selected">
       <thead>
         <tr>
           <th class="name"><%= Cms::Group.t :name %></th>

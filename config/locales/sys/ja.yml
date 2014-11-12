@@ -10,9 +10,9 @@ ja:
     db_tool: DBツール
     role: 権限/ロール
     search_groups:
-      index: 所有グループを選択する
-      search: 所有グループを検索
-      select: 所有グループを設定する
+      index: グループを選択する
+      search: グループを検索
+      select: グループを設定する
       deselect: 削除
 
   modules:

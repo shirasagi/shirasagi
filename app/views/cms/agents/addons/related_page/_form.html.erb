@@ -1,26 +1,11 @@
-<%= coffee do %>
-
-deselectPage=() ->
-  $(this).parents("tr:first").remove()
-  if $("table.selected-pages tr[data-id]").size() == 0
-    $("table.selected-pages").hide()
-  return false
-
-$ ->
-  $("table.selected-pages a.deselect").click(deselectPage)
-  if $("table.selected-pages tbody .deselect").size() == 0
-    $("table.selected-pages").hide()
-
-<% end %>
-
 <dl class="see mod-related pages">
   <dt><%= @model.t :related_pages %><%= @model.tt :page_ids %></dt>
   <dd>
-    <%= f.hidden_field "related_page_ids[]", value: "", class: "hidden-pages-ids" %>
+    <%= f.hidden_field "related_page_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("cms.search_pages.index"), cms_search_pages_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index selected-pages">
+    <table class="index ajax-selected">
       <thead>
         <tr>
           <th class="name"><%= @model.t :name %></th>

@@ -1,29 +1,14 @@
-<%= coffee do %>
-
-deselectGroup=() ->
-  $(this).parents("tr:first").remove()
-  if $("table.selected-groups tr[data-id]").size() == 0
-    $("table.selected-groups").hide()
-  return false
-
-$ ->
-  $("table.selected-groups a.deselect").click(deselectGroup)
-  if $("table.selected-groups tbody .deselect").size() == 0
-    $("table.selected-groups").hide()
-
-<% end %>
-
 <dl class="see mod-owner">
   <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
   <dd><%= f.select :permission_level, (1..@cur_user.cms_role_level(@cur_site)).map { |i| %W(#{i} #{i}) } %></dd>
 
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
-    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-groups-ids" %>
+    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("cms.search_groups.index"), cms_search_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index selected-groups">
+    <table class="index ajax-selected">
       <thead>
         <tr>
           <th class="name"><%= Cms::Group.t :name %></th>

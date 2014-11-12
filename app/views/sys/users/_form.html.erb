@@ -10,10 +10,26 @@
 
   <dt><%= @model.t :group_ids %></dt>
   <dd>
-    <%= hidden_field_tag "item[group_ids][]" %>
-    <% SS::Group.all.each do |item| %>
-    <label><%= f.check_box "group_ids[]", {}, item._id %><%= item.name %></label><br />
-    <% end %>
+    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("sys.search_groups.index"), sys_search_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= Sys::Group.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.groups.each do |group| %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("sys.search_groups.deselect"), "#", class: :deselect %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </dd>
 
   <dt><%= @model.t :type %></dt>
