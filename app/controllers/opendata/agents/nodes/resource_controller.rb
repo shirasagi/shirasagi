@@ -22,7 +22,7 @@ class Opendata::Agents::Nodes::ResourceController < ApplicationController
     end
 
     def download
-      @item = @dataset.resources.find_by id: params[:id], filename: params[:filename]
+      @item = @dataset.resources.find_by id: params[:id], filename: params[:filename].force_encoding("utf-8")
       @item.dataset.inc downloaded: 1
 
       send_file @item.file.path, type: @item.content_type, filename: @item.filename,
