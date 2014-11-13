@@ -271,7 +271,7 @@ save_node route: "facility/category", filename: "institution/shurui/kokyo", name
 save_node route: "cms/node", filename: "institution/yoto", name: "施設の用途"
 save_node route: "facility/service", filename: "institution/yoto/asobu", name: "遊ぶ", order: 10
 save_node route: "facility/service", filename: "institution/yoto/manabu", name: "学ぶ", order: 20
-save_node route: "facility/service", filename: "institution/yoto/sodan", name: "相談", order: 30
+save_node route: "facility/service", filename: "institution/yoto/sodan", name: "相談する", order: 30
 
 array = Facility::Node::Category.where(site_id: @site._id).map { |m| [m.filename, m] }
 facility_categories = Hash[*array.flatten]
