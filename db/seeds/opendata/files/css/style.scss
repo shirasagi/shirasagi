@@ -39,7 +39,6 @@ select, input, textarea, button {
 }
 select {
   @include input;
-  max-width: 95%;
   padding: 3px 5px;
 }
 input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
@@ -860,17 +859,17 @@ form.opendata-search_groups-form {
   overflow: hidden;
   dl {
     @include inline-block;
-    margin:0 70px 15px 0;
+    margin:0 15px 15px 0;
     dd input, dd select {
-      width: 160px;
+      width: 245px;
+    }
+    &:nth-child(3n+1) {
+      margin-right: 0;
     }
   }
   .send {
-    float: right;
-    width: 40px;
-    margin-top: 3em;
-    margin-right: 2em;
     padding: 10px;
+    text-align: right;
     input {
       @include r-arrow;
       @include border-radius(5px);
