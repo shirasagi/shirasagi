@@ -28,13 +28,6 @@ class Facility::PagesController < ApplicationController
     end
 
   public
-    def index
-      @items = @model.site(@cur_site).node(@cur_node).
-        allow(:read, @cur_user).
-        order_by(filename: 1).
-        page(params[:page]).per(50)
-    end
-
     def show
       raise "403" unless @item.allowed?(:read, @cur_user)
       action = @cur_node.allowed?(:edit, @cur_user, site: @cur_site) ? :edit : :show

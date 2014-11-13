@@ -39,7 +39,8 @@ $ ->
           $("#task-form .closed").html closed.replace(/\..*/, "").replace("T", " ")
           $("#task-form .log").val data["logs"].join("\n")
           if data["state"] == "stop"
-            $("#task-form .stop").hide()
+            $("#task-form .stop-button").hide()
+            $("#task-form .run-button").show()
   setInterval reload, 10000
 <% end %>
 
@@ -64,16 +65,16 @@ $ ->
 </div>
 
 <footer class="send">
-  <% if @item.running? || @item.state == "ready" %>
+  <% hide = (@item.running? || @item.state == "ready") ? nil : "display: none;" %>
+  <div class="stop-button" style="<%= hide %>">
     <%= submit_tag t(:stop), name: "stop", class: "stop" %>
-    <div style="margin: 20px 0px 0px; text-align: right;">
-      <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t("views.task.confirm_reset")}')" %>
-    </div>
-  <% else %>
-    <% if !flash[:notice] %>
-    <%= submit_tag t(:run), class: :save unless flash[:notice] %>
-    <% end %>
-  <% end %>
+    <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t("views.task.confirm_reset")}')" %>
+  </div>
+
+  <% hide = hide.present? ? "" : "display: none;" %>
+  <div class="run-button" style="<%= hide %>">
+    <%= submit_tag t(:run), class: :save %>
+  <div>
 </footer>
 
 <% end %>

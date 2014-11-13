@@ -20,12 +20,4 @@ class Category::NodesController < ApplicationController
       diff = @item.route !~ /^category\//
       diff ? node_node_path(cid: @cur_node, id: @item.id) : { action: :show, id: @item.id }
     end
-
-  public
-    def index
-      @items = @model.site(@cur_site).node(@cur_node).
-        allow(:read, @cur_user).
-        order_by(filename: 1).
-        page(params[:page]).per(50)
-    end
 end

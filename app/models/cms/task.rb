@@ -7,8 +7,8 @@ class Cms::Task
   class << self
     private
       def find_sites(opts)
-        return Cms::Site unless opts[:host]
-        Cms::Site.where host: opts[:host]
+        return Cms::Site unless opts[:site]
+        Cms::Site.where host: opts[:site]
       end
 
       def find_node(site, opts)
@@ -16,54 +16,44 @@ class Cms::Task
         Cms::Node.site(site).find_by filename: opts[:node]
       end
 
-    public
-      def generate_nodes(opts = {})
+      def process_with_site(task_name, controller, action, opts)
+        find_sites(opts).each do |site|
+          ready name: task_name, site_id: site.id do |task|
+            task.process controller, action, site: site
+          end
+        end
+      end
+
+      def process_with_node(task_name, controller, action, opts)
         find_sites(opts).each do |site|
           node    = find_node site, opts
           node_id = node ? node.id : nil
 
-          ready name: "cms:generate_nodes", site_id: site.id, node_id: node_id do |task|
-            task.process Cms::Agents::Tasks::NodesController, :generate, site: site, node: node
+          ready name: task_name, site_id: site.id, node_id: node_id do |task|
+            task.process controller, action, site: site, node: node
           end
         end
+      end
+
+    public
+      def generate_nodes(opts = {})
+        process_with_node "cms:generate_nodes", Cms::Agents::Tasks::NodesController, :generate, opts
       end
 
       def generate_pages(opts = {})
-        find_sites(opts).each do |site|
-          node    = find_node site, opts
-          node_id = node ? node.id : nil
-
-          ready name: "cms:generate_pages", site_id: site.id, node_id: node_id do |task|
-            task.process Cms::Agents::Tasks::PagesController, :generate, site: site, node: node
-          end
-        end
+        process_with_node "cms:generate_pages", Cms::Agents::Tasks::PagesController, :generate, opts
       end
 
       def update_pages(opts = {})
-        find_sites(opts).each do |site|
-          node    = find_node site, opts
-          node_id = node ? node.id : nil
-
-          ready name: "cms:update_pages", site_id: site.id, node_id: node_id do |task|
-            task.process Cms::Agents::Tasks::PagesController, :update, site: site, node: node
-          end
-        end
+        process_with_node "cms:update_pages", Cms::Agents::Tasks::PagesController, :update, opts
       end
 
       def release_pages(opts = {})
-        find_sites(opts).each do |site|
-          ready name: "cms:release_pages", site_id: site.id do |task|
-            task.process Cms::Agents::Tasks::PagesController, :release, site: site
-          end
-        end
+        process_with_site "cms:release_pages", Cms::Agents::Tasks::PagesController, :release, opts
       end
 
       def remove_pages(opts = {})
-        find_sites(opts).each do |site|
-          ready name: "cms:remove_pages", site_id: site.id do |task|
-            task.process Cms::Agents::Tasks::PagesController, :remove, site: site
-          end
-        end
+        process_with_site "cms:remove_pages", Cms::Agents::Tasks::PagesController, :remove, opts
       end
   end
 end
