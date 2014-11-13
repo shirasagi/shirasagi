@@ -47,7 +47,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
           map.map_points.each do |point|
             point[:html] = marker_info
             point[:category] = category_ids
-            point[:pointer_image] = image_url if image_url.present?
+            point[:image] = image_url if image_url.present?
             @markers.push point
           end
         end

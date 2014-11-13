@@ -42,10 +42,10 @@ class @Map
     markerBounds = new google.maps.LatLngBounds()
 
     $.each Map.markers, (id, value) ->
-      if value["pointer_image"]
+      if value["image"]
         Map.markers[id]["marker"] = new google.maps.Marker(
           position: new google.maps.LatLng(value["loc"][0],value["loc"][1]),
-          icon: value["pointer_image"],
+          icon: value["image"],
           map: Map.map
         )
       else
