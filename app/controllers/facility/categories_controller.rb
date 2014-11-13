@@ -15,12 +15,4 @@ class Facility::CategoriesController < ApplicationController
     def pre_params
       { route: "facility/category" }
     end
-
-  public
-    def index
-      @items = @model.site(@cur_site).node(@cur_node).
-        allow(:read, @cur_user).
-        order_by(filename: 1).
-        page(params[:page]).per(50)
-    end
 end
