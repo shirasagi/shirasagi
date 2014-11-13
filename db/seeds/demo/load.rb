@@ -39,6 +39,8 @@ save_layout filename: "top.layout.html", name: "トップレイアウト"
 save_layout filename: "one.layout.html", name: "1カラム"
 save_layout filename: "faq-top.layout.html", name: "FAQトップ"
 save_layout filename: "faq.layout.html", name: "FAQ"
+save_layout filename: "event.layout.html", name: "イベントカレンダー"
+save_layout filename: "map.layout.html", name: "施設ガイド"
 save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
 save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
 save_layout filename: "urgency-layout/top-level3.layout.html", name: "緊急災害3：トップページ"
@@ -210,6 +212,9 @@ save_node route: "category/page", filename: "faq/kenko", name: "健康・福祉"
 save_node route: "category/page", filename: "faq/kanko", name: "観光・文化・スポーツ", order: 40
 save_node route: "category/page", filename: "faq/sangyo", name: "産業・仕事", order: 50
 save_node route: "category/page", filename: "faq/shisei", name: "市政情報", order: 60
+save_node route: "category/page", filename: "calendar/bunka", name: "文化・芸術", order: 10
+save_node route: "category/page", filename: "calendar/kohen", name: "講演・講座", order: 20
+save_node route: "category/page", filename: "calendar/sports", name: "スポーツ", order: 60
 
 array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 categories = Hash[*array.flatten]
@@ -222,7 +227,8 @@ save_node route: "cms/node", filename: "use", name: "ご利用案内"
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
 
 ## event
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs)
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs),
+  st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map{ |c| categories[c].id }
 
 ## uploader
 save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
@@ -248,6 +254,66 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市�
   reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
   reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
   reply_lower_text: "以上。"
+
+## facility
+save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域"
+save_node route: "facility/location", filename: "institution/chiki/higashii", name: "東区", order: 10
+save_node route: "facility/location", filename: "institution/chiki/nishi", name: "西区", order: 20
+save_node route: "facility/location", filename: "institution/chiki/minami", name: "南区", order: 30
+save_node route: "facility/location", filename: "institution/chiki/kita", name: "北区", order: 40
+
+save_node route: "cms/node", filename: "institution/shurui", name: "施設の種類"
+save_node route: "facility/category", filename: "institution/shurui/bunka", name: "文化施設", order: 10
+save_node route: "facility/category", filename: "institution/shurui/sports", name: "運動施設", order: 20
+save_node route: "facility/category", filename: "institution/shurui/school", name: "小学校", order: 30
+save_node route: "facility/category", filename: "institution/shurui/kokyo", name: "公園・公共施設", order: 40
+
+save_node route: "cms/node", filename: "institution/yoto", name: "施設の用途"
+save_node route: "facility/service", filename: "institution/yoto/asobu", name: "遊ぶ", order: 10
+save_node route: "facility/service", filename: "institution/yoto/manabu", name: "学ぶ", order: 20
+save_node route: "facility/service", filename: "institution/yoto/sodan", name: "相談", order: 30
+
+array = Facility::Node::Category.where(site_id: @site._id).map { |m| [m.filename, m] }
+facility_categories = Hash[*array.flatten]
+array = Facility::Node::Location.where(site_id: @site._id).map { |m| [m.filename, m] }
+facility_locations = Hash[*array.flatten]
+array = Facility::Node::Service.where(site_id: @site._id).map { |m| [m.filename, m] }
+facility_services = Hash[*array.flatten]
+
+save_node route: "facility/search", filename: "institution", name: "施設ガイド",
+  st_category_ids: facility_categories.values.map{ |cate| cate.id },
+  st_location_ids: facility_locations.values.map{ |loc| loc.id },
+  st_service_ids: facility_services.values.map{ |serv| serv.id }
+
+save_node route: "facility/node", filename: "institution/bunka", name: "文化施設一覧",
+  st_category_ids: facility_categories.values.map{ |cate| cate.id },
+  st_location_ids: facility_locations.values.map{ |loc| loc.id },
+  st_service_ids: facility_services.values.map{ |serv| serv.id }
+
+save_node route: "facility/node", filename: "institution/kokyo", name: "公共施設一覧",
+  st_category_ids: facility_categories.values.map{ |cate| cate.id },
+  st_location_ids: facility_locations.values.map{ |loc| loc.id },
+  st_service_ids: facility_services.values.map{ |serv| serv.id }
+
+save_node route: "facility/node", filename: "institution/school", name: "学校一覧",
+  st_category_ids: facility_categories.values.map{ |cate| cate.id },
+  st_location_ids: facility_locations.values.map{ |loc| loc.id },
+  st_service_ids: facility_services.values.map{ |serv| serv.id }
+
+save_node route: "facility/node", filename: "institution/sports", name: "運動施設一覧",
+  st_category_ids: facility_categories.values.map{ |cate| cate.id },
+  st_location_ids: facility_locations.values.map{ |loc| loc.id },
+  st_service_ids: facility_services.values.map{ |serv| serv.id }
+
+save_node route: "facility/page", filename: "institution/bunka/library", name: "シラサギ市立図書館",
+  kana: "しらさぎとしょかん",
+  address: "大鷺県シラサギ市小鷺町1丁目1番地1号",
+  tel: "00-0000-0000",
+  fax: "00-0000-0000",
+  related_url: "http://demo.ss-proj.org/",
+  category_ids: [facility_categories["institution/shurui/bunka"].id],
+  location_ids: [facility_locations["institution/chiki/higashii"].id],
+  service_ids: [facility_services["institution/yoto/manabu"].id]
 
 def save_inquiry_column(data)
   puts data[:name]
@@ -286,7 +352,7 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", 
 
 ## layout
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: layouts["pages"].id)
-Cms::Node.where(site_id: @site._id, route: /^event\//).update_all(layout_id: layouts["one"].id)
+Cms::Node.where(site_id: @site._id, route: /^event\//).update_all(layout_id: layouts["event"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "oshirase").
   update_all(layout_id: layouts["more"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "kanko").
@@ -317,6 +383,8 @@ Cms::Node.where(site_id: @site._id, filename: /^faq$/).
   update_all(layout_id: layouts["faq-top"].id)
 Cms::Node.where(site_id: @site._id, filename: /faq\//).
   update_all(layout_id: layouts["faq"].id)
+Cms::Node.where(site_id: @site._id, route: /facility\//).
+  update_all(layout_id: layouts["map"].id)
 
 ## -------------------------------------
 puts "# parts"
@@ -343,7 +411,7 @@ def save_part(data)
   item
 end
 
-save_part route: "cms/free", filename: "about.part.html", name: "SHIRASAGI市について"
+save_part route: "cms/free", filename: "about.part.html", name: "シラサギ市について"
 save_part route: "cms/free", filename: "add.part.html", name: "広告", mobile_view: "hide"
 save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
 save_part route: "cms/free", filename: "guide.part.html", name: "くらしのガイド"
@@ -362,6 +430,7 @@ save_part route: "cms/free", filename: "safety.part.html", name: "安心安全�
 save_part route: "cms/free", filename: "tool.part.html", name: "アクセシビリティーツール", mobile_view: "hide"
 save_part route: "cms/free", filename: "topics.part.html", name: "街の話題"
 save_part route: "cms/free", filename: "useful.part.html", name: "お役立ち情報"
+save_part route: "cms/free", filename: "map-side.part.html", name: "サイドメニュー：施設ガイド"
 save_part route: "article/page", filename: "attention/recent.part.html", name: "注目情報", limit: 5
 save_part route: "article/page", filename: "docs/recent.part.html", name: "新着情報"
 save_part route: "article/page", filename: "oshirase/kanko/recent.part.html", name: "お知らせ", limit: 6
@@ -384,6 +453,7 @@ save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "�
 save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報", limit: 20
 save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
 save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
+save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
 
 ## -------------------------------------
 puts "# pages"
@@ -469,13 +539,52 @@ save_page route: "article/page", filename: "urgency/28.html", name: "黒鷺県�
   layout_id: layouts["oshirase"].id, category_ids: [categories["urgency"].id]
 save_page route: "article/page", filename: "urgency/29.html", name: "黒鷺県沖で発生した地震による津波被害について。",
   layout_id: layouts["more"].id, category_ids: [categories["urgency"].id]
+save_page route: "article/page", filename: "docs/30.html", name: "ふれあいフェスティバル",
+  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
 
-dates = (Date.today..(Date.today + 12)).map { |d| d.mongoize }
-save_page route: "article/page", filename: "docs/30.html", name: "ふれあいフェスティバル", layout_id: layouts["oshirase"].id,
-  category_ids: [categories["oshirase"].id, categories["oshirase/event"].id], event_dates: dates
+dates = (Date.today..(Date.today + 20)).map { |d| d.mongoize }
+save_page route: "event/page", filename: "calendar/31.html", name: "住民相談会を開催します。",
+  layout_id: layouts["event"].id, category_ids: [categories["calendar/kohen"].id], event_dates: dates,
+  schedule: "〇〇年○月〇日", venue: "○○○○○○○○○○", cost: "○○○○○○○○○○",
+  content: "○○○○○○○○○○○○○○○○○○○○", related_url: "http://demo.ss-proj.org/"
 
 ## -------------------------------------
 puts "# faq"
 
-save_page route: "faq/page", filename: "faq/docs/31.html", name: "休日や夜間の戸籍の届出について",
+save_page route: "faq/page", filename: "faq/docs/32.html", name: "休日や夜間の戸籍の届出について",
   layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id], question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
+
+## -------------------------------------
+puts "# facility"
+
+def save_ss_files(path, data)
+  puts path
+  cond = { filename: data[:filename], model: data[:model] }
+
+  file = Fs::UploadedFile.new("ss_file")
+  file.binmode
+  file.write(File.binread(path))
+  file.rewind
+  file.original_filename = data[:filename]
+  file.content_type = Fs.content_type(path)
+
+  item = SS::File.find_or_create_by(cond)
+  item.in_file = file
+  item.update
+
+  item
+end
+
+Dir.glob "ss_files/facility/*.*" do |file|
+  save_ss_files file, filename: File.basename(file), model: "facility/temp_file"
+end
+
+array   =  SS::File.where(model: "facility/temp_file").map { |m| [m.filename, m] }
+facility_images = Hash[*array.flatten]
+
+save_page route: "facility/image", filename: "institution/bunka/library/library.html", name: "シラサギ市立図書館",
+  layout_id: layouts["map"].id, image_id: facility_images["library.jpg"].id, order: 0
+save_page route: "facility/image", filename: "institution/bunka/library/equipment.html", name: "設備",
+  layout_id: layouts["map"].id, image_id: facility_images["equipment.jpg"].id, order: 10
+save_page route: "facility/map", filename: "institution/bunka/library/map.html", name: "地図",
+  layout_id: layouts["map"].id, map_points: [  { name: "マーカー名",  loc: [  34.067035,  134.589971 ],  text: "" } ]

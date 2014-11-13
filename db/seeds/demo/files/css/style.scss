@@ -823,8 +823,8 @@ img {
 }
 
 // -----------------------------------------------------------------------------
-// links-life
-#links-life {
+// links-life, side-menu
+#links-life, #side-menu {
   margin-bottom: $box-margin;
   h1 {
     padding: 3px 6px 0;
@@ -1170,6 +1170,24 @@ img {
     }
   }
 }
+.event-pages-filter {
+  @include clear;
+  margin-bottom: $item-margin;
+  li a {
+    display: block;
+    @include float(left);
+    margin: 0 10px 10px 0;
+    padding: 3px 5px 3px;
+    @include border-radius(3px);
+    background: $hblue;
+    color: $text;
+    text-decoration: none;
+    &:hover {
+      background-color: $blue;
+      color: $t-white;
+    }
+  }
+}
 #event-list {
   clear: both;
   margin-bottom: 2em;
@@ -1192,6 +1210,14 @@ img {
       height: 0;
       overflow: hidden;
     }
+    .page {
+      margin-bottom: 0;
+      padding-bottom: 6px;
+      border: none;
+      &:last-child {
+        padding-bottom: 3px;
+      }
+    }
   }
   dl.sat {
     background: #e1ebf1;
@@ -1213,6 +1239,126 @@ img {
       border: none;
       font-size: 100%;
       font-weight: normal;
+    }
+    div {
+      @include float(left);
+      min-width: 85px;
+      margin-right: $item-margin;
+      a {
+        display: block;
+        min-width: 85px;
+        padding: 0 5px;
+        border: border-lblue;
+        background: $hblue;
+        color: $text;
+        text-decoration: none;
+      }
+    }
+  }
+  .page {
+    margin-bottom: 10px;
+    border-bottom: $border-hgry;
+    h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 100%;
+      font-weight: normal;
+    }
+    p {
+      margin-bottom: $item-margin;
+    }
+    .categories {
+      @include clear;
+      margin-bottom: 0;
+      border: none;
+      li {
+        padding-left: 0;
+      }
+      li a {
+        display: block;
+        @include float(left);
+        margin: 0 10px 10px 0;
+        padding: 3px 5px;
+        @include border-radius(3px);
+        background: $hblue;
+        color: $text;
+        text-decoration: none;
+        &:hover {
+          background-color: $blue;
+          color: $t-white;
+        }
+      }
+    }
+  }
+}
+.event .see {
+  @include clear;
+  dt {
+    clear: both;
+    @include float(left);
+    width: 150px;
+    margin: 0 $box-margin $item-margin 0;
+    padding: 3px 5px;
+    @include border-radius(3px);
+    background: $hblue;
+  }
+  dd {
+    @include float(left);
+    width: 528px;
+    margin-bottom: $item-margin;
+    padding: 3px 0;
+    word-break: break-all;
+  }
+}
+#calendar {
+  border: $border-hgry;
+  .title h2 {
+    margin-bottom: 6px;
+    padding: 5px $item-margin;
+    @include grd-blue;
+    color: $t-white;
+  }
+  .calendar-nav {
+    text-align: center;
+    li {
+      display: inline-block;
+      font-size: $px12;
+    }
+    .current {
+      margin: 0 5px;
+    }
+  }
+  .calendar {
+    margin: 0 auto $item-margin;
+    caption {
+      font-size: $px16;
+    }
+    th, td {
+      width: 40px;
+      border: $border-hgry;
+      text-align: center;
+    }
+    th {
+      background: $hblue;
+    }
+    .unit {
+      display: none;
+    }
+    td.sun {
+      color: $red;
+    }
+    td.sat {
+      color: #03c;
+    }
+    .today {
+      background: #ffeacc;
+    }
+    td.prev-month, td.next-month {
+      color: $hgry;
+      a {
+        color: $hgry;
+      }
     }
   }
 }
@@ -1362,10 +1508,281 @@ img {
   }
 }
 // -----------------------------------------------------------------------------
+// map
+.map {
+  h2 {
+    clear: both;
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px16;
+    font-weight: bold;
+  }
+  .cms-nodes h2 {
+    margin: 0;
+    border: none;
+  }
+  #side-menu h2 {
+    margin-bottom: 0;
+  }
+  .keyword {
+    input{
+      width: 469px;
+    }
+  }
+  .keyword, .category, .service, .location {
+    @include clear;
+    margin-bottom: $item-margin;
+    div {
+      @include float(left);
+      min-width: 177px;
+      min-height: 20px;
+      margin-bottom: 3px;
+      &.three {
+        margin-right: $item-margin;
+      }
+    }
+  }
+  .send {
+    margin-bottom: $box-margin;
+    text-align: center;
+    input {
+      @include btn-org;
+    }
+  }
+  .condition {
+    @include clear;
+    dt {
+      clear: both;
+      width: 160px;
+      @include float(left);
+      margin-right: $box-margin;
+      padding: 3px 10px;
+      @include border-radius(3px);
+      background: $hblue;
+    }
+    dd {
+      @include float(left);
+      margin-bottom: 6px;
+      padding: 3px 0;
+    }
+    & + p {
+      @include clear;
+    }
+  }
+  p .ajax-box {
+    display: block;
+    @include float(right);
+    @include btn-org;
+    margin-bottom: $box-margin;
+    color: $text;
+    text-decoration: none;
+  }
+  .result {
+    @include float(left);
+    border: none;
+    font-size: $px14;
+    font-weight: normal;
+  }
+  .tabs {
+    @include clear;
+    border-bottom: 2px solid $orange;
+    ul {
+      @include clear;
+      @include float(right);
+      li {
+        @include float(left);
+        a {
+          display: block;
+          margin-left: $item-margin;
+          padding: 3px 30px;
+          @include border-top-left-radius(3px);
+          @include border-top-right-radius(3px);
+          @include grd-gry;
+          color: $text;
+          text-decoration: none;
+        }
+      }
+      .current a {
+        @include grd-blue;
+        color: $t-white;
+      }
+    }
+  }
+  #map-canvas {
+    width: 712px !important;
+    height: 500px !important;
+    margin-bottom: $item-margin;
+    .maker-info {
+      width: 300px;
+    }
+  }
+  .filters {
+    @include clear;
+    li {
+      @include float(left);
+      a {
+        display: block;
+        margin: 0 $item-margin $item-margin 0;
+        padding: 3px 10px;
+        @include border-radius(3px);
+        background-color: $hgry;
+        color: $text;
+        text-decoration: none;
+        &:hover {
+          background-color: $hblue;
+        }
+        &.clicked {
+          background-color: $blue;
+          color: $t-white;
+          &:hover {
+            background-color: $hblue;
+            color: $text;
+          }
+        }
+      }
+    }
+    .area-list li a {padding:3px 10px;}
+  }
+  .columns {
+    .column {
+      clear: both;
+      padding: 6px 0;
+      border-bottom: $border-hgry;
+      .categories {
+        margin-bottom: 0;
+        border: none;
+        text-align: left;
+        ul {
+          @include clear;
+        }
+        li {
+          @include float(left);
+          a {
+            display: block;
+            margin: 0 6px 6px 0;
+            padding: 3px 10px;
+            @include border-radius(3px);
+            background-color: $hgry;
+            color: $text;
+            text-decoration: none;
+            &:hover {
+              background-color: $hblue;
+            }
+          }
+        }
+      }
+    }
+  }
+  .summary-image {
+    @include float(right);
+    padding: 4px;
+    border: $border-hgry;
+  }
+  .body {
+    @include float(left);
+    width: 528px;
+    dd {
+      width: 344px;
+    }
+  }
+  .see {
+    @include clear;
+    dt {
+      clear: both;
+      @include float(left);
+      width: 150px;
+      margin: 0 $box-margin $item-margin 0;
+      padding: 3px 5px;
+      @include border-radius(3px);
+      background: $hblue;
+    }
+    dd {
+      @include float(left);
+      margin-bottom: $item-margin;
+      padding: 3px 0;
+    }
+    & + p {
+      border: $border-hgry;
+      padding: 4px;
+    }
+  }
+  .additional-info {
+    margin-bottom: $box-margin;
+  }
+  .images {
+    @include clear;
+    margin-bottom: $box-margin;
+    .image {
+      @include float(left);
+      margin: 0 10px 10px 0;
+      padding: 4px;
+      border: $border-hgry;
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+    }
+  }
+  .facility-nodes {
+    width: 100%;
+    margin-bottom: $item-margin;
+    caption {
+      text-align: left;
+    }
+    table {
+      width: 100%;
+      margin-bottom: $box-margin;
+    }
+    caption {
+      margin-bottom: 6px;
+      padding: 0 10px;
+      border-bottom: 2px solid $blue;
+      color: $blue;
+      font-size: $px16;
+      font-weight: bold;
+    }
+    th {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+      background: $hblue;
+    }
+    td {
+      padding: 3px 8px 0;
+      border: $border-hgry;
+    }
+  }
+}
+
+#colorbox {
+  h2 {
+    clear: both;
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px16;
+    font-weight: bold;
+  }
+  .category, .service, .location {
+    div {
+      @include float(left);
+      min-width: 177px;
+    }
+  }
+  .send {
+    clear: both;
+    text-align: center;
+    input {
+      @include btn-org;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
 // smart phone
 // -----------------------------------------------------------------------------
 @media only screen and (max-width: 600px) {
-  #head, #navi .wrap, #wrap, #main, #side, #addition, #add, 
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
   #main .category-nodes article  {
@@ -1814,13 +2231,43 @@ img {
   }
 // -----------------------------------------------------------------------------
 //  event
+  .event-pages-filter {
+    padding: 10px 10px 0;
+  }
+  .event-date ul {
+    position: static;
+    margin-bottom: $smart-margin;
+    padding: 0 10px;
+  }
   #event-list {
     dt {
       float: none;
       width:100%;
+      @include box-sizing(border-box);
     }
     dd {
       margin: 0;
+      article {
+        padding: 0;
+      }
+    }
+  }
+  #event-list dd div a {
+    min-width: 0;
+  }
+  .event .see {
+    padding: 10px;
+    dt, dd {
+      display: block;
+      @include box-sizing(border-box);
+      width: 100%;
+      float: none;
+    }
+    dt {
+      margin: 0 0 $smart-margin;
+    }
+    dd {
+      padding: 0;
     }
   }
 // -----------------------------------------------------------------------------
@@ -1867,5 +2314,109 @@ img {
     keyword input {
       width: 200px;
     }
+  }
+// -----------------------------------------------------------------------------
+// map
+  .map {
+    .keyword input {
+      width: 100%;
+      @include box-sizing(border-box);
+    }
+    form .location {
+      width: 100%;
+      min-height: 0;
+      @include box-sizing(border-box);
+      background: none;
+      div {
+        position: static;
+        min-width: 150px;
+      }
+    }
+    .condition {
+      padding: 10px 10px 0;
+      & + p {
+        padding: 0 10px;
+      }
+      dt, dd {
+        float: none;
+        display: block;
+        width: 100%;
+        margin: 0;
+        @include box-sizing(border-box);
+      }
+    }
+    .tabs {
+      padding: 0 10px;
+    }
+    #map-canvas {
+      width: 100% !important;
+      height: 300px !important;
+    }
+    .filters {
+      padding: 0 10px;
+    }
+    .columns .column {
+      padding: 10px;
+    }
+    .body {
+      float: none;
+      width: 100%;
+    }
+    .summary-image {
+      display: inline-block;
+      float: none;
+      margin-bottom: 10px;
+    }
+    .see {
+      display: block;
+      width: 100%;
+      padding: 0 10px;
+      @include box-sizing(border-box);
+      dt, dd {
+        float: none;
+        display: block;
+        width: 100%;
+        margin: 0;
+        @include box-sizing(border-box);
+      }
+    }
+    .facility-nodes {
+      width: 100%;
+      th, td {
+        display: block;
+        padding: 0;
+        border: none;
+      }
+      th {
+        @include float(left);
+        background: none;
+        &:after {
+          content: " / ";
+        }
+      }
+      td:first-child {
+        margin-top: 10px;
+      }
+      td:last-child {
+        margin-bottom: 10px;
+      }
+      tr {
+        border-bottom: $border-hgry;
+      }
+    }
+  }
+  .summary-image {
+    margin: 10px;
+  }
+  .images {
+    padding: 0 10px;
+  }
+  #colorbox .category div, #colorbox .service div, #colorbox .location div {
+    float: none;
+    display: block;
+    width: 100%;
+  }
+  #colorbox .send input {
+    margin-bottom: 10px;
   }
 }
