@@ -4,12 +4,12 @@ ja:
     page: 地図記事
     loc: 位置
     zoom: ズーム
-    search: 検索
+    search: 地名を検索
     setting: マップ設定
     markers: マーカー設定
     clicked: クリック座標
     button:
-      set_marker: マーカーの位置を設定
+      set_marker: マーカーの設置
       add_marker: マーカーを追加する
       clear_marker: 削除
 

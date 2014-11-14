@@ -22,20 +22,40 @@ class @Map_Form
       if(Map.openedInfo)
         Map.openedInfo.close()
       $('dd[data-id = "' + id + '"]').each ->
+        name = $(this).find(".marker-name").val()
         text = $(this).find(".marker-text").val()
-        if text != ""
+        if name != "" || text != ""
           marker_html = '<div class="marker-info">'
-          $.each text.split(/[\r\n]+/), ->
-            if this.match(/^https?:\/\//)
-              marker_html += '<p><a href="' + this + '">' + this + '</a></p>'
-            else
-              marker_html += '<p>' + this + '</p>'
+          if name != ""
+            marker_html += '<p>' + name + '</p>'
+          if text != ""
+            $.each text.split(/[\r\n]+/), ->
+              if this.match(/^https?:\/\//)
+                marker_html += '<p><a href="' + this + '">' + this + '</a></p>'
+              else
+                marker_html += '<p>' + this + '</p>'
 
-          Map.openedInfo = new google.maps.InfoWindow(content: marker_html)
+          Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
           Map.openedInfo.open(Map.markers[id].getMap(), Map.markers[id])
         return false
       return
     return
+
+  @geocoderSearch: (address) ->
+    geocoder = new google.maps.Geocoder()
+    geocoder.geocode(
+      { "address" : address, "region" : "jp" },
+      (results, status) ->
+        if(status==google.maps.GeocoderStatus.OK)
+          result = results[0]
+          Map.map.setCenter(result.geometry.location)
+          if (result.geometry.viewport)
+            Map.map.fitBounds(result.geometry.viewport)
+        else
+          alert("座標を取得できませんでした。")
+        return
+    )
+    return false
 
   @clonePointForm: ()->
     if $(".mod-map dd.marker").length < Map_Form.maxPointForm
@@ -43,12 +63,14 @@ class @Map_Form
       cln.attr("data-id",Map_Form.dataID)
       Map_Form.dataID += 1
       cln.find("input,textarea").val ""
-      cln.find(".marker-name").val("マーカー名")
+      cln.find(".marker-name").val("")
       cln.find(".clear-marker").on 'click', ->
         Map_Form.clearPointForm(cln)
-
       cln.find(".set-marker").on 'click', ->
         Map_Form.createMarker(cln)
+      cln.find(".marker-name").on 'keypress', (e)->
+        if e.which == 13
+          return false
     return
 
   @clearPointForm: (ele)->
@@ -97,17 +119,30 @@ class @Map_Form
         map: Map.map,
       )
 
-    $(".mod-map .add-marker").on 'click', ->
+    $(".mod-map .add-marker").on 'click', (e) ->
       Map_Form.clonePointForm()
       return false
 
-    $(".mod-map .clear-marker").on 'click', ->
+    $(".mod-map .clear-marker").on 'click', (e)->
       Map_Form.clearPointForm($(this).closest("dd.marker"))
       return false
 
-    $(".mod-map .set-marker").on 'click', ->
+    $(".mod-map .set-marker").on 'click', (e)->
       Map_Form.createMarker($(this).closest("dd.marker"))
       return false
+
+    $(".mod-map .location-search").on 'click', (e)->
+      Map_Form.geocoderSearch($(".mod-map .keyword").val())
+      return false
+
+    $(".mod-map .keyword").on 'keypress', (e)->
+      if e.which == 13
+        Map_Form.geocoderSearch($(this).val())
+        return false
+
+    $(".mod-map .marker-name").on 'keypress', (e)->
+      if e.which == 13
+        return false
 
     Map.markers = []
     markerBounds = new google.maps.LatLngBounds()

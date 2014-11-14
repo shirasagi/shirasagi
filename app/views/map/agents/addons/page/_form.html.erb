@@ -10,44 +10,46 @@ $(window).on "load", ->
 <% end %>
 
 <div class="mod-map">
-  <div id="map-container">
-    <div id="map-canvas"></div>
-  </div>
-  <div id="map-markers">
-    <dl class="marker-setting">
-      <dt>
-        <%= t("map.markers") %><%= @item.tt :map_points %>
-        <%= hidden_field_tag :clicked, nil, class: "loc clicked" %>
-      </dt>
-      <% if @item.map_points.blank? %>
-        <dd class="marker">
-          <p>
-            <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
-            <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
-            <%= text_field_tag "item[map_points][][name]", @item.t(:marker_name), class: "marker-name" %>
-            <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
-          </p>
-          <p>
-            <span class="text"><%= @item.t :marker_text %></span>
-            <%= text_area_tag "item[map_points][][text]", nil, class: "marker-text" %>
-          </p>
-        </dd>
-      <% end %>
-      <% @item.map_points.each do |point| %>
-        <dd class="marker">
-          <p>
-            <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
-            <%= text_field_tag "item[map_points][][name]", point[:name], class: "marker-name" %>
-            <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
-            <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
-          </p>
-          <p>
-            <span class="text"><%= @item.t :marker_text %></span>
-            <%= text_area_tag "item[map_points][][text]", point[:text], class: "marker-text" %>
-          </p>
-        </dd>
-      <% end %>
-      <dd><%= button_tag t("map.button.add_marker"), { type: :button, class: "add-marker" } %></dd>
-    </dl>
+  <%= text_field_tag :keyword, nil, class: "keyword", placeholder: t("map.search") %>
+    <%= button_tag t("views.button.search"), { type: :button, class: "location-search" } %>
+  <div id="map-canvas" style="width: 100%; height: 320px"></div>
+  <dl class="marker-setting">
+    <dt>
+      <%= t("map.markers") %><%= @item.tt :map_points %>
+      <%= hidden_field_tag :clicked, nil, class: "loc clicked" %>
+    </dt>
+    <% if @item.map_points.blank? %>
+      <dd class="marker">
+        <p>
+          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
+          <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
+          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
+        </p>
+        <p>
+          <%= text_field_tag "item[map_points][][name]", nil, class: "marker-name", placeholder: @item.t(:marker_name) %>
+        </p>
+        <p>
+          <%= text_area_tag "item[map_points][][text]", nil, class: "marker-text", placeholder: @item.t(:marker_text) %>
+        </p>
+      </dd>
+    <% end %>
+    <% @item.map_points.each do |point| %>
+      <dd class="marker">
+        <p>
+          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
+          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
+        </p>
+        <p>
+          <%= text_field_tag "item[map_points][][name]",  point[:name], class: "marker-name", placeholder: @item.t(:marker_name) %>
+        </p>
+        <p>
+          <%= text_area_tag "item[map_points][][text]", point[:text], class: "marker-text", placeholder: @item.t(:marker_text) %>
+        </p>
+      </dd>
+    <% end %>
+  </dl>
+  <div>
+    <%= button_tag t("map.button.add_marker"), { type: :button, class: "add-marker" } %>
   </div>
 </div>

@@ -61,13 +61,18 @@ class @Map
         Map.markers[id]["window"] = new google.maps.InfoWindow(
           content: marker_html
         )
-      else if value["text"]
+      else if value["name"] || value["text"]
+        name = value["name"]
+        text = value["text"]
         marker_html = '<div class="marker-info">'
-        $.each value["text"].split(/[\r\n]+/), ->
-          if this.match(/^https?:\/\//)
-            marker_html += '<p><a href="' + this + '">' + this + '</a></p>'
-          else
-            marker_html += '<p>' + this + '</p>'
+        if name != ""
+            marker_html += '<p>' + name + '</p>'
+          if text != ""
+            $.each text.split(/[\r\n]+/), ->
+              if this.match(/^https?:\/\//)
+                marker_html += '<p><a href="' + this + '">' + this + '</a></p>'
+              else
+                marker_html += '<p>' + this + '</p>'
 
         marker_html += '</div>'
         Map.markers[id]["window"] = new google.maps.InfoWindow(
