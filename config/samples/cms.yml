@@ -10,6 +10,11 @@ production: &production
   # Link Check Ajax URL
   link_check_url: /.cms/link_check/check.json
 
+  # Google Map API Center Location
+  map_center:
+    - 36.204824
+    - 138.252924
+
 test:
   <<: *production
 

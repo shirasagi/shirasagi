@@ -16,8 +16,13 @@ class @Map
     return
 
   @load: (element) ->
+    <% if SS.config.cms.map_center.present? %>
+    map_center = [<%= SS.config.cms.map_center[0] %>, <%= SS.config.cms.map_center[1] %>]
+    <% else %>
+    map_center = [36.204824, 138.252924]
+    <% end %>
     mapOptions = {
-      center: new google.maps.LatLng(35.392915, 139.442888),
+      center: new google.maps.LatLng(map_center[0], map_center[1]),
       zoom: 5,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       panControl: false,
