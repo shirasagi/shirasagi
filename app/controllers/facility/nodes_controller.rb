@@ -5,7 +5,7 @@ class Facility::NodesController < ApplicationController
   model Facility::Node::Base
 
   prepend_view_path "app/views/cms/node/nodes"
-  navi_view "facility/main/navi"
+  navi_view "facility/node/navi"
 
   private
     def fix_params

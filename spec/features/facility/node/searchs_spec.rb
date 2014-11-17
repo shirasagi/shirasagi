@@ -5,7 +5,6 @@ describe "facility_node_searches" do
   subject(:node) { create_once :facility_node_search, name: "facility" }
   subject(:item) { Cms::Node.last }
   subject(:index_path) { facility_searches_path site.host, node }
-  subject(:page_index_path) { facility_pages_path site.host, node }
   subject(:new_path) { new_facility_search_path site.host, node }
   subject(:show_path) { facility_search_path site.host, node, item }
   subject(:edit_path) { edit_facility_search_path site.host, node, item }
@@ -63,7 +62,7 @@ describe "facility_node_searches" do
       within "form" do
         click_button "削除"
       end
-      expect(current_path).to eq page_index_path
+      expect(current_path).to eq index_path
     end
   end
 end
