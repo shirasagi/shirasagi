@@ -1,6 +1,8 @@
 ja:
   facility:
     facility: 施設
+    node: 施設一覧
+    search: 施設検索
     page: 施設情報
     category:
       setting: 種類設定

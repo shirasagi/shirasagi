@@ -24,8 +24,10 @@ $ ->
 
 <div class="columns">
   <% @items.each do |item| %>
-    <div class="column">
-      <p class="name"><%= link_to item.name, item.url %></p>
+    <article class="column">
+      <header>
+        <h2 class="name"><%= link_to item.name, item.url %></h2>
+      </header>
       <div class="categories">
         <ul>
           <% item.categories.each do |cate| %>
@@ -36,7 +38,7 @@ $ ->
         </ul>
       </div>
       <p class="address"><%= item.address %></p>
-    </div>
+    </article>
   <% end %>
 </div>
 

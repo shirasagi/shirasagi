@@ -2,9 +2,10 @@ class Facility::SearchesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
 
-  model Facility::Node::Search
+  model Facility::Node::Base
 
   prepend_view_path "app/views/cms/node/nodes"
+  navi_view "facility/search/navi"
 
   private
     def fix_params
@@ -12,12 +13,6 @@ class Facility::SearchesController < ApplicationController
     end
 
     def pre_params
-      { route: "facility/search" }
-    end
-
-  public
-    def index
-      redirect_to facility_pages_path
-      return
+      { route: "facility/node" }
     end
 end

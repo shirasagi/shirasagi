@@ -3,11 +3,15 @@
   <dd><%= f.text_field :image_alt %></dd>
 
   <dt><%= @model.t :image_thumb_size %><%= @model.tt :image_thumb_size %></dt>
-  <dd>
-    <span class: "thumb-width"><%= @model.t :image_thumb_width %></span>
-    <%= f.number_field :image_thumb_width, class: "thumb-width" %>
-    <span class: "thumb-height"><%= @model.t :image_thumb_height %></span>
-    <%= f.number_field :image_thumb_height, class: "thumb-height" %>
+  <dd class="image-thumb-size">
+    <label class="width">
+      <%= @model.t :image_thumb_width %>
+      <%= f.number_field :image_thumb_width %>
+    </label>
+    <label class="height">
+      <%= @model.t :image_thumb_height %>
+      <%= f.number_field :image_thumb_height %>
+    </label>
   </dd>
 
   <dt><%= @model.t :image_comment %><%= @model.tt :image_comment %></dt>

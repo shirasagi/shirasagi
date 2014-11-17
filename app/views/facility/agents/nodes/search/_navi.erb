@@ -7,9 +7,13 @@
   <dd><%= @locations.pluck(:name).join("、") %></dd>
 </dl>
 
-<p><%= link_to t("facility.submit.change"), "#", class: "ajax-box" %></p>
+<nav class="setting"><%= link_to t("facility.submit.change"), "#", class: "ajax-box" %></nav>
 
-<h2 class="result"><%= t("facility.result") %><span class="number"><%= @items.count %></span><%= t("facility.count") %></h2>
+<section class="result">
+  <h2>
+    <%= t("facility.result") %><span class="number"><%= @items.count %></span><%= t("facility.count") %>
+  </h2>
+</section>
 
 <nav class="tabs">
   <ul>

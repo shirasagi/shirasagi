@@ -2,21 +2,12 @@
 
 <nav class="sub-menu">
   <header><h1><%= t "facility.facility" %></h1></header>
-  <% if params[:action] =~ /show|edit/ %>
-  <div>
-    <%= link_to :"facility.image", facility_images_path(cid: @item.id), class: "icon-page" %>
-  </div>
-  <div>
-    <%= link_to :"facility.map", facility_maps_path(cid: @item.id), class: "icon-page" %>
-  </div>
-  <% else %>
   <div>
     <%= link_to :"facility.search", facility_searches_path, class: "icon-node" %>
   </div>
   <div>
     <%= link_to :"facility.page", facility_pages_path, class: "icon-node" %>
   </div>
-  <% end %>
 </nav>
 
 <% end %>

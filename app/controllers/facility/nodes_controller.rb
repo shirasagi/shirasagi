@@ -2,9 +2,10 @@ class Facility::NodesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
 
-  model Facility::Node::Node
+  model Facility::Node::Base
 
   prepend_view_path "app/views/cms/node/nodes"
+  navi_view "facility/main/navi"
 
   private
     def fix_params
@@ -12,7 +13,7 @@ class Facility::NodesController < ApplicationController
     end
 
     def pre_params
-      { route: "facility/node" }
+      { route: "facility/page" }
     end
 
   public
