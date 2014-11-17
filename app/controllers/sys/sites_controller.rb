@@ -23,30 +23,10 @@ class Sys::SitesController < ApplicationController
       raise "403" unless @item.allowed?(:edit, @cur_user)
       result = @item.save
       if result
-        permissions = %w(
-          edit_cms_sites
-          edit_cms_users
-          read_other_cms_nodes
-          read_other_cms_pages
-          read_other_cms_parts
-          read_other_cms_layouts
-          edit_other_cms_nodes
-          edit_other_cms_pages
-          edit_other_cms_parts
-          edit_other_cms_layouts
-          delete_other_cms_nodes
-          delete_other_cms_pages
-          delete_other_cms_parts
-          delete_other_cms_layouts
-          read_other_article_pages
-          edit_other_article_pages
-          delete_other_article_pages
-        )
-
         cond = {
           site_id: @item.id,
           name: "admin",
-          permissions: permissions,
+          permissions: Cms::Role.permission_names,
           permission_level: 3
         }
 
