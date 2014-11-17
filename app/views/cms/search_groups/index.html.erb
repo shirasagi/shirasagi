@@ -1,102 +1,36 @@
 <%= coffee do %>
 
-selectGroups =(groups) ->
-  for group in groups
-    tr = $("<tr>").attr("data-id", group["id"])
-    input = $("<td>").append($("input:hidden.hidden-groups-ids:first").clone(false))
-    input.find("input").val(group["id"])
-    input.append(group["name"])
-    deselect = $("<td>").append('<%= link_to t("cms.search_groups.deselect"), "#", class: :deselect %>')
-    deselect.find("a.deselect").click(deselectGroup)
-    tr.append(input)
-    tr.append(deselect)
-    $("table.selected-groups tbody").append(tr)
-    $("table.selected-groups").show()
-  return
-
-deselectGroup =() ->
-  $(this).parents("tr:first").remove()
-  if $("table.selected-groups tr[data-id]").size() == 0
-    $("table.selected-groups table.index").hide()
-  return false
-
-searchGroups =(elem) ->
-  elem = $(elem)
-  elem.on "submit", (e) ->
-    elem.find("input").attr "disabled", true
-    url = "<%= request.url %>"
-    query = elem.find("input.query").val().trim()
-    site =
-    $.ajax {
-      type: "GET", url: url, cache: false,
-      data: { s: { name: query }, site: site },
-      success: (data) ->
-        $("div.search-groups").children().remove()
-        $("div.search-groups").append data
-
-        selected = []
-        $("table.selected-groups tbody tr").each ->
-          selected.push $(this).attr("data-id")
-        for id in selected
-          $(".search-groups tbody tr[data-id=#{id}]").remove()
-
-        return
-      complete: (xhr, status) ->
-        elem.find("input").removeAttr "disabled"
-        SS_ListUI.render($(".search-groups table"))
-
-        $(".search-groups tbody a[href]").click ->
-          name = $(this).text()
-          id = $(this).parents("tr:first").attr("data-id")
-          selectGroups([{id : id, name : name}])
-          $.colorbox.close()
-          return false
-
-        $(".search-groups table").change(toggleSelectButton)
-    }
-    return false
-  return
-
-toggleSelectButton =()->
-  if $(".search-groups tbody input:checkbox").filter(":checked").size() > 0
-    $("button.select-groups").parent("div:first").show()
-  else
-    $("button.select-groups").parent("div:first").hide()
-
 $ ->
-  searchGroups "form.search-groups"
-  $("button.select-groups").click ->
-    groups = []
-    $(".search-groups tbody input:checkbox").filter(":checked").each ->
-      name = $(this).parents("tr:first").text()
-      id = $(this).parents("tr:first").attr("data-id")
-      groups.push { id: id,  name: name }
-    selectGroups(groups)
-    $.colorbox.close()
-    return false
-  $("form.search-groups").trigger('submit');
-  toggleSelectButton()
+  SS_SearchUI.modal()
 
 <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-<%= form_for :item, url: { action: :index }, html: { method: "GET", class: "search-groups", multipart: true } do |f| %>
-  <%= text_field_tag :query, nil, { id: nil, class: "query" } %>
-  <%= f.submit t("cms.search_groups.search"), class: :search %>
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search, multipart: true } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit  t("cms.search_groups.search") %>
 <% end %>
 </div>
 
-<div class="search-groups">
-  <table class="index">
-    <thead>
-      <tr>
-        <th style="width: 20px;"><input type="checkbox" /></th>
-        <th class="name"><%= @model.t :name %></th>
+<table class="index">
+  <thead>
+    <tr>
+      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th class="name"><%= @model.t :name %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <td><%= link_to item.name, "#", class: "select-item" %></td>
       </tr>
-    </thead>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-  <%= button_tag t("cms.search_groups.select"), { type: :button, class: "select-groups" } %>
+  <%= button_tag t("cms.search_groups.select"), { type: :button, class: "select-items" } %>
 </div>

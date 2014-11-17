@@ -1,101 +1,40 @@
 <%= coffee do %>
 
-selectPages =(pages) ->
-  for page in pages
-    tr = $("<tr>").attr("data-id", page["id"])
-    input = $("<td>").append($("input:hidden.hidden-pages-ids:first").clone(false))
-    input.find("input").val(page["id"])
-    input.append(page["name"])
-    deselect = $("<td>").append('<%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %>')
-    deselect.find("a.deselect").click(deselectPage)
-    tr.append(input)
-    tr.append(deselect)
-    $("table.selected-pages tbody").prepend(tr)
-    $("table.selected-pages").show()
-  return
-
-deselectPage =() ->
-  $(this).parents("tr:first").remove()
-  if $("table.selected-pages tr[data-id]").size() == 0
-    $("table.selected-pages table.index").hide()
-  return false
-
-searchPages =(elem) ->
-  elem = $(elem)
-  elem.on "submit", (e) ->
-    elem.find("input").attr "disabled", true
-    url = "<%= request.url %>"
-    query = elem.find("input.query").val().trim()
-    $.ajax {
-      type: "GET", url: url, cache: false,
-      data: { s: { name: query } },
-      success: (data) ->
-        $("div.search-pages").children().remove()
-        $("div.search-pages").append data
-
-        selected = []
-        $("table.selected-pages tbody tr").each ->
-          selected.push $(this).attr("data-id")
-        for id in selected
-          $(".search-pages tbody tr[data-id=#{id}]").remove()
-
-        return
-      complete: (xhr, status) ->
-        elem.find("input").removeAttr "disabled"
-        SS_ListUI.render($(".search-pages table"))
-
-        $(".search-pages tbody a[href]").click ->
-          name = $(this).text()
-          id = $(this).parents("tr:first").attr("data-id")
-          selectPages([{id : id, name : name}])
-          $.colorbox.close()
-          return false
-
-        $(".search-pages table").change(toggleSelectButton)
-    }
-    return false
-  return
-
-toggleSelectButton =()->
-  if $(".search-pages tbody input:checkbox").filter(":checked").size() > 0
-    $("button.select-pages").parent("div:first").show()
-  else
-    $("button.select-pages").parent("div:first").hide()
-
 $ ->
-  searchPages "form.search-pages"
-  $("button.select-pages").click ->
-    pages = []
-    $(".search-pages tbody input:checkbox").filter(":checked").each ->
-      name = $(this).parents("tr:first").find("td.name").text()
-      id = $(this).parents("tr:first").attr("data-id")
-      pages.push { id: id,  name: name }
-    selectPages(pages)
-    $.colorbox.close()
-    return false
-  $("form.search-pages").trigger('submit');
-  toggleSelectButton()
+  SS_SearchUI.modal()
 
 <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-<%= form_for :item, url: { action: :index }, html: { method: "GET", class: "search-pages", multipart: true } do |f| %>
-  <%= text_field_tag :query, nil, { id: nil, class: "query" } %>
-  <%= f.submit t("cms.search_pages.search"), class: :search %>
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search, multipart: true } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit  t("cms.search_pages.search") %>
 <% end %>
 </div>
 
-<div class="search-pages">
-  <table class="index">
-    <thead>
-      <tr>
-        <th style="width: 20px;"><input type="checkbox" /></th>
-        <th class="name"><%= @model.t :name %></th>
+<table class="index">
+  <thead>
+    <tr>
+      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="filename"><%= @model.t :filename %></th>
+      <th class="updated"><%= @model.t :updated %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <td class="name"><%= link_to item.name, "#", class: "select-item" %></td>
+        <td class="filename"><%= item.filename %></td>
+        <td class="updated"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
       </tr>
-    </thead>
-  </table>
-</div>
+    <% end %>
+  </tbody>
+</table>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-  <%= button_tag t("cms.search_pages.select"), { type: :button, class: "select-pages" } %>
+  <%= button_tag t("cms.search_pages.select"), { type: :button, class: "select-items" } %>
 </div>
