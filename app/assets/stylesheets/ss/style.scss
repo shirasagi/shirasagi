@@ -462,7 +462,7 @@ input.date, input.datetime {
 // map
 .mod-map {
   .keyword {
-    width: 400px;
+    max-width: 400px;
     margin-bottom: 10px;
   }
   .marker-setting {
