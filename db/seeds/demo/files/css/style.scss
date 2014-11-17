@@ -767,6 +767,7 @@ img {
   border-left: 5px solid $orange;
   @include grd-blue;
   font-size: $px18;
+  font-weight: bold;
   color: $t-white;
 }
 
@@ -1001,6 +1002,7 @@ img {
     padding: 3px 10px 0;
     background: $hblue;
     font-size: $px16;
+    font-weight: bold;
     &:first-child {
       margin-top: 0;
     }
@@ -1062,7 +1064,7 @@ img {
     th {
       padding: 3px 8px 0;
       border: $border-hgry;
-      background: $hblue;
+      background: #ffefbb;
       text-align: left;
     }
     td {
