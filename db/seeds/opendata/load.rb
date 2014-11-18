@@ -156,15 +156,15 @@ save_part filename: "sns-share.part.html" , name: "SNSシェアボタン", route
 save_part filename: "portal-kv.part.html" , name: "ポータル：キービジュアル", route: "cms/free"
 save_part filename: "portal-about.part.html" , name: "ポータル：Our Open Dateとは", route: "cms/free"
 save_part filename: "portal-tab.part.html" , name: "ポータル：新着タブ", route: "cms/tabs", conditions: %w(info event), limit: 5
-save_part filename: "portal-dataset.part.html" , name: "ポータル：オープンデータカタログ", route: "opendata/dataset"
+save_part filename: "portal-dataset.part.html" , name: "ポータル：オープンデータカタログ", route: "opendata/dataset", limit: 5
 save_part filename: "portal-plan.part.html" , name: "ポータル：公開予定", route: "cms/free"
 save_part filename: "portal-fb.part.html" , name: "ポータル：facebook", route: "cms/free"
 save_part filename: "dataset-head.part.html" , name: "データ：ヘッダー", route: "cms/free"
 save_part filename: "dataset-kv.part.html" , name: "データ：キービジュアル", route: "cms/free"
 save_part filename: "dataset-group.part.html" , name: "データ：グループ", route: "opendata/dataset_group"
-save_part filename: "dataset-news.part.html" , name: "データ：新着順", route: "opendata/dataset"
-save_part filename: "dataset-popular.part.html" , name: "データ：人気順", route: "opendata/dataset"
-save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset"
+save_part filename: "dataset-news.part.html" , name: "データ：新着順", route: "opendata/dataset", limit: 7
+save_part filename: "dataset-popular.part.html" , name: "データ：人気順", route: "opendata/dataset", limit: 7
+save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset", limit: 7
 save_part filename: "mypage-head.part.html" , name: "マイページ：ヘッダー", route: "cms/free"
 
 ## -------------------------------------
