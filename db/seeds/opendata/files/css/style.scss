@@ -781,6 +781,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
         right: 0;
         margin: 2px;
         padding: 2px 5px;
+        cursor: pointer
       }
     }
   }
@@ -1230,6 +1231,10 @@ nav.cms-sns_share {
 
 // -----------------------------------------------------------------------------
 // inquiry
+.inquiry-html p {
+  margin-bottom: 12px;
+}
+
 .inquiry-form {
   margin-bottom: $box-margin;
   dl {
@@ -1279,10 +1284,10 @@ nav.cms-sns_share {
       margin-right: 12px;
       padding: 6px 12px;
       @include btn-blue-left;
+      cursor: pointer
     }
     input[name="cancel"] {
       @include btn-gry;
-      color: $text;
     }
   }
   .inquiry-confirm-message {
