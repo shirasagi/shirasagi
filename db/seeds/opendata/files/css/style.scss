@@ -526,6 +526,13 @@ textarea {
   }
 }
 
+.s-dataset #contents footer.contact {
+  h1 {
+    background: $data-blue;
+    color: $text;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // calendar
 .event-date {
