@@ -1,0 +1,14 @@
+<div class="page">
+<article class="body">
+    <h1>納税課の概要</h1>
+    <table>
+        <tbody>
+            <tr><th scope="row">所在地</th><td>シラサギ市本庁舎　3階<br /><a href="/shisei/chosha/">庁舎案内</a></td></tr>
+            <tr><th scope="row">電話番号</th><td>000-000-0000</td></tr>
+            <tr><th scope="row">ファックス番号</th><td>000-000-0000</td></tr>
+            <tr><th scope="row">メールアドレス</th><td>nouzei@example.jp</td></tr>
+        </tbody>
+    </table>
+    <h1>業務概要</h1>
+    <p>市税の収納、納税相談、滞納処分、納税証明発行など。</p>
+    <h1>お知らせ</h1>

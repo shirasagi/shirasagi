@@ -200,7 +200,19 @@ save_node route: "category/page", filename: "shisei/koho/shiryo", name: "報道�
 save_node route: "category/page", filename: "shisei/senkyo", name: "選挙"
 save_node route: "category/page", filename: "shisei/shicho", name: "市長の部屋"
 save_node route: "category/page", filename: "shisei/shisaku", name: "施策・計画"
-save_node route: "category/page", filename: "shisei/soshiki", name: "組織案内"
+save_node route: "category/node", filename: "shisei/soshiki", name: "組織案内"
+save_node route: "category/node", filename: "shisei/soshiki/kikaku", name: "企画政策部", order: 10
+save_node route: "category/node", filename: "shisei/soshiki/soumu", name: "総務部", order: 20
+save_node route: "category/node", filename: "shisei/soshiki/keizai", name: "経済部", order: 30
+save_node route: "category/node", filename: "shisei/soshiki/kensetu", name: "建設部", order: 40
+save_node route: "category/node", filename: "shisei/soshiki/kikikanri", name: "危機管理部", order: 50
+save_node route: "category/node", filename: "shisei/soshiki/kyoiku", name: "教育委員会", order: 60
+save_node route: "category/page", filename: "shisei/soshiki/kikaku/koho", name: "広報課", order: 10
+save_node route: "category/page", filename: "shisei/soshiki/kikaku/seisaku", name: "政策課", order: 20
+save_node route: "category/page", filename: "shisei/soshiki/kikaku/hisho", name: "秘書課", order: 30
+save_node route: "category/page", filename: "shisei/soshiki/soumu/somu", name: "総務課", order: 10
+save_node route: "category/page", filename: "shisei/soshiki/soumu/shokuin", name: "職員課", order: 20
+save_node route: "category/page", filename: "shisei/soshiki/soumu/nouzei", name: "納税課", order: 30
 save_node route: "category/page", filename: "shisei/toke", name: "統計・人口"
 save_node route: "category/page", filename: "shisei/toshi", name: "都市整備"
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革"
@@ -441,7 +453,7 @@ save_part route: "article/page", filename: "oshirase/recent.part.html", name: "�
 save_part route: "article/page", filename: "oshirase/sangyo/recent.part.html", name: "お知らせ", limit: 5
 save_part route: "article/page", filename: "oshirase/shisei/recent.part.html", name: "お知らせ", limit: 5
 save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンくず", mobile_view: "hide"
-save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト"
+save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト", limit: 20, sort: "order"
 save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
   conditions: %w(oshirase oshirase/event shisei/jinji), limit: 6
 save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
@@ -481,6 +493,7 @@ save_page route: "cms/page", filename: "mobile.html", name: "スマートフォ�
 save_page route: "cms/page", filename: "sitemap/index.html", name: "サイトマップ", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
+save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内", layout_id: layouts["category-middle"].id
 
 ## -------------------------------------
 puts "# articles"
@@ -488,21 +501,47 @@ puts "# articles"
 save_page route: "article/page", filename: "docs/1.html", name: "インフルエンザによる学級閉鎖状況",
   layout_id: layouts["pages"].id, category_ids: [categories["attention"].id]
 save_page route: "article/page", filename: "docs/2.html", name: "コンビニ納付のお知らせ",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id]
-save_page route: "article/page", filename: "docs/3.html", name: "平成26年第1回SHIRASAGI市議会定例会を開催します",
+  layout_id: layouts["oshirase"].id,
+  category_ids: [ categories["attention"].id,
+                  categories["shisei/soshiki"].id,
+                  categories["shisei/soshiki/kikaku"].id,
+                  categories["shisei/soshiki/kikaku/koho"].id,
+                  categories["shisei/soshiki/kikaku/seisaku"].id,
+                  categories["shisei/soshiki/soumu"].id,
+                  categories["shisei/soshiki/soumu/nouzei"].id
+                ]
+save_page route: "article/page", filename: "docs/3.html", name: "平成26年第1回シラサギ市議会定例会を開催します",
   layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id]
 save_page route: "article/page", filename: "docs/4.html", name: "放射性物質・震災関連情報",
   layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id]
 save_page route: "article/page", filename: "docs/5.html", name: "市内の微小粒子状物質（PM2.5）の測定データ（速報値）を公開しています。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id]
 save_page route: "article/page", filename: "docs/7.html", name: "還付金詐欺と思われる不審な電話にご注意ください",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
-save_page route: "article/page", filename: "docs/8.html", name: "平成26年度　SHIRASAGI市システム構築に係るの公募型企画競争",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
+  layout_id: layouts["oshirase"].id,
+  category_ids: [ categories["oshirase"].id,
+                  categories["shisei/soshiki"].id,
+                  categories["shisei/soshiki/kikaku"].id,
+                  categories["shisei/soshiki/kikaku/koho"].id,
+                  categories["shisei/soshiki/kikaku/seisaku"].id,
+                ]
+save_page route: "article/page", filename: "docs/8.html", name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
+  layout_id: layouts["oshirase"].id,
+  category_ids: [ categories["oshirase"].id,
+                  categories["shisei/soshiki"].id,
+                  categories["shisei/soshiki/kikaku"].id,
+                  categories["shisei/soshiki/kikaku/koho"].id,
+                  categories["shisei/soshiki/kikaku/seisaku"].id,
+                ]
 save_page route: "article/page", filename: "docs/9.html", name: "冬の感染症に備えましょう",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
 save_page route: "article/page", filename: "docs/11.html", name: "広報SHIRASAGI3月号を掲載",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
+  layout_id: layouts["oshirase"].id,
+  category_ids: [ categories["oshirase"].id,
+                  categories["oshirase/kurashi"].id,
+                  categories["shisei/soshiki"].id,
+                  categories["shisei/soshiki/kikaku"].id,
+                  categories["shisei/soshiki/kikaku/koho"].id,
+                ]
 save_page route: "article/page", filename: "docs/12.html", name: "インフルエンザ流行警報がでています",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
 save_page route: "article/page", filename: "docs/14.html", name: "転出届",
@@ -522,7 +561,14 @@ save_page route: "article/page", filename: "docs/20.html", name: "住民票コ�
 save_page route: "article/page", filename: "docs/21.html", name: "住民票コードの変更",
   layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
 save_page route: "article/page", filename: "docs/22.html", name: "自動交付機・コンビニ交付サービスについて",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id,
+  category_ids: [ categories["oshirase"].id,
+                  categories["oshirase/kurashi"].id,
+                  categories["shisei/soshiki"].id,
+                  categories["shisei/soshiki/kikaku"].id,
+                  categories["shisei/soshiki/kikaku/koho"].id,
+                  categories["shisei/soshiki/kikaku/seisaku"].id,
+                ]
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届",
   layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
 save_page route: "article/page", filename: "oshirase/kurashi/23.html", name: "犬・猫を譲り受けたい方",
@@ -530,18 +576,35 @@ save_page route: "article/page", filename: "oshirase/kurashi/23.html", name: "�
 save_page route: "article/page", filename: "oshirase/kurashi/24.html", name: "平成26年度住宅補助金の募集について掲載しました。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
 save_page route: "article/page", filename: "oshirase/kurashi/25.html", name: "休日臨時窓口を開設します。",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
+  layout_id: layouts["oshirase"].id,
+  category_ids: [ categories["oshirase"].id,
+                  categories["oshirase/kurashi"].id,
+                  categories["shisei/soshiki"].id,
+                  categories["shisei/soshiki/kikaku"].id,
+                  categories["shisei/soshiki/kikaku/koho"].id,
+                  categories["shisei/soshiki/kikaku/seisaku"].id,
+                ]
 save_page route: "article/page", filename: "oshirase/kurashi/26.html", name: "身体障害者手帳の認定基準が変更",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
 save_page route: "article/page", filename: "oshirase/kurashi/27.html", name: "平成26年4月より国民健康保険税率が改正されます",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
+  layout_id: layouts["oshirase"].id,
+  category_ids: [ categories["oshirase"].id,
+                  categories["oshirase/kurashi"].id,
+                  categories["shisei/soshiki/soumu"].id,
+                  categories["shisei/soshiki/soumu/nouzei"].id
+                ]
 save_page route: "article/page", filename: "urgency/28.html", name: "黒鷺県沖で発生した地震による当市への影響について。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["urgency"].id]
 save_page route: "article/page", filename: "urgency/29.html", name: "黒鷺県沖で発生した地震による津波被害について。",
   layout_id: layouts["more"].id, category_ids: [categories["urgency"].id]
 save_page route: "article/page", filename: "docs/30.html", name: "ふれあいフェスティバル",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
-
+  layout_id: layouts["oshirase"].id,
+  category_ids: [ categories["oshirase"].id,
+                  categories["oshirase/event"].id,
+                  categories["shisei/soshiki"].id,
+                  categories["shisei/soshiki/kikaku"].id,
+                  categories["shisei/soshiki/kikaku/koho"].id,
+                ]
 dates = (Date.today..(Date.today + 20)).map { |d| d.mongoize }
 save_page route: "event/page", filename: "calendar/31.html", name: "住民相談会を開催します。",
   layout_id: layouts["event"].id, category_ids: [categories["calendar/kohen"].id], event_dates: dates,
