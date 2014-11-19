@@ -8,7 +8,7 @@ def cate_form(item)
   h << @f.check_box("area_ids[]", {}, item._id)
   h << %(#{item.name}</label>)
 
-  children = item.children
+  children = item.children.sort(order: 1)
 
   if children.size > 0
     cc = children.map { |c| c.children.size }.max != 0
