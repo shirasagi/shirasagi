@@ -35,6 +35,7 @@ gem "rmagick"
 gem "holiday_japan"
 gem "mail-iso-2022-jp"
 gem 'simple_captcha2', require: 'simple_captcha'
+gem "rails_autolink"
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
