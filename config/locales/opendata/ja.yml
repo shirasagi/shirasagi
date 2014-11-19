@@ -82,7 +82,7 @@ ja:
         name: データセット名
         text: 説明
         site_id: サイト
-        user_id: 作成者ユーザー
+        user_id: データ作成者
         group_id: 所属グループ
         categry_ids: 分野
         point: 評価
@@ -101,7 +101,7 @@ ja:
       opendata/app:
         site_id: サイト
         name: アプリ名
-        user_id: 作成者ユーザー
+        user_id: アプリ作成者
         group_id: 所属グループ
         categry_ids: カテゴリー
         dataset_ids: データセット
