@@ -66,7 +66,7 @@ categories = [
 </nav>
 
 <div class="text">
-  <%=br @cur_page.send :text %>
+  <%=br auto_link(@cur_page.text, html: { target: "_blank" } ) %>
 </div>
 
 <div class="detail">
@@ -88,15 +88,15 @@ categories = [
       </div>
       <div class="resources">
         <% @cur_page.resources.each do |rs| %>
-        <div class="name format-<%= rs.format.downcase %>">
-          <%= rs.name %>
-          (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
-          <% if rs.rdf_iri.present? %>
-          <div><%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %></div>
-          <% end %>
-        </div>
-        <div><%= link_to "ダウンロード", rs.url, class: "download" %></div>
-        <div class="text"><%= rs.text %></div>
+          <div class="name format-<%= rs.format.downcase %>">
+            <%= rs.name %>
+            (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
+            <% if rs.rdf_iri.present? %>
+            <div class="sparql"><%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %></div>
+            <% end %>
+          </div>
+          <div><%= link_to "ダウンロード", rs.url, class: "download" %></div>
+          <div class="text"><%=br auto_link(rs.text, html: { target: "_blank" } ) %></div>
         <% end %>
       </div>
     </div>
