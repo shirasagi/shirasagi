@@ -53,7 +53,7 @@ module Cms::PublicFilter::Layout
         response.body = %(#{notice_html}#{response.body})
       end
 
-      html.gsub!('#{page_name}', @cur_item.name)
+      html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
       html.sub!("</ yield />", response.body)
       html
     end
