@@ -135,12 +135,10 @@ class @SS_Font
 
 class @SS_AdobeReader
   @render: ->
-    $("#ss-adobe-reader, .ss-adobe-reader").each ->
-      ele = $(this).hide()
-      $("a[href]").each ->
-       if $(this).attr("href").match(/\.pdf/i)
-         ele.show()
-         return false
+    if $("a[href$='.pdf']").length
+      $("#ss-adobe-reader, .ss-adobe-reader").each ->
+        $(this).html('<div><%= I18n.t('cms.adobe_reader.remark').join %></div>').show()
+        $(this).append('<a href="http://get.adobe.com/jp/reader/"><%= I18n.t('cms.adobe_reader.download') %></a>')
 
 class @SS_Mobile
   @render: ->
