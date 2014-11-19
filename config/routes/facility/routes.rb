@@ -38,11 +38,8 @@ SS::Application.routes.draw do
 
   namespace "facility", path: ".:site/facility" do
     get "/search_categories" => "search_categories#index"
-    post "/search_categories" => "search_categories#search"
     get "/search_locations" => "search_locations#index"
-    post "/search_locations" => "search_locations#search"
     get "/search_services" => "search_services#index"
-    post "/search_services" => "search_services#search"
   end
 
   namespace "facility", path: ".u:user/facility", module: "facility", servicer: /\d+/ do
