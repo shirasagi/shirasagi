@@ -476,16 +476,21 @@ input.date, input.datetime {
     }
     dd {
       float: left;
+      margin-left: 0px;
+      margin-right: 40px;
       p {
         margin-top: 5px;
       }
+      &.marker {
+        padding-bottom: 30px
+      }
+      .marker-name,.marker-text {
+        width: 260px;
+      }
+      &:last-child {
+        width: 260px;
+      }
     }
-    input.marker-name {
-      width: 260px;
-    }
-  }
-  .add-marker {
-    margin-left: 40px;
   }
 }
 #map-canvas {
@@ -546,4 +551,3 @@ input.date, input.datetime {
 @import "pc";
 @import "mb";
 @import "sns/style";
-

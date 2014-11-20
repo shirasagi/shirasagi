@@ -21,35 +21,35 @@ $(window).on "load", ->
     <% if @item.map_points.blank? %>
       <dd class="marker">
         <p>
-          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
-          <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
-          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
-        </p>
-        <p>
           <%= text_field_tag "item[map_points][][name]", nil, class: "marker-name", placeholder: @item.t(:marker_name) %>
         </p>
         <p>
           <%= text_area_tag "item[map_points][][text]", nil, class: "marker-text", placeholder: @item.t(:marker_text) %>
+        </p>
+        <p>
+          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
+          <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
+          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
         </p>
       </dd>
     <% end %>
     <% @item.map_points.each do |point| %>
       <dd class="marker">
         <p>
-          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
-          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
-          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
-        </p>
-        <p>
           <%= text_field_tag "item[map_points][][name]",  point[:name], class: "marker-name", placeholder: @item.t(:marker_name) %>
         </p>
         <p>
           <%= text_area_tag "item[map_points][][text]", point[:text], class: "marker-text", placeholder: @item.t(:marker_text) %>
         </p>
+        <p>
+          <%= button_tag t("map.button.set_marker"), { type: :button, class: "set-marker" } %>
+          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+          <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker" } %>
+        </p>
       </dd>
     <% end %>
+    <dd>
+      <%= link_to t("map.button.add_marker"), "#", class: "add-marker" %>
+    </dd>
   </dl>
-  <div>
-    <%= button_tag t("map.button.add_marker"), { type: :button, class: "add-marker" } %>
-  </div>
 </div>
