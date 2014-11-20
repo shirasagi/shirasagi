@@ -3,16 +3,25 @@
 <nav class="main-menu">
   <header><h1><%= t("modules.opendata") %></h1></header>
   <div>
-    <%= link_to :"mongoid.models.opendata/dataset_group", opendata_dataset_groups_path, class: "icon-node" %>
-
-    <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
-    <%= link_to item.name, opendata_datasets_path(@cur_site.host, item), class: "icon-node" %>
-    <% end %>
-    <% Opendata::Node::App.site(@cur_site).each do |item| %>
-    <%= link_to item.name, opendata_apps_path(@cur_site.host, item), class: "icon-node" %>
-    <% end %>
-    <% Opendata::Node::Idea.site(@cur_site).each do |item| %>
-    <%= link_to item.name, opendata_ideas_path(@cur_site.host, item), class: "icon-node" %>
+    <% if @cur_node.route == "opendata/dataset" %>
+      <%= link_to :"mongoid.models.opendata/dataset", opendata_datasets_path, class: "icon-node" %>
+      <%= link_to :"mongoid.models.opendata/dataset_group", opendata_dataset_groups_path, class: "icon-node" %>
+      <%= link_to :"mongoid.models.opendata/license", opendata_licenses_path, class: "icon-node" %>
+    <% elsif @cur_node.route == "opendata/app" %>
+      <%= link_to :"mongoid.models.opendata/app", opendata_apps_path, class: "icon-node" %>
+      <%= link_to :"mongoid.models.opendata/license", opendata_licenses_path, class: "icon-node" %>
+    <% elsif @cur_node.route == "opendata/idea" %>
+      <%= link_to :"mongoid.models.opendata/idea", opendata_ideas_path, class: "icon-node" %>
+    <% else %>
+      <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
+      <%= link_to item.name, opendata_datasets_path(@cur_site.host, item), class: "icon-node" %>
+      <% end %>
+      <% Opendata::Node::App.site(@cur_site).each do |item| %>
+      <%= link_to item.name, opendata_apps_path(@cur_site.host, item), class: "icon-node" %>
+      <% end %>
+      <% Opendata::Node::Idea.site(@cur_site).each do |item| %>
+      <%= link_to item.name, opendata_ideas_path(@cur_site.host, item), class: "icon-node" %>
+      <% end %>
     <% end %>
   </div>
 </nav>

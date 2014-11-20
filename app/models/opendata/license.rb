@@ -1,16 +1,18 @@
-class Opendata::DatasetGroup
+class Opendata::License
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
+  include SS::Relation::File
   include Cms::Addon::OwnerPermission
-  include Opendata::Addon::Category
 
   set_permission_name :opendata_datasets
 
   seqid :id
   field :state, type: String, default: "public"
   field :name, type: String
-  field :order, type: Integer
+  field :order, type: Integer, default: 0
+
+  belongs_to_file :file
 
   permit_params :state, :name, :order, file_ids: []
 
@@ -25,21 +27,6 @@ class Opendata::DatasetGroup
     public
       def public
         where(state: "public")
-      end
-
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
-
-        if params[:name].present?
-          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
-          criteria = criteria.all_in name: words
-        end
-        if params[:category_id].present?
-          criteria = criteria.where category_ids: params[:category_id].to_i
-        end
-
-        criteria
       end
   end
 end

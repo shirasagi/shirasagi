@@ -66,6 +66,7 @@ ja:
 
   mongoid:
     models:
+      opendata/license: ライセンス
       opendata/dataset_group: グループ
       opendata/dataset: データセット
       opendata/app: アプリ
@@ -76,6 +77,10 @@ ja:
       opendata/addon/rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
+      opendata/license:
+        name: ライセンス名
+        file_id: ライセンス画像
+        order: 並び順
       opendata/dataset_group:
         name: グループ名
       opendata/dataset:

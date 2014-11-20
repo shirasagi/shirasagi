@@ -192,6 +192,34 @@ puts "# articles"
 end
 
 ## -------------------------------------
+puts "# licenses"
+
+def license_file(filename)
+  file = Fs::UploadedFile.new("fixtures")
+  file.binmode
+  file.write File.read("fixtures/#{filename}")
+  file.rewind
+  file.original_filename = filename
+  file.content_type = "image/png"
+  file
+end
+
+def save_license(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Opendata::License.find_or_create_by cond
+  item.update data
+end
+
+save_license name: "PDM（Public Domain Mark：公有標）", in_file: license_file("cc-pdm.png"), order: 1
+save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 2
+save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 3
+save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 4
+save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 5
+save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_file("cc-by-nc-sa.png"), order: 6
+save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 7
+
+## -------------------------------------
 puts "# opendata dataset_groups"
 
 def save_dataset_group(data)

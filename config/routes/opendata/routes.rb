@@ -8,6 +8,7 @@ SS::Application.routes.draw do
 
   content "opendata" do
     get "/" => "main#index", as: :main
+    resources :licenses, concerns: :deletion
     resources :dataset_categories, concerns: :deletion
     resources :dataset_groups, concerns: :deletion do
       get "search" => "dataset_groups/search#index", on: :collection
