@@ -103,6 +103,7 @@ ja:
         name: リソース名
         text: 説明
         format: フォーマット
+        license_id: ライセンス
       opendata/app:
         site_id: サイト
         name: アプリ名

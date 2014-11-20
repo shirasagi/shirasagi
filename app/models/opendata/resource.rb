@@ -10,12 +10,14 @@ class Opendata::Resource
   field :format, type: String
 
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
+  belongs_to :license, class_name: "Opendata::License"
   belongs_to_file :file
 
-  permit_params :name, :text, :format
+  permit_params :name, :text, :format, :license_id
 
   validates :name, presence: true
   validates :format, presence: true
+  validates :license, presence: true
 
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :set_format

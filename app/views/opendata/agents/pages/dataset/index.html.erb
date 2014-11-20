@@ -37,7 +37,7 @@ $ ->
 
 <div class="point">
   <div class="count">
-    <span class="number"></span>
+    <span class="number"><%= @cur_page.point %></span>
     <span class="label">いいね！数</span>
   </div>
   <%= link_to "いいね！", "#", class: "add" %>
@@ -82,23 +82,30 @@ categories = [
       <h1>ダウンロード</h1>
     </header>
 
-    <div class="download">
-      <div class="license">
-        <%= @cur_page.send :license %>
-      </div>
-      <div class="resources">
-        <% @cur_page.resources.each do |rs| %>
-          <div class="name format-<%= rs.format.downcase %>">
-            <%= rs.name %>
-            (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
-            <% if rs.rdf_iri.present? %>
-            <div class="sparql"><%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %></div>
-            <% end %>
-          </div>
-          <div><%= link_to "ダウンロード", rs.url, class: "download" %></div>
-          <div class="text"><%= auto_link br(rs.text), html: { target: "_blank" } %></div>
+    <div class="resources">
+      <% @cur_page.resources.each do |rs| %>
+      <div class="resource">
+        <div class="name format-<%= rs.format.downcase %>">
+          <%= rs.name %> (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
+        </div>
+        <div class="icons">
+          <% if license = rs.license %>
+          <span class="license"><%= tryb { image_tag license.file.url, alt: license.name } || license.name %></span>
+          <% end %>
+          <%= link_to "ダウンロード", rs.url, class: "download" %>
+        </div>
+        <% if rs.text.present? %>
+        <div class="text">
+          <%= auto_link br(rs.text), html: { target: "_blank" } %>
+        </div>
+        <% end %>
+        <% if rs.rdf_iri.present? %>
+        <div class="sparql">
+          <%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %>
+        </div>
         <% end %>
       </div>
+      <% end %>
     </div>
 
     <dl class="author">

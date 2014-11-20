@@ -20,7 +20,7 @@ class Opendata::Dataset
   has_many :points, primary_key: :dataset_id, class_name: "Opendata::DatasetPoint",
     dependent: :destroy
 
-  validates :license, presence: true
+  #validates :license, presence: true
   validates :category_ids, presence: true
 
   permit_params :text, :license, :related_url, file_ids: []

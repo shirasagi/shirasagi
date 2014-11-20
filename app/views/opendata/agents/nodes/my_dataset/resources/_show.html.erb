@@ -10,11 +10,14 @@
   </dd>
   <% end %>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
-
   <dt><%= @model.t :format %></dt>
   <dd><%= @item.send :format %></dd>
+
+  <dt><%= @model.t :license_id %></dt>
+  <dd><%= tryb { @item.license.name } %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
   <% if @item.rdf_iri.present? %>
   <dt><%= @model.t :rdf_iri %></dt>

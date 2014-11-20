@@ -1084,28 +1084,40 @@ article.areas, article.formats {
           font-size: $px15;
         }
       }
-      .download {
+      .resources {
+        @include clearfix;
         float: left;
-        width: 767px;
-        padding: 16px;
+        width: 799px;
         border: 2px solid #00b2c4;
-        .license {
-          padding-bottom: 10px;
-        }
-        .resources {
-          .download {
+        .resource {
+          @include clearfix;
+          margin: 0px 16px;
+          padding: 16px 0px;
+          border-bottom: 1px solid #ddcfcc;
+          .name {
+            float: left;
+          }
+          .icons {
             float: right;
-            width: auto;
-            @include r-arrow;
-            @include border-radius(5px);
+            .license {
+              margin-right: 5px;
+            }
+            .download {
+              width: auto;
+              @include r-arrow;
+              @include border-radius(5px);
+            }
           }
           .text {
             float: none;
             clear: both;
             width: auto;
-            margin-bottom: 5px;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddcfcc;
+            margin: 0px;
+            padding-top: 10px;
+          }
+          .sparql {
+            clear: both;
+            padding-top: 10px;
           }
         }
       }
@@ -1179,7 +1191,6 @@ article.areas, article.formats {
 .resources {
   .name {
     float: left;
-    width: 600px;
     padding-left: 40px;
     background: url(../img/ic-text.png) no-repeat 5px center;
     word-wrap: break-word;
