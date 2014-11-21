@@ -1088,6 +1088,7 @@ article.areas, article.formats {
         @include clearfix;
         float: left;
         width: 799px;
+        padding-bottom: 10px;
         border: 2px solid #00b2c4;
         .resource {
           @include clearfix;
