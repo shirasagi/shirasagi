@@ -21,6 +21,13 @@ ja:
     group: グループ
     member: メンバー
     syntax_check: HTMLチェック
+    syntax_check_error: エラー
+    syntax_check_warning: 警告
+    syntax_check_replace:
+      dependent_character: "[機種依存文字]"
+      caption: キャプション
+    enable_warning: HTMLチェックに警告を含める
+    auto_correct: 自動修正
     link_check: リンクチェック
     generate_node: フォルダ書き出し
     generate_page: ページ書き出し
@@ -183,13 +190,53 @@ ja:
 
   errors:
     messages:
-      set_img_alt: 画像に代替テキストが設定されていません。
-      set_table_summary: 表にサマリ属性が設定されていません。
+      html_syntax_error: アクセシビリティエラーが発生しました。本文のHTMLチェックを確認してください。
+      set_img_alt: 画像の代替テキストを確認してください。
       set_table_caption: 表にキャプションが設定されていません。
+      set_th_scope: 表のヘッダーにスコープ属性が設定されていません。
       link_check_success: 成功
       link_check_failure: 失敗
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
       not_a_child_group: はサイトに所属するグループを設定してください。
+      invalid_order_of_h: 見出しの順番が不正です。
+      invalid_multibyte_character: 英数字は半角文字を入力してください。
+      invalid_dependent_character: 機種依存文字が含まれています。
+      invalid_date_format: 日付の表記は○年○月○日としてください。
+      invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
+      check_interword_space: 単語間のスペースを確認してください。
+      check_link_text: "リンクのテキストを確認してください。"
+      check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      syntax_check_detail:
+        set_img_alt:
+          - 画像の内容を示す代替テキストを設定してください。
+        set_table_caption:
+          - 表に見出し(CAPTION)が設定されていません
+          - TABLEタグの中にCAPTIONタグを追記してください。
+        set_th_scope:
+          - 表のヘッダー(TH)に見出しの方向であるSCOPE属性が設定されていません。
+          - 行方向であればscope="colを設定してください。
+          - 列方向であればscope="row"を設定してください。
+        invalid_order_of_h:
+          - 見出し(H)の順番が不正です。
+          - 適切な順に配置してください。
+        invalid_multibyte_character:
+          - 本文に全角英数が含まれています。
+          - 半角英数に置き換えるか削除してください。
+        invalid_dependent_character:
+          - 本文に機種依存文字が含まれています。
+          - 他の文字に置き換えるか削除してください。
+        invalid_date_format:
+          - 日付の形式を修正してください。
+        invalid_adjacent_a:
+          - 隣り合うリンク(A)に同じリンク先が設定されています。
+          - 一つのリンク(A)にマークアップしてください。
+        check_interword_space:
+          - 単語間に不要なスペースが含まれている場合は削除してください。
+        check_link_text:
+          - リンク内のテキストは遷移先を表すものを設定してください。
+        check_embedded_media:
+          - 動画や音声を本文に埋め込む場合は説明を記述してください。
+
     template:
       no_errors: エラーは見つかりませんでした。
       no_links: リンクは見つかりませんでした。

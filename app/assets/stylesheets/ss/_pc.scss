@@ -511,6 +511,50 @@ table.see {
     }
   }
 }
+.detail {
+  position:relative;
+  cursor: pointer;
+  &:hover {
+     background-color: #f9c;
+  }
+  ul {
+    position: absolute;
+    left: -120px;
+    width: 30em;
+    z-index: 90;
+    padding: 10px;
+    border: $border-gray3;
+    background-color: #fff;
+    color: $black;
+    text-align: left;
+    line-height: 1.6em;
+    list-style-position: inside;
+    list-style-type: disc;cursor: text;
+    li {
+      padding-left: 1em;
+      font-weight: normal;
+      text-indent: -1em;
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      left: 222px;
+      bottom: -6px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid $gray3;
+      border-right: 6px solid transparent;
+      border-left: 6px solid transparent;
+    }
+    &:after {
+      content: " ";
+      position: absolute;
+      left: 220px;
+      height: 0;
+      width: 0;
+    }
+  }
+}
 #addon-cms-addons-file .see #selected-files .action {
   a {
     display: inline-block;
@@ -534,6 +578,7 @@ table.see {
   }
 }
 #errorSyntaxChecker, #errorLinkChecker {
+  margin-top: 10px;
   margin-bottom: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid $pink;
@@ -547,6 +592,9 @@ table.see {
   p, li {
     margin: 0 15px;
     color: #822;
+  }
+  .code {
+    @include ellipsis;
   }
 }
 .permission-names {
