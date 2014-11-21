@@ -1088,13 +1088,15 @@ article.areas, article.formats {
         @include clearfix;
         float: left;
         width: 799px;
-        padding-bottom: 10px;
         border: 2px solid #00b2c4;
         .resource {
           @include clearfix;
           margin: 0px 16px;
           padding: 16px 0px;
           border-bottom: 1px solid #ddcfcc;
+          &:last-child {
+            margin-bottom: 10px;
+          }
           .name {
             float: left;
           }
