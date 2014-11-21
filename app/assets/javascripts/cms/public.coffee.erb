@@ -7,6 +7,7 @@
 $ ->
   SS_Kana.render()
   SS_Font.render()
+  SS_AdobeReader.render()
   SS_Mobile.render()
   $(".ss-part").each ->
     SS.renderPart $(this)
@@ -131,6 +132,12 @@ class @SS_Font
     $("body").css "font-size", size + "%"
     $.cookie("ss-font", size, { expires: 7, path: '/' })
     return false
+
+class @SS_AdobeReader
+  @render: ->
+    if $("a[href$='.pdf']").length
+      $("#ss-adobe-reader, .ss-adobe-reader").each ->
+        $(this).html('<%= I18n.t('cms.adobe_reader.remark').join %>').show()
 
 class @SS_Mobile
   @render: ->
