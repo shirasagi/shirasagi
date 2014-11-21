@@ -137,8 +137,7 @@ class @SS_AdobeReader
   @render: ->
     if $("a[href$='.pdf']").length
       $("#ss-adobe-reader, .ss-adobe-reader").each ->
-        $(this).html('<div><%= I18n.t('cms.adobe_reader.remark').join %></div>').show()
-        $(this).append('<a href="http://get.adobe.com/jp/reader/"><%= I18n.t('cms.adobe_reader.download') %></a>')
+        $(this).html('<%= I18n.t('cms.adobe_reader.remark').join %>').show()
 
 class @SS_Mobile
   @render: ->

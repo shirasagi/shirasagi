@@ -26,10 +26,11 @@ ja:
     generate_page: ページ書き出し
     adobe_reader:
       remark:
+        - <div>
         - PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
-        - お持ちでない場合は、お使いのパソコンの機種とスペックに合わせた
-        - プラグインをダウンロード、インストールしてください。
-      download: Adobe Readerをダウンロードする。
+        - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
+        - </div>
+        - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
     search_groups:
       index: 所有グループを選択する
       search: 所有グループを検索
