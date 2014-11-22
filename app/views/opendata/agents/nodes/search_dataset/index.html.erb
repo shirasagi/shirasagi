@@ -57,6 +57,14 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
     </header>
   </article>
   <% end %>
+
+  <% if @items.blank? %>
+  <article>
+    <header>
+      <h2>データセットは見つかりませんでした。</h2>
+    </header>
+  </article>
+  <% end %>
 </div>
 
 <%= paginate @items %>

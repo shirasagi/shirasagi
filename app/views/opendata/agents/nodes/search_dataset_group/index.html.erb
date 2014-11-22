@@ -29,6 +29,14 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [
     </header>
   </article>
   <% end %>
+
+  <% if @items.blank? %>
+  <article>
+    <header>
+      <h2>データセットグループは見つかりませんでした。</h2>
+    </header>
+  </article>
+  <% end %>
 </div>
 
 <%= paginate @items %>

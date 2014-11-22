@@ -102,6 +102,9 @@ class Opendata::Dataset
         if params[:name].present?
           criteria = criteria.keyword_in params[:keyword], :name
         end
+        if params[:tag].present?
+          criteria = criteria.where tags: params[:tag]
+        end
         if params[:area_id].present?
           criteria = criteria.where area_ids: params[:area_id].to_i
         end
@@ -112,9 +115,6 @@ class Opendata::Dataset
           groups = Opendata::DatasetGroup.site(site).public.search_text(params[:dataset_group])
           groups = groups.pluck(:id).presence || [-1]
           criteria = criteria.any_in dataset_group_ids: groups
-        end
-        if params[:tag].present?
-          criteria = criteria.where tags: params[:tag]
         end
         if params[:format].present?
           criteria = criteria.where "resources.format" => params[:format].upcase
