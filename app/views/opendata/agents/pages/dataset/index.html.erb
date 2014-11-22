@@ -111,10 +111,10 @@ categories = [
     <dl class="author">
       <% if @cur_page.member_id.present? %>
         <dt><%= @cur_page.t :member_id %></dt>
-        <dd><%= tryb{@cur_page.member.name} %></dd>
+        <dd><%= tryb{@cur_page.member.name} %><br /></dd>
       <% else %>
         <dt><%= @cur_page.t :user_id %></dt>
-        <dd><%= tryb{@cur_page.user.name} %></dd>
+        <dd><%= tryb{@cur_page.user.name} %><br /></dd>
       <% end %>
 
       <% if @cur_page.related_url.present? %>
@@ -126,7 +126,7 @@ categories = [
       <dd><%= @cur_page.downloaded.to_i %> 回</dd>
 
       <dt><%= @cur_page.t :updated %></dt>
-      <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %></dd>
+      <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
     </dl>
   </div>
 </div>
