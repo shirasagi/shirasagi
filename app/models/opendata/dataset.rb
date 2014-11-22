@@ -36,6 +36,11 @@ class Opendata::Dataset
       url.sub(/\.html$/, "") + "/point/add.json"
     end
 
+    def contact_present?
+      return false if member_id.present?
+      super
+    end
+
   private
     def validate_filename
       @basename.blank? ? nil : super
