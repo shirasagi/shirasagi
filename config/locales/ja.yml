@@ -217,6 +217,10 @@ ja:
   mongoid:
     errors:
       messages:
+        validations:
+          message: There was validation errors on %{document}
+          summary: "Errors:\n    %{errors}"
+          resolution: Check the instances for this model looking for missing fields or wrong values.
         unknown_attribute:
           message: "unknown_attribute %{klass}.%{name}"
           summary: "unknown_attribute %{klass}.%{name}"
