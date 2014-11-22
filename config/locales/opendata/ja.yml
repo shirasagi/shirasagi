@@ -77,6 +77,7 @@ ja:
       opendata/license:
         name: ライセンス名
         file_id: ライセンス画像
+        related_url: 関連URL
         order: 並び順
       opendata/dataset_group:
         name: グループ名

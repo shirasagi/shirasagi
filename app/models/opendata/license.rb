@@ -10,11 +10,12 @@ class Opendata::License
   seqid :id
   field :state, type: String, default: "public"
   field :name, type: String
+  field :related_url, type: String
   field :order, type: Integer, default: 0
 
   belongs_to_file :file
 
-  permit_params :state, :name, :order, file_ids: []
+  permit_params :state, :name, :related_url, :order, file_ids: []
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }

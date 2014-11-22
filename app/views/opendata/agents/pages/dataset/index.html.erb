@@ -90,7 +90,14 @@ categories = [
         </div>
         <div class="icons">
           <% if license = rs.license %>
-          <span class="license"><%= tryb { image_tag license.file.url, alt: license.name } || license.name %></span>
+          <span class="license">
+            <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+            <% if license.related_url.present? %>
+              <%= link_to label, license.related_url, target: "_blank" %>
+            <% else %>
+              <%= label %>
+            <% end %>
+          </span>
           <% end %>
           <%= link_to "ダウンロード", rs.url, class: "download" %>
         </div>
@@ -110,7 +117,7 @@ categories = [
 
     <dl class="author">
       <% if @cur_page.member_id.present? %>
-        <dt><%= @cur_page.t :member_id %></dt>
+        <dt><%= @cur_page.t :user_id %></dt>
         <dd><%= tryb{@cur_page.member.name} %><br /></dd>
       <% else %>
         <dt><%= @cur_page.t :user_id %></dt>
