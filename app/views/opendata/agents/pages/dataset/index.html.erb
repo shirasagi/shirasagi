@@ -83,7 +83,7 @@ categories = [
     </header>
 
     <div class="resources">
-      <% @cur_page.resources.each do |rs| %>
+      <% @cur_page.resources.order(name: 1).each do |rs| %>
       <div class="resource">
         <div class="name format-<%= rs.format.downcase %>">
           <%= rs.name %> (<%= rs.format %> <%= number_to_human_size(rs.size) %>)

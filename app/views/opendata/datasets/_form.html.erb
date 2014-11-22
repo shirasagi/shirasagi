@@ -1,25 +1,13 @@
-<%= coffee do %>
-$ ->
-  data = <%== @model.license_options.to_json %>
-
-  $("#item_license").autocomplete
-    source: (request, response) ->
-      response(
-        $.grep data, (value) ->
-          return value.match(new RegExp("^" + request.term, "i"))
-      )
-<% end %>
-
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
-
-  <dt><%= @model.t :license %></dt>
-  <dd><%= f.text_field :license, style: "ime-mode: disabled;" %></dd>
 
   <dt><%= @model.t :text %></dt>
   <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :related_url %></dt>
   <dd><%= f.text_field :related_url %></dd>
+
+  <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
 </dl>

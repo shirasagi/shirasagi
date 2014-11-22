@@ -5,14 +5,11 @@
   <dt><%= @model.t :resources %></dt>
   <dd><%= link_to :"opendata.manage_resources", "resources/" %></dd>
   <dd>
-    <% @item.resources.each do |rs| %>
+    <% @item.resources.order(name: 1).each do |rs| %>
     <div><%= link_to rs.name, "resources/#{rs.id}/" %>
       (<%= rs.format.upcase %> <%= number_to_human_size rs.size %>)</div>
     <% end %>
   </dd>
-
-  <dt><%= @model.t :license %></dt>
-  <dd><%= @item.send :license %></dd>
 
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
@@ -20,12 +17,12 @@
   <dt><%= @model.t :related_url %></dt>
   <dd><%= @item.send :related_url %></dd>
 
+  <dt><%= @model.t :tags %></dt>
+  <dd><%= @item.tags.join(", ") %></dd>
+
   <dt><%= @model.t :category_ids %></dt>
   <dd><%= @item.categories.map { |m| m.name }.join(", ") %></dd>
 
   <dt><%= @model.t :area_ids %></dt>
   <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
-
-  <dt><%= @model.t :tags %></dt>
-  <dd><%= @item.tags.join(", ") %></dd>
 </dl>

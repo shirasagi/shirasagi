@@ -20,7 +20,6 @@ ja:
       opendata/dataset_node: データセット
       opendata/dataset: データセット
       opendata/app: アプリ
-      opendata/tag: タグ
       opendata/release: 公開設定
       opendata/resource: リソース
       opendata/rdf_store: RDFストア
@@ -72,8 +71,6 @@ ja:
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
-      opendata/addon/tag:
-        tags: タグ
       opendata/addon/rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
@@ -93,6 +90,7 @@ ja:
         point: 評価
         license: ライセンス
         related_url: 関連URL
+        tags: タグ
         category_ids: 分野
         dataset_group_ids: グループ
         area_ids: 地域

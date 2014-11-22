@@ -18,7 +18,7 @@ class Opendata::Agents::Nodes::SearchDatasetController < ApplicationController
       @model = Opendata::Dataset
 
       @items = @model.site(@cur_site).public.
-        search(params[:s]).
+        search(params[:s].merge(site: @cur_site)).
         order_by(sort).
         page(params[:page]).
         per(20)

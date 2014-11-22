@@ -2,7 +2,7 @@
   <% @items.each do |item| %>
   <article>
     <header>
-      <h2><%= link_to item.name, search_datasets_path + "?s[dataset_group_id]=#{item.id}" %></h2>
+      <h2><%= link_to item.name, search_datasets_path + "?s[dataset_group]=#{item.name}" %></h2>
     </header>
   </article>
   <% end %>

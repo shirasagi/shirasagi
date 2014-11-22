@@ -1,8 +1,0 @@
-<%
-
-return if @item.tags.blank?
-
-%><dl class="see">
-  <dt><%= @model.t :tags %></dt>
-  <dd><%= @item.send :tags %></dd>
-</dl>

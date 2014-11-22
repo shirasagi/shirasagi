@@ -4,30 +4,18 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
 areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 
 %>
-<%= coffee do %>
-$ ->
-  data = <%== @model.license_options.to_json %>
-
-  $("#item_license").autocomplete
-    source: (request, response) ->
-      response(
-        $.grep data, (value) ->
-          return value.match(new RegExp("^" + request.term, "i"))
-      )
-<% end %>
-
 <dl class="see opendata-dataset">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
-
-  <dt><%= @model.t :license %></dt>
-  <dd><%= f.text_field :license, style: "ime-mode: disabled;" %></dd>
 
   <dt><%= @model.t :text %></dt>
   <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :related_url %></dt>
   <dd><%= f.text_field :related_url %></dd>
+
+  <dt><%= @model.t :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
 
   <dt><%= @model.t :category_ids %></dt>
   <dd>
@@ -39,7 +27,4 @@ $ ->
 
   <dt><%= @model.t :area_ids %></dt>
   <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
-
-  <dt><%= @model.t :tags %></dt>
-  <dd><%= f.text_field :tags %></dd>
 </dl>

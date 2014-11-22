@@ -59,18 +59,6 @@ module Opendata::Addon
     end
   end
 
-  module Tag
-    extend SS::Addon
-    extend ActiveSupport::Concern
-
-    set_order 310
-
-    included do
-      field :tags, type: SS::Extensions::Words
-      permit_params :tags, keywords: []
-    end
-  end
-
   module Release
     extend ActiveSupport::Concern
     extend SS::Addon

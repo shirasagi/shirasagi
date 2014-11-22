@@ -32,12 +32,12 @@ SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
 <article class="areas nodes">
   <header><h1>地域</h1></header>
   <div>
-    <% @areas.each do |item| %>
+    <% @areas.each do |data| %>
     <article>
       <header>
-        <h2><a href="<%= "#{@search_url}&s[area_id]=#{item.id}" %>">
-          <span class="name"><%= item.name %></span>
-          <span class="count">(<%= item[:count] %>)</span></a></h2>
+        <h2><a href="<%= "#{@search_url}&s[area_id]=#{data['id']}" %>">
+          <span class="name"><%= data["name"] %></span>
+          <span class="count">(<%= data["count"] %>)</span></a></h2>
       </header>
     </article>
     <% end %>
@@ -80,8 +80,8 @@ SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
     <% @licenses.each do |data| %>
     <article>
       <header>
-        <h2><a href="<%= "#{@search_url}&s[license]=#{data['id']}" %>">
-          <span class="name"><%= data["id"] %></span>
+        <h2><a href="<%= "#{@search_url}&s[license_id]=#{data['id']}" %>">
+          <span class="name"><%= data["name"] %></span>
           <span class="count">(<%= data["count"] %>)</span></a></h2>
       </header>
     </article>

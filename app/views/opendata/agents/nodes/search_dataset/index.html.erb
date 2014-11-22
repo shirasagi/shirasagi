@@ -2,7 +2,7 @@
 
 areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
 categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
-groups = Opendata::DatasetGroup.site(@cur_site).public.sort(name: 1).map { |m| [m.name, m.id] }
+licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 @s = OpenStruct.new params[:s]
 
 %>
@@ -25,7 +25,7 @@ groups = Opendata::DatasetGroup.site(@cur_site).public.sort(name: 1).map { |m| [
   </dl>
   <dl class="tag">
     <dt>ライセンス</dt>
-    <dd><%= f.text_field :license %></dd>
+    <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
   </dl>
   <dl class="category">
     <dt>分野</dt>
@@ -33,7 +33,7 @@ groups = Opendata::DatasetGroup.site(@cur_site).public.sort(name: 1).map { |m| [
   </dl>
   <dl class="group">
     <dt>グループ</dt>
-    <dd><%= f.select :dataset_group_id, groups, include_blank: "" %></dd>
+    <dd><%= f.text_field :dataset_group %></dd>
   </dl>
   <dl class="sort">
     <dt>並び順</dt>
