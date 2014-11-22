@@ -1077,8 +1077,6 @@ article.areas, article.formats {
       overflow: hidden;
       .resources {
         @include clearfix;
-        float: left;
-        width: 800px;
         border: 2px solid #00b2c4;
         header {
           h1 {
@@ -1114,31 +1112,37 @@ article.areas, article.formats {
             clear: both;
             width: auto;
             margin: 0px;
-            padding-top: 10px;
+            padding: 10px 0px 0px 35px;
           }
           .sparql {
             clear: both;
-            padding-top: 10px;
+            padding: 10px 0px 0px 35px;
           }
         }
       }
       dl.author {
-        margin-left: 830px;
+        margin: 20px 0px 0px;
         padding: 10px;
         border: 2px solid #00b2c4;
-        dt, dd {
-          width: 215px;
-        }
         dt {
-          padding: 5px;
+          @include clearfix;
+          clear: both;
+          float: left;
+          width: 180px;
+          min-height: 1.0em;
+          padding: 5px 8px;
           background: #ffe7a5;
         }
         dd {
-          padding: 10px 5px;
-          white-space: nowrap;
-          overflow: hidden;
+          min-height: 1.5em;
+          margin-left: 205px;
+          padding: 5px;
           text-overflow: ellipsis;
+          white-space: nowrap;
         }
+        dt ~ dt { margin-top: 10px; }
+        dd ~ dd { margin-top: 10px; }
+        dd + dd { margin-top: 10px; }
       }
     }
   }
