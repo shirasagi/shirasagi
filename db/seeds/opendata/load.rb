@@ -250,8 +250,7 @@ end
     route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
-    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1),
-    license: "CC"
+    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
 end
 
 ## -------------------------------------
