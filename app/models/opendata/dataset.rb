@@ -120,7 +120,7 @@ class Opendata::Dataset
           criteria = criteria.where "resources.format" => params[:format].upcase
         end
         if params[:license_id].present?
-          criteria = criteria.where license_id: params[:license_id].to_i
+          criteria = criteria.where "resources.license_id" => params[:license_id].to_i
         end
 
         criteria
