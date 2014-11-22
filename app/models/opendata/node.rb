@@ -41,18 +41,6 @@ module Opendata::Node
     default_scope ->{ where(route: "opendata/search_dataset") }
   end
 
-  class App
-    include Cms::Node::Model
-
-    default_scope ->{ where(route: "opendata/app") }
-  end
-
-  class Idea
-    include Cms::Node::Model
-
-    default_scope ->{ where(route: "opendata/idea") }
-  end
-
   class Sparql
     include Cms::Node::Model
 
@@ -65,10 +53,16 @@ module Opendata::Node
     default_scope ->{ where(route: "opendata/api") }
   end
 
-  class User
+  class App
     include Cms::Node::Model
 
-    default_scope ->{ where(route: "opendata/user") }
+    default_scope ->{ where(route: "opendata/app") }
+  end
+
+  class Idea
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/idea") }
   end
 
   class Mypage
