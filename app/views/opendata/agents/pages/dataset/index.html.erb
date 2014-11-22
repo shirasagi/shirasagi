@@ -77,12 +77,12 @@ categories = [
     <%= link_to "アイデア", "#", class: "idea" %>
   </nav>
 
-  <section class="info">
-    <header>
-      <h1>ダウンロード</h1>
-    </header>
-
+  <div class="info-wrap">
     <div class="resources">
+      <header>
+        <h1>ダウンロード</h1>
+      </header>
+
       <% @cur_page.resources.order(name: 1).each do |rs| %>
       <div class="resource">
         <div class="name format-<%= rs.format.downcase %>">
@@ -128,7 +128,7 @@ categories = [
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %></dd>
     </dl>
-  </section>
+  </div>
 </div>
 
 <%= render file: "contact/agents/addons/page/view/index" %>
