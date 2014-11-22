@@ -36,10 +36,6 @@ class Opendata::Dataset
       url.sub(/\.html$/, "") + "/point/add.json"
     end
 
-    def generate_file
-      true
-    end
-
   private
     def validate_filename
       @basename.blank? ? nil : super

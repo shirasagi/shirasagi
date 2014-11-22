@@ -22,6 +22,9 @@ class Opendata::Resource
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :set_format
 
+  after_save -> { dataset.save }
+  after_destroy -> { dataset.save }
+
   public
     def url
       dataset.full_url.sub(/\.html$/, "") + "/resource/#{id}/#{filename}"
