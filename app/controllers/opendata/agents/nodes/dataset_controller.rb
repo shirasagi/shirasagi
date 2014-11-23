@@ -40,7 +40,6 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
         rel = Opendata::Node::Area.site(@cur_site).public.where(id: data["id"]).first
         rel ? { "id" => rel.id, "name" => rel.name, "count" => data["count"] } : nil
       end.compact
-      dump @areas
 
       @tags     = pages.aggregate_array(:tags)
 
