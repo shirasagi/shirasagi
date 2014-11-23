@@ -16,7 +16,7 @@ module SS::Relation::File
       define_method("remove_#{name}") {
         ss_file = send(name)
         ss_file.destroy if ss_file
-        send("#{store}=", nil)
+        send("#{store}=", nil) rescue nil
       }
 
       define_method("save_#{name}") {
