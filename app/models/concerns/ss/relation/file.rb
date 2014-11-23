@@ -7,12 +7,20 @@ module SS::Relation::File
       store = opts[:store_as] || "#{name.to_s.singularize}_id"
       belongs_to name, foreign_key: store, class_name: "SS::File", dependent: :destroy
 
-      attr_accessor "in_#{name}"
-      permit_params "in_#{name}"
+      attr_accessor "in_#{name}", "rm_#{name}"
+      permit_params "in_#{name}", "rm_#{name}"
 
+      before_save "remove_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
       before_save "save_#{name}", if: ->{ send("in_#{name}").present? }
 
+      define_method("remove_#{name}") {
+        ss_file = send(name)
+        ss_file.destroy if ss_file
+        send("#{store}=", nil)
+      }
+
       define_method("save_#{name}") {
+        send("remove_#{name}")
         file = send("in_#{name}")
 
         ss_file = SS::File.new
