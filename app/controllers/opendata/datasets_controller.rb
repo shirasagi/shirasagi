@@ -4,6 +4,7 @@ class Opendata::DatasetsController < ApplicationController
 
   model Opendata::Dataset
 
+  append_view_path "app/views/cms/pages"
   navi_view "opendata/main/navi"
 
   private
@@ -14,6 +15,7 @@ class Opendata::DatasetsController < ApplicationController
   public
     def index
       @items = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user).
+        search(params[:s]).
         order_by(updated: -1).
         page(params[:page]).per(50)
     end
