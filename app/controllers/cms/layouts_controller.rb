@@ -23,6 +23,7 @@ class Cms::LayoutsController < ApplicationController
       @items = @model.site(@cur_site).
         allow(:read, @cur_user).
         where(depth: 1).
+        search(params[:s]).
         order_by(filename: 1).
         page(params[:page]).per(50)
     end
