@@ -25,6 +25,7 @@ class Opendata::ResourcesController < ApplicationController
   public
     def index
       @items = @dataset.resources.
+        search(params[:s]).
         order_by(name: 1).
         page(params[:page]).per(50)
     end

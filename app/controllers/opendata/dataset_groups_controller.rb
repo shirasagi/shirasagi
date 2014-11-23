@@ -14,6 +14,7 @@ class Opendata::DatasetGroupsController < ApplicationController
   public
     def index
       @items = @model.site(@cur_site).allow(:read, @cur_user).
+        search(params[:s]).
         order_by(updated: -1).
         page(params[:page]).per(50)
     end

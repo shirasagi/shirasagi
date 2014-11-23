@@ -29,5 +29,13 @@ class Opendata::License
       def public
         where(state: "public")
       end
+
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+        criteria
+      end
   end
 end

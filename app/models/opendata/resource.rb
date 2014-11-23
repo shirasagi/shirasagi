@@ -74,5 +74,14 @@ class Opendata::Resource
         %w(AVI BMP CSV DOC DOCX DOT GIF HTML JPG LZH MOV MP3 MPG ODS
            ODT OTS OTT RAR RTF RDF TAR TGZ TTL TXT WAV XLS XLT XLSX XML ZIP)
       end
+
+
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        criteria = criteria.where(name: /#{params[:keyword]}/) if params[:keyword].present?
+        criteria
+      end
   end
 end
