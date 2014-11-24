@@ -28,4 +28,10 @@ class Opendata::Agents::Nodes::ResourceController < ApplicationController
       send_file @item.file.path, type: @item.content_type, filename: @item.filename,
         disposition: :attachment, x_sendfile: true
     end
+
+    def content
+      @cur_node.layout_id = nil
+      @item = @dataset.resources.find_by id: params[:id]
+      @data = @item.parse_tsv
+    end
 end

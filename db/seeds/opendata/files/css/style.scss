@@ -861,7 +861,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
   }
 }
 
-form.opendata-search_groups-form {
+form.opendata-search_datasets-form, form.opendata-search_groups-form {
   margin: $box-margin 0 ;
   padding: 10px;
   border: 2px solid $data-blue;
@@ -877,12 +877,12 @@ form.opendata-search_groups-form {
     }
   }
   .send {
-    padding: 10px;
-    text-align: right;
+    float: right;
+    padding: 1.8em 10px 0px;
     input {
       @include r-arrow;
       @include border-radius(5px);
-      padding: 4px 8px 4px 30px;
+      padding: 4px 15px 4px 30px;
       font-family: $font-base;
       font-size: $px14;
     }
@@ -1001,7 +1001,7 @@ article.areas, article.formats {
 //-----------------------------------------------------------------------------------------
 //dataset-page
 .s-dataset #contents {
-    header h1.name {
+  header h1.name {
     padding: 0 0 5px 10px;
     color: #005c7b;
     font-size: $px28;
@@ -1099,10 +1099,9 @@ article.areas, article.formats {
           .icons {
             float: right;
             .license {
-              margin-right: 5px;
             }
-            .download {
-              width: auto;
+            .content, .download {
+              margin-left: 4px;
               @include r-arrow;
               @include border-radius(5px);
             }
@@ -1144,6 +1143,25 @@ article.areas, article.formats {
         dd ~ dd { margin-top: 10px; }
         dd + dd { margin-top: 10px; }
       }
+    }
+  }
+}
+.s-dataset .resource-content {
+  padding: 5px;
+  table {
+    border: 1px solid #ccc;
+    tr:nth-child(even) {
+      background-color: #f8f8f8;
+    }
+    th, td {
+      max-width: 160px;
+      padding: 4px;
+      border: 1px solid #ccc;
+      font-size: 75%;
+      vertical-align: top;
+      line-height: 1.2;
+      word-wrap: break-word;
+      word-break: break-all;
     }
   }
 }

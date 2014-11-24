@@ -6,10 +6,14 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
 @s = OpenStruct.new params[:s]
 
 %>
-<%= form_for :s, url: "", html: { class: "opendata-search_groups-form", method: :get } do |f| %>
+<%= form_for :s, url: "", html: { class: "opendata-search_datasets-form", method: :get } do |f| %>
   <dl class="keyword">
     <dt>キーワード</dt>
     <dd><%= f.text_field :keyword %></dd>
+  </dl>
+  <dl class="category">
+    <dt>分野</dt>
+    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
   </dl>
   <dl class="category">
     <dt>地域</dt>
@@ -26,10 +30,6 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <dl class="tag">
     <dt>ライセンス</dt>
     <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
-  </dl>
-  <dl class="category">
-    <dt>分野</dt>
-    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
   </dl>
   <dl class="group">
     <dt>グループ</dt>

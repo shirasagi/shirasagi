@@ -65,11 +65,11 @@ save_node filename: "event", name: "イベント", route: "event/page", shortcut
 save_node filename: "dataset", name: "データセット", route: "opendata/dataset", shortcut: "show",
   layout_id: layouts["dataset-top"].id,
   page_layout_id: layouts["dataset-page"].id
-save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category", shortcut: "show",
+save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category",
   layout_id: layouts["dataset-bunya"].id
-save_node filename: "dataset/search_group", name: "データセットグループ検索", route: "opendata/search_dataset_group", shortcut: "show",
+save_node filename: "dataset/search_group", name: "データセットグループ検索", route: "opendata/search_dataset_group",
   layout_id: layouts["dataset-group"].id
-save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset", shortcut: "show",
+save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
   layout_id: layouts["dataset-bunya"].id
 
 save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "show"

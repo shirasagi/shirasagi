@@ -1,5 +1,9 @@
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
 <%= coffee do %>
 $ ->
+  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
+
   point_link = $(".point .add")
 
   $.ajax
@@ -72,7 +76,6 @@ categories = [
 <div class="detail">
   <nav>
     <%= link_to "データ作品の情報", "#", class: "info" %>
-    <%= link_to "データの内容", "#", class: "data" %>
     <%= link_to "アプリ", "#", class: "app" %>
     <%= link_to "アイデア", "#", class: "idea" %>
   </nav>
@@ -80,7 +83,7 @@ categories = [
   <div class="info-wrap">
     <div class="resources">
       <header>
-        <h1>ダウンロード</h1>
+        <h1>リソース</h1>
       </header>
 
       <% @cur_page.resources.order(name: 1).each do |rs| %>
@@ -99,6 +102,7 @@ categories = [
             <% end %>
           </span>
           <% end %>
+          <%= link_to "データの内容", rs.content_url, class: "content" if rs.tsv %>
           <%= link_to "ダウンロード", rs.url, class: "download" %>
         </div>
         <% if rs.text.present? %>

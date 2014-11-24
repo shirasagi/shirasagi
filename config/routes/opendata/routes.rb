@@ -16,6 +16,8 @@ SS::Application.routes.draw do
     resources :datasets, concerns: :deletion do
       resources :resources, concerns: :deletion do
         get "file" => "resources#download"
+        get "tsv" => "resources#download_tsv"
+        get "content" => "resources#content"
       end
     end
     resources :search_datasets, concerns: :deletion
@@ -36,6 +38,7 @@ SS::Application.routes.draw do
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
     get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
+    get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/resource", format: false
     get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
     get "dataset/:dataset/point/index.json" => "public#show_point", cell: "nodes/dataset", format: false
     get "dataset/:dataset/point/add.json" => "public#add_point", cell: "nodes/dataset", format: false

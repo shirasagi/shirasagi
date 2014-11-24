@@ -18,4 +18,12 @@
 
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+
+  <% if @item.tsv %>
+  <dt><%= @model.t :tsv_id %></dt>
+  <dd>
+    <%= link_to @item.tsv.filename, opendata_dataset_resource_tsv_path(resource_id: @item.id) %>
+    (<%= link_to @model.t(:content), opendata_dataset_resource_content_path(resource_id: @item.id) %>)
+  </dd>
+  <% end %>
 </dl>

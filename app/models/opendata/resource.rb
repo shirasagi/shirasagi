@@ -12,6 +12,7 @@ class Opendata::Resource
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
   belongs_to :license, class_name: "Opendata::License"
   belongs_to_file :file
+  belongs_to_file :tsv
 
   permit_params :name, :text, :format, :license_id
 
@@ -34,6 +35,10 @@ class Opendata::Resource
       dataset.full_url.sub(/\.html$/, "") + "/resource/#{id}/#{filename}"
     end
 
+    def content_url
+      dataset.full_url.sub(/\.html$/, "") + "/resource/#{id}/content.html"
+    end
+
     def path
       file ? file.path : nil
     end
@@ -44,6 +49,15 @@ class Opendata::Resource
 
     def size
       file ? file.size : nil
+    end
+
+    def parse_tsv
+      require "nkf"
+      require "csv"
+
+      data = NKF.nkf("-w", tsv.read)
+      sep  = data =~ /\t/ ? "\t" : ","
+      CSV.parse(data, col_sep: sep)
     end
 
     def allowed?(action, user, opts = {})

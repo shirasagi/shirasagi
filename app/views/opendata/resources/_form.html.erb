@@ -33,4 +33,10 @@ $ ->
 
   <dt><%= @model.t :text %></dt>
   <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :tsv_id %></dt>
+  <dd><%= f.file_field :in_tsv %></td>
+  <% if @item.tsv_id %>
+  <dd><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>
+  <% end %>
 </dl>
