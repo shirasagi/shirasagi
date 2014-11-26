@@ -49,6 +49,7 @@ ja:
         related_url: URL
         field: 項目名
         value: 内容
+        contact: お問い合わせ
 
   datetime:
     prompts:
@@ -77,6 +78,8 @@ ja:
         - イベントの内容を入力できます。
       cost:
         - イベント参加に必要な費用を入力できます。
+      contact:
+        - 連絡先を入力できます。
     event/addon/additional_info:
       field:
         - 追加情報の項目名を設定します。

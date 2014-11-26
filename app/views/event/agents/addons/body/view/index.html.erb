@@ -23,4 +23,9 @@
     <dt><%= @cur_page.class.t :related_url %></dt>
     <dd><%= link_to(@cur_page.related_url, @cur_page.related_url, target: "_blank") if @cur_page.related_url.present? %></dd>
   <% end %>
+
+  <% if @cur_page.contact.present? %>
+    <dt><%= @cur_page.class.t :contact %></dt>
+    <dd><%=br @cur_page.contact.to_s %></dd>
+  <% end %>
 </dl>

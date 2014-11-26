@@ -33,8 +33,9 @@ module Event::Addon
       field :content, type: String
       field :cost, type: String
       field :related_url, type: String
+      field :contact, type: String
 
-      permit_params :schedule, :venue, :content, :cost, :related_url
+      permit_params :schedule, :venue, :content, :cost, :related_url, :contact
     end
 
     set_order 180
