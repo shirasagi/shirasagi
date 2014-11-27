@@ -5,12 +5,12 @@ class Facility::Agents::Nodes::PageController < ApplicationController
   public
     def map_pages
       Facility::Map.site(@cur_site).public.
-        where(filename: /^#{@cur_node.filename}\//, depth: @cur_node.depth + 1).order_by(order: -1)
+        where(filename: /^#{@cur_node.filename}\//, depth: @cur_node.depth + 1).order_by(order: 1)
     end
 
     def image_pages
       Facility::Image.site(@cur_site).public.
-        where(filename: /^#{@cur_node.filename}\//, depth: @cur_node.depth + 1).order_by(order: -1)
+        where(filename: /^#{@cur_node.filename}\//, depth: @cur_node.depth + 1).order_by(order: 1)
     end
 
     def index

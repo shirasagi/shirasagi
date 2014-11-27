@@ -54,7 +54,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
         @events[d] = events(d).map { |page|
           [
             page,
-            page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: -1)
+            page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
           ]
         }
       end
@@ -67,7 +67,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
       @events = events(@date).map { |page|
         [
           page,
-          page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: -1)
+          page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
         ]
       }
 

@@ -40,7 +40,7 @@ $ ->
 
 <%== @cur_node.upper_html %>
 
-<% if @cur_node.st_categories.present? %>
+<% if @cur_node.st_categories.order_by(order: 1).present? %>
   <nav class="event-pages-filter">
     <ul>
       <li class="all">

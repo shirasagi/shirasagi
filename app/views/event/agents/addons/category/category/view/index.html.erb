@@ -2,7 +2,7 @@
   st_categories = @cur_page.parent.try(:st_categories)
   if st_categories
     event_categories = @cur_page.categories.
-      in(id: st_categories.pluck(:id)).order_by(order: -1)
+      in(id: st_categories.pluck(:id)).order_by(order: 1)
   else
     event_categories = []
   end
