@@ -13,6 +13,7 @@ body {
   margin: 0 auto;
   font-family: $font-base;
   font-size: 100%;
+  line-height: 1.4;
   color: $text;
 }
 h1, h2, h3, h4, h5 {
@@ -110,7 +111,7 @@ textarea {
           a {
             display: block;
             min-height: 25px;
-            padding: 9px 0 7px 33px;
+            padding: 12px 0 4px 33px;
             color: $text;
             text-decoration: none;
           }
@@ -133,7 +134,7 @@ textarea {
           border-bottom: 2px solid $white;
           background: $white;
           a {
-            padding: 8px 0 6px 33px;
+            padding: 11px 0 3px 33px;
             background: url(../img/ic-data-s-bk.png) no-repeat 10px center;
           }
         }
@@ -150,11 +151,10 @@ textarea {
     .login {
       float: right;
       max-width: 400px;
-      padding: 12px 10px 12px 0;
+      padding: 15px 10px 15px 0;
       background: url(../img/ic-login.png) no-repeat left center;
       a {
         display: inline-block;
-        min-height: 24px;
         padding-left: 20px;
         color: $white;
       }
@@ -171,7 +171,7 @@ textarea {
     border-bottom: 2px solid $white;
     background: $white;
     a {
-      padding: 8px 0 6px 33px;
+      padding: 11px 0 3px 33px;
       background: url(../img/ic-data-s-bk.png) no-repeat 10px center;
     }
   }
@@ -236,13 +236,13 @@ textarea {
       display: block;
     }
     #title-data, #title-app, #title-idea {
-      padding: 17px 0 17px 53px;
+      padding: 20px 0 20px 53px;
       color: $text;
       font-size: $px15;
       font-weight: bold;
     }
     #contents-data, #contents-app, #contents-idea {
-      padding: 3px 0;
+      padding: 6px 0;
       color: $white;
       text-align: center;
     }
@@ -277,7 +277,7 @@ textarea {
   a {
     display: block;
     margin: 90px 0 0 290px;
-    padding: 10px 60px 10px 45px;
+    padding: 13px 60px 13px 45px;
     @include border-radius(5px);
     background: url(../img/ic-add.png) no-repeat 20px center;
     @include fill-gray;
@@ -338,14 +338,14 @@ textarea {
     position: absolute;
     top: -150px;
     width: 249px;
-    padding: 5px 10px;
+    padding: 8px 10px;
     border: $border-hgry;
     background-color: $white;
     text-align: left;
     span {
       display: inline-block;
       min-width: 110px;
-      padding: 5px 10px 5px 40px;
+      padding: 11px 10px 11px 40px;
       background: url(../img/ic-data-m-bl.png) no-repeat left center;
       font-size: $px28;
       text-align: center;
@@ -390,7 +390,7 @@ textarea {
 #about, .s-portal #contents header, #s-mypage-login #contents , #s-mypage #contents, .opendata-sparql {
   h1 {
     margin-bottom: 6px;
-    padding: 4px 10px;
+    padding: 7px 10px;
     @include grd-blue;
     color:$white;
     font-size: $px15;
@@ -399,11 +399,12 @@ textarea {
 
 #about p {
   padding-left: 16px;
+  line-height: 1.6;
 }
 
 .s-portal #contents {
   #portal-dataset header h1 {
-    padding: 6px 38px;
+    padding: 7px 38px;
     background: url(../img/ic-data-s.png) no-repeat 10px center;
     background-color: $data-blue;
     color:$white;
@@ -411,7 +412,7 @@ textarea {
   }
   #info-page-name {
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 13px 10px;
     font-size: $px17;
   }
 }
@@ -622,7 +623,7 @@ textarea {
       display: inline-block;
       width: 120px;
       margin-right: 10px;
-      padding: 4px 0;
+      padding: 7px 0;
       @include border-top-radius(5px);
       background: #ddcfcc;
       color: $text;
@@ -632,13 +633,13 @@ textarea {
         @include grd-blue;
         color: $white;
       }
+      &:first-child {
+        margin-left: 18px;
+      }
     }
     .current {
       @include grd-blue;
       color: $white;
-    }
-    #cms-tab-53-0-name {
-      margin-left: 18px;
     }
   }
   nav {
@@ -824,7 +825,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
   }
   a {
     display: block;
-    padding: 6px 0 5px 0;
+    padding: 10px 0 9px 0;
     text-decoration: none;
     text-align: center;
     color: $text;
@@ -839,7 +840,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
 }
 
 #od-searchgroup-name {
-  padding: 6px 35px;
+  padding: 9px 35px;
   background: url(../img/ic-groupsearch-b.png) no-repeat 8px center;
   background-color: #ffe7a5;
   font-size: $px15;
@@ -904,7 +905,7 @@ form.opendata-search_datasets-form, form.opendata-search_groups-form {
       display: inline-block;
       width: 120px;
       margin-right: 10px;
-      padding: 4px 0;
+      padding: 7px 0;
       @include border-top-radius(5px);
       background: #ccd6d6;
       color: $text;
@@ -913,12 +914,12 @@ form.opendata-search_datasets-form, form.opendata-search_groups-form {
       &:hover {
         background: $data-blue;
       }
+      &:first-child {
+        margin-left: 18px;
+      }
     }
     .current {
       background: $data-blue;
-    }
-    #cms-tab-174-0-name {
-      margin-left: 18px;
     }
   }
   nav {
@@ -950,7 +951,7 @@ form.opendata-search_datasets-form, form.opendata-search_groups-form {
 
 article.areas h1, article.tags h1, article.formats h1, article.licenses h1, #od-page-name, #dataset-news h1,
 #dataset-popular h1, #dataset-attention h1 {
-  padding: 4px 10px;
+  padding: 7px 10px;
   border-bottom: 2px solid #ffcf38;
   background: $data-blue;
   color:text;
@@ -979,7 +980,7 @@ article.areas, article.tags, article.formats, article.licenses, .opendata-search
 
 article.areas, article.tags, article.formats, article.licenses {
   width: 395px;
-  min-height: 288px;
+  min-height: 230px;
 }
 
 article.areas, article.formats {
@@ -1006,7 +1007,7 @@ article.areas, article.formats {
 //dataset-page
 .s-dataset #contents {
   header h1.name {
-    padding: 0 0 5px 10px;
+    padding: 5px 0 5px 10px;
     color: #005c7b;
     font-size: $px28;
     font-weight: bold;
@@ -1024,7 +1025,7 @@ article.areas, article.formats {
     a {
       display: inline-block;
       margin: 0 5px 10px 0;
-      padding: 1px 10px;
+      padding: 4px 10px;
       border: 1px solid #ddcfcc;
       @include border-radius(5px);
       color: $text;
@@ -1056,7 +1057,7 @@ article.areas, article.formats {
       a {
         display: inline-block;
         margin-right: 10px;
-        padding: 4px 10px;
+        padding: 7px 10px;
         @include border-top-radius(5px);
         background: #ccd6d6;
         color: $text;
@@ -1084,7 +1085,7 @@ article.areas, article.formats {
         border: 2px solid #00b2c4;
         header {
           h1 {
-            padding: 4px 0 4px 45px;
+            padding: 7px 0 7px 45px;
             background: $data-blue url(../img/ic-download.png) no-repeat 10px center;
             font-size: $px15;
           }
@@ -1099,6 +1100,7 @@ article.areas, article.formats {
           }
           .name {
             float: left;
+            line-height: 1.85;
           }
           .icons {
             float: right;
@@ -1179,7 +1181,7 @@ article.areas, article.formats {
     margin-bottom: $box-margin;
     .count {
       margin-bottom: 10px;
-      padding: 5px 80px;
+      padding: 14px 80px;
       border: 1px solid #ddcfcc;
       text-align: center;
       span.number {
@@ -1191,7 +1193,7 @@ article.areas, article.formats {
     }
     .add {
       display: inline-block;
-      padding: 2px 20px 2px 40px;
+      padding: 5px 20px 5px 40px;
       border: 1px solid #282828;
       @include border-radius(5px);
       background: #383838 url(../img/ic-like.png) no-repeat 10px center;
@@ -1359,9 +1361,8 @@ nav.cms-sns_share {
     margin-bottom: $box-margin;
     a {
       display: block;
-      //width: 350px;
       margin-top: $box-margin;
-      padding: 16px 0 16px 170px;
+      padding: 19px 0 19px 170px;
       border: $border-hgry;
       color: $text;
       vertical-align: middle;
@@ -1402,7 +1403,7 @@ nav.cms-sns_share {
     display: inline-block;
     width: 150px;
     margin-right: 10px;
-    padding: 4px 0;
+    padding: 7px 0;
     @include border-top-radius(5px);
     background: #ddcfcc;
     color: $text;
@@ -1443,15 +1444,17 @@ nav.cms-sns_share {
       min-height: 2em;
       float: left;
       clear: both;
+      margin-bottom: $box-margin;
       padding-right: 10px;
       background: #ddcfcc;
       text-align: right;
-      margin-bottom: $box-margin;
+      line-height: 2em;
     }
     dd {
       min-height: 2em;
       margin-left: 270px;
       margin-bottom: $box-margin;
+      line-height: 2em;
       label {
         display: inline-block;
         margin-right: 10px;
@@ -1554,7 +1557,7 @@ table.index {
 
 #footer-navi {
   min-width: 1100px;
-  padding: 7px 0;
+  padding: 10px 0;
   border-top: 1px solid $gray;
   background: #eeeeee;
   text-align: center;
@@ -1565,7 +1568,7 @@ table.index {
 
 #copyright {
   min-width: 1100px;
-  padding: 4px 0;
+  padding: 7px 0;
   @include grd-gray;
   color: $white;
   font-size: $px12;
