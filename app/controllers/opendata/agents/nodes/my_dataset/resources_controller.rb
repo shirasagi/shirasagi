@@ -64,6 +64,13 @@ class Opendata::Agents::Nodes::MyDataset::ResourcesController < ApplicationContr
         disposition: :attachment, x_sendfile: true
     end
 
+    def download_tsv
+      @item = @dataset.resources.find params[:resource_id]
+
+      send_file @item.tsv.path, type: @item.tsv.content_type, filename: @item.tsv.filename,
+        disposition: :attachment, x_sendfile: true
+    end
+
     def new
       @item = @model.new
       render

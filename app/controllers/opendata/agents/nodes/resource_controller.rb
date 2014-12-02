@@ -31,7 +31,10 @@ class Opendata::Agents::Nodes::ResourceController < ApplicationController
 
     def content
       @cur_node.layout_id = nil
+
       @item = @dataset.resources.find_by id: params[:id]
-      @data = @item.parse_tsv
+      raise "404" unless @item.tsv_present?
+
+      render nothing: true unless @data = @item.parse_tsv
     end
 end

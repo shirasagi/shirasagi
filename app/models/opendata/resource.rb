@@ -51,13 +51,20 @@ class Opendata::Resource
       file ? file.size : nil
     end
 
+    def tsv_present?
+      if tsv || %(CSV TSV).index(format)
+        true
+      end
+    end
+
     def parse_tsv
       require "nkf"
       require "csv"
 
-      data = NKF.nkf("-w", tsv.read)
+      src  = tsv || file
+      data = NKF.nkf("-w", src.read)
       sep  = data =~ /\t/ ? "\t" : ","
-      CSV.parse(data, col_sep: sep)
+      CSV.parse(data, col_sep: sep) rescue nil
     end
 
     def allowed?(action, user, opts = {})

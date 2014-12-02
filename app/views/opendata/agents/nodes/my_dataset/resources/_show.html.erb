@@ -19,6 +19,14 @@
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
+  <% if @item.tsv %>
+  <dt><%= @model.t :tsv_id %></dt>
+  <dd>
+    <%= link_to @item.tsv.filename, "tsv" %>
+    (<%= number_to_human_size @item.tsv.size %>)
+  </dd>
+  <% end %>
+
   <% if @item.rdf_iri.present? %>
   <dt><%= @model.t :rdf_iri %></dt>
   <dd><%= link_to @item.rdf_iri, "#{sparql_path}?graph_name=#{@item.rdf_iri}" %></dd>

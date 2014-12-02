@@ -65,6 +65,7 @@ SS::Application.routes.draw do
     resources :datasets, path: "my_dataset", controller: "public", cell: "nodes/my_dataset", concerns: :deletion do
       resources :resources, controller: "public", cell: "nodes/my_dataset/resources", concerns: :deletion do
         get "file" => "public#download"
+        get "tsv" => "public#download_tsv"
       end
     end
     resources :apps, path: "my_app", controller: "public", cell: "nodes/my_app", concerns: :deletion
