@@ -63,7 +63,7 @@ $ ->
 
 <div class="mod-workflow">
 
-  <% if (@item.group_ids & @cur_user.group_ids).length > 0 && @item.state == "closed" %>
+  <% if @item.state == "closed" %>
     <% if @item.allowed?(:approve, @cur_user) && @item.workflow_state == "request" %>
       <% @item.workflow_approvers.split(/\r\n/).each do |d| %>
         <% next if @cur_user._id != d.split(",")[1].to_i || d.split(",")[2] != "request" %>
