@@ -14,9 +14,6 @@
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
-  <dt><%= @model.t :related_url %></dt>
-  <dd><%= @item.send :related_url %></dd>
-
   <dt><%= @model.t :tags %></dt>
   <dd><%= @item.tags.join(", ") %></dd>
 

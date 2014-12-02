@@ -128,11 +128,6 @@ categories = [
         <dd><%= tryb{@cur_page.user.name} %><br /></dd>
       <% end %>
 
-      <% if @cur_page.related_url.present? %>
-        <dt><%= @cur_page.t :related_url %></dt>
-        <dd><%= link_to @cur_page.related_url, @cur_page.related_url, target: "_blank" %></dd>
-      <% end %>
-
       <dt><%= @cur_page.t :downloaded %></dt>
       <dd><%= @cur_page.downloaded.to_i %> 回</dd>
 

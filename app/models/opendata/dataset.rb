@@ -12,7 +12,6 @@ class Opendata::Dataset
 
   field :text, type: String
   field :point, type: Integer, default: "0"
-  field :related_url, type: String
   field :tags, type: SS::Extensions::Words
   field :downloaded, type: Integer
 
@@ -21,7 +20,7 @@ class Opendata::Dataset
 
   validates :category_ids, presence: true
 
-  permit_params :text, :related_url, :tags, tags: []
+  permit_params :text, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
