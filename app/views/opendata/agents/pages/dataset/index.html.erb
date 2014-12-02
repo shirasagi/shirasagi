@@ -50,16 +50,16 @@ $ ->
 <%
 max = 3
 categories = [
-  { items: @cur_page.categories, type: :category, name: :name, id: :id },
-  { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, id: :id },
-  { items: @cur_page.tags, type: :tag, name: :to_s, id: :to_s },
+  { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
+  { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
 ]
 %>
 <nav class="categories">
   <% categories.each do |cate| %>
     <% cate[:items].each_with_index do |item, idx| %>
       <% hide = (idx >= max) ? "display: none" : nil %>
-      <%= link_to item.send(cate[:name]), "#{@search_url}?s[#{cate[:type]}_id]=#{item.send(cate[:id])}",
+      <%= link_to item.send(cate[:name]), "#{@search_url}?s[#{cate[:key]}]=#{item.send(cate[:val])}",
         class: cate[:type], style: hide %>
     <% end %>
     <% if cate[:items].size > max %>
