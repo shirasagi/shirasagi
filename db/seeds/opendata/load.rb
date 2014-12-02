@@ -185,11 +185,11 @@ save_page filename: "index.html", name: "トップページ", layout_id: layouts
 ## -------------------------------------
 puts "# articles"
 
-1.step(3) do |i|
-  save_page filename: "info/#{i}.html", name: "サンプル記事#{i}", html: body,
-    route: "article/page", layout_id: layouts["portal-info"].id,
-    category_ids: Category::Node::Base.site(@site).pluck(:_id).sample(2)
-end
+#1.step(3) do |i|
+#  save_page filename: "info/#{i}.html", name: "サンプル記事#{i}", html: body,
+#    route: "article/page", layout_id: layouts["portal-info"].id,
+#    category_ids: Category::Node::Base.site(@site).pluck(:_id).sample(2)
+#end
 
 ## -------------------------------------
 puts "# licenses"
@@ -229,10 +229,10 @@ def save_dataset_group(data)
   item.update data
 end
 
-1.step(3) do |i|
-  save_dataset_group name: "データセットグループ#{i}",
-                     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
-end
+#1.step(3) do |i|
+#  save_dataset_group name: "データセットグループ#{i}",
+#                     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
+#end
 
 ## -------------------------------------
 puts "# opendata datasets"
@@ -245,13 +245,13 @@ def save_data(data)
   puts item.errors.full_messages unless item.update data
 end
 
-1.step(3) do |i|
-  save_data filename: "dataset/#{i}.html", name: "データセット#{i}", text: "<s>s</s>",
-    route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
-    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-    dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
-    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
-end
+#1.step(3) do |i|
+#  save_data filename: "dataset/#{i}.html", name: "データセット#{i}", text: "<s>s</s>",
+#    route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
+#    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
+#    dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
+#    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
+#end
 
 ## -------------------------------------
 puts "# opendata apps"
@@ -264,11 +264,11 @@ def save_app(data)
   item.update data
 end
 
-1.step(3) do |i|
+#1.step(3) do |i|
 #  save_app name: "アプリ#{i}", text: "aaaaaa",
 #    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
 #    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1)
-end
+#end
 
 ## -------------------------------------
 puts "# opendata ideas"
@@ -281,9 +281,9 @@ def save_idea(data)
   item.update data
 end
 
-1.step(3) do |i|
+#1.step(3) do |i|
 #  save_idea name: "アイデア#{i}", text: "aaaaaa",
 #    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
 #    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
 #    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1)
-end
+#end
