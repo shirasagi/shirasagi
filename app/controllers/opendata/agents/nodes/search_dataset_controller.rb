@@ -17,8 +17,11 @@ class Opendata::Agents::Nodes::SearchDatasetController < ApplicationController
 
       @model = Opendata::Dataset
 
+      focus = params[:s] || {}
+      focus = focus.merge(site: @cur_site)
+
       @items = @model.site(@cur_site).public.
-        search(params[:s].merge(site: @cur_site)).
+        search(focus).
         order_by(sort).
         page(params[:page]).
         per(20)
