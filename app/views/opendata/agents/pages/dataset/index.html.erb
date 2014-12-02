@@ -70,7 +70,7 @@ categories = [
 </nav>
 
 <div class="text">
-  <%= auto_link br(@cur_page.text), html: { target: "_blank" } %>
+  <%= auto_link br(@cur_page.text) %>
 </div>
 
 <div class="detail">
@@ -107,7 +107,7 @@ categories = [
         </div>
         <% if rs.text.present? %>
         <div class="text">
-          <%= auto_link br(rs.text), html: { target: "_blank" } %>
+          <%= auto_link br(rs.text) %>
         </div>
         <% end %>
         <% if rs.rdf_iri.present? %>
