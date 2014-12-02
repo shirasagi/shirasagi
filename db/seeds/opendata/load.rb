@@ -211,7 +211,7 @@ def save_license(data)
   item.update data
 end
 
-save_license name: "PDM（Public Domain Mark：公有標）", in_file: license_file("cc-pdm.png"), order: 1
+save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 1
 save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 2
 save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 3
 save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 4
