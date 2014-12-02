@@ -102,7 +102,7 @@ categories = [
             <% end %>
           </span>
           <% end %>
-          <%= link_to "データの内容", rs.content_url, class: "content" if rs.tsv_present? %>
+          <%= link_to "プレビュー", rs.content_url, class: "content" if rs.tsv_present? %>
           <%= link_to "ダウンロード", rs.url, class: "download" %>
         </div>
         <% if rs.text.present? %>

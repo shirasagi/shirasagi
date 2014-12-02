@@ -102,7 +102,7 @@ ja:
         text: 説明
         format: フォーマット
         license_id: ライセンス
-        tsv_id: 表示用データ(TSV)
+        tsv_id: プレビュー用データ
         content: データの内容
       opendata/app:
         site_id: サイト
