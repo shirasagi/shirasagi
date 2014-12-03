@@ -20,10 +20,9 @@ module SS::Relation::File
       }
 
       define_method("save_#{name}") {
-        send("remove_#{name}")
         file = send("in_#{name}")
 
-        ss_file = SS::File.new
+        ss_file = send(name) || SS::File.new
         ss_file.in_file = file
         ss_file.model = self.class.to_s.underscore
         ss_file.filename = file.original_filename
