@@ -123,9 +123,12 @@ categories = [
       <% if @cur_page.member_id.present? %>
         <dt><%= @cur_page.t :user_id %></dt>
         <dd><%= tryb{@cur_page.member.name} %><br /></dd>
-      <% else %>
+      <% elsif @cur_page.contact_group %>
         <dt><%= @cur_page.t :user_id %></dt>
-        <dd><%= tryb{@cur_page.user.name} %><br /></dd>
+        <dd><%= @cur_page.contact_group.full_name %><br /></dd>
+      <% elsif @cur_page.groups.present? %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd><%= @cur_page.groups.first.name %><br /></dd>
       <% end %>
 
       <dt><%= @cur_page.t :downloaded %></dt>
