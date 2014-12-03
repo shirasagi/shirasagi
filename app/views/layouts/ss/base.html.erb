@@ -47,6 +47,7 @@
     <% if @cur_user %>
     <nav>
       <%= link_to "dev", "#", onclick: "alert('#{Rails.env}'); return false;" unless Rails.env.production? %>
+      <%= link_to @cur_group.name.sub(/.*\//, ""), sns_user_profile_path(@cur_user) if @cur_group %>
       <%= link_to @cur_user.name, sns_user_profile_path(@cur_user) %>
       <%= link_to :logout, sns_logout_path %>
     </nav>
