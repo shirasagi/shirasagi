@@ -38,6 +38,10 @@ module SS::Group::Model
     end
 
   public
+    def full_name
+      name.gsub("/", " ")
+    end
+
     def rename_children
       return unless @db_changes["name"]
       return unless @db_changes["name"][0]
