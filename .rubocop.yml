@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - Guardfile
     - bin/*
+    - vendor/bundle/**/*
 
 # Rails default check path
 Rails/DefaultScope:
