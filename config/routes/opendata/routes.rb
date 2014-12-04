@@ -53,6 +53,9 @@ SS::Application.routes.draw do
 
     get "sparql/(*path)" => "public#index", cell: "nodes/sparql"
     post "sparql/(*path)" => "public#index", cell: "nodes/sparql"
+    get "api/package_list" => "public#package_list", cell: "nodes/api"
+    get "api/group_list" => "public#group_list", cell: "nodes/api"
+    get "api/tag_list" => "public#tag_list", cell: "nodes/api"
     get "api/(*path)" => "public#index", cell: "nodes/api"
 
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
