@@ -61,11 +61,7 @@ class Uploader::File
     end
 
     def ext
-      if !directory? && path =~ /\./
-        ".#{path.sub(/^.*\./, '')}"
-      else
-        ""
-      end
+      File.extname(path)
     end
 
     def directory?
