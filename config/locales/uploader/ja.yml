@@ -23,6 +23,7 @@ ja:
       uploader/file:
         name: タイトル
         filename: ファイル名
+        path: ファイル名
         content_type: MIME
         size: ファイルサイズ
         text: 内容

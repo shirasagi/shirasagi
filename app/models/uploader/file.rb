@@ -7,7 +7,7 @@ class Uploader::File
   validates :path, presence: true
   validates :filename, length: { maximum: 2000 }
 
-  validate :validate_path
+  validate :validate_filename
   validate :validate_exists, if: :path_chenged?
   validate :validate_scss
   validate :validate_coffee
@@ -131,11 +131,11 @@ class Uploader::File
     end
 
   private
-    def validate_path
+    def validate_filename
       if directory?
-        errors.add :path, :invalid if path !~ /^\/?([\w\-]+\/)*[\w\-]+$/
+        errors.add :path, :invalid if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
       else
-        errors.add :path, :invalid if path !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+        errors.add :path, :invalid if filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
       end
     end
 
