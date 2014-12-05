@@ -29,11 +29,15 @@ class Opendata::Dataset
 
   public
     def point_url
-      url.sub(/\.html$/, "") + "/point/index.json"
+      url.sub(/\.html$/, "") + "/point/show.html"
     end
 
     def point_add_url
-      url.sub(/\.html$/, "") + "/point/add.json"
+      url.sub(/\.html$/, "") + "/point/add.html"
+    end
+
+    def point_members_url
+      url.sub(/\.html$/, "") + "/point/members.html"
     end
 
     def contact_present?

@@ -1,0 +1,5 @@
+<ul class="point-members">
+  <% @items.each do |item| %>
+  <li><%= tryb { item.member.name } || "-" %></li>
+  <% end %>
+</ul>

@@ -3,7 +3,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
   include Opendata::UrlHelper
   include Opendata::MypageFilter
 
-  before_action :set_dataset, only: [:show_point, :add_point]
+  before_action :set_dataset, only: [:show_point, :add_point, :point_members]
   skip_filter :logged_in?
 
   private
@@ -57,18 +57,19 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
     end
 
     def show_point
-      if logged_in?(redirect: false)
-        mode = :entry
-        cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
-        mode = :cancel if point = Opendata::DatasetPoint.where(cond).first
-      else
-        mode = :login
-      end
+      @cur_node.layout = nil
+      @mode = nil
 
-      render json: { point: @dataset.point, mode: mode }.to_json
+      if logged_in?(redirect: false)
+        @mode = :add
+
+        cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
+        @mode = :cancel if point = Opendata::DatasetPoint.where(cond).first
+      end
     end
 
     def add_point
+      @cur_node.layout = nil
       raise "403" unless logged_in?(redirect: false)
 
       cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
@@ -76,13 +77,22 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       if point = Opendata::DatasetPoint.where(cond).first
         point.destroy
         @dataset.inc point: -1
-        mode = :entry
+        @mode = :add
       else
         Opendata::DatasetPoint.new(cond).save
         @dataset.inc point: 1
-        mode = :cancel
+        @mode = :cancel
       end
 
-      render json: { point: @dataset.point, mode: mode }.to_json
+      render :show_point
+    end
+
+    def point_members
+      @cur_node.layout = nil
+
+      dump Opendata::DatasetPoint.all.size
+      @items = Opendata::DatasetPoint.where(site_id: @cur_site.id, dataset_id: @dataset.id)
+      #dump({site_id: @cur_site.id, dataset_id: @dataset.id})
+      dump @items.size
     end
 end

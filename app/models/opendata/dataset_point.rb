@@ -1,9 +1,9 @@
 class Opendata::DatasetPoint
   include SS::Document
 
-  field :site_id, type: Integer
-  field :member_id, type: Integer
-  field :dataset_id, type: Integer
+  belongs_to :site, class_name: "SS::Site"
+  belongs_to :member, class_name: "Cms::Member"
+  belongs_to :dataset, class_name: "Opendata::Dataset"
 
   validates :site_id, presence: true
   validates :member_id, presence: true

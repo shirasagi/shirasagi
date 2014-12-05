@@ -1,0 +1,26 @@
+<%= coffee do %>
+$ ->
+
+  $(".point .update").click (event)->
+    $.ajax
+      url: "<%= @dataset.point_add_url %>"
+      success: (data)->
+        $(".point").html data
+    event.preventDefault()
+
+  $(".point .number a").colorbox({ fixed: true, width: "300px", height: "50%" })
+
+<% end %>
+
+<div class="count">
+  <span class="number">
+    <% if @dataset.point == 0 %>
+      <%= @dataset.point %>
+    <% else %>
+      <%= link_to @dataset.point, @dataset.point_members_url %>
+    <% end %>
+  </span>
+  <span class="label">いいね！数</span>
+</div>
+
+<%= link_to "いいね！", "#", class: "update #{@mode}" if @mode %>

@@ -2,37 +2,22 @@
 <script src="/assets/js/jquery.colorbox.js"></script>
 <%= coffee do %>
 $ ->
-  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
-
-  point_link = $(".point .add")
-
+  # show point
   $.ajax
     url: "<%= @cur_page.point_url %>"
     success: (data)->
-      $(".point .count .number").text data["point"]
-      if data["mode"] == "entry"
-        # add
-      else if data["mode"] == "cancel"
-        point_link.removeClass("add").addClass("cancel")
-      else
-        point_link.remove()
+      $(".point").html data
 
-  point_link.click (event)->
-    $.ajax
-      url: "<%= @cur_page.point_add_url %>"
-      success: (data)->
-        $(".point .count .number").text data["point"]
-        if data["mode"] == "cancel"
-          point_link.removeClass("add").addClass("cancel")
-        else
-          point_link.removeClass("cancel").addClass("add")
-    event.preventDefault()
-
+  # hide categories
   $(".categories a[data-class=other]").click ->
     type = $(this).attr("class")
     $(".categories a." + type).show()
     $(this).remove()
     return false
+
+  # preview
+  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
+
 <% end %>
 
 <header>
@@ -44,7 +29,6 @@ $ ->
     <span class="number"><%= @cur_page.point %></span>
     <span class="label">いいね！数</span>
   </div>
-  <%= link_to "いいね！", "#", class: "add" %>
 </div>
 
 <%

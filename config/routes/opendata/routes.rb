@@ -40,8 +40,9 @@ SS::Application.routes.draw do
     get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
     get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/resource", format: false
     get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
-    get "dataset/:dataset/point/index.json" => "public#show_point", cell: "nodes/dataset", format: false
-    get "dataset/:dataset/point/add.json" => "public#add_point", cell: "nodes/dataset", format: false
+    get "dataset/:dataset/point/show.:format" => "public#show_point", cell: "nodes/dataset", format: false
+    get "dataset/:dataset/point/add.:format" => "public#add_point", cell: "nodes/dataset", format: false
+    get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset", format: false
 
     match "search_dataset_group/(index.:format)" => "public#index", cell: "nodes/search_dataset_group", via: [:get, :post]
     match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]
