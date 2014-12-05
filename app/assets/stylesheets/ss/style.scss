@@ -253,7 +253,7 @@ textarea.ace_text-input {
   }
 }
 .field_with_errors {
-  input {
+  input, textarea, select {
     display: inline;
     border: 1px solid #e00;
   }
