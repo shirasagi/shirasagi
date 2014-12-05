@@ -1,26 +1,11 @@
-<%= coffee do %>
-
-deselectItem=() ->
-  $(this).parents("tr:first").remove()
-  if $("table.selected-dataset-groups tr[data-id]").size() == 0
-    $("table.selected-dataset-groups").hide()
-  return false
-
-$ ->
-  $("table.selected-dataset-groups a.deselect").click(deselectItem)
-  if $("table.selected-dataset-groups tbody .deselect").size() == 0
-    $("table.selected-dataset-groups").hide()
-
-<% end %>
-
 <dl class="see mod-opendata_dataset_groups">
   <dt><%= @model.t :dataset_group_ids %></dt>
   <dd>
-    <%= f.hidden_field "dataset_group_ids[]", value: "", class: "hidden-groups-ids" %>
+    <%= f.hidden_field "dataset_group_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("opendata.search_dataset_groups.index"), search_opendata_dataset_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index selected-dataset-groups">
+    <table class="index ajax-selected">
       <thead>
         <tr>
           <th class="name"><%= @model.t :name %></th>
