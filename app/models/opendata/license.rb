@@ -19,6 +19,7 @@ class Opendata::License
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
+  validates :file_id, presence: true
 
   def state_options
     [%w(公開 public), %w(非公開 closed)]
