@@ -1538,6 +1538,60 @@ table.index {
   border: 1px solid #ee0000;
 }
 
+.tooltip {
+  display:inline-block;
+  position:relative;
+  width:16px;
+  left:5px;
+  height:16px;
+  @include border-radius(8px);
+  background: #333;
+  color:#fff;
+  font-weight:bold;
+  text-decoration:none;
+  text-align:center;
+  cursor: pointer;
+  &:hover {
+     background-color: #f9c;
+  }
+  ul {
+    display: none;
+    position: absolute;
+    bottom:18px;
+    left:-220px;
+    width: 22em;
+    z-index: 90;
+    padding: 10px;
+    border: 1px solid #bbb;
+    background-color: #fff;
+    color: #333;
+    text-align: left;
+    line-height: 1.6em;
+    list-style: none;
+    li {
+      font-weight: normal;
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      left: 222px;
+      bottom: -6px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid #bbb;
+      border-right: 6px solid transparent;
+      border-left: 6px solid transparent;
+    }
+    &:after {
+      content: " ";
+      position: absolute;
+      left: 220px;
+      height:0;
+      width:0;
+    }
+  }
+}
+
 #ss-notice {
   margin-bottom: $box-margin;
   padding: 10px 20px;
