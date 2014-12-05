@@ -16,6 +16,7 @@ class Opendata::DatasetGroup
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
+  validates :category_ids, presence: true
 
   def state_options
     [%w(公開 public), %w(非公開 closed)]

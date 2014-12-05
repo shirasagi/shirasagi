@@ -66,11 +66,13 @@ ja:
   mongoid:
     models:
       opendata/license: ライセンス
-      opendata/dataset_group: グループ
+      opendata/dataset_group: データセットグループ
       opendata/dataset: データセット
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
+      opendata/addon/category:
+        category_ids: 分野
       opendata/addon/rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
