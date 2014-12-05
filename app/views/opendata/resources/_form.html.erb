@@ -25,16 +25,16 @@ $ ->
   <dt><%= @model.t :file_id %></dt>
   <dd><%= f.file_field :in_file %></dd>
 
-  <dt><%= @model.t :format %></dt>
+  <dt><%= @model.t :format %><%= @model.tt :format %></dt>
   <dd><%= f.text_field :format, style: "width: 8em; ime-mode: disabled;" %></dd>
 
   <dt><%= @model.t :license_id %></dt>
   <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
 
-  <dt><%= @model.t :text %></dt>
+  <dt><%= @model.t :text %><%= @model.tt :text %></dt>
   <dd><%= f.text_area :text %></dd>
 
-  <dt><%= @model.t :tsv_id %></dt>
+  <dt><%= @model.t :tsv_id %><%= @model.tt :tsv_id %></dt>
   <dd><%= f.file_field :in_tsv %></td>
   <% if @item.tsv_id %>
   <dd><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>

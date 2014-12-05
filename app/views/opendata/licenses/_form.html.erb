@@ -5,7 +5,7 @@
   <dt><%= @model.t :file_id %></dt>
   <dd><%= f.file_field :in_file %></dd>
 
-  <dt><%= @model.t :related_url %></dt>
+  <dt><%= @model.t :related_url %><%= @model.tt :related_url %></dt>
   <dd><%= f.text_field :related_url %></dd>
 
   <dt><%= @model.t :state %></dt>

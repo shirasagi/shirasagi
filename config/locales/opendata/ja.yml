@@ -125,3 +125,23 @@ ja:
         app_ids: アプリ
         point: 評価
         text: 内容
+
+  tooltip:
+    opendata/dataset:
+      text: &text
+        - データセットの説明を入力します。
+        - URLは自動的にリンクが設定されます。
+      tags:
+        - 関連する単語を登録します。
+        - カンマ、スペースで区切ることにより複数の単語を設定することができます。
+    opendata/resource:
+      format:
+        - ファイルのフォーマットを半角英数の大文字で入力します。
+        - 「 TTL 」を入力した場合はRDFサーバにデータが登録されます。
+      text: *text
+      tsv_id:
+        - TSV、CSVファイルを登録しておくとデータセットのページでプレビュー表示ができます。
+        - リソースファイルがTSV、CSVファイルの場合は登録する必要はありません。
+    opendata/license:
+      related_url:
+        - 登録するライセンスの公式ページや説明ページのURLを登録します。
