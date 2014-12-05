@@ -79,6 +79,7 @@ ja:
       opendata/license:
         name: ライセンス名
         file_id: ライセンス画像
+        in_file: ファイル
         related_url: 関連URL
         order: 並び順
       opendata/dataset_group:
@@ -100,6 +101,7 @@ ja:
         downloaded: 合計ダウンロード数
       opendata/resource:
         file_id: ファイル
+        in_file: ファイル
         name: リソース名
         text: 説明
         format: フォーマット

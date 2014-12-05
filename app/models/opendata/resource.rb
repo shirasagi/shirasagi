@@ -17,7 +17,7 @@ class Opendata::Resource
   permit_params :name, :text, :format, :license_id
 
   validates :name, presence: true
-  validates :file_id, presence: true
+  validates :in_file, presence: true, if: ->{ file_id.blank? }
   validates :format, presence: true
   validates :license_id, presence: true
 
