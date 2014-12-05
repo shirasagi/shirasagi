@@ -18,6 +18,7 @@ class Opendata::Dataset
   has_many :points, primary_key: :dataset_id, class_name: "Opendata::DatasetPoint",
     dependent: :destroy
 
+  validates :text, presence: true
   validates :category_ids, presence: true
 
   permit_params :text, :tags, tags: []
