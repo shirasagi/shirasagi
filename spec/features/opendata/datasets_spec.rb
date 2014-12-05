@@ -36,6 +36,7 @@ describe "opendata_datasets" do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
+        fill_in "item[text]", with: "sample"
         all("input[type=checkbox][id^='item_category_ids']").each { |c| check c[:id] }
         all("input[type=checkbox][id^='item_area_ids']").each { |c| check c[:id] }
         click_button "保存"

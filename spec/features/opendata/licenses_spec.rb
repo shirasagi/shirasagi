@@ -33,6 +33,7 @@ describe "opendata_licenses" do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
         click_button "保存"
       end
       expect(status_code).to eq 200
