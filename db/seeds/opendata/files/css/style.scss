@@ -1524,7 +1524,7 @@ table.index {
   border: 1px solid #D88888;
   h2 {
     margin: -20px -20px 25px;
-    padding: 0 10px;
+    padding: 3px 10px;
     background: #D88888;
     color: #fff;
   }
@@ -1533,8 +1533,10 @@ table.index {
   }
 }
 
-.field_with_errors input {
-  border: 1px solid #ee0000;
+.field_with_errors {
+  input, textarea, select {
+    border: 1px solid #ee0000;
+  }
 }
 
 .tooltip {
