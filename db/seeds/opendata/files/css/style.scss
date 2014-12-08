@@ -1438,7 +1438,6 @@ nav.cms-sns_share {
     }
   }
   dl.see {
-    overflow: hidden;
     dt {
       min-width: 240px;
       min-height: 2em;
@@ -1550,6 +1549,7 @@ table.index {
   font-weight:bold;
   text-decoration:none;
   text-align:center;
+  line-height: 1.3em;
   cursor: pointer;
   &:hover {
      background-color: #f9c;
