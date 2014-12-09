@@ -1,0 +1,21 @@
+ja:
+  ezine:
+    page: メルマガ記事
+    button:
+      convert_html_to_text: HTML版を変換する
+
+    preview_html: HTML版プレビュー
+    preview_text: テキスト版プレビュー
+    deliver_test: テスト配信
+    deliver: 本配信
+    sent_log: 配信ログ
+
+  modules:
+    ezine: メールマガジン
+
+  mongoid:
+    attributes:
+      ezine/page:
+        name: 記事タイトル
+        html: 本文（HTML版）
+        text: 本文（テキスト版）
