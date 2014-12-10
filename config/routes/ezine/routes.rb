@@ -11,6 +11,10 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion
   end
 
+  node "ezine" do
+    get "page/(index.:format)" => "public#index", cell: "nodes/page"
+  end
+
   page "ezine" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
   end

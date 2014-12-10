@@ -13,6 +13,10 @@ ja:
   modules:
     ezine: メールマガジン
 
+  cms:
+    nodes:
+      ezine/page: 配信記事一覧
+
   mongoid:
     attributes:
       ezine/page:
