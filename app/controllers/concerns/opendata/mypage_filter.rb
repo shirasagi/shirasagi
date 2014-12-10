@@ -2,6 +2,7 @@ module Opendata::MypageFilter
   extend ActiveSupport::Concern
 
   included do
+    helper Opendata::UrlHelper
     before_action :logged_in?
   end
 

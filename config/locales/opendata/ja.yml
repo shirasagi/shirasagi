@@ -7,6 +7,10 @@ ja:
       search: データセットグループを検索
       select: データセットグループを設定する
       deselect: 削除
+    button:
+      delete_account: アカウント削除
+    notice:
+      deleted_account: アカウントを削除しました。
     errors:
       messages:
         invalid_rdf: RDFストアの登録に失敗しました。

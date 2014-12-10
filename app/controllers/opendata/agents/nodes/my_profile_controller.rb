@@ -48,4 +48,16 @@ class Opendata::Agents::Nodes::MyProfileController < ApplicationController
         render action: :edit
       end
     end
+
+    def delete
+      render
+    end
+
+    def destroy
+      if @cur_member.remove
+        redirect_to view_context.mypage_path, notice: t("opendata.notice.deleted_account")
+      else
+        render action: :delete
+      end
+    end
 end

@@ -1,0 +1,12 @@
+<%= form_for :item, url: @cur_node.url, html: { id: "item-form", method: :delete } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="deletion-confirm">
+    アカウントを削除してよろしいですか？<br />
+    ユーザー情報は消えますが、過去に投稿したデータは残ります。
+  </div>
+
+  <footer class="send">
+    <%= submit_tag t("opendata.button.delete_account"), name: :delete %>
+  </footer>
+<% end %>
