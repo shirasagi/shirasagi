@@ -1,13 +1,15 @@
 module Ads::Addon
-  module BannerSetting
-    extend SS::Addon
+  module PageList
     extend ActiveSupport::Concern
+    extend SS::Addon
 
     set_order 200
 
     included do
       field :sort, type: String
-      permit_params :sort
+      field :upper_html, type: String
+      field :lower_html, type: String
+      permit_params :sort, :upper_html, :lower_html
     end
 
     public

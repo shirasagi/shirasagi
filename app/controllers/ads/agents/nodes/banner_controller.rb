@@ -3,11 +3,7 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
 
   public
     def index
-      sort = @cur_node.sort_hash
-      @random = sort[:random]
-
-      @items = Ads::Banner.site(@cur_site).node(@cur_node).public(@cur_date).order_by(sort)
-      #@items = @items.shuffle if @random
+      @items = Ads::Banner.site(@cur_site).node(@cur_node).public(@cur_date).order_by(order: 1)
     end
 
     def count

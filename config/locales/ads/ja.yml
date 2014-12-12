@@ -8,7 +8,7 @@ ja:
   modules:
     ads: 広告管理
     addons:
-      ads/banner_setting: バナー設定
+      ads/page_list: リスト表示
 
   cms:
     nodes:
@@ -28,6 +28,9 @@ ja:
     models:
       ads/banner: 広告バナー
     attributes:
+      ads/addon/page_list:
+        upper_html: 上部HTML
+        lower_html: 下部HTML
       ads/banner:
         name: サイト名
         link_url: リンクURL
@@ -36,5 +39,3 @@ ja:
         date: アクセス日
         link_url: リンクURL
         count: アクセス数
-      ads/addon/banner_setting:
-        sort: バナー表示順

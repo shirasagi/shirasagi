@@ -5,20 +5,26 @@ return if @items.blank?
 wrap_id = "ads-banners-#{@items[0].id}"
 
 %><div class="ads-banners" id="<%= wrap_id %>">
-  <% @items.each do |item| %>
-  <a href="<%= item.url %>" target="_blank">
-    <% if file = item.file %>
-      <%= image_tag file.url, alt: item.name, title: item.name %>
-    <% else %>
-      <%= item.name %>
+  <%== @cur_part.upper_html if @cur_part.upper_html.present? %>
+
+  <div class="banners">
+    <% @items.each do |item| %>
+    <a href="<%= item.url %>" target="_blank">
+      <% if file = item.file %>
+        <%= image_tag file.url, alt: item.name, title: item.name %>
+      <% else %>
+        <%= item.name %>
+      <% end %>
+    </a>
     <% end %>
-  </a>
-  <% end %>
+  </div>
+
+  <%== @cur_part.lower_html if @cur_part.lower_html.present? %>
 </div>
 
 <% if @random %>
 <%= coffee do %>
-wrap = $("#<%= wrap_id %>")
+wrap = $("#<%= wrap_id %> .banners")
 list = wrap.find("a")
 list = list.sort ->
   return Math.random() - .5
