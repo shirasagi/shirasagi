@@ -1475,7 +1475,19 @@ nav.cms-sns_share {
         font-family: $font-base;
         font-size: $px14;
       }
+      input[name="delete"] {
+        background: #c33838;
+        &:hover {
+          background: #990000;
+        }
+      }
     }
+  }
+  .deletion-confirm {
+    margin-bottom:$box-margin;
+    padding: 15px;
+    border: 1px solid #C33838;
+    background: #FCEEEE;
   }
 }
 
@@ -1523,6 +1535,8 @@ table.index {
     }
   }
 }
+
+
 
 #errorExplanation {
   margin-bottom: $box-margin;
