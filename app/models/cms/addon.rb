@@ -107,7 +107,7 @@ module Cms::Addon
     def validate_release_state
       return if errors.present?
 
-      if state = "public"
+      if state == "public"
         self.state = "ready" if release_date && release_date > Time.now
         self.state = "closed" if close_date && close_date <= Time.now
       end
