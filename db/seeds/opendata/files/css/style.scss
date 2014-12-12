@@ -363,7 +363,12 @@ textarea {
     padding: 10px 15px;
     font-size: $px15;
   }
+  .addinfo {
+    float: right;
+    margin: 0 25px 5px 0;
+  }
   nav {
+    clear: both;
     padding: 10px 0;
     text-align: center;
     a {
@@ -434,8 +439,8 @@ textarea {
 #contents article.body {
   margin-bottom: $box-margin;
   h1 {
-    margin: 12px 0 6px;
-    padding: 3px 10px 0;
+    margin: 12px 0;
+    padding: 5px 10px;
     background: #3386bb;
     color: $white;
     font-size: $px15;
@@ -445,7 +450,7 @@ textarea {
   }
   h2 {
     margin-bottom: 6px;
-    padding: 0 10px;
+    padding: 3px 10px;
     border-bottom: 2px solid #3386bb;
     color: #3386bb;
     font-size: $px15;
@@ -453,7 +458,7 @@ textarea {
   }
   h3 {
     margin-bottom: 6px;
-    padding: 0 10px;
+    padding: 3px 10px;
     border-left: 5px solid #3386bb;
     color: #3386bb;;
     font-weight: bold;
@@ -467,6 +472,7 @@ textarea {
   }
   p {
     margin-bottom: 12px;
+    line-height: 1.6;
   }
   ul {
     margin-bottom: 12px;
