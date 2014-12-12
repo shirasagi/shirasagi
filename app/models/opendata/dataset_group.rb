@@ -2,6 +2,7 @@ class Opendata::DatasetGroup
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
+  include Cms::Addon::Release
   include Cms::Addon::OwnerPermission
   include Opendata::Addon::Category
 

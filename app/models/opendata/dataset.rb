@@ -1,11 +1,11 @@
 class Opendata::Dataset
   include Cms::Page::Model
+  include Cms::Addon::Release
   include Contact::Addon::Page
   include Opendata::Addon::Resource
   include Opendata::Addon::Category
   include Opendata::Addon::DatasetGroup
   include Opendata::Addon::Area
-  include Opendata::Addon::Release
   include Opendata::Reference::Member
 
   set_permission_name "opendata_datasets"

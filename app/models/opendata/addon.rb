@@ -58,21 +58,4 @@ module Opendata::Addon
       permit_params app_ids: []
     end
   end
-
-  module Release
-    extend ActiveSupport::Concern
-    extend SS::Addon
-
-    set_order 501
-
-    included do
-      validate :validate_release_date
-    end
-
-    def validate_release_date
-      if public? && released.blank?
-        self.released = Time.now
-      end
-    end
-  end
 end
