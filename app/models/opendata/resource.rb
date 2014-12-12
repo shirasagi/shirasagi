@@ -97,7 +97,6 @@ class Opendata::Resource
            ODT OTS OTT RAR RTF RDF TAR TGZ TTL TXT WAV XLS XLT XLSX XML ZIP)
       end
 
-
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?
