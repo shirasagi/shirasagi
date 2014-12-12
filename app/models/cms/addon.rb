@@ -79,10 +79,9 @@ module Cms::Addon
     set_order 500
 
     included do
-      #field :released, type: DateTime
       field :release_date, type: DateTime
       field :close_date, type: DateTime
-      permit_params :released, :release_date, :close_date
+      permit_params :release_date, :close_date
 
       validate :validate_release_date
     end

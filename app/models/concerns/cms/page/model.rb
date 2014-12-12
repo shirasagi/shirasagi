@@ -15,7 +15,7 @@ module Cms::Page::Model
 
     embeds_ids :categories, class_name: "Cms::Node"
 
-    permit_params category_ids: []
+    permit_params :released, category_ids: []
 
     after_validation :set_released, if: -> { public? }
     after_save :rename_file, if: ->{ @db_changes }
