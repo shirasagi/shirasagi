@@ -151,7 +151,6 @@ save_part filename: "tab.part.html" , name: "サイト切り替えタブ", route
 save_part filename: "mypage-login.part.html" , name: "ログイン", route: "opendata/mypage_login", ajax_view: "enabled"
 save_part filename: "crumbs.part.html" , name: "パンくず", route: "cms/crumb"
 save_part filename: "foot.part.html" , name: "フッター", route: "cms/free"
-save_part filename: "add.part.html" , name: "広告", route: "cms/free"
 save_part filename: "ads/banner.part.html" , name: "広告", route: "ads/banner"
 save_part filename: "twitter.part.html" , name: "twitter", route: "cms/free"
 save_part filename: "facebook.part.html" , name: "facebook", route: "cms/free"
