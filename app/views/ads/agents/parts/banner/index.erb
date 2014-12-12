@@ -9,13 +9,15 @@ wrap_id = "ads-banners-#{@items[0].id}"
 
   <div class="banners">
     <% @items.each do |item| %>
-    <a href="<%= item.url %>" target="_blank">
-      <% if file = item.file %>
-        <%= image_tag file.url, alt: item.name, title: item.name %>
-      <% else %>
-        <%= item.name %>
-      <% end %>
-    </a>
+    <span>
+      <a href="<%= item.url %>" target="_blank">
+        <% if file = item.file %>
+          <%= image_tag file.url, alt: item.name, title: item.name %>
+        <% else %>
+          <%= item.name %>
+        <% end %>
+      </a>
+    </span>
     <% end %>
   </div>
 
