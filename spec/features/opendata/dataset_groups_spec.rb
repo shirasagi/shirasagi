@@ -30,9 +30,12 @@ describe "opendata_dataset_groups" do
     end
 
     it "#new" do
+      create_once :opendata_node_category, basename: "opendata_category1"
+
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
+        all("input[type=checkbox][id^='item_category_ids']").each { |c| check c[:id] }
         click_button "保存"
       end
       expect(status_code).to eq 200
