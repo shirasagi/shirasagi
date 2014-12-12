@@ -57,6 +57,7 @@ save_node filename: "css", name: "CSS", route: "uploader/file"
 save_node filename: "js", name: "Javascript", route: "uploader/file"
 save_node filename: "img", name: "画像", route: "uploader/file"
 save_node filename: "termsofuse", name: "利用規約", route: "uploader/file"
+save_node filename: "ads", name: "広告", route: "ads/banner"
 
 save_node filename: "info", name: "お知らせ", route: "article/page", shortcut: "show",
   layout_id: layouts["portal-info"].id
@@ -151,6 +152,7 @@ save_part filename: "mypage-login.part.html" , name: "ログイン", route: "ope
 save_part filename: "crumbs.part.html" , name: "パンくず", route: "cms/crumb"
 save_part filename: "foot.part.html" , name: "フッター", route: "cms/free"
 save_part filename: "add.part.html" , name: "広告", route: "cms/free"
+save_part filename: "ads/banner.part.html" , name: "広告", route: "ads/banner"
 save_part filename: "twitter.part.html" , name: "twitter", route: "cms/free"
 save_part filename: "facebook.part.html" , name: "facebook", route: "cms/free"
 save_part filename: "sns-share.part.html" , name: "SNSシェアボタン", route: "cms/sns_share"

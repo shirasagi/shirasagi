@@ -367,12 +367,12 @@ textarea {
     float: right;
     margin: 0 25px 5px 0;
   }
-  nav {
+  .banners {
     clear: both;
     padding: 10px 0;
     text-align: center;
-    a {
-      display: inline-block;
+    span {
+      display: block;
       margin-bottom: 14px;
     }
   }
