@@ -15,9 +15,10 @@ module Cms::Content
     field :filename, type: String
     field :depth, type: Integer
     field :order, type: Integer, default: 0
+    field :released, type: DateTime
     field :md5, type: String
 
-    permit_params :state, :name, :filename, :basename, :order, :route
+    permit_params :state, :name, :filename, :basename, :order, :released, :route
 
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }

@@ -12,4 +12,7 @@
     (<%= file.filename %> <%= number_to_human_size file.size %>)
     <% end %>
   </dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
 </dl>

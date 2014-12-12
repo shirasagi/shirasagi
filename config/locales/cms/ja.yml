@@ -96,6 +96,7 @@ ja:
       cms/body: 本文
       cms/file: ファイル
       cms/release: 公開設定
+      cms/release_plan: 公開予約
       cms/crumb: パンくず設定
       cms/node_list: リスト表示
       cms/page_list: リスト表示
@@ -117,23 +118,21 @@ ja:
       cms/part/crumb: パンくずリスト
       cms/layout: レイアウト
     attributes:
+      cms/content:
+        released: 公開日時
+        order: 並び順
       cms/node/model:
         name: タイトル
         filename: フォルダー名
         basename: フォルダー名
         route: フォルダー属性
         summary_html: Summary
-        order: 並び順
       cms/page/model:
         name: タイトル
         route: ページ属性
         summary_html: Summary
         html: 本文
         files: ファイル
-        released: 公開日時
-        release_date: 公開開始日時(予約)
-        close_date: 公開終了日時(予約)
-        order: 並び順
         related_pages: 関連記事
       cms/part/model:
         name: パーツ名
@@ -170,6 +169,9 @@ ja:
         oauth_id: OAuth ID
         oauth_token: OAuth トークン
 
+      cms/addon/release_plan:
+        release_date: 公開開始日時
+        close_date: 公開終了日時
       cms/addon/role:
         cms_role_ids: ロール
       cms/addon/permission:

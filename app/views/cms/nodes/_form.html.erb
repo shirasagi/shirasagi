@@ -17,9 +17,6 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <dt><%= @model.t :basename %><%= @model.tt :foldername %></dt>
   <dd><%= f.text_field :basename, class: "filename" %></dd>
 
-  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
-  <dd><%= f.select :state, @item.state_options %></dd>
-
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
 

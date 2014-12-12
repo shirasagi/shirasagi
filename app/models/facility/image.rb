@@ -2,6 +2,7 @@ class Facility::Image
   include Cms::Page::Model
   include Cms::Addon::Meta
   include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Facility::Addon::Image
   include Facility::Addon::ImageInfo
   include Workflow::Addon::Approver

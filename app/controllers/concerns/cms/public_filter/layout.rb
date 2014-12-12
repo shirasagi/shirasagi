@@ -59,7 +59,7 @@ module Cms::PublicFilter::Layout
     end
 
     def render_layout_part(path)
-      part = Cms::Part.site(@cur_site)
+      part = Cms::Part.site(@cur_site).public
       part = part.where(mobile_view: "show") if filters.include?(:mobile)
       part = part.filename(path).first
       return unless part

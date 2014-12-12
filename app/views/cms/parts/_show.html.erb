@@ -12,11 +12,6 @@ file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/parts/') + "/e
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
 
-  <!--
-  <dt><%= @model.t :state %></dt>
-  <dd><%= @item.label :state %></dd>
-  -->
-
   <dt><%= @model.t :mobile_view %></dt>
   <dd><%= @item.label :mobile_view %></dd>
 

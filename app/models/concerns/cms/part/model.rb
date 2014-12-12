@@ -2,6 +2,7 @@ module Cms::Part::Model
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
+  include Cms::Addon::Release
   include History::Addon::Backup
 
   included do |mod|

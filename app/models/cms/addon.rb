@@ -77,6 +77,13 @@ module Cms::Addon
     extend SS::Addon
 
     set_order 500
+  end
+
+  module ReleasePlan
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 501
 
     included do
       field :release_date, type: DateTime
@@ -84,6 +91,7 @@ module Cms::Addon
       permit_params :release_date, :close_date
 
       validate :validate_release_date
+      validate :validate_release_state
     end
 
     def validate_release_date
@@ -93,6 +101,15 @@ module Cms::Addon
         if release_date.present? && release_date >= close_date
           errors.add :close_date, :greater_than, count: t(:release_date)
         end
+      end
+    end
+
+    def validate_release_state
+      return if errors.present?
+
+      if state = "public"
+        self.state = "ready" if release_date && release_date > Time.now
+        self.state = "closed" if close_date && close_date <= Time.now
       end
     end
   end

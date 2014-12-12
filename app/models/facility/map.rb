@@ -2,6 +2,7 @@ class Facility::Map
   include Cms::Page::Model
   include Cms::Addon::Meta
   include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Map::Addon::Page
   include Workflow::Addon::Approver
 

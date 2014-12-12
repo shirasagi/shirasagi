@@ -8,6 +8,7 @@ class Cms::Page
   include Cms::Addon::Body
   include Cms::Addon::File
   include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Cms::Addon::RelatedPage
   include Category::Addon::Category
   include Event::Addon::Date

@@ -11,11 +11,10 @@ module Cms::Page::Model
     #text_index :name, :html
 
     field :route, type: String, default: ->{ "cms/page" }
-    field :released, type: DateTime
 
     embeds_ids :categories, class_name: "Cms::Node"
 
-    permit_params :released, category_ids: []
+    permit_params category_ids: []
 
     after_validation :set_released, if: -> { public? }
     after_save :rename_file, if: ->{ @db_changes }

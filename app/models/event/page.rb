@@ -2,6 +2,7 @@ class Event::Page
   include Cms::Page::Model
   include Cms::Addon::Meta
   include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Cms::Addon::RelatedPage
   include Cms::Addon::Body
   include Cms::Addon::File
