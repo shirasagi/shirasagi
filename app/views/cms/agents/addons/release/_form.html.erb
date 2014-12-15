@@ -1,5 +1,7 @@
 <%= coffee do%>
 $ ->
+  SS_AddonTabs.toggleView(".mod-cms-release")
+
   $(".mod-cms-release .datetime").datetimepicker
     lang: "ja"
     roundTime: 'ceil'

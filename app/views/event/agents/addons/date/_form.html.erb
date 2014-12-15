@@ -1,6 +1,8 @@
 <% controller.class.javascript "event/form" %>
 <%= coffee do%>
 $ ->
+  SS_AddonTabs.toggleView(".mod-event")
+
   $(".mod-event .date").datetimepicker
     lang: "ja", timepicker: false, scrollInput: false, closeOnDateSelect: true, format: "Y/m/d"
 

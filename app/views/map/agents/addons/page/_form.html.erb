@@ -2,8 +2,12 @@
 <% controller.class.javascript "map/public" %>
 <% controller.class.javascript "map/form" %>
 <%= coffee do %>
+$ ->
+  SS_AddonTabs.toggleView(".mod-map")
 
-$(window).on "load", ->
+  $(".mod-map").parent().find(".toggle a").click ->
+    google.maps.event.trigger Map.map, "resize"
+
   Map.load(document.getElementById("map-canvas"))
   Map_Form.setMarkers()
 

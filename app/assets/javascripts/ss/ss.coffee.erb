@@ -214,9 +214,9 @@ class @SS_AddonTabs
   @toggleView: (view) ->
     view = $(view)
     view.hide()
-    view.before '<div class="toggle"><button class="button"><%= t("views.button.toggle") %></button></div>'
+    view.before '<div class="toggle"><a href="#"><%= t("views.button.toggle") %></a></div>'
 
-    trigger = view.parent().find(".toggle button")
+    trigger = view.parent().find(".toggle a")
     trigger.on 'click', ->
       view.animate( { height: 'toggle' }, 'fast' )
       return false

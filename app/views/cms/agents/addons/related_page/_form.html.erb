@@ -1,4 +1,9 @@
-<dl class="see mod-related pages">
+<%= coffee do %>
+$ ->
+  SS_AddonTabs.toggleView(".mod-cms-related_pages")
+<% end %>
+
+<dl class="see mod-cms-related_pages">
   <dt><%= @model.t :related_pages %><%= @model.tt :page_ids %></dt>
   <dd>
     <%= f.hidden_field "related_page_ids[]", value: "", class: "hidden-ids" %>
