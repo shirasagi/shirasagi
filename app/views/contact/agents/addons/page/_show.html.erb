@@ -1,3 +1,5 @@
+<% return if @item.contact_state != "show" || !@item.contact_present? %>
+
 <dl class="see mod-contact">
   <dt><%= @model.t :contact_state %></dt>
   <dd><%= @item.label :contact_state %></dd>
