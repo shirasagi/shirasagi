@@ -2,6 +2,9 @@
   <%= error_messages_for :item %>
 
   <dl class="see">
+    <dt><%= @model.t :icon_id %></dt>
+    <dd><%= f.file_field :in_icon %></dd>
+
     <dt><%= @model.t :name %></dt>
     <dd><%= f.text_field :name %></dd>
 

@@ -59,6 +59,8 @@ SS::Application.routes.draw do
     get "api/tag_list" => "public#tag_list", cell: "nodes/api"
     get "api/(*path)" => "public#index", cell: "nodes/api"
 
+    get "member/:member" => "public#index", cell: "nodes/member"
+
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
     get "mypage/login"  => "public#login", cell: "nodes/mypage"
     post "mypage/login" => "public#login", cell: "nodes/mypage"

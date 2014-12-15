@@ -8,19 +8,21 @@ $ ->
         $(".point").html data
     event.preventDefault()
 
-  $(".point .number a").colorbox({ fixed: true, width: "300px", height: "50%" })
+  $(".point .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
 
 <% end %>
 
 <div class="count">
   <span class="number">
+    <%= @dataset.point %>
+  </span>
+  <span class="label">
     <% if @dataset.point == 0 %>
-      <%= @dataset.point %>
+      いいね！数
     <% else %>
-      <%= link_to @dataset.point, @dataset.point_members_url %>
+      <%= link_to "いいね！数", @dataset.point_members_url %>
     <% end %>
   </span>
-  <span class="label">いいね！数</span>
 </div>
 
 <%= link_to "いいね！", "#", class: "update #{@mode}" if @mode %>

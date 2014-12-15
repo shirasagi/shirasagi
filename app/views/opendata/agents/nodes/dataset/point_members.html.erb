@@ -1,5 +1,5 @@
 <ul class="point-members">
   <% @items.each do |item| %>
-  <li><%= tryb { item.member.name } || "-" %></li>
+  <li><%= link_to item.member.name, "#{member_path}#{item.member.id}" %></li>
   <% end %>
 </ul>

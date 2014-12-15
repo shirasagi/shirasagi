@@ -7,7 +7,7 @@ class Opendata::Agents::Nodes::MyProfileController < ApplicationController
 
   protected
     def set_model
-      @model = Cms::Member
+      @model = Opendata::Member
     end
 
     def set_item

@@ -3,6 +3,9 @@
 </nav>
 
 <dl class="see">
+  <dt><%= @model.t :icon_id %></dt>
+  <dd><%== tryb { %(<img src="#{@cur_member.icon.url}" />) } %></dd>
+
   <dt><%= @model.t :name %></dt>
   <dd><%= @cur_member.name %></dd>
 

@@ -1,0 +1,24 @@
+<div class="profile">
+  <% if @member.icon %>
+  <div class="icon"><img src="<%= @member.icon.url %>" /></div>
+  <% end %>
+
+  <div class="name"><%= @member.name %></div>
+</div>
+
+<div class="contents">
+  <section class="datasets">
+    <h2>データセット</h2>
+    <div class="pages">
+      <% @datasets.each do |item| %>
+      <article>
+        <header>
+          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+          <h2><%= link_to item.name, item.url %></h2>
+          <span class="point"><%= item.point.to_i %></span>
+        </header>
+      </article>
+      <% end %>
+    </div>
+  </section>
+</div>

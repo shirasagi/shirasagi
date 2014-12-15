@@ -22,4 +22,10 @@ module Opendata::UrlHelper
     return nil unless node
     node.url
   end
+
+  def member_path
+    node = Opendata::Node::Member.site(@cur_site).public.first
+    return nil unless node
+    node.url
+  end
 end

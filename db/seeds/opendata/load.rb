@@ -35,9 +35,10 @@ save_layout filename: "dataset-bunya.layout.html", name: "データ：分野、�
 save_layout filename: "dataset-group.layout.html", name: "データ：グループ検索"
 save_layout filename: "dataset-page.layout.html", name: "データ：詳細ページ"
 save_layout filename: "dataset-general.layout.html", name: "データ：汎用"
+save_layout filename: "sparql.layout.html", name: "SPARQL"
+save_layout filename: "member-general.layout.html", name: "メンバー：汎用"
 save_layout filename: "mypage-login.layout.html", name: "マイページ：トップ"
 save_layout filename: "mypage-general.layout.html", name: "マイページ：トップ汎用"
-save_layout filename: "sparql.layout.html", name: "SPARQL"
 
 array   = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/, '\1'), m] }
 layouts = Hash[*array.flatten]
@@ -79,6 +80,9 @@ save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortc
 save_node filename: "sparql", name: "SPARQL", route: "opendata/sparql", shortcut: "show",
   layout_id: layouts["sparql"].id
 save_node filename: "api", name: "API", route: "opendata/api", shortcut: "show"
+
+save_node filename: "member", name: "ユーザー", route: "opendata/member",
+  layout_id: layouts["member-general"].id
 
 save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
   layout_id: layouts["mypage-login"].id

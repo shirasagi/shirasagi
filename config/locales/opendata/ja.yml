@@ -80,6 +80,8 @@ ja:
       opendata/addon/rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
+      opendata/member:
+        icon_id: アイコン画像
       opendata/license:
         name: ライセンス名
         file_id: ライセンス画像

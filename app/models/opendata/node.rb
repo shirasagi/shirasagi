@@ -71,6 +71,12 @@ module Opendata::Node
     default_scope ->{ where(route: "opendata/mypage") }
   end
 
+  class Member
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/member") }
+  end
+
   class MyProfile
     include Cms::Node::Model
 

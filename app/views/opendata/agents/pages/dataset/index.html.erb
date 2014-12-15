@@ -106,7 +106,13 @@ categories = [
     <dl class="author">
       <% if @cur_page.member_id.present? %>
         <dt><%= @cur_page.t :user_id %></dt>
-        <dd><%= tryb{@cur_page.member.name} || "ゲストユーザー" %><br /></dd>
+        <dd>
+          <% if @cur_page.member %>
+          <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
+          <% else %>
+          ゲストユーザー
+          <% end %>
+        </dd>
       <% elsif @cur_page.contact_group %>
         <dt><%= @cur_page.t :user_id %></dt>
         <dd><%= @cur_page.contact_group.full_name %><br /></dd>
