@@ -29,7 +29,7 @@ class Opendata::Resource
 
   public
     def url
-      dataset.full_url.sub(/\.html$/, "") + "/resource/#{id}/#{filename}"
+      dataset.url.sub(/\.html$/, "") + "/resource/#{id}/#{filename}"
     end
 
     def full_url

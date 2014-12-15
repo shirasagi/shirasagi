@@ -2,6 +2,8 @@ ja:
   opendata:
     create: 新規登録
     manage_resources: リソースを管理する
+    links:
+      add_resource: リソースを追加する
     search_dataset_groups:
       index: データセットグループを選択する
       search: データセットグループを検索
