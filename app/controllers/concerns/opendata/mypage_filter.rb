@@ -3,6 +3,7 @@ module Opendata::MypageFilter
 
   included do
     helper Opendata::UrlHelper
+    helper Opendata::FormHelper
     before_action :logged_in?
   end
 

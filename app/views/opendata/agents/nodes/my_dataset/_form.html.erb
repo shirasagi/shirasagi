@@ -7,16 +7,16 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 <%= javascript_include_tag "opendata/public" %>
 
 <dl class="see opendata-dataset">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :text %><%= @item.tt :text %></dt>
+  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
   <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :tags %><%= @item.tt :tags %></dt>
   <dd><%= f.text_field :tags %></dd>
 
-  <dt><%= @model.t :category_ids %></dt>
+  <dt><%= @model.t :category_ids %><%= required_label %></dt>
   <dd>
     <%= f.hidden_field "category_ids[]", value: "" %>
     <% categories.each do |c| %>

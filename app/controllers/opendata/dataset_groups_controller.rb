@@ -1,6 +1,7 @@
 class Opendata::DatasetGroupsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  helper Opendata::FormHelper
 
   model Opendata::DatasetGroup
 

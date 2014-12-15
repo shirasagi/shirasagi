@@ -32,7 +32,8 @@ end
 
 %>
 <dl class="see mod-opendata-category">
-  <dd class="wide">
+  <dt><%= required_label %></dt>
+  <dd class="wides">
     <%= f.hidden_field "category_ids[]", value: "" %>
 
     <% categories.each do |cate| %>
