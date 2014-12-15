@@ -20,8 +20,7 @@
       </article>
       <% end %>
     </div>
-    <nav>
-      <%= link_to :more, "datasets/", class: "more" %>
-    </nav>
   </section>
 </div>
+
+<%= paginate @datasets %>

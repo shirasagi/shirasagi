@@ -60,6 +60,7 @@ SS::Application.routes.draw do
     get "api/(*path)" => "public#index", cell: "nodes/api"
 
     get "member/:member" => "public#index", cell: "nodes/member"
+    get "member/:member/datasets/(:filename.:format)" => "public#datasets", cell: "nodes/member"
 
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
     get "mypage/login"  => "public#login", cell: "nodes/mypage"
