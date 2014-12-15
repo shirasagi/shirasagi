@@ -40,6 +40,7 @@ ja:
       delete: 削除
       search: 検索
       reset: リセット
+      toggle: 折りたたみ表示
     confirm:
       delete: 削除してよろしいですか？
       unload: 入力したデータは保存されません。

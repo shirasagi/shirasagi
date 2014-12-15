@@ -211,6 +211,16 @@ class @SS_AddonTabs
       cur.addClass("current");
       ev.preventDefault();
 
+  @toggleView: (view) ->
+    view = $(view)
+    view.hide()
+    view.before '<div class="toggle"><button class="button"><%= t("views.button.toggle") %></button></div>'
+
+    trigger = view.parent().find(".toggle button")
+    trigger.on 'click', ->
+      view.animate( { height: 'toggle' }, 'fast' )
+      return false
+
 class @SS_Tooltips
   @render: ->
     ttips = $(".tooltip")

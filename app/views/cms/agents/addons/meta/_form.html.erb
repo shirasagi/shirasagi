@@ -1,19 +1,9 @@
 <%= coffee do %>
 $ ->
-  $("dl.meta").hide()
-  $("#addon-cms-agents-addons-meta header h2").addClass("hide")
-  $("#addon-cms-agents-addons-meta header h2").on 'click', ->
-    $("dl.meta").animate( { height: 'toggle' }, 'fast' )
-    if $(this).hasClass("hide")
-      $(this).addClass("show")
-      $(this).removeClass("hide")
-    else
-      $(this).addClass("hide")
-      $(this).removeClass("show")
-    return false
+  SS_AddonTabs.toggleView(".mod-cms-meta")
 <% end %>
 
-<dl class="see meta">
+<dl class="see mod-cms-meta">
   <dt><%= @model.t :keywords %><%= @model.tt :keywords %></dt>
   <dd><%= f.text_field :keywords %></dd>
 
