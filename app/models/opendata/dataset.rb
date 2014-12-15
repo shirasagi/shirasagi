@@ -1,6 +1,7 @@
 class Opendata::Dataset
   include Cms::Page::Model
   include Cms::Addon::Release
+  include Cms::Addon::RelatedPage
   include Contact::Addon::Page
   include Opendata::Addon::Resource
   include Opendata::Addon::Category
