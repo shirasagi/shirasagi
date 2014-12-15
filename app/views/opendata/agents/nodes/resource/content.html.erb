@@ -1,7 +1,9 @@
+<% limit = 100 %>
+
 <div class="resource-content">
   <table class="cells" summary="<%= @item.name %>">
     <tbody>
-      <% @data.each do |line| %>
+      <% @data.slice(0, limit).each do |line| %>
       <tr>
         <% line.each do |col| %>
         <td><%= col %></td>
@@ -10,4 +12,8 @@
       <% end %>
     </tbody>
   </table>
+
+  <% if @data.size > limit %>
+  <div><%= limit %>件のデータを表示しています。</div>
+  <% end %>
 </div>
