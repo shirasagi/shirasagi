@@ -1,6 +1,5 @@
 class Opendata::Agents::Nodes::MemberController < ApplicationController
   include Cms::NodeFilter::View
-  #include Opendata::MypageFilter
 
   before_action :set_member
 

@@ -14,16 +14,16 @@ $ ->
 
   $("#item_in_file").change ->
     filename = $(this).val()
-    if filename.match(/\./)
-      $("#item_format").val filename.replace(/.*\./, "").toUpperCase()
+    $("#item_name").val filename.replace(/.*[\\\/]/, "")
+    $("#item_format").val filename.replace(/.*\./, "").toUpperCase() if filename.match(/\./)
 <% end %>
 
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= f.text_field :name %></dd>
-
   <dt><%= @model.t :file_id %></dt>
   <dd><%= f.file_field :in_file %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :format %><%= @model.tt :format %></dt>
   <dd><%= f.text_field :format, style: "width: 8em; ime-mode: disabled;" %></dd>
