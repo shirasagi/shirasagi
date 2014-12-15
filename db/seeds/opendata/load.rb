@@ -93,7 +93,7 @@ save_node filename: "mypage/idea", name: "アイデア", route: "opendata/my_ide
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
 save_node filename: "bunya/kurashi", name: "くらし", route: "opendata/category", order: 1
-save_node filename: "bunya/kyoiku", name: "教育・分野", route: "opendata/category", order: 2
+save_node filename: "bunya/kyoiku", name: "教育・文化", route: "opendata/category", order: 2
 save_node filename: "bunya/kanko", name: "観光・物産", route: "opendata/category", order: 3
 save_node filename: "bunya/sangyo", name: "産業・労働", route: "opendata/category", order: 4
 save_node filename: "bunya/kendo", name: "県土づくり", route: "opendata/category", order: 5
