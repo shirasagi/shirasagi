@@ -1552,6 +1552,66 @@ table.index {
   }
 }
 
+//-----------------------------------------------------------------------------------------
+//user-page
+.profile {
+  padding: 20px 50px;
+  .icon {
+    display: inline-block;
+    padding: 8px;
+    border: 2px solid #ddcfcc;
+    @include border-radius(5px);
+  }
+  .name {
+    display: inline-block;
+    padding:15px;
+    font-size: $px27;
+  }
+}
+
+section.datasets {
+  padding: 20px 0;
+  h2 {
+    padding: 7px 10px;
+    background-color: $data-blue;
+    color:$white;
+    font-size: $px15;
+  }
+  .pages {
+    article header {
+      padding: 8px 0 8px 16px;
+      border-bottom: $border-hgry;
+    }
+    time {
+      display: inline-block;
+      width: 120px;
+    }
+    h2 {
+      margin-right: 10px;
+      display: inline;
+      padding: 0 5px;
+      background: none;
+      font-size: $px14;
+      a {
+        display: inline-block;
+      }
+    }
+    .point {
+      padding: 2px 5px 2px 30px;
+      background: url(../img/ic-like-bk.png) no-repeat 5px 2px;
+      border: $border-hgry;
+      font-size: $px12;
+    }
+  }
+  nav {
+    padding-top: 14px;
+    a.more {
+      float: right;
+      @include r-arrow;
+      @include border-radius(5px);
+    }
+  }
+}
 
 
 #errorExplanation {
