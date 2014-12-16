@@ -1443,6 +1443,21 @@ nav.cms-sns_share {
       padding-right: 20px;
     }
   }
+  nav.account {
+    a {
+      padding: 0;
+      margin: 0;
+      background: none;
+      border: none;
+      color: $link;
+      text-decoration: underline;
+      &:hover {
+        background: none;
+        color: #005c7b;
+        text-decoration: none;
+      }
+    }
+  }
   dl.see {
     dt {
       min-width: 240px;
