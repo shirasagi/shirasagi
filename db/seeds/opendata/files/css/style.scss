@@ -1018,7 +1018,7 @@ article.areas, article.formats {
     font-size: $px28;
     font-weight: bold;
   }
-  .text, .detail, .detail nav {
+  .text, .detail, .detail nav, nav.related-pages {
     margin-bottom: $box-margin;
   }
   .text {
@@ -1154,6 +1154,22 @@ article.areas, article.formats {
         dt ~ dt { margin-top: 10px; }
         dd ~ dd { margin-top: 10px; }
         dd + dd { margin-top: 10px; }
+      }
+    }
+  }
+  nav.related-pages {
+    header h1 {
+      padding: 7px 0 7px 45px;
+      background: $data-blue url(../img/ic-data-s.png) no-repeat 10px center;
+      font-size: $px15;
+    }
+    .pages {
+      margin: 20px 0px 0px;
+      padding: 10px;
+      border: 2px solid $data-blue;
+      article {
+        padding: 8px;
+        border-bottom: 1px solid #cccccc;
       }
     }
   }
