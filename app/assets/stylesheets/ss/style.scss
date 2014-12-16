@@ -364,7 +364,6 @@ footer.send {
 
 // -------------------------------------------------------------------------------------------------
 // addon
-
 #addon-cms-agents-addons-file .see, .addon-view .see {
   .cboxElement {
     @include btn;
@@ -404,6 +403,14 @@ footer.send {
     .grandchild > label {
       clear: both;
       display: block;
+    }
+  }
+}
+
+#addon-cms-agents-addons-body .mod-cms-body {
+  .syntax-check,.link-check {
+    + label {
+      float: right;
     }
   }
 }

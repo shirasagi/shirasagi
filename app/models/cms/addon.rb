@@ -66,9 +66,17 @@ module Cms::Addon
     set_order 200
 
     included do
+      attr_accessor :html_syntax_error
+
       field :html, type: String, metadata: { form: :text }
       field :wiki, type: String, metadata: { form: :text }
-      permit_params :html
+      permit_params :html, :html_syntax_error
+
+      validate :validate_html_syntax_error, if: -> { html_syntax_error.present? }
+
+      def validate_html_syntax_error
+        errors.add :base, I18n.t('errors.messages.html_syntax_error')
+      end
     end
   end
 
