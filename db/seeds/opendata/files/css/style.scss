@@ -1474,6 +1474,7 @@ nav.cms-sns_share {
         @include btn-blue-left;
         font-family: $font-base;
         font-size: $px14;
+        cursor: pointer;
       }
       input[name="delete"] {
         background: #c33838;
