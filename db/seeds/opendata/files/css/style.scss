@@ -625,6 +625,26 @@ textarea {
     }
   }
 }
+.s-portal {
+  dl.see {
+    padding: 15px;
+    dt {
+      float: left;
+      min-height: 1em;
+      min-width: 110px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    dd {
+      min-height: 1.5em;
+      margin-left: 110px;
+      margin-bottom: 10px;
+    }
+  }
+  article.body {
+    padding: 0 15px;
+  }
+}
 
 // -----------------------------------------------------------------------------
 // cms-tabs
