@@ -89,10 +89,6 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
 
     def point_members
       @cur_node.layout = nil
-
-      dump Opendata::DatasetPoint.all.size
       @items = Opendata::DatasetPoint.where(site_id: @cur_site.id, dataset_id: @dataset.id)
-      #dump({site_id: @cur_site.id, dataset_id: @dataset.id})
-      dump @items.size
     end
 end
