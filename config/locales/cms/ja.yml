@@ -20,13 +20,11 @@ ja:
     user: ユーザー
     group: グループ
     member: メンバー
+    alert: 警告
     syntax_check: HTMLチェック
-    syntax_check_error: エラー
-    syntax_check_warning: 警告
     syntax_check_replace:
       dependent_character: "[機種依存文字]"
       caption: キャプション
-    enable_warning: HTMLチェックに警告を含める
     auto_correct: 自動修正
     link_check: リンクチェック
     generate_node: フォルダ書き出し
@@ -198,7 +196,7 @@ ja:
 
   errors:
     messages:
-      html_syntax_error: アクセシビリティエラーが発生しました。本文のHTMLチェックを確認してください。
+      check_html: 本文のHTMLチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
       set_table_caption: 表にキャプションが設定されていません。
       set_th_scope: 表のヘッダーにスコープ属性が設定されていません。

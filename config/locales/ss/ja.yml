@@ -36,6 +36,7 @@ ja:
       save: 保存
       draft_save: 下書き保存
       publish_save: 公開保存
+      ignore_alert: 警告を無視する
       cancel: キャンセル
       delete: 削除
       search: 検索

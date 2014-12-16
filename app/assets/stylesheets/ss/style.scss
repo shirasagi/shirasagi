@@ -261,6 +261,22 @@ textarea.ace_text-input {
     color: #822;
   }
 }
+#alertExplanation {
+  margin: 0px 0px 20px;
+  padding: 20px 20px;
+  border-bottom: 1px solid #fbc;
+  background-color: #fff;
+  h2 {
+    margin: -20px -20px 25px;
+    padding: 4px 8px;
+    background-color: #e78;
+    color: #fff;
+  }
+  p, ul {
+    //white-space: nowrap;
+    color: #822;
+  }
+}
 .field_with_errors {
   input, textarea, select {
     display: inline;
@@ -364,6 +380,7 @@ footer.send {
 
 // -------------------------------------------------------------------------------------------------
 // addon
+
 #addon-cms-agents-addons-file .see, .addon-view .see {
   .cboxElement {
     @include btn;
@@ -403,14 +420,6 @@ footer.send {
     .grandchild > label {
       clear: both;
       display: block;
-    }
-  }
-}
-
-#addon-cms-agents-addons-body .mod-cms-body {
-  .syntax-check,.link-check {
-    + label {
-      float: right;
     }
   }
 }

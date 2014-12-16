@@ -1,15 +1,18 @@
 ## cms form
 
 $(window).load ->
+  return if window.load_cms_form
+  window.load_cms_form = true
+
   Syntax_Checker.render()
   Link_Checker.render()
 
+  Submit_Alert.addValidation(Submit_Alert.presence)
+  Submit_Alert.addValidation(Syntax_Checker.validateHtml)
+  Submit_Alert.render()
+
 class @Syntax_Checker
   @message = {
-    header             : "<%= I18n.t('cms.syntax_check') %>"
-    body               : "<%= I18n.t('errors.template.body') %>"
-    noErrors           : "<%= I18n.t('errors.template.no_errors') %>"
-
     notSetImgAlt       : "<%= I18n.t('errors.messages.set_img_alt') %>"
     notSetTableCaption : "<%= I18n.t('errors.messages.set_table_caption') %>"
     notSetThScope      : "<%= I18n.t('errors.messages.set_th_scope') %>"
@@ -46,31 +49,15 @@ class @Syntax_Checker
 
   @errors
   @errorCount
-  @warnings
-  @warningCount
 
   @reset: ()->
     @errors = {}
-    @warnings  = {}
     @errorCount  = 0
-    @warningCount = 0
     return
 
   @render: ()->
-    $(".mod-cms-body button.syntax-check").off("click").on "click", ->
-      Syntax_Checker.check(checkWarning: $(".check-warning").prop("checked"))
-
-    $(":submit").on "click", (e)->
-      $(".html-syntax-error").val("")
-      if $(this).hasClass("publish_save")
-        Syntax_Checker.check(appendResult: false, checkWarning: $(".check-warning").prop("checked"))
-        if Syntax_Checker.errorCount +  Syntax_Checker.warningCount > 0
-          $(".html-syntax-error").val("true")
-        else
-          $(".html-syntax-error").val("")
-
-    if $(".html-syntax-error").val() != ""
-      $(".mod-cms-body button.syntax-check").trigger("click")
+    $(".mod-cms-body button.syntax-check").on "click", ->
+      Syntax_Checker.check()
 
   @check: (opts={})->
     Syntax_Checker.reset()
@@ -81,42 +68,38 @@ class @Syntax_Checker
     Syntax_Checker.checkDependentCharacter html
     Syntax_Checker.checkDateFormat html
     Syntax_Checker.checkAdjacentA html
-
-    if opts["checkWarning"] != false
-      Syntax_Checker.checkOrderOfH html
-      Syntax_Checker.checkImgAlt html
-      Syntax_Checker.checkInterwordSpace html
-      Syntax_Checker.checkLinkText html
-      Syntax_Checker.checkEmbeddedMedia html
+    Syntax_Checker.checkOrderOfH html
+    Syntax_Checker.checkImgAlt html
+    Syntax_Checker.checkInterwordSpace html
+    Syntax_Checker.checkLinkText html
+    Syntax_Checker.checkEmbeddedMedia html
 
     $('.mod-cms-body div#errorSyntaxChecker').remove()
-    return if opts["appendResult"] == false
 
     result = $("<div>")
     result.attr('id', 'errorSyntaxChecker')
     result.attr('class', 'errorExplanation')
-    result.append("<h2>" + Syntax_Checker.message["header"] + "</h2>")
-
-    if Object.keys(Syntax_Checker.errors).length == 0 && Object.keys(Syntax_Checker.warnings).length == 0
-      result.append("<p>" + Syntax_Checker.message["noErrors"] + "</p>")
-      $('.mod-cms-body dd:last').after(result)
-      return
+    result.append("<h2>" + "<%= I18n.t('cms.syntax_check') %>" + "</h2>")
 
     if Object.keys(Syntax_Checker.errors).length
-      result.append("<p>" + "<%= I18n.t('cms.syntax_check_error') %>" + "</p>")
+      result.append("<p>" + "<%= I18n.t('errors.template.body') %>" + "</p>")
       result.append('<ul>')
       ul = result.find('ul:last')
       Syntax_Checker.appendMessage(ul, Syntax_Checker.errors)
+      $('.mod-cms-body dd:last').after(result)
+      SS_Tooltips.render(".detail")
+      return false
+    else
+      result.append("<p>" + "<%= I18n.t('errors.template.no_errors') %>" + "</p>")
+      $('.mod-cms-body dd:last').after(result)
+      return true
 
-    if Object.keys(Syntax_Checker.warnings).length
-      result.append("<p>" + "<%= I18n.t('cms.syntax_check_warning') %>" + "</p>")
-      result.append('<ul>')
-      ul = result.find('ul:last')
-      Syntax_Checker.appendMessage(ul, Syntax_Checker.warnings)
-
-    $('.mod-cms-body dd:last').after(result)
-    SS_Tooltips.render(".detail")
-    return
+  @validateHtml: (form)->
+    unless Syntax_Checker.check()
+      addonName = "<%= I18n.t('cms.syntax_check') %>"
+      for key, errors of Syntax_Checker.errors
+        for error, i in errors
+          Submit_Alert.add addonName, this, error["msg"]
 
   @getEditorHtml: ()->
     if (typeof tinymce != 'undefined')
@@ -139,12 +122,6 @@ class @Syntax_Checker
     Syntax_Checker.errorCount += 1
     return key
 
-  @pushWarning: (warnings) ->
-    key = Syntax_Checker.warningCount
-    Syntax_Checker.warnings[key] = warnings
-    Syntax_Checker.warningCount += 1
-    return key
-
   @isValidDate: (date)->
     return false  if Object::toString.call(date) isnt "[object Date]"
     if not isNaN(date.getTime()) and date.getYear() > 0
@@ -163,7 +140,7 @@ class @Syntax_Checker
       ul.append('<li class="code">')
       ul.find('li:last').append('<code>')
       ul.append('<ul>')
-      $.each errors, (i, error) ->
+      for error, i in errors
         ul.find('li:last code').text(error["code"])
         ul.find('> ul:last').append('<li>')
         li = ul.find('> ul:last li:last')
@@ -189,13 +166,13 @@ class @Syntax_Checker
     $(html).find('img').each ->
       alt = $(this).attr('alt')
       if !alt || alt.trim() == "" || /^[\w\s\.\-]*$/.test(alt)
-        warnings = [{
+        errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg:  Syntax_Checker.message["notSetImgAlt"]
           detail: Syntax_Checker.message["detail"]["notSetImgAlt"]
           ele: this
         }]
-        Syntax_Checker.pushWarning(warnings)
+        Syntax_Checker.pushError(errors)
 
   @checkTable: (html)->
     $(html).find("table").each ->
@@ -250,33 +227,33 @@ class @Syntax_Checker
     for i in [0..h.length-1]
       if i == 0
         unless /h[12]/i.test h[i].tagName
-          code += h[i].tagName
+          code += h[i].tagName + " "
       else
         if /h3/i.test h[i].tagName
           unless /h[23456]/i.test h[i-1].tagName
-            code += h[i].tagName
+            code += h[i].tagName + " "
 
         else if /h4/i.test h[i].tagName
           unless /h[3456]/i.test h[i-1].tagName
-            code += h[i].tagName
+            code += h[i].tagName + " "
 
         else if /h5/i.test h[i].tagName
           unless /h[456]/i.test h[i-1].tagName
-            code += h[i].tagName
+            code += h[i].tagName + " "
 
         else if /h6/i.test h[i].tagName
           unless /h[56]/i.test h[i-1].tagName
-            code += h[i].tagName
+            code += h[i].tagName + " "
 
     if code != ""
-      warnings = [{
+      errors = [{
         code: code
         msg: Syntax_Checker.message["invalidOrderOfH"]
         ele: html
         detail: Syntax_Checker.message["detail"]["invalidOrderOfH"]
         correct: Syntax_Checker.correctOrderOfH
       }]
-      Syntax_Checker.pushWarning(warnings)
+      Syntax_Checker.pushError(errors)
     return
 
   @correctOrderOfH: (html)->
@@ -325,7 +302,7 @@ class @Syntax_Checker
     c = html.match /[Ａ-Ｚａ-ｚ０-９]/g
     unless $.isEmptyObject(c)
       errors = [{
-        code: c.join(",")
+        code: c.join("、")
         msg: Syntax_Checker.message["invalidMultibyteCharacter"]
         detail: Syntax_Checker.message["detail"]["invalidMultibyteCharacter"]
         ele: html
@@ -343,7 +320,7 @@ class @Syntax_Checker
     c = html.match(regex)
     unless $.isEmptyObject(c)
       errors = [{
-        code: c.join(",")
+        code: c.join("、")
         msg: Syntax_Checker.message["invalidDependentCharacter"]
         detail: Syntax_Checker.message["detail"]["invalidDependentCharacter"]
         ele: html
@@ -369,7 +346,7 @@ class @Syntax_Checker
 
     unless $.isEmptyObject(dates)
       errors = [{
-        code: dates.join(",")
+        code: dates.join("、")
         msg: Syntax_Checker.message["invalidDateFormat"]
         detail: Syntax_Checker.message["detail"]["invalidDateFormat"]
         ele: html
@@ -414,33 +391,33 @@ class @Syntax_Checker
       if /[ 　]/.test(text)
         for i in [0..text.length-1]
           if text.charCodeAt(i) >= 256
-            warnings = [{
+            errors = [{
               code: text
               msg: Syntax_Checker.message["checkInterwordSpace"]
               detail: Syntax_Checker.message["detail"]["checkInterwordSpace"]
             }]
-            Syntax_Checker.pushWarning(warnings)
+            Syntax_Checker.pushError(errors)
             break
 
   @checkLinkText: (html)->
     $(html).find("a[href]").each ->
       text = $(this).text()
       if text.length <= 3
-        warnings = [{
+        errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg: Syntax_Checker.message["checkLinkText"]
           detail: Syntax_Checker.message["detail"]["checkLinkText"]
         }]
-        Syntax_Checker.pushWarning(warnings)
+        Syntax_Checker.pushError(errors)
 
   @checkEmbeddedMedia: (html)->
     $(html).find("embed,video").each ()->
-      warnings = [{
+      errors = [{
         code: this
         msg: Syntax_Checker.message["checkEmbeddedMedia"]
         detail: Syntax_Checker.message["detail"]["checkEmbeddedMedia"]
       }]
-      Syntax_Checker.pushWarning(warnings)
+      Syntax_Checker.pushError(errors)
 
     regExt = new RegExp("(" + Syntax_Checker.mediaExtension.join("|") + ")","i")
     regSite = /https?:\/\/www\.youtube\.com\//
@@ -449,23 +426,23 @@ class @Syntax_Checker
       src = $(this).attr("src")
       ext = src.replace(/\?.*$/, "").replace( /.*\//, '' ).split(".").pop()
       if regExt.test(ext) || regSite.test(src)
-        warnings = [{
+        errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg: Syntax_Checker.message["checkEmbeddedMedia"]
           detail: Syntax_Checker.message["detail"]["checkEmbeddedMedia"]
         }]
-        Syntax_Checker.pushWarning(warnings)
+        Syntax_Checker.pushError(errors)
 
     $(html).find("a[href]").each ()->
       href = $(this).attr("href")
       ext = href.replace(/\?.*$/, "").replace( /.*\//, '' ).split(".").pop()
       if regExt.test(ext) || regSite.test(href)
-        warnings = [{
+        errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg: Syntax_Checker.message["checkEmbeddedMedia"]
           detail: Syntax_Checker.message["detail"]["checkEmbeddedMedia"]
         }]
-        Syntax_Checker.pushWarning(warnings)
+        Syntax_Checker.pushError(errors)
 
 class @Link_Checker
   @message = {
@@ -483,7 +460,7 @@ class @Link_Checker
   @url = "<%= SS.config.cms.link_check_url %>" || "/.cms/link_check/check.json"
 
   @render: ()->
-    $(".mod-cms-body button.link-check").off("click").on "click", ->
+    $(".mod-cms-body button.link-check").on "click", ->
       $.support.cors = true
       button = this
       $(button).attr('disabled', true)
@@ -557,3 +534,71 @@ class @Link_Checker
         return
     }
     return
+
+class @Submit_Alert
+  @alerts = []
+  @validations = []
+
+  @render: ()->
+    $("input:submit").on "click.submit_alert", (e)->
+      submit = this
+      form   = $(submit).closest("form")
+
+      unless Submit_Alert.validate(form)
+        div = $('<div id="alertExplanation" class="errorExplanation">')
+        div.append("<h2><%= I18n.t('cms.alert') %></h2>")
+        for addon, fields of Submit_Alert.alerts
+          div.append('<p>' + addon + '</p>')
+          ul = $("<ul>").appendTo(div)
+          for field, i in fields
+            ul.append('<li>' + field["msg"] + '</li>')
+
+        footer = $('<footer class="send">')
+        footer.append('<button name="button" type="button" class="save"><%= I18n.t('views.button.ignore_alert') %></button>')
+        footer.append('<button name="button" type="button" class="cancel"><%= I18n.t('views.button.cancel') %></button>')
+
+        $.colorbox(
+          html: div.get(0).outerHTML + footer.get(0).outerHTML,
+          fixed: true
+        )
+
+        $("#cboxLoadedContent").find(".save").on "click", ()->
+          $(submit).off(".submit_alert")
+          $(submit).trigger("click")
+
+        $("#cboxLoadedContent").find(".cancel").on "click", (e)->
+          $.colorbox.close()
+          return false
+
+        return false
+
+  @validate: (form)->
+    Submit_Alert.alerts = {}
+    $.each Submit_Alert.validations, ->
+      (this)(form)
+
+    if $.isEmptyObject(Submit_Alert.alerts)
+      return ture
+    else
+      return false
+
+  @addValidation: (validate)->
+    Submit_Alert.validations.push(validate)
+
+  @presence: (form)->
+    $(form).find("input.presence,textarea.presence").each ->
+      if $(this).val() == ""
+        $(this).closest("dl").show()
+        addonName = $(this).closest(".addon-view").find("header").text()
+        fieldName = Submit_Alert.justText($(this).closest("dd").prev("dt"))
+        Submit_Alert.add addonName, this, fieldName + "<%= I18n.t('errors.messages.blank') %>"
+
+  @add: (addon, ele, msg)->
+    Submit_Alert.alerts[addon] ||= []
+    Submit_Alert.alerts[addon].push(
+      "ele" : ele
+      "msg" : msg
+    )
+
+  @justText: (ele)->
+    $(ele).clone().children().remove().end().text()
