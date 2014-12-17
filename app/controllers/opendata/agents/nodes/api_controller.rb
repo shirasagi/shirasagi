@@ -3,8 +3,54 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
 
   before_action :accept_cors_request
 
-  public
+  private
+    def package_list_param_check?(limit, offset)
 
+      limit_message = []
+      offset_message = []
+
+      if !limit.nil?
+        if integer?(limit)
+          if limit.to_i < 0
+            limit_message << "Must be a natural number"
+          end
+        else
+          limit_message << "Invalid integer"
+        end
+      end
+
+      if !offset.nil?
+        if integer?(offset)
+          if offset.to_i < 0
+            offset_message << "Must be a natural number"
+          end
+        else
+          offset_message << "Invalid integer"
+        end
+      end
+
+      messages = {}
+      messages[:limit] = limit_message if !limit_message.empty?
+      messages[:offset] = offset_message if !offset_message.empty?
+
+      check_count = limit_message.size + offset_message.size
+      if check_count == 0
+        check = true
+      else
+        check = false
+      end
+
+      return check, messages
+    end
+
+    def integer?(s)
+      i = Integer(s)
+      check = true
+    rescue
+      check = false
+    end
+
+  public
     def index
       render
     end
@@ -52,52 +98,6 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       res[:result] = package_list
 
       render json: res
-    end
-
-    def package_list_param_check?(limit, offset)
-
-      limit_message = []
-      offset_message = []
-
-      if !limit.nil?
-        if integer?(limit)
-          if limit.to_i < 0
-            limit_message << "Must be a natural number"
-          end
-        else
-          limit_message << "Invalid integer"
-        end
-      end
-
-      if !offset.nil?
-        if integer?(offset)
-          if offset.to_i < 0
-            offset_message << "Must be a natural number"
-          end
-        else
-          offset_message << "Invalid integer"
-        end
-      end
-
-      messages = {}
-      messages[:limit] = limit_message if !limit_message.empty?
-      messages[:offset] = offset_message if !offset_message.empty?
-
-      check_count = limit_message.size + offset_message.size
-      if check_count == 0
-        check = true
-      else
-        check = false
-      end
-
-      return check, messages
-    end
-
-    def integer?(s)
-      i = Integer(s)
-      check = true
-    rescue
-      check = false
     end
 
 end
