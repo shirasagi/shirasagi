@@ -130,32 +130,29 @@ module Cms::PublicFilter
     end
 
     def rescue_action(e = nil)
-      return render_error(e, status: 404) if e.to_s == "404"
+      return render_error(e, status: e.to_s.to_i) if e.to_s =~ /^\d+$/
       return render_error(e, status: 404) if e.is_a? Mongoid::Errors::DocumentNotFound
       return render_error(e, status: 404) if e.is_a? ActionController::RoutingError
       raise e
     end
 
     def render_error(e, opts = {})
+      # for development
       raise e if Rails.application.config.consider_all_requests_local
+
+      self.response = ActionDispatch::Response.new
+
       status = opts[:status].presence || 500
+      render status: status, file: error_template(status), layout: false
+    end
 
-      # create proc object
-      render_status = proc { |status, dir|
-        %W(#{status}.html 500.html).each do |name|
-          file = "#{dir}/#{name}"
-          render(status: status, file: file, layout: false) and return if Fs.exists?(file)
-        end
-      }
-
+    def error_template(status)
       if @cur_site
-        dir = "#{@cur_site.path}"
-        render_status.call(status, dir)
+        file = "#{@cur_site.path}/#{status}.html"
+        return file if Fs.exists?(file)
       end
 
-      dir = Rails.public_path.to_s
-      render_status.call(status, dir)
-
-      render status: status, nothing: true
+      file = "#{Rails.public_path}/#{status}.html"
+      Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
     end
 end
