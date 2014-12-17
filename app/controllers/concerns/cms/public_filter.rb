@@ -43,8 +43,7 @@ module Cms::PublicFilter
   private
     def set_site
       host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"]
-      @cur_site ||= SS::Site.find_by domains: host rescue nil
-      @cur_site ||= SS::Site.first if Rails.env.development?
+      @cur_site ||= SS::Site.find_by_domain host
       raise "404" if !@cur_site
     end
 

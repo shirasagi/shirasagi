@@ -44,6 +44,12 @@ module SS::Site::Model
       def root
         "#{Rails.public_path}/sites"
       end
+
+      def find_by_domain(host)
+        site = SS::Site.find_by domains: host rescue nil
+        site ||= SS::Site.first if Rails.env.development?
+        site
+      end
     end
   end
 end
