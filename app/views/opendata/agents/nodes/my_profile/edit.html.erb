@@ -8,7 +8,7 @@
     <dt><%= @model.t :name %><%= required_label %></dt>
     <dd><%= f.text_field :name %></dd>
 
-    <dt><%= @model.t :email %><%= required_label %></dt>
+    <dt><%= @model.t :email %></dt>
     <dd><%= f.email_field :email %></dd>
 
     <% if @item.oauth_type.blank? %>
