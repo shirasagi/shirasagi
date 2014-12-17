@@ -1553,6 +1553,7 @@ table.index th, table.index td {
 }
 table.index {
   width: 100%;
+  margin-bottom: $box-margin;
   thead {
     tr {
       border-bottom: $border-hgry;
