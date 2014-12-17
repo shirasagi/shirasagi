@@ -276,14 +276,21 @@ textarea {
   margin-top: 28px;
   a {
     display: block;
-    margin: 90px 0 0 290px;
-    padding: 13px 60px 13px 45px;
+    margin: 20px 0 0 290px;
+    padding: 13px 30px 13px 45px;
     @include border-radius(5px);
-    background: url(../img/ic-add.png) no-repeat 20px center;
     @include fill-gray;
+    background-repeat: no-repeat;
+    background-position: 15px center;
     font-size: $px15;
     text-decoration: none;
-    }
+  }
+  a.search {
+    background-image: url(../img/ic-search.png);
+  }
+  a.new {
+    background-image: url(../img/ic-add.png);
+  }
 }
 
 #dataset-kv-right {
