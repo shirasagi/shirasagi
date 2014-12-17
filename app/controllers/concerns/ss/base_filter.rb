@@ -58,9 +58,15 @@ module SS::BaseFilter
     end
 
     def rescue_action(e)
-      if e.to_s == "403"
-        return render(status: 403, file: "#{Rails.public_path}/500.html", layout: false)
+      if e.to_s =~ /^\d+$/
+        status = e.to_s.to_i
+        return render status: status, file: error_template(status), layout: false
       end
       raise e
+    end
+
+    def error_template(status)
+      file = "#{Rails.public_path}/#{status}.html"
+      Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
     end
 end
