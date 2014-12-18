@@ -20,9 +20,10 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
       @query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map { |q| { name: /\Q#{q}\E/ } }
 
       @items = pages.
-        order_by(@cur_node.sort_hash).
         and(@query[:category]).
         and(@query[:keyword]).
+        and(@cur_node.condition_hash).
+        order_by(@cur_node.sort_hash).
         page(params[:page]).
         per(@cur_node.limit)
       render
