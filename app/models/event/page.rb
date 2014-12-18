@@ -24,6 +24,6 @@ class Event::Page
     end
 
     def seq_filename
-      self.filename = dirname ? "#{dirname}/#{id}.html" : "#{id}.html"
+      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
 end
