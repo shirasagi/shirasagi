@@ -43,6 +43,26 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       return check, messages
     end
 
+    def group_list_param_check?(sort)
+
+      sort_message = []
+      sort_values = ["name", "packages"]
+
+      sort_message << "Cannot sort by field `#{sort}`" if !sort_values.include?(sort)
+
+      messages = {}
+      messages[:sort] = sort_message if !sort_message.empty?
+
+      check_count = sort_message.size
+      if check_count == 0
+        check = true
+      else
+        check = false
+      end
+
+      return check, messages
+    end
+
     def integer?(s)
       i = Integer(s)
       check = true
@@ -96,6 +116,59 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       res[:help] = help
       res[:success] = true
       res[:result] = package_list
+
+      render json: res
+    end
+
+    def group_list
+
+      help = SS.config.opendata.api["group_list_help"]
+
+      sort = params[:sort] || "name"
+      sort = sort.downcase
+      groups = params[:groups]
+      all_fields = params[:all_fields]
+      all_fields = false if all_fields.nil?
+
+      check, messages = group_list_param_check?(sort)
+      if !check
+        error = {}
+        error[:__type] = "Validation Error"
+        messages.each do |key, value|
+          error[key] = value
+        end
+
+        res = {}
+        res[:help] = help
+        res[:success] = false
+        res[:error] = error
+
+        render json: res and return
+      end
+
+      @items = Opendata::DatasetGroup.site(@cur_site).public
+      @items = @items.order_by(name: 1) if sort == "name"
+
+      group_list = []
+      if all_fields
+        @items.each do |item|
+          group = {}
+          group[:id] = item.id
+          group[:state] = item.state
+          group[:name] = item.name
+          group[:order] = item.order
+          group_list << group
+        end
+      else
+        @items.each do |item|
+          group_list << item[:name]
+        end
+      end
+
+      res = {}
+      res[:help] = help
+      res[:success] = true
+      res[:result] = group_list
 
       render json: res
     end
