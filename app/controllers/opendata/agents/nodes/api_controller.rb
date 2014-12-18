@@ -127,8 +127,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       sort = params[:sort] || "name"
       sort = sort.downcase
       groups = params[:groups]
-      all_fields = params[:all_fields]
-      all_fields = false if all_fields.nil?
+      all_fields = params[:all_fields] || false
 
       check, messages = group_list_param_check?(sort)
       if !check
