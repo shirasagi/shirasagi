@@ -302,7 +302,7 @@ class @Syntax_Checker
     c = html.match /[Ａ-Ｚａ-ｚ０-９]/g
     unless $.isEmptyObject(c)
       errors = [{
-        code: c.join("、")
+        code: c.join(",")
         msg: Syntax_Checker.message["invalidMultibyteCharacter"]
         detail: Syntax_Checker.message["detail"]["invalidMultibyteCharacter"]
         ele: html
@@ -320,7 +320,7 @@ class @Syntax_Checker
     c = html.match(regex)
     unless $.isEmptyObject(c)
       errors = [{
-        code: c.join("、")
+        code: c.join(",")
         msg: Syntax_Checker.message["invalidDependentCharacter"]
         detail: Syntax_Checker.message["detail"]["invalidDependentCharacter"]
         ele: html
@@ -346,7 +346,7 @@ class @Syntax_Checker
 
     unless $.isEmptyObject(dates)
       errors = [{
-        code: dates.join("、")
+        code: dates.join(",")
         msg: Syntax_Checker.message["invalidDateFormat"]
         detail: Syntax_Checker.message["detail"]["invalidDateFormat"]
         ele: html
