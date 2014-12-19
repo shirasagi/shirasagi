@@ -1,7 +1,7 @@
 SHIRASAGI インストールマニュアル
 ================================
 
-CentOS 6.5/64bit
+CentOS 6.6/64bit
 
 --------------------
 # Packages
@@ -27,6 +27,7 @@ CentOS 6.5/64bit
 --------------------
 # Ruby (RVM)
 
+  gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
   \curl -sSL https://get.rvm.io | sudo bash -s stable
   source /etc/profile
   rvm install 2.1.2
