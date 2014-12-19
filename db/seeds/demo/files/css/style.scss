@@ -726,9 +726,9 @@ img {
       @include r-arrow;
     }
   }
-  nav {
+  .ads-banners {
     @include clear;
-    a {
+    span {
       display: block;
       float: left;
       margin-right: 12px;
@@ -736,6 +736,18 @@ img {
         margin: 0;
       }
     }
+  }
+}
+// -----------------------------------------------------------------------------
+// sns
+.cms-sns_share {
+  @include clear;
+  .site {
+    float: left;
+    margin-right: 15px;
+  }
+  .fb {
+    margin-top: -6px;
   }
 }
 // -----------------------------------------------------------------------------
@@ -985,10 +997,14 @@ img {
   margin-bottom: $item-margin;
   text-align: right;
 }
+.map-page {
+  margin-bottom: $box-margin;
+}
 .page article, .one article.body,
 .page .related-pages, .page footer.contact,
 .inquiry-html, .inquiry-form,
-.faq-question, .faq .body {
+.faq-question, .faq .body,
+.map-page {
   article {
     h2 {
       padding: 0;
@@ -1100,6 +1116,13 @@ img {
       font-weight: normal;
     }
   }
+}
+// -----------------------------------------------------------------------------
+//  ss-adobe-reader
+.ss-adobe-reader {
+  margin: $box-margin 0;
+  padding: $item-margin;
+  border: $border-hgry;
 }
 // -----------------------------------------------------------------------------
 //  related-pages
