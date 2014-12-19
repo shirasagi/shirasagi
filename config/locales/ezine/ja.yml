@@ -1,6 +1,7 @@
 ja:
   ezine:
     page: メルマガ記事
+    member: メルマガ読者
     button:
       convert_html_to_text: HTML版を変換する
 
@@ -23,3 +24,6 @@ ja:
         name: 記事タイトル
         html: 本文（HTML版）
         text: 本文（テキスト版）
+      ezine/member:
+        email: メールアドレス
+        email_type: 配信形式
