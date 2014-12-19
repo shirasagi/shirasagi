@@ -1247,26 +1247,24 @@ article.areas, article.formats {
         display: block;
       }
     }
-    .add {
+    .update {
       display: inline-block;
       padding: 5px 20px 5px 40px;
-      border: 1px solid #282828;
       @include border-radius(5px);
+      text-decoration: none;
+    }
+    .add {
+      border: 1px solid #282828;
       background: #383838 url(../img/ic-like.png) no-repeat 10px center;
       color: $white;
-      text-decoration: none;
       &:hover {
         background-color: #666666;
       }
     }
     .cancel {
-      display: inline-block;
-      padding: 2px 20px 2px 40px;
       border: 1px solid #bdbdbd;
-      @include border-radius(5px);
       background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
       color: $text;
-      text-decoration: none;
       &:hover {
         background-color: #dedede;
       }
