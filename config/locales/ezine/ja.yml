@@ -3,6 +3,7 @@ ja:
     page: メルマガ記事
     member: メルマガ読者
     test_member: テスト読者
+    entry: 登録履歴
     button:
       convert_html_to_text: HTML版を変換する
 
@@ -31,3 +32,7 @@ ja:
       ezine/test_member:
         email: メールアドレス
         email_type: 配信形式
+      ezine/entry:
+        email: メールアドレス
+        email_type: 配信形式
+        entry_type: 登録種別

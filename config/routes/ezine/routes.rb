@@ -11,6 +11,7 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion
     resources :members, concerns: :deletion
     resources :test_members, concerns: :deletion
+    resources :entries, concerns: :deletion
   end
 
   node "ezine" do
