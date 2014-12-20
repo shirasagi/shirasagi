@@ -10,5 +10,7 @@ module Ezine::Entryable
     field :verification_token, type: String
 
     belongs_to :node, class_name: "Cms::Node"
+
+    scope :verified, ->{ where verification_token: nil }
   end
 end
