@@ -2,6 +2,7 @@ ja:
   ezine:
     page: メルマガ記事
     member: メルマガ読者
+    test_member: テスト読者
     button:
       convert_html_to_text: HTML版を変換する
 
@@ -25,5 +26,8 @@ ja:
         html: 本文（HTML版）
         text: 本文（テキスト版）
       ezine/member:
+        email: メールアドレス
+        email_type: 配信形式
+      ezine/test_member:
         email: メールアドレス
         email_type: 配信形式
