@@ -4,8 +4,11 @@ ja:
     member: メルマガ読者
     test_member: テスト読者
     entry: 登録履歴
+    page_title:
+      entry: 配信登録
     button:
       convert_html_to_text: HTML版を変換する
+      confirm_entry: 配信登録
 
     preview_html: HTML版プレビュー
     preview_text: テキスト版プレビュー

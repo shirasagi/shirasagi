@@ -1,0 +1,23 @@
+<%= coffee do %>
+$ ->
+  $('.ezine-form input').keypress (ev) ->
+    if (ev.which and ev.which is 13) or (ev.keyCode and ev.keyCode is 13)
+      return false
+    else
+      return true
+  return
+<% end %>
+
+<div class="ezine-html">
+  <%= t('ezine.page_title.entry') %>
+</div>
+
+<%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
+<div class="ezine-form">
+  <%= error_messages_for :answer, header_message: false %>
+  <%= render partial: "form", locals: { f: f, confirm: false }  %>
+  <footer class="send">
+  <%= f.submit t('ezine.button.confirm_entry'), name: :confirm_entry %>
+  </footer>
+</div>
+<% end %>
