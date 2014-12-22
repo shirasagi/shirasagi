@@ -17,6 +17,7 @@ SS::Application.routes.draw do
   node "ezine" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/entry/(index.:format)" => "public#entry", cell: "nodes/form"
+    get "page/update/(index.:format)" => "public#update", cell: "nodes/form"
     post "page/confirm.html" => "public#create", cell: "nodes/form"
   end
 
