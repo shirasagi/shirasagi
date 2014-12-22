@@ -7,9 +7,9 @@ $(window).load ->
   Syntax_Checker.render()
   Link_Checker.render()
 
-  Submit_Alert.addValidation(Submit_Alert.presence)
-  Submit_Alert.addValidation(Syntax_Checker.validateHtml)
-  Submit_Alert.render()
+  Form_Alert.addValidation(Form_Alert.presence)
+  Form_Alert.addValidation(Syntax_Checker.validateHtml)
+  Form_Alert.render()
 
 class @Syntax_Checker
   @message = {
@@ -24,20 +24,20 @@ class @Syntax_Checker
     checkInterwordSpace : "<%= I18n.t('errors.messages.check_interword_space') %>"
     checkLinkText : "<%= I18n.t('errors.messages.check_link_text') %>"
     checkEmbeddedMedia : "<%= I18n.t('errors.messages.check_embedded_media') %>"
+  }
 
-    detail : {
-      notSetImgAlt       : <%= I18n.t('errors.messages.syntax_check_detail.set_img_alt').to_json %>
-      notSetTableCaption : <%= I18n.t('errors.messages.syntax_check_detail.set_table_caption').to_json %>
-      notSetThScope      : <%= I18n.t('errors.messages.syntax_check_detail.set_th_scope').to_json %>
-      invalidOrderOfH    : <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>
-      invalidMultibyteCharacter : <%= I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character').to_json %>
-      invalidDependentCharacter : <%= I18n.t('errors.messages.syntax_check_detail.invalid_dependent_character').to_json %>
-      invalidDateFormat : <%= I18n.t('errors.messages.syntax_check_detail.invalid_date_format').to_json %>
-      invalidAdjacentA : <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>
-      checkInterwordSpace : <%= I18n.t('errors.messages.syntax_check_detail.check_interword_space').to_json %>
-      checkLinkText : <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>
-      checkEmbeddedMedia : <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>
-    }
+  @detail = {
+    notSetImgAlt       : <%= I18n.t('errors.messages.syntax_check_detail.set_img_alt').to_json %>
+    notSetTableCaption : <%= I18n.t('errors.messages.syntax_check_detail.set_table_caption').to_json %>
+    notSetThScope      : <%= I18n.t('errors.messages.syntax_check_detail.set_th_scope').to_json %>
+    invalidOrderOfH    : <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>
+    invalidMultibyteCharacter : <%= I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character').to_json %>
+    invalidDependentCharacter : <%= I18n.t('errors.messages.syntax_check_detail.invalid_dependent_character').to_json %>
+    invalidDateFormat : <%= I18n.t('errors.messages.syntax_check_detail.invalid_date_format').to_json %>
+    invalidAdjacentA : <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>
+    checkInterwordSpace : <%= I18n.t('errors.messages.syntax_check_detail.check_interword_space').to_json %>
+    checkLinkText : <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>
+    checkEmbeddedMedia : <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>
   }
 
   @dependentCharacter = "<%= I18n.t('dependent_character').join %>"
@@ -99,7 +99,7 @@ class @Syntax_Checker
       addonName = "<%= I18n.t('cms.syntax_check') %>"
       for key, errors of Syntax_Checker.errors
         for error, i in errors
-          Submit_Alert.add addonName, this, error["msg"]
+          Form_Alert.add addonName, this, error["msg"]
 
   @getEditorHtml: ()->
     if (typeof tinymce != 'undefined')
@@ -169,7 +169,7 @@ class @Syntax_Checker
         errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg:  Syntax_Checker.message["notSetImgAlt"]
-          detail: Syntax_Checker.message["detail"]["notSetImgAlt"]
+          detail: Syntax_Checker.detail["notSetImgAlt"]
           ele: this
         }]
         Syntax_Checker.pushError(errors)
@@ -184,7 +184,7 @@ class @Syntax_Checker
         errors.push({
           code: Syntax_Checker.outerHtmlSummary(table)
           msg:  Syntax_Checker.message["notSetTableCaption"]
-          detail: Syntax_Checker.message["detail"]["notSetTableCaption"]
+          detail: Syntax_Checker.detail["notSetTableCaption"]
           ele: table
           correct: Syntax_Checker.correctTableCaption
         })
@@ -194,7 +194,7 @@ class @Syntax_Checker
           errors.push({
             code: Syntax_Checker.outerHtmlSummary(table)
             msg:  Syntax_Checker.message["notSetThScope"]
-            detail: Syntax_Checker.message["detail"]["notSetThScope"]
+            detail: Syntax_Checker.detail["notSetThScope"]
             ele: table
             correct: Syntax_Checker.correctTableScope
           })
@@ -250,7 +250,7 @@ class @Syntax_Checker
         code: code
         msg: Syntax_Checker.message["invalidOrderOfH"]
         ele: html
-        detail: Syntax_Checker.message["detail"]["invalidOrderOfH"]
+        detail: Syntax_Checker.detail["invalidOrderOfH"]
         correct: Syntax_Checker.correctOrderOfH
       }]
       Syntax_Checker.pushError(errors)
@@ -304,7 +304,7 @@ class @Syntax_Checker
       errors = [{
         code: c.join(",")
         msg: Syntax_Checker.message["invalidMultibyteCharacter"]
-        detail: Syntax_Checker.message["detail"]["invalidMultibyteCharacter"]
+        detail: Syntax_Checker.detail["invalidMultibyteCharacter"]
         ele: html
         correct: Syntax_Checker.correctMultibyteCharacter
       }]
@@ -322,7 +322,7 @@ class @Syntax_Checker
       errors = [{
         code: c.join(",")
         msg: Syntax_Checker.message["invalidDependentCharacter"]
-        detail: Syntax_Checker.message["detail"]["invalidDependentCharacter"]
+        detail: Syntax_Checker.detail["invalidDependentCharacter"]
         ele: html
         correct: Syntax_Checker.correctDependentCharacter
       }]
@@ -348,7 +348,7 @@ class @Syntax_Checker
       errors = [{
         code: dates.join(",")
         msg: Syntax_Checker.message["invalidDateFormat"]
-        detail: Syntax_Checker.message["detail"]["invalidDateFormat"]
+        detail: Syntax_Checker.detail["invalidDateFormat"]
         ele: html
         correct: Syntax_Checker.correctDateFormat
       }]
@@ -373,7 +373,7 @@ class @Syntax_Checker
         errors = [{
           code: Syntax_Checker.outerHtmlSummary(this) + Syntax_Checker.outerHtmlSummary(next)
           msg: Syntax_Checker.message["invalidAdjacentA"]
-          detail: Syntax_Checker.message["detail"]["invalidAdjacentA"]
+          detail: Syntax_Checker.detail["invalidAdjacentA"]
           ele: this
           correct: Syntax_Checker.correctAdjacentA
         }]
@@ -394,7 +394,7 @@ class @Syntax_Checker
             errors = [{
               code: text
               msg: Syntax_Checker.message["checkInterwordSpace"]
-              detail: Syntax_Checker.message["detail"]["checkInterwordSpace"]
+              detail: Syntax_Checker.detail["checkInterwordSpace"]
             }]
             Syntax_Checker.pushError(errors)
             break
@@ -406,7 +406,7 @@ class @Syntax_Checker
         errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg: Syntax_Checker.message["checkLinkText"]
-          detail: Syntax_Checker.message["detail"]["checkLinkText"]
+          detail: Syntax_Checker.detail["checkLinkText"]
         }]
         Syntax_Checker.pushError(errors)
 
@@ -415,7 +415,7 @@ class @Syntax_Checker
       errors = [{
         code: this
         msg: Syntax_Checker.message["checkEmbeddedMedia"]
-        detail: Syntax_Checker.message["detail"]["checkEmbeddedMedia"]
+        detail: Syntax_Checker.detail["checkEmbeddedMedia"]
       }]
       Syntax_Checker.pushError(errors)
 
@@ -429,7 +429,7 @@ class @Syntax_Checker
         errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg: Syntax_Checker.message["checkEmbeddedMedia"]
-          detail: Syntax_Checker.message["detail"]["checkEmbeddedMedia"]
+          detail: Syntax_Checker.detail["checkEmbeddedMedia"]
         }]
         Syntax_Checker.pushError(errors)
 
@@ -440,7 +440,7 @@ class @Syntax_Checker
         errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg: Syntax_Checker.message["checkEmbeddedMedia"]
-          detail: Syntax_Checker.message["detail"]["checkEmbeddedMedia"]
+          detail: Syntax_Checker.detail["checkEmbeddedMedia"]
         }]
         Syntax_Checker.pushError(errors)
 
@@ -535,7 +535,7 @@ class @Link_Checker
     }
     return
 
-class @Submit_Alert
+class @Form_Alert
   @alerts = []
   @validations = []
 
@@ -544,10 +544,10 @@ class @Submit_Alert
       submit = this
       form   = $(submit).closest("form")
 
-      unless Submit_Alert.validate(form)
+      unless Form_Alert.validate(form)
         div = $('<div id="alertExplanation" class="errorExplanation">')
         div.append("<h2><%= I18n.t('cms.alert') %></h2>")
-        for addon, fields of Submit_Alert.alerts
+        for addon, fields of Form_Alert.alerts
           div.append('<p>' + addon + '</p>')
           ul = $("<ul>").appendTo(div)
           for field, i in fields
@@ -573,29 +573,29 @@ class @Submit_Alert
         return false
 
   @validate: (form)->
-    Submit_Alert.alerts = {}
-    $.each Submit_Alert.validations, ->
+    Form_Alert.alerts = {}
+    $.each Form_Alert.validations, ->
       (this)(form)
 
-    if $.isEmptyObject(Submit_Alert.alerts)
+    if $.isEmptyObject(Form_Alert.alerts)
       return ture
     else
       return false
 
   @addValidation: (validate)->
-    Submit_Alert.validations.push(validate)
+    Form_Alert.validations.push(validate)
 
   @presence: (form)->
     $(form).find("input.presence,textarea.presence").each ->
       if $(this).val() == ""
         $(this).closest("dl").show()
         addonName = $(this).closest(".addon-view").find("header").text()
-        fieldName = Submit_Alert.justText($(this).closest("dd").prev("dt"))
-        Submit_Alert.add addonName, this, fieldName + "<%= I18n.t('errors.messages.blank') %>"
+        fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"))
+        Form_Alert.add addonName, this, fieldName + "<%= I18n.t('errors.messages.blank') %>"
 
   @add: (addon, ele, msg)->
-    Submit_Alert.alerts[addon] ||= []
-    Submit_Alert.alerts[addon].push(
+    Form_Alert.alerts[addon] ||= []
+    Form_Alert.alerts[addon].push(
       "ele" : ele
       "msg" : msg
     )
