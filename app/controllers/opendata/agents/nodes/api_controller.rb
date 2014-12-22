@@ -81,6 +81,24 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       return check, messages
     end
 
+    def group_show_param_check?(id)
+
+      check = false
+      id_message = []
+
+      if id.blank?
+        id_message << "Missing value"
+      end
+
+      messages = {}
+      messages[:name_or_id] = id_message if !id_message.empty?
+
+      check_count = id_message.size
+      check = true if check_count == 0
+
+      return check, messages
+    end
+
     def integer?(s)
       i = Integer(s)
       check = true
@@ -243,6 +261,34 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         res = {}
         res[:help] = help
         res[:success] = false
+        res[:error] = {message: "Not found", __type: "Not Found Error"}
+      end
+
+      render json: res
+    end
+
+    def group_show
+      help = SS.config.opendata.api["group_show_help"]
+      id = params[:id]
+      include_datasets =params[:include_datasets]
+
+      check, messages = group_show_param_check?(id)
+      if !check
+        error = {__type: "Validation Error"}
+        messages.each do |key, value|
+          error[key] = value
+        end
+
+        render json: {help: help, success: false, error: error} and return
+      end
+
+      @groups = Opendata::DatasetGroup.site(@cur_site).public.order_by(name: 1)
+      @groups = @groups.any_of({"id" => id}, {"name" => id})
+
+      if @groups.count > 0
+        res = {help: help, success: true, result: @groups[0]}
+      else
+        res = {help: help, success: false}
         res[:error] = {message: "Not found", __type: "Not Found Error"}
       end
 
