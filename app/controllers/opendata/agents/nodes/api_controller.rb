@@ -3,103 +3,6 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
 
   before_action :accept_cors_request
 
-  private
-    def package_list_param_check?(limit, offset)
-
-      limit_message = []
-      offset_message = []
-
-      if !limit.nil?
-        if integer?(limit)
-          if limit.to_i < 0
-            limit_message << "Must be a natural number"
-          end
-        else
-          limit_message << "Invalid integer"
-        end
-      end
-
-      if !offset.nil?
-        if integer?(offset)
-          if offset.to_i < 0
-            offset_message << "Must be a natural number"
-          end
-        else
-          offset_message << "Invalid integer"
-        end
-      end
-
-      messages = {}
-      messages[:limit] = limit_message if !limit_message.empty?
-      messages[:offset] = offset_message if !offset_message.empty?
-
-      check_count = limit_message.size + offset_message.size
-      if check_count == 0
-        check = true
-      else
-        check = false
-      end
-
-      return check, messages
-    end
-
-    def package_show_param_check?(id)
-
-      check = false
-      id_message = []
-      id_message << "Missing value" if id.blank?
-
-      messages = {}
-      messages[:name_or_id] = id_message if !id_message.empty?
-
-      check_count = id_message.size
-      check = true if check_count == 0
-
-      return check, messages
-    end
-
-    def group_list_param_check?(sort)
-
-      sort_message = []
-      sort_values = ["name", "packages"]
-
-      sort_message << "Cannot sort by field `#{sort}`" if !sort_values.include?(sort)
-
-      messages = {}
-      messages[:sort] = sort_message if !sort_message.empty?
-
-      check_count = sort_message.size
-      if check_count == 0
-        check = true
-      else
-        check = false
-      end
-
-      return check, messages
-    end
-
-    def group_show_param_check?(id)
-
-      check = false
-      id_message = []
-      id_message << "Missing value" if id.blank?
-
-      messages = {}
-      messages[:name_or_id] = id_message if !id_message.empty?
-
-      check_count = id_message.size
-      check = true if check_count == 0
-
-      return check, messages
-    end
-
-    def integer?(s)
-      i = Integer(s)
-      check = true
-    rescue
-      check = false
-    end
-
   public
     def index
       render
@@ -112,7 +15,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       limit = params[:limit]
       offset = params[:offset]
 
-      check, messages = package_list_param_check?(limit, offset)
+      check, messages = Opendata::Api.package_list_param_check?(limit, offset)
       if !check
         error = {}
         error[:__type] = "Validation Error"
@@ -149,7 +52,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       groups = params[:groups]
       all_fields = params[:all_fields]
 
-      check, messages = group_list_param_check?(sort)
+      check, messages = Opendata::Api.group_list_param_check?(sort)
       if !check
         error = {}
         error[:__type] = "Validation Error"
@@ -206,7 +109,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       id = params[:id]
       #use_default_schema = params[:use_default_schema]
 
-      check, messages = package_show_param_check?(id)
+      check, messages = Opendata::Api.package_show_param_check?(id)
       if !check
         error = {}
         error[:__type] = "Validation Error"
@@ -256,7 +159,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       id = params[:id]
       include_datasets =params[:include_datasets]
 
-      check, messages = group_show_param_check?(id)
+      check, messages = Opendata::Api.group_show_param_check?(id)
       if !check
         error = {__type: "Validation Error"}
         messages.each do |key, value|
