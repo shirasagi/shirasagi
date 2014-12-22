@@ -53,7 +53,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       end
 
       messages = {}
-      messages[:id] = id_message if !id_message.empty?
+      messages[:name_or_id] = id_message if !id_message.empty?
 
       check_count = id_message.size
       check = true if check_count == 0
