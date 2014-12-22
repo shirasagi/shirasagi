@@ -155,8 +155,9 @@ class @Syntax_Checker
 
         if error["correct"] && error["ele"]
           correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct') %>" + '</a>')
-          correct.on "click", ->
-            html = error["correct"](error["ele"])
+          correct.on "click", {error: error}, (e)->
+            html = e.data.error["correct"](e.data.error["ele"])
+            console.log html
             Syntax_Checker.setEditorHtml(html)
             $(".mod-cms-body button.syntax-check").trigger("click")
             return false
@@ -562,7 +563,7 @@ class @Form_Alert
           fixed: true
         )
 
-        $("#cboxLoadedContent").find(".save").on "click", ()->
+        $("#cboxLoadedContent").find(".save").on "click", {submit: submit}, ()->
           $(submit).off(".submit_alert")
           $(submit).trigger("click")
 
