@@ -43,6 +43,24 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       return check, messages
     end
 
+    def package_show_param_check?(id)
+
+      check = false
+      id_message = []
+
+      if id.nil? || id.empty?
+        id_message << "Missing value"
+      end
+
+      messages = {}
+      messages[:id] = id_message if !id_message.empty?
+
+      check_count = id_message.size
+      check = true if check_count == 0
+
+      return check, messages
+    end
+
     def group_list_param_check?(sort)
 
       sort_message = []
@@ -193,6 +211,42 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
 
       render json: res
 
+    end
+
+    def package_show
+
+      help = SS.config.opendata.api["package_show_help"]
+
+      id = params[:id]
+      #use_default_schema = params[:use_default_schema]
+
+      check, messages = package_show_param_check?(id)
+      if !check
+        error = {}
+        error[:__type] = "Validation Error"
+        messages.each do |key, value|
+          error[key] = value
+        end
+
+        render json: {help: help, success: false, error: error} and return
+      end
+
+      @datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
+      @datasets = @datasets.any_of({"id" => id}, {"name" => id}).limit(1)
+
+      if @datasets.count > 0
+        res = {}
+        res[:help] = help
+        res[:success] = true
+        res[:result] = @datasets[0]
+      else
+        res = {}
+        res[:help] = help
+        res[:success] = false
+        res[:error] = {message: "Not found", __type: "Not Found Error"}
+      end
+
+      render json: res
     end
 
 end
