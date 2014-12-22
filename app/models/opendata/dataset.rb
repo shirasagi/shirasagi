@@ -95,13 +95,25 @@ class Opendata::Dataset
         collection.aggregate(pipes)
       end
 
-      def get_tag_list(name)
+      def get_tag_list(query)
         pipes = []
-        pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
-        pipes << { "$project" => { _id: 0, "#{name}" => 1 } }
-        pipes << { "$unwind" => "$#{name}" }
-        pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
+        pipes << { "$match" => where({}).selector.merge("tags" => { "$exists" => 1 }) }
+        pipes << { "$project" => { _id: 0, "tags" => 1 } }
+        pipes << { "$unwind" => "$tags" }
+        pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
         pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
+        pipes << { "$sort" => { name: 1 } }
+        collection.aggregate(pipes)
+      end
+
+      def get_tag(tag_name)
+        pipes = []
+        pipes << { "$match" => where({}).selector.merge("tags" => { "$exists" => 1 }) }
+        pipes << { "$project" => { _id: 0, "tags" => 1 } }
+        pipes << { "$unwind" => "$tags" }
+        pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
+        pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
+        pipes << { "$match" => { name: tag_name }}
         pipes << { "$sort" => { name: 1 } }
         collection.aggregate(pipes)
       end
