@@ -27,16 +27,13 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         render json: res and return
       end
 
-      @items = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
-
-      if !limit.nil?
-        @items = @items.skip(offset) if !offset.nil?
-        @items = @items.limit(limit)
-      end
+      @datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
+      @datasets = @datasets.skip(offset) if limit.present? && offset.present?
+      @datasets = @datasets.limit(limit) if limit.present?
 
       package_list = []
-      @items.each do |item|
-        package_list << item[:name]
+      @datasets.each do |dataset|
+        package_list << dataset[:name]
       end
 
       res = {help: help, success: true, result: package_list}
@@ -64,18 +61,17 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         render json: res and return
       end
 
-      @items = Opendata::DatasetGroup.site(@cur_site).public
-      @items = @items.order_by(name: 1) if sort == "name"
+      @groups = Opendata::DatasetGroup.site(@cur_site).public
+      @groups = @groups.order_by(name: 1) if sort == "name"
 
       group_list = []
       if all_fields.nil?
-        @items.each do |item|
-          group_list << item[:name]
+        @groups.each do |group|
+          group_list << group[:name]
         end
       else
-        @items.each do |item|
-          group = {id: item.id, state: item.state, name: item.name, order: item.order}
-          group_list << group
+        @groups.each do |group|
+          group_list << {id: group.id, state: group.state, name: group.name, order: group.order}
         end
       end
 

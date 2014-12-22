@@ -4,6 +4,7 @@ module Opendata::Api
     public
     def package_list_param_check?(limit, offset)
 
+      check = false
       limit_message = []
       offset_message = []
 
@@ -32,11 +33,7 @@ module Opendata::Api
       messages[:offset] = offset_message if !offset_message.empty?
 
       check_count = limit_message.size + offset_message.size
-      if check_count == 0
-        check = true
-      else
-        check = false
-      end
+      check = true if check_count == 0
 
       return check, messages
     end
@@ -58,6 +55,7 @@ module Opendata::Api
 
     def group_list_param_check?(sort)
 
+      check = false
       sort_message = []
       sort_values = ["name", "packages"]
 
@@ -67,11 +65,7 @@ module Opendata::Api
       messages[:sort] = sort_message if !sort_message.empty?
 
       check_count = sort_message.size
-      if check_count == 0
-        check = true
-      else
-        check = false
-      end
+      check = true if check_count == 0
 
       return check, messages
     end
