@@ -15,16 +15,9 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       limit = params[:limit]
       offset = params[:offset]
 
-      check, messages = Opendata::Api.package_list_param_check?(limit, offset)
-      if !check
-        error = {}
-        error[:__type] = "Validation Error"
-        messages.each do |key, value|
-          error[key] = value
-        end
-
-        res = {help: help, success: false, error: error}
-        render json: res and return
+      error = Opendata::Api.package_list_param_check?(limit, offset)
+      if error.present?
+        render json: {help: help, success: false, error: error} and return
       end
 
       @datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
@@ -49,16 +42,9 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       groups = params[:groups]
       all_fields = params[:all_fields]
 
-      check, messages = Opendata::Api.group_list_param_check?(sort)
-      if !check
-        error = {}
-        error[:__type] = "Validation Error"
-        messages.each do |key, value|
-          error[key] = value
-        end
-
-        res = {help: help, success: false, error: error}
-        render json: res and return
+      error = Opendata::Api.group_list_param_check?(sort)
+      if error.present?
+        render json: {help: help, success: false, error: error} and return
       end
 
       @groups = Opendata::DatasetGroup.site(@cur_site).public
@@ -105,14 +91,8 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       id = params[:id]
       #use_default_schema = params[:use_default_schema]
 
-      check, messages = Opendata::Api.package_show_param_check?(id)
-      if !check
-        error = {}
-        error[:__type] = "Validation Error"
-        messages.each do |key, value|
-          error[key] = value
-        end
-
+      error = Opendata::Api.package_show_param_check?(id)
+      if error.present?
         render json: {help: help, success: false, error: error} and return
       end
 
@@ -155,13 +135,8 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       id = params[:id]
       include_datasets =params[:include_datasets]
 
-      check, messages = Opendata::Api.group_show_param_check?(id)
-      if !check
-        error = {__type: "Validation Error"}
-        messages.each do |key, value|
-          error[key] = value
-        end
-
+      error = Opendata::Api.group_show_param_check?(id)
+      if error.present?
         render json: {help: help, success: false, error: error} and return
       end
 

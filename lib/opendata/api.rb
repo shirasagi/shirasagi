@@ -4,7 +4,6 @@ module Opendata::Api
     public
     def package_list_param_check?(limit, offset)
 
-      check = false
       limit_message = []
       offset_message = []
 
@@ -33,14 +32,18 @@ module Opendata::Api
       messages[:offset] = offset_message if !offset_message.empty?
 
       check_count = limit_message.size + offset_message.size
-      check = true if check_count == 0
+      if check_count > 0
+        error = {__type: "Validation Error"}
+        messages.each do |key, value|
+          error[key] = value
+        end
+      end
 
-      return check, messages
+      return error
     end
 
     def package_show_param_check?(id)
 
-      check = false
       id_message = []
       id_message << "Missing value" if id.blank?
 
@@ -48,14 +51,18 @@ module Opendata::Api
       messages[:name_or_id] = id_message if !id_message.empty?
 
       check_count = id_message.size
-      check = true if check_count == 0
+      if check_count > 0
+        error = {__type: "Validation Error"}
+        messages.each do |key, value|
+          error[key] = value
+        end
+      end
 
-      return check, messages
+      return error
     end
 
     def group_list_param_check?(sort)
 
-      check = false
       sort_message = []
       sort_values = ["name", "packages"]
 
@@ -65,14 +72,18 @@ module Opendata::Api
       messages[:sort] = sort_message if !sort_message.empty?
 
       check_count = sort_message.size
-      check = true if check_count == 0
+      if check_count > 0
+        error = {__type: "Validation Error"}
+        messages.each do |key, value|
+          error[key] = value
+        end
+      end
 
-      return check, messages
+      return error
     end
 
     def group_show_param_check?(id)
 
-      check = false
       id_message = []
       id_message << "Missing value" if id.blank?
 
@@ -80,9 +91,14 @@ module Opendata::Api
       messages[:name_or_id] = id_message if !id_message.empty?
 
       check_count = id_message.size
-      check = true if check_count == 0
+      if check_count > 0
+        error = {__type: "Validation Error"}
+        messages.each do |key, value|
+          error[key] = value
+        end
+      end
 
-      return check, messages
+      return error
     end
 
     def integer?(s)
