@@ -47,10 +47,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
 
       check = false
       id_message = []
-
-      if id.nil? || id.empty?
-        id_message << "Missing value"
-      end
+      id_message << "Missing value" if id.blank?
 
       messages = {}
       messages[:name_or_id] = id_message if !id_message.empty?
@@ -85,10 +82,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
 
       check = false
       id_message = []
-
-      if id.blank?
-        id_message << "Missing value"
-      end
+      id_message << "Missing value" if id.blank?
 
       messages = {}
       messages[:name_or_id] = id_message if !id_message.empty?
@@ -126,20 +120,14 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
           error[key] = value
         end
 
-        res = {}
-        res[:help] = help
-        res[:success] = false
-        res[:error] = error
-
+        res = {help: help, success: false, error: error}
         render json: res and return
       end
 
       @items = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
 
       if !limit.nil?
-        if !offset.nil?
-          @items = @items.skip(offset)
-        end
+        @items = @items.skip(offset) if !offset.nil?
         @items = @items.limit(limit)
       end
 
@@ -148,11 +136,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         package_list << item[:name]
       end
 
-      res = {}
-      res[:help] = help
-      res[:success] = true
-      res[:result] = package_list
-
+      res = {help: help, success: true, result: package_list}
       render json: res
     end
 
@@ -173,11 +157,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
           error[key] = value
         end
 
-        res = {}
-        res[:help] = help
-        res[:success] = false
-        res[:error] = error
-
+        res = {help: help, success: false, error: error}
         render json: res and return
       end
 
@@ -191,20 +171,12 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         end
       else
         @items.each do |item|
-          group = {}
-          group[:id] = item.id
-          group[:state] = item.state
-          group[:name] = item.name
-          group[:order] = item.order
+          group = {id: item.id, state: item.state, name: item.name, order: item.order}
           group_list << group
         end
       end
 
-      res = {}
-      res[:help] = help
-      res[:success] = true
-      res[:result] = group_list
-
+      res = {help: help, success: true, result: group_list}
       render json: res
     end
 
@@ -222,11 +194,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         tag_list << tag["name"]
       end
 
-      res = {}
-      res[:help] = help
-      res[:success] = true
-      res[:result] = tag_list
-
+      res = {help: help, success: true, result: tag_list}
       render json: res
 
     end
@@ -249,18 +217,13 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         render json: {help: help, success: false, error: error} and return
       end
 
-      @datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
-      @datasets = @datasets.any_of({"id" => id}, {"name" => id}).limit(1)
+      @datasets = Opendata::Dataset.site(@cur_site).public
+      @datasets = @datasets.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
       if @datasets.count > 0
-        res = {}
-        res[:help] = help
-        res[:success] = true
-        res[:result] = @datasets[0]
+        res = {help: help, success: true, result: @datasets[0]}
       else
-        res = {}
-        res[:help] = help
-        res[:success] = false
+        res = {help: help, success: false}
         res[:error] = {message: "Not found", __type: "Not Found Error"}
       end
 
@@ -282,8 +245,8 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         render json: {help: help, success: false, error: error} and return
       end
 
-      @groups = Opendata::DatasetGroup.site(@cur_site).public.order_by(name: 1)
-      @groups = @groups.any_of({"id" => id}, {"name" => id})
+      @groups = Opendata::DatasetGroup.site(@cur_site).public
+      @groups = @groups.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
       if @groups.count > 0
         res = {help: help, success: true, result: @groups[0]}
