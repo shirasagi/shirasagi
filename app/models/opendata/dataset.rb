@@ -95,6 +95,17 @@ class Opendata::Dataset
         collection.aggregate(pipes)
       end
 
+      def get_tag_list(name)
+        pipes = []
+        pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
+        pipes << { "$project" => { _id: 0, "#{name}" => 1 } }
+        pipes << { "$unwind" => "$#{name}" }
+        pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
+        pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
+        pipes << { "$sort" => { name: 1 } }
+        collection.aggregate(pipes)
+      end
+
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?

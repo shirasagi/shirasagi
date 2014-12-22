@@ -172,4 +172,27 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       render json: res
     end
 
+    def tag_list
+      help = SS.config.opendata.api["tag_list_help"]
+
+      query = params[:query]
+      #vocabulary_id = params[:vocabulary_id]
+      #all_fields = params[:all_fields] || false
+
+      @tags = Opendata::Dataset.site(@cur_site).public.get_tag_list(:tags)
+
+      tag_list = []
+      @tags.each do |tag|
+        tag_list << tag["name"]
+      end
+
+      res = {}
+      res[:help] = help
+      res[:success] = true
+      res[:result] = tag_list
+
+      render json: res
+
+    end
+
 end
