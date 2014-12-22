@@ -127,7 +127,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       sort = params[:sort] || "name"
       sort = sort.downcase
       groups = params[:groups]
-      all_fields = params[:all_fields] || false
+      all_fields = params[:all_fields]
 
       check, messages = group_list_param_check?(sort)
       if !check
@@ -149,7 +149,11 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       @items = @items.order_by(name: 1) if sort == "name"
 
       group_list = []
-      if all_fields
+      if all_fields.nil?
+        @items.each do |item|
+          group_list << item[:name]
+        end
+      else
         @items.each do |item|
           group = {}
           group[:id] = item.id
@@ -157,10 +161,6 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
           group[:name] = item.name
           group[:order] = item.order
           group_list << group
-        end
-      else
-        @items.each do |item|
-          group_list << item[:name]
         end
       end
 
