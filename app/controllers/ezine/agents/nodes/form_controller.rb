@@ -12,6 +12,11 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
       render action: :update
     end
 
+    def remove
+      @model = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
+      render action: :remove
+    end
+
     def create
       if params[:submit].present?
         # TODO: save process

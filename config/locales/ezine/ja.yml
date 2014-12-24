@@ -7,10 +7,12 @@ ja:
     page_title:
       entry: 配信登録
       update: 配信形式の変更
+      remove: 配信停止
     button:
       convert_html_to_text: HTML版を変換する
       confirm_entry: 配信登録
       confirm_update: 変更
+      confirm_remove: 配信停止
 
     preview_html: HTML版プレビュー
     preview_text: テキスト版プレビュー
