@@ -9,6 +9,8 @@
 <%= csrf_meta_tags if @csrf_token != false %>
 </head>
 
+<body id="<%= body_id(request.path.to_s) %>" class="<%= body_class(request.path.to_s) %>">
 <%= yield %>
+</body>
 
 </html>
