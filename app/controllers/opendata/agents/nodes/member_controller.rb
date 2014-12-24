@@ -1,5 +1,6 @@
 class Opendata::Agents::Nodes::MemberController < ApplicationController
   include Cms::NodeFilter::View
+  helper Opendata::UrlHelper
 
   before_action :set_member
 

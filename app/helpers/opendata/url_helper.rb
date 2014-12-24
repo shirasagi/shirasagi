@@ -1,4 +1,15 @@
 module Opendata::UrlHelper
+  def member_icon(member, opts = {})
+    opts[:alt] ||= ""
+    if opts[:size]
+      opts.merge!(width: 38, height: 38) if opts[:size] == :small
+      opts.delete :size
+    end
+
+    url = member.icon ? member.icon.url : "opendata/icon-user.png"
+    image_tag url, opts
+  end
+
   def search_datasets_path
     node = Opendata::Node::SearchDataset.site(@cur_site).public.first
     return nil unless node

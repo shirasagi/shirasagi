@@ -4,7 +4,7 @@
 
 <dl class="see">
   <dt><%= @model.t :icon_id %></dt>
-  <dd><%== tryb { %(<img src="#{@cur_member.icon.url}" />) } %></dd>
+  <dd><%= member_icon @cur_member %></dd>
 
   <dt><%= @model.t :name %></dt>
   <dd><%= @cur_member.name %></dd>

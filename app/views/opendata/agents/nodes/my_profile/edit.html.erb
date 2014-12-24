@@ -4,6 +4,9 @@
   <dl class="see">
     <dt><%= @model.t :icon_id %></dt>
     <dd><%= f.file_field :in_icon %></dd>
+    <% if @item.icon_id %>
+    <dd class="in_icon"><label><%= f.check_box :rm_icon %><%= t "views.button.delete" %> (<%= @item.icon.filename %>)</label></dd>
+    <% end %>
 
     <dt><%= @model.t :name %><%= required_label %></dt>
     <dd><%= f.text_field :name %></dd>

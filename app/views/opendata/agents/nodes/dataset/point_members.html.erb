@@ -1,5 +1,8 @@
 <ul class="point-members">
   <% @items.each do |item| %>
-  <li><%= link_to item.member.name, "#{member_path}#{item.member.id}" %></li>
+  <li>
+    <%= member_icon item.member, size: :small %>
+    <span><%= link_to item.member.name, "#{member_path}#{item.member.id}" %></span>
+  </li>
   <% end %>
 </ul>

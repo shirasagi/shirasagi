@@ -1,10 +1,4 @@
-<div class="profile">
-  <% if @member.icon %>
-  <div class="icon"><img src="<%= @member.icon.url %>" alt="" /></div>
-  <% end %>
-
-  <div class="name"><%= @member.name %></div>
-</div>
+<%= render "head" %>
 
 <div class="contents">
   <section class="datasets">
