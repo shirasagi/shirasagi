@@ -76,7 +76,8 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
 
       tag_list = []
       @tags.each do |tag|
-        tag_list << tag["name"]
+        tag_name = tag["name"]
+        tag_list << tag["name"] if query.nil? || (query.present? && tag_name =~ /^.*#{query}.*$/i)
       end
 
       res = {help: help, success: true, result: tag_list}
