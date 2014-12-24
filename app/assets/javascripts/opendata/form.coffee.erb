@@ -1,0 +1,34 @@
+# opendata resource form
+$ ->
+  Opendata_ResourceForm.render()
+  Opendata_ResourceForm.toggleTsv()
+
+class @Opendata_ResourceForm
+  @render: ->
+    formats = <%= Opendata::Resource.format_options.to_json %>
+
+    $("#item_format").autocomplete
+      source: (request, response) ->
+        response(
+          $.grep formats, (value) ->
+            return value.match(new RegExp("^" + request.term, "i"))
+        )
+
+    $("#item_in_file").change ->
+      Opendata_ResourceForm.autosetFilename()
+      Opendata_ResourceForm.toggleTsv()
+
+    $("#item_format").change ->
+      Opendata_ResourceForm.toggleTsv()
+
+  @autosetFilename: ->
+    filename = $("#item_in_file").val()
+    $("#item_name").val filename.replace(/.*[\\\/]/, "")
+    $("#item_format").val filename.replace(/.*\./, "").toUpperCase() if filename.match(/\./)
+
+  @toggleTsv: ->
+    if $("#item_format").val().match(/^(csv|tsv)$/i)
+      $(".in_tsv").hide()
+    else
+      $(".in_tsv").show()
+

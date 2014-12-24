@@ -1,22 +1,7 @@
 <%
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 %>
-<%= coffee do %>
-$ ->
-  data = <%== @model.format_options.to_json %>
-
-  $("#item_format").autocomplete
-    source: (request, response) ->
-      response(
-        $.grep data, (value) ->
-          return value.match(new RegExp("^" + request.term, "i"))
-      )
-
-  $("#item_in_file").change ->
-    filename = $(this).val()
-    $("#item_name").val filename.replace(/.*[\\\/]/, "")
-    $("#item_format").val filename.replace(/.*\./, "").toUpperCase() if filename.match(/\./)
-<% end %>
+<%= javascript_include_tag "opendata/form" %>
 
 <dl class="see">
   <dt><%= @model.t :file_id %><%= required_label %></dt>
@@ -34,9 +19,9 @@ $ ->
   <dt><%= @model.t :text %><%= @model.tt :text %></dt>
   <dd><%= f.text_area :text %></dd>
 
-  <dt><%= @model.t :tsv_id %><%= @model.tt :tsv_id %></dt>
-  <dd><%= f.file_field :in_tsv %></td>
+  <dt class="in_tsv"><%= @model.t :tsv_id %><%= @model.tt :tsv_id %></dt>
+  <dd class="in_tsv"><%= f.file_field :in_tsv %></td>
   <% if @item.tsv_id %>
-  <dd><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>
+  <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>
   <% end %>
 </dl>

@@ -80,6 +80,10 @@ class Opendata::Resource
 
     def set_format
       self.format = format.upcase if format.present?
+
+      if tsv_present? && tsv
+        self.rm_tsv = "1"
+      end
     end
 
   class << self
