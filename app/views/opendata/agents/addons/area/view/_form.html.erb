@@ -24,16 +24,6 @@ def cate_form(item)
 end
 
 %>
-<%= coffee do %>
-$ ->
-  $(".category-form div.parent").each ->
-    parent = $(this)
-    parent.find(".parent input[type=checkbox]").change ->
-      val = $(this).prop("checked")
-      parent.find(".child input[type=checkbox]").each ->
-        $(this).prop "checked", val;
-<% end %>
-
 <div class="category-form">
   <%= f.hidden_field "area_ids[]", value: "" %>
 
