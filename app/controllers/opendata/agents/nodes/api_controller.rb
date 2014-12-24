@@ -133,7 +133,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
     def group_show
       help = SS.config.opendata.api["group_show_help"]
       id = params[:id]
-      include_datasets =params[:include_datasets]
+      include_datasets = params[:include_datasets]
 
       error = Opendata::Api.group_show_param_check?(id)
       if error.present?
@@ -144,7 +144,11 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       @groups = @groups.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
       if @groups.count > 0
-        res = {help: help, success: true, result: @groups[0]}
+        group = @groups[0]
+        @datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group[:id]
+        group[:package_count] = @datasets.count
+        group[:packages] = @datasets if include_datasets
+        res = {help: help, success: true, result: group}
       else
         res = {help: help, success: false}
         res[:error] = {message: "Not found", __type: "Not Found Error"}
