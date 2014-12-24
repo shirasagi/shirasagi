@@ -1,7 +1,17 @@
 module Opendata::DatasetFilter
   extend ActiveSupport::Concern
 
+  included do
+    before_action :set_dataset_with_aggregation,
+      only: [:index_areas, :index_tags, :index_formats, :index_licenses]
+  end
+
   private
+    def set_dataset_with_aggregation
+      @cur_node.layout = nil
+      @search_url      = search_datasets_path + "?"
+    end
+
     def aggregate_areas(limit)
       areas = pages.aggregate_array :area_ids, limit: limit
       areas.each_with_index do |data, idx|
@@ -37,25 +47,21 @@ module Opendata::DatasetFilter
 
   public
     def index_areas
-      @cur_node.layout = nil
       @areas = aggregate_areas(100)
       render "opendata/agents/nodes/dataset/areas", layout: "opendata/dataset_aggregation"
     end
 
     def index_tags
-      @cur_node.layout = nil
       @tags = aggregate_tags(100)
       render "opendata/agents/nodes/dataset/tags", layout: "opendata/dataset_aggregation"
     end
 
     def index_formats
-      @cur_node.layout = nil
       @formats = aggregate_formats(100)
       render "opendata/agents/nodes/dataset/formats", layout: "opendata/dataset_aggregation"
     end
 
     def index_licenses
-      @cur_node.layout = nil
       @licenses = aggregate_licenses(100)
       render "opendata/agents/nodes/dataset/licenses", layout: "opendata/dataset_aggregation"
     end
