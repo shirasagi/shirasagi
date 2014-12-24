@@ -2,6 +2,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
   include Opendata::MypageFilter
+  include Opendata::DatasetFilter
 
   before_action :set_dataset, only: [:show_point, :add_point, :point_members]
   skip_filter :logged_in?
@@ -24,6 +25,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
 
     def index
       @count          = pages.size
+      @node_url       = "#{@cur_node.url}"
       @search_url     = search_datasets_path + "?"
       @rss_url        = search_datasets_path + "index.rss?"
       @items          = pages.order_by(released: -1).limit(10)
@@ -36,19 +38,11 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
         { name: "注目順", url: "#{@search_url}&sort=attention", pages: @download_items, rss: "#{@rss_url}&sort=attention" }
       ]
 
-      @areas = pages.aggregate_array(:area_ids).map do |data|
-        rel = Opendata::Node::Area.site(@cur_site).public.where(id: data["id"]).first
-        rel ? { "id" => rel.id, "name" => rel.name, "count" => data["count"] } : nil
-      end.compact
-
-      @tags     = pages.aggregate_array(:tags)
-
-      @formats  = pages.aggregate_resources(:format)
-
-      @licenses = pages.aggregate_resources(:license_id).map do |data|
-        rel = Opendata::License.site(@cur_site).public.where(id: data["id"]).first
-        rel ? { "id" => rel.id, "name" => rel.name, "count" => data["count"] } : nil
-      end.compact
+      max = 5
+      @areas    = aggregate_areas(max)
+      @tags     = aggregate_tags(max)
+      @formats  = aggregate_formats(max)
+      @licenses = aggregate_licenses(max)
 
       respond_to do |format|
         format.html { render }

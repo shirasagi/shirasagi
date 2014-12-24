@@ -61,17 +61,32 @@ class Opendata::Dataset
         [%w(新着順 released), %w(人気順 popular), %w(注目順 attention)]
       end
 
-      def aggregate_field(name)
+      def limit_aggregation(pipes, limit)
+        return collection.aggregate(pipes) unless limit
+
+        pipes << { "$limit" => limit + 1 }
+        aggr = collection.aggregate(pipes)
+
+        def aggr.popped=(bool); @popped = bool end
+        def aggr.popped?; @popped.present? end
+
+        if aggr.size > limit
+          aggr.pop
+          aggr.popped = true
+        end
+        aggr
+      end
+
+      def aggregate_field(name, opts = {})
         pipes = []
         pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
         pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
         pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
         pipes << { "$sort" => { count: -1 } }
-        pipes << { "$limit" => 5 }
-        collection.aggregate(pipes)
+        limit_aggregation pipes, opts[:limit]
       end
 
-      def aggregate_array(name)
+      def aggregate_array(name, opts = {})
         pipes = []
         pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
         pipes << { "$project" => { _id: 0, "#{name}" => 1 } }
@@ -79,11 +94,10 @@ class Opendata::Dataset
         pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
         pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
         pipes << { "$sort" => { count: -1 } }
-        pipes << { "$limit" => 5 }
-        collection.aggregate(pipes)
+        limit_aggregation pipes, opts[:limit]
       end
 
-      def aggregate_resources(name, cond = {})
+      def aggregate_resources(name, opts = {})
         pipes = []
         pipes << { "$match" => where({}).selector.merge("resources.#{name}" => { "$exists" => 1 }) }
         pipes << { "$project" => { _id: 0, "resources.#{name}" => 1 } }
@@ -92,7 +106,7 @@ class Opendata::Dataset
         pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
         pipes << { "$sort" => { count: -1 } }
         pipes << { "$limit" => 5 }
-        collection.aggregate(pipes)
+        limit_aggregation pipes, opts[:limit]
       end
 
       def get_tag_list(query)

@@ -36,7 +36,16 @@ SS::Application.routes.draw do
 
     get "dataset_category/" => "public#nothing", cell: "nodes/dataset_category"
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
+    get "dataset_category/:name/areas" => "public#index_areas", cell: "nodes/dataset_category"
+    get "dataset_category/:name/tags" => "public#index_tags", cell: "nodes/dataset_category"
+    get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset_category"
+    get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset_category"
+
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
+    get "dataset/areas" => "public#index_areas", cell: "nodes/dataset"
+    get "dataset/tags" => "public#index_tags", cell: "nodes/dataset"
+    get "dataset/formats" => "public#index_formats", cell: "nodes/dataset"
+    get "dataset/licenses" => "public#index_licenses", cell: "nodes/dataset"
     get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
     get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/resource", format: false
     get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false

@@ -1,5 +1,13 @@
-<%= jquery do %>
-SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+
+<%= coffee do %>
+$ ->
+  SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
+  $(".areas a.more").colorbox({ fixed: true, height: "80%" })
+  $(".tags a.more").colorbox({ fixed: true, height: "80%" })
+  $(".formats a.more").colorbox({ fixed: true, height: "80%" })
+  $(".licenses a.more").colorbox({ fixed: true, height: "80%" })
 <% end %>
 
 <div class="dataset-count">
@@ -31,60 +39,32 @@ SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
 
 <article class="areas nodes">
   <header><h1>地域</h1></header>
-  <div>
-    <% @areas.each do |data| %>
-    <article>
-      <header>
-        <h2><a href="<%= "#{@search_url}&s[area_id]=#{data['id']}" %>">
-          <span class="name"><%= data["name"] %></span>
-          <span class="count">(<%= data["count"] %>)</span></a></h2>
-      </header>
-    </article>
-    <% end %>
-  </div>
+  <%= render file: "opendata/agents/nodes/dataset/areas" %>
+  <% if @areas.popped? %>
+  <nav><%= link_to :more, "#{@node_url}areas/", class: "more" %></nav>
+  <% end %>
 </article>
 
 <article class="tags nodes">
   <header><h1>タグ</h1></header>
-  <div>
-    <% @tags.each do |data| %>
-    <article>
-      <header>
-        <h2><a href="<%= "#{@search_url}&s[tag]=#{data['id']}" %>">
-          <span class="name"><%= data["id"] %></span>
-          <span class="count">(<%= data["count"] %>)</span></a></h2>
-      </header>
-    </article>
-    <% end %>
-  </div>
+  <%= render file: "opendata/agents/nodes/dataset/tags" %>
+  <% if @tags.popped? %>
+  <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>
+  <% end %>
 </article>
 
 <article class="formats nodes">
   <header><h1>フォーマット</h1></header>
-  <div>
-    <% @formats.each do |data| %>
-    <article>
-      <header>
-        <h2><a href="<%= "#{@search_url}&s[format]=#{data['id']}" %>">
-          <span class="name"><%= data["id"] %></span>
-          <span class="count">(<%= data["count"] %>)</span></a></h2>
-      </header>
-    </article>
-    <% end %>
-  </div>
+  <%= render file: "opendata/agents/nodes/dataset/formats" %>
+  <% if @formats.popped? %>
+  <nav><%= link_to :more, "#{@node_url}formats/", class: "more" %></nav>
+  <% end %>
 </article>
 
 <article class="licenses nodes">
   <header><h1>ライセンス</h1></header>
-  <div>
-    <% @licenses.each do |data| %>
-    <article>
-      <header>
-        <h2><a href="<%= "#{@search_url}&s[license_id]=#{data['id']}" %>">
-          <span class="name"><%= data["name"] %></span>
-          <span class="count">(<%= data["count"] %>)</span></a></h2>
-      </header>
-    </article>
-    <% end %>
-  </div>
+  <%= render file: "opendata/agents/nodes/dataset/licenses" %>
+  <% if @licenses.popped? %>
+  <nav><%= link_to :more, "#{@node_url}licenses/", class: "more" %></nav>
+  <% end %>
 </article>
