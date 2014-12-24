@@ -200,6 +200,7 @@ ja:
     messages:
       check_html: 本文のHTMLチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
+      invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
       set_th_scope: 表のヘッダーにスコープ属性が設定されていません。
       link_check_success: 成功
@@ -217,6 +218,9 @@ ja:
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
+        invalid_img_scheme:
+          - 画像のSRC属性にデータ形式のURIスキームが存在します。
+          - 他のURIスキームを使用してください。
         set_table_caption:
           - 表に見出し(CAPTION)が設定されていません
           - TABLEタグの中にCAPTIONタグを追記してください。

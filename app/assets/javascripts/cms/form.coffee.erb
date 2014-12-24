@@ -14,6 +14,7 @@ $(window).load ->
 class @Syntax_Checker
   @message = {
     notSetImgAlt       : "<%= I18n.t('errors.messages.set_img_alt') %>"
+    invalidImgScheme   : "<%= I18n.t('errors.messages.invalid_img_scheme') %>"
     notSetTableCaption : "<%= I18n.t('errors.messages.set_table_caption') %>"
     notSetThScope      : "<%= I18n.t('errors.messages.set_th_scope') %>"
     invalidOrderOfH    : "<%= I18n.t('errors.messages.invalid_order_of_h') %>"
@@ -28,6 +29,7 @@ class @Syntax_Checker
 
   @detail = {
     notSetImgAlt       : <%= I18n.t('errors.messages.syntax_check_detail.set_img_alt').to_json %>
+    invalidImgScheme   : <%= I18n.t('errors.messages.syntax_check_detail.invalid_img_scheme').to_json %>
     notSetTableCaption : <%= I18n.t('errors.messages.syntax_check_detail.set_table_caption').to_json %>
     notSetThScope      : <%= I18n.t('errors.messages.syntax_check_detail.set_th_scope').to_json %>
     invalidOrderOfH    : <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>
@@ -63,16 +65,17 @@ class @Syntax_Checker
     Syntax_Checker.reset()
     html = Syntax_Checker.getEditorHtml()
 
-    Syntax_Checker.checkTable html
+    Syntax_Checker.checkTable              html
     Syntax_Checker.checkMultibyteCharacter html
     Syntax_Checker.checkDependentCharacter html
-    Syntax_Checker.checkDateFormat html
-    Syntax_Checker.checkAdjacentA html
-    Syntax_Checker.checkOrderOfH html
-    Syntax_Checker.checkImgAlt html
-    Syntax_Checker.checkInterwordSpace html
-    Syntax_Checker.checkLinkText html
-    Syntax_Checker.checkEmbeddedMedia html
+    Syntax_Checker.checkDateFormat         html
+    Syntax_Checker.checkAdjacentA          html
+    Syntax_Checker.checkOrderOfH           html
+    Syntax_Checker.checkImgAlt             html
+    Syntax_Checker.checkImgDataUriScheme   html
+    Syntax_Checker.checkInterwordSpace     html
+    Syntax_Checker.checkLinkText           html
+    Syntax_Checker.checkEmbeddedMedia      html
 
     $('.mod-cms-body div#errorSyntaxChecker').remove()
 
@@ -171,6 +174,18 @@ class @Syntax_Checker
           code: Syntax_Checker.outerHtmlSummary(this)
           msg:  Syntax_Checker.message["notSetImgAlt"]
           detail: Syntax_Checker.detail["notSetImgAlt"]
+          ele: this
+        }]
+        Syntax_Checker.pushError(errors)
+
+  @checkImgDataUriScheme: (html)->
+    $(html).find('img[src]').each ->
+      src = $(this).attr('src')
+      if /^data:.*?,.*?$/.test(src)
+        errors = [{
+          code: Syntax_Checker.outerHtmlSummary(this)
+          msg:  Syntax_Checker.message["invalidImgScheme"]
+          detail: Syntax_Checker.detail["invalidImgScheme"]
           ele: this
         }]
         Syntax_Checker.pushError(errors)
