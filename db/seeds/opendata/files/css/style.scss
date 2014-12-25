@@ -493,8 +493,19 @@ textarea {
     margin-bottom: 12px;
     list-style: none;
     li {
+      position: relative;
       padding-left: 15px;
-      background: url(../img/ic-info-list.png) no-repeat left center;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 7px;
+        left: 2px;
+        display: block;
+        width: 6px;
+        height: 6px;
+        @include border-radius(3px);
+        background: #3386bb;
+      }
     }
   }
   ol {
