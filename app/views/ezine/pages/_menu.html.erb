@@ -5,7 +5,7 @@
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete/ %>
+  <% elsif params[:action] =~ /edit|update|delete/ || (params[:action] =~ /show/ && params[:do] =~ /deliver_test|deliver/) %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :back_to_show, action: :show, id: @item %>
     <% end %>
@@ -21,10 +21,10 @@
       <%= link_to t("ezine.preview_text"), cms_preview_path(path: @item.filename), target: "_blank" %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.deliver_test"), action: :edit, id: @item %>
+      <%= link_to t("ezine.deliver_test"), action: :delivery_test_confirmation, id: @item %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.deliver"), action: :edit, id: @item %>
+      <%= link_to t("ezine.deliver"), action: :delivery_confirmation, id: @item %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t("ezine.sent_log"), action: :edit, id: @item %>

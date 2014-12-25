@@ -13,6 +13,7 @@ ja:
       confirm_entry: 配信登録
       confirm_update: 変更
       confirm_remove: 配信停止
+      deliver: 送信
 
     preview_html: HTML版プレビュー
     preview_text: テキスト版プレビュー

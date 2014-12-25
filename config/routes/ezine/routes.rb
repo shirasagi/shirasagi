@@ -8,7 +8,12 @@ SS::Application.routes.draw do
 
   content "ezine" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: :deletion
+    resources :pages, concerns: :deletion do
+      get :delivery_confirmation, on: :member
+      get :delivery_test_confirmation, on: :member
+      post :delivery, on: :member
+      post :delivery_test, on: :member
+    end
     resources :members, concerns: :deletion
     resources :test_members, concerns: :deletion
     resources :entries, concerns: :deletion
