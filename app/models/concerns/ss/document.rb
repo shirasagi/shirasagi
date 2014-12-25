@@ -73,12 +73,6 @@ module SS::Document
       end
     end
 
-    def use_id_field(name)
-      aliased_fields.delete(name.to_s)
-      define_method(name) { @attributes[name.to_s] }
-      define_method("#{name}=") {|val| @attributes[name.to_s] = val }
-    end
-
     def embeds_ids(name, opts = {})
       store = opts[:store_as] || "#{name.to_s.singularize}_ids"
       field store, type: SS::Extensions::ObjectIds, default: []
