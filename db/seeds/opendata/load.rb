@@ -57,7 +57,6 @@ end
 save_node filename: "css", name: "CSS", route: "uploader/file"
 save_node filename: "js", name: "Javascript", route: "uploader/file"
 save_node filename: "img", name: "画像", route: "uploader/file"
-save_node filename: "termsofuse", name: "利用規約", route: "uploader/file"
 save_node filename: "ads", name: "広告", route: "ads/banner"
 
 save_node filename: "info", name: "お知らせ", route: "article/page", shortcut: "show",
