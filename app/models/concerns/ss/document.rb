@@ -63,14 +63,14 @@ module SS::Document
       h.join("\n").html_safe
     end
 
-    def seqid(name = :id, opts = {})
+    def seqid(name = :id)
       sequence_field name
 
       if name == :id
         replace_field "_id", Integer
-        use_id_field if opts[:field] == true
+      else
+        field name, type: Integer
       end
-      field name, type: Integer
     end
 
     def use_id_field(name)
