@@ -69,6 +69,12 @@ SS::Application.routes.draw do
     get "api/package_show" => "public#package_show", cell: "nodes/api"
     get "api/tag_show" => "public#tag_show", cell: "nodes/api"
     get "api/group_show" => "public#group_show", cell: "nodes/api"
+    get "api/1/package_list" => "public#package_list", cell: "nodes/api"
+    get "api/1/group_list" => "public#group_list", cell: "nodes/api"
+    get "api/1/tag_list" => "public#tag_list", cell: "nodes/api"
+    get "api/1/package_show" => "public#package_show", cell: "nodes/api"
+    get "api/1/tag_show" => "public#tag_show", cell: "nodes/api"
+    get "api/1/group_show" => "public#group_show", cell: "nodes/api"
 
     get "member/:member" => "public#index", cell: "nodes/member"
     get "member/:member/datasets/(:filename.:format)" => "public#datasets", cell: "nodes/member"
