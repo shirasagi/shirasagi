@@ -633,6 +633,12 @@ textarea {
     }
   }
 }
+.event-date a, #event-list a {
+  color: #005c7b;
+  &:hover {
+    color: $link;
+  }
+}
 .s-portal {
   dl.see {
     padding: 15px;
