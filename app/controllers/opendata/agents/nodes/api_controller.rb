@@ -148,7 +148,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
         group = @groups[0]
         @datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group[:id]
         group[:package_count] = @datasets.count
-        group[:packages] = @datasets if include_datasets
+        group[:packages] = @datasets if include_datasets.nil? || include_datasets =~ /^true$/i
         res = {help: help, success: true, result: group}
       else
         res = {help: help, success: false}
