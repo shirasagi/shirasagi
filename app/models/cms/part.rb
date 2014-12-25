@@ -1,7 +1,5 @@
 class Cms::Part
   extend ActiveSupport::Autoload
-  autoload :Model
-
   include Cms::Part::Model
 
   index({ site_id: 1, filename: 1 }, { unique: true })

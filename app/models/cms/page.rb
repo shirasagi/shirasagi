@@ -1,8 +1,5 @@
 class Cms::Page
   extend ActiveSupport::Autoload
-  autoload :Feature
-  autoload :Model
-
   include Model
   include Cms::Addon::Meta
   include Cms::Addon::Body
