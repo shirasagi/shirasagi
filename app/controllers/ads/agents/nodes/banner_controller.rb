@@ -3,7 +3,7 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
 
   public
     def index
-      @items = Ads::Banner.site(@cur_site).node(@cur_node).public(@cur_date).order_by(order: 1)
+      render nothing: true
     end
 
     def count
