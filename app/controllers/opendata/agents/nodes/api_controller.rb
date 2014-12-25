@@ -91,6 +91,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       help = SS.config.opendata.api["package_show_help"]
 
       id = params[:id]
+      id = URI.decode(id) if !id.nil?
       #use_default_schema = params[:use_default_schema]
 
       error = Opendata::Api.package_show_param_check?(id)
