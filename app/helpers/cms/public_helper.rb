@@ -23,7 +23,7 @@ module Cms::PublicHelper
         path += "-" + node
       end
 
-      nodes.present? ? nodes.join(" ") : ""
+      nodes.join(" ")
     end
 
   private

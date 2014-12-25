@@ -44,7 +44,11 @@ module Cms::PublicFilter::Layout
       @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
       body = @cur_layout.body.to_s
-      body = body.sub("<body>", %(<body id="#{body_id(request.path)}" class="#{body_class(request.path)}">))
+      body = body.sub(/<body.*?>/) do |m|
+        m = m.sub(/ class="/, ' class="' + body_class(request.path) + ' ') if m =~ / class="/
+        m = m.sub(/<body/, '<body class="' + body_class(request.path) + '"') unless m =~ / class="/
+        m.sub(/<body/, '<body id="' + body_id(request.path) + '"') unless m =~ / id="/
+      end
 
       html = body.gsub(/<\/ part ".+?" \/>/) do |m|
         path = m.sub(/<\/ part "(.+)?" \/>/, '\\1') + ".part.html"
