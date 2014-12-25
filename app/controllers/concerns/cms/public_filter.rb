@@ -9,7 +9,7 @@ module Cms::PublicFilter
     rescue_from StandardError, with: :rescue_action
     before_action :set_site
     before_action :set_request_path
-    before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
+    #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
     before_action :deny_path
     before_action :parse_path
     before_action :compile_scss
@@ -102,7 +102,7 @@ module Cms::PublicFilter
     end
 
     def x_sendfile(file = @file)
-      return unless Fs.exists?(file)
+      return unless Fs.file?(file)
       response.headers["Expires"] = 1.days.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
       response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
