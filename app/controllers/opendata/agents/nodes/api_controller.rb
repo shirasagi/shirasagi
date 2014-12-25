@@ -69,6 +69,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       help = SS.config.opendata.api["tag_list_help"]
 
       query = params[:query]
+      query = URI.decode(query) if !query.nil?
       #vocabulary_id = params[:vocabulary_id]
       #all_fields = params[:all_fields] || false
 
@@ -113,6 +114,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
     def tag_show
       help = SS.config.opendata.api["tag_show_help"]
       id = params[:id]
+      id = URI.decode(id) if !id.nil?
 
       if id.blank?
         error = {__type: "Validation Error", id: "Missing value"}
@@ -134,6 +136,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
     def group_show
       help = SS.config.opendata.api["group_show_help"]
       id = params[:id]
+      id = URI.decode(id) if !id.nil?
       include_datasets = params[:include_datasets]
 
       error = Opendata::Api.group_show_param_check?(id)
