@@ -9,21 +9,21 @@ module Cms::PublicHelper
     end
 
     def body_id(path)
-      path = (path =~ /\.html$/) ? path : path.sub(/\/$/, "") + "/index.html"
-      "page-" + path.gsub(/\//, "-")
+      path = (path =~ /\.html$/) ? path.to_s : path.to_s.sub(/\/$/, "") + "/index.html"
+      "body-" + path.gsub(/\//, "-").gsub(/[^\w-]+/, "-")
     end
 
     def body_class(path)
-      path = (path =~ /\.html$/) ? path : path.sub(/\/$/, "") + "/index.html"
+      path = (path =~ /\.html$/) ? path.to_s : path.to_s.sub(/\/$/, "") + "/index.html"
       nodes = path.sub(/^\//, "").split(/\//)
       nodes.pop
 
-      path = "node-"
+      path = "body-"
       nodes = nodes.map do |node|
         path += "-" + node
       end
 
-      nodes.present? ? nodes.join(" ") : "rootnode"
+      nodes.present? ? nodes.join(" ") : ""
     end
 
   private
