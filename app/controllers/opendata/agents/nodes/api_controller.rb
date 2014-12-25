@@ -48,17 +48,25 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
       end
 
       @groups = Opendata::DatasetGroup.site(@cur_site).public
-      @groups = @groups.order_by(name: 1) if sort == "name"
 
       group_list = []
+      @groups.each do |group|
+        datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group.id
+        group_list << {id: group.id, state: group.state, name: group.name, order: group.order, packages: datasets.count}
+      end
+
+      if sort =~ /^name$/i
+        group_list.sort!{|a, b| a[:name] <=> b[:name]}
+      elsif sort =~ /^packages$/i
+        group_list.sort!{|a, b| (b[:packages] == a[:packages]) ? a[:name] <=> b[:name] : b[:packages] <=> a[:packages]}
+      end
+
       if all_fields.nil?
-        @groups.each do |group|
-          group_list << group[:name]
+        group_name_list = []
+        group_list.each do |group|
+          group_name_list << group[:name]
         end
-      else
-        @groups.each do |group|
-          group_list << {id: group.id, state: group.state, name: group.name, order: group.order}
-        end
+        group_list = group_name_list
       end
 
       res = {help: help, success: true, result: group_list}
