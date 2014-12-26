@@ -19,5 +19,10 @@ module Faq::Node
     include Category::Addon::Setting
 
     default_scope ->{ where(route: "faq/search") }
+
+    public
+      def condition_hash
+        conditions.present? ? super : {}
+      end
   end
 end

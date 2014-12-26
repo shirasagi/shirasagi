@@ -12,7 +12,7 @@ module Fs::File
     end
 
     def file?(path)
-      FileTest.file path
+      FileTest.file? path
     end
 
     def directory?(path)

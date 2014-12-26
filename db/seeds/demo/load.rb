@@ -9,6 +9,24 @@ Dir.glob "files/**/*.*" do |file|
   Fs.binwrite "#{@site.path}/#{name}", File.binread(file)
 end
 
+def save_ss_files(path, data)
+  puts path
+  cond = { filename: data[:filename], model: data[:model] }
+
+  file = Fs::UploadedFile.new("ss_file")
+  file.binmode
+  file.write(File.binread(path))
+  file.rewind
+  file.original_filename = data[:filename]
+  file.content_type = Fs.content_type(path)
+
+  item = SS::File.find_or_create_by(cond)
+  item.in_file = file
+  item.update
+
+  item
+end
+
 ## -------------------------------------
 puts "# layouts"
 
@@ -55,10 +73,10 @@ def save_node(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  upper_html = File.read("nodes/" + data[:filename] + ".upper_html") rescue nil
-  loop_html  = File.read("nodes/" + data[:filename] + ".loop_html") rescue nil
-  lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
-  summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
+  upper_html ||= File.read("nodes/" + data[:filename] + ".upper_html") rescue nil
+  loop_html  ||= File.read("nodes/" + data[:filename] + ".loop_html") rescue nil
+  lower_html ||= File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
+  summary_html ||= File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
   item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.upper_html = upper_html if upper_html
@@ -251,6 +269,9 @@ save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: 
 save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", st_category_ids: [categories["faq"].id]
 save_node route: "faq/search", filename: "faq/faq-search", name: "よくある質問検索", st_category_ids: [categories["faq"].id]
 
+## ads
+save_node route: "ads/banner", filename: "add", name: "広告バナー", shortcut: "show"
+
 ## urgency
 save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災害レイアウト",
   urgency_default_layout_id: layouts["top"].id, shortcut: "show"
@@ -393,6 +414,8 @@ Cms::Node.where(site_id: @site._id, filename: /^inquiry$/).
   update_all(layout_id: layouts["one"].id)
 Cms::Node.where(site_id: @site._id, filename: /^faq$/).
   update_all(layout_id: layouts["faq-top"].id)
+Cms::Node.where(site_id: @site._id, filename: /^add$/).
+  update_all(layout_id: layouts["one"].id)
 Cms::Node.where(site_id: @site._id, filename: /faq\//).
   update_all(layout_id: layouts["faq"].id)
 Cms::Node.where(site_id: @site._id, route: /facility\//).
@@ -406,9 +429,9 @@ def save_part(data)
   cond = { site_id: @site._id, filename: data[:filename] }
 
   html = File.read("parts/" + data[:filename]) rescue nil
-  upper_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".upper_html")) rescue nil
-  loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
-  lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
+  upper_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".upper_html")) rescue nil
+  loop_html  ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
+  lower_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
   item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.html = html if html
@@ -424,7 +447,6 @@ def save_part(data)
 end
 
 save_part route: "cms/free", filename: "about.part.html", name: "シラサギ市について"
-save_part route: "cms/free", filename: "add.part.html", name: "広告", mobile_view: "hide"
 save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
 save_part route: "cms/free", filename: "guide.part.html", name: "くらしのガイド"
 save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー"
@@ -466,6 +488,8 @@ save_part route: "article/page", filename: "urgency/recent.part.html", name: "�
 save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
 save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
 save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
+save_part route: "ads/banner", filename: "add/add.part.html", name: "広告バナー", mobile_view: "hide"
+save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
 
 ## -------------------------------------
 puts "# pages"
@@ -474,8 +498,8 @@ def save_page(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  html = File.read("pages/" + data[:filename]) rescue nil
-  summary_html = File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
+  html ||= File.read("pages/" + data[:filename]) rescue nil
+  summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
   item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
   item.html = html if html
@@ -497,9 +521,15 @@ save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組�
 
 ## -------------------------------------
 puts "# articles"
+contact_group = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
+contact_group_id = contact_group.id rescue nil
+contact_email = contact_group_id ? "kikakuseisaku@example.jp" : nil
+contact_tel = contact_group_id ? "000-000-0000" : nil
+contact_fax = contact_group_id ? "000-000-0000" : nil
 
 save_page route: "article/page", filename: "docs/1.html", name: "インフルエンザによる学級閉鎖状況",
-  layout_id: layouts["pages"].id, category_ids: [categories["attention"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["attention"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/2.html", name: "コンビニ納付のお知らせ",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["attention"].id,
@@ -509,13 +539,17 @@ save_page route: "article/page", filename: "docs/2.html", name: "コンビニ納
                   categories["shisei/soshiki/kikaku/seisaku"].id,
                   categories["shisei/soshiki/soumu"].id,
                   categories["shisei/soshiki/soumu/nouzei"].id
-                ]
+                ],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/3.html", name: "平成26年第1回シラサギ市議会定例会を開催します",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/4.html", name: "放射性物質・震災関連情報",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/5.html", name: "市内の微小粒子状物質（PM2.5）の測定データ（速報値）を公開しています。",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/7.html", name: "還付金詐欺と思われる不審な電話にご注意ください",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id,
@@ -523,7 +557,8 @@ save_page route: "article/page", filename: "docs/7.html", name: "還付金詐欺
                   categories["shisei/soshiki/kikaku"].id,
                   categories["shisei/soshiki/kikaku/koho"].id,
                   categories["shisei/soshiki/kikaku/seisaku"].id,
-                ]
+                ],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/8.html", name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id,
@@ -531,9 +566,11 @@ save_page route: "article/page", filename: "docs/8.html", name: "平成26年度�
                   categories["shisei/soshiki/kikaku"].id,
                   categories["shisei/soshiki/kikaku/koho"].id,
                   categories["shisei/soshiki/kikaku/seisaku"].id,
-                ]
+                ],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/9.html", name: "冬の感染症に備えましょう",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/11.html", name: "広報SHIRASAGI3月号を掲載",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id,
@@ -541,25 +578,35 @@ save_page route: "article/page", filename: "docs/11.html", name: "広報SHIRASAG
                   categories["shisei/soshiki"].id,
                   categories["shisei/soshiki/kikaku"].id,
                   categories["shisei/soshiki/kikaku/koho"].id,
-                ]
+                ],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/12.html", name: "インフルエンザ流行警報がでています",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/14.html", name: "転出届",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/15.html", name: "転入届",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/16.html", name: "世帯または世帯主を変更するとき",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/17.html", name: "証明書発行窓口",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/18.html", name: "住民票記載事項証明書様式",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/19.html", name: "住所変更の証明書について",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/20.html", name: "住民票コードとは",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/21.html", name: "住民票コードの変更",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/22.html", name: "自動交付機・コンビニ交付サービスについて",
   layout_id: layouts["pages"].id,
   category_ids: [ categories["oshirase"].id,
@@ -568,13 +615,17 @@ save_page route: "article/page", filename: "docs/22.html", name: "自動交付�
                   categories["shisei/soshiki/kikaku"].id,
                   categories["shisei/soshiki/kikaku/koho"].id,
                   categories["shisei/soshiki/kikaku/seisaku"].id,
-                ]
+                ],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届",
-  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id]
+  layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "oshirase/kurashi/23.html", name: "犬・猫を譲り受けたい方",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "oshirase/kurashi/24.html", name: "平成26年度住宅補助金の募集について掲載しました。",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "oshirase/kurashi/25.html", name: "休日臨時窓口を開設します。",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id,
@@ -583,20 +634,27 @@ save_page route: "article/page", filename: "oshirase/kurashi/25.html", name: "�
                   categories["shisei/soshiki/kikaku"].id,
                   categories["shisei/soshiki/kikaku/koho"].id,
                   categories["shisei/soshiki/kikaku/seisaku"].id,
-                ]
+                ],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "oshirase/kurashi/26.html", name: "身体障害者手帳の認定基準が変更",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "oshirase/kurashi/27.html", name: "平成26年4月より国民健康保険税率が改正されます",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id,
                   categories["oshirase/kurashi"].id,
                   categories["shisei/soshiki/soumu"].id,
                   categories["shisei/soshiki/soumu/nouzei"].id
-                ]
+                ],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "urgency/28.html", name: "黒鷺県沖で発生した地震による当市への影響について。",
-  layout_id: layouts["oshirase"].id, category_ids: [categories["urgency"].id]
+  layout_id: layouts["oshirase"].id, category_ids: [categories["urgency"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "urgency/29.html", name: "黒鷺県沖で発生した地震による津波被害について。",
-  layout_id: layouts["more"].id, category_ids: [categories["urgency"].id]
+  layout_id: layouts["more"].id, category_ids: [categories["urgency"].id],
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
+
+file = save_ss_files "ss_files/article/pdf_file.pdf", filename: "pdf_file.pdf", model: "article/page"
 save_page route: "article/page", filename: "docs/30.html", name: "ふれあいフェスティバル",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id,
@@ -604,7 +662,10 @@ save_page route: "article/page", filename: "docs/30.html", name: "ふれあい�
                   categories["shisei/soshiki"].id,
                   categories["shisei/soshiki/kikaku"].id,
                   categories["shisei/soshiki/kikaku/koho"].id,
-                ]
+                ],
+  file_ids: [file.id],
+  html: '<p><a class="icon-pdf" href="' + file.url + '">サンプルファイル (PDF 783KB)</a></p>',
+  contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 dates = (Date.today..(Date.today + 20)).map { |d| d.mongoize }
 save_page route: "event/page", filename: "calendar/31.html", name: "住民相談会を開催します。",
   layout_id: layouts["event"].id, category_ids: [categories["calendar/kohen"].id], event_dates: dates,
@@ -618,25 +679,24 @@ save_page route: "faq/page", filename: "faq/docs/32.html", name: "休日や夜�
   layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id], question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
 
 ## -------------------------------------
+puts "# ads"
+
+banner1 = save_ss_files "ss_files/ads/dummy_banner_1.gif", filename: "dummy_banner_1.gif", model: "ads/banner"
+banner2 = save_ss_files "ss_files/ads/dummy_banner_2.gif", filename: "dummy_banner_2.gif", model: "ads/banner"
+banner3 = save_ss_files "ss_files/ads/dummy_banner_3.gif", filename: "dummy_banner_3.gif", model: "ads/banner"
+banner4 = save_ss_files "ss_files/ads/dummy_banner_4.gif", filename: "dummy_banner_4.gif", model: "ads/banner"
+banner5 = save_ss_files "ss_files/ads/dummy_banner_5.gif", filename: "dummy_banner_5.gif", model: "ads/banner"
+banner6 = save_ss_files "ss_files/ads/dummy_banner_6.gif", filename: "dummy_banner_6.gif", model: "ads/banner"
+
+save_page route: "ads/banner", filename: "add/600.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner1.id
+save_page route: "ads/banner", filename: "add/601.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner2.id
+save_page route: "ads/banner", filename: "add/602.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner3.id
+save_page route: "ads/banner", filename: "add/603.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner4.id
+save_page route: "ads/banner", filename: "add/604.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner5.id
+save_page route: "ads/banner", filename: "add/605.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner6.id
+
+## -------------------------------------
 puts "# facility"
-
-def save_ss_files(path, data)
-  puts path
-  cond = { filename: data[:filename], model: data[:model] }
-
-  file = Fs::UploadedFile.new("ss_file")
-  file.binmode
-  file.write(File.binread(path))
-  file.rewind
-  file.original_filename = data[:filename]
-  file.content_type = Fs.content_type(path)
-
-  item = SS::File.find_or_create_by(cond)
-  item.in_file = file
-  item.update
-
-  item
-end
 
 Dir.glob "ss_files/facility/*.*" do |file|
   save_ss_files file, filename: File.basename(file), model: "facility/temp_file"
