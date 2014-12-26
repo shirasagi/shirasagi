@@ -10,12 +10,37 @@ production: &production
 
   # Web API
   api:
-    package_list_help: "Help: package_list"
-    group_list_help:  "Help: group_list"
-    tag_list_help: "Help: tag_list"
-    package_show_help: "Help: package_show"
-    tag_show_help: "Help: tag_show"
-    group_show_help:   "Help: group_show"
+    package_list_help: |
+      [api] package_list - 公開データセット名一覧を取得する。
+      [param1] limit - 出力するデータセット名の最大件数を指定する。
+                       0を指定した場合は件数を制限しない。
+      [param2] offset - 出力を開始するデータセットの配列インデックスを指定する。
+                        limitが設定された場合のみ、有効とする。
+    group_list_help: |
+      [api] group_list - データセットグループ名一覧を取得する。
+      [param1] sort - 戻り値のソート対象の項目。
+                      name（デフォルト）またはpackagesを指定する。
+      [param2] all_fields - 全項目を出力するかどうかを指定する。
+                            True：表示、False：非表示（デフォルト）。
+      [param3] groups - 未実装。
+    tag_list_help: |
+      [api] tag_list - タグ名一覧を取得する。
+      [param1] query - 指定した文字列を含むタグ名を出力対象とする。
+      [param2] all_fields - 未実装。
+      [param3] vocabulary_id - 未実装。
+    package_show_help: |
+      [api] package_show - 公開データセット情報を取得する。
+      [param1] id - 指定した文字列を含むデータセット名またはデータセットIDを出力する。（必須）
+      [param2] use_default_schema - 未実装。
+    tag_show_help: |
+      [api] tag_show - 指定したタグ名を含む公開データセット情報の一覧を取得する。
+      [param1] id - 指定した文字列と一致するタグを出力対象とする。（必須）
+    group_show_help: |
+      [api] group_show - 公開データセットグループ情報を取得する。
+      [param1] id - 指定した文字列と一致するデータセットグループ名またはデータセットグループIDを出力対象とする。（必須）
+      [param2] include_datasets - データセットグループに属するデータセット情報を含めるかどうかを指定する。
+                                  true：含む（デフォルト）。
+                                  false：含まない。（packagesの値は空の配列となる。）
 
 test:
   <<: *production
