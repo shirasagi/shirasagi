@@ -365,24 +365,20 @@ textarea {
 // -----------------------------------------------------------------------------
 // add
 #add {
-  width: 249px;
   background: #eeeeee;
+  text-align: center;
   h2 {
     padding: 10px 15px;
+    text-align: left;
     font-size: $px15;
   }
-  .addinfo {
-    float: right;
-    margin: 0 25px 5px 0;
+  span {
+    display: block;
+    margin-bottom: 14px;
   }
-  .banners {
-    clear: both;
-    padding: 10px 0;
-    text-align: center;
-    span {
-      display: block;
-      margin-bottom: 14px;
-    }
+  .addinfo {
+    display: inline-block;
+    margin-bottom: 14px;
   }
 }
 
