@@ -1,6 +1,7 @@
 module Cms::PublicFilter::Layout
   extend ActiveSupport::Concern
   include Cms::PublicFilter::Agent
+  include Cms::PublicHelper
 
   private
     def filters
@@ -42,7 +43,15 @@ module Cms::PublicFilter::Layout
       @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
       @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
 
-      html = @cur_layout.body.to_s.gsub(/<\/ part ".+?" \/>/) do |m|
+      body = @cur_layout.body.to_s
+      body = body.sub(/<body.*?>/) do |m|
+        m = m.sub(/ class="/, %( class="#{body_class(request.path)} )     ) if m =~ / class="/
+        m = m.sub(/<body/,    %(<body class="#{body_class(request.path)}")) unless m =~ / class="/
+        m = m.sub(/<body/,    %(<body id="#{body_id(request.path)}")      ) unless m =~ / id="/
+        m
+      end
+
+      html = body.gsub(/<\/ part ".+?" \/>/) do |m|
         path = m.sub(/<\/ part "(.+)?" \/>/, '\\1') + ".part.html"
         path = path[0] == "/" ? path.sub(/^\//, "") : @cur_layout.dirname(path)
         render_layout_part(path)

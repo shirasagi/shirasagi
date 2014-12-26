@@ -8,6 +8,24 @@ module Cms::PublicHelper
       end.html_safe
     end
 
+    def body_id(path)
+      path = (path =~ /\.html$/) ? path.to_s : path.to_s.sub(/\/$/, "") + "/index.html"
+      "body-" + path.gsub(/\//, "-").gsub(/[^\w-]+/, "-")
+    end
+
+    def body_class(path)
+      path = (path =~ /\.html$/) ? path.to_s : path.to_s.sub(/\/$/, "") + "/index.html"
+      nodes = path.sub(/^\//, "").split(/\//)
+      nodes.pop
+
+      path = "body-"
+      nodes = nodes.map do |node|
+        path += "-" + node
+      end
+
+      nodes.join(" ")
+    end
+
   private
     def convert_static_url(url)
       path, query = url.split("?")
