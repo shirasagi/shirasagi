@@ -807,15 +807,26 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
       }
       .u-menu {
         margin-bottom: 15px;
-        a.group-search {
-          margin-right: 30px;
-          padding: 4px 10px 3px 32px;
+        a.menu-link {
+          display: inline-block;
+          margin-right: 10px;
+          padding: 4px 10px 4px 32px;
           @include border-radius(5px);
-          background: url(../img/ic-groupsearch.png) no-repeat 5px center;
           @include fill-gray;
+          background-repeat: no-repeat;
+          background-position: 5px center;
           color: $white;
           font-size: $px15;
           text-decoration: none;
+        }
+        a.dataset-search {
+          background-image: url(../img/ic-search.png);
+        }
+        a.dataset-new {
+          background-image: url(../img/ic-add.png);
+        }
+        a.group-search {
+          background-image: url(../img/ic-groupsearch.png);
         }
         a.inquiry {
           padding: 5px 0 5px 20px;
@@ -827,34 +838,35 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
 }
 
 #dataset-title .menu .l-menu {
-    width: 100%;
-    @include box-sizing(border-box);
-    text-align: left;
-    form {
-      float: none;
-      position: relative;
-      width: 285px;
-      @include border-radius(5px);
-      border: 1px solid #ddcfcc;
-      #search-box {
-        width: 85%;
-        margin: 2px 10px 2px 2px;
-        padding: 5px;
-        @include border-radius(0px);
-        border: none;
-        outline-color: $white;
-        @include box-shadow(none);
-      }
-      img {
-        position: absolute;
-        top: 2px;
-        right: 0;
-        margin: 2px;
-        padding: 2px 5px;
-        cursor: pointer
-      }
+  overflow: hidden;
+  width: 100%;
+  @include box-sizing(border-box);
+  text-align: left;
+  form {
+    float: right;
+    position: relative;
+    width: 285px;
+    @include border-radius(5px);
+    border: 1px solid #ddcfcc;
+    #search-box {
+      width: 85%;
+      margin: 2px 10px 2px 2px;
+      padding: 5px;
+      @include border-radius(0px);
+      border: none;
+      outline-color: $white;
+      @include box-shadow(none);
+    }
+    img {
+      position: absolute;
+      top: 2px;
+      right: 0;
+      margin: 2px;
+      padding: 2px 5px;
+      cursor: pointer
     }
   }
+}
 
 #gnav {
   min-width: 1100px;
