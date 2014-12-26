@@ -1560,13 +1560,10 @@ nav.cms-sns_share {
 .category-form {
   padding: 10px;
   border: 1px solid #ddcfcc;
-  .parent {
-    font-weight: bold;
-    .child {
-      padding: 5px 0 5px 30px;
-      border-top: 1px solid #ddcfcc;
-      font-weight: normal;
-    }
+  .child {
+    padding: 5px 0;
+    border-top: 1px solid #ddcfcc;
+    font-weight: normal;
   }
 }
 
