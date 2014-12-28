@@ -30,8 +30,8 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
         { name: "注目順", url: "#{@search_url}&sort=attention", pages: @download_items, rss: "#{@rss_url}&sort=attention" }
       ]
 
-      max = 5
-      @areas    = aggregate_areas(max)
+      max = 50
+      @areas    = aggregate_areas
       @tags     = aggregate_tags(max)
       @formats  = aggregate_formats(max)
       @licenses = aggregate_licenses(max)

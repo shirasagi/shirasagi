@@ -40,9 +40,6 @@ $ ->
 <article class="areas nodes">
   <header><h1>地域</h1></header>
   <%= render file: "opendata/agents/nodes/dataset/areas" %>
-  <% if @areas.popped? %>
-  <nav><%= link_to :more, "#{@node_url}areas/", class: "more" %></nav>
-  <% end %>
 </article>
 
 <article class="tags nodes">

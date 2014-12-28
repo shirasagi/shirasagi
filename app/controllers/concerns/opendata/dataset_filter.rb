@@ -12,14 +12,14 @@ module Opendata::DatasetFilter
       @search_url      = search_datasets_path + "?"
     end
 
-    def aggregate_areas(limit)
-      areas = pages.aggregate_array :area_ids, limit: limit
-      areas.each_with_index do |data, idx|
-        if rel = Opendata::Node::Area.site(@cur_site).public.where(id: data["id"]).first
-          areas[idx] = { "id" => rel.id, "name" => rel.name, "count" => data["count"] }
-        else
-          areas[idx] = nil
-        end
+    def aggregate_areas
+      counts = pages.aggregate_array(:area_ids).map { |c| [c["id"], c["count"]] }.to_h
+
+      areas = []
+      Opendata::Node::Area.site(@cur_site).public.order_by(order: 1).map do |item|
+        next unless counts[item.id]
+        item.count = counts[item.id]
+        areas << item
       end
       areas
     end

@@ -14,6 +14,7 @@ module Opendata::Node
   class Area
     include Cms::Node::Model
 
+    attr_accessor :count
     default_scope ->{ where(route: "opendata/area") }
   end
 
