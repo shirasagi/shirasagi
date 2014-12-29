@@ -1018,17 +1018,15 @@ form.opendata-search_datasets-form, form.opendata-search_groups-form {
   }
 }
 
-article.areas h1, article.tags h1, article.formats h1, article.licenses h1, #od-page-name, #dataset-news h1,
-#dataset-popular h1, #dataset-attention h1 {
+#od-page-name, #dataset-news h1, #dataset-popular h1, #dataset-attention h1 {
   padding: 7px 10px;
   border-bottom: 2px solid #ffcf38;
   background: $data-blue;
-  color:text;
+  color: $text;
   font-size: $px15;
 }
 
-article.areas, article.tags, article.formats, article.licenses, .opendata-search_groups,
-.opendata-dataset_groups {
+.opendata-search_groups, .opendata-dataset_groups {
   display: block;
   float: left;
   width: 803px;
@@ -1047,13 +1045,24 @@ article.areas, article.tags, article.formats, article.licenses, .opendata-search
   }
 }
 
-article.areas, article.tags, article.formats, article.licenses {
-  width: 395px;
-  min-height: 230px;
-}
-
-article.areas, article.formats {
-  margin-right: 13px;
+article.areas, article.tags, article.licenses, article.formats {
+  margin-bottom: $box-margin;
+  h1 {
+    padding: 4px 10px;
+    border-bottom: 2px solid #ffcf38;
+    background: $data-blue;
+    color:$text;
+  }
+  div {
+    padding: 8px 16px 0;
+    article, header, h2 {
+      display: inline;
+    }
+    article {
+      padding-right: 15px;
+      line-height: 2.0;
+    }
+  }
 }
 
 .opendata-dataset_groups {
