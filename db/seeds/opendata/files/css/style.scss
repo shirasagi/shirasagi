@@ -732,22 +732,23 @@ textarea {
 // article header
 .cms-tabs, #portal-dataset, .opendata-tabs, .article-pages, .opendata-search_datasets {
   article header {
-    padding: 8px 0 8px 16px;
+    overflow: hidden;
+    padding: 8px 16px;
     border-bottom: $border-hgry;
   }
   time {
-    display: inline-block;
+    float: left;
     width: 120px;
   }
   h2 {
-    margin-right: 10px;
-    display: inline;
-    padding: 0 5px;
-    a {
-      display: inline-block;
-    }
+    float: left;
+    max-width: 640px;
+    margin-left: 10px;
+    word-wrap: break-word;
   }
   .point {
+    display: inline-block;
+    margin-left: 10px;
     padding: 2px 5px 2px 30px;
     background: url(../img/ic-like-bk.png) no-repeat 5px 2px;
     border: $border-hgry;
