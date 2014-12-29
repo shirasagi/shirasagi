@@ -803,11 +803,13 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
     }
     .menu {
       float: right;
+      max-width: 750px;
       .l-menu {
         margin: 15px 0;
       }
       .u-menu {
         margin-bottom: 15px;
+        text-align: right;
         a.menu-link {
           display: inline-block;
           margin-right: 10px;
@@ -830,6 +832,7 @@ article.areas, article.tags, article.formats, article.licenses, #search_group,  
           background-image: url(../img/ic-groupsearch.png);
         }
         a.inquiry {
+          display: inline-block;
           padding: 5px 0 5px 20px;
           background: url(../img/ic-inquiry.png) no-repeat left center;
         }
