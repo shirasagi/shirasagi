@@ -733,7 +733,7 @@ textarea {
 
 // -----------------------------------------------------------------------------
 // article header
-.cms-tabs, #portal-dataset, .opendata-tabs, .article-pages, .opendata-search_datasets {
+.cms-tabs, #portal-dataset, .opendata-tabs, .article-pages, .opendata-search_datasets, section.datasets .pages {
   article header {
     overflow: hidden;
     padding: 8px 16px;
@@ -766,7 +766,7 @@ textarea {
 // -----------------------------------------------------------------------------
 // more
 .cms-tabs, #portal-dataset, .opendata-tabs, #dataset-news,
-#dataset-popular, #dataset-attention {
+#dataset-popular, #dataset-attention, section.datasets {
   nav {
     padding-top: 14px;
   }
@@ -1651,37 +1651,12 @@ section.datasets {
     font-size: $px15;
   }
   .pages {
-    article header {
-      padding: 8px 0 8px 16px;
-      border-bottom: $border-hgry;
-    }
-    time {
-      display: inline-block;
-      width: 120px;
-    }
     h2 {
-      margin-right: 10px;
-      display: inline;
-      padding: 0 5px;
+      max-width: 917px;
+      padding: 0;
       background: none;
+      color: $text;
       font-size: $px14;
-      a {
-        display: inline-block;
-      }
-    }
-    .point {
-      padding: 2px 5px 2px 30px;
-      background: url(../img/ic-like-bk.png) no-repeat 5px 2px;
-      border: $border-hgry;
-      font-size: $px12;
-    }
-  }
-  nav {
-    padding-top: 14px;
-    a.more {
-      float: right;
-      @include r-arrow;
-      @include border-radius(5px);
     }
   }
 }

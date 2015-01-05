@@ -8,8 +8,7 @@
       <article>
         <header>
           <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-          <h2><%= link_to item.name, item.url %></h2>
-          <span class="point"><%= item.point.to_i %></span>
+          <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
         </header>
       </article>
       <% end %>
