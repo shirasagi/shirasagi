@@ -25,6 +25,7 @@ module SS::File::Model
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ !in_file && !in_files }
+    validate :validate_size
 
     before_save :save_file
     before_destroy :remove_file
@@ -116,5 +117,17 @@ module SS::File::Model
 
     def remove_file
       Fs.rm_rf(path)
+    end
+
+    def validate_size
+      if SS.config.cms.max_filesize.present?
+        if in_file.present?
+          errors.add :base, :too_large_file if in_file.size > SS.config.cms.max_filesize
+        elsif in_files.present?
+          in_files.each do |file|
+            errors.add :base, :too_large_file if file.size > SS.config.cms.max_filesize
+          end
+        end
+      end
     end
 end
