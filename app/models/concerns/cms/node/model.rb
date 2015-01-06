@@ -5,6 +5,7 @@ module Cms::Node::Model
   include Cms::Reference::Layout
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
+  include Cms::Addon::NodeSetting
   include Cms::Addon::Meta
   include Cms::Addon::Release
   include History::Addon::Backup

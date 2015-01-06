@@ -23,6 +23,18 @@ module Cms::Addon
     end
   end
 
+  module NodeSetting
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 10
+
+    included do
+      field :view_route, type: String
+      permit_params :view_route
+    end
+  end
+
   module Meta
     extend ActiveSupport::Concern
     extend SS::Addon
