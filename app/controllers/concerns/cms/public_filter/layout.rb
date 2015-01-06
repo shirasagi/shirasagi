@@ -28,9 +28,12 @@ module Cms::PublicFilter::Layout
       agent = new_agent controller
       agent.controller.params.merge! spec
       resp = agent.render spec[:action]
+      body = resp.body
+      body.gsub!('#{part_name}', ERB::Util.html_escape(@cur_part.name))
+      body.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_part.parent ? @cur_part.parent.name : ""))
 
       @cur_part = nil
-      resp.body
+      body
     end
 
     def render_layout(layout)
@@ -63,6 +66,7 @@ module Cms::PublicFilter::Layout
       end
 
       html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
+      html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
       html.sub!("</ yield />", response.body)
       html
     end
