@@ -28,5 +28,8 @@
     <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.member", cms_members_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"history.log", history_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% unless SS.config.kana.disable %>
+      <%= link_to :"kana.dictionary", kana_dictionaries_path if Kana::Dictionary.allowed?(:edit, @cur_user, site: @cur_site) || Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
+    <% end %>
   </div>
 </nav>
