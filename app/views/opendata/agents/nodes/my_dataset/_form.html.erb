@@ -26,4 +26,7 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 
   <dt><%= @model.t :area_ids %></dt>
   <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
 </dl>
