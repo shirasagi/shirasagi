@@ -36,7 +36,7 @@ module Opendata::MypageFilter
 
     def unset_member(opt = {})
       session[:member] = nil
-      redirect_to "/mypage/login" if opt[:redirect]
+      redirect_to "/" if opt[:redirect]
       @cur_member = nil
     end
 end
