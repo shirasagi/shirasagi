@@ -17,5 +17,25 @@ module SS::Config
       define_singleton_method(name) { data[name] = OpenStruct.new(conf) }
       send(name)
     end
+
+    def env
+      return super if data[:env]
+
+      file  = "#{Rails.root}/config/environment.yml"
+      conf  = YAML.load_file(file)
+      conf  = SS::Config::Environment.default_values.merge(conf)
+
+      define_singleton_method(name) { data[name] = OpenStruct.new(conf) }
+      send(name)
+    end
+  end
+
+  module Environment
+    cattr_reader(:default_values) do
+      {
+        storage: "file",
+        max_filesize: 2097152
+      }
+    end
   end
 end

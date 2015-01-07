@@ -15,9 +15,6 @@ production: &production
     - 36.204824
     - 138.252924
 
-  # Temp File Size Limit
-  max_filesize: 2000000
-
 test:
   <<: *production
 

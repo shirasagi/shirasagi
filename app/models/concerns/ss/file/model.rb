@@ -120,12 +120,12 @@ module SS::File::Model
     end
 
     def validate_size
-      if SS.config.cms.max_filesize.present?
+      if SS.config.env.max_filesize.present?
         if in_file.present?
-          errors.add :base, :too_large_file if in_file.size > SS.config.cms.max_filesize
+          errors.add :base, :too_large_file if in_file.size > SS.config.env.max_filesize
         elsif in_files.present?
           in_files.each do |file|
-            errors.add :base, :too_large_file if file.size > SS.config.cms.max_filesize
+            errors.add :base, :too_large_file if file.size > SS.config.env.max_filesize
           end
         end
       end
