@@ -23,7 +23,7 @@ namespace :opendata do
         next unless resource.file
         puts "  #{resource.filename}"
         begin
-          resource.save_fuseki_rdf
+          resource.save_rdf_store
         rescue => e
           puts "Error: #{e}"
         end
