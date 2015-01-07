@@ -43,7 +43,7 @@ class Cms::PreviewController < ApplicationController
         url = m.match(/.*?="(.*?)"/)[1]
         if url =~ /^\/(assets|assets-dev)\//
           m
-        elsif url =~ /^\//
+        elsif url =~ /^\/[^\/]/
           m.sub(/="/, "=\"#{preview_url}")
         else
           m
