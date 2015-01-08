@@ -134,7 +134,8 @@ ja:
         dataset_ids: データセット
         app_ids: アプリ
         point: 評価
-        text: 内容
+        text: コメント
+        tags: タグ
 
   tooltip:
     opendata/dataset:
