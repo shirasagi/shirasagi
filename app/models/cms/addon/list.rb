@@ -41,29 +41,37 @@ module Cms::Addon::List
         date + new_days > (@cur_date || Time.now)
       end
 
-      def condition_hash
+      def condition_hash(opts = {})
         cond = []
         cids = []
+        cond_url = []
 
-        if self.is_a?(Cms::Part::Model)
-          if parent
-            cond << { filename: /^#{parent.filename}\//, depth: depth }
-            cids << parent.id
-          else
-            cond << { depth: depth }
-          end
+        if opts[:cur_path] && conditions.index('#{request_dir}')
+          cur_dir = opts[:cur_path].sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
+          cond_url = conditions.map {|url| url.sub('#{request_dir}', cur_dir)}
         else
-          cond << { filename: /^#{filename}\//, depth: depth + 1 }
-          cids << id
+          if self.is_a?(Cms::Part::Model)
+            if parent
+              cond << { filename: /^#{parent.filename}\//, depth: depth }
+              cids << parent.id
+            else
+              cond << { depth: depth }
+            end
+          else
+            cond << { filename: /^#{filename}\//, depth: depth + 1 }
+            cids << id
+          end
+          cond_url = conditions
         end
 
-        conditions.each do |url|
+        cond_url.each do |url|
           node = Cms::Node.filename(url).first
           next unless node
           cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
           cids << node.id
         end
         cond << { :category_ids.in => cids } if cids.present?
+        cond << { :id => -1 } if cond.blank?
 
         { '$or' => cond }
       end
