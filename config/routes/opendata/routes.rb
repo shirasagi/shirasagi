@@ -20,14 +20,30 @@ SS::Application.routes.draw do
         get "content" => "resources#content"
       end
     end
+
+    resources :idea_categories, concerns: :deletion
+#    resources :idea_groups, concerns: :deletion do
+#      get "search" => "idea_groups/search#index", on: :collection
+#    end
+#    resources :ideas, concerns: :deletion do
+#      resources :resources, concerns: :deletion do
+#        get "file" => "resources#download"
+#        get "tsv" => "resources#download_tsv"
+#        get "content" => "resources#content"
+#      end
+#    end
+
     resources :search_datasets, concerns: :deletion
     resources :search_dataset_groups, concerns: :deletion
+    resources :search_ideas, concerns: :deletion
+#    resources :search_idea_groups, concerns: :deletion
     resources :sparqls, concerns: :deletion
     resources :apis, concerns: :deletion
     resources :mypages, concerns: :deletion
     resources :my_datasets, concerns: :deletion
-    resources :apps, concerns: :deletion
-    resources :ideas, concerns: :deletion
+    resources :my_ideas, concerns: :deletion
+#    resources :apps, concerns: :deletion
+#    resources :ideas, concerns: :deletion
   end
 
   node "opendata" do
@@ -58,8 +74,28 @@ SS::Application.routes.draw do
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"
+
+    get "idea_category/" => "public#nothing", cell: "nodes/idea_category"
+    get "idea_category/:name/" => "public#index", cell: "nodes/idea_category"
+    get "idea_category/:name/areas" => "public#index_areas", cell: "nodes/idea_category"
+    get "idea_category/:name/tags" => "public#index_tags", cell: "nodes/idea_category"
+    get "idea_category/:name/formats" => "public#index_formats", cell: "nodes/idea_category"
+    get "idea_category/:name/licenses" => "public#index_licenses", cell: "nodes/idea_category"
+
     get "idea/(index.:format)" => "public#index", cell: "nodes/idea"
-    get "idea/:id/(index.:format)" => "public#show", cell: "nodes/idea"
+    get "idea/areas" => "public#index_areas", cell: "nodes/idea"
+    get "idea/tags" => "public#index_tags", cell: "nodes/idea"
+    get "idea/formats" => "public#index_formats", cell: "nodes/idea"
+    get "idea/licenses" => "public#index_licenses", cell: "nodes/idea"
+    get "idea/:idea/point/show.:format" => "public#show_point", cell: "nodes/idea", format: false
+    get "idea/:idea/point/add.:format" => "public#add_point", cell: "nodes/idea", format: false
+    get "idea/:idea/point/members.html" => "public#point_members", cell: "nodes/idea", format: false
+
+#    match "search_idea_group/(index.:format)" => "public#index", cell: "nodes/search_idea_group", via: [:get, :post]
+    match "search_idea/(index.:format)" => "public#index", cell: "nodes/search_idea", via: [:get, :post]
+
+#    get "idea/(index.:format)" => "public#index", cell: "nodes/idea"
+#    get "idea/:id/(index.:format)" => "public#show", cell: "nodes/idea"
 
     get "sparql/(*path)" => "public#index", cell: "nodes/sparql"
     post "sparql/(*path)" => "public#index", cell: "nodes/sparql"
