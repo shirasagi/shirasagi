@@ -105,13 +105,14 @@ textarea {
         li {
           display: inline-block;
           position: absolute;
-          bottom: 0;
-          width: 150px;
+          bottom: -2px;
+          width: 146px;
           @include border-top-radius(5px);
+          border: 2px solid #ddcfcc;
           a {
             display: block;
             min-height: 25px;
-            padding: 12px 0 4px 33px;
+            padding: 11px 0 3px 33px;
             color: $text;
             text-decoration: none;
           }
@@ -128,9 +129,6 @@ textarea {
         left: 250px;
         &:hover {
           position: absolute;
-          bottom: -2px;
-          width: 146px;
-          border: 2px solid #ddcfcc;
           border-bottom: 2px solid $white;
           background: $white;
           a {
@@ -168,9 +166,6 @@ textarea {
 .s-dataset #head {
   .inner .tab .tab01 {
     position: absolute;
-    bottom: -2px;
-    width: 146px;
-    border: 2px solid #ddcfcc;
     border-bottom: 2px solid $white;
     background: $white;
     a {
