@@ -1,0 +1,15 @@
+<dl class="see">
+  <dt><%= @model.t :url %></dt>
+  <dd><%= link_to @item.url, @item.url, target: :_blank %></dd>
+
+  <% if @item.exists? && @item.has_error == 0 %>
+  <dt><%= @model.t :play %></dt>
+  <dd><%= content_tag("audio", "", controls: true, src: url_for(action: :file, id: @item)) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :error %></dt>
+  <dd><%= text_area_tag :error, @item.error %></dd>
+
+  <dt><%= @model.t :updated %></dt>
+  <dd><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></dd>
+</dl>

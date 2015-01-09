@@ -1,0 +1,45 @@
+ja:
+  voice:
+    voice_file: 読み上げ音声
+    error_file: エラー一覧
+    synthesis_fail:
+      empty_source: 読み上げる文字列がありません。
+      no_open_jtalk: Open JTalk がインストールされていません。
+      open_jtalk: Open JTalk エラーが発生しました。
+      no_sox: Sox がインストールされていません。
+      sox: Sox エラーが発生しました。
+      no_lame: Lame がインストールされていません。
+      lame: Lame エラーが発生しました。
+
+  modules:
+    voice: 読み上げ
+
+  mongoid:
+    models:
+      voice/voice_file: 読み上げ音声
+    attributes:
+      voice/voice_file:
+        url: URL
+        last_modified: URLの最終更新日時
+        error: エラー
+        updated: 作成日時
+        play: 再生
+
+  tooltip:
+    voice/voice_file:
+      url: URL
+      last_modified: URLの最終更新日時
+      error: エラー
+      updated: 作成日時
+
+  views:
+    voice/voice_files:
+      index: ページ一覧
+      not_exists: ページがありません。
+    voice/error_files:
+      index: エラー一覧
+      not_exists: エラーはありません。
+
+  job:
+    models:
+      voice/synthesis_job: 音声読み上げ

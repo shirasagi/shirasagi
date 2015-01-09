@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :class_name %></dt>
+  <dd><%= t(@item.class_name.underscore, scope: "job.models") %></dd>
+
+  <dt><%= @model.t :started %></dt>
+  <dd class="datetime"><%= @item.started ? @item.started.strftime("%Y/%m/%d %H:%M") : @item.started %></dd>
+
+  <dt><%= @model.t :closed %></dt>
+  <dd class="datetime"><%= @item.closed ? @item.closed.strftime("%Y/%m/%d %H:%M") : @item.closed %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= t(@item.state, scope: "job.state") %></dd>
+
+  <dt><%= @model.t :args %></dt>
+  <dd><%= @item.args %></dd>
+
+  <dt><%= @model.t :logs %></dt>
+  <dd><%= text_area_tag :logs, @item.logs.blank? ? "" : safe_join(@item.logs, "\n") %></dd>
+</dl>

@@ -1,0 +1,18 @@
+<%= form_for :item, url: { action: :download }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t :"download" %></h2></header>
+    <dl class="see">
+      <dt><%= @item.t :save_term %></dt>
+      <dd><%= f.select :save_term, @item.save_term_options %></dd>
+    </dl>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t(:download), class: :save %>
+  <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>
