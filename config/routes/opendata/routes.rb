@@ -36,14 +36,13 @@ SS::Application.routes.draw do
     resources :search_datasets, concerns: :deletion
     resources :search_dataset_groups, concerns: :deletion
     resources :search_ideas, concerns: :deletion
-#    resources :search_idea_groups, concerns: :deletion
     resources :sparqls, concerns: :deletion
     resources :apis, concerns: :deletion
     resources :mypages, concerns: :deletion
     resources :my_datasets, concerns: :deletion
     resources :my_ideas, concerns: :deletion
-#    resources :apps, concerns: :deletion
-#    resources :ideas, concerns: :deletion
+    resources :apps, concerns: :deletion
+    resources :ideas, concerns: :deletion
   end
 
   node "opendata" do
@@ -91,7 +90,6 @@ SS::Application.routes.draw do
     get "idea/:idea/point/add.:format" => "public#add_point", cell: "nodes/idea", format: false
     get "idea/:idea/point/members.html" => "public#point_members", cell: "nodes/idea", format: false
 
-#    match "search_idea_group/(index.:format)" => "public#index", cell: "nodes/search_idea_group", via: [:get, :post]
     match "search_idea/(index.:format)" => "public#index", cell: "nodes/search_idea", via: [:get, :post]
 
 #    get "idea/(index.:format)" => "public#index", cell: "nodes/idea"

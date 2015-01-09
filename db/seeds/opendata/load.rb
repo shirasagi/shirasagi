@@ -35,6 +35,10 @@ save_layout filename: "dataset-bunya.layout.html", name: "データ：分野、�
 save_layout filename: "dataset-group.layout.html", name: "データ：グループ検索"
 save_layout filename: "dataset-page.layout.html", name: "データ：詳細ページ"
 save_layout filename: "dataset-general.layout.html", name: "データ：汎用"
+save_layout filename: "idea-top.layout.html", name: "アイデア：トップ"
+save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
+save_layout filename: "idea-page.layout.html", name: "アイデア：詳細ページ"
+save_layout filename: "idea-general.layout.html", name: "アイデア：汎用"
 save_layout filename: "sparql.layout.html", name: "SPARQL"
 save_layout filename: "member-general.layout.html", name: "メンバー：汎用"
 save_layout filename: "mypage-login.layout.html", name: "マイページ：トップ"
@@ -75,7 +79,13 @@ save_node filename: "dataset/search", name: "データセット検索", route: "
   layout_id: layouts["dataset-bunya"].id
 
 save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "show"
+
 save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortcut: "show"
+save_node filename: "idea/bunya", name: "分野", route: "opendata/idea_category",
+  layout_id: layouts["idea-bunya"].id
+save_node filename: "idea/search", name: "アイデア検索", route: "opendata/search_idea",
+  layout_id: layouts["idea-bunya"].id
+
 save_node filename: "sparql", name: "SPARQL", route: "opendata/sparql", shortcut: "show",
   layout_id: layouts["sparql"].id
 save_node filename: "api", name: "API", route: "opendata/api", shortcut: "show"
@@ -170,6 +180,11 @@ save_part filename: "dataset-group.part.html" , name: "データ：グループ"
 save_part filename: "dataset-news.part.html" , name: "データ：新着順", route: "opendata/dataset", limit: 7
 save_part filename: "dataset-popular.part.html" , name: "データ：人気順", route: "opendata/dataset", limit: 7
 save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset", limit: 7
+save_part filename: "idea-head.part.html" , name: "アイデア：ヘッダー", route: "cms/free"
+save_part filename: "idea-kv.part.html" , name: "アイデア：キービジュアル", route: "cms/free"
+save_part filename: "idea-news.part.html" , name: "アイデア：新着順", route: "opendata/idea", limit: 7
+save_part filename: "idea-popular.part.html" , name: "アイデア：人気順", route: "opendata/idea", limit: 7
+save_part filename: "idea-attention.part.html" , name: "アイデア：注目順", route: "opendata/idea", limit: 7
 save_part filename: "mypage-head.part.html" , name: "マイページ：ヘッダー", route: "cms/free"
 
 ## -------------------------------------
