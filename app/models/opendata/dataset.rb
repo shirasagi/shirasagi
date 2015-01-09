@@ -142,6 +142,9 @@ class Opendata::Dataset
           criteria = criteria.keyword_in params[:keyword],
             :name, :text, "resources.name", "resources.filename", "resources.text"
         end
+        if params[:ids].present?
+          criteria = criteria.any_in id: params[:ids].split(/,/)
+        end
         if params[:name].present?
           criteria = criteria.keyword_in params[:keyword], :name
         end
