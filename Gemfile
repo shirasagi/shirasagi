@@ -52,6 +52,10 @@ group :development, :test do
   gem 'guard-rspec', '~> 4.3.1'
   gem 'fuubar'
   gem 'timecop'
+  gem 'pry-rails'
+  gem 'pry-doc'
+  gem 'pry-byebug'
+  gem 'pry-stack_explorer'
 end
 
 group :development do
