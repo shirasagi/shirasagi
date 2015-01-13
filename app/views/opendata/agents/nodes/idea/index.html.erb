@@ -1,3 +1,55 @@
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+
+<%= coffee do %>
+$ ->
+  SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
+  $(".areas a.more").colorbox({ fixed: true, height: "80%" })
+  $(".tags a.more").colorbox({ fixed: true, height: "80%" })
+  $(".formats a.more").colorbox({ fixed: true, height: "80%" })
+  $(".licenses a.more").colorbox({ fixed: true, height: "80%" })
+<% end %>
+
+<div class="idea-count">
+  登録アイデア件数 <span><%= @count %></span>件
+</div>
+
+<div class="opendata-tabs tabs" id="opendata-tabs-<%= @cur_node.id %>">
+  <% @tabs.each_with_index do |tab, idx| %>
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-<%= idx %>">
+    <header><h1><%= tab[:name] %></h1></header>
+    <div class="pages">
+      <% tab[:pages].each do |item| %>
+      <article>
+        <header>
+          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+          <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+        </header>
+      </article>
+      <% end %>
+    </div>
+    <nav class="feed">
+      <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
+      <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
+    </nav>
+  </article>
+  <% end %>
+</div>
+
+<article class="areas nodes">
+  <header><h1>地域</h1></header>
+  <%= render file: "opendata/agents/nodes/idea/areas" %>
+</article>
+
+<article class="tags nodes">
+  <header><h1>タグ</h1></header>
+  <%= render file: "opendata/agents/nodes/idea/tags" %>
+  <% if @tags.popped? %>
+  <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>
+  <% end %>
+</article>
+
+<!--
 <div class="opendata-ideas">
   <% @items.each do |item| %>
   <article>

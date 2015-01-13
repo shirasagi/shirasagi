@@ -1,0 +1,49 @@
+<html>
+<head>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
+  <link href="/css/style.css" media="all" rel="stylesheet" />
+  <link rel="shortcut icon" href="/img/favicon.ico" />
+  <script src="/js/common.js"></script>
+  <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <script src="/js/selectivizr.js"></script>
+  <![endif]-->
+</head>
+<body class="s-idea">
+<div id="page">
+
+  <header id="head">
+    <div class="inner">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
+      </div>
+    </div>
+  </header>
+
+  </ part "idea-head" />
+  </ part "crumbs" />
+
+  <div id="contents">
+    <div id="main">
+      <section id="search_ideas">
+        <header><h1 id="od-page-name">#{page_name}</h1></header>
+        </ yield />
+      </section>
+    </div>
+    <!--
+    <div id="sidebar">
+      <section id="search_group">
+        <header><h1 id="od-searchgroup-name">グループ</h1></header>
+        </ part "dataset-group" />
+      </section>
+    </div>
+    -->
+  </div>
+
+  </ part "foot" />
+
+</div>
+</body>
+</html>

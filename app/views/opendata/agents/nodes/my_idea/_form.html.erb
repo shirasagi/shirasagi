@@ -1,0 +1,29 @@
+<%
+
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
+areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
+
+%>
+<%= javascript_include_tag "opendata/public" %>
+
+<dl class="see opendata-idea">
+  <dt><%= @model.t :name %><%= required_label %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :tags %><%= @item.tt :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
+
+  <dt><%= @model.t :category_ids %><%= required_label %></dt>
+  <dd>
+    <%= f.hidden_field "category_ids[]", value: "" %>
+    <% categories.each do |c| %>
+      <label><%= f.check_box("category_ids[]", {}, c.id) %> <%= c.name %></label>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>

@@ -1,0 +1,10 @@
+<%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { id: "item-form", method: :delete, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<%= render partial: "show" %>
+
+<footer class="send">
+  <%= f.submit t("views.button.delete"), class: :delete %>
+</footer>
+
+<% end %>

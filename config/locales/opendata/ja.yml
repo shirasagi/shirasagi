@@ -26,6 +26,7 @@ ja:
       opendata/dataset_node: データセット
       opendata/dataset: データセット
       opendata/app: アプリ
+      opendata/idea: アイデア
       opendata/release: 公開設定
       opendata/resource: リソース
       opendata/rdf_store: RDFストア
@@ -42,12 +43,16 @@ ja:
       opendata/api: API
       opendata/mypage: マイページ
       opendata/my_dataset: マイデータセット
+      opendata/my_idea: マイアイデア
       opendata/app: アプリマーケット
       opendata/idea: アイデアボックス
+      opendata/idea_category: アイデア分野
+      opendata/search_idea: アイデア検索
     parts:
       opendata/mypage_login: ログイン
       opendata/dataset: データセット
       opendata/dataset_group: データセットグループ
+      opendata/idea: アイデア
 
   cms_role:
     read_other_opendata_datasets: データセットの閲覧（全て）

@@ -55,5 +55,13 @@ module Opendata::Part
     def condition_hash
       {} # TODO:
     end
+
+    def template_variable_get(item, name)
+      if name == "point"
+        item.point.to_i
+      else
+        super
+      end
+    end
   end
 end

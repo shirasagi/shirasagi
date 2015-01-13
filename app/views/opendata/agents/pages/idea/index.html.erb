@@ -1,0 +1,63 @@
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+<%= coffee do %>
+$ ->
+  # show point
+  $.ajax
+    url: "<%= @cur_page.point_url %>"
+    success: (data)->
+      $(".point").html data
+
+  # hide categories
+  $(".categories a[data-class=other]").click ->
+    type = $(this).attr("class")
+    $(".categories a." + type).show()
+    $(this).remove()
+    return false
+
+  # preview
+  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
+
+<% end %>
+
+<header>
+  <h1 class="name"><%= @cur_page.send :name %></h1>
+</header>
+
+<div class="point">
+  <div class="count">
+    <span class="number"><%= @cur_page.point %></span>
+    <span class="label">いいね！数</span>
+  </div>
+</div>
+
+<%
+max = 3
+categories = [
+  { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
+  { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
+]
+%>
+<nav class="categories">
+  <% categories.each do |cate| %>
+    <% cate[:items].each_with_index do |item, idx| %>
+      <% hide = (idx >= max) ? "display: none" : nil %>
+      <%= link_to item.send(cate[:name]), "#{@search_url}?s[#{cate[:key]}]=#{item.send(cate[:val])}",
+        class: cate[:type], style: hide %>
+    <% end %>
+    <% if cate[:items].size > max %>
+      <%= link_to "他#{cate[:items].size-max}件", "#",
+        class: "#{cate[:type]}", "data-class" => "other" %>
+    <% end %>
+  <% end %>
+</nav>
+
+<div class="text">
+  <%= auto_link br(@cur_page.text) %>
+</div>
+
+
+
+<%= render file: "cms/agents/addons/related_page/view/index" %>
+<%= render file: "contact/agents/addons/page/view/index" %>
