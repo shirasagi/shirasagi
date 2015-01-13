@@ -23,8 +23,6 @@ class Kana::Dictionary
   validates :body, presence: true
   validate :validate_body
 
-  scope :site, ->(site) { self.in(site_id: site.id) }
-
   public
     def validate_body
       each_csv

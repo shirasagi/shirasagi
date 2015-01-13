@@ -16,7 +16,7 @@ class Kana::DictionariesController < ApplicationController
     end
 
     def set_item
-      @item = @model.where(site_id: @cur_site.id).find(params[:id])
+      @item = @model.site(@cur_site).find(params[:id])
       raise "403" unless @item
     end
 
