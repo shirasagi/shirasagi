@@ -26,31 +26,33 @@
   </ part "crumbs" />
 
   <div id="contents">
-    <div id="main">
-      <section id="search_group">
-        <header><h1 id="od-searchgroup-name">#{page_name}</h1></header>
-        </ yield />
-      </section>
-    </div>
-    <div id="sidebar">
-      <section id="dataset-news">
-        <header>
-          <h1>新着順</h1>
-        </header>
-        </ part "dataset-news" />
-      </section>
-      <section id="dataset-popular">
-        <header>
-          <h1>人気順</h1>
-        </header>
-        </ part "dataset-popular" />
-      </section>
-      <section id="dataset-attention">
-        <header>
-          <h1>注目順</h1>
-        </header>
-        </ part "dataset-attention" />
-      </section>
+    <div class="content-body">
+      <div id="main">
+        <section id="search_group">
+          <header><h1 id="od-searchgroup-name">#{page_name}</h1></header>
+          </ yield />
+        </section>
+      </div>
+      <div id="sidebar">
+        <section id="dataset-news">
+          <header>
+            <h1>新着順</h1>
+          </header>
+          </ part "dataset-news" />
+        </section>
+        <section id="dataset-popular">
+          <header>
+            <h1>人気順</h1>
+          </header>
+          </ part "dataset-popular" />
+        </section>
+        <section id="dataset-attention">
+          <header>
+            <h1>注目順</h1>
+          </header>
+          </ part "dataset-attention" />
+        </section>
+      </div>
     </div>
   </div>
 </ part "foot" />

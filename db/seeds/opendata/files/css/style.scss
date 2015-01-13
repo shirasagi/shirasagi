@@ -71,6 +71,12 @@ textarea {
 }
 
 // -----------------------------------------------------------------------------
+// .content-body
+.content-body {
+  margin-bottom: $footer-margin;
+}
+
+// -----------------------------------------------------------------------------
 // head
 #head {
   @include clear;
@@ -314,16 +320,14 @@ textarea {
     float: left;
     width: 803px;
     margin-right: $box-margin;
-    margin-bottom: $box-margin;
   }
   #sidebar {
     float: right;
     width: 249px;
-    margin-bottom: $box-margin;
   }
 }
 
-#contents {
+#contents .content-body{
   overflow: hidden;
 }
 
@@ -446,7 +450,6 @@ textarea {
 
 
 #contents article.body {
-  margin-bottom: $box-margin;
   h1 {
     margin: 12px 0;
     padding: 5px 10px;
@@ -537,7 +540,6 @@ textarea {
 }
 
 #contents footer.contact {
-  margin-bottom: $box-margin;
   h1 {
     margin: 12px 0 6px;
     padding: 4px 10px;
@@ -594,7 +596,6 @@ textarea {
 }
 #event-list {
   clear: both;
-  margin-bottom: $box-margin;
   border-top: 1px solid #ccc;
   dl {
     margin: 0;
@@ -1377,7 +1378,6 @@ nav.cms-sns_share {
 }
 
 .inquiry-form {
-  margin-bottom: $box-margin;
   dl {
     @include clear;
     clear: both;
@@ -1476,12 +1476,6 @@ nav.cms-sns_share {
   li.github {
     background: url(../img/logo_GitHub.png) no-repeat 53px center;
   }
-}
-
-///-----------------------------------------------------------------------------------------
-//s-mypage-login #contents .inner, s-mypage #contents .inner
-#s-mypage-login #contents .inner, #s-mypage #contents .inner {
-  margin-bottom: $box-margin;
 }
 
 //-----------------------------------------------------------------------------------------

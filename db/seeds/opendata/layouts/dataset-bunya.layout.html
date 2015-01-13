@@ -26,17 +26,19 @@
   </ part "crumbs" />
 
   <div id="contents">
-    <div id="main">
-      <section id="search_datasets">
-        <header><h1 id="od-page-name">#{page_name}</h1></header>
-        </ yield />
-      </section>
-    </div>
-    <div id="sidebar">
-      <section id="search_group">
-        <header><h1 id="od-searchgroup-name">グループ</h1></header>
-        </ part "dataset-group" />
-      </section>
+    <div class="content-body">
+      <div id="main">
+        <section id="search_datasets">
+          <header><h1 id="od-page-name">#{page_name}</h1></header>
+          </ yield />
+        </section>
+      </div>
+      <div id="sidebar">
+        <section id="search_group">
+          <header><h1 id="od-searchgroup-name">グループ</h1></header>
+          </ part "dataset-group" />
+        </section>
+      </div>
     </div>
   </div>
 
