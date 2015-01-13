@@ -11,6 +11,7 @@ SS::Application.routes.draw do
     resources :pages, concerns: :deletion do
       get :delivery_confirmation, on: :member
       get :delivery_test_confirmation, on: :member
+      get :sent_logs, on: :member
       get :preview_text, on: :member
       post :delivery, on: :member
       post :delivery_test, on: :member

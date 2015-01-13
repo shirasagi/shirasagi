@@ -44,3 +44,6 @@ ja:
         email: メールアドレス
         email_type: 配信形式
         entry_type: 登録種別
+      ezine/sent_log:
+        email: メールアドレス
+        created: 配信日時

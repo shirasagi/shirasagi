@@ -10,6 +10,9 @@
       <%= link_to :back_to_show, action: :show, id: @item %>
     <% end %>
     <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /sent_logs/ %>
+    <%= link_to :back_to_show, action: :show, id: params[:id] %>
+    <%= link_to :back_to_index, action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, action: :edit, id: @item %>
@@ -27,7 +30,7 @@
       <%= link_to t("ezine.deliver"), action: :delivery_confirmation, id: @item %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.sent_log"), action: :edit, id: @item %>
+      <%= link_to t("ezine.sent_log"), action: :sent_logs, id: @item %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :delete, action: :delete, id: @item %>

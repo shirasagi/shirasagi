@@ -52,6 +52,14 @@ class Ezine::PagesController < ApplicationController
       render text: "delivery test OK" + params.to_s
     end
 
+    def sent_logs
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+      @items = Ezine::SentLog.where(node_id: params[:cid], page_id: params[:id]).
+        order_by(created: -1).
+        page(params[:page]).per(50)
+    end
+
     def preview_text
       load_pages
       item = @items.find(params[:id])
