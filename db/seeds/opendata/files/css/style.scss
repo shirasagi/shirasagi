@@ -540,21 +540,33 @@ textarea {
 }
 
 #contents footer.contact {
+  @include clear;
+  margin-top: 30px;
+  padding-bottom: 10px;
   h1 {
-    margin: 12px 0 6px;
+    margin-bottom: 6px;
     padding: 4px 10px;
     background: #3386bb;
     color: $white;
     font-size: $px15;
   }
   p {
-    padding-left: 10px;
+    padding: 0 15px;
+    line-height: 1.7;
   }
   dl {
+    @include clear;
     display: inline;
-    padding-left: 20px;
+    float: left;
+    margin-right: 10px;
+    padding: 0 15px;
+    line-height: 1.7;
     dt, dd {
       display: inline;
+      float: left;
+    }
+    dt {
+      font-weight: bold;
     }
   }
 }
