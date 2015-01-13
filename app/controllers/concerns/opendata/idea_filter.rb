@@ -3,7 +3,8 @@ module Opendata::IdeaFilter
 
   included do
     before_action :set_idea_with_aggregation,
-      only: [:index_areas, :index_tags, :index_formats, :index_licenses]
+#      only: [:index_areas, :index_tags, :index_formats, :index_licenses]
+      only: [:index_areas, :index_tags]
   end
 
   private
