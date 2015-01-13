@@ -182,9 +182,9 @@ save_part filename: "dataset-popular.part.html" , name: "データ：人気順",
 save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset", limit: 7
 save_part filename: "idea-head.part.html" , name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html" , name: "アイデア：キービジュアル", route: "cms/free"
-save_part filename: "idea-news.part.html" , name: "アイデア：新着順", route: "opendata/idea", limit: 7
-save_part filename: "idea-popular.part.html" , name: "アイデア：人気順", route: "opendata/idea", limit: 7
-save_part filename: "idea-attention.part.html" , name: "アイデア：注目順", route: "opendata/idea", limit: 7
+#save_part filename: "idea-news.part.html" , name: "アイデア：新着順", route: "opendata/idea", limit: 7
+#save_part filename: "idea-popular.part.html" , name: "アイデア：人気順", route: "opendata/idea", limit: 7
+#save_part filename: "idea-attention.part.html" , name: "アイデア：注目順", route: "opendata/idea", limit: 7
 save_part filename: "mypage-head.part.html" , name: "マイページ：ヘッダー", route: "cms/free"
 
 ## -------------------------------------
