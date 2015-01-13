@@ -1058,10 +1058,43 @@ article.areas, article.tags, article.licenses, article.formats {
     article, header, h2 {
       display: inline;
     }
-    article {
-      padding-right: 15px;
-      line-height: 2.0;
+    article a {
+      display: inline-block;
+      margin: 0 5px 10px 0;
+      padding: 4px 10px;
+      border: 1px solid #ddcfcc;
+      @include border-radius(5px);
+      color: $text;
+      text-decoration: none;
     }
+  }
+}
+
+article.areas div article a {
+  background: #99cf38;
+  &:hover {
+    background: #cbe79a;
+  }
+}
+
+article.tags div article a {
+  background: #82c1ea;
+  &:hover {
+    background: #b6dbf3;
+  }
+}
+
+article.formats div article a {
+  background: #ffc0cb;
+  &:hover {
+    background: #fccbcb;
+  }
+}
+
+article.licenses div article a {
+  background: #e4ceaa;
+  &:hover {
+    background: #ecdcc2;
   }
 }
 
