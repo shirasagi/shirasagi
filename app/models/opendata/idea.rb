@@ -25,7 +25,7 @@ class Opendata::Idea
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
-  permit_params :state, :name, :dataset_id, :app_id, :text, :point, tags: []
+  permit_params :state, :name, :dataset_id, :app_id, :text, :point, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
