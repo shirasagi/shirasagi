@@ -43,7 +43,7 @@ class Kana::Dictionary
 
         terms = line.split(/\s*(#{FS.join("|")})\s*/)
         unless terms[0] && terms[1]
-          errors.add :base, :malformed_user_dictionary, line: line, no: idx
+          errors.add :base, :malformed_kana_dictionary, line: line, no: idx
           next
         end
 
@@ -51,7 +51,7 @@ class Kana::Dictionary
         yomi = terms[2].strip.tr("ぁ-ん", "ァ-ン")
 
         if yomi !~ /^[ァ-ンーヴ]+$/
-          errors.add :base, :malformed_user_dictionary, line: line, no: idx
+          errors.add :base, :malformed_kana_dictionary, line: line, no: idx
           next
         end
 

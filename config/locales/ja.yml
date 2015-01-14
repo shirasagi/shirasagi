@@ -125,7 +125,7 @@ ja:
       other_than: "は%{count}以外の値にしてください。"
       email: はメールアドレスを入力してください。
       invalid_updated: 他のユーザーによって更新されています。編集をやり直してください。
-      malformed_user_dictionary: "書式が不正です: %{line}(%{no})"
+      malformed_kana_dictionary: "書式が不正です: %{line}(%{no})"
     template:
       body: 次の項目を確認してください。
       header:
