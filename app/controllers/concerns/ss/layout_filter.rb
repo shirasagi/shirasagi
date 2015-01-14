@@ -25,7 +25,7 @@ module SS::LayoutFilter
 
     public
       def javascript(path)
-        self.javascripts << path
+        self.javascripts << path unless javascripts.index(path)
       end
   end
 end
