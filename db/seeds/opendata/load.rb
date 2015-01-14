@@ -80,7 +80,9 @@ save_node filename: "dataset/search", name: "データセット検索", route: "
 
 save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "show"
 
-save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortcut: "show"
+save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortcut: "show",
+  layout_id: layouts["idea-top"].id,
+  page_layout_id: layouts["idea-page"].id
 save_node filename: "idea/bunya", name: "分野", route: "opendata/idea_category",
   layout_id: layouts["idea-bunya"].id
 save_node filename: "idea/search", name: "アイデア検索", route: "opendata/search_idea",
