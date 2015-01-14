@@ -28,7 +28,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @count          = pages.size
       @node_url       = "#{@cur_node.url}"
       @search_url     = search_ideas_path + "?"
-      @rss_url        = search_ideas_path + "index.rss?"
+      @rss_url        = search_ideas_path + "rss.xml?"
       @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
       @download_items = pages.order_by(downloaded: -1).limit(10)

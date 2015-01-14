@@ -51,12 +51,14 @@ SS::Application.routes.draw do
 
     get "dataset_category/" => "public#nothing", cell: "nodes/dataset_category"
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
+    get "dataset_category/:name/rss.xml" => "public#rss", cell: "nodes/dataset_category"
     get "dataset_category/:name/areas" => "public#index_areas", cell: "nodes/dataset_category"
     get "dataset_category/:name/tags" => "public#index_tags", cell: "nodes/dataset_category"
     get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset_category"
     get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset_category"
 
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
+    get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset"
     get "dataset/areas" => "public#index_areas", cell: "nodes/dataset"
     get "dataset/tags" => "public#index_tags", cell: "nodes/dataset"
     get "dataset/formats" => "public#index_formats", cell: "nodes/dataset"
@@ -70,6 +72,7 @@ SS::Application.routes.draw do
 
     match "search_dataset_group/(index.:format)" => "public#index", cell: "nodes/search_dataset_group", via: [:get, :post]
     match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]
+    get "search_dataset/rss.xml" => "public#rss", cell: "nodes/search_dataset"
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"

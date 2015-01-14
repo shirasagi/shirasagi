@@ -7,8 +7,9 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
     def pages
       @item ||= Opendata::Node::Category.site(@cur_site).
         where(filename: /\/#{params[:name]}$/).first
-
       raise "404" unless @item
+
+      @cur_node.name = @item.name
 
       Opendata::Dataset.site(@cur_site).where(category_ids: @item.id).public
     end
@@ -17,7 +18,7 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
       @count          = pages.size
       @node_url       = "#{@cur_node.url}#{params[:name]}/"
       @search_url     = search_datasets_path + "?s[category_id]=#{@item.id}"
-      @rss_url        = search_datasets_path + "index.rss?s[category_id]=#{@item.id}"
+      @rss_url        = search_datasets_path + "rss.xml?s[category_id]=#{@item.id}"
       @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
       @download_items = pages.order_by(downloaded: -1).limit(10)
@@ -35,6 +36,11 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
       @tags     = aggregate_tags(max)
       @formats  = aggregate_formats(max)
       @licenses = aggregate_licenses(max)
+    end
+
+    def rss
+      @items = pages.order_by(released: -1).limit(100)
+      render_rss @cur_node, @items
     end
 
     def nothing

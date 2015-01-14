@@ -27,7 +27,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       @count          = pages.size
       @node_url       = "#{@cur_node.url}"
       @search_url     = search_datasets_path + "?"
-      @rss_url        = search_datasets_path + "index.rss?"
+      @rss_url        = search_datasets_path + "rss.xml?"
       @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
       @download_items = pages.order_by(downloaded: -1).limit(10)
@@ -43,11 +43,11 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       @tags     = aggregate_tags(max)
       @formats  = aggregate_formats(max)
       @licenses = aggregate_licenses(max)
+    end
 
-      respond_to do |format|
-        format.html { render }
-        format.rss  { render_rss @cur_node, @items }
-      end
+    def rss
+      @items = pages.order_by(released: -1).limit(100)
+      render_rss @cur_node, @items
     end
 
     def show_point

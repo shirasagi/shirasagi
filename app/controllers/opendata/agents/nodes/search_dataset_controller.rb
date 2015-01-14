@@ -2,8 +2,13 @@ class Opendata::Agents::Nodes::SearchDatasetController < ApplicationController
   include Cms::NodeFilter::View
   helper Opendata::UrlHelper
 
-  public
-    def index
+  private
+    def pages
+      @model = Opendata::Dataset
+
+      focus = params[:s] || {}
+      focus = focus.merge(site: @cur_site)
+
       case params[:sort]
       when "released"
         sort = { released: -1 }
@@ -15,20 +20,18 @@ class Opendata::Agents::Nodes::SearchDatasetController < ApplicationController
         sort = { released: -1 }
       end
 
-      @model = Opendata::Dataset
-
-      focus = params[:s] || {}
-      focus = focus.merge(site: @cur_site)
-
-      @items = @model.site(@cur_site).public.
+      @model.site(@cur_site).public.
         search(focus).
-        order_by(sort).
-        page(params[:page]).
-        per(20)
+        order_by(sort)
+    end
 
-      respond_to do |format|
-        format.html { render }
-        format.rss  { render_rss @cur_node, @items }
-      end
+  public
+    def index
+      @items = pages.page(params[:page]).per(20)
+    end
+
+    def rss
+      @items = pages.limit(100)
+      render_rss @cur_node, @items
     end
 end
