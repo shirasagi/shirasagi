@@ -35,13 +35,11 @@ class Kana::DictionariesController < ApplicationController
       put_history_log
       begin
         @model.build_dic @cur_site.id
-        notice = t("kana.build_success")
+        redirect_to({ action: :index }, { notice: t("kana.build_success") })
       rescue
-        notice = $!.to_s
         logger.error $!.to_s
         logger.error $!.backtrace.join("\n")
+        @errors = [ $!.to_s ]
       end
-
-      redirect_to({ action: :index }, { notice: notice })
     end
 end

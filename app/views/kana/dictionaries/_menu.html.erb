@@ -13,6 +13,8 @@
       <%= link_to :back_to_show, action: :show, id: @item %>
     <% end %>
     <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /build/ %>
+    <%= link_to :back_to_index, action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, action: :edit, id: @item %>
