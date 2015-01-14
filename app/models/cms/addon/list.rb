@@ -29,7 +29,7 @@ module Cms::Addon::List
 
       def limit
         value = self[:limit].to_i
-        (value < 1 || 100 < value) ? 100 : value
+        (value < 1 || 1000 < value) ? 100 : value
       end
 
       def new_days
