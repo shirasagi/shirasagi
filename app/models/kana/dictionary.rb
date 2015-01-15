@@ -94,7 +94,7 @@ class Kana::Dictionary
             end
 
             if count == 0
-              raise I18n.t("kana.build_fail.no_content")
+              return I18n.t("kana.build_fail.no_content")
             end
 
             tmp_dic = Tempfile::new(["mecab", ".dic"], dir)
@@ -107,13 +107,13 @@ class Kana::Dictionary
             master_file = master_dic(site_id)
             Fs.binwrite(master_file, ::IO.binread(tmp_dic.path))
           end
+          nil
         end
 
         def pull(site_id)
           master_file = master_dic(site_id)
           unless Fs.exists?(master_file)
-            yield nil
-            return
+            return yield nil
           end
 
           Dir.mktmpdir do |dir|
@@ -121,7 +121,7 @@ class Kana::Dictionary
             ::IO.binwrite(local_file, Fs.binread(master_file))
             master_stat = Fs.stat(master_file)
             File.utime(master_stat.atime, master_stat.mtime, local_file)
-            yield local_file
+            return yield local_file
           end
         end
     end

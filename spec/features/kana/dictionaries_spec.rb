@@ -103,7 +103,7 @@ describe "kana_dictionaries" do
 
       it "#build" do
         visit build_path
-        expect(status_code).to eq 200
+        expect(status_code).to eq 400
         expect(current_path).to eq build_path
       end
     end
