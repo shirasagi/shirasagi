@@ -4,3 +4,6 @@ RAILS_ENV: production
 
 # File storage ('file' or 'grid_fs')
 storage: file
+
+# Temp File Size Limit
+max_filesize: 2097152
