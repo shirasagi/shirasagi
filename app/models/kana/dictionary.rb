@@ -19,11 +19,11 @@ class Kana::Dictionary
 
   permit_params :name, :body
 
+  #text_index :name, :body
+
   validates :name, presence: true
   validates :body, presence: true
   validate :validate_body
-
-  scope :keyword, ->(keyword) { any_of({ name: /#{keyword}/ }) }
 
   public
     def validate_body
@@ -125,6 +125,19 @@ class Kana::Dictionary
             File.utime(master_stat.atime, master_stat.mtime, local_file)
             return yield local_file
           end
+        end
+
+        def search(params)
+          criteria = self.where({})
+          return criteria if params.blank?
+
+          if params[:name].present?
+            criteria = criteria.search_text params[:name]
+          end
+          if params[:keyword].present?
+            criteria = criteria.keyword_in params[:keyword], :name, :body
+          end
+          criteria
         end
     end
 end
