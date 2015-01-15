@@ -34,12 +34,21 @@ class Kana::DictionariesController < ApplicationController
 
       put_history_log
       begin
-        @model.build_dic @cur_site.id
-        redirect_to({ action: :index }, { notice: t("kana.build_success") })
+        error_message = @model.build_dic @cur_site.id
+        unless error_message
+          redirect_to({ action: :index }, { notice: t("kana.build_success") })
+          return
+        end
+
+        # this is user's invalid operation.
+        @errors = [ error_message ]
+        render :status => :bad_request
       rescue
+        # occuring exception means system error.
         logger.error $!.to_s
         logger.error $!.backtrace.join("\n")
         @errors = [ $!.to_s ]
+        render :status => :internal_server_error
       end
     end
 end
