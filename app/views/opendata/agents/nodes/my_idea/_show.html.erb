@@ -11,6 +11,9 @@
   <dt><%= @model.t :category_ids %></dt>
   <dd><%= @item.categories.map { |m| m.name }.join(", ") %></dd>
 
+  <dt><%= @model.t :area_ids %></dt>
+  <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
+
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
 </dl>

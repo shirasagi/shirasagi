@@ -156,9 +156,9 @@ class Opendata::Idea
         if params[:tag].present?
           criteria = criteria.where tags: params[:tag]
         end
-#        if params[:area_id].present?
-#          criteria = criteria.where area_ids: params[:area_id].to_i
-#        end
+        if params[:area_id].present?
+          criteria = criteria.where area_ids: params[:area_id].to_i
+        end
         if params[:category_id].present?
           criteria = criteria.where category_ids: params[:category_id].to_i
         end

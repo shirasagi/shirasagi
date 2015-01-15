@@ -136,6 +136,7 @@ ja:
         site_id: サイト
         user_id: 作成者
         categry_ids: カテゴリー
+        area_ids: 地域
         dataset_ids: データセット
         app_ids: アプリ
         point: 評価
