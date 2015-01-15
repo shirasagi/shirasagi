@@ -69,10 +69,12 @@ describe "kana_dictionaries" do
         expect(current_path).to eq index_path
       end
 
-      it "#build" do
-        visit build_path
-        expect(status_code).to eq 200
-        expect(current_path).to eq index_path
+      describe "#build", :type => :mecab do
+        it "will be success" do
+          visit build_path
+          expect(status_code).to eq 200
+          expect(current_path).to eq index_path
+        end
       end
     end
 
@@ -101,10 +103,12 @@ describe "kana_dictionaries" do
         expect { visit delete_path }.to raise_error Mongoid::Errors::DocumentNotFound
       end
 
-      it "#build" do
-        visit build_path
-        expect(status_code).to eq 400
-        expect(current_path).to eq build_path
+      describe "#build", :type => :mecab do
+        it "will be bad request" do
+          visit build_path
+          expect(status_code).to eq 400
+          expect(current_path).to eq build_path
+        end
       end
     end
   end
