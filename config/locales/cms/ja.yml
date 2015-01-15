@@ -96,6 +96,7 @@ ja:
     addons:
       cms/role: ロール
       cms/owner_permission: 権限
+      cms/node_setting: 基本設定
       cms/meta: メタ情報
       cms/html: HTML
       cms/body: 本文
@@ -131,6 +132,7 @@ ja:
         filename: フォルダー名
         basename: フォルダー名
         route: フォルダー属性
+        view_route: 既定のモジュール
         summary_html: Summary
       cms/page/model:
         route: ページ属性
@@ -296,6 +298,8 @@ ja:
         - 初期値は上位のフォルダの設定を継承しています。
       shortcut:
         - 表示を選択することで管理画面のサイトトップ「コンテンツ」に表示されます。
+      view_route:
+        - サイトトップ「コンテンツ」から遷移したときの「モジュール」を設定します。
       conditions:
         - 自フォルダー内のリスト以外で表示するリストのフォルダー名を記述します。
         - |-

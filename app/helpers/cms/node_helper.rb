@@ -1,6 +1,7 @@
 module Cms::NodeHelper
   def contents_path(node)
-    "/.#{node.site.host}/" + node.route.pluralize.sub("/", "#{node.id}/")
+    route = node.view_route.present? ? node.view_route : node.route
+     "/.#{node.site.host}/" + route.pluralize.sub("/", "#{node.id}/")
   rescue StandardError => e
     raise(e) unless Rails.env.production?
     node_nodes_path(cid: node)
