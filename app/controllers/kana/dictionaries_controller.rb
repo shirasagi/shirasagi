@@ -24,8 +24,12 @@ class Kana::DictionariesController < ApplicationController
     def index
       raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site) || @model.allowed?(:read, @cur_user, site: @cur_site)
 
-      @items = @model.site(@cur_site).
-        order_by(name: 1).
+      @s = params[:s]
+      @keyword = @s[:keyword] if @s
+
+      criteria = @model.site(@cur_site)
+      criteria = criteria.keyword(@keyword) unless @keyword.blank?
+      @items = criteria.order_by(name: 1).
         page(params[:page]).per(50)
     end
 

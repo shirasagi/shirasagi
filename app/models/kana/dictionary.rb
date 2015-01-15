@@ -23,6 +23,8 @@ class Kana::Dictionary
   validates :body, presence: true
   validate :validate_body
 
+  scope :keyword, ->(keyword) { any_of({ name: /#{keyword}/ }) }
+
   public
     def validate_body
       each_csv
