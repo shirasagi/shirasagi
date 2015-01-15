@@ -7,6 +7,9 @@ class Ezine::Entry
   validates :email_type, inclusion: { in: %w(text html) }
   validates :entry_type, inclusion: { in: %w(add update delete) }
 
+  before_create ->{ self.verification_token = unique_token },
+    if: ->{ SS.config.ezine.deliver_verification_mail_from_here }
+
   class << self
     def pull_from_public!
       begin
@@ -60,6 +63,14 @@ class Ezine::Entry
       when "delete"
         return if member.nil?
         member.destroy
+      end
+    end
+
+  private
+    def unique_token
+      loop do
+        t = Digest::SHA1.hexdigest SecureRandom.uuid
+        return t if Ezine::Entry.where(verification_token: t).first.nil?
       end
     end
 end
