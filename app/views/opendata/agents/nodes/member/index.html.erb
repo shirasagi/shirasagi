@@ -17,4 +17,22 @@
       <%= link_to :more, "datasets/", class: "more" %>
     </nav>
   </section>
+  <% if false %>
+  <section class="ideas">
+    <h2>アイデア</h2>
+    <div class="pages">
+      <% @ideas.each do |item| %>
+      <article>
+        <header>
+          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+          <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+        </header>
+      </article>
+      <% end %>
+    </div>
+    <nav>
+      <%= link_to :more, "ideas/", class: "more" %>
+    </nav>
+  </section>
+  <% end %>
 </div>

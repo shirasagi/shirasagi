@@ -16,10 +16,20 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
         where(member_id: @member.id).
         order_by(released: -1).
         limit(10)
+
+      ideas
     end
 
     def datasets
       @datasets = Opendata::Dataset.site(@cur_site).public.
+        where(member_id: @member.id).
+        order_by(released: -1).
+        page(params[:page]).
+        per(20)
+    end
+
+    def ideas
+      @ideas = Opendata::Idea.site(@cur_site).public.
         where(member_id: @member.id).
         order_by(released: -1).
         page(params[:page]).

@@ -1,0 +1,19 @@
+<%= render "head" %>
+
+<div class="contents">
+  <section class="ideas">
+    <h2>アイデア</h2>
+    <div class="pages">
+      <% @ideas.each do |item| %>
+      <article>
+        <header>
+          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+          <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+        </header>
+      </article>
+      <% end %>
+    </div>
+  </section>
+</div>
+
+<%= paginate @ideas %>

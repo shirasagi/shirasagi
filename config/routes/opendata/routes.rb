@@ -117,6 +117,7 @@ SS::Application.routes.draw do
 
     get "member/:member" => "public#index", cell: "nodes/member"
     get "member/:member/datasets/(:filename.:format)" => "public#datasets", cell: "nodes/member"
+    get "member/:member/ideas/(:filename.:format)" => "public#ideas", cell: "nodes/member"
 
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
     get "mypage/login"  => "public#login", cell: "nodes/mypage"
