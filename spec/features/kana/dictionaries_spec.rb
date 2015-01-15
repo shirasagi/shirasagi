@@ -2,12 +2,8 @@ require 'spec_helper'
 
 describe "kana_dictionaries" do
   subject(:site) { cms_site }
-  subject(:item) { create(:kana_dictionary) }
   subject(:index_path) { kana_dictionaries_path site.host }
   subject(:new_path) { new_kana_dictionary_path site.host }
-  subject(:show_path) { kana_dictionary_path site.host, item }
-  subject(:edit_path) { edit_kana_dictionary_path site.host, item }
-  subject(:delete_path) { delete_kana_dictionary_path site.host, item }
   subject(:build_path) { kana_dictionaries_build_path site.host }
 
   it "without login" do
@@ -41,36 +37,75 @@ describe "kana_dictionaries" do
       expect(page).not_to have_css("form#item-form")
     end
 
-    it "#show" do
-      visit show_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-    end
+    context "with item" do
+      subject(:item) { create(:kana_dictionary) }
+      subject(:show_path) { kana_dictionary_path site.host, item }
+      subject(:edit_path) { edit_kana_dictionary_path site.host, item }
+      subject(:delete_path) { delete_kana_dictionary_path site.host, item }
 
-    it "#edit" do
-      visit edit_path
-      within "form#item-form" do
-        fill_in "item[name]", with: "modify"
-        click_button "保存"
+      it "#show" do
+        visit show_path
+        expect(status_code).to eq 200
+        expect(current_path).to eq show_path
       end
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
-      expect(page).not_to have_css("form#item-form")
-    end
 
-    it "#delete" do
-      visit delete_path
-      within "form" do
-        click_button "削除"
+      it "#edit" do
+        visit edit_path
+        within "form#item-form" do
+          fill_in "item[name]", with: "modify"
+          click_button "保存"
+        end
+        expect(status_code).to eq 200
+        expect(current_path).not_to eq sns_login_path
+        expect(page).not_to have_css("form#item-form")
       end
-      expect(status_code).to eq 200
-      expect(current_path).to eq index_path
+
+      it "#delete" do
+        visit delete_path
+        within "form" do
+          click_button "削除"
+        end
+        expect(status_code).to eq 200
+        expect(current_path).to eq index_path
+      end
+
+      it "#build" do
+        visit build_path
+        expect(status_code).to eq 200
+        expect(current_path).to eq index_path
+      end
     end
 
-    it "#build" do
-      visit build_path
-      expect(status_code).to eq 200
-      expect(current_path).to eq index_path
+    context "without item" do
+      subject(:missing_item) { 10000 + rand(10000) }
+      subject(:show_path) { kana_dictionary_path site.host, missing_item }
+      subject(:edit_path) { edit_kana_dictionary_path site.host, missing_item }
+      subject(:delete_path) { delete_kana_dictionary_path site.host, missing_item }
+
+      before(:each) do
+        # remove all items before starting tests
+        Kana::Dictionary.each do |item|
+          item.delete
+        end
+      end
+
+      it "#show" do
+        expect { visit show_path }.to raise_error Mongoid::Errors::DocumentNotFound
+      end
+
+      it "#edit" do
+        expect { visit edit_path }.to raise_error Mongoid::Errors::DocumentNotFound
+      end
+
+      it "#delete" do
+        expect { visit delete_path }.to raise_error Mongoid::Errors::DocumentNotFound
+      end
+
+      it "#build" do
+        visit build_path
+        expect(status_code).to eq 200
+        expect(current_path).to eq build_path
+      end
     end
   end
 end
