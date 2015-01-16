@@ -1,0 +1,14 @@
+<% # TODO Fix correctly %>
+
+<% message.subject = 'Verification Email' %>
+
+<%= @entry.node.name %>
+
+<%= @entry.email %>
+
+<%= @entry.email_type %>
+
+<%= @entry.entry_type %>
+
+<% # TODO Set correct verification URL %>
+<%= "http://example.com/foo/bar?token=#{@entry.verification_token}" %>
