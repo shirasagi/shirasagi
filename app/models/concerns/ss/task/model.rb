@@ -32,7 +32,7 @@ module SS::Task::Model
   module ClassMethods
     public
       def ready(cond, &block)
-        task = Cms::Task.find_or_create_by(cond)
+        task = self.find_or_create_by(cond)
         return false unless task.start
 
         begin
