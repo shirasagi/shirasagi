@@ -147,5 +147,6 @@ SS::Application.routes.draw do
 
   page "opendata" do
     get "dataset/:filename.:format" => "public#index", cell: "pages/dataset"
+    get "idea/:filename.:format" => "public#index", cell: "pages/idea"
   end
 end
