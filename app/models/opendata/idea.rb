@@ -12,7 +12,7 @@ class Opendata::Idea
 
   set_permission_name "opendata_ideas"
 
-  seqid :id
+#  seqid :id
   field :state, type: String, default: "public"
   field :name, type: String
   field :point, type: Integer, default: "0"

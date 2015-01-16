@@ -143,6 +143,7 @@ ja:
         point: 評価
         text: コメント
         tags: タグ
+        comment_body: 本文
 
   tooltip:
     opendata/dataset:
