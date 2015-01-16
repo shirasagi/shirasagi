@@ -29,8 +29,14 @@ module Cms::PublicFilter::Layout
       agent.controller.params.merge! spec
       resp = agent.render spec[:action]
       body = resp.body
-      body.gsub!('#{part_name}', ERB::Util.html_escape(@cur_part.name))
-      body.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_part.parent ? @cur_part.parent.name : ""))
+
+      if body =~ /\#\{request_.+?\}/
+        dir = Cms::Node.filename(@cur_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
+        if dir
+          body.gsub!('#{request_dir}', ERB::Util.html_escape(dir.name))
+          body.gsub!('#{request_parent_dir}', ERB::Util.html_escape(dir.parent ? dir.parent.name : dir.name))
+        end
+      end
 
       @cur_part = nil
       body
