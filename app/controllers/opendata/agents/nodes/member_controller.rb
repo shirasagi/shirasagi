@@ -8,6 +8,8 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
     def set_member
       @member = Opendata::Member.site(@cur_site).where(id: params[:member]).first
       raise "404" unless @member
+
+      @member_url = "#{@cur_node.url}#{@member.id}/"
     end
 
   public
