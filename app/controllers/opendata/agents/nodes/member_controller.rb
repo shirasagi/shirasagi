@@ -2,7 +2,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   include Cms::NodeFilter::View
   helper Opendata::UrlHelper
 
-  before_action :set_member
+  before_action :set_member, except: :index
 
   protected
     def set_member
@@ -14,6 +14,13 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
 
   public
     def index
+      @items = Opendata::Member.site(@cur_site).
+        order_by(id: -1).
+        page(params[:page]).
+        per(50)
+    end
+
+    def show
       @datasets = Opendata::Dataset.site(@cur_site).public.
         where(member_id: @member.id).
         order_by(released: -1).
@@ -27,7 +34,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
         where(member_id: @member.id).
         order_by(released: -1).
         page(params[:page]).
-        per(20)
+        per(50)
     end
 
     def ideas
@@ -35,6 +42,6 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
         where(member_id: @member.id).
         order_by(released: -1).
         page(params[:page]).
-        per(20)
+        per(50)
     end
 end

@@ -1,38 +1,12 @@
-<%= render "head" %>
+<article class="members">
+  <ul>
+    <% @items.each do |item| %>
+    <li>
+      <%= member_icon item, size: :small %>
+      <span><%= link_to item.name, "#{@cur_node.url}#{item.id}" %></span>
+    </li>
+    <% end %>
+  </ul>
 
-<div class="contents">
-  <section class="datasets">
-    <h2>データセット</h2>
-    <div class="pages">
-      <% @datasets.each do |item| %>
-      <article>
-        <header>
-          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-          <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
-        </header>
-      </article>
-      <% end %>
-    </div>
-    <nav>
-      <%= link_to :more, "#{@member_url}datasets/", class: "more" %>
-    </nav>
-  </section>
-  <% if false %>
-  <section class="ideas">
-    <h2>アイデア</h2>
-    <div class="pages">
-      <% @ideas.each do |item| %>
-      <article>
-        <header>
-          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-          <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
-        </header>
-      </article>
-      <% end %>
-    </div>
-    <nav>
-      <%= link_to :more, "#{@member_url}ideas/", class: "more" %>
-    </nav>
-  </section>
-  <% end %>
-</div>
+  <%= paginate @items %>
+</section>

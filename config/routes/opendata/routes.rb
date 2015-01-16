@@ -115,7 +115,8 @@ SS::Application.routes.draw do
     get "api/1/tag_show" => "public#tag_show", cell: "nodes/api"
     get "api/1/group_show" => "public#group_show", cell: "nodes/api"
 
-    get "member/:member" => "public#index", cell: "nodes/member"
+    get "member/" => "public#index", cell: "nodes/member"
+    get "member/:member" => "public#show", cell: "nodes/member"
     get "member/:member/datasets/(:filename.:format)" => "public#datasets", cell: "nodes/member"
     get "member/:member/ideas/(:filename.:format)" => "public#ideas", cell: "nodes/member"
 
