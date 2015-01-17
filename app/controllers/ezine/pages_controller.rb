@@ -51,4 +51,10 @@ class Ezine::PagesController < ApplicationController
       #TODO: メールの送信処理を追加する
       render text: "delivery test OK" + params.to_s
     end
+
+    def preview_text
+      load_pages
+      item = @items.find(params[:id])
+      render text: item.text.gsub(/\r\n|\r|\n/, "<br />")
+    end
 end

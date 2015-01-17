@@ -18,7 +18,7 @@
       <%= link_to t("ezine.preview_html"), cms_preview_path(path: @item.filename), target: "_blank" %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.preview_text"), cms_preview_path(path: @item.filename), target: "_blank" %>
+      <%= link_to t("ezine.preview_text"), { action: :preview_text, id: @item }, { target: "_blank" } %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t("ezine.deliver_test"), action: :delivery_test_confirmation, id: @item %>
