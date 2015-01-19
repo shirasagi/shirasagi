@@ -9,6 +9,14 @@
     <script src="/js/html5shiv.js"></script>
     <script src="/js/selectivizr.js"></script>
   <![endif]-->
+  <script>
+    window.onload = function(){
+      if (location.host.match(/.*ouropendata\.jp/i)) {
+        document.getElementById("portal-idea").style.display = "none";
+        document.getElementById("idea-tab").href = "#";
+      }
+    };
+  </script>
 </head>
 <body class="s-idea s-idea-top">
 <div id="page">

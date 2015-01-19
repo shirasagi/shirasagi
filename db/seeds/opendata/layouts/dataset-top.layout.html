@@ -9,6 +9,14 @@
     <script src="/js/html5shiv.js"></script>
     <script src="/js/selectivizr.js"></script>
   <![endif]-->
+  <script>
+    window.onload = function(){
+      if (location.host.match(/.*ouropendata\.jp/i)) {
+        document.getElementById("idea-tab").href = "#";
+      }
+    };
+  </script>
+</head>
 </head>
 <body class="s-dataset s-dataset-top">
 <div id="page">
