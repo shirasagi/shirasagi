@@ -1,0 +1,35 @@
+<nav class="act-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :new, action: :new %>
+    <% end %>
+    <% if @model.allowed?(:build, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :build_kana_dictionary, action: :build %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :back_to_show, action: :show, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /build/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :edit, action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :delete, action: :delete, id: @item %>
+    <% end %>
+    <% if @item.class.include?(Cms::Page::Model) %>
+      <%= link_to :"cms.view_page", @item.url, target: "_blank" if @item.public? %>
+      <%= link_to :"cms.preview_page", cms_preview_path(path: @item.filename), target: "_blank" %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
+<%= render file: "_addons_menu" %>
+<% end %>
