@@ -1,9 +1,5 @@
 class Opendata::Idea
   include Cms::Page::Model
-  #include SS::Document
-  #include SS::Reference::User
-  #include SS::Reference::Site
-  #include Cms::Addon::OwnerPermission
   include Opendata::Addon::Category
   include Opendata::Addon::Area
   include Opendata::Addon::Dataset
@@ -12,7 +8,6 @@ class Opendata::Idea
 
   set_permission_name "opendata_ideas"
 
-#  seqid :id
   field :state, type: String, default: "public"
   field :name, type: String
   field :point, type: Integer, default: "0"
@@ -21,6 +16,9 @@ class Opendata::Idea
 
   belongs_to :dataset, class_name: "Opendata::Dataset"
   belongs_to :app, class_name: "Opendata::App"
+
+  has_many :points, primary_key: :idea_id, class_name: "Opendata::IdeaPoint",
+    dependent: :destroy
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
@@ -59,10 +57,6 @@ class Opendata::Idea
     end
 
   class << self
-#    def public
-#      where(state: "public")
-#    end
-
     public
       def sort_options
         [%w(新着順 released), %w(人気順 popular), %w(注目順 attention)]
@@ -116,29 +110,6 @@ class Opendata::Idea
         logger.warn pipes
         limit_aggregation pipes, opts[:limit]
       end
-
-#      def get_tag_list(query)
-#        pipes = []
-#        pipes << { "$match" => where({}).selector.merge("tags" => { "$exists" => 1 }) }
-#        pipes << { "$project" => { _id: 0, "tags" => 1 } }
-#        pipes << { "$unwind" => "$tags" }
-#        pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
-#        pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
-#        pipes << { "$sort" => { name: 1 } }
-#        collection.aggregate(pipes)
-#      end
-#
-#      def get_tag(tag_name)
-#        pipes = []
-#        pipes << { "$match" => where({}).selector.merge("tags" => { "$exists" => 1 }) }
-#        pipes << { "$project" => { _id: 0, "tags" => 1 } }
-#        pipes << { "$unwind" => "$tags" }
-#        pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
-#        pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
-#        pipes << { "$match" => { name: tag_name }}
-#        pipes << { "$sort" => { name: 1 } }
-#        collection.aggregate(pipes)
-#      end
 
       def search(params)
         criteria = self.where({})
