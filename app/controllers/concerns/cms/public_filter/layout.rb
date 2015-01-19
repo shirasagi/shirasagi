@@ -54,9 +54,9 @@ module Cms::PublicFilter::Layout
 
       body = @cur_layout.body.to_s
       body = body.sub(/<body.*?>/) do |m|
-        m = m.sub(/ class="/, %( class="#{body_class(request.path)} )     ) if m =~ / class="/
-        m = m.sub(/<body/,    %(<body class="#{body_class(request.path)}")) unless m =~ / class="/
-        m = m.sub(/<body/,    %(<body id="#{body_id(request.path)}")      ) unless m =~ / id="/
+        m = m.sub(/ class="/, %( class="#{body_class(@cur_path)} )     ) if m =~ / class="/
+        m = m.sub(/<body/,    %(<body class="#{body_class(@cur_path)}")) unless m =~ / class="/
+        m = m.sub(/<body/,    %(<body id="#{body_id(@cur_path)}")      ) unless m =~ / id="/
         m
       end
 
