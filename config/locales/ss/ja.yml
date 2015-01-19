@@ -32,6 +32,7 @@ ja:
       change: 変更する
       more: もっと見る
       delete_all: すべて削除する
+      build_kana_dictionary: 辞書反映
     button:
       save: 保存
       draft_save: 下書き保存

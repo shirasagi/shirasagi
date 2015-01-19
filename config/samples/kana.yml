@@ -3,6 +3,8 @@
 production: &production
   disable: false
   location: /kana
+  mecab_indexer: /usr/local/libexec/mecab/mecab-dict-index
+  mecab_dicdir: /usr/local/lib/mecab/dic/ipadic
 
 test:
   <<: *production

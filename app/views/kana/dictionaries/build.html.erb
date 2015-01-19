@@ -1,0 +1,9 @@
+<div id="errorSyntaxChecker" class="errorExplanation">
+    <h2><%= t "errors.template.header.one" %></h2>
+    <p><%= t "errors.template.body" %></p>
+    <ul>
+        <% @errors.each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+    </ul>
+</div>

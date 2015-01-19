@@ -18,6 +18,15 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+def can_test_mecab_specific?
+  # In Travis Ci dictionares_controller#build failed because of there is no MeCab installed.
+  # So, before test, check whether we can do MeCab specific tests.
+  return false if SS.config.kana.disable
+  return false unless ::File.exists?(SS.config.kana.mecab_indexer)
+  return false unless ::File.exists?(SS.config.kana.mecab_dicdir)
+  true
+end
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -51,6 +60,8 @@ RSpec.configure do |config|
   config.before do
     FactoryGirl.reload
   end
+
+  config.filter_run_excluding :type => 'mecab' unless can_test_mecab_specific?
 
   `rake db:drop`
 end
