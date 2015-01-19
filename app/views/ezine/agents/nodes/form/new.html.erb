@@ -14,10 +14,10 @@ $ ->
 
 <%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
 <div class="ezine-form">
-  <%= error_messages_for :answer, header_message: false %>
+  <%= error_messages_for :entry, header_message: false %>
   <%= render partial: "form", locals: { f: f, confirm: false }  %>
   <footer class="send">
-  <%= f.submit t('ezine.button.confirm_entry'), name: :confirm_entry %>
+    <%= f.submit t('ezine.button.confirm_entry'), name: :submit %>
   </footer>
 </div>
 <% end %>

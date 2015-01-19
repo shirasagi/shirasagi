@@ -1,27 +1,55 @@
 class Ezine::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
 
+  before_action :set_entries, only: [:new, :update, :remove, :confirm]
+
+  private
+    def set_entries
+      @entry = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
+    end
+
+    def get_entry_type(type)
+      case type
+      when "new"
+        "add"
+      when "update"
+        "update"
+      when "remove"
+        "delete"
+      end
+    end
+
   public
-    def entry
-      @model = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
-      render action: :entry
-    end
+    def confirm
+      entry_type = get_entry_type request.env["HTTP_REFERER"].split("/").last
 
-    def update
-      @model = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
-      render action: :update
-    end
+      raise "403" unless params[:submit].present?
 
-    def remove
-      @model = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
-      render action: :remove
-    end
+      @entry.email = params[:item][:email]
+      @entry.email_type = params[:item][:email_type]
+      @entry.email_type = 'html' if @entry.email_type.nil?
+      @entry.entry_type = entry_type
 
-    def create
-      if params[:submit].present?
-        # TODO: save process
+      if @entry.save
+        case entry_type
+        when "add"
+          @entry_type_string = t("ezine.entry_type.add")
+        when "update"
+          @entry_type_string = t("ezine.entry_type.update")
+        when "delete"
+          @entry_type_string = t("ezine.entry_type.delete")
+        end
+
+        render action: :confirm
       else
-        render action: :entry
+        case entry_type
+        when "add"
+          render action: :new
+        when "update"
+          render action: :update
+        when "delete"
+          render action: :remove
+        end
       end
     end
 end

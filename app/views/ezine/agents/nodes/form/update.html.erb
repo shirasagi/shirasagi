@@ -12,12 +12,12 @@ $ ->
   <%= t('ezine.page_title.update') %>
 </div>
 
-<%= form_for :item, url: "#{@cur_node.url}update.html", html: { multipart: true } do |f| %>
+<%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
 <div class="ezine-form">
   <%= error_messages_for :answer, header_message: false %>
   <%= render partial: "form", locals: { f: f, confirm: false }  %>
   <footer class="send">
-  <%= f.submit t('ezine.button.confirm_update'), name: :confirm_update %>
+  <%= f.submit t('ezine.button.confirm_update'), name: :submit %>
   </footer>
 </div>
 <% end %>
