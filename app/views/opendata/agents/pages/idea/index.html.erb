@@ -56,19 +56,23 @@ categories = [
 <div class="detail">
 
   <div class="info-wrap">
-    <div class="comments">
+    <div class="idea-comments">
 
       <div class="text">
         <%= auto_link br(@cur_page.text) %>
         <hr>
       </div>
 
-      <% if @mode || true %>
-        <dl class="input_comment">
-          <dt><%= @cur_page.t :comment_body %></dt>
-          <dd>本文（テキストボックス）</dd>
-        </dl>
-        <%= link_to "このページにコメントする", "#", class: "update #{@mode}" %>
+      <% if true %>
+      <div class="input_comment">
+        <%= form_for :s, url: "", html: { class: "opendata-search_ideas-form", method: :get } do |f| %>
+          <dl class="comment_body">
+            <dt><%= @cur_page.t :comment_body %></dt>
+            <dd><%= f.text_field :comment_body %></dd>
+          </dl>
+          <%= link_to "このページにコメントする", "#", class: "update #{@mode}" %>
+        <% end %>
+      </div>
       <% end %>
 
   </div>
