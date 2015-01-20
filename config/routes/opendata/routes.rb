@@ -88,11 +88,11 @@ SS::Application.routes.draw do
     get "idea/rss.xml" => "public#rss", cell: "nodes/idea"
     get "idea/areas" => "public#index_areas", cell: "nodes/idea"
     get "idea/tags" => "public#index_tags", cell: "nodes/idea"
-#    get "idea/formats" => "public#index_formats", cell: "nodes/idea"
-#    get "idea/licenses" => "public#index_licenses", cell: "nodes/idea"
     get "idea/:idea/point/show.:format" => "public#show_point", cell: "nodes/idea", format: false
     get "idea/:idea/point/add.:format" => "public#add_point", cell: "nodes/idea", format: false
     get "idea/:idea/point/members.html" => "public#point_members", cell: "nodes/idea", format: false
+    get "idea/:idea/comment/show.:format" => "public#show_comment", cell: "nodes/idea", format: false
+    get "idea/:idea/comment/add.:format" => "public#add_comment", cell: "nodes/idea", format: false
 
     match "search_idea/(index.:format)" => "public#index", cell: "nodes/search_idea", via: [:get, :post]
     get "search_idea/rss.xml" => "public#rss", cell: "nodes/search_idea"
