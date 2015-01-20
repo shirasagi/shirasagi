@@ -9,6 +9,8 @@ class Ezine::Entry
 
   before_create ->{ self.verification_token = unique_token },
     if: ->{ SS.config.ezine.deliver_verification_mail_from_here }
+  after_create ->{ Ezine::Mailer.verification_mail(self).deliver },
+    if: ->{ SS.config.ezine.deliver_verification_mail_from_here }
 
   class << self
     def pull_from_public!
