@@ -19,6 +19,8 @@ class Opendata::Idea
 
   has_many :points, primary_key: :idea_id, class_name: "Opendata::IdeaPoint",
     dependent: :destroy
+  has_many :comments, primary_key: :idea_id, class_name: "Opendata::IdeaComment",
+    dependent: :destroy
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
@@ -40,6 +42,14 @@ class Opendata::Idea
 
     def point_members_url
       url.sub(/\.html$/, "") + "/point/members.html"
+    end
+
+    def comment_url
+      url.sub(/\.html$/, "") + "/comment/show.html"
+    end
+
+    def comment_add_url
+      url.sub(/\.html$/, "") + "/comment/add.html"
     end
 
     def contact_present?

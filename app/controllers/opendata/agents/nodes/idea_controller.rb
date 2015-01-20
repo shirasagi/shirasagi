@@ -5,6 +5,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
   include Opendata::IdeaFilter
 
   before_action :set_idea, only: [:show_point, :add_point, :point_members]
+  before_action :set_idea_comment, only: [:show_comment, :add_comment]
   skip_filter :logged_in?
 
   private
@@ -18,6 +19,15 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       raise "404" unless @idea
     end
 
+    def set_idea_comment
+      @idea_comment_path = @cur_path.sub(/\/comment\/.*/, ".html")
+
+      @idea_comment = Opendata::Idea.site(@cur_site).public.
+        filename(@idea_comment_path).
+        first
+
+      raise "404" unless @idea_comment
+    end
 
   public
     def pages
@@ -85,21 +95,15 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @items = Opendata::IdeaPoint.where(site_id: @cur_site.id, idea_id: @idea.id)
     end
 
-#    def index
-#      @items = Opendata::Idea.site(@cur_site).
-#        order_by(updated: -1).
-#        page(params[:page]).
-#        per(20)
-#
-#      render
-#    end
+    def show_comment
+      @cur_node.layout = nil
 
-#    def show
-#      @model = Opendata::Idea
-#      @item = @model.site(@cur_site).find(params[:id])
-#
-#      render
-#    end
+      @comment_mode = true if logged_in?(redirect: false)
+    end
 
+    def add_comment
+      @cur_node.layout = nil
+      raise "403" unless logged_in?(redirect: false)
+    end
 
 end

@@ -8,6 +8,12 @@ $ ->
     success: (data)->
       $(".point").html data
 
+  # show comment
+  $.ajax
+    url: "<%= @cur_page.comment_url %>"
+    success: (data)->
+      $(".comment").html data
+
   # hide categories
   $(".categories a[data-class=other]").click ->
     type = $(this).attr("class")
@@ -31,6 +37,8 @@ $ ->
   </div>
 </div>
 
+<div class="comment"></div>
+
 <%
 max = 3
 categories = [
@@ -52,29 +60,4 @@ categories = [
     <% end %>
   <% end %>
 </nav>
-
-<div class="detail">
-
-  <div class="info-wrap">
-    <div class="idea-comments">
-
-      <div class="text">
-        <%= auto_link br(@cur_page.text) %>
-        <hr>
-      </div>
-
-      <% if true %>
-      <div class="input_comment">
-        <%= form_for :s, url: "", html: { class: "opendata-search_ideas-form", method: :get } do |f| %>
-          <dl class="comment_body">
-            <dt><%= @cur_page.t :comment_body %></dt>
-            <dd><%= f.text_field :comment_body %></dd>
-          </dl>
-          <%= link_to "このページにコメントする", "#", class: "update #{@mode}" %>
-        <% end %>
-      </div>
-      <% end %>
-
-  </div>
-</div>
 

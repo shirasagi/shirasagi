@@ -1,0 +1,38 @@
+<%= coffee do %>
+$ ->
+
+  $(".comment .update").click (event)->
+    $.ajax
+      url: "<%= @idea_comment.comment_add_url %>"
+      success: (data)->
+        $(".comment").html data
+    event.preventDefault()
+
+  $(".comment .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
+
+<% end %>
+
+<div class="detail">
+
+  <div class="info-wrap">
+    <div class="idea-comments">
+
+      <div class="text">
+        <%= auto_link br(@idea_comment.text) %>
+        <hr>
+      </div>
+
+      <% if @comment_mode %>
+      <div class="input_comment">
+        <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>
+          <dl class="comment_body">
+            <dt>本文</dt>
+            <dd><%= f.text_field :comment_body %></dd>
+          </dl>
+          <%= link_to "このページにコメントする", "#", class: "update" %>
+        <% end %>
+      </div>
+      <% end %>
+
+  </div>
+</div>
