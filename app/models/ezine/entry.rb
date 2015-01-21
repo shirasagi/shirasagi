@@ -31,6 +31,25 @@ class Ezine::Entry
       [%w(テキスト版 text), %w(HTML版 html)]
     end
 
+    # Verify an entry.
+    #
+    # If current server is primary (for members registration), accept this
+    # entry.
+    #
+    # If this entry has been already verified, do nothing.
+    #
+    # エントリーの確認をする．
+    #
+    # もし現アプリケーションがプライマリ(メンバ登録用)であれば
+    # エントリーを受理する．
+    #
+    # 既にこのエントリーが確認済みであれば何もしない．
+    def verify
+      return if verification_token.nil?
+      update verification_token: nil
+      accept if SS.config.ezine.register_member_here
+    end
+
     # Accept an entry and create, update or destroy a Ezine::Member.
     #
     # Switch the action with entry_type field.
