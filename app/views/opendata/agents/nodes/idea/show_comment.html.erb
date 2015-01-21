@@ -22,6 +22,18 @@ $ ->
         <hr>
       </div>
 
+      <div class="comments">
+        <% @comments.each do |comment| %>
+          <div class="comment"><%= comment.text %></div>
+          <% if comment.member %>
+          <%= link_to comment.member.name, "#{member_path}#{comment.member.id}" %>
+          <% else %>
+          ゲストユーザー
+          <% end %>
+          <hr>
+        <% end %>
+      </div>
+
       <% if @comment_mode %>
       <div class="input_comment">
         <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>

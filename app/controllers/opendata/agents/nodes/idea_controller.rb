@@ -87,7 +87,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
         @mode = :cancel
       end
 
-        render :show_point
+      render :show_point
     end
 
     def point_members
@@ -97,6 +97,9 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
     def show_comment
       @cur_node.layout = nil
+
+      cond = { site_id: @cur_site.id, idea_id: @idea_comment.id }
+      @comments = Opendata::IdeaComment.where(cond)
 
       @comment_mode = true if logged_in?(redirect: false)
     end
