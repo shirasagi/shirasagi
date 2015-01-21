@@ -404,7 +404,7 @@ class @Syntax_Checker
   @checkInterwordSpace: (html)->
     $(html).find(":not(iframe)").each ->
       text = $.trim(Syntax_Checker.justText(this))
-      if /[ 　]/.test(text)
+      if /[　]/.test(text)
         for i in [0..text.length-1]
           if text.charCodeAt(i) >= 256
             errors = [{

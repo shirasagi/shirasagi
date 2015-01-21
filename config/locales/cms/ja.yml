@@ -214,7 +214,7 @@ ja:
       invalid_dependent_character: 機種依存文字が含まれています。
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
-      check_interword_space: 単語間のスペースを確認してください。
+      check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: "リンクのテキストを確認してください。"
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       syntax_check_detail:
@@ -245,7 +245,7 @@ ja:
           - 隣り合うリンク(A)に同じリンク先が設定されています。
           - 一つのリンク(A)にマークアップしてください。
         check_interword_space:
-          - 単語間に不要なスペースが含まれている場合は削除してください。
+          - 単語の文字間に不要なスペースが含まれている場合は削除してください。
         check_link_text:
           - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
