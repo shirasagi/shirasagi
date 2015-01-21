@@ -2,9 +2,7 @@ module Opendata::IdeaFilter
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_idea_with_aggregation,
-#      only: [:index_areas, :index_tags, :index_formats, :index_licenses]
-      only: [:index_areas, :index_tags]
+    before_action :set_idea_with_aggregation, only: [:index_areas, :index_tags]
   end
 
   private
@@ -29,23 +27,6 @@ module Opendata::IdeaFilter
       pages.aggregate_array :tags, limit: limit
     end
 
-#    def aggregate_formats(limit)
-#      pages.aggregate_resources :format, limit: limit
-#    end
-
-#    def aggregate_licenses(limit)
-#      licenses = pages.aggregate_resources :license_id, limit: limit
-#
-#      licenses.each_with_index do |data, idx|
-#        if rel = Opendata::License.site(@cur_site).public.where(id: data["id"]).first
-#          licenses[idx] = { "id" => rel.id, "name" => rel.name, "count" => data["count"] }
-#        else
-#          licenses[idx] = nil
-#        end
-#      end
-#      licenses
-#    end
-
   public
     def index_areas
       @areas = aggregate_areas(100)
@@ -57,13 +38,4 @@ module Opendata::IdeaFilter
       render "opendata/agents/nodes/idea/tags", layout: "opendata/idea_aggregation"
     end
 
-#    def index_formats
-#      @formats = aggregate_formats(100)
-#      render "opendata/agents/nodes/idea/formats", layout: "opendata/idea_aggregation"
-#    end
-
-#    def index_licenses
-#      @licenses = aggregate_licenses(100)
-#      render "opendata/agents/nodes/idea/licenses", layout: "opendata/idea_aggregation"
-#    end
 end

@@ -81,8 +81,6 @@ SS::Application.routes.draw do
     get "idea_category/:name/" => "public#index", cell: "nodes/idea_category"
     get "idea_category/:name/areas" => "public#index_areas", cell: "nodes/idea_category"
     get "idea_category/:name/tags" => "public#index_tags", cell: "nodes/idea_category"
-    get "idea_category/:name/formats" => "public#index_formats", cell: "nodes/idea_category"
-    get "idea_category/:name/licenses" => "public#index_licenses", cell: "nodes/idea_category"
 
     get "idea/(index.:format)" => "public#index", cell: "nodes/idea"
     get "idea/rss.xml" => "public#rss", cell: "nodes/idea"
