@@ -22,8 +22,7 @@ module Contact::Addon
       end
 
       def contact_present?
-        [contact_group_id,
-         contact_charge,
+        [contact_charge,
          contact_tel,
          contact_fax,
          contact_email
