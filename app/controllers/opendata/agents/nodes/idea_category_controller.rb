@@ -7,8 +7,9 @@ class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
     def pages
       @item ||= Opendata::Node::Category.site(@cur_site).
         where(filename: /\/#{params[:name]}$/).first
-
       raise "404" unless @item
+
+      @cur_node.name = @item.name
 
       Opendata::Idea.site(@cur_site).where(category_ids: @item.id).public
     end
@@ -33,8 +34,6 @@ class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
       max = 50
       @areas    = aggregate_areas
       @tags     = aggregate_tags(max)
-      @formats  = aggregate_formats(max)
-      @licenses = aggregate_licenses(max)
     end
 
     def nothing
