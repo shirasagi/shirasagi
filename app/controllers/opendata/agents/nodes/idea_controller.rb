@@ -26,6 +26,11 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
         filename(@idea_comment_path).
         first
 
+      cond = { site_id: @cur_site.id, idea_id: @idea_comment.id }
+      @comments = Opendata::IdeaComment.where(cond)
+
+      @comment_mode = logged_in?(redirect: false)
+
       raise "404" unless @idea_comment
     end
 
@@ -97,16 +102,16 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
     def show_comment
       @cur_node.layout = nil
-
-      cond = { site_id: @cur_site.id, idea_id: @idea_comment.id }
-      @comments = Opendata::IdeaComment.where(cond)
-
-      @comment_mode = true if logged_in?(redirect: false)
     end
 
     def add_comment
       @cur_node.layout = nil
       raise "403" unless logged_in?(redirect: false)
+
+      cond = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: @idea_comment.id, text: "" }
+      Opendata::IdeaComment.new(cond).save
+
+      render :show_comment
     end
 
 end

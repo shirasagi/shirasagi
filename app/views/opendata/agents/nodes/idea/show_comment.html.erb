@@ -36,7 +36,7 @@ $ ->
 
       <% if @comment_mode %>
       <div class="input_comment">
-        <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>
+        <%= form_for :s, url: "", html: { class: "opendata-add_comment-form" } do |f| %>
           <dl class="comment_body">
             <dt>本文</dt>
             <dd><%= f.text_field :comment_body %></dd>
