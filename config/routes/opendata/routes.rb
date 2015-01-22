@@ -22,16 +22,6 @@ SS::Application.routes.draw do
     end
 
     resources :idea_categories, concerns: :deletion
-#    resources :idea_groups, concerns: :deletion do
-#      get "search" => "idea_groups/search#index", on: :collection
-#    end
-#    resources :ideas, concerns: :deletion do
-#      resources :resources, concerns: :deletion do
-#        get "file" => "resources#download"
-#        get "tsv" => "resources#download_tsv"
-#        get "content" => "resources#content"
-#      end
-#    end
 
     resources :search_datasets, concerns: :deletion
     resources :search_dataset_groups, concerns: :deletion
@@ -90,13 +80,10 @@ SS::Application.routes.draw do
     get "idea/:idea/point/add.:format" => "public#add_point", cell: "nodes/idea", format: false
     get "idea/:idea/point/members.html" => "public#point_members", cell: "nodes/idea", format: false
     get "idea/:idea/comment/show.:format" => "public#show_comment", cell: "nodes/idea", format: false
-    get "idea/:idea/comment/add.:format" => "public#add_comment", cell: "nodes/idea", format: false
+    match "idea/:idea/comment/add.:format" => "public#add_comment", cell: "nodes/idea", via: [:get, :post]
 
     match "search_idea/(index.:format)" => "public#index", cell: "nodes/search_idea", via: [:get, :post]
     get "search_idea/rss.xml" => "public#rss", cell: "nodes/search_idea"
-
-#    get "idea/(index.:format)" => "public#index", cell: "nodes/idea"
-#    get "idea/:id/(index.:format)" => "public#show", cell: "nodes/idea"
 
     get "sparql/(*path)" => "public#index", cell: "nodes/sparql"
     post "sparql/(*path)" => "public#index", cell: "nodes/sparql"
