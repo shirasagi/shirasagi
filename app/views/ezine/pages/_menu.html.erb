@@ -5,7 +5,7 @@
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete/ || (params[:action] =~ /show/ && params[:do] =~ /deliver_test|deliver/) %>
+  <% elsif params[:action] =~ /edit|update|delete|delivery_test_confirmation|delivery_confirmation/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :back_to_show, action: :show, id: @item %>
     <% end %>
