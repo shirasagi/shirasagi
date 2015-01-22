@@ -7,7 +7,7 @@ class Ezine::Page
   field :name, type: String
   field :html, type: String, default: ""
   field :text, type: String, default: ""
-  field :results, type: Array
+  field :results, type: Array, default: []
   field :completed, type: Boolean, default: false
 
   permit_params :id, :route, :name, :html, :text, :results
