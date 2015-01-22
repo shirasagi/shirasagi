@@ -14,8 +14,8 @@ module Cms::PublicHelper
 
     def body_class(path)
       prefix = "body-"
-      nodes  = path.to_s.sub(/^\//, "").sub(/\/[^\/]*$/, "").split(/\//)
-      nodes  = nodes.map { |node| prefix = "#{prefix}-#{node}" }
+      nodes  = path.to_s.sub(/\/[^\/]+\.html$/, "").sub(/^\//, "").split("/")
+      nodes  = nodes.map { |node| prefix = "#{prefix}-" + node.gsub(/[^\w-]+/, "-") }
       nodes.join(" ")
     end
 
