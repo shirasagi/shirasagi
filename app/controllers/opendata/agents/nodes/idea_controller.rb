@@ -27,7 +27,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
         first
 
       cond = { site_id: @cur_site.id, idea_id: @idea_comment.id }
-      @comments = Opendata::IdeaComment.where(cond)
+      @comments = Opendata::IdeaComment.where(cond).order_by(:updated.asc)
 
       @comment_mode = logged_in?(redirect: false)
 

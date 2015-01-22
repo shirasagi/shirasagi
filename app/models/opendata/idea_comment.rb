@@ -11,4 +11,5 @@ class Opendata::IdeaComment
   validates :site_id, presence: true
   validates :member_id, presence: true
   validates :idea_id, presence: true
+  validates :text, presence: true, length: { maximum: 100 }
 end
