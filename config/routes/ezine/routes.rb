@@ -27,6 +27,7 @@ SS::Application.routes.draw do
     get "page/entry/update/(index.:format)" => "public#update", cell: "nodes/form"
     get "page/entry/remove/(index.:format)" => "public#remove", cell: "nodes/form"
     post "page/confirm.html" => "public#confirm", cell: "nodes/form"
+    get "page/entry/verification/(index.:format)" => "public#verify", cell: "nodes/form"
   end
 
   page "ezine" do

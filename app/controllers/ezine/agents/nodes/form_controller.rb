@@ -52,4 +52,13 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
         end
       end
     end
+
+    def verify
+      entry = Ezine::Entry.where(verification_token: params[:token]).first
+      if entry.present?
+        entry.verify
+      else
+        raise "403"
+      end
+    end
 end
