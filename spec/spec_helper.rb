@@ -61,7 +61,7 @@ RSpec.configure do |config|
     FactoryGirl.reload
   end
 
-  config.filter_run_excluding :type => 'mecab' unless can_test_mecab_specific?
+  config.filter_run_excluding(mecab: true) unless can_test_mecab_specific?
 
   `rake db:drop`
 end

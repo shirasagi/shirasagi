@@ -5,13 +5,13 @@ class Kana::Dictionary
   include Cms::Permission
 
   # field separator
-  FS = %w[, 、 ，]
+  FS = %w(, 、 ，)
 
   # default cost
   DEFAULT_COST = 10
 
   # default part-of-speech
-  DEFAULT_POS = %w[名詞 固有名詞 一般 *]
+  DEFAULT_POS = %w(名詞 固有名詞 一般 *)
 
   seqid :id
   field :name, type: String
@@ -27,44 +27,19 @@ class Kana::Dictionary
 
   public
     def validate_body
-      each_csv
-      errors.size == 0 ? true : false
+      enumerate_csv.count
+      errors.blank?
     end
 
-    def each_csv
-      return if body.blank?
-
-      idx = 0
-      body.each_line do |line|
-        idx = idx + 1
-        line = line.to_s.gsub(/#.*/, "")
-        line.strip!
-        if line.blank?
-          next
-        end
-
-        terms = line.split(/\s*(#{FS.join("|")})\s*/)
-        unless terms[0] && terms[1]
-          errors.add :base, :malformed_kana_dictionary, line: line, no: idx
-          next
-        end
-
-        word = terms[0].strip
-        yomi = terms[2].strip.tr("ぁ-ん", "ァ-ン")
-
-        if yomi !~ /^[ァ-ンーヴ]+$/
-          errors.add :base, :malformed_kana_dictionary, line: line, no: idx
-          next
-        end
-
-        yield word, yomi if block_given?
-      end
+    def enumerate_csv
+      Kana::CsvEnumerable.new self
     end
 
     class << self
       public
         def master_root
-          "#{Rails.root}/private/files/kana_dictionaries"
+          root = Rails.env.test? ? "/tmp/kana_dictionaries_#{Time.now.strftime("%Y%m%d")}" : "#{Rails.root}"
+          ::File.join(root, 'private', 'files', 'kana_dictionaries')
         end
 
         def master_dic(site_id)
@@ -79,35 +54,17 @@ class Kana::Dictionary
           raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exists?(mecab_dicdir)
 
           ::Dir.mktmpdir do |dir|
-            tmp_src = ::Tempfile::new(["mecab", ".csv"], dir)
+            tmp_src = File.join(dir, make_tmpname("txt"))
 
-            count = 0
-            ::File.open(tmp_src, "w:UTF-8") do |f|
-              self.where(site_id: site_id).each do |item|
-                item.each_csv do |word, yomi|
-                  f.puts "#{word},*,*,#{DEFAULT_COST},#{DEFAULT_POS[0]},#{DEFAULT_POS[1]},#{DEFAULT_POS[2]},#{DEFAULT_POS[3]},*,*,#{word},#{yomi},#{yomi}"
-                  count = count + 1
-                end
+            count = build_source(site_id, tmp_src)
+            return I18n.t("kana.build_fail.no_content") if count == 0
 
-                if item.errors.size > 0
-                  logger.warn("dictionary #{item.name} has #{errors.size} error(s).")
-                end
-              end
-            end
-
-            if count == 0
-              return I18n.t("kana.build_fail.no_content")
-            end
-
-            tmp_dic = Tempfile::new(["mecab", ".dic"], dir)
-            cmd = "#{mecab_indexer} -d #{mecab_dicdir} -u #{tmp_dic.path} -f UTF-8 -t UTF-8 #{tmp_src.path}"
-            logger.info("system(#{cmd})")
-            system(cmd)
-            raise I18n.t("kana.build_fail.index") if $?.exitstatus != 0
+            tmp_dic = File.join(dir, make_tmpname("dic"))
+            run_mecab_indexer(tmp_src, tmp_dic)
 
             # upload user.dic
             master_file = master_dic(site_id)
-            Fs.binwrite(master_file, ::IO.binread(tmp_dic.path))
+            Fs.binwrite(master_file, ::IO.binread(tmp_dic))
           end
           nil
         end
@@ -138,6 +95,42 @@ class Kana::Dictionary
             criteria = criteria.keyword_in params[:keyword], :name, :body
           end
           criteria
+        end
+
+      private
+        def make_tmpname(suffix)
+          # blow code come from Tmpname::make_tmpname
+          "mecab#{Time.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
+        end
+
+        def build_source(site_id, output_file)
+          count = 0
+          ::File.open(output_file, "w:UTF-8") do |f|
+            each_all_csv(site_id) do |word, yomi|
+              f.puts "#{word},*,*,#{DEFAULT_COST},#{DEFAULT_POS.join(',')},*,*,#{word},#{yomi},#{yomi}"
+              count += 1
+            end
+          end
+          count
+        end
+
+        def each_all_csv(site_id)
+          where(site_id: site_id).each do |item|
+            item.enumerate_csv.each do |word, yomi|
+              yield word, yomi
+            end
+            logger.warn("dictionary #{item.name} has #{item.errors.size} error(s).") if item.errors.size > 0
+          end
+        end
+
+        def run_mecab_indexer(input_file, output_file)
+          mecab_indexer = SS.config.kana.mecab_indexer
+          mecab_dicdir = SS.config.kana.mecab_dicdir
+
+          cmd = "#{mecab_indexer} -d #{mecab_dicdir} -u #{output_file} -f UTF-8 -t UTF-8 #{input_file}"
+          logger.info("system(#{cmd})")
+          system(cmd)
+          raise I18n.t("kana.build_fail.index") if $CHILD_STATUS.exitstatus != 0
         end
     end
 end
