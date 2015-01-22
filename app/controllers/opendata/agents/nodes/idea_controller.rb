@@ -108,7 +108,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @cur_node.layout = nil
       raise "403" unless logged_in?(redirect: false)
 
-      cond = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: @idea_comment.id, text: "" }
+      cond = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: @idea_comment.id, text: params[:comment_body] }
       Opendata::IdeaComment.new(cond).save
 
       render :show_comment

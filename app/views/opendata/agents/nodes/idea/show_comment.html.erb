@@ -4,6 +4,8 @@ $ ->
   $(".comment .update").click (event)->
     $.ajax
       url: "<%= @idea_comment.comment_add_url %>"
+      type: "GET"
+      data: { comment_body : $('#s_comment_body').val()}
       success: (data)->
         $(".comment").html data
     event.preventDefault()
@@ -35,15 +37,13 @@ $ ->
       </div>
 
       <% if @comment_mode %>
-      <div class="input_comment">
-        <%= form_for :s, url: "", html: { class: "opendata-add_comment-form" } do |f| %>
+        <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>
           <dl class="comment_body">
             <dt>本文</dt>
             <dd><%= f.text_field :comment_body %></dd>
           </dl>
-          <%= link_to "このページにコメントする", "#", class: "update" %>
+          <%= link_to "このページにコメントする", "", class: "update" %>
         <% end %>
-      </div>
       <% end %>
 
   </div>
