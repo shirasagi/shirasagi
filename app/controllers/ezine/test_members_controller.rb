@@ -1,5 +1,6 @@
 class Ezine::TestMembersController < ApplicationController
   include Cms::BaseFilter
+  include Cms::CrudFilter
 
   model Ezine::TestMember
 
@@ -7,7 +8,7 @@ class Ezine::TestMembersController < ApplicationController
 
   private
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+    { cur_user: @cur_user, cur_site: @cur_site, node_id: @cur_node.id }
   end
 
   public
@@ -17,5 +18,9 @@ class Ezine::TestMembersController < ApplicationController
         where(node_id: @cur_node.id).
         order_by(updated: -1).
         page(params[:page]).per(50)
+    end
+
+    def new
+      @item = Ezine::TestMember.new(site_id: @cur_site.id, node_id: @cur_node.id)
     end
 end
