@@ -1,0 +1,32 @@
+production:
+  # Deliver verification mails from here or not.
+  deliver_verification_mail_from_here: true
+  # Register members here or not.
+  register_member_here: true
+  # Delivery interval configurations.
+  # Sleep $sleep_seconds each $interval deliverys.
+  interval: 50
+  sleep_seconds: 10
+
+## Multiple servers example
+#
+## On primary (internal) server configurations
+#production:
+#  deliver_verification_mail_from_here: false
+#  register_member_here: true
+#  interval: 50
+#  sleep_seconds: 10
+#
+## On secondary (external) server configurations
+#production:
+#  deliver_verification_mail_from_here: true
+#  register_member_here: false
+
+development: &development
+  deliver_verification_mail_from_here: true
+  register_member_here: true
+  interval: 1
+  sleep_seconds: 0
+
+test:
+  <<: *development

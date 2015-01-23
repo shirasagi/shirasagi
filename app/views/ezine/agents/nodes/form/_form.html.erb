@@ -1,0 +1,12 @@
+<div class="columns">
+  <dl class="column">
+    <dt><%= @entry.t :email %></dt>
+    <dd><%= f.text_field :email %></dd>
+    <dt><%= @entry.t :email_type %></dt>
+    <dd>
+    <% @entry.email_type_options.each do |email_type| %>
+      <%= f.radio_button :email_type, email_type[1] %><%= email_type[0] %>
+    <% end %>
+    </dd>
+  </dl>
+</div>
