@@ -62,7 +62,7 @@ module Voice::VoiceFilesFilter
         return
       end
 
-      send_audio_file(file: @item.file, timestamp: @item.last_modified)
+      send_audio_file(@item.file)
     end
 
   private
@@ -83,15 +83,20 @@ module Voice::VoiceFilesFilter
       send_data csv.encode("SJIS"), filename: "voice_files_#{Time.now.to_i}.csv"
     end
 
-    def send_audio_file(opts)
-      file = opts[:file]
+    def send_audio_file(file)
       return unless file
-
-      timestamp = opts.key?(:timestamp) ? opts["timestamp"] : nil
-      timestamp ||= Fs.stat(file).mtime
+      timestamp = Fs.stat(file).mtime
 
       response.headers["Content-Type"] = "audio/mpeg"
       response.headers["Last-Modified"] = CGI::rfc1123_date(timestamp)
+
+      if Fs.mode == :grid_fs
+        return send_data Fs.binread(file)
+      end
+
+      # x_sendfile requires a instance which implements 'to_path' method.
+      # see: Rack::Sendfile#call(env)
+      file = ::File.new(file) unless file.respond_to?(:to_path)
       send_file file, disposition: :inline, x_sendfile: true
     end
 end

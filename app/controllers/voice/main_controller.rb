@@ -23,7 +23,7 @@ class Voice::MainController < ApplicationController
       end
 
       if voice_file.latest?
-        send_audio_file(file: voice_file.file, timestamp: voice_file.last_modified)
+        send_audio_file(voice_file.file)
         return
       end
 
@@ -33,7 +33,7 @@ class Voice::MainController < ApplicationController
       rescue
         # http errors like 404 or 500.
         if voice_file.exists?
-          send_audio_file(file: voice_file.file, timestamp: voice_file.last_modified)
+          send_audio_file(voice_file.file)
           return
         end
 
@@ -43,7 +43,7 @@ class Voice::MainController < ApplicationController
         return
       end
 
-      voice_file = Voice::VoiceFile.acquire_lock voice_file.id
+      voice_file = Voice::VoiceFile.acquire_lock voice_file
       if voice_file
         # create voice file in background if successfully acquire lock
         Voice::SynthesisJob.call_async voice_file.id do |job|
@@ -64,15 +64,20 @@ class Voice::MainController < ApplicationController
       url
     end
 
-    def send_audio_file(opts)
-      file = opts[:file]
+    def send_audio_file(file)
       return unless file
-
-      timestamp = opts.key?(:timestamp) ? opts["timestamp"] : nil
-      timestamp ||= Fs.stat(file).mtime
+      timestamp = Fs.stat(file).mtime
 
       response.headers["Content-Type"] = "audio/mpeg"
       response.headers["Last-Modified"] = CGI::rfc1123_date(timestamp)
+
+      if Fs.mode == :grid_fs
+        return send_data Fs.binread(file)
+      end
+
+      # x_sendfile requires a instance which implements 'to_path' method.
+      # see: Rack::Sendfile#call(env)
+      file = ::File.new(file) unless file.respond_to?(:to_path)
       send_file file, disposition: :inline, x_sendfile: true
     end
 

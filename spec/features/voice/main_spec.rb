@@ -49,32 +49,6 @@ describe "voice_main" do
       end
     end
 
-    context "when valid site with querystring is given" do
-      it "returns 202" do
-        url = "http://#{voice_site.domain}/test-001.html?_=#{rand(0x100000000).to_s(36)}"
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
-        expect(status_code).to eq 202
-        expect(response_headers.keys).to include("Retry-After")
-        expect(Voice::VoiceFile.where(url: url).count).to be >= 1
-
-        # wait for a while or wait until status_code turns to 200.
-        require 'timeout'
-        timeout(60) do
-          loop do
-            visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
-            break if status_code == 200
-            sleep 1
-          end
-        end
-
-        # visit again
-        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
-        expect(status_code).to eq 200
-        expect(response_headers).to include("Content-Type" => "audio/mpeg")
-        expect(response_headers.keys).to_not include("Retry-After")
-      end
-    end
-
     context "when invalid site is given" do
       it "returns 404" do
         url = "http://not-exsit-host-#{rand(0x100000000).to_s(36)}/"
@@ -130,11 +104,43 @@ describe "voice_main" do
     end
 
     context "when server timed out" do
+      after(:all) do
+        http_server.release_wait
+      end
+
       it "returns 404" do
-        url = "http://#{voice_site.domain}/test-001.html?wait=5&_=#{rand(0x100000000).to_s(36)}"
+        # wait = SS.config.voice.download['timeout_sec'] + 5
+        wait = 10
+        url = "http://#{voice_site.domain}/test-001.html?wait=#{wait}&_=#{rand(0x100000000).to_s(36)}"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
         expect(Voice::VoiceFile.where(url: url).count).to eq 0
+      end
+    end
+
+    context "when server does not respond last_modified" do
+      it "returns 200" do
+        url = "http://#{voice_site.domain}/test-001.html?last_modified=nil&_=#{rand(0x100000000).to_s(36)}"
+        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        expect(status_code).to eq 202
+        expect(response_headers.keys).to include("Retry-After")
+        expect(Voice::VoiceFile.where(url: url).count).to be >= 1
+
+        # wait for a while or wait until status_code turns to 200.
+        require 'timeout'
+        timeout(60) do
+          loop do
+            visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+            break if status_code == 200
+            sleep 1
+          end
+        end
+
+        # visit again
+        visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
+        expect(status_code).to eq 200
+        expect(response_headers).to include("Content-Type" => "audio/mpeg")
+        expect(response_headers.keys).to_not include("Retry-After")
       end
     end
   end

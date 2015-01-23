@@ -9,16 +9,13 @@ class Voice::VoiceFile
   include SS::Reference::Site
   include Cms::Permission
   include Voice::Downloadable
+  include Voice::Lockable
 
   store_in collection: "voice_files"
 
   # permissions are delegated to edit_cms_users.
   set_permission_name :cms_users, :edit
 
-  field :path, type: String
-  field :url, type: String
-  field :last_modified, type: DateTime
-  field :lock_until, type: DateTime, default: 0
   field :error, type: String
   field :has_error, type: Integer, default: 0
   field :age, type: Integer, default: 0
@@ -55,44 +52,6 @@ class Voice::VoiceFile
         File.expand_path(SS.config.voice.root, Rails.root)
       end
 
-      def acquire_lock(id)
-        criteria = Voice::VoiceFile.where(id: id)
-        criteria = criteria.lt(lock_until: Time.now)
-        criteria.find_and_modify({ '$set' => { lock_until: 5.minutes.from_now }}, new: true)
-      end
-
-      def release_lock(id)
-        voice_file = Voice::VoiceFile.find(id) rescue nil
-        if voice_file
-          voice_file.lock_until = Time.at(0)
-          voice_file.save!
-        end
-      end
-
-      def find_or_create_by_url(url)
-        url = ::URI.parse(url.to_s) unless url.respond_to?(:host)
-        if url.host.blank? || url.path.blank?
-          # path must not be either nil, empty.
-          Rails.logger.debug("malformed url: #{url}")
-          return nil
-        end
-        url.normalize!
-
-        site = find_site url
-        unless site
-          Rails.logger.debug("site is not found: #{url}")
-          return nil
-        end
-
-        path = url.query.blank? ? url.path : "#{path}?#{url.query}"
-        voice_file = Voice::VoiceFile.find_or_create_by site_id: site.id, path: path
-        if voice_file.url.blank?
-          voice_file.url = url.to_s
-          voice_file.save!
-        end
-        voice_file
-      end
-
       def save_term_options
         [
           [I18n.t(:"history.save_term.day"), "day"],
@@ -100,14 +59,6 @@ class Voice::VoiceFile
           [I18n.t(:"history.save_term.year"), "year"],
           [I18n.t(:"history.save_term.all_save"), "all_save"],
         ]
-      end
-
-    private
-      def find_site(url)
-        host = url.host
-        port = url.port
-
-        SS::Site.find_by_domain("#{host}:#{port}") || SS::Site.find_by_domain("#{host}")
       end
   end
 
@@ -127,10 +78,10 @@ class Voice::VoiceFile
     def latest?
       return false unless exists?
 
-      @html, @last_modified = download unless @html
+      download
 
-      # check for whether source is updated.
-      return false if self.last_modified < @last_modified
+      # check for whether this has same identity
+      return false unless same_identity?
 
       # check for whether kana dictionary is updated.
       Kana::Dictionary.pull(self.site_id) do |kanadic|
@@ -146,9 +97,9 @@ class Voice::VoiceFile
     end
 
     def synthesize(force = false)
-      ensure_release_lock do
+      self.class.ensure_release_lock(self) do
         begin
-          @html, @last_modified = self.download
+          download
           unless force
             if self.latest?
               # voice file is up-to-date
@@ -158,9 +109,9 @@ class Voice::VoiceFile
           end
 
           Fs.mkdir_p(::File.dirname(self.file))
-          Voice::Converter.convert(self.site_id, @html, self.file)
+          Voice::Converter.convert(self.site_id, @cached_page.html, self.file)
 
-          self.last_modified = @last_modified
+          self.page_identity = @cached_page.page_identity
           self.error = nil
           # incrementing age ensures that 'updated' field is updated.
           self.age += 1
@@ -168,7 +119,7 @@ class Voice::VoiceFile
         rescue OpenURI::HTTPError
           raise
         rescue
-          self.last_modified = nil
+          self.page_identity = nil
           self.error = $ERROR_INFO.to_s
           # incrementing age ensures that 'updated' field is updated.
           self.age += 1
@@ -183,15 +134,6 @@ class Voice::VoiceFile
     end
 
   private
-    def ensure_release_lock
-      begin
-        ret = yield
-      ensure
-        self.class.release_lock id
-      end
-      ret
-    end
-
     def set_has_error
       self.has_error = self.error.blank? ? 0 : 1
     end
