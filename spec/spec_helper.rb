@@ -1,3 +1,4 @@
+require 'simplecov'
 require 'coveralls'
 Coveralls.wear!
 
@@ -17,6 +18,15 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start do
+  add_filter 'spec/'
+  add_filter 'vendor/bundle'
+end
 
 def can_test_mecab_specific?
   # In Travis Ci dictionares_controller#build failed because of there is no MeCab installed.
