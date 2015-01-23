@@ -59,5 +59,33 @@ categories = [
   <% end %>
 </nav>
 
+<div class="detail">
+
+  <div class="info-wrap">
+
+    <dl class="author">
+      <% if @cur_page.member_id.present? %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd>
+          <% if @cur_page.member %>
+          <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
+          <% else %>
+          ゲストユーザー
+          <% end %>
+        </dd>
+      <% elsif @cur_page.contact_group %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd><%= @cur_page.contact_group.full_name %><br /></dd>
+      <% elsif @cur_page.groups.present? %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd><%= @cur_page.groups.first.name %><br /></dd>
+      <% end %>
+
+      <dt><%= @cur_page.t :updated %></dt>
+      <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
+    </dl>
+  </div>
+</div>
+
 <div class="comment"></div>
 
