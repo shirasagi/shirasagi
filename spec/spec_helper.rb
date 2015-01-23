@@ -23,11 +23,11 @@ def can_test_mecab_spec?
   # So, before test, check whether we can do MeCab specific tests.
   return false if SS.config.kana.disable
   unless ::File.exists?(SS.config.kana.mecab_indexer)
-    reporter.message("[MeCab Spec] not found: #{SS.config.kana.mecab_indexer}")
+    puts("[MeCab Spec] not found: #{SS.config.kana.mecab_indexer}")
     return false
   end
   unless ::File.exists?(SS.config.kana.mecab_dicdir)
-    reporter.message("[MeCab Spec] not found: #{SS.config.kana.mecab_dicdir}")
+    puts("[MeCab Spec] not found: #{SS.config.kana.mecab_dicdir}")
     return false
   end
   true
@@ -39,19 +39,19 @@ def can_test_open_jtalk_spec?
   return false if ENV["allow_open_jtalk"].to_i == 0
   return false if SS.config.voice.disable
   unless ::File.exists?(SS.config.voice['openjtalk']['bin'])
-    reporter.message("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['bin']}")
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['bin']}")
     return false
   end
   unless ::Dir.exists?(SS.config.voice['openjtalk']['dic'])
-    reporter.message("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['dic']}")
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['dic']}")
     return false
   end
   unless ::File.exists?(SS.config.voice['openjtalk']['sox'])
-    reporter.message("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['sox']}")
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['sox']}")
     return false
   end
   unless ::File.exists?(SS.config.voice['lame']['bin'])
-    reporter.message("[Open JTalk Spec] not found: #{SS.config.voice['lame']['bin']}")
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['lame']['bin']}")
     return false
   end
   true
