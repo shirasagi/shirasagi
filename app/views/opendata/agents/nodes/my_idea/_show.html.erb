@@ -14,6 +14,12 @@
   <dt><%= @model.t :area_ids %></dt>
   <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
 
+  <dt><%= @model.t :dataset_ids %></dt>
+  <dd><%= @item.datasets.map { |m| m.name }.join(", ") %></dd>
+
+  <dt><%= @model.t :app_ids %></dt>
+  <dd><%= @item.apps.map { |m| m.name }.join(", ") %></dd>
+
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
 </dl>

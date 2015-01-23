@@ -18,6 +18,8 @@ class Opendata::Dataset
 
   has_many :points, primary_key: :dataset_id, class_name: "Opendata::DatasetPoint",
     dependent: :destroy
+  has_many :ideas, primary_key: :dataset_id, class_name: "Opendata::Idea",
+    dependent: :destroy
 
   validates :text, presence: true
   validates :category_ids, presence: true
