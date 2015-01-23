@@ -78,7 +78,7 @@ describe Voice::SynthesisJob do
       it { expect(Voice::VoiceFile.where(url: url).count).to eq 0 }
     end
 
-    context 'when get 404', :type => :very_slow do
+    context 'when get 404' do
       port = 33_190
       http_server = Voice::TestHttpServer.new(port)
       url = "http://localhost:#{port}/test-001.html?status_code=404&_=#{rand(0x100000000).to_s(36)}"
@@ -101,7 +101,7 @@ describe Voice::SynthesisJob do
       it { expect(Voice::VoiceFile.where(url: url).count).to eq 0 }
     end
 
-    context 'when get 500', :type => :very_slow do
+    context 'when get 500' do
       port = 33_190
       http_server = Voice::TestHttpServer.new(port)
       url = "http://localhost:#{port}/test-001.html?status_code=500&_=#{rand(0x100000000).to_s(36)}"
@@ -124,7 +124,7 @@ describe Voice::SynthesisJob do
       it { expect(Voice::VoiceFile.where(url: url).count).to eq 0 }
     end
 
-    context 'when server timed out', :type => :very_slow do
+    context 'when server timed out' do
       port = 33_190
       http_server = Voice::TestHttpServer.new(port)
       url = "http://localhost:#{port}/test-001.html?wait=10&_=#{rand(0x100000000).to_s(36)}"
@@ -145,6 +145,61 @@ describe Voice::SynthesisJob do
       subject { Job::Model.find_by(name: 'job:voice_synthesis') rescue nil }
       it { should be_nil }
       it { expect(Voice::VoiceFile.where(url: url).count).to eq 0 }
+    end
+  end
+
+  describe '#call', open_jtalk: true do
+    port = 33_190
+    http_server = Voice::TestHttpServer.new(port)
+
+    before(:all) do
+      http_server.start
+    end
+
+    after(:all) do
+      http_server.stop
+    end
+
+    subject(:site) { cms_site }
+
+    context 'when synthesize from file "fixtures/voice/test-001.html"' do
+      url = "http://localhost:#{port}/test-001.html?_=#{rand(0x100000000).to_s(36)}"
+
+      subject(:voice_file) { Voice::VoiceFile.find_or_create_by(site_id: site.id, url: url) }
+
+      it "creates voice file" do
+        expect {
+          Voice::SynthesisJob.new.call(voice_file.id)
+        }.to change {
+          voice_file.exists?
+        }.from(false).to(true)
+      end
+    end
+
+    context 'when get 404' do
+      url = "http://localhost:#{port}/test-001.html?status_code=404&_=#{rand(0x100000000).to_s(36)}"
+
+      subject(:voice_file) { Voice::VoiceFile.find_or_create_by(site_id: site.id, url: url) }
+
+      it "creates dows not voice file" do
+        expect {
+          Voice::SynthesisJob.new.call(voice_file.id)
+        }.to raise_error OpenURI::HTTPError
+        expect(Voice::VoiceFile.where(id: voice_file.id).count).to eq 0
+      end
+    end
+
+    context 'when server timed out' do
+      url = "http://localhost:#{port}/test-001.html?wait=104&_=#{rand(0x100000000).to_s(36)}"
+
+      subject(:voice_file) { Voice::VoiceFile.find_or_create_by(site_id: site.id, url: url) }
+
+      it "creates dows not voice file" do
+        expect {
+          Voice::SynthesisJob.new.call(voice_file.id)
+        }.to raise_error TimeoutError
+        expect(Voice::VoiceFile.where(id: voice_file.id).count).to eq 0
+      end
     end
   end
 end

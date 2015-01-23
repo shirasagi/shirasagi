@@ -17,7 +17,7 @@ class Voice::SynthesisJob
         voice_file.synthesize force
       rescue OpenURI::HTTPError, TimeoutError
         # do not record http errors like 404, 500.
-        voice_file.destroy unless voice_file.exists?
+        voice_file.destroy
         raise
       end
     end
