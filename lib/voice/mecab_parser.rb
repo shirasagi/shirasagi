@@ -1,5 +1,3 @@
-require "MeCab"
-
 class Voice::MecabParser
   include Enumerable
 
@@ -32,6 +30,7 @@ class Voice::MecabParser
       mecab_param = MECAB_OPTIONS
       mecab_param << %( -u "#{userdic}") if userdic.present?
 
+      require "MeCab"
       MeCab::Tagger.new(mecab_param)
     end
 end
