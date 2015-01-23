@@ -1,5 +1,8 @@
 class Opendata::Idea
   include Cms::Page::Model
+  include Cms::Addon::Release
+  include Cms::Addon::RelatedPage
+  include Contact::Addon::Page
   include Opendata::Addon::Category
   include Opendata::Addon::Area
   include Opendata::Addon::Dataset
