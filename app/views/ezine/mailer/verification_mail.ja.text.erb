@@ -10,5 +10,4 @@
 
 <%= @entry.entry_type %>
 
-<% # TODO Set correct verification URL %>
-<%= "http://example.com/foo/bar?token=#{@entry.verification_token}" %>
+<%= "#{@entry.node.full_url}entry/verification?token=#{@entry.verification_token}" %>
