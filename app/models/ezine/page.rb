@@ -40,19 +40,30 @@ class Ezine::Page
       Ezine::Member.where(node_id: parent.id, email: {"$nin" => emails})
     end
 
-    # Deliver a mail to a member and create a sent log if it is succeeded.
+    # Deliver a mail to a member.
     #
-    # 1メンバーにメールを配信し成功すれば配信ログを作成する。
+    # Create a sent log if it is succeeded and isn't test delivery.
+    #
+    # 1メンバーにメールを配信する。
+    #
+    # 成功しかつテスト配信でなければ配信ログを作成する。
     #
     # @param [Ezine::Member, Ezine::TestMember] member
+    # @param [true, false] is_test
+    #
+    #   Test delivery or not. (default: false)
+    #
+    #   テスト配信であるかどうか。(デフォルト: false)
     #
     # @raise [Object]
     #   An error object from `ActionMailer#deliver`
     #
     #   `ActionMailer#deliver` メソッドからのエラーオブジェクト
-    def deliver_to(member)
+    def deliver_to(member, is_test: false)
       Ezine::Mailer.page_mail(self, member).deliver
-      Ezine::SentLog.create node_id: parent.id, page_id: id, email: member.email
+      Ezine::SentLog.create(
+        node_id: parent.id, page_id: id, email: member.email
+      ) unless is_test
     end
 
     # Do a test delivery.
@@ -60,7 +71,7 @@ class Ezine::Page
     # テスト配信を行う。
     def deliver_to_test_members
       Ezine::TestMember.all.each do |test_member|
-        deliver_to test_member
+        deliver_to test_member, is_test: true
       end
     end
 
