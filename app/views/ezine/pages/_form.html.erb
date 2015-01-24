@@ -1,0 +1,39 @@
+<%= coffee do %>
+  $ ->
+    $('.ezine-convert-button').click ->
+      if (typeof tinymce != 'undefined')
+        text = convert_html_to_text tinymce.get('item_html').getContent()
+      else if (typeof CKEDITOR != 'undefined')
+        text = convert_html_to_text CKEDITOR.instances.item_html.getData()
+      else
+        text = ""
+
+      $('.ezine-page-text').val(text)
+
+  convert_html_to_text = (html) ->
+    html = html.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g,'')
+    html = html.replace(/&quot;|&#34;/g, '"')
+    html = html.replace(/&apos;|&#39;/g, '\'')
+    html = html.replace(/&lt;|&#60;/g, '\<')
+    html = html.replace(/&gt;|&#62;/g, '\>')
+    html = html.replace(/&nbsp;|&#160;/g, ' ')
+<% end %>
+
+<%= html_editor ".ezine-page-html", height: "180px" %>
+
+<dl class="ezine-form see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
+  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
+
+  <dt><%= @model.t :html %></dt>
+  <dd><%= f.text_area :html, class: "ezine-page-html", style: "height:180px;" %></dd>
+
+  <dt>&nbsp;</dt>
+  <dd><%= button_tag t("ezine.button.convert_html_to_text"), { type: :button, class: "ezine-convert-button" } %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= f.text_area :text, class: "ezine-page-text" %></dd>
+</dl>

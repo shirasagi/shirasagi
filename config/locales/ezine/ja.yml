@@ -1,0 +1,53 @@
+ja:
+  ezine:
+    page: メルマガ記事
+    member: メルマガ読者
+    test_member: テスト読者
+    entry: 登録履歴
+    page_title:
+      entry: 配信登録
+      update: 配信形式の変更
+      remove: 配信停止
+    button:
+      convert_html_to_text: HTML版を変換する
+      confirm_entry: 配信登録
+      confirm_update: 変更
+      confirm_remove: 配信停止
+      deliver: 送信
+    entry_type:
+      add: 配信登録
+      update: 配信形式の変更
+      delete: 配信停止
+
+    preview_html: HTML版プレビュー
+    preview_text: テキスト版プレビュー
+    deliver_test: テスト配信
+    deliver: 本配信
+    sent_log: 配信ログ
+
+  modules:
+    ezine: メールマガジン
+
+  cms:
+    nodes:
+      ezine/page: 配信記事一覧
+
+  mongoid:
+    attributes:
+      ezine/page:
+        name: 記事タイトル
+        html: 本文（HTML版）
+        text: 本文（テキスト版）
+      ezine/member:
+        email: メールアドレス
+        email_type: 配信形式
+      ezine/test_member:
+        email: メールアドレス
+        email_type: 配信形式
+      ezine/entry:
+        email: メールアドレス
+        email_type: 配信形式
+        entry_type: 登録種別
+      ezine/sent_log:
+        email: メールアドレス
+        created: 配信日時

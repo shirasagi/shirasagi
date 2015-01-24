@@ -1,0 +1,9 @@
+<div class="ezine-html">
+  <%= t('ezine.deliver') %>
+
+  <%= render partial: 'deliver_form' %>
+
+  <%= form_for :item, url: { action: :delivery } do |f| %>
+    <%= f.submit t('ezine.button.deliver'), name: :deliver %>
+  <% end %>
+</div>
