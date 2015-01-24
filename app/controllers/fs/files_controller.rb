@@ -5,7 +5,7 @@ class Fs::FilesController < ApplicationController
       path  = params[:filename]
       path << ".#{params[:format]}" if params[:format].present?
 
-      @item = SS::File.find_by id: params[:id], filename: path
+      @item = SS::File.find_by id: params[:id], filename: path, state: "public"
     end
 
   public
