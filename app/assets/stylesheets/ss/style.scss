@@ -325,17 +325,15 @@ dl.see {
   > dt {
     @include clear;
     float: left;
-    min-width: 140px;
+    min-width: 160px;
     min-height: 1.0em;
     color: $black;
     font-weight: bold;
   }
   > dd {
     min-height: 1.41em;
-    margin: 0 0 0 140px;
-    //border-top: 1px solid #eee;
     @include clear;
-    margin: 0px 0px 0px 140px;
+    margin: 0px 0px 0px 160px;
   }
   > dt ~ dt { margin-top: 20px; }
   > dd ~ dd { margin-top: 20px; }
