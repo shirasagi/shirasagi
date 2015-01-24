@@ -29,7 +29,11 @@ module Cms::PublicHelper
       page = params.delete("page")
 
       path = @cur_path
-      path = path.sub(/\/$/, "/index.html").sub(".html", ".p#{page}.html") if page
+
+      if page
+        path = path.sub(/\/$/, "/index.html").sub(".html", ".p#{page}.html")
+        params[:page] = page if path !~ /\.html/
+      end
 
       if params.size > 0
         path = "#{path}?" + params.to_query
