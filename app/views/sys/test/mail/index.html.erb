@@ -19,10 +19,12 @@
 <% end %>
 
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true } do |f| %>
-<%#= error_messages_for :item %>
 
 <article id="http-tester">
   <div class="view">
+    <h2>Mail From</h2>
+    <div><%= f.text_field :from, required: true %></div>
+
     <h2>Mail To</h2>
     <div><%= f.text_field :to, required: true %></div>
 
