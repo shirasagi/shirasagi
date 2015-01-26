@@ -6,4 +6,4 @@ do
   if [ $? -eq 0 ]; then
     break
   fi
-next
+done
