@@ -1,2 +1,9 @@
 #!/bin/bash
-bundle install --without development --jobs 2 --retry 5
+for i in $(seq 1 5)
+do
+  echo "$i of 5: bundle install --without development"
+  bundle install --without development
+  if [ $? -eq 0 ]; then
+    break
+  fi
+next
