@@ -8,9 +8,9 @@ services:
 bundler_args: "--without development"
 install:
   - pushd .
-  - .travis.d/install.sh
+  - sh .travis.d/install.sh
   - popd
 before_script:
   - pushd .
-  - .travis.d/before_script.sh
+  - sh .travis.d/before_script.sh
   - popd
