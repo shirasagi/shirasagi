@@ -8,9 +8,7 @@ $ ->
   return
 <% end %>
 
-<div class="ezine-html">
-  <%= t('ezine.page_title.remove') %>
-</div>
+<h2 class="ezine-html"><%= t('ezine.page_title.remove') %></h2>
 
 <%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
 <div class="ezine-form">
