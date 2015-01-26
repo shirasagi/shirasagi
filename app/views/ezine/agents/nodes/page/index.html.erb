@@ -1,16 +1,5 @@
 <div class="ezine-pages pages">
-<% @items.each do |item| %>
-  <article>
-    <header>
-      <time datetime="<%= item.date.to_date %>">
-        <%= item.date.to_date %>
-      </time>
-      <h2><a href="<%= item.url %>"><%= item.name %></a></h2>
-    </header>
-    <p><%= strip_tags(item.html).truncate(30) %></p>
-    <p><a href="<%= item.url %>" class="more"><%= t("ezine.more") %></a></p>
-  </article>
-<% end %>
+<%= render_page_list %>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
