@@ -16,6 +16,8 @@ module SS::User::Model
     field :email, type: String, metadata: { form: :email }
     field :password, type: String
     field :type, type: String
+    field :last_loggedin, type: DateTime
+
     embeds_ids :groups, class_name: "SS::Group"
 
     permit_params :name, :email, :password, :in_password, :type, group_ids: []
