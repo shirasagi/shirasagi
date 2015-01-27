@@ -2,6 +2,8 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
   helper Cms::ListHelper
 
+  before_action :accept_cors_request, only: [:rss]
+
   public
     def pages
       Faq::Page.site(@cur_site).public(@cur_date)
