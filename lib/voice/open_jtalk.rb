@@ -64,7 +64,8 @@ class Voice::OpenJtalk
 
       Rails.logger.debug("system: #{cmd}")
       system(cmd)
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless $CHILD_STATUS.exitstatus == 0
+      # do not use $CHILD_STATUS because $CHILD_STATUS does not exist in some ruby version/environments
+      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless $?.exitstatus == 0
       raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless ::File.exists?(output)
       raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") if ::File.size(output) == 0
     end
@@ -84,7 +85,8 @@ class Voice::OpenJtalk
       cmd = %("#{@sox_path}" #{source_list} "#{tmp_output}")
       Rails.logger.debug("system: #{cmd}")
       system(cmd)
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.sox") unless $CHILD_STATUS.exitstatus == 0
+      # do not use $CHILD_STATUS because $CHILD_STATUS does not exist in some ruby version/environments
+      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.sox") unless $?.exitstatus == 0
 
       ::FileUtils.copy(tmp_output, output)
       true

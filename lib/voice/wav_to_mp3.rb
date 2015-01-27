@@ -20,7 +20,8 @@ module Voice
         # execute command
         Rails.logger.debug("system: #{cmd}")
         system(cmd)
-        raise WavToMp3Error, I18n.t("voice.synthesis_fail.lame") unless $CHILD_STATUS.exitstatus == 0
+        # do not use $CHILD_STATUS because $CHILD_STATUS does not exist in some ruby version/environments
+        raise WavToMp3Error, I18n.t("voice.synthesis_fail.lame") unless $?.exitstatus == 0
       end
 
     private
