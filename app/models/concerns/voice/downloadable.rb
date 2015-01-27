@@ -71,8 +71,9 @@ module Voice::Downloadable
       end
     end
 
-    def make_page_identity(html, _, _)
+    def make_page_identity(html, etag, _)
       # return [ last_modified.to_f.to_s ].pack("m").chomp if last_modified
+      return etag if etag.present?
       Digest::MD5.hexdigest(html)
     end
 

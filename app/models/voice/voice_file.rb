@@ -75,8 +75,12 @@ class Voice::VoiceFile
       Fs.exists?(file)
     end
 
-    def latest?
+    def latest?(margin = 60)
       return false unless exists?
+
+      # this file is enough fresh.
+      # this condition is fail safe for CSRF token problem.
+      return true if fresh?(margin)
 
       download
 
@@ -149,5 +153,10 @@ class Voice::VoiceFile
       rescue klass => e
         Rails.logger.error("#{message}: #{e.class} (#{e.message}):\n  #{e.backtrace[0..5].join('\n  ')}")
       end
+    end
+
+    def fresh?(margin)
+      elapsed = Time.now - Fs.stat(file).mtime
+      elapsed < margin
     end
 end

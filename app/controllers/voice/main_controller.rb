@@ -22,17 +22,25 @@ class Voice::MainController < ApplicationController
         return
       end
 
-      if voice_file.latest?
-        send_audio_file(voice_file.file)
+      voice_file = Voice::VoiceFile.acquire_lock voice_file
+      unless voice_file
+        head :accepted, retry_after: SS.config.voice.controller["retry_after"]
         return
       end
 
       begin
-        # check for whether given url can download
+        if voice_file.latest?
+          Voice::VoiceFile.release_lock voice_file
+          send_audio_file(voice_file.file)
+          return
+        end
+
+        # check for whether be able to download.
         voice_file.download
       rescue
         # http errors like 404 or 500.
         if voice_file.exists?
+          Voice::VoiceFile.release_lock voice_file
           send_audio_file(voice_file.file)
           return
         end
@@ -43,15 +51,12 @@ class Voice::MainController < ApplicationController
         return
       end
 
-      voice_file = Voice::VoiceFile.acquire_lock voice_file
-      if voice_file
-        # create voice file in background if successfully acquire lock
-        Voice::SynthesisJob.call_async voice_file.id do |job|
-          job.site_id = voice_file.site_id
-        end
-        run_job
+      # create voice file in background if successfully acquire lock
+      # and do not release lock while voice is creating.
+      Voice::SynthesisJob.call_async voice_file.id do |job|
+        job.site_id = voice_file.site_id
       end
-
+      run_job
       head :accepted, retry_after: SS.config.voice.controller["retry_after"]
     end
 
