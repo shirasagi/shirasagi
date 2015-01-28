@@ -7,6 +7,7 @@ class Voice::TestHttpServer
       @port = port
       @fixture_root = "#{Rails.root}/spec/fixtures/voice"
       @redirect_map = {}
+      @options = {}
     end
 
     def start
@@ -60,6 +61,14 @@ class Voice::TestHttpServer
       @redirect_map.delete(from)
     end
 
+    def add_options(path, opts)
+      @options[path] = opts
+    end
+
+    def remove_options(path)
+      @options.delete(path)
+    end
+
   private
     def set_started
       @lock.synchronize do
@@ -70,17 +79,19 @@ class Voice::TestHttpServer
 
     def handle(request, response)
       path = "/#{request.path}".gsub(/\/\/+/, "/")
+      opts = @options.fetch(path, {})
       path = @redirect_map.fetch(path, path)
       path = "#{@fixture_root}/#{path}".gsub(/\/\/+/, "/")
 
       raise WEBrick::HTTPStatus::NotFound unless ::File.exist?(path)
 
       file = ::File.new(path)
-      status_code = request.query['status_code'].present? ? request.query['status_code'].to_i : nil
-      last_modified = request.query['last_modified'].present? ? request.query['last_modified'] : nil
-      last_modified = parse_last_modified(last_modified, ::File.mtime(path).httpdate)
-      etag = request.query['etag'].present? ? request.query['etag'] : make_etag(file)
-      wait = request.query['wait'].present? ? request.query['wait'].to_f : nil
+      status_code = opts[:status_code]
+      last_modified = opts.fetch(:last_modified, ::File.mtime(path))
+      last_modified = last_modified.httpdate if last_modified.respond_to?(:httpdate)
+      etag = opts.fetch(:etag, make_etag(file))
+      wait = opts[:wait].present? ? opts[:wait].to_f : nil
+
       # sleep wait if wait
       if wait
         begin
@@ -94,7 +105,7 @@ class Voice::TestHttpServer
         end
       end
 
-      response.status = status_code if status_code
+      response.status = status_code if status_code.present?
       response.content_type = "text/html; charset=utf-8"
       response["Last-Modified"] = last_modified unless last_modified.nil?
       response["ETag"] = etag if etag !~ /^nil$/i
