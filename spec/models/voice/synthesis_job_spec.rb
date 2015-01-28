@@ -82,6 +82,7 @@ describe Voice::SynthesisJob do
 
       before(:all) do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", status_code: 400)
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -105,6 +106,7 @@ describe Voice::SynthesisJob do
 
       before(:all) do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", status_code: 404)
         Voice::SynthesisJob.call_async id.to_s
 
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
@@ -129,6 +131,7 @@ describe Voice::SynthesisJob do
 
       before(:all) do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", status_code: 500)
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -153,6 +156,7 @@ describe Voice::SynthesisJob do
 
       before(:all) do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", wait: wait)
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -180,6 +184,7 @@ describe Voice::SynthesisJob do
 
       before(:all) do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", last_modified: nil)
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -256,6 +261,7 @@ describe Voice::SynthesisJob do
       before :all  do
         # puts '[enter] when get 404'
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", status_code: 404)
       end
 
       # after :all  do
@@ -280,6 +286,7 @@ describe Voice::SynthesisJob do
       before :all  do
         # puts '[enter] when server timed out'
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", wait: wait)
       end
 
       after :all  do

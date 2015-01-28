@@ -148,6 +148,7 @@ describe Voice::VoiceFile do
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", etag: nil)
       end
 
       subject(:voice_file) do
@@ -170,6 +171,7 @@ describe Voice::VoiceFile do
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", last_modified: nil)
       end
 
       subject(:voice_file) do
@@ -192,6 +194,7 @@ describe Voice::VoiceFile do
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", etag: nil, last_modified: nil)
       end
 
       subject(:voice_file) do

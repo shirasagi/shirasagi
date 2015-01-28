@@ -98,7 +98,8 @@ module Voice::Downloadable
 
       voice_file = self.find_or_create_by site_id: site.id, path: url.path
       if voice_file.url.blank?
-        voice_file.url = url.to_s
+        # remove query string and fragments.
+        voice_file.url = url.to_s.gsub(/\?.+$/, '').gsub(/#.+$/, '')
         voice_file.save!
       end
       voice_file

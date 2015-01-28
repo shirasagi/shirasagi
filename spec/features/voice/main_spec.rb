@@ -87,6 +87,7 @@ describe "voice_main" do
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", status_code: 400)
       end
 
       it "returns 404" do
@@ -102,6 +103,7 @@ describe "voice_main" do
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", status_code: 404)
       end
 
       it "returns 404" do
@@ -117,6 +119,7 @@ describe "voice_main" do
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", status_code: 500)
       end
 
       it "returns 404" do
@@ -129,9 +132,11 @@ describe "voice_main" do
 
     context "when server timed out" do
       path = "#{rand(0x100000000).to_s(36)}.html"
+      wait = 10
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", wait: wait)
       end
 
       after(:all) do
@@ -139,8 +144,6 @@ describe "voice_main" do
       end
 
       it "returns 404" do
-        # wait = SS.config.voice.download['timeout_sec'] + 5
-        wait = 10
         url = "http://#{voice_site.domain}/#{path}?wait=#{wait}"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
@@ -153,14 +156,20 @@ describe "voice_main" do
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
+        http_server.add_options("/#{path}", last_modified: nil)
       end
 
       it "returns 200" do
-        url = "http://#{voice_site.domain}/#{path}?last_modified=nil"
+        url0 = "http://#{voice_site.domain}/#{path}"
+        url = "#{url0}?last_modified=nil"
+        # request url with query string
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 202
         expect(response_headers.keys).to include("Retry-After")
-        expect(Voice::VoiceFile.where(url: url).count).to be >= 1
+        # record exists if query string is not given.
+        expect(Voice::VoiceFile.where(url: url0).count).to be >= 1
+        # record does not exist if query string is given.
+        expect(Voice::VoiceFile.where(url: url).count).to eq 0
 
         # wait for a while or wait until status_code turns to 200.
         require 'timeout'
