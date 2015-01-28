@@ -14,3 +14,4 @@ before_script:
   - pushd .
   - bash .travis.d/before_script.sh
   - popd
+script: allow_open_jtalk=1 bundle exec rspec
