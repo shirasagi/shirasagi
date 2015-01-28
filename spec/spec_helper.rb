@@ -28,12 +28,42 @@ SimpleCov.start do
   add_filter 'vendor/bundle'
 end
 
-def can_test_mecab_specific?
+def can_test_mecab_spec?
   # In Travis Ci dictionares_controller#build failed because of there is no MeCab installed.
   # So, before test, check whether we can do MeCab specific tests.
   return false if SS.config.kana.disable
-  return false unless ::File.exists?(SS.config.kana.mecab_indexer)
-  return false unless ::File.exists?(SS.config.kana.mecab_dicdir)
+  unless ::File.exists?(SS.config.kana.mecab_indexer)
+    puts("[MeCab Spec] not found: #{SS.config.kana.mecab_indexer}")
+    return false
+  end
+  unless ::File.exists?(SS.config.kana.mecab_dicdir)
+    puts("[MeCab Spec] not found: #{SS.config.kana.mecab_dicdir}")
+    return false
+  end
+  true
+end
+
+def can_test_open_jtalk_spec?
+  # be carefule, open jtalk spec is slow.
+  # you will waste a lot of time if you turn on allow_open_jtalk.
+  return false if ENV["allow_open_jtalk"].to_i == 0
+  return false if SS.config.voice.disable
+  unless ::File.exists?(SS.config.voice['openjtalk']['bin'])
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['bin']}")
+    return false
+  end
+  unless ::Dir.exists?(SS.config.voice['openjtalk']['dic'])
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['dic']}")
+    return false
+  end
+  unless ::File.exists?(SS.config.voice['openjtalk']['sox'])
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['openjtalk']['sox']}")
+    return false
+  end
+  unless ::File.exists?(SS.config.voice['lame']['bin'])
+    puts("[Open JTalk Spec] not found: #{SS.config.voice['lame']['bin']}")
+    return false
+  end
   true
 end
 
@@ -71,7 +101,8 @@ RSpec.configure do |config|
     FactoryGirl.reload
   end
 
-  config.filter_run_excluding(mecab: true) unless can_test_mecab_specific?
+  config.filter_run_excluding(mecab: true) unless can_test_mecab_spec?
+  config.filter_run_excluding(open_jtalk: true) unless can_test_open_jtalk_spec?
 
   `rake db:drop`
 end

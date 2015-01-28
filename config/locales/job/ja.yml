@@ -1,0 +1,40 @@
+ja:
+  job:
+    log: ジョブ実行履歴
+    save_term:
+      day: １日
+      month: １ヶ月
+      year: １年
+      all_save: すべて保存
+      all_delete: すべて削除
+    view_diff: 差分を見る
+    restore: 復元する
+    confirm:
+      restore: 復元してよろしいですか？
+    notice:
+      restore: システムのバージョンが異なる場合、正常に動作しなくなる可能性があります。
+      restored: 復元しました。
+    button:
+      restore: 復元
+    state:
+      stop: 停止
+      start: 開始
+      running: 実行中
+      completed: 完了
+      failed: 失敗
+
+  modules:
+    job: ジョブ
+
+  mongoid:
+    models:
+      job/log: ジョブ実行履歴
+    attributes:
+      job/log:
+        class_name: ジョブ名
+        started: 開始日時
+        closed: 終了日時
+        state: 状態
+        args: パラメータ
+        logs: ログ
+        save_term: 保存期間
