@@ -1,4 +1,9 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
+
+  <% if @item.send(:layout_id).present? %>
+  <dt><%= @model.t :layout_id %></dt>
+  <dd><%= tryb{@item.layout.name} %></dd>
+  <% end %>
 </dl>
