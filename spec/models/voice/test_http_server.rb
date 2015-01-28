@@ -6,6 +6,7 @@ class Voice::TestHttpServer
     def initialize(port)
       @port = port
       @fixture_root = "#{Rails.root}/spec/fixtures/voice"
+      @redirect_map = {}
     end
 
     def start
@@ -51,6 +52,14 @@ class Voice::TestHttpServer
       @server_thread = nil
     end
 
+    def add_redirect(from, to)
+      @redirect_map[from] = to
+    end
+
+    def remove_redirect(from)
+      @redirect_map.delete(from)
+    end
+
   private
     def set_started
       @lock.synchronize do
@@ -60,8 +69,9 @@ class Voice::TestHttpServer
     end
 
     def handle(request, response)
-      path = "#{@fixture_root}/#{request.path}"
-      path.gsub!(/\/\/+/, "/")
+      path = "/#{request.path}".gsub(/\/\/+/, "/")
+      path = @redirect_map.fetch(path, path)
+      path = "#{@fixture_root}/#{path}".gsub(/\/\/+/, "/")
 
       raise WEBrick::HTTPStatus::NotFound unless ::File.exist?(path)
 

@@ -78,8 +78,7 @@ class Voice::VoiceFile
     def latest?(margin = 60)
       return false unless exists?
 
-      # this file is enough fresh.
-      # this condition is fail safe for CSRF token problem.
+      # check for whether file is fresh enough to prevent infinite loops in voice synthesis.
       return true if fresh?(margin)
 
       download

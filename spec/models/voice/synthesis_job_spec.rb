@@ -16,12 +16,14 @@ describe Voice::SynthesisJob do
     end
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
-      url = "http://localhost:#{port}/test-001.html?_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}"
       id = Voice::VoiceFile.find_or_create_by(site_id: 1, url: url).id
 
       expected_args = []
       expected_priority = 0
       before :all  do
+        http_server.add_redirect("/#{path}", "/test-001.html")
         Voice::SynthesisJob.call_async id.to_s
         expected_args = [ id.to_s ]
         expected_priority = Time.now.to_i
@@ -47,10 +49,12 @@ describe Voice::SynthesisJob do
     end
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
-      url = "http://localhost:#{port}/test-001.html?_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}"
       id = Voice::VoiceFile.find_or_create_by(site_id: 1, url: url).id
 
       before(:all) do
+        http_server.add_redirect("/#{path}", "/test-001.html")
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -72,10 +76,12 @@ describe Voice::SynthesisJob do
     end
 
     context 'when get 400' do
-      url = "http://localhost:#{port}/test-001.html?status_code=400&_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}?status_code=400"
       id = Voice::VoiceFile.find_or_create_by(site_id: 1, url: url).id
 
       before(:all) do
+        http_server.add_redirect("/#{path}", "/test-001.html")
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -93,10 +99,12 @@ describe Voice::SynthesisJob do
     end
 
     context 'when get 404' do
-      url = "http://localhost:#{port}/test-001.html?status_code=404&_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}?status_code=404"
       id = Voice::VoiceFile.find_or_create_by(site_id: 1, url: url).id
 
       before(:all) do
+        http_server.add_redirect("/#{path}", "/test-001.html")
         Voice::SynthesisJob.call_async id.to_s
 
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
@@ -115,10 +123,12 @@ describe Voice::SynthesisJob do
     end
 
     context 'when get 500' do
-      url = "http://localhost:#{port}/test-001.html?status_code=500&_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}?status_code=500"
       id = Voice::VoiceFile.find_or_create_by(site_id: 1, url: url).id
 
       before(:all) do
+        http_server.add_redirect("/#{path}", "/test-001.html")
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -136,11 +146,13 @@ describe Voice::SynthesisJob do
     end
 
     context 'when server timed out' do
+      path = "#{rand(0x100000000).to_s(36)}.html"
       wait = SS.config.voice.download['timeout_sec'] + 5
-      url = "http://localhost:#{port}/test-001.html?wait=#{wait}&_=#{rand(0x100000000).to_s(36)}"
+      url = "http://localhost:#{port}/#{path}?wait=#{wait}"
       id = Voice::VoiceFile.find_or_create_by(site_id: 1, url: url).id
 
       before(:all) do
+        http_server.add_redirect("/#{path}", "/test-001.html")
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -162,10 +174,12 @@ describe Voice::SynthesisJob do
     end
 
     context 'when server does not respond last_modified' do
-      url = "http://localhost:#{port}/test-001.html?last_modified=nil&_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}?last_modified=nil"
       id = Voice::VoiceFile.find_or_create_by(site_id: 1, url: url).id
 
       before(:all) do
+        http_server.add_redirect("/#{path}", "/test-001.html")
         Voice::SynthesisJob.call_async id.to_s
         cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
         system(cmd)
@@ -205,12 +219,14 @@ describe Voice::SynthesisJob do
     subject(:site) { cms_site }
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
-      url = "http://localhost:#{port}/test-001.html?_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}"
 
-      # before :all  do
-      #   puts '[enter] when synthesize from file "fixtures/voice/test-001.html"'
-      # end
-      #
+      before :all  do
+        # puts '[enter] when synthesize from file "fixtures/voice/test-001.html"'
+        http_server.add_redirect("/#{path}", "/test-001.html")
+      end
+
       # after :all  do
       #   puts '[leave] when synthesize from file "fixtures/voice/test-001.html"'
       # end
@@ -234,12 +250,14 @@ describe Voice::SynthesisJob do
     end
 
     context 'when get 404' do
-      url = "http://localhost:#{port}/test-001.html?status_code=404&_=#{rand(0x100000000).to_s(36)}"
+      path = "#{rand(0x100000000).to_s(36)}.html"
+      url = "http://localhost:#{port}/#{path}?status_code=404"
 
-      # before :all  do
-      #   puts '[enter] when get 404'
-      # end
-      #
+      before :all  do
+        # puts '[enter] when get 404'
+        http_server.add_redirect("/#{path}", "/test-001.html")
+      end
+
       # after :all  do
       #   puts '[leave] when get 404'
       # end
@@ -255,12 +273,14 @@ describe Voice::SynthesisJob do
     end
 
     context 'when server timed out' do
+      path = "#{rand(0x100000000).to_s(36)}.html"
       wait = SS.config.voice.download['timeout_sec'] + 5
-      url = "http://localhost:#{port}/test-001.html?wait=#{wait}&_=#{rand(0x100000000).to_s(36)}"
+      url = "http://localhost:#{port}/#{path}?wait=#{wait}"
 
-      # before :all  do
-      #   puts '[enter] when server timed out'
-      # end
+      before :all  do
+        # puts '[enter] when server timed out'
+        http_server.add_redirect("/#{path}", "/test-001.html")
+      end
 
       after :all  do
         # puts '[leave] when server timed out'

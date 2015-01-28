@@ -122,8 +122,14 @@ describe Voice::VoiceFile do
     end
 
     context "when downloads page" do
+      path = "#{rand(0x100000000).to_s(36)}.html"
+
+      before :all  do
+        http_server.add_redirect("/#{path}", "/test-001.html")
+      end
+
       subject(:voice_file) do
-        url = "http://#{voice_site.domain}/test-001.html?_=#{rand(0x100000000).to_s(36)}"
+        url = "http://#{voice_site.domain}/#{path}"
         Voice::VoiceFile.find_or_create_by_url(url)
       end
 
@@ -138,8 +144,14 @@ describe Voice::VoiceFile do
     end
 
     context "when server does not respond etag" do
+      path = "#{rand(0x100000000).to_s(36)}.html"
+
+      before :all  do
+        http_server.add_redirect("/#{path}", "/test-001.html")
+      end
+
       subject(:voice_file) do
-        url = "http://#{voice_site.domain}/test-001.html?etag=nil&_=#{rand(0x100000000).to_s(36)}"
+        url = "http://#{voice_site.domain}/#{path}?etag=nil"
         Voice::VoiceFile.find_or_create_by_url(url)
       end
 
@@ -154,8 +166,14 @@ describe Voice::VoiceFile do
     end
 
     context "when server does not respond last_modified" do
+      path = "#{rand(0x100000000).to_s(36)}.html"
+
+      before :all  do
+        http_server.add_redirect("/#{path}", "/test-001.html")
+      end
+
       subject(:voice_file) do
-        url = "http://#{voice_site.domain}/test-001.html?last_modified=nil&_=#{rand(0x100000000).to_s(36)}"
+        url = "http://#{voice_site.domain}/#{path}?last_modified=nil"
         Voice::VoiceFile.find_or_create_by_url(url)
       end
 
@@ -170,8 +188,14 @@ describe Voice::VoiceFile do
     end
 
     context "when server does not either respond etag or last_modified" do
+      path = "#{rand(0x100000000).to_s(36)}.html"
+
+      before :all  do
+        http_server.add_redirect("/#{path}", "/test-001.html")
+      end
+
       subject(:voice_file) do
-        url = "http://#{voice_site.domain}/test-001.html?etag=nil&last_modified=nil&_=#{rand(0x100000000).to_s(36)}"
+        url = "http://#{voice_site.domain}/#{path}?etag=nil&last_modified=nil"
         Voice::VoiceFile.find_or_create_by_url(url)
       end
 

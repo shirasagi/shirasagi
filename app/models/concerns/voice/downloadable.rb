@@ -71,10 +71,14 @@ module Voice::Downloadable
       end
     end
 
-    def make_page_identity(html, etag, _)
-      # return [ last_modified.to_f.to_s ].pack("m").chomp if last_modified
-      return etag if etag.present?
-      Digest::MD5.hexdigest(html)
+    def make_page_identity(html, _, _)
+      Digest::MD5.hexdigest(purge_csrf_token(html))
+    end
+
+    def purge_csrf_token(html)
+      html.gsub!(/<\s*meta\s+content\s*=\s*["']authenticity_token["']\s+name\s*=\s*["']csrf-param["']\s*\/>/, '')
+      html.gsub!(/<\s*meta\s+content\s*=\s*["'].+?["']\s+name\s*=\s*["']csrf-token["']\s*\/>/, '')
+      html
     end
 
   module ClassMethods
@@ -92,8 +96,7 @@ module Voice::Downloadable
         return nil
       end
 
-      path = url.query.blank? ? url.path : "#{path}?#{url.query}"
-      voice_file = self.find_or_create_by site_id: site.id, path: path
+      voice_file = self.find_or_create_by site_id: site.id, path: url.path
       if voice_file.url.blank?
         voice_file.url = url.to_s
         voice_file.save!
