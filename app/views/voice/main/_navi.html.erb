@@ -1,0 +1,9 @@
+<nav class="sub-menu">
+  <header><h1><%= t "voice.voice_file" %></h1></header>
+  <div>
+    <%= link_to :"views.voice/voice_files.index", voice_voice_files_path %>
+    <%= link_to :"views.voice/error_files.index", voice_error_files_path %>
+  </div>
+</nav>
+
+<%= render partial: "cms/main/navi" %>

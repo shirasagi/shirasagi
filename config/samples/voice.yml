@@ -1,0 +1,63 @@
+# voice
+
+production: &production
+  disable: false
+  download:
+    max_attempts: 3
+    initial_wait: 3
+    timeout_sec: 10
+  controller:
+    # set the controller path when type is internal(e.g: ./voice).
+    # set the controller url when type is external(e.g: http://external-server/path-to-controller).
+    location: "/.voice"
+    retry_after: 5
+  resource:
+    loading: "/audios/voice-loading.mp3"
+    disabled: "/audios/voice-disabled.mp3"
+  # a target from which extract text
+  scraper:
+    voice-marks: [ "read-voice", "end-read-voice" ]
+    skip-marks: [ "skip-voice", "end-skip-voice" ]
+    delete-tags:
+      - style
+      - script
+      - noscript
+      - iframe
+      - rb
+      - rp
+    kuten-tags:
+      - h1
+      - h2
+      - h3
+      - h4
+      - h5
+      - p
+      - br
+      - div
+      - pre
+      - blockquote
+      - ul
+      - ol
+      - table
+  # text-to-speech type. only supports 'openjtalk' now.
+  type: openjtalk
+  # open-jtalk options
+  openjtalk:
+    bin: /usr/local/bin/open_jtalk
+    dic: /usr/local/dic
+    voice: config/voices/mei_normal/mei_normal.htsvoice
+    opts: "-s 48000 -p 200 -u 0.5 -jm 0.5 -jf 0.5"
+    max_length: 1024
+    sox: /usr/local/bin/sox
+  lame:
+    bin: /usr/local/bin/lame
+    opts: "--scale 5 --silent"
+
+test:
+  <<: *production
+  max_attempts: 1
+  initial_wait: 1
+  timeout_sec: 5
+
+development:
+  <<: *production

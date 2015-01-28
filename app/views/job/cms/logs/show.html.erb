@@ -1,0 +1,9 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <% if addons.size > 0 %><header><h2><%= t :basic_info %></h2></header><% end %>
+    <%= render file: "job/cms/logs/_show" %>
+  </div>
+  <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+</div>

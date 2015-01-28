@@ -1,0 +1,21 @@
+# job
+
+production: &production
+  default:
+    name: default
+    model: "job:service"
+    num_workers: 0
+    log_file: log/job.log
+    log_level: info
+    poll:
+      - 'default'
+      - 'voice_synthesis'
+  pool:
+    voice_synthesis:
+      max_size: 100
+
+test:
+  <<: *production
+
+development:
+  <<: *production

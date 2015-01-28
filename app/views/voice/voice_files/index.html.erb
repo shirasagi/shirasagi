@@ -1,0 +1,35 @@
+<%= render file: "_search" %>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th><%= @model.t :url %></th>
+      <th class="datetime"><%= @model.t :updated %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |item| %>
+    <tr>
+      <td>
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item %>
+          <%= link_to :delete, action: :delete, id: item %>
+          <%= link_to :view_site, item.url, target: :_blank %>
+        </nav>
+      </td>
+      <td><%= link_to item.url, action: :show, id: item %></td>
+      <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+    </tr>
+    <% end %>
+    <% if @items.blank? %>
+    <tr>
+      <td colspan="3"><%= @message %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>
