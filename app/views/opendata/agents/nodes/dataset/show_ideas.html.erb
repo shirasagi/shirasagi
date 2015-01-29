@@ -1,0 +1,21 @@
+<div class="detail">
+
+  <div class="info-wrap">
+    <div class="dataset-ideas">
+
+      <div class="ideas">
+        <% @ideas.each do |idea| %>
+          <div class="comment"><%= idea.text %></div>
+
+          <% if idea.member %>
+          <%= link_to idea.member.name, "#{member_path}#{idea.member.id}" %>
+          <% else %>
+          ゲストユーザー
+          <% end %>
+
+          <hr>
+        <% end %>
+      </div>
+
+  </div>
+</div>

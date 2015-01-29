@@ -43,6 +43,10 @@ class Opendata::Dataset
       url.sub(/\.html$/, "") + "/point/members.html"
     end
 
+    def dataset_ideas_url
+      url.sub(/\.html$/, "") + "/ideas/show.html"
+    end
+
     def contact_present?
       return false if member_id.present?
       super

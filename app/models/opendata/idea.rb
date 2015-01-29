@@ -19,6 +19,7 @@ class Opendata::Idea
 
   belongs_to :dataset, class_name: "Opendata::Dataset"
   belongs_to :app, class_name: "Opendata::App"
+  belongs_to :member, class_name: "Opendata::Member"
 
   has_many :points, primary_key: :idea_id, class_name: "Opendata::IdeaPoint",
     dependent: :destroy

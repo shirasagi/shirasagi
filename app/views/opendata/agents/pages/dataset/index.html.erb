@@ -8,6 +8,12 @@ $ ->
     success: (data)->
       $(".point").html data
 
+  # show ideas
+  $.ajax
+    url: "<%= @cur_page.dataset_ideas_url %>"
+    success: (data)->
+      $(".dataset-ideas").html data
+
   # hide categories
   $(".categories a[data-class=other]").click ->
     type = $(this).attr("class")
@@ -129,6 +135,8 @@ categories = [
     </dl>
   </div>
 </div>
+
+<div class="dataset-ideas" id="dataset-ideas"></div>
 
 <%= render file: "cms/agents/addons/related_page/view/index" %>
 <%= render file: "contact/agents/addons/page/view/index" %>
