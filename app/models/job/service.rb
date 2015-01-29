@@ -1,4 +1,5 @@
 require 'benchmark'
+require 'English'
 
 class Job::Service
   extend SS::Translation
@@ -99,7 +100,7 @@ class Job::Service
           job_log.state = "completed"
           job_log.closed = Time.now
           Rails.logger.info("Completed Job #{task.id} in #{time * 1000} ms")
-        rescue => e
+        rescue Exception => e
           job_log.state = "failed"
           job_log.closed = Time.now
           Rails.logger.fatal("Failed Job #{task.id}: #{e.class} (#{e.message}):\n  #{e.backtrace[0..5].join('\n  ')}")

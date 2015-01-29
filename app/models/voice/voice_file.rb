@@ -121,9 +121,9 @@ class Voice::VoiceFile
           self.save!
         rescue OpenURI::HTTPError
           raise
-        rescue
+        rescue Exception => e
           self.page_identity = nil
-          self.error = $ERROR_INFO.to_s
+          self.error = e.to_s
           # incrementing age ensures that 'updated' field is updated.
           self.age += 1
           guard_from_exception(self.url) do

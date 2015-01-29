@@ -1,3 +1,5 @@
+require 'English'
+
 class Job::MasterService
   class << self
     public
