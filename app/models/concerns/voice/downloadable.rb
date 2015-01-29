@@ -16,12 +16,13 @@ module Voice::Downloadable
   def download
     return @cached_page if @cached_page
 
+    credential = basic_auth.present? ? decrypt(basic_auth) : nil
     @cached_page = with_retry(max_attempts) do
       timeout(timeout_sec) do
         # class must provide a method 'url'
         options = {}
         options[:read_timeout] = timeout_sec
-        options[:http_basic_authentication] = decrypt(basic_auth) if basic_auth.present?
+        options[:http_basic_authentication] = credential if credential.present?
         open(url, options) do |f|
           status_code = f.status[0]
 
@@ -68,7 +69,8 @@ module Voice::Downloadable
 
       begin
         yield
-      rescue TimeoutError, StandardError
+      rescue TimeoutError, StandardError => e
+        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace[0..5].join('\n  ')}")
         num_attempts += 1
         raise if num_attempts >= max_attempts
 
@@ -91,17 +93,19 @@ module Voice::Downloadable
     def decrypt(auth)
       secrets = Rails.application.secrets[:secret_key_base]
       encryptor = ::ActiveSupport::MessageEncryptor.new(secrets, cipher: 'aes-256-cbc')
+      user, pass = auth
       begin
-        auth[0] = encryptor.decrypt_and_verify(auth[0])
+        user = encryptor.decrypt_and_verify(user)
       rescue ActiveSupport::MessageVerifier::InvalidSignature
         # ignore
       end
 
       begin
-        auth[1] = encryptor.decrypt_and_verify(auth[1])
+        pass = encryptor.decrypt_and_verify(pass)
       rescue ActiveSupport::MessageVerifier::InvalidSignature
         # ignore
       end
+      [ user, pass ]
     end
 
   module ClassMethods
