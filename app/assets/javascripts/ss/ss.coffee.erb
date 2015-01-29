@@ -43,10 +43,17 @@ class @SS
 
   @render:(box = null) ->
     if box
+      anchorCallback = ()->
+        $("#cboxLoadedContent a").each ->
+          elem = $(this)
+          elem.addClass("cboxElement")
+          if !elem.attr("target") && !elem.data("target")
+            elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
+
       $(box).find("a").each ->
         elem = $(this)
         if !elem.attr("target") && !elem.data("target")
-          elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+          elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
 
     # default
     box = $(document)

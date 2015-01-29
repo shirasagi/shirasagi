@@ -31,5 +31,11 @@
     <% unless SS.config.kana.disable %>
       <%= link_to :"kana.dictionary", kana_dictionaries_path if Kana::Dictionary.allowed?(:edit, @cur_user, site: @cur_site) || Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
     <% end %>
+    <% unless SS.config.voice.disable %>
+      <%= link_to :"voice.voice_file", voice_voice_files_path if Voice::VoiceFile.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% end %>
+    <% unless SS.config.job.disable_log %>
+      <%= link_to :"job.log", job_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% end %>
   </div>
 </nav>

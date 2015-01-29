@@ -66,6 +66,55 @@ CentOS 6.6/64bit
   echo "/usr/local/lib" >> /etc/ld.so.conf
   ldconfig
 
+--------------------
+# 読み上げ
+
+  cd /usr/local/src
+  wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz
+  tar xvzf hts_engine_API-1.08.tar.gz && cd hts_engine_API-1.08
+  ./configure && make && make install
+
+  cd /usr/local/src
+  wget http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz
+  tar xvzf open_jtalk-1.07.tar.gz && cd open_jtalk-1.07
+  sed -i "s/#define MAXBUFLEN 1024/#define MAXBUFLEN 10240/" bin/open_jtalk.c
+  sed -i "s/0x00D0 SPACE/0x000D SPACE/" mecab-naist-jdic/char.def
+  ./configure --with-charset=UTF-8 && make && make install
+
+  cd /usr/local/src
+  wget http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz
+  tar xvzf lame-3.99.5.tar.gz && cd lame-3.99.5
+  ./configure && make && make install
+
+  cd /usr/local/src
+  wget http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
+  tar xvzf sox-14.4.1.tar.gz && cd sox-14.4.1
+  ./configure && make && make install
+
+  ldconfig
+
+
+# 読み上げの Basic 認証
+
+  読み上げでは、リクエストされた URL にアクセスして記事をダウンロードします。
+  アクセス先が Basic 認証で保護されている場合、ダウンロード出来ないため読み上げることができません。
+
+  Basic 認証の設定が必要な場合、config/voice.yml をテキストエディタで開き、
+  basic_auth をコメントアウトし、ユーザとパスワードを設定してください。
+
+  ユーザとパスワードは、`secrets.yml` に設定している secret_key_base を用いて暗号化することができます。
+
+  ```
+  $ RAILS_ENV=production bundle exec rails c
+  > secrets = Rails.application.secrets[:secret_key_base]
+  > encryptor = ::ActiveSupport::MessageEncryptor.new(secrets, cipher: 'aes-256-cbc')
+  > puts encryptor.encrypt_and_sign("user")
+  > puts encryptor.encrypt_and_sign("pass")
+  ```
+
+  `secrets.yml` に設定している secret_key_base は production, test, development それぞれで異なるので、
+  voice.yml にはそれぞれ異なる文字列を設定してください。
+
 ----------------------------------------------------------------------------------------------------
 
 --------------------

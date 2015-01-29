@@ -46,9 +46,9 @@ class Kana::DictionariesController < ApplicationController
         render :status => :bad_request
       rescue
         # occuring exception means system error.
-        logger.error $!.to_s
-        logger.error $!.backtrace.join("\n")
-        @errors = [ $!.to_s ]
+        logger.error $ERROR_INFO
+        logger.error $ERROR_INFO.backtrace.join("\n")
+        @errors = [ $ERROR_INFO.to_s ]
         render :status => :internal_server_error
       end
     end

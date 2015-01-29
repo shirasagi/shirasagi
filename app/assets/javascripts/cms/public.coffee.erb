@@ -11,6 +11,7 @@ $ ->
   SS_Mobile.render()
   $(".ss-part").each ->
     SS.renderPart $(this)
+  SS_Voice.render()
 
 class @SS
   @head = ""
@@ -204,3 +205,144 @@ class @SS_Tabs
     $(name).addClass "current"
     $(view).show()
     return false
+
+class @SS_Voice
+  @voice_config =
+    'location': "<%= SS.config.voice.controller['location'] %>"
+    'loading-resource': "<%= SS.config.voice.resource['loading'] %>"
+    'disabled-resource': "<%= SS.config.voice.resource['disabled'] %>"
+  @url = null
+  @anchor = null
+  @voice_controller = null
+  @state = null
+  @cancel_loading = null
+  @timer_id = null
+
+  @render: ->
+    SS_Voice.url = SS_Voice.requestUrl()
+
+    anchor_parent = $('#ss-voice')
+    return if anchor_parent.size() == 0
+    anchor_parent = anchor_parent.first() if anchor_parent.size() > 1
+
+    SS_Voice.anchor = $('<a/>').html('読み上げる').attr('href', SS_Voice.url)
+    anchor_parent.html('')
+    SS_Voice.anchor.appendTo(anchor_parent)
+
+    id = '#ss-voice-controller'
+    controller_parent = $(id)
+    if controller_parent.size() == 0
+      # no controller tag found, create default audio controller tag
+      controller_parent = anchor_parent
+
+    SS_Voice.voice_controller = new SS_VoiceController(controller_parent)
+    SS_Voice.state = null
+    SS_Voice.cancel_loading = false
+    SS_Voice.timer_id = null
+    SS_Voice.init()
+
+  @init: ->
+    SS_Voice.state = 'init'
+    SS_Voice.voice_controller.stop()
+    SS_Voice.setAction(SS_Voice.load)
+    SS_Voice.cancel_loading = false
+    return false
+
+  @setAction: (action) ->
+    SS_Voice.anchor.unbind('click')
+    SS_Voice.anchor.bind('click', action)
+
+  @load: ->
+    return false if SS_Voice.cancel_loading
+    $.ajax {
+      type: 'HEAD', url: SS_Voice.url, cache: false
+      statusCode: {
+        200: =>
+          SS_Voice.playAudio()
+        202: (data, status, xhr) =>
+          SS_Voice.renderLoading()
+          retry_after = xhr.getResponseHeader('Retry-After')
+          retry_after = 5 unless retry_after
+          SS_Voice.timer_id = setTimeout(SS_Voice.load, retry_after * 1000)
+      }
+      error: ->
+        SS_Voice.renderError()
+    }
+    return false
+
+  @renderLoading: ->
+    return false if SS_Voice.state == 'loading'
+    url = SS_Voice.voice_config['loading-resource']
+    SS_Voice.state = 'loading'
+    SS_Voice.setAction(SS_Voice.cancel)
+    SS_Voice.voice_controller.play(url)
+    return false
+
+  @renderError: ->
+    return false if SS_Voice.state == 'error'
+    clearTimeout(SS_Voice.timer_id) if SS_Voice.timer_id >= 0
+    SS_Voice.timer_id = -1
+    url = SS_Voice.voice_config['disabled-resource']
+    SS_Voice.state = 'error'
+    SS_Voice.setAction(SS_Voice.cancel)
+    SS_Voice.voice_controller.play(url)
+    return false
+
+  @cancel: ->
+    SS_Voice.cancel_loading = true
+    clearTimeout(SS_Voice.timer_id) unless SS_Voice.timer_id == null
+    SS_Voice.timer_id = null
+    # back to beginning
+    SS_Voice.init()
+    return false
+
+  @playAudio: ->
+    SS_Voice.state = 'playing'
+    SS_Voice.voice_controller.play(SS_Voice.url)
+    SS_Voice.setAction(SS_Voice.cancel)
+    return false
+
+  @requestUrl: ->
+    path = SS_Voice.trimKanaDir(location.pathname)
+    path = "/index.html" if path == "/"
+    url = encodeURIComponent(SS_Voice.normalizeProtocol(location.protocol) + '://' + location.host + path)
+    url = SS_Voice.normalizeLocation(SS_Voice.voice_config['location']) + '/' + url
+    return url
+
+  @trimKanaDir: (path, kana_dir = SS_Kana.dir) ->
+    return path.replace(new RegExp('^' + kana_dir.replace('/', '\/') + '\/'), '/')
+
+  @normalizeProtocol: (protocol) ->
+    return protocol.replace(new RegExp(':$'), '')
+
+  @normalizeLocation: (location) ->
+    return location.replace(new RegExp('/$'), '')
+
+class @SS_VoiceController
+  constructor: (tag) ->
+    @tag = $(tag)
+
+  play: (source) ->
+    @stop()
+    @source = source
+    audio_container = SS_VoiceController.createAudio(source)
+    audio_container.appendTo(@tag)
+    audio = audio_container.children('.ss-voice-player')
+    audio[0].load()
+    audio[0].play()
+
+  stop: ->
+    @source = null
+    @tag.children('.ss-voice-container').remove()
+
+  @createAudio: (source) ->
+    audio_container = $('<span/>')
+    audio_container.addClass('ss-voice-container')
+    audio = $('<audio/>')
+    audio.attr('controls', '')
+    audio.attr('autoplay', '')
+    audio.attr('loop', '')
+    audio.attr('src', source)
+    audio.addClass('ss-voice-player')
+    audio.appendTo(audio_container)
+    audio_container

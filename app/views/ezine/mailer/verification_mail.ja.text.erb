@@ -1,0 +1,9 @@
+<% message.subject = "#{@entry.node.name} #{t('ezine.entry_type.' + @entry.entry_type)}確認" %>
+メールアドレスの<%= t('ezine.entry_type.' + @entry.entry_type) %>を受け付けました。
+以下のアドレスをクリックして<%= t('ezine.entry_type.' + @entry.entry_type) %>を完了してください。
+<%= "#{@entry.node.full_url}entry/verification?token=#{@entry.verification_token}" %>
+
+メールアドレス: <%= @entry.email %>
+配信形式: <%= @entry.email_type %>
+
+このメールに心当たりのない方はお手数ですが本メールを破棄してください。

@@ -21,6 +21,7 @@ module Cms::Member::Model
     field :oauth_type, type: String
     field :oauth_id, type: String
     field :oauth_token, type: String
+    field :last_loggedin, type: DateTime
 
     permit_params :name, :email, :password, :in_password
 

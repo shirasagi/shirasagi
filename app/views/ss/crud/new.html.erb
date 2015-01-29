@@ -1,6 +1,6 @@
 <% addons = @item ? @item.class.addons : [] %>
 
-<%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true } do |f| %>
+<%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
 <%= error_messages_for :item %>
 
 <div class="addon-views">

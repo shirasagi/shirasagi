@@ -2,6 +2,8 @@ class Article::Agents::Nodes::PageController < ApplicationController
   include Cms::NodeFilter::View
   helper Cms::ListHelper
 
+  before_action :accept_cors_request, only: [:rss]
+
   public
     def pages
       Article::Page.site(@cur_site).public(@cur_date).

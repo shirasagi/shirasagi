@@ -10,16 +10,16 @@ module SS::Relation::File
       attr_accessor "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}", "rm_#{name}"
 
-      before_save "remove_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
-      before_save "save_#{name}", if: ->{ send("in_#{name}").present? }
+      before_save "remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
+      before_save "save_relation_#{name}", if: ->{ send("in_#{name}").present? }
 
-      define_method("remove_#{name}") {
+      define_method("remove_relation_#{name}") {
         ss_file = send(name)
         ss_file.destroy if ss_file
         send("#{store}=", nil) rescue nil
       }
 
-      define_method("save_#{name}") {
+      define_method("save_relation_#{name}") {
         file = send("in_#{name}")
 
         ss_file = send(name) || SS::File.new

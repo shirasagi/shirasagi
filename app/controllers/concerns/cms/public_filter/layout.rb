@@ -30,11 +30,11 @@ module Cms::PublicFilter::Layout
       resp = agent.render spec[:action]
       body = resp.body
 
-      if body =~ /\#\{request_.+?\}/
-        dir = Cms::Node.filename(@cur_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
-        if dir
-          body.gsub!('#{request_dir}', ERB::Util.html_escape(dir.name))
-          body.gsub!('#{request_parent_dir}', ERB::Util.html_escape(dir.parent ? dir.parent.name : dir.name))
+      if body =~ /\#\{.*?parent_name\}/
+        parent = Cms::Node.filename(@cur_path.to_s.sub(/^\//, "").sub(/\/[\w\-\.]*?$/, "")).first
+        if parent
+          body.gsub!('#{parent_name}', ERB::Util.html_escape(parent.name))
+          body.gsub!('#{parent.parent_name}', ERB::Util.html_escape(parent.parent ? parent.parent.name : parent.name))
         end
       end
 

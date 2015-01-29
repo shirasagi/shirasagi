@@ -69,7 +69,7 @@ describe "kana_dictionaries" do
         expect(current_path).to eq index_path
       end
 
-      describe "#build", :type => :mecab do
+      describe "#build", mecab: true do
         it "will be success" do
           visit build_path
           expect(status_code).to eq 200
@@ -79,7 +79,7 @@ describe "kana_dictionaries" do
     end
 
     context "without item" do
-      subject(:missing_item) { 10000 + rand(10000) }
+      subject(:missing_item) { 10_000 + rand(10_000) }
       subject(:show_path) { kana_dictionary_path site.host, missing_item }
       subject(:edit_path) { edit_kana_dictionary_path site.host, missing_item }
       subject(:delete_path) { delete_kana_dictionary_path site.host, missing_item }
@@ -103,7 +103,7 @@ describe "kana_dictionaries" do
         expect { visit delete_path }.to raise_error Mongoid::Errors::DocumentNotFound
       end
 
-      describe "#build", :type => :mecab do
+      describe "#build", mecab: true do
         it "will be bad request" do
           visit build_path
           expect(status_code).to eq 400

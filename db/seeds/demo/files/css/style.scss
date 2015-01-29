@@ -63,7 +63,7 @@ img {
       border-right: $border-hgry;
       @include u-arrow;
     }
-    #size, #read, #ss-kana, #info {
+    #size, #ss-voice, #ss-kana, #info {
       float: right;
       border-left: $border-hgry;
     }
@@ -82,9 +82,19 @@ img {
         }
       }
     }
-    #read {
+    #ss-voice {
       padding: 0 10px 0 35px;
       background: url(../img/voice.png) no-repeat 10px center;
+      position: relative;
+      span {
+        position: absolute;
+        left: 50px;
+        top: 25px;
+        width: 100%;
+        audio {
+          float: right;
+        }
+      }
     }
     #ss-kana {
       padding: 0 10px;
@@ -95,6 +105,19 @@ img {
     }
     #info {
       padding: 0 10px;
+    }
+  }
+  #voice-nav {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    //padding: 5px 10px;
+    position: relative;
+    #ss-voice-controller {
+      audio {
+        padding: 5px 10px;
+        float: right;
+      }
     }
   }
 }
