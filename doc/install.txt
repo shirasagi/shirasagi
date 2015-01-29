@@ -93,6 +93,28 @@ CentOS 6.6/64bit
 
   ldconfig
 
+
+# 読み上げの Basic 認証
+
+  読み上げでは、リクエストされた URL にアクセスして記事をダウンロードします。
+  アクセス先が Basic 認証で保護されている場合、ダウンロード出来ないため読み上げることができません。
+
+  Basic 認証の設定が必要な場合、config/voice.yml をテキストエディタで開き、
+  basic_auth をコメントアウトし、ユーザとパスワードを設定してください。
+
+  ユーザとパスワードは、`secrets.yml` に設定している secret_key_base を用いて暗号化することができます。
+
+  ```
+  $ RAILS_ENV=production bundle exec rails c
+  > secrets = Rails.application.secrets[:secret_key_base]
+  > encryptor = ::ActiveSupport::MessageEncryptor.new(secrets, cipher: 'aes-256-cbc')
+  > puts encryptor.encrypt_and_sign("user")
+  > puts encryptor.encrypt_and_sign("pass")
+  ```
+
+  `secrets.yml` に設定している secret_key_base は production, test, development それぞれで異なるので、
+  voice.yml にはそれぞれ異なる文字列を設定してください。
+
 ----------------------------------------------------------------------------------------------------
 
 --------------------

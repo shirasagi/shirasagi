@@ -19,7 +19,10 @@ module Voice::Downloadable
     @cached_page = with_retry(max_attempts) do
       timeout(timeout_sec) do
         # class must provide a method 'url'
-        open(url) do |f|
+        options = {}
+        options[:read_timeout] = timeout_sec
+        options[:http_basic_authentication] = decrypt(basic_auth) if basic_auth.present?
+        open(url, options) do |f|
           status_code = f.status[0]
 
           html = f.read if status_code == '200'
@@ -55,6 +58,10 @@ module Voice::Downloadable
       @timeout_sec ||= SS.config.voice.download['timeout_sec']
     end
 
+    def basic_auth
+      @basic_auth ||= SS.config.voice.download['basic_auth']
+    end
+
     def with_retry(max_attempts)
       num_attempts = 0
       wait = initial_wait
@@ -79,6 +86,22 @@ module Voice::Downloadable
       html.gsub!(/<\s*meta\s+content\s*=\s*["']authenticity_token["']\s+name\s*=\s*["']csrf-param["']\s*\/>/, '')
       html.gsub!(/<\s*meta\s+content\s*=\s*["'].+?["']\s+name\s*=\s*["']csrf-token["']\s*\/>/, '')
       html
+    end
+
+    def decrypt(auth)
+      secrets = Rails.application.secrets[:secret_key_base]
+      encryptor = ::ActiveSupport::MessageEncryptor.new(secrets, cipher: 'aes-256-cbc')
+      begin
+        auth[0] = encryptor.decrypt_and_verify(auth[0])
+      rescue ActiveSupport::MessageVerifier::InvalidSignature
+        # ignore
+      end
+
+      begin
+        auth[1] = encryptor.decrypt_and_verify(auth[1])
+      rescue ActiveSupport::MessageVerifier::InvalidSignature
+        # ignore
+      end
     end
 
   module ClassMethods
