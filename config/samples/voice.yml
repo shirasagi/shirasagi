@@ -6,9 +6,9 @@ production: &production
     max_attempts: 3
     initial_wait: 3
     timeout_sec: 10
+    # basic_auth: [ "user", "pass" ]
+    # basic_auth: [ "ZjlvckRjaVVMM0t1UXE2ZjF6RFZZZz09LS14eEhJZTZ4bHRKekQzd3hvR3FUNURnPT0=--4de55609c68a873a734bdd221b9c42fe67888e07", "NVJURDVEbWExcE5yUDlVTFZKUUQrQT09LS00YzJab0lwODRNSGRMWHZPR2J5dTFBPT0=--970e99f0ca61a6ac7a008bca94e4068d2174f0f1" ]
   controller:
-    # set the controller path when type is internal(e.g: ./voice).
-    # set the controller url when type is external(e.g: http://external-server/path-to-controller).
     location: "/.voice"
     retry_after: 5
   resource:
