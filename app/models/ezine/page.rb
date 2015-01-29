@@ -3,13 +3,10 @@ class Ezine::Page
   include Cms::Addon::Release
   include Ezine::Addon::Page::Body
 
-  seqid :id
-  field :route, type: String, default: ->{ "ezine/page" }
-  field :name, type: String
   field :results, type: Array, default: []
   field :completed, type: Boolean, default: false
 
-  permit_params :id, :route, :name, :html, :text, :results
+  permit_params :results
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
