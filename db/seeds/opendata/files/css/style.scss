@@ -1529,7 +1529,8 @@ nav.cms-sns_share {
   margin: $box-margin 0;
   padding: 0;
   border-bottom: $blue 2px solid;
-  a {
+  overflow: hidden;
+  a.dataset, a.app, a.idea, a.profile {
     display: inline-block;
     width: 150px;
     margin-right: 10px;
@@ -1544,15 +1545,19 @@ nav.cms-sns_share {
     @include grd-blue;
     color: $white;
   }
-  .current {
+  a.current {
     @include grd-blue;
     color: $white;
   }
-  .dataset {
+  a.dataset {
     margin-left: 18px;
   }
-  .app, .idea {
+  a.app, a.idea {
     @include opacity(.5);
+  }
+  a.tutorial-data {
+    float: right;
+    padding-top: 10px;
   }
 }
 
