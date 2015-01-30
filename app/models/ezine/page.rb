@@ -1,6 +1,7 @@
 class Ezine::Page
   include Cms::Page::Model
   include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Ezine::Addon::Page::Body
 
   field :results, type: Array, default: []
