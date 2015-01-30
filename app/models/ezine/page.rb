@@ -1,16 +1,10 @@
 class Ezine::Page
   include Cms::Page::Model
   include Cms::Addon::Release
+  include Ezine::Addon::Page::Body
 
-  seqid :id
-  field :route, type: String, default: ->{ "ezine/page" }
-  field :name, type: String
-  field :html, type: String, default: ""
-  field :text, type: String, default: ""
   field :results, type: Array, default: []
   field :completed, type: Boolean, default: false
-
-  permit_params :id, :route, :name, :html, :text, :results
 
   before_save :seq_filename, if: ->{ basename.blank? }
 

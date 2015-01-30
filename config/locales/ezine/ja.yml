@@ -27,6 +27,8 @@ ja:
 
   modules:
     ezine: メールマガジン
+    addons:
+      ezine/page/body: 本文
 
   cms:
     nodes:
