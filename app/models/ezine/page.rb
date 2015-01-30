@@ -6,8 +6,6 @@ class Ezine::Page
   field :results, type: Array, default: []
   field :completed, type: Boolean, default: false
 
-  permit_params :results
-
   before_save :seq_filename, if: ->{ basename.blank? }
 
   default_scope ->{ where(route: "ezine/page") }
