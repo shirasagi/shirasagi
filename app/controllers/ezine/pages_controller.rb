@@ -1,6 +1,6 @@
 class Ezine::PagesController < ApplicationController
   include Cms::BaseFilter
-  include Cms::CrudFilter
+  include Cms::PageFilter
 
   model Ezine::Page
 
