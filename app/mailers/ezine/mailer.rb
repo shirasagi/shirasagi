@@ -7,7 +7,7 @@ class Ezine::Mailer < ActionMailer::Base
   def verification_mail(entry)
     @entry = entry
 
-    mail from: 'noreply@example.com', to: entry.email
+    mail from: SS.config.ezine.sender_address, to: entry.email
   end
 
   # Deliver Ezine::Page as an e-mail.
@@ -20,7 +20,7 @@ class Ezine::Mailer < ActionMailer::Base
     @page = page
     @member = member
 
-    mail from: 'noreply@example.com', to: member.email do |format|
+    mail from: SS.config.ezine.sender_address, to: member.email do |format|
       case member.email_type
       when "text"
         format.text
