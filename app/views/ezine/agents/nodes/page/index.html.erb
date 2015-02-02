@@ -1,5 +1,11 @@
-<div class="ezine-pages pages">
-<%= render_page_list %>
-</div>
-
-<%= paginate @items if @items.try(:current_page) %>
+<ul class="ezine-pages">
+  <li>
+    <%= link_to t('ezine.entry_type.add'),    @cur_node.url + 'new.html' %>
+  </li>
+  <li>
+    <%= link_to t('ezine.entry_type.update'), @cur_node.url + 'update.html' %>
+  </li>
+  <li>
+    <%= link_to t('ezine.entry_type.delete'), @cur_node.url + 'remove.html' %>
+  </li>
+</ul>
