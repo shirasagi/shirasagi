@@ -33,6 +33,7 @@ ja:
   cms:
     nodes:
       ezine/page: 配信記事一覧
+      ezine/backnumber: バックナンバー
 
   mongoid:
     attributes:
