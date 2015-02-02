@@ -23,11 +23,12 @@ SS::Application.routes.draw do
 
   node "ezine" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
-    get "page/entry/new/(index.:format)" => "public#new", cell: "nodes/form"
-    get "page/entry/update/(index.:format)" => "public#update", cell: "nodes/form"
-    get "page/entry/remove/(index.:format)" => "public#remove", cell: "nodes/form"
-    post "page/confirm.html" => "public#confirm", cell: "nodes/form"
-    get "page/entry/verification/(index.:format)" => "public#verify", cell: "nodes/form"
+    get "page/new.:format" => "public#new", cell: "nodes/form"
+    get "page/update.:format" => "public#update", cell: "nodes/form"
+    get "page/remove.:format" => "public#remove", cell: "nodes/form"
+    post "page/confirm.:format" => "public#confirm", cell: "nodes/form"
+    get "page/verify.:format" => "public#verify", cell: "nodes/form"
+    get "backnumber/(index.:format)" => "public#index", cell: "nodes/backnumber"
   end
 
   page "ezine" do

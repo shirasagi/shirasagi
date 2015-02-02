@@ -1,0 +1,5 @@
+<div class="ezine-pages pages">
+<%= render_page_list %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
