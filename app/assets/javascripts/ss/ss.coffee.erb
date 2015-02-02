@@ -154,7 +154,8 @@ class @SS_ListUI
       tbody = tr.parent()
       tr.find(".tap-menu a").each ->
         if $(this).attr("href")[-7..-1] == "/delete"
-          tr.find(".tap-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= t 'views.links.delete_all' %></a></nav>")
+          h = "<nav class='multiple-menu'><a href='multipleDelete' ><%= t 'views.links.delete_all' %></a></nav>"
+          tr.find(".tap-menu").after(h)
       tr.find("input[type=checkbox]").each ->
         tr.toggleClass("checked", $(this).prop("checked"))
       tr.find("input[type=checkbox]").change ->
@@ -178,6 +179,7 @@ class @SS_ListUI
         tr.find(".multiple-menu").hide()
       tr.find(".multiple-menu a").on "click", (e) ->
         if $(this).attr("href") == "multipleDelete"
+          return false unless confirm("<%= t "views.confirm.delete" %>")
           e.preventDefault();
           for chkbox in $("input[name='ids[]']")
             if chkbox.checked
