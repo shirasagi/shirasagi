@@ -306,17 +306,19 @@ class @SS_Debug
     }
 
 class @SS_SearchUI
+  @anchorAjaxBox
+
   @select: (item) ->
     # create tr element and append to form
 
     tr    = $("<tr>").attr("data-id", item["id"])
-    input = $.colorbox.element().closest("dl").find(".hidden-ids").clone(false)
+    input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false)
     input = input.val(item["id"]).removeClass("hidden-ids")
     a     = $('<a class="deselect" href="#">削除</a>').on "click", SS_SearchUI.deselect
 
     tr.append($('<td>').append($(input)).append(item["name"]))
     tr.append($('<td>').append($(a)))
-    $.colorbox.element().closest("dl").find(".ajax-selected tbody").prepend(tr)
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr)
     return
 
   @deselect: (e)->
@@ -336,6 +338,9 @@ class @SS_SearchUI
         $(this).hide()
 
   @modal: ()->
+    if $.colorbox.element().hasClass("ajax-box")
+      SS_SearchUI.anchorAjaxBox = $.colorbox.element()
+
     $("#ajax-box form.search").on "submit", (e)->
       $(this).ajaxSubmit(
         url: $(this).attr("action")
@@ -346,9 +351,9 @@ class @SS_SearchUI
       )
       e.preventDefault()
 
-    $.colorbox.element().closest("dl").find(".ajax-selected tr[data-id]").each ->
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
       id = $(this).attr("data-id")
-      $("#ajax-box .items [data-id=#{id}]").remove()
+      $("#colorbox .items [data-id=#{id}]").remove()
 
     SS_ListUI.render("table.index")
 
@@ -357,7 +362,7 @@ class @SS_SearchUI
       name = $(this).text()
       SS_SearchUI.select({ id: id, name: name })
 
-      $.colorbox.element().closest("dl").find(".ajax-selected").show()
+      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
       e.preventDefault()
       $.colorbox.close()
 
@@ -368,11 +373,10 @@ class @SS_SearchUI
         name = $(this).closest("[data-id]").text() if name == ""
         SS_SearchUI.select({ id: id, name: name })
 
-      $.colorbox.element().closest("dl").find(".ajax-selected").show()
+      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
       e.preventDefault()
       $.colorbox.close()
 
     $("#ajax-box .index").on "change", (e)->
       SS_SearchUI.toggleSelectButton()
     SS_SearchUI.toggleSelectButton()
-
