@@ -12,6 +12,10 @@ class Ezine::PagesController < ApplicationController
       { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
     end
 
+    def pre_params
+      { state: 'closed' }
+    end
+
     def load_pages
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 
