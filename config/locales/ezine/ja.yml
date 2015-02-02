@@ -4,15 +4,8 @@ ja:
     member: メルマガ読者
     test_member: テスト読者
     entry: 登録履歴
-    page_title:
-      entry: 配信登録
-      update: 配信形式の変更
-      remove: 配信停止
     button:
       convert_html_to_text: HTML版を変換する
-      confirm_entry: 配信登録
-      confirm_update: 変更
-      confirm_remove: 配信停止
       deliver: 送信
     entry_type:
       add: 配信登録
