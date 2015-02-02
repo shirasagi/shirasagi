@@ -7,9 +7,9 @@ class Ezine::TestMembersController < ApplicationController
   navi_view "ezine/main/navi"
 
   private
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site, node_id: @cur_node.id }
-  end
+    def fix_params
+      { cur_user: @cur_user, cur_site: @cur_site, node_id: @cur_node.id }
+    end
 
   public
     def index

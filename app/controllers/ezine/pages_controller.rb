@@ -8,24 +8,28 @@ class Ezine::PagesController < ApplicationController
   navi_view "ezine/main/navi"
 
   private
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
-  end
+    def fix_params
+      { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+    end
 
-  def load_pages
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+    def pre_params
+      { state: 'closed' }
+    end
 
-    @items = @model.site(@cur_site).node(@cur_node).
-      allow(:read, @cur_user).
-      search(params[:s]).
-      order_by(updated: -1).
-      page(params[:page]).per(50)
-  end
+    def load_pages
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 
-  def load_members(model)
-    @members = model.site(@cur_site).order_by(updated: -1)
-    @members_email = @members.reduce("") {|a, e| a += e.email + "\n"}
-  end
+      @items = @model.site(@cur_site).node(@cur_node).
+        allow(:read, @cur_user).
+        search(params[:s]).
+        order_by(updated: -1).
+        page(params[:page]).per(50)
+    end
+
+    def load_members(model)
+      @members = model.site(@cur_site).order_by(updated: -1)
+      @members_email = @members.reduce("") {|a, e| a += e.email + "\n"}
+    end
 
   public
     def index
