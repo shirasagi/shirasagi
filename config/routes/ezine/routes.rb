@@ -23,9 +23,9 @@ SS::Application.routes.draw do
 
   node "ezine" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
-    get "page/new.:format" => "public#new", cell: "nodes/form"
+    get "page/add.:format" => "public#add", cell: "nodes/form"
     get "page/update.:format" => "public#update", cell: "nodes/form"
-    get "page/remove.:format" => "public#remove", cell: "nodes/form"
+    get "page/delete.:format" => "public#delete", cell: "nodes/form"
     post "page/confirm.:format" => "public#confirm", cell: "nodes/form"
     get "page/verify.:format" => "public#verify", cell: "nodes/form"
     get "backnumber/(index.:format)" => "public#index", cell: "nodes/backnumber"

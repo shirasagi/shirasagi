@@ -1,27 +1,20 @@
 class Ezine::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
 
-  before_action :set_entries, only: [:new, :update, :remove, :confirm]
+  before_action :set_entries, only: [:add, :update, :delete, :confirm]
 
   private
     def set_entries
       @entry = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
     end
 
-    def get_entry_type(type)
-      case type
-      when "new"
-        "add"
-      when "update"
-        "update"
-      when "remove"
-        "delete"
-      end
+    def get_entry_type(referer_path)
+      File.basename(referer_path, ".*")
     end
 
   public
     def confirm
-      entry_type = get_entry_type request.env["HTTP_REFERER"].split("/").last
+      entry_type = get_entry_type request.env["HTTP_REFERER"]
 
       raise "403" unless params[:submit].present?
 
@@ -31,25 +24,10 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
       @entry.entry_type = entry_type
 
       if @entry.save
-        case entry_type
-        when "add"
-          @entry_type_string = t("ezine.entry_type.add")
-        when "update"
-          @entry_type_string = t("ezine.entry_type.update")
-        when "delete"
-          @entry_type_string = t("ezine.entry_type.delete")
-        end
-
+        @entry_type_string = t("ezine.entry_type." + entry_type)
         render action: :confirm
       else
-        case entry_type
-        when "add"
-          render action: :new
-        when "update"
-          render action: :update
-        when "delete"
-          render action: :remove
-        end
+        render action: entry_type.to_sym
       end
     end
 
