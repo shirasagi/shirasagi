@@ -7,7 +7,6 @@ class Article::Agents::Parts::PageController < ApplicationController
       @items = Article::Page.site(@cur_site).public(@cur_date).
         where(@cur_part.condition_hash(cur_path: @cur_path)).
         order_by(@cur_part.sort_hash).
-        page(params[:page]).
-        per(@cur_part.limit)
+        limit(@cur_part.limit)
     end
 end

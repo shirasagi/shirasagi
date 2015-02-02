@@ -20,8 +20,7 @@ class Category::Agents::Parts::NodeController < ApplicationController
       @items = Category::Node::Base.site(@cur_site).public.
         where(cond).
         order_by(@cur_part.sort_hash).
-        page(params[:page]).
-        per(@cur_part.limit)
+        limit(@cur_part.limit)
 
       render
     end
