@@ -34,6 +34,22 @@ module SS::User::Model
       end
   end
 
+  module ClassMethods
+    public
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        if params[:name].present?
+          criteria = criteria.search_text params[:name]
+        end
+        if params[:keyword].present?
+          criteria = criteria.keyword_in params[:keyword], :name, :email
+        end
+        criteria
+      end
+  end
+
   def encrypt_password
     self.password = SS::Crypt.crypt(in_password)
   end
