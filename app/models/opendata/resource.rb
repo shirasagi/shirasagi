@@ -106,7 +106,7 @@ class Opendata::Resource
         return criteria if params.blank?
 
         criteria = criteria.where(name: /#{params[:keyword]}/) if params[:keyword].present?
-        criteria = criteria.where :format => params[:format].upcase if params[:format].present?
+        criteria = criteria.where(format: params[:format].upcase) if params[:format].present?
 
         criteria
       end
