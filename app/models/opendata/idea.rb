@@ -16,6 +16,7 @@ class Opendata::Idea
   field :point, type: Integer, default: "0"
   field :text, type: String
   field :tags, type: SS::Extensions::Words
+  field :commented, type: DateTime
 
   belongs_to :dataset, class_name: "Opendata::Dataset"
   belongs_to :app, class_name: "Opendata::App"
@@ -29,7 +30,7 @@ class Opendata::Idea
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
-  permit_params :state, :name, :dataset_id, :app_id, :text, :point, :tags, tags: []
+  permit_params :state, :name, :dataset_id, :app_id, :text, :point, :commented, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
