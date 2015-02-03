@@ -1550,14 +1550,11 @@ nav.cms-sns_share {
   a.app, a.idea {
     @include opacity(.5);
   }
-  a.tutorial-data {
-    float: right;
-    padding-top: 10px;
-  }
 }
 
 #s-mypage #contents .inner {
   nav.menu {
+    float: left;
     margin-bottom: $box-margin;
     padding-top: 14px;
     a {
@@ -1567,7 +1564,13 @@ nav.cms-sns_share {
       padding-right: 20px;
     }
   }
+  nav.tutorial-data {
+    float: right;
+    margin-bottom: $box-margin;
+    padding-top: 14px;
+  }
   dl.see {
+    clear: both;
     margin: 0px;
     margin-bottom: $box-margin;
     > dt {
@@ -1649,6 +1652,7 @@ table.index th, table.index td {
   padding: 4px 8px;
 }
 table.index {
+  clear: both;
   width: 100%;
   margin-bottom: $box-margin;
   thead {
