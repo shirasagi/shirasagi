@@ -8,14 +8,12 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
       @entry = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
     end
 
-    def get_entry_type(referer_path)
-      File.basename(referer_path, ".*")
+    def entry_type
+      File.basename request.env["HTTP_REFERER"], ".*"
     end
 
   public
     def confirm
-      entry_type = get_entry_type request.env["HTTP_REFERER"]
-
       raise "403" unless params[:submit].present?
 
       @entry.email = params[:item][:email]
