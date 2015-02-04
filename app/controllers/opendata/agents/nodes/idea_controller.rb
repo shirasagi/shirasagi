@@ -52,7 +52,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
         { name: "最新投稿順", url: "#{@search_url}&sort=released", pages: @items, rss: "#{@rss_url}&sort=released" },
         { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items, rss: "#{@rss_url}&sort=popular" },
         { name: "注目順", url: "#{@search_url}&sort=attention", pages: @comment_items, rss: "#{@rss_url}&sort=attention" }
-        ]
+      ]
 
       max = 50
       @areas    = aggregate_areas
@@ -113,6 +113,14 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       @idea_comment.commented = Time.now
       @idea_comment.save
+
+      cond = { id: @idea_comment.member_id }
+      @member = Opendata::Member.site(@cur_site).where(cond).first
+      if @member
+        commented_count = @member.commented_count || 0
+        @member.commented_count = @member.commented_count + 1
+        @member.save
+      end
 
       render :show_comment
     end

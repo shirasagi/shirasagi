@@ -2,8 +2,10 @@ class Opendata::Member
   include Cms::Member::Model
   include SS::Relation::File
 
+  field :commented_count, type: Integer, default: "0"
+
   belongs_to_file :icon
-  permit_params :in_icon
+  permit_params :in_icon, :commented_count
 
   validate "convert_icon", if: ->{ in_icon.present? }
 
