@@ -41,7 +41,7 @@ $(function(){
 });
 
 $(function(){
-    $("#dataset-ideas,#portal-idea,#ideas").each(function(){
+    $("#dataset-ideas,#portal-idea,#ideas,#idea-kv01,#idea-kv02").each(function(){
         if(location.href.match(/^ouropendata\.jp$/i)) {
             $(this).css("display", "none");
         }
