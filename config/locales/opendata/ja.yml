@@ -138,8 +138,8 @@ ja:
         user_id: 作成者
         categry_ids: カテゴリー
         area_ids: 地域
-        dataset_ids: データセット
-        app_ids: アプリ
+        dataset_id: 関連データセット
+        app_id: 関連アプリ
         point: 評価
         text: コメント
         tags: タグ

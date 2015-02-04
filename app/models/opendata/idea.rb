@@ -5,8 +5,6 @@ class Opendata::Idea
   include Contact::Addon::Page
   include Opendata::Addon::Category
   include Opendata::Addon::Area
-  include Opendata::Addon::Dataset
-  include Opendata::Addon::App
   include Opendata::Reference::Member
 
   set_permission_name "opendata_ideas"
@@ -16,6 +14,8 @@ class Opendata::Idea
   field :point, type: Integer, default: "0"
   field :text, type: String
   field :tags, type: SS::Extensions::Words
+  field :dataset_id, type: String
+  field :app_id, type: String
   field :commented, type: DateTime
 
   belongs_to :dataset, class_name: "Opendata::Dataset"
