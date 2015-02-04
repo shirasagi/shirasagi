@@ -34,6 +34,17 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       raise "404" unless @idea_comment
     end
 
+    def update_commented_count(member_ids)
+      member_ids.each do |member_id|
+        @member = Opendata::Member.site(@cur_site).where({id: member_id}).first
+        if @member
+          commented_count = @member.commented_count || 0
+          @member.commented_count = @member.commented_count + 1
+          @member.save
+        end
+      end
+    end
+
   public
     def pages
       Opendata::Idea.site(@cur_site).public
@@ -114,13 +125,14 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @idea_comment.commented = Time.now
       @idea_comment.save
 
-      cond = { id: @idea_comment.member_id }
-      @member = Opendata::Member.site(@cur_site).where(cond).first
-      if @member
-        commented_count = @member.commented_count || 0
-        @member.commented_count = @member.commented_count + 1
-        @member.save
+      member_ids = []
+      comments = Opendata::IdeaComment.where({idea_id: @idea_comment.id}).excludes({member_id: @cur_member.id})
+      comments.each do |comment|
+        member_ids << comment.member_id
       end
+
+      member_ids << @idea_comment.member_id
+      update_commented_count(member_ids.uniq)
 
       render :show_comment
     end
