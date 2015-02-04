@@ -467,6 +467,13 @@ input.date, input.datetime {
 }
 
 // -------------------------------------------------------------------------------------------------
+// colorbox
+
+#cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
+  display: none !important;
+}
+
+// -------------------------------------------------------------------------------------------------
 // event
 
 .mod-event-additional-info {
