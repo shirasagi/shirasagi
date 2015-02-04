@@ -10,6 +10,8 @@ ja:
     basic_info: 基本情報
     upload: アップロード
     download: ダウンロード
+    import: インポート
+    file: ファイル
     image: 画像
     state:
       public: 公開中
@@ -23,6 +25,7 @@ ja:
       show: 詳細を見る
       edit: 編集する
       delete: 削除する
+      import: インポート
       back_to_show: 詳細へ戻る
       back_to_index: 一覧へ戻る
       parent_directory: 上の階層へ
