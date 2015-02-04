@@ -1,10 +1,10 @@
 class Ezine::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
 
-  before_action :set_entries, only: [:add, :update, :delete, :confirm]
+  before_action :set_entry, only: [:add, :update, :delete, :confirm]
 
   private
-    def set_entries
+    def set_entry
       @entry = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
     end
 
