@@ -31,3 +31,19 @@ $(function(){
         }
     });
 });
+
+$(function(){
+    $("#idea-tab,#mypage-idea-tab").each(function(){
+        if(location.href.match(/^ouropendata\.jp$/i)) {
+            $(this).attr("href", "#");
+        }
+    });
+});
+
+$(function(){
+    $("#dataset-ideas,#portal-idea,#ideas").each(function(){
+        if(location.href.match(/^ouropendata\.jp$/i)) {
+            $(this).css("display", "none");
+        }
+    });
+});
