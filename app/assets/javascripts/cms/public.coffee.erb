@@ -212,7 +212,7 @@ class @SS_Voice
     'loading-resource': "<%= SS.config.voice.resource['loading'] %>"
     'disabled-resource': "<%= SS.config.voice.resource['disabled'] %>"
   @url = null
-  @anchor = null
+  @voice_tag = null
   @voice_controller = null
   @state = null
   @cancel_loading = null
@@ -221,19 +221,20 @@ class @SS_Voice
   @render: ->
     SS_Voice.url = SS_Voice.requestUrl()
 
-    anchor_parent = $('#ss-voice')
-    return if anchor_parent.size() == 0
-    anchor_parent = anchor_parent.first() if anchor_parent.size() > 1
+    voice_tag = $('#ss-voice')
+    return if voice_tag.size() == 0
+    voice_tag = voice_tag.first() if voice_tag.size() > 1
 
-    SS_Voice.anchor = $('<a/>').html('読み上げる').attr('href', SS_Voice.url)
-    anchor_parent.html('')
-    SS_Voice.anchor.appendTo(anchor_parent)
+    anchor = $('<a/>').html(voice_tag.html()).attr('href', SS_Voice.url)
+    voice_tag.html('')
+    anchor.appendTo(voice_tag)
+    SS_Voice.voice_tag = anchor
 
     id = '#ss-voice-controller'
     controller_parent = $(id)
     if controller_parent.size() == 0
       # no controller tag found, create default audio controller tag
-      controller_parent = anchor_parent
+      controller_parent = voice_tag
 
     SS_Voice.voice_controller = new SS_VoiceController(controller_parent)
     SS_Voice.state = null
@@ -249,8 +250,8 @@ class @SS_Voice
     return false
 
   @setAction: (action) ->
-    SS_Voice.anchor.unbind('click')
-    SS_Voice.anchor.bind('click', action)
+    SS_Voice.voice_tag.unbind('click')
+    SS_Voice.voice_tag.bind('click', action)
 
   @load: ->
     return false if SS_Voice.cancel_loading
