@@ -72,7 +72,7 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
       @item.attributes = get_params
 
       if @item.update
-        redirect_to "#{@cur_node.url}#{@item.id}", notice: t("views.notice.saved")
+        redirect_to "#{@cur_node.url}#{@item.id}/", notice: t("views.notice.saved")
       else
         render action: :edit
       end
