@@ -65,7 +65,6 @@ module Cms::Addon::Import
       end
 
       def import_from_zip(opts = {})
-        @imported = 0
         root_files = (opts[:root_files] == true)
 
         Zip::Archive.open(in_file.path) do |ar|
@@ -92,7 +91,6 @@ module Cms::Addon::Import
       end
 
       def import_from_file
-        @imported = 0
         import_filename = "#{self.filename}/#{in_file.original_filename}"
 
         if ::File.extname(import_filename) =~ /^\.(html|htm)$/i
@@ -114,6 +112,7 @@ module Cms::Addon::Import
 
     public
       def import
+        @imported = 0
         return false if in_file.blank?
 
         if ::File.extname(in_file.original_filename) =~ /^\.zip$/i
@@ -124,6 +123,7 @@ module Cms::Addon::Import
       end
 
       def save_with_import
+        @imported = 0
         return false unless save(context: :import)
         return import
       end
