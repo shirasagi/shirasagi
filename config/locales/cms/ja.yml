@@ -21,7 +21,7 @@ ja:
     group: グループ
     member: メンバー
     alert: 警告
-    syntax_check: HTMLチェック
+    syntax_check: アクセシビリティチェック
     syntax_check_replace:
       dependent_character: "[機種依存文字]"
       caption: キャプション
@@ -200,7 +200,7 @@ ja:
 
   errors:
     messages:
-      check_html: 本文のHTMLチェックを確認してください。
+      check_html: 本文のアクセシビリティチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
