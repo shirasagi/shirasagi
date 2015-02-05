@@ -123,6 +123,7 @@ ja:
       cms/part/tabs: 新着タブ
       cms/part/crumb: パンくずリスト
       cms/layout: レイアウト
+      cms/workflow/route: 承認経路
     attributes:
       cms/content:
         released: 公開日時

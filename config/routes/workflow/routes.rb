@@ -12,11 +12,19 @@ SS::Application.routes.draw do
   content "workflow" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: :deletion
+    get "/wizard/:id/approver_setting" => "wizard#approver_setting"
+    post "/wizard/:id/approver_setting" => "wizard#approver_setting"
+    get "/wizard/:id" => "wizard#index"
+    post "/wizard/:id" => "wizard#index"
   end
 
   namespace "workflow", path: ".:site/workflow" do
     get "/" => "main#index"
     resources :pages, concerns: :deletion
+    # get "/wizard/:id/approver_setting" => "wizard#approver_setting"
+    # post "/wizard/:id/approver_setting" => "wizard#approver_setting"
+    # get "/wizard/:id" => "wizard#index"
+    # post "/wizard/:id" => "wizard#index"
   end
 
 end
