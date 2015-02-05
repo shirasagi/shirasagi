@@ -8,6 +8,20 @@
   <dt><%= @model.t :tags %></dt>
   <dd><%= @item.tags %></dd>
 
+  <dt><%= @model.t :dataset_id %></dt>
+  <dd>
+    <% if @item.dataset %>
+      <%= @item.dataset.name %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :app_id %></dt>
+  <dd>
+    <% if @item.app %>
+      <%= @item.app.name %>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :point %></dt>
   <dd><%= @item.point %></dd>
 </dl>

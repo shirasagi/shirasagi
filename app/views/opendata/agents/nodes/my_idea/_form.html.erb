@@ -28,11 +28,22 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
   <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
 
   <dt><%= @model.t :dataset_id %></dt>
-  <dd></dd>
+  <dd>
+    <% if @dataset %>
+      <%= f.hidden_field "dataset_id", value: params[:dataset] %>
+      <%= @dataset.send :name %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :app_id %></dt>
-  <dd></dd>
+  <dd>
+    <% if @app %>
+      <%= f.hidden_field "app_id", value: params[:app] %>
+      <%= @app.send :name %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
 </dl>
+

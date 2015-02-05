@@ -17,6 +17,12 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
     def set_item
       @item = @model.site(@cur_site).member(@cur_member).find params[:id]
       @item.attributes = fix_params
+
+      dataset_id = @item.dataset_id
+      @dataset = Opendata::Dataset.site(@cur_site).find(dataset_id) if dataset_id
+
+      app_id = @item.app_id
+      @app = Opendata::App.site(@cur_site).find(app_id) if app_id
     end
 
     def fix_params
@@ -51,6 +57,13 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
 
     def new
       @item = @model.new
+
+      dataset_id = params[:dataset]
+      @dataset = Opendata::Dataset.site(@cur_site).find(dataset_id) if dataset_id
+
+      app_id = params[:app]
+      @app = Opendata::App.site(@cur_site).find(app_id) if app_id
+
       render
     end
 
@@ -89,9 +102,5 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
         render action: :delete
       end
     end
-
-#    def index
-#      render nothing: true
-#    end
 
 end

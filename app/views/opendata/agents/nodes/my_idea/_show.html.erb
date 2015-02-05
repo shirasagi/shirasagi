@@ -15,10 +15,18 @@
   <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
 
   <dt><%= @model.t :dataset_id %></dt>
-  <dd></dd>
+  <dd>
+    <% if @dataset %>
+      <%= @dataset.send :name %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :app_id %></dt>
-  <dd></dd>
+  <dd>
+    <% if @app %>
+      <%= @app.send :name %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>

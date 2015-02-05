@@ -8,6 +8,20 @@
   <dt><%= @model.t :tags %></dt>
   <dd><%= f.text_field :tags %></dd>
 
+  <dt><%= @model.t :dataset_id %></dt>
+  <dd>
+    <% if @item.dataset %>
+      <%= @item.dataset.name %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :app_id %></dt>
+  <dd>
+    <% if @item.app %>
+      <%= @item.app.name %>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :point %></dt>
   <dd><%= f.number_field :point %></dd>
 </dl>
