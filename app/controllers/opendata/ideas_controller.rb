@@ -12,9 +12,6 @@ class Opendata::IdeasController < ApplicationController
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
     end
-#    def fix_params
-#      { cur_user: @cur_user, cur_site: @cur_site }
-#    end
 
   public
     def index
@@ -23,9 +20,4 @@ class Opendata::IdeasController < ApplicationController
         order_by(updated: -1).
         page(params[:page]).per(50)
     end
-#    def index
-#      @items = @model.site(@cur_site).
-#        order_by(updated: -1).
-#        page(params[:page]).per(50)
-#    end
 end

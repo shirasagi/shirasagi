@@ -1,6 +1,9 @@
 class Opendata::IdeaComment
   include SS::Document
 
+  field :site_id, type: Integer
+  field :member_id, type: Integer
+  field :idea_id, type: Integer
   field :name, type: String
   field :text, type: String
 
@@ -12,4 +15,5 @@ class Opendata::IdeaComment
   validates :member_id, presence: true
   validates :idea_id, presence: true
   validates :text, presence: true, length: { maximum: 100 }
+
 end
