@@ -1,0 +1,10 @@
+
+<% if @app %>
+<div class="detail">
+  <div class="info-wrap">
+    <div class="app_header">関連アプリ</div>
+    <div class="app"><%= link_to @app.name, @app.url %></div>
+    <div class="app_text"><%= @app.text %></div>
+  </div>
+</div>
+<% end %>

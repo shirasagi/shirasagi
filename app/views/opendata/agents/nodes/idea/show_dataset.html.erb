@@ -1,0 +1,10 @@
+
+<% if @dataset %>
+<div class="detail">
+  <div class="info-wrap">
+    <div class="dataset_header">関連データセット</div>
+    <div class="dataset"><%= link_to @dataset.name, @dataset.url %></div>
+    <div class="dataset_text"><%= @dataset.text %></div>
+  </div>
+</div>
+<% end %>

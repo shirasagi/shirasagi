@@ -58,6 +58,14 @@ class Opendata::Idea
       url.sub(/\.html$/, "") + "/comment/add.html"
     end
 
+    def related_dataset_url
+      url.sub(/\.html$/, "") + "/dataset/show.html"
+    end
+
+    def related_app_url
+      url.sub(/\.html$/, "") + "/app/show.html"
+    end
+
     def contact_present?
       return false if member_id.present?
       super

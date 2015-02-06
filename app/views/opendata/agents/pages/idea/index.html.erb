@@ -14,6 +14,18 @@ $ ->
     success: (data)->
       $(".comment").html data
 
+  # show related_dataset
+  $.ajax
+    url: "<%= @cur_page.related_dataset_url %>"
+    success: (data)->
+      $("#related_dataset").html data
+
+  # show related_app
+  $.ajax
+    url: "<%= @cur_page.related_app_url %>"
+    success: (data)->
+      $("#related_app").html data
+
   # hide categories
   $(".categories a[data-class=other]").click ->
     type = $(this).attr("class")
@@ -85,6 +97,15 @@ categories = [
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
     </dl>
   </div>
+</div>
+
+<div id="sidebar">
+  <section>
+    <div id="related_dataset"></div>
+  </section>
+  <section>
+    <div id="related_app"></div>
+  </section>
 </div>
 
 <div class="comment"></div>

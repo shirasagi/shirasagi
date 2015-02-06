@@ -5,8 +5,8 @@
 
       <div class="ideas">
         <% @ideas.each do |idea| %>
-          <div class="comment"><%= link_to idea.name, idea.url %></div>
-          <div class="comment_text"><%= idea.text %></div>
+          <div class="idea"><%= link_to idea.name, idea.url %></div>
+          <div class="idea_text"><%= idea.text %></div>
 
           <% if idea.member %>
           <%= link_to idea.member.name, "#{member_path}#{idea.member.id}" %>

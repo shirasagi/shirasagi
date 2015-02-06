@@ -141,4 +141,30 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       render :show_comment
     end
 
+    def show_dataset
+      @cur_node.layout = nil
+
+      idea_path = @cur_path.sub(/\/dataset\/.*/, ".html")
+
+      idea = Opendata::Idea.site(@cur_site).public.
+        filename(idea_path).
+        first
+      raise "404" unless idea
+
+      @dataset = Opendata::Dataset.site(@cur_site).find(idea.dataset_id) if idea.dataset_id
+    end
+
+    def show_app
+      @cur_node.layout = nil
+
+      idea_path = @cur_path.sub(/\/app\/.*/, ".html")
+
+      idea = Opendata::Idea.site(@cur_site).public.
+      filename(idea_path).
+      first
+      raise "404" unless idea
+
+      @app = Opendata::App.site(@cur_site).find(idea.app_id) if idea.app_id
+    end
+
 end
