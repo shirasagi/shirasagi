@@ -50,3 +50,6 @@ Style/TrailingWhitespace:
 # Cop supports --auto-correct.
 Style/UnneededPercentQ:
   Enabled: true
+
+Lint/RescueException:
+  Enabled: false
