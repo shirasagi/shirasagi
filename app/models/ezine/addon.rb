@@ -39,4 +39,17 @@ module Ezine::Addon
       permit_params :sender_name, :sender_email
     end
   end
+
+  module Reply
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 420
+
+    included do
+      field :reply_upper_text, type: String, default: ""
+      field :reply_lower_text, type: String, default: ""
+      permit_params :reply_upper_text, :reply_lower_text
+    end
+  end
 end
