@@ -12,6 +12,9 @@ module Inquiry::Node
     include Inquiry::Addon::Notice
     include Inquiry::Addon::Reply
 
+    has_many :columns, class_name: "Inquiry::Column"
+    has_many :answers, class_name: "Inquiry::Answer"
+
     default_scope ->{ where(route: "inquiry/form") }
   end
 end

@@ -19,7 +19,7 @@
           <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
         </nav>
       </td>
-      <td><%= item.name %></td>
+      <td><%= link_to item.name, action: :show, id: item %></td>
       <td><%= item.order %></td>
       <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>

@@ -6,11 +6,15 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
+  concern :download do
+    get :download, on: :collection
+  end
+
   content "inquiry" do
     get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
     resources :forms, concerns: :deletion
     resources :columns, concerns: :deletion
-    resources :answers, concerns: :deletion, only: [:index, :show, :destroy]
+    resources :answers, concerns: [:deletion, :download], only: [:index, :show, :destroy]
   end
 
   node "inquiry" do
