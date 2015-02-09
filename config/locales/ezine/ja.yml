@@ -23,6 +23,7 @@ ja:
     addons:
       ezine/page/body: 本文
       ezine/signature: 署名
+      ezine/sender_address: 送信者設定
 
   cms:
     nodes:
@@ -34,6 +35,8 @@ ja:
       ezine/node/page:
         signature_html: 署名（HTML版）
         signature_text: 署名（テキスト版）
+        sender_name: 送信者名
+        sender_email: 送信メールアドレス
       ezine/page:
         name: 記事タイトル
         html: 本文（HTML版）

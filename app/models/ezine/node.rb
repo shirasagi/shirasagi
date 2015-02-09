@@ -8,6 +8,7 @@ module Ezine::Node
   class Page
     include Cms::Node::Model
     include Ezine::Addon::Signature
+    include Ezine::Addon::SenderAddress
 
     default_scope ->{ where(route: "ezine/page") }
   end
