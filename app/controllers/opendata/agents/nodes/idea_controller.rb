@@ -148,9 +148,6 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       comment = Opendata::IdeaComment.find params[:comment]
       comment.destroy if comment
 
-      logger.warn @idea_comment.member_id
-      logger.warn @cur_member.id
-
       render :show_comment
     end
 
