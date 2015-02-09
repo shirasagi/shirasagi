@@ -6,7 +6,7 @@ $ ->
   $.ajax
     url: "<%= @cur_page.point_url %>"
     success: (data)->
-      $(".point").html data
+      $("#idea-point").html data
 
   # show comment
   $.ajax
@@ -42,7 +42,7 @@ $ ->
   <h1 class="name"><%= @cur_page.send :name %></h1>
 </header>
 
-<div class="point">
+<div class="point" id="idea-point">
   <div class="count">
     <span class="number"><%= @cur_page.point %></span>
     <span class="label">いいね！数</span>

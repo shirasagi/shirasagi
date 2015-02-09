@@ -1,14 +1,14 @@
 <%= coffee do %>
 $ ->
 
-  $(".point .update").click (event)->
+  $("#idea-point .update").click (event)->
     $.ajax
       url: "<%= @idea.point_add_url %>"
       success: (data)->
-        $(".point").html data
+        $("#idea-point").html data
     event.preventDefault()
 
-  $(".point .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
+  $("#idea-point .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
 
 <% end %>
 
