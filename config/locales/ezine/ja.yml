@@ -22,6 +22,7 @@ ja:
     ezine: メールマガジン
     addons:
       ezine/page/body: 本文
+      ezine/signature: 署名
 
   cms:
     nodes:
@@ -30,6 +31,9 @@ ja:
 
   mongoid:
     attributes:
+      ezine/node/page:
+        signature_html: 署名（HTML版）
+        signature_text: 署名（テキスト版）
       ezine/page:
         name: 記事タイトル
         html: 本文（HTML版）

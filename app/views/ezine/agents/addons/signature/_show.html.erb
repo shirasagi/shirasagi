@@ -1,0 +1,16 @@
+<dl class="see mod-ezine-signature">
+  <dt><%= @model.t :signature_html %></dt>
+  <dd>
+    <% if @item.send(:signature_html).present? %>
+    <%= html_editor "#mod-ezine-signature-html", height: "400px", readonly: true %>
+    <%= text_area_tag "mod-ezine-signature-html", @item.signature_html, style: "height: 400px;" %>
+    <% end %>
+  </dd>
+  <dt><%= @model.t :signature_text %></dt>
+  <dd>
+    <% if @item.send(:signature_text).present? %>
+    <%= text_area_tag "mod-ezine-signature-text", @item.signature_text, style: "height: 400px;" %>
+    <% end %>
+  </dd>
+</dl>
+
