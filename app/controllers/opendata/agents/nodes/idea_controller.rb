@@ -29,6 +29,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       cond = { site_id: @cur_site.id, idea_id: @idea_comment.id }
       @comments = Opendata::IdeaComment.where(cond).order_by(:updated.asc)
 
+      @manage_mode = true if logged_in?(redirect: false) && @cur_member.id == @idea_comment.member_id
       @comment_mode = logged_in?(redirect: false)
 
       raise "404" unless @idea_comment
@@ -146,6 +147,9 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       comment = Opendata::IdeaComment.find params[:comment]
       comment.destroy if comment
+
+      logger.warn @idea_comment.member_id
+      logger.warn @cur_member.id
 
       render :show_comment
     end

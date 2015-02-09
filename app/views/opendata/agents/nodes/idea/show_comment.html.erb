@@ -34,7 +34,7 @@
       <div class="comments">
         <% @comments.each do |comment| %>
           <div class="comment"><%= comment.text %></div>
-          <%= link_to "削除", "", class: "comment_delete", id: comment.id %>
+          <%= link_to "削除", "", class: "comment_delete", id: comment.id if @manage_mode %>
           <% if comment.member %>
           <%= link_to comment.member.name, "#{member_path}#{comment.member.id}" %>
           <% else %>
