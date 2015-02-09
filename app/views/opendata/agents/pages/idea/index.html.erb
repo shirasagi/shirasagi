@@ -12,7 +12,7 @@ $ ->
   $.ajax
     url: "<%= @cur_page.comment_url %>"
     success: (data)->
-      $(".comment").html data
+      $("#idea-comments").html data
 
   # show related_dataset
   $.ajax
@@ -108,5 +108,5 @@ categories = [
   </section>
 </div>
 
-<div class="comment"></div>
+<div class="comment" id="idea-comments"></div>
 

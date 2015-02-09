@@ -5,7 +5,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
   include Opendata::IdeaFilter
 
   before_action :set_idea, only: [:show_point, :add_point, :point_members]
-  before_action :set_idea_comment, only: [:show_comment, :add_comment]
+  before_action :set_idea_comment, only: [:show_comment, :add_comment, :delete_comment]
   skip_filter :logged_in?
 
   private
@@ -137,6 +137,15 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       member_ids << @idea_comment.member_id
       update_commented_count(member_ids.uniq)
+
+      render :show_comment
+    end
+
+    def delete_comment
+      @cur_node.layout = nil
+
+      comment = Opendata::IdeaComment.find params[:comment]
+      comment.destroy if comment
 
       render :show_comment
     end

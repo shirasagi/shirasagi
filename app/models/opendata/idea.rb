@@ -58,6 +58,10 @@ class Opendata::Idea
       url.sub(/\.html$/, "") + "/comment/add.html"
     end
 
+    def comment_delete_url
+      url.sub(/\.html$/, "") + "/comment/delete.html"
+    end
+
     def related_dataset_url
       url.sub(/\.html$/, "") + "/dataset/show.html"
     end
