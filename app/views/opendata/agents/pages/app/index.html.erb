@@ -1,0 +1,97 @@
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+<%= coffee do %>
+$ ->
+  # show point
+  $.ajax
+    url: "<%= @cur_page.point_url %>"
+    success: (data)->
+      $(".point").html data
+
+  # hide categories
+  $(".categories a[data-class=other]").click ->
+    type = $(this).attr("class")
+    $(".categories a." + type).show()
+    $(this).remove()
+    return false
+
+  # preview
+  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
+
+<% end %>
+
+<header>
+  <h1 class="name"><%= @cur_page.send :name %></h1>
+</header>
+
+<div class="point">
+  <div class="count">
+    <span class="number"><%= @cur_page.point %></span>
+    <span class="label">いいね！数</span>
+  </div>
+</div>
+
+<%
+max = 3
+categories = [
+  { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
+  { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
+]
+%>
+<nav class="categories">
+  <% categories.each do |cate| %>
+    <% cate[:items].each_with_index do |item, idx| %>
+      <% hide = (idx >= max) ? "display: none" : nil %>
+      <%= link_to item.send(cate[:name]), "#{@search_url}?s[#{cate[:key]}]=#{item.send(cate[:val])}",
+        class: cate[:type], style: hide %>
+    <% end %>
+    <% if cate[:items].size > max %>
+      <%= link_to "他#{cate[:items].size-max}件", "#",
+        class: "#{cate[:type]}", "data-class" => "other" %>
+    <% end %>
+  <% end %>
+</nav>
+
+<div class="text">
+  <%= auto_link br(@cur_page.text) %>
+</div>
+
+<div class="detail">
+
+  <div class="info-wrap">
+
+  <div class="map">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d52012.195005576476!2d133.0468892697888!3d35.435920656671705!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35571ac797a7f35d%3A0xc7405d8139aed6cd!2z5pel5pysLCDls7bmoLnnnIzmnb7msZ_luILkuYPmnKjnpo_lr4znlLrvvJfvvJPvvJXiiJLvvJLvvJHvvJE!5e0!3m2!1sja!2s!4v1406104245858" width="730" height="350" frameborder="0" style="border:0"></iframe>
+  </div>
+
+
+    <dl class="author">
+      <% if @cur_page.member_id.present? %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd>
+          <% if @cur_page.member %>
+          <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
+          <% else %>
+          ゲストユーザー
+          <% end %>
+        </dd>
+      <% elsif @cur_page.contact_group %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd><%= @cur_page.contact_group.full_name %><br /></dd>
+      <% elsif @cur_page.groups.present? %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd><%= @cur_page.groups.first.name %><br /></dd>
+      <% end %>
+
+      <dt><%= @cur_page.t :license_id %></dt>
+      <dd><%= @cur_page.license.name %></dd>
+
+      <dt><%= @cur_page.t :downloaded %></dt>
+      <dd><%= @cur_page.downloaded.to_i %> 回</dd>
+
+      <dt><%= @cur_page.t :updated %></dt>
+      <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
+    </dl>
+  </div>
+</div>

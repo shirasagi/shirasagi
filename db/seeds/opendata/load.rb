@@ -30,6 +30,10 @@ end
 
 save_layout filename: "portal-top.layout.html", name: "ポータル：トップ"
 save_layout filename: "portal-info.layout.html", name: "ポータル：お知らせ"
+save_layout filename: "app-top.layout.html", name: "アプリ：トップ"
+save_layout filename: "app-bunya.layout.html", name: "アプリ：分野、アプリ検索"
+save_layout filename: "app-page.layout.html", name: "アプリ：詳細ページ"
+save_layout filename: "app-general.layout.html", name: "アプリ：汎用"
 save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "dataset-bunya.layout.html", name: "データ：分野、データ検索"
 save_layout filename: "dataset-group.layout.html", name: "データ：グループ検索"
@@ -78,7 +82,13 @@ save_node filename: "dataset/search_group", name: "データセットグルー�
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
   layout_id: layouts["dataset-bunya"].id
 
-save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "show"
+save_node filename: "app", name: "アプリケーション", route: "opendata/app", shortcut: "show",
+  layout_id: layouts["app-top"].id,
+  page_layout_id: layouts["app-page"].id
+save_node filename: "app/bunya", name: "分野", route: "opendata/app_category",
+  layout_id: layouts["app-bunya"].id
+save_node filename: "app/search", name: "アプリケーション検索", route: "opendata/search_app",
+  layout_id: layouts["app-bunya"].id
 
 save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortcut: "show",
   layout_id: layouts["idea-top"].id,
@@ -99,7 +109,7 @@ save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
   layout_id: layouts["mypage-login"].id
 save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile"
 save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset"
-save_node filename: "mypage/app", name: "アプリ", route: "opendata/my_app"
+save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app"
 save_node filename: "mypage/idea", name: "アイデア", route: "opendata/my_idea"
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
@@ -177,6 +187,8 @@ save_part filename: "portal-dataset.part.html" , name: "ポータル：オープ
 save_part filename: "portal-idea.part.html" , name: "ポータル：オープンアイデアボックス", route: "opendata/idea", limit: 5
 save_part filename: "portal-plan.part.html" , name: "ポータル：公開予定", route: "cms/free"
 save_part filename: "portal-fb.part.html" , name: "ポータル：facebook", route: "cms/free"
+save_part filename: "app-head.part.html" , name: "アプリ：ヘッダー", route: "cms/free"
+save_part filename: "app-kv.part.html" , name: "アプリ：キービジュアル", route: "cms/free"
 save_part filename: "dataset-head.part.html" , name: "データ：ヘッダー", route: "cms/free"
 save_part filename: "dataset-kv.part.html" , name: "データ：キービジュアル", route: "cms/free"
 save_part filename: "dataset-group.part.html" , name: "データ：グループ", route: "opendata/dataset_group"

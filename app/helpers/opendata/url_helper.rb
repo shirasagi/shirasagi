@@ -22,6 +22,12 @@ module Opendata::UrlHelper
     node.url
   end
 
+  def search_apps_path
+    node = Opendata::Node::SearchApp.site(@cur_site).public.first
+    return nil unless node
+    node.url
+  end
+
   def search_ideas_path
     node = Opendata::Node::SearchIdea.site(@cur_site).public.first
     return nil unless node

@@ -26,11 +26,20 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
         order_by(released: -1).
         limit(10)
 
+      apps
       ideas
     end
 
     def datasets
       @datasets = Opendata::Dataset.site(@cur_site).public.
+        where(member_id: @member.id).
+        order_by(released: -1).
+        page(params[:page]).
+        per(50)
+    end
+
+    def apps
+      @apps = Opendata::App.site(@cur_site).public.
         where(member_id: @member.id).
         order_by(released: -1).
         page(params[:page]).

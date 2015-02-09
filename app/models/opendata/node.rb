@@ -60,6 +60,18 @@ module Opendata::Node
     default_scope ->{ where(route: "opendata/app") }
   end
 
+  class AppCategory
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/app_category") }
+  end
+
+  class SearchApp
+    include Cms::Node::Model
+
+    default_scope ->{ where(route: "opendata/search_app") }
+  end
+
   class Idea
     include Cms::Node::Model
 

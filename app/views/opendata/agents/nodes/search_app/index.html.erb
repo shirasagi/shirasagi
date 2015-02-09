@@ -1,0 +1,65 @@
+<%
+
+areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
+@s = OpenStruct.new params[:s]
+
+%>
+<%= form_for :s, url: "", html: { class: "opendata-search_apps-form", method: :get } do |f| %>
+  <dl class="keyword">
+    <dt>キーワード</dt>
+    <dd><%= f.text_field :keyword %></dd>
+  </dl>
+  <dl class="category">
+    <dt>分野</dt>
+    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
+  </dl>
+  <dl class="category">
+    <dt>地域</dt>
+    <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
+  </dl>
+  <dl class="tag">
+    <dt>タグ</dt>
+    <dd><%= f.text_field :tag %></dd>
+  </dl>
+  <dl class="format">
+    <dt>フォーマット</dt>
+    <dd><%= f.text_field :format, value: tryb { params[:s][:format] } %></dd>
+  </dl>
+  <dl class="license">
+    <dt>ライセンス</dt>
+    <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
+  </dl>
+  <dl class="sort">
+    <dt>並び順</dt>
+    <dd><%= select_tag :sort, options_for_select(@model.sort_options, params[:sort]) %></dd>
+  </dl>
+
+  <div class="send">
+    <%= submit_tag t("views.button.search"), name: :search %>
+  </div>
+<% end %>
+
+<%= paginate @items %>
+
+<div class="opendata-search_apps pages">
+  <% @items.each do |item| %>
+  <article>
+    <header>
+      <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+      <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+    </header>
+  </article>
+  <% end %>
+
+  <% if @items.blank? %>
+  <article>
+    <header>
+      <h2>アプリケーションは見つかりませんでした。</h2>
+    </header>
+  </article>
+  <% end %>
+</div>
+
+<%= paginate @items %>

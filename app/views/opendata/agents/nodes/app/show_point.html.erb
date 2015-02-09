@@ -1,0 +1,28 @@
+<%= coffee do %>
+$ ->
+
+  $(".point .update").click (event)->
+    $.ajax
+      url: "<%= @app.point_add_url %>"
+      success: (data)->
+        $(".point").html data
+    event.preventDefault()
+
+  $(".point .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
+
+<% end %>
+
+<div class="count">
+  <span class="number">
+    <%= @app.point %>
+  </span>
+  <span class="label">
+    <% if @app.point == 0 %>
+      いいね！数
+    <% else %>
+      <%= link_to "いいね！数", @app.point_members_url %>
+    <% end %>
+  </span>
+</div>
+
+<%= link_to "いいね！", "#", class: "update #{@mode}" if @mode %>

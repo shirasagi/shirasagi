@@ -33,7 +33,7 @@ $(function(){
 });
 
 $(function(){
-    $("#idea-tab,#mypage-idea-tab").each(function(){
+    $("#app-tab,#mypage-app-tab,#idea-tab,#mypage-idea-tab").each(function(){
         if(location.href.match(/^ouropendata\.jp$/i)) {
             $(this).attr("href", "#");
         }
@@ -41,7 +41,7 @@ $(function(){
 });
 
 $(function(){
-    $("#dataset-ideas,#portal-idea,#ideas,#idea-kv01,#idea-kv02").each(function(){
+    $("#portal-app,#apps,#app-kv01,#app-kv02,#dataset-ideas,#portal-idea,#ideas,#idea-kv01,#idea-kv02").each(function(){
         if(location.href.match(/^ouropendata\.jp$/i)) {
             $(this).css("display", "none");
         }

@@ -123,15 +123,21 @@ ja:
         tsv_id: プレビュー用データ
         content: データの内容
       opendata/app:
-        site_id: サイト
-        name: アプリ名
-        user_id: アプリ作成者
+        file_id: ファイル
+        in_file: ファイル
+        name: アプリケーション名
+        text: 説明
+        format: フォーマット
+        license_id: ライセンス
+        tags: タグ
+        categry_ids: 分野
+        area_ids: 地域
         group_id: 所属グループ
-        categry_ids: カテゴリー
         dataset_ids: データセット
         point: 評価
-        text: 説明
-        license: ライセンス
+        downloaded: 合計ダウンロード数
+        site_id: サイト
+        user_id: アプリ作成者
       opendata/idea:
         name: タイトル
         site_id: サイト

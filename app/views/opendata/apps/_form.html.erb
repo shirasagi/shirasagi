@@ -1,13 +1,22 @@
+<%
+licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
+%>
+<%= javascript_include_tag "opendata/form" %>
+
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :file_id %><%= required_label %></dt>
+  <dd><%= f.file_field :in_file %></dd>
+
+  <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :text %></dt>
+  <dt><%= @model.t :text %><%= required_label %></dt>
   <dd><%= f.text_field :text %></dd>
 
-  <dt><%= @model.t :license %></dt>
-  <dd><%= f.text_field :license %></dd>
+  <dt><%= @model.t :license_id %><%= required_label %></dt>
+  <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
 
-  <dt><%= @model.t :point %></dt>
-  <dd><%= f.number_field :point %></dd>
+  <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
+
 </dl>

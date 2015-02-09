@@ -1,0 +1,43 @@
+<%
+
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
+areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
+licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
+
+%>
+<%= javascript_include_tag "opendata/public" %>
+<%= javascript_include_tag "opendata/form" %>
+
+<dl class="see opendata-app">
+  <dt><%= @model.t :file_id %><%= required_label %></dt>
+  <dd><%= f.file_field :in_file %></dd>
+
+  <dt><%= @model.t :name %><%= required_label %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :format %><%= @item.tt :format %><%= required_label %></dt>
+  <dd><%= f.text_field :format, style: "width: 8em; ime-mode: disabled;" %></dd>
+
+  <dt><%= @model.t :license_id %><%= required_label %></dt>
+  <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
+
+  <dt><%= @model.t :tags %><%= @item.tt :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
+
+  <dt><%= @model.t :category_ids %><%= required_label %></dt>
+  <dd>
+    <%= f.hidden_field "category_ids[]", value: "" %>
+    <% categories.each do |c| %>
+      <label><%= f.check_box("category_ids[]", {}, c.id) %> <%= c.name %></label>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :area_ids %></dt>
+  <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>

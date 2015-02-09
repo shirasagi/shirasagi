@@ -1,6 +1,6 @@
 class Opendata::Agents::Parts::AppController < ApplicationController
   include Cms::PartFilter::View
-  helper Cms::ListHelper
+  helper Opendata::ListHelper
 
   public
     def index

@@ -21,17 +21,23 @@ SS::Application.routes.draw do
       end
     end
 
+    resources :app_categories, concerns: :deletion
+
     resources :idea_categories, concerns: :deletion
 
     resources :search_datasets, concerns: :deletion
     resources :search_dataset_groups, concerns: :deletion
+    resources :search_apps, concerns: :deletion
     resources :search_ideas, concerns: :deletion
     resources :sparqls, concerns: :deletion
     resources :apis, concerns: :deletion
     resources :mypages, concerns: :deletion
     resources :my_datasets, concerns: :deletion
+    resources :my_apps, concerns: :deletion
     resources :my_ideas, concerns: :deletion
-    resources :apps, concerns: :deletion
+    resources :apps, concerns: :deletion do
+      get "file" => "apps#download"
+    end
     resources :ideas, concerns: :deletion
   end
 
@@ -65,8 +71,27 @@ SS::Application.routes.draw do
     match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/search_dataset"
 
+    get "app_category/" => "public#nothing", cell: "nodes/app_category"
+    get "app_category/:name/" => "public#index", cell: "nodes/app_category"
+    get "app_category/:name/rss.xml" => "public#rss", cell: "nodes/app_category"
+    get "app_category/:name/areas" => "public#index_areas", cell: "nodes/app_category"
+    get "app_category/:name/tags" => "public#index_tags", cell: "nodes/app_category"
+    get "app_category/:name/formats" => "public#index_formats", cell: "nodes/app_category"
+    get "app_category/:name/licenses" => "public#index_licenses", cell: "nodes/app_category"
+
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"
+    get "app/rss.xml" => "public#rss", cell: "nodes/app"
+    get "app/areas" => "public#index_areas", cell: "nodes/app"
+    get "app/tags" => "public#index_tags", cell: "nodes/app"
+    get "app/formats" => "public#index_formats", cell: "nodes/app"
+    get "app/licenses" => "public#index_licenses", cell: "nodes/app"
+    get "app/:app/point/show.:format" => "public#show_point", cell: "nodes/app", format: false
+    get "app/:app/point/add.:format" => "public#add_point", cell: "nodes/app", format: false
+    get "app/:app/point/members.html" => "public#point_members", cell: "nodes/app", format: false
+
+    match "search_app/(index.:format)" => "public#index", cell: "nodes/search_app", via: [:get, :post]
+    get "search_app/rss.xml" => "public#rss", cell: "nodes/search_app"
 
     get "idea_category/" => "public#nothing", cell: "nodes/idea_category"
     get "idea_category/:name/" => "public#index", cell: "nodes/idea_category"
@@ -122,7 +147,9 @@ SS::Application.routes.draw do
         get "tsv" => "public#download_tsv"
       end
     end
-    resources :apps, path: "my_app", controller: "public", cell: "nodes/my_app", concerns: :deletion
+    resources :apps, path: "my_app", controller: "public", cell: "nodes/my_app", concerns: :deletion do
+      get "file" => "public#download"
+    end
     resources :ideas, path: "my_idea", controller: "public", cell: "nodes/my_idea", concerns: :deletion
   end
 
@@ -137,6 +164,7 @@ SS::Application.routes.draw do
 
   page "opendata" do
     get "dataset/:filename.:format" => "public#index", cell: "pages/dataset"
+    get "app/:filename.:format" => "public#index", cell: "pages/app"
     get "idea/:filename.:format" => "public#index", cell: "pages/idea"
   end
 end
