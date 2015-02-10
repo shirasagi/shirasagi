@@ -1,0 +1,16 @@
+<%= coffee do %>
+  $ ->
+
+  $(".confirm").click (event)->
+    $.ajax
+      url: "/mypage/notice/confirm.html"
+      type: "GET"
+      success: (data)->
+        $("#my-notice").html data
+    event.preventDefault()
+
+<% end %>
+
+<% if @cur_member.commented_count && @cur_member.commented_count > 0 %>
+<%= link_to @cur_member.commented_count, "", class: "confirm" %>
+<% end %>

@@ -139,6 +139,8 @@ SS::Application.routes.draw do
     get "mypage/login"  => "public#login", cell: "nodes/mypage"
     post "mypage/login" => "public#login", cell: "nodes/mypage"
     get "mypage/logout" => "public#logout", cell: "nodes/mypage"
+    get "mypage/notice/show.:format" => "public#show_notice", cell: "nodes/mypage", format: false
+    get "mypage/notice/confirm.:format" => "public#confirm_notice", cell: "nodes/mypage", format: false
     get "mypage/:provider" => "public#provide", cell: "nodes/mypage"
 
     resource :profile, path: "my_profile", controller: "public", cell: "nodes/my_profile", concerns: :deletion

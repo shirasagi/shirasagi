@@ -1,4 +1,15 @@
+<%= coffee do %>
+
+  # show notification
+  $.ajax
+    url: "/mypage/notice/show.html"
+    success: (data)->
+      $("#my-notice").html data
+
+<% end %>
+
 <% if @cur_member %>
+<span id="my-notice"></span>
 <a href="/mypage/"><%= @cur_member.name %>さん</a>
 <a href="/mypage/logout"><%= t("views.logout") %></a>
 <% else %>

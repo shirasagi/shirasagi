@@ -29,6 +29,20 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
       unset_member redirect: true
     end
 
+    def show_notice
+      @cur_node.layout = nil
+    end
+
+    def confirm_notice
+      @cur_node.layout = nil
+
+      @cur_member.commented_count = 0
+      @cur_member.confirmed = Time.now
+      @cur_member.save
+
+      render :show_notice
+    end
+
     def provide
       session[:auth_site] = @cur_site
       %w(twitter facebook yahoojp google_oauth2 github).each do |name|

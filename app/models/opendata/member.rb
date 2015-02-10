@@ -3,9 +3,10 @@ class Opendata::Member
   include SS::Relation::File
 
   field :commented_count, type: Integer, default: "0"
+  field :confirmed, type: DateTime
 
   belongs_to_file :icon
-  permit_params :in_icon, :commented_count
+  permit_params :in_icon, :commented_count, :confirmed
 
   validate "convert_icon", if: ->{ in_icon.present? }
 
