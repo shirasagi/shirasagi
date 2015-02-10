@@ -1,7 +1,7 @@
 <%= render "head" %>
 
 <div class="contents">
-  <section class="datasets">
+  <section class="datasets" id="datasets">
     <h2>データセット</h2>
     <div class="pages">
       <% @datasets.each do |item| %>
@@ -17,7 +17,7 @@
       <%= link_to :more, "#{@member_url}datasets/", class: "more" %>
     </nav>
   </section>
-  <section class="apps">
+  <section class="apps" id="apps">
     <h2>アプリケーション</h2>
     <div class="pages">
       <% @apps.each do |item| %>
