@@ -14,6 +14,7 @@ $ ->
 <div class="ezine-form">
   <%= error_messages_for :entry, header_message: false %>
   <%= render partial: "form", locals: { f: f, confirm: false }  %>
+  <%= f.hidden_field :entry_type, value: :add %>
   <footer class="send">
     <%= f.submit t('ezine.entry_type.add'), name: :submit %>
   </footer>
