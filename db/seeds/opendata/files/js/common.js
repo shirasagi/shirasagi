@@ -33,7 +33,7 @@ $(function(){
 });
 
 $(function(){
-    $("#app-tab,#mypage-app-tab,#idea-tab,#mypage-idea-tab").each(function(){
+    $("#app-tab,#mypage-app-tab,#idea-tab,#idea-nav,#mypage-idea-tab").each(function(){
         if(location.host.match(/^ouropendata\.jp$/i)) {
             $(this).attr("href", "#");
         }
