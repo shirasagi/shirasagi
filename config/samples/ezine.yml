@@ -7,8 +7,6 @@ production:
   # Sleep $sleep_seconds each $interval deliverys.
   interval: 50
   sleep_seconds: 10
-  # Sender E-mail address
-  sender_address: noreply@example.jp
 
 ## Multiple servers example
 #
@@ -29,7 +27,6 @@ development: &development
   register_member_here: true
   interval: 1
   sleep_seconds: 0
-  sender_address: noreply@example.jp
 
 test:
   <<: *development
