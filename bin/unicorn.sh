@@ -17,8 +17,12 @@ for APP in ${APPS[@]}; do
   start()
   {
     if [ -e $PID ]; then
-      echo "$NAME already started"
-      exit 1
+      if ! ps `cat ${PID}`|grep "unicorn"|grep "master">/dev/null; then
+        rm -f ${PID}
+      else
+        echo "$NAME already started"
+        exit 1
+      fi
     fi
     echo "start $NAME"
     cd $APP
