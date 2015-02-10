@@ -1,10 +1,6 @@
 module Mobile::PublicFilter
   extend ActiveSupport::Concern
 
-  included do
-    after_action :render_mobile, if: ->{ filters.include?(:mobile) }
-  end
-
   public
     def mobile_path?
       filters.include?(:mobile)
@@ -21,7 +17,8 @@ module Mobile::PublicFilter
       body = response.body
 
       # links
-      body.gsub!(/href="\/(?!#{SS.config.mobile.directory}\/)/, "href=\"/mobile/")
+      location = SS.config.mobile.location.gsub(/^\/|\/$/, "")
+      body.gsub!(/href="\/(?!#{location}\/)/, "href=\"/#{location}/")
       body.gsub!(/<span .*?id="ss-(small|medium|large|kana|pc|mb)".*?>.*?<\/span>/, "")
 
       # tags

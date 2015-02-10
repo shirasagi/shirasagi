@@ -5,6 +5,7 @@ class Cms::PreviewController < ApplicationController
   before_action :set_group
   before_action :set_path_with_preview, prepend: true
   after_action :render_preview, if: ->{ @file =~ /\.html$/ }
+  after_action :render_mobile, if: ->{ mobile_path? }
 
   private
     def set_site
