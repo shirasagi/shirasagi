@@ -14,29 +14,29 @@ module Ezine::Addon
     end
   end
 
-  module Signature
+  module SenderAddress
     extend ActiveSupport::Concern
     extend SS::Addon
 
     set_order 400
 
     included do
-      field :signature_html, type: String, default: ""
-      field :signature_text, type: String, default: ""
-      permit_params :signature_html, :signature_text
+      field :sender_name, type: String, default: ""
+      field :sender_email, type: String, default: ""
+      permit_params :sender_name, :sender_email
     end
   end
 
-  module SenderAddress
+  module Signature
     extend ActiveSupport::Concern
     extend SS::Addon
 
     set_order 410
 
     included do
-      field :sender_name, type: String, default: ""
-      field :sender_email, type: String, default: ""
-      permit_params :sender_name, :sender_email
+      field :signature_html, type: String, default: ""
+      field :signature_text, type: String, default: ""
+      permit_params :signature_html, :signature_text
     end
   end
 
