@@ -127,8 +127,8 @@ ja:
         in_file: ファイル
         name: アプリケーション名
         text: 説明
-        format: フォーマット
         license_id: ライセンス
+        appurls: アプリケーションURL
         tags: タグ
         categry_ids: 分野
         area_ids: 地域

@@ -14,6 +14,7 @@ class Opendata::App
   field :appfilename, type: String
   field :point, type: Integer, default: "0"
   field :text, type: String
+  field :appurls, type: Array
   field :tags, type: SS::Extensions::Words
   field :excuted, type: Integer
   field :downloaded, type: Integer
@@ -49,14 +50,18 @@ class Opendata::App
       url.sub(/\.html$/, "") + "/point/members.html"
     end
 
+    def appurl
+      url.sub(/\.html$/, "") + "/#{appfilename}"
+    end
+
     def contact_present?
       return false if member_id.present?
       super
     end
 
-    def path
-      file ? file.path : nil
-    end
+#    def path
+#      file ? file.path : nil
+#    end
 
     def content_type
       file ? file.content_type : nil
@@ -64,18 +69,6 @@ class Opendata::App
 
     def size
       file ? file.size : nil
-    end
-
-    def ss_file_path
-      appfile ? appfile.path : nil
-    end
-
-    def ss_file_content_type
-      appfile ? appfile.content_type : nil
-    end
-
-    def ss_file_size
-      appfile ? appfile.size : nil
     end
 
   private

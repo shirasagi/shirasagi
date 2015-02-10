@@ -23,9 +23,7 @@ class Opendata::AppsController < ApplicationController
 
     def download
       @item = @model.find params[:app_id]
-      #@file = SS::File.find @item.file_id
-      #send_file @file.path, type: @file.content_type, filename: @item.appfilename,
-      send_file @item.path, type: @item.content_type, filename: @item.appfilename,
+      send_file @item.file.path, type: @item.content_type, filename: @item.appfilename,
         disposition: :attachment, x_sendfile: true
     end
 

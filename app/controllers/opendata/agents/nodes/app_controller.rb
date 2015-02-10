@@ -5,6 +5,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
   include Opendata::AppFilter
 
   before_action :set_app, only: [:show_point, :add_point, :point_members]
+  #before_action :set_app_download, only: [:download]
   skip_filter :logged_in?
 
   private
@@ -17,6 +18,16 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
 
       raise "404" unless @app
     end
+
+#    def set_app_download
+#      @app_path_download = @cur_path.sub(/\/#{params[:appfilename]}/, ".html")
+
+#      @app_download = Opendata::App.site(@cur_site).public.
+#        filename(@app_path_download).
+#        first
+
+#      raise "404" unless @app_download
+#    end
 
   public
   def pages
@@ -43,6 +54,18 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
     @tags     = aggregate_tags(max)
     @formats  = aggregate_formats(max)
     @licenses = aggregate_licenses(max)
+  end
+
+  def download
+    @model = Opendata::App
+    @item = @model.site(@cur_site).find(id: params[:app], appfilename: params[:appfilename].force_encoding("utf-8"))
+
+    #@item = @app_download.find id: params[:app], appfilename: params[:appfilename].force_encoding("utf-8")
+
+    @item.inc downloaded: 1
+
+    send_file @item.file.path, type: @item.content_type, filename: @item.appfilename,
+      disposition: :attachment, x_sendfile: true
   end
 
   def rss

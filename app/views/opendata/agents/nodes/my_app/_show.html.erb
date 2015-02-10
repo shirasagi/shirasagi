@@ -2,7 +2,7 @@
   <% if @item.file %>
   <dt><%= @model.t :file_id %></dt>
   <dd>
-    <%= link_to @item.filename, "file" %>
+    <%= link_to @item.appfilename, "file" %>
     (<%= number_to_human_size @item.size %>)
   </dd>
   <% end %>
@@ -12,9 +12,6 @@
 
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
-
-  <dt><%= @model.t :format %></dt>
-  <dd><%= @item.send :format %></dd>
 
   <dt><%= @model.t :license_id %></dt>
   <dd><%= tryb { @item.license.name } %></dd>

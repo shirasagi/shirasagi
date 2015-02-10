@@ -82,7 +82,7 @@ save_node filename: "dataset/search_group", name: "データセットグルー�
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
   layout_id: layouts["dataset-bunya"].id
 
-save_node filename: "app", name: "アプリケーション", route: "opendata/app", shortcut: "show",
+save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "show",
   layout_id: layouts["app-top"].id,
   page_layout_id: layouts["app-page"].id
 save_node filename: "app/bunya", name: "分野", route: "opendata/app_category",

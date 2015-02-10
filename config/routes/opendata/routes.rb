@@ -86,6 +86,7 @@ SS::Application.routes.draw do
     get "app/tags" => "public#index_tags", cell: "nodes/app"
     get "app/formats" => "public#index_formats", cell: "nodes/app"
     get "app/licenses" => "public#index_licenses", cell: "nodes/app"
+    get "app/:app/*appfilename" => "public#download", cell: "nodes/app", format: false
     get "app/:app/point/show.:format" => "public#show_point", cell: "nodes/app", format: false
     get "app/:app/point/add.:format" => "public#add_point", cell: "nodes/app", format: false
     get "app/:app/point/members.html" => "public#point_members", cell: "nodes/app", format: false
