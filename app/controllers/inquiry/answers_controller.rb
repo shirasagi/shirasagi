@@ -7,6 +7,29 @@ class Inquiry::AnswersController < ApplicationController
   append_view_path "app/views/cms/pages"
   navi_view "inquiry/main/navi"
 
+  private
+    def send_csv(items)
+      require "csv"
+
+      columns = @cur_node.becomes_with_route.columns.pluck(:name)
+      csv = CSV.generate do |data|
+        data << columns
+        items.each do |item|
+          values = item.data.map{|d| [d.column.name, d.value]}.to_h
+
+          row = []
+          columns.each do |col|
+            row << values[col]
+          end
+
+          data << row
+        end
+      end
+
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+        filename: "inquiry_answers_#{Time.now.to_i}.csv"
+    end
+
   public
     def index
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
@@ -29,5 +52,9 @@ class Inquiry::AnswersController < ApplicationController
     def destroy
       raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
       render_destroy @item.destroy
+    end
+
+    def download
+      send_csv(@cur_node.becomes_with_route.answers)
     end
 end
