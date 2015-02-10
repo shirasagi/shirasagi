@@ -34,7 +34,7 @@ $(function(){
 
 $(function(){
     $("#app-tab,#app-nav,#mypage-app-tab,#idea-tab,#idea-nav,#mypage-idea-tab").each(function(){
-        if(location.host.match(/^ouropendata\.jp$/i)) {
+        if(location.host.match(/^ouropendata\.jp$/i) || location.host.match(/^stb\.ouropendata\.jp$/i)) {
             $(this).attr("href", "#");
         }
     });
@@ -42,7 +42,7 @@ $(function(){
 
 $(function(){
     $("#portal-app,#apps,#app-kv01,#app-kv02,#dataset-ideas,#portal-idea,#ideas,#idea-kv01,#idea-kv02").each(function(){
-        if(location.host.match(/^ouropendata\.jp$/i)) {
+        if(location.host.match(/^ouropendata\.jp$/i) || location.host.match(/^stb\.ouropendata\.jp$/i)) {
             $(this).css("display", "none");
         }
     });
