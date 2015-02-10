@@ -1,0 +1,9 @@
+<%= html_editor ".ezine-signature-html", height: "400px" %>
+
+<dl class="see mod-ezine-page-body">
+  <dt><%= @model.t :signature_html %></dt>
+  <dd><%= f.text_area :signature_html, class: "ezine-signature-html", style: "height:400px;" %></dd>
+
+  <dt><%= @model.t :signature_text %></dt>
+  <dd><%= f.text_area :signature_text, class: "ezine-signature-text", style: "height:400px;" %></dd>
+</dl>

@@ -6,8 +6,10 @@ class Ezine::Mailer < ActionMailer::Base
   # @param [Ezine::Entry] entry
   def verification_mail(entry)
     @entry = entry
+    @node = Ezine::Node::Page.find entry.node.id
+    sender = "#{@node.sender_name} <#{@node.sender_email}>"
 
-    mail from: SS.config.ezine.sender_address, to: entry.email
+    mail from: sender, to: entry.email
   end
 
   # Deliver Ezine::Page as an e-mail.
@@ -19,8 +21,10 @@ class Ezine::Mailer < ActionMailer::Base
   def page_mail(page, member)
     @page = page
     @member = member
+    @node = Ezine::Node::Page.find page.parent.id
+    sender = "#{@node.sender_name} <#{@node.sender_email}>"
 
-    mail from: SS.config.ezine.sender_address, to: member.email do |format|
+    mail from: sender, to: member.email do |format|
       case member.email_type
       when "text"
         format.text

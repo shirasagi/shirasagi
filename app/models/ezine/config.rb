@@ -5,7 +5,6 @@ module Ezine::Config
       register_member_here: true,
       sleep_seconds: 0,
       interval: 1,
-      sender_address: 'noreply@example.jp',
     }
   end
 end
