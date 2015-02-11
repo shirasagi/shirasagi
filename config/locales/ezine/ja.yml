@@ -40,6 +40,7 @@ ja:
         sender_email: 送信メールアドレス
         reply_upper_text: 上部確認テキスト
         reply_lower_text: 下部確認テキスト
+        reply_signature: 署名
       ezine/page:
         name: 記事タイトル
         html: 本文（HTML版）
