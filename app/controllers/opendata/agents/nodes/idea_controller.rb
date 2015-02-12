@@ -35,12 +35,12 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       raise "404" unless @idea_comment
     end
 
-    def update_commented_count(member_ids)
+    def update_commented_count(member_ids, count)
       member_ids.each do |member_id|
         @member = Opendata::Member.site(@cur_site).where({id: member_id}).first
         if @member
           commented_count = @member.commented_count || 0
-          @member.commented_count = @member.commented_count + 1
+          @member.commented_count = @member.commented_count + count
           @member.save
         end
       end
@@ -131,13 +131,17 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       idea.save
 
       member_ids = []
-      comments = Opendata::IdeaComment.where({idea_id: @idea_comment.id}).excludes({member_id: @cur_member.id})
-      comments.each do |comment|
-        member_ids << comment.member_id
+      other_comments = Opendata::IdeaComment.where({idea_id: @idea_comment.id})
+      other_comments = other_comments.not_in({member_id: [@cur_member.id, @idea_comment.member.id]})
+      other_comments.each do |other_comment|
+        member_ids << other_comment.member_id if !member_ids.include?(other_comment.member_id)
       end
 
-      member_ids << @idea_comment.member_id
-      update_commented_count(member_ids.uniq)
+      if @idea_comment.member_id != @cur_member.id && !member_ids.include?(@idea_comment.member_id)
+        member_ids << @idea_comment.member_id
+      end
+
+      update_commented_count(member_ids.uniq, 1)
 
       render :show_comment
     end
@@ -146,7 +150,25 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @cur_node.layout = nil
 
       comment = Opendata::IdeaComment.find params[:comment]
-      comment.destroy if comment
+
+      if comment
+
+        member_ids = []
+        other_comments = Opendata::IdeaComment.where(idea_id: comment.idea_id, updated: {"$lte" => comment.updated})
+        other_comments = other_comments.not_in({member_id: [@cur_member.id, comment.member_id]})
+        other_comments.each do |other_comment|
+          if comment.updated > other_comment.member.confirmed
+            member_ids << other_comment.member_id if !member_ids.include?(other_comment.member_id)
+          end
+        end
+
+        if comment.updated > @idea_comment.member.confirmed
+          member_ids << @idea_comment.member_id if comment.member_id != @idea_comment.member_id
+        end
+
+        update_commented_count(member_ids.uniq, -1)
+        comment.destroy
+      end
 
       render :show_comment
     end
