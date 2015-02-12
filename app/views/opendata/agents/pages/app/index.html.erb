@@ -15,13 +15,16 @@ $ ->
     $(this).remove()
     return false
 
+  # preview
+  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
+
 <% end %>
 
 <header>
   <h1 class="name"><%= @cur_page.send :name %></h1>
 </header>
 
-<div class="point">
+<div class="point" id="app-point">
   <div class="count">
     <span class="number"><%= @cur_page.point %></span>
     <span class="label">いいね！数</span>
@@ -58,19 +61,20 @@ categories = [
 
   <div class="info-wrap">
 
-
-
-
-
-    <div class="resources">
-      <div class="resource">
-        <div class="icons">
-          <%= link_to "ダウンロード", @cur_page.appurl, class: "download" %>
+    <% if @cur_page.file_id.present? %>
+      <div class="resources">
+        <div class="resource">
+          <div class="icons">
+            <%= link_to "ダウンロード", @cur_page.app_url, class: "download" %>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
 
     <dl class="author">
+      <dt><%= @cur_page.t :appurl %></dt>
+      <dd><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></dd>
+
       <% if @cur_page.member_id.present? %>
         <dt><%= @cur_page.t :user_id %></dt>
         <dd>
@@ -112,3 +116,6 @@ categories = [
     </dl>
   </div>
 </div>
+
+<%= render file: "cms/agents/addons/related_page/view/index" %>
+<%= render file: "contact/agents/addons/page/view/index" %>

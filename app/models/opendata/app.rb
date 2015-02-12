@@ -10,11 +10,10 @@ class Opendata::App
 
   set_permission_name "opendata_apps"
 
-  field :name, type: String
   field :appfilename, type: String
   field :point, type: Integer, default: "0"
   field :text, type: String
-  field :appurls, type: Array
+  field :appurl, type: String
   field :tags, type: SS::Extensions::Words
   field :excuted, type: Integer
   field :downloaded, type: Integer
@@ -25,10 +24,9 @@ class Opendata::App
   belongs_to :license, class_name: "Opendata::License"
   belongs_to_file :file
 
-  permit_params :name, :text, :license_id, :dataset_ids, :tags, tags: []
+  permit_params :text, :appurl, :license_id, :dataset_ids, :tags, tags: []
 
-  validates :name, presence: true, length: { maximum: 80 }
-  validates :in_file, presence: true, if: ->{ file_id.blank? }
+  validates :text, presence: true
   validates :category_ids, presence: true
   validates :license_id, presence: true
 
@@ -50,7 +48,7 @@ class Opendata::App
       url.sub(/\.html$/, "") + "/point/members.html"
     end
 
-    def appurl
+    def app_url
       url.sub(/\.html$/, "") + "/#{appfilename}"
     end
 

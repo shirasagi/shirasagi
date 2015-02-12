@@ -123,12 +123,12 @@ ja:
         tsv_id: プレビュー用データ
         content: データの内容
       opendata/app:
-        file_id: ファイル
-        in_file: ファイル
+        file_id: アプリケーションファイル
+        in_file: アプリケーションファイル
         name: アプリケーション名
         text: 説明
         license_id: ライセンス
-        appurls: アプリケーションURL
+        appurl: アプリケーションURL
         tags: タグ
         categry_ids: 分野
         area_ids: 地域

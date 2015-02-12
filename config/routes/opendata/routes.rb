@@ -80,7 +80,6 @@ SS::Application.routes.draw do
     get "app_category/:name/licenses" => "public#index_licenses", cell: "nodes/app_category"
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
-    get "app/:id/(index.:format)" => "public#show", cell: "nodes/app"
     get "app/rss.xml" => "public#rss", cell: "nodes/app"
     get "app/areas" => "public#index_areas", cell: "nodes/app"
     get "app/tags" => "public#index_tags", cell: "nodes/app"
