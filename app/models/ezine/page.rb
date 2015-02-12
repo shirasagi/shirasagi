@@ -60,7 +60,7 @@ class Ezine::Page
     #
     # テスト配信を行う。
     def deliver_to_test_members
-      Ezine::TestMember.all.each do |test_member|
+      Ezine::TestMember.where(node_id: parent.id).each do |test_member|
         deliver_to test_member
       end
     end
