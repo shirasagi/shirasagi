@@ -17,4 +17,8 @@ class Ezine::TestMember
     def email_type_options
       [%w(テキスト版 text), %w(HTML版 html)]
     end
+
+    def test_member?
+      true
+    end
 end

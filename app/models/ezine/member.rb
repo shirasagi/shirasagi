@@ -8,4 +8,9 @@ class Ezine::Member
   belongs_to :node, class_name: "Cms::Node"
 
   validates :email, uniqueness: { scope: :node_id }, presence: true, email: true
+
+  public
+    def test_member?
+      false
+    end
 end
