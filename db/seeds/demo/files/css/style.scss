@@ -83,17 +83,13 @@ img {
       }
     }
     #ss-voice {
+      position: relative;
       padding: 0 10px 0 35px;
       background: url(../img/voice.png) no-repeat 10px center;
-      position: relative;
-      span {
+      .ss-voice-container {
         position: absolute;
-        left: 50px;
-        top: 25px;
-        width: 100%;
-        audio {
-          float: right;
-        }
+        top: 100%;
+        left: 0;
       }
     }
     #ss-kana {
@@ -105,19 +101,6 @@ img {
     }
     #info {
       padding: 0 10px;
-    }
-  }
-  #voice-nav {
-    @include clear;
-    width: $page-width;
-    margin: 0 auto;
-    //padding: 5px 10px;
-    position: relative;
-    #ss-voice-controller {
-      audio {
-        padding: 5px 10px;
-        float: right;
-      }
     }
   }
 }
@@ -1845,6 +1828,95 @@ img {
   }
 }
 // -----------------------------------------------------------------------------
+// ezine
+.ezine-pages {
+  margin-bottom: $box-margin;
+  list-style: none;
+  li {
+    float: left;
+    width: 325px;
+    margin: 0 24px 24px 0;
+    padding: 6px;
+    border: $border-hgry;
+    border-left: 5px solid $blue;
+    cursor: pointer;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
+    &:hover {
+      background: $hblue;
+    }
+  }
+}
+.ezine {
+  .ezine-html {
+    margin-bottom: 6px;
+    padding: 0 10px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px16;
+    font-weight: bold;
+  }
+  dl {
+    @include clear;
+    clear: both;
+    width: 100%;
+    margin-bottom: $box-margin;
+    dt {
+      clear: both;
+      float: left;
+      width: 200px;
+      margin-bottom: $item-margin;
+      padding: 6px $item-margin;
+      font-weight: bold;
+      background: $hblue;
+      @include border-radius(3px);
+      .required {
+        display: block;
+        color: $red;
+        font-weight: normal;
+      }
+    }
+    dd {
+      float: left;
+      width: 464px;
+      margin-bottom: $item-margin;
+      padding: 0 $item-margin;
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
+  .send {
+    padding-left: 236px;
+    input {
+      margin-right: $item-margin;
+      @include btn-org;
+    }
+    input[name="cancel"] {
+      @include btn-gry;
+    }
+  }
+  #errorExplanation {
+    margin-bottom: $box-margin;
+    padding: $item-margin $item-margin 0;
+    border: 2px solid $red;
+    @include border-radius(5px);
+    background: #ffffa4;
+    ul {padding-left: $box-margin;}
+  }
+  .inquiry-confirm-message {
+    margin-bottom: $box-margin;
+    &~dd {
+      padding-bottom:2em;
+    }
+  }
+  .simple-captcha {
+    padding-left: 236px;
+    margin-bottom: $box-margin;
+  }
+}
+// -----------------------------------------------------------------------------
 // smart phone
 // -----------------------------------------------------------------------------
 @media only screen and (max-width: 600px) {
@@ -2487,5 +2559,45 @@ img {
   }
   #colorbox .send input {
     margin-bottom: 10px;
+  }
+// -----------------------------------------------------------------------------
+// ezine
+  .ezine-pages {
+    @include clear;
+    margin: $smart-margin 0 0 0;
+    padding: 0 10px;
+    li {
+      @include box-sizing(border-box);
+      width: 100%;
+      margin: 0 0 10px 0;
+      padding: 5px;
+    }
+  }
+  .ezine {
+    margin-bottom: $box-margin;
+    padding: 0 $smart-margin;
+    dl {
+      dt {
+        width: 100%;
+        margin-bottom: $smart-margin;
+        @include box-sizing(border-box);
+        .required {
+          display: inline;
+        }
+      }
+      dd {
+        width: 100%;
+        @include box-sizing(border-box);
+        input[type="text"], input[type="email"], textarea {
+          width: 100%;
+          @include box-sizing(border-box);
+        }
+      }
+    }
+    .send, .simple-captcha {
+      margin-bottom: $smart-margin;
+      padding: 0;
+      text-align: center;
+    }
   }
 }

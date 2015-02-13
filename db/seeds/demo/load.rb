@@ -59,6 +59,7 @@ save_layout filename: "faq-top.layout.html", name: "FAQトップ"
 save_layout filename: "faq.layout.html", name: "FAQ"
 save_layout filename: "event.layout.html", name: "イベントカレンダー"
 save_layout filename: "map.layout.html", name: "施設ガイド"
+save_layout filename: "ezine.layout.html", name: "メールマガジン"
 save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
 save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
 save_layout filename: "urgency-layout/top-level3.layout.html", name: "緊急災害3：トップページ"
@@ -288,6 +289,20 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市�
   reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
   reply_lower_text: "以上。"
 
+## ezine
+ezine_signature_html = File.read("nodes/ezine.signature_html") rescue nil
+ezine_signature_text = File.read("nodes/ezine.signature_text") rescue nil
+ezine_reply_signature = File.read("nodes/ezine.reply_signature") rescue nil
+ezine_page_node = save_node route: "ezine/page", filename: "ezine", name: "メールマガジン",
+  sender_name: "シラサギサンプルサイト",
+  sender_email: "admin@example.jp",
+  reply_upper_text: "メールマガジン登録を受け付けました。",
+  signature_html: ezine_signature_html,
+  signature_text: ezine_signature_text,
+  reply_signature: ezine_reply_signature
+ezine_backnumber_node = save_node route: "ezine/backnumber", filename: "ezine/backnumber",
+  name: "メールマガジン　バックナンバー", conditions: %w(ezine)
+
 ## facility
 save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域"
 save_node route: "facility/location", filename: "institution/chiki/higashii", name: "東区", order: 10
@@ -420,6 +435,8 @@ Cms::Node.where(site_id: @site._id, filename: /faq\//).
   update_all(layout_id: layouts["faq"].id)
 Cms::Node.where(site_id: @site._id, route: /facility\//).
   update_all(layout_id: layouts["map"].id)
+Cms::Node.where(site_id: @site._id, route: /ezine\//).
+  update_all(layout_id: layouts["ezine"].id)
 
 ## -------------------------------------
 puts "# parts"
@@ -465,6 +482,7 @@ save_part route: "cms/free", filename: "tool.part.html", name: "アクセシビ�
 save_part route: "cms/free", filename: "topics.part.html", name: "街の話題"
 save_part route: "cms/free", filename: "useful.part.html", name: "お役立ち情報"
 save_part route: "cms/free", filename: "map-side.part.html", name: "サイドメニュー：施設ガイド"
+save_part route: "cms/free", filename: "ezine-side.part.html", name: "サイドメニュー：メールマガジン"
 save_part route: "article/page", filename: "attention/recent.part.html", name: "注目情報", limit: 5
 save_part route: "article/page", filename: "docs/recent.part.html", name: "新着情報"
 save_part route: "article/page", filename: "oshirase/kanko/recent.part.html", name: "お知らせ", limit: 6
@@ -711,3 +729,8 @@ save_page route: "facility/image", filename: "institution/bunka/library/equipmen
   layout_id: layouts["map"].id, image_id: facility_images["equipment.jpg"].id, order: 10
 save_page route: "facility/map", filename: "institution/bunka/library/map.html", name: "地図",
   layout_id: layouts["map"].id, map_points: [  { name: "マーカー名",  loc: [  34.067035,  134.589971 ],  text: "" } ]
+
+puts "# ezine"
+save_page route: "ezine/page", filename: "ezine/653.html", name: "シラサギ市メールマガジン", completed: true,
+  layout_id: layouts["ezine"].id,  html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
+  text: "シラサギ市メールマガジンを配信します。\r\n"

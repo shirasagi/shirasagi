@@ -29,7 +29,8 @@ $(function() {
       $("this").addClass("current");
     }
   });
-  var url = "/"+window.location.pathname.split("/")[1]+"/";
+  var url = window.location.pathname;
+  var url = "/"+url.split("/")[1]+"/";
   $('#navi li a[href="'+url+'"]').parent().addClass('current');
 
 // navi
@@ -50,7 +51,7 @@ $(function() {
   }
 
 // block link
-  $(".category-nodes article").click(function(){
+  $(".category-nodes article, .ezine-pages li").click(function(){
     window.location=$(this).find("a").attr("href");
     return false;
   });
