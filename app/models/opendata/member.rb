@@ -2,11 +2,11 @@ class Opendata::Member
   include Cms::Member::Model
   include SS::Relation::File
 
-  field :commented_count, type: Integer, default: "0"
-  field :confirmed, type: DateTime
-
   belongs_to_file :icon
-  permit_params :in_icon, :commented_count, :confirmed
+  permit_params :in_icon
+
+  has_one :points, primary_key: :member_id, class_name: "Opendata::MemberNotice",
+    dependent: :destroy
 
   validate "convert_icon", if: ->{ in_icon.present? }
 

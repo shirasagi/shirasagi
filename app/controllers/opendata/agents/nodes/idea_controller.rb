@@ -37,11 +37,14 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
     def update_commented_count(member_ids, count)
       member_ids.each do |member_id|
-        @member = Opendata::Member.site(@cur_site).where({id: member_id}).first
-        if @member
-          commented_count = @member.commented_count || 0
-          @member.commented_count = @member.commented_count + count
-          @member.save
+        notice = Opendata::MemberNotice.where({member_id: member_id}).first
+        if notice
+          commented_count = notice.commented_count || 0
+          notice.commented_count = notice.commented_count + count
+          notice.save
+        else
+          notice_new = { site_id: @cur_site.id, member_id: member_id, commented_count: 1 }
+          Opendata::MemberNotice.new(notice_new).save
         end
       end
     end
@@ -133,12 +136,10 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       other_comments = Opendata::IdeaComment.where({idea_id: @idea_comment.id})
       other_comments = other_comments.not_in({member_id: [@cur_member.id, @idea_comment.member.id]})
       other_comments.each do |other_comment|
-        member_ids << other_comment.member_id if !member_ids.include?(other_comment.member_id)
+        member_ids << other_comment.member_id
       end
 
-      if @idea_comment.member_id != @cur_member.id && !member_ids.include?(@idea_comment.member_id)
-        member_ids << @idea_comment.member_id
-      end
+      member_ids << @idea_comment.member_id if @idea_comment.member_id != @cur_member.id
 
       update_commented_count(member_ids.uniq, 1)
 

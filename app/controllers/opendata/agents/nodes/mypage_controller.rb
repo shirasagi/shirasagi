@@ -4,9 +4,17 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
 
   skip_filter :logged_in?, only: [:login, :logout, :provide]
 
+  before_action :get_member_notice, only: [:show_notice, :confirm_notice]
+
   private
     def get_params
       params.require(:item).permit(:email, :password)
+    end
+
+    def get_member_notice
+      if @cur_member
+        @notice = Opendata::MemberNotice.where(member_id: @cur_member.id).first
+      end
     end
 
   public
@@ -36,9 +44,9 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
     def confirm_notice
       @cur_node.layout = nil
 
-      @cur_member.commented_count = 0
-      @cur_member.confirmed = Time.now
-      @cur_member.save
+      @notice.commented_count = 0
+      @notice.confirmed = Time.now
+      @notice.save
 
       render :show_notice
     end

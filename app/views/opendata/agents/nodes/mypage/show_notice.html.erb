@@ -11,6 +11,6 @@
 
 <% end %>
 
-<% if @cur_member.commented_count && @cur_member.commented_count != 0 %>
-<%= link_to @cur_member.commented_count, "", class: "confirm" %>
+<% if @notice && @notice.commented_count != 0 %>
+<%= link_to @notice.commented_count, "", class: "confirm" %>
 <% end %>
