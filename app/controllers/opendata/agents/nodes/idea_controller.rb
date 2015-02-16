@@ -123,7 +123,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       idea_id = @idea_comment.id
       idea = Opendata::Idea.site(@cur_site).find(idea_id)
 
-      new_comment = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: idea_id, text: params[:comment_body] }
+      new_comment = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: idea_id, text: params[:comment_body]}
       Opendata::IdeaComment.new(new_comment).save
 
       idea.commented = Time.now
@@ -149,24 +149,9 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @cur_node.layout = nil
 
       comment = Opendata::IdeaComment.find params[:comment]
-
       if comment
-
-        member_ids = []
-        other_comments = Opendata::IdeaComment.where(idea_id: comment.idea_id, updated: {"$lte" => comment.updated})
-        other_comments = other_comments.not_in({member_id: [@cur_member.id, comment.member_id]})
-        other_comments.each do |other_comment|
-          if comment.updated > other_comment.member.confirmed
-            member_ids << other_comment.member_id if !member_ids.include?(other_comment.member_id)
-          end
-        end
-
-        if comment.updated > @idea_comment.member.confirmed
-          member_ids << @idea_comment.member_id if comment.member_id != @idea_comment.member_id
-        end
-
-        update_commented_count(member_ids.uniq, -1)
-        comment.destroy
+        comment.deleted = Time.now
+        comment.save
       end
 
       render :show_comment

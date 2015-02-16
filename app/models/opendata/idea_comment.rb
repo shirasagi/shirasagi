@@ -6,6 +6,7 @@ class Opendata::IdeaComment
   field :idea_id, type: Integer
   field :name, type: String
   field :text, type: String
+  field :deleted, type: DateTime
 
   belongs_to :site, class_name: "SS::Site"
   belongs_to :member, class_name: "Opendata::Member"
