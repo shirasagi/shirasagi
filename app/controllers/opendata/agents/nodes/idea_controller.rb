@@ -27,9 +27,8 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
         first
 
       cond = { site_id: @cur_site.id, idea_id: @idea_comment.id }
-      @comments = Opendata::IdeaComment.where(cond).order_by(:updated.asc)
+      @comments = Opendata::IdeaComment.where(cond).order_by(:created.asc)
 
-      @manage_mode = true if logged_in?(redirect: false) && @cur_member.id == @idea_comment.member_id
       @comment_mode = logged_in?(redirect: false)
 
       raise "404" unless @idea_comment

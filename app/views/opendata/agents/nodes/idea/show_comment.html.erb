@@ -40,9 +40,11 @@
             <%= comment.text %>
             <% end %>
           </div>
-          <%= link_to "削除", "", class: "comment_delete", id: comment.id if @manage_mode %>
+          <% if @comment_mode && [@idea_comment.member_id, comment.member_id].include?(@cur_member.id) %>
+          <%= link_to "削除", "", class: "comment_delete", id: comment.id if comment.deleted.nil? %>
+          <% end %>
           <% if comment.member %>
-          <%= link_to comment.member.name, "#{member_path}#{comment.member.id}" %>
+          <%= link_to comment.member.name, "#{member_path}#{comment.member_id}" %>
           <% else %>
           ゲストユーザー
           <% end %>
