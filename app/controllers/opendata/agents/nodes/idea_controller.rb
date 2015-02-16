@@ -37,7 +37,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
     def update_commented_count(member_ids, count)
       member_ids.each do |member_id|
-        notice = Opendata::MemberNotice.where({member_id: member_id}).first
+        notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: member_id}).first
         if notice
           commented_count = notice.commented_count || 0
           notice.commented_count = notice.commented_count + count

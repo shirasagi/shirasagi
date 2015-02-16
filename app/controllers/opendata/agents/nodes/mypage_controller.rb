@@ -13,7 +13,7 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
 
     def get_member_notice
       if @cur_member
-        @notice = Opendata::MemberNotice.where(member_id: @cur_member.id).first
+        @notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: @cur_member.id}).first
       end
     end
 
