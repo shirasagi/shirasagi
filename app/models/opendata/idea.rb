@@ -17,7 +17,6 @@ class Opendata::Idea
   field :dataset_id, type: Integer
   field :app_id, type: Integer
   field :commented, type: DateTime
-  field :comment_count, type: Integer, default: "0"
 
   belongs_to :dataset, class_name: "Opendata::Dataset"
   belongs_to :app, class_name: "Opendata::App"

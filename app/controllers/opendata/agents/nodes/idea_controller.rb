@@ -56,12 +56,12 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @node_url       = "#{@cur_node.url}"
       @search_url     = search_ideas_path + "?"
       @rss_url        = search_ideas_path + "rss.xml?"
-      @items          = pages.order_by(updated: -1).limit(10)
+      @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
       @comment_items = pages.excludes(commented: nil).order_by(commented: -1).limit(10)
 
       @tabs = [
-        { name: "最新投稿順", url: "#{@search_url}&sort=updated", pages: @items, rss: "#{@rss_url}&sort=updated" },
+        { name: "新着順", url: "#{@search_url}&sort=released", pages: @items, rss: "#{@rss_url}&sort=released" },
         { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items, rss: "#{@rss_url}&sort=popular" },
         { name: "注目順", url: "#{@search_url}&sort=attention", pages: @comment_items, rss: "#{@rss_url}&sort=attention" }
       ]
@@ -127,7 +127,6 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       Opendata::IdeaComment.new(new_comment).save
 
       idea.commented = Time.now
-      idea.comment_count = Opendata::IdeaComment.where({idea_id: idea_id}).count
       idea.save
 
       member_ids = []

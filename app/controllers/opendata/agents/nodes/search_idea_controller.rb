@@ -10,14 +10,14 @@ class Opendata::Agents::Nodes::SearchIdeaController < ApplicationController
       focus = focus.merge(site: @cur_site)
 
       case params[:sort]
-      when "updated"
-        sort = { updated: -1 }
+      when "released"
+        sort = { released: -1 }
       when "popular"
         sort = { point: -1 }
       when "attention"
         sort = { downloaded: -1 }
       else
-        sort = { updated: -1 }
+        sort = { released: -1 }
       end
 
       @model.site(@cur_site).public.
