@@ -16,6 +16,7 @@ class Ezine::TestMembersController < ApplicationController
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
       @items = @model.site(@cur_site).
         where(node_id: @cur_node.id).
+        search(params[:s]).
         order_by(updated: -1).
         page(params[:page]).per(50)
     end

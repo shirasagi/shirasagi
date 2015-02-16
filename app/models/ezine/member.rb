@@ -1,6 +1,7 @@
 class Ezine::Member
   include SS::Document
   include SS::Reference::Site
+  include Ezine::MemberSearchable
 
   field :email, type: String, metadata: { from: :email }
   field :email_type, type: String
