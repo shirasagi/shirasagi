@@ -86,7 +86,7 @@ class Opendata::Idea
   class << self
     public
       def sort_options
-        [%w(最新投稿順 updated), %w(人気順 popular), %w(注目順 attention)]
+        [%w(新着順 updated), %w(人気順 popular), %w(注目順 attention)]
       end
 
       def limit_aggregation(pipes, limit)
