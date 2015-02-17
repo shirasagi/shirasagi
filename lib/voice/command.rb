@@ -15,6 +15,7 @@ class Voice::Command
               Rails.logger.info("[#{prompt}] #{line}")
             end
           end
+          i.write ''
           i.close
           t.join
           t.value
