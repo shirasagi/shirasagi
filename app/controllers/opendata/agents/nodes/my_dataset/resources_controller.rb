@@ -94,7 +94,7 @@ class Opendata::Agents::Nodes::MyDataset::ResourcesController < ApplicationContr
       @item.attributes = get_params
 
       if @item.update
-        redirect_to "#{@dataset_url}resources/#{@item.id}", notice: t("views.notice.saved")
+        redirect_to "#{@dataset_url}resources/#{@item.id}/", notice: t("views.notice.saved")
       else
         render action: :edit
       end
