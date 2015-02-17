@@ -1,6 +1,7 @@
 class Cms::UsersController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::SearchableCrudFilter
 
   model Cms::User
 
@@ -17,16 +18,6 @@ class Cms::UsersController < ApplicationController
     end
 
   public
-    def index
-      raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
-
-      @items = @model.site(@cur_site).
-        allow(:edit, @cur_user, site: @cur_site).
-        search(params[:s]).
-        order_by(name: 1).
-        page(params[:page]).per(50)
-    end
-
     def update
       other_group_ids = Cms::Group.nin(id: Cms::Group.site(@cur_site).pluck(:id)).in(id: @item.group_ids).pluck(:id)
       other_role_ids = Cms::Role.nin(id: Cms::Role.site(@cur_site).pluck(:id)).in(id: @item.cms_role_ids).pluck(:id)

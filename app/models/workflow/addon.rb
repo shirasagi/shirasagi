@@ -24,8 +24,11 @@ module Workflow::Addon
       permit_params workflow_required_counts: []
       permit_params :workflow_reset
 
-      validate :validate_workflow_approvers
-      validate :validate_workflow_required_counts
+      before_validation :reset, if: -> { workflow_reset }
+      validate :validate_workflow_approvers_presence, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
+      validate :validate_workflow_approvers_level_consecutiveness, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
+      validate :validate_workflow_approvers_role, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
+      validate :validate_workflow_required_counts, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     end
 
     public
@@ -113,27 +116,36 @@ module Workflow::Addon
       end
 
       def apply_workflow?(route)
-        route.approvers.each do |approver|
-          user = Cms::User.find(approver[:user_id])
-          errors.add :base, :route_approver_unable_to_read, route: route.name, level: approver[:level], user: user.name \
-            unless allowed?(:read, user, site: cur_site)
-          errors.add :base, :route_approver_unable_to_approve, route: route.name, level: approver[:level], user: user.name \
-            unless allowed?(:approve, user, site: cur_site)
+        users = route.approvers.map do |approver|
+          Cms::User.find(approver[:user_id])
+        end
+        unreable_users = users.reject do |user|
+          allowed?(:read, user, site: cur_site)
+        end
+        unreable_users.each do |user|
+          errors.add :base, :route_approver_unable_to_read, route: route.name, level: approver[:level], user: user.name
+        end
+
+        unapprovable_users = users.reject do |user|
+          allowed?(:approve, user, site: cur_site)
+        end
+        unapprovable_users.each do |user|
+          errors.add :base, :route_approver_unable_to_approve, route: route.name, level: approver[:level], user: user.name
         end
         errors.size == 0
       end
 
     private
-      def validate_workflow_approvers
+      def reset
         if workflow_reset
           self.unset(:workflow_user_id)
           self.unset(:workflow_state)
           self.unset(:workflow_comment)
           self.unset(:workflow_approvers)
         end
+      end
 
-        return unless workflow_state == WORKFLOW_STATE_REQUEST
-
+      def validate_workflow_approvers_presence
         errors.add :workflow_approvers, :not_select if workflow_approvers.blank?
 
         # check whether approver's required field is given.
@@ -142,14 +154,18 @@ module Workflow::Addon
           errors.add :workflow_approvers, :user_id_blank if workflow_approver[:user_id].blank?
           errors.add :workflow_approvers, :state_blank if workflow_approver[:state].blank?
         end
+      end
 
+      def validate_workflow_approvers_level_consecutiveness
         # level must start from 1 and level must be consecutive.
         check = 1
         workflow_levels.each do |level|
           errors.add :base, :approvers_level_missing, level: check unless level == check
           check = level + 1
         end
+      end
 
+      def validate_workflow_approvers_role
         return if errors.size > 0
 
         # check whether approvers have read permission.
@@ -161,8 +177,6 @@ module Workflow::Addon
       end
 
       def validate_workflow_required_counts
-        return unless workflow_state == WORKFLOW_STATE_REQUEST
-
         errors.add :workflow_required_counts, :not_select if workflow_required_counts.blank?
 
         workflow_levels.each do |level|

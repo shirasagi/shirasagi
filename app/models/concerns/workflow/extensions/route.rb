@@ -27,13 +27,7 @@ module Workflow::Extensions::Route
       private
         def normalize(array)
           ret = array.map do |hash|
-            if hash.kind_of?(String)
-              convert_from_string(hash)
-            elsif hash.respond_to?(:symbolize_keys)
-              hash.symbolize_keys
-            else
-              nil
-            end
+            normalize_hash hash
           end
           ret.compact!
           ret.each do |hash|
@@ -41,6 +35,16 @@ module Workflow::Extensions::Route
             hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
           end
           ret.to_a.uniq
+        end
+
+        def normalize_hash(hash)
+          if hash.kind_of?(String)
+            convert_from_string(hash)
+          elsif hash.respond_to?(:symbolize_keys)
+            hash.symbolize_keys
+          else
+            nil
+          end
         end
 
         def convert_from_string(text)

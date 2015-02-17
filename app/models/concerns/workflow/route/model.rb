@@ -14,7 +14,8 @@ module Workflow::Route::Model
     permit_params :name, group_ids: [], approvers: [], required_counts: []
 
     validates :name, presence: true, length: { maximum: 40 }
-    validate :validate_approvers
+    validate :validate_approvers_presence
+    validate :validate_approvers_consecutiveness
     validate :validate_required_counts
   end
 
@@ -35,20 +36,21 @@ module Workflow::Route::Model
   end
 
   private
-    def validate_approvers
+    def validate_approvers_presence
       errors.add :approvers, :blank if approvers.blank?
-
       approvers.each do |approver|
         errors.add :base, :approvers_level_blank if approver[:level].blank?
         errors.add :base, :approvers_user_id_blank if approver[:user_id].blank?
       end
+    end
 
+    def validate_approvers_consecutiveness
       # level must start from 1 and level must be consecutive.
-      max_level = levels.each.max
-      if max_level
-        1.upto(max_level) do |level|
-          errors.add :base, :approvers_level_missing, level: level unless levels.include?(level)
-        end
+      max_level = levels.max
+      return unless max_level
+
+      1.upto(max_level) do |level|
+        errors.add :base, :approvers_level_missing, level: level unless levels.include?(level)
       end
     end
 
