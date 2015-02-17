@@ -20,4 +20,9 @@ class Opendata::IdeasController < ApplicationController
         order_by(updated: -1).
         page(params[:page]).per(50)
     end
+
+    def show
+      cond = { site_id: @cur_site.id, idea_id: params[:id] }
+      @comments = Opendata::IdeaComment.where(cond).order_by(:created.asc)
+    end
 end

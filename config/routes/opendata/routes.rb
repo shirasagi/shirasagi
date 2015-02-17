@@ -21,6 +21,10 @@ SS::Application.routes.draw do
       end
     end
 
+    resources :ideas, concerns: :deletion do
+      resources :comments, concerns: :deletion
+    end
+
     resources :app_categories, concerns: :deletion
 
     resources :idea_categories, concerns: :deletion
@@ -40,7 +44,6 @@ SS::Application.routes.draw do
         get "file" => "appfiles#download"
       end
     end
-    resources :ideas, concerns: :deletion
   end
 
   node "opendata" do

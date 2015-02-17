@@ -3,9 +3,11 @@ ja:
     create: 新規登録
     manage_resources: リソースを管理する
     manage_appfiles: アプリケーションファイルを管理する
+    manage_comments: コメントを管理する
     links:
       add_resource: 新しいリソースを追加する
       add_appfile: 新しいアプリケーションファイルを追加する
+      add_comment: 新しいコメントを追加する
     search_dataset_groups:
       index: データセットグループを選択する
       search: データセットグループを検索
@@ -34,6 +36,7 @@ ja:
       opendata/resource: リソース
       opendata/appfile: アプリケーションファイル
       opendata/rdf_store: RDFストア
+      opendata/comment: コメント
 
   cms:
     nodes:
@@ -161,6 +164,10 @@ ja:
         text: コメント
         tags: タグ
         comment_body: 本文
+      opendata/comment:
+        text: コメント
+        member_name: 投稿者名
+        deleted: 削除日時
 
   tooltip:
     opendata/dataset:
