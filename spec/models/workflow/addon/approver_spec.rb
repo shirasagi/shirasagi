@@ -23,9 +23,9 @@ describe Workflow::Addon::Approver do
     context "when hash array is given" do
       subject do
         model.new({ workflow_approvers: [
-                      nil,
-                      { level: 1, user_id: 2, state: "pending", comment: "" },
-                      { level: 2, user_id: 1, state: "pending", comment: "" } ] })
+          nil,
+          { level: 1, user_id: 2, state: "pending", comment: "" },
+          { level: 2, user_id: 1, state: "pending", comment: "" } ] })
       end
       it { expect(subject.workflow_approvers.size).to eq 2 }
       it { expect(subject.workflow_approvers[0][:level]).to eq 1 }
@@ -41,7 +41,7 @@ describe Workflow::Addon::Approver do
 
   describe "#workflow_required_counts" do
     context "when csv is given" do
-      subject { model.new({ workflow_required_counts: [ "false", "1", "2" ] }) }
+      subject { model.new({ workflow_required_counts: %w(false 1 2) }) }
       it { expect(subject.workflow_required_counts.length).to eq 3 }
       it { expect(subject.workflow_required_counts[0]).to be false }
       it { expect(subject.workflow_required_counts[1]).to eq 1 }
@@ -258,7 +258,7 @@ describe Workflow::Addon::Approver do
                   workflow_required_counts: [ false, false ]})
     end
     it do
-      subject.set_workflow_approver_state_to_request()
+      subject.set_workflow_approver_state_to_request
       expect(subject.workflow_approvers[0][:state]).to eq "request"
       expect(subject.workflow_approvers[1][:state]).to eq "request"
       expect(subject.workflow_approvers[2][:state]).to eq "request"
@@ -341,8 +341,10 @@ describe Workflow::Addon::Approver do
                     workflow_required_counts: [ false, false ]})
       end
       it { expect(subject).to have(1).errors_on(:base) }
-      it { expect(subject.errors_on(:base)).to \
-        include(I18n.t("errors.messages.approvers_level_missing", level: 1)) }
+      it do
+        expect(subject.errors_on(:base)).to \
+          include(I18n.t("errors.messages.approvers_level_missing", level: 1))
+      end
     end
 
     context "when workflow_required_counts is missing" do
@@ -361,8 +363,10 @@ describe Workflow::Addon::Approver do
                     workflow_required_counts: [ 2 ]})
       end
       it { expect(subject).to have(1).errors_on(:base) }
-      it { expect(subject.errors_on(:base)).to \
-        include(I18n.t("errors.messages.required_count_greater_than_approvers", level: 1, required_count: 2)) }
+      it do
+        expect(subject.errors_on(:base)).to \
+          include(I18n.t("errors.messages.required_count_greater_than_approvers", level: 1, required_count: 2))
+      end
     end
   end
 end
