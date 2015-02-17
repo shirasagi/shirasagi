@@ -56,7 +56,7 @@ class Voice::MainController < ApplicationController
       Voice::SynthesisJob.call_async voice_file.id do |job|
         job.site_id = voice_file.site_id
       end
-      run_job
+      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
       head :accepted, retry_after: SS.config.voice.controller["retry_after"]
     end
 
@@ -84,12 +84,5 @@ class Voice::MainController < ApplicationController
       # see: Rack::Sendfile#call(env)
       file = ::File.new(file) unless file.respond_to?(:to_path)
       send_file file, disposition: :inline, x_sendfile: true
-    end
-
-    def run_job
-      # run job in other process which does not wait for exit.
-      cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env}"
-      logger.debug("system: #{cmd}")
-      stdin, stdout, stderr = Open3.popen3(cmd)
     end
 end

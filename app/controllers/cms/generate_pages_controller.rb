@@ -10,7 +10,7 @@ class Cms::GeneratePagesController < ApplicationController
     end
 
     def task_command
-      %(rake #{task_name} site=#{@cur_site.host})
+      [ task_name, "site=#{@cur_site.host}" ]
     end
 
     def set_item

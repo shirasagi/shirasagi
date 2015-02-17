@@ -43,9 +43,7 @@ class Ezine::PagesController < ApplicationController
 
     def delivery
       page = Ezine::Page.find(params[:id])
-      require "open3"
-      cmd = "bundle exec rake ezine:deliver page_id=#{page.id} &"
-      stdin, stdout, stderr = Open3.popen3(cmd)
+      SS::RakeRunner.run_async "ezine:deliver", "page_id=#{page.id}"
       redirect_to({ action: :delivery_confirmation }, { notice: "配信を開始しました" })
     end
 

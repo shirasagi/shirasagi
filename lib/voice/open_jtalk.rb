@@ -62,11 +62,8 @@ class Voice::OpenJtalk
       cmd << " #{@openjtalk_opts}" if @openjtalk_opts.present?
       cmd << %( "#{input}")
 
-      Rails.logger.debug("system: #{cmd}")
-      require "open3"
-      stdout, stderr, status = Open3.capture3(cmd)
-      Rails.logger.debug("[openjtalk stdout] #{stdout}") if stdout.present?
-      Rails.logger.info("[openjtalk stderr] #{stderr}") if stderr.present?
+      # execute command
+      status = Voice::Command.run_with_logging(cmd, "openjtalk")
 
       raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless status.exitstatus == 0
       raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless ::File.exists?(output)
@@ -86,12 +83,9 @@ class Voice::OpenJtalk
       tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(['talk', '.wav'], nil))
       source_list = sources.map{|i| %("#{i}")}.join(" ")
       cmd = %("#{@sox_path}" #{source_list} "#{tmp_output}")
-      Rails.logger.debug("system: #{cmd}")
-      require "open3"
-      stdout, stderr, status = Open3.capture3(cmd)
-      Rails.logger.debug("[sox stdout] #{stdout}") if stdout.present?
-      Rails.logger.info("[sox stderr] #{stderr}") if stderr.present?
 
+      # execute command
+      status = Voice::Command.run_with_logging(cmd, "sox")
       raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.sox") unless status.exitstatus == 0
 
       ::FileUtils.copy(tmp_output, output)
