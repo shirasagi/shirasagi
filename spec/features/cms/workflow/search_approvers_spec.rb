@@ -25,7 +25,7 @@ describe "cms_workflow_search_approvers" do
       # save_and_open_page
       # print page.html
       within("form.search") do
-        expect(all("option").reduce([]) { |ret, o| ret << o.value }).to include "#{group.id}"
+        expect(all("option").reduce([]) { |a, e| a << e.value }).to include "#{group.id}"
       end
       within("table.index") do
         expect(find("a.select-item").text).to eq "#{user.name}"
