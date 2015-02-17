@@ -18,11 +18,7 @@ module Voice
         cmd = %("#{bin_path}" #{opts} "#{input_file}" "#{output_file}")
 
         # execute command
-        Rails.logger.debug("system: #{cmd}")
-        require "open3"
-        stdout, stderr, status = Open3.capture3(cmd)
-        Rails.logger.debug("[lame stdout] #{stdout}") if stdout.present?
-        Rails.logger.info("[lame stderr] #{stderr}") if stderr.present?
+        status = Voice::Command.run_with_logging(cmd, "lame")
         raise WavToMp3Error, I18n.t("voice.synthesis_fail.lame") unless status.exitstatus == 0
       end
 

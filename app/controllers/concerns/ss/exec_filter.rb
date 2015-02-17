@@ -20,9 +20,7 @@ module SS::ExecFilter
 
       @item.update_attributes state: "ready"
 
-      require "open3"
-      cmd = "bundle exec #{task_command} &"
-      stdin, stdout, stderr = Open3.popen3(cmd)
+      SS::RakeRunner.run_async *task_command
 
       redirect_to({ action: :index }, { notice: t("views.task.started") })
     end

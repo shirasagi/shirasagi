@@ -22,7 +22,6 @@ describe "cms_workflow_routes" do
     before { login_cms_user }
 
     it "#index" do
-      puts index_path
       visit index_path
       expect(current_path).not_to eq sns_login_path
     end

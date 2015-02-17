@@ -1,28 +1,39 @@
 require "open3"
 
 class Voice::MainController < ApplicationController
-  public
-    def index
+  before_action :check_voice_disable
+  before_action :set_url
+  before_action :set_voice_file
+
+  private
+    def check_voice_disable
+      # raise "404" if SS.config.voice.disable
       if SS.config.voice.disable
         head :not_found
-        return
       end
+    end
 
-      url = get_and_normalize_path
-      if url.host.blank? || url.path.blank?
+    def set_url
+      @url = get_and_normalize_path
+      if @url.host.blank? || @url.path.blank?
         # path must not be either nil, empty.
-        logger.debug("malformed url: #{url}")
+        logger.debug("malformed url: #{@url}")
+        # raise "400"
         head :bad_request
-        return
       end
+    end
 
-      voice_file = Voice::VoiceFile.find_or_create_by_url url
-      unless voice_file
+    def set_voice_file
+      @voice_file = Voice::VoiceFile.find_or_create_by_url @url
+      # raise "404"
+      unless @voice_file
         head :not_found
-        return
       end
+    end
 
-      voice_file = Voice::VoiceFile.acquire_lock voice_file
+  public
+    def index
+      voice_file = Voice::VoiceFile.acquire_lock @voice_file
       unless voice_file
         head :accepted, retry_after: SS.config.voice.controller["retry_after"]
         return
@@ -56,7 +67,7 @@ class Voice::MainController < ApplicationController
       Voice::SynthesisJob.call_async voice_file.id do |job|
         job.site_id = voice_file.site_id
       end
-      run_job
+      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
       head :accepted, retry_after: SS.config.voice.controller["retry_after"]
     end
 
@@ -84,12 +95,5 @@ class Voice::MainController < ApplicationController
       # see: Rack::Sendfile#call(env)
       file = ::File.new(file) unless file.respond_to?(:to_path)
       send_file file, disposition: :inline, x_sendfile: true
-    end
-
-    def run_job
-      # run job in other process which does not wait for exit.
-      cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env}"
-      logger.debug("system: #{cmd}")
-      stdin, stdout, stderr = Open3.popen3(cmd)
     end
 end
