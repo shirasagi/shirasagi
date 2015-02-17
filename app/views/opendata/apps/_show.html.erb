@@ -1,15 +1,4 @@
 <dl class="see">
-  <% if @item.file %>
-  <dt><%= @model.t :file_id %></dt>
-  <dd>
-    <%= link_to @item.appfilename, opendata_app_file_path(app_id: @item.id) %>
-    (<%= number_to_human_size @item.size %>)
-  </dd>
-  <% end %>
-
-  <dt><%= @model.t :appurl %></dt>
-  <dd><%= auto_link br(@item.appurl), html: { target: "_blank" } %></dd>
-
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
@@ -21,4 +10,7 @@
 
   <dt><%= @model.t :tags %></dt>
   <dd><%= @item.send :tags %></dd>
+
+  <dt><%= @model.t :appurl %></dt>
+  <dd><%= auto_link br(@item.appurl), html: { target: "_blank" } %></dd>
 </dl>

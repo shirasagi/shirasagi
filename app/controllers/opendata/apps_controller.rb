@@ -20,11 +20,4 @@ class Opendata::AppsController < ApplicationController
         order_by(updated: -1).
         page(params[:page]).per(50)
     end
-
-    def download
-      @item = @model.find params[:app_id]
-      send_file @item.file.path, type: @item.content_type, filename: @item.appfilename,
-        disposition: :attachment, x_sendfile: true
-    end
-
 end

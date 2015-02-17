@@ -49,13 +49,6 @@ class Opendata::Agents::Nodes::MyAppController < ApplicationController
       render
     end
 
-    def download
-      @item = @model.find params[:app_id]
-
-      send_file @item.file.path, type: @item.content_type, filename: @item.appfilename,
-        disposition: :attachment, x_sendfile: true
-    end
-
     def new
       @item = @model.new
       render

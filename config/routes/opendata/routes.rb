@@ -36,7 +36,9 @@ SS::Application.routes.draw do
     resources :my_apps, concerns: :deletion
     resources :my_ideas, concerns: :deletion
     resources :apps, concerns: :deletion do
-      get "file" => "apps#download"
+      resources :appfiles, concerns: :deletion do
+        get "file" => "appfiles#download"
+      end
     end
     resources :ideas, concerns: :deletion
   end
@@ -76,19 +78,20 @@ SS::Application.routes.draw do
     get "app_category/:name/rss.xml" => "public#rss", cell: "nodes/app_category"
     get "app_category/:name/areas" => "public#index_areas", cell: "nodes/app_category"
     get "app_category/:name/tags" => "public#index_tags", cell: "nodes/app_category"
-    get "app_category/:name/formats" => "public#index_formats", cell: "nodes/app_category"
     get "app_category/:name/licenses" => "public#index_licenses", cell: "nodes/app_category"
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app"
     get "app/rss.xml" => "public#rss", cell: "nodes/app"
     get "app/areas" => "public#index_areas", cell: "nodes/app"
     get "app/tags" => "public#index_tags", cell: "nodes/app"
-    get "app/formats" => "public#index_formats", cell: "nodes/app"
     get "app/licenses" => "public#index_licenses", cell: "nodes/app"
-    get "app/:app/*appfilename" => "public#download", cell: "nodes/app", format: false
     get "app/:app/point/show.:format" => "public#show_point", cell: "nodes/app", format: false
     get "app/:app/point/add.:format" => "public#add_point", cell: "nodes/app", format: false
     get "app/:app/point/members.html" => "public#point_members", cell: "nodes/app", format: false
+
+    get "app/:app/zip" => "public#download", cell: "nodes/app", format: false
+    get "app/:app/appfile/:id/" => "public#index", cell: "nodes/appfile"
+    get "app/:app/appfile/:id/*filename" => "public#download", cell: "nodes/appfile", format: false
 
     match "search_app/(index.:format)" => "public#index", cell: "nodes/search_app", via: [:get, :post]
     get "search_app/rss.xml" => "public#rss", cell: "nodes/search_app"
@@ -132,6 +135,7 @@ SS::Application.routes.draw do
     get "member/" => "public#index", cell: "nodes/member"
     get "member/:member" => "public#show", cell: "nodes/member"
     get "member/:member/datasets/(:filename.:format)" => "public#datasets", cell: "nodes/member"
+    get "member/:member/apps/(:filename.:format)" => "public#apps", cell: "nodes/member"
     get "member/:member/ideas/(:filename.:format)" => "public#ideas", cell: "nodes/member"
 
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage"
@@ -150,7 +154,9 @@ SS::Application.routes.draw do
       end
     end
     resources :apps, path: "my_app", controller: "public", cell: "nodes/my_app", concerns: :deletion do
-      get "file" => "public#download"
+      resources :appfiles, controller: "public", cell: "nodes/my_app/appfiles", concerns: :deletion do
+        get "file" => "public#download"
+      end
     end
     resources :ideas, path: "my_idea", controller: "public", cell: "nodes/my_idea", concerns: :deletion
   end

@@ -18,6 +18,23 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
       raise "404" unless @app
     end
 
+    def create_zip(items)
+      path = "#{Rails.root}/tmp/"
+
+      zipfilename = path + items.name + ".zip"
+
+      if File.exist?(zipfilename)
+        File.unlink(zipfilename)
+      end
+
+      Zip::Archive.open(zipfilename, Zip::CREATE) do |ar|
+        items.appfiles.each do |item|
+          ar.add_file(item.filename, item.file.path)
+        end
+      end
+      return zipfilename
+    end
+
   public
     def pages
       Opendata::App.site(@cur_site).public
@@ -30,27 +47,26 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
       @rss_url        = search_apps_path + "rss.xml?"
       @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
-      @download_items = pages.order_by(downloaded: -1).limit(10)
+      @excute_items   = pages.order_by(excuted: -1).limit(10)
 
       @tabs = [
         { name: "新着順", url: "#{@search_url}&sort=released", pages: @items, rss: "#{@rss_url}&sort=released" },
         { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items, rss: "#{@rss_url}&sort=popular" },
-        { name: "注目順", url: "#{@search_url}&sort=attention", pages: @download_items, rss: "#{@rss_url}&sort=attention" }
+        { name: "注目順", url: "#{@search_url}&sort=attention", pages: @excute_items, rss: "#{@rss_url}&sort=attention" }
       ]
 
       max = 50
       @areas    = aggregate_areas
       @tags     = aggregate_tags(max)
-      @formats  = aggregate_formats(max)
       @licenses = aggregate_licenses(max)
     end
 
     def download
-      @model = Opendata::App
-      @item = @model.site(@cur_site).find_by(id: params[:app], appfilename: params[:appfilename].force_encoding("utf-8"))
-      @item.inc downloaded: 1
+      @item = Opendata::App.site(@cur_site).find(params[:app])
 
-      send_file @item.file.path, type: @item.content_type, filename: @item.appfilename,
+      zipfilename = create_zip(@item)
+
+      send_file zipfilename, type: "application/zip", filename: "#{@item.name}.zip",
         disposition: :attachment, x_sendfile: true
     end
 

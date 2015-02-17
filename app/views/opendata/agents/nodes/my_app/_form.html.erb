@@ -9,12 +9,6 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
 <%= javascript_include_tag "opendata/form" %>
 
 <dl class="see opendata-app">
-  <dt><%= @model.t :file_id %></dt>
-  <dd><%= f.file_field :in_file %></dd>
-
-  <dt><%= @model.t :appurl %></dt>
-  <dd><%= f.url_field :appurl %></dd>
-
   <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
 
@@ -26,6 +20,9 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
 
   <dt><%= @model.t :tags %><%= @item.tt :tags %></dt>
   <dd><%= f.text_field :tags %></dd>
+
+  <dt><%= @model.t :appurl %></dt>
+  <dd><%= f.url_field :appurl %></dd>
 
   <dt><%= @model.t :category_ids %><%= required_label %></dt>
   <dd>

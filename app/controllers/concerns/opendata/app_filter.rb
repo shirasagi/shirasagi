@@ -2,8 +2,7 @@ module Opendata::AppFilter
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_app_with_aggregation,
-      only: [:index_areas, :index_tags, :index_formats, :index_licenses]
+    before_action :set_app_with_aggregation, only: [:index_areas, :index_tags, :index_licenses]
   end
 
   private
@@ -28,12 +27,8 @@ module Opendata::AppFilter
       pages.aggregate_array :tags, limit: limit
     end
 
-    def aggregate_formats(limit)
-      pages.aggregate_resources :format, limit: limit
-    end
-
     def aggregate_licenses(limit)
-      licenses = pages.aggregate_resources :license_id, limit: limit
+      licenses = pages.aggregate_licenses :license_id, limit: limit
 
       licenses.each_with_index do |data, idx|
         if rel = Opendata::License.site(@cur_site).public.where(id: data["id"]).first
@@ -54,11 +49,6 @@ module Opendata::AppFilter
     def index_tags
       @tags = aggregate_tags(100)
       render "opendata/agents/nodes/app/tags", layout: "opendata/app_aggregation"
-    end
-
-    def index_formats
-      @formats = aggregate_formats(100)
-      render "opendata/agents/nodes/app/formats", layout: "opendata/app_aggregation"
     end
 
     def index_licenses

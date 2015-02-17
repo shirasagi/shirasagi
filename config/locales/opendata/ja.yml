@@ -2,8 +2,10 @@ ja:
   opendata:
     create: 新規登録
     manage_resources: リソースを管理する
+    manage_appfiles: アプリケーションファイルを管理する
     links:
       add_resource: 新しいリソースを追加する
+      add_appfile: 新しいアプリケーションファイルを追加する
     search_dataset_groups:
       index: データセットグループを選択する
       search: データセットグループを検索
@@ -30,6 +32,7 @@ ja:
       opendata/idea: アイデア
       opendata/release: 公開設定
       opendata/resource: リソース
+      opendata/appfile: アプリケーションファイル
       opendata/rdf_store: RDFストア
 
   cms:
@@ -40,12 +43,15 @@ ja:
       opendata/dataset_category: データセット分野
       opendata/search_dataset: データセット検索
       opendata/search_dataset_group: データセットグループ検索
+      opendata/app: アプリ
+      opendata/app_category: アプリ分野
+      opendata/search_app: アプリ検索
       opendata/sparql: SPARQL
       opendata/api: API
       opendata/mypage: マイページ
       opendata/my_dataset: マイデータセット
+      opendata/my_app: マイアプリ
       opendata/my_idea: マイアイデア
-      opendata/app: アプリマーケット
       opendata/idea: アイデアボックス
       opendata/idea_category: アイデア分野
       opendata/search_idea: アイデア検索
@@ -53,6 +59,7 @@ ja:
       opendata/mypage_login: ログイン
       opendata/dataset: データセット
       opendata/dataset_group: データセットグループ
+      opendata/app: アプリ
       opendata/idea: アイデア
 
   cms_role:
@@ -123,21 +130,25 @@ ja:
         tsv_id: プレビュー用データ
         content: データの内容
       opendata/app:
-        file_id: アプリケーションファイル
-        in_file: アプリケーションファイル
-        name: アプリケーション名
+        name: アプリ名
         text: 説明
         license_id: ライセンス
-        appurl: アプリケーションURL
+        appurl: アプリURL
         tags: タグ
         categry_ids: 分野
         area_ids: 地域
         group_id: 所属グループ
         dataset_ids: データセット
         point: 評価
-        downloaded: 合計ダウンロード数
+        excuted: 実行回数
         site_id: サイト
         user_id: アプリ作成者
+        appfiles: アプリケーションファイル
+      opendata/appfile:
+        file_id: ファイル
+        in_file: ファイル
+        name: アプリケーションファイル名
+        text: 説明
       opendata/idea:
         name: タイトル
         site_id: サイト
@@ -167,6 +178,8 @@ ja:
       tsv_id:
         - TSV、CSVファイルを登録しておくとデータセットのページでプレビュー表示ができます。
         - リソースファイルがTSV、CSVファイルの場合は登録する必要はありません。
+    opendata/appfile:
+      text: *text
     opendata/license:
       related_url:
         - 登録するライセンスの公式ページや説明ページのURLを登録します。

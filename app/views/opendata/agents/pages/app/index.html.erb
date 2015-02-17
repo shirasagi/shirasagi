@@ -15,16 +15,13 @@ $ ->
     $(this).remove()
     return false
 
-  # preview
-  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
-
 <% end %>
 
 <header>
   <h1 class="name"><%= @cur_page.send :name %></h1>
 </header>
 
-<div class="point" id="app-point">
+<div class="point">
   <div class="count">
     <span class="number"><%= @cur_page.point %></span>
     <span class="label">いいね！数</span>
@@ -59,17 +56,20 @@ categories = [
 
 <div class="detail">
 
-  <div class="info-wrap">
+  <div class="appfile">
+    <header>
+      <h1>アプリケーション</h1>
+    </header>
+    <% if @cur_page.appfiles.present? %>
+      <div class="app_script">
 
-    <% if @cur_page.file_id.present? %>
-      <div class="resources">
-        <div class="resource">
-          <div class="icons">
-            <%= link_to "ダウンロード", @cur_page.app_url, class: "download" %>
-          </div>
-        </div>
       </div>
+
+      <%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %>
     <% end %>
+  </div>
+
+  <div class="info-wrap">
 
     <dl class="author">
       <dt><%= @cur_page.t :appurl %></dt>
@@ -92,6 +92,9 @@ categories = [
         <dd><%= @cur_page.groups.first.name %><br /></dd>
       <% end %>
 
+      <dt><%= @cur_page.t :excuted %></dt>
+      <dd><%= @cur_page.excuted.to_i %> 回</dd>
+
       <dt><%= @cur_page.t :license_id %></dt>
       <dd>
         <div class="icons">
@@ -107,9 +110,6 @@ categories = [
           <% end %>
         </div>
       </dd>
-
-      <dt><%= @cur_page.t :downloaded %></dt>
-      <dd><%= @cur_page.downloaded.to_i %> 回</dd>
 
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>

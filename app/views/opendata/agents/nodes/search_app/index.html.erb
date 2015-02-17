@@ -23,10 +23,6 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
     <dt>タグ</dt>
     <dd><%= f.text_field :tag %></dd>
   </dl>
-  <dl class="format">
-    <dt>フォーマット</dt>
-    <dd><%= f.text_field :format, value: tryb { params[:s][:format] } %></dd>
-  </dl>
   <dl class="license">
     <dt>ライセンス</dt>
     <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>

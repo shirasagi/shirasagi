@@ -3,26 +3,23 @@ class Opendata::App
   include Cms::Addon::Release
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
+  include Opendata::Addon::Appfile
   include Opendata::Addon::Category
   include Opendata::Addon::Area
   include Opendata::Reference::Member
-  include SS::Relation::File
 
   set_permission_name "opendata_apps"
 
-  field :appfilename, type: String
   field :point, type: Integer, default: "0"
   field :text, type: String
   field :appurl, type: String
   field :tags, type: SS::Extensions::Words
   field :excuted, type: Integer
-  field :downloaded, type: Integer
 
   has_many :points, primary_key: :app_id, class_name: "Opendata::AppPoint",
     dependent: :destroy
   embeds_ids :datasets, class_name: "Opendata::Dataset"
   belongs_to :license, class_name: "Opendata::License"
-  belongs_to_file :file
 
   permit_params :text, :appurl, :license_id, :dataset_ids, :tags, tags: []
 
@@ -30,7 +27,6 @@ class Opendata::App
   validates :category_ids, presence: true
   validates :license_id, presence: true
 
-  before_validation :set_appfilename, if: ->{ in_file.present? }
   before_save :seq_filename, if: ->{ basename.blank? }
 
   default_scope ->{ where(route: "opendata/app") }
@@ -48,25 +44,13 @@ class Opendata::App
       url.sub(/\.html$/, "") + "/point/members.html"
     end
 
-    def app_url
-      url.sub(/\.html$/, "") + "/#{appfilename}"
+    def zip_url
+      url.sub(/\.html$/, "") + "/zip"
     end
 
     def contact_present?
       return false if member_id.present?
       super
-    end
-
-#    def path
-#      file ? file.path : nil
-#    end
-
-    def content_type
-      file ? file.content_type : nil
-    end
-
-    def size
-      file ? file.size : nil
     end
 
   private
@@ -76,10 +60,6 @@ class Opendata::App
 
     def seq_filename
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
-
-    def set_appfilename
-      self.appfilename = in_file.original_filename
     end
 
   class << self
@@ -123,16 +103,38 @@ class Opendata::App
       limit_aggregation pipes, opts[:limit]
     end
 
-    def aggregate_resources(name, opts = {})
+    def aggregate_licenses(name, opts = {})
       pipes = []
-      pipes << { "$match" => where({}).selector.merge("resources.#{name}" => { "$exists" => 1 }) }
-      pipes << { "$project" => { _id: 0, "resources.#{name}" => 1 } }
-      pipes << { "$unwind" => "$resources" }
-      pipes << { "$group" => { _id: "$resources.#{name}", count: { "$sum" =>  1 } }}
+      pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
+      pipes << { "$project" => { _id: 0, "#{name}" => 1 } }
+      pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
       pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
       pipes << { "$sort" => { count: -1 } }
       pipes << { "$limit" => 5 }
       limit_aggregation pipes, opts[:limit]
+    end
+
+    def get_tag_list(query)
+      pipes = []
+      pipes << { "$match" => where({}).selector.merge("tags" => { "$exists" => 1 }) }
+      pipes << { "$project" => { _id: 0, "tags" => 1 } }
+      pipes << { "$unwind" => "$tags" }
+      pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
+      pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
+      pipes << { "$sort" => { name: 1 } }
+      collection.aggregate(pipes)
+    end
+
+    def get_tag(tag_name)
+      pipes = []
+      pipes << { "$match" => where({}).selector.merge("tags" => { "$exists" => 1 }) }
+      pipes << { "$project" => { _id: 0, "tags" => 1 } }
+      pipes << { "$unwind" => "$tags" }
+      pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
+      pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
+      pipes << { "$match" => { name: tag_name }}
+      pipes << { "$sort" => { name: 1 } }
+      collection.aggregate(pipes)
     end
 
     def search(params)
@@ -141,7 +143,10 @@ class Opendata::App
 
       site = params[:site]
 
-      criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword],
+          :name, :text, "appfiles.name", "appfiles.filename", "appfiles.text"
+      end
 
       criteria = criteria.keyword_in params[:keyword], :name if params[:name].present?
 

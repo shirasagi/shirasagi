@@ -1,0 +1,22 @@
+<dl class="see">
+  <dd class="wide">
+    <%= link_to opendata_app_appfiles_path(app_id: @item) do %>
+      <button><%= t("opendata.manage_appfiles") %></button>
+    <% end %>
+  </dd>
+
+  <% if @item.appfiles.present? %>
+  <dd class="wide">
+    <table class="index">
+      <tbody>
+        <% @item.appfiles.order(name: 1).each do |rs| %>
+        <tr>
+          <td><%= link_to rs.name, opendata_app_appfile_path(app_id: @item.id, id: rs.id) %>
+          <td><%= number_to_human_size rs.size %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
+</dl>
