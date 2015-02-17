@@ -1,0 +1,34 @@
+<%= coffee do %>
+$ ->
+
+  $(".workflow-route-start").on "click", (e) ->
+    uri = location.pathname.split("/")
+    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
+    uri[3] = "wizard"
+    uri = uri.join("/")  + "/approver_setting"
+    route_id = $("#workflow_route").val()
+    $.ajax
+      type: "post"
+      url: uri
+      async: false
+      data:
+        route_id: route_id
+      success: (html, status) ->
+        $(".workflow-partial-section").html(html)
+      error: (xhr, status) ->
+        try
+          errors = $.parseJSON(xhr.responseText)
+          alert(["== Error =="].concat(errors).join("\n"));
+        catch
+          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+    e.preventDefault()
+
+<% end %>
+
+<dl class="see">
+  <dt><%= t("workflow.route") %><%= @model.tt :workflow_routes %></dt>
+  <dd>
+    <%= select_tag :workflow_route, options_for_select(Cms::Workflow::Route.route_options(@cur_user)) %>
+    <%= link_to t("workflow.state.start"), "#", class: "workflow-route-start cboxElement" %>
+  </dd>
+</dl>

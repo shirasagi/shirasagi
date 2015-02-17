@@ -27,7 +27,7 @@
     <%= link_to :"cms.user", cms_users_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.member", cms_members_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"history.log", history_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :"workflow.name", cms_workflow_routes_path if Cms::Workflow::Route.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% unless SS.config.kana.disable %>
       <%= link_to :"kana.dictionary", kana_dictionaries_path if Kana::Dictionary.allowed?(:edit, @cur_user, site: @cur_site) || Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
     <% end %>
@@ -37,5 +37,6 @@
     <% unless SS.config.job.disable_log %>
       <%= link_to :"job.log", job_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% end %>
+    <%= link_to :"history.log", history_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
   </div>
 </nav>

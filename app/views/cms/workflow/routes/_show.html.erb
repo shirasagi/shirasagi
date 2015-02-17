@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+  <dt><%= @model.t :group_ids %></dt>
+  <dd><%= br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+</dl>
+
+<% @item.levels.each do |level| %>
+<dl class="see">
+  <dt><%= @model.t :level, level: level %></dt>
+  <dd>
+    <dl class="see" style="margin-top: 0px">
+      <dt><%= @model.t :required_counts %></dt>
+      <dd><%= @item.required_count_label_at(level) %></dd>
+      <dt><%= @model.t :approvers %></dt>
+      <dd><%= br @item.approvers_at(level).map { |approver| @item.user_name(approver[:user_id]) }.join("\n") %></dd>
+    </dl>
+  </dd>
+</dl>
+<% end %>

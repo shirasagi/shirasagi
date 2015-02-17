@@ -5,35 +5,19 @@ class Workflow::Extensions::WorkflowApprovers < Array
 
   class << self
     def demongoize(object)
-      ret = ""
-      object.map { |d| ret << (d.values).join(",") + "\r\n" } if object.present?
-      ret
+      if object.present?
+        Workflow::Extensions::WorkflowApprovers.new(normalize(object))
+      else
+        Workflow::Extensions::WorkflowApprovers.new
+      end
     end
 
     def mongoize(object)
       case object
-      when self.class then object.mongoize
-      when String then
-        set = []
-        object.split(/\r\n|\n/).map do |d|
-          begin
-            h = Hash[[:level, :user_id, :state, :comment].zip(d.split(","))]
-            h[:level] = h[:level].to_i
-            h[:user_id] = h[:user_id].to_i
-            h[:comment] = "" if h[:comment].blank?
-            set << h
-          rescue => e
-            nil
-          end
-        end
-#        set.mongoize
-
-        if set.present?
-          self.new(set).mongoize
-        else
-          self.new([]).mongoize
-        end
-
+      when self.class then
+        object.mongoize
+      when Array then
+        Workflow::Extensions::WorkflowApprovers.new(normalize(object)).mongoize
       else
         object
       end
@@ -46,5 +30,34 @@ class Workflow::Extensions::WorkflowApprovers < Array
         object
       end
     end
+
+    private
+      def normalize(array)
+        ret = array.map do |hash|
+          if hash.kind_of?(String)
+            convert_from_string(hash)
+          elsif hash.respond_to?(:symbolize_keys)
+            hash.symbolize_keys
+          else
+            nil
+          end
+        end
+        ret.compact!
+        ret.each do |hash|
+          hash[:level] = hash[:level].to_i if hash[:level].present?
+          hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
+          hash[:comment] = "" if hash[:comment].blank?
+        end
+        ret.to_a.uniq
+      end
+
+      def convert_from_string(text)
+        return nil if text.blank?
+        begin
+          Hash[[:level, :user_id, :state, :comment].zip(text.split(",").map(&:strip))]
+        rescue
+          nil
+        end
+      end
   end
 end
