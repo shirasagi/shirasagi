@@ -103,9 +103,14 @@ class Job::Service
         rescue Exception => e
           job_log.state = "failed"
           job_log.closed = Time.now
-          Rails.logger.fatal("Failed Job #{task.id}: #{e.class} (#{e.message}):\n  #{e.backtrace[0..5].join('\n  ')}")
+          Rails.logger.fatal("Failed Job #{task.id}: #{e.class} (#{e.message}):\n  #{e.backtrace.join('\n  ')}")
+          raise if system_error?(e)
         end
       end
+    end
+
+    def system_error?(e)
+      e.kind_of?(NoMemoryError) || e.kind_of?(SignalException) || e.kind_of?(SystemExit) || e.kind_of?(fatal)
     end
 
     def create_job(task)

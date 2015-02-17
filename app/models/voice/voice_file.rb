@@ -150,7 +150,7 @@ class Voice::VoiceFile
       begin
         yield
       rescue klass => e
-        Rails.logger.error("#{message}: #{e.class} (#{e.message}):\n  #{e.backtrace[0..5].join('\n  ')}")
+        Rails.logger.error("#{message}: #{e.class} (#{e.message}):\n  #{e.backtrace.join('\n  ')}")
       end
     end
 
