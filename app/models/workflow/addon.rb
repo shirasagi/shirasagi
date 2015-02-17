@@ -48,18 +48,7 @@ module Workflow::Addon
 
       def workflow_current_level
         workflow_levels.each do |level|
-          required_counts = workflow_required_counts_at(level)
-          approvers = workflow_approvers_at(level)
-          case required_counts
-          when false
-            remains = approvers.select do |approver|
-              approver[:state] == WORKFLOW_STATE_REQUEST || approver[:state] == WORKFLOW_STATE_PENDING
-            end
-            return level if remains.length > 0
-          else
-            approved = approvers.select { |approver| approver[:state] == WORKFLOW_STATE_APPROVE }.length
-            return level if approved < required_counts
-          end
+          return level unless complete?(level)
         end
         nil
       end
@@ -117,21 +106,10 @@ module Workflow::Addon
 
       def apply_workflow?(route)
         users = route.approvers.map do |approver|
-          Cms::User.find(approver[:user_id])
-        end
-        unreable_users = users.reject do |user|
-          allowed?(:read, user, site: cur_site)
-        end
-        unreable_users.each do |user|
-          errors.add :base, :route_approver_unable_to_read, route: route.name, level: approver[:level], user: user.name
+          [ approver[:level], Cms::User.find(approver[:user_id]) ]
         end
 
-        unapprovable_users = users.reject do |user|
-          allowed?(:approve, user, site: cur_site)
-        end
-        unapprovable_users.each do |user|
-          errors.add :base, :route_approver_unable_to_approve, route: route.name, level: approver[:level], user: user.name
-        end
+        validate_user(route, users, :read, :approve)
         errors.size == 0
       end
 
@@ -186,6 +164,25 @@ module Workflow::Addon
           approvers = workflow_approvers_at(level)
           errors.add :base, :required_count_greater_than_approvers, level: level, required_count: required_count \
             if approvers.length < required_count
+        end
+      end
+
+      def complete?(level)
+        required_counts = workflow_required_counts_at(level)
+        approvers = workflow_approvers_at(level)
+        required_counts = approvers.length if required_counts == false
+        approved = approvers.select { |approver| approver[:state] == WORKFLOW_STATE_APPROVE }.length
+        approved >= required_counts
+      end
+
+      def validate_user(route, users, *actions)
+        actions.each do |action|
+          unable_users = users.reject do |_, user|
+            allowed?(action, user, site: cur_site)
+          end
+          unable_users.each do |level, user|
+            errors.add :base, "route_approver_unable_to_#{action}".to_sym, route: route.name, level: level, user: user.name
+          end
         end
       end
   end
