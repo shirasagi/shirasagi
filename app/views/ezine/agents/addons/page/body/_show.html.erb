@@ -1,14 +1,16 @@
 <dl class="see mod-ezine-page-body">
-  <dd class="wide">
+  <dt><%= @model.t :html %></dt>
+  <dd>
     <% if @item.send(:html).present? %>
     <%= html_editor "#mod-ezine-page-body", height: "400px", readonly: true %>
     <%= text_area_tag "mod-ezine-page-body", @item.html, style: "height: 400px;" %>
     <% end %>
   </dd>
-  <dd class="wide">
+
+  <dt><%= @model.t :text %></dt>
+  <dd>
     <% if @item.send(:text).present? %>
     <%= text_area_tag "mod-ezine-page-body", @item.text, class: "monospace", style: "height: 400px;" %>
     <% end %>
   </dd>
 </dl>
-

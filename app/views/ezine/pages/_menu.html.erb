@@ -5,42 +5,30 @@
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|delivery_test_confirmation|delivery_confirmation/ %>
+  <% elsif params[:action] =~ /edit|update|delete|delivery|sent_logs/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :back_to_show, action: :show, id: @item %>
     <% end %>
-    <%= link_to :back_to_index, action: :index %>
-  <% elsif params[:action] =~ /sent_logs/ %>
-    <%= link_to :back_to_show, action: :show, id: params[:id] %>
     <%= link_to :back_to_index, action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, action: :edit, id: @item %>
     <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.preview_html"), cms_preview_path(path: @item.filename), target: "_blank" %>
-    <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.preview_text"), { action: :preview_text, id: @item }, { target: "_blank" } %>
-    <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.deliver_test"), action: :delivery_test_confirmation, id: @item %>
-    <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.deliver"), action: :delivery_confirmation, id: @item %>
-    <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t("ezine.sent_log"), action: :sent_logs, id: @item %>
-    <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :delete, action: :delete, id: @item %>
     <% end %>
-    <%# <%= link_to :"cms.view_page", @item.url, target: :_blank if @item.public? %>
-
     <%= link_to :back_to_index, action: :index %>
   <% end %>
 </nav>
 
-<% if params[:action] =~ /new|edit|create|update/ %>
+<% if params[:action] =~ /show/ && @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+<nav class="act-menu">
+  <%= link_to t("ezine.deliver_test"), action: :delivery_test_confirmation, id: @item %>
+  <%= link_to t("ezine.deliver"), action: :delivery_confirmation, id: @item %>
+  <%= link_to t("ezine.sent_log"), action: :sent_logs, id: @item %>
+</nav>
+<% end %>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
 <%= render file: "_addons_menu" %>
 <% end %>

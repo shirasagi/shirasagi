@@ -4,19 +4,22 @@ ja:
     member: メルマガ読者
     test_member: テスト読者
     entry: 登録履歴
-    button:
-      convert_html_to_text: HTML版を変換する
-      deliver: 送信
-    entry_type:
-      add: 配信登録
-      update: 配信形式の変更
-      delete: 配信停止
-
     preview_html: HTML版プレビュー
     preview_text: テキスト版プレビュー
     deliver_test: テスト配信
     deliver: 本配信
     sent_log: 配信ログ
+    button:
+      convert_html_to_text: HTML版を変換する
+      deliver: 本配信
+      deliver_test: テスト配信
+    entry_type:
+      add: 配信登録
+      update: 配信形式の変更
+      delete: 配信停止
+    notice:
+      delivered: 配信を開始しました
+      delivered_test: テスト配信を完了しました
 
   modules:
     ezine: メールマガジン
