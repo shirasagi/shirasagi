@@ -13,6 +13,7 @@ module SS::User::Model
 
     seqid :id
     field :name, type: String
+    field :uid, type: String
     field :email, type: String, metadata: { form: :email }
     field :password, type: String
     field :type, type: String
@@ -52,5 +53,18 @@ module SS::User::Model
 
   def encrypt_password
     self.password = SS::Crypt.crypt(in_password)
+  end
+
+  def uid_to_disp
+    if uid.present?
+      uid
+    else
+      email.split('@')[0]
+    end
+  end
+
+  # detail, descriptive name
+  def long_name
+    "#{name}(#{uid_to_disp})"
   end
 end
