@@ -1,6 +1,8 @@
 module Opendata::Sparql
   require "rdf/turtle"
   require "sparql/client"
+  require "nkf"
+  require "tempfile"
 
   # Fuseki Server
   SERVER  = SS.config.opendata.fuseki["host"]
@@ -25,17 +27,35 @@ module Opendata::Sparql
         dump("sparql#save:  #{graph_name}, #{ttl_url}") if test?
         return true if disable?
 
-        client = SPARQL::Client.new(UPDATE_SITE)
+        begin
 
-        triples = []
+          temp_file = Tempfile.new("temp")
+          open(ttl_url) {|f|
+            f.each {|line|
+              encoding = NKF.guess(line)
+              temp_file.puts line.encode(Encoding::UTF_8, encoding)
+            }
+          }
+          temp_file.close(false)
 
-        graph = RDF::Graph.load(ttl_url)
-        graph.each do |statement|
-          triples << statement.to_s
+          temp_file.open
+
+          triples = []
+          graph = RDF::Graph.load(temp_file.path)
+          graph.each do |statement|
+            triples << statement.to_s
+          end
+
+          sparql = "INSERT DATA { GRAPH <#{graph_name}> { #{triples.join(" ")} } }"
+
+          client = SPARQL::Client.new(UPDATE_SITE)
+          client.update(sparql)
+
+        rescue => e
+          raise e
+        ensure
+          temp_file.close(true) if temp_file
         end
-
-        sparql = "INSERT DATA { GRAPH <#{graph_name}> { #{triples.join(" ")} } }"
-        client.update(sparql)
 
         return triples
       end
