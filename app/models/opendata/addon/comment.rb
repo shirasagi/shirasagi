@@ -6,10 +6,6 @@ module Opendata::Addon::Comment
 
   included do
     embeds_many :comments, class_name: "Opendata::Comment"
-    before_destroy :destroy_comments
   end
 
-  def destroy_comments
-    comments.destroy
-  end
 end
