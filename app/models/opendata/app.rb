@@ -19,8 +19,7 @@ class Opendata::App
   has_many :points, primary_key: :app_id, class_name: "Opendata::AppPoint",
     dependent: :destroy
   embeds_ids :datasets, class_name: "Opendata::Dataset"
-  has_many :ideas, primary_key: :app_id, class_name: "Opendata::Idea",
-    dependent: :destroy
+  has_many :ideas, primary_key: :app_id, class_name: "Opendata::Idea"
 
   belongs_to :license, class_name: "Opendata::License"
 
