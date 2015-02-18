@@ -27,7 +27,7 @@ SS::Application.routes.draw do
     get "page/update.:format" => "public#update", cell: "nodes/form"
     get "page/delete.:format" => "public#delete", cell: "nodes/form"
     post "page/confirm.:format" => "public#confirm", cell: "nodes/form"
-    get "page/verify.:format" => "public#verify", cell: "nodes/form"
+    get "page/verify(.:format)" => "public#verify", cell: "nodes/form"
     get "backnumber/(index.:format)" => "public#index", cell: "nodes/backnumber"
   end
 

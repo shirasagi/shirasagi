@@ -3,7 +3,7 @@
 
 メールアドレスの<%= t('ezine.entry_type.' + @entry.entry_type) %>を受け付けました。
 以下のアドレスをクリックして<%= t('ezine.entry_type.' + @entry.entry_type) %>を完了してください。
-<%= "#{@node.full_url}entry/verify?token=#{@entry.verification_token}" %>
+<%= "#{@node.full_url}verify?token=#{@entry.verification_token}" %>
 
 メールアドレス: <%= @entry.email %>
 配信形式: <%= @entry.email_type %>
