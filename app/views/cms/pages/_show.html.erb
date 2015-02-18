@@ -4,6 +4,10 @@
 
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
+  <dd>
+    <%= link_to @item.full_url, @item.full_url, target: "_blank" %>
+    (<%= link_to :"cms.preview_page", cms_preview_path(path: @item.filename), target: "_blank" %>)
+  </dd>
 
   <% if @item.send(:layout_id).present? %>
   <dt><%= @model.t :layout_id %></dt>
