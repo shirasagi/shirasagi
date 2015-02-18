@@ -103,7 +103,7 @@ module Workflow::Route::Model
     def user_name(user_id)
       ref = user_for(user_id)
       if ref.respond_to?(:name)
-        ref.name
+        ref.long_name
       else
         nil
       end

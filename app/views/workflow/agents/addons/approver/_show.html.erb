@@ -114,7 +114,7 @@ $ ->
       <dd>
         <% if @item.workflow_user_id.present? %>
         <% user = SS::User.find(@item.workflow_user_id) %>
-        <%= "#{user.name}(#{user.email.split('@')[0]})" %>
+        <%= "#{user.long_name}" %>
         <% end %>
       </dd>
 

@@ -59,7 +59,7 @@ $ ->
         end
         names = approvers.map do |approver|
           user = @route.user_for(approver[:user_id])
-          "#{user.name}(#{(SS::User.find user._id).email.split("@")[0]})"
+          "#{user.long_name}"
         end
       %>
       <% approvers.each do |approver| %>

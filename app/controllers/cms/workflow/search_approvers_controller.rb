@@ -22,7 +22,7 @@ class Cms::Workflow::SearchApproversController < ApplicationController
       groups = Cms::Group.site(@cur_site).order_by(_id: 1).each.select do |g|
         g.allowed?(:read, @cur_user, site: @cur_site)
       end
-      groups.reduce([ [ t("all"), false ] ]) do |ret, g|
+      groups.reduce([]) do |ret, g|
         ret << [ g.name, g.id ]
       end.to_a
     end
