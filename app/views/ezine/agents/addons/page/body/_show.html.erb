@@ -7,7 +7,7 @@
   </dd>
   <dd class="wide">
     <% if @item.send(:text).present? %>
-    <%= text_area_tag "mod-ezine-page-body", @item.text, style: "height: 400px;" %>
+    <%= text_area_tag "mod-ezine-page-body", @item.text, class: "monospace", style: "height: 400px;" %>
     <% end %>
   </dd>
 </dl>

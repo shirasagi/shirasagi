@@ -6,29 +6,6 @@
 // -------------------------------------------------------------------------------------------------
 // base
 
-.login-box {
-    display: table;
-    width: 300px;
-    padding: 20px 20px;
-    background: $white;
-    header {
-      @include clear;
-      margin-bottom: 20px;
-      h1 {
-        float: left;
-      }
-      .version {
-        float: right;
-        color: $gray5;
-      }
-    }
-    input[type="email"], input[type="password"] {
-      background: $gray2;
-    }
-    footer.send {
-      padding-bottom: 0;
-    }
-}
 html, body {
   height: 100%;
   margin: 0px;
@@ -290,6 +267,9 @@ textarea.ace_text-input {
 // -------------------------------------------------------------------------------------------------
 // common
 
+.monospace {
+  font-family: "Osaka−等幅", "ＭＳ ゴシック", "MS Gothic", "monospace";
+}
 .pagination {
   @include clear;
   margin: 20px 0px;
@@ -471,6 +451,33 @@ input.date, input.datetime {
 
 #cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
   display: none !important;
+}
+
+// -------------------------------------------------------------------------------------------------
+// login
+
+.login-box {
+    display: table;
+    width: 300px;
+    padding: 20px 20px;
+    background: $white;
+    header {
+      @include clear;
+      margin-bottom: 20px;
+      h1 {
+        float: left;
+      }
+      .version {
+        float: right;
+        color: $gray5;
+      }
+    }
+    input[type="email"], input[type="password"] {
+      background: $gray2;
+    }
+    footer.send {
+      padding-bottom: 0;
+    }
 }
 
 // -------------------------------------------------------------------------------------------------
