@@ -9,11 +9,12 @@
   <article>
     <%= error_messages_for :item %>
     <%= hidden_field_tag :ref, params[:ref] %>
+    <%= hidden_field_tag "item[in_group]", SS.config.sns.login_group %>
 
-    Email<br />
-    <%= email_field :item, :email %><br />
+    <%= t("ss.views.login/login.id") %><br />
+    <%= text_field :item, :in_id %><br />
     <br />
-    Password<br />
+    <%= t("ss.views.login/login.password") %><br />
     <%= password_field :item, :password %><br />
 
     <footer class="send">

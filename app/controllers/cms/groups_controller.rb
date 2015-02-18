@@ -20,4 +20,13 @@ class Cms::GroupsController < ApplicationController
       super
       raise "403" unless Cms::Group.site(@cur_site).include?(@item)
     end
+
+  public
+    def index
+      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      @items = @model.site(@cur_site).
+          allow(:read, @cur_user, site: @cur_site).
+          search(params[:s]).
+          page(params[:page]).per(50)
+    end
 end

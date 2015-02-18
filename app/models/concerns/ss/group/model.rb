@@ -2,6 +2,7 @@ module SS::Group::Model
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
+  include Ldap::Addon::Group
 
   attr_accessor :in_password
 
@@ -10,7 +11,10 @@ module SS::Group::Model
 
     seqid :id
     field :name, type: String
-    permit_params :name
+    field :order, type: Integer
+    permit_params :name, :order
+
+    default_scope -> { order_by(order: 1, name: 1) }
 
     validates :name, presence: true, length: { maximum: 80 }
     validate :validate_name
@@ -57,5 +61,21 @@ module SS::Group::Model
         item.name = item.name.sub(/^#{src}\//, "#{dst}\/")
         item.save validate: false
       end
+    end
+
+    def root
+      parts = name.split("/")
+      return nil if parts.length == 0
+      return self if parts.length == 1
+
+      0.upto(parts.length - 1) do |c|
+        ret = self.class.where(name: parts[0..c].join("/")).first
+        return ret if ret.present?
+      end
+      nil
+    end
+
+    def root?
+      id == root.id
     end
 end

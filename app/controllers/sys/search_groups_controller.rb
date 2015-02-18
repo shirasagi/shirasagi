@@ -8,7 +8,6 @@ class Sys::SearchGroupsController < ApplicationController
   public
     def index
       @items = @model.
-        search(params[:s]).
-        order_by(_id: -1)
+        search(params[:s])
     end
 end

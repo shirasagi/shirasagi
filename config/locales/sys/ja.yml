@@ -36,7 +36,5 @@ ja:
         host: ホスト名
         domains: ドメイン
         group_ids: グループ
-      sys/group:
-        name: グループ名
       sys/addon/role:
         sys_role_ids: ロール

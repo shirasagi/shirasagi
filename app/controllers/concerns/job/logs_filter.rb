@@ -107,7 +107,7 @@ module Job::LogsFilter
     end
 
     def compact
-      coll = @model.collection.name
-      coll.session.command({ compact: coll }) rescue nil
+      coll = @model.collection
+      coll.session.command({ compact: coll.name }) rescue nil
     end
 end

@@ -1,6 +1,6 @@
 # mongoid
 shared_examples "mongoid#save" do
-  it { expect(build(factory).save).to eq true }
+  it { expect { build(factory).save! }.not_to raise_error }
 end
 
 shared_examples "mongoid#find" do

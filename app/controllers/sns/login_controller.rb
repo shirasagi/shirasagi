@@ -2,6 +2,7 @@ class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
 
   skip_filter :logged_in?, only: [:login]
+  before_action :set_group
 
   navi_view nil
 
@@ -10,22 +11,28 @@ class Sns::LoginController < ApplicationController
       params.require(:item).permit(:email, :password, :ref)
     end
 
+    def set_group
+      in_group = params[:group_id] || params[:item].try(:[], :in_group)
+      @cur_group = SS::Group.or({ id: in_group }, { name: in_group }).first if in_group.present?
+      @cur_group = @cur_group.root if @cur_group.present?
+    end
+
   public
     def login
       @item = SS::User.new
-      @item.email    = params[:email]
-      @item.password = params[:password]
+      @item.in_id       = params[:item].try(:[], :in_id)
+      @item.password    = params[:item].try(:[], :password)
       return if !request.post?
 
       @item.attributes = get_params
-      user = SS::User.where(email: @item.email, password: SS::Crypt.crypt(@item.password)).first
+      user = SS::User.authenticate(@cur_group, @item.in_id, @item.password)
       return if !user
 
       if params[:ref].blank? || [sns_login_path, sns_mypage_path].index(params[:ref])
-        return set_user user, session: true, redirect: true
+        return set_user user, session: true, redirect: true, password: @item.password
       end
 
-      set_user user, session: true
+      set_user user, session: true, password: @item.password
       render action: :redirect
     end
 

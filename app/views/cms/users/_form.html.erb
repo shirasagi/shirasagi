@@ -2,11 +2,17 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
+  <dt><%= @model.t :uid %></dt>
+  <dd><%= f.text_field :in_uid %></dd>
+
   <dt><%= @model.t :email %></dt>
   <dd><%= f.email_field :email %></dd>
 
   <dt><%= @model.t :in_password %></dt>
   <dd><%= f.password_field :in_password %></dd>
+
+  <dt><%= @model.t :type %></dt>
+  <dd><%= f.select :type, @model.type_options %></dd>
 
   <dt><%= @model.t :group_ids %></dt>
   <dd>

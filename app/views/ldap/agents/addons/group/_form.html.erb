@@ -1,0 +1,11 @@
+<%
+  return render(text: "") unless @item.root?
+%>
+<dl class="see">
+  <dt><%= @model.t :ldap_host %><%= @model.tt :ldap_host %></dt>
+  <dd><%= f.text_field :ldap_host %></dd>
+  <dt><%= @model.t :ldap_dn %><%= @model.tt :ldap_dn %></dt>
+  <dd><%= f.text_field :ldap_dn %></dd>
+  <dt><%= @model.t :ldap_auth_method %><%= @model.tt :ldap_auth_method %></dt>
+  <dd><%= f.select :ldap_auth_method, @model.ldap_auth_method_options %></dd>
+</dl>
