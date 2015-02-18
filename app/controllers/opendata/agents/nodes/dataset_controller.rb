@@ -30,7 +30,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
 
       cond = { site_id: @cur_site.id, dataset_id: @dataset_idea.id }
       @ideas = Opendata::Idea.where(cond).order_by(:updated.asc)
-  end
+    end
 
   public
     def pages
