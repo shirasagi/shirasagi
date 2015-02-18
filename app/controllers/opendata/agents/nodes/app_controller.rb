@@ -5,6 +5,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
   include Opendata::AppFilter
 
   before_action :set_app, only: [:show_point, :add_point, :point_members]
+  before_action :set_ideas, only: [:show_ideas]
   skip_filter :logged_in?
 
   private
@@ -16,6 +17,19 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
         first
 
       raise "404" unless @app
+    end
+
+    def set_ideas
+      @app_idea_path = @cur_path.sub(/\/ideas\/.*/, ".html")
+
+      @app_idea = Opendata::App.site(@cur_site).public.
+        filename(@app_idea_path).
+        first
+
+      raise "404" unless @app_idea
+
+      cond = { site_id: @cur_site.id, app_id: @app_idea.id }
+      @ideas = Opendata::Idea.where(cond).order_by(:updated.asc)
     end
 
     def create_zip(items)
@@ -109,6 +123,11 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
     def point_members
       @cur_node.layout = nil
       @items = Opendata::AppPoint.where(site_id: @cur_site.id, app_id: @app.id)
+    end
+
+    def show_ideas
+      @cur_node.layout = nil
+      @login_mode = logged_in?(redirect: false)
     end
 
     def show

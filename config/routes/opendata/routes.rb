@@ -91,6 +91,7 @@ SS::Application.routes.draw do
     get "app/:app/point/show.:format" => "public#show_point", cell: "nodes/app", format: false
     get "app/:app/point/add.:format" => "public#add_point", cell: "nodes/app", format: false
     get "app/:app/point/members.html" => "public#point_members", cell: "nodes/app", format: false
+    get "app/:app/ideas/show.:format" => "public#show_ideas", cell: "nodes/app", format: false
 
     get "app/:app/zip" => "public#download", cell: "nodes/app", format: false
     get "app/:app/appfile/:id/" => "public#index", cell: "nodes/appfile"

@@ -44,6 +44,10 @@ class Opendata::App
       url.sub(/\.html$/, "") + "/point/members.html"
     end
 
+    def app_ideas_url
+      url.sub(/\.html$/, "") + "/ideas/show.html"
+    end
+
     def zip_url
       url.sub(/\.html$/, "") + "/zip"
     end
