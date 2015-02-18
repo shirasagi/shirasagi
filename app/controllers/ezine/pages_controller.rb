@@ -13,7 +13,7 @@ class Ezine::PagesController < ApplicationController
     end
 
     def pre_params
-      { state: 'closed' }
+      super.merge(state: 'closed')
     end
 
     def load_pages
