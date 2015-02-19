@@ -5,11 +5,9 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
 
   private
     def set_items
-      if params[:q].present?
-        @category_ids = params[:q][:category_ids].select{ |id| id.present? }.map{ |id| id.to_i }
-        @service_ids  = params[:q][:service_ids].select{ |id| id.present? }.map{ |id| id.to_i }
-        @location_ids = params[:q][:location_ids].select{ |id| id.present? }.map{ |id| id.to_i }
-      end
+      @category_ids = params[:category_ids].select(&:present?).map(&:to_i) rescue nil
+      @service_ids  = params[:service_ids].select(&:present?).map(&:to_i) rescue nil
+      @location_ids = params[:location_ids].select(&:present?).map(&:to_i) rescue nil
 
       q_category = @category_ids.present? ? { category_ids: @category_ids } : {}
       q_service  = @service_ids.present? ? { service_ids: @service_ids } : {}

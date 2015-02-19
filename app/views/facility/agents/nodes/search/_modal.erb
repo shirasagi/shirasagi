@@ -8,10 +8,10 @@ $ ->
 <%= form_tag search_path, multipart: true, method: "get" do %>
   <div class="category">
     <h2><%= t("facility.category.setting") %></h2>
-    <%= hidden_field_tag 'q[category_ids][]', "" %>
+    <%= hidden_field_tag 'category_ids[]', "" %>
     <% @cur_node.st_categories.each do |cate| %>
       <div class="<%= cate.basename %>">
-        <%= check_box_tag 'q[category_ids][]', cate.id, @categories.pluck(:_id).index(cate.id),
+        <%= check_box_tag 'category_ids[]', cate.id, @categories.pluck(:_id).index(cate.id),
           { :id => "q_category_ids_#{cate.id}", :class => "prop"} %>
         <label for=<%= "q_category_ids_#{cate.id}" %>><%= cate.name %></label>
       </div>
@@ -20,10 +20,10 @@ $ ->
 
   <div class="service">
     <h2><%= t("facility.service.setting") %></h2>
-    <%= hidden_field_tag 'q[service_ids][]', "" %>
+    <%= hidden_field_tag 'service_ids[]', "" %>
     <% @cur_node.st_services.each do |cate| %>
       <div class="<%= cate.basename %>">
-        <%= check_box_tag 'q[service_ids][]', cate.id, @services.pluck(:_id).index(cate.id),
+        <%= check_box_tag 'service_ids[]', cate.id, @services.pluck(:_id).index(cate.id),
           { :id => "q_service_ids_#{cate.id}", :class => "prop"} %>
         <label for=<%= "q_service_ids_#{cate.id}" %>><%= cate.name %></label>
       </div>
@@ -32,10 +32,10 @@ $ ->
 
   <div class="location">
     <h2><%= t("facility.location.setting") %></h2>
-    <%= hidden_field_tag 'q[location_ids][]', "" %>
+    <%= hidden_field_tag 'location_ids[]', "" %>
     <% @cur_node.st_locations.each do |cate| %>
       <div class="<%= cate.basename %>">
-        <%= check_box_tag 'q[location_ids][]', cate.id, @locations.pluck(:_id).index(cate.id),
+        <%= check_box_tag 'location_ids[]', cate.id, @locations.pluck(:_id).index(cate.id),
           { :id => "q_location_ids_#{cate.id}", :class => "prop"} %>
       <label for=<%= "q_location_ids_#{cate.id}" %>><%= cate.name %></label>
       </div>
