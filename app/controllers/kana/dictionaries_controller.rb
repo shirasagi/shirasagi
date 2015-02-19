@@ -20,6 +20,12 @@ class Kana::DictionariesController < ApplicationController
       raise "403" unless @item
     end
 
+    def item_ids
+      return [] if params["item"].blank?
+      return [] if params["item"]["ids"].blank?
+      params["item"]["ids"].map { |v| v.to_i }
+    end
+
   public
     def index
       raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site) || @model.allowed?(:read, @cur_user, site: @cur_site)
@@ -30,12 +36,20 @@ class Kana::DictionariesController < ApplicationController
         page(params[:page]).per(50)
     end
 
+    def build_confirmation
+      raise "403" unless @model.allowed?(:build, @cur_user, site: @cur_site)
+
+      @items = @model.site(@cur_site).
+          search(params[:s]).
+          order_by(name: 1)
+    end
+
     def build
       raise "403" unless @model.allowed?(:build, @cur_user, site: @cur_site)
 
       put_history_log
       begin
-        error_message = @model.build_dic @cur_site.id
+        error_message = @model.build_dic(@cur_site.id, item_ids)
         unless error_message
           redirect_to({ action: :index }, { notice: t("kana.build_success") })
           return

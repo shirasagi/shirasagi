@@ -5,6 +5,7 @@ describe "kana_dictionaries" do
   subject(:index_path) { kana_dictionaries_path site.host }
   subject(:new_path) { new_kana_dictionary_path site.host }
   subject(:build_path) { kana_dictionaries_build_path site.host }
+  subject(:build_confirmation_path) { kana_dictionaries_build_confirmation_path site.host }
 
   it "without login" do
     visit index_path
@@ -71,9 +72,15 @@ describe "kana_dictionaries" do
 
       describe "#build", mecab: true do
         it "will be success" do
-          visit build_path
+          visit build_confirmation_path
           expect(status_code).to eq 200
-          expect(current_path).to eq index_path
+          expect(current_path).to eq build_confirmation_path
+
+          within("footer.send") do
+            click_button I18n.t("kana.views.button.build_kana_dictionary")
+            expect(status_code).to eq 200
+            expect(current_path).to eq index_path
+          end
         end
       end
     end
@@ -105,9 +112,15 @@ describe "kana_dictionaries" do
 
       describe "#build", mecab: true do
         it "will be bad request" do
-          visit build_path
-          expect(status_code).to eq 400
-          expect(current_path).to eq build_path
+          visit build_confirmation_path
+          expect(status_code).to eq 200
+          expect(current_path).to eq build_confirmation_path
+
+          within("footer.send") do
+            click_button I18n.t("kana.views.button.build_kana_dictionary")
+            expect(status_code).to eq 400
+            expect(current_path).to eq build_path
+          end
         end
       end
     end
