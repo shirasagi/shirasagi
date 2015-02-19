@@ -46,7 +46,7 @@ class Kana::Dictionary
           self.master_root + "/" + site_id.to_s.split(//).join("/") + "/_/user.dic"
         end
 
-        def build_dic(site_id)
+        def build_dic(site_id, item_ids)
           mecab_indexer = SS.config.kana.mecab_indexer
           mecab_dicdir = SS.config.kana.mecab_dicdir
 
@@ -56,7 +56,7 @@ class Kana::Dictionary
           ::Dir.mktmpdir do |dir|
             tmp_src = File.join(dir, make_tmpname("txt"))
 
-            count = build_source(site_id, tmp_src)
+            count = build_source(build_criteria(site_id, item_ids), tmp_src)
             return I18n.t("kana.build_fail.no_content") if count == 0
 
             tmp_dic = File.join(dir, make_tmpname("dic"))
@@ -98,15 +98,21 @@ class Kana::Dictionary
         end
 
       private
+        def build_criteria(site_id, item_ids)
+          criteria = where(site_id: site_id)
+          criteria = criteria.where(:id.in => item_ids) if item_ids.present?
+          criteria
+        end
+
         def make_tmpname(suffix)
           # blow code come from Tmpname::make_tmpname
           "mecab#{Time.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
         end
 
-        def build_source(site_id, output_file)
+        def build_source(criteria, output_file)
           count = 0
           ::File.open(output_file, "w:UTF-8") do |f|
-            each_all_csv(site_id) do |word, yomi|
+            each_all_csv(criteria) do |word, yomi|
               f.puts "#{word},*,*,#{DEFAULT_COST},#{DEFAULT_POS.join(',')},*,*,#{word},#{yomi},#{yomi}"
               count += 1
             end
@@ -114,8 +120,8 @@ class Kana::Dictionary
           count
         end
 
-        def each_all_csv(site_id)
-          where(site_id: site_id).each do |item|
+        def each_all_csv(criteria)
+          criteria.each do |item|
             item.enumerate_csv.each do |word, yomi|
               yield word, yomi
             end

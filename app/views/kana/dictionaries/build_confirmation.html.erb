@@ -1,0 +1,48 @@
+<%= scss do %>
+  .build-confirmation-info {
+    h1 {
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    p {
+      margin-bottom: 15px;
+    }
+  }
+<% end %>
+
+<%= form_for :item, url: { action: :build }, html: {id: "item-form", method: :post, multipart: true, autocomplete: :off} do |f| %>
+  <%= error_messages_for :item %>
+
+  <header class="build-confirmation-info">
+    <h1><%= t "kana.build_confirmation.header" %></h1>
+    <p><%= t "kana.build_confirmation.description" %></p>
+  </header>
+
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= @model.t :name %></th>
+      <th class="datetime"><%= @model.t :updated %></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= f.hidden_field "ids[]", value: item.id %><%= item.name %></td>
+        <td><%= item.updated.strftime("%Y/%m/%d") %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <footer class="send">
+    <%= f.submit t("kana.views.button.build_kana_dictionary"), class: :save %>
+    <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+
+<% end %>
+
+<%= jquery do %>
+  SS.confirmUnloading();
+<% end %>

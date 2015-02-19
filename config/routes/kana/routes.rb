@@ -7,7 +7,8 @@ SS::Application.routes.draw do
   end
 
   namespace("kana", as: "kana", path: ".:site/kana", module: "kana") do
-    get "dictionaries/build" => "dictionaries#build"
+    get "dictionaries/build_confirmation" => "dictionaries#build_confirmation"
+    post "dictionaries/build" => "dictionaries#build"
     resources :dictionaries, concerns: :deletion
   end
 end

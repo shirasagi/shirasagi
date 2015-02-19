@@ -51,7 +51,7 @@ describe Kana::Dictionary do
         user_dic = model.master_dic(item.site_id)
         Fs.rm_rf(user_dic) if Fs.exists?(user_dic)
 
-        model.build_dic(item.site_id)
+        model.build_dic(item.site_id, [ item.id ])
         expect(Fs.exists?(user_dic)).to be true
       end
 
