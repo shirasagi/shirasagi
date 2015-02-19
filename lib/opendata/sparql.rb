@@ -52,6 +52,7 @@ module Opendata::Sparql
           client.update(sparql)
 
         rescue => e
+          temp_file.close(true) if temp_file
           raise e
         ensure
           temp_file.close(true) if temp_file
