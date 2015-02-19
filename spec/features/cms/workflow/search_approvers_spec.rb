@@ -28,7 +28,7 @@ describe "cms_workflow_search_approvers" do
         expect(all("option").reduce([]) { |a, e| a << e.value }).to include "#{group.id}"
       end
       within("table.index") do
-        expect(find("a.select-item").text).to eq "#{user.name}"
+        expect(find("a.select-item").text).to eq "#{user.long_name}"
       end
 
       expect(current_path).not_to eq sns_login_path
