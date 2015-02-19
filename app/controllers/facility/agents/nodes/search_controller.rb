@@ -3,7 +3,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   helper Cms::ListHelper
   helper Map::MapHelper
 
-  public
+  private
     def set_items
       if params[:q].present?
         @category_ids = params[:q][:category_ids].select{ |id| id.present? }.map{ |id| id.to_i }
@@ -27,12 +27,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
         order_by(name: 1)
     end
 
-    def index
-    end
-
-    def map
-      set_items
-
+    def set_markers
       @markers = []
       @items.each do |item|
         category_ids = item.categories.pluck(:_id)
@@ -52,6 +47,28 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
           end
         end
       end
+    end
+
+  public
+    def index
+    end
+
+    def map
+      set_items
+      set_markers
+    end
+
+    def map_all
+      @items = Facility::Node::Page.site(@cur_site).public.
+        where(@cur_node.condition_hash).
+        order_by(name: 1)
+
+      @categories = Facility::Node::Category.in(_id: [])
+      @services   = Facility::Node::Service.in(_id: [])
+      @locations  = Facility::Node::Location.in(_id: [])
+      set_markers
+
+      render :map
     end
 
     def result

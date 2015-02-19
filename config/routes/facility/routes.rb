@@ -28,6 +28,7 @@ SS::Application.routes.draw do
 
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
     get "search/(map.:format)" => "public#map", cell: "nodes/search"
+    get "search/(map-all.:format)" => "public#map_all", cell: "nodes/search"
     get "search/(result.:format)" => "public#result", cell: "nodes/search"
   end
 
