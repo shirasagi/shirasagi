@@ -101,4 +101,22 @@ describe Voice::Scraper do
       end
     end
   end
+
+  context "when <script type=\"text/javascript\"> is given" do
+    html = <<-EOF
+      <div id="google_translate_element"></div><script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ja', layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL, multilanguagePage: true}, 'google_translate_element');
+      }
+      </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    EOF
+    texts = Voice::Scraper.new.extract_text html
+
+    it 'is array' do
+      expect(texts).to be_a(Array)
+    end
+    it 'is empty' do
+      expect(texts.length).to eq 0
+    end
+  end
 end
