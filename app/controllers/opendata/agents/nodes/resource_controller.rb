@@ -25,7 +25,10 @@ class Opendata::Agents::Nodes::ResourceController < ApplicationController
       @item = @dataset.resources.find_by id: params[:id], filename: params[:filename].force_encoding("utf-8")
       @item.dataset.inc downloaded: 1
 
-      send_file @item.file.path, type: @item.content_type, filename: @item.filename,
+      filename = @item.filename
+      filename = ERB::Util.url_encode(filename) if browser.ie?
+
+      send_file @item.file.path, type: @item.content_type, filename: filename,
         disposition: :attachment, x_sendfile: true
     end
 
