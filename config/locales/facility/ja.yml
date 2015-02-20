@@ -44,6 +44,10 @@ ja:
       search: この条件で検索する
       reset: 検索条件をリセットする
       change: 検索条件を変更する
+    import:
+      start: 施設情報の更新処理を開始しました。
+      invalid_file: CSV形式のファイルを選択してください。
+      log: インポートログ
 
   modules:
     facility: 施設
@@ -77,13 +81,20 @@ ja:
       facility/node/page:
         name: 施設名
         kana: 施設名ふりがな
+        layout: レイアウト
         postcode: 郵便番号
         address: 住所
         tel: 電話番号
         fax: FAX
         related_url: URL
+        categories: 施設の種類
+        services: 施設の用途
+        locations: 施設の地域
+        additional_info: 追加情報
         field: 項目名
         value: 内容
+        map_points: 座標
+        groups: 管理グループ
       facility/node/search:
         search_html: 検索HTML
         map_html: 地図HTML
@@ -96,6 +107,10 @@ ja:
         image_thumb_size: サムネイルサイズ
         image_thumb_width: 幅
         image_thumb_height: 高さ
+
+  job:
+    models:
+      facility/import_job: 施設情報インポート
 
   tooltip:
     facility/addon/body:

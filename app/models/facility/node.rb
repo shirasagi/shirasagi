@@ -24,6 +24,10 @@ module Facility::Node
     include Facility::Addon::Location
 
     default_scope ->{ where(route: "facility/page") }
+
+    def serve_static_file?
+      false
+    end
   end
 
   class Search

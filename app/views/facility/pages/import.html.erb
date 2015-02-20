@@ -1,0 +1,20 @@
+<%= form_for :item, url: { action: :import }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t(:import) %></h2></header>
+    <dl class="see">
+      <dt><%= t(:file) %></dt>
+      <dd><%= f.file_field :file %></dd>
+      <dt><%= t "facility.import.log" %></dt>
+      <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
+    </dl>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t(:import), class: :save %>
+  <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>
