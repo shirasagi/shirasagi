@@ -32,6 +32,11 @@ class ApplicationController < ActionController::Base
       request.env["HTTP_X_REAL_IP"] || request.remote_addr
     end
 
+    def browser
+      require "browser"
+      Browser.new(ua: request.user_agent, accept_language: request.accept_language)
+    end
+
     # Accepts the request for Cross-Origin Resource Sharing.
     # @return boolean
     def accept_cors_request
