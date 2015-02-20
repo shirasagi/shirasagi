@@ -9,7 +9,7 @@ $ ->
   <div class="category">
     <h2><%= t("facility.category.setting") %></h2>
     <%= hidden_field_tag 'category_ids[]', "" %>
-    <% @cur_node.st_categories.each do |cate| %>
+    <% @cur_node.st_categories.order_by(order: 1).each do |cate| %>
       <div class="<%= cate.basename %>">
         <%= check_box_tag 'category_ids[]', cate.id, nil,
           { :id => "q_category_ids_#{cate.id}", :class => "prop"} %>
@@ -21,7 +21,7 @@ $ ->
   <div class="service">
     <h2><%= t("facility.service.setting") %></h2>
     <%= hidden_field_tag 'service_ids[]', "" %>
-    <% @cur_node.st_services.each do |cate| %>
+    <% @cur_node.st_services.order_by(order: 1).each do |cate| %>
       <div class="<%= cate.basename %>">
         <%= check_box_tag 'service_ids[]', cate.id, nil,
           { :id => "q_service_ids_#{cate.id}", :class => "prop"} %>
@@ -33,7 +33,7 @@ $ ->
   <div class="location">
     <h2><%= t("facility.location.setting") %></h2>
     <%= hidden_field_tag 'location_ids[]', "" %>
-    <% @cur_node.st_locations.each do |cate| %>
+    <% @cur_node.st_locations.order_by(order: 1).each do |cate| %>
       <div class="<%= cate.basename %>">
         <%= check_box_tag 'location_ids[]', cate.id, nil,
           { :id => "q_location_ids_#{cate.id}", :class => "prop"} %>
