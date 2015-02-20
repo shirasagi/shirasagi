@@ -23,7 +23,7 @@ describe Voice::Scraper do
         expect(texts).to include(include("平田 13μg/㎥。"))
       end
       it 'contains "シラサギ市南区"' do
-        expect(texts).to include(include('"シラサギ市南区"&<>'))
+        expect(texts).to include(include("シラサギ市南区"))
       end
       it 'does not contain "本文へ"' do
         expect(texts).not_to include(include("本文へ"))
@@ -99,6 +99,72 @@ describe Voice::Scraper do
       it 'is empty' do
         expect(texts.length).to eq 0
       end
+    end
+  end
+
+  context "when <script type=\"text/javascript\"> is given" do
+    html = <<-EOF
+      <div id="google_translate_element"></div><script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ja', layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL, multilanguagePage: true}, 'google_translate_element');
+      }
+      </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    EOF
+    texts = Voice::Scraper.new.extract_text html
+
+    it 'is array' do
+      expect(texts).to be_a(Array)
+    end
+    it 'is empty' do
+      expect(texts.length).to eq 0
+    end
+  end
+
+  context "when http entity &rsaquo; is given" do
+    html = "<p>&rsaquo;</p>"
+    texts = Voice::Scraper.new.extract_text html
+
+    it 'is array' do
+      expect(texts).to be_a(Array)
+    end
+    it 'is empty' do
+      expect(texts.length).to eq 0
+    end
+  end
+
+  context "when http entity &sup2; is given" do
+    html = "<p>&sup2;</p>"
+    texts = Voice::Scraper.new.extract_text html
+
+    it 'is array' do
+      expect(texts).to be_a(Array)
+    end
+    it 'is empty' do
+      expect(texts.length).to eq 0
+    end
+  end
+
+  context "when http entity &Eacute; is given" do
+    html = "<p>&Eacute;</p>"
+    texts = Voice::Scraper.new.extract_text html
+
+    it 'is array' do
+      expect(texts).to be_a(Array)
+    end
+    it 'is empty' do
+      expect(texts.length).to eq 0
+    end
+  end
+
+  context "when http entity &#174; is given" do
+    html = "<p>&#174;</p>"
+    texts = Voice::Scraper.new.extract_text html
+
+    it 'is array' do
+      expect(texts).to be_a(Array)
+    end
+    it 'is empty' do
+      expect(texts.length).to eq 0
     end
   end
 end

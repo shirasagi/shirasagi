@@ -18,7 +18,7 @@ class Voice::Scraper
       if html =~ /<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->/i
         html.gsub!(/<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{@skip_marks[1]}\s[^>]*?-->/im, '')
       end
-      html.gsub!(/<\s*(#{@delete_tags.join("|")})\s*>.*?<\/\s*\1\s*>/im, '')
+      html.gsub!(/<\s*(#{@delete_tags.join("|")})(\s|>).*?<\/\s*\1\s*>/im, '')
 
       # <img> tag's special case
       html.gsub!(/<\s*img[^>]*>/im) do |m|
@@ -29,8 +29,12 @@ class Voice::Scraper
       html.gsub!(/<\s*(#{@kuten_tags.join("|")})\s*\/>/i, "\n")
       html.gsub!(/<\/?[a-z!][^>]*?>/i, "")
 
-      html = CGI::unescapeHTML(html)
+      # remove html entity
       html.gsub!("&nbsp;", " ")
+      html.gsub!(/&[a-z0-9]+;/i, " ")
+      html.gsub!(/&#[0-9]+;/i, " ")
+      html = CGI::unescapeHTML(html)
+
       html.gsub!(/\s*。+\s*/, "。")
       html.gsub!(/。+/, "。")
       # html.tr!('０-９ａ-ｚＡ-Ｚ', '0-9a-zA-Z')
