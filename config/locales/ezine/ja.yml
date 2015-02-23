@@ -4,8 +4,6 @@ ja:
     member: メルマガ読者
     test_member: テスト読者
     entry: 登録履歴
-    preview_html: HTML版プレビュー
-    preview_text: テキスト版プレビュー
     deliver_test: テスト配信
     deliver: 本配信
     sent_log: 配信ログ
