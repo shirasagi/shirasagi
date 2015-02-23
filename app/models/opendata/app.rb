@@ -14,7 +14,7 @@ class Opendata::App
   field :text, type: String
   field :appurl, type: String
   field :tags, type: SS::Extensions::Words
-  field :excuted, type: Integer
+  field :executed, type: Integer
 
   has_many :points, primary_key: :app_id, class_name: "Opendata::AppPoint",
     dependent: :destroy

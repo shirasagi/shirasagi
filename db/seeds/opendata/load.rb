@@ -184,6 +184,7 @@ save_part filename: "portal-kv.part.html" , name: "ポータル：キービジ�
 save_part filename: "portal-about.part.html" , name: "ポータル：Our Open Dateとは", route: "cms/free"
 save_part filename: "portal-tab.part.html" , name: "ポータル：新着タブ", route: "cms/tabs", conditions: %w(info event), limit: 5
 save_part filename: "portal-dataset.part.html" , name: "ポータル：オープンデータカタログ", route: "opendata/dataset", limit: 5
+save_part filename: "portal-app.part.html" , name: "ポータル：オープンアプリマーケット", route: "opendata/app", limit: 5
 save_part filename: "portal-idea.part.html" , name: "ポータル：オープンアイデアボックス", route: "opendata/idea", limit: 5
 save_part filename: "portal-plan.part.html" , name: "ポータル：公開予定", route: "cms/free"
 save_part filename: "portal-fb.part.html" , name: "ポータル：facebook", route: "cms/free"

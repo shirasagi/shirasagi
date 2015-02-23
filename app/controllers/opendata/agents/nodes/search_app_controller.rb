@@ -15,7 +15,7 @@ class Opendata::Agents::Nodes::SearchAppController < ApplicationController
       when "popular"
         sort = { point: -1 }
       when "attention"
-        sort = { excuted: -1 }
+        sort = { executed: -1 }
       else
         sort = { released: -1 }
       end

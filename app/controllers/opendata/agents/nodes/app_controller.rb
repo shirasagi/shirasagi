@@ -61,12 +61,12 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
       @rss_url        = search_apps_path + "rss.xml?"
       @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
-      @excute_items   = pages.order_by(excuted: -1).limit(10)
+      @execute_items   = pages.order_by(executed: -1).limit(10)
 
       @tabs = [
         { name: "新着順", url: "#{@search_url}&sort=released", pages: @items, rss: "#{@rss_url}&sort=released" },
         { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items, rss: "#{@rss_url}&sort=popular" },
-        { name: "注目順", url: "#{@search_url}&sort=attention", pages: @excute_items, rss: "#{@rss_url}&sort=attention" }
+        { name: "注目順", url: "#{@search_url}&sort=attention", pages: @execute_items, rss: "#{@rss_url}&sort=attention" }
       ]
 
       max = 50

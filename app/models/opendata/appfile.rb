@@ -6,6 +6,7 @@ class Opendata::Appfile
   field :name, type: String
   field :filename, type: String
   field :text, type: String
+  field :format, type: String
 
   embedded_in :app, class_name: "Opendata::App", inverse_of: :appfile
   belongs_to_file :file
@@ -48,8 +49,12 @@ class Opendata::Appfile
   private
     def set_filename
       self.filename = in_file.original_filename
+      self.format = filename.sub(/.*\./, "").upcase if format.blank?
     end
 
+    def set_format
+      self.format = format.upcase if format.present?
+    end
   class << self
     public
       def allowed?(action, user, opts = {})
