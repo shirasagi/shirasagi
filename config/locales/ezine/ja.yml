@@ -46,6 +46,7 @@ ja:
         name: 記事タイトル
         html: 本文（HTML版）
         text: 本文（テキスト版）
+        results: 配信開始日時
       ezine/member:
         email: メールアドレス
         email_type: 配信形式
