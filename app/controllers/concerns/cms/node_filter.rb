@@ -3,6 +3,7 @@ module Cms::NodeFilter
   include Cms::CrudFilter
 
   included do
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move]
     before_action :change_item_class, if: -> { @item.present? }
   end
 
@@ -57,5 +58,39 @@ module Cms::NodeFilter
       @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
       render_update @item.update, location: redirect_url
+    end
+
+    def move
+      @filename = params[:filename]
+      @source = params[:source]
+      destination = params[:destination]
+      confirm = params[:confirm]
+
+      if request.get? || confirm
+        if confirm
+          @item.validate_destination_filename(destination)
+          @item.filename = destination
+        end
+
+        if @item.errors.empty? && @source.present?
+          words = [ "\"/#{@source}\"" ]
+          words << "\"/#{@source.sub(/index.html$/, "")}\"" if @source =~ /\/index.html$/
+          words = words.join(" ")
+
+          cond = Cms::Page.keyword_in(words, :html, :question).selector
+          cond["$or"] = cond["$and"]
+          cond.delete("$and")
+
+          @pages = Cms::Page.site(@cur_site).where(cond).limit(500)
+          @parts = Cms::Part.site(@cur_site).where(cond).limit(500)
+          @layouts = Cms::Layout.site(@cur_site).where(cond).limit(500)
+        end
+
+        @source ||= @item.filename
+        @filename ||= @item.filename
+      else
+        raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
+        render_update @item.move(destination), location: { action: :move, source: @source }, render: { file: :move }
+      end
     end
 end

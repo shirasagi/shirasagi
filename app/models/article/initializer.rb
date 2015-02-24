@@ -9,5 +9,7 @@ module Article
     Cms::Role.permission :edit_private_article_pages
     Cms::Role.permission :delete_other_article_pages
     Cms::Role.permission :delete_private_article_pages
+    Cms::Role.permission :move_private_article_pages
+    Cms::Role.permission :move_other_article_pages
   end
 end
