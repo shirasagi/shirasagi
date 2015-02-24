@@ -35,6 +35,7 @@ CentOS 6.6/64bit
 --------------------
 # SHIRASAGI
 
+  set ss_root=/var/www/shirasagi
   git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi /var/www/shirasagi
   cd /var/www/shirasagi
   cp -n config/samples/* config/
@@ -57,7 +58,8 @@ CentOS 6.6/64bit
 
   cd /usr/local/src
   tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz && cd mecab-ipadic-2.7.0-20070801
-  ./configure --with-charset=utf8 && make && make install
+  patch -p1 < $ss_root/doc/mecab-ipadic-2.7.0-20070801.patch
+  ./configure --with-charset=UTF-8 && make && make install
 
   cd /usr/local/src
   tar xvzf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996
