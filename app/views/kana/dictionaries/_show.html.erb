@@ -1,7 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :body %></dt>
-  <dd><%= text_area_tag :body, @item.body, style: "height: 400px;" %></dd>
+  <dd style="overflow: scroll; height: 400px;"><%= br @item.body %></dd>
 </dl>
