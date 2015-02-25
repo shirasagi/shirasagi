@@ -33,10 +33,12 @@ class ApplicationMailer
     end
 
     def set_sendmail(conf)
-      ActionMailer::Base.sendmail_settings = {
-        location: conf['location'],
-        arguments: conf['arguments']
-      }
+      if conf['location'].present?
+        ActionMailer::Base.sendmail_settings["location"] = conf['location']
+      end
+      if conf['location'].present?
+        ActionMailer::Base.sendmail_settings["arguments"] = conf['arguments']
+      end
     end
   end
 end
