@@ -3,6 +3,7 @@
     <tr>
       <th style="width: 20px;"><input type="checkbox" /></th>
       <th><%= @model.t :name %></th>
+      <th><%= @model.t :test_delivered %></th>
       <th><%= @model.t :results %></th>
       <th class="datetime"><%= @model.t :updated %></th>
     </tr>
@@ -20,6 +21,7 @@
         </nav>
       </td>
       <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
+      <td><%= item.test_delivered.strftime("%Y/%m/%d %H:%M") unless item.test_delivered.nil? %></td>
       <td><%= item.results[0].strftime("%Y/%m/%d %H:%M") unless item.results[0].nil? %></td>
       <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
