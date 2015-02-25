@@ -49,6 +49,7 @@ ja:
         name: 記事タイトル
         html: 本文（HTML版）
         text: 本文（テキスト版）
+        test_delivered: テスト配信完了日時
         results: 配信開始日時
       ezine/member:
         email: メールアドレス

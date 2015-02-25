@@ -4,6 +4,7 @@ class Ezine::Page
   include Cms::Addon::ReleasePlan
   include Ezine::Addon::Page::Body
 
+  field :test_delivered, type: DateTime
   field :results, type: Array, default: []
   field :completed, type: Boolean, default: false
 
@@ -63,6 +64,7 @@ class Ezine::Page
       Ezine::TestMember.where(node_id: parent.id).each do |test_member|
         deliver_to test_member
       end
+      update test_delivered: Time.now
     end
 
   private
