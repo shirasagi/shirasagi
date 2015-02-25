@@ -244,13 +244,13 @@ def save_license(data)
   item.update data
 end
 
-save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 1
-save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 2
-save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 3
-save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 4
-save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 5
-save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_file("cc-by-nc-sa.png"), order: 6
-save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 7
+save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1
+save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 2
+save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 3
+save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 4
+save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_file("cc-by-nc-sa.png"), order: 5
+save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 6
+save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 7
 
 ## -------------------------------------
 puts "# opendata dataset_groups"
