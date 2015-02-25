@@ -98,7 +98,6 @@ module SS::Task::Model
     end
 
     def log(msg)
-      puts msg
       self.logs << msg
     end
 
