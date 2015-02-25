@@ -14,6 +14,8 @@ class Ezine::Member
   belongs_to :node, class_name: "Cms::Node"
 
   validates :email, uniqueness: { scope: :node_id }, presence: true, email: true
+  validates :email_type, inclusion: { in: %w(text html) }
+  validates :state, inclusion: { in: [true, false] }
 
   public
     def email_type_options
