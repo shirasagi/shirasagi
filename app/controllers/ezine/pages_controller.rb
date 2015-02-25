@@ -76,10 +76,4 @@ class Ezine::PagesController < ApplicationController
         order_by(created: -1).
         page(params[:page]).per(50)
     end
-
-    def preview_text
-      load_pages
-      item = @items.find(params[:id])
-      render text: item.text.gsub(/\r\n|\r|\n/, "<br />")
-    end
 end

@@ -3,6 +3,7 @@ class Ezine::TestMember
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::Permission
+  include Ezine::MemberSearchable
 
   field :email, type: String, metadata: { from: :email }
   field :email_type, type: String

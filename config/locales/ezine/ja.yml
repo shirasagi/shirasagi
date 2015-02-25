@@ -4,8 +4,6 @@ ja:
     member: メルマガ読者
     test_member: テスト読者
     entry: 登録履歴
-    preview_html: HTML版プレビュー
-    preview_text: テキスト版プレビュー
     deliver_test: テスト配信
     deliver: 本配信
     sent_log: 配信ログ
@@ -20,6 +18,9 @@ ja:
     notice:
       delivered: 配信を開始しました
       delivered_test: テスト配信を完了しました
+    state:
+      enable: 配信する
+      disable: 配信しない
 
   modules:
     ezine: メールマガジン
@@ -48,9 +49,11 @@ ja:
         name: 記事タイトル
         html: 本文（HTML版）
         text: 本文（テキスト版）
+        results: 配信開始日時
       ezine/member:
         email: メールアドレス
         email_type: 配信形式
+        state: 配信状態
       ezine/test_member:
         email: メールアドレス
         email_type: 配信形式

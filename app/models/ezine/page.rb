@@ -32,7 +32,7 @@ class Ezine::Page
     def members_to_deliver
       return [] if completed
       emails = Ezine::SentLog.where(page_id: id).map(&:email)
-      Ezine::Member.where(node_id: parent.id, email: {"$nin" => emails})
+      Ezine::Member.where(state: true, node_id: parent.id, email: {"$nin" => emails})
     end
 
     # Deliver a mail to a member.

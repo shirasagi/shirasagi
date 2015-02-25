@@ -1,0 +1,14 @@
+<dl class="ezine-form see">
+  <dt><%= @model.t :email %></dt>
+  <dd><%= f.text_field :email %></dd>
+
+  <dt><%= @model.t :email_type %></dt>
+  <dd>
+  <% @item.email_type_options.each do |email_type| %>
+    <%= f.radio_button :email_type, email_type[1] %><%= email_type[0] %>
+  <% end %>
+  </dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.check_box :state %><%= t("ezine.state.enable") %></dd>
+</dl>
