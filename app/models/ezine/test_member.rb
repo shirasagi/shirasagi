@@ -14,6 +14,9 @@ class Ezine::TestMember
 
   validates :email, uniqueness: { scope: :node_id }, presence: true, email: true
 
+  # Test member is always "enabled".
+  scope :enabled, ->{ all }
+
   public
     def email_type_options
       [%w(テキスト版 text), %w(HTML版 html)]

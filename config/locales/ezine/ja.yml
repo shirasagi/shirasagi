@@ -19,8 +19,8 @@ ja:
       delivered: 配信を開始しました
       delivered_test: テスト配信を完了しました
     state:
-      enable: 配信する
-      disable: 配信しない
+      enabled: 配信する
+      disabled: 配信しない
 
   modules:
     ezine: メールマガジン
