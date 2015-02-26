@@ -12,9 +12,9 @@ class ApplicationMailer
         conf = yml[Rails.env.to_s]
         ActionMailer::Base.delivery_method = conf['delivery_method']
         ActionMailer::Base.default from: conf['default_from'], charset: conf['default_charset']
-        if conf['delivery_method'] == :smtp
+        if conf['delivery_method'] == 'smtp'
           set_smtp conf
-        elsif conf['delivery_method'] == :sendmail
+        elsif conf['delivery_method'] == 'sendmail'
           set_sendmail conf
         end
       end
@@ -33,10 +33,12 @@ class ApplicationMailer
     end
 
     def set_sendmail(conf)
-      ActionMailer::Base.sendmail_settings = {
-        location: conf['location'],
-        arguments: conf['arguments']
-      }
+      if conf['location'].present?
+        ActionMailer::Base.sendmail_settings["location"] = conf['location']
+      end
+      if conf['location'].present?
+        ActionMailer::Base.sendmail_settings["arguments"] = conf['arguments']
+      end
     end
   end
 end
