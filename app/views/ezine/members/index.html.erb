@@ -1,8 +1,12 @@
+<%= render file: "app/views/ss/crud/_search" %>
+
 <table class="index">
   <thead>
     <tr>
+      <th style="width: 20px;"><input type="checkbox" /></th>
       <th><%= @model.t :email %></th>
       <th><%= @model.t :email_type %></th>
+      <th><%= @model.t :state %></th>
       <th class="datetime"><%= @model.t :updated %></th>
     </tr>
   </thead>
@@ -10,8 +14,17 @@
   <tbody>
     <% @items.each do |item| %>
     <tr>
-      <td><%= item.email %></td>
+      <td>
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to :edit, action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        </nav>
+      </td>
+      <td><%= link_to item.email, { action: :show, id: item } %></td>
       <td><%= item.email_type %></td>
+      <td><%= item.state ? t("ezine.state.enable") : t("ezine.state.disable") %></td>
       <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>
