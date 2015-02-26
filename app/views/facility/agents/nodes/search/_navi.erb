@@ -17,11 +17,12 @@
 
 <nav class="tabs">
   <ul>
-    <li class="tab<%= current == "map" ? " current" : "" %>">
-      <%= link_to t("facility.tab.map"), "./map.html?#{{q: params[:q]}.to_query}" %>
+    <% query = params.select{ |k, v| %(category_ids service_ids location_ids).index(k) }.to_query %>
+    <li class="tab map<%= current == "map" ? " current" : "" %>">
+      <%= link_to t("facility.tab.map"), "./map.html?#{query}" %>
     </li>
-    <li class="tab<%= current == "result" ? " current" : "" %>">
-      <%= link_to t("facility.tab.result"), "./result.html?#{{q: params[:q]}.to_query}" %>
+    <li class="tab list<%= current == "result" ? " current" : "" %>">
+      <%= link_to t("facility.tab.result"), "./result.html?#{query}" %>
     </li>
   </ul>
 </nav>
