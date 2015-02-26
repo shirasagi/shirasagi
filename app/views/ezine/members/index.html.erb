@@ -24,7 +24,7 @@
       </td>
       <td><%= link_to item.email, { action: :show, id: item } %></td>
       <td><%= item.email_type %></td>
-      <td><%= item.state ? t("ezine.state.enable") : t("ezine.state.disable") %></td>
+      <td><%= t('ezine.state.' + item.state) %></td>
       <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>

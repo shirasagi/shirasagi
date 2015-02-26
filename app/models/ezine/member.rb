@@ -7,7 +7,7 @@ class Ezine::Member
 
   field :email, type: String, metadata: { from: :email }
   field :email_type, type: String
-  field :state, type: Boolean, default: true
+  field :state, type: String, default: 'enabled'
 
   permit_params :email, :email_type, :state
 
@@ -15,9 +15,9 @@ class Ezine::Member
 
   validates :email, uniqueness: { scope: :node_id }, presence: true, email: true
   validates :email_type, inclusion: { in: %w(text html) }
-  validates :state, inclusion: { in: [true, false] }
+  validates :state, inclusion: { in: %w(enabled disabled) }
 
-  scope :enabled, ->{ where(state: true) }
+  scope :enabled, ->{ where(state: 'enabled') }
 
   public
     def email_type_options
@@ -25,7 +25,7 @@ class Ezine::Member
     end
 
     def state_options
-      [%w(有効 true), %w(無効 false)]
+      [%w(配信する enabled), %w(配信しない disabled)]
     end
 
     def test_member?

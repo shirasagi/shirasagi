@@ -10,5 +10,9 @@
   </dd>
 
   <dt><%= @model.t :state %></dt>
-  <dd><%= f.check_box :state %><%= t("ezine.state.enable") %></dd>
+  <dd>
+  <% @item.state_options.each do |state| %>
+    <%= f.radio_button :state, state[1] %><%= state[0] %>
+  <% end %>
+  </dd>
 </dl>
