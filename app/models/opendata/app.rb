@@ -55,10 +55,6 @@ class Opendata::App
       url.sub(/\.html$/, "") + "/zip"
     end
 
-    def application_url
-      url.sub(/\.html$/, "") + "/application"
-    end
-
     def contact_present?
       return false if member_id.present?
       super
