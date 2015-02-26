@@ -6,5 +6,5 @@
    <dd><%= @item.email_type %></dd>
 
    <dt><%= @model.t :state %></dt>
-   <dd><%= @item.state ? t("ezine.state.enable") : t("ezine.state.disable") %></dd>
+   <dd><%= t('ezine.state.' + @item.state) %></dd>
 </dl>
