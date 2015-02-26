@@ -574,7 +574,11 @@ input.date, input.datetime {
     margin-top: 10px;
   }
 }
-
+#addon-facility-agents-addons-body ~ #addon-cms-agents-addons-release {
+  .mod-cms-release dt:last-of-type,dd:last-of-type {
+    display: none;
+  }
+}
 .image-thumb-size label {
   font-weight: bold;
   display: inline-block;
