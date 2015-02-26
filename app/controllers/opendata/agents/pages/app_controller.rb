@@ -10,6 +10,10 @@ class Opendata::Agents::Pages::AppController < ApplicationController
 
       @search_url = search_apps_path
 
+      if @cur_page.dataset_ids.empty? == false
+        @dataset = Opendata::Dataset.site(@cur_site).public.find(@cur_page.dataset_ids)
+      end
+
       render
     end
 end

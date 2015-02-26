@@ -62,16 +62,72 @@ categories = [
 
 <div class="detail">
 
-  <div class="appfile">
+  <div class="application">
     <header>
       <h1>アプリケーション</h1>
     </header>
-    <% if @cur_page.appfiles.present? %>
-      <div class="app_script">
 
+    <div class="appContainer">
+      <div class="tabbox">
+        <p class="tabs">
+          <a href="#tab-play" class="tab-play" onclick="ChangeTab('tab-play'); return false;">Play</a>
+          <a href="#tab-js" class="tab-js" onclick="ChangeTab('tab-js'); return false;">JavaScripts</a>
+          <a href="#tab-css" class="tab-css" onclick="ChangeTab('tab-css'); return false;">CSS</a>
+          <a href="#tab-html" class="tab-html" onclick="ChangeTab('tab-html'); return false;">HTML</a>
+          <a href="#tab-summary" class="tab-summary" onclick="ChangeTab('tab-summary'); return false;">概要</a>
+          <a href="#tab-savedresult" class="tab-savedresult" onclick="ChangeTab('tab-savedresult'); return false;">保存した実行結果</a>
+        </p>
+        <div id="tab-play" class="tab">
+          <iframe id="play" name="play" width="700" height="500" frameborder="0">
+          </iframe>
+        </div>
+        <div id="tab-js" class="tab">
+          <p>java</p>
+        </div>
+        <div id="tab-css" class="tab">
+          <p>(CSS)</p>
+        </div>
+        <div id="tab-html" class="tab">
+          <p>(HTML)</p>
+        </div>
+        <div id="tab-summary" class="tab">
+          <p>(概要)</p>
+        </div>
+        <div id="tab-savedresult" class="tab">
+          <p>(保存した実行結果)</p>
+        </div>
       </div>
+    </div>
+    <%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %>
 
-      <%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %>
+  </div>
+
+  <div class="datasets">
+    <% if @dataset.present? %>
+    <% @dataset.each do |ds| %>
+      <dl class="dataset">
+        <dt><%= link_to ds.name, ds.url %></dt>
+        <% if ds.member_id.present? %>
+          <dt>投稿者：
+            <% if ds.member %>
+              <%= link_to ds.member.name, "#{member_path}#{ds.member.id}" %>
+            <% else %>
+              ゲストユーザー
+            <% end %>
+          </dt>
+        <% elsif ds.contact_group %>
+          <dt>投稿者：
+            <%= ds.contact_group.full_name %>
+          </dt>
+        <% elsif ds.groups.present? %>
+          <dt>投稿者：
+            <%= ds.groups.first.name %>
+          </dt>
+        <% end %>
+        <dt>更新日：<%= tryb{ds.updated.strftime("%Y年%m月%1d日")} %></dt>
+        <dt><%= ds.downloaded.to_i %> ダウンロード</dt>
+      </dl>
+    <% end %>
     <% end %>
   </div>
 
@@ -98,8 +154,8 @@ categories = [
         <dd><%= @cur_page.groups.first.name %><br /></dd>
       <% end %>
 
-      <dt><%= @cur_page.t :excuted %></dt>
-      <dd><%= @cur_page.excuted.to_i %> 回</dd>
+      <dt><%= @cur_page.t :executed %></dt>
+      <dd><%= @cur_page.executed.to_i %> 回</dd>
 
       <dt><%= @cur_page.t :license_id %></dt>
       <dd>
@@ -127,3 +183,16 @@ categories = [
 
 <%= render file: "cms/agents/addons/related_page/view/index" %>
 <%= render file: "contact/agents/addons/page/view/index" %>
+
+<script type="text/javascript"><!--
+function ChangeTab(tabname) {
+   document.getElementById('tab-play').style.display = 'none';
+   document.getElementById('tab-js').style.display = 'none';
+   document.getElementById('tab-css').style.display = 'none';
+   document.getElementById('tab-html').style.display = 'none';
+   document.getElementById('tab-summary').style.display = 'none';
+   document.getElementById('tab-savedresult').style.display = 'none';
+   document.getElementById(tabname).style.display = 'block';
+}
+ChangeTab('tab-play');
+// --></script>
