@@ -151,7 +151,12 @@ class Opendata::Dataset
           criteria = criteria.any_in id: params[:ids].split(/,/)
         end
         if params[:name].present?
-          criteria = criteria.keyword_in params[:keyword], :name
+          if params[:modal].present?
+            words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
+            criteria = criteria.all_in name: words
+          else
+            criteria = criteria.keyword_in params[:keyword], :name
+          end
         end
         if params[:tag].present?
           criteria = criteria.where tags: params[:tag]

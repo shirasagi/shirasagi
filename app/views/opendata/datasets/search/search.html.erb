@@ -1,0 +1,21 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="name"><%= @model.t :text %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |item| %>
+    <tr data-id="<%= item.id %>">
+      <td class="checkbox">
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+      </td>
+      <td><%= link_to item.name, "#" %></td>
+      <td><%= item.text %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

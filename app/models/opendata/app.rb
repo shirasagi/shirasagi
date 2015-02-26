@@ -6,6 +6,7 @@ class Opendata::App
   include Opendata::Addon::Appfile
   include Opendata::Addon::Category
   include Opendata::Addon::Area
+  include Opendata::Addon::Dataset
   include Opendata::Reference::Member
 
   set_permission_name "opendata_apps"
@@ -52,6 +53,10 @@ class Opendata::App
 
     def zip_url
       url.sub(/\.html$/, "") + "/zip"
+    end
+
+    def application_url
+      url.sub(/\.html$/, "") + "/application"
     end
 
     def contact_present?

@@ -8,6 +8,11 @@ ja:
       add_resource: 新しいリソースを追加する
       add_appfile: 新しいアプリケーションファイルを追加する
       add_comment: 新しいコメントを追加する
+    search_datasets:
+      index: データセットを選択する
+      search: データセットを検索
+      select: データセットを設定する
+      deselect: 削除
     search_dataset_groups:
       index: データセットグループを選択する
       search: データセットグループを検索

@@ -14,6 +14,7 @@ SS::Application.routes.draw do
       get "search" => "dataset_groups/search#index", on: :collection
     end
     resources :datasets, concerns: :deletion do
+      get "search" => "datasets/search#index", on: :collection
       resources :resources, concerns: :deletion do
         get "file" => "resources#download"
         get "tsv" => "resources#download_tsv"
