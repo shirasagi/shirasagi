@@ -17,6 +17,8 @@ class Ezine::Member
   validates :email_type, inclusion: { in: %w(text html) }
   validates :state, inclusion: { in: [true, false] }
 
+  scope :enabled, ->{ where(state: true) }
+
   public
     def email_type_options
       [%w(テキスト版 text), %w(HTML版 html)]
