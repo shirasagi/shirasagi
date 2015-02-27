@@ -5,7 +5,7 @@
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
   <dd>
-    <%= link_to @item.full_url, @item.full_url, target: "_blank" %>
+    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
     (<%= link_to :"cms.preview_page", cms_preview_path(path: @item.filename), target: "_blank" %>)
   </dd>
 
