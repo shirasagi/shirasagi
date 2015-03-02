@@ -22,7 +22,7 @@ describe Voice::Converter do
 
     it 'creates wav from "/index.html"' do
       source_file = Rails.root.join('spec', 'fixtures', 'voice', 'test-001.html')
-      expect(::File.exists?(source_file)).to be_true
+      expect(::File.exists?(source_file)).to be_truthy
 
       html = File.read source_file
       tmp = Tempfile::new(['talk', '.wav'], '/tmp')
