@@ -3,7 +3,7 @@ class Workflow::RoutesController < ApplicationController
   include Cms::CrudFilter
   include Cms::SearchableCrudFilter
 
-  model Cms::Workflow::Route
+  model Workflow::Route
 
   navi_view "cms/main/navi"
 
