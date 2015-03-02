@@ -4,9 +4,8 @@ class SS::RakeRunner
   class << self
     private
       def do_spawn(task, *args)
-        cmd = "bundle exec rake #{task} #{args.join(" ")}"
-        Rails.logger.debug "spawn: #{cmd}"
-        spawn(cmd, in: NULL_DEVICE, out: NULL_DEVICE, err: NULL_DEVICE)
+        Rails.logger.debug "spawn: bundle exec rake #{task} #{args.join(" ")}"
+        spawn({}, "bundle", "exec", "rake", task, *args, { in: NULL_DEVICE, out: NULL_DEVICE, err: NULL_DEVICE })
       end
 
     public
