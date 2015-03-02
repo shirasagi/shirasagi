@@ -1,10 +1,15 @@
 
-<% if @dataset %>
+<% if @idea_ds.dataset_id %>
 <div class="detail">
+  <% dataset = @idea_ds.dataset %>
   <div class="info-wrap">
     <div class="dataset_header">関連データセット</div>
-    <div class="dataset"><%= link_to @dataset.name, @dataset.url %></div>
-    <div class="dataset_text"><%= @dataset.text %></div>
+    <% if dataset %>
+      <div class="dataset"><%= link_to dataset.name, dataset.url %></div>
+      <div class="dataset_text"><%= dataset.text %></div>
+    <% else %>
+      <div class="dataset"><%= "存在しません" %></div>
+    <% end %>
   </div>
 </div>
 <% end %>

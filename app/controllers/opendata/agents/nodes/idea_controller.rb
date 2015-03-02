@@ -162,12 +162,11 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       idea_path = @cur_path.sub(/\/dataset\/.*/, ".html")
 
-      idea = Opendata::Idea.site(@cur_site).public.
+      @idea_ds = Opendata::Idea.site(@cur_site).public.
         filename(idea_path).
         first
-      raise "404" unless idea
+      raise "404" unless @idea_ds
 
-      @dataset = Opendata::Dataset.site(@cur_site).find(idea.dataset_id) if idea.dataset_id
     end
 
     def show_app
