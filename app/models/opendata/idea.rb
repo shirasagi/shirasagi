@@ -135,7 +135,6 @@ class Opendata::Idea
         pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
         pipes << { "$sort" => { count: -1 } }
         pipes << { "$limit" => 5 }
-        logger.warn pipes
         limit_aggregation pipes, opts[:limit]
       end
 
