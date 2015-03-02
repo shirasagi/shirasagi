@@ -7,7 +7,3 @@
   <dd><%= @item.member.send :name %></dd>
 
 </dl>
-
-<footer class="send">
-  <%= button_tag t("opendata.links.add_comment"), onclick: "location.href='#{url_for(action: :new)}'; return false;" %>
-</footer>
