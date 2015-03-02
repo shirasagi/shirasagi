@@ -217,6 +217,7 @@ ja:
       not_found_parent_node: 移動先の親フォルダーが存在しません。
       subnode_of_itself: 移動先のフォルダーパスに自身のパスが含まれています。
       not_cms_page_in_root: 固定ページ以外をルートに移動することはできません。
+      not_have_parent_read_permission: 移動先の親フォルダーの閲覧権限がありません。
       check_html: 本文のアクセシビリティチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。

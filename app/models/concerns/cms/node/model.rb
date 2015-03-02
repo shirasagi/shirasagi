@@ -103,7 +103,9 @@ module Cms::Node::Model
 
         return errors.add :base, :not_found_parent_node if dst_parent.blank?
         return errors.add :base, :subnode_of_itself if filename == dst_parent.filename
-        # add Authority check if necessary
+
+        allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+        return errors.add :base, :not_have_parent_read_permission unless allowed
       end
     end
 

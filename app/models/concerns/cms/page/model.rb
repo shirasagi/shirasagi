@@ -49,7 +49,9 @@ module Cms::Page::Model
         dst_parent = Cms::Node.where(site_id: site_id, filename: dst_dir).first
 
         return errors.add :base, :not_found_parent_node if dst_parent.blank?
-        # add Authority check if necessary
+
+        allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+        return errors.add :base, :not_have_parent_read_permission unless allowed
       else
         return errors.add :base, :not_cms_page_in_root if route != "cms/page"
       end
