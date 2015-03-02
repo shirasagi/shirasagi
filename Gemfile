@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "4.1.6"
+gem "rails", "4.2.0"
 gem "sass-rails", "~> 4.0.3"
 gem "uglifier", ">= 1.3.0"
 gem "coffee-rails", "~> 4.0.0"
@@ -44,6 +44,8 @@ group :development, :test do
   gem 'spring', '~> 1.1.3'
   gem 'rspec'
   gem 'rspec-rails'
+  gem 'rspec-its'
+  gem 'rspec-collection_matchers'
   gem 'capybara'
   gem 'factory_girl_rails'
   gem 'coveralls', require: false

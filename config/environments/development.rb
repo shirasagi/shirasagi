@@ -18,7 +18,7 @@ Rails.application.configure do
   config.active_support.deprecation = :log
 
   # Asset pipeline.
-  config.serve_static_assets = true
+  #config.serve_static_assets = true
   config.assets.debug = true
   #config.assets.raise_runtime_errors = true
   config.assets.compress = false
