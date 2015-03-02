@@ -1,10 +1,15 @@
 
-<% if @app %>
+<% if @idea_ap.app_id %>
 <div class="detail">
+  <% app = @idea_ap.app %>
   <div class="info-wrap">
     <div class="app_header">関連アプリ</div>
-    <div class="app"><%= link_to @app.name, @app.url %></div>
-    <div class="app_text"><%= @app.text %></div>
+    <% if app %>
+      <div class="app"><%= link_to app.name, app.url %></div>
+      <div class="app_text"><%= app.text %></div>
+    <% else %>
+      <div class="app"><%= "存在しません" %></div>
+    <% end %>
   </div>
 </div>
 <% end %>

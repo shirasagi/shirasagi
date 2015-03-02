@@ -174,12 +174,11 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       idea_path = @cur_path.sub(/\/app\/.*/, ".html")
 
-      idea = Opendata::Idea.site(@cur_site).public.
+      @idea_ap = Opendata::Idea.site(@cur_site).public.
       filename(idea_path).
       first
-      raise "404" unless idea
+      raise "404" unless @idea_ap
 
-      @app = Opendata::App.site(@cur_site).find(idea.app_id) if idea.app_id
     end
 
 end
