@@ -17,12 +17,6 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
     def set_item
       @item = @model.site(@cur_site).member(@cur_member).find params[:id]
       @item.attributes = fix_params
-
-      dataset_id = @item.dataset_id
-      @dataset = Opendata::Dataset.site(@cur_site).find(dataset_id) if dataset_id
-
-      app_id = @item.app_id
-      @app = Opendata::App.site(@cur_site).find(app_id) if app_id
     end
 
     def fix_params

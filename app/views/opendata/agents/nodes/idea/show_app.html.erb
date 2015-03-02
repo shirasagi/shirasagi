@@ -1,7 +1,7 @@
 
-<% if @idea_ap.app_id %>
+<% if @idea_ap.app_ids.length > 0 %>
 <div class="detail">
-  <% app = @idea_ap.app %>
+  <% app = @idea_ap.apps[0] %>
   <div class="info-wrap">
     <div class="app_header">関連アプリ</div>
     <% if app %>

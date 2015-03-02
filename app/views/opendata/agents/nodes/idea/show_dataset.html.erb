@@ -1,7 +1,7 @@
 
-<% if @idea_ds.dataset_id %>
+<% if @idea_ds.dataset_ids.length > 0 %>
 <div class="detail">
-  <% dataset = @idea_ds.dataset %>
+  <% dataset = @idea_ds.datasets[0] %>
   <div class="info-wrap">
     <div class="dataset_header">関連データセット</div>
     <% if dataset %>

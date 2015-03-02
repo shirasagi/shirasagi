@@ -29,17 +29,25 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 
   <dt><%= @model.t :dataset_id %></dt>
   <dd>
-    <% if @dataset %>
-      <%= f.hidden_field "dataset_id", value: params[:dataset] %>
-      <%= @dataset.send :name %>
+    <%= f.hidden_field "dataset_ids[]", value: params[:dataset] %>
+    <% if @item.dataset_ids.length > 0 %>
+      <% if @item.datasets.length > 0 %>
+      <%= @item.datasets[0].send :name %>
+      <% else %>
+      <%= "存在しません" %>
+      <% end %>
     <% end %>
   </dd>
 
   <dt><%= @model.t :app_id %></dt>
   <dd>
-    <% if @app %>
-      <%= f.hidden_field "app_id", value: params[:app] %>
-      <%= @app.send :name %>
+    <%= f.hidden_field "app_ids[]", value: params[:app] %>
+    <% if @item.app_ids.length > 0 %>
+      <% if @item.apps.length > 0 %>
+      <%= @item.apps[0].send :name %>
+      <% else %>
+      <%= "存在しません" %>
+      <% end %>
     <% end %>
   </dd>
 

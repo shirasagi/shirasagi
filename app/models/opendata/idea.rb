@@ -6,6 +6,8 @@ class Opendata::Idea
   include Opendata::Addon::Comment
   include Opendata::Addon::Category
   include Opendata::Addon::Area
+  include Opendata::Addon::Dataset
+  include Opendata::Addon::App
   include Opendata::Reference::Member
 
   set_permission_name "opendata_ideas"
@@ -15,12 +17,10 @@ class Opendata::Idea
   field :point, type: Integer, default: "0"
   field :text, type: String
   field :tags, type: SS::Extensions::Words
-  field :dataset_id, type: Integer
-  field :app_id, type: Integer
   field :commented, type: DateTime
 
-  belongs_to :dataset, class_name: "Opendata::Dataset"
-  belongs_to :app, class_name: "Opendata::App"
+  embeds_ids :datasets, class_name: "Opendata::Dataset"
+  embeds_ids :apps, class_name: "Opendata::App"
   belongs_to :member, class_name: "Opendata::Member"
 
   has_many :points, primary_key: :idea_id, class_name: "Opendata::IdeaPoint",
