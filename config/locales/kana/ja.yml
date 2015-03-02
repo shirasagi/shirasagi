@@ -7,14 +7,14 @@ ja:
       no_mecab_dicdir: MeCab 辞書がインストールされていません。
       no_content: 登録データが見つかりません。
       index: かな辞書を作成できません。
-    build_confirmation:
-      header: 確認
-      description: 以下のかな辞書から辞書をビルドし、システムに反映します。よろしいですか？
     views:
       links:
         build_kana_dictionary: 辞書反映
       button:
         build_kana_dictionary: 反映
+      dictionaries/build_confirmation:
+        build_header: 辞書を反映してよろしいですか？
+        build_description: 以下のかな辞書から辞書をビルドし、システムに反映します。
 
   modules:
     kana: かな
