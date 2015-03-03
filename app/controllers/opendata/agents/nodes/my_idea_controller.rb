@@ -52,11 +52,8 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
     def new
       @item = @model.new
 
-      dataset_id = params[:dataset]
-      @dataset = Opendata::Dataset.site(@cur_site).find(dataset_id) if dataset_id
-
-      app_id = params[:app]
-      @app = Opendata::App.site(@cur_site).find(app_id) if app_id
+      @item.dataset_ids = [params[:dataset]]
+      @item.app_ids = [params[:app]]
 
       render
     end
