@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe "cms_workflow_search_approvers" do
+describe "workflow_search_approvers" do
   subject(:site) { cms_site }
   subject(:user) { cms_user }
   subject(:group) { cms_group }
-  subject(:index_path) { cms_workflow_search_approvers_path site.host }
+  subject(:index_path) { workflow_search_approvers_path site.host }
 
   it "without login" do
     visit index_path

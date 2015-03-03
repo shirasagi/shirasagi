@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe "cms_workflow_routes" do
+describe "workflow_routes" do
   subject(:site) { cms_site }
   subject(:user) { cms_user }
   subject(:group) { cms_group }
-  subject(:index_path) { cms_workflow_routes_path site.host }
-  subject(:new_path) { new_cms_workflow_route_path site.host }
+  subject(:index_path) { workflow_routes_path site.host }
+  subject(:new_path) { new_workflow_route_path site.host }
 
   it "without login" do
     visit index_path

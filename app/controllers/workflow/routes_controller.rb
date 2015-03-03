@@ -1,9 +1,9 @@
-class Cms::Workflow::RoutesController < ApplicationController
+class Workflow::RoutesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Cms::SearchableCrudFilter
 
-  model Cms::Workflow::Route
+  model Workflow::Route
 
   navi_view "cms/main/navi"
 
