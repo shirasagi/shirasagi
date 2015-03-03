@@ -12,8 +12,8 @@ production: &production
     location: "/.voice"
     retry_after: 5
   resource:
-    loading: "/audios/voice-loading.mp3"
-    disabled: "/audios/voice-disabled.mp3"
+    loading: "/assets/voice/voice-loading.mp3"
+    disabled: "/assets/voice/voice-disabled.mp3"
   # a target from which extract text
   scraper:
     voice-marks: [ "read-voice", "end-read-voice" ]
