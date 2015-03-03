@@ -4,7 +4,6 @@ module Cms::PageFilter
 
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move]
-    menu_view "cms/pages/menu"
   end
 
   private
