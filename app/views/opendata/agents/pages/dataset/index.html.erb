@@ -2,6 +2,10 @@
 <script src="/assets/js/jquery.colorbox.js"></script>
 <%= coffee do %>
 $ ->
+
+  # Tabs
+  SS_Tabs.render("#dataset-tabs-<%= @cur_node.id %>");
+
   # show point
   $.ajax
     url: "<%= @cur_page.point_url %>"
@@ -63,80 +67,90 @@ categories = [
   <%= auto_link br(@cur_page.text) %>
 </div>
 
-<div class="detail">
-  <nav>
-    <%= link_to "データ作品の情報", "#", class: "info" %>
-    <%= link_to "アプリ", "#", class: "app" %>
-    <%= link_to "アイデア", "#", class: "idea" %>
-  </nav>
+<div class="opendata-tabs tabs"  id="dataset-tabs-<%= @cur_node.id %>">
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
+    <header><h1>データ作品の情報</h1></header>
+    <div class="pages">
+      <div class="info-wrap">
+        <div class="resources">
+          <header>
+            <h1>リソース</h1>
+          </header>
 
-  <div class="info-wrap">
-    <div class="resources">
-      <header>
-        <h1>リソース</h1>
-      </header>
-
-      <% @cur_page.resources.order(name: 1).each do |rs| %>
-      <div class="resource">
-        <div class="name format-<%= rs.format.downcase %>">
-          <%= rs.name %> (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
-        </div>
-        <div class="icons">
-          <% if license = rs.license %>
-          <span class="license">
-            <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-            <% if license.related_url.present? %>
-              <%= link_to label, license.related_url, target: "_blank" %>
-            <% else %>
-              <%= label %>
+          <% @cur_page.resources.order(name: 1).each do |rs| %>
+          <div class="resource">
+            <div class="name format-<%= rs.format.downcase %>">
+              <%= rs.name %> (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
+            </div>
+            <div class="icons">
+              <% if license = rs.license %>
+              <span class="license">
+                <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+                <% if license.related_url.present? %>
+                  <%= link_to label, license.related_url, target: "_blank" %>
+                <% else %>
+                  <%= label %>
+                <% end %>
+              </span>
+              <% end %>
+              <%= link_to "プレビュー", rs.content_url, class: "content" if rs.tsv_present? %>
+              <%= link_to "ダウンロード", rs.url, class: "download" %>
+            </div>
+            <% if rs.text.present? %>
+            <div class="text">
+              <%= auto_link br(rs.text) %>
+            </div>
             <% end %>
-          </span>
+            <% if rs.rdf_iri.present? %>
+            <div class="sparql">
+              <%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %>
+            </div>
+            <% end %>
+          </div>
           <% end %>
-          <%= link_to "プレビュー", rs.content_url, class: "content" if rs.tsv_present? %>
-          <%= link_to "ダウンロード", rs.url, class: "download" %>
         </div>
-        <% if rs.text.present? %>
-        <div class="text">
-          <%= auto_link br(rs.text) %>
-        </div>
-        <% end %>
-        <% if rs.rdf_iri.present? %>
-        <div class="sparql">
-          <%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %>
-        </div>
-        <% end %>
+
+        <dl class="author">
+          <% if @cur_page.member_id.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd>
+              <% if @cur_page.member %>
+              <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
+              <% else %>
+              ゲストユーザー
+              <% end %>
+            </dd>
+          <% elsif @cur_page.contact_group %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.contact_group.full_name %><br /></dd>
+          <% elsif @cur_page.groups.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.groups.first.name %><br /></dd>
+          <% end %>
+
+          <dt><%= @cur_page.t :downloaded %></dt>
+          <dd><%= @cur_page.downloaded.to_i %> 回</dd>
+
+          <dt><%= @cur_page.t :updated %></dt>
+          <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
+        </dl>
       </div>
-      <% end %>
     </div>
-
-    <dl class="author">
-      <% if @cur_page.member_id.present? %>
-        <dt><%= @cur_page.t :user_id %></dt>
-        <dd>
-          <% if @cur_page.member %>
-          <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
-          <% else %>
-          ゲストユーザー
-          <% end %>
-        </dd>
-      <% elsif @cur_page.contact_group %>
-        <dt><%= @cur_page.t :user_id %></dt>
-        <dd><%= @cur_page.contact_group.full_name %><br /></dd>
-      <% elsif @cur_page.groups.present? %>
-        <dt><%= @cur_page.t :user_id %></dt>
-        <dd><%= @cur_page.groups.first.name %><br /></dd>
-      <% end %>
-
-      <dt><%= @cur_page.t :downloaded %></dt>
-      <dd><%= @cur_page.downloaded.to_i %> 回</dd>
-
-      <dt><%= @cur_page.t :updated %></dt>
-      <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
-    </dl>
-  </div>
+    <nav class="feed"></nav>
+  </article>
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
+    <header><h1>アプリ</h1></header>
+    <div class="pages"></div>
+    <nav class="feed"></nav>
+  </article>
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
+    <header><h1>アイデア</h1></header>
+    <div class="pages">
+      <div class="dataset-ideas" id="dataset-ideas"></div>
+    </div>
+    <nav class="feed"></nav>
+  </article>
 </div>
-
-<div class="dataset-ideas" id="dataset-ideas"></div>
 
 <%= render file: "cms/agents/addons/related_page/view/index" %>
 <%= render file: "contact/agents/addons/page/view/index" %>
