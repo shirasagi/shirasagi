@@ -28,6 +28,7 @@ class Voice::MainController < ApplicationController
       # raise "404"
       unless voice_file
         head :not_found
+        return
       end
 
       @voice_file = Voice::VoiceFile.acquire_lock voice_file
