@@ -32,10 +32,6 @@ SS::Application.routes.draw do
     get "/search_groups" => "search_groups#index"
     get "/search_pages" => "search_pages#index"
     get "/search_categories" => "search_categories#index"
-    namespace "workflow" do
-      get "/search_approvers" => "search_approvers#index"
-      resources :routes, concerns: :deletion
-    end
   end
 
   namespace "cms", path: ".cms" do

@@ -1,4 +1,4 @@
-class Cms::Workflow::SearchApproversController < ApplicationController
+class Workflow::SearchApproversController < ApplicationController
   include Cms::SearchFilter
 
   model Cms::User

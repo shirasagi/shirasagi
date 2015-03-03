@@ -21,6 +21,8 @@ SS::Application.routes.draw do
   namespace "workflow", path: ".:site/workflow" do
     get "/" => "main#index"
     resources :pages, concerns: :deletion
+    get "/search_approvers" => "search_approvers#index"
+    resources :routes, concerns: :deletion
     # get "/wizard/:id/approver_setting" => "wizard#approver_setting"
     # post "/wizard/:id/approver_setting" => "wizard#approver_setting"
     # get "/wizard/:id" => "wizard#index"
