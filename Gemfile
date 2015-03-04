@@ -15,7 +15,7 @@ gem "unicorn"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
-gem "mongoid", git: "https://github.com/mongoid/mongoid.git"
+gem "mongoid", "~> 4.0.0"
 gem "mongoid-rspec"
 gem "mongo_mapper"
 gem "bson_ext"
