@@ -5,7 +5,7 @@
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete/ %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :back_to_show, action: :show, id: @item %>
     <% end %>
@@ -13,6 +13,9 @@
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(:move, action: :move, id: @item) if respond_to?(:move) %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :delete, action: :delete, id: @item %>

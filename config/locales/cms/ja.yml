@@ -21,6 +21,13 @@ ja:
     group: グループ
     member: メンバー
     alert: 警告
+    move:
+      page: ページ
+      layout: レイアウト
+      part: パーツ
+      url: URL
+      confirm: 確認
+      message: '"/%{source}"へのリンクが含まれるページ'
     syntax_check: アクセシビリティチェック
     syntax_check_replace:
       dependent_character: "[機種依存文字]"
@@ -90,6 +97,10 @@ ja:
     delete_private_cms_pages: 固定ページの削除（所有）
     delete_private_cms_parts: パーツの削除（所有）
     delete_private_cms_layouts: レイアウトの削除（所有）
+    move_other_cms_nodes: フォルダーの移動（全て）
+    move_other_cms_pages: 固定ページの移動（全て）
+    move_private_cms_nodes: フォルダーの移動（所有）
+    move_private_cms_pages: 固定ページの移動（所有）
 
   modules:
     cms: 標準機能
@@ -201,6 +212,12 @@ ja:
 
   errors:
     messages:
+      same_filename: 移動先と移動前が同じファイル名です。
+      exist_physical_file: 移動先に物理ファイルが既に存在します。
+      not_found_parent_node: 移動先の親フォルダーが存在しません。
+      subnode_of_itself: 移動先のフォルダーパスに自身のパスが含まれています。
+      not_cms_page_in_root: 固定ページ以外をルートに移動することはできません。
+      not_have_parent_read_permission: 移動先の親フォルダーの閲覧権限がありません。
       check_html: 本文のアクセシビリティチェックを確認してください。
       set_img_alt: 画像の代替テキストを確認してください。
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
@@ -338,6 +355,9 @@ ja:
       st_categories:
         - フォルダー下で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+      destination_filename:
+        - ページやフォルダーの移動を行います。
+        - 移動先をフルパスで設定してください。
 
     cms/part/model:
       route:

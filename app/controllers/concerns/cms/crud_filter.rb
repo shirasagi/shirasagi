@@ -6,6 +6,12 @@ module Cms::CrudFilter
     menu_view "cms/crud/menu"
   end
 
+ private
+    def append_view_paths
+      append_view_path "app/views/ss/crud"
+      append_view_path "app/views/cms/crud"
+    end
+
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)

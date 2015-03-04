@@ -37,6 +37,8 @@ ja:
     edit_private_faq_pages: FAQページ編集（所有）
     delete_other_faq_pages: FAQページ削除（全て）
     delete_private_faq_pages: FAQページ削除（所有）
+    move_other_faq_pages: FAQページの移動（全て）
+    move_private_faq_pages: FAQページの移動（所有）
 
   tooltip:
     faq/part/search:

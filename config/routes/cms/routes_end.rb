@@ -4,6 +4,11 @@ SS::Application.routes.draw do
     get :delete, :on => :member
   end
 
+  concern :move do
+    get :move, :on => :member
+    put :move, :on => :member
+  end
+
   namespace "cms", path: ".:site" do
     get "/" => "main#index", as: :main
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
@@ -27,7 +32,7 @@ SS::Application.routes.draw do
     resources :parts, concerns: :deletion do
       get :routes, on: :collection
     end
-    resources :pages, concerns: :deletion
+    resources :pages, concerns: [:deletion, :move]
     resources :layouts, concerns: :deletion
     get "/search_groups" => "search_groups#index"
     get "/search_pages" => "search_pages#index"
@@ -44,9 +49,9 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
-    resource :conf, concerns: :deletion
+    resource :conf, concerns: [:deletion, :move]
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: :deletion
+    resources :pages, concerns: [:deletion, :move]
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
   end
