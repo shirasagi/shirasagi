@@ -1,9 +1,10 @@
 <nav class="act-menu">
-  <% if params[:action] =~ /edit|update|delete/ %>
+  <% if params[:action] =~ /edit|update|delete|move/ %>
     <%= link_to :back_to_show, action: :show %>
     <%= link_to :back_to_index, controller: :nodes %>
   <% else %>
     <%= link_to :edit, action: :edit if @item.allowed?(:edit, @cur_user)  %>
+    <%= link_to :move, action: :move if @item.allowed?(:move, @cur_user)  %>
     <%= link_to :delete, action: :delete if @item.allowed?(:edit, @cur_user)  %>
     <%= link_to :back_to_index, controller: :nodes %>
   <% end %>

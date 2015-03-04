@@ -11,6 +11,7 @@ ja:
     upload: アップロード
     download: ダウンロード
     import: インポート
+    confirm: 確認
     file: ファイル
     image: 画像
     state:
@@ -24,6 +25,7 @@ ja:
       new: 新規作成
       show: 詳細を見る
       edit: 編集する
+      move: 移動する
       delete: 削除する
       import: インポート
       back_to_show: 詳細へ戻る
@@ -45,6 +47,7 @@ ja:
       search: 検索
       reset: リセット
       toggle: 折りたたみ表示
+      move: 移動
     confirm:
       delete: 削除してよろしいですか？
       unload: 入力したデータは保存されません。

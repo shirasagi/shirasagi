@@ -88,6 +88,36 @@ module Cms::Node::Model
       [%w(表示 show), %w(非表示 hide)]
     end
 
+    def validate_destination_filename(dst)
+      dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
+
+      return errors.add :filename, :empty if dst.blank?
+      return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+
+      return errors.add :base, :same_filename if filename == dst
+      return errors.add :filename, :taken if self.class.where(site_id: site_id, filename: dst).first
+      return errors.add :base, :exist_physical_file if Fs.exists?("#{site.path}/#{dst}")
+
+      if dst_dir.present?
+        dst_parent = Cms::Node.where(site_id: site_id, filename: dst_dir).first
+
+        return errors.add :base, :not_found_parent_node if dst_parent.blank?
+        return errors.add :base, :subnode_of_itself if filename == dst_parent.filename
+
+        allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+        return errors.add :base, :not_have_parent_read_permission unless allowed
+      end
+    end
+
+    def move(dst)
+      validate_destination_filename(dst)
+      return false unless errors.empty?
+
+      @cur_node = nil
+      @basename = dst
+      save
+    end
+
   private
     def rename_children
       return unless @db_changes["filename"]
@@ -100,8 +130,10 @@ module Cms::Node::Model
       src, dst = @db_changes["filename"]
       %w(nodes pages parts layouts).each do |name|
         send(name).where(filename: /^#{src}\//).each do |item|
-          item.filename = item.filename.sub(/^#{src}\//, "#{dst}\/")
-          item.save validate: false
+          item.set(
+            filename: item.filename.sub(/^#{src}\//, "#{dst}\/"),
+            depth: item.filename.scan("/").size + 1
+          )
         end
       end
     end

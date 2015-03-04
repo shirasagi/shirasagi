@@ -82,6 +82,7 @@ module SS::CrudFilter
   private
     def render_create(result, opts = {})
       location = opts[:location].presence || { action: :show, id: @item }
+      render_opts = opts[:render].presence || { file: :new }
 
       if result
         respond_to do |format|
@@ -90,7 +91,7 @@ module SS::CrudFilter
         end
       else
         respond_to do |format|
-          format.html { render file: :new }
+          format.html { render render_opts }
           format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
         end
       end
@@ -98,6 +99,7 @@ module SS::CrudFilter
 
     def render_update(result, opts = {})
       location = opts[:location].presence || { action: :show }
+      render_opts = opts[:render].presence || { file: :edit }
 
       if result
         respond_to do |format|
@@ -106,7 +108,7 @@ module SS::CrudFilter
         end
       else
         respond_to do |format|
-          format.html { render file: :edit }
+          format.html { render render_opts }
           format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
         end
       end
@@ -114,6 +116,7 @@ module SS::CrudFilter
 
     def render_destroy(result, opts = {})
       location = opts[:location].presence || { action: :index }
+      render_opts = opts[:render].presence || { file: :delete }
 
       if result
         respond_to do |format|
@@ -122,7 +125,7 @@ module SS::CrudFilter
         end
       else
         respond_to do |format|
-          format.html { render file: :delete }
+          format.html { render render_opts }
           format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
         end
       end

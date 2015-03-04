@@ -18,6 +18,8 @@ ja:
     edit_private_article_pages: 記事ページの編集（所有）
     delete_other_article_pages: 記事ページの削除（全て）
     delete_private_article_pages: 記事ページの削除（所有）
+    move_other_article_pages: 記事ページの移動（全て）
+    move_private_article_pages: 記事ページの移動（所有）
 
   mongoid:
     models:
