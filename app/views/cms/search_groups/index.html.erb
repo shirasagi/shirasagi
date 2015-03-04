@@ -34,3 +34,5 @@ $ ->
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= button_tag t("cms.search_groups.select"), { type: :button, class: "select-items" } %>
 </div>
+
+<%= paginate @items if @items.try(:current_page) %>
