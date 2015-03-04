@@ -36,8 +36,8 @@ class Ads::AccessLogsController < ApplicationController
     end
 
     def monthly
-      sdate = Time.parse("#{@year}-#{@month}-01")
-      edate = sdate.advance(months:  1)
+      sdate = Date.new @year.to_i, @month.to_i, 1
+      edate = sdate + 1.months
 
       @max_cell = sdate.end_of_month.day
       @totals = {}
@@ -53,8 +53,8 @@ class Ads::AccessLogsController < ApplicationController
     end
 
     def yearly
-      sdate = Time.parse("#{@year}0101")
-      edate = sdate.advance(years:  1)
+      sdate = Date.new @year.to_i, 1, 1
+      edate = sdate + 1.years
 
       @max_cell = 12
       @totals = {}
