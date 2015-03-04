@@ -15,7 +15,7 @@
       <%= link_to :edit, action: :edit, id: @item %>
     <% end %>
     <% if @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to(:move, action: :move, id: @item) if respond_to?(:move) %>
+      <%= link_to(:move, action: :move, id: @item) rescue "" %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :delete, action: :delete, id: @item %>
