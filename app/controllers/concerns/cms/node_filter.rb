@@ -73,8 +73,9 @@ module Cms::NodeFilter
         end
 
         if @item.errors.empty? && @source.present?
-          words = [ "\"/#{@source}\"" ]
-          words << "\"/#{@source.sub(/index.html$/, "")}\"" if @source =~ /\/index.html$/
+          path = ("=\"/#{@source}" =~ /\.html$/) ? "=\"/#{@source}" : "=\"/#{@source}/"
+          words = [ path ]
+          words << "=\"/#{@source.sub(/index.html$/, "")}" if @source =~ /\/index.html$/
           words = words.join(" ")
 
           cond = Cms::Page.keyword_in(words, :html, :question).selector
