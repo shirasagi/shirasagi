@@ -18,7 +18,7 @@ module Mobile::PublicFilter
 
       # links
       location = SS.config.mobile.location.gsub(/^\/|\/$/, "")
-      body.gsub!(/href="\/(?!#{location}\/)/, "href=\"/#{location}/")
+      body.gsub!(/href="\/(?!#{location}\/)(?!fs\/)/, "href=\"/#{location}/")
       body.gsub!(/<span .*?id="ss-(small|medium|large|kana|pc|mb)".*?>.*?<\/span>/, "")
 
       # tags
