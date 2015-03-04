@@ -5,8 +5,8 @@ class Ezine::Page
   include Ezine::Addon::Page::Body
 
   field :test_delivered, type: DateTime
-  field :results, type: Array, default: []
   field :completed, type: Boolean, default: false
+  embeds_many :results, class_name: "Ezine::Result"
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
