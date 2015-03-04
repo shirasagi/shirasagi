@@ -5,7 +5,7 @@ class Sys::Test::HttpController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << ["HTTTP Test", sys_test_mail_path]
+      @crumbs << ["HTTTP Test", sys_test_http_path]
     end
 
   public

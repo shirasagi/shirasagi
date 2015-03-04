@@ -11,7 +11,7 @@ class Inquiry::AnswersController < ApplicationController
     def send_csv(items)
       require "csv"
 
-      columns = @cur_node.becomes_with_route.columns.pluck(:name)
+      columns = @cur_node.becomes_with_route("inquiry/form").columns.pluck(:name)
       csv = CSV.generate do |data|
         data << columns
         items.each do |item|
@@ -55,6 +55,6 @@ class Inquiry::AnswersController < ApplicationController
     end
 
     def download
-      send_csv(@cur_node.becomes_with_route.answers)
+      send_csv @cur_node.becomes_with_route("inquiry/form").answers
     end
 end

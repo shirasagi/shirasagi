@@ -36,7 +36,7 @@ class Ads::AccessLogsController < ApplicationController
     end
 
     def monthly
-      sdate = Time.parse("#{@year}#{@month}01")
+      sdate = Time.parse("#{@year}-#{@month}-01")
       edate = sdate.advance(months:  1)
 
       @max_cell = sdate.end_of_month.day

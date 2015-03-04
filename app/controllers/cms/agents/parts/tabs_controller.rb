@@ -30,10 +30,17 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
         if node_class.method_defined?(:index)
           @cur_node = node
-          cont  = invoke_agent node_class, :index
-          pages = cont.instance_variable_get(:@items)
-          pages = nil if pages && !pages.respond_to?(:current_page)
-          pages = nil if pages && !pages.klass.include?(Cms::Page::Model)
+          cont = new_agent(node_class)
+          cont.controller.params = {}
+          begin
+            cont.invoke :index
+            pages = cont.instance_variable_get(:@items)
+            pages = nil if pages && !pages.respond_to?(:current_page)
+            pages = nil if pages && !pages.klass.include?(Cms::Page::Model)
+          rescue => e
+            logger.error $ERROR_INFO
+            logger.error $ERROR_INFO.backtrace.join("\n")
+          end
         end
 
         if pages.nil?

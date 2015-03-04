@@ -97,8 +97,8 @@ ja:
         - 施設の電話番号を設定します。
       fax:
         - 施設のファクシミリ番号を入力します。
-      homepage:
-        - 施設のホームページアドレスを入力します。
+      related_url:
+        - 施設のWebページアドレスを入力します。
     facility/addon/additional_info:
       field:
         - 追加情報の項目名を設定します。

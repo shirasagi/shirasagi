@@ -27,7 +27,7 @@ class Ezine::PagesController < ApplicationController
     end
 
     def load_members(model)
-      @members = model.where(node_id: @cur_node.id).order_by(updated: -1)
+      @members = model.where(node_id: @cur_node.id).enabled.order_by(updated: -1)
       @members_email = @members.reduce("") {|a, e| a += e.email + "\n"}
     end
 
@@ -75,11 +75,5 @@ class Ezine::PagesController < ApplicationController
       @items = Ezine::SentLog.where(node_id: params[:cid], page_id: params[:id]).
         order_by(created: -1).
         page(params[:page]).per(50)
-    end
-
-    def preview_text
-      load_pages
-      item = @items.find(params[:id])
-      render text: item.text.gsub(/\r\n|\r|\n/, "<br />")
     end
 end

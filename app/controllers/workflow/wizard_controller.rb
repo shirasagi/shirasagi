@@ -18,7 +18,7 @@ class Workflow::WizardController < ApplicationController
       if "my_group" == route_id
         @route = nil
       else
-        @route = Cms::Workflow::Route.find(params[:route_id])
+        @route = Workflow::Route.find(params[:route_id])
       end
       # TODO: check route
     end

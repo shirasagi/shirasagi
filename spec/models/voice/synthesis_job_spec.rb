@@ -246,8 +246,8 @@ describe Voice::SynthesisJob do
         }.from(false).to(true)
 
         voice_file.reload
-        expect(voice_file.same_identity?).to be_true
-        expect(voice_file.latest?).to be_true
+        expect(voice_file.same_identity?).to be_truthy
+        expect(voice_file.latest?).to be_truthy
         expect(voice_file.error).to be_nil
         expect(voice_file.has_error).to eq 0
         expect(voice_file.age).to be > 0

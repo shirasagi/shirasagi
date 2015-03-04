@@ -30,7 +30,7 @@ CentOS 6.6/64bit
   gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
   \curl -sSL https://get.rvm.io | sudo bash -s stable
   source /etc/profile
-  rvm install 2.1.2
+  rvm install 2.2.0
 
 --------------------
 # SHIRASAGI
@@ -49,7 +49,8 @@ CentOS 6.6/64bit
   cd /usr/local/src
   wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz \
       http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz \
-      http://mecab.googlecode.com/files/mecab-ruby-0.996.tar.gz
+      http://mecab.googlecode.com/files/mecab-ruby-0.996.tar.gz \
+      https://raw.githubusercontent.com/shirasagi/shirasagi/stable/vendor/mecab/mecab-ipadic-2.7.0-20070801.patch
 
   cd /usr/local/src
   tar xvzf mecab-0.996.tar.gz && cd mecab-0.996
@@ -57,7 +58,10 @@ CentOS 6.6/64bit
 
   cd /usr/local/src
   tar xvzf mecab-ipadic-2.7.0-20070801.tar.gz && cd mecab-ipadic-2.7.0-20070801
-  ./configure --with-charset=utf8 && make && make install
+  patch -p1 < ../mecab-ipadic-2.7.0-20070801.patch
+  # もしくは:
+  # patch -p1 < /var/www/shirasagi/vendor/mecab/mecab-ipadic-2.7.0-20070801.patch
+  ./configure --with-charset=UTF-8 && make && make install
 
   cd /usr/local/src
   tar xvzf mecab-ruby-0.996.tar.gz && cd mecab-ruby-0.996
@@ -70,24 +74,26 @@ CentOS 6.6/64bit
 # 読み上げ
 
   cd /usr/local/src
-  wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz
+  wget http://downloads.sourceforge.net/hts-engine/hts_engine_API-1.08.tar.gz \
+      http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz \
+      http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz \
+      http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
+
+  cd /usr/local/src
   tar xvzf hts_engine_API-1.08.tar.gz && cd hts_engine_API-1.08
   ./configure && make && make install
 
   cd /usr/local/src
-  wget http://downloads.sourceforge.net/open-jtalk/open_jtalk-1.07.tar.gz
   tar xvzf open_jtalk-1.07.tar.gz && cd open_jtalk-1.07
   sed -i "s/#define MAXBUFLEN 1024/#define MAXBUFLEN 10240/" bin/open_jtalk.c
   sed -i "s/0x00D0 SPACE/0x000D SPACE/" mecab-naist-jdic/char.def
   ./configure --with-charset=UTF-8 && make && make install
 
   cd /usr/local/src
-  wget http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz
   tar xvzf lame-3.99.5.tar.gz && cd lame-3.99.5
   ./configure && make && make install
 
   cd /usr/local/src
-  wget http://downloads.sourceforge.net/sox/sox-14.4.1.tar.gz
   tar xvzf sox-14.4.1.tar.gz && cd sox-14.4.1
   ./configure && make && make install
 
