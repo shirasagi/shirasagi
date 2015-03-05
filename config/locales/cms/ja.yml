@@ -275,6 +275,11 @@ ja:
       check_links: 次のリンクを確認しました。
 
   tooltip:
+    cms/page/model:
+      destination_filename:
+        - ページやフォルダーの移動を行います。
+        - 移動先をフルパスで設定してください。
+
     cms/node/model:
       route:
         - 設定した属性に応じたページ(index.html)が自動で生成されます。
