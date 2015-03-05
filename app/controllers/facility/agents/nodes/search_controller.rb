@@ -30,11 +30,11 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     def set_markers
       @items = []
       @markers = []
-      images = SS::File.where(model: /facility\//).map {|image| [image.id, image.url]}.to_h
+      images = Facility::TempFile.all.map {|image| [image.id, image.url]}.to_h
 
       Facility::Map.site(@cur_site).public.each do |map|
         parent_path = ::File.dirname(map.filename)
-        item = Facility::Node::Page.site(@cur_site).
+        item = Facility::Node::Page.site(@cur_site).public.
           where(@cur_node.condition_hash).
           in_path(parent_path).
           in(@q_category).

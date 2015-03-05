@@ -1,5 +1,7 @@
 class Facility::ImagesController < ApplicationController
-  include Facility::PageFilter
+  include Cms::BaseFilter
+  include Cms::PageFilter
+  include Workflow::PageFilter
 
   model Facility::Image
 
