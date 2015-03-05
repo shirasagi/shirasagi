@@ -28,7 +28,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
 
       raise "404" unless @app_idea
 
-      cond = { site_id: @cur_site.id, app_id: @app_idea.id }
+      cond = { site_id: @cur_site.id, app_ids: @app_idea.id }
       @ideas = Opendata::Idea.where(cond).order_by(:updated.asc)
     end
 
