@@ -44,7 +44,7 @@ module Cms::Addon
 
       permit = []
       permit << "#{action}_#{access}_#{self.class.permission_name}"
-      permit << "#{action}_other_#{self.class.permission_name}"  if access == :private
+      permit << "#{action}_other_#{self.class.permission_name}" if access == :private
 
       level = user.cms_roles.site(site).in(permissions: permit).pluck(:permission_level).max
       (level && level >= permit_level) ? true : false
