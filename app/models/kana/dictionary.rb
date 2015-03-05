@@ -38,8 +38,7 @@ class Kana::Dictionary
     class << self
       public
         def master_root
-          root = Rails.env.test? ? "/tmp/kana_dictionaries_#{Time.now.strftime("%Y%m%d")}" : "#{Rails.root}"
-          ::File.join(root, 'private', 'files', 'kana_dictionaries')
+          ::File.join(SS.config.kana.root, "private", "files", "kana_dictionaries")
         end
 
         def master_dic(site_id)

@@ -8,14 +8,16 @@ module Voice::Converter
         config = SS.config.voice[type]
 
         tts = Voice::TextToSpeechFactory.create(type, config)
-        wav_file = Tempfile::new(['talk', '.wav'], '/tmp')
-        tts.build(site_id, texts, wav_file.path)
+        Dir.mktmpdir do |tmpdir|
+          wav_file = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
+          tts.build(site_id, texts, wav_file)
 
-        mp3_file = Tempfile::new(['talk', '.mp3'], '/tmp')
-        Voice::WavToMp3.new.convert(wav_file.path, mp3_file.path)
+          mp3_file = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".mp3"], nil))
+          Voice::WavToMp3.new.convert(wav_file, mp3_file)
 
-        Fs.binwrite(output, IO.binread(mp3_file.path))
-        true
+          Fs.binwrite(output, IO.binread(mp3_file))
+          true
+        end
       end
   end
 end

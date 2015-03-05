@@ -17,7 +17,7 @@ describe Voice::OpenJtalk do
           'opts' => SS.config.voice['openjtalk']['opts'],
           'max_length' => SS.config.voice['openjtalk']['max_length'],
           'sox' => SS.config.voice['openjtalk']['sox'] })
-      tmp = Tempfile::new(['talk', '.wav'], '/tmp')
+      tmp = Tempfile::new(['voice', '.wav'], '/tmp')
 
       talk.build(site.id, [ 'apple' ], tmp.path)
       expect(tmp.stat.size).to satisfy { |v| v > 20_000 }
@@ -28,7 +28,7 @@ describe Voice::OpenJtalk do
       config = SS.config.voice[type]
 
       talk = Voice::OpenJtalk.new(config)
-      tmp = Tempfile::new(['talk', '.wav'], '/tmp')
+      tmp = Tempfile::new(['voice', '.wav'], '/tmp')
 
       talk.build(site.id, [ 'apple' ], tmp.path)
       expect(tmp.stat.size).to satisfy { |v| v > 20_000 }
@@ -43,7 +43,7 @@ describe Voice::OpenJtalk do
       config = SS.config.voice[type]
 
       talk = Voice::OpenJtalk.new(config)
-      tmp = Tempfile::new(['talk', '.wav'], '/tmp')
+      tmp = Tempfile::new(['voice', '.wav'], '/tmp')
 
       talk.build(site.id, texts, tmp.path)
       expect(tmp.stat.size).to satisfy { |v| v > 20_000 }

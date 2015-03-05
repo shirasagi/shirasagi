@@ -103,7 +103,7 @@ class Job::Service
         rescue Exception => e
           job_log.state = "failed"
           job_log.closed = Time.now
-          Rails.logger.fatal("Failed Job #{task.id}: #{e.class} (#{e.message}):\n  #{e.backtrace.join('\n  ')}")
+          Rails.logger.fatal("Failed Job #{task.id}: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
           raise if system_error?(e)
         end
       end
