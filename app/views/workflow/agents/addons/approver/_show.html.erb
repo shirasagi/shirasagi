@@ -36,6 +36,7 @@ $ ->
       required_counts.push($(this).prop("value"))
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
+    uri[3] = "pages"
     $.ajax
       type: "post"
       url: uri.join("/")  + "/" + $(this).attr("updatetype") + "_update"

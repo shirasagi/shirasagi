@@ -21,7 +21,7 @@ class Facility::Agents::Nodes::PageController < ApplicationController
           points.push point
 
           image_ids = @cur_node.categories.pluck(:image_id)
-          points[i][:image] = SS::File.find(image_ids.first).url if image_ids.present?
+          points[i][:image] = Facility::TempFile.in(id: image_ids).first.try(:url)
         end
         map.map_points = points
 

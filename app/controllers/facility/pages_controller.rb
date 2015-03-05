@@ -39,7 +39,7 @@ class Facility::PagesController < ApplicationController
           points.push point
 
           image_ids = @item.categories.pluck(:image_id)
-          points[i][:image] = Facility::TempFile.find(image_ids.first).url if image_ids.present?
+          points[i][:image] = Facility::TempFile.in(id: image_ids).first.try(:url)
         end
         map.map_points = points
 
