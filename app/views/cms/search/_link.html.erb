@@ -1,0 +1,68 @@
+<%
+def edit_path_with_route(item)
+  model = item.class.name.underscore.sub(/^.+?\//, "")
+
+  path = "edit_cms_#{model}_path".to_sym
+  return send(path, id: item.id) if item.parent.blank?
+
+  if item.respond_to?(:route)
+    route = item.route =~ /cms\// ? "node_page" : item.route.gsub("/", "_")
+    path  = "edit_#{route}_path".to_sym
+    return send(path, cid: item.parent.id, id: item.id) if respond_to?(path)
+  end
+
+  path = "edit_node_#{model}_path".to_sym
+  return send(path, cid: item.parent.id, id: item.id)
+end
+%>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t("cms.move.page") %></th>
+      <th><%= t("cms.move.url") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @pages.each do |item| %>
+      <tr>
+        <td><%= link_to item.name, edit_path_with_route(item), target: "_blank" %></td>
+        <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t("cms.move.part") %></th>
+      <th><%= t("cms.move.url") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @parts.each do |item| %>
+      <tr>
+        <td><%= link_to item.name, edit_path_with_route(item), target: "_blank" %></td>
+        <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t("cms.move.layout") %></th>
+      <th><%= t("cms.move.url") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @layouts.each do |item| %>
+      <tr>
+        <td><%= link_to item.name, edit_path_with_route(item), target: "_blank" %></td>
+        <td><%= link_to item.filename, "#{@cur_site.full_url}#{item.filename}", target: "_blank" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

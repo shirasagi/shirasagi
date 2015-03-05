@@ -34,9 +34,12 @@ SS::Application.routes.draw do
     end
     resources :pages, concerns: [:deletion, :move]
     resources :layouts, concerns: :deletion
+    get "/search" => "search#index"
+    post "/search" => "search#update"
     get "/search_groups" => "search_groups#index"
     get "/search_pages" => "search_pages#index"
     get "/search_categories" => "search_categories#index"
+    get "/search_links" => "search_links#index"
   end
 
   namespace "cms", path: ".cms" do

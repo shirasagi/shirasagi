@@ -1,0 +1,40 @@
+<div class="search-form">
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+  <dl class="see">
+    <dt>検索文字</dt>
+    <dd>
+      <%= text_field_tag :filename, "", value: "", class: :filename %>
+      <%= f.button "検索", name: "confirm" %>
+    </dd>
+
+    <dt>置換文字</dt>
+    <dd>
+      <%= text_field_tag :replace , "", value: "", class: :filename %>
+      <%= f.button "全置換", name: "confirm" %>
+    </dd>
+
+    <dt>オプション</dt>
+    <dd>
+      <label>
+        <%= check_box_tag "", "" %>
+        URL
+      </label>
+      <label>
+        <%= check_box_tag "", "" %>
+        正規表現
+      </label>
+    </dd>
+  </dl>
+<% end %>
+</div>
+
+<% if @pages %>
+  <%= render file: "_link" %>
+<!--
+  <dl class="see">
+    <dt class="wide"></dt>
+    <dl style="height:300px; overflow:auto; border: 1px solid #cccccc; padding: 15px;"></dl>
+  </dl>
+-->
+<% end %>
+
