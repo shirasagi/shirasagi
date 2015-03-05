@@ -4,8 +4,8 @@
   <thead>
     <tr>
       <th class="checkbox"><input type="checkbox" /></th>
-      <th><%= @model.t :name %></th>
       <th class="filename"><%= @model.t :filename %></th>
+      <th class="text"><%= @model.t :text %></th>
       <th class="datetime"><%= @model.t :updated %></th>
     </tr>
   </thead>
@@ -20,8 +20,8 @@
           <%= link_to :delete, { action: :delete, id: item } %>
         </nav>
       </td>
-      <td><%= link_to item.name, { action: :show, id: item } %></td>
-      <td class="filename"><%= item.filename %></td>
+      <td class="filename"><%= link_to item.filename, { action: :show, id: item } %></td>
+      <td class="text"><%= item.text %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>

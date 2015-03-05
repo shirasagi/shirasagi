@@ -10,8 +10,26 @@ class Opendata::Agents::Pages::AppController < ApplicationController
 
       @search_url = search_apps_path
 
+      appli = Opendata::App.find(@cur_page.id)
+      @app_html = appli.appfiles.where(format: "HTML").first
+      if @app_html.present?
+        @app_index = "/app/#{@cur_page.id}/appfile/#{@app_html.filename}"
+        @text = "/text/#{@cur_page.id}/appfile/"
+        @html_text = "#{@text}#{@app_html.filename}"
+
+        @app_js = []
+        @app_css = []
+        appli.appfiles.each do |file|
+          if file.format == "JS"
+            @app_js.push(file)
+          elsif file.format == "CSS"
+            @app_css.push(file)
+          end
+        end
+      end
+
       if @cur_page.dataset_ids.empty? == false
-        @dataset = Opendata::Dataset.site(@cur_site).public.find(@cur_page.dataset_ids)
+        @ds = Opendata::Dataset.site(@cur_site).public.find(@cur_page.dataset_ids)
       end
 
       render

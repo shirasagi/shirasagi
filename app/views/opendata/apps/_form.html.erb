@@ -6,8 +6,8 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :text %><%= required_label %></dt>
-  <dd><%= f.text_field :text %></dd>
+  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
+  <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :license_id %><%= required_label %></dt>
   <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>

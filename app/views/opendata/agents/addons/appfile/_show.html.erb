@@ -11,7 +11,7 @@
       <tbody>
         <% @item.appfiles.order(name: 1).each do |rs| %>
         <tr>
-          <td><%= link_to rs.name, opendata_app_appfile_path(app_id: @item.id, id: rs.id) %>
+          <td><%= link_to rs.filename, opendata_app_appfile_path(app_id: @item.id, id: rs.id) %>
           <td><%= number_to_human_size rs.size %></td>
         </tr>
       <% end %>

@@ -1,0 +1,168 @@
+<div class="application">
+  <header>
+    <h1>アプリケーション</h1>
+  </header>
+  <div class="appHeader">
+    <input type="button" value="play" id="btnPlay" class="btnPlay" onclick="javascript:PlayApp(); return false;" />
+    <input type="button" value="reload" id="btnReload" class="btnReload" onclick="javascript:ReloadApp(); return false;" />
+  </div>
+  <div class="appContainer">
+    <div id="tabs">
+      <ul>
+        <li><a href="#tab-play" onclick="ChangeTab('tab-play'); return false;">
+          Play</a></li>
+        <li><a href="#tab-js" onclick="ChangeTab('tab-js'); return false;">
+          JavaScripts</a></li>
+        <li><a href="#tab-css" onclick="ChangeTab('tab-css'); return false;">
+          CSS</a></li>
+        <li><a href="#tab-html" onclick="ChangeTab('tab-html'); return false;">
+          HTML</a></li>
+        <li><a href="#tab-summary" onclick="ChangeTab('tab-summary'); return false;">
+          概要</a></li>
+        <li><a href="#tab-savedresult" onclick="ChangeTab('tab-savedresult'); return false;">
+          保存した実行結果</a></li>
+      </ul>
+      <div id="tab-play">
+        <p>
+          <iframe class="frmPlay" src="" width="700" height="500" frameborder="0">
+          </iframe>
+        </p>
+      </div>
+      <div id="tab-js">
+        <ul>
+          <% @app_js.each do |j| %>
+            <li><a href="#tab-js-<%= j.id %>" onclick="ChangeTabJs('tab-js-<%= j.id %>'); return false;">
+              <%= j.filename %></a></li>
+          <% end %>
+        </ul>
+        <% @app_js.each do |j| %>
+          <div id="tab-js-<%= j.id %>" name="tab-name-js">
+            <p><iframe class="frmJs" src="<%= @text + j.filename %>" width="700" height="500" frameborder="0">
+            </iframe></p>
+          </div>
+        <% end %>
+      </div>
+      <div id="tab-css">
+        <ul>
+          <% @app_css.each do |c| %>
+            <li><a href="#tab-css-<%= c.id %>" onclick="ChangeTabCss('tab-css-<%= c.id %>'); return false;">
+              <%= c.filename %></a></li>
+          <% end %>
+        </ul>
+        <% @app_css.each do |c| %>
+          <div id="tab-css-<%= c.id %>" name="tab-name-css">
+            <p><iframe class="frmCss" src="<%= @text + c.filename %>" width="700" height="500" frameborder="0">
+            </iframe></p>
+          </div>
+        <% end %>
+      </div>
+      <div id="tab-html">
+        <p>
+          <iframe class="frmHtml" src="<%= @html_text %>" width="700" height="500" frameborder="0">
+          </iframe>
+        </p>
+      </div>
+      <div id="tab-summary">
+        <p>
+          (概要)
+        </p>
+      </div>
+      <div id="tab-savedresult">
+        <p>
+          (保存した実行結果)
+        </p>
+      </div>
+    </div>
+  </div>
+  <%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %>
+</div>
+
+<script type="text/javascript"><!--
+function PlayApp() {
+  var value = $(".btnPlay").val()
+  if (value == "play"){
+    $(".frmPlay").attr("src", "");
+    $(".frmPlay").attr("src", "<%= @app_index %>");
+    ChangeTab("tab-play");
+    $(".btnPlay").val("stop")
+    document.getElementById("btnReload").style.display = "block";
+  }
+  else{
+    $(".frmPlay").attr("src", "");
+    $(".btnPlay").val("play")
+    document.getElementById("btnReload").style.display = "none";
+  }
+}
+
+function ReloadApp() {
+  $(".frmPlay").attr("src", "");
+  $(".frmPlay").attr("src", "<%= @app_index %>");
+  ChangeTab("tab-play");
+  $(".btnPlay").val("stop")
+}
+
+function ChangeTab(tabname) {
+  document.getElementById("tab-play").style.display = "none";
+  document.getElementById("tab-js").style.display = "none";
+  document.getElementById("tab-css").style.display = "none";
+  document.getElementById("tab-html").style.display = "none";
+  document.getElementById("tab-summary").style.display = "none";
+  document.getElementById("tab-savedresult").style.display = "none";
+  document.getElementById(tabname).style.display = "block";
+}
+
+function ChangeTabJs(tabname){
+  var names = document.getElementsByName("tab-name-js")
+  for (i = 0; i < names.length; i = i + 1){
+    if (names[i].id == tabname){
+      names[i].style.display = "block";
+    }else{
+      names[i].style.display = "none";
+    }
+  }
+}
+
+function ChangeTabCss(tabname){
+  var names = document.getElementsByName("tab-name-css")
+  for (i = 0; i < names.length; i = i + 1){
+    if (names[i].id == tabname){
+      names[i].style.display = "block";
+    }else{
+      names[i].style.display = "none";
+    }
+  }
+}
+
+function LoadTab(){
+  ChangeTab("tab-play")
+
+  var namejs = document.getElementsByName("tab-name-js")
+  for (i = 0; i < namejs.length; i = i + 1){
+    if (i == 0){
+      namejs[i].style.display = "block";
+    }else{
+      namejs[i].style.display = "none";
+    }
+  }
+  var namecss = document.getElementsByName("tab-name-css")
+  for (i = 0; i < namecss.length; i = i + 1){
+    if (i == 0){
+      namecss[i].style.display = "block";
+    }else{
+      namecss[i].style.display = "none";
+    }
+  }
+}
+
+function LoadButton(){
+  var value = $(".btnPlay").val()
+  if (value == "play"){
+    document.getElementById("btnReload").style.display = "none";
+  }
+  else{
+    document.getElementById("btnReload").style.display = "block";
+  }
+}
+LoadTab()
+LoadButton()
+// --></script>

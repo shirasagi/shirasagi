@@ -3,7 +3,6 @@ class Opendata::Appfile
   include SS::Relation::File
 
   seqid :id
-  field :name, type: String
   field :filename, type: String
   field :text, type: String
   field :format, type: String
@@ -11,10 +10,10 @@ class Opendata::Appfile
   embedded_in :app, class_name: "Opendata::App", inverse_of: :appfile
   belongs_to_file :file
 
-  permit_params :name, :text
+  permit_params :text
 
-  validates :name, presence: true
   validates :in_file, presence: true, if: ->{ file_id.blank? }
+  validates :filename, uniqueness: true
 
   before_validation :set_filename, if: ->{ in_file.present? }
 
@@ -69,7 +68,7 @@ class Opendata::Appfile
         criteria = self.where({})
         return criteria if params.blank?
 
-        criteria = criteria.where(name: /#{params[:keyword]}/) if params[:keyword].present?
+        criteria = criteria.where(filename: /#{params[:keyword]}/) if params[:keyword].present?
 
         criteria
       end
