@@ -42,6 +42,14 @@ module Workflow::Addon
         end
       end
 
+      def workflow_user
+        if workflow_user_id.present?
+          SS::User.where(id: workflow_user_id).first
+        else
+          nil
+        end
+      end
+
       def workflow_levels
         workflow_approvers.map { |h| h[:level] }.uniq.compact.sort
       end
@@ -105,9 +113,18 @@ module Workflow::Addon
       end
 
       def apply_workflow?(route)
-        users = route.approvers.map do |approver|
-          [ approver[:level], Cms::User.find(approver[:user_id]) ]
+        route.validate
+        if route.errors.size != 0
+          route.errors.full_messages.each do |m|
+            errors.add :base, m
+          end
+          return false
         end
+
+        users = route.approvers.map do |approver|
+          [ approver[:level], Cms::User.where(id: approver[:user_id]).first ]
+        end
+        users = users.select { |_, user| user.present? }
 
         validate_user(route, users, :read, :approve)
         errors.size == 0
@@ -147,8 +164,11 @@ module Workflow::Addon
         return if errors.size > 0
 
         # check whether approvers have read permission.
-        workflow_approvers.each do |workflow_approver|
-          user = Cms::User.find(workflow_approver[:user_id])
+        users = workflow_approvers.map do |approver|
+          Cms::User.where(id: approver[:user_id]).first
+        end
+        users = users.select(&:present?)
+        users.each do |user|
           errors.add :workflow_approvers, :not_read, name: user.name unless allowed?(:read, user, site: cur_site)
           errors.add :workflow_approvers, :not_approve, name: user.name unless allowed?(:approve, user, site: cur_site)
         end

@@ -51,14 +51,23 @@
         </tr>
       </thead>
       <tbody>
-        <% @item.approvers_at(level).each do |approver| %>
-          <tr data-id="<%= "#{level},#{approver[:user_id]}" %>">
-            <td>
-              <%= f.hidden_field "approvers[]", value: "#{level},#{approver[:user_id]}" %>
-              <%= @item.user_name(approver[:user_id]) %>
-            </td>
-            <td><%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %></td>
-          </tr>
+        <% @item.approver_users_at(level).each do |user| %>
+          <% if user.present? %>
+            <tr data-id="<%= "#{level},#{user.id}" %>">
+              <td>
+                <%= f.hidden_field "approvers[]", value: "#{level},#{user.id}" %>
+                <%= user.long_name %>
+              </td>
+              <td><%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %></td>
+            </tr>
+          <% else %>
+            <tr>
+              <td>
+                <%= t("workflow.user_deleted") %>
+              </td>
+              <td><%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %></td>
+            </tr>
+          <% end %>
         <% end %>
       </tbody>
     </table>

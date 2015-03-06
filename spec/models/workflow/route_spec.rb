@@ -91,7 +91,7 @@ describe Workflow::Route do
       subject do
         Workflow::Route.new({ name: "workflow-#{rand(0x100000000).to_s(36)}",
                               group_ids: [ 1 ],
-                              approvers: [ { user_id: 2 }, { user_id: 1 } ],
+                              approvers: [ { user_id: cms_user.id }, { user_id: ss_user.id } ],
                               required_counts: [ false, false ] })
       end
       it { expect(subject).to have(2).errors_on(:base) }
@@ -111,7 +111,7 @@ describe Workflow::Route do
       subject do
         Workflow::Route.new({ name: "workflow-#{rand(0x100000000).to_s(36)}",
                               group_ids: [ 1 ],
-                              approvers: [ { level: 2, user_id: 1 } ],
+                              approvers: [ { level: 2, user_id: cms_user.id } ],
                               required_counts: [ false, false ] })
       end
       it { expect(subject).to have(1).errors_on(:base) }
