@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
 gem "rails", "4.2.0"
-gem "sass-rails", "~> 4.0.3"
+gem 'sass-rails', '~> 5.0'
 gem "uglifier", ">= 1.3.0"
-gem "coffee-rails", "~> 4.0.0"
+gem 'coffee-rails', '~> 4.1.0'
 gem "therubyracer", "~> 0.10.2", platforms: :ruby
 gem "jquery-rails"
 gem "turbolinks"
@@ -37,6 +37,8 @@ gem "mail-iso-2022-jp"
 gem 'simple_captcha2', require: 'simple_captcha'
 gem "rails_autolink"
 gem "browser"
+gem 'sass-rails-source-maps'
+gem 'coffee-rails-source-maps'
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
