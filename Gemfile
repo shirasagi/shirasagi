@@ -37,8 +37,8 @@ gem "mail-iso-2022-jp"
 gem 'simple_captcha2', require: 'simple_captcha'
 gem "rails_autolink"
 gem "browser"
-gem 'sass-rails-source-maps'
-gem 'coffee-rails-source-maps'
+#gem 'sass-rails-source-maps'
+#gem 'coffee-rails-source-maps'
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
