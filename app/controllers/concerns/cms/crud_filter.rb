@@ -6,7 +6,7 @@ module Cms::CrudFilter
     menu_view "cms/crud/menu"
   end
 
- private
+  private
     def append_view_paths
       append_view_path "app/views/ss/crud"
       append_view_path "app/views/cms/crud"
