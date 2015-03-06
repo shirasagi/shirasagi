@@ -474,6 +474,7 @@ class @Link_Checker
   @links = {}
   @error = ""
   @url = "<%= SS.config.cms.link_check_url %>" || "/.cms/link_check/check.json"
+  @rootUrl = ""
 
   @render: ()->
     $(".mod-cms-body button.link-check").on "click", ->
@@ -525,7 +526,9 @@ class @Link_Checker
 
     links = {}
     for href, i in $(html).find('a[href]')
-      links[i + 1] = $(href).attr('href')
+      link = $(href).attr('href')
+      link = Link_Checker.rootUrl + link.slice(1) if /^\//.test(link)
+      links[i + 1] = link
 
     $.ajax {
       type: "POST", url: Link_Checker.url, cache: false,
