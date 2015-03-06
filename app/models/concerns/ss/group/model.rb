@@ -64,9 +64,8 @@ module SS::Group::Model
     end
 
     def root
-      parts = name.split("/")
-      return nil if parts.length == 0
-      return self if parts.length == 1
+      parts = name.try(:split, "/") || []
+      return self if parts.length <= 1
 
       0.upto(parts.length - 1) do |c|
         ret = self.class.where(name: parts[0..c].join("/")).first

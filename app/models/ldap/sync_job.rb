@@ -78,10 +78,10 @@ class Ldap::SyncJob
     def sync_ldap_users(ss_group, ldap_users)
       ldap_users.each do |ldap_user|
         ss_user = Cms::User.where(ldap_dn: ldap_user.dn).first
+        new_user = ss_user.blank?
         ss_user ||= Cms::User.new
 
-        same_group = nil
-        same_group = same_group?(ss_user.group_ids, [ ss_group.id ]) if ss_user.persisted?
+        same_group = new_user ? true : same_group?(ss_user.group_ids, [ ss_group.id ])
 
         ss_user.name = ldap_user.name
         ss_user.email = ldap_user.email if ldap_user.email.present?

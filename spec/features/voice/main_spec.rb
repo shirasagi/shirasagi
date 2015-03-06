@@ -5,11 +5,11 @@ describe "voice_main" do
   port = 33_190
   http_server = nil
 
-  subject(:voice_site) {
+  let(:voice_site) {
     SS::Site.find_or_create_by(
       name: "VoiceSite",
       host: "voicehost",
-      domains: "localhost:#{port}"
+      domains: "127.0.0.1:#{port}"
     )
   }
 

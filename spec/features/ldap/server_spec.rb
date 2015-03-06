@@ -24,13 +24,6 @@ describe "ldap_server", ldap: true do
     let(:group_path) { "/.#{site.host}/ldap/server/#{URI.escape(group_dn)}/group" }
     let(:user_path) { "/.#{site.host}/ldap/server/#{URI.escape(user_dn)}/user" }
 
-    after :all do
-      group.delete if group.present?
-      site.delete if site.present?
-      role.delete if role.present?
-      user.delete if user.present?
-    end
-
     it "without login" do
       visit index_path
       expect(current_path).to eq sns_login_path
@@ -44,28 +37,28 @@ describe "ldap_server", ldap: true do
 
     context "with auth" do
       it "#index" do
-        login_cms_user(user)
+        login_user(user)
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end
 
       it "#index with dn" do
-        login_cms_user(user)
+        login_user(user)
         visit index2_path
         expect(status_code).to eq 200
         expect(current_path).to eq index2_path
       end
 
       it "#group" do
-        login_cms_user(user)
+        login_user(user)
         visit group_path
         expect(status_code).to eq 200
         expect(current_path).to eq group_path
       end
 
       it "#user" do
-        login_cms_user(user)
+        login_user(user)
         visit user_path
         expect(status_code).to eq 200
         expect(current_path).to eq user_path

@@ -7,10 +7,6 @@ describe Ldap::User, ldap: true do
            ldap_dn: "dc=city,dc=shirasagi,dc=jp", ldap_auth_method: "simple")
   end
 
-  after :all do
-    group.delete if group.present?
-  end
-
   describe "#find" do
     subject(:username) { "cn=Manager,dc=city,dc=shirasagi,dc=jp" }
     subject(:password) { "ldappass" }

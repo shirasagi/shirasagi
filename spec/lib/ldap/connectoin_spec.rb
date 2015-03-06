@@ -9,10 +9,6 @@ describe Ldap::Connection, ldap: true do
     let(:username) { "cn=Manager,dc=city,dc=shirasagi,dc=jp" }
     let(:password) { "ldappass" }
 
-    after :all do
-      group.delete if group.present?
-    end
-
     describe ".connect" do
       context "when valid config is given" do
         it { expect(Ldap::Connection.connect(group, username, password)).not_to be_nil }
@@ -52,10 +48,6 @@ describe Ldap::Connection, ldap: true do
     let(:group) do
       create(:ss_group, name: unique_id, ldap_host: ENV["ldap_host"],
              ldap_dn: "dc=city,dc=shirasagi,dc=jp", ldap_auth_method: "anonymous")
-    end
-
-    after :all do
-      group.delete if group.present?
     end
 
     describe ".connect" do

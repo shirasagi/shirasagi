@@ -16,7 +16,7 @@ describe Voice::SynthesisJob do
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}"
+      url = "http://127.0.0.1:#{port}/#{path}"
       let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
@@ -48,7 +48,7 @@ describe Voice::SynthesisJob do
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}"
+      url = "http://127.0.0.1:#{port}/#{path}"
       let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
@@ -78,7 +78,7 @@ describe Voice::SynthesisJob do
 
     context 'when get 400' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}?status_code=400"
+      url = "http://127.0.0.1:#{port}/#{path}?status_code=400"
       let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
@@ -105,7 +105,7 @@ describe Voice::SynthesisJob do
 
     context 'when get 404' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}?status_code=404"
+      url = "http://127.0.0.1:#{port}/#{path}?status_code=404"
       let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
@@ -132,7 +132,7 @@ describe Voice::SynthesisJob do
 
     context 'when get 500' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}?status_code=500"
+      url = "http://127.0.0.1:#{port}/#{path}?status_code=500"
       let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
@@ -160,7 +160,7 @@ describe Voice::SynthesisJob do
     context 'when server timed out' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       wait = SS.config.voice.download['timeout_sec'] + 5
-      url = "http://localhost:#{port}/#{path}?wait=#{wait}"
+      url = "http://127.0.0.1:#{port}/#{path}?wait=#{wait}"
       let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
@@ -191,7 +191,7 @@ describe Voice::SynthesisJob do
 
     context 'when server does not respond last_modified' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}?last_modified=nil"
+      url = "http://127.0.0.1:#{port}/#{path}?last_modified=nil"
       let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
@@ -238,7 +238,7 @@ describe Voice::SynthesisJob do
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}"
+      url = "http://127.0.0.1:#{port}/#{path}"
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
@@ -264,7 +264,7 @@ describe Voice::SynthesisJob do
 
     context 'when get 404' do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://localhost:#{port}/#{path}?status_code=404"
+      url = "http://127.0.0.1:#{port}/#{path}?status_code=404"
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")
@@ -284,7 +284,7 @@ describe Voice::SynthesisJob do
     context 'when server timed out' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       wait = SS.config.voice.download['timeout_sec'] + 5
-      url = "http://localhost:#{port}/#{path}?wait=#{wait}"
+      url = "http://127.0.0.1:#{port}/#{path}?wait=#{wait}"
 
       before :all  do
         http_server.add_redirect("/#{path}", "/test-001.html")

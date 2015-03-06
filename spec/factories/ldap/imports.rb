@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :ldap_import, class: Ldap::Import do
-    site_id { create(:ss_site).id }
+    site_id { ss_site.id }
     group_count 3
     user_count 2
     ldap [ { type: "group", dn: "ou=001企画部,dc=city,dc=shirasagi,dc=jp", name: "001企画部" },

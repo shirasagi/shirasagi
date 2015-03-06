@@ -7,13 +7,6 @@ describe Cms::User do
   let(:site1) { create(:cms_site, host: unique_id, domains: "#{unique_id}.example.jp", group_ids: [ group1.id ]) }
   let(:site2) { create(:cms_site, host: unique_id, domains: "#{unique_id}.example.jp", group_ids: [ group2.id ]) }
 
-  after :all do
-    group1.delete if group1.present?
-    group2.delete if group2.present?
-    site1.delete if site1.present?
-    site2.delete if site2.present?
-  end
-
   describe "#save" do
     context "when sns user is given" do
       subject(:entity) do

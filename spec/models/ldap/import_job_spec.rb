@@ -28,13 +28,6 @@ describe Ldap::ImportJob, ldap: true do
       end
       subject { Ldap::ImportJob.new }
 
-      after :all do
-        group.delete if group.present?
-        site.delete if site.present?
-        role.delete if role.present?
-        user.delete if user.present?
-      end
-
       import = nil
       it "should not raise errors" do
         expect { import = subject.call(site.id, user.id, "pass") }.not_to raise_error

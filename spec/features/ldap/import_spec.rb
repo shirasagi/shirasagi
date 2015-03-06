@@ -20,13 +20,6 @@ describe "ldap_import", ldap: true do
     let(:index_path) { ldap_import_index_path site.host }
     let(:import_confirmation_path) { ldap_import_import_confirmation_path site.host }
 
-    after :all do
-      group.delete if group.present?
-      site.delete if site.present?
-      role.delete if role.present?
-      user.delete if user.present?
-    end
-
     it "without login" do
       visit index_path
       expect(current_path).to eq sns_login_path
@@ -40,14 +33,14 @@ describe "ldap_import", ldap: true do
 
     context "with auth" do
       it "#index" do
-        login_cms_user(user)
+        login_user(user)
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end
 
       it "#import" do
-        login_cms_user(user)
+        login_user(user)
         visit import_confirmation_path
         expect(current_path).to eq import_confirmation_path
         within "form#item-form" do
@@ -63,21 +56,18 @@ describe "ldap_import", ldap: true do
         let(:show_path) { ldap_import_path site.host, item }
         let(:sync_confirmation_path) { "/.#{site.host}/ldap/import/sync_confirmation/#{item.id}" }
         let(:sync_path) { "/.#{site.host}/ldap/import/sync/#{item.id}" }
+        let(:results_path) { "/.#{site.host}/ldap/import/results/#{item.id}" }
         let(:delete_path) { delete_ldap_import_path site.host, item }
 
-        after :all do
-          item.delete if item.present?
-        end
-
         it "#show" do
-          login_cms_user(user)
+          login_user(user)
           visit show_path
           expect(status_code).to eq 200
           expect(current_path).to eq show_path
         end
 
         it "#sync" do
-          login_cms_user(user)
+          login_user(user)
           visit sync_confirmation_path
           expect(status_code).to eq 200
           expect(current_path).to eq sync_confirmation_path
@@ -85,12 +75,12 @@ describe "ldap_import", ldap: true do
             click_button "同期"
           end
           expect(status_code).to eq 200
-          expect(current_path).to eq sync_path
+          expect(current_path).to eq results_path
           expect(page).to have_selector("article#main div dl.see")
         end
 
         it "#delete" do
-          login_cms_user(user)
+          login_user(user)
           visit delete_path
           expect(status_code).to eq 200
           expect(current_path).to eq delete_path

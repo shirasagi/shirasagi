@@ -9,10 +9,6 @@ describe Ldap::Group, ldap: true do
   subject(:username) { "cn=Manager,dc=city,dc=shirasagi,dc=jp" }
   subject(:password) { "ldappass" }
 
-  after :all do
-    group.delete if group.present?
-  end
-
   describe "#find" do
     context "existing dn is given" do
       subject(:dn) { "ou=001企画部, dc=city, dc=shirasagi, dc=jp" }

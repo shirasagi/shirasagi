@@ -55,7 +55,7 @@ module SS::Site::Model
 
     def root_group
       ret = root_groups
-      if ret.length != 1
+      if ret.length > 1
         raise MultipleRootGroupsError, "site: #{name} has multiple root groups"
       end
       ret.first
