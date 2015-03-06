@@ -52,18 +52,13 @@ $ ->
     </dd>
     <dd>
       <%
-        approvers = @route.approvers_at(level)
-        approvers = approvers.select do |approver|
-          user = @route.user_for(approver[:user_id])
+        users = @route.approver_users_at(level)
+        users = users.select(&:present?).select do |user|
           @item.allowed?(:approve, user, site: @cur_site)
         end
-        names = approvers.map do |approver|
-          user = @route.user_for(approver[:user_id])
-          "#{user.long_name}"
-        end
+        names = users.map(&:long_name)
       %>
-      <% approvers.each do |approver| %>
-        <% user = @route.user_for(approver[:user_id]) %>
+      <% users.each do |user| %>
         <%= hidden_field_tag "workflow_approvers", "#{level},#{user._id},pending," %>
       <% end %>
       <%= br names.join("\n") %>

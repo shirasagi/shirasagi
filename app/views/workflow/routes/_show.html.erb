@@ -17,6 +17,6 @@
   <dt><%= @model.t :required_counts %></dt>
   <dd><%= @item.required_count_label_at(level) %></dd>
   <dt><%= @model.t :approvers %></dt>
-  <dd><%= br @item.approvers_at(level).map { |approver| @item.user_name(approver[:user_id]) }.join("\n") %></dd>
+  <dd><%= br @item.approver_users_at(level).map { |user| user.present? ? user.long_name : t("workflow.user_deleted") }.join("\n") %></dd>
 </dl>
 <% end %>
