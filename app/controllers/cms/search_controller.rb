@@ -9,10 +9,6 @@ class Cms::SearchController < ApplicationController
 
   public
     def index
-      @pages = []
-      @layouts = []
-      @parts = []
-      @model = Cms::Page
     end
 
     def update
