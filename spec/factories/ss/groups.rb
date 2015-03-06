@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :ss_group, class: SS::Group do
-    name "#{unique_id}"
+    name "ss_group"
   end
 end
