@@ -74,6 +74,9 @@ RSpec.configure do |config|
     `rake db:create_indexes`
     DatabaseCleaner[:mongoid].strategy = :truncation
   end
+
+  config.add_setting :default_dbscope, default: :context
+  config.extend(SS::DatabaseCleanerSupport)
 end
 
 def unique_id
