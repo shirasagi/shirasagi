@@ -17,10 +17,8 @@
           CSS</a></li>
         <li><a href="#tab-html" onclick="ChangeTab('tab-html'); return false;">
           HTML</a></li>
-        <li><a href="#tab-summary" onclick="ChangeTab('tab-summary'); return false;">
-          概要</a></li>
-        <li><a href="#tab-savedresult" onclick="ChangeTab('tab-savedresult'); return false;">
-          保存した実行結果</a></li>
+        <li><a href="#tab-sample" onclick="ChangeTab('tab-sample'); return false;">
+          サンプルデータ</a></li>
       </ul>
       <div id="tab-play">
         <p>
@@ -30,12 +28,12 @@
       </div>
       <div id="tab-js">
         <ul>
-          <% @app_js.each do |j| %>
+          <% @js_src.each do |j| %>
             <li><a href="#tab-js-<%= j.id %>" onclick="ChangeTabJs('tab-js-<%= j.id %>'); return false;">
               <%= j.filename %></a></li>
           <% end %>
         </ul>
-        <% @app_js.each do |j| %>
+        <% @js_src.each do |j| %>
           <div id="tab-js-<%= j.id %>" name="tab-name-js">
             <p><iframe class="frmJs" src="<%= @text + j.filename %>" width="700" height="500" frameborder="0">
             </iframe></p>
@@ -44,12 +42,12 @@
       </div>
       <div id="tab-css">
         <ul>
-          <% @app_css.each do |c| %>
+          <% @css_src.each do |c| %>
             <li><a href="#tab-css-<%= c.id %>" onclick="ChangeTabCss('tab-css-<%= c.id %>'); return false;">
               <%= c.filename %></a></li>
           <% end %>
         </ul>
-        <% @app_css.each do |c| %>
+        <% @css_src.each do |c| %>
           <div id="tab-css-<%= c.id %>" name="tab-name-css">
             <p><iframe class="frmCss" src="<%= @text + c.filename %>" width="700" height="500" frameborder="0">
             </iframe></p>
@@ -57,19 +55,24 @@
         <% end %>
       </div>
       <div id="tab-html">
-        <p>
-          <iframe class="frmHtml" src="<%= @html_text %>" width="700" height="500" frameborder="0">
-          </iframe>
-        </p>
+        <ul>
+          <% @html_src.each do |h| %>
+            <li><a href="#tab-html-<%= h.id %>" onclick="ChangeTabHtml('tab-html-<%= h.id %>'); return false;">
+              <%= h.filename %></a></li>
+          <% end %>
+        </ul>
+        <% @html_src.each do |h| %>
+          <div id="tab-html-<%= h.id %>" name="tab-name-html">
+            <p><iframe class="frmHtml" src="<%= @text + h.filename %>" width="700" height="500" frameborder="0">
+            </iframe></p>
+          </div>
+        <% end %>
       </div>
-      <div id="tab-summary">
+      <div id="tab-sample">
         <p>
-          (概要)
-        </p>
-      </div>
-      <div id="tab-savedresult">
-        <p>
-          (保存した実行結果)
+          <% if @sample.present? %>
+            <%= render partial: "opendata/agents/pages/app/content" %>
+          <% end %>
         </p>
       </div>
     </div>
@@ -106,8 +109,7 @@ function ChangeTab(tabname) {
   document.getElementById("tab-js").style.display = "none";
   document.getElementById("tab-css").style.display = "none";
   document.getElementById("tab-html").style.display = "none";
-  document.getElementById("tab-summary").style.display = "none";
-  document.getElementById("tab-savedresult").style.display = "none";
+  document.getElementById("tab-sample").style.display = "none";
   document.getElementById(tabname).style.display = "block";
 }
 
@@ -124,6 +126,28 @@ function ChangeTabJs(tabname){
 
 function ChangeTabCss(tabname){
   var names = document.getElementsByName("tab-name-css")
+  for (i = 0; i < names.length; i = i + 1){
+    if (names[i].id == tabname){
+      names[i].style.display = "block";
+    }else{
+      names[i].style.display = "none";
+    }
+  }
+}
+
+function ChangeTabHtml(tabname){
+  var names = document.getElementsByName("tab-name-html")
+  for (i = 0; i < names.length; i = i + 1){
+    if (names[i].id == tabname){
+      names[i].style.display = "block";
+    }else{
+      names[i].style.display = "none";
+    }
+  }
+}
+
+function ChangeTabCsv(tabname){
+  var names = document.getElementsByName("tab-name-csv")
   for (i = 0; i < names.length; i = i + 1){
     if (names[i].id == tabname){
       names[i].style.display = "block";
@@ -150,6 +174,22 @@ function LoadTab(){
       namecss[i].style.display = "block";
     }else{
       namecss[i].style.display = "none";
+    }
+  }
+  var namehtml = document.getElementsByName("tab-name-html")
+  for (i = 0; i < namehtml.length; i = i + 1){
+    if (i == 0){
+      namehtml[i].style.display = "block";
+    }else{
+      namehtml[i].style.display = "none";
+    }
+  }
+  var namecsv = document.getElementsByName("tab-name-csv")
+  for (i = 0; i < namecsv.length; i = i + 1){
+    if (i == 0){
+      namecsv[i].style.display = "block";
+    }else{
+      namecsv[i].style.display = "none";
     }
   }
 }

@@ -45,6 +45,16 @@ class Opendata::Appfile
       true
     end
 
+    def parse_csv
+      require "nkf"
+      require "csv"
+
+      src  = file
+      data = NKF.nkf("-w", src.read)
+      sep  = data =~ /\t/ ? "\t" : ","
+      CSV.parse(data, col_sep: sep) rescue nil
+    end
+
   private
     def set_filename
       self.filename = in_file.original_filename

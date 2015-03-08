@@ -11,21 +11,25 @@ class Opendata::Agents::Pages::AppController < ApplicationController
       @search_url = search_apps_path
 
       appli = Opendata::App.find(@cur_page.id)
-      @app_html = appli.appfiles.where(format: "HTML").first
+      @app_html = appli.appfiles.where(filename: "index.html").first
       if @app_html.present?
         @app_index = "/app/#{@cur_page.id}/appfile/#{@app_html.filename}"
         @text = "/text/#{@cur_page.id}/appfile/"
-        @html_text = "#{@text}#{@app_html.filename}"
 
-        @app_js = []
-        @app_css = []
+        @js_src = []
+        @css_src = []
+        @html_src = []
         appli.appfiles.each do |file|
           if file.format == "JS"
-            @app_js.push(file)
+            @js_src.push(file)
           elsif file.format == "CSS"
-            @app_css.push(file)
+            @css_src.push(file)
+          elsif file.format == "HTML" or file.format == "HTM"
+            @html_src.push(file)
           end
         end
+
+        @sample = appli.appfiles.where(format: "CSV")
       end
 
       if @cur_page.dataset_ids.empty? == false
