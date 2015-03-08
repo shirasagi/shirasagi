@@ -27,3 +27,17 @@ module SS
     end
   end
 end
+
+module Mongoid
+  module Tasks
+    module Database
+      extend self
+
+      private
+        # rewrite logger method.
+        def logger
+          Rails.logger
+        end
+    end
+  end
+end
