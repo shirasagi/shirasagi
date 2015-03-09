@@ -70,10 +70,18 @@ RSpec.configure do |config|
   config.filter_run_excluding(open_jtalk: true) unless can_test_open_jtalk_spec?
 
   config.before(:suite) do
-    `rake db:drop`
-    `rake db:create_indexes`
+    # `rake db:drop`
+    ::Mongoid::Sessions.default.drop
+    # `rake db:create_indexes`
+    ::Rails.application.eager_load!
+    ::Mongoid::Tasks::Database.create_indexes
+
+    #
     DatabaseCleaner[:mongoid].strategy = :truncation
   end
+
+  config.add_setting :default_dbscope, default: :context
+  config.extend(SS::DatabaseCleanerSupport)
 end
 
 def unique_id

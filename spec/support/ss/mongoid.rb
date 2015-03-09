@@ -8,25 +8,36 @@ shared_examples "mongoid#find" do
   #it { expect(model.all.size).not_to eq 0 }
 end
 
-class RSpec::Core::ExampleGroup
-  class << self
-    alias_method :subclass_original, :subclass
-    def subclass(parent, description, args, &example_group_block)
-      ret = subclass_original(parent, description, args, &example_group_block)
-      is_top_level = parent == RSpec::Core::ExampleGroup
-      if is_top_level
-        ret.module_exec do
-          prepend_before(:context) do
-            Rails.logger.debug "#{description}: start database cleaner"
-            DatabaseCleaner.start
-          end
-          after(:context) do
-            Rails.logger.debug "#{description}: clean database"
-            DatabaseCleaner.clean
-          end
-        end
+module SS
+  module DatabaseCleanerSupport
+    def self.extended(obj)
+      return unless obj.top_level?
+
+      dbscope = obj.metadata[:dbscope]
+      dbscope ||= RSpec.configuration.default_dbscope
+
+      obj.prepend_before(dbscope) do
+        Rails.logger.debug "start database cleaner at #{inspect}"
+        DatabaseCleaner.start
       end
-      ret
+      obj.after(dbscope) do
+        Rails.logger.debug "clean database at #{inspect}"
+        DatabaseCleaner.clean
+      end
+    end
+  end
+end
+
+module Mongoid
+  module Tasks
+    module Database
+      extend self
+
+      private
+        # rewrite logger method.
+        def logger
+          Rails.logger
+        end
     end
   end
 end
