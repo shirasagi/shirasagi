@@ -1,0 +1,20 @@
+<dt class="chorg-revisions-<%= type %>"><%= t :"chorg.views.revisions/#{params[:action]}.#{type}" %></dt>
+<dd class="chorg-revisions-<%= type %>">
+  <table class="index">
+    <thead><tr><th><%= t("chorg.views.revisions/#{params[:action]}.#{type}_description") %></th></tr></thead>
+    <tbody>
+    <% change_sets.each do |change_set| %>
+      <tr>
+        <td>
+          <%= link_to change_set.add_description, chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+          <nav class="tap-menu">
+            <%= link_to :show, chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+            <%= link_to :edit, edit_chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+            <%= link_to :delete, delete_chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+          </nav>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</dd>

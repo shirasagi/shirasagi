@@ -19,4 +19,9 @@ describe Cms::Page do
     it { expect(item.public?).not_to eq nil }
     it { expect(item.parent).to eq false }
   end
+
+  describe "#becomes_with_route" do
+    subject { create(:cms_page, route: "article/page") }
+    it { expect(subject.becomes_with_route).to be_kind_of(Article::Page) }
+  end
 end

@@ -361,8 +361,19 @@ class @SS_SearchUI
     $("#ajax-box a.select-item").on "click", (e)->
       id = $(this).closest("[data-id]").attr("data-id")
       name = $(this).text()
+      # append newly selected item
       SS_SearchUI.select({ id: id, name: name })
+      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
+      e.preventDefault()
+      $.colorbox.close()
 
+    $("#ajax-box .select-single-item").on "click", (e)->
+      id = $(this).closest("[data-id]").attr("data-id")
+      name = $(this).text()
+      # remove old items
+      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").remove()
+      # append newly selected item
+      SS_SearchUI.select({ id: id, name: name })
       SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
       e.preventDefault()
       $.colorbox.close()

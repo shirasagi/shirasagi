@@ -1,0 +1,41 @@
+<dl class="see before_division">
+  <dt><%= t "chorg.views.#{params[:type]}_change_sets.before_division" %></dt>
+  <dd></dd>
+  <dt><%= t "chorg.views.#{params[:type]}_change_sets.name" %></dt>
+  <dd>
+    <%= f.hidden_field "sources[][id]", value: "", class: "hidden-ids" %>
+    <%= link_to :"chorg.views.#{params[:type]}_change_sets.select_group", cms_search_groups_path(single: 1), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name" style="width: 90%;"><%= Cms::Group.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% source = @item.sources.try(:first) %>
+      <% if source.present? %>
+        <tr data-id="<%= source["id"] %>">
+          <td><%= f.hidden_field "sources[][id]", value: source["id"] %> <%= source["name"] %></td>
+          <td><%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see after_division">
+  <dt><%= t "chorg.views.#{params[:type]}_change_sets.after_division", count: 0 %></dt>
+  <dd></dd>
+  <% 1.upto(SS.config.chorg.max_division) do |index| %>
+    <dt><%= t "chorg.views.#{params[:type]}_change_sets.after_division", count: index %></dt>
+    <dd></dd>
+    <% Chorg::ChangeSet::GROUP_ATTRIBUTES.each do |k| %>
+      <dt><%= t "chorg.views.#{params[:type]}_change_sets.#{k}" %></dt>
+      <dd><%= text_field_tag "item[destinations][][#{k}]", "", id: "item_destinations_#{index - 1}_#{k}", value: @item.destinations.try(:send, :[], index - 1).try(:send, :[], k) %></dd>
+    <% end %>
+  <% end %>
+</dl>
