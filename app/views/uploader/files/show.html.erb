@@ -17,7 +17,7 @@
       <% if @item.text? %>
       <% begin %>
       <dt class="wide"><%= @model.t :text %></dt>
-      <dd class="wide"><%= text_area_tag "mod-uploader-text", @item.text, style: "height: 500px;" %></dd>
+      <dd class="wide"><%= text_area_tag "mod-uploader-text", @item.text, style: "height: 400px;" %></dd>
       <% rescue => e %>Error (<%= e %>)<% end %>
       <% end %>
     <% end %>
