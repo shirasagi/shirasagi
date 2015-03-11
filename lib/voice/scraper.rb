@@ -18,6 +18,7 @@ class Voice::Scraper
       if html =~ /<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->/i
         html.gsub!(/<!--[^>]*?\s#{@skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{@skip_marks[1]}\s[^>]*?-->/im, '')
       end
+      html.gsub!(/<!--[\s\S]*?-->/m, '')
       html.gsub!(/<\s*(#{@delete_tags.join("|")})(\s|>).*?<\/\s*\1\s*>/im, '')
 
       # <img> tag's special case
