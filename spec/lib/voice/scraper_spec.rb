@@ -162,4 +162,29 @@ describe Voice::Scraper do
       expect(texts.length).to eq 0
     end
   end
+
+  context "when multiple skip-voice is given" do
+    source_file = ::File.new("#{Rails.root}/spec/fixtures/voice/test-003.html")
+    html = source_file.read
+    texts = Voice::Scraper.new.extract_text html
+
+    it 'is array' do
+      expect(texts).to be_a(Array)
+    end
+    it 'contains "見出し1"' do
+      expect(texts).to include(include("見出し1"))
+    end
+    it 'contains "見出し2"' do
+      expect(texts).to include(include("見出し2"))
+    end
+    it 'contains "見出し3"' do
+      expect(texts).to include(include("見出し3"))
+    end
+    it 'contains "見出し4"' do
+      expect(texts).to include(include("見出し4"))
+    end
+    it 'contains "内容が入ります。内容が入ります。内容が入ります。"' do
+      expect(texts).to include(include("内容が入ります。内容が入ります。内容が入ります。"))
+    end
+  end
 end
