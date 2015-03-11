@@ -31,11 +31,9 @@ end
 module Mongoid
   module Tasks
     module Database
-      extend self
-
       private
         # rewrite logger method.
-        def logger
+        def self.logger
           Rails.logger
         end
     end
