@@ -11,8 +11,6 @@ end
 module SS
   module DatabaseCleanerSupport
     def self.extended(obj)
-      return unless obj.top_level?
-
       dbscope = obj.metadata[:dbscope]
       dbscope ||= RSpec.configuration.default_dbscope
 
