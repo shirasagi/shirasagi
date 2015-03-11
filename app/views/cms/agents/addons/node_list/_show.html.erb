@@ -20,7 +20,7 @@
   <dt><%= @model.t :loop_html %></dt>
   <dd>
     <% if @item.loop_html.present? %>
-    <%= text_area_tag :loop_html, @item.loop_html, class: "html" %>
+    <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>
     <% end %>
   </dd>
 
