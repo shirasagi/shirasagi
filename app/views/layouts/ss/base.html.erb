@@ -8,11 +8,12 @@
 <link data-turbolinks-track="true" href="/assets/css/jquery-ui/pepper-grinder/custom.min.css" media="all" rel="stylesheet" />
 <link data-turbolinks-track="true" href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <link data-turbolinks-track="true" href="/assets/css/datetimepicker/jquery.datetimepicker.css" media="all" rel="stylesheet" />
+<link data-turbolinks-track="true" href="/assets/css/codemirror/codemirror.css" media="all" rel="stylesheet" />
 <% controller.stylesheets.each do |path| %>
 <%= stylesheet_link_tag path, media: "all", "data-turbolinks-track" => true %>
 <% end %>
 <!--[if lt IE 9]>
-<script src="/assets/js/IE9.js"></script>
+<script src="/assets/js/html5.js"></script>
 <script src="/assets/js/selectivizr-min.js"></script>
 <![endif]-->
 <%= javascript_include_tag "ss/ss", "data-turbolinks-track" => true %>
@@ -26,9 +27,12 @@
 <% elsif SS.config.cms.html_editor == "tinymce" %>
 <script data-turbolinks-track="true" src="/assets/js/tinymce/tinymce.min.js"></script>
 <% end %>
+<!--
 <script data-turbolinks-track="true" src="/assets/js/ace/ace.js"></script>
 <script data-turbolinks-track="true" src="/assets/js/ace/theme-chrome.js"></script>
 <script data-turbolinks-track="true" src="/assets/js/jquery-ace.min.js"></script>
+-->
+<script data-turbolinks-track="true" src="/assets/js/codemirror/codemirror.js"></script>
 <% controller.javascripts.each do |path| %>
 <%= javascript_include_tag path %>
 <% end %>
