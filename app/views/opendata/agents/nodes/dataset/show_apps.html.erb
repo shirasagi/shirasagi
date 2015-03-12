@@ -1,0 +1,38 @@
+<div class="detail">
+
+  <div class="info-wrap">
+    <div class="dataset-apps">
+
+      <div class="apps">
+        <% @apps.each do |app| %>
+          <dl class="author">
+            <dt><%= app.t :name %></dt>
+            <dd><%= link_to app.name, app.url %></dd>
+            <dt><%= app.t :text %></dt>
+            <dd><%= app.text %></dd>
+            <% if app.member_id.present? %>
+              <dt><%= app.t :user_id %></dt>
+              <dd>
+                <% if app.member %>
+                  <%= link_to app.member.name, "#{member_path}#{@cur_page.member.id}" %>
+                <% else %>
+                  ゲストユーザー
+                <% end %>
+              </dd>
+            <% elsif app.contact_group %>
+              <dt><%= app.t :user_id %></dt>
+              <dd><%= app.contact_group.full_name %><br /></dd>
+            <% elsif app.groups.present? %>
+              <dt><%= app.t :user_id %></dt>
+              <dd><%= app.groups.first.name %><br /></dd>
+            <% end %>
+
+            <dt><%= app.t :updated %></dt>
+            <dd><%= tryb{app.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
+          </dl>
+          <hr>
+        <% end %>
+      </div>
+
+  </div>
+</div>

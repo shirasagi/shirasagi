@@ -71,6 +71,7 @@ SS::Application.routes.draw do
     get "dataset/:dataset/point/show.:format" => "public#show_point", cell: "nodes/dataset", format: false
     get "dataset/:dataset/point/add.:format" => "public#add_point", cell: "nodes/dataset", format: false
     get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset", format: false
+    get "dataset/:dataset/apps/show.:format" => "public#show_apps", cell: "nodes/dataset", format: false
     get "dataset/:dataset/ideas/show.:format" => "public#show_ideas", cell: "nodes/dataset", format: false
 
     match "search_dataset_group/(index.:format)" => "public#index", cell: "nodes/search_dataset_group", via: [:get, :post]

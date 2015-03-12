@@ -12,6 +12,12 @@ $ ->
     success: (data)->
       $(".point").html data
 
+  # show apps
+  $.ajax
+    url: "<%= @cur_page.dataset_apps_url %>"
+    success: (data)->
+      $(".dataset-apps").html data
+
   # show ideas
   $.ajax
     url: "<%= @cur_page.dataset_ideas_url %>"
@@ -140,7 +146,9 @@ categories = [
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
     <header><h1>アプリ</h1></header>
-    <div class="pages"></div>
+    <div class="pages">
+      <div class="dataset-apps" id="dataset-apps"></div>
+    </div>
     <nav class="feed"></nav>
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">

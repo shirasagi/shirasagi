@@ -9,7 +9,6 @@
       <thead>
         <tr>
           <th class="name"><%= @model.t :dataset_ids %></th>
-          <th class="name"><%= @model.t :text %></th>
           <th></th>
         </tr>
       </thead>
@@ -17,7 +16,6 @@
         <% @item.datasets.each do |dataset| %>
         <tr data-id="<%= dataset.id %>">
           <td><%= f.hidden_field "dataset_ids[]", value: dataset.id %> <%= dataset.name %></td>
-          <td><%= dataset.text %></td>
           <td><%= link_to t("opendata.search_datasets.deselect"), "#", class: :deselect %></td>
         </tr>
         <% end %>

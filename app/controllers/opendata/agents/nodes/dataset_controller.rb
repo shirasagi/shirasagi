@@ -5,6 +5,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
   include Opendata::DatasetFilter
 
   before_action :set_dataset, only: [:show_point, :add_point, :point_members]
+  before_action :set_apps, only: [:show_apps]
   before_action :set_ideas, only: [:show_ideas]
   skip_filter :logged_in?
 
@@ -17,6 +18,19 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
         first
 
       raise "404" unless @dataset
+    end
+
+    def set_apps
+      @dataset_app_path = @cur_path.sub(/\/apps\/.*/, ".html")
+
+      @dataset_app = Opendata::Dataset.site(@cur_site).public.
+        filename(@dataset_app_path).
+        first
+
+      raise "404" unless @dataset_app
+
+      cond = { site_id: @cur_site.id, dataset_ids: @dataset_app.id }
+      @apps = Opendata::App.where(cond).order_by(:updated.asc)
     end
 
     def set_ideas
@@ -98,6 +112,10 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
     def point_members
       @cur_node.layout = nil
       @items = Opendata::DatasetPoint.where(site_id: @cur_site.id, dataset_id: @dataset.id)
+    end
+
+    def show_apps
+      @cur_node.layout = nil
     end
 
     def show_ideas
