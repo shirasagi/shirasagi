@@ -36,7 +36,7 @@ $ ->
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
     uri[3] = "pages"
-    redirectLocation = "<%= @item.try(:branch?) ? show_path_with_route(@item.master) : "" %>"
+    redirect_location = "<%= @item.try(:branch?) ? show_path_with_route(@item.master) : "" %>"
     $.ajax
       type: "post"
       url: uri.join("/")  + "/" + $(this).attr("updatetype") + "_update"
@@ -48,8 +48,8 @@ $ ->
         remand_comment: $("#remand_comment").prop("value")
         url: "<%= request.url %>"
       success: (data) ->
-        if data["workflow_state"] == "approve" && redirectLocation != ""
-          location.href = redirectLocation
+        if data["workflow_state"] == "approve" && redirect_location != ""
+          location.href = redirect_location
         else
           location.reload()
         end
