@@ -19,7 +19,7 @@ class Workflow::SearchApproversController < ApplicationController
     end
 
     def group_options
-      groups = Cms::Group.site(@cur_site).order_by(_id: 1).each.select do |g|
+      groups = Cms::Group.site(@cur_site).each.select do |g|
         g.allowed?(:read, @cur_user, site: @cur_site)
       end
       groups.reduce([]) do |ret, g|

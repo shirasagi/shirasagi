@@ -1,27 +1,46 @@
 module EditorHelper
+
+  CODE_EXT_MODES = {
+    html: :htmlmixed,
+    scss: :css,
+    js: :javascript,
+    coffee: :coffeescript,
+  }
+
+  CODE_MODE_FILES = {
+    htmlmixed: %w(xml javascript css vbscript htmlmixed),
+  }
+
   def code_editor(elem, opts = {})
-    mode = opts[:mode]
-    if !mode && opts[:filename]
-      extname = opts[:filename].sub(/.*\./, "")
-      extname = "javascript" if extname == "js"
-      mode = extname if File.exists?("#{Rails.public_path}/assets/js/ace/mode-#{extname}.js")
-    end
+    mode   = opts[:mode].to_s.presence
+    mode ||= opts[:filename].sub(/.*\./, "") if opts[:filename]
+
+    mode = CODE_EXT_MODES[mode.to_sym] if CODE_EXT_MODES[mode.to_sym]
+
+    mode_path = "/assets/js/codemirror/mode"
+    mode_file = "#{Rails.public_path}#{mode_path}"
+    mode = nil unless File.exists?("#{mode_file}/#{mode}/#{mode}.js") if mode
 
     h  = []
-    h << %(<script data-turbolinks-track="true" src="/assets/js/ace/mode-#{mode}.js"></script>) if mode
+
+    if mode
+      (CODE_MODE_FILES[mode.to_sym] || [mode]).each do |m|
+        h << %(<script data-turbolinks-track="true" src="#{mode_path}/#{m}/#{m}.js"></script>)
+      end
+    end
+
     h <<  coffee do
       j  = []
       j << %($ ->)
-      j << %(  editor = $\("#{elem}"\).ace({ theme: "chrome", lang: "#{mode}" }))
-      j << %(  ace = editor.data("ace").editor.ace)
-
-      if opts[:readonly]
-        j << %(  ace.setReadOnly(true))
-        j << %(  h = ace.getSession().getScreenLength() * 16 + ace.renderer.scrollBar.getWidth())
-        j << %(  $(ace["container"]).css("line-height", "16px"))
-        j << %(  $(ace["container"]).height(h + "px"))
-        j << %(  $(ace["container"]).find(".ace_scrollbar").hide())
-      end
+      j << %(  $\("#{elem}"\).each -> )
+      j << %(    form = $(this))
+      j << %(    cm = CodeMirror.fromTextArea form.get(0), )
+      j << %(      mode: "#{mode}" ) if mode.present?
+      j << %(      lineNumbers: true )
+      j << %(      readOnly: true ) if opts[:readonly]
+      j << %(      #viewportMargin: Infinity ) if opts[:readonly]
+      j << %(    cm.setSize null, form.height() ) #if opts[:readonly].blank?
+      j << %(    cm.refresh() ) if opts[:readonly].blank?
 
       j.join("\n").html_safe
     end

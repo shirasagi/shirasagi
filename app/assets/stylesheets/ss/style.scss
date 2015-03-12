@@ -112,15 +112,11 @@ textarea.code {
   font-size: 120%;
   font-family: monospace;
 }
-.ace_editor {
-  border: 1px solid #ddd;
+.CodeMirror {
   @include box-sizing(border-box);
 }
-form .ace_editor {
-  border: 1px solid #bbb;
-}
-textarea.ace_text-input {
-  padding: 0px;
+form .CodeMirror {
+  border: 1px solid #ccc;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -472,7 +468,7 @@ input.date, input.datetime {
         color: $gray5;
       }
     }
-    input[type="email"], input[type="password"] {
+    input[type="text"], input[type="password"] {
       background: $gray2;
     }
     footer.send {

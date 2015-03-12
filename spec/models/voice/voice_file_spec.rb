@@ -118,7 +118,7 @@ describe Voice::VoiceFile do
     end
 
     subject(:voice_site) do
-      Cms::Site.find_or_create_by(name: "VoiceSite", host: "test-voice", domains: [ "localhost:#{port}" ])
+      Cms::Site.find_or_create_by(name: "VoiceSite", host: "test-voice", domains: [ "127.0.0.1:#{port}" ])
     end
 
     context "when downloads page" do

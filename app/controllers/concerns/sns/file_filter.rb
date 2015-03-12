@@ -1,6 +1,11 @@
 module Sns::FileFilter
   extend ActiveSupport::Concern
 
+  private
+    def set_last_modified
+      response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.to_time)
+    end
+
   public
     def index
       @items = []
@@ -8,12 +13,15 @@ module Sns::FileFilter
 
     def view
       set_item
+      set_last_modified
+
       send_data @item.read, type: @item.content_type, filename: @item.filename,
         disposition: :inline
     end
 
     def thumb
       set_item
+      set_last_modified
 
       require 'RMagick'
       image = Magick::Image.from_blob(@item.read).shift
@@ -26,6 +34,8 @@ module Sns::FileFilter
 
     def download
       set_item
+      set_last_modified
+
       send_data @item.read, type: @item.content_type, filename: @item.filename,
         disposition: :attachment
     end

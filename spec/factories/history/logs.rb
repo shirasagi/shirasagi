@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :history_log, class: History::Log do
-    site_id { create(:ss_site).id }
-    user_id { create(:ss_user).id }
+    site_id { ss_site.id }
+    user_id { ss_user.id }
     url "/path/to"
     controller "module/controller"
     action "create"

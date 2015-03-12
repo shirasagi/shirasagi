@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
 gem "rails", "4.2.0"
-gem "sass-rails", "~> 4.0.3"
+gem 'sass-rails', '~> 5.0'
 gem "uglifier", ">= 1.3.0"
-gem "coffee-rails", "~> 4.0.0"
+gem 'coffee-rails', '~> 4.1.0'
 gem "therubyracer", "~> 0.10.2", platforms: :ruby
 gem "jquery-rails"
 gem "turbolinks"
@@ -37,6 +37,9 @@ gem "mail-iso-2022-jp"
 gem 'simple_captcha2', require: 'simple_captcha'
 gem "rails_autolink"
 gem "browser"
+#gem 'sass-rails-source-maps'
+#gem 'coffee-rails-source-maps'
+gem "net-ldap"
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
@@ -59,6 +62,23 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
+
+  # DatabaseCleaner
+  #
+  # ref.
+  #   https://github.com/DatabaseCleaner/database_cleaner
+  #   http://stackoverflow.com/questions/6583618/clean-out-or-reset-test-database-with-rspec-and-mongoid-on-rails-3
+  #
+  # Version 1.4.0 is latest now, but that version contaions an error.
+  #
+  # Error message:
+  #   DatabaseCleaner::UnknownStrategySpecified:
+  #          The 'truncation' strategy does not exist for the mongoid ORM!  Available strategies: truncation
+  #
+  # ref.
+  #   https://github.com/DatabaseCleaner/database_cleaner/issues/322
+  #   https://github.com/DatabaseCleaner/database_cleaner/issues/299
+  gem 'database_cleaner', '1.3.0'
 end
 
 group :development do

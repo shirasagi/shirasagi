@@ -177,8 +177,6 @@ ja:
         name: ロール名
         permission_level: 権限レベル
         permissions: 権限設定
-      cms/group:
-        name: グループ名
       cms/member/model:
         name: 氏名
         email: メールアドレス

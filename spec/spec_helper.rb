@@ -10,6 +10,7 @@ require 'rspec/rails'
 #require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'database_cleaner'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -67,8 +68,21 @@ RSpec.configure do |config|
 
   config.filter_run_excluding(mecab: true) unless can_test_mecab_spec?
   config.filter_run_excluding(open_jtalk: true) unless can_test_open_jtalk_spec?
+  config.filter_run_excluding(ldap: true) unless can_test_ldap_spec?
 
-  `rake db:drop`
+  config.before(:suite) do
+    # `rake db:drop`
+    ::Mongoid::Sessions.default.drop
+    # `rake db:create_indexes`
+    ::Rails.application.eager_load!
+    ::Mongoid::Tasks::Database.create_indexes
+
+    #
+    DatabaseCleaner[:mongoid].strategy = :truncation
+  end
+
+  config.add_setting :default_dbscope, default: :context
+  config.extend(SS::DatabaseCleanerSupport)
 end
 
 def unique_id

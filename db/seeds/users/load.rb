@@ -9,17 +9,17 @@ def save_group(data)
   cond = { name: data[:name] }
 
   item = SS::Group.find_or_create_by cond
-  item.update data
+  item.update_attributes! data
   item
 end
 
-g1_00 = save_group name: "シラサギ市"
-g1_10 = save_group name: "シラサギ市/企画政策部"
-g1_11 = save_group name: "シラサギ市/企画政策部/政策課"
-g1_12 = save_group name: "シラサギ市/企画政策部/広報課"
-g1_20 = save_group name: "シラサギ市/危機管理部"
-g1_21 = save_group name: "シラサギ市/危機管理部/管理課"
-g1_22 = save_group name: "シラサギ市/危機管理部/防災課"
+g1_00 = save_group name: "シラサギ市", order: 10
+g1_10 = save_group name: "シラサギ市/企画政策部", order: 20
+g1_11 = save_group name: "シラサギ市/企画政策部/政策課", order: 30
+g1_12 = save_group name: "シラサギ市/企画政策部/広報課", order: 40
+g1_20 = save_group name: "シラサギ市/危機管理部", order: 50
+g1_21 = save_group name: "シラサギ市/危機管理部/管理課", order: 60
+g1_22 = save_group name: "シラサギ市/危機管理部/防災課", order: 70
 
 @site.add_to_set group_ids: g1_00.id
 
@@ -64,6 +64,8 @@ role2 = save_cms_role name: "記事編集権限", permission_level: 1,
 if @sys_user
   @sys_user.add_to_set group_ids: g1_00.id
   @sys_user.add_to_set cms_role_ids: role1.id
+  @sys_user.accounts = [{uid: "sys", group_id: g1_00.root.id}]
+  @sys_user.save!
 end
 
 ## -------------------------------------
@@ -92,11 +94,11 @@ def save_user(data)
 end
 
 @admin = save_user name: "サイト管理者", email: "admin@example.jp", password: "pass",
-  group_ids: [g1_11.id], cms_role_ids: [role1.id]
+  group_ids: [g1_11.id], cms_role_ids: [role1.id], accounts: [{uid: "admin", group_id: g1_11.root.id}]
 @user1 = save_user name: "一般ユーザー1", email: "user1@example.jp", password: "pass",
-  group_ids: [g1_11.id, g1_21.id], cms_role_ids: [role2.id]
+  group_ids: [g1_11.id, g1_21.id], cms_role_ids: [role2.id], accounts: [{uid: "user1", group_id: g1_11.root.id}]
 @user2 = save_user name: "一般ユーザー2", email: "user2@example.jp", password: "pass",
-  group_ids: [g1_22.id], cms_role_ids: [role2.id]
+  group_ids: [g1_22.id], cms_role_ids: [role2.id], accounts: [{uid: "user2", group_id: g1_22.root.id}]
 
 ## -------------------------------------
 puts "# nodes"

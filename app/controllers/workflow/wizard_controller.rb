@@ -19,8 +19,8 @@ class Workflow::WizardController < ApplicationController
         @route = nil
       else
         @route = Workflow::Route.find(params[:route_id])
+        @route.cur_site = @cur_site
       end
-      # TODO: check route
     end
 
     def set_item
