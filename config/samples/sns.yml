@@ -1,0 +1,9 @@
+production: &production
+  # specify which group should be logged in.
+  login_group: シラサギ市
+
+test:
+  <<: *production
+
+development:
+  <<: *production

@@ -1,0 +1,29 @@
+<table class="index">
+  <thead>
+  <tr>
+    <th style="width: 20px;"><input type="checkbox" /></th>
+    <th class="datetime"><%= @model.t :created %></th>
+    <th><%= @model.t :group_count %></th>
+    <th><%= @model.t :user_count %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @items.each do |item| %>
+    <tr>
+      <td>
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item %>
+          <%# link_to :delete, action: :delete, id: item %>
+        </nav>
+      </td>
+      <td><%= link_to item.created.strftime("%Y/%m/%d %H:%M"), action: :show, id: item %></td>
+      <td><%= item.group_count %></td>
+      <td><%= item.user_count %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

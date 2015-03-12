@@ -19,7 +19,7 @@ end
 def login_user(user)
   visit sns_login_path
   within "form" do
-    fill_in "item[email]", with: user.email
+    fill_in "item[in_id]", with: user.email
     fill_in "item[password]", with: "pass"
     click_button "ログイン"
   end

@@ -1,0 +1,104 @@
+<%
+   def group_hierachy(group)
+     if group.nil?
+       [ [ t("modules.attributes.ldap/group.root"), nil ] ]
+     else
+       group_hierachy(group.parent) << [ group.name, group.dn ]
+     end
+   end
+   group_hierachy = group_hierachy(@parent_group)
+
+   def excludes?(group)
+     @exclude_groups.include?(group.name)
+   end
+%>
+<%= scss do %>
+  dl.ldap-server-groups {
+    margin-top: 15px;
+  }
+  dl.ldap-server-users {
+    margin-top: 15px;
+  }
+<% end %>
+
+<% if @errors.present? %>
+<div class="errorExplanation" id="errorExplanation">
+  <h2><%= t "errors.template.header", count: @errors.size %></h2>
+  <ul>
+    <% @errors.each do |error| %>
+    <li><%= error %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+<header class="ldap-server-header">
+  <nav>
+    <% group_hierachy.each_with_index do |e, idx| %>
+      <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
+      <% if e[1].nil? %>
+        <span class="link"><%= link_to e[0], action: :index %></span>
+      <% else %>
+        <span class="link"><%= link_to e[0], action: :index, "dn" => e[1] %></span>
+      <% end %>
+    <% end %>
+  </nav>
+</header>
+
+<dl class="see ldap-server-groups">
+  <dt><%= t "modules.attributes.ldap/group.group" %></dt>
+  <dd>
+    <% if @groups.blank? %>
+    <%= t "ldap.messages.no_groups"%>
+    <% else %>
+    <table class="index ldap-groups">
+      <thead>
+      <tr>
+        <th><%= t "modules.attributes.ldap/group.name" %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @groups.each do |group| %>
+        <tr <% if excludes?(group) then %> style="display: none;" <% end %>>
+          <td>
+            <%= link_to group.name, action: :index, "dn" => group.dn %>
+            <nav class="tap-menu">
+              <%= link_to :show, action: :group, "dn" => group.dn %>
+            </nav>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <% end %>
+  </dd>
+</dl>
+
+<dl class="see ldap-server-users">
+  <dt><%= t "modules.attributes.ldap/user.user" %></dt>
+  <dd>
+    <% if @users.blank? %>
+    <%= t "ldap.messages.no_users"%>
+    <% else %>
+    <table class="index ldap-users">
+      <thead>
+      <tr>
+        <th><%= t "modules.attributes.ldap/user.name" %>(<%= t "modules.attributes.ldap/user.email" %>)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <%= link_to "#{user.name}(#{user.email})", action: :user, "dn" => user.dn %>
+            <nav class="tap-menu">
+              <%= link_to :show, action: :user, "dn" => user.dn %>
+            </nav>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <% end %>
+  </dd>
+</dl>

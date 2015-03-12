@@ -39,6 +39,7 @@ gem "rails_autolink"
 gem "browser"
 #gem 'sass-rails-source-maps'
 #gem 'coffee-rails-source-maps'
+gem "net-ldap"
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 

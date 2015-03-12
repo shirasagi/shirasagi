@@ -1,6 +1,7 @@
 def cms_user
   cms_user = Cms::User.where(email: build(:cms_user).email).first
   cms_user ||= create(:cms_user, group_ids: [cms_group.id], cms_role_ids: [cms_role.id])
+  cms_user.cur_site = cms_site
   cms_user
 end
 

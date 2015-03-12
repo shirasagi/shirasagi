@@ -3,6 +3,9 @@ module SS::Site::Model
   extend SS::Translation
   include SS::Document
 
+  class MultipleRootGroupsError < RuntimeError
+  end
+
   included do
     store_in collection: "ss_sites"
     index({ host: 1 }, { unique: true })
@@ -38,6 +41,24 @@ module SS::Site::Model
 
     def full_url
       "http://#{domain}/".sub(/\/+$/, "/")
+    end
+
+    def root_groups
+      root_group_ids = groups.map do |group|
+        group.root.id
+      end.uniq.sort.to_a
+
+      root_group_ids.map do |group_id|
+        SS::Group.find group_id
+      end
+    end
+
+    def root_group
+      ret = root_groups
+      if ret.length > 1
+        raise MultipleRootGroupsError, "site: #{name} has multiple root groups"
+      end
+      ret.first
     end
 
     class << self

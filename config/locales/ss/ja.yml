@@ -59,6 +59,12 @@ ja:
       interrupted: 中断命令を送信しました。
       confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
 
+  ss:
+    views:
+      login/login:
+        id: ユーザーIDまたはメールアドレス
+        password: パスワード
+
   mongoid:
     models:
       ss/site: サイト
@@ -86,13 +92,18 @@ ja:
         group_ids: グループ
       ss/user/model:
         name: 氏名
+        uid: ユーザーID
         email: メールアドレス
         password: パスワード
         in_password: パスワード
         group_ids: グループ
         type: ユーザータイプ
-      ss/group:
+        accounts: ユーザーID
+        sns: SNSユーザー
+        ldap: LDAPユーザー
+      ss/group/model:
         name: グループ名
+        order: 表示順
       ss/reference/site:
         site_id: サイト
       ss/task/model:

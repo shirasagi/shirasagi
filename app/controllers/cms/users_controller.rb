@@ -12,6 +12,10 @@ class Cms::UsersController < ApplicationController
       @crumbs << [:"cms.user", action: :index]
     end
 
+    def fix_params
+      { cur_site: @cur_site }
+    end
+
     def set_item
       super
       raise "403" unless Cms::User.site(@cur_site).include?(@item)
