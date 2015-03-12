@@ -5,6 +5,7 @@
   <div class="appHeader">
     <input type="button" value="play" id="btnPlay" class="btnPlay" onclick="javascript:PlayApp(); return false;" />
     <input type="button" value="reload" id="btnReload" class="btnReload" onclick="javascript:ReloadApp(); return false;" />
+    <input type="button" value="fullscreen" onClick="location.href='/app/<%= @cur_page.id %>/full'">
   </div>
   <div class="appContainer">
     <div id="tabs">
