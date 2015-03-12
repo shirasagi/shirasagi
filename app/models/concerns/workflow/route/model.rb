@@ -43,7 +43,7 @@ module Workflow::Route::Model
         if approver[:user_id].blank?
           errors.add :base, :approvers_user_id_blank
         else
-          errors.add :base, :approvers_user_missing if SS::User.where(id: approver[:user_id]).first.blank?
+          errors.add :base, :approvers_user_missing if Cms::User.where(id: approver[:user_id]).first.blank?
         end
       end
     end
@@ -81,7 +81,7 @@ module Workflow::Route::Model
     end
 
     def approver_users_at(level)
-      approvers_at(level).map { |h| SS::User.where(id: h[:user_id]).first }
+      approvers_at(level).map { |h| Cms::User.where(id: h[:user_id]).first }
     end
 
     def required_count_at(level)
@@ -95,16 +95,6 @@ module Workflow::Route::Model
         I18n.t("workflow.required_count_label.all")
       else
         I18n.t("workflow.required_count_label.minimum", required_count: required_count)
-      end
-    end
-
-    def approver_names(level)
-      approver_users_at(level).map do |user|
-        if user.present? && user.respond_to?(:long_name)
-          user.long_name
-        else
-          nil
-        end
       end
     end
 

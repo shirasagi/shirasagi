@@ -22,6 +22,13 @@ class Workflow::Route
       end
   end
 
+  public
+    def approver_users_at(level)
+      super.each do |user|
+        user.cur_site = cur_site if user.present?
+      end
+    end
+
   private
     def validate_groups
       self.errors.add :group_ids, :blank if groups.blank?

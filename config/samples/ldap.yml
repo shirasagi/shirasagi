@@ -1,0 +1,12 @@
+production: &production
+  # specify exlucdes groups when importing from ldap server,
+  # this is case sensitive.
+  exclude_groups:
+    - Group
+    - People
+
+test:
+  <<: *production
+
+development:
+  <<: *production

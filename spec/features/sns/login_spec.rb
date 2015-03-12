@@ -4,7 +4,7 @@ describe "sns_login" do
   it "invalid login" do
     visit sns_login_path
     within "form" do
-      fill_in "item[email]", with: "wrong@example.jp"
+      fill_in "item[in_id]", with: "wrong@example.jp"
       fill_in "item[password]", with: "wrong_pass"
       click_button "ログイン"
     end
@@ -14,7 +14,7 @@ describe "sns_login" do
   it "valid login" do
     visit sns_login_path
     within "form" do
-      fill_in "item[email]", with: sys_user.email
+      fill_in "item[in_id]", with: sys_user.email
       fill_in "item[password]", with: "pass"
       click_button "ログイン"
     end
