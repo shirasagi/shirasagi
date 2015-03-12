@@ -6,6 +6,10 @@ ja:
     selectable_users: 選択候補
     pages: 承認
     user_deleted: 削除ユーザー
+    master_message: このページは差し替え用のページです。
+    master_page: 差し替え元ページ
+    branch_page: 差し替えページ
+    create_branch: 差し替え用ページを作成する
     state:
       request: 申請
       approve: 承認
@@ -39,6 +43,7 @@ ja:
   modules:
     addons:
       workflow/approver: 承認
+      workflow/branch: ブランチ
 
   mongoid:
     attributes:

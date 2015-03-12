@@ -11,11 +11,16 @@ SS::Application.routes.draw do
     put :move, :on => :member
   end
 
+  concern :copy do
+    get :copy, :on => :member
+    put :copy, :on => :member
+  end
+
   content "article" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     get "generate" => "generate#index"
     post "generate" => "generate#run"
-    resources :pages, concerns: [:deletion, :move]
+    resources :pages, concerns: [:deletion, :move, :copy]
   end
 
   content "article" do

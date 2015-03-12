@@ -40,6 +40,7 @@ module Cms::Page::Model
 
       return errors.add :filename, :empty if dst.blank?
       return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+      return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
 
       return errors.add :base, :same_filename if filename == dst
       return errors.add :filename, :taken if self.class.where(site_id: site_id, filename: dst).first
@@ -64,6 +65,21 @@ module Cms::Page::Model
       @cur_node = nil
       @basename = dst
       save
+    end
+
+    def clone_document(opts = {})
+      attr = attributes.merge(opts).select{ |k| self.fields.keys.include?(k) }
+      item = self.class.new(attr)
+      item.id = nil
+      item.state = "closed"
+      if opts[:filename].nil?
+        item.filename = item.dirname("copy-" + rand(0xffff_ffff_ffff_ffff).to_s(32))
+      end
+
+      item.try(:clone_files)
+      item.try(:clone_facility_image)
+      item.save
+      item
     end
 
   private

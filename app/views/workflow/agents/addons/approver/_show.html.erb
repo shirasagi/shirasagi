@@ -21,7 +21,6 @@
 
 <%= coffee do %>
 $ ->
-
   $(document).on "click", ".update-item", (e) ->
     approvers = []
     $(".workflow-multi-select").each (e) ->
@@ -37,6 +36,7 @@ $ ->
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
     uri[3] = "pages"
+    redirectLocation = "<%= @item.try(:branch?) ? show_path_with_route(@item.master) : "" %>"
     $.ajax
       type: "post"
       url: uri.join("/")  + "/" + $(this).attr("updatetype") + "_update"
@@ -47,8 +47,12 @@ $ ->
         workflow_required_counts: required_counts
         remand_comment: $("#remand_comment").prop("value")
         url: "<%= request.url %>"
-      success: (msg) ->
-        location.reload()
+      success: (data) ->
+        if data["workflow_state"] == "approve" && redirectLocation != ""
+          location.href = redirectLocation
+        else
+          location.reload()
+        end
       error: (xhr, status) ->
         try
           errors = $.parseJSON(xhr.responseText)

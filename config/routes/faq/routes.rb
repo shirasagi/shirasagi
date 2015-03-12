@@ -11,9 +11,14 @@ SS::Application.routes.draw do
     put :move, :on => :member
   end
 
+  concern :copy do
+    get :copy, :on => :member
+    put :copy, :on => :member
+  end
+
   content "faq" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :move]
+    resources :pages, concerns: [:deletion, :move, :copy]
     resources :searches, concerns: :deletion
   end
 

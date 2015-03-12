@@ -1,0 +1,21 @@
+<%= form_for :item, url: { action: :copy }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t("views.confirm.clone") %></h2></header>
+    <%= error_messages_for :copy %>
+    <dl class="see">
+      <dt><%= @model.t :name %><%= @model.tt :title %></dt>
+      <dd>
+        <%= f.text_field :name, class: :name %>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("views.button.save"), class: :save %>
+  <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+
+<% end %>

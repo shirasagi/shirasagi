@@ -39,6 +39,28 @@ module Cms::Addon
       end
     end
 
+    def clone_files
+      ids = SS::Extensions::Array.new
+      files.each do |f|
+        attr = Hash[f.attributes]
+        attr.select!{ |k| f.fields.keys.include?(k) }
+
+        file = SS::File.new(attr)
+        file.id = nil
+        file.in_file = f.uploaded_file
+
+        if file.save
+          ids << file.id.mongoize
+
+          html = self.html
+          html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
+          html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+          self.html = html
+        end
+      end
+      self.file_ids = ids
+    end
+
     def destroy_files
       files.destroy_all
     end

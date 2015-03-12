@@ -26,6 +26,7 @@ ja:
       show: 詳細を見る
       edit: 編集する
       move: 移動する
+      copy: 複製する
       delete: 削除する
       import: インポート
       back_to_show: 詳細へ戻る
@@ -51,6 +52,7 @@ ja:
     confirm:
       delete: 削除してよろしいですか？
       unload: 入力したデータは保存されません。
+      clone: 複製してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。

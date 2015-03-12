@@ -2,7 +2,7 @@ class Workflow::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  before_action :set_item, only: [:request_update, :approve_update, :remand_update]
+  before_action :set_item, only: [:request_update, :approve_update, :remand_update, :create_branch]
 
   private
     def set_model
@@ -44,7 +44,7 @@ class Workflow::PagesController < ApplicationController
 
       if @item.update
         request_approval
-        render nothing: true, status: :no_content
+        render json: { workflow_state: @item.workflow_state }
       else
         render json: @item.errors.full_messages, status: :unprocessable_entity
       end
@@ -74,14 +74,17 @@ class Workflow::PagesController < ApplicationController
           request_approval
         end
 
-        if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
+        workflow_state = @item.workflow_state
+        if  workflow_state == @model::WORKFLOW_STATE_APPROVE
           # finished workflow
           args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                    site: @cur_site, page: @item,
                    url: params[:url], comment: params[:remand_comment] }
           Workflow::Mailer.approve_mail(args).deliver
+          @item.destroy if @item.try(:branch?)
         end
-        render nothing: true, status: :no_content
+
+        render json: { workflow_state: workflow_state }
       else
         render json: @item.errors.full_messages, status: :unprocessable_entity
       end
@@ -100,9 +103,17 @@ class Workflow::PagesController < ApplicationController
                    url: params[:url], comment: params[:remand_comment] }
           Workflow::Mailer.remand_mail(args).deliver
         end
-        render nothing: true, status: :no_content
+        render json: { workflow_state: @item.workflow_state }
       else
         render json: @item.errors.full_messages, status: :unprocessable_entity
       end
+    end
+
+    def create_branch
+      raise "400" if @item.branch?
+
+      @item.clone_document(master_id: @item.id) if @item.branches.blank?
+      @items = @item.branches
+      render :branch, layout: "ss/ajax"
     end
 end
