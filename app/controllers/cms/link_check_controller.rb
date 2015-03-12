@@ -12,7 +12,7 @@ class Cms::LinkCheckController < ApplicationController
 
       params[:url].each_value do |link|
         next if result[link]
-        result[link] = check_url(link)
+        result[link] = check_url(::URI.escape(link))
       end
 
       respond_to do |format|
