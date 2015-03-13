@@ -14,7 +14,7 @@
               <dt><%= app.t :user_id %></dt>
               <dd>
                 <% if app.member %>
-                  <%= link_to app.member.name, "#{member_path}#{@cur_page.member.id}" %>
+                  <%= link_to app.member.name, "#{member_path}#{app.member.id}" %>
                 <% else %>
                   ゲストユーザー
                 <% end %>
