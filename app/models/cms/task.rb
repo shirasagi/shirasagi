@@ -55,5 +55,9 @@ class Cms::Task
       def remove_pages(opts = {})
         process_with_site "cms:remove_pages", Cms::Agents::Tasks::PagesController, :remove, opts
       end
+
+      def check_links(opts = {})
+        process_with_node "cms:check_links", Cms::Agents::Tasks::LinksController, :check, opts
+      end
   end
 end

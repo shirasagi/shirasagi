@@ -30,6 +30,7 @@ SS::Application.routes.draw do
     end
     resources :pages, concerns: [:deletion, :move]
     resources :layouts, concerns: :deletion
+    get "check_links" => "check_links#index"
     get "generate_nodes" => "generate_nodes#index"
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
