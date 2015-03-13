@@ -25,7 +25,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
     def generate_new_pages
       term = (@start_date..@close_date).map { |m| sprintf("#{m.year}%02d", m.month) }.uniq
       term.each do |date|
-        url  = "#{@node.url}/#{date}.html"
+        url  = "#{@node.url}#{date}.html"
         file = "#{@node.path}/#{date}.html"
 
         if generate_node @node, url: url, file: file
