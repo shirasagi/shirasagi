@@ -16,6 +16,7 @@ class Voice::TestHttpServer
       @cond = ConditionVariable.new
       @server_thread = Thread.new do
         server = WEBrick::HTTPServer.new(
+          :BindAddress => "127.0.0.1",
           :Port => @port,
           :Logger => WEBrick::Log.new('/dev/null'),
           :AccessLog => [],

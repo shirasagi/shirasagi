@@ -1,0 +1,63 @@
+<dl class="see ldap-import-basic">
+  <dt><%= @model.t :created %></dt>
+  <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dt><%= @model.t :group_count %></dt>
+  <dd><%= @item.group_count %></dd>
+  <dt><%= @model.t :user_count %></dt>
+  <dd><%= @item.user_count %></dd>
+</dl>
+
+<%= scss do %>
+  .ldap-import-groups-and-users {
+    margin: 0px;
+    border: solid 1px #dedede;
+    > dl + dl { margin-top: 20px; }
+  }
+
+  .ldap-import-groups-and-users-title {
+    background: #dedede;
+  }
+
+  .ldap-import-groups {
+    > dl ~ dl { margin-top: 20px; }
+    > dl + dl { margin-top: 10px; }
+  }
+
+  .ldap-import-users {
+    margin-left: 0px;
+  }
+<% end %>
+
+<%
+   def render_groups_and_users(groups)
+     ret = ""
+     groups.each do |group|
+       child_groups = @item.ldap.child_groups(group.dn)
+       child_users = @item.ldap.child_users(group.dn)
+       user_list = child_users.map { |e| h(e.name) }.join(", ")
+
+       ret << "<dl class=\"ldap-import-groups-and-users\">"
+       ret << "<dt class=\"ldap-import-groups-and-users-title\">"
+       ret << h(group.name)
+       ret << "</dt>"
+       if user_list.present?
+         ret << "<dd class=\"ldap-import-users\">"
+         ret << user_list
+         ret << "</dd>"
+       end
+       if child_groups.size > 0
+         ret << "<dd class=\"ldap-import-groups\">"
+         ret << render_groups_and_users(@item.ldap.child_groups(group.dn))
+         ret << "</dd>"
+       end
+       ret << "</dl>"
+     end
+     ret
+   end
+%>
+<dl class="see ldap-import-ldap">
+  <dt><%= @model.t :ldap %></dt>
+  <dd class="ldap-import-groups">
+    <%= render_groups_and_users(@item.ldap.root_groups).html_safe %>
+  </dd>
+</dl>

@@ -1,0 +1,22 @@
+<nav class="act-menu">
+  <% if params[:action] == "index" %>
+    <%= link_to :import, action: :import_confirmation %>
+  <% elsif params[:action] =~ /import_confirmation|import/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /delete|sync_confirmation|sync|results/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :back_to_show, action: :show, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /show/ %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :sync, action: :sync_confirmation, id: @item %>
+      <%= link_to :delete, action: :delete, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
+<%= render file: "_addons_menu" %>
+<% end %>

@@ -46,6 +46,7 @@ module SS::BaseFilter
     def set_user(user, opt = {})
       if opt[:session]
         session[:user] = SS::Crypt.encrypt("#{user._id},#{remote_addr},#{request.user_agent}")
+        session[:password] = SS::Crypt.encrypt(opt[:password]) if opt[:password].present?
       end
       redirect_to sns_mypage_path if opt[:redirect]
       @cur_user = user
@@ -53,6 +54,7 @@ module SS::BaseFilter
 
     def unset_user(opt = {})
       session[:user] = nil
+      session[:password] = nil
       redirect_to sns_login_path if opt[:redirect]
       @cur_user = nil
     end

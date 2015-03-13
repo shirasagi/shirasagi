@@ -68,6 +68,7 @@ RSpec.configure do |config|
 
   config.filter_run_excluding(mecab: true) unless can_test_mecab_spec?
   config.filter_run_excluding(open_jtalk: true) unless can_test_open_jtalk_spec?
+  config.filter_run_excluding(ldap: true) unless can_test_ldap_spec?
 
   config.before(:suite) do
     # `rake db:drop`

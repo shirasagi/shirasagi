@@ -1,6 +1,6 @@
 # mongoid
 shared_examples "mongoid#save" do
-  it { expect(build(factory).save).to eq true }
+  it { expect { build(factory).save! }.not_to raise_error }
 end
 
 shared_examples "mongoid#find" do
@@ -11,8 +11,6 @@ end
 module SS
   module DatabaseCleanerSupport
     def self.extended(obj)
-      return unless obj.top_level?
-
       dbscope = obj.metadata[:dbscope]
       dbscope ||= RSpec.configuration.default_dbscope
 
@@ -31,11 +29,9 @@ end
 module Mongoid
   module Tasks
     module Database
-      extend self
-
       private
         # rewrite logger method.
-        def logger
+        def self.logger
           Rails.logger
         end
     end

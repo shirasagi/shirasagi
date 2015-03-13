@@ -1,0 +1,73 @@
+ja:
+  ldap:
+    server: サーバー情報
+    import: インポート
+    views:
+      button:
+        import: インポート
+        sync: 同期
+      confirm:
+        import: インポートしてよろしいですか？
+        import_description: LDAPサーバから情報をインポートし、中間情報を作成します。
+        sync: 同期してよろしいですか？
+      import/sync:
+        header: 同期結果
+        group: グループ
+        user: ユーザー
+        success: 更新
+        delete: 削除
+        fail: 失敗
+        error: エラー
+        warning: 警告
+    messages:
+      no_groups: グループが見つかりません。
+      no_users: ユーザが見つかりません。
+      import_success: インポートに成功しました。
+      sync_success: "同期に成功しました。グループ数: %{group_count}、ユーザー数: %{user_count}"
+      group_moved: "%{user_name} がグループ「%{group_name}」へ移動しました。"
+    errors:
+      connection_setting_not_found: LDAP 接続情報が設定されていません。
+
+  modules:
+    ldap: LDAP
+    addons:
+      ldap/user: LDAP
+      ldap/group: LDAP
+    attributes:
+      ldap/group:
+        root: ルート
+        group: グループ
+        name: 名前
+        auth_method_options:
+          password: パスワード
+          anonymous: 匿名
+      ldap/user:
+        user: ユーザ
+        name: 名前
+        email: email
+
+  mongoid:
+    models:
+      ldap/addon/group: グループ
+      ldap/addon/user: ユーザー
+      ldap/import: インポート
+    attributes:
+      ldap/addon/group:
+        ldap_host: ホスト
+        ldap_dn: DN
+        ldap_auth_method: 認証方法
+      ldap/addon/user:
+        ldap_dn: DN
+      ldap/import:
+        group_count: グループ数
+        user_count: ユーザ数
+        ldap: LDAPインポート結果
+
+  views:
+    ldap/server:
+      index: サーバー情報
+    ldap/import:
+      index: インポート
+    links:
+      ldap: LDAP
+      sync: 同期する

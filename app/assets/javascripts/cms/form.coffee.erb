@@ -474,6 +474,7 @@ class @Link_Checker
   @links = {}
   @error = ""
   @url = "<%= SS.config.cms.link_check_url %>" || "/.cms/link_check/check.json"
+  @rootUrl = ""
 
   @render: ()->
     $(".mod-cms-body button.link-check").on "click", ->
@@ -516,6 +517,14 @@ class @Link_Checker
     @error = ""
     return
 
+  @addMessage: (link, state)->
+    if state
+      msg =  '<span class="success">' + Link_Checker.message["success"] + '</span>'
+      Link_Checker.links[link] = link + " " + msg
+    else
+      msg =  '<span class="failure">' + Link_Checker.message["failure"] + '</span>'
+      Link_Checker.links[link] = link + " " + msg
+
   @check: (html, complete)->
     numOfLinks = $(html).find('a[href]').length
     if numOfLinks == 0
@@ -525,7 +534,14 @@ class @Link_Checker
 
     links = {}
     for href, i in $(html).find('a[href]')
-      links[i + 1] = $(href).attr('href')
+      link = $(href).attr('href')
+      continue if link == "#"
+
+      if link[0] == "#"
+        Link_Checker.addMessage(link, $(html).find(link).length != 0)
+      else
+        link = Link_Checker.rootUrl + link.slice(1) if /^\//.test(link)
+        links[i + 1] = link
 
     $.ajax {
       type: "POST", url: Link_Checker.url, cache: false,
@@ -535,12 +551,7 @@ class @Link_Checker
       crossDomain: true,
       success: (res, status) ->
         for link, code of res
-          if code == 200
-            msg =  '<span class="success">' + Link_Checker.message["success"] + '</span>'
-            Link_Checker.links[link] = link + " " + msg
-          else
-            msg =  '<span class="failure">' + Link_Checker.message["failure"] + '</span>'
-            Link_Checker.links[link] = link + " " + msg
+          Link_Checker.addMessage(link, (code == 200))
         return
       error: (xhr, status, error) ->
         Link_Checker.error = "<p>" + Link_Checker.message["linkCheckerError"] + ": " + Link_Checker.url + "</p>"
