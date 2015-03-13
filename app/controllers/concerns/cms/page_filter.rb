@@ -52,7 +52,7 @@ module Cms::PageFilter
       location = nil
       if result && @item.try(:branch?) && @item.state != "closed"
         location = { action: :index }
-        @item.destroy
+        @item.delete
       end
       render_update result, location: location
     end
@@ -108,8 +108,7 @@ module Cms::PageFilter
       return if request.get?
 
       @item.attributes = get_params
-      @clone_document = @item.clone_document(master_id: nil)
-      result = @clone_document.errors.empty?
-      render_update result, location: { action: :index }, render: { file: :copy }
+      @copy = @item.new_clone
+      render_update @copy.save, location: { action: :index }, render: { file: :copy }
     end
 end

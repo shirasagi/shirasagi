@@ -9,8 +9,13 @@ module Cms::Addon
       embeds_ids :files, class_name: "SS::File"
       permit_params file_ids: []
 
+      before_save :clone_files, if: -> { new_clone? }
       before_save :save_files
       after_destroy :destroy_files
+    end
+
+    def allow_other_user_files
+      @other_user_files_allowed = true
     end
 
     def save_files
@@ -22,7 +27,7 @@ module Cms::Addon
       files.each do |file|
         if !add_ids.include?(file.id)
           #
-        elsif @cur_user && @cur_user.id != file.user_id
+        elsif !@other_user_files_allowed && @cur_user && @cur_user.id != file.user_id
           next
         else
           file.update_attribute(:model, model_name.i18n_key)
@@ -37,28 +42,6 @@ module Cms::Addon
         file = SS::File.where(id: id).first
         file.destroy if file
       end
-    end
-
-    def clone_files
-      ids = SS::Extensions::Array.new
-      files.each do |f|
-        attr = Hash[f.attributes]
-        attr.select!{ |k| f.fields.keys.include?(k) }
-
-        file = SS::File.new(attr)
-        file.id = nil
-        file.in_file = f.uploaded_file
-
-        if file.save
-          ids << file.id.mongoize
-
-          html = self.html
-          html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-          html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-          self.html = html
-        end
-      end
-      self.file_ids = ids
     end
 
     def destroy_files

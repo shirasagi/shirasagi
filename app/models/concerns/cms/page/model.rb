@@ -67,21 +67,6 @@ module Cms::Page::Model
       save
     end
 
-    def clone_document(opts = {})
-      attr = attributes.merge(opts).select{ |k| self.fields.keys.include?(k) }
-      item = self.class.new(attr)
-      item.id = nil
-      item.state = "closed"
-      if opts[:filename].nil?
-        item.filename = item.dirname("copy-" + rand(0xffff_ffff_ffff_ffff).to_s(32))
-      end
-
-      item.try(:clone_files)
-      item.try(:clone_facility_image)
-      item.save
-      item
-    end
-
   private
     def set_released
       self.released ||= Time.now

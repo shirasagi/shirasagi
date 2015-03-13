@@ -41,23 +41,6 @@ module Facility::Addon
 
       permit_params :image_id
     end
-
-    public
-      def clone_facility_image
-        return unless image
-
-        attr = Hash[image.attributes]
-        attr.select!{ |k| image.fields.keys.include?(k) }
-
-        file = SS::File.new(attr)
-        file.id = nil
-        file.in_file = image.uploaded_file
-
-        if file.save
-          self.image_id = nil
-          self.image_id = file.id.mongoize
-        end
-      end
   end
 
   module PointerImage

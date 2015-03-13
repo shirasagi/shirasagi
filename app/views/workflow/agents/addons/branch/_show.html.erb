@@ -14,7 +14,7 @@ $ ->
 
   toggleCreateBranchButton()
   $(".create-branch").on "click", ->
-    path = "<%= create_branch_workflow_page_path(id: @item.id) %>"
+    path = "<%= branch_create_workflow_page_path(id: @item.id) %>"
     $.ajax
       type: "POST",
       url: path

@@ -4,14 +4,13 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
+  end
+
+  concern :workflow do
     post :request_update, on: :member
     post :approve_update, on: :member
     post :remand_update, on: :member
-  end
-
-  concern :branch do
-    get :branches, on: :member
-    post :create_branch, on: :member
+    post :branch_create, on: :member
   end
 
   content "workflow" do
@@ -25,7 +24,7 @@ SS::Application.routes.draw do
 
   namespace "workflow", path: ".:site/workflow" do
     get "/" => "main#index"
-    resources :pages, concerns: [:deletion, :branch]
+    resources :pages, concerns: [:deletion, :workflow]
     get "/search_approvers" => "search_approvers#index"
     resources :routes, concerns: :deletion
     # get "/wizard/:id/approver_setting" => "wizard#approver_setting"

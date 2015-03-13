@@ -2,16 +2,17 @@ class Workflow::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  before_action :set_item, only: [:request_update, :approve_update, :remand_update, :create_branch]
+  before_action :set_item, only: [:request_update, :approve_update, :remand_update, :branch_create]
 
   private
     def set_model
-       @model = Cms::Page
+      @model = Cms::Page
     end
 
     def set_item
       @item = @model.find(params[:id]).becomes_with_route
       @item.attributes = fix_params
+      @item.allow_other_user_files
     end
 
     def fix_params
@@ -75,13 +76,13 @@ class Workflow::PagesController < ApplicationController
         end
 
         workflow_state = @item.workflow_state
-        if  workflow_state == @model::WORKFLOW_STATE_APPROVE
+        if workflow_state == @model::WORKFLOW_STATE_APPROVE
           # finished workflow
           args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                    site: @cur_site, page: @item,
                    url: params[:url], comment: params[:remand_comment] }
           Workflow::Mailer.approve_mail(args).deliver
-          @item.destroy if @item.try(:branch?)
+          @item.delete if @item.try(:branch?)
         end
 
         render json: { workflow_state: workflow_state }
@@ -109,10 +110,15 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    def create_branch
+    def branch_create
       raise "400" if @item.branch?
 
-      @item.clone_document(master_id: @item.id) if @item.branches.blank?
+      if @item.branches.blank?
+        copy = @item.new_clone
+        copy.master = @item
+        copy.save
+      end
+
       @items = @item.branches
       render :branch, layout: "ss/ajax"
     end

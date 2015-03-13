@@ -4,12 +4,9 @@ SS::Application.routes.draw do
     get :delete, :on => :member
   end
 
-  concern :move do
+  concern :crud do
     get :move, :on => :member
     put :move, :on => :member
-  end
-
-  concern :copy do
     get :copy, :on => :member
     put :copy, :on => :member
   end
@@ -37,7 +34,7 @@ SS::Application.routes.draw do
     resources :parts, concerns: :deletion do
       get :routes, on: :collection
     end
-    resources :pages, concerns: [:deletion, :move, :copy]
+    resources :pages, concerns: [:deletion, :crud]
     resources :layouts, concerns: :deletion
     get "/search_groups" => "search_groups#index"
     get "/search_pages" => "search_pages#index"
@@ -54,9 +51,9 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
-    resource :conf, concerns: [:deletion, :move]
+    resource :conf, concerns: [:deletion, :crud]
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :move, :copy]
+    resources :pages, concerns: [:deletion, :crud]
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
   end
