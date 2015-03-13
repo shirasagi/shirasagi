@@ -12,7 +12,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     def generate
       @task.log "# #{@site.name}"
 
-      generate_root_pages
+      generate_root_pages unless @node
 
       nodes = Cms::Node.site(@site).public
       nodes = nodes.where(filename: /^#{@node.filename}\/?$/) if @node
