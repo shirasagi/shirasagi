@@ -58,6 +58,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
       events(dates).each do |page|
         page.event_dates.split(/\r\n|\n/).each do |date|
           d = Date.parse(date)
+          next unless @events[d]
           @events[d] << [
             page,
             page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
