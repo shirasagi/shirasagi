@@ -4,6 +4,8 @@ class Ads::Banner
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
 
+  set_permission_name "ads_banners"
+
   field :link_url, type: String
 
   belongs_to_file :file
