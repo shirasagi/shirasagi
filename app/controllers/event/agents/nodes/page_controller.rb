@@ -40,7 +40,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     def events(date)
       events = Cms::Page.site(@cur_site).public(@cur_date).
         where(@cur_node.condition_hash).
-        where(:"event_dates".in => [date.mongoize]).
+        where(:"event_dates".in => date).
         entries.
         sort_by{ |page| page.event_dates.size }
     end
@@ -51,12 +51,18 @@ class Event::Agents::Nodes::PageController < ApplicationController
       close_date = @month != 12 ? Date.new(@year, @month + 1, 1) : Date.new(@year + 1, 1, 1)
 
       (start_date...close_date).each do |d|
-        @events[d] = events(d).map { |page|
-          [
+        @events[d] = []
+      end
+
+      dates = (start_date...close_date).map { |m| m.mongoize }
+      events(dates).each do |page|
+        page.event_dates.split(/\r\n|\n/).each do |date|
+          d = Date.parse(date)
+          @events[d] << [
             page,
             page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
           ]
-        }
+        end
       end
 
       render :monthly
@@ -64,12 +70,12 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
     def index_daily
       @date = Date.new(@year, @month, @day)
-      @events = events(@date).map { |page|
+      @events = events([@date.mongoize]).map do |page|
         [
           page,
           page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
         ]
-      }
+      end
 
       render :daily
     end
