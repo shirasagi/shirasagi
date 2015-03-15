@@ -7,9 +7,6 @@
   </dd>
   <% end %>
 
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
-
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 </dl>

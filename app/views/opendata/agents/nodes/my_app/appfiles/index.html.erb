@@ -13,7 +13,7 @@
   <tbody>
     <% @items.each do |item| %>
     <tr>
-      <td><a href="<%= "#{item.id}/" %>"><%= item.name %></a></td>
+      <td><a href="<%= "#{item.id}/" %>"><%= item.filename %></a></td>
       <td><%= l item.updated.to_date, format: :long %></td>
       <td><%= number_to_human_size item.size %></td>
     </tr>

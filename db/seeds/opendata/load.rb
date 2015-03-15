@@ -87,7 +87,7 @@ save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "
   page_layout_id: layouts["app-page"].id
 save_node filename: "app/bunya", name: "分野", route: "opendata/app_category",
   layout_id: layouts["app-bunya"].id
-save_node filename: "app/search", name: "アプリケーション検索", route: "opendata/search_app",
+save_node filename: "app/search", name: "アプリ検索", route: "opendata/search_app",
   layout_id: layouts["app-bunya"].id
 
 save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortcut: "show",

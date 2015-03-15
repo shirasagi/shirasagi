@@ -2,11 +2,11 @@ ja:
   opendata:
     create: 新規登録
     manage_resources: リソースを管理する
-    manage_appfiles: アプリケーションファイルを管理する
+    manage_appfiles: アプリファイルを管理する
     manage_comments: コメントを管理する
     links:
       add_resource: 新しいリソースを追加する
-      add_appfile: 新しいアプリケーションファイルを追加する
+      add_appfile: 新しいアプリファイルを追加する
       add_comment: 新しいコメントを追加する
     search_datasets:
       index: データセットを選択する
@@ -39,7 +39,7 @@ ja:
       opendata/idea: アイデア
       opendata/release: 公開設定
       opendata/resource: リソース
-      opendata/appfile: アプリケーションファイル
+      opendata/appfile: アプリファイル
       opendata/rdf_store: RDFストア
       opendata/comment: コメント
 
@@ -151,11 +151,11 @@ ja:
         excuted: 実行回数
         site_id: サイト
         user_id: アプリ作成者
-        appfiles: アプリケーションファイル
+        appfiles: アプリファイル
       opendata/appfile:
         file_id: ファイル
         in_file: ファイル
-        name: アプリケーションファイル名
+        name: アプリファイル名
         text: 説明
       opendata/idea:
         name: タイトル
@@ -192,7 +192,7 @@ ja:
         - リソースファイルがTSV、CSVファイルの場合は登録する必要はありません。
     opendata/app:
       text: &text
-        - アプリケーションの説明を入力します。
+        - アプリの説明を入力します。
         - URLは自動的にリンクが設定されます。
       tags:
         - 関連する単語を登録します。
