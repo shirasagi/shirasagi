@@ -24,7 +24,7 @@ module Cms::FormHelper
     path = "cms_#{model}_path".to_sym
     return send(path, id: item.id) if item.parent.blank?
 
-    if item.respond_to?(:route)
+    if item.respond_to?(:route) && model == "page"
       route = item.route =~ /cms\// ? "node_page" : item.route.gsub("/", "_")
       path  = "#{route}_path".to_sym
       return send(path, cid: item.parent.id, id: item.id) if respond_to?(path)

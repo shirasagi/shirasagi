@@ -39,6 +39,9 @@ SS::Application.routes.draw do
     get "search_groups" => "search_groups#index"
     get "search_pages" => "search_pages#index"
     get "search_categories" => "search_categories#index"
+    get "/search_html" => "search_html#index"
+    get "/search" => "search#index"
+    post "/search" => "search#update"
   end
 
   namespace "cms", path: ".cms" do

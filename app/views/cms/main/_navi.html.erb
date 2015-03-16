@@ -22,7 +22,8 @@
 <nav class="main-menu">
   <header><h1><%= t :"cms.config" %></h1></header>
   <div>
-    <%= link_to :"cms.site", cms_site_path  %>
+    <%= link_to :"cms.site", cms_site_path %>
+    <%= link_to :"cms.search.html", cms_search_path if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.role", cms_roles_path if Cms::Role.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.user", cms_users_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>

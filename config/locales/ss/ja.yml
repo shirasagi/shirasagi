@@ -46,6 +46,8 @@ ja:
       cancel: キャンセル
       delete: 削除
       search: 検索
+      replace: 置換
+      replace_all: 全置換
       reset: リセット
       toggle: 折りたたみ表示
       move: 移動
