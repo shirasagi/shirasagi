@@ -15,5 +15,5 @@
   <dd><%= @item.args %></dd>
 
   <dt><%= @model.t :logs %></dt>
-  <dd><%= text_area_tag :logs, @item.logs.blank? ? "" : safe_join(@item.logs, "\n") %></dd>
+  <dd style="overflow: scroll; height: 400px; white-space: pre;"><%= br @item.logs.blank? ? "" : @item.logs.join("\n") %></dd>
 </dl>
