@@ -5,24 +5,9 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 
 %>
-<%= javascript_include_tag "opendata/public" %>
-<%= javascript_include_tag "opendata/form" %>
-
-<script language=javascript>
-<!--
-function show(inputData) {
-var objID=document.getElementById( "layer_" + inputData );
-var buttonID=document.getElementById( "category_" + inputData );
-if(objID.className=='close') {
-objID.style.display='block';
-objID.className='open';
-}else{
-objID.style.display='none';
-objID.className='close';
-}
-}
-//-->
-</script>
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<%= javascript_include_tag "ss/ss", "data-turbolinks-track" => true %>
+<script src="/assets/js/jquery.colorbox.js"></script>
 
 <dl class="see opendata-app">
   <dt><%= @model.t :name %><%= required_label %></dt>
@@ -52,11 +37,7 @@ objID.className='close';
   <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
 
   <dt><%= @model.t :dataset_ids %></dt>
-  <dd>
-  <a href="javascript:void(0)" id="category_dataset" onclick="show('dataset');">展開</a>
-  <div id="layer_dataset" style="display: none;position:relative;margin-left:15pt" class="close">
-  <%= render partial: "opendata/agents/addons/dataset/view/form", locals: { f: f } %></div>
-  </dd>
+  <%= render partial: "opendata/agents/addons/dataset/view/form", locals: { f: f } %>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>

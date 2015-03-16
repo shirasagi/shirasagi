@@ -4,12 +4,11 @@
 
   <dt><%= @model.t :appfiles %></dt>
   <dd><%= link_to :"opendata.manage_appfiles", "appfiles/" %></dd>
-  <dd>
-    <% @item.appfiles.order(name: 1).each do |af| %>
-    <div><%= link_to af.name, "appfiles/#{af.id}/" %>
-      (<%= number_to_human_size af.size %>)</div>
-    <% end %>
-  </dd>
+  <% @item.appfiles.order(name: 1).each do |af| %>
+    <dd>
+      <div><%= link_to af.filename, "appfiles/#{af.id}/" %>(<%= number_to_human_size af.size %>)</div>
+    </dd>
+  <% end %>
 
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
@@ -30,8 +29,12 @@
   <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
 
   <dt><%= @model.t :dataset_ids %></dt>
-  <% @item.datasets.map { |m| m.name }.each do |i| %>
-    <dd><%= i %></dd>
+  <% if @item.datasets.present? %>
+    <% @item.datasets.map { |m| m.name }.each do |i| %>
+      <dd><%= i %></dd>
+    <% end %>
+  <% else %>
+    <dd></dd>
   <% end %>
 
   <dt><%= @model.t :state %></dt>
