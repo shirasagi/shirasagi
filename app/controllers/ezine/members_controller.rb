@@ -24,4 +24,8 @@ class Ezine::MembersController < ApplicationController
     def new
       @item = Ezine::Member.new(site_id: @cur_site.id, node_id: @cur_node.id)
     end
+
+    def download
+      # TODO: CSV export
+    end
 end
