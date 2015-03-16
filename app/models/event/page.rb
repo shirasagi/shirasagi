@@ -11,6 +11,8 @@ class Event::Page
   include Event::Addon::Category::Category
   include Event::Addon::Date
   include Workflow::Addon::Approver
+  include History::Addon::Backup
+  include Workflow::Addon::Branch
 
   set_permission_name "event_pages"
 

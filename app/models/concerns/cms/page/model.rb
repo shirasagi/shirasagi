@@ -40,6 +40,7 @@ module Cms::Page::Model
 
       return errors.add :filename, :empty if dst.blank?
       return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+      return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
 
       return errors.add :base, :same_filename if filename == dst
       return errors.add :filename, :taken if self.class.where(site_id: site_id, filename: dst).first

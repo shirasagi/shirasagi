@@ -3,7 +3,7 @@ module Cms::PageFilter
   include Cms::CrudFilter
 
   included do
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy]
   end
 
   private
@@ -47,7 +47,14 @@ module Cms::PageFilter
         raise "403" unless @item.allowed?(:release, @cur_user)
         @item.state = "ready" if @item.release_date
       end
-      render_update @item.update
+
+      result = @item.update
+      location = nil
+      if result && @item.try(:branch?) && @item.state != "closed"
+        location = { action: :index }
+        @item.delete
+      end
+      render_update result, location: location
     end
 
     def move
@@ -95,5 +102,13 @@ module Cms::PageFilter
 
         render_update result, location: location, render: { file: :move }
       end
+    end
+
+    def copy
+      return if request.get?
+
+      @item.attributes = get_params
+      @copy = @item.new_clone
+      render_update @copy.save, location: { action: :index }, render: { file: :copy }
     end
 end

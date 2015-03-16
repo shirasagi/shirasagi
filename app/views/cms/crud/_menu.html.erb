@@ -14,6 +14,9 @@
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, action: :edit, id: @item %>
     <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(:copy, action: :copy, id: @item) rescue nil %>
+    <% end %>
     <% if @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to(:move, action: :move, id: @item) rescue nil %>
     <% end %>

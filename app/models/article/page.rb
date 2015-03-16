@@ -12,6 +12,7 @@ class Article::Page
   include Workflow::Addon::Approver
   include Contact::Addon::Page
   include History::Addon::Backup
+  include Workflow::Addon::Branch
 
   set_permission_name "article_pages"
 

@@ -1,3 +1,5 @@
+<% return "" if @item.try(:branch?) %>
+
 <%= coffee do%>
 $ ->
   SS_AddonTabs.toggleView(".mod-cms-release_plan")
