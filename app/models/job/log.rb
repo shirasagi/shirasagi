@@ -4,6 +4,10 @@ class Job::Log
   include SS::Reference::User
   #include SS::Reference::Site
 
+  STATE_RUNNING = "running".freeze
+  STATE_COMPLETED = "completed".freeze
+  STATE_FAILED = "failed".freeze
+
   index({ updated: -1 })
 
   attr_accessor :save_term
@@ -49,15 +53,15 @@ class Job::Log
     end
 
     def start_label
-      item.started ? item.started.strftime("%Y-%m-%d %H:%m") : ""
+      started ? started.strftime("%Y-%m-%d %H:%m") : ""
     end
 
     def closed_label
-      item.started ? item.started.strftime("%Y-%m-%d %H:%m") : ""
+      closed ? closed.strftime("%Y-%m-%d %H:%m") : ""
     end
 
     def joined_jobs
-      item.logs.blank? ? '' : item.logs.join("\n")
+      logs.blank? ? '' : logs.join("\n")
     end
 
   class << self
