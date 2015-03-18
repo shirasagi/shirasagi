@@ -13,7 +13,7 @@
 
   <footer class="send">
     <%= f.submit t("ldap.views.button.sync"), class: :save %>
-    <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>
 

@@ -4,9 +4,11 @@ SS::Application.routes.draw do
     get :delete, :on => :member
   end
 
-  concern :move do
+  concern :crud do
     get :move, :on => :member
     put :move, :on => :member
+    get :copy, :on => :member
+    put :copy, :on => :member
   end
 
   namespace "cms", path: ".:site" do
@@ -28,7 +30,7 @@ SS::Application.routes.draw do
     resources :parts, concerns: :deletion do
       get :routes, on: :collection
     end
-    resources :pages, concerns: [:deletion, :move]
+    resources :pages, concerns: [:deletion, :crud]
     resources :layouts, concerns: :deletion
     get "check_links" => "check_links#index"
     get "generate_nodes" => "generate_nodes#index"
@@ -50,9 +52,9 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
-    resource :conf, concerns: [:deletion, :move]
+    resource :conf, concerns: [:deletion, :crud]
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :move]
+    resources :pages, concerns: [:deletion, :crud]
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
   end

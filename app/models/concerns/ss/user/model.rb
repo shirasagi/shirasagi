@@ -6,7 +6,6 @@ module SS::User::Model
   include Sys::Reference::Role
   include Ldap::Addon::User
 
-  attr_accessor :in_id
   attr_accessor :in_password
 
   TYPE_SNS = "sns".freeze
@@ -28,7 +27,7 @@ module SS::User::Model
     embeds_many :accounts, class_name: "SS::User::Model::Account"
 
     permit_params :name, :email, :password, :type, group_ids: []
-    permit_params :in_id, :in_password
+    permit_params :in_password
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :email, email: true, length: { maximum: 80 }

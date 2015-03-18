@@ -6,14 +6,16 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
-  concern :move do
+  concern :crud do
     get :move, :on => :member
     put :move, :on => :member
+    get :copy, :on => :member
+    put :copy, :on => :member
   end
 
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :move]
+    resources :pages, concerns: [:deletion, :crud]
   end
 
   node "event" do

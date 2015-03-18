@@ -13,6 +13,7 @@ class Faq::Page
   include Faq::Reference::Question
   include Contact::Addon::Page
   include History::Addon::Backup
+  include Workflow::Addon::Branch
 
   set_permission_name "faq_pages"
 
