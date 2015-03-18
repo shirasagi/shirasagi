@@ -211,6 +211,7 @@ class @SS_Voice
     'location': "<%= SS.config.voice.controller['location'] %>"
     'loading-resource': "<%= SS.config.voice.resource['loading'] %>"
     'disabled-resource': "<%= SS.config.voice.resource['disabled'] %>"
+    'overload-resource': "<%= SS.config.voice.resource['overload'] %>"
   @url = null
   @voice_tag = null
   @voice_controller = null
@@ -266,8 +267,8 @@ class @SS_Voice
           retry_after = 5 unless retry_after
           SS_Voice.timer_id = setTimeout(SS_Voice.load, retry_after * 1000)
       }
-      error: ->
-        SS_Voice.renderError()
+      error: (xhr, status, error) ->
+        SS_Voice.renderError(xhr.status)
     }
     return false
 
@@ -279,11 +280,16 @@ class @SS_Voice
     SS_Voice.voice_controller.play(url)
     return false
 
-  @renderError: ->
+  @renderError: (status) ->
     return false if SS_Voice.state == 'error'
     clearTimeout(SS_Voice.timer_id) if SS_Voice.timer_id >= 0
     SS_Voice.timer_id = -1
-    url = SS_Voice.voice_config['disabled-resource']
+    if status == 429
+      # too many requests
+      url = SS_Voice.voice_config['overload-resource']
+    else
+      # other error
+      url = SS_Voice.voice_config['disabled-resource']
     SS_Voice.state = 'error'
     SS_Voice.setAction(SS_Voice.cancel)
     SS_Voice.voice_controller.play(url)
