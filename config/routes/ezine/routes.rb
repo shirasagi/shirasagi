@@ -15,7 +15,9 @@ SS::Application.routes.draw do
       post :delivery, on: :member
       post :delivery_test, on: :member
     end
-    resources :members, concerns: :deletion
+    resources :members, concerns: :deletion do
+      get :download, on: :collection
+    end
     resources :test_members, concerns: :deletion
     resources :entries, concerns: :deletion
   end

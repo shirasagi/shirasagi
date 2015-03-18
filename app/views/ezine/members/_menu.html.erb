@@ -2,6 +2,7 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, action: :new %>
+      <%= link_to :download, action: :download %>
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
