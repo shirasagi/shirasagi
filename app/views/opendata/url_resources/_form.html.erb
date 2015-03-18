@@ -23,3 +23,4 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>
   <% end %>
 </dl>
+

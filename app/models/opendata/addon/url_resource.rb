@@ -13,3 +13,4 @@ module Opendata::Addon::UrlResource
     url_resources.destroy
   end
 end
+

@@ -187,3 +187,4 @@ class Opendata::UrlResource
       end
   end
 end
+
