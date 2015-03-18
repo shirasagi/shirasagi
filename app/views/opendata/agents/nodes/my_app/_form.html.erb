@@ -5,9 +5,16 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 
 %>
+<%= javascript_include_tag "opendata/public" %>
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
-<%= javascript_include_tag "ss/ss", "data-turbolinks-track" => true %>
 <script src="/assets/js/jquery.colorbox.js"></script>
+<script src="/assets/js/jquery.form.js"></script>
+<%= coffee do %>
+$ ->
+
+  $("a.ajax-box").colorbox({ fixed: true, width: "90%", height: "90%" })
+
+<% end %>
 
 <dl class="see opendata-app">
   <dt><%= @model.t :name %><%= required_label %></dt>

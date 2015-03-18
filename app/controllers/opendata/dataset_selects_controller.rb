@@ -1,5 +1,5 @@
 class Opendata::DatasetSelectsController < ApplicationController
-  include SS::AjaxFilter
+  include Opendata::AjaxFilter
 
   before_action :set_site
 

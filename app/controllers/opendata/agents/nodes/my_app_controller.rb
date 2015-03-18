@@ -4,7 +4,6 @@ class Opendata::Agents::Nodes::MyAppController < ApplicationController
 
   before_action :set_model
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
-  before_action :set_node_dataset
 
   protected
     def app_node
@@ -34,10 +33,6 @@ class Opendata::Agents::Nodes::MyAppController < ApplicationController
 
     def get_params
       params.require(:item).permit(permit_fields).merge(fix_params)
-    end
-
-    def set_node_dataset
-      @node_dataset = Cms::Node.site(@cur_site).where(route: "opendata/dataset").public.first
     end
 
   public

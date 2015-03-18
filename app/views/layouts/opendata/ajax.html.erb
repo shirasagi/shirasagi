@@ -1,0 +1,7 @@
+<div id="ajax-box">
+<%= yield %>
+</div>
+
+<%= javascript_tag do %>
+  Opendata.render("#ajax-box");
+<% end %>

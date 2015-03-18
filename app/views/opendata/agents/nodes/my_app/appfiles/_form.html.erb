@@ -1,8 +1,6 @@
 <%
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 %>
-<%= javascript_include_tag "opendata/public" %>
-<%= javascript_include_tag "opendata/form" %>
 
 <dl class="see opendata-app-appfiles">
   <dt><%= @model.t :file_id %><%= required_label %></dt>
