@@ -30,7 +30,7 @@ class Cms::Task
           node_id = node ? node.id : nil
 
           ready name: task_name, site_id: site.id, node_id: node_id do |task|
-            task.process controller, action, site: site, node: node
+            task.process controller, action, site: site, node: node, opts: opts
           end
         end
       end

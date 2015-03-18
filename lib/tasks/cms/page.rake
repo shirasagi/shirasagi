@@ -18,4 +18,8 @@ namespace :cms do
   task :remove_pages => :environment do
     Cms::Task.remove_pages site: ENV["site"]
   end
+
+  task :check_links => :environment do
+    Cms::Task.check_links site: ENV["site"], node: ENV["node"], email: ENV["email"]
+  end
 end
