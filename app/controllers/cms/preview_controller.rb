@@ -1,6 +1,7 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
   include Cms::PublicFilter
+  include Fs::FileFilter
 
   before_action :set_group
   before_action :set_path_with_preview, prepend: true
@@ -27,11 +28,23 @@ class Cms::PreviewController < ApplicationController
       super
       return if response.body.present?
 
-      if @cur_path =~ /^\/fs\// # TODO:
-        filename = ::File.basename(@cur_path)
-        id = ::File.basename ::File.dirname(@cur_path)
+      if @cur_path =~ /^\/fs\//
+        path = @cur_path.sub("/thumb/", "/")
+        filename = ::File.basename(path)
+        id = ::File.basename ::File.dirname(path)
         @item = SS::File.find_by id: id, filename: filename
-        return send_data @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline
+
+        if @cur_path =~ /\/thumb\//
+          width  = params[:width]
+          height = params[:height]
+
+          send_thumb @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline,
+            width: width, height: height
+          return
+        else
+          send_data @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline
+          return
+        end
       end
       raise "404" unless Fs.exists?(file)
     end
