@@ -18,10 +18,8 @@ class Ezine::MembersController < ApplicationController
         where(node_id: @cur_node.id).
         order_by(updated: -1)
 
-      columns = [items.t("ezine.member.email"), items.t("ezine.member.email_type"), items.t("created")]
-
       csv = CSV.generate do |data|
-        data << columns
+        data << %w(email email_type created)
         items.each do |item|
           row = []
           row << item.email
