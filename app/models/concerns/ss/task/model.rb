@@ -58,6 +58,7 @@ module SS::Task::Model
         save
         interrupt = self.class.find_by(id: id, select: interrupt).interrupt
         raise Interrupt, "interrupted: stop" if interrupt.to_s == "stop"
+        GC.start
       end
       self
     end
