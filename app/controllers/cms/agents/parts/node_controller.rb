@@ -6,8 +6,7 @@ class Cms::Agents::Parts::NodeController < ApplicationController
     def index
       @cur_node = @cur_part.parent
 
-      path = @cur_path.sub(/\/[^\/]*$/, "")
-      node = Category::Node::Base.site(@cur_site).filename(path).first || @cur_node
+      node = @cur_node
 
       if node && node.dirname
         cond = { filename: /^#{node.dirname}\//, depth: node.depth }
