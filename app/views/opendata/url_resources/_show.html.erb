@@ -1,0 +1,33 @@
+<dl class="see">
+  <% if @item.file %>
+  <dt><%= @model.t :file_id %></dt>
+  <dd>
+    <%= link_to File.basename(URI.parse(@item.original_url).path), opendata_dataset_url_resource_file_path(url_resource_id: @item.id) %>
+    (<%= number_to_human_size @item.size %>)
+  </dd>
+  <% end %>
+
+  <dt><%= @model.t :original_url %></dt>
+  <dd><%= @item.send :original_url %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :license_id %></dt>
+  <dd><%= tryb { @item.license.name } %></dd>
+
+  <dt><%= @model.t :format %></dt>
+  <dd><%= @item.send :format %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+
+  <dt><%= @model.t :tsv_id %></dt>
+  <dd>
+    <%= link_to @model.t(:content), opendata_dataset_url_resource_content_path(url_resource_id: @item.id) %>
+  </dd>
+</dl>
+
+<footer class="send">
+  <%= button_tag t("opendata.links.add_url_resource"), onclick: "location.href='#{url_for(action: :new)}'; return false;" %>
+</footer>

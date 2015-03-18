@@ -2,10 +2,12 @@ ja:
   opendata:
     create: 新規登録
     manage_resources: リソースを管理する
+    manage_url_resources: クローリングを管理する
     manage_appfiles: アプリファイルを管理する
     manage_comments: コメントを管理する
     links:
       add_resource: 新しいリソースを追加する
+      add_url_resource: 新しいURLを追加する
       add_appfile: 新しいアプリファイルを追加する
       add_comment: 新しいコメントを追加する
     search_datasets:
@@ -25,6 +27,12 @@ ja:
     errors:
       messages:
         invalid_rdf: RDFストアの登録に失敗しました。
+        invalid_timeout: タイムアウトしました。
+        dynamic_file: 動的ファイルはクローリングできません。
+    crawl_state:
+      same: 　
+      updated: 更新
+      delete: 削除
 
   modules:
     opendata: オープンデータ
@@ -39,6 +47,7 @@ ja:
       opendata/idea: アイデア
       opendata/release: 公開設定
       opendata/resource: リソース
+      opendata/url_resource: クローリング
       opendata/appfile: アプリファイル
       opendata/rdf_store: RDFストア
       opendata/comment: コメント
@@ -95,6 +104,7 @@ ja:
       opendata/license: ライセンス
       opendata/dataset_group: データセットグループ
       opendata/dataset: データセット
+      opendata/crawl: クローリング
       opendata/app: アプリ
       opendata/idea: アイデア
     attributes:
@@ -137,6 +147,18 @@ ja:
         license_id: ライセンス
         tsv_id: プレビュー用データ
         content: データの内容
+      opendata/url_resource:
+        file_id: クローリングファイル
+        in_file: クローリングファイル
+        name: クローリング名
+        text: 説明
+        format: フォーマット
+        original_url: URL
+        license_id: ライセンス
+        tsv_id: プレビュー
+        content: クローリングデータの内容
+        crawl_state: ステータス
+        original_updated: 元ファイル更新日時
       opendata/app:
         name: アプリ名
         text: 説明

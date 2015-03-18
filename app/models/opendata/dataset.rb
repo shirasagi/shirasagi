@@ -4,10 +4,19 @@ class Opendata::Dataset
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
   include Opendata::Addon::Resource
+  include Opendata::Addon::UrlResource
   include Opendata::Addon::Category
   include Opendata::Addon::DatasetGroup
   include Opendata::Addon::Area
   include Opendata::Reference::Member
+
+  scope :formast_is, ->(word, *fields) {
+    where("$and" => [{ "$or" => fields.map { |field| { field => word.to_s } } } ])
+  }
+
+  scope :license_is, ->(id, *fields) {
+    where("$and" => [{ "$or" => fields.map { |field| { field => id.to_i } } } ])
+  }
 
   set_permission_name "opendata_datasets"
 
@@ -149,7 +158,7 @@ class Opendata::Dataset
 
         if params[:keyword].present?
           criteria = criteria.keyword_in params[:keyword],
-            :name, :text, "resources.name", "resources.filename", "resources.text"
+            :name, :text, "resources.name", "resources.filename", "resources.text", "url_resources.name", "url_resources.filename", "url_resources.text"
         end
         if params[:ids].present?
           criteria = criteria.any_in id: params[:ids].split(/,/)
@@ -177,10 +186,10 @@ class Opendata::Dataset
           criteria = criteria.any_in dataset_group_ids: groups
         end
         if params[:format].present?
-          criteria = criteria.where "resources.format" => params[:format].upcase
+          criteria = criteria.formast_is  params[:format].upcase, "resources.format","url_resources.format"
         end
         if params[:license_id].present?
-          criteria = criteria.where "resources.license_id" => params[:license_id].to_i
+          criteria = criteria.license_is  params[:license_id].to_i, "resources.license_id","url_resources.license_id"
         end
 
         criteria

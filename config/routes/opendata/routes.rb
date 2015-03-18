@@ -9,6 +9,7 @@ SS::Application.routes.draw do
   content "opendata" do
     get "/" => "main#index", as: :main
     resources :licenses, concerns: :deletion
+    resources :crawls, concerns: :deletion
     resources :dataset_categories, concerns: :deletion
     resources :dataset_groups, concerns: :deletion do
       get "search" => "dataset_groups/search#index", on: :collection
@@ -20,6 +21,13 @@ SS::Application.routes.draw do
         get "tsv" => "resources#download_tsv"
         get "content" => "resources#content"
       end
+
+      resources :url_resources, concerns: :deletion do
+        get "file" => "url_resources#download"
+        get "tsv" => "url_resources#download_tsv"
+        get "content" => "url_resources#content"
+      end
+
     end
 
     resources :ideas, concerns: :deletion do
@@ -65,9 +73,13 @@ SS::Application.routes.draw do
     get "dataset/tags" => "public#index_tags", cell: "nodes/dataset"
     get "dataset/formats" => "public#index_formats", cell: "nodes/dataset"
     get "dataset/licenses" => "public#index_licenses", cell: "nodes/dataset"
+    get "dataset/crawl" => "public#index_crawl", cell: "nodes/dataset"
     get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
     get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/resource", format: false
     get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
+    get "dataset/:dataset/url_resource/:id/" => "public#index", cell: "nodes/url_resource"
+    get "dataset/:dataset/url_resource/:id/content.html" => "public#content", cell: "nodes/url_resource", format: false
+    get "dataset/:dataset/url_resource/:id/*filename" => "public#download", cell: "nodes/url_resource", format: false
     get "dataset/:dataset/point/show.:format" => "public#show_point", cell: "nodes/dataset", format: false
     get "dataset/:dataset/point/add.:format" => "public#add_point", cell: "nodes/dataset", format: false
     get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset", format: false
