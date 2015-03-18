@@ -15,7 +15,11 @@ module Cms::Addon
     end
 
     def allow_other_user_files
-      @other_user_files_allowed = true
+      @allowed_other_user_files = true
+    end
+
+    def allowed_other_user_files?
+      @allowed_other_user_files == true
     end
 
     def save_files
@@ -27,7 +31,7 @@ module Cms::Addon
       files.each do |file|
         if !add_ids.include?(file.id)
           #
-        elsif !@other_user_files_allowed && @cur_user && @cur_user.id != file.user_id
+        elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
           next
         else
           file.update_attribute(:model, model_name.i18n_key)
