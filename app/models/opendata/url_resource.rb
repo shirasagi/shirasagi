@@ -18,10 +18,9 @@ class Opendata::UrlResource
   belongs_to_file :file
   belongs_to_file :tsv
 
-  permit_params :name, :text, :format, :license_id, :original_url
+  permit_params :name, :text, :license_id, :original_url
 
   validates :name, presence: true
-  validates :format, presence: true
   validates :license_id, presence: true
 
   validate :validate_original_url
