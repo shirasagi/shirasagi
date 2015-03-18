@@ -1,5 +1,7 @@
 class Faq::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::PublicFilter::Layout
+  include Mobile::PublicFilter
   helper Cms::ListHelper
 
   before_action :accept_cors_request, only: [:rss]
@@ -16,6 +18,7 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
       end
       @category = params[:category]
       @keyword = params[:keyword]
+      @url = mobile_path? ? "/mobile#{@cur_node.url}" : @cur_node.url
 
       @query = {}
       @query[:category] = @category.blank? ? {} : { :"category_ids".in =>  [@category.to_i] }

@@ -9,7 +9,7 @@
 %>
 
 <div class="faq-search">
-<%= form_tag @search_node.url, multipart: true, method: "get" do |f| %>
+<%= form_tag @url, multipart: true, method: "get" do |f| %>
   <% if categories.present? %>
   <div class="category">
     <%= t('faq.query.category') %>
