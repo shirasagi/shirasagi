@@ -52,4 +52,3 @@ class Opendata::UrlResourcesController < ApplicationController
       @data = @item.parse_tsv
     end
 end
-

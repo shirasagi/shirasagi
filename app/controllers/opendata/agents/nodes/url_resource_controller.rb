@@ -39,4 +39,3 @@ class Opendata::Agents::Nodes::UrlResourceController < ApplicationController
       render nothing: true unless @data = @item.parse_tsv
     end
 end
-
