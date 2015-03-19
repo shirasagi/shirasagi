@@ -19,7 +19,7 @@ class Opendata::Idea
   field :tags, type: SS::Extensions::Words
   field :commented, type: DateTime
 
-  belongs_to :datasets, class_name: "Opendata::Dataset", inverse_of: :idea
+  embeds_ids :datasets, class_name: "Opendata::Dataset"
   embeds_ids :apps, class_name: "Opendata::App"
   belongs_to :member, class_name: "Opendata::Member"
 
