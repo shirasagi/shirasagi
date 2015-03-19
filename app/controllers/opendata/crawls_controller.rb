@@ -2,7 +2,6 @@ class Opendata::CrawlsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  #model Opendata::Dataset
   model Opendata::UrlResource
 
   navi_view "opendata/main/navi"
@@ -12,19 +11,32 @@ class Opendata::CrawlsController < ApplicationController
     @datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
     @items = []
     package_list = []
-    #@model_crawl = Opendata::UrlResource
-
     @datasets.each do |dataset|
       package_list << dataset[:name]
-      dataset.url_resources.each do |urlresource|
+
+      dataset.url_resources.
+        search(params[:s]).
+        order_by(name: 1).
+        page(params[:page]).per(50).each do |urlresource|
+
+        unless params[:s].blank?
+          if params[:s][:search_updated]=="1" && params[:s][:search_delete]=="1"
+            next unless urlresource.crawl_state == "updated" || urlresource.crawl_state == "delete"
+          elsif  params[:s][:search_updated]=="1"
+            next unless urlresource.crawl_state == "updated"
+          elsif  params[:s][:search_delete]=="1"
+            next unless urlresource.crawl_state == "delete"
+            end
+        end
+
         item = {id: dataset._id,
-                urlresourceid: urlresource._id,
-                resourcename: dataset.name,
-                name: urlresource.name,
-                crawl_state:   urlresource.crawl_state,
-                filename: urlresource.filename,
-                original_updated: urlresource.original_updated,
-                original_url: urlresource.original_url}
+            urlresourceid: urlresource._id,
+            resourcename: dataset.name,
+            name: urlresource.name,
+            crawl_state:   urlresource.crawl_state,
+            filename: urlresource.filename,
+            original_updated: urlresource.original_updated,
+            original_url: urlresource.original_url}
         @items << item
       end
     end

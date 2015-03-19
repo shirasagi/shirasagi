@@ -1,0 +1,12 @@
+<% @s = OpenStruct.new params[:s] %>
+<div class="search-form">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.text_field :keyword, style: "width: 300px;" %>
+    <input type="submit" value="<%= t('views.button.search') %>" />
+  <%= f.check_box :search_updated %><%= t "opendata.crawl_state.updated" %>
+  <%= f.check_box :search_delete %><%= t "opendata.crawl_state.delete" %>
+  <% end %>
+
+
+
+</div>

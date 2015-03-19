@@ -22,10 +22,12 @@
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
+  <% if @item.tsv_present? %>
   <dt><%= @model.t :tsv_id %></dt>
   <dd>
     <%= link_to @model.t(:content), opendata_dataset_url_resource_content_path(url_resource_id: @item.id) %>
   </dd>
+  <% end %>
 </dl>
 
 <footer class="send">

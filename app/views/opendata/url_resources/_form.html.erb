@@ -7,6 +7,7 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
 
   <dt><%= @model.t :original_url %><%= required_label %></dt>
   <dd><%= f.url_field :original_url %></dd>
+  <dd><input type="button" value=<%= @model.t :tsv_id %> onClick="window.open(item_original_url.value)"></dd>
 
   <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -17,10 +18,6 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <dt><%= @model.t :text %><%= @model.tt :text %></dt>
   <dd><%= f.text_area :text %></dd>
 
-  <dt class="in_tsv"><%= @model.t :tsv_id %><%= @model.tt :tsv_id %></dt>
 
-  <% if @item.tsv_id %>
-  <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>
-  <% end %>
 </dl>
 
