@@ -12,7 +12,7 @@ class Workflow::PagesController < ApplicationController
     def set_item
       @item = @model.find(params[:id]).becomes_with_route
       @item.attributes = fix_params
-      @item.allow_other_user_files
+      @item.try(:allow_other_user_files)
     end
 
     def fix_params
