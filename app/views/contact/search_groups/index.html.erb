@@ -6,20 +6,17 @@ $ ->
     id = $(this).closest("[data-id]").attr("data-id")
     name = $(this).text()
 
-    $.colorbox.element().closest("dl").find(".ajax-selected tr[data-id]").remove()
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").remove()
     SS_SearchUI.select({id: id, name: name})
-    $.colorbox.element().closest("dl").find(".ajax-selected").show()
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
 
     tel = $(this).parents("tr:first").find(".contact-tel").text()
     fax = $(this).parents("tr:first").find(".contact-fax").text()
     email = $(this).parents("tr:first").find(".contact-email").text()
 
-    if $("#item_contact_tel").val() == ""
-      $("#item_contact_tel").prop("value", tel)
-    if $("#item_contact_fax").val() == ""
-      $("#item_contact_fax").prop("value", fax)
-    if $("#item_contact_email").val() == ""
-      $("#item_contact_email").prop("value", email)
+    $("#item_contact_tel").val(tel)
+    $("#item_contact_fax").val(fax)
+    $("#item_contact_email").val(email)
 
     e.preventDefault()
     $.colorbox.close()
@@ -53,3 +50,5 @@ $ ->
     <% end %>
   </tbody>
 </table>
+
+<%= paginate @items if @items.try(:current_page) %>
