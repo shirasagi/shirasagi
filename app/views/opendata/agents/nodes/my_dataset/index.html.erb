@@ -24,8 +24,8 @@
       <td><%= item.label :state %></td>
       <td><%= item.point.to_i %></td>
       <td><%= item.downloaded.to_i %></td>
-      <td>0</td>
-      <td>0</td>
+      <td><%= item.apps.size %></td>
+      <td><%= item.ideas.size %></td>
     </tr>
     <% end %>
   </tbody>

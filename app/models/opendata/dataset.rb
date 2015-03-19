@@ -27,7 +27,8 @@ class Opendata::Dataset
 
   has_many :points, primary_key: :dataset_id, class_name: "Opendata::DatasetPoint",
     dependent: :destroy
-  has_many :ideas, primary_key: :dataset_id, class_name: "Opendata::Idea"
+  has_many :apps, foreign_key: :dataset_ids, class_name: "Opendata::App"
+  has_many :ideas, foreign_key: :dataset_ids, class_name: "Opendata::Idea"
 
   validates :text, presence: true
   validates :category_ids, presence: true
