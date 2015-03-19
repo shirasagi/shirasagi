@@ -88,7 +88,7 @@ class Job::Service
       with_task do |task, job_log|
         begin
           Rails.logger.info("Started Job #{task.id}")
-          job_log.state = "running"
+          job_log.state = Job::Log::STATE_RUNNING
           job_log.started = Time.now
           job_log.save
 
@@ -97,11 +97,11 @@ class Job::Service
             job.call *(task.args)
           end
 
-          job_log.state = "completed"
+          job_log.state = Job::Log::STATE_COMPLETED
           job_log.closed = Time.now
           Rails.logger.info("Completed Job #{task.id} in #{time * 1000} ms")
         rescue Exception => e
-          job_log.state = "failed"
+          job_log.state = Job::Log::STATE_FAILED
           job_log.closed = Time.now
           Rails.logger.fatal("Failed Job #{task.id}: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
           raise if system_error?(e)

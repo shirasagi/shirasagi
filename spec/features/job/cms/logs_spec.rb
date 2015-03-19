@@ -1,11 +1,16 @@
 require 'spec_helper'
+require "csv"
 
-describe "job_cms_logs" do
-  subject(:site) { cms_site }
-  # subject(:model) { Job::Log }
-  subject(:index_path) { job_cms_logs_path site.host }
-  subject(:download_path) { job_cms_download_path site.host }
-  subject(:batch_destroy) { job_cms_batch_destroy_path site.host }
+describe "job_cms_logs", dbscope: :example do
+  let(:site) { cms_site }
+  let(:index_path) { job_cms_logs_path site.host }
+  let(:download_path) { job_cms_download_path site.host }
+  let(:batch_destroy) { job_cms_batch_destroy_path site.host }
+  let(:job) { create(:job_model, site: site) }
+  let(:log1) { create(:job_log, :job_log_running, job: job) }
+  let(:log2) { create(:job_log, :job_log_completed, job: job) }
+  let(:log3) { create(:job_log, :job_log_failed, job: job) }
+  let(:logs) { [log1, log2, log3] }
 
   it "without login" do
     visit index_path
@@ -22,12 +27,22 @@ describe "job_cms_logs" do
     before { login_cms_user }
 
     it "#index" do
+      # ensure that log is existed
+      logs.each do |log|
+        expect(log).not_to be_nil
+      end
+
       visit index_path
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
     end
 
     it "#download" do
+      # ensure that log is existed
+      logs.each do |log|
+        expect(log).not_to be_nil
+      end
+
       visit download_path
       expect(status_code).to eq 200
       expect(current_path).to eq download_path
@@ -37,17 +52,39 @@ describe "job_cms_logs" do
       end
 
       expect(status_code).to eq 200
+      csv_lines = CSV.parse(page.html.encode("UTF-8"))
+      expect(csv_lines.length).to eq 4
+      expect(csv_lines[0]).to eq %w(ClassName Started Closed State Args Logs)
+      expect(csv_lines[1]).to include(logs[0].class_name)
+      expect(csv_lines[1]).to include(logs[0].start_label)
+      expect(csv_lines[1]).to include(I18n.t(logs[0].state, scope: "job.state"))
+      expect(csv_lines[2]).to include(logs[1].class_name)
+      expect(csv_lines[2]).to include(logs[1].start_label)
+      expect(csv_lines[2]).to include(logs[1].closed_label)
+      expect(csv_lines[2]).to include(I18n.t(logs[1].state, scope: "job.state"))
+      expect(csv_lines[3]).to include(logs[2].class_name)
+      expect(csv_lines[3]).to include(logs[2].start_label)
+      expect(csv_lines[3]).to include(logs[2].closed_label)
+      expect(csv_lines[3]).to include(I18n.t(logs[2].state, scope: "job.state"))
     end
 
     it "#batch_destroy" do
+      # ensure that log is existed
+      logs.each do |log|
+        expect(log).not_to be_nil
+      end
+      expect(Job::Log.count).to be > 0
+
       visit batch_destroy
       expect(status_code).to eq 200
       expect(current_path).to eq batch_destroy
 
       within "form" do
+        select I18n.t("history.save_term.all_delete"), from: "item_save_term"
         click_button I18n.t("button.delete", scope: "views")
       end
       expect(status_code).to eq 200
+      expect(Job::Log.count).to eq 0
     end
   end
 end
