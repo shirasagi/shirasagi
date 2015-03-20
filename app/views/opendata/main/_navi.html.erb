@@ -7,6 +7,7 @@
       <%= link_to :"mongoid.models.opendata/dataset", opendata_datasets_path, class: "icon-node" %>
       <%= link_to :"mongoid.models.opendata/dataset_group", opendata_dataset_groups_path, class: "icon-node" %>
       <%= link_to :"mongoid.models.opendata/license", opendata_licenses_path, class: "icon-node" %>
+      <%= link_to :"mongoid.models.opendata/crawl", opendata_crawls_path, class: "icon-node" %>
     <% elsif @cur_node.route == "opendata/app" %>
       <%= link_to :"mongoid.models.opendata/app", opendata_apps_path, class: "icon-node" %>
       <%= link_to :"mongoid.models.opendata/license", opendata_licenses_path, class: "icon-node" %>
@@ -27,3 +28,4 @@
 </nav>
 
 <% end %>
+
