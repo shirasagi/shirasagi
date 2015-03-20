@@ -22,7 +22,9 @@
       </td>
       <td><%= link_to item.name, { action: :show, id: item } %></td>
       <td class="original_url"><%= item.original_url %></td>
-      <td class="original_updated"><%= item.original_updated.strftime("%Y/%m/%d %H:%M") %></td>
+      <% if item.original_updated.present? %>
+        <td class="original_updated"><%= item.original_updated.strftime("%Y/%m/%d %H:%M") %></td>
+      <% end %>
     </tr>
     <% end %>
   </tbody>

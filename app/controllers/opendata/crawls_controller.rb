@@ -20,12 +20,12 @@ class Opendata::CrawlsController < ApplicationController
         page(params[:page]).per(50).each do |urlresource|
 
         unless params[:s].blank?
-          if params[:s][:search_updated]=="1" && params[:s][:search_delete]=="1"
-            next unless urlresource.crawl_state == "updated" || urlresource.crawl_state == "delete"
+          if params[:s][:search_updated]=="1" && params[:s][:search_deleted]=="1"
+            next unless urlresource.crawl_state == "updated" || urlresource.crawl_state == "deleted"
           elsif  params[:s][:search_updated]=="1"
             next unless urlresource.crawl_state == "updated"
-          elsif  params[:s][:search_delete]=="1"
-            next unless urlresource.crawl_state == "delete"
+          elsif  params[:s][:search_deleted]=="1"
+            next unless urlresource.crawl_state == "deleted"
             end
         end
 

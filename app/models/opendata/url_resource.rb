@@ -54,7 +54,6 @@ class Opendata::UrlResource
     end
 
     def tsv_present?
-      puts format.to_s
       if format.blank?
         true if tsv
       else
@@ -116,7 +115,6 @@ class Opendata::UrlResource
         time_out = 30
         timeout(time_out){
 
-          #urlopen = open(original_url)
           self.original_updated = open(original_url).last_modified
           if self.original_updated.blank?
             errors.add :base, I18n.t("opendata.errors.messages.dynamic_file")
@@ -157,6 +155,7 @@ class Opendata::UrlResource
         return
 
       rescue
+        puts "3"
         errors.add :original_url, :invalid
         return
 
