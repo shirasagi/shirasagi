@@ -40,7 +40,6 @@ class Voice::MainController < ApplicationController
 
   public
     def index
-      raise Job::SizeLimitExceededError, "size limit exceeded"
       if @voice_file.latest?
         Voice::VoiceFile.release_lock @voice_file
         send_audio_file(@voice_file.file)
