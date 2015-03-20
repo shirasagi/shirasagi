@@ -155,7 +155,6 @@ class Opendata::UrlResource
         return
 
       rescue
-        puts "3"
         errors.add :original_url, :invalid
         return
 
