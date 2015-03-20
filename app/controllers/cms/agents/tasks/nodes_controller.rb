@@ -5,7 +5,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
   private
     def set_params
-      @limit = @limit ? @limit.to_i : 100
+      @limit = @opts[:limit] ? @opts[:limit].to_i : 100
     end
 
   public
