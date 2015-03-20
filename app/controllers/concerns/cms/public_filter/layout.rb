@@ -16,7 +16,7 @@ module Cms::PublicFilter::Layout
     end
 
     def render_part(part, opts = {})
-      return part.html if part.route == "cms/frees"
+      return part.html if part.route == "cms/free"
 
       path = "/.#{@cur_site.host}/parts/#{part.route}"
       spec = recognize_agent path, method: "GET"
