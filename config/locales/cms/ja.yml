@@ -34,7 +34,7 @@ ja:
       caption: キャプション
     auto_correct: 自動修正
     link_check: リンクチェック
-    generate_node: フォルダ書き出し
+    generate_node: フォルダー書き出し
     generate_page: ページ書き出し
     adobe_reader:
       remark:
