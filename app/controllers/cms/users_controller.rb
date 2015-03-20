@@ -13,7 +13,7 @@ class Cms::UsersController < ApplicationController
     end
 
     def fix_params
-      { cur_site: @cur_site }
+      {}
     end
 
     def set_item

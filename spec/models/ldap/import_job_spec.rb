@@ -12,8 +12,7 @@ describe Ldap::ImportJob, ldap: true do
 
     context "when ldap connection is set" do
       let(:group) do
-        create(:cms_group, name: unique_id, ldap_host: ENV["ldap_host"],
-               ldap_dn: "dc=city,dc=shirasagi,dc=jp", ldap_auth_method: "anonymous")
+        create(:cms_group, name: unique_id,ldap_dn: "dc=city,dc=shirasagi,dc=jp")
       end
       let(:site) do
         create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"],
@@ -27,6 +26,13 @@ describe Ldap::ImportJob, ldap: true do
                group_ids: [group.id], cms_role_ids: [role.id])
       end
       subject { Ldap::ImportJob.new }
+
+      around(:each) do |example|
+        save_auth_method = SS.config.ldap.auth_method
+        SS.config.replace_value_at(:ldap, :auth_method, "anonymous")
+        example.run
+        SS.config.replace_value_at(:ldap, :auth_method, save_auth_method)
+      end
 
       import = nil
       it "should not raise errors" do

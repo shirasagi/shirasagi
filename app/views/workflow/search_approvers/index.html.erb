@@ -26,7 +26,6 @@ $ ->
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <% item.cur_site = @cur_site %>
       <tr data-id="<%= "#{@level},#{item.id}" %>">
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />

@@ -1,41 +1,37 @@
 require 'net-ldap'
 
 class Ldap::Connection
-  DEFAULT_PORT = 389.freeze
-
   private_class_method :new
 
   class << self
     public
-      def connect(root_group, username, password)
-        return nil if root_group.ldap_host.blank?
-        return nil if root_group.ldap_dn.blank?
+      def connect(host: SS.config.ldap.host, base_dn: nil, auth_method: SS.config.ldap.auth_method, username: nil, password: nil)
+        return nil if host.blank?
+        return nil if auth_method.blank?
 
-        if root_group.ldap_anonymous?
-          config = create_anonymous_config(root_group)
-        else
-          config = create_auth_config(root_group, username, password)
-        end
-        return nil if config.blank?
+        host, port = host.split(":")
+        config = { host: host }
+        config[:port] = port.to_i if port.present?
+        config[:base] = base_dn if base_dn.present?
+        config[:auth_method] = auth_method.to_sym
 
-        host, port = config[:host].split(":")
-        port = port.present? ? port.to_i : DEFAULT_PORT
-        ldap = Net::LDAP.new(host: host, port: port, base: config[:base_dn])
-        raise Ldap::BindError unless do_bind(ldap, config)
+        ldap = Net::LDAP.new(config)
+        raise Ldap::BindError unless do_bind(ldap, auth_method, username, password)
         new(ldap, config)
       end
 
-      def authenticate(root_group, username, password)
-        return false if root_group.ldap_host.blank?
-        return false if root_group.ldap_dn.blank?
+      def authenticate(host: SS.config.ldap.host, username: nil, password: nil)
+        return false if host.blank?
+        return false if username.blank?
+        return false if password.blank?
 
-        config = create_auth_config(root_group, username, password)
-        return false if config.blank?
+        host, port = host.split(":")
+        config = { host: host }
+        config[:port] = port.to_i if port.present?
+        config[:base] = username
 
-        host, port = config[:host].split(":")
-        port = port.present? ? port.to_i : DEFAULT_PORT
-        ldap = Net::LDAP.new(host: host, port: port, base: config[:base_dn])
-        return false unless do_bind(ldap, config)
+        ldap = Net::LDAP.new(config)
+        return false unless do_bind(ldap, :simple, username, password)
         true
       end
 
@@ -53,33 +49,12 @@ class Ldap::Connection
       end
 
     private
-      def create_anonymous_config(root_group)
-        config = {}
-        config[:host] = root_group.ldap_host
-        config[:base_dn] = root_group.ldap_dn
-        config[:auth_method] = :anonymous
-        config
-      end
-
-      def create_auth_config(root_group, username, password)
-        return nil if username.blank?
-        return nil if password.blank?
-
-        config = {}
-        config[:host] = root_group.ldap_host
-        config[:base_dn] = root_group.ldap_dn
-        config[:auth_method] = :simple
-        config[:username] = username
-        config[:password] = password
-        config
-      end
-
-      def do_bind(ldap, config)
-        method = config[:auth_method].to_sym
-        auth = { method: method }
-        if method != :anonymous
-          auth[:username] = config[:username]
-          auth[:password] = decrypt(config[:password])
+      def do_bind(ldap, auth_method, username, password)
+        auth_method = auth_method.to_sym
+        auth = { method: auth_method.to_sym }
+        if auth_method != :anonymous
+          auth[:username] = username
+          auth[:password] = decrypt(password)
         end
         ldap.bind(auth)
       end

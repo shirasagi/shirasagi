@@ -1,6 +1,8 @@
 production: &production
   # specify exlucdes groups when importing from ldap server,
   # this is case sensitive.
+  host: "localhost:389"
+  auth_method: simple
   exclude_groups:
     - Group
     - People

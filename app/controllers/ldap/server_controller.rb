@@ -13,9 +13,13 @@ class Ldap::ServerController < ApplicationController
       @exclude_groups = SS.config.ldap.exclude_groups || []
     end
 
+    def connect
+      Ldap::Connection.connect(base_dn: @cur_site.root_group.ldap_dn, username: @cur_user.ldap_dn, password: session[:password])
+    end
+
   public
     def index
-      connection = Ldap::Connection.connect(@cur_site.root_group, @cur_user.ldap_dn, session[:password])
+      connection = connect
       if connection.blank?
         @errors = [ t("ldap.errors.connection_setting_not_found") ]
         render status: :bad_request
@@ -41,7 +45,7 @@ class Ldap::ServerController < ApplicationController
       dn = params[:dn]
       raise "404" if dn.blank?
 
-      connection = Ldap::Connection.connect(@cur_site.root_group, @cur_user.ldap_dn, session[:password])
+      connection = connect
       @entity = Ldap::Group.find(connection, dn)
 
       raise "404" if @entity.blank?
@@ -52,7 +56,7 @@ class Ldap::ServerController < ApplicationController
       dn = params[:dn]
       raise "404" if dn.blank?
 
-      connection = Ldap::Connection.connect(@cur_site.root_group, @cur_user.ldap_dn, session[:password])
+      connection = connect
       @entity = Ldap::User.find(connection, dn)
 
       raise "404" if @entity.blank?

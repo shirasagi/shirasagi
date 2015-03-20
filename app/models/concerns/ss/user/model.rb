@@ -7,59 +7,63 @@ module SS::User::Model
   include Ldap::Addon::User
 
   attr_accessor :in_password
+  attr_accessor :cur_group
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
 
+  LOGIN_ROLE_DBPASSWD = "dbpasswd".freeze
+  LOGIN_ROLE_LDAP = "ldap".freeze
+
   included do
     store_in collection: "ss_users"
     index({ email: 1 }, { sparse: true, unique: true })
-    index({ "accounts.uid" => 1, "accounts.group_id" => 1 }, { sparse: true, unique: true })
+    index({ uid: 1 }, { sparse: true, unique: true })
 
     seqid :id
     field :name, type: String
+    field :uid, type: String
     field :email, type: String, metadata: { form: :email }
     field :password, type: String
     field :type, type: String
+    field :login_roles, type: Array, default: [LOGIN_ROLE_DBPASSWD]
     field :last_loggedin, type: DateTime
 
     embeds_ids :groups, class_name: "SS::Group"
-    embeds_many :accounts, class_name: "SS::User::Model::Account"
 
-    permit_params :name, :email, :password, :type, group_ids: []
+    permit_params :name, :uid, :email, :password, :type, :login_roles, group_ids: []
     permit_params :in_password
 
     validates :name, presence: true, length: { maximum: 40 }
+    validates :uid, length: { maximum: 40 }
+    validates :uid, uniqueness: true, if: ->{ uid.present? }
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: true, if: ->{ email.present? }
-    validates :email, presence: true, if: ->{ accounts.blank? }
+    validates :email, presence: true, if: ->{ uid.blank? }
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
     validate :validate_type
-    # validates "accounts.uid", uniqueness: { scope: "accounts.group_id" }, if: ->{ accounts.present? }
-    # validates :accounts.uid, uniqueness: { scope: :accounts.group_id }, if: ->{ accounts.present? }
+    validate :validate_uid
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
 
-    before_save :remove_accounts, if: -> { accounts.blank? }
+    scope :uid_or_email, ->(id) { self.or({email: id}, {uid: id}) }
   end
 
   module ClassMethods
     public
+      def auth_methods
+        @auth_methods ||= [ :ldap_authenticate, :dbpasswd_authenticate ]
+      end
+
       def authenticate(group, id, password)
-        if id.include?("@")
-          user = find_user_by_email(id)
-        else
-          user = find_user_by_uid(group, id)
-        end
+        user = uid_or_email(id).first
         return nil unless user
 
-        if group.present? && user.ldap_dn.present?
-          user.ldap_authenticate(group, password) ? user : nil
-        elsif user.password.present?
-          user.password == SS::Crypt.crypt(password) ? user : nil
-        else
-          nil
+        user.cur_group = group
+        auth_methods.each do |method|
+          return user if user.send(method, password)
         end
+        nil
       end
 
       def search(params)
@@ -78,16 +82,6 @@ module SS::User::Model
       def type_options
         [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
       end
-
-    private
-      def find_user_by_email(email)
-        self.where(email: email).first
-      end
-
-      def find_user_by_uid(group, uid)
-        return nil if group.blank?
-        self.where("accounts.uid" => uid, "accounts.group_id" => group.id).first
-      end
   end
 
   public
@@ -97,22 +91,28 @@ module SS::User::Model
 
     # detail, descriptive name
     def long_name
-      "#{name}"
-    end
-
-    def uid_of(group)
-      found = accounts.select do |account|
-        account.group_id == group.id
-      end.first
-      found.try(:uid)
+      uid = self.uid
+      uid ||= email.split("@")[0] if email.present?
+      if uid.present?
+        "#{name}(#{uid})"
+      else
+        "#{name}"
+      end
     end
 
   private
+    def dbpasswd_authenticate(in_passwd)
+      return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
+      return false if password.blank?
+      password == SS::Crypt.crypt(in_passwd)
+    end
+
     def validate_type
       errors.add :type, :invalid unless type.blank? || type == TYPE_SNS || type == TYPE_LDAP
     end
 
-    def remove_accounts
-      remove_attribute(:accounts) if accounts.blank?
+    def validate_uid
+      return if uid.blank?
+      errors.add :uid, :invalid if uid !~ /^[\w\-]+$/
     end
 end

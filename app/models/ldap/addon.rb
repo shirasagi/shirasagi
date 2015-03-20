@@ -79,9 +79,14 @@ module Ldap::Addon
     end
 
     public
-      def ldap_authenticate(group, password)
-        return false unless group
-        Ldap::Connection.authenticate(group.root, ldap_dn, password)
+      def ldap_authenticate(password)
+        return false unless cur_group
+        return false unless login_roles.include?(SS::User::Model::LOGIN_ROLE_LDAP)
+        return false if ldap_dn.blank?
+        Ldap::Connection.authenticate(username: ldap_dn, password: password)
+      rescue => e
+        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        false
       end
   end
 end
