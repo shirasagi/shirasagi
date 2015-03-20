@@ -19,4 +19,8 @@ class Facility::Image
     def seq_filename
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
+
+    def serve_static_file?
+      false
+    end
 end

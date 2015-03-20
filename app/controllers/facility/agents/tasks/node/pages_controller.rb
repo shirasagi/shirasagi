@@ -3,6 +3,6 @@ class Facility::Agents::Tasks::Node::PagesController < ApplicationController
 
   public
     def generate
-      generate_node @node
+      #generate_node @node
     end
 end
