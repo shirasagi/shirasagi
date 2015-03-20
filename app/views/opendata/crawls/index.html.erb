@@ -1,3 +1,9 @@
+<script type="text/javascript">
+  $(function(){
+    $(".crawl_state").css("width", "60px");
+    $(".crawl_state_updated").css("color", "#FF0000");
+  });
+</script>
 
 <%= render file: "_search" %>
 
@@ -23,7 +29,7 @@
           <%= link_to :delete, { action: :delete, id: item } %>
         </nav>
       </td>
-      <td class="crawl_state <%= item[:crawl_state] %>"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></td>
+      <td class="crawl_state_<%= item[:crawl_state] %>"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></td>
       <td class="name"><%= link_to item[:name], { action: :show, id: item } %></td>
       <td class="resourcename"><%= item[:resourcename] %></td>
       <td class="original_url"><input type="button" value=<%= @model.t :tsv_id %> onClick="window.open('<%= item[:original_url] %>')">　<%= item[:original_url] %></td>

@@ -1,10 +1,21 @@
+<script type="text/javascript">
+  $(function(){
+    $(".index-search").css("width", "500px");
+    $("#s_keyword,#s_search_updated, #s_search_deleted").css("float","left");
+    $("#s_search_updated, #s_search_deleted").css("margin-top","4px").css("margin-left","20px");
+    $("#label_updated, #label_deleted").css({float:"left", margin:"3px 3px 3px 0px"});
+  });
+</script>
+
 <% @s = OpenStruct.new params[:s] %>
 <div class="search-form">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
     <input type="submit" value="<%= t('views.button.search') %>" />
-  <%= f.check_box :search_updated %><%= t "opendata.crawl_state.updated" %>
-  <%= f.check_box :search_deleted %><%= t "opendata.crawl_state.deleted" %>
+    <%= f.check_box :search_updated %>
+    <p id="label_updated"><%= t "opendata.crawl_state.updated" %></p>
+    <%= f.check_box :search_deleted %>
+    <p id="label_deleted"><%= t "opendata.crawl_state.deleted" %></p>
   <% end %>
 
 

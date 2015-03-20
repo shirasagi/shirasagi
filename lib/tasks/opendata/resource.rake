@@ -34,4 +34,56 @@ namespace :opendata do
   task :fuseki_clear => :environment do
     Opendata::Sparql.clear_all
   end
+
+  task :crawling => :environment do
+    require "open-uri"
+    require "timeout"
+
+    site = SS::Site.where(host: ENV["site"]).first
+    datasets = Opendata::Dataset.site(site)
+    datasets.each do |ds|
+      next if ds.url_resources.size == 0
+      ds.url_resources.each do |ur|
+        begin
+          time_out = 30
+          timeout(time_out){
+            url_file = open(ur.original_url)
+            puts ur.original_url
+            if url_file.present?
+              if url_file.last_modified.present?
+                if ur.original_updated == nil
+                  ur.crawl_state = "updated"
+                elsif url_file.last_modified > ur.original_updated.beginning_of_day
+                  ur.crawl_state = "updated"
+                elsif url_file.last_modified <= ur.original_updated.beginning_of_day
+                  ur.crawl_state = "same"
+                end
+                ur.original_updated = url_file.last_modified
+              else
+                puts "no last_modified"
+                ur.original_updated = nil
+                ur.crawl_state = "deleted"
+              end
+            else
+              puts "no file"
+              ur.original_updated = nil
+              ur.crawl_state = "deleted"
+            end
+            res = ur.save(validate: false)
+            if res == true
+              puts "success"
+            else
+              puts "failure"
+            end
+          }
+        rescue TimeoutError
+          puts I18n.t("opendata.errors.messages.invalid_timeout")
+          next
+        rescue => e
+          puts "Error: #{e}"
+          next
+        end
+      end
+    end
+  end
 end
