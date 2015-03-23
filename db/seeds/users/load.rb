@@ -64,7 +64,7 @@ role2 = save_cms_role name: "記事編集権限", permission_level: 1,
 if @sys_user
   @sys_user.add_to_set group_ids: g1_00.id
   @sys_user.add_to_set cms_role_ids: role1.id
-  @sys_user.accounts = [{uid: "sys", group_id: g1_00.root.id}]
+  @sys_user.uid = "sys"
   @sys_user.save!
 end
 
@@ -94,11 +94,11 @@ def save_user(data)
 end
 
 @admin = save_user name: "サイト管理者", email: "admin@example.jp", password: "pass",
-  group_ids: [g1_11.id], cms_role_ids: [role1.id], accounts: [{uid: "admin", group_id: g1_11.root.id}]
+  group_ids: [g1_11.id], cms_role_ids: [role1.id], uid: "admin"
 @user1 = save_user name: "一般ユーザー1", email: "user1@example.jp", password: "pass",
-  group_ids: [g1_11.id, g1_21.id], cms_role_ids: [role2.id], accounts: [{uid: "user1", group_id: g1_11.root.id}]
+  group_ids: [g1_11.id, g1_21.id], cms_role_ids: [role2.id], uid: "user1"
 @user2 = save_user name: "一般ユーザー2", email: "user2@example.jp", password: "pass",
-  group_ids: [g1_22.id], cms_role_ids: [role2.id], accounts: [{uid: "user2", group_id: g1_22.root.id}]
+  group_ids: [g1_22.id], cms_role_ids: [role2.id], uid: "user2"
 
 ## -------------------------------------
 puts "# nodes"

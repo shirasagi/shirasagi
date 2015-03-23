@@ -1,8 +1,13 @@
 production: &production
+  # specify ldap server and port.
+  host: "localhost:389"
+  # specify ldap authentication method.
+  # you can specify:
+  # * simple: simple user and password authentication.
+  # * anonymous: use anonymous access. this method does not use user and password.
+  auth_method: simple
   # specify exlucdes groups when importing from ldap server,
   # this is case sensitive.
-  host: "localhost:389"
-  auth_method: simple
   exclude_groups:
     - Group
     - People

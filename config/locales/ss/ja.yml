@@ -100,7 +100,6 @@ ja:
         in_password: パスワード
         group_ids: グループ
         type: ユーザータイプ
-        accounts: ユーザーID
         sns: SNSユーザー
         ldap: LDAPユーザー
       ss/group/model:
