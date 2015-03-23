@@ -7,7 +7,6 @@ module SS::User::Model
   include Ldap::Addon::User
 
   attr_accessor :in_password
-  attr_accessor :cur_group
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -55,11 +54,10 @@ module SS::User::Model
         @auth_methods ||= [ :ldap_authenticate, :dbpasswd_authenticate ]
       end
 
-      def authenticate(group, id, password)
+      def authenticate(id, password)
         user = uid_or_email(id).first
         return nil unless user
 
-        user.cur_group = group
         auth_methods.each do |method|
           return user if user.send(method, password)
         end

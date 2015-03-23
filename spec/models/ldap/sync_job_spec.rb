@@ -1,10 +1,7 @@
 require 'spec_helper'
 
 describe Ldap::SyncJob do
-  subject(:group) do
-    create(:cms_group, name: unique_id, ldap_host: ENV["ldap_host"],
-           ldap_dn: "dc=city,dc=shirasagi,dc=jp", ldap_auth_method: "anonymous")
-  end
+  subject(:group) { create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp") }
   subject(:item) { create(:ldap_import) }
   subject { Ldap::SyncJob.new }
 

@@ -9,7 +9,6 @@
   <article>
     <%= error_messages_for :item %>
     <%= hidden_field_tag :ref, params[:ref] %>
-    <%= hidden_field_tag "item[in_group]", SS.config.sns.login_group %>
 
     <%= t("ss.views.login/login.id") %><br />
     <%= text_field :item, :email %><br />

@@ -62,8 +62,6 @@ describe "sns_login", dbscope: :example do
     it "valid login" do
       visit sns_login_path
       within "form" do
-        # fill in hidden field tag
-        find(:xpath, "//input[@id='item_in_group']").set group.name
         fill_in "item[email]", with: subject.name
         fill_in "item[password]", with: "user1"
         click_button "ログイン"

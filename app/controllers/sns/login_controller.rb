@@ -7,7 +7,7 @@ class Sns::LoginController < ApplicationController
 
   private
     def get_params
-      params.require(:item).permit(:in_group, :email, :password)
+      params.require(:item).permit(:email, :password)
     end
 
   public
@@ -16,14 +16,10 @@ class Sns::LoginController < ApplicationController
 
       safe_params = get_params
 
-      in_group = safe_params[:in_group]
       email_or_uid = safe_params[:email]
       password = safe_params[:password]
 
-      @cur_group = SS::Group.or({ id: in_group }, { name: in_group }).first if in_group.present?
-      @cur_group = @cur_group.root if @cur_group.present?
-
-      @item = SS::User.authenticate(@cur_group, email_or_uid, password)
+      @item = SS::User.authenticate(email_or_uid, password)
       return if !@item
 
       if params[:ref].blank? || [sns_login_path, sns_mypage_path].index(params[:ref])

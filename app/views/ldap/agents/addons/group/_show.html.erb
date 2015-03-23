@@ -1,11 +1,4 @@
-<%
-  return render(text: "") unless @item.root?
-%>
 <dl class="see">
-  <dt><%= @model.t :ldap_host %></dt>
-  <dd><%= @item.ldap_host %></dd>
   <dt><%= @model.t :ldap_dn %></dt>
   <dd><%= @item.ldap_dn %></dd>
-  <dt><%= @model.t :ldap_auth_method %></dt>
-  <dd><%= @item.ldap_auth_method_option %></dd>
 </dl>

@@ -38,9 +38,6 @@ ja:
         root: ルート
         group: グループ
         name: 名前
-        auth_method_options:
-          password: パスワード
-          anonymous: 匿名
       ldap/user:
         user: ユーザ
         name: 名前
