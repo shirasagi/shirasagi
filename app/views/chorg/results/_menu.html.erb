@@ -1,0 +1,8 @@
+<nav class="act-menu">
+  <%= link_to :back_to_show, controller: :revisions, action: :show, id: @revision %>
+  <%= link_to :back_to_index, controller: :revisions, action: :index %>
+</nav>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
+<%= render file: "_addons_menu" %>
+<% end %>

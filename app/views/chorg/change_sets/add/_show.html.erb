@@ -1,0 +1,6 @@
+<dl class="see">
+  <% Chorg::ChangeSet::GROUP_ATTRIBUTES.each do |k| %>
+    <dt><%= t "chorg.views.#{params[:type]}_change_sets.#{k}" %></dt>
+    <dd><%= @item.destinations.try(:first).try(:send, :[], k) %></dd>
+  <% end %>
+</dl>

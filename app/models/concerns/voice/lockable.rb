@@ -8,10 +8,11 @@ module Voice::Lockable
   end
 
   module ClassMethods
-    def acquire_lock(item)
+    def acquire_lock(item, lock_timeout = nil)
+      lock_timeout ||= 5.minutes.from_now
       criteria = item.class.where(id: item.id)
       criteria = criteria.lt(lock_until: Time.now)
-      criteria.find_and_modify({ '$set' => { lock_until: 5.minutes.from_now }}, new: true)
+      criteria.find_and_modify({ '$set' => { lock_until: lock_timeout }}, new: true)
     end
 
     def release_lock(item)

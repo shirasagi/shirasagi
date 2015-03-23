@@ -132,7 +132,9 @@ module Cms::Content
     end
 
     def becomes_with_route(name = nil)
-      name ||= route
+      # be careful, Cms::Layout does not respond to route
+      name ||= route if respond_to?(:route)
+      return self unless name
       klass = name.camelize.constantize rescue nil
       return self unless klass
 

@@ -1,0 +1,18 @@
+<nav class="act-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to :new, action: :new %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, chorg_revisions_revision_path(id: params[:rid]) %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to :back_to_show, action: :show, id: @item %>
+    <%= link_to :back_to_index, chorg_revisions_revision_path(id: params[:rid]) %>
+  <% else %>
+    <%= link_to :edit, action: :edit, id: @item %>
+    <%= link_to :delete, action: :delete, id: @item %>
+    <%= link_to :back_to_index, chorg_revisions_revision_path(id: params[:rid]) %>
+   <% end %>
+</nav>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
+<%= render file: "_addons_menu" %>
+<% end %>
