@@ -2,8 +2,8 @@
 <head>
   <meta name="viewport"
   content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
+  <link rel="shortcut icon" href="/img/favicon.ico" />
   <link href="/css/style.css" media="all" rel="stylesheet" />
-  <script src="/js/common.js"></script>
   <!--[if lt IE 9]>
     <script src="/js/html5shiv.js"></script>
     <script src="/js/selectivizr.js"></script>
@@ -36,13 +36,12 @@ $ ->
       $(".point").html data
 <% end %>
 
-<div class="appheder">
+<div class="application-full">
 
-  <div class="btn-app">
-    <input type="button" value="アプリの説明" onClick="location.href='/app/<%= @item.id %>.html'">
-  </div>
-
-<%= @item.name %>
+<div class="app-header">
+  <input type="button" class="btn-app" value="アプリの説明" onClick="location.href='/app/<%= @item.id %>.html'">
+  <span class="app-name"><%= @item.name %></span>
+</div>
 
 <div class="point">
   <div class="count">
@@ -51,13 +50,13 @@ $ ->
   </div>
 </div>
 
-<div class="text">
-  <%= auto_link br(@item.text) %>
+<div class="app-body">
+  <% if @app_html.present? %>
+    <%= render partial: "opendata/appscripts/app" %>
+  <% end %>
 </div>
 
-<% if @app_html.present? %>
-  <%= render partial: "opendata/appscripts/app" %>
-<% end %>
+</div>
 
 </body>
 </html>

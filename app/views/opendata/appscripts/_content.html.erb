@@ -5,7 +5,8 @@ div.csv-preview {
   border: 1px solid #bbb;
   background-color: #fff;
   td {
-    max-width: 150px;
+    border: 1px solid #bbb;
+    padding: 2px 5px 2px 5px;
   }
 }
 <% end %>
@@ -16,7 +17,7 @@ div.csv-preview {
   <% end %>
 </ul>
 <% @sample.each do |s| %>
-  <div id="tab-csv-<%= s.id %>" name="tab-name-csv">
+  <div id="tab-csv-<%= s.id %>" name="tab-name-csv" class="tab-csv">
     [<%= s.filename %>]
 
     <div class="csv-preview">

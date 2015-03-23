@@ -2159,6 +2159,112 @@ article.licenses div article a {
 
 
 // <アプリ>------------------------------------------------------------------------------------------------------------
+
+//app fullscreen
+.application-full {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  .app-header {
+    position: absolute;
+    width: 780px;
+    height: 80px;
+    left: 0;
+    .btn-app {
+      float: left;
+      margin: 5px 10px 5px 10px;
+      vertical-align: top;
+    }
+    .app-name {
+      float: left;
+      margin: 10px 0px 10px 0px;
+      vertical-align: top;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 80%;
+    }
+  }
+  .point {
+    position: absolute;
+    margin-right: 30px;
+    right: 0;
+    .count {
+      float: right;
+      margin-top: 3px;
+      margin-bottom: 3px;
+      padding: 3px 25px;
+      border: 1px solid #ddcfcc;
+      span.number {
+        padding: 0 40px;
+        background: url(../img/ic-like02.png) no-repeat left 4px;
+        font-size: $px24;
+      }
+      span.label {
+        display: block;
+      }
+    }
+    .update {
+      float: left;
+      margin: 3px 3px 3px 3px;
+      display: inline-block;
+      padding: 3px 3px 3px 30px;
+      @include border-radius(3px);
+      text-decoration: none;
+      vertical-align: center;
+    }
+    .add {
+      float: left;
+      border: 1px solid #282828;
+      background: #383838 url(../img/ic-like.png) no-repeat 3px center;
+      color: $white;
+      vertical-align: center;
+      &:hover {
+        background-color: #666666;
+      }
+    }
+    .cancel {
+      float: left;
+      margin: 3px 3px 3px 3px;
+      border: 1px solid #bdbdbd;
+      background: #EEEBEB url(../img/ic-check.png) no-repeat 3px center;
+      color: $text;
+      vertical-align: center;
+      &:hover {
+        background-color: #dedede;
+      }
+    }
+  }
+
+  .app-body {
+    clear: both;
+    width: 100%;
+    height: -webkit-calc(100% - 80px);
+    height: calc(100% - 80px);
+    margin-top: 80px;
+    .appContainer {
+      height: 100%;
+      overflow: auto;
+      #tabs li {
+        display: inline;
+        #tab-sample li {
+          display: inline;
+        }
+      }
+      .app-datasets {
+        margin: 10px;
+        .app-dataset {
+          margin: 5px;
+          border: 1px solid #bdbdbd;
+        }
+      }
+      .tab-csv {
+        margin: 10px;
+      }
+    }
+  }
+}
+
 // <アイデア>----------------------------------------------------------------------------------------------------------
 
 // <スパークル>--------------------------------------------------------------------------------------------------------

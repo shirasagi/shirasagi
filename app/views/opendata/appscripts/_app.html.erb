@@ -1,32 +1,30 @@
-<div class="application">
-  <div class="appContainer">
-    <div id="tabs">
-      <ul>
-        <li><a href="#tab-play" onclick="ChangeTab('tab-play'); return false;">
-          Play</a></li>
-        <li><a href="#tab-ds" onclick="ChangeTab('tab-ds'); return false;">
-          入力データ</a></li>
-        <li><a href="#tab-sample" onclick="ChangeTab('tab-sample'); return false;">
-          サンプルデータ</a></li>
-      </ul>
-      <div id="tab-play">
-        <p>
-          <iframe class="frmPlay" src="<%= @app_index %>" frameborder="0">
-          </iframe>
-        </p>
-      </div>
-      <div id="tab-ds">
-        <% if @ds.present? %>
-          <%= render partial: "opendata/appscripts/dataset" %>
+<div class="appContainer">
+  <div id="tabs">
+    <ul>
+      <li><a href="#tab-play" onclick="ChangeTab('tab-play'); return false;">
+        実行画面</a></li>
+      <li><a href="#tab-ds" onclick="ChangeTab('tab-ds'); return false;">
+        入力データ</a></li>
+      <li><a href="#tab-sample" onclick="ChangeTab('tab-sample'); return false;">
+        サンプルデータ</a></li>
+    </ul>
+    <div id="tab-play">
+      <p>
+        <iframe class="frmPlay" src="<%= @app_index %>" frameborder="0">
+        </iframe>
+      </p>
+    </div>
+    <div id="tab-ds">
+      <% if @ds.present? %>
+        <%= render partial: "opendata/appscripts/dataset" %>
+      <% end %>
+    </div>
+    <div id="tab-sample">
+      <p>
+        <% if @sample.present? %>
+          <%= render partial: "opendata/appscripts/content" %>
         <% end %>
-      </div>
-      <div id="tab-sample">
-        <p>
-          <% if @sample.present? %>
-            <%= render partial: "opendata/appscripts/content" %>
-          <% end %>
-        </p>
-      </div>
+      </p>
     </div>
   </div>
 </div>
