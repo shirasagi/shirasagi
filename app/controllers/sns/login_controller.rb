@@ -12,10 +12,15 @@ class Sns::LoginController < ApplicationController
 
   public
     def login
-      return if !request.post?
+      if !request.post?
+        # retrieve parameters from get parameter. this is bookmark support.
+        @item = SS::User.new
+        @item.email = params[:email]
+        @item.password = params[:password]
+        return
+      end
 
       safe_params = get_params
-
       email_or_uid = safe_params[:email]
       password = safe_params[:password]
 

@@ -70,4 +70,21 @@ describe "sns_login", dbscope: :example do
       expect(page).not_to have_css(".login-box")
     end
   end
+
+  context "when email/password get parameters is given" do
+    let(:role) { sys_role }
+    let(:user) { create(:sys_user, in_password: "pass", sys_role_ids: [role.id]) }
+    # bookmark support
+    it "valid login" do
+      visit sns_login_path(email: user.email)
+      expect(status_code).to eq 200
+      expect(find("#item_email").value).to eq(user.email)
+      within "form" do
+        fill_in "item[password]", with: user.in_password
+        click_button "ログイン"
+      end
+      expect(current_path).to eq sns_mypage_path
+      expect(page).not_to have_css(".login-box")
+    end
+  end
 end
