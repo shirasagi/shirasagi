@@ -56,8 +56,10 @@ describe "sns_login", dbscope: :example do
   end
 
   context "with ldap user", ldap: true do
-    let(:group) { create(:cms_group, name: unique_id,ldap_dn: "dc=city,dc=shirasagi,dc=jp") }
-    subject { create(:cms_ldap_user, ldap_dn: "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp", group: group) }
+    let(:base_dn) { "dc=city,dc=shirasagi,dc=jp" }
+    let(:group) { create(:cms_group, name: unique_id, ldap_dn: base_dn) }
+    let(:user_dn) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
+    subject { create(:cms_ldap_user, ldap_dn: user_dn, group: group) }
 
     it "valid login" do
       visit sns_login_path

@@ -10,35 +10,59 @@ describe Ldap::Connection, ldap: true do
 
     describe ".connect" do
       context "when valid config is given" do
-        it { expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method, username: username, password: password)).not_to be_nil }
+        it do
+          expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                          username: username, password: password)).not_to be_nil
+        end
       end
 
       context "when user1 is given" do
         let(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
         let(:password) { "user1" }
-        it { expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method, username: username, password: password)).not_to be_nil }
+        it do
+          expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                          username: username, password: password)).not_to be_nil
+        end
       end
 
       context "when unknown-user is given" do
-        let(:username) { "uid=user#{rand(0x100000000).to_s(36)},ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
+        let(:username) do
+          "uid=user#{rand(0x100000000).to_s(36)},ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp"
+        end
         let(:password) { "user1" }
-        it { expect { Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method, username: username, password: password) }.to raise_error Ldap::BindError }
+        it do
+          expect do
+            Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                     username: username, password: password)
+          end.to raise_error Ldap::BindError
+        end
       end
 
       context "when illegal password is given" do
         let(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
         let(:password) { rand(0x100000000).to_s(36) }
-        it { expect { Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method, username: username, password: password) }.to raise_error Ldap::BindError }
+        it do
+          expect do
+            Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                     username: username, password: password)
+          end.to raise_error Ldap::BindError
+        end
       end
     end
 
     describe "#groups" do
-      subject { Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method, username: username, password: password) }
+      subject do
+        Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                 username: username, password: password)
+      end
       it { expect(subject.groups.length).to be >= 0 }
     end
 
     describe "#users" do
-      subject { Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method, username: username, password: password) }
+      subject do
+        Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                 username: username, password: password)
+      end
       it { expect(subject.users.length).to be >= 0 }
     end
   end

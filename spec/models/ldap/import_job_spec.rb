@@ -12,7 +12,7 @@ describe Ldap::ImportJob, ldap: true do
 
     context "when ldap connection is set" do
       let(:group) do
-        create(:cms_group, name: unique_id,ldap_dn: "dc=city,dc=shirasagi,dc=jp")
+        create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")
       end
       let(:site) do
         create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"],
