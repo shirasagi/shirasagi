@@ -12,18 +12,19 @@
 </head>
 <body class="s-portal">
 <div id="page">
-  <header id="head">
-    <div class="inner">
-      </ part "tab" />
-      <div class="login">
-        </ part "mypage-login" />
+  <div id="wrap">
+    <header id="head">
+      <div class="inner">
+        </ part "tab" />
+        <div class="login">
+          </ part "mypage-login" />
+        </div>
+     </div>
+    </header>
+    <div id="tab-inner">
+      <div id="top">
+        </ part "portal-kv" />
       </div>
-    </div>
-  </header>
-
-  <div id="top">
-    <div id="shadow">
-      </ part "portal-kv" />
     </div>
   </div>
 
@@ -38,7 +39,7 @@
           </header>
           </ part "portal-dataset" />
           <nav>
-            <a class="opendata" href="/dataset/">データカタログサイトへ</a>
+            <a class="more" href="/dataset/">データカタログサイトへ</a>
             <a class="rss" href="/dataset/rss.xml">RSS</a>
           </nav>
         </section>
@@ -48,7 +49,7 @@
           </header>
           </ part "portal-app" />
           <nav>
-            <a class="opendata" href="/app/">アプリマーケットサイトへ</a>
+            <a class="more" href="/app/">アプリマーケットサイトへ</a>
             <a class="rss" href="/app/rss.xml">RSS</a>
           </nav>
         </section>
@@ -58,11 +59,10 @@
           </header>
           </ part "portal-idea" />
           <nav>
-            <a class="opendata" href="/idea/">アイデアボックスサイトへ</a>
+            <a class="more" href="/idea/">アイデアボックスサイトへ</a>
             <a class="rss" href="/idea/rss.xml">RSS</a>
           </nav>
         </section>
-        </ part "portal-plan" />
       </div>
       <div id="sidebar">
         <div id="add">
