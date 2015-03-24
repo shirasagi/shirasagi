@@ -12,27 +12,28 @@ $ ->
 <div class="app-count">
   <span class="count-label">登録アプリ件数</span><span class="count"><%= @count %></span>件
 </div>
-
-<div class="opendata-tabs tabs" id="opendata-tabs-<%= @cur_node.id %>">
-  <% @tabs.each_with_index do |tab, idx| %>
-  <article class="tab" id="cms-tab-<%= @cur_node.id %>-<%= idx %>">
-    <header><h1><%= tab[:name] %></h1></header>
-    <div class="pages">
-      <% tab[:pages].each do |item| %>
-      <article>
-        <header>
-          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-          <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
-        </header>
-      </article>
-      <% end %>
-    </div>
-    <nav class="feed">
-      <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
-      <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
-    </nav>
-  </article>
-  <% end %>
+<div class="app-tabs">
+  <div class="opendata-tabs tabs" id="opendata-tabs-<%= @cur_node.id %>">
+    <% @tabs.each_with_index do |tab, idx| %>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-<%= idx %>">
+      <header><h1><%= tab[:name] %></h1></header>
+      <div class="pages">
+        <% tab[:pages].each do |item| %>
+        <article>
+          <header>
+            <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+            <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+          </header>
+        </article>
+        <% end %>
+      </div>
+      <nav class="feed">
+        <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
+        <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
+      </nav>
+    </article>
+    <% end %>
+  </div>
 </div>
 
 <article class="areas nodes">
