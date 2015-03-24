@@ -10,20 +10,15 @@ module Workflow::Addon
       belongs_to :master, foreign_key: "master_id", class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
+      define_method(:master?) { master.blank? }
+      define_method(:branch?) { master.present? }
+
       permit_params :master_id
 
       after_save :merge_to_master
     end
 
     public
-      def master?
-        master.blank?
-      end
-
-      def branch?
-        master.present?
-      end
-
       def new_clone?
         @new_clone == true
       end
