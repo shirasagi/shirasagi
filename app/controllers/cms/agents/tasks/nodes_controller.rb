@@ -5,7 +5,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
   private
     def set_params
-      @limit = @opts[:limit] ? @opts[:limit].to_i : 100
+      #
     end
 
   public
@@ -32,7 +32,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
         agent.controller.instance_variable_set :@node, node
         agent.invoke :generate
 
-        generate_node_pages node
+        #generate_node_pages node
       end
     end
 
@@ -47,7 +47,6 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
     def generate_node_pages(node)
       pages = node.pages.public
-      return if @limit && @limit < pages.size
 
       pages.each do |page|
         @task.count
