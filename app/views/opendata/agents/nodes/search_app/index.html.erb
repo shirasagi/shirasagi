@@ -37,7 +37,9 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   </div>
 <% end %>
 
-<%= paginate @items %>
+<div class="app-pagination">
+  <%= paginate @items %>
+</div>
 
 <div class="opendata-search_apps pages">
   <% @items.each do |item| %>
@@ -58,4 +60,6 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <% end %>
 </div>
 
-<%= paginate @items %>
+<div class="app-pagination">
+  <%= paginate @items %>
+</div>
