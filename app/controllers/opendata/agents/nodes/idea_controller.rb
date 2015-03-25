@@ -150,7 +150,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       comment = Opendata::IdeaComment.find params[:comment]
       if comment
-        comment.deleted = Time.now
+        comment.comment_deleted = Time.now
         comment.save
       end
 

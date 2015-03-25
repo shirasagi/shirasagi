@@ -34,14 +34,14 @@
       <div class="comments">
         <% @comments.each do |comment| %>
           <div class="comment">
-            <% if comment.deleted %>
+            <% if comment.comment_deleted %>
             <%= "コメントは削除されました" %>
             <% else %>
             <%= comment.text %>
             <% end %>
           </div>
           <% if @comment_mode && [@idea_comment.member_id, comment.member_id].include?(@cur_member.id) %>
-          <%= link_to "削除", "", class: "comment_delete", id: comment.id if comment.deleted.nil? %>
+          <%= link_to "削除", "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
           <% end %>
           <% if comment.member %>
           <%= link_to comment.member.name, "#{member_path}#{comment.member_id}" %>

@@ -30,8 +30,8 @@
       </td>
       <td class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
       <td class="datetime">
-        <% if item.deleted.present? %>
-        <%= item.deleted.strftime("%Y/%m/%d %H:%M") %>
+        <% if item.comment_deleted.present? %>
+        <%= item.comment_deleted.strftime("%Y/%m/%d %H:%M") %>
         <% end %>
       </td>
     </tr>
