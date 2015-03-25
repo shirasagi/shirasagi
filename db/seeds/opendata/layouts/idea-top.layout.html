@@ -12,40 +12,44 @@
 </head>
 <body class="s-idea s-idea-top">
 <div id="page">
-  <header id="head">
-    <div class="inner">
-      </ part "tab" />
-      <div class="login">
-        </ part "mypage-login" />
+  <div id="wrap">
+    <header id="head">
+      <div class="inner">
+        </ part "tab" />
+        <div class="login">
+          </ part "mypage-login" />
+        </div>
       </div>
-    </div>
-  </header>
-
-  </ part "idea-head" />
-
-  <div id="top">
-    <div id="shadow">
-      </ part "idea-kv" />
+    </header>
+    <div id="tab-inner">
+      <div class="wrap">
+        </ part "idea-head" />
+        <div id="top">
+          </ part "idea-kv" />
+        </div>
+      </div>
     </div>
   </div>
 
   <div id="data-top-contents">
-    <div id="main">
-      </ yield />
-      </ part "facebook" />
-    </div>
-    <div id="sidebar">
-      <div id="add">
-        <header><h2>広告</h2></header>
-        </ part "ads/banner" />
-        <a class="addinfo" href="/docs/kokokubosyu.html">広告バナーのご案内</a>
+    <div class="content-body">
+      <div id="main">
+        </ yield />
+        </ part "facebook" />
       </div>
-      <div id="link">
-        <a href="http://www.pref.tokushima.jp/"><img src="http://www.pref.tokushima.jp/_files/00438858/bn_tokushimaken_top1.jpg" width="170px" height="50px" border="0" alt="徳島県ホームページ"></a>
+      <div id="sidebar">
+        <div id="add">
+          <header><h2>広告</h2></header>
+          </ part "ads/banner" />
+          <a class="addinfo" href="/docs/kokokubosyu.html">広告バナーのご案内</a>
+        </div>
+        <div id="link">
+          <a href="http://www.pref.tokushima.jp/"><img src="http://www.pref.tokushima.jp/_files/00438858/bn_tokushimaken_top1.jpg" width="170px" height="50px" border="0" alt="徳島県ホームページ"></a>
+        </div>
+        </ part "twitter" />
       </div>
-      </ part "twitter" />
+      <div class="clear"></div>
     </div>
-    <div class="clear"></div>
   </div>
 
   </ part "foot" />
