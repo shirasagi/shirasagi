@@ -24,6 +24,11 @@ module Workflow::Addon
         @new_clone == true
       end
 
+      def cloned_name?
+        prefix = I18n.t("workflow.cloned_name_prefix")
+        name =~ /^\[#{prefix}\]/
+      end
+
       def new_clone(attributes = {})
         attributes = self.attributes.merge(attributes).select{ |k| self.fields.keys.include?(k) }
 

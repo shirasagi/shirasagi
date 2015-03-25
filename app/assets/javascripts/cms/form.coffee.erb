@@ -98,7 +98,7 @@ class @Syntax_Checker
       $('.mod-cms-body dd:last').after(result)
       return true
 
-  @validateHtml: (form)->
+  @validateHtml: (form, submit)->
     unless Syntax_Checker.check()
       addonName = "<%= I18n.t('cms.syntax_check') %>"
       for key, errors of Syntax_Checker.errors
@@ -572,7 +572,7 @@ class @Form_Alert
       submit = this
       form   = $(submit).closest("form")
 
-      unless Form_Alert.validate(form)
+      unless Form_Alert.validate(form, submit)
         div = $('<div id="alertExplanation" class="errorExplanation">')
         div.append("<h2><%= I18n.t('cms.alert') %></h2>")
         for addon, fields of Form_Alert.alerts
@@ -601,10 +601,10 @@ class @Form_Alert
 
         return false
 
-  @validate: (form)->
+  @validate: (form, submit)->
     Form_Alert.alerts = {}
     $.each Form_Alert.validations, ->
-      (this)(form)
+      (this)(form, submit)
 
     if $.isEmptyObject(Form_Alert.alerts)
       return ture
@@ -614,7 +614,7 @@ class @Form_Alert
   @addValidation: (validate)->
     Form_Alert.validations.push(validate)
 
-  @presence: (form)->
+  @presence: (form, submit)->
     $(form).find("input.presence,textarea.presence").each ->
       if $(this).val() == ""
         $(this).closest("dl").show()
@@ -622,9 +622,9 @@ class @Form_Alert
         fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"))
         Form_Alert.add addonName, this, fieldName + "<%= I18n.t('errors.messages.blank') %>"
 
-  @clonedName: (form)->
+  @clonedName: (form, submit)->
     name = $(form).find("#addon-basic #item_name")
-    if /^<%= I18n.t('workflow.cloned_name_prefix') %>/.test($(name).val())
+    if $(submit).hasClass("publish_save") && /^\[<%= I18n.t('workflow.cloned_name_prefix') %>\]/.test($(name).val())
       addonName = $(name).closest(".addon-view").find("header").text()
       fieldName = Form_Alert.justText($(name).closest("dd").prev("dt"))
       Form_Alert.add addonName, name, "<%= I18n.t('errors.messages.cloned_name') %>"
