@@ -10,7 +10,7 @@ ja:
     master_page: 差し替え元ページ
     branch_page: 差し替えページ
     create_branch: 差し替え用ページを作成する
-    cloned_name_prefix: 【複製】
+    cloned_name_prefix: 複製
     state:
       request: 申請
       approve: 承認
@@ -82,7 +82,8 @@ ja:
       required_count_greater_than_approvers: "%{level} 段目に設定されている承認者が、必要承認数 %{required_count} より少ないです。"
       route_approver_unable_to_read: "承認経路「%{route}」に設定されているユーザ「%{user} は記事閲覧権がありません。"
       route_approver_unable_to_approve: "承認経路「%{route}」に設定されているユーザ「%{user}」は記事承認権がありません。"
-      cloned_name: "タイトルに【複製】が含まれています。"
+      cloned_name: "タイトルに[複製]が含まれています。"
+      invalid_approve_name: "タイトルを変更し承認申請を行ってください。"
 
   cms_role:
     release_other_article_pages: 記事ページの公開（全て）
