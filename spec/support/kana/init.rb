@@ -13,6 +13,16 @@ def can_test_mecab_spec?
   true
 end
 
+RSpec.configuration.before(:suite) do
+  prefix = "kana"
+  timestamp = Time.now.strftime("%Y%m%d")
+  tmp = ::File.join(Dir.tmpdir, "#{prefix}-#{timestamp}")
+  ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
+
+  SS.config.kana
+  SS::Config.replace_value_at(:kana, :root, tmp)
+end
+
 RSpec.configuration.after(:suite) do
   ::FileUtils.rm_rf SS.config.kana.root if ::Dir.exists?(SS.config.kana.root)
 end
