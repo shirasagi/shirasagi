@@ -27,7 +27,7 @@ FactoryGirl.define do
     end
 
     trait :cms_user_ldap do
-      login_roles [SS::User::Model::LOGIN_ROLE_DBPASSWD, SS::User::Model::LOGIN_ROLE_LDAP]
+      login_roles [SS::User::LOGIN_ROLE_DBPASSWD, SS::User::LOGIN_ROLE_LDAP]
       ldap_dn { "cn=#{name},dc=example,dc=jp" }
     end
 
