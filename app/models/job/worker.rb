@@ -64,7 +64,7 @@ module Job::Worker
 
         if pool_config.max_size?
           size = Job::Model.where(pool: pool).count
-          raise "size limit exceeded" if size >= pool_config.max_size
+          raise Job::SizeLimitExceededError, "size limit exceeded" if size >= pool_config.max_size
         end
       end
   end

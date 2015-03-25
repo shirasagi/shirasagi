@@ -66,6 +66,12 @@ class Voice::MainController < ApplicationController
         return
       end
 
+      if e.is_a?(Job::SizeLimitExceededError)
+        @voice_file.destroy
+        head :too_many_requests
+        return
+      end
+
       # do not record http errors like 404.
       @voice_file.destroy
       head :not_found
