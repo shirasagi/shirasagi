@@ -11,7 +11,7 @@ class Ldap::ImportJob
       @user_count = 0
       @exclude_groups ||= SS.config.ldap.exclude_groups
 
-      connection = Ldap::Connection.connect(@site.root_group, @user.ldap_dn, password)
+      connection = Ldap::Connection.connect(base_dn: @site.root_group.ldap_dn, username: @user.ldap_dn, password: password)
       if connection.blank?
         raise I18n.t("ldap.errors.connection_setting_not_found")
       end

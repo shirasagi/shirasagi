@@ -3,8 +3,7 @@ require 'spec_helper'
 describe "ldap_server", ldap: true do
   context "with ldap site" do
     let(:group) do
-      create(:cms_group, name: unique_id, ldap_host: ENV["ldap_host"],
-             ldap_dn: "dc=city,dc=shirasagi,dc=jp", ldap_auth_method: "anonymous")
+      create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")
     end
     let(:site) do
       create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"],
@@ -23,6 +22,13 @@ describe "ldap_server", ldap: true do
     let(:index2_path) { "/.#{site.host}/ldap/server/#{URI.escape(group_dn)}" }
     let(:group_path) { "/.#{site.host}/ldap/server/#{URI.escape(group_dn)}/group" }
     let(:user_path) { "/.#{site.host}/ldap/server/#{URI.escape(user_dn)}/user" }
+
+    around(:each) do |example|
+      save_auth_method = SS.config.ldap.auth_method
+      SS.config.replace_value_at(:ldap, :auth_method, "anonymous")
+      example.run
+      SS.config.replace_value_at(:ldap, :auth_method, save_auth_method)
+    end
 
     it "without login" do
       visit index_path
