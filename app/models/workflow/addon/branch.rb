@@ -10,20 +10,16 @@ module Workflow::Addon
       belongs_to :master, foreign_key: "master_id", class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
+      define_method(:master?) { master.blank? }
+      define_method(:branch?) { master.present? }
+
       permit_params :master_id
 
+      before_save :seq_filename, if: ->{ new_clone? && basename.blank? }
       after_save :merge_to_master
     end
 
     public
-      def master?
-        master.blank?
-      end
-
-      def branch?
-        master.present?
-      end
-
       def new_clone?
         @new_clone == true
       end
@@ -36,9 +32,18 @@ module Workflow::Addon
         item.state = "closed"
         item.cur_user = @cur_user
         item.cur_site = @cur_site
+        item.cur_node = @cur_node
         if attributes[:filename].nil?
-          item.filename = item.dirname("copy-" + rand(0xffff_ffff_ffff_ffff).to_s(32))
+          item.filename = "#{dirname}/"
+          item.basename = ""
         end
+
+        item.workflow_user_id = nil
+        item.workflow_state = nil
+        item.workflow_comment = nil
+        item.workflow_approvers = nil
+        item.workflow_required_counts = nil
+
         item.instance_variable_set(:@new_clone, true)
         item
       end
@@ -86,6 +91,16 @@ module Workflow::Addon
         master.cur_user = @cur_user
         master.cur_site = @cur_site
         master.merge(self)
+      end
+
+    private
+      def validate_filename
+        (new_clone? && @basename && @basename.blank?) ? nil : super
+      end
+
+      def seq_filename
+        self.filename ||= ""
+        self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
       end
   end
 end

@@ -7,6 +7,7 @@ $(window).load ->
   Syntax_Checker.render()
   Link_Checker.render()
 
+  Form_Alert.addValidation(Form_Alert.clonedName)
   Form_Alert.addValidation(Form_Alert.presence)
   Form_Alert.addValidation(Syntax_Checker.validateHtml)
   Form_Alert.render()
@@ -620,6 +621,13 @@ class @Form_Alert
         addonName = $(this).closest(".addon-view").find("header").text()
         fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"))
         Form_Alert.add addonName, this, fieldName + "<%= I18n.t('errors.messages.blank') %>"
+
+  @clonedName: (form)->
+    name = $(form).find("#addon-basic #item_name")
+    if /^<%= I18n.t('workflow.cloned_name_prefix') %>/.test($(name).val())
+      addonName = $(name).closest(".addon-view").find("header").text()
+      fieldName = Form_Alert.justText($(name).closest("dd").prev("dt"))
+      Form_Alert.add addonName, name, "<%= I18n.t('errors.messages.cloned_name') %>"
 
   @add: (addon, ele, msg)->
     Form_Alert.alerts[addon] ||= []

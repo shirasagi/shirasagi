@@ -113,6 +113,7 @@ class Workflow::PagesController < ApplicationController
     def branch_create
       raise "400" if @item.branch?
 
+      @item.cur_node = @item.parent
       if @item.branches.blank?
         copy = @item.new_clone
         copy.master = @item
