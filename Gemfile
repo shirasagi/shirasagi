@@ -71,6 +71,7 @@ gem 'json-jwt'
 gem 'sparql'
 gem 'sparql-client'
 gem 'rdf-turtle'
+gem 'rdf-rdfxml'
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 

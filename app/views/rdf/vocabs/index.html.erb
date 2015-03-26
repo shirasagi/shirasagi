@@ -1,0 +1,31 @@
+<%= render file: "_search" %>
+<table class="index">
+  <thead>
+  <tr>
+    <th class="checkbox"><input type="checkbox" /></th>
+    <th><%= @model.t :label %></th>
+    <th><%= @model.t :owner %></th>
+    <th class="datetime"><%= @model.t :updated %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @items.each do |item| %>
+    <tr>
+      <td class="checkbox">
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item %>
+          <%= link_to :edit, action: :edit, id: item %>
+          <%= link_to :delete, action: :delete, id: item %>
+        </nav>
+      </td>
+      <td><%= link_to item.label, action: :show, id: item %></td>
+      <td><%= t :"rdf.vocabs.owner_#{item.owner}" %></td>
+      <td><%= item.updated.strftime("%Y/%m/%d") %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

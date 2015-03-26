@@ -1,0 +1,3193 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ic: <http://imi.ipa.go.jp/ns/core/rdf#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix uncefactCode: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCode:9#> .
+@prefix uncefactDuration: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeDuration:4#> .
+@prefix uncefactISO4217: <urn:un:unece:uncefact:codelist:standard:ISO:ISO3AlphaCurrencyCode:2012-08-31#> .
+@prefix uncefactLinear: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeLinear:4#> .
+@prefix uncefactVolume: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeVolume:4#> .
+@prefix uncefactWeight: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4#> .
+
+<http://imi.ipa.go.jp/ns/core/rdf> a owl:Ontology ;
+	rdfs:label "共通語彙基盤コア語彙"@ja, "IMI Core Vocabulary"@en ;
+	dct:creator [
+		foaf:homepage <http://www.ipa.go.jp/> ;
+		foaf:name "IPA 独立行政法人情報処理推進機構"@ja, "Information-technology Promotion Agency, Japan."@en
+	], [
+		foaf:homepage <http://www.meti.go.jp/> ;
+		foaf:name "経済産業省"@ja, "Ministry of Economy, Trade and Industry"@en
+	] ;
+	dct:issued "2015-02-03" ;
+	cc:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+	rdfs:comment "コア語彙は、共通語彙基盤の基礎をなすもので、氏名、住所、組織等、あらゆる社会活動で使用される中核的な用語の集合です。多くのシステム間で情報交換のための基礎となる語彙で、データ交換、オープンデータの二次利用等の効率化に役立つものです。"@ja ;
+	owl:versionInfo "2.2" .
+
+
+## プロパティ定義 ################
+ic:ID a owl:ObjectProperty ;
+	rdfs:label "ID"@ja ;
+	rdfs:comment "事物を識別するためのID型の識別子"@ja ;
+	schema:domainIncludes ic:人型, ic:住所型, ic:連絡先型, ic:組織型, ic:製品型, ic:地物型, ic:設備型, ic:イベント型, ic:アクセス型 ;
+	rdfs:range ic:ID型 .
+
+ic:氏名 a owl:ObjectProperty ;
+	rdfs:label "氏名"@ja ;
+	rdfs:comment "人の氏名"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:氏名型 .
+
+ic:性別 a owl:DatatypeProperty ;
+	rdfs:label "性別"@ja ;
+	rdfs:comment "性別の表記"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range xsd:string .
+
+ic:性別コード a owl:ObjectProperty ;
+	rdfs:label "性別コード"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:コード型 .
+
+ic:生年月日 a owl:ObjectProperty ;
+	rdfs:label "生年月日"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:日付型 .
+
+ic:死亡年月日 a owl:ObjectProperty ;
+	rdfs:label "死亡年月日"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:日付型 .
+
+ic:住所 a owl:ObjectProperty ;
+	rdfs:label "住所"@ja ;
+	rdfs:comment "現住所など"@ja ;
+	schema:domainIncludes ic:人型, ic:連絡先型, ic:組織型, ic:場所型 ;
+	rdfs:range ic:住所型 .
+
+ic:本籍 a owl:ObjectProperty ;
+	rdfs:label "本籍"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:住所型 .
+
+ic:連絡先 a owl:ObjectProperty ;
+	rdfs:label "連絡先"@ja ;
+	rdfs:comment "組織の連絡先（本社、コールセンター等）など"@ja ;
+	schema:domainIncludes ic:人型, ic:組織型, ic:地物型, ic:設備型, ic:イベント型 ;
+	rdfs:range ic:連絡先型 .
+
+ic:国籍 a owl:DatatypeProperty ;
+	rdfs:label "国籍"@ja ;
+	rdfs:comment "国籍の表記"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range xsd:string .
+
+ic:国籍コード a owl:ObjectProperty ;
+	rdfs:label "国籍コード"@ja ;
+	rdfs:comment "住民基本台帳で利用されている国籍コード"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:コード型 .
+
+ic:出生国 a owl:DatatypeProperty ;
+	rdfs:label "出生国"@ja ;
+	rdfs:comment "生まれた国名"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range xsd:string .
+
+ic:出生国コード a owl:ObjectProperty ;
+	rdfs:label "出生国コード"@ja ;
+	rdfs:comment "生まれた国のコード"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:コード型 .
+
+ic:出生地 a owl:ObjectProperty ;
+	rdfs:label "出生地"@ja ;
+	rdfs:comment "生まれた場所"@ja ;
+	schema:domainIncludes ic:人型 ;
+	rdfs:range ic:住所型 .
+
+ic:種別 a owl:DatatypeProperty ;
+	rdfs:label "種別"@ja ;
+	rdfs:comment "様々な事物の種類の表記"@ja ;
+	schema:domainIncludes ic:名称型, ic:氏名型, ic:住所型, ic:連絡先型, ic:人数型, ic:製品型, ic:施設型, ic:イベント型, ic:価格型, ic:定期スケジュール型, ic:アクセス型, ic:アクセス区間型 ;
+	rdfs:range xsd:string .
+
+ic:表記 a owl:DatatypeProperty ;
+	rdfs:label "表記"@ja ;
+	rdfs:comment "日本語による表記"@ja ;
+	schema:domainIncludes ic:名称型, ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:カナ表記 a owl:DatatypeProperty ;
+	rdfs:label "カナ表記"@ja ;
+	rdfs:comment "カタカナ表記"@ja ;
+	schema:domainIncludes ic:名称型 ;
+	rdfs:range xsd:string .
+
+ic:ローマ字表記 a owl:DatatypeProperty ;
+	rdfs:label "ローマ字表記"@ja ;
+	schema:domainIncludes ic:名称型 ;
+	rdfs:range xsd:string .
+
+ic:姓名 a owl:DatatypeProperty ;
+	rdfs:label "姓名"@ja ;
+	rdfs:comment "氏名（姓、名）の表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:姓名カナ表記 a owl:DatatypeProperty ;
+	rdfs:label "姓名カナ表記"@ja ;
+	rdfs:comment "氏名（姓、名）のカナ表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:姓名ローマ字表記 a owl:DatatypeProperty ;
+	rdfs:label "姓名ローマ字表記"@ja ;
+	rdfs:comment "氏名（姓、名）のアルファベット表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:姓 a owl:DatatypeProperty ;
+	rdfs:label "姓"@ja ;
+	rdfs:comment "姓の表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:姓カナ表記 a owl:DatatypeProperty ;
+	rdfs:label "姓カナ表記"@ja ;
+	rdfs:comment "姓のカナ表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:姓ローマ字表記 a owl:DatatypeProperty ;
+	rdfs:label "姓ローマ字表記"@ja ;
+	rdfs:comment "姓のローマ表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:名 a owl:DatatypeProperty ;
+	rdfs:label "名"@ja ;
+	rdfs:comment "名の表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:名カナ表記 a owl:DatatypeProperty ;
+	rdfs:label "名カナ表記"@ja ;
+	rdfs:comment "名のカナ表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:名ローマ字表記 a owl:DatatypeProperty ;
+	rdfs:label "名ローマ字表記"@ja ;
+	rdfs:comment "名のローマ字表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:ミドルネーム a owl:DatatypeProperty ;
+	rdfs:label "ミドルネーム"@ja ;
+	rdfs:comment "ミドルネームの表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:ミドルネームカナ表記 a owl:DatatypeProperty ;
+	rdfs:label "ミドルネームカナ表記"@ja ;
+	rdfs:comment "ミドルネームのカナ表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:ミドルネームローマ字表記 a owl:DatatypeProperty ;
+	rdfs:label "ミドルネームローマ字表記"@ja ;
+	rdfs:comment "ミドルネームのローマ字表記"@ja ;
+	schema:domainIncludes ic:氏名型 ;
+	rdfs:range xsd:string .
+
+ic:郵便番号 a owl:DatatypeProperty ;
+	rdfs:label "郵便番号"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:住所コード a owl:ObjectProperty ;
+	rdfs:label "住所コード"@ja ;
+	rdfs:comment "地方公共団体情報システム機構地方公共団体コード住所等の利用を想定。住所のコード化が必要な範囲に応じて自治体で個別に設定する"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range ic:コード型 .
+
+ic:国 a owl:DatatypeProperty ;
+	rdfs:label "国"@ja ;
+	rdfs:comment "国名"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:国コード a owl:ObjectProperty ;
+	rdfs:label "国コード"@ja ;
+	rdfs:comment "国のコード"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range ic:コード型 .
+
+ic:都道府県 a owl:DatatypeProperty ;
+	rdfs:label "都道府県"@ja ;
+	rdfs:comment "都道府県名"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:都道府県コード a owl:ObjectProperty ;
+	rdfs:label "都道府県コード"@ja ;
+	rdfs:comment "都道府県のコード"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range ic:コード型 .
+
+ic:市区町村 a owl:DatatypeProperty ;
+	rdfs:label "市区町村"@ja ;
+	rdfs:comment "市区町村名"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:区 a owl:DatatypeProperty ;
+	rdfs:label "区"@ja ;
+	rdfs:comment "政令指定都市の区の名前"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:市区町村コード a owl:ObjectProperty ;
+	rdfs:label "市区町村コード"@ja ;
+	rdfs:comment "市区町村のコード"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range ic:コード型 .
+
+ic:町名 a owl:DatatypeProperty ;
+	rdfs:label "町名"@ja ;
+	rdfs:comment "町域、または市区町村の下の行政区分の表記"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:丁目 a owl:DatatypeProperty ;
+	rdfs:label "丁目"@ja ;
+	rdfs:comment "丁目の表示"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:番地補足 a owl:DatatypeProperty ;
+	rdfs:label "番地補足"@ja ;
+	rdfs:comment "番地の前の、「東」「北」「浜」「甲」「イ」等の文字"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:番地 a owl:DatatypeProperty ;
+	rdfs:label "番地"@ja ;
+	rdfs:comment "番、街区の表示"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:号 a owl:DatatypeProperty ;
+	rdfs:label "号"@ja ;
+	rdfs:comment "号、住居番号の表示"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:ビル名 a owl:DatatypeProperty ;
+	rdfs:label "ビル名"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:ビル番号 a owl:DatatypeProperty ;
+	rdfs:label "ビル番号"@ja ;
+	rdfs:comment "号棟などのビル番号の表記"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:部屋番号 a owl:DatatypeProperty ;
+	rdfs:label "部屋番号"@ja ;
+	rdfs:comment "階数、号室などの部屋番号の表記"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:方書 a owl:DatatypeProperty ;
+	rdfs:label "方書"@ja ;
+	rdfs:comment "方書 (私書箱も含む)"@ja ;
+	schema:domainIncludes ic:住所型 ;
+	rdfs:range xsd:string .
+
+ic:名称 a owl:ObjectProperty ;
+	rdfs:label "名称"@ja ;
+	rdfs:comment "事物の名称"@ja ;
+	schema:domainIncludes ic:連絡先型, ic:組織型, ic:場所型, ic:ID体系型, ic:製品型, ic:設備型, ic:イベント型, ic:状況型, ic:コードリスト型 ;
+	rdfs:range ic:名称型 .
+
+ic:組織 a owl:ObjectProperty ;
+	rdfs:label "組織"@ja ;
+	rdfs:comment "事物に関連する組織"@ja ;
+	schema:domainIncludes ic:連絡先型, ic:組織関連型 ;
+	rdfs:range ic:組織型 .
+
+ic:担当者役職 a owl:DatatypeProperty ;
+	rdfs:label "担当者役職"@ja ;
+	rdfs:comment "連絡先担当者の役職の表記"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range xsd:string .
+
+ic:担当者名 a owl:ObjectProperty ;
+	rdfs:label "担当者名"@ja ;
+	rdfs:comment "連絡先担当者の氏名"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range ic:氏名型 .
+
+ic:Eメールアドレス a owl:DatatypeProperty ;
+	rdfs:label "Eメールアドレス"@ja ;
+	rdfs:comment "電子メールのメールアドレス"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range xsd:string .
+
+ic:送付先 a owl:DatatypeProperty ;
+	rdfs:label "送付先"@ja ;
+	rdfs:comment "送付先の住所、私書箱など"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range xsd:string .
+
+ic:電話番号 a owl:DatatypeProperty ;
+	rdfs:label "電話番号"@ja ;
+	rdfs:comment "連絡先の電話番号"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range ic:電話番号型 .
+
+ic:内線番号 a owl:DatatypeProperty ;
+	rdfs:label "内線番号"@ja ;
+	rdfs:comment "連絡先の内線番号"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range xsd:string .
+
+ic:FAX番号 a owl:DatatypeProperty ;
+	rdfs:label "FAX番号"@ja ;
+	rdfs:comment "連絡先のFAX番号など"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range ic:電話番号型 .
+
+ic:携帯電話番号 a owl:DatatypeProperty ;
+	rdfs:label "携帯電話番号"@ja ;
+	rdfs:comment "連絡先の携帯電話番号"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range ic:電話番号型 .
+
+ic:Webサイト a owl:ObjectProperty ;
+	rdfs:label "Webサイト"@ja ;
+	rdfs:comment "WebサイトのURL"@ja ;
+	schema:domainIncludes ic:連絡先型, ic:設備型 ;
+	rdfs:range owl:Thing .
+
+ic:対応言語 a owl:DatatypeProperty ;
+	rdfs:label "対応言語"@ja ;
+	rdfs:comment "連絡先との連絡の際に利用可能な言語名"@ja ;
+	schema:domainIncludes ic:連絡先型 ;
+	rdfs:range xsd:string .
+
+ic:略称アルファベット a owl:DatatypeProperty ;
+	rdfs:label "略称アルファベット"@ja ;
+	rdfs:comment "頭文字などによる略称表記"@ja ;
+	schema:domainIncludes ic:組織型 ;
+	rdfs:range xsd:string .
+
+ic:通称 a owl:DatatypeProperty ;
+	rdfs:label "通称"@ja ;
+	rdfs:comment "正式な名称以外に一般的に使用されている名称"@ja ;
+	schema:domainIncludes ic:組織型, ic:場所型 ;
+	rdfs:range xsd:string .
+
+ic:活動状況 a owl:ObjectProperty ;
+	rdfs:label "活動状況"@ja ;
+	rdfs:comment "組織の状況。倒産、破産等"@ja ;
+	schema:domainIncludes ic:組織型 ;
+	rdfs:range ic:状況型 .
+
+ic:概要 a owl:DatatypeProperty ;
+	rdfs:label "概要"@ja ;
+	rdfs:comment "事物の概要説明"@ja ;
+	schema:domainIncludes ic:組織型 ;
+	rdfs:range xsd:string .
+
+ic:関連組織 a owl:ObjectProperty ;
+	rdfs:label "関連組織"@ja ;
+	rdfs:comment "組織やイベントなどに関連する組織"@ja ;
+	schema:domainIncludes ic:組織型, ic:イベント型 ;
+	rdfs:range ic:組織関連型 .
+
+ic:地物 a owl:ObjectProperty ;
+	rdfs:label "地物"@ja ;
+	rdfs:comment "組織に関連する地物や施設、建物"@ja ;
+	schema:domainIncludes ic:組織型 ;
+	rdfs:range ic:地物型 .
+
+ic:代表者 a owl:ObjectProperty ;
+	rdfs:label "代表者"@ja ;
+	rdfs:comment "組織の代表者"@ja ;
+	schema:domainIncludes ic:組織型 ;
+	rdfs:range ic:構成員型 .
+
+ic:設立日 a owl:ObjectProperty ;
+	rdfs:label "設立日"@ja ;
+	rdfs:comment "設立日。支店や事業所は設置日"@ja ;
+	schema:domainIncludes ic:組織型 ;
+	rdfs:range ic:日付型 .
+
+ic:備考 a owl:DatatypeProperty ;
+	rdfs:label "備考"@ja ;
+	rdfs:comment "補足情報の記述"@ja ;
+	schema:domainIncludes ic:組織型, ic:施設型, ic:設備型, ic:アクセス型 ;
+	rdfs:range xsd:string .
+
+ic:事業種目 a owl:DatatypeProperty ;
+	rdfs:label "事業種目"@ja ;
+	rdfs:comment "事業の種類の表記。（販売業等）"@ja ;
+	schema:domainIncludes ic:業務組織型 ;
+	rdfs:range xsd:string .
+
+ic:事業年度開始日 a owl:ObjectProperty ;
+	rdfs:label "事業年度開始日"@ja ;
+	rdfs:comment "事業年度の開始日"@ja ;
+	schema:domainIncludes ic:業務組織型 ;
+	rdfs:range ic:日付型 .
+
+ic:構成員数 a owl:DatatypeProperty ;
+	rdfs:label "構成員数"@ja ;
+	rdfs:comment "構成員の人数"@ja ;
+	schema:domainIncludes ic:業務組織型 ;
+	rdfs:range xsd:nonNegativeInteger .
+
+ic:代理人 a owl:ObjectProperty ;
+	rdfs:label "代理人"@ja ;
+	rdfs:comment "手続きなどを代理するもの"@ja ;
+	schema:domainIncludes ic:業務組織型 ;
+	rdfs:range ic:組織関連型 .
+
+ic:組織種別位置 a owl:DatatypeProperty ;
+	rdfs:label "組織種別位置"@ja ;
+	rdfs:comment "組織の名称の中において、株式会社等の組織種別が置かれる位置の表記"@ja ;
+	schema:domainIncludes ic:法人型 ;
+	rdfs:range xsd:string .
+
+ic:組織種別 a owl:ObjectProperty ;
+	rdfs:label "組織種別"@ja ;
+	rdfs:comment "組織の種別。（株式会社等）"@ja ;
+	schema:domainIncludes ic:法人型 ;
+	rdfs:range ic:コード型 .
+
+ic:資本金 a owl:ObjectProperty ;
+	rdfs:label "資本金"@ja ;
+	rdfs:comment "法人などの資本金。（前決算時）"@ja ;
+	schema:domainIncludes ic:法人型 ;
+	rdfs:range ic:金額型 .
+
+ic:従業員数 a owl:ObjectProperty ;
+	rdfs:label "従業員数"@ja ;
+	rdfs:comment "法人の従業員数。（前決算時）"@ja ;
+	schema:domainIncludes ic:法人型 ;
+	rdfs:range ic:人数型 .
+
+ic:人数 a owl:DatatypeProperty ;
+	rdfs:label "人数"@ja ;
+	rdfs:comment "イベントの参加者、定員など"@ja ;
+	schema:domainIncludes ic:人数型, ic:イベント型 ;
+	rdfs:range xsd:nonNegativeInteger .
+
+ic:役割 a owl:DatatypeProperty ;
+	rdfs:label "役割"@ja ;
+	rdfs:comment "人、組織、施設などの役割の表記"@ja ;
+	schema:domainIncludes ic:構成員型, ic:組織関連型, ic:施設関連型 ;
+	rdfs:range xsd:string .
+
+ic:構成員 a owl:ObjectProperty ;
+	rdfs:label "構成員"@ja ;
+	schema:domainIncludes ic:構成員型 ;
+	rdfs:range ic:人型 .
+
+ic:地理識別子 a owl:ObjectProperty ;
+	rdfs:label "地理識別子"@ja ;
+	rdfs:comment "場所の地理識別子"@ja ;
+	schema:domainIncludes ic:場所型 ;
+	rdfs:range ic:ID型 .
+
+ic:地理座標 a owl:ObjectProperty ;
+	rdfs:label "地理座標"@ja ;
+	rdfs:comment "場所の経緯度座標"@ja ;
+	schema:domainIncludes ic:場所型 ;
+	rdfs:range ic:座標型 .
+
+ic:座標参照系 a owl:ObjectProperty ;
+	rdfs:label "座標参照系"@ja ;
+	rdfs:comment "座標の参照系"@ja ;
+	schema:domainIncludes ic:座標型 ;
+	rdfs:range ic:ID型 .
+
+ic:緯度経度書式 a owl:DatatypeProperty ;
+	rdfs:label "緯度経度書式"@ja ;
+	rdfs:comment "度、分、秒の書式。書式はiso6709に準拠する"@ja ;
+	schema:domainIncludes ic:座標型 ;
+	rdfs:range xsd:string .
+
+ic:緯度 a owl:DatatypeProperty ;
+	rdfs:label "緯度"@ja ;
+	rdfs:comment "緯度。-90から+90で記載"@ja ;
+	schema:domainIncludes ic:座標型 ;
+	rdfs:range xsd:string .
+
+ic:経度 a owl:DatatypeProperty ;
+	rdfs:label "経度"@ja ;
+	rdfs:comment "経度。-180から+180で記載"@ja ;
+	schema:domainIncludes ic:座標型 ;
+	rdfs:range xsd:string .
+
+ic:座標データ書式 a owl:ObjectProperty ;
+	rdfs:label "座標データ書式"@ja ;
+	rdfs:comment "点、線、面などを表現するデータ文字列の書式を指定する"@ja ;
+	schema:domainIncludes ic:座標型 ;
+	rdfs:range ic:コード型 .
+
+ic:座標データ a owl:DatatypeProperty ;
+	rdfs:label "座標データ"@ja ;
+	rdfs:comment "点、線、面などを表現するデータ文字列"@ja ;
+	schema:domainIncludes ic:座標型 ;
+	rdfs:range xsd:string .
+
+ic:測地高度 a owl:ObjectProperty ;
+	rdfs:label "測地高度"@ja ;
+	rdfs:comment "高さ"@ja ;
+	schema:domainIncludes ic:座標型 ;
+	rdfs:range ic:長さ型 .
+
+ic:体系 a owl:ObjectProperty ;
+	rdfs:label "体系"@ja ;
+	rdfs:comment "IDの種別"@ja ;
+	schema:domainIncludes ic:ID型 ;
+	rdfs:range ic:ID体系型 .
+
+ic:識別値 a owl:DatatypeProperty ;
+	rdfs:label "識別値"@ja ;
+	rdfs:comment "識別子やコードの値"@ja ;
+	schema:domainIncludes ic:ID型, ic:コード型 ;
+	rdfs:range xsd:string .
+
+ic:発行者 a owl:ObjectProperty ;
+	rdfs:label "発行者"@ja ;
+	rdfs:comment "IDやコードの発行主体"@ja ;
+	schema:domainIncludes ic:ID体系型, ic:コードリスト型 ;
+	rdfs:range ic:実体型 .
+
+ic:バージョン a owl:DatatypeProperty ;
+	rdfs:label "バージョン"@ja ;
+	rdfs:comment "識別子などのバージョン"@ja ;
+	schema:domainIncludes ic:ID体系型, ic:コードリスト型 ;
+	rdfs:range xsd:string .
+
+ic:URI a owl:ObjectProperty ;
+	rdfs:label "URI"@ja ;
+	rdfs:comment "参照先"@ja ;
+	schema:domainIncludes ic:ID体系型, ic:コードリスト型 ;
+	rdfs:range owl:Thing .
+
+ic:種別コード a owl:ObjectProperty ;
+	rdfs:label "種別コード"@ja ;
+	rdfs:comment "製品の種別コードなど"@ja ;
+	schema:domainIncludes ic:製品型, ic:施設型 ;
+	rdfs:range ic:コード型 .
+
+ic:自動認識ID a owl:ObjectProperty ;
+	rdfs:label "自動認識ID"@ja ;
+	rdfs:comment "バーコードや二次元コード等の自動認識IDの画像等"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range owl:Thing .
+
+ic:価格 a owl:ObjectProperty ;
+	rdfs:label "価格"@ja ;
+	rdfs:comment "製品などの価格をic:価格型で表現する"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:価格型 .
+
+ic:説明 a owl:DatatypeProperty ;
+	rdfs:label "説明"@ja ;
+	rdfs:comment "様々な事物の説明"@ja ;
+	schema:domainIncludes ic:製品型, ic:地物型, ic:設備型, ic:イベント型, ic:期間型, ic:イベントスケジュール型, ic:定期スケジュール型 ;
+	rdfs:range xsd:string .
+
+ic:使用方法 a owl:DatatypeProperty ;
+	rdfs:label "使用方法"@ja ;
+	rdfs:comment "使用方法の説明"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:製造者 a owl:DatatypeProperty ;
+	rdfs:label "製造者"@ja ;
+	rdfs:comment "製造者名"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:製造者ID a owl:ObjectProperty ;
+	rdfs:label "製造者ID"@ja ;
+	rdfs:comment "製造者によって割り当てられたID"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:ID型 .
+
+ic:販売業者 a owl:DatatypeProperty ;
+	rdfs:label "販売業者"@ja ;
+	rdfs:comment "販売業者名"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:販売業者ID a owl:ObjectProperty ;
+	rdfs:label "販売業者ID"@ja ;
+	rdfs:comment "販売業者によって割り当てられたID"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:ID型 .
+
+ic:入数 a owl:ObjectProperty ;
+	rdfs:label "入数"@ja ;
+	rdfs:comment "製品などが箱等に含まれる数量"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:数量型 .
+
+ic:形態 a owl:DatatypeProperty ;
+	rdfs:label "形態"@ja ;
+	rdfs:comment "製品などの形態の説明"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:重量 a owl:ObjectProperty ;
+	rdfs:label "重量"@ja ;
+	rdfs:comment "製品などの重量"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:重量型 .
+
+ic:サイズ a owl:DatatypeProperty ;
+	rdfs:label "サイズ"@ja ;
+	rdfs:comment "製品などのサイズの表記"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:幅 a owl:ObjectProperty ;
+	rdfs:label "幅"@ja ;
+	rdfs:comment "製品などの幅"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:長さ型 .
+
+ic:高さ a owl:ObjectProperty ;
+	rdfs:label "高さ"@ja ;
+	rdfs:comment "製品などの高さ"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:長さ型 .
+
+ic:長さ a owl:ObjectProperty ;
+	rdfs:label "長さ"@ja ;
+	rdfs:comment "製品などの長さ"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:長さ型 .
+
+ic:色 a owl:DatatypeProperty ;
+	rdfs:label "色"@ja ;
+	rdfs:comment "製品などの色"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:原産国 a owl:DatatypeProperty ;
+	rdfs:label "原産国"@ja ;
+	rdfs:comment "製品などの原産国名"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:原産国コード a owl:ObjectProperty ;
+	rdfs:label "原産国コード"@ja ;
+	rdfs:comment "製品などの原産国を表すコード"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range ic:コード型 .
+
+ic:規制情報 a owl:DatatypeProperty ;
+	rdfs:label "規制情報"@ja ;
+	rdfs:comment "取り扱い上の注意等の規制に関する情報"@ja ;
+	schema:domainIncludes ic:製品型 ;
+	rdfs:range xsd:string .
+
+ic:製造日 a owl:ObjectProperty ;
+	rdfs:label "製造日"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range ic:日付型 .
+
+ic:ロット番号 a owl:DatatypeProperty ;
+	rdfs:label "ロット番号"@ja ;
+	rdfs:comment "製造ロットの番号"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range xsd:string .
+
+ic:消費期限 a owl:ObjectProperty ;
+	rdfs:label "消費期限"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range ic:日付型 .
+
+ic:使用期限 a owl:ObjectProperty ;
+	rdfs:label "使用期限"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range ic:日付型 .
+
+ic:賞味期限 a owl:ObjectProperty ;
+	rdfs:label "賞味期限"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range ic:日付型 .
+
+ic:シリアル番号 a owl:ObjectProperty ;
+	rdfs:label "シリアル番号"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range ic:ID型 .
+
+ic:状態 a owl:DatatypeProperty ;
+	rdfs:label "状態"@ja ;
+	rdfs:comment "製品などの状態。新品、中古などの表記"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range xsd:string .
+
+ic:所有者 a owl:ObjectProperty ;
+	rdfs:label "所有者"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range ic:実体型 .
+
+ic:購入価格 a owl:ObjectProperty ;
+	rdfs:label "購入価格"@ja ;
+	schema:domainIncludes ic:製品個品型 ;
+	rdfs:range ic:金額型 .
+
+ic:要約 a owl:DatatypeProperty ;
+	rdfs:label "要約"@ja ;
+	rdfs:comment "イベントなどの概要説明。100文字以内"@ja ;
+	schema:domainIncludes ic:地物型, ic:イベント型 ;
+	rdfs:range xsd:string .
+
+ic:アクセス a owl:ObjectProperty ;
+	rdfs:label "アクセス"@ja ;
+	rdfs:comment "アクセス方法"@ja ;
+	schema:domainIncludes ic:地物型 ;
+	rdfs:range ic:アクセス型 .
+
+ic:参照 a owl:ObjectProperty ;
+	rdfs:label "参照"@ja ;
+	rdfs:comment "追加情報等の参照先"@ja ;
+	schema:domainIncludes ic:地物型 ;
+	rdfs:range owl:Thing .
+
+ic:画像 a owl:ObjectProperty ;
+	rdfs:label "画像"@ja ;
+	rdfs:comment "事物の状態などを表す画像の参照先"@ja ;
+	schema:domainIncludes ic:地物型, ic:設備型 ;
+	rdfs:range owl:Thing .
+
+ic:設備 a owl:ObjectProperty ;
+	rdfs:label "設備"@ja ;
+	rdfs:comment "定常的に備わっている設備"@ja ;
+	schema:domainIncludes ic:地物型 ;
+	rdfs:range ic:設備型 .
+
+ic:管理者 a owl:ObjectProperty ;
+	rdfs:label "管理者"@ja ;
+	rdfs:comment "管理者や管理組織など"@ja ;
+	schema:domainIncludes ic:地物型, ic:設備型 ;
+	rdfs:range ic:実体型 .
+
+ic:利用可能時間 a owl:ObjectProperty ;
+	rdfs:label "利用可能時間"@ja ;
+	rdfs:comment "施設や設備などの利用可能日、開始、終了時間"@ja ;
+	schema:domainIncludes ic:施設型, ic:設備型 ;
+	rdfs:range ic:スケジュール型 .
+
+ic:料金 a owl:ObjectProperty ;
+	rdfs:label "料金"@ja ;
+	rdfs:comment "施設、設備の利用料金やイベントの参加費など"@ja ;
+	schema:domainIncludes ic:施設型, ic:設備型, ic:イベント型 ;
+	rdfs:range ic:価格型 .
+
+ic:収容人数 a owl:ObjectProperty ;
+	rdfs:label "収容人数"@ja ;
+	schema:domainIncludes ic:施設型 ;
+	rdfs:range ic:数量型 .
+
+ic:駐車場 a owl:ObjectProperty ;
+	rdfs:label "駐車場"@ja ;
+	rdfs:comment "施設が利用する駐車場"@ja ;
+	schema:domainIncludes ic:施設型 ;
+	rdfs:range ic:駐車場型 .
+
+ic:建物 a owl:ObjectProperty ;
+	rdfs:label "建物"@ja ;
+	rdfs:comment "施設が利用する建物"@ja ;
+	schema:domainIncludes ic:施設型 ;
+	rdfs:range ic:建物型 .
+
+ic:関連施設 a owl:ObjectProperty ;
+	rdfs:label "関連施設"@ja ;
+	rdfs:comment "上位施設、下位施設等の関連施設"@ja ;
+	schema:domainIncludes ic:施設型 ;
+	rdfs:range ic:施設関連型 .
+
+ic:施設 a owl:ObjectProperty ;
+	rdfs:label "施設"@ja ;
+	rdfs:comment "地物に関連する施設"@ja ;
+	schema:domainIncludes ic:施設関連型, ic:建物型 ;
+	rdfs:range ic:施設型 .
+
+ic:敷地面積 a owl:ObjectProperty ;
+	rdfs:label "敷地面積"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range ic:面積型 .
+
+ic:主要用途 a owl:DatatypeProperty ;
+	rdfs:label "主要用途"@ja ;
+	rdfs:comment "建物の主要用途の表記"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range xsd:string .
+
+ic:建築面積 a owl:ObjectProperty ;
+	rdfs:label "建築面積"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range ic:面積型 .
+
+ic:延べ面積 a owl:ObjectProperty ;
+	rdfs:label "延べ面積"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range ic:面積型 .
+
+ic:最高の高さ a owl:ObjectProperty ;
+	rdfs:label "最高の高さ"@ja ;
+	rdfs:comment "建物の最高点の高さ"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range ic:長さ型 .
+
+ic:地上階数 a owl:DatatypeProperty ;
+	rdfs:label "地上階数"@ja ;
+	rdfs:comment "建物の地上階数"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range xsd:decimal .
+
+ic:地下階数 a owl:DatatypeProperty ;
+	rdfs:label "地下階数"@ja ;
+	rdfs:comment "建物の地下階数"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range xsd:decimal .
+
+ic:構造 a owl:DatatypeProperty ;
+	rdfs:label "構造"@ja ;
+	rdfs:comment "建物などの構造の表記"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range xsd:string .
+
+ic:竣工日 a owl:ObjectProperty ;
+	rdfs:label "竣工日"@ja ;
+	rdfs:comment "建物の竣工日"@ja ;
+	schema:domainIncludes ic:建物型 ;
+	rdfs:range ic:日付型 .
+
+ic:駐車場種別 a owl:DatatypeProperty ;
+	rdfs:label "駐車場種別"@ja ;
+	rdfs:comment "駐車場の種別"@ja ;
+	schema:domainIncludes ic:駐車場型 ;
+	rdfs:range xsd:string .
+
+ic:収容台数 a owl:DatatypeProperty ;
+	rdfs:label "収容台数"@ja ;
+	rdfs:comment "駐車場の収容可能台数"@ja ;
+	schema:domainIncludes ic:駐車場型 ;
+	rdfs:range xsd:integer .
+
+ic:設置地点 a owl:ObjectProperty ;
+	rdfs:label "設置地点"@ja ;
+	rdfs:comment "設備が設置されている施設や建物などの地物"@ja ;
+	schema:domainIncludes ic:設備型 ;
+	rdfs:range ic:地物型 .
+
+ic:設置位置 a owl:DatatypeProperty ;
+	rdfs:label "設置位置"@ja ;
+	rdfs:comment "受付横等、設置場所を示す内容を記述"@ja ;
+	schema:domainIncludes ic:設備型 ;
+	rdfs:range xsd:string .
+
+ic:外部利用可否 a owl:DatatypeProperty ;
+	rdfs:label "外部利用可否"@ja ;
+	rdfs:comment "施設や設備などの外部利用可否を記述"@ja ;
+	schema:domainIncludes ic:設備型 ;
+	rdfs:range xsd:string .
+
+ic:利用者 a owl:DatatypeProperty ;
+	rdfs:label "利用者"@ja ;
+	rdfs:comment "利用者に限定条件がある場合に条件を記述"@ja ;
+	schema:domainIncludes ic:設備型 ;
+	rdfs:range xsd:string .
+
+ic:設置日 a owl:ObjectProperty ;
+	rdfs:label "設置日"@ja ;
+	rdfs:comment "施設の設置日"@ja ;
+	schema:domainIncludes ic:設備型 ;
+	rdfs:range ic:日付型 .
+
+ic:設置者 a owl:ObjectProperty ;
+	rdfs:label "設置者"@ja ;
+	rdfs:comment "設備などを設置した自治体や組織"@ja ;
+	schema:domainIncludes ic:設備型 ;
+	rdfs:range ic:組織型 .
+
+ic:バリアフリー a owl:DatatypeProperty ;
+	rdfs:label "バリアフリー"@ja ;
+	rdfs:comment "バリアフリーに関する情報がある場合に記述"@ja ;
+	schema:domainIncludes ic:設備型 ;
+	rdfs:range xsd:string .
+
+ic:開催場所 a owl:ObjectProperty ;
+	rdfs:label "開催場所"@ja ;
+	rdfs:comment "イベントなどの開催場所"@ja ;
+	schema:domainIncludes ic:イベント型 ;
+	rdfs:range ic:地物型 .
+
+ic:期間 a owl:ObjectProperty ;
+	rdfs:label "期間"@ja ;
+	rdfs:comment "イベントなどの期間"@ja ;
+	schema:domainIncludes ic:イベント型 ;
+	rdfs:range ic:スケジュール型 .
+
+ic:参加方法 a owl:DatatypeProperty ;
+	rdfs:label "参加方法"@ja ;
+	rdfs:comment "イベントなどの参加方法の説明"@ja ;
+	schema:domainIncludes ic:イベント型 ;
+	rdfs:range xsd:string .
+
+ic:関連イベント a owl:ObjectProperty ;
+	rdfs:label "関連イベント"@ja ;
+	rdfs:comment "関連するイベント"@ja ;
+	schema:domainIncludes ic:イベント型 ;
+	rdfs:range ic:イベント型 .
+
+ic:対象者 a owl:DatatypeProperty ;
+	rdfs:label "対象者"@ja ;
+	rdfs:comment "イベントなどの参加対象者の説明"@ja ;
+	schema:domainIncludes ic:イベント型 ;
+	rdfs:range xsd:string .
+
+ic:キーワード a owl:DatatypeProperty ;
+	rdfs:label "キーワード"@ja ;
+	rdfs:comment "イベントのキーワード"@ja ;
+	schema:domainIncludes ic:イベント型 ;
+	rdfs:range xsd:string .
+
+ic:数値 a owl:DatatypeProperty ;
+	rdfs:label "数値"@ja ;
+	rdfs:comment "測定数値"@ja ;
+	schema:domainIncludes ic:測定値型, ic:数量型, ic:容量型, ic:面積型, ic:重量型, ic:長さ型, ic:時間型, ic:金額型 ;
+	rdfs:range xsd:decimal .
+
+ic:測定名称 a owl:DatatypeProperty ;
+	rdfs:label "測定名称"@ja ;
+	rdfs:comment "測定方法の名称"@ja ;
+	schema:domainIncludes ic:測定値型 ;
+	rdfs:range xsd:string .
+
+ic:測定単位 a owl:DatatypeProperty ;
+	rdfs:label "測定単位"@ja ;
+	rdfs:comment "測定の単位"@ja ;
+	schema:domainIncludes ic:測定値型 ;
+	rdfs:range xsd:string .
+
+ic:数量単位 a owl:ObjectProperty ;
+	rdfs:label "数量単位"@ja ;
+	rdfs:comment "数量の単位"@ja ;
+	schema:domainIncludes ic:数量型 ;
+	rdfs:range ic:コード型 .
+
+ic:容量単位 a owl:DatatypeProperty ;
+	rdfs:label "容量単位"@ja ;
+	rdfs:comment "容量の単位"@ja ;
+	schema:domainIncludes ic:容量型 ;
+	rdfs:range uncefactVolume:MeasurementUnitCommonCodeVolumeContentType .
+
+ic:面積単位 a owl:DatatypeProperty ;
+	rdfs:label "面積単位"@ja ;
+	rdfs:comment "面積の単位"@ja ;
+	schema:domainIncludes ic:面積型 ;
+	rdfs:range uncefactCode:MeasurementUnitCommonCodeContentType .
+
+ic:重量単位 a owl:DatatypeProperty ;
+	rdfs:label "重量単位"@ja ;
+	rdfs:comment "重量の単位"@ja ;
+	schema:domainIncludes ic:重量型 ;
+	rdfs:range uncefactWeight:MeasurementUnitCommonCodeWeightContentType .
+
+ic:長さ単位 a owl:DatatypeProperty ;
+	rdfs:label "長さ単位"@ja ;
+	rdfs:comment "長さの単位"@ja ;
+	schema:domainIncludes ic:長さ型 ;
+	rdfs:range uncefactLinear:MeasurementUnitCommonCodeLinearContentType .
+
+ic:時間単位 a owl:DatatypeProperty ;
+	rdfs:label "時間単位"@ja ;
+	rdfs:comment "時間の単位"@ja ;
+	schema:domainIncludes ic:時間型 ;
+	rdfs:range uncefactDuration:MeasurementUnitCommonCodeDurationContentType .
+
+ic:通貨 a owl:DatatypeProperty ;
+	rdfs:label "通貨"@ja ;
+	rdfs:comment "通貨名"@ja ;
+	schema:domainIncludes ic:金額型 ;
+	rdfs:range xsd:string .
+
+ic:通貨コード a owl:DatatypeProperty ;
+	rdfs:label "通貨コード"@ja ;
+	schema:domainIncludes ic:金額型 ;
+	rdfs:range uncefactISO4217:ISO3AlphaCurrencyCodeContentType .
+
+ic:金額 a owl:ObjectProperty ;
+	rdfs:label "金額"@ja ;
+	rdfs:comment "価格の金額"@ja ;
+	schema:domainIncludes ic:価格型 ;
+	rdfs:range ic:金額型 .
+
+ic:発生日 a owl:ObjectProperty ;
+	rdfs:label "発生日"@ja ;
+	rdfs:comment "状況などの発生日時"@ja ;
+	schema:domainIncludes ic:状況型 ;
+	rdfs:range ic:日時型 .
+
+ic:詳細 a owl:DatatypeProperty ;
+	rdfs:label "詳細"@ja ;
+	rdfs:comment "状況などの詳細説明"@ja ;
+	schema:domainIncludes ic:状況型 ;
+	rdfs:range xsd:string .
+
+ic:関係者 a owl:ObjectProperty ;
+	rdfs:label "関係者"@ja ;
+	rdfs:comment "状況を発生させた人及び組織"@ja ;
+	schema:domainIncludes ic:状況型 ;
+	rdfs:range ic:実体型 .
+
+ic:標準型日時 a owl:DatatypeProperty ;
+	rdfs:label "標準型日時"@ja ;
+	rdfs:comment "日時"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:dateTime .
+
+ic:年号 a owl:DatatypeProperty ;
+	rdfs:label "年号"@ja ;
+	rdfs:comment "日付や日時などの元号"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:string .
+
+ic:年 a owl:DatatypeProperty ;
+	rdfs:label "年"@ja ;
+	rdfs:comment "日付や日時などの年の値"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:integer .
+
+ic:月 a owl:DatatypeProperty ;
+	rdfs:label "月"@ja ;
+	rdfs:comment "日付や日時などの月の値"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:integer .
+
+ic:日 a owl:DatatypeProperty ;
+	rdfs:label "日"@ja ;
+	rdfs:comment "日付や日時などの日の値"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:integer .
+
+ic:時 a owl:DatatypeProperty ;
+	rdfs:label "時"@ja ;
+	rdfs:comment "日時などの時の値"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:integer .
+
+ic:分 a owl:DatatypeProperty ;
+	rdfs:label "分"@ja ;
+	rdfs:comment "日時などの分の値"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:integer .
+
+ic:秒 a owl:DatatypeProperty ;
+	rdfs:label "秒"@ja ;
+	rdfs:comment "秒の値"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:decimal .
+
+ic:時間帯 a owl:DatatypeProperty ;
+	rdfs:label "時間帯"@ja ;
+	rdfs:comment "時間帯。協定世界時からの時間差"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:string .
+
+ic:カレンダー a owl:ObjectProperty ;
+	rdfs:label "カレンダー"@ja ;
+	rdfs:comment "カレンダーの種類"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range ic:コード型 .
+
+ic:標準型日付 a owl:DatatypeProperty ;
+	rdfs:label "標準型日付"@ja ;
+	rdfs:comment "日付"@ja ;
+	schema:domainIncludes ic:日付型 ;
+	rdfs:range xsd:date .
+
+ic:開始日時 a owl:ObjectProperty ;
+	rdfs:label "開始日時"@ja ;
+	rdfs:comment "イベントなどの開始日時"@ja ;
+	schema:domainIncludes ic:期間型 ;
+	rdfs:range ic:日時型 .
+
+ic:終了日時 a owl:ObjectProperty ;
+	rdfs:label "終了日時"@ja ;
+	rdfs:comment "終了日"@ja ;
+	schema:domainIncludes ic:期間型 ;
+	rdfs:range ic:日時型 .
+
+ic:開催日 a owl:ObjectProperty ;
+	rdfs:label "開催日"@ja ;
+	rdfs:comment "イベントなどが開催される日"@ja ;
+	schema:domainIncludes ic:イベントスケジュール型 ;
+	rdfs:range ic:日付型 .
+
+ic:開始日 a owl:ObjectProperty ;
+	rdfs:label "開始日"@ja ;
+	rdfs:comment "イベントなどの開始日"@ja ;
+	schema:domainIncludes ic:イベントスケジュール型 ;
+	rdfs:range ic:日付型 .
+
+ic:終了日 a owl:ObjectProperty ;
+	rdfs:label "終了日"@ja ;
+	rdfs:comment "イベントが終了する日"@ja ;
+	schema:domainIncludes ic:イベントスケジュール型 ;
+	rdfs:range ic:日付型 .
+
+ic:開始時間 a owl:DatatypeProperty ;
+	rdfs:label "開始時間"@ja ;
+	rdfs:comment "場所やサービスの開始時間"@ja ;
+	schema:domainIncludes ic:イベントスケジュール型, ic:定期スケジュール型 ;
+	rdfs:range xsd:time .
+
+ic:終了時間 a owl:DatatypeProperty ;
+	rdfs:label "終了時間"@ja ;
+	rdfs:comment "場所やサービスなどの終了時間"@ja ;
+	schema:domainIncludes ic:イベントスケジュール型, ic:定期スケジュール型 ;
+	rdfs:range xsd:time .
+
+ic:開催期日 a owl:DatatypeProperty ;
+	rdfs:label "開催期日"@ja ;
+	rdfs:comment "スケジュールが有効となる日。「週間」スケジュールの場合は曜日を指定し、「月間」スケジュールの場合は月の中の日を指定し、「年間」スケジュールの場合は年の中の月日を指定する"@ja ;
+	schema:domainIncludes ic:定期スケジュール型 ;
+	rdfs:range xsd:string .
+
+ic:有効開始日時 a owl:ObjectProperty ;
+	rdfs:label "有効開始日時"@ja ;
+	rdfs:comment "このスケジュールが有効になる日時"@ja ;
+	schema:domainIncludes ic:定期スケジュール型 ;
+	rdfs:range ic:日時型 .
+
+ic:有効終了日時 a owl:ObjectProperty ;
+	rdfs:label "有効終了日時"@ja ;
+	rdfs:comment "このスケジュールが無効になる日時"@ja ;
+	schema:domainIncludes ic:定期スケジュール型 ;
+	rdfs:range ic:日時型 .
+
+ic:コード種別 a owl:ObjectProperty ;
+	rdfs:label "コード種別"@ja ;
+	rdfs:comment "コードの種別"@ja ;
+	schema:domainIncludes ic:コード型 ;
+	rdfs:range ic:コードリスト型 .
+
+ic:始点 a owl:ObjectProperty ;
+	rdfs:label "始点"@ja ;
+	rdfs:comment "アクセス方法を表記する際などの始点（出発地点）となる地物"@ja ;
+	schema:domainIncludes ic:アクセス型, ic:アクセス区間型 ;
+	rdfs:range ic:地物型 .
+
+ic:始点備考 a owl:DatatypeProperty ;
+	rdfs:label "始点備考"@ja ;
+	rdfs:comment "アクセス方法を表記する際などの始点（出発地点）となる地物についての備考"@ja ;
+	schema:domainIncludes ic:アクセス型, ic:アクセス区間型 ;
+	rdfs:range xsd:string .
+
+ic:終点 a owl:ObjectProperty ;
+	rdfs:label "終点"@ja ;
+	rdfs:comment "アクセス方法を表記する際などの終点（目的地点）となる地物"@ja ;
+	schema:domainIncludes ic:アクセス型, ic:アクセス区間型 ;
+	rdfs:range ic:地物型 .
+
+ic:終点備考 a owl:DatatypeProperty ;
+	rdfs:label "終点備考"@ja ;
+	rdfs:comment "アクセス方法を表記する際などの終点（目的地点）となる地物についての備考"@ja ;
+	schema:domainIncludes ic:アクセス型, ic:アクセス区間型 ;
+	rdfs:range xsd:string .
+
+ic:アクセス区間 a owl:ObjectProperty ;
+	rdfs:label "アクセス区間"@ja ;
+	rdfs:comment "アクセス方法の各区間の一覧"@ja ;
+	schema:domainIncludes ic:アクセス型 ;
+	rdfs:range ic:アクセス区間型 .
+
+ic:時間 a owl:ObjectProperty ;
+	rdfs:label "時間"@ja ;
+	rdfs:comment "アクセス時間や会議時間など"@ja ;
+	schema:domainIncludes ic:アクセス型, ic:アクセス区間型 ;
+	rdfs:range ic:測定値型 .
+
+ic:地図 a owl:ObjectProperty ;
+	rdfs:label "地図"@ja ;
+	schema:domainIncludes ic:アクセス型 ;
+	rdfs:range owl:Thing .
+
+ic:路線 a owl:DatatypeProperty ;
+	rdfs:label "路線"@ja ;
+	rdfs:comment "アクセスに用いる交通の事業者及び路線名、バス系統など"@ja ;
+	schema:domainIncludes ic:アクセス区間型 ;
+	rdfs:range xsd:string .
+
+
+## クラス定義（プロパティ制約は後方で別途定義） ################
+ic:人型 a owl:Class ;
+	rdfs:label "人型"@ja ;
+	rdfs:comment "人の情報を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:実体型 .
+
+ic:名称型 a owl:Class ;
+	rdfs:label "名称型"@ja ;
+	rdfs:comment "組織や地物等の名称を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:氏名型 a owl:Class ;
+	rdfs:label "氏名型"@ja ;
+	rdfs:comment "人の氏名を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:住所型 a owl:Class ;
+	rdfs:label "住所型"@ja ;
+	rdfs:comment "住所を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:連絡先型 a owl:Class ;
+	rdfs:label "連絡先型"@ja ;
+	rdfs:comment "連絡先を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:組織型 a owl:Class ;
+	rdfs:label "組織型"@ja ;
+	rdfs:comment "組織を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:実体型 .
+
+ic:業務組織型 a owl:Class ;
+	rdfs:label "業務組織型"@ja ;
+	rdfs:comment "業務組織を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:組織型 .
+
+ic:法人型 a owl:Class ;
+	rdfs:label "法人型"@ja ;
+	rdfs:comment "法人を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:業務組織型 .
+
+ic:人数型 a owl:Class ;
+	rdfs:label "人数型"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:構成員型 a owl:Class ;
+	rdfs:label "構成員型"@ja ;
+	rdfs:comment "組織等を構成する人を表現するクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:組織関連型 a owl:Class ;
+	rdfs:label "組織関連型"@ja ;
+	rdfs:comment "組織の関連を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:場所型 a owl:Class ;
+	rdfs:label "場所型"@ja ;
+	rdfs:comment "場所を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:座標型 a owl:Class ;
+	rdfs:label "座標型"@ja ;
+	rdfs:comment "座標を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:ID型 a owl:Class ;
+	rdfs:label "ID型"@ja ;
+	rdfs:comment "識別子を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:ID体系型 a owl:Class ;
+	rdfs:label "ID体系型"@ja ;
+	rdfs:comment "IDの種別を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:製品型 a owl:Class ;
+	rdfs:label "製品型"@ja ;
+	rdfs:comment "製品を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:製品個品型 a owl:Class ;
+	rdfs:label "製品個品型"@ja ;
+	rdfs:comment "製品を個別に表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:製品型 .
+
+ic:地物型 a owl:Class ;
+	rdfs:label "地物型"@ja ;
+	rdfs:comment "施設や建物など、参照対象となる地物を表すためのクラス "@ja ;
+	rdfs:subClassOf ic:場所型 .
+
+ic:施設型 a owl:Class ;
+	rdfs:label "施設型"@ja ;
+	rdfs:comment "特定のサービスをする提供する施設を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:地物型 .
+
+ic:施設関連型 a owl:Class ;
+	rdfs:label "施設関連型"@ja ;
+	rdfs:comment "施設の関連を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:建物型 a owl:Class ;
+	rdfs:label "建物型"@ja ;
+	rdfs:comment "具体的な建物をｊ表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:地物型 .
+
+ic:駐車場型 a owl:Class ;
+	rdfs:label "駐車場型"@ja ;
+	rdfs:comment "駐車場を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:施設型 .
+
+ic:設備型 a owl:Class ;
+	rdfs:label "設備型"@ja ;
+	rdfs:comment "施設や建物等に備わっている設備を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:イベント型 a owl:Class ;
+	rdfs:label "イベント型"@ja ;
+	rdfs:comment "イベントを表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:測定値型 a owl:Class ;
+	rdfs:label "測定値型"@ja ;
+	rdfs:comment "測定単位及び方法を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:数量型 a owl:Class ;
+	rdfs:label "数量型"@ja ;
+	rdfs:comment "数量を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:容量型 a owl:Class ;
+	rdfs:label "容量型"@ja ;
+	rdfs:comment "容量を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:面積型 a owl:Class ;
+	rdfs:label "面積型"@ja ;
+	rdfs:comment "面積を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:重量型 a owl:Class ;
+	rdfs:label "重量型"@ja ;
+	rdfs:comment "重量を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:長さ型 a owl:Class ;
+	rdfs:label "長さ型"@ja ;
+	rdfs:comment "長さを表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:時間型 a owl:Class ;
+	rdfs:label "時間型"@ja ;
+	rdfs:comment "時間の長さを表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:金額型 a owl:Class ;
+	rdfs:label "金額型"@ja ;
+	rdfs:comment "金額を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:価格型 a owl:Class ;
+	rdfs:label "価格型"@ja ;
+	rdfs:comment "価格を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:実体型 a owl:Class ;
+	rdfs:label "実体型"@ja ;
+	rdfs:comment "実体を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:状況型 a owl:Class ;
+	rdfs:label "状況型"@ja ;
+	rdfs:comment "状況を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:日時型 a owl:Class ;
+	rdfs:label "日時型"@ja ;
+	rdfs:comment "日付を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:日付型 a owl:Class ;
+	rdfs:label "日付型"@ja ;
+	rdfs:comment "日付を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:期間型 a owl:Class ;
+	rdfs:label "期間型"@ja ;
+	rdfs:comment "期間を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:スケジュール型 a owl:Class ;
+	rdfs:label "スケジュール型"@ja ;
+	rdfs:comment "スケジュールを表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:イベントスケジュール型 a owl:Class ;
+	rdfs:label "イベントスケジュール型"@ja ;
+	rdfs:comment "施設等のオープン日とオープン時間を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:スケジュール型 .
+
+ic:定期スケジュール型 a owl:Class ;
+	rdfs:label "定期スケジュール型"@ja ;
+	rdfs:comment "定期的に繰り返される事象のスケジュールを表現するクラス"@ja ;
+	rdfs:subClassOf ic:スケジュール型 .
+
+ic:詳細スケジュール型 a owl:Class ;
+	rdfs:label "詳細スケジュール型"@ja ;
+	rdfs:comment "（将来的に整備する予定）施設等のオープン日とオープン時間を表現するためのクラス。複数のスケジュールが列挙された場合はそれらの和を取るものとする"@ja ;
+	rdfs:subClassOf ic:スケジュール型 .
+
+ic:詳細スケジュール規則型 a owl:Class ;
+	rdfs:label "詳細スケジュール規則型"@ja ;
+	rdfs:comment "（将来的に整備する予定）繰り返し型のスケジュールを定義するための規則"@ja ;
+	rdfs:subClassOf ic:スケジュール型 .
+
+ic:コード型 a owl:Class ;
+	rdfs:label "コード型"@ja ;
+	rdfs:comment "コードを表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:コードリスト型 a owl:Class ;
+	rdfs:label "コードリスト型"@ja ;
+	rdfs:comment "コードの種別を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:アクセス型 a owl:Class ;
+	rdfs:label "アクセス型"@ja ;
+	rdfs:comment "地物等へのアクセスを表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:アクセス区間型 a owl:Class ;
+	rdfs:label "アクセス区間型"@ja ;
+	rdfs:comment "アクセス含まれる各区間を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:事物型 a owl:Class ;
+	rdfs:label "事物型"@ja ;
+	rdfs:comment "全ての型のベースとなる基本型。"@ja .
+
+
+## データ型定義 ################
+ic:電話番号型 a rdfs:Datatype ;
+	rdfs:label "電話番号型"@ja, "o"@en ;
+	rdfs:comment "電話番号を表現するためのデータ型"@ja, "o"@en ;
+	owl:equivalentClass [
+		owl:onDatatype xsd:string
+	] .
+
+
+## クラスのプロパティ制約定義 ################
+ic:人型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:allValuesFrom ic:ID型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:氏名 ;
+		owl:allValuesFrom ic:氏名型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:性別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "性別の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:性別コード ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:生年月日 ;
+		owl:onClass ic:日付型 ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:死亡年月日 ;
+		owl:onClass ic:日付型 ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:住所 ;
+		owl:allValuesFrom ic:住所型 ;
+		rdfs:comment "現住所"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:本籍 ;
+		owl:onClass ic:住所型 ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:連絡先 ;
+		owl:allValuesFrom ic:連絡先型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:国籍 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "国籍の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:国籍コード ;
+		owl:allValuesFrom ic:コード型 ;
+		rdfs:comment "住民基本台帳で利用されている国籍コード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:出生国 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "生まれた国名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:出生国コード ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "生まれた国のコード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:出生地 ;
+		owl:onClass ic:住所型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "生まれた場所"@ja
+	] .
+
+ic:名称型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "名称の種類の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "日本語による表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:カナ表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "カタカナ表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:ローマ字表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1
+	] .
+
+ic:氏名型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "氏名の種類の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:姓名 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "氏名（姓、名）の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:姓名カナ表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "氏名（姓、名）のカナ表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:姓名ローマ字表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "氏名（姓、名）のアルファベット表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:姓 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "姓の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:姓カナ表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "姓のカナ表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:姓ローマ字表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "姓のローマ表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "名の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名カナ表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "名のカナ表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名ローマ字表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "名のローマ字表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:ミドルネーム ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "ミドルネームの表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:ミドルネームカナ表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "ミドルネームのカナ表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:ミドルネームローマ字表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "ミドルネームのローマ字表記"@ja
+	] .
+
+ic:住所型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:onClass ic:ID型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "住所及び土地に割り振られるID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "住所の種類の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:表記 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "住所の全文表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:郵便番号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:住所コード ;
+		owl:allValuesFrom ic:コード型 ;
+		rdfs:comment "地方公共団体情報システム機構地方公共団体コード住所等の利用を想定。住所のコード化が必要な範囲に応じて自治体で個別に設定する"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:国 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "国名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:国コード ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "国のコード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:都道府県 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "都道府県名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:都道府県コード ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "都道府県のコード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:市区町村 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "市区町村名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:区 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "政令指定都市の区の名前"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:市区町村コード ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "市区町村のコード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:町名 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "町域、または市区町村の下の行政区分の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:丁目 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "丁目の表示"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:番地補足 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "番地の前の、「東」「北」「浜」「甲」「イ」等の文字"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:番地 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "番、街区の表示"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "号、住居番号の表示"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:ビル名 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:ビル番号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "号棟などのビルの番号の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:部屋番号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "階数、号室などの部屋番号の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:方書 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "方書 (私書箱も含む)"@ja
+	] .
+
+ic:連絡先型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:allValuesFrom ic:ID型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "連絡先の種別の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:allValuesFrom ic:名称型 ;
+		rdfs:comment "連絡先名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:組織 ;
+		owl:allValuesFrom ic:組織型 ;
+		rdfs:comment "連絡先が他組織に委任等されているときに記載"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:担当者役職 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "連絡先担当者の役職の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:担当者名 ;
+		owl:allValuesFrom ic:氏名型 ;
+		rdfs:comment "連絡先担当者の氏名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:Eメールアドレス ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "連絡先の電子メールアドレス"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:住所 ;
+		owl:allValuesFrom ic:住所型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:送付先 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "送付先の住所、私書箱など"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:電話番号 ;
+		owl:allValuesFrom ic:電話番号型 ;
+		rdfs:comment "連絡先の電話番号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:内線番号 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "連絡先の内線番号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:FAX番号 ;
+		owl:allValuesFrom ic:電話番号型 ;
+		rdfs:comment "連絡先のFAX番号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:携帯電話番号 ;
+		owl:allValuesFrom ic:電話番号型 ;
+		rdfs:comment "連絡先の携帯電話番号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:Webサイト ;
+		owl:allValuesFrom owl:Thing ;
+		rdfs:comment "WebサイトのURL"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:対応言語 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "連絡先との連絡の際に利用可能な言語名"@ja
+	] .
+
+ic:組織型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:allValuesFrom ic:ID型 ;
+		rdfs:comment "組織に発行されている識別子"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:onClass ic:名称型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "組織名称。組合以外は、組織種別を省略して記載"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:略称アルファベット ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "頭文字などによる略称表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:通称 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "組織の通称名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:活動状況 ;
+		owl:allValuesFrom ic:状況型 ;
+		rdfs:comment "組織の状況。倒産、破産等"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:概要 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "組織の概要説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:連絡先 ;
+		owl:allValuesFrom ic:連絡先型 ;
+		rdfs:comment "組織の連絡先（本社、コールセンター等）"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:関連組織 ;
+		owl:allValuesFrom ic:組織関連型 ;
+		rdfs:comment "支店等、関連組織"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:地物 ;
+		owl:allValuesFrom ic:地物型 ;
+		rdfs:comment "組織に関連する地物や施設、建物"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:住所 ;
+		owl:allValuesFrom ic:住所型 ;
+		rdfs:comment "組織に関係する住所。登記上の住所など"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:代表者 ;
+		owl:allValuesFrom ic:構成員型 ;
+		rdfs:comment "組織の代表者"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:設立日 ;
+		owl:onClass ic:日付型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "設立日。支店や事業所は設置日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "補足情報などがある場合に記述"@ja
+	] .
+
+ic:業務組織型 a owl:Class ;
+	rdfs:subClassOf ic:組織型, [
+		a owl:Restriction ;
+		owl:onProperty ic:事業種目 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "販売業など事業の種類の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:事業年度開始日 ;
+		owl:onClass ic:日付型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "事業年度の開始日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:構成員数 ;
+		owl:onDataRange xsd:nonNegativeInteger ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "構成員の人数"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:代理人 ;
+		owl:allValuesFrom ic:組織関連型 ;
+		rdfs:comment "法定手続きなどを代理するもの"@ja
+	] .
+
+ic:法人型 a owl:Class ;
+	rdfs:subClassOf ic:業務組織型, [
+		a owl:Restriction ;
+		owl:onProperty ic:組織種別位置 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "組織の名称の中において、株式会社等の組織種別が置かれる位置の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:組織種別 ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "組織の種別。（株式会社等）"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:資本金 ;
+		owl:onClass ic:金額型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "資本金。（前決算時）"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:従業員数 ;
+		owl:onClass ic:人数型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "従業員数。（前決算時）"@ja
+	] .
+
+ic:人数型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "種別ごとに人数を数える場合の種別の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:人数 ;
+		owl:onDataRange xsd:nonNegativeInteger ;
+		owl:maxQualifiedCardinality 1
+	] .
+
+ic:構成員型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:役割 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "構成員の役割の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:構成員 ;
+		owl:onClass ic:人型 ;
+		owl:maxQualifiedCardinality 1
+	] .
+
+ic:組織関連型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:役割 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "組織の役割の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:組織 ;
+		owl:onClass ic:組織型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "関連組織"@ja
+	] .
+
+ic:場所型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:allValuesFrom ic:名称型 ;
+		rdfs:comment "地名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:通称 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "正式な名称以外の通称"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:地理識別子 ;
+		owl:onClass ic:ID型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "場所の地理識別子"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:住所 ;
+		owl:onClass ic:住所型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "場所の住所"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:地理座標 ;
+		owl:onClass ic:座標型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "場所の経緯度座標"@ja
+	] .
+
+ic:座標型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:座標参照系 ;
+		owl:onClass ic:ID型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "座標の参照系"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:緯度経度書式 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "度、分、秒の書式。書式はiso6709に準拠する"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:緯度 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "緯度。-90から+90で記載"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:経度 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "経度。-180から+180で記載"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:座標データ書式 ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "点、線、面などを表現するデータ文字列の書式を指定する"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:座標データ ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "点、線、面などを表現するデータ文字列"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:測地高度 ;
+		owl:onClass ic:長さ型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "高さ"@ja
+	] .
+
+ic:ID型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:体系 ;
+		owl:onClass ic:ID体系型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "IDの種別"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:識別値 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "識別のためのIDの値"@ja
+	] .
+
+ic:ID体系型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:onClass ic:名称型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "ID体系の名前"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:発行者 ;
+		owl:onClass ic:実体型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "ID体系の発行主体"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:バージョン ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "ID体系のバージョン"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:URI ;
+		owl:maxCardinality 1 ;
+		rdfs:comment "ID体系や発行者の参照先"@ja
+	] .
+
+ic:製品型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:allValuesFrom ic:ID型 ;
+		rdfs:comment "製品に割り当てられたID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製品の種別の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:種別コード ;
+		owl:allValuesFrom ic:コード型 ;
+		rdfs:comment "製品の種別コード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:allValuesFrom ic:名称型 ;
+		rdfs:comment "製品の名前"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:自動認識ID ;
+		owl:allValuesFrom owl:Thing ;
+		rdfs:comment "バーコードや二次元コード等の自動認識IDの画像等"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:価格 ;
+		owl:allValuesFrom ic:価格型 ;
+		rdfs:comment "製品の価格"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製品の説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:使用方法 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "使用方法の説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:製造者 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製造者名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:製造者ID ;
+		owl:allValuesFrom ic:ID型 ;
+		rdfs:comment "製造者によって割り当てられたID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:販売業者 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "販売業者名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:販売業者ID ;
+		owl:allValuesFrom ic:ID型 ;
+		rdfs:comment "販売業者によって割り当てられたID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:入数 ;
+		owl:allValuesFrom ic:数量型 ;
+		rdfs:comment "製品が箱等に含まれる数量"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:形態 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製品の形態の説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:重量 ;
+		owl:allValuesFrom ic:重量型 ;
+		rdfs:comment "製品の重量"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:サイズ ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製品のサイズの表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:幅 ;
+		owl:allValuesFrom ic:長さ型 ;
+		rdfs:comment "製品の幅"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:高さ ;
+		owl:allValuesFrom ic:長さ型 ;
+		rdfs:comment "製品の高さ"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:長さ ;
+		owl:allValuesFrom ic:長さ型 ;
+		rdfs:comment "製品の長さ"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:色 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製品の色の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:原産国 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製品の原産国名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:原産国コード ;
+		owl:allValuesFrom ic:コード型 ;
+		rdfs:comment "製品の原産国を表すコード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:規制情報 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "取り扱い上の注意等の規制に関する情報"@ja
+	] .
+
+ic:製品個品型 a owl:Class ;
+	rdfs:subClassOf ic:製品型, [
+		a owl:Restriction ;
+		owl:onProperty ic:製造日 ;
+		owl:allValuesFrom ic:日付型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:ロット番号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "製造ロットの番号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:消費期限 ;
+		owl:allValuesFrom ic:日付型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:使用期限 ;
+		owl:allValuesFrom ic:日付型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:賞味期限 ;
+		owl:allValuesFrom ic:日付型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:シリアル番号 ;
+		owl:onClass ic:ID型 ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:状態 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "製品の状態。新品、中古などの表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:所有者 ;
+		owl:allValuesFrom ic:実体型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:購入価格 ;
+		owl:allValuesFrom ic:金額型
+	] .
+
+ic:地物型 a owl:Class ;
+	rdfs:subClassOf ic:場所型, [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:onClass ic:ID型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "識別するためのID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:要約 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "概要説明。100文字以内"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:allValuesFrom xsd:string
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:アクセス ;
+		owl:allValuesFrom ic:アクセス型 ;
+		rdfs:comment "アクセス方法"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:参照 ;
+		owl:allValuesFrom owl:Thing ;
+		rdfs:comment "追加情報等の参照先"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:画像 ;
+		owl:allValuesFrom owl:Thing ;
+		rdfs:comment "画像の参照先"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:連絡先 ;
+		owl:allValuesFrom ic:連絡先型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:設備 ;
+		owl:allValuesFrom ic:設備型 ;
+		rdfs:comment "定常的に備わっている設備"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:管理者 ;
+		owl:allValuesFrom ic:実体型
+	] .
+
+ic:施設型 a owl:Class ;
+	rdfs:subClassOf ic:地物型, [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "施設の種別の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:種別コード ;
+		owl:allValuesFrom ic:コード型 ;
+		rdfs:comment "施設の種別コード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:利用可能時間 ;
+		owl:allValuesFrom ic:スケジュール型 ;
+		rdfs:comment "施設の利用可能日、開始、終了時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:料金 ;
+		owl:allValuesFrom ic:価格型 ;
+		rdfs:comment "施設の料金"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:収容人数 ;
+		owl:allValuesFrom ic:数量型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:駐車場 ;
+		owl:allValuesFrom ic:駐車場型 ;
+		rdfs:comment "施設が利用する駐車場"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:建物 ;
+		owl:allValuesFrom ic:建物型 ;
+		rdfs:comment "施設が利用する建物"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:関連施設 ;
+		owl:allValuesFrom ic:施設関連型 ;
+		rdfs:comment "上位施設、下位施設等の関連施設"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "補足情報などがある場合に記述"@ja
+	] .
+
+ic:施設関連型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:役割 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "関連施設の役割の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:施設 ;
+		owl:onClass ic:施設型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "関連施設"@ja
+	] .
+
+ic:建物型 a owl:Class ;
+	rdfs:subClassOf ic:地物型, [
+		a owl:Restriction ;
+		owl:onProperty ic:敷地面積 ;
+		owl:allValuesFrom ic:面積型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:主要用途 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "建物の主要用途の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:建築面積 ;
+		owl:allValuesFrom ic:面積型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:延べ面積 ;
+		owl:allValuesFrom ic:面積型
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:最高の高さ ;
+		owl:allValuesFrom ic:長さ型 ;
+		rdfs:comment "建物の最高点の高さ"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:地上階数 ;
+		owl:allValuesFrom xsd:decimal ;
+		rdfs:comment "建物の地上階数"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:地下階数 ;
+		owl:allValuesFrom xsd:decimal ;
+		rdfs:comment "建物の地下階数"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:構造 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "建物の構造の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:竣工日 ;
+		owl:allValuesFrom ic:日付型 ;
+		rdfs:comment "建物の竣工日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:施設 ;
+		owl:allValuesFrom ic:施設型 ;
+		rdfs:comment "建物を利用する施設"@ja
+	] .
+
+ic:駐車場型 a owl:Class ;
+	rdfs:subClassOf ic:施設型, [
+		a owl:Restriction ;
+		owl:onProperty ic:駐車場種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "駐車場の種別"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:収容台数 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "駐車場の収容可能台数"@ja
+	] .
+
+ic:設備型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:onClass ic:ID型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "設備のID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:onClass ic:名称型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "設備の名称"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:設置地点 ;
+		owl:onClass ic:地物型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "設備が設置されている施設や建物などの地物"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:設置位置 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "受付横等、設置場所を示す内容を記述"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "設備の説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:利用可能時間 ;
+		owl:allValuesFrom ic:スケジュール型 ;
+		rdfs:comment "設備が利用可能な日と利用可能時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:料金 ;
+		owl:allValuesFrom ic:価格型 ;
+		rdfs:comment "設備の利用料金"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:外部利用可否 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "設備の外部利用可否を記述"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:利用者 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "利用者に限定条件がある場合に条件を記述"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:設置日 ;
+		owl:onClass ic:日付型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "施設の設置日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:画像 ;
+		owl:maxCardinality 1 ;
+		rdfs:comment "設備の位置が遠景からもわかる画像のURL"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:Webサイト ;
+		owl:maxCardinality 1 ;
+		rdfs:comment "関連ホームページ"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:設置者 ;
+		owl:onClass ic:組織型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "設備を設置した自治体や組織"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:管理者 ;
+		owl:onClass ic:実体型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "設備を管理している組織名や人"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:連絡先 ;
+		owl:onClass ic:連絡先型 ;
+		owl:maxQualifiedCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:バリアフリー ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "バリアフリーに関する情報がある場合に記述"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "全体としての補足情報がある場合に記述"@ja
+	] .
+
+ic:イベント型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:allValuesFrom ic:ID型 ;
+		rdfs:comment "イベントを識別するためのID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "イベント内容の種別"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:allValuesFrom ic:名称型 ;
+		rdfs:comment "イベントの名称"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:関連組織 ;
+		owl:allValuesFrom ic:組織関連型 ;
+		rdfs:comment "イベントに関連する組織"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:開催場所 ;
+		owl:allValuesFrom ic:地物型 ;
+		rdfs:comment "イベントの開催場所"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:期間 ;
+		owl:allValuesFrom ic:スケジュール型 ;
+		rdfs:comment "イベントの期間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:参加方法 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "イベントの参加方法の説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:連絡先 ;
+		owl:allValuesFrom ic:連絡先型 ;
+		rdfs:comment "イベントへの連絡方法"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "イベントの説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:要約 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "イベントの概要。100文字以内"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:関連イベント ;
+		owl:allValuesFrom ic:イベント型 ;
+		rdfs:comment "関連するイベント"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:対象者 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "イベントの参加対象者の説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:人数 ;
+		owl:allValuesFrom xsd:nonNegativeInteger ;
+		rdfs:comment "イベントの参加者、定員"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:キーワード ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "イベントのキーワード"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:料金 ;
+		owl:allValuesFrom ic:価格型 ;
+		rdfs:comment "イベントに参加するための料金"@ja
+	] .
+
+ic:測定値型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "測定数値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:測定名称 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "測定方法名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:測定単位 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "測定の単位"@ja
+	] .
+
+ic:数量型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "測定数値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:数量単位 ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "数量の単位"@ja
+	] .
+
+ic:容量型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "測定数値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:容量単位 ;
+		owl:onDataRange uncefactVolume:MeasurementUnitCommonCodeVolumeContentType ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "容量の単位"@ja
+	] .
+
+ic:面積型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "測定数値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:面積単位 ;
+		owl:onDataRange uncefactCode:MeasurementUnitCommonCodeContentType ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "面積の単位"@ja
+	] .
+
+ic:重量型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "測定数値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:重量単位 ;
+		owl:onDataRange uncefactWeight:MeasurementUnitCommonCodeWeightContentType ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "重量の単位"@ja
+	] .
+
+ic:長さ型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "測定数値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:長さ単位 ;
+		owl:onDataRange uncefactLinear:MeasurementUnitCommonCodeLinearContentType ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "長さの単位"@ja
+	] .
+
+ic:時間型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "測定数値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時間単位 ;
+		owl:onDataRange uncefactDuration:MeasurementUnitCommonCodeDurationContentType ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "時間の単位"@ja
+	] .
+
+ic:金額型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:数値 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "金額の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:通貨 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "通貨名"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:通貨コード ;
+		owl:onDataRange uncefactISO4217:ISO3AlphaCurrencyCodeContentType ;
+		owl:maxQualifiedCardinality 1
+	] .
+
+ic:価格型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "価格の対象単位や種別の表記"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:金額 ;
+		owl:onClass ic:金額型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "価格の金額"@ja
+	] .
+
+ic:状況型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:allValuesFrom ic:名称型 ;
+		rdfs:comment "状況の名称"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:発生日 ;
+		owl:allValuesFrom ic:日時型 ;
+		rdfs:comment "状況の発生日時"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:詳細 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "状況の詳細説明"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:関係者 ;
+		owl:allValuesFrom ic:実体型 ;
+		rdfs:comment "対象の事物に関係する人及び組織"@ja
+	] .
+
+ic:日時型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:標準型日時 ;
+		owl:onDataRange xsd:dateTime ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "日時"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:年号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "元号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:年 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "年の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:月 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "月の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:日 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "日の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "時の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:分 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "分の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:秒 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "秒の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時間帯 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "時間帯。協定世界時からの時間差"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:カレンダー ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "カレンダーの種類"@ja
+	] .
+
+ic:日付型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:標準型日付 ;
+		owl:onDataRange xsd:date ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "日付"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:年号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "元号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:年 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "年の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:月 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "月の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:日 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "日の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時間帯 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "時間帯。協定世界時からの時間差"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:カレンダー ;
+		owl:onClass ic:コード型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "カレンダーの種類"@ja
+	] .
+
+ic:期間型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:開始日時 ;
+		owl:onClass ic:日時型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "開始日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終了日時 ;
+		owl:onClass ic:日時型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "終了日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "期間の説明や例外などの説明"@ja
+	] .
+
+ic:イベントスケジュール型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:開催日 ;
+		owl:allValuesFrom ic:日付型 ;
+		rdfs:comment "一日だけの開催の場合の開催日。列挙可"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:開始日 ;
+		owl:onClass ic:日付型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "イベントが開始する日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終了日 ;
+		owl:onClass ic:日付型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "イベントが終了する日"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:開始時間 ;
+		owl:onDataRange xsd:time ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "場所やサービスの開始時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終了時間 ;
+		owl:onDataRange xsd:time ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "場所やサービスの終了時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "スケジュールの説明や例外など"@ja
+	] .
+
+ic:定期スケジュール型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "スケジュールの種別。「週間」「月間」「年間」などを指定する"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:開催期日 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "このスケジュールが有効となる日。「週間」スケジュールの場合は曜日を指定し、「月間」スケジュールの場合は月の中の日を指定し、「年間」スケジュールの場合は年の中の月日を指定する"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:有効開始日時 ;
+		owl:onClass ic:日時型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "このスケジュールが有効になる日時"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:有効終了日時 ;
+		owl:onClass ic:日時型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "このスケジュールが無効になる日時"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:開始時間 ;
+		owl:onDataRange xsd:time ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "指定された曜日に場所やサービスが開始する時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終了時間 ;
+		owl:onDataRange xsd:time ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "指定された曜日に場所やサービスが終了する時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "スケジュールの説明や例外などの説明"@ja
+	] .
+
+ic:コード型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:コード種別 ;
+		owl:onClass ic:コードリスト型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "コードの種別"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:識別値 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "コードの値"@ja
+	] .
+
+ic:コードリスト型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:名称 ;
+		owl:onClass ic:名称型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "コードの名前"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:発行者 ;
+		owl:onClass ic:実体型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "コードの発行主体"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:バージョン ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "コードのバージョン"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:URI ;
+		owl:maxCardinality 1 ;
+		rdfs:comment "コードや発行者の参照先"@ja
+	] .
+
+ic:アクセス型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:ID ;
+		owl:onClass ic:ID型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法を表すID"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "最寄地点からのアクセス手段。鉄道、バス、徒歩、など"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:始点 ;
+		owl:onClass ic:地物型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の始点（出発地点）"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:始点備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の始点についての備考"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終点 ;
+		owl:onClass ic:地物型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の終点（目的地点）"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終点備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の終点についての備考"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:アクセス区間 ;
+		owl:allValuesFrom ic:アクセス区間型 ;
+		rdfs:comment "アクセス方法の各区間の一覧"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時間 ;
+		owl:onClass ic:測定値型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "始点から終点までのアクセス時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:地図 ;
+		owl:maxCardinality 1
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "その他の補足情報。"@ja
+	] .
+
+ic:アクセス区間型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "最寄地点からのアクセス手段。鉄道、バス、徒歩、など"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:始点 ;
+		owl:onClass ic:地物型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の始点（出発地点）"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:始点備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の始点についての備考"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:路線 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセスに用いる交通の事業者及び路線名、バス系統など"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終点 ;
+		owl:onClass ic:地物型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の終点（目的地点）"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終点備考 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "アクセス方法の終点についての備考"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時間 ;
+		owl:onClass ic:測定値型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "始点から終点までのアクセス時間"@ja
+	] .
+

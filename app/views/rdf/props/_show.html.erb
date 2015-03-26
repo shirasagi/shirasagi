@@ -1,0 +1,31 @@
+<% Rails.logger.debug("@item=#{@item.attributes}") %>
+<dl class="see rdf-class">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= "#{@item.vocab.prefix}:#{@item.name}" %></dd>
+
+  <dt><%= @model.t :label_ja %></dt>
+  <dd><%= @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %></dt>
+  <dd><%= @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+
+  <dt><%= @model.t :domains %></dt>
+  <dd>
+    <% if @item.domains %>
+    <%= br(@item.domains.map { |domain| Rdf::Vocab.pname(domain) }.join("\n")) %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :ranges %></dt>
+  <dd>
+    <% if @item.ranges %>
+      <%= br(@item.ranges.map { |range| Rdf::Vocab.pname(range) }.join("\n")) %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :comments %></dt>
+  <dd><%= br(@item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant")) %></dd>
+
+  <dt><%= @model.t :usages %></dt>
+  <dd><%= br(@item.usages.map { |usage| "#{usage.vocab.prefix}:#{usage.name}" }.join("\n")) %></dd>
+</dl>

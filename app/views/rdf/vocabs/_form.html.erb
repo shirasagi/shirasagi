@@ -1,0 +1,43 @@
+<%= scss do %>
+textarea {
+  width: 80%;
+}
+<% end %>
+
+<dl class="see rdf-vocab">
+  <dt><%= @model.t :prefix %><%= @model.tt :prefix %></dt>
+  <dd><%= f.text_field :prefix %></dd>
+
+  <dt><%= @model.t :uri %><%= @model.tt :uri %></dt>
+  <dd><%= f.text_field :uri %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :label_ja %><%= @model.tt :label_ja %></dt>
+  <dd><%= text_field_tag "item[labels][ja]", @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %><%= @model.tt :label_en %></dt>
+  <dd><%= text_field_tag "item[labels][en]", @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+
+  <dt><%= @model.t :creator_name_ja %><%= @model.tt :creator_name_ja %></dt>
+  <dd><%= text_field_tag "item[creators][][names][ja]", @item.creators.try(:first).try(:[], "names").try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :creator_name_en %><%= @model.tt :creator_name_en %></dt>
+  <dd><%= text_field_tag "item[creators][][names][en]", @item.creators.try(:first).try(:[], "names").try(:[], "en") || @item.creators.try(:first).try(:[], "names").try(:[], "invariant") %></dd>
+
+  <dt><%= @model.t :creator_homepage %><%= @model.tt :creator_homepage %></dt>
+  <dd><%= text_field_tag "item[creators][][homepage]", @item.creators.try(:first).try(:[], "homepage") %></dd>
+
+  <dt><%= @model.t :license %><%= @model.tt :license %></dt>
+  <dd><%= f.text_field :license %></dd>
+
+  <dt><%= @model.t :version %><%= @model.tt :version %></dt>
+  <dd><%= f.text_field :version %></dd>
+
+  <dt><%= @model.t :published %><%= @model.tt :published %></dt>
+  <dd><%= f.text_field :published %></dd>
+
+  <dt><%= @model.t :comments %><%= @model.tt :comments %></dt>
+  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant"), style: "height: 200px;" %></dd>
+</dl>

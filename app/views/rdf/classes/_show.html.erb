@@ -1,0 +1,42 @@
+<dl class="see rdf-class">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= "#{@item.vocab.prefix}:#{@item.name}" %></dd>
+
+  <dt><%= @model.t :label_ja %></dt>
+  <dd><%= @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %></dt>
+  <dd><%= @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+
+  <dt><%= @model.t :sub_class_of %></dt>
+  <dd><%= Rdf::Vocab.pname(@item.sub_class_of) %></dd>
+
+  <dt><%= @model.t :comments %></dt>
+  <dd><%= br(@item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant")) %></dd>
+
+  <dt><%= @model.t :properties %></dt>
+  <dd>
+    <% if @item.properties.present? %>
+    <table class="index">
+      <thead>
+      <tr>
+        <th><%= @model.t :property_property %></th>
+        <th><%= @model.t :property_class %></th>
+        <th><%= @model.t :property_cardinality %></th>
+        <th><%= @model.t :property_comment %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.properties.each do |prop| %>
+        <tr>
+          <td><%= prop["property"] %></td>
+          <td><%= Rdf::Vocab.pname(prop["class"]) %></td>
+          <td><%= prop["cardinality"] %></td>
+          <td><%= prop["comments"].try(:[], "ja") || prop["comments"].try(:[], "en") || prop["comments"].try(:[], "invariant") %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <% end %>
+  </dd>
+</dl>

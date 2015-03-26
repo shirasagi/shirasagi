@@ -1,0 +1,45 @@
+<%= scss do %>
+input.readonly {
+  background-color: #eee;
+}
+textarea {
+  width: 80%;
+}
+<% end %>
+
+<dl class="see rdf-props">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd>
+    <label for="item_name"><%= @item.vocab.prefix %>:</label>
+    <%= text_field_tag "item[name]", @item.name %>
+  </dd>
+
+  <dt><%= @model.t :label_ja %><%= @model.tt :label_ja %></dt>
+  <dd><%= text_field_tag "item[labels][ja]", @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %><%= @model.tt :label_en %></dt>
+  <dd><%= text_field_tag "item[labels][en]", @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+
+  <dt class="rdf-props__domains"><%= @model.t :domains %><%= @model.tt :domains %></dt>
+  <% 1.upto(1) do |i| %>
+  <dd class="rdf-props__domains domain<%= i %>">
+    <% domain = @item.domains.try(:[], i - 1) %>
+    <%= hidden_field_tag "item[domains][]", domain, "data-type" => :uri %>
+    <span data-type="pname"><%= Rdf::Vocab.pname(domain) %></span>
+    <%= link_to t("rdf.props.search_domain"), rdf_search_classes_path(target: "domain#{i}"), class: "ajax-box" %>
+  </dd>
+  <% end %>
+
+  <dt class="rdf-props__ranges"><%= @model.t :ranges %><%= @model.tt :ranges %></dt>
+  <% 1.upto(1) do |i| %>
+  <dd class="props__ranges range<%= i %>">
+    <% range = @item.ranges.try(:[], i - 1) %>
+    <%= hidden_field_tag "item[ranges][]", range, "data-type" => :uri %>
+    <span data-type="pname"><%= Rdf::Vocab.pname(range) %></span>
+    <%= link_to t("rdf.props.search_range"), rdf_search_classes_path(target: "range#{i}"), class: "ajax-box" %>
+  </dd>
+  <% end %>
+
+  <dt><%= @model.t :comments %><%= @model.tt :comments %></dt>
+  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant"), style: "height: 200px;" %></dd>
+</dl>

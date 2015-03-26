@@ -1,0 +1,106 @@
+<%= scss do %>
+input.readonly {
+  background-color: #eee;
+}
+textarea {
+  width: 80%;
+}
+<% end %>
+
+<dl class="see rdf-props">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd>
+    <label for="item_name"><%= @item.vocab.prefix %>:</label>
+    <%= text_field_tag "item[name]", @item.name %>
+  </dd>
+
+  <dt><%= @model.t :label_ja %><%= @model.tt :label_ja %></dt>
+  <dd><%= text_field_tag "item[labels][ja]", @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %><%= @model.tt :label_en %></dt>
+  <dd><%= text_field_tag "item[labels][en]", @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+
+  <dt><%= @model.t :sub_class_of %><%= @model.tt :sub_class_of %></dt>
+  <dd class="rdf-props__sub_class_of">
+    <%= hidden_field_tag "item[sub_class_of]", @item.sub_class_of, "data-type" => :uri %>
+    <span data-type="pname"><%= Rdf::Vocab.pname(@item.sub_class_of) %></span>
+    <%= link_to t("rdf.classes.search_sub_class_of"), rdf_search_classes_path(target: "rdf-props__sub_class_of"), class: "ajax-box" %>
+  </dd>
+
+  <dt><%= @model.t :comments %><%= @model.tt :comments %></dt>
+  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant"), style: "height: 200px;" %></dd>
+
+  <dt><%= @model.t :properties %></dt>
+  <dd>
+      <table class="ajax-selected rdf-props__properties">
+        <thead>
+        <tr>
+          <th><%= @model.t :property_property %></th>
+          <th><%= @model.t :property_class %></th>
+          <th><%= @model.t :property_cardinality %></th>
+          <th><%= @model.t :property_comment %></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if @item.properties.present? %>
+        <% @item.properties.each_with_index do |prop, index| %>
+          <tr data-row="<%= index %>">
+            <td>
+              <%= text_field_tag "item[properties][][property]", prop["property"] %>
+            </td>
+            <td class="prop<%= index %>">
+              <%= link_to t("rdf.classes.search_property_class"), rdf_search_classes_path(target: "prop#{index}"), class: "ajax-box" %>
+              <%= hidden_field_tag "item[properties][][class]", prop["class"], "data-type" => :uri %>
+              <span data-type="pname"><%= Rdf::Vocab.pname(prop["class"]) %></span>
+            </td>
+            <td>
+              <%= text_field_tag "item[properties][][cardinality]", prop["cardinality"] %>
+            </td>
+            <td>
+              <%= text_field_tag "item[properties][][comments][ja]", prop["comments"].try(:[], "ja") || prop["comments"].try(:[], "en") || prop["comments"].try(:[], "invariant") %>
+            </td>
+            <td>
+              <%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %>
+            </td>
+          </tr>
+        <% end %>
+        <% end %>
+        </tbody>
+      </table>
+      <div><%= link_to t("rdf.classes.append_property"), "#", class: "append-prop" %></div>
+  </dd>
+</dl>
+
+<%= coffee do %>
+$ ->
+  $(".append-prop").on "click", (e)->
+    last_index = $("table.rdf-props__properties tbody tr:last").attr("data-row")
+    if last_index
+      last_index = parseInt(last_index, 10) + 1
+    else
+      last_index = 0
+    tr = $("<tr data-row='#{last_index}'/>").append($("""
+      <td>
+        <%= text_field_tag "item[properties][][property]", "" %>
+      </td>
+      <td class="prop#{last_index}">
+        <a class="ajax-box cboxElement" href="/.www/rdf/search_classes?target=prop#{last_index}"><%= t("rdf.classes.search_property_class") %></a>
+        <%= hidden_field_tag "item[properties][][class]", "", "data-type" => :uri %>
+        <span data-type="pname"></span>
+      </td>
+      <td>
+        <%= text_field_tag "item[properties][][cardinality]", "" %>
+      </td>
+      <td>
+        <%= text_field_tag "item[properties][][comments][ja]", "" %>
+      </td>
+      <td>
+        <%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %>
+      </td>
+    """))
+    tr.find(".deselect").on "click", SS_SearchUI.deselect
+    $("table.rdf-props__properties").show()
+    $("table.rdf-props__properties tbody").append(tr)
+    e.preventDefault()
+<% end %>

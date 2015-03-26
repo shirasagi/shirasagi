@@ -50,6 +50,9 @@
   <% if SS.config.voice.disable.blank? && Voice::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"voice.file", voice_files_path %></h3>
   <% end %>
+  <% if Rdf::Vocab.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :"rdf.vocabs", rdf_vocabs_path %>
+  <% end %>
   <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"job.main", job_cms_main_path %></h3>
   <% end %>

@@ -1,0 +1,3831 @@
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xmlns:schema="http://schema.org/"
+  xmlns:dct="http://purl.org/dc/terms/"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:ic="http://imi.ipa.go.jp/ns/core/rdf#"
+  xmlns:cc="http://creativecommons.org/ns#"
+  xmlns:uncefactCode="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCode:9#"
+  xmlns:uncefactDuration="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeDuration:4#"
+  xmlns:uncefactISO4217="urn:un:unece:uncefact:codelist:standard:ISO:ISO3AlphaCurrencyCode:2012-08-31#"
+  xmlns:uncefactLinear="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeLinear:4#"
+  xmlns:uncefactVolume="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeVolume:4#"
+  xmlns:uncefactWeight="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4#"
+>
+<owl:Ontology rdf:about="http://imi.ipa.go.jp/ns/core/rdf">
+	<rdfs:label xml:lang="ja">共通語彙基盤コア語彙</rdfs:label>
+	<rdfs:label xml:lang="en">IMI Core Vocabulary</rdfs:label>
+	<dct:creator>
+		<rdf:Description>
+			<foaf:homepage rdf:resource="http://www.ipa.go.jp/"/>
+			<foaf:name xml:lang="ja">IPA 独立行政法人情報処理推進機構</foaf:name>
+			<foaf:name xml:lang="en">Information-technology Promotion Agency, Japan.</foaf:name>
+		</rdf:Description>
+	</dct:creator>
+	<dct:creator>
+		<rdf:Description>
+			<foaf:homepage rdf:resource="http://www.meti.go.jp/"/>
+			<foaf:name xml:lang="ja">経済産業省</foaf:name>
+			<foaf:name xml:lang="en">Ministry of Economy, Trade and Industry</foaf:name>
+		</rdf:Description>
+	</dct:creator>
+	<dct:issued>2015-02-03</dct:issued>
+	<cc:license rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/"/>
+	<rdfs:comment xml:lang="ja">コア語彙は、共通語彙基盤の基礎をなすもので、氏名、住所、組織等、あらゆる社会活動で使用される中核的な用語の集合です。多くのシステム間で情報交換のための基礎となる語彙で、データ交換、オープンデータの二次利用等の効率化に役立つものです。</rdfs:comment>
+	<owl:versionInfo>2.2</owl:versionInfo>
+</owl:Ontology>
+
+<!--== プロパティ定義 ===============-->
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ID">
+	<rdfs:label xml:lang="ja">ID</rdfs:label>
+	<rdfs:comment xml:lang="ja">事物を識別するためのID型の識別子</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#氏名">
+	<rdfs:label xml:lang="ja">氏名</rdfs:label>
+	<rdfs:comment xml:lang="ja">人の氏名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#性別">
+	<rdfs:label xml:lang="ja">性別</rdfs:label>
+	<rdfs:comment xml:lang="ja">性別の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#性別コード">
+	<rdfs:label xml:lang="ja">性別コード</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#生年月日">
+	<rdfs:label xml:lang="ja">生年月日</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#死亡年月日">
+	<rdfs:label xml:lang="ja">死亡年月日</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#住所">
+	<rdfs:label xml:lang="ja">住所</rdfs:label>
+	<rdfs:comment xml:lang="ja">現住所など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#場所型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#本籍">
+	<rdfs:label xml:lang="ja">本籍</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#連絡先">
+	<rdfs:label xml:lang="ja">連絡先</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織の連絡先（本社、コールセンター等）など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#国籍">
+	<rdfs:label xml:lang="ja">国籍</rdfs:label>
+	<rdfs:comment xml:lang="ja">国籍の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#国籍コード">
+	<rdfs:label xml:lang="ja">国籍コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">住民基本台帳で利用されている国籍コード</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#出生国">
+	<rdfs:label xml:lang="ja">出生国</rdfs:label>
+	<rdfs:comment xml:lang="ja">生まれた国名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#出生国コード">
+	<rdfs:label xml:lang="ja">出生国コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">生まれた国のコード</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#出生地">
+	<rdfs:label xml:lang="ja">出生地</rdfs:label>
+	<rdfs:comment xml:lang="ja">生まれた場所</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#種別">
+	<rdfs:label xml:lang="ja">種別</rdfs:label>
+	<rdfs:comment xml:lang="ja">様々な事物の種類の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人数型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#表記">
+	<rdfs:label xml:lang="ja">表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">日本語による表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#カナ表記">
+	<rdfs:label xml:lang="ja">カナ表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">カタカナ表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ローマ字表記">
+	<rdfs:label xml:lang="ja">ローマ字表記</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#姓名">
+	<rdfs:label xml:lang="ja">姓名</rdfs:label>
+	<rdfs:comment xml:lang="ja">氏名（姓、名）の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#姓名カナ表記">
+	<rdfs:label xml:lang="ja">姓名カナ表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">氏名（姓、名）のカナ表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#姓名ローマ字表記">
+	<rdfs:label xml:lang="ja">姓名ローマ字表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">氏名（姓、名）のアルファベット表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#姓">
+	<rdfs:label xml:lang="ja">姓</rdfs:label>
+	<rdfs:comment xml:lang="ja">姓の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#姓カナ表記">
+	<rdfs:label xml:lang="ja">姓カナ表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">姓のカナ表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#姓ローマ字表記">
+	<rdfs:label xml:lang="ja">姓ローマ字表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">姓のローマ表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#名">
+	<rdfs:label xml:lang="ja">名</rdfs:label>
+	<rdfs:comment xml:lang="ja">名の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#名カナ表記">
+	<rdfs:label xml:lang="ja">名カナ表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">名のカナ表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#名ローマ字表記">
+	<rdfs:label xml:lang="ja">名ローマ字表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">名のローマ字表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ミドルネーム">
+	<rdfs:label xml:lang="ja">ミドルネーム</rdfs:label>
+	<rdfs:comment xml:lang="ja">ミドルネームの表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ミドルネームカナ表記">
+	<rdfs:label xml:lang="ja">ミドルネームカナ表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">ミドルネームのカナ表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ミドルネームローマ字表記">
+	<rdfs:label xml:lang="ja">ミドルネームローマ字表記</rdfs:label>
+	<rdfs:comment xml:lang="ja">ミドルネームのローマ字表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#郵便番号">
+	<rdfs:label xml:lang="ja">郵便番号</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#住所コード">
+	<rdfs:label xml:lang="ja">住所コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">地方公共団体情報システム機構地方公共団体コード住所等の利用を想定。住所のコード化が必要な範囲に応じて自治体で個別に設定する</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#国">
+	<rdfs:label xml:lang="ja">国</rdfs:label>
+	<rdfs:comment xml:lang="ja">国名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#国コード">
+	<rdfs:label xml:lang="ja">国コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">国のコード</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#都道府県">
+	<rdfs:label xml:lang="ja">都道府県</rdfs:label>
+	<rdfs:comment xml:lang="ja">都道府県名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#都道府県コード">
+	<rdfs:label xml:lang="ja">都道府県コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">都道府県のコード</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#市区町村">
+	<rdfs:label xml:lang="ja">市区町村</rdfs:label>
+	<rdfs:comment xml:lang="ja">市区町村名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#区">
+	<rdfs:label xml:lang="ja">区</rdfs:label>
+	<rdfs:comment xml:lang="ja">政令指定都市の区の名前</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#市区町村コード">
+	<rdfs:label xml:lang="ja">市区町村コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">市区町村のコード</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#町名">
+	<rdfs:label xml:lang="ja">町名</rdfs:label>
+	<rdfs:comment xml:lang="ja">町域、または市区町村の下の行政区分の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#丁目">
+	<rdfs:label xml:lang="ja">丁目</rdfs:label>
+	<rdfs:comment xml:lang="ja">丁目の表示</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#番地補足">
+	<rdfs:label xml:lang="ja">番地補足</rdfs:label>
+	<rdfs:comment xml:lang="ja">番地の前の、「東」「北」「浜」「甲」「イ」等の文字</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#番地">
+	<rdfs:label xml:lang="ja">番地</rdfs:label>
+	<rdfs:comment xml:lang="ja">番、街区の表示</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#号">
+	<rdfs:label xml:lang="ja">号</rdfs:label>
+	<rdfs:comment xml:lang="ja">号、住居番号の表示</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ビル名">
+	<rdfs:label xml:lang="ja">ビル名</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ビル番号">
+	<rdfs:label xml:lang="ja">ビル番号</rdfs:label>
+	<rdfs:comment xml:lang="ja">号棟などのビル番号の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#部屋番号">
+	<rdfs:label xml:lang="ja">部屋番号</rdfs:label>
+	<rdfs:comment xml:lang="ja">階数、号室などの部屋番号の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#方書">
+	<rdfs:label xml:lang="ja">方書</rdfs:label>
+	<rdfs:comment xml:lang="ja">方書 (私書箱も含む)</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#名称">
+	<rdfs:label xml:lang="ja">名称</rdfs:label>
+	<rdfs:comment xml:lang="ja">事物の名称</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#場所型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID体系型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#状況型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#組織">
+	<rdfs:label xml:lang="ja">組織</rdfs:label>
+	<rdfs:comment xml:lang="ja">事物に関連する組織</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織関連型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#担当者役職">
+	<rdfs:label xml:lang="ja">担当者役職</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先担当者の役職の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#担当者名">
+	<rdfs:label xml:lang="ja">担当者名</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先担当者の氏名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#Eメールアドレス">
+	<rdfs:label xml:lang="ja">Eメールアドレス</rdfs:label>
+	<rdfs:comment xml:lang="ja">電子メールのメールアドレス</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#送付先">
+	<rdfs:label xml:lang="ja">送付先</rdfs:label>
+	<rdfs:comment xml:lang="ja">送付先の住所、私書箱など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#電話番号">
+	<rdfs:label xml:lang="ja">電話番号</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先の電話番号</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#電話番号型"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#内線番号">
+	<rdfs:label xml:lang="ja">内線番号</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先の内線番号</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#FAX番号">
+	<rdfs:label xml:lang="ja">FAX番号</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先のFAX番号など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#電話番号型"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#携帯電話番号">
+	<rdfs:label xml:lang="ja">携帯電話番号</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先の携帯電話番号</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#電話番号型"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#Webサイト">
+	<rdfs:label xml:lang="ja">Webサイト</rdfs:label>
+	<rdfs:comment xml:lang="ja">WebサイトのURL</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#対応言語">
+	<rdfs:label xml:lang="ja">対応言語</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先との連絡の際に利用可能な言語名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#略称アルファベット">
+	<rdfs:label xml:lang="ja">略称アルファベット</rdfs:label>
+	<rdfs:comment xml:lang="ja">頭文字などによる略称表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#通称">
+	<rdfs:label xml:lang="ja">通称</rdfs:label>
+	<rdfs:comment xml:lang="ja">正式な名称以外に一般的に使用されている名称</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#場所型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#活動状況">
+	<rdfs:label xml:lang="ja">活動状況</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織の状況。倒産、破産等</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#状況型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#概要">
+	<rdfs:label xml:lang="ja">概要</rdfs:label>
+	<rdfs:comment xml:lang="ja">事物の概要説明</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#関連組織">
+	<rdfs:label xml:lang="ja">関連組織</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織やイベントなどに関連する組織</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織関連型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地物">
+	<rdfs:label xml:lang="ja">地物</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織に関連する地物や施設、建物</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#代表者">
+	<rdfs:label xml:lang="ja">代表者</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織の代表者</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#構成員型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設立日">
+	<rdfs:label xml:lang="ja">設立日</rdfs:label>
+	<rdfs:comment xml:lang="ja">設立日。支店や事業所は設置日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#備考">
+	<rdfs:label xml:lang="ja">備考</rdfs:label>
+	<rdfs:comment xml:lang="ja">補足情報の記述</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#事業種目">
+	<rdfs:label xml:lang="ja">事業種目</rdfs:label>
+	<rdfs:comment xml:lang="ja">事業の種類の表記。（販売業等）</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#業務組織型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#事業年度開始日">
+	<rdfs:label xml:lang="ja">事業年度開始日</rdfs:label>
+	<rdfs:comment xml:lang="ja">事業年度の開始日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#業務組織型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#構成員数">
+	<rdfs:label xml:lang="ja">構成員数</rdfs:label>
+	<rdfs:comment xml:lang="ja">構成員の人数</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#業務組織型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#代理人">
+	<rdfs:label xml:lang="ja">代理人</rdfs:label>
+	<rdfs:comment xml:lang="ja">手続きなどを代理するもの</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#業務組織型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織関連型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#組織種別位置">
+	<rdfs:label xml:lang="ja">組織種別位置</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織の名称の中において、株式会社等の組織種別が置かれる位置の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#法人型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#組織種別">
+	<rdfs:label xml:lang="ja">組織種別</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織の種別。（株式会社等）</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#法人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#資本金">
+	<rdfs:label xml:lang="ja">資本金</rdfs:label>
+	<rdfs:comment xml:lang="ja">法人などの資本金。（前決算時）</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#法人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#従業員数">
+	<rdfs:label xml:lang="ja">従業員数</rdfs:label>
+	<rdfs:comment xml:lang="ja">法人の従業員数。（前決算時）</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#法人型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人数型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#人数">
+	<rdfs:label xml:lang="ja">人数</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントの参加者、定員など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人数型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#役割">
+	<rdfs:label xml:lang="ja">役割</rdfs:label>
+	<rdfs:comment xml:lang="ja">人、組織、施設などの役割の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#構成員型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織関連型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設関連型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#構成員">
+	<rdfs:label xml:lang="ja">構成員</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#構成員型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地理識別子">
+	<rdfs:label xml:lang="ja">地理識別子</rdfs:label>
+	<rdfs:comment xml:lang="ja">場所の地理識別子</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#場所型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地理座標">
+	<rdfs:label xml:lang="ja">地理座標</rdfs:label>
+	<rdfs:comment xml:lang="ja">場所の経緯度座標</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#場所型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#座標参照系">
+	<rdfs:label xml:lang="ja">座標参照系</rdfs:label>
+	<rdfs:comment xml:lang="ja">座標の参照系</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#緯度経度書式">
+	<rdfs:label xml:lang="ja">緯度経度書式</rdfs:label>
+	<rdfs:comment xml:lang="ja">度、分、秒の書式。書式はiso6709に準拠する</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#緯度">
+	<rdfs:label xml:lang="ja">緯度</rdfs:label>
+	<rdfs:comment xml:lang="ja">緯度。-90から+90で記載</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#経度">
+	<rdfs:label xml:lang="ja">経度</rdfs:label>
+	<rdfs:comment xml:lang="ja">経度。-180から+180で記載</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#座標データ書式">
+	<rdfs:label xml:lang="ja">座標データ書式</rdfs:label>
+	<rdfs:comment xml:lang="ja">点、線、面などを表現するデータ文字列の書式を指定する</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#座標データ">
+	<rdfs:label xml:lang="ja">座標データ</rdfs:label>
+	<rdfs:comment xml:lang="ja">点、線、面などを表現するデータ文字列</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#測地高度">
+	<rdfs:label xml:lang="ja">測地高度</rdfs:label>
+	<rdfs:comment xml:lang="ja">高さ</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#体系">
+	<rdfs:label xml:lang="ja">体系</rdfs:label>
+	<rdfs:comment xml:lang="ja">IDの種別</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID体系型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#識別値">
+	<rdfs:label xml:lang="ja">識別値</rdfs:label>
+	<rdfs:comment xml:lang="ja">識別子やコードの値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#発行者">
+	<rdfs:label xml:lang="ja">発行者</rdfs:label>
+	<rdfs:comment xml:lang="ja">IDやコードの発行主体</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID体系型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#バージョン">
+	<rdfs:label xml:lang="ja">バージョン</rdfs:label>
+	<rdfs:comment xml:lang="ja">識別子などのバージョン</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID体系型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#URI">
+	<rdfs:label xml:lang="ja">URI</rdfs:label>
+	<rdfs:comment xml:lang="ja">参照先</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID体系型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#種別コード">
+	<rdfs:label xml:lang="ja">種別コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品の種別コードなど</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#自動認識ID">
+	<rdfs:label xml:lang="ja">自動認識ID</rdfs:label>
+	<rdfs:comment xml:lang="ja">バーコードや二次元コード等の自動認識IDの画像等</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#価格">
+	<rdfs:label xml:lang="ja">価格</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの価格をic:価格型で表現する</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#説明">
+	<rdfs:label xml:lang="ja">説明</rdfs:label>
+	<rdfs:comment xml:lang="ja">様々な事物の説明</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#期間型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#使用方法">
+	<rdfs:label xml:lang="ja">使用方法</rdfs:label>
+	<rdfs:comment xml:lang="ja">使用方法の説明</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#製造者">
+	<rdfs:label xml:lang="ja">製造者</rdfs:label>
+	<rdfs:comment xml:lang="ja">製造者名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#製造者ID">
+	<rdfs:label xml:lang="ja">製造者ID</rdfs:label>
+	<rdfs:comment xml:lang="ja">製造者によって割り当てられたID</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#販売業者">
+	<rdfs:label xml:lang="ja">販売業者</rdfs:label>
+	<rdfs:comment xml:lang="ja">販売業者名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#販売業者ID">
+	<rdfs:label xml:lang="ja">販売業者ID</rdfs:label>
+	<rdfs:comment xml:lang="ja">販売業者によって割り当てられたID</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#入数">
+	<rdfs:label xml:lang="ja">入数</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などが箱等に含まれる数量</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数量型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#形態">
+	<rdfs:label xml:lang="ja">形態</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの形態の説明</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#重量">
+	<rdfs:label xml:lang="ja">重量</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの重量</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#重量型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#サイズ">
+	<rdfs:label xml:lang="ja">サイズ</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などのサイズの表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#幅">
+	<rdfs:label xml:lang="ja">幅</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの幅</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#高さ">
+	<rdfs:label xml:lang="ja">高さ</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの高さ</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#長さ">
+	<rdfs:label xml:lang="ja">長さ</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの長さ</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#色">
+	<rdfs:label xml:lang="ja">色</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの色</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#原産国">
+	<rdfs:label xml:lang="ja">原産国</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの原産国名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#原産国コード">
+	<rdfs:label xml:lang="ja">原産国コード</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの原産国を表すコード</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#規制情報">
+	<rdfs:label xml:lang="ja">規制情報</rdfs:label>
+	<rdfs:comment xml:lang="ja">取り扱い上の注意等の規制に関する情報</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#製造日">
+	<rdfs:label xml:lang="ja">製造日</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ロット番号">
+	<rdfs:label xml:lang="ja">ロット番号</rdfs:label>
+	<rdfs:comment xml:lang="ja">製造ロットの番号</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#消費期限">
+	<rdfs:label xml:lang="ja">消費期限</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#使用期限">
+	<rdfs:label xml:lang="ja">使用期限</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#賞味期限">
+	<rdfs:label xml:lang="ja">賞味期限</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#シリアル番号">
+	<rdfs:label xml:lang="ja">シリアル番号</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#状態">
+	<rdfs:label xml:lang="ja">状態</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品などの状態。新品、中古などの表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#所有者">
+	<rdfs:label xml:lang="ja">所有者</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#購入価格">
+	<rdfs:label xml:lang="ja">購入価格</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品個品型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#要約">
+	<rdfs:label xml:lang="ja">要約</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどの概要説明。100文字以内</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#アクセス">
+	<rdfs:label xml:lang="ja">アクセス</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス方法</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#参照">
+	<rdfs:label xml:lang="ja">参照</rdfs:label>
+	<rdfs:comment xml:lang="ja">追加情報等の参照先</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#画像">
+	<rdfs:label xml:lang="ja">画像</rdfs:label>
+	<rdfs:comment xml:lang="ja">事物の状態などを表す画像の参照先</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設備">
+	<rdfs:label xml:lang="ja">設備</rdfs:label>
+	<rdfs:comment xml:lang="ja">定常的に備わっている設備</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#管理者">
+	<rdfs:label xml:lang="ja">管理者</rdfs:label>
+	<rdfs:comment xml:lang="ja">管理者や管理組織など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#利用可能時間">
+	<rdfs:label xml:lang="ja">利用可能時間</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設や設備などの利用可能日、開始、終了時間</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#料金">
+	<rdfs:label xml:lang="ja">料金</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設、設備の利用料金やイベントの参加費など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#収容人数">
+	<rdfs:label xml:lang="ja">収容人数</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数量型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#駐車場">
+	<rdfs:label xml:lang="ja">駐車場</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設が利用する駐車場</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#駐車場型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#建物">
+	<rdfs:label xml:lang="ja">建物</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設が利用する建物</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#関連施設">
+	<rdfs:label xml:lang="ja">関連施設</rdfs:label>
+	<rdfs:comment xml:lang="ja">上位施設、下位施設等の関連施設</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設関連型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#施設">
+	<rdfs:label xml:lang="ja">施設</rdfs:label>
+	<rdfs:comment xml:lang="ja">地物に関連する施設</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設関連型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#敷地面積">
+	<rdfs:label xml:lang="ja">敷地面積</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#主要用途">
+	<rdfs:label xml:lang="ja">主要用途</rdfs:label>
+	<rdfs:comment xml:lang="ja">建物の主要用途の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#建築面積">
+	<rdfs:label xml:lang="ja">建築面積</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#延べ面積">
+	<rdfs:label xml:lang="ja">延べ面積</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#最高の高さ">
+	<rdfs:label xml:lang="ja">最高の高さ</rdfs:label>
+	<rdfs:comment xml:lang="ja">建物の最高点の高さ</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地上階数">
+	<rdfs:label xml:lang="ja">地上階数</rdfs:label>
+	<rdfs:comment xml:lang="ja">建物の地上階数</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地下階数">
+	<rdfs:label xml:lang="ja">地下階数</rdfs:label>
+	<rdfs:comment xml:lang="ja">建物の地下階数</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#構造">
+	<rdfs:label xml:lang="ja">構造</rdfs:label>
+	<rdfs:comment xml:lang="ja">建物などの構造の表記</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#竣工日">
+	<rdfs:label xml:lang="ja">竣工日</rdfs:label>
+	<rdfs:comment xml:lang="ja">建物の竣工日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#駐車場種別">
+	<rdfs:label xml:lang="ja">駐車場種別</rdfs:label>
+	<rdfs:comment xml:lang="ja">駐車場の種別</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#駐車場型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#収容台数">
+	<rdfs:label xml:lang="ja">収容台数</rdfs:label>
+	<rdfs:comment xml:lang="ja">駐車場の収容可能台数</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#駐車場型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設置地点">
+	<rdfs:label xml:lang="ja">設置地点</rdfs:label>
+	<rdfs:comment xml:lang="ja">設備が設置されている施設や建物などの地物</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設置位置">
+	<rdfs:label xml:lang="ja">設置位置</rdfs:label>
+	<rdfs:comment xml:lang="ja">受付横等、設置場所を示す内容を記述</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#外部利用可否">
+	<rdfs:label xml:lang="ja">外部利用可否</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設や設備などの外部利用可否を記述</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#利用者">
+	<rdfs:label xml:lang="ja">利用者</rdfs:label>
+	<rdfs:comment xml:lang="ja">利用者に限定条件がある場合に条件を記述</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設置日">
+	<rdfs:label xml:lang="ja">設置日</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設の設置日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設置者">
+	<rdfs:label xml:lang="ja">設置者</rdfs:label>
+	<rdfs:comment xml:lang="ja">設備などを設置した自治体や組織</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#バリアフリー">
+	<rdfs:label xml:lang="ja">バリアフリー</rdfs:label>
+	<rdfs:comment xml:lang="ja">バリアフリーに関する情報がある場合に記述</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#開催場所">
+	<rdfs:label xml:lang="ja">開催場所</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどの開催場所</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#期間">
+	<rdfs:label xml:lang="ja">期間</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどの期間</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#参加方法">
+	<rdfs:label xml:lang="ja">参加方法</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどの参加方法の説明</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#関連イベント">
+	<rdfs:label xml:lang="ja">関連イベント</rdfs:label>
+	<rdfs:comment xml:lang="ja">関連するイベント</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#対象者">
+	<rdfs:label xml:lang="ja">対象者</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどの参加対象者の説明</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#キーワード">
+	<rdfs:label xml:lang="ja">キーワード</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントのキーワード</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#数値">
+	<rdfs:label xml:lang="ja">数値</rdfs:label>
+	<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定値型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数量型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#容量型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#重量型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時間型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#測定名称">
+	<rdfs:label xml:lang="ja">測定名称</rdfs:label>
+	<rdfs:comment xml:lang="ja">測定方法の名称</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定値型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#測定単位">
+	<rdfs:label xml:lang="ja">測定単位</rdfs:label>
+	<rdfs:comment xml:lang="ja">測定の単位</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定値型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#数量単位">
+	<rdfs:label xml:lang="ja">数量単位</rdfs:label>
+	<rdfs:comment xml:lang="ja">数量の単位</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数量型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#容量単位">
+	<rdfs:label xml:lang="ja">容量単位</rdfs:label>
+	<rdfs:comment xml:lang="ja">容量の単位</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#容量型"/>
+	<rdfs:range rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeVolume:4#MeasurementUnitCommonCodeVolumeContentType"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#面積単位">
+	<rdfs:label xml:lang="ja">面積単位</rdfs:label>
+	<rdfs:comment xml:lang="ja">面積の単位</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+	<rdfs:range rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCode:9#MeasurementUnitCommonCodeContentType"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#重量単位">
+	<rdfs:label xml:lang="ja">重量単位</rdfs:label>
+	<rdfs:comment xml:lang="ja">重量の単位</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#重量型"/>
+	<rdfs:range rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4#MeasurementUnitCommonCodeWeightContentType"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#長さ単位">
+	<rdfs:label xml:lang="ja">長さ単位</rdfs:label>
+	<rdfs:comment xml:lang="ja">長さの単位</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+	<rdfs:range rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeLinear:4#MeasurementUnitCommonCodeLinearContentType"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#時間単位">
+	<rdfs:label xml:lang="ja">時間単位</rdfs:label>
+	<rdfs:comment xml:lang="ja">時間の単位</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時間型"/>
+	<rdfs:range rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeDuration:4#MeasurementUnitCommonCodeDurationContentType"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#通貨">
+	<rdfs:label xml:lang="ja">通貨</rdfs:label>
+	<rdfs:comment xml:lang="ja">通貨名</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#通貨コード">
+	<rdfs:label xml:lang="ja">通貨コード</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+	<rdfs:range rdf:resource="urn:un:unece:uncefact:codelist:standard:ISO:ISO3AlphaCurrencyCode:2012-08-31#ISO3AlphaCurrencyCodeContentType"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#金額">
+	<rdfs:label xml:lang="ja">金額</rdfs:label>
+	<rdfs:comment xml:lang="ja">価格の金額</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#発生日">
+	<rdfs:label xml:lang="ja">発生日</rdfs:label>
+	<rdfs:comment xml:lang="ja">状況などの発生日時</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#状況型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#詳細">
+	<rdfs:label xml:lang="ja">詳細</rdfs:label>
+	<rdfs:comment xml:lang="ja">状況などの詳細説明</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#状況型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#関係者">
+	<rdfs:label xml:lang="ja">関係者</rdfs:label>
+	<rdfs:comment xml:lang="ja">状況を発生させた人及び組織</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#状況型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#標準型日時">
+	<rdfs:label xml:lang="ja">標準型日時</rdfs:label>
+	<rdfs:comment xml:lang="ja">日時</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#年号">
+	<rdfs:label xml:lang="ja">年号</rdfs:label>
+	<rdfs:comment xml:lang="ja">日付や日時などの元号</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#年">
+	<rdfs:label xml:lang="ja">年</rdfs:label>
+	<rdfs:comment xml:lang="ja">日付や日時などの年の値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#月">
+	<rdfs:label xml:lang="ja">月</rdfs:label>
+	<rdfs:comment xml:lang="ja">日付や日時などの月の値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#日">
+	<rdfs:label xml:lang="ja">日</rdfs:label>
+	<rdfs:comment xml:lang="ja">日付や日時などの日の値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#時">
+	<rdfs:label xml:lang="ja">時</rdfs:label>
+	<rdfs:comment xml:lang="ja">日時などの時の値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#分">
+	<rdfs:label xml:lang="ja">分</rdfs:label>
+	<rdfs:comment xml:lang="ja">日時などの分の値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#秒">
+	<rdfs:label xml:lang="ja">秒</rdfs:label>
+	<rdfs:comment xml:lang="ja">秒の値</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#時間帯">
+	<rdfs:label xml:lang="ja">時間帯</rdfs:label>
+	<rdfs:comment xml:lang="ja">時間帯。協定世界時からの時間差</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#カレンダー">
+	<rdfs:label xml:lang="ja">カレンダー</rdfs:label>
+	<rdfs:comment xml:lang="ja">カレンダーの種類</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#標準型日付">
+	<rdfs:label xml:lang="ja">標準型日付</rdfs:label>
+	<rdfs:comment xml:lang="ja">日付</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#開始日時">
+	<rdfs:label xml:lang="ja">開始日時</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどの開始日時</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#期間型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#終了日時">
+	<rdfs:label xml:lang="ja">終了日時</rdfs:label>
+	<rdfs:comment xml:lang="ja">終了日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#期間型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#開催日">
+	<rdfs:label xml:lang="ja">開催日</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどが開催される日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#開始日">
+	<rdfs:label xml:lang="ja">開始日</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントなどの開始日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#終了日">
+	<rdfs:label xml:lang="ja">終了日</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントが終了する日</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#開始時間">
+	<rdfs:label xml:lang="ja">開始時間</rdfs:label>
+	<rdfs:comment xml:lang="ja">場所やサービスの開始時間</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#time"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#終了時間">
+	<rdfs:label xml:lang="ja">終了時間</rdfs:label>
+	<rdfs:comment xml:lang="ja">場所やサービスなどの終了時間</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#time"/>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#開催期日">
+	<rdfs:label xml:lang="ja">開催期日</rdfs:label>
+	<rdfs:comment xml:lang="ja">スケジュールが有効となる日。「週間」スケジュールの場合は曜日を指定し、「月間」スケジュールの場合は月の中の日を指定し、「年間」スケジュールの場合は年の中の月日を指定する</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#有効開始日時">
+	<rdfs:label xml:lang="ja">有効開始日時</rdfs:label>
+	<rdfs:comment xml:lang="ja">このスケジュールが有効になる日時</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#有効終了日時">
+	<rdfs:label xml:lang="ja">有効終了日時</rdfs:label>
+	<rdfs:comment xml:lang="ja">このスケジュールが無効になる日時</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#コード種別">
+	<rdfs:label xml:lang="ja">コード種別</rdfs:label>
+	<rdfs:comment xml:lang="ja">コードの種別</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#始点">
+	<rdfs:label xml:lang="ja">始点</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス方法を表記する際などの始点（出発地点）となる地物</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#始点備考">
+	<rdfs:label xml:lang="ja">始点備考</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス方法を表記する際などの始点（出発地点）となる地物についての備考</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#終点">
+	<rdfs:label xml:lang="ja">終点</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス方法を表記する際などの終点（目的地点）となる地物</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#終点備考">
+	<rdfs:label xml:lang="ja">終点備考</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス方法を表記する際などの終点（目的地点）となる地物についての備考</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間">
+	<rdfs:label xml:lang="ja">アクセス区間</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス方法の各区間の一覧</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#時間">
+	<rdfs:label xml:lang="ja">時間</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス時間や会議時間など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+	<rdfs:range rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定値型"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地図">
+	<rdfs:label xml:lang="ja">地図</rdfs:label>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://imi.ipa.go.jp/ns/core/rdf#路線">
+	<rdfs:label xml:lang="ja">路線</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセスに用いる交通の事業者及び路線名、バス系統など</rdfs:comment>
+	<schema:domainIncludes rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+	<rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<!--== クラス定義（プロパティ制約は後方で別途定義） ===============-->
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#人型">
+	<rdfs:label xml:lang="ja">人型</rdfs:label>
+	<rdfs:comment xml:lang="ja">人の情報を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#名称型">
+	<rdfs:label xml:lang="ja">名称型</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織や地物等の名称を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#氏名型">
+	<rdfs:label xml:lang="ja">氏名型</rdfs:label>
+	<rdfs:comment xml:lang="ja">人の氏名を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#住所型">
+	<rdfs:label xml:lang="ja">住所型</rdfs:label>
+	<rdfs:comment xml:lang="ja">住所を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#連絡先型">
+	<rdfs:label xml:lang="ja">連絡先型</rdfs:label>
+	<rdfs:comment xml:lang="ja">連絡先を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#組織型">
+	<rdfs:label xml:lang="ja">組織型</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#業務組織型">
+	<rdfs:label xml:lang="ja">業務組織型</rdfs:label>
+	<rdfs:comment xml:lang="ja">業務組織を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#法人型">
+	<rdfs:label xml:lang="ja">法人型</rdfs:label>
+	<rdfs:comment xml:lang="ja">法人を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#業務組織型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#人数型">
+	<rdfs:label xml:lang="ja">人数型</rdfs:label>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#構成員型">
+	<rdfs:label xml:lang="ja">構成員型</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織等を構成する人を表現するクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#組織関連型">
+	<rdfs:label xml:lang="ja">組織関連型</rdfs:label>
+	<rdfs:comment xml:lang="ja">組織の関連を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#場所型">
+	<rdfs:label xml:lang="ja">場所型</rdfs:label>
+	<rdfs:comment xml:lang="ja">場所を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#座標型">
+	<rdfs:label xml:lang="ja">座標型</rdfs:label>
+	<rdfs:comment xml:lang="ja">座標を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ID型">
+	<rdfs:label xml:lang="ja">ID型</rdfs:label>
+	<rdfs:comment xml:lang="ja">識別子を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ID体系型">
+	<rdfs:label xml:lang="ja">ID体系型</rdfs:label>
+	<rdfs:comment xml:lang="ja">IDの種別を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#製品型">
+	<rdfs:label xml:lang="ja">製品型</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#製品個品型">
+	<rdfs:label xml:lang="ja">製品個品型</rdfs:label>
+	<rdfs:comment xml:lang="ja">製品を個別に表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地物型">
+	<rdfs:label xml:lang="ja">地物型</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設や建物など、参照対象となる地物を表すためのクラス </rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#場所型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#施設型">
+	<rdfs:label xml:lang="ja">施設型</rdfs:label>
+	<rdfs:comment xml:lang="ja">特定のサービスをする提供する施設を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#施設関連型">
+	<rdfs:label xml:lang="ja">施設関連型</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設の関連を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#建物型">
+	<rdfs:label xml:lang="ja">建物型</rdfs:label>
+	<rdfs:comment xml:lang="ja">具体的な建物をｊ表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#駐車場型">
+	<rdfs:label xml:lang="ja">駐車場型</rdfs:label>
+	<rdfs:comment xml:lang="ja">駐車場を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設備型">
+	<rdfs:label xml:lang="ja">設備型</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設や建物等に備わっている設備を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#イベント型">
+	<rdfs:label xml:lang="ja">イベント型</rdfs:label>
+	<rdfs:comment xml:lang="ja">イベントを表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#測定値型">
+	<rdfs:label xml:lang="ja">測定値型</rdfs:label>
+	<rdfs:comment xml:lang="ja">測定単位及び方法を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#数量型">
+	<rdfs:label xml:lang="ja">数量型</rdfs:label>
+	<rdfs:comment xml:lang="ja">数量を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#容量型">
+	<rdfs:label xml:lang="ja">容量型</rdfs:label>
+	<rdfs:comment xml:lang="ja">容量を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#面積型">
+	<rdfs:label xml:lang="ja">面積型</rdfs:label>
+	<rdfs:comment xml:lang="ja">面積を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#重量型">
+	<rdfs:label xml:lang="ja">重量型</rdfs:label>
+	<rdfs:comment xml:lang="ja">重量を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#長さ型">
+	<rdfs:label xml:lang="ja">長さ型</rdfs:label>
+	<rdfs:comment xml:lang="ja">長さを表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#時間型">
+	<rdfs:label xml:lang="ja">時間型</rdfs:label>
+	<rdfs:comment xml:lang="ja">時間の長さを表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#金額型">
+	<rdfs:label xml:lang="ja">金額型</rdfs:label>
+	<rdfs:comment xml:lang="ja">金額を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#価格型">
+	<rdfs:label xml:lang="ja">価格型</rdfs:label>
+	<rdfs:comment xml:lang="ja">価格を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#実体型">
+	<rdfs:label xml:lang="ja">実体型</rdfs:label>
+	<rdfs:comment xml:lang="ja">実体を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#状況型">
+	<rdfs:label xml:lang="ja">状況型</rdfs:label>
+	<rdfs:comment xml:lang="ja">状況を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#日時型">
+	<rdfs:label xml:lang="ja">日時型</rdfs:label>
+	<rdfs:comment xml:lang="ja">日付を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#日付型">
+	<rdfs:label xml:lang="ja">日付型</rdfs:label>
+	<rdfs:comment xml:lang="ja">日付を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#期間型">
+	<rdfs:label xml:lang="ja">期間型</rdfs:label>
+	<rdfs:comment xml:lang="ja">期間を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型">
+	<rdfs:label xml:lang="ja">スケジュール型</rdfs:label>
+	<rdfs:comment xml:lang="ja">スケジュールを表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型">
+	<rdfs:label xml:lang="ja">イベントスケジュール型</rdfs:label>
+	<rdfs:comment xml:lang="ja">施設等のオープン日とオープン時間を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型">
+	<rdfs:label xml:lang="ja">定期スケジュール型</rdfs:label>
+	<rdfs:comment xml:lang="ja">定期的に繰り返される事象のスケジュールを表現するクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#詳細スケジュール型">
+	<rdfs:label xml:lang="ja">詳細スケジュール型</rdfs:label>
+	<rdfs:comment xml:lang="ja">（将来的に整備する予定）施設等のオープン日とオープン時間を表現するためのクラス。複数のスケジュールが列挙された場合はそれらの和を取るものとする</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#詳細スケジュール規則型">
+	<rdfs:label xml:lang="ja">詳細スケジュール規則型</rdfs:label>
+	<rdfs:comment xml:lang="ja">（将来的に整備する予定）繰り返し型のスケジュールを定義するための規則</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#コード型">
+	<rdfs:label xml:lang="ja">コード型</rdfs:label>
+	<rdfs:comment xml:lang="ja">コードを表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型">
+	<rdfs:label xml:lang="ja">コードリスト型</rdfs:label>
+	<rdfs:comment xml:lang="ja">コードの種別を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#アクセス型">
+	<rdfs:label xml:lang="ja">アクセス型</rdfs:label>
+	<rdfs:comment xml:lang="ja">地物等へのアクセスを表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型">
+	<rdfs:label xml:lang="ja">アクセス区間型</rdfs:label>
+	<rdfs:comment xml:lang="ja">アクセス含まれる各区間を表現するためのクラス</rdfs:comment>
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事物型"/>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#事物型">
+	<rdfs:label xml:lang="ja">事物型</rdfs:label>
+	<rdfs:comment xml:lang="ja">全ての型のベースとなる基本型。</rdfs:comment>
+</owl:Class>
+
+<!--== データ型定義 ===============-->
+<rdfs:Datatype rdf:about="http://imi.ipa.go.jp/ns/core/rdf#電話番号型">
+	<rdfs:label xml:lang="ja">電話番号型</rdfs:label>
+	<rdfs:label xml:lang="en">o</rdfs:label>
+	<rdfs:comment xml:lang="ja">電話番号を表現するためのデータ型</rdfs:comment>
+	<rdfs:comment xml:lang="en">o</rdfs:comment>
+	<owl:equivalentClass>
+		<rdf:Description>
+			<owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+		</rdf:Description>
+	</owl:equivalentClass>
+</rdfs:Datatype>
+
+<!--== クラスのプロパティ制約定義 ===============-->
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#人型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#性別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">性別の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#性別コード"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#生年月日"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#死亡年月日"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+			<rdfs:comment xml:lang="ja">現住所</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#本籍"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#国籍"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">国籍の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#国籍コード"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<rdfs:comment xml:lang="ja">住民基本台帳で利用されている国籍コード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#出生国"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">生まれた国名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#出生国コード"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">生まれた国のコード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#出生地"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">生まれた場所</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#名称型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">名称の種類の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">日本語による表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#カナ表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">カタカナ表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ローマ字表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#氏名型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">氏名の種類の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#姓名"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">氏名（姓、名）の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#姓名カナ表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">氏名（姓、名）のカナ表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#姓名ローマ字表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">氏名（姓、名）のアルファベット表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#姓"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">姓の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#姓カナ表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">姓のカナ表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#姓ローマ字表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">姓のローマ表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">名の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名カナ表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">名のカナ表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名ローマ字表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">名のローマ字表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ミドルネーム"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">ミドルネームの表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ミドルネームカナ表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">ミドルネームのカナ表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ミドルネームローマ字表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">ミドルネームのローマ字表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#住所型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">住所及び土地に割り振られるID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">住所の種類の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#表記"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">住所の全文表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#郵便番号"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所コード"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<rdfs:comment xml:lang="ja">地方公共団体情報システム機構地方公共団体コード住所等の利用を想定。住所のコード化が必要な範囲に応じて自治体で個別に設定する</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#国"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">国名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#国コード"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">国のコード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#都道府県"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">都道府県名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#都道府県コード"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">都道府県のコード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#市区町村"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">市区町村名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#区"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">政令指定都市の区の名前</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#市区町村コード"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">市区町村のコード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#町名"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">町域、または市区町村の下の行政区分の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#丁目"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">丁目の表示</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#番地補足"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">番地の前の、「東」「北」「浜」「甲」「イ」等の文字</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#番地"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">番、街区の表示</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#号"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">号、住居番号の表示</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ビル名"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ビル番号"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">号棟などのビルの番号の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#部屋番号"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">階数、号室などの部屋番号の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#方書"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">方書 (私書箱も含む)</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#連絡先型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">連絡先の種別の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<rdfs:comment xml:lang="ja">連絡先名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+			<rdfs:comment xml:lang="ja">連絡先が他組織に委任等されているときに記載</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#担当者役職"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">連絡先担当者の役職の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#担当者名"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#氏名型"/>
+			<rdfs:comment xml:lang="ja">連絡先担当者の氏名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#Eメールアドレス"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">連絡先の電子メールアドレス</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#送付先"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">送付先の住所、私書箱など</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#電話番号"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#電話番号型"/>
+			<rdfs:comment xml:lang="ja">連絡先の電話番号</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#内線番号"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">連絡先の内線番号</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#FAX番号"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#電話番号型"/>
+			<rdfs:comment xml:lang="ja">連絡先のFAX番号</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#携帯電話番号"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#電話番号型"/>
+			<rdfs:comment xml:lang="ja">連絡先の携帯電話番号</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#Webサイト"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+			<rdfs:comment xml:lang="ja">WebサイトのURL</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#対応言語"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">連絡先との連絡の際に利用可能な言語名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#組織型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<rdfs:comment xml:lang="ja">組織に発行されている識別子</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">組織名称。組合以外は、組織種別を省略して記載</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#略称アルファベット"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">頭文字などによる略称表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#通称"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">組織の通称名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#活動状況"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#状況型"/>
+			<rdfs:comment xml:lang="ja">組織の状況。倒産、破産等</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#概要"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">組織の概要説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+			<rdfs:comment xml:lang="ja">組織の連絡先（本社、コールセンター等）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#関連組織"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織関連型"/>
+			<rdfs:comment xml:lang="ja">支店等、関連組織</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+			<rdfs:comment xml:lang="ja">組織に関連する地物や施設、建物</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+			<rdfs:comment xml:lang="ja">組織に関係する住所。登記上の住所など</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#代表者"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#構成員型"/>
+			<rdfs:comment xml:lang="ja">組織の代表者</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設立日"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">設立日。支店や事業所は設置日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">補足情報などがある場合に記述</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#業務組織型">
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事業種目"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">販売業など事業の種類の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#事業年度開始日"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">事業年度の開始日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#構成員数"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">構成員の人数</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#代理人"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織関連型"/>
+			<rdfs:comment xml:lang="ja">法定手続きなどを代理するもの</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#法人型">
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#業務組織型"/>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織種別位置"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">組織の名称の中において、株式会社等の組織種別が置かれる位置の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織種別"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">組織の種別。（株式会社等）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#資本金"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">資本金。（前決算時）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#従業員数"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人数型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">従業員数。（前決算時）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#人数型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">種別ごとに人数を数える場合の種別の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人数"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#構成員型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#役割"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">構成員の役割の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#構成員"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#組織関連型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#役割"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">組織の役割の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">関連組織</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#場所型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<rdfs:comment xml:lang="ja">地名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#通称"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">正式な名称以外の通称</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地理識別子"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">場所の地理識別子</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#住所型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">場所の住所</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地理座標"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">場所の経緯度座標</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#座標型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標参照系"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">座標の参照系</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#緯度経度書式"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">度、分、秒の書式。書式はiso6709に準拠する</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#緯度"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">緯度。-90から+90で記載</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#経度"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">経度。-180から+180で記載</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標データ書式"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">点、線、面などを表現するデータ文字列の書式を指定する</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#座標データ"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">点、線、面などを表現するデータ文字列</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測地高度"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">高さ</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ID型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#体系"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID体系型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">IDの種別</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#識別値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">識別のためのIDの値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#ID体系型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">ID体系の名前</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#発行者"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">ID体系の発行主体</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#バージョン"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">ID体系のバージョン</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#URI"/>
+			<owl:maxCardinality>1</owl:maxCardinality>
+			<rdfs:comment xml:lang="ja">ID体系や発行者の参照先</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#製品型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<rdfs:comment xml:lang="ja">製品に割り当てられたID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製品の種別の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別コード"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<rdfs:comment xml:lang="ja">製品の種別コード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<rdfs:comment xml:lang="ja">製品の名前</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#自動認識ID"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+			<rdfs:comment xml:lang="ja">バーコードや二次元コード等の自動認識IDの画像等</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+			<rdfs:comment xml:lang="ja">製品の価格</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#説明"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製品の説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#使用方法"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">使用方法の説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製造者"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製造者名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製造者ID"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<rdfs:comment xml:lang="ja">製造者によって割り当てられたID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#販売業者"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">販売業者名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#販売業者ID"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<rdfs:comment xml:lang="ja">販売業者によって割り当てられたID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#入数"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数量型"/>
+			<rdfs:comment xml:lang="ja">製品が箱等に含まれる数量</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#形態"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製品の形態の説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#重量"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#重量型"/>
+			<rdfs:comment xml:lang="ja">製品の重量</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#サイズ"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製品のサイズの表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#幅"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+			<rdfs:comment xml:lang="ja">製品の幅</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#高さ"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+			<rdfs:comment xml:lang="ja">製品の高さ</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+			<rdfs:comment xml:lang="ja">製品の長さ</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#色"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製品の色の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#原産国"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製品の原産国名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#原産国コード"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<rdfs:comment xml:lang="ja">製品の原産国を表すコード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#規制情報"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">取り扱い上の注意等の規制に関する情報</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#製品個品型">
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製品型"/>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#製造日"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ロット番号"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">製造ロットの番号</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#消費期限"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#使用期限"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#賞味期限"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#シリアル番号"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#状態"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">製品の状態。新品、中古などの表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#所有者"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#購入価格"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#地物型">
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#場所型"/>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">識別するためのID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#要約"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">概要説明。100文字以内</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#説明"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス型"/>
+			<rdfs:comment xml:lang="ja">アクセス方法</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#参照"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+			<rdfs:comment xml:lang="ja">追加情報等の参照先</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#画像"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+			<rdfs:comment xml:lang="ja">画像の参照先</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設備型"/>
+			<rdfs:comment xml:lang="ja">定常的に備わっている設備</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#管理者"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#施設型">
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">施設の種別の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別コード"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<rdfs:comment xml:lang="ja">施設の種別コード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#利用可能時間"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+			<rdfs:comment xml:lang="ja">施設の利用可能日、開始、終了時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#料金"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+			<rdfs:comment xml:lang="ja">施設の料金</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#収容人数"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数量型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#駐車場"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#駐車場型"/>
+			<rdfs:comment xml:lang="ja">施設が利用する駐車場</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建物型"/>
+			<rdfs:comment xml:lang="ja">施設が利用する建物</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#関連施設"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設関連型"/>
+			<rdfs:comment xml:lang="ja">上位施設、下位施設等の関連施設</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">補足情報などがある場合に記述</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#施設関連型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#役割"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">関連施設の役割の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">関連施設</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#建物型">
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#敷地面積"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#主要用途"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">建物の主要用途の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#建築面積"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#延べ面積"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積型"/>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#最高の高さ"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ型"/>
+			<rdfs:comment xml:lang="ja">建物の最高点の高さ</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地上階数"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<rdfs:comment xml:lang="ja">建物の地上階数</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地下階数"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<rdfs:comment xml:lang="ja">建物の地下階数</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#構造"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">建物の構造の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#竣工日"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<rdfs:comment xml:lang="ja">建物の竣工日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+			<rdfs:comment xml:lang="ja">建物を利用する施設</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#駐車場型">
+	<rdfs:subClassOf rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#施設型"/>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#駐車場種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">駐車場の種別</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#収容台数"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">駐車場の収容可能台数</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#設備型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">設備のID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">設備の名称</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設置地点"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">設備が設置されている施設や建物などの地物</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設置位置"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">受付横等、設置場所を示す内容を記述</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#説明"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">設備の説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#利用可能時間"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+			<rdfs:comment xml:lang="ja">設備が利用可能な日と利用可能時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#料金"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+			<rdfs:comment xml:lang="ja">設備の利用料金</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#外部利用可否"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">設備の外部利用可否を記述</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#利用者"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">利用者に限定条件がある場合に条件を記述</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設置日"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">施設の設置日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#画像"/>
+			<owl:maxCardinality>1</owl:maxCardinality>
+			<rdfs:comment xml:lang="ja">設備の位置が遠景からもわかる画像のURL</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#Webサイト"/>
+			<owl:maxCardinality>1</owl:maxCardinality>
+			<rdfs:comment xml:lang="ja">関連ホームページ</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#設置者"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">設備を設置した自治体や組織</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#管理者"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">設備を管理している組織名や人</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#バリアフリー"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">バリアフリーに関する情報がある場合に記述</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">全体としての補足情報がある場合に記述</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#イベント型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<rdfs:comment xml:lang="ja">イベントを識別するためのID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">イベント内容の種別</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<rdfs:comment xml:lang="ja">イベントの名称</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#関連組織"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#組織関連型"/>
+			<rdfs:comment xml:lang="ja">イベントに関連する組織</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#開催場所"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+			<rdfs:comment xml:lang="ja">イベントの開催場所</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#期間"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#スケジュール型"/>
+			<rdfs:comment xml:lang="ja">イベントの期間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#参加方法"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">イベントの参加方法の説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#連絡先型"/>
+			<rdfs:comment xml:lang="ja">イベントへの連絡方法</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#説明"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">イベントの説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#要約"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">イベントの概要。100文字以内</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#関連イベント"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#イベント型"/>
+			<rdfs:comment xml:lang="ja">関連するイベント</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#対象者"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">イベントの参加対象者の説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#人数"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+			<rdfs:comment xml:lang="ja">イベントの参加者、定員</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#キーワード"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">イベントのキーワード</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#料金"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#価格型"/>
+			<rdfs:comment xml:lang="ja">イベントに参加するための料金</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#測定値型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定名称"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">測定方法名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定単位"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">測定の単位</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#数量型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数量単位"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">数量の単位</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#容量型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#容量単位"/>
+			<owl:onDataRange rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeVolume:4#MeasurementUnitCommonCodeVolumeContentType"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">容量の単位</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#面積型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#面積単位"/>
+			<owl:onDataRange rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCode:9#MeasurementUnitCommonCodeContentType"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">面積の単位</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#重量型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#重量単位"/>
+			<owl:onDataRange rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4#MeasurementUnitCommonCodeWeightContentType"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">重量の単位</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#長さ型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#長さ単位"/>
+			<owl:onDataRange rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeLinear:4#MeasurementUnitCommonCodeLinearContentType"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">長さの単位</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#時間型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">測定数値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時間単位"/>
+			<owl:onDataRange rdf:resource="urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeDuration:4#MeasurementUnitCommonCodeDurationContentType"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">時間の単位</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#金額型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#数値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">金額の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#通貨"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">通貨名</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#通貨コード"/>
+			<owl:onDataRange rdf:resource="urn:un:unece:uncefact:codelist:standard:ISO:ISO3AlphaCurrencyCode:2012-08-31#ISO3AlphaCurrencyCodeContentType"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#価格型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">価格の対象単位や種別の表記</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#金額型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">価格の金額</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#状況型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<rdfs:comment xml:lang="ja">状況の名称</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#発生日"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+			<rdfs:comment xml:lang="ja">状況の発生日時</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#詳細"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">状況の詳細説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#関係者"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+			<rdfs:comment xml:lang="ja">対象の事物に関係する人及び組織</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#日時型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#標準型日時"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">日時</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#年号"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">元号</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#年"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">年の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#月"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">月の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">日の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">時の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#分"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">分の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#秒"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">秒の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時間帯"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">時間帯。協定世界時からの時間差</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#カレンダー"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">カレンダーの種類</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#日付型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#標準型日付"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">日付</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#年号"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">元号</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#年"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">年の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#月"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">月の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">日の値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時間帯"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">時間帯。協定世界時からの時間差</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#カレンダー"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">カレンダーの種類</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#期間型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#開始日時"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">開始日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終了日時"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">終了日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#説明"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">期間の説明や例外などの説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#イベントスケジュール型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#開催日"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<rdfs:comment xml:lang="ja">一日だけの開催の場合の開催日。列挙可</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#開始日"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">イベントが開始する日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終了日"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日付型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">イベントが終了する日</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#開始時間"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#time"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">場所やサービスの開始時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終了時間"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#time"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">場所やサービスの終了時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#説明"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">スケジュールの説明や例外など</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#定期スケジュール型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">スケジュールの種別。「週間」「月間」「年間」などを指定する</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#開催期日"/>
+			<owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<rdfs:comment xml:lang="ja">このスケジュールが有効となる日。「週間」スケジュールの場合は曜日を指定し、「月間」スケジュールの場合は月の中の日を指定し、「年間」スケジュールの場合は年の中の月日を指定する</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#有効開始日時"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">このスケジュールが有効になる日時</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#有効終了日時"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#日時型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">このスケジュールが無効になる日時</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#開始時間"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#time"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">指定された曜日に場所やサービスが開始する時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終了時間"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#time"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">指定された曜日に場所やサービスが終了する時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#説明"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">スケジュールの説明や例外などの説明</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#コード型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コード種別"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">コードの種別</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#識別値"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">コードの値</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#コードリスト型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#名称型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">コードの名前</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#発行者"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#実体型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">コードの発行主体</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#バージョン"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">コードのバージョン</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#URI"/>
+			<owl:maxCardinality>1</owl:maxCardinality>
+			<rdfs:comment xml:lang="ja">コードや発行者の参照先</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#アクセス型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#ID型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法を表すID</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">最寄地点からのアクセス手段。鉄道、バス、徒歩、など</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#始点"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の始点（出発地点）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#始点備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の始点についての備考</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終点"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の終点（目的地点）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終点備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の終点についての備考</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間"/>
+			<owl:allValuesFrom rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型"/>
+			<rdfs:comment xml:lang="ja">アクセス方法の各区間の一覧</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時間"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定値型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">始点から終点までのアクセス時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地図"/>
+			<owl:maxCardinality>1</owl:maxCardinality>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">その他の補足情報。</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+<owl:Class rdf:about="http://imi.ipa.go.jp/ns/core/rdf#アクセス区間型">
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#種別"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">最寄地点からのアクセス手段。鉄道、バス、徒歩、など</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#始点"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の始点（出発地点）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#始点備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の始点についての備考</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#路線"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセスに用いる交通の事業者及び路線名、バス系統など</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終点"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#地物型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の終点（目的地点）</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#終点備考"/>
+			<owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">アクセス方法の終点についての備考</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+	<rdfs:subClassOf>
+		<owl:Restriction>
+			<owl:onProperty rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#時間"/>
+			<owl:onClass rdf:resource="http://imi.ipa.go.jp/ns/core/rdf#測定値型"/>
+			<owl:maxQualifiedCardinality>1</owl:maxQualifiedCardinality>
+			<rdfs:comment xml:lang="ja">始点から終点までのアクセス時間</rdfs:comment>
+		</owl:Restriction>
+	</rdfs:subClassOf>
+</owl:Class>
+</rdf:RDF>

@@ -1,0 +1,64 @@
+ja:
+  rdf:
+    vocabs:
+      owner_system: 共通語彙
+      owner_user: ユーザー語彙
+    classes:
+      search_sub_class_of: 継承を変更する
+      search_property_class: 型を変更する
+      append_property: プロパティ追加
+    props:
+      search_domain: 定義域を変更する
+      search_range: 値域を変更する
+
+  modules:
+    rdf: RDF語彙
+
+  mongoid:
+    models:
+      rdf/object:
+    attributes:
+      rdf/object:
+        vocab: 語彙
+        name: 名前
+        labels: ラベル
+        label_ja: 名称(日本語)
+        label_en: 名称(英語)
+        comments: 説明
+        equivalent: 同型
+      rdf/vocab:
+        prefix: プレフィックス
+        uri: URI
+        order: 並び順
+        labels: ラベル
+        label_ja: 名称(日本語)
+        label_en: 名称(英語)
+        comments: 説明
+        creators: 作成者
+        creator_name_ja: 作成者(日本語)
+        creator_name_en: 作成者(英語)
+        creator_homepage: ホームページ
+        license: ライセンス
+        version: バージョン
+        published: 日時
+        owner: 所有者
+      rdf/class:
+        sub_class_of: 継承
+        properties: プロパティ
+        property_property: 名称
+        property_class: 型
+        property_cardinality: 許容回数
+        property_comment: 説明
+      rdf/prop:
+        domains: 定義域
+        ranges: 値域
+        sub_property_of: 継承
+        usages: 使用クラス
+
+  views:
+    links:
+      rdf:
+        vocabs: RDF語彙
+        vocab: 語彙情報
+        classes: クラス
+        props: プロパティ
