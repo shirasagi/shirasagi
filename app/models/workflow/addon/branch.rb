@@ -90,7 +90,7 @@ module Workflow::Addon
 
       def merge_to_master
         return unless branch?
-        return if state == "closed"
+        return unless state == "public"
 
         master = self.master
         master.cur_user = @cur_user
