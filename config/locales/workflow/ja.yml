@@ -83,7 +83,7 @@ ja:
       route_approver_unable_to_read: "承認経路「%{route}」に設定されているユーザ「%{user} は記事閲覧権がありません。"
       route_approver_unable_to_approve: "承認経路「%{route}」に設定されているユーザ「%{user}」は記事承認権がありません。"
       cloned_name: "タイトルに[複製]が含まれています。"
-      invalid_approve_name: "タイトルを変更し承認申請を行ってください。"
+      invalid_approve_name: "複製後のタイトルを変更し承認申請を行ってください。"
 
   cms_role:
     release_other_article_pages: 記事ページの公開（全て）
