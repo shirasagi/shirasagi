@@ -141,7 +141,6 @@ $ ->
           <% user  = Cms::User.where(id: workflow_approver[:user_id]).first %>
           <% state = t("workflow.state.#{workflow_approver[:state]}") %>
           <% if user %>
-            <% user.cur_site = @cur_site %>
             <%= "#{workflow_approver[:level]}:#{user.long_name}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
           <% else %>
             <%= "#{workflow_approver[:level]}:#{t("workflow.user_deleted")}：#{state}" %><br /><%= workflow_approver[:comment] %><br />

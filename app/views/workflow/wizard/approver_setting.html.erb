@@ -40,7 +40,6 @@ $ ->
     <%= hidden_field_tag "workflow_required_counts", false %>
     <select class="workflow-multi-select" multiple="multiple" name="multiselect">
       <% Cms::User.where(:group_ids.in => Cms::Group.site(@cur_site).pluck(:id), :_id.ne => @cur_user._id).each do |user| %>
-        <% user.cur_site = @cur_site %>
         <% next unless @item.allowed?(:approve, user, site: @cur_site) %>
         <option value="1,<%= user._id %>,pending," <%= 'selected="selected"' if userids.index(user._id) %>>
           <%= "#{user.long_name}" %></option>
