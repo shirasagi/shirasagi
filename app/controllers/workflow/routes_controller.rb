@@ -12,10 +12,6 @@ class Workflow::RoutesController < ApplicationController
       @crumbs << [:"workflow.name", action: :index]
     end
 
-    def fix_params
-      { cur_site: @cur_site }
-    end
-
     def set_item
       super
       raise "403" unless @model.site(@cur_site).include?(@item)

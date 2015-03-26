@@ -4,8 +4,6 @@ class Workflow::Route
 
   set_permission_name "cms_users", :edit
 
-  attr_accessor :cur_site
-
   scope :site, ->(site) { self.in(group_ids: Cms::Group.site(site).pluck(:id)) }
 
   validate :validate_groups
@@ -21,13 +19,6 @@ class Workflow::Route
         ret
       end
   end
-
-  public
-    def approver_users_at(level)
-      super.each do |user|
-        user.cur_site = cur_site if user.present?
-      end
-    end
 
   private
     def validate_groups
