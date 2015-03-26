@@ -87,7 +87,7 @@ class Ldap::SyncJob
         ss_user.uid = ldap_user.uid
         ss_user.email = ldap_user.email if ldap_user.email.present?
         ss_user.group_ids = [ ss_group.id ]
-        ss_user.login_roles = [Cms::User::LOGIN_ROLE_LDAP]
+        ss_user.login_roles = [SS::User::LOGIN_ROLE_LDAP]
         ss_user.ldap_dn = ldap_user.dn
         ss_user.ldap_import_id = @item.id
         if ss_user.save

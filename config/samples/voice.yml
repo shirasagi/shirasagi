@@ -56,9 +56,6 @@ production: &production
 
 test:
   <<: *production
-  max_attempts: 1
-  initial_wait: 1
-  timeout_sec: 5
 
 development:
   <<: *production

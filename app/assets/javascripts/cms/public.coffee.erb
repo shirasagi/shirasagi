@@ -226,7 +226,7 @@ class @SS_Voice
     return if voice_tag.size() == 0
     voice_tag = voice_tag.first() if voice_tag.size() > 1
 
-    anchor = $('<a/>').html(voice_tag.html()).attr('href', SS_Voice.url).attr('rel', 'nofollow')
+    anchor = $('<a rel="nofollow"/>').attr('href', SS_Voice.url).html(voice_tag.html())
     voice_tag.html('')
     anchor.appendTo(voice_tag)
     SS_Voice.voice_tag = anchor
