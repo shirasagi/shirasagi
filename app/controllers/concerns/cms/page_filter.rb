@@ -107,7 +107,7 @@ module Cms::PageFilter
     def copy
       if request.get?
         prefix = I18n.t("workflow.cloned_name_prefix")
-        @item.name = "[#{prefix}]#{@item.name}" unless @item.cloned_name?
+        @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
         return
       end
 
