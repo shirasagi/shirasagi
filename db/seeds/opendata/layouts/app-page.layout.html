@@ -13,31 +13,31 @@
 <body class="s-app">
   <div id="page">
     <div id="wrap">
-    <header id="head">
-      <div class="inner">
-        </ part "tab" />
-        <div class="login">
-          </ part "mypage-login" />
+      <header id="head">
+        <div class="inner">
+          </ part "tab" />
+          <div class="login">
+            </ part "mypage-login" />
+          </div>
+        </div>
+      </header>
+      <div id="tab-inner">
+        <div class="wrap">
+          </ part "app-head" />
         </div>
       </div>
-    </header>
-    <div id="tab-inner">
-      <div class="wrap">
-        </ part "app-head" />
+    </div>
+    </ part "crumbs" />
+
+    <div id="contents" class="app-page-contents">
+      <div class="content-body">
+        </ part "sns-share" />
+        </ yield />
       </div>
     </div>
+
+    </ part "foot" />
+
   </div>
-  </ part "crumbs" />
-
-  <div id="contents" class="app-page-contents">
-    <div class="content-body">
-      </ part "sns-share" />
-      </ yield />
-    </div>
-  </div>
-
-  </ part "foot" />
-
-</div>
 </body>
 </html>
