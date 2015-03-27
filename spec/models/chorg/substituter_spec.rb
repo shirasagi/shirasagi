@@ -76,10 +76,10 @@ describe Chorg::Substituter::StringSubstituter do
   end
 
   describe "#<=>" do
-    let(:substituer1) { described_class.new("kmsrgxit7k@example.jp", "") }
-    let(:substituer2) { described_class.new("kmsrgxit7k", "") }
-    let(:substituer3) { described_class.new("シラサギ市/企画政策部/企画政策部 長生き課", "") }
-    let(:substituer4) { described_class.new("企画政策部 長生き課", "") }
+    let(:substituer1) { described_class.new("kmsrgxit7k@example.jp", "tfszbhe91d@example.jp") }
+    let(:substituer2) { described_class.new("kmsrgxit7k", "tfszbhe91d") }
+    let(:substituer3) { described_class.new("シラサギ市/企画政策部/企画政策部 長生き課", "シラサギ市/健康管理部/健康管理部 地域連携課") }
+    let(:substituer4) { described_class.new("企画政策部 長生き課", "健康管理部 地域連携課") }
     let(:substituer5) { Chorg::Substituter::IdSubstituter.new(30_016, []) }
 
     it { expect(substituer1).to be < substituer2 }
@@ -159,16 +159,16 @@ describe Chorg::Substituter do
     end
   end
 
-  describe "substitutes to nil" do
+  describe "does not substitute to nil" do
     let(:from) { { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課", contact_email: "kmsrgxit7k@example.jp", release_date: Time.now } }
     let(:to) { { id: 31_016 } }
     subject { described_class.new.collect(from, to) }
 
     describe "#call" do
       it { expect(subject.call(30_016)).to eq 31_016 }
-      it { expect(subject.call("シラサギ市/企画政策部/企画政策部 長生き課")).to eq "" }
-      it { expect(subject.call("企画政策部 長生き課")).to eq "" }
-      it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "" }
+      it { expect(subject.call("シラサギ市/企画政策部/企画政策部 長生き課")).to eq "シラサギ市/企画政策部/企画政策部 長生き課" }
+      it { expect(subject.call("企画政策部 長生き課")).to eq "企画政策部 長生き課" }
+      it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "kmsrgxit7k@example.jp" }
     end
   end
 end
