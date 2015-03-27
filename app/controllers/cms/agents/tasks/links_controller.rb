@@ -12,7 +12,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       @results = {}
       @errors  = {}
 
-      10000000.times do |i|
+      10*1000*1000.times do |i|
         break if @urls.blank?
         url, ref = @urls.shift
         #@task.log url
