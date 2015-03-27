@@ -4,7 +4,7 @@ class Sys::Role
 
   set_permission_name "sys_users", :edit
 
-  field :permissions, type: SS::Extensions::Array
+  field :permissions, type: SS::Extensions::Array, overwrite: true
 
   validates :permissions, presence: true
 end
