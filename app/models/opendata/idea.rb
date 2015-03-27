@@ -6,8 +6,6 @@ class Opendata::Idea
   include Opendata::Addon::Comment
   include Opendata::Addon::Category
   include Opendata::Addon::Area
-  include Opendata::Addon::Dataset
-  include Opendata::Addon::App
   include Opendata::Reference::Member
 
   set_permission_name "opendata_ideas"
@@ -28,10 +26,11 @@ class Opendata::Idea
   has_many :comments, primary_key: :idea_id, class_name: "Opendata::IdeaComment",
     dependent: :destroy
 
+  validates :text, presence: true, length: { maximum: 80 }
+  validates :category_ids, presence: true
   validates :state, presence: true
-  validates :name, presence: true, length: { maximum: 80 }
 
-  permit_params :state, :name, :dataset_id, :app_id, :text, :point, :commented, :tags, tags: []
+  permit_params :state, :name, :text, :point, :commented, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
 

@@ -1,11 +1,11 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :text %></dt>
+  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
   <dd><%= f.text_field :text %></dd>
 
-  <dt><%= @model.t :tags %></dt>
+  <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
   <dd><%= f.text_field :tags %></dd>
 
   <dt><%= @model.t :dataset_id %></dt>
