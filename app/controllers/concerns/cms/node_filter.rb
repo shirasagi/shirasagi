@@ -14,7 +14,9 @@ module Cms::NodeFilter
 
     def set_item
       super
-      raise "404" if @cur_node && @item.id == @cur_node.id
+      if @cur_node
+        raise "500" if @item.id == @cur_node.id && @item.collection_name.to_s == "cms_nodes"
+      end
     end
 
     def change_item_class
