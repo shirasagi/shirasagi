@@ -2,6 +2,7 @@
   $ ->
 
   $(".comment_add").click (event)->
+    $(@).css('pointer-events', 'none')
     $.ajax
       url: "<%= @idea_comment.comment_add_url %>"
       type: "GET"
