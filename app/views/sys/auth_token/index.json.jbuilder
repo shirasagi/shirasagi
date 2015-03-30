@@ -1,1 +1,1 @@
-json.authenticity_token @item
+json.auth_token @item
