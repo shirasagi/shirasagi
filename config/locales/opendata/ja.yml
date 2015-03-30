@@ -150,7 +150,7 @@ ja:
       opendata/url_resource:
         file_id: クローリングファイル
         in_file: クローリングファイル
-        name: クローリング名
+        name: リソース名
         text: 説明
         format: フォーマット
         original_url: URL
