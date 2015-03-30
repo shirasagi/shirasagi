@@ -24,6 +24,7 @@ ja:
     models:
       sys/site: サイト
       sys/user: ユーザー
+      sys/role: ロール
     attributes:
       sys/role:
         name: ロール名

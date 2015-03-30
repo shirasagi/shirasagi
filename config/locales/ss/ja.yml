@@ -71,9 +71,11 @@ ja:
     models:
       ss/site: サイト
       ss/user: ユーザー
+      ss/group: グループ
       ss/temp_file: 一時ファイル
       ss/user_file: ユーザーファイル
       ss/group_file: グループファイル
+      ss/task: タスク
     attributes:
       ss/document:
         created: 作成日時
@@ -105,6 +107,8 @@ ja:
       ss/group/model:
         name: グループ名
         order: 表示順
+      ss/reference/user:
+        user_id: ユーザー
       ss/reference/site:
         site_id: サイト
       ss/task/model:

@@ -80,6 +80,9 @@ ja:
       chorg/main_runner: 組織変更/本番実行
 
   mongoid:
+    models:
+      chorg/change_set: 変更内容
+      chorg/revision: リビジョン
     attributes:
       chorg/revision:
         name: 名前

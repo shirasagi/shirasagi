@@ -128,6 +128,7 @@ ja:
       cms/node/node: フォルダーリスト
       cms/node/page: ページリスト
       cms/page: ページ
+      cms/part: パーツ
       cms/part/free: HTML記述
       cms/part/node: フォルダーリスト
       cms/part/page: ページリスト
@@ -135,11 +136,14 @@ ja:
       cms/part/crumb: パンくずリスト
       cms/layout: レイアウト
       cms/workflow/route: 承認経路
+      cms/role: ロール
     attributes:
       cms/content:
         released: 公開日時
         name: タイトル
+        depth: フォルダ階層
         order: 並び順
+        md5: ハッシュ値
       cms/node/model:
         filename: フォルダー名
         basename: フォルダー名
@@ -185,6 +189,10 @@ ja:
         oauth_id: OAuth ID
         oauth_token: OAuth トークン
 
+      cms/addon/meta:
+        keywords: キーワード
+        description: 概要
+        summary_html: サマリー
       cms/addon/release:
         released: 公開日時
       cms/addon/release_plan:
