@@ -2,7 +2,7 @@ module Opendata::Addon::UrlResource
   extend SS::Addon
   extend ActiveSupport::Concern
 
-  set_order 200
+  set_order 201
 
   included do
     embeds_many :url_resources, class_name: "Opendata::UrlResource"
