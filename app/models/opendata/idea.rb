@@ -30,7 +30,7 @@ class Opendata::Idea
   validates :category_ids, presence: true
   validates :state, presence: true
 
-  permit_params :state, :name, :text, :point, :commented, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []
+  permit_params :text, :point, :commented, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
