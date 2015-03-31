@@ -36,7 +36,8 @@ class Opendata::CrawlsController < ApplicationController
             crawl_state:   urlresource.crawl_state,
             filename: urlresource.filename,
             original_updated: urlresource.original_updated,
-            original_url: urlresource.original_url}
+            original_url: urlresource.original_url,
+            crawl_update:   urlresource.crawl_update}
         @items << item
       end
     end

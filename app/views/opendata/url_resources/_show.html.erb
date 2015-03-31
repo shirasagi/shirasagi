@@ -19,6 +19,9 @@
   <dt><%= @model.t :format %></dt>
   <dd><%= @item.send :format %></dd>
 
+  <dt><%= @model.t :crawl_update %></dt>
+  <dd><%= @item.label :crawl_update %></dd>
+
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 

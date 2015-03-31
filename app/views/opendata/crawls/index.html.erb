@@ -1,6 +1,7 @@
 <script type="text/javascript">
   $(function(){
     $(".crawl_state").css("width", "60px");
+    $(".crawl_update").css("width", "60px");
     $(".crawl_state_updated").css("color", "#FF0000");
   });
 </script>
@@ -12,6 +13,7 @@
     <tr>
       <th class="checkbox"><input type="checkbox" /></th>
       <th class="crawl_state"><%= @model.t :crawl_state %></th>
+      <th class="crawl_update"><%= @model.t :crawl_update %></th>
       <th class="name"><%= @model.t :name %></th>
       <th class="resourcename"><%= t "mongoid.attributes.opendata/dataset.name" %></th>
       <th class="original_url"><%= @model.t :original_url %></th>
@@ -31,11 +33,14 @@
       </td>
 
       <td class="crawl_state_<%= item[:crawl_state] %>"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></td>
+      <td class="crawl_update"><%= t "opendata.crawl_update.#{item[:crawl_update]}" %></td>
       <% if item[:crawl_state] == "deleted" %>
         <td class="name"><%= link_to item[:name] , delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %></td>
       <% else %>
         <td class="name"><%= link_to item[:name] , edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %></td>
       <% end %>
+
+
       <td class="resourcename"><%= item[:resourcename] %></td>
       <td class="original_url"><input type="button" value=<%= @model.t :tsv_id %> onClick="window.open('<%= item[:original_url] %>')">　<%= item[:original_url] %></td>
       <% if item[:original_updated].present? %>

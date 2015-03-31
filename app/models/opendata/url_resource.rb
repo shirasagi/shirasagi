@@ -9,19 +9,20 @@ class Opendata::UrlResource
   field :text, type: String
   field :format, type: String
   field :original_url, type: String
-
   field :original_updated, type: DateTime
   field :crawl_state, type: String, default: "same"
+  field :crawl_update, type: String
 
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :url_resource
   belongs_to :license, class_name: "Opendata::License"
   belongs_to_file :file
   belongs_to_file :tsv
 
-  permit_params :name, :text, :license_id, :original_url
+  permit_params :name, :text, :license_id, :original_url, :crawl_update
 
   validates :name, presence: true
   validates :license_id, presence: true
+  validates :crawl_update, presence: true
 
   validate :validate_original_url
 
@@ -75,7 +76,11 @@ class Opendata::UrlResource
       true
     end
 
-  private
+    def crawl_update_options
+      [%w(手動 none), %w(自動 auto)]
+    end
+
+    private
 
     def validate_original_url
 
@@ -115,7 +120,7 @@ class Opendata::UrlResource
         time_out = 30
         timeout(time_out){
 
-          self.original_updated = open(original_url).last_modified
+          self.original_updated = open(original_url, proxy: true).last_modified
           if self.original_updated.blank?
             errors.add :base, I18n.t("opendata.errors.messages.dynamic_file")
             return
@@ -125,7 +130,7 @@ class Opendata::UrlResource
           temp_file = Tempfile.new("temp")
 
           File.open(temp_file , 'wb') do |output|
-            open(original_url) do |data|
+            open(original_url, proxy: true) do |data|
               output.write(data.read)
             end
           end

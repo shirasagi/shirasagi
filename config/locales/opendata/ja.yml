@@ -33,6 +33,9 @@ ja:
       same: 　
       updated: 更新
       deleted: 削除
+    crawl_update:
+      none: 　
+      auto: 自動
 
   modules:
     opendata: オープンデータ
@@ -159,6 +162,7 @@ ja:
         content: クローリングデータの内容
         crawl_state: ステータス
         original_updated: 元ファイル更新日時
+        crawl_update: 更新方法
       opendata/app:
         name: アプリ名
         text: 説明
