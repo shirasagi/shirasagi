@@ -74,7 +74,9 @@ module Cms::PageFilter
       else
         @source = @item.filename
         raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
-        render_update @item.move(destination), location: { action: :move, source: @source, link_check: true }, render: { file: :move }
+
+        location = { action: :move, source: @source, link_check: true }
+        render_update @item.move(destination), location: location, render: { file: :move }
       end
     end
 
