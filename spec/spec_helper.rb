@@ -70,6 +70,19 @@ RSpec.configure do |config|
   config.filter_run_excluding(open_jtalk: true) unless can_test_open_jtalk_spec?
   config.filter_run_excluding(ldap: true) unless can_test_ldap_spec?
 
+  if system("which phantomjs > /dev/null 2>&1")
+    begin
+      # found phantomjs, register poltergeist as a Capybara driver.
+      require 'capybara/poltergeist'
+      Capybara.register_driver :poltergeist do |app|
+        Capybara::Poltergeist::Driver.new(app, :inspector => true)
+      end
+      Capybara.javascript_driver = :poltergeist
+    rescue LoadError
+      config.filter_run_excluding(js: true)
+    end
+  end
+
   config.before(:suite) do
     # `rake db:drop`
     ::Mongoid::Sessions.default.drop
@@ -83,6 +96,7 @@ RSpec.configure do |config|
 
   config.add_setting :default_dbscope, default: :context
   config.extend(SS::DatabaseCleanerSupport)
+  config.include(SS::ColorBoxSupport, js: true)
 end
 
 def unique_id
