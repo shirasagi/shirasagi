@@ -1,7 +1,17 @@
 require "timeout"
 require "open-uri"
+require 'nkf'
 
 class Cms::Agents::Tasks::LinksController < ApplicationController
+  before_action :set_params
+
+  private
+    def set_params
+      if @opts
+        @email = @opts[:email]
+      end
+    end
+
   public
     def check
       @task.log "# #{@site.name}"
@@ -12,7 +22,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       @results = {}
       @errors  = {}
 
-      10*1000*1000.times do |i|
+      (10*1000*1000).times do |i|
         break if @urls.blank?
         url, ref = @urls.shift
         #@task.log url
@@ -33,10 +43,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       @task.log msg
 
-      if @opts[:email].present?
+      if @email.present?
         ActionMailer::Base.mail(
           from: "shirasagi@" + @site.domain.sub(/:.*/, ""),
-          to: @opts[:email],
+          to: @email,
           subject: "[#{@site.name}] Link Check: #{@errors.size} errors",
           body: msg
         ).deliver
@@ -46,7 +56,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   private
     # Check URL (front)
     def check_url(url, ref)
-      if url =~ /(\/|\.html)$/
+      if url =~ /(\/|\.html?)$/
         check_html(url, ref)
       else
         check_file(url, ref)
@@ -79,6 +89,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       return if url[0] != "/"
 
+      html = NKF.nkf "-w", html
       html.scan(/href="([^"]+)"/) do |m|
         next_url = m[0]
         next_url = next_url.sub(/^#{@base_url}/, "/")
