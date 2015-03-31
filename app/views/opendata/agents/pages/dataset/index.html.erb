@@ -85,8 +85,20 @@ categories = [
 
           <% @cur_page.resources.order(name: 1).each do |rs| %>
           <div class="resource">
-            <div class="name format-<%= rs.format.downcase %>">
-              <%= rs.name %> (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
+            <div class="info">
+              <div class="name format-<%= rs.format.downcase %>">
+                <%= rs.name %> (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
+              </div>
+              <% if rs.text.present? %>
+              <div class="text">
+                <%= auto_link br(rs.text) %>
+              </div>
+              <% end %>
+              <% if rs.rdf_iri.present? %>
+              <div class="sparql">
+                <%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %>
+              </div>
+              <% end %>
             </div>
             <div class="icons">
               <% if license = rs.license %>
@@ -102,23 +114,25 @@ categories = [
               <%= link_to "プレビュー", rs.content_url, class: "content" if rs.tsv_present? %>
               <%= link_to "ダウンロード", rs.url, class: "download" %>
             </div>
-            <% if rs.text.present? %>
-            <div class="text">
-              <%= auto_link br(rs.text) %>
-            </div>
-            <% end %>
-            <% if rs.rdf_iri.present? %>
-            <div class="sparql">
-              <%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %>
-            </div>
-            <% end %>
           </div>
           <% end %>
 
           <% @cur_page.url_resources.order(name: 1).each do |urs| %>
           <div class="url_resource">
-            <div class="name format-<%= urs.format.downcase %>">
-              <%= urs.name %> (<%= urs.format %> <%= number_to_human_size(urs.size) %>)
+            <div class="info">
+              <div class="name format-<%= urs.format.downcase %>">
+                <%= urs.name %> (<%= urs.format %> <%= number_to_human_size(urs.size) %>)
+              </div>
+              <% if urs.text.present? %>
+              <div class="text">
+                <%= auto_link br(urs.text) %>
+              </div>
+              <% end %>
+              <% if urs.rdf_iri.present? %>
+              <div class="sparql">
+                <%= urs.t :rdf_iri %> <%= link_to urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}" %>
+              </div>
+              <% end %>
             </div>
             <div class="icons">
               <% if license = urs.license %>
@@ -134,16 +148,6 @@ categories = [
               <%= link_to "プレビュー", urs.content_url, class: "content" if urs.tsv_present? %>
               <%= link_to "ダウンロード", urs.url, class: "download" %>
             </div>
-            <% if urs.text.present? %>
-            <div class="text">
-              <%= auto_link br(urs.text) %>
-            </div>
-            <% end %>
-            <% if urs.rdf_iri.present? %>
-            <div class="sparql">
-              <%= urs.t :rdf_iri %> <%= link_to urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}" %>
-            </div>
-            <% end %>
           </div>
           <% end %>
         </div>
