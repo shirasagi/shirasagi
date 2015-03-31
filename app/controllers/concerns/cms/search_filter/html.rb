@@ -12,8 +12,7 @@ module Cms::SearchFilter::Html
 
     def search_html_with_regexp(string)
       regexp = Regexp.new(string, Regexp::MULTILINE)
-
-      cond  = { "$or" => HTML_FIELDS.map { |field| { field => regexp} } }
+      cond  = { "$or" => HTML_FIELDS.map { |field| { field => regexp } } }
       search_html_with_condition(cond)
     end
 
