@@ -1,6 +1,12 @@
 <%= coffee do %>
   $ ->
 
+  $("#s_comment_body").keypress (event) ->
+    if event.keyCode == 13
+      $(".comment_add").trigger("click")
+      $(@).unbind event
+      event.preventDefault()
+
   $(".comment_add").click (event)->
     $(@).css('pointer-events', 'none')
     $.ajax
