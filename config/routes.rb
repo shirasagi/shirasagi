@@ -49,6 +49,7 @@ SS::Application.routes.draw do
     get   "/"      => "mypage#index", as: :mypage
     get   "logout" => "login#logout", as: :logout
     match "login"  => "login#login", as: :login, via: [:get, :post]
+    get   "auth_token" => "auth_token#index", as: :auth_token
   end
 
 end

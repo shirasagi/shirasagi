@@ -19,7 +19,6 @@ SS::Application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     get "/search_groups" => "search_groups#index"
-    get "auth_token" => "auth_token#index", as: :auth_token
 
     namespace "db" do
       get "/" => redirect { |p, req| "#{req.path}/colls" }

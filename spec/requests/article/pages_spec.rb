@@ -5,7 +5,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:node) { create(:article_node_page) }
-  let(:auth_token_path) { sys_auth_token_path(format: :json) }
+  let(:auth_token_path) { sns_auth_token_path(format: :json) }
   let(:index_path) { article_pages_path(site.host, node, format: :json) }
 
   before do
