@@ -454,6 +454,51 @@ table.cells, table.see {
     }
   }
 }
+.search-contents-form {
+  @include clear;
+  background: $gray3;
+  padding: 5px 5px 10px 5px;
+  dt {
+    position: relative;
+    top: 6px;
+    left: 6px;
+    font-weight: normal !important;
+  }
+  dd:not(:last-child) {
+    position: relative;
+    top: 6px;
+    left: 6px;
+    border: 2px solid $white;
+    max-width: 380px;
+  }
+  #keyword,#replacement {
+    border: none;
+    height: 2em;
+    &:focus {
+      @include box-shadow(none);
+    }
+  }
+  .search {
+    padding: 2px 20px 1px;
+    background: $gray3;
+    border: none;
+    position: absolute;
+    &:hover {
+      background: $pink;
+      color: $white;
+    }
+  }
+  .replace {
+    padding: 2px 20px 1px 15px;
+    background: $gray3;
+    border: none;
+    position: absolute;
+    &:hover {
+      background: $pink;
+      color: $white;
+    }
+  }
+}
 .tooltip {
   display:inline-block;
   position:relative;

@@ -33,10 +33,14 @@ $ ->
     layout_ids = $("input[name='layout_ids[]']:checked:enabled")
 
     if keyword != "" && (page_ids.length || part_ids.length || layout_ids.length)
-      # post
-    else
-      e.preventDefault()
-      return false
+      if confirm("<%= t("cms.search.confirm_message") %>")
+        return true
+
+    e.preventDefault()
+    return false
+
+  $(".option").on "click", (e)->
+    $("[value!='" + $(this).attr("value") + "'].option").prop("checked", false)
 
   $("th input").remove()
   $("input[name='page_ids[]']").remove()
@@ -45,28 +49,28 @@ $ ->
 <% end %>
 
 <%= form_for :item, url: { action: :update }, html: { class: "index-search", multipart: true } do |f| %>
-<div class="search-form">
+<div class="search-contents-form">
   <dl class="see">
-    <dt style="font-weight: normal;"><%= t("cms.search.keyword") %><%= @model.tt :search_keyword %></dt>
+    <dt><%= t("cms.search.keyword") %><%= @model.tt :search_keyword %></dt>
     <dd>
       <%= text_field_tag :keyword, "", value: @keyword, class: :keyword %>
       <%= f.submit t("views.button.search"), name: "search", class: :search %>
     </dd>
 
-    <dt style="font-weight: normal;"><%= t("cms.search.replacement") %><%= @model.tt :replace_keyword %></dt>
+    <dt><%= t("cms.search.replacement") %><%= @model.tt :replace_keyword %></dt>
     <dd>
       <%= text_field_tag :replacement, "", value: @replacement, class: :replacement %>
       <%= f.submit t("views.button.replace_all"), name: "replace", class: :replace %>
     </dd>
 
-    <dt style="font-weight: normal;"><%= t("cms.search.option") %><%= @model.tt :search_option %></dt>
+    <dt><%= t("cms.search.option") %><%= @model.tt :search_option %></dt>
     <dd>
       <label>
-        <%= radio_button_tag :option, :url, true, class: :option %>
+        <%= check_box_tag :option, :url, false, class: :option %>
         <%= t("cms.search.url") %>
       </label>
       <label>
-        <%= radio_button_tag :option, :regexp, false, class: :option %>
+        <%= check_box_tag :option, :regexp, false, class: :option %>
         <%= t("cms.search.regexp") %>
       </label>
     </dd>
