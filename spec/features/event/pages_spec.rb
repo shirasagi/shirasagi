@@ -2,13 +2,15 @@ require 'spec_helper'
 
 describe "event_pages" do
   subject(:site) { cms_site }
-  subject(:node) { create_once :event_node_page, name: "event" }
+  subject(:node) { create_once :event_node_page, filename: "docs", name: "event" }
   subject(:item) { Event::Page.last }
   subject(:index_path) { event_pages_path site.host, node }
   subject(:new_path) { new_event_page_path site.host, node }
   subject(:show_path) { event_page_path site.host, node, item }
   subject(:edit_path) { edit_event_page_path site.host, node, item }
   subject(:delete_path) { delete_event_page_path site.host, node, item }
+  subject(:move_path) { move_event_page_path site.host, node, item }
+  subject(:copy_path) { copy_event_page_path site.host, node, item }
 
   it "without login" do
     visit index_path
@@ -55,6 +57,36 @@ describe "event_pages" do
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).not_to have_css("form#item-form")
+    end
+
+    it "#move" do
+      visit move_path
+      within "form" do
+        fill_in "destination", with: "docs/destination"
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq move_path
+      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+
+      within "form" do
+        fill_in "destination", with: "docs/sample"
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq move_path
+      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+    end
+
+    it "#copy" do
+      visit copy_path
+      within "form" do
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a", text: "[複製] modify")
+      expect(page).to have_css(".state", text: "非公開")
     end
 
     it "#delete" do
