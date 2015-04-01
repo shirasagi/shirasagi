@@ -8,8 +8,8 @@ class Voice::SynthesisJob
 
   public
     def call(id_or_url, force = false)
-      voice_file = Voice::VoiceFile.find(id_or_url) rescue nil
-      voice_file ||= Voice::VoiceFile.find_or_create_by_url(id_or_url)
+      voice_file = Voice::File.find(id_or_url) rescue nil
+      voice_file ||= Voice::File.find_or_create_by_url(id_or_url)
       return unless voice_file
 
       begin

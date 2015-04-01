@@ -1,10 +1,10 @@
-module Voice::VoiceFilesFilter
+module Voice::FilesFilter
   extend ActiveSupport::Concern
   include Cms::BaseFilter
   include Cms::CrudFilter
 
   included do
-    model Voice::VoiceFile
+    model Voice::File
     navi_view "voice/main/navi"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :file]
     before_action :set_search, only: [:index]

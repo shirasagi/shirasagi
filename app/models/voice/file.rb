@@ -3,15 +3,13 @@ require 'open-uri'
 require 'resolv-replace'
 require 'timeout'
 
-class Voice::VoiceFile
+class Voice::File
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
   include Cms::Permission
   include Voice::Downloadable
   include Voice::Lockable
-
-  store_in collection: "voice_files"
 
   # permissions are delegated to edit_cms_users.
   set_permission_name :cms_users, :edit

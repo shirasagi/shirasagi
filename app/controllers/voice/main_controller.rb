@@ -24,14 +24,14 @@ class Voice::MainController < ApplicationController
     end
 
     def lock_voice_file
-      voice_file = Voice::VoiceFile.find_or_create_by_url @url
+      voice_file = Voice::File.find_or_create_by_url @url
       # raise "404"
       unless voice_file
         head :not_found
         return
       end
 
-      @voice_file = Voice::VoiceFile.acquire_lock voice_file
+      @voice_file = Voice::File.acquire_lock voice_file
       unless @voice_file
         head :accepted, retry_after: SS.config.voice.controller["retry_after"]
         return
@@ -41,7 +41,7 @@ class Voice::MainController < ApplicationController
   public
     def index
       if @voice_file.latest?
-        Voice::VoiceFile.release_lock @voice_file
+        Voice::File.release_lock @voice_file
         send_audio_file(@voice_file.file)
         return
       end
@@ -61,7 +61,7 @@ class Voice::MainController < ApplicationController
 
       # http errors like 404 or 500.
       if @voice_file.exists?
-        Voice::VoiceFile.release_lock @voice_file
+        Voice::File.release_lock @voice_file
         send_audio_file(@voice_file.file)
         return
       end
