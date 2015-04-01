@@ -44,7 +44,7 @@ module Job::Worker
 
       check_size_limit(pool)
 
-      task = Job::Model.enqueue(entity, &block)
+      task = Job::Task.enqueue(entity, &block)
       Rails.logger.debug("Submitted Job: id=#{task.id}, name=#{task.name}, class_name=#{task.class_name}, args=#{task.args}")
       task
     end
@@ -63,7 +63,7 @@ module Job::Worker
         pool_config = PoolConfig.new(SS.config.job.pool[pool])
 
         if pool_config.max_size?
-          size = Job::Model.where(pool: pool).count
+          size = Job::Task.where(pool: pool).count
           raise Job::SizeLimitExceededError, "size limit exceeded" if size >= pool_config.max_size
         end
       end

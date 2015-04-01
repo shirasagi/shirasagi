@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :job_model, class: Job::Model do
+  factory :job_model, class: Job::Task do
     transient do
       site nil
       user nil

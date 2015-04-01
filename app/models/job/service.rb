@@ -131,7 +131,7 @@ class Job::Service
 
     def dequeue_task
       config["poll"].each do |queue_name|
-        task = Job::Model.dequeue(queue_name)
+        task = Job::Task.dequeue(queue_name)
         return task if task
       end
 

@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Job::Model do
+describe Job::Task do
   describe 'array arg' do
     let(:args) { [ 1, 'message' ] }
     let(:entity) { { name: 'job', class_name: 'Foo', args: [ args ] } }
-    let(:item) { Job::Model.create!(entity) }
-    subject { Job::Model.find_by(id: item.id) }
+    let(:item) { Job::Task.create!(entity) }
+    subject { Job::Task.find_by(id: item.id) }
 
     it { should_not be_nil }
     its(:name) { should eq 'job' }
@@ -17,8 +17,8 @@ describe Job::Model do
   describe 'symbolized key hash arg' do
     let(:args) { { :id => 1, :payload => 'message'} }
     let(:entity) { { name: 'job', class_name: 'Foo', args: [ args ] } }
-    let(:item) { Job::Model.create!(entity) }
-    subject { Job::Model.find_by(id: item.id) }
+    let(:item) { Job::Task.create!(entity) }
+    subject { Job::Task.find_by(id: item.id) }
 
     it { should_not be_nil }
     its(:name) { should eq 'job' }
@@ -30,8 +30,8 @@ describe Job::Model do
   describe 'string key hash arg' do
     let(:args) { { 'id' => 1, 'payload' => 'message'} }
     let(:entity) { { name: 'job', class_name: 'Foo', args: [ args ] } }
-    let(:item) { Job::Model.create!(entity) }
-    subject { Job::Model.find_by(id: item.id) }
+    let(:item) { Job::Task.create!(entity) }
+    subject { Job::Task.find_by(id: item.id) }
 
     it { should_not be_nil }
     its(:name) { should eq 'job' }
