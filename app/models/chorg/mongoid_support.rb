@@ -1,4 +1,5 @@
 module Chorg::MongoidSupport
+  include Chorg::Context
   include Chorg::Loggable
 
   def update_attributes(entity, hash)
@@ -121,30 +122,30 @@ module Chorg::MongoidSupport
   end
 
   def add_group_to_site(group)
-    return unless @add_group_to_site
+    return unless adds_group_to_site
     return if group.id == 0
-    return if @cur_site.group_ids.include?(group.id)
+    return if cur_site.group_ids.include?(group.id)
 
-    copy = Array.new(@cur_site.group_ids)
+    copy = Array.new(cur_site.group_ids)
     copy << group.id
-    @cur_site.group_ids = copy.uniq.sort
-    if save_or_collect_errors(@cur_site)
-      put_log("added group #{group.name} to site #{@cur_site.host}")
+    cur_site.group_ids = copy.uniq.sort
+    if save_or_collect_errors(cur_site)
+      put_log("added group #{group.name} to site #{cur_site.host}")
     else
-      put_log("failed to add group #{group.name} to site #{@cur_site.host}")
+      put_log("failed to add group #{group.name} to site #{cur_site.host}")
     end
   end
 
   def remove_group_from_site(group)
-    return unless @cur_site.group_ids.include?(group.id)
+    return unless cur_site.group_ids.include?(group.id)
 
-    copy = Array.new(@cur_site.group_ids)
+    copy = Array.new(cur_site.group_ids)
     copy.delete(group.id)
-    @cur_site.group_ids = copy.uniq.sort
-    if save_or_collect_errors(@cur_site)
-      put_log("removed group #{group.name} from site #{@cur_site.host}")
+    cur_site.group_ids = copy.uniq.sort
+    if save_or_collect_errors(cur_site)
+      put_log("removed group #{group.name} from site #{cur_site.host}")
     else
-      put_log("failed to remove group #{group.name} from site #{@cur_site.host}")
+      put_log("failed to remove group #{group.name} from site #{cur_site.host}")
     end
   end
 
