@@ -79,7 +79,7 @@ class Ldap::Connection
       params = { filter: filter }
       params[:base] = base if base.present?
       params[:scope] = scope if scope.present?
-      @ldap.search(params)
+      @ldap.search(params) || []
     end
 
     def groups
