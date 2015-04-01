@@ -8,18 +8,18 @@
       </tr>
     </thead>
     <tbody>
-    <% change_sets.each do |change_set| %>
+    <% changesets.each do |changeset| %>
       <tr>
         <td>
-          <%= link_to change_set.after_division, chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+          <%= link_to changeset.after_division, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
           <nav class="tap-menu">
-            <%= link_to :show, chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
-            <%= link_to :edit, edit_chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
-            <%= link_to :delete, delete_chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+            <%= link_to :show, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to :edit, edit_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to :delete, delete_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
           </nav>
         </td>
         <td>
-          <%= change_set.before_division %>
+          <%= changeset.before_division %>
         </td>
       </tr>
     <% end %>

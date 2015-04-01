@@ -14,8 +14,8 @@ SS::Application.routes.draw do
     resources :revisions, concerns: :deletion
   end
 
-  namespace("chorg_change_sets", path: ".:site/chorgs/revision:rid/:type", module: "chorg", rid: /\w+/, type: /\w+/) do
-    resources :change_sets, concerns: :deletion
+  namespace("chorg_changesets", path: ".:site/chorgs/revision:rid/:type", module: "chorg", rid: /\w+/, type: /\w+/) do
+    resources :changesets, concerns: :deletion
   end
 
   namespace("chorg_run", path: ".:site/chorgs/revision:rid/:type", module: "chorg", rid: /\w+/, type: /\w+/) do

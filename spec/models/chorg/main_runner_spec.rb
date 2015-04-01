@@ -6,7 +6,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
   context "with add" do
     let(:revision) { create(:revision, site_id: site.id) }
-    let(:changeset) { create(:add_change_set, revision_id: revision.id) }
+    let(:changeset) { create(:add_changeset, revision_id: revision.id) }
     subject { described_class.new }
 
     it do
@@ -19,7 +19,7 @@ describe Chorg::MainRunner, dbscope: :example do
   context "with move" do
     let(:group) { create(:revision_new_group) }
     let(:revision) { create(:revision, site_id: site.id) }
-    let(:changeset) { create(:move_change_set, revision_id: revision.id, source: group) }
+    let(:changeset) { create(:move_changeset, revision_id: revision.id, source: group) }
 
     context "with Article::Page" do
       let(:page) { create(:revisoin_page, site: site, group: group) }
@@ -94,7 +94,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:user1) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
       let(:user2) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
-      let(:changeset) { create(:unify_change_set, revision_id: revision.id, sources: [group1, group2]) }
+      let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
       let(:page) { create(:revisoin_page, site: site, group: group1) }
       subject { described_class.new }
 
@@ -134,7 +134,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:user2) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
-        create(:unify_change_set, revision_id: revision.id, sources: [group1, group2], destination: group1)
+        create(:unify_changeset, revision_id: revision.id, sources: [group1, group2], destination: group1)
       end
       let(:page) { create(:revisoin_page, site: site, group: group1) }
       subject { described_class.new }
@@ -186,7 +186,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:user) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group0.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
-        create(:division_change_set, revision_id: revision.id, source: group0, destinations: [group1, group2])
+        create(:division_changeset, revision_id: revision.id, source: group0, destinations: [group1, group2])
       end
       let(:page) { create(:revisoin_page, site: site, group: group0) }
       subject { described_class.new }
@@ -223,7 +223,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:user) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
-        create(:division_change_set, revision_id: revision.id, source: group1, destinations: [group1, group2])
+        create(:division_changeset, revision_id: revision.id, source: group1, destinations: [group1, group2])
       end
       let(:page) { create(:revisoin_page, site: site, group: group1) }
       subject { described_class.new }
@@ -261,7 +261,7 @@ describe Chorg::MainRunner, dbscope: :example do
   context "with delete" do
     let(:group) { create(:revision_new_group) }
     let(:revision) { create(:revision, site_id: site.id) }
-    let(:changeset) { create(:delete_change_set, revision_id: revision.id, source: group) }
+    let(:changeset) { create(:delete_changeset, revision_id: revision.id, source: group) }
     subject { described_class.new }
 
     it do

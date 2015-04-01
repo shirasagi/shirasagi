@@ -1,4 +1,4 @@
-class Chorg::ChangeSet
+class Chorg::Changeset
   extend SS::Translation
   include SS::Document
   include Cms::Permission
@@ -9,8 +9,6 @@ class Chorg::ChangeSet
   TYPE_DIVISION = "division".freeze
   TYPE_DELETE = "delete".freeze
   TYPES = [TYPE_ADD, TYPE_MOVE, TYPE_UNIFY, TYPE_DIVISION, TYPE_DELETE].freeze
-
-  store_in collection: "chorg_changesets"
 
   set_permission_name "cms_users", :edit
 
