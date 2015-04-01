@@ -8,6 +8,8 @@ describe "cms_pages" do
   subject(:show_path) { cms_page_path site.host, item }
   subject(:edit_path) { edit_cms_page_path site.host, item }
   subject(:delete_path) { delete_cms_page_path site.host, item }
+  subject(:move_path) { move_cms_page_path site.host, item }
+  subject(:copy_path) { copy_cms_page_path site.host, item }
 
   it "without login" do
     visit index_path
@@ -54,6 +56,36 @@ describe "cms_pages" do
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).not_to have_css("form#item-form")
+    end
+
+    it "#move" do
+      visit move_path
+      within "form" do
+        fill_in "destination", with: "destination"
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq move_path
+      expect(page).to have_css("form#item-form h2", text: "destination.html")
+
+      within "form" do
+        fill_in "destination", with: "sample"
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq move_path
+      expect(page).to have_css("form#item-form h2", text: "sample.html")
+    end
+
+    it "#copy" do
+      visit copy_path
+      within "form" do
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+      expect(page).to have_css("a", text: "[複製] modify")
+      expect(page).to have_css(".state", text: "非公開")
     end
 
     it "#delete" do
