@@ -1,28 +1,36 @@
-<dl class="see opendata-dataset">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
-
-  <dt><%= @model.t :resources %></dt>
-  <dd><%= link_to :"opendata.manage_resources", "resources/" %></dd>
-  <dd>
-    <% @item.resources.order(name: 1).each do |rs| %>
-    <div><%= link_to rs.name, "resources/#{rs.id}/" %>
-      (<%= rs.format.upcase %> <%= number_to_human_size rs.size %>)</div>
-    <% end %>
-  </dd>
-
-  <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
-
-  <dt><%= @model.t :tags %></dt>
-  <dd><%= @item.tags.join(", ") %></dd>
-
-  <dt><%= @model.t :category_ids %></dt>
-  <dd><%= @item.categories.map { |m| m.name }.join(", ") %></dd>
-
-  <dt><%= @model.t :area_ids %></dt>
-  <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
-
-  <dt><%= @model.t :state %></dt>
-  <dd><%= @item.label :state %></dd>
-</dl>
+<table class="see opendata-dataset show">
+  <tr>
+    <td class="field"><%= @model.t :name %></td>
+    <td class="input"><%= @item.send :name %></td>
+  </tr>
+  <tr>
+    <td class="field"><%= @model.t :resources %></td>
+    <td class="input">
+      <div class="resources"><%= link_to :"opendata.manage_resources", "resources/" %></div>
+      <% @item.resources.order(name: 1).each do |rs| %>
+      <div class="resource"><%= link_to rs.name, "resources/#{rs.id}/" %>
+        (<%= rs.format.upcase %> <%= number_to_human_size rs.size %>)</div>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td class="field"><%= @model.t :text %></td>
+    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+  </tr>
+  <tr>
+    <td class="field"><%= @model.t :tags %></td>
+    <td class="input"><%= @item.tags.join(", ") %></td>
+  </tr>
+  <tr>
+    <td class="field"><%= @model.t :category_ids %></td>
+    <td class="input"><%= @item.categories.map { |m| m.name }.join(", ") %></td>
+  </tr>
+  <tr>
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= @item.areas.map { |m| m.name }.join(", ") %></td>
+  </tr>
+  <tr>
+    <td class="field"><%= @model.t :state %></td>
+    <td class="input"><%= @item.label :state %></td>
+  </tr>
+</table>

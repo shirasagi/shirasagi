@@ -6,27 +6,39 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 %>
 <%= javascript_include_tag "opendata/public" %>
 
-<dl class="see opendata-dataset">
-  <dt><%= @model.t :name %><%= required_label %></dt>
-  <dd><%= f.text_field :name %></dd>
+<table class="see opendata-dataset">
+  <tr>
+    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="input"><%= f.text_field :name %></td>
+  </tr>
 
-  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
-  <dd><%= f.text_area :text %></dd>
+  <tr>
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %><%= required_label %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
 
-  <dt><%= @model.t :tags %><%= @item.tt :tags %></dt>
-  <dd><%= f.text_field :tags %></dd>
+  <tr>
+    <td class="field"><%= @model.t :tags %><%= @item.tt :tags %></td>
+    <td class="input"><%= f.text_field :tags %></td>
+  </tr>
 
-  <dt><%= @model.t :category_ids %><%= required_label %></dt>
-  <dd>
-    <%= f.hidden_field "category_ids[]", value: "" %>
-    <% categories.each do |c| %>
-      <label><%= f.check_box("category_ids[]", {}, c.id) %> <%= c.name %></label>
-    <% end %>
-  </dd>
+  <tr>
+    <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
+    <td class="input">
+      <%= f.hidden_field "category_ids[]", value: "" %>
+      <% categories.each do |c| %>
+        <label class="category"><%= f.check_box("category_ids[]", {}, c.id) %> <%= c.name %></label>
+      <% end %>
+    </td>
+  </tr>
 
-  <dt><%= @model.t :area_ids %></dt>
-  <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
+  <tr>
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
+  </tr>
 
-  <dt><%= @model.t :state %></dt>
-  <dd><%= f.select :state, @item.state_options %></dd>
-</dl>
+  <tr>
+    <td class="field"><%= @model.t :state %></td>
+    <td class="input"><%= f.select :state, @item.state_options %></td>
+  </tr>
+</table>
