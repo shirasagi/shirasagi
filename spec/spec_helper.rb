@@ -81,6 +81,8 @@ RSpec.configure do |config|
     rescue LoadError
       config.filter_run_excluding(js: true)
     end
+  else
+    config.filter_run_excluding(js: true)
   end
 
   config.before(:suite) do
