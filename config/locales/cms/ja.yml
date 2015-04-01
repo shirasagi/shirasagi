@@ -21,6 +21,18 @@ ja:
     group: グループ
     member: メンバー
     alert: 警告
+    search:
+      html: サイト内検索
+      result: 検索結果
+      keyword: 検索文字
+      replacement: 置換文字
+      option: オプション
+      page: ページ
+      layout: レイアウト
+      part: パーツ
+      name: タイトル
+      url: URL
+      regexp: 正規表現
     move:
       page: ページ
       layout: レイアウト
@@ -286,6 +298,14 @@ ja:
       destination_filename:
         - ページやフォルダーの移動を行います。
         - 移動先をフルパスで設定してください。
+      search_keyword:
+        - 検索を行う文字列を入力します。
+        - 検索文字をHTMLに含むページ、パーツ、レイアウトを検索します。
+      replace_keyword:
+        - 置換後の文字列を入力します。
+        - 検索を行った後、置換を行うページ、パーツ、レイアウトにチェックを入れ全置換ボタンを押下してください。
+      search_option:
+        - 検索時に検索文字の形式をURLもしくは正規表現に設定します。
 
     cms/node/model:
       route:

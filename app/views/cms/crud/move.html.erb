@@ -1,24 +1,49 @@
+<%= coffee do %>
+$ ->
+  result = $(".result")
+  confirm = <%= @link_check.present? %>
+
+  if confirm
+    path    = "<%= cms_search_html_path %>"
+    keyword = "<%= @source %>"
+    option  = "url"
+    data    = { s: { keyword: keyword, option: option } }
+
+    result.closest(".see").show()
+    $.ajax
+      type: "GET",
+      data: data
+      url: path + "?" + $.param(data)
+      beforeSend: ->
+        result.html(SS.loading)
+      success: (data)->
+        result.html(data)
+        result.find("th input").remove()
+        result.find("input[name='page_ids[]']").remove()
+        result.find("input[name='part_ids[]']").remove()
+        result.find("input[name='layout_ids[]']").remove()
+      error: (data, status) ->
+        alert(["== Error =="].concat(data.responseJSON).join("\n"))
+<% end %>
+
 <%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
     <header><h2><%= @filename %></h2></header>
     <%= error_messages_for :item %>
-    <% if @pages %>
-      <dl class="see">
-        <dt class="wide"><%= t("cms.move.message", source: @source) %></dt>
-        <dl style="height:300px; overflow:auto; border: 1px solid #cccccc; padding: 15px;">
-          <%= render file: "_link_check" %>
-        </dl>
+    <dl class="see" style="display: none;">
+      <dt class="wide"><%= t("cms.move.message", source: @source) %></dt>
+      <dl class="result" style="height:300px; overflow:auto; border: 1px solid #cccccc; padding: 15px;">
       </dl>
-    <% end %>
+    </dl>
     <dl class="see">
       <dt><%= @model.t :filename %><%= @model.tt :destination_filename %></dt>
       <dd>
         <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
         <%= hidden_field_tag :filename, "", value: @filename %>
-        <%= hidden_field_tag :source, "", value: (@source == @filename ? @source : @filename) %>
-        <%= f.button t("cms.move.confirm"), name: "confirm" %>
+        <%= hidden_field_tag :source, "", value: @source %>
+        <%= f.button t("cms.move.confirm"), name: :confirm, class: :confirm %>
       </dd>
     </dl>
   </div>

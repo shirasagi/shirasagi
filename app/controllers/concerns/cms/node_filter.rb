@@ -63,37 +63,25 @@ module Cms::NodeFilter
     end
 
     def move
-      @filename = params[:filename]
-      @source = params[:source]
+      @filename   = params[:filename]
+      @source     = params[:source]
+      @link_check = params[:link_check]
       destination = params[:destination]
-      confirm = params[:confirm]
+      confirm     = params[:confirm]
 
-      if request.get? || confirm
-        if confirm
-          @item.validate_destination_filename(destination)
-          @item.filename = destination
-        end
-
-        if @item.errors.empty? && @source.present?
-          path = ("=\"/#{@source}" =~ /\.html$/) ? "=\"/#{@source}" : "=\"/#{@source}/"
-          words = [ path ]
-          words << "=\"/#{@source.sub(/index.html$/, "")}" if @source =~ /\/index.html$/
-          words = words.join(" ")
-
-          cond = Cms::Page.keyword_in(words, :html, :question).selector
-          cond["$or"] = cond["$and"]
-          cond.delete("$and")
-
-          @pages = Cms::Page.site(@cur_site).where(cond).limit(500)
-          @parts = Cms::Part.site(@cur_site).where(cond).limit(500)
-          @layouts = Cms::Layout.site(@cur_site).where(cond).limit(500)
-        end
-
-        @source ||= @item.filename
-        @filename ||= @item.filename
+      if request.get?
+        @filename = @item.filename
+      elsif confirm
+        @source = "#{@item.filename}/"
+        @item.validate_destination_filename(destination)
+        @item.filename = destination
+        @link_check = @item.errors.empty?
       else
+        @source = "#{@item.filename}/"
         raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
-        render_update @item.move(destination), location: { action: :move, source: @source }, render: { file: :move }
+
+        location = { action: :move, source: @source, link_check: true }
+        render_update @item.move(destination), location: location, render: { file: :move }
       end
     end
 end
