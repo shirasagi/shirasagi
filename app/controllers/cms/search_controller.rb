@@ -35,8 +35,10 @@ class Cms::SearchController < ApplicationController
       begin
         if option == "regexp"
           search_html_with_regexp(keyword)
-        else
+        elsif option == "url"
           search_html_with_url(keyword)
+        else
+          search_html_with_string(keyword)
         end
 
         @pages   = @pages.in(id: page_ids).order_by(filename: 1).limit(500)
@@ -48,7 +50,7 @@ class Cms::SearchController < ApplicationController
         else
           replace_html_with_url(keyword, replacement)
         end
-      rescue RegexpError => e
+      rescue => e
         @pages   = []
         @layouts = []
         @parts   = []

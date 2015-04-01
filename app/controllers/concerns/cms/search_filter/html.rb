@@ -1,9 +1,16 @@
 module Cms::SearchFilter::Html
   extend ActiveSupport::Concern
 
-  HTML_FIELDS = [:html, :question, :loop_html, :upper_html, :lower_html]
+  HTML_FIELDS = [
+    :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel, :contact_fax, :contact_email
+  ]
 
   private
+    def search_html_with_string(string)
+      cond  = { "$or" => HTML_FIELDS.map { |field| { field => /\Q#{string}\E/i } } }
+      search_html_with_condition(cond)
+    end
+
     def search_html_with_url(url)
       path = "=\"#{url}"
       cond  = { "$or" => HTML_FIELDS.map { |field| { field => /\Q#{path}\E/i } } }
