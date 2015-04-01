@@ -19,6 +19,15 @@ ja:
         fail: 失敗
         error: エラー
         warning: 警告
+      server/index:
+        group:
+          root: ルート
+          group: グループ
+          name: 名前
+        user:
+          user: ユーザ
+          name: 名前
+          email: email
     messages:
       no_groups: グループが見つかりません。
       no_users: ユーザが見つかりません。
@@ -33,15 +42,6 @@ ja:
     addons:
       ldap/user: LDAP
       ldap/group: LDAP
-    attributes:
-      ldap/group:
-        root: ルート
-        group: グループ
-        name: 名前
-      ldap/user:
-        user: ユーザ
-        name: 名前
-        email: email
 
   mongoid:
     models:

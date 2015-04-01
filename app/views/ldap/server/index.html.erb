@@ -1,7 +1,7 @@
 <%
    def group_hierachy(group)
      if group.nil?
-       [ [ t("modules.attributes.ldap/group.root"), nil ] ]
+       [ [ t("ldap.views.server/index.group.root"), nil ] ]
      else
        group_hierachy(group.parent) << [ group.name, group.dn ]
      end
@@ -46,7 +46,7 @@
 </header>
 
 <dl class="see ldap-server-groups">
-  <dt><%= t "modules.attributes.ldap/group.group" %></dt>
+  <dt><%= t "ldap.views.server/index.group.group" %></dt>
   <dd>
     <% if @groups.blank? %>
     <%= t "ldap.messages.no_groups"%>
@@ -54,7 +54,7 @@
     <table class="index ldap-groups">
       <thead>
       <tr>
-        <th><%= t "modules.attributes.ldap/group.name" %></th>
+        <th><%= t "ldap.views.server/index.group.name" %></th>
       </tr>
       </thead>
       <tbody>
@@ -75,7 +75,7 @@
 </dl>
 
 <dl class="see ldap-server-users">
-  <dt><%= t "modules.attributes.ldap/user.user" %></dt>
+  <dt><%= t "ldap.views.server/index.user.user" %></dt>
   <dd>
     <% if @users.blank? %>
     <%= t "ldap.messages.no_users"%>
@@ -83,7 +83,7 @@
     <table class="index ldap-users">
       <thead>
       <tr>
-        <th><%= t "modules.attributes.ldap/user.name" %>(<%= t "modules.attributes.ldap/user.email" %>)</th>
+        <th><%= t "ldap.views.server/index.user.name" %>(<%= t "ldap.views.server/index.user.email" %>)</th>
       </tr>
       </thead>
       <tbody>

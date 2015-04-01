@@ -1,7 +1,7 @@
 <%
    def group_hierachy(group)
      if group.nil?
-       [ [ t("modules.attributes.ldap/group.root"), nil ] ]
+       [ [ t("ldap.views.server/index.group.root"), nil ] ]
      else
        group_hierachy(group.parent) << [ group.name, group.dn ]
      end
