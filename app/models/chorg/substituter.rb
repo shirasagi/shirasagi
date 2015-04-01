@@ -39,6 +39,8 @@ module Chorg::Substituter
   # @private
   class StringSubstituter < BaseSubstituter
     def initialize(from_value, to_value)
+      raise if from_value.blank?
+      raise if to_value.blank?
       @from_value = from_value
       @to_value = to_value.nil? ? "" : to_value
       @from_regex = /#{Regexp.escape(@from_value)}/
@@ -56,20 +58,23 @@ module Chorg::Substituter
   # @private
   module HierarchySubstituterSupport
     def self.collect(from_value, to_value, separator)
-      to_value = to_value.nil? ? "" : to_value
+      # to_value = to_value.nil? ? "" : to_value
+      raise if from_value.blank?
+      raise if to_value.blank?
       from_parts = from_value.split(separator)
       to_parts = to_value.split(separator)
       from_leaf = from_parts.last
       to_leaf = to_parts.last
 
-      substituters = [StringSubstituter.new(from_value, to_value), StringSubstituter.new(from_leaf, to_leaf)]
+      substituters = [StringSubstituter.new(from_value, to_value)]
+      substituters << StringSubstituter.new(from_leaf, to_leaf) if from_leaf.present? && to_leaf.present?
       if from_parts.length > 1 && from_parts.length == to_parts.length
         1.upto(from_parts.length - 1) do |index|
           from_hierarchy = to_parts[0..(index - 1)]
           from_hierarchy << from_parts[index]
           from_hierarchy = from_hierarchy.join(separator)
           to_hierarchy = to_parts[0..index].join(separator)
-          substituters << StringSubstituter.new(from_hierarchy, to_hierarchy) if from_hierarchy != to_hierarchy
+          substituters << StringSubstituter.new(from_hierarchy, to_hierarchy) if from_hierarchy.present? && to_hierarchy.present? && from_hierarchy != to_hierarchy
         end
       end
       substituters
@@ -92,7 +97,7 @@ module Chorg::Substituter
         from_value = v
         next if from_value.blank?
         to_value = to[k]
-        next if from_value == to_value
+        next if to_value.blank? || from_value == to_value
 
         if config.ids_fields.include?(k.to_s)
           @substituters << IdSubstituter.new(from_value, to_value)
