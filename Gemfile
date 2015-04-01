@@ -54,6 +54,7 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'coveralls', require: false
   gem 'rubocop', require: false
+  gem 'poltergeist', require: false
   gem 'guard'
   gem 'guard-rubocop', '~> 1.1.0'
   gem 'guard-rspec', '~> 4.3.1'
