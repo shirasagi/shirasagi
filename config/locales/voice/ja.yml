@@ -1,6 +1,6 @@
 ja:
   voice:
-    voice_file: 読み上げ音声
+    file: 読み上げ音声
     error_file: エラー一覧
     synthesis_fail:
       empty_source: 読み上げる文字列がありません。
@@ -16,9 +16,9 @@ ja:
 
   mongoid:
     models:
-      voice/voice_file: 読み上げ音声
+      voice/file: 読み上げ音声
     attributes:
-      voice/voice_file:
+      voice/file:
         url: URL
         last_modified: URLの最終更新日時
         error: エラー
@@ -26,14 +26,14 @@ ja:
         play: 再生
 
   tooltip:
-    voice/voice_file:
+    voice/file:
       url: URL
       last_modified: URLの最終更新日時
       error: エラー
       updated: 作成日時
 
   views:
-    voice/voice_files:
+    voice/files:
       index: ページ一覧
       not_exists: ページがありません。
     voice/error_files:

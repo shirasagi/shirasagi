@@ -1,11 +1,11 @@
-class Voice::VoiceFilesController < ApplicationController
+class Voice::FilesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  include Voice::VoiceFilesFilter
+  include Voice::FilesFilter
 
   private
     def set_crumbs
-      @crumbs << [:"voice.voice_file", action: :index]
+      @crumbs << [:"voice.file", action: :index]
     end
 
   public

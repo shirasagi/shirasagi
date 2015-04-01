@@ -2,9 +2,16 @@ SS::Application.routes.draw do
 
   Voice::Initializer
 
-  concern :deletion_and_source do
+  concern :deletion do
     get :delete, on: :member
+  end
+
+  concern :file do
     get :file, on: :member
+  end
+
+  concern :download do
+    get :download, on: :collection
   end
 
   namespace "voice", path: ".voice" do
@@ -13,10 +20,8 @@ SS::Application.routes.draw do
   end
 
   namespace("voice", as: "voice", path: ".:site/voice", module: "voice") do
-    get "voice_files/download" => "voice_files#download"
-    resources :voice_files, concerns: :deletion_and_source, except: [:create, :edit, :new, :update]
-    get "error_files/download" => "error_files#download"
-    resources :error_files, concerns: :deletion_and_source, except: [:create, :edit, :new, :update]
+    resources :files, concerns: [:download, :deletion, :file], except: [:create, :edit, :new, :update]
+    resources :error_files, concerns: [:download, :deletion, :file], except: [:create, :edit, :new, :update]
   end
 
 end

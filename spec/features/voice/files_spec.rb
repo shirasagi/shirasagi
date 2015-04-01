@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe "voice_voice_files" do
+describe "voice_files" do
   subject(:site) { cms_site }
-  subject(:index_path) { voice_voice_files_path site.host }
-  subject(:download_path) { voice_voice_files_download_path site.host }
+  subject(:index_path) { voice_files_path site.host }
+  subject(:download_path) { download_voice_files_path site.host }
 
   it "without login" do
     visit index_path
@@ -18,8 +18,8 @@ describe "voice_voice_files" do
 
   context "with auth" do
     subject(:item) { create(:voice_voice_file) }
-    subject(:show_path) { voice_voice_file_path site.host, item }
-    subject(:delete_path) { delete_voice_voice_file_path site.host, item }
+    subject(:show_path) { voice_file_path site.host, item }
+    subject(:delete_path) { delete_voice_file_path site.host, item }
 
     before { login_cms_user }
 

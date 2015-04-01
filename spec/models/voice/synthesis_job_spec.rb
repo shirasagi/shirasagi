@@ -17,7 +17,7 @@ describe Voice::SynthesisJob do
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       url = "http://127.0.0.1:#{port}/#{path}"
-      let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
+      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
 
@@ -37,7 +37,7 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Voice::VoiceFile.find_by(url: url) rescue nil }
+        subject { Voice::File.find_by(url: url) rescue nil }
         it { should_not be_nil }
         its(:lock_until) { should eq Time.at(0) }
         its(:error) { should be_nil }
@@ -49,7 +49,7 @@ describe Voice::SynthesisJob do
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       url = "http://127.0.0.1:#{port}/#{path}"
-      let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
+      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
       let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
@@ -67,7 +67,7 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Voice::VoiceFile.find_by(url: url) rescue nil }
+        subject { Voice::File.find_by(url: url) rescue nil }
         it { should_not be_nil }
         its(:lock_until) { should eq Time.at(0) }
         its(:error) { should be_nil }
@@ -79,7 +79,7 @@ describe Voice::SynthesisJob do
     context 'when get 400' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       url = "http://127.0.0.1:#{port}/#{path}?status_code=400"
-      let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
+      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
       let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
@@ -106,7 +106,7 @@ describe Voice::SynthesisJob do
     context 'when get 404' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       url = "http://127.0.0.1:#{port}/#{path}?status_code=404"
-      let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
+      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
       let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
@@ -133,7 +133,7 @@ describe Voice::SynthesisJob do
     context 'when get 500' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       url = "http://127.0.0.1:#{port}/#{path}?status_code=500"
-      let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
+      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
       let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
@@ -161,7 +161,7 @@ describe Voice::SynthesisJob do
       path = "#{rand(0x100000000).to_s(36)}.html"
       wait = SS.config.voice.download['timeout_sec'] + 5
       url = "http://127.0.0.1:#{port}/#{path}?wait=#{wait}"
-      let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
+      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
       let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
@@ -192,7 +192,7 @@ describe Voice::SynthesisJob do
     context 'when server does not respond last_modified' do
       path = "#{rand(0x100000000).to_s(36)}.html"
       url = "http://127.0.0.1:#{port}/#{path}?last_modified=nil"
-      let(:item) { Voice::VoiceFile.find_or_create_by(site_id: cms_site.id, url: url) }
+      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
       let(:id) { item.id }
       let(:job) { Voice::SynthesisJob.call_async id.to_s }
       let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
@@ -211,7 +211,7 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Voice::VoiceFile.find_by(url: url) rescue nil }
+        subject { Voice::File.find_by(url: url) rescue nil }
         it { should_not be_nil }
         its(:page_identity) { expect(subject.page_identity).to_not be_nil }
         its(:lock_until) { should eq Time.at(0) }
@@ -244,7 +244,7 @@ describe Voice::SynthesisJob do
         http_server.add_redirect("/#{path}", "/test-001.html")
       end
 
-      subject(:voice_file) { Voice::VoiceFile.find_or_create_by(site_id: site.id, url: url) }
+      subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       it "creates voice file" do
         expect {
@@ -271,13 +271,13 @@ describe Voice::SynthesisJob do
         http_server.add_options("/#{path}", status_code: 404)
       end
 
-      subject(:voice_file) { Voice::VoiceFile.find_or_create_by(site_id: site.id, url: url) }
+      subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       it "creates dows not voice file" do
         expect {
           Voice::SynthesisJob.new.call(voice_file.id)
         }.to raise_error OpenURI::HTTPError
-        expect(Voice::VoiceFile.where(id: voice_file.id).count).to eq 0
+        expect(Voice::File.where(id: voice_file.id).count).to eq 0
       end
     end
 
@@ -295,13 +295,13 @@ describe Voice::SynthesisJob do
         http_server.release_wait
       end
 
-      subject(:voice_file) { Voice::VoiceFile.find_or_create_by(site_id: site.id, url: url) }
+      subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       it "creates dows not voice file" do
         expect {
           Voice::SynthesisJob.new.call(voice_file.id)
         }.to raise_error TimeoutError
-        expect(Voice::VoiceFile.where(id: voice_file.id).count).to eq 0
+        expect(Voice::File.where(id: voice_file.id).count).to eq 0
       end
     end
   end

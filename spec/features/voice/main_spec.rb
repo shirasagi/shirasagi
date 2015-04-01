@@ -35,7 +35,7 @@ describe "voice_main" do
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 202
         expect(response_headers.keys).to include("Retry-After")
-        expect(Voice::VoiceFile.where(url: url).count).to be >= 1
+        expect(Voice::File.where(url: url).count).to be >= 1
 
         # wait for a while or wait until status_code turns to 200.
         require 'timeout'
@@ -60,7 +60,7 @@ describe "voice_main" do
         url = "http://not-exsit-host-#{rand(0x100000000).to_s(36)}/"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
       end
     end
 
@@ -69,7 +69,7 @@ describe "voice_main" do
         url = "http:/xyz/"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 400
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
       end
     end
 
@@ -78,7 +78,7 @@ describe "voice_main" do
         url = "http://#{voice_site.domain}/not-exist-doc-#{rand(0x100000000).to_s(36)}.html"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
       end
     end
 
@@ -94,7 +94,7 @@ describe "voice_main" do
         url = "http://#{voice_site.domain}/#{path}?status_code=400"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
       end
     end
 
@@ -110,7 +110,7 @@ describe "voice_main" do
         url = "http://#{voice_site.domain}/#{path}?status_code=404"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
       end
     end
 
@@ -126,7 +126,7 @@ describe "voice_main" do
         url = "http://#{voice_site.domain}/#{path}?status_code=500"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
       end
     end
 
@@ -147,7 +147,7 @@ describe "voice_main" do
         url = "http://#{voice_site.domain}/#{path}?wait=#{wait}"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 404
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
       end
     end
 
@@ -167,9 +167,9 @@ describe "voice_main" do
         expect(status_code).to eq 202
         expect(response_headers.keys).to include("Retry-After")
         # record exists if query string is not given.
-        expect(Voice::VoiceFile.where(url: url0).count).to be >= 1
+        expect(Voice::File.where(url: url0).count).to be >= 1
         # record does not exist if query string is given.
-        expect(Voice::VoiceFile.where(url: url).count).to eq 0
+        expect(Voice::File.where(url: url).count).to eq 0
 
         # wait for a while or wait until status_code turns to 200.
         require 'timeout'

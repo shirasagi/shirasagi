@@ -1,15 +1,15 @@
 require 'spec_helper'
 require 'models/voice/test_http_server'
 
-describe Voice::VoiceFile do
+describe Voice::File do
   describe '#find_or_create_by_url' do
     context "when valid site is given" do
       random_string = rand(0x100000000).to_s(36)
       subject(:site) { cms_site }
-      subject { Voice::VoiceFile.find_or_create_by_url("http://#{site.domain}/" + random_string) }
+      subject { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
 
       it { should_not be_nil }
-      its(:class) { should be Voice::VoiceFile }
+      its(:class) { should be described_class }
       its(:id) { should be_a(BSON::ObjectId) }
       its(:path) { should eq "/#{random_string}" }
       its(:url) { should eq "http://#{site.domain}/" + random_string }
@@ -23,7 +23,7 @@ describe Voice::VoiceFile do
 
     context "when invalid site is given" do
       random_string = rand(0x100000000).to_s(36)
-      subject { Voice::VoiceFile.find_or_create_by_url("http://invalid-site-#{random_string}/" + random_string) }
+      subject { described_class.find_or_create_by_url("http://invalid-site-#{random_string}/" + random_string) }
 
       it { should be_nil }
     end
@@ -36,14 +36,14 @@ describe Voice::VoiceFile do
     expected_lock_until = nil
     before(:all) do
       site = cms_site
-      voice_file = Voice::VoiceFile.find_or_create_by_url("http://#{site.domain}/" + random_string)
-      locked_voice_file = Voice::VoiceFile.acquire_lock(voice_file)
+      voice_file = described_class.find_or_create_by_url("http://#{site.domain}/" + random_string)
+      locked_voice_file = described_class.acquire_lock(voice_file)
       expected_lock_until  = Time.now
     end
     subject { locked_voice_file }
 
     it { should_not be_nil }
-    its(:class) { should be Voice::VoiceFile }
+    its(:class) { should be described_class }
     its(:lock_until) { should be >= expected_lock_until }
   end
 
@@ -53,10 +53,10 @@ describe Voice::VoiceFile do
     locked_voice_file = nil
     before(:all) do
       site = cms_site
-      voice_file = Voice::VoiceFile.find_or_create_by_url("http://#{site.domain}/" + random_string)
+      voice_file = described_class.find_or_create_by_url("http://#{site.domain}/" + random_string)
       # lock twice
-      Voice::VoiceFile.acquire_lock(voice_file)
-      locked_voice_file = Voice::VoiceFile.acquire_lock(voice_file)
+      described_class.acquire_lock(voice_file)
+      locked_voice_file = described_class.acquire_lock(voice_file)
     end
     subject { locked_voice_file }
     it { should be_nil }
@@ -68,21 +68,21 @@ describe Voice::VoiceFile do
     released_voice_file = nil
     before(:all) do
       site = cms_site
-      voice_file = Voice::VoiceFile.find_or_create_by_url("http://#{site.domain}/" + random_string)
-      locked_voice_file = Voice::VoiceFile.acquire_lock(voice_file)
-      released_voice_file = Voice::VoiceFile.release_lock(locked_voice_file)
+      voice_file = described_class.find_or_create_by_url("http://#{site.domain}/" + random_string)
+      locked_voice_file = described_class.acquire_lock(voice_file)
+      released_voice_file = described_class.release_lock(locked_voice_file)
     end
     subject { released_voice_file }
 
     it { should_not be_nil }
-    its(:class) { should be Voice::VoiceFile }
+    its(:class) { should be described_class }
     its(:lock_until) { should eq Time.at(0) }
   end
 
   context 'when error is given, has_error is set automatically' do
     random_string = rand(0x100000000).to_s(36)
     subject(:site) { cms_site }
-    subject(:voice_file) { Voice::VoiceFile.find_or_create_by_url("http://#{site.domain}/" + random_string) }
+    subject(:voice_file) { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
     subject {
       voice_file.error = "has error"
       voice_file.save!
@@ -99,7 +99,7 @@ describe Voice::VoiceFile do
     describe "#search" do
       count = nil
       before(:all) do
-        count = Voice::VoiceFile.search({ :has_error => 1 }).count
+        count = described_class.search({ :has_error => 1 }).count
       end
       it { expect(count).to be >= 1 }
     end
@@ -130,7 +130,7 @@ describe Voice::VoiceFile do
 
       subject(:voice_file) do
         url = "http://#{voice_site.domain}/#{path}"
-        Voice::VoiceFile.find_or_create_by_url(url)
+        described_class.find_or_create_by_url(url)
       end
 
       it { should_not be_nil }
@@ -153,7 +153,7 @@ describe Voice::VoiceFile do
 
       subject(:voice_file) do
         url = "http://#{voice_site.domain}/#{path}?etag=nil"
-        Voice::VoiceFile.find_or_create_by_url(url)
+        described_class.find_or_create_by_url(url)
       end
 
       it { should_not be_nil }
@@ -176,7 +176,7 @@ describe Voice::VoiceFile do
 
       subject(:voice_file) do
         url = "http://#{voice_site.domain}/#{path}?last_modified=nil"
-        Voice::VoiceFile.find_or_create_by_url(url)
+        described_class.find_or_create_by_url(url)
       end
 
       it { should_not be_nil }
@@ -199,7 +199,7 @@ describe Voice::VoiceFile do
 
       subject(:voice_file) do
         url = "http://#{voice_site.domain}/#{path}?etag=nil&last_modified=nil"
-        Voice::VoiceFile.find_or_create_by_url(url)
+        described_class.find_or_create_by_url(url)
       end
 
       it { should_not be_nil }

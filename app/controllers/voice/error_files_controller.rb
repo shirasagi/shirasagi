@@ -1,7 +1,7 @@
 class Voice::ErrorFilesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  include Voice::VoiceFilesFilter
+  include Voice::FilesFilter
 
   private
     def set_crumbs
