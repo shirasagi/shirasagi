@@ -1,39 +1,55 @@
-<dl class="see opendata-dataset-resources">
+<table class="see opendata-dataset-resources show">
   <% if @item.file %>
-  <dt><%= @model.t :file_id %></dt>
-  <dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :file_id %></td>
+    <td class="input">
     <%= link_to @item.filename, "file" %>
     (<%= number_to_human_size @item.size %>)
-  </dd>
+  </td>
+  </tr>
   <% end %>
 
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %></td>
+    <td class="input"><%= @item.send :name %></td>
+  </tr>
 
-  <dt><%= @model.t :format %></dt>
-  <dd><%= @item.send :format %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :format %></td>
+    <td class="input"><%= @item.send :format %></td>
+  </tr>
 
-  <dt><%= @model.t :license_id %></dt>
-  <dd><%= tryb { @item.license.name } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :license_id %></td>
+    <td class="input"><%= tryb { @item.license.name } %></td>
+  </tr>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %></td>
+    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+  </tr>
 
   <% if @item.tsv %>
-  <dt><%= @model.t :tsv_id %></dt>
-  <dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :tsv_id %></td>
+    <td class="input">
     <%= link_to @item.tsv.filename, "tsv" %>
     (<%= number_to_human_size @item.tsv.size %>)
-  </dd>
+  </td>
+  </tr>
   <% end %>
 
   <% if @item.rdf_iri.present? %>
-  <dt><%= @model.t :rdf_iri %></dt>
-  <dd><%= link_to @item.rdf_iri, "#{sparql_path}?graph_name=#{@item.rdf_iri}" %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :rdf_iri %></td>
+    <td class="input"><%= link_to @item.rdf_iri, "#{sparql_path}?graph_name=#{@item.rdf_iri}" %></td>
+  </tr>
   <% end %>
 
   <% if @item.rdf_error.present? %>
-  <dt><%= @model.t :rdf_error %></dt>
-  <dd><%= @item.send :rdf_error %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :rdf_error %></td>
+    <td class="input"><%= @item.send :rdf_error %></td>
+  </tr>
   <% end %>
-</dl>
+</table>

@@ -16,36 +16,53 @@ $ ->
 
 <% end %>
 
-<dl class="see opendata-app">
-  <dt><%= @model.t :name %><%= required_label %></dt>
-  <dd><%= f.text_field :name %></dd>
+<table class="see opendata-app">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="input"><%= f.text_field :name %></td>
+  </tr>
 
-  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
-  <dd><%= f.text_area :text %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %><%= required_label %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
 
-  <dt><%= @model.t :license_id %><%= required_label %></dt>
-  <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :license_id %><%= required_label %></td>
+    <td class="input"><%= f.select :license_id, licenses, include_blank: "" %></td>
+  </tr>
 
-  <dt><%= @model.t :tags %><%= @item.tt :tags %></dt>
-  <dd><%= f.text_field :tags %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :tags %><%= @item.tt :tags %></td>
+    <td class="input"><%= f.text_field :tags %></td>
+  </tr>
 
-  <dt><%= @model.t :appurl %></dt>
-  <dd><%= f.url_field :appurl %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :appurl %></td>
+    <td class="input"><%= f.url_field :appurl %></td>
+  </tr>
 
-  <dt><%= @model.t :category_ids %><%= required_label %></dt>
-  <dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
+    <td class="input">
     <%= f.hidden_field "category_ids[]", value: "" %>
     <% categories.each do |c| %>
       <label><%= f.check_box("category_ids[]", {}, c.id) %> <%= c.name %></label>
     <% end %>
-  </dd>
+    </td>
+  </tr>
 
-  <dt><%= @model.t :area_ids %></dt>
-  <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
+  </tr>
 
-  <dt><%= @model.t :dataset_ids %></dt>
-  <%= render partial: "opendata/agents/addons/dataset/view/form", locals: { f: f } %>
-
-  <dt><%= @model.t :state %></dt>
-  <dd><%= f.select :state, @item.state_options %></dd>
-</dl>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :dataset_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/dataset/view/form", locals: { f: f } %></td>
+  </tr>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :state %></td>
+    <td class="input"><%= f.select :state, @item.state_options %></td>
+  </tr>
+</table>

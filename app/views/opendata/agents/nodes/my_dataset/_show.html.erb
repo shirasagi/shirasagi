@@ -1,9 +1,9 @@
 <table class="see opendata-dataset show">
-  <tr>
+  <tr class="parent-row">
     <td class="field"><%= @model.t :name %></td>
     <td class="input"><%= @item.send :name %></td>
   </tr>
-  <tr>
+  <tr class="parent-row">
     <td class="field"><%= @model.t :resources %></td>
     <td class="input">
       <div class="resources"><%= link_to :"opendata.manage_resources", "resources/" %></div>
@@ -13,23 +13,23 @@
       <% end %>
     </td>
   </tr>
-  <tr>
+  <tr class="parent-row">
     <td class="field"><%= @model.t :text %></td>
     <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
   </tr>
-  <tr>
+  <tr class="parent-row">
     <td class="field"><%= @model.t :tags %></td>
     <td class="input"><%= @item.tags.join(", ") %></td>
   </tr>
-  <tr>
+  <tr class="parent-row">
     <td class="field"><%= @model.t :category_ids %></td>
     <td class="input"><%= @item.categories.map { |m| m.name }.join(", ") %></td>
   </tr>
-  <tr>
+  <tr class="parent-row">
     <td class="field"><%= @model.t :area_ids %></td>
     <td class="input"><%= @item.areas.map { |m| m.name }.join(", ") %></td>
   </tr>
-  <tr>
+  <tr class="parent-row">
     <td class="field"><%= @model.t :state %></td>
     <td class="input"><%= @item.label :state %></td>
   </tr>

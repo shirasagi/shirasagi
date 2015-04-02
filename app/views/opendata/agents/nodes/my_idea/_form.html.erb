@@ -6,29 +6,40 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 %>
 <%= javascript_include_tag "opendata/public" %>
 
-<dl class="see opendata-idea">
-  <dt><%= @model.t :name %><%= required_label %></dt>
-  <dd><%= f.text_field :name %></dd>
+<table class="see opendata-idea">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="input"><%= f.text_field :name %></td>
+  </tr>
 
-  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
-  <dd><%= f.text_area :text %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %><%= required_label %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
 
-  <dt><%= @model.t :tags %><%= @item.tt :tags %></dt>
-  <dd><%= f.text_field :tags %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :tags %><%= @item.tt :tags %></td>
+    <td class="input"><%= f.text_field :tags %></td>
+  </tr>
 
-  <dt><%= @model.t :category_ids %><%= required_label %></dt>
-  <dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
+    <td class="input">
     <%= f.hidden_field "category_ids[]", value: "" %>
     <% categories.each do |c| %>
       <label><%= f.check_box("category_ids[]", {}, c.id) %> <%= c.name %></label>
     <% end %>
-  </dd>
+  </td>
+  </tr>
 
-  <dt><%= @model.t :area_ids %></dt>
-  <dd><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
+  </tr>
 
-  <dt><%= @model.t :dataset_id %></dt>
-  <dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :dataset_id %></td>
+    <td class="input">
     <%= f.hidden_field "dataset_ids[]", value: params[:dataset] %>
     <% if @item.dataset_ids.length > 0 %>
       <% if @item.datasets.length > 0 %>
@@ -37,10 +48,12 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
       <%= "存在しません" %>
       <% end %>
     <% end %>
-  </dd>
+  </td>
+  </tr>
 
-  <dt><%= @model.t :app_id %></dt>
-  <dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :app_id %></td>
+    <td class="input">
     <%= f.hidden_field "app_ids[]", value: params[:app] %>
     <% if @item.app_ids.length > 0 %>
       <% if @item.apps.length > 0 %>
@@ -49,9 +62,12 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
       <%= "存在しません" %>
       <% end %>
     <% end %>
-  </dd>
+  </td>
+  </tr>
 
-  <dt><%= @model.t :state %></dt>
-  <dd><%= f.select :state, @item.state_options %></dd>
-</dl>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :state %></td>
+    <td class="input"><%= f.select :state, @item.state_options %></td>
+  </tr>
+</table>
 

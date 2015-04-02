@@ -1,10 +1,11 @@
+<dl>
 <dd>
   <%= f.hidden_field "dataset_ids[]", value: "", class: "hidden-ids" %>
   <%= link_to t("opendata.search_datasets.index"), "/datasets/select", class: "ajax-box" %>
 </dd>
 
 <dd>
-  <table class="index ajax-selected">
+  <table class="ajax-selected">
     <thead>
       <tr>
         <th class="name"><%= @model.t :dataset_ids %></th>
@@ -22,3 +23,4 @@
     </tbody>
   </table>
 </dd>
+</dl>

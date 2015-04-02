@@ -5,7 +5,7 @@ $ ->
   Opendata.render()
   Opendata_Tooltips.render()
   Opendata_SearchUI.render()
-  Opendata_ListUI.render("table.index")
+  Opendata_ListUI.render("table.od-modal")
 
 class @Opendata
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
@@ -116,7 +116,7 @@ class @Opendata_Tooltips
 
 class @Opendata_ListUI
   @render: (list)->
-    $("table.index tbody tr").each ->
+    $("table.od-modal tbody tr").each ->
       tr    = $(this)
       tbody = tr.parent()
       tr.find(".tap-menu a").each ->
@@ -211,7 +211,7 @@ class @Opendata_SearchUI
       id = $(this).attr("data-id")
       $("#ajax-box .items [data-id=#{id}]").remove()
 
-    Opendata_ListUI.render("table.index")
+    Opendata_ListUI.render("table.od-modal")
 
     $("#ajax-box a.select-item").on "click", (e)->
       id = $(this).closest("[data-id]").attr("data-id")
@@ -233,7 +233,7 @@ class @Opendata_SearchUI
       e.preventDefault()
       $.colorbox.close()
 
-    $("#ajax-box .index").on "change", (e)->
+    $("#ajax-box .od-modal").on "change", (e)->
       Opendata_SearchUI.toggleSelectButton()
     Opendata_SearchUI.toggleSelectButton()
 

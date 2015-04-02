@@ -1,42 +1,62 @@
-<dl class="see opendata-app">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+<table class="see opendata-app show">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %></td>
+    <td class="input"><%= @item.send :name %></td>
+  </tr>
 
-  <dt><%= @model.t :appfiles %></dt>
-  <dd><%= link_to :"opendata.manage_appfiles", "appfiles/" %></dd>
-  <% @item.appfiles.order(name: 1).each do |af| %>
-    <dd>
-      <div><%= link_to af.filename, "appfiles/#{af.id}/" %>(<%= number_to_human_size af.size %>)</div>
-    </dd>
-  <% end %>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :appfiles %></td>
+    <td class="input">
+      <div class="resources"><%= link_to :"opendata.manage_appfiles", "appfiles/" %></div>
+      <% @item.appfiles.order(name: 1).each do |af| %>
+        <div class="resource"><%= link_to af.filename, "appfiles/#{af.id}/" %>(<%= number_to_human_size af.size %>)</div>
+      <% end %>
+    </td>
+  </tr>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %></td>
+    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+  </tr>
 
-  <dt><%= @model.t :license_id %></dt>
-  <dd><%= tryb { @item.license.name } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :license_id %></td>
+    <td class="input"><%= tryb { @item.license.name } %></td>
+  </tr>
 
-  <dt><%= @model.t :tags %></dt>
-  <dd><%= @item.tags.join(", ") %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :tags %></td>
+    <td class="input"><%= @item.tags.join(", ") %></td>
+  </tr>
 
-  <dt><%= @model.t :appurl %></dt>
-  <dd><%= auto_link br(@item.appurl), html: { target: "_blank" } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :appurl %></td>
+    <td class="input"><%= auto_link br(@item.appurl), html: { target: "_blank" } %></td>
+  </tr>
 
-  <dt><%= @model.t :category_ids %></dt>
-  <dd><%= @item.categories.map { |m| m.name }.join(", ") %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :category_ids %></td>
+    <td class="input"><%= @item.categories.map { |m| m.name }.join(", ") %></td>
+  </tr>
 
-  <dt><%= @model.t :area_ids %></dt>
-  <dd><%= @item.areas.map { |m| m.name }.join(", ") %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= @item.areas.map { |m| m.name }.join(", ") %></td>
+  </tr>
 
-  <dt><%= @model.t :dataset_ids %></dt>
-  <% if @item.datasets.present? %>
-    <% @item.datasets.map { |m| m.name }.each do |i| %>
-      <dd><%= i %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :dataset_ids %></td>
+    <td class="input">
+    <% if @item.datasets.present? %>
+      <% @item.datasets.map { |m| m.name }.each do |i| %>
+        <div><%= i %></div>
+      <% end %>
     <% end %>
-  <% else %>
-    <dd></dd>
-  <% end %>
+    </td>
+  </tr>
 
-  <dt><%= @model.t :state %></dt>
-  <dd><%= @item.label :state %></dd>
-</dl>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :state %></td>
+    <td class="input"><%= @item.label :state %></td>
+  </tr>
+</table>

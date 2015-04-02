@@ -49,31 +49,40 @@ namespace :opendata do
           timeout(time_out){
             url_file = open(ur.original_url)
             puts ur.original_url
-            if url_file.present?
-              if url_file.last_modified.present?
-                if ur.original_updated == nil
-                  ur.crawl_state = "updated"
-                elsif url_file.last_modified > ur.original_updated.beginning_of_day
-                  ur.crawl_state = "updated"
-                elsif url_file.last_modified <= ur.original_updated.beginning_of_day
-                  ur.crawl_state = "same"
+            if ur.crawl_update == "none"
+              if url_file.present?
+                if url_file.last_modified.present?
+                  if ur.original_updated == nil
+                    ur.crawl_state = "updated"
+                  elsif url_file.last_modified > ur.original_updated.beginning_of_day
+                    ur.crawl_state = "updated"
+                  elsif url_file.last_modified <= ur.original_updated.beginning_of_day
+                    ur.crawl_state = "same"
+                  end
+                  ur.original_updated = url_file.last_modified
+                else
+                  puts "no last_modified"
+                  ur.crawl_state = "deleted"
                 end
-                ur.original_updated = url_file.last_modified
               else
-                puts "no last_modified"
-                ur.original_updated = nil
+                puts "no file"
                 ur.crawl_state = "deleted"
               end
-            else
-              puts "no file"
-              ur.original_updated = nil
-              ur.crawl_state = "deleted"
-            end
-            res = ur.save(validate: false)
-            if res == true
-              puts "success"
-            else
-              puts "failure"
+              res = ur.save(validate: false)
+              if res == true
+                puts "success"
+              else
+                puts "failure"
+              end
+            elsif ur.crawl_update == "auto"
+              if url_file.present?
+                if url_file.last_modified.present?
+                  if url_file.last_modified > ur.original_updated.beginning_of_day
+                    ur.crawl_state = "same"
+                    ur.save
+                  end
+                end
+              end
             end
           }
         rescue TimeoutError

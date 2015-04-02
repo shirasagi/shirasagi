@@ -2,10 +2,14 @@
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 %>
 
-<dl class="see opendata-app-appfiles">
-  <dt><%= @model.t :file_id %><%= required_label %></dt>
-  <dd><%= f.file_field :in_file %></dd>
+<table class="see opendata-app-appfiles">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :file_id %><%= required_label %></td>
+    <td class="input"><%= f.file_field :in_file %></td>
+  </tr>
 
-  <dt><%= @model.t :text %><%= @item.tt :text %></dt>
-  <dd><%= f.text_area :text %></dd>
-</dl>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
+</table>

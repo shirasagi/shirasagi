@@ -4,25 +4,32 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
 <%= javascript_include_tag "opendata/public" %>
 <%= javascript_include_tag "opendata/form" %>
 
-<dl class="see opendata-dataset-resources">
-  <dt><%= @model.t :file_id %><%= required_label %></dt>
-  <dd><%= f.file_field :in_file %></dd>
-
-  <dt><%= @model.t :name %><%= required_label %></dt>
-  <dd><%= f.text_field :name %></dd>
-
-  <dt><%= @model.t :format %><%= @item.tt :format %><%= required_label %></dt>
-  <dd><%= f.text_field :format, style: "width: 8em; ime-mode: disabled;" %></dd>
-
-  <dt><%= @model.t :license_id %><%= required_label %></dt>
-  <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
-
-  <dt><%= @model.t :text %><%= @item.tt :text %></dt>
-  <dd><%= f.text_area :text %></dd>
-
-  <dt class="in_tsv"><%= @model.t :tsv_id %><%= @item.tt :tsv_id %></dt>
-  <dd class="in_tsv"><%= f.file_field :in_tsv %></td>
-  <% if @item.tsv_id %>
-  <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>
-  <% end %>
-</dl>
+<table class="see opendata-dataset-resources">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :file_id %><%= required_label %></td>
+    <td class="input"><%= f.file_field :in_file %></td>
+  </tr>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="input"><%= f.text_field :name %></td>
+  </tr>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :format %><%= @item.tt :format %><%= required_label %></td>
+    <td class="input"><%= f.text_field :format, style: "width: 8em; ime-mode: disabled;" %></td>
+  </tr>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :license_id %><%= required_label %></td>
+    <td class="input"><%= f.select :license_id, licenses, include_blank: "" %></td>
+  </tr>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
+  <tr class="parent-row">
+    <td class="in_tsv field"><%= @model.t :tsv_id %><%= @item.tt :tsv_id %></td>
+    <td class="in_tsv input"><%= f.file_field :in_tsv %></td>
+    <% if @item.tsv_id %>
+      <td class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></td>
+    <% end %>
+  </tr>
+</table>

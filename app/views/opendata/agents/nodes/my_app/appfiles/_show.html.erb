@@ -1,12 +1,16 @@
-<dl class="see opendata-app-appfiles">
+<table class="see opendata-app-appfiles show">
   <% if @item.file %>
-  <dt><%= @model.t :file_id %></dt>
-  <dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :file_id %></td>
+    <td class="input">
     <%= link_to @item.filename, "file" %>
     (<%= number_to_human_size @item.size %>)
-  </dd>
+  </td>
+  </tr>
   <% end %>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %></td>
+    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+  </tr>
 </dl>
