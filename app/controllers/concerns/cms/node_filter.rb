@@ -72,12 +72,12 @@ module Cms::NodeFilter
       if request.get?
         @filename = @item.filename
       elsif confirm
-        @source = "#{@item.filename}/"
+        @source = "/#{@item.filename}/"
         @item.validate_destination_filename(destination)
         @item.filename = destination
         @link_check = @item.errors.empty?
       else
-        @source = "#{@item.filename}/"
+        @source = "/#{@item.filename}/"
         raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
 
         location = { action: :move, source: @source, link_check: true }

@@ -40,7 +40,8 @@ ja:
       part: パーツ
       url: URL
       confirm: 確認
-      message: '"/%{source}"へのリンクが含まれるページ'
+      message: '"%{source}"へのリンクが含まれるページ'
+      link_to_replace: URLを置換する
     syntax_check: アクセシビリティチェック
     syntax_check_replace:
       dependent_character: "[機種依存文字]"

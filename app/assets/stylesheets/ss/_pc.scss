@@ -479,20 +479,24 @@ table.cells, table.see {
     }
   }
   .search {
+    width:20%;
     padding: 2px 20px 1px;
     background: $gray3;
     border: none;
     position: absolute;
+    right: 0;
     &:hover {
       background: $pink;
       color: $white;
     }
   }
   .replace {
+    width:20%;
     padding: 2px 20px 1px 15px;
     background: $gray3;
     border: none;
     position: absolute;
+    right: 0;
     &:hover {
       background: $pink;
       color: $white;
