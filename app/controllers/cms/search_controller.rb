@@ -32,7 +32,12 @@ class Cms::SearchController < ApplicationController
       part_ids = params[:part_ids].to_a.map(&:to_i)
       layout_ids = params[:layout_ids].to_a.map(&:to_i)
 
+      @pages   = []
+      @layouts = []
+      @parts   = []
+
       begin
+        raise "400" if keyword.blank?
         if option == "regexp"
           search_html_with_regexp(keyword)
         elsif option == "url"
@@ -51,9 +56,7 @@ class Cms::SearchController < ApplicationController
           replace_html_with_url(keyword, replacement)
         end
       rescue => e
-        @pages   = []
-        @layouts = []
-        @parts   = []
+        #
       end
 
       location = {

@@ -33,7 +33,12 @@ $ ->
     <header><h2><%= @filename %></h2></header>
     <%= error_messages_for :item %>
     <dl class="see" style="display: none;">
-      <dt class="wide"><%= t("cms.move.message", source: @source) %></dt>
+      <dt class="wide">
+        <%= t("cms.move.message", source: @source) %>
+        <% if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <span style="float: right; padding-right: 25px;"><%= link_to t("cms.move.link_to_replace"), cms_search_path %></span>
+        <% end %>
+      </dt>
       <dl class="result" style="height:300px; overflow:auto; border: 1px solid #cccccc; padding: 15px;">
       </dl>
     </dl>

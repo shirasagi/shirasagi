@@ -66,11 +66,11 @@ $ ->
     <dt><%= t("cms.search.option") %><%= @model.tt :search_option %></dt>
     <dd>
       <label>
-        <%= check_box_tag :option, :url, false, class: :option %>
+        <%= check_box_tag :option, :url, false, id: "option-url", class: :option %>
         <%= t("cms.search.url") %>
       </label>
       <label>
-        <%= check_box_tag :option, :regexp, false, class: :option %>
+        <%= check_box_tag :option, :regexp, false, id: "option-regexp", class: :option %>
         <%= t("cms.search.regexp") %>
       </label>
     </dd>
