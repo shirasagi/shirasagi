@@ -1,0 +1,15 @@
+<dl class="see after_move">
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.after_unify" %></dt>
+  <dd></dd>
+  <% Chorg::Changeset::GROUP_ATTRIBUTES.each do |k| %>
+    <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
+    <dd><%= @item.destinations.try(:first).try(:send, :[], k) %></dd>
+  <% end %>
+</dl>
+
+<dl class="see before_move">
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.before_unify" %></dt>
+  <dd></dd>
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %></dt>
+  <dd><%= br @item.sources.map { |e| e["name"] }.join("\n") %></dd>
+</dl>

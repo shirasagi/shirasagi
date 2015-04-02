@@ -1,15 +1,15 @@
 FactoryGirl.define do
-  factory :add_change_set, class: Chorg::ChangeSet do
-    type Chorg::ChangeSet::TYPE_ADD
+  factory :add_changeset, class: Chorg::Changeset do
+    type Chorg::Changeset::TYPE_ADD
     destinations { [ { name: "シラサギ市/新設グループ_#{unique_id}" }.stringify_keys ] }
   end
 
-  factory :move_change_set, class: Chorg::ChangeSet do
+  factory :move_changeset, class: Chorg::Changeset do
     transient do
       source nil
     end
 
-    type Chorg::ChangeSet::TYPE_MOVE
+    type Chorg::Changeset::TYPE_MOVE
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
     destinations do
       [ { name: "シラサギ市/新設グループ_#{unique_id}",
@@ -19,13 +19,13 @@ FactoryGirl.define do
     end
   end
 
-  factory :unify_change_set, class: Chorg::ChangeSet do
+  factory :unify_changeset, class: Chorg::Changeset do
     transient do
       sources nil
       destination nil
     end
 
-    type Chorg::ChangeSet::TYPE_UNIFY
+    type Chorg::Changeset::TYPE_UNIFY
     destinations do
       [ { name: "シラサギ市/新設グループ_#{unique_id}",
           contact_email: "mb4pjr0czv@example.jp",
@@ -46,13 +46,13 @@ FactoryGirl.define do
     end
   end
 
-  factory :division_change_set, class: Chorg::ChangeSet do
+  factory :division_changeset, class: Chorg::Changeset do
     transient do
       source nil
       destinations nil
     end
 
-    type Chorg::ChangeSet::TYPE_DIVISION
+    type Chorg::Changeset::TYPE_DIVISION
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
 
     after(:build) do |entity, evaluator|
@@ -65,12 +65,12 @@ FactoryGirl.define do
     end
   end
 
-  factory :delete_change_set, class: Chorg::ChangeSet do
+  factory :delete_changeset, class: Chorg::Changeset do
     transient do
       source nil
     end
 
-    type Chorg::ChangeSet::TYPE_DELETE
+    type Chorg::Changeset::TYPE_DELETE
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
   end
 end

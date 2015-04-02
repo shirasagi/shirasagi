@@ -1,0 +1,19 @@
+<dl class="see before_division">
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.before_division" %></dt>
+  <dd></dd>
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %></dt>
+  <dd><%= br @item.sources.map { |e| e["name"] }.join("\n") %></dd>
+</dl>
+
+<dl class="see after_division">
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.after_division", count: 0 %></dt>
+  <dd></dd>
+  <% @item.destinations.each.with_index(1) do |destination, index| %>
+    <dt><%= t "chorg.views.#{params[:type]}_changesets.after_division", count: index %></dt>
+    <dd></dd>
+    <% Chorg::Changeset::GROUP_ATTRIBUTES.each do |k| %>
+      <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
+      <dd><%= destination[k] %></dd>
+    <% end %>
+  <% end %>
+</dl>

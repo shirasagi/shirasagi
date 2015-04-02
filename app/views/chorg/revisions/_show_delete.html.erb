@@ -3,14 +3,14 @@
   <table class="index">
     <thead><tr><th><%= t("chorg.views.revisions/#{params[:action]}.#{type}_description") %></th></tr></thead>
     <tbody>
-    <% change_sets.each do |change_set| %>
+    <% changesets.each do |changeset| %>
       <tr>
         <td>
-          <%= link_to change_set.delete_description, chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+          <%= link_to changeset.delete_description, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
           <nav class="tap-menu">
-            <%= link_to :show, chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
-            <%= link_to :edit, edit_chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
-            <%= link_to :delete, delete_chorg_change_sets_change_set_path(rid: @item, type: change_set.type, id: change_set) %>
+            <%= link_to :show, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to :edit, edit_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
+            <%= link_to :delete, delete_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
           </nav>
         </td>
       </tr>

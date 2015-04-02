@@ -14,11 +14,11 @@
     <%= link_to :delete, action: :delete, id: @item %>
     </nav>
     <nav class="act-menu">
-    <%= link_to :"chorg.menus.revisions.add", new_chorg_change_sets_change_set_path(rid: @item, type: "add") %>
-    <%= link_to :"chorg.menus.revisions.move", new_chorg_change_sets_change_set_path(rid: @item, type: "move") %>
-    <%= link_to :"chorg.menus.revisions.unify", new_chorg_change_sets_change_set_path(rid: @item, type: "unify") %>
-    <%= link_to :"chorg.menus.revisions.division", new_chorg_change_sets_change_set_path(rid: @item, type: "division") %>
-    <%= link_to :"chorg.menus.revisions.delete", new_chorg_change_sets_change_set_path(rid: @item, type: "delete") %>
+    <%= link_to :"chorg.menus.revisions.add", new_chorg_changesets_changeset_path(rid: @item, type: "add") %>
+    <%= link_to :"chorg.menus.revisions.move", new_chorg_changesets_changeset_path(rid: @item, type: "move") %>
+    <%= link_to :"chorg.menus.revisions.unify", new_chorg_changesets_changeset_path(rid: @item, type: "unify") %>
+    <%= link_to :"chorg.menus.revisions.division", new_chorg_changesets_changeset_path(rid: @item, type: "division") %>
+    <%= link_to :"chorg.menus.revisions.delete", new_chorg_changesets_changeset_path(rid: @item, type: "delete") %>
     </nav>
     <nav class="act-menu">
     <%= link_to :"chorg.menus.revisions.test_execute", controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::TEST %>

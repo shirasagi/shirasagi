@@ -1,7 +1,7 @@
 ja:
   chorg:
     revision: 組織変更
-    change_set: 組織変更内容
+    changeset: 組織変更内容
     views:
       revisions/edit: &revisions_edit
         add: 新設
@@ -27,24 +27,24 @@ ja:
           header: 本番実行しますが、よろしいですか？
           run_button: 本番実行
         run_options: 実行オプション
-      add_change_sets:  &group_props
+      add_changesets:  &group_props
         name: グループ名
         order: 表示順
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
         ldap_dn: DN
-      move_change_sets:
+      move_changesets:
         before_move: 移動元
         after_move: 移動先
         select_group: 移動グループを選択する
         <<: *group_props
-      unify_change_sets:
+      unify_changesets:
         before_unify: 統合元
         after_unify: 統合先
         select_group: 統合グループを選択する
         <<: *group_props
-      division_change_sets:
+      division_changesets:
         before_division: 分割元
         after_division:
           zero: 分割先
@@ -52,7 +52,7 @@ ja:
           other: "%{count} 番目の分割先"
         select_group: 分割グループを選択する
         <<: *group_props
-      delete_change_sets:
+      delete_changesets:
         select_group: 廃止グループを選択する
         <<: *group_props
     menus:
@@ -70,9 +70,7 @@ ja:
       test_run: テスト実行
 
   modules:
-    revision: 組織変更
-    change_set: 組織変更内容
-    runner: 組織変更
+    chorg: 組織変更
 
   job:
     models:
@@ -81,11 +79,11 @@ ja:
 
   mongoid:
     models:
-      chorg/change_set: 変更内容
+      chorg/changeset: 変更内容
       chorg/revision: リビジョン
     attributes:
       chorg/revision:
         name: 名前
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
-      chorg/change_set:
+      chorg/changeset:
         type: 種別

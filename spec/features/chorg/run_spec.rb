@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "chorg_run", dbscope: :example do
   let(:site) { cms_site }
   let(:revision) { create(:revision, site_id: site.id) }
-  let(:changeset) { create(:add_change_set, revision_id: revision.id) }
+  let(:changeset) { create(:add_changeset, revision_id: revision.id) }
   let(:revision_show_path) { chorg_revisions_revision_path site.host, revision.id }
 
   context "with test run" do

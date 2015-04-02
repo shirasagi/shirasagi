@@ -1,8 +1,8 @@
-class Chorg::ChangeSetsController < ApplicationController
+class Chorg::ChangesetsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Chorg::ChangeSet
+  model Chorg::Changeset
 
   navi_view "cms/main/navi"
 
@@ -30,7 +30,7 @@ class Chorg::ChangeSetsController < ApplicationController
     end
 
     def append_view_paths
-      append_view_path "app/views/chorg/change_sets/#{params[:type]}"
+      append_view_path "app/views/chorg/changesets/#{params[:type]}"
       super
     end
 

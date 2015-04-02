@@ -4,9 +4,9 @@ module Chorg::PrimitiveRunner
   include Chorg::MongoidSupport
 
   def run_primitive_chorg
-    Chorg::ChangeSet::TYPES.each do |type|
+    Chorg::Changeset::TYPES.each do |type|
       put_log("==#{type}==")
-      with_inc_depth { @item.send("#{type}_change_sets").each(&method("execute_#{type}")) }
+      with_inc_depth { @item.send("#{type}_changesets").each(&method("execute_#{type}")) }
     end
   end
 
