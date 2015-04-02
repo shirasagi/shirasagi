@@ -18,7 +18,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-      @urls    = { @site.url => nil }
+      @urls    = { @site.url => "Site" }
       @results = {}
       @errors  = {}
 
@@ -98,6 +98,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         next if next_url =~ /\.(css|js|json)$/
         next if next_url =~ /\.p\d+\.html$/ #pagination
         next if next_url =~ /\/2\d{7}\.html$/ #calendar
+        next if next_url =~ /^\w+:/ && next_url !~ /^http/ #other scheme
+        next if next_url =~ /\/https?:/ #b.hatena
 
         if next_url[0] != "/" && next_url !~ /^https?:/
           next_url = File.expand_path next_url, File.dirname(url)
