@@ -1,4 +1,4 @@
-class Job::Model
+class Job::Task
   extend SS::Translation
   include SS::Document
   include SS::Task::Model
@@ -20,14 +20,14 @@ class Job::Model
   class << self
     public
       def enqueue(entity)
-        model = Job::Model.new(entity)
+        model = Job::Task.new(entity)
         yield model if block_given?
         model.save!
         model
       end
 
       def dequeue(name)
-        criteria = Job::Model.where(pool: name, started: nil)
+        criteria = Job::Task.where(pool: name, started: nil)
         criteria = criteria.lte(at: Time.now)
         criteria = criteria.asc(:priority)
         criteria.find_and_modify({ '$set' => { started: Time.now }}, new: true)

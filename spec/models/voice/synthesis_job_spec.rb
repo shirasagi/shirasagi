@@ -28,7 +28,7 @@ describe Voice::SynthesisJob do
       it { expect(job).not_to be_nil }
 
       describe "job" do
-        subject { Job::Model.find_by(pool: 'voice_synthesis') rescue nil }
+        subject { Job::Task.find_by(pool: 'voice_synthesis') rescue nil }
         it { should_not be_nil }
         its(:class_name) { should eq 'Voice::SynthesisJob' }
         its(:args) { should eq [ id.to_s ] }
@@ -62,7 +62,7 @@ describe Voice::SynthesisJob do
       it { expect(system(cmd)).to be_truthy }
 
       describe "job" do
-        subject { Job::Model.find_by(name: 'job:voice_synthesis') rescue nil }
+        subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
         it { should be_nil }
       end
 
@@ -93,12 +93,12 @@ describe Voice::SynthesisJob do
       it { expect(system(cmd)).to be false }
 
       describe "job" do
-        subject { Job::Model.find_by(name: 'job:voice_synthesis') rescue nil }
+        subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
         it { should be_nil }
       end
 
       describe "voice_file" do
-        subject { Job::Model.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: url) rescue nil }
         it { should be_nil }
       end
     end
@@ -120,12 +120,12 @@ describe Voice::SynthesisJob do
       it { expect(system(cmd)).to be_falsey }
 
       describe "job" do
-        subject { Job::Model.find_by(name: 'job:voice_synthesis') rescue nil }
+        subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
         it { should be_nil }
       end
 
       describe "voice_file" do
-        subject { Job::Model.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: url) rescue nil }
         it { should be_nil }
       end
     end
@@ -147,12 +147,12 @@ describe Voice::SynthesisJob do
       it { expect(system(cmd)).to be_falsey }
 
       describe "job" do
-        subject { Job::Model.find_by(name: 'job:voice_synthesis') rescue nil }
+        subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
         it { should be_nil }
       end
 
       describe "voice_file" do
-        subject { Job::Model.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: url) rescue nil }
         it { should be_nil }
       end
     end
@@ -179,12 +179,12 @@ describe Voice::SynthesisJob do
       it { expect(system(cmd)).to be_falsey }
 
       describe "job" do
-        subject { Job::Model.find_by(name: 'job:voice_synthesis') rescue nil }
+        subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
         it { should be_nil }
       end
 
       describe "voice_file" do
-        subject { Job::Model.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: url) rescue nil }
         it { should be_nil }
       end
     end
@@ -206,7 +206,7 @@ describe Voice::SynthesisJob do
       it { expect(system(cmd)).to be_truthy }
 
       describe "job" do
-        subject { Job::Model.find_by(name: 'job:voice_synthesis') rescue nil }
+        subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
         it { should be_nil }
       end
 
