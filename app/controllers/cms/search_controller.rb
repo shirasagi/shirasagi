@@ -52,8 +52,10 @@ class Cms::SearchController < ApplicationController
 
         if option == "regexp"
           replace_html_with_regexp(keyword, replacement)
-        else
+        elsif option == "url"
           replace_html_with_url(keyword, replacement)
+        else
+          replace_html_with_string(keyword, replacement)
         end
       rescue => e
         #
@@ -73,6 +75,20 @@ class Cms::SearchController < ApplicationController
     end
 
   private
+    def replace_html_with_string(string, replacement)
+      @pages = @pages.select do |item|
+        update_html_fields(item) { |html| html.gsub(string, replacement) }
+      end
+
+      @parts = @parts.select do |item|
+        update_html_fields(item) { |html| html.gsub(string, replacement) }
+      end
+
+      @layouts = @layouts.select do |item|
+        update_html_fields(item) { |html| html.gsub(string, replacement) }
+      end
+    end
+
     def replace_html_with_url(src_url, dest_url)
       src_path  = "=\"#{src_url}"
       dest_path = "=\"#{dest_url}"
