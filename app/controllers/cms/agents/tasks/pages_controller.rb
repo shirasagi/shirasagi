@@ -58,7 +58,9 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
         page.release_date = nil
       end
 
-      if !page.save
+      if page.save
+        page.delete if page.try(:branch?) && page.state == "public"
+      else
         @task.log "error: " + page.errors.full_messages.join(', ') if @task
       end
     end

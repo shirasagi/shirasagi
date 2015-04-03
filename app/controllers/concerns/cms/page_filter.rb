@@ -50,7 +50,7 @@ module Cms::PageFilter
 
       result = @item.update
       location = nil
-      if result && @item.try(:branch?) && @item.state != "closed"
+      if result && @item.try(:branch?) && @item.state == "public"
         location = { action: :index }
         @item.delete
       end
