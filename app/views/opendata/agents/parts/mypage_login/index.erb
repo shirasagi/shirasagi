@@ -10,8 +10,8 @@
 
 <% if @cur_member %>
 <span id="my-notice"></span>
-<a href="/mypage/"><%= @cur_member.name %>さん</a>
-<a href="/mypage/logout"><%= t("views.logout") %></a>
+<a class="member" href="/mypage/"><%= @cur_member.name %>さん</a>
+<a class="logout" href="/mypage/logout"><%= t("views.logout") %></a>
 <% else %>
-<a href="/mypage/login"><%= t("views.login") %></a>
+<a class="login" href="/mypage/login"><%= t("views.login") %></a>
 <% end %>
