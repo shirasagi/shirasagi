@@ -5,7 +5,7 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 
 %>
-<%= javascript_include_tag "opendata/public" %>
+<%= javascript_include_tag "opendata/opendata" %>
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
 <script src="/assets/js/jquery.form.js"></script>

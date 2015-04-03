@@ -1,8 +1,37 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery.cookie
+#//= #require jquery.turbolinks
+#//= #require turbolinks
 
 <% environment.context_class.instance_eval { include ApplicationHelper } %>
 
+##
+#  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
+##
+
 $ ->
+  # $.ajaxSetup
+  #   headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
+
   Opendata.render()
+
+  # navi
+  path = location.pathname + "/"
+  $("#navi .main-menu a, #navi .sub-menu a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
+
+  # pulldown menu
+  if $(window).width() >= 800
+    menu = $(".pulldown-menu")
+    link = menu.find("a")
+    menu.each ->
+      link.not(".current").hide()
+      link.filter(".current").prependTo(menu).click ->
+        link.not(".current").slideToggle("fast")
+        return false
+
   Opendata_Tooltips.render()
   Opendata_SearchUI.render()
   Opendata_ListUI.render("table.od-modal")
