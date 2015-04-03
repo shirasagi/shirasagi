@@ -18,7 +18,10 @@ SS::Application.routes.draw do
     resources :groups, concerns: :deletion
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
-    get "/search_groups" => "search_groups#index"
+
+    namespace "apis" do
+      get "groups" => "groups#index"
+    end
 
     namespace "db" do
       get "/" => redirect { |p, req| "#{req.path}/colls" }

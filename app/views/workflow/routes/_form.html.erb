@@ -10,7 +10,7 @@
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("cms.search_groups.index"), cms_search_groups_path, class: "ajax-box" %>
+    <%= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -24,7 +24,7 @@
         <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
             <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("sys.search_groups.deselect"), "#", class: :deselect %></td>
+            <td><%= link_to t("sys.apis.groups.deselect"), "#", class: :deselect %></td>
           </tr>
         <% end %>
       </tbody>
@@ -58,14 +58,14 @@
                 <%= f.hidden_field "approvers[]", value: "#{level},#{user.id}" %>
                 <%= user.long_name %>
               </td>
-              <td><%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %></td>
+              <td><%= link_to t("cms.apis.pages.deselect"), "#", class: :deselect %></td>
             </tr>
           <% else %>
             <tr>
               <td>
                 <%= t("workflow.user_deleted") %>
               </td>
-              <td><%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %></td>
+              <td><%= link_to t("cms.apis.pages.deselect"), "#", class: :deselect %></td>
             </tr>
           <% end %>
         <% end %>

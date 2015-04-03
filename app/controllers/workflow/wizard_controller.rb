@@ -1,5 +1,5 @@
 class Workflow::WizardController < ApplicationController
-  include Cms::SearchFilter
+  include Cms::ApiFilter
 
   before_action :set_route, only: [:approver_setting]
   before_action :set_item, only: [:approver_setting]

@@ -21,27 +21,6 @@ ja:
     group: グループ
     member: メンバー
     alert: 警告
-    search:
-      html: サイト内検索
-      result: 検索結果
-      keyword: 検索文字
-      replacement: 置換文字
-      option: オプション
-      page: ページ
-      layout: レイアウト
-      part: パーツ
-      name: タイトル
-      url: URL
-      regexp: 正規表現
-      confirm_message: 全置換を行ってもよろしいですか？
-    move:
-      page: ページ
-      layout: レイアウト
-      part: パーツ
-      url: URL
-      confirm: 確認
-      message: '"%{source}"へのリンクが含まれるページ'
-      link_to_replace: URLを置換する
     syntax_check: アクセシビリティチェック
     syntax_check_replace:
       dependent_character: "[機種依存文字]"
@@ -57,21 +36,34 @@ ja:
         - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
         - </div>
         - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
-    search_groups:
-      index: グループを選択する
-      search: グループを検索
-      select: グループを設定する
-      deselect: 削除
-    search_pages:
-      index: 関連記事を選択する
-      search: 関連記事を検索
-      select: 関連記事を設定する
-      deselect: 削除
-    search_categories:
-      index: カテゴリを選択する
-      search: カテゴリを検索
-      select: カテゴリを設定する
-      deselect: 削除
+    search_contents: サイト内検索
+    move_page:
+      message: '"%{source}"へのリンクが含まれるページ'
+      link_to_replace: URLを置換する
+    apis:
+      groups:
+        index: グループを選択する
+        search: グループを検索
+        select: グループを設定する
+        deselect: 削除
+      pages:
+        index: 関連記事を選択する
+        search: 関連記事を検索
+        select: 関連記事を設定する
+        deselect: 削除
+      categories:
+        index: カテゴリーを選択する
+        search: カテゴリーを検索
+        select: カテゴリーを設定する
+        deselect: 削除
+      contents:
+        page: ページ
+        title: タイトル
+        result: 検索結果
+        keyword: 検索文字
+        replacement: 置換文字
+        option: オプション
+        confirm_message: 全置換を行ってもよろしいですか？
 
     nodes:
       cms/node: フォルダーリスト

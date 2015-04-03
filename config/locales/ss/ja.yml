@@ -14,6 +14,8 @@ ja:
     confirm: 確認
     file: ファイル
     image: 画像
+    url: URL
+    regexp: 正規表現
     state:
       public: 公開中
       closed: 非公開
