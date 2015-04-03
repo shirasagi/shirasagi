@@ -120,14 +120,22 @@ module SS::File::Model
     end
 
     def validate_size
-      if SS.config.env.max_filesize.present?
-        if in_file.present?
-          errors.add :base, :too_large_file if in_file.size > SS.config.env.max_filesize
-        elsif in_files.present?
-          in_files.each do |file|
-            errors.add :base, :too_large_file if file.size > SS.config.env.max_filesize
-          end
+      validate_limit = lambda do |file|
+        filename   = file.original_filename
+        base_limit = SS.config.env.max_filesize
+        ext_limit  = SS.config.env.max_filesize_ext[filename.sub(/.*\./, "")]
+
+        if ext_limit.present?
+          errors.add :base, :too_large_file, filename: filename if file.size > ext_limit
+        elsif base_limit.present?
+          errors.add :base, :too_large_file, filename: filename if file.size > base_limit
         end
+      end
+
+      if in_file.present?
+        validate_limit.call(in_file)
+      elsif in_files.present?
+        in_files.each { |file| validate_limit.call(file) }
       end
     end
 end

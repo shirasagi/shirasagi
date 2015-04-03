@@ -31,7 +31,8 @@ module SS::Config
     cattr_reader(:default_values) do
       {
         storage: "file",
-        max_filesize: 104_857_600
+        max_filesize: 104_857_600,
+        max_filesize_ext: {}
       }
     end
   end
