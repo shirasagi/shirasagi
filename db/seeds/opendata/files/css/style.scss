@@ -779,6 +779,18 @@ nav.pagination {
     background: $idea-yellow;
   }
 }
+#s-mypage nav.pagination {
+  a {
+    &:hover {
+      background: $blue;
+      color: $white;
+    }
+  }
+  .current {
+    background: $blue;
+    color: $white;
+  }
+}
 
 // -----------------------------------------------------------------------------
 // form
@@ -1318,13 +1330,32 @@ form.opendata-search_ideas-form .send {
 // #s-mypage #contents .inner
 #s-mypage #contents .inner {
   nav.menu {
+    @include grd-mypagebutton-blue;
     float: left;
     margin-bottom: 28px;
+    border: 1px solid rgba($blue, 0.55);
+    letter-spacing: -.40em;
+    &:hover {
+      @include grd-mypagebutton-blue_hover;
+      border: 1px solid rgba($blue, 0.7);
+    }
     a {
-      //@include r-arrow;
-      @include border-radius(5px);
-      margin-right: 15px;
-      padding-right: 20px;
+      @include box-shadow(0 0 0 1px $gray);
+      @include grd-mypagebutton-gray;
+      padding: 8px 25px;
+      display: inline-block;
+      margin: 4px 5px;
+      border: 1px solid $white;
+      color: $text;
+      text-decoration: none;
+      letter-spacing: normal;
+      &:hover {
+        @include grd-mypagebutton-gray_hover;
+      }
+    }
+    a:not(:target) {
+      filter: none;
+      -ms-filter: none;
     }
   }
   nav.tutorial-data {
@@ -1445,17 +1476,33 @@ form.opendata-search_ideas-form .send {
     }
     .send {
       text-align: center;
-      input {
-        padding: 10px 50px;
-        @include btn-blue-left;
-        font-family: $font-base;
-        font-size: $px14;
-        cursor: pointer;
-      }
-      input[name="delete"] {
-        background: #c33838;
+      div {
+        @include grd-mypagebutton-blue;
+        display: inline-block;
+        border: 1px solid rgba($blue, 0.55);
+        letter-spacing: -.40em;
         &:hover {
-          background: #990000;
+          @include grd-mypagebutton-blue_hover;
+          border: 1px solid rgba($blue, 0.7);
+        }
+        input {
+          @include box-shadow(0 0 0 1px $gray);
+          @include grd-mypagebutton-gray;
+          display: inline-block;
+          margin: 4px 5px;
+          padding: 8px 25px;
+          border: 1px solid $white;
+          color: $text;
+          text-decoration: none;
+          letter-spacing: normal;
+          cursor: pointer;
+          &:hover {
+            @include grd-mypagebutton-gray_hover;
+          }
+        }
+        input:not(:target) {
+          filter: none;
+          -ms-filter: none;
         }
       }
     }
@@ -2503,7 +2550,7 @@ article.licenses div article a {
             line-height: 1.3;
           }
         }
-        .resource {
+        .resource, .url_resource {
           @include clearfix;
           margin: 0px 16px;
           border-bottom: 1px solid #ddcfcc;
