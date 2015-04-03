@@ -30,10 +30,9 @@ class Uploader::File
               Fs.binwrite path, binary
             end
           end
+          @saved_path = @path
           compile_scss if @css
           compile_coffee if @js
-
-          @saved_path = @path
           return true
         rescue => e
           errors.add :path, ":" + e.message
