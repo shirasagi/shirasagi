@@ -13,6 +13,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
 
   public
+    # Checks the URLs by task.
     def check
       @task.log "# #{@site.name}"
 
@@ -53,8 +54,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
     end
 
-  private
-    # Check URL (front)
+    # Checks the url.
     def check_url(url, ref)
       if url =~ /(\/|\.html?)$/
         check_html(url, ref)
@@ -63,6 +63,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
     end
 
+  private
     # Adds the log with valid url
     def add_valid_url(url, ref)
         @results[url] = 1
@@ -75,9 +76,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         @errors[ref]  << url
     end
 
-    # Check URL with HTML file
+    # Checks the html url.
     def check_html(url, ref)
-      file = get_file(url)
+      file = get_internal_file(url)
       html = file ? Fs.read(file) : get_http(url)
 
       if html.nil?
@@ -90,7 +91,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       return if url[0] != "/"
 
       html = NKF.nkf "-w", html
-      html.scan(/href="([^"]+)"/) do |m|
+      html.scan(/\shref="([^"]+)"/i) do |m|
         next_url = m[0]
         next_url = next_url.sub(/^#{@base_url}/, "/")
         next_url = next_url.sub(/#.*/, "")
@@ -105,30 +106,36 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         if next_url[0] != "/" && next_url !~ /^https?:/
           next_url = File.expand_path next_url, File.dirname(url)
         end
+        next_url = URI.encode(next_url) if next_url =~ /[^-_.!~*'()\w;\/\?:@&=+$,%#]/
         next if @results[next_url]
 
         @urls[next_url] = url
       end
     end
 
-    # Check URL with other file
+    # Checks the file url.
     def check_file(url, ref)
-      if get_head(url) == false
+      if get_internal_file(url)
+        add_valid_url(url, ref)
+      elsif check_head(url) == false
         add_invalid_url(url, ref)
       else
         add_valid_url(url, ref)
       end
     end
 
-    # Search file
-    def get_file(url)
+    # Returns the internal file.
+    def get_internal_file(url)
+      return nil if url =~ /^https?:/
+
       url  = url.sub(/\?.*/, "")
+      url  = URI.decode(url)
       file = "#{@site.path}#{url}"
       file = File.join(file, "index.html") if Fs.directory?(file)
       Fs.file?(file) ? file : nil
     end
 
-    # GET Request
+    # Returns the HTML response with HTTP request.
     def get_http(url)
       url = File.join(@base_url, url) if url[0] == "/"
 
@@ -147,8 +154,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
     end
 
-    # HEAD Request (fake)
-    def get_head(url)
+    # Cheks the existence with HEAD request.
+    def check_head(url)
       url = File.join(@base_url, url) if url[0] == "/"
 
       begin
