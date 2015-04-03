@@ -2,16 +2,22 @@
   <a href="edit/">プロフィールの編集</a>
 </nav>
 
-<dl class="see">
-  <dt><%= @model.t :icon_id %></dt>
-  <dd><%= member_icon @cur_member %></dd>
+<table class="see">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :icon_id %></td>
+    <td class="input"><%= member_icon @cur_member %></td>
+  </tr>
 
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @cur_member.name %></dd>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %></td>
+    <td class="input"><%= @cur_member.name %></td>
+  </tr>
 
-  <dt><%= @model.t :email %></dt>
-  <dd><%= @cur_member.email %></dd>
-</dl>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :email %></td>
+    <td class="input"><%= @cur_member.email %></td>
+  </tr>
+</table>
 
 <nav class="account">
   <a href="delete/">アカウントの削除</a>
