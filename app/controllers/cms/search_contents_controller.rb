@@ -12,11 +12,11 @@ class Cms::SearchContentsController < ApplicationController
     def index
       @keyword = params[:keyword]
       @replacement = params[:replacement]
-      @update_items = params[:update_items]
-      if @update_items
-        page_ids  = params[:update_items][:page_ids]
-        layout_ids = params[:update_items][:layout_ids]
-        part_ids   = params[:update_items][:part_ids]
+      @updated_items = params[:updated_items]
+      if @updated_items
+        page_ids  = params[:updated_items][:page_ids]
+        layout_ids = params[:updated_items][:layout_ids]
+        part_ids   = params[:updated_items][:part_ids]
 
         @pages = Cms::Page.site(@cur_site).in(id: page_ids).order_by(filename: 1).limit(500)
         @parts = Cms::Part.site(@cur_site).in(id: part_ids).order_by(filename: 1).limit(500)
@@ -40,21 +40,15 @@ class Cms::SearchContentsController < ApplicationController
         raise "400" if keyword.blank?
         if option == "regexp"
           search_html_with_regexp(keyword)
-        elsif option == "url"
-          search_html_with_url(keyword)
-        else
-          search_html_with_string(keyword)
-        end
-
-        @pages   = @pages.in(id: page_ids).order_by(filename: 1).limit(500)
-        @layouts = @layouts.in(id: layout_ids).order_by(filename: 1).limit(500)
-        @parts   = @parts.in(id: part_ids).order_by(filename: 1).limit(500)
-
-        if option == "regexp"
+          exclude_search_results(page_ids, part_ids, layout_ids)
           replace_html_with_regexp(keyword, replacement)
         elsif option == "url"
+          search_html_with_url(keyword)
+          exclude_search_results(page_ids, part_ids, layout_ids)
           replace_html_with_url(keyword, replacement)
         else
+          search_html_with_string(keyword)
+          exclude_search_results(page_ids, part_ids, layout_ids)
           replace_html_with_string(keyword, replacement)
         end
       rescue => e
@@ -65,7 +59,7 @@ class Cms::SearchContentsController < ApplicationController
         action: :index,
         keyword: keyword,
         replacement: replacement,
-        update_items: {
+        updated_items: {
           page_ids: @pages.map(&:id),
           layout_ids: @layouts.map(&:id),
           part_ids: @parts.map(&:id)
@@ -120,6 +114,12 @@ class Cms::SearchContentsController < ApplicationController
       @layouts = @layouts.select do |item|
         update_html_fields(item) { |html|  html.gsub(regexp, replacement) }
       end
+    end
+
+    def exclude_search_results(page_ids, part_ids, layout_ids)
+      @pages   = @pages.in(id: page_ids).order_by(filename: 1).limit(500)
+      @layouts = @layouts.in(id: layout_ids).order_by(filename: 1).limit(500)
+      @parts   = @parts.in(id: part_ids).order_by(filename: 1).limit(500)
     end
 
     def update_html_fields(item)
