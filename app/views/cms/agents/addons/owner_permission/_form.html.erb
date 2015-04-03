@@ -11,7 +11,7 @@ $ ->
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("cms.search_groups.index"), cms_search_groups_path, class: "ajax-box" %>
+    <%= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -24,13 +24,13 @@ $ ->
       <tbody>
         <tr data-id="<%= @cur_group.id %>">
           <td><%= f.hidden_field "group_ids[]", value: @cur_group.id %> <%= @cur_group.name %></td>
-          <td><%= link_to t("cms.search_groups.deselect"), "#", class: :deselect %></td>
+          <td><%= link_to t("cms.apis.groups.deselect"), "#", class: :deselect %></td>
         </tr>
         <% @item.groups.each do |group| %>
         <% next if group.id == @cur_group.id %>
         <tr data-id="<%= group.id %>">
           <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
-          <td><%= link_to t("cms.search_groups.deselect"), "#", class: :deselect %></td>
+          <td><%= link_to t("cms.apis.groups.deselect"), "#", class: :deselect %></td>
         </tr>
         <% end %>
       </tbody>

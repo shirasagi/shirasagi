@@ -13,7 +13,7 @@
   <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %></dt>
   <dd>
     <%= f.hidden_field "sources[][id]", value: "", class: "hidden-ids" %>
-    <%= link_to :"chorg.views.#{params[:type]}_changesets.select_group", cms_search_groups_path, class: "ajax-box" %>
+    <%= link_to :"chorg.views.#{params[:type]}_changesets.select_group", cms_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

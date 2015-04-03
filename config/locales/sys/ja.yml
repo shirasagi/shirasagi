@@ -9,11 +9,12 @@ ja:
     test: テスト
     db_tool: DBツール
     role: 権限/ロール
-    search_groups:
-      index: グループを選択する
-      search: グループを検索
-      select: グループを設定する
-      deselect: 削除
+    apis:
+      groups:
+        index: グループを選択する
+        search: グループを検索
+        select: グループを設定する
+        deselect: 削除
 
   modules:
     sys: システム

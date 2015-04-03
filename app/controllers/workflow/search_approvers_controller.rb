@@ -1,5 +1,5 @@
 class Workflow::SearchApproversController < ApplicationController
-  include Cms::SearchFilter
+  include Cms::ApiFilter
 
   model Cms::User
 

@@ -1,5 +1,5 @@
 class Contact::SearchGroupsController < ApplicationController
-  include Cms::SearchFilter
+  include Cms::ApiFilter
 
   model Cms::Group
 

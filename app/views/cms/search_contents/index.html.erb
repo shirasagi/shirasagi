@@ -1,0 +1,85 @@
+<%= coffee do %>
+$ ->
+  result = $(".result")
+  $(".search").on "click", (e)->
+    path    = "<%= cms_apis_contents_path %>"
+    keyword = $(".keyword").val()
+    option  = $(".option:checked").val();
+    data    = { s: { keyword: keyword, option: option } }
+
+    if keyword != ""
+      $.ajax
+        type: "GET",
+        data: data
+        url: path + "?" + $.param(data)
+        beforeSend: ->
+          result.html(SS.loading)
+        success: (data)->
+          result.html(data)
+          result.find("input:enabled").prop("checked", true)
+        error: (data, status) ->
+          alert(data)
+          console.log data
+          result.html("input")
+          alert(["== Error =="].concat(data.responseJSON).join("\n"))
+
+    e.preventDefault()
+    return false
+
+  $(".replace").on "click", (e)->
+    keyword    = $(".keyword").val()
+    page_ids   = $("input[name='page_ids[]']:checked:enabled")
+    part_ids   = $("input[name='part_ids[]']:checked:enabled")
+    layout_ids = $("input[name='layout_ids[]']:checked:enabled")
+
+    if keyword != "" && (page_ids.length || part_ids.length || layout_ids.length)
+      if confirm("<%= t("cms.apis.contents.confirm_message") %>")
+        return true
+
+    e.preventDefault()
+    return false
+
+  $(".option").on "click", (e)->
+    $("[value!='" + $(this).attr("value") + "'].option").prop("checked", false)
+
+  $("th input").remove()
+  $("input[name='page_ids[]']").remove()
+  $("input[name='part_ids[]']").remove()
+  $("input[name='layout_ids[]']").remove()
+<% end %>
+
+<%= form_for :item, url: { action: :update }, html: { class: "index-search", multipart: true } do |f| %>
+<div class="search-contents-form">
+  <dl class="see">
+    <dt><%= t("cms.apis.contents.keyword") %><%= @model.tt :search_keyword %></dt>
+    <dd>
+      <%= text_field_tag :keyword, "", value: @keyword, class: :keyword %>
+      <%= f.submit t("views.button.search"), name: "search", class: :search %>
+    </dd>
+
+    <dt><%= t("cms.apis.contents.replacement") %><%= @model.tt :replace_keyword %></dt>
+    <dd>
+      <%= text_field_tag :replacement, "", value: @replacement, class: :replacement %>
+      <%= f.submit t("views.button.replace_all"), name: "replace", class: :replace %>
+    </dd>
+
+    <dt><%= t("cms.apis.contents.option") %><%= @model.tt :search_option %></dt>
+    <dd>
+      <label>
+        <%= check_box_tag :option, :url, false, id: "option-url", class: :option %>
+        <%= t("views.url") %>
+      </label>
+      <label>
+        <%= check_box_tag :option, :regexp, false, id: "option-regexp", class: :option %>
+        <%= t("views.regexp") %>
+      </label>
+    </dd>
+  </dl>
+</div>
+
+<div class="result">
+  <% if @update_items %>
+    <%= render file: "cms/apis/contents/index" %>
+  <% end %>
+</div>
+<% end %>

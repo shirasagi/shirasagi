@@ -35,7 +35,9 @@ SS::Application.routes.draw do
   end
 
   namespace "event", path: ".:site/event" do
-    get "/search_categories" => "search_categories#index"
+    namespace "apis" do
+      get "categories" => "categories#index"
+    end
   end
 
 end

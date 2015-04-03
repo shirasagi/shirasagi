@@ -7,7 +7,7 @@ $ ->
   <dt><%= @model.t :related_pages %><%= @model.tt :page_ids %></dt>
   <dd>
     <%= f.hidden_field "related_page_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("cms.search_pages.index"), cms_search_pages_path, class: "ajax-box" %>
+    <%= link_to t("cms.apis.pages.index"), cms_apis_pages_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -21,7 +21,7 @@ $ ->
         <% @item.related_pages.each do |page| %>
         <tr data-id="<%= page.id %>">
           <td><%= f.hidden_field "related_page_ids[]", value: page.id %> <%= page.name %></td>
-          <td><%= link_to t("cms.search_pages.deselect"), "#", class: :deselect %></td>
+          <td><%= link_to t("cms.apis.search_pages.deselect"), "#", class: :deselect %></td>
         </tr>
         <% end %>
         <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>
