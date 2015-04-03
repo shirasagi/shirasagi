@@ -95,6 +95,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         next_url = next_url.sub(/^#{@base_url}/, "/")
         next_url = next_url.sub(/#.*/, "")
 
+        next if next_url.blank?
         next if next_url =~ /\.(css|js|json)$/
         next if next_url =~ /\.p\d+\.html$/ #pagination
         next if next_url =~ /\/2\d{7}\.html$/ #calendar
