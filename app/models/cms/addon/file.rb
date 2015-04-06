@@ -9,7 +9,7 @@ module Cms::Addon
       embeds_ids :files, class_name: "SS::File"
       permit_params file_ids: []
 
-      before_save :clone_files, if: -> { new_clone? }
+      before_save :clone_files, if: -> { try(:new_clone?) }
       before_save :save_files
       after_destroy :destroy_files
     end
