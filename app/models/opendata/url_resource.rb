@@ -1,7 +1,7 @@
 class Opendata::UrlResource
   include SS::Document
   include SS::Relation::File
-  include Opendata::Addon::RdfStore
+  include Opendata::Addon::UrlRdfStore
 
   seqid :id
   field :name, type: String
@@ -146,12 +146,13 @@ class Opendata::UrlResource
           ss_file.in_file = in_file
           ss_file.model = self.class.to_s.underscore
 
-          ss_file.content_type = self.format = original_url.sub(/.*\./, "").downcase #"csv"
+          ss_file.content_type = self.format = original_url.sub(/.*\./, "").upcase #downcase #"csv"
           ss_file.filename = File.basename(uri.path)
           ss_file.save
           send("file_id=", ss_file.id)
 
           in_file.close
+          in_file.close(true) if in_file
 
           }
 
@@ -162,6 +163,9 @@ class Opendata::UrlResource
       rescue
         errors.add :original_url, :invalid
         return
+
+      ensure
+        in_file.close(true) if in_file
 
       end
     end

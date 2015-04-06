@@ -53,6 +53,7 @@ ja:
       opendata/url_resource: クローリング
       opendata/appfile: アプリファイル
       opendata/rdf_store: RDFストア
+      opendata/url_rdf_store: RDFストア
       opendata/comment: コメント
 
   cms:
@@ -114,6 +115,9 @@ ja:
       opendata/addon/category:
         category_ids: 分野
       opendata/addon/rdf_store:
+        rdf_iri: グラフ名
+        rdf_error: RDF登録エラー
+      opendata/addon/url_rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
       opendata/member:

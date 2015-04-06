@@ -11,7 +11,6 @@
 <table class="index">
   <thead>
     <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
       <th class="crawl_state"><%= @model.t :crawl_state %></th>
       <th class="crawl_update"><%= @model.t :crawl_update %></th>
       <th class="name"><%= @model.t :name %></th>
@@ -23,8 +22,7 @@
   <tbody>
     <% @items.each do |item| %>
     <tr>
-      <td>
-        <input type="checkbox" name="ids[]" value="<%= item[:id] %>" />
+      <td class="crawl_state_<%= item[:crawl_state] %>"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %>
         <nav class="tap-menu">
           <%= link_to :show, opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
           <%= link_to :edit, edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
@@ -32,14 +30,12 @@
         </nav>
       </td>
 
-      <td class="crawl_state_<%= item[:crawl_state] %>"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></td>
       <td class="crawl_update"><%= t "opendata.crawl_update.#{item[:crawl_update]}" %></td>
       <% if item[:crawl_state] == "deleted" %>
         <td class="name"><%= link_to item[:name] , delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %></td>
       <% else %>
         <td class="name"><%= link_to item[:name] , edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %></td>
       <% end %>
-
 
       <td class="resourcename"><%= item[:resourcename] %></td>
       <td class="original_url"><input type="button" value=<%= @model.t :tsv_id %> onClick="window.open('<%= item[:original_url] %>')">　<%= item[:original_url] %></td>
