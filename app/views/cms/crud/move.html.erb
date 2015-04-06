@@ -4,7 +4,7 @@ $ ->
   confirm = <%= @link_check.present? %>
 
   if confirm
-    path    = "<%= cms_search_contents_path %>"
+    path    = "<%= cms_apis_contents_path %>"
     keyword = "<%= @source %>"
     option  = "url"
     data    = { s: { keyword: keyword, option: option } }
@@ -48,7 +48,7 @@ $ ->
         <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
         <%= hidden_field_tag :filename, "", value: @filename %>
         <%= hidden_field_tag :source, "", value: @source %>
-        <%= f.button t("views.confirm"), name: :confirm, class: :confirm %>
+        <%= f.button t("cms.move_page.confirm"), name: :confirm, class: :confirm %>
       </dd>
     </dl>
   </div>

@@ -38,6 +38,7 @@ ja:
         - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
     search_contents: サイト内検索
     move_page:
+      confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
       link_to_replace: URLを置換する
     apis:
