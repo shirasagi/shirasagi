@@ -820,6 +820,9 @@ form.opendata-search_datasets-form, form.opendata-search_groups-form, form.opend
       @include box-shadow(0 0 0 1px $gray);
       @include grd-button-gray;
       cursor: pointer;
+      &:hover {
+        @include grd-button-gray_hover;
+      }
     }
     input:not(:target) {
       filter: none;
@@ -1358,20 +1361,18 @@ form.opendata-search_ideas-form .send {
       -ms-filter: none;
     }
   }
-  nav.tutorial-data {
-    float: right;
-    @include box-shadow(0 0 0 1px #b3b3e6);
-    margin-left: 4px;
-    margin-right: 1px;
-    margin-bottom: $box-margin;
-    padding: 14px 8px 10px 25px;
+  nav.tutorial-data a {
+    @include box-shadow(0 0 0 1px $gray);
+    @include grd-tutorial;
     display: inline-block;
+    float: right;
+    margin: 0 1px 28px 4px;
+    padding: 8px 8px 8px 37px;
     border: 1px solid $white;
-    background: rgba(232, 232, 252, 0.3) url(../img/ic-arrow_darkblue.png) no-repeat 10px center;
     color: $text;
     text-decoration: none;
     &:hover {
-      background-color: #e1e2e3;
+      @include grd-tutorial_hover;
     }
   }
   table.see {
@@ -2011,8 +2012,6 @@ nav.cms-sns_share {
   float: left;
   padding: 27px 20px;
   a {
-    @include box-shadow(0 0 0 1px #b3b3e6);
-    @include grd-nav-blue;
     display: inline-block;
     width: 95px;
     margin-top: 94px;
@@ -2031,10 +2030,18 @@ nav.cms-sns_share {
     }
   }
   a.search {
-    //background-image: url(../img/ic-search_l.png);
+    @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
+    @include grd-largesearchbutton;
+    &:hover {
+      @include grd-largesearchbutton_hover;
+    }
   }
   a.new {
-    //background-image: url(../img/ic-add_l.png);
+    @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
+    @include grd-largeaddbutton;
+    &:hover {
+      @include grd-largeaddbutton_hover;
+    }
   }
 }
 
@@ -2213,19 +2220,39 @@ nav.cms-sns_share {
       .sitemenu {
         padding: 9px 0;
         a {
-          @include box-shadow(0 0 0 1px #b3b3e6);
-          @include grd-nav-blue;
-          width: 120px;
+          width: 110px;
           margin-right: 9px;
-          padding: 5px 0px 5px 22px;
+          padding: 5px 0px 5px 32px;
           display: inline-block;
           border: 1px solid $white;
           color: #4d4d4d;
+          font-size: $px13;
           text-decoration: none;
           text-align: left;
           letter-spacing: normal;
           &:last-child {
             margin-right: 0;
+          }
+        }
+        a.new {
+          @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
+          @include grd-addbutton;
+          &:hover {
+            @include grd-addbutton_hover;
+          }
+        }
+        a.search {
+          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
+          @include grd-searchbutton;
+          &:hover {
+            @include grd-searchbutton_hover;
+          }
+        }
+        a.group-search {
+          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
+          @include grd-groupsearchbutton;
+          &:hover {
+            @include grd-groupsearchbutton_hover;
           }
         }
         nav {
@@ -2762,7 +2789,6 @@ article.licenses div article a {
   padding: 27px 20px;
   a {
     @include box-shadow(0 0 0 1px #b3b3e6);
-    @include grd-nav-blue;
     display: inline-block;
     width: 95px;
     margin-top: 94px;
@@ -2781,10 +2807,18 @@ article.licenses div article a {
     }
   }
   a.search {
-    //background-image: url(../img/ic-search_l.png);
+    @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
+    @include grd-largesearchbutton;
+    &:hover {
+      @include grd-largesearchbutton_hover;
+    }
   }
   a.new {
-    //background-image: url(../img/ic-add_l.png);
+    @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
+    @include grd-largeaddbutton;
+    &:hover {
+      @include grd-largeaddbutton_hover;
+    }
   }
 }
 
@@ -2963,19 +2997,32 @@ article.licenses div article a {
       .sitemenu {
         padding: 9px 0;
         a {
-          @include box-shadow(0 0 0 1px #b3b3e6);
-          @include grd-nav-blue;
-          width: 120px;
+          width: 110px;
           margin-right: 9px;
-          padding: 5px 0px 5px 22px;
+          padding: 5px 0px 5px 32px;
           display: inline-block;
           border: 1px solid $white;
           color: #4d4d4d;
+          font-size: $px13;
           text-decoration: none;
           text-align: left;
           letter-spacing: normal;
           &:last-child {
             margin-right: 0;
+          }
+        }
+        a.new {
+          @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
+          @include grd-addbutton;
+          &:hover {
+            @include grd-addbutton_hover;
+          }
+        }
+        a.search {
+          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
+          @include grd-searchbutton;
+          &:hover {
+            @include grd-searchbutton_hover;
           }
         }
         nav {
@@ -3251,7 +3298,6 @@ article.licenses div article a {
   padding: 27px 20px;
   a {
     @include box-shadow(0 0 0 1px #b3b3e6);
-    @include grd-nav-blue;
     display: inline-block;
     width: 95px;
     margin-top: 94px;
@@ -3270,10 +3316,18 @@ article.licenses div article a {
     }
   }
   a.search {
-    //background-image: url(../img/ic-search_l.png);
+    @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
+    @include grd-largesearchbutton;
+    &:hover {
+      @include grd-largesearchbutton_hover;
+    }
   }
   a.new {
-    //background-image: url(../img/ic-add_l.png);
+    @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
+    @include grd-largeaddbutton;
+    &:hover {
+      @include grd-largeaddbutton_hover;
+    }
   }
 }
 
@@ -3452,19 +3506,32 @@ article.licenses div article a {
       .sitemenu {
         padding: 9px 0;
         a {
-          @include box-shadow(0 0 0 1px #b3b3e6);
-          @include grd-nav-blue;
-          width: 120px;
+          width: 110px;
           margin-right: 9px;
-          padding: 5px 0px 5px 22px;
+          padding: 5px 0px 5px 32px;
           display: inline-block;
           border: 1px solid $white;
           color: #4d4d4d;
+          font-size: $px13;
           text-decoration: none;
           text-align: left;
           letter-spacing: normal;
           &:last-child {
             margin-right: 0;
+          }
+        }
+        a.new {
+          @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
+          @include grd-addbutton;
+          &:hover {
+            @include grd-addbutton_hover;
+          }
+        }
+        a.search {
+          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
+          @include grd-searchbutton;
+          &:hover {
+            @include grd-searchbutton_hover;
           }
         }
         nav {
