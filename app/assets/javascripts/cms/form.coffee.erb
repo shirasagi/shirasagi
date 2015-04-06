@@ -1,15 +1,16 @@
 ## cms form
 
 $(window).load ->
-  return if window.load_cms_form
-  window.load_cms_form = true
-
   Syntax_Checker.render()
   Link_Checker.render()
 
   Form_Alert.addValidation(Form_Alert.clonedName)
   Form_Alert.addValidation(Form_Alert.presence)
   Form_Alert.addValidation(Syntax_Checker.validateHtml)
+
+  if Syntax_Checker.autoCorrect
+    Form_Alert.addBeforeSave(Syntax_Checker.correctAll)
+
   Form_Alert.render()
 
 class @Syntax_Checker
@@ -44,7 +45,7 @@ class @Syntax_Checker
   }
 
   @dependentCharacter = "<%= I18n.t('dependent_character').join %>"
-  @mediaExtension = [
+  @mediaExtensions = [
     "aac" , "aif", "aiff", "au" , "avi", "flac", "flv", "mid",
     "midi", "mp3", "m4a" , "mp4", "mpg", "mpeg", "oga", "ogg",
     "tta" , "vdo", "wav" , "wma", "wmv"
@@ -52,6 +53,7 @@ class @Syntax_Checker
 
   @errors
   @errorCount
+  @autoCorrect = <%= SS.config.cms.auto_correct_page_html == true %>
 
   @reset: ()->
     @errors = {}
@@ -100,10 +102,31 @@ class @Syntax_Checker
 
   @validateHtml: (form, submit)->
     unless Syntax_Checker.check()
-      addonName = "<%= I18n.t('cms.syntax_check') %>"
       for key, errors of Syntax_Checker.errors
         for error, i in errors
-          Form_Alert.add addonName, this, error["msg"]
+          if error["correct"] && Syntax_Checker.autoCorrect
+            Form_Alert.add "<%= I18n.t('cms.auto_correct.notice') %>", this, error["msg"]
+          else
+            Form_Alert.add "<%= I18n.t('cms.syntax_check') %>", this, error["msg"]
+
+  @correctAll: (form, submit)->
+    html = Syntax_Checker.getEditorHtml()
+
+    html = Syntax_Checker.correctMultibyteCharacter(html)
+    html = Syntax_Checker.correctDependentCharacter("<div>" + html + "</div>")
+    html = Syntax_Checker.correctDateFormat("<div>" + html + "</div>")
+
+    if $("<div>" + html + "</div>").find("table").length
+      html = Syntax_Checker.correctTableCaption($("<div>" + html + "</div>").find("table"))
+      html = Syntax_Checker.correctTableScope($("<div>" + html + "</div>").find("table"))
+
+    if $("<div>" + html + "</div>").find("h1,h2,h3,h4,h5,h6").length
+      html = Syntax_Checker.correctOrderOfH("<div>" + html + "</div>")
+
+    if $("<div>" + html + "</div>").find("a[href]").length
+      html = Syntax_Checker.correctAdjacentA($("<div>" + html + "</div>").find("a[href]"))
+
+    Syntax_Checker.setEditorHtml(html)
 
   @getEditorHtml: ()->
     if (typeof tinymce != 'undefined')
@@ -158,10 +181,9 @@ class @Syntax_Checker
         li.append(message)
 
         if error["correct"] && error["ele"]
-          correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct') %>" + '</a>')
+          correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct.link') %>" + '</a>')
           correct.on "click", {error: error}, (e)->
             html = e.data.error["correct"](e.data.error["ele"])
-            console.log html
             Syntax_Checker.setEditorHtml(html)
             $(".mod-cms-body button.syntax-check").trigger("click")
             return false
@@ -221,8 +243,8 @@ class @Syntax_Checker
 
   @correctTableCaption: (table)->
     $(table).find('caption').remove()
-    $(table).prepend('<caption>' + "<%= I18n.t('cms.syntax_check_replace.caption') %>" + '</caption>')
-    return  $(table).parents().last().html()
+    $(table).prepend('<caption>' + "<%= I18n.t('cms.auto_correct.caption') %>" + '</caption>')
+    return  $(table).parents().last().html() || $(table).html()
 
   @correctTableScope: (table)->
     if $(table).find("tr:first th").length == 1
@@ -231,10 +253,10 @@ class @Syntax_Checker
       scope = "col"
 
     $(table).find("tr:first th").each ->
-        $(this).attr("scope", scope)  unless $(this).attr("scope")
+      $(this).attr("scope", scope) unless $(this).attr("scope")
     $(table).find("tr:not(:first) th").each ->
-      $(this).attr("scope", "row")  unless $(this).attr("scope")
-    return  $(table).parents().last().html()
+      $(this).attr("scope", "row") unless $(this).attr("scope")
+    return  $(table).parents().last().html() || $(table).html()
 
   @checkOrderOfH: (html)->
     h = $(html).find("h1,h2,h3,h4,h5,h6")
@@ -313,7 +335,7 @@ class @Syntax_Checker
             $(h[i]).after(replace).remove()
             h[i] = replace[0]
 
-    return $(replace).parents().last().html()
+    return $(replace).parents().last().html() || $(replace).html()
 
   @checkMultibyteCharacter: (html)->
     c = html.match /[Ａ-Ｚａ-ｚ０-９]/g
@@ -348,7 +370,7 @@ class @Syntax_Checker
   @correctDependentCharacter: (html)->
     regex = new RegExp("[" + Syntax_Checker.dependentCharacter + "]","g")
     html = html.replace regex, (c)->
-      "<%= I18n.t('cms.syntax_check_replace.dependent_character') %>"
+      "<%= I18n.t('cms.auto_correct.dependent_character') %>"
     return $(html).html()
 
   @checkDateFormat: (html)->
@@ -398,9 +420,11 @@ class @Syntax_Checker
 
   @correctAdjacentA: (a)->
     next = $(a).next('a[href="' + $(a).attr("href") + '"]')
-    $(a).html($(a).html() + $(next).html()) if $(a).html() != $(next).html()
-    next.remove()
-    return $(a).parents().last().html()
+    if next.length
+      $(a).html($(a).html() + $(next).html()) if $(a).html() != $(next).html()
+      next.remove()
+
+    return $(a).parents().last().html() || $(a).html()
 
   @checkInterwordSpace: (html)->
     $(html).find(":not(iframe)").each ->
@@ -436,7 +460,7 @@ class @Syntax_Checker
       }]
       Syntax_Checker.pushError(errors)
 
-    regExt = new RegExp("(" + Syntax_Checker.mediaExtension.join("|") + ")","i")
+    regExt = new RegExp("(" + Syntax_Checker.mediaExtensions.join("|") + ")","i")
     regSite = /https?:\/\/www\.youtube\.com\//
 
     $(html).find("iframe[src]").each ()->
@@ -566,9 +590,10 @@ class @Link_Checker
 class @Form_Alert
   @alerts = []
   @validations = []
+  @beforeSaves = []
 
   @render: ()->
-    $("input:submit").on "click.submit_alert", (e)->
+    $("input:submit").on "click.form_alert", (e)->
       submit = this
       form   = $(submit).closest("form")
 
@@ -592,7 +617,8 @@ class @Form_Alert
         )
 
         $("#cboxLoadedContent").find(".save").on "click", {submit: submit}, ()->
-          $(submit).off(".submit_alert")
+          Form_Alert.runBeforeSave(form, submit)
+          $(submit).off(".form_alert")
           $(submit).trigger("click")
 
         $("#cboxLoadedContent").find(".cancel").on "click", (e)->
@@ -613,6 +639,13 @@ class @Form_Alert
 
   @addValidation: (validate)->
     Form_Alert.validations.push(validate)
+
+  @runBeforeSave: (form, submit)->
+    $.each Form_Alert.beforeSaves, ->
+      (this)(form, submit)
+
+  @addBeforeSave: (callback)->
+    Form_Alert.beforeSaves.push(callback)
 
   @presence: (form, submit)->
     $(form).find("input.presence,textarea.presence").each ->

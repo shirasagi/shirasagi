@@ -10,6 +10,9 @@ production: &production
   # Link Check Ajax URL
   link_check_url: /.cms/link_check/check.json
 
+  # Correct Page's HTML When Saving
+  auto_correct_page_html: false
+
   # Google Map API Center Location
   map_center:
     - 36.204824

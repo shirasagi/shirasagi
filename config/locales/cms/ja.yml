@@ -22,10 +22,11 @@ ja:
     member: メンバー
     alert: 警告
     syntax_check: アクセシビリティチェック
-    syntax_check_replace:
+    auto_correct:
+      link: 自動修正
+      notice: アクセシビリティチェック（保存時に自動で修正されます）
       dependent_character: "[機種依存文字]"
       caption: キャプション
-    auto_correct: 自動修正
     link_check: リンクチェック
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
