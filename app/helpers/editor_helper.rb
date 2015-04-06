@@ -41,6 +41,7 @@ module EditorHelper
       j << %(      #viewportMargin: Infinity ) if opts[:readonly]
       j << %(    cm.setSize null, form.height() ) #if opts[:readonly].blank?
       j << %(    cm.refresh() ) if opts[:readonly].blank?
+      j << %(    form.data "editor", cm )
 
       j.join("\n").html_safe
     end
