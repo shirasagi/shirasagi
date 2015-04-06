@@ -1,6 +1,7 @@
 <%
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 %>
+<%= javascript_include_tag "opendata/opendata" %>
 
 <table class="see opendata-app-appfiles">
   <tr class="parent-row">

@@ -1,7 +1,12 @@
 <%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { id: "item-form", method: :delete, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
-<%= render partial: "show" %>
+<table class="see opendata-idea show">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %></td>
+    <td class="input"><%= @item.send :name %></td>
+  </tr>
+</table>
 
 <footer class="send">
   <div>
