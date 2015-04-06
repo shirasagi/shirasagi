@@ -146,7 +146,7 @@ class Opendata::UrlResource
           ss_file.in_file = in_file
           ss_file.model = self.class.to_s.underscore
 
-          ss_file.content_type = self.format = original_url.sub(/.*\./, "").upcase #downcase #"csv"
+          ss_file.content_type = self.format = original_url.sub(/.*\./, "").upcase
           ss_file.filename = File.basename(uri.path)
           ss_file.save
           send("file_id=", ss_file.id)
