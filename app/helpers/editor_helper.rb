@@ -15,7 +15,7 @@ module EditorHelper
     mode   = opts[:mode].to_s.presence
     mode ||= opts[:filename].sub(/.*\./, "") if opts[:filename]
 
-    mode = CODE_EXT_MODES[mode.to_sym] if CODE_EXT_MODES[mode.to_sym]
+    mode = CODE_EXT_MODES[mode.to_sym] if mode && CODE_EXT_MODES[mode.to_sym]
 
     mode_path = "/assets/js/codemirror/mode"
     mode_file = "#{Rails.public_path}#{mode_path}"

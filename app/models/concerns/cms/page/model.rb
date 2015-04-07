@@ -5,6 +5,10 @@ module Cms::Page::Model
   include Cms::Reference::Layout
 
   included do
+    class_variable_set(:@@_after_generate_file_callbacks, [])
+    class_variable_set(:@@_after_remove_file_callbacks, [])
+    class_variable_set(:@@_after_rename_file_callbacks, [])
+
     store_in collection: "cms_pages"
     set_permission_name "cms_pages"
 
@@ -29,10 +33,27 @@ module Cms::Page::Model
     end
 
     def generate_file
-      return unless serve_static_file?
-      return unless public?
-      return unless public_node?
-      Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      return false unless serve_static_file?
+      return false unless public?
+      return false unless public_node?
+      written = Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      self.class.class_variable_get(:@@_after_generate_file_callbacks).each { |m| send(m) }
+      written
+    end
+
+    def remove_file
+      Fs.rm_rf path
+      self.class.class_variable_get(:@@_after_remove_file_callbacks).each { |m| send(m) }
+    end
+
+    def rename_file
+      return unless @db_changes["filename"]
+      return unless @db_changes["filename"][0]
+
+      src = "#{site.path}/#{@db_changes['filename'][0]}"
+      dst = "#{site.path}/#{@db_changes['filename'][1]}"
+      Fs.mv src, dst if Fs.exists?(src)
+      self.class.class_variable_get(:@@_after_rename_file_callbacks).each { |m| send(m, src, dst) }
     end
 
     def validate_destination_filename(dst)
@@ -76,16 +97,20 @@ module Cms::Page::Model
       ".html"
     end
 
-    def rename_file
-      return unless @db_changes["filename"]
-      return unless @db_changes["filename"][0]
-
-      src = "#{site.path}/#{@db_changes['filename'][0]}"
-      dst = "#{site.path}/#{@db_changes['filename'][1]}"
-      Fs.mv src, dst if Fs.exists?(src)
+  module ClassMethods
+    def after_generate_file(method)
+      methods = class_variable_get(:@@_after_generate_file_callbacks)
+      class_variable_set(:@@_after_generate_file_callbacks, methods << method)
     end
 
-    def remove_file
-      Fs.rm_rf path
+    def after_remove_file(method)
+      methods = class_variable_get(:@@_after_remove_file_callbacks)
+      class_variable_set(:@@_after_remove_file_callbacks, methods << method)
     end
+
+    def after_rename_file(method)
+      methods = class_variable_get(:@@_after_rename_file_callbacks)
+      class_variable_set(:@@_after_rename_file_callbacks, methods << method)
+    end
+  end
 end
