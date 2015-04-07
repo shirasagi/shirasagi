@@ -25,6 +25,17 @@ SS::Application.routes.draw do
         get "file" => "resources#download"
         get "tsv" => "resources#download_tsv"
         get "content" => "resources#content"
+        get "header_size" => "csv2rdf_settings#header_size"
+        post "header_size" => "csv2rdf_settings#header_size"
+        get "rdf_class" => "csv2rdf_settings#rdf_class"
+        post "rdf_class" => "csv2rdf_settings#rdf_class"
+        get "column_types" => "csv2rdf_settings#column_types"
+        post "column_types" => "csv2rdf_settings#column_types"
+        get "confirmation" => "csv2rdf_settings#confirmation"
+        post "confirmation" => "csv2rdf_settings#confirmation"
+        get "rdf_class_preview" => "csv2rdf_settings#rdf_class_preview"
+        get "rdf_prop_select/:column_index" => "csv2rdf_settings#rdf_prop_select"
+        post "rdf_prop_select/:column_index" => "csv2rdf_settings#rdf_prop_select"
       end
 
       resources :url_resources, concerns: :deletion do

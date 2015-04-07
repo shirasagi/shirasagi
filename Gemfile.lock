@@ -190,6 +190,7 @@ GEM
       activesupport (>= 3.0.0)
     kgio (2.10.0)
     kramdown (1.10.0)
+    levenshtein (0.2.2)
     libv8 (3.16.14.15)
     listen (3.0.6)
       rb-fsevent (>= 0.9.3)
@@ -518,6 +519,7 @@ DEPENDENCIES
   json-jwt
   kaminari
   kramdown
+  levenshtein
   mail-iso-2022-jp
   marked-rails
   momentjs-rails

@@ -1,0 +1,22 @@
+<%= stylesheet_link_tag "opendata/private", media: "all" %>
+
+<%= form_for :item, url: { action: params[:action] }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <%= render file: "_#{params[:action]}", locals: { f: f } %>
+    </div>
+  </div>
+
+  <footer class="send">
+    <% if next_url? %>
+      <%= f.submit t("opendata.button.next"), class: :save %>
+    <% else %>
+      <%= f.submit t("opendata.button.build"), class: :save %>
+    <% end %>
+    <%= f.button t("opendata.button.back"), type: :reset, onclick: "location.href='#{prev_url}'; return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

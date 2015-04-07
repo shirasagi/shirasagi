@@ -67,11 +67,12 @@ gem 'ruby-saml'
 # JWT/JWS
 gem 'json-jwt'
 
-# SPARQL
+# SPARQL/RDF
 gem 'sparql'
 gem 'sparql-client'
 gem 'rdf-turtle'
 gem 'rdf-rdfxml'
+gem 'levenshtein'
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 

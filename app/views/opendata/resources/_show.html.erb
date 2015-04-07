@@ -29,5 +29,8 @@
 </dl>
 
 <footer class="send">
-  <%= button_tag t("opendata.links.add_resource"), onclick: "location.href='#{url_for(action: :new)}'; return false;" %>
+  <%= button_tag t("opendata.links.add_resource"), onclick: "location.href='#{url_for(action: :new)}'; return false;", type: :button %>
+  <% if @item.tsv_present? %>
+  <%= button_tag t("opendata.links.build_rdf"), onclick: "location.href='#{url_for(controller: :csv2rdf_settings, action: :header_size, resource_id: @item)}'; return false;", type: :button %>
+  <% end %>
 </footer>

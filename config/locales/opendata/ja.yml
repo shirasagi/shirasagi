@@ -10,6 +10,10 @@ ja:
       add_url_resource: 新しいURLを追加する
       add_appfile: 新しいアプリファイルを追加する
       add_comment: 新しいコメントを追加する
+      build_rdf: RDFに変換する
+      back_to_resource: リソースへ戻る
+      back_to_rdf_class: 戻る
+      back_to_column_types: 戻る
     search_datasets:
       index: データセットを選択する
       search: データセットを検索
@@ -22,13 +26,19 @@ ja:
       deselect: 削除
     button:
       delete_account: アカウント削除
+      next: 次へ進む
+      build: RDFを作成する
+      back: 前へ戻る
     notice:
       deleted_account: アカウントを削除しました。
+      started_building_rdf_job: "RDF 変換処理を開始しました。処理結果は「ジョブ実行履歴」で確認してください。"
     errors:
       messages:
         invalid_rdf: RDFストアの登録に失敗しました。
         invalid_timeout: タイムアウトしました。
         dynamic_file: 動的ファイルはクローリングできません。
+        property_not_selected: プロパティが選択されていません。
+        build_rdf_failed: RDFの作成に失敗しました。
     crawl_state:
       same: 　
       updated: 更新
@@ -36,6 +46,17 @@ ja:
     crawl_update:
       none: 　
       auto: 自動
+    confirm:
+      build_csv2rdf: "RDF 変換処理を開始します。よろしいですか？"
+    labels:
+      auto_assing: "自動割付結果"
+      auto_mis_assing: "自動割付ミス"
+      samples: "データ"
+      rdf_property: RDF プロパティ
+    messages:
+      max_row_notice: "最大 %{max} 行を表示しています。"
+      build_rdf_success: RDFの作成に成功しました。
+      sent_rdf_success: RDFストアの登録に成功しました。
 
   modules:
     opendata: オープンデータ
@@ -111,6 +132,7 @@ ja:
       opendata/crawl: クローリング
       opendata/app: アプリ
       opendata/idea: アイデア
+      opendata/csv2rdf_setting: RDF変換設定
     attributes:
       opendata/addon/category:
         category_ids: 分野
@@ -203,6 +225,12 @@ ja:
         text: コメント
         member_name: 投稿者名
         deleted: 削除日時
+      opendata/csv2rdf_setting:
+        dataset: データセット
+        header_rows: タイトル行数
+        header_labels: タイトル
+        class: RDFクラス
+        column_types: 列設定
 
   tooltip:
     opendata/dataset:
@@ -241,3 +269,7 @@ ja:
     opendata/license:
       related_url:
         - 登録するライセンスの公式ページや説明ページのURLを登録します。
+
+  job:
+    models:
+      opendata/csv2rdf_converter/job: RDF変換ジョブ
