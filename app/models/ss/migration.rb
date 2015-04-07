@@ -44,5 +44,18 @@ class SS::Migration
       x = order(version: -1).limit(1).first
       x.nil? ? '00000000000000' : x.version
     end
+
+    # Take a timestamp from a filepath.
+    #
+    # @param [String] filepath
+    #
+    # @return [String] timestamp
+    #
+    # @example
+    #   SS::Migration.take_timestamp '/foo/bar/lib/migrations/mod1/20150330000000_a.rb'
+    #   #=> '20150330000000'
+    def take_timestamp(filepath)
+      File.basename(filepath).split('_')[0]
+    end
   end
 end

@@ -80,4 +80,9 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example do
       it { is_expected.to eq '20150324000001' }
     end
   end
+
+  describe '.take_timestamp' do
+    subject { described_class.take_timestamp '/a/b/20150330000000_c_d.rb' }
+    it { is_expected.to eq '20150330000000' }
+  end
 end
