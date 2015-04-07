@@ -29,11 +29,11 @@ module Cms::PublicFilter
         raise "404" unless part
         @cur_path = params[:ref] || "/"
         send_part render_part(part)
-      elsif page = find_page(@html)
-        self.response = render_page page
+      elsif page = find_page(@cur_path)
+        self.response = render_page(page)
         send_page page
-      elsif node = find_node(@html)
-        self.response = render_node node
+      elsif node = find_node(@cur_path)
+        self.response = render_node(node)
         send_page node
       else
         raise "404"

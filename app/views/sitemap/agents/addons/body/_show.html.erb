@@ -1,0 +1,23 @@
+<%= code_editor ".mod-sitemap-body .text", readonly: true %>
+
+<dl class="see mod-sitemap-body">
+  <dt><%= @model.t :sitemap_page_state %></dt>
+  <dd><%= @item.send :sitemap_page_state %></dd>
+
+  <dt><%= @model.t :sitemap_depth %></dt>
+  <dd><%= @item.send :sitemap_depth %></dd>
+
+  <dt><%= @model.t :sitemap_deny_urls %></dt>
+  <dd>
+    <% if @item.sitemap_deny_urls.present? %>
+    <%= text_area_tag :sitemap_deny_urls, @item.sitemap_deny_urls, class: "text", style: "height: 100px;"  %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :sitemap_urls %></dt>
+  <dd>
+    <% if @item.sitemap_urls.present? %>
+    <%= text_area_tag :sitemap_urls, @item.sitemap_urls, class: "text", style: "height: 200px;"  %>
+    <% end %>
+  </dd>
+</dl>

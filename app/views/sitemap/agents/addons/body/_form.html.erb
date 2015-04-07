@@ -1,0 +1,35 @@
+<%= code_editor ".mod-sitemap-body .text" %>
+<%= coffee do %>
+$ ->
+  $("#export-urls").click ->
+    $("#item_sitemap_urls").data("editor").setValue("loading..")
+    $.ajax
+      type: "GET",
+      data:
+        item:
+          sitemap_page_state: $("#item_sitemap_page_state").val()
+          sitemap_depth: $("#item_sitemap_depth").val()
+          sitemap_deny_urls: $("#item_sitemap_deny_urls").data("editor").getValue()
+      url: "<%= export_urls_sitemap_pages_path %>"
+      success: (data)->
+        $("#item_sitemap_urls").data("editor").setValue(data)
+      error: (data, status) ->
+        alert(["== Error =="].concat(data.responseJSON).join("\n"))
+<% end %>
+
+<dl class="see mod-sitemap-body">
+  <dt><%= @model.t :sitemap_page_state %><%= @model.tt :sitemap_page_state %></dt>
+  <dd><%= f.select :sitemap_page_state, @item.sitemap_page_state_options, include_blank: " " %></dd>
+
+  <dt><%= @model.t :sitemap_depth %><%= @model.tt :sitemap_depth %></dt>
+  <dd><%= f.number_field :sitemap_depth, min: 1, max: 5 %></dd>
+
+  <dt><%= @model.t :sitemap_deny_urls %><%= @model.tt :sitemap_deny_urls %></dt>
+  <dd><%= f.text_area :sitemap_deny_urls, class: "text", style: "height: 120px" %></dd>
+
+  <dt><%= @model.t :sitemap_export_urls %><%= @model.tt :sitemap_export_urls %></dt>
+  <dd><input id="export-urls" type="button" value="<%= t("sitemap.buttons.export_urls") %>"></dd>
+
+  <dt><%= @model.t :sitemap_urls %><%= @model.tt :sitemap_urls %></dt>
+  <dd><%= f.text_area :sitemap_urls, class: "text", style: "height: 300px" %></dd>
+</dl>

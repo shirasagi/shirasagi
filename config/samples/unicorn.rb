@@ -1,6 +1,6 @@
 worker_processes Integer(ENV["WEB_CONCURRENCY"] || 2)
 listen 3000
-timeout 15
+timeout 120
 preload_app true
 
 root = File.expand_path("../../", __FILE__)

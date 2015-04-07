@@ -1,0 +1,15 @@
+<article class="sitemap-body">
+  <% @cur_page.sitemap_list.each do |node| %>
+    <<%= hx = "h" + (node[:depth] + 1).to_s %>>
+      <%= link_to node[:name], node[:url] %>
+    </<%= hx %>>
+
+    <% if node[:pages] %>
+    <ul>
+      <% node[:pages].each do |page| %>
+        <%= link_to page[:name], page[:url] %>
+      <% end %>
+    </ul>
+    <% end %>
+  <% end %>
+</article>

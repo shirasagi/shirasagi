@@ -1,4 +1,4 @@
-class Uploader::Agents::Nodes::FileController < ApplicationController
+class Sitemap::Agents::Nodes::PageController < ApplicationController
   include Cms::NodeFilter::View
 
   public

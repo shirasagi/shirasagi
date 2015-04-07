@@ -84,7 +84,7 @@ module Workflow::Addon
 
         self.attributes = attributes
         self.master_id = nil
-        self.allow_other_user_files
+        self.allow_other_user_files if respond_to?(:allow_other_user_files)
         self.save
       end
 
