@@ -1345,9 +1345,10 @@ form.opendata-search_ideas-form .send {
     a {
       @include box-shadow(0 0 0 1px $gray);
       @include grd-mypagebutton-gray;
-      padding: 8px 25px;
       display: inline-block;
+      float: left;
       margin: 4px 5px;
+      padding: 8px 25px;
       border: 1px solid $white;
       color: $text;
       text-decoration: none;
