@@ -18,6 +18,11 @@ module Opendata
     Cms::Node.plugin "opendata/idea"
     Cms::Node.plugin "opendata/idea_category"
     Cms::Node.plugin "opendata/search_idea"
+    Cms::Part.plugin "opendata/app"
+    Cms::Part.plugin "opendata/idea"
+    Cms::Part.plugin "opendata/dataset"
+    Cms::Part.plugin "opendata/dataset_group"
+    Cms::Part.plugin "opendata/mypage_login"
 
     Cms::Role.permission :read_other_opendata_datasets
     Cms::Role.permission :read_private_opendata_datasets
