@@ -36,6 +36,15 @@ class Opendata::Idea
 
   default_scope ->{ where(route: "opendata/idea") }
 
+  scope :sort_criteria, ->(sort) do
+    case sort
+    when "attention"
+      excludes(commented: nil).order_by(sort_hash(sort))
+    else
+      order_by(sort_hash(sort))
+    end
+  end
+
   public
     def point_url
       url.sub(/\.html$/, "") + "/point/show.html"
@@ -86,7 +95,20 @@ class Opendata::Idea
   class << self
     public
       def sort_options
-        [%w(新着順 updated), %w(人気順 popular), %w(注目順 attention)]
+        [%w(新着順 released), %w(人気順 popular), %w(注目順 attention)]
+      end
+
+      def sort_hash(sort)
+        case sort
+        when "released"
+          { released: -1, _id: -1 }
+        when "popular"
+          { point: -1, _id: -1 }
+        when "attention"
+          { commented: -1, _id: -1 }
+        else
+          { sort => 1, _id: -1 }
+        end
       end
 
       def limit_aggregation(pipes, limit)

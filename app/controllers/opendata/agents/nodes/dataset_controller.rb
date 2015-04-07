@@ -56,15 +56,13 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       @node_url       = "#{@cur_node.url}"
       @search_url     = search_datasets_path + "?"
       @rss_url        = search_datasets_path + "rss.xml?"
-      @items          = pages.order_by(released: -1).limit(10)
-      @point_items    = pages.order_by(point: -1).limit(10)
-      @download_items = pages.order_by(downloaded: -1).limit(10)
-
-      @tabs = [
-        { name: "新着順", url: "#{@search_url}&sort=released", pages: @items, rss: "#{@rss_url}&sort=released" },
-        { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items, rss: "#{@rss_url}&sort=popular" },
-        { name: "注目順", url: "#{@search_url}&sort=attention", pages: @download_items, rss: "#{@rss_url}&sort=attention" }
-      ]
+      @tabs = []
+      Opendata::Dataset.sort_options.each do |options|
+        @tabs << { name: options[0],
+                   url: "#{@search_url}&sort=#{options[1]}",
+                   pages: pages.order_by(Opendata::Dataset.sort_hash(options[1])).limit(10),
+                   rss: "#{@rss_url}&sort=#{options[1]}"}
+      end
 
       max = 50
       @areas    = aggregate_areas

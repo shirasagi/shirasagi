@@ -6,7 +6,7 @@ class Opendata::Agents::Parts::IdeaController < ApplicationController
     def index
       @items = Opendata::Idea.site(@cur_site).public.
         where(@cur_part.condition_hash).
-        order_by(@cur_part.sort_hash).
+        sort_criteria(@cur_part.sort).
         page(params[:page]).
         per(@cur_part.limit)
 

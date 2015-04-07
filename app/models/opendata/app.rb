@@ -74,6 +74,19 @@ class Opendata::App
       [%w(新着順 released), %w(人気順 popular), %w(注目順 attention)]
     end
 
+    def sort_hash(sort)
+      case sort
+      when "released"
+        { released: -1, _id: -1 }
+      when "popular"
+        { point: -1, _id: -1 }
+      when "attention"
+        { executed: -1, _id: -1 }
+      else
+        { sort => 1, _id: -1 }
+      end
+    end
+
     def limit_aggregation(pipes, limit)
       return collection.aggregate(pipes) unless limit
 

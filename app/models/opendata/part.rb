@@ -15,6 +15,14 @@ module Opendata::Part
       {} # TODO:
     end
 
+    def sort_options
+      Array(Opendata::Dataset.sort_options).concat(super)
+    end
+
+    def sort_hash
+      Opendata::Dataset.sort_hash(sort)
+    end
+
     def template_variable_get(item, name)
       if name == "point"
         item.point.to_i
@@ -45,6 +53,14 @@ module Opendata::Part
       {} # TODO:
     end
 
+    def sort_options
+      Array(Opendata::App.sort_options).concat(super)
+    end
+
+    def sort_hash
+      Opendata::App.sort_hash(sort)
+    end
+
     def template_variable_get(item, name)
       if name == "point"
         item.point.to_i
@@ -62,6 +78,18 @@ module Opendata::Part
 
     def condition_hash
       {} # TODO:
+    end
+
+    def sort_options
+      Array(Opendata::Idea.sort_options).concat(super)
+    end
+
+    def sort_hash
+      Opendata::Idea.sort_hash(sort)
+    end
+
+    def sort_criteria
+      Opendata::Idea.sort_criteria(sort)
     end
 
     def template_variable_get(item, name)
