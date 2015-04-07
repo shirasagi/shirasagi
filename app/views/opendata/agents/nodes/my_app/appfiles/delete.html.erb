@@ -1,17 +1,7 @@
 <%= form_for :item, url: @item_url, html: { id: "item-form", method: :delete, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
-<table class="see opendata-app-appfiles show">
-  <% if @item.file %>
-  <tr class="parent-row">
-    <td class="field"><%= @model.t :file_id %></td>
-    <td class="input">
-    <%= @item.filename, "file" %>
-    (<%= number_to_human_size @item.size %>)
-  </td>
-  </tr>
-  <% end %>
-</table>
+<%= render partial: "show" %>
 
 <footer class="send">
   <div>
