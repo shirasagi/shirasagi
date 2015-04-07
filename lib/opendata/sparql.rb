@@ -11,7 +11,7 @@ module Opendata::Sparql
 
   QUERY_SITE  = "http://#{SERVER}:#{PORT}/#{DATASET}/query"
   UPDATE_SITE = "http://#{SERVER}:#{PORT}/#{DATASET}/update"
-  DATE_SITE   = "http://#{SERVER}:#{PORT}/#{DATASET}/data"
+  DATA_SITE   = "http://#{SERVER}:#{PORT}/#{DATASET}/data"
 
   class << self
     public
