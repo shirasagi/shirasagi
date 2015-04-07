@@ -49,4 +49,35 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example do
       /.*\/mod2\/20150324000003_a\.rb$/,
     ] }
   end
+
+  describe '.latest_version' do
+    subject { described_class.latest_version }
+
+    context 'no version exists' do
+      it { is_expected.to eq '00000000000000' }
+    end
+
+    context '1 version exists' do
+      before { create :ss_migration, version: '20150324000001' }
+      it { is_expected.to eq '20150324000001' }
+    end
+
+    context '2 versions exist' do
+      before do
+        create :ss_migration, version: '20150324000000'
+        create :ss_migration, version: '20150324000001'
+      end
+
+      it { is_expected.to eq '20150324000001' }
+    end
+
+    context '2 reversed ordered versions exist' do
+      before do
+        create :ss_migration, version: '20150324000001'
+        create :ss_migration, version: '20150324000000'
+      end
+
+      it { is_expected.to eq '20150324000001' }
+    end
+  end
 end
