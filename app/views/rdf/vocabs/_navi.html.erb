@@ -1,4 +1,4 @@
-<% if @item.present? %>
+<% unless @item.nil? || @item.new_record? %>
 <nav class="sub-menu">
   <header><h1><%= t :"views.links.rdf.vocabs" %></h1></header>
   <div>

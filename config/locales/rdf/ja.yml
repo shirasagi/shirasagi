@@ -21,7 +21,7 @@ ja:
       rdf/object:
         vocab: 語彙
         name: 名前
-        labels: ラベル
+        labels: 名称
         label_ja: 名称(日本語)
         label_en: 名称(英語)
         comments: 説明
@@ -30,7 +30,8 @@ ja:
         prefix: プレフィックス
         uri: URI
         order: 並び順
-        labels: ラベル
+        labels: 名称
+        label: 名称
         label_ja: 名称(日本語)
         label_en: 名称(英語)
         comments: 説明
