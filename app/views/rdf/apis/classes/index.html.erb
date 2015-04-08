@@ -7,11 +7,11 @@
 <div class="rdf-search-classes-search-form" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
 <%= form_for :s, url: { action: :index, target: @target }, html: { method: "GET", class: :search, multipart: true } do |f| %>
   <dl class="see rdf-search-classes-search-options">
-    <dt><%= t ".search_options.vocab" %></dt>
+    <dt><%= t "rdf.apis.search_options.vocab" %></dt>
     <dd><%= select_tag "s[vocab]",  options_for_select(@vocab_options, params[:s][:vocab]) %></dd>
-    <dt><%= t ".search_options.name" %></dt>
+    <dt><%= t "rdf.apis.search_options.name" %></dt>
     <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %></dd>
-    <dd><%= f.submit  t(".search") %></dd>
+    <dd><%= f.submit  t("rdf.apis.search_options.search") %></dd>
   </dl>
 <% end %>
 </div>
@@ -27,7 +27,7 @@
     <% @items.each do |item| %>
       <tr data-id="<%= item.id %>" data-uri="<%= "#{item.vocab.uri}#{item.name}" %>">
         <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", "#", class: "select-item" %></td>
-        <td><%= item.comments.try(:[], "ja") || item.comments.try(:[], "en") || item.comments.try(:[], "invariant") %></td>
+        <td><%= item.comment %></td>
       </tr>
     <% end %>
   </tbody>

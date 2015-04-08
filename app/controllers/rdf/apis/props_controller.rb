@@ -1,4 +1,4 @@
-class Rdf::SearchPropsController < ApplicationController
+class Rdf::Apis::PropsController < ApplicationController
   include Cms::SearchFilter
 
   model Rdf::Prop

@@ -24,7 +24,7 @@ textarea {
   <dd class="rdf-props__sub_class_of">
     <%= hidden_field_tag "item[sub_class_of]", @item.sub_class_of, "data-type" => :uri %>
     <span data-type="pname"><%= Rdf::Vocab.pname(@item.sub_class_of) %></span>
-    <%= link_to t("rdf.classes.search_sub_class_of"), rdf_search_classes_path(target: "rdf-props__sub_class_of"), class: "ajax-box" %>
+    <%= link_to t("rdf.classes.search_sub_class_of"), rdf_apis_classes_path(target: "rdf-props__sub_class_of"), class: "ajax-box" %>
   </dd>
 
   <dt><%= @model.t :comments %><%= @model.tt :comments %></dt>
@@ -50,7 +50,7 @@ textarea {
               <%= text_field_tag "item[properties][][property]", prop["property"] %>
             </td>
             <td class="prop<%= index %>">
-              <%= link_to t("rdf.classes.search_property_class"), rdf_search_classes_path(target: "prop#{index}"), class: "ajax-box" %>
+              <%= link_to t("rdf.classes.search_property_class"), rdf_apis_classes_path(target: "prop#{index}"), class: "ajax-box" %>
               <%= hidden_field_tag "item[properties][][class]", prop["class"], "data-type" => :uri %>
               <span data-type="pname"><%= Rdf::Vocab.pname(prop["class"]) %></span>
             </td>
@@ -85,7 +85,7 @@ $ ->
         <%= text_field_tag "item[properties][][property]", "" %>
       </td>
       <td class="prop#{last_index}">
-        <a class="ajax-box cboxElement" href="/.www/rdf/search_classes?target=prop#{last_index}"><%= t("rdf.classes.search_property_class") %></a>
+        <a class="ajax-box cboxElement" href="/.www/rdf/apis/classes?target=prop#{last_index}"><%= t("rdf.classes.search_property_class") %></a>
         <%= hidden_field_tag "item[properties][][class]", "", "data-type" => :uri %>
         <span data-type="pname"></span>
       </td>

@@ -1,4 +1,4 @@
-class Rdf::SearchClassesController < ApplicationController
+class Rdf::Apis::ClassesController < ApplicationController
   include Cms::SearchFilter
 
   model Rdf::Class

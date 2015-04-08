@@ -10,6 +10,11 @@ ja:
     props:
       search_domain: 定義域を変更する
       search_range: 値域を変更する
+    apis:
+      search_options:
+        vocab: 語彙
+        name: 名前
+        search: 検索
 
   modules:
     rdf: RDF語彙
@@ -25,6 +30,7 @@ ja:
         label_ja: 名称(日本語)
         label_en: 名称(英語)
         comments: 説明
+        comment: 説明
         equivalent: 同型
       rdf/vocab:
         prefix: プレフィックス
