@@ -6,6 +6,17 @@ class SS::Migration
   DIR = Rails.root.join('lib/migrations')
 
   class << self
+    # Do migration.
+    def migrate
+      filepaths_to_apply.each do |filepath|
+        timestamp = take_timestamp filepath
+        require filepath
+        "SS::Migration#{timestamp}".constantize.new.change
+        create version: timestamp
+        puts "Applied SS::Migration#{timestamp}"
+      end
+    end
+
     # Return the all filepaths in *RAILS_ROOT/lib/migrations/**.
     #
     # Returned array is sorted ascending by the filename.
