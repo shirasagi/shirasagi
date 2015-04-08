@@ -57,5 +57,14 @@ class SS::Migration
     def take_timestamp(filepath)
       File.basename(filepath).split('_')[0]
     end
+
+    # Return the all filepath of migrations to apply.
+    #
+    # It is a sub array of *filepaths* method.
+    #
+    # @return [Array<String>] An array of filepath of migrations to apply.
+    def filepaths_to_apply
+      filepaths.select { |e| take_timestamp(e) > latest_version }
+    end
   end
 end

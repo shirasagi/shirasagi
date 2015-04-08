@@ -85,4 +85,41 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example do
     subject { described_class.take_timestamp '/a/b/20150330000000_c_d.rb' }
     it { is_expected.to eq '20150330000000' }
   end
+
+  describe '.filepaths_to_apply' do
+    before do
+      mkdir 'tmp/lib/migrations/mod1'
+      touch 'tmp/lib/migrations/mod1/20150330000000_a.rb'
+      touch 'tmp/lib/migrations/mod1/20150330000001_a.rb'
+      SS::Migration.class_eval { remove_const :DIR }
+      SS::Migration::DIR = Rails.root.join 'tmp/lib/migrations'
+    end
+
+    after do
+      rm_rf 'tmp/lib/migrations/mod1'
+    end
+
+    subject { described_class.filepaths_to_apply }
+
+    context 'when no migration is applied' do
+      it { is_expected.to match [
+        /.*\/20150330000000_a.rb$/,
+        /.*\/20150330000001_a.rb$/,
+      ] }
+    end
+
+    context 'after 1st migration is applied' do
+      before { create :ss_migration, version: '20150330000000' }
+      it { is_expected.to match [/.*\/20150330000001_a.rb$/] }
+    end
+
+    context 'when no migration to apply exists' do
+      before do
+        create :ss_migration, version: '20150330000000'
+        create :ss_migration, version: '20150330000001'
+      end
+
+      it { is_expected.to eq [] }
+    end
+  end
 end
