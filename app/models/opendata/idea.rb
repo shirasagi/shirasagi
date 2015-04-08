@@ -107,7 +107,8 @@ class Opendata::Idea
         when "attention"
           { commented: -1, _id: -1 }
         else
-          { sort => 1, _id: -1 }
+          return { released: -1 } if sort.blank?
+          { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
         end
       end
 
