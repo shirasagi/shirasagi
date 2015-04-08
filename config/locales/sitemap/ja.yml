@@ -37,3 +37,32 @@ ja:
         sitemap_depth: 表示階層数
         sitemap_deny_urls: 除外URL
         sitemap_export_urls: URLリスト出力
+
+  tooltip:
+    sitemap/addon/body:
+      sitemap_page_state:
+        - 一覧にページを含めるかを設定します。
+        - 「非表示」の場合はフォルダーのみ表示されます。
+      sitemap_depth:
+        - 表示する最大階層数を設定します。
+        - 最大5階層まで設定できます。
+      sitemap_deny_urls:
+        - 一覧に表示しないURLを設定します。
+        - 前方一致したURLを除外します。
+        - 正規表現での入力が可能です。
+        -
+        - 例：ページのURLを指定して除外
+        - /docs/123.html
+        - 例：/docs/内でindex.html以外のページを除外
+        - /docs/.
+      sitemap_export_urls:
+        - 設定した条件を元にURLリストを出力します。
+        - URLリストを未入力にすると自動的にリストを作成します。
+        - サイトマップを自動更新したい場合はURLリストを未入力で保存してください。
+      sitemap_urls:
+        - 表示するURLのリストを設定します。
+        - "URLの後ろに「#ページ名」を付けると表示名を変更できます。"
+        -
+        - 例：/docs/ に別名を設定
+        - "/docs/ #新着記事"
+

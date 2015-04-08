@@ -8,7 +8,7 @@ module Sitemap::Addon
     included do
       field :sitemap_urls, type: SS::Extensions::Lines
       field :sitemap_depth, type: Integer, default: 3
-      field :sitemap_page_state, type: String, default: "show"
+      field :sitemap_page_state, type: String, default: "hide"
       field :sitemap_deny_urls, type: SS::Extensions::Lines
       permit_params :sitemap_urls, :sitemap_depth, :sitemap_page_state, :sitemap_deny_urls
 
