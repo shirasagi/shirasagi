@@ -1,7 +1,8 @@
 <nav class="act-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to :new, action: :new %>
-  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :import, action: :import %>
+  <% elsif params[:action] =~ /new|create|import/ %>
     <%= link_to :back_to_index, action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <%= link_to :back_to_show, action: :show, id: @item %>

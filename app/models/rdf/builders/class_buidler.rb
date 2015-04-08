@@ -2,7 +2,15 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
   include Rdf::Builders::Traversable
   include Rdf::Builders::Context
 
-  IGNORE_PREDICATES = %w(rdf:type rdfs:isDefinedBy dc:hasVersion dc:issued dc:modified rdfs:seeAlso).freeze
+  IGNORE_PREDICATES = %w(rdf:type
+                         rdfs:isDefinedBy
+                         rdfs:seeAlso
+                         dc:hasVersion
+                         dc:issued
+                         dc:modified
+                         vs:term_status
+                         owl:disjointWith
+                         prov:wasDerivedFrom).freeze
 
   def initialize
     register_handler("rdfs:label", Rdf::Builders::LangLiteralHandler.new(:labels))
@@ -19,7 +27,7 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
     return if IGNORE_PREDICATES.include?(predicate)
     unless super
       puts "unknown class key: #{predicate}"
-      Rails.logger.warn("unknown class key: #{predicate}")
+      # Rails.logger.warn("unknown class key: #{predicate}")
     end
     nil
   end

@@ -3,23 +3,36 @@ class Rdf::VocabImportJob
   include Rdf::Builders::Traversable
 
   public
-    def call(host, prefix, file, owner = Rdf::Vocab::OWNER_USER)
-      @cur_site = SS::Site.find_by(host: host)
-      @prefix = prefix
-      @graph = RDF::Graph.load(file, format: format_of(file))
-      @owner = owner
-      @vocabs = []
-      @vocab_count = 0
-      @class_count = 0
-      @property_count = 0
+    def call(host, prefix, file_or_id, owner = Rdf::Vocab::OWNER_USER, order = nil)
+      begin
+        @cur_site = SS::Site.find_by(host: host)
+        @prefix = prefix
+        if file_or_id.is_a?(Numeric)
+          @temp_file = SS::TempFile.where(_id: file_or_id).first
+          @filename = @temp_file.path
+          @format = format_of(@temp_file.filename)
+        else
+          @filename = file_or_id.try(:path) || file_or_id.to_s
+          @format = format_of(@filename)
+        end
+        @graph = RDF::Graph.load(@filename, format: @format)
+        @owner = owner
+        @order = order
+        @vocabs = []
+        @vocab_count = 0
+        @class_count = 0
+        @property_count = 0
 
-      load_and_create_vocab
-      @vocabs.each do |vocab|
-        load_and_create_objects(vocab)
+        load_and_create_vocab
+        @vocabs.each do |vocab|
+          load_and_create_objects(vocab)
+        end
+
+        Rails.logger.info("imported from #{@filename}: vocab count=#{@vocab_count}, class count=#{@class_count}, " \
+          "property count=#{@property_count}")
+      ensure
+        @temp_file.delete if @temp_file
       end
-
-      Rails.logger.info("imported from #{file}: vocab count=#{@vocab_count}, class count=#{@class_count}, " \
-        "property count=#{@property_count}")
     end
 
   private
@@ -27,7 +40,7 @@ class Rdf::VocabImportJob
       case File.extname(file).downcase
       when ".ttl" then
         :ttl
-      when ".xml" then
+      when ".xml", ".rdf" then
         :rdfxml
       else
         :ttl
@@ -35,19 +48,21 @@ class Rdf::VocabImportJob
     end
 
     def load_and_create_vocab
-      ontology_subject = @graph.each.first.subject
+      ontology_subject = @graph.each.first.try(:subject)
+      raise Rdf::VocabImportJobError, I18n.t("rdf.errors.unable_to_load_graph") if ontology_subject.blank?
       ontology_subject_hash = convert_to_hash(ontology_subject)
 
       builder = Rdf::Builders::VocabBuilder.new
       builder.graph = @graph
       builder.build(ontology_subject_hash)
-      return if builder.attributes.blank?
+      raise Rdf::VocabImportJobError, I18n.t("rdf.errors.unable_to_load_vocab") if builder.attributes.blank?
 
       vocab = Rdf::Vocab.new
       vocab.attributes = builder.attributes
       vocab.site_id = @cur_site.id
       vocab.prefix = @prefix
       vocab.owner = @owner
+      vocab.order = @order if @order
       vocab.uri = ontology_subject.to_s unless builder.attributes.key?(:uri)
       vocab.save!
 

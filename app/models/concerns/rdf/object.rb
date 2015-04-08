@@ -19,7 +19,7 @@ module Rdf::Object
     before_validation :normalize_labels
     before_validation :normalize_comments
     validates :vocab, presence: true
-    validates :name, presence: true, length: { maximum: 40 }, uniqueness: { scope: :vocab_id }
+    validates :name, presence: true, length: { maximum: 80 }, uniqueness: { scope: :vocab_id }
     validate :validate_name
 
     scope :site, ->(site) { self.in(vocab_id: Rdf::Vocab.site(site).pluck(:id)) }
@@ -70,7 +70,7 @@ module Rdf::Object
     def validate_name
       return if name.blank?
       # symbols is not allowed.
-      errors.add :name, :invalid if name =~ /[\x00-,\.-\/:-@\[-\^`\{-\x7f]/
+      errors.add :name, :invalid if name =~ /[\x00-,:-@\[-\^`\{-\x7f]/
     end
 
     def normalize_labels

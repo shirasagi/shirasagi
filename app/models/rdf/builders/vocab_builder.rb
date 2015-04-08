@@ -2,7 +2,7 @@ class Rdf::Builders::VocabBuilder < Rdf::Builders::BaseBuilder
   include Rdf::Builders::Traversable
   include Rdf::Builders::Context
 
-  IGNORE_PREDICATES = %w(rdf:type).freeze
+  IGNORE_PREDICATES = %w(rdf:type dc:source).freeze
 
   def initialize
     register_handler("cc:license", Rdf::Builders::LiteralHandler.new(:license))
@@ -11,8 +11,11 @@ class Rdf::Builders::VocabBuilder < Rdf::Builders::BaseBuilder
     alias_handler "dc:modified", "dc:issued"
 
     register_handler("rdfs:label", Rdf::Builders::LangLiteralHandler.new(:labels))
-    register_handler("rdfs:comment", Rdf::Builders::LangLiteralHandler.new(:comments))
     alias_handler "dc:title", "rdfs:label"
+    alias_handler "dc11:title", "rdfs:label"
+    register_handler("rdfs:comment", Rdf::Builders::LangLiteralHandler.new(:comments))
+    alias_handler "dc11:description", "rdfs:comment"
+    alias_handler "dc:description", "rdfs:comment"
 
     register_handler("dc:creator", Rdf::Builders::CreatorHandler.new(:creators))
     alias_handler "dc:publisher", "dc:creator"
@@ -25,7 +28,7 @@ class Rdf::Builders::VocabBuilder < Rdf::Builders::BaseBuilder
     return if IGNORE_PREDICATES.include?(predicate)
     unless super
       puts "unknown vocab key: #{predicate}"
-      Rails.logger.warn("unknown vocab key: #{predicate}")
+      # Rails.logger.warn("unknown vocab key: #{predicate}")
     end
     nil
   end

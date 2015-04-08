@@ -7,7 +7,10 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
                          dc:issued
                          dc:modified
                          rdfs:isDefinedBy
-                         schema:domainIncludes).freeze
+                         schema:domainIncludes
+                         vs:term_status
+                         prov:wasDerivedFrom
+                         owl:inverseOf).freeze
 
   def initialize
     register_handler("rdfs:label", Rdf::Builders::LangLiteralHandler.new(:labels))
@@ -29,7 +32,7 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
     return if IGNORE_PREDICATES.include?(predicate)
     unless super
       puts "unknown property key: #{predicate}"
-      Rails.logger.warn("unknown property key: #{predicate}")
+      # Rails.logger.warn("unknown property key: #{predicate}")
     end
     nil
   end

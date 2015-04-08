@@ -6,8 +6,13 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
+  concern :import do
+    get :import, on: :collection
+    post :import, on: :collection
+  end
+
   namespace("rdf", path: ".:site/rdf", module: "rdf") do
-    resources :vocabs, concerns: :deletion
+    resources :vocabs, concerns: [:deletion, :import]
     namespace "apis" do
       get "classes" => "classes#index"
       get "props" => "props#index"

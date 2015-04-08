@@ -5,6 +5,8 @@ class Rdf::Vocab
   include Cms::Permission
   include Rdf::LangHash
 
+  DEFAULT_ORDER = 100.freeze
+
   OWNER_SYSTEM = "system".freeze
   OWNER_USER = "user".freeze
   OWNERS = [OWNER_SYSTEM, OWNER_USER].freeze
@@ -18,7 +20,7 @@ class Rdf::Vocab
   seqid :id
   field :prefix, type: String
   field :uri, type: String
-  field :order, type: Integer
+  field :order, type: Integer, default: DEFAULT_ORDER
   field :labels, type: Hash
   field :comments, type: Hash
   field :creators, type: Array
@@ -58,6 +60,14 @@ class Rdf::Vocab
     def pname(uri)
       return uri if uri.blank?
       qname(uri).join(":")
+    end
+
+    def owner_options
+      options = []
+      OWNERS.each do |owner|
+        options << [I18n.t("rdf.vocabs.owner_#{owner}"), owner]
+      end
+      options
     end
   end
 

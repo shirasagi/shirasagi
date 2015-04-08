@@ -3,7 +3,7 @@ namespace :rdf do
     break if ENV["site"].blank?
     break if ENV["prefix"].blank?
     break if ENV["file"].blank?
-    Rdf::VocabImportJob.new.call(ENV["site"], ENV["prefix"], ENV["file"], ENV["owner"] || Rdf::Vocab::OWNER_SYSTEM)
+    Rdf::VocabImportJob.new.call(ENV["site"], ENV["prefix"], ENV["file"], ENV["owner"] || Rdf::Vocab::OWNER_SYSTEM, ENV["order"])
   end
 
   task :delete_schema => :environment do
