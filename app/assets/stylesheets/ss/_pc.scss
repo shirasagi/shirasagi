@@ -521,7 +521,6 @@ table.cells, table.see {
   }
   ul {
     display: none;
-    list-style-position: inside;
     position: absolute;
     bottom:18px;
     left:-220px;
@@ -529,16 +528,17 @@ table.cells, table.see {
     z-index: 90;
     padding: 10px;
     border: $border-gray3;
+    @include box-shadow(1px 1px 3px #ddd);
     background-color: #fff;
     color: $black;
     text-align: left;
     line-height: 1.6em;
-    list-style-position: inside;
-    list-style-type: disc;cursor: text;
+    list-style: none;
+    cursor: text;
     li {
-      padding-left: 1em;
+      //padding-left: 1em;
       font-weight: normal;
-      text-indent: -1em;
+      //text-indent: -1em;
     }
     &:before {
       content: "";
