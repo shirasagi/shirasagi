@@ -99,6 +99,11 @@ module Workflow::Addon
       end
 
     private
+      def serve_static_file?
+        return false if branch?
+        super
+      end
+
       def validate_filename
         (new_clone? && @basename && @basename.blank?) ? nil : super
       end

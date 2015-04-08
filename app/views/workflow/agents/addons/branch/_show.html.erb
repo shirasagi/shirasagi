@@ -5,12 +5,15 @@ $ ->
   toggleCreateBranchButton = ()->
     dd = $(".create-branch").closest("dd")
     dt = dd.next("dt")
+    result = dt.next(".result")
     if $(".branches .name").length
       dd.hide()
       dt.show()
+      result.show()
     else
       dd.show()
       dt.hide()
+      result.hide()
 
   toggleCreateBranchButton()
   $(".create-branch").on "click", ->
@@ -19,9 +22,11 @@ $ ->
       type: "POST",
       url: path
       beforeSend: ->
+        $(".result").show()
         $(".result").html(SS.loading)
       success: (data)->
         $(".result").html(data)
+        $(".result a").removeClass()
         toggleCreateBranchButton()
       error: (data, status) ->
         alert(["== Error =="].concat(data.responseJSON).join("\n"))
@@ -33,18 +38,15 @@ $ ->
     <dt class="wide"><%= t("workflow.master_message") %></dt>
     <dd></dd>
     <dt><%= t("workflow.master_page") %></dt>
-    <dd class="result">
-      <%= render file: "workflow/pages/branch" if @items.present? %>
-    </dd>
   <% else %>
     <% @items = @item.branches %>
     <dd class="wide">
       <%= button_tag t("workflow.create_branch"), class: "create-branch" %>
     </dd>
     <dt><%= t("workflow.branch_page") %></dt>
-    <dd class="result">
-      <%= render file: "workflow/pages/branch" if @items.present? %>
-    </dd>
   <% end %>
+  <dd class="result">
+    <%= render file: "workflow/pages/branch" if @items.present? %>
+  </dd>
 </dl>
 
