@@ -13,8 +13,8 @@ module Rdf::Object
     field :equivalent, type: String
 
     permit_params :name, :labels, :comments, :equivalent
-    permit_params labels: ["ja", "en", "invariant"]
-    permit_params comments: ["ja", "en", "invariant"]
+    permit_params labels: %w(ja en invariant)
+    permit_params comments: %w(ja en invariant)
 
     before_validation :normalize_labels
     before_validation :normalize_comments
@@ -41,16 +41,19 @@ module Rdf::Object
       #   criteria = criteria.keyword_in params[:keyword], :name, :html
       # end
       if params[:vocab].present?
-        vocab_id = params[:vocab]
-        vocab_id = case vocab_id
-        when "false" then
-          false
-        else
-          vocab_id.to_i
-        end
+        vocab_id = normalize_vocab_id(params[:vocab])
         criteria = criteria.where(vocab_id: vocab_id) if vocab_id
       end
       criteria
+    end
+
+    def normalize_vocab_id(vocab_id)
+      case vocab_id
+      when "false" then
+        false
+      else
+        vocab_id.to_i
+      end
     end
   end
 

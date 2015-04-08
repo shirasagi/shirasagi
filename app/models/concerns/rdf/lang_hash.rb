@@ -10,7 +10,7 @@ module Rdf::LangHash
       LANGS.each do |lang|
         return hash[lang] if hash[lang].present?
       end
-      hash.map{ |_,v| v }.select { |v| v.present? }.first
+      hash.map{ |_, v| v }.select { |v| v.present? }.first
     end
 
     def normalize_lang_hash(hash)

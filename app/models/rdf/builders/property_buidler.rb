@@ -3,11 +3,11 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
   include Rdf::Builders::Context
 
   IGNORE_PREDICATES = %w(rdf:type
-                           dc:hasVersion
-                           dc:issued
-                           dc:modified
-                           rdfs:isDefinedBy
-                           schema:domainIncludes).freeze
+                         dc:hasVersion
+                         dc:issued
+                         dc:modified
+                         rdfs:isDefinedBy
+                         schema:domainIncludes).freeze
 
   def initialize
     register_handler("rdfs:label", Rdf::Builders::LangLiteralHandler.new(:labels))

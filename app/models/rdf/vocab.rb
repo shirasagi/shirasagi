@@ -30,9 +30,9 @@ class Rdf::Vocab
   has_many :props, class_name: "Rdf::Prop", dependent: :destroy
 
   permit_params :prefix, :uri, :order, :labels, :comments, :creators, :license, :version, :published
-  permit_params labels: ["ja", "en", "invariant"]
-  permit_params comments: ["ja", "en", "invariant"]
-  permit_params creators: [{names: ["ja", "en", "invariant"]}, "homepage"]
+  permit_params labels: %w(ja en invariant)
+  permit_params comments: %w(ja en invariant)
+  permit_params creators: [{names: %w(ja en invariant)}, "homepage"]
 
   before_validation :check_uri
   before_validation :normalize_labels
