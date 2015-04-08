@@ -16,5 +16,5 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <dd><%= f.text_field :tags %></dd>
 
   <dt><%= @model.t :appurl %></dt>
-  <dd><%= f.url_field :appurl %></dd>
+  <dd><%= f.text_area :appurl %></dd>
 </dl>

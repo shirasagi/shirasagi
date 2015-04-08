@@ -66,12 +66,7 @@ categories = [
     <%= render partial: "opendata/agents/pages/app/app" %>
   <% end %>
 
-  <% if @ds.present? %>
-    <%= render partial: "opendata/agents/pages/app/dataset" %>
-  <% end %>
-
   <div class="info-wrap">
-
     <dl class="author">
       <dt><%= @cur_page.t :appurl %></dt>
       <dd><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></dd>
@@ -117,8 +112,6 @@ categories = [
     </dl>
   </div>
 </div>
-
-<div class="app-ideas" id="app-ideas"></div>
 
 <%= render file: "cms/agents/addons/related_page/view/index" %>
 <%= render file: "contact/agents/addons/page/view/index" %>

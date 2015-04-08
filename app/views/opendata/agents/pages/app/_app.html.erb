@@ -1,7 +1,4 @@
 <div class="application">
-  <header>
-    <h1>アプリ</h1>
-  </header>
   <div class="appHeader">
     <input type="button" value="play" id="btnPlay" class="btnPlay" onclick="javascript:PlayApp(); return false;" />
     <input type="button" value="reload" id="btnReload" class="btnReload" onclick="javascript:ReloadApp(); return false;" />
@@ -9,72 +6,101 @@
   </div>
   <div class="appContainer">
     <div id="tabs">
-      <ul>
-        <li><a href="#tab-play" onclick="ChangeTab('tab-play'); return false;">
-          Play</a></li>
-        <li><a href="#tab-js" onclick="ChangeTab('tab-js'); return false;">
-          JavaScripts</a></li>
-        <li><a href="#tab-css" onclick="ChangeTab('tab-css'); return false;">
-          CSS</a></li>
-        <li><a href="#tab-html" onclick="ChangeTab('tab-html'); return false;">
-          HTML</a></li>
-        <li><a href="#tab-sample" onclick="ChangeTab('tab-sample'); return false;">
-          サンプルデータ</a></li>
-      </ul>
-      <div id="tab-play">
-        <p>
-          <iframe class="frmPlay" src="" width="700" height="500" frameborder="0">
-          </iframe>
-        </p>
-      </div>
-      <div id="tab-js">
-        <ul>
+      <nav class="names">
+        <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play'); return false;">
+          実 行</a>
+        <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js'); return false;">
+          JavaScript</a>
+        <a id="css" class="name" href="#tab-css" onclick="ChangeTab('tab-css'); return false;">
+          CSS</a>
+        <a id="html" class="name" href="#tab-html" onclick="ChangeTab('tab-html'); return false;">
+          HTML</a>
+        <a id="sample" class="name" href="#tab-sample" onclick="ChangeTab('tab-sample'); return false;">
+          サンプルデータ</a>
+        <a id="dataset" class="name" href="#tab-dataset" onclick="ChangeTab('tab-dataset'); return false;">
+          関連データセット</a>
+        <a id="idea" class="name" href="#tab-idea" onclick="ChangeTab('tab-idea'); return false;">
+          関連アイデア</a>
+      </nav>
+
+      <div class="tab-body">
+        <div id="tab-play">
+          <header><h1>実行</h1></header>
+          <p>
+            <iframe class="frmPlay" src="" width="700" height="500" frameborder="0">
+            </iframe>
+          </p>
+        </div>
+        <div id="tab-js">
+          <header><h1>JavaScript</h1></header>
+          <ul>
+            <% @js_src.each do |j| %>
+              <li><a href="#tab-js-<%= j.id %>" onclick="ChangeTabJs('tab-js-<%= j.id %>'); return false;">
+                <%= j.filename %></a></li>
+            <% end %>
+          </ul>
           <% @js_src.each do |j| %>
-            <li><a href="#tab-js-<%= j.id %>" onclick="ChangeTabJs('tab-js-<%= j.id %>'); return false;">
-              <%= j.filename %></a></li>
+            <div id="tab-js-<%= j.id %>" name="tab-name-js">
+              <p><iframe class="frmJs" src="<%= @text + j.filename %>" width="700" height="500" frameborder="0">
+              </iframe></p>
+            </div>
           <% end %>
-        </ul>
-        <% @js_src.each do |j| %>
-          <div id="tab-js-<%= j.id %>" name="tab-name-js">
-            <p><iframe class="frmJs" src="<%= @text + j.filename %>" width="700" height="500" frameborder="0">
-            </iframe></p>
-          </div>
-        <% end %>
-      </div>
-      <div id="tab-css">
-        <ul>
+        </div>
+        <div id="tab-css">
+          <header><h1>CSS</h1></header>
+          <ul>
+            <% @css_src.each do |c| %>
+              <li><a href="#tab-css-<%= c.id %>" onclick="ChangeTabCss('tab-css-<%= c.id %>'); return false;">
+                <%= c.filename %></a></li>
+            <% end %>
+          </ul>
           <% @css_src.each do |c| %>
-            <li><a href="#tab-css-<%= c.id %>" onclick="ChangeTabCss('tab-css-<%= c.id %>'); return false;">
-              <%= c.filename %></a></li>
+            <div id="tab-css-<%= c.id %>" name="tab-name-css">
+              <p><iframe class="frmCss" src="<%= @text + c.filename %>" width="700" height="500" frameborder="0">
+              </iframe></p>
+            </div>
           <% end %>
-        </ul>
-        <% @css_src.each do |c| %>
-          <div id="tab-css-<%= c.id %>" name="tab-name-css">
-            <p><iframe class="frmCss" src="<%= @text + c.filename %>" width="700" height="500" frameborder="0">
-            </iframe></p>
-          </div>
-        <% end %>
-      </div>
-      <div id="tab-html">
-        <ul>
+        </div>
+        <div id="tab-html">
+          <header><h1>HTML</h1></header>
+          <ul>
+            <% @html_src.each do |h| %>
+              <li><a href="#tab-html-<%= h.id %>" onclick="ChangeTabHtml('tab-html-<%= h.id %>'); return false;">
+                <%= h.filename %></a></li>
+            <% end %>
+          </ul>
           <% @html_src.each do |h| %>
-            <li><a href="#tab-html-<%= h.id %>" onclick="ChangeTabHtml('tab-html-<%= h.id %>'); return false;">
-              <%= h.filename %></a></li>
+            <div id="tab-html-<%= h.id %>" name="tab-name-html">
+              <p><iframe class="frmHtml" src="<%= @text + h.filename %>" width="700" height="500" frameborder="0">
+              </iframe></p>
+            </div>
           <% end %>
-        </ul>
-        <% @html_src.each do |h| %>
-          <div id="tab-html-<%= h.id %>" name="tab-name-html">
-            <p><iframe class="frmHtml" src="<%= @text + h.filename %>" width="700" height="500" frameborder="0">
-            </iframe></p>
-          </div>
-        <% end %>
-      </div>
-      <div id="tab-sample">
-        <p>
-          <% if @sample.present? %>
-            <%= render partial: "opendata/agents/pages/app/content" %>
-          <% end %>
-        </p>
+        </div>
+        <div id="tab-sample">
+          <header><h1>サンプルデータ</h1></header>
+          <p>
+            <% if @sample.present? %>
+              <%= render partial: "opendata/agents/pages/app/content" %>
+            <% end %>
+          </p>
+        </div>
+        <div id="tab-dataset">
+          <header><h1>関連データセット</h1></header>
+          <p>
+            <% if @ds.present? %>
+              <%= render partial: "opendata/agents/pages/app/dataset" %>
+            <% end %>
+          </p>
+        </div>
+        <div id="tab-idea">
+          <header><h1>関連アイデア</h1></header>
+          <p>
+            <div class="app-ideas" id="app-ideas"></div>
+            <% if @app_idea.present? %>
+              <%= render partial: "opendata/agents/pages/app/content" %>
+            <% end %>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -111,6 +137,8 @@ function ChangeTab(tabname) {
   document.getElementById("tab-css").style.display = "none";
   document.getElementById("tab-html").style.display = "none";
   document.getElementById("tab-sample").style.display = "none";
+  document.getElementById("tab-dataset").style.display = "none";
+  document.getElementById("tab-idea").style.display = "none";
   document.getElementById(tabname).style.display = "block";
 }
 

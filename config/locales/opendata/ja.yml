@@ -178,7 +178,7 @@ ja:
         group_id: 所属グループ
         dataset_ids: データセット
         point: 評価
-        excuted: 実行回数
+        executed: 実行回数
         site_id: サイト
         user_id: アプリ作成者
         appfiles: アプリファイル

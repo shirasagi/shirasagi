@@ -1,7 +1,4 @@
 <div class="app-datasets">
-  <header>
-    <h1>入力データ</h1>
-  </header>
   <% @ds.each do |ds| %>
     <dl class="app-dataset">
       <dt><%= link_to ds.name, ds.url %></dt>
@@ -22,8 +19,8 @@
           <%= ds.groups.first.name %>
         </dt>
       <% end %>
-      <dt>更新日：<%= tryb{ds.updated.strftime("%Y年%m月%1d日")} %></dt>
-      <dt><%= ds.downloaded.to_i %> ダウンロード</dt>
+      <dt>更新日 <%= tryb{ds.updated.strftime("%Y年%m月%1d日")} %></dt>
+      <dt>合計ダウンロード数（<%= ds.downloaded.to_i %>）</dt>
     </dl>
   <% end %>
 </div>

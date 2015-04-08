@@ -2439,6 +2439,7 @@ article.licenses div article a {
 // .data-page-contents
 .s-dataset .data-page-contents {
   .names {
+    @include box-shadow(0 8px 8px rgba(0, 0, 0, 0.1));
     margin-bottom: 18px;
     border-bottom: 2px solid $blue;
   }
@@ -3154,110 +3155,291 @@ article.licenses div article a {
 }
 
 // -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-//app fullscreen
-.application-full {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  .app-header {
-    position: absolute;
-    width: 780px;
-    height: 80px;
-    left: 0;
-    .btn-app {
-      float: left;
-      margin: 5px 10px 5px 10px;
-      vertical-align: top;
+// .app-page-contents
+.s-app .app-page-contents {
+  .names {
+    margin-bottom: 18px;
+    border-bottom: 2px solid $blue;
+  }
+  header h1.name {
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px32;
+  }
+  .text, nav.related-pages {
+    margin-bottom: 28px;
+  }
+  .text {
+    float: left;
+    width: 800px;
+    line-height: 1.5;
+  }
+  .categories {
+    width: 800px;
+    margin-bottom: 18px;
+    a {
+      display: inline-block;
+      margin: 0 5px 10px 0;
+      padding: 4px 10px;
+      @include border-radius(5px);
+      color: $text;
+      text-decoration: none;
     }
-    .app-name {
-      float: left;
-      margin: 10px 0px 10px 0px;
-      vertical-align: top;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 80%;
+    a.area {
+      background: #D4EF97;
+      &:hover {
+        background: #cbe79a;
+      }
+    }
+    a.category {
+      background: #FAE257;
+      &:hover {
+        background: #ffe593;
+      }
+    }
+    a.tag {
+      background: #CAEBFF;
+      &:hover {
+        background: #b6dbf3;
+      }
     }
   }
+  .application {
+    clear: both;
+    #tabs {
+      padding: 0;
+      .names {
+        @include box-shadow(0 8px 8px rgba(0, 0, 0, 0.1));
+        .name {
+          @include box-sizing(border-box);
+          @include border-top-radius(5px);
+          @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
+          display: inline-block;
+          width: 150px;
+          margin-right: 6px;
+          padding: 9px 0;
+          border: 1px solid $gray;
+          border-bottom: none;
+          color: $text;
+          text-decoration: none;
+          text-align: center;
+          font-size: $px16;
+          line-height: 1.3;
+        }
+        a.name {
+          background: rgba(33, 56, 127, 0.21) no-repeat 7px 6px;
+          &:hover {
+            @include opacity(1);
+            @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+            background: #ffffff no-repeat 7px 6px;
+            color: $blue;
+          }
+        }
+        a#play {
+          width: 90px;
+        }
+        a#js {
+          width: 120px;
+        }
+        a#css {
+          width: 90px;
+        }
+        a#html {
+          width: 100px;
+        }
+        a#sample {
+          width: 150px;
+        }
+        a#dataset {
+          width: 190px;
+          padding-left: 20px;
+          background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab.png) no-repeat 7px 6px;
+          &:hover {
+            @include opacity(1);
+            @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+            background: url(../img/ic-datatab_hover.png) no-repeat 7px 6px;
+            color: $blue;
+          }
+        }
+        a#idea {
+          width: 160px;
+          padding-left: 20px;
+          background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab.png) no-repeat 10px 5px;
+          &:hover {
+            @include opacity(1);
+            @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+            background: url(../img/ic-ideatab_hover.png) no-repeat 10px 5px;
+            color: $blue;
+          }
+        }
+      }
+      .tab-body {
+        @include clearfix;
+        border: 2px solid #ddcfcc;
+        header {
+            border-bottom: 2px solid $blue;
+            @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+          h1 {
+            @include box-sizing(border-box);
+            @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+            padding: 9px 0 9px 26px;
+            border: 1px solid $gray;
+            border-bottom: none;
+            background: url(../img/appling.png) no-repeat -10px -100px;
+            color: $blue;
+            font-size: $px16;
+            line-height: 1.3;
+          }
+        }
+      }
+    }
+    .download {
+      @include box-shadow(0 0 0 1px #b3b3e6);
+      margin: 4px;
+      padding: 10px 8px 10px 25px;
+      display: inline-block;
+      border: 1px solid $white;
+      background: rgba(232, 232, 252, 0.3) url(../img/ic-arrow_blue_l.png) no-repeat 10px center;
+      color: $text;
+      text-decoration: none;
+      &:hover {
+        background-color: #e1e2e3;
+      }
+    }
+  }
+  .info-wrap {
+    overflow: hidden;
+    dl.author {
+      margin: 28px 0px 0px;
+      padding: 4px;
+      border: 2px solid #ddcfcc;
+      dt {
+        @include clearfix;
+        clear: both;
+        float: left;
+        width: 180px;
+        min-height: 1.0em;
+        padding: 5px 8px;
+        background: #f7daec;
+      }
+      dd {
+        min-height: 1.5em;
+        margin-left: 205px;
+        padding: 5px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      dt ~ dt { margin-top: 4px; }
+      dd ~ dd { margin-top: 4px; }
+      dd + dd { margin-top: 4px; }
+    }
+  }
+  nav.related-pages {
+    header h1 {
+      @include box-sizing(border-box);
+      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+      padding: 12px 0 5px 10px;
+      border: 2px solid #ddcfcc;
+      border-bottom: 2px solid $blue;
+      color: $blue;
+      font-size: $px16;
+      line-height: 1.3;
+    }
+    .pages {
+      padding: 0 7px;
+      border: 2px solid #ddcfcc;
+      border-top: none;
+      article {
+        padding: 8px;
+        border-bottom: 1px dotted #cccccc;
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// .appfile-content
+.s-app .appfile-content {
+  padding: 5px;
+  table {
+    border: 1px solid #ccc;
+    tr:nth-child(even) {
+      background-color: #f8f8f8;
+    }
+    th, td {
+      max-width: 160px;
+      min-width: 150px;
+      padding: 4px;
+      border: 1px solid #ccc;
+      font-size: 75%;
+      vertical-align: top;
+      line-height: 1.2;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .app-page-contents point
+.s-app .app-page-contents {
   .point {
-    position: absolute;
-    margin-right: 30px;
-    right: 0;
+    float: right;
+    margin-bottom: $box-margin;
     .count {
-      float: right;
-      margin-top: 3px;
-      margin-bottom: 3px;
-      padding: 3px 25px;
-      border: 1px solid #ddcfcc;
+      width: 270px;
+      margin-bottom: 10px;
+      padding: 15px 0;
+      border: 1px solid $gray;
+      text-align: center;
       span.number {
         padding: 0 40px;
         background: url(../img/ic-like02.png) no-repeat left 4px;
-        font-size: $px24;
+        font-size: $px32;
       }
       span.label {
         display: block;
       }
     }
     .update {
-      float: left;
-      margin: 3px 3px 3px 3px;
       display: inline-block;
-      padding: 3px 3px 3px 30px;
-      @include border-radius(3px);
+      padding: 5px 20px 5px 40px;
+      @include border-radius(5px);
       text-decoration: none;
-      vertical-align: center;
     }
     .add {
-      float: left;
       border: 1px solid #282828;
-      background: #383838 url(../img/ic-like.png) no-repeat 3px center;
+      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
       color: $white;
-      vertical-align: center;
       &:hover {
         background-color: #666666;
       }
     }
     .cancel {
-      float: left;
-      margin: 3px 3px 3px 3px;
       border: 1px solid #bdbdbd;
-      background: #EEEBEB url(../img/ic-check.png) no-repeat 3px center;
+      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
       color: $text;
-      vertical-align: center;
       &:hover {
         background-color: #dedede;
       }
     }
   }
+}
 
-  .app-body {
-    clear: both;
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+//app fullscreen
+.app-body {
+  width: 100%;
+  height: 100%;
+  .frm-app {
     width: 100%;
-    height: -webkit-calc(100% - 80px);
-    height: calc(100% - 80px);
-    margin-top: 80px;
-    .appContainer {
-      height: 100%;
-      overflow: auto;
-      #tabs li {
-        display: inline;
-        #tab-sample li {
-          display: inline;
-        }
-      }
-      .app-datasets {
-        margin: 10px;
-        .app-dataset {
-          margin: 5px;
-          border: 1px solid #bdbdbd;
-        }
-      }
-      .tab-csv {
-        margin: 10px;
-      }
-    }
+    height: 100%;
   }
 }
 

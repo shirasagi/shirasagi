@@ -36,6 +36,8 @@ class Opendata::Agents::Pages::AppController < ApplicationController
         @ds = Opendata::Dataset.site(@cur_site).public.find(@cur_page.dataset_ids)
       end
 
+      @app_idea = Opendata::Idea.site(@cur_site).public.where(app_id: @cur_page.id)
+
       render
     end
 end

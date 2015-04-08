@@ -15,47 +15,19 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
 <title><%= @item.name %></title>
-<link data-turbolinks-track="true" href="/assets/css/jquery-ui/pepper-grinder/custom.min.css" media="all" rel="stylesheet" />
 <!--[if lt IE 9]>
 <script src="/assets/js/IE9.js"></script>
 <script src="/assets/js/selectivizr-min.js"></script>
 <![endif]-->
-<%= javascript_include_tag "ss/ss", "data-turbolinks-track" => true %>
 <%= csrf_meta_tags %>
 </head>
 <body>
 
-<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
-<script src="/assets/js/jquery.colorbox.js"></script>
-<%= coffee do %>
-$ ->
-  # show point
-  $.ajax
-    url: "<%= @item.point_url %>"
-    success: (data)->
-      $(".point").html data
-<% end %>
-
-<div class="application-full">
-
-<div class="app-header">
-  <input type="button" class="btn-app" value="アプリの説明" onClick="location.href='/app/<%= @item.id %>.html'">
-  <span class="app-name"><%= @item.name %></span>
-</div>
-
-<div class="point">
-  <div class="count">
-    <span class="number"><%= @item.point %></span>
-    <span class="label">いいね！数</span>
-  </div>
-</div>
-
 <div class="app-body">
   <% if @app_html.present? %>
-    <%= render partial: "opendata/appscripts/app" %>
+    <iframe class="frm-app" src="<%= @app_index %>" frameborder="0">
+    </iframe>
   <% end %>
-</div>
-
 </div>
 
 </body>
