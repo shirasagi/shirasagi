@@ -84,10 +84,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       if html.nil?
         add_invalid_url(url, ref)
         return
-      else
-        add_valid_url(url, ref)
       end
 
+      add_valid_url(url, ref)
       return if url[0] != "/"
 
       html = NKF.nkf "-w", html
@@ -96,21 +95,25 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         next_url = next_url.sub(/^#{@base_url}/, "/")
         next_url = next_url.sub(/#.*/, "")
 
-        next if next_url.blank?
-        next if next_url =~ /\.(css|js|json)$/
-        next if next_url =~ /\.p\d+\.html$/ #pagination
-        next if next_url =~ /\/2\d{7}\.html$/ #calendar
-        next if next_url =~ /^\w+:/ && next_url !~ /^http/ #other scheme
-        next if next_url =~ /\/https?:/ #b.hatena
+        next unless valid_url(next_url)
 
-        if next_url[0] != "/" && next_url !~ /^https?:/
-          next_url = File.expand_path next_url, File.dirname(url)
-        end
+        internal = (next_url[0] != "/" && next_url !~ /^https?:/)
+        next_url = File.expand_path next_url, File.dirname(url) if internal
         next_url = URI.encode(next_url) if next_url =~ /[^-_.!~*'()\w;\/\?:@&=+$,%#]/
         next if @results[next_url]
 
         @urls[next_url] = url
       end
+    end
+
+    def valid_url(url)
+      return false if url.blank?
+      return false if url =~ /\.(css|js|json)$/
+      return false if url =~ /\.p\d+\.html$/
+      return false if url =~ /\/2\d{7}\.html$/ # calendar
+      return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
+      return false if url =~ /\/https?:/ # b.hatena
+      true
     end
 
     # Checks the file url.
