@@ -1,5 +1,5 @@
 class Rdf::Apis::ClassesController < ApplicationController
-  include Cms::SearchFilter
+  include Cms::ApiFilter
 
   model Rdf::Class
 

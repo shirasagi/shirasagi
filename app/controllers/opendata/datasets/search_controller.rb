@@ -1,5 +1,5 @@
 class Opendata::Datasets::SearchController < ApplicationController
-  include Cms::SearchFilter
+  include Cms::ApiFilter
 
   model Opendata::Dataset
 end
