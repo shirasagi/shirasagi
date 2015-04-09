@@ -1,6 +1,5 @@
 class Facility::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
   helper Map::MapHelper
 
   private
