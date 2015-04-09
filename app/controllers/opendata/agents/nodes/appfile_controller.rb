@@ -27,4 +27,12 @@ class Opendata::Agents::Nodes::AppfileController < ApplicationController
       send_file @item.file.path, type: @item.content_type, filename: @item.filename,
         disposition: :attachment, x_sendfile: true
     end
+
+    def content
+      @cur_node.layout_id = nil
+
+      @item = @app.appfiles.find_by id: params[:id], format: "CSV"
+
+      render nothing: true unless @data = @item.parse_csv
+    end
 end

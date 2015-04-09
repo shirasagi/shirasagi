@@ -13,7 +13,7 @@ class Opendata::Agents::Pages::AppController < ApplicationController
       appli = Opendata::App.find(@cur_page.id)
       @app_html = appli.appfiles.where(filename: "index.html").first
       if @app_html.present?
-        @app_index = "/app/#{@cur_page.id}/appfile/#{@app_html.filename}"
+        @app_index = "/app/#{@cur_page.id}/application/#{@app_html.filename}"
         @text = "/text/#{@cur_page.id}/appfile/"
 
         @js_src = []

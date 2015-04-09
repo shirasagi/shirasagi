@@ -29,6 +29,10 @@ class Opendata::Appfile
       app.full_url.sub(/\.html$/, "") + "/appfile/#{id}/#{filename}"
     end
 
+    def content_url
+      app.full_url.sub(/\.html$/, "") + "/appfile/#{id}/content.html"
+    end
+
     def path
       file ? file.path : nil
     end

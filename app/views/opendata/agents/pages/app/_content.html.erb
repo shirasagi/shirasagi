@@ -1,37 +1,20 @@
-<%= scss do %>
-div.csv-preview {
-  overflow-x: scroll;
-  padding: 10px;
-  border: 1px solid #bbb;
-  background-color: #fff;
-  td {
-    border: 1px solid #bbb;
-    padding: 2px 5px 2px 5px;
-  }
-}
-<% end %>
-<ul>
-  <% @sample.each do |s| %>
-    <li><a href="#tab-csv-<%= s.id %>" onclick="ChangeTabCsv('tab-csv-<%= s.id %>'); return false;">
-    <%= s.filename %></a></li>
-  <% end %>
-</ul>
-<% @sample.each do |s| %>
-  <div id="tab-csv-<%= s.id %>" name="tab-name-csv">
-    [<%= s.filename %>]
-
-    <div class="csv-preview">
-      <table class="cells">
-        <tbody>
-          <% s.parse_csv.each do |line| %>
-          <tr>
-            <% line.each do |col| %>
-              <td><%= col %></td>
-            <% end %>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+<% @cur_page.appfiles.order(name: 1).each do |file| %>
+<% if file.format.downcase == "csv" %>
+  <div class="appfile">
+    <div class="info">
+      <div class="name format-<%= file.format.downcase %>">
+        <%= file.filename %> (<%= file.format %> <%= number_to_human_size(file.size) %>)
+      </div>
+      <% if file.text.present? %>
+      <div class="text">
+        <%= auto_link br(file.text) %>
+      </div>
+      <% end %>
+    </div>
+    <div class="icons">
+      <%= link_to "プレビュー", file.content_url, class: "content" %>
+      <%= link_to "ダウンロード", file.url, class: "download" %>
     </div>
   </div>
+<% end %>
 <% end %>

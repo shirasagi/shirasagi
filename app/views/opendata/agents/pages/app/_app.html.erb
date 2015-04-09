@@ -2,7 +2,7 @@
   <div class="appHeader">
     <input type="button" value="play" id="btnPlay" class="btnPlay" onclick="javascript:PlayApp(); return false;" />
     <input type="button" value="reload" id="btnReload" class="btnReload" onclick="javascript:ReloadApp(); return false;" />
-    <input type="button" value="fullscreen" onClick="location.href='/app/<%= @cur_page.id %>/full'">
+    <input type="button" value="fullscreen" target="_brank" onClick="window.open('/app/<%= @cur_page.id %>/full'); return false;">
   </div>
   <div class="appContainer">
     <div id="tabs">
@@ -78,11 +78,9 @@
         </div>
         <div id="tab-sample">
           <header><h1>サンプルデータ</h1></header>
-          <p>
-            <% if @sample.present? %>
-              <%= render partial: "opendata/agents/pages/app/content" %>
-            <% end %>
-          </p>
+          <% if @sample.present? %>
+            <%= render partial: "opendata/agents/pages/app/content" %>
+          <% end %>
         </div>
         <div id="tab-dataset">
           <header><h1>関連データセット</h1></header>

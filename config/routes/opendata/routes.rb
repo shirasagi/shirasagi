@@ -2,7 +2,7 @@ SS::Application.routes.draw do
 
   Opendata::Initializer
 
-  get "/app/:app/appfile/*filename" => "opendata/appscripts#index"
+  get "/app/:app/application/*filename" => "opendata/appscripts#index"
   get "/text/:app/appfile/*filename" => "opendata/appscripts#text"
   get "/app/:app/full" => "opendata/appscripts#full"
   get "/datasets/select(.:format)" => "opendata/dataset_selects#index"
@@ -114,6 +114,7 @@ SS::Application.routes.draw do
 
     get "app/:app/zip" => "public#download", cell: "nodes/app", format: false
     get "app/:app/appfile/:id/" => "public#index", cell: "nodes/appfile"
+    get "app/:app/appfile/:id/content.html" => "public#content", cell: "nodes/appfile", format: false
     get "app/:app/appfile/:id/*filename" => "public#download", cell: "nodes/appfile", format: false
 
     match "search_app/(index.:format)" => "public#index", cell: "nodes/search_app", via: [:get, :post]
