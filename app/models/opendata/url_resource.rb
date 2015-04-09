@@ -153,6 +153,7 @@ class Opendata::UrlResource
 
           in_file.close
           in_file.close(true) if in_file
+          self.crawl_state = "same"
 
           }
 
