@@ -83,11 +83,20 @@ module ApplicationHelper
     controller.render_agent(controller_name, action).body.html_safe
   end
 
-  def mail_to_entity(email_address, name = nil, html_options = {})
-    return "" if email_address.blank?
-    email_address = email_address.gsub(/@/, "&#64;").gsub(/\./, "&#46;").html_safe
-    name = email_address if name.blank?
-    mail_to(email_address, name, html_options).html_safe
+  def mail_to_entity(email_address, name = nil, html_options = {}, &block)
+    html_options, name = name, nil if block_given?
+    html_options = (html_options || {}).stringify_keys
+
+    extras = %w{ cc bcc body subject }.map! { |item|
+      option = html_options.delete(item) || next
+      "#{item}=#{Rack::Utils.escape_path(option)}"
+    }.compact
+    extras = extras.empty? ? '' : '?' + extras.join('&')
+
+    email_address = email_address.gsub(/@/, "&#64;").gsub(/\./, "&#46;").html_safe if email_address.present?
+    html_options["href"] = "mailto:#{email_address}#{extras}".html_safe
+
+    content_tag(:a, name || email_address, html_options, &block)
   end
 
 end
