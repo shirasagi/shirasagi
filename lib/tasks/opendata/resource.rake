@@ -54,9 +54,9 @@ namespace :opendata do
                 if url_file.last_modified.present?
                   if ur.original_updated == nil
                     ur.crawl_state = "updated"
-                  elsif url_file.last_modified > ur.original_updated.beginning_of_day
+                  elsif url_file.last_modified.strftime("%s") > ur.original_updated.strftime("%s")
                     ur.crawl_state = "updated"
-                  elsif url_file.last_modified <= ur.original_updated.beginning_of_day
+                  elsif url_file.last_modified.strftime("%s") <= ur.original_updated.strftime("%s")
                     ur.crawl_state = "same"
                   end
                   ur.original_updated = url_file.last_modified
@@ -77,7 +77,7 @@ namespace :opendata do
             elsif ur.crawl_update == "auto"
               if url_file.present?
                 if url_file.last_modified.present?
-                  if url_file.last_modified > ur.original_updated.beginning_of_day
+                  if url_file.last_modified.strftime("%s") > ur.original_updated.strftime("%s")
                     ur.crawl_state = "same"
                     ur.save
                   end
