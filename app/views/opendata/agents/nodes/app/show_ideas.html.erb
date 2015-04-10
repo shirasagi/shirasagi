@@ -4,18 +4,6 @@
     <div class="app-ideas">
 
       <div class="ideas">
-        <% @ideas.each do |idea| %>
-          <div class="idea"><%= link_to idea.name, idea.url %></div>
-          <div class="idea_text"><%= idea.text %></div>
-
-          <% if idea.member %>
-          <%= link_to idea.member.name, "#{member_path}#{idea.member.id}" %>
-          <% else %>
-          ゲストユーザー
-          <% end %>
-
-          <hr>
-        <% end %>
         <% if @login_mode %>
           <a class="contribute" href="<%= "/mypage/idea/new?app=#{@app_idea.id}" %>">アイデアを投稿する</a>
         <% end %>

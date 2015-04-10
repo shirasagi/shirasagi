@@ -71,9 +71,6 @@ categories = [
 
   <div class="info-wrap">
     <dl class="author">
-      <dt><%= @cur_page.t :appurl %></dt>
-      <dd><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></dd>
-
       <% if @cur_page.member_id.present? %>
         <dt><%= @cur_page.t :user_id %></dt>
         <dd>

@@ -2,11 +2,13 @@
   <div class="appHeader">
     <input type="button" value="play" id="btnPlay" class="btnPlay" onclick="javascript:PlayApp(); return false;" />
     <input type="button" value="reload" id="btnReload" class="btnReload" onclick="javascript:ReloadApp(); return false;" />
-    <input type="button" value="fullscreen" target="_brank" onClick="window.open('/app/<%= @cur_page.id %>/full'); return false;">
+    <input type="button" value="全画面表示で実行" target="_brank" onClick="window.open('/app/<%= @cur_page.id %>/full'); return false;">
   </div>
   <div class="appContainer">
     <div id="tabs">
       <nav class="names">
+        <a id="url" class="name" href="#tab-url" onclick="ChangeTab('tab-url'); return false;">
+          参考URL</a>
         <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play'); return false;">
           実 行</a>
         <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js'); return false;">
@@ -24,12 +26,14 @@
       </nav>
 
       <div class="tab-body">
+        <div id="tab-url">
+          <header><h1>参考URL</h1></header>
+          <p><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></p>
+        </div>
         <div id="tab-play">
           <header><h1>実行</h1></header>
-          <p>
-            <iframe class="frmPlay" src="" width="700" height="500" frameborder="0">
-            </iframe>
-          </p>
+          <iframe class="frmPlay" src="" width="100%" height="100%" frameborder="0">
+          </iframe>
         </div>
         <div id="tab-js">
           <header><h1>JavaScript</h1></header>
@@ -84,20 +88,16 @@
         </div>
         <div id="tab-dataset">
           <header><h1>関連データセット</h1></header>
-          <p>
-            <% if @ds.present? %>
-              <%= render partial: "opendata/agents/pages/app/dataset" %>
-            <% end %>
-          </p>
+          <% if @ds.present? %>
+            <%= render partial: "opendata/agents/pages/app/dataset" %>
+          <% end %>
         </div>
         <div id="tab-idea">
           <header><h1>関連アイデア</h1></header>
-          <p>
-            <div class="app-ideas" id="app-ideas"></div>
-            <% if @app_idea.present? %>
-              <%= render partial: "opendata/agents/pages/app/content" %>
-            <% end %>
-          </p>
+          <div class="app-ideas" id="app-ideas"></div>
+          <% if @app_idea.present? %>
+            <%= render partial: "opendata/agents/pages/app/idea" %>
+          <% end %>
         </div>
       </div>
     </div>
@@ -130,6 +130,7 @@ function ReloadApp() {
 }
 
 function ChangeTab(tabname) {
+  document.getElementById("tab-url").style.display = "none";
   document.getElementById("tab-play").style.display = "none";
   document.getElementById("tab-js").style.display = "none";
   document.getElementById("tab-css").style.display = "none";

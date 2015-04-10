@@ -1,26 +1,11 @@
-<div class="app-datasets">
+<table class="index">
+  <tbody>
   <% @ds.each do |ds| %>
-    <dl class="app-dataset">
-      <dt><%= link_to ds.name, ds.url %></dt>
-      <% if ds.member_id.present? %>
-        <dt>投稿者：
-          <% if ds.member %>
-            <%= link_to ds.member.name, "#{member_path}#{ds.member.id}" %>
-          <% else %>
-            ゲストユーザー
-          <% end %>
-        </dt>
-      <% elsif ds.contact_group %>
-        <dt>投稿者：
-          <%= ds.contact_group.full_name %>
-        </dt>
-      <% elsif ds.groups.present? %>
-        <dt>投稿者：
-          <%= ds.groups.first.name %>
-        </dt>
-      <% end %>
-      <dt>更新日 <%= tryb{ds.updated.strftime("%Y年%m月%1d日")} %></dt>
-      <dt>合計ダウンロード数（<%= ds.downloaded.to_i %>）</dt>
-    </dl>
+    <tr>
+      <td class="name"><%= link_to ds.name, ds.url %></td>
+      <td>合計ダウンロード数(<%= ds.downloaded.to_i %>)</td>
+      <td>更新日時 <%= tryb{ds.updated.strftime("%Y年%m月%d日")} %></td>
+    </tr>
   <% end %>
-</div>
+  </tbody>
+</table>

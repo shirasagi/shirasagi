@@ -171,7 +171,7 @@ ja:
         name: アプリ名
         text: 説明
         license_id: ライセンス
-        appurl: アプリURL
+        appurl: 参考URL
         tags: タグ
         categry_ids: 分野
         area_ids: 地域
