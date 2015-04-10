@@ -26,7 +26,7 @@ class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
       controller.instance_variable_set :@cur_node, @item
 
       @tabs = [
-        { name: "最新投稿順", url: "#{@search_url}&sort=updated", pages: @items, rss: "#{@rss_url}&sort=updated" },
+        { name: "新着順", url: "#{@search_url}&sort=updated", pages: @items, rss: "#{@rss_url}&sort=updated" },
         { name: "人気順", url: "#{@search_url}&sort=popular", pages: @point_items, rss: "#{@rss_url}&sort=popular" },
         { name: "注目順", url: "#{@search_url}&sort=attention", pages: @comment_items, rss: "#{@rss_url}&sort=attention" }
       ]
