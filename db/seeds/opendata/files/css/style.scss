@@ -260,7 +260,7 @@ textarea {
     background: url(../img/rainbow.png) no-repeat left center;
   }
   .wrap {
-    @include border-radius(3px);
+    @include border-radius(4px);
     @include box-shadow(1px 1px 1px rgba(168, 168, 168, 0.75));
     border: 1px solid $gray;
     background: $white;
@@ -870,6 +870,9 @@ form.opendata-search_ideas-form .send {
   .pages {
     border: 1px solid $gray;
     border-top: none;
+    article:last-child header {
+      border-bottom: none;
+    }
   }
   nav {
     //@include clear;
@@ -1206,38 +1209,18 @@ form.opendata-search_ideas-form .send {
 // tab-inner
 #s-mypage {
   #tab-inner {
-    position: relative;
-    max-width: $page-width;
-    min-width: $page-width;
-    margin: 0 auto;
-    padding: 0 10px;
-    &:before {
-      content: "";
-      width: 77px;
-      height: 153px;
-      position: absolute;
-      left: -67px;
-      top: -79px;
-      background: url(../img/rainbow.png) no-repeat left center;
-    }
     .wrap {
-      @include border-radius(0px);
+      @include border-bottom-radius(0px);
       @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
       border: 1px solid $gray;
-      border-bottom: 0;
       background: $white;
       h1 {
-        margin: 1px 2px 0 2px;
-        padding: 3px 0 0 15px;
+        @include border-top-radius(2px);
+        margin: 2px;
+        padding: 14px 0 14px 15px;
         background: $blue;
         color: $white;
-        font-size: $px31;
-      }
-      .crumbs {
-        width: $page-width;
-        margin: 0 auto;
-        padding: 14px 0 0 15px;
-        font-size: $px12;
+        font-size: $px32;
       }
     }
   }
@@ -1245,7 +1228,7 @@ form.opendata-search_ideas-form .send {
 //mypage-tabs
 #mypage-tabs {
   @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-  margin: 36px 0 20px 0;
+  margin: 20px 0;
   padding: 0;
   border-bottom: $blue 2px solid;
   overflow: hidden;
@@ -1265,7 +1248,7 @@ form.opendata-search_ideas-form .send {
   }
   a.dataset {
     width: 170px;
-    background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab.png) no-repeat 7px 6px;
+    background: rgba(33, 56, 127, 0.21) url(../img/ic-mypagedatatab.png) no-repeat 7px 6px;
     &:hover {
       @include opacity(1);
       @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
@@ -1297,7 +1280,7 @@ form.opendata-search_ideas-form .send {
   }
   a.idea {
     width: 170px;
-    background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab.png) no-repeat 10px 5px;
+    background: rgba(33, 56, 127, 0.21) url(../img/ic-mypageideatab.png) no-repeat 10px 6px;
     &:hover {
       @include opacity(1);
       @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
@@ -1814,7 +1797,7 @@ nav.cms-sns_share {
   display: block;
   @include grd-aqua;
   border: 1pt solid #b2b2b2;
-  @include border-radius(3px);
+  @include border-radius(4px);
   @include box-shadow(0 3px 2px rgba(0, 0, 0, 0.2), 0 -5px 5px rgba(0, 0, 0, 0.1));
   #portal-kv {
     overflow: hidden;
@@ -1973,6 +1956,36 @@ nav.cms-sns_share {
   .pages {
     border: 1px solid $gray;
     border-top: none;
+    article:last-child header {
+      border-bottom: none;
+    }
+  }
+}
+
+
+// <記事ページ>--------------------------------------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// .s-portalinfo #tab-inner
+.s-portalinfo {
+  #contents {
+    margin: 12px auto 0 auto;
+  }
+  #tab-inner {
+    .wrap {
+      @include border-bottom-radius(0px);
+      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
+      border: 1px solid $gray;
+      background: $white;
+      h1 {
+        @include border-top-radius(2px);
+        margin: 2px;
+        padding: 14px 0 14px 15px;
+        background: $blue;
+        color: $white;
+        font-size: $px32;
+      }
+    }
   }
 }
 
