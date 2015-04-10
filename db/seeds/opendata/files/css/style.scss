@@ -1026,10 +1026,12 @@ form.opendata-search_ideas-form .send {
 // -----------------------------------------------------------------------------
 // inquiry
 .inquiry-html p {
-  margin-bottom: 12px;
+  font-size: $px16;
+  line-height: 1.5;
 }
 
 .inquiry-form {
+  margin-top: 20px;
   dl {
     @include clear;
     clear: both;
