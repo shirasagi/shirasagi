@@ -24,16 +24,16 @@ namespace :ss do
         type = field.type.to_s
         meta = nil
 
-        if type == "SS::Extensions::ObjectIds"
-          #type = "Array"
-          #meta = "##{field.metadata[:elem_class]}" if field.metadata[:elem_class]
-        elsif type == "Object" && name =~ /_id$/
-          #type = "Integer"
-          #meta = "##{field.metadata[:class_name]}" if field.metadata[:class_name]
-        elsif type == "SS::Extensions::Words"
-          #type = "Array"
-          #meta = "Words"
-        end
+        # if type == "SS::Extensions::ObjectIds"
+        #   type = "Array"
+        #   meta = "##{field.metadata[:elem_class]}" if field.metadata[:elem_class]
+        # elsif type == "Object" && name =~ /_id$/
+        #   type = "Integer"
+        #   meta = "##{field.metadata[:class_name]}" if field.metadata[:class_name]
+        # elsif type == "SS::Extensions::Words"
+        #   type = "Array"
+        #   meta = "Words"
+        # end
 
         fields[coll][name] = "#{type}\t#{name_t}\t#{meta}"
       end
