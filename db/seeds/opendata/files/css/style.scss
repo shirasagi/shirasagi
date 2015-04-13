@@ -3375,19 +3375,46 @@ article.licenses div article a {
             }
           }
         }
+        .fullscreen {
+          margin: 24px 0 0 24px;
+          a {
+            @include box-shadow(0 0 0 1px $gray);
+            @include grd-appbtn;
+            display: inline-block;
+            padding: 8px 8px 8px 25px;
+            border: 1px solid $white;
+            color: $text;
+            text-decoration: none;
+            &:hover {
+              @include grd-appbtn_hover;
+            }
+          }
+        }
+        .frame {
+          border-bottom: 1px dotted #cccccc;
+          &:last-child {
+            border-bottom: 0;
+          }
+          iframe {
+            width: -webkit-calc(100% - 16px);
+            width: calc(100% - 16px);
+            min-height: 360px;
+            margin: 16px;
+          }
+        }
       }
     }
     .download {
-      @include box-shadow(0 0 0 1px #b3b3e6);
-      margin: 4px;
-      padding: 10px 8px 10px 25px;
+      @include box-shadow(0 0 0 1px $gray);
+      @include grd-appbtn;
       display: inline-block;
+      margin: 12px 0 0 12px;
+      padding: 8px 8px 8px 25px;
       border: 1px solid $white;
-      background: rgba(232, 232, 252, 0.3) url(../img/ic-arrow_blue_l.png) no-repeat 10px center;
       color: $text;
       text-decoration: none;
       &:hover {
-        background-color: #e1e2e3;
+        @include grd-appbtn_hover;
       }
     }
   }

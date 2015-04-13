@@ -11,7 +11,7 @@
             <tr>
               <td class="name"><%= link_to idea.name, idea.url %></td>
               <td>コメント数(<% i = @idea_comment.where("idea_id": idea.id) %><% if i.present? %><%= i.count.to_i %><% else %>0<% end %>)</td>
-              <td>更新日時 <%= tryb{idea.updated.strftime("%Y年%m月%d日")} %></td>
+              <td>更新日時 <%= tryb{idea.updated.strftime("%Y年%m月%d日 %H時%M分")} %></td>
             </tr>
           <% end %>
           </tbody>

@@ -4,7 +4,7 @@
     <tr>
       <td class="name"><%= link_to ds.name, ds.url %></td>
       <td>合計ダウンロード数(<%= ds.downloaded.to_i %>)</td>
-      <td>更新日時 <%= tryb{ds.updated.strftime("%Y年%m月%d日")} %></td>
+      <td>更新日時 <%= tryb{ds.updated.strftime("%Y年%m月%d日 %H時%M分")} %></td>
     </tr>
   <% end %>
   </tbody>

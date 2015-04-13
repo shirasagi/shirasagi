@@ -265,6 +265,26 @@ $footer-margin: 60px;
   @include filter-gradient(#c2c2c2, $white, vertical);
 }
 
+@mixin grd-appbtn {
+  background-color: #c9c9c9;
+  background-image: url(../img/ic-arrow_blue.png);
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  @include background(url(../img/ic-arrow_blue.png) no-repeat 10px center, linear-gradient($white 0%, #fdfdfd 50.9%, #f6f6f6 69.24%, #ebebeb 82.3%, #dadada 92.79%, #c9c9c9 100%));
+  background:url(../img/ic-arrow_blue.png) no-repeat 10px center, url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImcxMDYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNGREZERkQiIG9mZnNldD0iMC41MDkiLz48c3RvcCBzdG9wLWNvbG9yPSIjRjZGNkY2IiBvZmZzZXQ9IjAuNjkyNCIvPjxzdG9wIHN0b3AtY29sb3I9IiNFQkVCRUIiIG9mZnNldD0iMC44MjMiLz48c3RvcCBzdG9wLWNvbG9yPSIjREFEQURBIiBvZmZzZXQ9IjAuOTI3OSIvPjxzdG9wIHN0b3AtY29sb3I9IiNDOUM5QzkiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2cxMDYpIiAvPgo8L3N2Zz4=);
+  @include filter-gradient($white, #c9c9c9, vertical);
+}
+
+@mixin grd-appbtn_hover {
+  background-color: rgba(#C2C2C2, 0.6);
+  background-image: url(../img/ic-arrow_blue.png);
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  @include background(url(../img/ic-arrow_blue.png) no-repeat 10px center, linear-gradient(0deg, $white 0%, #f3f3f3 17.63%, #ebebeb 36.07%, #c9c9c9 100%));
+  background:url(../img/ic-arrow_blue.png) no-repeat 10px center, url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc1NjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNDOUM5QzkiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNFQkVCRUIiIG9mZnNldD0iMC42MzkzIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0YzRjNGMyIgb2Zmc2V0PSIwLjgyMzciLz48c3RvcCBzdG9wLWNvbG9yPSIjRkZGRkZGIiBvZmZzZXQ9IjEiLz4KPC9saW5lYXJHcmFkaWVudD4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNnNTY5KSIgLz4KPC9zdmc+);
+  @include filter-gradient(#c2c2c2, $white, vertical);
+}
+
 @mixin grd-gray {
   background: $gray;
   @include background-image(linear-gradient(top, $gray, #383838));

@@ -65,9 +65,7 @@ categories = [
 
 <div class="detail">
 
-  <% if @app_html.present? %>
-    <%= render partial: "opendata/agents/pages/app/app" %>
-  <% end %>
+  <%= render partial: "opendata/agents/pages/app/app" %>
 
   <div class="info-wrap">
     <dl class="author">
@@ -95,7 +93,7 @@ categories = [
       <dd><%= @cur_page.license %></dd>
 
       <dt><%= @cur_page.t :updated %></dt>
-      <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>
+      <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%d日 %H時%M分")} %><br /></dd>
     </dl>
   </div>
 </div>
