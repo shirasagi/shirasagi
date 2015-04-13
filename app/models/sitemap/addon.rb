@@ -63,7 +63,7 @@ module Sitemap::Addon
           next if depth > sitemap_depth
 
           if url =~ /#/
-            data = { url: url.sub(/#.*/, ""), name: url.sub(/^.*?#/, ""), depth: depth }
+            data = { url: url.sub(/\s*#.*/, ""), name: url.sub(/^.*?\s*#/, ""), depth: depth }
           else
             url   = url.strip.sub(/\/$/, "")
             model = url =~ /(^|\/)[^\.]+$/ ? Cms::Node : Cms::Page

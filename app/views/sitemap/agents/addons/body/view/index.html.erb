@@ -1,13 +1,24 @@
+<%
+
+def node_class(path)
+  "node-" + path.to_s.sub(/\/$/, "").gsub(/[^\w-]+/, "-")
+end
+
+def page_class(path)
+  "page-" + path.to_s.sub(/\/$/, "/index").sub(/\.html$/, "").gsub(/[^\w-]+/, "-")
+end
+
+%>
 <article class="sitemap-body">
   <% @cur_page.sitemap_list.each do |node| %>
-    <<%= hx = "h" + (node[:depth] + 1).to_s %>>
+    <<%= hx = "h" + (node[:depth] + 1).to_s %> class="<%= page_class node[:url] %>">
       <%= link_to node[:name], node[:url] %>
     </<%= hx %>>
 
     <% if node[:pages] %>
-    <ul>
+    <ul class="<%= node_class node[:url] %>">
       <% node[:pages].each do |page| %>
-        <%= link_to page[:name], page[:url] %>
+        <li class="<%= page_class page[:url] %>"><%= link_to page[:name], page[:url] %></li>
       <% end %>
     </ul>
     <% end %>
