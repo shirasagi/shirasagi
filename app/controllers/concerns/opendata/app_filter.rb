@@ -28,16 +28,17 @@ module Opendata::AppFilter
     end
 
     def aggregate_licenses(limit)
-      licenses = pages.aggregate_licenses :license_id, limit: limit
+#      licenses = pages.aggregate_licenses :license_id, limit: limit
+      pages.aggregate_field :license, limit: limit
 
-      licenses.each_with_index do |data, idx|
-        if rel = Opendata::License.site(@cur_site).public.where(id: data["id"]).first
-          licenses[idx] = { "id" => rel.id, "name" => rel.name, "count" => data["count"] }
-        else
-          licenses[idx] = nil
-        end
-      end
-      licenses
+#      licenses.each_with_index do |data, idx|
+#        if rel = Opendata::License.site(@cur_site).public.where(id: data["id"]).first
+#          licenses[idx] = { "id" => rel.id, "name" => rel.name, "count" => data["count"] }
+#        else
+#          licenses[idx] = nil
+#        end
+#      end
+#      licenses
     end
 
   public

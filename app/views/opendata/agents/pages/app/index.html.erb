@@ -91,21 +91,8 @@ categories = [
       <dt><%= @cur_page.t :executed %></dt>
       <dd><%= @cur_page.executed.to_i %> 回</dd>
 
-      <dt><%= @cur_page.t :license_id %></dt>
-      <dd>
-        <div class="icons">
-          <% if license = @cur_page.license %>
-          <span class="license">
-            <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-            <% if license.related_url.present? %>
-              <%= link_to label, license.related_url, target: "_blank" %>
-            <% else %>
-              <%= label %>
-            <% end %>
-          </span>
-          <% end %>
-        </div>
-      </dd>
+      <dt><%= @cur_page.t :license %></dt>
+      <dd><%= @cur_page.license %></dd>
 
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%m月%1d日")} %><br /></dd>

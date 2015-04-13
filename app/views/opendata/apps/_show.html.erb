@@ -5,8 +5,8 @@
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
-  <dt><%= @model.t :license_id %></dt>
-  <dd><%= tryb { @item.license.name } %></dd>
+  <dt><%= @model.t :license %></dt>
+  <dd><%= @item.send :license %></dd>
 
   <dt><%= @model.t :tags %></dt>
   <dd><%= @item.send :tags %></dd>

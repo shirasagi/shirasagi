@@ -15,6 +15,7 @@ class Opendata::App
   field :text, type: String
   field :appurl, type: String
   field :tags, type: SS::Extensions::Words
+  field :license, type: String
   field :executed, type: Integer
 
   has_many :points, primary_key: :app_id, class_name: "Opendata::AppPoint",
@@ -22,13 +23,11 @@ class Opendata::App
   embeds_ids :datasets, class_name: "Opendata::Dataset"
   has_many :ideas, primary_key: :app_id, class_name: "Opendata::Idea"
 
-  belongs_to :license, class_name: "Opendata::License"
-
-  permit_params :text, :appurl, :license_id, :dataset_ids, :tags, tags: []
+  permit_params :text, :appurl, :license, :dataset_ids, :tags, tags: []
 
   validates :text, presence: true
   validates :category_ids, presence: true
-  validates :license_id, presence: true
+  validates :license, presence: true
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
@@ -124,17 +123,6 @@ class Opendata::App
       limit_aggregation pipes, opts[:limit]
     end
 
-    def aggregate_licenses(name, opts = {})
-      pipes = []
-      pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
-      pipes << { "$project" => { _id: 0, "#{name}" => 1 } }
-      pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
-      pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
-      pipes << { "$sort" => { count: -1 } }
-      pipes << { "$limit" => 5 }
-      limit_aggregation pipes, opts[:limit]
-    end
-
     def get_tag_list(query)
       pipes = []
       pipes << { "$match" => where({}).selector.merge("tags" => { "$exists" => 1 }) }
@@ -177,7 +165,7 @@ class Opendata::App
 
       criteria = criteria.where category_ids: params[:category_id].to_i if params[:category_id].present?
 
-      criteria = criteria.where license_id: params[:license_id].to_i if params[:license_id].present?
+      criteria = criteria.where license: params[:license] if params[:license].present?
 
       criteria
     end

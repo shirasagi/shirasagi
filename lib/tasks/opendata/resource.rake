@@ -35,7 +35,7 @@ namespace :opendata do
     Opendata::Sparql.clear_all
   end
 
-  task :crawling => :environment do
+  task :crawl => :environment do
     require "open-uri"
     require "timeout"
 

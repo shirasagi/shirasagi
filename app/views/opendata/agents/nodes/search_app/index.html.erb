@@ -25,7 +25,7 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   </dl>
   <dl class="license">
     <dt>ライセンス</dt>
-    <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
+    <dd><%= f.text_field :license %></dd>
   </dl>
   <dl class="sort">
     <dt>並び順</dt>

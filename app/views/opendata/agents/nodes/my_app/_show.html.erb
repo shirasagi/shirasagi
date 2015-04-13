@@ -20,8 +20,8 @@
   </tr>
 
   <tr class="parent-row">
-    <td class="field"><%= @model.t :license_id %></td>
-    <td class="input"><%= tryb { @item.license.name } %></td>
+    <td class="field"><%= @model.t :license %></td>
+    <td class="input"><%= @item.send :license %></td>
   </tr>
 
   <tr class="parent-row">

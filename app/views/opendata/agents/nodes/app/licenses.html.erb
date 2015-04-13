@@ -3,8 +3,8 @@
   <% next unless data %>
   <article>
     <header>
-      <h2><a href="<%= "#{@search_url}&s[license_id]=#{data['id']}" %>">
-        <span class="name"><%= data["name"] %></span>
+      <h2><a href="<%= "#{@search_url}&s[license]=#{data['id']}" %>">
+        <span class="name"><%= data["id"] %></span>
         <span class="count">(<%= data["count"] %>)</span></a></h2>
     </header>
   </article>
