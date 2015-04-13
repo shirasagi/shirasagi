@@ -17,8 +17,10 @@ end
 
     <% if node[:pages] %>
     <ul class="<%= node_class node[:url] %>">
-      <% node[:pages].each do |page| %>
-        <li class="<%= page_class page[:url] %>"><%= link_to page[:name], page[:url] %></li>
+      <% node[:pages].each_with_index do |page, idx| %>
+        <% classes = [page_class(page[:url])] %>
+        <% classes << "last-child" if idx == node[:pages].size - 1 %>
+        <li class="<%= classes.join(' ') %>"><%= link_to page[:name], page[:url] %></li>
       <% end %>
     </ul>
     <% end %>
