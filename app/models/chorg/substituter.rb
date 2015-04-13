@@ -74,7 +74,9 @@ module Chorg::Substituter
           from_hierarchy << from_parts[index]
           from_hierarchy = from_hierarchy.join(separator)
           to_hierarchy = to_parts[0..index].join(separator)
-          substituters << StringSubstituter.new(from_hierarchy, to_hierarchy) if from_hierarchy.present? && to_hierarchy.present? && from_hierarchy != to_hierarchy
+          if from_hierarchy.present? && to_hierarchy.present? && from_hierarchy != to_hierarchy
+            substituters << StringSubstituter.new(from_hierarchy, to_hierarchy)
+          end
         end
       end
       substituters
