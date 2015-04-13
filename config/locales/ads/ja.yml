@@ -29,6 +29,8 @@ ja:
       ads/banner: 広告バナー
     attributes:
       ads/addon/page_list:
+        link_action: リンク動作
+        link_target: リンク表示
         upper_html: 上部HTML
         lower_html: 下部HTML
       ads/banner:
@@ -39,3 +41,19 @@ ja:
         date: アクセス日
         link_url: リンクURL
         count: アクセス数
+
+  tooltip:
+    ads/addon/page_list:
+      link_action:
+        - リンクの動作を設定します。
+        - クッションページ： 外部サイトへ移動する旨のページを表示します。
+        - 直リンク： 直接外部サイトへ移動します。
+      link_target:
+        - リンクの表示形式をを設定します。
+      sort:
+        - どういった順でリストの並べるかを指定します。
+      upper_html:
+        - リスト部分の上部に任意の内容をHTMLで記述することが可能です。
+      lower_html:
+        - リスト部分の下部に任意の内容をHTMLで記述することが可能です。
+

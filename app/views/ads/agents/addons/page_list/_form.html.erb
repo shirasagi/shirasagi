@@ -1,6 +1,12 @@
 <%= code_editor ".mod-ads-pagelist .html", mode: :html %>
 
 <dl class="see mod-ads-pagelist">
+  <dt><%= @model.t :link_action %><%= @model.tt :link_action %></dt>
+  <dd><%= f.select :link_action, @item.link_action_options %></dd>
+
+  <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
+  <dd><%= f.select :link_target, @item.link_target_options %></dd>
+
   <dt><%= @model.t :sort %><%= @model.tt :sort %></dt>
   <dd><%= f.select :sort, @item.sort_options, include_blank: " " %></dd>
 

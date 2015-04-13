@@ -4,13 +4,16 @@ return if @items.blank?
 
 wrap_id = "ads-banners-#{@items[0].id}"
 
+target = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") : nil
+
 %><div class="ads-banners" id="<%= wrap_id %>">
   <%== @cur_part.upper_html if @cur_part.upper_html.present? %>
 
   <div class="banners">
     <% @items.each do |item| %>
+    <% url = @cur_part.link_action.present? ? item.link_url : item.url %>
     <span>
-      <a href="<%= item.url %>" target="_blank">
+      <a href="<%= url %>" <%== target %>>
         <% if file = item.file %>
           <%= image_tag file.url, alt: item.name, title: item.name %>
         <% else %>
