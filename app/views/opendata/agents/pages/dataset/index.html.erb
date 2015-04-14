@@ -181,16 +181,22 @@ categories = [
     <nav class="feed"></nav>
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
-    <header><h1>アプリ</h1></header>
+    <header><h1>関連アプリ</h1></header>
     <div class="pages">
-      <div class="dataset-apps" id="dataset-apps"></div>
+      <div id="tab-app">
+        <header><h1>関連アプリ</h1></header>
+        <div class="dataset-apps" id="dataset-apps"></div>
+      </div>
     </div>
     <nav class="feed"></nav>
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
-    <header><h1>アイデア</h1></header>
+    <header><h1>関連アイデア</h1></header>
     <div class="pages">
-      <div class="dataset-ideas" id="dataset-ideas"></div>
+      <div id="tab-idea">
+        <header><h1>関連アイデア</h1></header>
+        <div class="dataset-ideas" id="dataset-ideas"></div>
+      </div>
     </div>
     <nav class="feed"></nav>
   </article>

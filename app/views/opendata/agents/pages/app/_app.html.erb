@@ -3,25 +3,25 @@
     <div id="tabs">
       <nav class="names">
         <% if @tab_display == "tab_url" %>
-          <a id="url" class="name" href="#tab-url" onclick="ChangeTab('tab-url'); return false;">
+          <a id="url" class="name" href="#tab-url" onclick="ChangeTab('tab-url','url'); return false;">
             参考URL</a>
         <% else %>
           <% if @tab_display == "tab_html" %>
-            <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play'); return false;">
+            <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play','play'); return false;">
               実 行</a>
-            <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js'); return false;">
+            <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js','js'); return false;">
               JavaScript</a>
-            <a id="css" class="name" href="#tab-css" onclick="ChangeTab('tab-css'); return false;">
+            <a id="css" class="name" href="#tab-css" onclick="ChangeTab('tab-css','css'); return false;">
               CSS</a>
-            <a id="html" class="name" href="#tab-html" onclick="ChangeTab('tab-html'); return false;">
+            <a id="html" class="name" href="#tab-html" onclick="ChangeTab('tab-html','html'); return false;">
               HTML</a>
-            <a id="sample" class="name" href="#tab-sample" onclick="ChangeTab('tab-sample'); return false;">
+            <a id="sample" class="name" href="#tab-sample" onclick="ChangeTab('tab-sample','sample'); return false;">
               サンプルデータ</a>
           <% end %>
         <% end %>
-        <a id="dataset" class="name" href="#tab-dataset" onclick="ChangeTab('tab-dataset'); return false;">
+        <a id="dataset" class="name dataset" href="#tab-dataset" onclick="ChangeTab('tab-dataset','dataset'); return false;">
           関連データセット</a>
-        <a id="idea" class="name" href="#tab-idea" onclick="ChangeTab('tab-idea'); return false;">
+        <a id="idea" class="name idea" href="#tab-idea" onclick="ChangeTab('tab-idea','idea'); return false;">
           関連アイデア</a>
       </nav>
 
@@ -92,37 +92,48 @@
 
 <script type="text/javascript"><!--
 var tab_display = "<%= @tab_display %>";
-function ChangeTab(tabname) {
-  document.getElementById("tab-dataset").style.display = "none";
-  document.getElementById("tab-idea").style.display = "none";
+function ChangeTab(tabname, current) {
+  $("#tab-dataset").hide();
+  $("#tab-idea").hide();
+  $("#dataset").removeClass("dataset_current");
+  $("#idea").removeClass("idea_current");
   if (tab_display == "tab_url") {
-    document.getElementById("tab-url").style.display = "none";
-  }
-  else {
+    $("#tab-url").hide();
+    $("#url").removeClass("current");
+  } else {
     if (tab_display == "tab_html") {
-      document.getElementById("tab-play").style.display = "none";
-      document.getElementById("tab-js").style.display = "none";
-      document.getElementById("tab-css").style.display = "none";
-      document.getElementById("tab-html").style.display = "none";
-      document.getElementById("tab-sample").style.display = "none";
+      $("#tab-play").hide();
+      $("#tab-js").hide();
+      $("#tab-css").hide();
+      $("#tab-html").hide();
+      $("#tab-sample").hide();
+      $("#play").removeClass("current");
+      $("#js").removeClass("current");
+      $("#css").removeClass("current");
+      $("#html").removeClass("current");
+      $("#sample").removeClass("current");
     }
   }
-  document.getElementById(tabname).style.display = "block";
+  $("#" + tabname).show();
+  if (current == "dataset") {
+    $("#" + current).addClass("dataset_current");
+  } else if (current == "idea") {
+    $("#" + current).addClass("idea_current");
+  } else {
+    $("#" + current).addClass("current");
+  }
 }
 
 function LoadTab(){
   if (tab_display == "tab_url") {
-    ChangeTab("tab-url")
-  }
-  else {
+    ChangeTab("tab-url", "url")
+  } else {
     if (tab_display == "tab_html") {
-      ChangeTab("tab-play")
-    }
-    else {
-      ChangeTab("tab-dataset")
+      ChangeTab("tab-play", "play")
+    } else {
+      ChangeTab("tab-dataset", "dataset")
     }
   }
 }
-
-LoadTab()
+$(LoadTab);
 // --></script>

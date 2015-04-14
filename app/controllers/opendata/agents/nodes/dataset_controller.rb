@@ -119,5 +119,6 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
     def show_ideas
       @cur_node.layout = nil
       @login_mode = logged_in?(redirect: false)
+      @idea_comment = Opendata::IdeaComment
     end
 end
