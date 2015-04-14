@@ -17,7 +17,7 @@
     <% @items.each do |item| %>
     <tr>
       <td><a href="<%= "#{item.id}/" %>"><%= item.name %></a></td>
-      <td><%= l item.updated.to_date, format: :long %></td>
+      <td><%= tryb{item.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
       <td><%= item.label :state %></td>
       <td><%= item.point.to_i %></td>
       <td>

@@ -10,26 +10,34 @@ class Opendata::Agents::Pages::AppController < ApplicationController
 
       @search_url = search_apps_path
 
-      appli = Opendata::App.find(@cur_page.id)
-      @app_html = appli.appfiles.where(filename: "index.html").first
-      if @app_html.present?
-        @app_index = "/app/#{@cur_page.id}/application/#{@app_html.filename}"
-        @text = "/text/#{@cur_page.id}/appfile/"
+      @tab_display = ""
 
-        @js_src = []
-        @css_src = []
-        @html_src = []
-        appli.appfiles.each do |file|
-          if file.format == "JS"
-            @js_src.push(file)
-          elsif file.format == "CSS"
-            @css_src.push(file)
-          elsif file.format == "HTML" or file.format == "HTM"
-            @html_src.push(file)
+      if @cur_page.appurl.present?
+        @tab_display = "tab_url"
+      else
+        appli = Opendata::App.find(@cur_page.id)
+        @app_html = appli.appfiles.where(filename: "index.html").first
+        if @app_html.present?
+          @tab_display = "tab_html"
+
+          @app_index = "/app/#{@cur_page.id}/application/#{@app_html.filename}"
+          @text = "/text/#{@cur_page.id}/appfile/"
+
+          @js_src = []
+          @css_src = []
+          @html_src = []
+          appli.appfiles.each do |file|
+            if file.format == "JS"
+              @js_src.push(file)
+            elsif file.format == "CSS"
+              @css_src.push(file)
+            elsif file.format == "HTML" or file.format == "HTM"
+              @html_src.push(file)
+            end
           end
-        end
 
-        @sample = appli.appfiles.where(format: "CSV")
+          @sample = appli.appfiles.where(format: "CSV")
+        end
       end
 
       if @cur_page.dataset_ids.empty? == false

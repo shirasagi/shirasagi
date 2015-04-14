@@ -14,6 +14,7 @@ class Opendata::Appfile
 
   validates :in_file, presence: true, if: ->{ file_id.blank? }
   validates :filename, uniqueness: true
+  validate :validate_appfile
 
   before_validation :set_filename, if: ->{ in_file.present? }
 
@@ -68,6 +69,15 @@ class Opendata::Appfile
     def set_format
       self.format = format.upcase if format.present?
     end
+
+    def validate_appfile
+      if self.app.appurl.present?
+        errors.clear
+        errors.add :file_id, "はアプリの参考URLを登録している場合、登録できません。"
+        return
+      end
+    end
+
   class << self
     public
       def allowed?(action, user, opts = {})

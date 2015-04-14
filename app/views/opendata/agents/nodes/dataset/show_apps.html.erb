@@ -28,7 +28,7 @@
             <% end %>
 
             <dt><%= app.t :updated %></dt>
-            <dd><%= tryb{app.updated.strftime("%Y年%m月%d日 %H時%M分")} %><br /></dd>
+            <dd><%= tryb{app.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %><br /></dd>
           </dl>
           <hr>
         <% end %>

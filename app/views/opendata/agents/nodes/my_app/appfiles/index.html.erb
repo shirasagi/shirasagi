@@ -14,7 +14,7 @@
     <% @items.each do |item| %>
     <tr>
       <td><a href="<%= "#{item.id}/" %>"><%= item.filename %></a></td>
-      <td><%= l item.updated.to_date, format: :long %></td>
+      <td><%= tryb{item.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
       <td><%= number_to_human_size item.size %></td>
     </tr>
     <% end %>

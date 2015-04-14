@@ -28,6 +28,7 @@ class Opendata::App
   validates :text, presence: true
   validates :category_ids, presence: true
   validates :license, presence: true
+  validate :validate_appurl
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
@@ -66,6 +67,15 @@ class Opendata::App
 
     def seq_filename
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+    end
+
+    def validate_appurl
+      if self.appurl.present?
+        if self.appfiles.present?
+          errors.add :appurl, "はアプリのファイルを登録している場合、入力できません。"
+          return
+        end
+      end
     end
 
   class << self
