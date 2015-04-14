@@ -156,7 +156,7 @@ CentOS 6.6/64bit
   # 予約公開/非公開
   rake cms:release_pages
 
-  # 静的ページ書き出し（フォルダ＋ページ）
+  # 静的ページ書き出し（フォルダ＋トップページ）
   rake cms:generate_nodes site=www
 
   # 静的ページ書き出し（ページ）
@@ -170,6 +170,7 @@ CentOS 6.6/64bit
 
   # ページ公開＆書き出し
   */15 * * * * /bin/bash -l -c 'cd /var/www/shirasagi && bundle exec rake cms:release_pages && bundle exec rake cms:generate_nodes' >/dev/null
+  0 * * * * /bin/bash -l -c 'cd /var/www/shirasagi && bundle exec rake cms:generate_pages' >/dev/null
 
 --------------------
 # 開発ツール
