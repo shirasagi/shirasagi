@@ -41,6 +41,7 @@ gem "browser"
 #gem 'coffee-rails-source-maps'
 gem "net-ldap"
 gem "diffy"
+gem "ungarbled"
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
