@@ -3,7 +3,7 @@
 <table class="index">
   <thead>
     <tr>
-      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th class="checkbox"><input type="checkbox" /></th>
       <% @model.fields.select {|k, v| k =~ /^(name|filename)/ }.keys.each do |key| %>
       <th><%= @model.t key %></th>
       <% end %>
@@ -14,7 +14,7 @@
   <tbody>
     <% @items.each do |item| %>
     <tr>
-      <td>
+      <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>

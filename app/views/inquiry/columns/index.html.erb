@@ -1,7 +1,7 @@
 <table class="index">
   <thead>
     <tr>
-      <th style="width: 20px;"><input type="checkbox" /></th>
+      <th class="checkbox"><input type="checkbox" /></th>
       <th><%= @model.t :name %></th>
       <th><%= @model.t :order %></th>
       <th class="datetime"><%= @model.t :updated %></th>
@@ -11,7 +11,7 @@
   <tbody>
     <% @items.each do |item| %>
     <tr>
-      <td>
+      <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
