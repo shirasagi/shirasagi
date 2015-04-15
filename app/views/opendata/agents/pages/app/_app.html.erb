@@ -39,7 +39,7 @@
                 <%= link_to "全画面表示で実行", "/app/#{@cur_page.id}/full", :target=>["_blank"] %>
               </div>
               <div class="frame">
-                <iframe class="frmPlay" src="<%= @app_index %>" width="100%" height="100%"></iframe>
+                <iframe class="frmPlay" src="" width="100%" height="100%"></iframe>
               </div>
             </div>
             <div id="tab-js">
@@ -87,53 +87,7 @@
       </div>
     </div>
   </div>
-  <%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %>
+  <% if @tab_display == "tab_html" %>
+    <%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %>
+  <% end %>
 </div>
-
-<script type="text/javascript"><!--
-var tab_display = "<%= @tab_display %>";
-function ChangeTab(tabname, current) {
-  $("#tab-dataset").hide();
-  $("#tab-idea").hide();
-  $("#dataset").removeClass("dataset_current");
-  $("#idea").removeClass("idea_current");
-  if (tab_display == "tab_url") {
-    $("#tab-url").hide();
-    $("#url").removeClass("current");
-  } else {
-    if (tab_display == "tab_html") {
-      $("#tab-play").hide();
-      $("#tab-js").hide();
-      $("#tab-css").hide();
-      $("#tab-html").hide();
-      $("#tab-sample").hide();
-      $("#play").removeClass("current");
-      $("#js").removeClass("current");
-      $("#css").removeClass("current");
-      $("#html").removeClass("current");
-      $("#sample").removeClass("current");
-    }
-  }
-  $("#" + tabname).show();
-  if (current == "dataset") {
-    $("#" + current).addClass("dataset_current");
-  } else if (current == "idea") {
-    $("#" + current).addClass("idea_current");
-  } else {
-    $("#" + current).addClass("current");
-  }
-}
-
-function LoadTab(){
-  if (tab_display == "tab_url") {
-    ChangeTab("tab-url", "url")
-  } else {
-    if (tab_display == "tab_html") {
-      ChangeTab("tab-play", "play")
-    } else {
-      ChangeTab("tab-dataset", "dataset")
-    }
-  }
-}
-$(LoadTab);
-// --></script>

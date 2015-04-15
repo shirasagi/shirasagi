@@ -129,6 +129,26 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
       @idea_comment = Opendata::IdeaComment
     end
 
+    def show_executed
+      @cur_node.layout = nil
+      @app = Opendata::App.site(@cur_site).find(params[:app])
+      render
+    end
+
+    def add_executed
+      @cur_node.layout = nil
+      @app = Opendata::App.site(@cur_site).find(params[:app])
+      if @app.present?
+        exec = @app.executed.to_i
+        @app.executed = exec + 1
+        res = @app.save(validate: false)
+        if !res
+          @app.executed = exec
+        end
+      end
+      render
+    end
+
     def show
       @model = Opendata::App
       @item = @model.site(@cur_site).find(params[:id])

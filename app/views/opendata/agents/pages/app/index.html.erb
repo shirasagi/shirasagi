@@ -87,7 +87,7 @@ categories = [
       <% end %>
 
       <dt><%= @cur_page.t :executed %></dt>
-      <dd><%= @cur_page.executed.to_i %> 回</dd>
+      <dd><div id="executed"></div></dd>
 
       <dt><%= @cur_page.t :license %></dt>
       <dd><%= @cur_page.license %></dd>
@@ -100,3 +100,73 @@ categories = [
 
 <%= render file: "cms/agents/addons/related_page/view/index" %>
 <%= render file: "contact/agents/addons/page/view/index" %>
+
+<script type="text/javascript"><!--
+var tab_display = "<%= @tab_display %>";
+function PlayApp() {
+  if (tab_display == "tab_html") {
+    $(".frmPlay").attr("src", "");
+    $(".frmPlay").attr("src", "<%= @app_index %>");
+    $.ajax({
+      type: "GET",
+      url: "<%= @cur_page.executed_add_url %>",
+      success: function(data) {
+        $("#executed").html(data);
+      }
+    });
+  } else {
+    $.ajax({
+      type: "GET",
+      url: "<%= @cur_page.executed_show_url %>",
+      success: function(data) {
+        $("#executed").html(data);
+      }
+    });
+  }
+}
+function ChangeTab(tabname, current) {
+  $("#tab-dataset").hide();
+  $("#tab-idea").hide();
+  $("#dataset").removeClass("dataset_current");
+  $("#idea").removeClass("idea_current");
+  if (tab_display == "tab_url") {
+    $("#tab-url").hide();
+    $("#url").removeClass("current");
+  } else {
+    if (tab_display == "tab_html") {
+      $("#tab-play").hide();
+      $("#tab-js").hide();
+      $("#tab-css").hide();
+      $("#tab-html").hide();
+      $("#tab-sample").hide();
+      $("#play").removeClass("current");
+      $("#js").removeClass("current");
+      $("#css").removeClass("current");
+      $("#html").removeClass("current");
+      $("#sample").removeClass("current");
+    }
+  }
+  $("#" + tabname).show();
+  if (current == "dataset") {
+    $("#" + current).addClass("dataset_current");
+  } else if (current == "idea") {
+    $("#" + current).addClass("idea_current");
+  } else {
+    $("#" + current).addClass("current");
+  }
+}
+
+function LoadTab(){
+  if (tab_display == "tab_url") {
+    ChangeTab("tab-url", "url")
+  } else {
+    if (tab_display == "tab_html") {
+      ChangeTab("tab-play", "play")
+    } else {
+      ChangeTab("tab-dataset", "dataset")
+    }
+  }
+}
+$(LoadTab);
+$(PlayApp);
+// --></script>
