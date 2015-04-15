@@ -2,82 +2,74 @@ module Rdf::Object
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
-  include Rdf::LangHash
+  include Rdf::Reference::Vocab
 
   included do
     seqid :id
-    belongs_to :vocab, class_name: "Rdf::Vocab"
     field :name, type: String
-    field :labels, type: Hash
-    field :comments, type: Hash
-    field :equivalent, type: String
+    field :labels, type: Rdf::Extensions::LangHash
+    field :comments, type: Rdf::Extensions::LangHash
 
-    permit_params :name, :labels, :comments, :equivalent
-    permit_params labels: %w(ja en invariant)
-    permit_params comments: %w(ja en invariant)
+    permit_params :name, :labels, :comments
+    permit_params labels: Rdf::Extensions::LangHash::LANGS
+    permit_params comments: Rdf::Extensions::LangHash::LANGS
 
-    before_validation :normalize_labels
-    before_validation :normalize_comments
-    validates :vocab, presence: true
+    before_validation :normalize_name
+
     validates :name, presence: true, length: { maximum: 80 }, uniqueness: { scope: :vocab_id }
     validate :validate_name
 
-    scope :site, ->(site) { self.in(vocab_id: Rdf::Vocab.site(site).pluck(:id)) }
-    scope :vocab, ->(vocab) { where(vocab_id: vocab.id) }
+    scope :prefix_and_name, ->(prefix, name) { self.in(vocab_id: Rdf::Vocab.where(prefix: prefix).pluck(:id)).where(name: name) }
   end
 
   module ClassMethods
     def search(params)
-      criteria = self.where({})
+      criteria = search_vocab(params)
       return criteria if params.blank?
 
-      if params[:name].present?
-        # criteria = criteria.search_text params[:name]
-        words = params[:name]
+      words = params[:name]
+      words ||= params[:keyword]
+      if words.present?
         words = words.split(/[\s　]+/).uniq.compact.map { |w| /\Q#{w}\E/i } if words.is_a?(String)
-        criteria = criteria.all_in(:name => words)
+        criteria = criteria.all_in(name: words)
       end
-      # if params[:keyword].present?
-      #   criteria = criteria.keyword_in params[:keyword], :name, :html
-      # end
-      if params[:vocab].present?
-        vocab_id = normalize_vocab_id(params[:vocab])
-        criteria = criteria.where(vocab_id: vocab_id) if vocab_id
-      end
-      criteria
-    end
 
-    def normalize_vocab_id(vocab_id)
-      case vocab_id
-      when "false" then
-        false
-      else
-        vocab_id.to_i
+      class_id = params[:class_id]
+      if class_id.present?
+        class_id = class_id.to_i if class_id.respond_to?(:to_i)
+        criteria = criteria.in(class_ids: [class_id])
       end
+
+      uri = params[:uri]
+      if uri.present?
+        prefix, name = Rdf::Vocab.qname(uri)
+        criteria = criteria.prefix_and_name(prefix, name)
+      end
+
+      criteria
     end
   end
 
-  public
-    def label
-      lang_hash_value labels
-    end
-
-    def comment
-      lang_hash_value comments
-    end
-
   private
+    def normalize_name
+      return if name.blank?
+      # name must be NFKC
+      self.name = UNF::Normalizer.normalize(self.name.strip, :nfkc)
+    end
+
     def validate_name
       return if name.blank?
       # symbols is not allowed.
       errors.add :name, :invalid if name =~ /[\x00-,:-@\[-\^`\{-\x7f]/
     end
 
-    def normalize_labels
-      self.labels = normalize_lang_hash labels
+  public
+    # view support method
+    def preferred_label
+      "#{vocab.prefix}:#{name}"
     end
 
-    def normalize_comments
-      self.comments = normalize_lang_hash comments
+    def uri
+      "#{vocab.uri}#{name}"
     end
 end

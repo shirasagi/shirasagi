@@ -1,6 +1,7 @@
 class Rdf::VocabsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  helper Opendata::FormHelper
 
   model Rdf::Vocab
 
@@ -19,7 +20,7 @@ class Rdf::VocabsController < ApplicationController
 
     def set_extra_crumbs
       set_item
-      @crumbs << [@item.label, action: :show, id: @item] if @item.present?
+      @crumbs << [@item.labels.preferred_value, action: :show, id: @item] if @item.present?
     end
 
     def save_file
@@ -40,6 +41,16 @@ class Rdf::VocabsController < ApplicationController
     end
 
   public
+    def index
+      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+      @items = @model.site(@cur_site).
+          allow(:read, @cur_user, site: @cur_site).
+          search(params[:s]).
+          order_by(_id: -1).
+          page(params[:page]).per(50)
+    end
+
     def import
       @item = OpenStruct.new
       return render unless request.post?

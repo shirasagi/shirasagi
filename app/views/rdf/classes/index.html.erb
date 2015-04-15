@@ -1,12 +1,17 @@
 <%= render file: "_search" %>
 
-<table class="index">
+<%= scss do %>
+table.rdf-classes th.name {
+  width: 20%;
+}
+<% end %>
+
+<table class="index rdf-classes">
   <thead>
   <tr>
     <th class="checkbox"><input type="checkbox" /></th>
-    <th><%= @model.t :name %></th>
-    <th><%= @model.t :labels %></th>
-    <th><%= @model.t :comments %></th>
+    <th class="name"><%= @model.t :name %></th>
+    <th class="comments"><%= @model.t :comments %></th>
     <th class="datetime"><%= @model.t :updated %></th>
   </tr>
   </thead>
@@ -22,10 +27,9 @@
           <%= link_to :delete, action: :delete, id: item %>
         </nav>
       </td>
-      <td><%= link_to("#{item.vocab.prefix}:#{item.name}", action: :show, id: item) %></td>
-      <td><%= item.label %></td>
-      <td><%= item.comment %></td>
-      <td><%= item.updated.strftime("%Y/%m/%d") %></td>
+      <td class="name"><%= link_to("#{item.vocab.prefix}:#{item.name}", action: :show, id: item) %></td>
+      <td class="comments"><%= item.comments.try(:preferred_value) %></td>
+      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d") %></td>
     </tr>
   <% end %>
   </tbody>

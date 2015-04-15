@@ -7,9 +7,11 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
                          dc:issued
                          dc:modified
                          rdfs:isDefinedBy
+                         rdfs:subPropertyOf
                          schema:domainIncludes
                          vs:term_status
                          prov:wasDerivedFrom
+                         owl:equivalentProperty
                          owl:inverseOf).freeze
 
   def initialize
@@ -23,9 +25,9 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
 
     register_handler("rdfs:range", Rdf::Builders::RangeHandler.new(:ranges))
 
-    register_handler("rdfs:subPropertyOf", Rdf::Builders::SubPropertyOfHandler.new(:sub_property_of))
+    # register_handler("rdfs:subPropertyOf", Rdf::Builders::SubPropertyOfHandler.new(:sub_property_of))
 
-    register_handler("owl:equivalentProperty", Rdf::Builders::LiteralHandler.new(:equivalent))
+    # register_handler("owl:equivalentProperty", Rdf::Builders::LiteralHandler.new(:equivalent))
   end
 
   def call(predicate, objects)

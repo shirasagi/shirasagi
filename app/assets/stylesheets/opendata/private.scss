@@ -83,3 +83,47 @@ div.csv2rdf-settings-table-container {
     background-position: -45px 0px;
   }
 }
+
+textarea.readonly {
+  background-color: #eee;
+}
+
+.rdf-prop-search-form {
+  @include clear;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+  background: $gray3;
+  form.index-search {
+    @include clear;
+    float: left;
+    border: 2px solid $white;
+    select {
+      float: left;
+      height: 2em;
+      border: none;
+      &:focus {
+        @include box-shadow(none);
+      }
+      margin-right: 3px;
+    }
+    input[type="text"] {
+      float: left;
+      height: 2em;
+      border: none;
+      &:focus {
+        @include box-shadow(none);
+      }
+    }
+    input[type="submit"] {
+      float: left;
+      margin: 0;
+      padding: 2px 20px 1px;
+      border: none;
+      background: $gray3;
+      &:hover {
+        background: $pink;
+        color: $white;
+      }
+    }
+  }
+}

@@ -286,6 +286,9 @@ ja:
     opendata/license:
       related_url:
         - 登録するライセンスの公式ページや説明ページのURLを登録します。
+    opendata/csv2rdf_settings:
+      rdf_property:
+        - 適切な RDF プロパティを一覧内から選択し、「保存」ボタンをクリックします。
 
   job:
     models:

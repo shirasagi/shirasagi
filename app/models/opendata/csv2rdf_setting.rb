@@ -5,6 +5,7 @@ class Opendata::Csv2rdfSetting
   include SS::Reference::User
 
   SIMILARITY_THRESHOLD = 0.6.freeze
+  MAX_ROWS = 19.freeze
 
   attr_accessor :cur_dataset, :cur_resource
 
@@ -64,7 +65,7 @@ class Opendata::Csv2rdfSetting
       labels << tsv[i]
     end
     labels.transpose.map.with_index(1) do |column_labels, index|
-      column_labels = column_labels.map(&:strip).select(&:present?)
+      column_labels = column_labels.select(&:present?).map(&:strip)
       if column_labels.join.blank?
         # set default column name
         ["分類#{index}"]
@@ -83,7 +84,8 @@ class Opendata::Csv2rdfSetting
     end
   end
 
-  def search_column_types
-    Opendata::ColumnTypesSearcher::Searcher.call(self, SIMILARITY_THRESHOLD)
+  def search_column_types(opts = {})
+    opts = { threshold: SIMILARITY_THRESHOLD, max_rows: MAX_ROWS }.merge(opts)
+    Opendata::ColumnTypesSearcher::Searcher.call(self, opts)
   end
 end

@@ -11,7 +11,7 @@ module Opendata::Csv2rdfConverter::Helpers
       @cur_resource = @cur_dataset.resources.find(resource)
       @item = Opendata::Csv2rdfSetting.site(@cur_site).resource(@cur_resource).first
       @csv = @cur_resource.parse_tsv
-      @uri = "#{@cur_resource.full_url}#"
+      @uri = "#{UNF::Normalizer.normalize(@cur_resource.full_url, :nfkc)}#"
       @tmp_dir = nil
       @tmp_file = nil
     end
@@ -46,15 +46,27 @@ module Opendata::Csv2rdfConverter::Helpers
     end
 
     def fallback_property_name(column_index)
-      @item.header_labels[column_index].join("_")
+      name = @item.header_labels[column_index].map { |e| UNF::Normalizer.normalize(e.strip, :nfkc) }.join("_")
+      name.gsub!(/\s+/, '_')
+      name
     end
 
     def normalize_value(value, column_index)
       type_setting = @item.column_types[column_index]
       classes = type_setting["classes"]
       last_class = classes.last
-      if last_class == "xsd:integer" || last_class == "xsd:float"
-        "\"#{value.gsub(/,/, '')}\"^^#{last_class}"
+      if last_class == "xsd:integer"
+        if /^[-+]?[0-9,]+$/ =~ value
+          "\"#{value.gsub(/,/, '')}\"^^#{last_class}"
+        else
+          "\"#{value.gsub(/,/, '')}\""
+        end
+      elsif last_class == "xsd:decimal"
+        if /^[-+]?[0-9,]+\.[0-9]+$/ =~ value
+          "\"#{value.gsub(/,/, '')}\"^^#{last_class}"
+        else
+          "\"#{value.gsub(/,/, '')}\""
+        end
       else
         if value.start_with?("http:") || value.start_with?("https:")
           "<#{value}>"

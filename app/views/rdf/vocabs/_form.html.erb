@@ -5,13 +5,13 @@ textarea {
 <% end %>
 
 <dl class="see rdf-vocab">
-  <dt><%= @model.t :prefix %><%= @model.tt :prefix %></dt>
+  <dt><%= @model.t :prefix %><%= @model.tt :prefix %><%= required_label %></dt>
   <dd><%= f.text_field :prefix %></dd>
 
-  <dt><%= @model.t :uri %><%= @model.tt :uri %></dt>
+  <dt><%= @model.t :uri %><%= @model.tt :uri %><%= required_label %></dt>
   <dd><%= f.text_field :uri %></dd>
 
-  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dt><%= @model.t :order %><%= @model.tt :order %><%= required_label %></dt>
   <dd><%= f.number_field :order %></dd>
 
   <dt><%= @model.t :label_ja %><%= @model.tt :label_ja %></dt>

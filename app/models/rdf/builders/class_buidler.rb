@@ -10,6 +10,7 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
                          dc:modified
                          vs:term_status
                          owl:disjointWith
+                         owl:equivalentClass
                          prov:wasDerivedFrom).freeze
 
   def initialize
@@ -20,7 +21,7 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
 
     register_handler("rdfs:subClassOf", Rdf::Builders::SubClassOfHandler.new)
 
-    register_handler("owl:equivalentClass", Rdf::Builders::EquivalentClassHandler.new(:equivalent))
+    # register_handler("owl:equivalentClass", Rdf::Builders::EquivalentClassHandler.new(:equivalent))
   end
 
   def call(predicate, objects)

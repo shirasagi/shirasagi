@@ -27,7 +27,7 @@
     <% @items.each do |item| %>
       <tr data-id="<%= item.id %>" data-uri="<%= "#{item.vocab.uri}#{item.name}" %>">
         <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", "#", class: "select-item" %></td>
-        <td><%= item.comment %></td>
+        <td><%= item.comments.try(:preferred_value) %></td>
       </tr>
     <% end %>
   </tbody>
@@ -62,10 +62,26 @@ $ ->
 
     target = $(this).closest("[data-target]").attr("data-target")
     if target
+      $(".#{target}").children("[data-type='id']").val(id)
       $(".#{target}").children("[data-type='uri']").val(uri)
       $(".#{target}").children("[data-type='pname']").text(name)
     e.preventDefault()
     $.colorbox.close()
+
+  target = $("table.rdf-search-classes-class-list").attr("data-target")
+  if target
+    id = $(".#{target}").children("[data-type='id']").val()
+    url = $(".#{target}").children("[data-type='uri']").val()
+    remove_id = $(".#{target}").children("[data-type='remove-id']").val()
+    remove_url = $(".#{target}").children("[data-type='remove-uri']").val()
+    if id
+      $("table.rdf-search-classes-class-list tr[data-id='#{id}']").hide()
+    if url
+      $("table.rdf-search-classes-class-list tr[data-url='#{url}']").hide()
+    if remove_id
+      $("table.rdf-search-classes-class-list tr[data-id='#{remove_id}']").hide()
+    if remove_url
+      $("table.rdf-search-classes-class-list tr[data-url='#{remove_url}']").hide()
 
   $(".rdf-search-classes-loading").html(SS.loading)
 <% end %>

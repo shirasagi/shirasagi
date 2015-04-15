@@ -35,7 +35,7 @@
           <tr data-id="<%= item.id %>" data-uri="<%= "#{item.vocab.uri}#{item.name}" %>">
             <td class="checkbox"><%= f.radio_button(:class_id, item.id, checked: @item.class_id == item.id) %></td>
             <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", action: :rdf_class_preview, rdf_cid: item.id, s: params[:s] %></td>
-            <td><%= item.comment %></td>
+            <td><%= item.comments.try(:preferred_value) %></td>
           </tr>
         <% end %>
         </tbody>

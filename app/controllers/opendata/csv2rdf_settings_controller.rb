@@ -77,6 +77,20 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
       end
     end
 
+    def render_update(result, opts = {})
+      if result
+        respond_to do |format|
+          format.html { redirect_to({ action: :column_types }, { notice: t("views.notice.saved") }) }
+          format.json { head :no_content }
+        end
+      else
+        respond_to do |format|
+          format.html { render }
+          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
+        end
+      end
+    end
+
   public
     def header_size
       render_with(file: "wizards", action: :rdf_class)
@@ -109,11 +123,20 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
     end
 
     def rdf_class_preview
+      Rails.logger.debug("[enter] #rdf_class_preview")
       @rdf_class = Rdf::Class.site(@cur_site).find(params[:rdf_cid])
       @item = @item.dup
       @item.class_id = @rdf_class.id
-      # @item.update_column_types
-      @item.column_types = @item.search_column_types
+      Rails.logger.debug("#rdf_class_preview: search_column_types")
+      # def @item.rdf_class
+      #   Rails.logger.debug("#rdf_class_preview: rdf_class=#{@rdf_class}")
+      #   @rdf_class
+      # end
+      @item.column_types = @item.search_column_types(class: @rdf_class)
+      Rails.logger.debug("#rdf_class_preview: render")
+      render
+    ensure
+      Rails.logger.debug("[leave] #rdf_class_preview")
     end
 
     def rdf_prop_select
@@ -138,8 +161,8 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
         copy[@column_index] = {"classes" => ["xsd:string"]}
       when "endemic:integer"
         copy[@column_index] = {"classes" => ["xsd:integer"]}
-      when "endemic:float"
-        copy[@column_index] = {"classes" => ["xsd:float"]}
+      when "endemic:decimal"
+        copy[@column_index] = {"classes" => ["xsd:decimal"]}
       when "false"
         copy[@column_index] = {"classes" => [false]}
       else
@@ -156,18 +179,7 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
         copy[@column_index] = found
       end
 
-      # @item.column_types = copy
       @item.attributes = { column_types: copy }
-      if @item.update
-        respond_to do |format|
-          format.html { redirect_to({ action: :column_types }, { notice: t("views.notice.saved") }) }
-          format.json { head :no_content }
-        end
-      else
-        respond_to do |format|
-          format.html { render }
-          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
-        end
-      end
+      render_update @item.update
     end
 end

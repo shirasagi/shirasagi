@@ -1,0 +1,21 @@
+<%= scss do %>
+textarea.readonly {
+  background-color: #eee;
+  height: 200px;
+  //width: 80%;
+}
+<% end %>
+
+<dl class="see rdf-class">
+  <dt><%= @model.t :property %></dt>
+  <dd><%= @item.property.preferred_label %></dd>
+
+  <dt><%= @model.t :datatype %></dt>
+  <dd><%= @item.datatype.preferred_label %></dd>
+
+  <dt><%= @model.t :cardinality %></dt>
+  <dd><%= @item.cardinality %></dd>
+
+  <dt><%= @model.t :comments %></dt>
+  <dd><%= text_area_tag "comments", @item.comments.try(:preferred_value), readonly: true, class: "readonly" %></dd>
+</dl>

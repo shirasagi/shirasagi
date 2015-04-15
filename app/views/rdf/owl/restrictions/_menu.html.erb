@@ -3,11 +3,7 @@
     <% if @vocab.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, action: :new %>
     <% end %>
-    <% if @rdf_class.present? %>
-      <%= link_to :import, action: :import %>
-      <%= link_to :"rdf.links.back_to_class", controller: :classes, action: :show, id: @rdf_class %>
-    <% end %>
-  <% elsif params[:action] =~ /new|create|import/ %>
+  <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @vocab.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
@@ -25,16 +21,9 @@
       <%= link_to(:move, action: :move, id: @item) rescue nil %>
     <% end %>
     <% if @vocab.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-      <% if @rdf_class.present? %>
-        <%= link_to :delete, action: :unlink, id: @item %>
-      <% else %>
-        <%= link_to :delete, action: :delete, id: @item %>
-      <% end %>
+      <%= link_to :delete, action: :delete, id: @item %>
     <% end %>
     <%= link_to :back_to_index, action: :index %>
-    <% if @rdf_class.present? %>
-      <%= link_to :"rdf.links.back_to_class", controller: :classes, action: :show, id: @rdf_class %>
-    <% end %>
   <% end %>
 </nav>
 

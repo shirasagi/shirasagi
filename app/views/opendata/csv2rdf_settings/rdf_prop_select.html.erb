@@ -24,7 +24,7 @@ div.csv2rdf-settings-table-container {
         <dt><%= t("opendata.labels.samples") %></dt>
         <dd><%= text_area_tag "samples", safe_join(@samples, "\n"), readonly: true, class: "sample" %></dd>
 
-        <dt><%= t("opendata.labels.rdf_property") %></dt>
+        <dt><%= t("opendata.labels.rdf_property") %><%= tt("opendata/csv2rdf_settings.rdf_property") %></dt>
         <dd>
           <div class="csv2rdf-settings-table-container">
             <table>
@@ -37,7 +37,7 @@ div.csv2rdf-settings-table-container {
               </tr>
               </thead>
               <tbody>
-              <% each_expand_properties do |name, klass, comment, sub_props, depth, names, classes| %>
+              <% each_expand_properties do |id, name, klass, comment, sub_props, depth, ids, names, classes| %>
                 <tr data-depth="<%= depth %>" class="depth<%= depth %>">
                   <td class="checkbox">
                     <% if sub_props.blank? %>
@@ -53,19 +53,19 @@ div.csv2rdf-settings-table-container {
                 <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:string", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:string"]) %></td>
                 <td class="name"><span class="od-icon od-icon-leaf-prop">ファイル固有</span></td>
                 <td class="class">xsd:string</td>
-                <td class="comment"></td>
+                <td class="comment">一般的な文字列データを表します。</td>
               </tr>
               <tr data-depth="0" class="depth0">
                 <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:integer", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:integer"]) %></td>
                 <td class="name"><span class="od-icon od-icon-leaf-prop">ファイル固有</span></td>
                 <td class="class">xsd:integer</td>
-                <td class="comment"></td>
+                <td class="comment">一般的な整数データを表します。</td>
               </tr>
               <tr data-depth="0" class="depth0">
-                <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:float", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:float"]) %></td>
+                <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:decimal", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:decimal"]) %></td>
                 <td class="name"><span class="od-icon od-icon-leaf-prop">ファイル固有</span></td>
-                <td class="class">xsd:float</td>
-                <td class="comment"></td>
+                <td class="class">xsd:decimal</td>
+                <td class="comment">一般的な実数データを表します。</td>
               </tr>
               <tr data-depth="0" class="depth0">
                 <td class="checkbox"><%= f.radio_button(:prop_id, "false", checked: @column_type["properties"].nil? && @column_type["classes"].first == false) %></td>

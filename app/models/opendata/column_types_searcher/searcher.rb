@@ -8,14 +8,15 @@ module Opendata::ColumnTypesSearcher::Searcher
   end
 
   class StrictRdfPropertySearcher < Base
-    def initialize(settings, threshold)
+    def initialize(settings, opts)
       super(settings)
-      @threshold = threshold
+      @threshold = opts[:threshold]
+      @rdf_class = opts[:class] || @settings.rdf_class
     end
 
     def call
       result = []
-      properties = @settings.rdf_class.flattern_properties
+      properties = @rdf_class.flattern_properties
       @settings.header_labels.each do |column_names|
         similarities = build_property_similarities(properties, column_names)
 
@@ -59,10 +60,10 @@ module Opendata::ColumnTypesSearcher::Searcher
   end
 
   class FallbackSearcher < Base
-    def initialize(searcher, max_rows = 19)
+    def initialize(searcher, opts)
       super(searcher.settings)
       @searcher = searcher
-      @max_rows = max_rows
+      @max_rows = opts[:max_rows]
     end
 
     def call
@@ -81,7 +82,7 @@ module Opendata::ColumnTypesSearcher::Searcher
         if value.present?
           data_types << guess_data_type(value)
         else
-          data_types << nil
+          data_types << ""
         end
       end
 
@@ -89,7 +90,7 @@ module Opendata::ColumnTypesSearcher::Searcher
       if data_types.length == 1
         data_types[0] || "xsd:string"
       elsif data_types.length == 2
-        if data_types[0].nil?
+        if data_types[0].blank?
           data_types[1]
         else
           "xsd:string"
@@ -103,14 +104,14 @@ module Opendata::ColumnTypesSearcher::Searcher
       if /^[-+]?[0-9,]+$/ =~ value
         "xsd:integer"
       elsif /^[-+]?[0-9,]+\.[0-9]+$/ =~ value
-        "xsd:float"
+        "xsd:decimal"
       else
         "xsd:string"
       end
     end
   end
 
-  def self.call(settings, threshold, max_rows = 19)
-    FallbackSearcher.new(StrictRdfPropertySearcher.new(settings, threshold), max_rows).call
+  def self.call(settings, opts)
+    FallbackSearcher.new(StrictRdfPropertySearcher.new(settings, opts), opts).call
   end
 end

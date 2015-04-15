@@ -1,18 +1,13 @@
 <%= render file: "_search" %>
 
-<%= scss do %>
-table.rdf-vocabs th.owner {
-  width: 20%;
-}
-<% end %>
-
-<table class="index rdf-vocabs">
+<table class="index">
   <thead>
   <tr>
     <th class="checkbox"><input type="checkbox" /></th>
-    <th class="label"><%= @model.t :label %></th>
-    <th class="owner"><%= @model.t :owner %></th>
-    <th class="datetime"><%= @model.t :updated %></th>
+    <th><%= @model.t :property %></th>
+    <th><%= @model.t :datatype %></th>
+    <th><%= @model.t :cardinality %></th>
+    <th><%= @model.t :comments %></th>
   </tr>
   </thead>
 
@@ -27,9 +22,10 @@ table.rdf-vocabs th.owner {
           <%= link_to :delete, action: :delete, id: item %>
         </nav>
       </td>
-      <td class="label"><%= link_to item.labels.try(:preferred_value), action: :show, id: item %></td>
-      <td class="owner"><%= t :"rdf.vocabs.owner_#{item.owner}" %></td>
-      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d") %></td>
+      <td><%= link_to("#{item.property.preferred_label}", action: :show, id: item) %></td>
+      <td><%= item.datatype.preferred_label %></td>
+      <td><%= item.cardinality %></td>
+      <td><%= item.comments.try(:preferred_value) %></td>
     </tr>
   <% end %>
   </tbody>

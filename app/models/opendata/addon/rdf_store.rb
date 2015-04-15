@@ -29,7 +29,8 @@ module Opendata::Addon::RdfStore
     end
   rescue => e
     set rdf_iri: nil, rdf_error: I18n.t("opendata.errors.messages.invalid_rdf")
-    Rails.logger.error("#{I18n.t("opendata.errors.messages.invalid_rdf")}\n#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    Rails.logger.error("#{I18n.t("opendata.errors.messages.invalid_rdf")}\n" \
+      "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     raise
   end
 

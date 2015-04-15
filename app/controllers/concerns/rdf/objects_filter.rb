@@ -10,7 +10,7 @@ module Rdf::ObjectsFilter
   private
     def set_vocab
       return if @vocab.present?
-      @vocab = Rdf::Vocab.site(@cur_site).find(params[:vid])
+      @vocab = Rdf::Vocab.site(@cur_site).find(params[:vocab_id])
       raise "404" unless @vocab
     end
 
@@ -22,7 +22,7 @@ module Rdf::ObjectsFilter
     def set_crumbs
       set_vocab
       @crumbs << [:"rdf.vocabs", rdf_vocabs_path]
-      @crumbs << [@vocab.label, controller: :vocabs, action: :show, id: @vocab]
+      @crumbs << [@vocab.labels.preferred_value, controller: :vocabs, action: :show, id: @vocab]
     end
 
     def set_item
@@ -37,6 +37,7 @@ module Rdf::ObjectsFilter
       raise "403" unless @vocab.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
       @items = @model.vocab(@vocab).
+          search(params[:s]).
           order_by(_id: 1).
           page(params[:page]).per(50)
     end

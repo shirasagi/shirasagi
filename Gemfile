@@ -73,6 +73,7 @@ gem 'sparql-client'
 gem 'rdf-turtle'
 gem 'rdf-rdfxml'
 gem 'levenshtein'
+gem 'unf'
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 

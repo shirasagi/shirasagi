@@ -11,7 +11,7 @@ class Rdf::Apis::ClassesController < ApplicationController
         vocab.allowed?(:read, @cur_user, site: @cur_site)
       end
       vocabs.reduce([]) do |ret, vocab|
-        ret << [ vocab.label, vocab.id ]
+        ret << [ vocab.labels.preferred_value, vocab.id ]
       end.to_a
     end
 

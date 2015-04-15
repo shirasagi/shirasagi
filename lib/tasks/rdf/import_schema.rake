@@ -8,7 +8,7 @@ namespace :rdf do
 
   task :delete_schema => :environment do
     break if ENV["site"].blank?
-    break if ENV["uri"].blank?
-    Rdf::Vocab.site(SS::Site.find_by(host: ENV["site"])).find_by(uri: ENV["uri"]).delete
+    break if ENV["prefix"].blank?
+    Rdf::Vocab.site(SS::Site.find_by(host: ENV["site"])).find_by(prefix: ENV["prefix"]).delete
   end
 end

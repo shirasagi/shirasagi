@@ -8,7 +8,7 @@ textarea {
 <% end %>
 
 <dl class="see rdf-props">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %><%= required_label %></dt>
   <dd>
     <label for="item_name"><%= @item.vocab.prefix %>:</label>
     <%= text_field_tag "item[name]", @item.name %>
@@ -18,28 +18,15 @@ textarea {
   <dd><%= text_field_tag "item[labels][ja]", @item.labels.try(:[], "ja") %></dd>
 
   <dt><%= @model.t :label_en %><%= @model.tt :label_en %></dt>
-  <dd><%= text_field_tag "item[labels][en]", @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+  <dd><%= text_field_tag "item[labels][en]", @item.labels.try(:preferred_value, ["en", "invariant"]) %></dd>
 
-  <dt class="rdf-props__domains"><%= @model.t :domains %><%= @model.tt :domains %></dt>
-  <% 1.upto(1) do |i| %>
-  <dd class="rdf-props__domains domain<%= i %>">
-    <% domain = @item.domains.try(:[], i - 1) %>
-    <%= hidden_field_tag "item[domains][]", domain, "data-type" => :uri %>
-    <span data-type="pname"><%= Rdf::Vocab.pname(domain) %></span>
-    <%= link_to t("rdf.props.search_domain"), rdf_apis_classes_path(target: "domain#{i}"), class: "ajax-box" %>
+  <dt><%= @model.t :range %><%= @model.tt :range %></dt>
+  <dd class="rdf-props__range">
+    <%= hidden_field_tag "item[range_id]", @item.range.try(:id), "data-type" => :id %>
+    <span data-type="pname"><%= @item.range.try(:preferred_label) %></span>
+    <%= link_to t("rdf.props.search_range"), rdf_apis_classes_path(target: "rdf-props__range"), class: "ajax-box" %>
   </dd>
-  <% end %>
-
-  <dt class="rdf-props__ranges"><%= @model.t :ranges %><%= @model.tt :ranges %></dt>
-  <% 1.upto(1) do |i| %>
-  <dd class="props__ranges range<%= i %>">
-    <% range = @item.ranges.try(:[], i - 1) %>
-    <%= hidden_field_tag "item[ranges][]", range, "data-type" => :uri %>
-    <span data-type="pname"><%= Rdf::Vocab.pname(range) %></span>
-    <%= link_to t("rdf.props.search_range"), rdf_apis_classes_path(target: "range#{i}"), class: "ajax-box" %>
-  </dd>
-  <% end %>
 
   <dt><%= @model.t :comments %><%= @model.tt :comments %></dt>
-  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant"), style: "height: 200px;" %></dd>
+  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:preferred_value), style: "height: 200px;" %></dd>
 </dl>

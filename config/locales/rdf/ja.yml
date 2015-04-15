@@ -6,7 +6,7 @@ ja:
       in_file: ファイル
       import: インポート
     classes:
-      search_sub_class_of: 継承を変更する
+      search_sub_class: 継承を変更する
       search_property_class: 型を変更する
       append_property: プロパティ追加
     props:
@@ -22,6 +22,13 @@ ja:
     errors:
       unable_to_load_graph: RDF が読み取れません。サポートしていないファイルか空のファイルが指定されています。
       unable_to_load_vocab: 語彙が読み取れません。サポートしていないファイルが指定されています。
+    button:
+      import: インポート
+      manage_props: プロパティを管理する
+    links:
+      back_to_class: クラスへ戻る
+    notice:
+      imported_props: プロパティをインポートしました。
 
   modules:
     rdf: RDF語彙
@@ -57,17 +64,15 @@ ja:
         published: 日時
         owner: 所有者
       rdf/class:
-        sub_class_of: 継承
+        sub_class: 継承
         properties: プロパティ
         property_property: 名称
         property_class: 型
         property_cardinality: 許容回数
         property_comment: 説明
       rdf/prop:
-        domains: 定義域
-        ranges: 値域
-        sub_property_of: 継承
-        usages: 使用クラス
+        range: 値域
+        classes: 定義域
 
   views:
     links:
@@ -78,6 +83,32 @@ ja:
         props: プロパティ
         import: インポート
 
+  tooltip:
+    rdf/vocab:
+      prefix: プレフィックスを入力します。RDF 変換した際に TTL ファイルで用いられるプレフィックスです。
+      uri: この語彙を一意に識別する URI を入力します。RDF 変換した際に TTL ファイルで用いられる URI です。
+      label_ja: 日本語名称を入力します。
+      label_en: 英語名称を入力します。
+      creator_name_ja: 作成者を日本語で入力します。
+      creator_name_en: 作成者を英語で入力します。
+      creator_homepage: 作成者のホームページ入力します。
+      license: 語彙のライセンスを入力します。
+      version: 語彙のバージョンを入力します。
+      published: 語彙の出版日を入力します。
+      comments: 語彙の説明を入力します。
+    rdf/class:
+      name: RDF ファイル出力用の名称を入力します。慣例で名称の末尾には「型」を付けます。
+      label_ja: 日本語名称を入力します。
+      label_en: 英語名称を入力します。
+      sub_class: 継承するクラスを入力します。「継承を変更する」ボタンをクリックし、表示されるものの中から選択してください。
+      comments: クラスの説明を入力します。
+    rdf/prop:
+      name: RDF ファイル出力用の名称を入力します。
+      label_ja: 日本語名称を入力します。
+      label_en: 英語名称を入力します。
+      range: プロパティの型を入力します。「値域を変更する」ボタンをクリックし、表示されるものの中から選択してください。
+      comments: プロパティの説明を入力します。
+
   job:
     models:
-      rdf/vocab_import_job: "RDF/語彙インポート"
+      rdf/vocab_import_job: "RDF語彙インポート"

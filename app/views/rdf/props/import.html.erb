@@ -1,0 +1,51 @@
+<%= stylesheet_link_tag "opendata/private", media: "all" %>
+
+<% @s = OpenStruct.new params[:s] %>
+<div class="rdf-prop-search-form">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= select_tag "s[vocab]",  options_for_select(@vocab_options, params[:s][:vocab]) %>
+    <%= f.text_field :keyword, style: "width: 300px;" %>
+    <input type="submit" value="<%= t('views.button.search') %>" />
+  <% end %>
+</div>
+
+<%= scss do %>
+table.rdf-props {
+  th.name, th.range {
+    width: 20%;
+  }
+}
+<% end %>
+
+<%= form_for :item, url: { action: :import }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
+  <table class="index">
+    <thead>
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="range"><%= @model.t :range %></th>
+      <th class="comments"><%= @model.t :comments %></th>
+      <th class="datetime"><%= @model.t :updated %></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td class="checkbox"><%= f.check_box_tag "item[ids][]", item.id, checked = item.class_ids.try(:include?, @rdf_class.id) %></td>
+        <td class="name"><%= "#{item.vocab.prefix}:#{item.name}" %></td>
+        <td class="range"><%= item.range.try(:preferred_label) %></td>
+        <td class="comments"><%= item.comments.try(:preferred_value) %></td>
+        <td class="datetime"><%= item.updated.strftime("%Y/%m/%d") %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+
+  <footer class="send">
+    <%= f.submit t("rdf.button.import"), class: :save %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

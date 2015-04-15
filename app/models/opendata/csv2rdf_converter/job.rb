@@ -22,7 +22,8 @@ class Opendata::Csv2rdfConverter::Job
       Rails.logger.info(I18n.t("opendata.messages.build_rdf_success"))
       nil
     rescue => e
-      Rails.logger.error("#{I18n.t("opendata.errors.messages.build_rdf_failed")}\n#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      Rails.logger.error("#{I18n.t("opendata.errors.messages.build_rdf_failed")}\n" \
+        "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       raise
     end
 
@@ -30,8 +31,10 @@ class Opendata::Csv2rdfConverter::Job
     def put_linkdata
       @tmp_file.puts "## リンクデータ ####"
       each_data_row do |row, index|
-        @tmp_file.puts "<#{@uri}#{index}> a #{@item.rdf_class.vocab.prefix}:#{@item.rdf_class.name} ;"
         tree = build_tree(row)
+        next if tree.blank?
+
+        @tmp_file.puts "<#{@uri}#{index}> a #{@item.rdf_class.vocab.prefix}:#{@item.rdf_class.name} ;"
         write_tree(@tmp_file, tree)
         @tmp_file.puts
       end

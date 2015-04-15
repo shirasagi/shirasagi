@@ -28,13 +28,13 @@ class Rdf::Builders::SubClassOfHandler < Rdf::Builders::BaseHandler
           when "rdf:type" then
             # ignore
           when "owl:onProperty" then
-            property[:property] = value.first.to_s.gsub(@context.vocab.uri, '')
+            property[:property] = value.first.to_s
           when "owl:allValuesFrom", "owl:onDataRange", "owl:onClass" then
-            if property.key?(:class)
-              puts "[warning] duplicate key #{key} for :class"
-              Rails.logger.warn("duplicate key #{key} for :class")
+            if property.key?(:datatype)
+              puts "[warning] duplicate key #{key} for :datatype"
+              Rails.logger.warn("duplicate key #{key} for :datatype")
             else
-              property[:class] = value.first.to_s
+              property[:datatype] = value.first.to_s
             end
           when "owl:qualifiedCardinality", "owl:cardinality" then
             property[:cardinality] = "#{value.first.value}"
@@ -42,9 +42,9 @@ class Rdf::Builders::SubClassOfHandler < Rdf::Builders::BaseHandler
             property[:cardinality] = "0..#{value.first.value}"
           when "owl:minQualifiedCardinality", "owl:minCardinality" then
             property[:cardinality] = "#{value.first.value}..n"
-          when "owl:equivalentClass" then
-            equivalent = convert_to_hash(object)["owl:onDatatype"].first
-            property[:equivalent] = equivalent.to_s
+          # when "owl:equivalentClass" then
+          #   equivalent = convert_to_hash(object)["owl:onDatatype"].first
+          #   property[:equivalent] = equivalent.to_s
           when "rdfs:comment" then
             property[:comments] = {}
             value.each do |object|

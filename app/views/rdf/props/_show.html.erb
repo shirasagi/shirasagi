@@ -1,4 +1,5 @@
-<% Rails.logger.debug("@item=#{@item.attributes}") %>
+<%= stylesheet_link_tag "opendata/private", media: "all" %>
+
 <dl class="see rdf-class">
   <dt><%= @model.t :name %></dt>
   <dd><%= "#{@item.vocab.prefix}:#{@item.name}" %></dd>
@@ -7,25 +8,24 @@
   <dd><%= @item.labels.try(:[], "ja") %></dd>
 
   <dt><%= @model.t :label_en %></dt>
-  <dd><%= @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+  <dd><%= @item.labels.try(:preferred_value, ["en", "invariant"]) %></dd>
 
-  <dt><%= @model.t :domains %></dt>
+  <dt><%= @model.t :classes %></dt>
   <dd>
-    <% if @item.domains %>
-    <%= br(@item.domains.map { |domain| Rdf::Vocab.pname(domain) }.join("\n")) %>
+    <% if @item.classes.present? %>
+      <% @item.classes.each do |rdf_class| %>
+        <%= link_to(rdf_class.preferred_label, controller: :classes, action: :show, vocab_id: rdf_class.vocab, id: rdf_class) %><br />
+      <% end %>
     <% end %>
   </dd>
 
-  <dt><%= @model.t :ranges %></dt>
+  <dt><%= @model.t :range %></dt>
   <dd>
-    <% if @item.ranges %>
-      <%= br(@item.ranges.map { |range| Rdf::Vocab.pname(range) }.join("\n")) %>
+    <% if @item.range.present? %>
+      <%= link_to @item.range.try(:preferred_label), controller: :classes, action: :show, vocab_id: @item.range.vocab, id: @item.range %>
     <% end %>
   </dd>
 
   <dt><%= @model.t :comments %></dt>
-  <dd><%= br(@item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant")) %></dd>
-
-  <dt><%= @model.t :usages %></dt>
-  <dd><%= br(@item.usages.map { |usage| "#{usage.vocab.prefix}:#{usage.name}" }.join("\n")) %></dd>
+  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:preferred_value), style: "height: 200px;", readonly: true, class: :readonly %></dd>
 </dl>

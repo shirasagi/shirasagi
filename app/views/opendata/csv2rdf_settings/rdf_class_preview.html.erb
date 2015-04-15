@@ -12,6 +12,7 @@ div.csv2rdf-settings-table-container {
       <dd><%= "#{@rdf_class.vocab.prefix}:#{@rdf_class.name}" %></dd>
       <dt><%= t("opendata.labels.auto_assing") %></dt>
       <dd>
+        <% Rails.logger.debug("rdf_class_preview.html.erb: expand_properties") %>
         <% properties = @rdf_class.expand_properties %>
         <% if properties.present? %>
           <div class="csv2rdf-settings-table-container">
@@ -29,7 +30,8 @@ div.csv2rdf-settings-table-container {
               </tr>
               </thead>
               <tbody>
-              <% each_expand_properties do |name, klass, comment, sub_props, depth, names, classes| %>
+              <% Rails.logger.debug("rdf_class_preview.html.erb: each_expand_properties") %>
+              <% each_expand_properties(properties) do |id, name, klass, comment, sub_props, depth, ids, names, classes| %>
               <tr class="depth<%= depth %>" data-depth="<%= depth %>">
                 <td class="header"><%= find_header_labels(names) %></td>
                 <td class="name"><span class="od-icon <%= sub_props.present? ? "od-icon-node-prop" : "od-icon-leaf-prop" %>"><%= name %></span></td>

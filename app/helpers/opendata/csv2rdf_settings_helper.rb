@@ -24,7 +24,7 @@ module Opendata::Csv2rdfSettingsHelper
       vocab.allowed?(:read, @cur_user, site: @cur_site)
     end
     @vocab_options = vocabs.reduce([]) do |ret, vocab|
-      ret << [ vocab.label, vocab.id ]
+      ret << [ vocab.labels.preferred_value, vocab.id ]
     end.to_a
   end
 
@@ -53,12 +53,13 @@ module Opendata::Csv2rdfSettingsHelper
     @unmapped_headers
   end
 
-  def each_expand_properties(props = @rdf_class.expand_properties, depth = 0, names = [], classes = [], &block)
-    props.each do |name, klass, comment, sub_props|
+  def each_expand_properties(props = @rdf_class.expand_properties, depth = 0, ids = [], names = [], classes = [], &block)
+    props.each do |id, name, klass, comment, sub_props|
+      ids << id
       names << name
       classes << klass
-      yield name, klass, comment, sub_props, depth, names, classes
-      each_expand_properties(sub_props, depth + 1, names, classes, &block) if sub_props.present?
+      yield id, name, klass, comment, sub_props, depth, ids, names, classes
+      each_expand_properties(sub_props, depth + 1, ids, names, classes, &block) if sub_props.present?
       names.delete_at(-1)
       classes.delete_at(-1)
     end

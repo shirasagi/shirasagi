@@ -3,8 +3,18 @@
   <header><h1><%= t :"views.links.rdf.vocabs" %></h1></header>
   <div>
     <%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @vocab %>
-    <%= link_to :"rdf.classes", controller: :classes, action: :index, vid: @vocab %>
-    <%= link_to :"rdf.props", controller: :props, action: :index, vid: @vocab %>
+    <%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @vocab %>
+    <% if @rdf_class.present? %>
+      <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab, class_id: nil %>
+      <nav class="sub-menu">
+        <div>
+          <header><h1><%= @rdf_class.name %></h1></header>
+          <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %>
+        </div>
+      </nav>
+    <% else %>
+      <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %>
+    <% end %>
   </div>
 </nav>
 <% end %>
