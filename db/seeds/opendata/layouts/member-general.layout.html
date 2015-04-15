@@ -10,8 +10,9 @@
     <script src="/js/selectivizr.js"></script>
   <![endif]-->
 </head>
-<body class="s-portal">
+<body id="s-member">
 <div id="page">
+  <div id="wrap">
   <header id="head">
     <div class="inner">
       </ part "tab" />
@@ -20,12 +21,19 @@
       </div>
     </div>
   </header>
+    <div id="tab-inner">
+      <div class="wrap">
+        <header><h1 id="info-page-name">#{page_name}</h1></header>
+      </div>
+    </div>
+  </div>
   </ part "crumbs" />
 
   <div id="contents">
     <div class="content-body">
-      <header><h1 id="info-page-name">#{page_name}</h1></header>
-      </ yield />
+      <div class="inner">
+        </ yield />
+      </div>
     </div>
   </div>
 

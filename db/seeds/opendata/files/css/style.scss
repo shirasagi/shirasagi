@@ -1206,17 +1206,17 @@ form.opendata-search_ideas-form .send {
       background: url(../img/rainbow.png) no-repeat left center;
     }
     .wrap {
-      @include border-radius(0px);
+      @include border-bottom-radius(0px);
       @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
       border: 1px solid $gray;
-      border-bottom: 0;
       background: $white;
       h1 {
-        margin: 1px 2px 0 2px;
-        padding: 3px 0 0 15px;
+        @include border-top-radius(2px);
+        margin: 2px;
+        padding: 14px 0 14px 15px;
         background: $blue;
         color: $white;
-        font-size: $px31;
+        font-size: $px32;
       }
       .crumbs {
         width: $page-width;
@@ -1813,6 +1813,148 @@ nav.cms-sns_share {
   }
 }
 
+// tab-inner
+#s-member {
+  #tab-inner {
+    .wrap {
+      @include border-bottom-radius(0px);
+      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
+      border: 1px solid $gray;
+      background: $white;
+      h1 {
+        @include border-top-radius(2px);
+        margin: 2px;
+        padding: 14px 0 14px 15px;
+        background: $blue;
+        color: $white;
+        font-size: $px32;
+      }
+    }
+  }
+  .member-tabs {
+    clear: both;
+    margin-bottom: 28px;
+    .names {
+      padding: 0;
+      border-bottom: $blue 2px solid;
+      .name {
+        @include box-sizing(border-box);
+        @include border-top-radius(5px);
+        @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
+        display: inline-block;
+        width: 150px;
+        margin-right: 6px;
+        padding: 9px 0 9px 20px;
+        border: 1px solid $gray;
+        border-bottom: none;
+        color: $text;
+        text-decoration: none;
+        text-align: center;
+      }
+      a.name:nth-child(1) {
+        width: 170px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-mypagedatatab.png) no-repeat 7px 6px;
+        &:hover {
+          @include opacity(1);
+          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+          background: url(../img/ic-datatab_blue.png) no-repeat 7px 6px;
+          color: $blue;
+        }
+      }
+      a.current:nth-child(1) {
+        @include opacity(1);
+        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+        background: url(../img/ic-datatab_blue.png) no-repeat 7px 6px;
+        color: $blue;
+      }
+      a.name:nth-child(2) {
+        width: 170px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-mypageapptab.png) no-repeat 12px 10px;
+        &:hover {
+          @include opacity(1);
+          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+          background: url(../img/ic-mypageapptab_hover.png) no-repeat 12px 10px;
+          color: $blue;
+        }
+      }
+      a.current:nth-child(2) {
+        @include opacity(1);
+        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+        background: url(../img/ic-mypageapptab_hover.png) no-repeat 12px 10px;
+        color: $blue;
+      }
+      a.name:nth-child(3) {
+        width: 170px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-mypageideatab.png) no-repeat 10px 6px;
+        &:hover {
+          @include opacity(1);
+          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+          background: url(../img/ic-mypageideatab_hover.png) no-repeat 10px 5px;
+          color: $blue;
+        }
+      }
+      a.current:nth-child(3) {
+        @include opacity(1);
+        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+        background: url(../img/ic-mypageideatab_hover.png) no-repeat 10px 5px;
+        color: $blue;
+      }
+    }
+    .pages {
+      article header {
+        @include box-shadow(none);
+        overflow: hidden;
+        margin: 0;
+        padding: 12px 12px;
+        border-bottom: 1px dotted $gray;
+      }
+      time {
+        float: left;
+        width: 120px;
+      }
+      h2 {
+        float: left;
+        max-width: 599px;
+        margin-left: 25px;
+        word-wrap: break-word;
+      }
+      .point {
+        @include border-radius(3px);
+        @include box-shadow(0 0 0 1px rgba(33, 56, 127, 0.195));
+        display: inline-block;
+        margin-left: 25px;
+        padding: 0 5px 0 28px;
+        border: 1px solid rgba(33, 56, 127, 0.39);
+        background: url(../img/ic-like01.png) no-repeat 3px top;
+        color: $blue;
+      }
+    }
+    nav {
+      @include clear;
+      padding: 6px 5px 0 5px;
+      .more {
+        float: right;
+        padding-left: 12px;
+      }
+    }
+    nav.dataset {
+      .more {
+        background: url(../img/ic-arrow_pink.png) no-repeat left center;
+      }
+    }
+    nav.app {
+      .more {
+        background: url(../img/ic-arrow_blue.png) no-repeat left center;
+      }
+    }
+    nav.idea {
+      .more {
+        background: url(../img/ic-arrow_yellow.png) no-repeat left center;
+      }
+    }
+
+  }
+}
 
 // <ポータルサイト>----------------------------------------------------------------------------------------------------
 
