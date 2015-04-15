@@ -362,7 +362,7 @@ article.areas, article.tags, article.formats, article.licenses {
   }
   h2 {
     float: left;
-    max-width: 610px;
+    max-width: 599px;
     margin-left: 25px;
     word-wrap: break-word;
   }
@@ -434,7 +434,7 @@ article.areas, article.tags, article.formats, article.licenses {
   h1 {
     margin: 12px 0;
     padding: 5px 10px;
-    background: #3386bb;
+    background: $blue;
     color: $white;
     font-size: $px15;
     &:first-child {
@@ -444,20 +444,20 @@ article.areas, article.tags, article.formats, article.licenses {
   h2 {
     margin-bottom: 6px;
     padding: 3px 10px;
-    border-bottom: 2px solid #3386bb;
-    color: #3386bb;
+    border-bottom: 2px solid $blue;
+    color: $blue;
     font-size: $px15;
     font-weight: bold;
   }
   h3 {
     margin-bottom: 6px;
     padding: 3px 10px;
-    border-left: 5px solid #3386bb;
-    color: #3386bb;;
+    border-left: 5px solid $blue;
+    color: $blue;
     font-weight: bold;
   }
   h4 {
-    color: #3386bb;
+    color: $blue;
     font-weight: bold;
   }
   h5, h6 {
@@ -482,7 +482,7 @@ article.areas, article.tags, article.formats, article.licenses {
         width: 6px;
         height: 6px;
         @include border-radius(3px);
-        background: #3386bb;
+        background: $blue;
       }
     }
   }
@@ -493,7 +493,7 @@ article.areas, article.tags, article.formats, article.licenses {
   dl {
     margin-bottom: 10px;
     padding-bottom: 5px;
-    border-bottom: $border-hgry;
+    border-bottom: 1px solid $gray;
     dt {
       float: left;
       min-width: 15%;
@@ -504,18 +504,18 @@ article.areas, article.tags, article.formats, article.licenses {
     width: 100%;
     margin-bottom: 12px;
     caption {
-      color: #3386bb;
+      color: $blue;
       text-align: left;
     }
     th {
       padding: 3px 8px 0;
-      border: $border-hgry;
-      background: #3386bb;
+      border: 1px solid $gray;
+      background: $blue;
       color: $white;
     }
     td {
       padding: 3px 8px 0;
-      border: $border-hgry;
+      border: 1px solid $gray;
     }
   }
 }
@@ -577,7 +577,7 @@ article.areas, article.tags, article.formats, article.licenses {
   h1 {
     margin-bottom: 15px;
     padding: 7px 0 4px 15px;
-    border-bottom: 2px solid #3386bb;
+    border-bottom: 2px solid $blue;
     font-size: $px15;
   }
   ul {
@@ -589,7 +589,7 @@ article.areas, article.tags, article.formats, article.licenses {
       @include inline-block;
       margin-right: 10px;
       padding: 0 15px;
-      border-right: $border-hgry;
+      border-right: 1px solid $gray;
     }
     .next {
       @include inline-block;
@@ -600,11 +600,11 @@ article.areas, article.tags, article.formats, article.licenses {
 }
 #event-list {
   clear: both;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid $gray;
   dl {
     margin: 0;
     padding: 6px 10px 3px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid $gray;
     zoom:1;
     &:before {
       content: "\0020";
@@ -644,12 +644,6 @@ article.areas, article.tags, article.formats, article.licenses {
   }
   div.page {
     padding: 5px 0;
-  }
-}
-.event-date a, #event-list a {
-  color: #005c7b;
-  &:hover {
-    color: $link;
   }
 }
 
@@ -815,7 +809,8 @@ form.opendata-search_datasets-form, form.opendata-search_groups-form, form.opend
     border: 1px solid #B3B3E6;
     @include grd-button-blue;
     input {
-      padding: 8px 40px 8px 40px;
+      min-width: 110px;
+      padding: 8px 0;
       border: 1px solid $white;
       @include box-shadow(0 0 0 1px $gray);
       @include grd-button-gray;
@@ -1032,40 +1027,39 @@ form.opendata-search_ideas-form .send {
 
 .inquiry-form {
   margin-top: 20px;
+  .columns {
+    margin-bottom: 32px;
+    border-top: 2px solid $blue;
+    border-bottom: 2px solid $blue;
+  }
   dl {
-    @include clear;
-    clear: both;
-    width: 100%;
-    margin-bottom: $box-margin;
+    overflow: hidden;
+    border-top: 1px dotted $gray;
+    background: rgba($blue, 0.1);
+    &:first-child {
+      border-top: none;
+    }
     dt {
-      clear: both;
       float: left;
-      width: 200px;
-      padding: 6px 12px;
-      background: #cef3ff;
-      font-weight: bold;
-      @include border-radius(3px);
+      width: 126px;
+      padding: 12px;
       .required {
         display: block;
-        color: #d90000;
-        font-weight: normal;
+        color: #CC0000;
       }
     }
     dd {
       float: left;
-      width: 832px;
-      padding: 0 12px;
-      p {
-        margin-bottom: 0;
-      }
-      input[type="text"] {
-        width: 250px;
-      }
-      input[type="email"] {
-        width: 350px;
+      width: 906px;
+      min-height: 3em;
+      padding: 12px;
+      background: $white;
+      input {
+        width: 100%;
+        height: 3em;
       }
       textarea {
-        width: 800px;
+        width: 100%;
         min-height: 200px;
       }
       label {
@@ -1074,15 +1068,41 @@ form.opendata-search_ideas-form .send {
     }
   }
   .send {
-    padding-left: 236px;
-    input {
-      margin-right: 12px;
-      padding: 6px 12px;
-      @include btn-blue-left;
-      cursor: pointer
+    text-align: center;
+    input[name="confirm"], input[name="submit"] {
+      display: inline-block;
+      width: 120px;
+      height: 50px;
+      margin: 4px 5px;
+      padding-left: 15px;
+      border: none;
+      background: url(../img/btn-inquiry.png) no-repeat left center;
+      font-size: 10.5pt;
+      cursor: pointer;
+      &:hover {
+        background: url(../img/btn-inquiry_hover.png) no-repeat left center;
+      }
+    }
+    input:not(:target) {
+      filter: none;
+      -ms-filter: none;
     }
     input[name="cancel"] {
-      @include btn-gry;
+      @include box-shadow(0 0 0 1px $gray);
+      @include grd-mypagebutton-gray;
+      display: inline-block;
+      min-width: 110px;
+      margin: 4px 5px;
+      padding: 8px 0;
+      border: 1px solid $white;
+      color: $text;
+      text-decoration: none;
+      letter-spacing: normal;
+      font-size: 10.5pt;
+      cursor: pointer;
+      &:hover {
+        @include grd-mypagebutton-gray_hover;
+      }
     }
   }
   .inquiry-confirm-message {
@@ -1092,8 +1112,10 @@ form.opendata-search_ideas-form .send {
     }
   }
   .simple-captcha {
-    padding-left: 236px;
     margin-bottom: $box-margin;
+    input#answer_captcha {
+      width: 300px;
+    }
   }
 }
 
@@ -1476,8 +1498,9 @@ form.opendata-search_ideas-form .send {
           @include box-shadow(0 0 0 1px $gray);
           @include grd-mypagebutton-gray;
           display: inline-block;
+          min-width: 110px;
           margin: 4px 5px;
-          padding: 8px 25px;
+          padding: 8px 0;
           border: 1px solid $white;
           color: $text;
           text-decoration: none;
