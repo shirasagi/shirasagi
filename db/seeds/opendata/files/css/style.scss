@@ -3489,6 +3489,9 @@ article.licenses div article a {
         padding: 5px;
         text-overflow: ellipsis;
         white-space: nowrap;
+        #executed {
+          display: inline-block;
+        }
       }
       dt ~ dt { margin-top: 4px; }
       dd ~ dd { margin-top: 4px; }
