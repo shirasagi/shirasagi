@@ -75,6 +75,7 @@ class @Map
         Map.markers[id]["window"] = new google.maps.InfoWindow(
           content: marker_html
         )
+        Map.attachMessage(id)
       else if value["name"] || value["text"]
         name = value["name"]
         text = value["text"]
@@ -92,7 +93,9 @@ class @Map
         Map.markers[id]["window"] = new google.maps.InfoWindow(
           content: marker_html
         )
-      Map.attachMessage(id)
+        Map.attachMessage(id)
+      else
+        #
       return
 
     unless $.isEmptyObject(Map.markers)

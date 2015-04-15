@@ -18,7 +18,7 @@
   end
   html = html.gsub(/<\/ (.*?) \/>/) do |m|
     if $1 =~ /(tabs|settings)/
-      render file: "_#{$1}", locals: { current: "map" }
+      render file: "_#{$1}"
     else
       m
     end
@@ -43,5 +43,5 @@
     <span class="number"><%= @items.count %></span><%= t("facility.count") %>
   </h2>
 </section>
-<%= render file: "_tabs", locals: { current: "map" } %>
+<%= render file: "_tabs" %>
 <% end %>

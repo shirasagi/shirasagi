@@ -66,9 +66,9 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     end
 
     def set_filter_items
-      @filter_categories = Facility::Node::Category.in(_id: @items.map(&:category_ids).flatten)
-      @filter_locations = @cur_node.st_locations.entries.select{ |loc| loc.center_loc.present? }
-      @focus_options = @filter_locations.map { |loc| [loc.name, loc.center_loc.join(",")] }
+      @filter_categories = @cur_node.st_categories.in(_id: @items.map(&:category_ids).flatten)
+      @filter_locations = @cur_node.st_locations.entries.select{ |loc| loc.center_point.present? }
+      @focus_options = @filter_locations.map { |loc| [loc.name, loc.center_point.join(",")] }
       @focus_options.unshift [I18n.t("facility.select_location"), ""]
     end
 
@@ -82,12 +82,14 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       set_query
       set_markers
       set_filter_items
+      @current = "map"
       render :map
     end
 
     def result
       set_query
       set_items
+      @current = "result"
       @items = @items.page(params[:page]).
         per(@cur_node.limit)
       render :result
