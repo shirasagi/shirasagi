@@ -1900,59 +1900,54 @@ nav.cms-sns_share {
         color: $blue;
       }
     }
-    .pages {
-      article header {
-        @include box-shadow(none);
-        overflow: hidden;
-        margin: 0;
-        padding: 12px 12px;
-        border-bottom: 1px dotted $gray;
+    article.view {
+      .pages {
+        article header {
+          @include box-shadow(none);
+          overflow: hidden;
+          margin: 0;
+          padding: 12px 12px;
+          border-bottom: 1px dotted $gray;
+        }
+        time {
+          float: left;
+          width: 120px;
+        }
+        h2 {
+          float: left;
+          max-width: 599px;
+          margin-left: 25px;
+          word-wrap: break-word;
+        }
+        .point {
+          @include border-radius(3px);
+          @include box-shadow(0 0 0 1px rgba(33, 56, 127, 0.195));
+          display: inline-block;
+          margin-left: 25px;
+          padding: 0 5px 0 28px;
+          border: 1px solid rgba(33, 56, 127, 0.39);
+          background: url(../img/ic-like01.png) no-repeat 3px top;
+          color: $blue;
+        }
       }
-      time {
-        float: left;
-        width: 120px;
-      }
-      h2 {
-        float: left;
-        max-width: 599px;
-        margin-left: 25px;
-        word-wrap: break-word;
-      }
-      .point {
-        @include border-radius(3px);
-        @include box-shadow(0 0 0 1px rgba(33, 56, 127, 0.195));
-        display: inline-block;
-        margin-left: 25px;
-        padding: 0 5px 0 28px;
-        border: 1px solid rgba(33, 56, 127, 0.39);
-        background: url(../img/ic-like01.png) no-repeat 3px top;
-        color: $blue;
-      }
-    }
-    nav {
-      @include clear;
-      padding: 6px 5px 0 5px;
-      .more {
-        float: right;
-        padding-left: 12px;
-      }
-    }
-    nav.dataset {
-      .more {
-        background: url(../img/ic-arrow_pink.png) no-repeat left center;
-      }
-    }
-    nav.app {
-      .more {
-        background: url(../img/ic-arrow_blue.png) no-repeat left center;
-      }
-    }
-    nav.idea {
-      .more {
-        background: url(../img/ic-arrow_yellow.png) no-repeat left center;
+      nav {
+        @include clear;
+        padding: 6px 5px 0 5px;
+        .more {
+          float: right;
+          padding-left: 12px;
+        }
+        #ds_more {
+          background: url(../img/ic-arrow_pink.png) no-repeat left center;
+        }
+        #app_more {
+          background: url(../img/ic-arrow_blue.png) no-repeat left center;
+        }
+        #idea_more {
+          background: url(../img/ic-arrow_yellow.png) no-repeat left center;
+        }
       }
     }
-
   }
 }
 

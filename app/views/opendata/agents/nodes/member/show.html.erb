@@ -23,7 +23,7 @@ $ ->
           <% end %>
         </div>
         <nav>
-          <%= link_to :more, "#{@member_url}datasets/", class: "more" %>
+          <%= link_to :more, "#{@member_url}datasets/", class: "more", id: "ds_more" %>
         </nav>
     </article>
     <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
@@ -40,7 +40,7 @@ $ ->
           <% end %>
         </div>
         <nav>
-          <%= link_to :more, "#{@member_url}apps/", class: "more" %>
+          <%= link_to :more, "#{@member_url}apps/", class: "more", id: "app_more" %>
         </nav>
       </section>
     </article>
@@ -58,7 +58,7 @@ $ ->
           <% end %>
         </div>
         <nav>
-          <%= link_to :more, "#{@member_url}ideas/", class: "more" %>
+          <%= link_to :more, "#{@member_url}ideas/", class: "more", id: "idea_more" %>
         </nav>
       </section>
     </article>
