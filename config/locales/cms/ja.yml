@@ -30,6 +30,9 @@ ja:
     link_check: リンクチェック
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
+    sns_share:
+      tweet: ツイート
+      add_hatena: このエントリーをはてなブックマークに追加
     adobe_reader:
       remark:
         - <div>
@@ -163,6 +166,8 @@ ja:
         summary_html: Summary
         html: 本文
         files: ファイル
+        category_ids: カテゴリー
+        categories: カテゴリー
         related_pages: 関連記事
       cms/part/model:
         name: パーツ名

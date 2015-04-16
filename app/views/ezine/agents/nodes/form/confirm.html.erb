@@ -1,4 +1,3 @@
 <div class="ezine-html">
-  <p>メールマガジンの<%= @entry_type_string %>を受け付けました。</p>
-  <p>確認メールが届きますので、リンクをクリックしてください。</p>
+  <p><%=br t("ezine.messages.confirm_addr", type: @entry_type_string) %></p>
 </div>

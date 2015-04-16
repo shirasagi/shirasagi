@@ -1,6 +1,6 @@
 <% if @cur_page.related_pages.present? %>
 <nav class="related-pages">
-  <header><h1>関連記事</h1></header>
+  <header><h1><%= @cur_page.t :related_pages %></h1></header>
   <div class="pages">
     <% @cur_page.related_pages.each do |item| %>
     <article>

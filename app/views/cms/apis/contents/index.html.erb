@@ -23,7 +23,7 @@ $ ->
 <dl class="see">
   <dt class="wide">
     <%= t("cms.apis.contents.page") %>
-    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @pages.size %>件</span>
+    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @pages.size %><%= t "views.units.count" %></span>
   </dt>
   <dd style="margin: 0px 0px 0px 40px; padding: 10px 0px;">
     <table class="index">
@@ -58,7 +58,7 @@ $ ->
 
   <dt class="wide">
     <%= t("cms.part") %>
-    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @parts.size %>件</span>
+    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @parts.size %><%= t "views.units.count" %></span>
   </dt>
   <dd style="margin: 0px 0px 0px 40px; padding: 10px 0px;">
     <table class="index">
@@ -91,7 +91,7 @@ $ ->
 
   <dt class="wide">
     <%= t("cms.layout") %>
-    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @layouts.size %>件</span>
+    <span style="float: right;"><%= t("cms.apis.contents.result") %><%= @layouts.size %><%= t "views.units.count" %></span>
   </dt>
   <dd style="margin: 0px 0px 0px 40px; padding: 10px 0px;">
     <table class="index">

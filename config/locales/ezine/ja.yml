@@ -21,6 +21,13 @@ ja:
     state:
       enabled: 配信する
       disabled: 配信しない
+    messages:
+      confirm_addr: |-
+        メールマガジンの%{type}を受け付けました。
+        確認メールが届きますので、リンクをクリックしてください。
+      verify_addr:
+        メールアドレスの確認を完了しました。
+
 
   modules:
     ezine: メールマガジン

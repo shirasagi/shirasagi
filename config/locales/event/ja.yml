@@ -12,6 +12,8 @@ ja:
     prev_day: 前の日へ
     current_month: 今月
     filter_all: 全て
+    confirm:
+      delete: 項目を削除してよろしいですか？
 
   modules:
     event: イベント

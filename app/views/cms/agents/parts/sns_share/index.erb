@@ -19,7 +19,7 @@ url = File.join(@cur_site.full_url, @cur_path)
   </div>
 
   <div class="site twitter">
-    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja">ツイート</a>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja"><%= t "cms.sns_share.tweet" %></a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
     if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
     fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -28,9 +28,9 @@ url = File.join(@cur_site.full_url, @cur_path)
   <div class="site hatena">
     <a href="http://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button"
       data-hatena-bookmark-layout="standard-balloon"
-      data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加">
+      data-hatena-bookmark-lang="ja" title="<%= t "cms.sns_share.add_hatena" %>">
       <img src="//b.st-hatena.com/images/entry-button/button-only@2x.png"
-        alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+        alt="<%= t "cms.sns_share.add_hatena" %>" width="20" height="20" style="border: none;" /></a>
     <script type="text/javascript" src="//b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
   </div>
 

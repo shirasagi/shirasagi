@@ -10,7 +10,7 @@
 
 <% if event_categories.present? %>
 <nav class="categories">
-  <header><h1>カテゴリー</h1></header>
+  <header><h1><%= t('event.category') %></h1></header>
   <div class="nodes">
     <% event_categories.each do |item| %>
     <article>

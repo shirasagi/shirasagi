@@ -57,6 +57,7 @@ ja:
       delete: 削除してよろしいですか？
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
+      redirect: 下記のページにアクセスしようとしています。
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -64,6 +65,8 @@ ja:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
       confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
+    units:
+       count: 件
 
   ss:
     views:
