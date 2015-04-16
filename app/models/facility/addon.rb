@@ -64,24 +64,17 @@ module Facility::Addon
     set_order 210
   end
 
-  module CenterLocation
+  module FocusSetting
     extend ActiveSupport::Concern
     extend SS::Addon
 
     set_order 200
 
     included do
-      field :center_loc, type: ::Map::Extensions::Loc
+      field :center_point, type: ::Map::Extensions::Point
 
-      permit_params :center_loc
-
-      validate :validate_center_loc
+      permit_params center_point: [ :loc, :zoom_level ]
     end
-
-    private
-      def validate_center_loc
-        errors.add :center_loc, :invalid if center_loc.size != 2
-      end
   end
 
   module Image

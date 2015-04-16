@@ -79,8 +79,10 @@ $(window).on "load", ->
     select.find("option:selected").each ->
       return false if $(this).val() == ""
       loc = $(this).val().split(",")
+      zoomLevel = $(this).attr("data-zoom-level")
       latlng = new google.maps.LatLng(loc[0], loc[1])
       Map.map.setCenter latlng
+      Map.map.setZoom(parseInt(zoomLevel)) if zoomLevel
       select.val("")
 
   # setup search modal window

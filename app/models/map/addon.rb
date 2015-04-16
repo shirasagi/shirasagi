@@ -6,7 +6,7 @@ module Map::Addon
     set_order 320
 
     included do
-      field :map_points, type: Map::Extensions::MapPoints, default: []
+      field :map_points, type: Map::Extensions::Points, default: []
 
       permit_params map_points: [ :name, :loc, :text, :link, :image ]
     end

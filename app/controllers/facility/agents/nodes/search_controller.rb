@@ -67,8 +67,12 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
 
     def set_filter_items
       @filter_categories = @cur_node.st_categories.in(_id: @items.map(&:category_ids).flatten)
-      @filter_locations = @cur_node.st_locations.entries.select{ |loc| loc.center_point.present? }
-      @focus_options = @filter_locations.map { |loc| [loc.name, loc.center_point.join(",")] }
+      @filter_locations = @cur_node.st_locations.entries.select{ |l| l.center_point[:loc].present? }
+      @focus_options = @filter_locations.map do |l|
+        opts = {}
+        opts.merge!({ "data-zoom-level" => l.center_point[:zoom_level] }) if l.center_point[:zoom_level]
+        [l.name, l.center_point[:loc].join(","), opts]
+      end
       @focus_options.unshift [I18n.t("facility.select_location"), ""]
     end
 

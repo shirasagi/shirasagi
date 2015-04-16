@@ -103,7 +103,7 @@ module Facility::Node
   class Location
     include Cms::Node::Model
     include Cms::Addon::NodeList
-    include Facility::Addon::CenterLocation
+    include Facility::Addon::FocusSetting
 
     default_scope ->{ where(route: "facility/location") }
 

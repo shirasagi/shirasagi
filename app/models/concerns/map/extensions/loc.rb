@@ -16,9 +16,11 @@ class Map::Extensions::Loc < Array
       case object
       when self.class then object.mongoize
       when String then
-        self.new(object.gsub(/[, 　、\r\n]+/, ",").split(",").compact.uniq.map(&:to_f)).mongoize
+        object = object.gsub(/[, 　、\r\n]+/, ",").split(",").select(&:present?)
+        object = [Float(object[0]), Float(object[1])] rescue []
+        self.new(object).mongoize
       when Array then
-        object.map(&:to_f)
+        [Float(object[0]), Float(object[1])] rescue []
       else object
         object
       end

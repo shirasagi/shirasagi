@@ -50,7 +50,7 @@ ja:
     addons:
       facility/body: 施設情報
       facility/additional_info: 追加情報
-      facility/center_location: 地域設定
+      facility/focus_setting: フォーカス設定
       facility/image: 施設写真
       facility/image_info: 写真情報
       facility/pointer_image: ポインタ画像
@@ -88,7 +88,8 @@ ja:
         search_html: 検索HTML
         map_html: 地図HTML
       facility/node/location:
-        center_loc: 中心座標
+        center_point: 中心座標
+        zoom_level: ズームレベル
       facility/image:
         image_alt: ALT属性
         image_comment: 説明文
@@ -148,9 +149,13 @@ ja:
       image:
         - 施設検索結果の地図表示時に表示するポインタ画像を設定します。
         - このカテゴリが設定された施設のポインタ画像が変更されます。
-    facility/addon/center_location:
-      center_loc:
+    facility/addon/focus_setting:
+      center_point:
         - 地域の中心座標を設定することで地図検索時にフォーカスすることができます。
+      zoom_level:
+        - フォーカス時のズームレベル（１～１９）を設定します。
+        - 数値が大きいほど近くにフォーカスされます。
+        - 未設定時はフォーカスしても縮尺が変わりません。
     facility/addon/category:
       categories:
         - 施設の種類を設定します。
