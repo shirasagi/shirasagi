@@ -7,6 +7,7 @@ ja:
     deliver_test: テスト配信
     deliver: 本配信
     sent_log: 配信ログ
+
     button:
       convert_html_to_text: HTML版を変換する
       deliver: 本配信
@@ -15,18 +16,25 @@ ja:
       add: 配信登録
       update: 配信形式の変更
       delete: 配信停止
-    notice:
-      delivered: 配信を開始しました
-      delivered_test: テスト配信を完了しました
-    state:
-      enabled: 配信する
-      disabled: 配信しない
     messages:
       confirm_addr: |-
         メールマガジンの%{type}を受け付けました。
         確認メールが届きますので、リンクをクリックしてください。
       verify_addr:
         メールアドレスの確認を完了しました。
+    notice:
+      delivered: 配信を開始しました
+      delivered_test: テスト配信を完了しました
+    options:
+      delivery_state:
+        enabled: 配信する
+        disabled: 配信しない
+      email_type:
+        text: テキスト版
+        html: HTML版
+    state:
+      enabled: 配信する
+      disabled: 配信しない
 
 
   modules:

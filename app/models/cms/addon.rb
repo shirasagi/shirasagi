@@ -189,9 +189,13 @@ module Cms::Addon
 
     public
       def sort_options
-        [ ["タイトル", "name"], ["ファイル名", "filename"],
-          ["作成日時", "created"], ["更新日時", "updated -1"],
-          ["指定順", "order"] ]
+        [
+          [I18n.t('cms.options.sort.name'), 'name'],
+          [I18n.t('cms.options.sort.filename'), 'filename'],
+          [I18n.t('cms.options.sort.created'), 'created'],
+          [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
+          [I18n.t('cms.options.sort.order'), 'order'],
+        ]
       end
 
       def sort_hash
@@ -209,9 +213,14 @@ module Cms::Addon
 
     public
       def sort_options
-        [ ["タイトル", "name"], ["ファイル名", "filename"],
-          ["作成日時", "created"], ["更新日時", "updated -1"],
-          ["公開日時", "released -1"], ["指定順", "order"] ]
+        [
+          [I18n.t('cms.options.sort.name'), 'name'],
+          [I18n.t('cms.options.sort.filename'), 'filename'],
+          [I18n.t('cms.options.sort.created'), 'created'],
+          [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
+          [I18n.t('cms.options.sort.released_1'), 'released -1'],
+          [I18n.t('cms.options.sort.order'), 'order'],
+        ]
       end
 
       def sort_hash

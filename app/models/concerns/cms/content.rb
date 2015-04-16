@@ -112,11 +112,14 @@ module Cms::Content
     end
 
     def state_options
-      [%w(公開 public), %w(非公開 closed)]
+      [
+        [I18n.t('views.options.state.public'), 'public'],
+        [I18n.t('views.options.state.closed'), 'closed'],
+      ]
     end
 
     def state_private_options
-      [%w(公開待ち ready)]
+      [[I18n.t('views.options.state.ready'), 'ready']]
     end
 
     def status

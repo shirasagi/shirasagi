@@ -1,38 +1,30 @@
 ja:
   cms:
-    modules: モジュール
-    site: サイト
-    content: コンテンツ
-    node: フォルダー
-    page: 固定ページ
-    layout: レイアウト
-    part: パーツ
-    config: 設定
-    root_menu: メインメニュー
-    site_menu: サイトメニュー
-    view_site: サイト確認
-    preview_site: サイトプレビュー
-    view_page: 公開画面
-    preview_page: プレビュー
-    config: 設定
-    site: サイト
-    role: 権限/ロール
-    user: ユーザー
-    group: グループ
-    member: メンバー
     alert: 警告
-    syntax_check: アクセシビリティチェック
-    auto_correct:
-      link: 自動修正
-      notice: アクセシビリティチェック（保存時に自動で修正されます）
-      dependent_character: "[機種依存文字]"
-      caption: キャプション
-    link_check: リンクチェック
+    config: 設定
+    content: コンテンツ
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
-    sns_share:
-      tweet: ツイート
-      add_hatena: このエントリーをはてなブックマークに追加
+    group: グループ
+    layout: レイアウト
+    link_check: リンクチェック
+    member: メンバー
+    modules: モジュール
+    node: フォルダー
+    page: 固定ページ
+    part: パーツ
+    preview_page: プレビュー
+    preview_site: サイトプレビュー
+    role: 権限/ロール
+    root_menu: メインメニュー
+    search_contents: サイト内検索
+    site: サイト
+    site_menu: サイトメニュー
+    syntax_check: アクセシビリティチェック
+    user: ユーザー
+    view_page: 公開画面
+    view_site: サイト確認
+
     adobe_reader:
       remark:
         - <div>
@@ -40,22 +32,7 @@ ja:
         - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
         - </div>
         - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
-    search_contents: サイト内検索
-    move_page:
-      confirm: 確認
-      message: '"%{source}"へのリンクが含まれるページ'
-      link_to_replace: URLを置換する
     apis:
-      groups:
-        index: グループを選択する
-        search: グループを検索
-        select: グループを設定する
-        deselect: 削除
-      pages:
-        index: 関連記事を選択する
-        search: 関連記事を検索
-        select: 関連記事を設定する
-        deselect: 削除
       categories:
         index: カテゴリーを選択する
         search: カテゴリーを検索
@@ -69,7 +46,38 @@ ja:
         replacement: 置換文字
         option: オプション
         confirm_message: 全置換を行ってもよろしいですか？
+      groups:
+        index: グループを選択する
+        search: グループを検索
+        select: グループを設定する
+        deselect: 削除
+      pages:
+        index: 関連記事を選択する
+        search: 関連記事を検索
+        select: 関連記事を設定する
+        deselect: 削除
+    auto_correct:
+      link: 自動修正
+      notice: アクセシビリティチェック（保存時に自動で修正されます）
+      dependent_character: "[機種依存文字]"
+      caption: キャプション
+    move_page:
+      confirm: 確認
+      message: '"%{source}"へのリンクが含まれるページ'
+      link_to_replace: URLを置換する
+    options:
+      sort:
+        name: タイトル
+        filename: ファイル名
+        created: 作成日時
+        updated_1: 更新日時
+        released_1: 公開日時
+        order: 指定順
+    sns_share:
+      tweet: ツイート
+      add_hatena: このエントリーをはてなブックマークに追加
 
+  #cms:
     nodes:
       cms/node: フォルダーリスト
       cms/page: ページリスト

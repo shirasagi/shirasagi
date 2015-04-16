@@ -4,6 +4,16 @@ ja:
     access_log: アクセス集計
     yearly: 年間
     total: 合計
+    options:
+      link_action:
+        cushion: クッションページ
+        direct: 直リンク
+      link_target:
+        self: 同じタブで表示
+        blank: 別のタブで表示
+      sort:
+        order: 指定順
+        random: ランダム
 
   modules:
     ads: 広告管理

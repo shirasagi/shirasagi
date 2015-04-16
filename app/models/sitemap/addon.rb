@@ -28,7 +28,10 @@ module Sitemap::Addon
       end
 
       def sitemap_page_state_options
-        [%w(表示 show), %w(非表示 hide)]
+        [
+          [I18n.t('views.options.state.show'), 'show'],
+          [I18n.t('views.options.state.hide'), 'hide'],
+        ]
       end
 
       def load_sitemap_urls(opts = {})

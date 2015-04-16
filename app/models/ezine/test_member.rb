@@ -19,7 +19,10 @@ class Ezine::TestMember
 
   public
     def email_type_options
-      [%w(テキスト版 text), %w(HTML版 html)]
+      [
+        [I18n.t('ezine.options.email_type.text'), 'text'],
+        [I18n.t('ezine.options.email_type.html'), 'html'],
+      ]
     end
 
     def test_member?

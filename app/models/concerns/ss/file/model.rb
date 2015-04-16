@@ -43,7 +43,7 @@ module SS::File::Model
     end
 
     def state_options
-      [%w(公開 public)]
+      [[I18n.t('views.options.state.public'), 'public']]
     end
 
     def name

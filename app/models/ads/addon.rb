@@ -16,15 +16,24 @@ module Ads::Addon
 
     public
       def link_action_options
-        [ ["クッションページ", ""], ["直リンク", "direct"] ]
+        [
+          [I18n.t('ads.options.link_action.cushion'), ''],
+          [I18n.t('ads.options.link_action.direct'), 'direct'],
+        ]
       end
 
       def link_target_options
-        [ ["同じタブで表示", ""], ["別のタブで表示", "_blank"] ]
+        [
+          [I18n.t('ads.options.link_target.self'), ''],
+          [I18n.t('ads.options.link_target.blank'), 'blank'],
+        ]
       end
 
       def sort_options
-        [ ["指定順", "order"], ["ランダム", "random"] ]
+        [
+          [I18n.t('ads.options.sort.order'), 'order'],
+          [I18n.t('ads.options.sort.random'), 'random'],
+        ]
       end
 
       def sort_hash

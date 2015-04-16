@@ -1,7 +1,7 @@
 ja:
   category:
-    node: カテゴリー
     name: カテゴリー名
+    node: カテゴリー
     setting: カテゴリー設定
 
   modules:

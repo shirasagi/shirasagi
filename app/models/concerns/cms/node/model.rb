@@ -85,7 +85,10 @@ module Cms::Node::Model
     end
 
     def shortcut_options
-      [%w(表示 show), %w(非表示 hide)]
+        [
+          [I18n.t('views.options.state.show'), 'show'],
+          [I18n.t('views.options.state.hide'), 'hide'],
+        ]
     end
 
     def validate_destination_filename(dst)

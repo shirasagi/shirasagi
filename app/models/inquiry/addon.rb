@@ -26,7 +26,10 @@ module Inquiry::Addon
 
       public
         def inquiry_captcha_options
-          [%w(使用する enabled), %w(使用しない disabled)]
+          [
+            [I18n.t('inquiry.options.state.enabled'), 'enabled'],
+            [I18n.t('inquiry.options.state.disabled'), 'disabled'],
+          ]
         end
 
         def captcha_enabled?
@@ -52,7 +55,10 @@ module Inquiry::Addon
 
       public
         def notice_state_options
-          [%w(使用する enabled), %w(使用しない disabled)]
+          [
+            [I18n.t('inquiry.options.state.enabled'), 'enabled'],
+            [I18n.t('inquiry.options.state.disabled'), 'disabled'],
+          ]
         end
 
         def notify_mail_enabled?
@@ -87,7 +93,10 @@ module Inquiry::Addon
 
       public
         def reply_state_options
-          [%w(使用する enabled), %w(使用しない disabled)]
+          [
+            [I18n.t('inquiry.options.state.enabled'), 'enabled'],
+            [I18n.t('inquiry.options.state.disabled'), 'disabled'],
+          ]
         end
 
         def reply_mail_enabled?
@@ -122,14 +131,21 @@ module Inquiry::Addon
 
       public
         def input_type_options
-          [ %w(テキストボックス text_field), %w(テキストエリア text_area),
-            %w(メールアドレス email_field), %w(ラジオボタン選択 radio_button),
-            %w(プルダウン選択 select), %w(チェックボックス選択 check_box),
+          [
+            [I18n.t('inquiry.options.input_type.text_field'), 'text_field'],
+            [I18n.t('inquiry.options.input_type.text_area'), 'text_area'],
+            [I18n.t('inquiry.options.input_type.email_field'), 'email_field'],
+            [I18n.t('inquiry.options.input_type.radio_button'), 'radio_button'],
+            [I18n.t('inquiry.options.input_type.select'), 'select'],
+            [I18n.t('inquiry.options.input_type.check_box'), 'check_box'],
           ]
         end
 
         def required_options
-          [ %w(必須 required), %w(任意 optional) ]
+          [
+            [I18n.t('inquiry.options.required.required'), 'required'],
+            [I18n.t('inquiry.options.required.optional'), 'optional'],
+          ]
         end
 
         def required?

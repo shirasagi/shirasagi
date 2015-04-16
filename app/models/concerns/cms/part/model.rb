@@ -25,11 +25,17 @@ module Cms::Part::Model
     end
 
     def mobile_view_options
-      [%w(表示 show), %w(非表示 hide)]
+      [
+        [I18n.t('views.options.state.show'), 'show'],
+        [I18n.t('views.options.state.hide'), 'hide'],
+      ]
     end
 
     def ajax_view_options
-      [%w(有効 enabled), %w(無効 disabled)]
+      [
+        [I18n.t('views.options.state.enabled'), 'enabled'],
+        [I18n.t('views.options.state.disabled'), 'disabled'],
+      ]
     end
 
     def ajax_html

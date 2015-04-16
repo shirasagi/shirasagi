@@ -10,6 +10,20 @@ ja:
     confirm: 確認画面へ
     notify: 自動通知
     reply: 自動返信
+    options:
+      state:
+        enabled: 使用する
+        disabled: 使用しない
+      required:
+        required: 必須
+        optional: 任意
+      input_type:
+        text_field: テキストボックス
+        text_area: テキストエリア
+        email_field: メールアドレス
+        radio_button: ラジオボタン選択
+        select: プルダウン選択
+        check_box: チェックボックス選択
 
   modules:
     inquiry: メールフォーム
