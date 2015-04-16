@@ -35,7 +35,7 @@ class Sys::Test::MailController < ApplicationController
           to: @item.to,
           subject: @item.subject,
           body: @item.body
-        ).deliver
+        ).deliver_now
         redirect_to({ action: :index }, { notice: "Sent." })
       else
         render action: :index

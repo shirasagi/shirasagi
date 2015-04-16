@@ -9,7 +9,7 @@ class Ezine::Entry
 
   before_create ->{ self.verification_token = unique_token },
     if: ->{ SS.config.ezine.deliver_verification_mail_from_here }
-  after_create ->{ Ezine::Mailer.verification_mail(self).deliver },
+  after_create ->{ Ezine::Mailer.verification_mail(self).deliver_now },
     if: ->{ SS.config.ezine.deliver_verification_mail_from_here }
 
   class << self

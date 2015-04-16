@@ -50,7 +50,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
           to: @email,
           subject: "[#{@site.name}] Link Check: #{@errors.size} errors",
           body: msg
-        ).deliver
+        ).deliver_now
       end
     end
 
