@@ -2743,7 +2743,7 @@ article.licenses div article a {
       overflow: hidden;
       .resources {
         @include clearfix;
-        border: 2px solid #ddcfcc;
+        border: 1px solid $gray;
         header {
             border-bottom: 2px solid $blue;
             @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
@@ -2751,7 +2751,6 @@ article.licenses div article a {
             @include box-sizing(border-box);
             @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
             padding: 9px 0 9px 26px;
-            border: 1px solid $gray;
             border-bottom: none;
             background: url(../img/dataling.png) no-repeat -16px -32px;
             color: $blue;
@@ -2762,7 +2761,7 @@ article.licenses div article a {
         .resource, .url_resource {
           @include clearfix;
           margin: 0px 16px;
-          border-bottom: 1px solid #ddcfcc;
+          border-bottom: 1px dotted $gray;
           &:last-child {
             border-bottom: 0;
           }
@@ -2815,7 +2814,7 @@ article.licenses div article a {
       dl.author {
         margin: 28px 0px 0px;
         padding: 4px;
-        border: 2px solid #ddcfcc;
+        border: 1px solid $gray;
         dt {
           @include clearfix;
           clear: both;
