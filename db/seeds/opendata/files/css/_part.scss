@@ -145,6 +145,13 @@ $footer-margin: 60px;
   @include filter-gradient(#4D5F8C, #979CB9, vertical);
 }
 
+@mixin grd-info-title {
+  background-color: $white;
+  @include background-image(linear-gradient($white 0%, #fdfdfd 50.9%, #f6f6f6 69.24%, #ebebeb 82.3%, #dadada 92.79%, #c9c9c9 100%));
+  background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NDEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNGREZERkQiIG9mZnNldD0iMC41OSIvPjxzdG9wIHN0b3AtY29sb3I9IiNGNkY2RjYiIG9mZnNldD0iMC42OTI0Ii8+PHN0b3Agc3RvcC1jb2xvcj0iI0VCRUJFQiIgb2Zmc2V0PSIwLjgyMyIvPjxzdG9wIHN0b3AtY29sb3I9IiNEQURBREEiIG9mZnNldD0iMC45Mjc5Ii8+PHN0b3Agc3RvcC1jb2xvcj0iI0M5QzlDOSIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzc0MSkiIC8+Cjwvc3ZnPg==);
+  @include filter-gradient($white, #c9c9c9, vertical);
+}
+
 @mixin grd-addbutton {
   background-image: url(../img/ic-add.png);
   background-repeat: no-repeat;

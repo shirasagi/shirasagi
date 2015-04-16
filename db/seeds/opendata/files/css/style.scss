@@ -409,241 +409,35 @@ article.areas, article.tags, article.formats, article.licenses {
 }
 
 // -----------------------------------------------------------------------------
-// #about p
-#about p {
-  padding-left: 16px;
-  line-height: 1.6;
-}
-
-.s-portal #contents {
-  #info-page-name {
-    margin-bottom: 10px;
-    padding: 13px 10px;
-    font-size: $px17;
-  }
-}
-
-#contents header.released {
-  margin-bottom: 12px;
-  text-align: right;
-}
-
-// -----------------------------------------------------------------------------
-// #contents article.body
-#contents article.body {
-  h1 {
-    margin: 12px 0;
-    padding: 5px 10px;
-    background: $blue;
-    color: $white;
-    font-size: $px15;
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-  h2 {
-    margin-bottom: 6px;
-    padding: 3px 10px;
-    border-bottom: 2px solid $blue;
-    color: $blue;
-    font-size: $px15;
-    font-weight: bold;
-  }
-  h3 {
-    margin-bottom: 6px;
-    padding: 3px 10px;
-    border-left: 5px solid $blue;
-    color: $blue;
-    font-weight: bold;
-  }
-  h4 {
-    color: $blue;
-    font-weight: bold;
-  }
-  h5, h6 {
-    font-weight: bold;
-  }
-  p {
-    margin-bottom: 12px;
-    line-height: 1.6;
-  }
-  ul {
-    margin-bottom: 12px;
-    list-style: none;
-    li {
-      position: relative;
-      padding-left: 15px;
-      &:before {
-        content: "";
-        position: absolute;
-        top: 7px;
-        left: 2px;
-        display: block;
-        width: 6px;
-        height: 6px;
-        @include border-radius(3px);
-        background: $blue;
-      }
-    }
-  }
-  ol {
-    margin-bottom: 12px;
-    padding-left: 23px;
-  }
-  dl {
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid $gray;
-    dt {
-      float: left;
-      min-width: 15%;
-      font-weight: bold;
-    }
-  }
-  table {
-    width: 100%;
-    margin-bottom: 12px;
-    caption {
-      color: $blue;
-      text-align: left;
-    }
-    th {
-      padding: 3px 8px 0;
-      border: 1px solid $gray;
-      background: $blue;
-      color: $white;
-    }
-    td {
-      padding: 3px 8px 0;
-      border: 1px solid $gray;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
 // #contents footer.contact
 #contents footer.contact {
   @include clear;
-  margin-top: 30px;
-  //padding-bottom: 10px;
+  margin-top: 40px;
   h1 {
-    margin-bottom: 6px;
-    padding: 4px 10px;
-    background: #3386bb;
-    color: $white;
-    font-size: $px15;
+    margin-bottom: 18px;
+    padding: 4px 0 4px 10px;
+    background: rgba(#ababab, 0.21);
+    color: $blue;
+    @include box-shadow(0px 0.5px 0.5px rgba(#a8a8a8, 0.75), 0px 0px 0px 1px $white inset);
+    border: 1px solid rgba(#000000, 0.21);
   }
   p {
-    padding: 0 15px;
-    line-height: 1.7;
+    line-height: 1.5;
   }
   dl {
     @include clear;
     display: inline;
     float: left;
-    margin-right: 10px;
-    padding: 0 15px;
+    margin-top: 20px;
+    margin-right: 30px;
     line-height: 1.5;
+    &:last-child {
+      margin-right: 0;
+    }
     dt, dd {
       display: inline;
       float: left;
     }
-    dt {
-      //font-weight: bold;
-    }
-  }
-}
-.s-dataset #contents footer.contact, .s-app #contents footer.contact, .s-idea #contents footer.contact {
-  margin-top: 40px;
-  h1 {
-    margin-bottom: 18px;
-    padding: 7px 10px;
-    border: 1px solid $gray;
-    background: rgba(171,171,171,0.21);
-    color: $text;
-  }
-  p {
-    padding: 0 15px 0 0;
-  }
-  dl {
-    margin-top: 20px;
-    padding: 0 15px 0 0;
-  }
-}
-// -----------------------------------------------------------------------------
-// calendar
-.event-date {
-  position: relative;
-  h1 {
-    margin-bottom: 15px;
-    padding: 7px 0 4px 15px;
-    border-bottom: 2px solid $blue;
-    font-size: $px15;
-  }
-  ul {
-    position: absolute;
-    top: 9px;
-    right: 0;
-    .prev {
-      @include l-arrow-bk;
-      @include inline-block;
-      margin-right: 10px;
-      padding: 0 15px;
-      border-right: 1px solid $gray;
-    }
-    .next {
-      @include inline-block;
-      padding-right: 13px;
-      background: url(../img/r-arrow-bk.png) no-repeat right center;
-    }
-  }
-}
-#event-list {
-  clear: both;
-  border-top: 1px solid $gray;
-  dl {
-    margin: 0;
-    padding: 6px 10px 3px;
-    border-bottom: 1px solid $gray;
-    zoom:1;
-    &:before {
-      content: "\0020";
-      display: block;
-      height: 0;
-      overflow: hidden;
-    }
-    &:after {
-      content: "\0020";
-      clear: both;
-      display: block;
-      height: 0;
-      overflow: hidden;
-    }
-  }
-  dl.sat {
-    background: #e1ebf1;
-    color: #039;
-  }
-  dl.sun, dl.holiday {
-    background: #ffeeee;
-    color: #d90000;
-  }
-  dt {
-    float: left;
-    width: 12%;
-  }
-  dd {
-    margin-left: 12%;
-    h2 {
-      margin: 0;
-      padding: 0;
-      border: none;
-      font-size: $px14;
-      font-weight: normal;
-    }
-  }
-  div.page {
-    padding: 5px 0;
   }
 }
 
@@ -998,7 +792,7 @@ form.opendata-search_ideas-form .send {
   header {
     @include box-shadow(0px 0.5px 0.5px rgba(#a8a8a8, 0.75));
     padding: 1px;
-    border: 1px solid rgba(#999999, 0.21);
+    border: 1px solid rgba(#000000, 0.21);
     h1 {
       padding: 6px 0 6px 40px;
       background: url(../img/ic-groupsearch_pink.png) no-repeat 8px center;
@@ -2077,7 +1871,7 @@ nav.cms-sns_share {
     }
   }
   article.body {
-    padding: 0 15px;
+    padding-right: 15px;
   }
 }
 
@@ -2125,7 +1919,7 @@ nav.cms-sns_share {
 }
 
 
-// <記事ページ>--------------------------------------------------------------------------------------------------------
+// <記事・イベントページ>-----------------------------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 // .s-portalinfo #tab-inner
@@ -2148,6 +1942,202 @@ nav.cms-sns_share {
         font-size: $px32;
       }
     }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// #about p
+#about p {
+  padding-left: 16px;
+  line-height: 1.5;
+}
+
+#contents header.released {
+  margin-bottom: 24px;
+  text-align: right;
+}
+
+// -----------------------------------------------------------------------------
+// .s-portalinfo #info-title
+.s-portalinfo #info-title {
+  @include grd-info-title;
+  @include box-shadow(0 1px 1px rgba(#a8a8a8,0.25));
+  margin-bottom: 12px;
+  padding: 7px 0 7px 15px;
+  border: 1px solid $gray;
+  border-bottom: 2px solid $blue;
+  font-size: 200%;
+  color: $blue;
+}
+
+// -----------------------------------------------------------------------------
+// #contents article.body
+#contents article.body {
+  h1 {
+    margin: 12px 0;
+    padding: 5px 10px;
+    background: $blue;
+    color: $white;
+    font-size: $px15;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  h2 {
+    margin-bottom: 6px;
+    padding: 3px 10px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px15;
+    font-weight: bold;
+  }
+  h3 {
+    margin-bottom: 6px;
+    padding: 3px 10px;
+    border-left: 5px solid $blue;
+    color: $blue;
+    font-weight: bold;
+  }
+  h4 {
+    color: $blue;
+    font-weight: bold;
+  }
+  h5, h6 {
+    font-weight: bold;
+  }
+  p {
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  ul {
+    margin-bottom: 12px;
+    margin-left: 25px;
+    list-style: none;
+    li {
+      position: relative;
+      padding-left: 15px;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 7px;
+        left: 2px;
+        display: block;
+        width: 6px;
+        height: 6px;
+        @include border-radius(3px);
+        background: $blue;
+      }
+    }
+  }
+  ol {
+    margin-bottom: 12px;
+    margin-left: 25px;
+    padding-left: 23px;
+  }
+  dl {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid $gray;
+    dt {
+      float: left;
+      min-width: 15%;
+      font-weight: bold;
+    }
+  }
+  table {
+    width: 100%;
+    margin-bottom: 12px;
+    caption {
+      color: $blue;
+      text-align: left;
+    }
+    th {
+      padding: 3px 8px 0;
+      border: 1px solid $gray;
+      background: $blue;
+      color: $white;
+    }
+    td {
+      padding: 3px 8px 0;
+      border: 1px solid $gray;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// calendar
+.event-date {
+  position: relative;
+  h1 {
+    margin-bottom: 15px;
+    padding: 7px 0 4px 15px;
+    border-bottom: 2px solid $blue;
+    font-size: $px15;
+  }
+  ul {
+    position: absolute;
+    top: 9px;
+    right: 0;
+    .prev {
+      @include l-arrow-bk;
+      @include inline-block;
+      margin-right: 10px;
+      padding: 0 15px;
+      border-right: 1px solid $gray;
+    }
+    .next {
+      @include inline-block;
+      padding-right: 13px;
+      background: url(../img/r-arrow-bk.png) no-repeat right center;
+    }
+  }
+}
+#event-list {
+  clear: both;
+  border-top: 1px solid $gray;
+  dl {
+    margin: 0;
+    padding: 6px 10px 3px;
+    border-bottom: 1px solid $gray;
+    zoom:1;
+    &:before {
+      content: "\0020";
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+    &:after {
+      content: "\0020";
+      clear: both;
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+  }
+  dl.sat {
+    background: #e1ebf1;
+    color: #039;
+  }
+  dl.sun, dl.holiday {
+    background: #ffeeee;
+    color: #d90000;
+  }
+  dt {
+    float: left;
+    width: 12%;
+  }
+  dd {
+    margin-left: 12%;
+    h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: $px14;
+      font-weight: normal;
+    }
+  }
+  div.page {
+    padding: 5px 0;
   }
 }
 
@@ -2703,7 +2693,7 @@ article.licenses div article a {
       }
       a.name:nth-child(2) {
         width: 130px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab.png) no-repeat 12px 10px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 10px;
         &:hover {
           @include opacity(1);
           @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
@@ -2719,18 +2709,18 @@ article.licenses div article a {
       }
       a.name:nth-child(3) {
         width: 150px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab.png) no-repeat 10px 5px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab_blue.png) no-repeat 10px 5px;
         &:hover {
           @include opacity(1);
           @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-ideatab_hover.png) no-repeat 10px 5px;
+          background: url(../img/ic-ideatab_hover_s.png) no-repeat 10px 5px;
           color: $blue;
         }
       }
       a.current:nth-child(3) {
         @include opacity(1);
         @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-ideatab_hover.png) no-repeat 10px 5px;
+        background: url(../img/ic-ideatab_hover_s.png) no-repeat 10px 5px;
         color: $blue;
       }
     }
@@ -2833,7 +2823,7 @@ article.licenses div article a {
     }
     #tab-app, #tab-idea {
       @include clearfix;
-      border: 2px solid #ddcfcc;
+      border: 1px solid $gray;
       header {
           border-bottom: 2px solid $blue;
           @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
@@ -2841,7 +2831,6 @@ article.licenses div article a {
           @include box-sizing(border-box);
           @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
           padding: 9px 0 9px 26px;
-          border: 1px solid $gray;
           border-bottom: none;
           background: url(../img/dataling.png) no-repeat -16px -32px;
           color: $blue;
@@ -2856,17 +2845,19 @@ article.licenses div article a {
           td.name {
             width: 60%;
             padding-left: 24px;
+            white-space: normal;
+            word-break: break-word;
           }
         }
       }
     }
   }
   nav.related-pages {
+    border: 1px solid $gray;
     header h1 {
       @include box-sizing(border-box);
       @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
       padding: 12px 0 5px 10px;
-      border: 2px solid #ddcfcc;
       border-bottom: 2px solid $blue;
       color: $blue;
       font-size: $px16;
@@ -2874,11 +2865,10 @@ article.licenses div article a {
     }
     .pages {
       padding: 0 7px;
-      border: 2px solid #ddcfcc;
       border-top: none;
       article {
         padding: 8px;
-        border-bottom: 1px dotted #cccccc;
+        border-bottom: 1px dotted $gray;
         &:last-child {
           border-bottom: 0;
         }

@@ -29,7 +29,9 @@ def save_layout(data)
 end
 
 save_layout filename: "portal-top.layout.html", name: "ポータル：トップ"
+save_layout filename: "portal-general.layout.html", name: "ポータル：汎用"
 save_layout filename: "portal-info.layout.html", name: "ポータル：お知らせ"
+save_layout filename: "portal-event.layout.html", name: "ポータル：イベント"
 save_layout filename: "app-top.layout.html", name: "アプリ：トップ"
 save_layout filename: "app-bunya.layout.html", name: "アプリ：分野、アプリ検索"
 save_layout filename: "app-page.layout.html", name: "アプリ：詳細ページ"
@@ -68,9 +70,11 @@ save_node filename: "img", name: "画像", route: "uploader/file"
 save_node filename: "ads", name: "広告", route: "ads/banner"
 
 save_node filename: "info", name: "お知らせ", route: "article/page", shortcut: "show",
-  layout_id: layouts["portal-info"].id
+  layout_id: layouts["portal-general"].id,
+  page_layout_id: layouts["portal-info"].id
 save_node filename: "event", name: "イベント", route: "event/page", shortcut: "show",
-  layout_id: layouts["portal-info"].id
+layout_id: layouts["portal-general"].id,
+page_layout_id: layouts["portal-event"].id
 
 save_node filename: "dataset", name: "データセット", route: "opendata/dataset", shortcut: "show",
   layout_id: layouts["dataset-top"].id,
