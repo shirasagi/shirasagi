@@ -1426,21 +1426,33 @@ table.ajax-selected {
 
 // -----------------------------------------------------------------------------
 // section.datasets
-section.datasets {
+section.datasets, section.apps, section.ideas {
   padding: 20px 0;
-  h2 {
-    padding: 7px 10px;
-    background-color: $data-blue;
-    color:$white;
-    font-size: $px15;
+  header {
+    border: 1px solid $gray;
+    border-bottom: 2px solid $blue;
+    @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
+    h2 {
+      @include box-sizing(border-box);
+      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+      padding: 9px 0 9px 26px;
+      border-bottom: none;
+      color: $blue;
+      font-size: $px16;
+      line-height: 1.3;
+    }
   }
   .pages {
-    h2 {
-      max-width: 917px;
-      padding: 0;
-      background: none;
-      color: $text;
-      font-size: $px14;
+    header {
+      border: 0;
+      h2 {
+        max-width: 917px;
+        padding: 0;
+        background: none;
+        color: $text;
+        font-size: $px14;
+        box-shadow: none;
+      }
     }
   }
 }
