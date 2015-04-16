@@ -13,7 +13,8 @@ ja:
     current_month: 今月
     filter_all: 全て
     confirm:
-      delete: 項目を削除してよろしいですか？
+      delete_date: イベント日を削除してよろしいですか？
+      delete_item: 項目を削除してよろしいですか？
 
   modules:
     event: イベント

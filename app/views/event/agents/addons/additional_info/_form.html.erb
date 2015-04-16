@@ -18,7 +18,7 @@ $ ->
 
     if $(".mod-event-additional-info dt").length > 2
       if dt.find("input").val() != "" || dd.find("textarea").val() != ""
-        if confirm("<%= t "event.confirm.delete" %>")
+        if confirm("<%= t "event.confirm.delete_item" %>")
           dt.remove()
           dd.remove()
       else
@@ -26,7 +26,7 @@ $ ->
         dd.remove()
     else
       if dt.find("input").val() != "" || dd.find("textarea").val() != ""
-        if confirm("<%= t "event.confirm.delete" %>")
+        if confirm("<%= t "event.confirm.delete_item" %>")
           dt.find("input").val("")
           dd.find("textarea").val("")
       else

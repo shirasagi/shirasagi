@@ -24,14 +24,14 @@ $ ->
         <% if params[:action] =~ /new/ %>
           <tr data-id="<%= @cur_group.id %>">
             <td><%= f.hidden_field "contact_group_id", value: @cur_group.id %> <%= @cur_group.name %></td>
-            <td><%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
           </tr>
         <% else %>
           <% group = SS::Group.find_by id: @item.contact_group_id rescue nil %>
           <% if group.present? %>
             <tr data-id="<%= @item.contact_group_id %>">
               <td><%= f.hidden_field "contact_group_id", value: @item.contact_group_id %> <%= group.name %></td>
-              <td><%= link_to t("contact.search_groups.deselect"), "#", class: :deselect %></td>
+              <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
             </tr>
           <% end %>
         <% end %>

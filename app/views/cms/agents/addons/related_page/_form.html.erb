@@ -21,7 +21,7 @@ $ ->
         <% @item.related_pages.each do |page| %>
         <tr data-id="<%= page.id %>">
           <td><%= f.hidden_field "related_page_ids[]", value: page.id %> <%= page.name %></td>
-          <td><%= link_to t("cms.apis.search_pages.deselect"), "#", class: :deselect %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
         </tr>
         <% end %>
         <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>

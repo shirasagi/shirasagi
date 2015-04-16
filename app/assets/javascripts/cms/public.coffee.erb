@@ -84,11 +84,11 @@ class @SS_Kana
     if $("body").data("kana")
       url = SS_Kana.url(location.pathname, false)
       bind = 'onclick="location.href=\'' + url + '\'; return false"'
-      $("#ss-kana").html '<a class="off" href="#' + url + '" ' + bind + '>ふりがなをはずす</a>'
+      $("#ss-kana").html "<a class=\"off\" href=\"##{url}\" #{bind}><%= I18n.t 'cms.links.ruby_off' %></a>"
     else
       url = SS_Kana.url(location.pathname, true)
       bind = 'onclick="location.href=\'' + url + '\'; return false"'
-      $("#ss-kana").html '<a class="on" href="#' + url + '" ' + bind + '>ふりがなをつける</a>'
+      $("#ss-kana").html "<a class=\"on\" href=\"##{url}\" #{bind}><%= I18n.t "cms.links.ruby_on" %></a>"
 
   @url: (url, bool = null) ->
     bool = $("body").data("kana") if bool == null

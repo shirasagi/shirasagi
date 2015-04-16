@@ -2,7 +2,7 @@
 
 class @Map_Form
   @maxPointForm = 10
-  @deleteMessage = "マーカーを削除してよろしいですか？"
+  @deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>"
   @dataID = 0
   @clickIcon = "//maps.google.com/mapfiles/ms/icons/blue-dot.png"
   @clickMarker = null
@@ -52,7 +52,7 @@ class @Map_Form
           if (result.geometry.viewport)
             Map.map.fitBounds(result.geometry.viewport)
         else
-          alert("座標を取得できませんでした。")
+          alert("<%= I18n.t('map.alert.invalid_center') %>")
         return
     )
     return false

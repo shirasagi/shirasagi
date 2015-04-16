@@ -8,10 +8,14 @@ ja:
     setting: マップ設定
     markers: マーカー設定
     clicked: クリック座標
+    alert:
+      invalid_center: 座標を取得できませんでした。
     button:
       set_marker: マーカーの設置
       add_marker: マーカーを追加する
       clear_marker: 削除
+    confirm:
+      delete_marker: マーカーを削除してよろしいですか？
 
   modules:
     map: 地図

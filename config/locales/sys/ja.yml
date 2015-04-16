@@ -14,7 +14,6 @@ ja:
         index: グループを選択する
         search: グループを検索
         select: グループを設定する
-        deselect: 削除
 
   modules:
     sys: システム

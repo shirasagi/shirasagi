@@ -9,7 +9,6 @@ ja:
       index: 連絡先グループを選択する
       search: 連絡先グループを検索
       select: 連絡先グループを設定する
-      deselect: 削除
     state:
       show: 表示
       hide: 非表示

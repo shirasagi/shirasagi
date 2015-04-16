@@ -37,7 +37,6 @@ ja:
         index: カテゴリーを選択する
         search: カテゴリーを検索
         select: カテゴリーを設定する
-        deselect: 削除
       contents:
         page: ページ
         title: タイトル
@@ -50,17 +49,18 @@ ja:
         index: グループを選択する
         search: グループを検索
         select: グループを設定する
-        deselect: 削除
       pages:
         index: 関連記事を選択する
         search: 関連記事を検索
         select: 関連記事を設定する
-        deselect: 削除
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
       dependent_character: "[機種依存文字]"
       caption: キャプション
+    links:
+      ruby_on: ふりがなをつける
+      ruby_off: ふりがなをはずす
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
