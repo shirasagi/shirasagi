@@ -1,4 +1,4 @@
-class Mobile::Convertor < String
+class Mobile::Converter < String
   @@tags = {
     remove: %w(
       area audio canvas caption col colgroup embed iframe keygen map noscript
@@ -115,7 +115,7 @@ class Mobile::Convertor < String
     end
 
     def remove_other_namespace_tags!
-      self.gsub!(/<\S*?\:\S*?.*?>/m, "")
+      self.gsub!(/<\/?\w*?\:\w+?.*?>/m, "")
     end
 
     def remove_comments!

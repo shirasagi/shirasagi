@@ -22,7 +22,7 @@ module Mobile::PublicFilter
       body.gsub!(/<span .*?id="ss-(small|medium|large|kana|pc|mb)".*?>.*?<\/span>/, "")
 
       # tags
-      body = Mobile::Convertor.new(body)
+      body = Mobile::Converter.new(body)
       body.convert!
 
       # css
