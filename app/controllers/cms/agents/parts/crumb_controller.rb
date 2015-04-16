@@ -18,7 +18,11 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
 
         if @cur_path =~ /\/[\w\-]+\.[\w\-]+$/
           page = Cms::Page.site(@cur_site).filename(@cur_path).first
-          @items << [page.name, nil] if page
+          if @items.present? && @cur_path.end_with?("/index.html") && @items.last[0] == page.name
+            @items.last[1] = nil
+          else
+            @items << [page.name, nil] if page
+          end
         end
       end
 
