@@ -22,7 +22,7 @@
       </td>
       <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
       <td><%= item.test_delivered.strftime("%Y/%m/%d %H:%M") unless item.test_delivered.nil? %></td>
-      <td><%= item.results.first.started.strftime("%Y/%m/%d %H:%M") unless item.results.first.nil? %></td>
+      <td><%= item.results.first.started.strftime("%Y/%m/%d %H:%M") unless item.results.first.nil? rescue nil %></td>
       <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>
