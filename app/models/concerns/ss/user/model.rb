@@ -98,7 +98,7 @@ module SS::User::Model
       end
     end
 
-    def has_role?(action, object, opts = {})
+    def role?(action, object, opts = {})
       object.allowed?(action, self, opts)
       #@role_caches ||= {}
       #key = "#{action},#{object.permission_name},#{opts}"

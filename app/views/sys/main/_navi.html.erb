@@ -1,19 +1,19 @@
 <nav class="main-menu">
   <header><h1><%= t :"modules.sys" %></h1></header>
   <div>
-    <% if @cur_user.has_role?(:edit, Sys::Site) %>
+    <% if @cur_user.role?(:edit, Sys::Site) %>
       <%= link_to :"sys.site", sys_sites_path %>
     <% end %>
-    <% if @cur_user.has_role?(:edit, Sys::Role) %>
+    <% if @cur_user.role?(:edit, Sys::Role) %>
       <%= link_to :"sys.role", sys_roles_path %>
     <% end %>
-    <% if @cur_user.has_role?(:edit, Sys::User) %>
+    <% if @cur_user.role?(:edit, Sys::User) %>
       <%= link_to :"sys.user", sys_users_path %>
     <% end %>
-    <% if @cur_user.has_role?(:edit, Sys::Group) %>
+    <% if @cur_user.role?(:edit, Sys::Group) %>
       <%= link_to :"sys.group", sys_groups_path %>
     <% end %>
-    <% if @cur_user.has_role?(:edit, Sys::User) %>
+    <% if @cur_user.role?(:edit, Sys::User) %>
       <%= link_to :"sys.test", sys_test_path %>
       <%= link_to :"sys.db_tool", sys_db_path %>
       <%= link_to :"history.log", history_sys_logs_path %>
