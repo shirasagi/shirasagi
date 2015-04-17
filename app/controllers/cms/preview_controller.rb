@@ -47,7 +47,7 @@ class Cms::PreviewController < ApplicationController
           return
         end
       end
-      raise "404" unless Fs.exists?(file)
+      #raise "404" unless Fs.exists?(file)
     end
 
     def render_preview
