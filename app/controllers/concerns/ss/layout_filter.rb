@@ -24,6 +24,7 @@ module SS::LayoutFilter
       end
 
     public
+      # @deprecated
       def javascript(path)
         self.javascripts << path unless javascripts.index(path)
       end

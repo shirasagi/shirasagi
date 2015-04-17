@@ -42,12 +42,14 @@ module ApplicationHelper
     end
   end
 
+  # @deprecated
   def coffee(&block)
     javascript_tag do
       CoffeeScript.compile(capture(&block)).html_safe
     end
   end
 
+  # @deprecated
   def scss(&block)
     opts = Rails.application.config.sass
     sass = Sass::Engine.new "@import 'compass/css3';\n" + capture(&block),
