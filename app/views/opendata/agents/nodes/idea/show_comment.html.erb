@@ -28,43 +28,37 @@
 
 <% end %>
 
-
   <div class="info-wrap">
 
-      <div class="idea_text">
-        <%= auto_link br(@idea_comment.text) %>
-        <hr>
-      </div>
-
-      <div class="comments">
-        <% @comments.each do |comment| %>
-          <div class="comment">
-            <% if comment.comment_deleted %>
-            <%= "コメントは削除されました" %>
-            <% else %>
-            <%= comment.text %>
-            <% end %>
-          </div>
-          <% if @comment_mode && [@idea_comment.member_id, comment.member_id].include?(@cur_member.id) %>
-          <%= link_to "削除", "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
-          <% end %>
-          <% if comment.member %>
-          <%= link_to comment.member.name, "#{member_path}#{comment.member_id}" %>
+    <div class="comments">
+      <% @comments.each do |comment| %>
+        <div class="comment">
+          <% if comment.comment_deleted %>
+          <%= "コメントは削除されました" %>
           <% else %>
-          ゲストユーザー
+          <%= comment.text %>
           <% end %>
-          <hr>
+        </div>
+        <% if @comment_mode && [@idea_comment.member_id, comment.member_id].include?(@cur_member.id) %>
+        <%= link_to "削除", "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
         <% end %>
-      </div>
-
-      <% if @comment_mode %>
-        <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>
-          <dl class="comment_body">
-            <dt>本文</dt>
-            <dd><%= f.text_field :comment_body %></dd>
-          </dl>
-          <%= link_to "このページにコメントする", "", class: "comment_add" %>
+        <% if comment.member %>
+        <%= link_to comment.member.name, "#{member_path}#{comment.member_id}" %>
+        <% else %>
+        ゲストユーザー
         <% end %>
+        <hr>
       <% end %>
+    </div>
+
+    <% if @comment_mode %>
+      <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>
+        <dl class="comment_body">
+          <dt>本文</dt>
+          <dd><%= f.text_field :comment_body %></dd>
+        </dl>
+        <%= link_to "このページにコメントする", "", class: "comment_add" %>
+      <% end %>
+    <% end %>
 
   </div>

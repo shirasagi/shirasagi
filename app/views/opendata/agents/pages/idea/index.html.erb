@@ -75,6 +75,10 @@ categories = [
   <% end %>
 </nav>
 
+<div class="text">
+  <%= auto_link br(@cur_page.text) %>
+</div>
+
 <div class="idea-tabs tabs"  id="idea-tabs-<%= @cur_node.id %>">
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
     <header><h1>コメント</h1></header>
@@ -131,7 +135,7 @@ categories = [
       <% end %>
 
       <dt><%= @cur_page.t :commented %></dt>
-      <dd></dd>
+      <dd><%= @cur_page.total_comment.to_i %> 回</dd>
 
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %><br /></dd>

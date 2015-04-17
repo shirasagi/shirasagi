@@ -127,6 +127,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       Opendata::IdeaComment.new(new_comment).save
 
       idea.commented = Time.now
+      idea.total_comment += 1
       idea.save
 
       member_ids = []

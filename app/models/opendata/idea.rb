@@ -16,6 +16,7 @@ class Opendata::Idea
   field :text, type: String
   field :tags, type: SS::Extensions::Words
   field :commented, type: DateTime
+  field :total_comment, type: Integer, default: "0";
 
   embeds_ids :datasets, class_name: "Opendata::Dataset"
   embeds_ids :apps, class_name: "Opendata::App"
@@ -30,7 +31,7 @@ class Opendata::Idea
   validates :category_ids, presence: true
   validates :state, presence: true
 
-  permit_params :text, :point, :commented, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []
+  permit_params :text, :point, :commented, :total_comment, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
