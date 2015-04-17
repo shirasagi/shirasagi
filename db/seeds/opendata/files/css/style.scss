@@ -460,17 +460,17 @@ article.areas, article.tags, article.formats, article.licenses {
     padding-left: 12px;
   }
 }
-#portal-dataset nav, .s-dataset .opendata-tabs nav, #search_group nav {
+.cms-tabs nav, #portal-dataset nav, #portal-app nav, #portal-idea nav, .s-dataset .opendata-tabs nav, #search_group nav {
   .more {
     background: url(../img/ic-arrow_pink.png) no-repeat left center;
   }
 }
-#portal-app nav, .s-app .opendata-tabs nav {
+.s-app .opendata-tabs nav {
   .more {
     background: url(../img/ic-arrow_blue.png) no-repeat left center;
   }
 }
-#portal-idea nav, .s-idea .opendata-tabs nav {
+.s-idea .opendata-tabs nav {
   .more {
     background: url(../img/ic-arrow_yellow.png) no-repeat left center;
   }
@@ -3472,7 +3472,7 @@ article.licenses div article a {
         a.dataset {
           width: 180px;
           padding-left: 20px;
-          background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab_blue.png) no-repeat 7px 6px;
+          background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab_blue_s.png) no-repeat 7px 6px;
           &:hover {
             @include opacity(1);
             @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
@@ -3506,7 +3506,7 @@ article.licenses div article a {
       }
       .tab-body {
         @include clearfix;
-        border: 2px solid #ddcfcc;
+        border: 1px solid $gray;
         header {
             border-bottom: 2px solid $blue;
             @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
@@ -3514,7 +3514,6 @@ article.licenses div article a {
             @include box-sizing(border-box);
             @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
             padding: 9px 0 9px 26px;
-            border: 1px solid $gray;
             border-bottom: none;
             background: url(../img/appling.png) no-repeat -10px -100px;
             color: $blue;
@@ -3634,7 +3633,7 @@ article.licenses div article a {
     dl.author {
       margin: 28px 0px 0px;
       padding: 4px;
-      border: 2px solid #ddcfcc;
+      border: 1px solid $gray;
       dt {
         @include clearfix;
         clear: both;
@@ -3642,7 +3641,7 @@ article.licenses div article a {
         width: 180px;
         min-height: 1.0em;
         padding: 5px 8px;
-        background: rgba(0, 174, 239, 0.2);
+        background: rgba($app-blue, 0.2);
       }
       dd {
         min-height: 1.5em;
@@ -3660,11 +3659,12 @@ article.licenses div article a {
     }
   }
   nav.related-pages {
+    margin-top: 28px;
+    border: 1px solid $gray;
     header h1 {
       @include box-sizing(border-box);
       @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
       padding: 12px 0 5px 10px;
-      border: 2px solid #ddcfcc;
       border-bottom: 2px solid $blue;
       color: $blue;
       font-size: $px16;
@@ -3672,7 +3672,6 @@ article.licenses div article a {
     }
     .pages {
       padding: 0 7px;
-      border: 2px solid #ddcfcc;
       border-top: none;
       article {
         padding: 8px;
@@ -4166,6 +4165,279 @@ article.licenses div article a {
     line-height: 1.3;
   }
 }
+
+// -----------------------------------------------------------------------------
+// .idea-page-contents
+.s-idea .idea-page-contents {
+  .names {
+    margin-bottom: 18px;
+    border-bottom: 2px solid $blue;
+  }
+  header h1.name {
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid $blue;
+    color: $blue;
+    font-size: $px32;
+  }
+  .text, nav.related-pages {
+    margin-bottom: 28px;
+  }
+  .text {
+    float: left;
+    width: 800px;
+    line-height: 1.5;
+  }
+  .categories {
+    width: 800px;
+    margin-bottom: 18px;
+    a {
+      display: inline-block;
+      margin: 0 5px 10px 0;
+      padding: 4px 10px;
+      @include border-radius(5px);
+      color: $text;
+      text-decoration: none;
+    }
+    a.area {
+      background: #D4EF97;
+      &:hover {
+        background: #cbe79a;
+      }
+    }
+    a.category {
+      background: #FAE257;
+      &:hover {
+        background: #ffe593;
+      }
+    }
+    a.tag {
+      background: #CAEBFF;
+      &:hover {
+        background: #b6dbf3;
+      }
+    }
+  }
+  .idea-tabs {
+    clear: both;
+    margin-bottom: 28px;
+    .names {
+      padding: 0;
+      border-bottom: $blue 2px solid;
+      .name {
+        @include box-sizing(border-box);
+        @include border-top-radius(5px);
+        @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
+        display: inline-block;
+        width: 150px;
+        margin-right: 6px;
+        padding: 9px 0 9px 30px;
+        border: 1px solid $gray;
+        border-bottom: none;
+        color: $text;
+        text-decoration: none;
+        text-align: center;
+        font-size: $px16;
+        line-height: 1.3;
+      }
+      a.name:nth-child(1) {
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab.png) no-repeat 10px 5px;
+        &:hover {
+          @include opacity(1);
+          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+          background: url(../img/ic-ideatab_hover.png) no-repeat 10px 5px;
+          color: $blue;
+        }
+      }
+      a.current:nth-child(1) {
+        @include opacity(1);
+        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+        background: url(../img/ic-ideatab_hover.png) no-repeat 10px 5px;
+        color: $blue;
+      }
+      a.name:nth-child(2) {
+        width: 180px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab_blue_s.png) no-repeat 7px 6px;
+        &:hover {
+          @include opacity(1);
+          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+          background: url(../img/ic-datatab_hover_s.png) no-repeat 7px 6px;
+          color: $blue;
+        }
+      }
+      a.current:nth-child(2) {
+        @include opacity(1);
+        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+        background: url(../img/ic-datatab_hover_s.png) no-repeat 7px 6px;
+        color: $blue;
+      }
+      a.name:nth-child(3) {
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 10px;
+        &:hover {
+          @include opacity(1);
+          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+          background: url(../img/ic-apptab_hover.png) no-repeat 12px 10px;
+          color: $blue;
+        }
+      }
+      a.current:nth-child(3) {
+        @include opacity(1);
+        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
+        background: url(../img/ic-apptab_hover.png) no-repeat 12px 10px;
+        color: $blue;
+      }
+    }
+    #tab-dataset, #tab-app {
+      @include clearfix;
+      border: 1px solid $gray;
+      header {
+          border-bottom: 2px solid $blue;
+          @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+        h1 {
+          @include box-sizing(border-box);
+          @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+          padding: 9px 0 9px 26px;
+          border-bottom: none;
+          background: url(../img/idealing.png) no-repeat -14px -84px;
+          color: $blue;
+          font-size: $px16;
+          line-height: 1.3;
+        }
+      }
+      .index {
+        margin-bottom: 0;
+        border-bottom: 0;
+        tr {
+          td.name {
+            width: 60%;
+            padding-left: 24px;
+            white-space: normal;
+            word-break: break-word;
+          }
+        }
+      }
+    }
+  }
+  .info-wrap {
+    overflow: hidden;
+    #tab-comment {
+      @include clearfix;
+      border: 1px solid $gray;
+      header {
+        border-bottom: 2px solid $blue;
+        @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
+        h1 {
+          @include box-sizing(border-box);
+          @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+          padding: 9px 0 9px 26px;
+          border-bottom: none;
+          background: url(../img/idealing.png) no-repeat -14px -84px;
+          color: $blue;
+          font-size: $px16;
+          line-height: 1.3;
+        }
+      }
+    }
+    dl.author {
+      margin: 28px 0px 0px;
+      padding: 4px;
+      border: 1px solid $gray;
+      dt {
+        @include clearfix;
+        clear: both;
+        float: left;
+        width: 180px;
+        min-height: 1.0em;
+        padding: 5px 8px;
+        background: rgba(#F9E82B, 0.2);
+      }
+      dd {
+        min-height: 1.5em;
+        margin-left: 205px;
+        padding: 5px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        #executed {
+          display: inline-block;
+        }
+      }
+      dt ~ dt { margin-top: 4px; }
+      dd ~ dd { margin-top: 4px; }
+      dd + dd { margin-top: 4px; }
+    }
+  }
+  nav.related-pages {
+    margin-top: 28px;
+    border: 1px solid $gray;
+    header h1 {
+      @include box-sizing(border-box);
+      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+      padding: 12px 0 5px 10px;
+      border-bottom: 2px solid $blue;
+      color: $blue;
+      font-size: $px16;
+      line-height: 1.3;
+    }
+    .pages {
+      padding: 0 7px;
+      border-top: none;
+      article {
+        padding: 8px;
+        border-bottom: 1px dotted #cccccc;
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// .idea-page-contents point
+.s-idea .idea-page-contents {
+  .point {
+    float: right;
+    margin-bottom: $box-margin;
+    .count {
+      width: 270px;
+      margin-bottom: 10px;
+      padding: 15px 0;
+      border: 1px solid $gray;
+      text-align: center;
+      span.number {
+        padding: 0 40px;
+        background: url(../img/ic-like02.png) no-repeat left 4px;
+        font-size: $px32;
+      }
+      span.label {
+        display: block;
+      }
+    }
+    .update {
+      display: inline-block;
+      padding: 5px 20px 5px 40px;
+      @include border-radius(5px);
+      text-decoration: none;
+    }
+    .add {
+      border: 1px solid #282828;
+      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
+      color: $white;
+      &:hover {
+        background-color: #666666;
+      }
+    }
+    .cancel {
+      border: 1px solid #bdbdbd;
+      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
+      color: $text;
+      &:hover {
+        background-color: #dedede;
+      }
+    }
+  }
+}
+
 
 // <スパークル>--------------------------------------------------------------------------------------------------------
 
