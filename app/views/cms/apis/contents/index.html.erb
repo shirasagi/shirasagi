@@ -38,8 +38,8 @@ $ ->
       </thead>
       <tbody>
       <% @pages.each do |item| %>
-        <% readable = item.becomes_with_route.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <% editable = item.becomes_with_route.allowed?(:read, @cur_user, site: @cur_site) %>
+        <% readable = item.becomes_with_route.allowed?(:read, @cur_user, site: @cur_site) %>
+        <% editable = item.becomes_with_route.allowed?(:edit, @cur_user, site: @cur_site) %>
         <tr>
           <td class="checkbox">
             <%= check_box_tag("page_ids[]", item.id, false, (editable ? {} : { disabled: true })) %>
@@ -71,8 +71,8 @@ $ ->
       </thead>
       <tbody>
       <% @parts.each do |item| %>
-        <% readable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <% editable = item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <% readable = item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <% editable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <tr>
           <td class="checkbox">
             <%= check_box_tag("part_ids[]", item.id, false, (editable ? {} : { disabled: true })) %>
@@ -104,8 +104,8 @@ $ ->
       </thead>
       <tbody>
       <% @layouts.each do |item| %>
-        <% readable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <% editable = item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <% readable = item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <% editable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <tr>
           <td class="checkbox">
             <%= check_box_tag("layout_ids[]", item.id, false, (editable ? {} : { disabled: true })) %>
@@ -122,4 +122,3 @@ $ ->
     </table>
   </dd>
 </dl>
-
