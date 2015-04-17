@@ -11,5 +11,6 @@ class Sys::Test::HttpController < ApplicationController
   public
     def index
       raise "403" unless Sys::User.allowed?(:edit, @cur_user)
+      raise "403" unless Rails.env.development?
     end
 end

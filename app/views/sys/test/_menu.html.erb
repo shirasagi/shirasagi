@@ -1,4 +1,4 @@
 <nav class="act-menu">
-  <%= link_to "HTTP Test", sys_test_http_path %>
   <%= link_to "MAIL Test", sys_test_mail_path %>
+  <%= link_to "HTTP Test", sys_test_http_path if Rails.env.development? %>
 </nav>

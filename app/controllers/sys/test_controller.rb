@@ -3,6 +3,6 @@ class Sys::TestController < ApplicationController
 
   public
     def index
-      redirect_to sys_test_http_path
+      redirect_to sys_test_mail_path
     end
 end
