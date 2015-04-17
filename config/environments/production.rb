@@ -13,7 +13,6 @@ Rails.application.configure do
   # config.action_dispatch.rack_cache = true
 
   # Asset pipeline.
-  #config.serve_static_assets = true
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :sass

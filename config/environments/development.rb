@@ -18,12 +18,11 @@ Rails.application.configure do
   config.active_support.deprecation = :log
 
   # Asset pipeline.
-  #config.serve_static_assets = true
-  config.assets.debug = true
-  #config.assets.raise_runtime_errors = true
-  config.assets.compress = false
-  config.sass.debug_info = true
+  config.assets.debug = false
+  config.assets.compress = true
+  config.sass.debug_info = false
   config.assets.prefix = "/assets-dev"
+  #config.assets.raise_runtime_errors = true
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
