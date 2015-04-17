@@ -7,27 +7,6 @@
   <dd><%= @item.user_count %></dd>
 </dl>
 
-<%= scss do %>
-  .ldap-import-groups-and-users {
-    margin: 0px;
-    border: solid 1px #dedede;
-    > dl + dl { margin-top: 20px; }
-  }
-
-  .ldap-import-groups-and-users-title {
-    background: #dedede;
-  }
-
-  .ldap-import-groups {
-    > dl ~ dl { margin-top: 20px; }
-    > dl + dl { margin-top: 10px; }
-  }
-
-  .ldap-import-users {
-    margin-left: 0px;
-  }
-<% end %>
-
 <%
    def render_groups_and_users(groups)
      ret = ""

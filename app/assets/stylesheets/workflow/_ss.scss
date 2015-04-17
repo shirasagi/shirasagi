@@ -1,0 +1,23 @@
+.mod-workflow-approve, .mod-workflow-request {
+  margin: 0px 0px 15px;
+  padding: 5px 15px;
+  border: 1px solid #ccc;
+  h1 {
+    margin: -5px -15px 15px;
+    padding: 8px 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+  }
+  .buttons {
+    margin: 10px 0px 10px;
+    button {
+      margin: 0px 10px 0px 0px;
+      padding: 0px 30px;
+    }
+  }
+}
+
+.workflow-level-header {
+  font-weight: bold;
+  margin-top: 15px;
+}

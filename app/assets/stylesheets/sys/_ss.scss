@@ -1,0 +1,18 @@
+#http-tester {
+  h2 {
+    padding: 5px 10px;
+    background-color: #888;
+    color: #fff;
+  }
+  .buttons {
+    margin: 0px 0px 15px;
+    button { width: 100px; min-height: 3em; margin: 0px 10px 0px 0px; }
+  }
+
+  .view {
+    #queue { width: 120px; text-align: right; }
+    div { margin: 10px 0px; }
+    textarea { width: 90% !important; height: 200px; }
+  }
+}
+

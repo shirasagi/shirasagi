@@ -1,29 +1,3 @@
-<%= scss do %>
-.routes-view {
-  article {
-    clear: both;
-    float: left;
-    width: 100%;
-    padding: 5px 0px;
-    border-bottom: 1px solid #ddd;
-    h1 {
-      clear: both;
-      float: left;
-      width: 160px;
-      padding: 5px;
-    }
-    div {
-      float: left;
-      a {
-        display: inline-block;
-        margin: 0px 5px 0px 0px;
-        padding: 5px;
-      }
-    }
-  }
-}
-<% end %>
-
 <article class="routes-view">
   <% @items.each do |mod_name, mod| %>
   <article>

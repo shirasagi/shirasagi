@@ -1,14 +1,3 @@
-<%= scss do %>
-.history-backup {
-  th {
-    width: auto;
-  }
-  td.diff {
-    background-color: #ffc;
-  }
-}
-<% end %>
-
 <div class="addon-view">
   <table class="see history-backup">
     <% @item.data.sort.each do |k, v| %>

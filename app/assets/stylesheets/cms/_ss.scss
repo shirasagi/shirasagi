@@ -1,0 +1,47 @@
+.routes-view {
+  article {
+    clear: both;
+    float: left;
+    width: 100%;
+    padding: 5px 0px;
+    border-bottom: 1px solid #ddd;
+    h1 {
+      clear: both;
+      float: left;
+      width: 160px;
+      padding: 5px;
+    }
+    div {
+      float: left;
+      a {
+        display: inline-block;
+        margin: 0px 5px 0px 0px;
+        padding: 5px;
+      }
+    }
+  }
+}
+
+#task-form {
+  .info {
+    margin: 0px 0px 15px;
+    dt, dd {
+      display: inline-block;
+      padding: 5px 10px;
+    }
+    dt {
+      background-color: #888;
+      color: #fff;
+    }
+    dd {
+      min-width: 60px;
+      margin: 0px;
+    }
+  }
+  .logs {
+    textarea {
+      height: 300px;
+      background-color: #eee;
+    }
+  }
+}

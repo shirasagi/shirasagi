@@ -12,14 +12,6 @@
      @exclude_groups.include?(group.name)
    end
 %>
-<%= scss do %>
-  dl.ldap-server-groups {
-    margin-top: 15px;
-  }
-  dl.ldap-server-users {
-    margin-top: 15px;
-  }
-<% end %>
 
 <% if @errors.present? %>
 <div class="errorExplanation" id="errorExplanation">

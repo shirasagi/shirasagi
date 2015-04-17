@@ -1,0 +1,580 @@
+@import "ss/init";
+
+// -------------------------------------------------------------------------------------------------
+// base
+
+html, body {
+  height: 100%;
+  margin: 0px;
+  color: $black;
+}
+header, footer, nav, section, article, figure, aside {
+  display: block;
+  margin: 0px;
+}
+body {
+  font-family: $font-base;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+h1, h2, h3, h4, h5, p {
+  margin: 0px;
+  font-size: 100%;
+  font-weight: normal;
+}
+a {
+  color: $blue;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+  line-height: 0;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  empty-cells: show;
+}
+th {
+  font-size: 100%;
+  font-weight: normal;
+  text-align: left;
+}
+td {
+  font-size: 100%;
+}
+
+// -------------------------------------------------------------------------------------------------
+// form
+
+@mixin input {
+  border: 1px solid $gray4;
+  @include box-sizing(border-box);
+  background-color: #fff;
+  &:focus {
+    @include box-shadow(inset 0 0 3px $gray4);
+  }
+}
+select, input, textarea, button {
+  font-size: 100%;
+  font-family: $font-base;
+}
+button {
+  @include btn;
+}
+select {
+  @include input;
+  max-width: 95%;
+  padding: 4px;
+}
+input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
+input[type=email], input[type=number], input[type=tel] {
+  @include input;
+  width: 80%;
+  height: 2.5em;
+  padding: 3px 5px;
+}
+input[type=number] {
+  width: 12em;
+}
+input.number {
+  ime-mode: disabled;
+}
+input.filename {
+  width: 25em;
+  ime-mode: disabled;
+}
+input.date {
+  width: 9em;
+  text-align: center;
+}
+input.datetime {
+  width: 12em;
+  text-align: center;
+}
+textarea {
+  @include input;
+  width: 100%;
+  height: 6.5em;
+  padding: 5px 5px;
+  line-height: 1.4;
+}
+textarea.code {
+  height: 30em;
+  font-size: 120%;
+  font-family: monospace;
+}
+.CodeMirror {
+  @include box-sizing(border-box);
+}
+form .CodeMirror {
+  border: 1px solid #ccc;
+}
+
+// -------------------------------------------------------------------------------------------------
+// common view
+
+#ajax-box {
+  margin: 10px;
+}
+.main-view  {
+  @include main-view;
+}
+.addon-view {
+  margin: 0px 0px 20px;
+  padding-left: 10px;
+  header {
+    min-width: 130px;
+    margin-left: -10px;
+    margin-bottom: 10px;
+    border-bottom: $border-white;
+    color: $black;
+    font-size: 120%;
+    h2 {
+      padding: 5px 2px;
+      border-bottom: $border-gray4;
+      color: $gray5;
+    }
+  }
+  .see {
+    margin-top: 15px;
+  }
+  + footer.send {
+    border-top: 1px solid #ddd;
+  }
+  .toggle {
+    margin: 0px 0px 20px -10px;
+    a {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #e4e4e4;
+      color: #444;
+    }
+  }
+}
+.file-view {
+  float:left;
+  width: 150px;
+  margin: 0px 15px 15px 0px;
+  .thumb {
+    display: block !important;
+    height: 110px;
+    border: 1px solid #ddd;
+    color: #888;
+    text-align: center;
+    line-height: 110px;
+    &:hover {
+      background-color: #eee;
+      text-decoration: none;
+    }
+    img {
+      vertical-align: middle;
+    }
+    .ext {
+      display: block;
+      overflow: hidden;
+      color: #484;
+      font-size: 200%;
+      font-weight: bold;
+    }
+  }
+  .name {
+    overflow: hidden;
+    padding: 10px 0;
+    font-size: 90%;
+    @include ellipsis;
+    word-wrap: nowrap;
+  }
+  .menu {
+    float: right;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// form
+
+#notice {
+  display: table;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+  width: 100%;
+  height: 40px;
+  padding: 0px 10px;
+  @include box-sizing(border-box);
+  box-shadow: 0px 1px 2px #888;
+  background-color: #48f;
+  background-color:rgba(40, 80, 120, 0.8);
+  color: #fff;
+  line-height: 2.4;
+  .wrap {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
+#errorExplanation {
+  margin: 0px 0px 20px;
+  padding: 20px 20px;
+  border-bottom: 1px solid #fbc;
+  background-color: #fff;
+  h2 {
+    margin: -20px -20px 25px;
+    padding: 4px 8px;
+    background-color: #e78;
+    color: #fff;
+  }
+  p, ul {
+    color: #822;
+  }
+}
+#alertExplanation {
+  margin: 0px 0px 20px;
+  padding: 20px 20px;
+  border-bottom: 1px solid #fbc;
+  background-color: #fff;
+  h2 {
+    margin: -20px -20px 25px;
+    padding: 4px 8px;
+    background-color: #e78;
+    color: #fff;
+  }
+  p, ul {
+    //white-space: nowrap;
+    color: #822;
+  }
+}
+.field_with_errors {
+  input, textarea, select {
+    display: inline;
+    border: 1px solid #e00;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// common
+
+.monospace {
+  font-family: "Osaka−等幅", "ＭＳ ゴシック", "MS Gothic", "monospace";
+}
+.pagination {
+  @include clear;
+  margin: 20px 0px;
+  span a, .current, .gap {
+    float: left;
+    min-width: 20px;
+    margin: 0px 4px 0px 0px;
+    padding: 6px 2px;
+    @include box-shadow(0px 0px 3px #aaa);
+    background-color: #fff;
+    color: #444;
+    text-align: center;
+  }
+  span:first-child {
+    margin-left: 0px;
+    a { margin-left: 0px; }
+  }
+  .first a, .last a {
+    min-width: 20px;
+  }
+  .prev a, .next a  {
+    min-width: 50px;
+  }
+  .current {
+    background-color: #777;
+    color: #fff;
+  }
+  a:hover {
+    //background-color: #ddd;
+    color: #e00;
+    text-decoration: none;
+  }
+}
+dl.see {
+  margin: 0px;
+  > dt {
+    @include clear;
+    float: left;
+    min-width: 160px;
+    min-height: 1.0em;
+    color: $black;
+    font-weight: bold;
+  }
+  > dd {
+    min-height: 1.41em;
+    @include clear;
+    margin: 0px 0px 0px 160px;
+  }
+  > dt ~ dt { margin-top: 20px; }
+  > dd ~ dd { margin-top: 20px; }
+  > dd + dd { margin-top: 10px; }
+  > dt.wide {
+    float: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  > dd.wide {
+    float: none;
+    margin-left: 0px;
+    padding-top: 0px;
+    border-top: 0px;
+  }
+}
+footer.send {
+  padding: 20px 0px;
+  text-align: center;
+  input, button {
+    min-width: 120px;
+    margin: 0px 5px;
+    padding: 10px 10px;
+    border: 1px solid #ccc;
+    @include border-radius(4px);
+    @include box-shadow(0 1px 0 $white);
+    @include grd-btn;
+    cursor: pointer;
+    &:hover {
+      background: $gray1;
+    }
+  }
+  input.publish_save, input.save, button.save, input.delete {
+    border: 1px solid #c1447d;
+    @include grd-pink;
+    color: $white;
+    &:hover {
+      background: $pink;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// addon
+
+#addon-cms-agents-addons-file .see, .addon-view .see {
+  .cboxElement {
+    @include btn;
+    display: inline-block;
+    line-height: 1.4;
+  }
+  #selected-files {
+    margin-top: 30px;
+    @include clear;
+  }
+}
+.category-form {
+  line-height: 2.5;
+  label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  div.parent {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: $border-gray4;
+    font-weight: bold;
+    .child {
+      position: relative;
+      padding: 5px 0 5px 30px;
+      border-top: $border-gray4;
+      font-weight: normal;
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-top: $border-white;
+      }
+    }
+    .grandchild > label {
+      clear: both;
+      display: block;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// icon
+
+@mixin ss-icon {
+  &:before {
+    display: inline-block;
+    position: relative;
+    bottom: -1px;
+    width: 12px;
+    height: 12px;
+    margin: 0px 4px 0px 0px;
+    text-indent: -99px;
+    background-image: image-url("ss/icons.png");
+    content: " ";
+    @content;
+  }
+}
+a.icon-content { @include ss-icon { background-position: -0px 0px; } }
+a.icon-node    { @include ss-icon { background-position: -15px 0px; } }
+a.icon-node-up { @include ss-icon { background-position: -30px 0px; } }
+a.icon-page    { @include ss-icon { background-position: -45px 0px; } }
+a.icon-layout  { @include ss-icon { background-position: -60px 0px; } }
+a.icon-part    { @include ss-icon { background-position: -75px 0px; } }
+a.icon-conf    { @include ss-icon { background-position: -90px 0px; } }
+a.external {
+  &:after {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+    text-indent: -99px;
+    background-image: image-url("ss/icons.png");
+    background-position: -0px -15px;
+    content: " ";
+  }
+}
+input.date, input.datetime {
+  padding-left: 20px;
+  background: $white image-url("ss/calendar.png") no-repeat 5px center;
+}
+
+// -------------------------------------------------------------------------------------------------
+// colorbox
+
+#cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
+  display: none !important;
+}
+
+// -------------------------------------------------------------------------------------------------
+// login
+
+.login-box {
+    display: table;
+    width: 300px;
+    padding: 20px 20px;
+    background: $white;
+    header {
+      @include clear;
+      margin-bottom: 20px;
+      h1 {
+        float: left;
+      }
+      .version {
+        float: right;
+        color: $gray5;
+      }
+    }
+    input[type="text"], input[type="password"] {
+      background: $gray2;
+    }
+    footer.send {
+      padding-bottom: 0;
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+// event
+
+.mod-event-additional-info {
+  dt {
+    width: 140px;
+  }
+  dd.value {
+    font-weight: bold;
+  }
+  dd textarea {
+    width: 70%;
+  }
+  .clear {
+    vertical-align: top;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// map
+.mod-map {
+  .keyword {
+    max-width: 400px;
+    margin-bottom: 10px;
+  }
+  .marker-setting {
+    @include clear;
+    dt {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    dd {
+      float: left;
+      margin-left: 0px;
+      margin-right: 40px;
+      p {
+        margin-top: 5px;
+      }
+      &.marker {
+        padding-bottom: 30px
+      }
+      .marker-name,.marker-text {
+        width: 260px;
+      }
+      &:last-child {
+        width: 260px;
+      }
+    }
+  }
+}
+#map-canvas {
+  img {
+    max-width: none;
+  }
+  .marker-info {
+    white-space: nowrap;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// facility
+
+.mod-facility-additional-info {
+  dt {
+    width: 140px;
+  }
+  dd.value {
+    font-weight: bold;
+  }
+  dd textarea {
+    width: 70%;
+  }
+  .clear {
+    vertical-align: top;
+  }
+}
+#facility-info {
+  dl.body {
+    float: left;
+    width: 540px;
+    margin-bottom: 10px;
+  }
+  .summary {
+    @include clear;
+  }
+  .images .image {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+  }
+  .map-pages {
+    margin-top: 10px;
+  }
+}
+#addon-facility-agents-addons-body ~ #addon-cms-agents-addons-release {
+  .mod-cms-release dt:last-of-type,dd:last-of-type {
+    display: none;
+  }
+}
+.image-thumb-size label {
+  font-weight: bold;
+  display: inline-block;
+  _display: inline;
+  margin-right: 12px;
+}

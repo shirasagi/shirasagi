@@ -9,12 +9,6 @@
    group_hierachy = group_hierachy(@entity.parent)
 %>
 
-<%= scss do %>
-.ldap-server-header {
-  margin-bottom: 15px;
-}
-<% end %>
-
 <header class="ldap-server-header">
   <nav>
     <% group_hierachy.each_with_index do |e, idx| %>
