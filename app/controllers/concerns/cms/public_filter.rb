@@ -106,10 +106,11 @@ module Cms::PublicFilter
       response.headers["Expires"] = 1.days.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
       response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
-      if Fs.mode == :grid_fs
-        return send_data Fs.binread(file), type: Fs.content_type(file)
+      if Fs.mode == :file
+        send_file file, disposition: :inline, x_sendfile: true
+      else
+        send_data Fs.binread(file), type: Fs.content_type(file)
       end
-      send_file file, disposition: :inline, x_sendfile: true
     end
 
     def send_part(body)

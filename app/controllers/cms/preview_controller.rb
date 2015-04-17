@@ -38,11 +38,12 @@ class Cms::PreviewController < ApplicationController
           width  = params[:width]
           height = params[:height]
 
-          send_thumb @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline,
-            width: width, height: height
+          send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+            disposition: :inline, width: width, height: height
           return
         else
-          send_data @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline
+          send_file @item.path, type: @item.content_type, filename: @item.filename,
+            disposition: :inline, x_sendfile: true
           return
         end
       end

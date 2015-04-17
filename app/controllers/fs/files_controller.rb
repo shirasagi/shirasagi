@@ -18,7 +18,13 @@ class Fs::FilesController < ApplicationController
       set_item
       set_last_modified
 
-      send_data @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline
+      if Fs.mode == :file && Fs.file?(@item.path)
+        send_file @item.path, type: @item.content_type, filename: @item.filename,
+          disposition: :inline, x_sendfile: true
+      else
+        send_data @item.read, type: @item.content_type, filename: @item.filename,
+          disposition: :inline
+      end
     end
 
     def thumb
