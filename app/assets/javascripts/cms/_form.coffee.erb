@@ -1,17 +1,16 @@
-## cms form
+class @Cms_Form
+  @render: ->
+    #$(window).load ->
+    Syntax_Checker.render()
+    Link_Checker.render()
 
-$(window).load ->
-  Syntax_Checker.render()
-  Link_Checker.render()
+    Form_Alert.addValidation(Form_Alert.clonedName)
+    Form_Alert.addValidation(Form_Alert.presence)
+    Form_Alert.addValidation(Syntax_Checker.validateHtml)
 
-  Form_Alert.addValidation(Form_Alert.clonedName)
-  Form_Alert.addValidation(Form_Alert.presence)
-  Form_Alert.addValidation(Syntax_Checker.validateHtml)
-
-  if Syntax_Checker.autoCorrect
-    Form_Alert.addBeforeSave(Syntax_Checker.correctAll)
-
-  Form_Alert.render()
+    if Syntax_Checker.autoCorrect
+      Form_Alert.addBeforeSave(Syntax_Checker.correctAll)
+    Form_Alert.render()
 
 class @Syntax_Checker
   @message = {

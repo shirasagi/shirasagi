@@ -1,43 +1,41 @@
-## event form
-
-$ ->
-  if $("form .mod-event").length
-    $(".mod-event button:button.add-date").click ->
-      if $(".mod-event dd.dates").length < Event_Form.maxTermForm
-        Event_Form.cloneTermForm()
-      return
-
-    $(".mod-event button:button.clear").click ->
-      start = $(this).parent("dd").find(".start").val()
-      close = $(this).parent("dd").find(".close").val()
-      if start != "" ||  close != ""
-        if confirm(Event_Form.deleteMessage)
-          Event_Form.clearTermForm $(this).parent("dd")
-      else
-        Event_Form.clearTermForm $(this).parent("dd")
-      return
-
-    $("form").submit ->
-      terms = $(".mod-event dd.dates")
-      dates = []
-
-      for term in terms
-        add = Event_Form.termToDates($(term).find(".start").val(), $(term).find(".close").val())
-        dates = dates.concat(add)
-
-      $(".mod-event .event-dates").val Event_Form.datesToString(dates)
-      return
-
-#    $(".mod-event input.date").datepicker
-#      dateFormat: "yy/mm/dd",
-#      yearRange: "-10:+10"
-
-    Event_Form.setStoredDates()
-    return
-
 class @Event_Form
   @maxTermForm = 10
   @deleteMessage = "<%= I18n.t('event.confirm.delete_date') %>"
+
+  @render: ->
+    if $("form .mod-event").length
+      $(".mod-event button:button.add-date").click ->
+        if $(".mod-event dd.dates").length < Event_Form.maxTermForm
+          Event_Form.cloneTermForm()
+        return
+
+      $(".mod-event button:button.clear").click ->
+        start = $(this).parent("dd").find(".start").val()
+        close = $(this).parent("dd").find(".close").val()
+        if start != "" ||  close != ""
+          if confirm(Event_Form.deleteMessage)
+            Event_Form.clearTermForm $(this).parent("dd")
+        else
+          Event_Form.clearTermForm $(this).parent("dd")
+        return
+
+      $("form").submit ->
+        terms = $(".mod-event dd.dates")
+        dates = []
+
+        for term in terms
+          add = Event_Form.termToDates($(term).find(".start").val(), $(term).find(".close").val())
+          dates = dates.concat(add)
+
+        $(".mod-event .event-dates").val Event_Form.datesToString(dates)
+        return
+
+#      $(".mod-event input.date").datepicker
+#        dateFormat: "yy/mm/dd",
+#        yearRange: "-10:+10"
+
+      Event_Form.setStoredDates()
+      return
 
   @dateToString: (date)->
     yy = date.getYear()

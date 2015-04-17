@@ -1,8 +1,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.cookie
-#//= #require jquery.turbolinks
-#//= #require turbolinks
+//= require_self
+//= require ss/_mobile
+//= require ads/_cms
+//= require event/_cms
 
 $ ->
   SS_Kana.render()
@@ -139,29 +141,6 @@ class @SS_AdobeReader
     if $("a[href$='.pdf']").length
       $("#ss-adobe-reader, .ss-adobe-reader").each ->
         $(this).html('<%= I18n.t('cms.adobe_reader.remark').join %>').show()
-
-class @SS_Mobile
-  @render: ->
-    if navigator.userAgent.match(/(Android|iPad|iPhone)/)
-      if $.cookie("ss-mobile") == "pc"
-        head = $("head")
-        head.children("meta[name=viewport]").remove()
-        head.append '<meta name="viewport" content="width=1024" />'
-        vr = $("#ss-mb")
-        vr.html('<a href="#" onclick="return SS_Mobile.unset()">' + vr.text() + '</a>').show()
-      else
-        vr = $("#ss-pc")
-        vr.html('<a href="#" onclick="return SS_Mobile.setPc()">' + vr.text() + '</a>').show()
-
-  @unset: ->
-    $.removeCookie("ss-mobile", { expires: 7, path: '/' })
-    location.reload()
-    return false
-
-  @setPc: ->
-    $.cookie("ss-mobile", "pc", { expires: 7, path: '/' })
-    location.reload()
-    return false
 
 class @SS_Tabs
   @render: (elem) ->

@@ -1,0 +1,1 @@
+//= require event/_form

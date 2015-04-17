@@ -1,0 +1,135 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery.cookie
+//= require_self
+//= require ss/_mobile
+//= require ss/_list_ui
+//= require ss/_addon_tabs
+//= require ss/_tooltips
+//= require ss/_debug
+//= require ss/_search_ui
+//= require cms/_ss
+//= require event/_ss
+//= require map/_ss
+
+<% environment.context_class.instance_eval { include ApplicationHelper } %>
+
+##
+#  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
+##
+
+$ ->
+  # $.ajaxSetup
+  #   headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
+
+  SS.render()
+
+  # navi
+  path = location.pathname + "/"
+  $("#navi .main-menu a, #navi .sub-menu a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
+
+  # pulldown menu
+  if $(window).width() >= 800
+    menu = $(".pulldown-menu")
+    link = menu.find("a")
+    menu.each ->
+      link.not(".current").hide()
+      link.filter(".current").prependTo(menu).click ->
+        link.not(".current").slideToggle("fast")
+        return false
+
+  SS_ListUI.render("table.index")
+  SS_Mobile.render()
+  SS_AddonTabs.render()
+  SS_Tooltips.render(".tooltip")
+  SS_SearchUI.render()
+
+class @SS
+  @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+
+  @render:(box = null) ->
+    if box
+      anchorCallback = ()->
+        $("#cboxLoadedContent a").each ->
+          elem = $(this)
+          elem.addClass("cboxElement")
+          if !elem.attr("target") && !elem.data("target")
+            elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
+
+      $(box).find("a").each ->
+        elem = $(this)
+        if !elem.attr("target") && !elem.data("target")
+          elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
+
+    # default
+    box = $(document)
+
+    # external links
+    box.find("a[href^=http]").each ->
+      $(this).addClass("external")
+
+    # ajax to (color)box
+    box.find(".ajax-box").each ->
+      elem = $(this)
+      return true if elem.hasClass("cboxElement")
+      if !elem.attr("target") && !elem.data("target")
+        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+
+  @ajaxForm:(elem, params = {}) ->
+    elem = $(elem)
+    defaults = {
+      url: elem.attr("action") + ".json"
+      dataType: "json"
+      success: ->
+        #
+      error: (data, status) ->
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+    }
+    elem.on "submit", (e) ->
+      $(this).ajaxSubmit $.extend(defaults, params)
+      e.preventDefault();
+
+  @ajax:(elem, params = {}) ->
+    $(elem).click (e) ->
+      self = $(this)
+      defaults = {
+        url: self.attr("href")
+        beforeSend: ->
+          self.html SS.loading
+        success: ->
+          console.log "success"
+        error: (data, status) ->
+          alert("== Error ==");
+      }
+      $.ajax $.extend(defaults, params)
+      e.preventDefault();
+      return false
+
+  @ajaxDelete:(elem, params = {}) ->
+    $(elem).click (e) ->
+      return false if !confirm("<%= t "views.confirm.delete" %>")
+      self = $(this)
+      defaults = {
+        type: "DELETE",
+        data: "_method=delete",
+        url: self.attr("href") + ".json"
+        dataType: "json"
+        beforeSend: ->
+          self.html SS.loading
+        success: ->
+          $(self.data("remove")).remove() if self.data("remove")
+        error: (data, status) ->
+          alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+      $.ajax $.extend(defaults, params)
+      e.preventDefault();
+      return false
+
+  @confirmUnloading: ->
+    $("input[type=text],textarea,select").change ->
+      $(window).on "beforeunload", ->
+        return "<%= t('views.confirm.unload') %>"
+    $("input[type=submit]").click ->
+      $(window).off "beforeunload"
