@@ -34,10 +34,4 @@ SS::Application.routes.draw do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
   end
 
-  namespace "event", path: ".:site/event" do
-    namespace "apis" do
-      get "categories" => "categories#index"
-    end
-  end
-
 end
