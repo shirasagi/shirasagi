@@ -23,8 +23,6 @@ ja:
       event/page_list: リスト表示
       event/body: イベント情報
       event/additional_info: 追加情報
-      event/category/category: カテゴリー
-      event/category/setting: カテゴリー
 
   cms:
     nodes:

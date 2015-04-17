@@ -6,9 +6,9 @@ class Event::Page
   include Cms::Addon::RelatedPage
   include Cms::Addon::Body
   include Cms::Addon::File
+  include Category::Addon::Category
   include Event::Addon::Body
   include Event::Addon::AdditionalInfo
-  include Event::Addon::Category::Category
   include Event::Addon::Date
   include Workflow::Addon::Approver
   include History::Addon::Backup

@@ -7,8 +7,8 @@ module Event::Node
 
   class Page
     include Cms::Node::Model
+    include Category::Addon::Setting
     include Event::Addon::PageList
-    include Event::Addon::Category::Setting
 
     default_scope ->{ where(route: "event/page") }
 
