@@ -65,7 +65,6 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
-  #gem 'rack-mini-profiler'
 
   # DatabaseCleaner
   #
@@ -89,4 +88,5 @@ group :development do
   gem 'brakeman', require: false
   gem 'guard-brakeman', require: false
   gem 'yard', require: false
+  #gem 'rack-mini-profiler'
 end
