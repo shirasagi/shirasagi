@@ -1,7 +1,4 @@
-<%= coffee do %>
-$ ->
-  SS_AddonTabs.toggleView(".mod-contact-page")
-<% end %>
+<%= jquery do %> SS_AddonTabs.toggleView(".mod-contact-page"); <% end %>
 
 <dl class="see mod-contact-page">
   <dt><%= @model.t :contact_state %><%= @model.tt :contact_state %></dt>

@@ -1,8 +1,4 @@
-<%= coffee do %>
-$ ->
-  SS_AddonTabs.toggleView(".mod-cms-owner_permission")
-
-<% end %>
+<%= jquery do %> SS_AddonTabs.toggleView(".mod-cms-owner_permission"); <% end %>
 
 <dl class="see mod-cms-owner_permission">
   <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>

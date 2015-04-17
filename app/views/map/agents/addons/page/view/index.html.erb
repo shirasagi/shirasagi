@@ -1,12 +1,12 @@
 <% return unless @cur_page.map_points.present? %>
 
 <%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
-<%= javascript_include_tag "map/public" %>
-<%= coffee do %>
+<%= jquery do %>
 
-$(window).on "load", ->
-  Map.load(document.getElementById("map-canvas"))
-  Map.setMarkers(<%= raw @cur_page.map_points.to_json %>)
+$(window).on("load", function() {
+  Map.load(document.getElementById("map-canvas"));
+  Map.setMarkers(<%= raw @cur_page.map_points.to_json %>);
+});
 
 <% end %>
 

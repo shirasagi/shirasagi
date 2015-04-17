@@ -1,11 +1,9 @@
-<% controller.class.javascript "event/form" %>
-<%= coffee do%>
-$ ->
-  SS_AddonTabs.toggleView(".mod-event")
+<%= jquery do%>
+  SS_AddonTabs.toggleView(".mod-event");
+  Event_Form.render();
 
-  $(".mod-event .date").datetimepicker
-    lang: "ja", timepicker: false, scrollInput: false, closeOnDateSelect: true, format: "Y/m/d"
-
+  $(".mod-event .date").
+    datetimepicker({ lang: "ja", timepicker: false, scrollInput: false, closeOnDateSelect: true, format: "Y/m/d" });
 <% end %>
 
 <dl class="see mod-event">

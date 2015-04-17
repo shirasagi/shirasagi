@@ -1,7 +1,8 @@
 <%= html_editor ".mod-cms-body .html" %>
-<% controller.class.javascript "cms/form" %>
-<%= coffee do %>
-Link_Checker.rootUrl = "<%= @cur_site.full_url %>"
+
+<%= jquery do %>
+  Link_Checker.rootUrl = "<%= @cur_site.full_url %>";
+  Cms_Form.render();
 <% end %>
 
 <dl class="see mod-cms-body">

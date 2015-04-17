@@ -1,16 +1,13 @@
 <%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
-<% controller.class.javascript "map/public" %>
-<% controller.class.javascript "map/form" %>
-<%= coffee do %>
-$ ->
-  SS_AddonTabs.toggleView(".mod-map")
+<%= jquery do %>
+  SS_AddonTabs.toggleView(".mod-map");
 
-  $(".mod-map").parent().find(".toggle a").click ->
-    google.maps.event.trigger Map.map, "resize"
+  $(".mod-map").parent().find(".toggle a").click(function() {
+    google.maps.event.trigger(Map.map, "resize");
+  });
 
-  Map.load(document.getElementById("map-canvas"))
-  Map_Form.setMarkers()
-
+  Map.load(document.getElementById("map-canvas"));
+  Map_Form.setMarkers();
 <% end %>
 
 <div class="mod-map">

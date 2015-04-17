@@ -1,7 +1,4 @@
-<%= coffee do %>
-$ ->
-  SS_AddonTabs.toggleView(".mod-cms-related_pages")
-<% end %>
+<%= jquery do %> SS_AddonTabs.toggleView(".mod-cms-related_pages"); <% end %>
 
 <dl class="see mod-cms-related_pages">
   <dt><%= @model.t :related_pages %><%= @model.tt :page_ids %></dt>

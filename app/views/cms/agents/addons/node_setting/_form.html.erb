@@ -1,8 +1,4 @@
-<%= coffee do %>
-$ ->
-  SS_AddonTabs.toggleView(".mod-cms-node_setting")
-<% end %>
-
+<%= jquery do %> SS_AddonTabs.toggleView(".mod-cms-node_setting"); <% end %>
 <%
 
 view_route = params[:route] ? params[:route] : @item.route

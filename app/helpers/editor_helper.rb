@@ -29,21 +29,13 @@ module EditorHelper
       end
     end
 
-    h <<  coffee do
-      j  = []
-      j << %($ ->)
-      j << %(  $\("#{elem}"\).each -> )
-      j << %(    form = $(this))
-      j << %(    cm = CodeMirror.fromTextArea form.get(0), )
-      j << %(      mode: "#{mode}" ) if mode.present?
-      j << %(      lineNumbers: true )
-      j << %(      readOnly: true ) if opts[:readonly]
-      j << %(      #viewportMargin: Infinity ) if opts[:readonly]
-      j << %(    cm.setSize null, form.height() ) #if opts[:readonly].blank?
-      j << %(    cm.refresh() ) if opts[:readonly].blank?
-      j << %(    form.data "editor", cm )
+    h <<  jquery do
+      editor_opts = {}
+      editor_opts[:mode]        = mode if mode.present?
+      editor_opts[:readOnly]    = true if opts[:readonly]
+      editor_opts[:lineNumbers] = true
 
-      j.join("\n").html_safe
+      "Cms_Editor_CodeMirror.render('#{elem}', #{editor_opts.to_json});".html_safe
     end
 
     h.join("\n").html_safe
@@ -75,40 +67,9 @@ module EditorHelper
     opts[:allowedContent] = true
     opts[:height] ||= "360px"
 
-    h  = []
-    h <<  coffee do
-      j = []
-      j << %($ ->)
-      j << %(  $\("#{elem}"\).ckeditor #{opts.to_json})
-
-      j << %(  CKEDITOR.on 'dialogDefinition', (ev) -> )
-      j << %(    name = ev.data.name)
-      j << %(    def  = ev.data.definition)
-      j << %(    if name == 'table')
-      j << %(      info = def.getContents('info'))
-      j << %(      text = info.get('txtWidth'))
-      j << %(      text['default'] = "")
-      j << %(      text = info.get('txtCellSpace'))
-      j << %(      text['controlStyle'] = "display: none")
-      j << %(      text['label'] = "")
-      j << %(      text['default'] = "")
-      j << %(      text = info.get('txtCellPad'))
-      j << %(      text['controlStyle'] = "display: none")
-      j << %(      text['label'] = "")
-      j << %(      text['default'] = "")
-      j << %(      text = info.get('txtBorder'))
-      j << %(      text['controlStyle'] = "display: none")
-      j << %(      text['label'] = "")
-      j << %(      text['default'] = "")
-      j << %(      text = info.get('txtSummary'))
-      j << %(      text['controlStyle'] = "display: none")
-      j << %(      text['label'] = "")
-      j << %(      text['default'] = "")
-
-      j.join("\n").html_safe
+    jquery do
+      "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
     end
-
-    h.join("\n").html_safe
   end
 
   def html_editor_tinymce(elem, opts = {})

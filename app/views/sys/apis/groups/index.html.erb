@@ -1,9 +1,4 @@
-<%= coffee do %>
-
-$ ->
-  SS_SearchUI.modal()
-
-<% end %>
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
 <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search, multipart: true } do |f| %>

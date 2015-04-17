@@ -28,12 +28,5 @@ target = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") :
 </div>
 
 <% if @random %>
-<%= coffee do %>
-wrap = $("#<%= wrap_id %> .banners")
-list = wrap.find("a")
-list = list.sort ->
-  return Math.random() - .5
-list.each ->
-  wrap.append $(this)
-<% end %>
+  <%= jquery do %> Ads_Banner.randomize("#<%= wrap_id %> .banners") <% end %>
 <% end %>

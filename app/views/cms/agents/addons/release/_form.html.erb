@@ -1,12 +1,8 @@
-<%= coffee do%>
-$ ->
-  SS_AddonTabs.toggleView(".mod-cms-release")
+<%= jquery do%>
+  SS_AddonTabs.toggleView(".mod-cms-release");
 
-  $(".mod-cms-release .datetime").datetimepicker
-    lang: "ja"
-    roundTime: 'ceil'
-    step: 15
-
+  $(".mod-cms-release .datetime").
+    datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
 <% end %>
 
 <dl class="see mod-cms-release">

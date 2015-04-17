@@ -35,10 +35,7 @@ def cate_form(item)
 end
 
 %>
-<%= coffee do %>
-$ ->
-  SS_AddonTabs.toggleView(".mod-category-category")
-<% end %>
+<%= jquery do %> SS_AddonTabs.toggleView(".mod-category-category"); <% end %>
 
 <dl class="see mod-category-category category-form">
   <dd class="wide">

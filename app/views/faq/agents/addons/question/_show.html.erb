@@ -1,9 +1,8 @@
 <%= html_editor ".mod-faq-question .html", height: "300px", readonly: true %>
 
-<%= coffee do %>
-$ ->
-  $("dl.mod-cms-body").prevAll("header").text("<%= @model.t :answer %>")
-  $(".addon-tab[data-id='#addon-cms-addons-body']").text("<%= @model.t :answer %>")
+<%= jquery do %>
+  $("dl.mod-cms-body").prevAll("header").text("<%= @model.t :answer %>");
+  $(".addon-tab[data-id='#addon-cms-addons-body']").text("<%= @model.t :answer %>");
 <% end %>
 
 <dl class="see mod-faq-question">
