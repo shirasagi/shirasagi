@@ -2,6 +2,10 @@
 <script src="/assets/js/jquery.colorbox.js"></script>
 <%= coffee do %>
 $ ->
+
+  # Tabs
+  SS_Tabs.render("#idea-tabs-<%= @cur_node.id %>");
+
   # show point
   $.ajax
     url: "<%= @cur_page.point_url %>"
@@ -71,10 +75,43 @@ categories = [
   <% end %>
 </nav>
 
+<div class="idea-tabs tabs"  id="idea-tabs-<%= @cur_node.id %>">
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
+    <header><h1>コメント</h1></header>
+    <div class="pages">
+      <div class="info-wrap">
+        <div id="tab-comment">
+          <header><h1>コメント</h1></header>
+          <div class="comment" id="idea-comments"></div>
+        </div>
+      </div>
+    </div>
+    <nav class="feed"></nav>
+  </article>
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
+    <header><h1>関連データセット</h1></header>
+    <div class="pages">
+      <div id="tab-app">
+        <header><h1>関連データセット</h1></header>
+        <div class="related_dataset" id="related_dataset"></div>
+      </div>
+    </div>
+    <nav class="feed"></nav>
+  </article>
+  <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
+    <header><h1>関連アプリ</h1></header>
+    <div class="pages">
+      <div id="tab-idea">
+        <header><h1>関連アプリ</h1></header>
+        <div class="related_app" id="related_app"></div>
+      </div>
+    </div>
+    <nav class="feed"></nav>
+  </article>
+</div>
+
 <div class="detail">
-
   <div class="info-wrap">
-
     <dl class="author">
       <% if @cur_page.member_id.present? %>
         <dt><%= @cur_page.t :user_id %></dt>
@@ -93,20 +130,12 @@ categories = [
         <dd><%= @cur_page.groups.first.name %><br /></dd>
       <% end %>
 
+      <dt><%= @cur_page.t :commented %></dt>
+      <dd></dd>
+
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %><br /></dd>
     </dl>
   </div>
 </div>
-
-<div id="sidebar">
-  <section>
-    <div id="related_dataset"></div>
-  </section>
-  <section>
-    <div id="related_app"></div>
-  </section>
-</div>
-
-<div class="comment" id="idea-comments"></div>
 

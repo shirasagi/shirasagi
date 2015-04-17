@@ -221,6 +221,7 @@ ja:
         text: コメント
         tags: タグ
         comment_body: 本文
+        commented: 合計コメント数
       opendata/comment:
         text: コメント
         member_name: 投稿者名
