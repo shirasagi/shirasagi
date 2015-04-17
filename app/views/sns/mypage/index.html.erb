@@ -10,7 +10,7 @@
       <% @sites.each do |item| %>
       <tr>
         <td>
-          <div class="name"><%= link_to item.name, "/.#{item.host}" %></div>
+          <div class="name"><%= link_to item.name, cms_contents_path(site: item.host) %></div>
           <div class="url"><%= link_to item.full_url, item.full_url, target: :_blank %></div>
           <nav class="tap-menu">
             <%= link_to :"cms.content", "/.#{item.host}" %>
