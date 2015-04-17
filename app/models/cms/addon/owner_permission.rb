@@ -42,12 +42,14 @@ module Cms::Addon
 
       action = self.class.class_variable_get(:@@_permission_action) || action
 
-      permit = []
-      permit << "#{action}_#{access}_#{self.class.permission_name}"
-      permit << "#{action}_other_#{self.class.permission_name}" if access == :private
+      permits = []
+      permits << "#{action}_#{access}_#{self.class.permission_name}"
+      permits << "#{action}_other_#{self.class.permission_name}" if access == :private
 
-      level = user.cms_roles.site(site).in(permissions: permit).pluck(:permission_level).max
-      (level && level >= permit_level) ? true : false
+      permits.each do |permit|
+        return true if user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
+      end
+      false
     end
 
     module ClassMethods

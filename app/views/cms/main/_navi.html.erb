@@ -3,11 +3,22 @@
   <div>
     <%= link_to :"cms.content", cms_contents_path, class: "icon-content" %>
     <%= link_to :"cms.node", cms_nodes_path, class: "icon-node" %>
-    <%= link_to :"cms.page", cms_pages_path, class: "icon-page" if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to :"cms.part", cms_parts_path, class: "icon-part" if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to :"cms.generate_node", cms_generate_nodes_path, class: "icon-conf" if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to :"cms.generate_page", cms_generate_pages_path, class: "icon-conf" if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+
+    <% if @cur_user.has_role?(:read, Cms::Page, site: @cur_site, node: @cur_node) %>
+      <%= link_to :"cms.page", cms_pages_path, class: "icon-page" %>
+    <% end %>
+    <% if @cur_user.has_role?(:read, Cms::Part, site: @cur_site, node: @cur_node) %>
+      <%= link_to :"cms.part", cms_parts_path, class: "icon-part" %>
+    <% end %>
+    <% if @cur_user.has_role?(:read, Cms::Layout, site: @cur_site, node: @cur_node) %>
+      <%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Cms::Node, site: @cur_site, node: @cur_node) %>
+      <%= link_to :"cms.generate_node", cms_generate_nodes_path, class: "icon-conf" %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Cms::Page, site: @cur_site, node: @cur_node) %>
+      <%= link_to :"cms.generate_page", cms_generate_pages_path, class: "icon-conf" %>
+    <% end %>
   </div>
 </nav>
 
@@ -23,24 +34,45 @@
   <header><h1><%= t :"cms.config" %></h1></header>
   <div>
     <%= link_to :"cms.site", cms_site_path %>
-    <%= link_to :"cms.search_contents", cms_search_contents_path if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.role", cms_roles_path if Cms::Role.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.user", cms_users_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.group", cms_groups_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.member", cms_members_path if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"workflow.name", workflow_routes_path if Workflow::Route.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"ldap", ldap_import_index_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"chorg.revision", chorg_revisions_revisions_path if Chorg::Revision.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.link_check", cms_check_links_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <% unless SS.config.kana.disable %>
-      <%= link_to :"kana.dictionary", kana_dictionaries_path if Kana::Dictionary.allowed?(:edit, @cur_user, site: @cur_site) || Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
+
+    <% if @cur_user.has_role?(:edit, Cms::Site, site: @cur_site) %>
+      <%= link_to :"cms.search_contents", cms_search_contents_path %>
     <% end %>
-    <% unless SS.config.voice.disable %>
-      <%= link_to :"voice.file", voice_files_path if Voice::File.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @cur_user.has_role?(:edit, Cms::Role, site: @cur_site) %>
+      <%= link_to :"cms.role", cms_roles_path %>
     <% end %>
-    <% unless SS.config.job.disable_log %>
-      <%= link_to :"job.log", job_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @cur_user.has_role?(:edit, Cms::User, site: @cur_site) %>
+      <%= link_to :"cms.user", cms_users_path %>
     <% end %>
-    <%= link_to :"history.log", history_cms_logs_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @cur_user.has_role?(:edit, Cms::Group, site: @cur_site) %>
+      <%= link_to :"cms.group", cms_groups_path %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Cms::Group, site: @cur_site) %>
+      <%= link_to :"cms.member", cms_members_path %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Workflow::Route, site: @cur_site) %>
+      <%= link_to :"workflow.name", workflow_routes_path %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Cms::User, site: @cur_site) %>
+      <%= link_to :"ldap", ldap_import_index_path %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Chorg::Revision, site: @cur_site) %>
+      <%= link_to :"chorg.revision", chorg_revisions_revisions_path %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Cms::User, site: @cur_site) %>
+      <%= link_to :"cms.link_check", cms_check_links_path %>
+    <% end %>
+    <% if SS.config.kana.disable.blank? && @cur_user.has_role?(:read, Kana::Dictionary, site: @cur_site) %>
+      <%= link_to :"kana.dictionary", kana_dictionaries_path %>
+    <% end %>
+    <% if SS.config.voice.disable.blank? && @cur_user.has_role?(:edit, Voice::File, site: @cur_site) %>
+      <%= link_to :"voice.file", voice_files_path %>
+    <% end %>
+    <% if SS.config.job.disable_log.blank? && @cur_user.has_role?(:edit, Cms::User, site: @cur_site) %>
+      <%= link_to :"job.log", job_cms_logs_path %>
+    <% end %>
+    <% if @cur_user.has_role?(:edit, Cms::User, site: @cur_site) %>
+      <%= link_to :"history.log", history_cms_logs_path %>
+    <% end %>
   </div>
 </nav>

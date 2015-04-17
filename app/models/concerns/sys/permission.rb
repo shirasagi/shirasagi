@@ -6,7 +6,7 @@ module Sys::Permission
     action = self.class.class_variable_get(:@@_permission_action) || action
     permit = "#{action}_#{self.class.permission_name}"
 
-    role = user.sys_roles.in(permissions: permit).first
+    user.sys_role_permissions[permit].to_i > 0
   end
 
   module ClassMethods

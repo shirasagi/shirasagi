@@ -98,6 +98,14 @@ module SS::User::Model
       end
     end
 
+    def has_role?(action, object, opts = {})
+      object.allowed?(action, self, opts)
+      #@role_caches ||= {}
+      #key = "#{action},#{object.permission_name},#{opts}"
+      #return @role_caches[key] unless @role_caches[key].nil?
+      #@role_caches[key] = object.allowed?(action, self, opts)
+    end
+
   private
     def dbpasswd_authenticate(in_passwd)
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)

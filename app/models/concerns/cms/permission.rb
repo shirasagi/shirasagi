@@ -14,7 +14,7 @@ module Cms::Permission
       return false
     end
 
-    role = user.cms_roles.site(site).in(permissions: permit).first
+    user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
   end
 
   module ClassMethods
