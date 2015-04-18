@@ -57,7 +57,7 @@
 <% if @crumbs.size > 0 %>
 <div id="crumbs">
   <% if @crumbs.size != 1 %>
-    <div class="up"><%= link_to image_tag('/assets/ss/up-folder.png'), @crumbs[-2][1] %></div>
+    <div class="up"><%= link_to image_tag('/assets/img/up-folder.png'), @crumbs[-2][1] %></div>
   <% end %>
   <nav>
     <% @crumbs.each_with_index do |item, idx| %>

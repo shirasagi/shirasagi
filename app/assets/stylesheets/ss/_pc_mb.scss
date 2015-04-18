@@ -1,5 +1,3 @@
-@import "ss/init";
-
 // -------------------------------------------------------------------------------------------------
 // base
 
@@ -410,7 +408,7 @@ footer.send {
     height: 12px;
     margin: 0px 4px 0px 0px;
     text-indent: -99px;
-    background-image: image-url("ss/icons.png");
+    background-image: url(/assets/img/icons.png);
     content: " ";
     @content;
   }
@@ -429,14 +427,14 @@ a.external {
     height: 12px;
     margin-left: 4px;
     text-indent: -99px;
-    background-image: image-url("ss/icons.png");
+    background-image: url(/assets/img/icons.png);
     background-position: -0px -15px;
     content: " ";
   }
 }
 input.date, input.datetime {
   padding-left: 20px;
-  background: $white image-url("ss/calendar.png") no-repeat 5px center;
+  background: $white url(/assets/img/calendar.png) no-repeat 5px center;
 }
 
 // -------------------------------------------------------------------------------------------------

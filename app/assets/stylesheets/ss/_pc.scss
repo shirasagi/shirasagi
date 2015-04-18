@@ -1,4 +1,3 @@
-@import "ss/init";
 
 // -------------------------------------------------------------------------------------------------
 // base
@@ -31,7 +30,7 @@ body {
     a {
       float: left;
       width: 148px;
-      background-image: image-url("ss/logo.png");
+      background-image: url(/assets/img/logo.png);
       background-repeat: no-repeat;
       background-position: center center;
       color: #fff;
@@ -110,7 +109,7 @@ body {
       height: 12px;
       margin: 4px;
       text-indent: -99px;
-      background-image: image-url("ss/icons.png");
+      background-image: url(/assets/img/icons.png);
       background-position:  -15px 0;
       content: " ";
     }
@@ -147,7 +146,7 @@ body {
   margin-bottom: -40px;
   padding: 0 0 50px;
   @include box-sizing(border-box);
-  background: image-url("ss/back.png") no-repeat 98% 98%;
+  background: url(/assets/img/back.png) no-repeat 98% 98%;
 }
 #navi-back, #menu-back {
   position: fixed;

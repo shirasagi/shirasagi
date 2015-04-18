@@ -46,7 +46,11 @@ Rails.application.configure do
   # config.action_controller.asset_host = "http://assets.example.com"
 
   # Precompile additional assets.
-  config.assets.precompile += %w( *.css *.js )
+  #config.assets.precompile += %w( *.css *.js )
+  config.assets.precompile << Proc.new { |path, fn|
+    #fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path))
+    path !~ /\/_/ && fn =~ /app\/assets/ && %w(.js .css).include?(File.extname(path))
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # config.action_mailer.raise_delivery_errors = false
