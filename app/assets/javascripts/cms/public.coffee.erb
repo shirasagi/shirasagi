@@ -3,6 +3,7 @@
 //= require jquery.cookie
 //= require_self
 //= require ss/lib/mobile
+//= require cms/lib/preview
 //= require ads/lib/banner
 //= require event/lib/monthly
 //= require event/lib/calendar
@@ -12,9 +13,9 @@ $ ->
   SS_Font.render()
   SS_AdobeReader.render()
   SS_Mobile.render()
+  SS_Voice.render()
   $(".ss-part").each ->
     SS.renderPart $(this)
-  SS_Voice.render()
 
 class @SS
   @head = ""
