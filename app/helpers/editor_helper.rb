@@ -42,12 +42,12 @@ module EditorHelper
 
   def html_editor(elem, opts = {})
     case SS.config.cms.html_editor
-      when "ckeditor"
-        html_editor_ckeditor(elem, opts)
-      when "tinymce"
-        html_editor_tinymce(elem, opts)
-      when "wiki"
-        html_editor_wiki(elem, opts)
+    when "ckeditor"
+      html_editor_ckeditor(elem, opts)
+    when "tinymce"
+      html_editor_tinymce(elem, opts)
+    when "wiki"
+      html_editor_wiki(elem, opts)
     end
   end
 
@@ -88,12 +88,13 @@ module EditorHelper
       editor_opts[:toolbar]  = false
       editor_opts[:menubar]  = false
     else
-      editor_opts[:plugins]  = []
-      editor_opts[:plugins] << "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker"
-      editor_opts[:plugins] << "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking"
-      editor_opts[:plugins] << "save table contextmenu directionality emoticons template paste textcolor"
-      editor_opts[:toolbar]  = "insertfile undo redo | styleselect | bold italic | forecolor backcolor"
-      editor_opts[:toolbar] += " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"
+      editor_opts[:plugins]  = [
+        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+        "save table contextmenu directionality emoticons template paste textcolor"
+      ]
+      editor_opts[:toolbar] = "insertfile undo redo | styleselect | bold italic | forecolor backcolor" \
+        " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"
     end
 
     jquery do
