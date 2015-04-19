@@ -21,37 +21,40 @@ module EditorHelper
     mode_file = "#{Rails.public_path}#{mode_path}"
     mode = nil unless File.exists?("#{mode_file}/#{mode}/#{mode}.js") if mode
 
-    h  = []
+    controller.stylesheet "/assets/css/codemirror/codemirror.css"
+    controller.javascript "/assets/js/codemirror/codemirror.js"
 
     if mode
       (CODE_MODE_FILES[mode.to_sym] || [mode]).each do |m|
-        h << %(<script data-turbolinks-track="true" src="#{mode_path}/#{m}/#{m}.js"></script>)
+        controller.javascript "#{mode_path}/#{m}/#{m}.js"
       end
     end
 
-    h <<  jquery do
-      editor_opts = {}
-      editor_opts[:mode]        = mode if mode.present?
-      editor_opts[:readOnly]    = true if opts[:readonly]
-      editor_opts[:lineNumbers] = true
+    editor_opts = {}
+    editor_opts[:mode]        = mode if mode.present?
+    editor_opts[:readOnly]    = true if opts[:readonly]
+    editor_opts[:lineNumbers] = true
 
+    jquery do
       "Cms_Editor_CodeMirror.render('#{elem}', #{editor_opts.to_json});".html_safe
     end
-
-    h.join("\n").html_safe
   end
 
   def html_editor(elem, opts = {})
-    if SS.config.cms.html_editor == "ckeditor"
-      html_editor_ckeditor(elem, opts)
-    elsif SS.config.cms.html_editor == "tinymce"
-      html_editor_tinymce(elem, opts)
-    elsif SS.config.cms.html_editor == "wiki"
-      html_editor_wiki(elem, opts)
+    case SS.config.cms.html_editor
+      when "ckeditor"
+        html_editor_ckeditor(elem, opts)
+      when "tinymce"
+        html_editor_tinymce(elem, opts)
+      when "wiki"
+        html_editor_wiki(elem, opts)
     end
   end
 
   def html_editor_ckeditor(elem, opts = {})
+    controller.javascript "/assets/js/ckeditor/ckeditor.js"
+    controller.javascript "/assets/js/ckeditor/adapters/jquery.js"
+
     opts = { extraPlugins: "", removePlugins: "" }.merge(opts)
 
     if opts[:readonly]
@@ -73,34 +76,29 @@ module EditorHelper
   end
 
   def html_editor_tinymce(elem, opts = {})
-    h  = []
-    h <<  coffee do
-      j = []
-      j << %($ ->)
-      j << %(  tinymce.init)
-      j << %(    selector: "#{elem}")
-      j << %(    language: "ja")
+    controller.javascript "/assets/js/tinymce/tinymce.min.js"
 
-      if opts[:readonly]
-      j << %(    readonly: true)
-      j << %(    plugins: \[\])
-      j << %(    toolbar: false)
-      j << %(    menubar: false)
-      #j << %(    statusbar: false)
-      else
-      j << %(    plugins: \[ )
-      j << %(      "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",)
-      j << %(      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",)
-      j << %(      "save table contextmenu directionality emoticons template paste textcolor")
-      j << %(    \],)
-      j << %(    toolbar: "insertfile undo redo | styleselect | bold italic | forecolor backcolor" +)
-      j << %(      " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media")
-      end
+    editor_opts = {}
+    editor_opts[:selector] = elem
+    editor_opts[:language] = "ja"
 
-      j.join("\n").html_safe
+    if opts[:readonly]
+      editor_opts[:readonly] = true
+      editor_opts[:plugins]  = []
+      editor_opts[:toolbar]  = false
+      editor_opts[:menubar]  = false
+    else
+      editor_opts[:plugins]  = []
+      editor_opts[:plugins] << "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker"
+      editor_opts[:plugins] << "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking"
+      editor_opts[:plugins] << "save table contextmenu directionality emoticons template paste textcolor"
+      editor_opts[:toolbar]  = "insertfile undo redo | styleselect | bold italic | forecolor backcolor"
+      editor_opts[:toolbar] += " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"
     end
 
-    h.join("\n").html_safe
+    jquery do
+      "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json});".html_safe
+    end
   end
 
   def html_editor_wiki(elem, opts = {})

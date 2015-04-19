@@ -37,3 +37,7 @@ class @Cms_Editor_CKEditor
         text['label'] = ""
         text['default'] = ""
 
+class @Cms_Editor_TinyMCE
+  # Render TinyMCE
+  @render: (selector, opts = {}) ->
+    tinymce.init opts
