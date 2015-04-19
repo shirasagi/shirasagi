@@ -49,7 +49,7 @@ Rails.application.configure do
   #config.assets.precompile += %w( *.css *.js )
   config.assets.precompile << Proc.new { |path, fn|
     #fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path))
-    path !~ /\/_/ && fn =~ /app\/assets/ && %w(.js .css).include?(File.extname(path))
+    fn =~ /app\/assets/ && %w(.js .css).include?(File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.
