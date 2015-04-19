@@ -24,6 +24,7 @@ gem "dynamic_form"
 gem "zipruby"
 gem "jquery-turbolinks"
 gem "jquery-cookie-rails"
+gem 'jquery-form-rails'
 gem "redcarpet"
 gem "compass-rails"
 gem "kaminari"
