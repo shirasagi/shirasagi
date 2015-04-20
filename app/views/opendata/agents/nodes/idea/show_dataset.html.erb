@@ -3,7 +3,6 @@
 <div class="detail">
   <% dataset = @idea_ds.datasets[0] %>
   <div class="info-wrap">
-    <div class="dataset_header">関連データセット</div>
     <% if dataset %>
       <% if dataset.downloaded then downloaded = dataset.downloaded else downloaded = 0 end %>
       <div class="dataset"><%= link_to dataset.name, dataset.url %></div>

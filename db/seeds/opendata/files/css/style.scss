@@ -408,6 +408,21 @@ article.areas, article.tags, article.formats, article.licenses {
   margin-bottom: 28px;
 }
 
+#portal-dataset .opendata-datasets, #portal-app .opendata-apps, #portal-idea .opendata-ideas {
+  header {
+    display: none;
+  }
+  nav.feed {
+    display: none;
+  }
+}
+
+#portal-dataset, #portal-app, #portal-idea {
+  .pages article header {
+    display: block;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // #contents footer.contact
 #contents footer.contact {
@@ -450,9 +465,16 @@ article.areas, article.tags, article.formats, article.licenses {
   background: url(../img/ic-rss.png) no-repeat left center;
 }
 
+#data-attention nav, #app-attention nav, #idea-attention nav {
+  .rss {
+    display: none;
+  }
+}
+
 // -----------------------------------------------------------------------------
-// #portal-dataset nav, #portal-app nav, #portal-idea nav, .cms-tabs nav, .opendata-tabs nav, #search_group nav
-#portal-dataset nav, #portal-app nav, #portal-idea nav, .cms-tabs nav, .opendata-tabs nav, #search_group nav {
+// nav
+#portal-dataset nav, #portal-app nav, #portal-idea nav, .cms-tabs nav, .opendata-tabs nav, #search_group nav,
+#data-attention, #app-attention, #idea-attention {
   @include clear;
   padding: 6px 5px 0 5px;
   .more {
@@ -460,17 +482,18 @@ article.areas, article.tags, article.formats, article.licenses {
     padding-left: 12px;
   }
 }
-.cms-tabs nav, #portal-dataset nav, #portal-app nav, #portal-idea nav, .s-dataset .opendata-tabs nav, #search_group nav {
+.cms-tabs nav, #portal-dataset nav, #portal-app nav, #portal-idea nav, .s-dataset .opendata-tabs nav, #search_group nav,
+#app-attention nav, #idea-attention nav {
   .more {
     background: url(../img/ic-arrow_pink.png) no-repeat left center;
   }
 }
-.s-app .opendata-tabs nav {
+.s-app .opendata-tabs nav, .s-app #data-attention nav, .s-app #idea-attention nav {
   .more {
     background: url(../img/ic-arrow_blue.png) no-repeat left center;
   }
 }
-.s-idea .opendata-tabs nav {
+.s-idea .opendata-tabs nav, .s-idea #data-attention nav, .s-idea #app-attention nav {
   .more {
     background: url(../img/ic-arrow_yellow.png) no-repeat left center;
   }
@@ -723,70 +746,6 @@ form.opendata-search_ideas-form .send {
 }
 
 // -----------------------------------------------------------------------------
-// #dataset-news, #dataset-popular, #dataset-attention
-#dataset-news, #dataset-popular, #dataset-attention {
-  margin-bottom: 36px;
-  .opendata-datasets {
-    ul {
-      list-style: none;
-      li {
-        border-bottom: $border-hgry;
-        a {
-          display: block;
-          padding: 8px 0 8px 16px;
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #app-news, #app-popular, #app-attention
-#app-news, #app-popular, #app-attention {
-  margin-bottom: $box-margin;
-  .opendata-apps {
-    ul {
-      list-style: none;
-      li {
-        border-bottom: $border-hgry;
-        a {
-          display: block;
-          padding: 8px 0 8px 16px;
-          &:hover {
-            background: #ccd6d6;
-            color: $link;
-            text-decoration: none;
-          }
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #idea-news, #idea-popular, #idea-attention
-#idea-news, #idea-popular, #idea-attention {
-  margin-bottom: $box-margin;
-  .opendata-ideas {
-    ul {
-      list-style: none;
-      li {
-        border-bottom: $border-hgry;
-        a {
-          display: block;
-          padding: 8px 0 8px 16px;
-          &:hover {
-            background: #ccd6d6;
-            color: $link;
-            text-decoration: none;
-          }
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
 // .opendata-search_groups, #search_group
 .opendata-search_groups, #search_group {
   header {
@@ -794,7 +753,7 @@ form.opendata-search_ideas-form .send {
     padding: 1px;
     border: 1px solid rgba(#000000, 0.21);
     h1 {
-      padding: 6px 0 6px 40px;
+      padding: 5px 0 5px 40px;
       background: url(../img/ic-groupsearch_pink.png) no-repeat 8px center;
       background-color: rgba(#ababab, 0.21);
       font-size: $px16;
@@ -810,6 +769,48 @@ form.opendata-search_ideas-form .send {
       padding: 9px 12px;
     }
   }
+}
+
+#search_group, #data-attention, #app-attention, #idea-attention {
+  margin-bottom: 36px;
+}
+
+#data-attention, #app-attention, #idea-attention {
+  header {
+    @include box-shadow(0px 0.5px 0.5px rgba(#a8a8a8, 0.75));
+    padding: 1px;
+    border: 1px solid rgba(#000000, 0.21);
+    h1 {
+      padding: 5px 0 5px 40px;
+      font-size: $px16;
+    }
+  }
+  .pages li {
+    @include box-shadow(none);
+    padding: 0;
+    border: none;
+    border-bottom: 1px dotted $gray;
+    list-style: none;
+    a {
+      display: block;
+      padding: 9px 12px;
+    }
+  }
+}
+
+#data-attention header h1 {
+  background: url(../img/ic-datatab_hover_s.png) no-repeat 8px center;
+  background-color: rgba(#ababab, 0.21);
+}
+
+#app-attention header h1 {
+  background: url(../img/ic-apptab_hover.png) no-repeat 8px center;
+  background-color: rgba(#ababab, 0.21);
+}
+
+#idea-attention header h1 {
+  background: url(../img/ic-ideatab_hover_s.png) no-repeat 8px center;
+  background-color: rgba(#ababab, 0.21);
 }
 
 // -----------------------------------------------------------------------------
@@ -1043,6 +1044,8 @@ form.opendata-search_ideas-form .send {
     }
   }
 }
+
+// -----------------------------------------------------------------------------
 //mypage-tabs
 #mypage-tabs {
   @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
@@ -1371,6 +1374,10 @@ table.index {
   }
 }
 
+#s-mypage table.index tbody td {
+  max-width: 400px;
+}
+
 table.ajax-selected th, table.ajax-selected td {
   padding: 4px 8px;
 }
@@ -1410,17 +1417,16 @@ table.ajax-selected {
 // -----------------------------------------------------------------------------
 // .profile
 .profile {
-  padding: 20px 50px;
+  padding: 12px 0 40px 0;
   .icon {
     display: inline-block;
-    padding: 8px;
-    border: 2px solid #ddcfcc;
-    @include border-radius(5px);
+    padding: 7px;
+    border: 1px solid #8f8f8f;
   }
   .name {
     display: inline-block;
     padding:15px;
-    font-size: $px27;
+    font-size: $px28;
   }
 }
 
@@ -2500,9 +2506,8 @@ nav.cms-sns_share {
 
 // -----------------------------------------------------------------------------
 // article.areas, article.tags, article.licenses, article.formats
-// , #dataset-news, #dataset-popular, #dataset-attention
 .s-dataset {
-  article.areas, article.tags, article.licenses, article.formats, #dataset-news, #dataset-popular, #dataset-attention {
+  article.areas, article.tags, article.licenses, article.formats {
     header {
       margin-bottom: 24px;
       border-bottom: 2px solid $blue;
@@ -2634,6 +2639,7 @@ article.licenses div article a {
     float: left;
     width: 800px;
     line-height: 1.5;
+    word-wrap: break-word;
   }
   .categories {
     width: 800px;
@@ -3299,9 +3305,8 @@ article.licenses div article a {
 
 // -----------------------------------------------------------------------------
 // article.areas, article.tags, article.licenses, article.formats
-// , #app-news, #app-popular, #app-attention
 .s-app {
-  article.areas, article.tags, article.licenses, #app-news, #app-popular, #app-attention {
+  article.areas, article.tags, article.licenses {
     header {
       margin-bottom: 24px;
       border-bottom: 2px solid $blue;
@@ -3380,6 +3385,7 @@ article.licenses div article a {
     float: left;
     width: 800px;
     line-height: 1.5;
+    word-wrap: break-word;
   }
   .categories {
     width: 800px;
@@ -3581,6 +3587,8 @@ article.licenses div article a {
               td.name {
                 width: 60%;
                 padding-left: 24px;
+                white-space: normal;
+                word-break: break-word;
               }
             }
           }
@@ -4106,9 +4114,8 @@ article.licenses div article a {
 
 // -----------------------------------------------------------------------------
 // article.areas, article.tags
-// , #idea-news, #idea-popular, #idea-attention
 .s-idea {
-  article.areas, article.tags, #idea-news, #idea-popular, #idea-attention {
+  article.areas, article.tags {
     header {
       margin-bottom: 24px;
       border-bottom: 2px solid $blue;
@@ -4187,6 +4194,7 @@ article.licenses div article a {
     float: left;
     width: 800px;
     line-height: 1.5;
+    word-wrap: break-word;
   }
   .categories {
     width: 800px;
@@ -4337,6 +4345,39 @@ article.licenses div article a {
           line-height: 1.3;
         }
       }
+      .comments {
+        .comment {
+          padding: 24px 15px 8px 15px;
+          border-bottom: 1px solid $gray;
+          &:last-child {
+            border-bottom: none;
+          }
+          .text {
+            float: none;
+            width: auto;
+            margin-bottom: 32px;
+            line-height: 1.3;
+            word-wrap: break-word;
+          }
+          a {
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+    .dataset, .app {
+      float: left;
+      width: 610px;
+      padding: 24px 8px 24px 24px;
+      word-break: break-word;
+    }
+    .dataset_downloaded, .app_executed {
+      float: left;
+      padding: 24px 8px;
+    }
+    .dataset_updated, .app_updated {
+      float: left;
+      padding: 24px 8px;
     }
     dl.author {
       margin: 28px 0px 0px;

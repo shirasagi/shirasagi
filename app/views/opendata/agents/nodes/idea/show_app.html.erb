@@ -3,7 +3,6 @@
 <div class="detail">
   <% app = @idea_ap.apps[0] %>
   <div class="info-wrap">
-    <div class="app_header">関連アプリ</div>
     <% if app %>
       <div class="app"><%= link_to app.name, app.url %></div>
       <% if app.executed then executed = app.executed else executed = 0 end %>
