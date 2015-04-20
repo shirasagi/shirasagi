@@ -6,7 +6,9 @@
     <div class="app_header">関連アプリ</div>
     <% if app %>
       <div class="app"><%= link_to app.name, app.url %></div>
-      <div class="app_text"><%= app.text %></div>
+      <% if app.executed then executed = app.executed else executed = 0 end %>
+      <div class="app_executed">実行回数(<%= executed %>)</div>
+      <div class="app_updated">更新日時 <%= tryb{app.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></div>
     <% else %>
       <div class="app"><%= "存在しません" %></div>
     <% end %>

@@ -5,8 +5,10 @@
   <div class="info-wrap">
     <div class="dataset_header">関連データセット</div>
     <% if dataset %>
+      <% if dataset.downloaded then downloaded = dataset.downloaded else downloaded = 0 end %>
       <div class="dataset"><%= link_to dataset.name, dataset.url %></div>
-      <div class="dataset_text"><%= dataset.text %></div>
+      <div class="dataset_downloaded">合計ダウンロード数(<%= downloaded %>)</div>
+      <div class="dataset_updated">更新日時 <%= tryb{dataset.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></div>
     <% else %>
       <div class="dataset"><%= "存在しません" %></div>
     <% end %>
