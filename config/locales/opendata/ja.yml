@@ -59,19 +59,19 @@ ja:
       sent_rdf_success: RDFストアの登録に成功しました。
     sort_options:
       released: 新着順
-      attention: 人気順
+      popular: 人気順
       attention: 注目順
       datasets:
         released: 新着データセット
-        attention: 人気データセット
+        popular: 人気データセット
         attention: 注目データセット
       apps:
         released: 新着アプリ
-        attention: 人気アプリ
+        popular: 人気アプリ
         attention: 注目アプリ
       ideas:
         released: 新着アイデア
-        attention: 人気アイデア
+        popular: 人気アイデア
         attention: 注目アイデア
 
   modules:
