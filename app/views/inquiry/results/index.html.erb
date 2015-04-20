@@ -1,0 +1,34 @@
+<dl class="see" style="padding-bottom: 10px">
+  <dt><%= t "inquiry.total_count" %></dt>
+  <dd>
+    <%= @cur_node.answers.count %>
+    <%= t "views.units.count" %>
+  </dd>
+</dl>
+
+<% @columns.each do |column| %>
+<div class="column" style="overflow: auto; max-height: 200px; border: 1px solid #cccccc; margin-bottom: 10px">
+  <table class="index">
+    <thead><tr><th colspan="2"><%= column.name %></th></tr></thead>
+    <tbody>
+      <% if column.input_type =~ /(select|radio_button|check_box)/ %>
+        <% column.select_options.each do |opts| %>
+          <tr>
+            <td><%= opts %></td>
+            <td class="count">
+              <%= @aggregation[{ "column_id" => column.id, "value" => opts }] %>
+              <%= t "views.units.count" %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <% column.answer_data.each do |data| %>
+          <% if data.value.present? %>
+            <tr><td colspan="2"><%= data.value %></td></tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>

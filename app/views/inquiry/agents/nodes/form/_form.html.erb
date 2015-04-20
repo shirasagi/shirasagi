@@ -19,7 +19,7 @@
       <% end %>
     <% else %>
       <%= raw column.html %>
-      <% if column.input_type =~ /(text_field|email_field|text_area)/  %>
+      <% if column.input_type =~ /(text_field|email_field|text_area)/ %>
         <% opt = { value: data } %>
         <% opt.merge!(column.additional_attr_to_h) %>
         <%= f.send(column.input_type, column.id, opt) %>
@@ -29,7 +29,7 @@
       <% elsif column.input_type =~ /radio_button/ %>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
-          <% opt.merge!(column.additional_attr_to_h) %>          
+          <% opt.merge!(column.additional_attr_to_h) %>
           <% checked = (data == value) %>
           <%= send(column.input_type + "_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %>
           <%= label_tag "#{f.object_name}_#{column.id}_#{i}",  value %>

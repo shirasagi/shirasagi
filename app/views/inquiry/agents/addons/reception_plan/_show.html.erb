@@ -1,0 +1,17 @@
+<%
+
+return if @item.reception_start_date.blank? && @item.reception_close_date.blank?
+
+%>
+<% if !@item.reception_enabled? %>
+<%= jquery do %>
+  $('#addon-basic dd a[href="<%= @item.full_url %>"]').replaceWith("<%= @item.full_url %>");
+<% end %>
+<% end %>
+<dl class="see">
+  <dt><%= @model.t :reception_start_date %></dt>
+  <dd><%= tryb{@item.send(:reception_start_date).strftime("%Y/%m/%d")} %></dd>
+
+  <dt><%= @model.t :reception_close_date %></dt>
+  <dd><%= tryb{@item.send(:reception_close_date).strftime("%Y/%m/%d")} %></dd>
+</dl>

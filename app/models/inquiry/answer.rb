@@ -18,11 +18,18 @@ class Inquiry::Answer
   validate :validate_data
 
   public
-    def set_data(hash={})
+    def set_data(hash = {})
       self.data = []
       hash.each do |key, value|
-        value = value.kind_of?(Hash) ? value.map {|k, v| v}.join("\n") : value.to_s
-        self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value)
+        if value.kind_of?(Hash)
+          values = value.values
+          value  = value.map {|k, v| v}.join("\n")
+        else
+          values = [value.to_s]
+          value  = value.to_s
+        end
+
+        self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value, values: values)
       end
     end
 

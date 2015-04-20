@@ -2,10 +2,25 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
   include SimpleCaptcha::ControllerHelpers
 
-  before_action :set_columns, only: [:new, :confirm, :create, :sent]
+  before_action :check_release_state, only: [:new, :confirm, :create, :sent, :results], if: ->{ !@preview }
+  before_action :check_reception_state, only: [:new, :confirm, :create, :sent], if: ->{ !@preview }
+  before_action :check_aggregation_state, only: :results, if: ->{ !@preview }
+  before_action :set_columns, only: [:new, :confirm, :create, :sent, :results]
   before_action :set_answer, only: [:new, :confirm, :create]
 
   private
+    def check_release_state
+      raise "404" unless @cur_node.public?
+    end
+
+    def check_reception_state
+      raise "404" unless @cur_node.reception_enabled?
+    end
+
+    def check_aggregation_state
+      raise "404" unless @cur_node.aggregation_enabled?
+    end
+
     def set_columns
       @columns = Inquiry::Column.site(@cur_site).
         where(node_id: @cur_node.id, state: "public").
@@ -60,5 +75,11 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     def sent
       render action: :sent
+    end
+
+    def results
+      @cur_node.name = "#{@cur_node.name}　#{I18n.t("inquiry.result")}"
+      @aggregation = @cur_node.aggregate_select_columns
+      render action: :results
     end
 end
