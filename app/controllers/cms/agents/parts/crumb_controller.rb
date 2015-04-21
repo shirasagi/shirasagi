@@ -3,27 +3,27 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
 
   public
     def index
-      @cur_node = @cur_part.parent
+      @cur_node  = @cur_part.parent
+      root_node  = @cur_node || @cur_site
 
-      @root  = @cur_node || @cur_site
       @items = []
+      return if @cur_path !~ /^#{root_node.url}/
 
-      if "#{@cur_path}" =~ /^#{@root.url}/
-        url = @cur_path.sub(/^#{@cur_site.url}/, "").sub(/\/([\w\-]+\.[\w\-]+)?$/, "")
+      @items << [@cur_part.home_label, root_node.url]
 
-        Cms::Node.site(@cur_site).in_path(url).order(depth: -1).each do |node|
-          break if @cur_node && @cur_node.id == node.id
-          @items.unshift [node.name, node.url]
-        end
+      path = @cur_path.sub(/^#{@cur_site.url}/, "")
 
-        if @cur_path =~ /\/[\w\-]+\.[\w\-]+$/
-          page = Cms::Page.site(@cur_site).filename(@cur_path).first
-          @items << [page.name, nil] if page
-        end
+      Cms::Node.site(@cur_site).in_path(path).order(depth: 1).each do |node|
+        break if @cur_node && @cur_node.id == node.id
+        @items << [node.name, node.url]
       end
 
-      @items.unshift [@cur_part.home_label, @root.url]
+      page = Cms::Page.site(@cur_site).filename(path).first
+      return unless page
 
-      render
+      last_item = @items.last
+      return if last_item && last_item[0] == page.name && page.url =~ /\/index\.html$/
+
+      @items << [page.name, page.url]
     end
 end

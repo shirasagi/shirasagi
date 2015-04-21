@@ -1,7 +1,18 @@
-<div class="crumbs">
-  <% @items.each_with_index do |item, idx| %>
-  <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
-  <% if item[1] %><span class="node"><%= link_to *item %></span>
-  <% else %><span class="page"><%= item[0] %></span><% end %>
-  <% end %>
+<%
+
+size = @items.size
+html = []
+
+@items.each_with_index do |item, idx|
+  html << "<span class=\"separator\">&rsaquo;</span>".html_safe if idx > 0
+
+  if size == idx + 1
+    html << "<span class=\"page\">#{h(item[0])}</span>".html_safe
+  else
+    html << "<span class=\"page\">#{link_to(*item)}</span>".html_safe
+  end
+end
+
+%><div class="crumbs">
+  <%== html.join %>
 </div>
