@@ -46,6 +46,12 @@ module Rdf::Object
         criteria = criteria.prefix_and_name(prefix, name)
       end
 
+      category_id = params[:category]
+      if category_id.present?
+        category_id = category_id.to_i if category_id.respond_to?(:to_i)
+        criteria = criteria.in(category_ids: [category_id])
+      end
+
       criteria
     end
   end
