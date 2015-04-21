@@ -7,7 +7,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
 
   context "when IPA Core Vocab ttl is given" do
     let(:prefix) { "ic" }
-    let(:file) { Rails.root.join("spec", "fixtures", "rdf", "rdf.ttl") }
+    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "ipa-core.ttl") }
 
     it "import from IPA Core Vocab ttl" do
       described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
@@ -48,7 +48,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
 
   context "when XMLSchema ttl is given" do
     let(:prefix) { "xsd" }
-    let(:file) { Rails.root.join("spec", "fixtures", "rdf", "xsd.ttl") }
+    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "xsd.ttl") }
 
     xit "import from XMLSchema ttl" do
       described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
@@ -60,7 +60,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
 
   context "when Dublin Core Term ttl is given" do
     let(:prefix) { "dc" }
-    let(:file) { Rails.root.join("spec", "fixtures", "rdf", "dcterms.ttl") }
+    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "dcterms.ttl") }
 
     xit "import from Dublin Core Term ttl" do
       described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
