@@ -368,13 +368,12 @@ article.areas, article.tags, article.formats, article.licenses {
   }
   .point {
     @include border-radius(3px);
-    @include box-shadow(0 0 0 1px rgba(33, 56, 127, 0.195));
+    @include box-shadow(0 0 0 1px rgba(#45B035, 0.3));
     display: inline-block;
     margin-left: 25px;
     padding: 0 5px 0 28px;
-    border: 1px solid rgba(33, 56, 127, 0.39);
-    background: url(../img/ic-like01.png) no-repeat 3px top;
-    color: $blue;
+    border: 1px solid rgba(#45B035, 0.5);
+    background: url(../img/ic_s-sudachikun.gif) no-repeat 3px center;
   }
 }
 
@@ -1735,14 +1734,12 @@ nav.cms-sns_share {
           word-wrap: break-word;
         }
         .point {
-          @include border-radius(3px);
-          @include box-shadow(0 0 0 1px rgba(33, 56, 127, 0.195));
+          @include box-shadow(0 0 0 1px rgba(#45B035, 0.3));
           display: inline-block;
           margin-left: 25px;
           padding: 0 5px 0 28px;
-          border: 1px solid rgba(33, 56, 127, 0.39);
-          background: url(../img/ic-like01.png) no-repeat 3px top;
-          color: $blue;
+          border: 1px solid rgba(#45B035, 0.5);
+          background: url(../img/ic_s-sudachikun.gif) no-repeat 3px center;
         }
       }
       nav {
@@ -1761,6 +1758,33 @@ nav.cms-sns_share {
         #idea_more {
           background: url(../img/ic-arrow_yellow.png) no-repeat left center;
         }
+      }
+    }
+  }
+}
+
+#s-member {
+  article.members ul {
+    overflow: hidden;
+    margin-top: 12px;
+    li {
+      float: left;
+      width: 344px;
+      margin: 0 20px 16px 0;
+      list-style: none;
+      img {
+        width: 50px;
+        height: 50px;
+        padding: 2px;
+        border: 1px solid #a8a8a8;
+      }
+      span {
+        display: inline-block;
+        overflow: hidden;
+        width: 270px;
+        margin-left: 10px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -2957,8 +2981,8 @@ article.licenses div article a {
       border: 1px solid $gray;
       text-align: center;
       span.number {
-        padding: 0 40px;
-        background: url(../img/ic-like02.png) no-repeat left 4px;
+        padding: 0 50px;
+        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
         font-size: $px32;
       }
       span.label {
@@ -3764,8 +3788,8 @@ article.licenses div article a {
       border: 1px solid $gray;
       text-align: center;
       span.number {
-        padding: 0 40px;
-        background: url(../img/ic-like02.png) no-repeat left 4px;
+        padding: 0 50px;
+        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
         font-size: $px32;
       }
       span.label {
@@ -4411,6 +4435,37 @@ article.licenses div article a {
           }
         }
       }
+      form.opendata-add_comment-form {
+        padding: 16px;
+        background: #cccccc;
+        dl.comment_body {
+          display: inline-block;
+          width: 860px;
+          dt {
+            display: none;
+          }
+          input#s_comment_body {
+            width: 100%;
+          }
+        }
+        a.comment_add {
+          @include box-shadow(0 0 0 1px $gray);
+          @include grd-commentbutton;
+          display: inline-block;
+          margin-left: 15px;
+          padding: 8px 8px 8px 22px;
+          border: 1px solid $white;
+          color: $text;
+          text-decoration: none;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
+          &:hover {
+            @include grd-commentbutton_hover;
+          }
+        }
+      }
     }
     .dataset, .app {
       float: left;
@@ -4493,8 +4548,8 @@ article.licenses div article a {
       border: 1px solid $gray;
       text-align: center;
       span.number {
-        padding: 0 40px;
-        background: url(../img/ic-like02.png) no-repeat left 4px;
+        padding: 0 50px;
+        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
         font-size: $px32;
       }
       span.label {
