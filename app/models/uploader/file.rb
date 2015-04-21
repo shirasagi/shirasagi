@@ -144,6 +144,7 @@ class Uploader::File
 
     def validate_scss
       return if ext != ".scss"
+      return if ::File.basename(@path)[0] == "_"
       opts = Rails.application.config.sass
       sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
         syntax: :scss, cache: false,
@@ -159,6 +160,7 @@ class Uploader::File
 
     def validate_coffee
       return if ext != ".coffee"
+      return if ::File.basename(@path)[0] == "_"
       @js = CoffeeScript.compile @binary
     rescue => e
       errors.add :coffee, e.message
