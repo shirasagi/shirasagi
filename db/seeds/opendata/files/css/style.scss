@@ -433,7 +433,7 @@ article.areas, article.tags, article.formats, article.licenses {
     padding: 4px 0 4px 10px;
     background: rgba(#ababab, 0.21);
     color: $blue;
-    @include box-shadow(0px 0.5px 0.5px rgba(#a8a8a8, 0.75), 0px 0px 0px 1px $white inset);
+    @include box-shadow(0px 1px 1px rgba(#a8a8a8, 0.75), 0px 0px 0px 1px $white inset);
     border: 1px solid rgba(#000000, 0.21);
   }
   p {
@@ -749,11 +749,10 @@ form.opendata-search_ideas-form .send {
 // .opendata-search_groups, #search_group
 .opendata-search_groups, #search_group {
   header {
-    @include box-shadow(0px 0.5px 0.5px rgba(#a8a8a8, 0.75));
-    padding: 1px;
-    border: 1px solid rgba(#000000, 0.21);
     h1 {
-      padding: 5px 0 5px 40px;
+      @include box-shadow(0px 1px 1px rgba(#a8a8a8, 0.75), 0px 0px 0px 1px $white inset);
+      padding: 6px 0 6px 40px;
+      border: 1px solid rgba(#000000, 0.21);
       background: url(../img/ic-groupsearch_pink.png) no-repeat 8px center;
       background-color: rgba(#ababab, 0.21);
       font-size: $px16;
@@ -777,10 +776,10 @@ form.opendata-search_ideas-form .send {
 
 #data-attention, #app-attention, #idea-attention {
   header {
-    @include box-shadow(0px 0.5px 0.5px rgba(#a8a8a8, 0.75));
-    padding: 1px;
-    border: 1px solid rgba(#000000, 0.21);
     h1 {
+      @include box-shadow(0px 1px 1px rgba(#a8a8a8, 0.75), 0px 0px 0px 1px $white inset);
+      padding: 6px 0 6px 40px;
+      border: 1px solid rgba(#000000, 0.21);
       padding: 5px 0 5px 40px;
       font-size: $px16;
     }
@@ -1176,6 +1175,10 @@ form.opendata-search_ideas-form .send {
     border: 1px solid $white;
     color: $text;
     text-decoration: none;
+    &:not(:target) {
+      filter: none;
+      -ms-filter: none;
+    }
     &:hover {
       @include grd-tutorial_hover;
     }
@@ -1986,6 +1989,10 @@ nav.cms-sns_share {
   border-bottom: 2px solid $blue;
   font-size: 200%;
   color: $blue;
+  &:not(:target) {
+    filter: none;
+    -ms-filter: none;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -2216,6 +2223,10 @@ nav.cms-sns_share {
   a.search {
     @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
     @include grd-largesearchbutton;
+    &:not(:target) {
+      filter: none;
+      -ms-filter: none;
+    }
     &:hover {
       @include grd-largesearchbutton_hover;
     }
@@ -2223,6 +2234,10 @@ nav.cms-sns_share {
   a.new {
     @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
     @include grd-largeaddbutton;
+    &:not(:target) {
+      filter: none;
+      -ms-filter: none;
+    }
     &:hover {
       @include grd-largeaddbutton_hover;
     }
@@ -2421,6 +2436,10 @@ nav.cms-sns_share {
         a.new {
           @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
           @include grd-addbutton;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
           &:hover {
             @include grd-addbutton_hover;
           }
@@ -2428,6 +2447,10 @@ nav.cms-sns_share {
         a.search {
           @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
           @include grd-searchbutton;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
           &:hover {
             @include grd-searchbutton_hover;
           }
@@ -2435,6 +2458,10 @@ nav.cms-sns_share {
         a.group-search {
           @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
           @include grd-groupsearchbutton;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
           &:hover {
             @include grd-groupsearchbutton_hover;
           }
@@ -3022,6 +3049,10 @@ article.licenses div article a {
   a.search {
     @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
     @include grd-largesearchbutton;
+    &:not(:target) {
+      filter: none;
+      -ms-filter: none;
+    }
     &:hover {
       @include grd-largesearchbutton_hover;
     }
@@ -3029,6 +3060,10 @@ article.licenses div article a {
   a.new {
     @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
     @include grd-largeaddbutton;
+    &:not(:target) {
+      filter: none;
+      -ms-filter: none;
+    }
     &:hover {
       @include grd-largeaddbutton_hover;
     }
@@ -3227,6 +3262,10 @@ article.licenses div article a {
         a.new {
           @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
           @include grd-addbutton;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
           &:hover {
             @include grd-addbutton_hover;
           }
@@ -3234,6 +3273,10 @@ article.licenses div article a {
         a.search {
           @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
           @include grd-searchbutton;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
           &:hover {
             @include grd-searchbutton_hover;
           }
@@ -3289,17 +3332,11 @@ article.licenses div article a {
     @include background-image(linear-gradient($white 20%, #e5e5e5));
     @include filter-gradient($white, #e5e5e5, vertical);
     &:hover {
-      background: $white;
-      background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBBRUVDIiBvZmZzZXQ9IjAiLz48c3RvcCBzdG9wLWNvbG9yPSIjMDBBRUVDIiBvZmZzZXQ9IjEiLz4KPC9saW5lYXJHcmFkaWVudD4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNnNzUpIiAvPgo8L3N2Zz4=);
-      @include background-image(linear-gradient(rgba(0, 174, 236, 0.2) 50%, rgba(0, 174, 236, 0.2)));
-      @include filter-gradient(#FDE8F4, #FDDFEF, vertical);
+      background: rgba(#00AEEC, 0.2)
     }
   }
   li.current {
-    background: $white;
-    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBBRUVDIiBvZmZzZXQ9IjAiLz48c3RvcCBzdG9wLWNvbG9yPSIjMDBBRUVDIiBvZmZzZXQ9IjEiLz4KPC9saW5lYXJHcmFkaWVudD4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNnNzUpIiAvPgo8L3N2Zz4=);
-    @include background-image(linear-gradient(rgba(0, 174, 236,0.2) 50%, rgba(0, 174, 236, 0.2)));
-    @include filter-gradient(#FDE8F4, #FDDFEF, vertical);
+    background: rgba(#00AEEC, 0.2)
   }
 }
 
@@ -3831,6 +3868,10 @@ article.licenses div article a {
   a.search {
     @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
     @include grd-largesearchbutton;
+    &:not(:target) {
+      filter: none;
+      -ms-filter: none;
+    }
     &:hover {
       @include grd-largesearchbutton_hover;
     }
@@ -3838,6 +3879,10 @@ article.licenses div article a {
   a.new {
     @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
     @include grd-largeaddbutton;
+    &:not(:target) {
+      filter: none;
+      -ms-filter: none;
+    }
     &:hover {
       @include grd-largeaddbutton_hover;
     }
@@ -4036,6 +4081,10 @@ article.licenses div article a {
         a.new {
           @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
           @include grd-addbutton;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
           &:hover {
             @include grd-addbutton_hover;
           }
@@ -4043,6 +4092,10 @@ article.licenses div article a {
         a.search {
           @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
           @include grd-searchbutton;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
           &:hover {
             @include grd-searchbutton_hover;
           }
@@ -4098,17 +4151,11 @@ article.licenses div article a {
     @include background-image(linear-gradient($white 22%, #e5e5e5));
     @include filter-gradient($white, #e5e5e5, vertical);
     &:hover {
-      background: $white;
-      background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImcyNTQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRTYwMCIgb2Zmc2V0PSIwIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRTYwMCIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzI1NCkiIC8+Cjwvc3ZnPg==);
-      @include background-image(linear-gradient(rgba(255, 230, 0, 0.22) 50%, rgba(255, 230, 0, 0.22)));
-      @include filter-gradient(#FDE8F4, #FDDFEF, vertical);
+      background: rgba($idea-yellow, 0.22);
     }
   }
   li.current {
-    background: $white;
-    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImcyNTQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRTYwMCIgb2Zmc2V0PSIwIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRTYwMCIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzI1NCkiIC8+Cjwvc3ZnPg==);
-    @include background-image(linear-gradient(rgba(255, 230, 0,0.22) 50%, rgba(255, 230, 0, 0.22)));
-    @include filter-gradient(#FDE8F4, #FDDFEF, vertical);
+    background: rgba($idea-yellow, 0.22);
   }
 }
 
