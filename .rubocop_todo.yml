@@ -107,11 +107,6 @@ Style/AndOr:
 Style/AsciiComments:
   Enabled: false
 
-# Offense count: 12
-# Cop supports --auto-correct.
-Style/Blocks:
-  Enabled: false
-
 # Offense count: 82
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -289,9 +284,9 @@ Style/RedundantReturn:
 Style/RedundantSelf:
   Enabled: false
 
-# Offense count: 32
+# Use / or %r around regular expressions.
 Style/RegexpLiteral:
-  MaxSlashes: 3
+  Enabled: false
 
 # Offense count: 81
 Style/RescueModifier:
@@ -403,3 +398,13 @@ Style/TrivialAccessors:
 # Configuration parameters: WordRegex.
 Style/WordArray:
   MinSize: 2
+
+##################### Rails ##################################
+
+# Prefer find_by over where.first.
+Rails/FindBy:
+  Enabled: false
+
+# Prefer all.find_each over all.find.
+Rails/FindEach:
+  Enabled: false
