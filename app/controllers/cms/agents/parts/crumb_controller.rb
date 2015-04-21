@@ -22,7 +22,7 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
       return unless page
 
       last_item = @items.last
-      return if last_item && last_item[0] == page.name && page.url =~ /\/index\.html$/
+      return if last_item[0] == page.name && page.url.end_with?("/index.html")
 
       @items << [page.name, page.url]
     end
