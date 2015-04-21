@@ -194,20 +194,29 @@ save_part filename: "portal-plan.part.html" , name: "ポータル：公開予定
 save_part filename: "portal-fb.part.html" , name: "ポータル：facebook", route: "cms/free"
 save_part filename: "app-head.part.html" , name: "アプリ：ヘッダー", route: "cms/free"
 save_part filename: "app-kv.part.html" , name: "アプリ：キービジュアル", route: "cms/free"
-save_part filename: "app-news.part.html" , name: "アプリ：新着順", route: "opendata/app", sort: "released", limit: 10
-save_part filename: "app-popular.part.html" , name: "アプリ：人気順", route: "opendata/app", sort: "popular", limit: 10
-save_part filename: "app-attention.part.html" , name: "アプリ：注目順", route: "opendata/app", sort: "attention", limit: 10
+save_part filename: "app-news.part.html" , name: "アプリ：新着順", route: "opendata/app", sort: "released", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "app-popular.part.html" , name: "アプリ：人気順", route: "opendata/app", sort: "popular", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "app-attention.part.html" , name: "アプリ：注目順", route: "opendata/app", sort: "attention", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
 save_part filename: "dataset-head.part.html" , name: "データ：ヘッダー", route: "cms/free"
 save_part filename: "dataset-kv.part.html" , name: "データ：キービジュアル", route: "cms/free"
 save_part filename: "dataset-group.part.html" , name: "データ：グループ", route: "opendata/dataset_group"
-save_part filename: "dataset-news.part.html" , name: "データ：新着順", route: "opendata/dataset", sort: "released", limit: 10
-save_part filename: "dataset-popular.part.html" , name: "データ：人気順", route: "opendata/dataset", sort: "popular", limit: 10
-save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset", sort: "attention", limit: 10
+save_part filename: "dataset-news.part.html" , name: "データ：新着順", route: "opendata/dataset", sort: "released", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "dataset-popular.part.html" , name: "データ：人気順", route: "opendata/dataset", sort: "popular", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "dataset-attention.part.html" , name: "データ：注目順", route: "opendata/dataset", sort: "attention", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
 save_part filename: "idea-head.part.html" , name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html" , name: "アイデア：キービジュアル", route: "cms/free"
-save_part filename: "idea-news.part.html" , name: "アイデア：新着順", route: "opendata/idea", sort: "released", limit: 10
-save_part filename: "idea-popular.part.html" , name: "アイデア：人気順", route: "opendata/idea", sort: "popular", limit: 10
-save_part filename: "idea-attention.part.html" , name: "アイデア：注目順", route: "opendata/idea", sort: "attention", limit: 10
+save_part filename: "idea-news.part.html" , name: "アイデア：新着順", route: "opendata/idea", sort: "released", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "idea-popular.part.html" , name: "アイデア：人気順", route: "opendata/idea", sort: "popular", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "idea-attention.part.html" , name: "アイデア：注目順", route: "opendata/idea", sort: "attention", limit: 10, \
+  upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
 save_part filename: "mypage-head.part.html" , name: "マイページ：ヘッダー", route: "cms/free"
 
 ## -------------------------------------
