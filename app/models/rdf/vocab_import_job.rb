@@ -131,7 +131,7 @@ class Rdf::VocabImportJob
         @class_count += 1
       when "http://purl.org/dc/dcam/VocabularyEncodingScheme" then
       else
-        puts "unknown type: #{hash["rdf:type"].first.pname}"
+        Rails.logger.debug "unknown type: #{hash["rdf:type"].first.pname}"
       end
 
       [ klass, builder ]
@@ -179,7 +179,7 @@ class Rdf::VocabImportJob
       property_hashes.each do |property_hash|
         rdf_prop = Rdf::Prop.site(@cur_site).search(uri: property_hash[:property]).first
         if rdf_prop.blank?
-          puts "property not found: #{uri}"
+          Rails.logger.debug "property not found: #{uri}"
           next
         end
 
@@ -208,7 +208,7 @@ class Rdf::VocabImportJob
         if domains.present?
           domain_classes = domains.map do |uri|
             rdf_class = Rdf::Class.site(@cur_site).search(uri: uri).first
-            puts "domain not found: #{uri}" if rdf_class.blank?
+            Rails.logger.debug "domain not found: #{uri}" if rdf_class.blank?
             rdf_class
           end
 
@@ -220,18 +220,18 @@ class Rdf::VocabImportJob
 
         if ranges.present?
           if ranges.length > 1
-            puts "multiple ranges are no longer supported."
+            Rails.logger.debug "multiple ranges are no longer supported."
           end
           range_class = Rdf::Class.site(@cur_site).search(uri: ranges.first).first
           if range_class.blank?
-            puts "range not found: #{ranges.first}"
+            Rails.logger.debug "range not found: #{ranges.first}"
             next
           end
 
           if rdf_object.range_id.blank?
             rdf_object.range_id = range_class.id
           elsif rdf_object.range_id != range_class.id
-            puts "property range missmatch for #{rdf_object.name}: #{rdf_object.range.uri} and #{ranges.first}"
+            Rails.logger.debug "property range missmatch for #{rdf_object.name}: #{rdf_object.range.uri} and #{ranges.first}"
           end
         end
 
@@ -243,7 +243,7 @@ class Rdf::VocabImportJob
       @pending_class_attributes.each do |rdf_class, sub_class_of|
         sub_class = Rdf::Class.site(@cur_site).search(uri: sub_class_of).first
         if sub_class.blank?
-          puts "sub class not found: #{sub_class_of}"
+          Rails.logger.debug "sub class not found: #{sub_class_of}"
           next
         end
 

@@ -27,8 +27,7 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
   def call(predicate, objects)
     return if IGNORE_PREDICATES.include?(predicate)
     unless super
-      puts "unknown class key: #{predicate}"
-      # Rails.logger.warn("unknown class key: #{predicate}")
+      Rails.logger.debug "unknown class key: #{predicate}"
     end
     nil
   end

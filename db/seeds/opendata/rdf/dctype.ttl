@@ -1,0 +1,146 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcam: <http://purl.org/dc/dcam/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://purl.org/dc/dcmitype/>
+    dcterms:modified "2012-06-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> ;
+    dcterms:title "DCMI Type Vocabulary"@en .
+
+<http://purl.org/dc/dcmitype/Collection>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "A collection is described as a group; its parts may also be separately described."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Collection-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "An aggregation of resources."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Collection"@en .
+
+<http://purl.org/dc/dcmitype/Dataset>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include lists, tables, and databases.  A dataset may be useful for direct machine processing."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Dataset-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "Data encoded in a defined structure."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Dataset"@en .
+
+<http://purl.org/dc/dcmitype/Event>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Metadata for an event provides descriptive information that is the basis for discovery of the purpose, location, duration, and responsible agents associated with an event. Examples include an exhibition, webcast, conference, workshop, open day, performance, battle, trial, wedding, tea party, conflagration."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Event-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A non-persistent, time-based occurrence."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Event"@en .
+
+<http://purl.org/dc/dcmitype/Image>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include images and photographs of physical objects, paintings, prints, drawings, other images and graphics, animations and moving pictures, film, diagrams, maps, musical notation.  Note that Image may include both electronic and physical representations."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Image-004> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A visual representation other than text."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Image"@en .
+
+<http://purl.org/dc/dcmitype/InteractiveResource>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include forms on Web pages, applets, multimedia learning objects, chat services, or virtual reality environments."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#InteractiveResource-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A resource requiring interaction from the user to be understood, executed, or experienced."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Interactive Resource"@en .
+
+<http://purl.org/dc/dcmitype/MovingImage>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include animations, movies, television programs, videos, zoetropes, or visual output from a simulation.  Instances of the type Moving Image must also be describable as instances of the broader type Image."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#MovingImage-003> ;
+    dcterms:issued "2003-11-18"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A series of visual representations imparting an impression of motion when shown in succession."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Moving Image"@en ;
+    rdfs:subClassOf <http://purl.org/dc/dcmitype/Image> .
+
+<http://purl.org/dc/dcmitype/PhysicalObject>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Note that digital representations of, or surrogates for, these objects should use Image, Text or one of the other types."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#PhysicalObject-003> ;
+    dcterms:issued "2002-07-13"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "An inanimate, three-dimensional object or substance."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Physical Object"@en .
+
+<http://purl.org/dc/dcmitype/Service>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include a photocopying service, a banking service, an authentication service, interlibrary loans, a Z39.50 or Web server."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Service-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A system that provides one or more functions."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Service"@en .
+
+<http://purl.org/dc/dcmitype/Software>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include a C source file, MS-Windows .exe executable, or Perl script."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Software-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A computer program in source or compiled form."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Software"@en .
+
+<http://purl.org/dc/dcmitype/Sound>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include a music playback file format, an audio compact disc, and recorded speech or sounds."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Sound-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A resource primarily intended to be heard."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Sound"@en .
+
+<http://purl.org/dc/dcmitype/StillImage>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include paintings, drawings, graphic designs, plans and maps. Recommended best practice is to assign the type Text to images of textual materials. Instances of the type Still Image must also be describable as instances of the broader type Image."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#StillImage-003> ;
+    dcterms:issued "2003-11-18"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A static visual representation."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Still Image"@en ;
+    rdfs:subClassOf <http://purl.org/dc/dcmitype/Image> .
+
+<http://purl.org/dc/dcmitype/Text>
+    dcam:memberOf dcterms:DCMIType ;
+    dcterms:description "Examples include books, letters, dissertations, poems, newspapers, articles, archives of mailing lists. Note that facsimiles or images of texts are still of the genre Text."@en ;
+    dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Text-003> ;
+    dcterms:issued "2000-07-11"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    dcterms:modified "2008-01-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    a rdfs:Class ;
+    rdfs:comment "A resource consisting primarily of words for reading."@en ;
+    rdfs:isDefinedBy <http://purl.org/dc/dcmitype/> ;
+    rdfs:label "Text"@en .
+

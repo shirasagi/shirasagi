@@ -330,3 +330,17 @@ end
 #    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
 #    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1)
 #end
+
+## -------------------------------------
+puts "# rdf vocabs"
+
+def import_vocab(data)
+  puts data[:prefix]
+  Rdf::VocabImportJob.new.call(@site.host, data[:prefix], data[:file], data[:owner] || Rdf::Vocab::OWNER_SYSTEM, data[:order])
+end
+
+import_vocab prefix: "xsd", file: "rdf/xsd.ttl", order: 2000
+import_vocab prefix: "dcmitype", file: "rdf/dctype.ttl", order: 2000
+import_vocab prefix: "dc11", file: "rdf/dcelements.ttl", order: 2000
+import_vocab prefix: "dc", file: "rdf/dcterms.ttl", order: 2000
+import_vocab prefix: "ic", file: "rdf/ipa-core.ttl", order: 1000

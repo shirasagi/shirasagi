@@ -33,8 +33,7 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
   def call(predicate, objects)
     return if IGNORE_PREDICATES.include?(predicate)
     unless super
-      puts "unknown property key: #{predicate}"
-      # Rails.logger.warn("unknown property key: #{predicate}")
+      Rails.logger.debug "unknown property key: #{predicate}"
     end
     nil
   end
