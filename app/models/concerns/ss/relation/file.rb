@@ -24,6 +24,7 @@ module SS::Relation::File
 
         ss_file = send(name) || SS::File.new
         ss_file.in_file = file
+        ss_file.site_id = site_id if respond_to?(:site_id)
         ss_file.model = self.class.to_s.underscore
         ss_file.filename = file.original_filename
         ss_file.save
