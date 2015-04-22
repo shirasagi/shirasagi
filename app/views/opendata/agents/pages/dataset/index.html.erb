@@ -111,8 +111,8 @@ categories = [
                 <% end %>
               </span>
               <% end %>
-              <%= link_to "プレビュー", rs.content_url, class: "content" if rs.tsv_present? %>
-              <%= link_to "ダウンロード", rs.url, class: "download" %>
+              <div class="content-wrap"><%= link_to "プレビュー", rs.content_url, class: "content" if rs.tsv_present? %></div>
+              <div class="download-wrap"><%= link_to "ダウンロード", rs.url, class: "download" %></div>
             </div>
           </div>
           <% end %>
@@ -145,8 +145,8 @@ categories = [
                 <% end %>
               </span>
               <% end %>
-              <%= link_to "プレビュー", urs.content_url, class: "content" if urs.tsv_present? %>
-              <%= link_to "ダウンロード", urs.url, class: "download" %>
+              <div class="content-wrap"><%= link_to "プレビュー", urs.content_url, class: "content" if urs.tsv_present? %></div>
+              <div class="download-wrap"><%= link_to "ダウンロード", urs.url, class: "download" %></div>
             </div>
           </div>
           <% end %>

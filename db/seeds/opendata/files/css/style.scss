@@ -1164,7 +1164,7 @@ form.opendata-search_ideas-form .send {
       -ms-filter: none;
     }
   }
-  nav.tutorial-data a {
+  nav.tutorial-data a, nav.tutorial-app a, nav.tutorial-idea a {
     @include box-shadow(0 0 0 1px $gray);
     @include grd-tutorial;
     display: inline-block;
@@ -1812,7 +1812,6 @@ nav.cms-sns_share {
 // #portal-kv-img
 #portal-kv-img {
   float: left;
-  padding: 15px 0px 15px 53px;
 }
 
 // -----------------------------------------------------------------------------
@@ -2824,7 +2823,7 @@ article.licenses div article a {
         }
         .resource, .url_resource {
           @include clearfix;
-          margin: 0px 16px;
+          padding: 0px 16px;
           border-bottom: 1px dotted $gray;
           &:last-child {
             border-bottom: 0;
@@ -2832,7 +2831,7 @@ article.licenses div article a {
           .info {
             float: left;
             padding: 24px 0px;
-            max-width: 666px;
+            max-width: 655px;
             .name {
               //float: left;
               font-size: $px15;
@@ -2855,21 +2854,44 @@ article.licenses div article a {
           }
           .icons {
             float: right;
-            padding: 22px;
+            padding: 24px 0;
             .license {
+              float: left;
+              margin-right: 10px;
+              padding: 10px 0;
+            }
+            .content-wrap {
+              @include grd-preview;
+              display: inline-block;
+              float: left;
+              margin-right: 5px;
+              border: 1px solid rgba(#666666, 0.24);
+              letter-spacing: -.40em;
+            }
+            .download-wrap {
+              @include grd-pinkbutton;
+              display: inline-block;
+              float: left;
+              border: 1px solid rgba(#EC008B, 0.24);
+              letter-spacing: -.40em;
             }
             .content, .download {
-              @include box-shadow(0 0 0 1px #b3b3e6);
-              margin-left: 4px;
-              margin-right: 1px;
-              padding: 10px 8px 10px 25px;
+              @include box-shadow(0 0 0 1px $gray);
+              @include grd-pinkarrow-gray;
               display: inline-block;
+              float: left;
+              margin: 4px 5px;
+              padding: 8px 25px;
               border: 1px solid $white;
-              background: rgba(232, 232, 252, 0.3) url(../img/ic-arrow_pink_l.png) no-repeat 10px center;
               color: $text;
               text-decoration: none;
+              letter-spacing: normal;
+              &:not(:target) {
+                filter: none;
+                -ms-filter: none;
+              }
               &:hover {
-                background-color: #e1e2e3;
+                @include grd-pinkarrow-gray_hover;
               }
             }
           }
