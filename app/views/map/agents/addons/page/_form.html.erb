@@ -2,12 +2,13 @@
 <%= jquery do %>
   SS_AddonTabs.toggleView(".mod-map");
 
-  $(".mod-map").parent().find(".toggle a").click(function() {
-    google.maps.event.trigger(Map.map, "resize");
-  });
-
+  Map.center = <%= SS.config.cms.map_center.to_json %>
   Map.load(document.getElementById("map-canvas"));
   Map_Form.setMarkers();
+
+  $(".mod-map").parent().find(".toggle a").click(function() {
+    Map.resize();
+  });
 <% end %>
 
 <div class="mod-map">

@@ -1,6 +1,7 @@
 class @Map
-  @map
-  @markers
+  @map        = null
+  @center     = [36.204824, 138.252924]
+  @markers    = null
   @openedInfo = null
 
   @attachMessage: (id) ->
@@ -14,13 +15,8 @@ class @Map
     return
 
   @load: (element) ->
-    <% if SS.config.cms.map_center.present? %>
-    map_center = [<%= SS.config.cms.map_center[0] %>, <%= SS.config.cms.map_center[1] %>]
-    <% else %>
-    map_center = [36.204824, 138.252924]
-    <% end %>
     mapOptions = {
-      center: new google.maps.LatLng(map_center[0], map_center[1]),
+      center: new google.maps.LatLng(@center[0], @center[1]),
       zoom: 5,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       panControl: false,
@@ -37,8 +33,13 @@ class @Map
         opened: true
       }
     }
-    Map.map = new google.maps.Map(element,  mapOptions)
+    @map = new google.maps.Map(element, mapOptions)
     return
+
+  @resize: ->
+    google.maps.event.trigger(@map, "resize")
+    @map.setCenter new google.maps.LatLng(@center[0], @center[1]) unless @resized
+    @resized = true
 
   @setMarkers: (markers) ->
     Map.markers = markers
