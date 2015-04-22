@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe "ads_banners" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :ads_node_banner, name: "ads" }
-  subject(:item) { Ads::Banner.last }
-  subject(:index_path) { ads_banners_path site.host, node }
-  subject(:new_path) { new_ads_banner_path site.host, node }
-  subject(:show_path) { ads_banner_path site.host, node, item }
-  subject(:edit_path) { edit_ads_banner_path site.host, node, item }
-  subject(:delete_path) { delete_ads_banner_path site.host, node, item }
+  let(:site) { cms_site }
+  let(:node) { create_once :ads_node_banner, name: "ads" }
+  let(:item) { Ads::Banner.last }
+  let(:index_path) { ads_banners_path site.host, node }
+  let(:new_path) { new_ads_banner_path site.host, node }
+  let(:show_path) { ads_banner_path site.host, node, item }
+  let(:edit_path) { edit_ads_banner_path site.host, node, item }
+  let(:delete_path) { delete_ads_banner_path site.host, node, item }
 
   it "without login" do
     visit index_path
@@ -29,7 +29,24 @@ describe "ads_banners" do
       expect(current_path).not_to eq sns_login_path
     end
 
+    it "#invalid_new" do
+      SS.config.env.max_filesize_ext["png"] = 0
+
+      visit new_path
+      within "form#item-form" do
+        fill_in "item[name]", with: "sample"
+        fill_in "item[link_url]", with: "http://example.jp"
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        click_button "保存"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).not_to eq new_path
+      expect(page).to have_css("form#item-form")
+    end
+
     it "#new" do
+      SS.config.env.max_filesize_ext["png"] = nil
+
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
