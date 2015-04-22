@@ -7,12 +7,32 @@
 }
 <% end %>
 
+<%
+last = nil
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).select do |cate|
+ if last == nil
+   last = cate
+ elsif cate.filename =~ /^#{last.filename}\//
+   false
+ else
+   last = cate
+ end
+end
+%>
+
 <%= error_messages_for :item %>
 
 <div class="addon-views">
   <div class="addon-view" id="addon-basic">
     <div class="opendata-csv2rdf-settings-class-search">
       <dl class="see rdf-search-classes-search-options">
+        <dt><%= t "opendata.labels.category_ids" %></dt>
+        <dd>
+          <span style="inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", false, params[:s].try(:[], :category_ids).try(:include?, "false")) %>すべて</label></span>
+          <% categories.each do |cate| %>
+            <span style="inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", cate._id, params[:s].try(:[], :category_ids).try(:include?, cate._id.to_s)) %><%= cate.name %></label></span>
+          <% end %>
+        </dd>
         <dt><%= t "rdf.apis.search_options.vocab" %></dt>
         <dd><%= select_tag "s[vocab]", options_for_select(vocab_options, params[:s].try(:[], :vocab)) %></dd>
         <dt><%= t "rdf.apis.search_options.name" %></dt>
@@ -57,7 +77,22 @@
 <%= coffee do %>
 $ ->
   $(".opendata-csv2rdf-settings-class-search__search").on "click", (e) ->
-    location.href = "#{$(this).attr('href')}?s[vocab]=#{$("select[name='s[vocab]'").val()}&s[name]=#{$("input[name='s[name]'").val()}"
+    params = []
+    $("input[name='s[category_ids][]'").each (i, e) ->
+      if $(e).prop("checked")
+        params.push("s[category_ids][]=#{$(e).val()}")
+    vocab = $("select[name='s[vocab]'").val()
+    if vocab
+      params.push("s[vocab]=#{vocab}")
+    name = $("input[name='s[name]'").val()
+    if name
+      params.push("s[name]=#{name}")
+    href = $(this).attr('href')
+    params = params.join("&")
+    if params
+      href = "#{href}?#{params}"
+    location.href = href
     e.preventDefault();
     false
+
 <% end %>

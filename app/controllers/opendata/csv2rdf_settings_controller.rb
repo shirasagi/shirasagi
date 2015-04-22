@@ -39,6 +39,10 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
       @item = @model.site(@cur_site).resource(@cur_resource).first
       @item ||= @model.create(pre_params.merge(fix_params))
       @item.attributes = fix_params
+
+      params[:s] ||= {}
+      # params[:s][:category_ids] ||= @cur_dataset.category_ids.map(&:to_s) if @cur_dataset.category_ids.present?
+      params[:s][:category_ids] ||= [ "false" ]
     end
 
     def set_rdf_class
@@ -128,10 +132,6 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
       @item = @item.dup
       @item.class_id = @rdf_class.id
       Rails.logger.debug("#rdf_class_preview: search_column_types")
-      # def @item.rdf_class
-      #   Rails.logger.debug("#rdf_class_preview: rdf_class=#{@rdf_class}")
-      #   @rdf_class
-      # end
       @item.column_types = @item.search_column_types(class: @rdf_class)
       Rails.logger.debug("#rdf_class_preview: render")
       render

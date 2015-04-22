@@ -53,6 +53,7 @@ ja:
       auto_mis_assing: "自動割付ミス"
       samples: "データ"
       rdf_property: RDF プロパティ
+      category_ids: 分野
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。

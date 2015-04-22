@@ -52,6 +52,13 @@ module Rdf::Object
         criteria = criteria.in(category_ids: [category_id])
       end
 
+      category_ids = params[:category_ids]
+      if category_ids.present?
+        # false means all
+        category_ids = category_ids.map { |e| e == "false" ? false : e.to_i }
+        criteria = criteria.in(category_ids: category_ids) unless category_ids.include?(false)
+      end
+
       criteria
     end
   end
