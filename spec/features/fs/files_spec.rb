@@ -8,15 +8,10 @@ describe "fs_files", dbscope: :example do
     src.binmode
     src.write ::File.binread(filename)
     src.rewind
-    src.original_filename = "logo.png"
-    src.content_type = "image/png"
+    src.original_filename = ::File.basename(filename)
+    src.content_type      = "image/png"
 
     file = SS::File.new
-
-    def file.path
-      super.sub(/^.*\/ss_files\//, "#{Rails.root}/tmp/ss_files/")
-    end
-
     file.in_file = src
     file.site_id = site.id
     file.model   = 'article/page'
@@ -40,7 +35,7 @@ describe "fs_files", dbscope: :example do
   end
 
   # https://github.com/shirasagi/shirasagi/issues/307
-  context "[logo.png]" do
+  context "[logo.png.png]" do
     let(:filename) { "#{Rails.root}/spec/fixtures/fs/logo.png.png" }
 
     it "#index" do
@@ -54,7 +49,7 @@ describe "fs_files", dbscope: :example do
     end
   end
 
-  after do
-    Fs.rm_rf "#{Rails.root}/tmp/ss_files/"
+  after(:each) do
+    Fs.rm_rf "#{Rails.root}/tmp/ss_files"
   end
 end
