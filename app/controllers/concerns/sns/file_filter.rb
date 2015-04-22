@@ -28,7 +28,7 @@ module Sns::FileFilter
       set_item
       set_last_modified
 
-      require 'RMagick'
+      require 'rmagick'
       image = Magick::Image.from_blob(@item.read).shift
       image = image.resize_to_fit 120, 90 if image.columns > 120 || image.rows > 90
 

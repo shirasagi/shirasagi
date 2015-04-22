@@ -1,4 +1,4 @@
-require 'RMagick'
+require 'rmagick'
 
 module Fs::FileFilter
   extend ActiveSupport::Concern
