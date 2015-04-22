@@ -3,8 +3,10 @@
   SS_AddonTabs.toggleView(".mod-map");
 
   Map.center = <%= SS.config.cms.map_center.to_json %>
-  Map.load(document.getElementById("map-canvas"));
-  Map_Form.setMarkers();
+  Map.setForm(Map_Form);
+
+  Map.load("#map-canvas");
+  Map.renderMarkers();
 
   $(".mod-map").parent().find(".toggle a").click(function() {
     Map.resize();

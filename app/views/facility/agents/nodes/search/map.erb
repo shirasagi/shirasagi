@@ -5,7 +5,7 @@
 <%= coffee do %>
 
 $(window).on "load", ->
-  Map.load(document.getElementById("map-canvas"))
+  Map.load("#map-canvas")
   Map.setMarkers(<%= raw @markers.to_json %>)
 
 $ ->

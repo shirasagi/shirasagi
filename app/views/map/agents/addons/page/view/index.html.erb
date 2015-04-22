@@ -2,12 +2,8 @@
 
 <%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
 <%= jquery do %>
-
-$(window).on("load", function() {
-  Map.load(document.getElementById("map-canvas"));
+  Map.load("#map-canvas");
   Map.setMarkers(<%= raw @cur_page.map_points.to_json %>);
-});
-
 <% end %>
 
 <section class="map-page">

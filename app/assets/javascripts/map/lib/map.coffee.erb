@@ -1,8 +1,10 @@
 class @Map
   @map        = null
+  @form       = null
   @center     = [36.204824, 138.252924]
   @markers    = null
   @openedInfo = null
+  @resized    = null
 
   @attachMessage: (id) ->
     google.maps.event.addListener Map.markers[id]["marker"], 'click', (event) ->
@@ -14,7 +16,10 @@ class @Map
       return
     return
 
-  @load: (element) ->
+  @setForm: (form) ->
+    @form = form
+
+  @load: (selector) ->
     mapOptions = {
       center: new google.maps.LatLng(@center[0], @center[1]),
       zoom: 5,
@@ -33,13 +38,18 @@ class @Map
         opened: true
       }
     }
-    @map = new google.maps.Map(element, mapOptions)
+    @map = new google.maps.Map($(selector).get(0), mapOptions)
     return
 
   @resize: ->
     google.maps.event.trigger(@map, "resize")
-    @map.setCenter new google.maps.LatLng(@center[0], @center[1]) unless @resized
+    if !@resized
+      @map.setCenter new google.maps.LatLng(@center[0], @center[1])
+      @form.renderMarkers() if @form
     @resized = true
+
+  @renderMarkers: ->
+    @form.renderMarkers() if @form
 
   @setMarkers: (markers) ->
     Map.markers = markers
@@ -95,4 +105,3 @@ class @Map
       Map.map.initialZoom = true
       Map.map.fitBounds(markerBounds)
     return
-

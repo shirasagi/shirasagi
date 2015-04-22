@@ -1,9 +1,9 @@
 class @Map_Form
-  @maxPointForm = 10
+  @maxPointForm  = 10
   @deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>"
-  @dataID = 0
-  @clickIcon = "//maps.google.com/mapfiles/ms/icons/blue-dot.png"
-  @clickMarker = null
+  @dataID        = 0
+  @clickIcon     = "//maps.google.com/mapfiles/ms/icons/blue-dot.png"
+  @clickMarker   = null
 
   @setMapLoc: (ele, lat, lon) ->
     lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6)
@@ -105,7 +105,7 @@ class @Map_Form
       Map_Form.attachMessage(dataId)
     return
 
-  @setMarkers: ()->
+  @renderMarkers: ()->
     google.maps.event.addListener Map.map, 'click', (event) ->
       Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng())
       if Map_Form.clickMarker != null
