@@ -40,11 +40,6 @@ SS::Application.routes.draw do
 
   SS::Initializer
 
-  namespace "fs" do
-    get ":id/:filename" => "files#index", as: :file
-    get ":id/thumb/:filename" => "files#thumb", as: :thumb
-  end
-
   namespace "sns", path: ".mypage" do
     get   "/"      => "mypage#index", as: :mypage
     get   "logout" => "login#logout", as: :logout
