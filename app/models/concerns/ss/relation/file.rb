@@ -40,8 +40,8 @@ module SS::Relation::File
       end
 
       define_method("remove_relation_#{name}") do
-        ss_file = send(name)
-        ss_file.destroy if ss_file
+        file = send(name)
+        file.destroy if file
         send("#{store}=", nil) rescue nil
       end
     end
