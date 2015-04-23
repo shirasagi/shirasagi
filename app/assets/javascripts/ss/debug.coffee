@@ -21,6 +21,7 @@ class @SS_Debug
     return if url.match(/^\/\..*?\/uploader/)
     return if url.match(/^\/\..*?\/db/)
     return if url.match(/^\/\..*?\/history/)
+    url = url.replace(/#.*/, "")
 
     if url.match(/^https?:/)
       return unless url.match(new RegExp("^https?://" + location.host))
