@@ -215,7 +215,7 @@ ja:
         categry_ids: 分野
         area_ids: 地域
         group_id: 所属グループ
-        dataset_ids: データセット
+        dataset_ids: 関連データセット
         point: 評価
         executed: 実行回数
         site_id: サイト
