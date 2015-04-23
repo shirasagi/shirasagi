@@ -88,6 +88,6 @@
     </div>
   </div>
   <% if @tab_display == "tab_html" %>
-    <%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %>
+    <div class="download-wrap"><%= link_to "ダウンロード", @cur_page.zip_url, class: "download" %></div>
   <% end %>
 </div>

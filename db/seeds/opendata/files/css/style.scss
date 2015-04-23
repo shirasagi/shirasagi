@@ -76,7 +76,7 @@ textarea {
 // -----------------------------------------------------------------------------
 // .content-body
 .content-body {
-  padding-bottom: $footer-margin;
+  padding-bottom: 60px;
 }
 
 // -----------------------------------------------------------------------------
@@ -85,7 +85,6 @@ textarea {
   @include grd-title;
   min-width: 1100px;
   border-top: 8px solid $blue;
-  //background: url(../img/rainbow.png) no-repeat left center;
 }
 
 // -----------------------------------------------------------------------------
@@ -277,7 +276,7 @@ article.areas, article.tags, article.formats, article.licenses {
 // -----------------------------------------------------------------------------
 // #add #twitter
 #add, #twitter {
-  margin-bottom: $box-margin;
+  margin-bottom: 24px;
 }
 
 // -----------------------------------------------------------------------------
@@ -332,7 +331,7 @@ article.areas, article.tags, article.formats, article.licenses {
 // -----------------------------------------------------------------------------
 // link
 #link {
-  margin-bottom: $box-margin;
+  margin-bottom: 24px;
   text-align: center;
 }
 
@@ -899,13 +898,13 @@ form.opendata-search_ideas-form .send {
     }
   }
   .inquiry-confirm-message {
-    margin-bottom: $box-margin;
+    margin-bottom: 24px;
     &~dd {
       padding-bottom:2em;
     }
   }
   .simple-captcha {
-    margin-bottom: $box-margin;
+    margin-bottom: 24px;
     input#answer_captcha {
       width: 300px;
     }
@@ -953,19 +952,19 @@ form.opendata-search_ideas-form .send {
   list-style: none;
   li {
     width: 526px;
-    margin-bottom: $box-margin;
+    margin-bottom: 24px;
     a {
       display: block;
-      margin-top: $box-margin;
+      margin-top: 24px;
       padding: 19px 0 19px 170px;
-      border: $border-hgry;
+      border: 1px solid $gray;
       color: $text;
       vertical-align: middle;
       text-decoration: none;
     }
   }
   li.Twitter {
-    margin-top: $box-margin;
+    margin-top: 24px;
     background: url(../img/logo_Twitter.png) no-repeat 50px center;
   }
   li.facebook {
@@ -1186,7 +1185,7 @@ form.opendata-search_ideas-form .send {
     clear: both;
     width: 100%;
     margin: 0px;
-    margin-bottom: $box-margin;
+    margin-bottom: 24px;
     border-top: 2px solid $blue;
     border-bottom: 2px solid $blue;
     tr.parent-row {
@@ -1241,7 +1240,7 @@ form.opendata-search_ideas-form .send {
   dl.see {
     clear: both;
     margin: 0px;
-    margin-bottom: $box-margin;
+    margin-bottom: 24px;
     > dt {
       @include clear;
       float: left;
@@ -1317,7 +1316,7 @@ form.opendata-search_ideas-form .send {
     }
   }
   .deletion-confirm {
-    margin-bottom:$box-margin;
+    margin-bottom:24px;
     padding: 15px;
     border: 1px solid #C33838;
     background: #FCEEEE;
@@ -1389,7 +1388,7 @@ table.ajax-selected {
   margin: 10px 0 10px 20px;
   thead {
     tr {
-      border-bottom: $border-hgry;
+      border-bottom: 1px solid $gray;
     }
     th {
       font-weight: normal;
@@ -1468,7 +1467,7 @@ section.datasets, section.apps, section.ideas {
 // -----------------------------------------------------------------------------
 // #errorExplanation
 #errorExplanation {
-  margin-bottom: $box-margin;
+  margin-bottom: 24px;
   padding: 20px 20px;
   border: 1px solid #cc0000;
   color: #cc0000;
@@ -1557,7 +1556,7 @@ section.datasets, section.apps, section.ideas {
 // -----------------------------------------------------------------------------
 // #ss-notice
 #ss-notice {
-  margin-bottom: $box-margin;
+  margin-bottom: 24px;
   padding: 10px 20px;
   background: #ebf6f9;
   border: 1px solid #8bb9da;
@@ -1757,6 +1756,63 @@ nav.cms-sns_share {
         }
         #idea_more {
           background: url(../img/ic-arrow_yellow.png) no-repeat left center;
+        }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// point
+.s-dataset .data-page-contents, .s-app .app-page-contents, .s-idea .idea-page-contents {
+  .point {
+    float: right;
+    margin-bottom: 24px;
+    .count {
+      width: 270px;
+      margin-bottom: 10px;
+      padding: 26px 0;
+      border: 1px solid $gray;
+      text-align: center;
+      span.number {
+        padding: 0 50px;
+        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
+        font-size: $px32;
+      }
+      span.label {
+        vertical-align: 5px;
+      }
+    }
+    .like {
+      width: 270px;
+      padding: 6px 0;
+      border: 1px solid rgba(162,215,154,0.24);
+      background: url(/img/img-iinesudachi.png) no-repeat 34px center,url(/img/img-iinebackground.png);
+      text-align: right;
+      .update {
+        @include box-shadow(0 0 0 1px $gray);
+        display: inline-block;
+        margin-right: 55px;
+        padding: 6px 25px;
+        border: 1px solid $white;
+        color: $text;
+        text-decoration: none;
+        letter-spacing: normal;
+      }
+      .add {
+        @include grd-iine;
+        &:not(:target) {
+          filter: none;
+          -ms-filter: none;
+        }
+        &:hover {
+          @include grd-iine_hover;
+        }
+      }
+      .cancel {
+        background: #E5E5E5 url(../img/ic-check.png) no-repeat 8px center;
+        &:hover {
+          background-color: #EFEFEF;
         }
       }
     }
@@ -2879,7 +2935,6 @@ article.licenses div article a {
               @include box-shadow(0 0 0 1px $gray);
               @include grd-pinkarrow-gray;
               display: inline-block;
-              float: left;
               margin: 4px 5px;
               padding: 8px 25px;
               border: 1px solid $white;
@@ -2952,6 +3007,33 @@ article.licenses div article a {
         }
       }
     }
+    #tab-idea {
+      .contribute-wrap {
+        @include grd-pinkbutton;
+        display: inline-block;
+        margin: 10px;
+        border: 1px solid rgba(#EC008B, 0.24);
+        letter-spacing: -.40em;
+        .contribute {
+          @include box-shadow(0 0 0 1px $gray);
+          @include grd-pinkarrow-gray;
+          display: inline-block;
+          margin: 4px 5px;
+          padding: 8px 20px;
+          border: 1px solid $white;
+          color: $text;
+          text-decoration: none;
+          letter-spacing: normal;
+          &:not(:target) {
+            filter: none;
+            -ms-filter: none;
+          }
+          &:hover {
+            @include grd-pinkarrow-gray_hover;
+          }
+        }
+      }
+    }
   }
   nav.related-pages {
     border: 1px solid $gray;
@@ -2999,53 +3081,6 @@ article.licenses div article a {
     }
   }
 }
-
-// -----------------------------------------------------------------------------
-// .data-page-contents point
-.s-dataset .data-page-contents {
-  .point {
-    float: right;
-    margin-bottom: $box-margin;
-    .count {
-      width: 270px;
-      margin-bottom: 10px;
-      padding: 15px 0;
-      border: 1px solid $gray;
-      text-align: center;
-      span.number {
-        padding: 0 50px;
-        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
-        font-size: $px32;
-      }
-      span.label {
-        display: block;
-      }
-    }
-    .update {
-      display: inline-block;
-      padding: 5px 20px 5px 40px;
-      @include border-radius(5px);
-      text-decoration: none;
-    }
-    .add {
-      border: 1px solid #282828;
-      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
-      color: $white;
-      &:hover {
-        background-color: #666666;
-      }
-    }
-    .cancel {
-      border: 1px solid #bdbdbd;
-      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
-      color: $text;
-      &:hover {
-        background-color: #dedede;
-      }
-    }
-  }
-}
-
 
 
 // <アプリ>------------------------------------------------------------------------------------------------------------
@@ -3655,19 +3690,38 @@ article.licenses div article a {
           }
           .icons {
             float: right;
-            padding: 22px;
-            .content, .download {
-              @include box-shadow(0 0 0 1px #b3b3e6);
-              margin-left: 4px;
-              margin-right: 1px;
-              padding: 10px 8px 10px 25px;
+            padding: 24px 0;
+            .content-wrap {
+              @include grd-preview;
               display: inline-block;
+              float: left;
+              margin-right: 5px;
+              border: 1px solid rgba(#666666, 0.24);
+              letter-spacing: -.40em;
+            }
+            .download-wrap {
+              @include grd-bluebutton;
+              display: inline-block;
+              float: left;
+              border: 1px solid rgba(#00AEEC, 0.24);
+              letter-spacing: -.40em;
+            }
+            .content, .download {
+              @include box-shadow(0 0 0 1px $gray);
+              @include grd-appbtn;
+              display: inline-block;
+              margin: 4px 5px;
+              padding: 8px 25px;
               border: 1px solid $white;
-              background: rgba(232, 232, 252, 0.3) url(../img/ic-arrow_blue_l.png) no-repeat 10px center;
               color: $text;
               text-decoration: none;
+              letter-spacing: normal;
+              &:not(:target) {
+                filter: none;
+                -ms-filter: none;
+              }
               &:hover {
-                background-color: #e1e2e3;
+                @include grd-appbtn_hover;
               }
             }
           }
@@ -3682,6 +3736,33 @@ article.licenses div article a {
                 padding-left: 24px;
                 white-space: normal;
                 word-break: break-word;
+              }
+            }
+          }
+        }
+        #tab-idea {
+          .contribute-wrap {
+            @include grd-bluebutton;
+            display: inline-block;
+            margin: 10px;
+            border: 1px solid rgba(#00AEEC, 0.24);
+            letter-spacing: -.40em;
+            .contribute {
+              @include box-shadow(0 0 0 1px $gray);
+              @include grd-appbtn;
+              display: inline-block;
+              margin: 4px 5px;
+              padding: 8px 20px;
+              border: 1px solid $white;
+              color: $text;
+              text-decoration: none;
+              letter-spacing: normal;
+              &:not(:target) {
+                filter: none;
+                -ms-filter: none;
+              }
+              &:hover {
+                @include grd-appbtn_hover;
               }
             }
           }
@@ -3715,15 +3796,26 @@ article.licenses div article a {
         }
       }
     }
+    .download-wrap {
+      @include grd-bluebutton;
+      display: inline-block;
+      border: 1px solid rgba(#00AEEC, 0.24);
+      letter-spacing: -.40em;
+    }
     .download {
       @include box-shadow(0 0 0 1px $gray);
       @include grd-appbtn;
       display: inline-block;
-      margin-left: 12px;
-      padding: 8px 8px 8px 25px;
+      margin: 4px 5px;
+      padding: 8px 25px;
       border: 1px solid $white;
       color: $text;
       text-decoration: none;
+      letter-spacing: normal;
+      &:not(:target) {
+        filter: none;
+        -ms-filter: none;
+      }
       &:hover {
         @include grd-appbtn_hover;
       }
@@ -3806,54 +3898,6 @@ article.licenses div article a {
     }
   }
 }
-
-// -----------------------------------------------------------------------------
-// .app-page-contents point
-.s-app .app-page-contents {
-  .point {
-    float: right;
-    margin-bottom: $box-margin;
-    .count {
-      width: 270px;
-      margin-bottom: 10px;
-      padding: 15px 0;
-      border: 1px solid $gray;
-      text-align: center;
-      span.number {
-        padding: 0 50px;
-        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
-        font-size: $px32;
-      }
-      span.label {
-        display: block;
-      }
-    }
-    .update {
-      display: inline-block;
-      padding: 5px 20px 5px 40px;
-      @include border-radius(5px);
-      text-decoration: none;
-    }
-    .add {
-      border: 1px solid #282828;
-      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
-      color: $white;
-      &:hover {
-        background-color: #666666;
-      }
-    }
-    .cancel {
-      border: 1px solid #bdbdbd;
-      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
-      color: $text;
-      &:hover {
-        background-color: #dedede;
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 //app fullscreen
@@ -4567,52 +4611,6 @@ article.licenses div article a {
   }
 }
 
-// -----------------------------------------------------------------------------
-// .idea-page-contents point
-.s-idea .idea-page-contents {
-  .point {
-    float: right;
-    margin-bottom: $box-margin;
-    .count {
-      width: 270px;
-      margin-bottom: 10px;
-      padding: 15px 0;
-      border: 1px solid $gray;
-      text-align: center;
-      span.number {
-        padding: 0 50px;
-        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
-        font-size: $px32;
-      }
-      span.label {
-        display: block;
-      }
-    }
-    .update {
-      display: inline-block;
-      padding: 5px 20px 5px 40px;
-      @include border-radius(5px);
-      text-decoration: none;
-    }
-    .add {
-      border: 1px solid #282828;
-      background: #383838 url(../img/ic-like.png) no-repeat 10px center;
-      color: $white;
-      &:hover {
-        background-color: #666666;
-      }
-    }
-    .cancel {
-      border: 1px solid #bdbdbd;
-      background: #EEEBEB url(../img/ic-check.png) no-repeat 10px center;
-      color: $text;
-      &:hover {
-        background-color: #dedede;
-      }
-    }
-  }
-}
-
 
 // <スパークル>--------------------------------------------------------------------------------------------------------
 
@@ -4620,10 +4618,10 @@ article.licenses div article a {
 // .opendata-sparql
 .opendata-sparql {
   h1 {
-    margin-bottom: $box-margin;
+    margin-bottom: 24px;
   }
   table {
-    margin-bottom: $box-margin;
+    margin-bottom: 24px;
     th {
       padding: 0 20px 20px 0;
       vertical-align: middle;
@@ -4643,10 +4641,29 @@ article.licenses div article a {
 }
 
 // -----------------------------------------------------------------------------
-//head
-.s-sparql #head {
-  margin-bottom: $box-margin;
+// .s-sparql #tab-inner
+.s-sparql {
+  #contents {
+    margin: 12px auto 0 auto;
+  }
+  #tab-inner {
+    .wrap {
+      @include border-bottom-radius(0px);
+      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
+      border: 1px solid $gray;
+      background: $white;
+      h1 {
+        @include border-top-radius(2px);
+        margin: 2px;
+        padding: 14px 0 14px 15px;
+        background: $blue;
+        color: $white;
+        font-size: $px32;
+      }
+    }
+  }
 }
+
 
 // <モーダル>----------------------------------------------------------------------------------------------------------
 

@@ -12,8 +12,8 @@
       <% end %>
     </div>
     <div class="icons">
-      <%= link_to "プレビュー", file.content_url, class: "content" %>
-      <%= link_to "ダウンロード", file.url, class: "download" %>
+      <div class="content-wrap"><%= link_to "プレビュー", file.content_url, class: "content" %></div>
+      <div class="download-wrap"><%= link_to "ダウンロード", file.url, class: "download" %></div>
     </div>
   </div>
 <% end %>

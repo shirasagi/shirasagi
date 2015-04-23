@@ -3,7 +3,7 @@
     <div class="dataset-ideas">
       <div class="ideas">
         <% if @login_mode %>
-          <a class="contribute" href="<%= "/mypage/idea/new?dataset=#{@dataset_idea.id}" %>">アイデアを投稿する</a>
+          <div class="contribute-wrap"><a class="contribute" href="<%= "/mypage/idea/new?dataset=#{@dataset_idea.id}" %>">アイデアを投稿する</a></div>
         <% end %>
         <table class="index">
           <tbody>
