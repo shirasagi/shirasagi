@@ -13,15 +13,15 @@ $ ->
 <% end %>
 
 <div class="count">
-  <span class="number">
-    <%= @dataset.point %>
-  </span>
   <span class="label">
     <% if @dataset.point == 0 %>
-      いいね！数
+      いいね！
     <% else %>
-      <%= link_to "いいね！数", @dataset.point_members_url %>
+      <%= link_to "いいね！", @dataset.point_members_url %>
     <% end %>
+  </span>
+  <span class="number">
+    <%= @dataset.point %>
   </span>
 </div>
 

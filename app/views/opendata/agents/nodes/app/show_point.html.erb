@@ -13,15 +13,15 @@ $ ->
 <% end %>
 
 <div class="count">
-  <span class="number">
-    <%= @app.point %>
-  </span>
   <span class="label">
     <% if @app.point == 0 %>
-      いいね！数
+      いいね！
     <% else %>
-      <%= link_to "いいね！数", @app.point_members_url %>
+      <%= link_to "いいね！", @app.point_members_url %>
     <% end %>
+  </span>
+  <span class="number">
+    <%= @app.point %>
   </span>
 </div>
 
