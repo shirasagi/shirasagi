@@ -26,7 +26,7 @@
   <header><h1><%= t :"cms.site_menu" %></h1></header>
   <div>
     <%= link_to :"cms.view_site", @cur_site.full_url, target: "_blank" %>
-    <%= link_to :"cms.preview_site", cms_preview_path, target: "_blank" %>
+    <%= link_to :"cms.preview_site", cms_preview_path + "/", target: "_blank" %>
   </div>
 </nav>
 
