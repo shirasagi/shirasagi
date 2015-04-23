@@ -1,7 +1,7 @@
 module Voice::Lockable
   extend ActiveSupport::Concern
 
-  EPOCH = Time.at(0)
+  EPOCH = Time.zone.at(0)
 
   included do
     field :lock_until, type: DateTime, default: EPOCH
@@ -11,7 +11,7 @@ module Voice::Lockable
     def acquire_lock(item, lock_timeout = nil)
       lock_timeout ||= 5.minutes.from_now
       criteria = item.class.where(id: item.id)
-      criteria = criteria.lt(lock_until: Time.now)
+      criteria = criteria.lt(lock_until: Time.zone.now)
       criteria.find_and_modify({ '$set' => { lock_until: lock_timeout }}, new: true)
     end
 

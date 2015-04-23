@@ -24,11 +24,7 @@ class Uploader::File
               Fs.mv saved_path, path
             end
           else
-            if directory?
-              Fs.mkdir_p path
-            else
-              Fs.binwrite path, binary
-            end
+            directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
           end
           @saved_path = @path
           compile_scss if @css

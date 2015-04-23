@@ -10,7 +10,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
       if y.present? && m.present? && Date.valid_date?(y.to_i, m.to_i, 1)
         @year = y.to_i
         @month = m.to_i
-        @day = Date.today.day.to_i
+        @day = Time.zone.today.day.to_i
       else
         @cur_path.sub(/\..+?$/, "").scan(/(\d{4})(\d{2})(\d{2})?$/).each do |y, m, d|
           d = 1 unless d
@@ -22,9 +22,9 @@ class Event::Agents::Parts::CalendarController < ApplicationController
         end
 
         if @year.blank? || @month.blank?
-          @year  = Date.today.year.to_i
-          @month = Date.today.month.to_i
-          @day = Date.today.day.to_i
+          @year  = Time.zone.today.year.to_i
+          @month = Time.zone.today.month.to_i
+          @day = Time.zone.today.day.to_i
         end
       end
 
@@ -50,7 +50,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
       @condition_hash = {} unless @condition_hash
       events = Cms::Page.site(@cur_site).public(@cur_date).
         where(@condition_hash).
-        where(:"event_dates".in => [date.mongoize]).
+        where(:event_dates.in => [date.mongoize]).
         entries.
         sort_by{ |page| page.event_dates.size }
     end

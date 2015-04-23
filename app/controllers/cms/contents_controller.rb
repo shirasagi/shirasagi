@@ -5,7 +5,7 @@ class Cms::ContentsController < ApplicationController
 
   private
     def set_crumbs
-      #@crumbs << [:"cms.content", action: :index]
+      @crumbs << [:"cms.content", action: :index]
     end
 
   public

@@ -27,7 +27,7 @@ class Inquiry::AnswersController < ApplicationController
       end
 
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-        filename: "inquiry_answers_#{Time.now.to_i}.csv"
+        filename: "inquiry_answers_#{Time.zone.now.to_i}.csv"
     end
 
   public

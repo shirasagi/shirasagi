@@ -105,7 +105,7 @@ class Kana::Dictionary
 
         def make_tmpname(suffix)
           # blow code come from Tmpname::make_tmpname
-          "mecab#{Time.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
+          "mecab#{Time.zone.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
         end
 
         def build_source(criteria, output_file)

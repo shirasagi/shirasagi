@@ -4,15 +4,15 @@ require 'timecop'
 describe Event::EventHelper, type: :helper do
 
   def date_when(date_opts = {})
-    return Date.current if date_opts.empty?
-    Date.current.change(date_opts)
+    return Time.zone.today if date_opts.empty?
+    Time.zone.today.change(date_opts)
   end
 
   before { Timecop.freeze(date_when(year: 2014, month: 9, day: 14)) }
 
   context '#within_one_year?' do
     it 'given current date returns true' do
-      date = Date.current # 2014/09/14
+      date = Time.zone.today # 2014/09/14
       expect(helper.within_one_year?(date)).to eq true
     end
 

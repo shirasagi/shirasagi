@@ -89,10 +89,10 @@ module ApplicationHelper
     html_options, name = name, nil if block_given?
     html_options = (html_options || {}).stringify_keys
 
-    extras = %w(cc bcc body subject).map! { |item|
+    extras = %w(cc bcc body subject).map! do |item|
       option = html_options.delete(item) || next
       "#{item}=#{Rack::Utils.escape_path(option)}"
-    }.compact
+    end.compact
     extras = extras.empty? ? '' : '?' + extras.join('&')
 
     email_address = email_address.gsub(/@/, "&#64;").gsub(/\./, "&#46;").html_safe if email_address.present?

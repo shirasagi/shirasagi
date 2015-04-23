@@ -59,16 +59,16 @@ class History::Log
       def term_to_date(name)
         case name.to_s
         when "year"
-          Time.now - 1.years
+          Time.zone.now - 1.years
         when "month"
-          #n = Time.now
+          #n = Time.zone.now
           #Time.local n.year, n.month, 1, 0, 0, 0
-          Time.now - 1.months
+          Time.zone.now - 1.months
         when "day"
-          #Date.today.to_time
-          Time.now - 1.days
+          #Time.zone.today.to_time
+          Time.zone.now - 1.days
         when "all_delete"
-          Time.now
+          Time.zone.now
         when "all_save"
           nil
         else

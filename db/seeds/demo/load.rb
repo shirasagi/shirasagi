@@ -684,7 +684,7 @@ save_page route: "article/page", filename: "docs/30.html", name: "ふれあい�
   file_ids: [file.id],
   html: '<p><a class="icon-pdf" href="' + file.url + '">サンプルファイル (PDF 783KB)</a></p>',
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
-dates = (Date.today..(Date.today + 20)).map { |d| d.mongoize }
+dates = (Time.zone.today..(Time.zone.today + 20)).map { |d| d.mongoize }
 save_page route: "event/page", filename: "calendar/31.html", name: "住民相談会を開催します。",
   layout_id: layouts["event"].id, category_ids: [categories["calendar/kohen"].id], event_dates: dates,
   schedule: "〇〇年○月〇日", venue: "○○○○○○○○○○", cost: "○○○○○○○○○○",

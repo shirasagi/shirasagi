@@ -102,5 +102,5 @@ RSpec.configure do |config|
 end
 
 def unique_id
-  Time.now.to_f.to_s.delete('.').to_i.to_s(36)
+  Time.zone.now.to_f.to_s.delete('.').to_i.to_s(36)
 end

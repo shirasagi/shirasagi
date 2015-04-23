@@ -11,7 +11,7 @@ describe Job::Task do
     its(:name) { should eq 'job' }
     its(:class_name) { should eq 'Foo' }
     its(:args) { should eq [ args ] }
-    its(:priority) { should be_within(5).of(Time.now.to_i) }
+    its(:priority) { should be_within(5).of(Time.zone.now.to_i) }
   end
 
   describe 'symbolized key hash arg' do
@@ -24,7 +24,7 @@ describe Job::Task do
     its(:name) { should eq 'job' }
     its(:class_name) { should eq 'Foo' }
     its(:args) { should eq [ args.stringify_keys ] }
-    its(:priority) { should be_within(5).of(Time.now.to_i) }
+    its(:priority) { should be_within(5).of(Time.zone.now.to_i) }
   end
 
   describe 'string key hash arg' do
@@ -37,6 +37,6 @@ describe Job::Task do
     its(:name) { should eq 'job' }
     its(:class_name) { should eq 'Foo' }
     its(:args) { should eq [ args.stringify_keys ] }
-    its(:priority) { should be_within(5).of(Time.now.to_i) }
+    its(:priority) { should be_within(5).of(Time.zone.now.to_i) }
   end
 end

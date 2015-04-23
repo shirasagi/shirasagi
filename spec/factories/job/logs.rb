@@ -16,21 +16,21 @@ FactoryGirl.define do
 
   trait :job_log_running do
     state Job::Log::STATE_RUNNING
-    started { Time.now }
+    started { Time.zone.now }
     logs [ "Job Started" ]
   end
 
   trait :job_log_completed do
     state Job::Log::STATE_COMPLETED
     started { 10.minutes.ago }
-    closed { Time.now }
+    closed { Time.zone.now }
     logs [ "Job Started", "Job Completed" ]
   end
 
   trait :job_log_failed do
     state Job::Log::STATE_FAILED
     started { 10.minutes.ago }
-    closed { Time.now }
+    closed { Time.zone.now }
     logs [ "Job Started", "Job Failed" ]
   end
 end

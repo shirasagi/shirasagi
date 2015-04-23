@@ -30,7 +30,7 @@ class Ezine::MembersController < ApplicationController
         end
       end
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-        filename: "ezine_members_#{Time.now.to_i}.csv"
+        filename: "ezine_members_#{Time.zone.now.to_i}.csv"
     end
 
   public

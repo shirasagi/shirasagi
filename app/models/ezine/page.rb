@@ -64,7 +64,7 @@ class Ezine::Page
       Ezine::TestMember.where(node_id: parent.id).each do |test_member|
         deliver_to test_member
       end
-      update test_delivered: Time.now
+      update test_delivered: Time.zone.now
     end
 
   private

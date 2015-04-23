@@ -19,7 +19,7 @@ module Job::Worker
 
     def call_in(interval, *args, &block)
       interval = interval.to_f
-      at = interval < 1_000_000_000 ? Time.now.to_f + interval : interval
+      at = interval < 1_000_000_000 ? Time.zone.now.to_f + interval : interval
       enqueue_job(
         class_name: self.to_s,
         args: args,

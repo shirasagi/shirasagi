@@ -1,8 +1,8 @@
 <%
 
 @s = OpenStruct.new params[:s]
-@s[:year]  ||= Date.today.year
-@s[:month] ||= Date.today.month
+@s[:year]  ||= Time.zone.today.year
+@s[:month] ||= Time.zone.today.month
 
 %>
 <div class="search-form">

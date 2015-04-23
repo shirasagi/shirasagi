@@ -70,7 +70,7 @@ module Job::LogsFilter
   private
     def send_csv(items)
       csv = build_csv(items)
-      send_data csv.encode("SJIS"), filename: "job_logs_#{Time.now.to_i}.csv"
+      send_data csv.encode("SJIS"), filename: "job_logs_#{Time.zone.now.to_i}.csv"
     end
 
     def build_csv(items)

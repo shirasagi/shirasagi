@@ -50,7 +50,7 @@ class Job::Service
 
         if service.current_count == 1
           service.state = "running"
-          service.started = Time.now
+          service.started = Time.zone.now
           service.save
         end
 
@@ -66,7 +66,7 @@ class Job::Service
         service = criteria.find_and_modify({ '$inc' => { current_count: -1, total_count: 1 }}, new: true)
         if service && service.current_count == 0
           service.state = "stop"
-          service.closed = Time.now
+          service.closed = Time.zone.now
           service.save
         end
         service
@@ -89,7 +89,7 @@ class Job::Service
         begin
           Rails.logger.info("Started Job #{task.id}")
           job_log.state = Job::Log::STATE_RUNNING
-          job_log.started = Time.now
+          job_log.started = Time.zone.now
           job_log.save
 
           time = Benchmark.realtime do
@@ -98,11 +98,11 @@ class Job::Service
           end
 
           job_log.state = Job::Log::STATE_COMPLETED
-          job_log.closed = Time.now
+          job_log.closed = Time.zone.now
           Rails.logger.info("Completed Job #{task.id} in #{time * 1000} ms")
         rescue Exception => e
           job_log.state = Job::Log::STATE_FAILED
-          job_log.closed = Time.now
+          job_log.closed = Time.zone.now
           Rails.logger.fatal("Failed Job #{task.id}: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
           raise if system_error?(e)
         end

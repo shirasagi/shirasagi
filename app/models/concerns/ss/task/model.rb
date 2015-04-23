@@ -77,7 +77,7 @@ module SS::Task::Model
         return false
       end
 
-      self.started       = Time.now
+      self.started       = Time.zone.now
       self.closed        = nil
       self.state         = "running"
       self.interrupt     = nil
@@ -88,7 +88,7 @@ module SS::Task::Model
     end
 
     def close
-      self.closed = Time.now
+      self.closed = Time.zone.now
       self.state  = "stop"
       save
     end

@@ -153,7 +153,7 @@ class Voice::File
     end
 
     def fresh?(margin)
-      elapsed = Time.now - Fs.stat(file).mtime
+      elapsed = Time.zone.now - Fs.stat(file).mtime
       elapsed < margin
     end
 end

@@ -5,8 +5,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
   public
     def index
-      @year  = Date.today.year.to_i
-      @month = Date.today.month.to_i
+      @year  = Time.zone.today.year.to_i
+      @month = Time.zone.today.month.to_i
 
       monthly
     end
@@ -40,7 +40,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     def events(date)
       events = Cms::Page.site(@cur_site).public(@cur_date).
         where(@cur_node.condition_hash).
-        where(:"event_dates".in => date).
+        where(:event_dates.in => date).
         entries.
         sort_by{ |page| page.event_dates.size }
     end

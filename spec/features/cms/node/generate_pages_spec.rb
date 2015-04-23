@@ -27,7 +27,7 @@ describe "cms_generate_pages" do
 
     it "#run" do
       # see: https://github.com/shirasagi/shirasagi/issues/272
-      start_at = Time.now
+      start_at = Time.zone.now
       visit index_path
       expect(status_code).to eq 200
       within "form#task-form" do

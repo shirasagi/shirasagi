@@ -21,7 +21,7 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
       @url = mobile_path? ? "/mobile#{@cur_node.url}" : @cur_node.url
 
       @query = {}
-      @query[:category] = @category.blank? ? {} : { :"category_ids".in =>  [@category.to_i] }
+      @query[:category] = @category.blank? ? {} : { :category_ids.in =>  [@category.to_i] }
       @query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map { |q| { name: /\Q#{q}\E/ } }
 
       @items = pages.

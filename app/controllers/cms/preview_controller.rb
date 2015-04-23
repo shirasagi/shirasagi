@@ -19,7 +19,7 @@ class Cms::PreviewController < ApplicationController
       @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
       @cur_path = URI.decode(@cur_path)
-      @cur_date = params[:preview_date].present? ? Time.parse(params[:preview_date]) : Time.now
+      @cur_date = params[:preview_date].present? ? params[:preview_date].in_time_zone : Time.zone.now
     end
 
     def x_sendfile(file = @file)

@@ -23,7 +23,7 @@ class Job::TaskLogger < ::Logger
     def write(message)
       if task
         task.logs << message.chomp
-        elapsed = Time.now - task.updated
+        elapsed = Time.zone.now - task.updated
         task.save if elapsed > FLUSH_INTERVAL
       end
     end

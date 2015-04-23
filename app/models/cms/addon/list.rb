@@ -38,7 +38,7 @@ module Cms::Addon::List
       end
 
       def in_new_days?(date)
-        date + new_days > (@cur_date || Time.now)
+        date + new_days > (@cur_date || Time.zone.now)
       end
 
       def condition_hash(opts = {})

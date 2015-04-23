@@ -5,8 +5,8 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
     def generate
       generate_node @node
 
-      @start_date = Date.current.advance(years: -1)
-      @close_date = Date.current.advance(years:  1)
+      @start_date = Time.zone.today.advance(years: -1)
+      @close_date = Time.zone.today.advance(years:  1)
 
       remove_old_pages
       generate_new_pages

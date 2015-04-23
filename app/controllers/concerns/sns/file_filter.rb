@@ -3,7 +3,7 @@ module Sns::FileFilter
 
   private
     def set_last_modified
-      response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.to_time)
+      response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
     end
 
   public

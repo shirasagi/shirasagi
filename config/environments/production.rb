@@ -47,10 +47,10 @@ Rails.application.configure do
 
   # Precompile additional assets.
   #config.assets.precompile += %w( *.css *.js )
-  config.assets.precompile << proc { |path, fn|
+  config.assets.precompile << proc do |path, fn|
     #fn =~ /app\/assets/ && !%w(.js .css).include?(File.extname(path))
     fn =~ /app\/assets/ && %w(.js .css).include?(File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/
-  }
+  end
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # config.action_mailer.raise_delivery_errors = false

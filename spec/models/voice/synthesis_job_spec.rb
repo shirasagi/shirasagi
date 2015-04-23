@@ -32,14 +32,14 @@ describe Voice::SynthesisJob do
         it { should_not be_nil }
         its(:class_name) { should eq 'Voice::SynthesisJob' }
         its(:args) { should eq [ id.to_s ] }
-        its(:priority) { should be_within(30).of(Time.now.to_i) }
+        its(:priority) { should be_within(30).of(Time.zone.now.to_i) }
         it { expect(subject.class_name.constantize).to be Voice::SynthesisJob }
       end
 
       describe "voice_file" do
         subject { Voice::File.find_by(url: url) rescue nil }
         it { should_not be_nil }
-        its(:lock_until) { should eq Time.at(0) }
+        its(:lock_until) { should eq Time.zone.at(0) }
         its(:error) { should be_nil }
         its(:has_error) { should eq 0 }
         its(:age) { should be >= 0 }
@@ -69,7 +69,7 @@ describe Voice::SynthesisJob do
       describe "voice_file" do
         subject { Voice::File.find_by(url: url) rescue nil }
         it { should_not be_nil }
-        its(:lock_until) { should eq Time.at(0) }
+        its(:lock_until) { should eq Time.zone.at(0) }
         its(:error) { should be_nil }
         its(:has_error) { should eq 0 }
         its(:age) { should be > 0 }
@@ -214,7 +214,7 @@ describe Voice::SynthesisJob do
         subject { Voice::File.find_by(url: url) rescue nil }
         it { should_not be_nil }
         its(:page_identity) { expect(subject.page_identity).to_not be_nil }
-        its(:lock_until) { should eq Time.at(0) }
+        its(:lock_until) { should eq Time.zone.at(0) }
         its(:error) { should be_nil }
         its(:has_error) { should eq 0 }
         its(:age) { should be > 0 }
@@ -247,11 +247,8 @@ describe Voice::SynthesisJob do
       subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       it "creates voice file" do
-        expect {
-          Voice::SynthesisJob.new.call(voice_file.id)
-        }.to change {
-          voice_file.exists?
-        }.from(false).to(true)
+        expect { Voice::SynthesisJob.new.call(voice_file.id) }.to \
+          change { voice_file.exists? }.from(false).to(true)
 
         voice_file.reload
         expect(voice_file.same_identity?).to be_truthy
@@ -274,9 +271,9 @@ describe Voice::SynthesisJob do
       subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       it "creates dows not voice file" do
-        expect {
+        expect do
           Voice::SynthesisJob.new.call(voice_file.id)
-        }.to raise_error OpenURI::HTTPError
+        end.to raise_error OpenURI::HTTPError
         expect(Voice::File.where(id: voice_file.id).count).to eq 0
       end
     end
@@ -298,9 +295,9 @@ describe Voice::SynthesisJob do
       subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
 
       it "creates dows not voice file" do
-        expect {
+        expect do
           Voice::SynthesisJob.new.call(voice_file.id)
-        }.to raise_error TimeoutError
+        end.to raise_error TimeoutError
         expect(Voice::File.where(id: voice_file.id).count).to eq 0
       end
     end

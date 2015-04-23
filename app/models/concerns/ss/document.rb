@@ -10,8 +10,8 @@ module SS::Document
     class_variable_set(:@@_permit_params, [])
     class_variable_set(:@@_text_index_fields, [])
 
-    field :created, type: DateTime, default: -> { Time.now }
-    field :updated, type: DateTime, default: -> { Time.now }
+    field :created, type: DateTime, default: -> { Time.zone.now }
+    field :updated, type: DateTime, default: -> { Time.zone.now }
     field :text_index, type: String
 
     validate :validate_updated, if: -> { in_updated.present? }
@@ -152,7 +152,7 @@ module SS::Document
 
     def set_updated
       return true if !changed?
-      self.updated = Time.now
+      self.updated = Time.zone.now
     end
 
     def set_text_index

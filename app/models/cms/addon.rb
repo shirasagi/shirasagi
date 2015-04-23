@@ -120,8 +120,8 @@ module Cms::Addon
       return if errors.present?
 
       if state == "public"
-        self.state = "ready" if release_date && release_date > Time.now
-        self.state = "closed" if close_date && close_date <= Time.now
+        self.state = "ready" if release_date && release_date > Time.zone.now
+        self.state = "closed" if close_date && close_date <= Time.zone.now
       end
     end
   end
@@ -169,7 +169,7 @@ module Cms::Addon
       end
 
       def in_new_days?(date)
-        date + new_days > Time.now
+        date + new_days > Time.zone.now
       end
 
     private

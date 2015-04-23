@@ -8,8 +8,8 @@ class Job::Task
   field :pool, type: String
   field :class_name, type: String
   field :args, type: Array
-  field :priority, type: Integer, default: -> { Time.now.to_i }
-  field :at, type: Integer, default: -> { Time.now.to_i }
+  field :priority, type: Integer, default: -> { Time.zone.now.to_i }
+  field :at, type: Integer, default: -> { Time.zone.now.to_i }
 
   belongs_to :site, class_name: "SS::Site"
 
@@ -28,9 +28,9 @@ class Job::Task
 
       def dequeue(name)
         criteria = Job::Task.where(pool: name, started: nil)
-        criteria = criteria.lte(at: Time.now)
+        criteria = criteria.lte(at: Time.zone.now)
         criteria = criteria.asc(:priority)
-        criteria.find_and_modify({ '$set' => { started: Time.now }}, new: true)
+        criteria.find_and_modify({ '$set' => { started: Time.zone.now }}, new: true)
       end
   end
 

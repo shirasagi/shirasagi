@@ -33,7 +33,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     def release
       @task.log "# #{@site.name}"
 
-      time = Time.now
+      time = Time.zone.now
       cond = [
         { state: "ready", release_date: { "$lte" => time } },
         { state: "public", close_date: { "$lte" => time } }

@@ -12,8 +12,8 @@ class Ads::AccessLogsController < ApplicationController
         @month = s[:month].presence
       end
 
-      sy = Date.today.year - 10
-      ey = Date.today.year
+      sy = Time.zone.today.year - 10
+      ey = Time.zone.today.year
       @years = (sy..ey).to_a.reverse.map { |d| ["#{d}#{t('datetime.prompts.year')}", d] }
       @months = (1..12).to_a.map { |d| ["#{d}#{t('datetime.prompts.month')}", d] }
 

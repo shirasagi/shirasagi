@@ -15,7 +15,7 @@ end
 
 RSpec.configuration.before(:suite) do
   prefix = "kana"
-  timestamp = Time.now.strftime("%Y%m%d")
+  timestamp = Time.zone.now.strftime("%Y%m%d")
   tmp = ::File.join(Dir.tmpdir, "#{prefix}-#{timestamp}")
   ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
 

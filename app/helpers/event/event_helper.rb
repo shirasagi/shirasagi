@@ -24,7 +24,7 @@ module Event::EventHelper
 
   def event_td_class(date, cdate)
     cls = event_dl_class(date)
-    cls = "#{cls} today" if date == Date.today
+    cls = "#{cls} today" if date == Time.zone.today
 
     if date.month > cdate.month
       "#{cls} next-month"
@@ -41,7 +41,7 @@ module Event::EventHelper
 
   def within_one_year?(date)
     # get current date
-    current = Date.current
+    current = Time.zone.today
 
     # manipulate year from current date
     start_date = current.advance(years: -1)

@@ -14,7 +14,7 @@ describe Voice::File do
       its(:path) { should eq "/#{random_string}" }
       its(:url) { should eq "http://#{site.domain}/" + random_string }
       its(:page_identity) { should be_nil }
-      its(:lock_until) { should eq Time.at(0) }
+      its(:lock_until) { should eq Time.zone.at(0) }
       its(:error) { should be_nil }
       its(:has_error) { should eq 0 }
       its(:age) { should eq 0 }
@@ -38,7 +38,7 @@ describe Voice::File do
       site = cms_site
       voice_file = described_class.find_or_create_by_url("http://#{site.domain}/" + random_string)
       locked_voice_file = described_class.acquire_lock(voice_file)
-      expected_lock_until  = Time.now
+      expected_lock_until  = Time.zone.now
     end
     subject { locked_voice_file }
 
@@ -76,18 +76,18 @@ describe Voice::File do
 
     it { should_not be_nil }
     its(:class) { should be described_class }
-    its(:lock_until) { should eq Time.at(0) }
+    its(:lock_until) { should eq Time.zone.at(0) }
   end
 
   context 'when error is given, has_error is set automatically' do
     random_string = rand(0x100000000).to_s(36)
     subject(:site) { cms_site }
     subject(:voice_file) { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
-    subject {
+    subject do
       voice_file.error = "has error"
       voice_file.save!
       voice_file
-    }
+    end
 
     it { should_not be_nil }
 

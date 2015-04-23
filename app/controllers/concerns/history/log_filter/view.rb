@@ -23,7 +23,7 @@ module History::LogFilter::View
         end
       end
 
-      send_data csv.encode("SJIS"), filename: "history_logs_#{Time.now.to_i}.csv"
+      send_data csv.encode("SJIS"), filename: "history_logs_#{Time.zone.now.to_i}.csv"
     end
 
     def render_destroy(result, opts = {})

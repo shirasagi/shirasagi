@@ -100,8 +100,14 @@ end
 
 describe Chorg::Substituter do
   context "with simple substitution" do
-    let(:from) { { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課", contact_email: "kmsrgxit7k@example.jp", release_date: Time.now } }
-    let(:to) { { id: 31_016, name: "シラサギ市/健康管理部/健康管理部 地域連携課", contact_email: "1b3ubagfds@example.jp", release_date: Time.now } }
+    let(:from) do
+      { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課",
+        contact_email: "kmsrgxit7k@example.jp", release_date: Time.zone.now }
+    end
+    let(:to) do
+      { id: 31_016, name: "シラサギ市/健康管理部/健康管理部 地域連携課",
+        contact_email: "1b3ubagfds@example.jp", release_date: Time.zone.now }
+    end
     subject { described_class.collect(from, to) }
 
     describe "#call" do
@@ -123,12 +129,12 @@ describe Chorg::Substituter do
     let(:from1) { { id: 30_015, name: "シラサギ市/企画政策部" } }
     let(:from2) do
       { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課",
-        contact_email: "kmsrgxit7k@example.jp", release_date: Time.now }
+        contact_email: "kmsrgxit7k@example.jp", release_date: Time.zone.now }
     end
     let(:to1) { { id: 31_015, name: "シラサギ市/健康管理部" } }
     let(:to2) do
       { id: 31_016, name: "シラサギ市/健康管理部/健康管理部 地域連携課",
-        contact_email: "1b3ubagfds@example.jp", release_date: Time.now }
+        contact_email: "1b3ubagfds@example.jp", release_date: Time.zone.now }
     end
     subject { described_class.collect(from1, to1).collect(from2, to2) }
 
@@ -160,7 +166,10 @@ describe Chorg::Substituter do
   end
 
   describe "does not substitute to nil" do
-    let(:from) { { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課", contact_email: "kmsrgxit7k@example.jp", release_date: Time.now } }
+    let(:from) do
+      { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課",
+        contact_email: "kmsrgxit7k@example.jp", release_date: Time.zone.now }
+    end
     let(:to) { { id: 31_016 } }
     subject { described_class.new.collect(from, to) }
 

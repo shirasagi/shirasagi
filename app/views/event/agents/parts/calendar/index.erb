@@ -13,7 +13,7 @@
       </li>
       <li class="current">
         <%= link_to t("event.current_month"), "#", class: :paginate,
-          "data-year" => Date.today.year, "data-month" => Date.today.month %>
+          "data-year" => Time.zone.today.year, "data-month" => Time.zone.today.month %>
       </li>
       <li class="next">
         <% if within_one_year?(@next_month_date) %>

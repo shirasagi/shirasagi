@@ -18,7 +18,7 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
         site_id: @item.site_id,
         node_id: @item.parent.id,
         link_url: @item.link_url,
-        date: Date.today
+        date: Time.zone.today
       )
       log.inc count: 1
 
