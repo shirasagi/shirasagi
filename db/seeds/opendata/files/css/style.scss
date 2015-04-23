@@ -1784,15 +1784,14 @@ nav.cms-sns_share {
       }
     }
     .like {
-      width: 270px;
-      padding: 6px 0;
-      border: 1px solid rgba(162,215,154,0.24);
+      width: 272px;
+      @include box-shadow(0 0 0 1px rgba(162,215,154,0.24) inset);
       background: url(/img/img-iinesudachi.png) no-repeat 34px center,url(/img/img-iinebackground.png);
       text-align: right;
       .update {
         @include box-shadow(0 0 0 1px $gray);
         display: inline-block;
-        margin-right: 55px;
+        margin: 6px 55px 6px 0;
         padding: 6px 25px;
         border: 1px solid $white;
         color: $text;
@@ -2604,19 +2603,19 @@ nav.cms-sns_share {
     background: $white;
     background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc5NjUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMC43Ii8+PHN0b3Agc3RvcC1jb2xvcj0iI0U1RTVFNSIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzk2NSkiIC8+Cjwvc3ZnPg==);
     @include background-image(linear-gradient($white 30%, #e5e5e5));
-    @include filter-gradient($white, #e5e5e5, vertical);
+    //@include filter-gradient($white, #e5e5e5, vertical);
     &:hover {
       background: $white;
       background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImczNDQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGREU4RjQiIG9mZnNldD0iMC41Ii8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZEREZFRiIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzM0NCkiIC8+Cjwvc3ZnPg==);
       @include background-image(linear-gradient(rgba(250, 191, 226, 0.3) 50%, rgba(250, 184, 223, 0.3)));
-      @include filter-gradient(#FDE8F4, #FDDFEF, vertical);
+      //@include filter-gradient(#FDE8F4, #FDDFEF, vertical);
     }
   }
   li.current {
     background: $white;
     background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImczNDQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGREU4RjQiIG9mZnNldD0iMC41Ii8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZEREZFRiIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzM0NCkiIC8+Cjwvc3ZnPg==);
     @include background-image(linear-gradient(rgba(250, 191, 226,0.3) 50%, rgba(250, 184, 223, 0.3)));
-    @include filter-gradient(#FDE8F4, #FDDFEF, vertical);
+    //@include filter-gradient(#FDE8F4, #FDDFEF, vertical);
   }
 }
 
@@ -3421,7 +3420,7 @@ article.licenses div article a {
     background: $white;
     background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBBRUVDIiBvZmZzZXQ9IjAiLz48c3RvcCBzdG9wLWNvbG9yPSIjMDBBRUVDIiBvZmZzZXQ9IjEiLz4KPC9saW5lYXJHcmFkaWVudD4KPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNnNzUpIiAvPgo8L3N2Zz4=);
     @include background-image(linear-gradient($white 20%, #e5e5e5));
-    @include filter-gradient($white, #e5e5e5, vertical);
+    //@include filter-gradient($white, #e5e5e5, vertical);
     &:hover {
       background: rgba(#00AEEC, 0.2)
     }
@@ -4249,7 +4248,6 @@ article.licenses div article a {
     background: $white;
     background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImcyNTQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRTYwMCIgb2Zmc2V0PSIwIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZGRTYwMCIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzI1NCkiIC8+Cjwvc3ZnPg==);
     @include background-image(linear-gradient($white 22%, #e5e5e5));
-    @include filter-gradient($white, #e5e5e5, vertical);
     &:hover {
       background: rgba($idea-yellow, 0.22);
     }
