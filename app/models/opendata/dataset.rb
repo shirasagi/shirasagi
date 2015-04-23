@@ -36,6 +36,7 @@ class Opendata::Dataset
   permit_params :text, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
+  after_save :on_state_changed, if: ->{ state_changed? }
 
   default_scope ->{ where(route: "opendata/dataset") }
 
@@ -72,6 +73,15 @@ class Opendata::Dataset
 
     def seq_filename
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+    end
+
+    def on_state_changed
+      resources.each do |r|
+        r.try(:state_changed)
+      end
+      url_resources.each do |r|
+        r.try(:state_changed)
+      end
     end
 
   class << self
