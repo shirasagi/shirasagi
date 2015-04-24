@@ -27,15 +27,24 @@ module Cms::Member::Model
 
     validates :name, presence: true, length: { maximum: 40 }
 
-    validates :email, uniqueness: { scope: :site_id }, presence: true, email: true,
-      length: { maximum: 80 }, if: ->{ oauth_type.blank? }
+    validates :email, email: true, length: { maximum: 80 }
+    validates :email, uniqueness: { scope: :site_id }, presence: true, if: ->{ oauth_type.blank? }
     validates :password, presence: true, if: ->{ oauth_type.blank? }
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
+    before_validation :normalize_email
   end
 
   public
     def encrypt_password
       self.password = SS::Crypt.crypt(in_password)
+    end
+
+  private
+    def normalize_email
+      self.email = email.strip if email.present?
+      if email.blank? && has_attribute?(:email)
+        remove_attribute(:email)
+      end
     end
 end
