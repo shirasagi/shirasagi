@@ -1630,7 +1630,7 @@ nav.cms-sns_share {
 #s-member {
   #tab-inner {
     .wrap {
-      @include border-bottom-radius(0px);
+      @include border-radius(3px);
       @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
       border: 1px solid $gray;
       background: $white;
@@ -1733,6 +1733,7 @@ nav.cms-sns_share {
           word-wrap: break-word;
         }
         .point {
+          @include border-radius(3px);
           @include box-shadow(0 0 0 1px rgba(#45B035, 0.3));
           display: inline-block;
           margin-left: 25px;
