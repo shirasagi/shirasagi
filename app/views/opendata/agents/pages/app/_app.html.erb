@@ -9,12 +9,12 @@
           <% if @tab_display == "tab_html" %>
             <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play','play'); return false;">
               実 行</a>
-            <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js','js'); return false;">
-              JavaScript</a>
-            <a id="css" class="name" href="#tab-css" onclick="ChangeTab('tab-css','css'); return false;">
-              CSS</a>
             <a id="html" class="name" href="#tab-html" onclick="ChangeTab('tab-html','html'); return false;">
               HTML</a>
+            <a id="css" class="name" href="#tab-css" onclick="ChangeTab('tab-css','css'); return false;">
+              CSS</a>
+            <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js','js'); return false;">
+              JavaScript</a>
             <a id="sample" class="name" href="#tab-sample" onclick="ChangeTab('tab-sample','sample'); return false;">
               サンプルデータ</a>
           <% end %>
@@ -42,11 +42,12 @@
                 <iframe class="frmPlay" src="" width="100%" height="100%"></iframe>
               </div>
             </div>
-            <div id="tab-js">
-              <header><h1>JavaScript</h1></header>
-              <% @js_src.each do |j| %>
-                <div id="js-<%= j.id %>" class="frame">
-                  <iframe class="frmJs" src="<%= @text + j.filename %>"></iframe>
+            <div id="tab-html">
+              <header><h1>HTML</h1></header>
+              <% @html_src.each do |h| %>
+                <div id="html-<%= h.id %>" class="frame">
+                  <div class="app_filename"><%= h.filename %></div>
+                  <iframe class="frmHtml" src="<%= @text + h.filename %>"></iframe>
                 </div>
               <% end %>
             </div>
@@ -54,15 +55,17 @@
               <header><h1>CSS</h1></header>
               <% @css_src.each do |c| %>
                 <div id="css-<%= c.id %>" class="frame">
+                  <div class="app_filename"><%= c.filename %></div>
                   <iframe class="frmCss" src="<%= @text + c.filename %>"></iframe>
                 </div>
               <% end %>
             </div>
-            <div id="tab-html">
-              <header><h1>HTML</h1></header>
-              <% @html_src.each do |h| %>
-                <div id="html-<%= h.id %>" class="frame">
-                  <iframe class="frmHtml" src="<%= @text + h.filename %>"></iframe>
+            <div id="tab-js">
+              <header><h1>JavaScript</h1></header>
+              <% @js_src.each do |j| %>
+                <div id="js-<%= j.id %>" class="frame">
+                  <div class="app_filename"><%= j.filename %></div>
+                  <iframe class="frmJs" src="<%= @text + j.filename %>"></iframe>
                 </div>
               <% end %>
             </div>

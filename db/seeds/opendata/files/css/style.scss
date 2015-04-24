@@ -3783,7 +3783,7 @@ article.licenses div article a {
           }
         }
         .frame {
-          border-bottom: 1px dotted #cccccc;
+          border-bottom: 1px solid $gray;
           &:last-child {
             border-bottom: 0;
           }
@@ -3792,6 +3792,10 @@ article.licenses div article a {
             width: calc(100% - 16px);
             min-height: 360px;
             margin: 16px;
+          }
+          .app_filename {
+            margin: 12px 16px 0 12px;
+            border-bottom: 1px dotted $gray;
           }
         }
       }
