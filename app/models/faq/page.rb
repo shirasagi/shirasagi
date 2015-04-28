@@ -10,7 +10,6 @@ class Faq::Page
   include Event::Addon::Date
   include Workflow::Addon::Approver
   include Faq::Addon::Question
-  include Faq::Reference::Question
   include Contact::Addon::Page
   include History::Addon::Backup
   include Workflow::Addon::Branch
