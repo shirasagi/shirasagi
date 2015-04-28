@@ -1,11 +1,17 @@
 require "open3"
 
 class Voice::MainController < ApplicationController
+  before_action :purge_pending_tasks
   before_action :check_voice_disable
   before_action :set_url
   before_action :lock_voice_file
 
   private
+    def purge_pending_tasks
+      # call #purge_pending_requests with 10% probability
+      Voice::SynthesisJob.purge_pending_tasks if Random.rand <= 0.1
+    end
+
     def check_voice_disable
       # raise "404" if SS.config.voice.disable
       if SS.config.voice.disable
