@@ -2,6 +2,7 @@ class SS::Migration20150423044546
   def change
     Ezine::Page.all.each do |page|
       results = page[:results]
+      next if results.nil?
       next if results.empty?
       next if results.first.instance_of? Ezine::Result
 
