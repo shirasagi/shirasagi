@@ -34,7 +34,9 @@ class Opendata::Csv2rdfConverter::Job
         tree = build_tree(row)
         next if tree.blank?
 
-        @tmp_file.puts "<#{@uri}#{index}> a #{@item.rdf_class.vocab.prefix}:#{@item.rdf_class.name} ;"
+        @tmp_file.puts "<#{@uri}#{index}>"
+        write_index(@tmp_file, 0)
+        @tmp_file.puts "a #{@item.rdf_class.vocab.prefix}:#{@item.rdf_class.name} ;"
         write_tree(@tmp_file, tree)
         @tmp_file.puts
       end
@@ -52,9 +54,7 @@ class Opendata::Csv2rdfConverter::Job
         next if val.blank? || ignore_column?(column_index)
         type_setting = @item.column_types[column_index]
         properties = type_setting["properties"]
-        if properties.blank?
-          properties = ["endemic_vocab:#{fallback_property_name(column_index)}"]
-        end
+        properties = ["endemic_vocab:#{fallback_property_name(column_index)}"] if properties.blank?
 
         subtree = root
         properties[0..-2].each_with_index do |name, i|
@@ -69,30 +69,29 @@ class Opendata::Csv2rdfConverter::Job
       root
     end
 
+    def write_index(f, depth)
+      f.write "  " * (depth + 1)
+    end
+
     def write_tree(f, tree, depth = 0)
       tree.each_with_index do |item, index|
         key, value = item
-        f.write "  " * (depth + 1) if depth == 0
-        write_value(f, key, value, depth)
-
-        last_sentence = index + 1 == tree.size && depth == 0
-        if last_sentence
-          f.write " ."
-        else
-          f.write " ;"
-        end
-        f.puts if depth == 0
+        write_value(f, key, value, depth, index + 1 == tree.size)
       end
-      f.puts if depth == 0
     end
 
-    def write_value(f, key, value, depth)
+    def write_value(f, key, value, depth, is_last)
+      write_index(f, depth)
+      delim = is_last ? (depth == 0 ? " ." : "") : " ;"
       if value.is_a?(Hash)
-        f.write "#{key} [ a #{value[:class]} ; "
+        f.puts "#{key} ["
+        write_index(f, depth + 1)
+        f.puts "a #{value[:class]} ;"
         write_tree(f, value[:tree], depth + 1)
-        f.write " ]"
+        write_index(f, depth)
+        f.puts "]#{delim}"
       else
-        f.write "#{key} #{value}"
+        f.puts "#{key} #{value}#{delim}"
       end
     end
 end
