@@ -8,4 +8,10 @@ FactoryGirl.define do
     area_ids [1]
     dataset_group_ids [1]
   end
+
+  factory :opendata_resource, class: Opendata::Resource do
+    name { "#{unique_id}" }
+    text "bbbb\nbbbb"
+  end
 end
+
