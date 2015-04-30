@@ -18,6 +18,11 @@ class Inquiry::Column
   validates :node_id, :state, :name, presence: true
 
   public
+    def answer_data(opts = {})
+      node.answers.where(opts).
+        map { |ans| ans.data.entries.select { |data| data.column_id == id } }.flatten
+    end
+
     def state_options
       [
         [I18n.t('views.options.state.public'), 'public'],

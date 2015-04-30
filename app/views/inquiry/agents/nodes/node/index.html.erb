@@ -1,0 +1,39 @@
+<div class="inquiry-nodes nodes">
+  <table id="forms">
+    <caption><%= @cur_node.name %></caption>
+    <thead>
+      <tr>
+        <th><%= @cur_node.class.t :name %></th>
+        <th><%= t "inquiry.reception_plan" %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td>
+          <% if item.reception_enabled? %>
+            <%= link_to item.name, item.url %>
+          <% else %>
+            <%= item.name %>
+          <% end %>
+        </td>
+        <td>
+          <% if item.reception_start_date.present? %>
+            <%= item.reception_start_date.strftime(t("date.formats.long")) %>
+            <%= t "inquiry.from" %>
+            <%= item.reception_close_date.strftime(t("date.formats.long")) %>
+          <% end %>
+        </td>
+        <td>
+          <% if item.aggregation_enabled? %>
+            <%= link_to t("inquiry.aggregate"), "#{item.url}results.html" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -11,10 +11,49 @@ module Inquiry::Node
     include Inquiry::Addon::Captcha
     include Inquiry::Addon::Notice
     include Inquiry::Addon::Reply
+    include Inquiry::Addon::ReleasePlan
+    include Inquiry::Addon::ReceptionPlan
+    include Inquiry::Addon::Aggregation
 
     has_many :columns, class_name: "Inquiry::Column"
     has_many :answers, class_name: "Inquiry::Answer"
 
+    after_validation :set_released, if: -> { public? }
     default_scope ->{ where(route: "inquiry/form") }
+
+    private
+      def set_released
+        self.released ||= Time.zone.now
+      end
   end
+
+  class Node
+    include Cms::Node::Model
+    include Cms::Addon::NodeList
+
+    default_scope ->{ where(route: "inquiry/node") }
+
+    public
+    def condition_hash(opts = {})
+      cond = []
+      cond << { filename: /^#{filename}\//, depth: depth + 1 }
+
+      conditions.each do |url|
+        # regex
+        if url =~ /\/\*$/
+          filename = url.sub(/\/\*$/, "")
+          cond << { filename: /^#{filename}\// }
+          next
+        end
+
+        node = Cms::Node.filename(url).first
+        next unless node
+
+        cond << { filename: node.filename }
+      end
+
+      { '$or' => cond }
+    end
+  end
+
 end

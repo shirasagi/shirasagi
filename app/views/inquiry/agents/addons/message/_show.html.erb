@@ -12,5 +12,12 @@
     <%= html_editor "#inquiry_sent_html", height: "200px", readonly: true %>
     <%= text_area_tag "inquiry_sent_html", @item.inquiry_sent_html, style: "height: 200px;" %>
   <% end %>
-  </dd>  
+  </dd>
+  <dt><%= @model.t :inquiry_results_html %></dt>
+  <dd>
+  <% if @item.send(:inquiry_results_html).present?  %>
+    <%= html_editor "#inquiry_results_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry_results_html", @item.inquiry_results_html, style: "height: 200px;" %>
+  <% end %>
+  </dd>
 </dl>

@@ -1,0 +1,12 @@
+<%
+
+return if @item.release_date.blank? && @item.close_date.blank?
+
+%>
+<dl class="see">
+  <dt><%= @model.t :release_date %></dt>
+  <dd><%= tryb{@item.send(:release_date).strftime("%Y/%m/%d %H:%M")} %></dd>
+
+  <dt><%= @model.t :close_date %></dt>
+  <dd><%= tryb{@item.send(:close_date).strftime("%Y/%m/%d %H:%M")} %></dd>
+</dl>

@@ -9,8 +9,9 @@ module Inquiry::Addon
     included do
       field :inquiry_html, type: String, default: ""
       field :inquiry_sent_html, type: String, default: ""
+      field :inquiry_results_html, type: String, default: ""
 
-      permit_params :inquiry_html, :inquiry_sent_html
+      permit_params :inquiry_html, :inquiry_sent_html, :inquiry_results_html
     end
   end
 
@@ -165,5 +166,96 @@ module Inquiry::Addon
           end
         end
     end
+  end
+
+  module ReleasePlan
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 501
+
+    included do
+      field :release_date, type: DateTime
+      field :close_date, type: DateTime
+      permit_params :release_date, :close_date
+
+      validate :validate_release_date
+    end
+
+    module ClassMethods
+      public
+        def public(date = nil)
+          date = Time.zone.now unless date
+          super(date)
+        end
+    end
+
+    public
+      def public?
+        if (release_date.present? && release_date > Time.zone.now) ||
+           (close_date.present? && close_date < Time.zone.now)
+          false
+        else
+          super
+        end
+      end
+
+      def label(name)
+        if name == :state
+          state = public? ? "public" : "closed"
+          I18n.t("views.options.state.#{state}")
+        else
+          super(name)
+        end
+      end
+
+    private
+      def validate_release_date
+        self.released ||= release_date
+
+        if close_date.present?
+          if release_date.present? && release_date >= close_date
+            errors.add :close_date, :greater_than, count: t(:release_date)
+          end
+        end
+      end
+  end
+
+  module ReceptionPlan
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 510
+
+    included do
+      field :reception_start_date, type: DateTime
+      field :reception_close_date, type: DateTime
+      permit_params :reception_start_date, :reception_close_date
+
+      validate :validate_reception_date
+    end
+
+    public
+      def reception_enabled?
+        if (reception_start_date.present? && reception_start_date.to_date > Time.zone.now.to_date) ||
+           (reception_close_date.present? && reception_close_date.to_date < Time.zone.now.to_date)
+          false
+        else
+          true
+        end
+      end
+
+    private
+      def validate_reception_date
+        if reception_start_date.present? || reception_close_date.present?
+          if reception_start_date.blank?
+            errors.add :reception_start_date, :empty
+          elsif reception_close_date.blank?
+            errors.add :reception_close_date, :empty
+          elsif reception_start_date > reception_close_date
+            errors.add :reception_close_date, :greater_than, count: t(:reception_start_date)
+          end
+        end
+      end
   end
 end
