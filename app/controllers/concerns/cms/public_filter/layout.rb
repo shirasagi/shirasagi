@@ -83,7 +83,7 @@ module Cms::PublicFilter::Layout
       part = part.filename(path).first
       return unless part
 
-      if part.ajax_view == "enabled" && !filters.include?(:mobile)
+      if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
         part.ajax_html
       else
         render_part(part.becomes_with_route)
