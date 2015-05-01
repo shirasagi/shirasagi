@@ -21,4 +21,12 @@ class Voice::SynthesisJob
         raise
       end
     end
+
+    def self.purge_pending_tasks
+      criteria = Job::Task.where(pool: 'voice_synthesis')
+      return if criteria.count < 20
+      count = criteria.where(started: nil).lt(created: 5.minutes.ago).destroy
+      Rails.logger.info("purged #{count} voice task(s)")
+      count
+    end
 end

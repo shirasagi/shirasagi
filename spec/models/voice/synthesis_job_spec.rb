@@ -3,94 +3,104 @@ require 'models/voice/test_http_server'
 
 describe Voice::SynthesisJob do
   describe '#call_async', open_jtalk: true do
-    port = 33_190
-    http_server = Voice::TestHttpServer.new(port)
-
     before :all  do
-      http_server.start
+      @port = 33_190
+      @http_server = Voice::TestHttpServer.new(@port)
+      @http_server.start
     end
 
     after :all  do
-      http_server.stop
+      @http_server.stop # if @http_server.present?
     end
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}"
-      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
-      let(:id) { item.id }
-      let(:job) { Voice::SynthesisJob.call_async id.to_s }
-
       before :all do
-        http_server.add_redirect("/#{path}", "/test-001.html")
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+
+        @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
+        @job = Voice::SynthesisJob.call_async @item.id.to_s
       end
 
-      it { expect(job).not_to be_nil }
+      after :all do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      it { expect(@job).not_to be_nil }
 
       describe "job" do
         subject { Job::Task.find_by(pool: 'voice_synthesis') rescue nil }
-        it { should_not be_nil }
-        its(:class_name) { should eq 'Voice::SynthesisJob' }
-        its(:args) { should eq [ id.to_s ] }
-        its(:priority) { should be_within(30).of(Time.zone.now.to_i) }
+        it { is_expected.not_to be_nil }
+        its(:class_name) { is_expected.to eq 'Voice::SynthesisJob' }
+        its(:args) { is_expected.to eq [ @item.id.to_s ] }
+        its(:priority) { is_expected.to be_within(30).of(Time.zone.now.to_i) }
         it { expect(subject.class_name.constantize).to be Voice::SynthesisJob }
       end
 
       describe "voice_file" do
-        subject { Voice::File.find_by(url: url) rescue nil }
-        it { should_not be_nil }
-        its(:lock_until) { should eq Time.zone.at(0) }
-        its(:error) { should be_nil }
-        its(:has_error) { should eq 0 }
-        its(:age) { should be >= 0 }
+        subject { Voice::File.find_by(url: @url) rescue nil }
+        it { is_expected.not_to be_nil }
+        its(:lock_until) { is_expected.to eq Time.zone.at(0) }
+        its(:error) { is_expected.to be_nil }
+        its(:has_error) { is_expected.to eq 0 }
+        its(:age) { is_expected.to be >= 0 }
       end
     end
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}"
-      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
-      let(:id) { item.id }
-      let(:job) { Voice::SynthesisJob.call_async id.to_s }
-      let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
-
       before(:all) do
-        http_server.add_redirect("/#{path}", "/test-001.html")
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
+        @job = Voice::SynthesisJob.call_async @item.id.to_s
+        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
-      it { expect(job).not_to be_nil }
-      it { expect(system(cmd)).to be_truthy }
+      after :all do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      it { expect(@job).not_to be_nil }
+      it { expect(system(@cmd)).to be_truthy }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
-        it { should be_nil }
+        it { is_expected.to be_nil }
       end
 
       describe "voice_file" do
-        subject { Voice::File.find_by(url: url) rescue nil }
-        it { should_not be_nil }
-        its(:lock_until) { should eq Time.zone.at(0) }
-        its(:error) { should be_nil }
-        its(:has_error) { should eq 0 }
-        its(:age) { should be > 0 }
+        subject { Voice::File.find_by(url: @url) rescue nil }
+        it { is_expected.not_to be_nil }
+        its(:lock_until) { is_expected.to eq Time.zone.at(0) }
+        its(:error) { is_expected.to be_nil }
+        its(:has_error) { is_expected.to eq 0 }
+        its(:age) { is_expected.to be > 0 }
       end
     end
 
     context 'when get 400' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}?status_code=400"
-      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
-      let(:id) { item.id }
-      let(:job) { Voice::SynthesisJob.call_async id.to_s }
-      let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
-
       before(:all) do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", status_code: 400)
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=400"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @http_server.add_options("/#{@path}", status_code: 400)
+
+        @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
+        @job = Voice::SynthesisJob.call_async @item.id.to_s
+        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
-      it { expect(job).not_to be_nil }
-      it { expect(system(cmd)).to be false }
+      after :all do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      it { expect(@job).not_to be_nil }
+      it { expect(system(@cmd)).to be false }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -98,26 +108,30 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Job::Task.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: @url) rescue nil }
         it { should be_nil }
       end
     end
 
     context 'when get 404' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}?status_code=404"
-      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
-      let(:id) { item.id }
-      let(:job) { Voice::SynthesisJob.call_async id.to_s }
-      let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
-
       before(:all) do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", status_code: 404)
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=404"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @http_server.add_options("/#{@path}", status_code: 404)
+
+        @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
+        @job = Voice::SynthesisJob.call_async @item.id.to_s
+        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
-      it { expect(job).not_to be_nil }
-      it { expect(system(cmd)).to be_falsey }
+      after :all do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      it { expect(@job).not_to be_nil }
+      it { expect(system(@cmd)).to be_falsey }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -125,26 +139,30 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Job::Task.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: @url) rescue nil }
         it { should be_nil }
       end
     end
 
     context 'when get 500' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}?status_code=500"
-      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
-      let(:id) { item.id }
-      let(:job) { Voice::SynthesisJob.call_async id.to_s }
-      let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
-
       before(:all) do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", status_code: 500)
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=500"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @http_server.add_options("/#{@path}", status_code: 500)
+
+        @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
+        @job = Voice::SynthesisJob.call_async @item.id.to_s
+        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
-      it { expect(job).not_to be_nil }
-      it { expect(system(cmd)).to be_falsey }
+      after :all do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      it { expect(@job).not_to be_nil }
+      it { expect(system(@cmd)).to be_falsey }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -152,31 +170,32 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Job::Task.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: @url) rescue nil }
         it { should be_nil }
       end
     end
 
     context 'when server timed out' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      wait = SS.config.voice.download['timeout_sec'] + 5
-      url = "http://127.0.0.1:#{port}/#{path}?wait=#{wait}"
-      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
-      let(:id) { item.id }
-      let(:job) { Voice::SynthesisJob.call_async id.to_s }
-      let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
-
       before(:all) do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", wait: wait)
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @wait = SS.config.voice.download['timeout_sec'] + 5
+        @url = "http://127.0.0.1:#{@port}/#{@path}?wait=#{@wait}"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @http_server.add_options("/#{@path}", wait: @wait)
+
+        @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
+        @job = Voice::SynthesisJob.call_async @item.id.to_s
+        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
       after(:all) do
-        http_server.release_wait
+        @http_server.release_wait
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
       end
 
-      it { expect(job).not_to be_nil }
-      it { expect(system(cmd)).to be_falsey }
+      it { expect(@job).not_to be_nil }
+      it { expect(system(@cmd)).to be_falsey }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -184,26 +203,30 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Job::Task.find_by(url: url) rescue nil }
+        subject { Job::Task.find_by(url: @url) rescue nil }
         it { should be_nil }
       end
     end
 
     context 'when server does not respond last_modified' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}?last_modified=nil"
-      let(:item) { Voice::File.find_or_create_by(site_id: cms_site.id, url: url) }
-      let(:id) { item.id }
-      let(:job) { Voice::SynthesisJob.call_async id.to_s }
-      let(:cmd) { "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1" }
-
       before(:all) do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", last_modified: nil)
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}?last_modified=nil"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @http_server.add_options("/#{@path}", last_modified: nil)
+
+        @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
+        @job = Voice::SynthesisJob.call_async @item.id.to_s
+        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
-      it { expect(job).not_to be_nil }
-      it { expect(system(cmd)).to be_truthy }
+      after(:all) do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      it { expect(@job).not_to be_nil }
+      it { expect(system(@cmd)).to be_truthy }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -211,7 +234,7 @@ describe Voice::SynthesisJob do
       end
 
       describe "voice_file" do
-        subject { Voice::File.find_by(url: url) rescue nil }
+        subject { Voice::File.find_by(url: @url) rescue nil }
         it { should_not be_nil }
         its(:page_identity) { expect(subject.page_identity).to_not be_nil }
         its(:lock_until) { should eq Time.zone.at(0) }
@@ -223,82 +246,120 @@ describe Voice::SynthesisJob do
   end
 
   describe '#call', open_jtalk: true do
-    port = 33_190
-    http_server = Voice::TestHttpServer.new(port)
-
     before(:all) do
-      http_server.start
+      @port = 33_190
+      @http_server = Voice::TestHttpServer.new(@port)
+      @http_server.start
     end
 
     after(:all) do
-      http_server.stop
+      @http_server.stop
     end
 
     subject(:site) { cms_site }
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}"
-
       before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
       end
 
-      subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
+      after(:all) do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
 
       it "creates voice file" do
-        expect { Voice::SynthesisJob.new.call(voice_file.id) }.to \
-          change { voice_file.exists? }.from(false).to(true)
+        expect { Voice::SynthesisJob.new.call(subject.id) }.to \
+          change { subject.exists? }.from(false).to(true)
 
-        voice_file.reload
-        expect(voice_file.same_identity?).to be_truthy
-        expect(voice_file.latest?).to be_truthy
-        expect(voice_file.error).to be_nil
-        expect(voice_file.has_error).to eq 0
-        expect(voice_file.age).to be > 0
+        subject.reload
+        expect(subject.same_identity?).to be_truthy
+        expect(subject.latest?).to be_truthy
+        expect(subject.error).to be_nil
+        expect(subject.has_error).to eq 0
+        expect(subject.age).to be > 0
       end
     end
 
     context 'when get 404' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      url = "http://127.0.0.1:#{port}/#{path}?status_code=404"
-
       before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", status_code: 404)
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=404"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @http_server.add_options("/#{@path}", status_code: 404)
       end
 
-      subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
+      after(:all) do
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
+      end
+
+      subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
 
       it "creates dows not voice file" do
-        expect do
-          Voice::SynthesisJob.new.call(voice_file.id)
-        end.to raise_error OpenURI::HTTPError
-        expect(Voice::File.where(id: voice_file.id).count).to eq 0
+        expect { Voice::SynthesisJob.new.call(subject.id) }.to raise_error OpenURI::HTTPError
+        expect(Voice::File.where(id: subject.id).count).to eq 0
       end
     end
 
     context 'when server timed out' do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-      wait = SS.config.voice.download['timeout_sec'] + 5
-      url = "http://127.0.0.1:#{port}/#{path}?wait=#{wait}"
-
       before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", wait: wait)
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @wait = SS.config.voice.download['timeout_sec'] + 5
+        @url = "http://127.0.0.1:#{@port}/#{@path}?wait=#{@wait}"
+        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @http_server.add_options("/#{@path}", wait: @wait)
       end
 
       after :all  do
-        http_server.release_wait
+        @http_server.release_wait
+        DatabaseCleaner.clean
+        DatabaseCleaner.start
       end
 
-      subject(:voice_file) { Voice::File.find_or_create_by(site_id: site.id, url: url) }
+      subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
 
       it "creates dows not voice file" do
-        expect do
-          Voice::SynthesisJob.new.call(voice_file.id)
-        end.to raise_error TimeoutError
-        expect(Voice::File.where(id: voice_file.id).count).to eq 0
+        expect { Voice::SynthesisJob.new.call(subject.id) }.to raise_error TimeoutError
+        expect(Voice::File.where(id: subject.id).count).to eq 0
+      end
+    end
+  end
+
+  describe '#purge_pending_tasks' do
+    before do
+      DatabaseCleaner.clean
+      DatabaseCleaner.start
+    end
+
+    context "when there is no tasks" do
+      it do
+        expect { described_class.purge_pending_tasks }.not_to raise_error
+      end
+    end
+
+    context "when there is 20 tasks and 1 is too old" do
+      before do
+        1.upto(20) do |id|
+          Voice::SynthesisJob.call_async id.to_s
+        end
+
+        first_task = Job::Task.first
+        first_task.created = 10.minutes.ago
+        first_task.save!
+      end
+
+      it do
+        expect { described_class.purge_pending_tasks }.to \
+          change { Job::Task.count }.from(20).to(19)
+      end
+
+      it do
+        expect(described_class.purge_pending_tasks).to eq 1
       end
     end
   end
