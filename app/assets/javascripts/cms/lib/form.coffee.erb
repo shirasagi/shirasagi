@@ -52,11 +52,11 @@ class @Syntax_Checker
 
   @errors
   @errorCount
-  @autoCorrect = <%= SS.config.cms.auto_correct_page_html == true %>
+  @autoCorrect = false
 
   @reset: ()->
     @errors = {}
-    @errorCount  = 0
+    @errorCount = 0
     return
 
   @render: ()->
@@ -495,9 +495,9 @@ class @Link_Checker
     linkCheckerError  : "<%= I18n.t('errors.messages.link_check_failed_to_connect') %>"
   }
 
-  @links = {}
-  @error = ""
-  @url = "<%= SS.config.cms.link_check_url %>" || "/.cms/link_check/check.json"
+  @links   = {}
+  @error   = ""
+  @url     = "/.cms/link_check/check.json"
   @rootUrl = ""
 
   @render: ()->

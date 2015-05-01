@@ -1,7 +1,9 @@
 <%= html_editor ".mod-cms-body .html" %>
 
 <%= jquery do %>
-  Link_Checker.rootUrl = "<%= @cur_site.full_url %>";
+  Link_Checker.url           = "<%= SS.config.cms.link_check_url %>";
+  Link_Checker.rootUrl       = "<%= @cur_site.full_url %>";
+  Syntax_Checker.autoCorrect = <%= SS.config.cms.auto_correct_page_html == true %>;
   Cms_Form.render();
 <% end %>
 
