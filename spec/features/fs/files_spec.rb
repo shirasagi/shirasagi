@@ -3,13 +3,8 @@ require 'spec_helper'
 describe "fs_files", dbscope: :example do
   let(:site) { cms_site }
   let(:file) do
-    src = Fs::UploadedFile.new("spec")
-
-    src.binmode
-    src.write ::File.binread(filename)
-    src.rewind
-    src.original_filename = ::File.basename(filename)
-    src.content_type      = "image/png"
+    src = Fs::UploadedFile.create_from_file(filename, basename: "spec")
+    src.content_type = "image/png"
 
     file = SS::File.new
     file.in_file = src
