@@ -13,8 +13,8 @@ class @Map
       if Map.markers[id]["window"]
         Map.markers[id]["window"].open(Map.markers[id]["marker"].getMap(), Map.markers[id]["marker"])
       Map.openedInfo = Map.markers[id]["window"]
-      return
-    return
+    google.maps.event.addListener Map.markers[id]["window"], 'closeclick', (event) ->
+      Map.openedInfo = null
 
   @setForm: (form) ->
     @form = form

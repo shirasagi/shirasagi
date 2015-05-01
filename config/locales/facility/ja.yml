@@ -33,6 +33,8 @@ ja:
     tab:
       map: 地図表示
       result: 一覧表示
+    sidebar:
+      click_marker: 地図上で確認
     button:
       add_info: 項目を追加する
       del_info: 削除
