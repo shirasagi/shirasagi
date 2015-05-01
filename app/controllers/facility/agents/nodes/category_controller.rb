@@ -1,6 +1,5 @@
 class Facility::Agents::Nodes::CategoryController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
 
   public
     def index

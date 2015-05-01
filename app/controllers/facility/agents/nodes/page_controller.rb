@@ -1,6 +1,5 @@
 class Facility::Agents::Nodes::PageController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
 
   public
     def map_pages

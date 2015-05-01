@@ -2,25 +2,14 @@
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
 
 <%= coffee do %>
-
-$ ->
-  $(".filters a").on "click", ->
-    dataID = parseInt($(this).attr("data-id"))
-    $.each markers, (id, value) ->
-      if $.inArray(dataID, markers[id]["location"]) >= 0
-        markers[id]["marker"].setVisible(true)
-      else
-        markers[id]["marker"].setVisible(false)
-        markers[id]["window"].close()
-    return false;
-
+$(window).on "load", ->
+  # setup search modal window
   $(".ajax-box").on "click", ->
     $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "./result.html" }) %>"})
     return false
-
 <% end %>
 
-<%= render  partial: "navi", locals: { current: "result" } %>
+<%= render file: "facility/agents/addons/search_result/view/upper" %>
 
 <div class="columns">
   <% @items.each do |item| %>

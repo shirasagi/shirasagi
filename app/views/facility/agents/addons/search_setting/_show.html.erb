@@ -1,0 +1,13 @@
+<%= code_editor ".mod-facility-search-setting .html", mode: :html, readonly: true %>
+
+<dl class="see mod-facility-search-setting">
+  <dt><%= @model.t :conditions %></dt>
+  <dd><%=br @item.conditions.join("\n") %></dd>
+
+  <dt><%= @model.t :search_html %></dt>
+  <dd>
+    <% if @item.search_html.present? %>
+    <%= text_area_tag :search_html, @item.search_html, class: "html", style: "height: 150px;"  %>
+    <% end %>
+  </dd>
+</dl>

@@ -1,6 +1,7 @@
 class Facility::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Facility::PageFilter
 
   model Facility::Node::Page
 

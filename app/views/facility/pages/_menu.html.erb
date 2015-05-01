@@ -2,6 +2,8 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, action: :new %>
+      <%= link_to :download, action: :download %>
+      <%= link_to :import, action: :import %>
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
@@ -10,6 +12,8 @@
       <%= link_to :back_to_show, action: :show, id: @item %>
     <% end %>
     <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /import/ %>
+    <%= link_to :back_to_index, action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t("facility.edit_page"), action: :edit, id: @item %>
@@ -17,8 +21,7 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :delete, action: :delete, id: @item %>
     <% end %>
-    <%= link_to :"cms.view_page", @item.url, target: :_blank if @item.public? %>
-
+    <%= link_to :preview, cms_preview_path(path: "#{@item.filename}/"), target: :_blank %>
     <%= link_to :back_to_index, action: :index %>
   <% end %>
 </nav>

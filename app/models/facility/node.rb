@@ -24,14 +24,19 @@ module Facility::Node
     include Facility::Addon::Location
 
     default_scope ->{ where(route: "facility/page") }
+
+    def serve_static_file?
+      false
+    end
   end
 
   class Search
     include Cms::Node::Model
-    include Cms::Addon::NodeList
     include Facility::Addon::CategorySetting
     include Facility::Addon::ServiceSetting
     include Facility::Addon::LocationSetting
+    include Facility::Addon::SearchSetting
+    include Facility::Addon::SearchResult
 
     default_scope ->{ where(route: "facility/search") }
 
@@ -102,6 +107,7 @@ module Facility::Node
   class Location
     include Cms::Node::Model
     include Cms::Addon::NodeList
+    include Facility::Addon::FocusSetting
 
     default_scope ->{ where(route: "facility/location") }
 

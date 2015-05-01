@@ -1,0 +1,17 @@
+<%= code_editor ".mod-facility-search-result .html", mode: :html, readonly: true %>
+
+<dl class="see mod-facility-search-result">
+  <dt><%= @model.t :upper_html %></dt>
+  <dd>
+    <% if @item.upper_html.present? %>
+    <%= text_area_tag :upper_html, @item.upper_html, class: "html", style: "height: 150px;"  %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :map_html %></dt>
+  <dd>
+    <% if @item.map_html.present? %>
+    <%= text_area_tag :map_html, @item.map_html, class: "html", style: "height: 150px;"  %>
+    <% end %>
+  </dd>
+</dl>

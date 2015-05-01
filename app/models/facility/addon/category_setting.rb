@@ -8,6 +8,6 @@ module Facility::Addon
       permit_params st_category_ids: []
     end
 
-    set_order 500
+    set_order 400
   end
 end

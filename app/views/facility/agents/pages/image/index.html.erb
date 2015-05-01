@@ -1,9 +1,3 @@
-<header class="released">
-  <time datetime="<%= I18n.l @cur_page.date.to_date, format: :iso %>"><%= I18n.l @cur_page.date.to_date, format: :long %></time>
-</header>
-
 <% Facility::Image.addons.each do |addon| %>
   <%= render file: addon.view_file if addon.view_file %>
 <% end %>
-
-<%= paginate @items if @items.try(:current_page) %>

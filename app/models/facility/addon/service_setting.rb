@@ -8,6 +8,6 @@ module Facility::Addon
       permit_params st_service_ids: []
     end
 
-    set_order 510
+    set_order 430
   end
 end

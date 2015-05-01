@@ -1,13 +1,15 @@
 class Facility::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
   helper Map::MapHelper
+  append_view_path "app/views/facility/agents/addons/search_setting/view"
+  append_view_path "app/views/facility/agents/addons/search_result/view"
 
   private
     def set_query
-      @category_ids = params[:category_ids].select(&:present?).map(&:to_i) rescue nil
-      @service_ids  = params[:service_ids].select(&:present?).map(&:to_i) rescue nil
-      @location_ids = params[:location_ids].select(&:present?).map(&:to_i) rescue nil
+      @keyword      = params[:keyword]
+      @category_ids = params[:category_ids].select(&:present?).map(&:to_i) rescue []
+      @service_ids  = params[:service_ids].select(&:present?).map(&:to_i) rescue []
+      @location_ids = params[:location_ids].select(&:present?).map(&:to_i) rescue []
 
       @q_category = @category_ids.present? ? { category_ids: @category_ids } : {}
       @q_service  = @service_ids.present? ? { service_ids: @service_ids } : {}
@@ -52,38 +54,55 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
         marker_info  = view_context.render_marker_info(item)
 
         map.map_points.each do |point|
+          point[:facility_id] = item.id
           point[:html] = marker_info
           point[:category] = category_ids
           point[:image] = image_url if image_url.present?
           @markers.push point
         end
       end
+
+      @items.sort_by!(&:name)
+    end
+
+    def set_filter_items
+      @filter_categories = @cur_node.st_categories.in(_id: @items.map(&:category_ids).flatten)
+      @filter_locations = @cur_node.st_locations.entries.select{ |l| l.center_point[:loc].present? }
+      @focus_options = @filter_locations.map do |l|
+        opts = {}
+        opts.merge!({ "data-zoom-level" => l.center_point[:zoom_level] }) if l.center_point[:zoom_level]
+        [l.name, l.center_point[:loc].join(","), opts]
+      end
+      @focus_options.unshift [I18n.t("facility.select_location"), ""]
     end
 
   public
     def index
+      set_query
+      render :index, locals: { search_path: "./map.html" }
     end
 
     def map
       set_query
       set_markers
+      set_filter_items
+      @current = "map"
       render :map
     end
 
     def result
       set_query
       set_items
+      @current = "result"
       @items = @items.page(params[:page]).
         per(@cur_node.limit)
+      render :result
     end
 
     def map_all
       params[:category_ids] = nil
       params[:service_ids]  = nil
       params[:location_ids] = nil
-
-      set_query
-      set_markers
-      render :map
+      map
     end
 end

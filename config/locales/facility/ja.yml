@@ -27,12 +27,15 @@ ja:
     result: 検索結果
     count: 件
     image: 施設写真
-    map: 施設地図
+    map: 地図
     edit_page: 施設情報を編集する
+    select_location: 地域を選択
     empty: 上記の条件では施設が見つかりませんでした。
     tab:
       map: 地図表示
       result: 一覧表示
+    sidebar:
+      click_marker: 地図上で確認
     button:
       add_info: 項目を追加する
       del_info: 削除
@@ -41,16 +44,23 @@ ja:
       search: この条件で検索する
       reset: 検索条件をリセットする
       change: 検索条件を変更する
+    import:
+      start: 施設情報の更新処理を開始しました。
+      invalid_file: CSV形式のファイルを選択してください。
+      log: インポートログ
 
   modules:
     facility: 施設
     addons:
       facility/body: 施設情報
       facility/additional_info: 追加情報
+      facility/focus_setting: フォーカス設定
       facility/image: 施設写真
       facility/image_info: 写真情報
       facility/pointer_image: ポインタ画像
-      facility/location: 施設の地域
+      facility/search_setting: 施設検索
+      facility/search_result: 検索結果
+      facility/location: 施設地域
       facility/location_setting: 施設の地域
       facility/service: 施設の用途
       facility/service_setting: 施設の用途
@@ -71,19 +81,36 @@ ja:
       facility/node/page:
         name: 施設名
         kana: 施設名ふりがな
+        layout: レイアウト
         postcode: 郵便番号
         address: 住所
         tel: 電話番号
         fax: FAX
         related_url: URL
+        categories: 施設の種類
+        services: 施設の用途
+        locations: 施設の地域
+        additional_info: 追加情報
         field: 項目名
         value: 内容
+        map_points: 座標
+        groups: 管理グループ
+      facility/node/search:
+        search_html: 検索HTML
+        map_html: 地図HTML
+      facility/node/location:
+        center_point: 中心座標
+        zoom_level: ズームレベル
       facility/image:
         image_alt: ALT属性
         image_comment: 説明文
         image_thumb_size: サムネイルサイズ
         image_thumb_width: 幅
         image_thumb_height: 高さ
+
+  job:
+    models:
+      facility/import_job: 施設情報インポート
 
   tooltip:
     facility/addon/body:
@@ -104,11 +131,46 @@ ja:
         - 追加情報の項目名を設定します。
       value:
         - 左欄項目の内容を設定します。
+    facility/addon/search_setting:
+      conditions:
+        - 検索対象に含める施設リストフォルダー名を記述します。
+        - |-
+          改行することで複数のファルダー指定することが可能です。
+          例：
+          institution/list
+          shelter/list
+      search_html:
+        - "検索部分のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
+        - "&lt;/ keyword /&gt; キーワード検索フォームが表示されます。"
+        - "&lt;/ category /&gt; 施設の種類検索フォームが表示されます。"
+        - "&lt;/ service /&gt; 施設の用途検索フォームが表示されます。"
+        - "&lt;/ location /&gt; 施設の地域検索フォームが表示されます。"
+    facility/addon/search_result:
+      upper_html:
+        - "検索結果上部のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
+        - "&lt;/ tabs /&gt; 地図、一覧表示の切り替えタブが表示されます。"
+        - "&lt;/ settings /&gt; 検索条件を変更するモーダルウインドウのリンクが表示されます。"
+        - "#{keyword} キーワードの検索クエリが表示されます。"
+        - "#{category} 施設の種類の検索クエリが表示されます。"
+        - "#{service} 施設の用途の検索クエリが表示されます。"
+        - "#{location} 施設の地域の検索クエリが表示されます。"
+        - "#{number} 検索結果件数が表示されます。"
+      map_html:
+        - "検索結果の地図部分のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
+        - "&lt;/ canvas /&gt; 地図が表示されます。"
+        - "&lt;/ sidebar /&gt; 地図と連動するサイドバーが表示されます。"
+        - "&lt;/ filters /&gt; 種類の絞り込み、地域フォーカスが表示されます。"
     facility/addon/pointer_image:
       image:
-        - |-
-          施設検索結果の地図表示時に表示するポインタ画像を設定します。
-          このカテゴリが設定された施設のポインタ画像が変更されます。
+        - 施設検索結果の地図表示時に表示するポインタ画像を設定します。
+        - このカテゴリが設定された施設のポインタ画像が変更されます。
+    facility/addon/focus_setting:
+      center_point:
+        - 地域の中心座標を設定することで地図検索時にフォーカスすることができます。
+      zoom_level:
+        - フォーカス時のズームレベル（１～１９）を設定します。
+        - 数値が大きいほど近くにフォーカスされます。
+        - 未設定時はフォーカスしても縮尺が変わりません。
     facility/addon/category:
       categories:
         - 施設の種類を設定します。
@@ -127,4 +189,3 @@ ja:
     facility/addon/service_setting:
       st_services:
         - 検索または施設作成時に使用する施設用途を設定します。
-
