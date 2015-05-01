@@ -13,12 +13,8 @@ def save_ss_files(path, data)
   puts path
   cond = { filename: data[:filename], model: data[:model] }
 
-  file = Fs::UploadedFile.new("ss_file")
-  file.binmode
-  file.write(File.binread(path))
-  file.rewind
-  file.original_filename = data[:filename]
-  file.content_type = Fs.content_type(path)
+  file = Fs::UploadedFile.create_from_file(path)
+  file.original_filename = data[:filename] if data[:filename].present?
 
   item = SS::File.find_or_create_by(cond)
   item.in_file = file
