@@ -99,6 +99,7 @@ RSpec.configure do |config|
   config.add_setting :default_dbscope, default: :context
   config.extend(SS::DatabaseCleanerSupport)
   config.include(SS::JsSupport, js: true)
+  config.extend(SS::HttpServerSupport, http_server: true)
 end
 
 def unique_id

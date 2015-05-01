@@ -1,31 +1,30 @@
 require 'spec_helper'
-require 'models/voice/test_http_server'
 
-describe Voice::File do
+describe Voice::File, http_server: true, doc_root: Rails.root.join("spec", "fixtures", "voice"), port: 33_190 do
   describe '#find_or_create_by_url' do
     context "when valid site is given" do
       random_string = rand(0x100000000).to_s(36)
-      subject(:site) { cms_site }
+      let(:site) { cms_site }
       subject { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
 
-      it { should_not be_nil }
-      its(:class) { should be described_class }
-      its(:id) { should be_a(BSON::ObjectId) }
-      its(:path) { should eq "/#{random_string}" }
-      its(:url) { should eq "http://#{site.domain}/" + random_string }
-      its(:page_identity) { should be_nil }
-      its(:lock_until) { should eq Time.zone.at(0) }
-      its(:error) { should be_nil }
-      its(:has_error) { should eq 0 }
-      its(:age) { should eq 0 }
-      its(:file) { should match %r</voice_files/[1-9]/[0-9a-f]{2}/[0-9a-f]{2}/_/> }
+      it { is_expected.not_to be_nil }
+      its(:class) { is_expected.to be described_class }
+      its(:id) { is_expected.to be_a(BSON::ObjectId) }
+      its(:path) { is_expected.to eq "/#{random_string}" }
+      its(:url) { is_expected.to eq "http://#{site.domain}/" + random_string }
+      its(:page_identity) { is_expected.to be_nil }
+      its(:lock_until) { is_expected.to eq Time.zone.at(0) }
+      its(:error) { is_expected.to be_nil }
+      its(:has_error) { is_expected.to eq 0 }
+      its(:age) { is_expected.to eq 0 }
+      its(:file) { is_expected.to match %r</voice_files/[1-9]/[0-9a-f]{2}/[0-9a-f]{2}/_/> }
     end
 
     context "when invalid site is given" do
       random_string = rand(0x100000000).to_s(36)
       subject { described_class.find_or_create_by_url("http://invalid-site-#{random_string}/" + random_string) }
 
-      it { should be_nil }
+      it { is_expected.to be_nil }
     end
   end
 
@@ -42,9 +41,9 @@ describe Voice::File do
     end
     subject { locked_voice_file }
 
-    it { should_not be_nil }
-    its(:class) { should be described_class }
-    its(:lock_until) { should be >= expected_lock_until }
+    it { is_expected.not_to be_nil }
+    its(:class) { is_expected.to be described_class }
+    its(:lock_until) { is_expected.to be >= expected_lock_until }
   end
 
   context 'when acquire_lock call twice' do
@@ -59,7 +58,7 @@ describe Voice::File do
       locked_voice_file = described_class.acquire_lock(voice_file)
     end
     subject { locked_voice_file }
-    it { should be_nil }
+    it { is_expected.to be_nil }
   end
 
   describe '#release_lock' do
@@ -74,26 +73,26 @@ describe Voice::File do
     end
     subject { released_voice_file }
 
-    it { should_not be_nil }
-    its(:class) { should be described_class }
-    its(:lock_until) { should eq Time.zone.at(0) }
+    it { is_expected.not_to be_nil }
+    its(:class) { is_expected.to be described_class }
+    its(:lock_until) { is_expected.to eq Time.zone.at(0) }
   end
 
   context 'when error is given, has_error is set automatically' do
     random_string = rand(0x100000000).to_s(36)
-    subject(:site) { cms_site }
-    subject(:voice_file) { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
+    let(:site) { cms_site }
+    let(:voice_file) { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
     subject do
       voice_file.error = "has error"
       voice_file.save!
       voice_file
     end
 
-    it { should_not be_nil }
+    it { is_expected.not_to be_nil }
 
     describe "#has_error" do
-      its(:error) { should eq "has error" }
-      its(:has_error) { should eq 1 }
+      its(:error) { is_expected.to eq "has error" }
+      its(:has_error) { is_expected.to eq 1 }
     end
 
     describe "#search" do
@@ -106,26 +105,15 @@ describe Voice::File do
   end
 
   describe '#download' do
-    port = 33_190
-    http_server = Voice::TestHttpServer.new(port)
-
-    before :all  do
-      http_server.start
-    end
-
-    after :all  do
-      http_server.stop
-    end
-
-    subject(:voice_site) do
-      Cms::Site.find_or_create_by(name: "VoiceSite", host: "test-voice", domains: [ "127.0.0.1:#{port}" ])
+    let(:voice_site) do
+      Cms::Site.find_or_create_by(name: "VoiceSite", host: "test-voice", domains: [ "127.0.0.1:33190" ])
     end
 
     context "when downloads page" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
+      before :all do
+        @http_server.options = { real_path: "/test-001.html" }
       end
 
       subject(:voice_file) do
@@ -133,7 +121,7 @@ describe Voice::File do
         described_class.find_or_create_by_url(url)
       end
 
-      it { should_not be_nil }
+      it { is_expected.not_to be_nil }
 
       it "downloads page" do
         voice_file.download
@@ -146,9 +134,8 @@ describe Voice::File do
     context "when server does not respond etag" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", etag: nil)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", etag: nil }
       end
 
       subject(:voice_file) do
@@ -156,7 +143,7 @@ describe Voice::File do
         described_class.find_or_create_by_url(url)
       end
 
-      it { should_not be_nil }
+      it { is_expected.not_to be_nil }
 
       it "downloads page" do
         voice_file.download
@@ -169,9 +156,8 @@ describe Voice::File do
     context "when server does not respond last_modified" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", last_modified: nil)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", last_modified: nil }
       end
 
       subject(:voice_file) do
@@ -179,7 +165,7 @@ describe Voice::File do
         described_class.find_or_create_by_url(url)
       end
 
-      it { should_not be_nil }
+      it { is_expected.not_to be_nil }
 
       it "downloads page" do
         voice_file.download
@@ -192,9 +178,8 @@ describe Voice::File do
     context "when server does not either respond etag or last_modified" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", etag: nil, last_modified: nil)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", etag: nil, last_modified: nil }
       end
 
       subject(:voice_file) do
@@ -202,7 +187,7 @@ describe Voice::File do
         described_class.find_or_create_by_url(url)
       end
 
-      it { should_not be_nil }
+      it { is_expected.not_to be_nil }
 
       it "downloads page" do
         voice_file.download
