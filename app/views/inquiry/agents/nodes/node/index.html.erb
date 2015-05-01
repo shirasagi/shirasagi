@@ -5,7 +5,10 @@
       <tr>
         <th><%= @cur_node.class.t :name %></th>
         <th><%= t "inquiry.reception_plan" %></th>
-        <th></th>
+        <% show_aggregation = @items.map(&:aggregation_enabled?).index(true) %>
+        <% if show_aggregation %>
+          <th><%= t "inquiry.aggregate" %></th>
+        <% end %>
       </tr>
     </thead>
     <tbody>
@@ -20,16 +23,22 @@
         </td>
         <td>
           <% if item.reception_start_date.present? %>
-            <%= item.reception_start_date.strftime(t("date.formats.long")) %>
-            <%= t "inquiry.from" %>
-            <%= item.reception_close_date.strftime(t("date.formats.long")) %>
+            <%=
+              item.reception_start_date.strftime(t("date.formats.long"))
+            %><%= t "inquiry.from" %><%=
+              item.reception_close_date.strftime(t("date.formats.long"))
+            %>
           <% end %>
         </td>
-        <td>
-          <% if item.aggregation_enabled? %>
-            <%= link_to t("inquiry.aggregate"), "#{item.url}results.html" %>
-          <% end %>
-        </td>
+        <% if show_aggregation %>
+          <td>
+            <% if item.aggregation_enabled? %>
+              <%= link_to t("inquiry.aggregate"), "#{item.url}results.html" %>
+            <% else %>
+              <%= t "inquiry.aggregate" %>
+            <% end %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
     </tbody>
