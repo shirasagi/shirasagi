@@ -89,32 +89,5 @@ $(window).on "load", ->
     $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "./map.html" }) %>"})
     return false
 <% end %>
-
-<%= render partial: "navi", locals: { current: "map" } %>
-
-<div id="map-sidebar" style="height: 400px;">
-  <% @items.each do |item| %>
-    <div class="column" data-id="<%= item.id %>">
-      <p><%= link_to item.name, item.url %></p>
-      <p><%= item.address %></p>
-      <%= link_to t("facility.sidebar.click_marker"), "#", class: "click-marker" %>
-    </div>
-  <% end %>
-</div>
-
-<div id="map-canvas" style="width: 100%; height: 400px;"></div>
-
-<nav class="filters">
-  <% if @filter_categories.present? %>
-　  <ul>
-      <% @filter_categories.order_by(order: 1).each do |cate| %>
-        <li class="<%= cate.basename %>">
-          <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
-        </li>
-      <% end %>
-    </ul>
-  <% end %>
-  <% if @filter_locations.present? %>
-    <%= select_tag :focus, options_for_select(@focus_options), class: :focus %>
-  <% end %>
-</nav>
+<%= render file: "facility/agents/addons/search_result/view/upper" %>
+<%= render file: "facility/agents/addons/search_result/view/map" %>

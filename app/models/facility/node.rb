@@ -28,10 +28,11 @@ module Facility::Node
 
   class Search
     include Cms::Node::Model
-    include Cms::Addon::NodeList
     include Facility::Addon::CategorySetting
     include Facility::Addon::ServiceSetting
     include Facility::Addon::LocationSetting
+    include Facility::Addon::SearchSetting
+    include Facility::Addon::SearchResult
 
     default_scope ->{ where(route: "facility/search") }
 

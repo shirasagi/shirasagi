@@ -1,12 +1,15 @@
 class Facility::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
   helper Map::MapHelper
+  append_view_path "app/views/facility/agents/addons/search_setting/view"
+  append_view_path "app/views/facility/agents/addons/search_result/view"
 
   private
     def set_query
-      @category_ids = params[:category_ids].select(&:present?).map(&:to_i) rescue nil
-      @service_ids  = params[:service_ids].select(&:present?).map(&:to_i) rescue nil
-      @location_ids = params[:location_ids].select(&:present?).map(&:to_i) rescue nil
+      @keyword      = params[:keyword]
+      @category_ids = params[:category_ids].select(&:present?).map(&:to_i) rescue []
+      @service_ids  = params[:service_ids].select(&:present?).map(&:to_i) rescue []
+      @location_ids = params[:location_ids].select(&:present?).map(&:to_i) rescue []
 
       @q_category = @category_ids.present? ? { category_ids: @category_ids } : {}
       @q_service  = @service_ids.present? ? { service_ids: @service_ids } : {}
@@ -63,15 +66,16 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     end
 
     def set_filter_items
-      @filter_categories = @categories.present? ? @categories : @cur_node.st_categories
-      @filter_locations = @cur_node.st_locations
-      @focus_options = @filter_locations.entries.
-        select{ |loc| loc.center_loc.present? }.map { |loc| [loc.name, loc.center_loc.join(",")] }
-      @focus_options.unshift ["地域を選択", ""]
+      @filter_categories = Facility::Node::Category.in(_id: @items.map(&:category_ids).flatten)
+      @filter_locations = @cur_node.st_locations.entries.select{ |loc| loc.center_loc.present? }
+      @focus_options = @filter_locations.map { |loc| [loc.name, loc.center_loc.join(",")] }
+      @focus_options.unshift [I18n.t("facility.select_location"), ""]
     end
 
   public
     def index
+      set_query
+      render :index, locals: { search_path: "./map.html" }
     end
 
     def map
@@ -86,15 +90,13 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       set_items
       @items = @items.page(params[:page]).
         per(@cur_node.limit)
+      render :result
     end
 
     def map_all
       params[:category_ids] = nil
       params[:service_ids]  = nil
       params[:location_ids] = nil
-
-      set_query
-      set_markers
-      render :map
+      map
     end
 end

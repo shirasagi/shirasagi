@@ -8,6 +8,6 @@ module Facility::Addon
       permit_params st_location_ids: []
     end
 
-    set_order 520
+    set_order 410
   end
 end

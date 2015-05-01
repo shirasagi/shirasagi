@@ -1,0 +1,24 @@
+<% if @cur_node.search_html.present? %>
+<%
+  html = @cur_node.search_html.gsub(/<\/ (.*?) \/>/) do |m|
+    if $1 =~ /(keyword|category|service|location)/
+      render file: "_#{$1}"
+    else
+      m
+    end
+  end
+%>
+<%= raw html %>
+<% else %>
+<h2><%= t("facility.keyword") %></h2>
+<%= render file: "_keyword" %>
+
+<h2><%= t("facility.category.setting") %></h2>
+<%= render file: "_category" %>
+
+<h2><%= t("facility.service.setting") %></h2>
+<%= render file: "_service" %>
+
+<h2><%= t("facility.location.setting") %></h2>
+<%= render file: "_location" %>
+<% end %>

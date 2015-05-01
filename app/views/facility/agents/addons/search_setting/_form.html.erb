@@ -1,0 +1,9 @@
+<%= code_editor ".mod-facility-search-setting .html", mode: :html %>
+
+<dl class="see mod-facility-search-setting">
+  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
+  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :search_html %><%= @model.tt :search_html %></dt>
+  <dd><%= f.text_area :search_html, class: :html, style: "height: 150px;" %></dd>
+</dl>

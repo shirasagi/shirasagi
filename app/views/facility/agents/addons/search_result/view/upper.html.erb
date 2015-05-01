@@ -1,0 +1,47 @@
+<% if @cur_node.upper_html.present? %>
+<%
+  html = @cur_node.upper_html.gsub(/\#\{(.*?)\}/) do |m|
+    name = $1
+    if name =~ /keyword/
+      @keyword.to_s
+    elsif name =~ /category/
+      @categories.pluck(:name).join("、").to_s
+    elsif name =~ /service/
+      @services.pluck(:name).join("、").to_s
+    elsif name =~ /location/
+      @locations.pluck(:name).join("、").to_s
+    elsif name =~ /number/
+      @items.count.to_s
+    else
+      m
+    end
+  end
+  html = html.gsub(/<\/ (.*?) \/>/) do |m|
+    if $1 =~ /(tabs|settings)/
+      render file: "_#{$1}", locals: { current: "map" }
+    else
+      m
+    end
+  end
+%>
+<%= raw html %>
+<% else %>
+<dl class="condition">
+  <dt class="keyword"><%= t("facility.keyword") %></dt>
+  <dd><%= @keyword %></dd>
+  <dt class="category"><%= t("facility.category.name") %></dt>
+  <dd><%= @categories.pluck(:name).join("、") %></dd>
+  <dt class="service"><%= t("facility.service.name") %></dt>
+  <dd><%= @services.pluck(:name).join("、") %></dd>
+  <dt class="location"><%= t("facility.location.name") %></dt>
+  <dd><%= @locations.pluck(:name).join("、") %></dd>
+</dl>
+<%= render file: "_settings" %>
+<section class="result">
+  <h2>
+    <%= t("facility.result") %>
+    <span class="number"><%= @items.count %></span><%= t("facility.count") %>
+  </h2>
+</section>
+<%= render file: "_tabs", locals: { current: "map" } %>
+<% end %>

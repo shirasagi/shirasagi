@@ -1,0 +1,9 @@
+<%= code_editor ".mod-facility-search-result .html", mode: :html %>
+
+<dl class="see mod-facility-search-result">
+  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+  <dd><%= f.text_area :upper_html, class: :html, style: "height: 150px;" %></dd>
+
+  <dt><%= @model.t :map_html %><%= @model.tt :map_html %></dt>
+  <dd><%= f.text_area :map_html, class: :html, style: "height: 150px;" %></dd>
+</dl>

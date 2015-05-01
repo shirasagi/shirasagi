@@ -27,8 +27,9 @@ ja:
     result: 検索結果
     count: 件
     image: 施設写真
-    map: 施設地図
+    map: 地図
     edit_page: 施設情報を編集する
+    select_location: 地域を選択
     empty: 上記の条件では施設が見つかりませんでした。
     tab:
       map: 地図表示
@@ -53,6 +54,8 @@ ja:
       facility/image: 施設写真
       facility/image_info: 写真情報
       facility/pointer_image: ポインタ画像
+      facility/search_setting: 施設検索
+      facility/search_result: 検索結果
       facility/location: 施設地域
       facility/location_setting: 施設の地域
       facility/service: 施設の用途
@@ -81,6 +84,9 @@ ja:
         related_url: URL
         field: 項目名
         value: 内容
+      facility/node/search:
+        search_html: 検索HTML
+        map_html: 地図HTML
       facility/node/location:
         center_loc: 中心座標
       facility/image:
@@ -109,6 +115,35 @@ ja:
         - 追加情報の項目名を設定します。
       value:
         - 左欄項目の内容を設定します。
+    facility/addon/search_setting:
+      conditions:
+        - 検索対象に含める施設リストフォルダー名を記述します。
+        - |-
+          改行することで複数のファルダー指定することが可能です。
+          例：
+          institution/list
+          shelter/list
+      search_html:
+        - "検索部分のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
+        - "&lt;/ keyword /&gt; キーワード検索フォームが表示されます。"
+        - "&lt;/ category /&gt; 施設の種類検索フォームが表示されます。"
+        - "&lt;/ service /&gt; 施設の用途検索フォームが表示されます。"
+        - "&lt;/ location /&gt; 施設の地域検索フォームが表示されます。"
+    facility/addon/search_result:
+      upper_html:
+        - "検索結果上部のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
+        - "&lt;/ tabs /&gt; 地図、一覧表示の切り替えタブが表示されます。"
+        - "&lt;/ settings /&gt; 検索条件を変更するモーダルウインドウのリンクが表示されます。"
+        - "#{keyword} キーワードの検索クエリが表示されます。"
+        - "#{category} 施設の種類の検索クエリが表示されます。"
+        - "#{service} 施設の用途の検索クエリが表示されます。"
+        - "#{location} 施設の地域の検索クエリが表示されます。"
+        - "#{number} 検索結果件数が表示されます。"
+      map_html:
+        - "検索結果の地図部分のHTMLを記述することが可能です。以下のテンプレートが使用できます。"
+        - "&lt;/ canvas /&gt; 地図が表示されます。"
+        - "&lt;/ sidebar /&gt; 地図と連動するサイドバーが表示されます。"
+        - "&lt;/ filters /&gt; 種類の絞り込み、地域フォーカスが表示されます。"
     facility/addon/pointer_image:
       image:
         - 施設検索結果の地図表示時に表示するポインタ画像を設定します。

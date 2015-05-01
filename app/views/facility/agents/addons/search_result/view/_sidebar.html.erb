@@ -1,0 +1,9 @@
+<div id="map-sidebar" style="height: 400px;">
+  <% @items.each do |item| %>
+    <div class="column" data-id="<%= item.id %>">
+      <p><%= link_to item.name, item.url %></p>
+      <p><%= item.address %></p>
+      <%= link_to t("facility.sidebar.click_marker"), "#", class: "click-marker" %>
+    </div>
+  <% end %>
+</div>
