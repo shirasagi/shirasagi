@@ -48,7 +48,7 @@ module Facility::PageFilter
       end
 
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-        filename: "facility_node_pages_#{Time.now.to_i}.csv"
+        filename: "facility_node_pages_#{Time.zone.now.to_i}.csv"
     end
 
     def import
@@ -57,7 +57,7 @@ module Facility::PageFilter
       t_columns = COLUMNS.map { |c| @model.t(c) }
 
       begin
-        file = params[:item].try(:[],:file)
+        file = params[:item].try(:[], :file)
         if file.nil? || ::File.extname(file.original_filename) != ".csv"
           raise I18n.t("facility.import.invalid_file")
         end
@@ -77,5 +77,5 @@ module Facility::PageFilter
       rescue => e
         @item.errors.add :base, e.to_s
       end
-  end
+    end
 end

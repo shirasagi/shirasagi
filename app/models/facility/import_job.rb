@@ -29,7 +29,7 @@ class Facility::ImportJob
           name = update_row(row)
           put_log("update #{i + 1}: #{name}")
         rescue => e
-          put_log("error  #{i + 1}: #{e.to_s}")
+          put_log("error  #{i + 1}: #{e}")
         end
       end
 
@@ -85,7 +85,7 @@ class Facility::ImportJob
         map.cur_site = @cur_site
         map.map_points = Map::Extensions::Points.new(points)
         map.save
-        name += " #{map.map_points.first[:loc].to_s}"
+        name += " #{map.map_points.first[:loc]}"
       end
 
       @destroy_pages.delete(filename)
