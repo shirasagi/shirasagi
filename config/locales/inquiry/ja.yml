@@ -15,7 +15,7 @@ ja:
     total_count: 総回答数
     reception_plan: 回答受付期間
     aggregate: 集計
-    dash: ～
+    from: から
 
     options:
       state:
@@ -42,6 +42,7 @@ ja:
       inquiry/input_setting: 入力設定
       inquiry/release_plan: 公開期間
       inquiry/reception_plan: 回答受付期間
+      inquiry/aggregation: 集計
 
   cms:
     nodes:
@@ -63,6 +64,7 @@ ja:
         reply_subject: 返信件名
         reply_upper_text: 上部返信テキスト
         reply_lower_text: 下部返信テキスト
+        aggregation_state: 集計設定
         release_date: 公開開始日
         close_date: 公開終了日
         reception_start_date: 回答受付開始日
@@ -156,3 +158,6 @@ ja:
       reception_close_date:
         - 回答受付終了日時を指定します。
         - 指定した日時が来ると回答入力フォームが非公開になります。
+    inquiry/addon/aggregation:
+      aggregation_state:
+        - 公開側で集計機能を使用するかを選択します。

@@ -19,7 +19,7 @@
             <tbody>
               <% column.select_options.each do |opts| %>
                 <tr>
-                  <td><%= opts %></td>
+                  <th><%= opts %></th>
                   <td class="count">
                     <%= @aggregation[{ "column_id" => column.id, "value" => opts }] %>
                     <%= t "views.units.count" %>
