@@ -1,23 +1,12 @@
 require 'spec_helper'
-require 'models/voice/test_http_server'
 
-describe Voice::SynthesisJob do
+describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec", "fixtures", "voice"), port: 33_190 do
   describe '#call_async', open_jtalk: true do
-    before :all  do
-      @port = 33_190
-      @http_server = Voice::TestHttpServer.new(@port)
-      @http_server.start
-    end
-
-    after :all  do
-      @http_server.stop # if @http_server.present?
-    end
-
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @url = "http://127.0.0.1:33190/#{@path}"
+        @http_server.options = { real_path: "/test-001.html" }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
@@ -52,8 +41,9 @@ describe Voice::SynthesisJob do
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @url = "http://127.0.0.1:33190/#{@path}"
+        @http_server.options = { real_path: "/test-001.html" }
+
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
         @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
@@ -85,9 +75,8 @@ describe Voice::SynthesisJob do
     context 'when get 400' do
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=400"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
-        @http_server.add_options("/#{@path}", status_code: 400)
+        @url = "http://127.0.0.1:33190/#{@path}?status_code=400"
+        @http_server.options = { real_path: "/test-001.html", status_code: 400 }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
@@ -116,9 +105,8 @@ describe Voice::SynthesisJob do
     context 'when get 404' do
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=404"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
-        @http_server.add_options("/#{@path}", status_code: 404)
+        @url = "http://127.0.0.1:33190/#{@path}?status_code=404"
+        @http_server.options = { real_path: "/test-001.html", status_code: 404 }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
@@ -147,9 +135,8 @@ describe Voice::SynthesisJob do
     context 'when get 500' do
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=500"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
-        @http_server.add_options("/#{@path}", status_code: 500)
+        @url = "http://127.0.0.1:33190/#{@path}?status_code=500"
+        @http_server.options = { real_path: "/test-001.html", status_code: 500 }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
@@ -179,9 +166,8 @@ describe Voice::SynthesisJob do
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @wait = SS.config.voice.download['timeout_sec'] + 5
-        @url = "http://127.0.0.1:#{@port}/#{@path}?wait=#{@wait}"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
-        @http_server.add_options("/#{@path}", wait: @wait)
+        @url = "http://127.0.0.1:33190/#{@path}?wait=#{@wait}"
+        @http_server.options = { real_path: "/test-001.html", wait: @wait }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
@@ -211,9 +197,8 @@ describe Voice::SynthesisJob do
     context 'when server does not respond last_modified' do
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}?last_modified=nil"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
-        @http_server.add_options("/#{@path}", last_modified: nil)
+        @url = "http://127.0.0.1:33190/#{@path}?last_modified=nil"
+        @http_server.options = { real_path: "/test-001.html", last_modified: nil }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
@@ -246,23 +231,13 @@ describe Voice::SynthesisJob do
   end
 
   describe '#call', open_jtalk: true do
-    before(:all) do
-      @port = 33_190
-      @http_server = Voice::TestHttpServer.new(@port)
-      @http_server.start
-    end
-
-    after(:all) do
-      @http_server.stop
-    end
-
     subject(:site) { cms_site }
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       before :all  do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
+        @url = "http://127.0.0.1:33190/#{@path}"
+        @http_server.options = { real_path: "/test-001.html" }
       end
 
       after(:all) do
@@ -288,9 +263,8 @@ describe Voice::SynthesisJob do
     context 'when get 404' do
       before :all  do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @url = "http://127.0.0.1:#{@port}/#{@path}?status_code=404"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
-        @http_server.add_options("/#{@path}", status_code: 404)
+        @url = "http://127.0.0.1:33190/#{@path}?status_code=404"
+        @http_server.options = { real_path: "/test-001.html", status_code: 404 }
       end
 
       after(:all) do
@@ -310,9 +284,8 @@ describe Voice::SynthesisJob do
       before :all  do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @wait = SS.config.voice.download['timeout_sec'] + 5
-        @url = "http://127.0.0.1:#{@port}/#{@path}?wait=#{@wait}"
-        @http_server.add_redirect("/#{@path}", "/test-001.html")
-        @http_server.add_options("/#{@path}", wait: @wait)
+        @url = "http://127.0.0.1:33190/#{@path}?wait=#{@wait}"
+        @http_server.options = { real_path: "/test-001.html", wait: @wait }
       end
 
       after :all  do

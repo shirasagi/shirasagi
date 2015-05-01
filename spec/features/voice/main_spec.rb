@@ -1,37 +1,23 @@
 require 'spec_helper'
-require File.expand_path("../../models/voice/test_http_server", File.dirname(__FILE__))
 
-describe "voice_main" do
-  port = 33_190
-  http_server = nil
-
+describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fixtures", "voice"), port: 33_190 do
   let(:voice_site) do
     SS::Site.find_or_create_by(
       name: "VoiceSite",
       host: "voicehost",
-      domains: "127.0.0.1:#{port}"
+      domains: "127.0.0.1:33190"
     )
-  end
-
-  before(:all) do
-    http_server = Voice::TestHttpServer.new(port)
-    http_server.start
-  end
-
-  after(:all) do
-    http_server.stop if http_server
   end
 
   describe "#index", open_jtalk: true do
     context "when valid site is given" do
-      path = "#{rand(0x100000000).to_s(36)}.html"
-
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
+      before :all do
+        @path = "#{rand(0x100000000).to_s(36)}.html"
+        @http_server.options = { real_path: "/test-001.html" }
       end
 
       it "returns 202" do
-        url = "http://#{voice_site.domain}/#{path}"
+        url = "http://#{voice_site.domain}/#{@path}"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
         expect(status_code).to eq 202
         expect(response_headers.keys).to include("Retry-After")
@@ -56,6 +42,10 @@ describe "voice_main" do
     end
 
     context "when invalid site is given" do
+      before :all do
+        @http_server.options = {}
+      end
+
       it "returns 404" do
         url = "http://not-exsit-host-#{rand(0x100000000).to_s(36)}/"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -65,6 +55,10 @@ describe "voice_main" do
     end
 
     context "when malformed url is given" do
+      before :all do
+        @http_server.options = {}
+      end
+
       it "returns 400" do
         url = "http:/xyz/"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -74,6 +68,10 @@ describe "voice_main" do
     end
 
     context "when accessing not existing doc" do
+      before :all do
+        @http_server.options = {}
+      end
+
       it "returns 404" do
         url = "http://#{voice_site.domain}/not-exist-doc-#{rand(0x100000000).to_s(36)}.html"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -85,9 +83,8 @@ describe "voice_main" do
     context "when server responds 400" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", status_code: 400)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", status_code: 400 }
       end
 
       it "returns 404" do
@@ -101,9 +98,8 @@ describe "voice_main" do
     context "when server responds 404" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", status_code: 404)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", status_code: 404 }
       end
 
       it "returns 404" do
@@ -117,9 +113,8 @@ describe "voice_main" do
     context "when server responds 500" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", status_code: 500)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", status_code: 500 }
       end
 
       it "returns 404" do
@@ -134,13 +129,12 @@ describe "voice_main" do
       path = "#{rand(0x100000000).to_s(36)}.html"
       wait = 10
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", wait: wait)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", wait: wait }
       end
 
-      after(:all) do
-        http_server.release_wait
+      after :all do
+        @http_server.release_wait
       end
 
       it "returns 404" do
@@ -154,9 +148,8 @@ describe "voice_main" do
     context "when server does not respond last_modified" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all  do
-        http_server.add_redirect("/#{path}", "/test-001.html")
-        http_server.add_options("/#{path}", last_modified: nil)
+      before :all do
+        @http_server.options = { real_path: "/test-001.html", last_modified: nil }
       end
 
       it "returns 200" do
