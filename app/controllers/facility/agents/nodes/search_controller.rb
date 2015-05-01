@@ -62,6 +62,14 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       @items.sort_by!(&:name)
     end
 
+    def set_filter_items
+      @filter_categories = @categories.present? ? @categories : @cur_node.st_categories
+      @filter_locations = @cur_node.st_locations
+      @focus_options = @filter_locations.entries.
+        select{ |loc| loc.center_loc.present? }.map { |loc| [loc.name, loc.center_loc.join(",")] }
+      @focus_options.unshift ["地域を選択", ""]
+    end
+
   public
     def index
     end
@@ -69,6 +77,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     def map
       set_query
       set_markers
+      set_filter_items
       render :map
     end
 

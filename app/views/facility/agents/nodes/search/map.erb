@@ -74,6 +74,16 @@ $(window).on "load", ->
         column.hide()
     return false
 
+  # setup location filter
+  $(".filters .focus").on "change", ->
+    select = $(this)
+    select.find("option:selected").each ->
+      return false if $(this).val() == ""
+      loc = $(this).val().split(",")
+      latlng = new google.maps.LatLng(loc[0], loc[1])
+      Map.map.setCenter latlng
+      select.val("")
+
   # setup search modal window
   $(".ajax-box").on "click", ->
     $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "./map.html" }) %>"})
@@ -94,15 +104,17 @@ $(window).on "load", ->
 
 <div id="map-canvas" style="width: 100%; height: 400px;"></div>
 
-<% categories = @categories.present? ? @categories : @cur_node.st_categories %>
-<% if categories.present? %>
-  <nav class="filters">
-    <ul>
-      <% categories.order_by(order: 1).each do |cate| %>
+<nav class="filters">
+  <% if @filter_categories.present? %>
+　  <ul>
+      <% @filter_categories.order_by(order: 1).each do |cate| %>
         <li class="<%= cate.basename %>">
           <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
         </li>
       <% end %>
     </ul>
-  </nav>
-<% end %>
+  <% end %>
+  <% if @filter_locations.present? %>
+    <%= select_tag :focus, options_for_select(@focus_options), class: :focus %>
+  <% end %>
+</nav>

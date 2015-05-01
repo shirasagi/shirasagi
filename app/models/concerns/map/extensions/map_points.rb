@@ -17,7 +17,7 @@ class Map::Extensions::MapPoints < Array
       when self.class then object.mongoize
       when Array then
         object.select { |point| point[:loc].present? }.
-          each { |point| point[:loc] = SS::Extensions::Array.mongoize(point[:loc]).map{|latlng| latlng.to_f} }
+          each { |point| point[:loc] = Map::Extensions::Loc.mongoize(point[:loc]) }
       else object
         []
       end

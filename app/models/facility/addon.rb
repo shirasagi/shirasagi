@@ -30,6 +30,26 @@ module Facility::Addon
     set_order 210
   end
 
+  module CenterLocation
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 200
+
+    included do
+      field :center_loc, type: ::Map::Extensions::Loc
+
+      permit_params :center_loc
+
+      validate :validate_center_loc
+    end
+
+    private
+      def validate_center_loc
+        errors.add :center_loc, :invalid if center_loc.size != 2
+      end
+  end
+
   module Image
     extend ActiveSupport::Concern
     extend SS::Addon
