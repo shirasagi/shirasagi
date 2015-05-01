@@ -47,6 +47,7 @@ class Opendata::UrlResourcesController < ApplicationController
       send_file @item.tsv.path, type: @item.content_type, filename: @item.tsv.filename,
         disposition: :attachment, x_sendfile: true
     end
+
     def content
       @item = @dataset.url_resources.find params[:url_resource_id]
       @data = @item.parse_tsv

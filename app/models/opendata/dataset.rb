@@ -110,8 +110,12 @@ class Opendata::Dataset
         pipes << { "$limit" => limit + 1 }
         aggr = collection.aggregate(pipes)
 
-        def aggr.popped=(bool); @popped = bool end
-        def aggr.popped?; @popped.present? end
+        def aggr.popped=(bool)
+          @popped = bool
+        end
+        def aggr.popped?
+          @popped.present?
+        end
 
         if aggr.size > limit
           aggr.pop
@@ -183,7 +187,8 @@ class Opendata::Dataset
 
         if params[:keyword].present?
           criteria = criteria.keyword_in params[:keyword],
-            :name, :text, "resources.name", "resources.filename", "resources.text", "url_resources.name", "url_resources.filename", "url_resources.text"
+            :name, :text, "resources.name", "resources.filename", "resources.text", "url_resources.name",
+                                         "url_resources.filename", "url_resources.text"
         end
         if params[:ids].present?
           criteria = criteria.any_in id: params[:ids].split(/,/)
@@ -211,10 +216,10 @@ class Opendata::Dataset
           criteria = criteria.any_in dataset_group_ids: groups
         end
         if params[:format].present?
-          criteria = criteria.formast_is  params[:format].upcase, "resources.format","url_resources.format"
+          criteria = criteria.formast_is  params[:format].upcase, "resources.format", "url_resources.format"
         end
         if params[:license_id].present?
-          criteria = criteria.license_is  params[:license_id].to_i, "resources.license_id","url_resources.license_id"
+          criteria = criteria.license_is  params[:license_id].to_i, "resources.license_id", "url_resources.license_id"
         end
 
         criteria

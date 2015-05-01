@@ -126,7 +126,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       new_comment = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: idea_id, text: params[:comment_body]}
       Opendata::IdeaComment.new(new_comment).save
 
-      idea.commented = Time.now
+      idea.commented = Time.zone.now
       idea.total_comment += 1
       idea.save
 
@@ -149,7 +149,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       comment = Opendata::IdeaComment.find params[:comment]
       if comment
-        comment.comment_deleted = Time.now
+        comment.comment_deleted = Time.zone.now
         comment.save
       end
 

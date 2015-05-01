@@ -41,7 +41,7 @@ class Opendata::CommentsController < ApplicationController
 
     def destroy
       comment = Opendata::IdeaComment.where(site_id: @cur_site.id, id: params[:id]).first
-      comment.comment_deleted = Time.now
+      comment.comment_deleted = Time.zone.now
       comment.save
       render_destroy comment
     end

@@ -1,0 +1,204 @@
+require 'spec_helper'
+
+# rubocop:disable Style/FirstParameterIndentation
+describe Opendata::UrlResource, dbscope: :example, http_server: true,
+         doc_root: Rails.root.join("spec", "fixtures", "opendata") do
+  let(:site) { cms_site }
+  let(:dataset) { create(:opendata_dataset) }
+  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
+  let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
+
+  context "check attributes with typical url resource" do
+    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    before do
+      subject.license_id = license.id
+      subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+      subject.crawl_update = "none"
+      subject.save!
+    end
+
+    describe "#url" do
+      its(:url) { is_expected.to eq "#{dataset.url.sub(/\.html$/, "")}/url_resource/#{subject.id}/shift_jis.csv" }
+    end
+
+    describe "#full_url" do
+      its(:full_url) { is_expected.to eq "#{dataset.full_url.sub(/\.html$/, "")}/url_resource/#{subject.id}/shift_jis.csv" }
+    end
+
+    describe "#content_url" do
+      its(:content_url) { is_expected.to eq "#{dataset.full_url.sub(/\.html$/, "")}/url_resource/#{subject.id}/content.html" }
+    end
+
+    describe "#path" do
+      its(:path) { expect(Fs.exists?(subject.path)).to be_truthy }
+    end
+
+    describe "#content_type" do
+      its(:content_type) { is_expected.to eq "application/octet-stream" }
+    end
+
+    describe "#size" do
+      its(:size) { is_expected.to be > 10 }
+    end
+  end
+
+  context "when last_modified is not given" do
+    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    before do
+      subject.license_id = license.id
+      subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+      subject.crawl_update = "none"
+      @http_server.options = { last_modified: nil }
+    end
+
+    after do
+      @http_server.options = {}
+    end
+
+    it do
+      subject.save
+      expect(subject).to have(1).error_on(:base)
+    end
+  end
+
+  describe "#parse_tsv" do
+    context "when shift_jis csv is given" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+        subject.crawl_update = "none"
+        subject.save!
+      end
+
+      it do
+        csv = subject.parse_tsv
+        expect(csv).not_to be_nil
+        expect(csv.length).to eq 3
+        expect(csv[0]).to eq %w(ヘッダー 値)
+        expect(csv[1]).to eq %w(品川 483901)
+        expect(csv[2]).to eq %w(新宿 43901)
+      end
+    end
+
+    context "when euc-jp csv is given" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/euc-jp.csv"
+        subject.crawl_update = "none"
+        subject.save!
+      end
+
+      it do
+        csv = subject.parse_tsv
+        expect(csv).not_to be_nil
+        expect(csv.length).to eq 3
+        expect(csv[0]).to eq %w(ヘッダー 値)
+        expect(csv[1]).to eq %w(品川 483901)
+        expect(csv[2]).to eq %w(新宿 43901)
+      end
+    end
+
+    context "when utf-8 csv is given" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/utf-8.csv"
+        subject.crawl_update = "none"
+        subject.save!
+      end
+
+      it do
+        csv = subject.parse_tsv
+        expect(csv).not_to be_nil
+        expect(csv.length).to eq 3
+        expect(csv[0]).to eq %w(ヘッダー 値)
+        expect(csv[1]).to eq %w(品川 483901)
+        expect(csv[2]).to eq %w(新宿 43901)
+      end
+    end
+  end
+
+  describe "#do_crawl" do
+    context "when crawl_update is auto" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+        subject.crawl_update = "auto"
+        subject.save!
+
+        # below code is curious but this rounds milli seconds
+        @now = Time.zone.at(Time.zone.now.to_i)
+        @http_server.options = { real_path: "/shift_jis-2.csv", last_modified: @now }
+      end
+
+      after do
+        @http_server.options = {}
+      end
+
+      it do
+        expect { subject.do_crawl }.to \
+          change(subject, :original_updated).to(@now).and \
+          change(subject, :file_id).by(1)
+
+        csv = subject.parse_tsv
+        expect(csv).not_to be_nil
+        expect(csv.length).to eq 3
+        expect(csv[0]).to eq %w(値域 人口)
+        expect(csv[1]).to eq %w(銀座 3523)
+        expect(csv[2]).to eq %w(六本木 12166)
+      end
+    end
+
+    context "when crawl_update is none" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+        subject.crawl_update = "none"
+        subject.save!
+
+        # below code is curious but this rounds milli seconds
+        @now = Time.zone.at(Time.zone.now.to_i)
+        @http_server.options = { real_path: "/shift_jis-2.csv", last_modified: @now }
+      end
+
+      after do
+        @http_server.options = {}
+      end
+
+      it do
+        expect { subject.do_crawl }.to \
+          change(subject, :original_updated).to(@now).and \
+          change(subject, :crawl_state).from("same").to("updated")
+
+        csv = subject.parse_tsv
+        expect(csv).not_to be_nil
+        expect(csv.length).to eq 3
+        expect(csv[0]).to eq %w(ヘッダー 値)
+        expect(csv[1]).to eq %w(品川 483901)
+        expect(csv[2]).to eq %w(新宿 43901)
+      end
+    end
+  end
+
+  describe ".allowed?" do
+    it { expect(described_class.allowed?(:edit, nil)).to be_truthy }
+  end
+
+  describe ".allow" do
+    it { expect(described_class.allow(:edit, nil)).to be_truthy }
+  end
+
+  describe ".format_options" do
+    it { expect(described_class.format_options).to include "AVI" }
+  end
+
+  describe ".search" do
+    it { expect(described_class.search(keyword: "keyword_b633").selector.to_h).to include("name" => /keyword_b633/) }
+    it { expect(described_class.search(format: "csv").selector.to_h).to include("format" => "CSV") }
+    it { expect(described_class.search(xxxx: "xxxxx").selector.to_h).to be_empty }
+  end
+end

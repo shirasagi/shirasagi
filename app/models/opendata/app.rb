@@ -111,8 +111,13 @@ class Opendata::App
       pipes << { "$limit" => limit + 1 }
       aggr = collection.aggregate(pipes)
 
-      def aggr.popped=(bool); @popped = bool end
-      def aggr.popped?; @popped.present? end
+      def aggr.popped=(bool)
+        @popped = bool
+      end
+
+      def aggr.popped?
+        @popped.present?
+      end
 
       if aggr.size > limit
         aggr.pop

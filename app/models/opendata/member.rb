@@ -21,11 +21,21 @@ class Opendata::Member
       return errors.add :icon_id, :invalid
     end
 
-    def image.size; filesize end
-    def image.content_type; mime_type end
-    def image.original_filename=(filename); @filename = filename end
-    def image.original_filename; @filename end
-    def image.read; to_blob end
+    def image.size
+      filesize
+    end
+    def image.content_type
+      mime_type
+    end
+    def image.original_filename=(filename)
+      @filename = filename
+    end
+    def image.original_filename
+      @filename
+    end
+    def image.read
+      to_blob
+    end
 
     image.original_filename = in_icon.original_filename
 

@@ -30,12 +30,12 @@ module Opendata::Sparql
         begin
 
           temp_file = Tempfile.new("temp")
-          open(ttl_url) {|f|
-            f.each {|line|
+          open(ttl_url) do |f|
+            f.each do |line|
               encoding = NKF.guess(line)
               temp_file.puts line.encode(Encoding::UTF_8, encoding)
-            }
-          }
+            end
+          end
           temp_file.close(false)
 
           temp_file.open

@@ -16,7 +16,7 @@ class Opendata::Idea
   field :text, type: String
   field :tags, type: SS::Extensions::Words
   field :commented, type: DateTime
-  field :total_comment, type: Integer, default: "0";
+  field :total_comment, type: Integer, default: "0"
 
   embeds_ids :datasets, class_name: "Opendata::Dataset"
   embeds_ids :apps, class_name: "Opendata::App"
@@ -119,8 +119,12 @@ class Opendata::Idea
         pipes << { "$limit" => limit + 1 }
         aggr = collection.aggregate(pipes)
 
-        def aggr.popped=(bool); @popped = bool end
-        def aggr.popped?; @popped.present? end
+        def aggr.popped=(bool)
+          @popped = bool
+        end
+        def aggr.popped?
+          @popped.present?
+        end
 
         if aggr.size > limit
           aggr.pop

@@ -187,17 +187,6 @@ class Rdf::VocabImportJob
         copy_class_ids << rdf_class.id
         rdf_prop.class_ids = copy_class_ids
         rdf_prop.update!
-
-        # check datatype mismatch
-        # datatype = property_hash[:datatype]
-        # if datatype.present?
-        #   if rdf_prop.range.blank?
-        #     rdf_prop.range = datatype
-        #   elsif rdf_prop.range.uri != datatype
-        #     puts "datatype mismatch for #{rdf_prop.name}: #{rdf_prop.range.uri} and #{datatype}"
-        #     next
-        #   end
-        # end
       end
     end
 

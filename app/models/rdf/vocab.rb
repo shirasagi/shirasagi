@@ -49,7 +49,7 @@ class Rdf::Vocab
     def qname(uri)
       return nil if uri.blank?
       # consider about caching if this method is too slow.
-      vocab = self.each.select { |vocab| uri.start_with?(vocab.uri) }.first
+      vocab = self.each.find { |vocab| uri.start_with?(vocab.uri) }
       if vocab
         [vocab.prefix, uri.gsub(vocab.uri, "")]
       else

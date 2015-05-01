@@ -8,7 +8,6 @@ class Opendata::DatasetSelectsController < ApplicationController
       host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"]
       @cur_site ||= SS::Site.find_by_domain host
 
-
       @model = Opendata::Dataset
     end
 

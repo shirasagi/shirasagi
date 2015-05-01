@@ -1,27 +1,18 @@
 class Opendata::UrlResource
   include SS::Document
+  include Opendata::Resource::Model
   include SS::Relation::File
   include Opendata::Addon::UrlRdfStore
 
-  seqid :id
-  field :name, type: String
-  field :filename, type: String
-  field :text, type: String
-  field :format, type: String
   field :original_url, type: String
   field :original_updated, type: DateTime
   field :crawl_state, type: String, default: "same"
   field :crawl_update, type: String
 
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :url_resource
-  belongs_to :license, class_name: "Opendata::License"
-  belongs_to_file :file
-  belongs_to_file :tsv
 
   permit_params :name, :text, :license_id, :original_url, :crawl_update
 
-  validates :name, presence: true
-  validates :license_id, presence: true
   validates :crawl_update, presence: true
 
   validate :validate_original_url
@@ -30,172 +21,121 @@ class Opendata::UrlResource
   after_destroy -> { dataset.save(validate: false) }
 
   public
-    def url
-      dataset.url.sub(/\.html$/, "") + "/url_resource/#{id}/#{filename}"
-    end
-
-    def full_url
-      dataset.full_url.sub(/\.html$/, "") + "/url_resource/#{id}/#{filename}"
-    end
-
-    def content_url
-      dataset.full_url.sub(/\.html$/, "") + "/url_resource/#{id}/content.html"
-    end
-
-    def path
-      file ? file.path : nil
-    end
-
-    def content_type
-      file ? file.content_type : nil
-    end
-
-    def size
-      file ? file.size : nil
-    end
-
-    def tsv_present?
-      if format.blank?
-        true if tsv
-      else
-        true if tsv || %(CSV TSV).index(format.upcase)
-      end
-    end
-
-    def parse_tsv
-      require "nkf"
-      require "csv"
-
-      src  = tsv || file
-      data = NKF.nkf("-w", src.read)
-      sep  = data =~ /\t/ ? "\t" : ","
-      CSV.parse(data, col_sep: sep) rescue nil
-    end
-
-    def allowed?(action, user, opts = {})
-      true
+    def context_path
+      "/url_resource"
     end
 
     def crawl_update_options
       [%w(手動 none), %w(自動 auto)]
     end
 
-    private
+    def do_crawl(time_out: 30)
+      puts self.original_url
+
+      last_modified = timeout(time_out) do
+        open(self.original_url) { |url_file| url_file.last_modified }
+      end
+
+      if self.crawl_update == "none"
+        do_crawl_none(last_modified)
+      elsif self.crawl_update == "auto"
+        do_crawl_auto(last_modified)
+      end
+    rescue TimeoutError
+      puts I18n.t("opendata.errors.messages.invalid_timeout")
+    rescue => e
+      puts "Error: #{e}"
+    end
+
+  private
+    def do_crawl_none(last_modified)
+      if last_modified.present?
+        if self.original_updated.blank?
+          self.crawl_state = "updated"
+        elsif last_modified.to_i > self.original_updated.to_i
+          self.crawl_state = "updated"
+        elsif last_modified.to_i <= self.original_updated.to_i
+          self.crawl_state = "same"
+        end
+        self.original_updated = last_modified
+      else
+        puts "no file or no last_modified"
+        self.crawl_state = "deleted"
+      end
+
+      res = self.save(validate: false)
+      if res == true
+        puts "success"
+      else
+        puts "failure"
+      end
+    end
+
+    def do_crawl_auto(last_modified)
+      return if last_modified.blank?
+      return if last_modified.to_i <= self.original_updated.to_i
+
+      self.crawl_state = "same"
+      # validate_original_url method is called inside save method,
+      # and then download resource from internet and save it locally.
+      self.save
+    end
 
     def validate_original_url
-
-      require 'net/http'
-      require "open-uri"
-      require "resolv-replace"
-      require 'timeout'
-
       uri = URI.parse(original_url)
-
       if uri.path == '/'
         errors.add :original_url, :invalid
         return
       end
 
-      begin
+      Tempfile.open('temp') do |temp_file|
+        last_modified = download_to(temp_file)
+        break if last_modified.blank?
 
-        http = Net::HTTP.new(uri.host)
-        http.open_timeout = 10
-        http.read_timeout = 30
-        response = http.start do |http|
-          http.head(uri.path)
-        end
+        self.original_updated = last_modified
+        self.filename = ::File.basename(uri.path)
 
-        unless response = Net::HTTPSuccess
-          errors.add :original_url, :invalid
-          return
-        end
+        ss_file = SS::File.new
+        ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
+                                                                 filename: ::File.basename(uri.path),
+                                                                 type: 'application/octet-stream')
+        ss_file.model = self.class.to_s.underscore
 
-      rescue => e
-        errors.add :original_url, :invalid
-        return
-
+        ss_file.content_type = self.format = original_url.sub(/.*\./, "").upcase
+        ss_file.filename = ::File.basename(uri.path)
+        ss_file.save
+        send("file_id=", ss_file.id)
+        self.crawl_state = "same"
       end
-
-      begin
-        time_out = 30
-        timeout(time_out){
-
-          self.original_updated = open(original_url, proxy: true).last_modified
-          if self.original_updated.blank?
-            errors.add :base, I18n.t("opendata.errors.messages.dynamic_file")
-            return
-          end
-
-          self.filename = File.basename(uri.path)
-          temp_file = Tempfile.new("temp")
-
-          File.open(temp_file , 'wb') do |output|
-            open(original_url, proxy: true) do |data|
-              output.write(data.read)
-            end
-          end
-
-          in_file = temp_file
-          (class << in_file; self; end).class_eval do
-            define_method(:original_filename) { File.basename(uri.path) }
-            define_method(:filename) { File.basename(uri.path) }
-            define_method(:content_type) { 'application/octet-stream' }
-          end
-
-          ss_file = SS::File.new
-          ss_file.in_file = in_file
-          ss_file.model = self.class.to_s.underscore
-
-          ss_file.content_type = self.format = original_url.sub(/.*\./, "").upcase
-          ss_file.filename = File.basename(uri.path)
-          ss_file.save
-          send("file_id=", ss_file.id)
-
-          in_file.close
-          in_file.close(true) if in_file
-          self.crawl_state = "same"
-
-          }
-
-      rescue TimeoutError
-        errors.add :base, I18n.t("opendata.errors.messages.invalid_timeout")
-        return
-
-      rescue
-        errors.add :original_url, :invalid
-        return
-
-      ensure
-        in_file.close(true) if in_file
-
-      end
+    rescue TimeoutError => e
+      logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      errors.add :base, I18n.t("opendata.errors.messages.invalid_timeout")
+    rescue => e
+      logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      errors.add :original_url, :invalid
+    ensure
+      in_file.close(true) if in_file
     end
 
+    def download_to(temp_file, time_out: 30)
+      require 'net/http'
+      require "open-uri"
+      require "resolv-replace"
+      require 'timeout'
 
-  class << self
-    public
-      def allowed?(action, user, opts = {})
-        true
+      temp_file.binmode
+      timeout(time_out) do
+        open(original_url, proxy: true) do |data|
+          if data.last_modified.blank?
+            errors.add :base, I18n.t("opendata.errors.messages.dynamic_file")
+            break
+          end
+
+          temp_file.write(data.read)
+          temp_file.rewind
+          break data.last_modified
+        end
       end
-
-      def allow(action, user, opts = {})
-        true
-      end
-
-      def format_options
-        %w(AVI BMP CSV DOC DOCX DOT GIF HTML JPG LZH MOV MP3 MPG ODS
-           ODT OTS OTT RAR RTF RDF TAR TGZ TTL TXT WAV XLS XLT XLSX XML ZIP)
-      end
-
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
-
-        criteria = criteria.where(name: /#{params[:keyword]}/) if params[:keyword].present?
-        criteria = criteria.where(format: params[:format].upcase) if params[:format].present?
-
-        criteria
-      end
-  end
+    end
 end
 

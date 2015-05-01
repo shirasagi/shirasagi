@@ -1,6 +1,6 @@
 class Rdf::Builders::SubClassOfHandler < Rdf::Builders::BaseHandler
   def call(_, objects)
-    sub_class_object = objects.select { |object| object.uri? }.first
+    sub_class_object = objects.find { |object| object.uri? }
     properties = create_class_properties(objects)
     @context.attributes[:sub_class_of] = sub_class_object.to_s if sub_class_object.present?
     @context.attributes[:properties] = properties if properties.present?

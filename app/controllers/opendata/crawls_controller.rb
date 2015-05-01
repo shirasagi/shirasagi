@@ -26,7 +26,7 @@ class Opendata::CrawlsController < ApplicationController
             next unless urlresource.crawl_state == "updated"
           elsif  params[:s][:search_deleted]=="1"
             next unless urlresource.crawl_state == "deleted"
-            end
+          end
         end
 
         item = {id: dataset._id,

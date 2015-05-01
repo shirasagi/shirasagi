@@ -45,7 +45,7 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
       @cur_node.layout = nil
 
       @notice.commented_count = 0
-      @notice.confirmed = Time.now
+      @notice.confirmed = Time.zone.now
       @notice.save
 
       render :show_notice

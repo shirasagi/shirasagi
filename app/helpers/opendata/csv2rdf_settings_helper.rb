@@ -53,13 +53,17 @@ module Opendata::Csv2rdfSettingsHelper
     @unmapped_headers
   end
 
-  def each_expand_properties(props = @rdf_class.expand_properties, depth = 0, ids = [], names = [], classes = [], &block)
+  def each_expand_properties(props = @rdf_class.expand_properties, opts = {}, &block)
+    depth = opts[:depth] || 0
+    ids = opts[:ids] || []
+    names = opts[:names] || []
+    classes = opts[:classes] || []
     props.each do |id, name, klass, comment, sub_props|
       ids << id
       names << name
       classes << klass
       yield id, name, klass, comment, sub_props, depth, ids, names, classes
-      each_expand_properties(sub_props, depth + 1, ids, names, classes, &block) if sub_props.present?
+      each_expand_properties(sub_props, depth: depth + 1, ids: ids, names: names, classes: classes, &block) if sub_props.present?
       names.delete_at(-1)
       classes.delete_at(-1)
     end
