@@ -10,6 +10,8 @@ module Facility::PageFilter
   )
 
   public
+    # TODO Enable rubocop
+    # rubocop:disable Metrics/AbcSize
     def download
       @items = Facility::Node::Page.site(@cur_site).
         where(filename: /^#{@cur_node.filename}\//, depth: @cur_node.depth + 1)
