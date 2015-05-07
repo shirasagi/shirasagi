@@ -1,12 +1,3 @@
-<%= scss do %>
-.opendata-csv2rdf-settings-class-search {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  background: #dedede;
-}
-<% end %>
-
 <%
 last = nil
 categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).select do |cate|

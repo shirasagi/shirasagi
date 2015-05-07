@@ -127,3 +127,17 @@ textarea.readonly {
     }
   }
 }
+
+div.opendata-csv2rdf-settings-class-search {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: #dedede;
+}
+
+.csv2rdf-settings-rdf-prop-select {
+  textarea {
+    height: 200px;
+    background-color: #eee;
+  }
+}

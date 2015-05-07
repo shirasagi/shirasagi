@@ -1,17 +1,3 @@
-<%= stylesheet_link_tag "opendata/private", media: "all" %>
-<%= scss do %>
-div.csv2rdf-settings-table-container {
-  white-space: normal;
-}
-
-.csv2rdf-settings-rdf-prop-select {
-  textarea {
-    height: 200px;
-    background-color: #eee;
-  }
-}
-<% end %>
-
 <%= form_for :item, url: { action: params[:action] }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
@@ -26,7 +12,7 @@ div.csv2rdf-settings-table-container {
 
         <dt><%= t("opendata.labels.rdf_property") %><%= tt("opendata/csv2rdf_settings.rdf_property") %></dt>
         <dd>
-          <div class="csv2rdf-settings-table-container">
+          <div class="csv2rdf-settings-table-container" style="white-space: normal;">
             <table>
               <thead>
               <tr>
