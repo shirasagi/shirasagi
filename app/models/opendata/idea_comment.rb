@@ -17,7 +17,7 @@ class Opendata::IdeaComment
   validates :site_id, presence: true
   validates :member_id, presence: true
   validates :idea_id, presence: true
-  validates :text, presence: true, length: { maximum: 100 }
+  validates :text, presence: true, length: { maximum: 400 }
 
   public
     def allowed?(action, user, opts = {})
