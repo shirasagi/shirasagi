@@ -4,7 +4,7 @@
       <nav class="names">
         <% if @tab_display == "tab_url" %>
           <a id="url" class="name" href="#tab-url" onclick="ChangeTab('tab-url','url'); return false;">
-            参考URL</a>
+            公開URL</a>
         <% else %>
           <% if @tab_display == "tab_html" %>
             <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play','play'); return false;">
@@ -28,7 +28,7 @@
       <div class="tab-body">
         <% if @tab_display =="tab_url" %>
           <div id="tab-url">
-            <header><h1>参考URL</h1></header>
+            <header><h1>公開URL</h1></header>
             <p><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></p>
           </div>
         <% else %>

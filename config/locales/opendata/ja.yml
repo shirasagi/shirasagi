@@ -210,7 +210,7 @@ ja:
         name: アプリ名
         text: 説明
         license: ライセンス
-        appurl: 参考URL
+        appurl: 公開URL
         tags: タグ
         categry_ids: 分野
         area_ids: 地域
