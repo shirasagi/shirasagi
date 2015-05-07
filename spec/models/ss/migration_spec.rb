@@ -42,12 +42,16 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example do
       rm_rf 'tmp/lib/migrations/mod2'
     end
 
-    it { expect(described_class.filepaths).to match [
-      /.*\/mod2\/20150324000000_a\.rb$/,
-      /.*\/mod1\/20150324000001_a\.rb$/,
-      /.*\/mod1\/20150324000002_a\.rb$/,
-      /.*\/mod2\/20150324000003_a\.rb$/,
-    ] }
+    it do
+      expect(described_class.filepaths).to match(
+        [
+          /.*\/mod2\/20150324000000_a\.rb$/,
+          /.*\/mod1\/20150324000001_a\.rb$/,
+          /.*\/mod1\/20150324000002_a\.rb$/,
+          /.*\/mod2\/20150324000003_a\.rb$/,
+        ]
+      )
+    end
   end
 
   describe '.latest_version' do
@@ -102,10 +106,12 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example do
     subject { described_class.filepaths_to_apply }
 
     context 'when no migration is applied' do
-      it { is_expected.to match [
-        /.*\/20150330000000_a.rb$/,
-        /.*\/20150330000001_a.rb$/,
-      ] }
+      it do
+        is_expected.to match [
+          /.*\/20150330000000_a.rb$/,
+          /.*\/20150330000001_a.rb$/,
+        ]
+      end
     end
 
     context 'after 1st migration is applied' do
