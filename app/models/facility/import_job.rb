@@ -40,6 +40,8 @@ class Facility::ImportJob
       end
     end
 
+    # TODO Enable rubocop
+    # rubocop:disable Metrics/AbcSize
     def update_row(row)
       filename = "#{@cur_node.filename}/#{row[@model.t(:filename)]}"
       item = @model.find_or_create_by filename: filename
