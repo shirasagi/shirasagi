@@ -88,4 +88,24 @@ class Opendata::Csv2rdfSetting
     opts = { threshold: SIMILARITY_THRESHOLD, max_rows: MAX_ROWS }.merge(opts)
     Opendata::ColumnTypesSearcher::Searcher.call(self, opts)
   end
+
+  def validate_header_size
+    if header_rows.blank?
+      errors.add :header_rows, :blank
+      return
+    end
+
+    if header_rows < 0
+      errors.add :header_rows, :greater_than_or_equal_to, count: 0
+      return
+    end
+  end
+
+  def validate_rdf_class
+    errors.add :class_id, :blank if class_id.blank?
+  end
+
+  def validate_column_types
+    # nothing to do
+  end
 end

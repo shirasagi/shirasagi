@@ -68,14 +68,21 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
       end
 
       @item.attributes = get_params
-      if @item.update
+      @item.send("validate_#{params[:action]}")
+      if @item.errors.blank? && @item.update
         respond_to do |format|
           format.html { redirect_to action: opts[:action] }
           format.json { head :no_content }
         end
       else
         respond_to do |format|
-          format.html { render }
+          format.html do
+            if opts.key?(:file)
+              render(file: opts[:file])
+            else
+              render
+            end
+          end
           format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
         end
       end

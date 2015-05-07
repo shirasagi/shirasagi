@@ -1,6 +1,6 @@
 <%
 header_rows_options = []
-1.upto(10).each { |i| header_rows_options << [i.to_s, i] }
+0.upto(10).each { |i| header_rows_options << [i.to_s, i] }
 %>
 <dl class="see csv2rdf-settings-header">
   <dt><%= @cur_resource.class.t :name %></dt>
@@ -32,9 +32,10 @@ $ ->
   render_table_header = ->
     val = parseInt($("select[name='item[header_rows]']").val())
     $("div.csv2rdf-settings-table-container table tr").removeClass("selected").removeClass("last_child")
-    for i in [0..val - 1]
-      $("div.csv2rdf-settings-table-container table tr:eq(#{i})").addClass("selected")
-    $("div.csv2rdf-settings-table-container table tr:eq(#{val - 1})").addClass("last_child")
+    if val > 0
+      for i in [0..val - 1]
+        $("div.csv2rdf-settings-table-container table tr:eq(#{i})").addClass("selected")
+      $("div.csv2rdf-settings-table-container table tr:eq(#{val - 1})").addClass("last_child")
 
   $("select[name='item[header_rows]']").on 'change', ->
     render_table_header()
