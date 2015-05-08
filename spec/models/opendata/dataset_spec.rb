@@ -1,21 +1,84 @@
 require 'spec_helper'
 
-describe Opendata::Dataset do
-  subject(:model) { Opendata::Dataset }
-  subject(:factory) { :opendata_dataset }
+describe Opendata::Dataset, dbscope: :example do
+  context "check attributes with typical url resource" do
+    subject { create(:opendata_dataset) }
+    its(:becomes_with_route) { is_expected.not_to be_nil }
+    its(:dirname) { is_expected.to eq "dir" }
+    its(:basename) { is_expected.to eq subject.filename.split('/').last }
+    its(:path) { is_expected.to end_with  "/#{subject.dirname}/#{subject.basename}" }
+    its(:url) { is_expected.to eq "/#{subject.dirname}/#{subject.basename}" }
+    its(:full_url) { is_expected.to eq "http://#{cms_site.domain}/#{subject.dirname}/#{subject.basename}" }
+    its(:parent) { is_expected.to eq nil }
+    its(:point_url) { is_expected.to eq "#{subject.url}/point/show.html" }
+    its(:point_add_url) { is_expected.to eq "#{subject.url}/point/add.html" }
+    its(:point_members_url) { is_expected.to eq "#{subject.url}/point/members.html" }
+    its(:dataset_apps_url) { is_expected.to eq "#{subject.url}/apps/show.html" }
+    its(:dataset_ideas_url) { is_expected.to eq "#{subject.url}/ideas/show.html" }
+    its(:contact_present?) { is_expected.to be_falsey }
+  end
 
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+  describe ".sort_options" do
+    it { expect(described_class.sort_options).to include %w(新着順 released) }
+  end
 
-  describe "#attributes" do
-    subject(:item) { model.last }
+  describe ".sort_hash" do
+    it { expect(described_class.sort_hash("released")).to include(released: -1).and include(_id: -1) }
+    it { expect(described_class.sort_hash("popular")).to include(point: -1).and include(_id: -1) }
+    it { expect(described_class.sort_hash("attention")).to include(downloaded: -1).and include(_id: -1) }
+    it { expect(described_class.sort_hash("")).to include(released: -1) }
+    it { expect(described_class.sort_hash("foobar")).to include("foobar" => 1) }
+  end
 
-    it { expect(item.becomes_with_route).not_to eq nil }
-    it { expect(item.dirname).not_to eq nil }
-    it { expect(item.basename).not_to eq nil }
-    it { expect(item.path).not_to eq nil }
-    it { expect(item.url).not_to eq nil }
-    it { expect(item.full_url).not_to eq nil }
-    it { expect(item.parent).to eq nil }
+  describe ".aggregate_field" do
+    it { expect(described_class.aggregate_field(:license, limit: 10)).to be_empty }
+  end
+
+  describe ".aggregate_array" do
+    it { expect(described_class.aggregate_array(:tags, limit: 10)).to be_empty }
+  end
+
+  describe ".aggregate_resources" do
+    it { expect(described_class.aggregate_resources(:format, limit: 10)).to be_empty }
+  end
+
+  describe ".get_tag_list" do
+    it { expect(described_class.get_tag_list(nil)).to be_empty }
+  end
+
+  describe ".get_tag" do
+    it { expect(described_class.get_tag("タグ")).to be_empty }
+  end
+
+  describe ".search" do
+    let(:ids_matcher) do
+      include("_id" => include("$in" => include(11).and(include(31))))
+    end
+    let(:name_keyword_matcher) do
+      include("$and" => include("$or" => include("name" => /\Qキーワード\E/i).and(include("text" => /\Qキーワード\E/i))))
+    end
+    let(:name_modal_matcher) do
+      include("name" => include("$all" => include(/\Q名前\E/)))
+    end
+    let(:dataset_group_matcher) do
+      include("dataset_group_ids" => include("$in" => include(-1)))
+    end
+    let(:format_matcher) do
+      include("$and" => include("$or" => include("resources.format" => "CSV").and(include("url_resources.format" => "CSV"))))
+    end
+    let(:license_id_matcher) do
+      include("$and" => include("$or" => include("resources.license_id" => 28).and(include("url_resources.license_id" => 28))))
+    end
+    it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/dataset") }
+    it { expect(described_class.search(keyword: "キーワード").selector.to_h).to include("$and") }
+    it { expect(described_class.search(ids: "11,31").selector.to_h).to ids_matcher }
+    it { expect(described_class.search(name: "名前", keyword: "キーワード").selector.to_h).to name_keyword_matcher }
+    it { expect(described_class.search(name: "名前", modal: true).selector.to_h).to name_modal_matcher }
+    it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
+    it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
+    it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }
+    it { expect(described_class.search(dataset_group: "データセット", site: cms_site).selector.to_h).to dataset_group_matcher }
+    it { expect(described_class.search(format: "csv").selector.to_h).to format_matcher }
+    it { expect(described_class.search(license_id: "28").selector.to_h).to license_id_matcher }
   end
 end
