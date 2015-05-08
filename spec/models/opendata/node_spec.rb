@@ -32,7 +32,7 @@ describe Opendata::Node::DatasetCategory do
   it_behaves_like "mongoid#find"
 end
 
-describe Opendata::Node::DatasetGroup do
+describe Opendata::Node::SearchDatasetGroup do
   subject(:model) { Opendata::Node::SearchDatasetGroup }
   subject(:factory) { :opendata_node_search_dataset_group }
 
