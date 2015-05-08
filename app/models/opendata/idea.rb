@@ -27,7 +27,7 @@ class Opendata::Idea
   has_many :comments, primary_key: :idea_id, class_name: "Opendata::IdeaComment",
     dependent: :destroy
 
-  validates :text, presence: true, length: { maximum: 80 }
+  validates :text, presence: true, length: { maximum: 400 }
   validates :category_ids, presence: true
   validates :state, presence: true
 
