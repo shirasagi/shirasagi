@@ -10,8 +10,8 @@ class Opendata::Idea
 
   set_permission_name "opendata_ideas"
 
-  field :state, type: String, default: "public"
-  field :name, type: String
+  field :state, type: String, default: "public", overwrite: true
+  field :name, type: String, overwrite: true
   field :point, type: Integer, default: "0"
   field :text, type: String
   field :tags, type: SS::Extensions::Words
