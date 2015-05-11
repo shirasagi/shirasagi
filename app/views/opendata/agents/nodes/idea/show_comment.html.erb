@@ -57,7 +57,7 @@
       <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>
         <dl class="comment_body">
           <dt>本文</dt>
-          <dd><%= f.text_field :comment_body %></dd>
+          <dd><%= f.text_field :comment_body, maxlength: "400" %></dd>
         </dl>
         <%= link_to "コメントを投稿", "", class: "comment_add" %>
       <% end %>
