@@ -1,6 +1,8 @@
 class Opendata::Appfile
   include SS::Document
   include SS::Relation::File
+  include Opendata::TsvParseable
+  include Opendata::AllowableAny
 
   seqid :id
   field :filename, type: String
@@ -46,20 +48,6 @@ class Opendata::Appfile
       file ? file.size : nil
     end
 
-    def allowed?(action, user, opts = {})
-      true
-    end
-
-    def parse_csv
-      require "nkf"
-      require "csv"
-
-      src  = file
-      data = NKF.nkf("-w", src.read)
-      sep  = data =~ /\t/ ? "\t" : ","
-      CSV.parse(data, col_sep: sep) rescue nil
-    end
-
   private
     def set_filename
       self.filename = in_file.original_filename
@@ -80,14 +68,6 @@ class Opendata::Appfile
 
   class << self
     public
-      def allowed?(action, user, opts = {})
-        true
-      end
-
-      def allow(action, user, opts = {})
-        true
-      end
-
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?
