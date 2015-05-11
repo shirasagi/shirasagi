@@ -35,25 +35,35 @@ module Sitemap::Addon
       end
 
       def load_sitemap_urls(opts = {})
-        urls = Cms::Node.where(site_id: site_id).public.
+        entries = Cms::Node.where(site_id: site_id).public.
           where(:depth.lte => sitemap_depth).
-          map { |m| opts[:name] ? "#{m.url} ##{m.name}" : m.url }
+          entries
 
         if sitemap_page_state != "hide"
-          urls += Cms::Page.where(site_id: site_id).public.
+          entries += Cms::Page.where(site_id: site_id).public.
             where(:depth.lte => sitemap_depth).
             not(filename: /\/index\.html$/).
-            map { |m| opts[:name] ? "#{m.url} ##{m.name}" : m.url }
+            entries
         end
 
         # deny
         if sitemap_deny_urls.present?
           regex = sitemap_deny_urls.map { |m| /^\/?#{m}/ }
           regex = Regexp.union(regex)
-          urls  = urls.reject { |url| url =~ regex }
+          entries  = entries.reject { |e| e.url =~ regex }
         end
 
-        urls.sort
+        # sort by order
+        h = {}
+        entries.each do |e|
+          parent_url = e.parent ? e.parent.url : "/"
+          h[parent_url] ||= []
+          h[parent_url] << e
+        end
+        entries = h.map { |k, v| v.sort_by(&:order) }.flatten
+
+        urls = entries.map { |m| opts[:name] ? "#{m.url} ##{m.name}" : m.url }
+        urls
       end
 
       def sitemap_list
