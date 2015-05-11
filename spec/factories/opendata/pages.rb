@@ -1,6 +1,10 @@
 FactoryGirl.define do
   factory :opendata_dataset, class: Opendata::Dataset, traits: [:cms_page] do
-    filename { "dir/#{unique_id}" }
+    transient do
+      node nil
+    end
+
+    filename { node.blank? ? "dir/#{unique_id}" : "#{node.filename}/#{unique_id}" }
     route "opendata/dataset"
     text "aaaa\naaaa"
     tags ["aaa", "bbb"]

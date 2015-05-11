@@ -14,8 +14,8 @@ class Opendata::Csv2rdfConverter::Job
         put_linkdata
         put_footer
 
-        # @tmp_file.flush
-        @tmp_file.close
+        @tmp_file.flush
+        @tmp_file.rewind
         save_and_send_ttl
       end
       dispose_context

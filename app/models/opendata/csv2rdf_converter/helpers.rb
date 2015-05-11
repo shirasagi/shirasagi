@@ -28,7 +28,7 @@ module Opendata::Csv2rdfConverter::Helpers
         begin
           yield @tmp_file
         ensure
-          @tmp_file.close unless @tmp_file.closed?
+          @tmp_file.close
         end
 
         @tmp_file = nil
@@ -164,7 +164,7 @@ module Opendata::Csv2rdfConverter::Helpers
       params[:text] = @cur_resource.text
       params[:format] = "TTL"
       params[:license_id] = @cur_resource.license_id
-      params[:in_file] = Opendata::Csv2rdfConverter::FakeUploadedFile.new(@tmp_file.path, TURTLE_CONTENT_TYPE)
+      params[:in_file] = Opendata::Csv2rdfConverter::FakeUploadedFile.new(@tmp_file, TURTLE_CONTENT_TYPE)
       params[:cur_host] = @cur_host if Opendata::Resource.respond_to?(:cur_host)
       params[:cur_user] = @cur_user if @cur_user.present? && Opendata::Resource.respond_to?(:cur_user)
       params[:cur_node] = @cur_node if Opendata::Resource.respond_to?(:cur_node)
