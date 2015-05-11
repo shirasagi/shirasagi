@@ -40,6 +40,11 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
     describe "#size" do
       its(:size) { is_expected.to be > 10 }
     end
+
+    # Opendata::Addon::UrlRdfStore
+    describe "#graph_name" do
+      its(:graph_name) { is_expected.to eq "#{dataset.full_url.sub(/\.html$/, "")}/url_resource/#{subject.id}/" }
+    end
   end
 
   context "when last_modified is not given" do
@@ -200,5 +205,43 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
     it { expect(described_class.search(keyword: "keyword_b633").selector.to_h).to include("name" => /keyword_b633/) }
     it { expect(described_class.search(format: "csv").selector.to_h).to include("format" => "CSV") }
     it { expect(described_class.search(xxxx: "xxxxx").selector.to_h).to be_empty }
+  end
+
+  context "ttl file", fuseki: true do
+    context "when ttl file is succeeded to send to fuseki server", fuseki: true do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/test-1.ttl"
+        subject.crawl_update = "none"
+      end
+
+      it do
+        allow(Opendata::Sparql).to receive(:clear).and_return(nil)
+        allow(Opendata::Sparql).to receive(:save).and_return(true)
+        expect { subject.save! }.not_to raise_error
+        expect(subject.rdf_iri).to eq subject.graph_name
+        expect(subject.rdf_error).to be_nil
+      end
+    end
+
+    context "when ttl file is failed to send to fuseki server", fuseki: true do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/test-1.ttl"
+        subject.crawl_update = "none"
+      end
+
+      it do
+        allow(Opendata::Sparql).to receive(:clear).and_return(nil)
+        allow(Opendata::Sparql).to receive(:save).and_raise("error from mock/stub")
+        expect { subject.save! }.not_to raise_error
+        expect(subject.rdf_iri).to be_nil
+        expect(subject.rdf_error).to eq I18n.t("opendata.errors.messages.invalid_rdf")
+      end
+    end
   end
 end
