@@ -1,3 +1,14 @@
+<%= javascript_include_tag "//www.google.com/jsapi" %>
+<%= javascript_tag do %>
+(function(){
+  Chart.load(function(){
+    $(".graph-canvas").each(function(){
+       Chart.drawBar(this, $.parseJSON($(this).attr("data-columns")));
+     });
+  });
+}).call(this);
+<% end %>
+
 <% if @cur_node.inquiry_results_html.present? %>
   <%= raw @cur_node.inquiry_results_html %>
 <% end %>
@@ -17,17 +28,22 @@
           <table class="index">
             <caption><%= column.name %></caption>
             <tbody>
+              <% data = {} %>
               <% column.select_options.each do |opts| %>
+                <% count = @aggregation[{ "column_id" => column.id, "value" => opts }] %>
+                <% total = @aggregation[{ "column_id" => column.id}] %>
+                <% percentage = (total > 0) ? ( count.to_f / total.to_f * 100.0 ).round(1) : 0 %>
+                <% data[opts] = percentage %>
                 <tr>
                   <th><%= opts %></th>
-                  <td class="count">
-                    <%= @aggregation[{ "column_id" => column.id, "value" => opts }] %>
-                    <%= t "views.units.count" %>
-                  </td>
+                  <td class="count"><%= count %><%= t "views.units.count" %></td>
                 </tr>
               <% end %>
             </tbody>
           </table>
+          <% if data.size > 0 %>
+            <dd class="graph"><div class="graph-canvas" data-columns='<%= data.to_json %>'></div></dd>
+          <% end %>
         </dd>
       </dl>
     <% end %>

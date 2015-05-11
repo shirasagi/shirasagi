@@ -39,7 +39,11 @@ module Inquiry::Addon
           aggregation = Inquiry::Answer.collection.aggregate(pipes)
           aggregation = aggregation.map { |i| [ i["_id"], i["count"] ] }.to_h
           aggregation.default = 0
-          aggregation
+
+          count = {}
+          count.default = 0
+          aggregation.each { |k, v| count[{ "column_id" => k["column_id"] }] += v }
+          aggregation.merge(count)
         end
     end
   end
