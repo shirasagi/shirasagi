@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-class Klass
-  include SS::Document
-end
+RSpec.describe SS::Document, type: :model, dbscope: :example do
+  class Klass
+    include SS::Document
+  end
 
-RSpec.describe Klass, type: :model, dbscope: :example do
   it do
     Timecop.scale(1_000_000_000)
     object = Klass.new
