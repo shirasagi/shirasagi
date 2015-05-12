@@ -20,8 +20,6 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
     alias_handler "dc:description", "rdfs:comment"
 
     register_handler("rdfs:subClassOf", Rdf::Builders::SubClassOfHandler.new)
-
-    # register_handler("owl:equivalentClass", Rdf::Builders::EquivalentClassHandler.new(:equivalent))
   end
 
   def call(predicate, objects)

@@ -24,10 +24,6 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
     register_handler("rdfs:domain", Rdf::Builders::RangeHandler.new(:domains))
 
     register_handler("rdfs:range", Rdf::Builders::RangeHandler.new(:ranges))
-
-    # register_handler("rdfs:subPropertyOf", Rdf::Builders::SubPropertyOfHandler.new(:sub_property_of))
-
-    # register_handler("owl:equivalentProperty", Rdf::Builders::LiteralHandler.new(:equivalent))
   end
 
   def call(predicate, objects)
