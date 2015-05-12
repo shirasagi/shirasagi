@@ -33,42 +33,17 @@ class Facility::ImportJob
         end
       end
 
-      dump @destroy_pages
       @model.in(filename: @destroy_pages).each do |item|
         put_log("destroy : #{item.name}")
         item.destroy
       end
     end
 
-    # TODO Enable rubocop
-    # rubocop:disable Metrics/AbcSize
     def update_row(row)
       filename = "#{@cur_node.filename}/#{row[@model.t(:filename)]}"
       item = @model.find_or_create_by filename: filename
       item.cur_site = @cur_site
-
-      item.name            = row[@model.t(:name)]
-      item.layout          = Cms::Layout.where(name: row[@model.t(:layout)]).first
-      item.kana            = row[@model.t(:kana)]
-      item.address         = row[@model.t(:address)]
-      item.postcode        = row[@model.t(:postcode)]
-      item.tel             = row[@model.t(:tel)]
-      item.fax             = row[@model.t(:fax)]
-      item.related_url     = row[@model.t(:related_url)]
-      item.additional_info = row.to_h.select {|k, v| k =~ /^#{@model.t(:additional_info)}[:：]/ && v.present? }.
-        map { |k, v| {:field => k, :value => v} }
-
-      ids = @cur_node.st_categories.in(name: row[@model.t(:categories)].to_s.split(/\n/)).map(&:id)
-      item.category_ids = SS::Extensions::ObjectIds.new(ids)
-
-      ids = @cur_node.st_locations.in(name: row[@model.t(:locations)].to_s.split(/\n/)).map(&:id)
-      item.location_ids = SS::Extensions::ObjectIds.new(ids)
-
-      ids = @cur_node.st_services.in(name: row[@model.t(:services)].to_s.split(/\n/)).map(&:id)
-      item.service_ids  = SS::Extensions::ObjectIds.new(ids)
-
-      ids = SS::Group.in(name: row[@model.t(:groups)].to_s.split(/\n/)).map(&:id)
-      item.group_ids    = SS::Extensions::ObjectIds.new(ids)
+      set_page_attributes(row, item)
 
       if item.save
         name = item.name
@@ -79,18 +54,50 @@ class Facility::ImportJob
       if row[@model.t(:map_points)].present?
         filename = "#{filename}/map.html"
         map = ::Facility::Map.find_or_create_by filename: filename
-        points = row[@model.t(:map_points)].split(/\n/).map do |loc|
-          { loc: Map::Extensions::Loc.mongoize(loc) }
-        end
-
-        map.name = "map"
         map.cur_site = @cur_site
-        map.map_points = Map::Extensions::Points.new(points)
+        set_map_attributes(row, map)
         map.save
         name += " #{map.map_points.first[:loc]}"
       end
 
       @destroy_pages.delete(filename)
       return name
+    end
+
+    def set_page_attributes(row, item)
+      item.name            = row[@model.t(:name)]
+      item.layout          = Cms::Layout.where(name: row[@model.t(:layout)]).first
+      item.kana            = row[@model.t(:kana)]
+      item.address         = row[@model.t(:address)]
+      item.postcode        = row[@model.t(:postcode)]
+      item.tel             = row[@model.t(:tel)]
+      item.fax             = row[@model.t(:fax)]
+      item.related_url     = row[@model.t(:related_url)]
+      item.additional_info = row.to_h.select { |k, v| k =~ /^#{@model.t(:additional_info)}[:：]/ && v.present? }.
+        map { |k, v| {:field => k, :value => v} }
+
+      set_page_categories(row, item)
+      ids = SS::Group.in(name: row[@model.t(:groups)].to_s.split(/\n/)).map(&:id)
+      item.group_ids    = SS::Extensions::ObjectIds.new(ids)
+    end
+
+    def set_page_categories(row, item)
+      ids = @cur_node.st_categories.in(name: row[@model.t(:categories)].to_s.split(/\n/)).map(&:id)
+      item.category_ids = SS::Extensions::ObjectIds.new(ids)
+
+      ids = @cur_node.st_locations.in(name: row[@model.t(:locations)].to_s.split(/\n/)).map(&:id)
+      item.location_ids = SS::Extensions::ObjectIds.new(ids)
+
+      ids = @cur_node.st_services.in(name: row[@model.t(:services)].to_s.split(/\n/)).map(&:id)
+      item.service_ids  = SS::Extensions::ObjectIds.new(ids)
+    end
+
+    def set_map_attributes(row, item)
+      points = row[@model.t(:map_points)].split(/\n/).map do |loc|
+        { loc: Map::Extensions::Loc.mongoize(loc) }
+      end
+
+      item.name = "map"
+      item.map_points = Map::Extensions::Points.new(points)
     end
 end

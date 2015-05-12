@@ -9,43 +9,45 @@ module Facility::PageFilter
     map_points groups
   )
 
+  private
+    def attributes_to_row(item)
+      row = []
+      row << item.basename
+      row << item.name
+      row << item.layout.try(:name)
+      row << item.kana
+      row << item.address
+      row << item.postcode
+      row << item.tel
+      row << item.fax
+      row << item.related_url
+      row << item.categories.map(&:name).join("\n")
+      row << item.locations.map(&:name).join("\n")
+      row << item.services.map(&:name).join("\n")
+      row << points.join("\n")
+      row << item.groups.pluck(:name).join("\n")
+      additional_columns.each do |c|
+        row << item.additional_info.map { |i| [i[:field], i[:value]] }.to_h[c]
+      end
+      row
+    end
+
   public
-    # TODO Enable rubocop
-    # rubocop:disable Metrics/AbcSize
     def download
       @items = Facility::Node::Page.site(@cur_site).
         where(filename: /^#{@cur_node.filename}\//, depth: @cur_node.depth + 1)
       t_columns = COLUMNS.map { |c| @model.t(c) }
-      additional_columns = @items.map { |item| item.additional_info.map {|i| i[:field] } }.
+      additional_columns = @items.map { |item| item.additional_info.map { |i| i[:field] } }.
         flatten.compact.uniq
 
       csv = CSV.generate do |data|
-        data << t_columns + additional_columns.map {|c| "#{@model.t(:additional_info)}:#{c}"}
+        data << t_columns + additional_columns.map { |c| "#{@model.t(:additional_info)}:#{c}" }
         @items.each do |item|
           maps = Facility::Map.site(@cur_site).
             where(filename: /^#{item.filename}\//, depth: item.depth + 1)
-          points = maps.map{|m| m.map_points}.flatten.
-            map{|m| m[:loc].join(",")}
-
-          row = []
-          row << item.basename
-          row << item.name
-          row << item.layout.try(:name)
-          row << item.kana
-          row << item.address
-          row << item.postcode
-          row << item.tel
-          row << item.fax
-          row << item.related_url
-          row << item.categories.map(&:name).join("\n")
-          row << item.locations.map(&:name).join("\n")
-          row << item.services.map(&:name).join("\n")
-          row << points.join("\n")
-          row << item.groups.pluck(:name).join("\n")
-          additional_columns.each do |c|
-            row << item.additional_info.map {|i| [i[:field], i[:value]] }.to_h[c]
-          end
-          data << row
+          points = maps.map{ |m| m.map_points }.flatten.
+            map{ |m| m[:loc].join(",") }
+          data << attributes_to_row(item)
         end
       end
 
