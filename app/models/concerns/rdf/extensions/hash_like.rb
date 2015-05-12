@@ -1,35 +1,10 @@
 module Rdf::Extensions::HashLike
   extend ActiveSupport::Concern
+  extend Forwardable
 
   attr_reader :document
 
-  def [](key)
-    @document[key]
-  end
-
-  def []=(key, value)
-    @document[key] = value
-  end
-
-  def keys
-    @document.keys
-  end
-
-  def values
-    @document.values
-  end
-
-  def length
-    @document.length
-  end
-
-  def size
-    @document.size
-  end
-
-  def each(*args, &block)
-    @document.each(*args, &block)
-  end
+  def_delegators :@document, :[], :[]=, :keys, :values, :length, :size, :each
 
   # Converts an object of this instance into a database friendly value.
   def mongoize
