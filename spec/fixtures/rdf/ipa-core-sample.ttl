@@ -1,0 +1,250 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ic: <http://imi.ipa.go.jp/ns/core/rdf#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix uncefactCode: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCode:9#> .
+@prefix uncefactDuration: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeDuration:4#> .
+@prefix uncefactISO4217: <urn:un:unece:uncefact:codelist:standard:ISO:ISO3AlphaCurrencyCode:2012-08-31#> .
+@prefix uncefactLinear: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeLinear:4#> .
+@prefix uncefactVolume: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeVolume:4#> .
+@prefix uncefactWeight: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4#> .
+
+<http://imi.ipa.go.jp/ns/core/rdf> a owl:Ontology ;
+	rdfs:label "共通語彙基盤コア語彙"@ja, "IMI Core Vocabulary"@en ;
+	dct:creator [
+		foaf:homepage <http://www.ipa.go.jp/> ;
+		foaf:name "IPA 独立行政法人情報処理推進機構"@ja, "Information-technology Promotion Agency, Japan."@en
+	], [
+		foaf:homepage <http://www.meti.go.jp/> ;
+		foaf:name "経済産業省"@ja, "Ministry of Economy, Trade and Industry"@en
+	] ;
+	dct:issued "2015-02-03" ;
+	cc:license <http://creativecommons.org/publicdomain/zero/1.0/> ;
+	rdfs:comment "コア語彙は、共通語彙基盤の基礎をなすもので、氏名、住所、組織等、あらゆる社会活動で使用される中核的な用語の集合です。多くのシステム間で情報交換のための基礎となる語彙で、データ交換、オープンデータの二次利用等の効率化に役立つものです。"@ja ;
+	owl:versionInfo "2.2" .
+
+
+## プロパティ定義 ################
+ic:標準型日時 a owl:DatatypeProperty ;
+	rdfs:label "標準型日時"@ja ;
+	rdfs:comment "日時"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:dateTime .
+
+ic:年号 a owl:DatatypeProperty ;
+	rdfs:label "年号"@ja ;
+	rdfs:comment "日付や日時などの元号"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:string .
+
+ic:年 a owl:DatatypeProperty ;
+	rdfs:label "年"@ja ;
+	rdfs:comment "日付や日時などの年の値"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:integer .
+
+ic:月 a owl:DatatypeProperty ;
+	rdfs:label "月"@ja ;
+	rdfs:comment "日付や日時などの月の値"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:integer .
+
+ic:日 a owl:DatatypeProperty ;
+	rdfs:label "日"@ja ;
+	rdfs:comment "日付や日時などの日の値"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:integer .
+
+ic:時 a owl:DatatypeProperty ;
+	rdfs:label "時"@ja ;
+	rdfs:comment "日時などの時の値"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:integer .
+
+ic:分 a owl:DatatypeProperty ;
+	rdfs:label "分"@ja ;
+	rdfs:comment "日時などの分の値"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:integer .
+
+ic:秒 a owl:DatatypeProperty ;
+	rdfs:label "秒"@ja ;
+	rdfs:comment "秒の値"@ja ;
+	schema:domainIncludes ic:日時型 ;
+	rdfs:range xsd:decimal .
+
+ic:時間帯 a owl:DatatypeProperty ;
+	rdfs:label "時間帯"@ja ;
+	rdfs:comment "時間帯。協定世界時からの時間差"@ja ;
+	schema:domainIncludes ic:日時型, ic:日付型 ;
+	rdfs:range xsd:string .
+
+ic:種別 a owl:DatatypeProperty ;
+	rdfs:label "種別"@ja ;
+	rdfs:comment "様々な事物の種類の表記"@ja ;
+	schema:domainIncludes ic:名称型, ic:氏名型, ic:住所型, ic:連絡先型, ic:人数型, ic:製品型, ic:施設型, ic:イベント型, ic:価格型, ic:定期スケジュール型, ic:アクセス型, ic:アクセス区間型 ;
+	rdfs:range xsd:string .
+
+ic:開催期日 a owl:DatatypeProperty ;
+	rdfs:label "開催期日"@ja ;
+	rdfs:comment "スケジュールが有効となる日。「週間」スケジュールの場合は曜日を指定し、「月間」スケジュールの場合は月の中の日を指定し、「年間」スケジュールの場合は年の中の月日を指定する"@ja ;
+	schema:domainIncludes ic:定期スケジュール型 ;
+	rdfs:range xsd:string .
+
+ic:有効開始日時 a owl:ObjectProperty ;
+	rdfs:label "有効開始日時"@ja ;
+	rdfs:comment "このスケジュールが有効になる日時"@ja ;
+	schema:domainIncludes ic:定期スケジュール型 ;
+	rdfs:range ic:日時型 .
+
+ic:有効終了日時 a owl:ObjectProperty ;
+	rdfs:label "有効終了日時"@ja ;
+	rdfs:comment "このスケジュールが無効になる日時"@ja ;
+	schema:domainIncludes ic:定期スケジュール型 ;
+	rdfs:range ic:日時型 .
+
+ic:開始時間 a owl:DatatypeProperty ;
+	rdfs:label "開始時間"@ja ;
+	rdfs:comment "場所やサービスの開始時間"@ja ;
+	schema:domainIncludes ic:イベントスケジュール型, ic:定期スケジュール型 ;
+	rdfs:range xsd:time .
+
+ic:終了時間 a owl:DatatypeProperty ;
+	rdfs:label "終了時間"@ja ;
+	rdfs:comment "場所やサービスなどの終了時間"@ja ;
+	schema:domainIncludes ic:イベントスケジュール型, ic:定期スケジュール型 ;
+	rdfs:range xsd:time .
+
+ic:説明 a owl:DatatypeProperty ;
+	rdfs:label "説明"@ja ;
+	rdfs:comment "様々な事物の説明"@ja ;
+	schema:domainIncludes ic:製品型, ic:地物型, ic:設備型, ic:イベント型, ic:期間型, ic:イベントスケジュール型, ic:定期スケジュール型 ;
+	rdfs:range xsd:string .
+
+## クラス定義（プロパティ制約は後方で別途定義） ################
+
+ic:事物型 a owl:Class ;
+	rdfs:label "事物型"@ja ;
+	rdfs:comment "全ての型のベースとなる基本型。"@ja .
+
+ic:日時型 a owl:Class ;
+	rdfs:label "日時型"@ja ;
+	rdfs:comment "日付を表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:スケジュール型 a owl:Class ;
+	rdfs:label "スケジュール型"@ja ;
+	rdfs:comment "スケジュールを表現するためのクラス"@ja ;
+	rdfs:subClassOf ic:事物型 .
+
+ic:定期スケジュール型 a owl:Class ;
+	rdfs:label "定期スケジュール型"@ja ;
+	rdfs:comment "定期的に繰り返される事象のスケジュールを表現するクラス"@ja ;
+	rdfs:subClassOf ic:スケジュール型 .
+
+## クラスのプロパティ制約定義 ################
+
+ic:日時型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:標準型日時 ;
+		owl:onDataRange xsd:dateTime ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "日時"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:年号 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "元号"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:年 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "年の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:月 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "月の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:日 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "日の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "時の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:分 ;
+		owl:onDataRange xsd:integer ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "分の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:秒 ;
+		owl:onDataRange xsd:decimal ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "秒の値"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:時間帯 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "時間帯。協定世界時からの時間差"@ja
+	] .
+
+ic:定期スケジュール型 a owl:Class ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty ic:種別 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "スケジュールの種別。「週間」「月間」「年間」などを指定する"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:開催期日 ;
+		owl:allValuesFrom xsd:string ;
+		rdfs:comment "このスケジュールが有効となる日。「週間」スケジュールの場合は曜日を指定し、「月間」スケジュールの場合は月の中の日を指定し、「年間」スケジュールの場合は年の中の月日を指定する"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:有効開始日時 ;
+		owl:onClass ic:日時型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "このスケジュールが有効になる日時"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:有効終了日時 ;
+		owl:onClass ic:日時型 ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "このスケジュールが無効になる日時"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:開始時間 ;
+		owl:onDataRange xsd:time ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "指定された曜日に場所やサービスが開始する時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:終了時間 ;
+		owl:onDataRange xsd:time ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "指定された曜日に場所やサービスが終了する時間"@ja
+	], [
+		a owl:Restriction ;
+		owl:onProperty ic:説明 ;
+		owl:onDataRange xsd:string ;
+		owl:maxQualifiedCardinality 1 ;
+		rdfs:comment "スケジュールの説明や例外などの説明"@ja
+	] .
