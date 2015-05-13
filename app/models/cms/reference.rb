@@ -20,7 +20,7 @@ module Cms::Reference
           role.permissions.each do |name|
             key = "#{name}_#{role.site_id}"
             if level = @cms_role_permissions[key]
-              @cms_role_permissions[key] = [level, permission_level].max
+              @cms_role_permissions[key] = [level, role.permission_level].max
             else
               @cms_role_permissions[key] = role.permission_level
             end
