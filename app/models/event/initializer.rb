@@ -9,6 +9,10 @@ module Event
     Cms::Role.permission :edit_private_event_pages
     Cms::Role.permission :delete_other_event_pages
     Cms::Role.permission :delete_private_event_pages
+    Cms::Role.permission :release_other_event_pages
+    Cms::Role.permission :release_private_event_pages
+    Cms::Role.permission :approve_other_event_pages
+    Cms::Role.permission :approve_private_event_pages
     Cms::Role.permission :move_private_event_pages
     Cms::Role.permission :move_other_event_pages
   end

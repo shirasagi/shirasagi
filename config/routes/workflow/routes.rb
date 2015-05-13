@@ -1,7 +1,5 @@
 SS::Application.routes.draw do
 
-  Workflow::Initializer
-
   concern :deletion do
     get :delete, on: :member
     post :request_update, on: :member
