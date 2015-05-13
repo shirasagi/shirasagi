@@ -65,16 +65,16 @@ class Facility::ImportJob
     end
 
     def set_page_attributes(row, item)
-      item.name            = row[@model.t(:name)]
-      item.layout          = Cms::Layout.where(name: row[@model.t(:layout)]).first
-      item.kana            = row[@model.t(:kana)]
-      item.address         = row[@model.t(:address)]
-      item.postcode        = row[@model.t(:postcode)]
-      item.tel             = row[@model.t(:tel)]
-      item.fax             = row[@model.t(:fax)]
-      item.related_url     = row[@model.t(:related_url)]
-      item.additional_info = row.to_h.select { |k, v| k =~ /^#{@model.t(:additional_info)}[:：]/ && v.present? }.
-        map { |k, v| {:field => k, :value => v} }
+      item.name            = row[@model.t(:name)].try(:squish)
+      item.layout          = Cms::Layout.where(name: row[@model.t(:layout)].try(:squish)).first
+      item.kana            = row[@model.t(:kana)].try(:squish)
+      item.address         = row[@model.t(:address)].try(:squish)
+      item.postcode        = row[@model.t(:postcode)].try(:squish)
+      item.tel             = row[@model.t(:tel)].try(:squish)
+      item.fax             = row[@model.t(:fax)].try(:squish)
+      item.related_url     = row[@model.t(:related_url)].try(:gsub, /[\r\n]/, " ")
+      item.additional_info = row.to_h.select {|k, v| k =~ /^#{@model.t(:additional_info)}[:：]/ && v.present? }.
+        map { |k, v| {:field => k.sub(/^#{@model.t(:additional_info)}[:：]/, ""), :value => v} }
 
       set_page_categories(row, item)
       ids = SS::Group.in(name: row[@model.t(:groups)].to_s.split(/\n/)).map(&:id)
@@ -82,13 +82,16 @@ class Facility::ImportJob
     end
 
     def set_page_categories(row, item)
-      ids = @cur_node.st_categories.in(name: row[@model.t(:categories)].to_s.split(/\n/)).map(&:id)
+      names = row[@model.t(:categories)].to_s.split(/\n/).map(&:strip)
+      ids = @cur_node.st_categories.in(name: names).map(&:id)
       item.category_ids = SS::Extensions::ObjectIds.new(ids)
 
-      ids = @cur_node.st_locations.in(name: row[@model.t(:locations)].to_s.split(/\n/)).map(&:id)
+      names = row[@model.t(:locations)].to_s.split(/\n/).map(&:strip)
+      ids = @cur_node.st_locations.in(name: names).map(&:id)
       item.location_ids = SS::Extensions::ObjectIds.new(ids)
 
-      ids = @cur_node.st_services.in(name: row[@model.t(:services)].to_s.split(/\n/)).map(&:id)
+      names = row[@model.t(:services)].to_s.split(/\n/).map(&:strip)
+      ids = @cur_node.st_services.in(name: names).map(&:id)
       item.service_ids  = SS::Extensions::ObjectIds.new(ids)
     end
 
