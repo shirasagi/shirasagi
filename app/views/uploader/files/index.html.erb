@@ -18,7 +18,7 @@
     <% @items.each do |item| %>
     <tr>
       <td class="checkbox">
-        <input type="checkbox" name="ids[]" />
+        <input type="checkbox" name="ids[]" value="<%= item.name %>"/>
         <nav class="tap-menu">
         <%= link_to :show, action: :show, filename: item.filename, do: :show if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to :edit, action: :show, filename: item.filename, do: :edit if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
