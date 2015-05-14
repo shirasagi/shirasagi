@@ -10,7 +10,12 @@ module Facility::PageFilter
   )
 
   private
-    def attributes_to_row(item)
+    def attributes_to_row(item, additional_columns)
+      maps = Facility::Map.site(@cur_site).
+        where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+      points = maps.map{ |m| m.map_points }.flatten.
+        map{ |m| m[:loc].join(",") }
+
       row = []
       row << item.basename
       row << item.name
@@ -43,11 +48,7 @@ module Facility::PageFilter
       csv = CSV.generate do |data|
         data << t_columns + additional_columns.map { |c| "#{@model.t(:additional_info)}:#{c}" }
         @items.each do |item|
-          maps = Facility::Map.site(@cur_site).
-            where(filename: /^#{item.filename}\//, depth: item.depth + 1)
-          points = maps.map{ |m| m.map_points }.flatten.
-            map{ |m| m[:loc].join(",") }
-          data << attributes_to_row(item)
+          data << attributes_to_row(item, additional_columns)
         end
       end
 
