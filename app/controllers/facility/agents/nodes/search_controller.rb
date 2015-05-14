@@ -23,6 +23,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     def set_items
       @items = Facility::Node::Page.site(@cur_site).public.
         where(@cur_node.condition_hash).
+        search(name: @keyword).
         in(@q_category).
         in(@q_service).
         in(@q_location).
@@ -39,6 +40,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
         item = Facility::Node::Page.site(@cur_site).public.
           where(@cur_node.condition_hash).
           in_path(parent_path).
+          search(name: @keyword).
           in(@q_category).
           in(@q_service).
           in(@q_location).first
