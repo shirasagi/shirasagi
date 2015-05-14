@@ -3,7 +3,7 @@
   <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :text %></dt>
-  <dd><%= @item.text %></dd>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
   <dt><%= @model.t :tags %></dt>
   <dd><%= @item.tags %></dd>
