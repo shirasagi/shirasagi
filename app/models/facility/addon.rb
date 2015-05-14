@@ -44,7 +44,7 @@ module Facility::Addon
     set_order 210
 
     included do
-      field :upper_html, type: String
+      field :upper_html, type: String, overwrite: true
       field :map_html, type: String
 
       permit_params :upper_html, :map_html
