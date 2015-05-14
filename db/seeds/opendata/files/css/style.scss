@@ -218,12 +218,20 @@ textarea {
         padding: 5px 4px 5px 27px;
         border: 1px solid $white;
         @include box-shadow(0 0 0 1px $gray);
+        text-decoration: none;
+        color: $text;
       }
       a.login {
-        background: #ededed url(../img/ic-login.png) no-repeat 3px center;
+        background: $white url(../img/ic-login.png) no-repeat 3px center;
+        &:hover {
+          background-color: #ededed;
+        }
       }
       a.logout {
-        background: #ededed url(../img/ic-logout.png) no-repeat 3px center;
+        background: $white url(../img/ic-logout.png) no-repeat 3px center;
+        &:hover {
+          background-color: #ededed;
+        }
       }
       a.member {
         display: inline-block;
