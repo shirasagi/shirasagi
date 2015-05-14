@@ -13,6 +13,9 @@ class Facility::ImportJob
       @cur_site = SS::Site.where(host: host).first
       @cur_node = ::Facility::Node::Node.where(filename: filename, site_id: @cur_site.id).first
 
+      put_log("destory all pages /#{@cur_node.filename}/*")
+      ::Facility::Node::Page.where(filename: /^#{@cur_node.filename}\//, site_id: @cur_site.id).destroy_all
+
       put_log("import start " + ::File.basename(@ss_file.name))
       import_csv(@ss_file)
 
@@ -21,7 +24,6 @@ class Facility::ImportJob
 
     def import_csv(file)
       @model = ::Facility::Node::Page
-      @destroy_pages = @model.where(filename: /^#{@cur_node.filename}\//).map(&:filename)
 
       table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
       table.each_with_index do |row, i|
@@ -31,11 +33,6 @@ class Facility::ImportJob
         rescue => e
           put_log("error  #{i + 1}: #{e}")
         end
-      end
-
-      @model.in(filename: @destroy_pages).each do |item|
-        put_log("destroy : #{item.name}")
-        item.destroy
       end
     end
 
@@ -60,7 +57,6 @@ class Facility::ImportJob
         name += " #{map.map_points.first[:loc]}"
       end
 
-      @destroy_pages.delete(filename)
       return name
     end
 
@@ -73,7 +69,7 @@ class Facility::ImportJob
       item.tel             = row[@model.t(:tel)].try(:squish)
       item.fax             = row[@model.t(:fax)].try(:squish)
       item.related_url     = row[@model.t(:related_url)].try(:gsub, /[\r\n]/, " ")
-      item.additional_info = row.to_h.select {|k, v| k =~ /^#{@model.t(:additional_info)}[:：]/ && v.present? }.
+      item.additional_info = row.to_h.select { |k, v| k =~ /^#{@model.t(:additional_info)}[:：]/ && v.present? }.
         map { |k, v| {:field => k.sub(/^#{@model.t(:additional_info)}[:：]/, ""), :value => v} }
 
       set_page_categories(row, item)
