@@ -1,6 +1,6 @@
 <nav class="tabs">
   <ul>
-    <% query = params.select{ |k, v| %(category_ids service_ids location_ids).index(k) }.to_query %>
+    <% query = params.select{ |k, v| %(keyword category_ids service_ids location_ids).index(k) }.to_query %>
     <li class="tab map<%= @current == "map" ? " current" : "" %>">
       <%= link_to t("facility.tab.map"), "./map.html?#{query}" %>
     </li>
