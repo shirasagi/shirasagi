@@ -548,7 +548,7 @@ article.areas, article.tags, article.formats, article.licenses {
 .crumbs {
   width: $page-width;
   margin: 0 auto;
-  padding: 14px 0 16px 0;
+  padding: 14px 10px 16px 10px;
   font-size: $px12;
 }
 
@@ -1020,12 +1020,6 @@ form.opendata-search_ideas-form .send {
         background: $blue;
         color: $white;
         font-size: $px32;
-      }
-      .crumbs {
-        width: $page-width;
-        margin: 0 auto;
-        padding: 14px 0 0 15px;
-        font-size: $px12;
       }
     }
   }
