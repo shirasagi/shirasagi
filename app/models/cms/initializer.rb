@@ -35,6 +35,10 @@ module Cms
     Cms::Role.permission :delete_private_cms_pages
     Cms::Role.permission :delete_private_cms_parts
     Cms::Role.permission :delete_private_cms_layouts
+    Cms::Role.permission :release_other_cms_pages
+    Cms::Role.permission :release_private_cms_pages
+    Cms::Role.permission :approve_other_cms_pages
+    Cms::Role.permission :approve_private_cms_pages
     Cms::Role.permission :move_private_cms_nodes
     Cms::Role.permission :move_private_cms_pages
     Cms::Role.permission :move_other_cms_nodes
