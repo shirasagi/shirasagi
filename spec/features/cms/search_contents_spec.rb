@@ -37,7 +37,7 @@ describe "cms_search", dbscope: :example do
           fill_in "keyword", with: "くらし"
           click_button "検索"
         end
-        wait_for_ajax(".result table")
+        wait_for_ajax
         expect(page).not_to have_css(".result table a", text: "[TEST] top")
         expect(page).to     have_css(".result table a", text: "[TEST] child")
         expect(page).not_to have_css(".result table a", text: "[TEST] 1.html")
@@ -58,7 +58,7 @@ describe "cms_search", dbscope: :example do
           fill_in "keyword", with: "戸籍"
           click_button "検索"
         end
-        wait_for_ajax(".result table")
+        wait_for_ajax
         expect(page).not_to have_css(".result table a", text: "[TEST] top")
         expect(page).to     have_css(".result table a", text: "[TEST] child")
         expect(page).not_to have_css(".result table a", text: "[TEST] 1.html")
@@ -72,7 +72,7 @@ describe "cms_search", dbscope: :example do
           check "option-url"
           click_button "検索"
         end
-        wait_for_ajax(".result table")
+        wait_for_ajax
         expect(page).not_to have_css(".result table a", text: "[TEST] top")
         expect(page).to     have_css(".result table a", text: "[TEST] child")
         expect(page).to     have_css(".result table a", text: "[TEST] 1")
@@ -95,7 +95,7 @@ describe "cms_search", dbscope: :example do
           check "option-url"
           click_button "検索"
         end
-        wait_for_ajax(".result table")
+        wait_for_ajax
         expect(page).not_to have_css(".result table a", text: "[TEST] top")
         expect(page).to     have_css(".result table a", text: "[TEST] child")
         expect(page).to     have_css(".result table a", text: "[TEST] 1")
@@ -109,7 +109,7 @@ describe "cms_search", dbscope: :example do
           check "option-regexp"
           click_button "検索"
         end
-        wait_for_ajax(".result table")
+        wait_for_ajax
         expect(page).not_to have_css(".result table a", text: "[TEST] top")
         expect(page).to     have_css(".result table a", text: "[TEST] child")
         expect(page).not_to have_css(".result table a", text: "[TEST] 1")
@@ -132,7 +132,7 @@ describe "cms_search", dbscope: :example do
           check "option-regexp"
           click_button "検索"
         end
-        wait_for_ajax(".result table")
+        wait_for_ajax
         expect(page).not_to have_css(".result table a", text: "[TEST] top")
         expect(page).to     have_css(".result table a", text: "[TEST] child")
         expect(page).not_to have_css(".result table a", text: "[TEST] 1")
