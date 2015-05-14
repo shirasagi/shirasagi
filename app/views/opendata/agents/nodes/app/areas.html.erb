@@ -8,4 +8,7 @@
     </header>
   </article>
   <% end %>
+  <% if @areas.count == 0 %>
+    <div>該当するデータは登録されていません</div>
+  <% end %>
 </div>
