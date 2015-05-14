@@ -14,7 +14,7 @@ class Opendata::Member
     file = send("in_icon")
 
     begin
-      require 'RMagick'
+      require 'rmagick'
       image = Magick::Image.from_blob(in_icon.read).shift
       image = image.resize_to_fill 114, 114 if image.columns > 114 || image.rows > 114
     rescue
