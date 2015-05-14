@@ -51,6 +51,9 @@ class @Map
   @renderMarkers: ->
     @form.renderMarkers() if @form
 
+  @renderEvents: ->
+    @form.renderEvents() if @form
+
   @setMarkers: (markers) ->
     Map.markers = markers
     markerBounds = new google.maps.LatLngBounds()

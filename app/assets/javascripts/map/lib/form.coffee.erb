@@ -69,26 +69,25 @@ class @Map_Form
       cln.find(".marker-name").on 'keypress', (e)->
         if e.which == 13
           return false
+    if $(".mod-map dd.marker").length == Map_Form.maxPointForm
+      $(".mod-map dd .add-marker").parent().hide()
     return
 
   @clearPointForm: (ele)->
-    if $(".mod-map dd.marker").length > 1
-      if ele.find(".marker-loc").val() != ""
-        if confirm(Map_Form.deleteMessage)
-          if Map.markers[parseInt(ele.attr("data-id"))]
-            Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
-          ele.find("input,textarea").val ""
-          ele.remove()
-      else
+    if ele.find(".marker-loc").val() != ""
+      if confirm(Map_Form.deleteMessage)
         if Map.markers[parseInt(ele.attr("data-id"))]
           Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
-        ele.remove()
+        ele.find("input,textarea").val("")
+        if $(".mod-map dd.marker").length > 1
+          ele.remove()
     else
-      if ele.find(".marker-loc").val() != ""
-        if confirm(Map_Form.deleteMessage)
-          if Map.markers[parseInt(ele.attr("data-id"))]
-            Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
-          ele.find("input,textarea").val ""
+      if Map.markers[parseInt(ele.attr("data-id"))]
+        Map.markers[parseInt(ele.attr("data-id"))].setMap(null)
+      ele.find("input,textarea").val("")
+      if $(".mod-map dd.marker").length > 1
+        ele.remove()
+    $(".mod-map dd .add-marker").parent().show()
     return
 
   @createMarker: (ele)->
@@ -106,6 +105,39 @@ class @Map_Form
     return
 
   @renderMarkers: ()->
+    markerBounds = new google.maps.LatLngBounds()
+
+    if Map.markers
+      for m in Map.markers
+        m.setMap(null)
+    Map.markers = []
+    Map_Form.dataID = 0
+
+    $(".mod-map dd.marker").each ->
+      $(this).attr("data-id", Map_Form.dataID)
+
+      if $(this).find(".marker-loc").val() != ""
+        loc = Map_Form.getMapLoc($(this).find(".marker-loc"))
+        Map.markers[Map_Form.dataID] = new google.maps.Marker(
+          position: loc,
+          map: Map.map
+        )
+        Map_Form.attachMessage(Map_Form.dataID)
+        markerBounds.extend(loc)
+      Map_Form.dataID += 1
+
+    if Map.markers.length > 0
+      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', ( event ) ->
+        if this.getZoom() > 13 && this.initialZoom == true
+          this.setZoom(13)
+          this.initialZoom = false
+        google.maps.event.removeListener(zoomChangeBoundsListener)
+
+      Map.map.initialZoom = true
+      Map.map.fitBounds(markerBounds)
+    return
+
+  @renderEvents: ()->
     google.maps.event.addListener Map.map, 'click', (event) ->
       Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng())
       if Map_Form.clickMarker != null
@@ -141,30 +173,3 @@ class @Map_Form
     $(".mod-map .marker-name").on 'keypress', (e)->
       if e.which == 13
         return false
-
-    Map.markers = []
-    markerBounds = new google.maps.LatLngBounds()
-
-    $(".mod-map dd.marker").each ->
-      $(this).attr("data-id", Map_Form.dataID)
-
-      if $(this).find(".marker-loc").val() != ""
-        loc = Map_Form.getMapLoc($(this).find(".marker-loc"))
-        Map.markers[Map_Form.dataID] = new google.maps.Marker(
-          position: loc,
-          map: Map.map
-        )
-        Map_Form.attachMessage(Map_Form.dataID)
-        markerBounds.extend(loc)
-      Map_Form.dataID += 1
-
-    if Map.markers.length > 0
-      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', ( event ) ->
-        if this.getZoom() > 13 && this.initialZoom == true
-          this.setZoom(13)
-          this.initialZoom = false
-        google.maps.event.removeListener(zoomChangeBoundsListener)
-
-      Map.map.initialZoom = true
-      Map.map.fitBounds(markerBounds)
-    return

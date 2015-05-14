@@ -4,6 +4,7 @@ ja:
     node: 施設一覧
     search: 施設検索
     page: 施設情報
+    keyword: キーワード
     category:
       setting: 種類設定
       index: 施設の種類を設定する
@@ -48,6 +49,7 @@ ja:
       start: 施設情報の更新処理を開始しました。
       invalid_file: CSV形式のファイルを選択してください。
       log: インポートログ
+      confirm: 既に登録されている施設情報をすべて削除しインポートを行います。更新処理を開始してよろしいですか？
 
   modules:
     facility: 施設
