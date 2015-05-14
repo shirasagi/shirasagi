@@ -35,4 +35,14 @@ class Opendata::Agents::Nodes::AppfileController < ApplicationController
 
       render nothing: true unless @data = @item.parse_csv
     end
+
+    def json
+      @cur_node.layout_id = nil
+
+      @item = @app.appfiles.find_by id: params[:id], format: "JSON"
+
+      @json = File.read(@item.file.path, :encoding => Encoding::UTF_8)
+
+      render
+    end
 end

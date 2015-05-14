@@ -36,6 +36,10 @@ class Opendata::Appfile
       app.full_url.sub(/\.html$/, "") + "/appfile/#{id}/content.html"
     end
 
+    def json_url
+      app.full_url.sub(/\.html$/, "") + "/appfile/#{id}/json.html"
+    end
+
     def path
       file ? file.path : nil
     end
@@ -61,7 +65,7 @@ class Opendata::Appfile
     def validate_appfile
       if self.app.appurl.present?
         errors.clear
-        errors.add :file_id, "はアプリの参考URLを登録している場合、登録できません。"
+        errors.add :file_id, "はアプリの公開URLを登録している場合、登録できません。"
         return
       end
     end

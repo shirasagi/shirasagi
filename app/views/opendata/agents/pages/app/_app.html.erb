@@ -71,7 +71,7 @@
             </div>
             <div id="tab-sample">
               <header><h1>サンプルデータ</h1></header>
-              <% if @sample.present? %>
+              <% if @csv.present? or @json.present? %>
                 <%= render partial: "opendata/agents/pages/app/content" %>
               <% end %>
             </div>

@@ -128,6 +128,7 @@ SS::Application.routes.draw do
     get "app/:app/zip" => "public#download", cell: "nodes/app", format: false
     get "app/:app/appfile/:id/" => "public#index", cell: "nodes/appfile"
     get "app/:app/appfile/:id/content.html" => "public#content", cell: "nodes/appfile", format: false
+    get "app/:app/appfile/:id/json.html" => "public#json", cell: "nodes/appfile", format: false
     get "app/:app/appfile/:id/*filename" => "public#download", cell: "nodes/appfile", format: false
 
     match "search_app/(index.:format)" => "public#index", cell: "nodes/search_app", via: [:get, :post]

@@ -36,7 +36,8 @@ class Opendata::Agents::Pages::AppController < ApplicationController
             end
           end
 
-          @sample = appli.appfiles.where(format: "CSV")
+          @csv = appli.appfiles.where(format: "CSV")
+          @json = appli.appfiles.where(format: "JSON")
         end
       end
 
