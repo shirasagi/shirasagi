@@ -153,7 +153,7 @@ textarea {
           a {
             @include box-shadow(0 -3px 0 0 $data-pink inset, 0 4px 0 -2px $data-pink);
             padding: 10px 8px 4px 0px;
-            background: url(../img/ic-datatab_hover.png) no-repeat 7px center;
+            background: url(../img/ic-datatab_hover.png) no-repeat 6px 7px;
           }
         }
       }
@@ -167,7 +167,7 @@ textarea {
           a {
             @include box-shadow(0 -3px 0 0 $app-blue inset, 0 4px 0 -2px $app-blue);
             padding: 10px 8px 4px 0px;
-            background: url(../img/ic-apptab_hover.png) no-repeat 3px center;
+            background: url(../img/ic-apptab_hover.png) no-repeat 3px 10px;
           }
         }
       }
@@ -2279,7 +2279,7 @@ nav.cms-sns_share {
     a {
       @include box-shadow(0 -3px 0 0 $data-pink inset, 0 4px 0 -2px $data-pink);
       padding: 10px 8px 4px 0px;
-      background: url(../img/ic-datatab_hover.png) no-repeat 7px center;
+      background: url(../img/ic-datatab_hover.png) no-repeat 6px 7px;
     }
   }
 }
@@ -2823,7 +2823,7 @@ article.licenses div article a {
       }
       a.name:nth-child(1) {
         width: 120px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab.png) no-repeat 7px 6px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-pagedatatab.png) no-repeat 7px 6px;
         &:hover {
           @include opacity(1);
           @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
@@ -2839,18 +2839,18 @@ article.licenses div article a {
       }
       a.name:nth-child(2) {
         width: 130px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 10px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 9px;
         &:hover {
           @include opacity(1);
           @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-apptab_hover.png) no-repeat 12px 10px;
+          background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
           color: $blue;
         }
       }
       a.current:nth-child(2) {
         @include opacity(1);
         @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-apptab_hover.png) no-repeat 12px 10px;
+        background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
         color: $blue;
       }
       a.name:nth-child(3) {
@@ -3107,7 +3107,7 @@ article.licenses div article a {
     a {
       @include box-shadow(0 -3px 0 0 $app-blue inset, 0 4px 0 -2px $app-blue);
       padding: 10px 8px 4px 0px;
-      background: url(../img/ic-apptab_hover.png) no-repeat 3px center;
+      background: url(../img/ic-apptab_hover.png) no-repeat 3px 10px;
     }
   }
 }
@@ -4419,7 +4419,7 @@ article.licenses div article a {
       }
       a.name:nth-child(1) {
         width: 150px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab.png) no-repeat 10px 5px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-pageideatab.png) no-repeat 10px 4px;
         &:hover {
           @include opacity(1);
           @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
@@ -4453,18 +4453,18 @@ article.licenses div article a {
       a.name:nth-child(3) {
         width: 130px;
         padding-left: 30px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 10px;
+        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 9px;
         &:hover {
           @include opacity(1);
           @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-apptab_hover.png) no-repeat 12px 10px;
+          background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
           color: $blue;
         }
       }
       a.current:nth-child(3) {
         @include opacity(1);
         @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-apptab_hover.png) no-repeat 12px 10px;
+        background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
         color: $blue;
       }
     }
