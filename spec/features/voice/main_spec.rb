@@ -2,11 +2,22 @@ require 'spec_helper'
 
 describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fixtures", "voice"), port: 33_190 do
   let(:voice_site) do
-    SS::Site.find_or_create_by(
-      name: "VoiceSite",
-      host: "voicehost",
-      domains: "127.0.0.1:33190"
-    )
+    SS::Site.find_or_create_by(name: "VoiceSite", host: "voicehost", domains: "127.0.0.1:33190")
+  end
+
+  before do
+    # To stabilize spec, voice synthesis job is executed in-place process .
+    allow(SS::RakeRunner).to receive(:run_async).and_wrap_original do |_, *args|
+      config = { name: "default", model: "job:service", num_workers: 0, poll: %w(default voice_synthesis) }
+      config.stringify_keys!
+      Job::Service.run config
+    end
+    # To stabilize spec, bypass open jatalk/lame/sox.
+    allow(Voice::Converter).to receive(:convert).and_wrap_original do |_, *args|
+      _, _, output = args
+      Fs.binwrite(output, IO.binread("#{Rails.root}/spec/fixtures/voice/voice-disabled.wav"))
+      true
+    end
   end
 
   describe "#index", open_jtalk: true do
@@ -14,6 +25,10 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
       before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @http_server.options = { real_path: "/test-001.html" }
+      end
+
+      after :all do
+        @http_server.options = {}
       end
 
       it "returns 202" do
@@ -87,6 +102,10 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
         @http_server.options = { real_path: "/test-001.html", status_code: 400 }
       end
 
+      after :all do
+        @http_server.options = {}
+      end
+
       it "returns 404" do
         url = "http://#{voice_site.domain}/#{path}?status_code=400"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -100,6 +119,10 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
 
       before :all do
         @http_server.options = { real_path: "/test-001.html", status_code: 404 }
+      end
+
+      after :all do
+        @http_server.options = {}
       end
 
       it "returns 404" do
@@ -117,6 +140,10 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
         @http_server.options = { real_path: "/test-001.html", status_code: 500 }
       end
 
+      after :all do
+        @http_server.options = {}
+      end
+
       it "returns 404" do
         url = "http://#{voice_site.domain}/#{path}?status_code=500"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -125,22 +152,22 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
       end
     end
 
-    context "when server timed out" do
+    context "when voice synthesis request is full" do
       path = "#{rand(0x100000000).to_s(36)}.html"
-      wait = 10
 
       before :all do
-        @http_server.options = { real_path: "/test-001.html", wait: wait }
+        @http_server.options = { real_path: "/test-001.html" }
       end
 
       after :all do
-        @http_server.release_wait
+        @http_server.options = {}
       end
 
-      it "returns 404" do
-        url = "http://#{voice_site.domain}/#{path}?wait=#{wait}"
+      it "returns 429" do
+        allow(Voice::SynthesisJob).to receive(:call_async).and_raise(Job::SizeLimitExceededError)
+        url = "http://#{voice_site.domain}/#{path}"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
-        expect(status_code).to eq 404
+        expect(status_code).to eq 429
         expect(Voice::File.where(url: url).count).to eq 0
       end
     end
@@ -150,6 +177,10 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
 
       before :all do
         @http_server.options = { real_path: "/test-001.html", last_modified: nil }
+      end
+
+      after :all do
+        @http_server.options = {}
       end
 
       it "returns 200" do
