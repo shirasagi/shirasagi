@@ -483,7 +483,7 @@ article.areas, article.tags, article.formats, article.licenses {
 // -----------------------------------------------------------------------------
 // nav
 #portal-dataset nav, #portal-app nav, #portal-idea nav, .cms-tabs nav, .opendata-tabs nav, #search_group nav,
-#data-attention, #app-attention, #idea-attention {
+#data-attention nav, #app-attention nav, #idea-attention nav {
   @include clear;
   padding: 6px 5px 0 5px;
   .more {
