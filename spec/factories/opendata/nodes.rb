@@ -23,6 +23,14 @@ FactoryGirl.define do
     route "opendata/search_dataset"
   end
 
+  factory :opendata_node_search_app, class: Opendata::Node::SearchApp, traits: [:cms_node] do
+    route "opendata/search_app"
+  end
+
+  factory :opendata_node_search_idea, class: Opendata::Node::SearchIdea, traits: [:cms_node] do
+    route "opendata/search_idea"
+  end
+
   factory :opendata_node_sparql, class: Opendata::Node::Sparql, traits: [:cms_node] do
     route "opendata/sparql"
   end
@@ -57,5 +65,9 @@ FactoryGirl.define do
 
   factory :opendata_node_my_idea, class: Opendata::Node::MyIdea, traits: [:cms_node] do
     route "opendata/my_idea"
+  end
+
+  factory :opendata_node_member, class: Opendata::Node::Member, traits: [:cms_node] do
+    route "opendata/member"
   end
 end
