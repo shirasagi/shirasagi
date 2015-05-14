@@ -191,7 +191,7 @@ module Workflow::Addon
         required_counts = workflow_required_counts_at(level)
         approvers = workflow_approvers_at(level)
         required_counts = approvers.length if required_counts == false
-        approved = approvers.select { |approver| approver[:state] == WORKFLOW_STATE_APPROVE }.length
+        approved = approvers.count { |approver| approver[:state] == WORKFLOW_STATE_APPROVE }
         approved >= required_counts
       end
 
