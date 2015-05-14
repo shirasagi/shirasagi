@@ -2747,6 +2747,7 @@ article.licenses div article a {
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px32;
+    line-height: 1;
   }
   .text, nav.related-pages {
     margin-bottom: 28px;
@@ -2810,7 +2811,7 @@ article.licenses div article a {
         line-height: 1.3;
       }
       a.name:nth-child(1) {
-        width: 180px;
+        width: 120px;
         background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab.png) no-repeat 7px 6px;
         &:hover {
           @include opacity(1);
@@ -3505,6 +3506,38 @@ article.licenses div article a {
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px32;
+    line-height: 1;
+  }
+  .side-right {
+    float: right;
+    .download-all {
+      margin-bottom: 24px;
+      text-align: center;
+      .download-wrap {
+        @include grd-bluebutton;
+        display: inline-block;
+        border: 1px solid rgba(#00AEEC, 0.24);
+        letter-spacing: -.40em;
+      }
+      .download {
+        @include box-shadow(0 0 0 1px $gray);
+        @include grd-appbtn;
+        display: inline-block;
+        margin: 4px 5px;
+        padding: 8px 25px;
+        border: 1px solid $white;
+        color: $text;
+        text-decoration: none;
+        letter-spacing: normal;
+        &:not(:target) {
+          filter: none;
+          -ms-filter: none;
+        }
+        &:hover {
+          @include grd-appbtn_hover;
+        }
+      }
+    }
   }
   .text, nav.related-pages {
     margin-bottom: 28px;
@@ -3783,7 +3816,7 @@ article.licenses div article a {
           }
         }
         .frame {
-          border-bottom: 1px dotted #cccccc;
+          border-bottom: 1px solid $gray;
           &:last-child {
             border-bottom: 0;
           }
@@ -3793,31 +3826,11 @@ article.licenses div article a {
             min-height: 360px;
             margin: 16px;
           }
+          .app_filename {
+            margin: 12px 16px 0 12px;
+            border-bottom: 1px dotted $gray;
+          }
         }
-      }
-    }
-    .download-wrap {
-      @include grd-bluebutton;
-      display: inline-block;
-      border: 1px solid rgba(#00AEEC, 0.24);
-      letter-spacing: -.40em;
-    }
-    .download {
-      @include box-shadow(0 0 0 1px $gray);
-      @include grd-appbtn;
-      display: inline-block;
-      margin: 4px 5px;
-      padding: 8px 25px;
-      border: 1px solid $white;
-      color: $text;
-      text-decoration: none;
-      letter-spacing: normal;
-      &:not(:target) {
-        filter: none;
-        -ms-filter: none;
-      }
-      &:hover {
-        @include grd-appbtn_hover;
       }
     }
   }
@@ -4332,6 +4345,7 @@ article.licenses div article a {
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px32;
+    line-height: 1;
   }
   .text, nav.related-pages {
     margin-bottom: 28px;

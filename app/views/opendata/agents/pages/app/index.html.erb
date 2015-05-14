@@ -30,13 +30,20 @@ $ ->
   <h1 class="name"><%= @cur_page.send :name %></h1>
 </header>
 
-<div class="point">
-  <div class="count">
-    <span class="label">いいね！</span>
-    <span class="number"><%= @cur_page.point %></span>
+<div class="side-right">
+  <div class="point">
+    <div class="count">
+      <span class="label">いいね！</span>
+      <span class="number"><%= @cur_page.point %></span>
+    </div>
   </div>
-</div>
 
+  <% if @tab_display == "tab_html" %>
+    <div class="download-all">
+      <div class="download-wrap"><%= link_to "一括ダウンロード", @cur_page.zip_url, class: "download" %></div>
+    </div>
+  <% end %>
+</div>
 <%
 max = 3
 categories = [
