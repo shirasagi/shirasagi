@@ -60,7 +60,7 @@ textarea {
   @include input;
   width: 70%;
   height: 6.5em;
-  padding: 5px 5px;
+  padding: 12px;
   line-height: 1.4;
 }
 
@@ -4538,6 +4538,7 @@ article.licenses div article a {
         }
       }
       form.opendata-add_comment-form {
+        position: relative;
         padding: 16px;
         background: #cccccc;
         dl.comment_body {
@@ -4546,14 +4547,18 @@ article.licenses div article a {
           dt {
             display: none;
           }
-          input#s_comment_body {
+          textarea {
             width: 100%;
+            vertical-align: bottom;
           }
         }
         a.comment_add {
           @include box-shadow(0 0 0 1px $gray);
           @include grd-commentbutton;
           display: inline-block;
+          position: absolute;
+          right: 35px;
+          top: 45px;
           margin-left: 15px;
           padding: 8px 8px 8px 22px;
           border: 1px solid $white;
@@ -4567,6 +4572,9 @@ article.licenses div article a {
             @include grd-commentbutton_hover;
           }
         }
+      }
+      .invite {
+        padding: 25px;
       }
     }
     .dataset, .app {
