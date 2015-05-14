@@ -137,6 +137,9 @@ textarea {
             color: $text;
             text-decoration: none;
             text-align: right;
+            img {
+              vertical-align: baseline;
+            }
           }
         }
       }
