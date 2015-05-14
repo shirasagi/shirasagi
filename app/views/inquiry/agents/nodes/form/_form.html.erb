@@ -2,7 +2,7 @@
 <% @items.each do |column, data| %>
   <dl class="column">
     <dt>
-    <%= column.name %>
+    <%= f.label column.id, column.name %>
     <% if column.required == "required" %>
       <span class="required"><%= t('inquiry.required_field') %></span>
     <% end %>
