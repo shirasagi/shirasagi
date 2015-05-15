@@ -37,12 +37,14 @@ module Sitemap::Addon
       def load_sitemap_urls(opts = {})
         entries = Cms::Node.where(site_id: site_id).public.
           where(:depth.lte => sitemap_depth).
+          order_by(filename: 1).
           entries
 
         if sitemap_page_state != "hide"
           entries += Cms::Page.where(site_id: site_id).public.
             where(:depth.lte => sitemap_depth).
             not(filename: /\/index\.html$/).
+            order_by(filename: 1).
             entries
         end
 
@@ -54,13 +56,23 @@ module Sitemap::Addon
         end
 
         # sort by order
-        h = {}
+        tree = {}
+        def tree.flatten(url, entries)
+          return unless self[url]
+          self[url].each do |e|
+            entries << e
+            self.flatten(e.url, entries)
+          end
+        end
+
         entries.each do |e|
           parent_url = e.parent ? e.parent.url : "/"
-          h[parent_url] ||= []
-          h[parent_url] << e
+          tree[parent_url] ||= []
+          tree[parent_url] << e
         end
-        entries = h.map { |k, v| v.sort_by(&:order) }.flatten
+        tree.each_value { |v| v.sort_by!(&:order) }
+        entries = []
+        tree.flatten("/", entries)
 
         urls = entries.map { |m| opts[:name] ? "#{m.url} ##{m.name}" : m.url }
         urls
