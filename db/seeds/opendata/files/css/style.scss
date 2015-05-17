@@ -3931,6 +3931,14 @@ article.licenses div article a {
   }
 }
 
+// .appfile-json
+.s-app .appfile-json {
+  padding: 5px;
+  pre {
+    font-family: $font-base;
+  }
+}
+
 // -----------------------------------------------------------------------------
 //app fullscreen
 .app-body {
