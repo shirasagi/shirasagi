@@ -1607,6 +1607,9 @@ section.datasets, section.apps, section.ideas {
   .name.format-kml {
     background: url(../img/ic-kml.png) no-repeat 5px center;
   }
+  .name.format-json {
+    background: url(../img/ic-json.png) no-repeat 5px center;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -3715,6 +3718,9 @@ article.licenses div article a {
             .format-csv {
               background: url(../img/ic-csv.png) no-repeat 5px center;
             }
+            .format-json {
+              background: url(../img/ic-json.png) no-repeat 5px center;
+            }
             .text {
               float: none;
               clear: both;
@@ -3737,6 +3743,14 @@ article.licenses div article a {
               border: 1px solid rgba(#666666, 0.24);
               letter-spacing: -.40em;
             }
+            .json-wrap {
+              @include grd-preview;
+              display: inline-block;
+              float: left;
+              margin-right: 5px;
+              border: 1px solid rgba(#666666, 0.24);
+              letter-spacing: -.40em;
+            }
             .download-wrap {
               @include grd-bluebutton;
               display: inline-block;
@@ -3744,7 +3758,7 @@ article.licenses div article a {
               border: 1px solid rgba(#00AEEC, 0.24);
               letter-spacing: -.40em;
             }
-            .content, .download {
+            .content, .download, .json {
               @include box-shadow(0 0 0 1px $gray);
               @include grd-appbtn;
               display: inline-block;
