@@ -14,10 +14,11 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
 
   public
     def index
-      @items = Opendata::Member.site(@cur_site).
-        order_by(id: -1).
-        page(params[:page]).
-        per(50)
+      # @items = Opendata::Member.site(@cur_site).
+      #   order_by(id: -1).
+      #   page(params[:page]).
+      #   per(50)
+      raise "404"
     end
 
     def show
