@@ -24,6 +24,7 @@ ja:
     user: ユーザー
     view_page: 公開画面
     view_site: サイト確認
+    editor_template: テンプレート
 
     adobe_reader:
       remark:
@@ -138,6 +139,7 @@ ja:
       cms/page_list: リスト表示
       cms/tabs: タブ表示
       cms/related_page: 関連記事
+      cms/thumb: サムネイル
 
   mongoid:
     models:
@@ -156,6 +158,7 @@ ja:
       cms/layout: レイアウト
       cms/workflow/route: 承認経路
       cms/role: ロール
+      cms/editor_template: テンプレート
     attributes:
       cms/content:
         released: 公開日時
@@ -209,6 +212,10 @@ ja:
         oauth_type: OAuth Type
         oauth_id: OAuth ID
         oauth_token: OAuth トークン
+      cms/editor_template:
+        name: 名前
+        description: 説明
+        order: 並び順
 
       cms/addon/meta:
         keywords: キーワード
@@ -236,6 +243,8 @@ ja:
       cms/addon/tabs:
         conditions: タブ設定(URL)
         new_days: NEWマーク期間
+      cms/addon/thumb:
+        thumb_id: サムネイル画像
 
   errors:
     messages:
@@ -296,6 +305,7 @@ ja:
           - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
+      thums_is_not_an_image: には画像ファイルを指定してください。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -497,3 +507,20 @@ ja:
       basename:
         - 半角英数字で入力してください。
         - .htmlなどの拡張子の記述は不要です。
+
+    cms/editor_template:
+      name:
+        - テンプレート名を入力します。
+        - 日本語での入力が可能です。
+      description:
+        - テンプレートの説明を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      thumb_id:
+        - サムネイル画像を指定します。
+        - サムネイル画像は、ご使用のエディターが CKEditor の場合にのみ表示されます。
+
+    cms/addon/thumb:
+      thumb_id:
+        - サムネイル画像を指定します。

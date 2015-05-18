@@ -1,0 +1,13 @@
+CKEDITOR.addTemplates( 'shirasagi', {
+  // The name of sub folder which hold the shortcut preview images of the
+  // templates.
+  imagesPath: '/',
+
+  // The templates definitions.
+  templates: [
+    <% @items.each_with_index do |item, index| %>
+      <%= item.export_for_ckeditor.html_safe %>
+      <%= index == @items.size - 1 ? "" : "," %>
+    <% end %>
+  ]
+} );

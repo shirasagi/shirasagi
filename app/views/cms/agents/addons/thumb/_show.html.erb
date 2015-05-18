@@ -1,0 +1,14 @@
+<dl class="see mod-cms-thumb-form">
+  <dt><%= @model.t :thumb_id %></dt>
+  <% if @item.thumb.present? %>
+  <dd>
+    <a class="thumb" href="/fs/<%= @item.thumb.id %>/<%= @item.thumb.filename %>" target="_blank">
+      <% if @item.thumb.image? %>
+        <img src="/fs/<%= @item.thumb.id %>/thumb/<%= @item.thumb.filename %>" alt="<%= @item.thumb.basename %>" />
+      <% else %>
+        <span class="ext icon-<%= @item.thumb.extname %>"><%= @item.thumb.extname %></span>
+      <% end %>
+    </a>
+  </dd>
+  <% end %>
+</dl>

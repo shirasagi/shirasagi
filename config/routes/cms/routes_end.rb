@@ -11,6 +11,10 @@ SS::Application.routes.draw do
     put :copy, :on => :member
   end
 
+  concern :template do
+    get :template, :on => :collection
+  end
+
   namespace "cms", path: ".:site" do
     get "/" => "main#index", as: :main
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
@@ -32,6 +36,7 @@ SS::Application.routes.draw do
     end
     resources :pages, concerns: [:deletion, :crud]
     resources :layouts, concerns: :deletion
+    resources :editor_templates, concerns: [:deletion, :template]
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"

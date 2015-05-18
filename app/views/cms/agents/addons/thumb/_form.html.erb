@@ -1,0 +1,7 @@
+<dl class="see mod-cms-thumb-form">
+  <dt><%= @model.t :thumb_id %><%= @model.tt :thumb_id %></dt>
+  <dd><%= f.file_field :in_thumb %></dd>
+  <% if @item.thumb %>
+    <dd><label><%= f.check_box :rm_thumb %><%= t "views.button.delete" %> (<%= @item.thumb.filename %>)</label></dd>
+  <% end %>
+</dl>
