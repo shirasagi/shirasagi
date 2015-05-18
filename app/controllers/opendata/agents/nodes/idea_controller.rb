@@ -76,6 +76,12 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
         end
     end
 
+
+    def rss
+      @items = pages.order_by(released: -1).limit(100)
+      render_rss @cur_node, @items
+    end
+
     def show_point
       @cur_node.layout = nil
       @mode = nil
