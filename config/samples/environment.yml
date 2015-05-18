@@ -26,3 +26,7 @@ max_filesize_ext:
   wmv:
   xls:
   xlsx:
+
+mime_type_map:
+  jtd: "application/x-js-taro"
+  wmv: "video/x-ms-wmv"
