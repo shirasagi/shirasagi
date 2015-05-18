@@ -23,6 +23,7 @@ module Cms::Node::Model
     permit_params :shortcut
 
     validates :route, presence: true
+    validate :validate_node_filename
 
     after_save :rename_children, if: ->{ @db_changes }
     after_save :remove_directory, if: ->{ @db_changes && @db_changes["state"] && !public? }
@@ -122,6 +123,10 @@ module Cms::Node::Model
     end
 
   private
+    def validate_node_filename
+      errors.add :basename, :invalid if filename == "fs"
+    end
+
     def rename_children
       return unless @db_changes["filename"]
       return unless @db_changes["filename"][0]

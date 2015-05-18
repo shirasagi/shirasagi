@@ -44,6 +44,10 @@ module SS::File::Model
       "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
     end
 
+    def public_path
+      "#{site.path}#{url}"
+    end
+
     def state_options
       [[I18n.t('views.options.state.public'), 'public']]
     end
@@ -92,6 +96,20 @@ module SS::File::Model
       file
     end
 
+    def generate_public_file
+      if site && basename.ascii_only?
+        file = public_path
+        data = self.read
+
+        return if Fs.exists?(file) && data == Fs.read(file)
+        Fs.binwrite file, data
+      end
+    end
+
+    def remove_public_file
+      Fs.rm_rf(public_path) if site
+    end
+
     def url
       "/fs/#{id}/#{filename}"
     end
@@ -119,6 +137,7 @@ module SS::File::Model
 
     def remove_file
       Fs.rm_rf(path)
+      remove_public_file
     end
 
     def validate_size

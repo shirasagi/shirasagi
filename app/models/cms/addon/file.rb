@@ -12,6 +12,8 @@ module Cms::Addon
       before_save :clone_files, if: -> { try(:new_clone?) }
       before_save :save_files
       after_destroy :destroy_files
+      after_generate_file :generate_public_files
+      after_remove_file :remove_public_files
     end
 
     def allow_other_user_files
@@ -50,6 +52,18 @@ module Cms::Addon
 
     def destroy_files
       files.destroy_all
+    end
+
+    def generate_public_files
+      files.each do |file|
+        file.generate_public_file
+      end
+    end
+
+    def remove_public_files
+      files.each do |file|
+        file.remove_public_file
+      end
     end
   end
 end

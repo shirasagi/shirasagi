@@ -4,7 +4,9 @@ module SS::Relation::File
 
   module ClassMethods
     def belongs_to_file(name, opts = {})
-      store = opts[:store_as] || "#{name.to_s.singularize}_id"
+      store       = opts[:store_as] || "#{name.to_s.singularize}_id"
+      public_file = (opts[:public_file] == true)
+
       belongs_to name, foreign_key: store, class_name: "SS::File", dependent: :destroy
 
       attr_accessor "in_#{name}", "rm_#{name}"
@@ -43,6 +45,20 @@ module SS::Relation::File
         file = send(name)
         file.destroy if file
         send("#{store}=", nil) rescue nil
+      end
+
+      if public_file
+        define_method("generate_public_#{name}") do
+          file = send(name)
+          file.generate_public_file
+        end
+        after_generate_file("generate_public_#{name}")
+
+        define_method("remove_public_#{name}") do
+          file = send(name)
+          file.remove_public_file
+        end
+        after_remove_file("remove_public_#{name}")
       end
     end
   end
