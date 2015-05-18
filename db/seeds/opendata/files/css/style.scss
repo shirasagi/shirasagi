@@ -124,6 +124,7 @@ textarea {
         li {
           @include box-sizing(border-box);
           @include border-top-radius(5px);
+          float: left;
           display: inline-block;
           width: 150px;
           margin-top: 26px;
