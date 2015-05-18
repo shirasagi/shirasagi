@@ -1576,9 +1576,17 @@ section.datasets, section.apps, section.ideas {
     background: url(../img/ic-text.png) no-repeat 5px center;
     word-wrap: break-word;
   }
-  .name.format-bmp, .name.format-gif, .name.format-jpg, .name.format-jpe, .name.format-jpeg,
+  .name.format-bmp {
+    background: url(../img/ic-bmp.png) no-repeat 5px center;
+  }
+  .name.format-gif {
+    background: url(../img/ic-gif.png) no-repeat 5px center;
+  }
+  .name.format-jpg, .name.format-jpe, .name.format-jpeg {
+    background: url(../img/ic-jpeg.png) no-repeat 5px center;
+  }
   .name.format-png {
-    background: url(../img/ic-image.png) no-repeat 5px center;
+    background: url(../img/ic-png.png) no-repeat 5px center;
   }
   .name.format-xls, .name.format-xlsx {
     background: url(../img/ic-excel.png) no-repeat 5px center;
