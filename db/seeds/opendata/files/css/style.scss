@@ -91,6 +91,8 @@ textarea {
 // head
 #head {
   @include clear;
+  position: relative;
+  z-index: 1;
   .inner {
     position: relative;
     @include clear;
@@ -104,84 +106,69 @@ textarea {
       padding: 12px 0 8px;
     }
     .tab {
-      float: left;
+      position: absolute;
+      left: 282px;
+      bottom: 0;
       ul {
         @include clear;
-        padding-top: 8px;
+        letter-spacing: -.40em;
         li.tab01 a {
-          background: url(../img/ic-datatab.png) no-repeat 6px center;
+          background: url(../img/ic-datatab.png) no-repeat 6px 7px;
         }
         li.tab02 a {
-          background: url(../img/ic-apptab.png) no-repeat 3px center;
+          background: url(../img/ic-apptab.png) no-repeat 3px 10px;
         }
         li.tab03 a {
-          background: url(../img/ic-ideatab.png) no-repeat 2px center;
+          background: url(../img/ic-ideatab.png) no-repeat 2px 4px;
         }
         li {
           @include box-sizing(border-box);
           @include border-top-radius(5px);
           display: inline-block;
-          position: absolute;
-          bottom: -1px;
           width: 150px;
+          margin-top: 26px;
           background: $white;
           border: 1px solid $gray;
+          border-bottom: none;
           z-index: 1;
           a {
             @include border-top-radius(5px);
             display: block;
             min-height: 25px;
-            padding: 10px 8px 3px 0px;
+            padding: 6px 8px 6px 0px;
             border: 2px solid $white;
             border-bottom: none;
+            letter-spacing: normal;
             color: $text;
             text-decoration: none;
             text-align: right;
-            img {
-              vertical-align: baseline;
-            }
           }
         }
       }
       .tab01 {
-        position: absolute;
-        left: 330px;
+        margin-left: 50px;
         &:hover {
-          position: absolute;
-          border-bottom: none;
-          background: $white;
           a {
-            @include box-shadow(0 -3px 0 0 $data-pink inset, 0 4px 0 -2px $data-pink);
-            padding: 10px 8px 4px 0px;
+            @include box-shadow(0 -2px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
             background: url(../img/ic-datatab_hover.png) no-repeat 6px 7px;
           }
         }
       }
       .tab02 {
-        position: absolute;
-        left: 490px;
+        margin-left: 10px;
         &:hover {
-          position: absolute;
-          border-bottom: none;
-          background: $white;
           a {
-            @include box-shadow(0 -3px 0 0 $app-blue inset, 0 4px 0 -2px $app-blue);
-            padding: 10px 8px 4px 0px;
+            @include box-shadow(0 -2px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
             background: url(../img/ic-apptab_hover.png) no-repeat 3px 10px;
           }
         }
       }
       .tab03 {
-        position: absolute;
-        left: 650px;
+        margin-left: 10px;
         &:hover {
-          position: absolute;
-          border-bottom: none;
-          background: $white;
           a {
-            @include box-shadow(0 -3px 0 0 $idea-yellow inset, 0 4px 0 -2px $idea-yellow);
-            padding: 10px 8px 4px 0px;
-            background: url(../img/ic-ideatab_hover.png) no-repeat 2px center;
+            @include box-shadow(0 -2px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
+            background: url(../img/ic-ideatab_hover.png) no-repeat 2px 4px;
           }
         }
       }
@@ -2278,12 +2265,8 @@ nav.cms-sns_share {
 // #head
 .s-dataset #head {
   .inner .tab .tab01 {
-    position: absolute;
-    border-bottom: none;
-    background: $white;
     a {
-      @include box-shadow(0 -3px 0 0 $data-pink inset, 0 4px 0 -2px $data-pink);
-      padding: 10px 8px 4px 0px;
+      @include box-shadow(0 -2px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
       background: url(../img/ic-datatab_hover.png) no-repeat 6px 7px;
     }
   }
@@ -3106,12 +3089,8 @@ article.licenses div article a {
 // #head
 .s-app #head {
   .inner .tab .tab02 {
-    position: absolute;
-    border-bottom: none;
-    background: $white;
     a {
-      @include box-shadow(0 -3px 0 0 $app-blue inset, 0 4px 0 -2px $app-blue);
-      padding: 10px 8px 4px 0px;
+      @include box-shadow(0 -2px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
       background: url(../img/ic-apptab_hover.png) no-repeat 3px 10px;
     }
   }
@@ -3964,13 +3943,9 @@ article.licenses div article a {
 // #head
 .s-idea #head {
   .inner .tab .tab03 {
-    position: absolute;
-    border-bottom: none;
-    background: $white;
     a {
-      @include box-shadow(0 -3px 0 0 $idea-yellow inset, 0 4px 0 -2px $idea-yellow);
-      padding: 10px 8px 4px 0px;
-      background: url(../img/ic-ideatab_hover.png) no-repeat 2px center;
+      @include box-shadow(0 -2px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
+      background: url(../img/ic-ideatab_hover.png) no-repeat 2px 4px;
     }
   }
 }
