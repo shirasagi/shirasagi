@@ -104,7 +104,7 @@ module SS::File::Model
     def set_filename
       self.filename   ||= in_file.original_filename
       self.size         = in_file.size
-      self.content_type = in_file.content_type
+      self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
     end
 
     def save_file
