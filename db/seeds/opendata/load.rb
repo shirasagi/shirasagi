@@ -77,7 +77,7 @@ save_node filename: "event", name: "イベント", route: "event/page", shortcut
 layout_id: layouts["portal-general"].id,
 page_layout_id: layouts["portal-event"].id
 
-save_node filename: "dataset", name: "データセット", route: "opendata/dataset", shortcut: "show",
+save_node filename: "dataset", name: "データカタログ", route: "opendata/dataset", shortcut: "show",
   layout_id: layouts["dataset-top"].id,
   page_layout_id: layouts["dataset-page"].id
 save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category",
@@ -87,7 +87,7 @@ save_node filename: "dataset/search_group", name: "データセットグルー�
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
   layout_id: layouts["dataset-bunya"].id
 
-save_node filename: "app", name: "アプリ", route: "opendata/app", shortcut: "show",
+save_node filename: "app", name: "アプリマーケット", route: "opendata/app", shortcut: "show",
   layout_id: layouts["app-top"].id,
   page_layout_id: layouts["app-page"].id
 save_node filename: "app/bunya", name: "分野", route: "opendata/app_category",
@@ -95,7 +95,7 @@ save_node filename: "app/bunya", name: "分野", route: "opendata/app_category",
 save_node filename: "app/search", name: "アプリ検索", route: "opendata/search_app",
   layout_id: layouts["app-bunya"].id
 
-save_node filename: "idea", name: "アイデア", route: "opendata/idea", shortcut: "show",
+save_node filename: "idea", name: "アイデアボックス", route: "opendata/idea", shortcut: "show",
   layout_id: layouts["idea-top"].id,
   page_layout_id: layouts["idea-page"].id
 save_node filename: "idea/bunya", name: "分野", route: "opendata/idea_category",
@@ -115,7 +115,7 @@ save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
 save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile"
 save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset"
 save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app"
-save_node filename: "mypage/idea", name: "アイデア", route: "opendata/my_idea"
+save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea"
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
 save_node filename: "bunya/kurashi", name: "くらし", route: "opendata/category", order: 1
