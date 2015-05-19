@@ -32,7 +32,7 @@ table.rdf-props {
     <tbody>
     <% @items.each do |item| %>
       <tr>
-        <td class="checkbox"><%= f.check_box_tag "item[ids][]", item.id, checked = item.class_ids.try(:include?, @rdf_class.id) %></td>
+        <td class="checkbox"><%= f.check_box_tag "item[ids][]", item.id, checked = item.class_ids.try(:include?, @rdf_class.id), id: "item_ids_#{item.id}" %></td>
         <td class="name"><%= "#{item.vocab.prefix}:#{item.name}" %></td>
         <td class="range"><%= item.range.try(:preferred_label) %></td>
         <td class="comments"><%= item.comments.try(:preferred_value) %></td>

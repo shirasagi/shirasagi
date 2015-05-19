@@ -4,7 +4,7 @@ module Rdf::Extensions::HashLike
 
   attr_reader :document
 
-  def_delegators :@document, :[], :[]=, :keys, :values, :length, :size, :each
+  def_delegators :@document, :[], :[]=, :keys, :values, :length, :size, :each, :to_h
 
   # Converts an object of this instance into a database friendly value.
   def mongoize

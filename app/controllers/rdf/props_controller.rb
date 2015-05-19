@@ -67,13 +67,16 @@ class Rdf::PropsController < ApplicationController
         return
       end
 
-      params[:item][:ids].map(&:to_i).each do |prop_id|
-        prop = @model.site(@cur_site).find(prop_id)
-        copy_class_ids = Array.new(prop.class_ids || [])
-        copy_class_ids << @rdf_class.id
-        copy_class_ids.uniq!
-        prop.class_ids = copy_class_ids
-        prop.save!
+      ids = params[:item].try(:[], :ids)
+      if ids.present?
+        ids.map(&:to_i).each do |prop_id|
+          prop = @model.site(@cur_site).find(prop_id)
+          copy_class_ids = Array.new(prop.class_ids || [])
+          copy_class_ids << @rdf_class.id
+          copy_class_ids.uniq!
+          prop.class_ids = copy_class_ids
+          prop.save!
+        end
       end
 
       respond_to do |format|
