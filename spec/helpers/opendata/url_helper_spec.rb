@@ -92,4 +92,13 @@ describe Opendata::UrlHelper, type: :helper, dbscope: :example do
     subject { helper.member_path }
     it { is_expected.to eq @member.url }
   end
+
+  describe ".mypage_path" do
+    before do
+      @cur_site = cms_site
+      @mypage = create :opendata_node_mypage
+    end
+    subject { helper.mypage_path }
+    it { is_expected.to eq @mypage.url }
+  end
 end
