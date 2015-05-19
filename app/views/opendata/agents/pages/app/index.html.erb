@@ -114,7 +114,7 @@ var tab_display = "<%= @tab_display %>";
 function PlayApp() {
   if (tab_display == "tab_html") {
     $(".frmPlay").attr("src", "");
-    $(".frmPlay").attr("src", "<%= @app_index %>");
+    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= I18n.t("opendata.url.app.index", {id: @cur_page.id, filename: @app_html.filename}) %><% end %>");
     $.ajax({
       type: "GET",
       url: "<%= @cur_page.executed_add_url %>",

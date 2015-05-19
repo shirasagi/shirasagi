@@ -74,6 +74,13 @@ ja:
         released: 新着アイデア
         popular: 人気アイデア
         attention: 注目アイデア
+    url:
+      dataset:
+        select: "/datasets/select"
+      app:
+        index: "/app/%{id}/application/%{filename}"
+        text: "/text/%{id}/appfile/%{filename}"
+        full: "/app/%{id}/full"
 
   modules:
     opendata: オープンデータ

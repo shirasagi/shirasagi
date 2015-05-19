@@ -37,10 +37,6 @@ class Opendata::AppscriptsController < ApplicationController
       @item = Opendata::App.find(params[:app])
 
       @app_html = @item.appfiles.where(filename: "index.html").first
-      if @app_html.present?
-        @app_index = "/app/#{@item.id}/application/#{@app_html.filename}"
-      end
-
     end
 
 end

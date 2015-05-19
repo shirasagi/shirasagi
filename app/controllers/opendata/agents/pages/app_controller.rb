@@ -20,9 +20,6 @@ class Opendata::Agents::Pages::AppController < ApplicationController
         if @app_html.present?
           @tab_display = "tab_html"
 
-          @app_index = "/app/#{@cur_page.id}/application/#{@app_html.filename}"
-          @text = "/text/#{@cur_page.id}/appfile/"
-
           @js_src = []
           @css_src = []
           @html_src = []
