@@ -58,7 +58,7 @@ module Facility::Node
   class Category
     include Cms::Node::Model
     include Cms::Addon::NodeList
-    include Facility::Addon::PointerImage
+    include Facility::Addon::Image
 
     default_scope ->{ where(route: "facility/category") }
 

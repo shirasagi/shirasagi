@@ -50,13 +50,13 @@ module SS::Relation::File
       if public_file
         define_method("generate_public_#{name}") do
           file = send(name)
-          file.generate_public_file
+          file.generate_public_file if file
         end
         after_generate_file("generate_public_#{name}")
 
         define_method("remove_public_#{name}") do
           file = send(name)
-          file.remove_public_file
+          file.remove_public_file if file
         end
         after_remove_file("remove_public_#{name}")
       end

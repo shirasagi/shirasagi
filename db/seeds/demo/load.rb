@@ -713,10 +713,10 @@ save_page route: "ads/banner", filename: "add/605.html", name: "シラサギ", l
 puts "# facility"
 
 Dir.glob "ss_files/facility/*.*" do |file|
-  save_ss_files file, filename: File.basename(file), model: "facility/temp_file"
+  save_ss_files file, filename: File.basename(file), model: "facility/file"
 end
 
-array   =  SS::File.where(model: "facility/temp_file").map { |m| [m.filename, m] }
+array   =  SS::File.where(model: "facility/file").map { |m| [m.filename, m] }
 facility_images = Hash[*array.flatten]
 
 save_page route: "facility/image", filename: "institution/bunka/library/library.html", name: "シラサギ市立図書館",

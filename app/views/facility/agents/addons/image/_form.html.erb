@@ -12,12 +12,11 @@ $ ->
 
     <div id="selected-files">
       <%= f.hidden_field "image_id", value: "", class: "hidden-ids" %>
-
       <% if @item.image.present? %>
         <div class="file-view">
-          <a class="thumb" href="<%= view_facility_temp_file_path(user: @cur_user, id: @item.image) %>" target="_blank">
+          <a class="thumb" href="/fs/<%= @item.image.id %>/<%= @item.image.filename %>" target="_blank">
             <% if @item.image.image? %>
-              <img src="<%= thumb_facility_temp_file_path(user: @cur_user, id: @item.image) %>" alt="<%= @item.image.basename %>" />
+              <img src="/fs/<%= @item.image.id %>/thumb/<%= @item.image.filename %>" alt="<%= @item.image.basename %>" />
             <% else %>
               <span class="ext icon-<%= @item.image.extname %>"><%= @item.image.extname %></span>
             <% end %>
