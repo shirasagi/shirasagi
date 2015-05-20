@@ -14,7 +14,11 @@ FactoryGirl.define do
   end
 
   factory :opendata_app, class: Opendata::App, traits: [:cms_page] do
-    filename { "dir/#{unique_id}" }
+    transient do
+      node nil
+    end
+
+    filename { node.blank? ? "dir/#{unique_id}" : "#{node.filename}/#{unique_id}" }
     route "opendata/app"
     text "aaaa\naaaa"
     tags ["aaa", "bbb"]
