@@ -247,11 +247,13 @@ array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename,
 categories = Hash[*array.flatten]
 
 ## node
-save_node route: "cms/node", filename: "sitemap", name: "サイトマップ"
 save_node route: "cms/node", filename: "use", name: "ご利用案内"
 
 ## article
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
+
+## sitemap
+save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 
 ## event
 save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs),
@@ -283,7 +285,35 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市�
   reply_state: "disabled",
   reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
   reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-  reply_lower_text: "以上。"
+  reply_lower_text: "以上。",
+  aggregation_state: "disabled"
+
+## public comment
+save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント", upper_html: "パブリックコメント一覧です。"
+inquiry_comment_1 = save_node route: "inquiry/form", filename: "comment/comment01", name: "シラサギ市政について",
+  from_name: "シラサギサンプルサイト",
+  inquiry_captcha: "enabled", notice_state: "disabled",
+  inquiry_html: inquiry_html,
+  inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
+  reply_state: "disabled",
+  reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+  reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
+  reply_lower_text: "以上。",
+  aggregation_state: "enabled",
+  reception_start_date: Time.zone.now.beginning_of_month,
+  reception_close_date: Time.zone.now.end_of_month
+inquiry_comment_2 = save_node route: "inquiry/form", filename: "comment/comment02", name: "シラサギ市都市計画について",
+  from_name: "シラサギサンプルサイト",
+  inquiry_captcha: "enabled", notice_state: "disabled",
+  inquiry_html: inquiry_html,
+  inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
+  reply_state: "disabled",
+  reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
+  reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
+  reply_lower_text: "以上。",
+  aggregation_state: "enabled",
+  reception_start_date: Time.zone.now.prev_month.beginning_of_month,
+  reception_close_date: Time.zone.now.prev_month.end_of_month
 
 ## ezine
 ezine_signature_html = File.read("nodes/ezine.signature_html") rescue nil
@@ -300,19 +330,26 @@ ezine_backnumber_node = save_node route: "ezine/backnumber", filename: "ezine/ba
   name: "メールマガジン　バックナンバー", conditions: %w(ezine)
 
 ## facility
-save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域"
-save_node route: "facility/location", filename: "institution/chiki/higashii", name: "東区", order: 10
-save_node route: "facility/location", filename: "institution/chiki/nishi", name: "西区", order: 20
-save_node route: "facility/location", filename: "institution/chiki/minami", name: "南区", order: 30
-save_node route: "facility/location", filename: "institution/chiki/kita", name: "北区", order: 40
-
-save_node route: "cms/node", filename: "institution/shurui", name: "施設の種類"
+save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域", layout_id: layouts["one"].id
+center_point = Map::Extensions::Point.mongoize(loc: [34.075593, 134.550614], zoom_level: 10)
+save_node route: "facility/location", filename: "institution/chiki/higashii",
+  name: "東区", order: 10, center_point: center_point
+center_point = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], zoom_level: 10)
+save_node route: "facility/location", filename: "institution/chiki/nishi",
+  name: "西区", order: 20, center_point: center_point
+center_point = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
+save_node route: "facility/location", filename: "institution/chiki/minami",
+  name: "南区", order: 30, center_point: center_point
+center_point = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
+save_node route: "facility/location", filename: "institution/chiki/kita",
+  name: "北区", order: 40, center_point: center_point
+save_node route: "cms/node", filename: "institution/shurui", name: "施設の種類", layout_id: layouts["one"].id
 save_node route: "facility/category", filename: "institution/shurui/bunka", name: "文化施設", order: 10
 save_node route: "facility/category", filename: "institution/shurui/sports", name: "運動施設", order: 20
 save_node route: "facility/category", filename: "institution/shurui/school", name: "小学校", order: 30
 save_node route: "facility/category", filename: "institution/shurui/kokyo", name: "公園・公共施設", order: 40
 
-save_node route: "cms/node", filename: "institution/yoto", name: "施設の用途"
+save_node route: "cms/node", filename: "institution/yoto", name: "施設の用途", layout_id: layouts["one"].id
 save_node route: "facility/service", filename: "institution/yoto/asobu", name: "遊ぶ", order: 10
 save_node route: "facility/service", filename: "institution/yoto/manabu", name: "学ぶ", order: 20
 save_node route: "facility/service", filename: "institution/yoto/sodan", name: "相談する", order: 30
@@ -329,35 +366,20 @@ save_node route: "facility/search", filename: "institution", name: "施設ガイ
   st_location_ids: facility_locations.values.map{ |loc| loc.id },
   st_service_ids: facility_services.values.map{ |serv| serv.id }
 
-save_node route: "facility/node", filename: "institution/bunka", name: "文化施設一覧",
+save_node route: "facility/node", filename: "institution/shisetsu", name: "施設一覧",
   st_category_ids: facility_categories.values.map{ |cate| cate.id },
   st_location_ids: facility_locations.values.map{ |loc| loc.id },
   st_service_ids: facility_services.values.map{ |serv| serv.id }
 
-save_node route: "facility/node", filename: "institution/kokyo", name: "公共施設一覧",
-  st_category_ids: facility_categories.values.map{ |cate| cate.id },
-  st_location_ids: facility_locations.values.map{ |loc| loc.id },
-  st_service_ids: facility_services.values.map{ |serv| serv.id }
-
-save_node route: "facility/node", filename: "institution/school", name: "学校一覧",
-  st_category_ids: facility_categories.values.map{ |cate| cate.id },
-  st_location_ids: facility_locations.values.map{ |loc| loc.id },
-  st_service_ids: facility_services.values.map{ |serv| serv.id }
-
-save_node route: "facility/node", filename: "institution/sports", name: "運動施設一覧",
-  st_category_ids: facility_categories.values.map{ |cate| cate.id },
-  st_location_ids: facility_locations.values.map{ |loc| loc.id },
-  st_service_ids: facility_services.values.map{ |serv| serv.id }
-
-save_node route: "facility/page", filename: "institution/bunka/library", name: "シラサギ市立図書館",
+save_node route: "facility/page", filename: "institution/shisetsu/library", name: "シラサギ市立図書館",
   kana: "しらさぎとしょかん",
   address: "大鷺県シラサギ市小鷺町1丁目1番地1号",
   tel: "00-0000-0000",
   fax: "00-0000-0000",
   related_url: "http://demo.ss-proj.org/",
-  category_ids: [facility_categories["institution/shurui/bunka"].id],
-  location_ids: [facility_locations["institution/chiki/higashii"].id],
-  service_ids: [facility_services["institution/yoto/manabu"].id]
+  category_ids: facility_categories.values.map(&:id),
+  location_ids: facility_locations.values.map(&:id),
+  service_ids: facility_services.values.map(&:id)
 
 def save_inquiry_column(data)
   puts data[:name]
@@ -366,6 +388,17 @@ def save_inquiry_column(data)
   item = Inquiry::Column.find_or_create_by(cond)
   item.attributes = data
   item.update
+
+  item
+end
+
+def save_inquiry_answer(data)
+  item = Inquiry::Answer.new
+  item.set_data(data[:data])
+  data.delete(:data)
+
+  item.attributes = data
+  raise item.errors.full_messages.to_s unless item.save
 
   item
 end
@@ -394,6 +427,50 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ区分", 
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
   html: column_question_html, select_options: [], required: "required", site_id: @site._id
 
+puts "# inquiry public comment"
+save_inquiry_column node_id: inquiry_comment_1.id, name: "性別", order: 0, input_type: "radio_button",
+  html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
+save_inquiry_column node_id: inquiry_comment_1.id, name: "年齢", order: 10, input_type: "select",
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
+save_inquiry_column node_id: inquiry_comment_1.id, name: "意見", order: 20, input_type: "text_area",
+  html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
+
+column_gender = save_inquiry_column node_id: inquiry_comment_2.id, name: "性別", order: 0, input_type: "radio_button",
+  html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
+column_age = save_inquiry_column node_id: inquiry_comment_2.id, name: "年齢", order: 10, input_type: "select",
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
+column_opinion = save_inquiry_column node_id: inquiry_comment_2.id, name: "意見", order: 20, input_type: "text_area",
+  html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
+
+save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+  remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
+  data: {
+    column_gender.id => "女性",
+    column_age.id => "10代",
+    column_opinion.id => "意見があります。"
+  }
+save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+  remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
+  data: {
+    column_gender.id => "女性",
+    column_age.id => "80代",
+    column_opinion.id => "意見があります。"
+  }
+save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+  remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
+  data: {
+    column_gender.id => "男性",
+    column_age.id => "50代",
+    column_opinion.id => "意見があります。"
+  }
+save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+  remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
+  data: {
+    column_gender.id => "男性",
+    column_age.id => "10代",
+    column_opinion.id => "意見があります。"
+  }
+
 ## layout
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: layouts["pages"].id)
 Cms::Node.where(site_id: @site._id, route: /^event\//).update_all(layout_id: layouts["event"].id)
@@ -421,7 +498,9 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: /^oshirase\/
   update_all(layout_id: layouts["more"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "urgency").
   update_all(layout_id: layouts["more"].id)
-Cms::Node.where(site_id: @site._id, filename: /^inquiry$/).
+Cms::Node.where(site_id: @site._id, route: /^inquiry\//).
+  update_all(layout_id: layouts["one"].id)
+Cms::Node.where(site_id: @site._id, filename: /^sitemap$/).
   update_all(layout_id: layouts["one"].id)
 Cms::Node.where(site_id: @site._id, filename: /^faq$/).
   update_all(layout_id: layouts["faq-top"].id)
@@ -528,7 +607,6 @@ end
 
 save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id
 save_page route: "cms/page", filename: "mobile.html", name: "スマートフォン・携帯サイト", layout_id: layouts["pages"].id
-save_page route: "cms/page", filename: "sitemap/index.html", name: "サイトマップ", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内", layout_id: layouts["category-middle"].id
@@ -687,6 +765,12 @@ save_page route: "event/page", filename: "calendar/31.html", name: "住民相談
   content: "○○○○○○○○○○○○○○○○○○○○", related_url: "http://demo.ss-proj.org/"
 
 ## -------------------------------------
+puts "sitemap"
+sitemap_urls = File.read("sitemap/urls.txt") rescue nil
+save_page route: "sitemap/page", filename: "sitemap/index.html", name: "サイトマップ",
+  layout_id: layouts["one"].id, sitemap_urls: sitemap_urls
+
+## -------------------------------------
 puts "# faq"
 
 save_page route: "faq/page", filename: "faq/docs/32.html", name: "休日や夜間の戸籍の届出について",
@@ -719,12 +803,12 @@ end
 array   =  SS::File.where(model: "facility/temp_file").map { |m| [m.filename, m] }
 facility_images = Hash[*array.flatten]
 
-save_page route: "facility/image", filename: "institution/bunka/library/library.html", name: "シラサギ市立図書館",
+save_page route: "facility/image", filename: "institution/shisetsu/library/library.html", name: "シラサギ市立図書館",
   layout_id: layouts["map"].id, image_id: facility_images["library.jpg"].id, order: 0
-save_page route: "facility/image", filename: "institution/bunka/library/equipment.html", name: "設備",
+save_page route: "facility/image", filename: "institution/shisetsu/library/equipment.html", name: "設備",
   layout_id: layouts["map"].id, image_id: facility_images["equipment.jpg"].id, order: 10
-save_page route: "facility/map", filename: "institution/bunka/library/map.html", name: "地図",
-  layout_id: layouts["map"].id, map_points: [  { name: "マーカー名",  loc: [  34.067035,  134.589971 ],  text: "" } ]
+save_page route: "facility/map", filename: "institution/shisetsu/library/map.html", name: "地図",
+  layout_id: layouts["map"].id, map_points: [ { name: "シラサギ市立図書館", loc: [ 34.067035, 134.589971 ], text: "" } ]
 
 puts "# ezine"
 save_page route: "ezine/page", filename: "ezine/653.html", name: "シラサギ市メールマガジン", completed: true,

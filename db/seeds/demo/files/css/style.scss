@@ -1010,7 +1010,7 @@ img {
 .page .related-pages, .page footer.contact,
 .inquiry-html, .inquiry-form,
 .faq-question, .faq .body,
-.map-page {
+.map-page, .inquiry-nodes, .columns {
   article {
     h2 {
       padding: 0;
@@ -1098,7 +1098,18 @@ img {
 #sitemap ul {
   @include clear;
 }
-#sitemap li {
+.sitemap-body h2 {
+  clear: both;
+  margin: $item-margin 0 6px;
+  padding: 3px 10px 0;
+  background: $hblue;
+  font-size: $px16;
+  font-weight: bold;
+  &:first-child {
+    margin-top: 0;
+  }
+}
+#sitemap li, .sitemap-body h3 {
   float: left;
   margin-bottom: 10px;
   padding:  0 10px;
@@ -1419,7 +1430,7 @@ img {
 }
 // -----------------------------------------------------------------------------
 // inquiry
-.inquiry-form {
+.inquiry-form, .columns {
   dl {
     @include clear;
     clear: both;
@@ -1460,6 +1471,7 @@ img {
         margin-right: $item-margin;
       }
     }
+    .graph {margin-left: 200px;}
   }
   .send {
     padding-left: 236px;
@@ -1489,6 +1501,7 @@ img {
     margin-bottom: $box-margin;
   }
 }
+
 // -----------------------------------------------------------------------------
 // faq
 .faq-question {
@@ -1608,7 +1621,7 @@ img {
       padding: 3px 0;
     }
   }
-  .setting {
+  .settings {
     @include clear;
     .ajax-box {
       display: block;
@@ -1652,9 +1665,26 @@ img {
       }
     }
   }
+  #map-sidebar {
+    float: left;
+    width: 180px;
+    height: 480px !important;
+    padding: 9px;
+    border: $border-hgry;
+    overflow-y: scroll;
+    .column {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: $border-hgry;
+      &:last-child {
+        margin-bottom: none;
+        border-bottom: none;
+      }
+    }
+  }
   #map-canvas {
-    width: 712px;
-    height: 500px;
+    width: 100% !important;
+    height: 500px !important;
     margin-bottom: $item-margin;
     .maker-info {
       width: 300px;
@@ -1708,6 +1738,7 @@ img {
         }
         li {
           @include float(left);
+          list-style: none;
           a {
             display: block;
             margin: 0 6px 6px 0;
@@ -1802,7 +1833,10 @@ img {
     }
   }
 }
-
+#body--institution-map .map #map-canvas,
+#body--institution-map-all .map #map-canvas {
+  width: 512px !important;
+}
 #colorbox {
   h2 {
     clear: both;
@@ -2417,7 +2451,7 @@ img {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
   }
-  .inquiry-form {
+  .inquiry-form, .columns {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
     dl {
@@ -2437,11 +2471,15 @@ img {
           @include box-sizing(border-box);
         }
       }
+      .graph {margin: 0;}
     }
     .send, .simple-captcha {
       padding: 0;
       text-align: center;
     }
+  }
+  .columns {
+    margin-top: $smart-margin;
   }
 // -----------------------------------------------------------------------------
 // faq
@@ -2483,15 +2521,19 @@ img {
         @include box-sizing(border-box);
       }
     }
-    .setting {
+    .settings {
         padding: 0 10px;
     }
     .tabs {
       padding: 0 10px;
     }
+    #map-sidebar {
+      display: none;
+    }
+
     #map-canvas {
-      width: 100%;
-      height: 300px;
+      width: 100% !important;
+      height: 300px !important;
     }
     .filters {
       padding: 0 10px;
@@ -2560,6 +2602,10 @@ img {
   #colorbox .send input {
     margin-bottom: 10px;
   }
+  #body--institution-map .map #map-canvas {
+    width: 100% !important;
+  }
+
 // -----------------------------------------------------------------------------
 // ezine
   .ezine-pages {

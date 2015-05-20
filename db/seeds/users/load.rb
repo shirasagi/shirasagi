@@ -101,6 +101,27 @@ end
   group_ids: [g1_22.id], cms_role_ids: [role2.id], uid: "user2"
 
 ## -------------------------------------
+puts "# workflow"
+
+def save_workflow_route(data)
+  puts data[:name]
+  item = Workflow::Route.new
+  item.attributes = data
+  raise item.errors.full_messages.to_s unless item.save
+
+  item
+end
+
+approvers = Workflow::Extensions::Route::Approvers.new(
+  [ { level: 1, user_id: @user1.id }, { level: 2, user_id: @admin.id } ]
+)
+required_counts = Workflow::Extensions::Route::RequiredCounts.new(
+  [ false, false, false, false, false ]
+)
+save_workflow_route name: "多段承認", group_ids: [g1_00.id],
+  approvers: approvers, required_counts: required_counts
+
+## -------------------------------------
 puts "# nodes"
 
 def save_node(data)

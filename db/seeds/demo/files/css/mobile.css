@@ -139,6 +139,9 @@ dd {
 #attention, .cms-tabs .tag-article {
   margin-bottom: 10px;
 }
+#about .shisetsu {
+  display: none;
+}
 .pages div h2 {
   margin: 0px 0px 5px;
   padding: 0px 10px 5px;
@@ -253,4 +256,8 @@ dd {
 }
 #event-list dl {
   padding: 0 10px;
+}
+/* ---------------------------------- */
+#body--institution-map .tag-nav, #map-sidebar .click-marker, #map-canvas {
+  display:none;
 }
