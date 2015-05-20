@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe "opendata_app_categories" do
+describe "opendata_app_categories", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_app_category, name: "opendata_app_categories" }
 
-  subject(:index_path) { opendata_app_categories_path site.host, node }
+  let(:index_path) { opendata_app_categories_path site.host, node }
 
   context "app_categories" do
     before { login_cms_user }
