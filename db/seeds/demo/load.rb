@@ -11,7 +11,7 @@ end
 
 def save_ss_files(path, data)
   puts path
-  cond = { filename: data[:filename], model: data[:model] }
+  cond = { site_id: @site._id, filename: data[:filename], model: data[:model] }
 
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
