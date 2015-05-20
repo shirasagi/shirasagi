@@ -34,7 +34,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
     end
 
     describe "#content_type" do
-      its(:content_type) { is_expected.to eq "application/octet-stream" }
+      its(:content_type) { is_expected.to eq SS::MimeType.find(subject.original_url, nil) }
     end
 
     describe "#size" do
