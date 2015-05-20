@@ -3,7 +3,7 @@ module Fs
     attr_accessor :original_filename, :content_type
 
     def self.create_from_file(file, basename: "ss_file", content_type: nil)
-      path = file.try(:path) || file
+      path = file.try(:path) || file.to_s
       instance = self.new(basename)
       instance.binmode
       instance.write(::File.binread(path))
