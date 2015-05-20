@@ -15,6 +15,14 @@ FactoryGirl.define do
     route "opendata/dataset_category"
   end
 
+  factory :opendata_node_app_category, class: Opendata::Node::AppCategory, traits: [:cms_node] do
+    route "opendata/app_category"
+  end
+
+  factory :opendata_node_idea_category, class: Opendata::Node::IdeaCategory, traits: [:cms_node] do
+    route "opendata/idea_category"
+  end
+
   factory :opendata_node_search_dataset_group, class: Opendata::Node::SearchDatasetGroup, traits: [:cms_node] do
     route "opendata/search_dataset_group"
   end
