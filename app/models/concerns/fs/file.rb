@@ -1,4 +1,3 @@
-require "mime/types"
 module Fs::File
   extend ActiveSupport::Concern
 
@@ -45,8 +44,8 @@ module Fs::File
       ::File.stat(path).size
     end
 
-    def content_type(path)
-      ::MIME::Types.type_for(path).first.content_type rescue nil
+    def content_type(path, default = nil)
+      ::SS::MimeType.find(path, default)
     end
 
     def mkdir_p(path)

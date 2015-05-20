@@ -32,7 +32,8 @@ module SS::Config
       {
         storage: "file",
         max_filesize: 104_857_600,
-        max_filesize_ext: {}
+        max_filesize_ext: {},
+        mime_type_map: {}
       }
     end
   end
