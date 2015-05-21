@@ -10,8 +10,7 @@ describe Opendata::App, dbscope: :example do
     its(:url) { is_expected.to eq "/#{subject.dirname}/#{subject.basename}" }
     its(:full_url) { is_expected.to eq "http://#{cms_site.domain}/#{subject.dirname}/#{subject.basename}" }
     its(:parent) { is_expected.to eq nil }
-    its(:point_url) { is_expected.to eq "#{subject.url}/point/show.html" }
-    its(:point_add_url) { is_expected.to eq "#{subject.url}/point/add.html" }
+    its(:point_url) { is_expected.to eq "#{subject.url}/point.html" }
     its(:point_members_url) { is_expected.to eq "#{subject.url}/point/members.html" }
     its(:app_ideas_url) { is_expected.to eq "#{subject.url}/ideas/show.html" }
     its(:zip_url) { is_expected.to eq "#{subject.url}/zip" }
