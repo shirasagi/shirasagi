@@ -1,18 +1,15 @@
 class Opendata::IdeaComment
   include SS::Document
+  include SS::Reference::Site
+  include SS::Reference::User
+  include Opendata::Reference::Member
 
-  field :site_id, type: Integer
   field :idea_id, type: Integer
-  field :member_id, type: Integer
-  field :user_id, type: Integer
   field :name, type: String
   field :text, type: String
   field :comment_deleted, type: DateTime
 
-  belongs_to :site, class_name: "SS::Site"
   belongs_to :idea, class_name: "Opendata::Idea"
-  belongs_to :member, class_name: "Opendata::Member"
-  belongs_to :user, class_name: "SS::User"
 
   permit_params :name, :text, :comment_deleted
 
