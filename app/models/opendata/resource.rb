@@ -12,6 +12,8 @@ class Opendata::Resource
   validates :format, presence: true
 
   before_validation :set_filename, if: ->{ in_file.present? }
+  before_validation :validate_in_file, if: ->{ in_file.present? }
+  before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
   before_validation :set_format
 
   after_save -> { dataset.save(validate: false) }
@@ -28,11 +30,18 @@ class Opendata::Resource
       self.format = filename.sub(/.*\./, "").upcase if format.blank?
     end
 
+    def validate_in_file
+      if %(CSV TSV).index(format)
+        errors.add :file_id, :invalid if parse_tsv(in_file).blank?
+      end
+    end
+
+    def validate_in_tsv
+      errors.add :tsv_id, :invalid if parse_tsv(in_tsv).blank?
+    end
+
     def set_format
       self.format = format.upcase if format.present?
-
-      if tsv_present? && tsv
-        self.rm_tsv = "1"
-      end
+      self.rm_tsv = "1" if %(CSV TSV).index(format)
     end
 end

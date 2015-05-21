@@ -7,14 +7,19 @@ module Opendata::TsvParseable
     end
   end
 
-  def parse_tsv
+  def parse_tsv(src = nil)
     require "nkf"
     require "csv"
 
-    src  = try(:tsv) || try(:file)
-    data = NKF.nkf("-w", src.read)
-    sep  = data =~ /\t/ ? "\t" : ","
-    CSV.parse(data, col_sep: sep) rescue nil
+    src ||= try(:tsv) || try(:file)
+
+    begin
+      data = NKF.nkf("-w", src.read)
+      sep  = data =~ /\t/ ? "\t" : ","
+      CSV.parse(data, col_sep: sep)
+    rescue
+      nil
+    end
   end
 
   alias_method :csv_present?, :tsv_present?
