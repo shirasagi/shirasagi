@@ -1,15 +1,6 @@
-<%= coffee do %>
-$ ->
-
-  $(".point .update").click (event)->
-    $.ajax
-      url: "<%= @app.point_add_url %>"
-      success: (data)->
-        $(".point").html data
-    event.preventDefault()
-
+<%= jquery do %>
+  Opendata_Point.renderButton();
   $(".point .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
-
 <% end %>
 
 <div class="count">

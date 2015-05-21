@@ -10,7 +10,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
   private
     def set_idea
-      @idea_path = @cur_path.sub(/\/point\/.*/, ".html")
+      @idea_path = @cur_path.sub(/\/point\.\w+$/, ".html")
 
       @idea = Opendata::Idea.site(@cur_site).public.
         filename(@idea_path).

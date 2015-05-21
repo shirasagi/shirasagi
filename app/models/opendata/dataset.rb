@@ -45,10 +45,6 @@ class Opendata::Dataset
       url.sub(/\.html$/, "") + "/point.html"
     end
 
-    def point_add_url
-      url.sub(/\.html$/, "") + "/point/add.html"
-    end
-
     def point_members_url
       url.sub(/\.html$/, "") + "/point/members.html"
     end

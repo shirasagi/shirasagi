@@ -119,8 +119,8 @@ SS::Application.routes.draw do
     get "app/areas" => "public#index_areas", cell: "nodes/app"
     get "app/tags" => "public#index_tags", cell: "nodes/app"
     get "app/licenses" => "public#index_licenses", cell: "nodes/app"
-    get "app/:app/point/show.:format" => "public#show_point", cell: "nodes/app", format: false
-    get "app/:app/point/add.:format" => "public#add_point", cell: "nodes/app", format: false
+    get "app/:app/point.:format" => "public#show_point", cell: "nodes/app", format: false
+    post "app/:app/point.:format" => "public#add_point", cell: "nodes/app", format: false
     get "app/:app/point/members.html" => "public#point_members", cell: "nodes/app", format: false
     get "app/:app/ideas/show.:format" => "public#show_ideas", cell: "nodes/app", format: false
     get "app/:app/executed/show.:format" => "public#show_executed", cell: "nodes/app", format: false
@@ -144,8 +144,8 @@ SS::Application.routes.draw do
     get "idea/rss.xml" => "public#rss", cell: "nodes/idea"
     get "idea/areas" => "public#index_areas", cell: "nodes/idea"
     get "idea/tags" => "public#index_tags", cell: "nodes/idea"
-    get "idea/:idea/point/show.:format" => "public#show_point", cell: "nodes/idea", format: false
-    get "idea/:idea/point/add.:format" => "public#add_point", cell: "nodes/idea", format: false
+    get "idea/:idea/point.:format" => "public#show_point", cell: "nodes/idea", format: false
+    post "idea/:idea/point.:format" => "public#add_point", cell: "nodes/idea", format: false
     get "idea/:idea/point/members.html" => "public#point_members", cell: "nodes/idea", format: false
     get "idea/:idea/comment/show.:format" => "public#show_comment", cell: "nodes/idea", format: false
     match "idea/:idea/comment/add.:format" => "public#add_comment", cell: "nodes/idea", via: [:get, :post]

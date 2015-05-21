@@ -1,5 +1,6 @@
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
+<%= javascript_include_tag "opendata/public" %>
 <%= coffee do %>
 $ ->
 
@@ -7,10 +8,7 @@ $ ->
   SS_Tabs.render("#idea-tabs-<%= @cur_node.id %>");
 
   # show point
-  $.ajax
-    url: "<%= @cur_page.point_url %>"
-    success: (data)->
-      $("#idea-point").html data
+  Opendata_Point.render();
 
   # show comment
   $.ajax

@@ -36,11 +36,7 @@ class Opendata::App
 
   public
     def point_url
-      url.sub(/\.html$/, "") + "/point/show.html"
-    end
-
-    def point_add_url
-      url.sub(/\.html$/, "") + "/point/add.html"
+      url.sub(/\.html$/, "") + "/point.html"
     end
 
     def point_members_url

@@ -1,12 +1,10 @@
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
+<%= javascript_include_tag "opendata/public" %>
 <%= coffee do %>
 $ ->
   # show point
-  $.ajax
-    url: "<%= @cur_page.point_url %>"
-    success: (data)->
-      $(".point").html data
+  Opendata_Point.render();
 
   # show ideas
   $.ajax
