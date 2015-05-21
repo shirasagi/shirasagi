@@ -15,6 +15,7 @@ module Opendata::TsvParseable
 
     begin
       data = NKF.nkf("-w", src.read)
+      src.try(:rewind)
       sep  = data =~ /\t/ ? "\t" : ","
       CSV.parse(data, col_sep: sep)
     rescue
