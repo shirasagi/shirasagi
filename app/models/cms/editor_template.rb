@@ -16,6 +16,8 @@ class Cms::EditorTemplate
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
 
+  default_scope -> { order_by(order: 1, name: 1) }
+
   class << self
     def search(params = {})
       criteria = self.where({})

@@ -23,7 +23,6 @@ class Cms::EditorTemplatesController < ApplicationController
       @items = @model.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
-        order_by(order: 1, _id: -1).
         page(params[:page]).per(50)
 
       respond_to do |format|
