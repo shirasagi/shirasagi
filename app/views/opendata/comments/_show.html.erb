@@ -4,6 +4,12 @@
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
   <dt><%= @model.t :member_name %></dt>
-  <dd><%= @item.member.send :name %></dd>
+  <dd>
+    <% if @item.member_id.present? %>
+    <%= @item.member.send :name if @item.member.present? %>
+    <% elsif @item.user_id.present? %>
+    <%= @item.user.send :name if @item.user.present? %>
+    <% end %>
+  </dd>
 
 </dl>

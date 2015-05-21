@@ -34,8 +34,9 @@ class Opendata::CommentsController < ApplicationController
     end
 
     def create
-      cond = { site_id: @cur_site.id, idea_id: params[:idea_id] }
+      cond = { site_id: @cur_site.id, idea_id: params[:idea_id], user_id: @cur_user.id, text: params[:item][:text] }
       @item = Opendata::IdeaComment.new(cond)
+      @item.save
       render_create @item.valid?
     end
 
