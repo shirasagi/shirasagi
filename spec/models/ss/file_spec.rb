@@ -47,13 +47,11 @@ describe SS::File do
       its(:content_type) { is_expected.to eq "application/javascript" }
     end
 
-
     context "when jtd file is uploaded with application/octet-stream" do
       let(:filename) { "a.jtd" }
       let(:mime_type_map) { { "jtd" => "application/x-js-taro" } }
       its(:content_type) { is_expected.to eq "application/x-js-taro" }
     end
-
 
     context "when wmv file is uploaded with application/octet-stream" do
       let(:filename) { "a.wmv" }
