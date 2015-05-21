@@ -32,7 +32,7 @@ describe Opendata::Csv2rdfSetting, dbscope: :example do
   describe "#header_cols" do
     context "when no header_rows is given" do
       subject { create(:opendata_csv2rdf_setting, site: site, resource: resource) }
-      its(:header_cols) { is_expected.to be_nil }
+      its(:header_cols) { is_expected.to eq 0 }
     end
 
     context "when no header_rows is given" do

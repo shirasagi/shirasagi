@@ -35,8 +35,8 @@ class Opendata::Csv2rdfSetting
   end
 
   def header_cols
-    return header_labels.length if header_labels.present?
-    nil
+    return 0 unless header_labels.present?
+    header_labels.length
   end
 
   def rdf_class
@@ -95,17 +95,19 @@ class Opendata::Csv2rdfSetting
       return
     end
 
-    if header_rows < 0
-      errors.add :header_rows, :greater_than_or_equal_to, count: 0
+    if header_rows <= 0
+      errors.add :header_rows, :greater_than, count: 0
       return
     end
   end
 
   def validate_rdf_class
+    validate_header_size
     errors.add :class_id, :blank if class_id.blank?
   end
 
   def validate_column_types
     # nothing to do
+    validate_rdf_class
   end
 end

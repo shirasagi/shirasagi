@@ -52,7 +52,8 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
         if @cur_class.present?
           params[:s][:vocab] = @cur_class.vocab.id
         else
-          params[:s][:vocab] = Rdf::Vocab.site(@cur_site).first.id
+          default_vocab = Rdf::Vocab.site(@cur_site).first
+          params[:s][:vocab] = default_vocab.id if default_vocab.present?
         end
       end
     end
@@ -134,16 +135,11 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
     end
 
     def rdf_class_preview
-      Rails.logger.debug("[enter] #rdf_class_preview")
       @rdf_class = Rdf::Class.site(@cur_site).find(params[:rdf_cid])
       @item = @item.dup
       @item.class_id = @rdf_class.id
-      Rails.logger.debug("#rdf_class_preview: search_column_types")
       @item.column_types = @item.search_column_types(class: @rdf_class)
-      Rails.logger.debug("#rdf_class_preview: render")
       render
-    ensure
-      Rails.logger.debug("[leave] #rdf_class_preview")
     end
 
     def rdf_prop_select
