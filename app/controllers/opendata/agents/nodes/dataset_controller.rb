@@ -11,7 +11,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
 
   private
     def set_dataset
-      @dataset_path = @cur_path.sub(/\/point\/.*/, ".html")
+      @dataset_path = @cur_path.sub(/\/point\.\w+$/, ".html")
 
       @dataset = Opendata::Dataset.site(@cur_site).public.
         filename(@dataset_path).

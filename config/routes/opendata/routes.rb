@@ -97,8 +97,8 @@ SS::Application.routes.draw do
     get "dataset/:dataset/url_resource/:id/" => "public#index", cell: "nodes/url_resource"
     get "dataset/:dataset/url_resource/:id/content.html" => "public#content", cell: "nodes/url_resource", format: false
     get "dataset/:dataset/url_resource/:id/*filename" => "public#download", cell: "nodes/url_resource", format: false
-    get "dataset/:dataset/point/show.:format" => "public#show_point", cell: "nodes/dataset", format: false
-    get "dataset/:dataset/point/add.:format" => "public#add_point", cell: "nodes/dataset", format: false
+    get "dataset/:dataset/point.:format" => "public#show_point", cell: "nodes/dataset", format: false
+    post "dataset/:dataset/point.:format" => "public#add_point", cell: "nodes/dataset", format: false
     get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset", format: false
     get "dataset/:dataset/apps/show.:format" => "public#show_apps", cell: "nodes/dataset", format: false
     get "dataset/:dataset/ideas/show.:format" => "public#show_ideas", cell: "nodes/dataset", format: false

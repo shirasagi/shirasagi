@@ -42,7 +42,7 @@ class Opendata::Dataset
 
   public
     def point_url
-      url.sub(/\.html$/, "") + "/point/show.html"
+      url.sub(/\.html$/, "") + "/point.html"
     end
 
     def point_add_url
