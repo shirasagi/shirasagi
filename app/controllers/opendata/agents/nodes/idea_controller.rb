@@ -138,12 +138,15 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       member_ids = []
       other_comments = Opendata::IdeaComment.where({idea_id: @idea_comment.id})
-      other_comments = other_comments.not_in({member_id: [@cur_member.id, @idea_comment.member.id]})
+      other_comments = other_comments.not_in({member_id: [@cur_member.id]})
+      other_comments = other_comments.not_in({member_id: [@idea_comment.member_id]}) if @idea_comment.member_id.present?
       other_comments.each do |other_comment|
         member_ids << other_comment.member_id
       end
 
-      member_ids << @idea_comment.member_id if @idea_comment.member_id != @cur_member.id
+      if @idea_comment.member_id.present? && @idea_comment.member_id != @cur_member.id
+        member_ids << @idea_comment.member_id
+      end
 
       update_commented_count(member_ids.uniq, 1)
 
