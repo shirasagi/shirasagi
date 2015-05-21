@@ -113,13 +113,13 @@ textarea {
         @include clear;
         letter-spacing: -.40em;
         li.tab01 a {
-          background: url(../img/ic-datatab.png) no-repeat 6px 7px;
+          background: url(../img/ic-datatab.png) no-repeat 6px 5px;
         }
         li.tab02 a {
-          background: url(../img/ic-apptab.png) no-repeat 3px 10px;
+          background: url(../img/ic-apptab.png) no-repeat 3px 8px;
         }
         li.tab03 a {
-          background: url(../img/ic-ideatab.png) no-repeat 2px 4px;
+          background: url(../img/ic-ideatab.png) no-repeat 2px 3px;
         }
         li {
           @include box-sizing(border-box);
@@ -150,8 +150,8 @@ textarea {
         margin-left: 50px;
         &:hover {
           a {
-            @include box-shadow(0 -2px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
-            background: url(../img/ic-datatab_hover.png) no-repeat 6px 7px;
+            @include box-shadow(0 -4px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
+            background: url(../img/ic-datatab_hover.png) no-repeat 6px 5px;
           }
         }
       }
@@ -159,8 +159,8 @@ textarea {
         margin-left: 10px;
         &:hover {
           a {
-            @include box-shadow(0 -2px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
-            background: url(../img/ic-apptab_hover.png) no-repeat 3px 10px;
+            @include box-shadow(0 -4px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
+            background: url(../img/ic-apptab_hover.png) no-repeat 3px 8px;
           }
         }
       }
@@ -168,8 +168,8 @@ textarea {
         margin-left: 10px;
         &:hover {
           a {
-            @include box-shadow(0 -2px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
-            background: url(../img/ic-ideatab_hover.png) no-repeat 2px 4px;
+            @include box-shadow(0 -4px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
+            background: url(../img/ic-ideatab_hover.png) no-repeat 2px 3px;
           }
         }
       }
@@ -538,9 +538,6 @@ article.areas, article.tags, article.formats, article.licenses {
   margin: 0 auto;
   padding: 14px 10px 16px 10px;
   font-size: $px12;
-  .separator {
-    margin: 0px 5px;
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -695,15 +692,15 @@ form.opendata-search_ideas-form .send {
     .name {
       &:hover {
         @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/dataling.png) no-repeat -16px -32px;
+        @include grd-dataheader;
+        @include box-shadow(none);
         color: $blue;
       }
     }
     .current {
       @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/dataling.png) no-repeat -16px -32px;
+      @include grd-dataheader;
+      @include box-shadow(none);
       color: $blue;
     }
   }
@@ -713,15 +710,15 @@ form.opendata-search_ideas-form .send {
     .name {
       &:hover {
         @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/appling.png) no-repeat -10px -100px;
+        @include grd-appheader;
+        @include box-shadow(none);
         color: $blue;
       }
     }
     .current {
       @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/appling.png) no-repeat -10px -100px;
+      @include grd-appheader;
+      @include box-shadow(none);
       color: $blue;
     }
   }
@@ -731,15 +728,15 @@ form.opendata-search_ideas-form .send {
     .name {
       &:hover {
         @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/idealing.png) no-repeat -14px -84px;
+        @include grd-ideaheader;
+        @include box-shadow(none);
         color: $blue;
       }
     }
     .current {
       @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/idealing.png) no-repeat -14px -84px;
+      @include grd-ideaheader;
+      @include box-shadow(none);
       color: $blue;
     }
   }
@@ -1041,7 +1038,7 @@ form.opendata-search_ideas-form .send {
 // -----------------------------------------------------------------------------
 //mypage-tabs
 #mypage-tabs {
-  @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
+  @include box-shadow(1px 1px $white inset, -1px 0 $white inset, 0 8px 8px rgba(#000000, 0.1));
   margin: 20px 0;
   padding: 0;
   border-bottom: $blue 2px solid;
@@ -1951,11 +1948,10 @@ nav.cms-sns_share {
   }
   h1 {
     @include box-sizing(border-box);
-    @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+    @include grd-portalheader;
     padding: 9px 0 9px 44px;
     border: 1px solid $gray;
     border-bottom: none;
-    background: url(../img/rainbow.png) no-repeat -4px -64px;
     color: $blue;
     font-size: $px16;
     line-height: 1.3;
@@ -2007,15 +2003,15 @@ nav.cms-sns_share {
       text-align: center;
       &:hover {
         @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/rainbow.png) no-repeat -2px -64px;
+        @include grd-portalheader;
+        @include box-shadow(none);
         color: $blue;
       }
     }
     .current {
       @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/rainbow.png) no-repeat -2px -64px;
+      @include grd-portalheader;
+      @include box-shadow(none);
       color: $blue;
     }
   }
@@ -2270,8 +2266,8 @@ nav.cms-sns_share {
 .s-dataset #head {
   .inner .tab .tab01 {
     a {
-      @include box-shadow(0 -2px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
-      background: url(../img/ic-datatab_hover.png) no-repeat 6px 7px;
+      @include box-shadow(0 -4px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
+      background: url(../img/ic-datatab_hover.png) no-repeat 6px 5px;
     }
   }
 }
@@ -2297,6 +2293,7 @@ nav.cms-sns_share {
   letter-spacing: -.40em;
   a {
     display: inline-block;
+    float: left;
     width: 162px;
     height: 50px;
     margin-top: 93px;
@@ -2339,7 +2336,7 @@ nav.cms-sns_share {
     float: left;
     width: 430px;
     margin: 27px 15px 27px 0;
-    padding: 20px 20px;
+    padding: 18px 20px 20px;
     @include border-radius(5px);
     border: 1px solid rgba(255, 51, 153, 0.29);
     @include box-shadow(0px 1px 1px 0px rgba(255, 51, 153, 0.29));
@@ -2546,6 +2543,7 @@ nav.cms-sns_share {
           }
         }
         nav {
+          min-width: 450px;
           letter-spacing: -.40em;
         }
       }
@@ -2562,7 +2560,7 @@ nav.cms-sns_share {
 #dataset-title .google-search {
   form {
     position: relative;
-    width: 327px;
+    width: 332px;
     border: 1px solid $gray;
     #search-box {
       width: 85%;
@@ -2618,11 +2616,10 @@ nav.cms-sns_share {
     }
     h1 {
       @include box-sizing(border-box);
-      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+      @include grd-dataheader;
       padding: 9px 0 9px 26px;
       border: 1px solid $gray;
       border-bottom: none;
-      background: url(../img/dataling.png) no-repeat -16px -32px;
       color: $blue;
       font-size: $px16;
       line-height: 1.3;
@@ -2657,11 +2654,10 @@ nav.cms-sns_share {
   @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
   h1 {
     @include box-sizing(border-box);
-    @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+    @include grd-dataheader;
     padding: 9px 0 9px 26px;
     border: 1px solid $gray;
     border-bottom: none;
-    background: url(../img/dataling.png) no-repeat -16px -32px;
     color: $blue;
     font-size: $px16;
     line-height: 1.3;
@@ -2856,10 +2852,9 @@ article.licenses div article a {
             @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
           h1 {
             @include box-sizing(border-box);
-            @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+            @include grd-dataheader;
             padding: 9px 0 9px 26px;
             border-bottom: none;
-            background: url(../img/dataling.png) no-repeat -16px -32px;
             color: $blue;
             font-size: $px16;
             line-height: 1.3;
@@ -2973,10 +2968,9 @@ article.licenses div article a {
           @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
         h1 {
           @include box-sizing(border-box);
-          @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+          @include grd-dataheader;
           padding: 9px 0 9px 26px;
           border-bottom: none;
-          background: url(../img/dataling.png) no-repeat -16px -32px;
           color: $blue;
           font-size: $px16;
           line-height: 1.3;
@@ -3078,8 +3072,8 @@ article.licenses div article a {
 .s-app #head {
   .inner .tab .tab02 {
     a {
-      @include box-shadow(0 -2px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
-      background: url(../img/ic-apptab_hover.png) no-repeat 3px 10px;
+      @include box-shadow(0 -4px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
+      background: url(../img/ic-apptab_hover.png) no-repeat 3px 8px;
     }
   }
 }
@@ -3105,6 +3099,7 @@ article.licenses div article a {
   letter-spacing: -.40em;
   a {
     display: inline-block;
+    float: left;
     width: 162px;
     height: 50px;
     margin-top: 93px;
@@ -3343,6 +3338,7 @@ article.licenses div article a {
           }
         }
         nav {
+          min-width: 450px;
           letter-spacing: -.40em;
         }
       }
@@ -3359,7 +3355,7 @@ article.licenses div article a {
 #app-title .google-search {
   form {
     position: relative;
-    width: 327px;
+    width: 332px;
     border: 1px solid $gray;
     #search-box {
       width: 85%;
@@ -3412,11 +3408,10 @@ article.licenses div article a {
     }
     h1 {
       @include box-sizing(border-box);
-      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+      @include grd-appheader;
       padding: 9px 0 9px 26px;
       border: 1px solid $gray;
       border-bottom: none;
-      background: url(../img/appling.png) no-repeat -10px -100px;
       color: $blue;
       font-size: $px16;
       line-height: 1.3;
@@ -3451,11 +3446,10 @@ article.licenses div article a {
   @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
   h1 {
     @include box-sizing(border-box);
-    @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+    @include grd-appheader;
     padding: 9px 0 9px 26px;
     border: 1px solid $gray;
     border-bottom: none;
-    background: url(../img/appling.png) no-repeat -10px -100px;
     color: $blue;
     font-size: $px16;
     line-height: 1.3;
@@ -3648,10 +3642,9 @@ article.licenses div article a {
             @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
           h1 {
             @include box-sizing(border-box);
-            @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+            @include grd-appheader;
             padding: 9px 0 9px 26px;
             border-bottom: none;
-            background: url(../img/appling.png) no-repeat -10px -100px;
             color: $blue;
             font-size: $px16;
             line-height: 1.3;
@@ -3918,8 +3911,8 @@ article.licenses div article a {
 .s-idea #head {
   .inner .tab .tab03 {
     a {
-      @include box-shadow(0 -2px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
-      background: url(../img/ic-ideatab_hover.png) no-repeat 2px 4px;
+      @include box-shadow(0 -4px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
+      background: url(../img/ic-ideatab_hover.png) no-repeat 2px 3px;
     }
   }
 }
@@ -3946,6 +3939,7 @@ article.licenses div article a {
   letter-spacing: -.40em;
   a {
     display: inline-block;
+    float: left;
     width: 162px;
     height: 50px;
     margin-top: 93px;
@@ -4184,6 +4178,7 @@ article.licenses div article a {
           }
         }
         nav {
+          min-width: 450px;
           letter-spacing: -.40em;
         }
       }
@@ -4200,7 +4195,7 @@ article.licenses div article a {
 #idea-title .google-search {
   form {
     position: relative;
-    width: 327px;
+    width: 332px;
     border: 1px solid $gray;
     #search-box {
       width: 85%;
@@ -4252,11 +4247,10 @@ article.licenses div article a {
     }
     h1 {
       @include box-sizing(border-box);
-      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+      @include grd-ideaheader;
       padding: 9px 0 9px 26px;
       border: 1px solid $gray;
       border-bottom: none;
-      background: url(../img/idealing.png) no-repeat -14px -84px;
       color: $blue;
       font-size: $px16;
       line-height: 1.3;
@@ -4291,11 +4285,10 @@ article.licenses div article a {
   @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
   h1 {
     @include box-sizing(border-box);
-    @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+    @include grd-ideaheader;
     padding: 9px 0 9px 26px;
     border: 1px solid $gray;
     border-bottom: none;
-    background: url(../img/idealing.png) no-repeat -14px -84px;
     color: $blue;
     font-size: $px16;
     line-height: 1.3;
@@ -4435,10 +4428,8 @@ article.licenses div article a {
           @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
         h1 {
           @include box-sizing(border-box);
-          @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
-          padding: 9px 0 9px 26px;
+          @include grd-ideaheader;
           border-bottom: none;
-          background: url(../img/idealing.png) no-repeat -14px -84px;
           color: $blue;
           font-size: $px16;
           line-height: 1.3;
@@ -4468,10 +4459,9 @@ article.licenses div article a {
         @include box-shadow(0 1px 1px rgba(168, 168, 168, 0.25));
         h1 {
           @include box-sizing(border-box);
-          @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
+          @include grd-ideaheader;
           padding: 9px 0 9px 26px;
           border-bottom: none;
-          background: url(../img/idealing.png) no-repeat -14px -84px;
           color: $blue;
           font-size: $px16;
           line-height: 1.3;
