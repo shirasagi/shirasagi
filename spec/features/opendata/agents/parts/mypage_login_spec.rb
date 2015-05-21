@@ -10,7 +10,7 @@ describe "opendata_agents_parts_mypage_login", dbscope: :example do
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       session.env("REQUEST_PATH", index_path)
       visit index_path
-      expect(current_path).not_to eq sns_login_path
+      expect(current_path).to eq index_path
     end
   end
 end

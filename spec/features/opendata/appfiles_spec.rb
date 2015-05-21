@@ -8,13 +8,12 @@ describe "opendata_appfiles", dbscope: :example do
     appfile
   end
 
+  let(:site) { cms_site }
+  let(:node) { create_once :opendata_node_app, name: "opendata_app" }
   let(:app) { create(:opendata_app, node: node) }
   let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
   let(:appfile) { create_appfile(app, file) }
-
-  let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_app, name: "opendata_app" }
   let(:index_path) { opendata_app_appfiles_path site.host, node, app_id: app.id }
   let(:new_path) { new_opendata_app_appfile_path site.host, node, app_id: app.id }
   let(:download_path) { opendata_app_appfile_file_path site.host, node, app_id: app.id, appfile_id: appfile.id }
