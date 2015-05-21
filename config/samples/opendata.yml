@@ -41,6 +41,7 @@ production: &production
       [param2] include_datasets - データセットグループに属するデータセット情報を含めるかどうかを指定する。
                                   true：含む（デフォルト）。
                                   false：含まない。（packagesの値は空の配列となる。）
+  use_member_form_login: false
 
 test:
   <<: *production

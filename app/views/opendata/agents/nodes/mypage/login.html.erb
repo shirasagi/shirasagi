@@ -7,7 +7,7 @@
   <% if secrets.github_key %><li class="github"><%= link_to "GitHub アカウントでログイン","/mypage/github" %></li><% end %>
 </ul>
 
-<% if Rails.env.development? %>
+<% if SS.config.opendata.use_member_form_login %>
   <%= form_tag "", class: "member-login" do |f| %>
     <%= error_messages_for :item %>
 
