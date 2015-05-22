@@ -43,6 +43,8 @@ gem "browser"
 gem "net-ldap"
 gem "diffy"
 gem "ungarbled"
+gem "fullcalendar-rails", "2.3.1.0"
+gem "momentjs-rails", "2.10.2"
 
 # OAuth
 gem 'omniauth'
