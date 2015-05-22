@@ -1,4 +1,19 @@
 <dl class="see">
+
   <dt><%= @model.t :text %></dt>
   <dd><%= @item.text %></dd>
+
+  <dt><%= @model.t :member_name %></dt>
+  <dd>
+    <% if @item.member %>
+    <%= @item.member.send :name %>
+    <% elsif @item.contact_group %>
+    <%= @item.contact_group.send :full_name %>
+    <% elsif @item.user.groups %>
+    <%= @item.user.groups.first.send :name %>
+    <% else %>
+    <%= "ゲストユーザー" %>
+    <% end %>
+  </dd>
+
 </dl>
