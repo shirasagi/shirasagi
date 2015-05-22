@@ -127,10 +127,10 @@ module SS::File::Model
         base_limit = SS.config.env.max_filesize
         ext_limit  = SS.config.env.max_filesize_ext[filename.sub(/.*\./, "")]
 
-        if ext_limit.present?
-          errors.add :base, :too_large_file, filename: filename if file.size > ext_limit
-        elsif base_limit.present?
-          errors.add :base, :too_large_file, filename: filename if file.size > base_limit
+        if ext_limit.present? && file.size > ext_limit
+          errors.add :base, :too_large_file, filename: filename, size: print_size(file.size), limit: print_size(ext_limit)
+        elsif base_limit.present? && file.size > base_limit
+          errors.add :base, :too_large_file, filename: filename, size: print_size(file.size), limit: print_size(base_limit)
         end
       end
 
@@ -139,5 +139,9 @@ module SS::File::Model
       elsif in_files.present?
         in_files.each { |file| validate_limit.call(file) }
       end
+    end
+
+    def print_size(size)
+      ApplicationController.helpers.number_to_human_size(size)
     end
 end
