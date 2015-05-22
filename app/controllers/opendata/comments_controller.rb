@@ -24,6 +24,20 @@ class Opendata::CommentsController < ApplicationController
       @item = Opendata::IdeaComment.where(site_id: @cur_site.id).find params[:id]
     end
 
+    def update_commented_count(member_ids, count)
+      member_ids.each do |member_id|
+        notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: member_id}).first
+        if notice
+          commented_count = notice.commented_count || 0
+          notice.commented_count += count
+          notice.save
+        else
+          notice_new = { site_id: @cur_site.id, member_id: member_id, commented_count: 1 }
+          Opendata::MemberNotice.new(notice_new).save
+        end
+      end
+    end
+
   public
     def index
       @items = @comments.search(params[:s]).order_by(:created.asc)
@@ -34,7 +48,8 @@ class Opendata::CommentsController < ApplicationController
     end
 
     def create
-      cond = { site_id: @cur_site.id, idea_id: params[:idea_id], user_id: @cur_user.id,
+      idea_id = params[:idea_id]
+      cond = { site_id: @cur_site.id, idea_id: idea_id, user_id: @cur_user.id,
                text: params[:item][:text],
                contact_state: params[:item][:contact_state],
                contact_charge: params[:item][:contact_charge],
@@ -46,6 +61,25 @@ class Opendata::CommentsController < ApplicationController
 
       @item = Opendata::IdeaComment.new(cond)
       @item.save
+
+      idea = Opendata::Idea.site(@cur_site).find(idea_id)
+      idea.commented = Time.zone.now
+      idea.total_comment += 1
+      idea.save
+
+      member_ids = []
+      other_comments = Opendata::IdeaComment.where({idea_id: idea_id})
+      other_comments = other_comments.not_in({member_id: [idea.member_id]}) if idea.member_id.present?
+      other_comments.each do |other_comment|
+        member_ids << other_comment.member_id
+      end
+
+      if idea.member_id.present?
+        member_ids << idea.member_id
+      end
+
+      update_commented_count(member_ids.uniq, 1)
+
       render_create @item.valid?
     end
 
