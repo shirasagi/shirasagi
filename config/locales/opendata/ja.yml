@@ -246,7 +246,7 @@ ja:
         tags: タグ
         comment_body: 本文
         commented: 合計コメント数
-      opendata/comment:
+      opendata/idea_comment:
         text: コメント
         member_name: 投稿者名
         deleted: 削除日時

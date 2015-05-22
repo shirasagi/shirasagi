@@ -2,7 +2,9 @@ class Opendata::IdeaComment
   include SS::Document
   include SS::Reference::Site
   include SS::Reference::User
+  include Contact::Addon::Page
   include Opendata::Reference::Member
+  include Opendata::AllowableAny
 
   field :idea_id, type: Integer
   field :name, type: String

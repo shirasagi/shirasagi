@@ -3,7 +3,7 @@ class Opendata::CommentsController < ApplicationController
   include Cms::CrudFilter
   helper Opendata::FormHelper
 
-  model Opendata::Comment
+  model Opendata::IdeaComment
 
   navi_view "opendata/main/navi"
 
