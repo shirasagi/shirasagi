@@ -148,11 +148,4 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
       end
       render
     end
-
-    def show
-      @model = Opendata::App
-      @item = @model.site(@cur_site).find(params[:id])
-
-      render
-    end
 end
