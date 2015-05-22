@@ -29,49 +29,43 @@ module Opendata::UrlHelper
 
   def search_datasets_path(options = {})
     node = Opendata::Node::SearchDataset.site(@cur_site).public.first
-    return nil unless node
+    raise "dataset search is disabled since Opendata::Node::SearchDataset is not registered" unless node
     build_path(node.url, options)
   end
 
   def search_groups_path(options = {})
     node = Opendata::Node::SearchDatasetGroup.site(@cur_site).public.first
-    return nil unless node
+    raise "group search is disabled since Opendata::Node::SearchDatasetGroup is not registered" unless node
     build_path(node.url, options)
   end
 
   def search_apps_path(options = {})
     node = Opendata::Node::SearchApp.site(@cur_site).public.first
-    return nil unless node
+    raise "app search is disabled since Opendata::Node::SearchApp is not registered" unless node
     build_path(node.url, options)
   end
 
   def search_ideas_path(options = {})
     node = Opendata::Node::SearchIdea.site(@cur_site).public.first
-    return nil unless node
+    raise "idea search is disabled since Opendata::Node::SearchIdea is not registered" unless node
     build_path(node.url, options)
   end
 
   def sparql_path(options = {})
     node = Opendata::Node::Sparql.site(@cur_site).public.first
-    return nil unless node
+    raise "sparql is disabled since Opendata::Node::Sparql is not registered" unless node
     build_path(node.url, options)
   end
 
   def mypage_path(options = {})
     node = Opendata::Node::Mypage.site(@cur_site).public.first
-    return nil unless node
+    raise "mypage is disabled since Opendata::Node::Mypage is not registered" unless node
     build_path(node.url, options)
   end
 
   def member_path(options = {})
     node = Opendata::Node::Member.site(@cur_site).public.first
-    return nil unless node
-    build_path(node.url, options)
-  end
-
-  def mypage_path(options = {})
-    node = Opendata::Node::Mypage.site(@cur_site).public.first
-    return nil unless node
+    raise "member is disabled since Opendata::Node::Member is not registered" unless node
     build_path(node.url, options)
   end
 end

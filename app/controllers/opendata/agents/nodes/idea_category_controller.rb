@@ -27,8 +27,8 @@ class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
 
       @tabs = [
         { name: "新着順", url: "#{@search_path.call("sort" => "updated")}", pages: @items, rss: "#{@rss_path.call("sort" => "updated")}" },
-        { name: "人気順", url: "#{@search_path.call("sort" => "updated")}", pages: @point_items, rss: "#{@rss_path.call("sort" => "popular")}" },
-        { name: "注目順", url: "#{@search_path.call("sort" => "updated")}", pages: @comment_items, rss: "#{@rss_path.call("sort" => "attention")}" }
+        { name: "人気順", url: "#{@search_path.call("sort" => "popular")}", pages: @point_items, rss: "#{@rss_path.call("sort" => "popular")}" },
+        { name: "注目順", url: "#{@search_path.call("sort" => "attention")}", pages: @comment_items, rss: "#{@rss_path.call("sort" => "attention")}" }
       ]
 
       max = 50

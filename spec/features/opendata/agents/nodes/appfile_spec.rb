@@ -20,6 +20,7 @@ describe "opendata_agents_nodes_appfile", dbscope: :example do
   let(:content_path) { appfile.url.sub(/#{appfile.filename}$/,"content.html") }
   let(:json_path) { json.url.sub(/#{json.filename}$/,"json.html") }
   let(:download_path) { appfile.url }
+  let!(:node_search) { create :opendata_node_search_app }
 
   it "#index" do
     page.driver.browser.with_session("public") do |session|
