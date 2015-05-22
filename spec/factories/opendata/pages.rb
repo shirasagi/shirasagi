@@ -27,6 +27,19 @@ FactoryGirl.define do
     license { unique_id }
   end
 
+  factory :opendata_idea, class: Opendata::Idea, traits: [:cms_page] do
+    transient do
+      node nil
+    end
+
+    filename { node.blank? ? "dir/#{unique_id}" : "#{node.filename}/#{unique_id}" }
+    route "opendata/idea"
+    text "cccc\ndddd"
+    tags ["ccc", "ddd"]
+    category_ids [1]
+    area_ids [1]
+  end
+
   factory :opendata_resource, class: Opendata::Resource do
     name { "#{unique_id}" }
     text "bbbb\nbbbb"
