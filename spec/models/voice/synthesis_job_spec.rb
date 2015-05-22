@@ -89,7 +89,7 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       end
 
       it { expect(@job).not_to be_nil }
-      it { expect(system(@cmd)).to be false }
+      it { expect(system(@cmd)).to be_truthy }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -119,7 +119,7 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       end
 
       it { expect(@job).not_to be_nil }
-      it { expect(system(@cmd)).to be_falsey }
+      it { expect(system(@cmd)).to be_truthy }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -149,7 +149,7 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       end
 
       it { expect(@job).not_to be_nil }
-      it { expect(system(@cmd)).to be_falsey }
+      it { expect(system(@cmd)).to be_truthy }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }
@@ -181,7 +181,7 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       end
 
       it { expect(@job).not_to be_nil }
-      it { expect(system(@cmd)).to be_falsey }
+      it { expect(system(@cmd)).to be_truthy }
 
       describe "job" do
         subject { Job::Task.find_by(name: 'job:voice_synthesis') rescue nil }

@@ -110,7 +110,8 @@ class Job::Service
     end
 
     def system_error?(e)
-      e.kind_of?(NoMemoryError) || e.kind_of?(SignalException) || e.kind_of?(SystemExit) || e.kind_of?(fatal)
+      # e.kind_of?(NoMemoryError) || e.kind_of?(SignalException) || e.kind_of?(SystemExit) || e.kind_of?(fatal)
+      e.kind_of?(NoMemoryError) || e.kind_of?(SignalException) || e.kind_of?(SystemExit)
     end
 
     def create_job(task)
