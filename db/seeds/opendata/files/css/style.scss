@@ -538,6 +538,9 @@ article.areas, article.tags, article.formats, article.licenses {
   margin: 0 auto;
   padding: 14px 10px 16px 10px;
   font-size: $px12;
+  .separator {
+    margin: 0px 5px;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -4429,6 +4432,7 @@ article.licenses div article a {
         h1 {
           @include box-sizing(border-box);
           @include grd-ideaheader;
+          padding: 9px 0 9px 26px;
           border-bottom: none;
           color: $blue;
           font-size: $px16;
