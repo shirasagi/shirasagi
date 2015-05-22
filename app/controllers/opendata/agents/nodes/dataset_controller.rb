@@ -54,14 +54,14 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
     def index
       @count          = pages.size
       @node_url       = "#{@cur_node.url}"
-      @search_url     = search_datasets_path + "?"
-      @rss_url        = search_datasets_path + "rss.xml?"
+      @search_path    = method(:search_datasets_path)
+      @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml?", options) }
       @tabs = []
       Opendata::Dataset.sort_options.each do |options|
         @tabs << { name: options[0],
-                   url: "#{@search_url}&sort=#{options[1]}",
+                   url: "#{@search_path.call("sort" => "#{options[1]}")}",
                    pages: pages.order_by(Opendata::Dataset.sort_hash(options[1])).limit(10),
-                   rss: "#{@rss_url}&sort=#{options[1]}"}
+                   rss: "#{@rss_path.call("sort" => "#{options[1]}")}"}
       end
 
       max = 50

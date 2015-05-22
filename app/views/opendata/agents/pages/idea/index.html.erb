@@ -63,7 +63,7 @@ categories = [
   <% categories.each do |cate| %>
     <% cate[:items].each_with_index do |item, idx| %>
       <% hide = (idx >= max) ? "display: none" : nil %>
-      <%= link_to item.send(cate[:name]), "#{@search_url}?s[#{cate[:key]}]=#{item.send(cate[:val])}",
+      <%= link_to item.send(cate[:name]), @search_path.call("s[#{cate[:key]}]" => "#{item.send(cate[:val])}"),
         class: cate[:type], style: hide %>
     <% end %>
     <% if cate[:items].size > max %>

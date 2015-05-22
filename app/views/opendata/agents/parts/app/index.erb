@@ -6,7 +6,7 @@
   <footer>
     <nav class="feed">
       <%= link_to :more, @node_url, class: "more" %>
-      <%= link_to "RSS", @rss_url, class: "rss" %>
+      <%= link_to "RSS", @rss_path.call, class: "rss" %>
     </nav>
   </footer>
 </article>

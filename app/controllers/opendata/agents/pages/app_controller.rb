@@ -8,7 +8,7 @@ class Opendata::Agents::Pages::AppController < ApplicationController
       @cur_node = @cur_page.parent.becomes_with_route
       @cur_page.layout_id = @cur_node.page_layout_id || @cur_node.layout_id
 
-      @search_url = search_apps_path
+      @search_path = method(:search_apps_path)
 
       @tab_display = ""
 

@@ -6,7 +6,7 @@ class Opendata::Agents::Parts::AppController < ApplicationController
   public
     def index
       @node_url = "#{search_apps_path}?sort=#{@cur_part.sort}"
-      @rss_url = "#{search_apps_path}rss.xml?sort=#{@cur_part.sort}"
+      @rss_path = ->(options = {}) { build_path("#{search_apps_path}rss.xml", { "sort" => "#{@cur_part.sort}" }.merge(options)) }
       @items = Opendata::App.site(@cur_site).public.
         where(@cur_part.condition_hash).
         order_by(@cur_part.sort_hash).

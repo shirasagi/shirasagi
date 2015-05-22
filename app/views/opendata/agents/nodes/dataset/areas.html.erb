@@ -2,7 +2,7 @@
   <% @areas.each do |item| %>
   <article>
     <header>
-      <h2><a href="<%= "#{@search_url}&s[area_id]=#{item.id}" %>">
+      <h2><a href="<%= @search_path.call("s[area_id]" => "#{item.id}") %>">
         <span class="name"><%= item.name %></span>
         <span class="count">(<%= item.count %>)</span></a></h2>
     </header>

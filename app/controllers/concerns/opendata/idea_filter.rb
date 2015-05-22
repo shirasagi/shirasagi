@@ -8,7 +8,7 @@ module Opendata::IdeaFilter
   private
     def set_idea_with_aggregation
       @cur_node.layout = nil
-      @search_url      = search_ideas_path + "?"
+      @search_path     = method(:search_ideas_path)
     end
 
     def aggregate_areas

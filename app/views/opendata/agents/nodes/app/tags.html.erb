@@ -2,7 +2,7 @@
   <% @tags.each do |data| %>
   <article>
     <header>
-      <h2><a href="<%= "#{@search_url}&s[tag]=#{data['id']}" %>">
+      <h2><a href="<%= @search_path.call("s[tag]" => "#{data['id']}") %>">
         <span class="name"><%= data["id"] %></span>
         <span class="count">(<%= data["count"] %>)</span></a></h2>
     </header>

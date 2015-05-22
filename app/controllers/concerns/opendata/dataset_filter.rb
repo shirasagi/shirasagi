@@ -9,7 +9,7 @@ module Opendata::DatasetFilter
   private
     def set_dataset_with_aggregation
       @cur_node.layout = nil
-      @search_url      = search_datasets_path + "?"
+      @search_path     = method(:search_datasets_path)
     end
 
     def aggregate_areas

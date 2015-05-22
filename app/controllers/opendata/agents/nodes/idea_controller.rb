@@ -56,14 +56,14 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
     def index
       @count          = pages.size
       @node_url       = "#{@cur_node.url}"
-      @search_url     = search_ideas_path + "?"
-      @rss_url        = search_ideas_path + "rss.xml?"
+      @search_path    = method(:search_ideas_path)
+      @rss_path       = ->(options = {}) { build_path("#{search_ideas_path}rss.xml", options) }
       @tabs = []
       Opendata::Idea.sort_options.each do |options|
         @tabs << { name: options[0],
-                   url: "#{@search_url}&sort=#{options[1]}",
+                   url: "#{@search_path.call("sort" => "#{options[1]}")}",
                    pages: pages.sort_criteria(options[1]).limit(10),
-                   rss: "#{@rss_url}&sort=#{options[1]}"}
+                   rss: "#{@rss_path.call("sort" => "#{options[1]}")}" }
       end
 
       max = 50
