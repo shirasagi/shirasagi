@@ -34,7 +34,16 @@ class Opendata::CommentsController < ApplicationController
     end
 
     def create
-      cond = { site_id: @cur_site.id, idea_id: params[:idea_id], user_id: @cur_user.id, text: params[:item][:text] }
+      cond = { site_id: @cur_site.id, idea_id: params[:idea_id], user_id: @cur_user.id,
+               text: params[:item][:text],
+               contact_state: params[:item][:contact_state],
+               contact_charge: params[:item][:contact_charge],
+               contact_tel: params[:item][:contact_tel],
+               contact_fax: params[:item][:contact_fax],
+               contact_email: params[:item][:contact_email]
+             }
+      cond[:contact_group_id] = params[:item][:contact_group_id] if params[:item][:contact_group_id].present?
+
       @item = Opendata::IdeaComment.new(cond)
       @item.save
       render_create @item.valid?
