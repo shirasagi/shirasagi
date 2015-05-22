@@ -24,8 +24,12 @@
       <td class="member_name">
         <% if item.member %>
         <%= item.member.name %>
+        <% elsif item.contact_group %>
+        <%= item.contact_group.send :full_name %>
+        <% elsif item.user.groups %>
+        <%= item.user.groups.first.send :name %>
         <% else %>
-        ゲストユーザー
+        <%= "ゲストユーザー" %>
         <% end %>
       </td>
       <td class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>

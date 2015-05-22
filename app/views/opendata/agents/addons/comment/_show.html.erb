@@ -9,14 +9,18 @@
   <dd class="wide">
     <table class="index">
       <tbody>
-        <% @comments.order(name: 1).each do |cm| %>
+        <% @comments.order(name: 1).each do |comment| %>
         <tr>
-          <td><%= cm.text %></td>
+          <td><%= comment.text %></td>
           <td>
-            <% if cm.member %>
-            <%= cm.member.name %>
+            <% if comment.member %>
+            <%= comment.member.name %>
+            <% elsif comment.contact_group %>
+            <%= comment.contact_group.full_name %>
+            <% elsif comment.user.groups %>
+            <%= comment.user.groups.first.name %>
             <% else %>
-            ゲストユーザー
+            <%= "ゲストユーザー" %>
             <% end %>
           </td>
         </tr>

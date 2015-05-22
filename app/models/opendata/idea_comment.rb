@@ -26,6 +26,10 @@ class Opendata::IdeaComment
 
   class << self
     public
+      def allowed?(action, user, opts = {})
+        true
+      end
+
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?

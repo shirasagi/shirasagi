@@ -5,10 +5,14 @@
 
   <dt><%= @model.t :member_name %></dt>
   <dd>
-    <% if @item.member_id.present? %>
-    <%= @item.member.send :name if @item.member.present? %>
-    <% elsif @item.user_id.present? %>
-    <%= @item.user.send :name if @item.user.present? %>
+    <% if @item.member %>
+    <%= @item.member.send :name %>
+    <% elsif @item.contact_group %>
+    <%= @item.contact_group.send :full_name %>
+    <% elsif @item.user.groups %>
+    <%= @item.user.groups.first.send :name %>
+    <% else %>
+    <%= "ゲストユーザー" %>
     <% end %>
   </dd>
 
