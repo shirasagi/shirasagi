@@ -204,6 +204,9 @@ img {
     }
   }
 }
+_::content, _:future, #navi .wrap .sangyo a:not(*:root) {
+  width: 175px;
+}
 #navi .wrap li ul, #navi .wrap .current ul {
   position: absolute;
   left: -1px;
