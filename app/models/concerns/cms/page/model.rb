@@ -52,6 +52,9 @@ module Cms::Page::Model
 
       src = "#{site.path}/#{@db_changes['filename'][0]}"
       dst = "#{site.path}/#{@db_changes['filename'][1]}"
+      dst_dir = ::File.dirname(dst)
+
+      Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
       Fs.mv src, dst if Fs.exists?(src)
       self.class.class_variable_get(:@@_after_rename_file_callbacks).each { |m| send(m, src, dst) }
     end

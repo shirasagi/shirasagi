@@ -128,14 +128,18 @@ module Cms::Node::Model
 
       src = "#{site.path}/#{@db_changes['filename'][0]}"
       dst = "#{site.path}/#{@db_changes['filename'][1]}"
+      dst_dir = ::File.dirname(dst)
+
+      Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
       Fs.mv src, dst if Fs.exists?(src)
 
       src, dst = @db_changes["filename"]
       %w(nodes pages parts layouts).each do |name|
         send(name).where(filename: /^#{src}\//).each do |item|
+          dst_filename = item.filename.sub(/^#{src}\//, "#{dst}\/")
           item.set(
-            filename: item.filename.sub(/^#{src}\//, "#{dst}\/"),
-            depth: item.filename.scan("/").size + 1
+            filename: dst_filename,
+            depth: dst_filename.scan("/").size + 1
           )
         end
       end
