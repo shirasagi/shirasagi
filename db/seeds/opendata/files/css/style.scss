@@ -523,12 +523,12 @@ article.areas, article.tags, article.formats, article.licenses {
     border-top: 1px solid $gray;
   }
   li {
+    @include box-sizing(border-box);
     float: left;
-    width: 134px;
+    width: 12.5%;
     border-left: 1px solid $gray;
   }
   li.kurashi {
-    width: 133px;
     border-left: none;
   }
   a {
