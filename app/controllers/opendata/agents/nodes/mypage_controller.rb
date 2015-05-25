@@ -6,6 +6,8 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
 
   before_action :get_member_notice, only: [:show_notice, :confirm_notice]
 
+  PROVIDERS = %w(twitter facebook yahoojp google_oauth2 github).freeze
+
   private
     def get_params
       params.require(:item).permit(:email, :password)
@@ -53,8 +55,7 @@ class Opendata::Agents::Nodes::MypageController < ApplicationController
 
     def provide
       session[:auth_site] = @cur_site
-      %w(twitter facebook yahoojp google_oauth2 github).each do |name|
-        redirect_to "/auth/#{name}" if request.path_info.include?(name)
-      end
+      provider = PROVIDERS.find { |name| request.path_info.include?(name) }
+      redirect_to "/auth/#{provider}" if provider.present?
     end
 end
