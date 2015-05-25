@@ -17,8 +17,9 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
     def index
       @count          = pages.size
       @node_url       = "#{@cur_node.url}#{params[:name]}/"
-      @search_path    = ->(options = {}) { search_datasets_path({ "s[category_id]" => "#{@item.id}" }.merge(options)) }
-      @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml", { "s[category_id]" => "#{@item.id}" }.merge(options)) }
+      default_options = { "s[category_id]" => "#{@item.id}" }
+      @search_path    = ->(options = {}) { search_datasets_path(default_options.merge(options)) }
+      @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml", default_options.merge(options)) }
       @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
       @download_items = pages.order_by(downloaded: -1).limit(10)
@@ -26,9 +27,18 @@ class Opendata::Agents::Nodes::DatasetCategoryController < ApplicationController
       controller.instance_variable_set :@cur_node, @item
 
       @tabs = [
-        { name: "新着順", url: "#{@search_path.call("sort" => "released")}", pages: @items, rss: "#{@rss_path.call("sort" => "released")}" },
-        { name: "人気順", url: "#{@search_path.call("sort" => "popular")}", pages: @point_items, rss: "#{@rss_path.call("sort" => "popular")}" },
-        { name: "注目順", url: "#{@search_path.call("sort" => "attention")}", pages: @download_items, rss: "#{@rss_path.call("sort" => "attention")}" }
+        { name: "新着順",
+          url: "#{@search_path.call("sort" => "released")}",
+          pages: @items,
+          rss: "#{@rss_path.call("sort" => "released")}" },
+        { name: "人気順",
+          url: "#{@search_path.call("sort" => "popular")}",
+          pages: @point_items,
+          rss: "#{@rss_path.call("sort" => "popular")}" },
+        { name: "注目順",
+          url: "#{@search_path.call("sort" => "attention")}",
+          pages: @download_items,
+          rss: "#{@rss_path.call("sort" => "attention")}" }
       ]
 
       max = 50
