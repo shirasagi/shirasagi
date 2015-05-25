@@ -13,6 +13,7 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
   let(:index_path) { "#{node.url}index.html" }
   let(:show_point_path) { "#{node.url}#{idea.id}/point.html" }
   let(:add_point_path) { "#{node.url}#{idea.id}/point.html" }
+  let(:point_members_path) { "#{node.url}#{idea.id}/point/members.html" }
   let(:show_comment_path) { "#{node.url}#{idea.id}/comment/show.html" }
   let(:show_dataset_path) { "#{node.url}#{idea.id}/dataset/show.html" }
   let(:show_app_path) { "#{node.url}#{idea.id}/app/show.html" }
@@ -45,6 +46,15 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
       session.env("REQUEST_PATH", rss_path)
       visit rss_path
       expect(current_path).to eq rss_path
+    end
+  end
+
+  it "#point_members" do
+    page.driver.browser.with_session("public") do |session|
+      session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      session.env("REQUEST_PATH", point_members_path)
+      visit point_members_path
+      expect(current_path).to eq point_members_path
     end
   end
 
