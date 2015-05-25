@@ -136,15 +136,6 @@ class Opendata::Idea
         aggr
       end
 
-      def aggregate_field(name, opts = {})
-        pipes = []
-        pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
-        pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
-        pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
-        pipes << { "$sort" => { count: -1 } }
-        limit_aggregation pipes, opts[:limit]
-      end
-
       def aggregate_array(name, opts = {})
         pipes = []
         pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
@@ -156,18 +147,6 @@ class Opendata::Idea
         limit_aggregation pipes, opts[:limit]
       end
 
-      def aggregate_resources(name, opts = {})
-        pipes = []
-        pipes << { "$match" => where({}).selector.merge("resources.#{name}" => { "$exists" => 1 }) }
-        pipes << { "$project" => { _id: 0, "resources.#{name}" => 1 } }
-        pipes << { "$unwind" => "$resources" }
-        pipes << { "$group" => { _id: "$resources.#{name}", count: { "$sum" =>  1 } }}
-        pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
-        pipes << { "$sort" => { count: -1 } }
-        pipes << { "$limit" => 5 }
-        limit_aggregation pipes, opts[:limit]
-      end
-
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?
@@ -175,18 +154,17 @@ class Opendata::Idea
         site = params[:site]
 
         if params[:keyword].present?
-          criteria = criteria.keyword_in params[:keyword],
-            :name, :text, "resources.name", "resources.filename", "resources.text"
+          criteria = criteria.keyword_in params[:keyword], :name, :text
         end
-        if params[:name].present?
-          criteria = criteria.keyword_in params[:keyword], :name
-        end
+
         if params[:tag].present?
           criteria = criteria.where tags: params[:tag]
         end
+
         if params[:area_id].present?
           criteria = criteria.where area_ids: params[:area_id].to_i
         end
+
         if params[:category_id].present?
           criteria = criteria.where category_ids: params[:category_id].to_i
         end
