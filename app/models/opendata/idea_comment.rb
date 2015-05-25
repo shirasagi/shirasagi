@@ -20,15 +20,9 @@ class Opendata::IdeaComment
   validates :text, presence: true, length: { maximum: 400 }
 
   public
-    def allowed?(action, user, opts = {})
-      true
-    end
 
   class << self
     public
-      def allowed?(action, user, opts = {})
-        true
-      end
 
       def search(params)
         criteria = self.where({})
@@ -37,5 +31,6 @@ class Opendata::IdeaComment
         criteria = criteria.where(text: /#{params[:keyword]}/) if params[:keyword].present?
         criteria
       end
+
   end
 end
