@@ -36,6 +36,11 @@ class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
       @tags     = aggregate_tags(max)
     end
 
+    def rss
+      @items = pages.order_by(updated: -1).limit(100)
+      render_rss @cur_node, @items
+    end
+
     def nothing
       render nothing: true
     end

@@ -10,7 +10,7 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example do
 
   let(:index_path) { "#{node.url}/kurashi" }
   let(:rss_path) { "#{node.url}/kurashi/rss.xml" }
-  let(:nothing_path) { node.url }
+  let(:nothing_path) { "#{node.url}index.html" }
 
   it "#index" do
     page.driver.browser.with_session("public") do |session|

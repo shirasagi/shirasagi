@@ -137,6 +137,7 @@ SS::Application.routes.draw do
 
     get "idea_category/" => "public#nothing", cell: "nodes/idea_category"
     get "idea_category/:name/" => "public#index", cell: "nodes/idea_category"
+    get "idea_category/:name/rss.xml" => "public#rss", cell: "nodes/idea_category"
     get "idea_category/:name/areas" => "public#index_areas", cell: "nodes/idea_category"
     get "idea_category/:name/tags" => "public#index_tags", cell: "nodes/idea_category"
 
