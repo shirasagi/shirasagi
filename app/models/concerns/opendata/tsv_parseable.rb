@@ -18,7 +18,8 @@ module Opendata::TsvParseable
       src.try(:rewind)
       sep  = data =~ /\t/ ? "\t" : ","
       CSV.parse(data, col_sep: sep)
-    rescue
+    rescue => e
+      logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       nil
     end
   end

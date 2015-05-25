@@ -70,9 +70,9 @@ class Opendata::Agents::Nodes::MyApp::AppfilesController < ApplicationController
     end
 
     def create
-      @item = @app.appfiles.create get_params
+      @item = @app.appfiles.new get_params
 
-      if @item.valid?
+      if @item.save
         redirect_to "#{@app_url}appfiles/", notice: t("views.notice.saved")
       else
         render action: :new

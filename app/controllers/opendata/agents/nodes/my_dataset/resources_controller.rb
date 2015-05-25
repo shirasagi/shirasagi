@@ -77,9 +77,9 @@ class Opendata::Agents::Nodes::MyDataset::ResourcesController < ApplicationContr
     end
 
     def create
-      @item = @dataset.resources.create get_params
+      @item = @dataset.resources.new get_params
 
-      if @item.valid?
+      if @item.save
         redirect_to "#{@dataset_url}resources/", notice: t("views.notice.saved")
       else
         render action: :new
