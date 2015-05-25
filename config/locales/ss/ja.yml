@@ -9,6 +9,7 @@ ja:
     download: ダウンロード
     file: ファイル
     image: 画像
+    resize_image: 画像リサイズ
     import: インポート
     login: ログイン
     logout: ログアウト

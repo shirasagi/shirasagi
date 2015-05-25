@@ -11,6 +11,9 @@ SS.ajax ".user-files .select",
 
 SS.ajaxDelete ".user-files .delete"
 
+$("#ajax-box .image-size").on "click", (e)->
+  $(this).find("option:first").text("Original Size")
+
 <% end %>
 
 <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
@@ -18,7 +21,8 @@ SS.ajaxDelete ".user-files .delete"
 
   <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
     <%= f.file_field :in_files, multiple: :multiple, required: :required %>
-    <%= f.submit :upload, class: :save %>
+    <%= f.select :image_size, @model.image_size_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %>
+    <%= f.submit :upload, class: :save, style: "margin-left: 10px;" %>
   </div>
 
 <% end %>

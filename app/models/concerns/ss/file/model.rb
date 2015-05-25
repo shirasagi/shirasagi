@@ -5,6 +5,7 @@ module SS::File::Model
   include SS::Reference::User
 
   attr_accessor :in_file, :in_files
+  attr_accessor :image_size
 
   included do
     store_in collection: "ss_files"
@@ -21,6 +22,7 @@ module SS::File::Model
 
     permit_params :state, :filename
     permit_params :in_file, :in_files, in_files: []
+    permit_params :image_size
 
     before_validation :set_filename, if: ->{ in_file.present? }
 
@@ -36,6 +38,15 @@ module SS::File::Model
   module ClassMethods
     def root
       "#{Rails.root}/private/files"
+    end
+
+    def image_size_options
+      [
+        ["640x480(VGA)", "640,480"], ["480x640(VGA)", "480,640"],
+        ["800x600(SVGA)", "800,600"], ["600x800(SVGA)", "600,800"],
+        ["1024×768(XGA)", "1024,768"], ["768x1024(XGA)", "768,1024"],
+        ["1280x720(HD)", "1280,720"], ["720x1280(HD)", "720,1280"]
+      ]
     end
   end
 
@@ -64,6 +75,14 @@ module SS::File::Model
       filename =~ /\.(bmp|gif|jpe?g|png)$/i
     end
 
+    def image_size
+      (@image_size && @image_size.size == 2) ? @image_size.map(&:to_i) : nil
+    end
+
+    def image_size=(s)
+      @image_size = SS::Extensions::Words.mongoize(s)
+    end
+
     def read
       Fs.exists?(path) ? Fs.binread(path) : nil
     end
@@ -74,9 +93,10 @@ module SS::File::Model
       in_files.each do |file|
         item = self.class.new(attributes)
         item.in_file = file
+        item.image_size = image_size
         next if item.save
 
-        item.errors.full_messages.each {|m| errors.add :base, m }
+        item.errors.full_messages.each { |m| errors.add :base, m }
         return false
       end
       true
@@ -112,9 +132,17 @@ module SS::File::Model
       return false if errors.present?
       return if in_file.blank?
 
+      if image? && image_size
+        image = Magick::Image.from_blob(in_file.read).shift
+        width, height = image_size
+        binary = image.resize(width, height).to_blob
+      else
+        binary = in_file.read
+      end
+
       dir = ::File.dirname(path)
       Fs.mkdir_p(dir) unless Fs.exists?(dir)
-      Fs.binwrite(path, in_file.read)
+      Fs.binwrite(path, binary)
     end
 
     def remove_file
