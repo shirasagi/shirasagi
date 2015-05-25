@@ -92,9 +92,10 @@ class Opendata::Idea
   class << self
     public
       def to_idea_path(path)
-        suffix = %w(/point.html /point/members.html /comment/show.html /comment/add.html /comment/delete.html /dataset/show.html /app/show.html).find { |suffix| path.end_with? suffix }
+        suffix = %w(/point.html /point/members.html /comment/show.html /comment/add.html /comment/delete.html
+                    /dataset/show.html /app/show.html).find { |suffix| path.end_with? suffix }
         return path if suffix.blank?
-        path[0 .. (path.length - suffix.length - 1)] + '.html'
+        path[0..(path.length - suffix.length - 1)] + '.html'
       end
 
       def sort_options
