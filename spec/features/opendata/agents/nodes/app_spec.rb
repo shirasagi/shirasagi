@@ -2,20 +2,16 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_app", dbscope: :example do
   def create_appfile(app, file)
-    appfile = app.appfiles.new(text: "aaa", format: "csv")
+    appfile = app.appfiles.new(text: "aaa", format: "CSV")
     appfile.in_file = file
     appfile.save
     appfile
-  end
-  before do
-    create_once :opendata_node_search_app, basename: "app/search"
   end
   let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
   let(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_app" }
   let(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", area_ids: [ area.id ] }
   let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
-  let(:appfile) { create_appfile(app, file) }
   let(:site) { cms_site }
   let(:index_path) { "#{node.url}index.html" }
   let(:download_path) { "#{node.url}#{app.id}/zip" }
@@ -23,10 +19,16 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:add_point_path) { "#{node.url}#{app.id}/point.html" }
   let(:rss_path) { "#{node.url}rss.xml" }
   let(:show_executed_path) { "#{node.url}#{app.id}/executed/show.html" }
+  let(:add_executed_path) { "#{node.url}#{app.id}/executed/add.html" }
   let(:show_ideas_path) { "#{node.url}#{app.id}/ideas/show.html" }
   let(:index_areas_path) { "#{node.url}areas.html" }
   let(:index_tags_path) { "#{node.url}tags.html" }
   let(:index_licenses_path) { "#{node.url}licenses.html" }
+
+  before do
+    create_once :opendata_node_search_app, basename: "app/search"
+    create_appfile(app, file)
+  end
 
   it "#index" do
     page.driver.browser.with_session("public") do |session|

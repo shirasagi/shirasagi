@@ -33,7 +33,7 @@ module Opendata::AppFilter
 
   public
     def index_areas
-      @areas = aggregate_areas(100)
+      @areas = aggregate_areas
       render "opendata/agents/nodes/app/areas", layout: "opendata/app_aggregation"
     end
 
