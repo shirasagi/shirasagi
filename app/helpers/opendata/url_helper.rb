@@ -10,21 +10,11 @@ module Opendata::UrlHelper
     image_tag url, opts
   end
 
-  def escape(string)
-    URI.escape(string.to_s, Regexp.new("[^#{URI::PATTERN::ALNUM}]"))
-  end
-
   def build_path(url, options)
     return url if options.blank?
-
-    params = options.map do |key, value|
-      if value.present?
-        "#{escape(key)}=#{escape(value)}"
-      else
-        "#{escape(key)}"
-      end
-    end
-    "#{url}?#{params.join("&")}".html_safe
+    # see: Rails Named Route Collection Source Code
+    # https://github.com/rails/rails/blob/master/actionpack/lib/action_dispatch/routing/route_set.rb
+    ActionDispatch::Http::URL.path_for(path: url, params: options)
   end
 
   def search_datasets_path(options = {})

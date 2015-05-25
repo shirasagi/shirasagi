@@ -30,6 +30,43 @@ describe Opendata::UrlHelper, type: :helper, dbscope: :example do
     end
   end
 
+  describe ".build_path" do
+    context "when sort parameter is given" do
+      subject { helper.build_path "/dataset/search/", "sort" => "popular" }
+      it { is_expected.to eq "/dataset/search/?sort=popular" }
+    end
+
+    context "when s[area] parameter is given" do
+      subject { helper.build_path "/dataset/search/", "s[area]" => "32" }
+      it { is_expected.to eq "/dataset/search/?s%5Barea%5D=32" }
+    end
+
+    context "when s[tag] parameter is given" do
+      subject { helper.build_path "/dataset/search/", "s[tag]" => "人口" }
+      it { is_expected.to eq "/dataset/search/?s%5Btag%5D=%E4%BA%BA%E5%8F%A3" }
+    end
+
+    context "when s[format] parameter is given" do
+      subject { helper.build_path "/dataset/search/", "s[format]" => "XLS" }
+      it { is_expected.to eq "/dataset/search/?s%5Bformat%5D=XLS" }
+    end
+
+    context "when s[license] parameter is given" do
+      subject { helper.build_path "/dataset/search/", "s[license]" => "2" }
+      it { is_expected.to eq "/dataset/search/?s%5Blicense%5D=2" }
+    end
+
+    context "when composite parameters is given" do
+      subject do
+        helper.build_path "/dataset/search/",
+                          "sort" => "popular",
+                          "s[area]" => "32",
+                          "s[tag]" => "人口"
+      end
+      it { is_expected.to eq "/dataset/search/?s%5Barea%5D=32&s%5Btag%5D=%E4%BA%BA%E5%8F%A3&sort=popular" }
+    end
+  end
+
   describe ".search_datasets_path" do
     before do
       @cur_site = cms_site
