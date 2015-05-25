@@ -4,7 +4,7 @@
 <%= coffee do %>
 $ ->
   # show point
-  Opendata_Point.render();
+  Opendata_Point.render("<%= @cur_page.point_url %>");
 
   # show ideas
   $.ajax

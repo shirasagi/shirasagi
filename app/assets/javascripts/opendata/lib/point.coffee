@@ -1,18 +1,18 @@
 class @Opendata_Point
-
-  @getUrl: ->
-    location.pathname.replace(/\.\w+$/, '/point.html')
-
-  @render: ->
+  @render: (url)->
     $.ajax
-      url: Opendata_Point.getUrl()
+      url: url
       success: (data)->
         $(".point").html data
 
   @renderButton: ->
     $(".point .update").click (event)->
+      url = event.target.href
+      data =
+        authenticity_token: $(event.target).data('auth-token')
       $.ajax
-        url: Opendata_Point.getUrl()
+        url: url
+        data: data
         type: "POST"
         success: (data)->
           $(".point").html data

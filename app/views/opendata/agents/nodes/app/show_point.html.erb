@@ -16,4 +16,4 @@
   </span>
 </div>
 
-<div class="like"><%= link_to "いいね！", "#", class: "update #{@mode}" if @mode %></div>
+<div class="like"><%= link_to "いいね！", "#{@app.point_url}", class: "update #{@mode}", "data-auth-token" => form_authenticity_token, rel: "nofollow" if @mode %></div>
