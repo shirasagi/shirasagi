@@ -11,8 +11,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
 
   private
     def set_dataset
-      @dataset_path = @cur_path.sub(/\/point\.\w+$/, ".html")
-
+      @dataset_path = Opendata::Dataset.to_dataset_path(@cur_path)
       @dataset = Opendata::Dataset.site(@cur_site).public.
         filename(@dataset_path).
         first
@@ -21,7 +20,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
     end
 
     def set_apps
-      @dataset_app_path = @cur_path.sub(/\/apps\/.*/, ".html")
+      @dataset_app_path = Opendata::Dataset.to_dataset_path(@cur_path)
 
       @dataset_app = Opendata::Dataset.site(@cur_site).public.
         filename(@dataset_app_path).
@@ -34,7 +33,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
     end
 
     def set_ideas
-      @dataset_idea_path = @cur_path.sub(/\/ideas\/.*/, ".html")
+      @dataset_idea_path = Opendata::Dataset.to_dataset_path(@cur_path)
 
       @dataset_idea = Opendata::Dataset.site(@cur_site).public.
         filename(@dataset_idea_path).

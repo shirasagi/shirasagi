@@ -10,8 +10,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
   private
     def set_idea
-      @idea_path = @cur_path.sub(/\/point\.\w+$/, ".html")
-
+      @idea_path = Opendata::Idea.to_idea_path(@cur_path)
       @idea = Opendata::Idea.site(@cur_site).public.
         filename(@idea_path).
         first
@@ -20,7 +19,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
     end
 
     def set_idea_comment
-      @idea_comment_path = @cur_path.sub(/\/comment\/.*/, ".html")
+      @idea_comment_path = Opendata::Idea.to_idea_path(@cur_path)
 
       @idea_comment = Opendata::Idea.site(@cur_site).public.
         filename(@idea_comment_path).

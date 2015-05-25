@@ -10,8 +10,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
 
   private
     def set_app
-      @app_path = @cur_path.sub(/\/point\.\w+$/, ".html")
-
+      @app_path = Opendata::App.to_app_path(@cur_path)
       @app = Opendata::App.site(@cur_site).public.
         filename(@app_path).
         first
@@ -20,7 +19,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
     end
 
     def set_ideas
-      @app_idea_path = @cur_path.sub(/\/ideas\/.*/, ".html")
+      @app_idea_path = Opendata::App.to_app_path(@cur_path)
 
       @app_idea = Opendata::App.site(@cur_site).public.
         filename(@app_idea_path).

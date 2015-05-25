@@ -82,6 +82,12 @@ class Opendata::Dataset
 
   class << self
     public
+      def to_dataset_path(path)
+        suffix = %w(/point.html /point/members.html /apps/show.html /ideas/show.html).find { |suffix| path.end_with? suffix }
+        return path if suffix.blank?
+        path[0 .. (path.length - suffix.length - 1)] + '.html'
+      end
+
       def sort_options
         [%w(新着順 released), %w(人気順 popular), %w(注目順 attention)]
       end
