@@ -6,7 +6,7 @@ FactoryGirl.define do
     end
 
     site_id { site.present? ? site.id : cms_site.id }
-    name "#{unique_id}"
+    name { "#{unique_id}" }
     email { "#{name}@example.jp" }
     in_password "pass"
     in_icon { icon_file.present? ? icon_file : nil }
