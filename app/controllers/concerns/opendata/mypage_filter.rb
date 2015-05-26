@@ -18,7 +18,7 @@ module Opendata::MypageFilter
       if session[:member]
         u = SS::Crypt.decrypt(session[:member]).to_s.split(",", 3)
         return unset_member redirect: true if u[1] != remote_addr
-        return unset_member redirect: true if u[2] != request.user_agent
+        return unset_member redirect: true if u[2] != request.user_agent.to_s
         @cur_member = Opendata::Member.find u[0].to_i rescue nil
       end
 
