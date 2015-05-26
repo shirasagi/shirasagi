@@ -25,13 +25,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:index_tags_path) { "#{node.url}tags.html" }
   let(:index_licenses_path) { "#{node.url}licenses.html" }
 
-  let(:file_index_path) { Rails.root.join("spec", "fixtures", "opendata", "index.html") }
-  let(:file_index) { Fs::UploadedFile.create_from_file(file_index_path, basename: "spec") }
-  let(:appfile) { create_appfile(app, file_index, "HTML") }
-  let(:full_path) { "#{node.url}#{app.id}/full"}
-  let(:app_index_path) { "#{node.url}#{app.id}/file_index/#{appfile.id}/app_index.html"}
-  let(:text_path) { "#{node.url}#{app.id}/file_text/#{appfile.id}/app_index.html"}
-
   let(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
 
   before do
@@ -111,33 +104,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
       session.env("REQUEST_PATH", show_ideas_path)
       visit show_ideas_path
       expect(current_path).to eq show_ideas_path
-    end
-  end
-
-  it "#full" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", full_path)
-      visit full_path
-      expect(current_path).to eq full_path
-    end
-  end
-
-  it "#app_index" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", app_index_path)
-      visit app_index_path
-      expect(current_path).to eq app_index_path
-    end
-  end
-
-  it "#text" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", text_path)
-      visit text_path
-      expect(current_path).to eq text_path
     end
   end
 
