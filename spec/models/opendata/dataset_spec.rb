@@ -1,19 +1,22 @@
 require 'spec_helper'
 
 describe Opendata::Dataset, dbscope: :example do
+  let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
+  let(:node) { create(:opendata_node_dataset) }
+
   context "check attributes with typical url resource" do
-    subject { create(:opendata_dataset) }
+    subject { create(:opendata_dataset, node: node) }
     its(:becomes_with_route) { is_expected.not_to be_nil }
-    its(:dirname) { is_expected.to eq "dir" }
+    its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
     its(:path) { is_expected.to end_with  "/#{subject.dirname}/#{subject.basename}" }
     its(:url) { is_expected.to eq "/#{subject.dirname}/#{subject.basename}" }
     its(:full_url) { is_expected.to eq "http://#{cms_site.domain}/#{subject.dirname}/#{subject.basename}" }
-    its(:parent) { is_expected.to eq nil }
-    its(:point_url) { is_expected.to eq "#{subject.url}/point.html" }
-    its(:point_members_url) { is_expected.to eq "#{subject.url}/point/members.html" }
-    its(:dataset_apps_url) { is_expected.to eq "#{subject.url}/apps/show.html" }
-    its(:dataset_ideas_url) { is_expected.to eq "#{subject.url}/ideas/show.html" }
+    its(:parent) { expect(subject.parent.id).to eq node.id }
+    its(:point_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/point.html" }
+    its(:point_members_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/point/members.html" }
+    its(:dataset_apps_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/apps/show.html" }
+    its(:dataset_ideas_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/ideas/show.html" }
     its(:contact_present?) { is_expected.to be_falsey }
   end
 

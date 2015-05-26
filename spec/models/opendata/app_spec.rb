@@ -2,20 +2,22 @@ require 'spec_helper'
 
 describe Opendata::App, dbscope: :example do
   context "check attributes with typical url resource" do
-    subject { create(:opendata_app) }
+    let!(:node_search_app) { create(:opendata_node_search_app) }
+    let(:node) { create(:opendata_node_app) }
+    subject { create(:opendata_app, node: node) }
     its(:becomes_with_route) { is_expected.not_to be_nil }
-    its(:dirname) { is_expected.to eq "dir" }
+    its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
     its(:path) { is_expected.to end_with  "/#{subject.dirname}/#{subject.basename}" }
     its(:url) { is_expected.to eq "/#{subject.dirname}/#{subject.basename}" }
     its(:full_url) { is_expected.to eq "http://#{cms_site.domain}/#{subject.dirname}/#{subject.basename}" }
-    its(:parent) { is_expected.to eq nil }
-    its(:point_url) { is_expected.to eq "#{subject.url}/point.html" }
-    its(:point_members_url) { is_expected.to eq "#{subject.url}/point/members.html" }
-    its(:app_ideas_url) { is_expected.to eq "#{subject.url}/ideas/show.html" }
-    its(:zip_url) { is_expected.to eq "#{subject.url}/zip" }
-    its(:executed_show_url) { is_expected.to eq "#{subject.url}/executed/show.html" }
-    its(:executed_add_url) { is_expected.to eq "#{subject.url}/executed/add.html" }
+    its(:parent) { expect(subject.parent.id).to eq node.id }
+    its(:point_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/point.html" }
+    its(:point_members_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/point/members.html" }
+    its(:app_ideas_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/ideas/show.html" }
+    its(:zip_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/zip" }
+    its(:executed_show_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/executed/show.html" }
+    its(:executed_add_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/executed/add.html" }
     its(:contact_present?) { is_expected.to be_falsey }
   end
 

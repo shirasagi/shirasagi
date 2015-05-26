@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Opendata::Resource, dbscope: :example do
   let(:site) { cms_site }
-  let(:dataset) { create(:opendata_dataset) }
+  let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
+  let(:node) { create(:opendata_node_dataset) }
+  let(:dataset) { create(:opendata_dataset, node: node) }
   let(:license_logo_file) { upload_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
   let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
   let(:content_type) { "application/vnd.ms-excel" }
@@ -106,7 +108,11 @@ describe Opendata::Resource, dbscope: :example do
     end
 
     context "when ttl file is succeeded to send to fuseki server", fuseki: true do
-       it do
+      before do
+        create(:opendata_node_sparql)
+      end
+
+      it do
         allow(Opendata::Sparql).to receive(:clear).and_return(nil)
         allow(Opendata::Sparql).to receive(:save).and_return(true)
         expect { subject.save! }.not_to raise_error
@@ -116,6 +122,10 @@ describe Opendata::Resource, dbscope: :example do
     end
 
     context "when ttl file is failed to send to fuseki server", fuseki: true do
+      before do
+        create(:opendata_node_sparql)
+      end
+
       it do
         allow(Opendata::Sparql).to receive(:clear).and_return(nil)
         allow(Opendata::Sparql).to receive(:save).and_raise("error from mock/stub")

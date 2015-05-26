@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   let(:site) { cms_site }
+  let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
   let(:dataset) { create(:opendata_dataset, node: node) }
   let(:license_logo_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }

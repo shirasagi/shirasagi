@@ -7,6 +7,7 @@ describe Opendata::ListHelper, type: :helper, dbscope: :example do
 
       before do
         @cur_site = cms_site
+        create(:opendata_node_search_dataset)
         @cur_part = create(:opendata_part_dataset)
         @cur_node = create(:opendata_node_dataset)
         @cur_path = @cur_node.filename
@@ -32,6 +33,7 @@ describe Opendata::ListHelper, type: :helper, dbscope: :example do
 
       before do
         @cur_site = cms_site
+        create(:opendata_node_search_dataset)
         @cur_part = create(:opendata_part_dataset)
         @cur_node = create(:opendata_node_dataset)
         @cur_path = @cur_node.filename

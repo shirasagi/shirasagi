@@ -15,6 +15,7 @@ describe "opendata_agents_pages_app", dbscope: :example do
   let!(:node_search) { create :opendata_node_search_app }
 
   context "appurl" do
+    let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
     let(:node_ds) { create_once :opendata_node_dataset, basename: "opendata_dataset1" }
     let(:dataset) { create(:opendata_dataset, node: node_ds) }
     let(:appurl) do

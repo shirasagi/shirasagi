@@ -11,6 +11,8 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
     let(:site) { cms_site }
     let(:host) { site.host }
     let(:user) { nil }
+    let!(:node_sparql) { create(:opendata_node_sparql) }
+    let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
     let(:node) { create(:opendata_node_dataset) }
     let(:license_logo_file) { upload_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
     let(:license) { create(:opendata_license, site: site, file: license_logo_file) }

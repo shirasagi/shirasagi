@@ -24,7 +24,6 @@ describe "opendata_agents_pages_dataset", dbscope: :example do
   end
 
   it "#index" do
-    puts "index_path=#{index_path}"
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       session.env("REQUEST_PATH", index_path)
