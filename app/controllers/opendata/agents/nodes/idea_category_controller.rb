@@ -42,7 +42,7 @@ class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
       ]
 
       max = 50
-      @areas    = aggregate_areas
+      @areas    = aggregate_areas(max)
       @tags     = aggregate_tags(max)
     end
 

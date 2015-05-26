@@ -4,7 +4,7 @@ FactoryGirl.define do
       node nil
     end
 
-    filename { node.blank? ? "dir/#{unique_id}" : "#{node.filename}/#{unique_id}" }
+    filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/dataset"
     text "aaaa\naaaa"
     tags ["aaa", "bbb"]
@@ -18,7 +18,7 @@ FactoryGirl.define do
       node nil
     end
 
-    filename { node.blank? ? "dir/#{unique_id}" : "#{node.filename}/#{unique_id}" }
+    filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/app"
     text "aaaa\naaaa"
     tags ["aaa", "bbb"]
@@ -32,7 +32,7 @@ FactoryGirl.define do
       node nil
     end
 
-    filename { node.blank? ? "dir/#{unique_id}" : "#{node.filename}/#{unique_id}" }
+    filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/idea"
     text "cccc\ndddd"
     tags ["ccc", "ddd"]

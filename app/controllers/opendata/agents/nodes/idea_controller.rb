@@ -66,7 +66,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       end
 
       max = 50
-      @areas    = aggregate_areas
+      @areas    = aggregate_areas(max)
       @tags     = aggregate_tags(max)
 
       respond_to do |format|

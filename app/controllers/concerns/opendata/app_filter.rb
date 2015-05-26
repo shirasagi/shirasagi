@@ -11,8 +11,8 @@ module Opendata::AppFilter
       @search_path     = method(:search_apps_path)
     end
 
-    def aggregate_areas
-      counts = pages.aggregate_array(:area_ids).map { |c| [c["id"], c["count"]] }.to_h
+    def aggregate_areas(limit)
+      counts = pages.aggregate_array(:area_ids, limit: limit).map { |c| [c["id"], c["count"]] }.to_h
 
       areas = []
       Opendata::Node::Area.site(@cur_site).public.order_by(order: 1).map do |item|
@@ -33,7 +33,7 @@ module Opendata::AppFilter
 
   public
     def index_areas
-      @areas = aggregate_areas
+      @areas = aggregate_areas(100)
       render "opendata/agents/nodes/app/areas", layout: "opendata/app_aggregation"
     end
 

@@ -42,7 +42,7 @@ class Opendata::Agents::Nodes::AppCategoryController < ApplicationController
       ]
 
       max = 50
-      @areas    = aggregate_areas
+      @areas    = aggregate_areas(max)
       @tags     = aggregate_tags(max)
       @licenses = aggregate_licenses(max)
     end

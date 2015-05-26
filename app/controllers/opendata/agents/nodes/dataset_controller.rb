@@ -64,7 +64,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       end
 
       max = 50
-      @areas    = aggregate_areas
+      @areas    = aggregate_areas(max)
       @tags     = aggregate_tags(max)
       @formats  = aggregate_formats(max)
       @licenses = aggregate_licenses(max)
