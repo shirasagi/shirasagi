@@ -3,8 +3,12 @@ require 'spec_helper'
 describe "authes" do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
-  let(:oauth_user) { set_omniauth(site, :twitter) }
-  let(:provide_path) { "#{node.url}#{oauth_user.provider}" }
+  let(:oauth_user) { set_omniauth(:twitter) }
+  let(:provide_path) { "#{node.url}twitter" }
+
+  before do
+    opendata_member(site, :twitter, "1234")
+  end
 
   context "member" do
     it "#provide" do
