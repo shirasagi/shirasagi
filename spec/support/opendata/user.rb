@@ -16,14 +16,6 @@ def set_omniauth(service)
   OmniAuth.config.mock_auth[service]
 end
 
-def failure_omniauth(service)
-  OmniAuth.config.test_mode = false
-
-  OmniAuth.config.mock_auth[service] = []
-
-  OmniAuth.config.mock_auth[service]
-end
-
 def login_opendata_member(site, node)
   opendata_member(site, :twitter, "1234")
   oauth_user = set_omniauth(:twitter)
