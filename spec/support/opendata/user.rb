@@ -3,32 +3,30 @@ def opendata_member(site, oauth_type, oauth_id)
   opendata_member
 end
 
-def set_omniauth(site, service)
+def set_omniauth(service)
   OmniAuth.config.test_mode = true
 
   OmniAuth.config.mock_auth[service] = OmniAuth::AuthHash.new({
-    :provider => service.to_s,
-    :uid => "1234",
-    :credentials => {
-      :token => "token"
+    provider: service.to_s,
+    uid: "1234",
+    credentials: {
+      token: "token"
     }
   })
+  OmniAuth.config.mock_auth[service]
+end
 
-  case service
-    when :twitter
-      OmniAuth.config.add_mock(service,
-        { info: {
-            nickname: "#{service.to_s}_oauth_user"
-          }
-        }
-      )
-    end
+def failure_omniauth(service)
+  OmniAuth.config.test_mode = false
+
+  OmniAuth.config.mock_auth[service] = []
+
   OmniAuth.config.mock_auth[service]
 end
 
 def login_opendata_member(site, node)
   opendata_member(site, :twitter, "1234")
-  oauth_user = set_omniauth(site, :twitter)
+  oauth_user = set_omniauth(:twitter)
   provide_path = "#{node.url}#{oauth_user.provider}"
   page.driver.browser.with_session("public") do |session|
     session.env("HTTP_X_FORWARDED_HOST", site.domain)
