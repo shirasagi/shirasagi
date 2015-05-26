@@ -15,7 +15,7 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
     <dt>分野</dt>
     <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
   </dl>
-  <dl class="category">
+  <dl class="area">
     <dt>地域</dt>
     <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
   </dl>
@@ -23,11 +23,11 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
     <dt>タグ</dt>
     <dd><%= f.text_field :tag %></dd>
   </dl>
-  <dl class="tag">
+  <dl class="format">
     <dt>フォーマット</dt>
     <dd><%= f.text_field :format, value: tryb { params[:s][:format] } %></dd>
   </dl>
-  <dl class="tag">
+  <dl class="license">
     <dt>ライセンス</dt>
     <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
   </dl>

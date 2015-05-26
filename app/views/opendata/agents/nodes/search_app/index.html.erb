@@ -15,7 +15,7 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
     <dt>分野</dt>
     <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
   </dl>
-  <dl class="category">
+  <dl class="area">
     <dt>地域</dt>
     <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
   </dl>
