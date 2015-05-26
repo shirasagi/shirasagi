@@ -42,13 +42,13 @@ module Cms::PublicFilter
 
   private
     def set_site
-      host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"]
+      host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
       @cur_site ||= SS::Site.find_by_domain host
       raise "404" if !@cur_site
     end
 
     def set_request_path
-      @cur_path ||= request.env["REQUEST_PATH"]
+      @cur_path ||= request.env["REQUEST_PATH"] || request.path
       cur_path = @cur_path.dup
 
       filter_methods = self.class.private_instance_methods.select { |m| m =~ /^set_request_path_with_/ }
