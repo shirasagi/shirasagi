@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe "opendata_agents_nodes_app", dbscope: :example do
-  def create_appfile(app, file)
-    appfile = app.appfiles.new(text: "aaa", format: "CSV")
+  def create_appfile(app, file, format)
+    appfile = app.appfiles.new(text: "aaa", format: format)
     appfile.in_file = file
     appfile.save
     appfile
@@ -16,7 +16,7 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:index_path) { "#{node.url}index.html" }
   let(:download_path) { "#{node.url}#{app.id}/zip" }
   let(:show_point_path) { "#{node.url}#{app.id}/point.html" }
-  let(:add_point_path) { "#{node.url}#{app.id}/point.html" }
+  let(:point_members_path) { "#{node.url}#{app.id}/point/members.html" }
   let(:rss_path) { "#{node.url}rss.xml" }
   let(:show_executed_path) { "#{node.url}#{app.id}/executed/show.html" }
   let(:add_executed_path) { "#{node.url}#{app.id}/executed/add.html" }
@@ -25,9 +25,12 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:index_tags_path) { "#{node.url}tags.html" }
   let(:index_licenses_path) { "#{node.url}licenses.html" }
 
+  let(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
+
   before do
     create_once :opendata_node_search_app, basename: "app/search"
-    create_appfile(app, file)
+    create_appfile(app, file, "CSV")
+    login_opendata_member(site, node_auth)
   end
 
   it "#index" do
@@ -52,9 +55,18 @@ describe "opendata_agents_nodes_app", dbscope: :example do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       session.env("REQUEST_PATH", show_point_path)
-      session.env("method", "POST")
-      visit show_point_path
+      session.env("HTTP_USER_AGENT", "user_agent")
+      visit "http://#{site.domain}#{show_point_path}"
       expect(current_path).to eq show_point_path
+    end
+  end
+
+  it "#point_members" do
+    page.driver.browser.with_session("public") do |session|
+      session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      session.env("REQUEST_PATH", point_members_path)
+      visit point_members_path
+      expect(current_path).to eq point_members_path
     end
   end
 

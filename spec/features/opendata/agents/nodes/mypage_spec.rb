@@ -6,12 +6,15 @@ describe "authes" do
   let(:oauth_user) { set_omniauth(site, :twitter) }
   let(:provide_path) { "#{node.url}#{oauth_user.provider}" }
 
-  it "#provide" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", provide_path)
-      visit provide_path
-      expect(current_path).to eq "/mypage/"
+  context "member" do
+    it "#provide" do
+      page.driver.browser.with_session("public") do |session|
+        session.env("HTTP_X_FORWARDED_HOST", site.domain)
+        session.env("REQUEST_PATH", provide_path)
+        session.env("omniauth.auth", oauth_user)
+        visit "http://#{site.domain}#{provide_path}"
+        expect(current_path).to eq "/mypage/"
+      end
     end
   end
 end
