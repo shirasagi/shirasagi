@@ -65,7 +65,7 @@ describe "opendata_agents_nodes_mypage", dbscope: :example do
   describe "#provide" do
     let(:dataset_url) { ::URI.parse "http://#{site.domain}#{node.url}dataset/" }
     let(:provide_url) { ::URI.parse "http://#{site.domain}#{node.url}twitter" }
-    let(:oauth_user) { set_omniauth(site, :twitter) }
+    let(:oauth_user) { set_omniauth(:twitter) }
 
     it do
       page.driver.browser.with_session("public") do |session|
