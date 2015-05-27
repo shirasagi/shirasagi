@@ -84,7 +84,7 @@ module SS::File::Model
     end
 
     def image_size=(s)
-      @image_size = SS::Extensions::Words.mongoize(s)
+      @image_size = (s.class == String) ? s.split(",") : s
     end
 
     def read
