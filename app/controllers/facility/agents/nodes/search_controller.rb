@@ -33,7 +33,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     def set_markers
       @items = []
       @markers = []
-      images = Facility::TempFile.all.map {|image| [image.id, image.url]}.to_h
+      images = SS::File.all.map {|image| [image.id, image.url]}.to_h
 
       Facility::Map.site(@cur_site).public.each do |map|
         parent_path = ::File.dirname(map.filename)

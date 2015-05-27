@@ -84,22 +84,26 @@ module Facility::Addon
     set_order 200
 
     included do
-      belongs_to :image, class_name: "Facility::TempFile"
-
+      belongs_to :image, class_name: "SS::File"
       permit_params :image_id
+
+      before_save :save_image
+      after_destroy :destroy_image
     end
-  end
 
-  module PointerImage
-    extend ActiveSupport::Concern
-    extend SS::Addon
+    def save_image
+      return true unless image_id_changed?
+      image.update_attribute(:site_id, site_id)
+      image.update_attribute(:model, "facility/file")
 
-    set_order 200
+      if image_id_was
+        file = SS::File.where(id: image_id_was).first
+        file.destroy if file
+      end
+    end
 
-    included do
-      belongs_to :image, class_name: "Facility::TempFile"
-
-      permit_params :image_id
+    def destroy_image
+      image.destroy if image
     end
   end
 
