@@ -6,20 +6,22 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
     create_once :opendata_node_search_idea, basename: "idea/search"
   end
 
-  let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
-  let(:node) { create_once :opendata_node_idea, name: "opendata_agents_nodes_idea" }
-  let(:idea) { create_once :opendata_idea, filename: "#{node.filename}/1.html", area_ids: [ area.id ] }
   let(:site) { cms_site }
-  let(:index_path) { "#{node.url}index.html" }
-  let(:show_point_path) { "#{node.url}#{idea.id}/point.html" }
-  let(:add_point_path) { "#{node.url}#{idea.id}/point.html" }
-  let(:point_members_path) { "#{node.url}#{idea.id}/point/members.html" }
-  let(:show_comment_path) { "#{node.url}#{idea.id}/comment/show.html" }
-  let(:show_dataset_path) { "#{node.url}#{idea.id}/dataset/show.html" }
-  let(:show_app_path) { "#{node.url}#{idea.id}/app/show.html" }
-  let(:rss_path) { "#{node.url}rss.xml" }
-  let(:index_areas_path) { "#{node.url}areas.html" }
-  let(:index_tags_path) { "#{node.url}tags.html" }
+  let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
+  let(:node_idea) { create_once :opendata_node_idea }
+  let!(:node_area) { create :opendata_node_area, name: '地域Ａ' }
+
+  let(:page_idea) { create_once :opendata_idea, filename: "#{node_idea.filename}/1.html", area_ids: [ area.id ] }
+  let(:index_path) { "#{node_idea.url}index.html" }
+  let(:show_point_path) { "#{node_idea.url}#{page_idea.id}/point.html" }
+  let(:add_point_path) { "#{node_idea.url}#{page_idea.id}/point.html" }
+  let(:point_members_path) { "#{node_idea.url}#{page_idea.id}/point/members.html" }
+  let(:show_comment_path) { "#{node_idea.url}#{page_idea.id}/comment/show.html" }
+  let(:show_dataset_path) { "#{node_idea.url}#{page_idea.id}/dataset/show.html" }
+  let(:show_app_path) { "#{node_idea.url}#{page_idea.id}/app/show.html" }
+  let(:rss_path) { "#{node_idea.url}rss.xml" }
+  let(:areas_path) { "#{node_idea.url}areas.html" }
+  let(:tags_path) { "#{node_idea.url}tags.html" }
 
   it "#index" do
     page.driver.browser.with_session("public") do |session|
@@ -46,6 +48,27 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
       session.env("REQUEST_PATH", rss_path)
       visit rss_path
       expect(current_path).to eq rss_path
+    end
+  end
+
+  it "#areas" do
+    page.driver.browser.with_session("public") do |session|
+      session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      session.env("REQUEST_PATH", areas_path)
+      visit areas_path
+      expect(current_path).to eq areas_path
+      #expect(page).to have_content(node_area.name)
+    end
+  end
+
+  it "#tags" do
+    page.driver.browser.with_session("public") do |session|
+      session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      session.env("REQUEST_PATH", tags_path)
+      visit tags_path
+      expect(current_path).to eq tags_path
+      #expect(page).to have_content(page_idea.tags[0])
+      #expect(page).to have_content(page_idea.tags[1])
     end
   end
 
