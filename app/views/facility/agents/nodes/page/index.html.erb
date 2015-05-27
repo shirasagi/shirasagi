@@ -1,13 +1,33 @@
+<%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
+<%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
+
+<%= jquery do %>
+$(window).on("load", function() {
+  $(".ajax-box").colorbox({
+    rel: "facility-images",
+    current: function() {
+      return $(this).closest("div").find(".comment").text();
+    },
+    html: function() {
+      var img = $(this).find("img")
+      var src = img.attr("src").split("?")[0].replace("thumb/", "");
+      var alt = img.attr("alt");
+      return '<div><img src="' + src + '" alt="' + alt + '"></div>';
+    }
+  });
+});
+<% end %>
+
 <% if @summary_image.present? %>
   <div class="summary-image">
     <p>
-      <%= link_to @summary_image.url do %>
+      <%= link_to @summary_image.url, class: "ajax-box", onclick: "return false;" do %>
         <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
         <%= image_tag @summary_image.image.thumb_url + "?" + thumb_size, alt: @summary_image.image_alt %>
       <% end %>
     </p>
     <% if @summary_image.image_comment.present? %>
-      <p><%= @summary_image.image_comment %></p>
+      <p class="comment"><%= @summary_image.image_comment %></p>
     <% end %>
   </div>
 <% end %>
@@ -22,13 +42,13 @@
     <% @images.each do |img| %>
       <div class="image">
         <p>
-          <%= link_to img.url do %>
+          <%= link_to img.url, class: "ajax-box", onclick: "return false;" do %>
             <% thumb_size = { width: img.image_thumb_width, height: img.image_thumb_height }.to_query %>
             <%= image_tag img.image.thumb_url + "?" + thumb_size, alt: img.image_alt %>
           <% end %>
         </p>
         <% if img.image_comment.present? %>
-          <p><%= img.image_comment %></p>
+          <p class="comment"><%= img.image_comment %></p>
         <% end %>
       </div>
     <% end %>
