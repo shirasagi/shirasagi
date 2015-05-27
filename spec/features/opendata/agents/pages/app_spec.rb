@@ -9,10 +9,18 @@ describe "opendata_agents_pages_app", dbscope: :example do
   end
 
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_app, name: "opendata_app" }
-  let(:category) { create_once :opendata_node_category, basename: "opendata_category1" }
-  let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
+  let!(:node) { create_once :opendata_node_app, name: "opendata_app" }
+  let!(:node_member) { create_once :opendata_node_member }
+  let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
+  let!(:category) { create_once :opendata_node_category, basename: "opendata_category1" }
+  let!(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
   let!(:node_search) { create :opendata_node_search_app }
+
+  let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
+
+  before do
+    login_opendata_member(site, node_auth)
+  end
 
   context "appurl" do
     let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
@@ -58,12 +66,8 @@ describe "opendata_agents_pages_app", dbscope: :example do
     end
 
     it "#index" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", html_path)
-        visit html_path
-        expect(current_path).to eq html_path
-      end
+      visit "http://#{site.domain}#{html_path}"
+      expect(current_path).to eq html_path
     end
   end
 end
