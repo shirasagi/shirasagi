@@ -62,11 +62,29 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
       let(:edit_path) { edit_opendata_idea_path site.host, node, item }
       let(:delete_path) { delete_opendata_idea_path site.host, node, item }
 
+      let(:comment_text) { "管理画面コメント０１" }
+
       describe "#show" do
         it do
           visit show_path
           expect(status_code).to eq 200
           expect(current_path).not_to eq sns_login_path
+
+          click_link "コメントを管理する"
+
+          click_link "新規作成"
+
+          fill_in "item_text", with: comment_text
+          click_button "保存"
+
+          click_link "一覧へ戻る"
+
+          click_link comment_text
+
+          click_link "削除する"
+
+          click_button "削除"
+
         end
       end
 
