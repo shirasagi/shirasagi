@@ -1,6 +1,7 @@
 class SS::Migration20150518040533
   def change
     unless valid_index?
+      remove_all_uid
       SS::User.remove_indexes
       SS::User.create_indexes
     end
@@ -31,5 +32,17 @@ class SS::Migration20150518040533
 
   def sparse?(index)
     index["sparse"].present? && index["sparse"]
+  end
+
+  def remove_all_uid
+    SS::User.where(uid: "").each(&method(:remove_uid))
+    SS::User.where(uid: nil).each(&method(:remove_uid))
+  end
+
+  def remove_uid(user)
+    if user.has_attribute?(:uid)
+      user.remove_attribute(:uid)
+      user.save!
+    end
   end
 end

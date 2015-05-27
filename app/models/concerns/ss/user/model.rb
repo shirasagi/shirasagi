@@ -44,6 +44,8 @@ module SS::User::Model
     validate :validate_uid
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
+    before_validation :normalize_email
+    before_validation :normalize_uid
 
     scope :uid_or_email, ->(id) { self.or({email: id}, {uid: id}) }
   end
@@ -107,6 +109,20 @@ module SS::User::Model
     end
 
   private
+    def normalize_email
+      self.email = email.strip if email.present?
+      if email.blank? && has_attribute?(:email)
+        remove_attribute(:email)
+      end
+    end
+
+    def normalize_uid
+      self.uid = uid.strip if uid.present?
+      if uid.blank? && has_attribute?(:uid)
+        remove_attribute(:uid)
+      end
+    end
+
     def dbpasswd_authenticate(in_passwd)
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
       return false if password.blank?
