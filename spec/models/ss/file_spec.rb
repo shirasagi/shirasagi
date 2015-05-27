@@ -59,4 +59,53 @@ describe SS::File do
       its(:content_type) { is_expected.to eq "video/x-ms-wmv" }
     end
   end
+
+  describe "#validate_size" do
+    let(:test_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
+    let(:test_file) { Fs::UploadedFile.create_from_file(test_file_path, basename: "spec") }
+
+    after do
+      test_file.close unless test_file.closed?
+    end
+
+    subject do
+      file = SS::File.new model: "article/page"
+      file.in_file = test_file
+      file
+    end
+
+    context "when max_filesize is limited" do
+      before do
+        @save_config = SS.config.env.max_filesize
+        SS::Config.replace_value_at(:env, :max_filesize, 50)
+      end
+
+      after do
+        SS::Config.replace_value_at(:env, :max_filesize, @save_config)
+      end
+
+      it do
+        expect(subject.save).to be_falsey
+        expect(subject.errors[:base]).not_to be_empty
+        expect(subject.errors[:base].first).to include("logo.png", "サイズが大きすぎます", "制限値: 50バイト")
+      end
+    end
+
+    context "when max_filesize_ext is limited" do
+      before do
+        @save_config = SS.config.env.max_filesize_ext
+        SS::Config.replace_value_at(:env, :max_filesize_ext, { "png" => 23 })
+      end
+
+      after do
+        SS::Config.replace_value_at(:env, :max_filesize, @save_config)
+      end
+
+      it do
+        expect(subject.save).to be_falsey
+        expect(subject.errors[:base]).not_to be_empty
+        expect(subject.errors[:base].first).to include("logo.png", "サイズが大きすぎます", "制限値: 23バイト")
+      end
+    end
+  end
 end
