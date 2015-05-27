@@ -12,8 +12,18 @@ def set_omniauth(service)
       uid: "1234",
       credentials: {
         token: "token"
+      },
+      info: {
+        name: "性　名"
       }
     })
+  OmniAuth.config.mock_auth[service]
+end
+
+def fail_omniauth(service)
+  OmniAuth.config.test_mode = true
+
+  OmniAuth.config.mock_auth[service] = :invalid_credentials
   OmniAuth.config.mock_auth[service]
 end
 
