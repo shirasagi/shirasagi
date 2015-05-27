@@ -35,6 +35,8 @@ ja:
         contact_email: メールアドレス
       contact/addon/group:
         <<: *cmspage
+      contact/addon/page:
+        <<: *cmspage
 
   tooltip:
     contact/addon/page:
