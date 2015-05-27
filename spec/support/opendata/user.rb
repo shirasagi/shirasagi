@@ -20,10 +20,5 @@ def login_opendata_member(site, node)
   opendata_member(site, :twitter, "1234")
   oauth_user = set_omniauth(:twitter)
   provide_path = "#{node.url}#{oauth_user.provider}"
-  page.driver.browser.with_session("public") do |session|
-    session.env("HTTP_X_FORWARDED_HOST", site.domain)
-    session.env("REQUEST_PATH", provide_path)
-    session.env("HTTP_USER_AGENT", "user_agent")
-    visit "http://#{site.domain}#{provide_path}"
-  end
+  visit "http://#{site.domain}#{provide_path}"
 end
