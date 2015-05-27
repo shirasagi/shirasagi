@@ -7,12 +7,22 @@ describe "opendata_agents_nodes_app", dbscope: :example do
     appfile.save
     appfile
   end
-  let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
-  let(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_app" }
-  let(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", area_ids: [ area.id ] }
-  let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
-  let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
+
   let(:site) { cms_site }
+  let!(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_app" }
+  let!(:node_member) { create_once :opendata_node_member }
+  let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
+
+  let!(:node_search) { create :opendata_node_search_app }
+
+  let!(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
+  let!(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", area_ids: [ area.id ] }
+  let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
+  let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
+  let!(:appfile) { create_appfile(app, file, "CSV") }
+
+  let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
+
   let(:index_path) { "#{node.url}index.html" }
   let(:download_path) { "#{node.url}#{app.id}/zip" }
   let(:show_point_path) { "#{node.url}#{app.id}/point.html" }
@@ -25,11 +35,7 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:index_tags_path) { "#{node.url}tags.html" }
   let(:index_licenses_path) { "#{node.url}licenses.html" }
 
-  let(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
-
   before do
-    create_once :opendata_node_search_app, basename: "app/search"
-    create_appfile(app, file, "CSV")
     login_opendata_member(site, node_auth)
   end
 
@@ -52,13 +58,8 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   end
 
   it "#show_point" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", show_point_path)
-      session.env("HTTP_USER_AGENT", "user_agent")
-      visit "http://#{site.domain}#{show_point_path}"
-      expect(current_path).to eq show_point_path
-    end
+    visit "http://#{site.domain}#{show_point_path}"
+    expect(current_path).to eq show_point_path
   end
 
   it "#point_members" do
