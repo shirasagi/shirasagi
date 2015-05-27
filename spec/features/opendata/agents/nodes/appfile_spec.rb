@@ -16,8 +16,8 @@ describe "opendata_agents_nodes_appfile", dbscope: :example do
   let(:file_json_path) { Rails.root.join("spec", "fixtures", "opendata", "test.json") }
   let(:file_json) { Fs::UploadedFile.create_from_file(file_json_path, basename: "spec") }
   let(:json) { create_appfile(app, file_json, "JSON") }
-  let(:content_path) { appfile.url.sub(/#{appfile.filename}$/,"content.html") }
-  let(:json_path) { json.url.sub(/#{json.filename}$/,"json.html") }
+  let(:content_path) { appfile.url.sub(/#{appfile.filename}$/, "content.html") }
+  let(:json_path) { json.url.sub(/#{json.filename}$/, "json.html") }
   let(:download_path) { appfile.url }
   let!(:node_search) { create :opendata_node_search_app }
 
