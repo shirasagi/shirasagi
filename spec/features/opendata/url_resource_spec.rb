@@ -62,6 +62,8 @@ describe "opendata_url_resource", dbscope: :example, http_server: true,
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).not_to have_css("form#item-form")
+      click_on I18n.t("mongoid.attributes.opendata/url_resource.content")
+      expect(current_path).not_to eq new_path
     end
 
     it "#download" do
