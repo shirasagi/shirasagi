@@ -1,8 +1,6 @@
 @import "init";
 @import "part";
 
-// <共通部分>----------------------------------------------------------------------------------------------------------
-
 // -----------------------------------------------------------------------------
 // element
 html {
@@ -15,7 +13,7 @@ body {
   font-family: $font-base;
   font-size: 100%;
   line-height: 1.5;
-  color: $text;
+  color: $black1;
 }
 h1, h2, h3, h4, h5 {
   margin: 0px;
@@ -31,6 +29,15 @@ a {
     color: $hover;
   }
 }
+rp, rt {
+  background: #fff;
+  color: $black1;
+  font-size: $px12;
+  font-weight: normal;
+}
+rp {
+  margin: 0px;
+}
 img {
   vertical-align: middle;
 }
@@ -42,12 +49,10 @@ select, input, textarea, button {
   font-family: $font-base;
 }
 select {
-  @include input;
-  padding: 3px 5px;
+  padding: 4px 5px;
 }
 input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
 input[type=email], input[type=number] {
-  @include input;
   width: 70%;
   min-height: 1.8em;
   margin: 0 0;
@@ -57,7 +62,6 @@ input[type=number] {
   width: 12em;
 }
 textarea {
-  @include input;
   width: 70%;
   height: 6.5em;
   padding: 12px;
@@ -74,2157 +78,1219 @@ textarea {
 }
 
 // -----------------------------------------------------------------------------
-// .content-body
-.content-body {
-  padding-bottom: 60px;
-}
-
-// -----------------------------------------------------------------------------
-// #wrap
-#wrap {
-  @include grd-title;
-  min-width: 1100px;
-  border-top: 8px solid $blue;
-}
-
-// -----------------------------------------------------------------------------
 // head
 #head {
-  @include clear;
-  position: relative;
-  z-index: 1;
-  .inner {
-    position: relative;
-    @include clear;
-    overflow: visible;
-    max-width: $page-width;
-    min-width: $page-width;
-    margin: 0 auto;
-    padding: 0 10px;
-    .logo {
-      float: left;
-      padding: 12px 0 8px;
-    }
-    .tab {
-      position: absolute;
-      left: 282px;
-      bottom: 0;
-      ul {
-        @include clear;
-        letter-spacing: -.40em;
-        li.tab01 a {
-          background: url(../img/ic-datatab.png) no-repeat 6px 5px;
-        }
-        li.tab02 a {
-          background: url(../img/ic-apptab.png) no-repeat 3px 8px;
-        }
-        li.tab03 a {
-          background: url(../img/ic-ideatab.png) no-repeat 2px 3px;
-        }
-        li {
-          @include box-sizing(border-box);
-          @include border-top-radius(5px);
-          float: left;
-          display: inline-block;
-          width: 150px;
-          margin-top: 26px;
-          background: $white;
-          border: 1px solid $gray;
-          border-bottom: none;
-          z-index: 1;
-          a {
-            @include border-top-radius(5px);
-            display: block;
-            min-height: 25px;
-            padding: 6px 8px 6px 0px;
-            border: 2px solid $white;
-            border-bottom: none;
-            letter-spacing: normal;
-            color: $text;
-            text-decoration: none;
-            text-align: right;
-          }
-        }
-      }
-      .tab01 {
-        margin-left: 50px;
-        &:hover {
-          a {
-            @include box-shadow(0 -4px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
-            background: url(../img/ic-datatab_hover.png) no-repeat 6px 5px;
-          }
-        }
-      }
-      .tab02 {
-        margin-left: 10px;
-        &:hover {
-          a {
-            @include box-shadow(0 -4px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
-            background: url(../img/ic-apptab_hover.png) no-repeat 3px 8px;
-          }
-        }
-      }
-      .tab03 {
-        margin-left: 10px;
-        &:hover {
-          a {
-            @include box-shadow(0 -4px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
-            background: url(../img/ic-ideatab_hover.png) no-repeat 2px 3px;
-          }
-        }
-      }
-    }
-    .login {
-      position: relative;
-      float: right;
-      width: 280px;
-      margin-top: 40px;
-      padding: 33px 0 5px 0;
-      span#my-notice {
-        display: inline-block;
-        position: absolute;
-        top: -10px;
-        left: 0px;
-        border-radius: 50%;
-        background: #CC0000;
-        z-index: 1;
-        a {
-          display: block;
-          width: 23px;
-          padding: 4px 0;
-          color: $white;
-          font-size: $px11;
-          font-weight: bold;
-          text-decoration: none;
-          text-align: center;
-        }
-      }
-      a.login, a.logout {
-        display: inline-block;
-        position: absolute;
-        bottom: 8px;
-        right: 1px;
-        width: 70px;
-        margin-left: 5px;
-        padding: 5px 4px 5px 27px;
-        border: 1px solid $white;
-        @include box-shadow(0 0 0 1px $gray);
-        text-decoration: none;
-        text-align: right;
-        color: $text;
-      }
-      a.login {
-        background: $white url(../img/ic-login.png) no-repeat 5px center;
-        padding: 5px 12px 5px 19px;
-        &:hover {
-          background-color: #ededed;
-        }
-      }
-      a.logout {
-        background: $white url(../img/ic-logout.png) no-repeat 5px center;
-        padding: 5px 3px 5px 28px;
-        &:hover {
-          background-color: #ededed;
-        }
-      }
-      a.member {
-        display: inline-block;
-        position: absolute;
-        bottom: 2px;
-        left: 15px;
-        max-width: 115px;
-        min-height: 31px;
-        line-height: 1.3;
-        padding-top: 7px;
-        padding-left: 30px;
-        background: url(../img/ic-member.png) no-repeat left center;
-        word-break: break-word;
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// tab-inner
-#tab-inner {
-  position: relative;
-  max-width: $page-width;
-  min-width: $page-width;
-  margin: 0 auto;
-  padding: 0 10px;
-  &:before {
-    content: "";
-    width: 77px;
-    height: 153px;
-    position: absolute;
-    left: -67px;
-    top: -79px;
-    background: url(../img/rainbow.png) no-repeat left center;
-  }
+  @include grd-black;
+  border-bottom: 2px solid $beige;
   .wrap {
-    @include border-top-radius(4px);
-    @include box-shadow(1px 1px 2px rgba(#a8a8a8, 0.75), 0 -1px 3px rgba(#a8a8a8, 0.3));
-    border: 1px solid $gray;
-    background: $white;
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 10px 10px 0;
+  }
+  .logo {
+    float: left;
+    margin-right: 40px;
+  }
+  .tab {
+    float: left;
+    margin-bottom: -2px;
+    li {
+      float: left;
+      margin-right: 10px;
+      a {
+        display: block;
+        padding: 8px 8px 8px 40px;
+        border: 2px solid $beige;
+        @include border-radius(5px 5px 0 0);
+        color: $black1;
+        text-decoration: none;
+        &:hover {
+          border-bottom: 2px solid #fff;
+        }
+      }
+    }
+    .dataset a {
+      background: $beige url(../img/ic-data-wh.png) no-repeat 10px center;
+      &:hover {
+        background: $white url(../img/ic-data-bk.png) no-repeat 10px center;
+      }
+    }
+    .app a {
+      background: $beige url(../img/ic-app-wh.png) no-repeat 10px center;
+      &:hover {
+        background: $white url(../img/ic-app-bk.png) no-repeat 10px center;
+      }
+    }
+    .idea a {
+      background: $beige url(../img/ic-idea-wh.png) no-repeat 10px center;
+      &:hover {
+        background: $white url(../img/ic-idea-bk.png) no-repeat 10px center;
+      }
+    }
+  }
+  .login {
+    float: right;
+    a {
+      margin-left: $item-margin;
+      padding: 5px 0 5px 25px;
+      background: url(../img/ic-login.png) no-repeat left center;
+      color: $white;
+      &:hover {text-decoration: none;}
+    }
   }
 }
-
-.s-dataset-top, .s-app-top, .s-idea-top {
-  #tab-inner .wrap {
-    @include border-bottom-radius(4px);
-  }
+.dataset #head .tab .dataset a {
+  border-bottom: 2px solid #fff;
+  background: $white url(../img/ic-data-bk.png) no-repeat 10px center;
 }
-
-// -----------------------------------------------------------------------------
-// about .cms-tabs portal-dataset #portal-app, article.areas, article.tags, article.formats, article.licenses
-#about, .cms-tabs, #portal-dataset, #portal-app, .opendata-tabs,
-article.areas, article.tags, article.formats, article.licenses {
-  margin-bottom: 40px;
+.app #head .tab .app a {
+  border-bottom: 2px solid #fff;
+  background: $white url(../img/ic-app-bk.png) no-repeat 10px center;
 }
-
-// -----------------------------------------------------------------------------
-// #add #twitter
-#add, #twitter {
-  margin-bottom: 24px;
+.idea #head .tab .idea a {
+  border-bottom: 2px solid #fff;
+  background: $white url(../img/ic-idea-bk.png) no-repeat 10px center;
 }
-
 // -----------------------------------------------------------------------------
-// contents
-#contents, #data-top-contents, #app-top-contents, #idea-top-contents {
+// site-title
+#site-title {
+  @include clear;
   width: $page-width;
   margin: 0 auto;
   padding: 0 10px;
-  padding-bottom: 80px;
-  #main {
+  .logo {
     float: left;
-    width: 800px;
+    margin-top: 18px;
   }
-  #sidebar {
+  .menu {
     float: right;
-    width: 248px;
+    padding: $item-margin 0;
+    .u-menu {
+      @include clear;
+      float: right;
+      margin-bottom: $item-margin;
+    }
+    .search {
+      float: left;
+    }
+    form {
+      @include clear;
+      padding: 3px 10px;
+      border: 1px solid $beige;
+      @include border-radius(3px);
+      input[type=text] {
+        float: left;
+        width: auto;
+        min-height: 1em;
+        padding: 0;
+        border: none;
+      }
+      #search-button {
+        float: left;
+      }
+    }
+    .inquiry {
+      float: left;
+      margin: 4px 0 0 $item-margin;
+      padding-left: 20px;
+      background: url(../img/ic-info.png) no-repeat left center;
+    }
+    .l-menu {
+      @include clear;
+      clear: both;
+      float: right;
+      li {
+        float: left;
+        margin-left: $item-margin;
+        list-style: none;
+        a {
+          @include btn-black;
+          padding-left: 35px;
+        }
+        .entry {
+          background: $black1 url(../img/ic-upload.png) no-repeat 6px center;
+        }
+        .search {
+          background: $black1 url(../img/ic-search-wh.png) no-repeat 6px center;
+        }
+        .group {
+          background: $black1 url(../img/ic-group.png) no-repeat 6px center;
+        }
+      }
+    }
   }
 }
-
-.s-portal #contents, #data-top-contents, #app-top-contents, #idea-top-contents {
-  margin: 30px auto 0 auto;
+// -----------------------------------------------------------------------------
+// gnav
+#gnav {
+  width: 100%;
+  ul {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+    li {
+      float: left;
+      width: 179px;
+      border-left: 1px solid #fff;
+      list-style: none;
+      &:last-child {
+        width: 178px;
+        border-right: 1px solid #fff;
+      }
+    }
+    a {
+      display: block;
+      padding: 10px 0;
+      color: $black1;
+      font-size: $px16;
+      text-decoration: none;
+      text-align: center;
+    }
+  }
 }
-
-#contents .content-body{
-  overflow: hidden;
+.dataset #gnav {
+  border-bottom: $border-yellow;
+  background: $sky;
+  ul li a:hover, ul li.current a {
+    background: #cef3ff;
+  }
 }
-
-.opendata-tabs {
-  clear: both;
+.app #gnav {
+  border-bottom: $border-orange;
+  background: $green;
+  ul li a:hover, ul li.current a {
+    background: #d9ffe6;
+  }
 }
-
+.idea #gnav {
+  border-bottom: $border-red;
+  background: $yellow;
+  ul li a:hover, ul li.current a {
+    background: #fff0ca;
+  }
+}
+// -----------------------------------------------------------------------------
+// keyvisual
+#portal-kv {
+  position: relative;
+  width: 100%;
+  margin-bottom: $box-margin;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    @include grd-gray;
+  }
+  @include grd-sky;
+  .wrap {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  h2 {
+    float: left;
+    margin-top: 55px;
+  }
+  nav {
+    float: right;
+    margin: $box-margin 0;
+    li {
+      width: 249px;
+      margin-bottom: $item-margin;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      a {
+        text-decoration: none;
+      }
+      .title {
+        display: block;
+        padding: $item-margin $item-margin $item-margin 50px;
+        color: $black1;
+        font-size: $px16;
+        font-weight: bold;
+      }
+      .summary {
+        display:block;
+        padding: 3px 0;
+        color: $white;
+        text-align: center;
+      }
+    }
+    .dataset {
+      background: $sky;
+      &:hover {
+        background: #00686b;
+        .title {color: $white;}
+      }
+      .title {
+        background: url(../img/ic-data-wh-l.png) no-repeat 13px center;
+      }
+      .summary {
+        background: #00686b;
+      }
+    }
+    .app {
+      background: $green;
+      &:hover {
+        background: #68931d;
+        .title {color: $white;}
+      }
+      .title {
+        background: url(../img/ic-app-wh-l.png) no-repeat 10px center;
+      }
+      .summary {
+        background: #68931d;
+      }
+    }
+    .idea {
+      background: $yellow;
+      &:hover {
+        background: #c79d00;
+        .title {color: $white;}
+      }
+      .title {
+        background: url(../img/ic-idea-wh-l.png) no-repeat 15px center;
+      }
+      .summary {
+        background: #c79d00;
+      }
+    }
+  }
+}
+#dataset-kv, #app-kv, #idea-kv {
+  position: relative;
+  width: 100%;
+  margin-bottom: $box-margin;
+  @include grd-sky;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    @include grd-gray;
+  }
+  .wrap {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  nav {
+    margin: 134px 0 $box-margin 0;
+    ul {
+      @include clear;
+    }
+    li {
+      float: left;
+      width: 249px;
+      list-style: none;
+      &:first-child {
+        margin-right: $box-margin;
+      }
+      a {
+        @include btn-black;
+        display: block;
+        padding-left: 35px;
+      }
+      .entry {
+        background: $black1 url(../img/ic-upload.png) no-repeat 6px center;
+      }
+      .search {
+        background: $black1 url(../img/ic-search-wh.png) no-repeat 6px center;
+      }
+    }
+  }
+}
+#dataset-kv .wrap {
+  background: url(../img/kv-data.png) no-repeat 660px center;
+}
+#app-kv .wrap {
+  background: url(../img/kv-app.png) no-repeat 660px center;
+}
+#idea-kv .wrap {
+  background: url(../img/kv-idea.png) no-repeat 660px center;
+}
+#body--dataset-index .dataset-count,
+#body--app-index .app-count,
+#body--idea-index .idea-count {
+  @include clear;
+  position: absolute;
+  top: -197px;
+  left: 10px;
+  width: 524px;
+  margin: 0;
+  padding: 0;
+  border: $border-gray2;
+  background: $white;
+  line-height: 6em;
+  .count-label {
+    display: inline-block;
+    float: left;
+    padding: 33px 10px;
+    background: $gray2;
+    line-height: 1em;
+    font-size: $px18;
+  }
+  .count {
+    display: inline-block;
+    float: left;
+    padding: 26px 10px 26px 90px;
+    font-size: $px32;
+    line-height: 1em;
+  }
+}
+#body--dataset-index .dataset-count {
+  .count {
+    background: url(../img/ic-data.png) no-repeat 45px 0.7em;
+  }
+}
+#body--app-index .app-count {
+  .count {
+    background: url(../img/ic-app.png) no-repeat 45px 0.7em;
+  }
+}
+#body--idea-index .idea-count {
+  .count {
+    background: url(../img/ic-idea.png) no-repeat 45px 0.7em;
+  }
+}
+// -----------------------------------------------------------------------------
+// wrap main side
+#wrap {
+  position: relative;
+  @include clear;
+  width: $page-width;
+  margin: 0 auto $box-margin;
+  padding: 0 10px;
+}
+#main {
+  float: left;
+  width: 803px;
+}
+.one #main {
+  float: none;
+  width: $page-width;
+}
+#side {
+  float: right;
+  width: 249px;
+}
 // -----------------------------------------------------------------------------
 // add
 #add {
-  background: #eeeeee;
-  text-align: center;
+  margin-bottom: $box-margin;
+  padding: $item-margin;
+  background: $gray1;
   h2 {
-    padding: 10px 15px;
-    text-align: left;
-    font-size: $px15;
+    margin-bottm: $item-margin;
+    font-size: $px16;
   }
-  span {
-    display: block;
-    margin-bottom: 14px;
-  }
-  .addinfo {
-    display: inline-block;
-    margin-bottom: 14px;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// link
-#link {
-  margin-bottom: 24px;
-  text-align: center;
-}
-
-// -----------------------------------------------------------------------------
-// twitter
-#twitter {
-  .twitter-timeline {
-    height: 436px;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// article header
-.cms-tabs, #portal-dataset, #portal-app, #portal-idea, .opendata-tabs, .article-pages,
- .opendata-search_datasets, .opendata-search_apps, .opendata-search_ideas,
- section.datasets .pages, section.apps .pages, section.ideas .pages {
-  article header {
-    @include box-shadow(none);
-    overflow: hidden;
-    margin: 0;
-    padding: 12px 12px;
-    border-bottom: 1px dotted $gray;
-  }
-  time {
-    float: left;
-    width: 120px;
-  }
-  h2 {
-    float: left;
-    max-width: 599px;
-    margin-left: 25px;
-    word-wrap: break-word;
-  }
-  .point {
-    @include border-radius(3px);
-    @include box-shadow(0 0 0 1px rgba(#45B035, 0.3));
-    display: inline-block;
-    margin-left: 25px;
-    padding: 0 5px 0 28px;
-    border: 1px solid rgba(#45B035, 0.5);
-    background: url(../img/ic_s-sudachikun.gif) no-repeat 3px center;
-  }
-}
-
-#portal-dataset, #portal-app, #portal-idea, .opendata-tabs,
- .opendata-search_datasets, .opendata-search_apps, .opendata-search_ideas {
-  article header {
-    padding: 8px 12px;
-  }
-  time {
-    padding: 1px 0 1px 30px;
-  }
-}
-
-#portal-dataset, .s-dataset .opendata-tabs, .opendata-search_datasets {
-  article header {
-    background: url(../img/ic-data_color.png) no-repeat 10px center;
-  }
-}
-#portal-app, .s-app .opendata-tabs, .opendata-search_apps {
-  article header {
-    background: url(../img/ic-app_color.png) no-repeat 10px center;
-  }
-}
-#portal-idea, .s-idea .opendata-tabs, .opendata-search_ideas {
-  article header {
-    background: url(../img/ic-idea_color.png) no-repeat 10px center;
-  }
-}
-
-.opendata-search_datasets, .opendata-search_apps, .opendata-search_ideas, .article-pages {
-  margin-bottom: 28px;
-}
-
-#portal-dataset .opendata-datasets, #portal-app .opendata-apps, #portal-idea .opendata-ideas {
-  header {
-    display: none;
-  }
-  nav.feed {
-    display: none;
-  }
-}
-
-#portal-dataset, #portal-app, #portal-idea {
-  .pages article header {
-    display: block;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #contents footer.contact
-#contents footer.contact {
-  @include clear;
-  margin-top: 40px;
-  h1 {
-    margin-bottom: 18px;
-    padding: 4px 0 4px 10px;
-    background: rgba(#ababab, 0.21);
-    color: $blue;
-    @include box-shadow(0px 1px 1px rgba(#a8a8a8, 0.4), 0px 0px 0px 1px $white inset);
-    border: 1px solid rgba(#000000, 0.21);
-  }
-  p {
-    line-height: 1.5;
-  }
-  dl {
-    @include clear;
-    display: inline;
-    float: left;
-    margin-top: 20px;
-    margin-right: 30px;
-    line-height: 1.5;
-    &:last-child {
-      margin-right: 0;
-    }
-    dt, dd {
-      display: inline;
-      float: left;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// rss
-.rss {
-  display: inline-block;
-  float: left;
-  padding-left: 24px;
-  background: url(../img/ic-rss.png) no-repeat left center;
-}
-
-#data-attention nav, #app-attention nav, #idea-attention nav {
-  .rss {
-    display: none;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// nav
-#portal-dataset nav, #portal-app nav, #portal-idea nav, .cms-tabs nav, .opendata-tabs nav, #search_group nav,
-#data-attention nav, #app-attention nav, #idea-attention nav {
-  @include clear;
-  padding: 6px 5px 0 5px;
-  .more {
-    float: right;
-    padding-left: 12px;
-  }
-}
-.cms-tabs nav, #portal-dataset nav, #portal-app nav, #portal-idea nav, .s-dataset .opendata-tabs nav, #search_group nav,
-#app-attention nav, #idea-attention nav {
-  .more {
-    background: url(../img/ic-arrow_pink.png) no-repeat left center;
-  }
-}
-.s-app .opendata-tabs nav, .s-app #data-attention nav, .s-app #idea-attention nav {
-  .more {
-    background: url(../img/ic-arrow_blue.png) no-repeat left center;
-  }
-}
-.s-idea .opendata-tabs nav, .s-idea #data-attention nav, .s-idea #app-attention nav {
-  .more {
-    background: url(../img/ic-arrow_yellow.png) no-repeat left center;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// article.areas, article.tags, article.formats, article.licenses
-article.areas, article.tags, article.formats, article.licenses {
-  .more {
-    padding-left: 12px;
-    background: url(../img/ic-arrow_pink.png) no-repeat left center;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #gnav
-#gnav {
-  ul {
-    overflow: hidden;
-    border-top: 1px solid $gray;
-  }
-  li {
-    @include box-sizing(border-box);
-    float: left;
-    width: 12.5%;
-    border-left: 1px solid $gray;
-  }
-  li.kurashi {
-    border-left: none;
-  }
-  a {
-    display: block;
-    padding: 7px 0 9px 0;
-    text-decoration: none;
+  .banners {
     text-align: center;
-    color: $text;
-    font-size: $px17;
+    a {
+      display: block;
+      margin-bottom: $item-margin;
+    }
+    span:last-child a {
+      margin-bottom: 0;
+    }
   }
 }
-
 // -----------------------------------------------------------------------------
-// .crumbs
-.crumbs {
-  width: $page-width;
+// foot
+#foot {
+  width: 100%;
   margin: 0 auto;
-  padding: 14px 10px 16px 10px;
-  font-size: $px12;
-  .separator {
-    margin: 0px 5px;
+  border-top: $border-gray2;
+  text-align: center;
+  nav {
+    padding: 7px 0;
+    background: $gray1;
   }
-}
-
-// -----------------------------------------------------------------------------
-// nav.pagination
-nav.pagination {
-  margin-bottom: 24px;
-  padding-top: 0;
-  a {
-    @include inline-block;
-    padding: 2px 6px;
-    background: #cccccc;
-    color: $text;
-    text-decoration: none;
-  }
-  .current {
-    @include inline-block;
-    padding: 2px 6px;
-  }
-}
-.s-dataset nav.pagination {
-  a {
-    &:hover {
-      background: $data-pink;
-    }
-  }
-  .current {
-    background: $data-pink;
-  }
-}
-.s-app nav.pagination {
-  a {
-    &:hover {
-      background: $app-blue;
-    }
-  }
-  .current {
-    background: $app-blue;
-  }
-}
-.s-idea nav.pagination {
-  a {
-    &:hover {
-      background: $idea-yellow;
-    }
-  }
-  .current {
-    background: $idea-yellow;
-  }
-}
-#s-mypage nav.pagination {
-  a {
-    &:hover {
-      background: $blue;
-      color: $white;
-    }
-  }
-  .current {
-    background: $blue;
+  #copyright {
+    padding: 7px 0;
+    @include grd-black;
     color: $white;
   }
 }
-
 // -----------------------------------------------------------------------------
-// form
-form.opendata-search_datasets-form, form.opendata-search_groups-form, form.opendata-search_apps-form, form.opendata-search_ideas-form {
-  margin: 28px 0 32px 0;
-  padding: 12px 10px 12px 10px;
-  border: 1px solid $gray;
-  overflow: hidden;
-  dl {
-    @include inline-block;
-    margin:0 15px 15px 0;
-    dd input, dd select {
-      width: 245px;
-    }
-    &:nth-child(3n+1) {
-      margin-right: 0;
-    }
-  }
-  .send {
-    float: right;
-    padding: 3px;
-    border: 1px solid #B3B3E6;
-    @include grd-button-blue;
-    input {
-      min-width: 110px;
-      padding: 8px 0;
-      border: 1px solid $white;
-      @include box-shadow(0 0 0 1px $gray);
-      @include grd-button-gray;
-      cursor: pointer;
-      &:hover {
-        @include grd-button-gray_hover;
-      }
-    }
-    input:not(:target) {
-      filter: none;
-      -ms-filter: none;
-    }
+// crumbs
+.crumbs {
+  margin: $item-margin 0;
+  .separator {
+    margin: 0 3px;
   }
 }
-
-form.opendata-search_datasets-form, form.opendata-search_groups-form {
-  .send {
-    margin: 1.8em 10px 0px;
-  }
-}
-form.opendata-search_apps-form .send {
-  margin: 0em 10px 0px;
-}
-form.opendata-search_ideas-form .send {
-  margin: 1.8em 10px 0px;
-}
-
 // -----------------------------------------------------------------------------
-// .opendata-tabs
-.opendata-tabs {
-  .names {
-    padding: 0;
-    border-bottom: $blue 2px solid;
-    .name {
-      @include box-sizing(border-box);
-      @include border-top-radius(5px);
-      @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-      display: inline-block;
-      width: 150px;
-      margin-right: 6px;
-      padding: 9px 0;
-      border: 1px solid $gray;
-      border-bottom: none;
-      background: rgba(33, 56, 127, 0.21);
-      color: $text;
+// page-list
+.pages, .opendata-search_groups {
+  article {
+    padding: 14px;
+    border-bottom: $border-gray2;
+    header {
+      @include clear;
+    }
+    time {
+      float: left;
+      width: 20%;
+    }
+   h2 {
+     float: left;
+     width: 80%;
+   }
+   .point {
+     margin-left: 7px;
+     padding: 3px 5px 0 35px;
+     border: $border-gray2;
+     @include border-radius(3px);
+     background: url(../img/ic-like.png) no-repeat 5px center;
+   }
+  }
+}
+// -----------------------------------------------------------------------------
+// feed
+.feed {
+  @include feed;
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.areas, .tags, .formats, .licenses {
+  clear: both;
+  div {
+    @include clear;
+    margin-bottom: $box-margin;
+  }
+  article {
+    float: left;
+    margin: 14px 7px 0;
+    a {
+      display: block;
+      padding: 3px 10px;
+      @include border-radius(3px);
+      color: $black1;
       text-decoration: none;
-      text-align: center;
-      font-size: $px16;
-      line-height: 1.3;
-    }
-  }
-  .pages {
-    border: 1px solid $gray;
-    border-top: none;
-    article:last-child header {
-      border-bottom: none;
     }
   }
   nav {
-    //@include clear;
-  }
-}
-.s-dataset .opendata-tabs {
-  .names {
-    .name {
-      &:hover {
-        @include opacity(1);
-        @include grd-dataheader;
-        @include box-shadow(none);
-        color: $blue;
-      }
-    }
-    .current {
-      @include opacity(1);
-      @include grd-dataheader;
-      @include box-shadow(none);
-      color: $blue;
-    }
-  }
-}
-.s-app .opendata-tabs {
-  .names {
-    .name {
-      &:hover {
-        @include opacity(1);
-        @include grd-appheader;
-        @include box-shadow(none);
-        color: $blue;
-      }
-    }
-    .current {
-      @include opacity(1);
-      @include grd-appheader;
-      @include box-shadow(none);
-      color: $blue;
-    }
-  }
-}
-.s-idea .opendata-tabs {
-  .names {
-    .name {
-      &:hover {
-        @include opacity(1);
-        @include grd-ideaheader;
-        @include box-shadow(none);
-        color: $blue;
-      }
-    }
-    .current {
-      @include opacity(1);
-      @include grd-ideaheader;
-      @include box-shadow(none);
-      color: $blue;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .opendata-search_groups, #search_group
-.opendata-search_groups, #search_group {
-  header {
-    h1 {
-      @include box-shadow(0px 1px 1px rgba(#a8a8a8, 0.4), 0px 0px 0px 1px $white inset);
-      padding: 6px 0 6px 40px;
-      border: 1px solid rgba(#000000, 0.21);
-      background: url(../img/ic-groupsearch_pink.png) no-repeat 8px center;
-      background-color: rgba(#ababab, 0.21);
-      font-size: $px16;
-    }
-  }
-  article header {
-    @include box-shadow(none);
-    padding: 0;
-    border: none;
-    border-bottom: 1px dotted $gray;
+    clear: both;
+    text-align: right;
     a {
-      display: block;
-      padding: 9px 12px;
+      @include btn-black;
     }
   }
 }
-
-#search_group, #data-attention, #app-attention, #idea-attention {
-  margin-bottom: 36px;
-}
-
-#data-attention, #app-attention, #idea-attention {
-  header {
-    h1 {
-      @include box-shadow(0px 1px 1px rgba(#a8a8a8, 0.4), 0px 0px 0px 1px $white inset);
-      padding: 6px 0 6px 40px;
-      border: 1px solid rgba(#000000, 0.21);
-      font-size: $px16;
-    }
-  }
-  .pages li {
-    @include box-shadow(none);
-    padding: 0;
-    border: none;
-    border-bottom: 1px dotted $gray;
-    list-style: none;
-    a {
-      display: block;
-      padding: 9px 12px;
-    }
+.areas article a {
+  background: $hgreen;
+  &:hover {
+    background: #e9f7cb;
   }
 }
-
-#data-attention header h1 {
-  background: url(../img/ic-datatab_hover_s.png) no-repeat 8px center;
-  background-color: rgba(#ababab, 0.21);
+.tags article a {
+  background: $hblue;
+  &:hover {
+    background: #e4f5ff;
+  }
 }
-
-#app-attention header h1 {
-  background: url(../img/ic-apptab_hover.png) no-repeat 8px center;
-  background-color: rgba(#ababab, 0.21);
+.formats article a {
+  background: $hred;
+  &:hover {
+    background: #ffe4e4;
+  }
 }
-
-#idea-attention header h1 {
-  background: url(../img/ic-ideatab_hover_s.png) no-repeat 8px center;
-  background-color: rgba(#ababab, 0.21);
+.licenses article a {
+  background: $brown;
+  &:hover {
+    background: #f2e4cb;
+  }
 }
-
 // -----------------------------------------------------------------------------
-// inquiry
-.inquiry-html p {
-  font-size: $px16;
-  line-height: 1.5;
-}
-
-.inquiry-form {
-  margin-top: 20px;
-  .columns {
-    margin-bottom: 32px;
-    border-top: 2px solid $blue;
-    border-bottom: 2px solid $blue;
+// sns
+.cms-sns_share {
+  @include clear;
+  display: block;
+  div {
+    float: left;
+    margin-right: $item-margin;
   }
+}
+// -----------------------------------------------------------------------------
+// count
+.dataset-count, .app-count, .idea-count {
+  float: right;
+  margin: $item-margin 0;
+  padding-right: 10px;
+  border: $border-gray2;
+  .count-label {
+    display: inline-block;
+    margin-right: $item-margin;
+    padding: 5px 10px;
+    background: $gray2;
+  }  
+}
+// -----------------------------------------------------------------------------
+// search
+.opendata-search_datasets-form, .opendata-search_groups-form,
+.opendata-search_apps-form,
+.opendata-search_ideas-form {
+  @include clear;
+  margin: $box-margin 0;
+  padding: 12px;
+  border: 2px solid $sky;
   dl {
-    overflow: hidden;
-    border-top: 1px dotted $gray;
-    background: rgba($blue, 0.1);
-    &:first-child {
-      border-top: none;
+    float: left;
+    width: 249px;
+    margin-right: $item-margin;
+    &:nth-child(4n), &:nth-child(7n) {
+      margin-right: 0;
+    } 
+    &:nth-child(5n), &:nth-child(8n) {
+      clear: both;
     }
-    dt {
-      float: left;
-      width: 126px;
-      padding: 12px;
-      .required {
-        display: block;
-        color: #CC0000;
-      }
+    &.group {
+      margin-right: $item-margin;
     }
     dd {
-      float: left;
-      width: 906px;
-      min-height: 3em;
-      padding: 12px;
-      background: $white;
-      input {
-        width: 100%;
-        height: 3em;
-      }
-      textarea {
-        width: 100%;
-        min-height: 200px;
-      }
-      label {
-        margin-right: 12px;
-      }
+      margin-bottom: $item-margin;
+    }
+    input {
+      width: 237px;
+    }
+    select {
+      width: 249px;
     }
   }
-  .send {
-    text-align: center;
-    input[name="confirm"], input[name="submit"] {
-      display: inline-block;
-      width: 120px;
-      height: 50px;
-      margin: 4px 5px;
-      padding-left: 15px;
-      border: none;
-      background: url(../img/btn-inquiry.png) no-repeat left center;
-      font-size: 10.5pt;
-      cursor: pointer;
-      &:hover {
-        background: url(../img/btn-inquiry_hover.png) no-repeat left center;
-      }
-    }
-    input:not(:target) {
-      filter: none;
-      -ms-filter: none;
-    }
-    input[name="cancel"] {
-      @include box-shadow(0 0 0 1px $gray);
-      @include grd-mypagebutton-gray;
-      display: inline-block;
-      min-width: 110px;
-      margin: 4px 5px;
-      padding: 8px 0;
-      border: 1px solid $white;
-      color: $text;
-      text-decoration: none;
-      letter-spacing: normal;
-      font-size: 10.5pt;
-      cursor: pointer;
-      &:hover {
-        @include grd-mypagebutton-gray_hover;
-      }
-    }
-  }
-  .inquiry-confirm-message {
-    margin-bottom: 24px;
-    &~dd {
-      padding-bottom:2em;
-    }
-  }
-  .simple-captcha {
-    margin-bottom: 24px;
-    input#answer_captcha {
-      width: 300px;
-    }
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//footer
-#foot {
-  clear: both;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  margin: 0 auto;
-}
-
-#footer-navi {
-  @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset, 0 1.35px 1.35px rgba(168, 168, 168, 0.25));
-  min-width: 1100px;
-  padding: 8px 0;
-  border-top: 1px solid $gray;
-  border-bottom: 1px solid $gray;
-  text-align: center;
-  nav a {
-    padding: 0 20px;
-  }
-}
-
-#copyright {
-  min-width: 1100px;
-  padding: 10px 0;
-  background: $blue;
-  color: $white;
-  text-align: center;
-}
-
-
-
-// <ログイン>----------------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-//s-mypage-login #contents ul
-#s-mypage-login #contents ul {
-  list-style: none;
-  li {
-    width: 526px;
-    margin-bottom: 24px;
-    a {
-      display: block;
-      margin-top: 24px;
-      padding: 19px 0 19px 170px;
-      border: 1px solid $gray;
-      color: $text;
-      vertical-align: middle;
-      text-decoration: none;
-    }
-  }
-  li.Twitter {
-    margin-top: 24px;
-    background: url(../img/logo_Twitter.png) no-repeat 50px center;
-  }
-  li.facebook {
-    background: url(../img/logo_Facebook.png) no-repeat 50px center;
-  }
-  li.Yahoo {
-    background: url(../img/logo_Yahoo.png) no-repeat 48px center;
-  }
-  li.Google {
-    background: url(../img/logo_Google.png) no-repeat 48px center;
-  }
-  li.github {
-    background: url(../img/logo_GitHub.png) no-repeat 53px center;
-  }
-}
-// tab-inner
-#s-mypage-login {
-  #tab-inner {
-    position: relative;
-    max-width: $page-width;
-    min-width: $page-width;
-    margin: 0 auto;
-    padding: 0 10px;
-    &:before {
-      content: "";
-      width: 77px;
-      height: 153px;
-      position: absolute;
-      left: -67px;
-      top: -79px;
-      background: url(../img/rainbow.png) no-repeat left center;
-    }
-    .wrap {
-      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
-      border: 1px solid $gray;
-      background: $white;
-      h1 {
-        @include border-top-radius(2px);
-        margin: 2px;
-        padding: 14px 0 14px 15px;
-        background: $blue;
-        color: $white;
-        font-size: $px32;
-      }
-    }
-  }
-}
-// <マイページ>---------------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// tab-inner
-#s-mypage {
-  #tab-inner {
-    .wrap {
-      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
-      border: 1px solid $gray;
-      background: $white;
-      h1 {
-        @include border-top-radius(2px);
-        margin: 2px;
-        padding: 14px 0 14px 15px;
-        background: $blue;
-        color: $white;
-        font-size: $px32;
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//mypage-tabs
-#mypage-tabs {
-  @include box-shadow(1px 1px $white inset, -1px 0 $white inset, 0 8px 8px rgba(#000000, 0.1));
-  margin: 20px 0;
-  padding: 0;
-  border-bottom: $blue 2px solid;
-  overflow: hidden;
-  a.dataset, a.app, a.idea, a.profile {
-    @include box-sizing(border-box);
-    @include border-top-radius(5px);
-    @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-    display: inline-block;
-    width: 150px;
-    margin-right: 6px;
-    padding: 9px 0 9px 20px;
-    border: 1px solid $gray;
-    border-bottom: none;
-    color: $text;
-    text-decoration: none;
-    text-align: center;
-  }
-  a.dataset {
-    width: 170px;
-    background: rgba(33, 56, 127, 0.21) url(../img/ic-mypagedatatab.png) no-repeat 7px 6px;
-    &:hover {
-      @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/ic-datatab_blue.png) no-repeat 7px 6px;
-      color: $blue;
-    }
-  }
-  a.current:nth-child(1) {
-    @include opacity(1);
-    @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-    background: url(../img/ic-datatab_blue.png) no-repeat 7px 6px;
-    color: $blue;
-  }
-  a.app {
-    width: 170px;
-    background: rgba(33, 56, 127, 0.21) url(../img/ic-mypageapptab.png) no-repeat 12px 10px;
-    &:hover {
-      @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/ic-mypageapptab_hover.png) no-repeat 12px 10px;
-      color: $blue;
-    }
-  }
-  a.current:nth-child(2) {
-    @include opacity(1);
-    @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-    background: url(../img/ic-mypageapptab_hover.png) no-repeat 12px 10px;
-    color: $blue;
-  }
-  a.idea {
-    width: 170px;
-    background: rgba(33, 56, 127, 0.21) url(../img/ic-mypageideatab.png) no-repeat 10px 6px;
-    &:hover {
-      @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/ic-mypageideatab_hover.png) no-repeat 10px 5px;
-      color: $blue;
-    }
-  }
-  a.current:nth-child(3) {
-    @include opacity(1);
-    @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-    background: url(../img/ic-mypageideatab_hover.png) no-repeat 10px 5px;
-    color: $blue;
-  }
-  a.profile {
-    width: 150px;
-    background: rgba(33, 56, 127, 0.21) url(../img/ic-profiletab.png) no-repeat 10px 5px;
-    &:hover {
-      @include opacity(1);
-      @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-      background: url(../img/ic-profiletab_hover.png) no-repeat 10px 5px;
-      color: $blue;
-    }
-  }
-  a.current:nth-child(4) {
-    @include opacity(1);
-    @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-    background: url(../img/ic-profiletab_hover.png) no-repeat 10px 5px;
-    color: $blue;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #s-mypage #contents .inner
-#s-mypage #contents .inner {
-  nav.menu {
-    @include grd-mypagebutton-blue;
-    float: left;
-    margin-bottom: 28px;
-    border: 1px solid rgba($blue, 0.55);
-    letter-spacing: -.40em;
-    &:hover {
-      @include grd-mypagebutton-blue_hover;
-      border: 1px solid rgba($blue, 0.7);
-    }
-    a {
-      @include box-shadow(0 0 0 1px $gray);
-      @include grd-mypagebutton-gray;
-      display: inline-block;
-      float: left;
-      margin: 4px 5px;
-      padding: 8px 25px;
-      border: 1px solid $white;
-      color: $text;
-      text-decoration: none;
-      letter-spacing: normal;
-      &:hover {
-        @include grd-mypagebutton-gray_hover;
-      }
-    }
-    a:not(:target) {
-      filter: none;
-      -ms-filter: none;
-    }
-  }
-  nav.tutorial-data a, nav.tutorial-app a, nav.tutorial-idea a {
-    @include box-shadow(0 0 0 1px $gray);
-    @include grd-tutorial;
-    display: inline-block;
+  .send input {
     float: right;
-    margin: 0 1px 28px 4px;
-    padding: 8px 8px 8px 37px;
-    border: 1px solid $white;
-    color: $text;
-    text-decoration: none;
-    &:not(:target) {
-      filter: none;
-      -ms-filter: none;
-    }
-    &:hover {
-      @include grd-tutorial_hover;
-    }
-  }
-  table.see {
-    clear: both;
-    width: 100%;
-    margin: 0px;
-    margin-bottom: 24px;
-    border-top: 2px solid $blue;
-    border-bottom: 2px solid $blue;
-    tr.parent-row {
-      border-bottom: 1px solid $gray;
-      &:last-child {
-        border-bottom: 0;
-      }
-    }
-    td.field {
-      width: 160px;
-      min-width: 150px;
-      padding: 12px 0 12px 12px;
-      background: rgba(33,56,127,0.1);
-      vertical-align: top;
-    }
-    td.input {
-      padding: 12px 0 12px 12px;
-      vertical-align: middle;
-      label {
-        display: inline-block;
-        margin-right: 10px;
-        padding: 4px 0;
-      }
-      input[type=text], textarea {
-        width: 100%;
-        resize: vertical;
-      }
-      .resources {
-        margin-bottom: 15px;
-      }
-      .resource {
-        padding-left: 15px;
-      }
-      .in_icon {
-        margin: 10px 0 0 10px;
-      }
-    }
-    td.wide {
-      float: none;
-      width: 100%;
-      box-sizing: border-box;
-    }
-  }
-  table.show {
-    td.field {
-      padding: 20px 0 20px 20px;
-    }
-    td.input {
-      padding: 20px 0 20px 20px;
-    }
-  }
-  dl.see {
-    clear: both;
-    margin: 0px;
-    margin-bottom: 24px;
-    > dt {
-      @include clear;
-      float: left;
-      min-width: 240px;
-      min-height: 1.0em;
-      padding: 5px 10px 5px 0;
-      background: #ddcfcc;
-      text-align: right;
-    }
-    > dd {
-      min-height: 1.41em;
-      margin: 0 0 0 270px;
-      padding: 5px 0;
-      @include clear;
-      margin: 0px 0px 0px 270px;
-      label {
-        display: inline-block;
-        margin-right: 10px;
-        padding: 4px 0;
-      }
-    }
-    > dt ~ dt { margin-top: 20px; }
-    > dd ~ dd { margin-top: 20px; }
-    > dd + dd { margin-top: 10px; }
-    > dt.wide {
-      float: none;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    > dd.wide {
-      float: none;
-      margin-left: 0px;
-      padding-top: 0px;
-      border-top: 0px;
-    }
-  }
-  #item-form {
-    dl.see > dd {
-      padding: 0;
-    }
-    .send {
-      text-align: center;
-      div {
-        @include grd-mypagebutton-blue;
-        display: inline-block;
-        border: 1px solid rgba($blue, 0.55);
-        letter-spacing: -.40em;
-        &:hover {
-          @include grd-mypagebutton-blue_hover;
-          border: 1px solid rgba($blue, 0.7);
-        }
-        input {
-          @include box-shadow(0 0 0 1px $gray);
-          @include grd-mypagebutton-gray;
-          display: inline-block;
-          min-width: 110px;
-          margin: 4px 5px;
-          padding: 8px 20px;
-          border: 1px solid $white;
-          color: $text;
-          text-decoration: none;
-          letter-spacing: normal;
-          cursor: pointer;
-          &:hover {
-            @include grd-mypagebutton-gray_hover;
-          }
-        }
-        input:not(:target) {
-          filter: none;
-          -ms-filter: none;
-        }
-      }
-    }
-  }
-  .deletion-confirm {
-    margin-bottom:24px;
-    padding: 15px;
-    border: 1px solid #C33838;
-    background: #FCEEEE;
+    @include btn-black;
   }
 }
-
+.opendata-search_apps-form {
+  border: 2px solid $green;
+}
+.opendata-search_ideas-form {
+  border: 2px solid $yellow;
+}
 // -----------------------------------------------------------------------------
-// .category-form
-.category-form {
-  //padding: 10px;
-  //border: 1px solid #ddcfcc;
-  .child {
-    padding: 5px 0;
-    border-top: 1px solid #ddcfcc;
-    font-weight: normal;
+// one
+.dataset .one, .app .one, .idea .one {
+  h1.name {
+    margin: $item-margin 0;
+    color: #005c7b;
+    font-size: $px32;
+    font-weight: bold;
   }
-}
-
-// -----------------------------------------------------------------------------
-// table
-table.index th, table.index td {
-  //padding: 4px 8px;
-}
-table.index {
-  clear: both;
-  width: 100%;
-  margin-bottom: 60px;
-  border-bottom: 2px solid $blue;
-  thead {
-    tr {
-      border-bottom: 2px solid $blue;
-    }
-    th {
-      padding-bottom: 4px;
-      font-weight: normal;
-      text-align: left;
-    }
-    th.name {
-      width: 40%;
-    }
-  }
-  tbody {
-    tr {
-      border-bottom: 1px dotted $gray;
-      &:last-child {
-        border-bottom: 0;
-      }
-    }
-    td {
-      padding: 24px 8px;
-      max-width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-}
-
-#s-mypage table.index tbody td {
-  max-width: 400px;
-}
-
-table.ajax-selected th, table.ajax-selected td {
-  padding: 4px 8px;
-}
-table.ajax-selected {
-  clear: both;
-  width: 98%;
-  margin: 10px 0 10px 20px;
-  thead {
-    tr {
-      border-bottom: 1px solid $gray;
-    }
-    th {
-      font-weight: normal;
-      text-align: left;
-    }
-    th.name {
-      width: 40%;
-    }
-  }
-  tbody {
-    tr {
-      &:nth-child(even) {
-        background: #ededed;
-      }
-    }
-    td {
-      max-width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-}
-
-// <ユーザーページ>-----------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// .profile
-.profile {
-  padding: 12px 0 40px 0;
-  .icon {
-    display: inline-block;
-    padding: 7px;
-    border: 1px solid #8f8f8f;
-  }
-  .name {
-    display: inline-block;
-    padding:15px;
-    font-size: $px28;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// section.datasets
-section.datasets, section.apps, section.ideas {
-  padding: 20px 0;
-  header {
-    border: 1px solid $gray;
-    border-bottom: 2px solid $blue;
-    @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-    h2 {
-      @include box-sizing(border-box);
-      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
-      padding: 9px 0 9px 26px;
-      border-bottom: none;
-      color: $blue;
-      font-size: $px16;
-      line-height: 1.3;
-    }
-  }
-  .pages {
-    header {
-      border: 0;
-      h2 {
-        max-width: 917px;
-        padding: 0;
-        background: none;
-        color: $text;
-        font-size: $px14;
-        box-shadow: none;
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #errorExplanation
-#errorExplanation {
-  margin-bottom: 24px;
-  padding: 20px 20px;
-  border: 1px solid #cc0000;
-  color: #cc0000;
-  h2 {
-    float: left;
-    //margin: -20px -20px 25px;
-    //padding: 3px 10px;
-    color: #cc0000;
-    font-size: $px17;
-  }
-  p {
-    font-size: $px17;
-  }
-  ul {
-    padding: 10px 40px 0;
-    color: #cc0000;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .field_with_errors
-.field_with_errors {
-  input, textarea, select {
-    border: 1px solid #cc0000;
-    background: #ffd9d9;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .tooltip
-.tooltip {
-  display:inline-block;
-  position:relative;
-  width:16px;
-  left:5px;
-  height:16px;
-  @include border-radius(8px);
-  background: #333;
-  color:#fff;
-  font-weight:bold;
-  text-decoration:none;
-  text-align:center;
-  line-height: 1.3em;
-  cursor: pointer;
-  &:hover {
-     background-color: #f9c;
-  }
-  ul {
-    display: none;
-    position: absolute;
-    bottom:18px;
-    left:-30px;
-    width: 22em;
-    z-index: 90;
-    padding: 10px;
-    border: 1px solid #bbb;
-    background-color: #fff;
-    color: #333;
-    text-align: left;
-    line-height: 1.6em;
-    list-style: none;
-    li {
-      font-weight: normal;
-    }
-    &:before {
-      content: "";
-      position: absolute;
-      left: 30px;
-      bottom: -6px;
-      width: 0;
-      height: 0;
-      border-top: 6px solid #bbb;
-      border-right: 6px solid transparent;
-      border-left: 6px solid transparent;
-    }
-    &:after {
-      content: " ";
-      position: absolute;
-      left: 30px;
-      height:0;
-      width:0;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #ss-notice
-#ss-notice {
-  margin-bottom: 24px;
-  padding: 10px 20px;
-  background: #ebf6f9;
-  border: 1px solid #8bb9da;
-}
-
-// -----------------------------------------------------------------------------
-// icon
-.resources {
-  .name {
-    float: left;
-    padding-left: 40px;
-    background: url(../img/ic-text.png) no-repeat 5px center;
-    word-wrap: break-word;
-  }
-  .name.format-bmp {
-    background: url(../img/ic-bmp.png) no-repeat 5px center;
-  }
-  .name.format-gif {
-    background: url(../img/ic-gif.png) no-repeat 5px center;
-  }
-  .name.format-jpg, .name.format-jpe, .name.format-jpeg {
-    background: url(../img/ic-jpeg.png) no-repeat 5px center;
-  }
-  .name.format-png {
-    background: url(../img/ic-png.png) no-repeat 5px center;
-  }
-  .name.format-xls, .name.format-xlsx {
-    background: url(../img/ic-excel.png) no-repeat 5px center;
-  }
-  .name.format-csv, .name.format-tsv {
-    background: url(../img/ic-csv.png) no-repeat 5px center;
-  }
-  .name.format-doc, .name.format-docx, .name.format-jtd {
-    background: url(../img/ic-word.png) no-repeat 5px center;
-  }
-  .name.format-zip, .name.format-lzh {
-    background: url(../img/ic-zip.png) no-repeat 5px center;
-  }
-  .name.format-pdf {
-    background: url(../img/ic-pdf.png) no-repeat 5px center;
-  }
-  .name.format-pptx, .name.format-ppt {
-    background: url(../img/ic-ppt.png) no-repeat 5px center;
-  }
-  .name.format-rdf {
-    background: url(../img/ic-rdf.png) no-repeat left center;
-  }
-  .name.format-html {
-    background: url(../img/ic-html.png) no-repeat 5px center;
-  }
-  .name.format-kml {
-    background: url(../img/ic-kml.png) no-repeat 5px center;
-  }
-  .name.format-json {
-    background: url(../img/ic-json.png) no-repeat 5px center;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// nav.cms-sns_share
-nav.cms-sns_share {
-  height: 20px;
-  margin-bottom: 32px;
-  .site {
-    float: left !important;
-    border: 0 !important;
-    padding: 0 !important;
-    margin-right: 10px !important;
-    min-height: 30px !important;
-    line-height: 18px !important;
-    text-indent: 0 !important;
-  }
-  .site.twitter {
-    width: 95px !important;
-  }
-  .site.google {
-    width: 70px !important;
-  }
-}
-
-// tab-inner
-#s-member {
-  #tab-inner {
-    .wrap {
-      @include border-radius(3px);
-      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
-      border: 1px solid $gray;
-      background: $white;
-      h1 {
-        @include border-top-radius(2px);
-        margin: 2px;
-        padding: 14px 0 14px 15px;
-        background: $blue;
-        color: $white;
-        font-size: $px32;
-      }
-    }
-  }
-  .member-tabs {
-    clear: both;
-    margin-bottom: 28px;
-    .names {
-      padding: 0;
-      border-bottom: $blue 2px solid;
-      .name {
-        @include box-sizing(border-box);
-        @include border-top-radius(5px);
-        @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-        display: inline-block;
-        width: 150px;
-        margin-right: 6px;
-        padding: 9px 0 9px 20px;
-        border: 1px solid $gray;
-        border-bottom: none;
-        color: $text;
-        text-decoration: none;
-        text-align: center;
-      }
-      a.name:nth-child(1) {
-        width: 170px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-mypagedatatab.png) no-repeat 7px 6px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-datatab_blue.png) no-repeat 7px 6px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(1) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-datatab_blue.png) no-repeat 7px 6px;
-        color: $blue;
-      }
-      a.name:nth-child(2) {
-        width: 170px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-mypageapptab.png) no-repeat 12px 10px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-mypageapptab_hover.png) no-repeat 12px 10px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(2) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-mypageapptab_hover.png) no-repeat 12px 10px;
-        color: $blue;
-      }
-      a.name:nth-child(3) {
-        width: 170px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-mypageideatab.png) no-repeat 10px 6px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-mypageideatab_hover.png) no-repeat 10px 5px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(3) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-mypageideatab_hover.png) no-repeat 10px 5px;
-        color: $blue;
-      }
-    }
-    article.view {
-      .pages {
-        article header {
-          @include box-shadow(none);
-          overflow: hidden;
-          margin: 0;
-          padding: 12px 12px;
-          border-bottom: 1px dotted $gray;
-        }
-        time {
-          float: left;
-          width: 120px;
-        }
-        h2 {
-          float: left;
-          max-width: 895px;
-          margin-left: 25px;
-          word-wrap: break-word;
-        }
-        .point {
-          @include border-radius(3px);
-          @include box-shadow(0 0 0 1px rgba(#45B035, 0.3));
-          display: inline-block;
-          margin-left: 25px;
-          padding: 0 5px 0 28px;
-          border: 1px solid rgba(#45B035, 0.5);
-          background: url(../img/ic_s-sudachikun.gif) no-repeat 3px center;
-        }
-      }
-      nav {
-        @include clear;
-        padding: 6px 5px 0 5px;
-        .more {
-          float: right;
-          padding-left: 12px;
-        }
-        #ds_more {
-          background: url(../img/ic-arrow_pink.png) no-repeat left center;
-        }
-        #app_more {
-          background: url(../img/ic-arrow_blue.png) no-repeat left center;
-        }
-        #idea_more {
-          background: url(../img/ic-arrow_yellow.png) no-repeat left center;
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// point
-.s-dataset .data-page-contents, .s-app .app-page-contents, .s-idea .idea-page-contents {
   .point {
     float: right;
-    margin-bottom: 24px;
-    .count {
-      width: 270px;
-      margin-bottom: 10px;
-      padding: 26px 0;
-      border: 1px solid $gray;
-      text-align: center;
-      span.number {
-        padding: 0 50px;
-        background: url(../img/ic_b-sudachikun.gif) no-repeat left 4px;
-        font-size: $px32;
-      }
-      span.label {
-        vertical-align: 5px;
-      }
+    width: 247px;
+    padding: $item-margin 0;
+    border: $border-gray2;
+    text-align: center;
+    .number {
+      font-size: $px32;
     }
-    .like {
-      width: 272px;
-      @include box-shadow(0 0 0 1px rgba(162,215,154,0.24) inset);
-      background: url(/img/img-iinesudachi.png) no-repeat 34px center,url(/img/img-iinebackground.png);
-      text-align: right;
-      .update {
-        @include box-shadow(0 0 0 1px $gray);
-        display: inline-block;
-        margin: 6px 55px 6px 0;
-        padding: 6px 25px;
-        border: 1px solid $white;
-        color: $text;
-        text-decoration: none;
-        letter-spacing: normal;
-      }
-      .add {
-        @include grd-iine;
-        &:not(:target) {
-          filter: none;
-          -ms-filter: none;
-        }
-        &:hover {
-          @include grd-iine_hover;
-        }
-      }
-      .cancel {
-        background: #E5E5E5 url(../img/ic-check.png) no-repeat 8px center;
-        &:hover {
-          background-color: #EFEFEF;
-        }
-      }
+    .like a {
+      @include btn-black;
     }
   }
-}
-
-#s-member {
-  article.members ul {
-    overflow: hidden;
-    margin-top: 12px;
-    li {
+  .categories {
+    @include clear;
+    float: left;
+    width: 803px;
+    margin-bottom: $item-margin;
+    a {
       float: left;
-      width: 344px;
-      margin: 0 20px 16px 0;
-      list-style: none;
-      &:nth-child(3n) {
-        margin-right: 0;
-      }
-      img {
-        width: 50px;
-        height: 50px;
-        padding: 2px;
-        border: 1px solid #a8a8a8;
-      }
-      span {
-        display: inline-block;
-        overflow: hidden;
-        width: 270px;
-        margin-left: 10px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-}
-
-// <ポータルサイト>----------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// top
-.s-portal #top {
-  display: block;
-  @include grd-aqua;
-  border: 1pt solid #b2b2b2;
-  @include border-radius(4px);
-  @include box-shadow(0 2px 3px rgba(#a8a8a8, 0.75),0 -4px 5px rgba(#a8a8a8, 0.2));
-  #portal-kv {
-    overflow: hidden;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #portal-kv-img
-#portal-kv-img {
-  float: left;
-}
-
-// -----------------------------------------------------------------------------
-// #portal-kv-nav
-#portal-kv-nav {
-  float: right;
-  padding: 10px;
-  li {
-    @include box-shadow(0 1px 1px rgba(#A8A8A8, 0.25));
-    width: 216px;
-    padding: 3px;
-    border: 1px solid $gray;
-    background: $white;
-  }
-  li.gnav01 {
-    margin-bottom: 10px;
-    &:hover {
-      background: #FFE9F7;
-    }
-  }
-  li.gnav02 {
-    margin-bottom: 10px;
-    &:hover {
-      background: #D7F6FF;
-    }
-  }
-  li.gnav03 {
-    &:hover {
-      background: #FFF8C7;
-    }
-  }
-  a {
-    display:block;
-    text-decoration: none;
-    span {
       display: block;
+      margin: 0 7px 7px 0;
+      padding: 3px 10px;
+      @include border-radius(3px);
+      color: $black1;
+      text-decoration: none;
     }
-    #title-data, #title-app, #title-idea {
-      padding: 15px 5px 15px 0;
-      text-align: right;
+    .category {
+      background: #ffcf38;
+      &:hover {
+        background: #ff79b;
+      }
     }
-    #contents-data, #contents-app, #contents-idea {
-      padding: 3.5px 0;
-      text-align: center;
+    .area {
+      background: $hgreen;
+      &:hover {
+        background: #e9f7cb;
+      }
     }
-    #title-data {
-      background: url(../img/img-data01.png) no-repeat 1px top;
-    }
-    #contents-data {
-      background: #ec008c;
-    }
-    #title-app {
-      background: url(../img/img-app01.png) no-repeat 4px top;
-    }
-    #contents-app {
-      background: #00aeef;
-    }
-    #title-idea {
-      background: url(../img/img-idea01.png) no-repeat 1px 4px;
-    }
-    #contents-idea {
-      background: #ffe600;
+    .tag {
+      background: $hblue;
+      &:hover {
+        background: #e4f5ff;
+      }
     }
   }
-}
-
-// -----------------------------------------------------------------------------
-// #about, #portal-dataset, #portal-app, #portal-idea
-#about, #portal-dataset, #portal-app, #portal-idea {
-  header {
-    margin-bottom: 24px;
-    border-bottom: 2px solid $blue;
-    @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
+  .text {
+    float: left;
+    width: 803px;
+    margin-bottom: $box-margin;
   }
-  h1 {
-    @include box-sizing(border-box);
-    @include grd-portalheader;
-    padding: 9px 0 9px 44px;
-    border: 1px solid $gray;
-    border-bottom: none;
-    color: $blue;
+  .tabs {
+    clear:both;
+  }
+  .names {
+    clear: both;
+    @include tab;
+    margin-bottom: $box-margin;
+    border-bottom: 2px solid $sky;
+    a:hover, a.current {
+      background: $sky;
+      filter: none;
+      color: $black1;
+    }
+  }
+  .resources, #tab-sample {
+    margin-bottom: $box-margin;
+    border: 2px solid $sky;
+    h1 {
+      @include midashi-dataset;
+      border-bottom: none;
+    }
+    .resource, .appfile {
+      @include clear;
+      padding: 12px;
+      border-bottom: $border-gray2;
+      .info {
+        float: left;
+        div {
+          padding: 7px 0 7px 35px;
+        }
+        .format-csv {
+          background: url(../img/file-csv.png) no-repeat left center;
+        }
+        .format-xlsx, .format-xls {
+          background: url(../img/file-xls.png) no-repeat left center;
+        }
+        .format-doc, .format-docx {
+          background: url(../img/file-word.png) no-repeat left center;
+        }
+        .format-txt {
+          background: url(../img/file-txt.png) no-repeat left center;
+        }
+        .format-rdf {
+          background: url(../img/file-rdf.png) no-repeat left center;
+        }
+        .format-xml {
+          background: url(../img/file-txt.png) no-repeat left center;
+        }
+        .format-zip {
+          background: url(../img/file-zip.png) no-repeat left center;
+        }
+        .format-html {
+          background: url(../img/file-html.png) no-repeat left center;
+        }
+        .format-ppt, .format-pptx {
+          background: url(../img/file-ppt.png) no-repeat left center;
+        }
+        .format-kml {
+          background: url(../img/file-kml.png) no-repeat left center;
+        }
+        .format-jpg {
+          background: url(../img/file-jpg.png) no-repeat left center;
+        }
+        .format-gif {
+          background: url(../img/file-gif.png) no-repeat left center;
+        }
+        .format-png {
+          background: url(../img/file-png.png) no-repeat left center;
+        }
+        .format-bmp {
+          background: url(../img/file-bmp.png) no-repeat left center;
+        }
+      }
+      .icons {
+        @include clear;
+        float: right;
+        span, div {
+          float: left;
+          margin-left: $item-margin;
+          &:empty {
+            display: none;
+          }
+        }
+        span {
+          margin: 2px 0;
+        }
+        div a {
+          @include btn-black;
+        }
+      }
+    }
+  }
+  #tab-app, #tab-idea, #tab-play, #tab-html, #tab-css, #tab-js, #tab-sample, #tab-dataset,
+  #tab-comment {
+    margin-bottom: $box-margin;
+    border: 2px solid $green;
+    h1 {
+      @include midashi-app;
+      border-bottom: none;
+    }
+    .contribute-wrap {
+      padding: 12px;
+    }
+    .contribute {
+      @include btn-black;
+    }
+    table {
+      width: 100%;
+    }
+    tr {
+      border-top:$border-gray2;
+    }
+    td {
+      padding: 12px;
+    }
+  }
+  #tab-sample, #tab-dataset {
+    border: 2px solid $sky;
+    h1 {
+      @include midashi-dataset;
+      border-bottom: none;
+    }
+  }
+  #tab-idea, #tab-comment {
+    border: 2px solid $yellow;
+    h1 {
+      @include midashi-idea;
+      border-bottom: none;
+    }
+  }
+  .fullscreen {
+    padding: 12px 12px 0;
+    a {
+      @include btn-black;
+    }
+  }
+  .frame {
+    padding: 12px;
+    iframe {
+      width: 100%;
+      min-height: 360px;
+    }
+  }
+  .app_filename {
+    margin-bottom: $item-margin;
+    padding-bottom: 7px;
+    border-bottom: $border-gray2;
     font-size: $px16;
-    line-height: 1.3;
   }
-}
-
-// -----------------------------------------------------------------------------
-// dl.see
-.s-portal {
-  dl.see {
-    padding: 15px;
+  .comments {
+    .comment {
+      padding: 12px;
+      border-bottom: $border-gray2;
+      .text {
+        width: 100%;
+        margin-bottom: $box-margin;
+      }
+      a {
+        margin-right: $item-margin;
+      }
+    }
+  }
+  #idea-comments .invite {
+    padding: 12px;
+  }
+  .opendata-add_comment-form {
+    @include clear;
+    padding: 12px;
+    background: $gray2;
+    dl {
+      float: left;
+    }
+    dt {
+      display: none;
+    }
+    textarea {
+      width: 780px;
+    }
+    .comment_add {
+      float: left;
+      @include btn-black;
+      margin: 40px;
+    }
+  }
+  .related_app, .related_dataset {
+    @include clear;
+    div {
+      float: left;
+    }
+    .app, .dataset {
+      clear: both;
+      width: 550px;
+      padding: 12px;
+    }
+    .app_executed, .dataset_downloaded {
+      width: 150px;
+      padding: 12px;
+    }
+    .app_updated, .dataset_updated {
+      width: 304px;
+      padding: 12px;
+    }
+  }
+  .author {
+    @include clear;
+    margin-bottom: $box-margin;
+    padding: 3px 3px 0;
+    border: $border-gray2;
     dt {
       float: left;
-      min-height: 1em;
-      min-width: 110px;
-      margin-bottom: 10px;
-      font-weight: bold;
+      width: 230px;
+      margin: 0 $item-margin 3px 0;
+      padding: 3px 10px;
+      background: $sky;
     }
     dd {
-      min-height: 1.5em;
-      margin-left: 110px;
-      margin-bottom: 10px;
+      float: left;
+      width: 808px;
+      margin-bottom: 3px;
+      padding: 3px 0;
     }
   }
-  article.body {
-    padding-right: 15px;
+  .related-pages, .contact {
+    @include clear;
+    margin-bottom: $box-margin;
+    h1 {
+      @include midashi-dataset;
+    }
+    article {
+      padding: 7px 14px;
+    }
+    .group {
+      margin-top: $item-margin;
+    }
+    dl {
+      @include clear;
+      float: left;
+      margin-right: $item-margin;
+      dt, dd {
+        float: left;
+      }
+    }
   }
 }
-
+.app .one {
+  h1.name {
+    color: #025931;
+  }
+  .names {
+    border-bottom: 2px solid $green;
+    a:hover, a.current {
+      background: $green;
+    }
+  }
+  .author dt {
+    background: $green;
+  }
+  .related-pages, .contact {
+    h1 {
+      @include midashi-app;
+    }
+  }
+}
+.app-body .frm-app {
+  width: 100%;
+  height: 100%;
+}
+.idea .one {
+  h1.name {
+    color: #006f47;
+  }
+  .names {
+    border-bottom: 2px solid $yellow;
+    a:hover, a.current {
+      background: $yellow;
+    }
+  }
+  .author dt {
+    background: $yellow;
+  }
+  .related-pages, .contact {
+    h1 {
+      @include midashi-idea;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// portal
+// -----------------------------------------------------------------------------
+// about
+#about {
+  margin-bottom: $box-margin;
+  h2 {
+    @include midashi;
+    @include grd-blue;
+    color: $white;
+  }
+  p {
+    margin-top: $item-margin;
+    padding: 0 10px;
+  }
+}
 // -----------------------------------------------------------------------------
 // cms-tabs
 .cms-tabs {
-  .names {
-    padding: 0;
-    border-bottom: $blue 2px solid;
-    .name {
-      @include box-sizing(border-box);
-      @include border-top-radius(5px);
-      @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-      display: inline-block;
-      width: 150px;
-      margin-right: 6px;
-      padding: 7px 0;
-      border: 1px solid $gray;
-      border-bottom: none;
-      background: rgba(33, 56, 127, 0.21);
-      color: $text;
-      text-decoration: none;
-      text-align: center;
-      &:hover {
-        @include opacity(1);
-        @include grd-portalheader;
-        @include box-shadow(none);
-        color: $blue;
-      }
-    }
-    .current {
-      @include opacity(1);
-      @include grd-portalheader;
-      @include box-shadow(none);
-      color: $blue;
-    }
-  }
-  .pages {
-    border: 1px solid $gray;
-    border-top: none;
-    article:last-child header {
-      border-bottom: none;
-    }
-  }
+  @include tabs;
 }
-
-
-// <記事・イベントページ>-----------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// .s-portalinfo #tab-inner
-.s-portalinfo {
-  #contents {
-    margin: 12px auto 0 auto;
-  }
-  #tab-inner {
-    .wrap {
-      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
-      border: 1px solid $gray;
-      background: $white;
-      h1 {
-        @include border-top-radius(2px);
-        margin: 2px;
-        padding: 14px 0 14px 15px;
-        background: $blue;
-        color: $white;
-        font-size: $px32;
-      }
-    }
-  }
+:root .cms-tabs .names a:hover,
+:root .cms-tabs a.current {
+  filter: none\0;
 }
 
 // -----------------------------------------------------------------------------
-// #about
-#about {
-  p {
-    margin: 0 0 5px 16px;
-    line-height: 1.5;
+// portal-dataset
+#portal-dataset, #portal-app, #portal-idea {
+  margin-bottom: $box-margin;
+  header h1 {
+    @include midashi-dataset;
   }
-  .more {
-    float: right;
-    padding-left: 12px;
-    background: url(../img/ic-arrow_pink.png) no-repeat left center;
+  nav {
+    @include feed;
   }
 }
-
-#contents header.released {
-  margin-bottom: 24px;
-  text-align: right;
+#portal-app header h1 {
+  @include midashi-app;
 }
-
+#portal-idea header h1 {
+  @include midashi-idea;
+}
 // -----------------------------------------------------------------------------
-// .s-portalinfo #info-title
-.s-portalinfo #info-title {
-  @include grd-info-title;
-  @include box-shadow(0 1px 1px rgba(#a8a8a8,0.25));
-  margin-bottom: 12px;
-  padding: 7px 0 7px 15px;
-  border: 1px solid $gray;
-  border-bottom: 2px solid $blue;
-  font-size: 200%;
-  color: $blue;
-  &:not(:target) {
-    filter: none;
-    -ms-filter: none;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #contents article.body
-#contents article.body {
-  h1 {
-    margin: 12px 0;
-    padding: 5px 10px;
-    background: $blue;
+// doc
+.portal {
+  #page-name h1 {
+    margin-bottom: $item-margin;
+    @include midashi;
+    @include grd-blue;
     color: $white;
-    font-size: $px15;
-    &:first-child {
-      margin-top: 0;
+    font-size: $px24;
+    font-weight: bold;
+  }
+  .released {
+    margin-bottom: $box-margin;
+    text-align: right;
+  }
+  .body, .inquiry-html, .inquiry-form {
+    h1 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      @include grd-blue;
+      color: $white;
+      font-size: $px18;
+      font-weight: bold;
     }
-  }
-  h2 {
-    margin-bottom: 6px;
-    padding: 3px 10px;
-    border-bottom: 2px solid $blue;
-    color: $blue;
-    font-size: $px15;
-    font-weight: bold;
-  }
-  h3 {
-    margin-bottom: 6px;
-    padding: 3px 10px;
-    border-left: 5px solid $blue;
-    color: $blue;
-    font-weight: bold;
-  }
-  h4 {
-    color: $blue;
-    font-weight: bold;
-  }
-  h5, h6 {
-    font-weight: bold;
-  }
-  p {
-    margin-bottom: 12px;
-    line-height: 1.6;
-  }
-  ul {
-    margin-bottom: 12px;
-    margin-left: 25px;
-    list-style: none;
-    li {
-      position: relative;
-      padding-left: 15px;
-      &:before {
-        content: "";
-        position: absolute;
-        top: 7px;
-        left: 2px;
-        display: block;
-        width: 6px;
-        height: 6px;
-        @include border-radius(3px);
-        background: $blue;
+    h2 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      border-bottom: 2px solid $blue;
+    }
+    h3 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      padding: 0 0 0 5px;
+      border-left: 5px solid $blue;
+    }
+    h4 {
+      margin-bottom: $item-margin;
+      padding: 0 10px;
+      color: $blue;
+      font-weight: bold;
+    }
+    p {
+      margin-bottom: $box-margin;
+      padding: 0 10px;
+    }
+    table {
+      margin-bottom: $box-margin;
+      caption {
+        padding: 0 10px;
+        text-align: left;
+      }
+      th, td {
+        padding: 5px 10px;
+        border: $border-gray2;
+      }
+      th {
+        background: $gray3;
       }
     }
+    ul, ol {
+      margin: 0 0 $box-margin 25px;
+    }
   }
-  ol {
-    margin-bottom: 12px;
-    margin-left: 25px;
-    padding-left: 23px;
-  }
-  dl {
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid $gray;
-    dt {
-      float: left;
-      min-width: 15%;
+  .related-pages, .map-page, .contact {
+    margin-bottom: $box-margin;
+    h1 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      @include grd-blue;
+      color: $white;
+      font-size: $px18;
       font-weight: bold;
     }
   }
-  table {
-    width: 100%;
-    margin-bottom: 12px;
-    caption {
-      color: $blue;
-      text-align: left;
-    }
-    th {
-      padding: 3px 8px 0;
-      border: 1px solid $gray;
-      background: $blue;
+  .map-page {
+    margin-bottom: $box-margin;
+    h2 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      @include grd-blue;
       color: $white;
+      font-size: $px18;
+      font-weight: bold;
     }
-    td {
-      padding: 3px 8px 0;
-      border: 1px solid $gray;
+  }
+  .contact {
+    @include clear;
+    dl {@include clear;}
+    dt, dd {
+      float: left;
+    }
+    .tel, .fax, .email {
+      float: left;
+      margin-right: $item-margin;
     }
   }
 }
-
+// -----------------------------------------------------------------------------
+// inquiry event
+.inquiry-form, .body--event .see {
+  dl {
+    clear: both;
+    @include clear;
+    margin-bottom: $item-margin;
+  }
+  dt {
+    width: 200px;
+    float: left;
+    margin-right: $item-margin;
+    padding: 10px;
+    background: $gray3;
+  }
+  dd {
+    float: left;
+    width: 569px;
+    margin-top: 4px;
+  }
+  .send {
+    text-align: center;
+    input {
+      @include btn-blue;
+    }
+  }
+  .simple-captcha {
+    margin: 0 0 $box-margin 234px;
+  }
+  #answer_captcha {
+   width: 10%;
+  }
+}
+:root .inquiry-form .send input,
+:root .body--event .see .send input {
+  filter: none\0;
+}
+#errorExplanation {
+  p, ul {
+    color: #e00;
+  }
+}
+.body--event {
+  .body {
+    clear: both;
+  }
+  .see {
+    dt {
+      clear: both;
+      margin-bottom: $item-margin;
+    }
+    dd {
+      margin: 10px 0  $item-margin;
+    }
+  }
+}
 // -----------------------------------------------------------------------------
 // calendar
 .event-date {
   position: relative;
   h1 {
-    margin-bottom: 15px;
-    padding: 7px 0 4px 15px;
-    border-bottom: 2px solid $blue;
-    font-size: $px15;
+    margin-bottom: $item-margin;
+    padding: 7px 0 4px 50px;
+    border-bottom: 2px solid $orange;
+    font-size: $px16;
+  }
+  h1.jan {
+    background: url(../img/ic-january.png) no-repeat 10px bottom;
+  }
+  h1.feb {
+    background: url(../img/ic-february.png) no-repeat left bottom;
+  }
+  h1.may {
+    background: url(../img/ic-may.png) no-repeat left bottom;
+  }
+  h1.apr {
+    background: url(../img/ic-april.png) no-repeat left bottom;
+  }
+  h1.mar {
+    background: url(../img/ic-march.png) no-repeat left bottom;
+  }
+  h1.jun {
+    background: url(../img/ic-june.png) no-repeat 10px bottom;
+  }
+  h1.jul {
+    background: url(../img/ic-july.png) no-repeat left bottom;
+  }
+  h1.aug {
+    background: url(../img/ic-august.png) no-repeat 5px bottom;
+  }
+  h1.sep {
+    background: url(../img/ic-september.png) no-repeat 9px bottom;
+  }
+  h1.oct {
+    background: url(../img/ic-october.png) no-repeat 10px bottom;
+  }
+  h1.nov {
+    background: url(../img/ic-november.png) no-repeat 8px bottom;
+  }
+  h1.dec {
+    background: url(../img/ic-december.png) no-repeat 10px bottom;
   }
   ul {
     position: absolute;
     top: 9px;
     right: 0;
     .prev {
-      @include l-arrow-bk;
       @include inline-block;
       margin-right: 10px;
       padding: 0 15px;
-      border-right: 1px solid $gray;
+      border-right: $border-gray2;
     }
     .next {
       @include inline-block;
       padding-right: 13px;
-      background: url(../img/r-arrow-bk.png) no-repeat right center;
     }
   }
 }
 #event-list {
   clear: both;
-  border-top: 1px solid $gray;
+  margin-bottom: 2em;
+  border-top: $border-gray2;
   dl {
     margin: 0;
     padding: 6px 10px 3px;
-    border-bottom: 1px solid $gray;
+    border-bottom: $border-gray2;
     zoom:1;
     &:before {
       content: "\0020";
@@ -2239,6 +1305,14 @@ nav.cms-sns_share {
       height: 0;
       overflow: hidden;
     }
+    .page {
+      margin-bottom: 0;
+      padding-bottom: 6px;
+      border: none;
+      &:last-child {
+        padding-bottom: 3px;
+      }
+    }
   }
   dl.sat {
     background: #e1ebf1;
@@ -2246,2511 +1320,703 @@ nav.cms-sns_share {
   }
   dl.sun, dl.holiday {
     background: #ffeeee;
-    color: #d90000;
+    color: #e00;
   }
   dt {
     float: left;
-    width: 12%;
+    width: 20%;
   }
   dd {
-    margin-left: 12%;
+    margin-left: 20%;
     h2 {
       margin: 0;
       padding: 0;
       border: none;
-      font-size: $px14;
+      font-size: 100%;
       font-weight: normal;
     }
-  }
-  div.page {
-    padding: 5px 0;
-  }
-}
-
-
-// <データカタログ>----------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// #head
-.s-dataset #head {
-  .inner .tab .tab01 {
-    a {
-      @include box-shadow(0 -4px 0 0 $data-pink inset, 0 6px 0 -2px $data-pink, 0 2px 0 0 $white);
-      background: url(../img/ic-datatab_hover.png) no-repeat 6px 5px;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #top
-.s-dataset #top {
-  background: url(../img/img-datakv02.png) no-repeat right center;
-}
-
-// -----------------------------------------------------------------------------
-// #dataset-kv
-#dataset-kv {
-  overflow: hidden;
-  border-top: 1px solid $gray;
-}
-
-// -----------------------------------------------------------------------------
-// #dataset-kv-left
-#dataset-kv-left {
-  float: left;
-  padding: 27px 20px;
-  letter-spacing: -.40em;
-  a {
-    display: inline-block;
-    float: left;
-    width: 162px;
-    height: 50px;
-    margin-top: 93px;
-    margin-right: 2px;
-    vertical-align: bottom;
-    letter-spacing: normal;
-  }
-  a.search {
-    background: url(../img/img-datasearch.png) no-repeat 0 0;
-    margin-left: 4px;
-    &:hover {
-      background: url(../img/img-datasearch_hover.png) no-repeat 0 0;
-    }
-  }
-  a.new {
-    background: url(../img/img-dataadd.png) no-repeat 0 0;
-    &:hover {
-      background: url(../img/img-dataadd_hover.png) no-repeat 0 0;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #dataset-kv-right
-#dataset-kv-right {
-  position: relative;
-  float: right;
-  margin-right: 65px;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    left: -20px;
-    width: 58px;
-    height: 59px;
-    background: url(../img/img-datakv01.png) no-repeat left center;
-  }
-  #about-data {
-    position: relative;
-    float: left;
-    width: 430px;
-    margin: 27px 15px 27px 0;
-    padding: 18px 20px 20px;
-    @include border-radius(5px);
-    border: 1px solid rgba(255, 51, 153, 0.29);
-    @include box-shadow(0px 1px 1px 0px rgba(255, 51, 153, 0.29));
-    background: $white;
-    font-size: $px17;
-    z-index: 1;
-    p {
-      line-height: 1.5;
-      letter-spacing: 1pt;
-      &:after {
-        position: absolute;
-        bottom: 30px;
-        right: -2px;
-        content: "";
-        width: 2px;
-        height: 26px;
-        background: $white;
-      }
-      a.search {
-        padding-left: 4px;
-      }
-      a.new {
-        padding: 0 3px;
-      }
-    }
-    &:before {
-      position: absolute;
-      bottom: 29px;
-      right: -35px;
-      content: "";
-      display: block;
-      width: 35px;
-      height: 14px;
-      @include box-shadow(0px 1px 0px 0 rgba(255, 51, 153, 0.29));
-      @include border-bottom-right-radius(50px 20px);
-      border-bottom: 1px solid rgba(255, 51, 153, 0.29);
-      background: transparent;
-      z-index: 10;
-    }
-    &:after {
-      position: absolute;
-      top: 69px;
-      left: 469px;
-      content: "";
-      display: block;
-      width: 36px;
-      height: 30px;
-      @include border-bottom-left-radius(50px 35px);
-      border-bottom: 1px solid rgba(255, 51, 153, 0.29);
-      background: transparent;
-      z-index: 10;
-    }
-  }
-  #sudachi {
-    float: right;
-    padding-top: 10px;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .dataset-count
-.dataset-count {
-  float: right;
-  margin: 12px 0;
-  padding-right: 10px;
-  border: 1px solid #999999;
-  background-color: $white;
-  text-align: left;
-  font-size: $px15;
-  span.count-label {
-    display: inline-block;
-    padding: 6px 10px;
-    background: #dddddd;
-    font-size: 80%;
-  }
-  span.count {
-    display: inline-block;
-    width: 50px;
-    padding: 0 6px 0 35px;
-    background: url(../img/ic-data_color_s.png) no-repeat 15px center;
-    text-align: right;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #data-top-contents .clear
-#data-top-contents .clear {
-  clear: both;
-}
-
-// -----------------------------------------------------------------------------
-// #main
-.s-dataset-top #main {
-  position: relative;
-  .dataset-count {
-    position: absolute;
-    top: -213px;
-    left: 21px;
-    padding: 0;
-    padding-right: 31px;
-    border: 1px solid #999999;
-    background-color: $white;
-    text-align: left;
-    font-size: $px25;
-    span.count-label {
-      display: inline-block;
-      width: 85px;
-      padding: 17px 10px;
-      background: #dddddd;
-      font-size: 65%;
-    }
-    span.count {
-      display: inline-block;
-      width: 110px;
-      padding: 0 6px 0 50px;
-      background: url(../img/ic-data_color_l.png) no-repeat 10px center;
-      font-size: 130%;
-      text-align: right;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #dataset-title
-#dataset-title {
-  padding: 2px 1px 1px 1px;
-  .inner {
-    @include grd-data-title;
-    overflow: hidden;
-    border-top: 2px solid $data-pink;
-    .left {
-      float: left;
-      padding: 10px 15px;
-    }
-    .right {
-      float: right;
-      padding: 10px;
-      .menu {
-        padding: 9px 0;
-        text-align: right;
-        .google-search {
-          display: inline-block;
-          padding-right: 12px;
-          text-align: initial;
-        }
-        .inquiry {
-          display: inline-block;
-          a {
-            padding-left: 22px;
-            background: url(../img/ic-inquiry.png) no-repeat left center;
-          }
-        }
-      }
-      .sitemenu {
-        padding: 9px 0;
-        padding-right: 8px;
-        text-align: right;
-        a {
-          width: 110px;
-          margin-right: 9px;
-          padding: 5px 0px 5px 32px;
-          display: inline-block;
-          border: 1px solid $white;
-          color: #4d4d4d;
-          font-size: $px13;
-          text-decoration: none;
-          text-align: left;
-          letter-spacing: normal;
-          &:last-child {
-            margin-right: 0;
-          }
-        }
-        a.new {
-          @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
-          @include grd-addbutton;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-addbutton_hover;
-          }
-        }
-        a.search {
-          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
-          @include grd-searchbutton;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-searchbutton_hover;
-          }
-        }
-        a.group-search {
-          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
-          @include grd-groupsearchbutton;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-groupsearchbutton_hover;
-          }
-        }
-        nav {
-          min-width: 450px;
-          letter-spacing: -.40em;
-        }
-      }
-    }
-  }
-  .inner:not(:target) {
-    filter: none;
-    -ms-filter: none;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #dataset-title .google-search
-#dataset-title .google-search {
-  form {
-    position: relative;
-    width: 332px;
-    border: 1px solid $gray;
-    #search-box {
-      width: 85%;
-      margin: 1px 10px 1px 2px;
-      padding: 2px;
-      @include border-radius(0px);
-      border: none;
-      outline-color: $white;
-      @include box-shadow(none);
-    }
-    img {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin: 2px;
-      padding: 2px 5px;
-      cursor: pointer
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #gnav
-.s-dataset #gnav {
-  li {
-    background: $white;
-    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc1OCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRkZGRiIgb2Zmc2V0PSIwLjMzMzMiLz48c3RvcCBzdG9wLWNvbG9yPSIjRkNGQ0ZDIiBvZmZzZXQ9IjAuMzgyOCIvPjxzdG9wIHN0b3AtY29sb3I9IiNFQ0VDRUMiIG9mZnNldD0iMC43MzIxIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0U2RTZFNiIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzU4KSIgLz4KPC9zdmc+);
-    @include background-image(linear-gradient($white 33.33%, #fcfcfc 38.28%, #ececec 73.21%, #e6e6e6 100%));
-    @include box-shadow(0 -4px 0 0 $data-pink inset);
-    &:hover {
-      background: $white;
-      background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImczNDQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGREU4RjQiIG9mZnNldD0iMC41Ii8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZEREZFRiIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzM0NCkiIC8+Cjwvc3ZnPg==);
-      @include background-image(linear-gradient(rgba(250, 191, 226, 0.3) 50%, rgba(250, 184, 223, 0.3)));
-    }
-  }
-  li.current {
-    background: $white;
-    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImczNDQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGREU4RjQiIG9mZnNldD0iMC41Ii8+PHN0b3Agc3RvcC1jb2xvcj0iI0ZEREZFRiIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzM0NCkiIC8+Cjwvc3ZnPg==);
-    @include background-image(linear-gradient(rgba(250, 191, 226,0.3) 50%, rgba(250, 184, 223, 0.3)));
-  }
-}
-
-// -----------------------------------------------------------------------------
-// article.areas, article.tags, article.licenses, article.formats
-.s-dataset {
-  article.areas, article.tags, article.licenses, article.formats {
-    header {
-      margin-bottom: 24px;
-      border-bottom: 2px solid $blue;
-      @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-    }
-    h1 {
-      @include box-sizing(border-box);
-      @include grd-dataheader;
-      padding: 9px 0 9px 26px;
-      border: 1px solid $gray;
-      border-bottom: none;
-      color: $blue;
-      font-size: $px16;
-      line-height: 1.3;
-    }
     div {
-      article, header, h2 {
-        display: inline-block;
-      }
-      article {
-        margin: 0 10px 10px 0;
-        header {
-          margin-bottom: 0;
-          border-bottom: 0;
-          @include box-shadow(none);
-        }
-        a {
-          display: inline-block;
-          padding: 4px 10px;
-          @include border-radius(5px);
-          color: $text;
-          text-decoration: none;
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #search_datasets #od-page-name
-#search_datasets #od-page-name {
-  border-bottom: 2px solid $blue;
-  @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-  h1 {
-    @include box-sizing(border-box);
-    @include grd-dataheader;
-    padding: 9px 0 9px 26px;
-    border: 1px solid $gray;
-    border-bottom: none;
-    color: $blue;
-    font-size: $px16;
-    line-height: 1.3;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// article
-article.areas div article a {
-  background: #D4EF97;
-  &:hover {
-    background: rgba(#D4EF97, 0.5);
-  }
-}
-
-article.tags div article a {
-  background: #CAEBFF;
-  &:hover {
-    background: rgba(#CAEBFF, 0.5);
-  }
-}
-
-article.formats div article a {
-  background: #FFCACA;
-  &:hover {
-    background: rgba(#FFCACA, 0.5);
-  }
-}
-
-article.licenses div article a {
-  background: #E5C998;
-  &:hover {
-    background: rgba(#E5C998, 0.5);
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .opendata-dataset_groups
-.opendata-dataset_groups {
-  float: none;
-  margin-bottom: 0;
-  width: 248px;
-}
-
-// -----------------------------------------------------------------------------
-// .opendata-search_groups, .opendata-search_datasets
-.opendata-search_groups, .opendata-search_datasets {
-  float: none;
-}
-
-// -----------------------------------------------------------------------------
-// .fb
-.s-dataset-top {
-  .fb {
-    clear: left;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .data-page-contents
-.s-dataset .data-page-contents {
-  .names {
-    @include box-shadow(0 8px 8px rgba(0, 0, 0, 0.1));
-    margin-bottom: 18px;
-    border-bottom: 2px solid $blue;
-  }
-  header h1.name {
-    margin-bottom: 12px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid $blue;
-    color: $blue;
-    font-size: $px32;
-    line-height: 1;
-  }
-  .text, nav.related-pages {
-    margin-bottom: 28px;
-  }
-  .text {
-    float: left;
-    width: 800px;
-    line-height: 1.5;
-    word-wrap: break-word;
-  }
-  .categories {
-    width: 800px;
-    margin-bottom: 18px;
-    a {
-      display: inline-block;
-      margin: 0 5px 10px 0;
-      padding: 4px 10px;
-      @include border-radius(5px);
-      color: $text;
-      text-decoration: none;
-    }
-    a.area {
-      background: #D4EF97;
-      &:hover {
-        background: #cbe79a;
-      }
-    }
-    a.category {
-      background: #FAE257;
-      &:hover {
-        background: #ffe593;
-      }
-    }
-    a.tag {
-      background: #CAEBFF;
-      &:hover {
-        background: #b6dbf3;
-      }
-    }
-  }
-  .dataset-tabs {
-    clear: both;
-    margin-bottom: 28px;
-    .names {
-      padding: 0;
-      border-bottom: $blue 2px solid;
-      .name {
-        @include box-sizing(border-box);
-        @include border-top-radius(5px);
-        @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-        display: inline-block;
-        width: 150px;
-        margin-right: 6px;
-        padding: 9px 0 9px 30px;
-        border: 1px solid $gray;
-        border-bottom: none;
-        color: $text;
+      @include float(left);
+      min-width: 85px;
+      margin-right: $item-margin;
+      a {
+        display: block;
+        min-width: 85px;
+        padding: 0 5px;
+        border: border-gray2;
+        background: $hblue;
+        color: $black1;
         text-decoration: none;
-        text-align: center;
-        font-size: $px16;
-        line-height: 1.3;
-      }
-      a.name:nth-child(1) {
-        width: 120px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-pagedatatab.png) no-repeat 7px 6px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-datatab_hover.png) no-repeat 7px 6px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(1) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-datatab_hover.png) no-repeat 7px 6px;
-        color: $blue;
-      }
-      a.name:nth-child(2) {
-        width: 130px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 9px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(2) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
-        color: $blue;
-      }
-      a.name:nth-child(3) {
-        width: 150px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab_blue.png) no-repeat 10px 5px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-ideatab_hover_s.png) no-repeat 10px 5px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(3) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-ideatab_hover_s.png) no-repeat 10px 5px;
-        color: $blue;
-      }
-    }
-    .info-wrap {
-      overflow: hidden;
-      .resources {
-        @include clearfix;
-        border: 1px solid $gray;
-        header {
-            border-bottom: 2px solid $blue;
-            @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-          h1 {
-            @include box-sizing(border-box);
-            @include grd-dataheader;
-            padding: 9px 0 9px 26px;
-            border-bottom: none;
-            color: $blue;
-            font-size: $px16;
-            line-height: 1.3;
-          }
-        }
-        .resource, .url_resource {
-          @include clearfix;
-          padding: 0px 16px;
-          border-bottom: 1px dotted $gray;
-          &:last-child {
-            border-bottom: 0;
-          }
-          .info {
-            float: left;
-            padding: 24px 0px;
-            max-width: 655px;
-            .name {
-              //float: left;
-              font-size: $px15;
-              line-height: 1.7;
-            }
-            .text {
-              float: none;
-              clear: both;
-              width: auto;
-              margin: 0px;
-              padding: 0px 0px 0px 40px;
-              font-size: $px12;
-              line-height: 1.3;
-              word-wrap: break-word;
-            }
-            .sparql {
-              clear: both;
-              padding: 0px 0px 0px 40px;
-            }
-          }
-          .icons {
-            float: right;
-            padding: 24px 0;
-            .license {
-              float: left;
-              margin-right: 10px;
-              padding: 10px 0;
-            }
-            .content-wrap {
-              @include grd-preview;
-              display: inline-block;
-              float: left;
-              margin-right: 5px;
-              border: 1px solid rgba(#666666, 0.24);
-              letter-spacing: -.40em;
-            }
-            .download-wrap {
-              @include grd-pinkbutton;
-              display: inline-block;
-              float: left;
-              border: 1px solid rgba(#EC008B, 0.24);
-              letter-spacing: -.40em;
-            }
-            .content, .download {
-              @include box-shadow(0 0 0 1px $gray);
-              @include grd-pinkarrow-gray;
-              display: inline-block;
-              margin: 4px 5px;
-              padding: 8px 25px;
-              border: 1px solid $white;
-              color: $text;
-              text-decoration: none;
-              letter-spacing: normal;
-              &:not(:target) {
-                filter: none;
-                -ms-filter: none;
-              }
-              &:hover {
-                @include grd-pinkarrow-gray_hover;
-              }
-            }
-          }
-        }
-      }
-      dl.author {
-        margin: 28px 0px 0px;
-        padding: 4px;
-        border: 1px solid $gray;
-        dt {
-          @include clearfix;
-          clear: both;
-          float: left;
-          width: 180px;
-          min-height: 1.0em;
-          padding: 5px 8px;
-          background: #f7daec;
-        }
-        dd {
-          min-height: 1.5em;
-          margin-left: 205px;
-          padding: 5px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        dt ~ dt { margin-top: 4px; }
-        dd ~ dd { margin-top: 4px; }
-        dd + dd { margin-top: 4px; }
-      }
-    }
-    #tab-app, #tab-idea {
-      @include clearfix;
-      border: 1px solid $gray;
-      header {
-          border-bottom: 2px solid $blue;
-          @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
-        h1 {
-          @include box-sizing(border-box);
-          @include grd-dataheader;
-          padding: 9px 0 9px 26px;
-          border-bottom: none;
-          color: $blue;
-          font-size: $px16;
-          line-height: 1.3;
-        }
-      }
-      .index {
-        margin-bottom: 0;
-        border-bottom: 0;
-        tr {
-          td.name {
-            width: 60%;
-            padding-left: 24px;
-            white-space: normal;
-            word-break: break-word;
-          }
-        }
-      }
-    }
-    #tab-idea {
-      .contribute-wrap {
-        @include grd-pinkbutton;
-        display: inline-block;
-        margin: 10px;
-        border: 1px solid rgba(#EC008B, 0.24);
-        letter-spacing: -.40em;
-        .contribute {
-          @include box-shadow(0 0 0 1px $gray);
-          @include grd-pinkarrow-gray;
-          display: inline-block;
-          margin: 4px 5px;
-          padding: 8px 20px;
-          border: 1px solid $white;
-          color: $text;
-          text-decoration: none;
-          letter-spacing: normal;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-pinkarrow-gray_hover;
-          }
-        }
       }
     }
   }
-  nav.related-pages {
-    border: 1px solid $gray;
-    header h1 {
-      @include box-sizing(border-box);
-      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
-      padding: 12px 0 5px 10px;
-      border-bottom: 2px solid $blue;
-      color: $blue;
-      font-size: $px16;
-      line-height: 1.3;
+  .page {
+    margin-bottom: 10px;
+    border-bottom: $border-gray2;
+    h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 100%;
+      font-weight: normal;
     }
-    .pages {
-      padding: 0 7px;
-      border-top: none;
-      article {
-        padding: 8px;
-        border-bottom: 1px dotted $gray;
-        &:last-child {
-          border-bottom: 0;
+    p {
+      margin-bottom: $item-margin;
+    }
+    .categories {
+      @include clear;
+      margin-bottom: 0;
+      border: none;
+      li {
+        padding-left: 0;
+      }
+      li a {
+        display: block;
+        @include float(left);
+        margin: 0 10px 10px 0;
+        padding: 3px 5px;
+        @include border-radius(3px);
+        background: $hblue;
+        color: $black1;
+        text-decoration: none;
+        &:hover {
+          background-color: $blue;
+          color: $white;
         }
       }
     }
   }
 }
-// -----------------------------------------------------------------------------
-// .resource-content
-.s-dataset .resource-content {
-  padding: 5px;
-  table {
-    border: 1px solid #ccc;
-    tr:nth-child(even) {
-      background-color: #f8f8f8;
+.event .see {
+  @include clear;
+  dt {
+    clear: both;
+    @include float(left);
+    width: 150px;
+    margin: 0 $box-margin $item-margin 0;
+    padding: 3px 5px;
+    @include border-radius(3px);
+    background: $hblue;
+  }
+  dd {
+    @include float(left);
+    width: 528px;
+    margin-bottom: $item-margin;
+    padding: 3px 0;
+    word-break: break-all;
+  }
+}
+.event-calendar {
+  margin-bottom: $box-margin;
+  .title h2 {
+    margin-bottom: 6px;
+    padding: 5px $item-margin;
+    @include grd-blue;
+    color: $white;
+  }
+  .calendar-nav {
+    text-align: center;
+    li {
+      display: inline-block;
+      font-size: $px12;
+    }
+    .current {
+      margin: 0 5px;
+    }
+  }
+  .calendar {
+    margin: 0 auto;
+    caption {
+      font-size: $px16;
     }
     th, td {
-      max-width: 160px;
-      min-width: 150px;
-      padding: 4px;
-      border: 1px solid #ccc;
-      font-size: 75%;
-      vertical-align: top;
-      line-height: 1.2;
-      word-wrap: break-word;
-      word-break: break-all;
-    }
-  }
-}
-
-
-// <アプリ>------------------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// #head
-.s-app #head {
-  .inner .tab .tab02 {
-    a {
-      @include box-shadow(0 -4px 0 0 $app-blue inset, 0 6px 0 -2px $app-blue, 0 2px 0 0 $white);
-      background: url(../img/ic-apptab_hover.png) no-repeat 3px 8px;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #top
-.s-app #top {
-  background: url(../img/img-appkv02.png) no-repeat right center;
-}
-
-// -----------------------------------------------------------------------------
-// #app-kv
-#app-kv {
-  overflow: hidden;
-  border-top: 1px solid $gray;
-}
-
-// -----------------------------------------------------------------------------
-// #app-kv-left
-#app-kv-left {
-  float: left;
-  padding: 27px 20px;
-  letter-spacing: -.40em;
-  a {
-    display: inline-block;
-    float: left;
-    width: 162px;
-    height: 50px;
-    margin-top: 93px;
-    margin-right: 2px;
-    vertical-align: bottom;
-    letter-spacing: normal;
-  }
-  a.search {
-    margin-left: 4px;
-    background: url(../img/img-appsearch.png) no-repeat 0 0;
-    &:hover {
-      background: url(../img/img-appsearch_hover.png) no-repeat 0 0;
-    }
-  }
-  a.new {
-    background: url(../img/img-appadd.png) no-repeat 0 0;
-    &:hover {
-      background: url(../img/img-appadd_hover.png) no-repeat 0 0;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #app-kv-right
-#app-kv-right {
-  position: relative;
-  float: right;
-  margin-right: 53px;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    left: -20px;
-    width: 58px;
-    height: 59px;
-    background: url(../img/img-appkv01.png) no-repeat left center;
-  }
-  #about-app {
-    position: relative;
-    float: left;
-    width: 430px;
-    margin: 27px 15px 20px 0;
-    padding: 10px 20px 5px 20px;
-    @include border-radius(5px);
-    border: 1px solid rgba($app-blue, 0.29);
-    @include box-shadow(0px 1px 1px 0px rgba($app-blue, 0.29));
-    background: $white;
-    font-size: $px17;
-    z-index: 1;
-    p {
-      line-height: 1.5;
-      letter-spacing: 1pt;
-      &:after {
-        position: absolute;
-        bottom: 30px;
-        right: -2px;
-        content: "";
-        width: 2px;
-        height: 26px;
-        background: $white;
-      }
-      a.search {
-        padding-left: 4px;
-      }
-      a.new {
-        padding: 0 3px;
-      }
-    }
-    &:before {
-      position: absolute;
-      bottom: 29px;
-      right: -35px;
-      content: "";
-      display: block;
-      width: 35px;
-      height: 14px;
-      @include box-shadow(0px 1px 0px 0 rgba($app-blue, 0.29));
-      @include border-bottom-right-radius(50px 20px);
-      border-bottom: 1px solid rgba($app-blue, 0.29);
-      background: transparent;
-      z-index: 10;
-    }
-    &:after {
-      position: absolute;
-      top: 69px;
-      left: 469px;
-      content: "";
-      display: block;
-      width: 36px;
-      height: 30px;
-      @include border-bottom-left-radius(50px 35px);
-      border-bottom: 1px solid rgba($app-blue, 0.29);
-      background: transparent;
-      z-index: 10;
-    }
-  }
-  #sudachi {
-    float: right;
-    padding-top: 25px;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .app-count
-.app-count {
-  float: right;
-  margin: 12px 0;
-  padding-right: 10px;
-  border: 1px solid #999999;
-  background-color: $white;
-  text-align: left;
-  font-size: $px15;
-  span.count-label {
-    display: inline-block;
-    padding: 6px 10px;
-    background: #dddddd;
-    font-size: 80%;
-  }
-  span.count {
-    display: inline-block;
-    width: 50px;
-    padding: 0 6px 0 35px;
-    background: url(../img/ic-app_color_s.png) no-repeat 15px center;
-    text-align: right;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #app-top-contents .clear
-#app-top-contents .clear {
-  clear: both;
-}
-
-// -----------------------------------------------------------------------------
-// #main
-.s-app-top #main {
-  position: relative;
-  .app-count {
-    position: absolute;
-    top: -213px;
-    left: 21px;
-    padding: 0;
-    padding-right: 31px;
-    border: 1px solid #999999;
-    background-color: $white;
-    text-align: left;
-    font-size: $px25;
-    span.count-label {
-      display: inline-block;
-      width: 85px;
-      padding: 17px 10px;
-      background: #dddddd;
-      font-size: 65%;
-    }
-    span.count {
-      display: inline-block;
-      width: 110px;
-      padding: 0 6px 0 50px;
-      background: url(../img/ic-app_color_l.png) no-repeat 10px center;
-      font-size: 130%;
-      text-align: right;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #app-title
-#app-title {
-  padding: 2px 1px 1px 1px;
-  .inner {
-    @include grd-app-title;
-    overflow: hidden;
-    border-top: 2px solid $app-blue;
-    .left {
-      float: left;
-      padding: 10px 25px;
-    }
-    .right {
-      float: right;
-      padding: 10px;
-      .menu {
-        padding: 9px 0;
-        text-align: right;
-        .google-search {
-          display: inline-block;
-          padding-right: 12px;
-          text-align: initial;
-        }
-        .inquiry {
-          display: inline-block;
-          a {
-            padding-left: 22px;
-            background: url(../img/ic-inquiry.png) no-repeat left center;
-          }
-        }
-      }
-      .sitemenu {
-        padding: 9px 0;
-        padding-right: 8px;
-        text-align: right;
-        a {
-          width: 110px;
-          margin-right: 9px;
-          padding: 5px 0px 5px 32px;
-          display: inline-block;
-          border: 1px solid $white;
-          color: #4d4d4d;
-          font-size: $px13;
-          text-decoration: none;
-          text-align: left;
-          letter-spacing: normal;
-          &:last-child {
-            margin-right: 0;
-          }
-        }
-        a.new {
-          @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
-          @include grd-addbutton;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-addbutton_hover;
-          }
-        }
-        a.search {
-          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
-          @include grd-searchbutton;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-searchbutton_hover;
-          }
-        }
-        nav {
-          min-width: 450px;
-          letter-spacing: -.40em;
-        }
-      }
-    }
-  }
-  .inner:not(:target) {
-    filter: none;
-    -ms-filter: none;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #app-title .google-search
-#app-title .google-search {
-  form {
-    position: relative;
-    width: 332px;
-    border: 1px solid $gray;
-    #search-box {
-      width: 85%;
-      margin: 1px 10px 1px 2px;
-      padding: 2px;
-      @include border-radius(0px);
-      border: none;
-      outline-color: $white;
-      @include box-shadow(none);
-    }
-    img {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin: 2px;
-      padding: 2px 5px;
-      cursor: pointer
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #gnav
-.s-app #gnav {
-  li {
-    background: $white;
-    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc1OCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRkZGRiIgb2Zmc2V0PSIwLjMzMzMiLz48c3RvcCBzdG9wLWNvbG9yPSIjRkNGQ0ZDIiBvZmZzZXQ9IjAuMzgyOCIvPjxzdG9wIHN0b3AtY29sb3I9IiNFQ0VDRUMiIG9mZnNldD0iMC43MzIxIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0U2RTZFNiIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzU4KSIgLz4KPC9zdmc+);
-    @include background-image(linear-gradient($white 33.33%, #fcfcfc 38.28%, #ececec 73.21%, #e6e6e6 100%));
-    @include box-shadow(0 -4px 0 0 $app-blue inset);
-    &:hover {
-      background: rgba(#00AEEC, 0.2)
-    }
-  }
-  li.current {
-    background: rgba(#00AEEC, 0.2)
-  }
-}
-
-// -----------------------------------------------------------------------------
-// article.areas, article.tags, article.licenses, article.formats
-.s-app {
-  article.areas, article.tags, article.licenses {
-    header {
-      margin-bottom: 24px;
-      border-bottom: 2px solid $blue;
-      @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-    }
-    h1 {
-      @include box-sizing(border-box);
-      @include grd-appheader;
-      padding: 9px 0 9px 26px;
-      border: 1px solid $gray;
-      border-bottom: none;
-      color: $blue;
-      font-size: $px16;
-      line-height: 1.3;
-    }
-    div {
-      article, header, h2 {
-        display: inline-block;
-      }
-      article {
-        margin: 0 10px 10px 0;
-        header {
-          margin-bottom: 0;
-          border-bottom: 0;
-          @include box-shadow(none);
-        }
-        a {
-          display: inline-block;
-          padding: 4px 10px;
-          @include border-radius(5px);
-          color: $text;
-          text-decoration: none;
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #search_apps #od-page-name
-#search_apps #od-page-name {
-  border-bottom: 2px solid $blue;
-  @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-  h1 {
-    @include box-sizing(border-box);
-    @include grd-appheader;
-    padding: 9px 0 9px 26px;
-    border: 1px solid $gray;
-    border-bottom: none;
-    color: $blue;
-    font-size: $px16;
-    line-height: 1.3;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .app-page-contents
-.s-app .app-page-contents {
-  .names {
-    margin-bottom: 18px;
-    border-bottom: 2px solid $blue;
-  }
-  header h1.name {
-    margin-bottom: 12px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid $blue;
-    color: $blue;
-    font-size: $px32;
-    line-height: 1;
-  }
-  .side-right {
-    float: right;
-    width: 272px;
-    .download-all {
-      margin-bottom: 24px;
+      width: 40px;
+      border: $border-gray2;
       text-align: center;
-      .download-wrap {
-        @include grd-bluebutton;
-        display: inline-block;
-        border: 1px solid rgba(#00AEEC, 0.24);
-        letter-spacing: -.40em;
+    }
+    th {
+      background: $hblue;
+    }
+    .unit {
+      display: none;
+    }
+    td.sun {
+      color: #e00;
+    }
+    td.sat {
+      color: #03c;
+    }
+    .today {
+      background: #ffeacc;
+    }
+    td.prev-month, td.next-month {
+      color: $gray4;
+      a {
+        color: $gray4;
       }
-      .download {
-        @include box-shadow(0 0 0 1px $gray);
-        @include grd-appbtn;
-        display: inline-block;
-        margin: 4px 5px;
-        padding: 8px 25px;
-        border: 1px solid $white;
-        color: $text;
-        text-decoration: none;
-        letter-spacing: normal;
-        &:not(:target) {
-          filter: none;
-          -ms-filter: none;
-        }
-        &:hover {
-          @include grd-appbtn_hover;
-        }
-      }
-    }
-  }
-  .text, nav.related-pages {
-    margin-bottom: 28px;
-  }
-  .text {
-    float: left;
-    width: 800px;
-    line-height: 1.5;
-    word-wrap: break-word;
-  }
-  .categories {
-    width: 800px;
-    margin-bottom: 18px;
-    a {
-      display: inline-block;
-      margin: 0 5px 10px 0;
-      padding: 4px 10px;
-      @include border-radius(5px);
-      color: $text;
-      text-decoration: none;
-    }
-    a.area {
-      background: #D4EF97;
-      &:hover {
-        background: #cbe79a;
-      }
-    }
-    a.category {
-      background: #FAE257;
-      &:hover {
-        background: #ffe593;
-      }
-    }
-    a.tag {
-      background: #CAEBFF;
-      &:hover {
-        background: #b6dbf3;
-      }
-    }
-  }
-  .application {
-    clear: both;
-    .appContainer {
-      margin-bottom: 12px;
-    }
-    #tabs {
-      padding: 0;
-      .names {
-        @include box-shadow(0 8px 8px rgba(0, 0, 0, 0.1));
-        .name {
-          @include box-sizing(border-box);
-          @include border-top-radius(5px);
-          @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-          display: inline-block;
-          width: 150px;
-          margin-right: 6px;
-          padding: 9px 0;
-          border: 1px solid $gray;
-          border-bottom: none;
-          color: $text;
-          text-decoration: none;
-          text-align: center;
-          font-size: $px16;
-          line-height: 1.3;
-        }
-        a.name {
-          background: rgba(33, 56, 127, 0.21) no-repeat 7px 6px;
-          &:hover {
-            @include opacity(1);
-            @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-            background: #ffffff no-repeat 7px 6px;
-            color: $blue;
-          }
-        }
-        a.current {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: #ffffff no-repeat 7px 6px;
-          color: $blue;
-        }
-        a#url {
-          width: 110px;
-        }
-        a#play {
-          width: 90px;
-        }
-        a#js {
-          width: 120px;
-        }
-        a#css {
-          width: 90px;
-        }
-        a#html {
-          width: 100px;
-        }
-        a#sample {
-          width: 150px;
-        }
-        a.dataset {
-          width: 180px;
-          padding-left: 20px;
-          background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab_blue_s.png) no-repeat 7px 6px;
-          &:hover {
-            @include opacity(1);
-            @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-            background: url(../img/ic-datatab_hover_s.png) no-repeat 7px 6px;
-            color: $blue;
-          }
-        }
-        a.dataset_current {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-datatab_hover_s.png) no-repeat 7px 6px;
-          color: $blue;
-        }
-        a.idea {
-          width: 150px;
-          padding-left: 20px;
-          background: rgba(33, 56, 127, 0.21) url(../img/ic-ideatab_blue.png) no-repeat 10px 5px;
-          &:hover {
-            @include opacity(1);
-            @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-            background: url(../img/ic-ideatab_hover_s.png) no-repeat 10px 5px;
-            color: $blue;
-          }
-        }
-        a.idea_current {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-ideatab_hover_s.png) no-repeat 10px 5px;
-          color: $blue;
-        }
-      }
-      .tab-body {
-        @include clearfix;
-        border: 1px solid $gray;
-        header {
-            border-bottom: 2px solid $blue;
-            @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
-          h1 {
-            @include box-sizing(border-box);
-            @include grd-appheader;
-            padding: 9px 0 9px 26px;
-            border-bottom: none;
-            color: $blue;
-            font-size: $px16;
-            line-height: 1.3;
-          }
-        }
-        #tab-url p{
-          padding: 24px;
-        }
-        #tab-sample .appfile {
-          @include clearfix;
-          margin: 0px 16px;
-          border-bottom: 1px solid #ddcfcc;
-          &:last-child {
-            border-bottom: 0;
-          }
-          .info {
-            float: left;
-            padding: 24px 0px;
-            max-width: 666px;
-            .name {
-              padding-left: 40px;
-              font-size: $px15;
-              line-height: 1.7;
-            }
-            .format-csv {
-              background: url(../img/ic-csv.png) no-repeat 5px center;
-            }
-            .format-json {
-              background: url(../img/ic-json.png) no-repeat 5px center;
-            }
-            .text {
-              float: none;
-              clear: both;
-              width: auto;
-              margin: 0px;
-              padding: 0px 0px 0px 40px;
-              font-size: $px12;
-              line-height: 1.3;
-              word-wrap: break-word;
-            }
-          }
-          .icons {
-            float: right;
-            padding: 24px 0;
-            .content-wrap {
-              @include grd-preview;
-              display: inline-block;
-              float: left;
-              margin-right: 5px;
-              border: 1px solid rgba(#666666, 0.24);
-              letter-spacing: -.40em;
-            }
-            .json-wrap {
-              @include grd-preview;
-              display: inline-block;
-              float: left;
-              margin-right: 5px;
-              border: 1px solid rgba(#666666, 0.24);
-              letter-spacing: -.40em;
-            }
-            .download-wrap {
-              @include grd-bluebutton;
-              display: inline-block;
-              float: left;
-              border: 1px solid rgba(#00AEEC, 0.24);
-              letter-spacing: -.40em;
-            }
-            .content, .download, .json {
-              @include box-shadow(0 0 0 1px $gray);
-              @include grd-appbtn;
-              display: inline-block;
-              margin: 4px 5px;
-              padding: 8px 25px;
-              border: 1px solid $white;
-              color: $text;
-              text-decoration: none;
-              letter-spacing: normal;
-              &:not(:target) {
-                filter: none;
-                -ms-filter: none;
-              }
-              &:hover {
-                @include grd-appbtn_hover;
-              }
-            }
-          }
-        }
-        #tab-dataset, #tab-idea {
-          .index {
-            margin-bottom: 0;
-            border-bottom: 0;
-            tr {
-              td.name {
-                width: 60%;
-                padding-left: 24px;
-                white-space: normal;
-                word-break: break-word;
-              }
-            }
-          }
-        }
-        #tab-idea {
-          .contribute-wrap {
-            @include grd-bluebutton;
-            display: inline-block;
-            margin: 10px;
-            border: 1px solid rgba(#00AEEC, 0.24);
-            letter-spacing: -.40em;
-            .contribute {
-              @include box-shadow(0 0 0 1px $gray);
-              @include grd-appbtn;
-              display: inline-block;
-              margin: 4px 5px;
-              padding: 8px 20px;
-              border: 1px solid $white;
-              color: $text;
-              text-decoration: none;
-              letter-spacing: normal;
-              &:not(:target) {
-                filter: none;
-                -ms-filter: none;
-              }
-              &:hover {
-                @include grd-appbtn_hover;
-              }
-            }
-          }
-        }
-        .fullscreen {
-          margin: 24px 0 0 24px;
-          a {
-            @include box-shadow(0 0 0 1px $gray);
-            @include grd-appbtn;
-            display: inline-block;
-            padding: 8px 8px 8px 25px;
-            border: 1px solid $white;
-            color: $text;
-            text-decoration: none;
-            &:hover {
-              @include grd-appbtn_hover;
-            }
-          }
-        }
-        .frame {
-          border-bottom: 1px solid $gray;
-          &:last-child {
-            border-bottom: 0;
-          }
-          iframe {
-            width: -webkit-calc(100% - 16px);
-            width: calc(100% - 16px);
-            min-height: 360px;
-            margin: 16px;
-          }
-          .app_filename {
-            margin: 12px 16px 0 12px;
-            border-bottom: 1px dotted $gray;
-          }
-        }
-      }
-    }
-  }
-  .info-wrap {
-    overflow: hidden;
-    dl.author {
-      margin: 28px 0px 0px;
-      padding: 4px;
-      border: 1px solid $gray;
-      dt {
-        @include clearfix;
-        clear: both;
-        float: left;
-        width: 180px;
-        min-height: 1.0em;
-        padding: 5px 8px;
-        background: rgba($app-blue, 0.2);
-      }
-      dd {
-        min-height: 1.5em;
-        margin-left: 205px;
-        padding: 5px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        #executed {
-          display: inline-block;
-        }
-      }
-      dt ~ dt { margin-top: 4px; }
-      dd ~ dd { margin-top: 4px; }
-      dd + dd { margin-top: 4px; }
-    }
-  }
-  nav.related-pages {
-    margin-top: 28px;
-    border: 1px solid $gray;
-    header h1 {
-      @include box-sizing(border-box);
-      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
-      padding: 12px 0 5px 10px;
-      border-bottom: 2px solid $blue;
-      color: $blue;
-      font-size: $px16;
-      line-height: 1.3;
-    }
-    .pages {
-      padding: 0 7px;
-      border-top: none;
-      article {
-        padding: 8px;
-        border-bottom: 1px dotted #cccccc;
-        &:last-child {
-          border-bottom: 0;
-        }
-      }
-    }
-  }
-}
-// -----------------------------------------------------------------------------
-// .appfile-content
-.s-app .appfile-content {
-  padding: 5px;
-  table {
-    border: 1px solid #ccc;
-    tr:nth-child(even) {
-      background-color: #f8f8f8;
-    }
-    th, td {
-      max-width: 160px;
-      min-width: 150px;
-      padding: 4px;
-      border: 1px solid #ccc;
-      font-size: 75%;
-      vertical-align: top;
-      line-height: 1.2;
-      word-wrap: break-word;
-      word-break: break-all;
-    }
-  }
-}
-
-// .appfile-json
-.s-app .appfile-json {
-  padding: 5px;
-  pre {
-    font-family: $font-base;
-  }
-}
-
-// -----------------------------------------------------------------------------
-//app fullscreen
-.app-body {
-  width: 100%;
-  height: 100%;
-  .frm-app {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-// <アイデア>----------------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// #head
-.s-idea #head {
-  .inner .tab .tab03 {
-    a {
-      @include box-shadow(0 -4px 0 0 $idea-yellow inset, 0 6px 0 -2px $idea-yellow, 0 2px 0 0 $white);
-      background: url(../img/ic-ideatab_hover.png) no-repeat 2px 3px;
     }
   }
 }
 
 // -----------------------------------------------------------------------------
-// #top
-.s-idea #top {
-
-  background: url(../img/img-ideakv02.png) no-repeat right center;
-}
-
+// dataset
 // -----------------------------------------------------------------------------
-// #idea-kv
-#idea-kv {
-  overflow: hidden;
-  border-top: 1px solid $gray;
-}
-
-// -----------------------------------------------------------------------------
-// #idea-kv-left
-#idea-kv-left {
-  float: left;
-  padding: 27px 20px;
-  letter-spacing: -.40em;
-  a {
-    display: inline-block;
-    float: left;
-    width: 162px;
-    height: 50px;
-    margin-top: 93px;
-    margin-right: 2px;
-    vertical-align: bottom;
-    letter-spacing: normal;
+// opendata-tabs
+.dataset .opendata-tabs {
+  @include tabs;
+  clear: both;
+  .names {
+    border-bottom: 2px solid $sky;
+    a:hover, a.current {
+      background: $sky;
+      filter: none;
+      color: $black1;
+    }
   }
-  a.search {
-    background: url(../img/img-ideasearch.png) no-repeat 0 0;
-    margin-left: 4px;
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.dataset {
+  .areas, .tags, .formats, .licenses {
+    h1 {
+      @include midashi-dataset;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// page-name
+.dataset #page-name {
+  @include midashi-dataset;
+}
+// -----------------------------------------------------------------------------
+// search_group
+#search_group {
+  margin-bottom: $box-margin;
+  h1 {
+    @include midashi-beige;
+    padding-left: 35px;
+    background: $beige2 url(../img/ic-group-gr.png) no-repeat 10px center;
+  }
+  h2 a {
+    display: block;
+    padding: 7px $item-margin;
+    border-bottom: $border-gray2;
     &:hover {
-      background: url(../img/img-ideasearch_hover.png) no-repeat 0 0;
+      background: $gray3;
     }
   }
-  a.new {
-    background: url(../img/img-ideaadd.png) no-repeat 0 0;
-    &:hover {
-      background: url(../img/img-ideaadd_hover.png) no-repeat 0 0;
-    }
+  nav {
+    text-align: right;
   }
-}
-
-// -----------------------------------------------------------------------------
-// #idea-kv-right
-#idea-kv-right {
-  position: relative;
-  float: right;
-  margin-right: 79px;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    left: -20px;
-    width: 58px;
-    height: 59px;
-    background: url(../img/img-ideakv01.png) no-repeat left center;
-  }
-  #about-idea {
-    position: relative;
-    float: left;
-    width: 430px;
-    margin: 27px 15px 20px 0;
-    padding: 10px 20px 5px 20px;
-    @include border-radius(5px);
-    border: 1px solid rgba($idea-yellow, 0.29);
-    @include box-shadow(0px 1px 1px 0px rgba($idea-yellow, 0.29));
-    background: $white;
-    font-size: $px17;
-    z-index: 1;
-    p {
-      line-height: 1.5;
-      letter-spacing: 1pt;
-      &:after {
-        position: absolute;
-        bottom: 30px;
-        right: -2px;
-        content: "";
-        width: 2px;
-        height: 26px;
-        background: $white;
-      }
-      a.search {
-        padding-left: 4px;
-      }
-      a.new {
-        padding: 0 3px;
-      }
-    }
-    &:before {
-      position: absolute;
-      bottom: 29px;
-      right: -35px;
-      content: "";
-      display: block;
-      width: 35px;
-      height: 14px;
-      @include box-shadow(0px 1px 0px 0 rgba($idea-yellow, 0.29));
-      @include border-bottom-right-radius(50px 20px);
-      border-bottom: 1px solid rgba($idea-yellow, 0.29);
-      background: transparent;
-      z-index: 10;
-    }
-    &:after {
-      position: absolute;
-      top: 69px;
-      left: 469px;
-      content: "";
-      display: block;
-      width: 36px;
-      height: 30px;
-      @include border-bottom-left-radius(50px 35px);
-      border-bottom: 1px solid rgba($idea-yellow, 0.29);
-      background: transparent;
-      z-index: 10;
-    }
-  }
-  #sudachi {
-    float: right;
-    padding: 36px 0 0 22px;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .idea-count
-.idea-count {
-  float: right;
-  margin: 12px 0;
-  padding-right: 10px;
-  border: 1px solid #999999;
-  background-color: $white;
-  text-align: left;
-  font-size: $px15;
-  span.count-label {
-    display: inline-block;
-    padding: 6px 10px;
-    background: #dddddd;
-    font-size: 80%;
-  }
-  span.count {
-    display: inline-block;
-    width: 50px;
-    padding: 2px 6px 2px 35px;
-    background: url(../img/ic-idea_color_s.png) no-repeat 15px center;
+  .more {
+    margin-top: $item-margin;
+    @include btn-black;
     text-align: right;
   }
 }
-
 // -----------------------------------------------------------------------------
-// #app-top-contents .clear
-#idea-top-contents .clear {
-  clear: both;
-}
-
-// -----------------------------------------------------------------------------
-// #main
-.s-idea-top #main {
-  position: relative;
-  .idea-count {
-    position: absolute;
-    top: -213px;
-    left: 21px;
-    padding: 0;
-    padding-right: 31px;
-    border: 1px solid #999999;
-    background-color: $white;
-    text-align: left;
-    font-size: $px25;
-    span.count-label {
-      display: inline-block;
-      width: 85px;
-      padding: 17px 10px;
-      background: #dddddd;
-      font-size: 65%;
-    }
-    span.count {
-      display: inline-block;
-      width: 110px;
-      padding: 3px 6px 0 50px;
-      background: url(../img/ic-idea_color_l.png) no-repeat 10px center;
-      font-size: 130%;
-      text-align: right;
-    }
+// dataset-attention
+#dataset-attention {
+  margin-bottom: $box-margin;
+  h1 {
+    @include midashi-dataset;
   }
-}
-
-// -----------------------------------------------------------------------------
-// #idea-title
-#idea-title {
-  padding: 2px 1px 1px 1px;
-  .inner {
-    @include grd-idea-title;
-    overflow: hidden;
-    border-top: 2px solid $idea-yellow;
-    .left {
-      float: left;
-      padding: 14px 4.5px;
-    }
-    .right {
-      float: right;
-      padding: 10px;
-      .menu {
-        padding: 9px 0;
-        text-align: right;
-        .google-search {
-          display: inline-block;
-          padding-right: 12px;
-          text-align: initial;
-        }
-        .inquiry {
-          display: inline-block;
-          a {
-            padding-left: 22px;
-            background: url(../img/ic-inquiry.png) no-repeat left center;
-          }
-        }
-      }
-      .sitemenu {
-        padding: 9px 0;
-        padding-right: 8px;
-        text-align: right;
-        a {
-          width: 110px;
-          margin-right: 9px;
-          padding: 5px 0px 5px 32px;
-          display: inline-block;
-          border: 1px solid $white;
-          color: #4d4d4d;
-          font-size: $px13;
-          text-decoration: none;
-          text-align: left;
-          letter-spacing: normal;
-          &:last-child {
-            margin-right: 0;
-          }
-        }
-        a.new {
-          @include box-shadow(0 0 0 1px rgba(#CCCC33, 0.6));
-          @include grd-addbutton;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-addbutton_hover;
-          }
-        }
-        a.search {
-          @include box-shadow(0 0 0 1px rgba(#b3b3e6, 0.5));
-          @include grd-searchbutton;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-searchbutton_hover;
-          }
-        }
-        nav {
-          min-width: 450px;
-          letter-spacing: -.40em;
-        }
-      }
-    }
-  }
-  .inner:not(:target) {
-    filter: none;
-    -ms-filter: none;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #idea-title .google-search
-#idea-title .google-search {
-  form {
-    position: relative;
-    width: 332px;
-    border: 1px solid $gray;
-    #search-box {
-      width: 85%;
-      margin: 1px 10px 1px 2px;
-      padding: 2px;
-      @include border-radius(0px);
-      border: none;
-      outline-color: $white;
-      @include box-shadow(none);
-    }
-    img {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin: 2px;
-      padding: 2px 5px;
-      cursor: pointer
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #gnav
-.s-idea #gnav {
   li {
-    background: $white;
-    background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc1OCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMCUiIHkyPSIxMDAlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRkZGRiIgb2Zmc2V0PSIwLjMzMzMiLz48c3RvcCBzdG9wLWNvbG9yPSIjRkNGQ0ZDIiBvZmZzZXQ9IjAuMzgyOCIvPjxzdG9wIHN0b3AtY29sb3I9IiNFQ0VDRUMiIG9mZnNldD0iMC43MzIxIi8+PHN0b3Agc3RvcC1jb2xvcj0iI0U2RTZFNiIgb2Zmc2V0PSIxIi8+CjwvbGluZWFyR3JhZGllbnQ+CjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZzU4KSIgLz4KPC9zdmc+);
-    @include background-image(linear-gradient($white 33.33%, #fcfcfc 38.28%, #ececec 73.21%, #e6e6e6 100%));
-    @include box-shadow(0 -4px 0 0 #FEE500 inset);
-    &:hover {
-      background: rgba($idea-yellow, 0.22);
-    }
-  }
-  li.current {
-    background: rgba($idea-yellow, 0.22);
-  }
-}
-
-// -----------------------------------------------------------------------------
-// article.areas, article.tags
-.s-idea {
-  article.areas, article.tags {
-    header {
-      margin-bottom: 24px;
-      border-bottom: 2px solid $blue;
-      @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-    }
-    h1 {
-      @include box-sizing(border-box);
-      @include grd-ideaheader;
-      padding: 9px 0 9px 26px;
-      border: 1px solid $gray;
-      border-bottom: none;
-      color: $blue;
-      font-size: $px16;
-      line-height: 1.3;
-    }
-    div {
-      article, header, h2 {
-        display: inline-block;
-      }
-      article {
-        margin: 0 10px 10px 0;
-        header {
-          margin-bottom: 0;
-          border-bottom: 0;
-          @include box-shadow(none);
-        }
-        a {
-          display: inline-block;
-          padding: 4px 10px;
-          @include border-radius(5px);
-          color: $text;
-          text-decoration: none;
-        }
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-// #search_apps #od-page-name
-#search_ideas #od-page-name {
-  border-bottom: 2px solid $blue;
-  @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-  h1 {
-    @include box-sizing(border-box);
-    @include grd-ideaheader;
-    padding: 9px 0 9px 26px;
-    border: 1px solid $gray;
-    border-bottom: none;
-    color: $blue;
-    font-size: $px16;
-    line-height: 1.3;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .idea-page-contents
-.s-idea .idea-page-contents {
-  .names {
-    margin-bottom: 18px;
-    border-bottom: 2px solid $blue;
-  }
-  header h1.name {
-    margin-bottom: 12px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid $blue;
-    color: $blue;
-    font-size: $px32;
-    line-height: 1;
-  }
-  .text, nav.related-pages {
-    margin-bottom: 28px;
-  }
-  .text {
-    float: left;
-    width: 800px;
-    line-height: 1.5;
-    word-wrap: break-word;
-  }
-  .categories {
-    width: 800px;
-    margin-bottom: 18px;
+    list-style: none;
     a {
-      display: inline-block;
-      margin: 0 5px 10px 0;
-      padding: 4px 10px;
-      @include border-radius(5px);
-      color: $text;
-      text-decoration: none;
-    }
-    a.area {
-      background: #D4EF97;
+      display: block;
+      padding: 7px $item-margin;
+      border-bottom: $border-gray2;
       &:hover {
-        background: #cbe79a;
-      }
-    }
-    a.category {
-      background: #FAE257;
-      &:hover {
-        background: #ffe593;
-      }
-    }
-    a.tag {
-      background: #CAEBFF;
-      &:hover {
-        background: #b6dbf3;
-      }
-    }
-  }
-  .idea-tabs {
-    clear: both;
-    margin-bottom: 28px;
-    .names {
-      @include box-shadow(0 8px 8px rgba(0, 0, 0, 0.1));
-      .name {
-        @include box-sizing(border-box);
-        @include border-top-radius(5px);
-        @include box-shadow(1px 1px $white inset, -1px 0 $white inset);
-        display: inline-block;
-        margin-right: 6px;
-        padding: 9px 0;
-        border: 1px solid $gray;
-        border-bottom: none;
-        color: $text;
-        text-decoration: none;
-        text-align: center;
-        font-size: $px16;
-        line-height: 1.3;
-      }
-      a.name:nth-child(1) {
-        width: 150px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-pageideatab.png) no-repeat 10px 4px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-ideatab_hover.png) no-repeat 10px 5px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(1) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-ideatab_hover.png) no-repeat 10px 5px;
-        color: $blue;
-      }
-      a.name:nth-child(2) {
-        width: 180px;
-        padding-left: 20px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-datatab_blue_s.png) no-repeat 7px 6px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-datatab_hover_s.png) no-repeat 7px 6px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(2) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-datatab_hover_s.png) no-repeat 7px 6px;
-        color: $blue;
-      }
-      a.name:nth-child(3) {
-        width: 130px;
-        padding-left: 30px;
-        background: rgba(33, 56, 127, 0.21) url(../img/ic-apptab_blue.png) no-repeat 12px 9px;
-        &:hover {
-          @include opacity(1);
-          @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-          background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
-          color: $blue;
-        }
-      }
-      a.current:nth-child(3) {
-        @include opacity(1);
-        @include box-shadow(0px -8px 8px rgba(0, 0, 0, 0.1) inset);
-        background: url(../img/ic-apptab_blue_hover.png) no-repeat 12px 10px;
-        color: $blue;
-      }
-    }
-    #tab-dataset, #tab-app {
-      @include clearfix;
-      border: 1px solid $gray;
-      header {
-          border-bottom: 2px solid $blue;
-          @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
-        h1 {
-          @include box-sizing(border-box);
-          @include grd-ideaheader;
-          padding: 9px 0 9px 26px;
-          border-bottom: none;
-          color: $blue;
-          font-size: $px16;
-          line-height: 1.3;
-        }
-      }
-      .index {
-        margin-bottom: 0;
-        border-bottom: 0;
-        tr {
-          td.name {
-            width: 60%;
-            padding-left: 24px;
-            white-space: normal;
-            word-break: break-word;
-          }
-        }
-      }
-    }
-  }
-  .info-wrap {
-    overflow: hidden;
-    #tab-comment {
-      @include clearfix;
-      border: 1px solid $gray;
-      header {
-        border-bottom: 2px solid $blue;
-        @include box-shadow(0 1px 1px rgba(#a8a8a8, 0.6));
-        h1 {
-          @include box-sizing(border-box);
-          @include grd-ideaheader;
-          padding: 9px 0 9px 26px;
-          border-bottom: none;
-          color: $blue;
-          font-size: $px16;
-          line-height: 1.3;
-        }
-      }
-      .comments {
-        .comment {
-          padding: 24px 15px 8px 15px;
-          border-bottom: 1px solid $gray;
-          &:last-child {
-            border-bottom: none;
-          }
-          .text {
-            float: none;
-            width: auto;
-            margin-bottom: 32px;
-            line-height: 1.3;
-            word-wrap: break-word;
-          }
-          a {
-            margin-right: 10px;
-          }
-        }
-      }
-      form.opendata-add_comment-form {
-        position: relative;
-        padding: 16px;
-        background: #cccccc;
-        dl.comment_body {
-          display: inline-block;
-          width: 860px;
-          dt {
-            display: none;
-          }
-          textarea {
-            width: 100%;
-            vertical-align: bottom;
-          }
-        }
-        a.comment_add {
-          @include box-shadow(0 0 0 1px $gray);
-          @include grd-commentbutton;
-          display: inline-block;
-          position: absolute;
-          right: 35px;
-          top: 45px;
-          margin-left: 15px;
-          padding: 8px 8px 8px 22px;
-          border: 1px solid $white;
-          color: $text;
-          text-decoration: none;
-          &:not(:target) {
-            filter: none;
-            -ms-filter: none;
-          }
-          &:hover {
-            @include grd-commentbutton_hover;
-          }
-        }
-      }
-      .invite {
-        padding: 25px 15px;
-        border-top: 1px solid $gray;
-      }
-    }
-    .dataset, .app {
-      float: left;
-      width: 610px;
-      padding: 24px 8px 24px 24px;
-      word-break: break-word;
-    }
-    .dataset_downloaded, .app_executed {
-      float: left;
-      padding: 24px 8px;
-    }
-    .dataset_updated, .app_updated {
-      float: left;
-      padding: 24px 8px;
-    }
-    dl.author {
-      margin: 28px 0px 0px;
-      padding: 4px;
-      border: 1px solid $gray;
-      dt {
-        @include clearfix;
-        clear: both;
-        float: left;
-        width: 180px;
-        min-height: 1.0em;
-        padding: 5px 8px;
-        background: rgba(#F9E82B, 0.2);
-      }
-      dd {
-        min-height: 1.5em;
-        margin-left: 205px;
-        padding: 5px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        #executed {
-          display: inline-block;
-        }
-      }
-      dt ~ dt { margin-top: 4px; }
-      dd ~ dd { margin-top: 4px; }
-      dd + dd { margin-top: 4px; }
-    }
-  }
-  nav.related-pages {
-    margin-top: 28px;
-    border: 1px solid $gray;
-    header h1 {
-      @include box-sizing(border-box);
-      @include box-shadow(0 -8px 8px rgba(0, 0, 0, 0.1) inset);
-      padding: 12px 0 5px 10px;
-      border-bottom: 2px solid $blue;
-      color: $blue;
-      font-size: $px16;
-      line-height: 1.3;
-    }
-    .pages {
-      padding: 0 7px;
-      border-top: none;
-      article {
-        padding: 8px;
-        border-bottom: 1px dotted #cccccc;
-        &:last-child {
-          border-bottom: 0;
-        }
+        background: $gray3;
       }
     }
   }
 }
 
-
-// <スパークル>--------------------------------------------------------------------------------------------------------
-
 // -----------------------------------------------------------------------------
-// .opendata-sparql
-.opendata-sparql {
+// app
+// -----------------------------------------------------------------------------
+// app-attention
+#app-attention {
+  margin-bottom: $box-margin;
   h1 {
-    margin-bottom: 24px;
+    @include midashi-app;
   }
-  table {
-    margin-bottom: 24px;
+  li {
+    list-style: none;
+    a {
+      display: block;
+      padding: 7px $item-margin;
+      border-bottom: $border-gray2;
+      &:hover {
+        background: $gray3;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// opendata-tabs
+.app .opendata-tabs {
+  @include tabs;
+  clear: both;
+  .names {
+    border-bottom: 2px solid $green;
+    a:hover, a.current {
+      background: $green;
+      filter: none;
+      color: $black1;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.app {
+  .areas, .tags, .formats, .licenses {
+    h1 {
+      @include midashi-app;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// page-name
+.app #page-name {
+  @include midashi-app;
+}
+// -----------------------------------------------------------------------------
+// idea
+// -----------------------------------------------------------------------------
+// idea-attention
+#idea-attention {
+  margin-bottom: $box-margin;
+  h1 {
+    @include midashi-idea;
+  }
+  li {
+    list-style: none;
+    a {
+      display: block;
+      padding: 7px $item-margin;
+      border-bottom: $border-gray2;
+      &:hover {
+        background: $gray3;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// opendata-tabs
+.idea .opendata-tabs {
+  @include tabs;
+  clear: both;
+  .names {
+    border-bottom: 2px solid $yellow;
+    a:hover, a.current {
+      background: $yellow;
+      filter: none;
+      color: $black1;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.idea {
+  .areas, .tags, .formats, .licenses {
+    h1 {
+      @include midashi-idea;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// page-name
+.idea #page-name {
+  @include midashi-idea;
+}
+// -----------------------------------------------------------------------------
+// mypage
+// -----------------------------------------------------------------------------
+// mypage
+.body--mypage {
+  .Twitter, .facebook, .Yahoo, .Google, .github {
+    list-style: none;
+    a {
+      display: block;
+      width: 498px;
+      margin-bottom: $item-margin;
+      padding: $item-margin $box-margin;
+      border: $border-gray2;
+      color: $black1;
+      text-decoration: none;
+      &:hover {
+        background: $gray2;
+      }
+    }
+  }
+  .menu {
+    float: left;
+    margin-bottom: $item-margin;
+    a {
+      @include btn-blue;
+      padding: 7px 12px;
+      width: 180px;
+    }
+  }
+  .tutorial-data {
+    float: right;
+    margin-bottom: $item-margin;
+    a {
+      @include btn-black;
+    }
+  }
+  .index {
+    clear: both;
+    width: 100%;
+    margin-bottom: $box-margin;
+    thead {
+      border-bottom: 2px solid $blue;
+    }
+    tr {
+      border-bottom: $border-gray2;
+    }
     th {
-      padding: 0 20px 20px 0;
-      vertical-align: middle;
+      font-weight: normal;
+      text-align: left;
+    }
+    th, td {
+      padding: 10px;
+    }
+  }
+  .see {
+    width: 100%;
+    margin-bottom: $box-margin;
+    border-top: 2px solid $blue;
+    border-bottom: 2px solid $blue;
+    tr {
+      border-bottom: $border-gray2;
     }
     td {
-      width: 100%;
-      padding-bottom: 20px;
-      textarea {
+      padding: $item-margin;
+      input[type="text"], textarea {
         width: 100%;
-        padding: 10px;
+        @include box-sizing(border-box);
       }
+      label {
+        margin-right: $item-margin;
+      }
+      label.parent {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 7px;
+        padding-bottom: 7px;
+        border-bottom: $border-gray2;
+      }
+    }
+    .field {
+      width: 200px;
+      background: $gray3;
+      vertical-align: top;
+    }
+  }
+  .ajax-selected {
+    width: 100%;
+    margin-top: $item-margin;
+    th {
+      padding: 0 $item-margin 7px;
+      font-weight: normal;
+      text-align: left;
+    }
+  }
+  #item-form {
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      @include border-radius(8px);
+      background: $black1;
+      line-height: 18px;
+      color: $white;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      ul {
+        position: absolute;
+        bottom: 18px;
+        left: -30px;
+        display: none;
+        width: 22em;
+        padding: 10px;
+        border: $border-gray2;
+        background: $white;
+        line-height: 1.6em;
+        color: $black1;
+        font-weight: normal;
+        text-align: left;
+        list-style: none;
+        &:before {
+          content: "";
+          position: absolute;
+          bottom: -11px;
+          left: 30px;
+          width: 0;
+          height: 0;
+          border-top: 10px solid $gray2;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          bottom: -16px;
+          left: 30px;
+          width: 0;
+          height: 0;
+          border-top: 10px solid $white;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+        }
+      }
+    }
+    .deletion-confirm {
+      margin-bottom: $box-margin;
+    }
+    .send {
+      text-align: center;
+      input {
+        @include btn-blue;
+      }
+    }
+  }
+  .account {
+    margin-bottom: $box-margin;
+    text-align: right;
+    a {
+      @include btn-black;
+    }
+  }
+  #ajax-box {
+    font-size: 87.5%;
+    input[type="text"] {
+      height: 1em;
+      padding: 2px;
+    }
+    input {
+      font-weight: $px14;
+    }
+    thead {
+      border-bottom: $border-gray2;
+    }
+    tr:hover {
+      background: $gray1;
+    }
+    th {
+      font-weight: normal;
+      text-align: left;
+      white-space: nowrap;
+    }
+    th, td {
+      padding: 5px 10px;
+    }
+    .checkbox {
+      width: 20px;
+    }
+  }
+}
+:root .body--mypage .menu a {
+  filter: none\0;
+}
+:root .body--mypage #item-form .send input {
+  filter: none\0;
+}
+.member-login {
+  margin-bottom: $box-margin;
+  dl {
+    clear: both;
+    @include clear;
+    margin-bottom: $item-margin;
+  }
+  dt, dd {
+    float: left;
+    margin-right: $item-margin;
+  }
+  dt {
+    padding: 3px 5px;
+  }
+  dd {
+    input {
+      width: 350px;
+    }
+  }
+  .send {
+    clear: both;
+    text-align: center;
+    input {
+      @include btn-blue;
+    }
+  }
+}
+:root .member-login .send input {
+  filter: none\0;
+}
+#mypage-tabs {
+  @include tab;
+  margin: $box-margin 0;
+  a {
+    position: relative;
+    padding: 8px 10px 5px 40px;
+  }
+  .dataset:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-data-wh.png) no-repeat left center;
+  }
+  .app:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 10px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-app-wh.png) no-repeat left center;
+  }
+  .idea:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-idea-wh.png) no-repeat left center;
+  }
+  .profile:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-login.png) no-repeat left center;
+  }
+}
+:root #mypage-tabs a:hover,
+:root #mypage-tabs a.current {
+  filter: none\0;
+}
+// -----------------------------------------------------------------------------
+// members
+.members {
+  ul {
+    @include clear;
+  }
+  li {
+    float: left;
+    width: 332px;
+    margin: 0 $item-margin $item-margin;
+    list-style: none;
+    vertical-align: middle;
+    img {
+      width: 50px;
+      height: 50px;
+      margin-right: $item-margin;
+      padding: 2px;
+      border: $border-gray2;
+    }
+  }
+}
+.member-tabs {
+  @include tabs;
+  clear: both;
+}
+:root .member-tabs .names a:hover,
+:root .member-tabs .names a.current {
+  filter: none\0;
+}
+
+.body--member .profile {
+  .icon {
+    float: left;
+    margin: 0 $box-margin $box-margin 0;
+    padding: 2px;
+    border: $border-gray2;
+  }
+  .name {
+    float: left;
+    width: 903px;
+    margin: $box-margin 0;
+    font-size: $px32;
+    font-weight: bold;
+  }
+}
+.body--member .contents {
+  clear: both;
+  .datasets header h2 {
+    @include midashi-dataset;
+  }
+  .apps header h2 {
+    @include midashi-app;
+  }
+  .ideas header h2 {
+    @include midashi-idea;
+  }
+  .datasets .pages header h2,
+  .apps .pages header h2,
+  .ideas .pages header h2 {
+    padding: 0;
+    border-bottom: none;
+    background: none;
+    font-size: $px14;
+  }
+}
+// -----------------------------------------------------------------------------
+// sparql
+.opendata-sparql {
+  table {
+    width: 100%;
+    margin-bottom: $box-margin;
+    border-top: 2px solid $blue;
+    border-bottom: 2px solid $blue;
+    tr {
+      border-bottom: $border-gray2;
+    }
+    td {
+      padding: $item-margin;
+      input[type="text"], textarea {
+        width: 100%;
+        @include box-sizing(border-box);
+      }
+      label {
+        margin-right: $item-margin;
+      }
+      label.parent {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 7px;
+        padding-bottom: 7px;
+        border-bottom: $border-gray2;
+      }
+    }
+    th {
+      width: 200px;
+      padding: $item-margin;
+      background: $gray3;
+      vertical-align: middle;
     }
   }
   div {
     text-align: center;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// .s-sparql #tab-inner
-.s-sparql {
-  #contents {
-    margin: 12px auto 0 auto;
-  }
-  #tab-inner {
-    .wrap {
-      @include box-shadow((-0.3px -0.3px 0px rgba(0, 0, 0, 0.4)),(0.3px 0px 0px rgba(0, 0, 0, 0.4)));
-      border: 1px solid $gray;
-      background: $white;
-      h1 {
-        @include border-top-radius(2px);
-        margin: 2px;
-        padding: 14px 0 14px 15px;
-        background: $blue;
-        color: $white;
-        font-size: $px32;
-      }
+    input {
+      @include btn-blue;
     }
   }
 }
-
-
-// <モーダル>----------------------------------------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-// #colorbox
-#colorbox {
-  font-size: 75%;
-  #ajax-box {
-    margin: 10px;
-    input[type=text] {
-      width: 80%;
-      height: 2.5em;
-    }
-  }
-}
-
-// table.od-modal
-table.od-modal {
-  table-layout:fixed;
-  width: 100%;
-  th, td {
-    padding: 4px 8px;
-  }
-  thead {
-    tr {
-      position: relative;
-      border-bottom: 1px solid #cccccc;
-      color: #644;
-    }
-    th {
-      padding: 4px 8px 4px;
-      color: #999999;
-      font-weight: normal;
-      text-align: left;
-    }
-    &:after {
-      display: block;
-      overflow: hidden;
-      height: 10px;
-      visibility: hidden;
-      content: "-";
-    }
-  }
-  tbody {
-    tr {
-      &:nth-child(even) { background-color: #fff; }
-      &:hover { background-color: #dedede; }
-    }
-    tr.checked {
-      background-color: #cccccc;
-    }
-  }
-  th.checkbox, td.checkbox {
-    width: 35px;
-    padding: 0px;
-    text-align: center;
-  }
-  th.filename {
-    width: 20%;
-  }
-  th.route {
-    width: 20%;
-  }
-  th.datetime {
-    width: 10em;
-    width: 20%;
-  }
-  th.state {
-    width: 10%;
-  }
-  td {
-    overflow: hidden;
-    max-width: 100%;
-    a {
-      color: #0066cc;
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-  td.filename {
-    color: #2bb496;
-  }
-  nav.tap-menu, nav.multiple-menu {
-    display: none;
-    position: absolute;
-    min-width: 10em;
-    border: 1px solid #dedede;
-    @include box-shadow(1px 1px 3px #bbb);
-    background-color: #fff;
-    z-index: 100;
-    a {
-      display: block;
-      padding: 0px 12px;
-      text-align: left;
-      line-height: 2.6;
-      &:hover {
-        background-color: #dedede;
-      }
-    }
-  }
+:root .opendata-sparql div input {
+  filter: none\0;
 }

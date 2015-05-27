@@ -1,42 +1,33 @@
-<div id="idea-title">
-  <div class="inner">
-    <div class="left">
-      <a href="/idea/"><img src="/img/logo_idea.png" alt="アイデアボックスサイト"></a>
+<header id="site-title" class="idea">
+  <h1 class="logo"><a href="/idea/"><img src="/img/logo-idea.png" alt="アイデアボックス"></a></h1>
+  <div class="menu">
+    <div class="u-menu">
+      <div class="search">
+        <form action="http://www.google.com/search">
+          <input type="hidden" value="ja" name="hl">
+          <input type="text" title="サイト内検索" placeholder="サイト内検索" class="text" id="search-box" name="q">
+          <input type="image" src="/img/ic-search.png" alt="検索" id="search-button" value="検索" name="sa">
+        </form>
+      </div>
+      <div class="inquiry">
+        <a href="/inquiry/">お問い合わせ</a>
+      </div>
     </div>
-    <div class="right">
-      <div class="menu">
-        <div class="google-search">
-          <form name="search" action="/search.html">
-            <input type="hidden" value="004872735012777302794:zesv_a96vza" name="cx">
-            <input type="hidden" value="FORID:10" name="cof">
-            <input type="hidden" value="UTF-8" name="ie">
-            <input type="text" name="q" size="40" id="search-box" class="text" title="サイト内検索" placeholder="サイト内検索">
-            <img src="/img/ic-googlesearch.png" onclick="document.forms['search'].submit();">
-          </form>
-        </div>
-        <div class="inquiry">
-          <a href="/inquiry">お問い合わせ</a>
-        </div>
-      </div>
-      <div class="sitemenu">
-        <nav>
-          <a class="menu-link new" href="/mypage/idea/">アイデア登録</a>
-          <a class="menu-link search" href="/idea/search/">アイデア検索</a>
-        </nav>
-      </div>
+    <div class="l-menu">
+      <nav>
+        <li><a class="entry" href="/mypage/idea/">アイデア登録</a></li>
+        <li><a class="search" href="/idea/search/">アイデア検索</a></li>
+      </nav>
     </div>
   </div>
-</div>
-
+</header>
 <nav id="gnav">
   <ul>
-    <li class="kurashi"><a href="/idea/bunya/kurashi/">くらし</a></li>
-    <li class="kyouiku"><a href="/idea/bunya/kyoiku/">教育・文化</a></li>
-    <li class="kanko"><a href="/idea/bunya/kanko/">観光・物産</a></li>
-    <li class="sangyo"><a href="/idea/bunya/sangyo/">産業・労働</a></li>
-    <li class="kendo"><a href="/idea/bunya/kendo/">県土づくり</a></li>
-    <li class="gyosei"><a href="/idea/bunya/gyosei/">行政・地域</a></li>
-    <li class="bosai"><a href="/idea/bunya/bosai/">防災</a></li>
-    <li class="tokei"><a href="/idea/bunya/tokei/">統計</a></li>
+    <li class="kurashi"><a href="/idea/bunya/kurashi/">くらし・手続き</a></li>
+    <li class="kosodate"><a href="/idea/bunya/kosodate/">子育て・教育</a></li>
+    <li class="kenko"><a href="/idea/bunya/kenko/">健康・福祉</a></li>
+    <li class="kanko"><a href="/idea/bunya/kanko/">観光・文化・スポーツ</a></li>
+    <li class="sangyo"><a href="/idea/bunya/sangyo/">産業・仕事</a></li>
+    <li class="shisei"><a href="/idea/bunya/shisei/">市政情報</a></li>
   </ul>
 </nav>

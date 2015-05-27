@@ -1,55 +1,42 @@
 <html>
 <head>
-  <meta name="viewport"
-    content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
-  <link rel="shortcut icon" href="/img/favicon.ico" />
-  <link rel="apple-touch-icon-precomposed" href="/img/webclip.png" />
   <script src="/js/common.js"></script>
   <!--[if lt IE 9]>
     <script src="/js/html5shiv.js"></script>
     <script src="/js/selectivizr.js"></script>
   <![endif]-->
 </head>
-<body class="s-dataset">
+<body class="dataset">
 <div id="page">
-  <div id="wrap">
-    <header id="head">
-      <div class="inner">
-        </ part "tab" />
-        <div class="login">
-          </ part "mypage-login" />
-        </div>
-      </div>
-    </header>
-    <div id="tab-inner">
-      <div class="wrap">
-        </ part "dataset-head" />
+  <header id="head">
+    <div class="wrap">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
       </div>
     </div>
-  </div>
-  </ part "crumbs" />
+  </header>
+  </ part "dataset-head" />
 
-  <div id="contents">
-    <div class="content-body">
-      <div id="main">
-        <section id="search_datasets">
-          <header id="od-page-name"><h1>#{page_name}</h1></header>
-          </ yield />
-        </section>
-      </div>
-      <div id="sidebar">
-        <section id="search_group">
-          <header><h1 id="od-searchgroup-name">グループ</h1></header>
-          </ part "dataset-group" />
-        </section>
-        <section id="app-attention">
-          </ part "app-attention" />
-        </section>
-        <section id="idea-attention">
-          </ part "idea-attention" />
-        </section>
-      </div>
+  <div id="wrap">
+    </ part "crumbs" />
+    <div id="main">
+      <header id="page-name"><h1>#{page_name}</h1></header>
+      </ yield />
+    </div>
+    <div id="side">
+      <section id="search_group">
+        <header><h1 id="od-searchgroup-name">グループ</h1></header>
+        </ part "dataset-group" />
+      </section>
+      <section id="app-attention">
+        </ part "app-attention" />
+      </section>
+      <section id="idea-attention">
+        </ part "idea-attention" />
+      </section>
     </div>
   </div>
 

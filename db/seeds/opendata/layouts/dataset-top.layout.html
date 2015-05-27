@@ -1,55 +1,32 @@
 <html>
 <head>
-  <meta name="viewport"
-    content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
-  <link rel="shortcut icon" href="/img/favicon.ico" />
-  <link rel="apple-touch-icon-precomposed" href="/img/webclip.png" />
   <script src="/js/common.js"></script>
   <!--[if lt IE 9]>
     <script src="/js/html5shiv.js"></script>
     <script src="/js/selectivizr.js"></script>
   <![endif]-->
 </head>
-<body class="s-dataset s-dataset-top">
+<body class="dataset">
 <div id="page">
-  <div id="wrap">
-    <header id="head">
-      <div class="inner">
-        </ part "tab" />
-        <div class="login">
-          </ part "mypage-login" />
-        </div>
-      </div>
-    </header>
-    <div id="tab-inner">
-      <div class="wrap">
-        </ part "dataset-head" />
-        <div id="top">
-          </ part "dataset-kv" />
-        </div>
+  <header id="head">
+    <div class="wrap">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
       </div>
     </div>
-  </div>
+  </header>
+  </ part "dataset-head" />
+  </ part "dataset-kv" />
 
-  <div id="data-top-contents">
-    <div class="content-body">
-      <div id="main">
-        </ yield />
-        </ part "facebook" />
-      </div>
-      <div id="sidebar">
-        <div id="add">
-          <header><h2>広告</h2></header>
-          </ part "ads/banner" />
-          <a class="addinfo" href="/docs/kokokubosyu.html">広告バナーのご案内</a>
-        </div>
-        <div id="link">
-          <a href="http://www.pref.tokushima.jp/"><img src="http://www.pref.tokushima.jp/_files/00438858/bn_tokushimaken_top1.jpg" width="170px" height="50px" border="0" alt="徳島県ホームページ"></a>
-        </div>
-        </ part "twitter" />
-      </div>
-      <div class="clear"></div>
+  <div id="wrap">
+    <div id="main">
+      </ yield />
+    </div>
+    <div id="side">
+      </ part "ads/banner" />
     </div>
   </div>
 

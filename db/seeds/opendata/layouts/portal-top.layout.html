@@ -3,78 +3,40 @@
   <meta name="viewport"
   content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
-  <link rel="shortcut icon" href="/img/favicon.ico" />
-  <link rel="apple-touch-icon-precomposed" href="/img/webclip.png" />
   <script src="/js/common.js"></script>
   <!--[if lt IE 9]>
     <script src="/js/html5shiv.js"></script>
     <script src="/js/selectivizr.js"></script>
   <![endif]-->
 </head>
-<body class="s-portal">
+<body class="portal">
 <div id="page">
-  <div id="wrap">
-    <header id="head">
-      <div class="inner">
-        </ part "tab" />
-        <div class="login">
-          </ part "mypage-login" />
-        </div>
-     </div>
-    </header>
-    <div id="tab-inner">
-      <div id="top">
-        </ part "portal-kv" />
+  <header id="head">
+    <div class="wrap">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
       </div>
     </div>
-  </div>
+  </header>
+  </ part "portal-kv" />
 
-  <div id="contents">
-    <div class="content-body">
-      <div id="main">
-        </ part "portal-about" />
-        </ part "portal-tab" />
-        <section id="portal-dataset">
-          <header>
-            <h1>データカタログ</h1>
-          </header>
-          </ part "portal-dataset" />
-          <nav>
-            <a class="more" href="/dataset/">データカタログサイトへ</a>
-            <a class="rss" href="/dataset/rss.xml">RSS</a>
-          </nav>
-        </section>
-        <section id="portal-app">
-          <header>
-            <h1>アプリマーケット</h1>
-          </header>
-          </ part "portal-app" />
-          <nav>
-            <a class="more" href="/app/">アプリマーケットサイトへ</a>
-            <a class="rss" href="/app/rss.xml">RSS</a>
-          </nav>
-        </section>
-        <section id="portal-idea">
-          <header>
-            <h1>アイデアボックス</h1>
-          </header>
-          </ part "portal-idea" />
-          <nav>
-            <a class="more" href="/idea/">アイデアボックスサイトへ</a>
-            <a class="rss" href="/idea/rss.xml">RSS</a>
-          </nav>
-        </section>
-      </div>
-      <div id="sidebar">
-        <div id="add">
-          <header><h2>広告</h2></header>
-          </ part "ads/banner" />
-          <a class="addinfo" href="/docs/kokokubosyu.html">広告バナーのご案内</a>
-        </div>
-
-        </ part "twitter" />
-        </ part "portal-fb" />
-      </div>
+  <div id="wrap">
+    <div id="main">
+      </ part "portal-about" />
+      </ part "portal-tab" />
+      <section id="portal-dataset">
+        </ part "portal-dataset" />
+      </section>
+      <section id="portal-app">
+        </ part "portal-app" />
+      </section>
+      <section id="portal-idea">
+        </ part "portal-idea" />
+      </section>
+    </div>
+    <div id="side">
+      </ part "ads/banner" />
     </div>
   </div>
 

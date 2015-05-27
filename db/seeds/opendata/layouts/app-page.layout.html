@@ -1,44 +1,35 @@
 <html>
 <head>
-  <meta name="viewport"
-    content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
-  <link rel="shortcut icon" href="/img/favicon.ico" />
-  <link rel="apple-touch-icon-precomposed" href="/img/webclip.png" />
   <script src="/js/common.js"></script>
   <!--[if lt IE 9]>
     <script src="/js/html5shiv.js"></script>
     <script src="/js/selectivizr.js"></script>
   <![endif]-->
 </head>
-<body class="s-app">
-  <div id="page">
-    <div id="wrap">
-      <header id="head">
-        <div class="inner">
-          </ part "tab" />
-          <div class="login">
-            </ part "mypage-login" />
-          </div>
-        </div>
-      </header>
-      <div id="tab-inner">
-        <div class="wrap">
-          </ part "app-head" />
-        </div>
+<body class="app">
+<div id="page">
+  <header id="head">
+    <div class="wrap">
+      </ part "tab" />
+      <div class="login">
+        </ part "mypage-login" />
       </div>
     </div>
+  </header>
+  </ part "app-head" />
+
+  <div id="wrap" class="one">
     </ part "crumbs" />
-
-    <div id="contents" class="app-page-contents">
-      <div class="content-body">
-        </ part "sns-share" />
-        </ yield />
-      </div>
+    <div id="main">
+      </ part "sns-share" />
+      </ yield />
     </div>
-
-    </ part "foot" />
-
   </div>
+
+  </ part "foot" />
+
+</div>
 </body>
 </html>
