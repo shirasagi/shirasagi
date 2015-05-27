@@ -1,22 +1,25 @@
 require 'spec_helper'
 
 describe Opendata::Idea, dbscope: :example do
+  let!(:node_search_dataset) { create(:opendata_node_search_idea) }
+  let(:node) { create(:opendata_node_idea) }
+
   context "check attributes with typical url resource" do
-    subject { create(:opendata_idea) }
+    subject { create(:opendata_idea, node: node) }
     its(:becomes_with_route) { is_expected.not_to be_nil }
-    its(:dirname) { is_expected.to eq "dir" }
+    its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
     its(:path) { is_expected.to end_with  "/#{subject.dirname}/#{subject.basename}" }
     its(:url) { is_expected.to eq "/#{subject.dirname}/#{subject.basename}" }
     its(:full_url) { is_expected.to eq "http://#{cms_site.domain}/#{subject.dirname}/#{subject.basename}" }
-    its(:parent) { is_expected.to eq nil }
-    its(:point_url) { is_expected.to eq "#{subject.url}/point.html" }
-    its(:point_members_url) { is_expected.to eq "#{subject.url}/point/members.html" }
-    its(:related_app_url) { is_expected.to eq "#{subject.url}/app/show.html" }
-    its(:related_dataset_url) { is_expected.to eq "#{subject.url}/dataset/show.html" }
-    its(:comment_url) { is_expected.to eq "#{subject.url}/comment/show.html" }
-    its(:comment_add_url) { is_expected.to eq "#{subject.url}/comment/add.html" }
-    its(:comment_delete_url) { is_expected.to eq "#{subject.url}/comment/delete.html" }
+    its(:parent) { expect(subject.parent.id).to eq node.id }
+    its(:point_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/point.html" }
+    its(:point_members_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/point/members.html" }
+    its(:related_app_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/app/show.html" }
+    its(:related_dataset_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/dataset/show.html" }
+    its(:comment_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/comment/show.html" }
+    its(:comment_add_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/comment/add.html" }
+    its(:comment_delete_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/comment/delete.html" }
     its(:contact_present?) { is_expected.to be_falsey }
   end
 
