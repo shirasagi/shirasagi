@@ -41,7 +41,6 @@ SS::Application.routes.draw do
 
       resources :url_resources, concerns: :deletion do
         get "file" => "url_resources#download"
-        get "tsv" => "url_resources#download_tsv"
         get "content" => "url_resources#content"
       end
 
@@ -90,7 +89,6 @@ SS::Application.routes.draw do
     get "dataset/tags" => "public#index_tags", cell: "nodes/dataset"
     get "dataset/formats" => "public#index_formats", cell: "nodes/dataset"
     get "dataset/licenses" => "public#index_licenses", cell: "nodes/dataset"
-    get "dataset/crawl" => "public#index_crawl", cell: "nodes/dataset"
     get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
     get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/resource", format: false
     get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
