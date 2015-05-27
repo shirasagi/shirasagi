@@ -228,4 +228,24 @@ module Cms::Addon
         { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
       end
   end
+
+  module Thumb
+    extend ActiveSupport::Concern
+    extend SS::Addon
+    include SS::Relation::File
+
+    set_order 210
+
+    included do
+      attr_accessor :in_thumb
+      belongs_to_file :thumb
+      permit_params :in_thumb
+      validate :validate_thumb, if: ->{ in_thumb.present? }
+    end
+
+    def validate_thumb
+      file = relation_file(:thumb)
+      errors.add :thumb_id, :thums_is_not_an_image unless file.image?
+    end
+  end
 end

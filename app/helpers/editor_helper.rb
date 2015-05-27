@@ -70,6 +70,9 @@ module EditorHelper
     opts[:allowedContent] = true
     opts[:height] ||= "360px"
 
+    opts[:templates] = 'shirasagi'
+    opts[:templates_files] = [ "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}" ]
+
     jquery do
       "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
     end
@@ -95,6 +98,9 @@ module EditorHelper
       ]
       editor_opts[:toolbar] = "insertfile undo redo | styleselect | bold italic | forecolor backcolor" \
         " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"
+
+      # editor_opts[:templates] = [ { title: 'Some title 1', description: 'Some desc 1', content: 'My content' } ]
+      editor_opts[:templates] = "#{template_cms_editor_templates_path}.json?_=#{Time.zone.now.to_i}"
     end
 
     jquery do

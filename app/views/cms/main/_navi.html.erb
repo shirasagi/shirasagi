@@ -50,6 +50,9 @@
     <% if @cur_user.role?(:edit, Cms::Group, site: @cur_site) %>
       <%= link_to :"cms.member", cms_members_path %>
     <% end %>
+    <% if @cur_user.role?(:edit, Cms::EditorTemplate, site: @cur_site) %>
+      <%= link_to :"cms.editor_template", cms_editor_templates_path %>
+    <% end %>
     <% if @cur_user.role?(:edit, Workflow::Route, site: @cur_site) %>
       <%= link_to :"workflow.name", workflow_routes_path %>
     <% end %>

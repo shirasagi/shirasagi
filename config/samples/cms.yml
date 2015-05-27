@@ -18,6 +18,8 @@ production: &production
     - 36.204824
     - 138.252924
 
+  editor_template_thumb: "/assets/img/editor_template.png"
+
 test:
   <<: *production
 
