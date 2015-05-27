@@ -9,7 +9,7 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
   let(:site) { cms_site }
   let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
   let(:node_idea) { create_once :opendata_node_idea }
-  let!(:node_area) { create :opendata_node_area, name: '地域Ａ' }
+  let!(:node_area) { create :opendata_node_area }
 
   let(:page_idea) { create_once :opendata_idea, filename: "#{node_idea.filename}/1.html", area_ids: [ area.id ] }
   let(:index_path) { "#{node_idea.url}index.html" }
@@ -36,7 +36,6 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       session.env("REQUEST_PATH", show_point_path)
-#      session.env("method", "POST")
       visit show_point_path
       expect(current_path).to eq show_point_path
     end
