@@ -141,7 +141,7 @@ $ cp -n config/samples/* config/
 # ldconfig
 ```
 
-> [モジュール - 音声読み上げ](http://shirasagi.github.io/module/voice.html)
+> [モジュール - 音声読み上げ](http://shirasagi.github.io/modules/voice.html)
 
 ## データベース操作
 
