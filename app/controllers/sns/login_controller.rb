@@ -1,7 +1,8 @@
 class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
 
-  skip_filter :logged_in?, only: [:login]
+  protect_from_forgery except: :remote_login
+  skip_filter :logged_in?, only: [:login, :remote_login]
 
   navi_view nil
 
@@ -32,7 +33,14 @@ class Sns::LoginController < ApplicationController
       end
 
       set_user @item, session: true, password: password
-      render action: :redirect
+      render :redirect
+    end
+
+    def remote_login
+      raise "404" unless SS::config.sns.remote_login
+
+      login
+      render :login if response.body.blank?
     end
 
     def logout

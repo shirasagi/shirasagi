@@ -5,7 +5,7 @@
   <div class="version">ver. <%= tryb{SS.version} %></div>
 </header>
 
-<%= form_tag action: :login do |f| %>
+<%= form_tag action: params[:action] do |f| %>
   <article>
     <%= error_messages_for :item %>
     <%= hidden_field_tag :ref, params[:ref] %>

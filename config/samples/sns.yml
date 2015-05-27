@@ -2,6 +2,9 @@ production: &production
   # specify which group should be logged in.
   login_group: シラサギ市
 
+  # without csrf token ( /.mypage/remote_login )
+  remote_login: false
+
 test:
   <<: *production
 
