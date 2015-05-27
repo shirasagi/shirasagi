@@ -24,7 +24,6 @@ describe "opendata_agents_nodes_appfile", dbscope: :example do
   it "#content" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", content_path)
       visit content_path
       expect(current_path).to eq content_path
     end
@@ -33,7 +32,6 @@ describe "opendata_agents_nodes_appfile", dbscope: :example do
   it "#json" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", json_path)
       visit json_path
       expect(current_path).to eq json_path
     end
@@ -42,7 +40,6 @@ describe "opendata_agents_nodes_appfile", dbscope: :example do
   it "#download" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", download_path)
       visit download_path
       expect(current_path).to eq download_path
     end

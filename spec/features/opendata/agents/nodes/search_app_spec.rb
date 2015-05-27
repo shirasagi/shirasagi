@@ -11,7 +11,6 @@ describe "opendata_search_apps", dbscope: :example do
     it "#index" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", index_path)
         visit index_path
         expect(current_path).to eq index_path
       end
@@ -20,7 +19,6 @@ describe "opendata_search_apps", dbscope: :example do
     it "#index released" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", index_path)
         visit "#{index_path}?&sort=released"
         expect(current_path).to eq index_path
       end
@@ -29,7 +27,6 @@ describe "opendata_search_apps", dbscope: :example do
     it "#index popular" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", index_path)
         visit "#{index_path}?&sort=popular"
         expect(current_path).to eq index_path
       end
@@ -38,7 +35,6 @@ describe "opendata_search_apps", dbscope: :example do
     it "#index attention" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", index_path)
         visit "#{index_path}?&sort=attention"
         expect(current_path).to eq index_path
       end
@@ -47,7 +43,6 @@ describe "opendata_search_apps", dbscope: :example do
     it "#rss" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", rss_path)
         visit rss_path
         expect(current_path).to eq rss_path
       end

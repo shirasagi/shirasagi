@@ -11,7 +11,6 @@ describe "opendata_agents_parts_app", dbscope: :example do
   it "#index" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", index_path)
       visit index_path
       expect(current_path).to eq index_path
     end

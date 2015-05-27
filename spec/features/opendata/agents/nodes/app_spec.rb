@@ -42,7 +42,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#index" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", index_path)
       visit index_path
       expect(current_path).to eq index_path
     end
@@ -51,7 +50,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#download" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", download_path)
       visit download_path
       expect(current_path).to eq download_path
     end
@@ -65,7 +63,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#point_members" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", point_members_path)
       visit point_members_path
       expect(current_path).to eq point_members_path
     end
@@ -74,7 +71,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#rss" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", rss_path)
       visit rss_path
       expect(current_path).to eq rss_path
     end
@@ -83,8 +79,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#show_executed" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", show_executed_path)
-      session.env("method", "POST")
       visit show_executed_path
       expect(current_path).to eq show_executed_path
     end
@@ -93,7 +87,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#add_executed" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", add_executed_path)
       visit add_executed_path
       expect(current_path).to eq add_executed_path
     end
@@ -102,7 +95,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#show_ideas" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", show_ideas_path)
       visit show_ideas_path
       expect(current_path).to eq show_ideas_path
     end
@@ -112,7 +104,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
     it "#index_areas" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", index_areas_path)
         visit index_areas_path
         expect(current_path).to eq index_areas_path
       end
@@ -121,7 +112,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
     it "#index_tags" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", index_tags_path)
         visit index_tags_path
         expect(current_path).to eq index_tags_path
       end
@@ -130,7 +120,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
     it "#index_licenses" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", index_licenses_path)
         visit index_licenses_path
         expect(current_path).to eq index_licenses_path
       end
