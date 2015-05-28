@@ -23,10 +23,10 @@ describe Cms::EditorTemplate, dbscope: :example do
     context "when editor is ckeditor" do
       before do
         @save = SS.config.cms.html_editor
-        SS::Config.replace_value_at(:cms, :html_editor, "ckeditor")
+        SS.config.replace_value_at(:cms, :html_editor, "ckeditor")
       end
       after do
-        SS::Config.replace_value_at(:cms, :html_editor, @save)
+        SS.config.replace_value_at(:cms, :html_editor, @save)
       end
       subject { described_class.ckeditor? }
       it { is_expected.to be_truthy }
@@ -35,10 +35,10 @@ describe Cms::EditorTemplate, dbscope: :example do
     context "when editor is tinymce" do
       before do
         @save = SS.config.cms.html_editor
-        SS::Config.replace_value_at(:cms, :html_editor, "tinymce")
+        SS.config.replace_value_at(:cms, :html_editor, "tinymce")
       end
       after do
-        SS::Config.replace_value_at(:cms, :html_editor, @save)
+        SS.config.replace_value_at(:cms, :html_editor, @save)
       end
       subject { described_class.ckeditor? }
       it { is_expected.to be_falsey }
@@ -49,10 +49,10 @@ describe Cms::EditorTemplate, dbscope: :example do
     context "when editor is ckeditor" do
       before do
         @save = SS.config.cms.html_editor
-        SS::Config.replace_value_at(:cms, :html_editor, "ckeditor")
+        SS.config.replace_value_at(:cms, :html_editor, "ckeditor")
       end
       after do
-        SS::Config.replace_value_at(:cms, :html_editor, @save)
+        SS.config.replace_value_at(:cms, :html_editor, @save)
       end
       subject { described_class.tinymce? }
       it { is_expected.to be_falsey }
@@ -61,10 +61,10 @@ describe Cms::EditorTemplate, dbscope: :example do
     context "when editor is tinymce" do
       before do
         @save = SS.config.cms.html_editor
-        SS::Config.replace_value_at(:cms, :html_editor, "tinymce")
+        SS.config.replace_value_at(:cms, :html_editor, "tinymce")
       end
       after do
-        SS::Config.replace_value_at(:cms, :html_editor, @save)
+        SS.config.replace_value_at(:cms, :html_editor, @save)
       end
       subject { described_class.tinymce? }
       it { is_expected.to be_truthy }

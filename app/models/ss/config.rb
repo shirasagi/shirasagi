@@ -1,4 +1,5 @@
 module SS::Config
+  # Use SS.config
   def SS.config
     SS::Config
   end

@@ -1,6 +1,6 @@
 module Fs
   class Initializer
-    type = SS::Config.env.storage
+    type = SS.config.env.storage
 
     if type == "grid_fs"
       Fs.include Fs::GridFs

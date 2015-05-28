@@ -20,7 +20,7 @@ RSpec.configuration.before(:suite) do
   ::Dir.mkdir(tmp) unless ::Dir.exists?(tmp)
 
   SS.config.kana
-  SS::Config.replace_value_at(:kana, :root, tmp)
+  SS.config.replace_value_at(:kana, :root, tmp)
 end
 
 RSpec.configuration.after(:suite) do
