@@ -47,14 +47,10 @@ SS::Application.routes.draw do
     post "search_contents" => "search_contents#update"
 
     namespace "apis" do
-      get "groups" => "groups#index"
-      get "pages" => "pages#index"
-      get "categories" => "categories#index"
-      get "contents" => "contents#index"
-      post "groups" => "groups#index"
-      post "pages" => "pages#index"
-      post "categories" => "categories#index"
-      post "contents" => "contents#index"
+      match "groups" => "groups#index", via: [:get, :post]
+      match "pages" => "pages#index", via: [:get, :post]
+      match "categories" => "categories#index", via: [:get, :post]
+      match "contents" => "contents#index", via: [:get, :post]
     end
   end
 
