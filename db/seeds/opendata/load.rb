@@ -37,7 +37,7 @@ def save_member(data)
   item
 end
 
-save_member email: "admin@example.jp", name: "admin", in_password: "pass"
+member = save_member email: "admin@example.jp", name: "admin", in_password: "pass"
 
 ## -------------------------------------
 puts "# layouts"
@@ -342,9 +342,10 @@ def save_license(data)
   cond = { site_id: @site._id, name: data[:name] }
   item = Opendata::License.find_or_create_by cond
   item.update data
+  item
 end
 
-save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1
+license_cc_by = save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1
 save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 2
 save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 3
 save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 4
@@ -352,74 +353,115 @@ save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_
 save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 6
 save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 7
 
-# ## -------------------------------------
-# puts "# opendata dataset_groups"
-#
-# def save_dataset_group(data)
-#   puts data[:name]
-#   cond = { site_id: @site._id, name: data[:name] }
-#   item = Opendata::DatasetGroup.find_or_create_by cond
-#   item.update data
-# end
-#
-# #1.step(3) do |i|
-# #  save_dataset_group name: "データセットグループ#{i}",
-# #                     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
-# #end
+## -------------------------------------
+puts "# opendata dataset_groups"
 
-# ## -------------------------------------
-# puts "# opendata datasets"
-#
-# def save_data(data)
-#   puts data[:name]
-#   cond = { site_id: @site.id, filename: data[:filename] }
-#
-#   item = Opendata::Dataset.find_or_create_by cond
-#   puts item.errors.full_messages unless item.update data
-# end
-#
-# #1.step(3) do |i|
-# #  save_data filename: "dataset/#{i}.html", name: "データセット#{i}", text: "<s>s</s>",
-# #    route: "opendata/dataset", layout_id: layouts["dataset-page"].id,
-# #    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-# #    dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
-# #    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
-# #end
+def save_dataset_group(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+  item = Opendata::DatasetGroup.find_or_create_by cond
+  item.update data
+end
 
-# ## -------------------------------------
-# puts "# opendata apps"
-#
-# def save_app(data)
-#   puts data[:name]
-#   cond = { site_id: @site._id, name: data[:name] }
-#
-#   item = Opendata::App.find_or_create_by cond
-#   item.update data
-# end
-#
-# #1.step(3) do |i|
-# #  save_app name: "アプリ#{i}", text: "aaaaaa",
-# #    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-# #    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1)
-# #end
+1.step(3) do |i|
+ save_dataset_group name: "データセットグループ#{i}",
+                    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1)
+end
 
-# ## -------------------------------------
-# puts "# opendata ideas"
-#
-# def save_idea(data)
-#   puts data[:name]
-#   cond = { site_id: @site._id, name: data[:name] }
-#
-#   item = Opendata::Idea.find_or_create_by cond
-#   item.update data
-# end
-#
-# #1.step(3) do |i|
-# #  save_idea name: "アイデア#{i}", text: "aaaaaa",
-# #    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
-# #    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
-# #    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1)
-# #end
+## -------------------------------------
+puts "# opendata datasets"
+
+def save_data(data)
+  puts data[:name]
+  cond = { site_id: @site.id, filename: data[:filename] }
+
+  item = Opendata::Dataset.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+def save_resource(dataset, data)
+  puts data[:name]
+  cond = { name: data[:name] }
+
+  path = "datasets/resources/#{data[:filename]}"
+  data.delete :filename
+  Fs::UploadedFile.create_from_file(path) do |file|
+    item = dataset.resources.where(cond).first || dataset.resources.new
+    item.in_file = file
+    item.update_attributes! data
+    puts item.errors.full_messages unless item.save
+  end
+end
+
+1.step(5) do |i|
+  dataset = save_data filename: "dataset/#{i}.html", name: "サンプルデータ【#{i}】", text: "サンプルデータ【#{i}】",
+    route: "opendata/dataset", layout_id: layouts["dataset-page"].id, member_id: member.id, tags: %w(タグ),
+    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
+    dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
+    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
+  if i == 1
+    save_resource(dataset, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
+  end
+end
+
+## -------------------------------------
+puts "# opendata apps"
+
+def save_app(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+
+  item = Opendata::App.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+def save_appfile(app, data)
+  puts data[:filename]
+  cond = { filename: data[:filename] }
+
+  path = "apps/appfiles/#{data[:filename]}"
+  data.delete :filename
+  Fs::UploadedFile.create_from_file(path) do |file|
+    item = app.appfiles.where(cond).first || app.appfiles.new
+    item.in_file = file
+    item.update_attributes! data
+    puts item.errors.full_messages unless item.save
+  end
+end
+
+1.step(5) do |i|
+  app = save_app filename: "app/#{i}.html", name: "サンプルアプリ【#{i}】", text: "サンプルアプリ【#{i}】",
+    license: %w(MIT BSD Apache).sample, route: "opendata/app", layout_id: layouts["app-page"].id, member_id: member.id, tags: %w(タグ),
+    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
+    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
+    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
+  if i == 1
+    save_appfile(app, filename: "index.html")
+  end
+end
+
+## -------------------------------------
+puts "# opendata ideas"
+
+def save_idea(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+
+  item = Opendata::Idea.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+1.step(5) do |i|
+  idea = save_idea filename: "idea/#{i}.html", name: "サンプルアイデア【#{i}】", text: "サンプルコメント",
+    route: "opendata/idea", layout_id: layouts["idea-page"].id, member_id: member.id, tags: %w(タグ),
+    category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
+    dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
+    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1),
+    area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
+end
 
 ## -------------------------------------
 puts "# rdf vocabs"
