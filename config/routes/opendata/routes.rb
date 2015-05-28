@@ -146,9 +146,9 @@ SS::Application.routes.draw do
     get "idea/:idea/point.:format" => "public#show_point", cell: "nodes/idea", format: false
     post "idea/:idea/point.:format" => "public#add_point", cell: "nodes/idea", format: false
     get "idea/:idea/point/members.html" => "public#point_members", cell: "nodes/idea", format: false
-    get "idea/:idea/comment/show.:format" => "public#show_comment", cell: "nodes/comment", format: false
-    match "idea/:idea/comment/add.:format" => "public#add_comment", cell: "nodes/comment", via: [:get, :post]
-    match "idea/:idea/comment/delete.:format" => "public#delete_comment", cell: "nodes/comment", via: [:get, :post]
+    get "idea/:idea/comment/show.:format" => "public#index", cell: "nodes/comment", format: false
+    match "idea/:idea/comment/add.:format" => "public#add", cell: "nodes/comment", via: [:get, :post]
+    match "idea/:idea/comment/delete.:format" => "public#delete", cell: "nodes/comment", via: [:get, :post]
     get "idea/:idea/dataset/show.:format" => "public#show_dataset", cell: "nodes/idea", format: false
     get "idea/:idea/app/show.:format" => "public#show_app", cell: "nodes/idea", format: false
 

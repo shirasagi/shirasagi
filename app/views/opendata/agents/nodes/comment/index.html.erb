@@ -4,7 +4,7 @@
   $(".comment_add").click (event)->
     $(@).css('pointer-events', 'none')
     $.ajax
-      url: "<%= @idea_comment.comment_add_url %>"
+      url: "<%= @idea.comment_add_url %>"
       type: "GET"
       data: { comment_body : $('#s_comment_body').val()}
       success: (data)->
@@ -13,7 +13,7 @@
 
   $(".comment_delete").click (event)->
     $.ajax
-      url: "<%= @idea_comment.comment_delete_url %>"
+      url: "<%= @idea.comment_delete_url %>"
       type: "GET"
       data: { comment : $(this).attr("id") }
       success: (data)->
@@ -36,7 +36,7 @@
             <%= simple_format(h(comment.text)) %>
             <% end %>
           </div>
-          <% if @comment_mode && [@idea_comment.member_id, comment.member_id].include?(@cur_member.id) %>
+          <% if @comment_mode && [@idea.member_id, comment.member_id].include?(@cur_member.id) %>
           <%= link_to "削除", "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
           <% end %>
 
