@@ -16,10 +16,19 @@ describe "opendata_agents_nodes_appfile", dbscope: :example do
   let(:file_json_path) { Rails.root.join("spec", "fixtures", "opendata", "test.json") }
   let(:file_json) { Fs::UploadedFile.create_from_file(file_json_path, basename: "spec") }
   let(:json) { create_appfile(app, file_json, "JSON") }
+  let(:index_path) { appfile.url.sub(/#{appfile.filename}$/, "") }
   let(:content_path) { appfile.url.sub(/#{appfile.filename}$/, "content.html") }
   let(:json_path) { json.url.sub(/#{json.filename}$/, "json.html") }
   let(:download_path) { appfile.url }
   let!(:node_search) { create :opendata_node_search_app }
+
+  it "#index" do
+    page.driver.browser.with_session("public") do |session|
+      session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      visit index_path
+      expect(current_path).to eq app.url
+    end
+  end
 
   it "#content" do
     page.driver.browser.with_session("public") do |session|
