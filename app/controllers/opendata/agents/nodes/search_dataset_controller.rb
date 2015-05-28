@@ -9,16 +9,7 @@ class Opendata::Agents::Nodes::SearchDatasetController < ApplicationController
       focus = params[:s] || {}
       focus = focus.merge(site: @cur_site)
 
-      case params[:sort]
-      when "released"
-        sort = { released: -1 }
-      when "popular"
-        sort = { point: -1 }
-      when "attention"
-        sort = { downloaded: -1 }
-      else
-        sort = { released: -1 }
-      end
+      sort = Opendata::Dataset.sort_hash params[:sort]
 
       @model.site(@cur_site).public.
         search(focus).
