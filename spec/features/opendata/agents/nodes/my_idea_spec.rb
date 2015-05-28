@@ -31,6 +31,10 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example do
   let(:item_name) { "アイデア０１" }
   let(:item_text) { "アイデア内容" }
 
+  let(:save) { "保存" }
+  let(:edit) { "編集" }
+  let(:delete) { "削除" }
+
   before do
     login_opendata_member(site, node_auth)
   end
@@ -49,22 +53,27 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example do
     fill_in "item_name", with: item_name
     fill_in "item_text", with: item_text
     check category.name
-    click_button "保存"
+    click_button save
     expect(current_path).to eq node_myidea.url
+    expect(page).to have_link(item_name)
 
     click_link item_name
     expect(current_path).to eq show_path
+    expect(page).to have_link(edit)
 
-    click_link "編集"
+    click_link edit
     expect(current_path).to eq edit_path
+    expect(page).to have_button(save)
 
-    click_button "保存"
+    click_button save
     expect(current_path).to eq show_path
+    expect(page).to have_link(delete)
 
-    click_link "削除"
+    click_link delete
     expect(current_path).to eq delete_path
+    expect(page).to have_button(delete)
 
-    click_button "削除"
+    click_button delete
     expect(current_path).to eq node_myidea.url
 
   end
