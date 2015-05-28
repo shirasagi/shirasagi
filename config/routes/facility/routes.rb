@@ -51,6 +51,9 @@ SS::Application.routes.draw do
       get "categories" => "categories#index"
       get "locations" => "locations#index"
       get "services" => "services#index"
+      post "categories" => "categories#index"
+      post "locations" => "locations#index"
+      post "services" => "services#index"
     end
   end
 
