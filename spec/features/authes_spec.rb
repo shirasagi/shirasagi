@@ -18,7 +18,7 @@ describe "authes", dbscope: :example do
   end
 
   context "oauth_callback create_member" do
-    let!(:oauth_user) { set_omniauth(:twitter) }
+    let!(:oauth_user) { set_omniauth }
 
     it "#callback" do
       visit provide_url
@@ -27,8 +27,8 @@ describe "authes", dbscope: :example do
   end
 
   context "oauth_callback get_member" do
-    let!(:oauth_user) { set_omniauth(:twitter) }
-    let!(:member) { opendata_member(site, :twitter, "1234") }
+    let!(:member) { opendata_member(site: site, oauth_type: :twitter, oauth_id: "1234") }
+    let!(:oauth_user) { set_omniauth(member) }
 
     it "#callback" do
       visit provide_url

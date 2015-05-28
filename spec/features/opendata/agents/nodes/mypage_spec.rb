@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "opendata_agents_nodes_mypage", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :opendata_node_mypage, filename: "mypage", basename: "mypage" }
-  let!(:member) { opendata_member(site, :twitter, "1234") }
+  let!(:member) { opendata_member }
   let!(:member_notice) { create(:opendata_member_notice, member: member) }
 
   context "with email and password" do
@@ -65,7 +65,7 @@ describe "opendata_agents_nodes_mypage", dbscope: :example do
   describe "#provide" do
     let(:dataset_url) { ::URI.parse "http://#{site.domain}#{node.url}dataset/" }
     let(:provide_url) { ::URI.parse "http://#{site.domain}#{node.url}twitter" }
-    let(:oauth_user) { set_omniauth(:twitter) }
+    let(:oauth_user) { set_omniauth }
 
     it do
       page.driver.browser.with_session("public") do |session|
