@@ -33,24 +33,58 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
     end
   end
 
-  it "#index" do
+  it "index, preview" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", index_path)
       visit index_path
       expect(current_path).to eq index_path
       within "article#cms-tab-#{node_dataset.id}-0" do
         within "div.pages" do
-          expect(page).to have_link(::File.basename(page_dataset.name))
+          click_link page_dataset.name
         end
       end
+      expect(status_code).to eq 200
+
+      within "article#cms-tab-#{node_dataset.id}-0" do
+        within "div.pages" do
+          click_link 'プレビュー'
+        end
+      end
+      expect(status_code).to eq 200
+
+      within "div.resource-content" do
+        within "table.cells" do
+          expect(page).to have_content('品川')
+          expect(page).to have_content('新宿')
+        end
+      end
+    end
+  end
+
+  it "index, download" do
+    page.driver.browser.with_session("public") do |session|
+      session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      visit index_path
+      expect(current_path).to eq index_path
+      within "article#cms-tab-#{node_dataset.id}-0" do
+        within "div.pages" do
+          click_link page_dataset.name
+        end
+      end
+      expect(status_code).to eq 200
+
+      within "article#cms-tab-#{node_dataset.id}-0" do
+        within "div.pages" do
+          click_link 'ダウンロード'
+        end
+      end
+      expect(status_code).to eq 200
     end
   end
 
   it "#rss" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", rss_path)
       visit rss_path
       expect(current_path).to eq rss_path
       expect(page).to have_xpath('//rss/channel/item')
@@ -64,7 +98,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#areas" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", areas_path)
       visit areas_path
       expect(current_path).to eq areas_path
       expect(page).to have_content(node_area.name)
@@ -74,7 +107,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#tags" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", tags_path)
       visit tags_path
       expect(current_path).to eq tags_path
       expect(page).to have_content(page_dataset.tags[0])
@@ -85,7 +117,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#formats" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", formats_path)
       visit formats_path
       expect(current_path).to eq formats_path
       expect(page).to have_content('CSV')
@@ -95,7 +126,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#licenses" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", licenses_path)
       visit licenses_path
       expect(current_path).to eq licenses_path
       expect(page).to have_content(license.name)
@@ -105,7 +135,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#show_point" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", show_point_path)
       visit show_point_path
       expect(current_path).to eq show_point_path
       expect(page).to have_content('いいね！')
@@ -115,7 +144,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#point_members" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", point_members_path)
       visit point_members_path
       expect(current_path).to eq point_members_path
       expect(page).to have_selector('ul.point-members')
@@ -125,7 +153,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#show_apps" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", dataset_apps_path)
       visit dataset_apps_path
       expect(current_path).to eq dataset_apps_path
       within "div.detail" do
@@ -139,7 +166,6 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   it "#show_ideas" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", dataset_ideas_path)
       visit dataset_ideas_path
       expect(current_path).to eq dataset_ideas_path
       within "div.detail" do
