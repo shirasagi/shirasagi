@@ -18,7 +18,7 @@ production: &production
     - 36.204824
     - 138.252924
 
-  editor_template_thumb: "/assets/img/editor_template.png"
+  editor_template_thumb: "/assets/img/editor-template.png"
 
   # Max Number of Markers in Map Addon
   map_max_point_form: 10
