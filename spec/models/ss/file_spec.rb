@@ -17,11 +17,11 @@ describe SS::File do
     before do
       # we need custom setting for jtd
       @save_config = SS.config.env.mime_type_map
-      SS::Config.replace_value_at(:env, :mime_type_map, mime_type_map)
+      SS.config.replace_value_at(:env, :mime_type_map, mime_type_map)
     end
 
     after do
-      SS::Config.replace_value_at(:env, :mime_type_map, @save_config)
+      SS.config.replace_value_at(:env, :mime_type_map, @save_config)
     end
 
     subject do
@@ -77,11 +77,11 @@ describe SS::File do
     context "when max_filesize is limited" do
       before do
         @save_config = SS.config.env.max_filesize
-        SS::Config.replace_value_at(:env, :max_filesize, 50)
+        SS.config.replace_value_at(:env, :max_filesize, 50)
       end
 
       after do
-        SS::Config.replace_value_at(:env, :max_filesize, @save_config)
+        SS.config.replace_value_at(:env, :max_filesize, @save_config)
       end
 
       it do
@@ -94,11 +94,11 @@ describe SS::File do
     context "when max_filesize_ext is limited" do
       before do
         @save_config = SS.config.env.max_filesize_ext
-        SS::Config.replace_value_at(:env, :max_filesize_ext, { "png" => 23 })
+        SS.config.replace_value_at(:env, :max_filesize_ext, { "png" => 23 })
       end
 
       after do
-        SS::Config.replace_value_at(:env, :max_filesize, @save_config)
+        SS.config.replace_value_at(:env, :max_filesize, @save_config)
       end
 
       it do

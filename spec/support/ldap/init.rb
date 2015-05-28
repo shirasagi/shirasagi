@@ -4,5 +4,5 @@ def can_test_ldap_spec?
 end
 
 RSpec.configuration.before(:suite) do
-  SS::Config.replace_value_at(:ldap, :host, ENV["ldap_host"]) if ENV["ldap_host"].present?
+  SS.config.replace_value_at(:ldap, :host, ENV["ldap_host"]) if ENV["ldap_host"].present?
 end

@@ -88,11 +88,11 @@ describe "cms_editor_templates", dbscope: :example, type: :feature do
       context "when editor is ckeditor" do
         before do
           @save = SS.config.cms.html_editor
-          SS::Config.replace_value_at(:cms, :html_editor, "ckeditor")
+          SS.config.replace_value_at(:cms, :html_editor, "ckeditor")
         end
 
         after do
-          SS::Config.replace_value_at(:cms, :html_editor, @save)
+          SS.config.replace_value_at(:cms, :html_editor, @save)
         end
 
         context "when js is requested" do
@@ -124,11 +124,11 @@ describe "cms_editor_templates", dbscope: :example, type: :feature do
       context "when editor is tinymce" do
         before do
           @save = SS.config.cms.html_editor
-          SS::Config.replace_value_at(:cms, :html_editor, "tinymce")
+          SS.config.replace_value_at(:cms, :html_editor, "tinymce")
         end
 
         after do
-          SS::Config.replace_value_at(:cms, :html_editor, @save)
+          SS.config.replace_value_at(:cms, :html_editor, @save)
         end
 
         context "when js is requested" do
