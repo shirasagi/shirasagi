@@ -51,6 +51,10 @@ SS::Application.routes.draw do
       get "pages" => "pages#index"
       get "categories" => "categories#index"
       get "contents" => "contents#index"
+      post "groups" => "groups#index"
+      post "pages" => "pages#index"
+      post "categories" => "categories#index"
+      post "contents" => "contents#index"
     end
   end
 

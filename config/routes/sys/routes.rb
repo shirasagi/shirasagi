@@ -21,6 +21,7 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "groups" => "groups#index"
+      post "groups" => "groups#index"
     end
 
     namespace "db" do
