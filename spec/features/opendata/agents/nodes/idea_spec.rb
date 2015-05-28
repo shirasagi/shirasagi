@@ -7,16 +7,15 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
   end
 
   let(:site) { cms_site }
-  let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
-  let(:node_idea) { create_once :opendata_node_idea }
+  let!(:node_idea) { create_once :opendata_node_idea }
+  let!(:node_member) { create_once :opendata_node_member }
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
 
   let!(:node_area) { create :opendata_node_area }
 
-  let(:page_idea) { create_once :opendata_idea, filename: "#{node_idea.filename}/1.html", area_ids: [ area.id ] }
+  let(:page_idea) { create_once :opendata_idea, filename: "#{node_idea.filename}/1.html", area_ids: [ node_area.id ] }
   let(:index_path) { "#{node_idea.url}index.html" }
   let(:show_point_path) { "#{node_idea.url}#{page_idea.id}/point.html" }
-  let(:add_point_path) { "#{node_idea.url}#{page_idea.id}/point.html" }
   let(:point_members_path) { "#{node_idea.url}#{page_idea.id}/point/members.html" }
   let(:show_comment_path) { "#{node_idea.url}#{page_idea.id}/comment/show.html" }
   let(:show_dataset_path) { "#{node_idea.url}#{page_idea.id}/dataset/show.html" }
