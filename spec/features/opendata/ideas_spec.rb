@@ -69,6 +69,12 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
           visit show_path
           expect(status_code).to eq 200
           expect(current_path).not_to eq sns_login_path
+        end
+      end
+
+      describe "#comment" do
+        it do
+          visit show_path
 
           click_link "コメントを管理する"
 
@@ -78,6 +84,9 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
           click_button "保存"
 
           click_link "一覧へ戻る"
+
+          fill_in "s_keyword", with: comment_text
+          click_button "検索"
 
           click_link comment_text
 
