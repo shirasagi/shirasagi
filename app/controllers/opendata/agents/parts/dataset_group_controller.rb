@@ -5,9 +5,7 @@ class Opendata::Agents::Parts::DatasetGroupController < ApplicationController
   public
     def index
       cond = {}
-      if @cate = category
-        cond[:category_ids] = @cate.id
-      end
+      cond[:category_ids] = @cate.id if @cate = category
 
       @items = Opendata::DatasetGroup.site(@cur_site).public.
         where(cond).
