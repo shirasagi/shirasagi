@@ -52,7 +52,8 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
     # let(:rdf_prop_select_path) { opendata_dataset_resource_rdf_prop_select_path site.host, node.id, dataset.id, resource.id }
     let(:rdf_prop_select_path) do
       routes = Rails.application.routes.url_helpers
-      url = routes.url_for host: "example.com", controller: "opendata/csv2rdf_settings", action: "rdf_prop_select", site: site.host, cid: node.id, dataset_id: dataset.id, resource_id: resource.id, column_index: 1
+      url = routes.url_for host: "example.com", controller: "opendata/csv2rdf_settings", action: "rdf_prop_select",
+        site: site.host, cid: node.id, dataset_id: dataset.id, resource_id: resource.id, column_index: 1
       url = ::URI.parse(url)
       url.path
     end

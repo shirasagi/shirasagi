@@ -19,11 +19,8 @@ class Opendata::IdeaComment
   validates :idea_id, presence: true
   validates :text, presence: true, length: { maximum: 400 }
 
-  public
-
   class << self
     public
-
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?
