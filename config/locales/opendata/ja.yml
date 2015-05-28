@@ -107,20 +107,22 @@ ja:
       opendata/area: 地域
       opendata/dataset: データセット
       opendata/dataset_category: データセット分野
-      opendata/search_dataset: データセット検索
       opendata/search_dataset_group: データセットグループ検索
+      opendata/search_dataset: データセット検索
+      opendata/sparql: SPARQL
+      opendata/api: API
       opendata/app: アプリ
       opendata/app_category: アプリ分野
       opendata/search_app: アプリ検索
-      opendata/sparql: SPARQL
-      opendata/api: API
-      opendata/mypage: マイページ
-      opendata/my_dataset: マイデータセット
-      opendata/my_app: マイアプリ
-      opendata/my_idea: マイアイデア
       opendata/idea: アイデアボックス
       opendata/idea_category: アイデア分野
       opendata/search_idea: アイデア検索
+      opendata/mypage: マイページ
+      opendata/member: メンバー
+      opendata/my_profile: マイプロフィール
+      opendata/my_dataset: マイデータセット
+      opendata/my_app: マイアプリ
+      opendata/my_idea: マイアイデア
     parts:
       opendata/mypage_login: ログイン
       opendata/dataset: データセット
