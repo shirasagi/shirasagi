@@ -7,6 +7,10 @@
 
 <%= form_tag action: params[:action] do |f| %>
   <article>
+    <% if @error %>
+    <div class="error-message"><%= @error %></div>
+    <% end %>
+
     <%= error_messages_for :item %>
     <%= hidden_field_tag :ref, params[:ref] %>
 
