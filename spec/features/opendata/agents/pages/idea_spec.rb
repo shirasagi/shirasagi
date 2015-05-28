@@ -21,7 +21,6 @@ describe "opendata_agents_pages_idea", dbscope: :example do
     it "#index" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", ideaurl_path)
         visit ideaurl_path
         expect(current_path).to eq ideaurl_path
       end

@@ -38,6 +38,7 @@ FactoryGirl.define do
     tags ["ccc", "ddd"]
     category_ids [1]
     area_ids [1]
+    point 1
   end
 
   factory :opendata_resource, class: Opendata::Resource do
