@@ -1,0 +1,6 @@
+<% if @cur_user.role?(:edit, Cms::Group, site: @cur_site) %>
+    <div>
+    下記のページで管理することが出来ます。
+    <p><%= link_to :"cms.member", cms_members_path %></p>
+  </div>
+<% end %>

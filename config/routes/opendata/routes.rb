@@ -69,6 +69,7 @@ SS::Application.routes.draw do
         get "file" => "appfiles#download"
       end
     end
+    resources :members, only: [:index]
   end
 
   node "opendata" do
