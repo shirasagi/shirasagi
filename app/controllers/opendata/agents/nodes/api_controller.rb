@@ -4,10 +4,6 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
   before_action :accept_cors_request
 
   public
-    def index
-      render
-    end
-
     def package_list
 
       help = SS.config.opendata.api["package_list_help"]
