@@ -1,9 +1,4 @@
 module SS::Config
-  # Use SS.config
-  def SS.config
-    SS::Config
-  end
-
   class << self
     def method_missing(name, *args, &block)
       file  = "#{Rails.root}/config/#{name}.yml"
