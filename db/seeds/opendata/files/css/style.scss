@@ -747,7 +747,7 @@ textarea {
     @include tab;
     margin-bottom: $box-margin;
     border-bottom: 2px solid $sky;
-    a:hover, a.current {
+    a:hover, a.current, a.dataset_current, a.app_current, a.idea_current {
       background: $sky;
       filter: none;
       color: $black1;
@@ -948,6 +948,7 @@ textarea {
     padding: 3px 3px 0;
     border: $border-gray2;
     dt {
+      clear: both;
       float: left;
       width: 230px;
       margin: 0 $item-margin 3px 0;
@@ -989,7 +990,7 @@ textarea {
   }
   .names {
     border-bottom: 2px solid $green;
-    a:hover, a.current {
+    a:hover, a.current, a.dataset_current, a.app_current, a.idea_current {
       background: $green;
     }
   }
@@ -1012,7 +1013,7 @@ textarea {
   }
   .names {
     border-bottom: 2px solid $yellow;
-    a:hover, a.current {
+    a:hover, a.current, a.dataset_current, a.app_current, a.idea_current {
       background: $yellow;
     }
   }
