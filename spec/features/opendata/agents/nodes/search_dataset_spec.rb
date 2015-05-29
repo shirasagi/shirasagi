@@ -27,7 +27,6 @@ describe "opendata_agents_nodes_search_dataset", dbscope: :example do
   it "#index" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", index_path)
       visit index_path
       expect(current_path).to eq index_path
       within "form.opendata-search_datasets-form" do
@@ -56,7 +55,6 @@ describe "opendata_agents_nodes_search_dataset", dbscope: :example do
   it "#rss" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", rss_path)
       visit rss_path
       expect(current_path).to eq rss_path
       expect(page).to have_xpath('//rss/channel/item')

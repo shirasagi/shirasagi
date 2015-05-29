@@ -231,19 +231,22 @@ end
 save_part filename: "ads/banner.part.html", name: "広告", route: "ads/banner",
           upper_html: "<section id=\"add\">\n  <header><h2>広告</h2></header>", lower_html: "</section>"
 save_part filename: "app-attention.part.html", name: "アプリ：注目順", route: "opendata/app",
-          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>",
+          loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
 save_part filename: "app-head.part.html", name: "アプリ：ヘッダー", route: "cms/free"
 save_part filename: "app-kv.part.html", name: "アプリ：キービジュアル", route: "cms/free"
 save_part filename: "crumbs.part.html", name: "パンくず", route: "cms/crumb"
 save_part filename: "dataset-attention.part.html", name: "データ：注目順", route: "opendata/dataset",
-          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>",
+          loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
 save_part filename: "dataset-group.part.html", name: "データ：グループ", route: "opendata/dataset_group"
 save_part filename: "dataset-head.part.html", name: "データ：ヘッダー", route: "cms/free"
 save_part filename: "dataset-kv.part.html", name: "データ：キービジュアル", route: "cms/free"
 save_part filename: "event/calendar.part.html", name: "イベントカレンダー", route: "event/calendar"
 save_part filename: "foot.part.html", name: "フッター", route: "cms/free"
 save_part filename: "idea-attention.part.html", name: "アイデア：注目順", route: "opendata/idea",
-          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>", loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>",
+          loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
 save_part filename: "mypage-login.part.html", name: "ログイン", route: "opendata/mypage_login", ajax_view: "enabled"
@@ -295,12 +298,16 @@ save_page route: "cms/page", filename: "tutorial-app.html", name: "アプリ登�
 save_page route: "cms/page", filename: "tutorial-idea.html", name: "アイデア登録手順", layout_id: layouts["portal-general"].id
 page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id, \
   map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([34.067022, 134.589982])}]), \
-  contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
-page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。", layout_id: layouts["portal-general"].id,
-          contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
-page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。", layout_id: layouts["portal-general"].id,
-          contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
-event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", layout_id: layouts["portal-event"].id, \
+  contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, \
+  contact_tel: contact_tel, contact_fax: contact_fax
+page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。", \
+  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
+  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
+page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。", \
+  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
+  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
+event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", \
+  layout_id: layouts["portal-event"].id,
   schedule: "#{7.days.since.strftime("%m").sub(/^0+/, '')}月#{7.days.since.strftime("%d").sub(/^0+/, '')}日", \
   venue: "シラサギ市図書館", related_url: "http://demo.ss-proj.org/", \
   event_dates: 7.upto(18).map { |d| "#{d.days.since.strftime("%Y/%m/%d")}" }.join("\r\n")
@@ -433,7 +440,8 @@ end
 
 1.step(5) do |i|
   app = save_app filename: "app/#{i}.html", name: "サンプルアプリ【#{i}】", text: "サンプルアプリ【#{i}】",
-    license: %w(MIT BSD Apache).sample, route: "opendata/app", layout_id: layouts["app-page"].id, member_id: member.id, tags: %w(タグ),
+    license: %w(MIT BSD Apache).sample, route: "opendata/app", layout_id: layouts["app-page"].id,
+    member_id: member.id, tags: %w(タグ),
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)

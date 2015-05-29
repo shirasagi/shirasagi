@@ -15,7 +15,6 @@ describe "opendata_agents_nodes_dataset_category", dbscope: :example do
   it "#index" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", index_path)
       visit index_path
       expect(current_path).to eq index_path
     end
@@ -24,7 +23,6 @@ describe "opendata_agents_nodes_dataset_category", dbscope: :example do
   it "#rss" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", rss_path)
       visit rss_path
       expect(current_path).to eq rss_path
     end
@@ -33,7 +31,6 @@ describe "opendata_agents_nodes_dataset_category", dbscope: :example do
   it "#nothing" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      session.env("REQUEST_PATH", nothing_path)
       visit nothing_path
       expect(current_path).to eq nothing_path
     end

@@ -138,7 +138,6 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
       expect(Capybara.current_driver).to be :rack_test
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        session.env("REQUEST_PATH", public_path.gsub(/^\//, ''))
         visit public_path
         expect(current_path).to eq public_path
         # page.save_page
