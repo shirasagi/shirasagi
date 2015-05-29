@@ -14,25 +14,31 @@ describe "opendata_agents_nodes_mypage", dbscope: :example do
     let(:show_notice_url) { ::URI.parse "http://#{site.domain}#{node.url}notice/show.html" }
     let(:confirm_notice_url) { ::URI.parse "http://#{site.domain}#{node.url}notice/confirm.html" }
 
+    before do
+      @save_config = SS.config.opendata.use_member_form_login
+      SS.config.replace_value_at :opendata, :use_member_form_login, true
+    end
+
+    after do
+      SS.config.replace_value_at :opendata, :use_member_form_login, @save_config
+    end
+
     it do
-      # page.driver.browser.with_session("public") do |session|
-      #   session.env("HTTP_HOST", site.domain)
-        visit index_url
-        expect(status_code).to eq 200
-        expect(current_path).to eq login_url.path
+      visit index_url
+      expect(status_code).to eq 200
+      expect(current_path).to eq login_url.path
 
-        within "form.member-login" do
-          fill_in "item[email]", with: member.email
-          fill_in "item[password]", with: member.in_password
-          click_button "ログイン"
-        end
-        expect(status_code).to eq 200
-        expect(current_path).to eq dataset_url.path
+      within "form.member-login" do
+        fill_in "item[email]", with: member.email
+        fill_in "item[password]", with: member.in_password
+        click_button "ログイン"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq dataset_url.path
 
-        visit logout_url
-        expect(status_code).to eq 200
-        expect(current_path).to eq login_url.path
-      # end
+      visit logout_url
+      expect(status_code).to eq 200
+      expect(current_path).to eq login_url.path
     end
 
     it do
