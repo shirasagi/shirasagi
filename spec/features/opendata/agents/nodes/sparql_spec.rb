@@ -45,7 +45,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "search and get html with no data" do
-      let (:data) { "" }
+      let(:data) { "" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "text/html", data: data })
@@ -65,7 +65,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "search and get html with valid result" do
-      let (:data) { "<table class=\"sparql\"><tr><td>spec</td></tr></table>" }
+      let(:data) { "<table class=\"sparql\"><tr><td>spec</td></tr></table>" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "text/html", data: data })
@@ -85,7 +85,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "search and get html_table with no data" do
-      let (:data) { "" }
+      let(:data) { "" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "text/html", data: data })
@@ -105,7 +105,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "search and get html_table with valid data" do
-      let (:data) { "<table class=\"sparql\"><tr><td>spec</td></tr></table>" }
+      let(:data) { "<table class=\"sparql\"><tr><td>spec</td></tr></table>" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "text/html", data: data })
@@ -125,7 +125,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "search and get json" do
-      let (:data) { "{ \"key\": \"spec\" }" }
+      let(:data) { "{ \"key\": \"spec\" }" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "application/json", data: data, ext: "json" })
@@ -145,7 +145,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "#csv" do
-      let (:data) { "A,B,C" }
+      let(:data) { "A,B,C" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "text/csv", data: data, ext: "csv" })
@@ -165,7 +165,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "#TSV" do
-      let (:data) { "A\tB\tC" }
+      let(:data) { "A\tB\tC" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "text/plain", data: data, ext: "txt" })
@@ -185,7 +185,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
     end
 
     describe "#XML" do
-      let (:data) { "<a>spec</a>" }
+      let(:data) { "<a>spec</a>" }
 
       before do
         allow(Opendata::Sparql).to receive(:select).and_return({ type: "application/xml", data: data, ext: "xml" })
