@@ -44,6 +44,7 @@ class Opendata::ResourcesController < ApplicationController
 
     def download_tsv
       @item = @dataset.resources.find params[:resource_id]
+      raise "404" if @item.tsv.blank?
       send_file @item.tsv.path, type: @item.content_type, filename: @item.tsv.filename,
         disposition: :attachment, x_sendfile: true
     end
