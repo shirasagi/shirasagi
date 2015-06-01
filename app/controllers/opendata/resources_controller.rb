@@ -32,8 +32,8 @@ class Opendata::ResourcesController < ApplicationController
     end
 
     def create
-      @item = @dataset.resources.create get_params
-      render_create @item.valid?
+      @item = @dataset.resources.new get_params
+      render_create @item.save
     end
 
     def download

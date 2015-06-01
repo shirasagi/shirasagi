@@ -32,8 +32,8 @@ class Opendata::UrlResourcesController < ApplicationController
     end
 
     def create
-      @item = @dataset.url_resources.create get_params
-      render_create @item.valid?
+      @item = @dataset.url_resources.new get_params
+      render_create @item.save
     end
 
     def download
