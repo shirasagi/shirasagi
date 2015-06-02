@@ -3,6 +3,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
   include Opendata::UrlHelper
   include Opendata::MypageFilter
   include Opendata::DatasetFilter
+  include Opendata::AjaxFilter
 
   before_action :set_dataset, only: [:show_point, :add_point, :point_members]
   before_action :set_apps, only: [:show_apps]
@@ -119,5 +120,11 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       @cur_node.layout = nil
       @login_mode = logged_in?(redirect: false)
       @idea_comment = Opendata::IdeaComment
+    end
+
+    def datasets_search
+      @cur_node.layout = nil
+      @model = Opendata::Dataset
+      @items = @model.site(@cur_site).search(params[:s]).order_by(_id: -1)
     end
 end

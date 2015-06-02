@@ -2,12 +2,6 @@ SS::Application.routes.draw do
 
   Opendata::Initializer
 
-  get "/app/:app/application/*filename" => "opendata/appscripts#index"
-  get "/text/:app/appfile/*filename" => "opendata/appscripts#text"
-  get "/app/:app/full" => "opendata/appscripts#full"
-  get "/datasets/select(.:format)" => "opendata/dataset_selects#index"
-  post "/datasets/select(.:format)" => "opendata/dataset_selects#index"
-
   concern :deletion do
     get :delete, on: :member
   end
@@ -102,6 +96,9 @@ SS::Application.routes.draw do
     get "dataset/:dataset/apps/show.:format" => "public#show_apps", cell: "nodes/dataset", format: false
     get "dataset/:dataset/ideas/show.:format" => "public#show_ideas", cell: "nodes/dataset", format: false
 
+    get "dataset/datasets/search(.:format)" => "public#datasets_search", cell: "nodes/dataset"
+    post "dataset/datasets/search(.:format)" => "public#datasets_search", cell: "nodes/dataset"
+
     match "search_dataset_group/(index.:format)" => "public#index", cell: "nodes/search_dataset_group", via: [:get, :post]
     match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/search_dataset"
@@ -130,6 +127,10 @@ SS::Application.routes.draw do
     get "app/:app/appfile/:id/content.html" => "public#content", cell: "nodes/appfile", format: false
     get "app/:app/appfile/:id/json.html" => "public#json", cell: "nodes/appfile", format: false
     get "app/:app/appfile/:id/*filename" => "public#download", cell: "nodes/appfile", format: false
+
+    get "app/:app/full" => "public#full", cell: "nodes/app", format: false
+    get "app/:app/file_index/:file_id/*filename" => "public#app_index", cell: "nodes/app", format: false
+    get "app/:app/file_text/:file_id/*filename" => "public#text", cell: "nodes/app", format: false
 
     match "search_app/(index.:format)" => "public#index", cell: "nodes/search_app", via: [:get, :post]
     get "search_app/rss.xml" => "public#rss", cell: "nodes/search_app"

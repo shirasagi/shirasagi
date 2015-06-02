@@ -112,7 +112,7 @@ var tab_display = "<%= @tab_display %>";
 function PlayApp() {
   if (tab_display == "tab_html") {
     $(".frmPlay").attr("src", "");
-    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= I18n.t("opendata.url.app.index", {id: @cur_page.id, filename: @app_html.filename}) %><% end %>");
+    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= I18n.t("opendata.url.app.index", {id: @cur_page.id, file_id: @app_html.id, filename: "app_index.html"}) %><% end %>");
     $.ajax({
       type: "GET",
       url: "<%= @cur_page.executed_add_url %>",

@@ -25,6 +25,8 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   let(:dataset_apps_path) { page_dataset.dataset_apps_url }
   let(:dataset_ideas_path) { page_dataset.dataset_ideas_url }
 
+  let(:datasets_search_path) { "#{node_dataset.url}datasets/search" }
+
   before do
     Fs::UploadedFile.create_from_file(dataset_resource_file_path, basename: "spec") do |f|
       dataset_resource.in_file = f
@@ -173,6 +175,14 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
           expect(page).to have_selector('div.ideas')
         end
       end
+    end
+  end
+
+  it "#datasets_search" do
+    page.driver.browser.with_session("public") do |session|
+      session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      visit datasets_search_path
+      expect(current_path).to eq datasets_search_path
     end
   end
 end
