@@ -1,6 +1,7 @@
 <%
 header_rows_options = []
-1.upto(10).each { |i| header_rows_options << [i.to_s, i] }
+actual_rows = @cur_resource.parse_tsv.size
+1.upto(actual_rows - 1).each { |i| header_rows_options << [i.to_s, i] }
 %>
 <dl class="see csv2rdf-settings-header">
   <dt><%= @cur_resource.class.t :name %></dt>

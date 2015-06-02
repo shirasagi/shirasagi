@@ -60,10 +60,14 @@ class Opendata::Csv2rdfSetting
 
   def fetch_header_labels
     tsv = resource.parse_tsv
+    actual_rows = tsv.size
+    max_rows = header_rows < actual_rows ? header_rows :  actual_rows
+
     labels = []
-    0.upto(header_rows - 1) do |i|
+    0.upto(max_rows - 1) do |i|
       labels << tsv[i]
     end
+
     labels.transpose.map.with_index(1) do |column_labels, index|
       column_labels = column_labels.select(&:present?).map(&:strip)
       if column_labels.join.blank?
@@ -97,6 +101,12 @@ class Opendata::Csv2rdfSetting
 
     if header_rows <= 0
       errors.add :header_rows, :greater_than, count: 0
+      return
+    end
+
+    tsv = resource.parse_tsv
+    if header_rows > tsv.size
+      errors.add :header_rows, :less_than, count: tsv.size
       return
     end
   end

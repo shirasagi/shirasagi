@@ -8,18 +8,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   let(:license_logo_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
   let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_path, basename: "spec") }
   let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
-  let(:content_type) { "application/vnd.ms-excel" }
-  let(:csv_file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
-  let!(:resource) { dataset.resources.new(attributes_for(:opendata_resource, license_id: license.id)) }
   let(:ipa_core_sample_file) { Rails.root.join("spec", "fixtures", "rdf", "ipa-core-sample.ttl") }
-
-  before do
-    Fs::UploadedFile.create_from_file(csv_file, basename: "spec") do |f|
-      resource.in_file = f
-      resource.save!
-    end
-    resource.reload
-  end
 
   before do
     # To stabilize spec, csv2tdf convert job is executed in-place process .
@@ -44,12 +33,24 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
     Rdf::VocabImportJob.new.call(site.host, "ic", ipa_core_sample_file, Rdf::Vocab::OWNER_SYSTEM, 1000)
   end
 
+  before { login_cms_user }
+
   describe "convert csv to rdf" do
+    let(:csv_file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
+    let(:resource) { dataset.resources.new(attributes_for(:opendata_resource, license_id: license.id)) }
+
+    before do
+      Fs::UploadedFile.create_from_file(csv_file, basename: "spec") do |f|
+        resource.in_file = f
+        resource.save!
+      end
+      resource.reload
+    end
+
     let(:header_size_path) { opendata_dataset_resource_header_size_path site.host, node.id, dataset.id, resource.id }
     let(:rdf_class_path) { opendata_dataset_resource_rdf_class_path site.host, node.id, dataset.id, resource.id }
     let(:rdf_class_preview_path) { opendata_dataset_resource_rdf_class_preview_path site.host, node.id, dataset.id, resource.id }
     let(:column_types_path) { opendata_dataset_resource_column_types_path site.host, node.id, dataset.id, resource.id }
-    # let(:rdf_prop_select_path) { opendata_dataset_resource_rdf_prop_select_path site.host, node.id, dataset.id, resource.id }
     let(:rdf_prop_select_path) do
       routes = Rails.application.routes.url_helpers
       url = routes.url_for host: "example.com", controller: "opendata/csv2rdf_settings", action: "rdf_prop_select",
@@ -60,7 +61,6 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
     let(:confirmation_path) { opendata_dataset_resource_confirmation_path site.host, node.id, dataset.id, resource.id }
     let(:show_resource_path) { opendata_dataset_resource_path site.host, node.id, dataset.id, resource.id }
 
-    before { login_cms_user }
     it do
       expect(SS.config.opendata.fuseki["disable"]).to be_truthy
 
@@ -133,6 +133,34 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
       expect { dataset.reload }.to change { dataset.resources.size }.by(1)
       ttl_resource = dataset.resources.where(format: "TTL").first
       expect(ttl_resource).not_to be_nil
+    end
+  end
+
+  describe "convert 2-rows-csv to rdf" do
+    let(:csv_file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-3.csv") }
+    let(:resource) { dataset.resources.new(attributes_for(:opendata_resource, license_id: license.id)) }
+    let(:header_size_path) { opendata_dataset_resource_header_size_path site.host, node.id, dataset.id, resource.id }
+    let(:show_resource_path) { opendata_dataset_resource_path site.host, node.id, dataset.id, resource.id }
+
+    before do
+      Fs::UploadedFile.create_from_file(csv_file, basename: "spec") do |f|
+        resource.in_file = f
+        resource.save!
+      end
+      resource.reload
+    end
+
+    it do
+      expect(SS.config.opendata.fuseki["disable"]).to be_truthy
+
+      visit header_size_path
+      expect(status_code).to eq 200
+      expect(current_path).to eq show_resource_path
+
+      # acquire that unable to convert to rdf message.
+      within "aside#notice" do
+        expect(page).to have_content(I18n.t('opendata.messages.require_at_least_two_rows'))
+      end
     end
   end
 end

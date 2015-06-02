@@ -58,6 +58,7 @@ ja:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。
       sent_rdf_success: RDFストアの登録に成功しました。
+      require_at_least_two_rows: "2 行以下の CSV ファイルは変換できません。"
     sort_options:
       released: 新着順
       popular: 人気順

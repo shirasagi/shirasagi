@@ -36,12 +36,18 @@ class Opendata::Csv2rdfSettingsController < ApplicationController
       @cur_dataset = Opendata::Dataset.site(@cur_site).node(@cur_node).find(params[:dataset_id])
       @cur_resource = @cur_dataset.resources.find(params[:resource_id])
 
+      actual_rows = @cur_resource.parse_tsv.size
+      if actual_rows <= 2
+        redirect_to opendata_dataset_resource_path(id: @cur_resource),
+                    flash: { notice: t('opendata.messages.require_at_least_two_rows') }
+        return
+      end
+
       @item = @model.site(@cur_site).resource(@cur_resource).first
       @item ||= @model.create(pre_params.merge(fix_params))
       @item.attributes = fix_params
 
       params[:s] ||= {}
-      # params[:s][:category_ids] ||= @cur_dataset.category_ids.map(&:to_s) if @cur_dataset.category_ids.present?
       params[:s][:category_ids] ||= [ "false" ]
     end
 
