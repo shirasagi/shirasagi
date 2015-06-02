@@ -2,6 +2,7 @@ class Opendata::Agents::Nodes::CommentController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
   include Opendata::MypageFilter
+  include Opendata::CommentFilter
 
   before_action :accept_cors_request
   before_action :set_comments, only: [:index, :add, :delete]
@@ -24,20 +25,6 @@ class Opendata::Agents::Nodes::CommentController < ApplicationController
       raise "404" unless @idea
     end
 
-    def update_commented_count(member_ids, count)
-      member_ids.each do |member_id|
-        notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: member_id}).first
-        if notice
-          commented_count = notice.commented_count || 0
-          notice.commented_count = notice.commented_count + count
-          notice.save
-        else
-          notice_new = { site_id: @cur_site.id, member_id: member_id, commented_count: 1 }
-          Opendata::MemberNotice.new(notice_new).save
-        end
-      end
-    end
-
   public
     def index
       @cur_node.layout = nil
@@ -57,19 +44,7 @@ class Opendata::Agents::Nodes::CommentController < ApplicationController
       idea.total_comment += 1
       idea.save
 
-      member_ids = []
-      other_comments = Opendata::IdeaComment.where({idea_id: @idea.id})
-      other_comments = other_comments.not_in({member_id: [@cur_member.id]})
-      other_comments = other_comments.not_in({member_id: [@idea.member_id]}) if @idea.member_id.present?
-      other_comments.each do |other_comment|
-        member_ids << other_comment.member_id
-      end
-
-      if @idea.member_id.present? && @idea.member_id != @cur_member.id
-        member_ids << @idea.member_id
-      end
-
-      update_commented_count(member_ids.uniq, 1)
+      update_member_notices(idea)
 
       render :index
     end

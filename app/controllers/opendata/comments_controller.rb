@@ -1,6 +1,7 @@
 class Opendata::CommentsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Opendata::CommentFilter
   helper Opendata::FormHelper
 
   model Opendata::IdeaComment
@@ -24,20 +25,6 @@ class Opendata::CommentsController < ApplicationController
       @item = Opendata::IdeaComment.where(site_id: @cur_site.id).find params[:id]
     end
 
-    def update_commented_count(member_ids, count)
-      member_ids.each do |member_id|
-        notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: member_id}).first
-        if notice
-          commented_count = notice.commented_count || 0
-          notice.commented_count += count
-          notice.save
-        else
-          notice_new = { site_id: @cur_site.id, member_id: member_id, commented_count: 1 }
-          Opendata::MemberNotice.new(notice_new).save
-        end
-      end
-    end
-
   public
     def index
       @items = @comments.search(params[:s]).order_by(:created.asc)
@@ -57,7 +44,8 @@ class Opendata::CommentsController < ApplicationController
                contact_fax: params[:item][:contact_fax],
                contact_email: params[:item][:contact_email]
              }
-      cond[:contact_group_id] = params[:item][:contact_group_id] if params[:item][:contact_group_id].present?
+      contact_group_id = params[:item][:contact_group_id]
+      cond[:contact_group_id] = contact_group_id if contact_group_id.present?
 
       @item = Opendata::IdeaComment.new(cond)
       @item.save
@@ -67,18 +55,7 @@ class Opendata::CommentsController < ApplicationController
       idea.total_comment += 1
       idea.save
 
-      member_ids = []
-      other_comments = Opendata::IdeaComment.where({idea_id: idea_id})
-      other_comments = other_comments.not_in({member_id: [idea.member_id]}) if idea.member_id.present?
-      other_comments.each do |other_comment|
-        member_ids << other_comment.member_id
-      end
-
-      if idea.member_id.present?
-        member_ids << idea.member_id
-      end
-
-      update_commented_count(member_ids.uniq, 1)
+      update_member_notices(idea)
 
       render_create @item.valid?
     end
