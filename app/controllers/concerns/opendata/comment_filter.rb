@@ -2,18 +2,18 @@ module Opendata::CommentFilter
   extend ActiveSupport::Concern
 
   private
-  def update_commented_count(member_ids, count)
-    member_ids.each do |member_id|
-      notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: member_id}).first
-      if notice
-        notice.commented_count += count
-        notice.save
-      else
-        notice_new = { site_id: @cur_site.id, member_id: member_id, commented_count: 1 }
-        Opendata::MemberNotice.new(notice_new).save
+    def update_commented_count(member_ids, count)
+      member_ids.each do |member_id|
+        notice = Opendata::MemberNotice.where({site_id: @cur_site.id, member_id: member_id}).first
+        if notice
+          notice.commented_count += count
+          notice.save
+        else
+          notice_new = { site_id: @cur_site.id, member_id: member_id, commented_count: 1 }
+          Opendata::MemberNotice.new(notice_new).save
+        end
       end
     end
-  end
 
   public
     def update_member_notices(idea)
