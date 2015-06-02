@@ -22,10 +22,10 @@ class Opendata::Idea
   embeds_ids :apps, class_name: "Opendata::App"
   belongs_to :member, class_name: "Opendata::Member"
 
-  has_many :points, primary_key: :idea_id, class_name: "Opendata::IdeaPoint",
-    dependent: :destroy
-  has_many :comments, primary_key: :idea_id, class_name: "Opendata::IdeaComment",
-    dependent: :destroy
+  has_many :points, foreign_key: :idea_id, class_name: "Opendata::IdeaPoint",
+    dependent: :delete
+  has_many :comments, foreign_key: :idea_id, class_name: "Opendata::IdeaComment",
+    dependent: :delete
 
   validates :text, presence: true, length: { maximum: 400 }
   validates :category_ids, presence: true
