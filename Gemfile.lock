@@ -454,3 +454,6 @@ DEPENDENCIES
   unicorn
   yard
   zipruby
+
+BUNDLED WITH
+   1.10.2
