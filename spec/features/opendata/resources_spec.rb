@@ -127,6 +127,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         end
       end
     end
+
     context "with item having tsv" do
       let(:resource_file_path) { "#{Rails.root}/spec/fixtures/opendata/test.json" }
       let(:item) { dataset.resources.new(attributes_for(:opendata_resource)) }
@@ -149,6 +150,56 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           visit download_tsv_path
           expect(status_code).to eq 200
           expect(current_path).to eq download_tsv_path
+        end
+      end
+    end
+
+    context "when non-tsv file is given for tsv-file" do
+      let(:resource_file_path) { "#{Rails.root}/spec/fixtures/opendata/test.json" }
+      let(:resource_tsv_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s }
+
+      describe "new and show" do
+        it do
+          visit new_path
+          within "form#item-form" do
+            attach_file "item[in_file]", resource_file_path
+            fill_in "item[name]", with: "#{unique_id}"
+            select license.name, from: "item_license_id"
+            attach_file "item[in_tsv]", resource_tsv_path
+            click_button "保存"
+          end
+          expect(status_code).to eq 200
+          expect(current_path).to eq index_path
+          within "div#errorExplanation" do
+            expect(page).to have_content("問題が発生しました。")
+            expect(page).to have_content("プレビュー用データは不正な値です。")
+          end
+        end
+      end
+    end
+
+    context "when preview file is given even if upload file is csv/tsv" do
+      let(:resource_file_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
+      let(:resource_tsv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis-2.csv" }
+
+      describe "new and show" do
+        it do
+          visit new_path
+          within "form#item-form" do
+            fill_in "item[name]", with: "#{unique_id}"
+            select license.name, from: "item_license_id"
+            attach_file "item[in_tsv]", resource_tsv_path
+            attach_file "item[in_file]", resource_file_path
+            click_button "保存"
+          end
+          expect(status_code).to eq 200
+
+          dataset.reload
+          item = dataset.resources.first
+          show_path = opendata_dataset_resource_path site.host, node, dataset, item
+          expect(current_path).to eq show_path
+          # acquire that tsv file is not saved.
+          expect(item.tsv).to be_nil
         end
       end
     end
