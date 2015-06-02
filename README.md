@@ -68,7 +68,7 @@ enabled=0
 # source /etc/profile
 # rvm install 2.2.2
 # rvm use 2.2.2 --default
-# gem install bundle
+# gem install bundler
 ```
 
 ## SHIRASAGI
