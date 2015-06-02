@@ -30,6 +30,11 @@ module SS
       config.paths["config/routes.rb"] << file
     end
   end
+
+  def self.config
+    # lazy loading
+    @_ss_config ||= "SS::Config".constantize
+  end
 end
 
 def dump(*args)
