@@ -51,7 +51,11 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
 
     def set_file
       item = Opendata::App.find(params[:app])
-      @appfile = item.appfiles.find(params[:file_id])
+      filename = params[:filename]
+      if filename == "app_index.html"
+        filename = "index.html"
+      end
+      @appfile = item.appfiles.find_by id: params[:file_id], filename: filename
     end
 
   public
@@ -137,12 +141,17 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
     def show_executed
       @cur_node.layout = nil
       @app = Opendata::App.site(@cur_site).find(params[:app])
+      @add = false
+      if params[:tab_display] == "tab_html"
+        @add = true
+      end
       render
     end
 
     def add_executed
       @cur_node.layout = nil
       @app = Opendata::App.site(@cur_site).find(params[:app])
+      @add = false
       if @app.present?
         exec = @app.executed.to_i
         @app.executed = exec + 1
@@ -151,7 +160,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
           @app.executed = exec
         end
       end
-      render
+      render :show_executed
     end
 
     def full

@@ -2,20 +2,22 @@
   $ ->
 
   $(".comment_add").click (event)->
-    $(@).css('pointer-events', 'none')
-    $.ajax
-      url: "<%= @idea.comment_add_url %>"
-      type: "GET"
-      data: { comment_body : $('#s_comment_body').val()}
-      success: (data)->
-        $("#idea-comments").html data
+    text = $('#s_comment_body').val()
+    if text.length > 0
+      $(@).css('pointer-events', 'none')
+      $.ajax
+        url: "<%= @idea.comment_add_url %>"
+        type: "POST"
+        data: { comment_body : text, authenticity_token: "<%= form_authenticity_token %>" }
+        success: (data)->
+          $("#idea-comments").html data
     event.preventDefault()
 
   $(".comment_delete").click (event)->
     $.ajax
       url: "<%= @idea.comment_delete_url %>"
-      type: "GET"
-      data: { comment : $(this).attr("id") }
+      type: "POST"
+      data: { comment : $(this).attr("id"), authenticity_token: "<%= form_authenticity_token %>" }
       success: (data)->
         $("#idea-comments").html data
     event.preventDefault()

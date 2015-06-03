@@ -120,7 +120,7 @@ SS::Application.routes.draw do
     get "app/:app/point/members.html" => "public#point_members", cell: "nodes/app", format: false
     get "app/:app/ideas/show.:format" => "public#show_ideas", cell: "nodes/app", format: false
     get "app/:app/executed/show.:format" => "public#show_executed", cell: "nodes/app", format: false
-    match "app/:app/executed/add.:format" => "public#add_executed", cell: "nodes/app", via: [:get, :post]
+    post "app/:app/executed/add.:format" => "public#add_executed", cell: "nodes/app", format: false
 
     get "app/:app/zip" => "public#download", cell: "nodes/app", format: false
     get "app/:app/appfile/:id/" => "public#index", cell: "nodes/appfile"
@@ -149,8 +149,8 @@ SS::Application.routes.draw do
     post "idea/:idea/point.:format" => "public#add_point", cell: "nodes/idea", format: false
     get "idea/:idea/point/members.html" => "public#point_members", cell: "nodes/idea", format: false
     get "idea/:idea/comment/show.:format" => "public#index", cell: "nodes/comment", format: false
-    match "idea/:idea/comment/add.:format" => "public#add", cell: "nodes/comment", via: [:get, :post]
-    match "idea/:idea/comment/delete.:format" => "public#delete", cell: "nodes/comment", via: [:get, :post]
+    post "idea/:idea/comment/add.:format" => "public#add", cell: "nodes/comment", format: false
+    post "idea/:idea/comment/delete.:format" => "public#delete", cell: "nodes/comment", format: false
     get "idea/:idea/dataset/show.:format" => "public#show_dataset", cell: "nodes/idea", format: false
     get "idea/:idea/app/show.:format" => "public#show_app", cell: "nodes/idea", format: false
 

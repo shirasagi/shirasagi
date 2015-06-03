@@ -6,6 +6,14 @@ $ ->
   # show point
   Opendata_Point.render("<%= @cur_page.point_url %>");
 
+  # show executed
+  $.ajax
+    url: "<%= @cur_page.executed_show_url %>"
+    data: { tab_display: "<%= @tab_display %>" }
+    type: "GET"
+    success: (data)->
+      $("#executed").html data
+
   # show ideas
   $.ajax
     url: "<%= @cur_page.app_ideas_url %>"
@@ -113,21 +121,6 @@ function PlayApp() {
   if (tab_display == "tab_html") {
     $(".frmPlay").attr("src", "");
     $(".frmPlay").attr("src", "<% if @app_html.present? %><%= I18n.t("opendata.url.app.index", {id: @cur_page.id, file_id: @app_html.id, filename: "app_index.html"}) %><% end %>");
-    $.ajax({
-      type: "GET",
-      url: "<%= @cur_page.executed_add_url %>",
-      success: function(data) {
-        $("#executed").html(data);
-      }
-    });
-  } else {
-    $.ajax({
-      type: "GET",
-      url: "<%= @cur_page.executed_show_url %>",
-      success: function(data) {
-        $("#executed").html(data);
-      }
-    });
   }
 }
 function ChangeTab(tabname, current) {
