@@ -174,10 +174,12 @@ module SS::File::Model
         base_limit = SS.config.env.max_filesize
         ext_limit  = SS.config.env.max_filesize_ext[filename.sub(/.*\./, "").downcase]
 
-        if ext_limit.present? && file.size > ext_limit
-          errors.add :base, :too_large_file, filename: filename, size: number_to_human_size(file.size), limit: number_to_human_size(ext_limit)
-        elsif base_limit.present? && file.size > base_limit
-          errors.add :base, :too_large_file, filename: filename, size: number_to_human_size(file.size), limit: number_to_human_size(base_limit)
+        [ ext_limit, base_limit ].each do |limit|
+          if limit.present? && file.size > limit
+            errors.add :base, :too_large_file, filename: filename,
+                       size: number_to_human_size(file.size),
+                       limit: number_to_human_size(limit)
+          end
         end
       end
 
