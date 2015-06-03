@@ -36,7 +36,7 @@ describe "opendata_agents_nodes_comment", dbscope: :example do
     it "#index" do
       visit "http://#{site.domain}#{index_path}"
       expect(current_path).to eq index_path
-      expect(page).to have_selector "a.comment_add"
+      expect(page).to have_selector "a.comment-add"
     end
 
 #    it "#add" do

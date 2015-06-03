@@ -120,14 +120,14 @@ var tab_display = "<%= @tab_display %>";
 function PlayApp() {
   if (tab_display == "tab_html") {
     $(".frmPlay").attr("src", "");
-    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= I18n.t("opendata.url.app.index", {id: @cur_page.id, file_id: @app_html.id, filename: "app_index.html"}) %><% end %>");
+    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= I18n.t("opendata.url.app.index", {id: @cur_page.id, filename: @app_html.filename}) %><% end %>");
   }
 }
 function ChangeTab(tabname, current) {
   $("#tab-dataset").hide();
   $("#tab-idea").hide();
-  $("#dataset").removeClass("dataset_current");
-  $("#idea").removeClass("idea_current");
+  $("#dataset").removeClass("dataset-current");
+  $("#idea").removeClass("idea-current");
   if (tab_display == "tab_url") {
     $("#tab-url").hide();
     $("#url").removeClass("current");
@@ -147,9 +147,9 @@ function ChangeTab(tabname, current) {
   }
   $("#" + tabname).show();
   if (current == "dataset") {
-    $("#" + current).addClass("dataset_current");
+    $("#" + current).addClass("dataset-current");
   } else if (current == "idea") {
-    $("#" + current).addClass("idea_current");
+    $("#" + current).addClass("idea-current");
   } else {
     $("#" + current).addClass("current");
   }

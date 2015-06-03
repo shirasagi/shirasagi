@@ -129,8 +129,8 @@ SS::Application.routes.draw do
     get "app/:app/appfile/:id/*filename" => "public#download", cell: "nodes/appfile", format: false
 
     get "app/:app/full" => "public#full", cell: "nodes/app", format: false
-    get "app/:app/file_index/:file_id/*filename" => "public#app_index", cell: "nodes/app", format: false
-    get "app/:app/file_text/:file_id/*filename" => "public#text", cell: "nodes/app", format: false
+    get "app/:app/file_index/(*filename)" => "public#app_index", cell: "nodes/app", format: false
+    get "app/:app/file_text/(*filename)" => "public#text", cell: "nodes/app", format: false
 
     match "search_app/(index.:format)" => "public#index", cell: "nodes/search_app", via: [:get, :post]
     get "search_app/rss.xml" => "public#rss", cell: "nodes/search_app"

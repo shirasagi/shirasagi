@@ -532,7 +532,7 @@ textarea {
 }
 // -----------------------------------------------------------------------------
 // page-list
-.pages, .opendata-search_groups {
+.pages, .opendata-search-groups {
   article {
     padding: 14px;
     border-bottom: $border-gray2;
@@ -634,13 +634,13 @@ textarea {
     margin-right: $item-margin;
     padding: 5px 10px;
     background: $gray2;
-  }  
+  }
 }
 // -----------------------------------------------------------------------------
 // search
-.opendata-search_datasets-form, .opendata-search_groups-form,
-.opendata-search_apps-form,
-.opendata-search_ideas-form {
+.opendata-search-datasets-form, .opendata-search-groups-form,
+.opendata-search-apps-form,
+.opendata-search-ideas-form {
   @include clear;
   margin: $box-margin 0;
   padding: 12px;
@@ -651,7 +651,7 @@ textarea {
     margin-right: $item-margin;
     &:nth-child(4n), &:nth-child(7n) {
       margin-right: 0;
-    } 
+    }
     &:nth-child(5n), &:nth-child(8n) {
       clear: both;
     }
@@ -673,10 +673,10 @@ textarea {
     @include btn-black;
   }
 }
-.opendata-search_apps-form {
+.opendata-search-apps-form {
   border: 2px solid $green;
 }
-.opendata-search_ideas-form {
+.opendata-search-ideas-form {
   border: 2px solid $yellow;
 }
 // -----------------------------------------------------------------------------
@@ -747,7 +747,7 @@ textarea {
     @include tab;
     margin-bottom: $box-margin;
     border-bottom: 2px solid $sky;
-    a:hover, a.current, a.dataset_current, a.app_current, a.idea_current {
+    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
       background: $sky;
       filter: none;
       color: $black1;
@@ -882,7 +882,7 @@ textarea {
       min-height: 360px;
     }
   }
-  .app_filename {
+  .app-filename {
     margin-bottom: $item-margin;
     padding-bottom: 7px;
     border-bottom: $border-gray2;
@@ -904,7 +904,7 @@ textarea {
   #idea-comments .invite {
     padding: 12px;
   }
-  .opendata-add_comment-form {
+  .opendata-add-comment-form {
     @include clear;
     padding: 12px;
     background: $gray2;
@@ -917,7 +917,7 @@ textarea {
     textarea {
       width: 780px;
     }
-    .comment_add {
+    .comment-add {
       float: left;
       @include btn-black;
       margin: 40px;
@@ -933,11 +933,11 @@ textarea {
       width: 550px;
       padding: 12px;
     }
-    .app_executed, .dataset_downloaded {
+    .app-executed, .dataset-downloaded {
       width: 150px;
       padding: 12px;
     }
-    .app_updated, .dataset_updated {
+    .app-updated, .dataset-updated {
       width: 304px;
       padding: 12px;
     }
@@ -990,7 +990,7 @@ textarea {
   }
   .names {
     border-bottom: 2px solid $green;
-    a:hover, a.current, a.dataset_current, a.app_current, a.idea_current {
+    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
       background: $green;
     }
   }
@@ -1013,7 +1013,7 @@ textarea {
   }
   .names {
     border-bottom: 2px solid $yellow;
-    a:hover, a.current, a.dataset_current, a.app_current, a.idea_current {
+    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
       background: $yellow;
     }
   }
@@ -1490,8 +1490,8 @@ textarea {
   @include midashi-dataset;
 }
 // -----------------------------------------------------------------------------
-// search_group
-#search_group {
+// search-group
+#search-group {
   margin-bottom: $box-margin;
   h1 {
     @include midashi-beige;

@@ -52,10 +52,10 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
     def set_file
       item = Opendata::App.find(params[:app])
       filename = params[:filename]
-      if filename == "app_index.html"
+      if filename.blank?
         filename = "index.html"
       end
-      @appfile = item.appfiles.find_by id: params[:file_id], filename: filename
+      @appfile = item.appfiles.find_by filename: filename
     end
 
   public

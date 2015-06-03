@@ -46,13 +46,8 @@
               <header><h1>HTML</h1></header>
               <% @html_src.each do |h| %>
                 <div id="html-<%= h.id %>" class="frame">
-                  <div class="app_filename"><%= h.filename %></div>
-                  <% if h.filename == "index.html" %>
-                    <% filename = "app_index.html" %>
-                  <% else %>
-                    <% filename = h.filename %>
-                  <% end %>
-                  <iframe class="frmHtml" src="<%= I18n.t("opendata.url.app.text", {id: @cur_page.id, file_id: h.id, filename: filename}) %>"></iframe>
+                  <div class="app-filename"><%= h.filename %></div>
+                  <iframe class="frmHtml" src="<%= I18n.t("opendata.url.app.text", {id: @cur_page.id, filename: h.filename}) %>"></iframe>
                 </div>
               <% end %>
             </div>
@@ -60,8 +55,8 @@
               <header><h1>CSS</h1></header>
               <% @css_src.each do |c| %>
                 <div id="css-<%= c.id %>" class="frame">
-                  <div class="app_filename"><%= c.filename %></div>
-                  <iframe class="frmCss" src="<%= I18n.t("opendata.url.app.text", {id: @cur_page.id, file_id: c.id, filename: c.filename}) %>"></iframe>
+                  <div class="app-filename"><%= c.filename %></div>
+                  <iframe class="frmCss" src="<%= I18n.t("opendata.url.app.text", {id: @cur_page.id, filename: c.filename}) %>"></iframe>
                 </div>
               <% end %>
             </div>
@@ -69,8 +64,8 @@
               <header><h1>JavaScript</h1></header>
               <% @js_src.each do |j| %>
                 <div id="js-<%= j.id %>" class="frame">
-                  <div class="app_filename"><%= j.filename %></div>
-                  <iframe class="frmJs" src="<%= I18n.t("opendata.url.app.text", {id: @cur_page.id, file_id: j.id, filename: j.filename}) %>"></iframe>
+                  <div class="app-filename"><%= j.filename %></div>
+                  <iframe class="frmJs" src="<%= I18n.t("opendata.url.app.text", {id: @cur_page.id, filename: j.filename}) %>"></iframe>
                 </div>
               <% end %>
             </div>

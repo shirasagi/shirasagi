@@ -116,7 +116,7 @@ categories = [
           <% end %>
 
           <% @cur_page.url_resources.order(name: 1).each do |urs| %>
-          <div class="url_resource">
+          <div class="url-resource">
             <div class="info">
               <div class="name format-<%= urs.format.downcase %>">
                 <%= urs.name %> (<%= urs.format %> <%= number_to_human_size(urs.size) %>)

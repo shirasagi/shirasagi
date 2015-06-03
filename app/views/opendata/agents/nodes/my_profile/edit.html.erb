@@ -6,7 +6,7 @@
       <td class="field"><%= @model.t :icon_id %></td>
       <td class="input"><%= f.file_field :in_icon %>
     <% if @item.icon_id %>
-      <div class="in_icon"><label><%= f.check_box :rm_icon %><%= t "views.button.delete" %> (<%= @item.icon.filename %>)</label>
+      <div class="in-icon"><label><%= f.check_box :rm_icon %><%= t "views.button.delete" %> (<%= @item.icon.filename %>)</label>
     <% end %>
       </td>
     </tr>

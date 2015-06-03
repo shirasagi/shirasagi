@@ -79,8 +79,8 @@ ja:
       dataset:
         search: "/dataset/datasets/search"
       app:
-        index: "/app/%{id}/file_index/%{file_id}/%{filename}"
-        text: "/app/%{id}/file_text/%{file_id}/%{filename}"
+        index: "/app/%{id}/file_index/%{filename}"
+        text: "/app/%{id}/file_text/%{filename}"
         full: "/app/%{id}/full"
 
   modules:

@@ -1,8 +1,8 @@
 <%= coffee do %>
   $ ->
 
-  $(".comment_add").click (event)->
-    text = $('#s_comment_body').val()
+  $(".comment-add").click (event)->
+    text = $('#s_comment-body').val()
     if text.length > 0
       $(@).css('pointer-events', 'none')
       $.ajax
@@ -58,12 +58,12 @@
     </div>
 
     <% if @comment_mode %>
-      <%= form_for :s, url: "", html: { class: "opendata-add_comment-form", method: :get } do |f| %>
-        <dl class="comment_body">
+      <%= form_for :s, url: "", html: { class: "opendata-add-comment-form", method: :get } do |f| %>
+        <dl class="comment-body">
           <dt>本文</dt>
           <dd><%= f.text_area :comment_body, maxlength: "400" %></dd>
         </dl>
-        <%= link_to "コメントを投稿", "", class: "comment_add" %>
+        <%= link_to "コメントを投稿", "", class: "comment-add" %>
       <% end %>
     <% else %>
       <div class="invite">コメントしたい場合には<%= link_to "ログイン","/mypage/login" %>してください</div>

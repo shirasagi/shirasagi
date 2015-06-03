@@ -29,7 +29,7 @@ describe "opendata_agents_nodes_search_dataset", dbscope: :example do
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       visit index_path
       expect(current_path).to eq index_path
-      within "form.opendata-search_datasets-form" do
+      within "form.opendata-search-datasets-form" do
         within "dl.keyword" do
           expect(page).to have_field('s[keyword]')
         end
