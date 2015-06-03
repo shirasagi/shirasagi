@@ -6,7 +6,7 @@ $ ->
 <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-<%= form_for :s, url: { action: :index }, html: { method: "POST", class: :search, multipart: true } do |f| %>
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
   <%= f.text_field :name, value: params[:s].try(:[], :name) %>
   <%= f.hidden_field :modal, value: "modal" %>
   <%= f.submit t("opendata.search_datasets.search") %>
