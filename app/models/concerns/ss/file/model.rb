@@ -172,7 +172,7 @@ module SS::File::Model
       validate_limit = lambda do |file|
         filename   = file.original_filename
         base_limit = SS.config.env.max_filesize
-        ext_limit  = SS.config.env.max_filesize_ext[filename.sub(/.*\./, "")]
+        ext_limit  = SS.config.env.max_filesize_ext[filename.sub(/.*\./, "").downcase]
 
         if ext_limit.present? && file.size > ext_limit
           errors.add :base, :too_large_file, filename: filename, size: number_to_human_size(file.size), limit: number_to_human_size(ext_limit)
