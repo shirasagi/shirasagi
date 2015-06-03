@@ -8,6 +8,7 @@ class Opendata::App
   include Opendata::Addon::Area
   include Opendata::Addon::Dataset
   include Opendata::Reference::Member
+  include Opendata::Common
 
   set_permission_name "opendata_apps"
 
@@ -36,27 +37,27 @@ class Opendata::App
 
   public
     def point_url
-      url.sub(/\.html$/, "") + "/point.html"
+      get_url(url, "/point.html")
     end
 
     def point_members_url
-      url.sub(/\.html$/, "") + "/point/members.html"
+      get_url(url, "/point/members.html")
     end
 
     def app_ideas_url
-      url.sub(/\.html$/, "") + "/ideas/show.html"
+      get_url(url, "/ideas/show.html")
     end
 
     def zip_url
-      url.sub(/\.html$/, "") + "/zip"
+      get_url(url, "/zip")
     end
 
     def executed_show_url
-      url.sub(/\.html$/, "") + "/executed/show.html"
+      get_url(url, "/executed/show.html")
     end
 
     def executed_add_url
-      url.sub(/\.html$/, "") + "/executed/add.html"
+      get_url(url, "/executed/add.html")
     end
 
     def contact_present?

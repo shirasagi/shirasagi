@@ -2,7 +2,7 @@
   $ ->
 
   $(".comment-add").click (event)->
-    text = $('#s_comment-body').val()
+    text = $('#s_comment_body').val()
     if text.length > 0
       $(@).css('pointer-events', 'none')
       $.ajax

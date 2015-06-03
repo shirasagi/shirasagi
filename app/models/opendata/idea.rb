@@ -7,6 +7,7 @@ class Opendata::Idea
   include Opendata::Addon::Category
   include Opendata::Addon::Area
   include Opendata::Reference::Member
+  include Opendata::Common
 
   set_permission_name "opendata_ideas"
 
@@ -48,31 +49,31 @@ class Opendata::Idea
 
   public
     def point_url
-      url.sub(/\.html$/, "") + "/point.html"
+      get_url(url, "/point.html")
     end
 
     def point_members_url
-      url.sub(/\.html$/, "") + "/point/members.html"
+      get_url(url, "/point/members.html")
     end
 
     def comment_url
-      url.sub(/\.html$/, "") + "/comment/show.html"
+      get_url(url, "/comment/show.html")
     end
 
     def comment_add_url
-      url.sub(/\.html$/, "") + "/comment/add.html"
+      get_url(url, "/comment/add.html")
     end
 
     def comment_delete_url
-      url.sub(/\.html$/, "") + "/comment/delete.html"
+      get_url(url, "/comment/delete.html")
     end
 
     def related_dataset_url
-      url.sub(/\.html$/, "") + "/dataset/show.html"
+      get_url(url, "/dataset/show.html")
     end
 
     def related_app_url
-      url.sub(/\.html$/, "") + "/app/show.html"
+      get_url(url, "/app/show.html")
     end
 
     def contact_present?

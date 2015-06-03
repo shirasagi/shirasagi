@@ -9,6 +9,7 @@ class Opendata::Dataset
   include Opendata::Addon::DatasetGroup
   include Opendata::Addon::Area
   include Opendata::Reference::Member
+  include Opendata::Common
 
   scope :formast_is, ->(word, *fields) {
     where("$and" => [{ "$or" => fields.map { |field| { field => word.to_s } } } ])
@@ -42,19 +43,19 @@ class Opendata::Dataset
 
   public
     def point_url
-      url.sub(/\.html$/, "") + "/point.html"
+      get_url(url, "/point.html")
     end
 
     def point_members_url
-      url.sub(/\.html$/, "") + "/point/members.html"
+      get_url(url, "/point/members.html")
     end
 
     def dataset_apps_url
-      url.sub(/\.html$/, "") + "/apps/show.html"
+      get_url(url, "/apps/show.html")
     end
 
     def dataset_ideas_url
-      url.sub(/\.html$/, "") + "/ideas/show.html"
+      get_url(url, "/ideas/show.html")
     end
 
     def contact_present?
