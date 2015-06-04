@@ -64,14 +64,13 @@ module Workflow::Addon
           file.in_file = f.uploaded_file
           file.user_id = @cur_user.id if @cur_user
 
-          if file.save
-            ids << file.id.mongoize
+          file.save validate: false
+          ids << file.id.mongoize
 
-            html = self.html
-            html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-            html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-            self.html = html
-          end
+          html = self.html
+          html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
+          html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+          self.html = html
         end
         self.file_ids = ids
       end
