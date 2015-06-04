@@ -25,7 +25,7 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
 
   let(:index_path) { "#{node_myapp.url}#{app.id}/appfiles/" }
   let(:new_path) { "#{node_myapp.url}#{app.id}/appfiles/new" }
-  let(:show_path) { "#{node_myapp.url}#{app.id}/appfiles/#{appfile.id}" }
+  let(:show_path) { "#{node_myapp.url}#{app.id}/appfiles/#{appfile.id}/" }
   let(:edit_path) { "#{node_myapp.url}#{app.id}/appfiles/#{appfile.id}/edit" }
   let(:delete_path) { "#{node_myapp.url}#{app.id}/appfiles/#{appfile.id}/delete" }
   let(:download_path) { "#{node_myapp.url}#{app.id}/appfiles/#{appfile.id}/file" }

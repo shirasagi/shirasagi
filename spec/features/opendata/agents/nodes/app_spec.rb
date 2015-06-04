@@ -29,7 +29,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:point_members_path) { "#{node.url}#{app.id}/point/members.html" }
   let(:rss_path) { "#{node.url}rss.xml" }
   let(:show_executed_path) { "#{node.url}#{app.id}/executed/show.html" }
-  let(:add_executed_path) { "#{node.url}#{app.id}/executed/add.html" }
   let(:show_ideas_path) { "#{node.url}#{app.id}/ideas/show.html" }
   let(:index_areas_path) { "#{node.url}areas.html" }
   let(:index_tags_path) { "#{node.url}tags.html" }
@@ -39,8 +38,8 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:file_index) { Fs::UploadedFile.create_from_file(file_index_path, basename: "spec") }
   let(:appfile) { create_appfile(app, file_index, "HTML") }
   let(:full_path) { "#{node.url}#{app.id}/full"}
-  let(:app_index_path) { "#{node.url}#{app.id}/file_index/#{appfile.id}/app_index.html"}
-  let(:text_path) { "#{node.url}#{app.id}/file_text/#{appfile.id}/app_index.html"}
+  let(:app_index_path) { "#{node.url}#{app.id}/file_index/index.html"}
+  let(:text_path) { "#{node.url}#{app.id}/file_text/index.html"}
 
   before do
     login_opendata_member(site, node_auth)
@@ -88,14 +87,6 @@ describe "opendata_agents_nodes_app", dbscope: :example do
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       visit show_executed_path
       expect(current_path).to eq show_executed_path
-    end
-  end
-
-  it "#add_executed" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit add_executed_path
-      expect(current_path).to eq add_executed_path
     end
   end
 
