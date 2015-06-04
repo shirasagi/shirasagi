@@ -87,7 +87,7 @@ class Opendata::Agents::Nodes::MyApp::AppfilesController < ApplicationController
       @item.attributes = get_params
 
       if @item.update
-        redirect_to "#{@app_url}appfiles/#{@item.id}", notice: t("views.notice.saved")
+        redirect_to "#{@app_url}appfiles/#{@item.id}/", notice: t("views.notice.saved")
       else
         render action: :edit
       end

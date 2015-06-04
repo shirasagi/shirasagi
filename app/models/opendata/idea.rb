@@ -117,35 +117,8 @@ class Opendata::Idea
         end
       end
 
-      def limit_aggregation(pipes, limit)
-        return collection.aggregate(pipes) unless limit
-
-        pipes << { "$limit" => limit + 1 }
-        aggr = collection.aggregate(pipes)
-
-        def aggr.popped=(bool)
-          @popped = bool
-        end
-        def aggr.popped?
-          @popped.present?
-        end
-
-        if aggr.size > limit
-          aggr.pop
-          aggr.popped = true
-        end
-        aggr
-      end
-
       def aggregate_array(name, opts = {})
-        pipes = []
-        pipes << { "$match" => where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
-        pipes << { "$project" => { _id: 0, "#{name}" => 1 } }
-        pipes << { "$unwind" => "$#{name}" }
-        pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
-        pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
-        pipes << { "$sort" => { count: -1 } }
-        limit_aggregation pipes, opts[:limit]
+        Opendata::Common.get_aggregate_array(self, name, opts)
       end
 
       def search(params)

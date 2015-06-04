@@ -41,14 +41,6 @@ describe Opendata::App, dbscope: :example do
     it { expect(described_class.aggregate_array(:tags, limit: 10)).to be_empty }
   end
 
-  describe ".get_tag_list" do
-    it { expect(described_class.get_tag_list(nil)).to be_empty }
-  end
-
-  describe ".get_tag" do
-    it { expect(described_class.get_tag("タグ")).to be_empty }
-  end
-
   describe ".search" do
     let(:name_keyword_matcher) do
       include("$and" => include("$or" => include("name" => /\Qキーワード\E/i).and(include("text" => /\Qキーワード\E/i))))

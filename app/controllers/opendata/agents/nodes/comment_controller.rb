@@ -41,7 +41,7 @@ class Opendata::Agents::Nodes::CommentController < ApplicationController
       Opendata::IdeaComment.new(new_comment).save
 
       idea.commented = Time.zone.now
-      idea.total_comment += 1
+      idea.total_comment = @comments.count
       idea.save
 
       update_member_notices(idea)
