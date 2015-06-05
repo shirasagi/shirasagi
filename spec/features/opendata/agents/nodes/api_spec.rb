@@ -11,6 +11,7 @@ describe "opendata_agents_nodes_api", dbscope: :example do
   let(:package_show_path) { "#{node.url}1/package_show" }
   let(:group_show_path) { "#{node.url}1/group_show" }
   let(:tag_show_path) { "#{node.url}1/tag_show" }
+  let(:package_search_path) { "#{node.url}1/package_search" }
 
   let!(:node_dataset) { create_once :opendata_node_dataset }
   let!(:node_dataset_group_01) { create(:opendata_dataset_group, site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
@@ -120,6 +121,36 @@ describe "opendata_agents_nodes_api", dbscope: :example do
 
         visit "#{group_show_path}?id=NO_DATASET_GROUP"
         visit group_show_path
+
+      end
+    end
+
+    it "#package_search" do
+      page.driver.browser.with_session("public") do |session|
+        session.env("HTTP_X_FORWARDED_HOST", cms_site.domain)
+
+        visit package_search_path
+        expect(status_code).to eq 200
+
+        visit "#{package_search_path}?q=#{node_dataset.name}"
+        expect(status_code).to eq 200
+
+        visit "#{package_search_path}?q=#{node_dataset.name}&start=0"
+        expect(status_code).to eq 200
+
+        visit "#{package_search_path}?q=#{node_dataset.name}&rows=5"
+        expect(status_code).to eq 200
+
+        visit "#{package_search_path}?q=#{node_dataset.name}&start=0&rows=5"
+        expect(status_code).to eq 200
+
+        visit "#{package_search_path}?q=#{node_dataset.name}&start=100&rows=10000"
+        expect(status_code).to eq 200
+
+        visit "#{package_search_path}?rows=a"
+        visit "#{package_search_path}?rows=-50"
+        visit "#{package_search_path}?start=b"
+        visit "#{package_search_path}?start=-10"
 
       end
     end
