@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Appfile, dbscope: :example do
+describe Opendata::App::Appfile, dbscope: :example do
   def create_appfile(app, file)
     appfile = app.appfiles.new(text: "aaa", format: "csv")
     appfile.in_file = file

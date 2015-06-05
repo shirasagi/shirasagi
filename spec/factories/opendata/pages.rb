@@ -13,13 +13,13 @@ FactoryGirl.define do
     dataset_group_ids [1]
   end
 
-  factory :opendata_app, class: Opendata::App, traits: [:cms_page] do
+  factory :opendata_app, class: Opendata::App::App, traits: [:cms_page] do
     transient do
       node nil
     end
 
     filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
-    route "opendata/app"
+    route "opendata/app/app"
     text "aaaa\naaaa"
     tags ["aaa", "bbb"]
     category_ids [1]

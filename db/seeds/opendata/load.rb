@@ -419,7 +419,7 @@ def save_app(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
 
-  item = Opendata::App.find_or_create_by cond
+  item = Opendata::App::App.find_or_create_by cond
   puts item.errors.full_messages unless item.update data
   item
 end
@@ -467,7 +467,7 @@ end
     route: "opendata/idea", layout_id: layouts["idea-page"].id, member_id: member.id, tags: %w(タグ),
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
-    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1),
+    app_ids: Opendata::App::App.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
 end
 

@@ -40,7 +40,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
     end
 
     def apps
-      @apps = Opendata::App.site(@cur_site).public.
+      @apps = Opendata::App::App.site(@cur_site).public.
         where(member_id: @member.id).
         order_by(released: -1).
         page(params[:page]).

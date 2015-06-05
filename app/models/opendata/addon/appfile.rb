@@ -5,7 +5,7 @@ module Opendata::Addon::Appfile
   set_order 200
 
   included do
-    embeds_many :appfiles, class_name: "Opendata::Appfile"
+    embeds_many :appfiles, class_name: "Opendata::App::Appfile"
     before_destroy :destroy_appfiles
   end
 

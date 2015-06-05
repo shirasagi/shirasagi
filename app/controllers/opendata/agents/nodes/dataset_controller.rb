@@ -30,7 +30,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       raise "404" unless @dataset_app
 
       cond = { site_id: @cur_site.id, dataset_ids: @dataset_app.id }
-      @apps = Opendata::App.where(cond).order_by(:updated.asc)
+      @apps = Opendata::App::App.where(cond).order_by(:updated.asc)
     end
 
     def set_ideas

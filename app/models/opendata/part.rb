@@ -54,11 +54,11 @@ module Opendata::Part
     end
 
     def sort_options
-      Array(Opendata::App.sort_options).concat(super)
+      Array(Opendata::App::App.sort_options).concat(super)
     end
 
     def sort_hash
-      Opendata::App.sort_hash(sort)
+      Opendata::App::App.sort_hash(sort)
     end
 
     def template_variable_get(item, name)

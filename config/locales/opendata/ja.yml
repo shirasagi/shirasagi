@@ -216,7 +216,7 @@ ja:
         crawl_state: ステータス
         original_updated: 元ファイル更新日時
         crawl_update: 更新方法
-      opendata/app:
+      opendata/app/app:
         name: アプリ名
         text: 説明
         license: ライセンス
@@ -231,7 +231,7 @@ ja:
         site_id: サイト
         user_id: アプリ作成者
         appfiles: アプリファイル
-      opendata/appfile:
+      opendata/app/appfile:
         file_id: ファイル
         in_file: ファイル
         name: アプリファイル名

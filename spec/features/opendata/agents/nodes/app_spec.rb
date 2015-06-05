@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe "opendata_agents_nodes_app", dbscope: :example do
+  def create_app(site, area)
+    app = Opendata::App::App.new(
+      name: "app",
+      text: "aaa", appurl: "",
+      license: "MIT",
+      filename: "#{node.filename}/1.html",
+      area_ids: [ area.id ],
+      category_ids: [1],
+      site_id: site.id
+    )
+    app.save!
+    app
+  end
   def create_appfile(app, file, format)
     appfile = app.appfiles.new(text: "aaa", format: format)
     appfile.in_file = file
@@ -16,7 +29,8 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let!(:node_search) { create :opendata_node_search_app }
 
   let!(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
-  let!(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", area_ids: [ area.id ] }
+  #let!(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", area_ids: [ area.id ] }
+  let!(:app) { create_app(site, area) }
   let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
   let!(:appfile) { create_appfile(app, file, "CSV") }

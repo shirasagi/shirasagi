@@ -54,7 +54,7 @@ module Opendata::Addon
     set_order 311
 
     included do
-      embeds_ids :apps, class_name: "Opendata::App"
+      embeds_ids :apps, class_name: "Opendata::App::App"
       permit_params app_ids: []
     end
   end

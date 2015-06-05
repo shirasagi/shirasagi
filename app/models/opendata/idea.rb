@@ -20,7 +20,7 @@ class Opendata::Idea
   field :total_comment, type: Integer, default: "0"
 
   embeds_ids :datasets, class_name: "Opendata::Dataset"
-  embeds_ids :apps, class_name: "Opendata::App"
+  embeds_ids :apps, class_name: "Opendata::App::App"
   belongs_to :member, class_name: "Opendata::Member"
 
   has_many :points, foreign_key: :idea_id, class_name: "Opendata::IdeaPoint",

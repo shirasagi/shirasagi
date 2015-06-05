@@ -11,7 +11,7 @@ class Opendata::Agents::Nodes::MyAppController < ApplicationController
     end
 
     def set_model
-      @model = Opendata::App
+      @model = Opendata::App::App
     end
 
     def set_item
@@ -37,7 +37,7 @@ class Opendata::Agents::Nodes::MyAppController < ApplicationController
 
   public
     def index
-      @items = Opendata::App.site(@cur_site).member(@cur_member).
+      @items = Opendata::App::App.site(@cur_site).member(@cur_member).
         order_by(updated: -1).
         page(params[:page]).
         per(20)

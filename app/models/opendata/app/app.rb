@@ -1,4 +1,4 @@
-class Opendata::App
+class Opendata::App::App
   include Cms::Page::Model
   include Cms::Addon::Release
   include Cms::Addon::RelatedPage
@@ -19,7 +19,7 @@ class Opendata::App
   field :license, type: String
   field :executed, type: Integer
 
-  has_many :points, primary_key: :app_id, class_name: "Opendata::AppPoint",
+  has_many :points, primary_key: :app_id, class_name: "Opendata::App::AppPoint",
     dependent: :destroy
   embeds_ids :datasets, class_name: "Opendata::Dataset"
   has_many :ideas, primary_key: :app_id, class_name: "Opendata::Idea"

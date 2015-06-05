@@ -3,7 +3,7 @@ class Opendata::AppsController < ApplicationController
   include Cms::CrudFilter
   helper Opendata::FormHelper
 
-  model Opendata::App
+  model Opendata::App::App
 
   append_view_path "app/views/cms/pages"
   navi_view "opendata/main/navi"

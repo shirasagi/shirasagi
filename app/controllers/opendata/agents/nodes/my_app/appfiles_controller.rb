@@ -10,7 +10,7 @@ class Opendata::Agents::Nodes::MyApp::AppfilesController < ApplicationController
 
   protected
     def app
-      @app ||= Opendata::App.site(@cur_site).find params[:app_id]
+      @app ||= Opendata::App::App.site(@cur_site).find params[:app_id]
     end
 
     def set_app
@@ -20,7 +20,7 @@ class Opendata::Agents::Nodes::MyApp::AppfilesController < ApplicationController
     end
 
     def set_model
-      @model = Opendata::Appfile
+      @model = Opendata::App::Appfile
     end
 
     def set_item
