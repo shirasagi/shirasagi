@@ -38,10 +38,10 @@ module Opendata::Api::GroupListFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      @groups = Opendata::DatasetGroup.site(@cur_site).public
+      groups = Opendata::DatasetGroup.site(@cur_site).public
 
       group_list = []
-      @groups.each do |group|
+      groups.each do |group|
         datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group.id
         group_list << {id: group.id, state: group.state, name: group.name, order: group.order, packages: datasets.count}
       end

@@ -33,14 +33,14 @@ module Opendata::Api::GroupShowFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      @groups = Opendata::DatasetGroup.site(@cur_site).public
-      @groups = @groups.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
+      groups = Opendata::DatasetGroup.site(@cur_site).public
+      groups = groups.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
-      if @groups.count > 0
-        group = @groups[0]
-        @datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group[:id]
-        group[:package_count] = @datasets.count
-        group[:packages] = @datasets if include_datasets.nil? || include_datasets =~ /^true$/i
+      if groups.count > 0
+        group = groups[0]
+        datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group[:id]
+        group[:package_count] = datasets.count
+        group[:packages] = datasets if include_datasets.nil? || include_datasets =~ /^true$/i
         res = {help: help, success: true, result: group}
       else
         res = {help: help, success: false}

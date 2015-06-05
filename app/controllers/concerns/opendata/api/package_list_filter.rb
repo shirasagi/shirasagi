@@ -62,12 +62,12 @@ module Opendata::Api::PackageListFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      @datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
-      @datasets = @datasets.skip(offset) if limit.present? && offset.present?
-      @datasets = @datasets.limit(limit) if limit.present?
+      datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
+      datasets = datasets.skip(offset) if limit.present? && offset.present?
+      datasets = datasets.limit(limit) if limit.present?
 
       package_list = []
-      @datasets.each do |dataset|
+      datasets.each do |dataset|
         package_list << dataset[:name]
       end
 

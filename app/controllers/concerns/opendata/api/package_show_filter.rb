@@ -35,11 +35,11 @@ module Opendata::Api::PackageShowFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      @datasets = Opendata::Dataset.site(@cur_site).public
-      @datasets = @datasets.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
+      datasets = Opendata::Dataset.site(@cur_site).public
+      datasets = datasets.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
-      if @datasets.count > 0
-        res = {help: help, success: true, result: @datasets[0]}
+      if datasets.count > 0
+        res = {help: help, success: true, result: datasets[0]}
       else
         res = {help: help, success: false}
         res[:error] = {message: "Not found", __type: "Not Found Error"}

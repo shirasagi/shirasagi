@@ -10,10 +10,10 @@ module Opendata::Api::TagListFilter
       #vocabulary_id = params[:vocabulary_id]
       #all_fields = params[:all_fields] || false
 
-      @tags = Opendata::Dataset.site(@cur_site).public.get_tag_list(query)
+      tags = Opendata::Dataset.site(@cur_site).public.get_tag_list(query)
 
       tag_list = []
-      @tags.each do |tag|
+      tags.each do |tag|
         tag_name = tag["name"]
         tag_list << tag["name"] if query.nil? || (query.present? && tag_name =~ /^.*#{query}.*$/i)
       end
