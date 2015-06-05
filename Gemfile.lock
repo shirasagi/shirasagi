@@ -53,7 +53,7 @@ GEM
       sass (~> 3.0)
       terminal-table (~> 1.4)
     browser (0.8.0)
-    bson (2.3.0)
+    bson (3.0.4)
     bson_ext (1.5.1)
     builder (3.2.2)
     byebug (4.0.5)
@@ -166,7 +166,7 @@ GEM
     jquery-turbolinks (2.1.0)
       railties (>= 3.1.0)
       turbolinks
-    json (1.8.2)
+    json (1.8.3)
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -205,8 +205,8 @@ GEM
       mongoid (~> 4.0.0)
       rake
       rspec (~> 3.1)
-    moped (2.0.4)
-      bson (~> 2.2)
+    moped (2.0.5)
+      bson (~> 3.0.4)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
     multi_json (1.11.0)
@@ -288,7 +288,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rmagick (2.15.0)
+    rmagick (2.15.2)
     rspec (3.2.0)
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
@@ -306,7 +306,7 @@ GEM
     rspec-mocks (3.2.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.2.0)
-    rspec-rails (3.2.1)
+    rspec-rails (3.2.2)
       actionpack (>= 3.0, < 4.3)
       activesupport (>= 3.0, < 4.3)
       railties (>= 3.0, < 4.3)
@@ -365,7 +365,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
-    timecop (0.7.3)
+    timecop (0.7.4)
     timers (4.0.1)
       hitimes
     tins (1.5.2)
@@ -454,6 +454,3 @@ DEPENDENCIES
   unicorn
   yard
   zipruby
-
-BUNDLED WITH
-   1.10.3
