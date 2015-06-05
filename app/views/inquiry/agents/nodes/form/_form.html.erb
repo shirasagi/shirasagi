@@ -1,5 +1,5 @@
 <div class="columns">
-<% @items.each do |column, data| %>
+<% @items.each do |column, data, confirm_data| %>
   <dl class="column">
     <dt>
     <%= column.name %>
@@ -16,6 +16,9 @@
         <% end %>
       <% else %>
         <%= f.hidden_field column.id, value: data %><%=br data %>
+        <% if column.input_confirm == "enabled" %>
+          <%= f.hidden_field "#{column.id}_confirm", value: confirm_data %>
+        <% end %>
       <% end %>
     <% else %>
       <%= raw column.html %>
@@ -44,6 +47,19 @@
       <% end %>
     <% end %>
     </dd>
+    <% if column.input_confirm == "enabled" && !confirm %>
+      <dt>
+        <%= f.label "#{column.id}_confirm", t("inquiry.confirm_input", name: column.name) %>
+        <% if column.required == "required" %>
+          <span class="required"><%= t('inquiry.required_field') %></span>
+        <% end %>
+      </dt>
+      <dd>
+        <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
+        <% opt = { value: "" } %>
+        <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
+      </dd>
+    <% end %>
   </dl>
 <% end %>
 </div>

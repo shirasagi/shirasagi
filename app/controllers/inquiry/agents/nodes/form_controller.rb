@@ -32,7 +32,11 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @data = {}
       @columns.each do |column|
         @items << [column, params[:item].try(:[], "#{column.id}")]
-        @data[column.id] = params[:item].try(:[], "#{column.id}")
+        @data[column.id] = [params[:item].try(:[], "#{column.id}")]
+        if column.input_confirm == "enabled"
+          @items.last << params[:item].try(:[], "#{column.id}_confirm")
+          @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")
+        end
       end
       @answer = Inquiry::Answer.new(site_id: @cur_site.id, node_id: @cur_node.id)
       @answer.remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip

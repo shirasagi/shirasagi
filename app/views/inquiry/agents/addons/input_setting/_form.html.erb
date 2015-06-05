@@ -7,4 +7,6 @@
   <dd><%= f.select :required, @item.required_options %></dd>
   <dt><%= @model.t :additional_attr %><%= @model.tt :additional_attr %></dt>
   <dd><%= f.text_field :additional_attr %></dd>
+  <dt><%= @model.t :input_confirm %><%= @model.tt :input_confirm %></dt>
+  <dd><%= f.select :input_confirm, @item.input_confirm_options %></dd>
 </dl>
