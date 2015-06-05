@@ -1,7 +1,7 @@
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-  <%= form_for :s, url: { action: :index, level: @level }, html: { method: "GET", class: :search, multipart: true } do |f| %>
+  <%= form_for :s, url: { action: :index, level: @level }, html: { method: "GET", class: :search } do |f| %>
     <dl class="see mod-cms-workflow-search-approvers">
       <dt><%= t "cms.group" %></dt>
       <dd><%= select_tag "s[group]",  options_for_select(@group_options, @group_id) %></dd>
