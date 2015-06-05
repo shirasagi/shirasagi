@@ -1,18 +1,6 @@
 require 'spec_helper'
 
 describe "opendata_ideas", type: :feature, dbscope: :example do
-  def create_idea(site, area, category)
-    idea = Opendata::Idea::Idea.new(
-      name: "idea",
-      text: "aaa",
-      filename: "#{node.filename}/1.html",
-      area_ids: [ area.id ],
-      category_ids: [ category.id ],
-      site_id: site.id
-    )
-    idea.save!
-    idea
-  end
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_idea, name: "opendata_idea" }
   let!(:node_search) { create_once :opendata_node_search_idea }
@@ -64,13 +52,12 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
     context "with item" do
       let(:category) { create_once :opendata_node_category, basename: "opendata_category1" }
       let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
-      let!(:item) { create_idea(site, area, category) }
-      #let(:item) do
-       # create_once :opendata_idea,
-        #            filename: "#{node.filename}/#{unique_id}.html",
-         #           category_ids: [ category.id ],
-          #          area_ids: [ area.id ]
-      #end
+      let(:item) do
+        create_once :opendata_idea,
+                    filename: "#{node.filename}/#{unique_id}.html",
+                    category_ids: [ category.id ],
+                    area_ids: [ area.id ]
+      end
       let(:show_path) { opendata_idea_path site.host, node, item }
       let(:edit_path) { edit_opendata_idea_path site.host, node, item }
       let(:delete_path) { delete_opendata_idea_path site.host, node, item }

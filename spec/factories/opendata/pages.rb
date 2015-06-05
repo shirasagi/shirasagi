@@ -33,7 +33,7 @@ FactoryGirl.define do
     end
 
     filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
-    route "opendata/idea/idea"
+    route "opendata/idea"
     text "cccc\ndddd"
     tags ["ccc", "ddd"]
     category_ids [1]
