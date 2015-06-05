@@ -151,9 +151,11 @@ module SS::File::Model
       return if in_file.blank?
 
       if image? && image_size
-        image = Magick::Image.from_blob(in_file.read).shift
         width, height = image_size
-        binary = image.resize(width, height).to_blob
+
+        image = Magick::Image.from_blob(in_file.read).shift
+        image = image.resize_to_fit width, height if image.columns > width || image.rows > height
+        binary = image.to_blob
       else
         binary = in_file.read
       end
