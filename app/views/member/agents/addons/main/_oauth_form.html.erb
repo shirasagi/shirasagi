@@ -1,0 +1,8 @@
+<dl class="see mod-member-formauth">
+  <dt><%= @model.t "#{provider}_oauth" %><%= @model.tt "#{provider}_oauth" %></dt>
+  <dd><%= f.select "#{provider}_oauth", @item.send("#{provider}_oauth_options") %></dd>
+  <dt><%= @model.t "#{provider}_client_id" %><%= @model.tt "#{provider}_client_id" %></dt>
+  <dd><%= f.text_field "#{provider}_client_id" %></dd>
+  <dt><%= @model.t "#{provider}_client_secret" %><%= @model.tt "#{provider}_client_secret" %></dt>
+  <dd><%= f.text_field "#{provider}_client_secret" %></dd>
+</dl>
