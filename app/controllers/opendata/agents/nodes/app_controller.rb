@@ -29,7 +29,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
       raise "404" unless @app_idea
 
       cond = { site_id: @cur_site.id, app_ids: @app_idea.id }
-      @ideas = Opendata::Idea.where(cond).order_by(:updated.asc)
+      @ideas = Opendata::Idea::Idea.where(cond).order_by(:updated.asc)
     end
 
     def create_zip(items)
@@ -135,7 +135,7 @@ class Opendata::Agents::Nodes::AppController < ApplicationController
     def show_ideas
       @cur_node.layout = nil
       @login_mode = logged_in?(redirect: false)
-      @idea_comment = Opendata::IdeaComment
+      @idea_comment = Opendata::Idea::IdeaComment
     end
 
     def show_executed

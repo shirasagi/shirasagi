@@ -1,7 +1,18 @@
 require 'spec_helper'
 
 describe "opendata_agents_nodes_comment", dbscope: :example do
-
+  def create_idea(site, area, category)
+    idea = Opendata::Idea::Idea.new(
+      name: "idea",
+      text: "aaa",
+      filename: "#{node_idea.filename}/1.html",
+      area_ids: [ area.id ],
+      category_ids: [ category.id ],
+      site_id: site.id
+    )
+    idea.save!
+    idea
+  end
   let(:site) { cms_site }
   let!(:node_idea) { create_once :opendata_node_idea, name: "opendata_idea" }
   let!(:node_search) { create_once :opendata_node_search_idea }
@@ -9,13 +20,7 @@ describe "opendata_agents_nodes_comment", dbscope: :example do
 
   let!(:category) { create_once :opendata_node_category }
   let!(:area) { create_once :opendata_node_area }
-
-  let!(:idea) do
-    create_once :opendata_idea,
-      filename: "#{node_idea.filename}/1.html",
-      category_ids: [ category.id ],
-      area_ids: [ area.id ]
-  end
+  let!(:idea) { create_idea(site, area, category) }
 
   let(:index_path) { "#{node_idea.url}#{idea.id}/comment/show.html" }
 

@@ -1,4 +1,4 @@
-class Opendata::IdeaComment
+class Opendata::Idea::IdeaComment
   include SS::Document
   include SS::Reference::Site
   include SS::Reference::User
@@ -11,7 +11,7 @@ class Opendata::IdeaComment
   field :text, type: String
   field :comment_deleted, type: DateTime
 
-  belongs_to :idea, class_name: "Opendata::Idea"
+  belongs_to :idea, class_name: "Opendata::Idea::Idea"
 
   permit_params :name, :text, :comment_deleted
 

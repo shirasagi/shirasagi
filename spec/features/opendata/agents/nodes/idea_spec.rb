@@ -1,7 +1,18 @@
 require 'spec_helper'
 
 describe "opendata_agents_nodes_idea", dbscope: :example do
-
+  def create_idea(site, area)
+    idea = Opendata::Idea::Idea.new(
+      name: "idea",
+      text: "aaa",
+      filename: "#{node_idea.filename}/1.html",
+      area_ids: [ area.id ],
+      category_ids: [ "1" ],
+      site_id: site.id
+    )
+    idea.save!
+    idea
+  end
   before do
     create_once :opendata_node_search_idea, basename: "idea/search"
   end
@@ -13,7 +24,7 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
 
   let!(:node_area) { create :opendata_node_area }
 
-  let(:page_idea) { create_once :opendata_idea, filename: "#{node_idea.filename}/1.html", area_ids: [ node_area.id ] }
+  let(:page_idea) { create_idea(site, node_area) }
   let(:index_path) { "#{node_idea.url}index.html" }
   let(:show_point_path) { "#{node_idea.url}#{page_idea.id}/point.html" }
   let(:point_members_path) { "#{node_idea.url}#{page_idea.id}/point/members.html" }

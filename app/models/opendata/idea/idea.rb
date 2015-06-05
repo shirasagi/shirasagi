@@ -1,4 +1,4 @@
-class Opendata::Idea
+class Opendata::Idea::Idea
   include Cms::Page::Model
   include Cms::Addon::Release
   include Cms::Addon::RelatedPage
@@ -23,9 +23,9 @@ class Opendata::Idea
   embeds_ids :apps, class_name: "Opendata::App::App"
   belongs_to :member, class_name: "Opendata::Member"
 
-  has_many :points, foreign_key: :idea_id, class_name: "Opendata::IdeaPoint",
+  has_many :points, foreign_key: :idea_id, class_name: "Opendata::Idea::IdeaPoint",
     dependent: :delete
-  has_many :comments, foreign_key: :idea_id, class_name: "Opendata::IdeaComment",
+  has_many :comments, foreign_key: :idea_id, class_name: "Opendata::Idea::IdeaComment",
     dependent: :delete
 
   validates :text, presence: true, length: { maximum: 400 }

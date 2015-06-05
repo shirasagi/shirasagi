@@ -5,7 +5,7 @@ module Opendata::Addon::Comment
   set_order 204
 
   included do
-    embeds_many :comments, class_name: "Opendata::IdeaComment"
+    embeds_many :comments, class_name: "Opendata::Idea::IdeaComment"
   end
 
 end

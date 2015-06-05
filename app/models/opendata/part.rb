@@ -81,15 +81,15 @@ module Opendata::Part
     end
 
     def sort_options
-      Array(Opendata::Idea.sort_options).concat(super)
+      Array(Opendata::Idea::Idea.sort_options).concat(super)
     end
 
     def sort_hash
-      Opendata::Idea.sort_hash(sort)
+      Opendata::Idea::Idea.sort_hash(sort)
     end
 
     def sort_criteria
-      Opendata::Idea.sort_criteria(sort)
+      Opendata::Idea::Idea.sort_criteria(sort)
     end
 
     def template_variable_get(item, name)

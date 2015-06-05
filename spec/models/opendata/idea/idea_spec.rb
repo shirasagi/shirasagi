@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Idea, dbscope: :example do
+describe Opendata::Idea::Idea, dbscope: :example do
   let!(:node_search_dataset) { create(:opendata_node_search_idea) }
   let(:node) { create(:opendata_node_idea) }
 

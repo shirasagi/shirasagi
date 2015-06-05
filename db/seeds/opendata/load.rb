@@ -457,7 +457,7 @@ def save_idea(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
 
-  item = Opendata::Idea.find_or_create_by cond
+  item = Opendata::Idea::Idea.find_or_create_by cond
   puts item.errors.full_messages unless item.update data
   item
 end

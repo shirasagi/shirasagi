@@ -27,13 +27,13 @@ FactoryGirl.define do
     license { unique_id }
   end
 
-  factory :opendata_idea, class: Opendata::Idea, traits: [:cms_page] do
+  factory :opendata_idea, class: Opendata::Idea::Idea, traits: [:cms_page] do
     transient do
       node nil
     end
 
     filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
-    route "opendata/idea"
+    route "opendata/idea/idea"
     text "cccc\ndddd"
     tags ["ccc", "ddd"]
     category_ids [1]

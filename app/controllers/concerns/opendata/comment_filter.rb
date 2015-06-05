@@ -23,7 +23,7 @@ module Opendata::CommentFilter
       except_member_ids << idea.member_id if idea.member_id
 
       member_ids = []
-      other_comments = Opendata::IdeaComment.where({idea_id: idea.id})
+      other_comments = Opendata::Idea::IdeaComment.where({idea_id: idea.id})
       other_comments.each do |other_comment|
         other_member_id = other_comment.member_id
         if other_member_id && except_member_ids.include?(other_member_id) == false

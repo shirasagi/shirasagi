@@ -11,7 +11,7 @@ class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
 
       @cur_node.name = @item.name
 
-      Opendata::Idea.site(@cur_site).where(category_ids: @item.id).public
+      Opendata::Idea::Idea.site(@cur_site).where(category_ids: @item.id).public
     end
 
     def index

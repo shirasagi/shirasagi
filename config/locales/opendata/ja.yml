@@ -236,7 +236,7 @@ ja:
         in_file: ファイル
         name: アプリファイル名
         text: 説明
-      opendata/idea:
+      opendata/idea/idea:
         name: タイトル
         site_id: サイト
         user_id: 作成者
@@ -249,7 +249,7 @@ ja:
         tags: タグ
         comment_body: 本文
         commented: 合計コメント数
-      opendata/idea_comment:
+      opendata/idea/idea_comment:
         text: コメント
         member_name: 投稿者名
         deleted: 削除日時
