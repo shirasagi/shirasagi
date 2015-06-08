@@ -20,7 +20,7 @@ SS::Application.routes.draw do
     resources :roles, concerns: :deletion
 
     namespace "apis" do
-      match "groups" => "groups#index", via: [:get, :post]
+      get "groups" => "groups#index"
     end
 
     namespace "db" do
