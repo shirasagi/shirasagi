@@ -10,6 +10,7 @@ class Event::Page
   include Event::Addon::Body
   include Event::Addon::AdditionalInfo
   include Event::Addon::Date
+  include Map::Addon::Page
   include Workflow::Addon::Approver
   include History::Addon::Backup
   include Workflow::Addon::Branch
