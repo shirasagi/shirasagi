@@ -623,7 +623,6 @@ class @Form_Alert
         $("#cboxLoadedContent").find(".cancel").on "click", (e)->
           $.colorbox.close()
           return false
-
         return false
 
   @validate: (form, submit)->
@@ -632,7 +631,7 @@ class @Form_Alert
       (this)(form, submit)
 
     if $.isEmptyObject(Form_Alert.alerts)
-      return ture
+      return true
     else
       return false
 
