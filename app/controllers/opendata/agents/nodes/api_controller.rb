@@ -7,6 +7,7 @@ class Opendata::Agents::Nodes::ApiController < ApplicationController
   include Opendata::Api::GroupShowFilter
   include Opendata::Api::TagShowFilter
   include Opendata::Api::PackageSearchFilter
+  include Opendata::Api::ResourceSearchFilter
 
   before_action :accept_cors_request
 
