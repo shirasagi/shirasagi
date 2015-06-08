@@ -34,10 +34,7 @@
   <header><h1><%= t :"cms.config" %></h1></header>
   <div>
     <%= link_to :"cms.site", cms_site_path %>
-
-    <% if @cur_user.role?(:edit, Cms::Site, site: @cur_site) %>
-      <%= link_to :"cms.search_contents", cms_search_contents_path %>
-    <% end %>
+    <%= link_to :"cms.search_contents", cms_search_contents_pages_path %>
     <% if @cur_user.role?(:edit, Cms::Role, site: @cur_site) %>
       <%= link_to :"cms.role", cms_roles_path %>
     <% end %>

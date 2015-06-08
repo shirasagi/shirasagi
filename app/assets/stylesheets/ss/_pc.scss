@@ -501,6 +501,54 @@ table.cells, table.see {
     }
   }
 }
+.search-contents-pages {
+  @include clear;
+  background: $gray3;
+  padding: 5px 5px 10px 5px;
+  margin-bottom: 20px;
+  dl {
+    input.filename {
+      width: 20em;
+    }
+    table.index {
+      margin-top: 2px;
+      width: 20em;
+      tr {
+        background-color: transparent;
+      }
+    }
+    &:nth-child(3),&:nth-child(5),&:nth-child(6),&:nth-child(7),&:nth-child(8) {
+      clear: both;
+      @include clear;
+    }
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+  dt {
+    min-width: 110px !important;
+    position: relative;
+    top: 6px;
+    left: 6px;
+    font-weight: normal !important;
+  }
+  dd {
+    margin: 0px 0px 0px 110px !important;
+    position: relative;
+    top: 6px;
+    left: 6px;
+    max-width: 380px;
+  }
+  .cboxElement {
+    @include btn;
+    display: inline-block;
+    line-height: 1.4;
+  }
+  .search,.reset {
+    width: 80px;
+    margin-right: 20px;
+  }
+}
 .tooltip {
   display:inline-block;
   position:relative;

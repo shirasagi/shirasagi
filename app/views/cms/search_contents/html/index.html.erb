@@ -2,7 +2,7 @@
 $ ->
   result = $(".result")
   $(".search").on "click", (e)->
-    path    = "<%= cms_apis_contents_path %>"
+    path    = "<%= cms_apis_contents_html_path %>"
     keyword = $(".keyword").val()
     option  = $(".option:checked").val();
     data    = { s: { keyword: keyword, option: option } }
@@ -19,8 +19,6 @@ $ ->
           result.find("input:enabled").prop("checked", true)
         error: (data, status) ->
           alert(data)
-          console.log data
-          result.html("input")
           alert(["== Error =="].concat(data.responseJSON).join("\n"))
 
     e.preventDefault()
@@ -51,19 +49,19 @@ $ ->
 <%= form_for :item, url: { action: :update }, html: { class: "index-search", multipart: true } do |f| %>
 <div class="search-contents-form">
   <dl class="see">
-    <dt><%= t("cms.apis.contents.keyword") %><%= @model.tt :search_keyword %></dt>
+    <dt><%= t("cms.apis.contents.keyword") %><%= tt("search_contents.html.keyword") %></dt>
     <dd>
       <%= text_field_tag :keyword, "", value: @keyword, class: :keyword %>
       <%= f.submit t("views.button.search"), name: "search", class: :search %>
     </dd>
 
-    <dt><%= t("cms.apis.contents.replacement") %><%= @model.tt :replace_keyword %></dt>
+    <dt><%= t("cms.apis.contents.replacement") %><%= tt("search_contents.html.replacement") %></dt>
     <dd>
       <%= text_field_tag :replacement, "", value: @replacement, class: :replacement %>
       <%= f.submit t("views.button.replace_all"), name: "replace", class: :replace %>
     </dd>
 
-    <dt><%= t("cms.apis.contents.option") %><%= @model.tt :search_option %></dt>
+    <dt><%= t("cms.apis.contents.option") %><%= tt("search_contents.html.option") %></dt>
     <dd>
       <label>
         <%= check_box_tag :option, :url, false, id: "option-url", class: :option %>
@@ -79,7 +77,7 @@ $ ->
 
 <div class="result">
   <% if @updated_items %>
-    <%= render file: "cms/apis/contents/index" %>
+    <%= render file: "cms/apis/contents/html/index" %>
   <% end %>
 </div>
 <% end %>
