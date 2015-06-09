@@ -36,12 +36,12 @@ $ ->
 
 <article class="areas nodes">
   <header><h1>地域</h1></header>
-  <%= render file: "opendata/agents/nodes/idea/areas" %>
+  <%= render file: "opendata/agents/nodes/idea/idea/areas" %>
 </article>
 
 <article class="tags nodes">
   <header><h1>タグ</h1></header>
-  <%= render file: "opendata/agents/nodes/idea/tags" %>
+  <%= render file: "opendata/agents/nodes/idea/idea/tags" %>
   <% if @tags.popped? %>
   <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>
   <% end %>

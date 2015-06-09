@@ -216,7 +216,7 @@ ja:
         crawl_state: ステータス
         original_updated: 元ファイル更新日時
         crawl_update: 更新方法
-      opendata/app/app:
+      opendata/app:
         name: アプリ名
         text: 説明
         license: ライセンス
@@ -231,12 +231,12 @@ ja:
         site_id: サイト
         user_id: アプリ作成者
         appfiles: アプリファイル
-      opendata/app/appfile:
+      opendata/appfile:
         file_id: ファイル
         in_file: ファイル
         name: アプリファイル名
         text: 説明
-      opendata/idea/idea:
+      opendata/idea:
         name: タイトル
         site_id: サイト
         user_id: 作成者
@@ -249,7 +249,7 @@ ja:
         tags: タグ
         comment_body: 本文
         commented: 合計コメント数
-      opendata/idea/idea_comment:
+      opendata/idea_comment:
         text: コメント
         member_name: 投稿者名
         deleted: 削除日時

@@ -7,7 +7,7 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
-    resources :my_apps, concerns: :deletion
+    resources :my_apps, concerns: :deletion, module: "mypage/app"
   end
 
   node "opendata" do

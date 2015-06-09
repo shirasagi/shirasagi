@@ -1,4 +1,4 @@
-module Opendata::IdeaFilter
+module Opendata::Idea::IdeaFilter
   extend ActiveSupport::Concern
 
   included do
@@ -30,12 +30,12 @@ module Opendata::IdeaFilter
   public
     def index_areas
       @areas = aggregate_areas(100)
-      render "opendata/agents/nodes/idea/areas", layout: "opendata/idea_aggregation"
+      render "opendata/agents/nodes/idea/idea/areas", layout: "opendata/idea_aggregation"
     end
 
     def index_tags
       @tags = aggregate_tags(100)
-      render "opendata/agents/nodes/idea/tags", layout: "opendata/idea_aggregation"
+      render "opendata/agents/nodes/idea/idea/tags", layout: "opendata/idea_aggregation"
     end
 
 end

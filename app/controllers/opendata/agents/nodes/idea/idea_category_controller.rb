@@ -1,7 +1,7 @@
-class Opendata::Agents::Nodes::IdeaCategoryController < ApplicationController
+class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
-  include Opendata::IdeaFilter
+  include Opendata::Idea::IdeaFilter
 
   public
     def pages

@@ -1,8 +1,8 @@
-class Opendata::Agents::Nodes::IdeaController < ApplicationController
+class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
   include Opendata::MypageFilter
-  include Opendata::IdeaFilter
+  include Opendata::Idea::IdeaFilter
 
   before_action :set_idea, only: [:show_point, :add_point, :point_members]
   skip_filter :logged_in?

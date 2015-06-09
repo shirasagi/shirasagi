@@ -1,4 +1,4 @@
-module Opendata::CommentFilter
+module Opendata::Idea::CommentFilter
   extend ActiveSupport::Concern
 
   private
