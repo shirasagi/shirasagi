@@ -3,7 +3,7 @@ module Opendata::Api::ResourceSearchFilter
   include Opendata::Api
 
   private
-    def resource_search_param_check?(query, order_by, offset, limit)
+    def resource_search_check(query, order_by, offset, limit)
 
       offset_messages = []
       limit_messages = []
@@ -36,7 +36,7 @@ module Opendata::Api::ResourceSearchFilter
       offset = params[:offset]
       limit = params[:limit]
 
-      error = resource_search_param_check?(query, order_by, offset, limit)
+      error = resource_search_check(query, order_by, offset, limit)
       if error
         render json: {help: help, success: false, error: error} and return
       end

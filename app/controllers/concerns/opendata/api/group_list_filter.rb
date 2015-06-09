@@ -3,7 +3,7 @@ module Opendata::Api::GroupListFilter
   include Opendata::Api
 
   private
-    def group_list_param_check?(sort)
+    def group_list_check(sort)
 
       sort_message = []
       sort_values = ["name", "packages"]
@@ -34,7 +34,7 @@ module Opendata::Api::GroupListFilter
       groups = params[:groups]
       all_fields = params[:all_fields]
 
-      error = group_list_param_check?(sort)
+      error = group_list_check(sort)
       if error.present?
         render json: {help: help, success: false, error: error} and return
       end

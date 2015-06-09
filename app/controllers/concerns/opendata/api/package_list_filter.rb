@@ -3,7 +3,7 @@ module Opendata::Api::PackageListFilter
   include Opendata::Api
 
   private
-    def package_list_param_check?(limit, offset)
+    def package_list_check(limit, offset)
 
       limit_message = []
       offset_message = []
@@ -58,7 +58,7 @@ module Opendata::Api::PackageListFilter
       limit = params[:limit]
       offset = params[:offset]
 
-      error = package_list_param_check?(limit, offset)
+      error = package_list_check(limit, offset)
       if error.present?
         render json: {help: help, success: false, error: error} and return
       end

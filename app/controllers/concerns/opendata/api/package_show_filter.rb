@@ -3,7 +3,7 @@ module Opendata::Api::PackageShowFilter
   include Opendata::Api
 
   private
-    def package_show_param_check?(id)
+    def package_show_check(id)
 
       id_message = []
       id_message << "Missing value" if id.blank?
@@ -31,7 +31,7 @@ module Opendata::Api::PackageShowFilter
       id = URI.decode(id) if !id.nil?
       #use_default_schema = params[:use_default_schema]
 
-      error = package_show_param_check?(id)
+      error = package_show_check(id)
       if error.present?
         render json: {help: help, success: false, error: error} and return
       end

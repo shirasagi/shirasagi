@@ -3,7 +3,7 @@ module Opendata::Api::GroupShowFilter
   include Opendata::Api
 
   private
-    def group_show_param_check?(id)
+    def group_show_check(id)
 
       id_message = []
       id_message << "Missing value" if id.blank?
@@ -29,7 +29,7 @@ module Opendata::Api::GroupShowFilter
       id = URI.decode(id) if !id.nil?
       include_datasets = params[:include_datasets] || "true"
 
-      error = group_show_param_check?(id)
+      error = group_show_check(id)
       if error.present?
         render json: {help: help, success: false, error: error} and return
       end

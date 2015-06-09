@@ -3,7 +3,7 @@ module Opendata::Api::PackageSearchFilter
   include Opendata::Api
 
   private
-    def package_search_param_check?(rows, start)
+    def package_search_check(rows, start)
 
       rows_message = []
       start_message = []
@@ -59,7 +59,7 @@ module Opendata::Api::PackageSearchFilter
       rows = params[:rows]
       start = params[:start]
 
-      error = package_search_param_check?(rows, start)
+      error = package_search_check(rows, start)
       if error
         render json: {help: help, success: false, error: error} and return
       end
