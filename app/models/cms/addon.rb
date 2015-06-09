@@ -248,4 +248,16 @@ module Cms::Addon
       errors.add :thumb_id, :thums_is_not_an_image unless file.image?
     end
   end
+
+  module ParentCrumb
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    set_order 410
+
+    included do
+      field :parent_crumb_urls, type: SS::Extensions::Lines
+      permit_params :parent_crumb_urls
+    end
+  end
 end

@@ -1,0 +1,6 @@
+<% return "" if @item.parent_crumb_urls.blank? %>
+
+<dl class="see">
+  <dt><%= @model.t :parent_crumb_urls %></dt>
+  <dd><%=br @item.send(:parent_crumb_urls).join("\n") %></dd>
+</dl>

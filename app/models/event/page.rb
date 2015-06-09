@@ -4,6 +4,7 @@ class Event::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::RelatedPage
+  include Cms::Addon::ParentCrumb
   include Cms::Addon::Body
   include Cms::Addon::File
   include Category::Addon::Category

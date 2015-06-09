@@ -76,6 +76,8 @@ ja:
         updated_1: 更新日時
         released_1: 公開日時
         order: 指定順
+      parent_crumb:
+        blank: カテゴリーから選択する
     sns_share:
       tweet: ツイート
       add_hatena: このエントリーをはてなブックマークに追加
@@ -142,6 +144,7 @@ ja:
       cms/tabs: タブ表示
       cms/related_page: 関連記事
       cms/thumb: サムネイル
+      cms/parent_crumb: パンくず
 
   mongoid:
     models:
@@ -247,6 +250,8 @@ ja:
         new_days: NEWマーク期間
       cms/addon/thumb:
         thumb_id: サムネイル画像
+      cms/addon/parent_crumb:
+        parent_crumb_urls: 親フォルダー
 
   errors:
     messages:
@@ -524,6 +529,15 @@ ja:
       home_label:
         - パンくずのトップに表示するサイトトップの名称を記述します。
 
+    cms/addon/thumb:
+      thumb_id:
+        - サムネイル画像を指定します。
+
+    cms/addon/parent_crumb:
+      parent_crumb_urls:
+        - 親フォルダーのURLを記述します。
+        - 設定しているカテゴリーから選択することも可能です。
+
     cms/layout:
       name:
         - レイアウト名を入力します。
@@ -544,7 +558,3 @@ ja:
       thumb_id:
         - サムネイル画像を指定します。
         - サムネイル画像は、ご使用のエディターが CKEditor の場合にのみ表示されます。
-
-    cms/addon/thumb:
-      thumb_id:
-        - サムネイル画像を指定します。

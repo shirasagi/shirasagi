@@ -7,6 +7,7 @@ class Cms::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::RelatedPage
+  include Cms::Addon::ParentCrumb
   include Category::Addon::Category
   include Event::Addon::Date
   include Map::Addon::Page

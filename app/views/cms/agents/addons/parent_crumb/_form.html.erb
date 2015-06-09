@@ -1,0 +1,31 @@
+<%= jquery do %>
+  SS_AddonTabs.toggleView(".mod-cms-parent_crumbs");
+
+  var select = $("#parent-crumbs");
+  var blank  = select.first().text();
+
+  $("#parent-crumbs").first().mousedown(function(){
+    $(this).toggleClass("pulled");
+    if (!$(this).hasClass("pulled")) return true;
+
+    select.html('<option value="">' + blank + '</option>');
+
+    $("input[type=checkbox][name$='[category_ids][]']").each(function(){
+      if (!$(this).prop('checked')) return;
+      var value  = $(this).data("url");
+      var label  = $(this).parent().text();
+      var option = $("<option>").val(value).text(label);
+      select.append(option);
+    });
+    select.change(function() {
+      var value = select.find("option:selected").val();
+      $("#item_parent_crumb_urls").val(value);
+    });
+  });
+<% end %>
+
+<dl class="see mod-cms-parent_crumbs">
+  <dt><%= @model.t :parent_crumb_urls %><%= @model.tt :parent_crumb_urls %></dt>
+  <dd><%= f.text_field :parent_crumb_urls %></dd>
+  <dd><select id="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
+</dl>
