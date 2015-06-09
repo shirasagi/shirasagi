@@ -1,0 +1,60 @@
+ja:
+  rss:
+    views:
+      confirm:
+        import: 取り込みますが、よろしいですか？
+      button:
+        import: 取込
+    messages:
+      job_started: |-
+        取り込みジョブを開始しました。
+    options:
+      rss_refresh_method:
+        manual: 手動
+        auto: 自動
+
+  modules:
+    rss: RSS
+    addons:
+      rss/page/body: RSS情報
+      rss/import: RSS取込
+
+  cms:
+    nodes:
+      rss/page: RSS取込
+
+  mongoid:
+    attributes:
+      rss/node/page:
+      rss/page:
+      rss/addon/import:
+        rss_url: RSS配信URL
+        rss_max_docs: 最大保存件数
+        rss_refresh_method: 更新方法
+      rss/addon/page/body:
+        rss_link: ソースURL
+        html: 本文
+
+  tooltip:
+    rss/addon/import:
+      rss_url:
+        - RSS配信URLを設定します。
+        -
+        - 次の RSS 形式をサポートしています。
+        - ・RSS 2.0
+        - ・Atom
+        - ・RDF
+      rss_max_docs:
+        - 最大保存件数を設定します。
+        -
+        - RSS を取り込んだ際に記事数が「最大保存件数」を超えた場合、公開日時の古い順に記事を削除し、記事数が「最大保存件数」以下になるように調整します。
+        -
+        - 「最大保存件数」に 0 を指定すると、無制限に記事を保存します。
+    rss/addon/page/body:
+      rss_link:
+        - ソースURLを設定します。
+      html:
+        - 本文を設定します。
+        -
+        - 「本文」は公開画面に表示されませんが、「本文」に設定した文字列は「サイト内検索」で検索することができます。
+        - 取り込んだ RSS 記事を管理しやすくすることができます。

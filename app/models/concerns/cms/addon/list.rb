@@ -85,6 +85,7 @@ module Cms::Addon::List
       end
 
       def render_loop_html(item, opts = {})
+        item = item.becomes_with_route rescue item
         (opts[:html] || loop_html).gsub(/\#\{(.*?)\}/) do |m|
           str = template_variable_get(item, $1) rescue false
           str == false ? m : str

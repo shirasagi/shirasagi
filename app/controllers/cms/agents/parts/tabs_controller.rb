@@ -51,7 +51,8 @@ class Cms::Agents::Parts::TabsController < ApplicationController
           end
         end
 
-        tab[:pages] = pages ? pages.order_by(released: -1).limit(@cur_part.limit) : []
+        pages = pages ? pages.order_by(released: -1).limit(@cur_part.limit) : []
+        tab[:pages] = pages.map { |item| item.becomes_with_route rescue item }
         tab[:rss]   = "#{node.url}rss.xml" if node_class.method_defined?(:rss)
       end
 

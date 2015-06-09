@@ -1,0 +1,6 @@
+<dl class="see mod-rss-import">
+  <dt><%= @model.t :rss_link %><%= @model.tt :rss_link %></dt>
+  <dd><%= f.text_field :rss_link %></dd>
+  <dt><%= @model.t :html %><%= @model.tt :html %></dt>
+  <dd><%= f.text_area :html, class: "rss-page-text monospace", style: "height:400px;" %></dd>
+</dl>
