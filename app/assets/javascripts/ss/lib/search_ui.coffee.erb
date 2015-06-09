@@ -3,7 +3,6 @@ class @SS_SearchUI
 
   @select: (item) ->
     # create tr element and append to form
-
     tr    = $("<tr>").attr("data-id", item["id"])
     input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false)
     input = input.val(item["id"]).removeClass("hidden-ids")
@@ -15,7 +14,10 @@ class @SS_SearchUI
     return
 
   @deselect: (e)->
+    table = $(this).parents(".ajax-selected:first")
     $(this).parents("tr:first").remove()
+    if table.find("tbody tr").size() == 0
+      table.hide()
     e.preventDefault()
 
   @toggleSelectButton: ()->

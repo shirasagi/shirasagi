@@ -1,15 +1,15 @@
-class Cms::SearchContentsController < ApplicationController
+class Cms::SearchContents::HtmlController < ApplicationController
   include Cms::BaseFilter
   include Cms::ApiFilter::Contents
 
   model Cms::Page
 
-  navi_view "cms/main/navi"
-
-  append_view_path "app/views/cms/search"
+  navi_view "cms/search_contents/navi"
 
   public
     def index
+      raise "403" unless Cms::User.allowed?(:edit, @cur_user, site: @cur_site)
+
       @keyword = params[:keyword]
       @replacement = params[:replacement]
       @updated_items = params[:updated_items]

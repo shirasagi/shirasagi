@@ -1,4 +1,4 @@
-class Cms::Apis::ContentsController < ApplicationController
+class Cms::Apis::Contents::HtmlController < ApplicationController
   include Cms::ApiFilter
   include Cms::ApiFilter::Contents
 

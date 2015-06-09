@@ -43,14 +43,16 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
-    get "search_contents" => "search_contents#index"
-    post "search_contents" => "search_contents#update"
+    get "search_contents/html" => "search_contents/html#index"
+    post "search_contents/html" => "search_contents/html#update"
+    get "search_contents/pages" => "search_contents/pages#index"
 
     namespace "apis" do
       get "groups" => "groups#index"
       get "pages" => "pages#index"
       get "categories" => "categories#index"
       get "contents" => "contents#index"
+      get "contents/html" => "contents/html#index"
     end
   end
 

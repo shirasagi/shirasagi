@@ -5,7 +5,9 @@ class Cms::Apis::CategoriesController < ApplicationController
 
   public
     def index
-      super
-      @items = @items.sort_by(&:filename)
+      @items = @model.site(@cur_site).
+        search(params[:s]).
+        order_by(filename: 1).
+        page(params[:page]).per(50)
     end
 end

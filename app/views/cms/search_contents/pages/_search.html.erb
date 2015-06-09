@@ -1,0 +1,122 @@
+<%= jquery do %>
+$(".reset").on("click", function(e){
+  $(".ajax-selected tbody").html("");
+  $(".ajax-selected").hide();
+  $(".filename").val("");
+  $(".state").prop("checked", false);
+  $(".datetime").val("");
+  return false;
+});
+$(".state").on("click", function(e){
+  $("[value!='" + $(this).attr("value") + "'].state").prop("checked", false)
+});
+$(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+<% end %>
+
+<%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>
+<div class="search-contents-pages">
+  <dl class="see">
+    <dt><%= @model.t("name") %><%= tt("search_contents.pages.name") %></dt>
+    <dd><%= text_field_tag "s[name]", @name, class: :filename %></dd>
+  </dl>
+
+  <dl class="see">
+    <dt><%= @model.t("filename") %><%= tt("search_contents.pages.filename") %></dt>
+    <dd><%= text_field_tag "s[filename]", @filename, class: :filename %></dd>
+  </dl>
+
+  <dl class="see">
+    <dt><%= @model.t("category_ids") %><%= tt("search_contents.pages.category") %></dt>
+    <dd class="wide" style="line-height: 2.5">
+      <%= hidden_field_tag "s[category_ids][]", nil, class: "hidden-ids" %>
+      <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index" style="visibility:hidden"></teble>
+      <table class="index ajax-selected">
+        <thead>
+          <tr>
+            <th class="name"><%= @model.t("category_ids") %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @categories.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= hidden_field_tag "s[category_ids][]", item.id %> <%= item.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+
+  <dl class="see">
+    <dt><%= @model.t("group_ids") %><%= tt("search_contents.pages.group") %></dt>
+    <dd class="wide" style="line-height: 2.5">
+      <%= hidden_field_tag "s[group_ids][]", nil, class: "hidden-ids" %>
+      <%= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index" style="visibility:hidden"></teble>
+      <table class="index ajax-selected">
+        <thead>
+          <tr>
+            <th class="name"><%= @model.t("group_ids") %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @groups.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= hidden_field_tag "s[group_ids][]", item.id %> <%= item.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+
+  <dl class="see">
+    <dt><%= @model.t("released") %><%= tt("search_contents.pages.released") %></dt>
+    <dd>
+      <%= text_field_tag "s[released][start]", tryb{@released["start"]}, class: "datetime" %>
+      <%= "-" %>
+      <%= text_field_tag "s[released][close]", tryb{@released["close"]}, class: "datetime" %>
+    </dd>
+  </dl>
+
+  <dl class="see">
+    <dt><%= @model.t("updated") %><%= tt("search_contents.pages.updated") %></dt>
+    <dd>
+      <%= text_field_tag "s[updated][start]", tryb{@updated["start"]}, class: "datetime" %>
+      <%= "-" %>
+      <%= text_field_tag "s[updated][close]", tryb{@updated["close"]}, class: "datetime" %>
+    </dd>
+  </dl>
+
+  <dl class="see">
+    <dt><%= @model.t("state") %><%= tt("search_contents.pages.state") %></dt>
+    <dd>
+      <label>
+        <%= check_box_tag "s[state]", "public", (@state == "public"), id: :s_public, class: :state %>
+        <%= t("views.options.state.public") %>
+      </label>
+      <label>
+        <%= check_box_tag "s[state]", "closed", (@state == "closed"), id: :s_closed, class: :state %>
+        <%= t("views.options.state.closed") %>
+      </label>
+    </dd>
+  </dl>
+
+  <dl class="see">
+    <dt></dt>
+    <dd class="wide">
+      <%= f.submit t("views.button.search"), name: "search", class: :search %>
+      <%= f.submit t("views.button.reset"), name: "reset", class: :reset %>
+    </dd>
+  </dl>
+</div>
+<% end %>

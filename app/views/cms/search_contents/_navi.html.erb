@@ -1,0 +1,9 @@
+<nav class="sub-menu">
+  <header><h1><%= t "cms.search_contents" %></h1></header>
+  <div>
+    <%= link_to :"cms.search_contents_pages", cms_search_contents_pages_path  %>
+    <%= link_to :"cms.search_contents_html", cms_search_contents_html_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+  </div>
+</nav>
+
+<%= render partial: "cms/main/navi" %>
