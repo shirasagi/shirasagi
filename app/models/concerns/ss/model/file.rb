@@ -56,7 +56,7 @@ module SS::Model::File
     end
 
     def public_path
-      "#{site.path}#{url}"
+      "#{site.path}/fs/#{id}/#{filename}"
     end
 
     def state_options

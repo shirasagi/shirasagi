@@ -4,7 +4,7 @@ namespace :cms do
   end
 
   task :generate_pages => :environment do
-    Cms::Task.generate_pages site: ENV["site"], node: ENV["node"]
+    Cms::Task.generate_pages site: ENV["site"], node: ENV["node"], attachment_files: ENV["attachment_files"]
   end
 
   task :update_pages => :environment do

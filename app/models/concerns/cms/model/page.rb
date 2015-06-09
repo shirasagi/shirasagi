@@ -27,6 +27,14 @@ module Cms::Model::Page
     after_destroy :remove_file
   end
 
+  private
+    def run_callback(c, *args)
+      call = true
+      call = instance_exec(&c[:if]) if c[:if]
+      call = !instance_exec(&c[:unless]) if c[:unless]
+      send(c[:method], *args)
+    end
+
   public
     def date
       released || updated || created
@@ -37,13 +45,17 @@ module Cms::Model::Page
       return false unless public?
       return false unless public_node?
       written = Cms::Agents::Tasks::PagesController.new.generate_page(self)
-      self.class.class_variable_get(:@@_after_generate_file_callbacks).each { |m| send(m) }
+      self.class.class_variable_get(:@@_after_generate_file_callbacks).each do |c|
+        run_callback(c)
+      end
       written
     end
 
     def remove_file
       Fs.rm_rf path
-      self.class.class_variable_get(:@@_after_remove_file_callbacks).each { |m| send(m) }
+      self.class.class_variable_get(:@@_after_remove_file_callbacks).each do |c|
+        run_callback(c)
+      end
     end
 
     def rename_file
@@ -56,7 +68,9 @@ module Cms::Model::Page
 
       Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
       Fs.mv src, dst if Fs.exists?(src)
-      self.class.class_variable_get(:@@_after_rename_file_callbacks).each { |m| send(m, src, dst) }
+      self.class.class_variable_get(:@@_after_rename_file_callbacks).each do |c|
+        run_callback(c, src, dst)
+      end
     end
 
     def validate_destination_filename(dst)
@@ -101,19 +115,22 @@ module Cms::Model::Page
     end
 
   module ClassMethods
-    def after_generate_file(method)
-      methods = class_variable_get(:@@_after_generate_file_callbacks)
-      class_variable_set(:@@_after_generate_file_callbacks, methods << method)
+    def after_generate_file(method, opts = {})
+      callback = opts.merge(method: method)
+      callbacks = class_variable_get(:@@_after_generate_file_callbacks)
+      class_variable_set(:@@_after_generate_file_callbacks, callbacks << callback)
     end
 
-    def after_remove_file(method)
-      methods = class_variable_get(:@@_after_remove_file_callbacks)
-      class_variable_set(:@@_after_remove_file_callbacks, methods << method)
+    def after_remove_file(method, opts = {})
+      callback = opts.merge(method: method)
+      callbacks = class_variable_get(:@@_after_remove_file_callbacks)
+      class_variable_set(:@@_after_remove_file_callbacks, callbacks << callback)
     end
 
-    def after_rename_file(method)
-      methods = class_variable_get(:@@_after_rename_file_callbacks)
-      class_variable_set(:@@_after_rename_file_callbacks, methods << method)
+    def after_rename_file(method, opts = {})
+      callback = opts.merge(method: method)
+      callbacks = class_variable_get(:@@_after_rename_file_callbacks)
+      class_variable_set(:@@_after_rename_file_callbacks, callbacks << callback)
     end
   end
 end
