@@ -35,7 +35,7 @@ module Opendata::Api::GroupShowFilter
       groups = groups.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
       if groups.count > 0
-        group = convert_group(groups[0][:id])
+        group = convert_dataset_group(groups[0][:id])
         datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group[:id]
         group[:package_count] = datasets.count
         group[:packages] = convert_packages(datasets) if include_datasets =~ /^true$/i

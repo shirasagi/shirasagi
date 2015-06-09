@@ -61,7 +61,7 @@ module Opendata::Api
       package[:resources] = convert_resources(dataset[:resources])
       package[:num_resources] = dataset.resources.size
       package[:tags] = convert_tags(dataset)
-      package[:groups] = convert_groups(dataset[:dataset_group_ids])
+      package[:groups] = convert_dataset_groups(dataset[:dataset_group_ids])
       package[:license_id] = dataset[:license]
       package[:name] = dataset[:name]
       package[:notes] = dataset[:text]
@@ -103,7 +103,8 @@ module Opendata::Api
       package_resource[:last_modified] = resource[:updated]
       package_resource[:description] = resource[:text]
       package_resource[:format] = resource[:format]
-      package_resource[:name] = resource[:filename]
+      package_resource[:name] = resource[:name]
+      package_resource[:filename] = resource[:filename]
       package_resource[:created] = resource[:created]
       package_resource[:filename] = resource[:filename]
       package_resource[:license_id] = resource[:license_id]
@@ -129,18 +130,18 @@ module Opendata::Api
       return package_tags
     end
 
-    def convert_groups(dataset_group_ids)
+    def convert_dataset_groups(dataset_group_ids)
       package_groups = []
 
-      groups = dataset_group_ids || []
-      groups.each do |group|
-        package_groups << convert_group(group)
+      group_ids = dataset_group_ids || []
+      group_ids.each do |group_id|
+        package_groups << convert_dataset_group(group_id)
       end
 
       return package_groups
     end
 
-    def convert_group(group_id)
+    def convert_dataset_group(group_id)
       package_group = {}
 
       dataset_group = Opendata::DatasetGroup.site(@cur_site).public.where(id: group_id).first
