@@ -1,5 +1,6 @@
 module Opendata::Api::PackageSearchFilter
   extend ActiveSupport::Concern
+  include Opendata::Api
 
   private
     def package_search_param_check?(rows, start)
@@ -68,7 +69,7 @@ module Opendata::Api::PackageSearchFilter
       all_count = datasets.count
       datasets = datasets.skip(start) if start
       datasets = datasets.limit(rows) if rows
-      result = {count: all_count, results: datasets}
+      result = {count: all_count, results: convert_packages(datasets)}
       res = {help: help, success: true, result: result}
 
       render json: res

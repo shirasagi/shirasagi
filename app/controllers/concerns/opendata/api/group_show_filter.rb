@@ -1,5 +1,6 @@
 module Opendata::Api::GroupShowFilter
   extend ActiveSupport::Concern
+  include Opendata::Api
 
   private
     def group_show_param_check?(id)
@@ -26,7 +27,7 @@ module Opendata::Api::GroupShowFilter
       help = SS.config.opendata.api["group_show_help"]
       id = params[:id]
       id = URI.decode(id) if !id.nil?
-      include_datasets = params[:include_datasets]
+      include_datasets = params[:include_datasets] || "true"
 
       error = group_show_param_check?(id)
       if error.present?
@@ -40,7 +41,7 @@ module Opendata::Api::GroupShowFilter
         group = groups[0]
         datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group[:id]
         group[:package_count] = datasets.count
-        group[:packages] = datasets if include_datasets.nil? || include_datasets =~ /^true$/i
+        group[:packages] = convert_packages(datasets) if include_datasets =~ /^true$/i
         res = {help: help, success: true, result: group}
       else
         res = {help: help, success: false}

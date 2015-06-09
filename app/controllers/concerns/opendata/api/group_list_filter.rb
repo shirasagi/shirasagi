@@ -1,5 +1,6 @@
 module Opendata::Api::GroupListFilter
   extend ActiveSupport::Concern
+  include Opendata::Api
 
   private
     def group_list_param_check?(sort)

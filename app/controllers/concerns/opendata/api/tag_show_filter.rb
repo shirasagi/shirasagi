@@ -1,5 +1,6 @@
 module Opendata::Api::TagShowFilter
   extend ActiveSupport::Concern
+  include Opendata::Api
 
   public
     def tag_show
@@ -15,7 +16,7 @@ module Opendata::Api::TagShowFilter
       datasets = Opendata::Dataset.site(@cur_site).public.search({tag: id})
 
       if datasets.count > 0
-        res = {help: help, success: true, result: datasets}
+        res = {help: help, success: true, result: convert_packages(datasets)}
       else
         res = {help: help, success: false}
         res[:error] = {message: "Not found", __type: "Not Found Error"}

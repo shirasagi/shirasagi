@@ -1,5 +1,6 @@
 module Opendata::Api::TagListFilter
   extend ActiveSupport::Concern
+  include Opendata::Api
 
   public
     def tag_list

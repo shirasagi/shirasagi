@@ -1,5 +1,6 @@
 module Opendata::Api::PackageListFilter
   extend ActiveSupport::Concern
+  include Opendata::Api
 
   private
     def package_list_param_check?(limit, offset)

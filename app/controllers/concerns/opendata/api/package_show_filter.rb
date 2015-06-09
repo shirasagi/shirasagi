@@ -1,5 +1,6 @@
 module Opendata::Api::PackageShowFilter
   extend ActiveSupport::Concern
+  include Opendata::Api
 
   private
     def package_show_param_check?(id)
@@ -39,7 +40,7 @@ module Opendata::Api::PackageShowFilter
       datasets = datasets.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
       if datasets.count > 0
-        res = {help: help, success: true, result: datasets[0]}
+        res = {help: help, success: true, result: convert_package(datasets[0])}
       else
         res = {help: help, success: false}
         res[:error] = {message: "Not found", __type: "Not Found Error"}
