@@ -1,4 +1,4 @@
-module Opendata::AppFilter
+module Opendata::App::AppFilter
   extend ActiveSupport::Concern
 
   included do

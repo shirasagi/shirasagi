@@ -1,4 +1,4 @@
-class Opendata::AppsController < ApplicationController
+class Opendata::App::AppsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   helper Opendata::FormHelper

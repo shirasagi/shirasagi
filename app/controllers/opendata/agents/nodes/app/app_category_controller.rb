@@ -1,7 +1,7 @@
 class Opendata::Agents::Nodes::App::AppCategoryController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
-  include Opendata::AppFilter
+  include Opendata::App::AppFilter
 
   public
     def pages

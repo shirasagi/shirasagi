@@ -7,9 +7,9 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
-    resources :app_categories, concerns: :deletion
-    resources :search_apps, concerns: :deletion
-    resources :apps, concerns: :deletion do
+    resources :app_categories, concerns: :deletion, module: :app
+    resources :search_apps, concerns: :deletion, module: :app
+    resources :apps, concerns: :deletion, module: :app do
       resources :appfiles, concerns: :deletion do
         get "file" => "appfiles#download"
       end
