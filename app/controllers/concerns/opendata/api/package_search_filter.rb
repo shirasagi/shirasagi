@@ -5,49 +5,22 @@ module Opendata::Api::PackageSearchFilter
   private
     def package_search_check(rows, start)
 
-      rows_message = []
-      start_message = []
+      rows_messages = []
+      start_messages = []
 
-      if rows
-        if integer?(rows)
-          if rows.to_i < 0
-            rows_message << "Must be a natural number"
-          end
-        else
-          rows_message << "Invalid integer"
-        end
-      end
-
-      if start
-        if integer?(start)
-          if start.to_i < 0
-            start_message << "Must be a natural number"
-          end
-        else
-          start_message << "Invalid integer"
-        end
-      end
+      check_num(rows, rows_messages)
+      check_num(start, start_messages)
 
       messages = {}
-      messages[:rows] = rows_message if rows_message.present?
-      messages[:start] = start_message if start_message.present?
+      messages[:rows] = rows_messages if rows_messages.size > 0
+      messages[:start] = start_messages if start_messages.size > 0
 
-      check_count = rows_message.size + start_message.size
-      if check_count > 0
+      if messages.size > 0
         error = {__type: "Validation Error"}
-        messages.each do |key, value|
-          error[key] = value
-        end
+        error = error.merge(messages)
       end
 
       return error
-    end
-
-    def integer?(s)
-      i = Integer(s)
-      check = true
-    rescue
-      check = false
     end
 
   public

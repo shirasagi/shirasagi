@@ -140,10 +140,10 @@ module Opendata::Api
       return package_groups
     end
 
-    def convert_group(group)
+    def convert_group(group_id)
       package_group = {}
 
-      dataset_group = Opendata::DatasetGroup.site(@cur_site).public.find(group)
+      dataset_group = Opendata::DatasetGroup.site(@cur_site).public.where(id: group_id).first
 
       if dataset_group
         package_group[:display_name] = dataset_group[:name]

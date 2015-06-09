@@ -5,49 +5,22 @@ module Opendata::Api::PackageListFilter
   private
     def package_list_check(limit, offset)
 
-      limit_message = []
-      offset_message = []
+      limit_messages = []
+      offset_messages = []
 
-      if !limit.nil?
-        if integer?(limit)
-          if limit.to_i < 0
-            limit_message << "Must be a natural number"
-          end
-        else
-          limit_message << "Invalid integer"
-        end
-      end
-
-      if !offset.nil?
-        if integer?(offset)
-          if offset.to_i < 0
-            offset_message << "Must be a natural number"
-          end
-        else
-          offset_message << "Invalid integer"
-        end
-      end
+      check_num(limit, limit_messages)
+      check_num(offset, offset_messages)
 
       messages = {}
-      messages[:limit] = limit_message if !limit_message.empty?
-      messages[:offset] = offset_message if !offset_message.empty?
+      messages[:limit] = limit_messages if limit_messages.size > 0
+      messages[:offset] = offset_messages if offset_messages.size > 0
 
-      check_count = limit_message.size + offset_message.size
-      if check_count > 0
+      if messages.size > 0
         error = {__type: "Validation Error"}
-        messages.each do |key, value|
-          error[key] = value
-        end
+        error = error.merge(messages)
       end
 
       return error
-    end
-
-    def integer?(s)
-      i = Integer(s)
-      check = true
-    rescue
-      check = false
     end
 
   public
@@ -59,13 +32,13 @@ module Opendata::Api::PackageListFilter
       offset = params[:offset]
 
       error = package_list_check(limit, offset)
-      if error.present?
+      if error
         render json: {help: help, success: false, error: error} and return
       end
 
       datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
-      datasets = datasets.skip(offset) if limit.present? && offset.present?
-      datasets = datasets.limit(limit) if limit.present?
+      datasets = datasets.skip(offset) if limit && offset
+      datasets = datasets.limit(limit) if limit
 
       package_list = []
       datasets.each do |dataset|

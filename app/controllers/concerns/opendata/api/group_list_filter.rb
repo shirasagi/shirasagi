@@ -5,20 +5,17 @@ module Opendata::Api::GroupListFilter
   private
     def group_list_check(sort)
 
-      sort_message = []
+      sort_messages = []
       sort_values = ["name", "packages"]
 
-      sort_message << "Cannot sort by field `#{sort}`" if !sort_values.include?(sort)
+      sort_messages << "Cannot sort by field `#{sort}`" if !sort_values.include?(sort)
 
       messages = {}
-      messages[:sort] = sort_message if !sort_message.empty?
+      messages[:sort] = sort_messages if sort_messages.size > 0
 
-      check_count = sort_message.size
-      if check_count > 0
+      if messages.size > 0
         error = {__type: "Validation Error"}
-        messages.each do |key, value|
-          error[key] = value
-        end
+        error = error.merge(messages)
       end
 
       return error
@@ -35,7 +32,7 @@ module Opendata::Api::GroupListFilter
       all_fields = params[:all_fields]
 
       error = group_list_check(sort)
-      if error.present?
+      if error
         render json: {help: help, success: false, error: error} and return
       end
 

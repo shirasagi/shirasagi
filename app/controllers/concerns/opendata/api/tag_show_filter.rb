@@ -8,7 +8,7 @@ module Opendata::Api::TagShowFilter
       id = params[:id]
       id = URI.decode(id) if id
 
-      if id.blank?
+      if !id
         error = {__type: "Validation Error", id: "Missing value"}
         render json: {help: help, success: false, error: error} and return
       end
