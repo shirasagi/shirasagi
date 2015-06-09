@@ -6,7 +6,6 @@ describe Opendata::Idea::Idea, dbscope: :example do
 
   context "check attributes with typical url resource" do
     subject { create(:opendata_idea, node: node) }
-    its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
     its(:path) { is_expected.to end_with  "/#{subject.dirname}/#{subject.basename}" }

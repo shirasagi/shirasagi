@@ -37,12 +37,12 @@ $ ->
 
 <article class="areas nodes">
   <header><h1>地域</h1></header>
-  <%= render file: "opendata/agents/nodes/app/areas" %>
+  <%= render file: "opendata/agents/nodes/app/app/areas" %>
 </article>
 
 <article class="tags nodes">
   <header><h1>タグ</h1></header>
-  <%= render file: "opendata/agents/nodes/app/tags" %>
+  <%= render file: "opendata/agents/nodes/app/app/tags" %>
   <% if @tags.popped? %>
   <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>
   <% end %>
@@ -50,5 +50,5 @@ $ ->
 
 <article class="licenses nodes">
   <header><h1>ライセンス</h1></header>
-  <%= render file: "opendata/agents/nodes/app/licenses" %>
+  <%= render file: "opendata/agents/nodes/app/app/licenses" %>
 </article>

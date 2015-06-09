@@ -1,4 +1,4 @@
-class Opendata::Agents::Parts::AppController < ApplicationController
+class Opendata::Agents::Parts::App::AppController < ApplicationController
   include Cms::PartFilter::View
   include Opendata::UrlHelper
   helper Opendata::ListHelper

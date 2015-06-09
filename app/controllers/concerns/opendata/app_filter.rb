@@ -34,16 +34,16 @@ module Opendata::AppFilter
   public
     def index_areas
       @areas = aggregate_areas(100)
-      render "opendata/agents/nodes/app/areas", layout: "opendata/app_aggregation"
+      render "opendata/agents/nodes/app/app/areas", layout: "opendata/app_aggregation"
     end
 
     def index_tags
       @tags = aggregate_tags(100)
-      render "opendata/agents/nodes/app/tags", layout: "opendata/app_aggregation"
+      render "opendata/agents/nodes/app/app/tags", layout: "opendata/app_aggregation"
     end
 
     def index_licenses
       @licenses = aggregate_licenses(100)
-      render "opendata/agents/nodes/app/licenses", layout: "opendata/app_aggregation"
+      render "opendata/agents/nodes/app/app/licenses", layout: "opendata/app_aggregation"
     end
 end

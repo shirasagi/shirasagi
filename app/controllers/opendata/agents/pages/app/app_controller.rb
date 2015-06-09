@@ -1,4 +1,4 @@
-class Opendata::Agents::Pages::AppController < ApplicationController
+class Opendata::Agents::Pages::App::AppController < ApplicationController
   include Cms::PageFilter::View
   include Opendata::UrlHelper
   helper Opendata::UrlHelper

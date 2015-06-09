@@ -72,7 +72,7 @@
             <div id="tab-sample">
               <header><h1>サンプルデータ</h1></header>
               <% if @csv.present? or @json.present? %>
-                <%= render partial: "opendata/agents/pages/app/content" %>
+                <%= render partial: "opendata/agents/pages/app/app/content" %>
               <% end %>
             </div>
           <% end %>
@@ -80,7 +80,7 @@
         <div id="tab-dataset">
           <header><h1>関連データセット</h1></header>
           <% if @ds.present? %>
-            <%= render partial: "opendata/agents/pages/app/dataset" %>
+            <%= render partial: "opendata/agents/pages/app/app/dataset" %>
           <% end %>
         </div>
         <div id="tab-idea">

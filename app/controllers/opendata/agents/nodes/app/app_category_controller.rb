@@ -1,4 +1,4 @@
-class Opendata::Agents::Nodes::AppCategoryController < ApplicationController
+class Opendata::Agents::Nodes::App::AppCategoryController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
   include Opendata::AppFilter
