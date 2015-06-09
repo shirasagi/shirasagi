@@ -9,7 +9,7 @@ class Opendata::Agents::Nodes::App::AppfileController < ApplicationController
     def set_app
       @app_path = @cur_path.sub(/\/appfile\/.*/, ".html")
 
-      @app = Opendata::App::App.site(@cur_site).public.
+      @app = Opendata::App.site(@cur_site).public.
         filename(@app_path).
         first
 

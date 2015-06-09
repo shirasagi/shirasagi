@@ -30,7 +30,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       raise "404" unless @dataset_app
 
       cond = { site_id: @cur_site.id, dataset_ids: @dataset_app.id }
-      @apps = Opendata::App::App.where(cond).order_by(:updated.asc)
+      @apps = Opendata::App.where(cond).order_by(:updated.asc)
     end
 
     def set_ideas
@@ -43,7 +43,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
       raise "404" unless @dataset_idea
 
       cond = { site_id: @cur_site.id, dataset_ids: @dataset_idea.id }
-      @ideas = Opendata::Idea::Idea.where(cond).order_by(:updated.asc)
+      @ideas = Opendata::Idea.where(cond).order_by(:updated.asc)
     end
 
   public
@@ -119,7 +119,7 @@ class Opendata::Agents::Nodes::DatasetController < ApplicationController
     def show_ideas
       @cur_node.layout = nil
       @login_mode = logged_in?(redirect: false)
-      @idea_comment = Opendata::Idea::IdeaComment
+      @idea_comment = Opendata::IdeaComment
     end
 
     def datasets_search

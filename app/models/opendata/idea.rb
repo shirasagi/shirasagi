@@ -1,4 +1,4 @@
-class Opendata::Idea::Idea
+class Opendata::Idea
   include Cms::Page::Model
   include Cms::Addon::Release
   include Cms::Addon::RelatedPage
@@ -20,12 +20,12 @@ class Opendata::Idea::Idea
   field :total_comment, type: Integer, default: "0"
 
   embeds_ids :datasets, class_name: "Opendata::Dataset"
-  embeds_ids :apps, class_name: "Opendata::App::App"
+  embeds_ids :apps, class_name: "Opendata::App"
   belongs_to :member, class_name: "Opendata::Member"
 
-  has_many :points, foreign_key: :idea_id, class_name: "Opendata::Idea::IdeaPoint",
+  has_many :points, foreign_key: :idea_id, class_name: "Opendata::IdeaPoint",
     dependent: :delete
-  has_many :comments, foreign_key: :idea_id, class_name: "Opendata::Idea::IdeaComment",
+  has_many :comments, foreign_key: :idea_id, class_name: "Opendata::IdeaComment",
     dependent: :delete
 
   validates :text, presence: true, length: { maximum: 400 }

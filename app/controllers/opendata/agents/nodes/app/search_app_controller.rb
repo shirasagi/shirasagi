@@ -4,7 +4,7 @@ class Opendata::Agents::Nodes::App::SearchAppController < ApplicationController
 
   private
     def pages
-      @model = Opendata::App::App
+      @model = Opendata::App
 
       focus = params[:s] || {}
       focus = focus.merge(site: @cur_site)

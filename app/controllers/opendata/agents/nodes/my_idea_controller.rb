@@ -11,7 +11,7 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
     end
 
     def set_model
-      @model = Opendata::Idea::Idea
+      @model = Opendata::Idea
     end
 
     def set_item
@@ -37,7 +37,7 @@ class Opendata::Agents::Nodes::MyIdeaController < ApplicationController
 
   public
     def index
-      @items = Opendata::Idea::Idea.site(@cur_site).member(@cur_member).
+      @items = Opendata::Idea.site(@cur_site).member(@cur_member).
         order_by(updated: -1).
         page(params[:page]).
         per(20)

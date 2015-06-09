@@ -11,14 +11,14 @@ class Opendata::Agents::Nodes::CommentController < ApplicationController
 
   private
     def set_comments
-      @idea_path = Opendata::Idea::Idea.to_idea_path(@cur_path)
+      @idea_path = Opendata::Idea.to_idea_path(@cur_path)
 
-      @idea = Opendata::Idea::Idea.site(@cur_site).public.
+      @idea = Opendata::Idea.site(@cur_site).public.
         filename(@idea_path).
         first
 
       cond = { site_id: @cur_site.id, idea_id: @idea.id }
-      @comments = Opendata::Idea::IdeaComment.where(cond).order_by(:created.asc)
+      @comments = Opendata::IdeaComment.where(cond).order_by(:created.asc)
 
       @comment_mode = logged_in?(redirect: false)
 
@@ -35,10 +35,10 @@ class Opendata::Agents::Nodes::CommentController < ApplicationController
       raise "403" unless logged_in?(redirect: false)
 
       idea_id = @idea.id
-      idea = Opendata::Idea::Idea.site(@cur_site).find(idea_id)
+      idea = Opendata::Idea.site(@cur_site).find(idea_id)
 
       new_comment = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: idea_id, text: params[:comment_body]}
-      Opendata::Idea::IdeaComment.new(new_comment).save
+      Opendata::IdeaComment.new(new_comment).save
 
       idea.commented = Time.zone.now
       idea.total_comment = @comments.count
@@ -52,7 +52,7 @@ class Opendata::Agents::Nodes::CommentController < ApplicationController
     def delete
       @cur_node.layout = nil
 
-      comment = Opendata::Idea::IdeaComment.find params[:comment]
+      comment = Opendata::IdeaComment.find params[:comment]
       if comment
         comment.comment_deleted = Time.zone.now
         comment.save

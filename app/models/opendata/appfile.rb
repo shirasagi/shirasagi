@@ -1,4 +1,4 @@
-class Opendata::App::Appfile
+class Opendata::Appfile
   include SS::Document
   include SS::Relation::File
   include Opendata::TsvParseable
@@ -10,7 +10,7 @@ class Opendata::App::Appfile
   field :text, type: String
   field :format, type: String
 
-  embedded_in :app, class_name: "Opendata::App::App", inverse_of: :appfile
+  embedded_in :app, class_name: "Opendata::App", inverse_of: :appfile
   belongs_to_file :file
 
   permit_params :text

@@ -3,7 +3,7 @@ class Opendata::IdeasController < ApplicationController
   include Cms::CrudFilter
   helper Opendata::FormHelper
 
-  model Opendata::Idea::Idea
+  model Opendata::Idea
 
   append_view_path "app/views/cms/pages"
   navi_view "opendata/main/navi"
@@ -23,6 +23,6 @@ class Opendata::IdeasController < ApplicationController
 
     def show
       cond = { site_id: @cur_site.id, idea_id: params[:id] }
-      @comments = Opendata::Idea::IdeaComment.where(cond).order_by(:created.asc)
+      @comments = Opendata::IdeaComment.where(cond).order_by(:created.asc)
     end
 end

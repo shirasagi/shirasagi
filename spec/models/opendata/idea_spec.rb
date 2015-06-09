@@ -1,11 +1,12 @@
 require 'spec_helper'
 
-describe Opendata::Idea::Idea, dbscope: :example do
+describe Opendata::Idea, dbscope: :example do
   let!(:node_search_dataset) { create(:opendata_node_search_idea) }
   let(:node) { create(:opendata_node_idea) }
 
   context "check attributes with typical url resource" do
     subject { create(:opendata_idea, node: node) }
+    its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
     its(:path) { is_expected.to end_with  "/#{subject.dirname}/#{subject.basename}" }

@@ -13,7 +13,7 @@ FactoryGirl.define do
     dataset_group_ids [1]
   end
 
-  factory :opendata_app, class: Opendata::App::App, traits: [:cms_page] do
+  factory :opendata_app, class: Opendata::App, traits: [:cms_page] do
     transient do
       node nil
     end
@@ -27,7 +27,7 @@ FactoryGirl.define do
     license { unique_id }
   end
 
-  factory :opendata_idea, class: Opendata::Idea::Idea, traits: [:cms_page] do
+  factory :opendata_idea, class: Opendata::Idea, traits: [:cms_page] do
     transient do
       node nil
     end

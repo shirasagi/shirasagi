@@ -4,7 +4,7 @@ class Opendata::CommentsController < ApplicationController
   include Opendata::CommentFilter
   helper Opendata::FormHelper
 
-  model Opendata::Idea::IdeaComment
+  model Opendata::IdeaComment
 
   navi_view "opendata/main/navi"
 
@@ -14,15 +14,15 @@ class Opendata::CommentsController < ApplicationController
 
     def set_idea
       cond = { site_id: @cur_site.id, idea_id: params[:idea_id] }
-      @comments ||= Opendata::Idea::IdeaComment.where(cond)
+      @comments ||= Opendata::IdeaComment.where(cond)
 
-      idea = Opendata::Idea::Idea.site(@cur_site).node(@cur_node).find params[:idea_id]
+      idea = Opendata::Idea.site(@cur_site).node(@cur_node).find params[:idea_id]
       @crumbs << [idea.name, opendata_idea_path(id: idea.id)]
 
     end
 
     def set_item
-      @item = Opendata::Idea::IdeaComment.where(site_id: @cur_site.id).find params[:id]
+      @item = Opendata::IdeaComment.where(site_id: @cur_site.id).find params[:id]
     end
 
   public
@@ -47,10 +47,10 @@ class Opendata::CommentsController < ApplicationController
       contact_group_id = params[:item][:contact_group_id]
       cond[:contact_group_id] = contact_group_id if contact_group_id.present?
 
-      @item = Opendata::Idea::IdeaComment.new(cond)
+      @item = Opendata::IdeaComment.new(cond)
       @item.save
 
-      idea = Opendata::Idea::Idea.site(@cur_site).find(idea_id)
+      idea = Opendata::Idea.site(@cur_site).find(idea_id)
       idea.commented = Time.zone.now
       idea.total_comment += 1
       idea.save
@@ -61,7 +61,7 @@ class Opendata::CommentsController < ApplicationController
     end
 
     def destroy
-      comment = Opendata::Idea::IdeaComment.where(site_id: @cur_site.id, id: params[:id]).first
+      comment = Opendata::IdeaComment.where(site_id: @cur_site.id, id: params[:id]).first
       comment.comment_deleted = Time.zone.now
       comment.save
       render_destroy comment

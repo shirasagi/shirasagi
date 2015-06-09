@@ -9,8 +9,8 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
   private
     def set_idea
-      @idea_path = Opendata::Idea::Idea.to_idea_path(@cur_path)
-      @idea = Opendata::Idea::Idea.site(@cur_site).public.
+      @idea_path = Opendata::Idea.to_idea_path(@cur_path)
+      @idea = Opendata::Idea.site(@cur_site).public.
         filename(@idea_path).
         first
 
@@ -19,7 +19,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
   public
     def pages
-      Opendata::Idea::Idea.site(@cur_site).public
+      Opendata::Idea.site(@cur_site).public
     end
 
     def index
@@ -28,7 +28,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
       @search_path    = method(:search_ideas_path)
       @rss_path       = ->(options = {}) { build_path("#{search_ideas_path}rss.xml", options) }
       @tabs = []
-      Opendata::Idea::Idea.sort_options.each do |options|
+      Opendata::Idea.sort_options.each do |options|
         @tabs << { name: options[0],
                    url: "#{@search_path.call("sort" => "#{options[1]}")}",
                    pages: pages.sort_criteria(options[1]).limit(10),
@@ -58,7 +58,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
         @mode = :add
 
         cond = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: @idea.id }
-        @mode = :cancel if point = Opendata::Idea::IdeaPoint.where(cond).first
+        @mode = :cancel if point = Opendata::IdeaPoint.where(cond).first
       end
     end
 
@@ -68,12 +68,12 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       cond = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: @idea.id }
 
-      if point = Opendata::Idea::IdeaPoint.where(cond).first
+      if point = Opendata::IdeaPoint.where(cond).first
         point.destroy
         @idea.inc point: -1
         @mode = :add
       else
-        Opendata::Idea::IdeaPoint.new(cond).save
+        Opendata::IdeaPoint.new(cond).save
         @idea.inc point: 1
         @mode = :cancel
       end
@@ -83,7 +83,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
     def point_members
       @cur_node.layout = nil
-      @items = Opendata::Idea::IdeaPoint.where(site_id: @cur_site.id, idea_id: @idea.id)
+      @items = Opendata::IdeaPoint.where(site_id: @cur_site.id, idea_id: @idea.id)
     end
 
     def show_dataset
@@ -91,7 +91,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       idea_path = @cur_path.sub(/\/dataset\/.*/, ".html")
 
-      @idea_ds = Opendata::Idea::Idea.site(@cur_site).public.
+      @idea_ds = Opendata::Idea.site(@cur_site).public.
         filename(idea_path).
         first
       raise "404" unless @idea_ds
@@ -103,7 +103,7 @@ class Opendata::Agents::Nodes::IdeaController < ApplicationController
 
       idea_path = @cur_path.sub(/\/app\/.*/, ".html")
 
-      @idea_ap = Opendata::Idea::Idea.site(@cur_site).public.
+      @idea_ap = Opendata::Idea.site(@cur_site).public.
       filename(idea_path).
       first
       raise "404" unless @idea_ap

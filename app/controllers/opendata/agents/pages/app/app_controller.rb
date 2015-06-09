@@ -15,7 +15,7 @@ class Opendata::Agents::Pages::App::AppController < ApplicationController
       if @cur_page.appurl.present?
         @tab_display = "tab_url"
       else
-        appli = Opendata::App::App.find(@cur_page.id)
+        appli = Opendata::App.find(@cur_page.id)
         @app_html = appli.appfiles.where(filename: "index.html").first
         if @app_html.present?
           @tab_display = "tab_html"
@@ -42,7 +42,7 @@ class Opendata::Agents::Pages::App::AppController < ApplicationController
         @ds = Opendata::Dataset.site(@cur_site).public.find(@cur_page.dataset_ids)
       end
 
-      @app_idea = Opendata::Idea::Idea.site(@cur_site).public.where(app_ids: @cur_page.id)
+      @app_idea = Opendata::Idea.site(@cur_site).public.where(app_ids: @cur_page.id)
 
       render
     end
