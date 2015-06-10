@@ -1,19 +1,19 @@
 module Opendata::Csv2rdfSettingsHelper
   def prev_url
-    wid = Opendata::Csv2rdfSettingsController::ACTION_SEQUENCE.index(params[:action].to_sym)
+    wid = Opendata::Dataset::Csv2rdfSettingsController::ACTION_SEQUENCE.index(params[:action].to_sym)
     if wid.nil? || wid == 0
       url_for(controller: :resources, action: :show, id: @cur_resource)
     else
-      url_for(action: Opendata::Csv2rdfSettingsController::ACTION_SEQUENCE[wid - 1])
+      url_for(action: Opendata::Dataset::Csv2rdfSettingsController::ACTION_SEQUENCE[wid - 1])
     end
   end
 
   def next_url?
-    wid = Opendata::Csv2rdfSettingsController::ACTION_SEQUENCE.index(params[:action].to_sym)
+    wid = Opendata::Dataset::Csv2rdfSettingsController::ACTION_SEQUENCE.index(params[:action].to_sym)
     if wid.nil? || wid == 0
       true
     else
-      wid + 1 < Opendata::Csv2rdfSettingsController::ACTION_SEQUENCE.length
+      wid + 1 < Opendata::Dataset::Csv2rdfSettingsController::ACTION_SEQUENCE.length
     end
   end
 

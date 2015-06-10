@@ -7,12 +7,12 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
-    resources :crawls, concerns: :deletion
-    resources :dataset_categories, concerns: :deletion
-    resources :dataset_groups, concerns: :deletion do
+    resources :crawls, concerns: :deletion, module: :dataset
+    resources :dataset_categories, concerns: :deletion, module: :dataset
+    resources :dataset_groups, concerns: :deletion, module: :dataset do
       get "search" => "dataset_groups/search#index", on: :collection
     end
-    resources :datasets, concerns: :deletion do
+    resources :datasets, concerns: :deletion, module: :dataset do
       get "search" => "datasets/search#index", on: :collection
       resources :resources, concerns: :deletion do
         get "file" => "resources#download"
@@ -37,50 +37,50 @@ SS::Application.routes.draw do
       end
 
     end
-    resources :search_datasets, concerns: :deletion
-    resources :search_dataset_groups, concerns: :deletion
+    resources :search_datasets, concerns: :deletion, module: :dataset
+    resources :search_dataset_groups, concerns: :deletion, module: :dataset
   end
 
   node "opendata" do
-    get "dataset_category/" => "public#nothing", cell: "nodes/dataset_category"
-    get "dataset_category/:name/" => "public#index", cell: "nodes/dataset_category"
-    get "dataset_category/:name/rss.xml" => "public#rss", cell: "nodes/dataset_category"
-    get "dataset_category/:name/areas" => "public#index_areas", cell: "nodes/dataset_category"
-    get "dataset_category/:name/tags" => "public#index_tags", cell: "nodes/dataset_category"
-    get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset_category"
-    get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset_category"
+    get "dataset_category/" => "public#nothing", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/:name/" => "public#index", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/:name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/:name/areas" => "public#index_areas", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/:name/tags" => "public#index_tags", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset/dataset_category"
 
-    get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset"
-    get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset"
-    get "dataset/areas" => "public#index_areas", cell: "nodes/dataset"
-    get "dataset/tags" => "public#index_tags", cell: "nodes/dataset"
-    get "dataset/formats" => "public#index_formats", cell: "nodes/dataset"
-    get "dataset/licenses" => "public#index_licenses", cell: "nodes/dataset"
-    get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/resource"
-    get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/resource", format: false
-    get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/resource", format: false
-    get "dataset/:dataset/url_resource/:id/" => "public#index", cell: "nodes/url_resource"
-    get "dataset/:dataset/url_resource/:id/content.html" => "public#content", cell: "nodes/url_resource", format: false
-    get "dataset/:dataset/url_resource/:id/*filename" => "public#download", cell: "nodes/url_resource", format: false
-    get "dataset/:dataset/point.:format" => "public#show_point", cell: "nodes/dataset", format: false
-    post "dataset/:dataset/point.:format" => "public#add_point", cell: "nodes/dataset", format: false
-    get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset", format: false
-    get "dataset/:dataset/apps/show.:format" => "public#show_apps", cell: "nodes/dataset", format: false
-    get "dataset/:dataset/ideas/show.:format" => "public#show_ideas", cell: "nodes/dataset", format: false
+    get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset/dataset"
+    get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset/dataset"
+    get "dataset/areas" => "public#index_areas", cell: "nodes/dataset/dataset"
+    get "dataset/tags" => "public#index_tags", cell: "nodes/dataset/dataset"
+    get "dataset/formats" => "public#index_formats", cell: "nodes/dataset/dataset"
+    get "dataset/licenses" => "public#index_licenses", cell: "nodes/dataset/dataset"
+    get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/dataset/resource"
+    get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/dataset/resource", format: false
+    get "dataset/:dataset/resource/:id/*filename" => "public#download", cell: "nodes/dataset/resource", format: false
+    get "dataset/:dataset/url_resource/:id/" => "public#index", cell: "nodes/dataset/url_resource"
+    get "dataset/:dataset/url_resource/:id/content.html" => "public#content", cell: "nodes/dataset/url_resource", format: false
+    get "dataset/:dataset/url_resource/:id/*filename" => "public#download", cell: "nodes/dataset/url_resource", format: false
+    get "dataset/:dataset/point.:format" => "public#show_point", cell: "nodes/dataset/dataset", format: false
+    post "dataset/:dataset/point.:format" => "public#add_point", cell: "nodes/dataset/dataset", format: false
+    get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset/dataset", format: false
+    get "dataset/:dataset/apps/show.:format" => "public#show_apps", cell: "nodes/dataset/dataset", format: false
+    get "dataset/:dataset/ideas/show.:format" => "public#show_ideas", cell: "nodes/dataset/dataset", format: false
 
-    get "dataset/datasets/search(.:format)" => "public#datasets_search", cell: "nodes/dataset"
+    get "dataset/datasets/search(.:format)" => "public#datasets_search", cell: "nodes/dataset/dataset"
 
-    match "search_dataset_group/(index.:format)" => "public#index", cell: "nodes/search_dataset_group", via: [:get, :post]
-    match "search_dataset/(index.:format)" => "public#index", cell: "nodes/search_dataset", via: [:get, :post]
-    get "search_dataset/rss.xml" => "public#rss", cell: "nodes/search_dataset"
+    match "search_dataset_group/(index.:format)" => "public#index", cell: "nodes/dataset/search_dataset_group", via: [:get, :post]
+    match "search_dataset/(index.:format)" => "public#index", cell: "nodes/dataset/search_dataset", via: [:get, :post]
+    get "search_dataset/rss.xml" => "public#rss", cell: "nodes/dataset/search_dataset"
   end
 
   part "opendata" do
-    get "dataset" => "public#index", cell: "parts/dataset"
-    get "dataset_group" => "public#index", cell: "parts/dataset_group"
+    get "dataset" => "public#index", cell: "parts/dataset/dataset"
+    get "dataset_group" => "public#index", cell: "parts/dataset/dataset_group"
   end
 
   page "opendata" do
-    get "dataset/:filename.:format" => "public#index", cell: "pages/dataset"
+    get "dataset/:filename.:format" => "public#index", cell: "pages/dataset/dataset"
   end
 end
