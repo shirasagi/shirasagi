@@ -194,6 +194,25 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
         expect(csv[2]).to eq %w(新宿 43901)
       end
     end
+
+    context "when uri.path is /" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/"
+        subject.crawl_update = "none"
+        subject.original_updated = nil
+        @http_server.options = { last_modified: nil }
+      end
+
+      after do
+        @http_server.options = {}
+      end
+
+      it do
+        expect { subject.save! }.to raise_error
+      end
+    end
   end
 
   describe ".allowed?" do
