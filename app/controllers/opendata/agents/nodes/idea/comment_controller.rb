@@ -1,7 +1,7 @@
 class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
-  include Opendata::MypageFilter
+  include Opendata::Mypage::MypageFilter
   include Opendata::Idea::CommentFilter
 
   before_action :accept_cors_request

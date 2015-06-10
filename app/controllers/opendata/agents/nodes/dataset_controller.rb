@@ -1,7 +1,7 @@
 class Opendata::Agents::Nodes::DatasetController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
-  include Opendata::MypageFilter
+  include Opendata::Mypage::MypageFilter
   include Opendata::DatasetFilter
   include Opendata::AjaxFilter
 

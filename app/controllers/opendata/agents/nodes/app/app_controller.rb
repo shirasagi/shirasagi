@@ -1,7 +1,7 @@
 class Opendata::Agents::Nodes::App::AppController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
-  include Opendata::MypageFilter
+  include Opendata::Mypage::MypageFilter
   include Opendata::App::AppFilter
 
   before_action :set_app, only: [:show_point, :add_point, :point_members]

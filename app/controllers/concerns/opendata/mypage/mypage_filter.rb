@@ -1,4 +1,4 @@
-module Opendata::MypageFilter
+module Opendata::Mypage::MypageFilter
   extend ActiveSupport::Concern
 
   included do

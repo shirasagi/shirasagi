@@ -1,6 +1,6 @@
-class Opendata::Agents::Nodes::MypageController < ApplicationController
+class Opendata::Agents::Nodes::Mypage::MypageController < ApplicationController
   include Cms::NodeFilter::View
-  include Opendata::MypageFilter
+  include Opendata::Mypage::MypageFilter
 
   skip_filter :logged_in?, only: [:login, :logout, :provide]
 

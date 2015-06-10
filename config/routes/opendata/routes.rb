@@ -12,6 +12,7 @@ SS::Application.routes.draw do
 
     resources :sparqls, concerns: :deletion
     resources :apis, concerns: :deletion
+    resources :members, only: [:index]
   end
 
   node "opendata" do
@@ -32,5 +33,11 @@ SS::Application.routes.draw do
     get "api/1/package_show" => "public#package_show", cell: "nodes/api"
     get "api/1/tag_show" => "public#tag_show", cell: "nodes/api"
     get "api/1/group_show" => "public#group_show", cell: "nodes/api"
+
+    get "member/" => "public#index", cell: "nodes/member"
+    get "member/:member" => "public#show", cell: "nodes/member"
+    get "member/:member/datasets/(:filename.:format)" => "public#datasets", cell: "nodes/member"
+    get "member/:member/apps/(:filename.:format)" => "public#apps", cell: "nodes/member"
+    get "member/:member/ideas/(:filename.:format)" => "public#ideas", cell: "nodes/member"
   end
 end
