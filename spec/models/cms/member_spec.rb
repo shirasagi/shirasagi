@@ -21,4 +21,19 @@ describe Cms::Member, dbscope: :example do
       end
     end
   end
+
+  describe ".create_auth_member" do
+    let(:auth) do
+      OpenStruct.new({ provider: "provider-#{unique_id}",
+                       uid: "uid-#{unique_id}",
+                       credentials: OpenStruct.new(token: "token-#{unique_id}"),
+                       info: OpenStruct.new(name: "name-#{unique_id}") })
+    end
+    let(:site) { cms_site }
+
+    it do
+      expect { Cms::Member.create_auth_member(auth, site) }.to \
+        change { Cms::Member.count }.from(0).to(1)
+    end
+  end
 end

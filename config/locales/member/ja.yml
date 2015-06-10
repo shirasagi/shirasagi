@@ -1,0 +1,129 @@
+ja:
+  member:
+    login_by:
+      twitter: Twitter ID でログイン
+      facebook: Facebook ID でログイン
+      yahoojp: Yahoo! JAPAN ID でログイン
+      google_oauth2: Google アカウントでログイン
+      github: GitHub アカウントでログイン
+    options:
+      form_auth: &disabled_enabled
+        disabled: 無効
+        enabled: 有効
+      twitter_oauth:
+        <<: *disabled_enabled
+      facebook_oauth:
+        <<: *disabled_enabled
+      yahoojp_oauth:
+        <<: *disabled_enabled
+      google_oauth2_oauth:
+        <<: *disabled_enabled
+      github_oauth:
+        <<: *disabled_enabled
+    view:
+      email: メールアドレス
+      password: パスワード
+
+  modules:
+    member: メンバー
+    addons:
+      member/redirection: リダイレクト
+      member/form_auth: フォーム認証
+      member/twitter_oauth: Twitter OAuth 認証
+      member/facebook_oauth: Facebook OAuth 認証
+      member/yahoo_jp_oauth: Yahoo! OAuth 認証
+      member/google_oauth: Google OAuth 認証
+      member/github_oauth: GitHub OAuth 認証
+
+  cms:
+    nodes:
+      member/login: ログイン
+
+  mongoid:
+    attributes:
+      member/addon/redirection:
+        redirect_url: リダイレクトURL
+      member/addon/form_auth:
+        form_auth: フォーム認証
+      member/addon/twitter_oauth:
+        twitter_oauth: OAuth 認証
+        twitter_client_id: Consumer Key
+        twitter_client_secret: Consumer Secret
+      member/addon/facebook_oauth:
+        facebook_oauth: OAuth 認証
+        facebook_client_id: App ID
+        facebook_client_secret: App Secret
+      member/addon/yahoo_jp_oauth:
+        yahoojp_oauth: OAuth 認証
+        yahoojp_client_id: アプリケーションID
+        yahoojp_client_secret: シークレット
+      member/addon/google_oauth:
+        google_oauth2_oauth: OAuth 認証
+        google_oauth2_client_id: クライアントID
+        google_oauth2_client_secret: クライアントシークレット
+      member/addon/github_oauth:
+        github_oauth: OAuth 認証
+        github_client_id: Client ID
+        github_client_secret: Client Secret
+
+  tooltip:
+    member/addon/redirection:
+      redirect_url:
+        - 認証に成功した際のリダイレクト先を指定します。
+        -
+        - 基本的には呼び出し元へ戻りますが、
+        - 呼び出し元が特定できない場合、「リダイレクトURL」に指定された URL にリダイレクトします。
+    member/addon/form_auth:
+      form_auth:
+        - メールアドレスとパスワードによるフォーム認証を有効にするかどうかを指定します。
+        - 有効にした場合、「メンバー」に登録されているアカウント情報でログインすることができます。
+    member/addon/twitter_oauth:
+      twitter_oauth:
+        - Twitter による OAuth 認証を有効にするかどうかを指定します。
+        - 有効にした場合、Twitter アカウントでログインすることができます。
+      twitter_client_id:
+        - Twitter でアプリケーションを作成した際に付与される Consumer Key を設定します。
+        - Twitter でアプリケーションを作成するには、https://apps.twitter.com/ にブラウザでアクセスします。
+      twitter_client_secret:
+        - Twitter でアプリケーションを作成した際に付与される Consumer Secret を設定します。
+        - Twitter でアプリケーションを作成するには、https://apps.twitter.com/ にブラウザでアクセスします。
+    member/addon/facebook_oauth:
+      facebook_oauth:
+        - Facebook による OAuth 認証を有効にするかどうかを指定します。
+        - 有効にした場合、Facebook アカウントでログインすることができます。
+      facebook_client_id:
+        - Facebook でアプリケーションを作成した際に付与される App ID を設定します。
+        - Facebook でアプリケーションを作成するには、https://developers.facebook.com/ にブラウザでアクセスします。
+      facebook_client_secret:
+        - Facebook でアプリケーションを作成した際に付与される App Secret を設定します。
+        - Facebook でアプリケーションを作成するには、https://developers.facebook.com/ にブラウザでアクセスします。
+    member/addon/yahoo_jp_oauth:
+      yahoojp_oauth:
+        - Yahoo! JAPAN による OAuth 認証を有効にするかどうかを指定します。
+        - 有効にした場合、Yahoo! JAPAN アカウントでログインすることができます。
+      yahoojp_client_id:
+        - Yahoo! JAPAN でアプリケーションを作成した際に付与される「アプリケーションID」を設定します。
+        - Yahoo! JAPAN でアプリケーションを作成するには、http://developer.yahoo.co.jp/ にブラウザでアクセスします。
+      yahoojp_client_secret:
+        - Yahoo! JAPAN でアプリケーションを作成した際に付与される「シークレット」を設定します。
+        - Yahoo! JAPAN でアプリケーションを作成するには、http://developer.yahoo.co.jp/ にブラウザでアクセスします。
+    member/addon/google_oauth:
+      google_oauth2_oauth:
+        - Google による OAuth 認証を有効にするかどうかを指定します。
+        - 有効にした場合、Google アカウントでログインすることができます。
+      google_oauth2_client_id:
+        - Google でアプリケーションを作成した際に付与される「クライアントID」を設定します。
+        - Google でアプリケーションを作成するには、https://console.developers.google.com/ にブラウザでアクセスします。
+      google_oauth2_client_secret:
+        - Google でアプリケーションを作成した際に付与される「クライアントシークレット」を設定します。
+        - Google でアプリケーションを作成するには、https://console.developers.google.com/ にブラウザでアクセスします。
+    member/addon/github_oauth:
+      github_oauth:
+        - GitHub による OAuth 認証を有効にするかどうかを指定します。
+        - 有効にした場合、GitHub アカウントでログインすることができます。
+      github_client_id:
+        - GitHub でアプリケーションを作成した際に付与される「Client ID」を設定します。
+        - GitHub でアプリケーションを作成するには、https://github.com/settings/developers にブラウザでアクセスします。
+      github_client_secret:
+        - GitHub でアプリケーションを作成した際に付与される「Client Secret」を設定します。
+        - GitHub でアプリケーションを作成するには、https://github.com/settings/developers にブラウザでアクセスします。

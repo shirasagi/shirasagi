@@ -1,0 +1,37 @@
+<%
+   enabled_providers = Cms::Member::OAUTH_PROVIDERS.select do |provider|
+     @cur_node.send("#{provider}_oauth") == "enabled"
+   end
+   enabled_providers = enabled_providers.to_a
+%>
+<div class="member-login-box">
+  <% if @error %>
+    <div class="error-message"><%= @error %></div>
+  <% end %>
+
+  <% if enabled_providers.present? %>
+    <ul class="oauth-login">
+      <% enabled_providers.each do |provider| %>
+        <li class="<%= provider %>"><%= link_to t("member.login_by.#{provider}"), "#{@cur_node.url}#{provider}", rel: "nofollow" %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if @cur_node.form_auth == "enabled" %>
+    <%= form_tag "", class: "form-login" do |f| %>
+      <%= error_messages_for :item %>
+
+      <dl>
+        <dt><%= label :item, :email, t("member.view.email") %></dt>
+        <dd><%= email_field :item, :email %></dd>
+
+        <dt><%= label :item, :password, t("member.view.password") %></dt>
+        <dd><%= password_field :item, :password %></dd>
+      </dl>
+
+      <div class="send">
+        <%= submit_tag t("views.login"), name: :login %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

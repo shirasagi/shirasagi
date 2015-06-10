@@ -1,0 +1,6 @@
+<dl class="see mod-member-formauth">
+  <dt><%= @model.t "#{provider}_oauth" %></dt>
+  <dd><%= @item.label "#{provider}_oauth" %></dd>
+  <dt><%= @model.t "#{provider}_client_id".to_sym %></dt>
+  <dd><%= @item.send("#{provider}_client_id") %></dd>
+</dl>
