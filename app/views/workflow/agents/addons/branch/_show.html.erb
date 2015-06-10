@@ -3,16 +3,15 @@
 <%= coffee do %>
 $ ->
   toggleCreateBranchButton = ()->
-    dd = $(".create-branch").closest("dd")
-    dt = dd.next("dt")
-    result = dt.next(".result")
+    dt = $("dl.branch .create-branch").closest("dt")
+    result = dt.next("dl.branch .result")
     if $(".branches .name").length
-      dd.hide()
-      dt.show()
+      dt.hide()
+      dt.next("dt").show()
       result.show()
     else
-      dd.show()
-      dt.hide()
+      dt.show()
+      dt.next("dt").hide()
       result.hide()
 
   toggleCreateBranchButton()
@@ -32,21 +31,26 @@ $ ->
         alert(["== Error =="].concat(data.responseJSON).join("\n"))
 <% end %>
 
+<%
+  @items = @item.branch? ? [@item.master] : @item.branches
+%>
 <dl class="see branch">
   <% if @item.branch? %>
-    <% @items = [@item.master] %>
-    <dt class="wide"><%= t("workflow.master_message") %></dt>
+    <dt class="wide"><%= t("workflow.branch_message") %></dt>
     <dd></dd>
     <dt><%= t("workflow.master_page") %></dt>
   <% else %>
-    <% @items = @item.branches %>
-    <dd class="wide">
-      <%= button_tag t("workflow.create_branch"), class: "create-branch" %>
-    </dd>
+    <% if @items.present? %>
+      <dt class="wide"><%= t("workflow.master_message") %></dt>
+      <dd></dd>
+    <% else %>
+      <dt class="wide">
+        <%= button_tag t("workflow.create_branch"), class: "create-branch" %>
+      </dt>
+    <% end %>
     <dt><%= t("workflow.branch_page") %></dt>
   <% end %>
   <dd class="result">
     <%= render file: "workflow/pages/branch" if @items.present? %>
   </dd>
 </dl>
-

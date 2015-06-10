@@ -6,8 +6,9 @@ ja:
     selectable_users: 選択候補
     pages: 承認
     user_deleted: 削除ユーザー
-    master_message: このページは差し替えページです。
+    master_message: 以下の差し替えページが作成されています。
     master_page: 差し替え元ページ
+    branch_message: このページは差し替えページです。
     branch_page: 差し替えページ
     create_branch: 差し替えページを作成する
     cloned_name_prefix: 複製
@@ -44,7 +45,7 @@ ja:
   modules:
     addons:
       workflow/approver: 承認
-      workflow/branch: ブランチ
+      workflow/branch: 差し替えページ
 
   mongoid:
     attributes:
