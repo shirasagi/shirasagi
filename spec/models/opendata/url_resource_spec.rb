@@ -213,6 +213,29 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
         expect { subject.save! }.to raise_error
       end
     end
+
+    context "when uri.path is invalid" do
+      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      before do
+        subject.license_id = license.id
+        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/notfound.csv"
+        subject.crawl_update = "none"
+        subject.original_updated = nil
+        @http_server.options = { last_modified: nil }
+      end
+
+      after do
+        @http_server.options = {}
+      end
+
+      it do
+        expect { subject.save! }.to raise_error
+      end
+    end
+  end
+
+  describe "crawl_update_options" do
+    it { expect(subject.crawl_update_options).to include(%w(手動 none), %w(自動 auto)) }
   end
 
   describe ".allowed?" do
