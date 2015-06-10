@@ -107,7 +107,14 @@ module Opendata::Api::ResourceSearchFilter
         result_list.sort!{|a, b| a[order_by_converted.to_sym] <=> b[order_by_converted.to_sym] }
       end
 
-      result_list = result_list[offset.to_i..-1] if offset
+      if offset
+        if result_list.size < offset.to_i
+          result_list = []
+        else
+          result_list = result_list[offset.to_i..-1]
+        end
+      end
+
       result_list = result_list[0, limit.to_i] if limit
 
       if result_list.count > 0

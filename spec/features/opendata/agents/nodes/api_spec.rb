@@ -12,6 +12,7 @@ describe "opendata_agents_nodes_api", dbscope: :example do
   let(:group_show_path) { "#{node.url}1/group_show" }
   let(:tag_show_path) { "#{node.url}1/tag_show" }
   let(:package_search_path) { "#{node.url}1/package_search" }
+  let(:resource_search_path) { "#{node.url}1/resource_search" }
 
   let!(:node_dataset) { create_once :opendata_node_dataset }
   let!(:node_dataset_group_01) { create(:opendata_dataset_group, site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
@@ -25,6 +26,8 @@ describe "opendata_agents_nodes_api", dbscope: :example do
     create(:opendata_dataset, node: node_dataset, dataset_group_ids: [node_dataset_group_02.id],
                               area_ids: [ node_area.id ], tags: ["TEST_2"])
   end
+
+  let!(:dataset_resource_01) { page_dataset_01.resources.new(attributes_for(:opendata_resource)) }
 
   context "api" do
 
@@ -151,6 +154,37 @@ describe "opendata_agents_nodes_api", dbscope: :example do
         visit "#{package_search_path}?rows=-50"
         visit "#{package_search_path}?start=b"
         visit "#{package_search_path}?start=-10"
+
+      end
+    end
+
+    it "#resource_search" do
+      page.driver.browser.with_session("public") do |session|
+        session.env("HTTP_X_FORWARDED_HOST", cms_site.domain)
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&offset=0"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&limit=5"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&offset=0&limit=5"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&offset=100&limit=10000"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&order_by=name"
+        expect(status_code).to eq 200
+
+        visit resource_search_path
+        visit "#{resource_search_path}?limit=a"
+        visit "#{resource_search_path}?limit=-50"
+        visit "#{resource_search_path}?offset=b"
+        visit "#{resource_search_path}?offset=-10"
 
       end
     end
