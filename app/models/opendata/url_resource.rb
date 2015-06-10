@@ -30,10 +30,17 @@ class Opendata::UrlResource
     end
 
     def do_crawl(time_out: 30)
+      require 'net/http'
+      require "open-uri"
+
       puts self.original_url
 
       last_modified = timeout(time_out) do
-        open(self.original_url) { |url_file| url_file.last_modified }
+        open(self.original_url, proxy: true) { |url_file| url_file.last_modified }
+      end
+
+      if last_modified.blank?
+        last_modified = Time.zone.now
       end
 
       if self.crawl_update == "none"
@@ -45,6 +52,8 @@ class Opendata::UrlResource
       puts I18n.t("opendata.errors.messages.invalid_timeout")
     rescue => e
       puts "Error: #{e}"
+      self.crawl_state = "deleted"
+      self.save(validate: false)
     end
 
   private
@@ -126,14 +135,21 @@ class Opendata::UrlResource
       temp_file.binmode
       timeout(time_out) do
         open(original_url, proxy: true) do |data|
-          if data.last_modified.blank?
-            errors.add :base, I18n.t("opendata.errors.messages.dynamic_file")
-            break
-          end
+          #if data.last_modified.blank?
+          #if self.crawl_update != "auto" && data.last_modified.blank?
+          #  errors.add :base, I18n.t("opendata.errors.messages.dynamic_file")
+          #  break
+          #end
 
           temp_file.write(data.read)
           temp_file.rewind
-          break data.last_modified
+
+          #if self.crawl_update == "auto" && data.last_modified.blank?
+          if data.last_modified.blank?
+            break Time.zone.now
+          else
+            break data.last_modified
+          end
         end
       end
     end
