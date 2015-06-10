@@ -16,6 +16,8 @@ ja:
     reception_plan: 回答受付期間
     aggregate: 集計
     from: から
+    confirm_input: "%{name}確認用"
+    confirm_input_description: "もう一度、同じ%{name}を入力してください。"
 
     options:
       state:
@@ -31,6 +33,9 @@ ja:
         radio_button: ラジオボタン選択
         select: プルダウン選択
         check_box: チェックボックス選択
+      input_confirm:
+        disabled: しない
+        enabled: する
 
   modules:
     inquiry: メールフォーム
@@ -79,6 +84,7 @@ ja:
         select_options: 選択肢
         required: 必須入力
         additional_attr: 追加属性
+        input_confirm: 入力確認
       inquiry/answer:
         remote_addr: IPアドレス
         user_agent: ユーザーエージェント
@@ -143,6 +149,8 @@ ja:
         - 項目の入力が必須か任意かを選択します。
       additional_attr:
         - 出力される入力形式のHTMLに属性を追加することが可能です。
+      input_confirm:
+        - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
     inquiry/addon/release_plan:
       release_date:
         - 公開を開始する日時を指定します。
@@ -161,3 +169,8 @@ ja:
     inquiry/addon/aggregation:
       aggregation_state:
         - 公開側で集計機能を使用するかを選択します。
+
+  errors:
+    messages:
+      invalid_input_type_for_input_confirm: "は、入力形式に「%{input_type}」が選択されている場合、「する」にできません。"
+      input_confirm_not_match: "が一致しません。"

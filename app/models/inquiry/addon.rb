@@ -126,9 +126,11 @@ module Inquiry::Addon
       field :select_options, type: SS::Extensions::Array, default: ""
       field :required, type: String, default: "required"
       field :additional_attr, type: String, default: ""
-      permit_params :input_type, :required, :additional_attr, :select_options
+      field :input_confirm, type: String, default: ""
+      permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm
 
       validate :validate_select_options
+      validate :validate_input_confirm_options
 
       public
         def input_type_options
@@ -149,6 +151,13 @@ module Inquiry::Addon
           ]
         end
 
+        def input_confirm_options
+          [
+            [I18n.t('inquiry.options.input_confirm.disabled'), 'disabled'],
+            [I18n.t('inquiry.options.input_confirm.enabled'), 'enabled'],
+          ]
+        end
+
         def required?
           required == "required"
         end
@@ -163,6 +172,12 @@ module Inquiry::Addon
         def validate_select_options
           if input_type =~ /(select|radio_button|check_box)/
             errors.add :select_options, :blank if select_options.blank?
+          end
+        end
+
+        def validate_input_confirm_options
+          if input_type =~ /(select|radio_button|check_box|text_area)/ && input_confirm == 'enabled'
+            errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
           end
         end
     end
