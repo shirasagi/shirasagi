@@ -44,6 +44,13 @@ module Opendata::Api::ResourceSearchFilter
       result_list = []
 
       field, term =  URI.decode(query).split(":")
+
+      field_list = %w(name description filename)
+      if field_list.include?(field) == false
+        error = {query: %(Field "#{field}" not recognised in resource_search.), __type: "Validation Error"}
+        render json: {help: help, success: false, error: error} and return
+      end
+
       if !term
         error = {query: "Must be <field>:<value> pair(s)", __type: "Validation Error"}
         render json: {help: help, success: false, error: error} and return
@@ -55,7 +62,7 @@ module Opendata::Api::ResourceSearchFilter
         resources.each do |resource|
           if field =~ /^name$/i && resource.name =~ /#{term}/i
             result_list << resource
-          elsif field =~ /^text$/i && resource.text =~ /#{term}/i
+          elsif field =~ /^description$/i && resource.text =~ /#{term}/i
             result_list << resource
           elsif field =~ /^filename$/i && resource.filename =~ /#{term}/i
             result_list << resource
@@ -63,20 +70,24 @@ module Opendata::Api::ResourceSearchFilter
         end
 
         url_resources = dataset.url_resources
-        url_resources.each do |resource|
-          if field =~ /^name$/i && resource.name =~ /#{term}/i
-            result_list << resource
-          elsif field =~ /^text$/i && resource.text =~ /#{term}/i
-            result_list << resource
-          elsif field =~ /^filename$/i && resource.filename =~ /#{term}/i
-            result_list << resource
+        url_resources.each do |url_resource|
+          if field =~ /^name$/i && url_resource.name =~ /#{term}/i
+            result_list << url_resource
+          elsif field =~ /^description$/i && url_resource.text =~ /#{term}/i
+            result_list << url_resource
+          elsif field =~ /^filename$/i && url_resource.filename =~ /#{term}/i
+            result_list << url_resource
           end
         end
       end
 
       if order_by
         if order_by =~ /^name$/i
-          resource_list.sort!{|a, b| a[:name] <=> b[:name] }
+          result_list.sort!{|a, b| a[:name] <=> b[:name] }
+        elsif order_by =~ /^description$/i
+          result_list.sort!{|a, b| a[:text] <=> b[:text] }
+        elsif order_by =~ /^filename$/i
+          result_list.sort!{|a, b| a[:filename] <=> b[:filename] }
         end
       end
 
