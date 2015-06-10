@@ -15,7 +15,7 @@ module Cms::BaseFilter
 
   private
     def set_site
-      @cur_site = SS::Site.find_by host: params[:site]
+      @cur_site = Cms::Site.find_by host: params[:site]
       @crumbs << [@cur_site.name, cms_contents_path]
     end
 

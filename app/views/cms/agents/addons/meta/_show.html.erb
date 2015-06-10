@@ -1,19 +1,5 @@
 <% return "" unless @item.meta_present? %>
-
-<%= coffee do %>
-$ ->
-  $("dl.meta").hide()
-  $("#addon-cms-agents-addons-meta header h2").addClass("hide")
-  $("#addon-cms-agents-addons-meta header h2").on 'click', ->
-    $("dl.meta").animate( { height: 'toggle' }, 'fast' )
-    if $(this).hasClass("hide")
-      $(this).addClass("show")
-      $(this).removeClass("hide")
-    else
-      $(this).addClass("hide")
-      $(this).removeClass("show")
-    return false
-<% end %>
+<%= jquery do %> SS_AddonTabs.toggleView("dl.meta"); <% end %>
 
 <dl class="see meta">
   <dt><%= @model.t :keywords %></dt>

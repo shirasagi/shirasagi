@@ -1,0 +1,12 @@
+<dl class="see page-setting">
+  <dt><%= @model.t :auto_keywords %></dt>
+  <dd><%= @item.label :auto_keywords %></dd>
+
+  <% if @item.keywords.present? %>
+    <dt><%= @model.t :keywords %></dt>
+    <dd><%= @item.keywords %></dd>
+  <% end %>
+
+  <dt><%= @model.t :auto_description %></dt>
+  <dd><%= @item.label :auto_description %></dd>
+</dl>

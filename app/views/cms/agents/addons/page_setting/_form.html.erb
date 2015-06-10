@@ -1,0 +1,12 @@
+<dl class="see mod-cms-page-setting">
+  <dl class="see">
+    <dt><%= @model.t :auto_keywords %><%= @model.tt :auto_keywords %></dt>
+    <dd><%= f.select :auto_keywords, @item.auto_keywords_options %></dd>
+
+    <dt><%= @model.t :keywords %><%= @model.tt :keywords %></dt>
+    <dd><%= f.text_field :keywords %></dd>
+
+    <dt><%= @model.t :auto_description %><%= @model.tt :auto_description %></dt>
+    <dd><%= f.select :auto_description, @item.auto_description_options %></dd>
+  </dl>
+</dl>
