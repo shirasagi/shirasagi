@@ -3,12 +3,12 @@ module Opendata::Api::ResourceSearchFilter
   include Opendata::Api
 
   private
-    def resource_search_check(query, order_by, offset, limit)
+    def resource_search_check(queries, order_by, offset, limit)
 
       offset_messages = []
       limit_messages = []
 
-      query_message = "Missing value" if query.blank?
+      query_message = "Missing value" if queries[0].blank?
 
       check_num(offset, offset_messages)
       check_num(limit, limit_messages)
@@ -26,26 +26,59 @@ module Opendata::Api::ResourceSearchFilter
       return error
     end
 
+    def convert_property_name(field)
+      if field =~ /^name$/i
+        property = "name"
+      elsif field =~ /^description$/i
+        property = "text"
+      elsif field =~ /^filename$/i
+        property = "filename"
+      elsif field =~ /^format$/i
+        property = "format"
+      else
+        property = nil
+      end
+
+      return property
+    end
+
+    def agree?(resource, queries)
+
+      result = true
+
+      queries.each do |query|
+        field, term =  URI.decode(query).split(":")
+        property = convert_property_name(field)
+        if resource[property.to_sym] !~ /#{term}/i
+          result = false
+        end
+      end
+
+      return result
+    end
+
   public
     def resource_search
 
       help = SS.config.opendata.api["resource_search_help"]
 
-      query = params[:query]
+      queries = [params[:query]]
       order_by = params[:order_by]
       offset = params[:offset]
       limit = params[:limit]
 
-      error = resource_search_check(query, order_by, offset, limit)
+      puts queries[0]
+
+      error = resource_search_check(queries, order_by, offset, limit)
       if error
         render json: {help: help, success: false, error: error} and return
       end
 
       result_list = []
 
-      field, term =  URI.decode(query).split(":")
+      field, term =  URI.decode(queries[0]).split(":")
 
-      field_list = %w(name description filename)
+      field_list = %w(name description filename format)
       if field_list.include?(field) == false
         error = {query: %(Field "#{field}" not recognised in resource_search.), __type: "Validation Error"}
         render json: {help: help, success: false, error: error} and return
@@ -56,39 +89,22 @@ module Opendata::Api::ResourceSearchFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      datasets = Opendata::Dataset.site(@cur_site).public.search_resources({keyword: term})
+      datasets = Opendata::Dataset.site(@cur_site).public
       datasets.each do |dataset|
         resources = dataset.resources
         resources.each do |resource|
-          if field =~ /^name$/i && resource.name =~ /#{term}/i
-            result_list << resource
-          elsif field =~ /^description$/i && resource.text =~ /#{term}/i
-            result_list << resource
-          elsif field =~ /^filename$/i && resource.filename =~ /#{term}/i
-            result_list << resource
-          end
+          result_list << resource if agree?(resource, queries)
         end
 
         url_resources = dataset.url_resources
         url_resources.each do |url_resource|
-          if field =~ /^name$/i && url_resource.name =~ /#{term}/i
-            result_list << url_resource
-          elsif field =~ /^description$/i && url_resource.text =~ /#{term}/i
-            result_list << url_resource
-          elsif field =~ /^filename$/i && url_resource.filename =~ /#{term}/i
-            result_list << url_resource
-          end
+          result_list << url_resource if agree?(url_resource, queries)
         end
       end
 
-      if order_by
-        if order_by =~ /^name$/i
-          result_list.sort!{|a, b| a[:name] <=> b[:name] }
-        elsif order_by =~ /^description$/i
-          result_list.sort!{|a, b| a[:text] <=> b[:text] }
-        elsif order_by =~ /^filename$/i
-          result_list.sort!{|a, b| a[:filename] <=> b[:filename] }
-        end
+      order_by_converted = convert_property_name(order_by)
+      if order_by && order_by_converted
+        result_list.sort!{|a, b| a[order_by_converted.to_sym] <=> b[order_by_converted.to_sym] }
       end
 
       result_list = result_list[offset.to_i..-1] if offset
@@ -102,7 +118,6 @@ module Opendata::Api::ResourceSearchFilter
       end
 
       render json: res
-
     end
 
 end
