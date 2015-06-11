@@ -507,7 +507,7 @@ table.cells, table.see {
   padding: 5px 5px 10px 5px;
   margin-bottom: 20px;
   dl {
-    input.filename {
+    input.filename, input.name {
       width: 20em;
     }
     table.index {
@@ -517,7 +517,7 @@ table.cells, table.see {
         background-color: transparent;
       }
     }
-    &:nth-child(3),&:nth-child(5),&:nth-child(6),&:nth-child(7),&:nth-child(8) {
+    &:nth-child(3), &:nth-child(5), &:nth-child(6), &:nth-child(7), &:nth-child(8) {
       clear: both;
       @include clear;
     }
