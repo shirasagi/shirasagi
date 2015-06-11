@@ -26,7 +26,7 @@ class Opendata::UrlResource
     end
 
     def crawl_update_options
-      [%w(手動 none), %w(自動 auto)]
+      [[I18n.t("opendata.crawl_update_name.none"),"none"], [I18n.t("opendata.crawl_update_name.auto"),"auto"]]
     end
 
     def do_crawl(time_out: 30)

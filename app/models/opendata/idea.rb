@@ -100,7 +100,11 @@ class Opendata::Idea
       end
 
       def sort_options
-        [%w(新着順 released), %w(人気順 popular), %w(注目順 attention)]
+        [
+          [I18n.t("opendata.sort_options.released"), "released"],
+          [I18n.t("opendata.sort_options.popular"), "popular"],
+          [I18n.t("opendata.sort_options.attention"), "attention"]
+        ]
       end
 
       def sort_hash(sort)

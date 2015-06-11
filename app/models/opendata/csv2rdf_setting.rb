@@ -72,7 +72,7 @@ class Opendata::Csv2rdfSetting
       column_labels = column_labels.select(&:present?).map(&:strip)
       if column_labels.join.blank?
         # set default column name
-        ["分類#{index}"]
+        ["#{I18n.t("opendata.labels.group")}#{index}"]
       else
         column_labels
       end

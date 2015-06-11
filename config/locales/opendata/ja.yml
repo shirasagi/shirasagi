@@ -39,6 +39,8 @@ ja:
         dynamic_file: 動的ファイルはクローリングできません。
         property_not_selected: プロパティが選択されていません。
         build_rdf_failed: RDFの作成に失敗しました。
+        validate_appurl: はアプリのファイルを登録している場合、入力できません。
+        validate_appfile: はアプリの公開URLを登録している場合、登録できません。
     crawl_state:
       same: 　
       updated: 更新
@@ -46,6 +48,10 @@ ja:
     crawl_update:
       none: 　
       auto: 自動
+    crawl_update_name:
+      none: 手動
+      auto: 自動
+
     confirm:
       build_csv2rdf: "RDF 変換処理を開始します。よろしいですか？"
     labels:
@@ -54,6 +60,7 @@ ja:
       samples: "データ"
       rdf_property: RDF プロパティ
       category_ids: 分野
+      group: 分類
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。
@@ -75,6 +82,9 @@ ja:
         released: 新着アイデア
         popular: 人気アイデア
         attention: 注目アイデア
+    state_options:
+      public: 公開
+      closed: 非公開
     url:
       dataset:
         search: "/dataset/datasets/search"

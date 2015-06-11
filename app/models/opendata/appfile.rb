@@ -62,7 +62,7 @@ class Opendata::Appfile
     def validate_appfile
       if self.app.appurl.present?
         errors.clear
-        errors.add :file_id, "はアプリの公開URLを登録している場合、登録できません。"
+        errors.add :file_id, I18n.t("opendata.errors.messages.validate_appfile")
         return
       end
     end

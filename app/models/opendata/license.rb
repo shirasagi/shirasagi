@@ -22,7 +22,7 @@ class Opendata::License
   validates :in_file, presence: true, if: ->{ file_id.blank? }
 
   def state_options
-    [%w(公開 public), %w(非公開 closed)]
+    [[I18n.t("opendata.state_options.public"), "public"], [I18n.t("opendata.state_options.closed"), "closed"]]
   end
 
   class << self
