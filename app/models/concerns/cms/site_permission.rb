@@ -1,31 +1,34 @@
-module Cms::Permission
+module Cms::SitePermission
   extend ActiveSupport::Concern
   include SS::Permission
 
-  def allowed?(action, user, opts = {})
-    site = opts[:site] || @cur_site
-    node = opts[:node] || @cur_node
+  public
+    def allowed?(action, user, opts = {})
+      action = permission_action || action
+      permit = "#{action}_#{self.class.permission_name}"
 
-    action = self.class.class_variable_get(:@@_permission_action) || action
-    permit = "#{action}_#{self.class.permission_name}"
+      site = opts[:site] || @cur_site
+      node = opts[:node] || @cur_node
 
-    if !Cms::Role.permission_names.include?(permit)
-      return node.allowed?(action, user, opts) if node
-      return false
+      if !Cms::Role.permission_names.include?(permit)
+        return node.allowed?(action, user, opts) if node
+        return false
+      end
+
+      permit << "_#{site.id}" if site
+      user.cms_role_permissions[permit].to_i > 0
     end
-
-    user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
-  end
 
   module ClassMethods
-    def allow(action, user, opts = {})
-      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
+    public
+      def allow(action, user, opts = {})
+        site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
-      action = class_variable_get(:@@_permission_action) || action
-      permit = "#{action}_#{permission_name}"
+        action = permission_action || action
+        permit = "#{action}_#{permission_name}"
 
-      role = user.cms_roles.where(site_id:  site_id).in(permissions: permit).first
-      role ? where({}) : where({ _id: -1 })
-    end
+        role = user.cms_roles.where(site_id:  site_id).in(permissions: permit).first
+        role ? where({}) : where({ _id: -1 })
+      end
   end
 end
