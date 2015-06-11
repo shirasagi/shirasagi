@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_api", dbscope: :example do
+describe "opendata_agents_nodes_api", dbscope: :example, http_server: true,
+          doc_root: Rails.root.join("spec", "fixtures", "opendata") do
 
   let!(:node) { create_once :opendata_node_api, name: "opendata_api" }
   let!(:node_area) { create :opendata_node_area }
@@ -27,7 +28,29 @@ describe "opendata_agents_nodes_api", dbscope: :example do
                               area_ids: [ node_area.id ], tags: ["TEST_2"])
   end
 
-  let!(:dataset_resource_01) { page_dataset_01.resources.new(attributes_for(:opendata_resource)) }
+  let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
+  let(:dataset_resource) { page_dataset_01.resources.new(attributes_for(:opendata_resource)) }
+  let(:dataset_url_resource) { page_dataset_01.url_resources.new(attributes_for(:opendata_resource)) }
+
+  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
+  let(:license) { create(:opendata_license, site: cms_site, file: license_logo_file) }
+
+  before do
+
+    Fs::UploadedFile.create_from_file(dataset_resource_file_path, basename: "spec") do |f|
+      dataset_resource.in_file = f
+      dataset_resource.license_id = license.id
+      dataset_resource.filename = "#{dataset_resource.name}.csv"
+      dataset_resource.format = "CSV"
+      dataset_resource.save!
+    end
+
+    dataset_url_resource.license_id = license.id
+    dataset_url_resource.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+    dataset_url_resource.crawl_update = "none"
+    dataset_url_resource.save!
+
+  end
 
   context "api" do
 
@@ -162,25 +185,36 @@ describe "opendata_agents_nodes_api", dbscope: :example do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", cms_site.domain)
 
-        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}"
+        visit "#{resource_search_path}?query=name:#{dataset_resource.name}"
         expect(status_code).to eq 200
 
-        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&offset=0"
+        visit "#{resource_search_path}?query=filename:#{dataset_resource.filename}"
         expect(status_code).to eq 200
 
-        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&limit=5"
+        visit "#{resource_search_path}?query=description:#{dataset_resource.text}"
         expect(status_code).to eq 200
 
-        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&offset=0&limit=5"
+        visit "#{resource_search_path}?query=format:#{dataset_resource.format}"
         expect(status_code).to eq 200
 
-        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&offset=100&limit=10000"
+        visit "#{resource_search_path}?query=name:#{dataset_resource.name}&offset=0"
         expect(status_code).to eq 200
 
-        visit "#{resource_search_path}?query=name:#{dataset_resource_01.name}&order_by=name"
+        visit "#{resource_search_path}?query=name:#{dataset_resource.name}&limit=5"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource.name}&offset=0&limit=5"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource.name}&offset=100&limit=10000"
+        expect(status_code).to eq 200
+
+        visit "#{resource_search_path}?query=name:#{dataset_resource.name}&order_by=name"
         expect(status_code).to eq 200
 
         visit resource_search_path
+        visit "#{resource_search_path}?query=name:"
+        visit "#{resource_search_path}?query=test:#{dataset_resource.name}"
         visit "#{resource_search_path}?limit=a"
         visit "#{resource_search_path}?limit=-50"
         visit "#{resource_search_path}?offset=b"
