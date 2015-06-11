@@ -13,8 +13,8 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
 
       path = @cur_path.sub(/^#{@cur_site.url}/, "")
 
-      if @cur_item.try(:parent_crumb_urls)[0]
-        find_node @cur_item.parent_crumb_urls[0]
+      if @cur_item.try(:parent_crumb_urls).try(:first).present?
+        find_node @cur_item.parent_crumb_urls.first
       else
         find_node path
       end
