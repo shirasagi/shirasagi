@@ -16,6 +16,7 @@ production: &production
 
 test:
   <<: *production
+  prefix_path: "/auth"
 
 development:
   <<: *production
