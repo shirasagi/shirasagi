@@ -4,7 +4,7 @@ module Cms::Content
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
-  include Cms::Addon::GroupPermission
+  include Cms::GroupPermission
 
   attr_accessor :cur_node, :basename
 

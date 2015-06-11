@@ -7,7 +7,10 @@ module Category::Part
 
   class Node
     include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::NodeList
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "category/node") }
   end

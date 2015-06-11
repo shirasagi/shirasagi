@@ -3,8 +3,6 @@ module Contact::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 400
-
     included do
       field :contact_state, type: String
       field :contact_charge, type: String
@@ -36,8 +34,6 @@ module Contact::Addon
   module Group
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 400
 
     included do
       field :contact_tel, type: String

@@ -95,7 +95,7 @@ module SS::Document
 
     def addons
       #return @addons if @addons
-      @addons = lookup_addons.sort {|a, b| a.order <=> b.order }.map {|m| m.addon_name }
+      @addons = lookup_addons.reverse.map { |m| m.addon_name }
     end
 
     def lookup_addons

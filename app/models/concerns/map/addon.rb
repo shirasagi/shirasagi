@@ -3,8 +3,6 @@ module Map::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 320
-
     included do
       field :map_points, type: Map::Extensions::Points, default: []
 

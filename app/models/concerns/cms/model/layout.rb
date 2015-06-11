@@ -2,8 +2,6 @@ module Cms::Model::Layout
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
-  include Cms::Addon::Html
-  include History::Addon::Backup
 
   attr_accessor :keywords, :description
 

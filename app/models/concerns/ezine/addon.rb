@@ -4,8 +4,6 @@ module Ezine::Addon
       extend SS::Addon
       extend ActiveSupport::Concern
 
-      set_order 300
-
       included do
         field :html, type: String, default: ""
         field :text, type: String, default: ""
@@ -18,8 +16,6 @@ module Ezine::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 400
-
     included do
       field :sender_name, type: String, default: ""
       field :sender_email, type: String, default: ""
@@ -31,8 +27,6 @@ module Ezine::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 410
-
     included do
       field :signature_html, type: String, default: ""
       field :signature_text, type: String, default: ""
@@ -43,8 +37,6 @@ module Ezine::Addon
   module Reply
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 420
 
     included do
       field :reply_upper_text, type: String, default: ""

@@ -1,10 +1,11 @@
 class Facility::Map
   include Cms::Model::Page
-  include Cms::Addon::Meta
+  include Workflow::Addon::Approver
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
+  include Cms::Addon::Meta
   include Map::Addon::Page
-  include Workflow::Addon::Approver
+  include Cms::Addon::GroupPermission
 
   default_scope ->{ where(route: "facility/map") }
 

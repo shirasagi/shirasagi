@@ -3,8 +3,6 @@ module History::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    set_order 650
-
     included do
       after_save :save_backup, if: -> { @db_changes.present? }
       before_destroy :destroy_backups

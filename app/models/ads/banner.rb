@@ -3,6 +3,8 @@ class Ads::Banner
   include SS::Relation::File
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
+  include Cms::Addon::GroupPermission
+  include History::Addon::Backup
 
   set_permission_name "ads_banners"
 

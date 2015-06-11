@@ -3,8 +3,6 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 210
-
     included do
       embeds_ids :files, class_name: "SS::File"
       permit_params file_ids: []

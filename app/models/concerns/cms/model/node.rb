@@ -5,10 +5,6 @@ module Cms::Model::Node
   include Cms::Reference::Layout
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
-  include Cms::Addon::NodeSetting
-  include Cms::Addon::Meta
-  include Cms::Addon::Release
-  include History::Addon::Backup
   include Facility::Reference::Category
   include Facility::Reference::Service
   include Facility::Reference::Location

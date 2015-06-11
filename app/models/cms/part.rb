@@ -11,42 +11,59 @@ class Cms::Part
 
   class Free
     include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::Html
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/free") }
   end
 
   class Node
     include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::NodeList
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/node") }
   end
 
   class Page
     include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::PageList
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/page") }
   end
 
   class Tabs
     include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::Tabs
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/tabs") }
   end
 
   class Crumb
     include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::Crumb
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/crumb") }
   end
 
   class SnsShare
     include Cms::Model::Part
-    #include Cms::Addon::SnsShare
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/sns_share") }
   end

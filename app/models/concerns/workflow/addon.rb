@@ -3,8 +3,6 @@ module Workflow::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 50
-
     attr_accessor :workflow_reset
 
     WORKFLOW_STATE_REQUEST = "request".freeze

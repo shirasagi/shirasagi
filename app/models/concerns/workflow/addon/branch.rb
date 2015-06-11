@@ -3,8 +3,6 @@ module Workflow::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 20
-
     included do
       field :master_id, type: Integer
       belongs_to :master, foreign_key: "master_id", class_name: self.to_s

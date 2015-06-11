@@ -3,8 +3,6 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 310
-
     included do
       embeds_ids :related_pages, class_name: "Cms::Page"
       permit_params related_page_ids: []
@@ -14,8 +12,6 @@ module Cms::Addon
   module Role
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 600
 
     included do
       embeds_ids :cms_roles, class_name: "Cms::Role"
@@ -27,8 +23,6 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 10
-
     included do
       field :view_route, type: String
       permit_params :view_route
@@ -38,8 +32,6 @@ module Cms::Addon
   module Meta
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 100
 
     included do |mod|
       field :keywords, type: SS::Extensions::Words
@@ -63,8 +55,6 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 200
-
     included do
       field :html, type: String, metadata: { form: :text }
       permit_params :html
@@ -74,8 +64,6 @@ module Cms::Addon
   module Body
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 200
 
     included do
       field :html, type: String, metadata: { form: :text }
@@ -99,15 +87,11 @@ module Cms::Addon
   module Release
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 500
   end
 
   module ReleasePlan
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 501
 
     included do
       field :release_date, type: DateTime
@@ -142,8 +126,6 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 200
-
     included do
       field :home_label, type: String
       permit_params :home_label
@@ -157,8 +139,6 @@ module Cms::Addon
   module Tabs
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 200
 
     included do
       field :conditions, type: SS::Extensions::Words
@@ -197,8 +177,6 @@ module Cms::Addon
     extend SS::Addon
     include Cms::Addon::List::Model
 
-    set_order 200
-
     public
       def sort_options
         [
@@ -220,8 +198,6 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
     include Cms::Addon::List::Model
-
-    set_order 200
 
     public
       def sort_options
@@ -246,8 +222,6 @@ module Cms::Addon
     extend SS::Addon
     include SS::Relation::File
 
-    set_order 210
-
     included do
       attr_accessor :in_thumb
       belongs_to_file :thumb
@@ -255,17 +229,16 @@ module Cms::Addon
       validate :validate_thumb, if: ->{ in_thumb.present? }
     end
 
-    def validate_thumb
-      file = relation_file(:thumb)
-      errors.add :thumb_id, :thums_is_not_an_image unless file.image?
-    end
+    private
+      def validate_thumb
+        file = relation_file(:thumb)
+        errors.add :thumb_id, :thums_is_not_an_image unless file.image?
+      end
   end
 
   module ParentCrumb
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 410
 
     included do
       field :parent_crumb_urls, type: SS::Extensions::Lines

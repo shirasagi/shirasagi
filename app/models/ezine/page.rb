@@ -3,6 +3,7 @@ class Ezine::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Ezine::Addon::Page::Body
+  include Cms::Addon::GroupPermission
 
   field :test_delivered, type: DateTime
   field :completed, type: Boolean, default: false

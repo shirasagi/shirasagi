@@ -13,16 +13,12 @@ module Facility::Addon
 
       permit_params :kana, :postcode, :address, :tel, :fax, :related_url
     end
-
-    set_order 200
   end
 
   module SearchSetting
     extend ActiveSupport::Concern
     extend SS::Addon
     include Cms::Addon::List::Model
-
-    set_order 200
 
     included do
       field :search_html, type: String
@@ -41,8 +37,6 @@ module Facility::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 210
-
     included do
       field :upper_html, type: String, overwrite: true
       field :map_html, type: String
@@ -60,15 +54,11 @@ module Facility::Addon
 
       permit_params additional_info: [ :field, :value ]
     end
-
-    set_order 210
   end
 
   module FocusSetting
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 200
 
     included do
       field :center_point, type: ::Map::Extensions::Point
@@ -80,8 +70,6 @@ module Facility::Addon
   module Image
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 200
 
     included do
       belongs_to :image, class_name: "SS::File"
@@ -110,8 +98,6 @@ module Facility::Addon
   module ImageInfo
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 210
 
     included do
       field :image_alt, type: String

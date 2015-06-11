@@ -3,8 +3,6 @@ module Ads::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 200
-
     included do
       field :link_action, type: String
       field :link_target, type: String

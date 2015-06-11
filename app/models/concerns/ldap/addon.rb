@@ -26,8 +26,6 @@ module Ldap::Addon
     extend ActiveSupport::Concern
     include Common
 
-    set_order 320
-
     included do
       field :ldap_dn, type: String
       field :ldap_import_id, type: Integer
@@ -41,8 +39,6 @@ module Ldap::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
     include Common
-
-    set_order 320
 
     included do
       field :ldap_dn, type: String

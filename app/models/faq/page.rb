@@ -1,19 +1,20 @@
 class Faq::Page
   include Cms::Model::Page
+  include Workflow::Addon::Branch
+  include Workflow::Addon::Approver
+  include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Cms::Addon::Meta
   include Cms::Addon::Body
   include Cms::Addon::File
-  include Cms::Addon::Release
-  include Cms::Addon::ReleasePlan
-  include Cms::Addon::RelatedPage
-  include Cms::Addon::ParentCrumb
   include Category::Addon::Category
   include Event::Addon::Date
-  include Workflow::Addon::Approver
   include Faq::Addon::Question
   include Contact::Addon::Page
+  include Cms::Addon::RelatedPage
+  include Cms::Addon::ParentCrumb
+  include Cms::Addon::GroupPermission
   include History::Addon::Backup
-  include Workflow::Addon::Branch
 
   set_permission_name "faq_pages"
 

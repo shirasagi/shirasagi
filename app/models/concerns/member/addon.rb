@@ -3,8 +3,6 @@ module Member::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    set_order 200
-
     included do
       field :redirect_url, type: String, default: "/"
       permit_params :redirect_url
@@ -14,8 +12,6 @@ module Member::Addon
   module FormAuth
     extend SS::Addon
     extend ActiveSupport::Concern
-
-    set_order 210
 
     included do
       field :form_auth, type: String, default: "disabled"
@@ -55,8 +51,6 @@ module Member::Addon
     extend ActiveSupport::Concern
     include Member::Addon::BaseOauth
 
-    set_order 220
-
     included do
       define_oauth_fields(:twitter)
     end
@@ -66,8 +60,6 @@ module Member::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
     include Member::Addon::BaseOauth
-
-    set_order 230
 
     included do
       define_oauth_fields(:facebook)
@@ -79,8 +71,6 @@ module Member::Addon
     extend ActiveSupport::Concern
     include Member::Addon::BaseOauth
 
-    set_order 240
-
     included do
       define_oauth_fields(:yahoojp)
     end
@@ -91,8 +81,6 @@ module Member::Addon
     extend ActiveSupport::Concern
     include Member::Addon::BaseOauth
 
-    set_order 250
-
     included do
       define_oauth_fields(:google_oauth2)
     end
@@ -102,8 +90,6 @@ module Member::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
     include Member::Addon::BaseOauth
-
-    set_order 260
 
     included do
       define_oauth_fields(:github)

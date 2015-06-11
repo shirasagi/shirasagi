@@ -7,7 +7,5 @@ module Facility::Addon
       embeds_ids :st_categories, class_name: "Facility::Node::Category"
       permit_params st_category_ids: []
     end
-
-    set_order 400
   end
 end

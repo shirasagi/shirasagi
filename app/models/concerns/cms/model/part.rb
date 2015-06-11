@@ -2,8 +2,6 @@ module Cms::Model::Part
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
-  include Cms::Addon::Release
-  include History::Addon::Backup
 
   included do |mod|
     store_in collection: "cms_parts"

@@ -7,7 +7,5 @@ module Facility::Addon
       embeds_ids :st_locations, class_name: "Facility::Node::Location"
       permit_params st_location_ids: []
     end
-
-    set_order 410
   end
 end

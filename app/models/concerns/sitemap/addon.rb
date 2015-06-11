@@ -3,8 +3,6 @@ module Sitemap::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    set_order 200
-
     included do
       field :sitemap_urls, type: SS::Extensions::Lines
       field :sitemap_depth, type: Integer, default: 3
