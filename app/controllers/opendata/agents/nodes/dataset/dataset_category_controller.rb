@@ -27,15 +27,15 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
       controller.instance_variable_set :@cur_node, @item
 
       @tabs = [
-        { name: "新着順",
+        { name: I18n.t("opendata.sort_options.released"),
           url: "#{@search_path.call("sort" => "released")}",
           pages: @items,
           rss: "#{@rss_path.call("sort" => "released")}" },
-        { name: "人気順",
+        { name: I18n.t("opendata.sort_options.popular"),
           url: "#{@search_path.call("sort" => "popular")}",
           pages: @point_items,
           rss: "#{@rss_path.call("sort" => "popular")}" },
-        { name: "注目順",
+        { name: I18n.t("opendata.sort_options.attention"),
           url: "#{@search_path.call("sort" => "attention")}",
           pages: @download_items,
           rss: "#{@rss_path.call("sort" => "attention")}" }
