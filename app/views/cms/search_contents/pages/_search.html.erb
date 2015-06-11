@@ -3,6 +3,7 @@ $(".reset").on("click", function(e){
   $(".ajax-selected tbody").html("");
   $(".ajax-selected").hide();
   $(".filename").val("");
+  $(".name").val("");
   $(".state").prop("checked", false);
   $(".datetime").val("");
   return false;
@@ -17,7 +18,7 @@ $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
 <div class="search-contents-pages">
   <dl class="see">
     <dt><%= @model.t("name") %><%= tt("search_contents.pages.name") %></dt>
-    <dd><%= text_field_tag "s[name]", @name, class: :filename %></dd>
+    <dd><%= text_field_tag "s[name]", @name, class: :name %></dd>
   </dl>
 
   <dl class="see">
