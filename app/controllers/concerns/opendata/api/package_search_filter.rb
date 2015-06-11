@@ -41,7 +41,7 @@ module Opendata::Api::PackageSearchFilter
 
       all_count = datasets.count
       datasets = datasets.skip(start) if start
-      datasets = datasets.limit(rows) if rows
+      datasets = datasets[0, rows.to_i] if rows
       result = {count: all_count, results: convert_packages(datasets)}
       res = {help: help, success: true, result: result}
 
