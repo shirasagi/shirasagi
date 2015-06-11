@@ -126,7 +126,7 @@ categories = [
         </dd>
       <% elsif @cur_page.contact_group %>
         <dt><%= @cur_page.t :user_id %></dt>
-        <dd><%= @cur_page.contact_group.full_name %><br /></dd>
+        <dd><%= @@cur_page.contact_group.name.sub(/.*\//, "") %><br /></dd>
       <% elsif @cur_page.groups.present? %>
         <dt><%= @cur_page.t :user_id %></dt>
         <dd><%= @cur_page.groups.first.name %><br /></dd>
