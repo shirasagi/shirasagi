@@ -1,6 +1,8 @@
 class Opendata::Agents::Parts::Mypage::MypageLoginController < ApplicationController
   include Cms::PartFilter::View
-  include Opendata::Mypage::MypageFilter
+  include Member::LoginFilter
+  include Opendata::MemberFilter
+  helper Opendata::UrlHelper
 
   skip_filter :logged_in?
 

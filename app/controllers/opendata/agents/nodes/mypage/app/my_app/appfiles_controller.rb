@@ -1,6 +1,8 @@
 class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < ApplicationController
   include Cms::NodeFilter::View
-  include Opendata::Mypage::MypageFilter
+  include Member::LoginFilter
+  include Opendata::MemberFilter
+  helper Opendata::FormHelper
   helper Opendata::UrlHelper
 
   before_action :accept_cors_request

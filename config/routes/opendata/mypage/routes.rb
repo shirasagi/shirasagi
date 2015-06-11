@@ -12,12 +12,8 @@ SS::Application.routes.draw do
 
   node "opendata" do
     get "mypage/(index.html)" => "public#index", cell: "nodes/mypage/mypage"
-    get "mypage/login"  => "public#login", cell: "nodes/mypage/mypage"
-    post "mypage/login" => "public#login", cell: "nodes/mypage/mypage"
-    get "mypage/logout" => "public#logout", cell: "nodes/mypage/mypage"
     get "mypage/notice/show.:format" => "public#show_notice", cell: "nodes/mypage/mypage", format: false
     get "mypage/notice/confirm.:format" => "public#confirm_notice", cell: "nodes/mypage/mypage", format: false
-    get "mypage/:provider" => "public#provide", cell: "nodes/mypage/mypage"
 
     resource :profile, path: "my_profile", controller: "public", cell: "nodes/mypage/my_profile", concerns: :deletion
   end

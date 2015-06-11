@@ -25,7 +25,7 @@
 
 <div class="app-body">
   <% if @app_html.present? %>
-    <iframe class="frm-app" src="<%= I18n.t("opendata.url.app.index", {id: @item.id, filename: @app_html.filename}) %>" frameborder="0">
+    <iframe class="frm-app" src="<%= "#{@app.file_index_url}#{@app_html.filename}" %>" frameborder="0">
     </iframe>
   <% end %>
 </div>

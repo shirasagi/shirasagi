@@ -3,7 +3,7 @@
     <div class="app-ideas">
       <div class="ideas">
         <% if @login_mode %>
-          <div class="contribute-wrap"><a class="contribute" href="<%= "/mypage/idea/new?app=#{@app_idea.id}" %>">アイデアを投稿する</a></div>
+          <div class="contribute-wrap"><a class="contribute" href="<%= "#{my_idea_path}new?app=#{@app_idea.id}" %>">アイデアを投稿する</a></div>
         <% end %>
         <table class="index">
           <tbody>

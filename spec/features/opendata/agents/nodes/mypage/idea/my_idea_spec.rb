@@ -7,6 +7,7 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example do
 
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
   let!(:node_myidea) { create_once :opendata_node_my_idea, filename: "#{node_mypage.filename}/idea" }
+  let!(:node_login) { create :member_node_login, redirect_url: node_myidea.url }
 
   let!(:category) { create_once :opendata_node_category, name: "カテゴリー０１" }
   let!(:area) { create_once :opendata_node_area, name: "地域Ａ" }
@@ -20,7 +21,6 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example do
 #  end
 
   let!(:node_search) { create :opendata_node_search_idea }
-  let!(:node_auth) { node_mypage }
 
   let(:index_path) { "#{node_myidea.url}index.html" }
   let(:new_path) { "#{node_myidea.url}new/" }
@@ -36,7 +36,11 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example do
   let(:delete) { "削除" }
 
   before do
-    login_opendata_member(site, node_auth)
+    login_opendata_member(site, node_login)
+  end
+
+  after do
+    logout_opendata_member(site, node_login)
   end
 
   it "#index" do

@@ -17,6 +17,12 @@ module Opendata::UrlHelper
     ActionDispatch::Http::URL.path_for(path: url, params: options)
   end
 
+  def dataset_path(options = {})
+    node = Opendata::Node::Dataset.site(@cur_site).public.first
+    raise "dataset search is disabled since Opendata::Node::Dataset is not registered" unless node
+    build_path(node.url, options)
+  end
+
   def search_datasets_path(options = {})
     node = Opendata::Node::SearchDataset.site(@cur_site).public.first
     raise "dataset search is disabled since Opendata::Node::SearchDataset is not registered" unless node
@@ -53,9 +59,27 @@ module Opendata::UrlHelper
     build_path(node.url, options)
   end
 
+  def my_dataset_path(options = {})
+    node = Opendata::Node::MyDataset.site(@cur_site).public.first
+    raise "mypage is disabled since Opendata::Node::MyDataset is not registered" unless node
+    build_path(node.url, options)
+  end
+
+  def my_idea_path(options = {})
+    node = Opendata::Node::MyIdea.site(@cur_site).public.first
+    raise "mypage is disabled since Opendata::Node::MyIdea is not registered" unless node
+    build_path(node.url, options)
+  end
+
   def member_path(options = {})
     node = Opendata::Node::Member.site(@cur_site).public.first
     raise "member is disabled since Opendata::Node::Member is not registered" unless node
+    build_path(node.url, options)
+  end
+
+  def member_login_path(options = {})
+    node = Member::Node::Login.site(@cur_site).public.first
+    raise "member login is disabled since Member::Node::Login is not registered" unless node
     build_path(node.url, options)
   end
 end

@@ -13,6 +13,7 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
   let!(:node_member) { create_once :opendata_node_member }
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
   let!(:node_myapp) { create_once :opendata_node_my_app, filename: "#{node_mypage.filename}/app" }
+  let!(:node_login) { create :member_node_login, redirect_url: node_myapp.url }
 
   let!(:node_search) { create :opendata_node_search_app }
 
@@ -32,7 +33,11 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
   let(:app_show_path) { "#{node_myapp.url}#{app.id}/" }
 
   before do
-    login_opendata_member(site, node_auth)
+    login_opendata_member(site, node_login)
+  end
+
+  after do
+    logout_opendata_member(site, node_login)
   end
 
   it "#index" do

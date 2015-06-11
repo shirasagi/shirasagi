@@ -1,17 +1,17 @@
-<%= coffee do %>
-
-  # show notification
-  $.ajax
-    url: "/mypage/notice/show.html"
-    success: (data)->
-      $("#my-notice").html data
-
-<% end %>
-
 <% if @cur_member %>
-<span id="my-notice"></span>
-<a class="member" href="/mypage/"><%= @cur_member.name %>さん</a>
-<a class="logout" href="/mypage/logout"><%= t("views.logout") %></a>
+    <%= coffee do %>
+
+    # show notification
+    $.ajax
+      url: "/mypage/notice/show.html"
+      success: (data)->
+        $("#my-notice").html data
+
+  <% end %>
+
+  <span id="my-notice"></span>
+  <%= link_to "#{@cur_member.name}さん", "#{mypage_path}", class: "member", rel: "nofollow" %>
+  <%= link_to t("views.logout"), "#{member_login_path}logout.html", class: "logout", rel: "nofollow" %>
 <% else %>
-<a class="login" href="/mypage/login"><%= t("views.login") %></a>
+  <%= link_to t("views.login"), "#{mypage_path}", class: "login", rel: "nofollow" %>
 <% end %>

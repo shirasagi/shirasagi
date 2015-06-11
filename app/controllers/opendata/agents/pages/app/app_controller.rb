@@ -1,6 +1,5 @@
 class Opendata::Agents::Pages::App::AppController < ApplicationController
   include Cms::PageFilter::View
-  include Opendata::UrlHelper
   helper Opendata::UrlHelper
 
   public
@@ -8,7 +7,7 @@ class Opendata::Agents::Pages::App::AppController < ApplicationController
       @cur_node = @cur_page.parent.becomes_with_route
       @cur_page.layout_id = @cur_node.page_layout_id || @cur_node.layout_id
 
-      @search_path = method(:search_apps_path)
+      @search_path = view_context.method(:search_apps_path)
 
       @tab_display = ""
 

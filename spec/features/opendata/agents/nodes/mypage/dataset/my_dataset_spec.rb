@@ -10,6 +10,8 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example do
   let!(:node_mypage) { create :opendata_node_mypage, filename: "mypage" }
   let!(:node_my_dataset) { create :opendata_node_my_dataset, filename: "#{node_mypage.filename}/dataset" }
 
+  let!(:node_login) { create :member_node_login, redirect_url: node_my_dataset.url }
+
   let!(:category) { create :opendata_node_category, name: "カテゴリー０１" }
   let!(:node_area) { create :opendata_node_area, name: "地域Ａ" }
 
@@ -26,7 +28,11 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example do
   let(:item_text) { "データセット内容" }
 
   before do
-    login_opendata_member(site, node_mypage, member)
+    login_opendata_member(site, node_login, member)
+  end
+
+  after do
+    logout_opendata_member(site, node_login, member)
   end
 
   describe "#index" do

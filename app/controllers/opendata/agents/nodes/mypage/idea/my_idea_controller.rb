@@ -1,6 +1,8 @@
 class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationController
   include Cms::NodeFilter::View
-  include Opendata::Mypage::MypageFilter
+  include Member::LoginFilter
+  include Opendata::MemberFilter
+  helper Opendata::FormHelper
 
   before_action :set_model
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]

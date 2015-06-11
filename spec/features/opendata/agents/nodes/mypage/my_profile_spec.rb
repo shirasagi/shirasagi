@@ -4,16 +4,21 @@ describe "opendata_agents_nodes_my_profile", dbscope: :example do
   let(:site) { cms_site }
   let(:node_mypage) { create :opendata_node_mypage, filename: "mypage", basename: "mypage" }
   let(:node_my_profile) { create :opendata_node_my_profile, filename: "#{node_mypage.filename}/myprofile" }
+  let!(:node_login) { create :member_node_login, redirect_url: node_my_profile.url }
   let(:member) { opendata_member(site: site) }
 
   let(:index_url) { ::URI.parse "http://#{site.domain}#{node_my_profile.url}" }
-  let(:login_url) { ::URI.parse "http://#{site.domain}#{node_mypage.url}login/" }
+  let(:login_url) { ::URI.parse "http://#{site.domain}#{node_login.url}login.html" }
 
   let(:item_name) { "name-#{unique_id}" }
   let(:item_email) { "#{unique_id}@example.jp" }
 
   before do
-    login_opendata_member(site, node_mypage)
+    login_opendata_member(site, node_login)
+  end
+
+  after do
+    logout_opendata_member(site, node_login)
   end
 
   it "#index" do

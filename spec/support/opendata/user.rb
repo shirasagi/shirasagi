@@ -35,7 +35,19 @@ def fail_omniauth(service)
 end
 
 def login_opendata_member(site, node, member = opendata_member(site: site))
-  oauth_user = set_omniauth(member)
-  provide_path = "#{node.url}#{oauth_user.provider}"
-  visit "http://#{site.domain}#{provide_path}"
+  login_url = "http://#{site.domain}#{node.url}login.html"
+
+  OmniAuth.config.test_mode = true
+  OmniAuth.config.mock_auth[member.oauth_type.to_sym] = OmniAuth::AuthHash.new({ provider: member.oauth_type, uid: member.oauth_id, credentials: { token: member.oauth_token }, info: { name: member.name } })
+
+  visit login_url
+  click_link "Twitter ID でログイン"
+end
+
+def logout_opendata_member(site, node, member = opendata_member(site: site))
+  logout_url = "http://#{site.domain}#{node.url}logout.html"
+  visit logout_url
+
+  OmniAuth.config.test_mode = false
+  OmniAuth.config.mock_auth[member.oauth_type.to_sym] = :invalid_credentials
 end

@@ -1,8 +1,9 @@
 class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
   include Cms::NodeFilter::View
-  include Opendata::UrlHelper
-  include Opendata::Mypage::MypageFilter
+  include Member::LoginFilter
+  include Opendata::MemberFilter
   include Opendata::Idea::IdeaFilter
+  helper Opendata::UrlHelper
 
   before_action :set_idea, only: [:show_point, :add_point, :point_members]
   skip_filter :logged_in?
@@ -25,8 +26,8 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
     def index
       @count          = pages.size
       @node_url       = "#{@cur_node.url}"
-      @search_path    = method(:search_ideas_path)
-      @rss_path       = ->(options = {}) { build_path("#{search_ideas_path}rss.xml", options) }
+      @search_path    = view_context.method(:search_ideas_path)
+      @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_ideas_path}rss.xml", options) }
       @tabs = []
       Opendata::Idea.sort_options.each do |options|
         @tabs << { name: options[0],

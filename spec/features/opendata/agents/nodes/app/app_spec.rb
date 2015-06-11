@@ -12,6 +12,7 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let!(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_app" }
   let!(:node_member) { create_once :opendata_node_member }
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
+  let!(:node_myidea) { create_once :opendata_node_my_idea, filename: "#{node_mypage.filename}/idea" }
 
   let!(:node_search) { create :opendata_node_search_app }
 
@@ -21,7 +22,7 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
   let!(:appfile) { create_appfile(app, file, "CSV") }
 
-  let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
+  # let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
 
   let(:index_path) { "#{node.url}index.html" }
   let(:download_path) { "#{node.url}#{app.id}/zip" }
@@ -37,13 +38,9 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:file_index_path) { Rails.root.join("spec", "fixtures", "opendata", "index.html") }
   let(:file_index) { Fs::UploadedFile.create_from_file(file_index_path, basename: "spec") }
   let(:appfile) { create_appfile(app, file_index, "HTML") }
-  let(:full_path) { "#{node.url}#{app.id}/full"}
-  let(:app_index_path) { "#{node.url}#{app.id}/file_index/index.html"}
-  let(:text_path) { "#{node.url}#{app.id}/file_text/index.html"}
-
-  before do
-    login_opendata_member(site, node_auth)
-  end
+  let(:full_path) { "#{node.url}#{app.id}/full/index.html" }
+  let(:app_index_path) { "#{node.url}#{app.id}/file_index/index.html" }
+  let(:text_path) { "#{node.url}#{app.id}/file_text/index.html" }
 
   it "#index" do
     page.driver.browser.with_session("public") do |session|
@@ -64,6 +61,9 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   it "#show_point" do
     visit "http://#{site.domain}#{show_point_path}"
     expect(current_path).to eq show_point_path
+    within "div.like" do
+      expect(page).not_to have_selector("a.update")
+    end
   end
 
   it "#point_members" do
@@ -148,4 +148,36 @@ describe "opendata_agents_nodes_app", dbscope: :example do
     end
   end
 
+  context "when logged in" do
+    let!(:node_login) { create :member_node_login, redirect_url: node.url }
+
+    before do
+      login_opendata_member(site, node_login)
+    end
+
+    after do
+      logout_opendata_member(site, node_login)
+    end
+
+    it "#show_point" do
+      visit "http://#{site.domain}#{show_point_path}"
+      expect(current_path).to eq show_point_path
+      within "div.like" do
+        expect(page).to have_selector("a.update")
+      end
+      click_link "いいね！"
+      expect(current_path).to eq show_point_path
+    end
+
+    it "#show_ideas" do
+      visit "http://#{site.domain}#{show_ideas_path}"
+      expect(current_path).to eq show_ideas_path
+      within "div.ideas" do
+        expect(page).to have_selector("a.contribute")
+      end
+
+      click_link "アイデアを投稿する"
+      expect(current_path).to eq "#{node_myidea.url}new"
+    end
+  end
 end

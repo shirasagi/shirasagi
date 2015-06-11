@@ -16,10 +16,14 @@ describe "opendata_agents_pages_app", dbscope: :example do
   let!(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
   let!(:node_search) { create :opendata_node_search_app }
 
-  let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
+  let!(:node_login) { create :member_node_login, redirect_url: node.url }
 
   before do
-    login_opendata_member(site, node_auth)
+    login_opendata_member(site, node_login)
+  end
+
+  after do
+    logout_opendata_member(site, node_login)
   end
 
   context "appurl" do

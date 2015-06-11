@@ -60,6 +60,18 @@ class Opendata::App
       get_url(url, "/executed/add.html")
     end
 
+    def full_screen_url
+      get_url(url, "/full/")
+    end
+
+    def file_text_url
+      get_url(url, "/file_text/")
+    end
+
+    def file_index_url
+      get_url(url, "/file_index/")
+    end
+
     def contact_present?
       return false if member_id.present?
       super
@@ -86,9 +98,12 @@ class Opendata::App
   class << self
     def to_app_path(path)
       suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
-                  /executed/add.html).find { |suffix| path.end_with? suffix }
-      return path if suffix.blank?
-      path[0..(path.length - suffix.length - 1)] + '.html'
+                  /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }
+      if suffix.present?
+        path[0..(path.length - suffix.length - 1)] + '.html'
+      else
+        path.sub(/\/file_text\/.*$/, '.html').sub(/\/file_index\/.*$/, '.html')
+      end
     end
 
     def sort_options

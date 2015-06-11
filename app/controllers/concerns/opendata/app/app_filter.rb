@@ -8,7 +8,7 @@ module Opendata::App::AppFilter
   private
     def set_app_with_aggregation
       @cur_node.layout = nil
-      @search_path     = method(:search_apps_path)
+      @search_path     = view_context.method(:search_apps_path)
     end
 
     def aggregate_areas(limit)

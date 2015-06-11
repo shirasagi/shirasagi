@@ -9,6 +9,7 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
   let!(:node_idea) { create_once :opendata_node_idea }
   let!(:node_member) { create_once :opendata_node_member }
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
+  let!(:node_login) { create :member_node_login, redirect_url: node_idea.url }
 
   let!(:node_area) { create :opendata_node_area }
 
@@ -24,7 +25,6 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
   let(:tags_path) { "#{node_idea.url}tags.html" }
 
   context "without auth" do
-
     it "#index" do
       page.driver.browser.with_session("public") do |session|
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
@@ -52,7 +52,6 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
 
         visit show_app_path
         expect(current_path).to eq show_app_path
-
       end
     end
 
@@ -82,12 +81,15 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
         expect(current_path).to eq tags_path
       end
     end
-
   end
 
   context "with auth" do
     before do
-      login_opendata_member(site, node_mypage)
+      login_opendata_member(site, node_login)
+    end
+
+    after do
+      logout_opendata_member(site, node_login)
     end
 
     it "#index" do
@@ -147,7 +149,5 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
         expect(current_path).to eq tags_path
       end
     end
-
   end
-
 end

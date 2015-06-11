@@ -1,6 +1,5 @@
 class Opendata::Agents::Pages::Dataset::DatasetController < ApplicationController
   include Cms::PageFilter::View
-  include Opendata::UrlHelper
   helper Opendata::UrlHelper
 
   public
@@ -8,7 +7,7 @@ class Opendata::Agents::Pages::Dataset::DatasetController < ApplicationControlle
       @cur_node = @cur_page.parent.becomes_with_route
       @cur_page.layout_id = @cur_node.page_layout_id || @cur_node.layout_id
 
-      @search_path = method(:search_datasets_path)
+      @search_path = view_context.method(:search_datasets_path)
 
       render
     end

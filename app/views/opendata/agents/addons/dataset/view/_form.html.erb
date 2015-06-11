@@ -1,7 +1,7 @@
 <dl>
 <dd>
   <%= f.hidden_field "dataset_ids[]", value: "", class: "hidden-ids" %>
-  <%= link_to t("opendata.search_datasets.index"), I18n.t("opendata.url.dataset.search"), class: "ajax-box" %>
+  <%= link_to t("opendata.search_datasets.index"), "#{dataset_path}datasets/search", class: "ajax-box" %>
 </dd>
 
 <dd>

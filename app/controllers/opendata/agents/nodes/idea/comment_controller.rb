@@ -1,8 +1,9 @@
 class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   include Cms::NodeFilter::View
-  include Opendata::UrlHelper
-  include Opendata::Mypage::MypageFilter
+  include Member::LoginFilter
+  include Opendata::MemberFilter
   include Opendata::Idea::CommentFilter
+  helper Opendata::UrlHelper
 
   before_action :accept_cors_request
   before_action :set_comments, only: [:index, :add, :delete]

@@ -160,13 +160,6 @@ ja:
     state_options:
       public: 公開
       closed: 非公開
-    url:
-      dataset:
-        search: "/dataset/datasets/search"
-      app:
-        index: "/app/%{id}/file_index/%{filename}"
-        text: "/app/%{id}/file_text/%{filename}"
-        full: "/app/%{id}/full"
 
   modules:
     opendata: オープンデータ

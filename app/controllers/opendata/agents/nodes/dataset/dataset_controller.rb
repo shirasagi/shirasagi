@@ -1,9 +1,10 @@
 class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationController
   include Cms::NodeFilter::View
-  include Opendata::UrlHelper
-  include Opendata::Mypage::MypageFilter
+  include Member::LoginFilter
+  include Opendata::MemberFilter
   include Opendata::Dataset::DatasetFilter
   include Opendata::AjaxFilter
+  helper Opendata::UrlHelper
 
   before_action :set_dataset, only: [:show_point, :add_point, :point_members]
   before_action :set_apps, only: [:show_apps]
@@ -54,8 +55,8 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     def index
       @count          = pages.size
       @node_url       = "#{@cur_node.url}"
-      @search_path    = method(:search_datasets_path)
-      @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml?", options) }
+      @search_path    = view_context.method(:search_datasets_path)
+      @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_datasets_path}rss.xml?", options) }
       @tabs = []
       Opendata::Dataset.sort_options.each do |options|
         @tabs << { name: options[0],
