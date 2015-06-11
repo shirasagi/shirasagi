@@ -1,12 +1,12 @@
 module Category::Part
   class Base
-    include Cms::Part::Model
+    include Cms::Model::Part
 
     default_scope ->{ where(route: /^category\//) }
   end
 
   class Node
-    include Cms::Part::Model
+    include Cms::Model::Part
     include Cms::Addon::NodeList
 
     default_scope ->{ where(route: "category/node") }

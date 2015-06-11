@@ -2,7 +2,7 @@ class Chorg::Revision
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
   include Voice::Lockable
 
   set_permission_name "cms_users", :edit

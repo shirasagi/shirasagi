@@ -1,5 +1,5 @@
 class Faq::Page
-  include Cms::Page::Model
+  include Cms::Model::Page
   include Cms::Addon::Meta
   include Cms::Addon::Body
   include Cms::Addon::File

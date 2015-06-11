@@ -1,7 +1,7 @@
 class Inquiry::Column
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
   include Inquiry::Addon::InputSetting
 
   seqid :id

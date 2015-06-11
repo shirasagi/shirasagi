@@ -1,5 +1,5 @@
 class Sys::Group
-  include SS::Group::Model
+  include SS::Model::Group
   include Sys::Permission
   include Contact::Addon::Group
 

@@ -2,7 +2,7 @@ class Sys::UsersController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter
 
-  model Sys::User
+  model SS::User
 
   menu_view "sys/crud/menu"
 

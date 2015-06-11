@@ -1,12 +1,12 @@
 module Inquiry::Node
   class Base
-    include Cms::Node::Model
+    include Cms::Model::Node
 
     default_scope ->{ where(route: /^inquiry\//) }
   end
 
   class Form
-    include Cms::Node::Model
+    include Cms::Model::Node
     include Inquiry::Addon::Message
     include Inquiry::Addon::Captcha
     include Inquiry::Addon::Notice
@@ -28,7 +28,7 @@ module Inquiry::Node
   end
 
   class Node
-    include Cms::Node::Model
+    include Cms::Model::Node
     include Cms::Addon::NodeList
 
     default_scope ->{ where(route: "inquiry/node") }

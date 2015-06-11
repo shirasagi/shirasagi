@@ -1,5 +1,5 @@
 class Cms::Member
-  include Cms::Member::Model
+  include Cms::Model::Member
 
   class << self
     public

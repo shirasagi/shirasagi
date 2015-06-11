@@ -4,7 +4,7 @@ require 'English'
 class Job::Service
   extend SS::Translation
   include SS::Document
-  include SS::Task::Model
+  include SS::Model::Task
 
   attr_accessor :config
 

@@ -24,6 +24,6 @@ describe Cms::Site do
              domains: ["#{unique_id}.example.jp"], group_ids: [group1.id, group2.id])
     end
 
-    it { expect { subject.root_group }.to raise_error SS::Site::Model::MultipleRootGroupsError }
+    it { expect { subject.root_group }.to raise_error SS::Model::Site::MultipleRootGroupsError }
   end
 end

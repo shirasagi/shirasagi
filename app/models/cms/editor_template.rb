@@ -2,7 +2,7 @@ class Cms::EditorTemplate
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
   include Cms::Addon::Html
   include Cms::Addon::Thumb
 

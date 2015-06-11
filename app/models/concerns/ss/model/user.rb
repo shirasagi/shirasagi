@@ -1,9 +1,7 @@
-module SS::User::Model
+module SS::Model::User
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
-  include Cms::Reference::Role
-  include Sys::Reference::Role
   include Ldap::Addon::User
 
   attr_accessor :in_password
@@ -98,14 +96,6 @@ module SS::User::Model
       else
         "#{name}"
       end
-    end
-
-    def role?(action, object, opts = {})
-      object.allowed?(action, self, opts)
-      #@role_caches ||= {}
-      #key = "#{action},#{object.permission_name},#{opts}"
-      #return @role_caches[key] unless @role_caches[key].nil?
-      #@role_caches[key] = object.allowed?(action, self, opts)
     end
 
   private

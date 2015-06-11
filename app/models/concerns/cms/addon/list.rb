@@ -50,7 +50,7 @@ module Cms::Addon::List
           cur_dir = opts[:cur_path].sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
           cond_url = conditions.map {|url| url.sub('#{request_dir}', cur_dir)}
         else
-          if self.is_a?(Cms::Part::Model)
+          if self.is_a?(Cms::Model::Part)
             if parent
               cond << { filename: /^#{parent.filename}\//, depth: depth }
               cids << parent.id

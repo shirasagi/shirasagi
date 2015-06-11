@@ -1,9 +1,9 @@
-module Cms::Member::Model
+module Cms::Model::Member
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
 
   attr_accessor :in_password
 

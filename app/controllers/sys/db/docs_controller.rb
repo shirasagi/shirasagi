@@ -27,7 +27,7 @@ class Sys::Db::DocsController < ApplicationController
 
   public
     def index
-      raise "403" unless Sys::User.allowed?(:edit, @cur_user)
+      raise "403" unless SS::User.allowed?(:edit, @cur_user)
 
       @items = @coll.find
 
@@ -36,7 +36,7 @@ class Sys::Db::DocsController < ApplicationController
     end
 
     def show
-      raise "403" unless Sys::User.allowed?(:edit, @cur_user)
+      raise "403" unless SS::User.allowed?(:edit, @cur_user)
     end
 
     def new

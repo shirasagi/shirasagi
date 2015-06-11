@@ -1,6 +1,5 @@
 class Cms::Layout
-  extend ActiveSupport::Autoload
-  include Cms::Layout::Model
+  include Cms::Model::Layout
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 end

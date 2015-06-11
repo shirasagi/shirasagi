@@ -1,4 +1,4 @@
-module Cms::Page::Model
+module Cms::Model::Page
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content

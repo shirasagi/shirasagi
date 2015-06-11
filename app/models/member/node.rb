@@ -1,6 +1,6 @@
 module Member::Node
   class Login
-    include Cms::Node::Model
+    include Cms::Model::Node
     include Member::Addon::Redirection
     include Member::Addon::FormAuth
     include Member::Addon::TwitterOauth

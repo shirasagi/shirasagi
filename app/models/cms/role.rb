@@ -1,7 +1,7 @@
 class Cms::Role
-  include SS::Role::Model
+  include SS::Model::Role
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
 
   set_permission_name "cms_users", :edit
 
@@ -16,16 +16,16 @@ class Cms::Role
       [%w(1 1), %w(2 2), %w(3 3)]
     end
 
-    def allowed?(action, user, opts = {})
-      return true if Sys::User.allowed?(action, user)
-      super
-    end
+    #def allowed?(action, user, opts = {})
+    #  return true if Cms::User.allowed?(action, user)
+    #  super
+    #end
 
   class << self
     public
-      def allow(action, user, opts = {})
-        return where({}) if Sys::User.allowed?(action, user)
-        super
-      end
+      #def allow(action, user, opts = {})
+      #  return where({}) if Cms::User.allowed?(action, user)
+      #  super
+      #end
   end
 end

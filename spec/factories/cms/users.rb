@@ -8,7 +8,7 @@ FactoryGirl.define do
     in_password "pass"
     group_ids { group.present? ? [group.id] : nil }
     cms_role_ids { role.present? ? [role.id] : nil }
-    login_roles [SS::User::Model::LOGIN_ROLE_DBPASSWD]
+    login_roles [SS::Model::User::LOGIN_ROLE_DBPASSWD]
 
     trait :cms_user_fixed_name do
       name "cms_user"

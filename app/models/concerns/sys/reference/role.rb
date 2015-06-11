@@ -1,5 +1,4 @@
 module Sys::Reference
-
   module Role
     extend ActiveSupport::Concern
 
@@ -21,5 +20,4 @@ module Sys::Reference
         @sys_role_permissions
       end
   end
-
 end

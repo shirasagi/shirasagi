@@ -1,5 +1,5 @@
 class Sys::Role
-  include SS::Role::Model
+  include SS::Model::Role
   include Sys::Permission
 
   set_permission_name "sys_users", :edit

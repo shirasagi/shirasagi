@@ -1,4 +1,4 @@
-module SS::Role::Model
+module SS::Model::Role
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document

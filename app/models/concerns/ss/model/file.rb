@@ -1,4 +1,4 @@
-module SS::File::Model
+module SS::Model::File
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document

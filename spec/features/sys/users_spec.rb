@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "sys_users" do
-  subject(:item) { Sys::User.last }
+  subject(:item) { SS::User.last }
   subject(:index_path) { sys_users_path }
   subject(:new_path) { new_sys_user_path }
   subject(:show_path) { sys_user_path item }

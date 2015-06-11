@@ -1,12 +1,12 @@
 module Article::Node
   class Base
-    include Cms::Node::Model
+    include Cms::Model::Node
 
     default_scope ->{ where(route: /^article\//) }
   end
 
   class Page
-    include Cms::Node::Model
+    include Cms::Model::Node
     include Cms::Addon::PageList
     include Category::Addon::Setting
 

@@ -1,4 +1,4 @@
-module SS::Group::Model
+module SS::Model::Group
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document

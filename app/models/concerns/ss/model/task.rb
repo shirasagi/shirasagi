@@ -1,4 +1,4 @@
-module SS::Task::Model
+module SS::Model::Task
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document

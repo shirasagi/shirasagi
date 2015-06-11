@@ -1,7 +1,7 @@
 class Job::Task
   extend SS::Translation
   include SS::Document
-  include SS::Task::Model
+  include SS::Model::Task
   include SS::Reference::User
   #include SS::Reference::Site
 

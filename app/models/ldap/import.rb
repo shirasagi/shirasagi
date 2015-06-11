@@ -2,7 +2,7 @@ class Ldap::Import
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
 
   TYPE_GROUP = "group"
   TYPE_USER = "user"

@@ -2,7 +2,7 @@ class Kana::Dictionary
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
 
   # field separator
   FS = %w(, 、 ，)

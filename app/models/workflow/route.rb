@@ -1,6 +1,6 @@
 class Workflow::Route
-  include Workflow::Route::Model
-  include Cms::Permission
+  include Workflow::Model::Route
+  include Cms::SitePermission
 
   set_permission_name "cms_users", :edit
 

@@ -1,24 +1,23 @@
 class Cms::Node
-  extend ActiveSupport::Autoload
-  include Cms::Node::Model
+  include Cms::Model::Node
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
   class Base
-    include Cms::Node::Model
+    include Cms::Model::Node
 
     default_scope ->{ where(route: /^cms\//) }
   end
 
   class Node
-    include Cms::Node::Model
+    include Cms::Model::Node
     include Cms::Addon::NodeList
 
     default_scope ->{ where(route: "cms/node") }
   end
 
   class Page
-    include Cms::Node::Model
+    include Cms::Model::Node
     include Cms::Addon::PageList
 
     default_scope ->{ where(route: "cms/page") }

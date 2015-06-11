@@ -1,5 +1,5 @@
 class Event::Page
-  include Cms::Page::Model
+  include Cms::Model::Page
   include Cms::Addon::Meta
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan

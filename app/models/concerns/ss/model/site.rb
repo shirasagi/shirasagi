@@ -1,4 +1,4 @@
-module SS::Site::Model
+module SS::Model::Site
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document

@@ -1,3 +1,3 @@
 class SS::File
-  include SS::File::Model
+  include SS::Model::File
 end

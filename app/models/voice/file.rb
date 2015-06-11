@@ -7,7 +7,7 @@ class Voice::File
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
   include Voice::Downloadable
   include Voice::Lockable
 

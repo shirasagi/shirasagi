@@ -1,4 +1,4 @@
-module Workflow::Route::Model
+module Workflow::Model::Route
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document

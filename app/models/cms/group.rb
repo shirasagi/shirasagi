@@ -1,6 +1,6 @@
 class Cms::Group
-  include SS::Group::Model
-  include Cms::Permission
+  include SS::Model::Group
+  include Cms::SitePermission
   include Contact::Addon::Group
 
   set_permission_name "cms_users", :edit

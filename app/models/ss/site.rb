@@ -1,3 +1,3 @@
 class SS::Site
-  include SS::Site::Model
+  include SS::Model::Site
 end

@@ -1,5 +1,5 @@
 def sys_user
-  sys_user = Sys::User.where(email: build(:sys_user).email).first
+  sys_user = SS::User.where(email: build(:sys_user).email).first
   sys_user ||= create(:sys_user, sys_role_ids: [sys_role.id])
   sys_user
 end

@@ -63,9 +63,11 @@ role2 = save_cms_role name: "記事編集権限", permission_level: 1,
 @sys_user = SS::User.where(email: "sys@example.jp").first
 if @sys_user
   @sys_user.add_to_set group_ids: g1_00.id
-  @sys_user.add_to_set cms_role_ids: role1.id
   @sys_user.uid = "sys"
   @sys_user.save!
+
+  @cms_user = Cms::User.find @sys_user.id
+  @cms_user.add_to_set cms_role_ids: role1.id
 end
 
 ## -------------------------------------
@@ -87,8 +89,9 @@ def save_user(data)
   item.update data
 
   item.add_to_set group_ids: group_ids
-  item.add_to_set cms_role_ids: cms_role_ids
-  item.update
+
+  cms_user = Cms::User.find item.id
+  cms_user.add_to_set cms_role_ids: cms_role_ids
 
   item
 end

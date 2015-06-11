@@ -1,3 +1,3 @@
 class SS::Group
-  include SS::Group::Model
+  include SS::Model::Group
 end

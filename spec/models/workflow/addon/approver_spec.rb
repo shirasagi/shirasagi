@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Workflow::Addon::Approver do
   model = Struct.new("M#{rand(0x100000000).to_s(36)}") do
-    include Cms::Page::Model
+    include Cms::Model::Page
     include Workflow::Addon::Approver
   end
 

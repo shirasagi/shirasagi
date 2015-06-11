@@ -1,4 +1,4 @@
-module Cms::Part::Model
+module Cms::Model::Part
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content

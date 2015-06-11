@@ -1,5 +1,5 @@
 class Ezine::Task
-  include SS::Task::Model
+  include SS::Model::Task
 
   class << self
     public

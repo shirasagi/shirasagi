@@ -1,7 +1,7 @@
 class Chorg::Changeset
   extend SS::Translation
   include SS::Document
-  include Cms::Permission
+  include Cms::SitePermission
 
   TYPE_ADD = "add".freeze
   TYPE_MOVE = "move".freeze

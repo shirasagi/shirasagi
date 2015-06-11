@@ -22,6 +22,7 @@ class Sys::SitesController < ApplicationController
       @item = @model.new get_params
       raise "403" unless @item.allowed?(:edit, @cur_user)
       result = @item.save
+
       if result
         cond = {
           site_id: @item.id,
@@ -29,10 +30,10 @@ class Sys::SitesController < ApplicationController
           permissions: Cms::Role.permission_names,
           permission_level: 3
         }
-
         role = Cms::Role.find_or_create_by cond
-        @cur_user.add_to_set cms_role_ids: role.id
-        @cur_user.update
+
+        cms_user = Cms::User.find(@cur_user.id)
+        cms_user.add_to_set cms_role_ids: role.id
       end
 
       render_create result

@@ -2,7 +2,7 @@ class Ezine::Member
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
   include Ezine::MemberSearchable
 
   field :email, type: String, metadata: { from: :email }

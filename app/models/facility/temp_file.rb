@@ -1,5 +1,5 @@
 class Facility::TempFile
-  include SS::File::Model
+  include SS::Model::File
 
   default_scope ->{ where(model: "facility/temp_file") }
 end
