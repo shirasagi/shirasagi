@@ -6,10 +6,10 @@
     <% if app %>
       <div class="app"><%= link_to app.name, app.url %></div>
       <% if app.executed then executed = app.executed else executed = 0 end %>
-      <div class="app-executed">実行回数(<%= executed %>)</div>
-      <div class="app-updated">更新日時 <%= tryb{app.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></div>
+      <div class="app-executed"><%= I18n.t("opendata.labels.executed_count") %>(<%= executed %>)</div>
+      <div class="app-updated"><%= I18n.t("opendata.labels.update_datetime") %> <%= tryb{app.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></div>
     <% else %>
-      <div class="app"><%= "存在しません" %></div>
+      <div class="app"><%= I18n.t("opendata.labels.not_exist") %></div>
     <% end %>
   </div>
 </div>

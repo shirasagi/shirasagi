@@ -1,13 +1,13 @@
 <nav class="menu">
-  <a href="new/">新規作成</a>
+  <a href="new/"><%= I18n.t("opendata.labels.new") %></a>
 </nav>
 
 <table class="opendata-appfiles index">
   <thead>
     <tr>
-      <th class="name">アプリファイル名</th>
-      <th class="updated">更新日時</th>
-      <th class="size">サイズ</th>
+      <th class="name"><%= I18n.t("opendata.labels.appfile_name") %></th>
+      <th class="updated"><%= I18n.t("opendata.labels.update_datetime") %></th>
+      <th class="size"><%= I18n.t("opendata.labels.size") %></th>
     </tr>
   </thead>
   <tbody>

@@ -60,7 +60,82 @@ ja:
       samples: "データ"
       rdf_property: RDF プロパティ
       category_ids: 分野
+      group_ids: グループ
       group: 分類
+      guest_user: ゲストユーザー
+      area: 地域
+      tag: タグ
+      license: ライセンス
+      format: フォーマット
+      keyword: キーワード
+      sort: 並び順
+      size: サイズ
+      state: 状態
+      point: いいね
+      time: 回
+      count: 件
+      app: アプリ
+      dataset: データセット
+      idea: アイデア
+      app_name: アプリ名
+      appfile_name: アプリファイル名
+      dataset_name: データセット名
+      idea_name: アイデア名
+      resource_name: リソース名
+      comment_count: コメント数
+      update_datetime: 更新日時
+      executed_count: 実行回数
+      downloaded_count: 合計ダウンロード数
+      iine: いいね！
+      public_url: 公開URL
+      execute: 実 行
+      execute_fullscreen: 全画面表示で実行
+      html: HTML
+      css: CSS
+      javascript: JavaScript
+      sample: サンプルデータ
+      relation_dataset: 関連データセット
+      relation_idea: 関連アイデア
+      characteristic: ファイル固有
+      login: ログイン
+      new: 新規作成
+      edit: 編集
+      delete: 削除
+      edit_profile: プロフィールの編集
+      delete_account: アカウントの削除
+      downloaded: ダウンロード
+      preview: プレビュー
+      add_comment: コメントを投稿
+      add_idea: アイデアを投稿する
+      more: もっと見る
+      apps_count: 登録アプリ件数
+      datasets_count: 登録データセット件数
+      ideas_count: 登録アイデア件数
+      app_tutorial: アプリ登録手順
+      dataset_tutorial: データ登録手順
+      idea_tutorial: アイデア登録手順
+      login_twitter: twitter ID でログイン
+      login_facebook: Facebook ID でログイン
+      login_yahoo: YAHOO!JAPAN ID でログイン
+      login_google: Google アカウントでログイン
+      login_github: GitHub アカウントでログイン
+      comment_invite_start: コメントしたい場合には
+      comment_invite_end: してください
+      not_exist: 存在しません
+      not_data: 該当するデータは登録されていません
+      delete_comment: コメントは削除されました
+      delete_account_q: アカウントを削除してよろしいですか？
+      delete_account_remain: ユーザー情報は消えますが、過去に投稿したデータは残ります。
+      count_display: 件のデータを表示しています。
+      no_app: アプリは見つかりませんでした。
+      no_dataset: データセットは見つかりませんでした。
+      no_dataset_group: データセットグループは見つかりませんでした。
+      no_idea: アイデアは見つかりませんでした。
+      management_page: 下記のページで管理することが出来ます。
+      popular_string: 一般的な文字列データを表します。
+      popular_integer: 一般的な整数データを表します。
+      popular_real: 一般的な実数データを表します。
+      no_change_rdf: この列は RDF へ変換しない
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。

@@ -8,27 +8,27 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
 %>
 <%= form_for :s, url: "", html: { class: "opendata-search-apps-form", method: :get } do |f| %>
   <dl class="keyword">
-    <dt>キーワード</dt>
+    <dt><%= I18n.t("opendata.labels.keyword") %></dt>
     <dd><%= f.text_field :keyword %></dd>
   </dl>
   <dl class="category">
-    <dt>分野</dt>
+    <dt><%= I18n.t("opendata.labels.category_ids") %></dt>
     <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
   </dl>
   <dl class="area">
-    <dt>地域</dt>
+    <dt><%= I18n.t("opendata.labels.area") %></dt>
     <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
   </dl>
   <dl class="tag">
-    <dt>タグ</dt>
+    <dt><%= I18n.t("opendata.labels.tag") %></dt>
     <dd><%= f.text_field :tag %></dd>
   </dl>
   <dl class="license">
-    <dt>ライセンス</dt>
+    <dt><%= I18n.t("opendata.labels.license") %></dt>
     <dd><%= f.text_field :license %></dd>
   </dl>
   <dl class="sort">
-    <dt>並び順</dt>
+    <dt><%= I18n.t("opendata.labels.sort") %></dt>
     <dd><%= select_tag :sort, options_for_select(@model.sort_options, params[:sort]) %></dd>
   </dl>
 
@@ -52,7 +52,7 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <% if @items.blank? %>
   <article>
     <header>
-      <h2>アプリは見つかりませんでした。</h2>
+      <h2><%= I18n.t("opendata.labels.no_app") %></h2>
     </header>
   </article>
   <% end %>

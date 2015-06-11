@@ -37,25 +37,25 @@
               <% end %>
               <tr data-depth="0" class="depth0">
                 <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:string", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:string"]) %></td>
-                <td class="name"><span class="od-icon od-icon-leaf-prop">ファイル固有</span></td>
+                <td class="name"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.characteristic") %></span></td>
                 <td class="class">xsd:string</td>
-                <td class="comment">一般的な文字列データを表します。</td>
+                <td class="comment"><%= I18n.t("opendata.labels.popular_string") %></td>
               </tr>
               <tr data-depth="0" class="depth0">
                 <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:integer", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:integer"]) %></td>
-                <td class="name"><span class="od-icon od-icon-leaf-prop">ファイル固有</span></td>
+                <td class="name"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.characteristic") %></span></td>
                 <td class="class">xsd:integer</td>
-                <td class="comment">一般的な整数データを表します。</td>
+                <td class="comment"><%= I18n.t("opendata.labels.popular_number") %></td>
               </tr>
               <tr data-depth="0" class="depth0">
                 <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:decimal", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:decimal"]) %></td>
-                <td class="name"><span class="od-icon od-icon-leaf-prop">ファイル固有</span></td>
+                <td class="name"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.characteristic") %></span></td>
                 <td class="class">xsd:decimal</td>
-                <td class="comment">一般的な実数データを表します。</td>
+                <td class="comment"><%= I18n.t("opendata.labels.popular_real") %></td>
               </tr>
               <tr data-depth="0" class="depth0">
                 <td class="checkbox"><%= f.radio_button(:prop_id, "false", checked: @column_type["properties"].nil? && @column_type["classes"].first == false) %></td>
-                <td colspan="3"><span class="od-icon od-icon-leaf-prop">この列は RDF へ変換しない</span></td>
+                <td colspan="3"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.no_change_rdf") %></span></td>
               </tr>
               </tbody>
             </table>

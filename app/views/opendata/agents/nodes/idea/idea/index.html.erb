@@ -9,7 +9,7 @@ $ ->
 <% end %>
 
 <div class="idea-count">
-  <span class="count-label">登録アイデア件数</span><span class="count"><%= @count %></span>件
+  <span class="count-label"><%= I18n.t("opendata.labels.ideas_count") %></span><span class="count"><%= @count %></span>件
 </div>
 
 <div class="opendata-tabs tabs" id="opendata-tabs-<%= @cur_node.id %>">
@@ -35,12 +35,12 @@ $ ->
 </div>
 
 <article class="areas nodes">
-  <header><h1>地域</h1></header>
+  <header><h1><%= I18n.t("opendata.labels.area") %></h1></header>
   <%= render file: "opendata/agents/nodes/idea/idea/areas" %>
 </article>
 
 <article class="tags nodes">
-  <header><h1>タグ</h1></header>
+  <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
   <%= render file: "opendata/agents/nodes/idea/idea/tags" %>
   <% if @tags.popped? %>
   <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>

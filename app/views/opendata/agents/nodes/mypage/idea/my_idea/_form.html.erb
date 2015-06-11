@@ -45,7 +45,7 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
       <% if @item.datasets.length > 0 %>
       <%= @item.datasets[0].send :name %>
       <% else %>
-      <%= "存在しません" %>
+      <%= I18n.t("opendata.labels.not_exist") %>
       <% end %>
     <% end %>
   </td>
@@ -59,7 +59,7 @@ areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
       <% if @item.apps.length > 0 %>
       <%= @item.apps[0].send :name %>
       <% else %>
-      <%= "存在しません" %>
+      <%= I18n.t("opendata.labels.not_exist") %>
       <% end %>
     <% end %>
   </td>

@@ -33,13 +33,13 @@
         <div class="comment">
           <div class="text">
             <% if comment.comment_deleted %>
-            <%= "コメントは削除されました" %>
+            <%= I18n.t("opendata.labels.delete_comment") %>
             <% else %>
             <%= simple_format(h(comment.text)) %>
             <% end %>
           </div>
           <% if @comment_mode && [@idea.member_id, comment.member_id].include?(@cur_member.id) %>
-          <%= link_to "削除", "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
+          <%= link_to I18n.t("opendata.labels.delete"), "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
           <% end %>
 
           <% if comment.member %>
@@ -49,7 +49,7 @@
           <% elsif comment.user.groups %>
           <%= comment.user.groups.first.name %>
           <% else %>
-          <%= "ゲストユーザー" %>
+          <%= I18n.t("opendata.labels.guest_user") %>
           <% end %>
 
           <%= tryb{comment.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %>
@@ -63,10 +63,10 @@
           <dt>本文</dt>
           <dd><%= f.text_area :comment_body, maxlength: "400" %></dd>
         </dl>
-        <%= link_to "コメントを投稿", "", class: "comment-add" %>
+        <%= link_to I18n.t("opendata.labels.add_comment"), "", class: "comment-add" %>
       <% end %>
     <% else %>
-      <div class="invite">コメントしたい場合には<%= link_to "ログイン","/mypage/login" %>してください</div>
+      <div class="invite"><%= I18n.t("opendata.labels.comment_invite_start") %><%= link_to I18n.t("opendata.labels.login"),"/mypage/login" %><%= I18n.t("opendata.labels.comment_invite_end") %></div>
     <% end %>
 
   </div>

@@ -8,7 +8,7 @@
     <% if @idea.point == 0 %>
       いいね！
     <% else %>
-      <%= link_to "いいね！", @idea.point_members_url %>
+      <%= link_to I18n.t("opendata.labels.iine"), @idea.point_members_url %>
     <% end %>
   </span>
   <span class="number">
@@ -16,4 +16,4 @@
   </span>
 </div>
 
-<div class="like"><%= link_to "いいね！", "#{@idea.point_url}", class: "update #{@mode}", "data-auth-token" => form_authenticity_token, rel: "nofollow" if @mode %></div>
+<div class="like"><%= link_to I18n.t("opendata.labels.iine"), "#{@idea.point_url}", class: "update #{@mode}", "data-auth-token" => form_authenticity_token, rel: "nofollow" if @mode %></div>

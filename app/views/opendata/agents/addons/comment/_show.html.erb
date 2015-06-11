@@ -20,7 +20,7 @@
             <% elsif comment.user.groups %>
             <%= comment.user.groups.first.name %>
             <% else %>
-            <%= "ゲストユーザー" %>
+            <%= I18n.t("opendata.labels.guest_user") %>
             <% end %>
           </td>
         </tr>

@@ -12,6 +12,6 @@
   </article>
   <% end %>
   <% if @tags.count == 0 %>
-    <div>該当するデータは登録されていません</div>
+    <div><%= I18n.t("opendata.labels.not_data") %></div>
   <% end %>
 </div>

@@ -6,11 +6,11 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [
 %>
 <%= form_for :s, url: "", html: { class: "opendata-search-groups-form", method: :get } do |f| %>
   <dl class="keyword">
-    <dt>キーワード</dt>
+    <dt><%= I18n.t("opendata.labels.keyword") %></dt>
     <dd><%= f.text_field :name %></dd>
   </dl>
   <dl class="category">
-    <dt>分野</dt>
+    <dt><%= I18n.t("opendata.labels.category_ids") %></dt>
     <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
   </dl>
 
@@ -33,7 +33,7 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [
   <% if @items.blank? %>
   <article>
     <header>
-      <h2>データセットグループは見つかりませんでした。</h2>
+      <h2><%= I18n.t("opendata.labels.no_dataset_group") %></h2>
     </header>
   </article>
   <% end %>

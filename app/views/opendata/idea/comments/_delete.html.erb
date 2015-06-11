@@ -12,7 +12,7 @@
     <% elsif @item.user.groups %>
     <%= @item.user.groups.first.send :name %>
     <% else %>
-    <%= "ゲストユーザー" %>
+    <%= I18n.t("opendata.labels.guest_user") %>
     <% end %>
   </dd>
 

@@ -2,17 +2,17 @@
   <a href="new/">新規作成</a>
 </nav>
 <nav class="tutorial-data">
-	<a class="tutorial-idea" href="/tutorial-idea.html">アイデア登録手順</a>
+	<a class="tutorial-idea" href="/tutorial-idea.html"><%= I18n.t("opendata.labels.idea_tutorial") %></a>
 </nav>
 <table class="opendata-ideas index">
   <thead>
     <tr>
-      <th class="name">アイデア名</th>
-      <th class="updated">更新日時</th>
-      <th class="state">状態</th>
-      <th class="point">いいね</th>
-      <th class="dataset">データセット</th>
-      <th class="app">アプリ</th>
+      <th class="name"><%= I18n.t("opendata.labels.idea_name") %></th>
+      <th class="updated"><%= I18n.t("opendata.labels.update_datetime") %></th>
+      <th class="state"><%= I18n.t("opendata.labels.state") %></th>
+      <th class="point"><%= I18n.t("opendata.labels.point") %></th>
+      <th class="dataset"><%= I18n.t("opendata.labels.dataset") %></th>
+      <th class="app"><%= I18n.t("opendata.labels.app") %></th>
     </tr>
   </thead>
   <tbody>
@@ -27,7 +27,7 @@
           <% if item.datasets.length > 0 %>
           <%= item.datasets[0].name %>
           <% else %>
-          <%= "存在しません" %>
+          <%= I18n.t("opendata.labels.not_exist") %>
           <% end %>
         <% end %>
       </td>
@@ -36,7 +36,7 @@
           <% if item.apps.length > 0 %>
           <%= item.apps[0].name %>
           <% else %>
-          <%= "存在しません" %>
+          <%= I18n.t("opendata.labels.not_exist") %>
           <% end %>
         <% end %>
       </td>

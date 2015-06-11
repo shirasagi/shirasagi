@@ -1,19 +1,19 @@
 <nav class="menu">
-  <a href="new/">新規作成</a>
+  <a href="new/"><%= I18n.t("opendata.labels.new") %></a>
 </nav>
 <nav class="tutorial-data">
-	<a class="tutorial-data" href="/tutorial-data.html">データ登録手順</a>
+	<a class="tutorial-data" href="/tutorial-data.html"><%= I18n.t("opendata.labels.dataset_tutorial") %></a>
 </nav>
 <table class="opendata-datasets index">
   <thead>
     <tr>
-      <th class="name">データセット名</th>
-      <th class="updated">更新日時</th>
-      <th class="state">状態</th>
-      <th class="point">いいね</th>
-      <th class="downloaded">ダウンロード</th>
-      <th class="app">アプリ</th>
-      <th class="idea">アイデア</th>
+      <th class="name"><%= I18n.t("opendata.labels.dataset_name") %></th>
+      <th class="updated"><%= I18n.t("opendata.labels.update_datetime") %></th>
+      <th class="state"><%= I18n.t("opendata.labels.state") %></th>
+      <th class="point"><%= I18n.t("opendata.labels.point") %></th>
+      <th class="downloaded"><%= I18n.t("opendata.labels.downloaded") %></th>
+      <th class="app"><%= I18n.t("opendata.labels.app") %></th>
+      <th class="idea"><%= I18n.t("opendata.labels.idea") %></th>
     </tr>
   </thead>
   <tbody>

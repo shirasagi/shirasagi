@@ -4,46 +4,46 @@
       <nav class="names">
         <% if @tab_display == "tab_url" %>
           <a id="url" class="name" href="#tab-url" onclick="ChangeTab('tab-url','url'); return false;">
-            公開URL</a>
+            <%= I18n.t("opendata.labels.public_url") %></a>
         <% else %>
           <% if @tab_display == "tab_html" %>
             <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play','play'); return false;">
-              実 行</a>
+              <%= I18n.t("opendata.labels.execute") %></a>
             <a id="html" class="name" href="#tab-html" onclick="ChangeTab('tab-html','html'); return false;">
-              HTML</a>
+              <%= I18n.t("opendata.labels.html") %></a>
             <a id="css" class="name" href="#tab-css" onclick="ChangeTab('tab-css','css'); return false;">
-              CSS</a>
+              <%= I18n.t("opendata.labels.css") %></a>
             <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js','js'); return false;">
-              JavaScript</a>
+              <%= I18n.t("opendata.labels.javascript") %></a>
             <a id="sample" class="name" href="#tab-sample" onclick="ChangeTab('tab-sample','sample'); return false;">
-              サンプルデータ</a>
+              <%= I18n.t("opendata.labels.sample") %></a>
           <% end %>
         <% end %>
         <a id="dataset" class="name dataset" href="#tab-dataset" onclick="ChangeTab('tab-dataset','dataset'); return false;">
-          関連データセット</a>
+          <%= I18n.t("opendata.labels.relation_dataset") %></a>
         <a id="idea" class="name idea" href="#tab-idea" onclick="ChangeTab('tab-idea','idea'); return false;">
-          関連アイデア</a>
+          <%= I18n.t("opendata.labels.relation_idea") %></a>
       </nav>
 
       <div class="tab-body">
         <% if @tab_display =="tab_url" %>
           <div id="tab-url">
-            <header><h1>公開URL</h1></header>
+            <header><h1><%= I18n.t("opendata.labels.public_url") %></h1></header>
             <p><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></p>
           </div>
         <% else %>
           <% if @tab_display == "tab_html" %>
             <div id="tab-play">
-              <header><h1>実行</h1></header>
+              <header><h1><%= I18n.t("opendata.labels.execute") %></h1></header>
               <div class="fullscreen">
-                <%= link_to "全画面表示で実行", I18n.t("opendata.url.app.full", {id: @cur_page.id}), :target=>["_blank"] %>
+                <%= link_to I18n.t("opendata.labels.execute_fullscreen"), I18n.t("opendata.url.app.full", {id: @cur_page.id}), :target=>["_blank"] %>
               </div>
               <div class="frame">
                 <iframe class="frmPlay" src="" width="100%" height="100%"></iframe>
               </div>
             </div>
             <div id="tab-html">
-              <header><h1>HTML</h1></header>
+              <header><h1><%= I18n.t("opendata.labels.html") %></h1></header>
               <% @html_src.each do |h| %>
                 <div id="html-<%= h.id %>" class="frame">
                   <div class="app-filename"><%= h.filename %></div>
@@ -52,7 +52,7 @@
               <% end %>
             </div>
             <div id="tab-css">
-              <header><h1>CSS</h1></header>
+              <header><h1><%= I18n.t("opendata.labels.css") %></h1></header>
               <% @css_src.each do |c| %>
                 <div id="css-<%= c.id %>" class="frame">
                   <div class="app-filename"><%= c.filename %></div>
@@ -61,7 +61,7 @@
               <% end %>
             </div>
             <div id="tab-js">
-              <header><h1>JavaScript</h1></header>
+              <header><h1><%= I18n.t("opendata.labels.javascript") %></h1></header>
               <% @js_src.each do |j| %>
                 <div id="js-<%= j.id %>" class="frame">
                   <div class="app-filename"><%= j.filename %></div>
@@ -70,7 +70,7 @@
               <% end %>
             </div>
             <div id="tab-sample">
-              <header><h1>サンプルデータ</h1></header>
+              <header><h1><%= I18n.t("opendata.labels.sample") %></h1></header>
               <% if @csv.present? or @json.present? %>
                 <%= render partial: "opendata/agents/pages/app/app/content" %>
               <% end %>
@@ -78,13 +78,13 @@
           <% end %>
         <% end %>
         <div id="tab-dataset">
-          <header><h1>関連データセット</h1></header>
+          <header><h1><%= I18n.t("opendata.labels.relation_dataset") %></h1></header>
           <% if @ds.present? %>
             <%= render partial: "opendata/agents/pages/app/app/dataset" %>
           <% end %>
         </div>
         <div id="tab-idea">
-          <header><h1>関連アイデア</h1></header>
+          <header><h1><%= I18n.t("opendata.labels.relation_idea") %></h1></header>
           <div class="app-ideas" id="app-ideas"></div>
         </div>
       </div>

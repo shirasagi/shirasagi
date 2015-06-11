@@ -14,6 +14,6 @@
   </table>
 
   <% if @data.size > limit %>
-  <div><%= limit %>件のデータを表示しています。</div>
+  <div><%= limit %><%= I18n.t("opendata.labels.count_display") %></div>
   <% end %>
 </div>

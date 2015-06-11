@@ -1,6 +1,6 @@
 <% if @cur_user.role?(:edit, Cms::Group, site: @cur_site) %>
     <div>
-    下記のページで管理することが出来ます。
+    <%= I18n.t("opendata.labels.management_page") %>
     <p><%= link_to :"cms.member", cms_members_path %></p>
   </div>
 <% end %>

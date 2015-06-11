@@ -2,8 +2,8 @@
   <%= error_messages_for :item %>
 
   <div class="deletion-confirm">
-    アカウントを削除してよろしいですか？<br />
-    ユーザー情報は消えますが、過去に投稿したデータは残ります。
+    <%= I18n.t("opendata.labels.delete_account_q") %><br />
+    <%= I18n.t("opendata.labels.delete_account_remain") %>
   </div>
 
   <footer class="send">
