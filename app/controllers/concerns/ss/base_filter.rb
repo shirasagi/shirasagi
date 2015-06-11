@@ -4,8 +4,10 @@ module SS::BaseFilter
   include History::LogFilter
 
   included do
-    helper EditorHelper
+    cattr_accessor(:user_class) { SS::User }
     cattr_accessor :model_class
+
+    helper EditorHelper
     before_action :set_model
     before_action :logged_in?
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
@@ -51,7 +53,7 @@ module SS::BaseFilter
         u = SS::Crypt.decrypt(session[:user]).to_s.split(",", 3)
         #return unset_user redirect: true if u[1] != remote_addr.to_s
         #return unset_user redirect: true if u[2] != request.user_agent.to_s
-        @cur_user = SS::User.find u[0].to_i rescue nil
+        @cur_user = self.user_class.find u[0].to_i rescue nil
       end
 
       return @cur_user if @cur_user

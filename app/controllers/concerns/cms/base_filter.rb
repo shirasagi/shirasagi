@@ -3,6 +3,8 @@ module Cms::BaseFilter
   include SS::BaseFilter
 
   included do
+    cattr_accessor(:user_class) { Cms::User }
+
     helper Cms::NodeHelper
     helper Cms::FormHelper
     before_action :set_site
