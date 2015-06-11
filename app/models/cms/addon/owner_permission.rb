@@ -10,13 +10,13 @@ module Cms::Addon
       field :permission_level, type: Integer, default: 1
       embeds_ids :groups, class_name: "SS::Group"
       permit_params :permission_level, group_ids: []
+    end
 
-      def owned?(user)
-        self.group_ids.each do |id|
-          return true if user.group_ids.include?(id)
-        end
-        return false
+    def owned?(user)
+      self.group_ids.each do |id|
+        return true if user.group_ids.include?(id)
       end
+      return false
     end
 
     def permission_level_options

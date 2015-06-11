@@ -4,7 +4,7 @@ production: &production
   # Static files
   serve_static_pages: true
 
-  # HTML editor (ckeditor, tinymce)
+  # HTML editor (ckeditor, tinymce, markdown)
   html_editor: ckeditor
 
   # Link Check Ajax URL

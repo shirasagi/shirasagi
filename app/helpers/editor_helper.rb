@@ -46,8 +46,8 @@ module EditorHelper
       html_editor_ckeditor(elem, opts)
     when "tinymce"
       html_editor_tinymce(elem, opts)
-    when "wiki"
-      html_editor_wiki(elem, opts)
+    when "markdown"
+      html_editor_markdown(elem, opts)
     end
   end
 
@@ -108,6 +108,6 @@ module EditorHelper
     end
   end
 
-  def html_editor_wiki(elem, opts = {})
+  def html_editor_markdown(elem, opts = {})
   end
 end

@@ -1,6 +1,6 @@
 <% if @cur_page.html.present? %>
 <article class="body">
-  <% if SS.config.cms.html_editor == "wiki" %>
+  <% if SS.config.cms.html_editor == "markdown" %>
   <%== ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@cur_page.html) %>
   <% else %>
   <%== @cur_page.html %>
