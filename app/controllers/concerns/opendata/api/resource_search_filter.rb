@@ -67,8 +67,6 @@ module Opendata::Api::ResourceSearchFilter
       offset = params[:offset]
       limit = params[:limit]
 
-      puts queries[0]
-
       error = resource_search_check(queries, order_by, offset, limit)
       if error
         render json: {help: help, success: false, error: error} and return
@@ -102,9 +100,9 @@ module Opendata::Api::ResourceSearchFilter
         end
       end
 
-      order_by_converted = convert_property_name(order_by)
-      if order_by && order_by_converted
-        result_list.sort!{|a, b| a[order_by_converted.to_sym] <=> b[order_by_converted.to_sym] }
+      order = convert_property_name(order_by)
+      if order_by && order
+        result_list.sort!{|a, b| a[order.to_sym] <=> b[order.to_sym] }
       end
 
       if offset
