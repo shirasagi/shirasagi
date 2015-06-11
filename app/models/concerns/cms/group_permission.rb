@@ -66,5 +66,5 @@ module Cms::GroupPermission
 
         where({ _id: -1 })
       end
-    end
+  end
 end
