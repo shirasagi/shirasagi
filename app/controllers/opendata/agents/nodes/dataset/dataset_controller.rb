@@ -125,7 +125,9 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     def datasets_search
       @cur_node.layout = nil
       @model = Opendata::Dataset
-      @items = @model.site(@cur_site).search(params[:s]).order_by(_id: -1).page(params[:page]).per(50)
+      # SHIRASAGI uses 50 for default page size.
+      # but datasetsets search uses 20 for its page size because IE is very slow if page size sets to 50,
+      @items = @model.site(@cur_site).search(params[:s]).order_by(_id: -1).page(params[:page]).per(20)
       render layout: "opendata/ajax"
     end
 end
