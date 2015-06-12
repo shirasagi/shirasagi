@@ -63,7 +63,7 @@
         <%= link_to I18n.t("opendata.labels.add_comment"), "", class: "comment-add" %>
       <% end %>
     <% else %>
-      <div class="invite"><%= I18n.t("opendata.labels.comment_invite_start") %><%= link_to I18n.t("opendata.labels.login"),"/mypage/login" %><%= I18n.t("opendata.labels.comment_invite_end") %></div>
+      <div class="invite"><%= I18n.t("opendata.labels.comment_invite_start") %><%= link_to I18n.t("opendata.labels.login"),"#{member_login_path}login.html?ref=#{CGI.escape(@idea.url)}" %><%= I18n.t("opendata.labels.comment_invite_end") %></div>
     <% end %>
 
   </div>
