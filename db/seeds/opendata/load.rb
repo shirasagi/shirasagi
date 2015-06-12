@@ -142,6 +142,11 @@ save_node filename: "api", name: "API", route: "opendata/api"
 save_node filename: "member", name: "ユーザー", route: "opendata/member",
   layout_id: layouts["mypage-top"].id
 
+save_node filename: "auth", name: "ログイン", route: "member/login",
+  layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
+  twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
+  google_oauth2_oauth: "enabled", github_oauth: "enabled"
+
 save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
   layout_id: layouts["mypage-top"].id
 save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
