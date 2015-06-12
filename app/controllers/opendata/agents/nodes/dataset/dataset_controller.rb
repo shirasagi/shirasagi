@@ -3,7 +3,6 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   include Member::LoginFilter
   include Opendata::MemberFilter
   include Opendata::Dataset::DatasetFilter
-  include Opendata::AjaxFilter
   helper Opendata::UrlHelper
 
   before_action :set_dataset, only: [:show_point, :add_point, :point_members]
@@ -126,6 +125,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     def datasets_search
       @cur_node.layout = nil
       @model = Opendata::Dataset
-      @items = @model.site(@cur_site).search(params[:s]).order_by(_id: -1)
+      @items = @model.site(@cur_site).search(params[:s]).order_by(_id: -1).page(params[:page]).per(50)
+      render layout: "opendata/ajax"
     end
 end
