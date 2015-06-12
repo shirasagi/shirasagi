@@ -10,13 +10,12 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     end
 
     def set_member_and_redirect(member)
-      ref = URI::decode(params[:ref] || flash[:ref] || "")
-      flash.discard(:ref)
-      if ref.blank? || [member_login_path].index(ref)
-        return set_member member, session: true, redirect: true
-      end
+      set_member member
 
-      set_member member, session: true
+      ref = URI::decode(params[:ref] || flash[:ref] || "")
+      ref = redirect_url if ref.blank?
+      flash.discard(:ref)
+
       redirect_to ref
     end
 
@@ -32,7 +31,6 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       @item.attributes = get_params
       member = Cms::Member.site(@cur_site).where(email: @item.email, password: SS::Crypt.crypt(@item.password)).first
       unless member
-        # @item = Cms::Member.new email: @item.email
         @error = t "sns.errors.invalid_login"
         return
       end
@@ -41,8 +39,9 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     end
 
     def logout
-      unset_member redirect: true
+      clear_member
       flash.discard(:ref)
+      redirect_to "#{member_login_path}"
     end
 
     def callback

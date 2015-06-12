@@ -1,6 +1,10 @@
 module Member::LoginFilter
   extend ActiveSupport::Concern
 
+  REDIRECT_OPTION_UNDEFINED = 0.freeze
+  REDIRECT_OPTION_ENABLED = 1.freeze
+  REDIRECT_OPTION_DISABLED = 2.freeze
+
   included do
     before_action :logged_in?, if: -> { member_login_path }
   end
@@ -21,23 +25,22 @@ module Member::LoginFilter
       end
 
       return @cur_member if @cur_member
-      unset_member
 
-      ref = "?ref=#{CGI.escape(request.env["REQUEST_URI"])}"
+      clear_member
+      return nil if translate_redirect_option(opts) == REDIRECT_OPTION_DISABLED
+
+      ref = "?ref=#{CGI.escape(request.env["REQUEST_URI"])}" if request.env["REQUEST_URI"].present?
       redirect_to "#{member_login_path}#{ref}"
+      nil
     end
 
-    def set_member(member, opt = {})
-      if opt[:session]
-        session[:member] = SS::Crypt.encrypt("#{member._id},#{remote_addr},#{request.user_agent}")
-      end
-      redirect_to redirect_url if opt[:redirect]
+    def set_member(member)
+      session[:member] = SS::Crypt.encrypt("#{member._id},#{remote_addr},#{request.user_agent}")
       @cur_member = member
     end
 
-    def unset_member(opt = {})
+    def clear_member
       session[:member] = nil
-      redirect_to member_login_path if opt[:redirect]
       @cur_member = nil
     end
 
@@ -54,7 +57,18 @@ module Member::LoginFilter
     end
 
     def redirect_url
-      return false unless member_login_node
+      return "/" unless member_login_node
       member_login_node.redirect_url || "/"
+    end
+
+    def translate_redirect_option(opts)
+      case opts[:redirect]
+      when true
+        REDIRECT_OPTION_ENABLED
+      when false
+        REDIRECT_OPTION_DISABLED
+      else
+        REDIRECT_OPTION_UNDEFINED
+      end
     end
 end
