@@ -1829,30 +1829,47 @@ textarea {
 :root .body--mypage #item-form .send input {
   filter: none\0;
 }
-.member-login {
-  margin-bottom: $box-margin;
-  dl {
-    clear: both;
-    @include clear;
-    margin-bottom: $item-margin;
-  }
-  dt, dd {
-    float: left;
-    margin-right: $item-margin;
-  }
-  dt {
-    padding: 3px 5px;
-  }
-  dd {
-    input {
-      width: 350px;
+.member-login-box {
+  .twitter, .facebook, .yahoojp, .google_oauth2, .github {
+    list-style: none;
+    a {
+      display: block;
+      width: 498px;
+      margin-bottom: $item-margin;
+      padding: $item-margin $box-margin;
+      border: $border-gray2;
+      color: $black1;
+      text-decoration: none;
+      &:hover {
+        background: $gray2;
+      }
     }
   }
-  .send {
-    clear: both;
-    text-align: center;
-    input {
-      @include btn-blue;
+  .form-login {
+    margin-bottom: $box-margin;
+    dl {
+      clear: both;
+      @include clear;
+      margin-bottom: $item-margin;
+    }
+    dt, dd {
+      float: left;
+      margin-right: $item-margin;
+    }
+    dt {
+      padding: 3px 5px;
+    }
+    dd {
+      input {
+        width: 350px;
+      }
+    }
+    .send {
+      clear: both;
+      text-align: center;
+      input {
+        @include btn-blue;
+      }
     }
   }
 }
