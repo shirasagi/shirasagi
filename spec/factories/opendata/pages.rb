@@ -51,5 +51,10 @@ FactoryGirl.define do
     text "eeee\nffff"
   end
 
+  factory :opendata_idea_comment, class: Opendata::IdeaComment do
+    name { "#{unique_id}" }
+    text "12345\n67890"
+  end
+
 end
 
