@@ -20,7 +20,7 @@ class Rss::PagesController < ApplicationController
         return
       end
 
-      Rss::ImportJob.call_async(@cur_site.host, @cur_node.id, @cur_user.id) do | job|
+      Rss::ImportJob.call_async(@cur_site.host, @cur_node.id, @cur_user.id) do |job|
         job.site_id = @cur_site.id
         job.user_id = @cur_user.id
       end

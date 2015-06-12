@@ -34,7 +34,7 @@ module Cms::PageFilter
       raise "403" unless @item.allowed?(:edit, @cur_user)
       if @item.state == "public"
         raise "403" unless @item.allowed?(:release, @cur_user)
-        @item.state = "ready" if @item.release_date
+        @item.state = "ready" if @item.try(:release_date).present?
       end
       render_create @item.save
     end
@@ -45,7 +45,7 @@ module Cms::PageFilter
       raise "403" unless @item.allowed?(:edit, @cur_user)
       if @item.state == "public"
         raise "403" unless @item.allowed?(:release, @cur_user)
-        @item.state = "ready" if @item.release_date
+        @item.state = "ready" if @item.try(:release_date).present?
       end
 
       result = @item.update

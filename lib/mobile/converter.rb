@@ -27,7 +27,6 @@ class Mobile::Converter < String
       gsub_br!
     end
 
-  private
     def s_to_attr(str)
       str.scan(/\S+?=".+?"/m).
         map { |s| s.split(/=/).size == 2 ? s.gsub(/"/, "").split(/=/) : nil }.

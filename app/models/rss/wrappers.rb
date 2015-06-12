@@ -10,7 +10,12 @@ module Rss::Wrappers
       end
 
       def name
-        @item.try(:title).try(:content)
+        ret = Mobile::Converter.new(@item.try(:title).try(:content) || '')
+        ret.remove_other_namespace_tags!
+        ret.remove_comments!
+        ret.remove_cdata_sections!
+        ret.strip!
+        ret
       end
 
       def link
@@ -130,6 +135,19 @@ module Rss::Wrappers
       @rss.items.each do |item|
         yield ::Rss::Wrappers::Items::RDF.wrap(item)
       end
+    end
+  end
+
+  def self.parse(url)
+    rss = ::RSS::Parser.parse(url, false)
+
+    case rss
+    when ::RSS::Atom::Feed
+      ::Rss::Wrappers::Atom.wrap(rss)
+    when ::RSS::Rss
+      ::Rss::Wrappers::Rss.wrap(rss)
+    when ::RSS::RDF
+      ::Rss::Wrappers::RDF.wrap(rss)
     end
   end
 end

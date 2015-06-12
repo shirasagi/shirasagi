@@ -33,13 +33,12 @@ class Rss::ImportJob
 
     Rails.logger.info("start importing rss from #{@cur_node.rss_url}")
 
-    @imported_links = []
+    @rss_links = []
     @min_released = nil
     @max_released = nil
     @errors = []
 
-    rss = RSS::Parser.parse(@cur_node.rss_url, false)
-    traverse_items(rss) do |item|
+    Rss::Wrappers.parse(@cur_node.rss_url).each do |item|
       import_rss_item item
     end
 
@@ -59,6 +58,9 @@ class Rss::ImportJob
     return if rss_item.link.blank? || rss_item.name.blank?
 
     page = Rss::Page.site(@cur_site).node(@cur_node).where(rss_link: rss_item.link).first
+    @rss_links << rss_item.link
+    @min_released = rss_item.released if @min_released.blank? || @min_released > rss_item.released
+    @max_released = rss_item.released if @max_released.blank? || @max_released < rss_item.released
     return if page.present? && page.released >= rss_item.released
     page ||= Rss::Page.new
     page.cur_site = @cur_site
@@ -71,24 +73,9 @@ class Rss::ImportJob
     page.rss_link = rss_item.link
     page.html = rss_item.html
     page.released = rss_item.released
-    if save_or_update page
-      @imported_links << page.rss_link
-      @min_released = page.released if @min_released.blank? || @min_released > page.released
-      @max_released = page.released if @max_released.blank? || @max_released < page.released
-    else
+    unless save_or_update page
       Rails.logger.error("#{page.errors.full_messages}")
       @errors.concat(page.errors.full_messages)
-    end
-  end
-
-  def traverse_items(rss, &block)
-    case rss
-    when RSS::Atom::Feed
-      Rss::Wrappers::Atom.wrap(rss).each(&block)
-    when RSS::Rss
-      Rss::Wrappers::Rss.wrap(rss).each(&block)
-    when RSS::RDF
-      Rss::Wrappers::RDF.wrap(rss).each(&block)
     end
   end
 
@@ -118,11 +105,11 @@ class Rss::ImportJob
   end
 
   def remove_unimported_pages
-    return if @imported_links.blank? || @min_released.blank? || @max_released.blank?
+    return if @rss_links.blank? || @min_released.blank? || @max_released.blank?
 
     criteria = Rss::Page.site(@cur_site).node(@cur_node)
     criteria = criteria.between(released: @min_released..@max_released)
-    criteria = criteria.nin(:rss_link, @imported_links)
+    criteria = criteria.nin(rss_link: @rss_links)
     criteria.each do |item|
       item.destroy
       put_history_log(item, :destroy)
