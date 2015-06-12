@@ -33,6 +33,8 @@ SS::Application.routes.draw do
     get "api/1/package_show" => "public#package_show", cell: "nodes/api"
     get "api/1/tag_show" => "public#tag_show", cell: "nodes/api"
     get "api/1/group_show" => "public#group_show", cell: "nodes/api"
+    get "api/1/package_search" => "public#package_search", cell: "nodes/api"
+    get "api/1/resource_search" => "public#resource_search", cell: "nodes/api"
 
     get "member/" => "public#index", cell: "nodes/member"
     get "member/:member" => "public#show", cell: "nodes/member"
