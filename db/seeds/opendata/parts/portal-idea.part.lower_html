@@ -1,0 +1,6 @@
+<footer>
+  <nav class="feed">
+    <a class="more" href="/idea/search/?sort=released">もっと見る</a>
+    <a class="rss" href="/idea/search/rss.xml?sort=released">RSS</a>
+  </nav>
+</footer>

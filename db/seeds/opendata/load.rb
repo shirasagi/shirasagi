@@ -211,9 +211,9 @@ def save_part(data)
   cond = { site_id: @site._id, filename: data[:filename] }
 
   html = File.read("parts/" + data[:filename]) rescue nil
-  upper_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".upper_html")) rescue nil
-  loop_html  ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
-  lower_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
+  upper_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".upper_html")) rescue nil
+  loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
+  lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
   item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   item.html = html if html
@@ -228,39 +228,36 @@ def save_part(data)
   item
 end
 
-save_part filename: "ads/banner.part.html", name: "広告", route: "ads/banner",
-          upper_html: "<section id=\"add\">\n  <header><h2>広告</h2></header>", lower_html: "</section>"
-save_part filename: "app-attention.part.html", name: "アプリ：注目順", route: "opendata/app",
-          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>",
-          loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "ads/banner.part.html", name: "広告", route: "ads/banner"
+save_part filename: "app-attention.part.html", name: "アプリ：注目順", \
+  route: "opendata/app", limit: 10, sort: "attention"
 save_part filename: "app-head.part.html", name: "アプリ：ヘッダー", route: "cms/free"
 save_part filename: "app-kv.part.html", name: "アプリ：キービジュアル", route: "cms/free"
 save_part filename: "crumbs.part.html", name: "パンくず", route: "cms/crumb"
-save_part filename: "dataset-attention.part.html", name: "データ：注目順", route: "opendata/dataset",
-          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>",
-          loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "dataset-attention.part.html", name: "データ：注目順", \
+  route: "opendata/dataset", limit: 10, sort: "attention"
 save_part filename: "dataset-group.part.html", name: "データ：グループ", route: "opendata/dataset_group"
 save_part filename: "dataset-head.part.html", name: "データ：ヘッダー", route: "cms/free"
 save_part filename: "dataset-kv.part.html", name: "データ：キービジュアル", route: "cms/free"
 save_part filename: "event/calendar.part.html", name: "イベントカレンダー", route: "event/calendar"
 save_part filename: "foot.part.html", name: "フッター", route: "cms/free"
-save_part filename: "idea-attention.part.html", name: "アイデア：注目順", route: "opendata/idea",
-          limit: 10, sort: "attention", upper_html: "<ul>", lower_html: "</ul>",
-          loop_html: "<li><a href=\"\#{url}\">\#{name}</a></li>"
+save_part filename: "idea-attention.part.html", name: "アイデア：注目順", \
+  route: "opendata/idea", limit: 10, sort: "attention"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
-save_part filename: "mypage-login.part.html", name: "ログイン", route: "opendata/mypage_login", ajax_view: "enabled"
+save_part filename: "mypage-login.part.html", name: "ログイン", \
+  route: "opendata/mypage_login", ajax_view: "enabled"
 save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
 save_part filename: "portal-about.part.html", name: "ポータル：Our Open Dateとは", route: "cms/free"
-save_part filename: "portal-app.part.html", name: "ポータル：オープンアプリマーケット", route: "opendata/app",
-          limit: 5, sort: "released"
-save_part filename: "portal-dataset.part.html", name: "ポータル：オープンデータカタログ", route: "opendata/dataset",
-          limit: 5, sort: "released"
-save_part filename: "portal-idea.part.html", name: "ポータル：オープンアイデアボックス", route: "opendata/idea",
-          limit: 5, sort: "released"
+save_part filename: "portal-app.part.html", name: "ポータル：オープンアプリマーケット", \
+  route: "opendata/app", limit: 5, sort: "released"
+save_part filename: "portal-dataset.part.html", name: "ポータル：オープンデータカタログ", \
+  route: "opendata/dataset", limit: 5, sort: "released"
+save_part filename: "portal-idea.part.html", name: "ポータル：オープンアイデアボックス", \
+  route: "opendata/idea", limit: 5, sort: "released"
 save_part filename: "portal-kv.part.html", name: "ポータル：キービジュアル", route: "cms/free"
-save_part filename: "portal-tab.part.html", name: "ポータル：新着タブ", route: "cms/tabs",
-          conditions: %w(docs event), limit: 5
+save_part filename: "portal-tab.part.html", name: "ポータル：新着タブ", \
+  route: "cms/tabs", conditions: %w(docs event), limit: 5
 save_part filename: "sns-share.part.html", name: "SNSシェアボタン", route: "cms/sns_share"
 save_part filename: "tab.part.html", name: "サイト切り替えタブ", route: "cms/free"
 
@@ -419,7 +416,7 @@ def save_app(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
 
-  item = Opendata::App::App.find_or_create_by cond
+  item = Opendata::App.find_or_create_by cond
   puts item.errors.full_messages unless item.update data
   item
 end
@@ -457,7 +454,7 @@ def save_idea(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
 
-  item = Opendata::Idea::Idea.find_or_create_by cond
+  item = Opendata::Idea.find_or_create_by cond
   puts item.errors.full_messages unless item.update data
   item
 end
@@ -467,7 +464,7 @@ end
     route: "opendata/idea", layout_id: layouts["idea-page"].id, member_id: member.id, tags: %w(タグ),
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
-    app_ids: Opendata::App::App.site(@site).pluck(:_id).sample(1),
+    app_ids: Opendata::App.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
 end
 
