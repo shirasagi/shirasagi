@@ -1,9 +1,9 @@
 <% if @cur_member %>
-    <%= coffee do %>
+  <%= coffee do %>
 
     # show notification
     $.ajax
-      url: "/mypage/notice/show.html"
+      url: "<%= mypage_path %>notice/show.html"
       success: (data)->
         $("#my-notice").html data
 
