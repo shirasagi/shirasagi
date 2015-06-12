@@ -27,6 +27,8 @@ SS::Application.routes.draw do
     get "api/package_show" => "public#package_show", cell: "nodes/api"
     get "api/tag_show" => "public#tag_show", cell: "nodes/api"
     get "api/group_show" => "public#group_show", cell: "nodes/api"
+    get "api/package_search" => "public#package_search", cell: "nodes/api"
+    get "api/resource_search" => "public#resource_search", cell: "nodes/api"
     get "api/1/package_list" => "public#package_list", cell: "nodes/api"
     get "api/1/group_list" => "public#group_list", cell: "nodes/api"
     get "api/1/tag_list" => "public#tag_list", cell: "nodes/api"
