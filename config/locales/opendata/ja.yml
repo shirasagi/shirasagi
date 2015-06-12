@@ -73,10 +73,13 @@ ja:
       state: 状態
       point: いいね
       time: 回
+      other: 他
       count: 件
       app: アプリ
       dataset: データセット
       idea: アイデア
+      resource: リソース
+      comment: コメント
       app_name: アプリ名
       appfile_name: アプリファイル名
       dataset_name: データセット名
@@ -86,6 +89,7 @@ ja:
       update_datetime: 更新日時
       executed_count: 実行回数
       downloaded_count: 合計ダウンロード数
+      downloaded_wrap: 一括ダウンロード
       iine: いいね！
       public_url: 公開URL
       execute: 実 行
@@ -95,6 +99,7 @@ ja:
       javascript: JavaScript
       sample: サンプルデータ
       relation_dataset: 関連データセット
+      relation_app: 関連アプリ
       relation_idea: 関連アイデア
       characteristic: ファイル固有
       login: ログイン

@@ -40,7 +40,7 @@ $ ->
 
 <div class="point">
   <div class="count">
-    <span class="label">いいね！</span>
+    <span class="label"><%= I18n.t("opendata.labels.iine") %></span>
     <span class="number"><%= @cur_page.point %></span>
   </div>
 </div>
@@ -61,7 +61,7 @@ categories = [
         class: cate[:type], style: hide %>
     <% end %>
     <% if cate[:items].size > max %>
-      <%= link_to "他#{cate[:items].size-max}件", "#",
+      <%= link_to I18n.t("opendata.labels.other") + "#{cate[:items].size-max}" + I18n.t("opendata.labels.count"), "#",
         class: "#{cate[:type]}", "data-class" => "other" %>
     <% end %>
   <% end %>
@@ -73,12 +73,12 @@ categories = [
 
 <div class="dataset-tabs tabs"  id="dataset-tabs-<%= @cur_node.id %>">
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
-    <header><h1>リソース</h1></header>
+    <header><h1><%= I18n.t("opendata.labels.resource") %></h1></header>
     <div class="pages">
       <div class="info-wrap">
         <div class="resources">
           <header>
-            <h1>リソース</h1>
+            <h1><%= I18n.t("opendata.labels.resource") %></h1>
           </header>
 
           <% @cur_page.resources.order(name: 1).each do |rs| %>
@@ -109,8 +109,8 @@ categories = [
                 <% end %>
               </span>
               <% end %>
-              <div class="content-wrap"><%= link_to "プレビュー", rs.content_url, class: "content" if rs.tsv_present? %></div>
-              <div class="download-wrap"><%= link_to "ダウンロード", rs.url, class: "download" %></div>
+              <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), rs.content_url, class: "content" if rs.tsv_present? %></div>
+              <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download" %></div>
             </div>
           </div>
           <% end %>
@@ -143,8 +143,8 @@ categories = [
                 <% end %>
               </span>
               <% end %>
-              <div class="content-wrap"><%= link_to "プレビュー", urs.content_url, class: "content" if urs.tsv_present? %></div>
-              <div class="download-wrap"><%= link_to "ダウンロード", urs.url, class: "download" %></div>
+              <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" if urs.tsv_present? %></div>
+              <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.url, class: "download" %></div>
             </div>
           </div>
           <% end %>
@@ -157,7 +157,7 @@ categories = [
               <% if @cur_page.member %>
               <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
               <% else %>
-              ゲストユーザー
+              <%= I18n.t("opendata.labels.guest_user") %>
               <% end %>
             </dd>
           <% elsif @cur_page.contact_group %>
@@ -169,7 +169,7 @@ categories = [
           <% end %>
 
           <dt><%= @cur_page.t :downloaded %></dt>
-          <dd><%= @cur_page.downloaded.to_i %> 回</dd>
+          <dd><%= @cur_page.downloaded.to_i %><%= I18n.t("opendata.labels.time")%></dd>
 
           <dt><%= @cur_page.t :updated %></dt>
           <dd><%= tryb{@cur_page.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %><br /></dd>
@@ -179,20 +179,20 @@ categories = [
     <nav class="feed"></nav>
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
-    <header><h1>関連アプリ</h1></header>
+    <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
     <div class="pages">
       <div id="tab-app">
-        <header><h1>関連アプリ</h1></header>
+        <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
         <div class="dataset-apps" id="dataset-apps"></div>
       </div>
     </div>
     <nav class="feed"></nav>
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
-    <header><h1>関連アイデア</h1></header>
+    <header><h1><%= I18n.t("opendata.labels.relation_idea") %></h1></header>
     <div class="pages">
       <div id="tab-idea">
-        <header><h1>関連アイデア</h1></header>
+        <header><h1><%= I18n.t("opendata.labels.relation_idea") %></h1></header>
         <div class="dataset-ideas" id="dataset-ideas"></div>
       </div>
     </div>

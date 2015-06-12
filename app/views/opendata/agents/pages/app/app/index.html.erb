@@ -40,14 +40,14 @@ $ ->
 <div class="side-right">
   <div class="point">
     <div class="count">
-      <span class="label">いいね！</span>
+      <span class="label"><%= I18n.t("opendata.labels.iine") %></span>
       <span class="number"><%= @cur_page.point %></span>
     </div>
   </div>
 
   <% if @tab_display == "tab_html" %>
     <div class="download-all">
-      <div class="download-wrap"><%= link_to "一括ダウンロード", @cur_page.zip_url, class: "download" %></div>
+      <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded_wrap"), @cur_page.zip_url, class: "download" %></div>
     </div>
   <% end %>
 </div>
@@ -67,7 +67,7 @@ categories = [
         class: cate[:type], style: hide %>
     <% end %>
     <% if cate[:items].size > max %>
-      <%= link_to "他#{cate[:items].size-max}件", "#",
+      <%= link_to  I18n.t("opendata.labels.other") + "#{cate[:items].size-max}" + I18n.t("opendata.labels.count") , "#",
         class: "#{cate[:type]}", "data-class" => "other" %>
     <% end %>
   <% end %>
@@ -89,7 +89,7 @@ categories = [
           <% if @cur_page.member %>
           <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
           <% else %>
-          ゲストユーザー
+          <%= I18n.t("opendata.labels.guest_user") %>
           <% end %>
         </dd>
       <% elsif @cur_page.contact_group %>

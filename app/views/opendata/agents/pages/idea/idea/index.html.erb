@@ -46,7 +46,7 @@ $ ->
 
 <div class="point" id="idea-point">
   <div class="count">
-    <span class="label">いいね！</span>
+    <span class="label"><%= I18n.t("opendata.labels.iine") %></span>
     <span class="number"><%= @cur_page.point %></span>
   </div>
 </div>
@@ -67,7 +67,7 @@ categories = [
         class: cate[:type], style: hide %>
     <% end %>
     <% if cate[:items].size > max %>
-      <%= link_to "他#{cate[:items].size-max}件", "#",
+      <%= link_to I18n.t("opendata.labels.other") + "#{cate[:items].size-max}" + I18n.t("opendata.labels.count"), "#",
         class: "#{cate[:type]}", "data-class" => "other" %>
     <% end %>
   <% end %>
@@ -79,11 +79,11 @@ categories = [
 
 <div class="idea-tabs tabs"  id="idea-tabs-<%= @cur_node.id %>">
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
-    <header><h1>コメント</h1></header>
+    <header><h1><%= I18n.t("opendata.labels.comment") %></h1></header>
     <div class="pages">
       <div class="info-wrap">
         <div id="tab-comment">
-          <header><h1>コメント</h1></header>
+          <header><h1><%= I18n.t("opendata.labels.comment") %></h1></header>
           <div class="comment" id="idea-comments"></div>
         </div>
       </div>
@@ -91,20 +91,20 @@ categories = [
     <nav class="feed"></nav>
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
-    <header><h1>関連データセット</h1></header>
+    <header><h1><%= I18n.t("opendata.labels.relation_dataset") %></h1></header>
     <div class="pages">
       <div id="tab-dataset">
-        <header><h1>関連データセット</h1></header>
+        <header><h1><%= I18n.t("opendata.labels.relation_dataset") %></h1></header>
         <div class="related_dataset" id="related_dataset"></div>
       </div>
     </div>
     <nav class="feed"></nav>
   </article>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
-    <header><h1>関連アプリ</h1></header>
+    <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
     <div class="pages">
       <div id="tab-app">
-        <header><h1>関連アプリ</h1></header>
+        <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
         <div class="related_app" id="related_app"></div>
       </div>
     </div>
@@ -121,7 +121,7 @@ categories = [
           <% if @cur_page.member %>
           <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
           <% else %>
-          ゲストユーザー
+          <%= I18n.t("opendata.labels.guest_user") %>
           <% end %>
         </dd>
       <% elsif @cur_page.contact_group %>
@@ -133,7 +133,7 @@ categories = [
       <% end %>
 
       <dt><%= @cur_page.t :commented %></dt>
-      <dd><%= @cur_page.total_comment.to_i %> 回</dd>
+      <dd><%= @cur_page.total_comment.to_i %><%= I18n.t("opendata.labels.time")%> </dd>
 
       <dt><%= @cur_page.t :updated %></dt>
       <dd><%= tryb{@cur_page.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %><br /></dd>
