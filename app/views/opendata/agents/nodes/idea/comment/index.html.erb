@@ -42,14 +42,11 @@
           <%= link_to I18n.t("opendata.labels.delete"), "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
           <% end %>
 
+          <% member_name = comment.get_member_name %>
           <% if comment.member %>
-          <%= link_to comment.member.name, "#{member_path}#{comment.member_id}" %>
-          <% elsif comment.contact_group %>
-          <%= comment.contact_group.full_name %>
-          <% elsif comment.user.groups %>
-          <%= comment.user.groups.first.name %>
+          <%= link_to member_name, "#{member_path}#{comment.member_id}" %>
           <% else %>
-          <%= I18n.t("opendata.labels.guest_user") %>
+          <%= member_name %>
           <% end %>
 
           <%= tryb{comment.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %>

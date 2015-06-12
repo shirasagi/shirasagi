@@ -4,16 +4,6 @@
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
 
   <dt><%= @model.t :member_name %></dt>
-  <dd>
-    <% if @item.member %>
-    <%= @item.member.send :name %>
-    <% elsif @item.contact_group %>
-    <%= @item.contact_group.send :full_name %>
-    <% elsif @item.user.groups %>
-    <%= @item.user.groups.first.send :name %>
-    <% else %>
-    <%= I18n.t("opendata.labels.guest_user") %>
-    <% end %>
-  </dd>
+  <dd><%= @item.get_member_name %></dd>
 
 </dl>

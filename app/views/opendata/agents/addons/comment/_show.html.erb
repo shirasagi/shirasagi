@@ -12,17 +12,7 @@
         <% @comments.order(name: 1).each do |comment| %>
         <tr>
           <td><%= comment.text %></td>
-          <td>
-            <% if comment.member %>
-            <%= comment.member.name %>
-            <% elsif comment.contact_group %>
-            <%= comment.contact_group.full_name %>
-            <% elsif comment.user.groups %>
-            <%= comment.user.groups.first.name %>
-            <% else %>
-            <%= I18n.t("opendata.labels.guest_user") %>
-            <% end %>
-          </td>
+          <td><%= comment.get_member_name %></td>
         </tr>
       <% end %>
       </tbody>

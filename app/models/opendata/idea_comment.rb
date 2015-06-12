@@ -19,6 +19,21 @@ class Opendata::IdeaComment
   validates :idea_id, presence: true
   validates :text, presence: true, length: { maximum: 400 }
 
+  public
+    def get_member_name
+      if member
+        name = member.name
+      elsif contact_group
+        name = contact_group.full_name
+      elsif user && user.groups && user.groups.size > 0
+        name = user.groups.first.name
+      else
+        name = I18n.t("opendata.labels.guest_user")
+      end
+
+      return name
+    end
+
   class << self
     public
       def search(params)

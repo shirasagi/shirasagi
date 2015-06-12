@@ -21,17 +21,7 @@
         </nav>
       </td>
       <td class="text"><%= link_to item.text, { action: :show, id: item } %></td>
-      <td class="member_name">
-        <% if item.member %>
-        <%= item.member.name %>
-        <% elsif item.contact_group %>
-        <%= item.contact_group.send :full_name %>
-        <% elsif item.user.groups %>
-        <%= item.user.groups.first.send :name %>
-        <% else %>
-        <%= I18n.t("opendata.labels.guest_user") %>
-        <% end %>
-      </td>
+      <td class="member_name"><%= item.get_member_name %></td>
       <td class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
       <td class="datetime">
         <% if item.comment_deleted.present? %>
