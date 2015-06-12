@@ -24,7 +24,7 @@ class Opendata::IdeaComment
       if member
         name = member.name
       elsif contact_group
-        name = contact_group.full_name
+        name = contact_group.name.sub(/.*\//, "")
       elsif user && user.groups && user.groups.size > 0
         name = user.groups.first.name
       else
