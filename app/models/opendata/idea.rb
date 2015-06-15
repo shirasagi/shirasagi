@@ -1,13 +1,14 @@
 class Opendata::Idea
-  include Cms::Page::Model
-  include Cms::Addon::Release
-  include Cms::Addon::RelatedPage
-  include Contact::Addon::Page
+  include Cms::Model::Page
   include Opendata::Addon::Comment
   include Opendata::Addon::Category
   include Opendata::Addon::Area
   include Opendata::Reference::Member
   include Opendata::Common
+  include Cms::Addon::Release
+  include Contact::Addon::Page
+  include Cms::Addon::RelatedPage
+  include Cms::Addon::GroupPermission
 
   set_permission_name "opendata_ideas"
 

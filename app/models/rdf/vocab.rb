@@ -2,7 +2,7 @@ class Rdf::Vocab
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Permission
+  include Cms::SitePermission
 
   DEFAULT_ORDER = 100.freeze
 

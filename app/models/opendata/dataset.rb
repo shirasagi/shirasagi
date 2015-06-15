@@ -1,15 +1,16 @@
 class Opendata::Dataset
-  include Cms::Page::Model
-  include Cms::Addon::Release
-  include Cms::Addon::RelatedPage
-  include Contact::Addon::Page
+  include Cms::Model::Page
   include Opendata::Addon::Resource
   include Opendata::Addon::UrlResource
   include Opendata::Addon::Category
-  include Opendata::Addon::DatasetGroup
   include Opendata::Addon::Area
+  include Opendata::Addon::DatasetGroup
   include Opendata::Reference::Member
   include Opendata::Common
+  include Cms::Addon::Release
+  include Contact::Addon::Page
+  include Cms::Addon::RelatedPage
+  include Cms::Addon::GroupPermission
 
   scope :formast_is, ->(word, *fields) {
     where("$and" => [{ "$or" => fields.map { |field| { field => word.to_s } } } ])

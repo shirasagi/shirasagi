@@ -1,13 +1,19 @@
 module Opendata::Part
   class MypageLogin
-    include Cms::Part::Model
+    include Cms::Model::Part
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/mypage_login") }
   end
 
   class Dataset
-    include Cms::Part::Model
+    include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::PageList
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/dataset") }
 
@@ -33,8 +39,10 @@ module Opendata::Part
   end
 
   class DatasetGroup
-    include Cms::Part::Model
-    #include Cms::Addon::NodeList
+    include Cms::Model::Part
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/dataset_group") }
 
@@ -44,8 +52,11 @@ module Opendata::Part
   end
 
   class App
-    include Cms::Part::Model
+    include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::PageList
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/app") }
 
@@ -71,8 +82,11 @@ module Opendata::Part
   end
 
   class Idea
-    include Cms::Part::Model
+    include Cms::Model::Part
+    include Cms::Addon::Release
     include Cms::Addon::PageList
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/idea") }
 

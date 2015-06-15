@@ -2,8 +2,6 @@ module Opendata::Addon::Appfile
   extend SS::Addon
   extend ActiveSupport::Concern
 
-  set_order 200
-
   included do
     embeds_many :appfiles, class_name: "Opendata::Appfile"
     before_destroy :destroy_appfiles

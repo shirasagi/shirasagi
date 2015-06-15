@@ -3,8 +3,6 @@ module Opendata::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    set_order 300
-
     included do
       embeds_ids :categories, class_name: "Opendata::Node::Category"
       permit_params category_ids: []
@@ -14,8 +12,6 @@ module Opendata::Addon
   module Area
     extend SS::Addon
     extend ActiveSupport::Concern
-
-    set_order 301
 
     included do
       embeds_ids :areas, class_name: "Opendata::Node::Area"
@@ -27,8 +23,6 @@ module Opendata::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    set_order 302
-
     included do
       embeds_ids :dataset_groups, class_name: "Opendata::DatasetGroup"
       permit_params dataset_group_ids: []
@@ -39,8 +33,6 @@ module Opendata::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    set_order 310
-
     included do
       embeds_ids :datasets, class_name: "Opendata::Dataset"
       permit_params dataset_ids: []
@@ -50,8 +42,6 @@ module Opendata::Addon
   module App
     extend SS::Addon
     extend ActiveSupport::Concern
-
-    set_order 311
 
     included do
       embeds_ids :apps, class_name: "Opendata::App"

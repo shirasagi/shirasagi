@@ -2,8 +2,6 @@ module Opendata::Addon::RdfStore::Model
   extend SS::Addon
   extend ActiveSupport::Concern
 
-  set_order 202
-
   included do
     field :rdf_iri, type: String
     field :rdf_error, type: String

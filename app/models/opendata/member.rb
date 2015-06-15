@@ -1,5 +1,5 @@
 class Opendata::Member
-  include Cms::Member::Model
+  include Cms::Model::Member
   include SS::Relation::File
 
   belongs_to_file :icon
