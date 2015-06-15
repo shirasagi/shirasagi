@@ -4,8 +4,6 @@ ja:
     category: カテゴリー
     add_date: 日付フォームを追加する
     del_date: 削除
-    add_info: 項目を追加する
-    del_info: 削除
     next_month: 次の月へ
     prev_month: 前の月へ
     next_day: 次の日へ
@@ -14,7 +12,6 @@ ja:
     filter_all: 全て
     confirm:
       delete_date: イベント日を削除してよろしいですか？
-      delete_item: 項目を削除してよろしいですか？
 
   modules:
     event: イベント
@@ -22,7 +19,6 @@ ja:
       event/date: イベント
       event/page_list: リスト表示
       event/body: イベント情報
-      event/additional_info: 追加情報
 
   cms:
     nodes:
@@ -42,7 +38,7 @@ ja:
 
   mongoid:
     attributes:
-      cms/page/model:
+      cms/model/page:
         event_name: イベントタイトル
         event_dates: イベント日
         schedule: 日時
@@ -83,8 +79,3 @@ ja:
         - イベント参加に必要な費用を入力できます。
       contact:
         - 連絡先を入力できます。
-    event/addon/additional_info:
-      field:
-        - 追加情報の項目名を設定します。
-      value:
-        - 項目の内容を設定します。

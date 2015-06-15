@@ -52,7 +52,7 @@ module Workflow::Addon
       end
 
       def clone_files
-        ids = SS::Extensions::Array.new
+        ids = SS::Extensions::Words.new
         files.each do |f|
           attributes = Hash[f.attributes]
           attributes.select!{ |k| f.fields.keys.include?(k) }

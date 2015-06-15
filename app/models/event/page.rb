@@ -9,7 +9,7 @@ class Event::Page
   include Cms::Addon::File
   include Category::Addon::Category
   include Event::Addon::Body
-  include Event::Addon::AdditionalInfo
+  include Cms::Addon::AdditionalInfo
   include Event::Addon::Date
   include Map::Addon::Page
   include Cms::Addon::RelatedPage

@@ -1,4 +1,4 @@
-class Event::Extensions::AdditionalInfo < Array
+class Cms::Extensions::AdditionalInfo < Array
   def mongoize
     self.to_a
   end

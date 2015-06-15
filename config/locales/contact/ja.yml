@@ -26,7 +26,7 @@ ja:
 
   mongoid:
     attributes:
-      cms/page/model: &cmspage
+      cms/model/page: &cmspage
         contact_state: 表示設定
         contact_group_id: 所属
         contact_charge: 担当

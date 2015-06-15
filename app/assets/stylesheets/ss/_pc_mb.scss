@@ -477,24 +477,6 @@ input.date, input.datetime {
 }
 
 // -------------------------------------------------------------------------------------------------
-// event
-
-.mod-event-additional-info {
-  dt {
-    width: 140px;
-  }
-  dd.value {
-    font-weight: bold;
-  }
-  dd textarea {
-    width: 70%;
-  }
-  .clear {
-    vertical-align: top;
-  }
-}
-
-// -------------------------------------------------------------------------------------------------
 // map
 .mod-map {
   .keyword {
@@ -533,51 +515,4 @@ input.date, input.datetime {
   .marker-info {
     white-space: nowrap;
   }
-}
-
-// -------------------------------------------------------------------------------------------------
-// facility
-
-.mod-facility-additional-info {
-  dt {
-    width: 140px;
-  }
-  dd.value {
-    font-weight: bold;
-  }
-  dd textarea {
-    width: 70%;
-  }
-  .clear {
-    vertical-align: top;
-  }
-}
-#facility-info {
-  dl.body {
-    float: left;
-    width: 540px;
-    margin-bottom: 10px;
-  }
-  .summary {
-    @include clear;
-  }
-  .images .image {
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 10px;
-  }
-  .map-pages {
-    margin-top: 10px;
-  }
-}
-#addon-facility-agents-addons-body ~ #addon-cms-agents-addons-release {
-  .mod-cms-release dt:last-of-type,dd:last-of-type {
-    display: none;
-  }
-}
-.image-thumb-size label {
-  font-weight: bold;
-  display: inline-block;
-  _display: inline;
-  margin-right: 12px;
 }

@@ -24,7 +24,7 @@ ja:
 
   mongoid:
     attributes:
-      cms/page/model:
+      cms/model/page:
         question: 質問
         answer: 回答
       faq/part/search:

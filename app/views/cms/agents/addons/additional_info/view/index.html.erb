@@ -1,6 +1,7 @@
-<% if @cur_page.additional_info.present? %>
+<% @item = @cur_page || @cur_node %>
+<% if @item.additional_info.present? %>
 <dl class="see additional-info">
-  <% @cur_page.additional_info.each do |info| %>
+  <% @item.additional_info.each do |info| %>
   <dt><%=br info[:field] %></dt>
   <dd><%=br info[:value] %></dd>
   <% end %>

@@ -27,6 +27,8 @@ ja:
     view_page: 公開画面
     view_site: サイト確認
     editor_template: テンプレート
+    confirm:
+      delete_item: 項目を削除してよろしいですか？
 
     adobe_reader:
       remark:
@@ -145,6 +147,7 @@ ja:
       cms/related_page: 関連記事
       cms/thumb: サムネイル
       cms/parent_crumb: パンくず
+      cms/additional_info: 追加情報
 
   mongoid:
     models:
@@ -171,13 +174,13 @@ ja:
         depth: フォルダ階層
         order: 並び順
         md5: ハッシュ値
-      cms/node/model:
+      cms/model/node:
         filename: フォルダー名
         basename: フォルダー名
         route: フォルダー属性
         view_route: 既定のモジュール
         summary_html: Summary
-      cms/page/model:
+      cms/model/page:
         route: ページ属性
         summary_html: Summary
         html: 本文
@@ -185,7 +188,7 @@ ja:
         category_ids: カテゴリー
         categories: カテゴリー
         related_pages: 関連記事
-      cms/part/model:
+      cms/model/part:
         name: パーツ名
         route: パーツ属性
         mobile_view: 携帯向け表示
@@ -210,7 +213,7 @@ ja:
         name: ロール名
         permission_level: 権限レベル
         permissions: 権限設定
-      cms/member/model:
+      cms/model/member:
         name: 氏名
         email: メールアドレス
         in_password: パスワード
@@ -252,6 +255,11 @@ ja:
         thumb_id: サムネイル画像
       cms/addon/parent_crumb:
         parent_crumb_urls: 親フォルダー
+      cms/addon/additional_info:
+        field: 項目
+        value: 内容
+        add_info: 項目を追加する
+        del_info: 削除
 
   errors:
     messages:
@@ -320,10 +328,15 @@ ja:
       check_links: 次のリンクを確認しました。
 
   tooltip:
-    cms/page/model:
+    cms/model/page:
       destination_filename:
         - ページやフォルダーの移動を行います。
         - 移動先をフルパスで設定してください。
+    cms/addon/additional_info:
+      field:
+        - 追加情報の項目名を設定します。
+      value:
+        - 項目の内容を設定します。
 
     search_contents:
       pages:
@@ -357,7 +370,7 @@ ja:
           - "URL選択時は \'=\"検索文字\' でテキスト検索を行います"
 
 
-    cms/node/model:
+    cms/model/node:
       route:
         - 設定した属性に応じたページ(index.html)が自動で生成されます。
         - |-
@@ -441,7 +454,7 @@ ja:
         - ページやフォルダーの移動を行います。
         - 移動先をフルパスで設定してください。
 
-    cms/part/model:
+    cms/model/part:
       route:
         - |-
           記事/記事リスト
