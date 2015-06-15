@@ -10,7 +10,7 @@ module SS::Model::Role
 
     seqid :id
     field :name, type: String
-    field :permissions, type: SS::Extensions::Array
+    field :permissions, type: SS::Extensions::Words
 
     permit_params :name, permissions: [] #TODO:
 

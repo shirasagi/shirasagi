@@ -45,17 +45,6 @@ module Facility::Addon
     end
   end
 
-  module AdditionalInfo
-    extend ActiveSupport::Concern
-    extend SS::Addon
-
-    included do
-      field :additional_info, type: Facility::Extensions::AdditionalInfo
-
-      permit_params additional_info: [ :field, :value ]
-    end
-  end
-
   module FocusSetting
     extend ActiveSupport::Concern
     extend SS::Addon

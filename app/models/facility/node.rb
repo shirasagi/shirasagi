@@ -1,6 +1,7 @@
 module Facility::Node
   class Base
     include Cms::Model::Node
+    include Cms::Addon::NodeSetting
 
     default_scope ->{ where(route: /^facility\//) }
   end
@@ -26,7 +27,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Facility::Addon::Body
-    include Facility::Addon::AdditionalInfo
+    include Cms::Addon::AdditionalInfo
     include Facility::Addon::Category
     include Facility::Addon::Service
     include Facility::Addon::Location

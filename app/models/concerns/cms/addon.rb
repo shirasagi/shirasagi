@@ -245,4 +245,15 @@ module Cms::Addon
       permit_params :parent_crumb_urls
     end
   end
+
+  module AdditionalInfo
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    included do
+      field :additional_info, type: Cms::Extensions::AdditionalInfo
+
+      permit_params additional_info: [ :field, :value ]
+    end
+  end
 end

@@ -49,7 +49,7 @@ ja:
 
   mongoid:
     attributes:
-      cms/page/model:
+      cms/model/page:
         workflow_user_id: 申請者
         workflow_state: 承認状態
         workflow_comment: 申請コメント

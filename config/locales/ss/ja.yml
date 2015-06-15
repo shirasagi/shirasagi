@@ -112,7 +112,7 @@ ja:
         host: ホスト名
         domains: ドメイン
         group_ids: グループ
-      ss/user/model:
+      ss/model/user:
         name: 氏名
         uid: ユーザーID
         email: メールアドレス
@@ -122,14 +122,14 @@ ja:
         type: ユーザータイプ
         sns: SNSユーザー
         ldap: LDAPユーザー
-      ss/group/model:
+      ss/model/group:
         name: グループ名
         order: 表示順
       ss/reference/user:
         user_id: ユーザー
       ss/reference/site:
         site_id: サイト
-      ss/task/model:
+      ss/model/task:
         name: タスク名
         started: 開始日時
         closed: 終了日時
