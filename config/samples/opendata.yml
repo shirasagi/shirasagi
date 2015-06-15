@@ -44,20 +44,20 @@ production: &production
     package_search_help: |
       [api] package_search - 公開データセット情報に対して、全文検索を行う。
       [param1] q - 全文検索のキーワードを指定する。（初期値：":"）
-      [param2] fq - 未実装
-      [param3] sort - 未実装
+      [param2] fq - 未実装。
+      [param3] sort - 未実装。
       [param4] rows - 取得するデータセット情報の最大数を指定する。
       [param5] start - 取得を開始するデータセット情報の配列インデックスを指定する。
-      [param6] facet - 未実装
-      [param7] facet.mincount - 未実装
-      [param8] facet.field - 未実装
+      [param6] facet - 未実装。
+      [param7] facet.mincount - 未実装。
+      [param8] facet.field - 未実装。
     resource_search_help: |
       [api] resource_search - 指定項目に指定値を部分一致で含む公開リソース情報を取得する。
       [param1] query - 検索条件を指定する。（必須）
                        検索条件は"項目名:値"の形式で指定する。（1セットのみ、指定可能。）
                        下記の項目名のいずれかを指定した場合のみ、有効となる。
                        （name、description、filename、format）
-      [param2] fields - 未実装（Deprecated）
+      [param2] fields - 未実装。（Deprecated）
       [param3] order_by - 昇順でソートを行う項目名を指定する。
                           下記の項目名のいずれかを指定した場合のみ、有効となる。
                           （name、description、filename、format）
