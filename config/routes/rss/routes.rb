@@ -7,28 +7,12 @@ SS::Application.routes.draw do
   end
 
   concern :import do
-    get :import, on: :collection
-    post :import, on: :collection
-  end
-
-  concern :crud do
-    get :move, :on => :member
-    put :move, :on => :member
-    get :copy, :on => :member
-    put :copy, :on => :member
+    match :import, via: [:get, :post], on: :collection
   end
 
   content "rss" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :import, :crud]
-  end
-
-  # workflow support
-  content "rss" do
-    get "index_approve" => "pages#index_approve"
-    get "index_request" => "pages#index_request"
-    get "index_ready" => "pages#index_ready"
-    get "index_closed" => "pages#index_closed"
+    resources :pages, concerns: [:deletion, :import]
   end
 
   node "rss" do
