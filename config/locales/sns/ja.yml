@@ -16,7 +16,7 @@ ja:
 
   mongoid:
     attributes:
-      ss/file/model: #?
+      ss/model/file: #?
         in_file: ファイル
         in_files: ファイル
         image: 画像
