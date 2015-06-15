@@ -1,9 +1,12 @@
 class Rss::Page
-  include Cms::Page::Model
-  include Category::Addon::Category
+  include Cms::Model::Page
   include Cms::Addon::Release
   # include Cms::Addon::ReleasePlan
   include Rss::Addon::Page::Body
+  include Category::Addon::Category
+  include Cms::Addon::RelatedPage
+  include Cms::Addon::ParentCrumb
+  include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
   set_permission_name "article_pages"

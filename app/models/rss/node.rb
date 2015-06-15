@@ -1,8 +1,13 @@
 module Rss::Node
   class Page
-    include Cms::Node::Model
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Release
+    include Cms::Addon::Meta
     include Rss::Addon::Import
     include Cms::Addon::PageList
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
 
     default_scope ->{ where(route: "rss/page") }
 

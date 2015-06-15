@@ -4,8 +4,6 @@ module Rss::Addon
       extend SS::Addon
       extend ActiveSupport::Concern
 
-      set_order 300
-
       included do
         field :rss_link, type: String
         field :html, type: String
@@ -17,8 +15,6 @@ module Rss::Addon
   module Import
     extend ActiveSupport::Concern
     extend SS::Addon
-
-    set_order 200
 
     RSS_REFRESH_METHOD_MANUAL = 'manual'.freeze
     RSS_REFRESH_METHOD_AUTO = 'auto'.freeze
