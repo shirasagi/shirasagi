@@ -132,7 +132,7 @@ ja:
     cms: 標準機能
     addons:
       cms/role: ロール
-      cms/owner_permission: 権限
+      cms/group_permission: 権限
       cms/node_setting: 基本設定
       cms/meta: メタ情報
       cms/html: HTML
@@ -239,7 +239,7 @@ ja:
       cms/addon/permission:
         group_ids: 管理グループ
         permission_level: 権限レベル
-      cms/addon/owner_permission:
+      cms/addon/group_permission:
         group_ids: 管理グループ
         permission_level: 権限レベル
       cms/addon/list/model:
