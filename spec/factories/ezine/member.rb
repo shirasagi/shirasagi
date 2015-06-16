@@ -4,5 +4,6 @@ FactoryGirl.define do
     email_type "text"
     state "enabled"
     site_id { cms_site.id }
+    association :node, factory: :ezine_node
   end
 end
