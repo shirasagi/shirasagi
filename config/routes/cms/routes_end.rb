@@ -15,6 +15,11 @@ SS::Application.routes.draw do
     get :template, :on => :collection
   end
 
+  concern :role do
+    get "role/edit" => "groups#role_edit", :on => :member
+    put "role" => "groups#role_update", :on => :member
+  end
+
   namespace "cms", path: ".:site" do
     get "/" => "main#index", as: :main
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
@@ -25,7 +30,7 @@ SS::Application.routes.draw do
     resource  :site, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :users, concerns: :deletion
-    resources :groups, concerns: :deletion
+    resources :groups, concerns: [:deletion, :role]
     resources :members, concerns: :deletion
     resources :contents, path: "contents/(:mod)"
     resources :nodes, concerns: :deletion do
