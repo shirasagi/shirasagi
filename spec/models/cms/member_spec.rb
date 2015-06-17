@@ -36,4 +36,51 @@ describe Cms::Member, dbscope: :example do
         change { Cms::Member.count }.from(0).to(1)
     end
   end
+
+  describe ".name_of" do
+    it "returns name" do
+      info = OmniAuth::AuthHash::InfoHash.new
+      info[:name] = "name"
+      info[:nickname] = "nickname"
+      expect(described_class.name_of(info)).to eq "name"
+    end
+
+    it "returns first_name" do
+      info = OmniAuth::AuthHash::InfoHash.new
+      info[:name] = ""
+      info[:first_name] = "first_name"
+      expect(described_class.name_of(info)).to eq "first_name"
+    end
+
+    it "returns last_name" do
+      info = OmniAuth::AuthHash::InfoHash.new
+      info[:name] = ""
+      info[:last_name] = "last_name"
+      expect(described_class.name_of(info)).to eq "last_name"
+    end
+
+    it "returns composite of first_name and last_name" do
+      info = OmniAuth::AuthHash::InfoHash.new
+      info[:name] = ""
+      info[:first_name] = "first_name"
+      info[:last_name] = "last_name"
+      expect(described_class.name_of(info)).to eq "first_name last_name"
+    end
+
+    it "returns nickname" do
+      # this example examines the github blank name issue.
+      info = OmniAuth::AuthHash::InfoHash.new
+      info[:name] = ""
+      info[:nickname] = "nickname"
+      expect(described_class.name_of(info)).to eq "nickname"
+    end
+
+    it "returns email" do
+      # this example examines the github blank name issue.
+      info = OmniAuth::AuthHash::InfoHash.new
+      info[:name] = ""
+      info[:email] = "address@example.jp"
+      expect(described_class.name_of(info)).to eq "address"
+    end
+  end
 end
