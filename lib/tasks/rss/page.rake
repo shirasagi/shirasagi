@@ -2,7 +2,6 @@ namespace :rss do
   task :import_pages => :environment do
     find_sites(ENV["site"]).each do |site|
       node = find_node(site, ENV["node"])
-      puts "node=#{node}(#{node.class})"
 
       if node.present?
         Rss::ImportJob.register_job(site, node)
