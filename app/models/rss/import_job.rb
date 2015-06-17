@@ -68,11 +68,11 @@ class Rss::ImportJob
     page.cur_user = @cur_user if @cur_user.present?
     page.name = rss_item.name
     page.layout_id = @cur_node.page_layout_id if @cur_node.page_layout_id.present?
-    # page.state = @cur_node.state
-    # page.category_ids = Array.new(@cur_node.category_ids) if @cur_node.category_ids.present?
     page.rss_link = rss_item.link
     page.html = rss_item.html
     page.released = rss_item.released
+    page.permission_level = @cur_node.permission_level if page.permission_level.blank?
+    page.group_ids = Array.new(@cur_node.group_ids) if page.group_ids.blank?
     unless save_or_update page
       Rails.logger.error("#{page.errors.full_messages}")
       @errors.concat(page.errors.full_messages)
