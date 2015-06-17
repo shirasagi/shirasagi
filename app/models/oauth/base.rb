@@ -14,14 +14,18 @@ module Oauth::Base
   def client_id
     @client_id ||= begin
       Rails.logger.debug("fetch client id from #{node.try(:filename)} node")
-      node.try("#{name}_client_id".downcase) || Rails.application.oauth.try("#{name}_client_id")
+      id = node.try("#{name}_client_id".downcase)
+      id = SS.config.oauth.try(:[], "#{name}_client_id") if id.blank?
+      id
     end
   end
 
   def client_secret
     @client_secret ||= begin
       Rails.logger.debug("fetch client secret from #{node.try(:filename)} node")
-      node.try("#{name}_client_secret".downcase) || Rails.application.oauth.try("#{name}_client_secret")
+      secret = node.try("#{name}_client_secret".downcase)
+      secret = SS.config.oauth.try(:[], "#{name}_client_secret") if secret.blank?
+      secret
     end
   end
 
