@@ -38,7 +38,7 @@ class Opendata::Dataset::UrlResourcesController < ApplicationController
 
     def download
       @item = @dataset.url_resources.find params[:url_resource_id]
-      send_file @item.file.path, type: @item.content_type, filename: File.basename(URI.parse(@item.original_url).path),
+      send_file @item.file.path, type: @item.content_type, filename: File.basename(@item.filename),
         disposition: :attachment, x_sendfile: true
     end
 

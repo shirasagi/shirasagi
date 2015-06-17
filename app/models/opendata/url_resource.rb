@@ -105,16 +105,16 @@ class Opendata::UrlResource
         break if last_modified.blank?
 
         self.original_updated = last_modified
-        self.filename = ::File.basename(uri.path)
+        self.filename = ::File.basename(uri.path) if self.filename.blank?
 
         ss_file = SS::File.new
         ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
-                                                                 filename: ::File.basename(uri.path),
+                                                                 filename: self.filename,
                                                                  type: 'application/octet-stream')
         ss_file.model = self.class.to_s.underscore
 
-        ss_file.content_type = self.format = original_url.sub(/.*\./, "").upcase
-        ss_file.filename = ::File.basename(uri.path)
+        ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
+        ss_file.filename = self.filename
         ss_file.save
         send("file_id=", ss_file.id)
         self.crawl_state = "same"
@@ -134,20 +134,19 @@ class Opendata::UrlResource
       require "open-uri"
       require "resolv-replace"
       require 'timeout'
+      require 'nkf'
 
       temp_file.binmode
       timeout(time_out) do
         open(original_url, proxy: true) do |data|
-          #if data.last_modified.blank?
-          #if self.crawl_update != "auto" && data.last_modified.blank?
-          #  errors.add :base, I18n.t("opendata.errors.messages.dynamic_file")
-          #  break
-          #end
 
           temp_file.write(data.read)
           temp_file.rewind
 
-          #if self.crawl_update == "auto" && data.last_modified.blank?
+          content_disposition = data.meta['content-disposition']
+          content_disposition = "Content-Disposition: attachment; filename= " if content_disposition.blank?
+          self.filename = NKF.nkf "-w", content_disposition.match(/filename=(\"?)(.+)\1/)[2].to_s
+
           if data.last_modified.blank?
             break Time.zone.now
           else

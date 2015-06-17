@@ -2,7 +2,7 @@
   <% if @item.file %>
   <dt><%= @model.t :file_id %></dt>
   <dd>
-    <%= link_to File.basename(URI.parse(@item.original_url).path), opendata_dataset_url_resource_file_path(url_resource_id: @item.id) %>
+    <%= link_to File.basename(@item.filename), opendata_dataset_url_resource_file_path(url_resource_id: @item.id) %>
     (<%= number_to_human_size @item.size %>)
   </dd>
   <% end %>
