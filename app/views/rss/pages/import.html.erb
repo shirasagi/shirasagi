@@ -1,0 +1,14 @@
+<%= form_for :item, url: { action: :import }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t("rss.views.confirm.import") %></h2></header>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("rss.views.button.import"), class: :save %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>

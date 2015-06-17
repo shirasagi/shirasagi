@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://example.jp/</id>
+  <title>シラサギ公式ホームページ</title>
+  <updated>2015-06-12T19:00:00+09:00</updated>
+  <link rel="alternate" href="http://example.jp/"/>
+  <entry>
+    <id>http://example.jp/atom/1.html</id>
+    <title>記事1</title>
+    <updated>2015-06-12T19:00:00+09:00</updated>
+    <summary type="html">本文1</summary>
+    <link rel="alternate" href="http://example.jp/atom/1.html"/>
+    <category term="category1" scheme="http://example.jp/category/1" label="カテゴリ1"/>
+    <category term="category2" scheme="http://example.jp/category/2" label="カテゴリ2"/>
+    <author>
+    </author>
+  </entry>
+  <entry>
+    <id>http://example.jp/atom/2.html</id>
+    <title>記事2</title>
+    <updated>2015-06-11T14:00:00+09:00</updated>
+    <summary type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml">本文2</div></summary>
+    <link rel="alternate" href="http://example.jp/atom/2.html"/>
+    <category term="category1" scheme="http://example.jp/category/2" label="カテゴリ2"/>
+    <category term="category2" scheme="http://example.jp/category/3" label="カテゴリ3"/>
+    <author>
+    </author>
+  </entry>
+  <entry>
+    <id>http://example.jp/atom/3.html</id>
+    <title type="xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml"><xhtml:div>記事3</xhtml:div></title>
+    <updated>2015-06-10T09:00:00+09:00</updated>
+    <summary type="html">本文3</summary>
+    <link rel="alternate" href="http://example.jp/atom/3.html"/>
+    <category term="category1" scheme="http://example.jp/category/3" label="カテゴリ3"/>
+    <category term="category2" scheme="http://example.jp/category/4" label="カテゴリ4"/>
+    <author>
+    </author>
+  </entry>
+  <entry>
+    <id>http://example.jp/atom/4.html</id>
+    <title>記事4</title>
+    <updated>2015-06-09T15:00:00+09:00</updated>
+    <summary type="html">本文4</summary>
+    <link rel="alternate" href="http://example.jp/atom/4.html"/>
+    <category term="category1" scheme="http://example.jp/category/4" label="カテゴリ4"/>
+    <category term="category2" scheme="http://example.jp/category/5" label="カテゴリ5"/>
+    <author>
+    </author>
+  </entry>
+  <entry>
+    <id>http://example.jp/atom/5.html</id>
+    <title>記事5</title>
+    <updated>2015-06-08T10:00:00+09:00</updated>
+    <summary type="html">本文5</summary>
+    <link rel="alternate" href="http://example.jp/atom/5.html"/>
+    <category term="category1" scheme="http://example.jp/category/5" label="カテゴリ5"/>
+    <category term="category2" scheme="http://example.jp/category/1" label="カテゴリ1"/>
+    <author>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,18 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :basename %></dt>
+  <dd><%= @item.send :basename %></dd>
+  <dd>
+    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
+  </dd>
+
+  <% if @item.send(:layout_id).present? %>
+  <dt><%= @model.t :layout_id %></dt>
+  <dd><%= tryb{@item.layout.name} %></dd>
+  <% end %>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+</dl>

@@ -1,0 +1,8 @@
+<dl class="see mod-rss-import">
+  <dt><%= @model.t :rss_url %><%= @model.tt :rss_url %></dt>
+  <dd><%= f.text_field :rss_url %></dd>
+  <dt><%= @model.t :rss_max_docs %><%= @model.tt :rss_max_docs %></dt>
+  <dd><%= f.number_field :rss_max_docs %></dd>
+  <dt><%= @model.t :rss_refresh_method %><%= @model.tt :rss_refresh_method %></dt>
+  <dd><%= f.select :rss_refresh_method, @item.rss_refresh_method_options %></dd>
+</dl>

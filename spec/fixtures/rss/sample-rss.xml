@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>シラサギ公式ホームページ</title>
+    <link>http://example.jp/</link>
+    <language>ja</language>
+    <description>記事</description>
+    <item>
+      <title>記事1</title>
+      <link>http://example.jp/rss/1.html</link>
+      <description>本文1</description>
+      <pubDate>Fri, 12 Jun 2015 19:00:00 +0900</pubDate>
+      <category>カテゴリ1</category>
+      <category>カテゴリ2</category>
+    </item>
+    <item>
+      <title>記事2</title>
+      <link>http://example.jp/rss/2.html</link>
+      <description>本文2</description>
+      <pubDate>Thu, 11 Jun 2015 14:00:00 +0900</pubDate>
+      <category>カテゴリ2</category>
+      <category>カテゴリ3</category>
+    </item>
+    <item>
+      <title>記事3</title>
+      <link>http://example.jp/rss/3.html</link>
+      <description>本文3</description>
+      <pubDate>Wed, 10 Jun 2015 09:00:00 +0900</pubDate>
+      <category>カテゴリ3</category>
+      <category>カテゴリ4</category>
+    </item>
+    <item>
+      <title>記事4</title>
+      <link>http://example.jp/rss/4.html</link>
+      <description>本文4</description>
+      <pubDate>Tue, 09 Jun 2015 15:00:00 +0900</pubDate>
+      <category>カテゴリ4</category>
+      <category>カテゴリ5</category>
+    </item>
+    <item>
+      <title>記事5</title>
+      <link>http://example.jp/rss/5.html</link>
+      <description>本文5</description>
+      <pubDate>Mon, 08 Jun 2015 10:00:00 +0900</pubDate>
+      <category>カテゴリ5</category>
+      <category>カテゴリ1</category>
+    </item>
+  </channel>
+</rss>
