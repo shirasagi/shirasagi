@@ -13,7 +13,7 @@ class Cms::UsersController < ApplicationController
     end
 
     def fix_params
-      {}
+      { cur_user: @cur_user }
     end
 
     def set_item

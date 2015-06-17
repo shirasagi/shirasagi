@@ -11,6 +11,10 @@ class Sys::UsersController < ApplicationController
       @crumbs << [:"sys.user", sys_users_path]
     end
 
+    def fix_params
+      { cur_user: @cur_user }
+    end
+
   public
     def index
       raise "403" unless @model.allowed?(:edit, @cur_user)
