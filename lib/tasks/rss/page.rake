@@ -1,5 +1,5 @@
 namespace :rss do
-  task :import_pages => :environment do
+  task :import_items => :environment do
     find_sites(ENV["site"]).each do |site|
       node = find_node(site, ENV["node"])
 
