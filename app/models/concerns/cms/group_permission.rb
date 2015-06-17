@@ -10,10 +10,7 @@ module Cms::GroupPermission
 
   public
     def owned?(user)
-      self.group_ids.each do |id|
-        return true if user.group_ids.include?(id)
-      end
-      return false
+      (self.group_ids & user.group_ids).present?
     end
 
     def permission_level_options
@@ -66,5 +63,5 @@ module Cms::GroupPermission
 
         where({ _id: -1 })
       end
-    end
+  end
 end
