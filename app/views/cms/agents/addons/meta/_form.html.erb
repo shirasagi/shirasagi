@@ -2,10 +2,16 @@
 
 <dl class="see mod-cms-meta">
   <dt><%= @model.t :keywords %><%= @model.tt :keywords %></dt>
-  <dd><%= f.text_field :keywords, class: "presence" %></dd>
+  <dd>
+    <% opts = @cur_site.auto_keywords_enabled? ? {} : { class: "presence" } %>
+    <%= f.text_field :keywords, opts %>
+  </dd>
 
   <dt><%= @model.t :description %><%= @model.tt :description %></dt>
-  <dd><%= f.text_area :description, class: "presence" %></dd>
+  <dd>
+    <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
+    <%= f.text_area :description, opts %>
+  </dd>
 
   <dt><%= @model.t :summary_html %><%= @model.tt :summary_html %></dt>
   <dd><%= f.text_area :summary_html %></dd>

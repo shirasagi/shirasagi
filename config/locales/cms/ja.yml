@@ -148,6 +148,7 @@ ja:
       cms/thumb: サムネイル
       cms/parent_crumb: パンくず
       cms/additional_info: 追加情報
+      cms/page_setting: ページ設定
 
   mongoid:
     models:
@@ -209,6 +210,9 @@ ja:
         host: ホスト名
         domains: ドメイン
         group_ids: グループ
+        auto_keywords: キーワード自動設定
+        auto_description: 概要自動設定
+        keywords: 追加キーワード
       cms/role:
         name: ロール名
         permission_level: 権限レベル
@@ -453,6 +457,16 @@ ja:
       destination_filename:
         - ページやフォルダーの移動を行います。
         - 移動先をフルパスで設定してください。
+
+    cms/site:
+      auto_keywords:
+        - ページ、フォルダー保存時にメタ情報のキーワードを入力しない場合、自動で入力するかを選択します。
+        - 自動入力されるキーワードは親フォルダーと設定カテゴリーから生成されます。
+      auto_description:
+        - ページ保存時にメタ情報のページ概要を入力しない場合、自動で入力するかを選択します。
+        - 自動入力されるページ概要は本文から生成されます。
+      keywords:
+        - キーワード自動設定が有効時にこの項目が自動入力に追加されます。
 
     cms/model/part:
       route:
