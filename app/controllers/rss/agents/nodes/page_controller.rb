@@ -10,9 +10,9 @@ class Rss::Agents::Nodes::PageController < ApplicationController
 
     def index
       @items = pages.
-          order_by(@cur_node.sort_hash).
-          page(params[:page]).
-          per(@cur_node.limit)
+        order_by(@cur_node.sort_hash).
+        page(params[:page]).
+        per(@cur_node.limit)
 
       render_with_pagination @items
     end
