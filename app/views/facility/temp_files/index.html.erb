@@ -19,6 +19,7 @@ SS.ajaxDelete ".temp-files .delete"
 
   <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
     <%= f.file_field :in_files, multiple: :multiple, required: :required, accept: 'image/png,image/gif,image/jpeg' %>
+    <%= f.select :image_size, @model.image_size_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %>
     <%= f.submit :upload, class: :save %>
   </div>
 

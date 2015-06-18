@@ -5,21 +5,16 @@
 $(window).on("load", function() {
   $(".ajax-box").colorbox({
     rel: "facility-images",
-    current: function() {
-      return $(this).closest("div").find(".comment").text();
-    },
+    current: "",
     html: function() {
-      var img = $(this).find("img")
-      var src = img.attr("src").split("?")[0].replace("thumb/", "");
-      var alt = img.attr("alt");
-      return '<div><img src="' + src + '" alt="' + alt + '"></div>';
+      return $(this).closest("div.image").find(".inside").html();
     }
   });
 });
 <% end %>
 
 <% if @summary_image.present? %>
-  <div class="summary-image">
+  <div class="summary-image image">
     <p>
       <%= link_to @summary_image.url, class: "ajax-box", onclick: "return false;" do %>
         <% thumb_size = { width: @summary_image.image_thumb_width, height: @summary_image.image_thumb_height }.to_query %>
@@ -29,6 +24,10 @@ $(window).on("load", function() {
     <% if @summary_image.image_comment.present? %>
       <p class="comment"><%= @summary_image.image_comment %></p>
     <% end %>
+    <div class="inside" style="display:none;">
+      <%= image_tag @summary_image.image.url, alt: @summary_image.image_alt %>
+      <p class="comment"><%=br @summary_image.image_comment %></p>
+    </div>
   </div>
 <% end %>
 
@@ -50,6 +49,10 @@ $(window).on("load", function() {
         <% if img.image_comment.present? %>
           <p class="comment"><%= img.image_comment %></p>
         <% end %>
+        <div class="inside" style="display:none;">
+          <%= image_tag img.image.url, alt: img.image_alt %>
+          <p class="comment"><%=br img.image_comment %></p>
+        </div>
       </div>
     <% end %>
   </div>
