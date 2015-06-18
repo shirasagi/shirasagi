@@ -21,7 +21,7 @@ module Opendata::Api::GroupShowFilter
 
   public
     def group_show
-      help = SS.config.opendata.api["group_show_help"]
+      help = t("opendata.api.group_show_help")
       id = params[:id]
       id = URI.decode(id) if id
       include_datasets = params[:include_datasets] || "true"

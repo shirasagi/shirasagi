@@ -8,64 +8,6 @@ production: &production
     port: 3030
     dataset: opendata
 
-  # Web API
-  api:
-    package_list_help: |
-      [api] package_list - 公開データセット名一覧を取得する。
-      [param1] limit - 出力するデータセット名の最大件数を指定する。
-                       0を指定した場合は件数を制限しない。
-      [param2] offset - 出力を開始するデータセットの配列インデックスを指定する。
-                        limitが設定された場合のみ、有効とする。
-    group_list_help: |
-      [api] group_list - データセットグループ情報の一覧を取得する。
-      [param1] sort - 戻り値のソート対象の項目。
-                      name（デフォルト）またはpackagesを指定する。
-      [param2] all_fields - 全項目を出力するかどうかを指定する。
-                            True：表示、False：非表示（デフォルト）。
-      [param3] groups - 未実装。
-    tag_list_help: |
-      [api] tag_list - タグ名一覧を取得する。
-      [param1] query - 指定した文字列を含むタグ名を出力対象とする。
-      [param2] all_fields - 未実装。
-      [param3] vocabulary_id - 未実装。
-    package_show_help: |
-      [api] package_show - 公開データセット情報を取得する。
-      [param1] id - IDまたは名称が指定した文字列と一致するデータセット情報を出力する。（必須）
-      [param2] use_default_schema - 未実装。
-    tag_show_help: |
-      [api] tag_show - タグが指定した文字列と一致する公開データセット情報の一覧を取得する。
-      [param1] id - 指定した文字列と一致するタグを出力対象とする。（必須）
-    group_show_help: |
-      [api] group_show - 公開データセットグループ情報を取得する。
-      [param1] id - IDまたは名称が指定した文字列と一致するデータセットグループ情報を出力対象とする。（必須）
-      [param2] include_datasets - データセットグループに属するデータセット情報を含めるかどうかを指定する。
-                                  true：含む（デフォルト）。
-                                  false：含まない。（packagesの値は空の配列となる。）
-    package_search_help: |
-      [api] package_search - 公開データセット情報に対して、全文検索を行う。
-      [param1] q - 全文検索のキーワードを指定する。（初期値：":"）
-      [param2] fq - 未実装。
-      [param3] sort - 未実装。
-      [param4] rows - 取得するデータセット情報の最大数を指定する。
-      [param5] start - 取得を開始するデータセット情報の配列インデックスを指定する。
-      [param6] facet - 未実装。
-      [param7] facet.mincount - 未実装。
-      [param8] facet.field - 未実装。
-    resource_search_help: |
-      [api] resource_search - 指定項目に指定値を部分一致で含む公開リソース情報を取得する。
-      [param1] query - 検索条件を指定する。（必須）
-                       検索条件は"項目名:値"の形式で指定する。（1セットのみ、指定可能。）
-                       下記の項目名のいずれかを指定した場合のみ、有効となる。
-                       （name、description、filename、format）
-      [param2] fields - 未実装。（Deprecated）
-      [param3] order_by - 昇順でソートを行う項目名を指定する。
-                          下記の項目名のいずれかを指定した場合のみ、有効となる。
-                          （name、description、filename、format）
-      [param4] offset - 取得を開始するリソースの配列インデックスを指定する。
-      [param5] limit - 取得するリソースの最大件数を指定する。
-
-  use_member_form_login: false
-
 test:
   <<: *production
   fuseki:

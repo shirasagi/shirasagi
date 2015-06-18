@@ -23,8 +23,7 @@ module Opendata::Api::GroupListFilter
 
   public
     def group_list
-
-      help = SS.config.opendata.api["group_list_help"]
+      help = t("opendata.api.group_list_help")
 
       sort = params[:sort] || "name"
       sort = sort.downcase

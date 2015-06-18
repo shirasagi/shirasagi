@@ -4,7 +4,7 @@ module Opendata::Api::TagShowFilter
 
   public
     def tag_show
-      help = SS.config.opendata.api["tag_show_help"]
+      help = t("opendata.api.tag_show_help")
       id = params[:id]
       id = URI.decode(id) if id
 

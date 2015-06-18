@@ -21,8 +21,7 @@ module Opendata::Api::PackageShowFilter
 
   public
     def package_show
-
-      help = SS.config.opendata.api["package_show_help"]
+      help = t("opendata.api.package_show_help")
 
       id = params[:id]
       id = URI.decode(id) if id

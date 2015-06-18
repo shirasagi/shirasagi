@@ -59,8 +59,7 @@ module Opendata::Api::ResourceSearchFilter
 
   public
     def resource_search
-
-      help = SS.config.opendata.api["resource_search_help"]
+      help = t("opendata.api.resource_search_help")
 
       queries = [params[:query]]
       order_by = params[:order_by]

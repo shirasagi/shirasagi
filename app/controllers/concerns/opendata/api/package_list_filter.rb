@@ -25,8 +25,7 @@ module Opendata::Api::PackageListFilter
 
   public
     def package_list
-
-      help = SS.config.opendata.api["package_list_help"]
+      help = t("opendata.api.package_list_help")
 
       limit = params[:limit]
       offset = params[:offset]

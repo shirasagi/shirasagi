@@ -4,7 +4,7 @@ module Opendata::Api::TagListFilter
 
   public
     def tag_list
-      help = SS.config.opendata.api["tag_list_help"]
+      help = t("opendata.api.tag_list_help")
 
       query = params[:query]
       query = URI.decode(query) if query

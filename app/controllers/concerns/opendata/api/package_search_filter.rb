@@ -25,8 +25,7 @@ module Opendata::Api::PackageSearchFilter
 
   public
     def package_search
-
-      help = SS.config.opendata.api["package_search_help"]
+      help = t("opendata.api.package_search_help")
 
       query = params[:q] || ":"
       rows = params[:rows]
