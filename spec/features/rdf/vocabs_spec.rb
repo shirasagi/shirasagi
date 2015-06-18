@@ -86,8 +86,8 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
       it do
         visit import_path
         within "form#item-form" do
-          fill_in "item[prefix]", with: "p#{unique_id}"
-          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/rdf/ipa-core-sample.ttl"
+          fill_in "params[prefix]", with: "p#{unique_id}"
+          attach_file "params[in_file]", "#{Rails.root}/spec/fixtures/rdf/ipa-core-sample.ttl"
           click_button I18n.t("rdf.vocabs.import")
         end
         expect(current_path).to eq index_path

@@ -1,4 +1,4 @@
-<%= form_for :item, url: { action: :import }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+<%= form_for :params, url: { action: :import }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
 <%# error_messages_for :item %>
 <% if @errors.present? %>
   <div id="errorSyntaxChecker" class="errorExplanation">
