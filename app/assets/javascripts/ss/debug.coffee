@@ -31,7 +31,9 @@ class @SS_Debug
       #return
 
     view = $("#log")
-    path = url.replace(/\d+/g, "123")
+    path = url
+    path = path.replace(/\d+/g, "123")
+    path = path.replace(/\?s(\[|\%123).*/g, "")
     patt = path.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     return true if view.val().match(new RegExp("^" + patt + "$", "m"))
     view.val view.val() + path + "\n"
