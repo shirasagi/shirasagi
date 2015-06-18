@@ -1203,9 +1203,20 @@ textarea {
 :root .body--event .see .send input {
   filter: none\0;
 }
+#ss-notice {
+  margin-bottom: $box-margin;
+  color: #e00;
+}
 #errorExplanation {
+  margin: $box-margin 0;
   p, ul {
     color: #e00;
+  }
+  p {
+    margin: $item-margin 0;
+  }
+  ul {
+    margin: $item-margin 0 $item-margin 25px;
   }
 }
 .body--event {
@@ -1846,20 +1857,22 @@ textarea {
     }
   }
   .form-login {
+    width: 498px;
     margin-bottom: $box-margin;
+    padding: $item-margin $box-margin;
+    border: $border-gray2;
     dl {
       clear: both;
       @include clear;
-      margin-bottom: $item-margin;
     }
     dt, dd {
-      float: left;
-      margin-right: $item-margin;
     }
     dt {
+      min-width: 120px;
       padding: 3px 5px;
     }
     dd {
+      margin-bottom: $item-margin;
       input {
         width: 350px;
       }
