@@ -20,15 +20,15 @@ module Opendata::Resource::Model
   end
 
   def url
-    dataset.url.sub(/\.html$/, "") + "#{context_path}/#{id}/#{filename}"
+    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(filename)}"
   end
 
   def full_url
-    dataset.full_url.sub(/\.html$/, "") + "#{context_path}/#{id}/#{filename}"
+    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(filename)}"
   end
 
   def content_url
-    dataset.full_url.sub(/\.html$/, "") + "#{context_path}/#{id}/content.html"
+    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/content.html"
   end
 
   def path

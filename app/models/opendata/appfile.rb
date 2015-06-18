@@ -26,11 +26,11 @@ class Opendata::Appfile
 
   public
     def url
-      get_app_url(app, "/appfile/#{id}/#{filename}")
+      get_app_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
     end
 
     def full_url
-      get_app_full_url(app, "/appfile/#{id}/#{filename}")
+      get_app_full_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
     end
 
     def content_url

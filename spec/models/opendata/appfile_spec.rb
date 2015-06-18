@@ -96,4 +96,24 @@ describe Opendata::Appfile, dbscope: :example do
     subject { create_appfile(app, file) }
     it { is_expected.to have(1).errors_on(:file_id) }
   end
+
+  context "when japanese filename is uploaded" do
+    let(:app) { create(:opendata_app, node: node, appurl: "http://example.jp/") }
+    let(:tmpdir) { Dir.tmpdir }
+    let(:file_path) do
+      File.open("#{tmpdir}/index - コピー.json", "w") do |fp|
+        fp.puts "{}"
+      end
+      "#{tmpdir}/index - コピー.json"
+    end
+    let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
+    subject { create_appfile(app, file) }
+
+    after do
+      ::FileUtils.rm_rf tmpdir
+    end
+
+    its(:url) { is_expected.to end_with("/#{URI.escape("index - コピー.json")}")}
+    its(:full_url) { is_expected.to end_with("/#{URI.escape("index - コピー.json")}")}
+  end
 end

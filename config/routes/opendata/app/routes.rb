@@ -40,11 +40,11 @@ SS::Application.routes.draw do
     get "app/:app/appfile/:id/" => "public#index", cell: "nodes/app/appfile"
     get "app/:app/appfile/:id/content.html" => "public#content", cell: "nodes/app/appfile", format: false
     get "app/:app/appfile/:id/json.html" => "public#json", cell: "nodes/app/appfile", format: false
-    get "app/:app/appfile/:id/*filename" => "public#download", cell: "nodes/app/appfile", format: false
+    get "app/:app/appfile/:id/*filename" => "public#download", filename: /.*/, cell: "nodes/app/appfile", format: false
 
     get "app/:app/full" => "public#full", cell: "nodes/app/app", format: false
-    get "app/:app/file_index/(*filename)" => "public#app_index", cell: "nodes/app/app", format: false
-    get "app/:app/file_text/(*filename)" => "public#text", cell: "nodes/app/app", format: false
+    get "app/:app/file_index/(*filename)" => "public#app_index", filename: /.*/, cell: "nodes/app/app", format: false
+    get "app/:app/file_text/(*filename)" => "public#text", filename: /.*/, cell: "nodes/app/app", format: false
 
     match "search_app/(index.:format)" => "public#index", cell: "nodes/app/search_app", via: [:get, :post]
     get "search_app/rss.xml" => "public#rss", cell: "nodes/app/search_app"

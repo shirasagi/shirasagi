@@ -25,6 +25,7 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
       @item = @dataset.resources.find_by id: params[:id], filename: params[:filename].force_encoding("utf-8")
       @item.dataset.inc downloaded: 1
 
+      @cur_node.layout_id = nil
       send_file @item.file.path, type: @item.content_type, filename: @item.filename,
         disposition: :attachment, x_sendfile: true
     end

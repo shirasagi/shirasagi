@@ -53,9 +53,8 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
     def set_file
       set_app
       filename = params[:filename]
-      if filename.blank?
-        filename = "index.html"
-      end
+      filename.force_encoding("utf-8") if filename.present?
+      filename = "index.html" if filename.blank?
       @appfile = @app.appfiles.find_by filename: filename
     end
 
