@@ -148,7 +148,7 @@ class Opendata::Dataset
         end
         if params[:name].present?
           if params[:modal].present?
-            words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
+            words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{Regexp.escape(w)}\E/ }
             criteria = criteria.all_in name: words
           else
             criteria = criteria.keyword_in params[:keyword], :name

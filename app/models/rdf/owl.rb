@@ -35,7 +35,7 @@
 #         # if params[:name].present?
 #         #   # criteria = criteria.search_text params[:name]
 #         #   words = params[:name]
-#         #   words = words.split(/[\s　]+/).uniq.compact.map { |w| /\Q#{w}\E/i } if words.is_a?(String)
+#         #   words = words.split(/[\s　]+/).uniq.compact.map { |w| /\Q#{Regexp.escape(w)}\E/i } if words.is_a?(String)
 #         #   criteria = criteria.all_in(:name => words)
 #         # end
 #         #

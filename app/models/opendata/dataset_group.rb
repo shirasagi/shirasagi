@@ -34,7 +34,7 @@ class Opendata::DatasetGroup
         return criteria if params.blank?
 
         if params[:name].present?
-          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{w}\E/ }
+          words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{Regexp.escape(w)}\E/ }
           criteria = criteria.all_in name: words
         end
         if params[:category_id].present?
