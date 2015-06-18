@@ -213,7 +213,7 @@ module Opendata::Api
     def get_user(user_id)
       package_user = {}
 
-      user = SS::User.find(user_id)
+      user = SS::User.find(user_id) rescue nil
       if user
         package_user[:author] = user[:name]
         package_user[:author_email] = user[:email]
