@@ -37,7 +37,7 @@ def save_member(data)
   item
 end
 
-member = save_member email: "admin@example.jp", name: "admin", in_password: "pass"
+member = save_member email: "member@example.jp", name: "member", in_password: "pass"
 
 ## -------------------------------------
 puts "# layouts"
