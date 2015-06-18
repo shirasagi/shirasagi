@@ -5,7 +5,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
   private
     def set_generate_options
-      @generate_relation_files = (@attachment_files == "generate")
+      @attachments = (@attachments == "1")
     end
 
   public
@@ -18,7 +18,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
       pages.each do |page|
         @task.count
-        page.serve_static_relation_files = @generate_relation_files
+        page.serve_static_relation_files = @attachments
         @task.log page.url if page.becomes_with_route.generate_file
       end
     end

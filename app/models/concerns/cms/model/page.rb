@@ -32,7 +32,7 @@ module Cms::Model::Page
       call = true
       call = instance_exec(&c[:if]) if c[:if]
       call = !instance_exec(&c[:unless]) if c[:unless]
-      send(c[:method], *args)
+      send(c[:method], *args) if call
     end
 
   public

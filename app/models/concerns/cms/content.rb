@@ -8,7 +8,6 @@ module Cms::Content
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files
-  attr_accessor :serve_static_file
 
   included do
     seqid :id
@@ -151,19 +150,13 @@ module Cms::Content
     end
 
     def serve_static_file?
-      if @serve_static_file.nil?
-        SS.config.cms.serve_static_pages
-      else
-        @serve_static_file == true
-      end
+      SS.config.cms.serve_static_pages
     end
 
     def serve_static_relation_files?
-      if @serve_static_relation_files.nil?
-        serve_static_file?
-      else
-        @serve_static_relation_files == true
-      end
+      return false unless serve_static_file?
+      return true if @serve_static_relation_files.nil?
+      @serve_static_relation_files == true
     end
 
   private
