@@ -14,7 +14,7 @@ class Cms::ContentsController < ApplicationController
 
       @mod = params[:mod]
       cond = {}
-      cond[:route] = /^#{@mod}\// if @mod.present?
+      cond[:route] = /^#{Regexp.escape(@mod)}\// if @mod.present?
 
       @items = Cms::Node.site(@cur_site).
         allow(:read, @cur_user).

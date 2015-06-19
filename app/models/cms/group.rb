@@ -7,7 +7,7 @@ class Cms::Group
 
   attr_accessor :cur_site
 
-  scope :site, ->(site) { self.in(name: site.groups.pluck(:name).map{ |name| /^#{name}(\/|$)/ }) }
+  scope :site, ->(site) { self.in(name: site.groups.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ }) }
 
   validate :validate_sites
 
@@ -16,7 +16,7 @@ class Cms::Group
       if cur_site.present?
         return if cur_site.group_ids.index(id)
 
-        cond = cur_site.groups.map { |group| name =~ /^#{group.name}\// }.compact
+        cond = cur_site.groups.map { |group| name =~ /^#{Regexp.escape(group.name)}\// }.compact
         self.errors.add :name, :not_a_child_group if cond.blank?
       end
     end

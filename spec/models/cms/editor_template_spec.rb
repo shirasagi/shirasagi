@@ -9,13 +9,18 @@ describe Cms::EditorTemplate, dbscope: :example do
 
     context "when name is given" do
       subject { described_class.search(name: "名前 なまえ") }
-      it { expect(subject.selector.to_h).to include("name" => include("$all" => include(/\Q名前\E/i, /\Qなまえ\E/i))) }
+      it { expect(subject.selector.to_h).to include("name" => include("$all" => include(/名前/i, /なまえ/i))) }
+    end
+
+    context "when name includes regex meta characters" do
+      subject { described_class.search(name: "名|前 な(*.?)まえ") }
+      it { expect(subject.selector.to_h).to include("name" => include("$all" => include(/名\|前/i, /な\(\*\.\?\)まえ/i))) }
     end
 
     context "when keyword is given" do
       subject { described_class.search(keyword: "キーワード1 キーワード2") }
-      it { expect(subject.selector.to_h).to include("$and" => include("$or" => include("name" => /\Qキーワード1\E/i))) }
-      it { expect(subject.selector.to_h).to include("$and" => include("$or" => include("name" => /\Qキーワード2\E/i))) }
+      it { expect(subject.selector.to_h).to include("$and" => include("$or" => include("name" => /キーワード1/i))) }
+      it { expect(subject.selector.to_h).to include("$and" => include("$or" => include("name" => /キーワード2/i))) }
     end
   end
 

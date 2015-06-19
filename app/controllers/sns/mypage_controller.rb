@@ -7,7 +7,7 @@ class Sns::MypageController < ApplicationController
 
       @sites = []
       SS::Site.each do |site|
-        if @cur_user.groups.in(name: site.groups.pluck(:name).map{ |name| /^#{name}(\/|$)/ } ).present?
+        if @cur_user.groups.in(name: site.groups.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ } ).present?
           @sites << site
         end
       end

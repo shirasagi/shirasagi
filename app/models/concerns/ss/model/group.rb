@@ -57,8 +57,8 @@ module SS::Model::Group
       src = @db_changes["name"][0]
       dst = @db_changes["name"][1]
 
-      SS::Group.where(name: /^#{src}\//).each do |item|
-        item.name = item.name.sub(/^#{src}\//, "#{dst}\/")
+      SS::Group.where(name: /^#{Regexp.escape(src)}\//).each do |item|
+        item.name = item.name.sub(/^#{Regexp.escape(src)}\//, "#{dst}\/")
         item.save validate: false
       end
     end
