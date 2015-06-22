@@ -5,11 +5,11 @@ class Faq::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::Meta
+  include Faq::Addon::Question
   include Cms::Addon::Body
   include Cms::Addon::File
   include Category::Addon::Category
   include Event::Addon::Date
-  include Faq::Addon::Question
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
   include Cms::Addon::ParentCrumb
