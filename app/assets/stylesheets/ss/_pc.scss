@@ -512,12 +512,12 @@ table.cells, table.see {
     }
     table.index {
       margin-top: 2px;
-      width: 20em;
+      width: auto;
       tr {
         background-color: transparent;
       }
     }
-    &:nth-child(3), &:nth-child(5), &:nth-child(6), &:nth-child(7), &:nth-child(8) {
+    &:nth-child(3), &:nth-child(4), &:nth-child(5), &:nth-child(6), &:nth-child(7), &:nth-child(8) {
       clear: both;
       @include clear;
     }
