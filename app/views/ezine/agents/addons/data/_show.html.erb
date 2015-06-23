@@ -1,0 +1,8 @@
+<% return if @item.data.blank? %>
+
+<dl class="see mod-ezine-data">
+  <% @item.data.each do |data| %>
+    <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
+    <dd><%= data.value %></dd>
+  <% end %>
+</dl>

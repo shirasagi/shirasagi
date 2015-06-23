@@ -4,6 +4,7 @@ class Ezine::Member
   include SS::Reference::Site
   include Cms::SitePermission
   include Ezine::MemberSearchable
+  include Ezine::Addon::Data
 
   field :email, type: String, metadata: { from: :email }
   field :email_type, type: String

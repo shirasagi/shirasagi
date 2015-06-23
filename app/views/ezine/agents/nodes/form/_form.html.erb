@@ -1,12 +1,32 @@
 <div class="columns">
   <dl class="column">
-    <dt><%= @entry.t :email %></dt>
-    <dd><%= f.text_field :email %></dd>
+    <dt>
+      <%= @entry.t :email %>
+      <span class="required"><%= t('ezine.required_field') %></span>
+    </dt>
+    <dd><%= f.email_field :email, value: @entry.email %></dd>
     <dt><%= @entry.t :email_type %></dt>
     <dd>
     <% @entry.email_type_options.each do |email_type| %>
-      <label><%= f.radio_button :email_type, email_type[1] %><%= email_type[0] %></label>
+      <label>
+        <%= f.radio_button :email_type, email_type[1], checked: (email_type[1] == @entry.email_type) %>
+        <%= email_type[0] %>
+      </label>
     <% end %>
     </dd>
   </dl>
+  <% @columns.each do |column | %>
+    <dl class="column">
+      <dt>
+        <%= f.label column.id, column.name %>
+        <% if column.required == "required" %>
+          <span class="required"><%= t('ezine.required_field') %></span>
+        <% end %>
+      </dt>
+      <dd>
+        <%= raw column.html %>
+        <%= column_tag(column, "#{f.object_name}[in_data]", @entry.in_data["#{column.id}"]) %>
+      </dd>
+    </dl>
+  <% end %>
 </div>

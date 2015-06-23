@@ -16,6 +16,8 @@ module Ezine::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    has_many :columns, class_name: "Ezine::Column"
+
     default_scope ->{ where(route: "ezine/page") }
   end
 

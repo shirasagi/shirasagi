@@ -12,7 +12,7 @@ $ ->
 
 <%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
 <div class="ezine-form">
-  <%= error_messages_for :answer, header_message: false %>
+  <%= error_messages_for :entry, header_message: false %>
   <%= render partial: "form_delete", locals: { f: f, confirm: false }  %>
   <%= f.hidden_field :entry_type, value: :delete %>
   <footer class="send">
