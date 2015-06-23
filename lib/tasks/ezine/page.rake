@@ -8,5 +8,9 @@ namespace :ezine do
     task :all => :environment do
       Ezine::Task.deliver_all
     end
+
+    task :reserved => :environment do
+      Ezine::Task.deliver_reserved
+    end
   end
 end

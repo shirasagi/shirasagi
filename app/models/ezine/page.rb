@@ -2,6 +2,7 @@ class Ezine::Page
   include Cms::Model::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
+  include Ezine::Addon::DeliverPlan
   include Ezine::Addon::Page::Body
   include Cms::Addon::GroupPermission
 

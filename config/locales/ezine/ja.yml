@@ -47,6 +47,7 @@ ja:
       ezine/reply: 確認メール
       ezine/data: 登録情報
       ezine/column_setting: 入力設定
+      ezine/deliver_plan: 配信予約
 
   cms:
     nodes:
@@ -69,6 +70,7 @@ ja:
         text: 本文（テキスト版）
         test_delivered: テスト配信完了日時
         results: 配信開始日時
+        deliver_date: 配信予約日時
       ezine/member:
         email: メールアドレス
         email_type: 配信形式
@@ -112,3 +114,7 @@ ja:
         - 登録確認の自動返信メールの下部に記載するテキストを入力します。
       reply_signature:
         - 登録確認の自動返信メールに記載する署名を入力します。
+    ezine/addon/deliver_plan:
+      deliver_date:
+        - 配信予約日時を設定します。
+        - 指定した日時が来ると配信を行います。

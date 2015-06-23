@@ -1,0 +1,4 @@
+<dl class="see">
+  <dt><%= @model.t :deliver_date %></dt>
+  <dd><%= tryb{@item.send(:deliver_date).strftime("%Y/%m/%d %H:%M")} %></dd>
+</dl>

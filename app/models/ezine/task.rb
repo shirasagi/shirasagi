@@ -31,6 +31,18 @@ class Ezine::Task
         end
       end
 
+      # Deliver reserved pages as Emails.
+      #
+      # 配信予約日時が入力されているページの中で、配信すべきページをメールとして送信する。
+      def deliver_reserved
+        time = Time.zone.now
+        Ezine::Page.where(:completed => false, :deliver_date.ne => nil, :deliver_date.lte => time).each do |page|
+          ready(id: page.id, name: 'ezine:deliver_reserved') do |task|
+            deliver_one_page page, task
+          end
+        end
+      end
+
     private
       # Deliver one page to one member as an Email.
       #
