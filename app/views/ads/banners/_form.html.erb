@@ -1,16 +1,16 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :link_url %></dt>
+  <dt><%= @model.t :link_url %><%= @model.tt :link_url %></dt>
   <dd><%= f.url_field :link_url, class: "url" %></dd>
 
-  <dt><%= @model.t :file_id %></dt>
+  <dt><%= @model.t :file_id %><%= @model.tt :file_id %></dt>
   <dd><%= f.file_field :in_file %></dd>
   <% if @item.file %>
   <dd><label><%= f.check_box :rm_file %><%= t "views.button.delete" %> (<%= @item.file.filename %>)</label></dd>
   <% end %>
 
-  <dt><%= @model.t :order %></dt>
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 </dl>

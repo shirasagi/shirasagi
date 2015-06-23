@@ -38,6 +38,7 @@ end
 <%= jquery do %> SS_AddonTabs.toggleView(".mod-category-category"); <% end %>
 
 <dl class="see mod-category-category category-form">
+  <div style="margin-bottom:20px;line-height:1.4;"><%= @model.tt :categories %></div>
   <dd class="wide">
     <%= f.hidden_field "category_ids[]", value: "" %>
 

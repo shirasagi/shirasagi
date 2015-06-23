@@ -22,3 +22,8 @@ ja:
       cms/model/page:
         st_categories: カテゴリー
         st_category_ids: カテゴリー
+
+  tooltip:
+    category/addon/category:
+      categories:
+        - 表示するカテゴリーページの名称にチェックを入れます。
