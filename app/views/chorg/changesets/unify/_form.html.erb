@@ -2,7 +2,7 @@
   <dt><%= t "chorg.views.#{params[:type]}_changesets.after_unify" %></dt>
   <dd></dd>
   <% Chorg::Changeset::GROUP_ATTRIBUTES.each do |k| %>
-    <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
+    <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %><%= tt "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
     <dd><%= f.text_field "destinations[][#{k}]", value: @item.destinations.try(:first).try(:send, :[], k) %></dd>
   <% end %>
 </dl>
@@ -10,7 +10,7 @@
 <dl class="see before_move">
   <dt><%= t "chorg.views.#{params[:type]}_changesets.before_unify" %></dt>
   <dd></dd>
-  <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %></dt>
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %><%= tt "chorg.views.#{params[:type]}_changesets.before_name" %></dt>
   <dd>
     <%= f.hidden_field "sources[][id]", value: "", class: "hidden-ids" %>
     <%= link_to :"chorg.views.#{params[:type]}_changesets.select_group", cms_apis_groups_path, class: "ajax-box" %>

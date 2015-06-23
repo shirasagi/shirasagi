@@ -87,3 +87,76 @@ ja:
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
       chorg/changeset:
         type: 種別
+
+  tooltip:
+    chorg/revision:
+      name:
+        - 組織変更の名称を入力します。
+    chorg:
+      views:
+        add_changesets:
+          name:
+            - 新設するのグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 新設するグループの電話番号を入力します。
+          contact_fax:
+            - 新設するグループのファックス番号を入力します。
+          contact_email:
+            - 新設するグループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は新設するグループの識別子(DN)を入力します。
+        delete_changesets:
+          name:
+            - 廃止するグループ名を選択します。
+        division_changesets:
+          name:
+            - 分割後ののグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 分割後のグループの電話番号を入力します。
+          contact_fax:
+            - 分割後のグループのファックス番号を入力します。
+          contact_email:
+            - 分割後のグループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は分割後のグループの識別子(DN)を入力します。
+          before_name:
+            - 分割元のグループ名を選択します。
+        move_changesets:
+          name:
+            - 移動先のグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 移動先グループの電話番号を入力します。
+          contact_fax:
+            - 移動先グループのファックス番号を入力します。
+          contact_email:
+            - 移動先グループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は移動先グループの識別子(DN)を入力します。
+          before_name:
+            - 移動元のグループ名を選択します。
+        unify_changesets:
+          name:
+            - 統合先のグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 統合先グループの電話番号を入力します。
+          contact_fax:
+            - 統合先グループのファックス番号を入力します。
+          contact_email:
+            - 統合先グループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は統合先グループの識別子(DN)を入力します。
+          before_name:
+            - 統合元のグループ名を選択します。
+
