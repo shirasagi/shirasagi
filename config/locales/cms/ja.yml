@@ -13,6 +13,7 @@ ja:
     node: フォルダー
     page: 固定ページ
     part: パーツ
+    file: 共有ファイル
     preview_page: プレビュー
     preview_site: サイトプレビュー
     role: 権限/ロール
@@ -103,26 +104,32 @@ ja:
     read_other_cms_pages: 固定ページの閲覧（全て）
     read_other_cms_parts: パーツの閲覧（全て）
     read_other_cms_layouts: レイアウトの閲覧（全て）
+    read_other_cms_files: ファイルの閲覧（全て）
     read_private_cms_nodes: フォルダーの閲覧（所有）
     read_private_cms_pages: 固定ページの閲覧（所有）
     read_private_cms_parts: パーツの閲覧（所有）
     read_private_cms_layouts: レイアウトの閲覧（所有）
+    read_private_cms_files: ファイルの閲覧（所有）
     edit_other_cms_nodes: フォルダーの編集（全て）
     edit_other_cms_pages: 固定ページの編集（全て）
     edit_other_cms_parts: パーツの編集（全て）
     edit_other_cms_layouts: レイアウトの編集（全て）
+    edit_other_cms_files: ファイルの編集（全て）
     edit_private_cms_nodes: フォルダーの編集（所有）
     edit_private_cms_pages: 固定ページの編集（所有）
     edit_private_cms_parts: パーツの編集（所有）
     edit_private_cms_layouts: レイアウトの編集（所有）
+    edit_private_cms_files: ファイルの編集（所有）
     delete_other_cms_nodes: フォルダーの削除（全て）
     delete_other_cms_pages: 固定ページの削除（全て）
     delete_other_cms_parts: パーツの削除（全て）
     delete_other_cms_layouts: レイアウトの削除（全て）
+    delete_other_cms_files: ファイルの削除（全て）
     delete_private_cms_nodes: フォルダーの削除（所有）
     delete_private_cms_pages: 固定ページの削除（所有）
     delete_private_cms_parts: パーツの削除（所有）
     delete_private_cms_layouts: レイアウトの削除（所有）
+    delete_private_cms_files: ファイルの削除（所有）
     move_other_cms_nodes: フォルダーの移動（全て）
     move_other_cms_pages: 固定ページの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
@@ -168,6 +175,7 @@ ja:
       cms/workflow/route: 承認経路
       cms/role: ロール
       cms/editor_template: テンプレート
+      cms/file: 共有ファイル
     attributes:
       cms/content:
         released: 公開日時

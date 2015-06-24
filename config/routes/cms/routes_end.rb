@@ -28,15 +28,32 @@ SS::Application.routes.draw do
     resources :groups, concerns: :deletion
     resources :members, concerns: :deletion
     resources :contents, path: "contents/(:mod)"
+
     resources :nodes, concerns: :deletion do
       get :routes, on: :collection
     end
+
     resources :parts, concerns: :deletion do
       get :routes, on: :collection
     end
+
     resources :pages, concerns: [:deletion, :crud]
     resources :layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
+
+    resources :files, concerns: [:deletion, :template] do
+      get :view, on: :member
+      get :thumb, on: :member
+      get :download, on: :member
+    end
+
+    resources :ajax_files, concerns: :deletion do
+      get :select, on: :member
+      get :view, on: :member
+      get :thumb, on: :member
+      get :download, on: :member
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"

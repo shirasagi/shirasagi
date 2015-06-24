@@ -1,7 +1,7 @@
 <div class="file-view">
-  <a class="thumb" href="<%= view_sns_user_temp_file_path(id: @item) %>" target="_blank">
+  <a class="thumb" href="<%= view_sns_user_temp_file_path(user: @cur_user.id, id: @item) %>" target="_blank">
     <% if @item.image? %>
-    <img src="<%= thumb_sns_user_temp_file_path(id: @item) %>" alt="<%= @item.basename %>" />
+    <img src="<%= thumb_sns_user_temp_file_path(user: @cur_user.id, id: @item) %>" alt="<%= @item.basename %>" />
     <% else %>
     <span class="ext icon-<%= @item.extname %>"><%= @item.extname %></span>
     <% end %>
