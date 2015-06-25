@@ -9,12 +9,12 @@ module Facility::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
     include Facility::Addon::CategorySetting
     include Facility::Addon::ServiceSetting
     include Facility::Addon::LocationSetting
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -24,13 +24,13 @@ module Facility::Node
   class Page
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Facility::Addon::Body
     include Cms::Addon::AdditionalInfo
     include Facility::Addon::Category
     include Facility::Addon::Service
     include Facility::Addon::Location
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -44,13 +44,13 @@ module Facility::Node
   class Search
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Facility::Addon::CategorySetting
     include Facility::Addon::ServiceSetting
     include Facility::Addon::LocationSetting
     include Facility::Addon::SearchSetting
     include Facility::Addon::SearchResult
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -74,10 +74,10 @@ module Facility::Node
   class Category
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
     include Facility::Addon::Image
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -104,9 +104,9 @@ module Facility::Node
   class Service
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -133,10 +133,10 @@ module Facility::Node
   class Location
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
     include Facility::Addon::FocusSetting
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

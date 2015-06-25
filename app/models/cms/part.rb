@@ -11,8 +11,8 @@ class Cms::Part
 
   class Free
     include Cms::Model::Part
-    include Cms::Addon::Release
     include Cms::Addon::Html
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -21,8 +21,8 @@ class Cms::Part
 
   class Node
     include Cms::Model::Part
-    include Cms::Addon::Release
     include Cms::Addon::NodeList
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -31,8 +31,8 @@ class Cms::Part
 
   class Page
     include Cms::Model::Part
-    include Cms::Addon::Release
     include Cms::Addon::PageList
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -41,8 +41,8 @@ class Cms::Part
 
   class Tabs
     include Cms::Model::Part
-    include Cms::Addon::Release
     include Cms::Addon::Tabs
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -51,8 +51,8 @@ class Cms::Part
 
   class Crumb
     include Cms::Model::Part
-    include Cms::Addon::Release
     include Cms::Addon::Crumb
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

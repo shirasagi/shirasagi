@@ -8,7 +8,6 @@ module Inquiry::Node
   class Form
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Inquiry::Addon::Message
     include Inquiry::Addon::Captcha
@@ -17,6 +16,7 @@ module Inquiry::Node
     include Inquiry::Addon::ReleasePlan
     include Inquiry::Addon::ReceptionPlan
     include Inquiry::Addon::Aggregation
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

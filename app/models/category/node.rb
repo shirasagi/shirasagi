@@ -8,9 +8,9 @@ module Category::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -20,9 +20,9 @@ module Category::Node
   class Page
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::PageList
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

@@ -1,8 +1,8 @@
 module Article::Part
   class Page
     include Cms::Model::Part
-    include Cms::Addon::Release
     include Cms::Addon::PageList
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
