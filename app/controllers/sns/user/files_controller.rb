@@ -1,7 +1,7 @@
 class Sns::User::FilesController < ApplicationController
   include Sns::UserFilter
   include Sns::CrudFilter
-  include Sns::FileFilter
+  include SS::FileFilter
 
   model SS::UserFile
 

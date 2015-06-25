@@ -1,7 +1,7 @@
 class Facility::TempFilesController < ApplicationController
   include Sns::UserFilter
   include Sns::CrudFilter
-  include Sns::FileFilter
+  include SS::FileFilter
   include SS::AjaxFilter
 
   model Facility::TempFile
@@ -20,6 +20,6 @@ class Facility::TempFilesController < ApplicationController
 
     def select
       set_item
-      render layout: !request.xhr?
+      render file: :select, layout: !request.xhr?
     end
 end

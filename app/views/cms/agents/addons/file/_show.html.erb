@@ -2,8 +2,24 @@
 
 <dl class="see">
   <dd class="wide">
-    <% @item.files.each do |file| %>
-    <%= file.basename %><br />
-    <% end %>
+    <div id="selected-files">
+      <% @item.files.each do |file| %>
+        <div class="file-view">
+          <%= link_to file.url, class: :thumb, target: "_blank" do %>
+            <% if file.image? %>
+              <%= image_tag file.thumb_url, alt: file.basename %>
+            <% else %>
+              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <% end %>
+          <% end %>
+
+          <div class="name">
+            <label>
+              <%= file.basename %>
+            </label><br />
+          </div>
+        </div>
+      <% end %>
+    </div>
   </dd>
 </dl>

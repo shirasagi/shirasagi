@@ -35,8 +35,7 @@ module Cms::Addon
         elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
           next
         else
-          file.update_attribute(:model, model_name.i18n_key)
-          file.update_attribute(:site_id, site_id)
+          file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: "public")
         end
         ids << file.id
       end

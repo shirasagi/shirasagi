@@ -4,8 +4,7 @@ module SS::Model::File
   include SS::Document
   include SS::Reference::User
 
-  attr_accessor :in_file, :in_files
-  attr_accessor :image_size
+  attr_accessor :in_file, :in_files, :image_size
 
   included do
     store_in collection: "ss_files"
@@ -13,7 +12,7 @@ module SS::Model::File
     seqid :id
     field :model, type: String
     field :file_id, type: String
-    field :state, type: String, default: "public"
+    field :state, type: String, default: "closed"
     field :filename, type: String
     field :size, type: Integer
     field :content_type, type: String
@@ -142,6 +141,7 @@ module SS::Model::File
   private
     def set_filename
       self.filename     = in_file.original_filename if filename.blank?
+      self.filename     = filename.gsub(/[^\w\-\.]/, "_")
       self.size         = in_file.size
       self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
     end

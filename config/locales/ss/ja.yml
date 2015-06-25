@@ -140,6 +140,8 @@ ja:
         total_count: 全体件数
         current_count: 処理件数
         log: ログ
+      ss/model/file:
+        name: ファイル名（表示用）
 
   tooltip:
     ss/document:
