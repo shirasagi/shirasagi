@@ -1,6 +1,8 @@
 <%
 licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 %>
+<%= stylesheet_link_tag "/assets/css/jquery-ui/smoothness/custom.min.css" %>
+<%= javascript_include_tag "/assets/js/jquery-ui-1.10.4.custom.min.js" %>
 <%= javascript_include_tag "opendata/opendata" %>
 <%= javascript_include_tag "opendata/form" %>
 
