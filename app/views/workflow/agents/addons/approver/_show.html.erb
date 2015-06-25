@@ -83,7 +83,7 @@ $ ->
     <% end %>
 
     <% if @item.allowed?(:edit, @cur_user) %>
-      <% if @item.cloned_name? %>
+      <% if @item.try(:cloned_name?) %>
         <section class="mod-workflow-request">
           <h1><%= t("errors.messages.invalid_approve_name") %></h1>
         </section>
