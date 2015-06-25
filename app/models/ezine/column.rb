@@ -17,7 +17,12 @@ class Ezine::Column
   validates :state, :name, presence: true
   before_destroy :destroy_data
 
-  scope :public, ->{ where(state: 'public') }
+  class << self
+    public
+      def public
+        where(state: 'public')
+      end
+  end
 
   public
     def state_options
