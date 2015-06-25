@@ -10,6 +10,7 @@ describe "fs_files", dbscope: :example do
     file.in_file = src
     file.site_id = site.id
     file.model   = 'article/page'
+    file.state   = 'public'
     file.save
     file.in_file.delete
     file
