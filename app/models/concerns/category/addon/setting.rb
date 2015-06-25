@@ -1,9 +1,4 @@
 module Category::Addon
-  module Category
-    extend SS::Addon
-    extend ActiveSupport::Concern
-  end
-
   module Setting
     extend SS::Addon
     extend ActiveSupport::Concern

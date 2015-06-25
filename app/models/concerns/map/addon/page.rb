@@ -9,5 +9,4 @@ module Map::Addon
       permit_params map_points: [ :name, :loc, :text, :link, :image ]
     end
   end
-
 end

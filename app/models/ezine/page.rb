@@ -1,6 +1,6 @@
 class Ezine::Page
   include Cms::Model::Page
-  include Ezine::Addon::Page::Body
+  include Ezine::Addon::Body
   include Ezine::Addon::DeliverPlan
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
