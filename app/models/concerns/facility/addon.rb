@@ -70,7 +70,7 @@ module Facility::Addon
 
     def save_image
       return true unless image_id_changed?
-      image.update_attributes(site_id: site_id, model: "facility/file", state: "public")
+      image.update_attributes(site_id: site_id, model: "facility/file", state: "public") if image
 
       if image_id_was
         file = SS::File.where(id: image_id_was).first
