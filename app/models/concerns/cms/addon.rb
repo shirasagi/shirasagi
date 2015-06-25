@@ -47,7 +47,7 @@ module Cms::Addon
       def summary
         return summary_html if summary_html.present?
         return nil unless respond_to?(:html)
-        ApplicationController.helpers.sanitize(html, tags: [], attributes: []).gsub(/\s+/, " ").strip.truncate(120)
+        ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
       end
 
       def meta_present?
