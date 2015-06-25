@@ -1,8 +1,8 @@
-class Cms::AjaxFilesController < ApplicationController
+class Cms::Apis::FilesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include SS::FileFilter
-  include SS::AjaxFilter
+  include SS::AjaxFileFilter
 
   model Cms::File
 
@@ -30,12 +30,12 @@ class Cms::AjaxFilesController < ApplicationController
         item.send("#{key}=", val) unless item.send(key)
       end
 
-      item.state   = "public"
+      #item.state   = "public"
       item.in_file = @item.uploaded_file
       item.save
       item.in_file.delete
       @item = item
 
-      render layout: !request.xhr?
+      render file: :select, layout: !request.xhr?
     end
 end

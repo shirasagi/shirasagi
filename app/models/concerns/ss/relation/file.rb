@@ -4,7 +4,7 @@ module SS::Relation::File
 
   module ClassMethods
     def belongs_to_file(name, opts = {})
-      store       = opts[:store_as] || "#{name.to_s.singularize}_id"
+      store = opts[:store_as] || "#{name.to_s.singularize}_id"
 
       belongs_to name, foreign_key: store, class_name: "SS::File", dependent: :destroy
 
@@ -21,6 +21,8 @@ module SS::Relation::File
         file.filename = file.in_file.original_filename
         file.model    = self.class.to_s.underscore
         file.site_id  = site_id if respond_to?(:site_id)
+        file.user_id  = @cur_user.id if @cur_user
+        file.state    = "public"
         file
       end
 

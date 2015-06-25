@@ -3,8 +3,6 @@ class Cms::File
   include SS::Reference::Site
   include Cms::Addon::GroupPermission
 
-  field :state, type: String, default: "closed"
-
   default_scope ->{ where(model: "cms/file") }
 
   class << self

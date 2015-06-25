@@ -1,21 +1,12 @@
-<%#= f.hidden_field :cur_user %>
-
 <dl class="see">
   <% if params[:action] =~ /new|create/ %>
-
     <dt><%= @model.t :in_files %></dt>
     <dd><%= f.file_field :in_files, multiple: :multiple %></dd>
-
   <% else %>
-
     <dt><%= @model.t :in_file %></dt>
     <dd><%= f.file_field :in_file %></dd>
 
     <dt><%= @model.t :filename %></dt>
     <dd><%= f.text_field :filename %></dd>
-
   <% end %>
-
-  <dt><%= @model.t :state %></dt>
-  <dd><%= f.select :state, @item.state_options %></dd>
 </dl>

@@ -52,13 +52,6 @@ SS::Application.routes.draw do
       get :download, on: :member
     end
 
-    resources :ajax_files, concerns: :deletion do
-      get :select, on: :member
-      get :view, on: :member
-      get :thumb, on: :member
-      get :download, on: :member
-    end
-
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
@@ -75,6 +68,13 @@ SS::Application.routes.draw do
       get "categories" => "categories#index"
       get "contents" => "contents#index"
       get "contents/html" => "contents/html#index"
+
+      resources :files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
     end
   end
 

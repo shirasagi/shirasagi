@@ -2,6 +2,11 @@ module SS::FileFilter
   extend ActiveSupport::Concern
 
   private
+    def append_view_paths
+      append_view_path "app/views/ss/crud/files"
+      super
+    end
+
     def set_last_modified
       response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
     end
