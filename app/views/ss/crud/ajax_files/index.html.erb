@@ -22,7 +22,7 @@ $("#ajax-box .image-size").on "click", (e)->
   <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
     <%= f.file_field :in_files, multiple: :multiple, required: :required %>
     <%= f.select :image_size, @model.image_size_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %>
-    <%= f.submit :upload, class: :save, style: "margin-left: 10px;" %>
+    <%= f.submit t("views.button.save"), class: :save, style: "margin-left: 10px;" %>
   </div>
 
 <% end %>

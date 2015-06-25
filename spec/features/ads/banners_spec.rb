@@ -30,7 +30,7 @@ describe "ads_banners" do
     end
 
     it "#invalid_new" do
-      SS.config.env.max_filesize_ext["png"] = 0
+      SS.config.replace_value_at(:env, :max_filesize_ext, { "png" => 1 })
 
       visit new_path
       within "form#item-form" do
@@ -45,7 +45,7 @@ describe "ads_banners" do
     end
 
     it "#new" do
-      SS.config.env.max_filesize_ext["png"] = nil
+      SS.config.replace_value_at(:env, :max_filesize_ext, {})
 
       visit new_path
       within "form#item-form" do
