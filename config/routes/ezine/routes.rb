@@ -20,6 +20,7 @@ SS::Application.routes.draw do
     end
     resources :test_members, concerns: :deletion
     resources :entries, concerns: :deletion
+    resources :columns, concerns: :deletion
   end
 
   node "ezine" do

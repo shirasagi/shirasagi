@@ -2,6 +2,7 @@ class Ezine::Entry
   include SS::Document
   include SS::Reference::Site
   include Ezine::Entryable
+  include Ezine::Addon::Data
 
   validates :email, presence: true, email: true
   validates :email_type, inclusion: { in: %w(text html) }
@@ -79,11 +80,12 @@ class Ezine::Entry
           site_id: site_id,
           node_id: node_id,
           email: email,
-          email_type: email_type
+          email_type: email_type,
+          data: data
         )
       when "update"
         return if member.nil?
-        member.update email_type: email_type
+        member.update(email_type: email_type, data: data)
       when "delete"
         return if member.nil?
         member.destroy

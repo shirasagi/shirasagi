@@ -6,6 +6,7 @@ class Ezine::Task
       # Deliver a page as Emails.
       #
       # 1ページをメールとして送信する。
+      # 配信予約日時が設定されている場合、条件を満たせば送信される。
       #
       # @param [Integer] page_id
       #
@@ -15,17 +16,19 @@ class Ezine::Task
       def deliver(page_id)
         page = Ezine::Page.where(completed: false, id: page_id).first
         return if page.nil?
+        return if page.deliver_date && Time.zone.now < page.deliver_date
         ready(id: page.id, name: 'ezine:deliver') do |task|
           deliver_one_page page, task
         end
       end
 
-      # Deliver all pages as Emails.
+      # Deliver reserved pages as Emails.
       #
-      # 全てのページをメールとして送信する。
-      def deliver_all
-        Ezine::Page.where(completed: false).each do |page|
-          ready(id: page.id, name: 'ezine:deliver_all') do |task|
+      # 配信予約日時が入力されているページの中で、日時の条件を満たすページをメールとして送信する。
+      def deliver_reserved
+        time = Time.zone.now
+        Ezine::Page.where(:completed => false, :deliver_date.ne => nil, :deliver_date.lte => time).each do |page|
+          ready(id: page.id, name: 'ezine:deliver_reserved') do |task|
             deliver_one_page page, task
           end
         end

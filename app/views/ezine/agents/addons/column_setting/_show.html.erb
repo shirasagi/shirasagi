@@ -1,0 +1,10 @@
+<dl class="see mod-ezine-input-setting">
+  <dt><%= @model.t :input_type %></dt>
+  <dd><%= @item.send :input_type %></dd>
+  <dt><%= @model.t :select_options %></dt>
+  <dd><%=br @item.send(:select_options).join("\n") %></dd>
+  <dt><%= @model.t :required %></dt>
+  <dd><%= @item.label :required %></dd>
+  <dt><%= @model.t :additional_attr %></dt>
+  <dd><%= @item.send :additional_attr %></dd>
+</dl>

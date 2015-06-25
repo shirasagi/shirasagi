@@ -45,4 +45,14 @@ module Ezine::Addon
       permit_params :reply_upper_text, :reply_lower_text, :reply_signature
     end
   end
+
+  module DeliverPlan
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    included do
+      field :deliver_date, type: DateTime
+      permit_params :deliver_date
+    end
+  end
 end

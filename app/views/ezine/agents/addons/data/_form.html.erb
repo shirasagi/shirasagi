@@ -1,0 +1,8 @@
+<% return if @columns.blank? %>
+
+<dl class="see mod-ezine-data">
+  <% @columns.each do |column| %>
+    <dt><%= f.label column.id, column.name %></dt>
+    <dd><%= column_tag(column, "#{f.object_name}[in_data]", @item.in_data["#{column.id}"]) %></dd>
+  <% end %>
+</dl>
