@@ -57,7 +57,7 @@ module SS::Model::File
     end
 
     def public_path
-      "#{site.path}#{url}"
+      "#{site.path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
     end
 
     def state_options
@@ -132,11 +132,11 @@ module SS::Model::File
     end
 
     def url
-      "/fs/#{id}/#{filename}"
+      "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
     end
 
     def thumb_url
-      "/fs/#{id}/thumb/#{filename}"
+      "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
     end
 
   private

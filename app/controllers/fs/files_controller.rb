@@ -3,10 +3,11 @@ class Fs::FilesController < ApplicationController
 
   private
     def set_item
+      id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
       path  = params[:filename]
       path << ".#{params[:format]}" if params[:format].present?
 
-      @item = SS::File.find_by id: params[:id], filename: path, state: "public"
+      @item = SS::File.find_by id: id, filename: path, state: "public"
     end
 
     def set_last_modified

@@ -7,10 +7,11 @@ module Cms::Addon
       embeds_ids :files, class_name: "SS::File"
       permit_params file_ids: []
 
-      before_save :clone_files, if: -> { try(:new_clone?) }
+      before_save :clone_files, if: ->{ try(:new_clone?) }
       before_save :save_files
       after_destroy :destroy_files
-      after_generate_file :generate_public_files
+
+      after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? }
       after_remove_file :remove_public_files
     end
 

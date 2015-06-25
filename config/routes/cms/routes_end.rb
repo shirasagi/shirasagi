@@ -115,5 +115,4 @@ SS::Application.routes.draw do
     via: [:get, :post, :put, :patch, :delete], format: false
 
   root "cms/public#index", defaults: { format: :html }
-
 end

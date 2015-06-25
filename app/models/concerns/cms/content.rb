@@ -7,6 +7,7 @@ module Cms::Content
   include Cms::GroupPermission
 
   attr_accessor :cur_node, :basename
+  attr_accessor :serve_static_relation_files
 
   included do
     seqid :id
@@ -150,6 +151,12 @@ module Cms::Content
 
     def serve_static_file?
       SS.config.cms.serve_static_pages
+    end
+
+    def serve_static_relation_files?
+      return false unless serve_static_file?
+      return true if @serve_static_relation_files.nil?
+      @serve_static_relation_files == true
     end
 
   private
