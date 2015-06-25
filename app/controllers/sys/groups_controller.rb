@@ -18,4 +18,20 @@ class Sys::GroupsController < ApplicationController
         search(params[:s]).
         page(params[:page]).per(50)
     end
+
+    def role_edit
+      set_item
+      return "404" if @item.users.blank?
+      render :role_edit
+    end
+
+    def role_update
+      set_item
+      role_ids = params[:item][:sys_role_ids].select(&:present?).map(&:to_i)
+
+      @item.users.each do |user|
+        user.set(sys_role_ids: role_ids)
+      end
+      render_update true
+    end
 end

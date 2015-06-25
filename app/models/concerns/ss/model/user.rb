@@ -4,7 +4,7 @@ module SS::Model::User
   include SS::Document
   include Ldap::Addon::User
 
-  attr_accessor :in_password
+  attr_accessor :cur_user, :in_password
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -44,6 +44,7 @@ module SS::Model::User
     before_validation :encrypt_password, if: ->{ in_password.present? }
     before_validation :normalize_email
     before_validation :normalize_uid
+    before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
     scope :uid_or_email, ->(id) { self.or({email: id}, {uid: id}) }
   end
@@ -126,5 +127,14 @@ module SS::Model::User
     def validate_uid
       return if uid.blank?
       errors.add :uid, :invalid if uid !~ /^[\w\-]+$/
+    end
+
+    def validate_cur_user
+      if id == cur_user.id
+        errors.add :base, :self_user
+        return false
+      else
+        return true
+      end
     end
 end

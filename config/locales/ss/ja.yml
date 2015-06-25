@@ -18,6 +18,9 @@ ja:
     regexp: 正規表現
     upload: アップロード
     url: URL
+    role: ロール
+    role_setting: ロール一括設定
+    group_users: 所属ユーザー
 
     button:
       save: 保存

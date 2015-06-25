@@ -1,0 +1,26 @@
+<%= form_for :item, url: { action: :role_update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t("views.role_setting") %></h2></header>
+    <dl class="see">
+      <dt><%= t("views.group_users") %></dt>
+      <dd><%= @item.users.map(&:name).join(", ") %></dd>
+      <dt><%= t("views.role") %></dt>
+      <dd>
+        <%= f.hidden_field "sys_role_ids[]", value: "" %>
+        <% Sys::Role.order_by(name: 1).each do |role| %>
+        <label><%= f.check_box("sys_role_ids[]", {}, role.id) %> <%= role.name %></label><br />
+        <% end %>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("views.button.save"), class: :save %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+
+<% end %>

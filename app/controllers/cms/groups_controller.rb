@@ -25,8 +25,24 @@ class Cms::GroupsController < ApplicationController
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
       @items = @model.site(@cur_site).
-          allow(:read, @cur_user, site: @cur_site).
-          search(params[:s]).
-          page(params[:page]).per(50)
+        allow(:read, @cur_user, site: @cur_site).
+        search(params[:s]).
+        page(params[:page]).per(50)
+    end
+
+    def role_edit
+      set_item
+      return "404" if @item.users.blank?
+      render :role_edit
+    end
+
+    def role_update
+      set_item
+      role_ids = params[:item][:cms_role_ids].select(&:present?).map(&:to_i)
+
+      @item.users.each do |user|
+        user.set(cms_role_ids: role_ids)
+      end
+      render_update true
     end
 end

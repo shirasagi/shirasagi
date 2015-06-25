@@ -6,6 +6,11 @@ SS::Application.routes.draw do
     get :delete, :on => :member
   end
 
+  concern :role do
+    get "role/edit" => "groups#role_edit", :on => :member
+    put "role" => "groups#role_update", :on => :member
+  end
+
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
     get "info" => "info#index", as: :info
@@ -15,7 +20,7 @@ SS::Application.routes.draw do
     post "test/mail" => "test/mail#create", as: :send_test_mail
 
     resources :users, concerns: :deletion
-    resources :groups, concerns: :deletion
+    resources :groups, concerns: [:deletion, :role]
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
 
