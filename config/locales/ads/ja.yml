@@ -53,6 +53,14 @@ ja:
         count: アクセス数
 
   tooltip:
+    ads/banner:
+      name:
+        - 広告バナーのリンク先のサイト名を入力します。
+        - 画像のalt属性にも利用します。
+      link_url:
+        - 広告バナーのリンク先のURLを入力します。
+      file_id:
+        - 広告バナーに利用する画像を登録します。
     ads/addon/page_list:
       link_action:
         - リンクの動作を設定します。

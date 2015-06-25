@@ -80,3 +80,22 @@ ja:
       ezine/sent_log:
         email: メールアドレス
         created: 配信日時
+
+  tooltip:
+    ezine/addon/signature:
+      signature_html:
+        - HTML版メールマガジンに記載する署名を入力します。
+      signature_text:
+        - テキスト版メールマガジンに記載する署名を入力します。
+    ezine/addon/sender_address:
+      sender_name:
+        - メールマガジンの送信者名を記載します。
+      sender_email:
+        - メールマガジンの送信者名に利用するメールアドレスを記載します。
+    ezine/addon/reply:
+      reply_upper_text:
+        - 登録確認の自動返信メールの上部に記載するテキストを入力します。
+      reply_lower_text:
+        - 登録確認の自動返信メールの下部に記載するテキストを入力します。
+      reply_signature:
+        - 登録確認の自動返信メールに記載する署名を入力します。

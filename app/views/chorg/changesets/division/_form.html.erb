@@ -1,7 +1,7 @@
 <dl class="see before_division">
   <dt><%= t "chorg.views.#{params[:type]}_changesets.before_division" %></dt>
   <dd></dd>
-  <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %></dt>
+  <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %><%= tt "chorg.views.#{params[:type]}_changesets.before_name" %></dt>
   <dd>
     <%= f.hidden_field "sources[][id]", value: "", class: "hidden-ids" %>
     <%= link_to :"chorg.views.#{params[:type]}_changesets.select_group", cms_apis_groups_path(single: 1), class: "ajax-box" %>
@@ -34,7 +34,7 @@
     <dt><%= t "chorg.views.#{params[:type]}_changesets.after_division", count: index %></dt>
     <dd></dd>
     <% Chorg::Changeset::GROUP_ATTRIBUTES.each do |k| %>
-      <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
+      <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %><%= tt "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
       <dd><%= text_field_tag "item[destinations][][#{k}]", "", id: "item_destinations_#{index - 1}_#{k}", value: @item.destinations.try(:send, :[], index - 1).try(:send, :[], k) %></dd>
     <% end %>
   <% end %>
