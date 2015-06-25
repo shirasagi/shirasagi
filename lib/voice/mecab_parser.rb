@@ -1,7 +1,7 @@
 class Voice::MecabParser
   include Enumerable
 
-  MECAB_OPTIONS = '--node-format=%ps,%pe,%m,%H\n'
+  MECAB_OPTIONS = '--node-format=%ps,%pe,%m,%H\n'.freeze
 
   def initialize(site_id, text)
     @site_id = site_id
@@ -27,7 +27,7 @@ class Voice::MecabParser
 
   private
     def create_mecab(userdic)
-      mecab_param = MECAB_OPTIONS
+      mecab_param = MECAB_OPTIONS.dup
       mecab_param << %( -u "#{userdic}") if userdic.present?
 
       require "MeCab"
