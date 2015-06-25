@@ -8,10 +8,10 @@ module Faq::Node
   class Page
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::PageList
     include Category::Addon::Setting
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -21,10 +21,10 @@ module Faq::Node
   class Search
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::PageList
     include Category::Addon::Setting
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

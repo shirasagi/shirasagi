@@ -1,11 +1,10 @@
 class Rss::Page
   include Cms::Model::Page
-  include Cms::Addon::Release
-  # include Cms::Addon::ReleasePlan
   include Rss::Addon::Page::Body
   include Category::Addon::Category
-  include Cms::Addon::RelatedPage
   include Cms::Addon::ParentCrumb
+  include Cms::Addon::RelatedPage
+  include Cms::Addon::Release
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
 

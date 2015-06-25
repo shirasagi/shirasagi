@@ -8,10 +8,10 @@ module Event::Node
   class Page
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Category::Addon::Setting
     include Event::Addon::PageList
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
