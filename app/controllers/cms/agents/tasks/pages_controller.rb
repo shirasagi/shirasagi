@@ -1,10 +1,10 @@
 class Cms::Agents::Tasks::PagesController < ApplicationController
   include Cms::PublicFilter::Page
 
-  before_action :set_generate_options, only: :generate
+  before_action :set_attachments, only: :generate
 
   private
-    def set_generate_options
+    def set_attachments
       @attachments = (@attachments == "1")
     end
 
