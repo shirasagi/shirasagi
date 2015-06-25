@@ -1,8 +1,8 @@
 # Set up default environment.
-require "yaml"
+require 'yaml'
 file = File.expand_path('../../config/environment.yml', __FILE__)
-env = File::exist?(file) ? YAML.load_file(file) : {}
-ENV['RAILS_ENV'] ||= env["RAILS_ENV"]
+renv = File::exist?(file) ? YAML.load_file(file)['RAILS_ENV'] : 'production'
+ENV['RAILS_ENV'] ||= renv
 
 # Set up gems listed in the Gemfile.
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
