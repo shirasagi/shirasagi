@@ -1,7 +1,6 @@
 <%
 
 categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
-areas = Opendata::Node::Area.site(@cur_site).sort(order: 1)
 
 %>
 <%= javascript_include_tag "opendata/opendata" %>

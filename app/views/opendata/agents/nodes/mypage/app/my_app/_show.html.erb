@@ -7,9 +7,9 @@
   <tr class="parent-row">
     <td class="field"><%= @model.t :appfiles %></td>
     <td class="input">
-      <div class="resources"><%= link_to :"opendata.manage_appfiles", "appfiles/" %></div>
+      <div class="resources"><%= link_to :"opendata.manage_appfiles", "#{@cur_node.url}#{@item.id}/appfiles/" %></div>
       <% @item.appfiles.order(name: 1).each do |af| %>
-        <div class="resource"><%= link_to af.filename, "appfiles/#{af.id}/" %>(<%= number_to_human_size af.size %>)</div>
+        <div class="resource"><%= link_to af.filename, "#{@cur_node.url}#{@item.id}/appfiles/#{af.id}/" %>(<%= number_to_human_size af.size %>)</div>
       <% end %>
     </td>
   </tr>

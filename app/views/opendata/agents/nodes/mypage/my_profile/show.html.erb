@@ -1,5 +1,5 @@
 <nav class="menu">
-  <a href="edit/"><%= I18n.t("opendata.labels.edit_profile") %></a>
+  <%= link_to :"opendata.labels.edit_profile", "#{@cur_node.url}edit/" %>
 </nav>
 
 <table class="see">
@@ -20,5 +20,5 @@
 </table>
 
 <nav class="account">
-  <a href="delete/"><%= I18n.t("opendata.labels.delete_account") %></a>
+  <%= link_to :"opendata.labels.delete_account", "#{@cur_node.url}delete/" %>
 </nav>

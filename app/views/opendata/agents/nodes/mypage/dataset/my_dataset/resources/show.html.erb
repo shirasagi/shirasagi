@@ -1,6 +1,6 @@
 <nav class="menu">
-  <a href="edit/"><%= I18n.t("opendata.labels.edit") %></a>
-  <a href="delete/"><%= I18n.t("opendata.labels.delete") %></a>
+  <%= link_to :"opendata.labels.edit", "#{@item_url}edit/" %>
+  <%= link_to :"opendata.labels.delete", "#{@item_url}delete/" %>
 </nav>
 
 <%= render partial: "show" %>

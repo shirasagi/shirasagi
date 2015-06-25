@@ -6,9 +6,9 @@
   <tr class="parent-row">
     <td class="field"><%= @model.t :resources %></td>
     <td class="input">
-      <div class="resources"><%= link_to :"opendata.manage_resources", "resources/" %></div>
+      <div class="resources"><%= link_to :"opendata.manage_resources", "#{@cur_node.url}#{@item.id}/resources/" %></div>
       <% @item.resources.order(name: 1).each do |rs| %>
-      <div class="resource"><%= link_to rs.name, "resources/#{rs.id}/" %>
+      <div class="resource"><%= link_to rs.name, "#{@cur_node.url}#{@item.id}/resources/#{rs.id}/" %>
         (<%= rs.format.upcase %> <%= number_to_human_size rs.size %>)</div>
       <% end %>
     </td>
