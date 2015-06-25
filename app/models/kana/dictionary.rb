@@ -39,7 +39,7 @@ class Kana::Dictionary
       public
         def master_root
           #::File.join(SS.config.kana.root, "private", "files", "kana_dictionaries")
-          File.join(Rails.root, "private", "files", "kana_dictionaries")
+          Kana::Config.root
         end
 
         def master_dic(site_id)

@@ -48,7 +48,7 @@ class Voice::File
     public
       def root
         #File.expand_path(SS.config.voice.root, Rails.root)
-        ::File.join(Rails.root, "private", "files")
+        Voice::Config.root
       end
 
       def save_term_options

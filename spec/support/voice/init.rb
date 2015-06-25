@@ -23,5 +23,6 @@ def can_test_open_jtalk_spec?
 end
 
 RSpec.configuration.after(:suite) do
-  ::FileUtils.rm_rf SS.config.voice.root if ::Dir.exists?(SS.config.voice.root)
+  #::FileUtils.rm_rf SS.config.voice.root if ::Dir.exists?(SS.config.voice.root)
+  ::FileUtils.rm_rf Voice::Config.root if ::Dir.exists?(Voice::Config.root)
 end

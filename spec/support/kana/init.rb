@@ -24,5 +24,6 @@ RSpec.configuration.before(:suite) do
 end
 
 RSpec.configuration.after(:suite) do
-  ::FileUtils.rm_rf SS.config.kana.root if ::Dir.exists?(SS.config.kana.root)
+  #::FileUtils.rm_rf SS.config.kana.root if ::Dir.exists?(SS.config.kana.root)
+  ::FileUtils.rm_rf Kana::Config.root if ::Dir.exists?(Kana::Config.root)
 end
