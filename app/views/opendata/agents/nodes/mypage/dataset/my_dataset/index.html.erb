@@ -1,34 +1,5 @@
-<nav class="menu">
-  <%= link_to :"opendata.labels.new", "#{@cur_node.url}new/" %>
-</nav>
-<nav class="tutorial-data">
-	<a class="tutorial-data" href="/tutorial-data.html"><%= I18n.t("opendata.labels.dataset_tutorial") %></a>
-</nav>
-<table class="opendata-datasets index">
-  <thead>
-    <tr>
-      <th class="name"><%= I18n.t("opendata.labels.dataset_name") %></th>
-      <th class="updated"><%= I18n.t("opendata.labels.update_datetime") %></th>
-      <th class="state"><%= I18n.t("opendata.labels.state") %></th>
-      <th class="point"><%= I18n.t("opendata.labels.point") %></th>
-      <th class="downloaded"><%= I18n.t("opendata.labels.downloaded") %></th>
-      <th class="app"><%= I18n.t("opendata.labels.app") %></th>
-      <th class="idea"><%= I18n.t("opendata.labels.idea") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
-    <tr>
-      <td><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
-      <td><%= tryb{item.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
-      <td><%= item.label :state %></td>
-      <td><%= item.point.to_i %></td>
-      <td><%= item.downloaded.to_i %></td>
-      <td><%= item.apps.size %></td>
-      <td><%= item.ideas.size %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="opendata-datasets datasets">
+  <%= render_dataset_list %>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

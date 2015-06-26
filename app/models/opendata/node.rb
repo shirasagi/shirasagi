@@ -197,6 +197,7 @@ module Opendata::Node
   class MyDataset
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
+    include Opendata::Addon::MyDatasetList
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::GroupPermission
