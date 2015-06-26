@@ -1,0 +1,19 @@
+<nav class="menu">
+  <a href="/mypage/dataset/new/">新規作成</a>
+</nav>
+<nav class="tutorial-data">
+  <a class="tutorial-data" href="/tutorial-data.html">データ登録手順</a>
+</nav>
+<table class="opendata-datasets index">
+  <thead>
+  <tr>
+    <th class="name">データセット名</th>
+    <th class="updated">更新日時</th>
+    <th class="state">状態</th>
+    <th class="point">いいね</th>
+    <th class="downloaded">ダウンロード</th>
+    <th class="app">アプリ</th>
+    <th class="idea">アイデア</th>
+  </tr>
+  </thead>
+  <tbody>

@@ -1,0 +1,18 @@
+<nav class="menu">
+  <a href="/mypage/idea/new/">新規作成</a>
+</nav>
+<nav class="tutorial-data">
+  <a class="tutorial-idea" href="/tutorial-idea.html">アイデア登録手順</a>
+</nav>
+<table class="opendata-ideas index">
+  <thead>
+  <tr>
+    <th class="name">アイデア名</th>
+    <th class="updated">更新日時</th>
+    <th class="state">状態</th>
+    <th class="point">いいね</th>
+    <th class="dataset">データセット</th>
+    <th class="app">アプリ</th>
+  </tr>
+  </thead>
+  <tbody>
