@@ -3,6 +3,7 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
   include Member::LoginFilter
   include Opendata::MemberFilter
   helper Opendata::FormHelper
+  helper Opendata::ListHelper
 
   before_action :set_model
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]

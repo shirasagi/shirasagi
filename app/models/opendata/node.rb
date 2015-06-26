@@ -221,6 +221,7 @@ module Opendata::Node
   class MyIdea
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
+    include Opendata::Addon::MyIdeaList
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::GroupPermission

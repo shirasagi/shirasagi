@@ -1,48 +1,5 @@
-<nav class="menu">
-  <%= link_to :"opendata.labels.new", "#{@cur_node.url}new/" %>
-</nav>
-<nav class="tutorial-data">
-	<a class="tutorial-idea" href="/tutorial-idea.html"><%= I18n.t("opendata.labels.idea_tutorial") %></a>
-</nav>
-<table class="opendata-ideas index">
-  <thead>
-    <tr>
-      <th class="name"><%= I18n.t("opendata.labels.idea_name") %></th>
-      <th class="updated"><%= I18n.t("opendata.labels.update_datetime") %></th>
-      <th class="state"><%= I18n.t("opendata.labels.state") %></th>
-      <th class="point"><%= I18n.t("opendata.labels.point") %></th>
-      <th class="dataset"><%= I18n.t("opendata.labels.dataset") %></th>
-      <th class="app"><%= I18n.t("opendata.labels.app") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
-    <tr>
-      <td><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
-      <td><%= tryb{item.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
-      <td><%= item.label :state %></td>
-      <td><%= item.point.to_i %></td>
-      <td>
-        <% if item.dataset_ids.length > 0 %>
-          <% if item.datasets.length > 0 %>
-          <%= item.datasets[0].name %>
-          <% else %>
-          <%= I18n.t("opendata.labels.not_exist") %>
-          <% end %>
-        <% end %>
-      </td>
-      <td>
-        <% if item.app_ids.length > 0 %>
-          <% if item.apps.length > 0 %>
-          <%= item.apps[0].name %>
-          <% else %>
-          <%= I18n.t("opendata.labels.not_exist") %>
-          <% end %>
-        <% end %>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="opendata-ideas ideas">
+  <%= render_idea_list %>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

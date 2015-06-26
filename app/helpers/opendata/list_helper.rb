@@ -91,4 +91,36 @@ module Opendata::ListHelper
 
     h.join("\n").html_safe
   end
+
+  def render_idea_list(&block)
+    cur_item = @cur_part || @cur_node
+    cur_item.cur_date = @cur_date
+
+    h  = []
+    h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
+    if block_given?
+      h << capture(&block)
+    else
+      @items.each do |item|
+        if cur_item.loop_html.present?
+          ih = cur_item.render_loop_html(item)
+        else
+          ih = []
+          ih << '<tr>'
+          ih << '  <td><a href="#{idea_url}">#{idea_name}</a></td>'
+          ih << '  <td>#{idea_updated.%Y年%1m月%1d日 %1H時%1M分}</td>'
+          ih << '  <td>#{idea_state}</td>'
+          ih << '  <td>#{idea_point}</td>'
+          ih << '  <td>#{idea_datasets}</td>'
+          ih << '  <td>#{idea_apps}</td>'
+          ih << '</tr>'
+          ih = cur_item.render_loop_html(item, html: ih.join("\n"))
+        end
+        h << ih.gsub('#{current}', current_url?(item.url).to_s)
+      end
+    end
+    h << cur_item.lower_html.html_safe if cur_item.lower_html.present?
+
+    h.join("\n").html_safe
+  end
 end

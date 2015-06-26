@@ -116,9 +116,6 @@ ja:
       apps_count: 登録アプリ件数
       datasets_count: 登録データセット件数
       ideas_count: 登録アイデア件数
-      app_tutorial: アプリ登録手順
-      dataset_tutorial: データ登録手順
-      idea_tutorial: アイデア登録手順
       login_twitter: twitter ID でログイン
       login_facebook: Facebook ID でログイン
       login_yahoo: YAHOO!JAPAN ID でログイン
@@ -141,6 +138,7 @@ ja:
       popular_integer: 一般的な整数データを表します。
       popular_real: 一般的な実数データを表します。
       no_change_rdf: この列は RDF へ変換しない
+      updated: "%Y年%1m月%1d日 %1H時%1M分"
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。

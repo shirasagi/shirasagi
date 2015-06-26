@@ -11,7 +11,7 @@ module Opendata::Addon::MyDatasetList
         elsif name == 'dataset_url'
           ERB::Util.html_escape "#{self.url}#{item.id}/"
         elsif name == 'dataset_updated'
-          I18n.l item.updated, format: "%Y年%1m月%1d日 %1H時%1M分"
+          I18n.l item.updated, format: I18n.t("opendata.labels.updated")
         elsif name =~ /^dataset_updated\.(.+)$/
           I18n.l item.updated, format: $1
         elsif name == 'dataset_state'
