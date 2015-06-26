@@ -35,7 +35,7 @@ class Ezine::Task
       end
 
     private
-      # Deliver one page to one member as an Email.
+      # Deliver one page to members as Emails.
       #
       # 1ページを複数メンバーにメールとして送信する。
       #
