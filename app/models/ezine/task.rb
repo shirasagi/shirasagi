@@ -37,7 +37,7 @@ class Ezine::Task
     private
       # Deliver one page to one member as an Email.
       #
-      # 1ページを1メンバーにメールとして送信する。
+      # 1ページを複数メンバーにメールとして送信する。
       #
       # @param [Ezine::Page] page
       # @param [Ezine::Task] task
