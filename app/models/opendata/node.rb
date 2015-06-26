@@ -209,6 +209,7 @@ module Opendata::Node
   class MyApp
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
+    include Opendata::Addon::MyAppList
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::GroupPermission
