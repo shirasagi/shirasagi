@@ -50,6 +50,10 @@ class Ezine::Task
         members.each.with_index do |member, index|
           interval_sleep index
           begin
+            # checking SentLog more strictly for multiple execution
+            sent_log = Ezine::SentLog.where(page_id: page.id, email: member.email).first
+            raise "already delivered to #{member.email}" if sent_log
+
             task.log "To: " + member.email
             page.deliver_to member
             success_count += 1
