@@ -5,20 +5,14 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example do
   let!(:node) { create_once :opendata_node_idea, name: "opendata_agents_nodes_idea" }
   let!(:member) { create_once :opendata_node_member }
 
+  let!(:upper_html) { '<a href="new/">新規作成</a>' }
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
-  let!(:node_myidea) { create_once :opendata_node_my_idea, filename: "#{node_mypage.filename}/idea" }
+  let!(:node_myidea) { create_once :opendata_node_my_idea, filename: "#{node_mypage.filename}/idea", upper_html: upper_html }
   let!(:node_login) { create :member_node_login, redirect_url: node_myidea.url }
 
   let!(:category) { create_once :opendata_node_category, name: "カテゴリー０１" }
   let!(:area) { create_once :opendata_node_area, name: "地域Ａ" }
   let(:node_idea) { create_once :opendata_node_idea, name: "opendata_idea" }
-
-#  let(:idea) do
-#    create_once :opendata_idea,
-#      filename: "#{node_idea.filename}/1.html",
-#      category_ids: [ category.id ],
-#      area_ids: [ area.id ]
-#  end
 
   let!(:node_search) { create :opendata_node_search_idea }
 

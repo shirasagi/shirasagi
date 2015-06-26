@@ -7,8 +7,9 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example do
   let!(:node_search_dataset) { create_once :opendata_node_search_dataset, basename: "dataset/search" }
   let!(:node_dataset) { create :opendata_node_dataset }
 
+  let!(:upper_html) { '<a href="new/">新規作成</a><table class="opendata-datasets datasets"><tbody>' }
   let!(:node_mypage) { create :opendata_node_mypage, filename: "mypage" }
-  let!(:node_my_dataset) { create :opendata_node_my_dataset, filename: "#{node_mypage.filename}/dataset" }
+  let!(:node_my_dataset) { create :opendata_node_my_dataset, filename: "#{node_mypage.filename}/dataset", upper_html: upper_html }
 
   let!(:node_login) { create :member_node_login, redirect_url: node_my_dataset.url }
 
