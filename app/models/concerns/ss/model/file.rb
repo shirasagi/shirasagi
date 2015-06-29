@@ -4,7 +4,7 @@ module SS::Model::File
   include SS::Document
   include SS::Reference::User
 
-  attr_accessor :in_file, :in_files, :image_size
+  attr_accessor :in_file, :in_files, :resizing
 
   included do
     store_in collection: "ss_files"
@@ -21,7 +21,7 @@ module SS::Model::File
 
     permit_params :state, :filename
     permit_params :in_file, :in_files, in_files: []
-    permit_params :image_size
+    permit_params :resizing
 
     before_validation :set_filename, if: ->{ in_file.present? }
 
@@ -30,6 +30,7 @@ module SS::Model::File
     validates :filename, presence: true, if: ->{ !in_file && !in_files }
     validate :validate_size
 
+    before_save :rename_file, if: ->{ @db_changes.present? }
     before_save :save_file
     before_destroy :remove_file
   end
@@ -39,7 +40,7 @@ module SS::Model::File
       "#{Rails.root}/private/files"
     end
 
-    def image_size_options
+    def resizing_options
       [
         ["320×240(QVGA)", "320,240"], ["240x320(QVGA)", "240,320"],
         ["640x480(VGA)", "640,480"], ["480x640(VGA)", "480,640"],
@@ -57,6 +58,14 @@ module SS::Model::File
 
     def public_path
       "#{site.path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    end
+
+    def url
+      "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    end
+
+    def thumb_url
+      "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
     end
 
     def state_options
@@ -79,12 +88,12 @@ module SS::Model::File
       filename =~ /\.(bmp|gif|jpe?g|png)$/i
     end
 
-    def image_size
-      (@image_size && @image_size.size == 2) ? @image_size.map(&:to_i) : nil
+    def resizing
+      (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
     end
 
-    def image_size=(s)
-      @image_size = (s.class == String) ? s.split(",") : s
+    def resizing=(s)
+      @resizing = (s.class == String) ? s.split(",") : s
     end
 
     def read
@@ -97,7 +106,7 @@ module SS::Model::File
       in_files.each do |file|
         item = self.class.new(attributes)
         item.in_file = file
-        item.image_size = image_size
+        item.resizing = resizing
         next if item.save
 
         item.errors.full_messages.each { |m| errors.add :base, m }
@@ -130,14 +139,6 @@ module SS::Model::File
       Fs.rm_rf(public_path) if site
     end
 
-    def url
-      "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
-    end
-
-    def thumb_url
-      "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
-    end
-
   private
     def set_filename
       self.filename     = in_file.original_filename if filename.blank?
@@ -151,9 +152,8 @@ module SS::Model::File
       return false if errors.present?
       return if in_file.blank?
 
-      if image? && image_size
-        width, height = image_size
-
+      if image? && resizing
+        width, height = resizing
         image = Magick::Image.from_blob(in_file.read).shift
         image = image.resize_to_fit width, height if image.columns > width || image.rows > height
         binary = image.to_blob
@@ -169,6 +169,13 @@ module SS::Model::File
     def remove_file
       Fs.rm_rf(path)
       remove_public_file
+    end
+
+    def rename_file
+      return unless @db_changes["filename"]
+      return unless @db_changes["filename"][0]
+
+      remove_public_file if site
     end
 
     def validate_size

@@ -1,6 +1,8 @@
 class Fs::FilesController < ApplicationController
   include Fs::FileFilter
 
+  before_action :set_item
+
   private
     def set_item
       id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
@@ -16,7 +18,6 @@ class Fs::FilesController < ApplicationController
 
   public
     def index
-      set_item
       set_last_modified
 
       if Fs.mode == :file && Fs.file?(@item.path)
@@ -29,13 +30,17 @@ class Fs::FilesController < ApplicationController
     end
 
     def thumb
-      set_item
-      set_last_modified
+      if @item.thumb
+        @item = @item.thumb
+        index
+      else
+        set_last_modified
 
-      width  = params[:width]
-      height = params[:height]
-      send_thumb @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline,
-        width: width, height: height
+        width  = params[:width]
+        height = params[:height]
+        send_thumb @item.read, type: @item.content_type, filename: @item.filename, disposition: :inline,
+          width: width, height: height
+      end
     rescue => e
       raise "500"
     end
