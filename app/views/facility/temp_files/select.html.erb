@@ -12,7 +12,7 @@
     <br />
   </div>
   <div class="action paste">
-    <% content = link_to "#{@item.filename} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", "/fs/#{@item.id}/#{@item.filename}", class: "icon-#{@item.extname}" %>
+    <% content = link_to "#{@item.filename} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", @item.url, class: "icon-#{@item.extname}" %>
   </div>
   <div class="action delete">
     <%= link_to t("views.button.delete"), "#", onclick: "deleteContent();" %>
