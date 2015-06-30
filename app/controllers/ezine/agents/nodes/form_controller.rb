@@ -10,6 +10,7 @@ class Ezine::Agents::Nodes::FormController < ApplicationController
     def set_entry
       @entry = Ezine::Entry.new(site_id: @cur_site.id, node_id: @cur_node.id)
       @entry.in_data = params[:item][:in_data] rescue {}
+      @entry.in_data = {} if @entry.in_data.nil?
     end
 
     def set_columns
