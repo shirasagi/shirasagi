@@ -41,7 +41,8 @@ class Cms::GroupsController < ApplicationController
       role_ids = params[:item][:cms_role_ids].select(&:present?).map(&:to_i)
 
       @item.users.each do |user|
-        user.set(cms_role_ids: role_ids)
+        set_ids = user.cms_role_ids - Cms::Role.site(@cur_site).map(&:id) + role_ids
+        user.set(cms_role_ids: set_ids)
       end
       render_update true
     end
