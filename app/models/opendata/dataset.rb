@@ -135,17 +135,32 @@ class Opendata::Dataset
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?
+        [ :search_keyword, :search_ids, :search_name, :search_tag, :search_area_id, :search_category_id,
+          :search_dataset_group, :search_format, :search_license_id, ].each do |m|
+          criteria = send(m, params, criteria)
+        end
 
-        site = params[:site]
+        criteria
+      end
 
+    private
+      def search_keyword(params, criteria)
         if params[:keyword].present?
           criteria = criteria.keyword_in params[:keyword],
-            :name, :text, "resources.name", "resources.filename", "resources.text", "url_resources.name",
-                                         "url_resources.filename", "url_resources.text"
+                       :name, :text, "resources.name", "resources.filename", "resources.text",
+                       "url_resources.name", "url_resources.filename", "url_resources.text"
         end
+        criteria
+      end
+
+      def search_ids(params, criteria)
         if params[:ids].present?
           criteria = criteria.any_in id: params[:ids].split(/,/)
         end
+        criteria
+      end
+
+      def search_name(params, criteria)
         if params[:name].present?
           if params[:modal].present?
             words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{Regexp.escape(w)}\E/ }
@@ -154,27 +169,51 @@ class Opendata::Dataset
             criteria = criteria.keyword_in params[:keyword], :name
           end
         end
+        criteria
+      end
+
+      def search_tag(params, criteria)
         if params[:tag].present?
           criteria = criteria.where tags: params[:tag]
         end
+        criteria
+      end
+
+      def search_area_id(params, criteria)
         if params[:area_id].present?
           criteria = criteria.where area_ids: params[:area_id].to_i
         end
+        criteria
+      end
+
+      def search_category_id(params, criteria)
         if params[:category_id].present?
           criteria = criteria.where category_ids: params[:category_id].to_i
         end
+        criteria
+      end
+
+      def search_dataset_group(params, criteria)
+        site = params[:site]
         if params[:dataset_group].present?
           groups = Opendata::DatasetGroup.site(site).public.search_text(params[:dataset_group])
           groups = groups.pluck(:id).presence || [-1]
           criteria = criteria.any_in dataset_group_ids: groups
         end
+        criteria
+      end
+
+      def search_format(params, criteria)
         if params[:format].present?
           criteria = criteria.formast_is  params[:format].upcase, "resources.format", "url_resources.format"
         end
+        criteria
+      end
+
+      def search_license_id(params, criteria)
         if params[:license_id].present?
           criteria = criteria.license_is  params[:license_id].to_i, "resources.license_id", "url_resources.license_id"
         end
-
         criteria
       end
   end

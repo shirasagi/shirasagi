@@ -58,10 +58,12 @@ SS::Application.routes.draw do
     get "dataset/licenses" => "public#index_licenses", cell: "nodes/dataset/dataset"
     get "dataset/:dataset/resource/:id/" => "public#index", cell: "nodes/dataset/resource"
     get "dataset/:dataset/resource/:id/content.html" => "public#content", cell: "nodes/dataset/resource", format: false
-    get "dataset/:dataset/resource/:id/*filename" => "public#download", filename: /.*/, cell: "nodes/dataset/resource", format: false
+    get "dataset/:dataset/resource/:id/*filename" => "public#download", filename: /.*/,
+      cell: "nodes/dataset/resource", format: false
     get "dataset/:dataset/url_resource/:id/" => "public#index", cell: "nodes/dataset/url_resource"
     get "dataset/:dataset/url_resource/:id/content.html" => "public#content", cell: "nodes/dataset/url_resource", format: false
-    get "dataset/:dataset/url_resource/:id/*filename" => "public#download", filename: /.*/, cell: "nodes/dataset/url_resource", format: false
+    get "dataset/:dataset/url_resource/:id/*filename" => "public#download", filename: /.*/,
+      cell: "nodes/dataset/url_resource", format: false
     get "dataset/:dataset/point.:format" => "public#show_point", cell: "nodes/dataset/dataset", format: false
     post "dataset/:dataset/point.:format" => "public#add_point", cell: "nodes/dataset/dataset", format: false
     get "dataset/:dataset/point/members.html" => "public#point_members", cell: "nodes/dataset/dataset", format: false
