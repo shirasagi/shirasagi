@@ -8,7 +8,9 @@ $(window).on("load", function() {
     current: "",
     html: function() {
       return $(this).closest("div.image").find(".inside").html();
-    }
+    },
+    maxWidth:"100%",
+    maxHeight:"100%"
   });
 });
 <% end %>
