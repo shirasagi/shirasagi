@@ -78,6 +78,18 @@ class Opendata::App
       super
     end
 
+    def create_zip
+      zip_filename = self.class.zip_dir.join("#{id}.zip").to_s
+      File.unlink(zip_filename) if File.exist?(zip_filename)
+
+      Zip::Archive.open(zip_filename, Zip::CREATE) do |ar|
+        appfiles.each do |appfile|
+          ar.add_file(appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_'), appfile.file.path)
+        end
+      end
+      return zip_filename
+    end
+
   private
     def validate_filename
       @basename.blank? ? nil : super
@@ -159,6 +171,12 @@ class Opendata::App
       criteria = criteria.where license: params[:license] if params[:license].present?
 
       criteria
+    end
+
+    def zip_dir
+      dir = Rails.root.join('tmp', 'opendata')
+      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+      dir
     end
   end
 end

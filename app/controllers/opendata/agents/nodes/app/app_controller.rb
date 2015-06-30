@@ -33,23 +33,6 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
       @ideas = Opendata::Idea.where(cond).order_by(:updated.asc)
     end
 
-    def create_zip(items)
-      path = "#{Rails.root}/tmp/"
-
-      zipfilename = path + items.name + ".zip"
-
-      if File.exist?(zipfilename)
-        File.unlink(zipfilename)
-      end
-
-      Zip::Archive.open(zipfilename, Zip::CREATE) do |ar|
-        items.appfiles.each do |item|
-          ar.add_file(item.filename, item.file.path)
-        end
-      end
-      return zipfilename
-    end
-
     def set_file
       set_app
       filename = params[:filename]
@@ -83,11 +66,8 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
     end
 
     def download
-      @item = @app
-
-      zipfilename = create_zip(@item)
-
-      send_file zipfilename, type: "application/zip", filename: "#{@item.name}.zip",
+      zipfilename = @app.create_zip
+      send_file zipfilename, type: "application/zip", filename: "#{@app.name}.zip",
         disposition: :attachment, x_sendfile: true
     end
 

@@ -19,6 +19,9 @@ describe Opendata::App, dbscope: :example do
     its(:executed_show_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/executed/show.html" }
     its(:executed_add_url) { is_expected.to eq "#{subject.url.sub(/\.html$/, "")}/executed/add.html" }
     its(:contact_present?) { is_expected.to be_falsey }
+    it ".zip_dir" do
+      expect(described_class.zip_dir_orig).to eq Rails.root.join('tmp', 'opendata')
+    end
   end
 
   describe ".sort_options" do
@@ -52,5 +55,93 @@ describe Opendata::App, dbscope: :example do
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
     it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }
     it { expect(described_class.search(license: "ライセンス").selector.to_h).to include("license" => "ライセンス") }
+  end
+
+  describe "#create_zip" do
+    let!(:node_search_app) { create(:opendata_node_search_app) }
+    let!(:node) { create(:opendata_node_app) }
+    let!(:app) { create(:opendata_app, node: node) }
+
+    def create_appfile(app, file)
+      appfile = app.appfiles.new(text: "aaa", format: "csv")
+      appfile.in_file = file
+      appfile.save!
+      appfile
+    end
+
+    def entry_names(zip_filename)
+      names = []
+      Zip::Archive.open(zip_filename) do |archives|
+        archives.each do |ar|
+          name = ar.name.encode('utf-8', 'cp932')
+          names << name
+        end
+      end
+      names
+    end
+
+    context "when there is no appfiles" do
+      it do
+        zip_filename = app.create_zip
+        expect(File.exist?(zip_filename)).to be_falsey
+      end
+    end
+
+    context "when there is one appfile" do
+      let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
+      let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
+      let!(:appfile) { create_appfile(app, file) }
+
+      it do
+        zip_filename = app.create_zip
+        expect(File.exist?(zip_filename)).to be_truthy
+      end
+    end
+
+    context "when there is one japanese filename" do
+      let!(:tmp_dir) { Dir.mktmpdir }
+      let!(:tmp_file) { "#{tmp_dir}/日本語ファイル名.csv" }
+
+      before do
+        FileUtils.cp(Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv"), tmp_file)
+        file = Fs::UploadedFile.create_from_file(tmp_file, basename: "spec")
+        create_appfile(app, file)
+      end
+
+      after do
+        FileUtils.rm_rf(tmp_dir)
+      end
+
+      it do
+        zip_filename = app.create_zip
+        expect(File.exist?(zip_filename)).to be_truthy
+
+        names = entry_names(zip_filename)
+        expect(names).to include('日本語ファイル名.csv')
+      end
+    end
+
+    context "when there is one invalid shift_jis japanese filename" do
+      let!(:tmp_dir) { Dir.mktmpdir }
+      let!(:tmp_file) { "#{tmp_dir}/\u222D日本語ファイル名.csv" }
+
+      before do
+        FileUtils.cp(Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv"), tmp_file)
+        file = Fs::UploadedFile.create_from_file(tmp_file, basename: "spec")
+        create_appfile(app, file)
+      end
+
+      after do
+        FileUtils.rm_rf(tmp_dir)
+      end
+
+      it do
+        zip_filename = app.create_zip
+        expect(File.exist?(zip_filename)).to be_truthy
+
+        names = entry_names(zip_filename)
+        expect(names).to include('_日本語ファイル名.csv')
+      end
+    end
   end
 end
