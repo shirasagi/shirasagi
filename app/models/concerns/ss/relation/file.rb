@@ -5,8 +5,9 @@ module SS::Relation::File
   module ClassMethods
     def belongs_to_file(name, opts = {})
       store = opts[:store_as] || "#{name.to_s.singularize}_id"
+      class_name = opts[:class_name] || "SS::File"
 
-      belongs_to name, foreign_key: store, class_name: "SS::File", dependent: :destroy
+      belongs_to name, foreign_key: store, class_name: class_name, dependent: :destroy
 
       attr_accessor "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}", "rm_#{name}"
@@ -19,6 +20,7 @@ module SS::Relation::File
         file = send(name) || SS::File.new
         file.in_file  = send("in_#{name}")
         file.filename = file.in_file.original_filename
+        file.model    = class_name.underscore
         file.model    = self.class.to_s.underscore
         file.site_id  = site_id if respond_to?(:site_id)
         file.user_id  = @cur_user.id if @cur_user
