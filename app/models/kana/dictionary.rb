@@ -5,13 +5,15 @@ class Kana::Dictionary
   include Cms::SitePermission
 
   # field separator
-  FS = %w(, 、 ，)
+  FS = %w(, 、 ，).freeze
 
   # default cost
-  DEFAULT_COST = 10
+  DEFAULT_COST = 10.freeze
 
   # default part-of-speech
-  DEFAULT_POS = %w(名詞 固有名詞 一般 *)
+  DEFAULT_POS = %w(名詞 固有名詞 一般 *).freeze
+
+  DEFAULT_MASTER_ROOT = Rails.root.join("private", "files", "kana_dictionaries").to_s.freeze
 
   seqid :id
   field :name, type: String
@@ -38,8 +40,7 @@ class Kana::Dictionary
     class << self
       public
         def master_root
-          #::File.join(SS.config.kana.root, "private", "files", "kana_dictionaries")
-          Kana::Config.root
+          SS.config.kana.root || DEFAULT_MASTER_ROOT
         end
 
         def master_dic(site_id)
