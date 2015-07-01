@@ -1,0 +1,26 @@
+<%= jquery do %>
+
+$('#ajax-form').ajaxForm({
+  url: "<%= url_for action: :create, format: :json %>",
+  dataType: 'json',
+  success: function(data) {
+    $('#cboxLoadedContent').load("<%= url_for action: :index %>");
+  },
+  error: function(data, status, err) {
+    resp = eval(data.responseText);
+    alert(resp.join("\n"));
+  }
+});
+
+<% end %>
+
+<%= form_for :item, url: { action: :create }, html: { id: "ajax-form", multipart: true, autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+<%= render file: '_form', locals: { f: f } %>
+
+<footer class="send">
+  <%= f.submit t("views.button.save"), class: :save %>
+  <%= link_to action: :index do %><%= f.button t("views.button.cancel"), type: :reset %><% end %>
+</footer>
+
+<% end %>

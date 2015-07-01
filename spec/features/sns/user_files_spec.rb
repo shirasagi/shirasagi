@@ -15,10 +15,11 @@ describe "sns_user_files" do
   end
 
   context "with auth" do
-    before { login_cms_user }
+    before { login_ss_user }
 
     it "#index" do
       visit index_path
+      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
