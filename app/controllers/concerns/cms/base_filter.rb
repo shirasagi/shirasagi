@@ -27,7 +27,7 @@ module Cms::BaseFilter
     end
 
     def set_group
-      cur_groups = @cur_user.groups.in(name: @cur_site.groups.pluck(:name).map{ |name| /^#{name}(\/|$)/ })
+      cur_groups = @cur_user.groups.in(name: @cur_site.groups.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ })
       @cur_group = cur_groups.first # select one group
       raise "403" unless @cur_group
     end

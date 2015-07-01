@@ -20,7 +20,7 @@ module SS::Document
     before_save :set_text_index
 
     scope :keyword_in, ->(words, *fields) {
-      words = words.split(/[\s　]+/).uniq.compact.map { |w| /\Q#{w}\E/i } if words.is_a?(String)
+      words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i } if words.is_a?(String)
       words = words[0..4]
       cond  = words.map do |word|
         { "$or" => fields.map { |field| { field => word } } }
@@ -29,7 +29,7 @@ module SS::Document
     }
 
     scope :search_text, ->(words) {
-      words = words.split(/[\s　]+/).uniq.compact.map { |w| /\Q#{w}\E/i } if words.is_a?(String)
+      words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i } if words.is_a?(String)
       if self.class_variable_get(:@@_text_index_fields).present?
         all_in text_index: words
       else

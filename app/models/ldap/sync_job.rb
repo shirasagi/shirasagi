@@ -19,12 +19,12 @@ class Ldap::SyncJob
       @results[:user][:errors] = []
       @results[:user][:warnings] = []
 
-      old_ldap_group_ids = Cms::Group.where(name: /^#{@group.name}\//).exists(ldap_dn: true).pluck(:id)
+      old_ldap_group_ids = Cms::Group.where(name: /^#{Regexp.escape(@group.name)}\//).exists(ldap_dn: true).pluck(:id)
 
       sync_ldap_groups(@group, @item.ldap.root_groups)
 
       # delete old entities
-      individual_criteria = [ Cms::Group.where(name: /^#{@group.name}\//),
+      individual_criteria = [ Cms::Group.where(name: /^#{Regexp.escape(@group.name)}\//),
                               Cms::User.in(group_ids: old_ldap_group_ids) ]
       num_deletes = individual_criteria.map do |c|
         # append common criteria
