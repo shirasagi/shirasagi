@@ -31,7 +31,7 @@ class Sns::User::AjaxFilesController < ApplicationController
         item.send("#{key}=", val) unless item.send(key)
       end
 
-      #item.state   = "public"
+      item.state   = "public"
       item.in_file = @item.uploaded_file
       item.save
       item.in_file.delete
