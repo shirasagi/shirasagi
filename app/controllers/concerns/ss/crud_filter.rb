@@ -17,7 +17,7 @@ module SS::CrudFilter
     end
 
     def render(*args)
-      args.size == 0 ? super(file: params[:action]) : super
+      args.size == 0 ? super(file: params[:action]) : super(*args)
     end
 
     def set_item
