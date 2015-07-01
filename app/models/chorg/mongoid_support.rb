@@ -66,7 +66,7 @@ module Chorg::MongoidSupport
   end
 
   def build_exclude_fields(defs)
-    @exclude_fields = defs.map { |e| e.start_with?("/") && e.end_with?("/") ? /#{e[1..-2]}/ : e }.freeze
+    @exclude_fields = defs.map { |e| e.start_with?("/") && e.end_with?("/") ? /#{Regexp.escape(e[1..-2])}/ : e }.freeze
   end
 
   def updatable_field?(k, v)
