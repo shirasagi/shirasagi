@@ -14,6 +14,7 @@ module SS::FileFilter
   public
     def create
       @item = @model.new get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
       if @item.in_files
         render_create @item.save_files, location: { action: :index }

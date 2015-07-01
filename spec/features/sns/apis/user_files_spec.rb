@@ -1,28 +1,22 @@
 require 'spec_helper'
 
-describe "cms_apis_files" do
-  let(:site) { cms_site }
-  let(:item) { Cms::File.last }
-  let(:index_path) { cms_apis_files_path site.host }
-  let(:new_path) { new_cms_apis_file_path site.host }
-  let(:show_path) { cms_apis_file_path site.host, item }
-  let(:edit_path) { edit_cms_apis_file_path site.host, item }
-  let(:delete_path) { delete_cms_apis_file_path site.host, item }
-  let(:select_path) { select_cms_apis_file_path site.host, item }
+describe "sns_apis_user_files" do
+  let(:user) { ss_user }
+  let(:item) { SS::UserFile.last }
+  let(:index_path) { sns_apis_user_files_path user.id }
+  let(:new_path) { new_sns_apis_user_file_path user.id }
+  let(:show_path) { sns_apis_user_file_path user.id, item }
+  let(:edit_path) { edit_sns_apis_user_file_path user.id, item }
+  let(:delete_path) { delete_sns_apis_user_file_path user.id, item }
+  let(:select_path) { select_sns_apis_user_file_path user.id, item }
 
   it "without login" do
     visit index_path
     expect(current_path).to eq sns_login_path
   end
 
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
   context "with auth" do
-    before { login_cms_user }
+    before { login_ss_user }
 
     it "#index" do
       visit index_path

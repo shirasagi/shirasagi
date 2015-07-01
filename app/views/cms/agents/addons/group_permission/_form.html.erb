@@ -1,9 +1,6 @@
 <%= jquery do %> SS_AddonTabs.toggleView(".mod-cms-owner_permission"); <% end %>
 
 <dl class="see mod-cms-owner_permission">
-  <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
-  <dd><%= f.select :permission_level, (1..@cur_user.cms_role_level(@cur_site)).map { |i| %W(#{i} #{i}) } %></dd>
-
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
@@ -32,4 +29,7 @@
       </tbody>
     </table>
   </dd>
+
+  <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
+  <dd><%= f.select :permission_level, (1..@cur_user.cms_role_level(@cur_site)).map { |i| %W(#{i} #{i}) } %></dd>
 </dl>

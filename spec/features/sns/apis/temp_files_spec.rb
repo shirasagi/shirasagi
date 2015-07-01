@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe "sns_user_files" do
+describe "sns_apis_temp_files" do
   let(:user) { ss_user }
   let(:item) { SS::TempFile.last }
-  let(:index_path) { sns_user_temp_files_path user.id }
-  let(:new_path) { new_sns_user_temp_file_path user.id }
-  let(:show_path) { sns_user_temp_file_path user.id, item }
-  let(:edit_path) { edit_sns_user_temp_file_path user.id, item }
-  let(:delete_path) { delete_sns_user_temp_file_path user.id, item }
+  let(:index_path) { sns_apis_temp_files_path user.id }
+  let(:new_path) { new_sns_apis_temp_file_path user.id }
+  let(:show_path) { sns_apis_temp_file_path user.id, item }
+  let(:edit_path) { edit_sns_apis_temp_file_path user.id, item }
+  let(:delete_path) { delete_sns_apis_temp_file_path user.id, item }
 
   it "without login" do
     visit index_path
@@ -15,16 +15,17 @@ describe "sns_user_files" do
   end
 
   context "with auth" do
-    before { login_cms_user }
+    before { login_ss_user }
 
     it "#index" do
       visit index_path
+      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
     it "#new" do
       visit new_path
-      within "form#item-form" do
+      within "#ajax-form" do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
         click_button "保存"
       end
@@ -41,7 +42,7 @@ describe "sns_user_files" do
 
     it "#edit" do
       visit edit_path
-      within "form#item-form" do
+      within "#ajax-form" do
         fill_in "item[filename]", with: "modify"
         click_button "保存"
       end

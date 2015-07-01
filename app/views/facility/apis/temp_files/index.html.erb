@@ -1,6 +1,6 @@
 <%= coffee do %>
 
-SS.ajaxForm "form.temp-file",
+SS.ajaxForm "#ajax-file",
   success: ->
     $("#cboxLoadedContent").load "<%= url_for(action: :index) %>"
 
@@ -14,7 +14,7 @@ SS.ajaxDelete ".temp-files .delete"
 
 <% end %>
 
-<%= form_for :item, url: { action: :create }, html: { class: "temp-file", multipart: true } do |f| %>
+<%= form_for :item, url: { action: :create }, html: { id: "ajax-form", multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
   <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">

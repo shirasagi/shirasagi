@@ -1,8 +1,8 @@
-class Sns::User::ProfilesController < ApplicationController
+class Sns::UserProfilesController < ApplicationController
   include Sns::UserFilter
   include Sns::CrudFilter
 
-  before_action :require_self, except: [:show]
+  #before_action :require_self, except: [:show]
 
   model SS::User
 

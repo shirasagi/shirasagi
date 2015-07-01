@@ -25,10 +25,11 @@ module SS::Model::File
     permit_params :image_size
 
     before_validation :set_filename, if: ->{ in_file.present? }
+    before_validation :validate_filename, if: ->{ filename.present? }
 
     validates :model, presence: true
     validates :state, presence: true
-    validates :filename, presence: true, if: ->{ !in_file && !in_files }
+    validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validate :validate_size
 
     before_save :save_file
@@ -49,6 +50,20 @@ module SS::Model::File
         ["1280x720(HD)", "1280,720"], ["720x1280(HD)", "720,1280"]
       ]
     end
+
+    public
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        if params[:name].present?
+          criteria = criteria.search_text params[:name]
+        end
+        if params[:keyword].present?
+          criteria = criteria.keyword_in params[:keyword], :name, :filename
+        end
+        criteria
+      end
   end
 
   public
@@ -142,9 +157,12 @@ module SS::Model::File
   private
     def set_filename
       self.filename     = in_file.original_filename if filename.blank?
-      self.filename     = filename.gsub(/[^\w\-\.]/, "_")
       self.size         = in_file.size
       self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
+    end
+
+    def validate_filename
+      self.filename = filename.gsub(/[^\w\-\.]/, "_")
     end
 
     def save_file

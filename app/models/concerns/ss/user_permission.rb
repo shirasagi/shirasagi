@@ -3,6 +3,7 @@ module SS::UserPermission
 
   public
     def allowed?(action, user, opts = {})
+      return true if new_record?
       user_id == user.id
     end
 

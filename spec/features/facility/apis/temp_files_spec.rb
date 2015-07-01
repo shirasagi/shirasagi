@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_apis_files" do
+describe "facility_apis_temp_files" do
   let(:site) { cms_site }
   let(:item) { Cms::File.last }
   let(:index_path) { cms_apis_files_path site.host }
@@ -48,7 +48,7 @@ describe "cms_apis_files" do
     end
 
     it "#select" do
-      visit select_path
+      visit edit_path
       expect(status_code).to eq 200
     end
 
