@@ -13,13 +13,14 @@ module SS::Model::File
     field :model, type: String
     field :file_id, type: String
     field :state, type: String, default: "closed"
+    field :name, type: String
     field :filename, type: String
     field :size, type: Integer
     field :content_type, type: String
 
     belongs_to :site, class_name: "SS::Site"
 
-    permit_params :state, :filename
+    permit_params :state, :name, :filename
     permit_params :in_file, :in_files, in_files: []
     permit_params :image_size
 
@@ -64,7 +65,7 @@ module SS::Model::File
     end
 
     def name
-      filename
+      self[:name].presence || basename
     end
 
     def basename

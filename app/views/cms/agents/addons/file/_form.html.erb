@@ -25,7 +25,7 @@ $ ->
 
           <%= link_to file.url, class: :thumb, target: "_blank" do %>
             <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.basename %>
+              <%= image_tag file.thumb_url, alt: file.name %>
             <% else %>
               <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
             <% end %>
@@ -34,15 +34,15 @@ $ ->
           <div class="name">
             <label>
               <%= f.check_box "file_ids[]", {}, file.id %>
-              <%= file.basename %>
+              <%= file.name %>
             </label><br />
           </div>
 
           <div class="action paste">
-            <% content = link_to "#{file.filename} (#{file.extname.upcase} #{number_to_human_size(file.size)})", file.url, class: "icon-#{file.extname}" %>
+            <% content = link_to "#{file.name} (#{file.extname.upcase} #{number_to_human_size(file.size)})", file.url, class: "icon-#{file.extname}" %>
             <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% if file.image? %>
-              <% content = image_tag file.url, alt: "#{file.basename}" %>
+              <% content = image_tag file.url, alt: "#{file.name}" %>
               <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
             <div class="action delete">

@@ -33,6 +33,7 @@ class Sns::User::AjaxFilesController < ApplicationController
 
       item.state   = "public"
       item.in_file = @item.uploaded_file
+      item.name    = @item.name
       item.save
       item.in_file.delete
       @item = item

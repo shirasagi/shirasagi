@@ -4,6 +4,9 @@
   <dd><%= link_to image_tag(url_for(action: :thumb)), { action: :view }, { target: "_blank" } %></dd>
   <% end %>
 
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
   <dt><%= @model.t :filename %></dt>
   <dd><%= @item.send :filename %></dd>
 

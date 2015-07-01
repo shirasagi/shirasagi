@@ -38,7 +38,7 @@ $("#ajax-box .image-size").on "click", (e)->
       <% end %>
     </a>
     <div class="name">
-      <%= item.basename %>
+      <%= item.name %>
     </div>
     <nav class="menu">
       <%= link_to t("views.button.delete"), { action: :destroy, id: item }, class: "delete",

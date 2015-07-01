@@ -7,7 +7,7 @@
         <div class="file-view">
           <%= link_to file.url, class: :thumb, target: "_blank" do %>
             <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.basename %>
+              <%= image_tag file.thumb_url, alt: file.name %>
             <% else %>
               <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
             <% end %>
@@ -15,7 +15,7 @@
 
           <div class="name">
             <label>
-              <%= file.basename %>
+              <%= file.name %>
             </label><br />
           </div>
         </div>
