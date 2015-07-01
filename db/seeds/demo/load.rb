@@ -316,6 +316,17 @@ inquiry_comment_2 = save_node route: "inquiry/form", filename: "comment/comment0
   reception_close_date: Time.zone.now.prev_month.end_of_month
 
 ## ezine
+def save_ezine_column(data)
+  puts data[:name]
+  cond = { site_id: data[:site_id], node_id: data[:node_id], name: data[:name] }
+
+  item = Ezine::Column.find_or_create_by(cond)
+  item.attributes = data
+  item.update
+
+  item
+end
+
 ezine_signature_html = File.read("nodes/ezine.signature_html") rescue nil
 ezine_signature_text = File.read("nodes/ezine.signature_text") rescue nil
 ezine_reply_signature = File.read("nodes/ezine.reply_signature") rescue nil
@@ -328,6 +339,8 @@ ezine_page_node = save_node route: "ezine/page", filename: "ezine", name: "メ�
   reply_signature: ezine_reply_signature
 ezine_backnumber_node = save_node route: "ezine/backnumber", filename: "ezine/backnumber",
   name: "メールマガジン　バックナンバー", conditions: %w(ezine)
+save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_type: "radio_button",
+  select_options: %w(男性 女性), required: "required", site_id: @site._id
 
 ## facility
 save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域", layout_id: layouts["one"].id
@@ -381,9 +394,10 @@ save_node route: "facility/page", filename: "institution/shisetsu/library", name
   location_ids: facility_locations.values.map(&:id),
   service_ids: facility_services.values.map(&:id)
 
+## inquiry
 def save_inquiry_column(data)
   puts data[:name]
-  cond = { node_id: data[:node_id], name: data[:name] }
+  cond = { site_id: data[:site_id], node_id: data[:node_id], name: data[:name] }
 
   item = Inquiry::Column.find_or_create_by(cond)
   item.attributes = data
@@ -417,7 +431,7 @@ save_inquiry_column node_id: inquiry_node.id, name: "お名前", order: 0, input
 save_inquiry_column node_id: inquiry_node.id, name: "企業・団体名", order: 10, input_type: "text_field",
   html: column_company_html, select_options: [], required: "optional", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "メールアドレス", order: 20, input_type: "email_field",
-  html: column_email_html, select_options: [], required: "required", site_id: @site._id
+  html: column_email_html, select_options: [], required: "required", input_confirm: "enabled", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "性別", order: 30, input_type: "radio_button",
   html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
 save_inquiry_column node_id: inquiry_node.id, name: "年齢", order: 40, input_type: "select",
@@ -785,6 +799,12 @@ banner3 = save_ss_files "ss_files/ads/dummy_banner_3.gif", filename: "dummy_bann
 banner4 = save_ss_files "ss_files/ads/dummy_banner_4.gif", filename: "dummy_banner_4.gif", model: "ads/banner"
 banner5 = save_ss_files "ss_files/ads/dummy_banner_5.gif", filename: "dummy_banner_5.gif", model: "ads/banner"
 banner6 = save_ss_files "ss_files/ads/dummy_banner_6.gif", filename: "dummy_banner_6.gif", model: "ads/banner"
+banner1.set(state: "public")
+banner2.set(state: "public")
+banner3.set(state: "public")
+banner4.set(state: "public")
+banner5.set(state: "public")
+banner6.set(state: "public")
 
 save_page route: "ads/banner", filename: "add/600.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner1.id
 save_page route: "ads/banner", filename: "add/601.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner2.id
@@ -814,3 +834,33 @@ puts "# ezine"
 save_page route: "ezine/page", filename: "ezine/653.html", name: "シラサギ市メールマガジン", completed: true,
   layout_id: layouts["ezine"].id,  html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
   text: "シラサギ市メールマガジンを配信します。\r\n"
+
+## -------------------------------------
+def save_editor_template(data)
+  puts data[:name]
+  cond = { site_id: data[:site_id], name: data[:name] }
+
+  item = Cms::EditorTemplate.find_or_create_by(cond)
+  item.attributes = data
+  item.update
+
+  item
+end
+
+puts "# editor templates"
+thumb_left  = save_ss_files("editor_templates/float-left.jpg", filename: "float-left.jpg", model: "cms/editor_template")
+thumb_right = save_ss_files("editor_templates/float-right.jpg", filename: "float-right.jpg", model: "cms/editor_template")
+
+editor_template_html = File.read("editor_templates/float-left.html") rescue nil
+save_editor_template name: "画像左回り込み", description: "画像が左に回り込み右側がテキストになります",
+  html: editor_template_html, thumb_id: thumb_left.id, order: 10, site_id: @site.id
+thumb_left.set(state: "public")
+
+editor_template_html = File.read("editor_templates/float-right.html") rescue nil
+save_editor_template name: "画像右回り込み", description: "画像が右に回り込み左側がテキストになります",
+  html: editor_template_html, thumb_id: thumb_right.id, order: 20, site_id: @site.id
+thumb_right.set(state: "public")
+
+editor_template_html = File.read("editor_templates/clear.html") rescue nil
+save_editor_template name: "回り込み解除", description: "回り込みを解除します",
+  html: editor_template_html, order: 30, site_id: @site.id

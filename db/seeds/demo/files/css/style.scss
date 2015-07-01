@@ -1097,6 +1097,17 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       border: $border-hgry;
     }
   }
+  .float-left {
+    float: left;
+    margin: 0 $item-margin $item-margin 0;
+  }
+  .float-right {
+    float: right;
+    margin: 0 0 $item-margin $item-margin;
+  }
+  .clear {
+    clear: both;
+  }
 }
 #sitemap ul {
   @include clear;
