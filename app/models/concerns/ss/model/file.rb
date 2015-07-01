@@ -11,7 +11,6 @@ module SS::Model::File
 
     seqid :id
     field :model, type: String
-    field :file_id, type: String
     field :state, type: String, default: "closed"
     field :name, type: String
     field :filename, type: String

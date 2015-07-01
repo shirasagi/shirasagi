@@ -16,18 +16,6 @@ module SS::Relation::File
       before_save "save_relation_#{name}", if: ->{ send("in_#{name}").present? }
       before_save "remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
 
-      define_method("relation_file") do |name|
-        file = send(name) || SS::File.new
-        file.in_file  = send("in_#{name}")
-        file.filename = file.in_file.original_filename
-        file.model    = class_name.underscore
-        file.model    = self.class.to_s.underscore
-        file.site_id  = site_id if respond_to?(:site_id)
-        file.user_id  = @cur_user.id if @cur_user
-        file.state    = "public"
-        file
-      end
-
       define_method("validate_relation_#{name}") do
         file = relation_file(name)
         return true if file.valid?
@@ -61,4 +49,17 @@ module SS::Relation::File
       end
     end
   end
+
+  public
+    def relation_file(name)
+      file = send(name) || SS::File.new
+      file.in_file  = send("in_#{name}")
+      file.filename = file.in_file.original_filename
+      #file.model    = class_name.underscore
+      file.model    = self.class.to_s.underscore
+      file.site_id  = site_id if respond_to?(:site_id)
+      file.user_id  = @cur_user.id if @cur_user
+      file.state    = "public"
+      file
+    end
 end
