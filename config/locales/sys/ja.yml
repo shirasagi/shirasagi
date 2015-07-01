@@ -39,3 +39,8 @@ ja:
         group_ids: グループ
       sys/addon/role:
         sys_role_ids: ロール
+
+  tooltip:
+    sys/addon/role:
+      sys_role_ids:
+        - ユーザーのロール/権限を指定します。

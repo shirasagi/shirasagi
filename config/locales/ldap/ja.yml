@@ -68,3 +68,11 @@ ja:
     links:
       ldap: LDAP
       sync: 同期する
+
+  tooltip:
+    ldap/addon/group:
+      ldap_dn:
+      - LDAPを利用している場合にグループのDN（識別子）を入力します。
+    ldap/addon/user:
+      ldap_dn:
+      - LDAPを利用している場合にユーザーのDN（識別子）を入力します。
