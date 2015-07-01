@@ -55,11 +55,13 @@ SS::Application.routes.draw do
   end
 
   namespace "facility", path: ".u:user/facility", module: "facility", servicer: /\d+/ do
-    resources :temp_files, concerns: :deletion do
-      get :select, on: :member
-      get :view, on: :member
-      get :thumb, on: :member
-      get :download, on: :member
+    namespace "apis" do
+      resources :temp_files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
     end
   end
 end

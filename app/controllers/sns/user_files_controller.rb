@@ -1,4 +1,4 @@
-class Sns::User::FilesController < ApplicationController
+class Sns::UserFilesController < ApplicationController
   include Sns::UserFilter
   include Sns::CrudFilter
   include SS::FileFilter

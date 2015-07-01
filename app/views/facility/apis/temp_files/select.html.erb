@@ -1,7 +1,7 @@
 <div class="file-view">
-  <a class="thumb" href="<%= view_facility_temp_file_path(id: @item) %>" target="_blank">
+  <a class="thumb" href="<%= view_facility_apis_temp_file_path(id: @item) %>" target="_blank">
     <% if @item.image? %>
-    <img src="<%= thumb_facility_temp_file_path(id: @item) %>" alt="<%= @item.basename %>" />
+    <img src="<%= thumb_facility_apis_temp_file_path(id: @item, _: @item.updated.to_i) %>" alt="<%= @item.basename %>" />
     <% else %>
     <span class="ext icon-<%= @item.extname %>"><%= @item.extname %></span>
     <% end %>
@@ -10,9 +10,6 @@
     <input type="hidden" name="item[image_id]" value="<%= @item.id %>" />
     <%= @item.name %>
     <br />
-  </div>
-  <div class="action paste">
-    <% content = link_to "#{@item.filename} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", @item.url, class: "icon-#{@item.extname}" %>
   </div>
   <div class="action delete">
     <%= link_to t("views.button.delete"), "#", onclick: "deleteContent();" %>

@@ -8,7 +8,7 @@ $ ->
 
 <dl class="see">
   <dd class="wide">
-    <%= link_to :upload, facility_temp_files_path(@cur_user), class: "ajax-box" %>
+    <%= link_to :upload, facility_apis_temp_files_path(@cur_user), class: "ajax-box" %>
 
     <div id="selected-files">
       <%= f.hidden_field "image_id", value: "", class: "hidden-ids" %>

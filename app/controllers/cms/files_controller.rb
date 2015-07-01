@@ -18,8 +18,6 @@ class Cms::FilesController < ApplicationController
 
   public
     def index
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
-
       @items = @model.site(@cur_site).
         allow(:read, @cur_user).
         search(params[:s]).

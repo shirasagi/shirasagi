@@ -31,7 +31,7 @@ class Facility::PagesController < ApplicationController
   public
     def show
       raise "403" unless @item.allowed?(:read, @cur_user)
-      action = @cur_node.allowed?(:edit, @cur_user, site: @cur_site) ? :edit : :show
+      action = @cur_node.allowed?(:edit, @cur_user, site: @cur_site) ? "edit_" : ""
 
       @maps = map_pages
       @maps.each do |map|
@@ -54,7 +54,7 @@ class Facility::PagesController < ApplicationController
       pages = image_pages.map do |page|
         [
           page,
-          send("#{action}_facility_image_path", cid: @item.id, id: page.id ),
+          send("#{action}facility_image_path", cid: @item.id, id: page.id ),
           { width: page.image_thumb_width, height: page.image_thumb_height }
         ]
       end

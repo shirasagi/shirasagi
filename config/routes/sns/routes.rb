@@ -4,32 +4,32 @@ SS::Application.routes.draw do
     get :delete, :on => :member
   end
 
-  namespace "sns_user", path: ".u:user", module: "sns/user", user: /\d+/ do
-    get "/" => redirect { |p, req| "#{req.path}/profile" }
+  namespace "sns", path: ".u:user", user: /\d+/ do
+    get "/" => redirect { |p, req| "#{req.path}/user_profile" }
 
-    resource :profile
-    resource :account
+    resource :user_profile
+    resource :user_account
 
-    resources :files, concerns: :deletion do
+    resources :user_files, concerns: :deletion do
       get :view, on: :member
       get :thumb, on: :member
       get :download, on: :member
     end
 
-    resources :temp_files, concerns: :deletion do
-      get :select, on: :member
-      get :view, on: :member
-      get :thumb, on: :member
-      get :download, on: :member
-    end
+    namespace "apis" do
+      resources :temp_files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
 
-    resources :ajax_files, concerns: :deletion do
-      get :select, on: :member
-      get :view, on: :member
-      get :thumb, on: :member
-      get :download, on: :member
+      resources :user_files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
     end
-
   end
-
 end

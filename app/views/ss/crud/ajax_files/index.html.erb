@@ -32,7 +32,7 @@ $("#ajax-box .image-size").on "click", (e)->
   <article class="file-view" id="user-file<%= item.id %>">
     <a class="thumb select" href="<%= url_for action: :select, id: item %>">
       <% if item.image? %>
-      <img src="<%= url_for(action: :thumb, id: item) %>" alt="<%= item.basename %>" />
+      <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
       <% else %>
       <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
       <% end %>
@@ -41,8 +41,12 @@ $("#ajax-box .image-size").on "click", (e)->
       <%= item.name %>
     </div>
     <nav class="menu">
-      <%= link_to t("views.button.delete"), { action: :destroy, id: item }, class: "delete",
-        "data-remove" => "#user-file#{item.id}" %>
+      <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t("views.button.edit"), { action: :edit, id: item }, class: "edit" %>
+      <% end %>
+      <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t("views.button.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
+      <% end %>
     </nav>
   </article>
   <% end %>
