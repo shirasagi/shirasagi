@@ -49,6 +49,13 @@ module SS::Relation::Thumb
       thumb.remove_public_file if thumb
     end
 
+    def destroy_thumbs
+      self.thumbs_resizing = {}
+      result = thumbs.destroy_all
+      reload
+      result
+    end
+
   private
     def initialize_thumbs_resizing
       return if thumbs_resizing
@@ -66,7 +73,7 @@ module SS::Relation::Thumb
         file = thumbs_was.delete(size)
         if file
           file.update_attributes(filename: filename, state: state) if state_changed? || filename_changed?
-          file.set(image_size_name: name)
+          file.set(image_size_name: name) if name != file.image_size_name
         else
           file = SS::ThumbFile.new
           file.in_file         = uploaded_file
@@ -84,12 +91,5 @@ module SS::Relation::Thumb
 
       thumbs_was.values.each(&:destroy)
       reload
-    end
-
-    def destroy_thumbs
-      self.thumbs_resizing = {}
-      result = thumbs.destroy_all
-      reload
-      result
     end
 end
