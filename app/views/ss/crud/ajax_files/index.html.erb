@@ -11,9 +11,6 @@ SS.ajax ".user-files .select",
 
 SS.ajaxDelete ".user-files .delete"
 
-$("#ajax-box .image-size").on "click", (e)->
-  $(this).find("option:first").text("")
-
 <% end %>
 
 <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
