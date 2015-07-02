@@ -1,17 +1,17 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :uid %></dt>
+  <dt><%= @model.t :uid %><%= @model.tt :uid %></dt>
   <dd><%= f.text_field :uid %></dd>
 
-  <dt><%= @model.t :email %></dt>
+  <dt><%= @model.t :email %><%= @model.tt :email %></dt>
   <dd><%= f.email_field :email %></dd>
 
-  <dt><%= @model.t :in_password %></dt>
+  <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
   <dd><%= f.password_field :in_password %></dd>
 
-  <dt><%= @model.t :group_ids %></dt>
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("sys.apis.groups.index"), sys_apis_groups_path, class: "ajax-box" %>
@@ -35,6 +35,6 @@
     </table>
   </dd>
 
-  <dt><%= @model.t :type %></dt>
+  <dt><%= @model.t :type %><%= @model.tt :type %></dt>
   <dd><%= f.select :type, @model.type_options %></dd>
 </dl>
