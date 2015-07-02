@@ -57,11 +57,10 @@ class Rss::ImportJob
   def import_rss_item(rss_item)
     return if rss_item.link.blank? || rss_item.name.blank?
 
+    update_stats rss_item
+
     page = Rss::Page.site(@cur_site).node(@cur_node).where(rss_link: rss_item.link).first
-    @rss_links << rss_item.link
-    @min_released = rss_item.released if @min_released.blank? || @min_released > rss_item.released
-    @max_released = rss_item.released if @max_released.blank? || @max_released < rss_item.released
-    return if page.present? && page.released >= rss_item.released
+    return if newer_than?(page, rss_item)
     page ||= Rss::Page.new
     page.cur_site = @cur_site
     page.cur_node = @cur_node
@@ -77,6 +76,16 @@ class Rss::ImportJob
       Rails.logger.error("#{page.errors.full_messages}")
       @errors.concat(page.errors.full_messages)
     end
+  end
+
+  def update_stats(rss_item)
+    @rss_links << rss_item.link
+    @min_released = rss_item.released if @min_released.blank? || @min_released > rss_item.released
+    @max_released = rss_item.released if @max_released.blank? || @max_released < rss_item.released
+  end
+
+  def newer_than?(page, rss_item)
+    page.present? && page.released >= rss_item.released
   end
 
   def save_or_update(page)
