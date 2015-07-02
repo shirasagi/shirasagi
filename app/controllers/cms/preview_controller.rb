@@ -31,15 +31,21 @@ class Cms::PreviewController < ApplicationController
       if @cur_path =~ /^\/fs\//
         path = @cur_path.sub("/thumb/", "/")
         filename = ::File.basename(path)
-        id = ::File.basename ::File.dirname(path)
+        id = ::File.dirname(path).sub("/fs/", "").sub("/_", "").gsub("/", "")
         @item = SS::File.find_by id: id, filename: filename
 
         if @cur_path =~ /\/thumb\//
-          width  = params[:width]
-          height = params[:height]
+          if @item.thumb
+            @item = @item.thumb
+          else
+            @thumb_width  = params[:width]
+            @thumb_height = params[:height]
+          end
+        end
 
+        if @thumb_width && @thumb_height
           send_thumb @item.read, type: @item.content_type, filename: @item.filename,
-            disposition: :inline, width: width, height: height
+            disposition: :inline, width: @thumb_width, height: @thumb_height
           return
         else
           send_file @item.path, type: @item.content_type, filename: @item.filename,
