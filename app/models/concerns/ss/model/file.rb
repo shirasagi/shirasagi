@@ -43,11 +43,16 @@ module SS::Model::File
 
     def resizing_options
       [
-        ["320×240(QVGA)", "320,240"], ["240x320(QVGA)", "240,320"],
-        ["640x480(VGA)", "640,480"], ["480x640(VGA)", "480,640"],
-        ["800x600(SVGA)", "800,600"], ["600x800(SVGA)", "600,800"],
-        ["1024×768(XGA)", "1024,768"], ["768x1024(XGA)", "768,1024"],
-        ["1280x720(HD)", "1280,720"], ["720x1280(HD)", "720,1280"]
+        [I18n.t('views.options.resizing.320×240'), "320,240"],
+        [I18n.t('views.options.resizing.240x320'), "240,320"],
+        [I18n.t('views.options.resizing.640x480'), "640,480"],
+        [I18n.t('views.options.resizing.480x640'), "480,640"],
+        [I18n.t('views.options.resizing.800x600'), "800,600"],
+        [I18n.t('views.options.resizing.600x800'), "600,800"],
+        [I18n.t('views.options.resizing.1024×768'), "1024,768"],
+        [I18n.t('views.options.resizing.768x1024'), "768,1024"],
+        [I18n.t('views.options.resizing.1280x720'), "1280,720"],
+        [I18n.t('views.options.resizing.720x1280'), "720,1280"],
       ]
     end
 
