@@ -4,7 +4,7 @@ module SS::Relation::Thumb
 
   module ClassMethods
     private
-      def has_many_thumbs
+      def use_relation_thumbs
         has_many :thumbs, class_name: "SS::ThumbFile", dependent: :destroy
 
         attr_accessor :thumbs_resizing
