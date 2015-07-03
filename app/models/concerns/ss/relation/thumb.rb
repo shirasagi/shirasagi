@@ -10,6 +10,7 @@ module SS::Relation::Thumb
         attr_accessor :thumbs_resizing
 
         after_initialize :initialize_thumbs_resizing
+        after_save :destroy_thumbs_contents, if: -> { in_file || resizing }
         after_save :save_thumbs, if: -> { image? }
       end
   end
@@ -38,6 +39,13 @@ module SS::Relation::Thumb
       thumb ? thumb.url : super
     end
 
+    def destroy_thumbs
+      self.thumbs_resizing = {}
+      result = thumbs.destroy_all
+      reload
+      result
+    end
+
     ## generate first thumb file
     def generate_public_file(*args)
       super
@@ -49,13 +57,6 @@ module SS::Relation::Thumb
       thumb.remove_public_file if thumb
     end
 
-    def destroy_thumbs
-      self.thumbs_resizing = {}
-      result = thumbs.destroy_all
-      reload
-      result
-    end
-
   private
     def initialize_thumbs_resizing
       return if thumbs_resizing
@@ -64,9 +65,16 @@ module SS::Relation::Thumb
       self.thumbs_resizing.symbolize_keys!
     end
 
+    def destroy_thumbs_contents
+      return if thumbs.blank?
+
+      thumbs.destroy_all
+      reload
+    end
+
     def save_thumbs
-      thumbs.destroy_all if in_file || resizing
       thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
+      self.thumbs_resizing = thumbs_resizing.symbolize_keys.compact
       self.thumbs_resizing = thumbs_resizing.invert.invert #delete duplicate values
 
       thumbs_resizing.each do |name, size|
