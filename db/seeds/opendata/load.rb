@@ -11,7 +11,7 @@ end
 
 def save_ss_files(path, data)
   puts path
-  cond = { filename: data[:filename], model: data[:model] }
+  cond = { site_id: @site._id, filename: data[:filename], model: data[:model] }
 
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
@@ -325,6 +325,12 @@ banner3 = save_ss_files "ss_files/ads/banner.gif", filename: "banner.gif", model
 banner4 = save_ss_files "ss_files/ads/banner.gif", filename: "banner.gif", model: "ads/banner"
 banner5 = save_ss_files "ss_files/ads/banner.gif", filename: "banner.gif", model: "ads/banner"
 banner6 = save_ss_files "ss_files/ads/banner.gif", filename: "banner.gif", model: "ads/banner"
+banner1.set(state: "public")
+banner2.set(state: "public")
+banner3.set(state: "public")
+banner4.set(state: "public")
+banner5.set(state: "public")
+banner6.set(state: "public")
 
 save_page route: "ads/banner", filename: "ads/600.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner1.id
 save_page route: "ads/banner", filename: "ads/601.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner2.id
