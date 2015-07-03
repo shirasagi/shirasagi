@@ -2,9 +2,12 @@ module Opendata::Api::ResourceSearchFilter
   extend ActiveSupport::Concern
   include Opendata::Api
 
+  included do
+    before_action :init_resource_search, only: [:resource_search]
+  end
+
   private
     def resource_search_check(queries, order_by, offset, limit)
-
       offset_messages = []
       limit_messages = []
 
@@ -23,7 +26,9 @@ module Opendata::Api::ResourceSearchFilter
         error = error.merge(messages)
       end
 
-      return error
+
+
+      error
     end
 
     def convert_property_name(field)
@@ -35,15 +40,12 @@ module Opendata::Api::ResourceSearchFilter
         property = "filename"
       elsif field =~ /^format$/i
         property = "format"
-      else
-        property = nil
       end
 
-      return property
+      property
     end
 
     def agree?(resource, queries)
-
       result = true
 
       queries.each do |query|
@@ -54,74 +56,77 @@ module Opendata::Api::ResourceSearchFilter
         end
       end
 
-      return result
+      result
     end
 
-  public
-    def resource_search
-      help = t("opendata.api.resource_search_help")
+    def init_resource_search
+      @help = t("opendata.api.resource_search_help")
 
-      queries = [params[:query]]
-      order_by = params[:order_by]
-      offset = params[:offset]
-      limit = params[:limit]
+      @queries = [params[:query]]
+      @order_by = params[:order_by]
+      @offset = params[:offset]
+      @limit = params[:limit]
 
-      error = resource_search_check(queries, order_by, offset, limit)
+      error = resource_search_check(@queries, @order_by, @offset, @limit)
       if error
-        render json: {help: help, success: false, error: error} and return
+        render json: { help: @help, success: false, error: error }
+        return
       end
 
-      result_list = []
-
-      field, term =  URI.decode(queries[0]).split(":")
+      field, term =  URI.decode(@queries[0]).split(":")
 
       field_list = %w(name description filename format)
-      if field_list.include?(field) == false
+      unless field_list.include?(field)
         error = {query: %(Field "#{field}" not recognised in resource_search.), __type: "Validation Error"}
-        render json: {help: help, success: false, error: error} and return
+        render json: {help: @help, success: false, error: error}
+        return
       end
 
       if !term
         error = {query: "Must be <field>:<value> pair(s)", __type: "Validation Error"}
-        render json: {help: help, success: false, error: error} and return
+        render json: {help: @help, success: false, error: error}
       end
+    end
+
+  public
+    def resource_search
+      @result_list = []
 
       datasets = Opendata::Dataset.site(@cur_site).public
       datasets.each do |dataset|
         resources = dataset.resources
         resources.each do |resource|
-          result_list << resource if agree?(resource, queries)
+          @result_list << resource if agree?(resource, @queries)
         end
 
         url_resources = dataset.url_resources
         url_resources.each do |url_resource|
-          result_list << url_resource if agree?(url_resource, queries)
+          @result_list << url_resource if agree?(url_resource, @queries)
         end
       end
 
-      order = convert_property_name(order_by)
-      if order_by && order
-        result_list.sort!{|a, b| a[order.to_sym] <=> b[order.to_sym] }
+      order = convert_property_name(@order_by)
+      if @order_by && order
+        @result_list.sort!{|a, b| a[order.to_sym] <=> b[order.to_sym] }
       end
 
-      if offset
-        if result_list.size < offset.to_i
-          result_list = []
+      if @offset
+        if @result_list.size < @offset.to_i
+          @result_list = []
         else
-          result_list = result_list[offset.to_i..-1]
+          @result_list = @result_list[@offset.to_i..-1]
         end
       end
 
-      result_list = result_list[0, limit.to_i] if limit
+      @result_list = @result_list[0, @limit.to_i] if @limit
 
-      if result_list.count > 0
-        res = {help: help, success: true, result: convert_resources(result_list)}
+      if @result_list.count > 0
+        res = {help: @help, success: true, result: convert_resources(@result_list)}
       else
-        res = {help: help, success: false}
+        res = {help: @help, success: false}
         res[:error] = {message: "Not found", __type: "Not Found Error"}
       end
 
       render json: res
     end
-
 end

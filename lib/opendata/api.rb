@@ -37,24 +37,9 @@ module Opendata::Api
     def convert_package(dataset)
       package = {}
 
-      member_id = dataset[:member_id]
-      user_id = dataset[:user_id]
+      author, author_email = get_author(dataset)
 
-      if member_id
-        member = get_member(member_id)
-        author = member[:author]
-        author_email = member[:author_email]
-      elsif user_id
-        user = get_user(user_id)
-        author = user[:author]
-        author_email = user[:author_email]
-      end
-
-      package[:private] = dataset[:state]
-      package[:revision_timestamp] = dataset[:released]
-      package[:id] = dataset[:_id]
-      package[:metadata_created] = dataset[:created]
-      package[:metadata_modified] = dataset[:updated]
+      # special attributes conversion
       package[:author] = author
       package[:author_email] = author_email
       package[:type] = "dataset"
@@ -64,25 +49,19 @@ module Opendata::Api
                                 get_num_url_resources(dataset[:url_resources])
       package[:tags] = convert_tags(dataset)
       package[:groups] = convert_dataset_groups(dataset[:dataset_group_ids])
-      package[:license_id] = dataset[:license]
-      package[:name] = dataset[:name]
-      package[:notes] = dataset[:text]
-      package[:title] = dataset[:name]
 
-      package[:permission_level] = dataset[:permission_level]
-      package[:member_id] = dataset[:member_id]
-      package[:user_id] = dataset[:user_id]
-      package[:site_id] = dataset[:site_id]
-      package[:filename] = dataset[:filename]
-      package[:route] = dataset[:route]
-      package[:depth] = dataset[:depth]
-      package[:order] = dataset[:order]
-      package[:category_ids] = dataset[:category_ids]
-      package[:area_ids] = dataset[:area_ids]
-      package[:related_page_ids] = dataset[:related_page_ids]
-      package[:related_url] = dataset[:related_url]
-      package[:point] = dataset[:point]
-      package[:downloaded] = dataset[:downloaded]
+      # map attributes
+      [ [ :private, :state ], [ :revision_timestamp, :released ], [ :id, :_id ], [ :metadata_created, :created ],
+        [ :metadata_modified, :updated ], [ :license_id, :license ], [ :name, :name ], [ :notes, :text ],
+        [ :title, :name ] ].each do |to, from|
+        package[to] = dataset[from]
+      end
+
+      # simply copy attributes
+      [ :permission_level, :member_id, :user_id, :site_id, :filename, :route, :depth, :order, :category_ids, :area_ids,
+        :related_page_ids, :related_url, :point, :downloaded ].each do |k|
+        package[k] = dataset[k]
+      end
 
       return package
     end
@@ -213,7 +192,7 @@ module Opendata::Api
     def get_user(user_id)
       package_user = {}
 
-      user = SS::User.find(user_id) rescue nil
+      user = Cms::User.site(@cur_site).where(id: user_id).first
       if user
         package_user[:author] = user[:name]
         package_user[:author_email] = user[:email]
@@ -222,4 +201,15 @@ module Opendata::Api
       return package_user
     end
 
+    def get_author(dataset)
+      if member_id = dataset[:member_id]
+        member = get_member(member_id)
+        return [ member[:author], member[:author_email] ]
+      elsif user_id = dataset[:user_id]
+        user = get_user(user_id)
+        return [ user[:author], user[:author_email] ]
+      end
+
+      nil
+    end
 end
