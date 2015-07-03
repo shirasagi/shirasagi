@@ -45,19 +45,18 @@ describe Opendata::Idea, dbscope: :example do
       include("_id" => include("$in" => include(11).and(include(31))))
     end
 
-    let(:name_keyword_matcher) do
-      include("$and" => include("$or" => include("name" => /\Qキーワード\E/i).and(include("text" => /\Qキーワード\E/i))))
+    let(:normal_keyword_matcher) do
+      include("$and" => include("$or" => include("name" => /キーワード/i).and(include("text" => /キーワード/i))))
     end
 
-    let(:name_modal_matcher) do
-      include("name" => include("$all" => include(/\Q名前\E/)))
+    let(:meta_keyword_matcher) do
+      include("$and" => include("$or" => include("name" => /\(\)\[\]\{\}\.\?\+\*\|\\/i).
+        and(include("text" => /\(\)\[\]\{\}\.\?\+\*\|\\/i))))
     end
 
     it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/idea") }
-    it { expect(described_class.search(keyword: "キーワード").selector.to_h).to include("$and") }
-    #it { expect(described_class.search(ids: "11,31").selector.to_h).to ids_matcher }
-    it { expect(described_class.search(name: "名前", keyword: "キーワード").selector.to_h).to name_keyword_matcher }
-    #it { expect(described_class.search(name: "名前", modal: true).selector.to_h).to name_modal_matcher }
+    it { expect(described_class.search(keyword: "キーワード").selector.to_h).to normal_keyword_matcher }
+    it { expect(described_class.search(keyword: "()[]{}.?+*|\\").selector.to_h).to meta_keyword_matcher }
     it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
     it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }

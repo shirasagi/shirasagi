@@ -56,11 +56,18 @@ describe Opendata::Dataset, dbscope: :example do
     let(:ids_matcher) do
       include("_id" => include("$in" => include(11).and(include(31))))
     end
-    let(:name_keyword_matcher) do
-      include("$and" => include("$or" => include("name" => /\Qキーワード\E/i).and(include("text" => /\Qキーワード\E/i))))
+    let(:normal_name_keyword_matcher) do
+      include("$and" => include("$or" => include("name" => /キーワード/i).and(include("text" => /キーワード/i))))
     end
-    let(:name_modal_matcher) do
-      include("name" => include("$all" => include(/\Q名前\E/)))
+    let(:normal_name_modal_matcher) do
+      include("name" => include("$all" => include(/名前/i)))
+    end
+    let(:meta_name_keyword_matcher) do
+      include("$and" => include("$or" => include("name" => /\(\)\[\]\{\}\.\?\+\*\|\\/i).
+        and(include("text" => /\(\)\[\]\{\}\.\?\+\*\|\\/i))))
+    end
+    let(:meta_name_modal_matcher) do
+      include("name" => include("$all" => include(/\(\)\[\]\{\}\.\?\+\*\|\\/i)))
     end
     let(:dataset_group_matcher) do
       include("dataset_group_ids" => include("$in" => include(-1)))
@@ -74,8 +81,10 @@ describe Opendata::Dataset, dbscope: :example do
     it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/dataset") }
     it { expect(described_class.search(keyword: "キーワード").selector.to_h).to include("$and") }
     it { expect(described_class.search(ids: "11,31").selector.to_h).to ids_matcher }
-    it { expect(described_class.search(name: "名前", keyword: "キーワード").selector.to_h).to name_keyword_matcher }
-    it { expect(described_class.search(name: "名前", modal: true).selector.to_h).to name_modal_matcher }
+    it { expect(described_class.search(name: "名前", keyword: "キーワード").selector.to_h).to normal_name_keyword_matcher }
+    it { expect(described_class.search(name: "名前", modal: true).selector.to_h).to normal_name_modal_matcher }
+    it { expect(described_class.search(name: "名前", keyword: "()[]{}.?+*|\\").selector.to_h).to meta_name_keyword_matcher }
+    it { expect(described_class.search(name: "()[]{}.?+*|\\", modal: true).selector.to_h).to meta_name_modal_matcher }
     it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
     it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }

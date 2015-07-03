@@ -46,11 +46,15 @@ describe Opendata::App, dbscope: :example do
 
   describe ".search" do
     let(:name_keyword_matcher) do
-      include("$and" => include("$or" => include("name" => /\Qキーワード\E/i).and(include("text" => /\Qキーワード\E/i))))
+      include("$and" => include("$or" => include("name" => /キーワード/i).and(include("text" => /キーワード/i))))
+    end
+    let(:meta_chars_matcher) do
+      include("$and" => include("$or" => include("name" => /\(\)\[\]\{\}\.\?\+\*\|\\/i)))
     end
     it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/app") }
     it { expect(described_class.search(keyword: "キーワード").selector.to_h).to include("$and") }
     it { expect(described_class.search(name: true, keyword: "キーワード").selector.to_h).to name_keyword_matcher }
+    it { expect(described_class.search(name: true, keyword: "()[]{}.?+*|\\").selector.to_h).to meta_chars_matcher }
     it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
     it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }

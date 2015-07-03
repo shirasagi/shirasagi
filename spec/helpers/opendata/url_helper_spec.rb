@@ -8,7 +8,7 @@ describe Opendata::UrlHelper, type: :helper, dbscope: :example do
     context "when menber has icon" do
       let(:member) { create(:opendata_member, icon_file: icon_file) }
       subject { helper.member_icon(member) }
-      it { is_expected.to eq '<img alt="" src="/fs/1/logo.png" />' }
+      it { is_expected.to eq '<img alt="" src="/fs/1/_/logo.png" />' }
     end
 
     context "when menber doesn't have icon" do

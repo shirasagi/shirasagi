@@ -130,8 +130,6 @@ class Opendata::Idea
         criteria = self.where({})
         return criteria if params.blank?
 
-        site = params[:site]
-
         if params[:keyword].present?
           criteria = criteria.keyword_in params[:keyword], :name, :text
         end

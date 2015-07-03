@@ -163,7 +163,7 @@ class Opendata::Dataset
       def search_name(params, criteria)
         if params[:name].present?
           if params[:modal].present?
-            words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /\Q#{Regexp.escape(w)}\E/ }
+            words = params[:name].split(/[\s　]+/).uniq.compact.map {|w| /#{Regexp.escape(w)}/i }
             criteria = criteria.all_in name: words
           else
             criteria = criteria.keyword_in params[:keyword], :name
