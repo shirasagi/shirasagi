@@ -718,7 +718,7 @@ textarea {
     .category {
       background: #ffcf38;
       &:hover {
-        background: #ff79b;
+        background: #ffe593;
       }
     }
     .area {
@@ -1355,7 +1355,7 @@ textarea {
         display: block;
         min-width: 85px;
         padding: 0 5px;
-        border: border-gray2;
+        border: $border-gray2;
         background: $hblue;
         color: $black1;
         text-decoration: none;
