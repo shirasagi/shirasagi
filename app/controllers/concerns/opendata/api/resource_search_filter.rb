@@ -26,8 +26,6 @@ module Opendata::Api::ResourceSearchFilter
         error = error.merge(messages)
       end
 
-
-
       error
     end
 
