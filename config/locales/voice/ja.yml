@@ -10,6 +10,8 @@ ja:
       sox: Sox エラーが発生しました。
       no_lame: Lame がインストールされていません。
       lame: Lame エラーが発生しました。
+    messages:
+      no_audio_solution: '<span>更新してください</span>再生するにはブラウザを更新するか、<a href="http://get.adobe.com/flashplayer/" target="_blank">Flash Player</a>を更新してください。'
 
   modules:
     voice: 読み上げ

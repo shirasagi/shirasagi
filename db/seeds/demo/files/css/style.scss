@@ -57,6 +57,7 @@ img {
     width: $page-width;
     margin: 0 auto;
     padding: 5px 10px;
+    position: relative;
     #nocssread {
       float: left;
       padding-right: 10px;
@@ -82,14 +83,16 @@ img {
         }
       }
     }
+    #ss-voice-controller {
+      position: absolute;
+      top: 100%;
+      right: 10px;
+    }
     #ss-voice {
-      position: relative;
-      padding: 0 10px 0 35px;
+      padding: 0 10px;
       background: url(../img/voice.png) no-repeat 10px center;
-      .ss-voice-container {
-        position: absolute;
-        top: 100%;
-        left: 0;
+      a {
+        padding-left: 23px;
       }
     }
     #ss-kana {

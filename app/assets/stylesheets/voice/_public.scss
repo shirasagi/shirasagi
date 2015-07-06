@@ -1,0 +1,20 @@
+@import "jplayer.blue.monday";
+
+.jp-audio {
+  .ss-jp-dismiss {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    .ss-jp-close {
+      float: left;
+      display: inline;
+      border: 0;
+      cursor: pointer;
+      background: transparent;
+      color: #767676;
+      &:focus {
+        color: #0173e3;
+      }
+    }
+  }
+}

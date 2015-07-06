@@ -16,6 +16,6 @@ class Voice::FilesController < ApplicationController
         search(@s).
         order_by(updated: -1).
         page(params[:page]).per(50)
-      @message = t("views.voice/voice_files.not_exists") if @items.blank?
+      @message = t("views.voice/files.not_exists") if @items.blank?
     end
 end
