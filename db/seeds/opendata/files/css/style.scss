@@ -1857,25 +1857,21 @@ textarea {
     }
   }
   .form-login {
-    width: 498px;
-    margin-bottom: $box-margin;
-    padding: $item-margin $box-margin;
-    border: $border-gray2;
+    @include clear;
     dl {
       clear: both;
       @include clear;
+      margin-bottom: $item-margin;
     }
     dt, dd {
+      float: left;
+      margin-right: $item-margin;
     }
     dt {
-      min-width: 120px;
       padding: 3px 5px;
     }
-    dd {
-      margin-bottom: $item-margin;
-      input {
-        width: 350px;
-      }
+    dd input {
+      width: 350px;
     }
     .send {
       clear: both;
@@ -2050,4 +2046,25 @@ textarea {
 }
 :root .opendata-sparql div input {
   filter: none\0;
+}
+// -----------------------------------------------------------------------------
+//  pagination
+.pagination {
+  margin: $box-margin 0;
+  text-align: center;
+  a {
+    @include inline-block;
+    padding: 4px 10px;
+    background: $gray1;
+    color: $black1;
+    text-decoration: none;
+    &:hover {
+      background: $gray3;
+    }
+  }
+  .current {
+    @include inline-block;
+    padding: 4px 10px;
+    background: $gray3;
+  }
 }
