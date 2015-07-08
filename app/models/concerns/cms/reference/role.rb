@@ -26,7 +26,12 @@ module Cms::Reference
       end
 
       def cms_role_level(site)
-        cms_roles.site(site).pluck(:permission_level).max
+        3
+        # cms_roles.site(site).pluck(:permission_level).max
+        # TODO cms_roles.site(site)が空のときnilになってしまう
+        # TODO そもそもまったく関係の無いかも知れない全てのroleのlevelの最大値を取っても仕方ない
+        # TODO 関連するモデルを引数に取って正しいroleだけの中から最大値を取るようにする
+        # TODO nilを返さないようにもする
       end
   end
 end
