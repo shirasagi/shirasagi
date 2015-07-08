@@ -14,15 +14,15 @@ module KeyVisual::Addon
     public
       def link_target_options
         [
-          [I18n.t('ads.options.link_target.self'), ''],
-          [I18n.t('ads.options.link_target.blank'), 'blank'],
+          [I18n.t('key_visual.options.link_target.self'), ''],
+          [I18n.t('key_visual.options.link_target.blank'), 'blank'],
         ]
       end
 
       def sort_options
         [
-          [I18n.t('ads.options.sort.order'), 'order'],
-          [I18n.t('ads.options.sort.random'), 'random'],
+          [I18n.t('key_visual.options.sort.order'), 'order'],
+          [I18n.t('key_visual.options.sort.random'), 'random'],
         ]
       end
 
