@@ -60,7 +60,6 @@ module Workflow::Addon
           file = SS::File.new(attributes)
           file.id = nil
           file.in_file = f.uploaded_file
-          file.thumbs_resizing = f.thumbs_resizing
           file.user_id = @cur_user.id if @cur_user
 
           file.save validate: false

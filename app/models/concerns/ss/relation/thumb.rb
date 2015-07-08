@@ -2,28 +2,28 @@ module SS::Relation::Thumb
   extend ActiveSupport::Concern
   extend SS::Translation
 
+  included do
+    cattr_accessor(:thumbs_resizing) { {} }
+
+    has_many :thumbs, class_name: "SS::ThumbFile", dependent: :destroy
+    after_save :destroy_thumbs, if: -> { in_file || resizing }
+    after_save :save_thumbs, if: -> { image? }
+
+    thumb_size [120, 90]
+  end
+
   module ClassMethods
     private
-      def use_relation_thumbs
-        has_many :thumbs, class_name: "SS::ThumbFile", dependent: :destroy
+      def thumb_size(size)
+        add_thumb_size(:normal, size)
+      end
 
-        attr_accessor :thumbs_resizing
-
-        after_initialize :initialize_thumbs_resizing
-        after_save :destroy_thumbs_contents, if: -> { in_file || resizing }
-        after_save :save_thumbs, if: -> { image? }
+      def add_thumb_size(name, size)
+        thumbs_resizing[name] = size
       end
   end
 
   public
-    def thumb_size(size)
-      add_thumb_size(:normal, size)
-    end
-
-    def add_thumb_size(name, size)
-      self.thumbs_resizing[name] = size
-    end
-
     def thumb(key = nil)
       if key.nil?
         normal = thumbs.where(image_size_name: :normal).first
@@ -40,7 +40,8 @@ module SS::Relation::Thumb
     end
 
     def destroy_thumbs
-      self.thumbs_resizing = {}
+      return if thumbs.blank?
+
       result = thumbs.destroy_all
       reload
       result
@@ -58,24 +59,11 @@ module SS::Relation::Thumb
     end
 
   private
-    def initialize_thumbs_resizing
-      return if thumbs_resizing
-
-      self.thumbs_resizing = thumbs.map { |t| [ t.image_size_name, t.image_size ] }.to_h
-      self.thumbs_resizing.symbolize_keys!
-    end
-
-    def destroy_thumbs_contents
-      return if thumbs.blank?
-
-      thumbs.destroy_all
-      reload
-    end
-
     def save_thumbs
       thumbs_was = thumbs.map { |t| [t.image_size, t] }.to_h
-      self.thumbs_resizing = thumbs_resizing.symbolize_keys.compact
-      self.thumbs_resizing = thumbs_resizing.invert.invert #delete duplicate values
+      thumbs_resizing = self.class.thumbs_resizing
+      thumbs_resizing = thumbs_resizing.symbolize_keys.compact
+      thumbs_resizing = thumbs_resizing.invert.invert #delete duplicate values
 
       thumbs_resizing.each do |name, size|
         file = thumbs_was.delete(size)
