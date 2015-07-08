@@ -1,0 +1,44 @@
+
+.bx-wrapper {
+  img {
+    display: block;
+    max-width: 100%;
+    border-style: none;
+  }
+  .bx-viewport {
+    li {
+      a {
+        display: inline-block;
+        img {
+        }
+      }
+    }
+  }
+  .bx-controls {
+    .bx-controls-auto {
+      .bx-controls-auto-item {
+        display: inline;
+        .bx-start {
+          color: #888;
+        }
+        .bx-stop {
+          color: #888;
+        }
+        .active {
+          color: #000;
+        }
+      }
+    }
+  }
+}
+.bx-thumbs {
+  img {
+    border-style: none;
+  }
+  a {
+    opacity: 0.5;
+  }
+  a.active {
+    opacity: 1.0;
+  }
+}

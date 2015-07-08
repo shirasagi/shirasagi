@@ -1,0 +1,15 @@
+<%= code_editor ".mod-key_visual-pagelist .html", mode: :html %>
+
+<dl class="see mod-key_visual-pagelist">
+  <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
+  <dd><%= f.select :link_target, @item.link_target_options %></dd>
+
+  <dt><%= @model.t :sort %><%= @model.tt :sort %></dt>
+  <dd><%= f.select :sort, @item.sort_options, include_blank: " " %></dd>
+
+  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+  <dd><%= f.text_area :upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
+  <dd><%= f.text_area :lower_html, class: :html %></dd>
+</dl>

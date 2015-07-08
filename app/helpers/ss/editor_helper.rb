@@ -1,4 +1,4 @@
-module EditorHelper
+module SS::EditorHelper
 
   CODE_EXT_MODES = {
     html: :htmlmixed,

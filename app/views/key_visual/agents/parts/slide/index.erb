@@ -1,0 +1,42 @@
+<%
+
+return if @items.blank?
+wrap_id = "key_visual-images-#{@items[0].id}"
+target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") : nil
+
+%>
+<%= jquery do %>
+  KeyVisual_Image.randomize("#<%= wrap_id %> .images");
+<% end if @random %>
+
+<%= jquery do %>
+  KeyVisual_Image.slide("#<%= wrap_id %>");
+<% end %>
+
+<%= stylesheet_link_tag "key_visual/_public" %>
+
+<div class="key_visual-slide" id="<%= wrap_id %>">
+  <%== @cur_part.upper_html if @cur_part.upper_html.present? %>
+
+  <ul class="images">
+    <% @items.each do |item| %>
+    <% file = item.file %>
+    <% next unless file %>
+    <li>
+      <a href="<%= item.link_url %>" <%== target %>><%= image_tag file.url, alt: item.name %></a>
+    </li>
+    <% end %>
+  </ul>
+
+  <div class="bx-thumbs">
+    <% @items.each_with_index do |item, idx| %>
+    <% file = item.file %>
+    <% next unless file %>
+      <a data-slide-index="<%= idx %>" href="">
+        <%= image_tag file.url.sub(/(\/[^\/]+)$/, '/thumb\\1'), alt: item.name %></a>
+    <% end %>
+  </div>
+
+  <%== @cur_part.lower_html if @cur_part.lower_html.present? %>
+</div>
+

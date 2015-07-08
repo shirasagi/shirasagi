@@ -80,6 +80,9 @@ input[type=email], input[type=number], input[type=tel] {
 input[type=number] {
   width: 12em;
 }
+input.alnum {
+  ime-mode: disabled;
+}
 input.number {
   ime-mode: disabled;
 }

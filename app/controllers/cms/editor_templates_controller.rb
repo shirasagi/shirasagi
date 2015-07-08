@@ -2,7 +2,7 @@ class Cms::EditorTemplatesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Cms::SearchableCrudFilter
-  helper EditorHelper
+  helper SS::EditorHelper
 
   model Cms::EditorTemplate
   navi_view "cms/main/navi"

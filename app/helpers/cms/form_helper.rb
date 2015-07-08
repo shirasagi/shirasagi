@@ -33,4 +33,17 @@ module Cms::FormHelper
     path = "node_#{model}_path".to_sym
     return send(path, cid: item.parent.id, id: item.id)
   end
+
+  def show_image_info(file)
+    return nil unless file
+
+    image = file.thumb || file
+    link  = %(<a href="#{file.url}" target="_blank">).html_safe
+
+    h  = []
+    h << %(<div>#{link}#{image_tag(image.url, alt: "")}</a></div>).html_safe
+    h << %(<div>#{link}#{file.filename}</a> \(#{number_to_human_size(file.size)}\)</div>).html_safe
+
+    safe_join(h)
+  end
 end

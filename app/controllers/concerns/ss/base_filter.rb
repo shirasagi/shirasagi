@@ -7,7 +7,7 @@ module SS::BaseFilter
     cattr_accessor(:user_class) { SS::User }
     cattr_accessor :model_class
 
-    helper EditorHelper
+    helper SS::EditorHelper
     before_action :set_model
     before_action :logged_in?
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
