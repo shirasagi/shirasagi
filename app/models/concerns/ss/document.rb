@@ -118,6 +118,57 @@ module SS::Document
 
       class_variable_set(:@@_text_index_fields, fields)
     end
+
+    # Mongoid では find_in_batches が存在しない。
+    # find_in_batches のエミュレーションを提供する。
+    #
+    # ActiveRecord の find_in_batches と異なる点がある。
+    #
+    # ActiveRecord の find_in_batches では、start オプションを取るが、本メソッドは offset オプションを取る。
+    # start オプションは主キーを取るが、offset オプションは読み飛ばすレコード数を取る。
+    #
+    # ActiveRecord の find_in_batches では、order_by が無効になるが、本メソッドでは order_by が有効である。
+    #
+    # @return [Enumerator<Array<self.class>>]
+    def find_in_batches(options = {})
+      unless block_given?
+        return to_enum(:find_in_batches, options)
+      end
+
+      batch_size = options[:batch_size] || 1000
+      offset = options[:offset] || 0
+      records = self.limit(batch_size).skip(offset).to_a
+      while records.any?
+        records_size = records.size
+        yield records
+        break if records_size < batch_size
+        offset += batch_size
+        records = self.limit(batch_size).skip(offset).to_a
+      end
+    end
+
+    # Mongoid では find_each が存在しない。
+    # find_each のエミュレーションを提供する。
+    #
+    # ActiveRecord の find_in_batches と異なる点がある。
+    #
+    # ActiveRecord の find_in_batches では、start オプションを取るが、本メソッドは offset オプションを取る。
+    # start オプションは主キーを取るが、offset オプションは読み飛ばすレコード数を取る。
+    #
+    # ActiveRecord の find_in_batches では、order_by が無効になるが、本メソッドでは order_by が有効である。
+    #
+    # @return [Enumerator<self.class>]
+    def find_each(options = {})
+      unless block_given?
+        return to_enum(:find_each, options)
+      end
+
+      find_in_batches(options) do |records|
+        records.each do |record|
+          yield record
+        end
+      end
+    end
   end
 
   public

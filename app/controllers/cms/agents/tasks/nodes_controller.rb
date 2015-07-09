@@ -2,6 +2,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   include Cms::PublicFilter::Node
 
   before_action :set_params
+  PER_BATCH = 100.freeze
 
   private
     def set_params
@@ -17,7 +18,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
       nodes = Cms::Node.site(@site).public
       nodes = nodes.where(filename: /^#{@node.filename}\/?$/) if @node
 
-      nodes.each do |node|
+      nodes.order_by(id: 1).find_each(batch_size: PER_BATCH) do |node|
         next unless node.public?
         next unless node.public_node?
 
@@ -39,7 +40,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     def generate_root_pages
       pages = Cms::Page.site(@site).public.where(depth: 1)
 
-      pages.each do |page|
+      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
         @task.count
         @task.log page.url if page.becomes_with_route.generate_file
       end
@@ -48,7 +49,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     def generate_node_pages(node)
       pages = node.pages.public
 
-      pages.each do |page|
+      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
         @task.count
         @task.log page.url if page.becomes_with_route.generate_file
       end

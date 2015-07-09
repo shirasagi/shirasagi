@@ -2,6 +2,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   include Cms::PublicFilter::Page
 
   before_action :set_attachments, only: :generate
+  PER_BATCH = 100.freeze
 
   private
     def set_attachments
@@ -16,7 +17,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       pages = pages.node(@node) if @node
       @task.total_count = pages.size
 
-      pages.each do |page|
+      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
         @task.count
         page.serve_static_relation_files = @attachments
         @task.log page.url if page.becomes_with_route.generate_file
@@ -29,7 +30,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       pages = Cms::Page.site(@site).public
       pages = pages.node(@node) if @node
 
-      pages.each do |page|
+      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
         page = page.becomes_with_route
         if !page.update
           @task.log page.url
@@ -50,7 +51,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       pages = Cms::Page.site(@site).or(cond)
       @task.total_count = pages.size
 
-      pages.each do |page|
+      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
         @task.count
         @task.log page.full_url
         release_page page.becomes_with_route
@@ -77,7 +78,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       pages = Cms::Page.site(@site)
       @task.total_count = pages.size
 
-      pages.each do |page|
+      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
         @task.count
         @task.log page.path if Fs.rm_rf page.path
       end

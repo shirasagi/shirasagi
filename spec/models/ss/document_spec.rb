@@ -71,4 +71,108 @@ RSpec.describe SS::Document, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe ".find_in_batches" do
+    before do
+      1.upto(10) do
+        Klass.create!(name: unique_id)
+      end
+    end
+
+    context "when block is given" do
+      it do
+        total_count = 0
+        check = {}
+        Klass.find_in_batches(batch_size: 3) do |records|
+          total_count += records.size
+          records.each do |r|
+            expect(check[r.name]).to be_nil
+            check[r.name] = true
+          end
+        end
+        expect(total_count).to eq Klass.count
+      end
+    end
+
+    context "when block and offset is given" do
+      it do
+        total_count = 0
+        check = {}
+        Klass.find_in_batches(offset: Klass.count / 2, batch_size: 3) do |records|
+          total_count += records.size
+          records.each do |r|
+            expect(check[r.name]).to be_nil
+            check[r.name] = true
+          end
+        end
+        expect(total_count).to eq Klass.count / 2
+      end
+    end
+
+    context "when block is not given" do
+      it do
+        enum = Klass.find_in_batches(batch_size: 3)
+
+        total_count = 0
+        check = {}
+        enum.each do |records|
+          total_count += records.size
+          records.each do |r|
+            expect(check[r.name]).to be_nil
+            check[r.name] = true
+          end
+        end
+        expect(total_count).to eq Klass.count
+      end
+    end
+  end
+
+  describe ".find_each" do
+    before do
+      1.upto(10) do
+        Klass.create!(name: unique_id)
+      end
+    end
+
+    context "when block is given" do
+      it do
+        total_count = 0
+        check = {}
+        Klass.find_each(batch_size: 3) do |r|
+          total_count += 1
+          expect(check[r.name]).to be_nil
+          check[r.name] = true
+        end
+        expect(total_count).to eq Klass.count
+      end
+    end
+
+    context "when block and offset is given" do
+      it do
+        total_count = 0
+        check = {}
+        Klass.find_each(offset: Klass.count / 2, batch_size: 3) do |r|
+          total_count += 1
+          expect(check[r.name]).to be_nil
+          check[r.name] = true
+        end
+        expect(total_count).to eq Klass.count / 2
+      end
+    end
+
+    context "when block is not given" do
+      it do
+        enum = Klass.find_each(batch_size: 3)
+
+        total_count = 0
+        check = {}
+        enum.each do |r|
+          total_count += 1
+          expect(check[r.name]).to be_nil
+          check[r.name] = true
+        end
+        expect(total_count).to eq Klass.count
+      end
+    end
+  end
 end
