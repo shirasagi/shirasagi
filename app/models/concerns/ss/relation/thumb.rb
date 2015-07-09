@@ -5,7 +5,7 @@ module SS::Relation::Thumb
   included do
     cattr_accessor(:thumbs_resizing) { {} }
 
-    has_many :thumbs, class_name: "SS::ThumbFile", dependent: :destroy
+    has_many :thumbs, class_name: "SS::ThumbFile", foreign_key: :original_id, dependent: :destroy
     after_save :destroy_thumbs, if: -> { in_file || resizing }
     after_save :save_thumbs, if: -> { image? }
 

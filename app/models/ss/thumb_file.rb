@@ -3,8 +3,6 @@ class SS::ThumbFile
 
   default_scope ->{ where(model: "ss/thumb_file") }
 
-  belongs_to :original, class_name: "SS::File"
-
   index({ original_id: 1 })
 
   field :original_id, type: Integer

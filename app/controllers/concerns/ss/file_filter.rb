@@ -40,6 +40,10 @@ module SS::FileFilter
       set_item
       set_last_modified
 
+      if @item.try(:thumb)
+        return send_file @item.thumb.path, type: @item.content_type, filename: @item.filename, disposition: :inline
+      end
+
       require 'rmagick'
       image = Magick::Image.from_blob(@item.read).shift
       image = image.resize_to_fit 120, 90 if image.columns > 120 || image.rows > 90
