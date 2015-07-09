@@ -36,8 +36,11 @@ ja:
       reset: リセット
       toggle: 折りたたみ表示
       move: 移動
+      import: 取り込み
+      convert: 変換
     confirm:
       delete: 削除してよろしいですか？
+      convert: 変換してよろしいですか？
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。

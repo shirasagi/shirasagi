@@ -1,0 +1,30 @@
+<%= jquery do %>
+$(".file").on("change", function() {
+  var basename = $(this).val().split('\\').pop();
+  var ext = basename.split('.').pop();
+  var name = ext.match(/zip/i) ? basename.replace(/\.[^.]+?$/, "") : "";
+  $(".name").val(name);
+  $(".filename").val(name);
+});
+<% end %>
+
+<%= form_for :item, url: { action: :import }, html: {id: "item-form", method: :post, multipart: true} do |f| %>
+  <%= error_messages_for :item %>
+  <%= f.hidden_field "group_ids[]", value: @cur_user.groups.map(&:id) %>
+
+  <dl class="see">
+    <dt><%= @model.t :in_file %><%= @model.tt :in_file %></dt>
+    <dd><%= f.file_field :in_file, class: "file" %></dd>
+
+    <dt><%= @model.t :name %><%= @model.tt :title %></dt>
+    <dd><%= f.text_field :name, class: "name" %></dd>
+
+    <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
+    <dd><%= f.text_field :basename, class: "filename" %></dd>
+  </dl>
+
+  <footer class="send">
+    <%= f.submit t("views.button.import"), class: :save %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

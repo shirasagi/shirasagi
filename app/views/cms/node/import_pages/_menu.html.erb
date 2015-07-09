@@ -1,0 +1,21 @@
+<nav class="act-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to :new, action: :new %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <%= link_to :back_to_show, action: :show, id: @item %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <%= link_to :edit, action: :edit, id: @item %>
+    <%= link_to t("cms.convert_to_cms_page"), action: :convert, id: @item %>
+    <%= link_to :copy, action: :copy, id: @item %>
+    <%= link_to :move, action: :move, id: @item %>
+    <%= link_to :delete, action: :delete, id: @item %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
+<%= render file: "_addons_menu" %>
+<% end %>

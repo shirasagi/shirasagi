@@ -8,5 +8,6 @@
     <%= link_to :"cms.config", node_conf_path, class: "icon-conf" if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.generate_node", node_generate_nodes_path, class: "icon-conf" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <%= link_to :"cms.generate_page", node_generate_pages_path, class: "icon-conf" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :"cms.import", node_import_path, class: "icon-conf" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
   </div>
 </nav>

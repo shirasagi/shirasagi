@@ -1,0 +1,14 @@
+<%= form_for :item, url: { action: :import }, html: {id: "item-form", method: :post, multipart: true} do |f| %>
+  <%= error_messages_for :item %>
+  <%= f.hidden_field "group_ids[]", value: @cur_user.groups.map(&:id) %>
+
+  <dl class="see">
+    <dt><%= @model.t :in_file %><%= @model.tt :in_file %></dt>
+    <dd><%= f.file_field :in_file %></dd>
+  </dl>
+
+  <footer class="send">
+    <%= f.submit t("views.button.import"), class: :save %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

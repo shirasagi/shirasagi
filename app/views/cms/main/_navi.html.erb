@@ -19,6 +19,13 @@
     <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :"cms.generate_page", cms_generate_pages_path, class: "icon-conf" %>
     <% end %>
+    <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% if @cur_node %>
+        <%= link_to :"cms.import", node_import_path, class: "icon-conf" %>
+      <% else %>
+        <%= link_to :"cms.import_node", cms_import_path, class: "icon-conf" %>
+      <% end %>
+    <% end %>
   </div>
 </nav>
 

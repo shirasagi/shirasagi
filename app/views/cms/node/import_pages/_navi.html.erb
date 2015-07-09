@@ -1,0 +1,23 @@
+<%= node_navi do %>
+
+<nav class="sub-menu">
+  <header><h1><%= t("cms.import_page") %></h1></header>
+  <div>
+    <%= link_to :"cms.node", node_import_nodes_path, class: "icon-node" %>
+    <%= link_to :"cms.import_page", node_import_pages_path, class: "icon-page" %>
+  </div>
+  <div class="narrow-page">
+    <%= link_to :"workflow.page.ready", index_ready_node_import_pages_path, class: "icon-page" %>
+    <%= link_to :"workflow.page.closed", index_closed_node_import_pages_path, class: "icon-page" %>
+  </div>
+</nav>
+
+<nav class="sub-menu">
+  <header><h1><%= t "workflow.pages" %></h1></header>
+  <div>
+    <%= link_to :"workflow.page.approve", index_approve_node_import_pages_path, class: "icon-page" %>
+    <%= link_to :"workflow.page.request", index_request_node_import_pages_path, class: "icon-page" %>
+  </div>
+</nav>
+
+<% end %>
