@@ -13,7 +13,7 @@ module Cms::Addon
     end
 
     def validate_release_date
-      self.released ||= release_date
+      self.released ||= release_date if respond_to?(:released)
 
       if close_date.present?
         if release_date.present? && release_date >= close_date
@@ -25,7 +25,7 @@ module Cms::Addon
     def validate_release_state
       return if errors.present?
 
-      if state == "public"
+      if try(:state) == "public"
         self.state = "ready" if release_date && release_date > Time.zone.now
         self.state = "closed" if close_date && close_date <= Time.zone.now
       end

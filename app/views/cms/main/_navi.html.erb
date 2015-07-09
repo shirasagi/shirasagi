@@ -49,16 +49,16 @@
     <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to :"cms.member", cms_members_path %>
     <% end %>
-    <% if Cms::EditorTemplate.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if Cms::EditorTemplate.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to :"cms.editor_template", cms_editor_templates_path %>
     <% end %>
-    <% if Workflow::Route.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to :"workflow.name", workflow_routes_path %>
     <% end %>
     <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to :"ldap", ldap_import_index_path %>
     <% end %>
-    <% if Chorg::Revision.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if Chorg::Revision.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to :"chorg.revision", chorg_revisions_revisions_path %>
     <% end %>
     <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
@@ -67,7 +67,7 @@
     <% if SS.config.kana.disable.blank? && Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to :"kana.dictionary", kana_dictionaries_path %>
     <% end %>
-    <% if SS.config.voice.disable.blank? && Voice::File.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if SS.config.voice.disable.blank? && Voice::File.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to :"voice.file", voice_files_path %>
     <% end %>
     <% if SS.config.job.disable_log.blank? && Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
@@ -75,6 +75,9 @@
     <% end %>
     <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to :"history.log", history_cms_logs_path %>
+    <% end %>
+    <% if Cms::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to :"cms.notice", cms_notices_path %>
     <% end %>
   </div>
 </nav>

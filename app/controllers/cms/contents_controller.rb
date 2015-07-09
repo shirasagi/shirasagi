@@ -11,6 +11,7 @@ class Cms::ContentsController < ApplicationController
   public
     def index
       @model = Cms::Node
+      self.menu_view_file = nil
 
       @mod = params[:mod]
       cond = {}
@@ -22,5 +23,13 @@ class Cms::ContentsController < ApplicationController
         where(shortcut: :show).
         order_by(filename: 1).
         page(params[:page]).per(100)
+
+      @notices = Cms::Notice.site(@cur_site).public.target_to(@cur_user).order_by(updated: -1)
+    end
+
+    def public_notice
+      @model = Cms::Notice
+      self.menu_view_file = "public_notice_menu"
+      @item = Cms::Notice.site(@cur_site).public.target_to(@cur_user).find(params[:notice])
     end
 end

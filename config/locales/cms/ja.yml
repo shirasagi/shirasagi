@@ -28,6 +28,9 @@ ja:
     view_page: 公開画面
     view_site: サイト確認
     editor_template: テンプレート
+    notice: お知らせ
+    important_notice: 重要なお知らせ
+    back_to_contents: コンテンツへ戻る
     confirm:
       delete_item: 項目を削除してよろしいですか？
 
@@ -81,6 +84,12 @@ ja:
         order: 指定順
       parent_crumb:
         blank: カテゴリーから選択する
+      notice_severity:
+        normal: ""
+        high: 重要なお知らせ
+      notice_target:
+        all: 全ユーザー
+        same_group: 同一グループ内
     sns_share:
       tweet: ツイート
       add_hatena: このエントリーをはてなブックマークに追加
@@ -105,31 +114,37 @@ ja:
     read_other_cms_parts: パーツの閲覧（全て）
     read_other_cms_layouts: レイアウトの閲覧（全て）
     read_other_cms_files: 共有ファイルの閲覧（全て）
+    read_other_cms_notices: お知らせの閲覧（全て）
     read_private_cms_nodes: フォルダーの閲覧（所有）
     read_private_cms_pages: 固定ページの閲覧（所有）
     read_private_cms_parts: パーツの閲覧（所有）
     read_private_cms_layouts: レイアウトの閲覧（所有）
     read_private_cms_files: 共有ファイルの閲覧（所有）
+    read_private_cms_notices: お知らせの閲覧（所有）
     edit_other_cms_nodes: フォルダーの編集（全て）
     edit_other_cms_pages: 固定ページの編集（全て）
     edit_other_cms_parts: パーツの編集（全て）
     edit_other_cms_layouts: レイアウトの編集（全て）
     edit_other_cms_files: 共有ファイルの編集（全て）
+    edit_other_cms_notices: お知らせの編集（全て）
     edit_private_cms_nodes: フォルダーの編集（所有）
     edit_private_cms_pages: 固定ページの編集（所有）
     edit_private_cms_parts: パーツの編集（所有）
     edit_private_cms_layouts: レイアウトの編集（所有）
     edit_private_cms_files: 共有ファイルの編集（所有）
+    edit_private_cms_notices: お知らせの編集（所有）
     delete_other_cms_nodes: フォルダーの削除（全て）
     delete_other_cms_pages: 固定ページの削除（全て）
     delete_other_cms_parts: パーツの削除（全て）
     delete_other_cms_layouts: レイアウトの削除（全て）
     delete_other_cms_files: 共有ファイルの削除（全て）
+    delete_other_cms_notices: お知らせの削除（全て）
     delete_private_cms_nodes: フォルダーの削除（所有）
     delete_private_cms_pages: 固定ページの削除（所有）
     delete_private_cms_parts: パーツの削除（所有）
     delete_private_cms_layouts: レイアウトの削除（所有）
     delete_private_cms_files: 共有ファイルの削除（所有）
+    delete_private_cms_notices: お知らせの削除（所有）
     move_other_cms_nodes: フォルダーの移動（全て）
     move_other_cms_pages: 固定ページの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
@@ -176,6 +191,7 @@ ja:
       cms/role: ロール
       cms/editor_template: テンプレート
       cms/file: 共有ファイル
+      cms/notice: お知らせ
     attributes:
       cms/content:
         released: 公開日時
@@ -236,6 +252,10 @@ ja:
         name: 名前
         description: 説明
         order: 並び順
+      cms/notice:
+        name: タイトル
+        notice_severity: 種別
+        notice_target: 掲載範囲
 
       cms/addon/meta:
         keywords: キーワード
@@ -689,4 +709,14 @@ ja:
 
     cms/addon/role:
       cms_role_ids:
-        - ユーザーのロール/権限を選択します。 
+        - ユーザーのロール/権限を選択します。
+
+    cms/notice:
+      name:
+        - タイトルを入力します。
+      notice_severity:
+        - 「重要なお知らせ」の場合、チェックをつけます。
+        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
+      notice_target:
+        - 「全ユーザー」に表示するか、「同一グループ内」に表示するかを選択します。
+        - 「同一グループ内」を選択した場合、「管理グループ」欄に設定したグループに表示されます。
