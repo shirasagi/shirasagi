@@ -21,8 +21,10 @@
 ##
 
 $ ->
-  # $.ajaxSetup
-  #   headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
+  $.ajaxSetup
+    # prevent caching ajax response. see #596.
+    cache: false
+    # headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
 
   SS.render()
 
