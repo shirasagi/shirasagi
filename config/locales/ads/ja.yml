@@ -18,6 +18,7 @@ ja:
   modules:
     ads: 広告管理
     addons:
+      ads/category: カテゴリー
       ads/page_list: リスト表示
 
   cms:
@@ -38,9 +39,12 @@ ja:
     models:
       ads/banner: 広告バナー
     attributes:
+      ads/addon/category:
+        ads_categories: カテゴリー
       ads/addon/page_list:
         link_action: リンク動作
         link_target: リンク表示
+        with_category: カテゴリー連動
         upper_html: 上部HTML
         lower_html: 下部HTML
       ads/banner:
@@ -73,6 +77,8 @@ ja:
         - アクセス集計には反映されません。
       link_target:
         - リンクの表示形式を設定します。
+      with_category:
+        - 表示中のページにカテゴリーが設定されている場合、そのカテゴリーを設定しているバナーのみ表示します。
       sort:
         - どういった順でリストの並べるかを指定します。
       upper_html:

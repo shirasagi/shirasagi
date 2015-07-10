@@ -7,9 +7,10 @@ module Ads::Addon
       field :link_action, type: String
       field :link_target, type: String
       field :sort, type: String
+      field :with_category, type: String
       field :upper_html, type: String
       field :lower_html, type: String
-      permit_params :link_action, :link_target, :sort, :upper_html, :lower_html
+      permit_params :link_action, :link_target, :sort, :with_category, :upper_html, :lower_html
     end
 
     public
@@ -31,6 +32,13 @@ module Ads::Addon
         [
           [I18n.t('ads.options.sort.order'), 'order'],
           [I18n.t('ads.options.sort.random'), 'random'],
+        ]
+      end
+
+      def with_category_options
+        [
+          [I18n.t("views.options.state.enabled"), "enabled"],
+          [I18n.t("views.options.state.disabled"), "disabled"],
         ]
       end
 

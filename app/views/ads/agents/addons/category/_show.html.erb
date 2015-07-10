@@ -1,0 +1,5 @@
+<% return "" if @item.ads_categories.blank? %>
+
+<dl class="see">
+  <dd class="wide"><%= @item.send(:ads_categories).pluck(:name).join(", ") %></dd>
+</dl>

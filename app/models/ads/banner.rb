@@ -1,6 +1,7 @@
 class Ads::Banner
   include Cms::Model::Page
   include SS::Relation::File
+  include Ads::Addon::Category
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
