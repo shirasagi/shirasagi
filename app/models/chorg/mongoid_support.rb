@@ -3,7 +3,7 @@ module Chorg::MongoidSupport
   include Chorg::Loggable
 
   def update_attributes(entity, hash)
-    hash.each { |k, v| entity[k] = v }
+    hash.select { |k, v| v.present? }.each { |k, v| entity[k] = v }
     entity
   end
 

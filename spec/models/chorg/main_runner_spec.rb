@@ -33,6 +33,11 @@ describe Chorg::MainRunner, dbscope: :example do
         expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(name: group.name).first).to be_nil
         expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
+        expect(Cms::Group.where(id: group.id).first.contact_email).to eq changeset.destinations.first["contact_email"]
+        expect(Cms::Group.where(id: group.id).first.contact_tel).to eq changeset.destinations.first["contact_tel"]
+        expect(Cms::Group.where(id: group.id).first.contact_fax).to eq changeset.destinations.first["contact_fax"]
+        # ldap_dn is expected not to be changed.
+        expect(Cms::Group.where(id: group.id).first.ldap_dn).to eq group.ldap_dn
         # check page
         save_filename = page.filename
         page.reload
@@ -42,6 +47,41 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq changeset.destinations.first["contact_email"]
         expect(page.contact_tel).to eq changeset.destinations.first["contact_tel"]
         expect(page.contact_fax).to eq changeset.destinations.first["contact_fax"]
+      end
+    end
+
+    context "with only move name" do
+      let(:group) { create(:revision_new_group) }
+      let(:revision) { create(:revision, site_id: site.id) }
+      let(:changeset) { create(:move_changeset_only_name, revision_id: revision.id, source: group) }
+
+      context "with Article::Page" do
+        let(:page) { create(:revisoin_page, site: site, group: group) }
+        subject { described_class.new }
+
+        it do
+          # ensure create models
+          expect(changeset).not_to be_nil
+          expect(page).not_to be_nil
+          # execute
+          expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+          expect(Cms::Group.where(name: group.name).first).to be_nil
+          expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
+          # these attributes are expected not to be changed.
+          expect(Cms::Group.where(id: group.id).first.contact_email).to eq group.contact_email
+          expect(Cms::Group.where(id: group.id).first.contact_tel).to eq group.contact_tel
+          expect(Cms::Group.where(id: group.id).first.contact_fax).to eq group.contact_fax
+          expect(Cms::Group.where(id: group.id).first.ldap_dn).to eq group.ldap_dn
+          # check page
+          save_filename = page.filename
+          page.reload
+          expect(page.group_ids).to eq [ group.id ]
+          expect(page.filename).to eq save_filename
+          expect(page.contact_group_id).to eq group.id
+          expect(page.contact_email).to eq group.contact_email
+          expect(page.contact_tel).to eq group.contact_tel
+          expect(page.contact_fax).to eq group.contact_fax
+        end
       end
     end
 
