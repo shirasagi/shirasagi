@@ -140,6 +140,7 @@ class Opendata::UrlResource
       timeout(time_out) do
         open(original_url, proxy: true) do |data|
 
+          data.binmode
           temp_file.write(data.read)
           temp_file.rewind
 
