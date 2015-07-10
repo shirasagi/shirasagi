@@ -6,10 +6,6 @@ target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") 
 
 %>
 <%= jquery do %>
-  KeyVisual_Image.randomize("#<%= wrap_id %> .images");
-<% end if @random %>
-
-<%= jquery do %>
   KeyVisual_Image.slide("#<%= wrap_id %>");
 <% end %>
 

@@ -8,9 +8,6 @@ ja:
       link_target:
         self: 同じタブで表示
         blank: 別のタブで表示
-      sort:
-        order: 指定順
-        random: ランダム
 
   modules:
     key_visual: キービジュアル
@@ -57,8 +54,6 @@ ja:
     key_visual/addon/page_list:
       link_target:
         - リンクの表示形式を設定します。
-      sort:
-        - どういった順でリストの並べるかを指定します。
       upper_html:
         - リスト部分の上部に任意の内容をHTMLで記述することが可能です。
       lower_html:

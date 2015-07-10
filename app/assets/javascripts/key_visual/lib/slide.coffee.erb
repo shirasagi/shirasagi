@@ -10,13 +10,7 @@ class @KeyVisual_Image
       stopText: "<%= I18n.t 'key_visual.controls.stop' %>"
       controls: false
       pagerCustom: "#{selector} .bx-thumbs"
-      onSliderLoad: (currentIndex) ->
-        $("#{selector} .images liXXX").not("li.bx-clone").each (i) ->
-          image = $(this).find("img")
-          thumb = "<img src='#{image.data('thumb')}' alt='#{image.attr('alt')}' />";
-          $($("#{selector} .bx-pager-item a")[i]).html(thumb)
 
-  # randomize banners
   @randomize: (selector) ->
     wrap = $(selector)
     list = wrap.find("li")
