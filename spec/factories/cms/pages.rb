@@ -10,4 +10,8 @@ FactoryGirl.define do
   factory :cms_page, class: Cms::Page, traits: [:cms_page] do
     #
   end
+
+  factory :cms_import_page, class: Cms::ImportPage, traits: [:cms_page] do
+    route "cms/import_page"
+  end
 end
