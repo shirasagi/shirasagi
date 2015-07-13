@@ -107,6 +107,10 @@ module Cms::Addon::List
           I18n.l item.date
         elsif name =~ /^time\.(\w+)$/
           I18n.l item.date, format: $1.to_sym
+        elsif name == "group"
+          item.groups.first.try(:name)
+        elsif name == "groups"
+          item.groups.map(&:name).join(", ")
         else
           false
         end
