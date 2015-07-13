@@ -128,6 +128,7 @@ ja:
       too_large_file: "%{filename}(%{size}) のサイズが大きすぎます（制限値: %{limit}）。"
       malformed_kana_dictionary: "書式が不正です: %{line}(%{no})"
       self_user: "ログイン中のユーザーを削除することはできません。"
+      locked: "「%{user}」さんが編集中のため、編集・削除・移動ができません。"
     template:
       body: 次の項目を確認してください。
       header:

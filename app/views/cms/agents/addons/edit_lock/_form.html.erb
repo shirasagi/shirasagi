@@ -1,0 +1,16 @@
+<% unless @item.new_record? %>
+  <% has_action_lock = url_for(action: :lock) rescue nil %>
+  <% if has_action_lock %>
+    <%= jquery do %>
+      SS_AddonTabs.toggleView(".mod-cms-edit_lock");
+      var editLock = new Cms_EditLock(".mod-cms-edit_lock", "<%= url_for action: :lock %>", "<%= url_for action: :unlock %>");
+    <% end %>
+
+    <dl class="see mod-cms-edit_lock">
+      <dt><%= @model.t :lock_owner %><%= @model.tt :lock_owner %></dt>
+      <dd class="lock_owner"><%= @item.lock_owner.long_name %></dd>
+      <dt><%= @model.t :lock_until %></dt>
+      <dd class="lock_until"><%= @item.lock_until.strftime("%Y/%m/%d %H:%M") %></dd>
+    </dl>
+  <% end %>
+<% end %>

@@ -4,6 +4,7 @@ module Cms::CrudFilter
 
   included do
     menu_view "cms/crud/menu"
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock]
   end
 
   private
@@ -40,6 +41,12 @@ module Cms::CrudFilter
 
     def edit
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      if @item.is_a?(Cms::Addon::EditLock)
+        unless @item.acquire_lock
+          redirect_to action: :lock
+          return
+        end
+      end
       render
     end
 
@@ -58,5 +65,32 @@ module Cms::CrudFilter
     def destroy
       raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
       render_destroy @item.destroy
+    end
+
+    def lock
+      if @item.acquire_lock(force: params[:force].present?)
+        render
+      else
+        respond_to do |format|
+          format.html { render }
+          format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
+        end
+      end
+    end
+
+    def unlock
+      raise "403" unless @item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node)
+
+      if @item.release_lock(force: params[:force].present?)
+        respond_to do |format|
+          format.html { redirect_to(action: :edit) }
+          format.json { head :no_content }
+        end
+      else
+        respond_to do |format|
+          format.html { render file: :show }
+          format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
+        end
+      end
     end
 end

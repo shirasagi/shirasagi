@@ -19,7 +19,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   end
 
   describe "GET /pages.json" do
-    let!(:page) { create(:article_page, filename: "#{node.filename}/filename#{rand(0xffffffff).to_s(36)}") }
+    let!(:page) { create(:article_page, node: node) }
 
     it do
       get index_path
@@ -43,6 +43,76 @@ describe "Article::PagesController", type: :request, dbscope: :example do
       expect(page["_id"]).to eq 1
       expect(page["name"]).to eq params['item[name]']
       expect(page["filename"]).to eq "#{node.filename}/#{params['item[basename]']}.html"
+    end
+  end
+
+  describe "GET /page/:id/lock.json" do
+    let!(:item) { create(:article_page, node: node) }
+    let!(:lock_path) { lock_article_page_path(site.host, node, item, format: :json) }
+
+    context "with no lock" do
+      it do
+        get lock_path
+        expect(response.status).to eq 200
+
+        item.reload
+        expect(item.lock_owner_id).to eq user.id
+      end
+    end
+
+    context "with not owned lock" do
+      let(:group) { cms_group }
+      let(:user1) { create(:cms_test_user, group: group) }
+
+      before do
+        item.acquire_lock(user: user1)
+      end
+
+      it do
+        get lock_path
+        expect(response.status).to eq 423
+
+        item.reload
+        expect(item.lock_owner_id).to eq user1.id
+      end
+    end
+  end
+
+  describe "DELETE /page/:id/lock.json" do
+    let!(:item) { create(:article_page, node: node) }
+    let!(:lock_path) { lock_article_page_path(site.host, node, item, format: :json) }
+
+    context "with owned lock" do
+      before do
+        item.acquire_lock(user: user)
+      end
+
+      it do
+        expect(item.lock_owner_id).to eq user.id
+
+        delete lock_path
+        expect(response.status).to eq 204
+
+        item.reload
+        expect(item.lock_owner_id).to be_nil
+      end
+    end
+
+    context "with not owned lock" do
+      let(:group) { cms_group }
+      let(:user1) { create(:cms_test_user, group: group) }
+
+      before do
+        item.acquire_lock(user: user1)
+      end
+
+      it do
+        delete lock_path
+        expect(response.status).to eq 423
+
+        item.reload
+        expect(item.lock_owner_id).to eq user1.id
+      end
     end
   end
 end

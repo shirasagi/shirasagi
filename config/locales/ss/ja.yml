@@ -38,6 +38,7 @@ ja:
       move: 移動
       import: 取り込み
       convert: 変換
+      unlock_and_edit_forcibly: 強制的にロックを解除し編集する
     confirm:
       delete: 削除してよろしいですか？
       convert: 変換してよろしいですか？

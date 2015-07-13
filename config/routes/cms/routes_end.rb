@@ -4,11 +4,14 @@ SS::Application.routes.draw do
     get :delete, :on => :member
   end
 
-  concern :crud do
-    get :move, :on => :member
-    put :move, :on => :member
+  concern :copy do
     get :copy, :on => :member
     put :copy, :on => :member
+  end
+
+  concern :move do
+    get :move, :on => :member
+    put :move, :on => :member
   end
 
   concern :template do
@@ -30,6 +33,11 @@ SS::Application.routes.draw do
   concern :role do
     get "role/edit" => "groups#role_edit", :on => :member
     put "role" => "groups#role_update", :on => :member
+  end
+
+  concern :lock do
+    get :lock, :on => :member
+    delete :lock, action: :unlock, :on => :member
   end
 
   namespace "cms", path: ".:site" do
@@ -56,7 +64,7 @@ SS::Application.routes.draw do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :crud]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock]
     resources :layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :notices, concerns: :deletion do
@@ -110,11 +118,11 @@ SS::Application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "import" => "import#index"
     post "import" => "import#import"
-    resource :conf, concerns: [:deletion, :crud]
+    resource :conf, concerns: [:deletion, :copy, :move]
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :crud]
-    resources :import_pages, concerns: [:deletion, :crud, :convert, :index_state]
-    resources :import_nodes, concerns: [:deletion, :crud]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock]
+    resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]
+    resources :import_nodes, concerns: [:deletion, :copy, :move]
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
   end
