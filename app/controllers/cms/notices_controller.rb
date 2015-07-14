@@ -21,10 +21,10 @@ class Cms::NoticesController < ApplicationController
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
       @items = @model.site(@cur_site).
-          allow(:edit, @cur_user, site: @cur_site).
-          search(params[:s]).
-          order_by(name: 1).
-          page(params[:page]).per(50)
+        allow(:edit, @cur_user, site: @cur_site).
+        search(params[:s]).
+        order_by(name: 1).
+        page(params[:page]).per(50)
     end
 
     def copy

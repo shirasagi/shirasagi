@@ -16,6 +16,8 @@
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>
+          <%= link_to :edit, action: :edit, id: item %>
+          <%= link_to :delete, action: :delete, id: item %>
         </nav>
       </td>
       <td><%= link_to item.name, { action: :show, id: item }, { class: "notice-severity-#{item.notice_severity}" } %></td>

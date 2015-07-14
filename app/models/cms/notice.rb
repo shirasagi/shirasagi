@@ -2,7 +2,6 @@ class Cms::Notice
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  # include SS::Reference::User
   include Cms::Addon::ReleasePlan
   include Cms::Addon::Body
   include Cms::Addon::File
@@ -68,6 +67,33 @@ class Cms::Notice
       item.id = nil
       item.cur_site = @cur_site
       # item.cur_node = @cur_node
+      item.instance_variable_set(:@new_clone, true)
       item
+    end
+
+    def new_clone?
+      @new_clone == true
+    end
+
+    def clone_files
+      ids = SS::Extensions::Words.new
+      files.each do |f|
+        attributes = Hash[f.attributes]
+        attributes.select!{ |k| f.fields.keys.include?(k) }
+
+        file = SS::File.new(attributes)
+        file.id = nil
+        file.in_file = f.uploaded_file
+        file.user_id = @cur_user.id if @cur_user
+
+        file.save validate: false
+        ids << file.id.mongoize
+
+        html = self.html
+        html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
+        html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+        self.html = html
+      end
+      self.file_ids = ids
     end
 end
