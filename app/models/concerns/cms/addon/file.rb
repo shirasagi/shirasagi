@@ -11,8 +11,8 @@ module Cms::Addon
       before_save :save_files
       after_destroy :destroy_files
 
-      after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? }
-      after_remove_file :remove_public_files
+      after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
+      after_remove_file :remove_public_files if respond_to?(:after_remove_file)
     end
 
     def allow_other_user_files

@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :notice_severity %><%= @model.tt :notice_severity %></dt>
+  <dd>
+    <%= f.check_box :notice_severity, {}, Cms::Notice::NOTICE_SEVERITY_HIGH, Cms::Notice::NOTICE_SEVERITY_NORMAL %>
+    <%= t "cms.important_notice" %>
+  </dd>
+
+  <dt><%= @model.t :notice_target %><%= @model.tt :notice_target %></dt>
+  <dd><%= f.select :notice_target, @item.notice_target_options %></dd>
+</dl>

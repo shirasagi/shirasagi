@@ -45,3 +45,15 @@
     }
   }
 }
+
+a.notice-severity-high {
+  color: $pink;
+}
+
+.addon-view header h2.notice-severity-high {
+  color: $pink;
+}
+
+table.notices {
+  margin-bottom: 15px;
+}

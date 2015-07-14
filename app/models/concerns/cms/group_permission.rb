@@ -24,14 +24,11 @@ module Cms::GroupPermission
       if self.new_record?
         if node
           access = node.owned?(user) ? :private : :other
-          permit_level = node.permission_level
         else
           access = :other
-          permit_level = 1
         end
       else
         access = owned?(user) ? :private : :other
-        permit_level = self.permission_level
       end
 
       action = permission_action || action

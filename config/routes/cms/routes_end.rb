@@ -44,7 +44,9 @@ SS::Application.routes.draw do
     resources :users, concerns: :deletion
     resources :groups, concerns: [:deletion, :role]
     resources :members, concerns: :deletion
-    resources :contents, path: "contents/(:mod)"
+    resources :contents, path: "contents/(:mod)" do
+      get "notices/:notice", action: :public_notice, on: :collection, as: "notice"
+    end
 
     resources :nodes, concerns: :deletion do
       get :routes, on: :collection
@@ -57,6 +59,10 @@ SS::Application.routes.draw do
     resources :pages, concerns: [:deletion, :crud]
     resources :layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
+    resources :notices, concerns: :deletion do
+      get :copy, :on => :member
+      put :copy, :on => :member
+    end
 
     resources :files, concerns: [:deletion, :template] do
       get :view, on: :member
