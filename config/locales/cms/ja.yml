@@ -522,6 +522,8 @@ ja:
           #{summary}　リンク先ページのSummaryが表示されます。
           #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
           #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
+          #{group}　リンク先ページの所有グループが表示されます。
+          #{groups}　リンク先ページの全ての所有グループが表示されます。
 
           使用例：
           &lt;article class="#{class}">
@@ -639,6 +641,8 @@ ja:
           #{summary}　リンク先ページのSummaryが表示されます。
           #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
           #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
+          #{group}　ルートグループが表示されます。
+          #{groups}　全てのグループが表示されます。
 
           使用例：
           &lt;article class="#{class}">
