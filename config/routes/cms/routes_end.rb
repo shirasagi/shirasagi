@@ -15,6 +15,18 @@ SS::Application.routes.draw do
     get :template, :on => :collection
   end
 
+  concern :convert do
+    get :convert, :on => :member
+    put :convert, :on => :member
+  end
+
+  concern :index_state do
+    get :index_approve, :on => :collection
+    get :index_request, :on => :collection
+    get :index_ready, :on => :collection
+    get :index_closed, :on => :collection
+  end
+
   concern :role do
     get "role/edit" => "groups#role_edit", :on => :member
     put "role" => "groups#role_update", :on => :member
@@ -58,6 +70,8 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
+    get "import" => "import#index"
+    post "import" => "import#import"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     get "search_contents/pages" => "search_contents/pages#index"
@@ -88,9 +102,13 @@ SS::Application.routes.draw do
     post "generate_nodes" => "generate_nodes#run"
     get "generate_pages" => "generate_pages#index"
     post "generate_pages" => "generate_pages#run"
+    get "import" => "import#index"
+    post "import" => "import#import"
     resource :conf, concerns: [:deletion, :crud]
     resources :nodes, concerns: :deletion
     resources :pages, concerns: [:deletion, :crud]
+    resources :import_pages, concerns: [:deletion, :crud, :convert, :index_state]
+    resources :import_nodes, concerns: [:deletion, :crud]
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
   end
@@ -99,6 +117,8 @@ SS::Application.routes.draw do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml"         => "public#rss", cell: "nodes/page", format: "xml"
+    get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
+    get "import_node/rss.xml"         => "public#rss", cell: "nodes/import_node", format: "xml"
   end
 
   part "cms" do
@@ -112,6 +132,7 @@ SS::Application.routes.draw do
 
   page "cms" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
+    get "import_page/:filename.:format" => "public#index", cell: "pages/import_page"
   end
 
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,

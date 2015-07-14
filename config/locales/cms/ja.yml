@@ -5,6 +5,10 @@ ja:
     content: コンテンツ
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
+    import_page: 取り込みページ
+    import: ページ取り込み
+    import_node: フォルダー取り込み
+    import_page: 取り込みページ
     group: グループ
     layout: レイアウト
     link_check: リンクチェック
@@ -28,6 +32,7 @@ ja:
     view_page: 公開画面
     view_site: サイト確認
     editor_template: テンプレート
+    convert_to_cms_page: 固定ページに変換する
     confirm:
       delete_item: 項目を削除してよろしいですか？
 
@@ -89,6 +94,7 @@ ja:
     nodes:
       cms/node: フォルダーリスト
       cms/page: ページリスト
+      cms/import_node: 取り込みページ
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト
@@ -156,6 +162,7 @@ ja:
       cms/parent_crumb: パンくず
       cms/additional_info: 追加情報
       cms/page_setting: ページ設定
+      cms/import/body: 本文
 
   mongoid:
     models:
@@ -189,6 +196,7 @@ ja:
         route: フォルダー属性
         view_route: 既定のモジュール
         summary_html: Summary
+        in_file: ファイル
       cms/model/page:
         route: ページ属性
         summary_html: Summary
@@ -207,8 +215,6 @@ ja:
         html: HTML
       cms/page:
         html: 本文
-      cms/addon/crumb:
-        home_label: ホームラベル
       cms/reference/layout:
         layout_id: レイアウト
       cms/reference/page_layout:
@@ -236,7 +242,8 @@ ja:
         name: 名前
         description: 説明
         order: 並び順
-
+      cms/addon/crumb:
+        home_label: ホームラベル
       cms/addon/meta:
         keywords: キーワード
         description: 概要
@@ -272,6 +279,8 @@ ja:
         value: 内容
         add_info: 項目を追加する
         del_info: 削除
+      cms/addon/import/page:
+        in_file: ファイル
 
   errors:
     messages:
@@ -350,6 +359,11 @@ ja:
         - 追加情報の項目名を入力します。
       value:
         - 項目の内容を入力します。
+    cms/addon/import/page:
+      in_file:
+        - 取り込むファイルを設定します。
+        - ルートフォルダーが含まれるZIPファイルもしくは単一のHTMLファイルを選択してください。
+        - フォルダー配下に 取り込みページ/フォルダー/アップロードファイル として展開されます。
 
     search_contents:
       pages:
@@ -689,4 +703,4 @@ ja:
 
     cms/addon/role:
       cms_role_ids:
-        - ユーザーのロール/権限を選択します。 
+        - ユーザーのロール/権限を選択します。
