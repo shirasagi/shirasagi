@@ -1,6 +1,5 @@
 require 'open-uri'
 require 'resolv-replace'
-require 'timeout'
 
 module Voice::Downloadable
   extend ActiveSupport::Concern
@@ -18,27 +17,28 @@ module Voice::Downloadable
 
     credential = basic_auth.present? ? decrypt(basic_auth) : nil
     @cached_page = with_retry(max_attempts) do
-      timeout(timeout_sec) do
-        # class must provide a method 'url'
-        options = {}
-        options[:read_timeout] = timeout_sec
-        options[:http_basic_authentication] = credential if credential.present?
-        open(url, options) do |f|
-          status_code = f.status[0]
+      # class must provide a method 'url'
+      options = {}
+      options[:read_timeout] = timeout_sec
+      options[:http_basic_authentication] = credential if credential.present?
+      open(url, options) do |f|
+        status_code = f.status[0]
 
-          html = f.read if status_code == '200'
-          html.force_encoding("utf-8") if html
-          page_identity = make_page_identity(html, f.meta['etag'], f.last_modified)
+        html = f.read if status_code == '200'
+        html.force_encoding("utf-8") if html
+        page_identity = make_page_identity(html, f.meta['etag'], f.last_modified)
 
-          page = {
-            html: html,
-            page_identity: page_identity
-          }
-          OpenStruct.new(page)
-        end
+        page = {
+          html: html,
+          page_identity: page_identity
+        }
+        OpenStruct.new(page)
       end
     end
     @cached_page
+  rescue
+    Rails.logger.info("error was raised while downloading from #{url}")
+    raise
   end
 
   def same_identity?

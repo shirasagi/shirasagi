@@ -95,10 +95,11 @@ class Voice::MainController < ApplicationController
 
     def send_audio_file(file)
       return unless file
-      timestamp = Fs.stat(file).mtime
+      fstat = Fs.stat(file)
 
       response.headers["Content-Type"] = "audio/mpeg"
-      response.headers["Last-Modified"] = CGI::rfc1123_date(timestamp)
+      response.headers["Content-Length"] = fstat.size
+      response.headers["Last-Modified"] = CGI::rfc1123_date(fstat.mtime)
 
       if Fs.mode == :grid_fs
         return send_data Fs.binread(file)

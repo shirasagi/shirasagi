@@ -2,7 +2,6 @@
 
 production: &production
   disable: false
-  #root: Rails.env.test? ? test_root : Rails.root.join("private", "files").to_s
   download:
     max_attempts: 3
     initial_wait: 3
@@ -16,6 +15,7 @@ production: &production
     loading: "/assets/voice/voice-loading.mp3"
     disabled: "/assets/voice/voice-disabled.mp3"
     overload: "/assets/voice/voice-overload.mp3"
+    jplayer_path: "/assets/js/jplayer"
   # a target from which extract text
   scraper:
     voice-marks: [ "read-voice", "end-read-voice" ]
