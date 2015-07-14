@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8" />
 <title><%= @window_name %></title>
+<%= stylesheet_link_tag "cms/public" %>
 <%= javascript_include_tag "cms/public" %>
 <%== @cur_layout.head %>
 <%= csrf_meta_tags if @csrf_token != false %>

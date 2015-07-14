@@ -11,6 +11,7 @@
 //= require inquiry/lib/chart
 //= require key_visual/lib/slide
 //= require map/lib/map
+//= require jplayer/jquery.jplayer
 
 $ ->
   SS_Kana.render()
@@ -81,7 +82,6 @@ class @SS
       success: (data) ->
         $(elem).replaceWith data
       error: ->
-        console.log "err"
         $(elem).find("img").remove()
 
 class @SS_Kana
@@ -216,17 +216,19 @@ class @SS_Voice
     anchor.appendTo(voice_tag)
     SS_Voice.voice_tag = anchor
 
-    id = '#ss-voice-controller'
-    controller_parent = $(id)
-    if controller_parent.size() == 0
+    voice_controller = $('#ss-voice-controller')
+    if voice_controller.size() == 0
       # no controller tag found, create default audio controller tag
-      controller_parent = voice_tag
+      voice_tag.after('<div id="ss-voice-controller" style="display: none;"/>')
+      voice_controller = $('#ss-voice-controller')
 
-    SS_Voice.voice_controller = new SS_VoiceController(controller_parent)
+    SS_Voice.voice_controller = new SS_VoiceController(voice_controller[0])
     SS_Voice.state = null
     SS_Voice.cancel_loading = false
     SS_Voice.timer_id = null
     SS_Voice.init()
+
+    voice_controller.find('.ss-jp-close').bind('click', SS_Voice.cancel)
 
   @init: ->
     SS_Voice.state = 'init'
@@ -311,30 +313,88 @@ class @SS_Voice
     return location.replace(new RegExp('/$'), '')
 
 class @SS_VoiceController
-  constructor: (tag) ->
-    @tag = $(tag)
+  constructor: (container) ->
+    @status = 'stopped'
+    @container = $(container)
+    @initialized = false
+    @container.html(@template())
+    @player = @container.children('.jp-jplayer')
+    @controller = @container.children('.jp-audio')
 
   play: (source) ->
     @stop()
-    @source = source
-    audio_container = SS_VoiceController.createAudio(source)
-    audio_container.appendTo(@tag)
-    audio = audio_container.children('.ss-voice-player')
-    audio[0].load()
-    audio[0].play()
+    @status = 'playing'
+    # IE8 requires that element must be visible to manipulate DOM and its events properly
+    @container.show()
+    if @initialized
+      @player.jPlayer("setMedia", {
+        title: document.title
+        mp3: source
+      })
+      @player.jPlayer("play")
+    else
+      @player.jPlayer({
+        ready: =>
+          @player.jPlayer("setMedia", {
+            title: document.title
+            mp3: source
+          })
+          @player.jPlayer("play") if @status == 'playing'
+          @initialized = true
+        autoBlur: false
+        cssSelectorAncestor: "##{@controller[0].id}"
+        keyEnabled: false
+        loop: true
+        remainingDuration: true
+        smoothPlayBar: true
+        supplied: "mp3"
+        swfPath: "<%= SS.config.voice.resource['jplayer_path'] %>"
+        toggleDuration: true
+        useStateClassSkin: true
+      })
 
   stop: ->
-    @source = null
-    @tag.children('.ss-voice-container').remove()
+    return unless @initialized
+    return if @status == 'stopped'
+    @player.jPlayer("stop")
+    @container.hide()
+    @status = 'stopped'
 
-  @createAudio: (source) ->
-    audio_container = $('<span/>')
-    audio_container.addClass('ss-voice-container')
-    audio = $('<audio/>')
-    audio.attr('controls', '')
-    audio.attr('autoplay', '')
-    audio.attr('loop', '')
-    audio.attr('src', source)
-    audio.addClass('ss-voice-player')
-    audio.appendTo(audio_container)
-    audio_container
+  template: ->
+    """
+    <div id="jquery_jplayer_#{(new Date).getTime()}" class="jp-jplayer"></div>
+    <div id="jp_container_#{(new Date).getTime()}" class="jp-audio" role="application" aria-label="media player">
+      <div class="jp-type-single">
+        <div class="jp-gui jp-interface">
+          <div class="jp-controls">
+            <button class="jp-play" role="button" tabindex="0">play</button>
+            <button class="jp-stop" role="button" tabindex="0">stop</button>
+          </div>
+          <div class="jp-progress">
+            <div class="jp-seek-bar">
+              <div class="jp-play-bar"></div>
+            </div>
+          </div>
+          <div class="jp-volume-controls">
+            <button class="jp-mute" role="button" tabindex="0">mute</button>
+            <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+            <div class="jp-volume-bar">
+              <div class="jp-volume-bar-value"></div>
+            </div>
+          </div>
+          <div class="jp-time-holder">
+            <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+            <div class="jp-toggles">
+              <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+            </div>
+          </div>
+          <div class="ss-jp-dismiss">
+            <button class="ss-jp-close" role="button" tabindex="0">&times;</button>
+          </div>
+        </div>
+        <div class="jp-no-solution">
+          <%= I18n.t 'voice.messages.no_audio_solution' %>
+        </div>
+      </div>
+    </div>
+    """
