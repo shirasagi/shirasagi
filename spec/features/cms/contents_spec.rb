@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_parts" do
+describe "cms_contents", dbscope: :example, type: :feature do
   subject(:site) { cms_site }
   subject(:index_path) { cms_contents_path site.host }
 
@@ -20,7 +20,41 @@ describe "cms_parts" do
 
     it "#index" do
       visit index_path
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+    end
+  end
+
+  context "with notice" do
+    let!(:normal_notice) { create(:cms_notice, notice_severity: Cms::Notice::NOTICE_SEVERITY_NORMAL) }
+    let!(:high_notice) { create(:cms_notice, notice_severity: Cms::Notice::NOTICE_SEVERITY_HIGH) }
+    # subject(:notice_path) { notice_cms_content_path site.host, item }
+
+    before do
+      login_cms_user
+    end
+
+    it "#index and #notice" do
+      visit index_path
+      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
+
+      within "table.notices-severity-high" do
+        expect(page).to have_content(high_notice.name)
+        expect(page).not_to have_content(normal_notice.name)
+      end
+      within "table.notices-severity-normal" do
+        expect(page).not_to have_content(high_notice.name)
+        expect(page).to have_content(normal_notice.name)
+      end
+
+      within "table.notices-severity-high" do
+        click_link high_notice.name
+      end
+
+      within "div.addon-view" do
+        expect(page).to have_content(high_notice.name)
+      end
     end
   end
 end
