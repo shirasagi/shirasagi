@@ -9,8 +9,6 @@ target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") 
   KeyVisual_Image.slide("#<%= wrap_id %>");
 <% end %>
 
-<%= stylesheet_link_tag "key_visual/_public" %>
-
 <div class="key_visual-slide" id="<%= wrap_id %>">
   <%== @cur_part.upper_html if @cur_part.upper_html.present? %>
 
