@@ -60,8 +60,9 @@ module Cms::PublicFilter::Layout
         m
       end
 
-      html = body.gsub(/<\/ part ".+?" \/>/) do |m|
-        path = m.sub(/<\/ part "(.+)?" \/>/, '\\1') + ".part.html"
+      # TODO: deprecated </ />
+      html = body.gsub(/(<\/|\{\{) part ".+?" (\/>|\}\})/) do |m|
+        path = m.sub(/(?:<\/|\{\{) part "(.+)?" (?:\/>|\}\})/, '\\1') + ".part.html"
         path = path[0] == "/" ? path.sub(/^\//, "") : @cur_layout.dirname(path)
         render_layout_part(path)
       end
@@ -74,6 +75,7 @@ module Cms::PublicFilter::Layout
       html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
       html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
       html.sub!("</ yield />", response.body)
+      html.sub!("{{ yield }}", response.body)
       html
     end
 
