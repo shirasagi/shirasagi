@@ -17,7 +17,7 @@ class Kana::Dictionary
 
   seqid :id
   field :name, type: String
-  field :body, type: String
+  field :body, type: String, metadata: { normalize: false }
 
   permit_params :name, :body
 

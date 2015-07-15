@@ -9,7 +9,10 @@ describe Cms::Member, dbscope: :example do
 
     context "when oauth_type is given" do
       subject { attributes_for(:cms_member, email: "", oauth_type: "facebook") }
-      it { expect { described_class.create! subject }.not_to raise_error }
+      it do
+        expect { described_class.create! subject }.not_to raise_error
+        expect(described_class.first.has_attribute?(:email)).to be_falsey
+      end
     end
 
     context "when two member having oauth_type is given" do
@@ -18,6 +21,8 @@ describe Cms::Member, dbscope: :example do
       it do
         expect { described_class.create! member1 }.not_to raise_error
         expect { described_class.create! member2 }.not_to raise_error
+        expect(described_class.where(name: member1[:name]).first.has_attribute?(:email)).to be_falsey
+        expect(described_class.where(name: member2[:name]).first.has_attribute?(:email)).to be_falsey
       end
     end
   end
