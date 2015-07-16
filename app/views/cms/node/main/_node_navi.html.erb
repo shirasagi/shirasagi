@@ -1,13 +1,31 @@
-<nav class="sub-menu">
-  <header><h1><%= t "modules.cms" %></h1></header>
-  <div>
-    <%= link_to :"cms.node", node_nodes_path, class: "icon-node" %>
-    <%= link_to :"cms.page", node_pages_path, class: "icon-page" if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to :"cms.part", node_parts_path, class: "icon-part" if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to :"cms.layout", node_layouts_path, class: "icon-layout" if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <%= link_to :"cms.config", node_conf_path, class: "icon-conf" if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.generate_node", node_generate_nodes_path, class: "icon-conf" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.generate_page", node_generate_pages_path, class: "icon-conf" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"cms.import", node_import_path, class: "icon-conf" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-  </div>
+<nav class="main-navi">
+  <h2><%= link_to :"cms.node", node_nodes_path, class: "icon-node" %></h2>
+
+  <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to :"cms.page", node_pages_path, class: "icon-page" %></h2>
+  <% end %>
+  <% if Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to :"cms.part", node_parts_path, class: "icon-part" %></h2>
+  <% end %>
+  <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to :"cms.layout", node_layouts_path, class: "icon-layout" %></h2>
+  <% end %>
+  <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to :"cms.config", node_conf_path, class: "icon-conf" %></h2>
+  <% end %>
 </nav>
+
+<nav class="mod-navi">
+  <h2>フォルダー</h2>
+
+  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.generate_node", node_generate_nodes_path, class: "icon-conf" %></h3>
+  <% end %>
+  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.generate_page", node_generate_pages_path, class: "icon-conf" %></h3>
+  <% end %>
+  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.import", node_import_path, class: "icon-conf" %></h3>
+  <% end %>
+</nav>
+
