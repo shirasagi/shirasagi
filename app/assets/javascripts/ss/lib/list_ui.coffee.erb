@@ -1,6 +1,6 @@
 class @SS_ListUI
   @render: (list)->
-    $("table.index tbody tr").each ->
+    $("div.index li").each ->
       tr    = $(this)
       tbody = tr.parent()
       tr.find(".tap-menu a").each ->
