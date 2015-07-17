@@ -4,7 +4,6 @@ ja:
     switch_layout: 反映
     selected_layout: 適用中
     default_layout: 通常時レイアウト
-    preview: プレビュー
     confirm_message: 反映してよろしいですか？
     errors:
       index_page_not_found: "同階層にindex.htmlがありません。"

@@ -6,7 +6,11 @@
   <dd><%= @item.send :basename %></dd>
   <dd>
     <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
-    (<%= link_to :"cms.preview_page", cms_preview_path(path: @item.filename), target: "_blank" %>)
+    (
+    <%= link_to :"cms.preview_pc_page", cms_preview_path(path: @item.filename), target: "_blank" %>
+    |
+    <%= link_to :"cms.preview_mobile_page", cms_mobile_preview_path(path: @item.filename), target: :_blank %>
+    )
   </dd>
 
   <% if @item.send(:layout_id).present? %>

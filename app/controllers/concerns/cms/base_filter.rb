@@ -7,6 +7,7 @@ module Cms::BaseFilter
 
     helper Cms::NodeHelper
     helper Cms::FormHelper
+    helper Cms::PathHelper
     before_action :set_site
     before_action :set_node
     before_action :set_group

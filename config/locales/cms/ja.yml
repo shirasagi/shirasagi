@@ -19,6 +19,8 @@ ja:
     part: パーツ
     file: 共有ファイル
     preview_page: プレビュー
+    preview_pc_page: PCプレビュー
+    preview_mobile_page: 携帯プレビュー
     preview_site: サイトプレビュー
     role: 権限/ロール
     root_menu: メインメニュー

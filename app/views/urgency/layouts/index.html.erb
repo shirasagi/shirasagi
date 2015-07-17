@@ -5,7 +5,7 @@
       <th><%= @model.t key %></th>
       <% end %>
       <th class="datetime"><%= @model.t :updated %></th>
-      <th class="preview"><%= t 'urgency.preview' %></th>
+      <th class="preview"><%= t 'cms.preview_page' %></th>
     </tr>
   </thead>
   <tbody>
@@ -16,7 +16,8 @@
         <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>
           <% unless selected_layout?(item) %>
-            <%= link_to t('urgency.preview'), cms_preview_path(path: layout_path), target: "_blank" %>
+            <%= link_to :pc_preview, cms_preview_path(path: layout_path), target: "_blank" %>
+            <%= link_to :mobile_preview, cms_mobile_preview_path(path: layout_path), target: :_blank %>
           <% end %>
         </nav>
         <%= link_to item.name, { action: :show, id: item }, class: "icon-layout" %>
@@ -26,7 +27,11 @@
       <% if selected_layout?(item) %>
       <td><%= t 'urgency.selected_layout' %></td>
       <% else %>
-      <td><%= link_to t('urgency.preview'), cms_preview_path(path: layout_path), target: "_blank" %></td>
+      <td>
+        <%= link_to :pc, cms_preview_path(path: layout_path), target: "_blank" %>
+        |
+        <%= link_to :mobile, cms_preview_path(path: layout_path), target: "_blank" %>
+      </td>
       <% end %>
     </tr>
     <% end %>

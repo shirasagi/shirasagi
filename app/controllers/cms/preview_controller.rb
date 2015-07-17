@@ -71,14 +71,22 @@ class Cms::PreviewController < ApplicationController
         end
       end
 
+      s = []
+      s << '$(function(){'
+      s << 'SS_Preview.mobile_path = "' + SS.config.mobile.location + '";'
+      s << 'SS_Preview.render();'
+      s << '});'
+
       h  = []
       h << view_context.stylesheet_link_tag("cms/preview")
       h << '<link href="/assets/css/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />'
+      h << '<script src="/assets/cms/public.js"></script>'
       h << '<script src="/assets/js/jquery.datetimepicker.js"></script>'
-      h << '<script>$(function(){ SS_Preview.render(); });</script>'
+      h << '<script>' + s.join + '</script>'
       h << '<div id="ss-preview">'
       h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
-      h << '<input type="button" class="preview" value="Preview">'
+      h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
+      h << '<input type="button" class="mobile" value=' + t("views.links.mobile") + '>'
       h << '</div>'
 
       body.sub!("</body>", h.join("\n") + "</body>")
