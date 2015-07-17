@@ -16,7 +16,7 @@ module SS::Fields::Normalizer
     end
 
     def normalize_string_field(name, field_def)
-      return if name.include?("html") || name.include("text")
+      # return if name.include?("html") || name.include("text")
       return unless field_def.metadata.fetch(:normalize, true)
       value = send(name)
       if value.present? && value.length > 1

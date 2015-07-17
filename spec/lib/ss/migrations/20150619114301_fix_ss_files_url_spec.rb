@@ -23,17 +23,17 @@ RSpec.describe SS::Migration20150619114301, dbscope: :example do
   it do
     described_class.new.change
     Cms::Page.all.each do |item|
-      expect(item.html).to eq(@after_html)
+      expect(item.html).to eq(@after_html.strip)
     end
 
     Cms::Part.all.each do |item|
-      expect(item.html).to eq(@after_html) if item.respond_to?(:html)
-      expect(item.upper_html).to eq(@after_html) if item.respond_to?(:upper_html)
-      expect(item.lower_html).to eq(@after_html) if item.respond_to?(:lower_html)
+      expect(item.html).to eq(@after_html.strip) if item.respond_to?(:html)
+      expect(item.upper_html).to eq(@after_html.strip) if item.respond_to?(:upper_html)
+      expect(item.lower_html).to eq(@after_html.strip) if item.respond_to?(:lower_html)
     end
 
     Cms::Layout.all.each do |item|
-      expect(item.html).to eq(@after_layout_html)
+      expect(item.html).to eq(@after_layout_html.strip)
     end
   end
 end
