@@ -1,6 +1,9 @@
 require 'spec_helper'
 
-describe Voice::File, http_server: true, doc_root: Rails.root.join("spec", "fixtures", "voice"), port: 33_190 do
+describe Voice::File, http_server: true do
+  http.default port: 33_190
+  http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
+
   describe '#find_or_create_by_url' do
     context "when valid site is given" do
       random_string = rand(0x100000000).to_s(36)
@@ -112,8 +115,8 @@ describe Voice::File, http_server: true, doc_root: Rails.root.join("spec", "fixt
     context "when downloads page" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html" }
+      before do
+        http.options real_path: "/test-001.html"
       end
 
       subject(:voice_file) do
@@ -134,8 +137,8 @@ describe Voice::File, http_server: true, doc_root: Rails.root.join("spec", "fixt
     context "when server does not respond etag" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html", etag: nil }
+      before do
+        http.options real_path: "/test-001.html", etag: nil
       end
 
       subject(:voice_file) do
@@ -156,8 +159,8 @@ describe Voice::File, http_server: true, doc_root: Rails.root.join("spec", "fixt
     context "when server does not respond last_modified" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html", last_modified: nil }
+      before do
+        http.options real_path: "/test-001.html", last_modified: nil
       end
 
       subject(:voice_file) do
@@ -178,8 +181,8 @@ describe Voice::File, http_server: true, doc_root: Rails.root.join("spec", "fixt
     context "when server does not either respond etag or last_modified" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html", etag: nil, last_modified: nil }
+      before do
+        http.options real_path: "/test-001.html", etag: nil, last_modified: nil
       end
 
       subject(:voice_file) do
