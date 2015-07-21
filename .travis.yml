@@ -7,7 +7,7 @@ rvm:
 services:
   - mongodb
 
-bundler_args: "--without development"
+bundler_args: --jobs=4 --without development
 install:
   - pushd .
   - bash .travis.d/install.sh
