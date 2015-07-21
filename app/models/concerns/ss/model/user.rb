@@ -2,6 +2,7 @@ module SS::Model::User
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
+  include SS::Fields::Normalizer
   include Ldap::Addon::User
 
   attr_accessor :cur_user, :in_password
@@ -42,8 +43,6 @@ module SS::Model::User
     validate :validate_uid
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
-    before_validation :normalize_email
-    before_validation :normalize_uid
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
     scope :uid_or_email, ->(id) { self.or({email: id}, {uid: id}) }
@@ -100,20 +99,6 @@ module SS::Model::User
     end
 
   private
-    def normalize_email
-      self.email = email.strip if email.present?
-      if email.blank? && has_attribute?(:email)
-        remove_attribute(:email)
-      end
-    end
-
-    def normalize_uid
-      self.uid = uid.strip if uid.present?
-      if uid.blank? && has_attribute?(:uid)
-        remove_attribute(:uid)
-      end
-    end
-
     def dbpasswd_authenticate(in_passwd)
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
       return false if password.blank?
