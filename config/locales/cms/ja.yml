@@ -96,8 +96,12 @@ ja:
         all: 全ユーザー
         same_group: 同一グループ内
     sns_share:
+      fb_like: Facebook いいね！
+      fb_share: Facebook シェア
       tweet: ツイート
+      hatena: はてなブックマーク
       add_hatena: このエントリーをはてなブックマークに追加
+      google: Google+
 
   #cms:
     nodes:
@@ -180,6 +184,7 @@ ja:
       cms/page_setting: ページ設定
       cms/import/body: 本文
       cms/edit_lock: 排他制御
+      cms/sns_share: SNS共有
 
   mongoid:
     models:
@@ -306,6 +311,9 @@ ja:
       cms/addon/edit_lock:
         lock_owner: 所有者
         lock_until: 期限
+      cms/addon/sns_share:
+        sns_share_states: 表示
+        sns_share_orders: 並び順
 
   errors:
     messages:

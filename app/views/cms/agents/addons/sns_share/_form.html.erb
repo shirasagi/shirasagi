@@ -1,0 +1,13 @@
+<dl class="see">
+  <% @item.sns_share_services.each do |name| %>
+    <dt><%= t "cms.sns_share.#{name}" %></dt>
+    <dd>
+      <%= select_tag "item[sns_share_states][#{name}]",
+        options_for_select(@item.sns_share_states_options, selected: @item.sns_share_state(name)) %>
+      &nbsp;
+      <%= @item.t :sns_share_orders %>:
+      <%= number_field_tag "item[sns_share_orders][#{name}]",
+        @item.sns_share_order(name).to_i, style: "width: 5em;" %>
+    </dd>
+  <% end %>
+</dl>

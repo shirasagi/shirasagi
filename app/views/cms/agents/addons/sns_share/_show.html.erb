@@ -1,0 +1,9 @@
+<dl class="see">
+  <% @item.sns_share_services.each do |name| %>
+    <dt><%= t "cms.sns_share.#{name}" %></dt>
+    <dd>
+      <%= @item.sns_share_state_label(name) %>
+      (<%= @item.sns_share_order(name).to_i %>)
+    </dd>
+  <% end %>
+</dl>

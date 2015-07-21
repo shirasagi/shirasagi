@@ -1,43 +1,64 @@
 <%
 
+render nothing: true if @cur_part.sort_sns_share_services.blank?
+
 url = File.join(@cur_site.full_url, @cur_path)
 
 %>
+
 <nav class="cms-sns_share">
-  <div class="site fb">
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.0";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+<% @cur_part.sort_sns_share_services.each do |service| %>
+  <% if service == "fb_like" %>
+    <div class="site fb fb-like">
+      <div id="fb-root"></div>
+      <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.0";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));</script>
+      <div class="fb-like" data-href="<%= url %>" data-layout="button_count" data-action="like"></div>
+    </div>
 
-    <div class="fb-like" data-href="<%= url %>"
-      data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
-  </div>
+  <% elsif service == "fb_share" %>
+    <div class="site fb fb-share">
+      <div id="fb-root"></div>
+      <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.4";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));</script>
+      <div class="fb-share-button" data-href="<%= url %>" data-layout="button_count"></div>
+    </div>
 
-  <div class="site twitter">
-    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja"><%= t "cms.sns_share.tweet" %></a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-    if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-    fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
+  <% elsif service == "tweet" %>
+    <div class="site twitter">
+      <a href="https://twitter.com/share" class="twitter-share-button" data-lang="ja"><%= t "cms.sns_share.tweet" %></a>
+      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+      if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+      fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
 
-  <div class="site hatena">
-    <a href="http://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button"
-      data-hatena-bookmark-layout="standard-balloon"
-      data-hatena-bookmark-lang="ja" title="<%= t "cms.sns_share.add_hatena" %>">
-      <img src="//b.st-hatena.com/images/entry-button/button-only@2x.png"
-        alt="<%= t "cms.sns_share.add_hatena" %>" width="20" height="20" style="border: none;" /></a>
-    <script type="text/javascript" src="//b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
-  </div>
+  <% elsif service == "hatena" %>
+    <div class="site hatena">
+      <a href="http://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button"
+        data-hatena-bookmark-layout="standard-balloon"
+        data-hatena-bookmark-lang="ja" title="<%= t "cms.sns_share.add_hatena" %>">
+        <img src="//b.st-hatena.com/images/entry-button/button-only@2x.png"
+          alt="<%= t "cms.sns_share.add_hatena" %>" width="20" height="20" style="border: none;" /></a>
+      <script type="text/javascript" src="//b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+    </div>
 
-  <div class="site google">
-    <div class="g-plusone" data-size="medium"></div>
-    <script src="https://apis.google.com/js/platform.js" async="async" defer="defer">
-      {lang: 'ja'}
-    </script>
-  </div>
+  <% elsif service == "google" %>
+    <div class="site google">
+      <div class="g-plusone" data-size="medium"></div>
+      <script src="https://apis.google.com/js/platform.js" async="async" defer="defer">
+        {lang: 'ja'}
+      </script>
+    </div>
+  <% end %>
+<% end %>
 </nav>
