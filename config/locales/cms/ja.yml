@@ -155,6 +155,7 @@ ja:
     move_other_cms_pages: 固定ページの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
     move_private_cms_pages: 固定ページの移動（所有）
+    unlock_other_cms_pages: 固定ページのロック解除（全て）
 
   modules:
     cms: 標準機能
@@ -178,6 +179,7 @@ ja:
       cms/additional_info: 追加情報
       cms/page_setting: ページ設定
       cms/import/body: 本文
+      cms/edit_lock: 排他制御
 
   mongoid:
     models:
@@ -301,6 +303,9 @@ ja:
         del_info: 削除
       cms/addon/import/page:
         in_file: ファイル
+      cms/addon/edit_lock:
+        lock_owner: 所有者
+        lock_until: 期限
 
   errors:
     messages:
