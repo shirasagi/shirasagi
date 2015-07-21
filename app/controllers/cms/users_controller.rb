@@ -6,6 +6,7 @@ class Cms::UsersController < ApplicationController
   model Cms::User
 
   navi_view "cms/main/navi"
+  menu_view "cms/users/menu"
 
   private
     def set_crumbs
@@ -34,5 +35,19 @@ class Cms::UsersController < ApplicationController
       @item.add_to_set(cms_role_ids: other_role_ids)
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
       render_update @item.update
+    end
+
+    def download
+      csv = @model.site(@cur_site).order_by(_id: 1).to_csv
+      send_data csv.encode("SJIS"), filename: "cms_users_#{Time.zone.now.to_i}.csv"
+    end
+
+    def import
+      return if request.get?
+      @item = @model.new get_params
+      @item.cur_site = @cur_site
+      result = @item.import
+      flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
+      render_create result, location: { action: :index }, render: { file: :import }
     end
 end
