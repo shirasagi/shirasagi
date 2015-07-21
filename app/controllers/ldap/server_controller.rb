@@ -22,7 +22,7 @@ class Ldap::ServerController < ApplicationController
       connection = connect
       if connection.blank?
         @errors = [ t("ldap.errors.connection_setting_not_found") ]
-        render status: :bad_request
+        render
         return
       end
 
@@ -38,7 +38,7 @@ class Ldap::ServerController < ApplicationController
       end
     rescue Net::LDAP::Error => e
       @errors = [ e.to_s ]
-      render status: :bad_request
+      render
     end
 
     def group
