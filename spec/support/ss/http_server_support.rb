@@ -6,28 +6,123 @@ module SS
 
     class Server
       public
-        def initialize(doc_root, bind_addr, port)
-          @doc_root = doc_root
-          @bind_addr = bind_addr
-          @port = port
+        DEFAULT_PORT = 4321.freeze
+
+        def initialize
+          @default_options = {}
           @options = {}
           @started = false
           @lock = Mutex.new
           @cond = ConditionVariable.new
         end
 
-        attr_reader :doc_root, :bind_addr, :port
-        attr_accessor :options
+        def default(options = {})
+          @default_options.merge!(options)
+        end
+
+        def default=(options)
+          @default_options = options
+        end
+
+        def options(opts = {})
+          @options.merge!(opts)
+        end
+
+        def options=(opts)
+          @options = opts
+        end
+
+        def self.define_option_get(name, opts = {})
+          key = opts[:key] || name
+          key = key.to_sym
+          default_value = opts[:default]
+
+          define_method(name) do
+            @options.fetch(key) do
+              @default_options.fetch(key) do
+                default_value.is_a?(Proc) ? default_value.call : default_value
+              end
+            end
+          end
+        end
+
+        # this property does:
+        #
+        #   @options.fetch(:addr, @default_options.fetch(:addr, "127.0.0.1"))
+        define_option_get :addr, default: "127.0.0.1"
+
+        # this property does:
+        #
+        #   @options.fetch(:port, @default_options.fetch(:port, DEFAULT_PORT))
+        define_option_get :port, default: DEFAULT_PORT
+
+        # this property does:
+        #
+        #   @options.fetch(:mount_dir, @default_options.fetch(:mount_dir, "/"))
+        define_option_get :mount_dir, default: "/"
+
+        # this property does:
+        #
+        #   @options.fetch(:doc_root, @default_options.fetch(:doc_root, Rails.root.to_s))
+        define_option_get :doc_root, default: -> { Rails.root.to_s }
+
+        # this property does:
+        #
+        #   @options.fetch(:handler, @default_options.fetch(:handler, nil))
+        define_option_get :handler
+
+        # this property does:
+        #
+        #   @options.fetch(:wait, @default_options.fetch(:wait, nil))
+        define_option_get :wait_sec, key: :wait
+
+        # this property does:
+        #
+        #   @options.fetch(:status_code, @default_options.fetch(:status_code, nil))
+        define_option_get :status_code
+
+        # this property does:
+        #
+        #   @options.fetch(:content_type, @default_options.fetch(:content_type, nil))
+        define_option_get :content_type
+
+        # this property does:
+        #
+        #   @options.fetch(:last_modified, @default_options.fetch(:last_modified, nil))
+        define_option_get :last_modified
+
+        # this property does:
+        #
+        #   @options.fetch(:etag, @default_options.fetch(:etag, nil))
+        define_option_get :etag
+
+        # this property does:
+        #
+        #   @options.fetch(:real_path, @default_options.fetch(:real_path, nil))
+        define_option_get :real_path
+
+        # this property does:
+        #
+        #   @options.fetch(:logger, @default_options.fetch(:logger, Rails.logger))
+        define_option_get :logger, default: -> { Rails.logger }
+
+        def started?
+          @started
+        end
+
+        def stopped?
+          !started?
+        end
 
         def start
           @server_thread = Thread.start(self) do |container|
             @server = ::WEBrick::HTTPServer.new(
-              BindAddress: @bind_addr,
-              Port: @port,
-              Logger: WEBrick::Log.new('/dev/null'),
+              BindAddress: addr,
+              Port: port,
+              Logger: logger,
               AccessLog: [],
               StartCallback: proc { set_started })
-            @server.mount_proc("/") do |request, response|
+            @server.mount_proc(mount_dir) do |request, response|
               handle(request, response)
             end
             Signal.trap(:INT) do
@@ -72,7 +167,7 @@ module SS
         end
 
         def handle(request, response)
-          handler = @options[:handler]
+          handler = self.handler
           if handler.present?
             handler.call(request, response)
             return
@@ -83,13 +178,12 @@ module SS
         end
 
         def wait_filter(request, response)
-          wait = @options[:wait]
-          return if wait.blank?
+          wait_sec = self.wait_sec
+          return if wait_sec.blank?
 
-          # sleep wait if wait
           begin
-            wait = wait.to_f if wait.respond_to?(:to_f)
-            timeout(wait) do
+            wait_sec = wait_sec.to_f if wait_sec.respond_to?(:to_f)
+            timeout(wait_sec) do
               @lock.synchronize do
                 @cond.wait(@lock)
               end
@@ -103,11 +197,11 @@ module SS
           path = map_path(request, response)
           raise WEBrick::HTTPStatus::NotFound unless ::File.exist?(path)
 
-          status_code = @options[:status_code]
-          content_type = @options[:content_type]
-          last_modified = @options.fetch(:last_modified, ::File.mtime(path))
+          status_code = self.status_code
+          content_type = self.content_type
+          last_modified = self.last_modified || ::File.mtime(path)
           last_modified = last_modified.httpdate if last_modified.respond_to?(:httpdate)
-          etag = @options.fetch(:etag, make_etag(path))
+          etag = self.etag || make_etag(path)
 
           ::File.open(path, "rb:ASCII-8BIT") do |file|
             response.status = status_code if status_code.present?
@@ -120,8 +214,8 @@ module SS
 
         def map_path(request, response)
           path = "/#{request.path}".gsub(/\/\/+/, "/")
-          path = @options.fetch(:real_path, path)
-          path = "#{@doc_root}/#{path}".gsub(/\/\/+/, "/")
+          path = self.real_path || path
+          path = "#{doc_root}/#{path}".gsub(/\/\/+/, "/")
           path
         end
 
@@ -131,28 +225,43 @@ module SS
     end
 
     def self.extended(obj)
-      doc_root = obj.metadata[:doc_root]
-      bind_addr = obj.metadata[:bind_addr] || "127.0.0.1"
-      port = obj.metadata[:port] || 20_000 + Random.rand(10_000)
+      obj.metadata[:_http] = Server.new
 
-      obj.before(:context) do
-        http_server = Server.new(doc_root, bind_addr, port)
-        http_server.start
-        @http_server = http_server
-        Rails.logger.info "http server is listening on #{bind_addr}:#{port}"
+      obj.before(:example) do
+        http_server = obj.metadata[:_http]
+        if http_server && http_server.stopped?
+          http_server.start
+          Rails.logger.info "http server is listening on #{http_server.addr}:#{http_server.port}"
+        end
+      end
+
+      obj.after(:example) do
+        http_server = obj.metadata[:_http]
+        if http_server
+          http_server.release_wait
+          http_server.options.clear
+        end
       end
 
       obj.after(:context) do
-        http_server = @http_server
-        @http_server = nil
+        http_server = obj.metadata[:_http]
+        obj.metadata[:_http] = nil
         next if http_server.nil?
         http_server.stop
         Rails.logger.info "http server has stopped"
       end
-    end
 
-    def http_server
-      @http_server
+      obj.class_eval do
+        # this class method is called from outside of examples
+        define_singleton_method(:http) do
+          obj.metadata[:_http]
+        end
+
+        # this instance method is called from inside of a example
+        define_method(:http) do
+          obj.metadata[:_http]
+        end
+      end
     end
   end
 end

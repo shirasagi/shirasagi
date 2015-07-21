@@ -1,15 +1,21 @@
 require 'spec_helper'
 
-describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec", "fixtures", "voice"), port: 33_190 do
+describe Voice::SynthesisJob, http_server: true do
+  http.default port: 33_190
+  http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
+
   describe '#call_async', open_jtalk: true do
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
       before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}"
-        @http_server.options = { real_path: "/test-001.html" }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
+      end
+
+      before do
+        http.options real_path: "/test-001.html"
       end
 
       after :all do
@@ -42,11 +48,14 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}"
-        @http_server.options = { real_path: "/test-001.html" }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
         @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+      end
+
+      before do
+        http.options real_path: "/test-001.html"
       end
 
       after :all do
@@ -76,11 +85,14 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}?status_code=400"
-        @http_server.options = { real_path: "/test-001.html", status_code: 400 }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
         @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+      end
+
+      before do
+        http.options real_path: "/test-001.html", status_code: 400
       end
 
       after :all do
@@ -106,11 +118,14 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}?status_code=404"
-        @http_server.options = { real_path: "/test-001.html", status_code: 404 }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
         @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+      end
+
+      before do
+        http.options real_path: "/test-001.html", status_code: 404
       end
 
       after :all do
@@ -136,11 +151,14 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
       before(:all) do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}?status_code=500"
-        @http_server.options = { real_path: "/test-001.html", status_code: 500 }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
         @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+      end
+
+      before do
+        http.options real_path: "/test-001.html", status_code: 500
       end
 
       after :all do
@@ -163,19 +181,21 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
     end
 
     context 'when server timed out' do
-      before(:all) do
+      before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @wait = SS.config.voice.download['timeout_sec'] + 5
         @url = "http://127.0.0.1:33190/#{@path}?wait=#{@wait}"
-        @http_server.options = { real_path: "/test-001.html", wait: @wait }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
         @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
+      before do
+        http.options real_path: "/test-001.html", wait: @wait
+      end
+
       after(:all) do
-        @http_server.release_wait
         DatabaseCleaner.clean
         DatabaseCleaner.start
       end
@@ -195,17 +215,20 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
     end
 
     context 'when server does not respond last_modified' do
-      before(:all) do
+      before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}?last_modified=nil"
-        @http_server.options = { real_path: "/test-001.html", last_modified: nil }
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
         @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
-      after(:all) do
+      before do
+        http.options real_path: "/test-001.html", last_modified: nil
+      end
+
+      after :all do
         DatabaseCleaner.clean
         DatabaseCleaner.start
       end
@@ -234,13 +257,16 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
     subject(:site) { cms_site }
 
     context 'when synthesize from file "fixtures/voice/test-001.html"' do
-      before :all  do
+      before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}"
-        @http_server.options = { real_path: "/test-001.html" }
       end
 
-      after(:all) do
+      before do
+        http.options real_path: "/test-001.html"
+      end
+
+      after :all do
         DatabaseCleaner.clean
         DatabaseCleaner.start
       end
@@ -261,13 +287,16 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
     end
 
     context 'when get 404' do
-      before :all  do
+      before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @url = "http://127.0.0.1:33190/#{@path}?status_code=404"
-        @http_server.options = { real_path: "/test-001.html", status_code: 404 }
       end
 
-      after(:all) do
+      before do
+        http.options real_path: "/test-001.html", status_code: 404
+      end
+
+      after :all do
         DatabaseCleaner.clean
         DatabaseCleaner.start
       end
@@ -281,15 +310,17 @@ describe Voice::SynthesisJob, http_server: true, doc_root: Rails.root.join("spec
     end
 
     context 'when server timed out' do
-      before :all  do
+      before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
         @wait = SS.config.voice.download['timeout_sec'] + 5
         @url = "http://127.0.0.1:33190/#{@path}?wait=#{@wait}"
-        @http_server.options = { real_path: "/test-001.html", wait: @wait }
       end
 
-      after :all  do
-        @http_server.release_wait
+      before do
+        http.options real_path: "/test-001.html", wait: @wait
+      end
+
+      after :all do
         DatabaseCleaner.clean
         DatabaseCleaner.start
       end
