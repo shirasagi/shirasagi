@@ -36,7 +36,7 @@ module Mobile::PublicFilter
       head << %(<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">)
       head << %(<html xmlns="http://www.w3.org/1999/xhtml">)
       head << %(<head>)
-      head << %(<title>#{body.match(/<title>(.*?)<\/title>/)[1]}</title>)
+      head << %(<title>#{body.match(/<title>(.*?)<\/title>/).try(:[], 1)}</title>)
       head << %(<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />)
       head << %(<link rel="stylesheet" href="#{css}" />)
       head << %(</head>)

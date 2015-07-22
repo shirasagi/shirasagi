@@ -1,4 +1,6 @@
 class @SS_Preview
+  @mobile_path = "/mobile"
+
   @render: ->
     $("#ss-preview .date").datetimepicker
       lang: "ja", roundTime: "ceil", step: 15, closeOnDateSelect: true
@@ -8,5 +10,13 @@ class @SS_Preview
       return if date == ""
 
       date = date.replace(/[^\d]/g, "")
-      path = location.pathname.replace(/\/preview\d*/, "/preview" + date) + location.search
+      path = location.pathname.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date) + location.search
+      location.href = path
+
+    $("#ss-preview .mobile").click ->
+      date = $("#ss-preview .date").val()
+      return if date == ""
+
+      date = date.replace(/[^\d]/g, "")
+      path = location.pathname.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date + "/mobile" ) + location.search
       location.href = path
