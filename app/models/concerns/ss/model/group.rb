@@ -8,6 +8,7 @@ module SS::Model::Group
 
   included do
     store_in collection: "ss_groups"
+    index({ name: 1 }, { unique: true })
 
     seqid :id
     field :name, type: String
@@ -16,7 +17,7 @@ module SS::Model::Group
 
     default_scope -> { order_by(order: 1, name: 1) }
 
-    validates :name, presence: true, length: { maximum: 80 }
+    validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
     validate :validate_name
     after_save :rename_children, if: ->{ @db_changes }
   end
