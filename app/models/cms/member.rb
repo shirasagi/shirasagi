@@ -3,7 +3,8 @@ class Cms::Member
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
-  index({ site_id: 1, email: 1 }, { unique: true, sparse: true })
+  #TODO
+  #index({ site_id: 1, email: 1 }, { unique: true, sparse: true })
 
   class << self
     public
