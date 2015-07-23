@@ -100,10 +100,13 @@ ja:
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
+      fb_lang: ja_JP
+      twitter: Twitter
       tweet: ツイート
       hatena: はてなブックマーク
-      add_hatena: このエントリーをはてなブックマークに追加
+      hatena_add: このエントリーをはてなブックマークに追加
       google: Google+
+      evernote: Evernote
 
   #cms:
     nodes:
