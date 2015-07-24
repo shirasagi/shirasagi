@@ -80,8 +80,10 @@ class Cms::PreviewController < ApplicationController
       h  = []
       h << view_context.stylesheet_link_tag("cms/preview")
       h << '<link href="/assets/css/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />'
+      h << '<link href="/assets/css/colorbox/colorbox.css" rel="stylesheet" />'
       h << '<script src="/assets/cms/public.js"></script>'
       h << '<script src="/assets/js/jquery.datetimepicker.js"></script>'
+      h << '<script src="/assets/js/jquery.colorbox.js"></script>'
       h << '<script>' + s.join + '</script>'
       h << '<div id="ss-preview">'
       h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
