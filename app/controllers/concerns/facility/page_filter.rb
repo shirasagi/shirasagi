@@ -69,7 +69,7 @@ module Facility::PageFilter
         table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
 
         # save csv to use in job
-        ss_file = Facility::TempFile.new
+        ss_file = SS::File.new
         ss_file.in_file = file
         ss_file.save
 
