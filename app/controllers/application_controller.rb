@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   #before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
-  before_filter :set_cache_buster
+  before_action :set_cache_buster
 
   public
     def t(key, opts = {})
