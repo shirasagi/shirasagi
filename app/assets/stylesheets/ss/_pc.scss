@@ -410,6 +410,12 @@ table.index {
       }
     }
   }
+  .toggle {
+    cursor: pointer;
+  }
+  .padding {
+    padding-left: 12px;
+  }
 }
 table.cells, table.see {
   border: 1px solid #ccc;

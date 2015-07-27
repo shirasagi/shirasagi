@@ -50,6 +50,10 @@ module SS::Model::Group
       name.gsub("/", " ")
     end
 
+    def trailing_name
+      name.split("/").pop
+    end
+
     def rename_children
       return unless @db_changes["name"]
       return unless @db_changes["name"][0]
