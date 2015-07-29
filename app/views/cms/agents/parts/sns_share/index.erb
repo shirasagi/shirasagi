@@ -1,8 +1,6 @@
 <%
 
 render nothing: true if @cur_part.sort_sns_share_services.blank?
-dump @cur_part.sort_sns_share_services
-
 url = File.join(@cur_site.full_url, @cur_path)
 
 %>
