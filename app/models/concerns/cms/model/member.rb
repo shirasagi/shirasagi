@@ -27,6 +27,7 @@ module Cms::Model::Member
     field :oauth_type, type: String
     field :oauth_id, type: String
     field :oauth_token, type: String
+    field :site_email, type: String
     field :last_loggedin, type: DateTime
 
     permit_params :name, :email, :password, :in_password
@@ -38,7 +39,13 @@ module Cms::Model::Member
     validates :password, presence: true, if: ->{ oauth_type.blank? }
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
+    before_save :set_site_email, if: ->{ email.present? }
   end
+
+  private
+    def set_site_email
+      self.site_email = "#{site_id}_#{email}"
+    end
 
   public
     def encrypt_password
