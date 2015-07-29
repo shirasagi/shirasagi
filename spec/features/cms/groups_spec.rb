@@ -8,6 +8,7 @@ describe "cms_groups" do
   subject(:show_path) { cms_group_path site.host, item }
   subject(:edit_path) { edit_cms_group_path site.host, item }
   subject(:delete_path) { delete_cms_group_path site.host, item }
+  subject(:import_path) { import_cms_groups_path site.host }
 
   it "without login" do
     visit index_path
@@ -61,6 +62,39 @@ describe "cms_groups" do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+  end
+
+  context "import from csv" do
+    before(:each) do
+      tel   = "000-000-0000"
+      email = "sys@example.jp"
+      g1 = create(:cms_group, name: "A", order: 10, contact_tel: tel, contact_fax: tel, contact_email: email)
+      cms_site.add_to_set(group_ids: [g1.id])
+    end
+
+    it "#import" do
+      login_cms_user
+      visit import_path
+      within "form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/group/cms_groups_1.csv"
+        click_button "インポート"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+
+      groups = Cms::Group.site(cms_site).ne(id: cms_group.id)
+      expected_names = %w(A A/B A/B/C A/B/C/D A/E A/E/F A/E/G)
+      expected_orders = %w(10 20 30 40 50 60 70).map(&:to_i)
+      expected_contact_tels = %w(1 2 3 4 5 6 7).fill("000-000-0000")
+      expected_contact_faxs = %w(1 2 3 4 5 6 7).fill("000-000-0000")
+      expected_contact_emails = %w(1 2 3 4 5 6 7).fill("sys@example.jp")
+
+      expect(groups.map(&:name)).to eq expected_names
+      expect(groups.map(&:order)).to eq expected_orders
+      expect(groups.map(&:contact_tel)).to eq expected_contact_tels
+      expect(groups.map(&:contact_fax)).to eq expected_contact_faxs
+      expect(groups.map(&:contact_email)).to eq expected_contact_emails
     end
   end
 end

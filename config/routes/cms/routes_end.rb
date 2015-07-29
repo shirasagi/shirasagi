@@ -23,6 +23,15 @@ SS::Application.routes.draw do
     put :convert, :on => :member
   end
 
+  concern :download do
+    get :download, :on => :collection
+  end
+
+  concern :import do
+    get :import, :on => :collection
+    post :import, :on => :collection
+  end
+
   concern :index_state do
     get :index_approve, :on => :collection
     get :index_request, :on => :collection
@@ -49,8 +58,8 @@ SS::Application.routes.draw do
     get "/" => "main#index"
     resource  :site, concerns: :deletion
     resources :roles, concerns: :deletion
-    resources :users, concerns: :deletion
-    resources :groups, concerns: [:deletion, :role]
+    resources :users, concerns: [:deletion, :download, :import]
+    resources :groups, concerns: [:deletion, :role, :download, :import]
     resources :members, concerns: :deletion
     resources :contents, path: "contents/(:mod)" do
       get "notices/:notice", action: :public_notice, on: :collection, as: "notice"

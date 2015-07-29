@@ -311,14 +311,18 @@ ja:
         value: 内容
         add_info: 項目を追加する
         del_info: 削除
-      cms/addon/import/page:
-        in_file: ファイル
       cms/addon/edit_lock:
         lock_owner: 所有者
         lock_until: 期限
       cms/addon/sns_share:
         sns_share_states: 表示
         sns_share_orders: 並び順
+      cms/addon/import/page:
+        in_file: ファイル
+      cms/addon/import/group:
+        in_file: ファイル
+      cms/addon/import/user:
+        in_file: ファイル
 
   errors:
     messages:
@@ -715,6 +719,18 @@ ja:
     cms/addon/thumb:
       thumb_id:
         - サムネイル画像を指定します。
+
+    cms/addon/import/group:
+      in_file:
+        - CSVファイルを指定しグループのインポートを行います。
+        - idが記述されていない行は新規作成になります。
+        - nameが記述されていない行は削除となります。
+
+    cms/addon/import/user:
+      in_file:
+        - CSVファイルを指定しユーザーのインポートを行います。
+        - idが記述されていない行は新規作成になります。
+        - emailまたはuidが記述されていない行は削除となります。
 
     cms/addon/parent_crumb:
       parent_crumb_urls:
