@@ -26,8 +26,7 @@ class Cms::GroupsController < ApplicationController
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
       @items = @model.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
-        page(params[:page]).per(50)
+        search(params[:s]).sort_by(&:name)
     end
 
     def role_edit

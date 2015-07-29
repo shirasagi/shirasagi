@@ -1,0 +1,45 @@
+class @SS_TreeUI
+  @render: (tree)->
+    $(tree).find("tbody tr").each ->
+      depth = parseInt($(this).attr("data-depth"))
+      $(this).hide() if (depth != 1)
+      $(this).find("img").parent().css('padding-left', (depth - 1) * 12)
+
+      d = parseInt($(this).next("tr").attr("data-depth")) || 0
+      i = $(this).find(".toggle:first")
+      i.replaceWith('<span style="padding-left: 16px;">') if (d == 0 || depth >= d)
+
+    $(tree).find(".toggle").on "mousedown mouseup", (e) ->
+      e.stopPropagation()
+      return false
+
+    $(tree).find(".toggle").on "click", (e) ->
+      tr    = $(this).closest("tr")
+      img   = tr.find(".toggle:first")
+      depth = parseInt(tr.attr("data-depth"))
+      SS_TreeUI.toggleImage(img)
+      tr.nextAll("tr").each ->
+        d = parseInt($(this).attr("data-depth"))
+        i = $(this).find(".toggle:first")
+        if (depth >= d)
+          return false
+        if ((depth + 1) == d)
+          $(this).toggle()
+          SS_TreeUI.closeImage(i)
+        else
+          $(this).hide()
+          SS_TreeUI.closeImage(i)
+      e.stopPropagation()
+      return false
+
+  @toggleImage = (img) ->
+    if img.attr("src") == "/assets/img/open.png"
+      SS_TreeUI.closeImage(img)
+    else if img.attr("src") == "/assets/img/close.png"
+      SS_TreeUI.openImage(img)
+
+  @openImage = (img) ->
+    img.attr("src", "/assets/img/open.png")
+
+  @closeImage = (img) ->
+    img.attr("src", "/assets/img/close.png")
