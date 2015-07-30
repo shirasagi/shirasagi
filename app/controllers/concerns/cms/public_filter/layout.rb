@@ -5,8 +5,9 @@ module Cms::PublicFilter::Layout
 
   private
     def filters
-      @filters ||= []
-      @filters
+      @filters ||= begin
+        request.env["ss.filters"] ||= []
+      end
     end
 
     def find_part(path)
