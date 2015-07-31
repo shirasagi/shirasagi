@@ -95,25 +95,21 @@
       </div>
     </div>
 
-    <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
-    <div id="menu"><div class="wrap"><%= render partial: "menu" %></div></div>
-    <% elsif controller.menu_view_file %>
-    <div id="menu"><div class="wrap"><%= render partial: controller.menu_view_file %></div></div>
-    <% end %>
-
     <article id="main">
       <% if @crumbs.size > 0 %>
       <div id="crumbs">
-        <% if @crumbs.size != 1 %>
-          <div class="up"><%= link_to image_tag('/assets/img/up-folder.png'), @crumbs[-2][1] %></div>
-        <% end %>
         <nav>
           <% @crumbs.each_with_index do |item, idx| %>
-            <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
             <span class="link"><%= link_to *item %></span>
           <% end %>
         </nav>
       </div>
+      <% end %>
+
+      <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+      <div id="menu"><%= render partial: "menu" %></div>
+      <% elsif controller.menu_view_file %>
+      <div id="menu"><%= render partial: controller.menu_view_file %></div>
       <% end %>
 
       <div class="wrap">
