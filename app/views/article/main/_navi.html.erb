@@ -1,22 +1,20 @@
 <%= node_navi do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.article" %></h1></header>
-  <div>
-    <%= link_to :"article.page", article_pages_path, class: "icon-page" %>
-  </div>
-  <div class="narrow-page">
-    <%= link_to :"workflow.page.ready", article_index_ready_path, class: "icon-page" %>
-    <%= link_to :"workflow.page.closed", article_index_closed_path, class: "icon-page" %>
-  </div>
-</nav>
+<%= mod_navi do %>
+  <h2><%= t "modules.article" %></h2>
+<% end %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "workflow.pages" %></h1></header>
-  <div>
-    <%= link_to :"workflow.page.approve", article_index_approve_path, class: "icon-page" %>
-    <%= link_to :"workflow.page.request", article_index_request_path, class: "icon-page" %>
-  </div>
-</nav>
+<h3><%= link_to :"article.page", article_pages_path, class: "icon-page" %></h3>
+<ul class="narrow-page">
+  <li><%= link_to :"workflow.page.ready", article_index_ready_path, class: "icon-page" %></li>
+  <li><%= link_to :"workflow.page.closed", article_index_closed_path, class: "icon-page" %></li>
+</ul>
+
+<h3><span><%= t "workflow.pages" %></span></h3>
+<ul class="narrow-page">
+  <li><%= link_to :"workflow.page.approve", article_index_approve_path, class: "icon-page" %></li>
+  <li><%= link_to :"workflow.page.approve", article_index_approve_path, class: "icon-page" %></li>
+  <li><%= link_to :"workflow.page.request", article_index_request_path, class: "icon-page" %></li>
+</ul>
 
 <% end %>

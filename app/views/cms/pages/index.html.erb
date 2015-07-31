@@ -1,37 +1,34 @@
 <%= render file: "_search" %>
 
-<table class="index">
-  <thead>
-    <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th><%= @model.t :name %></th>
-      <th class="filename"><%= @model.t :filename %></th>
-      <th class="datetime"><%= @model.t :updated %></th>
-      <th class="state"><%= @model.t :view_state %></th>
-    </tr>
-  </thead>
+<div class="index">
+  <div class="toolbar">
+    <label><input type="checkbox" /></label>
+    <span><%= @model.t :name %></span>
+  </div>
 
-  <tbody>
+  <ul>
     <% @items.each do |item| %>
-    <tr>
-      <td class="checkbox">
-        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="tap-menu">
-          <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-          <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
-          <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
-          <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
-        </nav>
-      </td>
-      <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
-      <td class="filename"><%= File.basename item.filename %></td>
-      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-      <td class="state"><%= t "views.state.#{item.status}" %></td>
-    </tr>
+    <li>
+      <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <nav class="tap-menu">
+        <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
+        <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
+        <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
+      </nav>
+      <div class="info">
+        <%= link_to item.name, { action: :show, id: item }, class: "icon-page title" %>
+        <div class="meta">
+          <span class="filename"><%= File.basename item.filename %></span>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="state"><%= t "views.state.#{item.status}" %></span>
+        </div>
+      </div>
+    </li>
     <% end %>
-  </tbody>
-</table>
+  </ul>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

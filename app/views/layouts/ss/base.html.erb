@@ -32,33 +32,42 @@
 <header id="head">
   <div class="wrap">
     <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
-    <% if @cur_site.present? %>
-    <h2><%= link_to @cur_site.name, "/.#{@cur_site.host}" %></h2>
+    <div class="cms">
+      <h2><a href="/.mypage">CMS</a></h2>
+      <% if @cur_site.present? %>
+      <p><%= link_to @cur_site.name, "/.#{@cur_site.host}" %></p>
+      <% end %>
+    </div>
+
+    <div class="gws">
+      <h2><a href="#">GWS</a></h2>
+    </div>
+
+    <div class="sns">
+      <h2><a href="#">SNS</a></h2>
+    </div>
+
+    <% if Rails.env.development? %>
+    <div class="env dev">dev</div>
     <% end %>
+
     <% if @cur_user %>
     <nav>
-      <%= link_to "dev", "#", onclick: "alert('#{Rails.env}'); return false;" unless Rails.env.production? %>
-      <%= link_to @cur_group.name.sub(/.*\//, ""), sns_user_profile_path(@cur_user) if @cur_group %>
-      <%= link_to @cur_user.name, sns_user_profile_path(@cur_user) %>
-      <%= link_to :logout, sns_logout_path %>
+      <% if @cur_group %>
+      <h2><%= link_to @cur_group.name.sub(/.*\//, ""), sns_user_profile_path(@cur_user) %></h2>
+      <% end %>
+
+      <div class="pulldown-menu">
+        <h2><%= link_to @cur_user.name, sns_user_profile_path(@cur_user) %></h2>
+        <ul>
+          <li><%= link_to :profile, sns_user_profile_path(@cur_user) %></li>
+          <li><%= link_to :logout, sns_logout_path %></li>
+        </ul>
+      </div>
     </nav>
     <% end %>
   </div>
 <!-- /#head --></header>
-
-<% if @crumbs.size > 0 %>
-<div id="crumbs">
-  <% if @crumbs.size != 1 %>
-    <div class="up"><%= link_to image_tag('/assets/img/up-folder.png'), @crumbs[-2][1] %></div>
-  <% end %>
-  <nav>
-    <% @crumbs.each_with_index do |item, idx| %>
-      <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
-      <span class="link"><%= link_to *item %></span>
-    <% end %>
-  </nav>
-</div>
-<% end %>
 
 <% if notice %>
 <aside id="notice">
@@ -69,24 +78,40 @@
 
 <div id="wrap">
   <div class="wrap">
+    <div id="navi">
+      <div class="wrap">
+        <% if @cur_site %>
+        <nav class="site-navi">
+          <h2><%= link_to :"cms.view_site", @cur_site.full_url, target: "_blank" %></h2>
+          <h2><%= link_to :"cms.preview_site", cms_preview_path + "/", target: "_blank" %></h2>
+        </nav>
+        <% end %>
 
-    <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
-    <div id="navi-back"></div>
-    <div id="navi"><div class="wrap"><%= render partial: "navi" %></div></div>
-    <% elsif controller.navi_view_file %>
-    <div id="navi-back"></div>
-    <div id="navi"><div class="wrap"><%= render partial: controller.navi_view_file %></div></div>
-    <% end %>
-
-    <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
-    <div id="menu-back"></div>
-    <div id="menu"><div class="wrap"><%= render partial: "menu" %></div></div>
-    <% elsif controller.menu_view_file %>
-    <div id="menu-back"></div>
-    <div id="menu"><div class="wrap"><%= render partial: controller.menu_view_file %></div></div>
-    <% end %>
+        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+        <%= render partial: "navi" %>
+        <% elsif controller.navi_view_file %>
+        <%= render partial: controller.navi_view_file %>
+        <% end %>
+      </div>
+    </div>
 
     <article id="main">
+      <% if @crumbs.size > 0 %>
+      <div id="crumbs">
+        <nav>
+          <% @crumbs.each_with_index do |item, idx| %>
+            <span class="link"><%= link_to *item %></span>
+          <% end %>
+        </nav>
+      </div>
+      <% end %>
+
+      <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+      <div id="menu"><%= render partial: "menu" %></div>
+      <% elsif controller.menu_view_file %>
+      <div id="menu"><%= render partial: controller.menu_view_file %></div>
+      <% end %>
+
       <div class="wrap">
       <%= yield %>
       </div>
