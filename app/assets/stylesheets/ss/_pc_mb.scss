@@ -15,13 +15,29 @@ body {
   line-height: 1.4;
   word-wrap: break-word;
 }
+#page {
+  position: relative;
+  font-size: 87.5%;
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 240px;
+    border-right: $border-gray4;
+    background: $white;
+    @include box-shadow(1px 0 3px #dedede);
+    @include mb { display: none; }
+  }
+}
 h1, h2, h3, h4, h5, p {
   margin: 0px;
   font-size: 100%;
   font-weight: normal;
 }
 a {
-  color: $blue;
+  color: $black;
   text-decoration: none;
 }
 a:hover {
@@ -32,6 +48,9 @@ img {
   height: auto;
   border-style: none;
   line-height: 0;
+}
+ul li {
+  list-style: none;
 }
 table {
   border-collapse: collapse;
@@ -48,22 +67,930 @@ td {
 }
 
 // -------------------------------------------------------------------------------------------------
-// form
-
-@mixin input {
-  border: 1px solid $gray4;
-  @include box-sizing(border-box);
-  background-color: #fff;
-  &:focus {
-    @include box-shadow(inset 0 0 3px $gray4);
+// head
+#head {
+  @include clear;
+  position: relative;
+  z-index: 100;
+  border-bottom: $border-gray4;
+  background: $black2;
+  h1 {
+    float: left;
+    a {
+      display: block;
+      width: 200px;
+      padding: 9px 20px;
+      line-height: 31px;
+      background: url(/assets/img/logo.png) no-repeat center center;
+      text-indent: -9999px;
+    }
+  }
+  .cms, .gws, .sns {
+    @include clear;
+    float: left;
+    @include mb { display: none; }
+    h2 {
+      float: left;
+      a {
+        display: block;
+        color: $white;
+        &:hover {
+          color: $black;
+          text-decoration: none;
+        }
+      }
+    }
+    p {
+      float: left;
+      a {
+        display: block;
+        padding: 15px 10px;
+        color: $white;
+        &:hover {
+          background: $white;
+          color: $black;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .cms {
+    border-left: $border-gray4;
+  }
+  .cms h2 a {
+    padding: 15px 20px 15px 55px;
+    background: url(/assets/img/ic-cms-off.png) no-repeat 20px center;
+    &:hover {
+      background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
+    }
+  }
+  .gws h2 a {
+    padding: 15px 20px 15px 70px;
+    background: url(/assets/img/ic-gws-off.png) no-repeat 20px center;
+    &:hover {
+      background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
+    }
+  }
+  .sns h2 a {
+    padding: 15px 20px 15px 60px;
+    background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
+    &:hover {
+      background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
+    }
+  }
+  .env {
+    float: left;
+    padding: 15px 10px;
+    color: $white;
+    @include mb { display: none; }
+  }
+  nav {
+    float: right;
+    a {
+      color: $white;
+    }
+    h2 {
+      float: left;
+      padding: 15px 40px;
+      @include mb { padding: 10px 30px; }
+      a {
+        display: block;
+      }
+    }
+    .pulldown-menu {
+      position: relative;
+      float: left;
+      h2 {
+        padding: 0;
+        a {
+          display: block !important;
+          padding: 15px 50px 15px 20px; 
+          border-left: $border-black2;
+          background: url(/assets/img/arrow-usr.png) no-repeat 80% center;
+          @include mb { padding: 10px 50px 10px 20px; }
+        }
+      }
+      li a { display: none; }
+      &:hover {
+        h2 a {
+          position: relative;
+          border-left: $border-black;
+          background-color: $gray3;
+          text-decoration: none;
+          &:after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 42%;
+            z-index: 100;
+            border-top: 8px solid $gray3;
+            border-right: 10px solid transparent;
+            border-left: 10px solid transparent;
+          }
+        }
+        li a{
+          display: block !important;
+        }
+      }
+      ul {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        @include box-sizing(border-box);
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        li {
+          list-style: none;
+        }
+        a {
+          padding: 10px 0;
+          border: $border-gray4;
+          border-top: none;
+          background: $white;
+          color: $black;
+        }
+      }
+    }
   }
 }
+
+// -------------------------------------------------------------------------------------------------
+// wrap
+#wrap {
+  @include clear;
+  background: $gray1;
+}
+
+// -------------------------------------------------------------------------------------------------
+// nav
+#navi {
+  position: relative;
+  float: left;
+  width: 240px;
+  z-index: 1;
+  border-right: $border-gray4;
+  background: $white;
+  @include mb {
+    float: none;
+    width: 100%;
+    border: none;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// site-navi
+.site-navi {
+  @include clear;
+  border-bottom: $border-gray4;
+  h2 {
+    float: left;
+    width: 120px;
+    text-align: center;
+    @include mb { width: 50%; }
+    a {
+      display: block;
+      padding: 45px 0 10px;
+      background: url(/assets/img/ic-preview-off.png) no-repeat center 5px;
+      font-size: $px12;
+      &:hover {
+        background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center 5px;
+        text-decoration: none;
+      }
+    }
+    a, a:hover {
+      @include mb {
+        padding: 15px 15px 15px 45px;
+        background-position: 4px center;
+        text-align: left;
+      }
+    }
+    .external {
+      background-image: url(/assets/img/ic-site-off.png);
+      &:hover {
+        background-image: url(/assets/img/ic-site-on.png);
+      }
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// main-navi
+.main-navi {
+  h2 a {
+    display: block;
+    padding: 12px 60px;
+    border-bottom: $border-gray4;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .icon-content {
+    background: url(/assets/img/ic-contents-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-contents-on.png) no-repeat 10px center;  
+    }
+  }
+  .icon-node {
+    background: url(/assets/img/ic-folder-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-folder-on.png) no-repeat 10px center;  
+    }
+  }
+  .icon-page {
+    background: url(/assets/img/ic-page-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-page-on.png) no-repeat 10px center;  
+    }
+  }
+  .icon-part {
+    background: url(/assets/img/ic-part-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-part-on.png) no-repeat 10px center;  
+    }
+  }
+  .icon-layout {
+    background: url(/assets/img/ic-layout-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-layout-on.png) no-repeat 10px center;  
+    }
+  }
+  .icon-conf {
+    background: url(/assets/img/ic-conf-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-conf-on.png) no-repeat 10px center;  
+    }
+  }
+  @include mb {
+    @include clear;
+    h2 {
+      float: left;
+      @include box-sizing(border-box);
+      width: 33%;
+      &:nth-child(3n) {
+        width: 34%;
+      }
+      a{
+        padding: 12px 0 12px 45px;
+        border-right: $border-gray4;
+        overflow: hidden;
+        font-size: $px12;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// mod-navi
+.mod-navi {
+  padding-bottom: 5px;
+  border-bottom: $border-gray4;
+  h2 {
+    padding: 10px 15px;
+    font-weight: bold;
+  }
+  h3 a {
+    display: block;
+    padding: 5px 15px 5px 60px;
+    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px center;
+      text-decoration: none;
+    }
+  }
+  h3 span {
+    display: block;
+    padding: 5px 15px 5px 60px;
+    background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+  }
+  @include mb {
+    h3 {
+      a, a:hover, span {
+        padding: 5px 15px 5px 35px;
+        background-position: 15px center;
+      }
+    }
+  }
+  .pulldown-menu {
+    position: relative;
+    h2 {
+      background: url(/assets/img/ic-arrow-off.png) no-repeat 210px center;
+    }
+    &:hover { 
+      h2 {
+        position: relative;
+        background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 210px center;
+        &:before {
+          content: "";
+          position: absolute;
+          top: 9px;
+          left: 100%;
+          z-index: 100;
+          border-top: 11px solid transparent;
+          border-bottom: 11px solid transparent;
+          border-left: 9px solid $gray4;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          top: 10px;
+          left: 100%;
+          z-index: 100;
+          border-top: 10px solid transparent;
+          border-bottom: 10px solid transparent;
+          border-left: 8px solid $gray1;
+        }  
+      }
+      ul { 
+        display: block;
+        a {
+          display: block !important;
+        }
+      }
+    }
+    ul {
+      @include clear;
+      display: none;
+      width: 400px;
+      position: absolute;
+      top: 0;
+      left: 241px;
+      margin: 0;
+      padding: 14px 12px;
+      border: $border-gray4;
+      border-left: none;
+      background: $white;
+      li {
+        float: left;
+        width: 168px;
+        padding: 10px 16px;
+        &:nth-child(2n+1) {
+          clear: both;
+        }
+      }
+      a {
+        padding-left: 15px;
+        background: url(/assets/img/ic-li.png) no-repeat left center;
+      }
+    }
+    @include mb {
+      h2, &:hover h2 {
+        background-position: 98% center;
+      }
+      ul {
+        position: static;
+        @include box-sizing(border-box);
+        width: 100%;
+        li {
+          @include box-sizing(border-box);
+          padding: 5px 0;
+        }
+      }
+    }
+  }
+  .narrow-page {
+    margin: 0;
+    padding: 0;
+    a {
+      display: block;
+      padding: 5px 15px 5px 90px;
+      background: url(/assets/img/ic-arrow16-off.png) no-repeat 65px center;
+      &:hover {
+        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 65px center;
+        text-decoration: none;
+      }
+    }
+    @include mb {
+      @include clear;
+      li {
+        float: left;
+        margin-left: 25px;
+        a, a:hover {
+          background-position: left center;
+          padding: 5px 0 5px 20px; 
+        }
+      }
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// main
+#main {
+  float: right;
+  width: 100%;
+  margin-left: -100%;
+  background: $gray1;
+  @include mb {
+    float: none;
+    margin: 0;
+  }
+}
+#main .wrap {
+  margin: 0 28px 0 268px;
+  @include mb { margin: 0; }
+}
+
+// -------------------------------------------------------------------------------------------------
+// foot
+#foot {
+  background: $gray1;
+  padding: 40px 15px 15px 268px;
+  text-align: right;
+  @incldue mb { padding: 10px; }
+}
+
+// -------------------------------------------------------------------------------------------------
+// crumbs
+#crumbs {
+  padding-left: 240px;
+  border-bottom: $border-gray4;
+  background: $gray5;
+  @include mb { display: none; }
+  nav {
+    @include clear;
+  }
+  .link {
+    float: left;
+    &:first-child a:before {
+      border: none;
+    }
+  }
+  a {
+    position: relative;
+    display: block;
+    padding: 10px 28px;
+    &:before {
+      content: "";
+      position: absolute;
+      top:0;
+      left: 0;
+      border-bottom: 20px solid transparent;
+      border-left: 12px solid $gray4;
+      border-top: 20px solid transparent;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -11px;
+      border-bottom: 20px solid transparent;
+      border-left: 12px solid $gray5;
+      border-top: 20px solid transparent;
+      z-index: 1;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// menu
+#menu {
+  .act-menu {
+    margin-left: 268px;
+    padding: 24px 24px 24px 0;
+    @include mb {
+      margin: 0;
+      padding: 10px;      
+    }
+    a {
+      display: inline-block;
+      margin-right: 24px;
+      @include arrow;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// common view
+
+#ajax-box {
+  margin: 10px;
+}
+.main-view  {
+  @include main-view;
+}
+.addon-view {
+  @include box;
+  margin-bottom: 32px;
+  @include mb {
+    margin: 0 10px 10px;
+  }
+  header {
+    @include box-head;
+  }
+  .see {
+    padding: 0 24px 28px; 
+    @include mb {
+      padding: 0 10px 10px;
+    }
+  }
+  + footer.send {
+    border-top: 1px solid #ddd;
+  }
+  .toggle {
+    position: absolute;
+    top: 17px;
+    left: 300px;
+    @include mb {
+      top: 13px;
+      left: auto;
+      right: 10px;
+    }
+    a {
+      padding-left: 20px;
+      background: url(/assets/img/ic-open.png) no-repeat left center;
+      font-size: $px12;
+    }
+  }
+}
+dl.see {
+  margin: 0px;
+  > dt {
+    @include clear;
+    float: left;
+    min-width: 180px;
+    padding: 7px 0;
+    color: $black;
+    font-weight: bold;
+    @include mb {
+      float: none;
+    }
+  }
+  > dd {
+    @include clear;
+    margin: 0px 0px 0px 180px;
+    padding: 7px 0;
+    @include mb {
+      margin: 0;
+    }
+    input, select,  {
+      margin: -7px 0;
+    }
+  }
+  > dt ~ dt { margin-top: 20px; }
+  > dd ~ dd {
+      margin-top: 20px;
+      @include mb {
+        margin-top: 0;
+      }
+    }
+  > dd + dd {
+    margin-top: 20px;
+    @include mb {
+      margin-top:10px;
+    }
+  }
+  > dt.wide {
+    float: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  > dd.wide {
+    float: none;
+    margin-left: 0px;
+    padding-top: 0px;
+    border-top: 0px;
+    button, .ajax-box {
+      margin-right: 15px;
+    }
+  }
+  table.index {
+    width: 100%;
+    th, td {
+      padding: 10px 0;
+    }
+    td {
+      border-top: $border-gray1;
+    }
+    .deselect {
+      @include btn;
+    }
+  }
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
+  line-height: 1.2;
+  @include border-radius(8px);
+  background: $orange;
+  color: $white;
+  text-align: center;
+  cursor: pointer;
+  ul {
+    position: absolute;
+    display: none;
+    left: -220px;
+    width: 30em;
+    padding: 24px;
+    border: $border-gray4;
+    line-height: 1.6;
+    z-index: 100;
+    background: $white;
+    @include box-shadow(0 0 6px $gray5);
+    color: $black;
+    font-weight: normal;
+    text-align: left;
+    &:before {
+      content: "";
+      position: absolute;
+      left: 215px;
+      bottom: -12px;
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 12px solid $gray4;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      left: 215px;
+      bottom: -19px;
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 12px solid $white;
+    }
+  }
+}
+footer.send {
+  padding: 28px 0 0;
+  text-align: center;
+  input, button {
+    margin: 0 8px;
+    @include btn-gray-l;
+  }
+  input.publish_save, input.save, button.save, input.delete {
+    @include btn-red;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// addon
+#addon-cms-agents-addons-file .see, .addon-view .see {
+  #selected-files {
+    margin-top: 30px;
+    @include clear;
+    @include mb {
+      margin-top: 10px;
+    }
+  }
+}
+.file-view {
+  float:left;
+  width: 164px;
+  margin: 0px 28px 20px 0px;
+  @include mb {
+    margin: 0 10px 10px 0;
+  }
+  .thumb {
+    display: block !important;
+    height: 110px;
+    border: 8px solid $gray4;
+    text-align: center;
+    line-height: 110px;
+    &:hover {
+      background-color: #eee;
+      text-decoration: none;
+    }
+    img {
+      vertical-align: middle;
+    }
+    .ext {
+      display: block;
+      overflow: hidden;
+      color: $orange;
+      font-size: $px32;
+      font-weight: bold;
+    }
+  }
+  .name {
+    overflow: hidden;
+    padding: 10px 0;
+    font-size: 90%;
+    @include ellipsis;
+    word-wrap: nowrap;
+  }
+  .action {
+    display: inline-block;
+    margin-bottom: 7px;
+    a {
+      @include btn;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// category
+#addon-category-agents-addons-category {
+  .category-form {
+    padding: 0;
+  }
+}
+.category-form {
+  line-height: 2;
+  > div {
+    padding: 0 24px;
+    @include mb {
+      padding: 0 10px;
+    }
+  }
+  label {
+    display: inline-block;
+    margin-right: 10px;
+    @include mb {
+      &.parent {
+        display: block;
+        border-bottom: $border-gray1;
+      }
+    }
+    input { margin: 5px !important;}
+  }
+  div.parent {
+    padding: 15px 24px;
+    border-bottom: $border-gray1;
+    @include mb {
+      padding: 10px;
+    }
+    &.last-child {
+      border: none;
+    }
+    .child {
+      padding-left: 30px;
+      @include mb {
+        padding: 0;
+      }
+    }
+    .grandchild > label {
+      clear: both;
+      display: block;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// mod-map
+.mod-map {
+  padding: 0 24px;
+  @include mb { padding: 0 10px; }
+  .keyword {
+    max-width: 400px;
+    margin-bottom: 20px;
+    @include mb { margin-bottom: 0;}
+  }
+  > button { @include mb{ margin-bottom: 10px; } }
+  .marker-setting {
+    @include clear;
+    margin: 20px 0 0;
+    dt {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    dd {
+      float: left;
+      margin-left: 0px;
+      margin-right: 28px;
+      @include mb {
+        float: none;
+        margin: 0;
+      }
+      p {
+        margin-top: 10px;
+        @include mb { margin: 0; }
+      }
+      &.marker {
+        padding-bottom: 18px
+      }
+      .marker-name,.marker-text {
+        width: 260px;
+        @include mb {
+          @include box-sizing(border-box);
+          width: 100%;
+        }
+      }
+      &:last-child {
+        width: 260px;
+        @include mb {
+          @include box-sizing(border-box);
+          width: 100%;
+        }
+      }
+    }
+  }
+  .add-marker {
+    @include btn-orange;
+    margin: 10px 0 28px;
+  }
+}
+#map-canvas {
+  img {
+    max-width: none;
+  }
+  .marker-info {
+    white-space: nowrap;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// search-form
+.search-form {
+  @include clear;
+  @include box;
+  margin-bottom: 24px;
+  padding: 12px;
+  @include mb { margin: 0 10px 10px; }
+  form {
+    float: right;
+    @include mb { 
+      float: none;
+      #s_keyword {
+        margin-bottom: 10px;
+      }      
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// index
+div.index {
+  @include box;
+  position: static;
+  @include mb { margin: 0 10px 10px; }
+  .toolbar {
+    padding: 20px;
+    border-bottom: $border-gray1;
+    font-weight: bold;
+    @include mb { padding: 10px; }
+  }
+  label {
+    margin-right: 20px;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    padding: 16px 20px;
+    border-bottom: $border-gray1;
+    @include mb { padding: 8px 10px; }
+    .checked, &:hover {
+      background: $orange2;
+    }
+    label {
+      float: left;
+      padding: 10px 0;
+    }
+    .info { @include mb { margin-left: 40px; } }
+    .title {
+      color: $orange;
+      font-size: $px16;
+      @include mb { font-size: $px14; }
+    }
+    .meta span {
+      margin-right: 20px;
+      font-size: $px12;
+    }
+  }
+  .tap-menu, .multiple-menu {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    padding: 15px;
+    border: $border-gray4;
+    background: $white;
+    @include box-shadow(1px 0 3px #dedede);
+    a {
+      display: block;
+      line-height: 1.8;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// form
 select, input, textarea, button {
+  -webkit-appearance: none;
   font-size: 100%;
   font-family: $font-base;
 }
-button {
+input[type=submit] {
   @include btn;
+}
+button, #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
+  @include btn;
+  &.add-date {
+    @include btn-orange;
+  }
+  @include mb {
+    margin-top: 10px;
+  }
 }
 select {
   @include input;
@@ -74,8 +1001,14 @@ input[type=text], input[type=password], input[type=date], input[type=datetime], 
 input[type=email], input[type=number], input[type=tel] {
   @include input;
   width: 80%;
-  height: 2.5em;
-  padding: 3px 5px;
+  padding: 6px;
+}
+@include mb {
+  input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
+  input[type=email], input[type=number], input[type=tel] {
+    @include box-sizing(border-box);
+    width: 100% !important;
+  }
 }
 input[type=number] {
   width: 12em;
@@ -115,85 +1048,6 @@ textarea.code {
 }
 form .CodeMirror {
   border: 1px solid #ccc;
-}
-
-// -------------------------------------------------------------------------------------------------
-// common view
-
-#ajax-box {
-  margin: 10px;
-}
-.main-view  {
-  @include main-view;
-}
-.addon-view {
-  margin: 0px 0px 20px;
-  padding-left: 10px;
-  header {
-    min-width: 130px;
-    margin-left: -10px;
-    margin-bottom: 10px;
-    border-bottom: $border-white;
-    color: $black;
-    font-size: 120%;
-    h2 {
-      padding: 5px 2px;
-      border-bottom: $border-gray4;
-      color: $gray5;
-    }
-  }
-  .see {
-    margin-top: 15px;
-  }
-  + footer.send {
-    border-top: 1px solid #ddd;
-  }
-  .toggle {
-    margin: 0px 0px 20px -10px;
-    a {
-      display: inline-block;
-      padding: 5px 10px;
-      background-color: #e4e4e4;
-      color: #444;
-    }
-  }
-}
-.file-view {
-  float:left;
-  width: 150px;
-  margin: 0px 15px 15px 0px;
-  .thumb {
-    display: block !important;
-    height: 110px;
-    border: 1px solid #ddd;
-    color: #888;
-    text-align: center;
-    line-height: 110px;
-    &:hover {
-      background-color: #eee;
-      text-decoration: none;
-    }
-    img {
-      vertical-align: middle;
-    }
-    .ext {
-      display: block;
-      overflow: hidden;
-      color: #484;
-      font-size: 200%;
-      font-weight: bold;
-    }
-  }
-  .name {
-    overflow: hidden;
-    padding: 10px 0;
-    font-size: 90%;
-    @include ellipsis;
-    word-wrap: nowrap;
-  }
-  .menu {
-    float: right;
-  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -297,148 +1151,6 @@ form .CodeMirror {
     text-decoration: none;
   }
 }
-dl.see {
-  margin: 0px;
-  > dt {
-    @include clear;
-    float: left;
-    min-width: 160px;
-    min-height: 1.0em;
-    color: $black;
-    font-weight: bold;
-  }
-  > dd {
-    min-height: 1.41em;
-    @include clear;
-    margin: 0px 0px 0px 160px;
-  }
-  > dt ~ dt { margin-top: 20px; }
-  > dd ~ dd { margin-top: 20px; }
-  > dd + dd { margin-top: 10px; }
-  > dt.wide {
-    float: none;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  > dd.wide {
-    float: none;
-    margin-left: 0px;
-    padding-top: 0px;
-    border-top: 0px;
-  }
-}
-footer.send {
-  padding: 20px 0px;
-  text-align: center;
-  input, button {
-    min-width: 120px;
-    margin: 0px 5px;
-    padding: 10px 10px;
-    border: 1px solid #ccc;
-    @include border-radius(4px);
-    @include box-shadow(0 1px 0 $white);
-    @include grd-btn;
-    cursor: pointer;
-    &:hover {
-      background: $gray1;
-    }
-  }
-  input.publish_save, input.save, button.save, input.delete {
-    border: 1px solid #c1447d;
-    @include grd-pink;
-    color: $white;
-    &:hover {
-      background: $pink;
-    }
-  }
-}
-
-// -------------------------------------------------------------------------------------------------
-// addon
-
-#addon-cms-agents-addons-file .see, .addon-view .see {
-  .cboxElement {
-    @include btn;
-    display: inline-block;
-    line-height: 1.4;
-  }
-  #selected-files {
-    margin-top: 30px;
-    @include clear;
-  }
-}
-.category-form {
-  line-height: 2.5;
-  label {
-    display: inline-block;
-    margin-right: 10px;
-  }
-  div.parent {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: $border-gray4;
-    font-weight: bold;
-    .child {
-      position: relative;
-      padding: 5px 0 5px 30px;
-      border-top: $border-gray4;
-      font-weight: normal;
-      &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        border-top: $border-white;
-      }
-    }
-    .grandchild > label {
-      clear: both;
-      display: block;
-    }
-  }
-}
-
-// -------------------------------------------------------------------------------------------------
-// icon
-
-@mixin ss-icon {
-  &:before {
-    display: inline-block;
-    position: relative;
-    bottom: -1px;
-    width: 12px;
-    height: 12px;
-    margin: 0px 4px 0px 0px;
-    text-indent: -99px;
-    background-image: url(/assets/img/icons.png);
-    content: " ";
-    @content;
-  }
-}
-a.icon-content { @include ss-icon { background-position: -0px 0px; } }
-a.icon-node    { @include ss-icon { background-position: -15px 0px; } }
-a.icon-node-up { @include ss-icon { background-position: -30px 0px; } }
-a.icon-page    { @include ss-icon { background-position: -45px 0px; } }
-a.icon-layout  { @include ss-icon { background-position: -60px 0px; } }
-a.icon-part    { @include ss-icon { background-position: -75px 0px; } }
-a.icon-conf    { @include ss-icon { background-position: -90px 0px; } }
-a.external {
-  &:after {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-left: 4px;
-    text-indent: -99px;
-    background-image: url(/assets/img/icons.png);
-    background-position: -0px -15px;
-    content: " ";
-  }
-}
-input.date, input.datetime {
-  padding-left: 20px;
-  background: $white url(/assets/img/calendar.png) no-repeat 5px center;
-}
 
 // -------------------------------------------------------------------------------------------------
 // colorbox
@@ -446,7 +1158,13 @@ input.date, input.datetime {
 #cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
   display: none !important;
 }
-
+#colorbox {
+  .menu {
+    a {
+      @include btn;
+    }
+  }
+}
 // -------------------------------------------------------------------------------------------------
 // login
 
@@ -477,45 +1195,4 @@ input.date, input.datetime {
     footer.send {
       padding-bottom: 0;
     }
-}
-
-// -------------------------------------------------------------------------------------------------
-// map
-.mod-map {
-  .keyword {
-    max-width: 400px;
-    margin-bottom: 10px;
-  }
-  .marker-setting {
-    @include clear;
-    dt {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    dd {
-      float: left;
-      margin-left: 0px;
-      margin-right: 40px;
-      p {
-        margin-top: 5px;
-      }
-      &.marker {
-        padding-bottom: 30px
-      }
-      .marker-name,.marker-text {
-        width: 260px;
-      }
-      &:last-child {
-        width: 260px;
-      }
-    }
-  }
-}
-#map-canvas {
-  img {
-    max-width: none;
-  }
-  .marker-info {
-    white-space: nowrap;
-  }
 }
