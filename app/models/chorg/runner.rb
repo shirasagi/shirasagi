@@ -68,6 +68,7 @@ class Chorg::Runner
 
         put_log("#{entity.name}(#{entity.url}) has some updates. module=#{entity.class}")
         with_inc_depth do
+          updates = updates.select { |k, v| v.present? }
           updates.each do |k, new_value|
             old_value = entity[k]
             put_log("property #{k} has these changes:")

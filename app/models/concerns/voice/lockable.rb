@@ -1,7 +1,7 @@
 module Voice::Lockable
   extend ActiveSupport::Concern
 
-  EPOCH = Time.zone.at(0)
+  EPOCH = Time.zone.at(0).freeze
 
   included do
     field :lock_until, type: DateTime, default: EPOCH

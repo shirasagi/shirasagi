@@ -111,6 +111,8 @@ ja:
       greater_than_or_equal_to: は%{count}以上の値にしてください。
       inclusion: は一覧にありません。
       invalid: は不正な値です。
+      invalid_file_type: は不正なファイル形式です。
+      duplicate: の重複が存在します。
       less_than: は%{count}より小さい値にしてください。
       less_than_or_equal_to: は%{count}以下の値にしてください。
       not_a_number: は数値で入力してください。
@@ -128,6 +130,7 @@ ja:
       too_large_file: "%{filename}(%{size}) のサイズが大きすぎます（制限値: %{limit}）。"
       malformed_kana_dictionary: "書式が不正です: %{line}(%{no})"
       self_user: "ログイン中のユーザーを削除することはできません。"
+      locked: "「%{user}」さんが編集中のため、編集・削除・移動ができません。"
     template:
       body: 次の項目を確認してください。
       header:

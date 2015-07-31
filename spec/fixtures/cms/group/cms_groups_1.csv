@@ -1,0 +1,7 @@
+id,name,order,ldap_dn,contact_tel,contact_fax,contact_email
+,A/B,20,"cn=Manager,dc=city,dc=shirasagi,dc=jp",000-000-0000,000-000-0000,sys@example.jp
+,A/B/C,30,,000-000-0000,000-000-0000,sys@example.jp
+,A/B/C/D,40,,000-000-0000,000-000-0000,sys@example.jp
+,A/E,50,,000-000-0000,000-000-0000,sys@example.jp
+,A/E/F,60,,000-000-0000,000-000-0000,sys@example.jp
+,A/E/G,70,,000-000-0000,000-000-0000,sys@example.jp

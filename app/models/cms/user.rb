@@ -3,8 +3,11 @@ class Cms::User
   include Cms::Addon::Role
   include Cms::Reference::Role
   include Cms::SitePermission
+  include Cms::Addon::Import::User
 
   set_permission_name "cms_users", :edit
+
+  attr_accessor :cur_site
 
   validate :validate_groups
 

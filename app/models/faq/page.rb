@@ -1,5 +1,6 @@
 class Faq::Page
   include Cms::Model::Page
+  include Cms::Addon::EditLock
   include Workflow::Addon::Branch
   include Workflow::Addon::Approver
   include Cms::Addon::Meta

@@ -19,6 +19,8 @@ ja:
     part: パーツ
     file: 共有ファイル
     preview_page: プレビュー
+    preview_pc_page: PCプレビュー
+    preview_mobile_page: 携帯プレビュー
     preview_site: サイトプレビュー
     role: 権限/ロール
     root_menu: メインメニュー
@@ -96,8 +98,15 @@ ja:
         all: 全ユーザー
         same_group: 同一グループ内
     sns_share:
+      fb_like: Facebook いいね！
+      fb_share: Facebook シェア
+      fb_lang: ja_JP
+      twitter: Twitter
       tweet: ツイート
-      add_hatena: このエントリーをはてなブックマークに追加
+      hatena: はてなブックマーク
+      hatena_add: このエントリーをはてなブックマークに追加
+      google: Google+
+      evernote: Evernote
 
   #cms:
     nodes:
@@ -155,6 +164,7 @@ ja:
     move_other_cms_pages: 固定ページの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
     move_private_cms_pages: 固定ページの移動（所有）
+    unlock_other_cms_pages: 固定ページのロック解除（全て）
 
   modules:
     cms: 標準機能
@@ -178,6 +188,8 @@ ja:
       cms/additional_info: 追加情報
       cms/page_setting: ページ設定
       cms/import/body: 本文
+      cms/edit_lock: 排他制御
+      cms/sns_share: SNS共有
 
   mongoid:
     models:
@@ -299,7 +311,17 @@ ja:
         value: 内容
         add_info: 項目を追加する
         del_info: 削除
+      cms/addon/edit_lock:
+        lock_owner: 所有者
+        lock_until: 期限
+      cms/addon/sns_share:
+        sns_share_states: 表示
+        sns_share_orders: 並び順
       cms/addon/import/page:
+        in_file: ファイル
+      cms/addon/import/group:
+        in_file: ファイル
+      cms/addon/import/user:
         in_file: ファイル
 
   errors:
@@ -697,6 +719,18 @@ ja:
     cms/addon/thumb:
       thumb_id:
         - サムネイル画像を指定します。
+
+    cms/addon/import/group:
+      in_file:
+        - CSVファイルを指定しグループのインポートを行います。
+        - idが記述されていない行は新規作成になります。
+        - nameが記述されていない行は削除となります。
+
+    cms/addon/import/user:
+      in_file:
+        - CSVファイルを指定しユーザーのインポートを行います。
+        - idが記述されていない行は新規作成になります。
+        - emailまたはuidが記述されていない行は削除となります。
 
     cms/addon/parent_crumb:
       parent_crumb_urls:

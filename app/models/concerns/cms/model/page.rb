@@ -98,10 +98,17 @@ module Cms::Model::Page
 
     def move(dst)
       validate_destination_filename(dst)
+      if is_a?(Cms::Addon::EditLock)
+        errors.add :base, :locked, user: lock_owner.long_name if locked?
+      end
       return false unless errors.empty?
 
       @cur_node = nil
       @basename = dst
+      if is_a?(Cms::Addon::EditLock)
+        remove_attribute(:lock_owner_id) if has_attribute?(:lock_owner_id)
+        remove_attribute(:lock_until) if has_attribute?(:lock_until)
+      end
       save
     end
 

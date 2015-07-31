@@ -61,6 +61,7 @@ class Cms::Part
 
   class SnsShare
     include Cms::Model::Part
+    include Cms::Addon::SnsShare
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

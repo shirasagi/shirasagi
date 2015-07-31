@@ -12,6 +12,7 @@ FactoryGirl.define do
     contact_email { "#{unique_id}@example.jp" }
     contact_tel "03-4389-8714"
     contact_fax "03-4389-8715"
+    ldap_dn { "ou=group,dc=example,dc=jp" }
   end
 
   factory :revisoin_page, class: Article::Page do

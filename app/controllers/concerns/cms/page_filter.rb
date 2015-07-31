@@ -3,7 +3,7 @@ module Cms::PageFilter
   include Cms::CrudFilter
 
   included do
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock, :move, :copy]
   end
 
   private

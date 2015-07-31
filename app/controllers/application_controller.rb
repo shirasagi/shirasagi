@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   #before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
+  before_action :set_cache_buster
 
   public
     def t(key, opts = {})
@@ -49,6 +50,14 @@ class ApplicationController < ActionController::Base
         headers["Content-Length"] = "0"
         headers["Content-Type"] = "text/plain"
         render text: ""
+      end
+    end
+
+    def set_cache_buster
+      if request.xhr?
+        response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "-1"
       end
     end
 end

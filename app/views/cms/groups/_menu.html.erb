@@ -1,21 +1,25 @@
 <nav class="act-menu">
-  <div>
-    <% if params[:action] =~ /index/ %>
-      <%= link_to :new, action: :new if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <% elsif params[:action] =~ /new|create/ %>
-      <%= link_to :back_to_index, action: :index %>
-    <% elsif params[:action] =~ /edit|update|delete/ %>
-      <%= link_to :back_to_show, action: :show, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to :back_to_index, action: :index %>
-    <% else %>
-      <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :role_setting, action: :role_edit, id: @item if @item.users.present? %>
-      <% end %>
-      <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to :back_to_index, action: :index %>
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to :new, action: :new %>
+      <%= link_to :download, action: :download %>
+      <%= link_to :import, action: :import %>
     <% end %>
-  </div>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to :back_to_show, action: :show, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /import/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to :role_setting, action: :role_edit, id: @item if @item.users.present? %>
+    <% end %>
+    <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
 </nav>
 
 <% if params[:action] =~ /^(show|new|edit|create|update)$/ %>

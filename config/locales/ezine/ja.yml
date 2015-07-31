@@ -41,7 +41,7 @@ ja:
   modules:
     ezine: メールマガジン
     addons:
-      ezine/page/body: 本文
+      ezine/body: 本文
       ezine/signature: 署名
       ezine/sender_address: 送信者設定
       ezine/reply: 確認メール
@@ -57,19 +57,25 @@ ja:
   mongoid:
     attributes:
       ezine/node/page:
+        column_ids: カラム
+      ezine/addon/signature:
         signature_html: 署名（HTML版）
         signature_text: 署名（テキスト版）
+      ezine/addon/sender_address:
         sender_name: 送信者名
         sender_email: 送信メールアドレス
+      ezine/addon/reply:
         reply_upper_text: 上部確認テキスト
         reply_lower_text: 下部確認テキスト
         reply_signature: 署名
       ezine/page:
         name: 記事タイトル
-        html: 本文（HTML版）
-        text: 本文（テキスト版）
         test_delivered: テスト配信完了日時
         results: 配信開始日時
+      ezine/addon/body:
+        html: 本文（HTML版）
+        text: 本文（テキスト版）
+      ezine/addon/deliver_plan:
         deliver_date: 配信予約日時
       ezine/member:
         email: メールアドレス

@@ -1,6 +1,9 @@
 require 'spec_helper'
 
-describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fixtures", "voice"), port: 33_190 do
+describe "voice_main", http_server: true do
+  http.default port: 33_190
+  http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
+
   let(:voice_site) do
     SS::Site.find_or_create_by(name: "VoiceSite", host: "voicehost", domains: "127.0.0.1:33190")
   end
@@ -24,11 +27,10 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     context "when valid site is given" do
       before :all do
         @path = "#{rand(0x100000000).to_s(36)}.html"
-        @http_server.options = { real_path: "/test-001.html" }
       end
 
-      after :all do
-        @http_server.options = {}
+      before do
+        http.options real_path: "/test-001.html"
       end
 
       it "returns 202" do
@@ -57,10 +59,6 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     end
 
     context "when invalid site is given" do
-      before :all do
-        @http_server.options = {}
-      end
-
       it "returns 404" do
         url = "http://not-exsit-host-#{rand(0x100000000).to_s(36)}/"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -70,10 +68,6 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     end
 
     context "when malformed url is given" do
-      before :all do
-        @http_server.options = {}
-      end
-
       it "returns 400" do
         url = "http:/xyz/"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -83,10 +77,6 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     end
 
     context "when accessing not existing doc" do
-      before :all do
-        @http_server.options = {}
-      end
-
       it "returns 404" do
         url = "http://#{voice_site.domain}/not-exist-doc-#{rand(0x100000000).to_s(36)}.html"
         visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
@@ -98,12 +88,8 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     context "when server responds 400" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html", status_code: 400 }
-      end
-
-      after :all do
-        @http_server.options = {}
+      before do
+        http.options real_path: "/test-001.html", status_code: 400
       end
 
       it "returns 404" do
@@ -117,12 +103,8 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     context "when server responds 404" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html", status_code: 404 }
-      end
-
-      after :all do
-        @http_server.options = {}
+      before do
+        http.options real_path: "/test-001.html", status_code: 404
       end
 
       it "returns 404" do
@@ -136,12 +118,8 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     context "when server responds 500" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html", status_code: 500 }
-      end
-
-      after :all do
-        @http_server.options = {}
+      before do
+        http.options real_path: "/test-001.html", status_code: 500
       end
 
       it "returns 404" do
@@ -155,12 +133,8 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     context "when voice synthesis request is full" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html" }
-      end
-
-      after :all do
-        @http_server.options = {}
+      before do
+        http.options real_path: "/test-001.html"
       end
 
       it "returns 429" do
@@ -175,12 +149,8 @@ describe "voice_main", http_server: true, doc_root: Rails.root.join("spec", "fix
     context "when server does not respond last_modified" do
       path = "#{rand(0x100000000).to_s(36)}.html"
 
-      before :all do
-        @http_server.options = { real_path: "/test-001.html", last_modified: nil }
-      end
-
-      after :all do
-        @http_server.options = {}
+      before do
+        http.options real_path: "/test-001.html", last_modified: nil
       end
 
       it "returns 200" do

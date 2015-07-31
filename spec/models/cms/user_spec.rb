@@ -15,6 +15,7 @@ describe Cms::User do
         expect(model.where(email: subject[:email]).first).not_to be_nil
         # uid can be nil if email.presents
         expect(model.where(email: subject[:email]).first.uid).to be_nil
+        expect(model.where(email: subject[:email]).first.has_attribute?(:uid)).to be_falsey
       end
     end
 
@@ -25,6 +26,7 @@ describe Cms::User do
         expect(model.where(uid: subject[:uid]).first).not_to be_nil
         # email can be nil if uid.presents
         expect(model.where(uid: subject[:uid]).first.email).to be_nil
+        expect(model.where(uid: subject[:uid]).first.has_attribute?(:email)).to be_falsey
       end
     end
 

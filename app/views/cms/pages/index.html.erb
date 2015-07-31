@@ -15,6 +15,7 @@
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
+        <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
         <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
       </nav>
       <div class="info">

@@ -1,10 +1,12 @@
 require 'spec_helper'
 
-describe Rss::ImportJob, dbscope: :example,
-         http_server: true, doc_root: Rails.root.join("spec", "fixtures", "rss"), port: 56_273 do
+describe Rss::ImportJob, dbscope: :example, http_server: true do
+  http.default port: 56_273
+  http.default doc_root: Rails.root.join("spec", "fixtures", "rss")
+
   context "when importing rdf" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:56273/#{path}" }
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -17,7 +19,7 @@ describe Rss::ImportJob, dbscope: :example,
 
   context "when importing rss" do
     let(:path) { "sample-rss.xml" }
-    let(:url) { "http://127.0.0.1:56273/#{path}" }
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -30,7 +32,7 @@ describe Rss::ImportJob, dbscope: :example,
 
   context "when importing atom" do
     let(:path) { "sample-atom.xml" }
-    let(:url) { "http://127.0.0.1:56273/#{path}" }
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
@@ -44,7 +46,7 @@ describe Rss::ImportJob, dbscope: :example,
   describe ".import_jobs" do
     context "rss_refresh_method is auto" do
       let(:path) { "sample-rdf.xml" }
-      let(:url) { "http://127.0.0.1:56273/#{path}" }
+      let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
       let(:site) { cms_site }
       let(:user) { cms_user }
       let(:refresh_method) { Rss::Node::Page::RSS_REFRESH_METHOD_AUTO }
@@ -57,7 +59,7 @@ describe Rss::ImportJob, dbscope: :example,
 
     context "rss_refresh_method is manual" do
       let(:path) { "sample-rdf.xml" }
-      let(:url) { "http://127.0.0.1:56273/#{path}" }
+      let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
       let(:site) { cms_site }
       let(:user) { cms_user }
       let(:refresh_method) { Rss::Node::Page::RSS_REFRESH_METHOD_MANUAL }
@@ -71,7 +73,7 @@ describe Rss::ImportJob, dbscope: :example,
 
   context "when rss_max_docs is 3" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:56273/#{path}" }
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url, rss_max_docs: 3 }
     let(:user) { cms_user }
@@ -83,20 +85,16 @@ describe Rss::ImportJob, dbscope: :example,
 
   context "when rss is updated" do
     let(:path) { "sample-rdf.xml" }
-    let(:url) { "http://127.0.0.1:56273/#{path}" }
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
-
-    after do
-      @http_server.options = {}
-    end
 
     it do
       described_class.new.call(site.host, node.id, user.id)
       expect(Rss::Page.count).to eq 5
 
-      @http_server.options = { real_path: "/sample-rdf-2.xml" }
+      http.options real_path: "/sample-rdf-2.xml"
 
       described_class.new.call(site.host, node.id, user.id)
       # expected count is 5, 1 added, 1 deleted, 1 updated.

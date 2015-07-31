@@ -2,6 +2,7 @@ class Cms::Group
   include SS::Model::Group
   include Cms::SitePermission
   include Contact::Addon::Group
+  include Cms::Addon::Import::Group
 
   set_permission_name "cms_users", :edit
 

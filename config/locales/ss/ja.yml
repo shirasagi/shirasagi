@@ -38,6 +38,7 @@ ja:
       move: 移動
       import: 取り込み
       convert: 変換
+      unlock_and_edit_forcibly: 強制的にロックを解除し編集する
     confirm:
       delete: 削除してよろしいですか？
       convert: 変換してよろしいですか？
@@ -56,6 +57,10 @@ ja:
       back_to_index: 一覧へ戻る
       parent_directory: 上の階層へ
       preview: プレビュー
+      pc_preview: PCプレビュー
+      mobile_preview: 携帯プレビュー
+      pc: PC
+      mobile: 携帯
       view_site: 公開画面を見る
       open: 開く
       change: 変更する

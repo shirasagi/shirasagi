@@ -3,6 +3,7 @@ module SS::Document
   extend SS::Translation
   include Mongoid::Document
   include SS::Fields::Sequencer
+  include SS::Fields::Normalizer
 
   attr_accessor :in_updated
 

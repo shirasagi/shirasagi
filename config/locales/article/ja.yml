@@ -20,6 +20,7 @@ ja:
     delete_private_article_pages: 記事ページの削除（所有）
     move_other_article_pages: 記事ページの移動（全て）
     move_private_article_pages: 記事ページの移動（所有）
+    unlock_other_article_pages: 記事ページのロック解除（全て）
 
   mongoid:
     models:

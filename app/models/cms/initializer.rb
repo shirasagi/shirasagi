@@ -56,5 +56,6 @@ module Cms
     Cms::Role.permission :move_private_cms_pages
     Cms::Role.permission :move_other_cms_nodes
     Cms::Role.permission :move_other_cms_pages
+    Cms::Role.permission :unlock_other_cms_pages
   end
 end

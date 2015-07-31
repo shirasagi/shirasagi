@@ -18,8 +18,6 @@ module Cms::Model::Member
   included do
     store_in collection: "cms_members"
 
-    #index({ email: 1 }, { unique: true, sparse: true })
-
     set_permission_name :cms_users, :edit
 
     seqid :id
@@ -29,6 +27,7 @@ module Cms::Model::Member
     field :oauth_type, type: String
     field :oauth_id, type: String
     field :oauth_token, type: String
+    field :site_email, type: String
     field :last_loggedin, type: DateTime
 
     permit_params :name, :email, :password, :in_password
@@ -40,19 +39,16 @@ module Cms::Model::Member
     validates :password, presence: true, if: ->{ oauth_type.blank? }
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
-    before_validation :normalize_email
+    before_save :set_site_email, if: ->{ email.present? }
   end
+
+  private
+    def set_site_email
+      self.site_email = "#{site_id}_#{email}"
+    end
 
   public
     def encrypt_password
       self.password = SS::Crypt.crypt(in_password)
-    end
-
-  private
-    def normalize_email
-      self.email = email.strip if email.present?
-      if email.blank? && has_attribute?(:email)
-        remove_attribute(:email)
-      end
     end
 end

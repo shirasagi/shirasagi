@@ -3,6 +3,8 @@ class Cms::Member
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
+  index({ site_email: 1 }, { unique: true, sparse: true })
+
   class << self
     public
       def create_auth_member(auth, site)

@@ -1,0 +1,25 @@
+<% if @item.locked? && !@item.lock_owned? %>
+  <dl class="see">
+    <dd class="wide"><%= t("errors.messages.locked", user: @item.lock_owner.long_name) %></dd>
+    <% if @item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node) %>
+    <dd class="wide">
+      <%= form_for :item, url: { action: :unlock }, html: { id: "item-form", method: :delete, multipart: true } do |f| %>
+        <%= hidden_field_tag "force", "true" %>
+        <button name="button" type="submit" class="release-lock"><%= t("views.button.unlock_and_edit_forcibly") %></button>
+      <% end %>
+    </dd>
+    <% end %>
+  </dl>
+
+  <%= jquery do %>
+    var self = $('a.addon-tab[data-id="#addon-cms-agents-addons-edit_lock"]');
+    var top = $('a.addon-tab[data-id="#addon-basic"]');
+    top.before(self);
+  <% end %>
+
+  <%= jquery do %>
+    var self = $('#addon-cms-agents-addons-edit_lock');
+    var top = $('#addon-basic');
+    top.before(self);
+  <% end %>
+<% end %>

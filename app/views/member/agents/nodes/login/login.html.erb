@@ -1,6 +1,6 @@
 <%
    enabled_providers = Cms::Member::OAUTH_PROVIDERS.select do |provider|
-     @cur_node.send("#{provider}_oauth") == "enabled"
+     @cur_node.try("#{provider}_oauth") == "enabled"
    end
    enabled_providers = enabled_providers.to_a
 %>

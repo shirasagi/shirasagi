@@ -47,6 +47,11 @@ module Workflow::Addon
         item.workflow_approvers = nil
         item.workflow_required_counts = nil
 
+        if item.is_a?(Cms::Addon::EditLock)
+          item.lock_owner_id = nil
+          item.lock_until = nil
+        end
+
         item.instance_variable_set(:@new_clone, true)
         item
       end
