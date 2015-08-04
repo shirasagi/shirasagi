@@ -15,9 +15,9 @@ $ ->
 <dl class="see">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
-    <%= link_to :upload, sns_apis_temp_files_path(@cur_user), class: "ajax-box" %>
-    <%= link_to :"sns.user_file", sns_apis_user_files_path(@cur_user), class: "ajax-box" %>
-    <%= link_to :"cms.file", cms_apis_files_path, class: "ajax-box" %>
+    <%= link_to :upload, sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+    <%= link_to :"sns.user_file", sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
+    <%= link_to :"cms.file", cms_apis_files_path, class: "ajax-box btn" %>
 
     <div id="selected-files">
       <% @item.files.each do |file| %>

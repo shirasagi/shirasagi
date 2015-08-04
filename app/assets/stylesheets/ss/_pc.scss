@@ -225,7 +225,7 @@ body {
 // -------------------------------------------------------------------------------------------------
 // menu
 
-nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
+nav.main-menu, nav.sub-menu, .nav-menu, nav.page-menu, nav.addon-menu {
   margin-bottom: 20px;
   header {
     display: block;
@@ -294,7 +294,7 @@ nav.sub-menu {
     }
   }
 }
-nav.act-menu {
+.nav-menu {
   margin: 0px 0px 20px;
   header {
     display: none;
@@ -392,7 +392,7 @@ table.index {
   td.filename {
     color: $green;
   }
-  nav.tap-menu, nav.multiple-menu {
+  nav.list-item-tap, nav.multiple-menu {
     display: none;
     position: absolute;
     min-width: 10em;
@@ -428,7 +428,7 @@ table.cells, table.see {
     background-color: #e4e4e4;
   }
 }
-.search-form {
+.list-search {
   @include clear;
   margin-bottom: 20px;
   padding: 5px 10px;

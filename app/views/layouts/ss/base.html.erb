@@ -97,13 +97,11 @@
 
     <article id="main">
       <% if @crumbs.size > 0 %>
-      <div id="crumbs">
-        <nav>
-          <% @crumbs.each_with_index do |item, idx| %>
-            <span class="link"><%= link_to *item %></span>
-          <% end %>
-        </nav>
-      </div>
+      <ol class="breadcrumb" id="crumbs">
+        <% @crumbs.each_with_index do |item, idx| %>
+          <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+        <% end %>
+      </ol>
       <% end %>
 
       <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>

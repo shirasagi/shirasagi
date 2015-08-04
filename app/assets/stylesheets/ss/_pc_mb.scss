@@ -164,7 +164,7 @@ td {
         padding: 0;
         a {
           display: block !important;
-          padding: 15px 50px 15px 20px; 
+          padding: 15px 50px 15px 20px;
           border-left: $border-black2;
           background: url(/assets/img/arrow-usr.png) no-repeat 80% center;
           @include mb { padding: 10px 50px 10px 20px; }
@@ -289,37 +289,37 @@ td {
   .icon-content {
     background: url(/assets/img/ic-contents-off.png) no-repeat 10px center;
     &:hover {
-      background: $gray1 url(/assets/img/ic-contents-on.png) no-repeat 10px center;  
+      background: $gray1 url(/assets/img/ic-contents-on.png) no-repeat 10px center;
     }
   }
   .icon-node {
     background: url(/assets/img/ic-folder-off.png) no-repeat 10px center;
     &:hover {
-      background: $gray1 url(/assets/img/ic-folder-on.png) no-repeat 10px center;  
+      background: $gray1 url(/assets/img/ic-folder-on.png) no-repeat 10px center;
     }
   }
   .icon-page {
     background: url(/assets/img/ic-page-off.png) no-repeat 10px center;
     &:hover {
-      background: $gray1 url(/assets/img/ic-page-on.png) no-repeat 10px center;  
+      background: $gray1 url(/assets/img/ic-page-on.png) no-repeat 10px center;
     }
   }
   .icon-part {
     background: url(/assets/img/ic-part-off.png) no-repeat 10px center;
     &:hover {
-      background: $gray1 url(/assets/img/ic-part-on.png) no-repeat 10px center;  
+      background: $gray1 url(/assets/img/ic-part-on.png) no-repeat 10px center;
     }
   }
   .icon-layout {
     background: url(/assets/img/ic-layout-off.png) no-repeat 10px center;
     &:hover {
-      background: $gray1 url(/assets/img/ic-layout-on.png) no-repeat 10px center;  
+      background: $gray1 url(/assets/img/ic-layout-on.png) no-repeat 10px center;
     }
   }
   .icon-conf {
     background: url(/assets/img/ic-conf-off.png) no-repeat 10px center;
     &:hover {
-      background: $gray1 url(/assets/img/ic-conf-on.png) no-repeat 10px center;  
+      background: $gray1 url(/assets/img/ic-conf-on.png) no-repeat 10px center;
     }
   }
   @include mb {
@@ -379,7 +379,7 @@ td {
     h2 {
       background: url(/assets/img/ic-arrow-off.png) no-repeat 210px center;
     }
-    &:hover { 
+    &:hover {
       h2 {
         position: relative;
         background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 210px center;
@@ -402,9 +402,9 @@ td {
           border-top: 10px solid transparent;
           border-bottom: 10px solid transparent;
           border-left: 8px solid $gray1;
-        }  
+        }
       }
-      ul { 
+      ul {
         display: block;
         a {
           display: block !important;
@@ -470,7 +470,7 @@ td {
         margin-left: 25px;
         a, a:hover {
           background-position: left center;
-          padding: 5px 0 5px 20px; 
+          padding: 5px 0 5px 20px;
         }
       }
     }
@@ -548,12 +548,12 @@ td {
 // -------------------------------------------------------------------------------------------------
 // menu
 #menu {
-  .act-menu {
+  .nav-menu {
     margin-left: 268px;
     padding: 24px 24px 24px 0;
     @include mb {
       margin: 0;
-      padding: 10px;      
+      padding: 10px;
     }
     a {
       display: inline-block;
@@ -582,7 +582,7 @@ td {
     @include box-head;
   }
   .see {
-    padding: 0 24px 28px; 
+    padding: 0 24px 28px;
     @include mb {
       padding: 0 10px 10px;
     }
@@ -900,7 +900,7 @@ footer.send {
 
 // -------------------------------------------------------------------------------------------------
 // search-form
-.search-form {
+.list-search {
   @include clear;
   @include box;
   margin-bottom: 24px;
@@ -908,11 +908,11 @@ footer.send {
   @include mb { margin: 0 10px 10px; }
   form {
     float: right;
-    @include mb { 
+    @include mb {
       float: none;
       #s_keyword {
         margin-bottom: 10px;
-      }      
+      }
     }
   }
 }
@@ -923,7 +923,7 @@ div.index {
   @include box;
   position: static;
   @include mb { margin: 0 10px 10px; }
-  .toolbar {
+  .list-head {
     padding: 20px;
     border-bottom: $border-gray1;
     font-weight: bold;
@@ -947,18 +947,18 @@ div.index {
       float: left;
       padding: 10px 0;
     }
-    .info { @include mb { margin-left: 40px; } }
+    .list-item-info { @include mb { margin-left: 40px; } }
     .title {
       color: $orange;
       font-size: $px16;
       @include mb { font-size: $px14; }
     }
-    .meta span {
+    .list-item-meta span {
       margin-right: 20px;
       font-size: $px12;
     }
   }
-  .tap-menu, .multiple-menu {
+  .list-item-tap, .multiple-menu {
     display: none;
     position: absolute;
     z-index: 100;

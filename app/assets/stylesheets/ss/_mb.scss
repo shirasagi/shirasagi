@@ -104,7 +104,7 @@ body {
 
 // -------------------------------------------------------------------------------------------------
 // menu
-nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
+nav.main-menu, nav.sub-menu, nav.nav-menu, nav.page-menu, nav.addon-menu {
   @include clear;
   margin: 0;
   background-color: $white;
@@ -143,11 +143,11 @@ nav.main-menu, nav.sub-menu, nav.act-menu, nav.page-menu, nav.addon-menu {
 #mod-menu a {
   display: block !important;
 }
-.act-menu {
+.nav-menu {
   @include clear;
   padding: 10px;
 }
-nav.act-menu a {
+nav-menu a {
   display: inline-block;
   @include btn;
   padding: 8px 15px 5px;
@@ -155,12 +155,12 @@ nav.act-menu a {
 nav.addon-menu header h1, nav.page-menu header h1 {
   border: none;
 }
-nav.act-menu div {
+nav-menu div {
   padding: 0;
 }
 // -------------------------------------------------------------------------------------------------
 // common
-.search-form {
+.list-search {
   margin-bottom: 10px;
 }
 .index-search {
@@ -232,7 +232,7 @@ table.index {
       float: right;
       color: #888;
     }
-    nav.tap-menu {
+    nav.list-item-tap {
       display: none;
       position: absolute;
       z-index: 100;

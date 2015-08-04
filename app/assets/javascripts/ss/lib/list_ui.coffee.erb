@@ -3,10 +3,10 @@ class @SS_ListUI
     $("div.index li").each ->
       tr    = $(this)
       tbody = tr.parent()
-      tr.find(".tap-menu a").each ->
+      tr.find(".list-item-tap a").each ->
         if $(this).attr("href")[-6..-1] == "delete"
           h = "<nav class='multiple-menu'><a href='multipleDelete' ><%= I18n.t 'views.links.delete_all' %></a></nav>"
-          tr.find(".tap-menu").after(h)
+          tr.find(".list-item-tap").after(h)
       tr.find("input[type=checkbox]").each ->
         tr.toggleClass("checked", $(this).prop("checked"))
       tr.find("input[type=checkbox]").change ->
@@ -23,10 +23,10 @@ class @SS_ListUI
         if !$(e.target).is('a') && !$(e.target).is("input")
           tbody.find("input[type=checkbox]").attr("checked", false)
           tbody.find("tr").removeClass("checked")
-          tr.find(".tap-menu").css("left", e.pageX + 2).css("top", e.pageY).show()
+          tr.find(".list-item-tap").css("left", e.pageX + 2).css("top", e.pageY).show()
           tr.find("input[type=checkbox]").trigger("click")
       tr.mouseleave ->
-        tr.find(".tap-menu").hide()
+        tr.find(".list-item-tap").hide()
         tr.find(".multiple-menu").hide()
       tr.find(".multiple-menu a").on "click", (e) ->
         if $(this).attr("href") == "multipleDelete"
