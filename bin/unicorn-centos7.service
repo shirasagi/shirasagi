@@ -1,0 +1,17 @@
+# rvm wrapper 2.2.2 start unicorn
+
+[Unit]
+Description=SHIRASAGI Unicorn Server
+
+[Service]
+WorkingDirectory=/var/www/shirasagi
+Environment=RAILS_ENV=production
+SyslogIdentifier=unicorn
+PIDFile=/var/www/shirasagi/tmp/pids/unicorn.pid
+
+ExecStart=/usr/local/rvm/bin/start_unicorn  -c config/unicorn.rb -E production -D
+ExecStop=/usr/bin/kill -QUIT $MAINPID
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
