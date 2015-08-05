@@ -56,7 +56,7 @@ ja:
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
         comment: 差し戻しコメント
-      workflow/route/model:
+      workflow/model/route:
         name: 名前
         approvers: 承認者
         required_counts: 必要承認数
