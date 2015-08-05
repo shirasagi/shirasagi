@@ -16,8 +16,13 @@ target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") 
     <% @items.each do |item| %>
     <% file = item.file %>
     <% next unless file %>
+
     <li>
-      <a href="<%= item.link_url %>" <%== target %>><%= image_tag file.url, alt: item.name %></a>
+      <% if item.link_url.present? %>
+        <a href="<%= item.link_url %>" <%== target %>><%= image_tag file.url, alt: item.name %></a>
+      <% else %>
+        <%= image_tag file.url, alt: item.name %>
+      <% end %>
     </li>
     <% end %>
   </ul>

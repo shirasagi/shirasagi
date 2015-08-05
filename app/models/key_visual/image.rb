@@ -12,7 +12,6 @@ class KeyVisual::Image
 
   belongs_to_file :file
 
-  validates :link_url, presence: true
   validates :in_file, presence: true, if: -> { file_id.blank? }
 
   before_save :seq_filename, if: ->{ basename.blank? }

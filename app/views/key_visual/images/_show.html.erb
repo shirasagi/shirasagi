@@ -2,8 +2,10 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
+  <% if @item.link_url.present? %>
   <dt><%= @model.t :link_url %></dt>
   <dd><%= link_to @item.link_url, @item.link_url, target: "_blank" %></dd>
+  <% end %>
 
   <dt><%= @model.t :file_id %></dt>
   <dd><%= show_image_info @item.file %></dd>
