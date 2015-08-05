@@ -141,7 +141,9 @@ module SS::Document
       records = self.limit(batch_size).skip(offset).to_a
       while records.any?
         records_size = records.size
-        yield records
+        with_scope(Mongoid::Criteria.new(self)) do
+          yield records
+        end
         break if records_size < batch_size
         offset += batch_size
         records = self.limit(batch_size).skip(offset).to_a
