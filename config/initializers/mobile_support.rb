@@ -58,21 +58,21 @@ module SS
     module_function :embed_mobile_path
   end
 
-  module MobileUrlFor
-    extend ActiveSupport::Concern
-
-    included do
-      helper_method :url_for
-    end
-
-    def url_for(options = nil, *parameters)
-      url = super
-      if SS::MobileSupport.mobile?(request)
-        url = SS::MobileSupport.embed_mobile_path(request, url)
-      end
-      url
-    end
-  end
+  # module MobileUrlFor
+  #   extend ActiveSupport::Concern
+  #
+  #   included do
+  #     helper_method :url_for
+  #   end
+  #
+  #   def url_for(*args)
+  #     url = super
+  #     if SS::MobileSupport.mobile?(request)
+  #       url = SS::MobileSupport.embed_mobile_path(request, url)
+  #     end
+  #     url
+  #   end
+  # end
 
   module MobileRedirecting
     extend ActiveSupport::Concern
@@ -97,6 +97,6 @@ HTML
 end
 
 ActiveSupport.on_load(:action_controller) do
-  include SS::MobileUrlFor
+  # include SS::MobileUrlFor
   include SS::MobileRedirecting
 end

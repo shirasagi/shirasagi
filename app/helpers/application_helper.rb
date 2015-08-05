@@ -36,6 +36,14 @@ module ApplicationHelper
     super *args
   end
 
+  def url_for(*args)
+    url = super
+    if SS::MobileSupport.mobile?(request)
+      url = SS::MobileSupport.embed_mobile_path(request, url)
+    end
+    url
+  end
+
   def jquery(&block)
     javascript_tag do
       "$(function() {\n#{capture(&block)}\n});".html_safe
