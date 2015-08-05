@@ -1,5 +1,6 @@
 module SS::AgentFilter
   extend ActiveSupport::Concern
+  include SS::TransSidFilter
 
   included do
     before_action :inherit_variables

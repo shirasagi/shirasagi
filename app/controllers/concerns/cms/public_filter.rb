@@ -42,8 +42,10 @@ module Cms::PublicFilter
 
   private
     def set_site
-      host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
-      @cur_site ||= SS::Site.find_by_domain host
+      @cur_site ||= begin
+        host = request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"] || request.host_with_port
+        request.env["ss.site"] = SS::Site.find_by_domain host
+      end
       raise "404" if !@cur_site
     end
 

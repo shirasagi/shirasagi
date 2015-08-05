@@ -2,6 +2,8 @@
 
 production: &production
   location: /mobile
+  # you can specify one of these: none, mobile, always
+  trans_sid: none
 
 test:
   <<: *production
