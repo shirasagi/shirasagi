@@ -17,6 +17,8 @@ body {
 }
 #page {
   position: relative;
+  min-height: 100%;
+  background: $gray1;
   font-size: 87.5%;
   &:after {
     content: "";
@@ -482,11 +484,11 @@ td {
 #main {
   float: right;
   width: 100%;
-  margin-left: -100%;
+  margin: 0 0 100px -100%;
   background: $gray1;
   @include mb {
     float: none;
-    margin: 0;
+    margin: 0 0 100px 0;
   }
 }
 #main .wrap {
@@ -497,23 +499,27 @@ td {
 // -------------------------------------------------------------------------------------------------
 // foot
 #foot {
-  background: $gray1;
-  padding: 40px 15px 15px 268px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
   text-align: right;
   @incldue mb { padding: 10px; }
 }
-
+#ss-mb, #ss-pc {
+  margin-top: 10px;
+  @include btn;
+}
 // -------------------------------------------------------------------------------------------------
-// crumbs
-#crumbs {
+// breadcrumb
+.breadcrumb {
+  @include clear;
+  margin: 0;
   padding-left: 240px;
   border-bottom: $border-gray4;
   background: $gray5;
+  list-style: none;
   @include mb { display: none; }
-  nav {
-    @include clear;
-  }
-  .link {
+  li {
     float: left;
     &:first-child a:before {
       border: none;
@@ -726,12 +732,26 @@ footer.send {
   input, button {
     margin: 0 8px;
     @include btn-gray-l;
+    @include mb {
+      margin: 0 4px;
+    }
   }
   input.publish_save, input.save, button.save, input.delete {
     @include btn-red;
   }
 }
 
+// -------------------------------------------------------------------------------------------------
+// button
+.btn-primary {
+  @include btn-red;
+}
+.btn-default {
+  @include btn-gray-l;
+}
+.btn-success {
+  @include btn-orange;
+}
 // -------------------------------------------------------------------------------------------------
 // addon
 #addon-cms-agents-addons-file .see, .addon-view .see {
@@ -936,7 +956,7 @@ div.index {
     margin: 0;
     padding: 0;
   }
-  li {
+  .list-item {
     padding: 16px 20px;
     border-bottom: $border-gray1;
     @include mb { padding: 8px 10px; }

@@ -36,6 +36,7 @@ $px31:222%;
 $px32:229%;
 
 // color
+$white: #ffffff;
 $black: #000000;
 $black2: #2b2b2b;
 $black3: #333333;
@@ -47,15 +48,11 @@ $gray5: #dcdcdc;
 $orange: #f25a38;
 $orange2: #fbebe8;
 
-$rblack: #131313;
-$white: #ffffff;
 $red: #bb1f24;
 $pink: #ea4c89;
 $blue: #0066cc;
 $green: #2bb496;
-
 $gray6: #434343;
-
 
 //border
 $border-black: 1px solid $black;
@@ -64,15 +61,6 @@ $border-gray1: 1px solid $gray1;
 $border-gray2: 1px solid $gray2;
 $border-gray4: 1px solid $gray4;
 $border-white: 1px solid $white;
-
-$border-pink: 5px solid $pink;
-$border-green: 5px solid $green;
-$border-black: 1px solid $rblack;
-$border-gray2: 1px solid $gray2;
-$border-gray3: 1px solid $gray3;
-$border-gray4: 1px solid $gray4;
-$border-gray5: 1px solid $gray5;
-$border-gray6: 1px solid $gray6;
 
 @mixin pc {
   //@media only screen and (min-width: 640px) { @content; }
@@ -138,51 +126,17 @@ $border-gray6: 1px solid $gray6;
     @include box-shadow(none);
   }
 }
-@mixin grd-orange1 {
-  background: #f2d150;
-  @include background-image(linear-gradient(top, #f2d150, #f2a950));
-  @include filter-gradient(#f2d150, #f2a950, vertical);
-  background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2YyZDE1MCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmMmE5NTAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-}
-@mixin grd-orange2 {
-  background: #f2a950;
-  @include background-image(linear-gradient(top, #f2a950, #f2d150));
-  @include filter-gradient(#f2a950, #f2d150, vertical);
-  background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2YyYTk1MCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmMmQxNTAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-}
-@mixin grd-gray1 {
-  background: #ebecec;
-  @include background-image(linear-gradient(top, #ebecec, $white));
-  @include filter-gradient(#ebecec, $white, vertical);
-}
-@mixin grd-gray2 {
-  background: #b9b9b9;
-  @include background-image(linear-gradient(top, #eeeeee, #b9b9b9));
-  @include filter-gradient(#eeeeee, #b9b9b9, vertical);
-  background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VlZWVlZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiOWI5YjkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-}
-@mixin grd-red1 {
-  background: #b23a3d;
-  @include background-image(linear-gradient(top, #b23a3d, #e13026));
-  @include filter-gradient(#b23a3d, #e13026, vertical);
-}
-@mixin grd-red2 {
-  background: #e13026;
-  @include background-image(linear-gradient(top, #e13026, #b23a3d));
-  @include filter-gradient(#e13026, #b23a3d, vertical);
-  background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2UxMzAyNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiMjNhM2QiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-}
 @mixin btn {
   display: inline-block;
   padding: 5px 12px;
   border: $border-gray2;
   @include border-radius(3px);
-  @include grd-gray1;
+  background: #ebecec;
   color: $black;
   font-size: $px12;
   cursor: pointer;
   &:hover {
-    @include grd-gray2;
+    background: #b9b9b9;
     text-decoration:none;
   }
 }
@@ -191,13 +145,17 @@ $border-gray6: 1px solid $gray6;
   padding: 12px 16px;
   border: $border-gray2;
   @include border-radius(6px);
-  @include grd-gray1;
+  background: #ebecec;
   color: $black;
   font-size: $px16;
   cursor: pointer;
   &:hover {
-    @include grd-gray2;
+    background: #b9b9b9;
     text-decoration:none;
+  }
+  @include mb {
+    font-size: $px14;
+    padding: 5px 12px;
   }
 }
 @mixin btn-orange {
@@ -205,12 +163,12 @@ $border-gray6: 1px solid $gray6;
   padding: 5px 12px;
   border: $border-gray2;
   @include border-radius(6px);
-  @include grd-orange1;
+  background: #f2d150;
   color: $black;
   font-size: $px12;
   cursor: pointer;
   &:hover {
-    @include grd-orange2;
+    background: #f2a950;
     text-decoration:none;
   }
 }
@@ -219,13 +177,17 @@ $border-gray6: 1px solid $gray6;
   padding: 12px 16px;
   border: $border-gray2;
   @include border-radius(6px);
-  @include grd-red1;
+  background: #e13026;
   color: $white;
   font-size: $px16;
   cursor: pointer;
   &:hover {
-    @include grd-red2;
+    background: #b23a3d;
     text-decoration:none;
+  }
+  @include mb {
+    font-size: $px12;
+    padding: 5px 12px;
   }
 }
 
