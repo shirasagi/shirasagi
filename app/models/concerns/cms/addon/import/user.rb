@@ -78,16 +78,19 @@ module Cms::Addon::Import
         item.uid = uid
         item.ldap_dn = ldap_dn
         item.group_ids = SS::Group.in(name: groups).map(&:id)
-        site_role_ids =  Cms::Role.site(@cur_site).map(&:id)
-        add_role_ids =  Cms::Role.site(@cur_site).in(name: cms_roles).map(&:id)
-        item.cms_role_ids = item.cms_role_ids - site_role_ids + add_role_ids
-
+        add_cms_roles(item, cms_roles)
         if item.save
           @imported += 1
         else
           set_errors(item, index)
         end
         item
+      end
+
+      def add_cms_roles(item, cms_roles)
+        site_role_ids = Cms::Role.site(@cur_site).map(&:id)
+        add_role_ids = Cms::Role.site(@cur_site).in(name: cms_roles).map(&:id)
+        item.cms_role_ids = item.cms_role_ids - site_role_ids + add_role_ids
       end
 
       def set_errors(item, index)
