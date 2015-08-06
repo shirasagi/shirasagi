@@ -394,6 +394,8 @@ save_node route: "facility/page", filename: "institution/shisetsu/library", name
   location_ids: facility_locations.values.map(&:id),
   service_ids: facility_services.values.map(&:id)
 
+save_node route: "key_visual/image", filename: "key_visual", name: "キービジュアル"
+
 ## inquiry
 def save_inquiry_column(data)
   puts data[:name]
@@ -597,6 +599,7 @@ save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name
 save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
 save_part route: "ads/banner", filename: "add/add.part.html", name: "広告バナー", mobile_view: "hide"
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
+save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
 
 ## -------------------------------------
 puts "# pages"
@@ -846,6 +849,23 @@ def save_editor_template(data)
 
   item
 end
+
+puts "# key visual"
+keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
+keyvisual2 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", model: "key_visual/image"
+keyvisual3 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", model: "key_visual/image"
+keyvisual4 = save_ss_files "ss_files/key_visual/keyvisual04.jpg", filename: "keyvisual04.jpg", model: "key_visual/image"
+keyvisual5 = save_ss_files "ss_files/key_visual/keyvisual05.jpg", filename: "keyvisual05.jpg", model: "key_visual/image"
+keyvisual1.set(state: "public")
+keyvisual2.set(state: "public")
+keyvisual3.set(state: "public")
+keyvisual4.set(state: "public")
+keyvisual5.set(state: "public")
+save_page route: "key_visual/image", filename: "key_visual/1.html", name: "キービジュアル1", order: 10, file_id: keyvisual1.id
+save_page route: "key_visual/image", filename: "key_visual/2.html", name: "キービジュアル2", order: 20, file_id: keyvisual2.id
+save_page route: "key_visual/image", filename: "key_visual/3.html", name: "キービジュアル3", order: 30, file_id: keyvisual3.id
+save_page route: "key_visual/image", filename: "key_visual/4.html", name: "キービジュアル4", order: 40, file_id: keyvisual4.id
+save_page route: "key_visual/image", filename: "key_visual/5.html", name: "キービジュアル5", order: 50, file_id: keyvisual5.id
 
 puts "# editor templates"
 thumb_left  = save_ss_files("editor_templates/float-left.jpg", filename: "float-left.jpg", model: "cms/editor_template")

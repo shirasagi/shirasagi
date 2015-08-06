@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
-  <link href="/css/style.css" media="all" rel="stylesheet" />
+  <link href="/css/style.css" media="all" rel="stylesheet" }}
   <script src="/js/common.js"></script>
   <!--[if lt IE 9]>
   <script src="/js/selectivizr.js"></script>
@@ -11,42 +11,42 @@
 <body>
 <div id="page">
 
-</ part "tool" />
-</ part "head" />
-</ part "navi" />
+{{ part "tool" }}
+{{ part "head" }}
+{{ part "navi" }}
 
 <div id="wrap">
   <div id="main">
-    </ part "keyvisual" />
+    {{ part "key_visual/slide" }}
     <div class="wrap">
       <div class="left">
-        </ part "guide" />
-        </ part "about" />
+        {{ part "guide" }}
+        {{ part "about" }}
       </div>
       <div class="center">
-        </ part "safety" />
-        </ part "online" />
-        </ part "propose" />
+        {{ part "safety" }}
+        {{ part "online" }}
+        {{ part "propose" }}
       </div>
     </div>
   </div>
   <div id="side">
-    </ part "attention/recent" />
-    <section></ part "recent-tabs" /></section>
+    {{ part "attention/recent" }}
+    <section>{{ part "recent-tabs" }}</section>
   </div>
 </div>
 <div id="addition">
   <div class="left">
-    </ part "useful" />
-    </ part "population" />
+    {{ part "useful" }}
+    {{ part "population" }}
   </div>
   <div class="center">
-    </ part "relations" />
-    </ part "ranking" />
+    {{ part "relations" }}
+    {{ part "ranking" }}
   </div>
   <div class="right">
-    </ part "topics" />
-    </ part "connect" />
+    {{ part "topics" }}
+    {{ part "connect" }}
   </div>
 </div>
 
@@ -55,10 +55,10 @@
     <h1>広告</h1>
   </header>
   <div class="info"><a href="#">広告バナーのご案内</a></div>
-  </ part "add/add" />
+  {{ part "add/add" }}
 </div>
-</ part "page-top" />
-</ part "foot" />
+{{ part "page-top" }}
+{{ part "foot" }}
 
 </div>
 </body>
