@@ -88,6 +88,10 @@ module SS::Model::File
       "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
     end
 
+    def public?
+      state == "public"
+    end
+
     def state_options
       [[I18n.t('views.options.state.public'), 'public']]
     end

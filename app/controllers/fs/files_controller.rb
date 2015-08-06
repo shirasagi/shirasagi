@@ -1,7 +1,9 @@
 class Fs::FilesController < ApplicationController
+  include SS::AuthFilter
   include Fs::FileFilter
 
   before_action :set_item
+  before_action :deny
 
   private
     def set_item
@@ -9,7 +11,12 @@ class Fs::FilesController < ApplicationController
       path  = params[:filename]
       path << ".#{params[:format]}" if params[:format].present?
 
-      @item = SS::File.find_by id: id, filename: path, state: "public"
+      @item = SS::File.find_by id: id, filename: path
+    end
+
+    def deny
+      return if @item.public?
+      raise "404" unless get_user_by_session
     end
 
     def set_last_modified

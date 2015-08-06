@@ -8,6 +8,6 @@ class Sns::Apis::TempFilesController < ApplicationController
 
   private
     def fix_params
-      { cur_user: @cur_user, state: "public" }
+      { cur_user: @cur_user }
     end
 end
