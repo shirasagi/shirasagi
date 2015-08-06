@@ -1,5 +1,6 @@
 module SS::BaseFilter
   extend ActiveSupport::Concern
+  include SS::AuthFilter
   include SS::LayoutFilter
   include History::LogFilter
 
@@ -48,14 +49,7 @@ module SS::BaseFilter
 
     def logged_in?
       return @cur_user if @cur_user
-
-      if session[:user]
-        u = SS::Crypt.decrypt(session[:user]).to_s.split(",", 3)
-        #return unset_user redirect: true if u[1] != remote_addr.to_s
-        #return unset_user redirect: true if u[2] != request.user_agent.to_s
-        @cur_user = self.user_class.find u[0].to_i rescue nil
-      end
-
+      @cur_user = get_user_by_session
       return @cur_user if @cur_user
       unset_user
 

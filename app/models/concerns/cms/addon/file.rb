@@ -24,18 +24,16 @@ module Cms::Addon
     end
 
     def save_files
-      return true unless file_ids_changed?
-
       add_ids = file_ids - file_ids_was.to_a
 
       ids = []
       files.each do |file|
         if !add_ids.include?(file.id)
-          #
+          file.update_attributes(state: state) if state_changed?
         elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
           next
         else
-          file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: "public")
+          file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
         end
         ids << file.id
       end
