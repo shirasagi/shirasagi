@@ -68,7 +68,9 @@ module SS::Relation::Thumb
       thumbs_resizing.each do |name, size|
         file = thumbs_was.delete(size)
         if file
-          file.update_attributes(filename: filename, state: state) if state_changed? || filename_changed?
+          if state_changed? || filename_changed? || site_id_changed?
+            file.update_attributes(filename: filename, state: state, site_id: site_id)
+          end
           file.set(image_size_name: name) if name != file.image_size_name
         else
           file = SS::ThumbFile.new
