@@ -57,7 +57,6 @@ img {
     width: $page-width;
     margin: 0 auto;
     padding: 5px 10px;
-    position: relative;
     #nocssread {
       float: left;
       padding-right: 10px;
@@ -83,16 +82,14 @@ img {
         }
       }
     }
-    #ss-voice-controller {
-      position: absolute;
-      top: 100%;
-      right: 10px;
-    }
     #ss-voice {
-      padding: 0 10px;
+      position: relative;
+      padding: 0 10px 0 35px;
       background: url(../img/voice.png) no-repeat 10px center;
-      a {
-        padding-left: 23px;
+      .ss-voice-container {
+        position: absolute;
+        top: 100%;
+        left: 0;
       }
     }
     #ss-kana {
@@ -370,49 +367,37 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 // -----------------------------------------------------------------------------
-// slideshow
-#slideshow {
+// slide
+.key_visual-slide {
   margin: $box-margin 0;
-  border-top: 5px solid #333;
-  #slide-photo {
-    position: relative;
-    height: 210px;
-    margin-bottom: 1px solid #fff;
+  padding: 5px 0;
+  background: #333;
+  .bx-controls {
+    padding: 0 10px;
+    background: #333;
+    text-align: right;
     div {
-      position: absolute;
-      top: 0;
-      left: 0;
+      display: inline-block;
+    }
+    .bx-stop {
+      padding-left: 15px;
+      background: url(../img/stop.png) no-repeat left center;
+    }
+    .bx-start {
+      margin-right: 12px;
+      padding-left: 15px;
+      background: url(../img/play.png) no-repeat left center;
+    }
+    .bx-controls-auto-item a {
+      color: $t-white;
+      text-decoration: none;
     }
   }
-  #slide-controll {
-    @include clear;
-    padding: 6px;
-    border-bottom: 3px solid $orange;
-    background: #333;
-    #slide-list {
-      float: left;
-      a {
-        float: left;
-        margin-right: 6px;
-        line-height: 1;
-      }
-    }
-    #pause-play {
-      float: right;
-      line-height: 1;
-      .pause a {
-        padding-left: 15px;
-        background: url(../img/stop.png) no-repeat left center;
-      }
-      .play a {
-        margin-left: 12px;
-        padding-left: 15px;
-        background: url(../img/play.png) no-repeat left center;
-      }
-      a {
-        color: $t-white;
-        text-decoration: none;
-      }
+  .bx-thumbs {
+    padding: 0 10px;
+    a {
+      display: inline-block;
+      margin-bottom: 5px;
     }
   }
 }
@@ -2054,17 +2039,11 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     }
   }
 // -----------------------------------------------------------------------------
-//  slideshow
-  #slideshow {
-    margin: 0 0 $smart-margin;
-    #slide-photo {
-      height: auto;
-      div:first-child {
-        position: relative;
-      }
-      img {
-        width: 100%;
-      }
+//  slide
+  .key_visual-slide {
+    margin: $smart-margin 0;
+    .bx-controls, .bx-thumbs {
+      display :none;
     }
   }
 // -----------------------------------------------------------------------------
