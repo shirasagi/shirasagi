@@ -602,8 +602,6 @@ save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile
 save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
 
 ## -------------------------------------
-puts "# pages"
-
 def save_page(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
@@ -621,12 +619,6 @@ def save_page(data)
 
   item
 end
-
-save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id
-save_page route: "cms/page", filename: "mobile.html", name: "スマートフォン・携帯サイト", layout_id: layouts["pages"].id
-save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: layouts["one"].id
-save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
-save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内", layout_id: layouts["category-middle"].id
 
 ## -------------------------------------
 puts "# articles"
@@ -884,3 +876,10 @@ thumb_right.set(state: "public")
 editor_template_html = File.read("editor_templates/clear.html") rescue nil
 save_editor_template name: "回り込み解除", description: "回り込みを解除します",
   html: editor_template_html, order: 30, site_id: @site.id
+
+puts "# cms pages"
+save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id
+save_page route: "cms/page", filename: "mobile.html", name: "スマートフォン・携帯サイト", layout_id: layouts["pages"].id
+save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: layouts["one"].id
+save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
+save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内", layout_id: layouts["category-middle"].id
