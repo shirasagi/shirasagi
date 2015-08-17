@@ -4,7 +4,6 @@ class Cms::Node::ConfsController < ApplicationController
 
   model Cms::Node
 
-  append_view_path "app/views/cms/nodes"
   navi_view "cms/node/main/navi"
 
   private

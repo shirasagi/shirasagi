@@ -986,11 +986,6 @@ div.index {
     label {
       float: left;
       padding: 10px 0;
-      input {
-        width: 20px;
-        height: 20px;
-        -moz-transform: scale(1.4);
-      }
     }
     .list-item-info { @include mb { margin-left: 40px; } }
     .list-item-title {

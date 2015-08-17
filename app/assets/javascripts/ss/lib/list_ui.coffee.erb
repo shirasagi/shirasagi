@@ -1,45 +1,21 @@
 class @SS_ListUI
-  @render: (list)->
-    $("div.index li").each ->
-      tr    = $(this)
-      tbody = tr.parent()
-      tr.find(".list-item-tap a").each ->
-        if $(this).attr("href")[-6..-1] == "delete"
-          h = "<nav class='multiple-menu'><a href='multipleDelete' ><%= I18n.t 'views.links.delete_all' %></a></nav>"
-          tr.find(".list-item-tap").after(h)
-      tr.find("input[type=checkbox]").each ->
-        tr.toggleClass("checked", $(this).prop("checked"))
-      tr.find("input[type=checkbox]").change ->
-        tr.toggleClass("checked", $(this).prop("checked"))
-        chkcnt = 0
-        for chkbox in $("input[name='ids[]']")
-          chkcnt++ if chkbox.checked
-        $("thead input[type=checkbox]").
-          prop("checked", (chkcnt > 0 && $("input[name='ids[]']").length == chkcnt) )
-        tr.find(".multiple-menu").hide() if !@checked
-      tr.find("input[type=checkbox]").mouseover (e) ->
-        tr.find(".multiple-menu").css("left", e.pageX + 15).css("top", e.pageY - 5).show() if @checked
-      tr.mouseup (e) ->
-        if !$(e.target).is('a') && !$(e.target).is("input")
-          tbody.find("input[type=checkbox]").attr("checked", false)
-          tbody.find("tr").removeClass("checked")
-          tr.find(".list-item-tap").css("left", e.pageX + 2).css("top", e.pageY).show()
-          tr.find("input[type=checkbox]").trigger("click")
-      tr.mouseleave ->
-        tr.find(".list-item-tap").hide()
-        tr.find(".multiple-menu").hide()
-      tr.find(".multiple-menu a").on "click", (e) ->
-        if $(this).attr("href") == "multipleDelete"
-          return false unless confirm("<%= I18n.t "views.confirm.delete" %>")
-          e.preventDefault();
-          for chkbox in $("input[name='ids[]']")
-            if chkbox.checked
-              return if SS_ListUI.deleteitem( chkbox.value ).status != 200
-              chkbox.checked = false
-          location.reload()
-    $("thead input[type=checkbox]").change ->
-      for chkbox in $("input[name='ids[]']")
-        chkbox.checked = @checked
+  @render: ->
+    $(".list-item").each ->
+      list = $(this)
+      list.find("input:checkbox").change ->
+        list.toggleClass("checked", $(this).prop("checked"))
+      list.mouseup (e) ->
+        if !$(e.target).is('a') && !$(e.target).is("input") && !$(e.target).is("label")
+          $('.list-item input:checkbox').prop('checked', false)
+          $('.list-item').removeClass('checked')
+          list.find(".list-item-tap").css("left", e.pageX).css("top", e.pageY).show()
+          list.find("input:checkbox").trigger("click")
+      list.mouseleave ->
+        $(".list-item-tap").hide()
+    $(".list-head input:checkbox").change ->
+      chk = $(this).prop('checked')
+      $('.list-item input:checkbox').each ->
+        $(this).prop('checked', chk)
 
   @deleteitem: (id)->
     $.ajax

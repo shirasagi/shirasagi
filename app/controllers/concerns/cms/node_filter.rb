@@ -3,7 +3,7 @@ module Cms::NodeFilter
   include Cms::CrudFilter
 
   included do
-    #append_view_path "app/views/cms/nodes"
+    prepend_view_path "app/views/cms/nodes"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move]
     before_action :change_item_class, if: -> { @item.present? }
   end
