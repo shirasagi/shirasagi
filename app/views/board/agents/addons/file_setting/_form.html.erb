@@ -1,0 +1,13 @@
+<dl class="see mod-board-file-setting">
+  <dt><%= @model.t :file_limit %><%= @model.tt :file_limit %></dt>
+  <dd><%= f.select :file_limit, @item.file_limit_options %></dd>
+
+  <dt><%= @model.t :file_size_limit %><%= @model.tt :file_size_limit %></dt>
+  <dd><%= f.select :file_size_limit, @item.file_size_limit_options %></dd>
+
+  <dt><%= @model.t :file_ext_limit %><%= @model.tt :file_ext_limit %></dt>
+  <dd><%= f.text_area :file_ext_limit, value: @item.file_ext_limit.join("\n") %></dd>
+
+  <dt><%= @model.t :file_scan %><%= @model.tt :file_scan %></dt>
+  <dd><%= f.select :file_scan, @item.file_scan_options %></dd>
+</dl>

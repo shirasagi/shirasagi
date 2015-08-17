@@ -1,0 +1,20 @@
+<%= @cur_node.upper_html.to_s.html_safe %>
+<nav class="menu">
+  <%= link_to :back_to_index, @cur_node.url %>
+</nav>
+<%= form_for :item, url: "create", html: { method: :post, multipart: true, autocomplete: :off } do |f| %>
+
+<div class="board-post-form">
+  <%= error_messages_for :item, header_message: false %>
+  <%= render partial: "form", locals: { f: f, reply: true }  %>
+  <% if @cur_node.captcha_enabled? %>
+    <%= show_simple_captcha(object: :item, code_type: 'numeric', input_html: { required: nil }) %>
+  <% end %>
+  <footer class="send">
+    <%= f.submit "投稿" %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+  </footer>
+</div>
+
+<% end %>
+<%= @cur_node.lower_html.to_s.html_safe %>
