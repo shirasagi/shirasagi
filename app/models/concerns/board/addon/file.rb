@@ -45,6 +45,21 @@ module Board::Addon
           errors.add :base, "#{item.name}#{I18n.t("errors.messages.invalid_file_type")}"
         end
       end
+      return unless errors.empty?
+
+      if node.file_scan_enabled?
+        in_files.each do |file|
+          begin
+            if !SS::FileScanner.scan(file)
+              errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
+              return
+            end
+          rescue => e
+            errors.add :base, I18n.t("errors.messages.file_scan_exception")
+            return
+          end
+        end
+      end
     end
 
     def save_in_files

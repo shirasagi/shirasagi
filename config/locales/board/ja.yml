@@ -49,6 +49,9 @@ ja:
         10MB: 10MB
         20MB: 20MB
         100MB: 100MB
+      file_scan:
+        enabled: 使用する
+        disabled: 使用しない
 
   modules:
     board: 掲示板
@@ -102,6 +105,7 @@ ja:
         file_limit: 添付ファイル
         file_size_limit: 容量制限
         file_ext_limit: ファイル拡張子
+        file_scan: ウイルスチェック
 
   tooltip:
     board/addon/list:
@@ -140,3 +144,5 @@ ja:
       file_ext_limit:
         - 添付可能なファイルの拡張子を指定します。
         - 指定がない場合は制限無く添付可能となります。
+      file_scan:
+        - 添付ファイルのウイルススキャンを有効にできます。

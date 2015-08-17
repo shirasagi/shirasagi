@@ -7,4 +7,7 @@
 
   <dt><%= @model.t :file_ext_limit %></dt>
   <dd><%=br @item.file_ext_limit.present? ? @item.file_ext_limit : t("board.views.unlimited") %></dd>
+
+  <dt><%= @model.t :file_scan %></dt>
+  <dd><%= @item.label :file_scan %></dd>
 </dl>

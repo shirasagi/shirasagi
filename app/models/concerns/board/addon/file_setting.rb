@@ -9,8 +9,9 @@ module Board::Addon
       field :file_limit, type: Integer, default: 0
       field :file_size_limit, type: Integer, default: (2 * 1024 * 1024)
       field :file_ext_limit, type: SS::Extensions::Words, default: ""
+      field :file_scan, type: String, default: "disabled"
 
-      permit_params :file_limit, :file_size_limit, :file_ext_limit
+      permit_params :file_limit, :file_size_limit, :file_ext_limit, :file_scan
     end
 
     public
@@ -18,8 +19,13 @@ module Board::Addon
         file_limit != 0
       end
 
+      def file_scan_enabled?
+        file_scan == "enabled"
+      end
+
       def file_ext_limit
-        SS::Extensions::Words.new(self[:file_ext_limit].map(&:downcase))
+        file_ext_limit = self[:file_ext_limit] || []
+        SS::Extensions::Words.new(file_ext_limit.map(&:downcase))
       end
 
       def file_limit_options
@@ -39,6 +45,13 @@ module Board::Addon
           [I18n.t('board.options.file_size_limit.20MB'), 20 * 1024 * 1024],
           [I18n.t('board.options.file_size_limit.100MB'), 100 * 1024 * 1024],
           [I18n.t('board.options.file_size_limit.none'), 0],
+        ]
+      end
+
+      def file_scan_options
+        [
+          [I18n.t('board.options.file_scan.disabled'), 'disabled'],
+          [I18n.t('board.options.file_scan.enabled'), 'enabled'],
         ]
       end
 
