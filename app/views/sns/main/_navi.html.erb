@@ -1,9 +1,9 @@
 <nav class="main-navi">
-  <h2><%= link_to :"sns.profile", sns_user_profile_path(@cur_user), class: "icon-none" %></h2>
-  <h2><%= link_to :"sns.file", sns_user_files_path(@cur_user), class: "icon-none" %></h2>
-  <h2><%= link_to :"sns.account", sns_user_account_path(@cur_user), class: "icon-none" %></h2>
+  <h2><%= link_to :"sns.profile", sns_user_profile_path(@cur_user) %></h2>
+  <h2><%= link_to :"sns.file", sns_user_files_path(@cur_user) %></h2>
+  <h2><%= link_to :"sns.account", sns_user_account_path(@cur_user) %></h2>
 
   <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h2><%= link_to :"modules.sys", sys_sites_path, class: "icon-none" %></h2>
+    <h2><%= link_to :"modules.sys", sys_sites_path %></h2>
   <% end %>
 </nav>

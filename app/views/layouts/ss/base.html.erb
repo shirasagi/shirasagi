@@ -33,27 +33,32 @@
   <div class="wrap">
     <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
 
-    <% curr = (request.path =~ /^\/\.s\d+/) ? "current" : nil %>
-    <div class="cms <%= curr %>">
-      <h2><%= link_to "CMS", "#" %></h2>
-      <% if @cur_site.present? %>
-      <p class="<%= 'current' if request.path =~ /^\/\.s\d+/ %>">
-        <%= link_to @cur_site.name, cms_contents_path(@cur_site) %></p>
+    <div class="cms">
+      <% if @cur_site %>
+      <h2><%= link_to "CMS", cms_contents_path(@cur_site), class: "current" %></h2>
+      <% else %>
+      <h2><%= link_to "CMS", "/.mypage" %></h2>
       <% end %>
     </div>
 
     <% if Rails.env.development? %>
-      <% curr = (request.path =~ /^\/\.g\d+/) ? "current" : nil %>
-      <div class="gws <%= curr %>">
-        <h2><a href="#/.g1">GWS</a></h2>
-      </div>
+    <div class="gws">
+      <% if @cur_org %>
+      <h2><%= link_to "GWS", "/.mypage", class: "current" %></h2>
+      <% else %>
+      <h2><%= link_to "GWS", "/.mypage" %></h2>
+      <% end %>
+    </div>
 
-      <% curr = (request.path =~ /^\/\.(u\d+|mypage)/) ? "current" : nil %>
-      <div class="sns <%= curr %>">
-        <h2><a href="/.mypage">SNS</a></h2>
-      </div>
+    <div class="sns">
+      <% if !@cur_site && !@cur_org %>
+      <h2><%= link_to "SNS", "/.mypage", class: "current" %></h2>
+      <% else %>
+      <h2><%= link_to "SNS", "/.mypage" %></h2>
+      <% end %>
+    </div>
 
-      <div class="env dev">[dev]</div>
+    <div class="env dev">[dev]</div>
     <% end %>
 
     <% if @cur_user %>

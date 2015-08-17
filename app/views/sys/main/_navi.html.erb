@@ -1,21 +1,21 @@
 <nav class="main-navi">
   <% if Sys::Site.allowed?(:edit, @cur_user) %>
-    <h2><%= link_to :"sys.site", sys_sites_path, class: "icon-none" %></h2>
+    <h2><%= link_to :"sys.site", sys_sites_path %></h2>
   <% end %>
   <% if Sys::Role.allowed?(:edit, @cur_user) %>
-    <h2><%= link_to :"sys.role", sys_roles_path, class: "icon-none" %></h2>
+    <h2><%= link_to :"sys.role", sys_roles_path %></h2>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h2><%= link_to :"sys.user", sys_users_path, class: "icon-none" %></h2>
+    <h2><%= link_to :"sys.user", sys_users_path %></h2>
   <% end %>
   <% if Sys::Group.allowed?(:edit, @cur_user) %>
-    <h2><%= link_to :"sys.group", sys_groups_path, class: "icon-none" %></h2>
+    <h2><%= link_to :"sys.group", sys_groups_path %></h2>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h2><%= link_to :"sys.test", sys_test_path, class: "icon-none" %></h2>
-    <h2><%= link_to :"sys.db_tool", sys_db_path, class: "icon-none" %></h2>
-    <h2><%= link_to :"history.log", history_sys_logs_path, class: "icon-none" %></h2>
+    <h2><%= link_to :"sys.test", sys_test_path %></h2>
+    <h2><%= link_to :"sys.db_tool", sys_db_path %></h2>
+    <h2><%= link_to :"history.log", history_sys_logs_path %></h2>
   <% end %>
 
-  <h2><%= link_to :"sys.info", sys_info_path, class: "icon-none" %></h2>
+  <h2><%= link_to :"sys.info", sys_info_path %></h2>
 </nav>

@@ -119,22 +119,25 @@ td {
   .cms h2 a {
     padding: 15px 20px 15px 55px;
     background: url(/assets/img/ic-cms-off.png) no-repeat 20px center;
-    &:hover {
+    &.current, &:hover {
       background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
+      color: $black;
     }
   }
   .gws h2 a {
     padding: 15px 20px 15px 70px;
     background: url(/assets/img/ic-gws-off.png) no-repeat 20px center;
-    &:hover {
+    &.current, &:hover {
       background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
+      color: $black;
     }
   }
   .sns h2 a {
     padding: 15px 20px 15px 60px;
     background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
-    &:hover {
+    &.current, &:hover {
       background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
+      color: $black;
     }
   }
   .env {
@@ -242,7 +245,7 @@ td {
 // site-navi
 .site-navi {
   @include clear;
-  border-bottom: $border-gray4;
+  border-bottom: $border-gray5;
   h2 {
     float: left;
     width: 120px;
@@ -283,7 +286,7 @@ td {
   h2 a {
     display: block;
     padding: 10px 15px;
-    border-bottom: $border-gray4;
+    border-bottom: $border-gray5;
     &:hover {
       text-decoration: none;
     }

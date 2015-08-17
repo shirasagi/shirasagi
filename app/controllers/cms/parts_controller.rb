@@ -8,7 +8,7 @@ class Cms::PartsController < ApplicationController
 
   private
     def set_crumbs
-      #@crumbs << [:"cms.part", action: :index]
+      @crumbs << [:"cms.part", action: :index]
     end
 
     def fix_params
