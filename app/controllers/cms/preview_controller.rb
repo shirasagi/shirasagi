@@ -10,7 +10,7 @@ class Cms::PreviewController < ApplicationController
 
   private
     def set_site
-      @cur_site = SS::Site.find_by host: params[:site]
+      @cur_site = SS::Site.find params[:site]
       @preview  = true
     end
 
