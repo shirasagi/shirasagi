@@ -1,0 +1,55 @@
+<%= jquery do %>
+SS_TreeUI.render(".topics");
+<% end %>
+
+<%= render file: "_search" %>
+
+<table class="index topics">
+  <thead>
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th><%= @model.t :name %></th>
+      <th class="datetime"><%= @model.t :updated %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |topic| %>
+      <tr data-depth="1">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= topic.id %>" />
+          <nav class="tap-menu">
+            <%= link_to :show, action: :show, id: topic %>
+            <%= link_to :edit, action: :edit, id: topic if topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to :reply, action: :new_reply, id: topic if topic.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to :delete, action: :delete, id: topic if topic.allowed?(:delete, @cur_user, site: @cur_site) %>
+            <%= link_to :pc_preview, cms_preview_path(path: "#{@cur_node.filename}/"), target: :_blank %>
+            <%= link_to :view_site, @cur_node.full_url, target: :_blank if @cur_node.public? %>
+          </nav>
+        </td>
+        <td class="expandable">
+          <%= link_to topic.name, action: :show, id: topic %>
+        </td>
+        <td><%= topic.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      </tr>
+      <% topic.children.order(descendants_updated: -1).each do |comment| %>
+        <tr data-depth="2">
+          <td class="checkbox">
+            <input type="checkbox" name="ids[]" value="<%= comment.id %>" />
+            <nav class="tap-menu">
+              <%= link_to :show, action: :show, id: comment %>
+              <%= link_to :edit, action: :edit, id: comment if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
+              <%= link_to :delete, action: :delete, id: comment if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
+              <%= link_to :pc_preview, cms_preview_path(path: "#{@cur_node.filename}/"), target: :_blank %>
+              <%= link_to :view_site, @cur_node.full_url, target: :_blank if @cur_node.public? %>
+            </nav>
+          </td>
+          <td class="expandable">
+            <%= link_to comment.name, action: :show, id: comment %>
+          </td>
+          <td><%= comment.updated.strftime("%Y/%m/%d %H:%M") %></td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

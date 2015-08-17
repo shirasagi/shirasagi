@@ -100,6 +100,10 @@ module SS::Model::File
       self[:name].presence || basename
     end
 
+    def humanized_name
+      "#{name} (#{extname.upcase} #{number_to_human_size(size)})"
+    end
+
     def basename
       filename.to_s.sub(/.*\//, "")
     end
