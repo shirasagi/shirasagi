@@ -1,0 +1,20 @@
+<%= jquery do %>
+$(".toggle").on("click", function() {
+  $(this).closest(".post").find(".children").toggle();
+  return false;
+});
+$(".children").hide();
+<% end %>
+
+<%= @cur_node.upper_html.to_s.html_safe %>
+<nav class="menu">
+  <%= link_to t("public_board.views.new"), "new" %>
+  <%= link_to t("public_board.views.search"), "search" %>
+</nav>
+
+<% @items.each do |topic| %>
+  <%= render partial: "post", locals: { item: topic, children: (@cur_node.mode == "tree") }  %>
+<% end %>
+<%= @cur_node.lower_html.to_s.html_safe %>
+
+<%= paginate @items if @items.try(:current_page) %>

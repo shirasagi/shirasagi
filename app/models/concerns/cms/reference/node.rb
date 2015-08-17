@@ -15,6 +15,11 @@ module Cms::Reference
       before_validation :set_node_id, if: ->{ @cur_node }
 
       scope :node, ->(node) { where(node_id: node.id) }
+      alias_method :cms_node, :node
+
+      define_method(:node) do
+        cms_node.becomes_with_route
+      end
     end
 
     private

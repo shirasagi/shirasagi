@@ -21,6 +21,7 @@ ja:
     role: ロール
     role_setting: ロール一括設定
     group_users: 所属ユーザー
+    required_field: ※必須入力
 
     button:
       save: 保存
@@ -53,6 +54,7 @@ ja:
       copy: 複製する
       delete: 削除する
       import: インポート
+      reply: 返信する
       back_to_show: 詳細へ戻る
       back_to_index: 一覧へ戻る
       parent_directory: 上の階層へ

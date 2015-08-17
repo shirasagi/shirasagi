@@ -1,0 +1,19 @@
+<%= @cur_node.upper_html.to_s.html_safe %>
+<nav class="menu">
+  <%= link_to :back_to_index, @cur_node.url %>
+</nav>
+
+<nav class="search-settings">
+  <%= form_tag "#{@cur_node.url}search", { method: :get } do %>
+    <%= "キーワード" %>
+    <%= text_field_tag :keyword, params[:keyword] %>
+    <%= submit_tag "検索", name: :search %>
+  <% end %>
+</nav>
+
+<% @items.each do |post| %>
+  <%= render partial: "post", locals: { item: post, children: false }  %>
+<% end %>
+
+<%= @cur_node.lower_html.to_s.html_safe %>
+<%= paginate @items if @items.try(:current_page) %>

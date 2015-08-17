@@ -39,7 +39,7 @@ $ ->
           </div>
 
           <div class="action paste">
-            <% content = link_to "#{file.name} (#{file.extname.upcase} #{number_to_human_size(file.size)})", file.url, class: "icon-#{file.extname}" %>
+            <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
             <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% if file.image? %>
               <% content = image_tag file.url, alt: "#{file.name}" %>

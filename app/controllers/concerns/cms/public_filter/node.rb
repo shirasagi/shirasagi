@@ -55,12 +55,12 @@ module Cms::PublicFilter::Node
       write_file node, html, file: file
     end
 
-    def generate_node_with_pagination(node)
+    def generate_node_with_pagination(node, opts = {})
       if generate_node node
         @task.log "#{node.url}index.html" if @task
       end
 
-      max = 9999
+      max = opts[:max] || 9999
       num = max
 
       2.upto(max) do |i|

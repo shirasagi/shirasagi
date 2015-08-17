@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :poster_name %></dt>
+  <dd><%= @item.poster %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= @item.text %></dd>
+
+  <dt><%= @model.t :email %></dt>
+  <dd><%= @item.email %></dd>
+
+  <dt><%= @model.t :poster_url %></dt>
+  <dd><%= link_to @item.poster_url if @item.poster_url.present? %></dd>
+
+  <dt><%= @model.t :delete_key %></dt>
+  <dd><%= @item.delete_key %></dd>
+</dl>

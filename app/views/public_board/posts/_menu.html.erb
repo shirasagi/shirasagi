@@ -1,0 +1,24 @@
+<nav class="act-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :new, action: :new %>
+      <%= link_to :download, action: :download %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|reply|lock/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :back_to_show, action: :show, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :edit, action: :edit, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>
+
+<% if params[:action] =~ /show|new|edit|create|update/ %>
+<%= render file: "_addons_menu" %>
+<% end %>

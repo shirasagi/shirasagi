@@ -97,6 +97,10 @@ ja:
       notice_target:
         all: 全ユーザー
         same_group: 同一グループ内
+      state:
+        enabled: 使用する
+        disabled: 使用しない
+
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -190,6 +194,7 @@ ja:
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
+      cms/captcha: 認証
 
   mongoid:
     models:
@@ -406,6 +411,10 @@ ja:
         - 取り込むファイルを設定します。
         - ルートフォルダーが含まれるZIPファイルもしくは単一のHTMLファイルを選択してください。
         - フォルダー配下に 取り込みページ/フォルダー/アップロードファイル として展開されます。
+
+    cms/addon/captcha:
+      captcha:
+        - フォームに画像認証を利用する場合は「使用する」を選択してください。
 
     search_contents:
       pages:

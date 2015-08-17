@@ -1,0 +1,20 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<%= form_for :item, url: { action: :reply, id: @topic.id }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <% if addons.size > 0 %><header><h2><%= t :basic_info %></h2></header><% end %>
+    <%= render file: '_form', locals: { f: f } %>
+  </div>
+  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+</div>
+
+<footer class="send">
+  <%= f.submit t("views.button.save"), class: :save %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

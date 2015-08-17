@@ -34,6 +34,7 @@ ja:
       default: ! '%Y/%1m/%1d'
       iso: ! '%Y-%m-%d'
       long: ! '%Y年%1m月%1d日' #(%a)
+      full: ! '%Y年%1m月%1d日 %1H時%M分'
       short: ! '%1m/%1d'
     month_names:
     -
@@ -131,6 +132,8 @@ ja:
       malformed_kana_dictionary: "書式が不正です: %{line}(%{no})"
       self_user: "ログイン中のユーザーを削除することはできません。"
       locked: "「%{user}」さんが編集中のため、編集・削除・移動ができません。"
+      invalid_word: 'に無効な語句"%{word}"が含まれています。'
+      file_scan_exception: "ウイルススキャンに失敗しました。"
     template:
       body: 次の項目を確認してください。
       header:

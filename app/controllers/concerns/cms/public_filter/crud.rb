@@ -1,25 +1,12 @@
-module SS::CrudFilter
+module Cms::PublicFilter::Crud
   extend ActiveSupport::Concern
+  include SS::AgentFilter
 
   included do
-    before_action :prepend_current_view_path
-    before_action :append_view_paths
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   end
 
   private
-    def prepend_current_view_path
-      prepend_view_path "app/views/#{params[:controller]}"
-    end
-
-    def append_view_paths
-      append_view_path "app/views/ss/crud"
-    end
-
-    def render(*args)
-      args.size == 0 ? super(file: params[:action]) : super
-    end
-
     def set_item
       @item = @model.find params[:id]
       @item.attributes = fix_params
@@ -119,7 +106,7 @@ module SS::CrudFilter
     def render_destroy(result, opts = {})
       location = opts[:location].presence || { action: :index }
       render_opts = opts[:render].presence || { file: :delete }
-      notice = opts[:notice].presence || t("views.notice.saved")
+      notice = opts[:notice].presence || t("views.notice.deleted")
 
       if result
         respond_to do |format|
