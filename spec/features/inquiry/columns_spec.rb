@@ -4,11 +4,11 @@ describe "inquiry_columns" do
   subject(:site) { cms_site }
   subject(:node) { create_once :article_node_page, name: "article" }
   subject(:item) { Inquiry::Column.last }
-  subject(:index_path) { inquiry_columns_path site.host, node }
-  subject(:new_path) { new_inquiry_column_path site.host, node }
-  subject(:show_path) { inquiry_column_path site.host, node, item }
-  subject(:edit_path) { edit_inquiry_column_path site.host, node, item }
-  subject(:delete_path) { delete_inquiry_column_path site.host, node, item }
+  subject(:index_path) { inquiry_columns_path site.id, node }
+  subject(:new_path) { new_inquiry_column_path site.id, node }
+  subject(:show_path) { inquiry_column_path site.id, node, item }
+  subject(:edit_path) { edit_inquiry_column_path site.id, node, item }
+  subject(:delete_path) { delete_inquiry_column_path site.id, node, item }
 
   it "without login" do
     visit index_path

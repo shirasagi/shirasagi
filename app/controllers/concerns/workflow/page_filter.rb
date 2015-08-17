@@ -14,7 +14,7 @@ module Workflow::PageFilter
           page(params[:page]).per(50)
       end
       @items = [] if !@items
-      render file: "app/views/cms/pages/index"
+      render file: :index
     end
 
   public

@@ -1,7 +1,3 @@
-<nav class="act-menu">
+<nav class="nav-menu">
   <%= link_to :preview, cms_preview_path(path: "#{@cur_node.filename}/results.html"), target: :_blank %>
 </nav>
-
-<% if params[:action] =~ /show|new|edit|create|update/ %>
-<%= render file: "_addons_menu" %>
-<% end %>

@@ -1,19 +1,10 @@
-<%= node_navi do %>
+<%= node_navi :facility do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "facility.facility" %></h1></header>
-  <% if params[:action] =~ /show|edit/ %>
-  <div>
-    <%= link_to :"facility.image", facility_images_path(cid: @item.id), class: "icon-page" %>
-  </div>
-  <div>
-    <%= link_to :"facility.map", facility_maps_path(cid: @item.id), class: "icon-page" %>
-  </div>
-  <% else %>
-  <div>
-    <%= link_to :"facility.page", facility_pages_path, class: "icon-node" %>
-  </div>
-  <% end %>
-</nav>
+<% if params[:action] =~ /show|edit/ %>
+<h3><%= link_to :"facility.image", facility_images_path(cid: @item.id) %></h3>
+<h3><%= link_to :"facility.map", facility_maps_path(cid: @item.id) %></h3>
+<% else %>
+<h3><%= link_to :"facility.page", facility_pages_path %></h3>
+<% end %>
 
 <% end %>

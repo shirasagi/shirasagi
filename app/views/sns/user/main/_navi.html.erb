@@ -1,8 +1,1 @@
-<nav class="main-menu">
-  <header><h1><%= t :"modules.sns" %></h1></header>
-  <div>
-    <%= link_to :"sns.profile", sns_user_profile_path %>
-    <%= link_to :"sns.file", sns_user_files_path %>
-    <%= link_to :"sns.account", sns_user_account_path if @cur_user.id == @sns_user.id %>
-  </div>
-</nav>
+<%= render partial: "sns/main/navi" %>

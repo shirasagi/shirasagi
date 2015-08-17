@@ -4,7 +4,7 @@ class Chorg::RevisionsController < ApplicationController
 
   model Chorg::Revision
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
 
   private
     def set_crumbs

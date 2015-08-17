@@ -30,7 +30,7 @@ $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
     <dt><%= @model.t("category_ids") %><%= tt("search_contents.pages.category") %></dt>
     <dd class="wide" style="line-height: 2.5">
       <%= hidden_field_tag "s[category_ids][]", nil, class: "hidden-ids" %>
-      <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "ajax-box" %>
+      <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
     </dd>
     <dd>
       <table class="index" style="visibility:hidden"></teble>
@@ -57,7 +57,7 @@ $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
     <dt><%= @model.t("group_ids") %><%= tt("search_contents.pages.group") %></dt>
     <dd class="wide" style="line-height: 2.5">
       <%= hidden_field_tag "s[group_ids][]", nil, class: "hidden-ids" %>
-      <%= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
+      <%= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
     </dd>
     <dd>
       <table class="index" style="visibility:hidden"></teble>

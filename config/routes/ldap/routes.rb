@@ -6,7 +6,7 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
-  namespace("ldap", as: "ldap", path: ".:site/ldap", module: "ldap") do
+  namespace("ldap", as: "ldap", path: ".s:site/ldap", module: "ldap") do
     get "server/:dn/group" => "server#group"
     get "server/:dn/user" => "server#user"
     get "server/:dn" => "server#index"

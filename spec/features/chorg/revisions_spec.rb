@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe "chorg_revisions", dbscope: :example do
   let(:site) { cms_site }
-  let(:index_path) { chorg_revisions_revisions_path site.host }
-  let(:new_path) { new_chorg_revisions_revision_path site.host }
+  let(:index_path) { chorg_revisions_revisions_path site.id }
+  let(:new_path) { new_chorg_revisions_revision_path site.id }
 
   it "without login" do
     visit index_path

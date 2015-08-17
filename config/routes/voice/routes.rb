@@ -19,7 +19,7 @@ SS::Application.routes.draw do
     get "/" => "main#index", format: false
   end
 
-  namespace("voice", as: "voice", path: ".:site/voice", module: "voice") do
+  namespace("voice", as: "voice", path: ".s:site/voice", module: "voice") do
     resources :files, concerns: [:download, :deletion, :file], except: [:create, :edit, :new, :update]
     resources :error_files, concerns: [:download, :deletion, :file], except: [:create, :edit, :new, :update]
   end

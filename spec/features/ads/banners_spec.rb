@@ -4,11 +4,11 @@ describe "ads_banners" do
   let(:site) { cms_site }
   let(:node) { create_once :ads_node_banner, name: "ads" }
   let(:item) { Ads::Banner.last }
-  let(:index_path) { ads_banners_path site.host, node }
-  let(:new_path) { new_ads_banner_path site.host, node }
-  let(:show_path) { ads_banner_path site.host, node, item }
-  let(:edit_path) { edit_ads_banner_path site.host, node, item }
-  let(:delete_path) { delete_ads_banner_path site.host, node, item }
+  let(:index_path) { ads_banners_path site.id, node }
+  let(:new_path) { new_ads_banner_path site.id, node }
+  let(:show_path) { ads_banner_path site.id, node, item }
+  let(:edit_path) { edit_ads_banner_path site.id, node, item }
+  let(:delete_path) { delete_ads_banner_path site.id, node, item }
 
   it "without login" do
     visit index_path

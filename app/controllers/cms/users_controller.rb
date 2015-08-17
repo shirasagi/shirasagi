@@ -5,7 +5,7 @@ class Cms::UsersController < ApplicationController
 
   model Cms::User
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
   menu_view "cms/users/menu"
 
   private

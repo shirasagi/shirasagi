@@ -49,12 +49,12 @@ SS::Application.routes.draw do
     delete :lock, action: :unlock, :on => :member
   end
 
-  namespace "cms", path: ".:site" do
+  namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
   end
 
-  namespace "cms", path: ".:site/cms" do
+  namespace "cms", path: ".s:site/cms" do
     get "/" => "main#index"
     resource  :site, concerns: :deletion
     resources :roles, concerns: :deletion

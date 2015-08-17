@@ -1,9 +1,5 @@
-<%= node_navi do %>
+<%= node_navi :facility do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "facility.facility" %></h1></header>
-  <div>
-    <%= link_to :"facility.category.name", facility_categories_path, class: "icon-node" %>
-  </div>
+<h3><%= link_to :"facility.category.name", facility_categories_path %></h3>
 
 <% end %>

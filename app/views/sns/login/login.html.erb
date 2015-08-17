@@ -6,24 +6,26 @@
 </header>
 
 <%= form_tag action: params[:action] do |f| %>
-  <article>
-    <% if @error %>
-    <div class="error-message"><%= @error %></div>
-    <% end %>
+  <% if @error %>
+  <div class="error-message"><%= @error %></div>
+  <% end %>
 
-    <%= error_messages_for :item %>
-    <%= hidden_field_tag :ref, params[:ref] %>
+  <%= error_messages_for :item %>
+  <%= hidden_field_tag :ref, params[:ref] %>
 
-    <%= t("ss.views.login/login.id") %><br />
-    <%= text_field :item, :email %><br />
-    <br />
-    <%= t("ss.views.login/login.password") %><br />
-    <%= password_field :item, :password %><br />
+  <div class="form-group">
+    <label><%= t("ss.views.login/login.id") %></label>
+    <%= text_field :item, :email %>
+  </div>
 
-    <footer class="send">
-      <%= submit_tag t(:login), class: :save %>
-    </footer>
-  </article>
+  <div class="form-group">
+    <label><%= t("ss.views.login/login.password") %></label>
+    <%= password_field :item, :password %>
+  </div>
+
+  <footer class="send">
+    <%= submit_tag t(:login), class: "btn-primary" %>
+  </footer>
 <% end %>
 
 </div>

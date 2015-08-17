@@ -4,7 +4,7 @@ class Cms::SitesController < ApplicationController
 
   model Cms::Site
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
   menu_view "cms/crud/resource_menu"
 
   private

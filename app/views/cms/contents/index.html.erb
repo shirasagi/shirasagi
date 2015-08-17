@@ -40,34 +40,42 @@
 </table>
 <% end %>
 
-<table class="index">
-  <thead>
-    <tr>
-      <th><%= @model.t :name %></th>
-      <th class="filename"><%= @model.t :filename %></th>
-      <th class="route"><%= t "views.module" %></th>
-    </tr>
-  </thead>
+<div class="index">
+  <div class="list-head">
+    <span><%= @model.t :name %></span>
+  </div>
 
-  <tbody>
+  <ul class="list-items">
     <% @items.each do |item| %>
-    <tr>
-      <td>
-        <%= link_to item.name, contents_path(item), class: "icon-node"%>
-        <nav class="tap-menu">
-          <%= link_to :"cms.content", contents_path(item) %>
-          <%= link_to :show, node_conf_path(cid: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to :edit, edit_node_conf_path(cid: item) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
-          <%= link_to :mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank %>
-          <%= link_to :view_site, item.full_url, target: :_blank %>
-        </nav>
-      </td>
-      <td class="filename"><%= item.filename %></td>
-      <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
-    </tr>
+    <li class="list-item">
+      <nav class="list-item-tap">
+        <%= link_to :"cms.content", contents_path(item) %>
+        <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+        <%= link_to :mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank %>
+        <%= link_to :view_site, item.full_url, target: :_blank %>
+      </nav>
+      <div class="list-item-info">
+        <%= link_to item.name, contents_path(item), class: "list-item-title" %>
+
+        <div class="list-item-meta">
+          <span class="id">#<%= item.id %></span>
+          <% if item.try(:updated) %>
+            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <% end %>
+          <% if item.try(:filename) %>
+            <span class="filename"><%= File.basename item.filename %></span>
+          <% end %>
+          <% if item.try(:route) %>
+            <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+          <% end %>
+          <% if item.try(:status) %>
+            <span class="state"><%= t "views.state.#{item.status}" %></span>
+          <% end %>
+        </div>
+      </div>
+    </li>
     <% end %>
-  </tbody>
-</table>
+  </ul>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

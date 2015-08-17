@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "cms_contents", dbscope: :example, type: :feature do
   subject(:site) { cms_site }
-  subject(:index_path) { cms_contents_path site.host }
+  subject(:index_path) { cms_contents_path site.id }
 
   it "without login" do
     visit index_path
@@ -28,7 +28,7 @@ describe "cms_contents", dbscope: :example, type: :feature do
   context "with notice" do
     let!(:normal_notice) { create(:cms_notice, notice_severity: Cms::Notice::NOTICE_SEVERITY_NORMAL) }
     let!(:high_notice) { create(:cms_notice, notice_severity: Cms::Notice::NOTICE_SEVERITY_HIGH) }
-    # subject(:notice_path) { notice_cms_content_path site.host, item }
+    # subject(:notice_path) { notice_cms_content_path site.id, item }
 
     before do
       login_cms_user

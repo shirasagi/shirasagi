@@ -5,7 +5,3 @@
     <%= link_to :edit, action: :edit, id: @item %>
   <% end %>
 </nav>
-
-<% if params[:action] =~ /show|new|edit|create|update/ %>
-<%= render file: "_addons_menu" %>
-<% end %>

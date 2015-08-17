@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe "cms_search", dbscope: :example do
   subject(:site) { cms_site }
-  subject(:pages_index_path) { cms_search_contents_pages_path site.host }
-  subject(:html_index_path) { cms_search_contents_html_path site.host }
+  subject(:pages_index_path) { cms_search_contents_pages_path site.id }
+  subject(:html_index_path) { cms_search_contents_html_path site.id }
 
   it "without login" do
     visit html_index_path

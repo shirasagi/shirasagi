@@ -4,7 +4,7 @@ class Chorg::ChangesetsController < ApplicationController
 
   model Chorg::Changeset
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
 
   before_action :set_revision
 

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "ads_access_logs" do
   subject(:site) { cms_site }
   subject(:node) { create_once :ads_node_banner, name: "ads" }
-  subject(:index_path) { ads_access_logs_path site.host, node }
+  subject(:index_path) { ads_access_logs_path site.id, node }
 
   it "without login" do
     visit index_path

@@ -1,4 +1,4 @@
-<nav class="act-menu">
+<nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to :new, action: :new %>
   <% elsif params[:action] =~ /new|create/ %>
@@ -13,23 +13,19 @@
     <%= link_to :edit, action: :edit, id: @item %>
     <%= link_to :delete, action: :delete, id: @item %>
     </nav>
-    <nav class="act-menu">
+    <nav class="nav-menu">
     <%= link_to :"chorg.menus.revisions.add", new_chorg_changesets_changeset_path(rid: @item, type: "add") %>
     <%= link_to :"chorg.menus.revisions.move", new_chorg_changesets_changeset_path(rid: @item, type: "move") %>
     <%= link_to :"chorg.menus.revisions.unify", new_chorg_changesets_changeset_path(rid: @item, type: "unify") %>
     <%= link_to :"chorg.menus.revisions.division", new_chorg_changesets_changeset_path(rid: @item, type: "division") %>
     <%= link_to :"chorg.menus.revisions.delete", new_chorg_changesets_changeset_path(rid: @item, type: "delete") %>
     </nav>
-    <nav class="act-menu">
+    <nav class="nav-menu">
     <%= link_to :"chorg.menus.revisions.test_execute", controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::TEST %>
     <%= link_to :"chorg.menus.revisions.production_execute", controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::MAIN %>
     <%= link_to :"chorg.menus.revisions.execute_results", controller: :results, action: :index, rid: @item.id %>
     </nav>
-    <nav class="act-menu">
+    <nav class="nav-menu">
     <%= link_to :back_to_index, action: :index %>
    <% end %>
 </nav>
-
-<% if params[:action] =~ /show|new|edit|create|update/ %>
-<%= render file: "_addons_menu" %>
-<% end %>

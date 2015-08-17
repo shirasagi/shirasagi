@@ -4,7 +4,7 @@ class Cms::MembersController < ApplicationController
 
   model Cms::Member
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
 
   private
     def set_crumbs

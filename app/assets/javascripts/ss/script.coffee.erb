@@ -32,13 +32,13 @@ $ ->
 
   # navi
   path = location.pathname + "/"
-  $("#navi .main-menu a, #navi .sub-menu a").each ->
+  $("#navi .main-navi a, #navi .mod-navi a").each ->
     menu = $(this)
     menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
 
   # pulldown menu
   if $(window).width() >= 800
-    menu = $(".pulldown-menu")
+    menu = $("#head .pulldown-menu")
     link = menu.find("a")
     menu.each ->
       link.not(".current").hide()

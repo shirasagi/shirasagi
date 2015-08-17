@@ -3,12 +3,12 @@ require 'spec_helper'
 describe "cms_notices", dbscope: :example, type: :feature do
   let(:site) { cms_site }
   let(:item) { create(:cms_notice, site: site) }
-  let(:index_path) { cms_notices_path site.host }
-  let(:new_path) { new_cms_notice_path site.host }
-  let(:show_path) { cms_notice_path site.host, item }
-  let(:edit_path) { edit_cms_notice_path site.host, item }
-  let(:delete_path) { delete_cms_notice_path site.host, item }
-  let(:copy_path) { copy_cms_notice_path site.host, item }
+  let(:index_path) { cms_notices_path site.id }
+  let(:new_path) { new_cms_notice_path site.id }
+  let(:show_path) { cms_notice_path site.id, item }
+  let(:edit_path) { edit_cms_notice_path site.id, item }
+  let(:delete_path) { delete_cms_notice_path site.id, item }
+  let(:copy_path) { copy_cms_notice_path site.id, item }
 
   it "without login" do
     visit index_path

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "cms_import" do
   subject(:site) { cms_site }
-  subject(:index_path) { cms_import_path site.host }
+  subject(:index_path) { cms_import_path site.id }
 
   it "without login" do
     visit index_path

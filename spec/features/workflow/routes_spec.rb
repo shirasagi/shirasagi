@@ -4,8 +4,8 @@ describe "workflow_routes", dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:group) { cms_group }
-  let(:index_path) { workflow_routes_path site.host }
-  let(:new_path) { new_workflow_route_path site.host }
+  let(:index_path) { workflow_routes_path site.id }
+  let(:new_path) { new_workflow_route_path site.id }
 
   it "without login" do
     visit index_path

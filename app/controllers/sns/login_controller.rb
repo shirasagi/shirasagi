@@ -4,6 +4,7 @@ class Sns::LoginController < ApplicationController
   protect_from_forgery except: :remote_login
   skip_filter :logged_in?, only: [:login, :remote_login]
 
+  layout "ss/login"
   navi_view nil
 
   private

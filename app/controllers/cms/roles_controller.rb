@@ -4,7 +4,7 @@ class Cms::RolesController < ApplicationController
 
   model Cms::Role
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
 
   private
     def set_crumbs

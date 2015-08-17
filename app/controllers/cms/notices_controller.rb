@@ -4,7 +4,7 @@ class Cms::NoticesController < ApplicationController
   include Cms::SearchableCrudFilter
 
   model Cms::Notice
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :copy]
 
   private

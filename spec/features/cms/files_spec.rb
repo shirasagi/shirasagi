@@ -3,11 +3,11 @@ require 'spec_helper'
 describe "cms_files" do
   let(:site) { cms_site }
   let(:item) { Cms::File.last }
-  let(:index_path) { cms_files_path site.host }
-  let(:new_path) { new_cms_file_path site.host }
-  let(:show_path) { cms_file_path site.host, item }
-  let(:edit_path) { edit_cms_file_path site.host, item }
-  let(:delete_path) { delete_cms_file_path site.host, item }
+  let(:index_path) { cms_files_path site.id }
+  let(:new_path) { new_cms_file_path site.id }
+  let(:show_path) { cms_file_path site.id, item }
+  let(:edit_path) { edit_cms_file_path site.id, item }
+  let(:delete_path) { delete_cms_file_path site.id, item }
 
   it "without login" do
     visit index_path

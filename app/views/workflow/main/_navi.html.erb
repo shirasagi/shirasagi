@@ -1,10 +1,5 @@
-<%= node_navi do %>
+<%= node_navi :workflow do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.workflow" %></h1></header>
-  <div>
-    <%= link_to :"workflow.page", workflow_pages_path, class: "icon-page" %>
-  </div>
-</nav>
+<h3><%= link_to :"workflow.page", workflow_pages_path %></h3>
 
 <% end %>

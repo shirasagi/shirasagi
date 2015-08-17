@@ -6,7 +6,6 @@ class Cms::Node::LayoutsController < ApplicationController
 
   prepend_view_path "app/views/cms/layouts"
   navi_view "cms/node/main/navi"
-  menu_view "cms/node/main/node_menu"
 
   private
     def fix_params

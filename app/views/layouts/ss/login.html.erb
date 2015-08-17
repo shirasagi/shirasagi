@@ -1,0 +1,50 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
+<title>SHIRASAGI</title>
+<%= stylesheet_link_tag "ss/style", media: "all" %>
+<!--[if lt IE 9]>
+<script src="/assets/js/html5.js"></script>
+<script src="/assets/js/selectivizr-min.js"></script>
+<![endif]-->
+<%= javascript_include_tag "ss/script" %>
+<%= csrf_meta_tags %>
+</head>
+<body>
+
+<div id="page-login">
+
+<header id="head">
+  <div class="wrap">
+    <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
+  </div>
+<!-- /#head --></header>
+
+<% if notice %>
+<aside id="notice">
+  <div class="wrap"><%= notice %></div>
+</aside>
+<script> setTimeout(function() { $('#notice').slideUp("fast"); }, 1500); </script>
+<% end %>
+
+<article id="main">
+  <div class="wrap">
+  <%= yield %>
+  </div>
+</article>
+
+<footer id="foot">
+  <div class="wrap">
+    SHIRASAGI Project
+  </div>
+  <div id="ss-pc" style="display: none">PC View</div>
+  <div id="ss-mb" style="display: none">Mobile View</div>
+<!-- /#foot --></footer>
+
+</div>
+
+</body>
+</html>

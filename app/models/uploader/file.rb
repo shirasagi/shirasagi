@@ -51,6 +51,10 @@ class Uploader::File
       Fs.size path
     end
 
+    def updated
+      Fs.stat(path).mtime
+    end
+
     def content_type
       Fs.content_type path
     end

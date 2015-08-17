@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "member_logins", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :member_node_login, site: cms_site }
-  let(:index_path) { member_logins_path site.host, node.id }
+  let(:index_path) { member_logins_path site.id, node.id }
 
   it "without login" do
     visit index_path

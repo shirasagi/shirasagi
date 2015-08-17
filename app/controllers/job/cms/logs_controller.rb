@@ -2,7 +2,7 @@ class Job::Cms::LogsController < ApplicationController
   include Cms::BaseFilter
   include Job::LogsFilter
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
 
   private
     def filter_permission

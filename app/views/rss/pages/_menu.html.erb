@@ -1,4 +1,4 @@
-<nav class="act-menu">
+<nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, action: :new %>
@@ -23,7 +23,3 @@
     <%= link_to :back_to_index, action: :index %>
   <% end %>
 </nav>
-
-<% if params[:action] =~ /new|edit|create|update/ %>
-<%= render file: "_addons_menu" %>
-<% end %>

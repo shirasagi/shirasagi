@@ -10,7 +10,7 @@ module Cms::PublicFilter::Page
     end
 
     def render_page(page)
-      path = "/.#{@cur_site.host}/pages/#{page.route}/#{page.basename}"
+      path = "/.s#{@cur_site.id}/pages/#{page.route}/#{page.basename}"
       spec = recognize_agent path
       return unless spec
 

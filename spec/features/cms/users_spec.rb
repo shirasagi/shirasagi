@@ -4,12 +4,12 @@ describe "cms_users", dbscope: :example do
   subject(:site) { cms_site }
   subject(:group) { cms_group }
   subject(:item) { create(:cms_test_user, group: group) }
-  subject(:index_path) { cms_users_path site.host }
-  subject(:new_path) { new_cms_user_path site.host }
-  subject(:show_path) { cms_user_path site.host, item }
-  subject(:edit_path) { edit_cms_user_path site.host, item }
-  subject(:delete_path) { delete_cms_user_path site.host, item }
-  subject(:import_path) { import_cms_users_path site.host }
+  subject(:index_path) { cms_users_path site.id }
+  subject(:new_path) { new_cms_user_path site.id }
+  subject(:show_path) { cms_user_path site.id, item }
+  subject(:edit_path) { edit_cms_user_path site.id, item }
+  subject(:delete_path) { delete_cms_user_path site.id, item }
+  subject(:import_path) { import_cms_users_path site.id }
 
   it "without login" do
     visit index_path

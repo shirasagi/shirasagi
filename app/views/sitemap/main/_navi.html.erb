@@ -1,10 +1,5 @@
-<%= node_navi do %>
+<%= node_navi :sitemap do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.sitemap" %></h1></header>
-  <div>
-    <%= link_to :"mongoid.models.sitemap/page", sitemap_pages_path, class: "icon-page" %>
-  </div>
-</nav>
+<h3><%= link_to :"mongoid.models.sitemap/page", sitemap_pages_path %></h3>
 
 <% end %>

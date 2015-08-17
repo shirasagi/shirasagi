@@ -8,30 +8,30 @@ class ActionDispatch::Routing::Mapper
   def cms(ns, opts = {}, &block)
     name = opts[:name] || ns.gsub("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, as: "#{name}_cms", path: ".:site/#{ns}", module: "#{mod}/cms") { yield }
+    namespace(name, as: "#{name}_cms", path: ".s:site/#{ns}", module: "#{mod}/cms") { yield }
   end
 
   def content(ns, opts = {}, &block)
     name = opts[:name] || ns.gsub("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, path: ".:site/#{ns}:cid", module: mod, cid: /\w+/) { yield }
+    namespace(name, path: ".s:site/#{ns}:cid", module: mod, cid: /\w+/) { yield }
   end
 
   def node(ns, &block)
     name = ns.gsub("/", "_")
-    path = ".:site/nodes/#{ns}"
+    path = ".s:site/nodes/#{ns}"
     namespace(name, as: "#{name}_node", path: path, module: "cms") { yield }
   end
 
   def page(ns, &block)
     name = ns.gsub("/", "_")
-    path = ".:site/pages/#{ns}"
+    path = ".s:site/pages/#{ns}"
     namespace(name, as: "#{name}_page", path: path, module: "cms") { yield }
   end
 
   def part(ns, &block)
     name = ns.gsub("/", "_")
-    path = ".:site/parts/#{ns}"
+    path = ".s:site/parts/#{ns}"
     namespace(name, as: "#{name}_part", path: path, module: "cms") { yield }
   end
 end

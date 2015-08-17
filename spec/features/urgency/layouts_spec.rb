@@ -4,7 +4,7 @@ describe "urgency_layouts" do
   subject(:site) { cms_site }
   subject(:node) { create_once :urgency_node_layout, name: "urgency" }
   subject(:item) { Uploader::File.last }
-  subject(:index_path) { urgency_layouts_path site.host, node }
+  subject(:index_path) { urgency_layouts_path site.id, node }
 
   it "without login" do
     visit index_path

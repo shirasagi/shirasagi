@@ -16,8 +16,8 @@ describe "ldap_import", ldap: true do
       create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
              group_ids: [group.id], cms_role_ids: [role.id])
     end
-    let(:index_path) { ldap_import_index_path site.host }
-    let(:import_confirmation_path) { ldap_import_import_confirmation_path site.host }
+    let(:index_path) { ldap_import_index_path site.id }
+    let(:import_confirmation_path) { ldap_import_import_confirmation_path site.id }
 
     around(:each) do |example|
       save_auth_method = SS.config.ldap.auth_method
@@ -59,11 +59,11 @@ describe "ldap_import", ldap: true do
 
       context "with item" do
         let(:item) { Ldap::Import.last }
-        let(:show_path) { ldap_import_path site.host, item }
-        let(:sync_confirmation_path) { "/.#{site.host}/ldap/import/sync_confirmation/#{item.id}" }
-        let(:sync_path) { "/.#{site.host}/ldap/import/sync/#{item.id}" }
-        let(:results_path) { "/.#{site.host}/ldap/import/results/#{item.id}" }
-        let(:delete_path) { delete_ldap_import_path site.host, item }
+        let(:show_path) { ldap_import_path site.id, item }
+        let(:sync_confirmation_path) { "/.s#{site.id}/ldap/import/sync_confirmation/#{item.id}" }
+        let(:sync_path) { "/.s#{site.id}/ldap/import/sync/#{item.id}" }
+        let(:results_path) { "/.s#{site.id}/ldap/import/results/#{item.id}" }
+        let(:delete_path) { delete_ldap_import_path site.id, item }
 
         it "#show" do
           login_user(user)
@@ -102,8 +102,8 @@ describe "ldap_import", ldap: true do
 
   context "with non-ldap site" do
     let(:site) { cms_site }
-    let(:import_confirmation_path) { ldap_import_import_confirmation_path site.host }
-    let(:import_path) { ldap_import_import_path site.host }
+    let(:import_confirmation_path) { ldap_import_import_confirmation_path site.id }
+    let(:import_path) { ldap_import_import_path site.id }
 
     context "with auth" do
       it "#import" do

@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe "kana_dictionaries" do
   subject(:site) { cms_site }
-  subject(:index_path) { kana_dictionaries_path site.host }
-  subject(:new_path) { new_kana_dictionary_path site.host }
-  subject(:build_path) { kana_dictionaries_build_path site.host }
-  subject(:build_confirmation_path) { kana_dictionaries_build_confirmation_path site.host }
+  subject(:index_path) { kana_dictionaries_path site.id }
+  subject(:new_path) { new_kana_dictionary_path site.id }
+  subject(:build_path) { kana_dictionaries_build_path site.id }
+  subject(:build_confirmation_path) { kana_dictionaries_build_confirmation_path site.id }
 
   it "without login" do
     visit index_path
@@ -40,9 +40,9 @@ describe "kana_dictionaries" do
 
     context "with item" do
       subject(:item) { create(:kana_dictionary) }
-      subject(:show_path) { kana_dictionary_path site.host, item }
-      subject(:edit_path) { edit_kana_dictionary_path site.host, item }
-      subject(:delete_path) { delete_kana_dictionary_path site.host, item }
+      subject(:show_path) { kana_dictionary_path site.id, item }
+      subject(:edit_path) { edit_kana_dictionary_path site.id, item }
+      subject(:delete_path) { delete_kana_dictionary_path site.id, item }
 
       it "#show" do
         visit show_path
@@ -87,9 +87,9 @@ describe "kana_dictionaries" do
 
     context "without item" do
       subject(:missing_item) { 10_000 + rand(10_000) }
-      subject(:show_path) { kana_dictionary_path site.host, missing_item }
-      subject(:edit_path) { edit_kana_dictionary_path site.host, missing_item }
-      subject(:delete_path) { delete_kana_dictionary_path site.host, missing_item }
+      subject(:show_path) { kana_dictionary_path site.id, missing_item }
+      subject(:edit_path) { edit_kana_dictionary_path site.id, missing_item }
+      subject(:delete_path) { delete_kana_dictionary_path site.id, missing_item }
 
       before(:each) do
         # remove all items before starting tests

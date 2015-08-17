@@ -5,7 +5,7 @@ class Cms::EditorTemplatesController < ApplicationController
   helper SS::EditorHelper
 
   model Cms::EditorTemplate
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
 
   private
     def set_crumbs

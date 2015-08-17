@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "move_cms_pages" do
   subject(:site) { cms_site }
-  subject(:index_path) { cms_pages_path site.host }
+  subject(:index_path) { cms_pages_path site.id }
 
   it "without login" do
     visit index_path
@@ -32,7 +32,7 @@ describe "move_cms_pages" do
 
     it "#move" do
       item = Cms::Page.where(filename: "page.html").first
-      move_page_path = move_cms_page_path(site.host, item)
+      move_page_path = move_cms_page_path(site.id, item)
       expect(Fs.exists?("#{site.path}/page.html")).to eq(true)
 
       visit move_page_path
@@ -49,7 +49,7 @@ describe "move_cms_pages" do
       expect(Fs.exists?("#{site.path}/A/page.html")).to eq(true)
 
       item = Cms::Node.where(filename: "A/B/C").first
-      move_node_path = move_node_conf_path(site.host, item)
+      move_node_path = move_node_conf_path(site.id, item)
       expect(Fs.exists?("#{site.path}/A/B/C/page2.html")).to eq(true)
 
       visit move_node_path

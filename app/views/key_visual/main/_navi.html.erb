@@ -1,10 +1,5 @@
-<%= node_navi do %>
+<%= node_navi :key_visual do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.key_visual" %></h1></header>
-  <div>
-    <%= link_to :"key_visual.image", key_visual_images_path, class: "icon-page" %>
-  </div>
-</nav>
+<h3><%= link_to :"key_visual.image", key_visual_images_path %></h3>
 
 <% end %>

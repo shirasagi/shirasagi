@@ -4,11 +4,11 @@ describe "ezine_members" do
   subject(:site) { cms_site }
   subject(:node) { create_once :ezine_node }
   subject(:item) { Ezine::Member.last }
-  subject(:index_path) { ezine_members_path site.host, node }
-  subject(:new_path) { new_ezine_member_path site.host, node }
-  subject(:show_path) { ezine_member_path site.host, node, item }
-  subject(:edit_path) { edit_ezine_member_path site.host, node, item }
-  subject(:delete_path) { delete_ezine_member_path site.host, node, item }
+  subject(:index_path) { ezine_members_path site.id, node }
+  subject(:new_path) { new_ezine_member_path site.id, node }
+  subject(:show_path) { ezine_member_path site.id, node, item }
+  subject(:edit_path) { edit_ezine_member_path site.id, node, item }
+  subject(:delete_path) { delete_ezine_member_path site.id, node, item }
 
   it "without login" do
     visit index_path

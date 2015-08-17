@@ -29,7 +29,7 @@ body {
     width: 240px;
     border-right: $border-gray4;
     background: $white;
-    @include box-shadow(1px 0 3px #dedede);
+    //@include box-shadow(1px 0 3px #dedede);
     @include mb { display: none; }
   }
 }
@@ -115,9 +115,6 @@ td {
         }
       }
     }
-  }
-  .cms {
-    border-left: $border-gray4;
   }
   .cms h2 a {
     padding: 15px 20px 15px 55px;
@@ -279,46 +276,58 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 // main-navi
+@mixin navi-icon {
+  padding: 10px 10px 10px 50px;
+}
 .main-navi {
   h2 a {
     display: block;
-    padding: 12px 60px;
+    padding: 10px 15px;
     border-bottom: $border-gray4;
     &:hover {
       text-decoration: none;
     }
   }
+  a.current {
+    background-color: $gray1;
+  }
   .icon-content {
+    @include navi-icon;
     background: url(/assets/img/ic-contents-off.png) no-repeat 10px center;
     &:hover {
       background: $gray1 url(/assets/img/ic-contents-on.png) no-repeat 10px center;
     }
   }
   .icon-node {
+    @include navi-icon;
     background: url(/assets/img/ic-folder-off.png) no-repeat 10px center;
     &:hover {
       background: $gray1 url(/assets/img/ic-folder-on.png) no-repeat 10px center;
     }
   }
   .icon-page {
+    @include navi-icon;
     background: url(/assets/img/ic-page-off.png) no-repeat 10px center;
     &:hover {
       background: $gray1 url(/assets/img/ic-page-on.png) no-repeat 10px center;
     }
   }
   .icon-part {
+    @include navi-icon;
     background: url(/assets/img/ic-part-off.png) no-repeat 10px center;
     &:hover {
       background: $gray1 url(/assets/img/ic-part-on.png) no-repeat 10px center;
     }
   }
   .icon-layout {
+    @include navi-icon;
     background: url(/assets/img/ic-layout-off.png) no-repeat 10px center;
     &:hover {
       background: $gray1 url(/assets/img/ic-layout-on.png) no-repeat 10px center;
     }
   }
   .icon-conf {
+    @include navi-icon;
     background: url(/assets/img/ic-conf-off.png) no-repeat 10px center;
     &:hover {
       background: $gray1 url(/assets/img/ic-conf-on.png) no-repeat 10px center;
@@ -702,6 +711,7 @@ dl.see {
     color: $black;
     font-weight: normal;
     text-align: left;
+    cursor: auto;
     &:before {
       content: "";
       position: absolute;
@@ -944,10 +954,20 @@ div.index {
   position: static;
   @include mb { margin: 0 10px 10px; }
   .list-head {
+    @include clear;
     padding: 20px;
     border-bottom: $border-gray1;
     font-weight: bold;
     @include mb { padding: 10px; }
+  }
+  .list-head-check {
+    float: left;
+  }
+  .list-head-action {
+    float: left;
+  }
+  .list-head-search {
+    float: right;
   }
   label {
     margin-right: 20px;
@@ -957,7 +977,7 @@ div.index {
     padding: 0;
   }
   .list-item {
-    padding: 16px 20px;
+    padding: 8px 20px;
     border-bottom: $border-gray1;
     @include mb { padding: 8px 10px; }
     .checked, &:hover {
@@ -966,28 +986,41 @@ div.index {
     label {
       float: left;
       padding: 10px 0;
+      input {
+        width: 20px;
+        height: 20px;
+        -moz-transform: scale(1.4);
+      }
     }
     .list-item-info { @include mb { margin-left: 40px; } }
-    .title {
+    .list-item-title {
       color: $orange;
       font-size: $px16;
       @include mb { font-size: $px14; }
     }
-    .list-item-meta span {
-      margin-right: 20px;
-      font-size: $px12;
+    .list-item-meta {
+      span {
+        margin-right: 10px;
+        font-size: $px12;
+      }
+      .id {
+        color: #888;
+      }
+      .filename {
+        color: #080;
+      }
     }
   }
   .list-item-tap, .multiple-menu {
     display: none;
     position: absolute;
     z-index: 100;
-    padding: 15px;
     border: $border-gray4;
     background: $white;
-    @include box-shadow(1px 0 3px #dedede);
+    @include box-shadow(1px 0 3px #ccc);
     a {
       display: block;
+      padding: 5px 10px;
       line-height: 1.8;
     }
   }

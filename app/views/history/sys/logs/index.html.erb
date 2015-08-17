@@ -1,26 +1,24 @@
-<table class="index">
-  <thead>
-    <tr>
-      <th><%= t :"history.user" %></th>
-      <th><%= t :"history.taget" %></th>
-      <th><%= t :"history.action" %></th>
-      <th class="datetime"><%= @model.t :created %></th>
-    </tr>
-  </thead>
-  <tbody>
+<div class="index">
+  <div class="list-head">
+    <span><%= t :"history.target" %> : <%= t :"history.action" %></span>
+  </div>
+
+  <ul>
     <% @items.each do |item| %>
-    <tr>
-      <td><%= item.user ? link_to(item.user_label, sys_user_path(item.user)) : item.user_id %>
-        <nav class="tap-menu">
-          <%= link_to item.url, item.url %>
-        </nav>
-      </td>
-      <td><%= item.target_label %></td>
-      <td><%= item.action %></td>
-      <td class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
-    </tr>
+    <% name = item.try(:name) || item.try(:title) || "##{item.id}" %>
+    <li class="list-item">
+      <div class="list-item-info">
+        <h3 class="list-item-title"><%= item.target_label %> : <%= item.action %></h3>
+        <div class="list-item-meta">
+          <span class="id">#<%= item.id %></span>
+          <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="filename"><%= item.url %></span>
+          <span class="user"><%= item.user ? link_to(item.user_label, sys_user_path(item.user)) : item.user_id %></span>
+        </div>
+      </div>
+    </li>
     <% end %>
-  </tbody>
-</table>
+  </ul>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

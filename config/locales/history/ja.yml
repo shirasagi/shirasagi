@@ -2,7 +2,7 @@ ja:
   history:
     log: 操作履歴
     user: ユーザー
-    taget: 操作対象
+    target: 操作対象
     action: アクション
     current_version: 現在のバージョン
     backup_version: バックアップ時のバージョン

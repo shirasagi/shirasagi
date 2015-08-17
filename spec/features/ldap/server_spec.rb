@@ -16,12 +16,12 @@ describe "ldap_server", ldap: true do
       create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
              group_ids: [group.id], cms_role_ids: [role.id])
     end
-    let(:index_path) { ldap_server_path site.host }
+    let(:index_path) { ldap_server_path site.id }
     let(:group_dn) { "ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
     let(:user_dn) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-    let(:index2_path) { "/.#{site.host}/ldap/server/#{URI.escape(group_dn)}" }
-    let(:group_path) { "/.#{site.host}/ldap/server/#{URI.escape(group_dn)}/group" }
-    let(:user_path) { "/.#{site.host}/ldap/server/#{URI.escape(user_dn)}/user" }
+    let(:index2_path) { "/.s#{site.id}/ldap/server/#{URI.escape(group_dn)}" }
+    let(:group_path) { "/.s#{site.id}/ldap/server/#{URI.escape(group_dn)}/group" }
+    let(:user_path) { "/.s#{site.id}/ldap/server/#{URI.escape(user_dn)}/user" }
 
     around(:each) do |example|
       save_auth_method = SS.config.ldap.auth_method
@@ -74,7 +74,7 @@ describe "ldap_server", ldap: true do
 
   context "with non-ldap site" do
     let(:site) { cms_site }
-    let(:index_path) { ldap_server_path site.host }
+    let(:index_path) { ldap_server_path site.id }
 
     context "with auth" do
       it "#index" do

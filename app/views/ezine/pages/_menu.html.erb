@@ -1,4 +1,4 @@
-<nav class="act-menu">
+<nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, action: :new %>
@@ -22,13 +22,9 @@
 </nav>
 
 <% if params[:action] =~ /show/ && @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-<nav class="act-menu">
+<nav class="nav-menu">
   <%= link_to t("ezine.deliver_test"), action: :delivery_test_confirmation, id: @item %>
   <%= link_to t("ezine.deliver"), action: :delivery_confirmation, id: @item %>
   <%= link_to t("ezine.sent_log"), action: :sent_logs, id: @item %>
 </nav>
-<% end %>
-
-<% if params[:action] =~ /show|new|edit|create|update/ %>
-<%= render file: "_addons_menu" %>
 <% end %>

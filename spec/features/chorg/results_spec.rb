@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "chorg_results", dbscope: :example do
   let(:site) { cms_site }
   let(:revision) { create(:revision, site_id: site.id) }
-  let(:index_path) { chorg_results_results_path site.host, revision.id }
+  let(:index_path) { chorg_results_results_path site.id, revision.id }
 
   it "without login" do
     visit index_path
@@ -31,7 +31,7 @@ describe "chorg_results", dbscope: :example do
       let(:job) { create(:job_model, site: site) }
       let(:job_log) { create(:job_log, :job_log_running, job: job) }
       let(:revision) { create(:revision, site_id: site.id, job_ids: [job.id]) }
-      let(:index_path) { chorg_results_results_path site.host, revision.id }
+      let(:index_path) { chorg_results_results_path site.id, revision.id }
 
       it do
         # ensure that entities has existed.
@@ -52,7 +52,7 @@ describe "chorg_results", dbscope: :example do
     let(:job) { create(:job_model, site: site) }
     let(:job_log) { create(:job_log, :job_log_running, job: job) }
     let(:revision) { create(:revision, site_id: site.id, job_ids: [job.id]) }
-    let(:show_path) { chorg_results_result_path site.host, revision.id, job_log.id }
+    let(:show_path) { chorg_results_result_path site.id, revision.id, job_log.id }
 
     it do
       # ensure that entities has existed.

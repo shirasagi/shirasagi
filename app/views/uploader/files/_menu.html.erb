@@ -1,5 +1,5 @@
 <% if params[:action] !~ /index/ %>
-  <nav class="act-menu">
+  <nav class="nav-menu">
     <% if params[:action] =~ /show/ %>
       <% if params[:do] =~ /show/ %>
         <%= link_to :edit, { action: :show, filename: @item.filename, do: "edit" } if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>

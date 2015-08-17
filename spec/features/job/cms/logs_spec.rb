@@ -3,9 +3,9 @@ require "csv"
 
 describe "job_cms_logs", dbscope: :example do
   let(:site) { cms_site }
-  let(:index_path) { job_cms_logs_path site.host }
-  let(:download_path) { job_cms_download_path site.host }
-  let(:batch_destroy) { job_cms_batch_destroy_path site.host }
+  let(:index_path) { job_cms_logs_path site.id }
+  let(:download_path) { job_cms_download_path site.id }
+  let(:batch_destroy) { job_cms_batch_destroy_path site.id }
   let(:job) { create(:job_model, site: site) }
   let(:log1) { create(:job_log, :job_log_running, job: job) }
   let(:log2) { create(:job_log, :job_log_completed, job: job) }

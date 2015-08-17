@@ -46,7 +46,7 @@ SS::Application.routes.draw do
     get "map/:filename.:format" => "public#index", cell: "pages/map"
   end
 
-  namespace "facility", path: ".:site/facility" do
+  namespace "facility", path: ".s:site/facility" do
     namespace "apis" do
       get "categories" => "categories#index"
       get "locations" => "locations#index"

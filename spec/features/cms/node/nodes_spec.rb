@@ -4,11 +4,11 @@ describe "cms_node_nodes" do
   subject(:site) { cms_site }
   subject(:node) { create_once :cms_node_node, name: "cms" }
   subject(:item) { Cms::Node.last }
-  subject(:index_path) { node_nodes_path site.host, node }
-  subject(:new_path) { new_node_node_path site.host, node }
-  subject(:show_path) { node_node_path site.host, node, item }
-  subject(:edit_path) { edit_node_node_path site.host, node, item }
-  subject(:delete_path) { delete_node_node_path site.host, node, item }
+  subject(:index_path) { node_nodes_path site.id, node }
+  subject(:new_path) { new_node_node_path site.id, node }
+  subject(:show_path) { node_node_path site.id, node, item }
+  subject(:edit_path) { edit_node_node_path site.id, node, item }
+  subject(:delete_path) { delete_node_node_path site.id, node, item }
 
   it "without login" do
     visit index_path

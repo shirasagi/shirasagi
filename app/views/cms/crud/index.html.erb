@@ -2,25 +2,13 @@
   <%= render file: "_list_head" %>
 
   <ul class="list-items">
-    <% if @cur_node %>
-      <li class="list-item">
-        <div class="list-item-info">
-          <% if @cur_node.parent %>
-          <%= link_to :parent_directory, { cid: @cur_node.parent }, class: "list-item-up" %>
-          <% else %>
-          <%= link_to :parent_directory, cms_nodes_path, class: "list-item-up" %>
-          <% end %>
-        </div>
-      </li>
-    <% end %>
-
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="list-item-tap">
         <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-        <% if @model.collection_name =~ /^cms_(nodes|pages)$/ %>
+        <% if item.try(:filename) %>
         <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
         <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
         <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
@@ -29,11 +17,15 @@
           <%= link_to image_tag(url_for(action: :thumb, id: item.id)),
             { action: :view, id: item.id }, { class: "thumb", target: "_blank" } %>
         <% end %>
+        <%# if item.file.present? && item.file.image? %>
+        <%#= link_to image_tag(item.file.thumb.url), item.file.url, { class: "thumb", target: "_blank" } %>
+        <%# end %>
       </nav>
 
       <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="list-item-info">
-        <%= link_to item.name, contents_path(item), class: "list-item-title" %>
+        <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+        <%= link_to title, { action: :show, id: item }, class: "list-item-title" %>
 
         <div class="list-item-meta">
           <span class="id">#<%= item.id %></span>

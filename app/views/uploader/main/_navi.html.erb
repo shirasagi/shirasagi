@@ -1,10 +1,5 @@
-<%= node_navi do %>
+<%= node_navi :uploader do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.uploader" %></h1></header>
-  <div>
-    <%= link_to :"uploader.files", uploader_files_path, class: "icon-page" %>
-  </div>
-</nav>
+<h3><%= link_to :"uploader.files", uploader_files_path %></h3>
 
 <% end %>

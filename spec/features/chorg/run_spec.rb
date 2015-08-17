@@ -4,10 +4,10 @@ describe "chorg_run", dbscope: :example do
   let(:site) { cms_site }
   let(:revision) { create(:revision, site_id: site.id) }
   let(:changeset) { create(:add_changeset, revision_id: revision.id) }
-  let(:revision_show_path) { chorg_revisions_revision_path site.host, revision.id }
+  let(:revision_show_path) { chorg_revisions_revision_path site.id, revision.id }
 
   context "with test run" do
-    let(:test_run_path) { chorg_run_confirmation_path site.host, revision.id, "test" }
+    let(:test_run_path) { chorg_run_confirmation_path site.id, revision.id, "test" }
 
     it "without login" do
       # ensure that entities has existed.
@@ -54,7 +54,7 @@ describe "chorg_run", dbscope: :example do
   end
 
   context "with main run" do
-    let(:main_run_path) { chorg_run_confirmation_path site.host, revision.id, "main" }
+    let(:main_run_path) { chorg_run_confirmation_path site.id, revision.id, "main" }
 
     it "without login" do
       # ensure that entities has existed.

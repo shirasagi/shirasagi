@@ -4,11 +4,11 @@ describe "key_visual_images" do
   let(:site) { cms_site }
   let(:node) { create_once :key_visual_node_image, name: "key_visual" }
   let(:item) { KeyVisual::Image.last }
-  let(:index_path) { key_visual_images_path site.host, node }
-  let(:new_path) { new_key_visual_image_path site.host, node }
-  let(:show_path) { key_visual_image_path site.host, node, item }
-  let(:edit_path) { edit_key_visual_image_path site.host, node, item }
-  let(:delete_path) { delete_key_visual_image_path site.host, node, item }
+  let(:index_path) { key_visual_images_path site.id, node }
+  let(:new_path) { new_key_visual_image_path site.id, node }
+  let(:show_path) { key_visual_image_path site.id, node, item }
+  let(:edit_path) { edit_key_visual_image_path site.id, node, item }
+  let(:delete_path) { delete_key_visual_image_path site.id, node, item }
 
   it "without login" do
     visit index_path

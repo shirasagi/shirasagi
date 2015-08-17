@@ -3,12 +3,12 @@ require 'spec_helper'
 describe "cms_groups" do
   subject(:site) { cms_site }
   subject(:item) { Cms::Group.last }
-  subject(:index_path) { cms_groups_path site.host }
-  subject(:new_path) { new_cms_group_path site.host }
-  subject(:show_path) { cms_group_path site.host, item }
-  subject(:edit_path) { edit_cms_group_path site.host, item }
-  subject(:delete_path) { delete_cms_group_path site.host, item }
-  subject(:import_path) { import_cms_groups_path site.host }
+  subject(:index_path) { cms_groups_path site.id }
+  subject(:new_path) { new_cms_group_path site.id }
+  subject(:show_path) { cms_group_path site.id, item }
+  subject(:edit_path) { edit_cms_group_path site.id, item }
+  subject(:delete_path) { delete_cms_group_path site.id, item }
+  subject(:import_path) { import_cms_groups_path site.id }
 
   it "without login" do
     visit index_path

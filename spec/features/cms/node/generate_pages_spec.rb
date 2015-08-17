@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "cms_generate_pages" do
   subject(:site) { cms_site }
   subject(:node) { create_once :cms_node_page, name: "cms" }
-  subject(:index_path) { node_generate_pages_path site.host, node }
+  subject(:index_path) { node_generate_pages_path site.id, node }
 
   it "without login" do
     visit index_path

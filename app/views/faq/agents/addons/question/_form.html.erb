@@ -2,7 +2,6 @@
 
 <%= jquery do %>
   $("dl.mod-cms-body").prevAll("header").text("<%= @model.t :answer %>");
-  $(".addon-tab[data-id='#addon-cms-addons-body']").text("<%= @model.t :answer %>");
 <% end %>
 
 <dl class="see mod-faq-question">

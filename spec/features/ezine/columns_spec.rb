@@ -4,11 +4,11 @@ describe "ezine_columns" do
   subject(:site) { cms_site }
   subject(:node) { create_once :ezine_node }
   subject(:item) { Ezine::Column.last }
-  subject(:index_path) { ezine_columns_path site.host, node }
-  subject(:new_path) { new_ezine_column_path site.host, node }
-  subject(:show_path) { ezine_column_path site.host, node, item }
-  subject(:edit_path) { edit_ezine_column_path site.host, node, item }
-  subject(:delete_path) { delete_ezine_column_path site.host, node, item }
+  subject(:index_path) { ezine_columns_path site.id, node }
+  subject(:new_path) { new_ezine_column_path site.id, node }
+  subject(:show_path) { ezine_column_path site.id, node, item }
+  subject(:edit_path) { edit_ezine_column_path site.id, node, item }
+  subject(:delete_path) { delete_ezine_column_path site.id, node, item }
 
   it "without login" do
     visit index_path

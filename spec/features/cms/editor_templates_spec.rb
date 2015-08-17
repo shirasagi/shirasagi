@@ -3,13 +3,13 @@ require 'spec_helper'
 describe "cms_editor_templates", dbscope: :example, type: :feature do
   let(:site) { cms_site }
   let(:item) { create(:cms_editor_template, site: site) }
-  let(:index_path) { cms_editor_templates_path site.host }
-  let(:new_path) { new_cms_editor_template_path site.host }
-  let(:show_path) { cms_editor_template_path site.host, item }
-  let(:edit_path) { edit_cms_editor_template_path site.host, item }
-  let(:delete_path) { delete_cms_editor_template_path site.host, item }
+  let(:index_path) { cms_editor_templates_path site.id }
+  let(:new_path) { new_cms_editor_template_path site.id }
+  let(:show_path) { cms_editor_template_path site.id, item }
+  let(:edit_path) { edit_cms_editor_template_path site.id, item }
+  let(:delete_path) { delete_cms_editor_template_path site.id, item }
   let(:thumb_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s }
-  let(:template_path) { template_cms_editor_templates_path site.host }
+  let(:template_path) { template_cms_editor_templates_path site.id }
 
   it "without login" do
     visit index_path

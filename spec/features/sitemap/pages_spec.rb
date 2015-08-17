@@ -4,13 +4,13 @@ describe "sitemap_pages" do
   subject(:site) { cms_site }
   subject(:node) { create_once :sitemap_node_page, filename: "docs", name: "sitemap" }
   subject(:item) { Sitemap::Page.last }
-  subject(:index_path) { sitemap_pages_path site.host, node }
-  subject(:new_path) { new_sitemap_page_path site.host, node }
-  subject(:show_path) { sitemap_page_path site.host, node, item }
-  subject(:edit_path) { edit_sitemap_page_path site.host, node, item }
-  subject(:delete_path) { delete_sitemap_page_path site.host, node, item }
-  subject(:move_path) { move_sitemap_page_path site.host, node, item }
-  subject(:copy_path) { copy_sitemap_page_path site.host, node, item }
+  subject(:index_path) { sitemap_pages_path site.id, node }
+  subject(:new_path) { new_sitemap_page_path site.id, node }
+  subject(:show_path) { sitemap_page_path site.id, node, item }
+  subject(:edit_path) { edit_sitemap_page_path site.id, node, item }
+  subject(:delete_path) { delete_sitemap_page_path site.id, node, item }
+  subject(:move_path) { move_sitemap_page_path site.id, node, item }
+  subject(:copy_path) { copy_sitemap_page_path site.id, node, item }
 
   it "without login" do
     visit index_path

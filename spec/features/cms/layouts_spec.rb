@@ -3,11 +3,11 @@ require 'spec_helper'
 describe "cms_layouts" do
   subject(:site) { cms_site }
   subject(:item) { Cms::Layout.last }
-  subject(:index_path) { cms_layouts_path site.host }
-  subject(:new_path) { new_cms_layout_path site.host }
-  subject(:show_path) { cms_layout_path site.host, item }
-  subject(:edit_path) { edit_cms_layout_path site.host, item }
-  subject(:delete_path) { delete_cms_layout_path site.host, item }
+  subject(:index_path) { cms_layouts_path site.id }
+  subject(:new_path) { new_cms_layout_path site.id }
+  subject(:show_path) { cms_layout_path site.id, item }
+  subject(:edit_path) { edit_cms_layout_path site.id, item }
+  subject(:delete_path) { delete_cms_layout_path site.id, item }
 
   it "without login" do
     visit index_path

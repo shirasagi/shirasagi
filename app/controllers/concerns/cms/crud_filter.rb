@@ -9,8 +9,8 @@ module Cms::CrudFilter
 
   private
     def append_view_paths
-      append_view_path "app/views/ss/crud"
       append_view_path "app/views/cms/crud"
+      append_view_path "app/views/ss/crud"
     end
 
   public

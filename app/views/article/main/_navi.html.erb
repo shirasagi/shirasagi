@@ -1,20 +1,17 @@
-<%= node_navi do %>
+<%= node_navi :article do %>
 
-<%= mod_navi do %>
-  <h2><%= t "modules.article" %></h2>
-<% end %>
+<h3><%= link_to :"article.page", article_pages_path %></h3>
 
-<h3><%= link_to :"article.page", article_pages_path, class: "icon-page" %></h3>
 <ul class="narrow-page">
-  <li><%= link_to :"workflow.page.ready", article_index_ready_path, class: "icon-page" %></li>
-  <li><%= link_to :"workflow.page.closed", article_index_closed_path, class: "icon-page" %></li>
+  <li><%= link_to :"workflow.page.ready", article_index_ready_path %></li>
+  <li><%= link_to :"workflow.page.closed", article_index_closed_path %></li>
 </ul>
 
 <h3><span><%= t "workflow.pages" %></span></h3>
+
 <ul class="narrow-page">
-  <li><%= link_to :"workflow.page.approve", article_index_approve_path, class: "icon-page" %></li>
-  <li><%= link_to :"workflow.page.approve", article_index_approve_path, class: "icon-page" %></li>
-  <li><%= link_to :"workflow.page.request", article_index_request_path, class: "icon-page" %></li>
+  <li><%= link_to :"workflow.page.approve", article_index_approve_path %></li>
+  <li><%= link_to :"workflow.page.request", article_index_request_path %></li>
 </ul>
 
 <% end %>

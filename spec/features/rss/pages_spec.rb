@@ -3,9 +3,9 @@ require 'spec_helper'
 describe "rss_pages", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :rss_node_page, site: site }
-  let(:index_path) { rss_pages_path site.host, node.id }
-  let(:new_path) { new_rss_page_path site.host, node.id }
-  let(:import_path) { import_rss_pages_path site.host, node.id }
+  let(:index_path) { rss_pages_path site.id, node.id }
+  let(:new_path) { new_rss_page_path site.id, node.id }
+  let(:import_path) { import_rss_pages_path site.id, node.id }
 
   context "without login" do
     it do
@@ -54,9 +54,9 @@ describe "rss_pages", dbscope: :example do
 
     context "with item" do
       let(:item) { create(:rss_page, site: site, node: node) }
-      let(:show_path) { rss_page_path site.host, node.id, item }
-      let(:edit_path) { edit_rss_page_path site.host, node.id, item }
-      let(:delete_path) { delete_rss_page_path site.host, node.id, item }
+      let(:show_path) { rss_page_path site.id, node.id, item }
+      let(:edit_path) { edit_rss_page_path site.id, node.id, item }
+      let(:delete_path) { delete_rss_page_path site.id, node.id, item }
 
       it "#index" do
         item.id

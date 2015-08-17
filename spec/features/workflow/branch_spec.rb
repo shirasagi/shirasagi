@@ -4,8 +4,8 @@ describe "workflow_branch", dbscope: :example do
   subject(:site) { cms_site }
   subject(:item) { create_once :article_page, filename: "docs/page.html", name: "[TEST] br_page" }
   subject(:node) { create_once :article_node_page, filename: "docs", name: "article" }
-  subject(:index_path) { article_pages_path site.host, node }
-  subject(:show_path) { article_page_path site.host, node, item }
+  subject(:index_path) { article_pages_path site.id, node }
+  subject(:show_path) { article_page_path site.id, node, item }
 
   it "without login" do
     visit index_path

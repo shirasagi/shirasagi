@@ -12,12 +12,6 @@
   </dl>
 
   <%= jquery do %>
-    var self = $('a.addon-tab[data-id="#addon-cms-agents-addons-edit_lock"]');
-    var top = $('a.addon-tab[data-id="#addon-basic"]');
-    top.before(self);
-  <% end %>
-
-  <%= jquery do %>
     var self = $('#addon-cms-agents-addons-edit_lock');
     var top = $('#addon-basic');
     top.before(self);

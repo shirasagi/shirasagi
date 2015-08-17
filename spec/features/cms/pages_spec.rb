@@ -3,13 +3,13 @@ require 'spec_helper'
 describe "cms_pages" do
   subject(:site) { cms_site }
   subject(:item) { Cms::Page.last }
-  subject(:index_path) { cms_pages_path site.host }
-  subject(:new_path) { new_cms_page_path site.host }
-  subject(:show_path) { cms_page_path site.host, item }
-  subject(:edit_path) { edit_cms_page_path site.host, item }
-  subject(:delete_path) { delete_cms_page_path site.host, item }
-  subject(:move_path) { move_cms_page_path site.host, item }
-  subject(:copy_path) { copy_cms_page_path site.host, item }
+  subject(:index_path) { cms_pages_path site.id }
+  subject(:new_path) { new_cms_page_path site.id }
+  subject(:show_path) { cms_page_path site.id, item }
+  subject(:edit_path) { edit_cms_page_path site.id, item }
+  subject(:delete_path) { delete_cms_page_path site.id, item }
+  subject(:move_path) { move_cms_page_path site.id, item }
+  subject(:copy_path) { copy_cms_page_path site.id, item }
 
   it "without login" do
     visit index_path

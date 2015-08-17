@@ -4,11 +4,11 @@ describe "facility_maps" do
   subject(:site) { cms_site }
   subject(:node) { create_once :facility_node_page, name: "facility" }
   subject(:item) { Facility::Map.last }
-  subject(:index_path) { facility_maps_path site.host, node }
-  subject(:new_path) { new_facility_map_path site.host, node }
-  subject(:show_path) { facility_map_path site.host, node, item }
-  subject(:edit_path) { edit_facility_map_path site.host, node, item }
-  subject(:delete_path) { delete_facility_map_path site.host, node, item }
+  subject(:index_path) { facility_maps_path site.id, node }
+  subject(:new_path) { new_facility_map_path site.id, node }
+  subject(:show_path) { facility_map_path site.id, node, item }
+  subject(:edit_path) { edit_facility_map_path site.id, node, item }
+  subject(:delete_path) { delete_facility_map_path site.id, node, item }
 
   it "without login" do
     visit index_path

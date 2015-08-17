@@ -1,10 +1,5 @@
-<%= node_navi do %>
+<%= node_navi :inquiry do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.inquiry" %></h1></header>
-  <div>
-    <%= link_to :"inquiry.nodes", inquiry_nodes_path %>
-  </div>
-</nav>
+<h3><%= link_to :"inquiry.nodes", inquiry_nodes_path %></h3>
 
 <% end %>

@@ -1,9 +1,11 @@
-<nav class="sub-menu">
-  <header><h1><%= t "views.links.ldap" %></h1></header>
-  <div>
-    <%= link_to :"views.ldap/import.index", ldap_import_index_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <%= link_to :"views.ldap/server.index", ldap_server_path if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
-  </div>
+<nav class="mod-navi">
+  <h2><%= t "views.links.ldap" %></h2>
+  <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <h3><%= link_to :"views.ldap/import.index", ldap_import_index_path %></h3>
+  <% end %>
+  <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <h3><%= link_to :"views.ldap/server.index", ldap_server_path %></h3>
+  <% end %>
 </nav>
 
-<%= render partial: "cms/main/navi" %>
+<%= render partial: "cms/main/conf_navi" %>

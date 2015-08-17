@@ -4,7 +4,7 @@ describe "uploader_files" do
   subject(:site) { cms_site }
   subject(:node) { create_once :uploader_node_file, name: "uploader" }
   subject(:item) { Uploader::File.last }
-  subject(:index_path) { uploader_files_path site.host, node }
+  subject(:index_path) { uploader_files_path site.id, node }
 
   it "without login" do
     visit index_path

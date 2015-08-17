@@ -1,14 +1,7 @@
 <nav class="nav-menu">
-  <header><h1><%= t "views.action" %></h1></header>
-  <div>
-    <% if params[:action] =~ /edit|update|delete/ %>
-      <%= link_to :back_to_show, action: :show %>
-    <% else %>
-      <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <% end %>
-  </div>
+  <% if params[:action] =~ /edit|update|delete/ %>
+    <%= link_to :back_to_show, action: :show %>
+  <% else %>
+    <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% end %>
 </nav>
-
-<% if params[:action] =~ /show|new|edit|create|update/ %>
-<%= render file: "_addons_menu" %>
-<% end %>

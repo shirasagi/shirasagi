@@ -2,7 +2,7 @@ class Cms::CheckLinksController < ApplicationController
   include Cms::BaseFilter
   include SS::ExecFilter
 
-  navi_view "cms/main/navi"
+  navi_view "cms/main/conf_navi"
 
   private
     def task_name

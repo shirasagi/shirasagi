@@ -4,11 +4,11 @@ describe "cms_node_parts" do
   subject(:site) { cms_site }
   subject(:node) { create_once :cms_node_page, name: "cms" }
   subject(:item) { Cms::Part.last }
-  subject(:index_path) { node_parts_path site.host, node }
-  subject(:new_path) { new_node_part_path site.host, node }
-  subject(:show_path) { node_part_path site.host, node, item }
-  subject(:edit_path) { edit_node_part_path site.host, node, item }
-  subject(:delete_path) { delete_node_part_path site.host, node, item }
+  subject(:index_path) { node_parts_path site.id, node }
+  subject(:new_path) { new_node_part_path site.id, node }
+  subject(:show_path) { node_part_path site.id, node, item }
+  subject(:edit_path) { edit_node_part_path site.id, node, item }
+  subject(:delete_path) { delete_node_part_path site.id, node, item }
 
   before(:all) do
     # TODO:

@@ -32,23 +32,28 @@
 <header id="head">
   <div class="wrap">
     <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
-    <div class="cms">
-      <h2><a href="/.mypage">CMS</a></h2>
+
+    <% curr = (request.path =~ /^\/\.s\d+/) ? "current" : nil %>
+    <div class="cms <%= curr %>">
+      <h2><%= link_to "CMS", "#" %></h2>
       <% if @cur_site.present? %>
-      <p><%= link_to @cur_site.name, "/.#{@cur_site.host}" %></p>
+      <p class="<%= 'current' if request.path =~ /^\/\.s\d+/ %>">
+        <%= link_to @cur_site.name, cms_contents_path(@cur_site) %></p>
       <% end %>
     </div>
 
-    <div class="gws">
-      <h2><a href="#">GWS</a></h2>
-    </div>
-
-    <div class="sns">
-      <h2><a href="#">SNS</a></h2>
-    </div>
-
     <% if Rails.env.development? %>
-    <div class="env dev">dev</div>
+      <% curr = (request.path =~ /^\/\.g\d+/) ? "current" : nil %>
+      <div class="gws <%= curr %>">
+        <h2><a href="#/.g1">GWS</a></h2>
+      </div>
+
+      <% curr = (request.path =~ /^\/\.(u\d+|mypage)/) ? "current" : nil %>
+      <div class="sns <%= curr %>">
+        <h2><a href="/.mypage">SNS</a></h2>
+      </div>
+
+      <div class="env dev">[dev]</div>
     <% end %>
 
     <% if @cur_user %>

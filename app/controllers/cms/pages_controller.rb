@@ -5,7 +5,6 @@ class Cms::PagesController < ApplicationController
   model Cms::Page
 
   navi_view "cms/main/navi"
-  menu_view "cms/main/node_menu"
 
   private
     def set_crumbs

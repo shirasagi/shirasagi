@@ -3,12 +3,12 @@ require 'spec_helper'
 describe "cms_node_pages", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :cms_node_page, name: "cms" }
-  let(:index_path) { node_pages_path site.host, node }
-  let(:new_path) { new_node_page_path site.host, node }
+  let(:index_path) { node_pages_path site.id, node }
+  let(:new_path) { new_node_page_path site.id, node }
   let(:item) { create(:cms_page) }
-  let(:show_path) { node_page_path site.host, node, item }
-  let(:edit_path) { edit_node_page_path site.host, node, item }
-  let(:delete_path) { delete_node_page_path site.host, node, item }
+  let(:show_path) { node_page_path site.id, node, item }
+  let(:edit_path) { edit_node_page_path site.id, node, item }
+  let(:delete_path) { delete_node_page_path site.id, node, item }
 
   it "without login" do
     visit index_path

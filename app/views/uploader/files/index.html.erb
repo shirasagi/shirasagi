@@ -1,37 +1,37 @@
-<table class="index">
-  <thead>
-    <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th><%= @model.t :name %></th>
-      <th><%= @model.t :filename %></th>
-    </tr>
-  </thead>
+<div class="index">
+  <%= render file: "_list_head" %>
 
-  <tbody>
+  <ul class="list-items">
     <% if @cur_node.filename != @item.filename %>
-    <tr>
-      <td></td>
-      <td><%= link_to :parent_directory, { action: :show, filename: @item.dirname }, class: "icon-node" %></td>
-      <td></td>
-    </tr>
+      <li class="list-item">
+        <div class="list-item-info">
+          <%= link_to :parent_directory, { action: :show, filename: @item.dirname }, class: "list-item-up" %>
+        </div>
+      </li>
     <% end %>
+
     <% @items.each do |item| %>
-    <tr>
-      <td class="checkbox">
-        <input type="checkbox" name="ids[]" value="<%= item.name %>"/>
-        <nav class="tap-menu">
+    <li class="list-item">
+      <nav class="list-item-tap">
         <%= link_to :show, action: :show, filename: item.filename, do: :show if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to :edit, action: :show, filename: item.filename, do: :edit if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to :delete, action: :show, filename: item.filename, do: :delete if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-        </nav>
-      </td>
-      <% if item.directory? %>
-      <td><%= link_to item.name, { action: :show, filename: item.filename }, class: "icon-node" %></td>
-      <% else %>
-      <td><%= link_to item.name, { action: :show, filename: item.filename, do: :show }, class: "icon-page" %></td>
-      <% end %>
-      <td class="filename"><%= item.name %></td>
-    </tr>
+      </nav>
+
+      <label><input type="checkbox" name="ids[]" value="<%= item.name %>" /></label>
+      <div class="list-item-info">
+        <% if item.directory? %>
+        <%= link_to item.name, { action: :show, filename: item.filename }, class: "list-item-title dir" %>
+        <% else %>
+        <%= link_to item.name, { action: :show, filename: item.filename, do: :show }, class: "list-item-title file" %>
+        <% end %>
+
+        <div class="list-item-meta">
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="filename"><%= item.name %></span>
+        </div>
+      </div>
+    </li>
     <% end %>
-  </tbody>
-</table>
+  </ul>
+</div>

@@ -6,7 +6,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   let!(:user) { cms_user }
   let!(:node) { create(:article_node_page) }
   let(:auth_token_path) { sns_auth_token_path(format: :json) }
-  let(:index_path) { article_pages_path(site.host, node, format: :json) }
+  let(:index_path) { article_pages_path(site.id, node, format: :json) }
 
   before do
     # get and save  auth token
@@ -48,7 +48,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
 
   describe "GET /page/:id/lock.json" do
     let!(:item) { create(:article_page, node: node) }
-    let!(:lock_path) { lock_article_page_path(site.host, node, item, format: :json) }
+    let!(:lock_path) { lock_article_page_path(site.id, node, item, format: :json) }
 
     context "with no lock" do
       it do
@@ -80,7 +80,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
 
   describe "DELETE /page/:id/lock.json" do
     let!(:item) { create(:article_page, node: node) }
-    let!(:lock_path) { lock_article_page_path(site.host, node, item, format: :json) }
+    let!(:lock_path) { lock_article_page_path(site.id, node, item, format: :json) }
 
     context "with owned lock" do
       before do

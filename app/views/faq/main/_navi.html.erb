@@ -1,22 +1,17 @@
-<%= node_navi do %>
+<%= node_navi :faq do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.faq" %></h1></header>
-  <div>
-    <%= link_to :"faq.page", faq_pages_path, class: "icon-page" %>
-  </div>
-  <div class="narrow-page">
-    <%= link_to :"workflow.page.ready", faq_index_ready_path, class: "icon-page" %>
-    <%= link_to :"workflow.page.closed", faq_index_closed_path, class: "icon-page" %>
-  </div>
-</nav>
+<h3><%= link_to :"faq.page", faq_pages_path %></h3>
 
-<nav class="sub-menu">
-  <header><h1><%= t "workflow.pages" %></h1></header>
-  <div>
-    <%= link_to :"workflow.page.approve", faq_index_approve_path, class: "icon-page" %>
-    <%= link_to :"workflow.page.request", faq_index_request_path, class: "icon-page" %>
-  </div>
-</nav>
+<ul class="narrow-page">
+  <li><%= link_to :"workflow.page.ready", faq_index_ready_path %></li>
+  <li><%= link_to :"workflow.page.closed", faq_index_closed_path %></li>
+</ul>
+
+<h3><span><%= t "workflow.pages" %></span></h3>
+
+<ul class="narrow-page">
+  <li><%= link_to :"workflow.page.approve", faq_index_approve_path %></li>
+  <li><%= link_to :"workflow.page.request", faq_index_request_path %></li>
+</ul>
 
 <% end %>

@@ -1,20 +1,28 @@
 module Cms::NodeHelper
   def contents_path(node)
     route = node.view_route.present? ? node.view_route : node.route
-     "/.#{node.site.host}/" + route.pluralize.sub("/", "#{node.id}/")
+     "/.s#{node.site.id}/" + route.pluralize.sub("/", "#{node.id}/")
   rescue StandardError => e
     raise(e) unless Rails.env.production?
     node_nodes_path(cid: node)
   end
 
-  def node_navi(opts = {}, &block)
+  def node_navi(mod_name = nil, &block)
     h  = []
+
+    if block_given?
+      h << %(<nav class="mod-navi">).html_safe
+
+      if mod_name
+        mod_name = t("modules.#{mod_name}")
+        h << mod_navi { %(<h2>#{mod_name}</h2>).html_safe }
+      end
+
+      h << capture(&block)
+      h << %(</nav>).html_safe
+    end
+
     h << render(partial: "cms/node/main/node_navi")
-
-    h << %(<nav class="mod-navi">).html_safe
-    h << capture(&block) if block_given?
-    h << %(</nav>).html_safe
-
     #h << render(partial: "cms/main/navi")
     safe_join(h)
   end

@@ -1,15 +1,9 @@
 <% addons.each do |addon| %>
-<div class="addon-view" id="addon-<%= addon.id %>">
   <% buf = nil %>
   <% buf = render file: addon.form_file, locals: { f: f, a: 1 } if addon.form_file %>
-
-  <% if buf.present? %>
+  <% next if buf.blank? %>
+  <div class="addon-view" id="addon-<%= addon.id %>">
     <header><h2><%= addon.name %></h2></header>
     <%= buf %>
-  <% else %>
-    <%= jquery do %>
-    $(".addon-menu").find("[data-id=#addon-<%= addon.id %>]").remove()
-    <% end %>
-  <% end %>
-</div>
+  </div>
 <% end %>

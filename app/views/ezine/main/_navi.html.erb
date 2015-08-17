@@ -1,22 +1,9 @@
-<%= node_navi do %>
+<%= node_navi :ezine do %>
 
-<nav class="sub-menu">
-  <header><h1><%= t "modules.ezine" %></h1></header>
-  <div>
-    <%= link_to :"ezine.page", ezine_pages_path, class: "icon-page" %>
-  </div>
-  <div>
-    <%= link_to :"ezine.member", ezine_members_path, class: "icon-page" %>
-  </div>
-  <div>
-    <%= link_to :"ezine.test_member", ezine_test_members_path, class: "icon-page" %>
-  </div>
-  <div>
-    <%= link_to :"ezine.column", ezine_columns_path, class: "icon-page" %>
-  </div>
-  <div>
-    <%= link_to :"ezine.entry", ezine_entries_path, class: "icon-page" %>
-  </div>
-</nav>
+<h3><%= link_to :"ezine.page", ezine_pages_path %></h3>
+<h3><%= link_to :"ezine.member", ezine_members_path %></h3>
+<h3><%= link_to :"ezine.test_member", ezine_test_members_path %></h3>
+<h3><%= link_to :"ezine.column", ezine_columns_path %></h3>
+<h3><%= link_to :"ezine.entry", ezine_entries_path %></h3>
 
 <% end %>
