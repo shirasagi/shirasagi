@@ -8,18 +8,18 @@
         <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
         <% if item.try(:filename) %>
         <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
         <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
         <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
         <% end %>
-        <% if item.try(:image?) %>
-          <%= link_to image_tag(url_for(action: :thumb, id: item.id)),
-            { action: :view, id: item.id }, { class: "thumb", target: "_blank" } %>
+
+        <% if item.try(:image) %>
+          <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+        <% elsif item.try(:image?) %>
+          <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
         <% end %>
-        <%# if item.file.present? && item.file.image? %>
-        <%#= link_to image_tag(item.file.thumb.url), item.file.url, { class: "thumb", target: "_blank" } %>
-        <%# end %>
       </nav>
 
       <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>

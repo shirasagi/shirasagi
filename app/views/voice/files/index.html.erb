@@ -1,9 +1,10 @@
 <%= render file: "_search" %>
 
+<br /><!-- TODO: -->
+
 <table class="index">
   <thead>
     <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
       <th><%= @model.t :url %></th>
       <th class="datetime"><%= @model.t :updated %></th>
     </tr>
@@ -11,16 +12,14 @@
 
   <tbody>
     <% @items.each do |item| %>
-    <tr>
-      <td class="checkbox">
-        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="tap-menu">
+    <tr class="list-item">
+      <td>
+        <nav class="list-item-tap">
           <%= link_to :show, action: :show, id: item %>
           <%= link_to :delete, action: :delete, id: item %>
           <%= link_to :view_site, item.url, target: :_blank %>
         </nav>
-      </td>
-      <td><%= link_to item.url, action: :show, id: item %></td>
+        <%= link_to item.url, action: :show, id: item %></td>
       <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>

@@ -1,10 +1,13 @@
 <%= node_navi :facility do %>
 
 <% if params[:action] =~ /show|edit/ %>
-<h3><%= link_to :"facility.image", facility_images_path(cid: @item.id) %></h3>
-<h3><%= link_to :"facility.map", facility_maps_path(cid: @item.id) %></h3>
+  <% if @item.parent.present? %>
+  <h3><%= link_to :"facility.page", facility_page_path(cid: @item.parent.id, id: @item.id) %></h3>
+  <% end %>
+  <h3><%= link_to :"facility.image", facility_images_path(cid: @item.id) %></h3>
+  <h3><%= link_to :"facility.map", facility_maps_path(cid: @item.id) %></h3>
 <% else %>
-<h3><%= link_to :"facility.page", facility_pages_path %></h3>
+  <h3><%= link_to :"facility.page", facility_pages_path %></h3>
 <% end %>
 
 <% end %>

@@ -1,8 +1,8 @@
+<% return if @item.send(:html).blank? %>
+
 <dl class="see mod-cms-body">
   <dd class="wide">
-    <% if @item.send(:html).present?  %>
     <%= html_editor_ckeditor "#mod-cms-body", height: "400px", readonly: true %>
     <%= text_area_tag "mod-cms-body", @item.html, style: "height: 400px;" %>
-    <% end %>
   </dd>
 </dl>

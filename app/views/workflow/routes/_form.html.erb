@@ -18,7 +18,7 @@
         <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">
             <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>
       </tbody>
@@ -52,14 +52,14 @@
                 <%= f.hidden_field "approvers[]", value: "#{level},#{user.id}" %>
                 <%= user.long_name %>
               </td>
-              <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+              <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
             </tr>
           <% else %>
             <tr>
               <td>
                 <%= t("workflow.user_deleted") %>
               </td>
-              <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+              <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
             </tr>
           <% end %>
         <% end %>

@@ -2,6 +2,8 @@ ja:
   cms:
     alert: 警告
     config: 設定
+    site_config: サイト設定
+    site_info: サイト情報
     content: コンテンツ
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し

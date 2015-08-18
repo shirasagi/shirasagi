@@ -1,10 +1,8 @@
 <%= form_for :item, url: { action: :import }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
-<div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <header><h2><%= t("rss.views.confirm.import") %></h2></header>
-  </div>
+<div class="main-box">
+  <header><h2><%= t("rss.views.confirm.import") %></h2></header>
 </div>
 
 <footer class="send">

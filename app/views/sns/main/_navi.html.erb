@@ -4,6 +4,6 @@
   <h2><%= link_to :"sns.account", sns_user_account_path(@cur_user) %></h2>
 
   <% if SS::User.allowed?(:edit, @cur_user) %>
-    <h2><%= link_to :"modules.sys", sys_sites_path %></h2>
+  <h2><%= link_to :"sys.conf", sys_sites_path %></h2>
   <% end %>
 </nav>

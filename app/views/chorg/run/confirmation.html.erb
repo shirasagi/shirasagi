@@ -1,16 +1,15 @@
 <%= form_for :item, url: { action: :run }, html: {id: "item-form", method: :post, multipart: true, autocomplete: :off} do |f| %>
   <%= error_messages_for :item %>
 
-  <div class="addon-views mod-chorg-run-confirmation">
-    <div class="addon-view" id="addon-basic">
-      <header><h2><%= t("chorg.views.run/confirmation.#{params[:type]}.header") %></h2></header>
-      <dl class="see mod-chorg-run-confirmation">
-        <dt><%= @model.t :name %></dt>
-        <dd><%= @item.name %></dd>
-        <dt><%= t("chorg.views.run/confirmation.run_options") %></dt>
-        <dd><%= f.check_box(:add_newly_created_group_to_site) %> <%= @model.t :add_newly_created_group_to_site %></dd>
-      </dl>
-    </div>
+  <div class="main-box mod-chorg-run-confirmation">
+    <header><h2><%= t("chorg.views.run/confirmation.#{params[:type]}.header") %></h2></header>
+
+    <dl class="see mod-chorg-run-confirmation">
+      <dt><%= @model.t :name %></dt>
+      <dd><%= @item.name %></dd>
+      <dt><%= t("chorg.views.run/confirmation.run_options") %></dt>
+      <dd><%= f.check_box(:add_newly_created_group_to_site) %> <%= @model.t :add_newly_created_group_to_site %></dd>
+    </dl>
   </div>
 
   <footer class="send">

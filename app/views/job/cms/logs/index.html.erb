@@ -9,9 +9,9 @@
   </thead>
   <tbody>
     <% @items.each do |item| %>
-    <tr>
+    <tr class="list-item">
       <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(" + safe_join(item.args, ", ") + ")", action: :show, id: item) %>
-        <nav class="tap-menu">
+        <nav class="list-item-tap">
           <%= link_to :show, action: :show, id: item %>
         </nav>
       </td>

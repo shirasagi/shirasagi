@@ -1,6 +1,6 @@
 <%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
 <%= jquery do %>
-  SS_AddonTabs.toggleView(".mod-map");
+  SS_AddonTabs.hide(".mod-map");
 
   Map.center = <%= SS.config.cms.map_center.to_json %>
   Map_Form.maxPointForm = <%= SS.config.cms.map_max_point_form %>
@@ -10,7 +10,7 @@
   Map.renderMarkers();
   Map.renderEvents();
 
-  $(".mod-map").parent().find(".toggle a").click(function() {
+  SS_AddonTabs.head(".mod-map").click(function() {
     Map.resize();
   });
 <% end %>

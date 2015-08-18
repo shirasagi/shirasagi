@@ -70,7 +70,7 @@
       <div class="pulldown-menu">
         <h2><%= link_to @cur_user.name, sns_user_profile_path(@cur_user) %></h2>
         <ul>
-          <li><%= link_to :profile, sns_user_profile_path(@cur_user) %></li>
+          <li><%= link_to t(:"sns.profile"), sns_user_profile_path(@cur_user) %></li>
           <li><%= link_to :logout, sns_logout_path %></li>
         </ul>
       </div>
@@ -129,9 +129,6 @@
 <!-- /#wrap --></div>
 
 <footer id="foot">
-  <div class="wrap">
-    SHIRASAGI Project
-  </div>
   <div id="ss-pc" style="display: none">PC View</div>
   <div id="ss-mb" style="display: none">Mobile View</div>
 <!-- /#foot --></footer>

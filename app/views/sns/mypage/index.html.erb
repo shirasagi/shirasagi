@@ -1,20 +1,20 @@
-<div id="sns-mypage">
+<% if @sites.size > 0 %>
+<div class="index mypage-sites">
+  <div class="list-head"><%= t "cms.site" %></div>
 
-  <table class="index sites">
-    <thead>
-      <tr>
-        <th><h1><%= t :"cms.site" %></h1></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @sites.each do |item| %>
-      <tr>
-        <td>
-          <div class="name"><%= link_to item.name, cms_contents_path(site: item) %></div>
-        </td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <ul class="list-items">
+    <% @sites.each do |item| %>
+    <li class="list-item">
+      <div class="list-item-info">
+        <%= link_to item.name, cms_contents_path(site: item), class: "list-item-title" %>
 
+        <div class="list-item-meta">
+          <span class="id"><%= item.full_url %></span>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
 </div>
+<% end %>
+

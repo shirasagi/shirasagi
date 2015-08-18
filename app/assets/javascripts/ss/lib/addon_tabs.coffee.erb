@@ -1,28 +1,15 @@
 class @SS_AddonTabs
   @render: ->
-    tabs = $(".addon-tab")
-    tabs.filter("[data-id=#addon-all]").addClass("current");
-    tabs.click (ev) ->
-      cur = $(this)
-      $(tabs).each ->
-        tab = $(this)
-        if cur.attr("data-id") == "#addon-all"
-          $(tab.attr("data-id")).fadeIn(150)
-          tab.removeClass("current");
-        else if cur.attr("data-id") == tab.attr("data-id")
-          $(tab.attr("data-id")).fadeIn(150)
-        else
-          $(tab.attr("data-id")).hide(0)
-        tab.removeClass("current");
-      cur.addClass("current");
-      ev.preventDefault();
+    $('.addon-head h2').on 'click', ->
+      $(this).parent().parent().find('.addon-body').animate( { height: 'toggle' }, 'fast' )
 
+  @hide: (view) ->
+    $(view).parent().hide()
+
+  # TODO: deprecated
   @toggleView: (view) ->
-    view = $(view)
-    view.hide()
-    view.before '<div class="toggle"><a href="#"><%= t("views.button.toggle") %></a></div>'
+    console.log "SS_AddonTabs.toggleView is deprecated"
+    $(view).parent().hide()
 
-    trigger = view.parent().find(".toggle a")
-    trigger.on 'click', ->
-      view.animate( { height: 'toggle' }, 'fast' )
-      return false
+  @head: (content) ->
+    $(content).parent().parent().find('.addon-head h2')

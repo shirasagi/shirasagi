@@ -1,5 +1,5 @@
 <% return "" unless @item.meta_present? %>
-<%= jquery do %> SS_AddonTabs.toggleView("dl.meta"); <% end %>
+<%= jquery do %> SS_AddonTabs.hide("dl.meta"); <% end %>
 
 <dl class="see meta">
   <dt><%= @model.t :keywords %></dt>

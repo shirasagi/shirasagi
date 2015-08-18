@@ -1,30 +1,33 @@
-<%= render file: "_search" %>
+<div class="index">
+  <%= render file: "_list_head" %>
 
-<table class="index">
-  <thead>
-    <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th><%= @model.t :name %></th>
-      <th class="datetime"><%= @model.t :updated %></th>
-    </tr>
-  </thead>
-
-  <tbody>
+  <ul class="list-items">
     <% @items.each do |item| %>
-    <tr>
-      <td class="checkbox">
-        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="tap-menu">
-          <%= link_to :show, action: :show, id: item %>
-          <%= link_to :edit, action: :edit, id: item %>
-          <%= link_to :delete, action: :delete, id: item %>
-        </nav>
-      </td>
-      <td><%= link_to item.name, { action: :show, id: item }, { class: "notice-severity-#{item.notice_severity}" } %></td>
-      <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-    </tr>
+    <li class="list-item">
+      <nav class="list-item-tap">
+        <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      </nav>
+
+      <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <div class="list-item-info">
+        <%= link_to item.name, { action: :show, id: item }, { class: "list-item-title" } %>
+
+        <div class="list-item-meta">
+          <span class="id">#<%= item.id %></span>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <% if item.try(:status) %>
+            <span class="state"><%= t "views.state.#{item.status}" %></span>
+          <% end %>
+          <% if attr = item.label(:notice_severity).presence %>
+            <span><%= attr %></span>
+          <% end %>
+        </div>
+      </div>
+    </li>
     <% end %>
-  </tbody>
-</table>
+  </ul>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

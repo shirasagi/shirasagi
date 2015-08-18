@@ -25,7 +25,7 @@ def cate_form(item)
 end
 
 %>
-<%= jquery do %> SS_AddonTabs.toggleView(".mod-ads-category"); <% end %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-ads-category"); <% end %>
 
 <dl class="see mod-ads-category category-form">
   <div style="margin-bottom:20px;line-height:1.4;"><%= @model.tt :ads_categories %></div>

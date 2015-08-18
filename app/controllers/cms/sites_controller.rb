@@ -9,7 +9,7 @@ class Cms::SitesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"cms.site", action: :show]
+      @crumbs << [:"cms.site_info", action: :show]
     end
 
     def set_item

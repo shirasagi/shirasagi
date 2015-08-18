@@ -10,12 +10,11 @@
 
   <tbody>
   <% @items.each do |item| %>
-    <tr>
+    <tr class="list-item">
       <td class="checkbox">
         <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="tap-menu">
+        <nav class="list-item-tap">
           <%= link_to :show, action: :show, id: item %>
-          <%# link_to :delete, action: :delete, id: item %>
         </nav>
       </td>
       <td><%= link_to item.created.strftime("%Y/%m/%d %H:%M"), action: :show, id: item %></td>

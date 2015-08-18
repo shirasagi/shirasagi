@@ -12,6 +12,7 @@
   <% else %>
     <%= link_to :edit, action: :edit, id: @item %>
     <%= link_to :delete, action: :delete, id: @item %>
+    <%= link_to :back_to_index, action: :index %>
     </nav>
     <nav class="nav-menu">
     <%= link_to :"chorg.menus.revisions.add", new_chorg_changesets_changeset_path(rid: @item, type: "add") %>
@@ -24,8 +25,5 @@
     <%= link_to :"chorg.menus.revisions.test_execute", controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::TEST %>
     <%= link_to :"chorg.menus.revisions.production_execute", controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::MAIN %>
     <%= link_to :"chorg.menus.revisions.execute_results", controller: :results, action: :index, rid: @item.id %>
-    </nav>
-    <nav class="nav-menu">
-    <%= link_to :back_to_index, action: :index %>
    <% end %>
 </nav>

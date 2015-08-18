@@ -2,7 +2,7 @@
   <% has_action_lock = url_for(action: :lock) rescue nil %>
   <% if has_action_lock %>
     <%= jquery do %>
-      SS_AddonTabs.toggleView(".mod-cms-edit_lock");
+      SS_AddonTabs.hide(".mod-cms-edit_lock");
       var editLock = new Cms_EditLock(".mod-cms-edit_lock", "<%= url_for action: :lock %>", "<%= url_for action: :unlock %>");
     <% end %>
 

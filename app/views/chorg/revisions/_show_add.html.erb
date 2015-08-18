@@ -4,10 +4,10 @@
     <thead><tr><th><%= t("chorg.views.revisions/#{params[:action]}.#{type}_description") %></th></tr></thead>
     <tbody>
     <% changesets.each do |changeset| %>
-      <tr>
+      <tr class="list-item">
         <td>
           <%= link_to changeset.add_description, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
-          <nav class="tap-menu">
+          <nav class="list-item-tap">
             <%= link_to :show, chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
             <%= link_to :edit, edit_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>
             <%= link_to :delete, delete_chorg_changesets_changeset_path(rid: @item, type: changeset.type, id: changeset) %>

@@ -1,22 +1,3 @@
-#sns-mypage {
-  .sites {
-    width: 300px;
-    .name {
-    }
-    .url {
-      float: right;
-      a { color: $green; }
-    }
-  }
-
-  @include mb {
-    .sites {
-      width: 100%;
-      td {
-        width: 100%;
-        max-width: 100%;
-      }
-    }
-  }
+.mypage-sites {
+  margin-top: 10px;
 }
-

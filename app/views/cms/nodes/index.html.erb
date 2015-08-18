@@ -5,11 +5,8 @@
     <% if @cur_node %>
       <li class="list-item">
         <div class="list-item-info">
-          <% if @cur_node.parent %>
-          <%= link_to :parent_directory, { cid: @cur_node.parent }, class: "list-item-up" %>
-          <% else %>
-          <%= link_to :parent_directory, cms_nodes_path, class: "list-item-up" %>
-          <% end %>
+          <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
+          <%= link_to :parent_directory, link, class: "list-item-up" %>
         </div>
       </li>
     <% end %>
@@ -20,14 +17,17 @@
         <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
         <% if @model.collection_name =~ /^cms_(nodes|pages)$/ %>
         <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
         <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
         <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
         <% end %>
-        <% if item.try(:image?) %>
-          <%= link_to image_tag(url_for(action: :thumb, id: item.id)),
-            { action: :view, id: item.id }, { class: "thumb", target: "_blank" } %>
+
+        <% if item.try(:image) %>
+          <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+        <% elsif item.try(:image?) %>
+          <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
         <% end %>
       </nav>
 
@@ -37,18 +37,10 @@
 
         <div class="list-item-meta">
           <span class="id">#<%= item.id %></span>
-          <% if item.try(:updated) %>
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-          <% end %>
-          <% if item.try(:filename) %>
-            <span class="filename"><%= File.basename item.filename %></span>
-          <% end %>
-          <% if item.try(:route) %>
-            <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-          <% end %>
-          <% if item.try(:status) %>
-            <span class="state"><%= t "views.state.#{item.status}" %></span>
-          <% end %>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="filename"><%= File.basename item.filename %></span>
+          <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+          <span class="state"><%= t "views.state.#{item.status}" %></span>
         </div>
       </div>
     </li>

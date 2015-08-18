@@ -46,14 +46,12 @@
   }
 }
 
-a.notice-severity-high {
-  color: $pink;
+.notices {
+  .datetime {
+    color: #888;
+  }
 }
-
-.addon-view header h2.notice-severity-high {
+.list-item-title.notice-severity-high {
   color: $pink;
-}
-
-table.notices {
-  margin-bottom: 15px;
+  font-weight: bold;
 }

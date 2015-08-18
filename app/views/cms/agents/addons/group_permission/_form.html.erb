@@ -1,4 +1,4 @@
-<%= jquery do %> SS_AddonTabs.toggleView(".mod-cms-owner_permission"); <% end %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-owner_permission"); <% end %>
 
 <dl class="see mod-cms-owner_permission">
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
@@ -17,13 +17,13 @@
       <tbody>
         <tr data-id="<%= @cur_group.id %>">
           <td><%= f.hidden_field "group_ids[]", value: @cur_group.id %> <%= @cur_group.name %></td>
-          <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% @item.groups.each do |group| %>
         <% next if group.id == @cur_group.id %>
         <tr data-id="<%= group.id %>">
           <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
-          <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>
       </tbody>

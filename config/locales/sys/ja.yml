@@ -1,5 +1,6 @@
 ja:
   sys:
+    conf: システム設定
     info: 接続情報
     server_name: サーバー名
     remote_addr: 接続元IPアドレス

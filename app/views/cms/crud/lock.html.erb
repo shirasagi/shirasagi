@@ -1,13 +1,12 @@
-<div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <header><h2><%= t("modules.addons.cms/edit_lock") %></h2></header>
-    <%= error_messages_for :item %>
-    <dl class="see">
-      <dt><%= @model.t :name %></dt>
-      <dd><%= @item.name %></dd>
-      <dd class="wide"><%= t("errors.messages.locked", user: @item.lock_owner.long_name) %></dd>
-    </dl>
-  </div>
+<div class="main-box">
+  <header><h2><%= t("modules.addons.cms/edit_lock") %></h2></header>
+  <%= error_messages_for :item %>
+
+  <dl class="see">
+    <dt><%= @model.t :name %></dt>
+    <dd><%= @item.name %></dd>
+    <dd class="wide"><%= t("errors.messages.locked", user: @item.lock_owner.long_name) %></dd>
+  </dl>
 </div>
 
 <% if @item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node) %>

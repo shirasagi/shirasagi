@@ -7,7 +7,7 @@ html {
 html, body {
   height: 100%;
   margin: 0px;
-  color: $black;
+  color: $black3;
 }
 header, footer, nav, section, article, figure, aside {
   display: block;
@@ -373,6 +373,9 @@ td {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    &.current {
+      background-color: $gray1;
+    }
     &:hover {
       background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px center;
       text-decoration: none;
@@ -475,6 +478,9 @@ td {
       display: block;
       padding: 5px 15px 5px 90px;
       background: url(/assets/img/ic-arrow16-off.png) no-repeat 65px center;
+      &.current {
+        background-color: $gray1;
+      }
       &:hover {
         background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 65px center;
         text-decoration: none;
@@ -590,23 +596,22 @@ td {
 #ajax-box {
   margin: 10px;
 }
-.main-view  {
-  @include main-view;
+.main-box  {
+  @include box;
+  padding: 10px 15px;
+  header {
+    @include box-head;
+    margin: -10px -15px 10px;
+    border-bottom: $border-gray1;
+  }
 }
 .addon-view {
   @include box;
-  margin-bottom: 10px;
   @include mb {
     margin: 0 10px 10px;
   }
-  header {
-    @include box-head;
-  }
   .see {
-    padding: 20px;
-    @include mb {
-      padding: 0 10px 10px;
-    }
+    padding: 0 10px;
   }
   + footer.send {
     border-top: 1px solid #ddd;
@@ -627,13 +632,25 @@ td {
     }
   }
 }
+.addon-head {
+  @include box-head;
+  h2 {
+    display: inline-block;
+    cursor: pointer;
+    &:hover { text-decoration: underline; }
+  }
+}
+.addon-body {
+  border-top: $border-gray1;
+  padding: 10px;
+}
 dl.see {
-  margin: 0px;
+  margin: 5px 0px;
   > dt {
     @include clear;
     float: left;
     min-width: 180px;
-    padding: 7px 0;
+    padding: 5px 0;
     color: $black;
     font-weight: bold;
     @include mb {
@@ -643,25 +660,25 @@ dl.see {
   > dd {
     @include clear;
     margin: 0px 0px 0px 180px;
-    padding: 7px 0;
+    padding: 5px 0;
     @include mb {
       margin: 0;
     }
-    input, select,  {
-      margin: -7px 0;
+    input, select {
+      margin: -5px 0;
     }
   }
-  > dt ~ dt { margin-top: 20px; }
+  > dt ~ dt { margin-top: 15px; }
   > dd ~ dd {
-      margin-top: 20px;
+      margin-top: 15px;
       @include mb {
         margin-top: 0;
       }
     }
   > dd + dd {
-    margin-top: 20px;
+    margin-top: 0px;
     @include mb {
-      margin-top:10px;
+      margin-top: 0;
     }
   }
   > dt.wide {
@@ -676,18 +693,6 @@ dl.see {
     border-top: 0px;
     button, .ajax-box {
       margin-right: 15px;
-    }
-  }
-  table.index {
-    width: 100%;
-    th, td {
-      padding: 10px 0;
-    }
-    td {
-      border-top: $border-gray1;
-    }
-    .deselect {
-      @include btn;
     }
   }
 }
@@ -747,7 +752,6 @@ footer.send {
   text-align: center;
   input, button {
     margin: 0 8px;
-    @include btn-gray-l;
     @include mb {
       margin: 0 4px;
     }
@@ -759,6 +763,10 @@ footer.send {
 
 // -------------------------------------------------------------------------------------------------
 // button
+
+.btn {
+  @include btn;
+}
 .btn-primary {
   @include btn-red;
 }
@@ -768,6 +776,7 @@ footer.send {
 .btn-success {
   @include btn-orange;
 }
+
 // -------------------------------------------------------------------------------------------------
 // addon
 #addon-cms-agents-addons-file .see, .addon-view .see {
@@ -959,71 +968,88 @@ div.index {
   @include box;
   position: static;
   @include mb { margin: 0 10px 10px; }
-  .list-head {
-    @include clear;
-    padding: 20px;
-    border-bottom: $border-gray1;
-    font-weight: bold;
-    @include mb { padding: 10px; }
-  }
-  .list-head-check {
-    float: left;
-  }
-  .list-head-action {
-    float: left;
-  }
-  .list-head-search {
-    float: right;
-  }
   label {
-    margin-right: 20px;
+    float: left;
+    margin-left: -15px;
+    margin-right: 5px;
+    padding: 8px;
   }
-  ul {
-    margin: 0;
-    padding: 0;
+}
+.list-items {
+  margin: 10px;
+  padding: 0;
+}
+.list-head {
+  @include clear;
+  margin: 0px 0px 10px;
+  padding: 10px 20px;
+  border-bottom: $border-gray1;
+  font-weight: bold;
+  @include mb { padding: 10px; }
+}
+.list-head-action {
+  float: left;
+}
+.list-head-search {
+  float: right;
+}
+.list-item {
+  padding: 8px 10px;
+  border-bottom: $border-gray1;
+  @include mb { padding: 8px 10px; }
+  &:last-child {
+    border: none;
   }
-  .list-item {
-    padding: 8px 20px;
-    border-bottom: $border-gray1;
-    @include mb { padding: 8px 10px; }
-    .checked, &:hover {
-      background: $orange2;
-    }
-    label {
-      float: left;
-      padding: 10px 0;
-    }
-    .list-item-info { @include mb { margin-left: 40px; } }
-    .list-item-title {
-      color: $orange;
-      font-size: $px15;
-      @include mb { font-size: $px14; }
-    }
-    .list-item-meta {
-      span {
-        margin-right: 10px;
-        font-size: $px12;
-      }
-      .id {
-        color: #888;
-      }
-      .filename {
-        color: #080;
-      }
-    }
+  .checked, &:hover {
+    background: $orange2;
   }
-  .list-item-tap, .multiple-menu {
-    display: none;
-    position: absolute;
-    z-index: 100;
-    border: $border-gray4;
+}
+.list-item-tap {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  padding: 5px 0px;
+  border: $border-gray4;
+  background: $white;
+  @include box-shadow(0px 1px 3px #gray4);
+  a {
+    display: block;
+    padding: 5px 15px;
+    line-height: 1.8;
+    &:hover { background: $gray1; }
+  }
+}
+.list-item-info { @include mb { margin-left: 40px; } }
+.list-item-title {
+  color: $orange;
+  font-size: $px15;
+  @include mb { font-size: $px14; }
+}
+.list-item-meta {
+  span {
+    margin-right: 10px;
+    font-size: $px12;
+  }
+  .id {
+    color: #888;
+  }
+  .filename {
+    color: #080;
+  }
+}
+
+table.index {
+  th, td {
+    padding: 4px 8px;
+    border: $border-gray5;
     background: $white;
-    @include box-shadow(0px 1px 3px #gray4);
-    a {
-      display: block;
-      padding: 5px 10px;
-      line-height: 1.8;
-    }
+  }
+  thead th {
+    background: $gray1;
+  }
+  .padding {
+    display: inline-block;
+    width: 12px;
   }
 }
 
@@ -1035,7 +1061,7 @@ select, input, textarea, button {
   font-family: $font-base;
 }
 input[type=submit] {
-  @include btn;
+  //@include btn;
 }
 button, #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
   @include btn;

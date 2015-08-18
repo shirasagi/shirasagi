@@ -1,9 +1,5 @@
 <div class="index">
-  <div class="list-head">
-    <span><%= t :"history.target" %> : <%= t :"history.action" %></span>
-  </div>
-
-  <ul>
+  <ul class="list-items">
     <% @items.each do |item| %>
     <% name = item.try(:name) || item.try(:title) || "##{item.id}" %>
     <li class="list-item">

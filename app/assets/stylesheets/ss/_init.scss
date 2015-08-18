@@ -91,15 +91,16 @@ $border-white: 1px solid $white;
 }
 @mixin box {
   position: relative;
+  margin-bottom: 10px;
+  //padding: 10px;
   border: $border-gray5;
   //@include border-radius(3px);
   background: $white;
 }
 @mixin box-head {
-  margin-bottom: 10px;
+  //margin: -10px -10px -10px;
   padding: 16px 16px;
   line-height: 1;
-  border-bottom: $border-gray1;
   h2 {
     padding-left: 8px;
     border-left: 3px solid $orange;
@@ -143,15 +144,15 @@ $border-white: 1px solid $white;
 }
 @mixin btn-gray-l {
   display: inline-block;
-  padding: 12px 16px;
-  border: $border-gray2;
+  padding: 8px 10px;
+  border: 1px solid #bbb;
   @include border-radius(6px);
   background: #ebecec;
   color: $black;
-  font-size: $px16;
+  font-size: $px15;
   cursor: pointer;
   &:hover {
-    background: #b9b9b9;
+    background: #ccc;
     text-decoration:none;
   }
   @include mb {
@@ -175,15 +176,17 @@ $border-white: 1px solid $white;
 }
 @mixin btn-red {
   display: inline-block;
-  padding: 12px 16px;
-  border: $border-gray2;
+  min-width: 100px;
+  padding: 8px 10px;
+  //border: $border-gray2;
+  border: none;
   @include border-radius(6px);
   background: #e13026;
   color: $white;
-  font-size: $px16;
+  font-size: $px15;
   cursor: pointer;
   &:hover {
-    background: #b23a3d;
+    background: #c23a3d;
     text-decoration:none;
   }
   @include mb {
@@ -225,12 +228,4 @@ $border-white: 1px solid $white;
   @include filter-gradient($gray1, $gray3, vertical);
   background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3MTgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGN0Y3RjciIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNERURFREUiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3MTgpIiAvPgo8L3N2Zz4=);
   background-size: auto auto;
-}
-@mixin main-view {
-  @include clear;
-  //position: relative;
-  margin: 0px 0px 10px;
-  padding: 15px;
-  @include box-shadow(0px 0px 2px #bbb);
-  background-color: $white;
 }

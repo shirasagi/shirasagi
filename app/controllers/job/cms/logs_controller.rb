@@ -1,5 +1,6 @@
 class Job::Cms::LogsController < ApplicationController
   include Cms::BaseFilter
+  include Cms::CrudFilter
   include Job::LogsFilter
 
   navi_view "cms/main/conf_navi"

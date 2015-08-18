@@ -1,23 +1,22 @@
 <%= form_for :item, url: { action: :build }, html: {id: "item-form", method: :post, multipart: true, autocomplete: :off} do |f| %>
   <%= error_messages_for :item %>
 
-  <div class="addon-views">
-    <div class="addon-view" id="addon-basic">
-      <header><h2><%= t("kana.views.dictionaries/build_confirmation.build_header") %></h2></header>
-      <p><%= t "kana.views.dictionaries/build_confirmation.build_description" %></p>
-    </div>
+  <div class="main-box">
+    <header><h2><%= t("kana.views.dictionaries/build_confirmation.build_header") %></h2></header>
+
+    <p><%= t "kana.views.dictionaries/build_confirmation.build_description" %></p>
+
+    <% @items.each do |item| %>
+      <%= f.hidden_field "ids[]", value: item.id %>
+    <% end %>
+
+    <dl class="see">
+      <dt><%= @model.t :name %></dt>
+      <dd>
+        <%= br @items.map(&:name).join("\n") %>
+      </dd>
+    </dl>
   </div>
-
-  <% @items.each do |item| %>
-    <%= f.hidden_field "ids[]", value: item.id %>
-  <% end %>
-
-  <dl class="see">
-    <dt><%= @model.t :name %></dt>
-    <dd>
-      <%= br @items.map(&:name).join("\n") %>
-    </dd>
-  </dl>
 
   <footer class="send">
     <%= f.submit t("kana.views.button.build_kana_dictionary"), class: :save %>
