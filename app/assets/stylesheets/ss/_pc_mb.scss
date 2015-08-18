@@ -513,7 +513,7 @@ td {
   }
 }
 #main .wrap {
-  margin: 0 28px 0 253px;
+  margin: 0 28px 0 250px;
   @include mb { margin: 0; }
 }
 
@@ -534,7 +534,7 @@ td {
 // breadcrumb
 .breadcrumb {
   @include clear;
-  margin: 0 0 20px;
+  margin: 0 0 10px;
   padding-left: 240px;
   border-bottom: $border-gray4;
   background: $gray5;
@@ -576,8 +576,8 @@ td {
 // menu
 #menu {
   .nav-menu {
-    margin: 24px;
-    margin-left: 268px;
+    margin: 20px;
+    margin-left: 260px;
     @include mb {
       margin: 0;
       padding: 10px;
