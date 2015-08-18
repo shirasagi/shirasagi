@@ -4,6 +4,8 @@
   <% next if buf.blank? %>
   <div class="addon-view" id="addon-<%= addon.id %>">
     <header><h2><%= addon.name %></h2></header>
-    <%= buf %>
+    <div class="addon-body">
+      <%= buf %>
+    </div>
   </div>
 <% end %>

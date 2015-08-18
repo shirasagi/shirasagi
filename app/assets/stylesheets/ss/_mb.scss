@@ -280,22 +280,6 @@ dl.see {
 // -------------------------------------------------------------------------------------------------
 // features
 
-.login-box {
-  width: 100%;
-  padding: 10px;
-  @include box-sizing(border-box);
-  header {
-    @include clear;
-    margin: 0px 0px 20px;
-    h1 {
-      float: left;
-    }
-    .version {
-      float: right;
-      color: #888;
-    }
-  }
-}
 #http-tester .buttons {
   @include clear;
   float: none !important;

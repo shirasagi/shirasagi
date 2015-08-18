@@ -91,20 +91,20 @@ $border-white: 1px solid $white;
 }
 @mixin box {
   position: relative;
-  border: $border-gray4;
-  @include border-radius(3px);
+  border: $border-gray5;
+  //@include border-radius(3px);
   background: $white;
 }
 @mixin box-head {
-  margin-bottom: 28px;
-  padding: 16px 24px;
+  margin-bottom: 10px;
+  padding: 16px 16px;
   line-height: 1;
   border-bottom: $border-gray1;
   h2 {
     padding-left: 8px;
     border-left: 3px solid $orange;
     color: $black3;
-    font-size: $px18;
+    font-size: $px16;
     font-weight: bold;
   }
   @include mb {

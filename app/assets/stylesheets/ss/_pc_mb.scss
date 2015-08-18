@@ -1,6 +1,9 @@
 // -------------------------------------------------------------------------------------------------
 // base
 
+html {
+  font-size: 87.5%;
+}
 html, body {
   height: 100%;
   margin: 0px;
@@ -19,7 +22,6 @@ body {
   position: relative;
   min-height: 100%;
   background: $gray1;
-  font-size: 87.5%;
   &:after {
     content: "";
     position: absolute;
@@ -283,15 +285,16 @@ td {
   padding: 10px 10px 10px 50px;
 }
 .main-navi {
+  border-bottom: $border-gray5;
   h2 a {
     display: block;
     padding: 10px 15px;
-    border-bottom: $border-gray5;
+    //border-bottom: $border-gray5;
     &:hover {
       text-decoration: none;
     }
   }
-  a.current {
+  a.current, a:hover {
     background-color: $gray1;
   }
   .icon-content {
@@ -360,8 +363,8 @@ td {
 // -------------------------------------------------------------------------------------------------
 // mod-navi
 .mod-navi {
-  padding-bottom: 5px;
-  border-bottom: $border-gray4;
+  padding-bottom: 8px;
+  border-bottom: $border-gray5;
   h2 {
     padding: 10px 15px;
     font-weight: bold;
@@ -430,7 +433,7 @@ td {
       display: none;
       width: 400px;
       position: absolute;
-      top: 0;
+      top: -1px;
       left: 241px;
       margin: 0;
       padding: 14px 12px;
@@ -504,7 +507,7 @@ td {
   }
 }
 #main .wrap {
-  margin: 0 28px 0 268px;
+  margin: 0 28px 0 253px;
   @include mb { margin: 0; }
 }
 
@@ -525,7 +528,7 @@ td {
 // breadcrumb
 .breadcrumb {
   @include clear;
-  margin: 0;
+  margin: 0 0 20px;
   padding-left: 240px;
   border-bottom: $border-gray4;
   background: $gray5;
@@ -547,7 +550,7 @@ td {
       top:0;
       left: 0;
       border-bottom: 20px solid transparent;
-      border-left: 12px solid $gray4;
+      border-left: 12px solid #c6c6c6;
       border-top: 20px solid transparent;
     }
     &:after {
@@ -567,8 +570,8 @@ td {
 // menu
 #menu {
   .nav-menu {
+    margin: 24px;
     margin-left: 268px;
-    padding: 24px 24px 24px 0;
     @include mb {
       margin: 0;
       padding: 10px;
@@ -592,7 +595,7 @@ td {
 }
 .addon-view {
   @include box;
-  margin-bottom: 32px;
+  margin-bottom: 10px;
   @include mb {
     margin: 0 10px 10px;
   }
@@ -600,7 +603,7 @@ td {
     @include box-head;
   }
   .see {
-    padding: 0 24px 28px;
+    padding: 20px;
     @include mb {
       padding: 0 10px 10px;
     }
@@ -705,12 +708,12 @@ dl.see {
     display: none;
     left: -220px;
     width: 30em;
-    padding: 24px;
+    padding: 15px;
     border: $border-gray4;
     line-height: 1.6;
     z-index: 100;
     background: $white;
-    @include box-shadow(0 0 6px $gray5);
+    @include box-shadow(0 1px 6px $gray4);
     color: $black;
     font-weight: normal;
     text-align: left;
@@ -993,7 +996,7 @@ div.index {
     .list-item-info { @include mb { margin-left: 40px; } }
     .list-item-title {
       color: $orange;
-      font-size: $px16;
+      font-size: $px15;
       @include mb { font-size: $px14; }
     }
     .list-item-meta {
@@ -1015,7 +1018,7 @@ div.index {
     z-index: 100;
     border: $border-gray4;
     background: $white;
-    @include box-shadow(1px 0 3px #ccc);
+    @include box-shadow(0px 1px 3px #gray4);
     a {
       display: block;
       padding: 5px 10px;
@@ -1215,35 +1218,4 @@ form .CodeMirror {
       @include btn;
     }
   }
-}
-// -------------------------------------------------------------------------------------------------
-// login
-
-.login-box {
-    display: table;
-    width: 300px;
-    padding: 20px 20px;
-    background: $white;
-    header {
-      @include clear;
-      margin-bottom: 20px;
-      h1 {
-        float: left;
-      }
-      .version {
-        float: right;
-        color: $gray5;
-      }
-    }
-    .error-message {
-      margin: 0px 0px 20px;
-      color: #e00;
-      font-weight: bold;
-    }
-    input[type="text"], input[type="password"] {
-      background: $gray2;
-    }
-    footer.send {
-      padding-bottom: 0;
-    }
 }

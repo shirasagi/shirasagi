@@ -12,8 +12,8 @@
     <h2><%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" %></h2>
   <% end %>
 
-  <h2><%= link_to :"cms.file", cms_files_path %></h2>
-  <h2><%= link_to :"cms.search_contents", cms_search_contents_pages_path %></h2>
+  <h2><%= link_to :"cms.file", cms_files_path, class: "icon-conf" %></h2>
+  <h2><%= link_to :"cms.search_contents", cms_search_contents_pages_path, class: "icon-conf" %></h2>
 
   <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to :"cms.generate_node", cms_generate_nodes_path, class: "icon-conf" %></h2>
