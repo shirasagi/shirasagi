@@ -6,7 +6,7 @@ class @SS_SearchUI
     tr    = $("<tr>").attr("data-id", item["id"])
     input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false)
     input = input.val(item["id"]).removeClass("hidden-ids")
-    a     = $('<a class="deselect" href="#"><%= I18n.t "views.button.delete" %></a>').on "click", SS_SearchUI.deselect
+    a     = $('<a class="deselect btn" href="#"><%= I18n.t "views.button.delete" %></a>').on "click", SS_SearchUI.deselect
 
     tr.append($('<td>').append($(input)).append(item["name"]))
     tr.append($('<td>').append($(a)))
