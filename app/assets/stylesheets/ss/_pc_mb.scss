@@ -71,6 +71,21 @@ td {
 }
 
 // -------------------------------------------------------------------------------------------------
+
+.dropdown {
+  position: relative;
+  cursor: pointer;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  cursor: auto;
+  &.active {
+    display: block;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
 // head
 #head {
   @include clear;
@@ -148,72 +163,52 @@ td {
     color: $white;
     @include mb { display: none; }
   }
-  nav {
+  .user {
     float: right;
     a {
       color: $white;
     }
-    h2 {
+    .group {
+      margin-right: 10px;
+    }
+    .dropdown {
       float: left;
-      padding: 15px 40px;
-      @include mb { padding: 10px 30px; }
-      a {
+      h2 {
+        padding: 15px 40px 15px 20px;
+        border-left: $border-black2;
+        background: url(/assets/img/arrow-usr.png) no-repeat 90% center;
+        color: $white;
+        @include mb { padding: 10px 40px 10px 20px; }
+      }
+      &:hover h2, &.active h2 {
+        position: relative;
+        border-left: $border-black;
+        background-color: $gray3;
+        text-decoration: none;
+      }
+      &.active ul {
         display: block;
       }
     }
-    .pulldown-menu {
-      position: relative;
-      float: left;
-      h2 {
-        padding: 0;
+    .dropdown-menu {
+      top: 100%;
+      right: 0;
+      @include box-sizing(border-box);
+      margin: 0;
+      padding: 5px 0px;
+      border: $border-gray4;
+      background: $white;
+      li {
+        display: block;
+        list-style: none;
         a {
-          display: block !important;
-          padding: 15px 50px 15px 20px;
-          border-left: $border-black2;
-          background: url(/assets/img/arrow-usr.png) no-repeat 80% center;
-          @include mb { padding: 10px 50px 10px 20px; }
-        }
-      }
-      li a { display: none; }
-      &:hover {
-        h2 a {
-          position: relative;
-          border-left: $border-black;
-          background-color: $gray3;
-          text-decoration: none;
-          &:after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 42%;
-            z-index: 100;
-            border-top: 8px solid $gray3;
-            border-right: 10px solid transparent;
-            border-left: 10px solid transparent;
-          }
-        }
-        li a{
-          display: block !important;
-        }
-      }
-      ul {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        @include box-sizing(border-box);
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-        li {
-          list-style: none;
-        }
-        a {
-          padding: 10px 0;
-          border: $border-gray4;
-          border-top: none;
-          background: $white;
+          display: block;
+          min-width: 120px;
+          padding: 5px 10px;
           color: $black;
+          &:hover {
+            background: #eee;
+          }
         }
       }
     }
@@ -285,11 +280,11 @@ td {
   padding: 10px 10px 10px 50px;
 }
 .main-navi {
-  border-bottom: $border-gray5;
+  //border-bottom: $border-gray5;
   h2 a {
     display: block;
     padding: 10px 15px;
-    //border-bottom: $border-gray5;
+    border-bottom: $border-gray5;
     &:hover {
       text-decoration: none;
     }
@@ -363,7 +358,7 @@ td {
 // -------------------------------------------------------------------------------------------------
 // mod-navi
 .mod-navi {
-  padding-bottom: 8px;
+  padding-bottom: 5px;
   border-bottom: $border-gray5;
   h2 {
     padding: 10px 15px;
@@ -394,80 +389,77 @@ td {
       }
     }
   }
-  .pulldown-menu {
-    position: relative;
+  .dropdown {
     h2 {
       background: url(/assets/img/ic-arrow-off.png) no-repeat 210px center;
     }
-    &:hover {
-      h2 {
-        position: relative;
-        background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 210px center;
-        &:before {
-          content: "";
-          position: absolute;
-          top: 9px;
-          left: 100%;
-          z-index: 100;
-          border-top: 11px solid transparent;
-          border-bottom: 11px solid transparent;
-          border-left: 9px solid $gray4;
-        }
-        &:after {
-          content: "";
-          position: absolute;
-          top: 10px;
-          left: 100%;
-          z-index: 100;
-          border-top: 10px solid transparent;
-          border-bottom: 10px solid transparent;
-          border-left: 8px solid $gray1;
-        }
+    &:hover h2, &.active h2 {
+      background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 210px center;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 9px;
+        left: 100%;
+        z-index: 100;
+        border-top: 11px solid transparent;
+        border-bottom: 11px solid transparent;
+        border-left: 9px solid $gray4;
       }
-      ul {
-        display: block;
-        a {
-          display: block !important;
-        }
-      }
-    }
-    ul {
-      @include clear;
-      display: none;
-      width: 400px;
-      position: absolute;
-      top: -1px;
-      left: 241px;
-      margin: 0;
-      padding: 14px 12px;
-      border: $border-gray4;
-      border-left: none;
-      background: $white;
-      li {
-        float: left;
-        width: 168px;
-        padding: 10px 16px;
-        &:nth-child(2n+1) {
-          clear: both;
-        }
-      }
-      a {
-        padding-left: 15px;
-        background: url(/assets/img/ic-li.png) no-repeat left center;
+      &:after {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 100%;
+        z-index: 100;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 8px solid $gray1;
       }
     }
     @include mb {
       h2, &:hover h2 {
-        background-position: 98% center;
+        background-position: 97% center;
       }
-      ul {
-        position: static;
-        @include box-sizing(border-box);
+    }
+  }
+  .dropdown-menu {
+    @include clear;
+    width: 400px;
+    top: -1px;
+    left: 241px;
+    margin: 0;
+    padding: 14px 10px 14px 20px;
+    border: $border-gray4;
+    border-left: none;
+    @include box-sizing(border-box);
+    background: $white;
+    li {
+      float: left;
+      width: 180px;
+      @include box-sizing(border-box);
+      &:nth-child(2n+1) {
+        clear: both;
+      }
+    }
+    a {
+      display: block;
+      width: 100%;
+      padding: 8px 0px 8px 15px;
+      @include box-sizing(border-box);
+      background: url(/assets/img/ic-li.png) no-repeat left center;
+      &:hover {
+        background-color: #eee;
+      }
+    }
+    @include mb {
+      position: static;
+      width: 100%;
+      li {
         width: 100%;
-        li {
-          @include box-sizing(border-box);
-          padding: 5px 0;
-        }
+        padding: 0;
+      }
+      a {
+        width: 100%;
       }
     }
   }
@@ -505,7 +497,7 @@ td {
 #main {
   float: right;
   width: 100%;
-  margin: 0 0 100px -100%;
+  margin: 0 0 10px -100%;
   background: $gray1;
   @include mb {
     float: none;
@@ -513,7 +505,7 @@ td {
   }
 }
 #main .wrap {
-  margin: 0 28px 0 250px;
+  margin: 0 10px 0 253px;
   @include mb { margin: 0; }
 }
 

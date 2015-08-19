@@ -62,14 +62,15 @@
     <% end %>
 
     <% if @cur_user %>
-    <nav>
-      <% if @cur_group %>
-      <h2><%= link_to @cur_group.name.sub(/.*\//, ""), sns_user_profile_path(@cur_user) %></h2>
-      <% end %>
-
-      <div class="pulldown-menu">
-        <h2><%= link_to @cur_user.name, sns_user_profile_path(@cur_user) %></h2>
-        <ul>
+    <nav class="user">
+      <div class="dropdown">
+        <h2>
+          <% if @cur_group %>
+          <span class="group"><%= @cur_group.name.sub(/.*\//, "") %></span>
+          <% end %>
+          <%= @cur_user.name %>
+        </h2>
+        <ul class="dropdown-menu">
           <li><%= link_to t(:"sns.profile"), sns_user_profile_path(@cur_user) %></li>
           <li><%= link_to :logout, sns_logout_path %></li>
         </ul>

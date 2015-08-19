@@ -30,14 +30,8 @@ $ ->
 
   SS.render()
 
-  # navi
-  path = location.pathname + "/"
-  $("#navi .main-navi a, #navi .mod-navi a").each ->
-    menu = $(this)
-    menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
-
-  # pulldown menu
-  if $(window).width() >= 800
+  # head
+  if $(window).width() >= 800 && 0
     menu = $("#head .pulldown-menu")
     link = menu.find("a")
     menu.each ->
@@ -45,6 +39,21 @@ $ ->
       link.filter(".current").prependTo(menu).click ->
         link.not(".current").slideToggle("fast")
         return false
+
+  # navi
+  path = location.pathname + "/"
+  $("#navi .main-navi a, #navi .mod-navi a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
+
+  # dropdown
+  $(".dropdown").click (e) ->
+    $(this).toggleClass('active')
+    $(this).find('.dropdown-menu').toggleClass('active')
+    e.stopPropagation()
+  $(document).click (e) ->
+    $(".dropdown").removeClass('active')
+    $(".dropdown-menu").removeClass('active')
 
   SS_ListUI.render("table.index")
   SS_Mobile.render()
