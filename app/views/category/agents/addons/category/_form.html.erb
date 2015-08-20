@@ -38,7 +38,7 @@ end
 <%= jquery do %> SS_AddonTabs.hide(".mod-category-category"); <% end %>
 
 <dl class="see mod-category-category category-form">
-  <div style="margin-bottom:20px;line-height:1.4;"><%= @model.tt :categories %></div>
+  <dt class="wide"><%= @model.t :categories %><%= @model.tt :categories %></dt>
   <dd class="wide">
     <%= f.hidden_field "category_ids[]", value: "" %>
 

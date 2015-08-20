@@ -8,7 +8,8 @@ $ ->
 
   @deleteContent = (id) ->
     $(".file-view").each ->
-      $(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
+      #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
+      $(this).remove() if id == $(this).find(".file-id").attr("value")
 
 <% end %>
 
@@ -33,7 +34,9 @@ $ ->
 
           <div class="name">
             <label>
-              <%= f.check_box "file_ids[]", {}, file.id %>
+              <%#= f.check_box "file_ids[]", {}, file.id %>
+              <%#= f.hidden_field "file_ids[]", {}, file.id, class: "file-id" %>
+              <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
               <%= file.name %>
             </label><br />
           </div>
@@ -45,9 +48,9 @@ $ ->
               <% content = image_tag file.url, alt: "#{file.name}" %>
               <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
-            <div class="action delete">
-              <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
-            </div>
+          </div>
+          <div class="action delete">
+            <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
           </div>
 
         </div>

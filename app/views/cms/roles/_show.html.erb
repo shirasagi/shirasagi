@@ -6,20 +6,20 @@
   <dd><%= @item.label :permission_level %></dd>
 
   <dt><%= @model.t :permissions %></dt>
-  <dd>
+  <dd class="role-permissions">
     <% @model.module_permission_names.each do |mod, names| %>
-      <div class="module-box" style="padding: 10px 0px; border-top: 1px solid #ccc;">
-        <p class="module-name" style="margin: 0px 0px 10px;"><%= t("modules.#{mod}") %></p>
-        <div class="permission-names" style="line-height: 1.7;">
-          <% names.each do |name| %>
-            <% if @item.permissions.include?(name.to_s) %>
-            <label><%= t("cms_role.#{name}") %></label>
-            <% else %>
-            <label style="color: #bbb;"><%= t("cms_role.#{name}") %></label>
-            <% end %>
+    <div class="module">
+      <p class="module-name"><%= t("modules.#{mod}") %></p>
+      <div class="permissions">
+        <% names.each do |name| %>
+          <% if @item.permissions.include?(name.to_s) %>
+          <label><%= t("cms_role.#{name}") %></label>
+          <% else %>
+          <label class="disabled"><%= t("cms_role.#{name}") %></label>
           <% end %>
-        </div>
+        <% end %>
       </div>
+    </div>
     <% end %>
   </dd>
 </dl>

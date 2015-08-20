@@ -1,19 +1,24 @@
 // -------------------------------------------------------------------------------------------------
 // base
 
+header, footer, nav, section, article, figure, aside {
+  display: block;
+  margin: 0;
+}
+* {
+  @include box-sizing(border-box);
+}
 html {
-  font-size: 87.5%;
+  //font-size: 87.5%;
+  font-size: 13px;
 }
 html, body {
   height: 100%;
   margin: 0px;
   color: $black3;
 }
-header, footer, nav, section, article, figure, aside {
-  display: block;
-  margin: 0px;
-}
 body {
+  background: $gray1;
   font-family: $font-base;
   line-height: 1.4;
   word-wrap: break-word;
@@ -21,7 +26,6 @@ body {
 #page {
   position: relative;
   min-height: 100%;
-  background: $gray1;
   &:after {
     content: "";
     position: absolute;
@@ -93,11 +97,12 @@ td {
   z-index: 100;
   border-bottom: $border-gray4;
   background: $black2;
+  font-size: 14px;
   h1 {
     float: left;
     a {
       display: block;
-      width: 200px;
+      width: 240px;
       padding: 9px 20px;
       line-height: 31px;
       background: url(/assets/img/logo.png) no-repeat center center;
@@ -113,7 +118,7 @@ td {
       a {
         display: block;
         color: $white;
-        &:hover {
+        &.current, &:hover {
           color: $black;
           text-decoration: none;
         }
@@ -138,7 +143,6 @@ td {
     background: url(/assets/img/ic-cms-off.png) no-repeat 20px center;
     &.current, &:hover {
       background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
-      color: $black;
     }
   }
   .gws h2 a {
@@ -146,7 +150,6 @@ td {
     background: url(/assets/img/ic-gws-off.png) no-repeat 20px center;
     &.current, &:hover {
       background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
-      color: $black;
     }
   }
   .sns h2 a {
@@ -154,7 +157,6 @@ td {
     background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
     &.current, &:hover {
       background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
-      color: $black;
     }
   }
   .env {
@@ -193,7 +195,6 @@ td {
     .dropdown-menu {
       top: 100%;
       right: 0;
-      @include box-sizing(border-box);
       margin: 0;
       padding: 5px 0px;
       border: $border-gray4;
@@ -219,7 +220,6 @@ td {
 // wrap
 #wrap {
   @include clear;
-  background: $gray1;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -229,7 +229,6 @@ td {
   float: left;
   width: 240px;
   z-index: 1;
-  border-right: $border-gray4;
   background: $white;
   @include mb {
     float: none;
@@ -338,7 +337,6 @@ td {
     @include clear;
     h2 {
       float: left;
-      @include box-sizing(border-box);
       width: 33%;
       &:nth-child(3n) {
         width: 34%;
@@ -395,6 +393,8 @@ td {
     }
     &:hover h2, &.active h2 {
       background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 210px center;
+    }
+    &.active h2 {
       &:before {
         content: "";
         position: absolute;
@@ -417,7 +417,7 @@ td {
       }
     }
     @include mb {
-      h2, &:hover h2 {
+      h2, &.active h2, &:hover h2 {
         background-position: 97% center;
       }
     }
@@ -431,12 +431,10 @@ td {
     padding: 14px 10px 14px 20px;
     border: $border-gray4;
     border-left: none;
-    @include box-sizing(border-box);
     background: $white;
     li {
       float: left;
       width: 180px;
-      @include box-sizing(border-box);
       &:nth-child(2n+1) {
         clear: both;
       }
@@ -445,11 +443,7 @@ td {
       display: block;
       width: 100%;
       padding: 8px 0px 8px 15px;
-      @include box-sizing(border-box);
       background: url(/assets/img/ic-li.png) no-repeat left center;
-      &:hover {
-        background-color: #eee;
-      }
     }
     @include mb {
       position: static;
@@ -468,13 +462,13 @@ td {
     padding: 0;
     a {
       display: block;
-      padding: 5px 15px 5px 90px;
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 65px center;
+      padding: 5px 15px 5px 85px;
+      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
       &.current {
         background-color: $gray1;
       }
       &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 65px center;
+        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
         text-decoration: none;
       }
     }
@@ -497,15 +491,14 @@ td {
 #main {
   float: right;
   width: 100%;
-  margin: 0 0 10px -100%;
-  background: $gray1;
+  margin: 0 0 40px -100%;
   @include mb {
     float: none;
     margin: 0 0 100px 0;
   }
 }
 #main .wrap {
-  margin: 0 10px 0 253px;
+  margin: 0 10px 0 250px;
   @include mb { margin: 0; }
 }
 
@@ -676,7 +669,6 @@ dl.see {
   > dt.wide {
     float: none;
     width: 100%;
-    box-sizing: border-box;
   }
   > dd.wide {
     float: none;
@@ -789,8 +781,8 @@ footer.send {
   }
   .thumb {
     display: block !important;
-    height: 110px;
-    border: 8px solid $gray4;
+    min-height: 110px;
+    border: 5px solid $gray4;
     text-align: center;
     line-height: 110px;
     &:hover {
@@ -875,7 +867,7 @@ footer.send {
 // -------------------------------------------------------------------------------------------------
 // mod-map
 .mod-map {
-  padding: 0 24px;
+  padding: 0 10px;
   @include mb { padding: 0 10px; }
   .keyword {
     max-width: 400px;
@@ -908,14 +900,12 @@ footer.send {
       .marker-name,.marker-text {
         width: 260px;
         @include mb {
-          @include box-sizing(border-box);
           width: 100%;
         }
       }
       &:last-child {
         width: 260px;
         @include mb {
-          @include box-sizing(border-box);
           width: 100%;
         }
       }
@@ -1020,7 +1010,7 @@ div.index {
 .list-item-meta {
   span {
     margin-right: 10px;
-    font-size: $px12;
+    //font-size: $px12;
   }
   .id {
     color: #888;
@@ -1078,7 +1068,6 @@ input[type=email], input[type=number], input[type=tel] {
 @include mb {
   input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
   input[type=email], input[type=number], input[type=tel] {
-    @include box-sizing(border-box);
     width: 100% !important;
   }
 }
@@ -1115,9 +1104,6 @@ textarea.code {
   font-size: 120%;
   font-family: monospace;
 }
-.CodeMirror {
-  @include box-sizing(border-box);
-}
 form .CodeMirror {
   border: 1px solid #ccc;
 }
@@ -1134,7 +1120,6 @@ form .CodeMirror {
   width: 100%;
   height: 40px;
   padding: 0px 10px;
-  @include box-sizing(border-box);
   box-shadow: 0px 1px 2px #888;
   background-color: #48f;
   background-color:rgba(40, 80, 120, 0.8);

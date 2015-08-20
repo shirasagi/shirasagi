@@ -94,7 +94,7 @@ $border-white: 1px solid $white;
   margin-bottom: 10px;
   //padding: 10px;
   border: $border-gray5;
-  //@include border-radius(3px);
+  @include border-radius(3px);
   background: $white;
 }
 @mixin box-head {
