@@ -33,7 +33,8 @@
 
       <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="list-item-info">
-        <%= link_to item.name, contents_path(item), class: "list-item-title" %>
+        <% link = item.respond_to?(:view_route) ? contents_path(item) : { action: :show, id: item } %>
+        <%= link_to item.name, link, class: "list-item-title" %>
 
         <div class="list-item-meta">
           <span class="id">#<%= item.id %></span>
