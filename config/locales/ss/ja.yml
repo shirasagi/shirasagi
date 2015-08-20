@@ -23,6 +23,7 @@ ja:
     group_users: 所属ユーザー
 
     button:
+      login: ログイン
       save: 保存
       draft_save: 下書き保存
       publish_save: 公開保存
@@ -34,6 +35,8 @@ ja:
       replace: 置換
       replace_all: 全置換
       reset: リセット
+      run: 実行
+      stop: 停止
       toggle: 折りたたみ表示
       move: 移動
       import: 取り込み

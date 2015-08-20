@@ -44,7 +44,7 @@ $ ->
   path = location.pathname + "/"
   $("#navi .main-navi a, #navi .mod-navi a").each ->
     menu = $(this)
-    menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
+    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
 
   # dropdown
   $(".dropdown").click (e) ->

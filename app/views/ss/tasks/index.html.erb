@@ -41,13 +41,13 @@ $ ->
 <footer class="send">
   <% hide = (@item.running? || @item.state == "ready") ? nil : "display: none;" %>
   <div class="stop-button" style="<%= hide %>">
-    <%= submit_tag t(:stop), name: "stop", class: "stop" %>
-    <%= submit_tag t(:reset), name: "reset", onclick: "return confirm('#{t("views.task.confirm_reset")}')" %>
+    <%= submit_tag t("views.button.stop"), name: "stop", class: "btn-primary stop" %>
+    <%= submit_tag t("views.button.reset"), name: "reset", class: "btn-default", onclick: "return confirm('#{t("views.task.confirm_reset")}')" %>
   </div>
 
   <% hide = hide.present? ? "" : "display: none;" %>
   <div class="run-button" style="<%= hide %>">
-    <%= submit_tag t(:run), class: :save %>
+    <%= submit_tag t("views.button.run"), class: "btn-primary save" %>
   <div>
 </footer>
 

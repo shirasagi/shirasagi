@@ -1038,9 +1038,11 @@ table.index {
 // -------------------------------------------------------------------------------------------------
 // form
 select, input, textarea, button {
-  -webkit-appearance: none;
   font-size: 100%;
   font-family: $font-base;
+  @include mb {
+    -webkit-appearance: none;
+  }
 }
 input[type=submit] {
   //@include btn;
