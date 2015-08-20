@@ -86,9 +86,20 @@ class Uploader::FilesController < ApplicationController
     def destroy
       raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
 
+      filenames = params[:ids]
       dirname = @item.dirname
-      @item.destroy
-      render_destroy true, location: "#{uploader_files_path}/#{dirname}"
+      if filenames
+        @items = []
+        filenames.each do |filename|
+          item = @model.file("#{@item.path.to_s}/#{filename}")
+          @items << item if item
+        end
+        @items.each(&:destroy)
+        render_destroy true, location: "#{uploader_files_path}/#{@item.filename}"
+      else
+        @item.destroy
+        render_destroy true, location: "#{uploader_files_path}/#{dirname}"
+      end
     end
 
   private

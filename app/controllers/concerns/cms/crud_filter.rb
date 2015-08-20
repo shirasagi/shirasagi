@@ -67,6 +67,12 @@ module Cms::CrudFilter
       render_destroy @item.destroy
     end
 
+    def destroy_all
+      raise "403" unless @items.first.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+      @items.destroy_all
+      render_destroy true
+    end
+
     def lock
       if @item.acquire_lock(force: params[:force].present?)
         render

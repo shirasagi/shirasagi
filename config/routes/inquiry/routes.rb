@@ -4,6 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
+    delete action: :destroy_all, :on => :collection
   end
 
   concern :download do

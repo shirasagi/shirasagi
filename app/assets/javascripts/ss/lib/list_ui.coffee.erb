@@ -16,14 +16,16 @@ class @SS_ListUI
       chk = $(this).prop('checked')
       $('.list-item input:checkbox').each ->
         $(this).prop('checked', chk)
+    $(".list-head .destroy-all").on "click", ->
+      token   = $(this).attr("data-token")
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      return false unless confirm("<%= I18n.t("views.confirm.delete") %>")
 
-  @deleteitem: (id)->
-    $.ajax
-      type: "post"
-      url: location.pathname + "/" + id
-      async: false
-      data: "_method=delete"
-      success: (msg) ->
-        #
-      error: (msg, status) ->
-        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
+      form = $("<form/>", action: "", method: "post")
+      form.append($("<input/>", name: "_method", value: "delete", type: "hidden" ))
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden" ))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
