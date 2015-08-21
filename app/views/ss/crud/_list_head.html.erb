@@ -2,7 +2,7 @@
   <label class="list-head-check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button onclick="alert('TODO')"><%= t :"views.links.delete" %></button>
+    <button class="destroy-all"><%= t :"views.links.delete" %></button>
   </div>
 
   <% @s = OpenStruct.new params[:s] %>

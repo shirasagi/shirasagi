@@ -2,6 +2,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
+    delete action: :destroy_all, :on => :collection
     post :request_update, on: :member
     post :approve_update, on: :member
     post :remand_update, on: :member

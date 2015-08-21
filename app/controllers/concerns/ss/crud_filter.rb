@@ -5,6 +5,7 @@ module SS::CrudFilter
     before_action :prepend_current_view_path
     before_action :append_view_paths
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+    before_action :set_destroy_items, only: [:destroy_all]
   end
 
   private
@@ -23,6 +24,15 @@ module SS::CrudFilter
     def set_item
       @item = @model.find params[:id]
       @item.attributes = fix_params
+    end
+
+    def set_destroy_items
+      ids = params[:ids]
+      raise "400" unless ids
+      ids = ids.split(",") if ids.kind_of?(String)
+      ids = ids.map(&:to_i)
+      @items = @model.in(id: ids)
+      raise "400" unless @items.present?
     end
 
     def fix_params
@@ -79,6 +89,11 @@ module SS::CrudFilter
       render_destroy @item.destroy
     end
 
+    def destroy_all
+      @items.destroy_all
+      render_destroy_all true
+    end
+
   private
     def render_create(result, opts = {})
       location = opts[:location].presence || { action: :show, id: @item }
@@ -128,6 +143,17 @@ module SS::CrudFilter
           format.html { render render_opts }
           format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
         end
+      end
+    end
+
+    def render_destroy_all(result)
+      location = { action: :index }
+      notice = result ? { notice: t("views.notice.deleted") } : {}
+      errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+      respond_to do |format|
+        format.html { redirect_to location, notice }
+        format.json { head json: errors }
       end
     end
 end

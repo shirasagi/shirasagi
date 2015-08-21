@@ -18,13 +18,16 @@ class @SS_ListUI
       list.mouseleave ->
         $(".list-item-tap").hide()
 
-  @deleteitem: (id)->
-    $.ajax
-      type: "post"
-      url: location.pathname + "/" + id
-      async: false
-      data: "_method=delete"
-      success: (msg) ->
-        #
-      error: (msg, status) ->
-        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
+    $(".list-head .destroy-all").on "click", ->
+      token   = $('meta[name="csrf-token"]').attr('content')
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      return false if checked.length == 0
+      return false unless confirm("<%= I18n.t("views.confirm.delete") %>")
+
+      form = $("<form/>", action: "", method: "post")
+      form.append($("<input/>", name: "_method", value: "delete", type: "hidden" ))
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden" ))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
