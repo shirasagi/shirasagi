@@ -17,7 +17,7 @@ class @SS_ListUI
       $('.list-item input:checkbox').each ->
         $(this).prop('checked', chk)
     $(".list-head .destroy-all").on "click", ->
-      token   = $(this).attr("data-token")
+      token   = $('meta[name="csrf-token"]').attr('content')
       checked = $(".list-item input:checkbox:checked").map ->
         $(this).val()
       return false if checked.length == 0

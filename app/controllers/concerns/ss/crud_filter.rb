@@ -32,6 +32,7 @@ module SS::CrudFilter
       ids = ids.split(",") if ids.kind_of?(String)
       ids = ids.map(&:to_i)
       @items = @model.in(id: ids)
+      raise "400" unless @items.present?
     end
 
     def fix_params
@@ -90,7 +91,7 @@ module SS::CrudFilter
 
     def destroy_all
       @items.destroy_all
-      render_destroy true
+      render_destroy_all true
     end
 
   private
@@ -142,6 +143,17 @@ module SS::CrudFilter
           format.html { render render_opts }
           format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
         end
+      end
+    end
+
+    def render_destroy_all(result)
+      location = { action: :index }
+      notice = result ? { notice: t("views.notice.deleted") } : {}
+      errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+      respond_to do |format|
+        format.html { redirect_to location, notice }
+        format.json { head json: errors }
       end
     end
 end

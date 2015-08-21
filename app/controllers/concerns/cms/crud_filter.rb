@@ -68,9 +68,18 @@ module Cms::CrudFilter
     end
 
     def destroy_all
-      raise "403" unless @items.first.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-      @items.destroy_all
-      render_destroy true
+      entries = @items.entries
+      @items = []
+
+      entries.each do |item|
+        if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+          next if item.destroy
+        else
+          item.errors.add :base, :auth_error
+        end
+        @items << item
+      end
+      render_destroy_all (entries.size != @items.size)
     end
 
     def lock

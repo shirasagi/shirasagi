@@ -2,9 +2,7 @@
   <label class="list-head-check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button class="destroy-all" data-token="<%= form_authenticity_token %>">
-      <%= t :"views.links.delete" %>
-    </button>
+    <button class="destroy-all"><%= t :"views.links.delete" %></button>
   </div>
 
   <% @s = OpenStruct.new params[:s] %>
