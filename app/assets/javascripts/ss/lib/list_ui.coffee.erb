@@ -1,5 +1,10 @@
 class @SS_ListUI
   @render: ->
+    $(".list-head input:checkbox").change ->
+      chk = $(this).prop('checked')
+      $('.list-item').each ->
+        $(this).toggleClass('checked', chk)
+        $(this).find('input:checkbox').prop('checked', chk)
     $(".list-item").each ->
       list = $(this)
       list.find("input:checkbox").change ->
@@ -12,10 +17,6 @@ class @SS_ListUI
           list.find("input:checkbox").trigger("click")
       list.mouseleave ->
         $(".list-item-tap").hide()
-    $(".list-head input:checkbox").change ->
-      chk = $(this).prop('checked')
-      $('.list-item input:checkbox').each ->
-        $(this).prop('checked', chk)
 
   @deleteitem: (id)->
     $.ajax
