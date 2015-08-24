@@ -82,11 +82,11 @@
   <div class="map-pages">
     <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       <% @maps.each do |map| %>
-        <p><%= link_to map.name, edit_facility_map_path(cid: @item.id, id: map.id), class: "icon-page" %></p>
+        <p><%= link_to map.name, edit_facility_map_path(cid: @item.id, id: map.id), class: "btn icon-page" %></p>
       <% end %>
     <% else %>
       <% @maps.each do |map| %>
-        <p><%= link_to map.name, facility_map_path(cid: @item.id, id: map.id), class: "icon-page" %></p>
+        <p><%= link_to map.name, facility_map_path(cid: @item.id, id: map.id), class: "btn icon-page" %></p>
       <% end %>
     <% end %>
   </div>

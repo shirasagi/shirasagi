@@ -6,8 +6,8 @@
       <dt><%= t "cms.group" %></dt>
       <dd><%= select_tag "s[group]",  options_for_select(@group_options, @group_id) %></dd>
       <dt><%= t "cms.user" %></dt>
-      <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %></dd>
-      <dd><%= f.submit t("workflow.search_approvers.search") %></dd>
+      <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %>
+      <%= f.submit t("workflow.search_approvers.search"), class: "btn" %></dd>
     </dl>
   <% end %>
 </div>

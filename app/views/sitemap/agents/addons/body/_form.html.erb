@@ -28,7 +28,7 @@ $ ->
   <dd><%= f.text_area :sitemap_deny_urls, class: "text", style: "height: 120px" %></dd>
 
   <dt><%= @model.t :sitemap_export_urls %><%= @model.tt :sitemap_export_urls %></dt>
-  <dd><input id="export-urls" type="button" value="<%= t("sitemap.buttons.export_urls") %>"></dd>
+  <dd><input id="export-urls" class="btn" type="button" value="<%= t("sitemap.buttons.export_urls") %>"></dd>
 
   <dt><%= @model.t :sitemap_urls %><%= @model.tt :sitemap_urls %></dt>
   <dd><%= f.text_area :sitemap_urls, class: "text", style: "height: 300px" %></dd>
