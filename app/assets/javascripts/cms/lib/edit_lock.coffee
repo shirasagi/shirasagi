@@ -18,16 +18,7 @@ class @Cms_EditLock
   updateView: (lock_until) ->
     $("#{@selector} .lock_until").text('')
     return unless lock_until
-    dateParts = []
-    dateParts.push(lock_until.getFullYear())
-    dateParts.push(('0' + (lock_until.getMonth() + 1)).slice(-2))
-    dateParts.push(lock_until.getDate())
-
-    timeParts = []
-    timeParts.push(lock_until.getHours())
-    timeParts.push(('0' + lock_until.getMinutes()).slice(-2))
-
-    $("#{@selector} .lock_until").text(dateParts.join('/') + ' ' + timeParts.join(':'))
+    $("#{@selector} .lock_until").text(lock_until)
 
   refreshLock: =>
     return if @unloading
@@ -38,8 +29,8 @@ class @Cms_EditLock
       cache: false
       statusCode:
         200: (data, status, xhr) =>
-          if (data.lock_until)
-            @updateView(new Date(data.lock_until))
+          if (data.lock_until_pretty)
+            @updateView(data.lock_until_pretty)
           else
             @updateView(null)
     setTimeout(@refreshLock, @interval)
