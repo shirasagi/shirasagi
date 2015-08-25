@@ -18,7 +18,7 @@
         <%= link_to :delete, action: :show, filename: item.filename, do: :delete if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       </nav>
 
-      <label><input type="checkbox" name="ids[]" value="<%= item.name %>" /></label>
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.name %>" /></label>
       <div class="info">
         <% if item.directory? %>
         <%= link_to item.name, { action: :show, filename: item.filename }, class: "list-item-title dir" %>

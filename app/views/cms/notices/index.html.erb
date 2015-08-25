@@ -10,7 +10,7 @@
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
       </nav>
 
-      <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
         <%= link_to item.name, { action: :show, id: item }, { class: "title" } %>
 

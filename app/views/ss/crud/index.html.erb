@@ -16,7 +16,7 @@
         <% end %>
       </nav>
 
-      <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
         <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
         <%= link_to title, { action: :show, id: item }, class: "list-item-title" %>
