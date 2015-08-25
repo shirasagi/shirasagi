@@ -73,7 +73,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     def add_invalid_url(url, ref)
         @results[url]  = 0
         @errors[ref] ||= []
-        @errors[ref]  << url
+        @errors[ref] << url
     end
 
     # Checks the html url.

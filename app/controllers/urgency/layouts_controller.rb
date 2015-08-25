@@ -31,7 +31,7 @@ class Urgency::LayoutsController < ApplicationController
       end
 
       index_page = @cur_node.parent ? "#{@cur_node.parent.filename}/index.html" : "index.html"
-      @index_page =  Cms::Page.site(@cur_site).where(filename: /^#{index_page}$/, depth: @cur_node.depth).first
+      @index_page = Cms::Page.site(@cur_site).where(filename: /^#{index_page}$/, depth: @cur_node.depth).first
 
       if @index_page.blank?
         redirect_to urgency_error_path(id: 2)

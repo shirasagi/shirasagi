@@ -65,7 +65,7 @@ class Ads::AccessLogsController < ApplicationController
       pipes << { "$match" => @items.selector }
       pipes << { "$group" => {
         _id: { link_url: "$link_url", month: { "$month" => "$date" } },
-        count: { "$sum" =>  "$count" }
+        count: { "$sum" => "$count" }
       } }
       pipes << { "$sort" => { "_id.link_url" => 1 } }
 

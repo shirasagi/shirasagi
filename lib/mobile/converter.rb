@@ -29,7 +29,7 @@ class Mobile::Converter < String
 
     def s_to_attr(str)
       str.scan(/\S+?=".+?"/m).
-        map { |s| s.split(/=/).size == 2 ? s.gsub(/"/, "").split(/=/) : nil }.
+        map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
         compact.to_h
     end
 
@@ -127,7 +127,7 @@ class Mobile::Converter < String
 
     def downcase_tags!
       self.gsub!(/<(\/?)([A-Z]+)(.*?)(\/?)>/m) do
-        ele  = $2
+        ele = $2
         src_attr = s_to_attr $3.to_s
         dst_attr = {}
         head = $1

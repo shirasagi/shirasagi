@@ -79,7 +79,7 @@ module Cms::CrudFilter
         end
         @items << item
       end
-      render_destroy_all (entries.size != @items.size)
+      render_destroy_all(entries.size != @items.size)
     end
 
     def lock

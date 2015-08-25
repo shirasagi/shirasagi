@@ -45,7 +45,7 @@ module Event::EventHelper
 
     # manipulate year from current date
     start_date = current.advance(years: -1)
-    close_date = current.advance(years:  1, month: 1)
+    close_date = current.advance(years: 1, month: 1)
 
     date.between?(start_date, close_date)
   end
@@ -55,7 +55,7 @@ module Event::EventHelper
     month = date.month
     name = opts[:name].present? ? opts[:name] : "#{month}#{t_date('month')}"
     path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
-    enable =  (opts[:enable] != nil) ? opts[:enable] : true
+    enable = (opts[:enable] != nil) ? opts[:enable] : true
 
     if enable && within_one_year?(date)
       link_to name , sprintf("#{path}%04d%02d.html", year, month)
@@ -69,8 +69,8 @@ module Event::EventHelper
     month = date.month
     day   = date.day
     name = opts[:name].present? ? opts[:name] : "#{day}#{t_date('day')}"
-    path = opts[:path].present? ? opts[:path] :  @cur_node.try(:url).to_s
-    enable =  (opts[:enable] != nil) ? opts[:enable] : true
+    path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
+    enable = (opts[:enable] != nil) ? opts[:enable] : true
 
     if enable && within_one_year?(date)
       link_to name, sprintf("#{path}%04d%02d%02d.html", year, month, day)

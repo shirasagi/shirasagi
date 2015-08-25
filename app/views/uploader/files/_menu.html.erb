@@ -12,7 +12,7 @@
         <%= link_to :back_to_index, { action: :show, filename: @item.filename } %>
       <% else %>
         <%= link_to :new_directory, {action: :show, filename: @item.filename, do: "new_directory" }, class: "icon-node" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :upload, {action: :show, filename: @item.filename,  do: "new_files" }, class: "icon-page" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :upload, {action: :show, filename: @item.filename, do: "new_files" }, class: "icon-page" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       <% end %>
     <% elsif params[:action] =~ /create/ %>
       <%= link_to :back_to_index, { action: :show, filename: @item.dirname } %>

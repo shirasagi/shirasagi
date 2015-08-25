@@ -30,7 +30,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
 
       @current_month_date = Date.new(@year, @month, 1)
       @prev_month_date = @current_month_date.change(day: 1).advance(days: -1)
-      @next_month_date = @current_month_date.advance(months:  1)
+      @next_month_date = @current_month_date.advance(months: 1)
       @dates = []
 
       if @cur_part.parent.present?

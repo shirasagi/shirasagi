@@ -6,7 +6,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
       generate_node @node
 
       @start_date = Time.zone.today.advance(years: -1)
-      @close_date = Time.zone.today.advance(years:  1)
+      @close_date = Time.zone.today.advance(years: 1)
 
       remove_old_pages
       generate_new_pages
@@ -18,7 +18,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
       term = term.map { |m| sprintf("#{m.year}%02d", m.month) }.uniq
       term.each do |date|
         file = "#{@node.path}/#{date}.html"
-        Fs.rm_rf file if  Fs.exists?(file)
+        Fs.rm_rf file if Fs.exists?(file)
       end
     end
 

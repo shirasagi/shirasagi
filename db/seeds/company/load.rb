@@ -105,7 +105,7 @@ save_node route: "category/page", name: "ビジネスソリューション", fil
 
 ## inquiry
 inquiry_html = File.read("nodes/inquiry.inquiry_html") rescue nil
-inquiry_sent_html  = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
+inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
 inquiry_node = save_node route: "inquiry/form", filename: "inquiry",
   name: "お問い合わせ", shortcut: "show", layout_id: layouts["one"].id,
   inquiry_captcha: "enabled", notice_state: "disabled",
@@ -157,7 +157,7 @@ save_inquiry_column node_id: inquiry_node.id, name: "住所", order: 80, input_t
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 90, input_type: "text_field",
   html: column_question_html, select_options: [], required: "required", site_id: @site._id
 
-array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
+array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 categories = Hash[*array.flatten]
 
 ## -------------------------------------
@@ -205,23 +205,23 @@ save_part route: "cms/page", filename: "company/side-menu.part.html", name: "サ
 save_part route: "cms/page", filename: "recruit/side-menu.part.html", name: "サイドメニュー",
   new_days: 0, limit: 10, mobile_view: "hide"
 save_part route: "cms/node", filename: "product/folder-list.part.html", name: "製品サービスカテゴリー",
-  sort: "order",  limit: 4
+  sort: "order", limit: 4
 save_part route: "cms/page", filename: "product/marketing/marketing.part.html", name: "ページ一覧",
-  sort: "order", new_days: 0,  limit: 20
+  sort: "order", new_days: 0, limit: 20
 save_part route: "cms/page", filename: "product/marketing/side-menu.part.html", name: "サイドメニュー",
-  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+  sort: "order", new_days: 0, limit: 20, mobile_view: "hide"
 save_part route: "cms/page", filename: "product/office/office.part.html", name: "ページ一覧",
-  sort: "order", new_days: 0,  limit: 20
+  sort: "order", new_days: 0, limit: 20
 save_part route: "cms/page", filename: "product/office/side-menu.part.html", name: "サイドメニュー",
-  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+  sort: "order", new_days: 0, limit: 20, mobile_view: "hide"
 save_part route: "cms/page", filename: "product/software/software.part.html", name: "ページ一覧",
-  sort: "order", new_days: 0,  limit: 20
+  sort: "order", new_days: 0, limit: 20
 save_part route: "cms/page", filename: "product/software/side-menu.part.html", name: "サイドメニュー",
-  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+  sort: "order", new_days: 0, limit: 20, mobile_view: "hide"
 save_part route: "cms/page", filename: "product/solution/solution.part.html", name: "ページ一覧",
-  sort: "order", new_days: 0,  limit: 20
+  sort: "order", new_days: 0, limit: 20
 save_part route: "cms/page", filename: "product/solution/side-menu.part.html", name: "サイドメニュー",
-  sort: "order", new_days: 0,  limit: 20, mobile_view: "hide"
+  sort: "order", new_days: 0, limit: 20, mobile_view: "hide"
 
 ## -------------------------------------
 puts "# pages"
@@ -246,7 +246,7 @@ end
 
 puts "# articles"
 
-save_page route: "article/page", name: "お知らせ情報が入ります。",  filename: "news/314.html",
+save_page route: "article/page", name: "お知らせ情報が入ります。", filename: "news/314.html",
   layout_id: layouts["news"].id, category_ids: [categories["oshirase"].id]
 save_page route: "article/page", name: "お知らせ情報が入ります。お知らせ情報が入ります。", filename: "news/315.html",
   layout_id: layouts["news"].id, category_ids: [categories["oshirase"].id]
@@ -273,7 +273,7 @@ save_page route: "cms/page", name: "ご挨拶", filename: "company/greeting.html
   order: 20, layout_id: layouts["company"].id
 save_page route: "cms/page", name: "沿革", filename: "company/history.html",
   order: 30, layout_id: layouts["company"].id
-save_page route: "cms/page", name: "会社概要",  filename: "company/index.html",
+save_page route: "cms/page", name: "会社概要", filename: "company/index.html",
   order: 10, layout_id: layouts["company"].id
 save_page route: "cms/page", name: "製品・サービス", filename: "product/index.html",
   layout_id: layouts["product-top"].id

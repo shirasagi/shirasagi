@@ -17,7 +17,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
       if within_one_year?(Date.new(@year, @month, 1))
         index_monthly
-      elsif within_one_year?(Date.new(@year, @month, 1).advance(months:  1, days: -1))
+      elsif within_one_year?(Date.new(@year, @month, 1).advance(months: 1, days: -1))
         index_monthly
       else
         raise "404"

@@ -50,7 +50,7 @@ class History::Log
         label += "(#{target_id})" if target_id.present?
       else
         model = controller.singularize
-        label  = I18n.t :"mongoid.models.#{model}", default: model
+        label = I18n.t :"mongoid.models.#{model}", default: model
       end
     end
 

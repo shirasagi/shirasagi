@@ -23,7 +23,7 @@ module ApplicationHelper
 
   def current_url?(url)
     current = @cur_path.sub(/\?.*/, "")
-    return nil if current.gsub("/", "").blank?
+    return nil if current.delete("/").blank?
     return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
     return :current if current =~ /^#{Regexp.escape(url)}(\/|\?|$)/
     nil
@@ -67,7 +67,7 @@ module ApplicationHelper
       debug_info: false,
       load_paths: opts.load_paths[1..-1] + ["#{Gem.loaded_specs['compass'].full_gem_path}/frameworks/compass/stylesheets"]
 
-    h  = []
+    h = []
     h << "<style>"
     h << sass.render
     h << "</style>"
@@ -80,7 +80,7 @@ module ApplicationHelper
     msg = [msg] if msg.class.to_s == "String"
     list = msg.map {|d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>"}
 
-    h  = []
+    h = []
     h << %(<div class="tooltip">?)
     h << %(<ul>)
     h << list

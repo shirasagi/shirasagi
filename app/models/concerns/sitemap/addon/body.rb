@@ -50,7 +50,7 @@ module Sitemap::Addon
         if sitemap_deny_urls.present?
           regex = sitemap_deny_urls.map { |m| /^\/?#{Regexp.escape(m)}/ }
           regex = Regexp.union(regex)
-          entries  = entries.reject { |e| e.url =~ regex }
+          entries = entries.reject { |e| e.url =~ regex }
         end
 
         # sort by order

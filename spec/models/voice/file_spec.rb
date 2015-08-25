@@ -40,7 +40,7 @@ describe Voice::File, http_server: true do
       site = cms_site
       voice_file = described_class.find_or_create_by_url("http://#{site.domain}/" + random_string)
       locked_voice_file = described_class.acquire_lock(voice_file)
-      expected_lock_until  = Time.zone.now
+      expected_lock_until = Time.zone.now
     end
     subject { locked_voice_file }
 

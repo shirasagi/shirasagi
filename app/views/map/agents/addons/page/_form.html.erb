@@ -42,7 +42,7 @@
     <% @item.map_points.each do |point| %>
       <dd class="marker">
         <p>
-          <%= text_field_tag "item[map_points][][name]",  point[:name], class: "marker-name", placeholder: @item.t(:marker_name) %>
+          <%= text_field_tag "item[map_points][][name]", point[:name], class: "marker-name", placeholder: @item.t(:marker_name) %>
         </p>
         <p>
           <%= text_area_tag "item[map_points][][text]", point[:text], class: "marker-text", placeholder: @item.t(:marker_text) %>

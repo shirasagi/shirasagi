@@ -3,8 +3,8 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
 
   public
     def index
-      @cur_node  = @cur_part.parent
-      root_node  = @cur_node || @cur_site
+      @cur_node = @cur_part.parent
+      root_node = @cur_node || @cur_site
 
       @items = []
       return if @cur_path !~ /^#{root_node.url}/

@@ -22,7 +22,7 @@ namespace :cms do
           edit_other_article_pages
           delete_other_article_pages
         )
-        data = { site_id: site.id, name: "admin",  permissions: permissions, permission_level: 3 }
+        data = { site_id: site.id, name: "admin", permissions: permissions, permission_level: 3 }
 
         puts "Create role ..."
         item = Cms::Role.find_or_create_by data

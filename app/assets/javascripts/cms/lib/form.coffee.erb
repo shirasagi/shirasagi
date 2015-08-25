@@ -543,10 +543,10 @@ class @Link_Checker
 
   @addMessage: (link, state)->
     if state
-      msg =  '<span class="success">' + Link_Checker.message["success"] + '</span>'
+      msg = '<span class="success">' + Link_Checker.message["success"] + '</span>'
       Link_Checker.links[link] = link + " " + msg
     else
-      msg =  '<span class="failure">' + Link_Checker.message["failure"] + '</span>'
+      msg = '<span class="failure">' + Link_Checker.message["failure"] + '</span>'
       Link_Checker.links[link] = link + " " + msg
 
   @check: (html, complete)->

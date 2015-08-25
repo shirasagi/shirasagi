@@ -53,7 +53,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
         image_id     = categories.map(&:image_id).first
 
         image_url = images[image_id]
-        marker_info  = view_context.render_marker_info(item)
+        marker_info = view_context.render_marker_info(item)
 
         map.map_points.each do |point|
           point[:facility_id] = item.id

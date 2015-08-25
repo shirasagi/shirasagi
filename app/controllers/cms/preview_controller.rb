@@ -31,7 +31,7 @@ class Cms::PreviewController < ApplicationController
       if @cur_path =~ /^\/fs\//
         path = @cur_path.sub("/thumb/", "/")
         filename = ::File.basename(path)
-        id = ::File.dirname(path).sub("/fs/", "").sub("/_", "").gsub("/", "")
+        id = ::File.dirname(path).sub("/fs/", "").sub("/_", "").delete("/")
         @item = SS::File.find_by id: id, filename: filename
 
         if @cur_path =~ /\/thumb\//
@@ -77,7 +77,7 @@ class Cms::PreviewController < ApplicationController
       s << 'SS_Preview.render();'
       s << '});'
 
-      h  = []
+      h = []
       h << view_context.stylesheet_link_tag("cms/preview")
       h << '<link href="/assets/css/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />'
       h << '<link href="/assets/css/colorbox/colorbox.css" rel="stylesheet" />'

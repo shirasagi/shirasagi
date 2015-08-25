@@ -74,7 +74,7 @@ class Facility::ImportJob
 
       set_page_categories(row, item)
       ids = SS::Group.in(name: row[@model.t(:groups)].to_s.split(/\n/)).map(&:id)
-      item.group_ids    = SS::Extensions::ObjectIds.new(ids)
+      item.group_ids = SS::Extensions::ObjectIds.new(ids)
     end
 
     def set_page_categories(row, item)
@@ -88,7 +88,7 @@ class Facility::ImportJob
 
       names = row[@model.t(:services)].to_s.split(/\n/).map(&:strip)
       ids = @cur_node.st_services.in(name: names).map(&:id)
-      item.service_ids  = SS::Extensions::ObjectIds.new(ids)
+      item.service_ids = SS::Extensions::ObjectIds.new(ids)
     end
 
     def set_map_attributes(row, item)

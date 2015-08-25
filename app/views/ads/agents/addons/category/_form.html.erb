@@ -5,7 +5,7 @@
 categories = Category::Node::Base.site(@cur_site).where(depth: 1).sort(filename: 1)
 
 def cate_form(item)
-  h  = %(<label>)
+  h = %(<label>)
   h << @f.check_box("ads_category_ids[]", { "data-url": item.url }, item.id)
   h << %(#{item.name}</label>)
 

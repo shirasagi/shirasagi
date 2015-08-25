@@ -47,7 +47,7 @@ module SS::Model::Group
 
   public
     def full_name
-      name.gsub("/", " ")
+      name.tr("/", " ")
     end
 
     def trailing_name

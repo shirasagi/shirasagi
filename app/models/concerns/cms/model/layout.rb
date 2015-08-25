@@ -47,11 +47,11 @@ module Cms::Model::Layout
       self.part_paths = paths.uniq
     end
 
-    def  set_css_paths
+    def set_css_paths
       self.css_paths = html.to_s.scan(/<link [^>]*href="([^"]*\.css)" [^>]*\/>/).map {|m| m[0] }.uniq
     end
 
-    def  set_js_paths
+    def set_js_paths
       self.js_paths = html.to_s.scan(/<script [^>]*src="([^"]*\.js)"[^>]*>/).map {|m| m[0] }.uniq
     end
 end

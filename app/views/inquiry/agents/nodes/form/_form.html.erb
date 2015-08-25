@@ -35,7 +35,7 @@
           <% opt.merge!(column.additional_attr_to_h) %>
           <% checked = (data == value) %>
           <%= send(column.input_type + "_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %>
-          <%= label_tag "#{f.object_name}_#{column.id}_#{i}",  value %>
+          <%= label_tag "#{f.object_name}_#{column.id}_#{i}", value %>
         <% end %>
       <% elsif column.input_type =~ /check_box/ %>
         <% column.select_options.each_with_index do |value, i| %>

@@ -33,7 +33,7 @@ class History::Backup
 
       data.delete("_id")
       data.delete("file_id")
-      data.delete("file_ids")  # TODO: for attachment files
+      data.delete("file_ids") # TODO: for attachment files
 
       resp = query.update('$set' => data)
       return true if resp["err"].blank?

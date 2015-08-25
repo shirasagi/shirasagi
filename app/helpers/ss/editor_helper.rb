@@ -60,11 +60,11 @@ module SS::EditorHelper
     if opts[:readonly]
       opts[:removePlugins] << ",toolbar"
       #opts[:removePlugins] << ",resize"
-      #opts[:extraPlugins]  << ",autogrow"
+      #opts[:extraPlugins] << ",autogrow"
       opts[:readOnly] = true
       opts.delete :readonly
     end
-    opts[:extraPlugins]  << ",templates,justify"
+    opts[:extraPlugins] << ",templates,justify"
     #opts[:enterMode] = 2 #BR
     #opts[:shiftEnterMode] = 1 #P
     opts[:allowedContent] = true
@@ -91,7 +91,7 @@ module SS::EditorHelper
       editor_opts[:toolbar]  = false
       editor_opts[:menubar]  = false
     else
-      editor_opts[:plugins]  = [
+      editor_opts[:plugins] = [
         "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
         "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
         "save table contextmenu directionality emoticons template paste textcolor"

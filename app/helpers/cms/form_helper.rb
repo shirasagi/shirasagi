@@ -25,7 +25,7 @@ module Cms::FormHelper
     return send(path, id: item.id) if item.parent.blank?
 
     if item.respond_to?(:route) && model == "page"
-      route = item.route =~ /cms\// ? "node_page" : item.route.gsub("/", "_")
+      route = item.route =~ /cms\// ? "node_page" : item.route.tr("/", "_")
       path  = "#{route}_path".to_sym
       return send(path, cid: item.parent.id, id: item.id) if respond_to?(path)
     end
@@ -40,7 +40,7 @@ module Cms::FormHelper
     image = file.thumb || file
     link  = %(<a href="#{file.url}" target="_blank">).html_safe
 
-    h  = []
+    h = []
     h << %(<div>#{link}#{image_tag(image.url, alt: "")}</a></div>).html_safe
     h << %(<div>#{link}#{file.filename}</a> \(#{number_to_human_size(file.size)}\)</div>).html_safe
 

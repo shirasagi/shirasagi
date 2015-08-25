@@ -17,7 +17,7 @@ describe Ldap::User, ldap: true do
                                  username: username, password: password)
       end
       subject { Ldap::User.find(connection, dn) }
-      it { expect(subject.dn).to eq dn.gsub(" ", "") }
+      it { expect(subject.dn).to eq dn.delete(" ") }
     end
 
     context "non-existing dn is given" do
@@ -41,7 +41,7 @@ describe Ldap::User, ldap: true do
                                username: username, password: password)
     end
     subject { Ldap::User.find(connection, dn) }
-    it { expect(subject.parent.dn).to eq parent_dn.gsub(" ", "") }
+    it { expect(subject.parent.dn).to eq parent_dn.delete(" ") }
   end
 
   describe "#auth admin" do

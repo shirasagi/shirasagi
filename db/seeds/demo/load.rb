@@ -243,7 +243,7 @@ save_node route: "category/page", filename: "calendar/bunka", name: "文化・�
 save_node route: "category/page", filename: "calendar/kohen", name: "講演・講座", order: 20
 save_node route: "category/page", filename: "calendar/sports", name: "スポーツ", order: 60
 
-array   =  Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
+array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 categories = Hash[*array.flatten]
 
 ## node
@@ -277,7 +277,7 @@ save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災�
 
 ## inquiry
 inquiry_html = File.read("nodes/inquiry.inquiry_html") rescue nil
-inquiry_sent_html  = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
+inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
 inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市へのお問い合わせ", shortcut: "show",
   from_name: "シラサギサンプルサイト",
   inquiry_captcha: "enabled", notice_state: "disabled",
@@ -815,7 +815,7 @@ Dir.glob "ss_files/facility/*.*" do |file|
   save_ss_files file, filename: File.basename(file), model: "facility/file"
 end
 
-array   =  SS::File.where(model: "facility/file").map { |m| [m.filename, m] }
+array = SS::File.where(model: "facility/file").map { |m| [m.filename, m] }
 facility_images = Hash[*array.flatten]
 
 save_page route: "facility/image", filename: "institution/shisetsu/library/library.html", name: "シラサギ市立図書館",
@@ -827,7 +827,7 @@ save_page route: "facility/map", filename: "institution/shisetsu/library/map.htm
 
 puts "# ezine"
 save_page route: "ezine/page", filename: "ezine/653.html", name: "シラサギ市メールマガジン", completed: true,
-  layout_id: layouts["ezine"].id,  html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
+  layout_id: layouts["ezine"].id, html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
   text: "シラサギ市メールマガジンを配信します。\r\n"
 
 ## -------------------------------------

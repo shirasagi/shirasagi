@@ -8,7 +8,7 @@ FactoryGirl.define do
   end
 
   factory :cms_part, class: Cms::Part, traits: [:cms_part] do
-    mobile_view  :show
+    mobile_view :show
   end
 
   factory :cms_part_base, class: Cms::Part::Base, traits: [:cms_part] do

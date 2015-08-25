@@ -17,7 +17,7 @@ class SS::Addon::Name
   end
 
   def id
-    path.gsub('/', '-')
+    path.tr('/', '-')
   end
 
   def controller_file

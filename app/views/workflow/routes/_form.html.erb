@@ -30,7 +30,7 @@
 <h1 class="workflow-level-header workflow-level-<%= level %>"><%= @model.t :level, level: level %></h1>
 <dl class="see workflow-approvers workflow-level-<%= level %>">
   <dt><%= @model.t :required_counts %><%= @model.tt :required_counts %></dt>
-  <dd><%= select_tag "item[required_counts][]",  options_for_select(@item.required_count_options, @item.required_count_at(level)) %></dd>
+  <dd><%= select_tag "item[required_counts][]", options_for_select(@item.required_count_options, @item.required_count_at(level)) %></dd>
   <dt><%= @model.t :approvers %><%= @model.tt :approvers %></dt>
   <dd>
     <%= f.hidden_field "approvers[]", value: "", class: "hidden-ids" %>

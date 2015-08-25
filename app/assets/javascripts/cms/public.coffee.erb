@@ -130,7 +130,7 @@ class @SS_Font
     vr.html '<a href="#" onclick="return SS_Font.set(true)">' + vr.text() + '</a>'
 
   @set: (size) ->
-    if size ==  true
+    if size == true
       size = @size + 20
       return false if size > 200
     else if size == false

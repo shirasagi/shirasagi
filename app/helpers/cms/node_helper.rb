@@ -8,7 +8,7 @@ module Cms::NodeHelper
   end
 
   def node_navi(mod_name = nil, &block)
-    h  = []
+    h = []
 
     if block_given?
       h << %(<nav class="mod-navi">).html_safe
@@ -33,7 +33,7 @@ module Cms::NodeHelper
       %(<li>#{link_to name, send("#{key}_main_path")}</li>).html_safe
     end
 
-    h  = []
+    h = []
     h << %(<div class="dropdown">).html_safe
     h << capture(&block) if block_given?
     h << %(<ul class="dropdown-menu">#{safe_join(mods)}</ul>).html_safe

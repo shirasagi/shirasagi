@@ -91,7 +91,7 @@ class Uploader::FilesController < ApplicationController
       if filenames
         @items = []
         filenames.each do |filename|
-          item = @model.file("#{@item.path.to_s}/#{filename}")
+          item = @model.file("#{@item.path}/#{filename}")
           @items << item if item
         end
         @items.each(&:destroy)
@@ -105,7 +105,7 @@ class Uploader::FilesController < ApplicationController
   private
     def create_directory
       path = "#{@item.path}/#{params[:item][:directory]}"
-      item = @model.new path: path,  is_dir: true
+      item = @model.new path: path, is_dir: true
 
       if item.save
         render_create true, location: "#{uploader_files_path}/#{@item.filename}"
@@ -143,7 +143,7 @@ class Uploader::FilesController < ApplicationController
         @items = @model.find(@item.path).sort_by
         dirs  = @items.select{ |item| item.directory?  }.sort_by { |item| item.name.capitalize }
         files = @items.select{ |item| !item.directory? }.sort_by { |item| item.name.capitalize }
-        @items =  dirs + files
+        @items = dirs + files
       else
         @items = []
       end

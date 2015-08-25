@@ -27,7 +27,7 @@ save_layout filename: "docs/index.layout.html", name: "記事レイアウト"
 save_layout filename: "product/index.layout.html", name: "製品情報レイアウト"
 save_layout filename: "recruit/index.layout.html", name: "採用情報レイアウト"
 
-array   = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/, '\1'), m] }
+array = Cms::Layout.where(site_id: @site._id).map {|m| [m.filename.sub(/\..*$/, '\1'), m] }
 layouts = Hash[*array.flatten]
 
 ## -------------------------------------
@@ -50,7 +50,7 @@ save_node filename: "product"     , name: "製品情報", route: "cms/node", sho
 save_node filename: "product/word", name: "文書管理", route: "cms/page"
 save_node filename: "product/calc", name: "表計算"  , route: "cms/page"
 
-save_node filename: "recruit"      , name: "採用情報", shortcut: "show",  route: "category/node"
+save_node filename: "recruit"      , name: "採用情報", shortcut: "show", route: "category/node"
 save_node filename: "recruit/sales", name: "営業部"  , route: "category/page"
 save_node filename: "recruit/devel", name: "開発部"  , route: "category/page"
 

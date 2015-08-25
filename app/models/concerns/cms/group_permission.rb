@@ -51,11 +51,11 @@ module Cms::GroupPermission
         action = permission_action || action
         permit = "#{action}_other_#{permission_name}"
 
-        level = user.cms_roles.where(site_id:  site_id).in(permissions: permit).pluck(:permission_level).max
-        return where("$or" =>  [{permission_level: {"$lte" => level }}, {permission_level:  nil}]) if level
+        level = user.cms_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
+        return where("$or" => [{permission_level: {"$lte" => level }}, {permission_level: nil}]) if level
 
         permit = "#{action}_private_#{permission_name}"
-        level = user.cms_roles.where(site_id:  site_id).in(permissions: permit).pluck(:permission_level).max
+        level = user.cms_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
         return self.in(group_ids: user.group_ids).where(permission_level: {"$lte" => level }) if level
 
         where({ _id: -1 })

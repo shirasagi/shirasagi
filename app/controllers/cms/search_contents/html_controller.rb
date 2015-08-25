@@ -14,7 +14,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
       @replacement = params[:replacement]
       @updated_items = params[:updated_items]
       if @updated_items
-        page_ids  = params[:updated_items][:page_ids]
+        page_ids   = params[:updated_items][:page_ids]
         layout_ids = params[:updated_items][:layout_ids]
         part_ids   = params[:updated_items][:part_ids]
 
@@ -25,12 +25,12 @@ class Cms::SearchContents::HtmlController < ApplicationController
     end
 
     def update
-      keyword = params[:keyword].to_s
+      keyword     = params[:keyword].to_s
       replacement = params[:replacement].to_s
-      option  = params[:option]
-      page_ids = params[:page_ids].to_a.map(&:to_i)
-      part_ids = params[:part_ids].to_a.map(&:to_i)
-      layout_ids = params[:layout_ids].to_a.map(&:to_i)
+      option      = params[:option]
+      page_ids    = params[:page_ids].to_a.map(&:to_i)
+      part_ids    = params[:part_ids].to_a.map(&:to_i)
+      layout_ids  = params[:layout_ids].to_a.map(&:to_i)
 
       @pages   = []
       @layouts = []
@@ -112,7 +112,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
       end
 
       @layouts = @layouts.select do |item|
-        update_html_fields(item) { |html|  html.gsub(regexp, replacement) }
+        update_html_fields(item) { |html| html.gsub(regexp, replacement) }
       end
     end
 

@@ -24,7 +24,7 @@ describe Job::Worker do
   end
 
   describe ".job_options" do
-    it  do
+    it do
       expect(model.job_options).not_to be_nil
       expect(model.job_options).to be_a(Hash)
     end

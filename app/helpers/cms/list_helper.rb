@@ -3,7 +3,7 @@ module Cms::ListHelper
     cur_item = @cur_part || @cur_node
     cur_item.cur_date = @cur_date
 
-    h  = []
+    h = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
     if block_given?
       h << capture(&block)
@@ -32,7 +32,7 @@ module Cms::ListHelper
     cur_item = @cur_part || @cur_node
     cur_item.cur_date = @cur_date
 
-    h  = []
+    h = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
     if block_given?
       h << capture(&block)

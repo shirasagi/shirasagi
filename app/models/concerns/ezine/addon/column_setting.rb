@@ -37,7 +37,7 @@ module Ezine::Addon
 
       def additional_attr_to_h
         additional_attr.scan(/\S+?=".+?"/m).
-          map { |s| s.split(/=/).size == 2 ? s.gsub(/"/, "").split(/=/) : nil }.
+          map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
           compact.to_h
       end
 

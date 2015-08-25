@@ -56,7 +56,7 @@ module Job::Worker
       end
 
       def default_pool
-        self.job_options.key?('pool') ?  self.job_options['pool'] : 'default'
+        self.job_options.key?('pool') ? self.job_options['pool'] : 'default'
       end
 
       def check_size_limit(pool)
