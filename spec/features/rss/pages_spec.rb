@@ -63,7 +63,7 @@ describe "rss_pages", dbscope: :example do
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
-        within "table.index" do
+        within "ul.list-items" do
           expect(page).to have_content(item.name)
         end
       end

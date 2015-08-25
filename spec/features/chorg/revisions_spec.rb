@@ -23,7 +23,7 @@ describe "chorg_revisions", dbscope: :example do
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
-        expect(page).not_to have_selector("table.index tbody tr")
+        expect(page).not_to have_selector("ul.list-items li.list-item nav.list-item-tap")
       end
     end
 
@@ -37,7 +37,7 @@ describe "chorg_revisions", dbscope: :example do
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
-        expect(page).to have_selector("table.index tbody tr")
+        expect(page).to have_selector("ul.list-items li.list-item nav.list-item-tap")
       end
     end
   end

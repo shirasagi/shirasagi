@@ -31,7 +31,7 @@ describe "cms_generate_pages" do
       visit index_path
       expect(status_code).to eq 200
       within "form#task-form" do
-        click_button "Run"
+        click_button I18n.t("views.button.run")
       end
       # task should be started within a minute.
       timeout(60) do
