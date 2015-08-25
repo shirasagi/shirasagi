@@ -2,8 +2,11 @@
   SS_AddonTabs.hide(".mod-event");
   Event_Form.render();
 
-  $(".mod-event .date").
-    datetimepicker({ lang: "ja", timepicker: false, scrollInput: false, closeOnDateSelect: true, format: "Y/m/d" });
+  if ($.support.opacity) {
+    // above IE9
+    $(".mod-event .date").
+      datetimepicker({ lang: "ja", timepicker: false, scrollInput: false, closeOnDateSelect: true, format: "Y/m/d" });
+  }
 <% end %>
 
 <dl class="see mod-event">

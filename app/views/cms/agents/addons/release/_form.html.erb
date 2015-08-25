@@ -1,8 +1,11 @@
 <%= jquery do %>
   SS_AddonTabs.hide(".mod-cms-release");
 
-  $(".mod-cms-release .datetime").
-    datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+  if ($.support.opacity) {
+    // above IE9
+    $(".mod-cms-release .datetime").
+      datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+  }
 <% end %>
 
 <dl class="see mod-cms-release">
