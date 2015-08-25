@@ -114,5 +114,23 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         expect(item.lock_owner_id).to eq user1.id
       end
     end
+
+    context "with owned lock and unlock twice" do
+      before do
+        item.acquire_lock(user: user)
+      end
+
+      it do
+        expect(item.lock_owner_id).to eq user.id
+
+        2.times do
+          delete lock_path
+          expect(response.status).to eq 204
+        end
+
+        item.reload
+        expect(item.lock_owner_id).to be_nil
+      end
+    end
   end
 end

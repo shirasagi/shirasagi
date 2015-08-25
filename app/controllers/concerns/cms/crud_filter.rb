@@ -96,6 +96,14 @@ module Cms::CrudFilter
     def unlock
       raise "403" unless @item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node)
 
+      unless @item.locked?
+        respond_to do |format|
+          format.html { redirect_to(action: :edit) }
+          format.json { head :no_content }
+        end
+        return
+      end
+
       if @item.release_lock(force: params[:force].present?)
         respond_to do |format|
           format.html { redirect_to(action: :edit) }

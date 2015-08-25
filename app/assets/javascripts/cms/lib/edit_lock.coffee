@@ -5,7 +5,14 @@ class @Cms_EditLock
     @unlock_url = unlock_url
     @unloading = false
     @interval = 2 * 60 * 1000
-    $(window).bind('beforeunload', @releaseLock)
+    if $.support.opacity
+      # above IE9
+      $(window).bind('beforeunload', @releaseLock)
+    else
+      # below IE8
+      $('button[type="reset"]').bind('click', @releaseLockOnCancel)
+      $('a.back-to-index').bind('click', @releaseLockOnCancel)
+      $('a.back-to-show').bind('click', @releaseLockOnCancel)
     @refreshLock()
 
   updateView: (lock_until) ->
@@ -48,3 +55,7 @@ class @Cms_EditLock
       async: false
     # must return void
     return
+
+  releaseLockOnCancel: =>
+    @releaseLock()
+    true
