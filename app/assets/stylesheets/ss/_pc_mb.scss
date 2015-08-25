@@ -45,7 +45,7 @@ h1, h2, h3, h4, h5, p {
   font-weight: normal;
 }
 a {
-  color: $black;
+  color: $orange;
   text-decoration: none;
 }
 a:hover {
@@ -206,7 +206,7 @@ td {
           display: block;
           min-width: 120px;
           padding: 5px 10px;
-          color: $black;
+          color: $orange;
           &:hover {
             background: #eee;
           }
@@ -251,6 +251,7 @@ td {
       display: block;
       padding: 45px 0 10px;
       background: url(/assets/img/ic-preview-off.png) no-repeat center 5px;
+      color: $black;
       font-size: $px12;
       &:hover {
         background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center 5px;
@@ -284,6 +285,7 @@ td {
     display: block;
     padding: 10px 15px;
     border-bottom: $border-gray5;
+    color: $black;
     &:hover {
       text-decoration: none;
     }
@@ -366,6 +368,7 @@ td {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+    color: $black;
     &.current {
       background-color: $gray1;
     }
@@ -464,6 +467,7 @@ td {
       display: block;
       padding: 5px 15px 5px 85px;
       background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+      color: $black;
       &.current {
         background-color: $gray1;
       }
@@ -499,7 +503,7 @@ td {
 }
 #main .wrap {
   margin: 0 10px 0 250px;
-  @include mb { margin: 0; }
+  @include mb { margin: 10px 0; }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -535,6 +539,7 @@ td {
     position: relative;
     display: block;
     padding: 10px 28px;
+    color: $black;
     &:before {
       content: "";
       position: absolute;
@@ -571,6 +576,7 @@ td {
       display: inline-block;
       margin-right: 24px;
       @include arrow;
+      color: $black;
     }
   }
 }
@@ -590,7 +596,7 @@ td {
     border-bottom: $border-gray1;
   }
 }
-.addon-view {
+.addon-view, .search-pages, .index-search, .search-form {
   @include box;
   @include mb {
     margin: 0 10px 10px;
@@ -616,6 +622,15 @@ td {
       font-size: $px12;
     }
   }
+}
+.search-contents-pages,
+.search-contents-form,
+.search-form {
+  padding: 10px;
+}
+.list-head-search .index-search {
+  margin-bottom: 0;
+  border: none;
 }
 .addon-head {
   @include box-head;
@@ -947,6 +962,7 @@ footer.send {
 // -------------------------------------------------------------------------------------------------
 // index
 div.index {
+  @include clear;
   @include box;
   position: static;
   @include mb { margin: 0 10px 10px; }
@@ -955,6 +971,11 @@ div.index {
     margin-left: -15px;
     margin-right: 5px;
     padding: 8px;
+  }
+}
+#ajax-box {
+  div.index {
+    border: none;
   }
 }
 .list-items {
@@ -971,9 +992,14 @@ div.index {
 }
 .list-head-action {
   float: left;
+  @include mb { button { margin: 0; } }
 }
 .list-head-search {
   float: right;
+  @include mb {
+    input[type="text"] { width: 70% !important; }
+    input[type="submit"] { width: 20% !important; }
+  }
 }
 .list-item {
   padding: 8px 10px;
@@ -1001,7 +1027,7 @@ div.index {
     &:hover { background: $gray1; }
   }
 }
-.list-item-info { @include mb { margin-left: 40px; } }
+label + .list-item-info { @include mb { margin-left: 26px; } }
 .list-item-title {
   color: $orange;
   font-size: $px15;
@@ -1019,15 +1045,46 @@ div.index {
     color: #080;
   }
 }
-
 table.index {
+  width: 100%;
+  border: $border-gray5;
+  background: $white;
+  tr:nth-child(2n) {
+    background: $gray1;
+  }
   th, td {
-    padding: 4px 8px;
-    border: $border-gray5;
-    background: $white;
+    padding: 6px 18px;
+    @include mb { display: inline-block; }
+  }
+  th.checkbox,
+  td.checkbox {
+    width: 38px;
+    padding-right: 0;
   }
   thead th {
+    border-bottom: $border-gray5;
     background: $gray1;
+    color: $gray2;
+    @include mb {
+      display: inline-block;
+      padding: 5px 0;
+      border: none;
+      background: none;
+      &:after {
+        content: "/";
+      }
+      &:first-child {
+        padding-left: 16px;
+      }
+      &:last-child {
+        padding-right: 16px;
+      }
+    }
+  }
+  @include mb {
+    thead {
+      background: $gray1;
+    }
   }
   .padding {
     display: inline-block;
@@ -1133,30 +1190,45 @@ form .CodeMirror {
     vertical-align: middle;
   }
 }
-#errorExplanation {
+.errorExplanation {
   margin: 0px 0px 20px;
   padding: 20px 20px;
-  border-bottom: 1px solid #fbc;
+  border-bottom: 1px solid $orange;
   background-color: #fff;
   h2 {
     margin: -20px -20px 25px;
     padding: 4px 8px;
-    background-color: #e78;
+    background-color: $orange;
     color: #fff;
   }
   p, ul {
-    color: #822;
+    padding: 0;
+  }
+  .code {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    @include border-radius(3px);
+    background: $black2;
+    color: $white;
+    & + ul {
+      margin-bottom: 20px;
+      padding-left: 20px;
+      li {
+        list-style: disc;
+      }
+    }
   }
 }
 #alertExplanation {
   margin: 0px 0px 20px;
   padding: 20px 20px;
-  border-bottom: 1px solid #fbc;
+  border-bottom: 1px solid $orange;
   background-color: #fff;
   h2 {
     margin: -20px -20px 25px;
     padding: 4px 8px;
-    background-color: #e78;
+    background: $orange;
     color: #fff;
   }
   p, ul {
@@ -1180,12 +1252,13 @@ form .CodeMirror {
 .pagination {
   @include clear;
   margin: 20px 0px;
+  @include mb { padding: 0 10px; }
   span a, .current, .gap {
     float: left;
     min-width: 20px;
     margin: 0px 4px 0px 0px;
-    padding: 6px 2px;
-    @include box-shadow(0px 0px 3px #aaa);
+    padding: 10px;
+    border: $border-gray5;
     background-color: #fff;
     color: #444;
     text-align: center;
@@ -1222,5 +1295,30 @@ form .CodeMirror {
     a {
       @include btn;
     }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// facility
+
+#facility-info {
+  position: relative;
+  .summary {
+    position: absolute;
+    top: 65px;
+    right: 15px;
+    @include mb { position: static;}
+  }
+  #map-canvas {
+    margin-bottom: 10px;
+  }
+}
+.mod-cms-additional-info {
+  #item_additional_info__field { width: 160px; } 
+  dd textarea {
+    width: 70%;
+  }
+  .clear {
+    vertical-align: top;
   }
 }

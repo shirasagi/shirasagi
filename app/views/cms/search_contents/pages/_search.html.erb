@@ -28,7 +28,7 @@ $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
 
   <dl class="see">
     <dt><%= @model.t("category_ids") %><%= tt("search_contents.pages.category") %></dt>
-    <dd class="wide" style="line-height: 2.5">
+    <dd class="wide">
       <%= hidden_field_tag "s[category_ids][]", nil, class: "hidden-ids" %>
       <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
     </dd>
@@ -55,7 +55,7 @@ $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
 
   <dl class="see">
     <dt><%= @model.t("group_ids") %><%= tt("search_contents.pages.group") %></dt>
-    <dd class="wide" style="line-height: 2.5">
+    <dd class="wide">
       <%= hidden_field_tag "s[group_ids][]", nil, class: "hidden-ids" %>
       <%= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
     </dd>
@@ -115,8 +115,8 @@ $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
   <dl class="see">
     <dt></dt>
     <dd class="wide">
-      <%= f.submit t("views.button.search"), name: "search", class: :search %>
-      <%= f.submit t("views.button.reset"), name: "reset", class: :reset %>
+      <%= f.submit t("views.button.search"), name: "search", class: "search btn-primary" %>
+      <%= f.submit t("views.button.reset"), name: "reset", class: "reset btn-default" %>
     </dd>
   </dl>
 </div>

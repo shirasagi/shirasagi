@@ -131,14 +131,15 @@ $border-white: 1px solid $white;
 @mixin btn {
   display: inline-block;
   padding: 5px 12px;
-  border: $border-gray2;
+  border: 1px solid #bbb;
   @include border-radius(3px);
-  background: #ebecec;
+  @include grd-white;
+  filter: none \9;
   color: $black;
   font-size: $px12;
   cursor: pointer;
   &:hover {
-    background: #b9b9b9;
+    background: #ebecec;
     text-decoration:none;
   }
 }
@@ -147,12 +148,13 @@ $border-white: 1px solid $white;
   padding: 8px 10px;
   border: 1px solid #bbb;
   @include border-radius(6px);
-  background: #ebecec;
+  @include grd-white;
+  filter: none \9;
   color: $black;
   font-size: $px15;
   cursor: pointer;
   &:hover {
-    background: #ccc;
+    background: #ebecec;
     text-decoration:none;
   }
   @include mb {
@@ -165,7 +167,8 @@ $border-white: 1px solid $white;
   padding: 5px 12px;
   border: $border-gray2;
   @include border-radius(6px);
-  background: #f2d150;
+  @include grd-orange;
+  filter: none \9;
   color: $black;
   font-size: $px12;
   cursor: pointer;
@@ -173,23 +176,28 @@ $border-white: 1px solid $white;
     background: #f2a950;
     text-decoration:none;
   }
+  @include mb {
+    font-size: $px14;
+    padding: 5px 12px;
+  }
 }
 @mixin btn-red {
   display: inline-block;
   min-width: 100px;
   padding: 8px 10px;
-  //border: $border-gray2;
-  border: none;
+  border: 1px solid #bbb;
   @include border-radius(6px);
-  background: #e13026;
+  @include grd-red;
+  filter: none \9;
   color: $white;
   font-size: $px15;
   cursor: pointer;
   &:hover {
-    background: #c23a3d;
+    background: #b23a3d;
     text-decoration:none;
   }
   @include mb {
+    min-width: 0;
     font-size: $px12;
     padding: 5px 12px;
   }
@@ -199,33 +207,17 @@ $border-white: 1px solid $white;
   @include background(linear-gradient($position, $value));
 }
 @mixin grd-white {
-  background: $gray1;
-  @include background-image(linear-gradient(top, #ffffff, #e7e7e7));
-  @include filter-gradient(#ffffff, #e7e7e7, vertical);
-  background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImcxMTgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNFN0U3RTciIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2cxMTgpIiAvPgo8L3N2Zz4=);
+  background: #ffffff;
+  @include background-image(linear-gradient(top, #ffffff, #ebecec));
+  @include filter-gradient(#ffffff, #ebecec, vertical);
 }
 @mixin grd-red {
-  background: $red;
-  @include background-image(linear-gradient(top, $red, #931e23));
-  @include filter-gradient($red, #931e23, vertical);
-  background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc2NDciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNCQjFGMjQiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiM5MzFFMjMiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c2NDcpIiAvPgo8L3N2Zz4=);
+  background: #e13026;
+  @include background-image(linear-gradient(top, #e13026, #b23a3d));
+  @include filter-gradient(#e13026, #b23a3d, vertical);
 }
-@mixin grd-pink {
-  background: $pink;
-  @include background-image(linear-gradient(top, $pink, #c1447d));
-  @include filter-gradient($pink, #c1447d, vertical);
-  background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc1NDkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNFQTRDODkiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNDMTQ0N0QiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c1NDkpIiAvPgo8L3N2Zz4=);
-}
-@mixin grd-green {
-  background: $green;
-  @include background-image(linear-gradient(top, $green, #218d77));
-  @include filter-gradient($green, #218d77, vertical);
-  background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc2MzEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiMyQkI0OTYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMyMThENzciIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c2MzEpIiAvPgo8L3N2Zz4=);
-}
-@mixin grd-btn {
-  background: $gray1;
-  @include background-image(linear-gradient(top, $gray1, $gray3));
-  @include filter-gradient($gray1, $gray3, vertical);
-  background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3MTgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGN0Y3RjciIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNERURFREUiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3MTgpIiAvPgo8L3N2Zz4=);
-  background-size: auto auto;
+@mixin grd-orange {
+  background: #f2d150;
+  @include background-image(linear-gradient(top, #f2d150, #f2a950));
+  @include filter-gradient(#f2d150, #f2a950, vertical);
 }
