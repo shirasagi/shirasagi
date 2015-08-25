@@ -11,8 +11,8 @@
   <ul class="list-items">
     <% @important_notices.each do |notice| %>
     <li class="list-item">
-      <div class="list-item-info">
-        <%= link_to notice.name, notice_cms_contents_path(notice: notice), { class: "list-item-title notice-severity-#{notice.notice_severity}" } %>
+      <div class="info">
+        <%= link_to notice.name, notice_cms_contents_path(notice: notice), { class: "title notice-severity-#{notice.notice_severity}" } %>
         <span class="datetime"><%= notice.updated.strftime("%Y/%m/%d %H:%M") %></span>
       </div>
     </li>
@@ -28,8 +28,8 @@
   <ul class="list-items">
     <% @normal_notices.each do |notice| %>
     <li class="list-item">
-      <div class="list-item-info">
-        <%= link_to notice.name, notice_cms_contents_path(notice: notice), { class: "list-item-title notice-severity-#{notice.notice_severity}" } %>
+      <div class="info">
+        <%= link_to notice.name, notice_cms_contents_path(notice: notice), { class: "title notice-severity-#{notice.notice_severity}" } %>
         <span class="datetime"><%= notice.updated.strftime("%Y/%m/%d %H:%M") %></span>
       </div>
     </li>
@@ -44,16 +44,16 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <li class="list-item">
-      <nav class="list-item-tap">
+      <nav class="tap-menu">
         <%= link_to :"cms.content", contents_path(item) %>
         <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
         <%= link_to :mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank %>
         <%= link_to :view_site, item.full_url, target: :_blank %>
       </nav>
-      <div class="list-item-info">
-        <%= link_to item.name, contents_path(item), class: "list-item-title" %>
+      <div class="info">
+        <%= link_to item.name, contents_path(item), class: "title" %>
 
-        <div class="list-item-meta">
+        <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="filename"><%= File.basename item.filename %></span>

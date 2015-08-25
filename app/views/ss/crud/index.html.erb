@@ -4,7 +4,7 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <li class="list-item">
-      <nav class="list-item-tap">
+      <nav class="tap-menu">
         <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user) %>
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user) %>
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user) %>
@@ -17,7 +17,7 @@
       </nav>
 
       <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
-      <div class="list-item-info">
+      <div class="info">
         <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
         <%= link_to title, { action: :show, id: item }, class: "list-item-title" %>
 

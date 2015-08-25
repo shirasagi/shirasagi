@@ -14,7 +14,7 @@
     <% @items.each do |item| %>
     <tr class="list-item">
       <td>
-        <nav class="list-item-tap">
+        <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>
           <%= link_to :delete, action: :delete, id: item %>
           <%= link_to :view_site, item.url, target: :_blank %>

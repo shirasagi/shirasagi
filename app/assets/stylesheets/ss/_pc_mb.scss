@@ -961,6 +961,21 @@ footer.send {
 
 // -------------------------------------------------------------------------------------------------
 // index
+.tap-menu {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  padding: 5px 0px;
+  border: $border-gray4;
+  background: $white;
+  @include box-shadow(0px 1px 3px #gray4);
+  a {
+    display: block;
+    padding: 5px 15px;
+    line-height: 1.8;
+    &:hover { background: $gray1; }
+  }
+}
 div.index {
   @include clear;
   @include box;
@@ -1011,38 +1026,26 @@ div.index {
   .checked, &:hover {
     background: $orange2;
   }
-}
-.list-item-tap {
-  display: none;
-  position: absolute;
-  z-index: 100;
-  padding: 5px 0px;
-  border: $border-gray4;
-  background: $white;
-  @include box-shadow(0px 1px 3px #gray4);
-  a {
-    display: block;
-    padding: 5px 15px;
-    line-height: 1.8;
-    &:hover { background: $gray1; }
+  label + .info {
+    @include mb { margin-left: 26px; }
   }
-}
-label + .list-item-info { @include mb { margin-left: 26px; } }
-.list-item-title {
-  color: $orange;
-  font-size: $px15;
-  @include mb { font-size: $px14; }
-}
-.list-item-meta {
-  span {
-    margin-right: 10px;
-    //font-size: $px12;
+  .title {
+    color: $orange;
+    font-size: $px15;
+    @include mb { font-size: $px14; }
   }
-  .id {
-    color: #888;
-  }
-  .filename {
-    color: #080;
+  .meta {
+    span {
+      display: inline-block;
+      margin-right: 10px;
+      //font-size: $px12;
+    }
+    .id {
+      color: #888;
+    }
+    .filename {
+      color: #080;
+    }
   }
 }
 table.index {
@@ -1314,7 +1317,7 @@ form .CodeMirror {
   }
 }
 .mod-cms-additional-info {
-  #item_additional_info__field { width: 160px; } 
+  #item_additional_info__field { width: 160px; }
   dd textarea {
     width: 70%;
   }

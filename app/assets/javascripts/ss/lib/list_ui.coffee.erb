@@ -13,10 +13,10 @@ class @SS_ListUI
         if !$(e.target).is('a') && !$(e.target).is("input") && !$(e.target).is("label")
           $('.list-item input:checkbox').prop('checked', false)
           $('.list-item').removeClass('checked')
-          list.find(".list-item-tap").css("left", e.pageX).css("top", e.pageY).show()
+          list.find(".tap-menu").css("left", e.pageX).css("top", e.pageY).show()
           list.find("input:checkbox").trigger("click")
       list.mouseleave ->
-        $(".list-item-tap").hide()
+        $(".tap-menu").hide()
 
     $(".list-head .destroy-all").on "click", ->
       token   = $('meta[name="csrf-token"]').attr('content')

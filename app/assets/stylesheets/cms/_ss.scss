@@ -51,7 +51,9 @@
     color: #888;
   }
 }
-.list-item-title.notice-severity-high {
-  color: $pink;
-  font-weight: bold;
+.list-item {
+  .title.notice-severity-high {
+    color: $pink;
+    font-weight: bold;
+  }
 }

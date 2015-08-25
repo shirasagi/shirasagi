@@ -54,7 +54,7 @@
         <tr class="list-item" <% if excludes?(group) then %> style="display: none;" <% end %>>
           <td>
             <%= link_to group.name, action: :index, "dn" => group.dn %>
-            <nav class="list-item-tap">
+            <nav class="tap-menu">
               <%= link_to :show, action: :group, "dn" => group.dn %>
             </nav>
           </td>
@@ -83,7 +83,7 @@
         <tr class="list-item">
           <td>
             <%= link_to "#{user.name}(#{user.email})", action: :user, "dn" => user.dn %>
-            <nav class="list-item-tap">
+            <nav class="tap-menu">
               <%= link_to :show, action: :user, "dn" => user.dn %>
             </nav>
           </td>

@@ -4,17 +4,17 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <li class="list-item">
-      <nav class="list-item-tap">
+      <nav class="tap-menu">
         <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
       </nav>
 
       <label><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
-      <div class="list-item-info">
-        <%= link_to item.name, { action: :show, id: item }, { class: "list-item-title" } %>
+      <div class="info">
+        <%= link_to item.name, { action: :show, id: item }, { class: "title" } %>
 
-        <div class="list-item-meta">
+        <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
           <% if item.try(:status) %>

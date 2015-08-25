@@ -3,9 +3,9 @@
     <% @items.each do |item| %>
     <% name = item.try(:name) || item.try(:title) || "##{item.id}" %>
     <li class="list-item">
-      <div class="list-item-info">
-        <h3 class="list-item-title"><%= item.target_label %> : <%= item.action %></h3>
-        <div class="list-item-meta">
+      <div class="info">
+        <h3 class="title"><%= item.target_label %> : <%= item.action %></h3>
+        <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="filename"><%= item.url %></span>

@@ -5,10 +5,10 @@
   <ul class="list-items">
     <% @sites.each do |item| %>
     <li class="list-item">
-      <div class="list-item-info">
-        <%= link_to item.name, cms_contents_path(site: item), class: "list-item-title" %>
+      <div class="info">
+        <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
 
-        <div class="list-item-meta">
+        <div class="meta">
           <span class="id"><%= item.full_url %></span>
         </div>
       </div>
