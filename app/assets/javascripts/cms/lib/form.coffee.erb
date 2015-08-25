@@ -86,7 +86,7 @@ class @Syntax_Checker
     result.attr('class', 'errorExplanation')
     result.append("<h2>" + "<%= I18n.t('cms.syntax_check') %>" + "</h2>")
 
-    if Object.keys(Syntax_Checker.errors).length
+    if Syntax_Checker.errorCount > 0
       result.append("<p>" + "<%= I18n.t('errors.template.body') %>" + "</p>")
       result.append('<ul>')
       ul = result.find('ul:last')
