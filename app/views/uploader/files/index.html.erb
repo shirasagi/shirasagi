@@ -5,7 +5,7 @@
     <% if @cur_node.filename != @item.filename %>
       <li class="list-item">
         <div class="info">
-          <%= link_to :parent_directory, { action: :show, filename: @item.dirname }, class: "list-item-up" %>
+          <%= link_to :parent_directory, { action: :show, filename: @item.dirname }, class: "up" %>
         </div>
       </li>
     <% end %>

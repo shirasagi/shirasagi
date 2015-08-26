@@ -255,6 +255,7 @@ td {
       font-size: $px12;
       &:hover {
         background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center 5px;
+        color: $orange;
         text-decoration: none;
       }
     }
@@ -278,6 +279,7 @@ td {
 // main-navi
 @mixin navi-icon {
   padding: 10px 10px 10px 50px;
+  @include mb { padding: 10px 10px 10px 35px; }
 }
 .main-navi {
   //border-bottom: $border-gray5;
@@ -287,8 +289,10 @@ td {
     border-bottom: $border-gray5;
     color: $black;
     &:hover {
+      color: $orange;
       text-decoration: none;
     }
+    @include mb { background-position: 0 center !important; }
   }
   a.current, a:hover {
     background-color: $gray1;
@@ -326,6 +330,20 @@ td {
     background: url(/assets/img/ic-layout-off.png) no-repeat 10px center;
     &:hover {
       background: $gray1 url(/assets/img/ic-layout-on.png) no-repeat 10px center;
+    }
+  }
+  .icon-conv {
+    @include navi-icon;
+    background: url(/assets/img/ic-conv-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-conv-on.png) no-repeat 10px center;
+    }
+  }
+  .icon-write {
+    @include navi-icon;
+    background: url(/assets/img/ic-write-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/ic-write-on.png) no-repeat 10px center;
     }
   }
   .icon-conf {
@@ -374,6 +392,7 @@ td {
     }
     &:hover {
       background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px center;
+      color: $orange;
       text-decoration: none;
     }
   }
@@ -396,6 +415,7 @@ td {
     }
     &:hover h2, &.active h2 {
       background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 210px center;
+      color: $orange;
     }
     &.active h2 {
       &:before {
@@ -473,6 +493,7 @@ td {
       }
       &:hover {
         background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
+        color: $orange;
         text-decoration: none;
       }
     }
@@ -577,6 +598,7 @@ td {
       margin-right: 24px;
       @include arrow;
       color: $black;
+      &:hover { color: $orange;}
     }
   }
 }
@@ -628,7 +650,8 @@ td {
 .search-form {
   padding: 10px;
 }
-.list-head-search .index-search {
+.list-head-search .index-search,
+.list-search .index-search {
   margin-bottom: 0;
   border: none;
 }
@@ -1028,6 +1051,13 @@ div.index {
   }
   label + .info {
     @include mb { margin-left: 26px; }
+  }
+  .up {
+    padding-left: 25px;
+    background: url(/assets/img/ic-arrow16up-off.png) no-repeat left center;
+    &:hover {
+      background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
+    }
   }
   .title {
     color: $orange;
