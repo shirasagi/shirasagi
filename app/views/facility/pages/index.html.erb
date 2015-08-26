@@ -6,7 +6,7 @@
       <li class="list-item">
         <div class="info">
           <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
-          <%= link_to :parent_directory, link, class: "list-item-up" %>
+          <%= link_to :parent_directory, link, class: "up" %>
         </div>
       </li>
     <% end %>
