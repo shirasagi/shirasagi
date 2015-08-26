@@ -11,7 +11,7 @@
   <tbody>
     <% @items.each do |item| %>
     <% layout_path = "#{@cur_node.filename}/layout-#{item.id}.html" %>
-    <tr class="list-item <%= default_layout?(item) ? 'default-layout' : '' ) %>">
+    <tr class="list-item <%= default_layout?(item) ? 'default-layout' : '' %>">
       <td>
         <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>
