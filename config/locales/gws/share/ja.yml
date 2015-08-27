@@ -1,0 +1,16 @@
+ja:
+  share:
+    file: ファイル共有
+
+  views:
+    button:
+      upload: アップロード
+      download: ダウンロード
+
+  mongoid:
+    attributes:
+      share/file:
+        basename: ファイル名
+        size: ファイルサイズ
+        created: 登録日時
+        updated: 更新日時

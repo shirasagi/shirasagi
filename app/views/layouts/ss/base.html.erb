@@ -44,7 +44,7 @@
     <% if Rails.env.development? %>
     <div class="gws">
       <% if @cur_org %>
-      <h2><%= link_to "GWS", "/.mypage", class: "current" %></h2>
+      <h2><%= link_to "GWS", gws_portal_path(group: @cur_org), class: "current" %></h2>
       <% else %>
       <h2><%= link_to "GWS", "/.mypage" %></h2>
       <% end %>

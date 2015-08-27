@@ -1,0 +1,2 @@
+//= require moment
+//= require fullcalendar

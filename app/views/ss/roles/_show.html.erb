@@ -2,20 +2,22 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
+  <% if @item.respond_to?(:permission_level) %>
   <dt><%= @model.t :permission_level %></dt>
   <dd><%= @item.label :permission_level %></dd>
+  <% end %>
 
   <dt><%= @model.t :permissions %></dt>
   <dd class="role-permissions">
     <% @model.module_permission_names.each do |mod, names| %>
     <div class="module">
-      <p class="module-name"><%= t("modules.#{mod}") %></p>
+      <p class="module-name"><%= @model.mod_name(mod) %></p>
       <div class="permissions">
         <% names.each do |name| %>
           <% if @item.permissions.include?(name.to_s) %>
-          <label><%= t("cms_role.#{name}") %></label>
+          <label><%= t("#{@model.collection_name.to_s.singularize}.#{name}") %></label>
           <% else %>
-          <label class="disabled"><%= t("cms_role.#{name}") %></label>
+          <label class="disabled"><%= t("#{@model.collection_name.to_s.singularize}.#{name}") %></label>
           <% end %>
         <% end %>
       </div>

@@ -257,10 +257,6 @@ ja:
         auto_keywords: キーワード自動設定
         auto_description: 概要自動設定
         keywords: 追加キーワード
-      cms/role:
-        name: ロール名
-        permission_level: 権限レベル
-        permissions: 権限設定
       cms/model/member:
         name: 氏名
         email: メールアドレス

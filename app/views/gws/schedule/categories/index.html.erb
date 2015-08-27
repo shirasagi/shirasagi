@@ -1,0 +1,28 @@
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+    <li class="list-item">
+      <nav class="tap-menu">
+        <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, @cur_group) %>
+        <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, @cur_group) %>
+        <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, @cur_group) %>
+      </nav>
+
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <div class="info">
+        <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+
+        <div class="meta">
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="gws-schedule-plan-color" style="<%= "background: #{item.bg_color}; color: #{item.text_color}" %>">
+            <%= @model.t :color %></span></dd>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

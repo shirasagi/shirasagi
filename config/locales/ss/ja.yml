@@ -165,6 +165,10 @@ ja:
         log: ログ
       ss/model/file:
         name: ファイル名（表示用）
+      ss/model/role:
+        name: ロール名
+        permission_level: 権限レベル
+        permissions: 権限設定
 
   tooltip:
     ss/model/user:

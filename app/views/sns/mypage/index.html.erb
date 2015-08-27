@@ -18,3 +18,19 @@
 </div>
 <% end %>
 
+<% if @groups.size > 0 && Rails.env.development? %>
+<div class="index mypage-sites">
+  <div class="list-head"><%= t "gws.group" %></div>
+
+  <ul class="list-items">
+    <% @groups.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, gws_portal_path(group: item), class: "title" %>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+

@@ -1,0 +1,13 @@
+<div class="gws-board-tree">
+  <article class="topic">
+    <%= render "gws/board/topics/parent", item: @item %>
+
+    <div class="menu">
+      <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) %><br />
+    </div>
+  </article>
+
+  <div class="comments">
+    <%= render partial: 'gws/board/comments/comment', collection: @item.children, locals: {parent: @item, recursion: true} %>
+  </div>
+</div>

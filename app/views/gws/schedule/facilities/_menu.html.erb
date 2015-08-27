@@ -1,0 +1,22 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, @cur_group) %>
+      <%= link_to :new, action: :new %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <% if @item.allowed?(:read, @cur_user, @cur_group) %>
+      <%= link_to :back_to_show, action: :show, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, @cur_group) %>
+      <%= link_to :edit, action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, @cur_group) %>
+      <%= link_to :delete, action: :delete, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>

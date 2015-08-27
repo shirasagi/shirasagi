@@ -21,18 +21,16 @@ ja:
     addons:
       sys/role: ロール
 
+  sys_role:
+    edit_sys_sites: サイトの編集
+    edit_sys_users: ユーザーの編集
+
   mongoid:
     models:
       sys/site: サイト
       sys/user: ユーザー
       sys/role: ロール
     attributes:
-      sys/role:
-        name: ロール名
-        permission_level: 権限レベル
-        permissions: 権限設定
-        edit_sys_sites: サイトの編集
-        edit_sys_users: ユーザーの編集
       sys/site:
         name: サイト名
         host: ホスト名

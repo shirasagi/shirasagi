@@ -1,0 +1,38 @@
+ja:
+  gws_schedule:
+    calendar: カレンダー
+    plan: 予定一覧
+    category: 種別設定
+
+    options:
+      allday:
+        allday: 終日
+      kind:
+        daily: 毎日
+        weekly: 毎週
+        monthly: 毎月
+      repeat_by:
+        date: 日付
+        week: 曜日
+
+  modules:
+    gws_schedule: スケジュール
+
+  mongoid:
+    models:
+      gws/schedule/plan: スケジュール
+      gws/schedule/category: スケジュール種類
+    attributes:
+      gws/schedule/plan:
+        name: タイトル
+        text: 内容
+        start_at: 開始日時
+        end_at: 終了日時
+        allday: 終日
+        category_id: スケジュール種別
+        term: 期間
+      gws/schedule/category:
+        name: スケジュール種別
+        color: 表示色
+        bg_color: 背景色
+        text_color: 文字色

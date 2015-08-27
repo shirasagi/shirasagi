@@ -1,0 +1,15 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= @item.send :text %></dd>
+
+  <dt><%= @model.t :term %></dt>
+  <dd><%= term(@item) %> <%= "(#{@item.label(:allday)})" if @item.allday? %></dd>
+
+  <% if @item.category %>
+  <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
+  <dd><%= @item.category.name %></dd>
+  <% end %>
+</dl>

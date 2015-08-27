@@ -1,0 +1,26 @@
+//= require fullcalendar
+
+#calendar {
+  .fc-head {
+    background-color: #eee;
+  }
+  .fc-view-container {
+    background-color: #fff;
+  }
+}
+
+.gws-board-topics, .gws-board-tree {
+  .topic {
+    margin: 0 0 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  .comments {
+    margin: 0 0 0 20px;
+  }
+  .comment {
+    margin: 10px 0 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+}

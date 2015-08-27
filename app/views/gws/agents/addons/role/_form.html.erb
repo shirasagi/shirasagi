@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :gws_role_ids %><%= @model.tt :gws_role_ids %></dt>
+  <dd>
+    <%= f.hidden_field "gws_role_ids[]", value: "" %>
+
+    <% Gws::Role.site(@cur_site).order_by(name: 1).each do |role| %>
+    <label><%= f.check_box("gws_role_ids[]", {}, role.id) %> <%= role.name %></label><br />
+    <% end %>
+  </dd>
+</dl>

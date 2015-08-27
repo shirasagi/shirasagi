@@ -1,0 +1,39 @@
+<%# TODO Fix all "cms" to "gws" in JS and CSS %>
+
+<%= jquery do %> SS_AddonTabs.toggleView(".mod-cms-owner_permission"); <% end %>
+
+<dl class="see mod-cms-owner_permission">
+  <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
+  <dd><%= f.select :permission_level, (1..@cur_user.gws_role_level).map { |i| %W(#{i} #{i}) } %></dd>
+
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <span onclick="alert(<%# TODO Implement %>'TODO Implement')"><%= t("cms.apis.groups.index") %></span>
+    <%#= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
+    <%#= link_to t("gws.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= Cms::Group.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-id="<%= @cur_group.id %>">
+          <td><%= f.hidden_field "group_ids[]", value: @cur_group.id %> <%= @cur_group.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+        </tr>
+        <% @item.groups.each do |group| %>
+        <% next if group.id == @cur_group.id %>
+        <tr data-id="<%= group.id %>">
+          <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: :deselect %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

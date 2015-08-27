@@ -1,0 +1,8 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :color %></dt>
+  <dd><span class="gws-schedule-plan-color" style="<%= "background: #{@item.bg_color}; color: #{@item.text_color}" %>">
+    <%= @model.t :color %></span></dd>
+</dl>

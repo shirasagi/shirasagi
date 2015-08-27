@@ -4,6 +4,7 @@ class Sys::RolesController < ApplicationController
 
   model Sys::Role
 
+  prepend_view_path "app/views/ss/roles"
   menu_view "sys/crud/menu"
 
   private

@@ -1,0 +1,8 @@
+<dl class="see">
+  <dt><%= @model.t :gws_role_ids %></dt>
+  <dd>
+    <% @item.gws_roles.site(@cur_site).order_by(name: 1).each do |role| %>
+    <div><%= link_to role.name, gws_role_path(id: role) %>
+    <% end %>
+  </dd>
+</dl>
