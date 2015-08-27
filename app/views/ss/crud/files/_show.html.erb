@@ -11,5 +11,5 @@
   <dd><%= @item.send :filename %></dd>
 
   <dt><%= @model.t :download %></dt>
-  <dd><%= link_to :download, action: :download %></dd>
+  <dd><%= link_to :download, { action: :download }, { class: "btn" } %></dd>
 </dl>
