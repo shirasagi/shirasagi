@@ -72,11 +72,17 @@ $ ->
       <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
         <section class="mod-workflow-approve">
-          <h1><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h1>
-          <%= text_area :remand, :comment, value: "" %>
-          <div class="buttons">
-            <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
-            <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item" } %>
+          <div class="addon-view">
+            <header class="addon-head">
+              <h2><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h2>
+            </header>
+            <div class="addon-body">
+              <%= text_area :remand, :comment, value: "" %>
+              <div class="buttons">
+                <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
+                <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item" } %>
+              </div>
+            </div>
           </div>
         </section>
       <% end %>
@@ -89,8 +95,7 @@ $ ->
         </section>
       <% else %>
         <section class="mod-workflow-request">
-          <h1><%= link_to t("workflow.request"), '#', class: "toggle-label" %></h1>
-          <div class="see request-setting workflow-partial-section" style="display: none;"></div>
+          <div class="see request-setting workflow-partial-section"></div>
         </section>
       <% end %>
     <% end %>

@@ -51,6 +51,10 @@ a {
 a:hover {
   text-decoration: underline;
 }
+nav a {
+  color: $black;
+  &:hover { color: $orange; }
+}
 img {
   max-width: 100%;
   height: auto;
@@ -206,8 +210,9 @@ td {
           display: block;
           min-width: 120px;
           padding: 5px 10px;
-          color: $orange;
+          color: $black;
           &:hover {
+            color: $orange;
             background: #eee;
           }
         }
@@ -1114,6 +1119,7 @@ table.index {
       }
     }
   }
+  img.toggle { cursor: pointer; }
   @include mb {
     thead {
       background: $gray1;
@@ -1122,6 +1128,16 @@ table.index {
   .padding {
     display: inline-block;
     width: 12px;
+  }
+}
+.ads-total table.index {
+  th,td {
+    border: $border-gray5;
+    @include mb { display: table-cell; }
+  }
+  thead th {
+    display: table-cell;
+    &:after { display: none; }
   }
 }
 
@@ -1226,11 +1242,12 @@ form .CodeMirror {
 .errorExplanation {
   margin: 0px 0px 20px;
   padding: 20px 20px;
-  border-bottom: 1px solid $orange;
+  border: 1px solid $orange;
+  @include border-radius(3px);
   background-color: #fff;
   h2 {
     margin: -20px -20px 25px;
-    padding: 4px 8px;
+    padding: 8px 20px;
     background-color: $orange;
     color: #fff;
   }
