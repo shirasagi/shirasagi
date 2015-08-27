@@ -1,7 +1,7 @@
-.mod-workflow-approve, .mod-workflow-request {
+.mod-workflow-request {
   margin: 0px 0px 15px;
-  padding: 5px 15px;
-  border: 1px solid #ccc;
+  padding: 5px 0;
+  background: $gray1;
   h1 {
     margin: -5px -15px 15px;
     padding: 8px 10px;
@@ -16,7 +16,11 @@
     }
   }
 }
-
+.mod-workflow-approve {
+  textarea {
+    margin-bottom: 10px;
+  }
+}
 .workflow-level-header {
   margin: 20px 10px 0;
   padding-left: 8px;
