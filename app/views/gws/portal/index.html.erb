@@ -1,1 +1,24 @@
+<%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
 
+<% @users.each do |user| %>
+  <%
+  calendar_id = "calendar#{user.id}"
+  events = Gws::Schedule::Plan.user(user).all
+  %>
+  <div class="calendar-name">
+    <%= user.name %>
+  </div>
+
+  <div id="<%= calendar_id %>" class="calendar portal"></div>
+  <%= javascript_tag do %>
+  $(function() {
+    $('#<%= calendar_id %>').fullCalendar({
+      lang: 'ja',
+      defaultView: 'basicWeek',
+      header: false,
+      contentHeight: 'auto',
+      eventSources: [{ events: <%== calendar_format(events).to_json %> }]
+    });
+  });
+  <% end %>
+<% end %>

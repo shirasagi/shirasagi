@@ -1,4 +1,5 @@
 class Gws::Schedule::Plan
+  include SS::Document
   include Gws::Schedule::Planable
   include SS::Reference::User
   include Gws::Addon::GroupPermission

@@ -10,6 +10,10 @@ module Gws::Schedule::PlanFilter
   end
 
   private
+    def fix_params
+      { user_id: @cur_user.id }
+    end
+
     def pre_params
       now = Time.zone.now
       min = now.min / 5 * 5
@@ -31,6 +35,16 @@ module Gws::Schedule::PlanFilter
     end
 
   public
+    def index
+      item = Gws::Schedule::Plan.user(@cur_user)
+
+      if params[:keyword].present?
+        @items = item.any_of name: /.*#{params[:keyword]}.*/
+      else
+        @items = item.all
+      end
+    end
+
     def create
       respond_to do |format|
         format.html { super }

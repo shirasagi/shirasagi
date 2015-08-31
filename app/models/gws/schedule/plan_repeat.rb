@@ -1,4 +1,5 @@
 class Gws::Schedule::PlanRepeat
+  include SS::Document
   include Gws::Schedule::Planable
 
   after_create :entry_plans

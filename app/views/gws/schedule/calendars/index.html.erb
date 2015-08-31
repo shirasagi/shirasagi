@@ -1,21 +1,12 @@
-<%
+<%#= render "search" %>
 
-events = @plans.map do |p|
-  data = { id: p.id, title: h(p.name), start: p.start_at, end: p.end_at, allDay: p.allday? }
-  if c = p.category
-    data.merge!(backgroundColor: c.bg_color, borderColor: c.bg_color, textColor: c.text_color)
-  end
-  data
-end
+<%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
 
-%>
-<%= render "search" %>
-
-<div id="calendar"></div>
-<script style="text/javascript">
-
+<div id="calendar" class="calendar"></div>
+<%= javascript_tag do %>
 $(function() {
   $('#calendar').fullCalendar({
+    lang: 'ja', // TODO:
     editable: true,
     defaultView: 'month',
     header: { center: 'month,basicWeek,agendaDay' },
@@ -39,8 +30,7 @@ $(function() {
         data: { item: { start_at: event.start.format(), end_at: event.end.format() } }
       });
     },
-    eventSources: [{ events: <%== events.to_json %> }]
+    eventSources: [{ events: <%== calendar_format(@items).to_json %> }]
   });
 });
-</script>
-
+<% end %>

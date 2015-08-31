@@ -18,7 +18,7 @@
 </div>
 <% end %>
 
-<% if @groups.size > 0 && Rails.env.development? %>
+<% if @groups.size > 0 && SS.config.gws.disable.blank? %>
 <div class="index mypage-sites">
   <div class="list-head"><%= t "gws.group" %></div>
 

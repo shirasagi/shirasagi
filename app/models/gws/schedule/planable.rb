@@ -1,9 +1,8 @@
 module Gws::Schedule::Planable
   extend ActiveSupport::Concern
+  include Gws::Reference::User
 
   included do
-    include SS::Document
-
     field :name, type: String
     field :text, type: String
     field :start_at, type: DateTime
