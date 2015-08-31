@@ -1,6 +1,5 @@
 module Gws::Schedule::Planable
   extend ActiveSupport::Concern
-  include Gws::Reference::User
 
   included do
     field :name, type: String

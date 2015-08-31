@@ -1,5 +1,7 @@
 class Gws::Schedule::PlanRepeat
   include SS::Document
+  include Gws::Reference::User
+  include Gws::Reference::Site
   include Gws::Schedule::Planable
 
   after_create :entry_plans

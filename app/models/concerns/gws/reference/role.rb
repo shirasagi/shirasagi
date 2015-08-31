@@ -4,12 +4,10 @@ module Gws::Reference
 
     included do
       embeds_ids :gws_roles, class_name: "Gws::Role"
+      permit_params gws_role_ids: []
+    end
 
-      # @return [Array<String>] The array of the user's role's permission names.
-      def gws_role_permission_names
-        @gws_role_permission_names ||= gws_roles.map(&:permissions).flatten.uniq
-      end
-
+    public
       # @return [Hash<String, Integer>]
       #   The hash that the key is permission name string and the value is
       #   permission level integer.
@@ -25,13 +23,16 @@ module Gws::Reference
       #   self.gws_role_permissions
       #   #=> {"a" => 3, "b" => 1, "c" => 2, "d" => 3}
       def gws_role_permissions
+        return @gws_role_permissions if @gws_role_permissions
+
         @gws_role_permissions ||= {}
         gws_roles.each do |role|
           role.permissions.each do |name|
-            if level = @gws_role_permissions[name]
-              @gws_role_permissions[name] = [level, role.permission_level].max
+            key = "#{name}_#{role.site_id}"
+            if level = @gws_role_permissions[key]
+              @gws_role_permissions[key] = [level, role.permission_level].max
             else
-              @gws_role_permissions[name] = role.permission_level
+              @gws_role_permissions[key] = role.permission_level
             end
           end
         end
@@ -44,6 +45,5 @@ module Gws::Reference
         # TODO きちんとmodelを参照して関係するroleだけの最大levelを取得する
         # TODO app/models/concerns/gws/reference/role.rb も参照
       end
-    end
   end
 end

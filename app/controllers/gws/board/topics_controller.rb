@@ -1,6 +1,6 @@
 class Gws::Board::TopicsController < ApplicationController
   include Gws::BaseFilter
-  include SS::CrudFilter
+  include Gws::CrudFilter
 
   model Gws::Board::Post
 
@@ -10,12 +10,15 @@ class Gws::Board::TopicsController < ApplicationController
     end
 
     def fix_params
-      { user: @cur_user }
+      { cur_user: @cur_user, cur_site: @cur_site }
     end
 
   public
     def index
-      @items = @model.topic.order(descendants_updated: -1)
+      @items = @model.site(@cur_site).topic.
+        allow(:read, @cur_user, site: @cur_site).
+        order(descendants_updated: -1).
+        page(params[:page]).per(50)
     end
 
     def show

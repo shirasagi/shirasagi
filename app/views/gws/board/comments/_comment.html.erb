@@ -8,7 +8,9 @@
     </div>
 
     <div class="menu">
+      <% if @item.permit_comment? %>
       <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id) if recursion %>
+      <% end %>
       <%= link_to :edit, edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
       <%= link_to :delete, delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
     </div>

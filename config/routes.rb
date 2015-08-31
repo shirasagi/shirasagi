@@ -6,7 +6,7 @@ class ActionDispatch::Routing::Mapper
   end
 
   def gws(ns, &block)
-    namespace(ns, as: "gws_#{ns}", path: ".g:group/#{ns}", module: "gws/#{ns}", group: /\d+/) { yield }
+    namespace(ns, as: "gws_#{ns}", path: ".g:site/#{ns}", module: "gws/#{ns}", group: /\d+/) { yield }
   end
 
   def cms(ns, opts = {}, &block)

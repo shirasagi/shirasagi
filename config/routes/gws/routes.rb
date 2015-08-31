@@ -1,16 +1,18 @@
 SS::Application.routes.draw do
   Gws::Initializer
 
-  get '.g:group/', to: 'gws/portal#index', as: :gws_portal
-
-  namespace "gws", path: ".g:group/gws" do
-  #gws "gws" do
-    resources :users#, only: [:index, :show, :edit, :update]
-    resources :roles do
-      get :delete, on: :member
-    end
+  concern :deletion do
+    get :delete, on: :member
+    delete action: :destroy_all, :on => :collection
   end
-  # TODO integrate / (as portal) and gws/roles
+
+  get '.g:site/', to: 'gws/portal#index', as: :gws_portal
+
+  namespace "gws", path: ".g:site/gws" do
+    resources :users, concerns: [:deletion]
+    resources :roles, concerns: [:deletion]
+    resources :facilities, concerns: [:deletion]
+  end
 
   # WIP
   #gws "reservation" do

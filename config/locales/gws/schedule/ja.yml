@@ -18,6 +18,21 @@ ja:
   modules:
     gws_schedule: スケジュール
 
+  gws_role:
+    read_other_gws_schedule_plans: スケジュールの閲覧（全て）
+    read_private_gws_schedule_plans: スケジュールの閲覧（自分）
+    edit_other_gws_schedule_plans: スケジュールの編集（全て）
+    edit_private_gws_schedule_plans: スケジュールの編集（自分）
+    delete_other_gws_schedule_plans: スケジュールの削除（全て）
+    delete_private_gws_schedule_plans: スケジュールの削除（自分）
+
+    read_other_gws_schedule_categories: スケジュール種別の閲覧（全て）
+    read_private_gws_schedule_categories: スケジュール種別の閲覧（自分）
+    edit_other_gws_schedule_categories: スケジュール種別の編集（全て）
+    edit_private_gws_schedule_categories: スケジュール種別の編集（自分）
+    delete_other_gws_schedule_categories: スケジュール種別の削除（全て）
+    delete_private_gws_schedule_categories: スケジュール種別の削除（自分）
+
   mongoid:
     models:
       gws/schedule/plan: スケジュール

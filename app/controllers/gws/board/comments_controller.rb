@@ -1,8 +1,10 @@
 class Gws::Board::CommentsController < ApplicationController
   include Gws::BaseFilter
-  include SS::CrudFilter
+  include Gws::CrudFilter
 
   model Gws::Board::Post
+
+  before_action :set_parent
 
   private
     def set_crumbs
@@ -10,28 +12,24 @@ class Gws::Board::CommentsController < ApplicationController
     end
 
     def fix_params
-      { user: @cur_user }
+      { cur_user: @cur_user, cur_site: @cur_site, topic_id: params[:topic_id], parent_id: params[:parent_id] }
+    end
+
+    def pre_params
+      { name: "Re: #{@parent.name}" }
+    end
+
+    def set_parent
+      @topic  = @model.find params[:topic_id]
+      @parent = @model.find params[:parent_id]
     end
 
   public
     def index
-      @parent = @model.find(params[:parent_id])
-      redirect_to gws_board_topic_path(id: @parent.topic_id)
+      redirect_to gws_board_topic_path(id: @topic.id)
     end
 
-    def new
-      @parent = @model.find(params[:parent_id])
-      super
-    end
-
-    def edit
-      @parent = @model.find(params[:parent_id])
-      super
-    end
-
-    def create
-      @item = @model.new get_params.merge({parent_id: params[:parent_id]})
-      @parent = @item.parent
-      render_create @item.save, location: { controller: 'gws/board/topics', action: :show, id: @item.topic_id }
+    def show
+      redirect_to gws_board_topic_path(id: @topic.id)
     end
 end

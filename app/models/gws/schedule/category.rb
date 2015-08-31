@@ -1,5 +1,7 @@
 class Gws::Schedule::Category
   include SS::Document
+  include Gws::Reference::User
+  include Gws::Reference::Site
   include Gws::Addon::GroupPermission
 
   field :name, type: String

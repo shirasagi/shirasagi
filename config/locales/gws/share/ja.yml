@@ -2,6 +2,17 @@ ja:
   share:
     file: ファイル共有
 
+  modules:
+    gws_share: 共有ファイル
+
+  gws_role:
+    read_other_gws_share_files: 共有ファイルの閲覧（全て）
+    read_private_gws_share_files: 共有ファイルの閲覧（自分）
+    edit_other_gws_share_files: 共有ファイルの編集（全て）
+    edit_private_gws_share_files: 共有ファイルの編集（自分）
+    delete_other_gws_share_files: 共有ファイルの削除（全て）
+    delete_private_gws_share_files: 共有ファイルの削除（自分）
+
   views:
     button:
       upload: アップロード

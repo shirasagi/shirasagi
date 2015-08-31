@@ -1,18 +1,3 @@
 <nav class="nav-menu">
-  <% if params[:action] =~ /new|create/ %>
-    <%= link_to :back_to_show, gws_board_topic_path(id: params[:topic_id]) %>
-  <% elsif params[:action] =~ /edit|update|delete|move/ %>
-    <% if @item.allowed?(:read, @cur_user, @cur_group) %>
-      <%= link_to :back_to_show, action: :show, id: @item.id %>
-      <%= link_to :back_to_index, gws_board_topic_path(id: params[:topic_id]) %>
-    <% end %>
-  <% else %>
-    <% if @item.allowed?(:edit, @cur_user, @cur_group) %>
-      <%= link_to :edit, action: :edit, id: @item.id %>
-    <% end %>
-    <% if @item.allowed?(:delete, @cur_user, @cur_group) %>
-      <%= link_to :delete, action: :delete, id: @item.id %>
-    <% end %>
-    <%= link_to :back_to_index, gws_board_topic_path(id: params[:topic_id]) %>
-  <% end %>
+  <%= link_to :"gws_board.links.back_to_thread", gws_board_topic_path(id: params[:topic_id]) %>
 </nav>

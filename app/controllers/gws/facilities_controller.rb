@@ -1,9 +1,8 @@
-class Gws::Share::FilesController < ApplicationController
+class Gws::FacilitiesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include SS::FileFilter
 
-  model Gws::Share::File
+  model Gws::Facility
 
   private
     def fix_params

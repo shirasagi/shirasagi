@@ -2,61 +2,26 @@ ja:
   gws:
     group: グループ
     portal: ポータル
+    facility: 設備管理
 
   gws_role:
-    read_gws_roles: GWSロールの閲覧
-    edit_gws_roles: GWSロールの編集
-    delete_gws_roles: GWSロールの削除
+    edit_gws_users: ユーザの編集
+    read_other_gws_facilities: 設備の閲覧（全て）
+    read_private_gws_facilities: 設備の閲覧（自分）
+    edit_other_gws_facilities: 設備の編集（全て）
+    edit_private_gws_facilities: 設備の編集（自分）
+    delete_other_gws_facilities: 設備の削除（全て）
+    delete_private_gws_facilities: 設備の削除（自分）
 
-    read_gws_users: GWSユーザの閲覧
-    edit_gws_users: GWSユーザの編集
-
-    read_other_gws_board_posts: 掲示板投稿の閲覧（全て）
-    read_private_gws_board_posts: 掲示板投稿の閲覧（自分）
-    edit_other_gws_board_posts: 掲示板投稿の編集（全て）
-    edit_private_gws_board_posts: 掲示板投稿の編集（自分）
-    delete_other_gws_board_posts: 掲示板投稿の削除（全て）
-    delete_private_gws_board_posts: 掲示板投稿の削除（自分）
-
-    read_other_gws_schedule_plans: スケジュールの閲覧（全て）
-    read_private_gws_schedule_plans: スケジュールの閲覧（自分）
-    edit_other_gws_schedule_plans: スケジュールの編集（全て）
-    edit_private_gws_schedule_plans: スケジュールの編集（自分）
-    delete_other_gws_schedule_plans: スケジュールの削除（全て）
-    delete_private_gws_schedule_plans: スケジュールの削除（自分）
-
-    read_other_gws_schedule_categories: スケジュール種別の閲覧（全て）
-    read_private_gws_schedule_categories: スケジュール種別の閲覧（自分）
-    edit_other_gws_schedule_categories: スケジュール種別の編集（全て）
-    edit_private_gws_schedule_categories: スケジュール種別の編集（自分）
-    delete_other_gws_schedule_categories: スケジュール種別の削除（全て）
-    delete_private_gws_schedule_categories: スケジュール種別の削除（自分）
-
-    read_other_gws_schedule_facilities: 施設の閲覧（全て）
-    read_private_gws_schedule_facilities: 施設の閲覧（自分）
-    edit_other_gws_schedule_facilities: 施設の編集（全て）
-    edit_private_gws_schedule_facilities: 施設の編集（自分）
-    delete_other_gws_schedule_facilities: 施設の削除（全て）
-    delete_private_gws_schedule_facilities: 施設の削除（自分）
-
-    read_other_gws_reservation_plans: 施設予約の閲覧（全て）
-    read_private_gws_reservation_plans: 施設予約の閲覧（自分）
-    edit_other_gws_reservation_plans: 施設予約の編集（全て）
-    edit_private_gws_reservation_plans: 施設予約の編集（自分）
-    delete_other_gws_reservation_plans: 施設予約の削除（全て）
-    delete_private_gws_reservation_plans: 施設予約の削除（自分）
-
-    read_other_gws_share_files: 共有ファイルの閲覧（全て）
-    read_private_gws_share_files: 共有ファイルの閲覧（自分）
-    edit_other_gws_share_files: 共有ファイルの編集（全て）
-    edit_private_gws_share_files: 共有ファイルの編集（自分）
-    delete_other_gws_share_files: 共有ファイルの削除（全て）
-    delete_private_gws_share_files: 共有ファイルの削除（自分）
+    read_other_gws_reservation_plans: 設備予約の閲覧（全て）
+    read_private_gws_reservation_plans: 設備予約の閲覧（自分）
+    edit_other_gws_reservation_plans: 設備予約の編集（全て）
+    edit_private_gws_reservation_plans: 設備予約の編集（自分）
+    delete_other_gws_reservation_plans: 設備予約の削除（全て）
+    delete_private_gws_reservation_plans: 設備予約の削除（自分）
 
   modules:
     gws: 標準機能
-    gws_facility: 設備管理
-    gws_share: 共有ファイル
     addons:
       gws/role: 権限/ロール
       gws/group_permission: 権限
@@ -68,7 +33,7 @@ ja:
       gws/share: 共有ファイル
       gws/facility: 設備
     attributes:
-      gws/schedule/facility:
+      gws/facility:
         name: 設備名
       gws/addon/role:
         gws_role_ids: ロール

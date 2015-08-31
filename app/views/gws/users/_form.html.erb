@@ -1,0 +1,24 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :uid %><%= @model.tt :uid %></dt>
+  <dd><%= f.text_field :uid %></dd>
+
+  <dt><%= @model.t :email %><%= @model.tt :email %></dt>
+  <dd><%= f.email_field :email %></dd>
+
+  <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
+  <dd><%= f.password_field :in_password %></dd>
+
+  <dt><%= @model.t :type %><%= @model.tt :type %></dt>
+  <dd><%= f.select :type, @model.type_options %></dd>
+
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
+  <dd>
+    <%= hidden_field_tag "item[group_ids][]" %>
+    <% Gws::Group.site(@cur_site).order_by(name: 1).each do |item| %>
+    <label><%= f.check_box "group_ids[]", {}, item._id %><%= item.name %></label><br />
+    <% end %>
+  </dd>
+</dl>

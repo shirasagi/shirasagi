@@ -1,8 +1,9 @@
 # "Post" class for BBS. It represents "topic" and "comment" models.
 class Gws::Board::Post
   include SS::Document
-  include Gws::Addon::GroupPermission
   include Gws::Reference::User
+  include Gws::Reference::Site
+  include Gws::Addon::GroupPermission
 
   seqid :id
   field :name, type: String
@@ -27,7 +28,7 @@ class Gws::Board::Post
   # Can't create a comment if its topic "permit_comment?" returns false.
   validate -> do
     unless topic.permit_comment?
-      errors.add :xxx, "Not allowed comment."
+      errors.add :base, I18n.t("gws_board.errors.denied_comment")
       # FIXME 排他制御出来ないためにこんなコード書いてる
       # FIXME (例:コメント本文入力中にトピックがコメント許可しないに変更)
       # FIXME バリデーションエラーメッセージを何処に入れれば良いのだろう？

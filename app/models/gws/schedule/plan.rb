@@ -1,7 +1,8 @@
 class Gws::Schedule::Plan
   include SS::Document
+  include Gws::Reference::User
+  include Gws::Reference::Site
   include Gws::Schedule::Planable
-  include SS::Reference::User
   include Gws::Addon::GroupPermission
 
   #TODO: 繰り返しのデータの持ち方については、要検討

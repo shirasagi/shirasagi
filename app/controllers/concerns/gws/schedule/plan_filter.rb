@@ -1,6 +1,5 @@
 module Gws::Schedule::PlanFilter
   extend ActiveSupport::Concern
-  include SS::CrudFilter
 
   included do
     prepend_view_path "app/views/gws/schedule/plans"
@@ -10,8 +9,12 @@ module Gws::Schedule::PlanFilter
   end
 
   private
+    def set_crumbs
+      @crumbs << [:"modules.gws_schedule", gws_schedule_calendars_path]
+    end
+
     def fix_params
-      { user_id: @cur_user.id }
+      { cur_user: @cur_user, cur_site: @cur_site }
     end
 
     def pre_params
@@ -36,16 +39,13 @@ module Gws::Schedule::PlanFilter
 
   public
     def index
-      item = Gws::Schedule::Plan.user(@cur_user)
+      item = Gws::Schedule::Plan.site(@cur_site).user(@cur_user)
+      item = item.any_of name: /.*#{params[:keyword]}.*/ if params[:keyword].present?
 
-      if params[:keyword].present?
-        @items = item.any_of name: /.*#{params[:keyword]}.*/
-      else
-        @items = item.all
-      end
+      @items = item.order_by(start_at: -1)
     end
 
-    def create
+    def create_x
       respond_to do |format|
         format.html { super }
         format.json { super }
@@ -60,7 +60,7 @@ module Gws::Schedule::PlanFilter
       end
     end
 
-    def update
+    def update_x
       respond_to do |format|
         format.html { super }
         format.json { super }

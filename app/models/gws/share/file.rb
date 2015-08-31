@@ -1,8 +1,11 @@
 class Gws::Share::File
   include SS::Model::File
-  include SS::Reference::User
-  include Gws::Share::Reference::Group
+  include Gws::Reference::Site
   include Gws::Addon::GroupPermission
 
   default_scope ->{ where(model: "share/file") }
+
+  def remove_public_file
+    #TODO: fix SS::Model::File
+  end
 end
