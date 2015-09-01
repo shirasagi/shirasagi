@@ -18,12 +18,7 @@ class Cms::EditorTemplatesController < ApplicationController
 
   public
     def template
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-
-      @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
-        page(params[:page]).per(50)
+      @items = @model.site(@cur_site).search(params[:s])
 
       respond_to do |format|
         format.js { render layout: false, content_type: "application/javascript" }

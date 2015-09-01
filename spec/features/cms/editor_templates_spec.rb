@@ -154,4 +154,86 @@ describe "cms_editor_templates", dbscope: :example, type: :feature do
       end
     end
   end
+
+  context "with normal user (editor template can read all users having edit_page privilege)" do
+    let!(:role) do
+      Cms::Role.create!(
+        name: "role_#{unique_id}",
+        permissions: Cms::Role.permission_names.reject { |name| name.include?('cms_users') },
+        site_id: site.id
+      )
+    end
+    let!(:user) { create(:cms_test_user, group: cms_group, role: role) }
+    before { login_user user }
+
+    describe "#template" do
+      context "when editor is ckeditor" do
+        before do
+          @save = SS.config.cms.html_editor
+          SS.config.replace_value_at(:cms, :html_editor, "ckeditor")
+        end
+
+        after do
+          SS.config.replace_value_at(:cms, :html_editor, @save)
+        end
+
+        context "when js is requested" do
+          before { item.reload }
+          it do
+            visit "#{template_path}.js"
+            expect(status_code).to eq 200
+
+            expect(page.source).to start_with("CKEDITOR.addTemplates( 'shirasagi',")
+            expect(page.source).to end_with("} );\n\n")
+            expect(page.source).to include("\"title\":\"#{item.name}\"")
+            expect(page.source).to include("\"description\":\"#{item.description}\"")
+            expect(page.source).to include("\"html\":\"#{item.html}\"")
+          end
+        end
+
+        context "when json is requested" do
+          before { item.reload }
+          it do
+            visit "#{template_path}.json"
+            expect(status_code).to eq 200
+
+            source = JSON.parse(page.source)
+            expect(source).to be_empty
+          end
+        end
+      end
+
+      context "when editor is tinymce" do
+        before do
+          @save = SS.config.cms.html_editor
+          SS.config.replace_value_at(:cms, :html_editor, "tinymce")
+        end
+
+        after do
+          SS.config.replace_value_at(:cms, :html_editor, @save)
+        end
+
+        context "when js is requested" do
+          before { item.reload }
+          it do
+            visit "#{template_path}.js"
+            expect(status_code).to eq 200
+
+            expect(page.source).to be_empty
+          end
+        end
+
+        context "when json is requested" do
+          before { item.reload }
+          it do
+            visit "#{template_path}.json"
+            expect(status_code).to eq 200
+
+            source = JSON.parse(page.source)
+            expect(source).to include(include("title" => item.name, "description" => item.description, "content" => item.html))
+          end
+        end
+      end
+    end
+  end
 end
