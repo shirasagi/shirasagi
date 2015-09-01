@@ -32,7 +32,7 @@ class Cms::SearchContents::PagesController < ApplicationController
       return unless params[:s]
 
       set_params
-      filename   = @filename.present? ? { filename: /^#{Regexp.escape(@filename)}/i } : {}
+      filename   = @filename.present? ? { filename: /#{Regexp.escape(@filename)}/i } : {}
       categories = @category_ids.present? ? { category_ids: @category_ids } : {}
       groups     = @group_ids.present? ? { group_ids: @group_ids } : {}
       state      = @state ? { state: @state } : {}
