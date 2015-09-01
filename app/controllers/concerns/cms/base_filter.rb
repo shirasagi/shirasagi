@@ -16,6 +16,7 @@ module Cms::BaseFilter
 
   private
     def set_site
+      @ss_mode = :cms
       @cur_site = Cms::Site.find params[:site]
       @crumbs << [@cur_site.name, cms_contents_path]
     end

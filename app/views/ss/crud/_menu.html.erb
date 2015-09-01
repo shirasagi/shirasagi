@@ -1,14 +1,14 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to :new, action: :new %>
+    <%= link_to :new, action: :new if @model.allowed?(:edit, @cur_user) %>
   <% elsif params[:action] =~ /new|create/ %>
     <%= link_to :back_to_index, action: :index %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
-    <%= link_to :back_to_show, action: :show, id: @item %>
+    <%= link_to :back_to_show, action: :show, id: @item if @model.allowed?(:read, @cur_user) %>
     <%= link_to :back_to_index, action: :index %>
   <% else %>
-    <%= link_to :edit, action: :edit, id: @item %>
-    <%= link_to :delete, action: :delete, id: @item %>
+    <%= link_to :edit, action: :edit, id: @item if @model.allowed?(:edit, @cur_user) %>
+    <%= link_to :delete, action: :delete, id: @item if @model.allowed?(:delete, @cur_user) %>
     <%= link_to :back_to_index, action: :index %>
    <% end %>
 </nav>

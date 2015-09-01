@@ -160,7 +160,7 @@ module SS::Model::File
     end
 
     def remove_public_file
-      Fs.rm_rf(public_path) if site
+      Fs.rm_rf(public_path) if site #TODO: modify the trriger
     end
 
   private

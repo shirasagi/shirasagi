@@ -1,0 +1,45 @@
+ja:
+  gws:
+    group: グループ
+    portal: ポータル
+    facility: 設備管理
+
+  gws_role:
+    edit_gws_users: ユーザの編集
+    read_other_gws_facilities: 設備の閲覧（全て）
+    read_private_gws_facilities: 設備の閲覧（自分）
+    edit_other_gws_facilities: 設備の編集（全て）
+    edit_private_gws_facilities: 設備の編集（自分）
+    delete_other_gws_facilities: 設備の削除（全て）
+    delete_private_gws_facilities: 設備の削除（自分）
+
+    read_other_gws_reservation_plans: 設備予約の閲覧（全て）
+    read_private_gws_reservation_plans: 設備予約の閲覧（自分）
+    edit_other_gws_reservation_plans: 設備予約の編集（全て）
+    edit_private_gws_reservation_plans: 設備予約の編集（自分）
+    delete_other_gws_reservation_plans: 設備予約の削除（全て）
+    delete_private_gws_reservation_plans: 設備予約の削除（自分）
+
+  modules:
+    gws: 標準機能
+    addons:
+      gws/role: 権限/ロール
+      gws/group_permission: 権限
+
+  mongoid:
+    models:
+      gws/user: ユーザー
+      gws/role: ロール
+      gws/share: 共有ファイル
+      gws/facility: 設備
+    attributes:
+      gws/facility:
+        name: 設備名
+      gws/addon/role:
+        gws_role_ids: ロール
+      gws/addon/permission:
+        group_ids: 管理グループ
+        permission_level: 権限レベル
+      gws/addon/group_permission:
+        group_ids: 管理グループ
+        permission_level: 権限レベル

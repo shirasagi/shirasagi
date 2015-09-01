@@ -5,6 +5,10 @@ class ActionDispatch::Routing::Mapper
     namespace(name, as: "#{name}_sys", path: ".sys/#{ns}", module: "#{mod}/sys") { yield }
   end
 
+  def gws(ns, &block)
+    namespace(ns, as: "gws_#{ns}", path: ".g:site/#{ns}", module: "gws/#{ns}", group: /\d+/) { yield }
+  end
+
   def cms(ns, opts = {}, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns

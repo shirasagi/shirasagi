@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :mode %></dt>
+  <dd><%= f.select :mode, @item.mode_options %></dd>
+
+  <dt><%= @model.t :permit_comment %></dt>
+  <dd><%= f.select :permit_comment, @item.permit_comment_options %></dd>
+</dl>

@@ -4,6 +4,7 @@ class Cms::RolesController < ApplicationController
 
   model Cms::Role
 
+  prepend_view_path "app/views/ss/roles"
   navi_view "cms/main/conf_navi"
 
   private

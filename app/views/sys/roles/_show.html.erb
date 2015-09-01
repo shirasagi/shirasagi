@@ -1,7 +1,0 @@
-<dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
-
-  <dt><%= @model.t :permissions %></dt>
-  <dd><%=br @item.permissions.select(&:present?).map{ |permit| @model.t(permit) }.join("\n") %></dd>
-</dl>

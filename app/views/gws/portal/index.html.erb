@@ -1,0 +1,49 @@
+<%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
+
+<h2 class="portal-h2"><%= t('modules.gws_schedule') %></h2>
+
+<div class="calendars">
+  <% @users.each do |user| %>
+    <%
+    calendar_id = "calendar#{user.id}"
+    events = Gws::Schedule::Plan.user(user).all
+    %>
+    <div class="calendar portal" id="<%= calendar_id %>"></div>
+
+    <%= jquery do %>
+    $('#<%= calendar_id %>').fullCalendar({
+      lang: 'ja',
+      defaultView: 'basicWeek',
+      header: false,
+      contentHeight: 'auto',
+      eventSources: [{ events: <%== calendar_format(events).to_json %> }]
+    });
+
+    $('#<%= calendar_id %> .fc-head').
+      after('<tbody class="fc-row-name"><tr><td><%= user.name %></td></tr></tbody>');
+
+    <% end %>
+  <% end %>
+</div>
+
+<h2 class="portal-h2"><%= t('modules.gws_board') %></h2>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th>スレッドタイトル</th>
+      <th>コメント数</th>
+      <th>最終更新日時</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @boards.each do |item| %>
+    <tr>
+      <td class="title"><%= link_to item.name, gws_board_topic_path(id: item) %></td>
+      <td class="comment"><%= item.descendants.size %></td>
+      <td class="datetime"><%= item.descendants_updated.strftime("%Y-%m-%d %H:%M") %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

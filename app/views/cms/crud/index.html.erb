@@ -7,7 +7,7 @@
       <nav class="tap-menu">
         <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
         <% if @model.collection_name =~ /^cms_(nodes|pages)$/ %>
         <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>

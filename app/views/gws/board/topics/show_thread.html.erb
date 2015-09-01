@@ -1,0 +1,17 @@
+<div class="gws-board-topics">
+  <article class="topic">
+    <%= render "gws/board/topics/parent", item: @item %>
+  </article>
+
+  <div class="comments">
+    <%= render partial: 'gws/board/comments/comment', collection: @item.descendants,
+      locals: {parent: @item, recursion: false} %>
+  </div>
+
+  <% if @item.permit_comment? %>
+  <footer class="send">
+    <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
+      class: "btn-primary" %>
+  </footer>
+  <% end %>
+</div>

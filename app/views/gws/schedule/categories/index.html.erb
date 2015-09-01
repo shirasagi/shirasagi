@@ -1,0 +1,7 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="gws-schedule-plan-color" style="<%= "background: #{item.bg_color}; color: #{item.text_color}" %>">
+    <%= @model.t :color %></span></dd>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

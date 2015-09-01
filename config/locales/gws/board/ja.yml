@@ -1,0 +1,66 @@
+ja:
+  gws_board:
+    user: ユーザー
+    no_authority: 権限がありません
+    topic:
+      comment: コメント
+      new: 新規作成
+      edit: 編集
+      submit: 投稿
+      update: 更新
+      delete: 削除
+      list: トピック一覧へ
+      confirm: 削除しますか？
+      notice:
+        create: トピックを作成しました。
+        update: トピックを更新しました。
+        delete: トピックを削除しました。
+    comment:
+      text: 本文
+      comment: コメントする
+      created: 投稿日
+      updated: 最終更新日
+      submit: 投稿
+      update: 更新
+      edit: 編集
+      delete: 削除
+      confirm: 削除しますか？
+      notice:
+        create: コメントを投稿しました。
+        update: コメントを更新しました。
+        delete: コメントを削除しました。
+    options:
+      mode:
+        thread: スレッド
+        tree: ツリー
+      permit_comment:
+        allow: 許可する
+        deny: 許可しない
+    links:
+      back_to_thread: 戻る
+      comment: 返信する
+    errors:
+      denied_comment: コメントの投稿は許可されていません。
+
+  modules:
+    gws_board: 掲示板
+
+  gws_role:
+    read_other_gws_board_posts: 掲示板投稿の閲覧（全て）
+    read_private_gws_board_posts: 掲示板投稿の閲覧（自分）
+    edit_other_gws_board_posts: 掲示板投稿の編集（全て）
+    edit_private_gws_board_posts: 掲示板投稿の編集（自分）
+    delete_other_gws_board_posts: 掲示板投稿の削除（全て）
+    delete_private_gws_board_posts: 掲示板投稿の削除（自分）
+
+  mongoid:
+    models:
+      gws/board: 掲示板
+    attributes:
+      gws/board/post:
+        name: タイトル
+        text: 本文
+        created: 投稿日
+        updated: 最終更新日
+        mode: 表示形式
+        permit_comment: コメント

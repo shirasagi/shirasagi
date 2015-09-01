@@ -12,7 +12,7 @@
         <% if item.try(:image) %>
           <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
         <% elsif item.try(:image?) %>
-          <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+          <%= link_to image_tag("#{item.thumb_url}?_=#{item.updated.to_i}", alt: ''), item.url, { class: "thumb", target: "_blank" } %>
         <% end %>
       </nav>
 

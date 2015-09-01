@@ -1,0 +1,12 @@
+# gws
+
+production: &production
+  disable: true
+
+test:
+  <<: *production
+  disable: false
+
+development:
+  <<: *production
+  disable: false

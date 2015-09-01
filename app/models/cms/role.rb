@@ -15,17 +15,4 @@ class Cms::Role
     def permission_level_options
       [%w(1 1), %w(2 2), %w(3 3)]
     end
-
-    #def allowed?(action, user, opts = {})
-    #  return true if Cms::User.allowed?(action, user)
-    #  super
-    #end
-
-  class << self
-    public
-      #def allow(action, user, opts = {})
-      #  return where({}) if Cms::User.allowed?(action, user)
-      #  super
-      #end
-  end
 end

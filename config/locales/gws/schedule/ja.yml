@@ -1,0 +1,53 @@
+ja:
+  gws_schedule:
+    calendar: カレンダー
+    plan: 予定一覧
+    category: 種別設定
+
+    options:
+      allday:
+        allday: 終日
+      kind:
+        daily: 毎日
+        weekly: 毎週
+        monthly: 毎月
+      repeat_by:
+        date: 日付
+        week: 曜日
+
+  modules:
+    gws_schedule: スケジュール
+
+  gws_role:
+    read_other_gws_schedule_plans: スケジュールの閲覧（全て）
+    read_private_gws_schedule_plans: スケジュールの閲覧（自分）
+    edit_other_gws_schedule_plans: スケジュールの編集（全て）
+    edit_private_gws_schedule_plans: スケジュールの編集（自分）
+    delete_other_gws_schedule_plans: スケジュールの削除（全て）
+    delete_private_gws_schedule_plans: スケジュールの削除（自分）
+
+    read_other_gws_schedule_categories: スケジュール種別の閲覧（全て）
+    read_private_gws_schedule_categories: スケジュール種別の閲覧（自分）
+    edit_other_gws_schedule_categories: スケジュール種別の編集（全て）
+    edit_private_gws_schedule_categories: スケジュール種別の編集（自分）
+    delete_other_gws_schedule_categories: スケジュール種別の削除（全て）
+    delete_private_gws_schedule_categories: スケジュール種別の削除（自分）
+
+  mongoid:
+    models:
+      gws/schedule/plan: スケジュール
+      gws/schedule/category: スケジュール種類
+    attributes:
+      gws/schedule/plan:
+        name: タイトル
+        text: 内容
+        start_at: 開始日時
+        end_at: 終了日時
+        allday: 終日
+        category_id: スケジュール種別
+        term: 期間
+      gws/schedule/category:
+        name: スケジュール種別
+        color: 表示色
+        bg_color: 背景色
+        text_color: 文字色

@@ -2,8 +2,10 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
+  <% if @item.respond_to?(:permission_level) %>
   <dt><%= @model.t :permission_level %></dt>
   <dd><%= f.select :permission_level, @item.permission_level_options %></dd>
+  <% end %>
 
   <dt><%= @model.t :permissions %></dt>
   <dd class="role-permissions">
@@ -11,10 +13,10 @@
 
     <% @model.module_permission_names.each do |mod, names| %>
     <div class="module">
-      <p class="module-name"><%= t("modules.#{mod}") %></p>
+      <p class="module-name"><%= @model.mod_name(mod) %></p>
       <div class="permissions">
         <% names.each do |name| %>
-        <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("cms_role.#{name}") %></label>
+        <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("#{@model.collection_name.to_s.singularize}.#{name}") %></label>
         <% end %>
       </div>
     </div>

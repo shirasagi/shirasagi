@@ -1,7 +1,7 @@
 <dl class="see">
   <% if @item.image? %>
   <dt><%= @model.t :image %></dt>
-  <dd><%= link_to image_tag(url_for(action: :thumb)), { action: :view }, { target: "_blank" } %></dd>
+  <dd><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank" } %></dd>
   <% end %>
 
   <dt><%= @model.t :name %></dt>
