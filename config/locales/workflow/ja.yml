@@ -115,7 +115,7 @@ ja:
         - 承認依頼が届いています。申請者に対するコメントを入力（任意）の上、承認または差し戻しを選択してください。
       workflow_routes:
         - 承認を申請するには承認経路を選択してから、選択ボタンをクリックしてください。
-    workflow/route/model:
+    workflow/model/route:
       name:
         - 承認経路の名前を入力します。
       approvers:
