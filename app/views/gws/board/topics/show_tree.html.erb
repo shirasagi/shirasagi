@@ -1,4 +1,4 @@
-<div class="gws-board-tree">
+<div class="main-box gws-board-tree">
   <article class="topic">
     <%= render "gws/board/topics/parent", item: @item %>
 
@@ -10,6 +10,6 @@
   </article>
 
   <div class="comments">
-    <%= render partial: 'gws/board/comments/comment', collection: @item.children, locals: {parent: @item, recursion: true} %>
+    <%= render partial: 'gws/board/comments/comment', collection: @item.children, locals: { parent: @item, recursion: true } %>
   </div>
 </div>

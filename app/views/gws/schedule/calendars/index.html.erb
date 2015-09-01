@@ -2,15 +2,14 @@
 
 <%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
 
-<div id="calendar" class="calendar"></div>
-
 <%= jquery do %>
 $('#calendar').fullCalendar({
-  lang: 'ja', // TODO:
+  lang: 'ja',
   editable: true,
   defaultView: 'month',
-  header: { right: 'prev month,basicWeek,agendaDay next today' },
   timeFormat: 'HH:mm',
+  header: { right: 'today prev month,basicWeek,agendaDay next' },
+  columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' },
   eventClick: function(event) {
     location.href = '<%= url_for action: :index %>/' + event.id;
   },
@@ -19,17 +18,27 @@ $('#calendar').fullCalendar({
     var end = (event.end == null) ? null : event.end.format();
     $.ajax({
       type: 'PUT',
-      url: '<%= url_for action: :index %>/' + event.id,
-      data: { item: { start_at: start, end_at: end } }
+      url: '<%= url_for action: :index %>/' + event.id + ".json",
+      data: { item: { start_at: start, end_at: end } },
+      error: function(xhr, status, error) {
+        revertFunc();
+      }
     });
   },
   eventResize: function(event, delta, revertFunc) {
     $.ajax({
       type: 'PUT',
-      url: '<%= url_for action: :index %>/' + event.id,
-      data: { item: { start_at: event.start.format(), end_at: event.end.format() } }
+      url: '<%= url_for action: :index %>/' + event.id + ".json",
+      data: { item: { start_at: event.start.format(), end_at: event.end.format() } },
+      error: function() { revertFunc(); }
     });
   },
-  eventSources: [{ events: <%== calendar_format(@items).to_json %> }]
+  eventSources: [{
+    url: '<%= url_for action: :index, format: :json %>'
+  }]
 });
 <% end %>
+
+<div class="main-box schedule-calendar">
+  <div id="calendar" class="calendar"></div>
+</div>

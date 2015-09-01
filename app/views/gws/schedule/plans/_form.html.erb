@@ -1,6 +1,15 @@
 <%= jquery do %>
   $(".datetime").
     datetimepicker({ lang: "ja", roundTime: 'ceil', step: 5 });
+
+  $(".datetime.start").data('last-time', $(".datetime.start").val());
+  $(".datetime.start").change(function() {
+    var old = $(this).data('last-time');
+    var str = $(this).val();
+    var end = $(".datetime.end").val();
+    if (end == "" || old == end) $(".datetime.end").val(str);
+    $(this).data('last-time', str);
+  });
 <% end %>
 
 <dl class="see">
@@ -12,8 +21,8 @@
 
   <dt><%= @model.t :term %></dt>
   <dd>
-    <%= f.text_field :start_at, class: "datetime", value: tryb{@item.start_at.strftime("%Y/%m/%d %H:%M")} %>
-    - <%= f.text_field :end_at, class: "datetime", value: tryb{@item.end_at.strftime("%Y/%m/%d %H:%M")} %>
+    <%= f.text_field :start_at, class: "datetime start", value: tryb{@item.start_at.strftime("%Y/%m/%d %H:%M")} %>
+    - <%= f.text_field :end_at, class: "datetime end", value: tryb{@item.end_at.strftime("%Y/%m/%d %H:%M")} %>
     &nbsp;<label><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
   </dd>
 

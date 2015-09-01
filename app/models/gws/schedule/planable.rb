@@ -7,18 +7,18 @@ module Gws::Schedule::Planable
     field :start_at, type: DateTime
     field :end_at, type: DateTime
     field :allday, type: String
+
     belongs_to :category, class_name: 'Gws::Schedule::Category'
 
-    validates :text, presence: true
+    permit_params :name, :text, :start_at, :end_at, :allday, :category_id
+
+    #validates :text, presence: true
     validates :start_at, presence: true
-    validates :end_at, presence: true
+    #validates :end_at, presence: true
+    validates :allday, inclusion: { in: [nil, "", "allday"] }
 
     validate do
-      errors.add(:start_at, "can't create an event that ends before it starts.") if start_at >= end_at
+      errors.add :end_at, :greater_than, count: t(:start_at) if end_at.present? && end_at < start_at
     end
-
-    validates :allday, inclusion: {in: [nil, "", "allday"]}
-
-    permit_params :name, :text, :start_at, :end_at, :allday, :category_id
   end
 end

@@ -1,7 +1,9 @@
 module Gws::Schedule::PlanHelper
   def term(item)
     format = item.allday? ? "%Y/%m/%d" : "%Y/%m/%d %H:%M"
-    [item.start_at.strftime(format), item.end_at.strftime(format)].uniq.join(" - ")
+    times = [item.start_at.strftime(format)]
+    times << item.end_at.strftime(format) if item.end_at.present?
+    times.uniq.join(" - ")
   end
 
   def calendar_format(events)

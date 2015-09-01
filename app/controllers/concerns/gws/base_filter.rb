@@ -5,6 +5,8 @@ module Gws::BaseFilter
   included do
     cattr_accessor(:user_class) { Gws::User }
 
+    helper Gws::LayoutHelper
+
     before_action :set_assets
     before_action :set_site
     before_action :set_group

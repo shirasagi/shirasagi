@@ -1,20 +1,22 @@
+<aside class="comment">
+  <h2 class="title"><%= comment.name %></h2>
+  <div class="body"><%= comment.text %></div>
+  <div class="meta">
+    <span class="datetime"><%= comment.updated.strftime("%Y/%m/%d %H:%M") %></span>
+    <span class="user"><%= comment.user.name %></span>
+  </div>
+
+  <div class="menu">
+    <% if @item.permit_comment? %>
+    <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id) if recursion %>
+    <% end %>
+    <%= link_to :edit, edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
+    <%= link_to :delete, delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
+  </div>
+</aside>
+
+<% if comment.children.size > 0 %>
 <div class="comments">
-  <aside class="comment">
-    <h2 class="title"><%= comment.name %></h2>
-    <div class="body"><%= comment.text %></div>
-    <div class="meta">
-      <span class="datetime"><%= comment.updated.strftime("%Y/%m/%d %H:%M") %></span>
-      <span class="user"><%= comment.user.name %></span>
-    </div>
-
-    <div class="menu">
-      <% if @item.permit_comment? %>
-      <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id) if recursion %>
-      <% end %>
-      <%= link_to :edit, edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
-      <%= link_to :delete, delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
-    </div>
-  </aside>
-
   <%= render partial: 'gws/board/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
 </div>
+<% end %>

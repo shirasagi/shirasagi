@@ -1,8 +1,6 @@
-<nav class="mod-navi">
+<%= mod_navi do %>
   <h2><%= t 'modules.gws_schedule' %></h2>
   <h3><%= link_to t('gws_schedule.calendar'), gws_schedule_calendars_path %></h3>
   <h3><%= link_to t('gws_schedule.plan'), gws_schedule_plans_path %></h3>
   <h3><%= link_to t('gws_schedule.category'), gws_schedule_categories_path %></h3>
-</nav>
-
-<%= render "gws/main/navi" %>
+<% end %>

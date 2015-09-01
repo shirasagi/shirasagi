@@ -31,7 +31,7 @@ class Gws::Schedule::Plan
     end
 
     def category_options
-      # TODO: where group_id: @cur_org.id
-      Gws::Schedule::Category.where({}).map { |c| [c.name, c.id] }
+      site = self.site || @cur_site
+      Gws::Schedule::Category.site(site).map { |c| [c.name, c.id] }
     end
 end
