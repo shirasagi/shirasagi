@@ -43,7 +43,7 @@ class @Cms_EditLock
       dataType: "json"
       data:
         _method: "delete"
-      async: false
+      timeout: 5000
     # must return void
     return
 
