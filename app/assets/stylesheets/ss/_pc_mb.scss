@@ -32,7 +32,7 @@ body {
     top: 0;
     bottom: 0;
     left: 0;
-    width: 240px;
+    width: 210px;
     border-right: $border-gray4;
     background: $white;
     //@include box-shadow(1px 0 3px #dedede);
@@ -106,10 +106,10 @@ td {
     float: left;
     a {
       display: block;
-      width: 240px;
-      padding: 9px 20px;
+      width: 210px;
+      padding: 9px 15px;
       line-height: 31px;
-      background: url(/assets/img/logo.png) no-repeat center center;
+      background: url(/assets/img/logo.png) no-repeat center center / 180px auto;
       text-indent: -9999px;
     }
   }
@@ -232,7 +232,7 @@ td {
 #navi {
   position: relative;
   float: left;
-  width: 240px;
+  width: 210px;
   z-index: 1;
   background: $white;
   @include mb {
@@ -249,7 +249,7 @@ td {
   border-bottom: $border-gray5;
   h2 {
     float: left;
-    width: 120px;
+    width: 105px;
     text-align: center;
     @include mb { width: 50%; }
     a {
@@ -528,7 +528,7 @@ td {
   }
 }
 #main .wrap {
-  margin: 0 10px 0 250px;
+  margin: 0 10px 0 220px;
   @include mb { margin: 10px 0; }
 }
 
@@ -550,7 +550,7 @@ td {
 .breadcrumb {
   @include clear;
   margin: 0 0 10px;
-  padding-left: 240px;
+  padding-left: 220px;
   border-bottom: $border-gray4;
   background: $gray5;
   list-style: none;
@@ -593,7 +593,7 @@ td {
 #menu {
   .nav-menu {
     margin: 20px;
-    margin-left: 260px;
+    margin-left: 230px;
     @include mb {
       margin: 0;
       padding: 10px;
@@ -786,6 +786,9 @@ footer.send {
   input.publish_save, input.save, button.save, input.delete {
     @include btn-red;
   }
+}
+.field_with_errors {
+  display: inline-block;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1035,6 +1038,7 @@ div.index {
 }
 .list-head-action {
   float: left;
+  margin-top: 3px;
   @include mb { button { margin: 0; } }
 }
 .list-head-search {
@@ -1254,6 +1258,13 @@ form .CodeMirror {
   p, ul {
     padding: 0;
   }
+  ul {
+    margin: 10px 0;
+    padding-left:20px;
+  }
+  li {
+    list-style: disc;
+  }
   .code {
     display: block;
     margin-bottom: 10px;
@@ -1261,6 +1272,7 @@ form .CodeMirror {
     @include border-radius(3px);
     background: $black2;
     color: $white;
+    list-style: none;
     & + ul {
       margin-bottom: 20px;
       padding-left: 20px;
