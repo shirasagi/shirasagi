@@ -165,7 +165,7 @@ $border-white: 1px solid $white;
 @mixin btn-orange {
   display: inline-block;
   padding: 5px 12px;
-  border: $border-gray2;
+  border: 1px solid #f2a950;
   @include border-radius(6px);
   @include grd-orange;
   filter: none \9;
@@ -185,7 +185,7 @@ $border-white: 1px solid $white;
   display: inline-block;
   min-width: 100px;
   padding: 8px 10px;
-  border: 1px solid #bbb;
+  border: 1px solid #b23a3d;
   @include border-radius(6px);
   @include grd-red;
   filter: none \9;
