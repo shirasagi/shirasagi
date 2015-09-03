@@ -662,7 +662,7 @@ td {
 }
 .addon-head {
   @include box-head;
-  &:hover { background: $gray1;}
+  &:hover { background: #f9f9f9;}
   h2 {
     display: inline-block;
     cursor: pointer;
