@@ -12,4 +12,12 @@
   <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
   <dd><%= @item.category.name %></dd>
   <% end %>
+
+  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+  <dd><%=br @item.members.map(&:name).join("\n") %></dd>
+
+  <% if @item.facilities.size > 0 %>
+  <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
+  <dd><%=br @item.facilities.map(&:name).join("\n") %></dd>
+  <% end %>
 </dl>

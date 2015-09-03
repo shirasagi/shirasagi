@@ -3,27 +3,17 @@
 <div class="main-box portal-calendar">
   <header><h2><%= t('modules.gws_schedule') %></h2></header>
 
-  <% @users.each do |user| %>
-    <%
-    calendar_id = "calendar#{user.id}"
-    events = Gws::Schedule::Plan.user(user)
-    %>
-    <div class="calendar portal" id="<%= calendar_id %>"></div>
+  <div class="calendar portal"></div>
 
-    <%= jquery do %>
-    $('#<%= calendar_id %>').fullCalendar({
-      lang: 'ja',
-      defaultView: 'basicWeek',
-      header: false,
-      columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' },
-      contentHeight: 'auto',
-      eventSources: [{ events: <%== calendar_format(events).to_json %> }]
-    });
+  <%= jquery do %>
+  $('.calendar').fullCalendar({
+    <%= calendar_default_options_js %>,
+    <%= calendar_editable_options_js url: gws_schedule_plans_path %>,
+    defaultView: 'basicWeek',
+    contentHeight: 'auto',
+    eventSources: [{ url: '<%= gws_schedule_plans_path(format: :json) %>' }]
+  });
 
-    $('#<%= calendar_id %> .fc-head').
-      after('<tbody class="fc-row-name"><tr><td><%= user.name %></td></tr></tbody>');
-
-    <% end %>
   <% end %>
 </div>
 

@@ -1,7 +1,11 @@
 ja:
   gws_schedule:
-    calendar: カレンダー
-    plan: 予定一覧
+    plan: 予定一覧（全て）
+    user_plan: 個人の予定
+    groups: グループ一覧
+    group_plan: グループの予定
+    facilities: 設備一覧
+    facility_plan: 設備予約
     category: 種別設定
 
     options:
@@ -46,6 +50,8 @@ ja:
         allday: 終日
         category_id: スケジュール種別
         term: 期間
+        member_ids: 参加者
+        facility_ids: 施設予約
       gws/schedule/category:
         name: スケジュール種別
         color: 表示色

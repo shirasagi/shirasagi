@@ -35,6 +35,7 @@ ja:
     attributes:
       gws/facility:
         name: 設備名
+        text: 説明
       gws/addon/role:
         gws_role_ids: ロール
       gws/addon/permission:

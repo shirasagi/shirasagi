@@ -1,0 +1,32 @@
+<%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
+
+<div class="main-box portal-calendar">
+  <header><h2><%= t('gws_schedule.facilities') %></h2></header>
+
+  <div class="calendar calendar-accessor"></div>
+  <%= jquery do %>
+  $('.calendar-accessor').fullCalendar({
+    <%= calendar_default_options_js %>,
+    defaultView: 'basicWeek',
+    contentHeight: 'auto',
+    eventSources: []
+  });
+  <% end %>
+
+  <% @items.each_with_index do |item, idx| %>
+    <div class="calendar-name"><%= link_to item.name, gws_schedule_facility_plans_path(facility: item.id) %></div>
+    <div class="calendar multiple" id="cal-<%= item.id %>" data-name="<%= item.name %>"></div>
+
+    <%= jquery do %>
+    $('#cal-<%= item.id %>').fullCalendar({
+      <%= calendar_default_options_js %>,
+      <%= calendar_editable_options_js url: gws_schedule_facility_plans_path(facility: item.id) %>,
+      defaultView: 'basicWeek',
+      contentHeight: 'auto',
+      eventSources: [{ url: '<%= gws_schedule_facility_plans_path(facility: item.id, format: :json) %>' }]
+    });
+    <% end %>
+  <% end %>
+
+  <%= jquery do %><%= calendar_accessor_js %><% end %>
+</div>

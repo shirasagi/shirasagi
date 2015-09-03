@@ -8,7 +8,7 @@ class Gws::Schedule::CategoriesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.gws_schedule.", gws_schedule_calendars_path]
+      @crumbs << [:"modules.gws_schedule.", gws_schedule_plans_path]
     end
 
     def fix_params

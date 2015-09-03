@@ -6,8 +6,17 @@ class Gws::Facility
 
   seqid :id
   field :name, type: String
+  field :text, type: String
 
-  permit_params :name
+  permit_params :name, :text
 
   validates :name, presence: true
+
+  scope :search, ->(params) {
+    criteria = where({})
+    return criteria if params.blank?
+
+    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+    criteria
+  }
 end

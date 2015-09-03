@@ -1,10 +1,13 @@
+<%= javascript_include_tag "/assets/js/tinyColorPicker/jqColorPicker.min.js" %>
+
+<%= jquery do %>
+$('#item_bg_color').colorPicker(); // that's it
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :bg_color %></dt>
   <dd><%= f.text_field :bg_color %></dd>
-
-  <dt><%= @model.t :text_color %></dt>
-  <dd><%= f.text_field :text_color %></dd>
 </dl>

@@ -1,0 +1,24 @@
+<%= jquery do %>
+SS_TreeUI.render(".index.groups");
+$(".index.groups tbody tr[data-depth='1'] img").click();
+<% end %>
+
+<div class="main-box">
+  <header><h2><%= @cur_site.trailing_name %></h2></header>
+
+  <table class="index groups">
+    <tbody>
+      <% @items.each do |item| %>
+      <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>">
+        <td class="expandable">
+          <% if item.users.size > 0 %>
+            <%= link_to item.trailing_name, gws_schedule_group_plans_path(group: item.id) %>
+          <% else %>
+            <%= item.trailing_name %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

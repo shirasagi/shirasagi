@@ -1,6 +1,24 @@
+//
+.fc-view-container *, .fc-view-container *::before, .fc-view-container *::after {
+  box-sizing: border-box;
+}
+.calendar-accessor {
+  .fc-body { display: none; }
+}
+.calendar.multiple {
+  .fc-toolbar, .fc-head { display: none; }
+}
+.calendar-name {
+  text-align: left;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-width: 0 1px;
+  background: #eee;
+}
 .calendar {
   .fc-left {
-    font-size: 150%;
+    margin: 5px 0 0;
+    font-size: 120%;
   }
   .fc-head {
     background-color: #eee;
@@ -8,18 +26,8 @@
       padding: 4px;
     }
   }
-  .fc-row-name {
-    td {
-      text-align: left;
-      padding: 4px 8px;
-      background: #eee;
-    }
-  }
   .fc-view-container {
     background-color: #fff;
-  }
-  ~ .calendar .fc-head {
-    display: none;
   }
   ~ .calendar .fc-row-name td {
     border-top-width: 0;
@@ -33,4 +41,7 @@
   .fc-event:hover {
     opacity: 0.9;
   }
+}
+.gws-schedule-plan-color {
+  padding: 0 5px;
 }

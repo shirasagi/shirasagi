@@ -82,4 +82,8 @@ module SS::Model::Group
     def root?
       id == root.id
     end
+
+    def descendants
+      self.class.where(name: /^#{name}\//)
+    end
 end

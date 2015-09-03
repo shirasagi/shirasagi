@@ -10,22 +10,19 @@ module Gws::Schedule::PlanFilter
 
   private
     def set_crumbs
-      @crumbs << [:"modules.gws_schedule", gws_schedule_calendars_path]
+      @crumbs << [:"modules.gws_schedule", gws_schedule_plans_path]
     end
 
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site }
     end
 
+    def pre_params
+      { member_ids: [@cur_user.id] }
+    end
+
   public
     def index
-      # TODO: term condition
-      # params[:start]
-      # params[:end]
-
-      item = Gws::Schedule::Plan.site(@cur_site).user(@cur_user)
-      item = item.any_of name: /.*#{params[:keyword]}.*/ if params[:keyword].present?
-
-      @items = item.order_by(start_at: -1)
+      render
     end
 end

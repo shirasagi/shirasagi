@@ -1,0 +1,7 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= term(item) %> <%= "(#{item.label(:allday)})" if item.allday? %></span>
+  <span class="user"><%= item.members.map(&:name).join(', ') %></span>
+  <span class="user"><%= item.facilities.map(&:name).join(', ') %></span>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

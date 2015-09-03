@@ -28,4 +28,13 @@
 
   <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
   <dd><%= f.select :category_id, @item.category_options, include_blank: " " %></dd>
+
+  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+  <dd><%= f.select :member_ids, Gws::User.site(@cur_site).map { |c| [c.name, c.id] }, {},
+    { multiple: true, size: 5, style: "min-width: 300px" } %></dd>
+
+  <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
+  <dd><%= f.select :facility_ids, Gws::Facility.site(@cur_site).map { |c| [c.name, c.id] }, {},
+    { multiple: true, size: 5, style: "min-width: 300px" } %></dd>
 </dl>
+
