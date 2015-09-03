@@ -1,26 +1,28 @@
-<table class="index">
-  <thead>
-    <tr>
-      <th><%= @model.t :class_name %></th>
-      <th class="datetime"><%= @model.t :started %></th>
-      <th class="datetime"><%= @model.t :closed %></th>
-      <th><%= @model.t :state %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
-    <tr class="list-item">
-      <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(" + safe_join(item.args, ", ") + ")", action: :show, id: item) %>
-        <nav class="tap-menu">
-          <%= link_to :show, action: :show, id: item %>
-        </nav>
-      </td>
-      <td class="datetime"><%= item.started ? item.started.strftime("%Y/%m/%d %H:%M") : item.started %></td>
-      <td class="datetime"><%= item.closed ? item.closed.strftime("%Y/%m/%d %H:%M") : item.closed %></td>
-      <td><%= t(item.state, scope: "job.state") %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="main-box">
+  <table class="index">
+    <thead>
+      <tr>
+        <th><%= @model.t :class_name %></th>
+        <th class="datetime"><%= @model.t :started %></th>
+        <th class="datetime"><%= @model.t :closed %></th>
+        <th><%= @model.t :state %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr class="list-item">
+        <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(" + safe_join(item.args, ", ") + ")", action: :show, id: item) %>
+          <nav class="tap-menu">
+            <%= link_to :show, action: :show, id: item %>
+          </nav>
+        </td>
+        <td class="datetime"><%= item.started ? item.started.strftime("%Y/%m/%d %H:%M") : item.started %></td>
+        <td class="datetime"><%= item.closed ? item.closed.strftime("%Y/%m/%d %H:%M") : item.closed %></td>
+        <td><%= t(item.state, scope: "job.state") %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

@@ -1,36 +1,40 @@
 <% if @sites.size > 0 %>
-<div class="index mypage-sites">
-  <div class="list-head"><%= t "cms.site" %></div>
+<div class="mypage-box">
+  <div class="index mypage-sites">
+    <div class="list-head"><%= t "cms.site" %></div>
 
-  <ul class="list-items">
-    <% @sites.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
+    <ul class="list-items">
+      <% @sites.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
 
-        <div class="meta">
-          <span class="id"><%= item.full_url %></span>
+          <div class="meta">
+            <span class="id"><%= item.full_url %></span>
+          </div>
         </div>
-      </div>
-    </li>
-    <% end %>
-  </ul>
+      </li>
+      <% end %>
+    </ul>
+  </div>
 </div>
 <% end %>
 
 <% if @groups.size > 0 && SS.config.gws.disable.blank? %>
-<div class="index mypage-sites">
-  <div class="list-head"><%= t "gws.group" %></div>
+<div class="mypage-box">
+  <div class="index mypage-group">
+    <div class="list-head"><%= t "gws.group" %></div>
 
-  <ul class="list-items">
-    <% @groups.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to item.name, gws_portal_path(site: item), class: "title" %>
-      </div>
-    </li>
-    <% end %>
-  </ul>
+    <ul class="list-items">
+      <% @groups.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, gws_portal_path(site: item), class: "title" %>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
 </div>
 <% end %>
 

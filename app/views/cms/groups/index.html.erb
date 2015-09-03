@@ -5,29 +5,31 @@ $(".index.groups tbody tr[data-depth='1'] img").click();
 
 <%= render file: "_search" %>
 
-<table class="index groups">
-  <thead>
-    <tr>
-      <th><%= @model.t :name %></th>
-      <th class="datetime"><%= @model.t :updated %></th>
-    </tr>
-  </thead>
+<div class="main-box">
+  <table class="index groups">
+    <thead>
+      <tr>
+        <th><%= @model.t :name %></th>
+        <th class="datetime"><%= @model.t :updated %></th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <% @items.each do |item| %>
-    <tr class="list-item" data-depth="<%= item.name.count("/") + 1 %>">
-      <nav class="tap-menu">
-        <%= link_to :show, action: :show, id: item %>
-        <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :delete, action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      </nav>
-      <td class="expandable">
-        <%= link_to item.trailing_name, { action: :show, id: item}, class: "title" %>
-      </td>
-      <td><%= item.updated.strftime("%Y/%m/%d") %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr data-depth="<%= item.name.count("/") + 1 %>">
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item %>
+          <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to :delete, action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        </nav>
+        <td class="expandable">
+          <%= link_to item.trailing_name, { action: :show, id: item}, class: "title" %>
+        </td>
+        <td><%= item.updated.strftime("%Y/%m/%d") %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

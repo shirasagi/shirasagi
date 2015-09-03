@@ -1,5 +1,6 @@
 <dt class="chorg-revisions-<%= type %>"><%= t :"chorg.views.revisions/#{params[:action]}.#{type}" %></dt>
 <dd class="chorg-revisions-<%= type %>">
+  <%= link_to :"chorg.menus.revisions.add", new_chorg_changesets_changeset_path(rid: @item, type: "add"), class: :btn %>
   <table class="index">
     <thead><tr><th><%= t("chorg.views.revisions/#{params[:action]}.#{type}_description") %></th></tr></thead>
     <tbody>
