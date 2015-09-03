@@ -47,10 +47,10 @@ $gray4: #cccccc;
 $gray5: #dcdcdc;
 $orange: #f25a38;
 $orange2: #fbebe8;
+$blue: #0066cc;
 
 $red: #bb1f24;
 $pink: #ea4c89;
-$blue: #0066cc;
 $green: #2bb496;
 $gray6: #434343;
 
@@ -90,7 +90,6 @@ $border-white: 1px solid $white;
   }
 }
 @mixin box {
-  position: relative;
   margin-bottom: 10px;
   //padding: 10px;
   border: $border-gray5;

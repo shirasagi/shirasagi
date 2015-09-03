@@ -662,6 +662,7 @@ td {
 }
 .addon-head {
   @include box-head;
+  &:hover { background: $gray1;}
   h2 {
     display: inline-block;
     cursor: pointer;
@@ -805,6 +806,9 @@ footer.send {
 }
 .btn-success {
   @include btn-orange;
+}
+.chorg-revisions .btn {
+  margin-bottom: 10px;
 }
 
 // -------------------------------------------------------------------------------------------------

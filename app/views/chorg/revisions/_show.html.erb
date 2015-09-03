@@ -1,10 +1,15 @@
 <dl class="see chorg-revisions">
   <dt><%= @model.t :name %></dt>
-  <dd><%= @item.name %></dd>
+  <dd>
+  <%= @item.name %>
+  <%= link_to :"chorg.menus.revisions.execute_results", { controller: :results, action: :index, rid: @item.id }, { class: :btn } %>
+  </dd>
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>
-    <% if changesets.present? %>
-      <%= render partial: "#{params[:action]}_#{type}", locals: { type: type, changesets: changesets } %>
-    <% end %>
+    <%= render partial: "#{params[:action]}_#{type}", locals: { type: type, changesets: changesets } %>
   <% end %>
 </dl>
+<footer class="send">
+  <%= link_to :"chorg.menus.revisions.test_execute", { controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::TEST }, { class: "btn-primary" } %>
+  <%= link_to :"chorg.menus.revisions.production_execute", { controller: :run, action: :confirmation, rid: @item.id, type: Chorg::Runner::MAIN }, { class: "btn-primary" } %>
+</footer>
