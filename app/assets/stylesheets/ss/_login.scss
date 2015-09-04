@@ -2,6 +2,15 @@
 // login
 
 #page-login {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: $gray1 url(/assets/img/back.png) no-repeat left 60%;
+  background-size: contain;
+}
+#page-login {
   #main {
     .wrap {
       margin: 0 10px;
@@ -54,7 +63,6 @@
 
 @include mb {
   .login-box {
-    width: 100%;
     padding: 10px;
     @include box-sizing(border-box);
     header {
