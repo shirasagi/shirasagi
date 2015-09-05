@@ -14,7 +14,10 @@
   <% end %>
 
   <% @items.each_with_index do |item, idx| %>
-    <div class="calendar-name"><%= link_to item.name, gws_schedule_user_plans_path(user: item.id) %></div>
+    <div class="calendar-name">
+      <%= link_to "+", new_gws_schedule_user_plan_path(user: item.id), class: 'add-plan' %>
+      <%= link_to item.name, gws_schedule_user_plans_path(user: item.id) %>
+    </div>
     <div class="calendar multiple" id="cal-<%= item.id %>" data-name="<%= item.name %>"></div>
 
     <%= jquery do %>

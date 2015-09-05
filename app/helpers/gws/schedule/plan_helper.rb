@@ -6,14 +6,20 @@ module Gws::Schedule::PlanHelper
     times.uniq.join(" - ")
   end
 
-  def calendar_format(events)
-    events.map do |p|
+  def calendar_format(events, opts = {})
+    events = events.map do |p|
       data = { id: p.id, title: h(p.name), start: p.start_at, end: p.end_at, allDay: p.allday? }
-      if c = p.category
-        data.merge!(backgroundColor: c.bg_color, borderColor: c.bg_color, textColor: c.text_color)
-      end
+      data.merge!(backgroundColor: c.bg_color, borderColor: c.bg_color, textColor: c.text_color) if c = p.category
       data
     end
+
+    if opts[:holiday]
+      events += HolidayJapan.between(opts[:holiday][0], opts[:holiday][1]).map do |d, name|
+        { className: 'fc-holiday', title: name, start: d, allDay: true, editable: false }
+      end
+    end
+
+    events
   end
 
   def calendar_accessor_js
@@ -28,6 +34,7 @@ module Gws::Schedule::PlanHelper
       lang: 'ja',
       timeFormat: 'HH:mm',
       columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' },
+      fixedWeekCount: false,
       startParam: 's[start]',
       endParam: 's[end]'
     ).strip.html_safe
@@ -38,7 +45,10 @@ module Gws::Schedule::PlanHelper
 
     %(
       editable: true,
-      eventClick: function(event) {
+      loading: function(isLoading, view) {
+      },
+      eventClick: function(event, jsEvent, view) {
+        if ($(this).hasClass('fc-holiday')) return false;
         location.href = '#{url}/' + event.id;
       },
       eventDrop: function(event, delta, revertFunc) {
