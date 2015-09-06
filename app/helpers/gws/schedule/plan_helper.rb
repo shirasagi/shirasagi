@@ -9,7 +9,9 @@ module Gws::Schedule::PlanHelper
   def calendar_format(events, opts = {})
     events = events.map do |p|
       data = { id: p.id, title: h(p.name), start: p.start_at, end: p.end_at, allDay: p.allday? }
-      data.merge!(backgroundColor: c.bg_color, borderColor: c.bg_color, textColor: c.text_color) if c = p.category
+      if c = p.category
+        data.merge!(backgroundColor: c.bg_color, borderColor: c.bg_color, textColor: c.text_color)
+      end
       data
     end
 
