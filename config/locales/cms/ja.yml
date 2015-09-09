@@ -173,7 +173,7 @@ ja:
     addons:
       cms/role: ロール
       cms/group_permission: 権限
-      cms/node_setting: 基本設定
+      cms/node_setting: フォルダー設定
       cms/meta: メタ情報
       cms/html: HTML
       cms/body: 本文

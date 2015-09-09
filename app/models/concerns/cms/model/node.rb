@@ -14,9 +14,10 @@ module Cms::Model::Node
     set_permission_name "cms_nodes"
 
     field :route, type: String
+    field :view_route, type: String
     field :shortcut, type: String, default: "hide"
 
-    permit_params :shortcut
+    permit_params :view_route, :shortcut
 
     validates :route, presence: true
     validate :validate_node_filename

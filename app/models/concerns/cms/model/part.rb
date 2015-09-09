@@ -10,7 +10,7 @@ module Cms::Model::Part
     field :route, type: String
     field :mobile_view, type: String, default: "show"
     field :ajax_view, type: String, default: "disabled"
-    permit_params :route, :mobile_view, :ajax_view
+    permit_params :mobile_view, :ajax_view
   end
 
   public
