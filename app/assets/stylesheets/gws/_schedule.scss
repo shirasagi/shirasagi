@@ -1,12 +1,73 @@
 //
+// FullCalendar
+//
 .fc-view table {
   box-sizing: border-box;
+}
+.fc-left {
+  margin: 5px 0 -5px;
+  font-size: 140%;
 }
 .fc-month-view .fc-body .fc-row {
   min-height: 6em;
 }
+.fc-head {
+  background-color: #eee;
+  th {
+    padding: 4px;
+  }
+}
+.fc-view-container {
+  background-color: #fff;
+}
+
+// days
 .fc-ltr .fc-basic-view .fc-day-number {
   //text-align: left;
+  //cursor: pointer;
+  &:hover {
+    //font-weight: bold;
+    //text-decoration: underline;
+  }
+}
+.fc-sun {
+  color: #e00;
+}
+.fc-sat {
+  color: #04b;
+}
+.fc-day.fc-sun {
+  background: #fff8f8;
+}
+.fc-day.fc-sat {
+  background: #f6f8ff;
+}
+.fc-today {
+  background: #FCF8E3;
+}
+
+// events
+.fc-event {
+  font-size: 90%; //0.85em
+  &:hover {
+    opacity: 0.8;
+  }
+}
+.fc-holiday {
+  border-color: transparent;
+  background: transparent;
+  color: #e00;
+  &:hover {
+    color: #e00;
+  }
+}
+
+//
+// original settings
+//
+.fc-loading {
+  padding: 4px;
+  color: #ddd;
 }
 .calendar-menu {
   position: relative;
@@ -37,46 +98,12 @@
   }
 }
 .calendar {
-  .fc-left {
-    margin: 5px 0 0;
-    font-size: 120%;
-  }
-  .fc-head {
-    background-color: #eee;
-    th {
-      padding: 4px;
-    }
-  }
-  .fc-view-container {
-    background-color: #fff;
-  }
   ~ .calendar .fc-row-name td {
     border-top-width: 0;
   }
-  .fc-sun {
-    color: #e00;
-  }
-  .fc-sat {
-    color: #04b;
-  }
-  .fc-day.fc-sun {
-    background: #fff8f8;
-  }
-  .fc-day.fc-sat {
-    background: #f6f8ff;
-  }
-  .fc-holiday {
-    border-color: transparent;
-    background: transparent;
-    color: #e00;
-  }
-  .fc-today {
-    background: #FCF8E3;
-  }
-  .fc-event:hover {
-    opacity: 0.8;
-  }
 }
-.gws-schedule-plan-color {
+
+// category
+.gws-schedule-category-sample {
   padding: 0 5px;
 }

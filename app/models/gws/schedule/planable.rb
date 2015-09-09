@@ -17,9 +17,13 @@ module Gws::Schedule::Planable
 
     #validates :text, presence: true
     validates :start_at, presence: true
-    #validates :end_at, presence: true
+    validates :end_at, presence: true
     validates :allday, inclusion: { in: [nil, "", "allday"] }
     validates :member_ids, presence: true
+
+    before_validation do
+      self.end_at = start_at if end_at.blank?
+    end
 
     validate do
       errors.add :end_at, :greater_than, count: t(:start_at) if end_at.present? && end_at < start_at

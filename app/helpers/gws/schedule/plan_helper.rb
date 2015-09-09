@@ -8,7 +8,7 @@ module Gws::Schedule::PlanHelper
 
   def calendar_format(events, opts = {})
     events = events.map do |p|
-      data = { id: p.id, title: h(p.name), start: p.start_at, end: p.end_at, allDay: p.allday? }
+      data = { id: p.id, title: h(p.name), start: p.start_at, end: (p.end_at || p.start_at), allDay: p.allday? }
       if c = p.category
         data.merge!(backgroundColor: c.bg_color, borderColor: c.bg_color, textColor: c.text_color)
       end
@@ -17,7 +17,7 @@ module Gws::Schedule::PlanHelper
 
     if opts[:holiday]
       events += HolidayJapan.between(opts[:holiday][0], opts[:holiday][1]).map do |d, name|
-        { className: 'fc-holiday', title: name, start: d, allDay: true, editable: false }
+        { className: 'fc-holiday', title: " #{name}", start: d, allDay: true, editable: false }
       end
     end
 
@@ -29,7 +29,7 @@ module Gws::Schedule::PlanHelper
       $('.calendar-accessor .fc-prev-button').click(function(){ $('.calendar.multiple .fc-prev-button').click(); });
       $('.calendar-accessor .fc-next-button').click(function(){ $('.calendar.multiple .fc-next-button').click(); });
     EOS
-    js.strip.html_safe
+    js.html_safe
   end
 
   def calendar_default_options_js
@@ -43,13 +43,20 @@ module Gws::Schedule::PlanHelper
       endParam: 's[end]',
       loading: function(isLoading, view) {
         if (isLoading) {
-          //$('#' + $(this).attr('id') + '-name').append('<span class="loading">Loading..</span>');
+          $(this).find('.fc-day').append('<span class="fc-loading">Loading..</span>');
         } else {
-          //$('#' + $(this).attr('id') + '-name .loading').remove();
+          $(this).find('.fc-loading').remove();
+        }
+      },
+      dayClick: function(date, event, view) {
+        if (view.name == 'month' && $(event.target).hasClass('fc-day-number')) {
+          var cal = view.calendar.getCalendar();
+          //cal.changeView('agendaDay');
+          //cal.gotoDate(date);
         }
       }
     EOS
-    js.strip.html_safe
+    js.html_safe
   end
 
   def calendar_editable_options_js(opts = {})
@@ -82,6 +89,6 @@ module Gws::Schedule::PlanHelper
         });
       }
     EOS
-    js.strip.html_safe
+    js.html_safe
   end
 end
