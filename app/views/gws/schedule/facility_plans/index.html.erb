@@ -11,7 +11,12 @@ $('#calendar').fullCalendar({
 });
 <% end %>
 
-<div class="main-box schedule-calendar">
+<section class="main-box schedule-calendar">
   <header><h2><%= @facility.name %></h2></header>
+  <nav class="calendar-menu">
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws_schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
+    <% end %>
+  </nav>
   <div id="calendar" class="calendar"></div>
-</div>
+</section>

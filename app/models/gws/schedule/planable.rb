@@ -24,5 +24,37 @@ module Gws::Schedule::Planable
     validate do
       errors.add :end_at, :greater_than, count: t(:start_at) if end_at.present? && end_at < start_at
     end
+
+    scope :member, ->(user) { where member_ids: user.id }
+    scope :facility, ->(item) { where facility_ids: item.id }
+
+    scope :search, ->(params) {
+      criteria = where({})
+      return criteria if params.blank?
+
+      criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+      criteria = criteria.where :start_at.gte => params[:start] if params[:start].present?
+      criteria = criteria.where :end_at.lte => params[:end] if params[:end].present?
+      criteria
+    }
   end
+
+  public
+    def allday_options
+      [
+        [I18n.t("gws_schedule.options.allday.allday"), "allday"]
+      ]
+    end
+
+    def allday?
+      allday == "allday"
+    end
+
+    def category_options
+      cond = {
+        site_id: @cur_site ? @cur_site.id: site_id,
+        user_id: @cur_user ? @cur_user.id : user_id
+      }
+      Gws::Schedule::Category.where(cond).map { |c| [c.name, c.id] }
+    end
 end

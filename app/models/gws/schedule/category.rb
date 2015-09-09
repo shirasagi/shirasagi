@@ -2,7 +2,7 @@ class Gws::Schedule::Category
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Addon::GroupPermission
+  include SS::UserPermission
 
   field :name, type: String
   field :bg_color, type: String, default: "#48b"

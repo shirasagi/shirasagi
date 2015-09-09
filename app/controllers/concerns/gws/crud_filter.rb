@@ -15,7 +15,7 @@ module Gws::CrudFilter
 
   public
     def index
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+      #raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
       @items = @model.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).

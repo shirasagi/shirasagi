@@ -25,30 +25,38 @@ module Gws::Schedule::PlanHelper
   end
 
   def calendar_accessor_js
-    %(
+    js = <<-EOS
       $('.calendar-accessor .fc-prev-button').click(function(){ $('.calendar.multiple .fc-prev-button').click(); });
       $('.calendar-accessor .fc-next-button').click(function(){ $('.calendar.multiple .fc-next-button').click(); });
-    ).strip.html_safe
+    EOS
+    js.strip.html_safe
   end
 
   def calendar_default_options_js
-    %(
+    js = <<-EOS
       lang: 'ja',
       timeFormat: 'HH:mm',
       columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' },
+      contentHeight: 'auto',
       fixedWeekCount: false,
       startParam: 's[start]',
-      endParam: 's[end]'
-    ).strip.html_safe
+      endParam: 's[end]',
+      loading: function(isLoading, view) {
+        if (isLoading) {
+          //$('#' + $(this).attr('id') + '-name').append('<span class="loading">Loading..</span>');
+        } else {
+          //$('#' + $(this).attr('id') + '-name .loading').remove();
+        }
+      }
+    EOS
+    js.strip.html_safe
   end
 
   def calendar_editable_options_js(opts = {})
     url = opts[:url] || url_for(action: :index)
 
-    %(
+    js = <<-EOS
       editable: true,
-      loading: function(isLoading, view) {
-      },
       eventClick: function(event, jsEvent, view) {
         if ($(this).hasClass('fc-holiday')) return false;
         location.href = '#{url}/' + event.id;
@@ -73,6 +81,7 @@ module Gws::Schedule::PlanHelper
           error: function() { revertFunc(); }
         });
       }
-    ).strip.html_safe
+    EOS
+    js.strip.html_safe
   end
 end

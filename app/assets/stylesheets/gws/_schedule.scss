@@ -1,6 +1,22 @@
 //
-.fc-view-container *, .fc-view-container *::before, .fc-view-container *::after {
+.fc-view table {
   box-sizing: border-box;
+}
+.fc-month-view .fc-body .fc-row {
+  min-height: 6em;
+}
+.fc-ltr .fc-basic-view .fc-day-number {
+  //text-align: left;
+}
+.calendar-menu {
+  position: relative;
+  top: -43px;
+  right: 5px;
+  margin: 0 0 -18px;
+  text-align: right;
+  a {
+    @include arrow;
+  }
 }
 .calendar-accessor {
   .fc-body { display: none; }
@@ -10,14 +26,14 @@
 }
 .calendar-name {
   text-align: left;
-  padding: 4px 8px;
+  padding: 5px;
   border: 1px solid #ddd;
   border-width: 0 1px;
   background: #eee;
   .add-plan {
-    display: inline-block;
-    padding: 0 5px;
-    background: #ddd;
+    float: right;
+    color: #888;
+    &:hover { color: $orange; }
   }
 }
 .calendar {
@@ -53,6 +69,9 @@
     border-color: transparent;
     background: transparent;
     color: #e00;
+  }
+  .fc-today {
+    background: #FCF8E3;
   }
   .fc-event:hover {
     opacity: 0.8;
