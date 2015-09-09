@@ -29,7 +29,7 @@ $ ->
 <%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
 
 <div class="main-box">
-  <header claass="addon-head"><h2><%= @filename %></h2></header>
+  <div claass="addon-head"><h2><%= @filename %></h2></div>
   <%= error_messages_for :item %>
 
   <dl class="see" style="display: none;">

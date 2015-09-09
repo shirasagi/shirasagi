@@ -73,9 +73,9 @@ $ ->
         <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
         <section class="mod-workflow-approve">
           <div class="addon-view">
-            <header class="addon-head">
+            <div class="addon-head">
               <h2><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h2>
-            </header>
+            </div>
             <div class="addon-body">
               <%= text_area :remand, :comment, value: "" %>
               <div class="buttons">

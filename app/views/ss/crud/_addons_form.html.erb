@@ -3,7 +3,7 @@
   <% buf = render file: addon.form_file, locals: { f: f, a: 1 } if addon.form_file %>
   <% next if buf.blank? %>
   <div class="addon-view" id="addon-<%= addon.id %>">
-    <header class="addon-head"><h2><%= addon.name %></h2></header>
+    <div class="addon-head"><h2><%= addon.name %></h2></div>
     <div class="addon-body">
       <%= buf %>
     </div>
