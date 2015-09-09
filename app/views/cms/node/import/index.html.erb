@@ -2,14 +2,14 @@
   <%= error_messages_for :item %>
   <%= f.hidden_field "group_ids[]", value: @cur_user.groups.map(&:id) %>
 
-  <div class="main-box">
+  <section class="main-box">
     <header><h2><%= t :"cms.import" %></h2></header>
 
     <dl class="see">
       <dt><%= @model.t :in_file %><%= @model.tt :in_file %></dt>
       <dd><%= f.file_field :in_file %></dd>
     </dl>
-  </div>
+  </section>
 
   <footer class="send">
     <%= f.submit t("views.button.import"), class: :save %>

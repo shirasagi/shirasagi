@@ -1,6 +1,6 @@
 <%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
 
-<div class="main-box portal-calendar">
+<section class="main-box portal-calendar">
   <header><h2><%= t('gws_schedule.facilities') %></h2></header>
 
   <div class="calendar calendar-accessor"></div>
@@ -32,4 +32,4 @@
   <% end %>
 
   <%= jquery do %><%= calendar_accessor_js %><% end %>
-</div>
+</section>

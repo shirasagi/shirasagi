@@ -1,8 +1,8 @@
-<div class="main-box">
+<section class="main-box">
   <header><h2><%= t :basic_info %></h2></header>
 
   <%= render file: "_show" %>
-</div>
+</section>
 
 <footer class="send">
   <%= form_for :item, url: { action: :update }, html: { id: "switch-layout", method: :put, multipart: true } do |f| %>

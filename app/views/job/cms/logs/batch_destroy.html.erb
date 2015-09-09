@@ -1,14 +1,14 @@
 <%= form_for :item, url: { action: :batch_destroy }, html: { method: :post, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
-<div class="main-box">
+<section class="main-box">
   <header><h2><%= t("views.confirm.delete") %></h2></header>
 
   <dl class="see">
     <dt><%= @item.t :save_term %></dt>
     <dd><%= f.select :save_term, @item.delete_term_options %></dd>
   </dl>
-</div>
+</section>
 
 <footer class="send">
   <%= f.submit t("views.button.delete"), class: :delete %>

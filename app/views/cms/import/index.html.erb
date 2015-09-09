@@ -12,7 +12,7 @@ $(".file").on("change", function() {
   <%= error_messages_for :item %>
   <%= f.hidden_field "group_ids[]", value: @cur_user.groups.map(&:id) %>
 
-  <div class="main-box">
+  <section class="main-box">
     <header><h2><%= t :"cms.import_node" %></h2></header>
 
     <dl class="see">
@@ -25,7 +25,7 @@ $(".file").on("change", function() {
       <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
       <dd><%= f.text_field :basename, class: "filename" %></dd>
     </dl>
-  </div>
+  </section>
 
   <footer class="send">
     <%= f.submit t("views.button.import"), class: :save %>

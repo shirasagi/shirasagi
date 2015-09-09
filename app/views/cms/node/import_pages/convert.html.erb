@@ -1,11 +1,11 @@
 <%= form_for :item, url: { action: :convert }, html: { method: :put, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
-<div class="main-box">
+<section class="main-box">
   <header><h2><%= t("views.confirm.convert") %></h2></header>
 
   <%= f.hidden_field :route, value: "cms/page" %>
-</div>
+</section>
 
 <footer class="send">
   <%= f.submit t("views.button.convert"), class: :save %>

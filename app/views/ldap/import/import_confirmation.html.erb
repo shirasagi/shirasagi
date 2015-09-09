@@ -1,11 +1,11 @@
 <%= form_for :item, url: { action: :import }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
-  <div class="main-box">
+  <section class="main-box">
     <header><h2><%= t("ldap.views.confirm.import") %></h2></header>
 
     <p><%= t "ldap.views.confirm.import_description" %></p>
-  </div>
+  </section>
 
   <footer class="send">
     <%= f.submit t("ldap.views.button.import"), class: :save %>
