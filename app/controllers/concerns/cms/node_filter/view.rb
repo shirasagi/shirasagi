@@ -5,6 +5,8 @@ module Cms::NodeFilter::View
 
   included do
     helper Cms::PublicHelper
+    cattr_accessor :model_class
+    before_action :set_model
   end
 
   module ClassMethods

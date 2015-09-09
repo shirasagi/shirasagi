@@ -1,0 +1,22 @@
+<dl class="see mod-board-post-setting">
+  <dt><%= @model.t :text_size_limit %></dt>
+  <dd><%= @item.text_size_limit %></dd>
+
+  <dt><%= @model.t :show_email %></dt>
+  <dd><%= @item.label :show_email %></dd>
+
+  <dt><%= @model.t :show_url %></dt>
+  <dd><%= @item.label :show_url %></dd>
+
+  <dt><%= @model.t :deletable_post %></dt>
+  <dd><%= @item.label :deletable_post %></dd>
+
+  <dt><%= @model.t :deny_url %></dt>
+  <dd><%= @item.label :deny_url %></dd>
+
+  <dt><%= @model.t :banned_words %></dt>
+  <dd><%=br @item.banned_words %></dd>
+
+  <dt><%= @model.t :deny_ips %></dt>
+  <dd><%=br @item.deny_ips %></dd>
+</dl>

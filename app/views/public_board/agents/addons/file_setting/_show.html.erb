@@ -1,0 +1,13 @@
+<dl class="see mod-board-file-setting">
+  <dt><%= @model.t :file_limit %></dt>
+  <dd><%= @item.label :file_limit %></dd>
+
+  <dt><%= @model.t :file_size_limit %></dt>
+  <dd><%= @item.label :file_size_limit %></dd>
+
+  <dt><%= @model.t :file_ext_limit %></dt>
+  <dd><%=br @item.file_ext_limit.present? ? @item.file_ext_limit : t("public_board.views.unlimited") %></dd>
+
+  <dt><%= @model.t :file_scan %></dt>
+  <dd><%= @item.label :file_scan %></dd>
+</dl>

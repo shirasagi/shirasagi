@@ -1,0 +1,148 @@
+ja:
+  public_board:
+    board: 掲示板
+    post: 掲示板
+
+    views:
+      reply: 返信
+      toggle: 展開
+      poster: 投稿者：
+      date: 投稿日時：
+      new: 新規投稿
+      search: 検索
+      unlimited: 制限なし
+
+    errors:
+      not_same_delete_key: 削除キーが違います。
+      invalid_delete_key: を英数4文字で入力してください。
+      not_allow_urls: にURLを含めることはできません。
+      too_many_files: "%{limit}つまでファイルを添付することができます。"
+
+    options:
+      mode:
+        thread: スレッド形式
+        tree: ツリー形式
+      show_email:
+        enabled: 表示する
+        disabled: 表示しない
+      show_url:
+        enabled: 表示する
+        disabled: 表示しない
+      deletable_post:
+        enabled: 使用する
+        disabled: 使用しない
+      deny_url:
+        deny: 拒否する
+        allow: 拒否しない
+      text_size_limit:
+        l0: 制限しない
+        l400: 400文字まで
+      file_limit:
+        none: 使用しない
+        1n: 1つまで
+        2n: 2つまで
+        3n: 3つまで
+      file_size_limit:
+        none: 制限しない
+        2MB: 2MB
+        5MB: 5MB
+        10MB: 10MB
+        20MB: 20MB
+        100MB: 100MB
+      file_scan:
+        enabled: 使用する
+        disabled: 使用しない
+
+  modules:
+    public_board: 掲示板
+    board: 掲示板
+    addons:
+      public_board/file: ファイル
+      public_board/list: リスト表示
+      public_board/post_setting: 投稿設定
+      public_board/file_setting: 添付ファイル設定
+
+  cms:
+    nodes:
+      public_board/post: 掲示板
+
+  views:
+    notice:
+      posted: 投稿しました。
+
+  cms_role:
+    read_board_posts: 投稿の閲覧
+    edit_board_posts: 投稿の編集
+    delete_board_posts: 投稿の削除
+
+  mongoid:
+    models:
+      public_board/node/board: 掲示板
+
+    attributes:
+      cms/addon/captcha:
+        captcha: 画像認証
+      public_board/post:
+        poster: 投稿者
+        poster_name: お名前
+        name: タイトル
+        text: 本文
+        email: メールアドレス
+        poster_url: URL
+        delete_key: 削除キー
+        in_files: ファイル
+      public_board/addon/list:
+        mode: 表示形式
+      public_board/addon/post_setting:
+        show_email: メールアドレスの表示
+        show_url: URLの表示
+        deletable_post: パスワードによる削除
+        deny_url: URl投稿拒否
+        banned_words: 禁止語句設定
+        deny_ips: 拒否IPアドレス
+        text_size_limit: 本文の最大文字数
+      public_board/addon/file_setting:
+        file_limit: 添付ファイル
+        file_size_limit: 容量制限
+        file_ext_limit: ファイル拡張子
+        file_scan: ウイルスチェック
+
+  tooltip:
+    public_board/addon/list:
+      mode:
+        - 掲示板の表示形式を指定します。
+      limit:
+        - 投稿の表示件数を指定します。
+      upper_html:
+        - 投稿一覧の上部に任意の内容のHTMLを記述することが可能です。
+      lower_html:
+        - 投稿一覧の下部に任意の内容のHTMLを記述することが可能です。
+    public_board/addon/post_setting:
+      text_size_limit:
+        - 投稿可能な最大文字数を指定します。
+      show_email:
+        - 投稿時にメールアドレスを使用するか設定します。
+      show_url:
+        - 投稿時にURLを使用するか設定します。
+      deletable_post:
+        - 削除キーを使用して投稿を削除可能かを設定します。
+      deny_url:
+        - URLを投稿本文に含めることができるかを設定します。
+      banned_words:
+        - 禁止用語を設定します。
+        - 該当する禁止用語がタイトルまたは本文に含まれる場合、投稿できません。
+        - 複数の語句を設定する場合は改行区切りで記述します。
+      deny_ips:
+        - 投稿、返信等を拒否するIPアドレスを設定します。
+        - 帯域での設定が可能です。
+        - 複数のIPアドレスを設定する場合は改行区切りで記述します。
+    public_board/addon/file_setting:
+      file_limit:
+        - 投稿に添付できるファイル数を指定します。
+      file_size_limit:
+        - 添付ファイルの最大容量を指定します。
+      file_ext_limit:
+        - 添付可能なファイルの拡張子を指定します。
+        - 指定がない場合は制限無く添付可能となります。
+      file_scan:
+        - 添付ファイルのウイルススキャンを有効にできます。

@@ -1,0 +1,52 @@
+<% klass = item.parent ?  "comment" : "topic" %>
+<% posted_by = item.user.present? ?  "admin-user" : "public-user" %>
+
+<article class="post <%= klass %> <%= posted_by %>">
+  <header>
+    <h2 class="title">
+      <%= item.name %>
+    </h2>
+  </header>
+  <div class="body">
+    <%= item.modified_text %>
+  </div>
+  <% if item.files.present? %>
+    <div class="files">
+      <% item.files.each do |file| %>
+        <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
+      <% end %>
+    </div>
+  <% end %>
+  <div class="date">
+    <%= t("public_board.views.date") %>
+    <%= item.updated.strftime(t("date.formats.full")) %>
+  </div>
+  <div class="poster">
+    <span class="name">
+      <%= t("public_board.views.poster") %>
+      <%= item.poster %>
+    </span>
+    <% if @cur_node.show_email? %>
+      <%= mail_to item.name, item.email, class: "email" if item.email.present? %>
+    <% end %>
+    <% if @cur_node.show_url? %>
+      <%= link_to item.poster_url, item.poster_url, class: "url" if item.poster_url.present? %>
+    <% end %>
+  </div>
+  <nav class="action">
+    <% if klass == "topic" %>
+      <%= link_to t("public_board.views.reply"), "./#{item.id}/new", class: "reply" %>
+    <% end %>
+    <% if @cur_node.deletable_post? && item.delete_key.present? %>
+      <%= link_to t("views.button.delete"), "./#{item.id}/delete", class: "delete" %>
+    <% end %>
+  </nav>
+  <% if children && item.children.present? %>
+    <%= link_to t("public_board.views.toggle"), "#", class: :toggle %>
+    <div class="children">
+      <% item.children.order(descendants_updated: -1).each do |child| %>
+        <%= render partial: "post", locals: { item: child, children: false }  %>
+      <% end %>
+    </div>
+  <% end %>
+</article>
