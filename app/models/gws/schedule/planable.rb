@@ -15,7 +15,7 @@ module Gws::Schedule::Planable
     permit_params :name, :text, :start_at, :end_at, :allday, :category_id
     permit_params member_ids: [], facility_ids: []
 
-    #validates :text, presence: true
+    validates :name, presence: true
     validates :start_at, presence: true
     validates :end_at, presence: true
     validates :allday, inclusion: { in: [nil, "", "allday"] }
@@ -23,10 +23,19 @@ module Gws::Schedule::Planable
 
     before_validation do
       self.end_at = start_at if end_at.blank?
+
+      if allday
+        self.start_at = start_at.to_date
+        self.end_at = (end_at + 1).to_date if self.end_at.strftime('%H%M%S') =~ /[^0]/
+        self.end_at = (end_at + 1).to_date if self.start_at.to_date == self.end_at.to_date
+      end
     end
 
     validate do
-      errors.add :end_at, :greater_than, count: t(:start_at) if end_at.present? && end_at < start_at
+      errors.add :end_at, :greater_than, count: t(:start_at) if end_at.present? && end_at <= start_at
+    end
+
+    after_validation do
     end
 
     scope :member, ->(user) { where member_ids: user.id }

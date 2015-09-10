@@ -1,15 +1,5 @@
 <%= jquery do %>
-  $(".datetime").
-    datetimepicker({ lang: "ja", roundTime: 'ceil', step: 5 });
-
-  $(".datetime.start").data('last-time', $(".datetime.start").val());
-  $(".datetime.start").change(function() {
-    var old = $(this).data('last-time');
-    var str = $(this).val();
-    var end = $(".datetime.end").val();
-    if (end == "" || old == end) $(".datetime.end").val(str);
-    $(this).data('last-time', str);
-  });
+  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 5 });
 <% end %>
 
 <dl class="see">

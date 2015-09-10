@@ -19,7 +19,7 @@ module Gws::Schedule::PlanFilter
     end
 
     def pre_params
-      { member_ids: [@cur_user.id] }
+      { member_ids: [@cur_user.id], start_at: params[:start] }
     end
 
   public

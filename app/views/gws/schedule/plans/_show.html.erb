@@ -6,7 +6,7 @@
   <dd><%=br @item.send :text %></dd>
 
   <dt><%= @model.t :term %></dt>
-  <dd><%= term(@item) %> <%= "(#{@item.label(:allday)})" if @item.allday? %></dd>
+  <dd><%= term(@item) %></dd>
 
   <% if @item.category %>
   <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>

@@ -1,0 +1,89 @@
+class @Gws_Schedule_Calendar
+  @render: (selector, opts = {})->
+    params = @defaultParams(opts)
+    $.extend params, @editableParams(opts) if opts['restUrl']
+    $.extend params, @tapMenuParams(opts) if opts['restUrl']
+    $.extend params, opts
+    $(selector).fullCalendar(params)
+
+  @defaultParams: (opts) ->
+    lang: 'ja'
+    timeFormat: 'HH:mm'
+    columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' }
+    header: { left: 'today prev next title', right: 'month basicWeek agendaDay' },
+    contentHeight: 'auto'
+    fixedWeekCount: false
+    startParam: 's[start]'
+    endParam: 's[end]'
+    loading: (isLoading, view) ->
+      if isLoading
+        $(this).find('.fc-day').append('<span class="fc-loading">Loading..</span>')
+      else
+        $(this).find('.fc-loading').remove()
+
+  @tapMenuParams: (opts) ->
+    url = opts['restUrl']
+
+    dayClick: (date, event, view) ->
+      links  = "<a href='#{url}/new?start=#{date.format()}' class='add-plan'><%= I18n.t 'gws_schedule.links.add_plan' %></a>"
+      if opts['defaultView'] != 'basicWeek'
+        if view.name != 'month'
+          links += '<a href="" data-view="month"><%= I18n.t "gws_schedule.links.show_month" %></a>'
+        if view.name != 'basicWeek'
+          links += '<a href="" data-view="basicWeek"><%= I18n.t "gws_schedule.links.show_week" %></a>'
+        if view.name != 'agendaDay'
+          links += '<a href="" data-view="agendaDay"><%= I18n.t "gws_schedule.links.show_day" %></a>'
+      $("body").append('<div class="tap-menu">' + links + '</div>')
+      $(".tap-menu").show().css("left", event.pageX - 5).css("top", event.pageY - 5).show()
+
+      $(".tap-menu a").click ->
+        if $(this).data('view')
+          cal = view.calendar.getCalendar()
+          cal.changeView($(this).data('view'));
+          cal.gotoDate(date);
+          $(".tap-menu").remove()
+          return false
+      $(".tap-menu").mouseleave ->
+        $(".tap-menu").remove()
+
+  @editableParams: (opts)->
+    url = opts['restUrl']
+
+    editable: true,
+    eventClick: (event, jsEvent, view) ->
+      return false if $(this).hasClass('fc-holiday')
+      location.href = "#{url}/" + event.id
+    eventDrop: (event, delta, revertFunc) ->
+      end = null
+      end = event.end.format() if event.end
+      $.ajax
+        type: 'PUT'
+        url: "#{url}/" + event.id + ".json"
+        data: { item: { start_at: event.start.format(), end_at: end } }
+        error: (xhr, status, error) ->
+          revertFunc()
+    eventResize: (event, delta, revertFunc) ->
+      $.ajax
+        type: 'PUT'
+        url: "#{url}/" + event.id + ".json"
+        data: { item: { start_at: event.start.format(), end_at: event.end.format() } }
+        error: (xhr, status, error) ->
+          revertFunc()
+
+  @renderController: (selector) ->
+    controller = $(selector)
+    $(selector).fullCalendar({
+      lang: 'ja'
+      timeFormat: 'HH:mm'
+      columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' }
+      defaultView: 'basicWeek',
+      header: { left: 'today prev next title', right: '' },
+      contentHeight: 'auto',
+      eventSources: []
+    })
+    controller.find('.fc-today-button').click ->
+      $('.calendar.multiple .fc-today-button').click()
+    controller.find('.fc-prev-button').click ->
+      $('.calendar.multiple .fc-prev-button').click()
+    controller.find('.fc-next-button').click ->
+      $('.calendar.multiple .fc-next-button').click()

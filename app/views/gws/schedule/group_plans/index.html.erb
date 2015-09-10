@@ -1,17 +1,12 @@
 <%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
+<%= jquery do %>
+Gws_Schedule_Calendar.renderController('#calendar-controller');
+<% end %>
 
 <section class="main-box">
   <header><h2><%= @group.trailing_name %></h2></header>
 
-  <div class="calendar calendar-accessor"></div>
-  <%= jquery do %>
-  $('.calendar-accessor').fullCalendar({
-    <%= calendar_default_options_js %>,
-    defaultView: 'basicWeek',
-    contentHeight: 'auto',
-    eventSources: []
-  });
-  <% end %>
+  <div class="calendar" id="calendar-controller"></div>
 
   <% @items.each_with_index do |item, idx| %>
     <div class="calendar-name" id="cal-<%= item.id %>-name">
@@ -21,15 +16,11 @@
     <div class="calendar multiple" id="cal-<%= item.id %>"></div>
 
     <%= jquery do %>
-    $('#cal-<%= item.id %>').fullCalendar({
-      <%= calendar_default_options_js %>,
-      <%= calendar_editable_options_js %>,
+    Gws_Schedule_Calendar.render('#cal-<%= item.id %>', {
       defaultView: 'basicWeek',
-      contentHeight: 'auto',
+      restUrl: '<%= url_for action: :index %>',
       eventSources: [{ url: '<%= gws_schedule_user_plans_path(user: item.id, format: :json) %>' }]
     });
     <% end %>
   <% end %>
-
-  <%= jquery do %><%= calendar_accessor_js %><% end %>
 </section>

@@ -1,8 +1,8 @@
 //= require fullcalendar
 
 @import "ss/init";
-@import "board";
-@import "schedule";
+@import "gws/board/gws";
+@import "gws/schedule/gws";
 
 .portal-h2 {
   margin: 20px 0;

@@ -4,12 +4,21 @@
 .fc-view table {
   box-sizing: border-box;
 }
-.fc-left {
+.fc-left h2 {
   margin: 5px 0 -5px;
-  font-size: 140%;
+  font-size: 120%;
+}
+.fc-right .fc-button, .fc-today-button {
+  min-width: 80px;
 }
 .fc-month-view .fc-body .fc-row {
-  min-height: 6em;
+  min-height: 7em;
+}
+.fc-basicWeek-view .fc-body .fc-row {
+  min-height: 35em;
+}
+.calendar.multiple .fc-basicWeek-view .fc-body .fc-row {
+  min-height: 4em;
 }
 .fc-head {
   background-color: #eee;
@@ -40,10 +49,11 @@
   background: #fff8f8;
 }
 .fc-day.fc-sat {
-  background: #f6f8ff;
+  background: #f6faff;
 }
-.fc-today {
-  background: #FCF8E3;
+.fc-unthemed .fc-today {
+  background: #Ffd;
+  font-weight: bold;
 }
 
 // events
@@ -79,7 +89,7 @@
     @include arrow;
   }
 }
-.calendar-accessor {
+#calendar-controller {
   .fc-body { display: none; }
 }
 .calendar.multiple {
@@ -106,4 +116,5 @@
 // category
 .gws-schedule-category-sample {
   padding: 0 5px;
+  font-size: 90%;
 }

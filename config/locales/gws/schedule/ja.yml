@@ -1,6 +1,6 @@
 ja:
   gws_schedule:
-    plan: 予定一覧（全て）
+    plan: 予定リスト
     user_plan: 個人の予定
     groups: グループ一覧
     group_plan: グループの予定
@@ -10,6 +10,9 @@ ja:
 
     links:
       add_plan: 予定を登録する
+      show_month: 月表示
+      show_week: 週表示
+      show_day: 日表示
     options:
       allday:
         allday: 終日

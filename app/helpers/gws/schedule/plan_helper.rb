@@ -1,9 +1,11 @@
 module Gws::Schedule::PlanHelper
   def term(item)
-    format = item.allday? ? "%Y/%m/%d" : "%Y/%m/%d %H:%M"
-    times = [item.start_at.strftime(format)]
-    times << item.end_at.strftime(format) if item.end_at.present?
-    times.uniq.join(" - ")
+    if item.allday?
+      dates = [item.start_at.strftime('%Y/%m/%d'), (item.end_at - 1).strftime('%Y/%m/%d')]
+    else
+      dates = [item.start_at.strftime('%Y/%m/%d %H:%M'), item.end_at.strftime('%Y/%m/%d %H:%M')]
+    end
+    dates.uniq.join(" - ")
   end
 
   def calendar_format(events, opts = {})
@@ -22,73 +24,5 @@ module Gws::Schedule::PlanHelper
     end
 
     events
-  end
-
-  def calendar_accessor_js
-    js = <<-EOS
-      $('.calendar-accessor .fc-prev-button').click(function(){ $('.calendar.multiple .fc-prev-button').click(); });
-      $('.calendar-accessor .fc-next-button').click(function(){ $('.calendar.multiple .fc-next-button').click(); });
-    EOS
-    js.html_safe
-  end
-
-  def calendar_default_options_js
-    js = <<-EOS
-      lang: 'ja',
-      timeFormat: 'HH:mm',
-      columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' },
-      contentHeight: 'auto',
-      fixedWeekCount: false,
-      startParam: 's[start]',
-      endParam: 's[end]',
-      loading: function(isLoading, view) {
-        if (isLoading) {
-          $(this).find('.fc-day').append('<span class="fc-loading">Loading..</span>');
-        } else {
-          $(this).find('.fc-loading').remove();
-        }
-      },
-      dayClick: function(date, event, view) {
-        if (view.name == 'month' && $(event.target).hasClass('fc-day-number')) {
-          var cal = view.calendar.getCalendar();
-          //cal.changeView('agendaDay');
-          //cal.gotoDate(date);
-        }
-      }
-    EOS
-    js.html_safe
-  end
-
-  def calendar_editable_options_js(opts = {})
-    url = opts[:url] || url_for(action: :index)
-
-    js = <<-EOS
-      editable: true,
-      eventClick: function(event, jsEvent, view) {
-        if ($(this).hasClass('fc-holiday')) return false;
-        location.href = '#{url}/' + event.id;
-      },
-      eventDrop: function(event, delta, revertFunc) {
-        var start = event.start.format();
-        var end = (event.end == null) ? null : event.end.format();
-        $.ajax({
-          type: 'PUT',
-          url: '#{url}/' + event.id + ".json",
-          data: { item: { start_at: start, end_at: end } },
-          error: function(xhr, status, error) {
-            revertFunc();
-          }
-        });
-      },
-      eventResize: function(event, delta, revertFunc) {
-        $.ajax({
-          type: 'PUT',
-          url: '#{url}/' + event.id + ".json",
-          data: { item: { start_at: event.start.format(), end_at: event.end.format() } },
-          error: function() { revertFunc(); }
-        });
-      }
-    EOS
-    js.html_safe
   end
 end

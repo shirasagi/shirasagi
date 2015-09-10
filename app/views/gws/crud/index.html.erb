@@ -18,8 +18,12 @@
 
       <label class="check"><input type="checkbox"name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
-        <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-        <%= link_to title, { action: :show, id: item }, class: "title" %>
+        <% if @index_title %>
+          <%== @index_title.call item %>
+        <% else %>
+          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+          <%= link_to title, { action: :show, id: item }, class: "title" %>
+        <% end %>
 
         <div class="meta">
           <% if @index_meta %>

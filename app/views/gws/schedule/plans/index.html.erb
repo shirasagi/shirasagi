@@ -1,15 +1,12 @@
 <%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
-
-<%#= render "search" %>
-
 <%= jquery do %>
-$('#calendar').fullCalendar({
-  <%= calendar_default_options_js %>,
-  <%= calendar_editable_options_js %>,
-  header: { right: 'today prev month,basicWeek,agendaDay next' },
-  eventSources: [{ url: '<%= url_for action: :index, format: :json %>' }],
+Gws_Schedule_Calendar.render('#calendar', {
+  restUrl: '<%= url_for action: :index %>',
+  eventSources: [{ url: '<%= url_for action: :index, format: :json %>' }]
 });
 <% end %>
+
+<%#= render "search" %>
 
 <section class="main-box schedule-calendar">
   <header><h2><%= (@user || @cur_user).name %></h2></header>

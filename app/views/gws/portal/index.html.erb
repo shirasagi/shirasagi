@@ -1,20 +1,17 @@
 <%= javascript_include_tag "/assets/js/fullcalendar/ja.js" %>
+<%= jquery do %>
+Gws_Schedule_Calendar.renderController('#calendar-controller');
+Gws_Schedule_Calendar.render('#calendar', {
+  defaultView: 'basicWeek',
+  restUrl: '<%= gws_schedule_plans_path %>',
+  eventSources: [{ url: '<%= gws_schedule_plans_path(format: :json) %>' }]
+});
+<% end %>
 
 <section class="main-box">
   <header><h2><%= t('modules.gws_schedule') %></h2></header>
-
-  <div class="calendar portal"></div>
-
-  <%= jquery do %>
-  $('.calendar').fullCalendar({
-    <%= calendar_default_options_js %>,
-    <%= calendar_editable_options_js url: gws_schedule_plans_path %>,
-    defaultView: 'basicWeek',
-    contentHeight: 'auto',
-    eventSources: [{ url: '<%= gws_schedule_plans_path(format: :json) %>' }]
-  });
-
-  <% end %>
+  <div class="calendar" id="calendar-controller"></div>
+  <div class="calendar multiple" id="calendar"></div>
 </section>
 
 <section class="main-box">

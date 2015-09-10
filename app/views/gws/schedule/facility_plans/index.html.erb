@@ -3,10 +3,8 @@
 <%#= render "search" %>
 
 <%= jquery do %>
-$('#calendar').fullCalendar({
-  <%= calendar_default_options_js %>,
-  <%= calendar_editable_options_js %>,
-  header: { right: 'today prev month,basicWeek,agendaDay next' },
+Gws_Schedule_Calendar.render('#calendar', {
+  restUrl: '<%= url_for action: :index %>',
   eventSources: [{ url: '<%= url_for action: :index, format: :json %>' }],
 });
 <% end %>
