@@ -1,7 +1,7 @@
 <%= form_for :item, url: { action: :update }, html: { method: :put } do |f| %>
 <%= error_messages_for :item %>
 
-<div class="addon-view">
+<section class="main-box">
   <header><h2><%= t("history.confirm.restore") %></h2></header>
   <dl class="see">
     <dt class="wide"><%= t :"history.current_version" %></dt>
@@ -10,17 +10,17 @@
     <dt class="wide"><%= t :"history.backup_version" %></dt>
     <dd><%= @item.version %></dd>
   </dl>
+</section>
 
-  <% if SS.version != @item.version || Rails.env.development? %>
-  <div style="margin: 20px 0px 0px; text-align: center;">
-    <%= t "history.notice.restore" %>
-  </div>
-  <% end %>
+<% if SS.version != @item.version || Rails.env.development? %>
+<div style="margin: 20px 0px 0px; text-align: center;">
+  <%= t "history.notice.restore" %>
 </div>
+<% end %>
 
 <footer class="send">
-  <%= f.submit t("history.button.restore"), class: :save %>
-  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  <%= f.submit t("history.button.restore"), class: 'btn-primary save' %>
+  <%= f.button t("views.button.cancel"), type: :reset, class: 'btn-default', onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
 </footer>
 
 <% end %>

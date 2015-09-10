@@ -2,7 +2,7 @@ class History::Backup
   include SS::Document
   include SS::Reference::User
 
-  cattr_reader(:max_age) { 5 }
+  cattr_reader(:max_age) { 20 }
 
   index({ ref_coll: 1, "data._id" => 1, created: -1 })
 

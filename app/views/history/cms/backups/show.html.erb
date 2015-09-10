@@ -1,14 +1,12 @@
-<div class="addon-view">
-  <div class="addon-body">
-    <table class="see index history-backup">
-      <% @item.data.sort.each do |k, v| %>
-      <tr>
-        <th><%= k %></th>
-        <td class="<%= 'diff' if @data[k] != v %>">
-          <%= v.present? ? v.inspect : "" %>
-        </td>
-      </tr>
-      <% end %>
-    </table>
-  </div>
+<div class="main-box">
+  <table class="see index history-backup">
+    <% @item.data.sort.each do |k, v| %>
+    <tr>
+      <th><%= k %></th>
+      <td class="<%= 'diff' if @data[k] != v %>">
+        <%= v.present? ? v.inspect : "" %>
+      </td>
+    </tr>
+    <% end %>
+  </table>
 </div>

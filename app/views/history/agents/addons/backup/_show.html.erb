@@ -4,7 +4,7 @@ return render(text: "") if @item.backups.size == 0
 
 %>
 <dl class="see mod-history-backup">
-  <% @item.backups.each do |item| %>
+  <% @item.backups.limit(10).each do |item| %>
   <dd>
     <% if @item.allowed?(:edit, @cur_user) %>
       <%= link_to l(item.created), history_cms_backup_path(id: item.id) %>
