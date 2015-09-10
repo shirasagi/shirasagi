@@ -89,20 +89,24 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       add_valid_url(url, ref)
       return if url[0] != "/"
 
-      html = NKF.nkf "-w", html
-      html.scan(/\shref="([^"]+)"/i) do |m|
-        next_url = m[0]
-        next_url = next_url.sub(/^#{@base_url}/, "/")
-        next_url = next_url.sub(/#.*/, "")
+      begin
+        html = NKF.nkf "-w", html
+        html.scan(/\shref="([^"]+)"/i) do |m|
+          next_url = m[0]
+          next_url = next_url.sub(/^#{@base_url}/, "/")
+          next_url = next_url.sub(/#.*/, "")
 
-        next unless valid_url(next_url)
+          next unless valid_url(next_url)
 
-        internal = (next_url[0] != "/" && next_url !~ /^https?:/)
-        next_url = File.expand_path next_url, File.dirname(url) if internal
-        next_url = URI.encode(next_url) if next_url =~ /[^-_.!~*'()\w;\/\?:@&=+$,%#]/
-        next if @results[next_url]
+          internal = (next_url[0] != "/" && next_url !~ /^https?:/)
+          next_url = File.expand_path next_url, File.dirname(url) if internal
+          next_url = URI.encode(next_url) if next_url =~ /[^-_.!~*'()\w;\/\?:@&=+$,%#]/
+          next if @results[next_url]
 
-        @urls[next_url] = url
+          @urls[next_url] = url
+        end
+      rescue
+        add_invalid_url(url, ref)
       end
     end
 
