@@ -42,6 +42,14 @@ class Gws::Board::Post
   scope :topic, ->{ exists parent_id: false }
   scope :comment, ->{ exists parent_id: true }
 
+  scope :search, ->(params) {
+    criteria = where({})
+    return criteria if params.blank?
+
+    criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
+    criteria
+  }
+
   def set_descendants_updated
     self.descendants_updated = updated
   end

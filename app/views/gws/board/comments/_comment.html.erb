@@ -1,8 +1,9 @@
-<aside class="comment">
-  <h2 class="title"><%= comment.name %></h2>
-  <div class="body"><%=br comment.text %></div>
+<aside class="main-box comment">
+  <header><h2><%= comment.name %></h2></header>
+
+  <div class="body markdown-body"><%= comment.text %></div>
   <div class="meta">
-    <span class="datetime"><%= comment.updated.strftime("%Y/%m/%d %H:%M") %></span>
+    <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
     <span class="user"><%= comment.user.name %></span>
   </div>
 
@@ -16,7 +17,7 @@
 </aside>
 
 <% if comment.children.size > 0 %>
-<div class="comments">
+<div class="gws-board gws-board-comments">
   <%= render partial: 'gws/board/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
 </div>
 <% end %>

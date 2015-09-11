@@ -189,6 +189,7 @@ GEM
       mime-types (>= 1.16, < 3)
     mail-iso-2022-jp (2.0.4)
       mail (>= 2.2.6, <= 2.6.3)
+    marked-rails (0.3.2.0)
     method_source (0.8.2)
     mime-types (2.6.1)
     mini_portile (0.6.2)
@@ -469,6 +470,7 @@ DEPENDENCIES
   jquery-turbolinks
   kaminari
   mail-iso-2022-jp
+  marked-rails
   momentjs-rails
   mongo_mapper
   mongoid (~> 4.0.0)

@@ -17,6 +17,7 @@ class Gws::Board::TopicsController < ApplicationController
     def index
       @items = @model.site(@cur_site).topic.
         allow(:read, @cur_user, site: @cur_site).
+        search(params[:s]).
         order(descendants_updated: -1).
         page(params[:page]).per(50)
     end

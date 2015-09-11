@@ -47,6 +47,7 @@ gem 'momentjs-rails'
 gem 'fullcalendar.io-rails'
 gem 'bxslider-rails'
 gem 'multi-select-rails'
+gem 'marked-rails'
 
 # OAuth
 gem 'omniauth'

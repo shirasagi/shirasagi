@@ -1,12 +1,27 @@
-<div class="main-box gws-board-topics">
+<%= jquery do %>
+$('.gws-board .body').each(function(){
+  $(this).html(marked($(this).html()));
+});
+<% end %>
+
+<div class="main-box gws-board gws-board-topics">
+  <header><h2><%= @item.name %></h2></header>
+
   <article class="topic">
     <%= render "gws/board/topics/parent", item: @item %>
-  </article>
 
-  <div class="comments">
-    <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
-  </div>
+    <div class="menu">
+      <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+    </div>
+  </article>
 </div>
+
+<% if @item.children.size > 0 %>
+<div class="gws-board gws-board-comments">
+  <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
+</div>
+<% end %>
 
 <% if @item.permit_comment? %>
 <footer class="send">

@@ -1,29 +1,23 @@
-.gws-board-topics, .gws-board-tree {
-  .topic {
+@import "github-markdown";
+
+// board
+.gws-board {
+  .topic, .comment {
     @include clear;
-    padding: 12px 5px;
-  }
-  .comments {
-    padding-left: 20px;
-    border-top: 1px solid #ddd;
   }
   .comment {
-    @include clear;
-    padding: 12px 5px;
-    border-top: 1px solid #ddd;
-    &:first-child {
-      border-width: 0;
-    }
-  }
-  .title {
-    font-size: 120%;
+    margin-top: 10px;
   }
   .body {
-    padding: 5px 0 15px;
+    padding: 10px;
+    margin: 0 0 20px;
   }
   .meta {
     float: left;
     color: #888;
+    .datetime {
+      margin-right: 5px;
+    }
   }
   .menu {
     float: right;
@@ -31,4 +25,7 @@
       margin: 0 0 0 5px;
     }
   }
+}
+.gws-board-comments {
+  padding-left: 30px;
 }
