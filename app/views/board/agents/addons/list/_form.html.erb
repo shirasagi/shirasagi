@@ -1,0 +1,15 @@
+<%= code_editor ".mod-board-list .html", mode: :html %>
+
+<dl class="see mod-board-list">
+  <dt><%= @model.t :mode %><%= @model.tt :mode %></dt>
+  <dd><%= f.select :mode, @item.mode_options %></dd>
+
+  <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
+  <dd><%= f.number_field :limit %></dd>
+
+  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+  <dd><%= f.text_area :upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
+  <dd><%= f.text_area :lower_html, class: :html %></dd>
+</dl>

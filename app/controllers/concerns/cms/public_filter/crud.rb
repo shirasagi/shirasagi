@@ -1,39 +1,15 @@
-module SS::CrudFilter
+module Cms::PublicFilter::Crud
   extend ActiveSupport::Concern
+  include SS::AgentFilter
 
   included do
-    before_action :prepend_current_view_path
-    before_action :append_view_paths
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
-    before_action :set_destroy_items, only: [:destroy_all]
-    menu_view "ss/crud/menu"
   end
 
   private
-    def prepend_current_view_path
-      prepend_view_path "app/views/#{params[:controller]}"
-    end
-
-    def append_view_paths
-      append_view_path "app/views/ss/crud"
-    end
-
-    def render(*args)
-      args.size == 0 ? super(file: params[:action]) : super
-    end
-
     def set_item
       @item = @model.find params[:id]
       @item.attributes = fix_params
-    end
-
-    def set_destroy_items
-      ids = params[:ids]
-      raise "400" unless ids
-      ids = ids.split(",") if ids.kind_of?(String)
-      ids = ids.map(&:to_i)
-      @items = @model.in(id: ids)
-      raise "400" unless @items.present?
     end
 
     def fix_params
@@ -90,11 +66,6 @@ module SS::CrudFilter
       render_destroy @item.destroy
     end
 
-    def destroy_all
-      @items.destroy_all
-      render_destroy_all true
-    end
-
   private
     def render_create(result, opts = {})
       location = opts[:location].presence || { action: :show, id: @item }
@@ -135,7 +106,7 @@ module SS::CrudFilter
     def render_destroy(result, opts = {})
       location = opts[:location].presence || { action: :index }
       render_opts = opts[:render].presence || { file: :delete }
-      notice = opts[:notice].presence || t("views.notice.saved")
+      notice = opts[:notice].presence || t("views.notice.deleted")
 
       if result
         respond_to do |format|
@@ -147,17 +118,6 @@ module SS::CrudFilter
           format.html { render render_opts }
           format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
         end
-      end
-    end
-
-    def render_destroy_all(result)
-      location = { action: :index }
-      notice = result ? { notice: t("views.notice.deleted") } : {}
-      errors = @items.map { |item| [item.id, item.errors.full_messages] }
-
-      respond_to do |format|
-        format.html { redirect_to location, notice }
-        format.json { head json: errors }
       end
     end
 end
