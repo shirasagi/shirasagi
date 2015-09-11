@@ -11,11 +11,11 @@ $('.gws-board .body').each(function(){
     <%= render "gws/board/topics/parent", item: @item %>
 
     <div class="menu">
-      <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
       <% if @item.permit_comment? %>
         <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id) %>
       <% end %>
+      <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
     </div>
   </article>
 </div>
