@@ -661,10 +661,13 @@ td {
 }
 .addon-head {
   @include box-head;
-  &:hover { background: #f9f9f9;}
+  &:hover { background: #f9f9f9; }
   h2 {
     display: inline-block;
   }
+}
+#addon-basic .addon-head {
+  &:hover { background: transparent; }
 }
 .addon-body {
   border-top: $border-gray1;
