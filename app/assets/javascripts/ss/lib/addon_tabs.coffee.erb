@@ -1,7 +1,7 @@
 class @SS_AddonTabs
   @render: ->
-    $('.addon-head h2').on 'click', ->
-      $(this).parent().parent().find('.addon-body').animate( { height: 'toggle' }, 'fast' )
+    $('.addon-head').on 'click', ->
+      $(this).parent().find('.addon-body').animate( { height: 'toggle' }, 'fast' )
 
   @hide: (view) ->
     $(view).parent().hide()

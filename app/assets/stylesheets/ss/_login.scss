@@ -26,13 +26,8 @@
   @include box-shadow(0px 1px 3px #ddd);
   background: $white;
   header {
-    @include clear;
-    margin-bottom: 30px;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    h1 {
-      float: left;
-      font-weight: bold;
+    h2 {
+      display: inline-block;
     }
     .version {
       float: right;
