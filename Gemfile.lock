@@ -217,6 +217,8 @@ GEM
       bson (~> 3.0)
       connection_pool (~> 2.0)
       optionable (~> 0.2.0)
+    multi-select-rails (0.9.12)
+      railties (>= 3.0)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -472,6 +474,7 @@ DEPENDENCIES
   mongoid (~> 4.0.0)
   mongoid-grid_fs
   mongoid-rspec
+  multi-select-rails
   net-ldap
   non-stupid-digest-assets
   omniauth

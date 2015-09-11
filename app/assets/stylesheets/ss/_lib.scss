@@ -1,0 +1,19 @@
+// -------------------------------------------------------------------------------------------------
+// multiselect.js
+// http://loudev.com/
+
+.ms-container .ms-selectable, .ms-container .ms-selection {
+  background: transparent;
+}
+.ms-selectable-head, .ms-selection-head {
+  margin-bottom: 5px;
+  padding-left: 6px;
+  border-left: 3px solid #bbb;
+}
+.ms-selection-head {
+  border-color: $orange;
+  color: $orange;
+}
+.ms-list {
+  background: $white;
+}

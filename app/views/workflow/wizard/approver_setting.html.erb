@@ -21,12 +21,8 @@ $ ->
     e.preventDefault()
 
   $(".workflow-multi-select").multiSelect
-    selectionHeader: "<div class='selectionHeader'><%= t "workflow.request_to" %></div>"
-    selectableHeader: "<div class='selectableHeader'><%= t "workflow.selectable_users" %></div>"
-
-  $(".ms-container").each ->
-    $(this).find(".selectableHeader").css("background-color", "#f0f3f3")
-    $(this).find(".selectionHeader").css("background-color", "#f0f3f3")
+    selectableHeader: "<div class='ms-selectable-head'><%= t "workflow.selectable_users" %></div>"
+    selectionHeader: "<div class='ms-selection-head'><%= t "workflow.request_to" %></div>"
 
 <% end %>
 

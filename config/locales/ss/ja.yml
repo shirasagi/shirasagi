@@ -21,6 +21,9 @@ ja:
     role: ロール
     role_setting: ロール一括設定
     group_users: 所属ユーザー
+    multi_select:
+      selectable_head: 選択候補
+      selection_head: 選択済み
 
     button:
       login: ログイン
