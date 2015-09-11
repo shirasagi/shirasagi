@@ -207,7 +207,7 @@ $border-white: 1px solid $white;
 }
 @mixin grd-white {
   background: #ffffff;
-  @include background-image(linear-gradient(top, #ffffff, #ebecec));
+  @include background(linear-gradient(top, #ffffff, #ebecec));
   @include filter-gradient(#ffffff, #ebecec, vertical);
 }
 @mixin grd-red {
