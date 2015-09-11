@@ -50,14 +50,16 @@ module Board::Addon
       if node.file_scan_enabled?
         in_files.each do |file|
           begin
-            if !SS::FileScanner.scan(file)
-              errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
-              return
-            end
+            result = SS::FileScanner.scan(stream: file.read)
           rescue => e
             errors.add :base, I18n.t("errors.messages.file_scan_exception")
             return
+          ensure
+            file.rewind
           end
+          next if result
+          errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
+          return
         end
       end
     end

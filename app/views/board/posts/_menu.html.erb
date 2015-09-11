@@ -14,6 +14,7 @@
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, action: :edit, id: @item %>
+      <%= link_to :reply, action: :new_reply, id: @item unless @item.topic? %>
     <% end %>
     <%= link_to :back_to_index, action: :index %>
   <% end %>

@@ -22,12 +22,20 @@ module Board::Model::Post
     validates :name, presence: true
     validates :text, presence: true
 
+    validate :validate_children, if: -> { topic }
+
     before_validation :set_topic_id, if: :comment?
     before_save :set_descendants_updated
     after_save :update_parent_descendants_updated
 
     scope :topic, ->{ exists parent_id: false }
     scope :comment, ->{ exists parent_id: true }
+  end
+
+  def validate_children
+    if topic.children.size >= 1000
+      errors.add :base, I18n.t('board.errors.too_many_comments')
+    end
   end
 
   def set_descendants_updated

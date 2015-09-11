@@ -6,18 +6,19 @@ class Board::PostsController < ApplicationController
 
   navi_view "board/main/navi"
 
-  before_action :set_topic, only: [:new_reply, :reply]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_topic, only: [:new_reply, :reply, :edit, :update]
   after_action :generate, only: [:create, :reply, :update, :destroy]
 
   private
     def fix_params
-      { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user, parent: @topic }
+      { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user, topic: @topic, parent: @topic }
     end
 
     def set_topic
       @topic = @model.topic.site(@cur_site).
         where(id: params[:id], node_id: @cur_node.id).first
-      raise "403" unless @topic
+      @topic = @item.topic if @item
     end
 
     def generate

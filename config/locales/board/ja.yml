@@ -17,6 +17,7 @@ ja:
       invalid_delete_key: を英数4文字で入力してください。
       not_allow_urls: にURLを含めることはできません。
       too_many_files: "%{limit}つまでファイルを添付することができます。"
+      too_many_comments: これ以上返信することはできません。
 
     options:
       mode:
