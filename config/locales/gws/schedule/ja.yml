@@ -2,10 +2,8 @@ ja:
   gws_schedule:
     plan: 予定リスト
     user_plan: 個人の予定
-    groups: グループ一覧
     group_plan: グループの予定
-    facilities: 設備一覧
-    facility_plan: 設備予約
+    facility_plan: 設備の予定
     category: 種別設定
 
     links:
@@ -49,7 +47,7 @@ ja:
         category_id: スケジュール種別
         term: 期間
         member_ids: 参加者
-        facility_ids: 施設予約
+        facility_ids: 設備予約
       gws/schedule/category:
         name: スケジュール種別
         color: 表示色

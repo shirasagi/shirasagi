@@ -1,13 +1,16 @@
 <%= jquery do %>
   $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 5 });
+  //$(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 5, inline:true });
+
+  $("#item_member_ids, #item_facility_ids").multiSelect({
+    selectableHeader: "<div class='ms-selectable-head'><%= t "views.multi_select.selectable_head" %></div>",
+    selectionHeader: "<div class='ms-selection-head'><%= t "views.multi_select.selection_head" %></div>",
+  });
 <% end %>
 
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
-
-  <dt><%= @model.t :text %></dt>
-  <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :term %></dt>
   <dd>
@@ -16,8 +19,13 @@
     &nbsp;<label><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
   </dd>
 
+  <% if nil %>
   <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
   <dd><%= f.select :category_id, @item.category_options, include_blank: " " %></dd>
+  <% end %>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= f.text_area :text %></dd>
 
   <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
   <dd><%= f.select :member_ids, Gws::User.site(@cur_site).map { |c| [c.name, c.id] }, {},
