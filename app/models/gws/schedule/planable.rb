@@ -2,6 +2,8 @@ module Gws::Schedule::Planable
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor :api
+
     field :name, type: String
     field :text, type: String
     field :start_at, type: DateTime
@@ -12,7 +14,7 @@ module Gws::Schedule::Planable
     embeds_ids :members, class_name: "Gws::User"
     embeds_ids :facilities, class_name: "Gws::Facility"
 
-    permit_params :name, :text, :start_at, :end_at, :allday, :category_id
+    permit_params :api, :name, :text, :start_at, :end_at, :allday, :category_id
     permit_params member_ids: [], facility_ids: []
 
     validates :name, presence: true
@@ -22,12 +24,17 @@ module Gws::Schedule::Planable
     validates :member_ids, presence: true
 
     before_validation do
-      self.end_at = start_at if end_at.blank?
-
-      if allday
+      if allday?
         self.start_at = start_at.to_date
+        self.end_at = start_at if end_at.blank?
         self.end_at = (end_at + 1).to_date if self.end_at.strftime('%H%M%S') =~ /[^0]/
         self.end_at = (end_at + 1).to_date if self.start_at.to_date == self.end_at.to_date
+      elsif end_at.blank?
+        if api == 'drop'
+          self.end_at = DateTime.new start_at.year, start_at.month, start_at.day, end_at_was.hour, end_at_was.min, end_at_was.sec
+        else
+          self.end_at = start_at + 1.minutes
+        end
       end
     end
 
@@ -69,5 +76,17 @@ module Gws::Schedule::Planable
         user_id: @cur_user ? @cur_user.id : user_id
       }
       Gws::Schedule::Category.where(cond).map { |c| [c.name, c.id] }
+    end
+
+    # event options
+    # http://fullcalendar.io/docs/event_data/Event_Object/
+    def calendar_format
+      data = { id: id, title: ERB::Util.h(name), start: start_at, end: end_at, allDay: allday? }
+      if start_at.to_date == end_at.to_date
+        data.merge! className: 'fc-event-one'
+      else
+        data.merge! className: 'fc-event-days'
+      end
+      data
     end
 end

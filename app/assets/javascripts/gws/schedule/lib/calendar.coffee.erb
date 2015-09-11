@@ -59,14 +59,14 @@ class @Gws_Schedule_Calendar
       $.ajax
         type: 'PUT'
         url: "#{url}/" + event.id + ".json"
-        data: { item: { start_at: event.start.format(), end_at: end } }
+        data: { item: { api: 'drop', start_at: event.start.format(), end_at: end } }
         error: (xhr, status, error) ->
           revertFunc()
     eventResize: (event, delta, revertFunc) ->
       $.ajax
         type: 'PUT'
         url: "#{url}/" + event.id + ".json"
-        data: { item: { start_at: event.start.format(), end_at: event.end.format() } }
+        data: { item: { api: 'resize', start_at: event.start.format(), end_at: event.end.format() } }
         error: (xhr, status, error) ->
           revertFunc()
 
