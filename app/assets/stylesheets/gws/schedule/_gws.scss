@@ -60,9 +60,12 @@
 
 // events
 .fc-event {
-  border-width: 0 1px;
-  padding: 2px;
+  padding: 1px 1px 1px 5px;
+  border: none;
   border-radius: 0;
+  font-size: 90%;
+}
+.fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-title {
   font-size: 90%;
 }
 .fc-day-grid-event .fc-time {
@@ -70,21 +73,23 @@
   font-weight: normal;
 }
 .fc-event-one {
-  border-color: transparent;
   background: transparent;
   color: #49a;
   cursor: pointer;
   &:hover { color: #49a; text-decoration: underline; }
 }
+.fc-agenda-view .fc-event-one {
+  background: #bdf;
+  color: #000;
+}
 .fc-event-days {
-  border-color: #fd8;
+  border-right: 2px solid #a88;
   background: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
   &:hover { color: #000 }
 }
 .fc-holiday {
-  border-color: #e00;
   background: #f33;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #fff;

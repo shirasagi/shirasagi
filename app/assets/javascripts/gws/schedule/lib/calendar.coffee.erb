@@ -9,7 +9,8 @@ class @Gws_Schedule_Calendar
   @defaultParams: (opts) ->
     lang: 'ja'
     timeFormat: 'HH:mm'
-    columnFormat: { month: 'ddd', week: 'M/D（ddd）', day: 'M/D（ddd）' }
+    slotLabelFormat: 'HH:mm',
+    columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
     header: { left: 'today prev next title', right: 'month basicWeek agendaDay' },
     contentHeight: 'auto'
     fixedWeekCount: false

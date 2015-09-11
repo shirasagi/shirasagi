@@ -1,6 +1,5 @@
 <%= jquery do %>
-  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 5 });
-  //$(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 5, inline:true });
+  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
 
   $("#item_member_ids, #item_facility_ids").multiSelect({
     selectableHeader: "<div class='ms-selectable-head'><%= t "views.multi_select.selectable_head" %></div>",
