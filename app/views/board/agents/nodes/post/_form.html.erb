@@ -1,0 +1,58 @@
+<% name_opts = reply ? { readonly: true } : {} %>
+
+<div class="columns">
+  <dl class="column">
+    <dt>
+      <%= @model.t :name %>
+      <span class="required"><%= t('views.required_field') %></span>
+    </dt>
+    <dd><%= f.text_field :name, name_opts %></dd>
+  </dl>
+
+  <dl class="column">
+    <dt>
+      <%= @model.t :poster_name %>
+      <span class="required"><%= t('views.required_field') %></span>
+    </dt>
+    <dd><%= f.text_field :poster %></dd>
+  </dl>
+
+  <dl class="column">
+    <dt>
+      <%= @model.t :text %>
+      <span class="required"><%= t('views.required_field') %></span>
+    </dt>
+    <dd><%= f.text_area :text %></dd>
+  </dl>
+
+  <% if @cur_node.show_email? %>
+    <dl class="column">
+      <dt><%= @model.t :email %></dt>
+      <dd><%= f.email_field :email %></dd>
+    </dl>
+  <% end %>
+
+  <% if @cur_node.show_url? %>
+    <dl class="column">
+      <dt><%= @model.t :poster_url %></dt>
+      <dd><%= f.text_field :poster_url %></dd>
+    </dl>
+  <% end %>
+
+  <% if @cur_node.deletable_post? %>
+    <dl class="column">
+      <dt>
+        <%= @model.t :delete_key %>
+        <span class="required"><%= t('views.required_field') %></span>
+      </dt>
+      <dd><%= f.text_field :delete_key %></dd>
+    </dl>
+  <% end %>
+
+  <% if @cur_node.allow_file_post? %>
+    <dl class="column">
+      <dt><%= @model.t :in_files %></dt>
+      <dd><%= f.file_field :in_files, multiple: :multiple %></dd>
+    </dl>
+  <% end %>
+</div>

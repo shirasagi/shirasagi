@@ -1,0 +1,28 @@
+<%= @cur_node.upper_html.to_s.html_safe %>
+<nav class="menu">
+  <%= link_to :back_to_index, @cur_node.url %>
+</nav>
+<%= form_for :item, url: "destroy", html: { method: :delete, multipart: true } do |f| %>
+
+<div class="board-post-form">
+  <%= error_messages_for :item, header_message: false %>
+
+  <div class="columns">
+    <dl class="column">
+      <dt><%= @model.t :name %></dt>
+      <dd><%= @item.name %></dd>
+
+      <dt><%= @model.t :delete_key %></dt>
+      <dd><%= f.text_field :delete_key %></dd>
+    </dl>
+  </div>
+
+  <%= show_simple_captcha(object: :item, code_type: 'numeric', input_html: { required: nil }) %>
+  <footer class="send">
+    <%= f.submit t("views.button.delete") %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+  </footer>
+</div>
+
+<% end %>
+<%= @cur_node.lower_html.to_s.html_safe %>
