@@ -4,8 +4,10 @@
 
   <dt><%= @model.t :notice_severity %><%= @model.tt :notice_severity %></dt>
   <dd>
-    <%= f.check_box :notice_severity, {}, Cms::Notice::NOTICE_SEVERITY_HIGH, Cms::Notice::NOTICE_SEVERITY_NORMAL %>
-    <%= t "cms.important_notice" %>
+    <label>
+      <%= f.check_box :notice_severity, {}, Cms::Notice::NOTICE_SEVERITY_HIGH, Cms::Notice::NOTICE_SEVERITY_NORMAL %>
+      <%= t "cms.important_notice" %>
+    </label>
   </dd>
 
   <dt><%= @model.t :notice_target %><%= @model.tt :notice_target %></dt>

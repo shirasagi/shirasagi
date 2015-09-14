@@ -9,6 +9,8 @@ class Ezine::Agents::Nodes::BacknumberController < ApplicationController
     end
 
     def index
+      return render(nothing: true) unless @cur_node.parent
+
       @items = pages.
         order_by(@cur_node.sort_hash).
         page(params[:page]).
