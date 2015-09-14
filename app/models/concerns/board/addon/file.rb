@@ -53,13 +53,13 @@ module Board::Addon
             result = SS::FileScanner.scan(stream: file.read)
           rescue => e
             errors.add :base, I18n.t("errors.messages.file_scan_exception")
-            return
+            break
           ensure
             file.rewind
           end
           next if result
           errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
-          return
+          break
         end
       end
     end
