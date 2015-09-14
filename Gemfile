@@ -83,6 +83,7 @@ group :development, :test do
   # The latest version is 1.5.0 now, but getting the same error again.
   # ref. https://github.com/DatabaseCleaner/database_cleaner/issues/390
   gem 'database_cleaner', '1.4.1'
+  gem 'dotenv-rails'
 end
 
 group :development do
