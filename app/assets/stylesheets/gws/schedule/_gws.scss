@@ -60,7 +60,7 @@
 
 // events
 .fc-event {
-  padding: 1px 1px 1px 5px;
+  padding: 1px 1px 1px 2px;
   border: none;
   border-radius: 0;
   font-size: 90%;
@@ -87,7 +87,7 @@
   background: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
-  &:hover { color: #000 }
+  &:hover { color: #000; text-decoration: underline; }
 }
 .fc-holiday {
   background: #f33;
@@ -116,6 +116,7 @@
   }
 }
 #calendar-controller {
+  .fc-widget-header { border-bottom-width: 0; }
   .fc-body { display: none; }
 }
 .calendar.multiple {
