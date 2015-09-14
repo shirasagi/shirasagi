@@ -63,7 +63,7 @@ class Gws::Schedule::PlanRepeat
     # @param  [Date]    base_date 基準日
     # @param  [Integer] wday      指定曜日(0-6 : 日-土)
     # @return [Date]              基準日から見た次の指定曜日の日付（基準日を含む）
-    def get_date_next_specified_wday(base_date = Time.zone.today, wday)
+    def get_date_next_specified_wday(base_date, wday)
       q = (wday - base_date.wday + 7) % 7
       base_date + q.day
     end
