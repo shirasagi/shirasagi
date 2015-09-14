@@ -2,7 +2,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   include Cms::PublicFilter::Node
 
   before_action :set_params
-  PER_BATCH = 100.freeze
+  PER_BATCH = 100
 
   private
     def set_params

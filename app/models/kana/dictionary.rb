@@ -8,7 +8,7 @@ class Kana::Dictionary
   FS = %w(, 、 ，).freeze
 
   # default cost
-  DEFAULT_COST = 10.freeze
+  DEFAULT_COST = 10
 
   # default part-of-speech
   DEFAULT_POS = %w(名詞 固有名詞 一般 *).freeze

@@ -2,7 +2,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   include Cms::PublicFilter::Page
 
   before_action :set_attachments, only: :generate
-  PER_BATCH = 100.freeze
+  PER_BATCH = 100
 
   private
     def set_attachments

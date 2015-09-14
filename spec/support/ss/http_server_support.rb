@@ -6,7 +6,7 @@ module SS
 
     class Server
       public
-        DEFAULT_PORT = 4321.freeze
+        DEFAULT_PORT = 4321
 
         def initialize
           @default_options = {}
