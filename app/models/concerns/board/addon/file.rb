@@ -17,6 +17,8 @@ module Board::Addon
       after_destroy :destroy_files
     end
 
+    # TODO Refactor by splitting into some tiny methods
+    # rubocop:disable Metrics/AbcSize
     def validate_in_files
       if node.file_limit < in_files.size
         errors.add :base, I18n.t("board.errors.too_many_files", limit: node.file_limit)
