@@ -50,14 +50,14 @@ class Board::Post
     end
 
     def validate_deny_url
-      if text =~ %r(https?://[\w/:%#\$&\?\(\)~\.=\+\-]+)
+      if text =~ %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}
         errors.add :text, I18n.t('board.errors.not_allow_urls')
       end
     end
 
     def modified_text
       text = self.text
-      text.gsub!(%r(https?://[\w/:%#\$&\?\(\)~\.=\+\-]+)) do |href|
+      text.gsub!(%r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}) do |href|
         "<a href=\"#{href}\">#{href}</a>"
       end
       text.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
