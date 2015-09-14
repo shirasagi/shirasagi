@@ -50,6 +50,17 @@ module SS::Model::User
 
   module ClassMethods
     public
+      def flex_find(keyword)
+        if keyword =~ /^\d+$/
+          cond = { id: keyword }
+        elsif keyword =~ /@/
+          cond = { email: keyword }
+        else
+          cond = { uid: keyword }
+        end
+        self.where(cond).first
+      end
+
       def auth_methods
         @auth_methods ||= [ :ldap_authenticate, :dbpasswd_authenticate ]
       end

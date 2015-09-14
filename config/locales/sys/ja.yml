@@ -10,6 +10,8 @@ ja:
     test: テスト
     db_tool: DBツール
     role: 権限/ロール
+    roles:
+      admin: 管理者
     apis:
       groups:
         index: グループを選択する

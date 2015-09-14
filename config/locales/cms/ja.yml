@@ -40,6 +40,9 @@ ja:
     notice: お知らせ
     important_notice: 重要なお知らせ
     back_to_contents: コンテンツへ戻る
+    roles:
+      admin: 管理者
+      user: 編集者
     confirm:
       delete_item: 項目を削除してよろしいですか？
 

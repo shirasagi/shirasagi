@@ -1,13 +1,9 @@
-if ENV["name"].blank?
-  puts "Please input seed name. ( name= )"
-  exit
-end
+# seed entry point
 
-if ENV["site"].blank?
-  puts "Please input site name. ( site= )"
-  exit
-end
+seed = ENV['name']
+file = "#{Rails.root}/db/seeds/#{seed}/load.rb"
 
-if name = ENV["name"].presence
-  require "#{Rails.root}/db/seeds/#{name}/load.rb"
-end
+puts "Please input seed name: name=[seed_name]" or exit if seed.blank?
+puts "Seed file not found: #{seed}" or exit unless File.exist?(file)
+
+require "#{Rails.root}/db/seeds/#{seed}/load.rb"

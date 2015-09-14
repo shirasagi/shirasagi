@@ -3,6 +3,9 @@ ja:
     group: グループ
     portal: ポータル
     facility: 設備管理
+    roles:
+      admin: 管理者
+      user: 一般ユーザー
 
   gws_role:
     edit_gws_users: ユーザの編集
