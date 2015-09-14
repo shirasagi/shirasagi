@@ -46,7 +46,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   public
     def index
-      model = (@cur_node.mode == "tree") ?  @model.topic : @model
+      model = (@cur_node.mode == "tree") ? @model.topic : @model
       order = (@cur_node.mode == "tree") ? :descendants_updated : :updated
       @items = model.site(@cur_site).node(@cur_node).
         order(order => -1).
