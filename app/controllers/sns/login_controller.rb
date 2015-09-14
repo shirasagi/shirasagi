@@ -2,7 +2,7 @@ class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
 
   protect_from_forgery except: :remote_login
-  skip_filter :logged_in?, only: [:login, :remote_login]
+  skip_action_callback :logged_in?, only: [:login, :remote_login]
 
   layout "ss/login"
   navi_view nil

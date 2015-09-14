@@ -7,7 +7,7 @@ class History::Cms::LogsController < ApplicationController
   navi_view "cms/main/conf_navi"
 
   before_action :filter_permission
-  skip_filter :put_log
+  skip_action_callback :put_log
 
   private
     def set_crumbs
