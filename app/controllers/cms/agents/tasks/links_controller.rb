@@ -99,7 +99,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
           next unless valid_url(next_url)
 
           internal = (next_url[0] != "/" && next_url !~ /^https?:/)
-          next_url = File.expand_path next_url, File.dirname(url) if internal
+          next_url = File.expand_path next_url, url.sub(/[^\/]*?$/, "") if internal
           next_url = URI.encode(next_url) if next_url =~ /[^-_.!~*'()\w;\/\?:@&=+$,%#]/
           next if @results[next_url]
 
