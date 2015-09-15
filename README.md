@@ -21,6 +21,7 @@ Platform
 - Ruby 2.2
 - Ruby on Rails 4
 - MongoDB 3
+- Unicorn
 
 Documentation
 -------------
