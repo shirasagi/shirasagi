@@ -17,6 +17,8 @@ module Board::Addon
       after_destroy :destroy_files
     end
 
+    # TODO Refactor by splitting into some tiny methods
+    # rubocop:disable Metrics/AbcSize
     def validate_in_files
       if node.file_limit < in_files.size
         errors.add :base, I18n.t("board.errors.too_many_files", limit: node.file_limit)
@@ -53,13 +55,13 @@ module Board::Addon
             result = SS::FileScanner.scan(stream: file.read)
           rescue => e
             errors.add :base, I18n.t("errors.messages.file_scan_exception")
-            return
+            break
           ensure
             file.rewind
           end
           next if result
           errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
-          return
+          break
         end
       end
     end

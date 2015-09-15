@@ -31,7 +31,10 @@ module Gws::Schedule::Planable
         self.end_at = (end_at + 1).to_date if self.start_at.to_date == self.end_at.to_date
       elsif end_at.blank?
         if api == 'drop'
-          self.end_at = DateTime.new start_at.year, start_at.month, start_at.day, end_at_was.hour, end_at_was.min, end_at_was.sec
+          self.end_at = DateTime.zone.new(
+            start_at.year, start_at.month, start_at.day,
+            end_at_was.hour, end_at_was.min, end_at_was.sec
+          )
         else
           self.end_at = start_at + 1.minutes
         end

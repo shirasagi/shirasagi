@@ -6,6 +6,6 @@ class Board::File
   default_scope ->{ where(model: "board/post") }
 
   # TODO: add validation for public posted
-  private
+  # private
     #
 end

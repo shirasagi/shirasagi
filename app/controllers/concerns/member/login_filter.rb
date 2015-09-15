@@ -1,9 +1,9 @@
 module Member::LoginFilter
   extend ActiveSupport::Concern
 
-  REDIRECT_OPTION_UNDEFINED = 0.freeze
-  REDIRECT_OPTION_ENABLED = 1.freeze
-  REDIRECT_OPTION_DISABLED = 2.freeze
+  REDIRECT_OPTION_UNDEFINED = 0
+  REDIRECT_OPTION_ENABLED = 1
+  REDIRECT_OPTION_DISABLED = 2
 
   included do
     before_action :logged_in?, if: -> { member_login_path }
