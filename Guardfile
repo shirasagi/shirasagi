@@ -44,3 +44,10 @@ guard 'brakeman', :run_on_start => true do
   watch(%r{^lib/.+\.rb$})
   watch('Gemfile')
 end
+
+# Load local Guardfile
+local_guardfile_path = File.expand_path('../Guardfile.local', __FILE__)
+if File.exist? local_guardfile_path
+  self.instance_eval(File.open(local_guardfile_path).read)
+end
+# ref. https://github.com/openmensa/openmensa/blob/ac3b063edfd3639091d2b4025a292feea7814ec9/Guardfile#L34-L38

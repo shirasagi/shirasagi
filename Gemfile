@@ -80,23 +80,10 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-byebug'
   gem 'pry-stack_explorer'
-
-  # DatabaseCleaner
-  #
-  # ref.
-  #   https://github.com/DatabaseCleaner/database_cleaner
-  #   http://stackoverflow.com/questions/6583618/clean-out-or-reset-test-database-with-rspec-and-mongoid-on-rails-3
-  #
-  # Version 1.4.0 is latest now, but that version contaions an error.
-  #
-  # Error message:
-  #   DatabaseCleaner::UnknownStrategySpecified:
-  #          The 'truncation' strategy does not exist for the mongoid ORM!  Available strategies: truncation
-  #
-  # ref.
-  #   https://github.com/DatabaseCleaner/database_cleaner/issues/322
-  #   https://github.com/DatabaseCleaner/database_cleaner/issues/299
-  gem 'database_cleaner', '1.3.0'
+  # The latest version is 1.5.0 now, but getting the same error again.
+  # ref. https://github.com/DatabaseCleaner/database_cleaner/issues/390
+  gem 'database_cleaner', '1.4.1'
+  gem 'dotenv-rails'
 end
 
 group :development do

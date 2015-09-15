@@ -24,3 +24,9 @@ ehthumbs.db
 # IntelliJ IDEA & RubyMine
 /*.iml
 /.idea/
+
+# Local Guardfile
+/Guardfile.local
+
+# Dotenv
+/.env
