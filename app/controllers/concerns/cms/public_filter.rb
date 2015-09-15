@@ -2,8 +2,6 @@ module Cms::PublicFilter
   extend ActiveSupport::Concern
   include Cms::PublicFilter::Node
   include Cms::PublicFilter::Page
-  include Mobile::PublicFilter
-  include Kana::PublicFilter
 
   included do
     rescue_from StandardError, with: :rescue_action
@@ -28,16 +26,22 @@ module Cms::PublicFilter
         part = find_part(@html)
         raise "404" unless part
         @cur_path = params[:ref] || "/"
-        send_part render_part(part)
+        if resp = render_part(part)
+          return send_part(resp)
+        end
       elsif page = find_page(@cur_path)
-        self.response = render_page(page)
-        send_page page
+        if resp = render_page(page)
+          self.response = resp
+          return send_page(page)
+        end
       elsif node = find_node(@cur_path)
-        self.response = render_node(node)
-        send_page node
-      else
-        raise "404"
+        if resp = render_node(node)
+          self.response = resp
+          return send_page(node)
+        end
       end
+
+      page_not_found if response.body.blank?
     end
 
   private
@@ -123,13 +127,17 @@ module Cms::PublicFilter
     end
 
     def send_page(page)
-      raise "404" unless response
+      return unless response
 
       if response.content_type == "text/html" && page.layout
         render inline: render_layout(page.layout), layout: (request.xhr? ? false : "cms/page")
       else
         @_response_body = response.body
       end
+    end
+
+    def page_not_found
+      raise "404"
     end
 
     def rescue_action(e = nil)

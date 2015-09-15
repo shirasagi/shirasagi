@@ -1,6 +1,8 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
   include Cms::PublicFilter
+  include Mobile::PublicFilter
+  include Kana::PublicFilter
   include Fs::FileFilter
 
   before_action :set_group
