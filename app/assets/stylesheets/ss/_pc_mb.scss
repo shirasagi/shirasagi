@@ -661,13 +661,12 @@ td {
 }
 .addon-head {
   @include box-head;
-  &:hover { background: #f9f9f9; }
+  &:hover { background: #f9f9f9;}
   h2 {
     display: inline-block;
+    cursor: pointer;
+    &:hover { text-decoration: underline; }
   }
-}
-#addon-basic .addon-head {
-  &:hover { background: transparent; }
 }
 .addon-body {
   border-top: $border-gray1;
@@ -723,6 +722,9 @@ dl.see {
       margin-right: 15px;
     }
   }
+}
+dl.mod-cms-parent_crumbs {
+  dd { margin-bottom: 10px; }
 }
 .tooltip {
   position: relative;
@@ -789,7 +791,7 @@ footer.send {
   }
 }
 .field_with_errors {
-  display: inline-block;
+  display: inline;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1158,10 +1160,7 @@ select, input, textarea, button {
     -webkit-appearance: none;
   }
 }
-input[type=submit] {
-  //@include btn;
-}
-button, #addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
+#addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
   @include btn;
   &.add-date {
     @include btn-orange;
@@ -1304,7 +1303,7 @@ form .CodeMirror {
 }
 .field_with_errors {
   input, textarea, select {
-    display: inline;
+    display: inline-block;
     border: 1px solid #e00;
   }
 }
