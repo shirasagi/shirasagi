@@ -10,6 +10,7 @@ class Gws::Board::Post
   field :text, type: String
   field :mode, type: String, default: 'thread'
   field :permit_comment, type: String, default: 'allow'
+  field :descendants_created, type: DateTime
   field :descendants_updated, type: DateTime
 
   permit_params :name, :text, :mode, :permit_comment

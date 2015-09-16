@@ -3,25 +3,36 @@ $('.gws-board .body').each(function(){
   $(this).html(marked($(this).html()));
 });
 <% end %>
+<%
 
-<div class="main-box gws-board gws-board-topics">
-  <header><h2><%= @item.name %></h2></header>
+menu = []
+menu << link_to(:edit, { action: :edit, id: @item }, class: "btn") if @item.allowed?(:edit, @cur_user, site: @cur_site)
+menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.allowed?(:delete, @cur_user, site: @cur_site)
 
+%>
+<div class="gws-board gws-board-thread">
   <article class="topic">
-    <%= render "gws/board/topics/parent", item: @item %>
+    <header>
+      <h2><%= @item.name %></h2>
+      <div class="meta">
+        <span class="user"><%= @item.user.name %></span>
+        <span class="datetime"><%= @item.created.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </header>
 
-    <div class="menu">
-      <%= link_to :edit, action: :edit, id: @item if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to :delete, action: :delete, id: @item if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-    </div>
+    <div class="body markdown-body"><%= @item.text %></div>
+
+    <% if menu.size > 0 %>
+    <div class="menu"><%= safe_join(menu) %></div>
+    <% end %>
   </article>
-</div>
 
-<% if @item.children.size > 0 %>
-<div class="gws-board gws-board-comments">
-  <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
+  <% if @item.children.size > 0 %>
+  <div class="comments">
+    <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
+  </div>
+  <% end %>
 </div>
-<% end %>
 
 <% if @item.permit_comment? %>
 <footer class="send">

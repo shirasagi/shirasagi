@@ -1,5 +1,6 @@
 /**
  *= require multi-select
+ *= require fullcalendar
  */
 
 // base
@@ -19,3 +20,6 @@
 @import "kana/ss";
 @import "ldap/ss";
 @import "workflow/ss";
+
+// platform
+@import "gws/ss";

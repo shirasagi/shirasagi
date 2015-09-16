@@ -1,0 +1,34 @@
+<% @item.sync_repeat_plan if params[:action] =~ /(new|edit)/ %>
+<% model = Gws::Schedule::RepeatPlan %>
+
+<dl class="see gws-schedule-repeat">
+  <dt><%= model.t :repeat_type %><%= model.tt :repeat_type %></dt>
+  <dd><%= f.select :repeat_type, @item.repeat_type_options, include_blank: t("gws_schedule.options.repeat_type.none") %></dd>
+
+  <dt><%= model.t :interval %><%= model.tt :interval %></dt>
+  <dd><%= f.select :interval, @item.interval_options %> 日/週/月</dd>
+
+  <dt>(毎月) <%= model.t :repeat_base %><%= model.tt :repeat_base %></dt>
+  <dd>
+    <div class="<%= 'checks_with_errors' if @item.errors[:repeat_base].size > 0 %>">
+      <label><%= f.radio_button :repeat_base, "date" %> <%= t "gws_schedule.options.repeat_base.date" %></label>
+      <label><%= f.radio_button :repeat_base, "wday" %> <%= t "gws_schedule.options.repeat_base.wday" %></label>
+    </div>
+  </dd>
+
+  <dt>(毎週) <%= model.t :wdays %><%= model.tt :wdays %></dt>
+  <dd class="wdays">
+    <div class="<%= 'checks_with_errors' if @item.errors[:wdays].size > 0 %>">
+      <%= f.hidden_field "wdays[]", value: "" %>
+      <% (0..6).each do |i| %>
+      <label><%= f.check_box "wdays[]", {}, i.to_s %> <%= t("date.abbr_day_names")[i] %></label>
+      <% end %>
+    </div>
+  </dd>
+
+  <dt><%= Gws::Schedule::RepeatPlan.t :start_date %><%= Gws::Schedule::RepeatPlan.tt :start_date %></dt>
+  <dd><%= f.text_field :start_date, class: "date" %></dd>
+
+  <dt><%= Gws::Schedule::RepeatPlan.t :end_date %><%= Gws::Schedule::RepeatPlan.tt :end_date %></dt>
+  <dd><%= f.text_field :end_date, class: "date" %></dd>
+</dl>

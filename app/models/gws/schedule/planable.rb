@@ -36,16 +36,13 @@ module Gws::Schedule::Planable
             end_at_was.hour, end_at_was.min, end_at_was.sec
           )
         else
-          self.end_at = start_at + 1.minutes
+          self.end_at = start_at + 1.minutes if start_at
         end
       end
     end
 
     validate do
       errors.add :end_at, :greater_than, count: t(:start_at) if end_at.present? && end_at <= start_at
-    end
-
-    after_validation do
     end
 
     scope :member, ->(user) { where member_ids: user.id }
@@ -89,6 +86,9 @@ module Gws::Schedule::Planable
         data.merge! className: 'fc-event-one'
       else
         data.merge! className: 'fc-event-days'
+      end
+      if repeat_plan_id
+        data[:className] += " fc-event-repeat"
       end
       data
     end

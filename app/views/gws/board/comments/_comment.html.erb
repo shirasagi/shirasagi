@@ -1,23 +1,37 @@
-<aside class="main-box comment">
-  <header><h2><%= comment.name %></h2></header>
+<%
 
-  <div class="body markdown-body"><%= comment.text %></div>
-  <div class="meta">
-    <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
-    <span class="user"><%= comment.user.name %></span>
-  </div>
+menu = []
+if @item.permit_comment? && recursion
+  menu << link_to(t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id), class: "btn")
+end
+if comment.allowed?(:edit, @cur_user, site: @cur_site)
+  menu << link_to(:edit, edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id), class: "btn")
+end
+if comment.allowed?(:delete, @cur_user, site: @cur_site)
+  menu << link_to(:delete, delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id), class: "btn")
+end
 
-  <div class="menu">
-    <% if @item.permit_comment? %>
-    <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id) if recursion %>
+%>
+<aside class="comment">
+  <header class="<%= 'toggle-head' if recursion %>">
+    <h2><%= comment.name %></h2>
+    <div class="meta">
+      <span class="user"><%= comment.user.name %></span>
+      <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
+    </div>
+  </header>
+
+  <div class="toggle-body <%= 'hide' if recursion %>">
+    <div class="body markdown-body"><%= comment.text %></div>
+
+    <% if menu.size > 0 %>
+    <div class="menu"><%= safe_join(menu) %></div>
     <% end %>
-    <%= link_to :edit, edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
-    <%= link_to :delete, delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id) %>
   </div>
 </aside>
 
 <% if comment.children.size > 0 %>
-<div class="gws-board gws-board-comments">
+<div class="comments">
   <%= render partial: 'gws/board/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
 </div>
 <% end %>

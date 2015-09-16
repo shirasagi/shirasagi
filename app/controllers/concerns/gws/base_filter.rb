@@ -17,7 +17,6 @@ module Gws::BaseFilter
   private
     def set_assets
       javascript 'gws/script'
-      stylesheet 'gws/style'
     end
 
     def set_current_site

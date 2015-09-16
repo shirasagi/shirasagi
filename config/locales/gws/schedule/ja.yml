@@ -14,13 +14,16 @@ ja:
     options:
       allday:
         allday: 終日
-      kind:
+      repeat_type:
+        none: 繰り返しなし
         daily: 毎日
         weekly: 毎週
         monthly: 毎月
-      repeat_by:
+      repeat_base:
         date: 日付
-        week: 曜日
+        wday: 曜日
+    errors:
+      empty_plan_days: 予定を登録できる日が存在しません。
 
   modules:
     gws_schedule: スケジュール
@@ -39,6 +42,7 @@ ja:
       gws/schedule/category: スケジュール種類
     attributes:
       gws/schedule/plan:
+        repeat_plan_id: 繰り返し
         name: タイトル
         text: 内容
         start_at: 開始日時
@@ -48,6 +52,18 @@ ja:
         term: 期間
         member_ids: 参加者
         facility_ids: 設備予約
+      gws/schedule/repeat_plan: &repeat
+        repeat_type: 繰り返し
+        interval: 繰り返す間隔
+        start_date: 開始日
+        end_date: 終了日
+        repeat_base: 繰り返しの基準
+        wdays: 曜日
+      gws/schedule/repeatable:
+        <<: *repeat
+        start_date: 繰り返し 開始日
+        end_date: 繰り返し 終了日
+        wdays: 繰り返し 曜日
       gws/schedule/category:
         name: スケジュール種別
         color: 表示色

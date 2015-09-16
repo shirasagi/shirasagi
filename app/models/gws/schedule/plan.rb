@@ -3,6 +3,7 @@ class Gws::Schedule::Plan
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Schedule::Planable
+  include Gws::Schedule::Repeatable
   include Gws::Addon::GroupPermission
 
   #TODO: 繰り返しのデータの持ち方については、要検討

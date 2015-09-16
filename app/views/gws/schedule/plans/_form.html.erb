@@ -1,5 +1,6 @@
 <%= jquery do %>
   $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+  $(".date").datetimepicker({ lang: "ja", timepicker:false, format:'Y-m-d' });
 
   $("#item_member_ids, #item_facility_ids").multiSelect({
     selectableHeader: "<div class='ms-selectable-head'><%= t "views.multi_select.selectable_head" %></div>",
@@ -35,3 +36,4 @@
     { multiple: true, size: 5, style: "min-width: 300px" } %></dd>
 </dl>
 
+<%= render 'repeat_form', f: f %>

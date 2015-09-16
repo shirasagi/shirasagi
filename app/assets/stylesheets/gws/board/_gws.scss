@@ -3,29 +3,39 @@
 // board
 .gws-board {
   .topic, .comment {
-    @include clear;
+    //@extend .main-box;
+    @include box;
+    header {
+      @include box-head;
+    }
   }
   .comment {
     margin-top: 10px;
   }
-  .body {
-    padding: 10px;
-    margin: 0 0 20px;
-  }
   .meta {
-    float: left;
-    color: #888;
-    .datetime {
+    position: relative;
+    float: right;
+    margin-top: -14px;
+    color: #666;
+    .user {
       margin-right: 5px;
+      font-weight: bold;
     }
+  }
+  .body {
+    border-top: $border-gray1;
+    padding: 10px 20px;
   }
   .menu {
-    float: right;
+    margin: 20px 0 0;
+    padding: 10px 5px;
+    border-top: 1px solid #eee;
+    text-align: left;
     a {
-      margin: 0 0 0 5px;
+      margin: 0 5px;
     }
   }
-}
-.gws-board-comments {
-  padding-left: 30px;
+  .comments {
+    padding-left: 25px;
+  }
 }
