@@ -13,7 +13,20 @@ module Mobile::PublicFilter
       filters << :mobile
     end
 
+    def page_not_found
+      return super unless mobile_path?
+      return super unless Fs.file?(@file)
+
+      if Fs.mode == :file
+        send_file @file, disposition: :inline, x_sendfile: true
+      else
+        send_data Fs.binread(@file), type: Fs.content_type(@file)
+      end
+    end
+
     def render_mobile
+      return if response.content_type != "text/html"
+
       body = response.body
 
       # links
