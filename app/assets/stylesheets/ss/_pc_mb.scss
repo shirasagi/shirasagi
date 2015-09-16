@@ -80,6 +80,9 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
+.hide {
+  display: none;
+}
 .dropdown {
   position: relative;
   cursor: pointer;
@@ -610,6 +613,7 @@ td {
 // -------------------------------------------------------------------------------------------------
 // common view
 
+
 #ajax-box {
   margin: 10px;
 }
@@ -621,6 +625,9 @@ td {
     margin: -10px -15px 10px;
     border-bottom: $border-gray1;
   }
+}
+.toggle-head {
+  &:hover { background: #f9f9f9; }
 }
 .addon-view, .search-pages, .index-search, .search-form {
   @include box;
@@ -661,7 +668,6 @@ td {
 }
 .addon-head {
   @include box-head;
-  &:hover { background: #f9f9f9;}
   h2 {
     display: inline-block;
     cursor: pointer;

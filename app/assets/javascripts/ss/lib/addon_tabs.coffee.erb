@@ -1,8 +1,7 @@
 class @SS_AddonTabs
   @render: ->
-    $('.addon-head').on 'click', ->
-      return if $(this).parent().attr('id') == 'addon-basic'
-      $(this).parent().find('.addon-body').animate( { height: 'toggle' }, 'fast' )
+    $('.toggle-head').on 'click', ->
+      $(this).parent().find('.toggle-body').animate( { height: 'toggle' }, 'fast' )
 
   @head: (content) ->
     $(content).parent().parent().find('.addon-head')
