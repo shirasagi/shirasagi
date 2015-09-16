@@ -24,7 +24,7 @@ class Cms::ContentsController < ApplicationController
         order_by(filename: 1).
         page(params[:page]).per(100)
 
-      @notices = Cms::Notice.site(@cur_site).public.target_to(@cur_user).order_by(updated: -1)
+      @notices = Cms::Notice.site(@cur_site).public.target_to(@cur_user).order_by(released: -1)
     end
 
     def public_notice

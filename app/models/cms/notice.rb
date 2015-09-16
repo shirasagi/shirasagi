@@ -1,10 +1,10 @@
 class Cms::Notice
-  extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::Addon::ReleasePlan
   include Cms::Addon::Body
   include Cms::Addon::File
+  include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
 
   NOTICE_SEVERITY_NORMAL = "normal".freeze
@@ -16,40 +16,23 @@ class Cms::Notice
   NOTICE_TARGETS = [ NOTICE_TARGET_ALL, NOTICE_TARGET_SAME_GROUP ].freeze
 
   seqid :id
+  field :state, type: String, default: "public"
   field :name, type: String
+  field :released, type: DateTime
   field :notice_severity, type: String, default: NOTICE_SEVERITY_NORMAL
   field :notice_target, type: String, default: NOTICE_TARGET_ALL
-  permit_params :name, :notice_severity, :notice_target
+
+  permit_params :state, :name, :released, :notice_severity, :notice_target
+
+  validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
-  class << self
-    def search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
+  after_validation :set_released, if: -> { state == "public" }
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :html
-      end
-      criteria
+  private
+    def set_released
+      self.released ||= Time.zone.now
     end
-
-    def public(date = Time.zone.now)
-      where("$and" => [
-        { "$or" => [ { release_date: nil }, { :release_date.lte => date } ] },
-        { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-      ])
-    end
-
-    def target_to(user)
-      where("$or" => [
-        { notice_target: NOTICE_TARGET_ALL },
-        { "$and" => [ { notice_target: NOTICE_TARGET_SAME_GROUP }, { :group_ids.in => user.group_ids } ] }
-      ])
-    end
-  end
 
   public
     def notice_severity_options
@@ -58,6 +41,13 @@ class Cms::Notice
 
     def notice_target_options
       NOTICE_TARGETS.map { |v| [ I18n.t("cms.options.notice_target.#{v}"), v ] }.to_a
+    end
+
+    def state_options
+      [
+        [I18n.t('views.options.state.public'), 'public'],
+        [I18n.t('views.options.state.closed'), 'closed'],
+      ]
     end
 
     def new_clone(attributes = {})
@@ -96,4 +86,34 @@ class Cms::Notice
       end
       self.file_ids = ids
     end
+
+  class << self
+    public
+      def public(date = Time.zone.now)
+        where("$and" => [
+          { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
+          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+        ])
+      end
+
+      def target_to(user)
+        where("$or" => [
+          { notice_target: NOTICE_TARGET_ALL },
+          { "$and" => [ { notice_target: NOTICE_TARGET_SAME_GROUP }, { :group_ids.in => user.group_ids } ] }
+        ])
+      end
+
+      def search(params = {})
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        if params[:name].present?
+          criteria = criteria.search_text params[:name]
+        end
+        if params[:keyword].present?
+          criteria = criteria.keyword_in params[:keyword], :name, :html
+        end
+        criteria
+      end
+  end
 end
