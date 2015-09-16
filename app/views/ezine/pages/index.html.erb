@@ -1,32 +1,35 @@
-<table class="index">
-  <thead>
-    <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th><%= @model.t :name %></th>
-      <th><%= @model.t :test_delivered %></th>
-      <th><%= @model.t :results %></th>
-      <th class="datetime"><%= @model.t :updated %></th>
-    </tr>
-  </thead>
+<div class="main-box">
+  <table class="index">
+    <thead>
+      <tr>
+        <th class="checkbox"><input type="checkbox" /></th>
+        <th><%= @model.t :name %></th>
+        <th><%= @model.t :test_delivered %></th>
+        <th><%= @model.t :results %></th>
+        <th class="datetime"><%= @model.t :updated %></th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <% @items.each do |item| %>
-    <tr class="list-item">
-      <td class="checkbox">
-        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="tap-menu">
-          <%= link_to :show, action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to :edit, action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-        </nav>
-      </td>
-      <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
-      <td><%= item.test_delivered.strftime("%Y/%m/%d %H:%M") unless item.test_delivered.nil? %></td>
-      <td><%= item.results.first.started.strftime("%Y/%m/%d %H:%M") unless item.results.first.nil? rescue nil %></td>
-      <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr class="list-item">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+          <nav class="tap-menu">
+            <%= link_to :show, action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+            <%= link_to :edit, action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+          </nav>
+        </td>
+        <td><%= link_to item.name, { action: :show, id: item }, class: "icon-page" %></td>
+        <td><%= item.test_delivered.strftime("%Y/%m/%d %H:%M") unless item.test_delivered.nil? %></td>
+        <td><%= item.results.first.started.strftime("%Y/%m/%d %H:%M") unless item.results.first.nil? rescue nil %></td>
+        <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
 
 <%= paginate @items if @items.try(:current_page) %>

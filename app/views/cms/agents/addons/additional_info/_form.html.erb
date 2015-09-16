@@ -44,7 +44,7 @@ $ ->
     <dt><%= text_field_tag "item[additional_info][][field]" %></dt>
     <dd>
       <%= text_area_tag "item[additional_info][][value]" %>
-      <%= button_tag @item.t(:del_info), { type: :button, class: "clear" } %>
+      <%= button_tag @item.t(:del_info), { type: :button, class: "clear btn" } %>
     </dd>
   <% end %>
 
@@ -52,9 +52,9 @@ $ ->
     <dt><%= text_field_tag "item[additional_info][][field]", info[:field] %></dt>
     <dd>
       <%= text_area_tag "item[additional_info][][value]", info[:value] %>
-      <%= button_tag  @item.t(:del_info), { type: :button, class: "clear" } %>
+      <%= button_tag  @item.t(:del_info), { type: :button, class: "clear btn" } %>
     </dd>
   <% end %>
 
-  <%= button_tag @item.t(:add_info), { type: :button, class: "add-info" }  %>
+  <%= button_tag @item.t(:add_info), { type: :button, class: "add-info btn" }  %>
 </dl>

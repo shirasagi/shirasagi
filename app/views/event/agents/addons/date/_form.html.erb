@@ -14,8 +14,8 @@
   <dd class="dates">
     <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date start" } %>
     - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date close" } %>
-    <%= button_tag t("event.del_date"), { type: :button, class: "clear" } %>
+    <%= button_tag t("event.del_date"), { type: :button, class: "clear btn" } %>
   </dd>
-  <dd><%= button_tag t("event.add_date"), { type: :button, class: "add-date" } %></dd>
-  <dd style="display: none;"><%= f.text_area :event_dates, class: "event-dates" %></dd>
+  <dd><%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %></dd>
+  <dd style="display: none;"><%= f.text_area :event_dates, class: "event-dates btn" %></dd>
 </dl>
