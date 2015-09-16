@@ -59,7 +59,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
     def create
       @item = @model.new get_params
       render_create @item.valid_with_captcha?(@cur_node) && @item.save,
-        location: "#{@cur_node.url}sent", render: :new, notice: "投稿しました。"
+        location: "#{@cur_node.url}sent", render: :new
     end
 
     def new_reply
@@ -70,7 +70,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
     def reply
       @item = @model.new get_params
       render_create @item.valid_with_captcha?(@cur_node) && @item.save,
-        location: "#{@cur_node.url}sent", render: :new_reply, notice: "投稿しました。"
+        location: "#{@cur_node.url}sent", render: :new_reply
     end
 
     def delete
