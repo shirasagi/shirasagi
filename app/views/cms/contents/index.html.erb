@@ -4,33 +4,25 @@
   @normal_notices = @notices.select { |notice| notice.notice_severity != Cms::Notice::NOTICE_SEVERITY_HIGH }
 
 %>
-<% if @important_notices.present? %>
+<% if @important_notices.present? || @normal_notices.present? %>
 <div class="index notices notices-severity-high">
-  <div class="list-head"><%= t "cms.important_notice" %></div>
+  <div class="list-head"><%= t "cms.notice" %></div>
 
   <ul class="list-items">
     <% @important_notices.each do |notice| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to notice.name, notice_cms_contents_path(notice: notice), { class: "title notice-severity-#{notice.notice_severity}" } %>
-        <span class="datetime"><%= notice.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        <%= link_to notice.name, notice_cms_contents_path(notice: notice), class: "title notice-severity-high" %>
+        <span class="datetime"><%= notice.released.strftime("%Y/%m/%d %H:%M") %></span>
       </div>
     </li>
     <% end %>
-  </ul>
-</div>
-<% end %>
 
-<% if @normal_notices.present? %>
-<div class="index notices notices-severity-normal">
-  <div class="list-head"><%= t "cms.notice" %></div>
-
-  <ul class="list-items">
     <% @normal_notices.each do |notice| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to notice.name, notice_cms_contents_path(notice: notice), { class: "title notice-severity-#{notice.notice_severity}" } %>
-        <span class="datetime"><%= notice.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        <%= link_to notice.name, notice_cms_contents_path(notice: notice) %>
+        <span class="datetime"><%= notice.released.strftime("%Y/%m/%d %H:%M") %></span>
       </div>
     </li>
     <% end %>
