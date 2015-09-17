@@ -3,7 +3,6 @@
 // board
 .gws-board {
   .topic, .comment {
-    //@extend .main-box;
     @include box;
     header {
       @include box-head;

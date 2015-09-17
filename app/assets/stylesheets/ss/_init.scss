@@ -61,7 +61,6 @@ $border-gray5: 1px solid $gray5;
 $border-white: 1px solid $white;
 
 @mixin pc {
-  //@media only screen and (min-width: 640px) { @content; }
   @content;
 }
 @mixin mb {
@@ -88,7 +87,6 @@ $border-white: 1px solid $white;
 }
 @mixin box {
   margin-bottom: 10px;
-  //padding: 10px;
   border: $border-gray4;
   @include border-radius(3px);
   background: $white;
@@ -125,7 +123,6 @@ $border-white: 1px solid $white;
   @include box-sizing(border-box);
   border: 1px solid $gray4;
   @include border-radius(3px);
-  background-color: #fffaf0;
   @include box-shadow(inset 0 1px 3px $gray5);
   &:focus {
     border: 1px solid #f29684;
@@ -143,7 +140,6 @@ $border-white: 1px solid $white;
   color: $black;
   font-size: $px12;
   cursor: pointer;
-  @include transition(all 0.5s ease);
   &:hover {
     background: #ebecec;
     text-decoration:none;
@@ -159,7 +155,6 @@ $border-white: 1px solid $white;
   color: $black;
   font-size: $px15;
   cursor: pointer;
-  @include transition(all 0.5s ease);
   &:hover {
     background: #ebecec;
     text-decoration:none;
@@ -179,7 +174,6 @@ $border-white: 1px solid $white;
   color: $black;
   font-size: $px12;
   cursor: pointer;
-  @include transition(all 0.5s ease);
   &:hover {
     background: #f2a950;
     text-decoration:none;
@@ -200,7 +194,6 @@ $border-white: 1px solid $white;
   color: $white;
   font-size: $px15;
   cursor: pointer;
-  @include transition(all 1s ease);
   &:hover {
     background: #b23a3d;
     text-decoration:none;

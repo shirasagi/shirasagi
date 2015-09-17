@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
 <title>SHIRASAGI</title>
 <%= stylesheet_link_tag "ss/style", media: "all" %>
-<link media="all" rel="stylesheet" href="/assets/css/jquery-ui/pepper-grinder/custom.min.css" />
-<link media="all" rel="stylesheet" href="/assets/css/datetimepicker/jquery.datetimepicker.css" />
 <link media="all" rel="stylesheet" href="/assets/css/colorbox/colorbox.css" />
 <% controller.stylesheets.each do |path| %>
 <%= stylesheet_link_tag path, media: "all" %>
@@ -17,8 +15,6 @@
 <script src="/assets/js/selectivizr-min.js"></script>
 <![endif]-->
 <%= javascript_include_tag "ss/script" %>
-<script src="/assets/js/jquery-ui-1.10.4.custom.min.js"></script>
-<script src="/assets/js/jquery.datetimepicker.js"></script>
 <script src="/assets/js/jquery.colorbox.js"></script>
 <% controller.javascripts.each do |path| %>
 <%= javascript_include_tag path %>

@@ -35,7 +35,6 @@ body {
     width: 210px;
     border-right: $border-gray4;
     background: $white;
-    //@include box-shadow(1px 0 3px #dedede);
     @include mb { display: none; }
   }
 }
@@ -290,7 +289,6 @@ td {
   @include mb { padding: 10px 10px 10px 35px; }
 }
 .main-navi {
-  //border-bottom: $border-gray5;
   h2 a {
     display: block;
     padding: 10px 15px;
