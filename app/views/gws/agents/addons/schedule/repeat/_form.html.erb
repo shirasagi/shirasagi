@@ -5,7 +5,8 @@ model = Gws::Schedule::RepeatPlan
 
 %>
 <%= jquery do %>
-  $(".date").datetimepicker({ lang: "ja", timepicker:false, format:'Y-m-d', closeOnDateSelect: true });
+  $(".date").datetimepicker({ lang: "ja", timepicker: false, format:'Y-m-d', closeOnDateSelect: true, scrollInput: false });
+  $(".time").datetimepicker({ lang: "ja", datepicker: false, format:'H:i', step: 30 });
 
   Gws_Schedule_Plan_Form.render();
 <% end %>
@@ -15,7 +16,7 @@ model = Gws::Schedule::RepeatPlan
   <dd><%= f.select :repeat_type, @item.repeat_type_options, include_blank: t("gws/schedule.options.repeat_type.none") %></dd>
 </dl>
 
-<dl class="see gws-schedule-repeat">
+<dl class="see gws-schedule-repeat hide">
   <dt><%= model.t :interval %><%= model.tt :interval %></dt>
   <dd>
     <%= f.select :interval, @item.interval_options %>
@@ -42,9 +43,9 @@ model = Gws::Schedule::RepeatPlan
     </div>
   </dd>
 
-  <dt><%= Gws::Schedule::RepeatPlan.t :start_date %><%= Gws::Schedule::RepeatPlan.tt :start_date %></dt>
-  <dd><%= f.text_field :start_date, class: "date" %></dd>
+  <dt><%= model.t :start_date %><%= model.tt :start_date %></dt>
+  <dd><%= f.text_field :start_date, class: :date %></dd>
 
-  <dt><%= Gws::Schedule::RepeatPlan.t :end_date %><%= Gws::Schedule::RepeatPlan.tt :end_date %></dt>
-  <dd><%= f.text_field :end_date, class: "date" %></dd>
+  <dt><%= model.t :end_date %><%= model.tt :end_date %></dt>
+  <dd><%= f.text_field :end_date, class: :date %></dd>
 </dl>

@@ -1199,12 +1199,16 @@ input.filename {
   width: 25em;
   ime-mode: disabled;
 }
+input.datetime {
+  width: 12em;
+  text-align: center;
+}
 input.date {
   width: 9em;
   text-align: center;
 }
-input.datetime {
-  width: 12em;
+input.time {
+  width: 9em;
   text-align: center;
 }
 textarea {

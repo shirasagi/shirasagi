@@ -9,6 +9,7 @@ class Gws::Schedule::ListPlansController < ApplicationController
     def index
       @items = Gws::Schedule::Plan.site(@cur_site).member(@cur_user).
         search(params[:s]).
-        order_by(start_at: -1)
+        order_by(updated: -1).
+        page(params[:page]).per(50)
     end
 end

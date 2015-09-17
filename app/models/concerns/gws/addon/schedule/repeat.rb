@@ -7,7 +7,9 @@ module Gws::Addon::Schedule::Repeat
     belongs_to :repeat_plan, class_name: "Gws::Schedule::RepeatPlan"
     permit_params :repeat_type, :interval, :start_date, :end_date, :repeat_base, wdays: []
 
+    before_validation :validate_repeat_params, if: -> { repeat_type.present? }
     validate :validate_repeat_plan, if: -> { repeat_type.present? }
+
     before_save :save_repeat_plan, if: -> { repeat_type.present? }
     before_save :remove_repeat_plan, if: -> { repeat_type == '' }
     after_save :extract_repeat_plans, if: -> { repeat_type.present? }
@@ -17,6 +19,10 @@ module Gws::Addon::Schedule::Repeat
   private
     def repeat_plan_fields
       [:repeat_type, :interval, :start_date, :end_date, :repeat_base, :wdays]
+    end
+
+    def validate_repeat_params
+      self.start_date = start_at if start_date.blank?
     end
 
     def validate_repeat_plan

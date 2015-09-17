@@ -170,8 +170,13 @@ class Gws::Schedule::RepeatPlan
     # @param [Plan]  base_plan 繰り返しの基準となる予定ドキュメント
     # @param [Array] dates     繰り返し予定を登録する日付の配列
     def save_plans(base_plan, dates)
-      sdt = base_plan.start_at
-      edt = base_plan.end_at
+      time = [0, 0]
+      diff = 0
+
+      if base_plan.start_at
+        time = [base_plan.start_at.hour, base_plan.start_at.min]
+        diff = base_plan.end_at.to_time.to_i - base_plan.start_at.to_time.to_i if base_plan.end_at
+      end
 
       attr = base_plan.attributes.dup
       attr.delete('_id')
@@ -180,15 +185,10 @@ class Gws::Schedule::RepeatPlan
       base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).destroy
 
       dates.each_with_index do |date, idx|
-        if idx == 0
-          plan = base_plan.class.find(base_plan.id)
-        else
-          plan = base_plan.class.new(attr)
-        end
+        plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
 
-        plan.start_at = DateTime.new date.year, date.month, date.day, sdt.hour, sdt.min, sdt.sec
-        plan.end_at   = DateTime.new date.year, date.month, date.day, edt.hour, edt.min, edt.sec
-        plan.end_at   = plan.start_at if base_plan.allday?
+        plan.start_at = Time.local date.year, date.month, date.day, time[0], time[1], 0
+        plan.end_at   = plan.start_at + diff.seconds
         plan.save
       end
     end

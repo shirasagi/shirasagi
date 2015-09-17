@@ -19,28 +19,13 @@ class Gws::Schedule::Plan
 
   permit_params :api, :name, :text, :start_at, :end_at, :allday, :category_id
 
-  validates :name, presence: true
-  validates :start_at, presence: true
-  validates :end_at, presence: true
-  validates :allday, inclusion: { in: [nil, "", "allday"] }
+  before_validation :validate_datetimes_on_drop, if: -> { api == 'drop' }
+  before_validation :validate_datetimes, if: -> { start_at.present? && repeat_type.blank? }
 
-  before_validation do
-    if allday?
-      self.start_at = start_at.to_date
-      self.end_at = start_at if end_at.blank?
-      self.end_at = (end_at + 1).to_date if self.end_at.strftime('%H%M%S') =~ /[^0]/
-      self.end_at = (end_at + 1).to_date if self.start_at.to_date == self.end_at.to_date
-    elsif end_at.blank?
-      if api == 'drop'
-        self.end_at = DateTime.zone.new(
-          start_at.year, start_at.month, start_at.day,
-          end_at_was.hour, end_at_was.min, end_at_was.sec
-        )
-      else
-        self.end_at = start_at + 1.minutes if start_at
-      end
-    end
-  end
+  validates :name, presence: true
+  validates :start_at, presence: true, if: -> { repeat_type.blank? }
+  #validates :end_at, presence: true, if: -> { repeat_type.blank? }
+  validates :allday, inclusion: { in: [nil, "", "allday"] }
 
   validate do
     errors.add :end_at, :greater_than, count: t(:start_at) if end_at.present? && end_at <= start_at
@@ -89,5 +74,24 @@ class Gws::Schedule::Plan
         data[:className] += " fc-event-repeat"
       end
       data
+    end
+
+  private
+    def validate_datetimes_on_drop
+      return if end_at.present?
+      time = [end_at_was.hour, end_at_was.min]
+      self.end_at = Time.local start_at.year, start_at.month, start_at.day, time[0], time[1], 0
+    end
+
+    def validate_datetimes
+      if allday?
+        self.start_at = start_at.to_date
+        self.end_at = start_at if end_at.blank?
+        self.end_at = (end_at + 1).to_date if end_at.strftime('%H%M%S') =~ /[^0]/
+        self.end_at = (end_at + 1).to_date if start_at.to_date == end_at.to_date
+      else
+        self.end_at = start_at if end_at.blank?
+        self.end_at = end_at + 1.minutes if start_at == end_at
+      end
     end
 end
