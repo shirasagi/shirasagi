@@ -15,10 +15,10 @@ end
 <aside class="comment">
   <header class="<%= 'toggle-head' if recursion %>">
     <h2><%= comment.name %></h2>
-    <div class="meta">
+    <nav class="meta">
       <span class="user"><%= comment.user.name %></span>
       <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
-    </div>
+    </nav>
   </header>
 
   <div class="toggle-body <%= 'hide' if recursion %>">

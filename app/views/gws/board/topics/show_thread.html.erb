@@ -14,10 +14,10 @@ menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.
   <article class="topic">
     <header>
       <h2><%= @item.name %></h2>
-      <div class="meta">
+      <nav class="meta">
         <span class="user"><%= @item.user.name %></span>
         <span class="datetime"><%= @item.created.strftime("%Y/%m/%d %H:%M") %></span>
-      </div>
+      </nav>
     </header>
 
     <div class="body markdown-body"><%= @item.text %></div>

@@ -1,0 +1,16 @@
+<%= jquery do %>
+  //SS_AddonTabs.hide(".gws-schedule-member");
+
+  $("#item_member_ids").multiSelect({
+    selectableHeader: "<div class='ms-selectable-head'><%= t "views.multi_select.selectable_head" %></div>",
+    selectionHeader: "<div class='ms-selection-head'><%= t "views.multi_select.selection_head" %></div>",
+  });
+<% end %>
+
+<dl class="see gws-schedule-member">
+  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+  <dd>
+    <%= f.select :member_ids, Gws::User.site(@cur_site).map { |c| [c.name, c.id] }, {},
+      { multiple: true, size: 5, style: "min-width: 300px" } %>
+  </dd>
+</dl>

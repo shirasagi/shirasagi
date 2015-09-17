@@ -46,7 +46,7 @@ $gray3: #424242;
 $gray4: #cccccc;
 $gray5: #dcdcdc;
 $orange: #f25a38;
-$orange2: #fbebe8;
+$orange2: #fbeee8;
 $blue: #0066cc;
 
 $pink: #ea4c89;
@@ -89,13 +89,12 @@ $border-white: 1px solid $white;
 @mixin box {
   margin-bottom: 10px;
   //padding: 10px;
-  border: $border-gray5;
+  border: $border-gray4;
   @include border-radius(3px);
   background: $white;
 }
 @mixin box-head {
-  //margin: -10px -10px -10px;
-  padding: 16px 16px;
+  padding: 12px 12px;
   line-height: 1;
   h2 {
     padding-left: 8px;
@@ -104,6 +103,12 @@ $border-white: 1px solid $white;
     font-size: $px16;
     font-weight: bold;
   }
+  nav {
+    position: relative;
+    float: right;
+    margin-top: -14px;
+    color: $gray3;
+  }
   @include mb {
     margin-bottom: 10px;
     padding: 15px 10px;
@@ -111,6 +116,10 @@ $border-white: 1px solid $white;
       font-size: $px14;
     }
   }
+}
+@mixin box-body {
+  border-top: $border-gray1;
+  padding: 15px;
 }
 @mixin input {
   @include box-sizing(border-box);

@@ -8,23 +8,18 @@
     header {
       @include box-head;
     }
+    .body {
+      @include box-body;
+    }
   }
   .comment {
     margin-top: 10px;
   }
   .meta {
-    position: relative;
-    float: right;
-    margin-top: -14px;
-    color: #666;
     .user {
       margin-right: 5px;
       font-weight: bold;
     }
-  }
-  .body {
-    border-top: $border-gray1;
-    padding: 10px 20px;
   }
   .menu {
     margin: 20px 0 0;

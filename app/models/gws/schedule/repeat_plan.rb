@@ -19,7 +19,7 @@ class Gws::Schedule::RepeatPlan
 
   before_validation do
     self.end_date = Date.new(start_date.year, 12, 31) if start_date.present? && end_date.blank?
-    wdays.reject! { |c| c.blank? }
+    self.wdays.reject! { |c| c.blank? }
   end
 
   validates :repeat_type, inclusion: { in: ['', 'daily', 'weekly', 'monthly'] }
@@ -27,14 +27,21 @@ class Gws::Schedule::RepeatPlan
   validates :interval, inclusion: { in: 1..10 }, if: -> { interval.present? }
   validates :start_date, presence: true, if: -> { repeat_type.present? }
   validates :repeat_base, presence: true, if: -> { repeat_type == 'monthly' }
-  validates :wdays, presence: true, if: -> { repeat_type == 'weekly' }
+  #validates :wdays, presence: true, if: -> { repeat_type == 'weekly' }
 
-  validate do
-    errors.add :end_date, :greater_than, count: t(:start_date) if end_date.present? && end_date <= start_date
-    errors.add :base, I18n.t('gws_schedule.errors.empty_plan_days') if errors.size > 0 && plan_dates.size == 0
-  end
+  validate :validate_plan_date, if: -> { start_date.present? && end_date.present? }
+  validate :validate_plan_dates, if: -> { errors.size == 0 }
 
   public
+    def validate_plan_date
+      errors.add :end_date, :greater_than, count: t(:start_date) if end_date <= start_date
+      errors.add(:end_date, I18n.t("gws_schedule.errors.less_than_years", count: 1)) if end_date > (start_date + 1.year)
+    end
+
+    def validate_plan_dates
+      errors.add :base, I18n.t('gws_schedule.errors.empty_plan_days') if plan_dates.size == 0
+    end
+
     def extract_plans(plan)
       save_plans plan, plan_dates
     end
@@ -52,19 +59,21 @@ class Gws::Schedule::RepeatPlan
       end
     end
 
+    # 繰り返し予定を登録する日付の配列を返す（毎日）
+    # @return [Array] 繰り返し予定を登録する日付の配列
     def daily_dates
-      start_date.upto(end_date)
+      start_date.step(end_date, interval).to_a
     end
 
     # 繰り返し予定を登録する日付の配列を返す（毎週X曜日）
     # @return [Array] 繰り返し予定を登録する日付の配列
     def weekly_dates
-      start = self.start_date
-
+      wdays = self.wdays.presence || [start_date.wday.to_s]
       dates = []
+
       (0..6).each do |i|
         if wdays.include?(i.to_s)
-          date = get_date_next_specified_wday(start, i)
+          date = get_date_next_specified_wday(start_date, i)
           dates << date if date <= end_date
         end
       end
@@ -98,8 +107,9 @@ class Gws::Schedule::RepeatPlan
       dates = []
       dates << start_date
 
-      dates.each do |dt|
-        dates << dt + 1.month if (dt + 1.month) <= end_date
+      dates.each do |date|
+        date = date + interval.month
+        dates << date if date <= end_date
       end
       dates
     end
@@ -114,7 +124,7 @@ class Gws::Schedule::RepeatPlan
       wday = start_date.wday
 
       dates.each do |dt|
-        check_month = dt + 1.month
+        check_month = dt + interval.month
         check_date = get_date_by_ordinal_week(check_month.year, check_month.month, week, wday)
         dates << check_date if check_date <= end_date
       end

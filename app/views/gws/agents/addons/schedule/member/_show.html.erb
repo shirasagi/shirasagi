@@ -1,0 +1,4 @@
+<dl class="see">
+  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+  <dd><%=br @item.members.map(&:name).join("\n") %></dd>
+</dl>

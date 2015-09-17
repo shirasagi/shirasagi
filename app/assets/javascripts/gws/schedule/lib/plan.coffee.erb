@@ -1,0 +1,18 @@
+#
+# RepeatPlan.fields :repeat_type, :interval, :start_date, :end_date, :repeat_base, :wdays
+#
+class @Gws_Schedule_Plan_Form
+  @render: ->
+    @changeView();
+    $('#item_repeat_type').change ->
+      Gws_Schedule_Plan_Form.changeView();
+
+  @changeView: ->
+    repeat_type = $('#item_repeat_type').val()
+
+    if repeat_type == ''
+      $('.gws-schedule-repeat').hide()
+    else
+      $('.gws-schedule-repeat').show()
+      $(".repeat-daily, .repeat-weekly, .repeat-monthly").hide()
+      $(".repeat-#{repeat_type}").show()

@@ -74,23 +74,28 @@
 }
 .fc-event-one {
   background: transparent;
-  color: #49a;
+  color: #800;
   cursor: pointer;
-  &:hover { color: #49a; text-decoration: underline; }
-}
-.fc-agenda-view .fc-event-one {
-  background-color: #bdf;
-  color: #000;
+  &:hover { color: #800; text-decoration: underline; }
 }
 .fc-event-days {
   border-right: 2px solid #a88;
   background-color: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
-  color: #000;
-  &:hover { color: #000; text-decoration: underline; }
+  color: #800;
+  &:hover { color: #800; text-decoration: underline; }
 }
-.fc-event-days.fc-event-repeat {
+.fc-agenda-view .fc-event-one {
   background-color: #bdf;
+  color: #000;
+}
+.fc-event-repeat.fc-event-one {
+  color: #49c;
+}
+.fc-event-repeat.fc-event-days {
+  border-color: #49c;
+  background-color: #def;
+  color: #28b;
 }
 .fc-holiday {
   background: #f33;
@@ -149,10 +154,8 @@
 }
 
 // repeat form
-.gws-schedule-repeat {
-  margin: 10px 0 !important;
-  padding: 20px !important;
-  background: #eee;
+dl.gws-schedule-repeat {
+  margin-top: 15px;
   label {
     margin: 0 2px;
     input {

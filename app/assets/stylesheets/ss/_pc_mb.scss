@@ -619,15 +619,17 @@ td {
 }
 .main-box  {
   @include box;
-  padding: 10px 15px;
+  padding: 15px 10px;
   header {
     @include box-head;
-    margin: -10px -15px 10px;
+    margin: -15px -10px 15px;
     border-bottom: $border-gray1;
   }
 }
 .toggle-head {
-  &:hover { background: #f9f9f9; }
+  cursor: pointer;
+  &:hover { background: #f4f4f4; }
+  &:hover { background: $orange2; }
 }
 .addon-view, .search-pages, .index-search, .search-form {
   @include box;
@@ -668,15 +670,9 @@ td {
 }
 .addon-head {
   @include box-head;
-  h2 {
-    display: inline-block;
-    cursor: pointer;
-    &:hover { text-decoration: underline; }
-  }
 }
 .addon-body {
-  border-top: $border-gray1;
-  padding: 10px;
+  @include box-body;
 }
 dl.see {
   margin: 5px 0px;
@@ -1061,7 +1057,7 @@ div.index {
   }
 }
 .list-item {
-  padding: 8px 10px;
+  padding: 8px 8px;
   border-bottom: $border-gray1;
   @include mb { padding: 8px 10px; }
   &:last-child {

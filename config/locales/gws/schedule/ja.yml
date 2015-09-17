@@ -24,9 +24,14 @@ ja:
         wday: 曜日
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
+      less_than_years: は%{count}年間以内の範囲にしてください。
 
   modules:
     gws_schedule: スケジュール
+    addons:
+      gws/schedule/member: 参加者
+      gws/schedule/facility: 設備予約
+      gws/schedule/repeat: 繰り返し
 
   gws_role:
     read_other_gws_schedule_plans: スケジュールの閲覧（全て）
@@ -53,7 +58,7 @@ ja:
         member_ids: 参加者
         facility_ids: 設備予約
       gws/schedule/repeat_plan: &repeat
-        repeat_type: 繰り返し
+        repeat_type: 繰り返し設定
         interval: 繰り返す間隔
         start_date: 開始日
         end_date: 終了日

@@ -1,23 +1,39 @@
-<% @item.sync_repeat_plan if params[:action] =~ /(new|edit)/ %>
-<% model = Gws::Schedule::RepeatPlan %>
+<%
 
-<dl class="see gws-schedule-repeat">
+model = Gws::Schedule::RepeatPlan
+@item.sync_repeat_plan if params[:action] =~ /(new|edit)/
+
+%>
+<%= jquery do %>
+  $(".date").datetimepicker({ lang: "ja", timepicker:false, format:'Y-m-d' });
+
+  Gws_Schedule_Plan_Form.render();
+<% end %>
+
+<dl class="see">
   <dt><%= model.t :repeat_type %><%= model.tt :repeat_type %></dt>
   <dd><%= f.select :repeat_type, @item.repeat_type_options, include_blank: t("gws_schedule.options.repeat_type.none") %></dd>
+</dl>
 
+<dl class="see gws-schedule-repeat">
   <dt><%= model.t :interval %><%= model.tt :interval %></dt>
-  <dd><%= f.select :interval, @item.interval_options %> 日/週/月</dd>
-
-  <dt>(毎月) <%= model.t :repeat_base %><%= model.tt :repeat_base %></dt>
   <dd>
+    <%= f.select :interval, @item.interval_options %>
+    <span class="repeat-daily">日</span>
+    <span class="repeat-weekly">週</span>
+    <span class="repeat-monthly">月</span>
+  </dd>
+
+  <dt class="repeat-monthly"><%= model.t :repeat_base %><%= model.tt :repeat_base %></dt>
+  <dd class="repeat-monthly">
     <div class="<%= 'checks_with_errors' if @item.errors[:repeat_base].size > 0 %>">
       <label><%= f.radio_button :repeat_base, "date" %> <%= t "gws_schedule.options.repeat_base.date" %></label>
       <label><%= f.radio_button :repeat_base, "wday" %> <%= t "gws_schedule.options.repeat_base.wday" %></label>
     </div>
   </dd>
 
-  <dt>(毎週) <%= model.t :wdays %><%= model.tt :wdays %></dt>
-  <dd class="wdays">
+  <dt class="repeat-weekly"><%= model.t :wdays %><%= model.tt :wdays %></dt>
+  <dd class="repeat-weekly">
     <div class="<%= 'checks_with_errors' if @item.errors[:wdays].size > 0 %>">
       <%= f.hidden_field "wdays[]", value: "" %>
       <% (0..6).each do |i| %>
