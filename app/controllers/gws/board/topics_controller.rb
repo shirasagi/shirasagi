@@ -6,7 +6,7 @@ class Gws::Board::TopicsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.gws_board", gws_board_topics_path]
+      @crumbs << [:"modules.gws/board", gws_board_topics_path]
     end
 
     def fix_params

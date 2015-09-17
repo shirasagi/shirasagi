@@ -7,7 +7,7 @@ $('.gws-board .body').each(function(){
 
 menu = []
 if @item.permit_comment?
-  menu << link_to(t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn")
+  menu << link_to(t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn")
 end
 menu << link_to(:edit, { action: :edit, id: @item }, class: "btn") if @item.allowed?(:edit, @cur_user, site: @cur_site)
 menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.allowed?(:delete, @cur_user, site: @cur_site)

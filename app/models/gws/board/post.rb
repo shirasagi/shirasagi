@@ -29,7 +29,7 @@ class Gws::Board::Post
   # Can't create a comment if its topic "permit_comment?" returns false.
   validate -> do
     unless topic.permit_comment?
-      errors.add :base, I18n.t("gws_board.errors.denied_comment")
+      errors.add :base, I18n.t("gws/board.errors.denied_comment")
       # FIXME 排他制御出来ないためにこんなコード書いてる
       # FIXME (例:コメント本文入力中にトピックがコメント許可しないに変更)
       # FIXME バリデーションエラーメッセージを何処に入れれば良いのだろう？
@@ -83,15 +83,15 @@ class Gws::Board::Post
 
   def mode_options
     [
-      [I18n.t('gws_board.options.mode.thread'), 'thread'],
-      [I18n.t('gws_board.options.mode.tree'), 'tree']
+      [I18n.t('gws/board.options.mode.thread'), 'thread'],
+      [I18n.t('gws/board.options.mode.tree'), 'tree']
     ]
   end
 
   def permit_comment_options
     [
-      [I18n.t('gws_board.options.permit_comment.allow'), 'allow'],
-      [I18n.t('gws_board.options.permit_comment.deny'), 'deny']
+      [I18n.t('gws/board.options.permit_comment.allow'), 'allow'],
+      [I18n.t('gws/board.options.permit_comment.deny'), 'deny']
     ]
   end
 end

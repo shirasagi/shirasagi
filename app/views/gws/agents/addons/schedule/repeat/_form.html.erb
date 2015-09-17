@@ -5,14 +5,14 @@ model = Gws::Schedule::RepeatPlan
 
 %>
 <%= jquery do %>
-  $(".date").datetimepicker({ lang: "ja", timepicker:false, format:'Y-m-d' });
+  $(".date").datetimepicker({ lang: "ja", timepicker:false, format:'Y-m-d', closeOnDateSelect: true });
 
   Gws_Schedule_Plan_Form.render();
 <% end %>
 
 <dl class="see">
   <dt><%= model.t :repeat_type %><%= model.tt :repeat_type %></dt>
-  <dd><%= f.select :repeat_type, @item.repeat_type_options, include_blank: t("gws_schedule.options.repeat_type.none") %></dd>
+  <dd><%= f.select :repeat_type, @item.repeat_type_options, include_blank: t("gws/schedule.options.repeat_type.none") %></dd>
 </dl>
 
 <dl class="see gws-schedule-repeat">
@@ -27,8 +27,8 @@ model = Gws::Schedule::RepeatPlan
   <dt class="repeat-monthly"><%= model.t :repeat_base %><%= model.tt :repeat_base %></dt>
   <dd class="repeat-monthly">
     <div class="<%= 'checks_with_errors' if @item.errors[:repeat_base].size > 0 %>">
-      <label><%= f.radio_button :repeat_base, "date" %> <%= t "gws_schedule.options.repeat_base.date" %></label>
-      <label><%= f.radio_button :repeat_base, "wday" %> <%= t "gws_schedule.options.repeat_base.wday" %></label>
+      <label><%= f.radio_button :repeat_base, "date" %> <%= t "gws/schedule.options.repeat_base.date" %></label>
+      <label><%= f.radio_button :repeat_base, "wday" %> <%= t "gws/schedule.options.repeat_base.wday" %></label>
     </div>
   </dd>
 

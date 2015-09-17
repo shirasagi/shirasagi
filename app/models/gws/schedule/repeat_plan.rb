@@ -35,11 +35,11 @@ class Gws::Schedule::RepeatPlan
   public
     def validate_plan_date
       errors.add :end_date, :greater_than, count: t(:start_date) if end_date <= start_date
-      errors.add(:end_date, I18n.t("gws_schedule.errors.less_than_years", count: 1)) if end_date > (start_date + 1.year)
+      errors.add(:end_date, I18n.t("gws/schedule.errors.less_than_years", count: 1)) if end_date > (start_date + 1.year)
     end
 
     def validate_plan_dates
-      errors.add :base, I18n.t('gws_schedule.errors.empty_plan_days') if plan_dates.size == 0
+      errors.add :base, I18n.t('gws/schedule.errors.empty_plan_days') if plan_dates.size == 0
     end
 
     def extract_plans(plan)

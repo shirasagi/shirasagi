@@ -57,7 +57,7 @@ module Gws::Addon::Schedule::Repeat
 
     def repeat_type_options
       [:daily, :weekly, :monthly].map do |name|
-        [I18n.t("gws_schedule.options.repeat_type.#{name}"), name.to_s]
+        [I18n.t("gws/schedule.options.repeat_type.#{name}"), name.to_s]
       end
     end
 

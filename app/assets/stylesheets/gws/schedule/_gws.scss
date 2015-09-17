@@ -114,10 +114,6 @@
   color: #ddd;
 }
 .calendar-menu {
-  position: relative;
-  float: right;
-  top: -13px;
-  text-align: right;
   a {
     @include arrow;
   }

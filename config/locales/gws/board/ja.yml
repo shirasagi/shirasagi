@@ -1,5 +1,5 @@
 ja:
-  gws_board:
+  gws/board:
     user: ユーザー
     no_authority: 権限がありません
     topic:
@@ -43,7 +43,7 @@ ja:
       denied_comment: コメントの投稿は許可されていません。
 
   modules:
-    gws_board: 掲示板
+    gws/board: 掲示板
 
   gws_role:
     read_other_gws_board_posts: 掲示板投稿の閲覧（全て）

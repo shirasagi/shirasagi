@@ -1,5 +1,5 @@
 ja:
-  gws_schedule:
+  gws/schedule:
     plan: 予定リスト
     user_plan: 個人の予定
     group_plan: グループの予定
@@ -27,7 +27,7 @@ ja:
       less_than_years: は%{count}年間以内の範囲にしてください。
 
   modules:
-    gws_schedule: スケジュール
+    gws/schedule: スケジュール
     addons:
       gws/schedule/member: 参加者
       gws/schedule/facility: 設備予約
@@ -55,22 +55,25 @@ ja:
         allday: 終日
         category_id: スケジュール種別
         term: 期間
-        member_ids: 参加者
-        facility_ids: 設備予約
-      gws/schedule/repeat_plan: &repeat
+      gws/schedule/repeat_plan: &repeat_plan
         repeat_type: 繰り返し設定
-        interval: 繰り返す間隔
+        interval: 繰り返し間隔
         start_date: 開始日
         end_date: 終了日
         repeat_base: 繰り返しの基準
         wdays: 曜日
-      gws/schedule/repeatable:
-        <<: *repeat
-        start_date: 繰り返し 開始日
-        end_date: 繰り返し 終了日
-        wdays: 繰り返し 曜日
       gws/schedule/category:
         name: スケジュール種別
         color: 表示色
         bg_color: 背景色
         text_color: 文字色
+
+      gws/addon/schedule/repeat:
+        <<: *repeat_plan
+        start_date: 繰り返し開始日
+        end_date: 繰り返し終了日
+        wdays: 繰り返し曜日
+      gws/addon/schedule/member:
+        member_ids: 参加者
+      gws/addon/schedule/facility:
+        facility_ids: 設備予約

@@ -2,7 +2,6 @@ ja:
   gws:
     group: グループ
     portal: ポータル
-    facility: 設備管理
     roles:
       admin: 管理者
       user: 一般ユーザー
@@ -34,7 +33,7 @@ ja:
       gws/user: ユーザー
       gws/role: ロール
       gws/share: 共有ファイル
-      gws/facility: 設備
+      gws/facility: 設備管理
     attributes:
       gws/facility:
         name: 設備名

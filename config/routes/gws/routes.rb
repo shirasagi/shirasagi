@@ -13,9 +13,4 @@ SS::Application.routes.draw do
     resources :roles, concerns: [:deletion]
     resources :facilities, concerns: [:deletion]
   end
-
-  # WIP
-  #gws "reservation" do
-  #  resources :plans
-  #end
 end

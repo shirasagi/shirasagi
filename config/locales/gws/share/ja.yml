@@ -3,7 +3,7 @@ ja:
     file: ファイル共有
 
   modules:
-    gws_share: 共有ファイル
+    gws/share: 共有ファイル
 
   gws_role:
     read_other_gws_share_files: 共有ファイルの閲覧（全て）

@@ -26,14 +26,14 @@ class @Gws_Schedule_Calendar
     url = opts['restUrl']
 
     dayClick: (date, event, view) ->
-      links  = "<a href='#{url}/new?start=#{date.format()}' class='add-plan'><%= I18n.t 'gws_schedule.links.add_plan' %></a>"
+      links  = "<a href='#{url}/new?start=#{date.format()}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
       if opts['defaultView'] != 'basicWeek'
         if view.name != 'month'
-          links += '<a href="" data-view="month"><%= I18n.t "gws_schedule.links.show_month" %></a>'
+          links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
         if view.name != 'basicWeek'
-          links += '<a href="" data-view="basicWeek"><%= I18n.t "gws_schedule.links.show_week" %></a>'
+          links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>'
         if view.name != 'agendaDay'
-          links += '<a href="" data-view="agendaDay"><%= I18n.t "gws_schedule.links.show_day" %></a>'
+          links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>'
       $("body").append('<div class="tap-menu">' + links + '</div>')
       $(".tap-menu").show().css("left", event.pageX - 5).css("top", event.pageY - 5).show()
 

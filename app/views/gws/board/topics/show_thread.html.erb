@@ -36,7 +36,7 @@ menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.
 
 <% if @item.permit_comment? %>
 <footer class="send">
-  <%= link_to t('gws_board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
+  <%= link_to t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
     class: "btn-primary" %>
 </footer>
 <% end %>

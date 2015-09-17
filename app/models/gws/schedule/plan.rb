@@ -59,7 +59,7 @@ class Gws::Schedule::Plan
   public
     def allday_options
       [
-        [I18n.t("gws_schedule.options.allday.allday"), "allday"]
+        [I18n.t("gws/schedule.options.allday.allday"), "allday"]
       ]
     end
 
@@ -85,6 +85,7 @@ class Gws::Schedule::Plan
         data.merge! className: 'fc-event-days'
       end
       if repeat_plan_id
+        data[:title] = " " + data[:title]
         data[:className] += " fc-event-repeat"
       end
       data
