@@ -10,20 +10,23 @@ module Board::Addon
       permit_params in_files: []
       permit_params file_ids: []
 
+      validate :validate_in_files_limit, if: -> { in_files.present? }
       validate :validate_in_files, if: -> { in_files.present? }
+      validate :scan_in_files, if: -> { in_files.present? }
 
       before_save :save_in_files, if: -> { in_files.present? }
       before_save :save_files
       after_destroy :destroy_files
     end
 
-    # TODO Refactor by splitting into some tiny methods
-    # rubocop:disable Metrics/AbcSize
-    def validate_in_files
+    def validate_in_files_limit
       if node.file_limit < in_files.size
         errors.add :base, I18n.t("board.errors.too_many_files", limit: node.file_limit)
-        return
       end
+    end
+
+    def validate_in_files
+      return unless errors.empty?
 
       in_files.each do |file|
         item = Board::File.new(site_id: site_id, state: "public")
@@ -44,25 +47,28 @@ module Board::Addon
         end
 
         if ext_limit.present? && !ext_limit.include?(item.extname.downcase)
-          errors.add :base, "#{item.name}#{I18n.t("errors.messages.invalid_file_type")}"
+          errors.add :base, I18n.t("board.errors.invalid_file_ext", ext: item.extname.downcase)
         end
       end
-      return unless errors.empty?
+    end
 
-      if node.file_scan_enabled?
-        in_files.each do |file|
-          begin
-            result = SS::FileScanner.scan(stream: file.read)
-          rescue => e
-            errors.add :base, I18n.t("errors.messages.file_scan_exception")
-            break
-          ensure
-            file.rewind
-          end
-          next if result
-          errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
+    def scan_in_files
+      return unless errors.empty?
+      return unless node.file_scan_enabled?
+
+      in_files.each do |file|
+        begin
+          result = SS::FileScanner.scan(stream: file.read)
+        rescue => e
+          errors.add :base, I18n.t("errors.messages.file_scan_exception")
           break
+        ensure
+          file.rewind
         end
+
+        next if result
+        errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
+        break
       end
     end
 
