@@ -41,7 +41,6 @@ class ActionDispatch::Routing::Mapper
 end
 
 SS::Application.routes.draw do
-
   SS::Initializer
 
   namespace "sns", path: ".mypage" do
@@ -50,6 +49,7 @@ SS::Application.routes.draw do
     match "login"  => "login#login", as: :login, via: [:get, :post]
     match "remote_login" => "login#remote_login", as: :remote_login, via: [:get, :post]
     get   "auth_token" => "auth_token#index", as: :auth_token
+    get   "cms" => "mypage#cms"
+    get   "gws" => "mypage#gws"
   end
-
 end

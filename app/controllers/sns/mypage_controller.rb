@@ -1,16 +1,41 @@
 class Sns::MypageController < ApplicationController
   include Sns::BaseFilter
 
+  private
+    def cms_sites
+      SS::Site.all.select do |site|
+        @cur_user.groups.in(name: site.groups.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ } ).present?
+      end
+    end
+
+    def gws_sites
+      ids = @cur_user.groups.map { |group| group.root.try(:id) }.uniq.compact
+      SS::Group.where(:id.in => ids)
+    end
+
   public
     def index
-      @sites = []
-      SS::Site.each do |site|
-        if @cur_user.groups.in(name: site.groups.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ } ).present?
-          @sites << site
-        end
-      end
+      @cms_sites = cms_sites
+      @gws_sites = gws_sites
+    end
 
-      ids = @cur_user.groups.map { |group| group.root.try(:id) }.uniq.compact
-      @groups = SS::Group.where(:id.in => ids).all
+    def cms
+      @sites = cms_sites
+
+      if @sites.size == 1
+        redirect_to cms_contents_path(@sites.first)
+      else
+        redirect_to sns_mypage_path
+      end
+    end
+
+    def gws
+      @sites = gws_sites
+
+      if @sites.size == 1
+        redirect_to gws_portal_path(@sites.first)
+      else
+        redirect_to sns_mypage_path
+      end
     end
 end
