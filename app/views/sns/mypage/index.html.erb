@@ -1,10 +1,10 @@
-<% if @sites.size > 0 %>
+<% if @cms_sites.size > 0 %>
 <div class="mypage-box">
   <div class="index mypage-sites">
     <div class="list-head"><%= t "cms.site" %></div>
 
     <ul class="list-items">
-      <% @sites.each do |item| %>
+      <% @cms_sites.each do |item| %>
       <li class="list-item">
         <div class="info">
           <%= link_to item.name, cms_contents_path(site: item), class: "title" %>
@@ -20,13 +20,13 @@
 </div>
 <% end %>
 
-<% if @groups.size > 0 && SS.config.gws.disable.blank? %>
+<% if @gws_sites.size > 0 && SS.config.gws.disable.blank? %>
 <div class="mypage-box">
   <div class="index mypage-groups">
     <div class="list-head"><%= t "gws.group" %></div>
 
     <ul class="list-items">
-      <% @groups.each do |item| %>
+      <% @gws_sites.each do |item| %>
       <li class="list-item">
         <div class="info">
           <%= link_to item.name, gws_portal_path(site: item), class: "title" %>
