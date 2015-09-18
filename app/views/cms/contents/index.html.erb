@@ -21,7 +21,7 @@
     <% @normal_notices.each do |notice| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to notice.name, notice_cms_contents_path(notice: notice) %>
+        <%= link_to notice.name, notice_cms_contents_path(notice: notice), class: "title notice-severity-normal" %>
         <span class="datetime"><%= notice.released.strftime("%Y/%m/%d %H:%M") %></span>
       </div>
     </li>

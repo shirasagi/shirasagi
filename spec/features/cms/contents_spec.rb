@@ -39,16 +39,17 @@ describe "cms_contents", dbscope: :example, type: :feature do
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
 
-      within "div.notices-severity-high" do
-        expect(page).to have_content(high_notice.name)
-        expect(page).not_to have_content(normal_notice.name)
-      end
-      within "div.notices-severity-normal" do
-        expect(page).not_to have_content(high_notice.name)
-        expect(page).to have_content(normal_notice.name)
+      within "div.notices" do
+        severity_high   = page.all(".notice-severity-high").map(&:text)
+        severity_normal = page.all(".notice-severity-normal").map(&:text)
+
+        expect(severity_high.index(high_notice.name)).to be_truthy
+        expect(severity_high.index(normal_notice.name)).to be_falsey
+        expect(severity_normal.index(normal_notice.name)).to be_truthy
+        expect(severity_normal.index(high_notice.name)).to be_falsey
       end
 
-      within "div.notices-severity-high" do
+      within "div.notices" do
         click_link high_notice.name
       end
 
