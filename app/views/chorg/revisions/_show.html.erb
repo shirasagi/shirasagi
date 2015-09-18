@@ -2,7 +2,7 @@
   <dt><%= @model.t :name %></dt>
   <dd>
   <%= @item.name %>
-  <%= link_to :"chorg.menus.revisions.execute_results", { controller: :results, action: :index, rid: @item.id }, { class: :btn } %>
+  <%= link_to :"chorg.menus.revisions.execute_results", { controller: :results, action: :index, rid: @item.id }, { class: "btn result" } %>
   </dd>
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>

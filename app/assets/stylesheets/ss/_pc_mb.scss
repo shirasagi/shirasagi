@@ -454,7 +454,7 @@ td {
     @include clear;
     width: 400px;
     top: -1px;
-    left: 241px;
+    left: 211px;
     margin: 0;
     padding: 14px 10px 14px 20px;
     border: $border-gray4;
@@ -679,7 +679,7 @@ dl.see {
     float: left;
     min-width: 180px;
     padding: 5px 0;
-    color: $black;
+    color: $orange3;
     font-weight: bold;
     @include mb {
       float: none;
@@ -809,8 +809,14 @@ footer.send {
 .btn-success {
   @include btn-orange;
 }
-.chorg-revisions .btn {
+.chorg-revisions {
   margin-bottom: 10px;
+  .btn {
+    margin-bottom: 10px;
+  }
+  .result {
+    float: right;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
