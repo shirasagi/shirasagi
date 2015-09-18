@@ -80,6 +80,9 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
+.hide {
+  display: none;
+}
 .dropdown {
   position: relative;
   cursor: pointer;
@@ -613,6 +616,9 @@ td {
 #ajax-box {
   margin: 10px;
 }
+.toggle-head {
+  &:hover { background: #f9f9f9; }
+}
 .main-box  {
   @include box;
   padding: 10px 15px;
@@ -661,7 +667,6 @@ td {
 }
 .addon-head {
   @include box-head;
-  &:hover { background: #f9f9f9;}
   h2 {
     display: inline-block;
     cursor: pointer;
