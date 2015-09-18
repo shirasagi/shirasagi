@@ -456,7 +456,7 @@ td {
     @include clear;
     width: 400px;
     top: -1px;
-    left: 241px;
+    left: 211px;
     margin: 0;
     padding: 14px 10px 14px 20px;
     border: $border-gray4;
@@ -613,9 +613,11 @@ td {
 // -------------------------------------------------------------------------------------------------
 // common view
 
-
 #ajax-box {
   margin: 10px;
+}
+.toggle-head {
+  &:hover { background: #f9f9f9; }
 }
 .main-box  {
   @include box;
@@ -625,9 +627,6 @@ td {
     margin: -10px -15px 10px;
     border-bottom: $border-gray1;
   }
-}
-.toggle-head {
-  &:hover { background: #f9f9f9; }
 }
 .addon-view, .search-pages, .index-search, .search-form {
   @include box;
@@ -685,7 +684,7 @@ dl.see {
     float: left;
     min-width: 180px;
     padding: 5px 0;
-    color: $black;
+    color: $orange3;
     font-weight: bold;
     @include mb {
       float: none;
@@ -815,8 +814,13 @@ footer.send {
 .btn-success {
   @include btn-orange;
 }
-.chorg-revisions .btn {
-  margin-bottom: 10px;
+.chorg-revisions {
+  .btn {
+    margin-bottom: 10px;
+  }
+  .result {
+    float: right;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
