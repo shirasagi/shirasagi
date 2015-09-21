@@ -85,6 +85,7 @@ RSpec.configure do |config|
         Capybara::Poltergeist::Driver.new(app, :inspector => true)
       end
       Capybara.javascript_driver = :poltergeist
+      Capybara.default_max_wait_time = 10
     rescue LoadError
       config.filter_run_excluding(js: true)
     end
