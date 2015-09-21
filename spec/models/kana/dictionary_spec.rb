@@ -91,7 +91,7 @@ describe Kana::Dictionary do
       end
 
       it "fails to save" do
-        expect { item.save! }.to raise_error
+        expect { item.save! }.to raise_error Mongoid::Errors::Validations
       end
     end
 
