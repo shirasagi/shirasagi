@@ -80,7 +80,7 @@ class Gws::Schedule::Plan
     def validate_datetimes_on_drop
       return if end_at.present?
       time = [end_at_was.hour, end_at_was.min]
-      self.end_at = Time.local start_at.year, start_at.month, start_at.day, time[0], time[1], 0
+      self.end_at = Time.zone.local start_at.year, start_at.month, start_at.day, time[0], time[1], 0
     end
 
     def validate_datetimes

@@ -79,7 +79,7 @@ class Gws::Schedule::RepeatPlan
       end
 
       dates.each do |date|
-        date = date + interval.week
+        date += interval.week
         dates << date if date <= end_date
       end
       dates.sort
@@ -108,7 +108,7 @@ class Gws::Schedule::RepeatPlan
       dates << start_date
 
       dates.each do |date|
-        date = date + interval.month
+        date += interval.month
         dates << date if date <= end_date
       end
       dates
@@ -175,7 +175,9 @@ class Gws::Schedule::RepeatPlan
 
       if base_plan.start_at
         time = [base_plan.start_at.hour, base_plan.start_at.min]
-        diff = base_plan.end_at.to_time.to_i - base_plan.start_at.to_time.to_i if base_plan.end_at
+        if base_plan.end_at
+          diff = base_plan.end_at.to_time_in_current_zone.to_i - base_plan.start_at.to_time_in_current_zone.to_i
+        end
       end
 
       attr = base_plan.attributes.dup
@@ -187,7 +189,7 @@ class Gws::Schedule::RepeatPlan
       dates.each_with_index do |date, idx|
         plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
 
-        plan.start_at = Time.local date.year, date.month, date.day, time[0], time[1], 0
+        plan.start_at = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
         plan.end_at   = plan.start_at + diff.seconds
         plan.save
       end
