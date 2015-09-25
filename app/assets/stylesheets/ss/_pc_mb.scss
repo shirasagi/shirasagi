@@ -1028,7 +1028,13 @@ div.index {
     float: left;
     margin-left: -15px;
     margin-right: 5px;
-    padding: 8px;
+    padding: 0 3px 16px 13px;
+    input {
+      margin: 2px 4px;
+    }
+  }
+  .list-head label {
+    padding: 10px 2px 4px 11px;
   }
 }
 #ajax-box {
@@ -1046,12 +1052,15 @@ div.index {
   padding: 10px 20px;
   border-bottom: $border-gray1;
   font-weight: bold;
-  @include mb { padding: 10px; }
+  @include mb { padding: 10px 20px; }
 }
 .list-head-action {
   float: left;
   margin-top: 3px;
-  @include mb { button { margin: 0; } }
+  @include mb { 
+    margin-bottom: 10px;
+    button { margin: 0; }
+  }
 }
 .list-head-search {
   float: right;
