@@ -18,8 +18,10 @@ class Gws::Board::Post
   belongs_to :topic, class_name: "Gws::Board::Post", inverse_of: :descendants
   belongs_to :parent, class_name: "Gws::Board::Post", inverse_of: :children
 
-  has_many :descendants, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :topic
-  has_many :children, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :parent
+  has_many :descendants, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :topic,
+    order: { created: 1 }
+  has_many :children, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :parent,
+    order: { created: 1 }
 
   validates :name, presence: true
   validates :text, presence: true
