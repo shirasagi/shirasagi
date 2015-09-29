@@ -120,6 +120,7 @@ ja:
   modules:
     addons:
       ss/body: 本文
+      ss/markdown: 内容
 
   mongoid:
     models:
@@ -180,6 +181,9 @@ ja:
         permissions: 権限設定
       ss/addon/body:
         html: 本文
+      ss/addon/markdown:
+        text: 内容
+        html: 内容
 
   tooltip:
     ss/model/user:

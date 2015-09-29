@@ -3,6 +3,7 @@ class Gws::Schedule::Plan
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::Schedule::Repeat
+  include SS::Addon::Markdown
   include Gws::Addon::Schedule::Member
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::GroupPermission
@@ -10,7 +11,6 @@ class Gws::Schedule::Plan
   attr_accessor :api, :api_start, :api_end
 
   field :name, type: String
-  field :text, type: String
 
   # 期間/検索用
   field :start_at, type: DateTime
@@ -26,7 +26,7 @@ class Gws::Schedule::Plan
   belongs_to :category, class_name: 'Gws::Schedule::Category'
 
   permit_params :api, :api_start, :api_end
-  permit_params :name, :text, :start_on, :end_on, :start_at, :end_at, :allday, :category_id
+  permit_params :name, :start_on, :end_on, :start_at, :end_at, :allday, :category_id
 
   before_validation :set_from_drop_api, if: -> { api == 'drop' }
   before_validation :set_from_resize_api, if: -> { api == 'resize' }

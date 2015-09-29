@@ -18,7 +18,6 @@ ja:
         update: トピックを更新しました。
         delete: トピックを削除しました。
     comment:
-      text: 本文
       comment: コメントする
       created: 投稿日
       updated: 最終更新日
@@ -61,7 +60,6 @@ ja:
     attributes:
       gws/board/post:
         name: タイトル
-        text: 本文
         created: 投稿日
         updated: 最終更新日
         mode: 表示形式

@@ -2,7 +2,8 @@ class Gws::Notice
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include SS::Addon::Body
+  #include SS::Addon::Body
+  include SS::Addon::Markdown
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Gws::Addon::GroupPermission

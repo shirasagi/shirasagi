@@ -22,7 +22,7 @@ end
   </header>
 
   <div class="toggle-body <%= 'hide' if recursion %>">
-    <div class="body markdown-body"><%= comment.text %></div>
+    <div class="body markdown-body"><%== comment.html %></div>
 
     <% if menu.size > 0 %>
     <div class="menu"><%= safe_join(menu) %></div>

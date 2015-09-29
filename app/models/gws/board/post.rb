@@ -3,17 +3,17 @@ class Gws::Board::Post
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include SS::Addon::Markdown
   include Gws::Addon::GroupPermission
 
   seqid :id
   field :name, type: String
-  field :text, type: String
   field :mode, type: String, default: 'thread'
   field :permit_comment, type: String, default: 'allow'
   field :descendants_created, type: DateTime
   field :descendants_updated, type: DateTime
 
-  permit_params :name, :text, :mode, :permit_comment
+  permit_params :name, :mode, :permit_comment
 
   belongs_to :topic, class_name: "Gws::Board::Post", inverse_of: :descendants
   belongs_to :parent, class_name: "Gws::Board::Post", inverse_of: :children

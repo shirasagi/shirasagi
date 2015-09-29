@@ -30,7 +30,4 @@
   <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
   <dd><%= f.select :category_id, @item.category_options, include_blank: " " %></dd>
   <% end %>
-
-  <dt><%= @model.t :text %></dt>
-  <dd><%= f.text_area :text %></dd>
 </dl>

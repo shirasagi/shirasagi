@@ -50,7 +50,6 @@ ja:
       gws/schedule/plan:
         repeat_plan_id: 繰り返し
         name: タイトル
-        text: 内容
         start_at: 開始日時
         end_at: 終了日時
         start_on: 開始日

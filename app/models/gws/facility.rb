@@ -2,13 +2,13 @@ class Gws::Facility
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include SS::Addon::Markdown
   include Gws::Addon::GroupPermission
 
   seqid :id
   field :name, type: String
-  field :text, type: String
 
-  permit_params :name, :text
+  permit_params :name
 
   validates :name, presence: true
 

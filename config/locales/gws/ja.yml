@@ -2,7 +2,7 @@ ja:
   gws:
     group: グループ
     portal: ポータル
-    site_config: グループ設定
+    site_config: 設定
     site_info: グループ情報
     roles:
       admin: 管理者
@@ -47,7 +47,6 @@ ja:
         severity: 種別
       gws/facility:
         name: 設備名
-        text: 説明
       gws/addon/role:
         gws_role_ids: ロール
       gws/addon/permission:
