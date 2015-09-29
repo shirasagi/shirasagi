@@ -27,14 +27,13 @@ class Gws::Schedule::RepeatPlan
   validates :interval, inclusion: { in: 1..10 }, if: -> { interval.present? }
   validates :repeat_start, presence: true, if: -> { repeat_type.present? }
   validates :repeat_base, presence: true, if: -> { repeat_type == 'monthly' }
-  #validates :wdays, presence: true, if: -> { repeat_type == 'weekly' }
 
   validate :validate_plan_date, if: -> { repeat_start.present? && repeat_end.present? }
   validate :validate_plan_dates, if: -> { errors.size == 0 }
 
   public
     def validate_plan_date
-      errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end <= repeat_start
+      errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end < repeat_start
       errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1)) if repeat_end > (repeat_start + 1.year)
     end
 
