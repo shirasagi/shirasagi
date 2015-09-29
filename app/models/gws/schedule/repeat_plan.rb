@@ -186,8 +186,13 @@ class Gws::Schedule::RepeatPlan
       dates.each_with_index do |date, idx|
         plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
 
-        plan.start_at = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
-        plan.end_at   = plan.start_at + diff.seconds
+        if plan.allday?
+          plan.start_on = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
+          plan.end_on   = plan.start_on + diff.seconds
+        else
+          plan.start_at = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
+          plan.end_at   = plan.start_at + diff.seconds
+        end
         plan.save
       end
     end
