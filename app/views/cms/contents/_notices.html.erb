@@ -1,0 +1,32 @@
+<%
+
+@notices = Cms::Notice.site(@cur_site).public.target_to(@cur_user).order_by(released: -1)
+@important_notices = @notices.select { |notice| notice.notice_severity == Cms::Notice::NOTICE_SEVERITY_HIGH }
+@normal_notices = @notices.select { |notice| notice.notice_severity != Cms::Notice::NOTICE_SEVERITY_HIGH }
+
+return if @important_notices.blank? && @normal_notices.blank?
+
+%>
+<div class="index notices">
+  <div class="list-head"><%= t "cms.notice" %></div>
+
+  <ul class="list-items">
+    <% @important_notices.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-high" %>
+        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </li>
+    <% end %>
+
+    <% @normal_notices.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-normal" %>
+        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>

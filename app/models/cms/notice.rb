@@ -1,5 +1,6 @@
 class Cms::Notice
   include SS::Document
+  include SS::Reference::User
   include SS::Reference::Site
   include Cms::Addon::Body
   include Cms::Addon::File
@@ -56,6 +57,7 @@ class Cms::Notice
       item = self.class.new(attributes)
       item.id = nil
       item.cur_site = @cur_site
+      item.state = 'closed'
       # item.cur_node = @cur_node
       item.instance_variable_set(:@new_clone, true)
       item
@@ -91,7 +93,8 @@ class Cms::Notice
     public
       def public(date = Time.zone.now)
         where("$and" => [
-          { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
+          { state: "public" },
+          { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
           { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
         ])
       end

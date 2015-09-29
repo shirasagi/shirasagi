@@ -57,14 +57,12 @@ SS::Application.routes.draw do
 
   namespace "cms", path: ".s:site/cms" do
     get "/" => "main#index"
-    resource  :site, concerns: :deletion
+    resource  :site
     resources :roles, concerns: :deletion
     resources :users, concerns: [:deletion, :download, :import]
     resources :groups, concerns: [:deletion, :role, :download, :import]
     resources :members, concerns: :deletion
-    resources :contents, path: "contents/(:mod)" do
-      get "notices/:notice", action: :public_notice, on: :collection, as: "notice"
-    end
+    resources :contents, path: "contents/(:mod)"
 
     resources :nodes, concerns: :deletion do
       get :routes, on: :collection
@@ -78,6 +76,10 @@ SS::Application.routes.draw do
     resources :layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :notices, concerns: :deletion do
+      get :copy, :on => :member
+      put :copy, :on => :member
+    end
+    resources :public_notices, concerns: :deletion do
       get :copy, :on => :member
       put :copy, :on => :member
     end

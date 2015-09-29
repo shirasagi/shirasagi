@@ -5,10 +5,11 @@ class Gws::RolesController < ApplicationController
   model Gws::Role
 
   prepend_view_path "app/views/ss/roles"
+  navi_view "gws/main/conf_navi"
 
   private
     def set_crumbs
-      @crumbs << [:"cms.role", action: :index]
+      @crumbs << [:"mongoid.models.gws/role", action: :index]
     end
 
     def fix_params

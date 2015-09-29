@@ -1,17 +1,20 @@
-class Gws::PublicNoticesController < ApplicationController
-  include Gws::BaseFilter
-  include Gws::CrudFilter
+class Cms::PublicNoticesController < ApplicationController
+  include Cms::BaseFilter
+  include Cms::CrudFilter
+  include Cms::SearchableCrudFilter
 
-  model Gws::Notice
+  model Cms::Notice
+
+  navi_view "cms/main/navi"
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.gws/notice", action: :index]
+      @crumbs << [:"cms.notice", action: :index]
     end
 
   public
     def index
-      @items = @model.site(@cur_site).public.
+      @items = @model.site(@cur_site).public.target_to(@cur_user).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
         order_by(released: -1).

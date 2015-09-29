@@ -1,0 +1,6 @@
+<nav class="nav-menu">
+  <%= link_to :"gws.links.back_to_portal", gws_portal_path %>
+  <% if params[:action] !~ /index/ %>
+    <%#= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>

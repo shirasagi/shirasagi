@@ -1,34 +1,4 @@
-<%
-
-  @important_notices = @notices.select { |notice| notice.notice_severity == Cms::Notice::NOTICE_SEVERITY_HIGH }
-  @normal_notices = @notices.select { |notice| notice.notice_severity != Cms::Notice::NOTICE_SEVERITY_HIGH }
-
-%>
-<% if @important_notices.present? || @normal_notices.present? %>
-<div class="index notices notices-severity-high">
-  <div class="list-head"><%= t "cms.notice" %></div>
-
-  <ul class="list-items">
-    <% @important_notices.each do |notice| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to notice.name, notice_cms_contents_path(notice: notice), class: "title notice-severity-high" %>
-        <span class="datetime"><%= notice.released.strftime("%Y/%m/%d %H:%M") %></span>
-      </div>
-    </li>
-    <% end %>
-
-    <% @normal_notices.each do |notice| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to notice.name, notice_cms_contents_path(notice: notice), class: "title notice-severity-normal" %>
-        <span class="datetime"><%= notice.released.strftime("%Y/%m/%d %H:%M") %></span>
-      </div>
-    </li>
-    <% end %>
-  </ul>
-</div>
-<% end %>
+<%= render partial: "notices" %>
 
 <div class="index">
   <div class="list-head"><%= t "cms.content" %></div>

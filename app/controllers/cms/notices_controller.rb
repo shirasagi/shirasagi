@@ -4,7 +4,9 @@ class Cms::NoticesController < ApplicationController
   include Cms::SearchableCrudFilter
 
   model Cms::Notice
+
   navi_view "cms/main/conf_navi"
+
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :copy]
 
   private
@@ -13,7 +15,7 @@ class Cms::NoticesController < ApplicationController
     end
 
     def fix_params
-      { cur_site: @cur_site }
+      { cur_user: @cur_user, cur_site: @cur_site }
     end
 
   public

@@ -5,10 +5,11 @@ class Gws::UsersController < ApplicationController
   model Gws::User
 
   prepend_view_path "app/views/sys/users"
+  navi_view "gws/main/conf_navi"
 
   private
     def set_crumbs
-      @crumbs << [:"sys.user", gws_users_path]
+      @crumbs << [:"mongoid.models.gws/user", gws_users_path]
     end
 
     def fix_params

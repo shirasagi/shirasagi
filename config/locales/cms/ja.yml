@@ -39,7 +39,6 @@ ja:
     convert_to_cms_page: 固定ページに変換する
     notice: お知らせ
     important_notice: 重要なお知らせ
-    back_to_contents: コンテンツへ戻る
     roles:
       admin: 管理者
       user: 編集者
@@ -82,6 +81,7 @@ ja:
     links:
       ruby_on: ふりがなをつける
       ruby_off: ふりがなをはずす
+      back_to_contents: コンテンツへ戻る
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'

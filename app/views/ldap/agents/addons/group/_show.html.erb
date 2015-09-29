@@ -1,3 +1,5 @@
+<% return if @item.ldap_dn.blank? %>
+
 <dl class="see">
   <dt><%= @model.t :ldap_dn %></dt>
   <dd><%= @item.ldap_dn %></dd>

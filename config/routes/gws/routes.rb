@@ -9,6 +9,7 @@ SS::Application.routes.draw do
   get '.g:site/', to: 'gws/portal#index', as: :gws_portal
 
   namespace "gws", path: ".g:site/gws" do
+    resource  :site
     resources :users, concerns: [:deletion]
     resources :roles, concerns: [:deletion]
     resources :facilities, concerns: [:deletion]

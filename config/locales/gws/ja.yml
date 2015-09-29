@@ -2,12 +2,16 @@ ja:
   gws:
     group: グループ
     portal: ポータル
+    site_config: グループ設定
+    site_info: グループ情報
     roles:
       admin: 管理者
       user: 一般ユーザー
     options:
       severity:
         high: 重要なお知らせ
+    links:
+      back_to_portal: ポータルへ戻る
 
   gws_role:
     edit_gws_users: ユーザの編集
@@ -33,7 +37,7 @@ ja:
   mongoid:
     models:
       gws/user: ユーザー
-      gws/role: ロール
+      gws/role: 権限/ロール
       gws/notice: お知らせ
       gws/share: 共有ファイル
       gws/facility: 設備管理

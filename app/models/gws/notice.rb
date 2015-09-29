@@ -50,11 +50,6 @@ class Gws::Notice
       ]
     end
 
-    def public?
-      #TODO: make conditions
-      state == 'public'
-    end
-
   private
     def set_released
       self.released ||= Time.zone.now
