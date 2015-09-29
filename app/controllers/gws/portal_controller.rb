@@ -9,8 +9,6 @@ class Gws::PortalController < ApplicationController
 
   public
     def index
-      @users = @cur_group.users
-
       @plans = Gws::Schedule::Plan.site(@cur_site).
         member(@cur_user).
         where(:end_at.gte => Time.zone.now).

@@ -33,7 +33,7 @@ class Gws::Schedule::Plan
   before_validation :set_dates_on
   before_validation :set_datetimes_at
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
   validates :start_at, presence: true, if: -> { repeat? }
   validates :end_at, presence: true, if: -> { repeat? }
   validates :allday, inclusion: { in: [nil, "", "allday"] }

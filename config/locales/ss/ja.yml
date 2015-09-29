@@ -117,6 +117,10 @@ ja:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
 
+  modules:
+    addons:
+      ss/body: 本文
+
   mongoid:
     models:
       ss/site: サイト
@@ -174,6 +178,8 @@ ja:
         name: ロール名
         permission_level: 権限レベル
         permissions: 権限設定
+      ss/addon/body:
+        html: 本文
 
   tooltip:
     ss/model/user:

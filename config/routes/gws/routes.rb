@@ -12,5 +12,7 @@ SS::Application.routes.draw do
     resources :users, concerns: [:deletion]
     resources :roles, concerns: [:deletion]
     resources :facilities, concerns: [:deletion]
+    resources :notices, concerns: [:deletion]
+    resources :public_notices, concerns: [:deletion]
   end
 end

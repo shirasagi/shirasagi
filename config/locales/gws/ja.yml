@@ -5,22 +5,24 @@ ja:
     roles:
       admin: 管理者
       user: 一般ユーザー
+    options:
+      severity:
+        high: 重要なお知らせ
 
   gws_role:
     edit_gws_users: ユーザの編集
+    read_other_gws_notices: お知らせの閲覧（全て）
+    read_private_gws_notices: お知らせの閲覧（自分）
+    edit_other_gws_notices: お知らせの編集（全て）
+    edit_private_gws_notices: お知らせの編集（自分）
+    delete_other_gws_notices: お知らせの削除（全て）
+    delete_private_gws_notices: お知らせの削除（自分）
     read_other_gws_facilities: 設備の閲覧（全て）
     read_private_gws_facilities: 設備の閲覧（自分）
     edit_other_gws_facilities: 設備の編集（全て）
     edit_private_gws_facilities: 設備の編集（自分）
     delete_other_gws_facilities: 設備の削除（全て）
     delete_private_gws_facilities: 設備の削除（自分）
-
-    read_other_gws_reservation_plans: 設備予約の閲覧（全て）
-    read_private_gws_reservation_plans: 設備予約の閲覧（自分）
-    edit_other_gws_reservation_plans: 設備予約の編集（全て）
-    edit_private_gws_reservation_plans: 設備予約の編集（自分）
-    delete_other_gws_reservation_plans: 設備予約の削除（全て）
-    delete_private_gws_reservation_plans: 設備予約の削除（自分）
 
   modules:
     gws: 標準機能
@@ -32,9 +34,13 @@ ja:
     models:
       gws/user: ユーザー
       gws/role: ロール
+      gws/notice: お知らせ
       gws/share: 共有ファイル
       gws/facility: 設備管理
     attributes:
+      gws/notice:
+        name: タイトル
+        severity: 種別
       gws/facility:
         name: 設備名
         text: 説明

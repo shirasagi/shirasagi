@@ -1,0 +1,12 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :severity %><%= @model.tt :severity %></dt>
+  <dd>
+    <label>
+      <%= f.check_box :severity, {}, 'high', '' %>
+      <%= t "gws.options.severity.high" %>
+    </label>
+  </dd>
+</dl>

@@ -6,9 +6,11 @@
 .portal-box {
   float: left;
   width: 50%;
+  &:nth-child(even) .index {
+    margin-right: 10px;
+  }
   .index {
     min-height: 245px;
-    margin-right: 10px;
     .list-head {
       padding-left: 15px;
     }

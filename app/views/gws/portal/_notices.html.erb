@@ -1,0 +1,32 @@
+<%
+
+@notices = Gws::Notice.site(@cur_site).public.order_by(released: -1)
+@important_notices = @notices.select { |notice| notice.severity == 'high' }
+@normal_notices = @notices.select { |notice| notice.severity.blank? }
+
+return if @important_notices.blank? && @normal_notices.blank?
+
+%>
+<div class="index notices notices-severity-high">
+  <div class="list-head"><%= t "mongoid.models.gws/notice" %></div>
+
+  <ul class="list-items">
+    <% @important_notices.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, gws_public_notice_path(id: item), class: "title notice-severity-high" %>
+        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </li>
+    <% end %>
+
+    <% @normal_notices.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, gws_public_notice_path(id: item), class: "title notice-severity-normal" %>
+        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
