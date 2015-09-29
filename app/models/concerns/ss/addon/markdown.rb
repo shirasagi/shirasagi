@@ -13,8 +13,12 @@ module SS::Addon
 
     private
       def convert_html
-        self.html = ::Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true).
-          render(text)
+        if text.blank?
+          self.html = nil
+        else
+          markdown = ::Redcarpet::Markdown.new Redcarpet::Render::HTML, autolink: true, tables: true
+          self.html = markdown.render(text)
+        end
       end
   end
 end
