@@ -53,7 +53,7 @@ describe "cms_contents", dbscope: :example, type: :feature do
         click_link high_notice.name
       end
 
-      within "h2.notice-severity-high" do
+      within ".main-box h2" do
         expect(page).to have_content(high_notice.name)
       end
     end
