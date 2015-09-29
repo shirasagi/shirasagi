@@ -3,7 +3,19 @@
 @import "gws/board/gws";
 @import "gws/schedule/gws";
 
-.portal-h2 {
-  margin: 20px 0;
-  font-size: 150%;
+.portal-box {
+  float: left;
+  width: 50%;
+  .index {
+    min-height: 245px;
+    margin-right: 10px;
+    .list-head {
+      padding-left: 15px;
+    }
+    .datetime {
+      float: right;
+      margin-left: 5px;
+      color: #888;
+    }
+  }
 }

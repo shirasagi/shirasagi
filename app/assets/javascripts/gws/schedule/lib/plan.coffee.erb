@@ -3,11 +3,41 @@
 #
 class @Gws_Schedule_Plan_Form
   @render: ->
-    @changeView();
-    $('#item_repeat_type').change ->
-      Gws_Schedule_Plan_Form.changeView();
+    @changeDateForm();
+    $('#item_allday').change ->
+      Gws_Schedule_Plan_Form.changeDateValue();
+      Gws_Schedule_Plan_Form.changeDateForm();
 
-  @changeView: ->
+  # @example
+  #   2015/09/29 00:00 => 2015/09/29
+  #   2015/09/29 => 2015/09/29 00:00
+  @changeDateValue: ->
+    if $('#item_allday').prop('checked')
+      $('#item_start_on').val $('#item_start_at').val().replace(/ .*/, '')
+      $('#item_end_on').val $('#item_end_at').val().replace(/ .*/, '')
+    else
+      stime = $('#item_start_at').val().replace(/.* /, '')
+      etime = $('#item_end_at').val().replace(/.* /, '')
+      stime = '00:00' if stime == '' && $('#item_start_on').val() != ''
+      etime = '00:00' if etime == '' && $('#item_end_on').val() != ''
+      $('#item_start_at').val $('#item_start_on').val() + " #{stime}"
+      $('#item_end_at').val $('#item_end_on').val() + " #{etime}"
+
+  @changeDateForm: ->
+    if $('#item_allday').prop('checked')
+      $('.dates-field').show()
+      $('.datetimes-field').hide()
+    else
+      $('.dates-field').hide()
+      $('.datetimes-field').show()
+
+class @Gws_Schedule_Plan_Repeat_Form
+  @render: ->
+    @changeRepeatForm();
+    $('#item_repeat_type').change ->
+      Gws_Schedule_Plan_Repeat_Form.changeRepeatForm();
+
+  @changeRepeatForm: ->
     repeat_type = $('#item_repeat_type').val()
 
     if repeat_type == ''

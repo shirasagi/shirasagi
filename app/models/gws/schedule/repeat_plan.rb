@@ -8,8 +8,8 @@ class Gws::Schedule::RepeatPlan
   field :interval, type: Integer
 
   # 開始-終了
-  field :start_date, type: Date
-  field :end_date, type: Date
+  field :repeat_start, type: Date
+  field :repeat_end, type: Date
 
   # 繰り返しの基準 date, wday / only monthly
   field :repeat_base, type: String, default: 'date'
@@ -18,24 +18,24 @@ class Gws::Schedule::RepeatPlan
   field :wdays, type: Array, default: []
 
   before_validation do
-    self.end_date = Date.new(start_date.year, 12, 31) if start_date.present? && end_date.blank?
+    self.repeat_end = Date.new(repeat_start.year, 12, 31) if repeat_start.present? && repeat_end.blank?
     self.wdays.reject! { |c| c.blank? }
   end
 
   validates :repeat_type, inclusion: { in: ['', 'daily', 'weekly', 'monthly'] }
   validates :interval, presence: true, if: -> { repeat_type.present? }
   validates :interval, inclusion: { in: 1..10 }, if: -> { interval.present? }
-  validates :start_date, presence: true, if: -> { repeat_type.present? }
+  validates :repeat_start, presence: true, if: -> { repeat_type.present? }
   validates :repeat_base, presence: true, if: -> { repeat_type == 'monthly' }
   #validates :wdays, presence: true, if: -> { repeat_type == 'weekly' }
 
-  validate :validate_plan_date, if: -> { start_date.present? && end_date.present? }
+  validate :validate_plan_date, if: -> { repeat_start.present? && repeat_end.present? }
   validate :validate_plan_dates, if: -> { errors.size == 0 }
 
   public
     def validate_plan_date
-      errors.add :end_date, :greater_than, count: t(:start_date) if end_date <= start_date
-      errors.add(:end_date, I18n.t("gws/schedule.errors.less_than_years", count: 1)) if end_date > (start_date + 1.year)
+      errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end <= repeat_start
+      errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1)) if repeat_end > (repeat_start + 1.year)
     end
 
     def validate_plan_dates
@@ -62,25 +62,25 @@ class Gws::Schedule::RepeatPlan
     # 繰り返し予定を登録する日付の配列を返す（毎日）
     # @return [Array] 繰り返し予定を登録する日付の配列
     def daily_dates
-      start_date.step(end_date, interval).to_a
+      repeat_start.step(repeat_end, interval).to_a
     end
 
     # 繰り返し予定を登録する日付の配列を返す（毎週X曜日）
     # @return [Array] 繰り返し予定を登録する日付の配列
     def weekly_dates
-      wdays = self.wdays.presence || [start_date.wday.to_s]
+      wdays = self.wdays.presence || [repeat_start.wday.to_s]
       dates = []
 
       (0..6).each do |i|
         if wdays.include?(i.to_s)
-          date = get_date_next_specified_wday(start_date, i)
-          dates << date if date <= end_date
+          date = get_date_next_specified_wday(repeat_start, i)
+          dates << date if date <= repeat_end
         end
       end
 
       dates.each do |date|
         date += interval.week
-        dates << date if date <= end_date
+        dates << date if date <= repeat_end
       end
       dates.sort
     end
@@ -105,11 +105,11 @@ class Gws::Schedule::RepeatPlan
     # @return [Array] 繰り返し予定を登録する日付の配列
     def monthly_dates_by_date
       dates = []
-      dates << start_date
+      dates << repeat_start
 
       dates.each do |date|
         date += interval.month
-        dates << date if date <= end_date
+        dates << date if date <= repeat_end
       end
       dates
     end
@@ -118,15 +118,15 @@ class Gws::Schedule::RepeatPlan
     # @return [Array] 繰り返し予定を登録する日付の配列
     def monthly_dates_by_week
       dates = []
-      dates << start_date
+      dates << repeat_start
 
-      week = get_week_number_of_month(start_date)
-      wday = start_date.wday
+      week = get_week_number_of_month(repeat_start)
+      wday = repeat_start.wday
 
       dates.each do |dt|
         check_month = dt + interval.month
         check_date = get_date_by_ordinal_week(check_month.year, check_month.month, week, wday)
-        dates << check_date if check_date <= end_date
+        dates << check_date if check_date <= repeat_end
       end
       dates
     end
@@ -135,10 +135,10 @@ class Gws::Schedule::RepeatPlan
     # @param  [Date]    base_date 基準日
     # @return [Integer]           第何週(1-5)
     def get_week_number_of_month(base_date)
-      start_date = Date.new(base_date.year, base_date.month, 1)
+      repeat_start = Date.new(base_date.year, base_date.month, 1)
       week_number = 0
 
-      start_date.upto(base_date.to_date).each do |dt|
+      repeat_start.upto(base_date.to_date).each do |dt|
         week_number += 1 if dt.wday == base_date.wday
       end
 
@@ -153,11 +153,11 @@ class Gws::Schedule::RepeatPlan
     # @return [Date]            条件に合致する日付
     # @return [nil]             条件が不正な場合はnilが返る
     def get_date_by_ordinal_week(year, month, week, wday)
-      start_date = Date.new(year, month, 1)
-      end_date = start_date + 1.month - 1.day
+      repeat_start = Date.new(year, month, 1)
+      repeat_end = repeat_start + 1.month - 1.day
       return_date = nil
 
-      start_date.upto(end_date).each do |dt|
+      repeat_start.upto(repeat_end).each do |dt|
         if get_week_number_of_month(dt) == week && dt.wday == wday
           return_date = Date.parse(dt.to_s)
           break
@@ -175,9 +175,7 @@ class Gws::Schedule::RepeatPlan
 
       if base_plan.start_at
         time = [base_plan.start_at.hour, base_plan.start_at.min]
-        if base_plan.end_at
-          diff = base_plan.end_at.to_time_in_current_zone.to_i - base_plan.start_at.to_time_in_current_zone.to_i
-        end
+        diff = base_plan.end_at.to_i - base_plan.start_at.to_i if base_plan.end_at
       end
 
       attr = base_plan.attributes.dup

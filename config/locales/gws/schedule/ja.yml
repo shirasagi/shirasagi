@@ -5,6 +5,7 @@ ja:
     group_plan: グループの予定
     facility_plan: 設備の予定
     category: 種別設定
+    reminder: リマインダー
 
     links:
       add_plan: 予定を登録する
@@ -52,16 +53,16 @@ ja:
         text: 内容
         start_at: 開始日時
         end_at: 終了日時
+        start_on: 開始日
+        end_on: 終了日
         allday: 終日
         category_id: スケジュール種別
         term: 日時
       gws/schedule/repeat_plan: &repeat_plan
         repeat_type: 繰り返し設定
         interval: 繰り返し間隔
-        start_date: 開始日
-        end_date: 終了日
-        start_time: 開始時刻
-        end_time: 終了時刻
+        repeat_start: 開始日
+        repeat_end: 終了日
         repeat_base: 繰り返しの基準
         wdays: 曜日
       gws/schedule/category:
@@ -72,8 +73,8 @@ ja:
 
       gws/addon/schedule/repeat:
         <<: *repeat_plan
-        start_date: 繰り返し - 開始日
-        end_date: 繰り返し - 終了日
+        repeat_start: 繰り返し - 開始日
+        repeat_end: 繰り返し - 終了日
         wdays: 繰り返し曜日
       gws/addon/schedule/member:
         member_ids: 参加者

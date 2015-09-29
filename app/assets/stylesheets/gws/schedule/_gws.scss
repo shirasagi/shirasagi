@@ -54,8 +54,7 @@
   //background: #f6faff;
 }
 .fc-unthemed .fc-today {
-  background: #Ffd;
-  font-weight: bold;
+  background: #ffb;
 }
 
 // events
@@ -72,36 +71,39 @@
   font-family: arial, sans-serif;
   font-weight: normal;
 }
+.fc-event-allday {
+  border-right: 2px solid #000;
+}
 .fc-event-one {
   background: transparent;
-  color: #800;
+  color: $orange;
   cursor: pointer;
-  &:hover { color: #800; text-decoration: underline; }
+  &:hover { color: $orange; text-decoration: underline; }
 }
 .fc-event-days {
-  border-right: 2px solid #a88;
+  border-color: #966;
   background-color: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
-  color: #800;
-  &:hover { color: #800; text-decoration: underline; }
+  color: #000;
+  &:hover { color: #000; text-decoration: underline; }
 }
 .fc-agenda-view .fc-event-one {
   background-color: #bdf;
   color: #000;
 }
 .fc-event-repeat.fc-event-one {
-  color: #49c;
+  color: #38c;
 }
 .fc-event-repeat.fc-event-days {
   border-color: #49c;
-  background-color: #def;
-  color: #28b;
+  background-color: #bdf;
+  color: #000;
 }
 .fc-holiday {
-  background: #f33;
+  background: #9d6;
   background-image: url(/assets/img/gws/bg-plan.png);
-  color: #fff;
-  &:hover { color: #fff; }
+  color: #000;
+  &:hover { color: #000; }
 }
 
 //
@@ -119,7 +121,7 @@
   }
 }
 #calendar-controller {
-  .fc-widget-header { border-bottom-width: 0; }
+  //.fc-widget-header { border-bottom-width: 0; }
   .fc-body { display: none; }
 }
 .calendar.multiple {
@@ -147,6 +149,11 @@
 .gws-schedule-category-sample {
   padding: 0 5px;
   font-size: 90%;
+}
+
+// plan form
+.date-options {
+  padding: 5px 5px 0;
 }
 
 // repeat form

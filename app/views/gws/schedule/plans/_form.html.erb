@@ -1,5 +1,8 @@
 <%= jquery do %>
-  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 30 });
+  $(".date").datetimepicker({ lang: "ja", timepicker: false, format:'Y/m/d', closeOnDateSelect: true, scrollInput: false });
+
+  Gws_Schedule_Plan_Form.render();
 <% end %>
 
 <dl class="see">
@@ -8,9 +11,19 @@
 
   <dt><%= @model.t :term %></dt>
   <dd>
-    <%= f.text_field :start_at, class: "datetime start", value: tryb{@item.start_at.strftime("%Y/%m/%d %H:%M")} %>
-    - <%= f.text_field :end_at, class: "datetime end", value: tryb{@item.end_at.strftime("%Y/%m/%d %H:%M")} %>
-    &nbsp;<label><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
+    <div class="datetimes-field">
+      <%= f.text_field :start_at, class: "datetime start", value: tryb{@item.start_at.strftime("%Y/%m/%d %H:%M")} %>
+      - <%= f.text_field :end_at, class: "datetime end", value: tryb{@item.end_at.strftime("%Y/%m/%d %H:%M")} %>
+    </div>
+    <div class="dates-field">
+      <%= f.text_field :start_on, class: "date start", value: tryb{@item.start_on.strftime("%Y/%m/%d")} %>
+      - <%= f.text_field :end_on, class: "date end", value: tryb{@item.end_on.strftime("%Y/%m/%d")} %>
+    </div>
+  </dd>
+  <dd>
+    <div class="date-options">
+      <label><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
+    </div>
   </dd>
 
   <% if nil %>

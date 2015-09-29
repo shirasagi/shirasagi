@@ -1,7 +1,7 @@
 module Gws::Schedule::PlanHelper
   def term(item)
     if item.allday?
-      dates = [item.start_at.strftime('%Y/%m/%d'), (item.end_at - 1).strftime('%Y/%m/%d')]
+      dates = [item.start_at.strftime('%Y/%m/%d'), item.end_at.strftime('%Y/%m/%d')]
     else
       dates = [item.start_at.strftime('%Y/%m/%d %H:%M'), item.end_at.strftime('%Y/%m/%d %H:%M')]
     end

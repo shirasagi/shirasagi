@@ -8,31 +8,49 @@ Gws_Schedule_Calendar.render('#calendar', {
 <% end %>
 
 <section class="main-box">
-  <header><h2><%= t('modules.gws/schedule') %></h2></header>
+  <!-- <header><h2><%= t('modules.gws/schedule') %></h2></header> -->
   <div class="calendar" id="calendar-controller"></div>
+  <div class="calendar-name">
+    <%= link_to @cur_user.name, gws_schedule_plans_path %>
+    <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_plan_path, class: 'add-plan' %>
+  </div>
   <div class="calendar multiple" id="calendar"></div>
 </section>
 
-<section class="main-box">
-  <header><h2><%= t('modules.gws/board') %></h2></header>
+<div class="portal-box">
+  <div class="index">
+    <div class="list-head"><%= t('gws/schedule.reminder') %></div>
 
-  <table class="index">
-    <thead>
-      <tr>
-        <th>スレッドタイトル</th>
-        <th>コメント数</th>
-        <th>最終更新日時</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @boards.each do |item| %>
-      <tr>
-        <td class="title"><%= link_to item.name, gws_board_topic_path(id: item) %></td>
-        <td class="comment"><%= item.descendants.size %></td>
-        <td class="datetime"><%= item.descendants_updated.strftime("%Y-%m-%d %H:%M") %></td>
-      </tr>
+    <ul class="list-items">
+      <% @plans.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, gws_schedule_plan_path(id: item), class: 'title' %>
+          <% if item.allday? %>
+          <span class="datetime"><%= item.end_at.strftime("%Y/%m/%d") %></span>
+          <% else %>
+          <span class="datetime"><%= item.end_at.strftime("%Y/%m/%d %H:%M") %></span>
+          <% end %>
+        </div>
+      </li>
       <% end %>
-    </tbody>
-  </table>
-</section>
+    </ul>
+  </div>
+</div>
+
+<div class="portal-box">
+  <div class="index">
+    <div class="list-head"><%= t('modules.gws/board') %></div>
+
+    <ul class="list-items">
+      <% @boards.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, gws_board_topic_path(id: item), class: 'title' %>
+          <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

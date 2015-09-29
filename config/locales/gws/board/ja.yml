@@ -1,6 +1,8 @@
 ja:
   gws/board:
     user: ユーザー
+    #descendants_num: コメント数
+    #descendants_updated: 更新日時
     no_authority: 権限がありません
     topic:
       comment: コメント
