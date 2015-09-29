@@ -9,9 +9,9 @@ module Cms::Model::Layout
     store_in collection: "cms_layouts"
     set_permission_name "cms_layouts"
 
-    field :part_paths, type: SS::Extensions::Words, metadata: { form: :none }
-    field :css_paths, type: SS::Extensions::Words, metadata: { form: :none }
-    field :js_paths, type: SS::Extensions::Words, metadata: { form: :none }
+    field :part_paths, type: SS::Extensions::Words
+    field :css_paths, type: SS::Extensions::Words
+    field :js_paths, type: SS::Extensions::Words
 
     before_save :set_part_paths
     before_save :set_css_paths

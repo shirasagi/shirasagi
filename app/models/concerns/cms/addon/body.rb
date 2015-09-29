@@ -4,7 +4,7 @@ module Cms::Addon
     extend SS::Addon
 
     included do
-      field :html, type: String, metadata: { form: :text }
+      field :html, type: String
       field :markdown, type: String
       permit_params :html, :markdown
 

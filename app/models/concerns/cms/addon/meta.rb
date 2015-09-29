@@ -5,8 +5,8 @@ module Cms::Addon
 
     included do
       field :keywords, type: SS::Extensions::Words
-      field :description, type: String, metadata: { form: :text }
-      field :summary_html, type: String, metadata: { form: :text }
+      field :description, type: String
+      field :summary_html, type: String
       permit_params :keywords, :description, :summary_html
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }

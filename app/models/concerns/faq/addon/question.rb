@@ -4,7 +4,7 @@ module Faq::Addon
     extend SS::Addon
 
     included do
-      field :question, type: String, metadata: { form: :text }
+      field :question, type: String
       permit_params :question
     end
   end

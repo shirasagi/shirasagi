@@ -22,7 +22,7 @@ module Cms::Model::Member
 
     seqid :id
     field :name, type: String
-    field :email, type: String, metadata: { form: :email }
+    field :email, type: String
     field :password, type: String
     field :oauth_type, type: String
     field :oauth_id, type: String

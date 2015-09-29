@@ -6,7 +6,7 @@ class Ezine::Member
   include Ezine::MemberSearchable
   include Ezine::Addon::Data
 
-  field :email, type: String, metadata: { from: :email }
+  field :email, type: String
   field :email_type, type: String
   field :state, type: String, default: 'enabled'
 

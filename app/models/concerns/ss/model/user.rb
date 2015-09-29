@@ -21,7 +21,7 @@ module SS::Model::User
     seqid :id
     field :name, type: String
     field :uid, type: String
-    field :email, type: String, metadata: { form: :email }
+    field :email, type: String
     field :password, type: String
     field :type, type: String
     field :login_roles, type: Array, default: [LOGIN_ROLE_DBPASSWD]

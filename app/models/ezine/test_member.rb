@@ -5,7 +5,7 @@ class Ezine::TestMember
   include Cms::SitePermission
   include Ezine::MemberSearchable
 
-  field :email, type: String, metadata: { from: :email }
+  field :email, type: String
   field :email_type, type: String
 
   permit_params :email, :email_type
