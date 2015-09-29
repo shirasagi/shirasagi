@@ -9,6 +9,8 @@ describe "cms_notices", dbscope: :example, type: :feature do
   let(:edit_path) { edit_cms_notice_path site.id, item }
   let(:delete_path) { delete_cms_notice_path site.id, item }
   let(:copy_path) { copy_cms_notice_path site.id, item }
+  let(:public_index_path) { cms_public_notices_path site.id }
+  let(:public_show_path) { cms_public_notice_path site.id, item }
 
   it "without login" do
     visit index_path
@@ -88,6 +90,22 @@ describe "cms_notices", dbscope: :example, type: :feature do
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
         expect(page).not_to have_css("form#item-form")
+      end
+    end
+
+    describe "#index" do
+      it do
+        visit public_index_path
+        expect(status_code).to eq 200
+        expect(current_path).to eq public_index_path
+      end
+    end
+
+    describe "#show" do
+      it do
+        visit public_show_path
+        expect(status_code).to eq 200
+        expect(current_path).to eq public_show_path
       end
     end
   end
