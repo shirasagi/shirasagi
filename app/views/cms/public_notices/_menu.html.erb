@@ -1,6 +1,6 @@
 <nav class="nav-menu">
   <%= link_to :"cms.links.back_to_contents", cms_contents_path %>
   <% if params[:action] !~ /index/ %>
-    <%#= link_to :back_to_index, action: :index %>
+    <%= link_to :back_to_index, action: :index %>
   <% end %>
 </nav>
