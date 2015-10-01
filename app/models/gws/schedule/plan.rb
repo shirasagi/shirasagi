@@ -121,7 +121,7 @@ class Gws::Schedule::Plan
       self.end_at   = api_end
     end
 
-    # Node: month, week
+    # Mode: month, week
     # - 時間予定の終了日を変更
     # - 終日予定の終了日を変更
     def set_from_resize_date_api
