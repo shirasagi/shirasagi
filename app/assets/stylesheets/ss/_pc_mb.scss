@@ -1034,7 +1034,7 @@ div.index {
     }
   }
   .list-head label {
-    padding: 10px 2px 4px 11px;
+    padding: 10px 4px 4px 19px;
   }
 }
 #ajax-box {
@@ -1049,7 +1049,7 @@ div.index {
 .list-head {
   @include clear;
   margin: 0px 0px 10px;
-  padding: 10px 20px;
+  padding: 10px 12px;
   border-bottom: $border-gray1;
   font-weight: bold;
   @include mb { padding: 10px 20px; }
@@ -1057,7 +1057,7 @@ div.index {
 .list-head-action {
   float: left;
   margin-top: 3px;
-  @include mb { 
+  @include mb {
     margin-bottom: 10px;
     button { margin: 0; }
   }

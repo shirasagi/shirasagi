@@ -7,8 +7,7 @@
 // -------------------------------------------------------------------------------------------------
 // define
 
-$font-base: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
-$font-head: Optima, Futura, Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-base: Tahoma, Arial, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
 
 //font-size
 $px10:72%;
@@ -93,13 +92,13 @@ $border-white: 1px solid $white;
   background: $white;
 }
 @mixin box-head {
-  padding: 12px 12px;
+  padding: 12px;
   line-height: 1;
   h2 {
     padding-left: 8px;
     border-left: 3px solid $orange;
     color: $black3;
-    font-size: $px16;
+    font-size: $px14;
     font-weight: bold;
   }
   nav {
