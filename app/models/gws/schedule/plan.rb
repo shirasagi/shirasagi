@@ -28,8 +28,10 @@ class Gws::Schedule::Plan
   permit_params :api, :api_start, :api_end
   permit_params :name, :start_on, :end_on, :start_at, :end_at, :allday, :category_id
 
-  before_validation :set_from_drop_api, if: -> { api == 'drop' }
-  before_validation :set_from_resize_api, if: -> { api == 'resize' }
+  before_validation :set_from_drop_time_api, if: -> { api == 'drop' && api_start.index('T') }
+  before_validation :set_from_drop_date_api, if: -> { api == 'drop' && !api_start.index('T') }
+  before_validation :set_from_resize_time_api, if: -> { api == 'resize' && api_start.index('T') }
+  before_validation :set_from_resize_date_api, if: -> { api == 'resize' && !api_start.index('T') }
   before_validation :set_dates_on
   before_validation :set_datetimes_at
 
@@ -92,25 +94,37 @@ class Gws::Schedule::Plan
     end
 
   private
-    # @example
-    #   [allday] api=drop, api_start=2015-09-30, api_end=2015-10-02
-    #   [a day]  api=drop, api_start=2015-09-30T17:55:22, api_end=
-    def set_from_drop_api
-      if allday?
-        self.start_on = api_start
-        self.end_on   = Date.parse(api_end) - 1.days
-      else
-        date = api_end.present? ? Date.parse(api_end) : Date.parse(api_start)
-        time = [end_at.hour, end_at.min]
-        self.start_at = api_start
-        self.end_at   = Time.zone.local date.year, date.month, date.day, time[0], time[1]
-      end
+    # Mode: month, week, day
+    # - 時間予定(複数日)を別の日に移動
+    # - 終日予定を時間予定に変更
+    def set_from_drop_time_api
+      self.start_at = api_start
+
+      date = api_end.present? ? Date.parse(api_end) : Date.parse(api_start)
+      time = allday? ? [start_at.hour, start_at.min] : [end_at.hour, end_at.min]
+      self.end_at = Time.zone.local date.year, date.month, date.day, time[0], time[1]
+      self.allday = nil
     end
 
-    # @example
-    #   [allday] api=resize, api_start=2015-09-29, api_end=2015-10-02
-    #   [a day]  none
-    def set_from_resize_api
+    # Mode: month, week
+    # - 終日予定を別の日に移動
+    def set_from_drop_date_api
+      self.start_on = api_start
+      self.end_on   = api_end.present?  ? (Date.parse(api_end) - 1.days) : api_start
+      self.allday   = 'allday'
+    end
+
+    # Mode: day
+    # - 時間予定の時間を変更
+    def set_from_resize_time_api
+      self.start_at = api_start
+      self.end_at   = api_end
+    end
+
+    # Node: month, week
+    # - 時間予定の終了日を変更
+    # - 終日予定の終了日を変更
+    def set_from_resize_date_api
       self.start_on = api_start
       self.end_on   = Date.parse(api_end) - 1.days
     end
