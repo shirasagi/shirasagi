@@ -47,6 +47,7 @@ module Gws::Addon::Schedule::Repeat
     def remove_repeat_plan
       if repeat_plan
         plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
+        plans.delete
         repeat_plan.destroy if plans.size == 0
       end
       remove_attribute(:repeat_plan_id)
@@ -69,6 +70,12 @@ module Gws::Addon::Schedule::Repeat
     def repeat_type_options
       [:daily, :weekly, :monthly].map do |name|
         [I18n.t("gws/schedule.options.repeat_type.#{name}"), name.to_s]
+      end
+    end
+
+    def repeat_base_options
+      [:date, :wday].map do |name|
+        [I18n.t("gws/schedule.options.repeat_base.#{name}"), name.to_s]
       end
     end
 

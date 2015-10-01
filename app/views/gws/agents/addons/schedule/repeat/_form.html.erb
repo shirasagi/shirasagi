@@ -17,9 +17,9 @@ model = Gws::Schedule::RepeatPlan
   <dt><%= model.t :interval %><%= model.tt :interval %></dt>
   <dd>
     <%= f.select :interval, @item.interval_options %>
-    <span class="repeat-daily">日</span>
-    <span class="repeat-weekly">週</span>
-    <span class="repeat-monthly">月</span>
+    <span class="repeat-daily"><%= t "gws/schedule.options.interval.daily" %></span>
+    <span class="repeat-weekly"><%= t "gws/schedule.options.interval.weekly" %></span>
+    <span class="repeat-monthly"><%= t "gws/schedule.options.interval.monthly" %></span>
   </dd>
 
   <dt class="repeat-monthly"><%= model.t :repeat_base %><%= model.tt :repeat_base %></dt>

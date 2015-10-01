@@ -1,0 +1,34 @@
+<%
+
+return unless @item.repeat_plan
+
+model = Gws::Schedule::RepeatPlan
+@item.sync_repeat_plan #if params[:action] =~ /(new|edit)/
+
+%>
+<dl class="see">
+  <dt><%= model.t :repeat_type %></dt>
+  <dd><%= @item.label :repeat_type %></dd>
+
+  <dt><%= model.t :interval %></dt>
+  <dd>
+    <%= @item.send :interval %>
+    <span class="repeat-daily"><%= t "gws/schedule.options.interval.#{@item.repeat_type}" %></span>
+  </dd>
+
+  <% if @item.repeat_type == 'monthly' %>
+  <dt><%= model.t :repeat_base %></dt>
+  <dd><%= @item.label :repeat_base %></dd>
+  <% end %>
+
+  <% if @item.repeat_type == 'weekly' && @item.wdays.present? %>
+  <dt><%= model.t :wdays %></dt>
+  <dd><%= @item.wdays.map { |i| t("date.abbr_day_names")[i.to_i] }.join(', ') %></dd>
+  <% end %>
+
+  <dt><%= model.t :repeat_start %></dt>
+  <dd><%= tryb{@item.repeat_start.strftime("%Y/%m/%d")} %></dd>
+
+  <dt><%= model.t :repeat_end %></dt>
+  <dd><%= tryb{@item.repeat_end.strftime("%Y/%m/%d")} %></dd>
+</dl>

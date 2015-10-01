@@ -18,7 +18,7 @@ class Gws::Schedule::RepeatPlan
   field :wdays, type: Array, default: []
 
   before_validation do
-    self.repeat_end = Date.new(repeat_start.year, 12, 31) if repeat_start.present? && repeat_end.blank?
+    self.repeat_end = repeat_start + 1.months if repeat_start.present? && repeat_end.blank?
     self.wdays.reject! { |c| c.blank? }
   end
 
@@ -32,15 +32,6 @@ class Gws::Schedule::RepeatPlan
   validate :validate_plan_dates, if: -> { errors.size == 0 }
 
   public
-    def validate_plan_date
-      errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end < repeat_start
-      errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1)) if repeat_end > (repeat_start + 1.year)
-    end
-
-    def validate_plan_dates
-      errors.add :base, I18n.t('gws/schedule.errors.empty_plan_days') if plan_dates.size == 0
-    end
-
     def extract_plans(plan)
       save_plans plan, plan_dates
     end
@@ -91,6 +82,15 @@ class Gws::Schedule::RepeatPlan
     end
 
   private
+    def validate_plan_date
+      errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end < repeat_start
+      errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1)) if repeat_end > (repeat_start + 1.year)
+    end
+
+    def validate_plan_dates
+      errors.add :base, I18n.t('gws/schedule.errors.empty_plan_days') if plan_dates.size == 0
+    end
+
     # 基準日から見た次の指定曜日の日付を返す
     # @param  [Date]    base_date 基準日
     # @param  [Integer] wday      指定曜日(0-6 : 日-土)
@@ -181,7 +181,7 @@ class Gws::Schedule::RepeatPlan
       attr.delete('_id')
 
       #TODO: 最適化
-      base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).destroy
+      base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).delete
 
       dates.each_with_index do |date, idx|
         plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
