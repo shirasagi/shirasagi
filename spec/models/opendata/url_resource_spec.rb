@@ -1,8 +1,10 @@
 require 'spec_helper'
 
 # rubocop:disable Style/FirstParameterIndentation
-describe Opendata::UrlResource, dbscope: :example, http_server: true,
-         doc_root: Rails.root.join("spec", "fixtures", "opendata") do
+describe Opendata::UrlResource, dbscope: :example, http_server: true do
+  # http.default port: 33_190
+  http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")
+
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
@@ -14,7 +16,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
     subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
     before do
       subject.license_id = license.id
-      subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+      subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
       subject.crawl_update = "none"
       subject.save!
     end
@@ -53,13 +55,9 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
     subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
     before do
       subject.license_id = license.id
-      subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+      subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
       subject.crawl_update = "none"
-      @http_server.options = { last_modified: nil }
-    end
-
-    after do
-      @http_server.options = {}
+      http.options last_modified: nil
     end
 
     it do
@@ -78,7 +76,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
       subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+        subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
         subject.crawl_update = "none"
         subject.save!
       end
@@ -97,7 +95,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
       subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/euc-jp.csv"
+        subject.original_url = "http://#{http.addr}:#{http.port}/euc-jp.csv"
         subject.crawl_update = "none"
         subject.save!
       end
@@ -116,7 +114,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
       subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/utf-8.csv"
+        subject.original_url = "http://#{http.addr}:#{http.port}/utf-8.csv"
         subject.crawl_update = "none"
         subject.save!
       end
@@ -137,17 +135,13 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
       subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+        subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
         subject.crawl_update = "auto"
         subject.save!
 
         # below code is curious but this rounds milli seconds
         @now = Time.zone.at(Time.zone.now.to_i)
-        @http_server.options = { real_path: "/shift_jis-2.csv", last_modified: @now }
-      end
-
-      after do
-        @http_server.options = {}
+        http.options real_path: "/shift_jis-2.csv", last_modified: @now
       end
 
       it do
@@ -168,17 +162,13 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
       subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+        subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
         subject.crawl_update = "none"
         subject.save!
 
         # below code is curious but this rounds milli seconds
         @now = Time.zone.at(Time.zone.now.to_i)
-        @http_server.options = { real_path: "/shift_jis-2.csv", last_modified: @now }
-      end
-
-      after do
-        @http_server.options = {}
+        http.options real_path: "/shift_jis-2.csv", last_modified: @now
       end
 
       it do
@@ -199,14 +189,10 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
       subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/"
+        subject.original_url = "http://#{http.addr}:#{http.port}/"
         subject.crawl_update = "none"
         subject.original_updated = nil
-        @http_server.options = { last_modified: nil }
-      end
-
-      after do
-        @http_server.options = {}
+        http.options last_modified: nil
       end
 
       it do
@@ -218,14 +204,10 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
       subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/notfound.csv"
+        subject.original_url = "http://#{http.addr}:#{http.port}/notfound.csv"
         subject.crawl_update = "none"
         subject.original_updated = nil
-        @http_server.options = { last_modified: nil }
-      end
-
-      after do
-        @http_server.options = {}
+        http.options last_modified: nil
       end
 
       it do
@@ -266,7 +248,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
 
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/test-1.ttl"
+        subject.original_url = "http://#{http.addr}:#{http.port}/test-1.ttl"
         subject.crawl_update = "none"
       end
 
@@ -284,7 +266,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true,
 
       before do
         subject.license_id = license.id
-        subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/test-1.ttl"
+        subject.original_url = "http://#{http.addr}:#{http.port}/test-1.ttl"
         subject.crawl_update = "none"
       end
 

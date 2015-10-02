@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_api", dbscope: :example, http_server: true,
-          doc_root: Rails.root.join("spec", "fixtures", "opendata") do
+describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
+  # http.default port: 33_190
+  http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")
 
   let!(:node) { create_once :opendata_node_api, name: "opendata_api" }
   let!(:node_area) { create :opendata_node_area }
@@ -46,7 +47,7 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true,
     end
 
     dataset_url_resource.license_id = license.id
-    dataset_url_resource.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+    dataset_url_resource.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
     dataset_url_resource.crawl_update = "none"
     dataset_url_resource.save!
 

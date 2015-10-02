@@ -1,7 +1,8 @@
 require 'spec_helper'
 
-describe "opendata_crawl", dbscope: :example, http_server: true,
-           doc_root: Rails.root.join("spec", "fixtures", "opendata") do
+describe "opendata_crawl", dbscope: :example, http_server: true do
+  # http.default port: 33_190
+  http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")
 
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
@@ -28,7 +29,7 @@ describe "opendata_crawl", dbscope: :example, http_server: true,
   subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
   before do
     subject.license_id = license.id
-    subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+    subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
     subject.crawl_update = "none"
     subject.save!
   end
@@ -48,7 +49,7 @@ describe "opendata_crawl", dbscope: :example, http_server: true,
    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
    before do
      subject.license_id = license.id
-     subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+     subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
      subject.crawl_update = "none"
      subject.save!
    end
@@ -68,7 +69,7 @@ describe "opendata_crawl", dbscope: :example, http_server: true,
    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
    before do
      subject.license_id = license.id
-     subject.original_url = "http://#{@http_server.bind_addr}:#{@http_server.port}/shift_jis.csv"
+     subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
      subject.crawl_update = "none"
      subject.save!
    end
