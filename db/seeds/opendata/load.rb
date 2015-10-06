@@ -2,6 +2,31 @@ Dir.chdir @root = File.dirname(__FILE__)
 @site = SS::Site.find_by host: ENV["site"]
 
 ## -------------------------------------
+puts "# roles"
+
+def add_permissions(name, permissions)
+  puts name
+  cond = { name: name, site_id: @site.id }
+
+  item = Cms::Role.find_by cond rescue nil
+  return unless item
+
+  item.permissions = (item.permissions.dup + permissions).uniq.sort.select(&:present?)
+  item.update
+  item
+end
+
+add_permissions "記事編集権限",
+  %w(
+    read_other_opendata_datasets edit_other_opendata_datasets delete_other_opendata_datasets
+    read_private_opendata_datasets edit_private_opendata_datasets delete_private_opendata_datasets
+    read_other_opendata_apps edit_other_opendata_apps delete_other_opendata_apps
+    read_private_opendata_apps edit_private_opendata_apps delete_private_opendata_apps
+    read_other_opendata_ideas edit_other_opendata_ideas delete_other_opendata_ideas
+    read_private_opendata_ideas edit_private_opendata_ideas delete_private_opendata_ideas
+  )
+
+## -------------------------------------
 puts "# files"
 
 Dir.glob "files/**/*.*" do |file|
