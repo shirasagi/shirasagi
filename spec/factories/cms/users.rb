@@ -15,7 +15,7 @@ FactoryGirl.define do
     end
 
     trait :cms_user_rand_name do
-      name "cms_user#{unique_id}"
+      name { "cms_user#{unique_id}" }
     end
 
     trait :cms_user_uid do

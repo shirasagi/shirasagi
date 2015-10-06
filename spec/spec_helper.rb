@@ -69,7 +69,7 @@ RSpec.configure do |config|
   config.include Capybara::DSL
 
   config.include FactoryGirl::Syntax::Methods
-  config.before do
+  config.before(:all) do
     FactoryGirl.reload
   end
 
