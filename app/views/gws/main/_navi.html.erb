@@ -1,9 +1,9 @@
 <nav class="main-navi">
   <!--
-  <h2><%= link_to t('gws.portal'), "#{gws_portal_path}/" %></h2>
+  <h2><%= link_to t('gws.portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
   -->
-  <h2><%= link_to t('modules.gws/schedule'), gws_schedule_plans_path %></h2>
-  <h2><%= link_to t('modules.gws/board'), gws_board_topics_path %></h2>
-  <h2><%= link_to t('modules.gws/share'), gws_share_files_path %></h2>
-  <h2><%= link_to t('gws.site_config'), gws_site_path %></h2>
+  <h2><%= link_to t('modules.gws/schedule'), gws_schedule_plans_path, class: "icon-schedule" %></h2>
+  <h2><%= link_to t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>
+  <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
+  <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
