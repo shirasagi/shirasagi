@@ -359,6 +359,20 @@ td {
       background: $gray1 url(/assets/img/ic-conf-on.png) no-repeat 10px center;
     }
   }
+  .icon-schedule {
+    @include navi-icon;
+    background: url(/assets/img/gws/ic-calendar-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/gws/ic-calendar-on.png) no-repeat 10px center;
+    }
+  }
+  .icon-board {
+    @include navi-icon;
+    background: url(/assets/img/gws/ic-board-off.png) no-repeat 10px center;
+    &:hover {
+      background: $gray1 url(/assets/img/gws/ic-board-on.png) no-repeat 10px center;
+    }
+  }
   @include mb {
     @include clear;
     h2 {
@@ -375,6 +389,13 @@ td {
         text-overflow: ellipsis;
       }
     }
+  }
+}
+.portal h2 a {
+  @include navi-icon;
+  background: url(/assets/img/gws/ic-portal-off.png) no-repeat 10px center;
+  &:hover {
+    background: $gray1 url(/assets/img/gws/ic-portal-on.png) no-repeat 10px center;
   }
 }
 
@@ -1083,7 +1104,7 @@ div.index {
     @include mb { margin-left: 26px; }
   }
   .up {
-    padding-left: 25px;
+    padding: 2px 0 3px 25px;
     background: url(/assets/img/ic-arrow16up-off.png) no-repeat left center;
     &:hover {
       background: url(/assets/img/ic-arrow16up-on.png) no-repeat left center;
