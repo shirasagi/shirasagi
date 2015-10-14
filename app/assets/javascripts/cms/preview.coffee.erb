@@ -1,9 +1,14 @@
+//= require jquery
+//= require jquery_ujs
+//= require jquery.cookie
+//= require jquery.datetimepicker
+
 class @SS_Preview
   @mobile_path = "/mobile"
 
   @render: ->
     $("#ss-preview .date").datetimepicker
-      lang: "ja", roundTime: "ceil", step: 15, closeOnDateSelect: true
+      lang: "ja", roundTime: "ceil", step: 30, closeOnDateSelect: true
 
     $("#ss-preview .preview").click ->
       date = $("#ss-preview .date").val()
