@@ -1,4 +1,4 @@
-# rvm wrapper 2.2.2 start unicorn
+# rvm wrapper 2.2.3 start unicorn
 
 [Unit]
 Description=SHIRASAGI Unicorn Server
