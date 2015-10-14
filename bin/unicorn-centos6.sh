@@ -2,7 +2,7 @@
 # chkconfig: - 85 35
 # description: Unicorn
 
-# rvm wrapper 2.2.2 start unicorn
+# rvm wrapper 2.2.3 start unicorn
 export PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin
 
 APPS=()
