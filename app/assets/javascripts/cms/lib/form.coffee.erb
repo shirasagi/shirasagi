@@ -606,8 +606,8 @@ class @Form_Alert
             ul.append('<li>' + field["msg"] + '</li>')
 
         footer = $('<footer class="send">')
-        footer.append('<button name="button" type="button" class="save"><%= I18n.t('views.button.ignore_alert') %></button>')
-        footer.append('<button name="button" type="button" class="cancel"><%= I18n.t('views.button.cancel') %></button>')
+        footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t('views.button.ignore_alert') %></button>')
+        footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t('views.button.cancel') %></button>')
 
         $.colorbox(
           html: div.get(0).outerHTML + footer.get(0).outerHTML,
