@@ -18,10 +18,14 @@
         <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
-        <% if @model.collection_name =~ /^cms_(nodes|pages)$/ %>
-        <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
-        <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
-        <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
+        <% if @model.collection_name == :cms_nodes %>
+          <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+          <%= link_to :mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank %>
+          <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
+        <% elsif @model.collection_name == :cms_pages %>
+          <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
+          <%= link_to :mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank %>
+          <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
         <% end %>
 
         <% if item.try(:image) %>
