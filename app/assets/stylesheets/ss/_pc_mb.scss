@@ -292,14 +292,22 @@ td {
   h2 a {
     display: block;
     padding: 10px 15px;
-    border-bottom: $border-gray5;
     color: $black;
     &:hover {
       color: $orange;
       text-decoration: none;
     }
-    @include mb { background-position: 0 center !important; }
+    @include mb {
+      border-bottom: $border-gray5;
+      background-position: 0 center !important;
+    }
   }
+  .tool {
+    border-top: $border-gray5;
+    border-bottom: $border-gray5;
+    @include mb { clear: both; }
+  }
+ 
   a.current, a:hover {
     background-color: $gray1;
   }
