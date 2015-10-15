@@ -46,12 +46,10 @@ $ ->
   <dl class="see">
     <dt><%= @model.t :filename %><%= @model.tt :destination_filename %></dt>
     <dd>
-      <form>
       <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
       <%= hidden_field_tag :filename, "", value: @filename %>
       <%= hidden_field_tag :source, "", value: @source %>
       <%= f.button t("cms.move_page.confirm"), name: :confirm, class: "confirm btn" %>
-      </form>
     </dd>
   </dl>
 </section>
