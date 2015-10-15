@@ -13,12 +13,12 @@
 <%= form_for :item, url: { action: :unlock }, html: { id: "item-form", method: :delete, multipart: true } do |f| %>
   <%= hidden_field_tag "force", "true" %>
   <footer class="send">
-    <%= f.submit t("views.button.unlock_and_edit_forcibly"), class: :save %>
+    <%= f.submit t("views.button.unlock_and_edit_forcibly"), class: "btn-primary" %>
     <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>
 <% else %>
   <footer class="send">
-    <%= button_tag t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= button_tag t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
   </footer>
 <% end %>
