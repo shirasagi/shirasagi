@@ -28,7 +28,7 @@ $(".index.groups tbody tr[data-depth='1'] img").click();
             <%= link_to topic.name, action: :show, id: topic %>
           </td>
           <td><%= topic.updated.strftime("%Y/%m/%d %H:%M") %></td>
-          <td><%= link_to :reply, action: :new_reply, id: topic %></td>
+          <td><%= link_to :reply, { action: :new_reply, id: topic }, class: :btn %></td>
         </tr>
         <% topic.children.order(descendants_updated: -1).each do |comment| %>
           <tr data-depth="2">

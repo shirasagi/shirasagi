@@ -19,8 +19,8 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t("kana.views.button.build_kana_dictionary"), class: :save %>
-    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    <%= f.submit t("kana.views.button.build_kana_dictionary"), class: "btn-primary save" %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
   </footer>
 
 <% end %>
