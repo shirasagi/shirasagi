@@ -76,8 +76,8 @@ $ ->
             <div class="addon-body">
               <%= text_area :remand, :comment, value: "" %>
               <div class="buttons">
-                <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
-                <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item" } %>
+                <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
+                <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@
       <%= f.select :year, @years %>
       <%= f.select :month, @months, include_blank: t("ads.yearly") %>
     </span>
-    <input type="submit" value="<%= t('views.button.search') %>" />
-    <input type="button" value="<%= t('views.button.reset') %>" onclick="location.href='?'" />
+    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+    <input type="button" value="<%= t('views.button.reset') %>" onclick="location.href='?'" class="btn" />
   <% end %>
 </div>

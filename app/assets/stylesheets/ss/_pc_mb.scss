@@ -958,9 +958,9 @@ footer.send {
   @include mb { padding: 0 10px; }
   .keyword {
     max-width: 400px;
-    margin-bottom: 20px;
-    @include mb { margin-bottom: 0;}
+    @include mb { max-width: 75%; }
   }
+  .location-search { margin-bottom: 20px; }
   > button { @include mb{ margin-bottom: 10px; } }
   .marker-setting {
     @include clear;
