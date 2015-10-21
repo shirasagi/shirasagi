@@ -8,9 +8,9 @@
     <li class="list-item">
       <nav class="tap-menu">
         <%= link_to :"cms.content", contents_path(item) %>
+        <%= link_to :view_site, item.full_url, target: :_blank %>
         <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
         <%= link_to :mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank %>
-        <%= link_to :view_site, item.full_url, target: :_blank %>
       </nav>
       <div class="info">
         <%= link_to item.name, contents_path(item), class: "title" %>
