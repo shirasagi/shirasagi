@@ -437,10 +437,10 @@ td {
   }
   .dropdown {
     h2 {
-      background: url(/assets/img/ic-arrow-off.png) no-repeat 210px center;
+      background: url(/assets/img/ic-arrow-off.png) no-repeat 190px center;
     }
     &:hover h2, &.active h2 {
-      background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 210px center;
+      background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 190px center;
       color: $orange;
     }
     &.active h2 {

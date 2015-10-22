@@ -39,62 +39,62 @@
   </div>
 
   <div class="addon-body">
-<dl class="see ldap-server-groups">
-  <dt><%= t "ldap.views.server/index.group.group" %></dt>
-  <dd>
-    <% if @groups.blank? %>
-    <%= t "ldap.messages.no_groups"%>
-    <% else %>
-    <table class="index ldap-groups">
-      <thead>
-      <tr>
-        <th><%= t "ldap.views.server/index.group.name" %></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @groups.each do |group| %>
-        <tr class="list-item" <% if excludes?(group) then %> style="display: none;" <% end %>>
-          <td>
-            <%= link_to group.name, action: :index, "dn" => group.dn %>
-            <nav class="tap-menu">
-              <%= link_to :show, action: :group, "dn" => group.dn %>
-            </nav>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-    <% end %>
-  </dd>
-</dl>
+    <dl class="see ldap-server-groups">
+      <dt><%= t "ldap.views.server/index.group.group" %></dt>
+      <dd>
+        <% if @groups.blank? %>
+        <%= t "ldap.messages.no_groups"%>
+        <% else %>
+        <table class="index ldap-groups">
+          <thead>
+          <tr>
+            <th><%= t "ldap.views.server/index.group.name" %></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @groups.each do |group| %>
+            <tr class="list-item" <% if excludes?(group) then %> style="display: none;" <% end %>>
+              <td>
+                <%= link_to group.name, action: :index, "dn" => group.dn %>
+                <nav class="tap-menu">
+                  <%= link_to :show, action: :group, "dn" => group.dn %>
+                </nav>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <% end %>
+      </dd>
+    </dl>
 
-<dl class="see ldap-server-users">
-  <dt><%= t "ldap.views.server/index.user.user" %></dt>
-  <dd>
-    <% if @users.blank? %>
-    <%= t "ldap.messages.no_users"%>
-    <% else %>
-    <table class="index ldap-users">
-      <thead>
-      <tr>
-        <th><%= t "ldap.views.server/index.user.name" %>(<%= t "ldap.views.server/index.user.email" %>)</th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @users.each do |user| %>
-        <tr class="list-item">
-          <td>
-            <%= link_to "#{user.name}(#{user.email})", action: :user, "dn" => user.dn %>
-            <nav class="tap-menu">
-              <%= link_to :show, action: :user, "dn" => user.dn %>
-            </nav>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-    <% end %>
-  </dd>
-</dl>
+    <dl class="see ldap-server-users">
+      <dt><%= t "ldap.views.server/index.user.user" %></dt>
+      <dd>
+        <% if @users.blank? %>
+        <%= t "ldap.messages.no_users"%>
+        <% else %>
+        <table class="index ldap-users">
+          <thead>
+          <tr>
+            <th><%= t "ldap.views.server/index.user.name" %>(<%= t "ldap.views.server/index.user.email" %>)</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @users.each do |user| %>
+            <tr class="list-item">
+              <td>
+                <%= link_to "#{user.name}(#{user.email})", action: :user, "dn" => user.dn %>
+                <nav class="tap-menu">
+                  <%= link_to :show, action: :user, "dn" => user.dn %>
+                </nav>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <% end %>
+      </dd>
+    </dl>
   </div>
 </div>
