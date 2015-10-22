@@ -289,11 +289,23 @@ td {
   @include mb { padding: 10px 10px 10px 35px; }
 }
 .main-navi {
+  border-bottom: $border-gray5;
   h2 a {
+    position: relative;
     display: block;
-    padding: 10px 15px;
+    @include navi-icon;
     color: $black;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 10px;
+      width: 32px;
+      height: 32px;
+      background: url(/assets/img/ic-main-navi.png) no-repeat left top;
+    }
     &:hover {
+      position: relative;
       color: $orange;
       text-decoration: none;
     }
@@ -302,84 +314,65 @@ td {
       background-position: 0 center !important;
     }
   }
-  .tool {
-    border-top: $border-gray5;
-    border-bottom: $border-gray5;
-    @include mb { clear: both; }
+  h2 a:hover:before {
+    background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
   }
- 
   a.current, a:hover {
     background-color: $gray1;
   }
-  .icon-content {
-    @include navi-icon;
-    background: url(/assets/img/ic-contents-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-contents-on.png) no-repeat 10px center;
-    }
+  .icon-node:before {
+    background-position: left -32px;
   }
-  .icon-node {
-    @include navi-icon;
-    background: url(/assets/img/ic-folder-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-folder-on.png) no-repeat 10px center;
-    }
+  .icon-node:hover:before {
+    background-position: -32px -32px;
   }
-  .icon-page {
-    @include navi-icon;
-    background: url(/assets/img/ic-page-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-page-on.png) no-repeat 10px center;
-    }
+  .icon-page:before {
+    background-position: left -64px;
   }
-  .icon-part {
-    @include navi-icon;
-    background: url(/assets/img/ic-part-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-part-on.png) no-repeat 10px center;
-    }
+  .icon-page:hover:before {
+    background-position: -32px -64px;
   }
-  .icon-layout {
-    @include navi-icon;
-    background: url(/assets/img/ic-layout-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-layout-on.png) no-repeat 10px center;
-    }
+  .icon-part:before {
+    background-position: left -96px;
   }
-  .icon-conv {
-    @include navi-icon;
-    background: url(/assets/img/ic-conv-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-conv-on.png) no-repeat 10px center;
-    }
+  .icon-part:hover:before {
+    background-position: -32px -96px;
   }
-  .icon-write {
-    @include navi-icon;
-    background: url(/assets/img/ic-write-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-write-on.png) no-repeat 10px center;
-    }
+  .icon-layout:before {
+    background-position: left -128px;
   }
-  .icon-conf {
-    @include navi-icon;
-    background: url(/assets/img/ic-conf-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/ic-conf-on.png) no-repeat 10px center;
-    }
+  .icon-layout:hover:before {
+    background-position: -32px -128px;
   }
-  .icon-schedule {
-    @include navi-icon;
-    background: url(/assets/img/gws/ic-calendar-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/gws/ic-calendar-on.png) no-repeat 10px center;
-    }
+  .icon-conv:before {
+    background-position: left -160px;
   }
-  .icon-board {
-    @include navi-icon;
-    background: url(/assets/img/gws/ic-board-off.png) no-repeat 10px center;
-    &:hover {
-      background: $gray1 url(/assets/img/gws/ic-board-on.png) no-repeat 10px center;
-    }
+  .icon-conv:hover:before {
+    background-position: -32px -160px;
+  }
+  .icon-write:before {
+    background-position: left -192px;
+  }
+  .icon-write:hover:before {
+    background-position: -32px -192px;
+  }
+  .icon-conf:before {
+    background-position: left -224px;
+  }
+  .icon-conf:hover:before {
+    background-position: -32px -224px;
+  }
+  .icon-schedule:before {
+    background-position: left -288px;
+  }
+  .icon-schedule:hover:before {
+    background-position: -32px -288px;
+  }
+  .icon-board:before {
+    background-position: left -320px;
+  }
+  .icon-board:hover:before {
+    background-position: -32px -320px;
   }
   @include mb {
     @include clear;
@@ -399,12 +392,11 @@ td {
     }
   }
 }
-.portal h2 a {
-  @include navi-icon;
-  background: url(/assets/img/gws/ic-portal-off.png) no-repeat 10px center;
-  &:hover {
-    background: $gray1 url(/assets/img/gws/ic-portal-on.png) no-repeat 10px center;
-  }
+.portal h2 a:before {
+  background-position: left -256px;
+}
+.portal h2 a:hover:before {
+  background-position: -32px -256px;
 }
 
 // -------------------------------------------------------------------------------------------------

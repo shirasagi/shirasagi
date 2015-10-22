@@ -24,8 +24,9 @@
 </div>
 <% end %>
 
-<header class="ldap-server-header">
-  <nav>
+<div class="addon-view" id="addon-basic">
+  <div class="addon-head ldap-server-header">
+    <h2>
     <% group_hierachy.each_with_index do |e, idx| %>
       <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
       <% if e[1].nil? %>
@@ -34,9 +35,10 @@
         <span class="link"><%= link_to e[0], action: :index, "dn" => e[1] %></span>
       <% end %>
     <% end %>
-  </nav>
-</header>
+    </h2>
+  </div>
 
+  <div class="addon-body">
 <dl class="see ldap-server-groups">
   <dt><%= t "ldap.views.server/index.group.group" %></dt>
   <dd>
@@ -94,3 +96,5 @@
     <% end %>
   </dd>
 </dl>
+  </div>
+</div>
