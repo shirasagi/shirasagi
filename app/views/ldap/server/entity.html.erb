@@ -9,22 +9,26 @@
    group_hierachy = group_hierachy(@entity.parent)
 %>
 
-<header class="ldap-server-header">
-  <nav>
-    <% group_hierachy.each_with_index do |e, idx| %>
-      <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
-      <% if e[1].nil? %>
-        <span class="link"><%= link_to e[0], action: :index %></span>
-      <% else %>
-        <span class="link"><%= link_to e[0], action: :index, "dn" => e[1] %></span>
+<div class="addon-view" id="addon-basic">
+  <div class="addon-head ldap-server-header">
+    <h2>
+      <% group_hierachy.each_with_index do |e, idx| %>
+        <% if idx > 0 %><span class="separator">&rsaquo;</span><% end %>
+        <% if e[1].nil? %>
+          <span class="link"><%= link_to e[0], action: :index %></span>
+        <% else %>
+          <span class="link"><%= link_to e[0], action: :index, "dn" => e[1] %></span>
+        <% end %>
       <% end %>
-    <% end %>
-  </nav>
-</header>
+    </h2>
+  </div>
 
-<dl class="see ldap-server-properties">
-  <% @entity.each do |key, values| %>
-  <dt><%= key %></dt>
-  <dd><%= values.join(", ") %></dd>
-  <% end %>
-</dl>
+  <div class="addon-body">
+    <dl class="see ldap-server-properties">
+      <% @entity.each do |key, values| %>
+      <dt><%= key %></dt>
+      <dd><%= values.join(", ") %></dd>
+      <% end %>
+    </dl>
+  </div>
+</div>
