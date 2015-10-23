@@ -1,7 +1,9 @@
 <nav class="main-navi">
   <h2><%= link_to :"cms.content", cms_contents_path, class: "icon-content" %></h2>
-  <h2><%= link_to :"cms.node", node_nodes_path, class: "icon-node" %></h2>
+</nav>
 
+<nav class="main-navi">
+  <h2><%= link_to :"cms.node", node_nodes_path, class: "icon-node" %></h2>
   <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to :"cms.page", node_pages_path, class: "icon-page" %></h2>
   <% end %>
