@@ -1,6 +1,6 @@
 <% if @cur_node.map_html.present? %>
 <%
-  html = @cur_node.map_html.gsub(/<\/ (.*?) \/>/) do |m|
+  html = @cur_node.map_html.gsub(/\#\{(.*?)\}/) do |m|
     if $1 =~ /(sidebar|canvas|filters)/
       render file: "_#{$1}", locals: { current: "map" }
     else

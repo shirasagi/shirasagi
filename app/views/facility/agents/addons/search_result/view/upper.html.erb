@@ -16,7 +16,7 @@
       m
     end
   end
-  html = html.gsub(/<\/ (.*?) \/>/) do |m|
+  html = html.gsub(/\#\{(.*?)\}/) do |m|
     if $1 =~ /(tabs|settings)/
       render file: "_#{$1}"
     else
