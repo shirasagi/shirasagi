@@ -86,7 +86,7 @@ class @Syntax_Checker
     result.attr('class', 'errorExplanation')
     result.append("<h2>" + "<%= I18n.t('cms.syntax_check') %>" + "</h2>")
 
-    if Object.keys(Syntax_Checker.errors).length
+    if Syntax_Checker.errorCount > 0
       result.append("<p>" + "<%= I18n.t('errors.template.body') %>" + "</p>")
       result.append('<ul>')
       ul = result.find('ul:last')
@@ -191,7 +191,7 @@ class @Syntax_Checker
   @checkImgAlt: (html)->
     $(html).find('img').each ->
       alt = $(this).attr('alt')
-      if !alt || alt.trim() == "" || /^[\w\s\.\-]*$/.test(alt)
+      if !alt || $.trim(alt) == "" || /^[\w\s\.\-]*$/.test(alt)
         errors = [{
           code: Syntax_Checker.outerHtmlSummary(this)
           msg:  Syntax_Checker.message["notSetImgAlt"]
@@ -218,7 +218,7 @@ class @Syntax_Checker
       caption = $(this).find('caption')
       errors = []
 
-      if !caption || caption.text().trim() == ""
+      if !caption || $.trim(caption.text()) == ""
         errors.push({
           code: Syntax_Checker.outerHtmlSummary(table)
           msg:  Syntax_Checker.message["notSetTableCaption"]
@@ -605,7 +605,8 @@ class @Form_Alert
           for field, i in fields
             ul.append('<li>' + field["msg"] + '</li>')
 
-        footer = $('<footer class="send">')
+        # caution: below IE8, you must use document.createElement() method to create <footer>
+        footer = $(document.createElement("footer")).addClass('send')
         footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t('views.button.ignore_alert') %></button>')
         footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t('views.button.cancel') %></button>')
 

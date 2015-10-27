@@ -1,8 +1,11 @@
 <%= jquery do %>
   SS_AddonTabs.hide(".mod-inquiry-reception_plan");
 
-  $(".mod-inquiry-reception_plan .datetime").
-    datetimepicker({ format: "Y-m-d", timepicker: false, lang: "ja" });
+  if ($.support.opacity) {
+    // above IE9
+    $(".mod-inquiry-reception_plan .datetime").
+      datetimepicker({ format: "Y-m-d", timepicker: false, lang: "ja" });
+  }
 <% end %>
 
 <dl class="see mod-inquiry-reception_plan">

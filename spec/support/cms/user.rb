@@ -1,6 +1,7 @@
 def cms_user
   cms_user = Cms::User.where(email: build(:cms_user).email).first
   cms_user ||= create(:cms_user, group: cms_group, role: cms_role)
+  cms_user.in_password ||= "pass"
   cms_user
 end
 

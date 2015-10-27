@@ -11,7 +11,10 @@ $(".reset").on("click", function(e){
 $(".state").on("click", function(e){
   $("[value!='" + $(this).attr("value") + "'].state").prop("checked", false)
 });
-$(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+if ($.support.opacity) {
+  // above IE9
+  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+}
 <% end %>
 
 <%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>

@@ -1,8 +1,11 @@
 <%= jquery do %>
   SS_AddonTabs.hide(".mod-ezine-delivere-plan");
 
-  $(".mod-ezine-delivere-plan .datetime").
-    datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+  if ($.support.opacity) {
+    // above IE9
+    $(".mod-ezine-delivere-plan .datetime").
+      datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+  }
 <% end %>
 
 <dl class="see mod-ezine-delivere-plan">

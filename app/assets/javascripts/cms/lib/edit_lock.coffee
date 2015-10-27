@@ -5,22 +5,20 @@ class @Cms_EditLock
     @unlock_url = unlock_url
     @unloading = false
     @interval = 2 * 60 * 1000
-    $(window).bind('beforeunload', @releaseLock)
+    if $.support.opacity
+      # above IE9
+      $(window).bind('beforeunload', @releaseLock)
+    else
+      # below IE8
+      $('button[type="reset"]').bind('click', @releaseLockOnCancel)
+      $('a.back-to-index').bind('click', @releaseLockOnCancel)
+      $('a.back-to-show').bind('click', @releaseLockOnCancel)
     @refreshLock()
 
   updateView: (lock_until) ->
     $("#{@selector} .lock_until").text('')
     return unless lock_until
-    dateParts = []
-    dateParts.push(lock_until.getFullYear())
-    dateParts.push(('0' + (lock_until.getMonth() + 1)).slice(-2))
-    dateParts.push(lock_until.getDate())
-
-    timeParts = []
-    timeParts.push(lock_until.getHours())
-    timeParts.push(('0' + lock_until.getMinutes()).slice(-2))
-
-    $("#{@selector} .lock_until").text(dateParts.join('/') + ' ' + timeParts.join(':'))
+    $("#{@selector} .lock_until").text(lock_until)
 
   refreshLock: =>
     return if @unloading
@@ -31,8 +29,8 @@ class @Cms_EditLock
       cache: false
       statusCode:
         200: (data, status, xhr) =>
-          if (data.lock_until)
-            @updateView(new Date(data.lock_until))
+          if (data.lock_until_pretty)
+            @updateView(data.lock_until_pretty)
           else
             @updateView(null)
     setTimeout(@refreshLock, @interval)
@@ -45,6 +43,10 @@ class @Cms_EditLock
       dataType: "json"
       data:
         _method: "delete"
-      async: false
+      timeout: 5000
     # must return void
     return
+
+  releaseLockOnCancel: =>
+    @releaseLock()
+    true
