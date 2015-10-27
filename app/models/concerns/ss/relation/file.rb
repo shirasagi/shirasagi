@@ -36,7 +36,7 @@ module SS::Relation::File
       define_method("remove_relation_#{name}") do
         file = send(name)
         file.destroy if file
-        #send("#{store}=", nil) rescue nil
+        unset(store) rescue nil
       end
 
       define_method("update_relation_#{name}_state") do
