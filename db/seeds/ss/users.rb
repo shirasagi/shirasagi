@@ -23,6 +23,22 @@ g20 = save_group name: "シラサギ市/危機管理部", order: 50
 g21 = save_group name: "シラサギ市/危機管理部/管理課", order: 60
 g22 = save_group name: "シラサギ市/危機管理部/防災課", order: 70
 
+def save_role(data)
+  if item = Sys::Role.where(name: data[:name]).first
+    puts "exists #{data[:name]}"
+    item.update data
+    return item
+  end
+
+  puts "create #{data[:name]}"
+  item = Sys::Role.new(data)
+  item.save
+  item
+end
+
+puts "# roles"
+r01 = save_role name: I18n.t('sys.roles.admin'), permissions: Sys::Role.permission_names
+
 def save_user(data)
   if item = SS::User.where(email: data[:email]).first
     puts "exists #{data[:name]}"
@@ -43,7 +59,7 @@ u01 = save_user name: "一般ユーザー1", uid: "user1", email: "user1@example
 u02 = save_user name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass", group_ids: [g21.id]
 u03 = save_user name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass", group_ids: [g12.id, g22.id]
 
-sys.add_to_set group_ids: [g11.id]
+sys.add_to_set group_ids: [g11.id], sys_role_ids: [r01.id]
 adm.add_to_set group_ids: [g11.id]
 u01.add_to_set group_ids: [g11.id]
 u02.add_to_set group_ids: [g21.id]
