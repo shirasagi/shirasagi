@@ -11,20 +11,20 @@
 <body>
 <div id="page">
 
-</ part "tool" />
-</ part "head" />
-</ part "navi" />
+{{ part "tool" }}
+{{ part "head" }}
+{{ part "navi" }}
 
 <div id="wrap">
-  </ part "breadcrumb" />
+  {{ part "breadcrumb" }}
   <div id="main" class="one">
     <header><h1 id="ss-page-name">#{page_name}</h1></header>
-    </ yield />
-    </ part "page-top" />
+    {{ yield }}
+    {{ part "page-top" }}
   </div>
 </div>
 
-</ part "foot" />
+{{ part "foot" }}
 
 </div>
 </body>

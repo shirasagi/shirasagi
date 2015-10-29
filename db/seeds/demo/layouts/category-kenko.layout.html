@@ -11,24 +11,24 @@
 <body>
 <div id="page">
 
-</ part "tool" />
-</ part "head" />
-</ part "navi" />
+{{ part "tool" }}
+{{ part "head" }}
+{{ part "navi" }}
 
 <div id="wrap">
-  </ part "breadcrumb" />
+  {{ part "breadcrumb" }}
   <div id="main">
     <header><h1 id="ss-page-name">#{page_name}</h1></header>
-    </ part "oshirase/kenko/recent" />
-    </ yield />
-    </ part "page-top" />
+    {{ part "oshirase/kenko/recent" }}
+    {{ yield }}
+    {{ part "page-top" }}
   </div>
   <div id="side">
-    </ part "links-life" />
+    {{ part "links-life" }}
   </div>
 </div>
 
-</ part "foot" />
+{{ part "foot" }}
 
 </div>
 </body>

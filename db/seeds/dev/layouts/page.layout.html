@@ -7,20 +7,20 @@
 <body>
 <div id="page">
 
-</ part "head" />
-</ part "navi" />
-<nav id="crumbs"><div class="wrap"></ part "crumbs" /></div></nav>
+{{ part "head" }}
+{{ part "navi" }}
+<nav id="crumbs"><div class="wrap">{{ part "crumbs" }}</div></nav>
 
 <div id="wrap">
   <article id="main">
     <div class="wrap">
       <header><h1 id="ss-page-name">#{page_name}</h1></header>
-      </ yield />
+      {{ yield }}
     </div>
   </article>
 </div>
 
-</ part "foot" />
+{{ part "foot" }}
 
 </div>
 </body>

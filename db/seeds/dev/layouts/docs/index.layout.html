@@ -7,26 +7,26 @@
 <body>
 <div id="page">
 
-</ part "/head" />
-</ part "/navi" />
-<nav id="crumbs"><div class="wrap"></ part "/crumbs" /></div></nav>
+{{ part "/head" }}
+{{ part "/navi" }}
+<nav id="crumbs"><div class="wrap">{{ part "/crumbs" }}</div></nav>
 
 <div id="wrap">
   <article id="main">
     <div class="wrap">
       <header><h1 id="ss-page-name">#{page_name}</h1></header>
-      </ yield />
+      {{ yield }}
     </div>
   </article>
   <div id="side">
     <div class="wrap">
-      <section><header><h1>注目記事</h1></header></ part "/topics/pages" /></section>
-      <section><header><h1>新着記事</h1></header></ part "pages" /></section>
+      <section><header><h1>注目記事</h1></header>{{ part "/topics/pages" }}</section>
+      <section><header><h1>新着記事</h1></header>{{ part "pages" }}</section>
     </div>
   </div>
 </div>
 
-</ part "/foot" />
+{{ part "/foot" }}
 
 </div>
 </body>

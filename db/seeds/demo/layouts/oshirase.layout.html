@@ -11,25 +11,25 @@
 <body>
 <div id="page">
 
-</ part "tool" />
-</ part "head" />
-</ part "navi" />
+{{ part "tool" }}
+{{ part "head" }}
+{{ part "navi" }}
 
 <div id="wrap">
-  </ part "breadcrumb" />
+  {{ part "breadcrumb" }}
   <div id="main" class="page">
     <header><h1 id="ss-page-name">#{page_name}</h1></header>
-    </ part "sns" />
-    </ yield />
+    {{ part "sns" }}
+    {{ yield }}
     <nav class="ss-adobe-reader" style="display: none">Adobe Reader</nav>
-    </ part "page-top" />
+    {{ part "page-top" }}
   </div>
   <div id="side">
-    </ part "recent-tabs" />
+    {{ part "recent-tabs" }}
   </div>
 </div>
 
-</ part "foot" />
+{{ part "foot" }}
 
 </div>
 </body>

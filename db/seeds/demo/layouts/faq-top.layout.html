@@ -11,25 +11,25 @@
 <body>
 <div id="page">
 
-</ part "tool" />
-</ part "head" />
-</ part "navi" />
+{{ part "tool" }}
+{{ part "head" }}
+{{ part "navi" }}
 
 <div id="wrap">
-  </ part "breadcrumb" />
+  {{ part "breadcrumb" }}
   <div id="main" class="faq">
     <header><h1 id="ss-page-name">#{page_name}</h1></header>
-    </ part "faq/faq-search/search" />
-    </ yield />
-    </ part "page-top" />
+    {{ part "faq/faq-search/search" }}
+    {{ yield }}
+    {{ part "page-top" }}
   </div>
   <div id="side">
-    </ part "faq/category-list" />
-    </ part "links-life" />
+    {{ part "faq/category-list" }}
+    {{ part "links-life" }}
   </div>
 </div>
 
-</ part "foot" />
+{{ part "foot" }}
 
 </div>
 </body>
