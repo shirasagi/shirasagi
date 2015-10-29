@@ -34,15 +34,17 @@
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
           <% opt.merge!(column.additional_attr_to_h) %>
           <% checked = (data == value) %>
-          <%= send(column.input_type + "_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %>
-          <%= label_tag "#{f.object_name}_#{column.id}_#{i}", value %>
+          <%= label_tag "#{f.object_name}_#{column.id}_#{i}" do %>
+            <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
+          <% end %>
         <% end %>
       <% elsif column.input_type =~ /check_box/ %>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = column.additional_attr_to_h %>
           <% checked = data.try(:[], "#{i}") ? true : false %>
-          <%= send(column.input_type + "_tag", "#{f.object_name}[#{column.id}][#{i}]", value, checked, opt) %>
-          <%= label_tag "#{f.object_name}_#{column.id}_#{i}", value %>
+          <%= label_tag "#{f.object_name}_#{column.id}_#{i}" do %>
+            <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}][#{i}]", value, checked, opt) %><span><%= value %></span>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
