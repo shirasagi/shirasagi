@@ -15,6 +15,7 @@ module SS::Relation::File
       before_save "validate_relation_#{name}", if: ->{ send("in_#{name}").present? }
       before_save "save_relation_#{name}", if: ->{ send("in_#{name}").present? }
       before_save "remove_relation_#{name}", if: ->{ send("rm_#{name}").to_s == "1" }
+      after_save "update_relation_#{name}_state", if: ->{ send(name).present? }
 
       define_method("validate_relation_#{name}") do
         file = relation_file(name)
@@ -35,7 +36,13 @@ module SS::Relation::File
       define_method("remove_relation_#{name}") do
         file = send(name)
         file.destroy if file
-        send("#{store}=", nil) rescue nil
+        unset(store) rescue nil
+      end
+
+      define_method("update_relation_#{name}_state") do
+        return unless respond_to?(:state)
+        file = send(name)
+        file.update_attributes(state: state) if file.state != state
       end
 
       define_method("generate_relation_public_#{name}") do
@@ -59,7 +66,7 @@ module SS::Relation::File
       file.model    = self.class.to_s.underscore
       file.site_id  = site_id if respond_to?(:site_id)
       file.user_id  = @cur_user.id if @cur_user
-      file.state    = "public"
+      file.state    = respond_to?(:state) ? state : "public"
       file
     end
 end
