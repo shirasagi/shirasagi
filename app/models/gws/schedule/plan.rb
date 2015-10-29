@@ -62,11 +62,8 @@ class Gws::Schedule::Plan
     end
 
     def category_options
-      cond = {
-        site_id: @cur_site ? @cur_site.id: site_id,
-        user_id: @cur_user ? @cur_user.id : user_id
-      }
-      Gws::Schedule::Category.where(cond).map { |c| [c.name, c.id] }
+      cond = { site_id: @cur_site ? @cur_site.id: site_id }
+      Gws::Schedule::Category.where(cond).order(name: 1).map { |c| [c.name, c.id] }
     end
 
     # event options
@@ -76,8 +73,11 @@ class Gws::Schedule::Plan
 
       if allday? || start_at.to_date != end_at.to_date
         data.merge! className: 'fc-event-days'
+        data[:backgroundColor] = category.color if category
+        data[:textColor] = category.text_color if category
       else
         data.merge! className: 'fc-event-one'
+        data[:textColor] = category.color if category
       end
 
       if allday?

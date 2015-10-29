@@ -3,6 +3,9 @@
   <dd><%= @item.send :name %></dd>
 
   <dt><%= @model.t :color %></dt>
-  <dd><span class="gws-schedule-category-sample" style="<%= "background: #{@item.bg_color}; color: #{@item.text_color}" %>">
-    <%= @model.t :color %></span></dd>
+  <dd>
+    <span class="gws-schedule-category-sample" style="<%= "background-color: #{@item.color}; color: #{@item.text_color}" %>">
+      <%= @item.name %></span>
+    <span style="<%= "color: #{@item.color};" %>"><%= @item.name %></span>
+  </dd>
 </dl>
