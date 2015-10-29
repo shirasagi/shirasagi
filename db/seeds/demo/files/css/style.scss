@@ -1001,7 +1001,8 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 .page .related-pages, .page footer.contact,
 .inquiry-html, .inquiry-form,
 .faq-question, .faq .body,
-.map-page, .inquiry-nodes, .columns {
+.map-page, .inquiry-nodes, .columns,
+.cke_editable {
   article {
     h2 {
       padding: 0;
@@ -1953,6 +1954,57 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 // -----------------------------------------------------------------------------
+// board
+.body--board #main {
+  .menu a {
+    display: inline-block;
+    @include btn-gry;
+    margin-bottom: $box-margin;
+    color: $text;
+    text-decoration: none;
+  }
+  .post {
+    margin-bottom: $item-margin;
+    padding: $item-margin;
+    border: $border-hgry;
+  }
+  .children {
+    .post {
+      margin: $item-margin 0 0 0;
+      padding: $item-margin 0 0 $item-margin;
+      border: none;
+      border-top: $border-hgry;
+    }
+  }
+  .admin-user {
+    border: $border-hblue;
+  }
+  .date, .poster, .name, .email, .url, .action {
+    display: inline-block;
+    margin-right: $item-margin;
+  }
+  .send {
+    text-align: center;
+    input {
+      @include btn-org;
+    }
+    button {
+      @include btn-gry;
+    }
+  }
+  .toggle {
+    @include u-arrow;
+  }
+  #errorExplanation {
+    margin-bottom: $box-margin;
+    padding: $item-margin $item-margin 0;
+    border: 2px solid $red;
+    @include border-radius(5px);
+    background: #ffffa4;
+    ul {padding-left: $box-margin;}
+  }
+}
+// -----------------------------------------------------------------------------
 // smart phone
 // -----------------------------------------------------------------------------
 @media only screen and (max-width: 600px) {
@@ -2640,6 +2692,16 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       margin-bottom: $smart-margin;
       padding: 0;
       text-align: center;
+    }
+  }
+// -----------------------------------------------------------------------------
+// board
+  .body--board {
+    .menu {
+      margin: $smart-margin;
+    }
+    .post {
+      margin: 0 $smart-margin $smart-margin;
     }
   }
 }
