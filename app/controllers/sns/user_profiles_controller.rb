@@ -2,7 +2,7 @@ class Sns::UserProfilesController < ApplicationController
   include Sns::UserFilter
   include Sns::CrudFilter
 
-  #before_action :require_self, except: [:show]
+  skip_action_callback :require_self, except: [:index]
 
   model SS::User
 
