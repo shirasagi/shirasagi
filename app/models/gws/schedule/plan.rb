@@ -110,7 +110,7 @@ class Gws::Schedule::Plan
     # - 終日予定を別の日に移動
     def set_from_drop_date_api
       self.start_on = api_start
-      self.end_on   = api_end.present?  ? (Date.parse(api_end) - 1.days) : api_start
+      self.end_on   = api_end.present? ? (Date.parse(api_end) - 1.days) : api_start
       self.allday   = 'allday'
     end
 
