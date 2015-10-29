@@ -5,7 +5,7 @@ module Inquiry::Addon
 
     included do
       field :input_type, type: String, default: "text_field"
-      field :select_options, type: SS::Extensions::Words, default: ""
+      field :select_options, type: SS::Extensions::Lines, default: ""
       field :required, type: String, default: "required"
       field :additional_attr, type: String, default: ""
       field :input_confirm, type: String, default: ""
