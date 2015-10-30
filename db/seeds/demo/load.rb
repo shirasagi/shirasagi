@@ -900,7 +900,7 @@ end
 
 node = save_node route: "board/post", filename: "board", name: "災害掲示板", layout_id: layouts["one"].id,
   mode: "tree", file_limit: 1, text_size_limit: 400, captcha: "enabled", deletable_post: "enabled",
-  deny_url: "deny", file_size_limit: 2097152, file_scan: "disabled", show_email: "enabled", show_url: "enabled"
+  deny_url: "deny", file_size_limit: (1024 * 1024 * 2), file_scan: "disabled", show_email: "enabled", show_url: "enabled"
 topic1 = save_board_post name: "テスト投稿", text: "テスト投稿です。", site_id: @site.id, node_id: node.id,
   poster: "白鷺　太郎", delete_key: 1234
 comment1 = save_board_post name: "Re:テスト投稿", text: "返信します。", site_id: @site.id, node_id: node.id,
