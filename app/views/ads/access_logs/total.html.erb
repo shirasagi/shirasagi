@@ -1,34 +1,36 @@
 <%= render "search" %>
 
-<div class="ads-total">
-  <table class="see index">
-    <caption>
-      <%= "#{@year}#{t('datetime.prompts.year')}" %>
-      <%= "#{@month}#{t('datetime.prompts.month')}" if @month %>
-    </caption>
-    <thead>
-      <tr>
-        <th><%= t("mongoid.attributes.ads/access_log.link_url") %></th>
-        <% (1..@max_cell).each do |day| %>
-        <th><%= day %></th>
-        <% end %>
-        <th><%= t("ads.total") %></th>
-      </tr>
-    </thead>
+<div class="main-box">
+  <div class="ads-total">
+    <table class="see index">
+      <caption>
+        <%= "#{@year}#{t('datetime.prompts.year')}" %>
+        <%= "#{@month}#{t('datetime.prompts.month')}" if @month %>
+      </caption>
+      <thead>
+        <tr>
+          <th><%= t("mongoid.attributes.ads/access_log.link_url") %></th>
+          <% (1..@max_cell).each do |day| %>
+          <th><%= day %></th>
+          <% end %>
+          <th><%= t("ads.total") %></th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <% @totals.each do |link_url, counts| %>
-      <% total = 0 %>
-      <tr>
-        <th><%= link_url %></th>
-        <% (1..@max_cell).each do |day| %>
-        <% total += counts[day].to_i %>
-        <td><%= counts[day].to_i %></td>
+      <tbody>
+        <% @totals.each do |link_url, counts| %>
+        <% total = 0 %>
+        <tr>
+          <th><%= link_url %></th>
+          <% (1..@max_cell).each do |day| %>
+          <% total += counts[day].to_i %>
+          <td><%= counts[day].to_i %></td>
+          <% end %>
+          <td><%= total %></td>
+        </tr>
         <% end %>
-        <td><%= total %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 </div>
 
