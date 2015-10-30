@@ -11,7 +11,7 @@ require "#{Rails.root}/db/seeds/ss/users"
 # Seed
 
 def save_role(data)
-  if item = Cms::Role.where(name: data[:name]).first
+  if item = Cms::Role.where(site_id: @site.id, name: data[:name]).first
     puts "exists #{data[:name]}"
     item.update data
     return item
