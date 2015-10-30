@@ -18,6 +18,7 @@ $ ->
   setInterval reload, 10000
 <% end %>
 
+<div class="main-box">
 <%= form_tag({ action: :run }, { id: "task-form" }) do |f| %>
 
 <dl class="info">
@@ -52,3 +53,4 @@ $ ->
 </footer>
 
 <% end %>
+</div>

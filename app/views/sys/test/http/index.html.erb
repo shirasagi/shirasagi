@@ -1,19 +1,21 @@
 <%= javascript_include_tag "ss/debug" %>
 
-<article id="http-tester">
-  <div class="buttons">
-    <button onclick="SS_Debug.run()">Run HTTP</button>
-    <button onclick="SS_Debug.stop()">Stop</button>
-  </div>
+<div class="main-box">
+  <article id="http-tester">
+    <div class="buttons">
+      <button class="btn" onclick="SS_Debug.run()">Run HTTP</button>
+      <button class="btn" onclick="SS_Debug.stop()">Stop</button>
+    </div>
 
-  <div class="view">
-    <h2>Queue</h2>
-    <div><input type="text" id="queue" value="" readonly="readonly" /></div>
+    <div class="view">
+      <h2>Queue</h2>
+      <div><input type="text" id="queue" value="" readonly="readonly" /></div>
 
-    <h2>Try URL</h2>
-    <div><textarea id="log" readonly="readonly" style="olor: #080"></textarea></div>
+      <h2>Try URL</h2>
+      <div><textarea id="log" readonly="readonly" style="olor: #080"></textarea></div>
 
-    <h2>Error URL</h2>
-    <div><textarea id="err" readonly="readonly" style="color: #e00;"></textarea></div>
-  </div>
-</article>
+      <h2>Error URL</h2>
+      <div><textarea id="err" readonly="readonly" style="color: #e00;"></textarea></div>
+    </div>
+  </article>
+</div>
