@@ -75,6 +75,7 @@ class Cms::PreviewController < ApplicationController
 
       h = []
       h << view_context.stylesheet_link_tag("cms/preview")
+      h << view_context.javascript_include_tag("cms/public") if mobile_path?
       h << view_context.javascript_include_tag("cms/preview")
       h << '<link href="/assets/css/colorbox/colorbox.css" rel="stylesheet" />'
       h << '<script src="/assets/js/jquery.colorbox.js"></script>'
