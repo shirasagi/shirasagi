@@ -29,8 +29,11 @@ module Cms::NodeHelper
 
   def mod_navi(&block)
     mods = Cms::Node.modules.map do |name, key|
-      key = "node" if key == "cms" #TODO:
-      %(<li>#{link_to name, send("#{key}_main_path")}</li>).html_safe
+      if key == "cms"
+        %(<li>#{link_to name, node_nodes_path(mod: "cms")}</li>).html_safe
+      else
+        %(<li>#{link_to name, send("#{key}_main_path")}</li>).html_safe
+      end
     end
 
     h = []

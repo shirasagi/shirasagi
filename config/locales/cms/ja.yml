@@ -17,6 +17,7 @@ ja:
     member: メンバー
     modules: モジュール
     node: フォルダー
+    node_config: フォルダー設定
     page: 固定ページ
     part: パーツ
     file: 共有ファイル

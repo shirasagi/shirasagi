@@ -1,9 +1,17 @@
-<% if params[:controller] =~ /^cms/ && @cur_node.route =~ /^cms/%>
-  <%= node_navi %>
+<% if params[:mod] %>
+  <% mod = params[:mod].to_sym %>
+<% elsif params[:controller] =~ /^cms/ && @cur_node.route =~ /^cms/ %>
+  <% mod = :cms %>
 <% else %>
   <% begin %>
+    <% mod = nil %>
     <%= render partial: @cur_node.route.sub(/\/.*/, "/main/navi") %>
   <% rescue ActionView::MissingTemplate %>
-    <%= node_navi %>
+    <% mod = :cms %>
+  <% end %>
+<% end %>
+
+<% if mod == :cms %>
+  <%= node_navi :cms do %>
   <% end %>
 <% end %>

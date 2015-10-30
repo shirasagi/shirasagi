@@ -402,7 +402,6 @@ td {
 // -------------------------------------------------------------------------------------------------
 // mod-navi
 .mod-navi {
-  padding-bottom: 8px;
   border-bottom: $border-gray5;
   h2 {
     padding: 10px 15px;
@@ -426,6 +425,9 @@ td {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+  }
+  h3:last-child, ul:last-child {
+    margin-bottom: 8px;
   }
   @include mb {
     h3 {

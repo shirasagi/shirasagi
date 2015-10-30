@@ -15,19 +15,17 @@
   <% end %>
 </nav>
 
-<nav class="mod-navi">
-  <h2>フォルダー</h2>
-
+<nav class="main-navi">
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.generate_node", node_generate_nodes_path, class: "icon-conf" %></h3>
+    <h2><%= link_to :"cms.generate_node", node_generate_nodes_path, class: "icon-write" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.generate_page", node_generate_pages_path, class: "icon-conf" %></h3>
+    <h2><%= link_to :"cms.generate_page", node_generate_pages_path, class: "icon-write" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.import", node_import_path, class: "icon-conf" %></h3>
+    <h2><%= link_to :"cms.import", node_import_path, class: "icon-conf" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.config", node_conf_path, class: "icon-conf" %></h3>
+    <h2><%= link_to :"cms.node_config", node_conf_path, class: "icon-conf" %></h2>
   <% end %>
 </nav>
