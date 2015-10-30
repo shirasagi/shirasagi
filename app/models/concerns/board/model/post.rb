@@ -13,54 +13,59 @@ module Board::Model::Post
     field :descendants_updated, type: DateTime
     permit_params :name, :text
 
-    belongs_to :topic, foreign_key: :topic_id, class_name: "Board::Post", inverse_of: :descendants
-    belongs_to :parent, foreign_key: :parent_id, class_name: "Board::Post", inverse_of: :children
+    belongs_to :topic, class_name: "Board::Post", inverse_of: :descendants
+    belongs_to :parent, class_name: "Board::Post", inverse_of: :children
 
-    has_many :descendants, foreign_key: :topic_id, class_name: "Board::Post", dependent: :destroy, inverse_of: :topic
-    has_many :children, foreign_key: :parent_id, class_name: "Board::Post", dependent: :destroy, inverse_of: :parent
+    has_many :children, class_name: "Board::Post", dependent: :destroy, inverse_of: :parent,
+      order: { created: 1 }
+    has_many :descendants, class_name: "Board::Post", dependent: :destroy, inverse_of: :topic,
+      order: { created: 1 }
 
     validates :name, presence: true
     validates :text, presence: true
 
-    validate :validate_children, if: -> { topic }
+    validate :validate_children, if: -> { topic_id.present? }
 
     before_validation :set_topic_id, if: :comment?
-    before_save :set_descendants_updated
-    after_save :update_parent_descendants_updated
+    before_save :set_descendants_updated, if: -> { topic_id.blank? }
+    after_save :update_topic_descendants_updated, if: -> { topic_id.present? }
 
     scope :topic, ->{ exists parent_id: false }
     scope :comment, ->{ exists parent_id: true }
   end
 
-  def validate_children
-    if topic.children.size >= 1000
-      errors.add :base, I18n.t('board.errors.too_many_comments')
+  public
+    def root_post
+      parent.nil? ? self : parent.root_post
     end
-  end
 
-  def set_descendants_updated
-    self.descendants_updated = updated
-  end
-
-  # Update parent's "descendants_updated" field recursively.
-  def update_parent_descendants_updated(time = nil)
-    if parent.present?
-      time ||= descendants_updated
-      # Call low level "set" API instead of "update" to skip callbacks.
-      parent.set descendants_updated: time
-      parent.update_parent_descendants_updated time
+    def comment?
+      parent_id.present?
     end
-  end
 
-  def root_post
-    parent.nil? ? self : parent.root_post
-  end
+    def permit_comment?
+      permit_comment == 'allow'
+    end
 
-  def comment?
-    parent.present?
-  end
+  private
+    def set_topic_id
+      self.topic_id = root_post.id
+    end
 
-  def set_topic_id
-    self.topic_id = root_post.id
-  end
+    def set_descendants_updated
+      return unless new_record?
+      self.descendants_updated = updated
+    end
+
+    def update_topic_descendants_updated
+      return unless topic
+      return unless _id_changed?
+      topic.set descendants_updated: updated
+    end
+
+    def validate_children
+      if topic.children.size >= 1000
+        errors.add :base, I18n.t('board.errors.too_many_comments')
+      end
+    end
 end
