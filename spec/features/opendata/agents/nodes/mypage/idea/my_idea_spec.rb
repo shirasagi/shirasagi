@@ -25,7 +25,7 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example do
   let(:item_name) { "アイデア０１" }
   let(:item_text) { "アイデア内容" }
 
-  let(:save) { "保存" }
+  let(:save) { "公開保存" }
   let(:edit) { "編集" }
   let(:delete) { "削除" }
 

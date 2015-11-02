@@ -99,7 +99,7 @@ describe Opendata::Appfile, dbscope: :example do
 
   context "when japanese filename is uploaded" do
     let(:app) { create(:opendata_app, node: node, appurl: "http://example.jp/") }
-    let(:tmpdir) { Dir.tmpdir }
+    let(:tmpdir) { Dir.mktmpdir }
     let(:file_path) do
       File.open("#{tmpdir}/index - コピー.json", "w") do |fp|
         fp.puts "{}"

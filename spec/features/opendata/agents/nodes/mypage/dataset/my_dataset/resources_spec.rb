@@ -52,7 +52,7 @@ describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
         fill_in "item_text", with: item_text
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv"
         select  license.name, from: "item_license_id"
-        click_button "保存"
+        click_button "公開保存"
       end
       expect(status_code).to eq 200
 
@@ -70,7 +70,7 @@ describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
       within "form#item-form" do
         fill_in "item_name", with: item_name2
         fill_in "item_text", with: item_text2
-        click_button "保存"
+        click_button "公開保存"
       end
       expect(status_code).to eq 200
 

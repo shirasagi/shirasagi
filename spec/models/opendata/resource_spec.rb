@@ -137,7 +137,7 @@ describe Opendata::Resource, dbscope: :example do
   end
 
   context "when japanese filename is uploaded" do
-    let(:tmpdir) { Dir.tmpdir }
+    let(:tmpdir) { Dir.mktmpdir }
     let(:file) do
       File.open("#{tmpdir}/index - コピー.html", "w") do |fp|
         fp.puts "<html></html>"

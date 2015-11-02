@@ -59,7 +59,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example do
     fill_in "item_name", with: item_name
     fill_in "item_text", with: item_text
     check category.name
-    click_button "保存"
+    click_button "公開保存"
     expect(status_code).to eq 200
 
     within "table.opendata-datasets" do
@@ -81,7 +81,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example do
       fill_in "item_name", with: item_name2
     end
 
-    click_button "保存"
+    click_button "公開保存"
     expect(status_code).to eq 200
 
     within "table.opendata-dataset" do

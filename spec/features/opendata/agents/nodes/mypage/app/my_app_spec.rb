@@ -53,7 +53,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
       fill_in "item[text]", with: "せつめい"
       fill_in "item[license]", with: "MIT"
       check category.name
-      click_on I18n.t("views.button.save")
+      click_on "公開保存"
     end
     expect(current_path).to eq index_path
   end
@@ -62,7 +62,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
     visit "http://#{site.domain}#{new_path}"
     expect(current_path).to eq new_path
     within "form#item-form" do
-      click_on I18n.t("views.button.save")
+      click_on "公開保存"
     end
     expect(current_path).to eq index_path
   end
@@ -80,7 +80,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
       fill_in "item[text]", with: "こうしん"
       fill_in "item[license]", with: "MIT"
       check category.name
-      click_on I18n.t("views.button.save")
+      click_on "公開保存"
     end
     expect(current_path).to eq show_path
   end
@@ -89,7 +89,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
     visit "http://#{site.domain}#{edit_path}"
     expect(current_path).to eq edit_path
     within "form#item-form" do
-      click_on I18n.t("views.button.save")
+      click_on "公開保存"
     end
     expect("#{current_path}/").to eq show_path
   end

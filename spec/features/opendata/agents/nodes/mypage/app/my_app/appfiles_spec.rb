@@ -51,7 +51,7 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
     within "form#item-form" do
       attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
       fill_in "item[text]", with: "せつめい"
-      click_on I18n.t("views.button.save")
+      click_on "公開保存"
     end
     expect(current_path).to eq index_path
   end
@@ -60,7 +60,7 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
     visit "http://#{site.domain}#{new_path}"
     expect(current_path).to eq new_path
     within "form#item-form" do
-      click_on I18n.t("views.button.save")
+      click_on "公開保存"
     end
     expect(current_path).to eq index_path
   end
@@ -76,7 +76,7 @@ describe "opendata_agents_nodes_my_app_appfiles", dbscope: :example do
     within "form#item-form" do
       attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
       fill_in "item[text]", with: "こうしん"
-      click_on I18n.t("views.button.save")
+      click_on "公開保存"
     end
     expect(current_path).to eq show_path
   end
