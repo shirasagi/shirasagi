@@ -15,7 +15,7 @@ module Opendata::Addon::MyDatasetList
         elsif name =~ /^dataset_updated\.(.+)$/
           I18n.l item.updated, format: $1
         elsif name == 'dataset_state'
-          ERB::Util.html_escape(item.label :state)
+          ERB::Util.html_escape(item.label :status)
         elsif name == 'dataset_point'
           ERB::Util.html_escape(item.point.to_i.to_s)
         elsif name == 'dataset_downloaded'

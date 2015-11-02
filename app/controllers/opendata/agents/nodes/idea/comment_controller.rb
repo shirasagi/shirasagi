@@ -7,6 +7,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
 
   before_action :accept_cors_request
   before_action :set_comments, only: [:index, :add, :delete]
+  before_action :set_workflow
 
   skip_filter :logged_in?
 
@@ -24,6 +25,11 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
       @comment_mode = logged_in?(redirect: false)
 
       raise "404" unless @idea
+
+      def set_workflow
+        @cur_site = Cms::Site.find(@cur_site.id)
+        @route = @cur_site.idea_workflow_route
+      end
     end
 
   public
@@ -39,7 +45,24 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
       idea = Opendata::Idea.site(@cur_site).find(idea_id)
 
       new_comment = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: idea_id, text: params[:comment_body]}
-      Opendata::IdeaComment.new(new_comment).save
+
+      comment = Opendata::IdeaComment.new(new_comment)
+      comment.apply_status("request", member: @cur_member, route: @route) if @route
+      comment.save
+
+      if @route
+        args = {
+          m_id: @cur_member.id,
+          t_uid: comment.workflow_approvers.first[:user_id],
+          site: @cur_site,
+          idea: @idea,
+          comment: comment,
+          url: ::File.join(@cur_site.full_url,
+            opendata_idea_comment_path(cid: @cur_node.id, site: @cur_site.host, idea_id: @idea.id, id: comment.id)
+          )
+        }
+        Opendata::Mailer.request_idea_comment_mail(args).deliver_now
+      end
 
       idea.commented = Time.zone.now
       idea.total_comment = @comments.count
@@ -55,6 +78,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
 
       comment = Opendata::IdeaComment.find params[:comment]
       if comment
+        comment.apply_status("closed", workflow_reset: true)
         comment.comment_deleted = Time.zone.now
         comment.save
       end

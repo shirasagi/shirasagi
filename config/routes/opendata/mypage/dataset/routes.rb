@@ -7,6 +7,9 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
+    get "datasets_approve" => "dataset/datasets#index_approve"
+    get "datasets_request" => "dataset/datasets#index_request"
+    get "datasets_closed" => "dataset/datasets#index_closed"
     resources :my_datasets, concerns: :deletion, module: "mypage/dataset"
   end
 

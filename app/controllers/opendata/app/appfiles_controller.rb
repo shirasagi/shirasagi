@@ -33,7 +33,16 @@ class Opendata::App::AppfilesController < ApplicationController
 
     def create
       @item = @app.appfiles.create get_params
+      @item.status = params[:item][:state]
+      @item.workflow = { workflow_reset: true } if @app.member.present?
       render_create @item.valid?
+    end
+
+    def update
+      @item.attributes = get_params
+      @item.status = params[:item][:state]
+      @item.workflow = { workflow_reset: true } if @app.member.present?
+      render_update @item.update
     end
 
     def download

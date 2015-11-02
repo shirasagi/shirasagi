@@ -7,6 +7,8 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
 
   before_action :set_model
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_workflow
+  after_action :deliver_workflow_mail, only: [:create, :update]
 
   protected
     def idea_node
@@ -20,6 +22,37 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
     def set_item
       @item = @model.site(@cur_site).member(@cur_member).find params[:id]
       @item.attributes = fix_params
+    end
+
+    def set_workflow
+      @cur_site = Cms::Site.find(@cur_site.id)
+      @route = @cur_site.idea_workflow_route
+    end
+
+    def set_status
+      @item.workflow_member_id = @cur_member.id
+      @item.cur_site = @cur_site
+
+      status_was = @item.status
+      status = "closed"
+      status = "request" if @route && params[:request].present?
+      status = "public"  if !@route && params[:publish_save].present?
+      @item.apply_status(status, member: @cur_member, route: @route, workflow_reset: true)
+      @deliver_mail = true if status = "request" && status_was != "request"
+    end
+
+    def deliver_workflow_mail
+      return unless @route
+      return unless @deliver_mail
+      return unless @item.errors.empty?
+      args = {
+        m_id: @cur_member.id,
+        t_uid: @item.workflow_approvers.first[:user_id],
+        site: @cur_site,
+        item: @item,
+        url: ::File.join(@cur_site.full_url, opendata_idea_path(cid: @cur_node.id, site: @cur_site.host, id: @item.id))
+      }
+      Opendata::Mailer.request_resource_mail(args).deliver_now
     end
 
     def fix_params
@@ -63,6 +96,7 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
 
     def create
       @item = @model.new get_params
+      set_status
 
       if @item.save
         redirect_to @cur_node.url, notice: t("views.notice.saved")
@@ -77,6 +111,7 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
 
     def update
       @item.attributes = get_params
+      set_status
 
       if @item.update
         redirect_to "#{@cur_node.url}#{@item.id}/", notice: t("views.notice.saved")

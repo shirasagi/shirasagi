@@ -1,5 +1,6 @@
 class Opendata::Dataset
   include Cms::Model::Page
+  include ::Workflow::Addon::Approver
   include Opendata::Addon::Resource
   include Opendata::Addon::UrlResource
   include Opendata::Addon::Category
@@ -11,6 +12,9 @@ class Opendata::Dataset
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
   include Cms::Addon::GroupPermission
+  include Workflow::MemberPermission
+
+  set_permission_name "opendata_datasets"
 
   scope :formast_is, ->(word, *fields) {
     where("$and" => [{ "$or" => fields.map { |field| { field => word.to_s } } } ])
@@ -136,7 +140,7 @@ class Opendata::Dataset
         criteria = self.where({})
         return criteria if params.blank?
         [ :search_keyword, :search_ids, :search_name, :search_tag, :search_area_id, :search_category_id,
-          :search_dataset_group, :search_format, :search_license_id, ].each do |m|
+          :search_dataset_group, :search_format, :search_license_id, :search_poster, ].each do |m|
           criteria = send(m, params, criteria)
         end
 
@@ -213,6 +217,16 @@ class Opendata::Dataset
       def search_license_id(params, criteria)
         if params[:license_id].present?
           criteria = criteria.license_is  params[:license_id].to_i, "resources.license_id", "url_resources.license_id"
+        end
+        criteria
+      end
+
+      def search_poster(params, criteria)
+        if params[:poster].present?
+          code = {}
+          cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
+          cond = { :workflow_member_id => nil } if params[:poster] == "admin"
+          criteria = criteria.where(cond)
         end
         criteria
       end

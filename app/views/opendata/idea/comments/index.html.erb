@@ -6,6 +6,7 @@
       <th class="checkbox"><input type="checkbox" /></th>
       <th class="text"><%= @model.t :text %></th>
       <td class="member_name"><%= @model.t :member_name %></td>
+      <td class="state"><%= @model.t :state %></td>
       <th class="datetime"><%= @model.t :updated %></th>
       <th class="datetime"><%= @model.t :deleted %></th>
     </tr>
@@ -22,6 +23,7 @@
       </td>
       <td class="text"><%= link_to item.text, { action: :show, id: item } %></td>
       <td class="member_name"><%= item.get_member_name %></td>
+      <td class="member_name"><%= item.label :status %></td>
       <td class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
       <td class="datetime">
         <% if item.comment_deleted.present? %>

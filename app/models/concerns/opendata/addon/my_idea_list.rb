@@ -33,7 +33,7 @@ module Opendata::Addon::MyIdeaList
     end
 
     def get_idea_state(item, *_)
-      ERB::Util.html_escape(item.label :state)
+      ERB::Util.html_escape(item.label :status)
     end
 
     def get_idea_point(item, *_)

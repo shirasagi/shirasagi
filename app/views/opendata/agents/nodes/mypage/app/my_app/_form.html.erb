@@ -60,8 +60,4 @@ $ ->
     <td class="field"><%= @model.t :dataset_ids %></td>
     <td class="input"><%= render partial: "opendata/agents/addons/dataset/view/form", locals: { f: f } %></td>
   </tr>
-  <tr class="parent-row">
-    <td class="field"><%= @model.t :state %></td>
-    <td class="input"><%= f.select :state, @item.state_options %></td>
-  </tr>
 </table>

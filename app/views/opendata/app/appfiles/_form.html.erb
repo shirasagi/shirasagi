@@ -1,3 +1,31 @@
+<%= jquery do %>
+<% if @app.allowed?(:release, @cur_user, site: @cur_site) %>
+$(".save").val("<%= t("views.button.closed_save") %>");
+$("<input />").attr("type", "submit")
+  .attr("name", "publish_save")
+  .attr("value", "<%= t("views.button.publish_save") %>")
+  .attr("class", "publish_save")
+  .insertAfter("#item-form input.save");
+<% end %>
+
+$(".save").on("click", function(e){
+  $("<input />").attr("type", "hidden")
+    .attr("name", "item[state]")
+    .attr("value", "closed")
+    .appendTo("#item-form")
+});
+$(".publish_save").on("click", function(e){
+  $("<input />").attr("type", "hidden")
+    .attr("name", "item[state]")
+    .attr("value", "public")
+    .appendTo("#item-form")
+  $("<input />").attr("type", "hidden")
+    .attr("name", "item[workflow_reset]")
+    .attr("value", "1")
+    .appendTo("#item-form")
+});
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :file_id %><%= required_label %></dt>
   <dd><%= f.file_field :in_file %></dd>

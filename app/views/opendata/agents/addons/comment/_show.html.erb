@@ -11,7 +11,8 @@
       <tbody>
         <% @comments.order(name: 1).each do |comment| %>
         <tr>
-          <td><%= comment.text %></td>
+          <td><%= link_to comment.text, opendata_idea_comment_path(idea_id: @item.id, id: comment.id) %></td>
+          <td><%= comment.label :status %></td>
           <td><%= comment.get_member_name %></td>
         </tr>
       <% end %>

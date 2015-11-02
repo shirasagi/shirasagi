@@ -1,5 +1,6 @@
 class Opendata::Idea
   include Cms::Model::Page
+  include ::Workflow::Addon::Approver
   include Opendata::Addon::Comment
   include Opendata::Addon::Category
   include Opendata::Addon::Area
@@ -9,6 +10,7 @@ class Opendata::Idea
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
   include Cms::Addon::GroupPermission
+  include Workflow::MemberPermission
 
   set_permission_name "opendata_ideas"
 
@@ -146,6 +148,18 @@ class Opendata::Idea
           criteria = criteria.where category_ids: params[:category_id].to_i
         end
 
+        criteria = search_poster(params, criteria)
+
+        criteria
+      end
+
+      def search_poster(params, criteria)
+        if params[:poster].present?
+          code = {}
+          cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
+          cond = { :workflow_member_id => nil } if params[:poster] == "admin"
+          criteria = criteria.where(cond)
+        end
         criteria
       end
   end

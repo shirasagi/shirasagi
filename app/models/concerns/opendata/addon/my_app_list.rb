@@ -15,7 +15,7 @@ module Opendata::Addon::MyAppList
       elsif name =~ /^app_updated\.(.+)$/
         I18n.l item.updated, format: $1
       elsif name == 'app_state'
-        ERB::Util.html_escape(item.label :state)
+        ERB::Util.html_escape(item.label :status)
       elsif name == 'app_point'
         ERB::Util.html_escape(item.point.to_i.to_s)
       else

@@ -1,18 +1,27 @@
 <%= node_navi do %>
 
-<nav class="main-menu">
+<nav class="sub-menu">
   <header><h1><%= t("modules.opendata") %></h1></header>
   <div>
     <% if @cur_node.route == "opendata/dataset" %>
       <%= link_to :"mongoid.models.opendata/dataset", opendata_datasets_path, class: "icon-node" %>
+      <div class="narrow-page">
+        <%= link_to :"workflow.page.closed", opendata_datasets_closed_path, class: "icon-node" %>
+      </div>
       <%= link_to :"mongoid.models.opendata/dataset_group", opendata_dataset_groups_path, class: "icon-node" %>
       <%= link_to :"mongoid.models.opendata/license", opendata_licenses_path, class: "icon-node" %>
       <%= link_to :"mongoid.models.opendata/crawl", opendata_crawls_path, class: "icon-node" %>
     <% elsif @cur_node.route == "opendata/app" %>
       <%= link_to :"mongoid.models.opendata/app", opendata_apps_path, class: "icon-node" %>
+      <div class="narrow-page">
+        <%= link_to :"workflow.page.closed", opendata_apps_closed_path, class: "icon-node" %>
+      </div>
       <%= link_to :"mongoid.models.opendata/license", opendata_licenses_path, class: "icon-node" %>
     <% elsif @cur_node.route == "opendata/idea" %>
       <%= link_to :"mongoid.models.opendata/idea", opendata_ideas_path, class: "icon-node" %>
+      <div class="narrow-page">
+        <%= link_to :"workflow.page.closed", opendata_ideas_closed_path, class: "icon-node" %>
+      </div>
     <% else %>
       <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
       <%= link_to item.name, opendata_datasets_path(@cur_site.host, item), class: "icon-node" %>
@@ -27,5 +36,30 @@
   </div>
 </nav>
 
+<% if @cur_node.route == "opendata/dataset" %>
+  <nav class="sub-menu">
+    <header><h1><%= t "workflow.pages" %></h1></header>
+    <div>
+      <%= link_to :"workflow.page.approve", opendata_datasets_approve_path, class: "icon-node" %>
+      <%= link_to :"workflow.page.request", opendata_datasets_request_path, class: "icon-node" %>
+    </div>
+  </nav>
+<% elsif @cur_node.route == "opendata/app" %>
+  <nav class="sub-menu">
+    <header><h1><%= t "workflow.pages" %></h1></header>
+    <div>
+      <%= link_to :"workflow.page.approve", opendata_apps_approve_path, class: "icon-node" %>
+      <%= link_to :"workflow.page.request", opendata_apps_request_path, class: "icon-node" %>
+    </div>
+  </nav>
+<% elsif @cur_node.route == "opendata/idea" %>
+  <nav class="sub-menu">
+    <header><h1><%= t "workflow.pages" %></h1></header>
+    <div>
+      <%= link_to :"workflow.page.approve", opendata_ideas_approve_path, class: "icon-node" %>
+      <%= link_to :"workflow.page.request", opendata_ideas_request_path, class: "icon-node" %>
+    </div>
+  </nav>
 <% end %>
 
+<% end %>

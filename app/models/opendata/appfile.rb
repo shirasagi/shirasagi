@@ -5,6 +5,8 @@ class Opendata::Appfile
   include Opendata::AllowableAny
   include Opendata::Common
 
+  attr_accessor :workflow, :status
+
   seqid :id
   field :filename, type: String
   field :text, type: String
@@ -21,7 +23,7 @@ class Opendata::Appfile
 
   before_validation :set_filename, if: ->{ in_file.present? }
 
-  after_save -> { app.save(validate: false) }
+  after_save :save_app
   after_destroy -> { app.save(validate: false) }
 
   public
@@ -65,6 +67,13 @@ class Opendata::Appfile
         errors.add :file_id, I18n.t("opendata.errors.messages.validate_appfile")
         return
       end
+    end
+
+    def save_app
+      self.workflow ||= {}
+      app.cur_site = app.site
+      app.apply_status(status, workflow) if status.present?
+      app.save(validate: false)
     end
 
   class << self

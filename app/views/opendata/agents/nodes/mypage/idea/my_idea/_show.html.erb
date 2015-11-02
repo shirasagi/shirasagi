@@ -52,6 +52,17 @@
 
   <tr class="parent-row">
     <td class="field"><%= @model.t :state %></td>
-    <td class="input"><%= @item.label :state %></td>
+    <td class="input"><%= @item.label :status %></td>
   </tr>
+  <% approver = @item.workflow_approvers.try(:last) %>
+  <% workflow_comment = tryb{ approver[:comment] } %>
+  <% if workflow_comment.present? %>
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :approver_comment %></td>
+      <td class="input">
+        <%= workflow_comment %>
+        <%= tryb{ "(#{Cms::User.find(approver[:user_id]).name})" } %>
+      </td>
+    </tr>
+  <% end %>
 </table>

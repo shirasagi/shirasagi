@@ -33,7 +33,16 @@ class Opendata::Dataset::ResourcesController < ApplicationController
 
     def create
       @item = @dataset.resources.new get_params
+      @item.status = params[:item][:state]
+      @item.workflow = { workflow_reset: true } if @dataset.member.present?
       render_create @item.save
+    end
+
+    def update
+      @item.attributes = get_params
+      @item.status = params[:item][:state]
+      @item.workflow = { workflow_reset: true } if @dataset.member.present?
+      render_update @item.update
     end
 
     def download

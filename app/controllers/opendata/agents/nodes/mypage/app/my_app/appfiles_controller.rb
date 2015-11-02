@@ -9,6 +9,8 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
   before_action :set_app
   before_action :set_model
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_workflow
+  after_action :deliver_workflow_mail, only: [:create, :update]
 
   protected
     def app
@@ -30,6 +32,21 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
       @item_url = "#{@appfile_url}#{@item.id}/"
     end
 
+    def set_workflow
+      @cur_site = Cms::Site.find(@cur_site.id)
+      @route = @cur_site.app_workflow_route
+    end
+
+    def set_status
+      status = "closed"
+      status = "request" if @route && params[:request].present?
+      status = "public"  if !@route && params[:publish_save].present?
+
+      @item.status = status
+      @item.workflow = { member: @cur_member, route: @route, workflow_reset: true }
+      @deliver_mail = true if status = "request" && @app.status != "request"
+    end
+
     def fix_params
       {}
     end
@@ -44,6 +61,20 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
 
     def get_params
       params.require(:item).permit(permit_fields).merge(fix_params)
+    end
+
+    def deliver_workflow_mail
+      return unless @route
+      return unless @deliver_mail
+      return unless @item.errors.empty?
+      args = {
+        m_id: @cur_member.id,
+        t_uid: @app.workflow_approvers.first[:user_id],
+        site: @cur_site,
+        item: @app,
+        url: ::File.join(@cur_site.full_url, opendata_app_path(cid: @cur_node.id, site: @cur_site.host, id: @app.id))
+      }
+      Opendata::Mailer.request_resource_mail(args).deliver_now
     end
 
   public
@@ -73,6 +104,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
 
     def create
       @item = @app.appfiles.new get_params
+      set_status
 
       if @item.save
         redirect_to "#{@app_url}appfiles/", notice: t("views.notice.saved")
@@ -87,6 +119,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
 
     def update
       @item.attributes = get_params
+      set_status
 
       if @item.update
         redirect_to "#{@app_url}appfiles/#{@item.id}/", notice: t("views.notice.saved")

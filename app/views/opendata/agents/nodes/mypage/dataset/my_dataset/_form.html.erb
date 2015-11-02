@@ -35,9 +35,4 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
     <td class="field"><%= @model.t :area_ids %></td>
     <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
   </tr>
-
-  <tr class="parent-row">
-    <td class="field"><%= @model.t :state %></td>
-    <td class="input"><%= f.select :state, @item.state_options %></td>
-  </tr>
 </table>

@@ -6,6 +6,16 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
+  concern :workflow do
+    post :request_update, on: :member
+    post :approve_update, on: :member
+    post :remand_update, on: :member
+    get :approver_setting, on: :member
+    post :approver_setting, on: :member
+    get :wizard, on: :member
+    post :wizard, on: :member
+  end
+
   content "opendata" do
     get "/" => "main#index", as: :main
     resources :licenses, concerns: :deletion
@@ -13,6 +23,10 @@ SS::Application.routes.draw do
     resources :sparqls, concerns: :deletion
     resources :apis, concerns: :deletion
     resources :members, only: [:index]
+
+    namespace "workflow" do
+      resources :idea_comments, concerns: :workflow
+    end
   end
 
   node "opendata" do

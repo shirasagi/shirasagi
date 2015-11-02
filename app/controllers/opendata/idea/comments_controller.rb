@@ -27,7 +27,7 @@ class Opendata::Idea::CommentsController < ApplicationController
 
   public
     def index
-      @items = @comments.search(params[:s]).order_by(:created.asc)
+      @items = @comments.search(params[:s]).order_by(:created.desc)
       @items = @items.page(params[:page]).per(50)
     end
 
@@ -42,7 +42,8 @@ class Opendata::Idea::CommentsController < ApplicationController
                contact_charge: params[:item][:contact_charge],
                contact_tel: params[:item][:contact_tel],
                contact_fax: params[:item][:contact_fax],
-               contact_email: params[:item][:contact_email]
+               contact_email: params[:item][:contact_email],
+               state: params[:item][:state]
              }
       contact_group_id = params[:item][:contact_group_id]
       cond[:contact_group_id] = contact_group_id if contact_group_id.present?
@@ -63,6 +64,7 @@ class Opendata::Idea::CommentsController < ApplicationController
     def destroy
       comment = Opendata::IdeaComment.where(site_id: @cur_site.id, id: params[:id]).first
       comment.comment_deleted = Time.zone.now
+      comment.apply_status("closed", workflow_reset: true)
       comment.save
       render_destroy comment
     end

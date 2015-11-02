@@ -34,6 +34,10 @@
           <div class="text">
             <% if comment.comment_deleted %>
             <%= I18n.t("opendata.labels.delete_comment") %>
+            <% elsif comment.status == "request" %>
+            <%= I18n.t("opendata.labels.request_comment") %>
+            <% elsif comment.state == "closed" %>
+            <%= I18n.t("opendata.labels.closed_comment") %>
             <% else %>
             <%= simple_format(h(comment.text)) %>
             <% end %>

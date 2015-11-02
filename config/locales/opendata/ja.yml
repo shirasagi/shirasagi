@@ -126,6 +126,8 @@ ja:
       not_exist: 存在しません
       not_data: 該当するデータは登録されていません
       delete_comment: コメントは削除されました
+      request_comment: コメントは承認待ちです
+      closed_comment: コメントは非公開です
       delete_account_q: アカウントを削除してよろしいですか？
       delete_account_remain: ユーザー情報は消えますが、過去に投稿したデータは残ります。
       count_display: 件のデータを表示しています。
@@ -238,6 +240,8 @@ ja:
       opendata/rdf_store: RDFストア
       opendata/url_rdf_store: RDFストア
       opendata/comment: コメント
+      opendata/mypage_setting: マイページ設定
+      opendata/workflow/idea_comment_approver: 承認
 
   cms:
     nodes:
@@ -271,22 +275,49 @@ ja:
   cms_role:
     read_other_opendata_datasets: データセットの閲覧（全て）
     read_private_opendata_datasets: データセットの閲覧（所有）
+    read_member_opendata_datasets: データセットの閲覧（メンバー）
     edit_other_opendata_datasets: データセットの編集（全て）
     edit_private_opendata_datasets: データセットの編集（所有）
+    edit_member_opendata_datasets: データセットの編集（メンバー）
     delete_other_opendata_datasets: データセットの削除（全て）
     delete_private_opendata_datasets: データセットの削除（所有）
+    delete_member_opendata_datasets: データセットの削除（メンバー）
+    release_other_opendata_datasets: データセットの公開（全て）
+    release_private_opendata_datasets: データセットの公開（所有）
+    release_member_opendata_datasets: データセットの公開（メンバー）
+    approve_other_opendata_datasets: データセットの承認（全て）
+    approve_private_opendata_datasets: データセットの承認（所有）
+    approve_member_opendata_datasets: データセットの承認（メンバー）
     read_other_opendata_apps: アプリの閲覧（全て）
     read_private_opendata_apps: アプリの閲覧（所有）
+    read_member_opendata_apps: アプリの閲覧（メンバー）
     edit_other_opendata_apps: アプリの編集（全て）
     edit_private_opendata_apps: アプリの編集（所有）
+    edit_member_opendata_apps: アプリの編集（メンバー）
     delete_other_opendata_apps: アプリの削除（全て）
     delete_private_opendata_apps: アプリの削除（所有）
+    delete_member_opendata_apps: アプリの削除（メンバー）
+    release_other_opendata_apps: アプリの公開（全て）
+    release_private_opendata_apps: アプリの公開（所有）
+    release_member_opendata_apps: アプリの公開（メンバー）
+    approve_other_opendata_apps: アプリの承認（全て）
+    approve_private_opendata_apps: アプリの承認（所有）
+    approve_member_opendata_apps: アプリの承認（メンバー）
     read_other_opendata_ideas: アイデアの閲覧（全て）
     read_private_opendata_ideas: アイデアの閲覧（所有）
+    read_member_opendata_ideas: アイデアの閲覧（メンバー）
     edit_other_opendata_ideas: アイデアの編集（全て）
     edit_private_opendata_ideas: アイデアの編集（所有）
+    edit_member_opendata_ideas: アイデアの編集（メンバー）
     delete_other_opendata_ideas: アイデアの削除（全て）
     delete_private_opendata_ideas: アイデアの削除（所有）
+    delete_member_opendata_ideas: アイデアの削除（メンバー）
+    release_other_opendata_ideas: アイデアの公開（全て）
+    release_private_opendata_ideas: アイデアの公開（所有）
+    release_member_opendata_ideas: アイデアの公開（メンバー）
+    approve_other_opendata_ideas: アイデアの承認（全て）
+    approve_private_opendata_ideas: アイデアの承認（所有）
+    approve_member_opendata_ideas: アイデアの承認（メンバー）
 
   mongoid:
     models:
@@ -296,6 +327,7 @@ ja:
       opendata/crawl: クローリング
       opendata/app: アプリ
       opendata/idea: アイデア
+      opendata/idea_comment: コメント
       opendata/csv2rdf_setting: RDF変換設定
     attributes:
       opendata/addon/category:
@@ -386,6 +418,7 @@ ja:
         tags: タグ
         comment_body: 本文
         commented: 合計コメント数
+        request_comment: 未承認コメント
       opendata/idea_comment:
         text: コメント
         member_name: 投稿者名
@@ -396,6 +429,18 @@ ja:
         header_labels: タイトル
         class: RDFクラス
         column_types: 列設定
+      opendata/addon/mypage_setting:
+        dataset_workflow_route: データセット承認
+        app_workflow_route: アプリ承認
+        idea_workflow_route: アイデア承認
+      opendata/addon/workflow/idea_comment_approver:
+        workflow_user_id: 申請者
+        workflow_state: 承認状態
+        workflow_comment: 申請コメント
+        workflow_approvers: 承認者
+        workflow_required_counts: 必要承認数
+        comment: 差し戻しコメント
+        approver_comment: 承認者コメント
 
   tooltip:
     opendata/dataset:
