@@ -31,6 +31,7 @@ ja:
       login: ログイン
       save: 保存
       draft_save: 下書き保存
+      closed_save: 非公開保存
       publish_save: 公開保存
       ignore_alert: 警告を無視する
       cancel: キャンセル
@@ -53,6 +54,7 @@ ja:
       paste: 貼り付け
       confirm: 確認
       setting: 設定
+      request: 公開申請
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -109,6 +111,12 @@ ja:
         active: 有効
         expired: 無効
         all: 全て
+        request: 申請
+        approve: 承認
+        pending: 下位承認待ち
+        remand: 差し戻し
+        start: 選択
+        cancel: 取消
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)

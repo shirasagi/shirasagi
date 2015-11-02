@@ -14,6 +14,7 @@ module Workflow::Addon
       cattr_reader(:approver_user_class) { Cms::User }
 
       field :workflow_user_id, type: Integer
+      field :workflow_member_id, type: Integer
       field :workflow_state, type: String
       field :workflow_comment, type: String
       field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
@@ -41,9 +42,35 @@ module Workflow::Addon
       end
     end
 
+    def status_options
+      [
+        [I18n.t('views.options.state.public'), 'public'],
+        [I18n.t('views.options.state.closed'), 'closed'],
+        [I18n.t('views.options.state.request'), WORKFLOW_STATE_REQUEST],
+        [I18n.t('views.options.state.approve'), WORKFLOW_STATE_APPROVE],
+        [I18n.t('views.options.state.pending'), WORKFLOW_STATE_PENDING],
+        [I18n.t('views.options.state.remand'), WORKFLOW_STATE_REMAND],
+      ]
+    end
+
+    def posted_by_options
+      [
+        [I18n.t('views.options.posted_by.admin'), "admin"],
+        [I18n.t('views.options.posted_by.member'), "member"],
+      ]
+    end
+
     def workflow_user
       if workflow_user_id.present?
         SS::User.where(id: workflow_user_id).first
+      else
+        nil
+      end
+    end
+
+    def workflow_member
+      if workflow_member_id.present?
+        Cms::Member.where(id: workflow_member_id).first
       else
         nil
       end
@@ -109,6 +136,37 @@ module Workflow::Addon
 
     def finish_workflow?
       workflow_current_level.nil?
+    end
+
+    def apply_status(status, opts = {})
+      member = opts[:member]
+      route  = opts[:route]
+      self.workflow_member_id = member.id if member
+
+      if status == "request"
+        self.state = "closed"
+        self.workflow_state = "request"
+        return false unless route
+        return false unless apply_workflow?(route)
+
+        self.workflow_approvers = route.approvers.map do |item|
+          item.merge(state: (item[:level] == 1) ? "request" : "pending")
+        end
+        self.workflow_required_counts = route.required_counts
+        return true
+      elsif status == "public"
+        self.state = "public"
+      else
+        self.state = "closed"
+      end
+
+      if opts[:workflow_reset]
+        self.workflow_user_id   = nil
+        self.workflow_state     = nil
+        self.workflow_comment   = nil
+        self.workflow_approvers = nil
+      end
+      true
     end
 
     def apply_workflow?(route)

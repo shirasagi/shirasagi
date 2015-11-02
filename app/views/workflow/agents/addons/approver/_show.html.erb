@@ -84,7 +84,7 @@ $ ->
       <% end %>
     <% end %>
 
-    <% if @item.allowed?(:edit, @cur_user) %>
+    <% if @item.allowed?(:edit, @cur_user) && @item.workflow_member.blank? %>
       <% if @item.try(:cloned_name?) %>
         <section class="mod-workflow-request">
           <h1><%= t("errors.messages.invalid_approve_name") %></h1>
@@ -102,7 +102,9 @@ $ ->
     <dl class="see">
       <dt><%= @model.t :workflow_user_id %></dt>
       <dd>
-        <% if @item.workflow_user.present? %>
+        <% if @item.workflow_member.present? %>
+          <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
+        <% elsif @item.workflow_user.present? %>
           <%= "#{@item.workflow_user.long_name}" %>
         <% else %>
           <%= t("workflow.user_deleted") %>
@@ -112,8 +114,10 @@ $ ->
       <dt><%= @model.t :workflow_state %></dt>
       <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
 
-      <dt><%= @model.t :workflow_comment %></dt>
-      <dd><%= @item.workflow_comment if @item.workflow_comment.present? %></dd>
+      <% if @item.workflow_comment.present? %>
+        <dt><%= @model.t :workflow_comment %></dt>
+        <dd><%= @item.workflow_comment %></dd>
+      <% end %>
 
       <dt><%= @model.t :workflow_approvers %></dt>
       <dd>
