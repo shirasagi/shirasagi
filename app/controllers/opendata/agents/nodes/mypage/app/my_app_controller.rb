@@ -53,7 +53,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyAppController < ApplicationControl
         item: @item,
         url: ::File.join(@cur_site.full_url, opendata_app_path(cid: @cur_node.id, site: @cur_site.host, id: @item.id))
       }
-      Opendata::Mailer.request_resource_mail(args).deliver_now
+      Opendata::Mailer.request_resource_mail(args).deliver_now rescue nil
     end
 
     def fix_params

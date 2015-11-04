@@ -87,11 +87,11 @@ $ ->
       <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
         <section class="mod-workflow-approve">
-          <h1><%= t("workflow.state.approve") %>/<%= @model.t :closed %><%= @model.tt :approve_remand %></h1>
+          <h1><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h1>
           <%= text_area :remand, :comment, value: "", style: "display: none;" %>
           <div class="buttons">
             <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
-            <%= button_tag @model.t :closed, { updatetype: :remand, class: "update-item" } %>
+            <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item" } %>
           </div>
         </section>
       <% end %>

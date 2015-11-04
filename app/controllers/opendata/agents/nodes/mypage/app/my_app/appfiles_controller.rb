@@ -74,7 +74,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
         item: @app,
         url: ::File.join(@cur_site.full_url, opendata_app_path(cid: @cur_node.id, site: @cur_site.host, id: @app.id))
       }
-      Opendata::Mailer.request_resource_mail(args).deliver_now
+      Opendata::Mailer.request_resource_mail(args).deliver_now rescue nil
     end
 
   public
