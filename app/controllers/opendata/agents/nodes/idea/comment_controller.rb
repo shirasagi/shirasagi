@@ -61,7 +61,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
             opendata_idea_comment_path(cid: @cur_node.id, site: @cur_site.host, idea_id: @idea.id, id: comment.id)
           )
         }
-        Opendata::Mailer.request_idea_comment_mail(args).deliver_now
+        Opendata::Mailer.request_idea_comment_mail(args).deliver_now rescue nil
       end
 
       idea.commented = Time.zone.now
