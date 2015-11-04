@@ -28,7 +28,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Logger
-  config.logger = Logger.new("#{Rails.root}/log/development.log")
+  config.logger = Logger.new("#{Rails.root}/log/development.log", 'daily')
   config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :warn
   # config.log_level = :debug
 end
