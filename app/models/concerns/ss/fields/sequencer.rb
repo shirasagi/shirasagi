@@ -7,6 +7,10 @@ module SS::Fields::Sequencer
       instance_variable_set(:@_sequenced_fields, fields << name)
       before_save :set_sequence
     end
+
+    def sequenced_fields
+      @_sequenced_fields
+    end
   end
 
   public
