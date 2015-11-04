@@ -16,7 +16,7 @@ module SS::Crypt
         cipher = OpenSSL::Cipher::Cipher.new opts[:type]
         cipher.encrypt
         cipher.pkcs5_keyivgen opts[:pass], opts[:salt]
-        Base64.encode64(cipher.update(str) + cipher.final) rescue nil
+        Base64.strict_encode64(cipher.update(str) + cipher.final) rescue nil
       end
 
       def decrypt(str, opts = {})
