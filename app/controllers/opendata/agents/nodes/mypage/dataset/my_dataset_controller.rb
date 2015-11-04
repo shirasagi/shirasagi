@@ -38,7 +38,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
       status = "request" if @route && params[:request].present?
       status = "public"  if !@route && params[:publish_save].present?
       @item.apply_status(status, member: @cur_member, route: @route, workflow_reset: true)
-      @deliver_mail = true if status = "request" && status_was != "request"
+      @deliver_mail = true if status == "request" && status_was != "request"
     end
 
     def deliver_workflow_mail

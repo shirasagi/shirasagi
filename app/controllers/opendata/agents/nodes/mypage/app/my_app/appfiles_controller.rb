@@ -44,7 +44,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
 
       @item.status = status
       @item.workflow = { member: @cur_member, route: @route, workflow_reset: true }
-      @deliver_mail = true if status = "request" && @app.status != "request"
+      @deliver_mail = true if status == "request" && @app.status != "request"
     end
 
     def fix_params

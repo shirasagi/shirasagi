@@ -44,7 +44,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
 
       @item.status = status
       @item.workflow = { member: @cur_member, route: @route, workflow_reset: true }
-      @deliver_mail = true if status = "request" && @dataset.status != "request"
+      @deliver_mail = true if status == "request" && @dataset.status != "request"
     end
 
     def fix_params
