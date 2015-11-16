@@ -19,6 +19,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
       pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
         @task.count
+        next unless page = Cms::Page.public.where(id: page.id).first #ISSUE: #745
         page.serve_static_relation_files = @attachments
         @task.log page.url if page.becomes_with_route.generate_file
       end
