@@ -17,8 +17,11 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
       nodes = Cms::Node.site(@site).public
       nodes = nodes.where(filename: /^#{@node.filename}\/?$/) if @node
+      ids   = nodes.pluck(:id)
 
-      nodes.order_by(id: 1).find_each(batch_size: PER_BATCH) do |node|
+      ids.each do |id|
+        node = Cms::Node.site(@site).public.where(id: id).first
+        next unless node
         next unless node.public?
         next unless node.public_node?
 
@@ -39,9 +42,12 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
     def generate_root_pages
       pages = Cms::Page.site(@site).public.where(depth: 1)
+      ids   = pages.pluck(:id)
 
-      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
+      ids.each do |id|
         @task.count
+        page = Cms::Page.site(@site).public.where(depth: 1).where(id: id).first
+        next unless page
         @task.log page.url if page.becomes_with_route.generate_file
       end
     end

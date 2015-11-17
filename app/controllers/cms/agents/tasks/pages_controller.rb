@@ -15,11 +15,13 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
       pages = Cms::Page.site(@site).public
       pages = pages.node(@node) if @node
-      @task.total_count = pages.size
+      ids   = pages.pluck(:id)
+      @task.total_count = ids.size
 
-      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
+      ids.each do |id|
         @task.count
-        next unless page = Cms::Page.public.where(id: page.id).first #ISSUE: #745
+        page = Cms::Page.site(@site).public.where(id: id).first
+        next unless page
         page.serve_static_relation_files = @attachments
         @task.log page.url if page.becomes_with_route.generate_file
       end
@@ -28,10 +30,13 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     def update
       @task.log "# #{@site.name}"
 
-      pages = Cms::Page.site(@site).public
+      pages = Cms::Page.site(@site)
       pages = pages.node(@node) if @node
+      ids   = pages.pluck(:id)
 
-      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
+      ids.each do |id|
+        page = Cms::Page.site(@site).where(id: id).first
+        next unless page
         page = page.becomes_with_route
         if !page.update
           @task.log page.url
@@ -50,10 +55,13 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       ]
 
       pages = Cms::Page.site(@site).or(cond)
-      @task.total_count = pages.size
+      ids   = pages.pluck(:id)
+      @task.total_count = ids.size
 
-      pages.order_by(id: 1).find_each(batch_size: PER_BATCH) do |page|
+      ids.each do |id|
         @task.count
+        page = Cms::Page.site(@site).or(cond).where(id: id).first
+        next unless page
         @task.log page.full_url
         release_page page.becomes_with_route
       end
