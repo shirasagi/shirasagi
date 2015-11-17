@@ -8,9 +8,11 @@ class Cms::LinkCheckController < ApplicationController
   public
     def check
       result = {}
-      raise "400" if params[:url].blank?
+      url = params[:url]
 
-      params[:url].each_value do |link|
+      raise "400" if url.blank?
+      url = url.values if url.is_a?(Hash)
+      url.each do |link|
         next if result[link]
         result[link] = check_url(::URI.escape(link))
       end
