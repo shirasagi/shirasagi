@@ -556,8 +556,8 @@ class @Link_Checker
       complete()
       return
 
-    links = {}
-    for href, i in $(html).find('a[href]')
+    links = []
+    for href in $(html).find('a[href]')
       link = $(href).attr('href')
       continue if link == "#"
 
@@ -565,7 +565,7 @@ class @Link_Checker
         Link_Checker.addMessage(link, $(html).find(link).length != 0)
       else
         link = Link_Checker.rootUrl + link.slice(1) if /^\//.test(link)
-        links[i + 1] = link
+        links.push(link)
 
     $.ajax {
       type: "POST", url: Link_Checker.url, cache: false,
