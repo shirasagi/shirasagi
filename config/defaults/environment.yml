@@ -32,4 +32,6 @@ mime_type_map:
   wmv: "video/x-ms-wmv"
 
 # multibyte filename validation
+#   underscore - replace multibyte characters to underscore
+#   sequence - replace filename to sequence id if filename include multibyte characters
 multibyte_filename: underscore

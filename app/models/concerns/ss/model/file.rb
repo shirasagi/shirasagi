@@ -30,10 +30,10 @@ module SS::Model::File
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validate :validate_size
 
+    before_save :validate_filename
     before_save :rename_file, if: ->{ @db_changes.present? }
     before_save :save_file
     before_destroy :remove_file
-    after_save :validate_filename
   end
 
   module ClassMethods
@@ -175,7 +175,7 @@ module SS::Model::File
     end
 
     def validate_filename
-      self.set(filename: SS::FilenameConvertor.convert(filename, id: id))
+      self.filename = SS::FilenameConvertor.convert(filename, id: id)
     end
 
     def save_file

@@ -11,7 +11,7 @@ class SS::FilenameConvertor
         when "underscore"
           filename.gsub(/[^\w\-\.]/, "_")
         else
-          filename.gsub(/[^\w\-\.]/, "_")
+          filename
         end
       end
   end
