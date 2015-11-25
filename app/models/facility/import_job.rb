@@ -10,7 +10,7 @@ class Facility::ImportJob
 
     def call(ss_file_id, host, filename)
       @ss_file  = ::SS::File.where(id: ss_file_id).first
-      @cur_site = SS::Site.where(host: host).first
+      @cur_site = Cms::Site.where(host: host).first
       @cur_node = ::Facility::Node::Node.where(filename: filename, site_id: @cur_site.id).first
 
       put_log("destory all pages /#{@cur_node.filename}/*")
