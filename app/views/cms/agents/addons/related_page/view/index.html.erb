@@ -1,12 +1,12 @@
 <% if @cur_page.related_pages.present? %>
-<nav class="related-pages">
-  <header><h1><%= @cur_page.t :related_pages %></h1></header>
+<section class="related-pages">
+  <header><h2><%= @cur_page.t :related_pages %></h2></header>
   <div class="pages">
-    <% @cur_page.related_pages.each do |item| %>
-    <article>
-      <header><h2><%= link_to item.name, item.url %></h2></header>
-    </article>
-    <% end %>
+    <ul>
+      <% @cur_page.related_pages.each do |item| %>
+      <li><%= link_to item.name, item.url %></li>
+      <% end %>
+    </ul>
   </div>
-</nav>
+</section>
 <% end %>

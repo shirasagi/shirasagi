@@ -1,6 +1,6 @@
 <% if @cur_page.contact_state == "show" && @cur_page.contact_present? %>
   <footer class="contact">
-    <h1><%= t("contact.view.title") %></h1>
+    <h2><%= t("contact.view.title") %></h2>
     <% if @cur_page.contact_group %>
       <p class="group"><%= @cur_page.contact_group.name.sub(/.*\//, "") %></p>
     <% end %>

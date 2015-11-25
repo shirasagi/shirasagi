@@ -5,7 +5,7 @@ url = File.join(@cur_site.full_url, @cur_path)
 
 %>
 
-<nav class="cms-sns_share">
+<div class="cms-sns_share">
 <% @cur_part.sort_sns_share_services.each do |service| %>
   <% if service == "fb_like" %>
     <div class="site fb fb-like">
@@ -67,4 +67,4 @@ url = File.join(@cur_site.full_url, @cur_path)
     </div>
   <% end %>
 <% end %>
-</nav>
+</div>

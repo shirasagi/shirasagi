@@ -1,12 +1,12 @@
 <% if @cur_page.categories.present? %>
-<nav class="categories">
-  <header><h1><%= @cur_page.t :categories %></h1></header>
+<section class="categories">
+  <header><h2><%= @cur_page.t :categories %></h2></header>
   <div class="nodes">
-    <% @cur_page.categories.each do |item| %>
-    <article>
-      <header><h2><%= link_to item.name, item.url %></h2></header>
-    </article>
-    <% end %>
+    <ul>
+      <% @cur_page.categories.each do |item| %>
+      <li><%= link_to item.name, item.url %></li>
+      <% end %>
+    </ul>
   </div>
-</nav>
+</section>
 <% end %>

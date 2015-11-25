@@ -1,7 +1,7 @@
 <%== @cur_node.upper_html %>
 
 <nav class="event-date">
-  <h1 class="<%= event_h1_class(@month) + " " + event_dl_class(@date) %>">
+  <h2 class="<%= event_h1_class(@month) + " " + event_dl_class(@date) %>">
     <%= time_tag(@date) do %>
       <%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}#{@day}#{t_date('day')}" %>
       <span class="wday">(<%= t_wday(@date) %><span class="unit"><%= t_date('wday') %></span>)</span>
@@ -10,7 +10,7 @@
         <span class="holiday"><%= HolidayJapan.name @date %></span>
       <% end %>
     <% end %>
-  </h1>
+  </h2>
   <ul>
     <li class="prev"><%= link_to_daily @date.advance(days: -1), name: t("event.prev_day") %></li>
     <li class="next"><%= link_to_daily @date.advance(days: 1), name: t("event.next_day") %></li>

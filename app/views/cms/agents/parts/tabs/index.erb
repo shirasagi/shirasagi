@@ -5,13 +5,13 @@ SS_Tabs.render("#cms-tabs-<%= @cur_part.id %>");
 <div class="cms-tabs tabs" id="cms-tabs-<%= @cur_part.id %>">
   <% @tabs.each_with_index do |tab, idx| %>
   <article class="tab" id="cms-tab-<%= @cur_part.id %>-<%= idx %>">
-    <header><h1><%= tab[:name] %></h1></header>
+    <header><h2><%= tab[:name] %></h2></header>
     <div class="pages">
       <% tab[:pages].each do |item| %>
       <article class="<%= 'new' if @cur_part.in_new_days?(item.date) %>">
         <header>
           <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-          <h2><%= link_to item.name, item.url %></h2>
+          <h3><%= link_to item.name, item.url %></h3>
         </header>
       </article>
       <% end %>

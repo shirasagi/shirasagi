@@ -154,7 +154,7 @@ class @SS_Tabs
 
     box.find(".tab").each (i) ->
       tab  = $(this)
-      name = tab.find('header > h1').html()
+      name = tab.find('header > h2').html()
       nav  = tab.find('nav')
       url  = nav.find(".more").attr("href")
 
@@ -171,7 +171,7 @@ class @SS_Tabs
       disp = "style='display: none;'" if i != 0
 
       html  = "<article id='" + view_id + "' class='view' " + disp + ">"
-      html += "<h1 style='display: none'>" + name + "</h1>"
+      html += "<h2 style='display: none'>" + name + "</h2>"
       html += "<div class='pages'>" + tab.find(".pages").html() + "</div>"
       html += "<nav>" + tab.find('nav').html() + "</nav>"
       html += "</article>"
