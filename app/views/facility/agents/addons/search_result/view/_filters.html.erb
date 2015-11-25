@@ -1,6 +1,6 @@
 <nav class="filters">
   <% if @filter_categories.present? %>
-　  <ul>
+    <ul>
       <% @filter_categories.order_by(order: 1).each do |cate| %>
         <li class="<%= cate.basename %>">
           <%= link_to cate.name, "#", class: "clicked", "data-id" => cate.id %>
