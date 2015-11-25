@@ -30,3 +30,8 @@ max_filesize_ext:
 mime_type_map:
   jtd: "application/x-js-taro"
   wmv: "video/x-ms-wmv"
+
+# multibyte filename validation
+#   underscore - replace multibyte characters to underscore
+#   sequence - replace filename to sequence id if filename include multibyte characters
+multibyte_filename: underscore

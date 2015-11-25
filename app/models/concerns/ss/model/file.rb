@@ -24,13 +24,13 @@ module SS::Model::File
     permit_params :resizing
 
     before_validation :set_filename, if: ->{ in_file.present? }
-    before_validation :validate_filename, if: ->{ filename.present? }
 
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validate :validate_size
 
+    before_save :validate_filename
     before_save :rename_file, if: ->{ @db_changes.present? }
     before_save :save_file
     before_destroy :remove_file
@@ -175,7 +175,7 @@ module SS::Model::File
     end
 
     def validate_filename
-      self.filename = filename.gsub(/[^\w\-\.]/, "_")
+      self.filename = SS::FilenameConvertor.convert(filename, id: id)
     end
 
     def save_file
