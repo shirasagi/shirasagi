@@ -10,8 +10,8 @@ class Article::Page
   include Cms::Addon::ParentCrumb
   include Event::Addon::Date
   include Map::Addon::Page
-  include Contact::Addon::Page
   include Cms::Addon::RelatedPage
+  include Contact::Addon::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission

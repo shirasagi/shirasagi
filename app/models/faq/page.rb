@@ -10,8 +10,8 @@ class Faq::Page
   include Category::Addon::Category
   include Cms::Addon::ParentCrumb
   include Event::Addon::Date
-  include Contact::Addon::Page
   include Cms::Addon::RelatedPage
+  include Contact::Addon::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
