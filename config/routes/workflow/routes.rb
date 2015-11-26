@@ -21,7 +21,7 @@ SS::Application.routes.draw do
     post "/wizard/:id" => "wizard#index"
   end
 
-  namespace "workflow", path: ".:site/workflow" do
+  namespace "workflow", path: ".s:site/workflow" do
     get "/" => "main#index"
     resources :pages, concerns: [:deletion, :branch]
     get "/search_approvers" => "search_approvers#index"
