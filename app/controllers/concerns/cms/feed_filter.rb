@@ -34,6 +34,6 @@ module Cms::FeedFilter
         end
       end
 
-      render xml: rss.to_xml
+      render xml: rss.to_xml, content_type: "application/rss+xml"
     end
 end
