@@ -82,7 +82,7 @@ class Gws::Schedule::Plan
 
       if allday?
         data.merge! start: start_at.to_date
-        data.merge! end: (end_at + 1.days).to_date
+        data.merge! end: (end_at + 1.day).to_date
         data[:className] += " fc-event-allday"
       end
 
@@ -110,7 +110,7 @@ class Gws::Schedule::Plan
     # - 終日予定を別の日に移動
     def set_from_drop_date_api
       self.start_on = api_start
-      self.end_on   = api_end.present? ? (Date.parse(api_end) - 1.days) : api_start
+      self.end_on   = api_end.present? ? (Date.parse(api_end) - 1.day) : api_start
       self.allday   = 'allday'
     end
 
@@ -126,7 +126,7 @@ class Gws::Schedule::Plan
     # - 終日予定の終了日を変更
     def set_from_resize_date_api
       self.start_on = api_start
-      self.end_on   = Date.parse(api_end) - 1.days
+      self.end_on   = Date.parse(api_end) - 1.day
     end
 
     def set_dates_on

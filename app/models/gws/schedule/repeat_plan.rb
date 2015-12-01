@@ -18,7 +18,7 @@ class Gws::Schedule::RepeatPlan
   field :wdays, type: Array, default: []
 
   before_validation do
-    self.repeat_end = repeat_start + 1.months if repeat_start.present? && repeat_end.blank?
+    self.repeat_end = repeat_start + 1.month if repeat_start.present? && repeat_end.blank?
     self.wdays.reject! { |c| c.blank? }
   end
 
