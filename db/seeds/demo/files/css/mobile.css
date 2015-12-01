@@ -101,18 +101,18 @@ dd {
   text-align: center;
 }
 /* ---------------------------------- */
-#guide h1, #about h1, #online h1, #propose h1,
-#safety h1, #attention h1, .cms-tabs h1,
-#useful h1, #population h1, #relations h1, #ranking h1, #topics h1,
-#ss-page-name, #links-life h1, #category-list h1,
-#emergency h1, #announce h1 {
+#guide h2, #about h2, #online h2, #propose h2,
+#safety h2, #attention h2, .cms-tabs h2,
+#useful h2, #population h2, #relations h2, #ranking h2, #topics h2,
+#ss-page-name, #links-life h2, #category-list h2,
+#emergency h2, #announce h2 {
   margin-bottom: 5px;
   padding: 0 10px;
   border-left: 5px solid #f08300;
   background: #007acd;
   color: #fff;
 }
-#safety h1, #emergency h1, #announce h1 {
+#safety h2, #emergency h2, #announce h2 {
   background: #e03300
 }
 #announce p {
@@ -125,7 +125,7 @@ dd {
   padding: 0 10px;
   border-bottom: 1px solid #ddd;
 }
-.pages #emergency div h2 {
+.pages #emergency div h3 {
   padding: 0;
   margin: 10px 0 5px;
   border: none;
@@ -133,7 +133,7 @@ dd {
 #emergency .tag-article p {
   margin: 5px 0;
 }
-#attention h1 {
+#attention h2 {
   background: #f08300;
 }
 #attention, .cms-tabs .tag-article {
@@ -142,7 +142,7 @@ dd {
 #about .shisetsu {
   display: none;
 }
-.pages div h2 {
+.pages div h3 {
   margin: 0px 0px 5px;
   padding: 0px 10px 5px;
   border-bottom: 1px solid #ddd;
@@ -157,7 +157,7 @@ dd {
   margin: 0;
   padding: 10px;
 }
-#topics h2 {
+#topics h3 {
   padding: 0 10px;
   font-size: 100%;
   font-weight: normal;
@@ -174,7 +174,7 @@ dd {
   color: #080;
 }
 /* ---------------------------------- */
-#recent-oshirase h1 {
+#recent-oshirase h2 {
   margin-bottom: 5px;
   padding: 0 10px;
   border-bottom: 1px solid #f08300;
@@ -199,7 +199,7 @@ dd {
   padding: 5px 10px 0;
   border-top: 1px solid #ddd;
 }
-#category-list h2 {
+#category-list h3 {
   font-size: 100%;
   font-weight: normal;
 }
@@ -211,20 +211,20 @@ dd {
 .page .body {
   padding: 0 10px;
 }
-.page .body h1 {
+.page .body h2 {
   padding: 0 10px;
   background: #cee;
 }
-.page .body h2 {
+.page .body h3 {
   border-bottom: 1px solid #007acd;
   color: #007acd;
 }
-.page .body h3 {
+.page .body h4 {
   padding-left: 10px;
   border-left: 5px solid #007acd;
   color: #007acd;
 }
-.page .body h4 {
+.page .body h5 {
   color: #007acd;
 }
 .page .body table {
@@ -249,7 +249,7 @@ dd {
   text-align: right;
 }
 /* ---------------------------------- */
-.event-date h1 {
+.event-date h2 {
   margin-bottom: 5px;
   padding: 0 10px;
   border-bottom: 1px solid #f08300;

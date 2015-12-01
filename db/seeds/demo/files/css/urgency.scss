@@ -271,7 +271,7 @@ img {
 #guide, #about, #safety, #online, #propose, #useful, #population, #relations, #ranking, #topics,
 #announce, #emergency, #calamity {
   margin-bottom: $box-margin;
-  h1 {
+  h2 {
     margin-bottom: 6px;
     padding: 3px 6px 0;
     border-left: 5px solid $orange;
@@ -282,12 +282,12 @@ img {
 #announce, #calamity {
   margin-top: $box-margin;
 }
-#safety h1, #announce h1, #emergency h1, #calamity h1 {
+#safety h2, #announce h2, #emergency h2, #calamity h2 {
   background: #e03300;
 }
 #emergency {
   margin-top: $box-margin;
-  h1 {
+  h2 {
     margin-bottom: 0;
   }
   article {
@@ -302,7 +302,7 @@ img {
   }
 }
 #guide {
-  h1 {
+  h2 {
     margin: 0;
   }
   ul {
@@ -328,7 +328,7 @@ img {
   }
 }
 #about {
-  h1 {
+  h2 {
     margin: 0;
   }
   ul {
@@ -421,7 +421,7 @@ img {
 // attention
 #attention {
   margin: $box-margin 0;
-  h1{
+  h2 {
     padding: 3px 6px 0;
     border-left: 5px solid $orange;
     background: #f4d89a;
@@ -459,7 +459,7 @@ img {
       width: 111px;
     }
   }
-  h1 {
+  h2 {
     padding: 3px 6px 0;
     border-left: 5px solid $orange;
     border-bottom: 2px solid $orange;
