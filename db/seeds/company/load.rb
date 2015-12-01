@@ -201,6 +201,7 @@ save_part route: "cms/free", filename: "connection.part.html", name: "関連サ�
 save_part route: "cms/free", filename: "foot-top.part.html", name: "フッター：トップ"
 save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
 save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー"
+save_part route: "cms/free", filename: "head-top.part.html", name: "ヘッダー：トップ", mobile_view: "hide"
 save_part route: "cms/free", filename: "inquiry.part.html", name: "お問い合わせ",
   mobile_view: "hide"
 save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル"
