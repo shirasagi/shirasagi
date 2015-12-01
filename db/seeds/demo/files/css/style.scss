@@ -900,7 +900,9 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   h2 {
     display: inline;
     margin: 0 0 0 10px;
+    padding: 0;
     border: none;
+    background: none;
     font-size: $px14;
     font-weight: normal;
     a {
@@ -949,20 +951,15 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   .nodes {
     @include inline-block;
     margin: 5px 0;
-    article {
-      display: inline-block;
-    }
-    header {
+    li {
+      @include inline-block;
       margin: 0;
-      h2 {
-        @include inline-block;
-        margin: 0;
-        padding: 0 10px;
-        border-left: $border-hgry;
-        border-bottom: none;
-        font-size: $px14;
-        font-weight: normal;
-      }
+      padding: 0 10px;
+      border-left: $border-hgry;
+      border-bottom: none;
+      font-size: $px14;
+      font-weight: normal;
+      list-style: none;
     }
   }
 }
@@ -1011,7 +1008,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       font-weight: normal;
     }
   }
-  h1 {
+  h1, h2 {
     margin: $item-margin 0 6px;
     padding: 3px 10px 0;
     background: $hblue;
@@ -1021,7 +1018,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       margin-top: 0;
     }
   }
-  h2 {
+  h3 {
     margin-bottom: 6px;
     padding: 0 10px;
     border-bottom: 2px solid $blue;
@@ -1029,18 +1026,18 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     font-size: $px16;
     font-weight: bold;
   }
-  h3 {
+  h4 {
     margin-bottom: 6px;
     padding: 0 10px;
     border-left: 5px solid $blue;
     color: $blue;
     font-weight: bold;
   }
-  h4 {
+  h5 {
     color: $blue;
     font-weight: bold;
   }
-  h5, h6 {
+  h6 {
     font-weight: bold;
   }
   p {
@@ -1146,16 +1143,8 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 // -----------------------------------------------------------------------------
 //  related-pages
-.page .related-pages {
+.page .related-pages, footer.contact {
   margin-bottom: $box-margin;
-  article h2 {
-    padding: 0 0 0 15px;
-    margin-bottom: 0;
-    border: none;
-    background: url("../img/ic-li.png") no-repeat 2px 8px;
-    font-size: $px14;
-    font-weight: normal;
-  }
 }
 // -----------------------------------------------------------------------------
 // calendar
@@ -1164,46 +1153,46 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 .event-date {
   position: relative;
-  h1 {
+  h2 {
     margin-bottom: $item-margin;
     padding: 7px 0 4px 50px;
     border-bottom: 2px solid $orange;
     font-size: $px16;
   }
-  h1.jan {
+  h2.jan {
     background: url(../img/ic-january.png) no-repeat 10px bottom;
   }
-  h1.feb {
+  h2.feb {
     background: url(../img/ic-february.png) no-repeat left bottom;
   }
-  h1.may {
+  h2.may {
     background: url(../img/ic-may.png) no-repeat left bottom;
   }
-  h1.apr {
+  h2.apr {
     background: url(../img/ic-april.png) no-repeat left bottom;
   }
-  h1.mar {
+  h2.mar {
     background: url(../img/ic-march.png) no-repeat left bottom;
   }
-  h1.jun {
+  h2.jun {
     background: url(../img/ic-june.png) no-repeat 10px bottom;
   }
-  h1.jul {
+  h2.jul {
     background: url(../img/ic-july.png) no-repeat left bottom;
   }
-  h1.aug {
+  h2.aug {
     background: url(../img/ic-august.png) no-repeat 5px bottom;
   }
-  h1.sep {
+  h2.sep {
     background: url(../img/ic-september.png) no-repeat 9px bottom;
   }
-  h1.oct {
+  h2.oct {
     background: url(../img/ic-october.png) no-repeat 10px bottom;
   }
-  h1.nov {
+  h2.nov {
     background: url(../img/ic-november.png) no-repeat 8px bottom;
   }
-  h1.dec {
+  h2.dec {
     background: url(../img/ic-december.png) no-repeat 10px bottom;
   }
   ul {

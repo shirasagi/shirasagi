@@ -61,7 +61,7 @@ img {
     padding: 10px;
     @include clear;
   }
-  h1 {
+  h1, p {
     float: left;
     padding: 12px 0;
   }
@@ -445,20 +445,20 @@ img {
 }
 .two #main, .one #main {
   .body {
-    h1 {
+    h1, h2 {
       margin-bottom: $item-margin;
       padding: 5px 10px 3px;
       border-bottom: $border-red1;
       background: $hred;
       font-size: $px16;
     }
-    h2 {
+    h3 {
       margin-bottom: $item-margin;
       padding: 3px 0 1px 10px;
       border-left: $border-red3;
       font-size: $px16;
     }
-    h3 {
+    h4 {
       position: relative;
       margin-bottom: $item-margin;
       padding-left: 15px;
@@ -527,26 +527,20 @@ img {
     .nodes {
       @include inline-block;
       margin: 5px 0;
-      article {
+      li {
         @include inline-block;
-      }
-      header {
         margin: 0;
-        h2 {
-          @include inline-block;
-          margin: 0;
-          padding: 0 10px;
-          border-left: $border-gray;
-          border-bottom: none;
-          font-size: $px14;
-          font-weight: normal;
-        }
+        padding: 0 10px;
+        border-left: $border-gray;
+        border-bottom: none;
+        font-size: $px14;
+        font-weight: normal;
       }
     }
   }
 }
 footer.contact {
-  h1 {
+  h2 {
     margin-bottom: $item-margin;
     padding: 5px 10px 3px;
     border-bottom: $border-red1;
