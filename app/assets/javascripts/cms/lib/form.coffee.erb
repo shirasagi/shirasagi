@@ -337,10 +337,15 @@ class @Syntax_Checker
     return $(replace).parents().last().html() || $(replace).html()
 
   @checkMultibyteCharacter: (html)->
-    c = html.match /[Ａ-Ｚａ-ｚ０-９]/g
-    unless $.isEmptyObject(c)
+    chars = []
+    $(html).find(":not(iframe)").addBack().contents().filter ->
+      return this.nodeType == 3
+    .each ->
+      c = this.textContent.match /[Ａ-Ｚａ-ｚ０-９]/g
+      chars.push c if c
+    unless $.isEmptyObject(chars)
       errors = [{
-        code: c.join(",")
+        code: chars.join(",")
         msg: Syntax_Checker.message["invalidMultibyteCharacter"]
         detail: Syntax_Checker.detail["invalidMultibyteCharacter"]
         ele: html
@@ -349,9 +354,14 @@ class @Syntax_Checker
       Syntax_Checker.pushError(errors)
 
   @correctMultibyteCharacter: (html)->
-    html = html.replace /[Ａ-Ｚａ-ｚ０-９]/g, (c)->
-      String.fromCharCode(c.charCodeAt(0) - 0xFEE0);
-    return $(html).html()
+    ret = $(html)
+    ret.find(":not(iframe)").addBack().contents().filter ->
+      return this.nodeType == 3
+    .each ->
+      text = this.textContent.replace /[Ａ-Ｚａ-ｚ０-９]/g, (c)->
+        String.fromCharCode(c.charCodeAt(0) - 0xFEE0);
+      this.textContent = text
+    return ret.html()
 
   @checkDependentCharacter: (html)->
     regex = new RegExp("[" + Syntax_Checker.dependentCharacter + "]","g")
