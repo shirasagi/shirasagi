@@ -206,7 +206,7 @@ save_part route: "cms/free", filename: "inquiry.part.html", name: "お問い合�
   mobile_view: "hide"
 save_part route: "cms/free", filename: "keyvisual.part.html", name: "キービジュアル"
 save_part route: "cms/tabs", filename: "news.part.html", name: "ニュース",
-  new_days: 7, conditions: %w(oshirase product recruit)
+  new_days: 7, limit: 3, conditions: %w(oshirase product recruit)
 save_part route: "cms/free", filename: "page-top.part.html", name: "ページトップ"
 save_part route: "cms/page", filename: "news/side-menu.part.html", name: "サイドメニュー",
   new_days: 0, limit: 10, mobile_view: "hide",
