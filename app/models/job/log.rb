@@ -88,11 +88,11 @@ class Job::Log
       def term_to_date(name)
         case name.to_s
         when "year"
-          Time.zone.now - 1.years
+          Time.zone.now - 1.year
         when "month"
-          Time.zone.now - 1.months
+          Time.zone.now - 1.month
         when "day"
-          Time.zone.now - 1.days
+          Time.zone.now - 1.day
         when "all_delete"
           Time.zone.now
         when "all_save"

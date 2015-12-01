@@ -19,7 +19,7 @@ module SS::EditorHelper
 
     mode_path = "/assets/js/codemirror/mode"
     mode_file = "#{Rails.public_path}#{mode_path}"
-    mode = nil unless File.exists?("#{mode_file}/#{mode}/#{mode}.js") if mode
+    mode = nil if mode && !File.exists?("#{mode_file}/#{mode}/#{mode}.js")
 
     controller.stylesheet "/assets/css/codemirror/codemirror.css"
     controller.javascript "/assets/js/codemirror/codemirror.js"

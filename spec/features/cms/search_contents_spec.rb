@@ -93,13 +93,13 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
 
-        Timecop.travel(3.day.from_now) do
+        Timecop.travel(3.days.from_now) do
           page = Cms::Page.where(name: "[TEST]D").first
           page.state = "public"
           page.save
         end
 
-        Timecop.travel(6.day.from_now) do
+        Timecop.travel(6.days.from_now) do
           page = Cms::Page.where(name: "[TEST]A").first
           page.html = "update"
           page.save

@@ -109,7 +109,7 @@ module Cms::PublicFilter
 
     def x_sendfile(file = @file)
       return unless Fs.file?(file)
-      response.headers["Expires"] = 1.days.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
+      response.headers["Expires"] = 1.day.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
       response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
       if Fs.mode == :file
