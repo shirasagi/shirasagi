@@ -158,6 +158,7 @@ SS::Application.routes.draw do
     resources :pages, concerns: [:deletion, :copy, :move, :lock]
     resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]
     resources :import_nodes, concerns: [:deletion, :copy, :move]
+    get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
     resources :archives, only: [:index]
@@ -168,6 +169,8 @@ SS::Application.routes.draw do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml"         => "public#rss", cell: "nodes/page", format: "xml"
+    get "group_page/(index.:format)" => "public#index", cell: "nodes/group_page"
+    get "group_page/rss.xml"         => "public#rss", cell: "nodes/group_page", format: "xml"
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
     get "import_node/rss.xml"         => "public#rss", cell: "nodes/import_node", format: "xml"
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/

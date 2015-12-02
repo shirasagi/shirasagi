@@ -1,0 +1,36 @@
+<%= code_editor ".mod-cms-pagegrouplist .html", mode: :html, readonly: true %>
+
+<dl class="see mod-cms-pagegrouplist">
+  <dt><%= @model.t :condition_groups %></dt>
+  <dd><%=br @item.condition_groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+
+  <dt><%= @model.t :sort %></dt>
+  <dd><%= @item.label :sort %></dd>
+
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.send :limit %></dd>
+
+  <dt><%= @model.t :upper_html %></dt>
+  <dd>
+    <% if @item.upper_html.present? %>
+    <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :loop_html %></dt>
+  <dd>
+    <% if @item.loop_html.present? %>
+    <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :lower_html %></dt>
+  <dd>
+    <% if @item.lower_html.present? %>
+    <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :new_days %></dt>
+  <dd><%= @item.send :new_days %> <%= t "datetime.prompts.day" %></dd>
+</dl>

@@ -178,6 +178,7 @@ ja:
       cms/import_node: 取り込みページ
       cms/archive: アーカイブ
       cms/photo_album: 写真一覧
+      cms/group_page: グループ別ページリスト
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト
@@ -266,6 +267,7 @@ ja:
       cms/crumb: パンくず設定
       cms/node_list: リスト表示
       cms/page_list: リスト表示
+      cms/page_group_list: リスト表示
       cms/tabs: タブ表示
       cms/related_page: 関連記事
       cms/thumb: サムネイル
@@ -414,6 +416,8 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
         new_days: NEWマーク期間
+      cms/addon/page_group_list:
+        condition_groups: 検索条件(グループ)
       cms/addon/tabs:
         conditions: タブ設定(URL)
         new_days: NEWマーク期間
@@ -698,6 +702,8 @@ ja:
           oshirase
           oshirase/event
           shisei/jinji
+      condition_groups:
+        - 検索条件に所属グループを含めます。
       sort:
         - どういった順でリストを並べるかを指定します。
         - タイトル、ファイル名、作成日時、更新日時、公開日時での並び順は昇順です。
