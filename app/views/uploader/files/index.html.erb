@@ -5,7 +5,7 @@
     <% if @cur_node.filename != @item.filename %>
       <li class="list-item">
         <div class="info">
-          <%= link_to :parent_directory, { action: :show, filename: @item.dirname }, class: "up" %>
+          <%= link_to :parent_directory, { action: :file, filename: @item.dirname }, class: "up" %>
         </div>
       </li>
     <% end %>
@@ -13,17 +13,17 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="tap-menu">
-        <%= link_to :show, action: :show, filename: item.filename, do: :show if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-        <%= link_to :edit, action: :show, filename: item.filename, do: :edit if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :delete, action: :show, filename: item.filename, do: :delete if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :show, action: :file, filename: item.filename, do: :show if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to :edit, action: :file, filename: item.filename, do: :edit if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, action: :file, filename: item.filename, do: :delete if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       </nav>
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.name %>" /></label>
       <div class="info">
         <% if item.directory? %>
-        <%= link_to item.name, { action: :show, filename: item.filename }, class: "list-item-title dir" %>
+          <%= link_to item.name, { action: :file, filename: item.filename }, class: "list-item-title dir" %>
         <% else %>
-        <%= link_to item.name, { action: :show, filename: item.filename, do: :show }, class: "list-item-title file" %>
+          <%= link_to item.name, { action: :file, filename: item.filename, do: :show }, class: "list-item-title file" %>
         <% end %>
 
         <div class="list-item-meta">
