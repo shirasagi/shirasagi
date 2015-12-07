@@ -75,6 +75,7 @@ SS::Application.routes.draw do
 
     resources :pages, concerns: [:deletion, :copy, :move, :lock]
     resources :layouts, concerns: :deletion
+    resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :notices, concerns: :deletion do
       get :copy, :on => :member

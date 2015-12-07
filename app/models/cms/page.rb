@@ -5,6 +5,7 @@ class Cms::Page
   include Workflow::Addon::Approver
   include Cms::Addon::Meta
   include Cms::Addon::Body
+  include Cms::Addon::BodyPart
   include Cms::Addon::File
   include Category::Addon::Category
   include Cms::Addon::ParentCrumb

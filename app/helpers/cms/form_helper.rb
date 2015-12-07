@@ -18,6 +18,14 @@ module Cms::FormHelper
     items
   end
 
+  def ancestral_body_layouts
+    items = []
+    Cms::BodyLayout.site(@cur_site).sort(name: 1).each do |item|
+      items << [item.name, item.id] if item.parts.present?
+    end
+    items
+  end
+
   def show_path_with_route(item)
     model = item.class.name.underscore.sub(/^.+?\//, "")
 

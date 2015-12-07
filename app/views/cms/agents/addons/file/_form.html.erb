@@ -2,9 +2,9 @@
 $ ->
   @insertContent = (cont) ->
     if (typeof tinymce) != "undefined"
-      tinymce.get("item_html").execCommand("mceInsertContent", false, cont)
+      tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont)
     else if (typeof CKEDITOR != "undefined")
-      CKEDITOR.instances.item_html.insertHtml(cont)
+      CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont)
 
   @deleteContent = (id) ->
     $(".file-view").each ->

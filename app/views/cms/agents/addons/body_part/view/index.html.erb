@@ -1,0 +1,17 @@
+<% return "" unless @cur_page.body_layout.present? %>
+
+<%
+html   = @cur_page.body_layout.html.to_s
+addons = @cur_page.body_layout.body_layout_addons
+
+html.gsub!(/\{\{ addon "(.+?)" \}\}/) do |m|
+  name = $1
+  addon = addons[name]
+  addon ? render(file: addon.view_file) : m
+end
+html.gsub!(/\{\{ yield (\d+?) \}\}/) do
+  n = $1.to_i
+  try{ @cur_page.body_parts[n] }.to_s
+end
+%>
+<%== html %>

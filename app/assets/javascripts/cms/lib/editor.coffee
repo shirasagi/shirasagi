@@ -40,4 +40,5 @@ class @Cms_Editor_CKEditor
 class @Cms_Editor_TinyMCE
   # Render TinyMCE
   @render: (selector, opts = {}) ->
+    opts["selector"] = selector
     tinymce.init opts

@@ -13,7 +13,9 @@ ja:
     import_page: 取り込みページ
     group: グループ
     layout: レイアウト
+    body_layout: 本文レイアウト
     link_check: リンクチェック
+    preview: プレビュー
     member: メンバー
     modules: モジュール
     node: フォルダー
@@ -185,6 +187,7 @@ ja:
       cms/meta: メタ情報
       cms/html: HTML
       cms/body: 本文
+      cms/body_part: 本文パーツ
       cms/file: ファイル
       cms/release: 公開設定
       cms/release_plan: 公開予約
@@ -201,6 +204,7 @@ ja:
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
       cms/captcha: 認証
+      cms/body_layout_html: HTML
 
   mongoid:
     models:
@@ -217,6 +221,7 @@ ja:
       cms/part/tabs: 新着タブ
       cms/part/crumb: パンくずリスト
       cms/layout: レイアウト
+      cms/body_layout: レイアウト
       cms/workflow/route: 承認経路
       cms/role: ロール
       cms/editor_template: テンプレート
@@ -252,10 +257,13 @@ ja:
       cms/layout:
         name: レイアウト名
         html: HTML
+      cms/body_layout:
+        parts: パーツ名
       cms/page:
         html: 本文
       cms/reference/layout:
         layout_id: レイアウト
+        body_layout_id: 本文レイアウト
       cms/reference/page_layout:
         page_layout_id: ページレイアウト
       cms/site:
