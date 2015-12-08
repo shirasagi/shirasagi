@@ -111,86 +111,120 @@ class Opendata::App
     end
 
   class << self
-    def to_app_path(path)
-      suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
-                  /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }
-      if suffix.present?
-        path[0..(path.length - suffix.length - 1)] + '.html'
-      else
-        path.sub(/\/file_text\/.*$/, '.html').sub(/\/file_index\/.*$/, '.html')
-      end
-    end
-
-    def sort_options
-      [
-        [I18n.t("opendata.sort_options.released"), "released"],
-        [I18n.t("opendata.sort_options.popular"), "popular"],
-        [I18n.t("opendata.sort_options.attention"), "attention"]
-      ]
-    end
-
-    def sort_hash(sort)
-      case sort
-      when "released"
-        { released: -1, _id: -1 }
-      when "popular"
-        { point: -1, _id: -1 }
-      when "attention"
-        { executed: -1, _id: -1 }
-      else
-        return { released: -1 } if sort.blank?
-        { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
-      end
-    end
-
-    def aggregate_field(name, opts = {})
-      Opendata::Common.get_aggregate_field(self, name, opts)
-    end
-
-    def aggregate_array(name, opts = {})
-      Opendata::Common.get_aggregate_array(self, name, opts)
-    end
-
-    def search(params)
-      criteria = self.where({})
-      return criteria if params.blank?
-
-      site = params[:site]
-
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword],
-          :name, :text, "appfiles.name", "appfiles.filename", "appfiles.text"
+    public
+      def to_app_path(path)
+        suffix = %w(/point.html /point/members.html /ideas/show.html /zip /executed/show.html
+                    /executed/add.html /full/ /full/index.html).find { |suffix| path.end_with? suffix }
+        if suffix.present?
+          path[0..(path.length - suffix.length - 1)] + '.html'
+        else
+          path.sub(/\/file_text\/.*$/, '.html').sub(/\/file_index\/.*$/, '.html')
+        end
       end
 
-      criteria = criteria.keyword_in params[:keyword], :name if params[:name].present?
-
-      criteria = criteria.where tags: params[:tag] if params[:tag].present?
-
-      criteria = criteria.where area_ids: params[:area_id].to_i if params[:area_id].present?
-
-      criteria = criteria.where category_ids: params[:category_id].to_i if params[:category_id].present?
-
-      criteria = criteria.where license: params[:license] if params[:license].present?
-
-      criteria = search_poster(params, criteria)
-
-      criteria
-    end
-
-    def search_poster(params, criteria)
-      if params[:poster].present?
-        code = {}
-        cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
-        cond = { :workflow_member_id => nil } if params[:poster] == "admin"
-        criteria = criteria.where(cond)
+      def sort_options
+        [
+          [I18n.t("opendata.sort_options.released"), "released"],
+          [I18n.t("opendata.sort_options.popular"), "popular"],
+          [I18n.t("opendata.sort_options.attention"), "attention"]
+        ]
       end
-      criteria
-    end
 
-    def zip_dir
-      dir = Rails.root.join('tmp', 'opendata')
-      FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
-      dir
-    end
+      def sort_hash(sort)
+        case sort
+        when "released"
+          { released: -1, _id: -1 }
+        when "popular"
+          { point: -1, _id: -1 }
+        when "attention"
+          { executed: -1, _id: -1 }
+        else
+          return { released: -1 } if sort.blank?
+          { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
+        end
+      end
+
+      def aggregate_field(name, opts = {})
+        Opendata::Common.get_aggregate_field(self, name, opts)
+      end
+
+      def aggregate_array(name, opts = {})
+        Opendata::Common.get_aggregate_array(self, name, opts)
+      end
+
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        SEARCH_HANDLERS.each do |handler|
+          criteria = send(handler, params, criteria)
+        end
+
+        criteria
+      end
+
+      def zip_dir
+        dir = Rails.root.join('tmp', 'opendata')
+        FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
+        dir
+      end
+
+    private
+      SEARCH_HANDLERS = [
+        :search_keyword, :search_name, :search_tag, :search_area_id, :search_category_id,
+        :search_license, :search_poster ].freeze
+
+      def search_keyword(params, criteria)
+        if params[:keyword].present?
+          criteria = criteria.keyword_in params[:keyword],
+            :name, :text, "appfiles.name", "appfiles.filename", "appfiles.text"
+        end
+        criteria
+      end
+
+      def search_name(params, criteria)
+        criteria = criteria.keyword_in params[:keyword], :name if params[:name].present?
+        criteria
+      end
+
+      def search_tag(params, criteria)
+        criteria = criteria.where tags: params[:tag] if params[:tag].present?
+        criteria
+      end
+
+      def search_area_id(params, criteria)
+        criteria = criteria.where area_ids: params[:area_id].to_i if params[:area_id].present?
+        criteria
+      end
+
+      def search_category_id(params, criteria)
+        return criteria if params[:category_id].blank?
+
+        category_id = params[:category_id].to_i
+        category_node = Cms::Node.site(params[:site]).public.where(id: category_id).first
+        return criteria if category_node.blank?
+
+        category_ids = [ category_id ]
+        category_node.all_children.public.each do |child|
+          category_ids << child.id
+        end
+
+        criteria.in(category_ids: category_ids)
+      end
+
+      def search_license(params, criteria)
+        criteria = criteria.where license: params[:license] if params[:license].present?
+        criteria
+      end
+
+      def search_poster(params, criteria)
+        if params[:poster].present?
+          cond = {}
+          cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
+          cond = { :workflow_member_id => nil } if params[:poster] == "admin"
+          criteria = criteria.where(cond)
+        end
+        criteria
+      end
   end
 end

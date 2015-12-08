@@ -3,20 +3,42 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
   include Opendata::UrlHelper
   include Opendata::Idea::IdeaFilter
 
-  public
+  private
+    def category_path
+      category_path = @cur_node.url.sub(@cur_node.parent_idea_node.url, '')
+      category_path = category_path[0..-2] if category_path.end_with?('/')
+      if name = params[:name]
+        category_path = "#{category_path}/#{name}"
+      end
+
+      category_path
+    end
+
     def pages
-      @item ||= Opendata::Node::Category.site(@cur_site).
-        where(filename: /\/#{params[:name]}$/).first
+      @item ||= begin
+        node = Cms::Node.site(@cur_site).public.where(filename: category_path).first
+        node = node.becomes_with_route if node.present?
+        node
+      end
       raise "404" unless @item
 
       @cur_node.name = @item.name
 
-      Opendata::Idea.site(@cur_site).where(category_ids: @item.id).public
+      Opendata::Idea.site(@cur_site).search(site: @cur_site, category_id: @item.id).public
     end
 
+    def node_url
+      if name = params[:name]
+        "#{@cur_node.url}#{name}/"
+      else
+        "#{@cur_node.url}"
+      end
+    end
+
+  public
     def index
       @count          = pages.size
-      @node_url       = "#{@cur_node.url}#{params[:name]}/"
+      @node_url       = node_url
       default_options = { "s[category_id]" => "#{@item.id}" }
       @search_path    = ->(options = {}) { search_ideas_path(default_options.merge(options)) }
       @rss_path       = ->(options = {}) { build_path("#{search_ideas_path}rss.xml", default_options.merge(options)) }
@@ -49,9 +71,5 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
     def rss
       @items = pages.order_by(updated: -1).limit(100)
       render_rss @cur_node, @items
-    end
-
-    def nothing
-      render nothing: true
     end
 end

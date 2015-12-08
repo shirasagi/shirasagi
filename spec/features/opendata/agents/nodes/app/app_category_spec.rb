@@ -2,10 +2,21 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_app_category", dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_app_category, name: "opendata_agents_nodes_app_category" }
+  let(:node_category_folder) { create_once :cms_node_node, basename: "category" }
+  let(:node_app) { create_once :opendata_node_app }
+  let(:node) do
+    create_once(
+      :opendata_node_app_category,
+      name: "opendata_agents_nodes_app_category",
+      basename: "#{node_app.filename}/#{node_category_folder.filename}",
+      depth: node_app.depth + 1)
+  end
   before do
-    create_once :opendata_node_category, basename: "bunya/kurashi"
-    create_once :opendata_node_search_app, basename: "app/search"
+    create_once(
+      :opendata_node_category,
+      basename: "#{node_category_folder.filename}/kurashi",
+      depth: node_category_folder.depth + 1)
+    create_once(:opendata_node_search_app, basename: "app/search")
   end
 
   let(:index_path) { "#{node.url}/kurashi" }

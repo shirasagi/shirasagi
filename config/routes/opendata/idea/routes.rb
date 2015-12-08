@@ -15,11 +15,12 @@ SS::Application.routes.draw do
   end
 
   node "opendata" do
-    get "idea_category/" => "public#nothing", cell: "nodes/idea/idea_category"
+    get "idea_category/" => "public#index", cell: "nodes/idea/idea_category"
+    get "idea_category/rss.xml" => "public#rss", cell: "nodes/idea/idea_category"
     get "idea_category/:name/" => "public#index", cell: "nodes/idea/idea_category"
     get "idea_category/:name/rss.xml" => "public#rss", cell: "nodes/idea/idea_category"
-    get "idea_category/:name/areas" => "public#index_areas", cell: "nodes/idea/idea_category"
-    get "idea_category/:name/tags" => "public#index_tags", cell: "nodes/idea/idea_category"
+    # get "idea_category/:name/areas" => "public#index_areas", cell: "nodes/idea/idea_category"
+    # get "idea_category/:name/tags" => "public#index_tags", cell: "nodes/idea/idea_category"
 
     get "idea/(index.:format)" => "public#index", cell: "nodes/idea/idea"
     get "idea/rss.xml" => "public#rss", cell: "nodes/idea/idea"

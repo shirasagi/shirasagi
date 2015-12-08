@@ -34,6 +34,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::Addon::CategorySetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -45,6 +46,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::DatasetChildNode
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -56,6 +58,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::DatasetChildNode
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -67,6 +70,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::DatasetChildNode
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -100,6 +104,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::Addon::CategorySetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -111,6 +116,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::AppChildNode
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -122,6 +128,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::AppChildNode
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -133,6 +140,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::Addon::CategorySetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -144,6 +152,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::IdeaChildNode
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -155,6 +164,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::IdeaChildNode
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

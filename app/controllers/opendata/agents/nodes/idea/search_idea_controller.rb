@@ -25,8 +25,13 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
         order_by(sort)
     end
 
+    def st_categories
+      @cur_node.parent_idea_node.st_categories.presence || @cur_node.parent_idea_node.default_st_categories
+    end
+
   public
     def index
+      @cur_categories = st_categories
       @items = pages.page(params[:page]).per(20)
     end
 

@@ -67,6 +67,10 @@ module Cms::Model::Node
     nodes.where cond.merge(depth: depth + 1)
   end
 
+  def all_children(cond = {})
+    nodes.where(cond).gt(depth: depth)
+  end
+
   def pages
     Cms::Page.where(site_id: site_id, filename: /^#{filename}\//)
   end

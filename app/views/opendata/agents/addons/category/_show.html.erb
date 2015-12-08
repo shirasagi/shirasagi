@@ -1,3 +1,14 @@
+<%
+def name_hier(category)
+  names = []
+  names << category.name
+  while category.parent.present?
+    category = category.parent
+    names << category.name
+  end
+  names.reverse.join('/')
+end
+%>
 <dl class="see">
-  <dd class="wide"><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
+  <dd class="wide"><%= @item.categories.map { |cate| name_hier(cate) }.join(", ") %></dd>
 </dl>

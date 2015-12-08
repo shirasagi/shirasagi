@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "rdf_classes", type: :feature, dbscope: :example do
   let(:site) { cms_site }
+  let!(:category) { create(:opendata_node_category, cur_site: site) }
   let(:vocab) { create(:rdf_vocab, site: site) }
   let(:index_path) { rdf_classes_classes_path site.host, vocab.id }
   let(:new_path) { new_rdf_classes_class_path site.host, vocab.id }

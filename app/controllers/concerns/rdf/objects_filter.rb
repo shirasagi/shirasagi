@@ -31,11 +31,20 @@ module Rdf::ObjectsFilter
       @item.attributes = fix_params
     end
 
+    def set_categories
+      # TODO: 後で修正するつもりだが、いいアイデアがない
+      node = Opendata::Node::Category.site(@cur_site).public.first
+      node = node.parent while node.parent.present?
+
+      @categories = [node.becomes_with_route]
+    end
+
   public
     def index
       set_vocab
       raise "403" unless @vocab.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
+      set_categories
       @items = @model.vocab(@vocab).
           search(params[:s]).
           order_by(_id: 1).
@@ -45,6 +54,7 @@ module Rdf::ObjectsFilter
     def show
       set_vocab
       raise "403" unless @vocab.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      set_categories
       render
     end
 
@@ -52,6 +62,7 @@ module Rdf::ObjectsFilter
       set_vocab
       @item = @model.new pre_params.merge(fix_params)
       raise "403" unless @vocab.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      set_categories
     end
 
     def create
@@ -64,6 +75,7 @@ module Rdf::ObjectsFilter
     def edit
       set_vocab
       raise "403" unless @vocab.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+      set_categories
       render
     end
 

@@ -45,6 +45,8 @@ describe Opendata::App, dbscope: :example do
   end
 
   describe ".search" do
+    let!(:node_category) { create(:opendata_node_category) }
+
     let(:name_keyword_matcher) do
       include("$and" => include("$or" => include("name" => /キーワード/i).and(include("text" => /キーワード/i))))
     end
@@ -57,7 +59,7 @@ describe Opendata::App, dbscope: :example do
     it { expect(described_class.search(name: true, keyword: "()[]{}.?+*|\\").selector.to_h).to meta_chars_matcher }
     it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
-    it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }
+    it { expect(described_class.search(site: node_category.site, category_id: node_category.id.to_s).selector.to_h).to include("category_ids" => include("$in" => include(node_category.id))) }
     it { expect(described_class.search(license: "ライセンス").selector.to_h).to include("license" => "ライセンス") }
   end
 

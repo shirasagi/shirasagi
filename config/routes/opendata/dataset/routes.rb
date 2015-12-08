@@ -42,13 +42,14 @@ SS::Application.routes.draw do
   end
 
   node "opendata" do
-    get "dataset_category/" => "public#nothing", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/" => "public#index", cell: "nodes/dataset/dataset_category"
+    get "dataset_category/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_category"
     get "dataset_category/:name/" => "public#index", cell: "nodes/dataset/dataset_category"
     get "dataset_category/:name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_category"
-    get "dataset_category/:name/areas" => "public#index_areas", cell: "nodes/dataset/dataset_category"
-    get "dataset_category/:name/tags" => "public#index_tags", cell: "nodes/dataset/dataset_category"
-    get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset/dataset_category"
-    get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset/dataset_category"
+    # get "dataset_category/:name/areas" => "public#index_areas", cell: "nodes/dataset/dataset_category"
+    # get "dataset_category/:name/tags" => "public#index_tags", cell: "nodes/dataset/dataset_category"
+    # get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset/dataset_category"
+    # get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset/dataset_category"
 
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset/dataset"
     get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset/dataset"

@@ -2,10 +2,20 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_dataset_category", dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_dataset_category }
+  let(:node_category_folder) { create_once :cms_node_node, basename: "category" }
+  let(:node_dataset) { create_once :opendata_node_dataset }
+  let(:node) do
+    create_once(
+      :opendata_node_dataset_category,
+      basename: "#{node_dataset.filename}/#{node_category_folder.filename}",
+      depth: node_dataset.depth + 1)
+  end
   before do
-    create_once :opendata_node_category, basename: "bunya/kurashi"
-    create_once :opendata_node_search_dataset, basename: "dataset/search"
+    create_once(
+      :opendata_node_category,
+      basename: "#{node_category_folder.filename}/kurashi",
+      depth: node_category_folder.depth + 1)
+    create_once(:opendata_node_search_dataset, basename: "dataset/search")
   end
 
   let(:index_path) { "#{node.url}/kurashi" }

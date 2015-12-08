@@ -17,12 +17,13 @@ SS::Application.routes.draw do
   end
 
   node "opendata" do
-    get "app_category/" => "public#nothing", cell: "nodes/app/app_category"
+    get "app_category/" => "public#index", cell: "nodes/app/app_category"
+    get "app_category/rss.xml" => "public#index", cell: "nodes/app/app_category"
     get "app_category/:name/" => "public#index", cell: "nodes/app/app_category"
     get "app_category/:name/rss.xml" => "public#rss", cell: "nodes/app/app_category"
-    get "app_category/:name/areas" => "public#index_areas", cell: "nodes/app/app_category"
-    get "app_category/:name/tags" => "public#index_tags", cell: "nodes/app/app_category"
-    get "app_category/:name/licenses" => "public#index_licenses", cell: "nodes/app/app_category"
+    # get "app_category/:name/areas" => "public#index_areas", cell: "nodes/app/app_category"
+    # get "app_category/:name/tags" => "public#index_tags", cell: "nodes/app/app_category"
+    # get "app_category/:name/licenses" => "public#index_licenses", cell: "nodes/app/app_category"
 
     get "app/(index.:format)" => "public#index", cell: "nodes/app/app"
     get "app/rss.xml" => "public#rss", cell: "nodes/app/app"

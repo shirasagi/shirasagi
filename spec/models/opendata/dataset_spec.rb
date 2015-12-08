@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Opendata::Dataset, dbscope: :example do
+  let!(:node_category) { create(:opendata_node_category) }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
 
@@ -53,6 +54,9 @@ describe Opendata::Dataset, dbscope: :example do
   end
 
   describe ".search" do
+    let(:category_id_params) do
+      { site: node_category.site, category_id: node_category.id.to_s }
+    end
     let(:ids_matcher) do
       include("_id" => include("$in" => include(11).and(include(31))))
     end
@@ -68,6 +72,9 @@ describe Opendata::Dataset, dbscope: :example do
     end
     let(:meta_name_modal_matcher) do
       include("name" => include("$all" => include(/\(\)\[\]\{\}\.\?\+\*\|\\/i)))
+    end
+    let(:category_id_matcher) do
+      include("category_ids" => include("$in" => include(node_category.id)))
     end
     let(:dataset_group_matcher) do
       include("dataset_group_ids" => include("$in" => include(-1)))
@@ -87,7 +94,7 @@ describe Opendata::Dataset, dbscope: :example do
     it { expect(described_class.search(name: "()[]{}.?+*|\\", modal: true).selector.to_h).to meta_name_modal_matcher }
     it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
-    it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }
+    it { expect(described_class.search(category_id_params).selector.to_h).to category_id_matcher }
     it { expect(described_class.search(dataset_group: "データセット", site: cms_site).selector.to_h).to dataset_group_matcher }
     it { expect(described_class.search(format: "csv").selector.to_h).to format_matcher }
     it { expect(described_class.search(license_id: "28").selector.to_h).to license_id_matcher }

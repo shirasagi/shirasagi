@@ -9,6 +9,38 @@ module Opendata::Addon
     end
   end
 
+  module CategorySetting
+    extend SS::Addon
+    extend ActiveSupport::Concern
+
+    included do
+      embeds_ids :st_categories, class_name: "Cms::Node"
+      permit_params st_category_ids: []
+    end
+
+    public
+      def default_st_categories
+        site = self.try(:cur_site) || self.try(:site)
+        return [] if site.blank?
+        categories = Opendata::Node::Category.site(site).sort(depth: 1, order: 1)
+        first_node = categories.first
+        return [] if first_node.blank?
+
+        categories.select { |cate| cate.depth == first_node.depth }
+      end
+
+      def st_parent_categories
+        categories = []
+        parents = st_categories.sort_by { |cate| cate.filename.count("/") }
+        while parents.present?
+          parent = parents.shift
+          parents = parents.map { |c| c.filename !~ /^#{parent.filename}\// ? c : nil }.compact
+          categories << parent
+        end
+        categories
+      end
+  end
+
   module Area
     extend SS::Addon
     extend ActiveSupport::Concern

@@ -2,11 +2,25 @@ require 'spec_helper'
 
 describe "opendata_search_ideas", dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_search_idea, name: "opendata_search_ideas" }
+  let(:node_idea) { create_once :opendata_node_idea }
+  let(:node) do
+    create_once(
+      :opendata_node_search_idea,
+      basename: "#{node_idea.filename}/search",
+      depth: node_idea.depth + 1,
+      name: "opendata_search_ideas")
+  end
 
   let(:index_path) { "#{node.url}index.html" }
   let(:rss_path) { "#{node.url}rss.xml" }
-  let!(:node_category) { create_once :opendata_node_category, name: 'カテゴリー０１' }
+  let(:node_category_folder) { create_once(:cms_node_node, basename: "category") }
+  let!(:node_category) do
+    create_once(
+      :opendata_node_category,
+      basename: "#{node_category_folder.filename}/kurashi",
+      depth: node_category_folder.depth + 1,
+      name: 'カテゴリー０１')
+  end
   let!(:node_area) { create_once :opendata_node_area, name: '地域Ａ' }
 
   context "search_idea" do
@@ -63,6 +77,7 @@ describe "opendata_search_ideas", dbscope: :example do
         session.env("HTTP_X_FORWARDED_HOST", site.domain)
 
         visit index_path
+        # page.save_page
         select node_category.name
         click_button "検索"
         expect(status_code).to eq 200

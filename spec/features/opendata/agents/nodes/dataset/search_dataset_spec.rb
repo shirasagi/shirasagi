@@ -5,9 +5,20 @@ describe "opendata_agents_nodes_search_dataset", dbscope: :example do
   let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
   let(:node_dataset) { create_once :opendata_node_dataset }
   let(:node_area) { create :opendata_node_area }
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, basename: "dataset/search" }
+  let!(:category) { create_once :opendata_node_category, basename: "opendata_category1" }
+  let!(:node_search_dataset) do
+    create_once(
+      :opendata_node_search_dataset,
+      basename: "#{node_dataset.filename}/search",
+      depth: node_dataset.depth + 1)
+  end
   let!(:page_dataset) { create(:opendata_dataset, node: node_dataset, area_ids: [ node_area.id ]) }
-  let!(:node_dataset_category) { create_once :opendata_node_dataset_category }
+  let!(:node_dataset_category) do
+    create_once(
+      :opendata_node_dataset_category,
+      basename: "#{node_dataset.filename}/category",
+      depth: node_dataset.depth + 1)
+  end
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let(:dataset_resource) { page_dataset.resources.new(attributes_for(:opendata_resource)) }
   let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }

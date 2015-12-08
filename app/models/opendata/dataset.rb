@@ -191,10 +191,18 @@ class Opendata::Dataset
       end
 
       def search_category_id(params, criteria)
-        if params[:category_id].present?
-          criteria = criteria.where category_ids: params[:category_id].to_i
+        return criteria if params[:category_id].blank?
+
+        category_id = params[:category_id].to_i
+        category_node = Cms::Node.site(params[:site]).public.where(id: category_id).first
+        return criteria if category_node.blank?
+
+        category_ids = [ category_id ]
+        category_node.all_children.public.each do |child|
+          category_ids << child.id
         end
-        criteria
+
+        criteria.in(category_ids: category_ids)
       end
 
       def search_dataset_group(params, criteria)
@@ -223,7 +231,7 @@ class Opendata::Dataset
 
       def search_poster(params, criteria)
         if params[:poster].present?
-          code = {}
+          cond = {}
           cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
           cond = { :workflow_member_id => nil } if params[:poster] == "admin"
           criteria = criteria.where(cond)

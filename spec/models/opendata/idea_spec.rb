@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Opendata::Idea, dbscope: :example do
   let!(:node_search_dataset) { create(:opendata_node_search_idea) }
   let(:node) { create(:opendata_node_idea) }
+  let!(:node_category) { create(:opendata_node_category) }
 
   context "check attributes with typical url resource" do
     subject { create(:opendata_idea, node: node) }
@@ -59,7 +60,7 @@ describe Opendata::Idea, dbscope: :example do
     it { expect(described_class.search(keyword: "()[]{}.?+*|\\").selector.to_h).to meta_keyword_matcher }
     it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
-    it { expect(described_class.search(category_id: "56").selector.to_h).to include("category_ids" => 56) }
+    it { expect(described_class.search(site: node_category.site, category_id: node_category.id.to_s).selector.to_h).to include("category_ids" => include("$in" => include(node_category.id))) }
 
   end
 end
