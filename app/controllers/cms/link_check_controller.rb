@@ -3,7 +3,7 @@ require "open-uri"
 
 class Cms::LinkCheckController < ApplicationController
   protect_from_forgery except: :check
-  skip_before_filter :verify_authenticity_token unless SS.config.env.csrf
+  skip_before_action :verify_authenticity_token unless SS.config.env.csrf_protect
   before_action :accept_cors_request
 
   public

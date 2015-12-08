@@ -2,7 +2,7 @@
 RAILS_ENV: production
 
 # enable csrf protect
-csrf: true
+protect_csrf: true
 
 # File storage ('file' or 'grid_fs')
 storage: file
