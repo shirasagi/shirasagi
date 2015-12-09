@@ -518,11 +518,13 @@ import_vocab prefix: "dc11", file: "rdf/dcelements.ttl", order: 2000
 import_vocab prefix: "dc", file: "rdf/dcterms.ttl", order: 2000
 import_vocab prefix: "ic", file: "rdf/ipa-core.ttl", order: 1000
 
-
 ## -------------------------------------
 puts "# max file size"
 
 def save_max_file_size(data)
+  # 100 MiB
+  data = {size: 100 * 1_024 * 1_024}.merge(data)
+
   puts data[:name]
   cond = { name: data[:name] }
 
@@ -531,9 +533,9 @@ def save_max_file_size(data)
   item
 end
 
-save_max_file_size name: '画像ファイル', extensions: %w(gif png jpg jpeg bmp), size: 100 * 1_024 * 1_024, order: 1, state: 'enabled'
-save_max_file_size name: '音声ファイル', extensions: %w(wav wma mp3 ogg), size: 100 * 1_024 * 1_024, order: 2, state: 'enabled'
-save_max_file_size name: '動画ファイル', extensions: %w(wmv avi mpeg mpg flv mp4), size: 100 * 1_024 * 1_024, order: 3, state: 'enabled'
-save_max_file_size name: 'マクロソフト・オフィース', extensions: %w(doc docx ppt pptx xls xlsx), size: 100 * 1_024 * 1_024, order: 4, state: 'enabled'
-save_max_file_size name: 'PDF', extensions: %w(pdf), size: 100 * 1_024 * 1_024, order: 5, state: 'enabled'
-save_max_file_size name: 'その他', extensions: %w(*), size: 100 * 1_024 * 1_024, order: 9999, state: 'enabled'
+save_max_file_size name: '画像ファイル', extensions: %w(gif png jpg jpeg bmp), order: 1, state: 'enabled'
+save_max_file_size name: '音声ファイル', extensions: %w(wav wma mp3 ogg), order: 2, state: 'enabled'
+save_max_file_size name: '動画ファイル', extensions: %w(wmv avi mpeg mpg flv mp4), order: 3, state: 'enabled'
+save_max_file_size name: 'マクロソフト・オフィース', extensions: %w(doc docx ppt pptx xls xlsx), order: 4, state: 'enabled'
+save_max_file_size name: 'PDF', extensions: %w(pdf), order: 5, state: 'enabled'
+save_max_file_size name: 'その他', extensions: %w(*), order: 9999, state: 'enabled'
