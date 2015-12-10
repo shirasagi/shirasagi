@@ -26,7 +26,7 @@ class Sys::SitesController < ApplicationController
       if result
         cond = {
           site_id: @item.id,
-          name: "admin",
+          name: I18n.t('cms.roles.admin'),
           permissions: Cms::Role.permission_names,
           permission_level: 3
         }
