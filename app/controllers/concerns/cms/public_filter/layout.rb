@@ -75,7 +75,7 @@ module Cms::PublicFilter::Layout
 
       html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
       html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
-      html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/, response.body)
+      html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
       html
     end
 
