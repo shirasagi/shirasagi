@@ -4,10 +4,9 @@ SS::Application.routes.draw do
 
   content "uploader" do
     get "/" => redirect { |p, req| "#{req.path}/files" }, as: :main
-
-    resources :files, only: [:index]
-    resource :files, path: '/files/*filename', as: :files,
-      only: [:create, :show, :destroy, :update], format: false
+    get "files" => "files#index"
+    get "files/*filename" => "files#file", format: false
+    resource :files, path: '/files/*filename', as: :files, only: [:create, :destroy, :update], format: false
   end
 
   node "uploader" do

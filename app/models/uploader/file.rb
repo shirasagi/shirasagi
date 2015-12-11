@@ -1,7 +1,7 @@
 class Uploader::File
   include ActiveModel::Model
 
-  attr_accessor :path, :binary
+  attr_accessor :path, :binary, :site
   attr_reader :saved_path, :is_dir
 
   validates :path, presence: true
@@ -105,6 +105,14 @@ class Uploader::File
 
     def dirname
       filename.sub(/\/[^\/]+$/, "")
+    end
+
+    def url
+      "#{site.url}#{filename}"
+    end
+
+    def full_url
+      "#{site.full_url}#{filename}"
     end
 
     def initialize(attributes={})

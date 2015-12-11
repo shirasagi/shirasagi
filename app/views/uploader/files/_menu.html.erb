@@ -1,24 +1,24 @@
 <% if params[:action] !~ /index/ %>
   <nav class="nav-menu">
-    <% if params[:action] =~ /show/ %>
+    <% if params[:action] =~ /file/ %>
       <% if params[:do] =~ /show/ %>
-        <%= link_to :edit, { action: :show, filename: @item.filename, do: "edit" } if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :delete, { action: :show, filename: @item.filename, do: "delete" } if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :back_to_index, { action: :show, filename: @item.dirname } %>
+        <%= link_to :edit, { action: :file, filename: @item.filename, do: "edit" } if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, { action: :file, filename: @item.filename, do: "delete" } if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :back_to_index, { action: :file, filename: @item.dirname } %>
       <% elsif params[:do] =~ /edit|delete/ %>
-        <%= link_to :back_to_show, { action: :show, filename: @item.filename, do: "show" } %>
-        <%= link_to :back_to_index, { action: :show, filename: @item.dirname } %>
+        <%= link_to :back_to_show, { action: :file, filename: @item.filename, do: "show" } %>
+        <%= link_to :back_to_index, { action: :file, filename: @item.dirname } %>
       <% elsif params[:do] =~ /new/ %>
-        <%= link_to :back_to_index, { action: :show, filename: @item.filename } %>
+        <%= link_to :back_to_index, { action: :file, filename: @item.filename } %>
       <% else %>
-        <%= link_to :new_directory, {action: :show, filename: @item.filename, do: "new_directory" }, class: "icon-node" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to :upload, {action: :show, filename: @item.filename, do: "new_files" }, class: "icon-page" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :new_directory, {action: :file, filename: @item.filename, do: "new_directory" }, class: "icon-node" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :upload, {action: :file, filename: @item.filename, do: "new_files" }, class: "icon-page" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       <% end %>
     <% elsif params[:action] =~ /create/ %>
-      <%= link_to :back_to_index, { action: :show, filename: @item.dirname } %>
+      <%= link_to :back_to_index, { action: :file, filename: @item.dirname } %>
     <% elsif params[:action] =~ /update/ %>
-      <%= link_to :back_to_show, { action: :show, filename: @item.filename, do: "show" } %>
-      <%= link_to :back_to_index, { action: :show, filename: @item.dirname } %>
+      <%= link_to :back_to_show, { action: :file, filename: @item.filename, do: "show" } %>
+      <%= link_to :back_to_index, { action: :file, filename: @item.dirname } %>
     <% end %>
   </nav>
 <% end %>
