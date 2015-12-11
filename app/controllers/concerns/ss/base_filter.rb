@@ -55,7 +55,10 @@ module SS::BaseFilter
 
       ref = request.env["REQUEST_URI"]
       ref = (ref == sns_mypage_path) ? "" : "?ref=" + CGI.escape(ref.to_s)
-      redirect_to "#{sns_login_path}#{ref}"
+      respond_to do |format|
+        format.html { redirect_to "#{sns_login_path}#{ref}" }
+        format.json { render json: :error, status: :unauthorized }
+      end
     end
 
     def set_user(user, opt = {})
