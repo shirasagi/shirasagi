@@ -11,6 +11,7 @@ class @Cms_Form
     if Syntax_Checker.autoCorrect
       Form_Alert.addBeforeSave(Syntax_Checker.correctAll)
     Form_Alert.render()
+    Form_Preview.render()
 
 class @Syntax_Checker
   @message = {
@@ -670,3 +671,48 @@ class @Form_Alert
 
   @justText: (ele)->
     $(ele).clone().children().remove().end().text()
+
+class @Form_Preview
+  @form_preview_path
+  @page_route
+
+  @getEditorHtml: (selector)->
+    if (typeof tinymce != 'undefined')
+      html = "<div>" + tinymce.get(selector).getContent() + "</div>"
+    else if (typeof CKEDITOR != 'undefined')
+      html = "<div>" + CKEDITOR.instances[selector].getData() + "</div>"
+    else
+      html = ""
+    return html
+
+  @render: ->
+    $(".mod-cms-body .preview").on "click", (e) ->
+      name = $("#item-form #item_name").val()
+      basename = $("#item-form #item_basename").val()
+      errors = []
+
+      errors.push "<%= I18n.t('errors.messages.set_name') %>" unless name
+      errors.push "<%= I18n.t('errors.messages.set_filename') %>" unless basename
+      unless $.isEmptyObject(errors)
+        alert(errors.join("\n"))
+        return false
+
+      params = []
+      for i, v of $("#item-form").serializeArray()
+        continue unless /^item\[/.test(v["name"])
+        continue if "item[html]" == v["name"]
+        params.push(name: v["name"].replace(/^item\[/, "preview_item["), value: v["value"])
+
+      params.push(name: "preview_item[route]", value: Form_Preview.page_route)
+      params.push(name: "preview_item[html]", value: Form_Preview.getEditorHtml("item_html"))
+
+      $.post(Form_Preview.form_preview_path,
+        params,
+        (data)->
+          width = $(window).width()
+          height = $(window).height()
+          w = window.open("about:blank", "WindowName","width=#{width},height=#{height},resizable=yes,scrollbars=yes")
+          w.document.write(data)
+          w.document.close()
+      )
+      return false

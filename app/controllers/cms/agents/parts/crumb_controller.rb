@@ -19,6 +19,7 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
         find_node path
       end
 
+      @items << [@preview_page.name, @preview_page.url] if @preview_page
       page = Cms::Page.site(@cur_site).filename(path).first
       return unless page
 

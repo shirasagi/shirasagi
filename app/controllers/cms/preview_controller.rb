@@ -7,8 +7,46 @@ class Cms::PreviewController < ApplicationController
 
   before_action :set_group
   before_action :set_path_with_preview, prepend: true
+  after_action :render_form_preview, only: :form_preview
   after_action :render_preview, if: ->{ @file =~ /\.html$/ }
   after_action :render_mobile, if: ->{ mobile_path? }
+
+  public
+    def form_preview
+      preview_item = params.require(:preview_item).permit!
+      path = params[:path]
+      id = preview_item.delete("id")
+      route = preview_item.delete("route")
+
+      page = Cms::Page.find(id) rescue Cms::Page.new(route: route)
+      page = page.becomes_with_route
+      page.attributes = preview_item
+      page.site = @cur_site
+      page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
+      page.lock_until = nil if page.respond_to?(:lock_until)
+
+      raise page_not_found unless page.name.present?
+      raise page_not_found unless page.basename.present?
+      page.basename = page.basename.sub(/\..+?$/, "") + ".html"
+
+      @cur_layout = Cms::Layout.where(id: page.layout_id).first
+      page.layout_id = nil if @cur_layout.nil?
+      @cur_node = Cms::Node.where(filename: /^#{path.sub(/\/$/, "")}/).first
+      @cur_page = page
+      @preview_page = page
+
+      resp = render_page(page, method: "GET")
+      return page_not_found unless resp
+      self.response = resp
+
+      if page.layout
+        render inline: render_layout(page.layout), layout: "cms/page"
+      else
+        @_response_body = response.body
+      end
+    rescue => e
+      rescue_action(e)
+    end
 
   private
     def set_site
@@ -79,19 +117,42 @@ class Cms::PreviewController < ApplicationController
       h << view_context.javascript_include_tag("cms/preview")
       h << '<link href="/assets/css/colorbox/colorbox.css" rel="stylesheet" />'
       h << '<script src="/assets/js/jquery.colorbox.js"></script>'
-      h << '<script>'
-      h << '$(function(){'
-      h << '  SS_Preview.mobile_path = "' + SS.config.mobile.location + '";'
-      h << '  SS_Preview.render();'
-      h << '});'
-      h << '</script>'
-      h << '<div id="ss-preview">'
-      h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
-      h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
-      h << '<input type="button" class="mobile" value=' + t("views.links.mobile") + '>'
-      h << '</div>'
+      unless @preview_page
+        h << '<script>'
+        h << '$(function(){'
+        h << '  SS_Preview.mobile_path = "' + SS.config.mobile.location + '";'
+        h << '  SS_Preview.render();'
+        h << '});'
+        h << '</script>'
+        h << '<div id="ss-preview">'
+        h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
+        h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
+        h << '<input type="button" class="mobile" value=' + t("views.links.mobile") + '>'
+        h << '</div>'
+      end
 
       body.sub!("</body>", h.join("\n") + "</body>")
+
+      response.body = body
+    end
+
+    def render_form_preview
+      require "uri"
+
+      body = response.body
+      body.gsub!(/(href|src)=".*?"/) do |m|
+        url = m.match(/.*?="(.*?)"/)[1]
+        scheme = ::URI.parse(url).scheme rescue true
+
+        if scheme
+          m
+        elsif url =~ /^\/\//
+          m
+        else
+          full_url = @cur_node ? @cur_node.full_url : @cur_site.full_url
+          m.sub(url, ::URI.join(full_url, url).to_s)
+        end
+      end
 
       response.body = body
     end

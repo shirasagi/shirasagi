@@ -53,6 +53,7 @@ SS::Application.routes.draw do
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
+    post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview
   end
 
   namespace "cms", path: ".s:site/cms" do

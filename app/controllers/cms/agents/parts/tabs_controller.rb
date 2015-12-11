@@ -15,7 +15,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
         @tabs << tab = { name: node.name, url: node.url, rss: nil, pages: [] }
 
         rest = path.sub(/^#{node.filename}/, "")
-        spec = recognize_agent "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}"
+        spec = recognize_agent "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}", method: "GET"
         next unless spec
 
         node_class = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
