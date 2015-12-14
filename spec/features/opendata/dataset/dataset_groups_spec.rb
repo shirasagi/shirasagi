@@ -31,9 +31,9 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
       it do
         category_folder = create_once(:cms_node_node, basename: "category")
         create_once(
-            :opendata_node_category,
-            basename: "#{category_folder.filename}/opendata_category1",
-            depth: category_folder.depth + 1)
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
 
         visit new_path
         within "form#item-form" do
@@ -51,9 +51,9 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
       let(:category_folder) { create_once(:cms_node_node, basename: "category") }
       let(:category) do
         create_once(
-            :opendata_node_category,
-            basename: "#{category_folder.filename}/opendata_category1",
-            depth: category_folder.depth + 1)
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
       end
       let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
       let(:show_path) { opendata_dataset_group_path site.host, node, item }
@@ -69,9 +69,9 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
       let(:category_folder) { create_once(:cms_node_node, basename: "category") }
       let(:category) do
         create_once(
-            :opendata_node_category,
-            basename: "#{category_folder.filename}/opendata_category1",
-            depth: category_folder.depth + 1)
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
       end
       let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
       let(:edit_path) { edit_opendata_dataset_group_path site.host, node, item }
@@ -91,9 +91,9 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
       let(:category_folder) { create_once(:cms_node_node, basename: "category") }
       let(:category) do
         create_once(
-            :opendata_node_category,
-            basename: "#{category_folder.filename}/opendata_category1",
-            depth: category_folder.depth + 1)
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
       end
       let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
       let(:delete_path) { delete_opendata_dataset_group_path site.host, node, item }

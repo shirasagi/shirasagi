@@ -32,9 +32,9 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
       before do
         category_folder = create_once(:cms_node_node, basename: "category")
         create_once(
-            :opendata_node_category,
-            basename: "#{category_folder.filename}/opendata_category1",
-            depth: category_folder.depth + 1)
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
         create_once(:opendata_node_area, basename: "opendata_area_1")
       end
 
@@ -57,9 +57,9 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
       let(:category_folder) { create_once(:cms_node_node, basename: "category") }
       let(:category) do
         create_once(
-            :opendata_node_category,
-            basename: "#{category_folder.filename}/opendata_category1",
-            depth: category_folder.depth + 1)
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
       end
       let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
       let(:item) do

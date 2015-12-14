@@ -47,11 +47,17 @@ describe Opendata::App, dbscope: :example do
   describe ".search" do
     let!(:node_category) { create(:opendata_node_category) }
 
+    let(:category_id_params) do
+      { site: node_category.site, category_id: node_category.id.to_s }
+    end
     let(:name_keyword_matcher) do
       include("$and" => include("$or" => include("name" => /キーワード/i).and(include("text" => /キーワード/i))))
     end
     let(:meta_chars_matcher) do
       include("$and" => include("$or" => include("name" => /\(\)\[\]\{\}\.\?\+\*\|\\/i)))
+    end
+    let(:category_id_matcher) do
+      include("category_ids" => include("$in" => include(node_category.id)))
     end
     it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/app") }
     it { expect(described_class.search(keyword: "キーワード").selector.to_h).to include("$and") }
@@ -59,7 +65,7 @@ describe Opendata::App, dbscope: :example do
     it { expect(described_class.search(name: true, keyword: "()[]{}.?+*|\\").selector.to_h).to meta_chars_matcher }
     it { expect(described_class.search(tag: "タグ").selector.to_h).to include("tags" => "タグ") }
     it { expect(described_class.search(area_id: "43").selector.to_h).to include("area_ids" => 43) }
-    it { expect(described_class.search(site: node_category.site, category_id: node_category.id.to_s).selector.to_h).to include("category_ids" => include("$in" => include(node_category.id))) }
+    it { expect(described_class.search(category_id_params).selector.to_h).to category_id_matcher }
     it { expect(described_class.search(license: "ライセンス").selector.to_h).to include("license" => "ライセンス") }
   end
 

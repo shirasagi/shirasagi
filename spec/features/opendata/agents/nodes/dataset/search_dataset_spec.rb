@@ -8,9 +8,9 @@ describe "opendata_agents_nodes_search_dataset", dbscope: :example do
   let(:category_folder) { create_once(:cms_node_node, basename: "category") }
   let(:category) do
     create_once(
-        :opendata_node_category,
-        basename: "#{category_folder.filename}/opendata_category1",
-        depth: category_folder.depth + 1)
+      :opendata_node_category,
+      basename: "#{category_folder.filename}/opendata_category1",
+      depth: category_folder.depth + 1)
   end
   let!(:node_search_dataset) do
     create_once(
