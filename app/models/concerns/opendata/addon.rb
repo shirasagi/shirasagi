@@ -25,8 +25,7 @@ module Opendata::Addon
         categories = Opendata::Node::Category.site(site).sort(depth: 1, order: 1)
         first_node = categories.first
         return [] if first_node.blank?
-
-        categories.select { |cate| cate.depth == first_node.depth }
+        return [first_node.parent].compact
       end
 
       def st_parent_categories

@@ -30,8 +30,12 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
 
     describe "#new" do
       before do
-        create_once :opendata_node_category, basename: "opendata_category1"
-        create_once :opendata_node_area, basename: "opendata_area_1"
+        category_folder = create_once(:cms_node_node, basename: "category")
+        create_once(
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
+        create_once(:opendata_node_area, basename: "opendata_area_1")
       end
 
       it do
@@ -50,7 +54,13 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
     end
 
     context "with item" do
-      let(:category) { create_once :opendata_node_category, basename: "opendata_category1" }
+      let(:category_folder) { create_once(:cms_node_node, basename: "category") }
+      let(:category) do
+        create_once(
+          :opendata_node_category,
+          basename: "#{category_folder.filename}/opendata_category1",
+          depth: category_folder.depth + 1)
+      end
       let(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
       let(:item) do
         create_once :opendata_idea,

@@ -13,7 +13,7 @@ describe "opendata_search_ideas", dbscope: :example do
 
   let(:index_path) { "#{node.url}index.html" }
   let(:rss_path) { "#{node.url}rss.xml" }
-  let(:node_category_folder) { create_once(:cms_node_node, basename: "category") }
+  let!(:node_category_folder) { create_once(:cms_node_node, basename: "category") }
   let!(:node_category) do
     create_once(
       :opendata_node_category,
