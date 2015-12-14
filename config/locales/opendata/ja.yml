@@ -226,6 +226,7 @@ ja:
     opendata: オープンデータ
     addons:
       opendata/category: 分野
+      opendata/category_setting: カテゴリ設定
       opendata/dataset_group: データセットグループ
       opendata/area: 地域
       opendata/dataset_node: データセット
@@ -332,6 +333,8 @@ ja:
     attributes:
       opendata/addon/category:
         category_ids: 分野
+      opendata/addon/category_setting:
+        st_category_ids: 分野
       opendata/addon/rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
