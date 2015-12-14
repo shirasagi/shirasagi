@@ -141,6 +141,7 @@ ja:
       ss/user_file: ユーザーファイル
       ss/group_file: グループファイル
       ss/task: タスク
+      ss/max_file_size: 最大ファイルサイズ
     attributes:
       ss/document:
         created: 作成日時
@@ -206,6 +207,12 @@ ja:
         mobile_location: ロケーション
         mobile_css: CSS
         trans_sid: Trans SID
+      ss/max_file_size:
+        name: 名前
+        extensions: 拡張子
+        size: 制限サイズ
+        order: 並び順
+        state: 状態
 
   tooltip:
     ss/model/user:

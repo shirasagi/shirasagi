@@ -19,4 +19,8 @@
   <% end %>
 
   <h3><%= link_to :"sys.info", sys_info_path %></h3>
+
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to :"sys.max_file_size", sys_max_file_sizes_path %></h3>
+  <% end %>
 </nav>
