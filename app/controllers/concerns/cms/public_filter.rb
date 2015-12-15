@@ -113,7 +113,7 @@ module Cms::PublicFilter
       response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
       if Fs.mode == :file
-        send_file file, disposition: :inline, x_sendfile: true
+        send_file file, type: Fs.content_type(file), disposition: :inline, x_sendfile: true
       else
         send_data Fs.binread(file), type: Fs.content_type(file)
       end
