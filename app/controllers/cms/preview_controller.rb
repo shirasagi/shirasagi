@@ -55,7 +55,7 @@ class Cms::PreviewController < ApplicationController
     end
 
     def set_path_with_preview
-      @cur_path ||= request.env["REQUEST_PATH"]
+      @cur_path ||= request.env["REQUEST_PATH"] || request.path
       @cur_path.sub!(/^#{cms_preview_path}(\d+)?/, "")
       @cur_path = "index.html" if @cur_path.blank?
       @cur_path = URI.decode(@cur_path)
