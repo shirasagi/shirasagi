@@ -1,10 +1,6 @@
-# Coverage analysis runs only on TravisCI
-# ref. http://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
-if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
-  require 'simplecov'
-  require 'coveralls'
-  Coveralls.wear!
-end
+require 'simplecov'
+require 'coveralls'
+Coveralls.wear!
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
@@ -24,16 +20,13 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
-# Coverage analysis runs only on TravisCI
-if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
-      SimpleCov::Formatter::HTMLFormatter,
-      Coveralls::SimpleCov::Formatter
-  ]
-  SimpleCov.start do
-    add_filter 'spec/'
-    add_filter 'vendor/bundle'
-  end
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start do
+  add_filter 'spec/'
+  add_filter 'vendor/bundle'
 end
 
 RSpec.configure do |config|
