@@ -141,6 +141,9 @@ ja:
       popular_real: 一般的な実数データを表します。
       no_change_rdf: この列は RDF へ変換しない
       updated: "%Y年%1m月%1d日 %1H時%1M分"
+      category_prefixes:
+        -
+        - '-'
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。

@@ -1,6 +1,6 @@
 <%
 def transform_category(categories, indent = 0)
-  indent_chars = "●・".freeze
+  indent_chars = t('opendata.labels.category_prefixes')
   ret = []
   categories.each do |m|
     ret << ["#{"　　" * indent}#{indent_chars[indent]} #{m.name}", m.id]
