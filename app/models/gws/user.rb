@@ -6,6 +6,8 @@ class Gws::User
 
   set_permission_name "gws_users", :edit
 
+  cattr_reader(:group_class) { Gws::Group }
+
   attr_accessor :cur_site
 
   embeds_ids :groups, class_name: "Gws::Group"

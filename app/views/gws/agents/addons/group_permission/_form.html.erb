@@ -1,17 +1,10 @@
-<%# TODO Fix all "cms" to "gws" in JS and CSS %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-gws-owner_permission"); <% end %>
 
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-owner_permission"); <% end %>
-
-<dl class="see mod-cms-owner_permission">
-  <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
-  <dd><%= f.select :permission_level, (1..@cur_user.gws_role_level).map { |i| %W(#{i} #{i}) } %></dd>
-
+<dl class="see mod-gws-owner_permission">
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
-    <span onclick="alert(<%# TODO Implement %>'TODO Implement')"><%= t("cms.apis.groups.index") %></span>
-    <%#= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
-    <%#= link_to t("gws.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
+    <%= link_to t("cms.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -36,4 +29,7 @@
       </tbody>
     </table>
   </dd>
+
+  <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
+  <dd><%= f.select :permission_level, (1..@cur_user.gws_role_level(@cur_site)).map { |i| %W(#{i} #{i}) } %></dd>
 </dl>

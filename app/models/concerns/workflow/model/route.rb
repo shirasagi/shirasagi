@@ -6,6 +6,8 @@ module Workflow::Model::Route
   included do
     store_in collection: "workflow_routes"
 
+    cattr_reader(:approver_user_class) { Cms::User }
+
     seqid :id
     field :name, type: String
     embeds_ids :groups, class_name: "SS::Group"
@@ -17,10 +19,20 @@ module Workflow::Model::Route
     validate :validate_approvers_presence
     validate :validate_approvers_consecutiveness
     validate :validate_required_counts
+    validate :validate_groups
   end
 
   module ClassMethods
     public
+      def route_options(user)
+        ret = [ [ t("my_group"), "my_group" ] ]
+        group_ids = user.group_ids.to_a
+        Workflow::Route.where(:group_ids.in => group_ids).each do |route|
+          ret << [ route.name, route.id ]
+        end
+        ret
+      end
+
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?
@@ -43,7 +55,7 @@ module Workflow::Model::Route
         if approver[:user_id].blank?
           errors.add :base, :approvers_user_id_blank
         else
-          errors.add :base, :approvers_user_missing if Cms::User.where(id: approver[:user_id]).first.blank?
+          errors.add :base, :approvers_user_missing if self.class.approver_user_class.where(id: approver[:user_id]).first.blank?
         end
       end
     end
@@ -71,6 +83,10 @@ module Workflow::Model::Route
       end
     end
 
+    def validate_groups
+      self.errors.add :group_ids, :blank if groups.blank?
+    end
+
   public
     def levels
       approvers.map { |h| h[:level] }.uniq.compact.sort
@@ -81,7 +97,7 @@ module Workflow::Model::Route
     end
 
     def approver_users_at(level)
-      approvers_at(level).map { |h| Cms::User.where(id: h[:user_id]).first }
+      approvers_at(level).map { |h| self.class.approver_user_class.where(id: h[:user_id]).first }
     end
 
     def required_count_at(level)

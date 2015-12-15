@@ -2,7 +2,7 @@ class Gws::Schedule::CategoriesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  navi_view "gws/schedule/main/navi"
+  navi_view "gws/main/conf_navi"
 
   model Gws::Schedule::Category
 

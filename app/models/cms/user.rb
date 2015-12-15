@@ -7,6 +7,8 @@ class Cms::User
 
   set_permission_name "cms_users", :edit
 
+  cattr_reader(:group_class) { Cms::Group }
+
   attr_accessor :cur_site
 
   validate :validate_groups
