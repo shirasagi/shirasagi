@@ -9,9 +9,9 @@ module Cms::PublicFilter::Page
       @preview || page.public? ? page.becomes_with_route : nil
     end
 
-    def render_page(page)
+    def render_page(page, env = {})
       path = "/.s#{@cur_site.id}/pages/#{page.route}/#{page.basename}"
-      spec = recognize_agent path
+      spec = recognize_agent path, env
       return unless spec
 
       @cur_page = page

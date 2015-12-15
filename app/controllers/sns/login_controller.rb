@@ -2,6 +2,7 @@ class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
 
   protect_from_forgery except: :remote_login
+  skip_before_action :verify_authenticity_token unless SS.config.env.csrf_protect
   skip_action_callback :logged_in?, only: [:login, :remote_login]
 
   layout "ss/login"

@@ -1,6 +1,9 @@
 # Default environment
 RAILS_ENV: production
 
+# enable csrf protect
+protect_csrf: true
+
 # File storage ('file' or 'grid_fs')
 storage: file
 

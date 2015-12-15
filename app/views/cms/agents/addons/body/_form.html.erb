@@ -8,9 +8,11 @@
 
   <%= html_editor ".mod-cms-body .html" %>
   <%= jquery do %>
-    Link_Checker.url           = "<%= SS.config.cms.link_check_url %>";
-    Link_Checker.rootUrl       = "<%= @cur_site.full_url %>";
-    Syntax_Checker.autoCorrect = <%= SS.config.cms.auto_correct_page_html == true %>;
+    Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
+    Link_Checker.rootUrl           = "<%= @cur_site.full_url %>";
+    Syntax_Checker.autoCorrect     = <%= SS.config.cms.auto_correct_page_html == true %>;
+    Form_Preview.page_route        = "<%= @item.try(:route) %>";
+    Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";
     Cms_Form.render();
   <% end %>
 
@@ -19,6 +21,7 @@
     <dd class="wide">
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
     <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+    <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
     </dd>
   </dl>
 
