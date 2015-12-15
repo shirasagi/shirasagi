@@ -4,23 +4,9 @@ class Opendata::Agents::Nodes::App::AppCategoryController < ApplicationControlle
   include Opendata::App::AppFilter
 
   private
-    def category_path
-      category_path = @cur_node.url.sub(@cur_node.parent_app_node.url, '')
-      category_path = category_path[0..-2] if category_path.end_with?('/')
-      if name = params[:name]
-        category_path = "#{category_path}/#{name}"
-      end
-
-      category_path
-    end
-
     def pages
-      @item ||= begin
-        Rails.logger.debug("category_path=#{category_path}")
-        node = Cms::Node.site(@cur_site).public.where(filename: category_path).first
-        node = node.becomes_with_route if node.present?
-        node
-      end
+      @cur_node.cur_subcategory = params[:name]
+      @item = @cur_node.related_category
       raise "404" unless @item
 
       @cur_node.name = @item.name
