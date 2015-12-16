@@ -17,9 +17,10 @@ module Opendata::TsvParseable
       data = NKF.nkf("-w", src.read)
       src.try(:rewind)
       sep  = data =~ /\t/ ? "\t" : ","
-      CSV.parse(data, col_sep: sep)
+      CSV.parse(data, row_sep: "\r\n", col_sep: sep, quote_char: '"')
     rescue => e
       logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       nil
     end
   end
