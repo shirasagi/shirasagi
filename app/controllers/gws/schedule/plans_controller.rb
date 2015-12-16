@@ -9,7 +9,7 @@ class Gws::Schedule::PlansController < ApplicationController
 
       @items = Gws::Schedule::Plan.site(@cur_site).
         member(@cur_user).
-        allow(:read, @cur_user, site: @cur_site).
+        #allow(:read, @cur_user, site: @cur_site).
         search(params[:s])
     end
 end

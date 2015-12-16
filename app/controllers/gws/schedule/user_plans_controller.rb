@@ -18,7 +18,7 @@ class Gws::Schedule::UserPlansController < ApplicationController
     def index
       @items = Gws::Schedule::Plan.site(@cur_site).
         member(@user).
-        allow(:read, @cur_user, site: @cur_site).
+        #allow(:read, @cur_user, site: @cur_site).
         search(params[:s])
     end
 end
