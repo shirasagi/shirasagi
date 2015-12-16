@@ -1,4 +1,10 @@
 class @Gws_Schedule_Calendar
+  @locales = {
+    year: "<%= I18n.t('datetime.prompts.year') %>"
+    month: "<%= I18n.t('datetime.prompts.month') %>"
+    day: "<%= I18n.t('datetime.prompts.day') %>"
+  }
+
   @render: (selector, opts = {})->
     params = @defaultParams(opts)
     $.extend params, @editableParams(opts) if opts['restUrl']
@@ -8,6 +14,11 @@ class @Gws_Schedule_Calendar
 
   @defaultParams: (opts) ->
     lang: 'ja'
+    titleFormat: {
+      month: "YYYY#{@locales.year} M#{@locales.month}",
+      week: "YYYY#{@locales.year} M#{@locales.month} D#{@locales.day}",
+      day: "YYYY#{@locales.year} M#{@locales.month} D#{@locales.day}",
+    },
     timeFormat: 'HH:mm'
     slotLabelFormat: 'HH:mm',
     columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
@@ -18,7 +29,7 @@ class @Gws_Schedule_Calendar
     endParam: 's[end]'
     loading: (isLoading, view) ->
       if isLoading
-        $(this).find('.fc-day').append('<span class="fc-loading">Loading..</span>')
+        $(this).find('.fc-day:first-child').append('<span class="fc-loading">Loading..</span>')
       else
         $(this).find('.fc-loading').remove()
 
@@ -75,6 +86,11 @@ class @Gws_Schedule_Calendar
     controller = $(selector)
     $(selector).fullCalendar({
       lang: 'ja'
+      titleFormat: {
+        month: "YYYY#{@locales.year} M#{@locales.month}",
+        week: "YYYY#{@locales.year} M#{@locales.month} D#{@locales.day}",
+        day: "YYYY#{@locales.year} M#{@locales.month} D#{@locales.day}",
+      },
       timeFormat: 'HH:mm'
       columnFormat: { month: 'ddd', week: 'M/D [(]ddd[)]', day: 'M/D [(]ddd[)]' }
       defaultView: 'basicWeek',
