@@ -7,6 +7,11 @@ ja:
     category: スケジュール種別
     reminder: リマインダー
 
+    calendar:
+      titleFormat:
+        month: YYYY年 M月
+        week: YYYY年 M月 D日
+        day: YYYY年 M月 D日
     links:
       add_plan: 予定を登録する
       show_month: 月表示
