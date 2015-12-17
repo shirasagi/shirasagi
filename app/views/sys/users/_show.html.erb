@@ -8,10 +8,14 @@
   <dt><%= @model.t :email %></dt>
   <dd><%= @item.send :email %></dd>
 
+  <% if @item.tel.present? %>
+  <dt><%= @model.t :tel %></dt>
+  <dd><%= @item.send :tel %></dd>
+  <% end %>
+
   <dt><%= @model.t :group_ids %></dt>
-   <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
 
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.send :type %></dd>
-
 </dl>

@@ -25,13 +25,14 @@ module SS::Model::User
     field :uid, type: String
     field :email, type: String
     field :password, type: String
+    field :tel, type: String
     field :type, type: String
     field :login_roles, type: Array, default: [LOGIN_ROLE_DBPASSWD]
     field :last_loggedin, type: DateTime
 
     embeds_ids :groups, class_name: "SS::Group"
 
-    permit_params :name, :uid, :email, :password, :type, :login_roles, group_ids: []
+    permit_params :name, :uid, :email, :password, :tel, :type, :login_roles, group_ids: []
     permit_params :in_password
 
     validates :name, presence: true, length: { maximum: 40 }

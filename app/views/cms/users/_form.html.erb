@@ -11,6 +11,9 @@
   <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
   <dd><%= f.password_field :in_password %></dd>
 
+  <dt><%= @model.t :tel %><%= @model.tt :tel %></dt>
+  <dd><%= f.text_field :tel %></dd>
+
   <dt><%= @model.t :type %><%= @model.tt :type %></dt>
   <dd><%= f.select :type, @model.type_options %></dd>
 
