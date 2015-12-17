@@ -1,0 +1,23 @@
+ja:
+  gws/workflow:
+
+  modules:
+    gws/workflow: ワークフロー
+
+  gws_role:
+    read_other_gws_workflow_files: ワークフローの閲覧（全て）
+    read_private_gws_workflow_files: ワークフローの閲覧（自分）
+    edit_other_gws_workflow_files: ワークフローの編集（全て）
+    edit_private_gws_workflow_files: ワークフローの編集（自分）
+    delete_other_gws_workflow_files: ワークフローの削除（全て）
+    delete_private_gws_workflow_files: ワークフローの削除（自分）
+    approve_other_gws_workflow_files: ワークフローの承認（全て）
+    approve_private_gws_workflow_files: ワークフローの承認（自分）
+
+  mongoid:
+    models:
+      gws/workflow/plan: ワークフロー
+      gws/workflow/category: ワークフロー種類
+    attributes:
+      gws/workflow/file:
+        name: タイトル

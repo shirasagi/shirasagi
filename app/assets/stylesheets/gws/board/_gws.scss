@@ -10,6 +10,16 @@
     .body {
       @include box-body;
     }
+    .files {
+      @include box-body;
+      a {
+        display: inline-block;
+        margin-right: 2em;
+        line-height: 1.5;
+        word-break: normal;
+        word-wrap: normal;
+      }
+    }
   }
   .comment {
     margin-top: 10px;

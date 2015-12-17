@@ -15,7 +15,17 @@ menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.
       </nav>
     </header>
 
-    <div class="body markdown-body"><%== @item.html %></div>
+    <div class="body markdown-body">
+      <%== @item.html %>
+    </div>
+
+    <% if @item.files.present? %>
+    <div class="files">
+      <% @item.files.each do |file| %>
+      <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+      <% end %>
+    </div>
+    <% end %>
 
     <% if menu.size > 0 %>
     <div class="menu"><%= safe_join(menu) %></div>

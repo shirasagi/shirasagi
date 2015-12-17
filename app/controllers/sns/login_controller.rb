@@ -32,12 +32,16 @@ class Sns::LoginController < ApplicationController
         return
       end
 
-      if params[:ref].blank? || [sns_login_path, sns_mypage_path].index(params[:ref])
+      if params[:ref].blank?
         return set_user @item, session: true, redirect: true, password: password
       end
 
       set_user @item, session: true, password: password
-      render :redirect
+      if params[:ref] =~ /^\//
+        redirect_to params[:ref]
+      else
+        render :redirect
+      end
     end
 
     def remote_login

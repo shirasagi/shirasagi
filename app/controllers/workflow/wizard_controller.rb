@@ -29,7 +29,7 @@ class Workflow::WizardController < ApplicationController
 
   public
     def index
-      render layout: false
+      render file: :index, layout: false
     end
 
     def approver_setting
@@ -40,7 +40,7 @@ class Workflow::WizardController < ApplicationController
           render json: @item.errors.full_messages, status: :bad_request
         end
       else
-        render layout: false
+        render file: :approver_setting, layout: false
       end
     end
 end

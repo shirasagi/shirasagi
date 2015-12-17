@@ -85,6 +85,7 @@ ja:
         disabled: 無効
         public: 公開
         closed: 非公開
+        draft: 下書き
         ready: 公開待ち
       resizing:
         320×240: 320×240(QVGA横)
@@ -100,6 +101,7 @@ ja:
     state:
       public: 公開中
       closed: 非公開
+      draft: 下書き
       ready: 公開待ち
       request: 申請中
       approve: 承認

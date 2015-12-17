@@ -21,14 +21,6 @@ class Gws::Notice
 
   after_validation :set_released, if: -> { state == "public" }
 
-  scope :public, ->(date = Time.zone.now) {
-    where("$and" => [
-      { state: "public" },
-      { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
-      { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-    ])
-  }
-
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
@@ -55,4 +47,15 @@ class Gws::Notice
     def set_released
       self.released ||= Time.zone.now
     end
+
+  class << self
+    public
+      def public(date = Time.zone.now)
+        where("$and" => [
+          { state: "public" },
+          { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
+          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+        ])
+      end
+  end
 end

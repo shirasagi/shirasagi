@@ -13,7 +13,7 @@ ja:
     create_branch: 差し替えページを作成する
     cloned_name_prefix: 複製
     state:
-      request: 申請
+      request: 申請中
       approve: 承認
       pending: 下位承認待ち
       remand: 差し戻し
@@ -49,7 +49,7 @@ ja:
 
   mongoid:
     attributes:
-      cms/model/page:
+      workflow/addon/approver:
         workflow_user_id: 申請者
         workflow_state: 承認状態
         workflow_comment: 申請コメント

@@ -11,6 +11,8 @@ module Workflow::Addon
     WORKFLOW_STATE_REMAND = "remand".freeze
 
     included do
+      cattr_reader(:approver_user_class) { Cms::User }
+
       field :workflow_user_id, type: Integer
       field :workflow_state, type: String
       field :workflow_comment, type: String
@@ -120,7 +122,7 @@ module Workflow::Addon
         end
 
         users = route.approvers.map do |approver|
-          [ approver[:level], Cms::User.where(id: approver[:user_id]).first ]
+          [ approver[:level], self.class.approver_user_class.where(id: approver[:user_id]).first ]
         end
         users = users.select { |_, user| user.present? }
 
@@ -163,7 +165,7 @@ module Workflow::Addon
 
         # check whether approvers have read permission.
         users = workflow_approvers.map do |approver|
-          Cms::User.where(id: approver[:user_id]).first
+          self.class.approver_user_class.where(id: approver[:user_id]).first
         end
         users = users.select(&:present?)
         users.each do |user|

@@ -4,9 +4,14 @@ ja:
     user_plan: 個人の予定
     group_plan: グループの予定
     facility_plan: 設備の予定
-    category: 種別設定
+    category: スケジュール種別
     reminder: リマインダー
 
+    calendar:
+      titleFormat:
+        month: YYYY年 M月
+        week: YYYY年 M月 D日
+        day: YYYY年 M月 D日
     links:
       add_plan: 予定を登録する
       show_month: 月表示

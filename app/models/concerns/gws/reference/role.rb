@@ -40,7 +40,7 @@ module Gws::Reference
       end
 
       # @return [Integer] ???
-      def gws_role_level
+      def gws_role_level(site)
         3
         # TODO きちんとmodelを参照して関係するroleだけの最大levelを取得する
         # TODO app/models/concerns/gws/reference/role.rb も参照

@@ -119,7 +119,7 @@ $ ->
       <dt><%= @model.t :workflow_approvers %></dt>
       <dd>
         <% @item.workflow_approvers.each do |workflow_approver| %>
-          <% user  = Cms::User.where(id: workflow_approver[:user_id]).first %>
+          <% user  = SS::User.where(id: workflow_approver[:user_id]).first %>
           <% state = t("workflow.state.#{workflow_approver[:state]}") %>
           <% if user %>
             <%= "#{workflow_approver[:level]}:#{user.long_name}：#{state}" %><br /><%= workflow_approver[:comment] %><br />

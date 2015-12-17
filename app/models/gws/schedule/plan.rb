@@ -4,12 +4,14 @@ class Gws::Schedule::Plan
   include Gws::Reference::Site
   include Gws::Addon::Schedule::Repeat
   include SS::Addon::Markdown
+  include Gws::Addon::File
   include Gws::Addon::Schedule::Member
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::GroupPermission
 
   attr_accessor :api, :api_start, :api_end
 
+  field :state, type: String, default: 'public'
   field :name, type: String
 
   # 期間/検索用

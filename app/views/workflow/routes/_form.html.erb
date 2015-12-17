@@ -1,10 +1,21 @@
+<%
+
+if params[:controller] =~ /^gws/
+  def groups_path; gws_apis_groups_path; end
+  def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
+else
+  def groups_path; cms_apis_groups_path; end
+  def approvers_path(*args); workflow_search_approvers_path(*args); end
+end
+
+%>
 <dl class="see workflow-basic">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("cms.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
+    <%= link_to t("cms.apis.groups.index"), groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -34,7 +45,7 @@
   <dt><%= @model.t :approvers %><%= @model.tt :approvers %></dt>
   <dd>
     <%= f.hidden_field "approvers[]", value: "", class: "hidden-ids" %>
-    <%= link_to :"workflow.search_approvers.index", workflow_search_approvers_path(level: level), class: "ajax-box" %>
+    <%= link_to :"workflow.search_approvers.index", approvers_path(level: level), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

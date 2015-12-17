@@ -15,5 +15,16 @@ SS::Application.routes.draw do
     resources :facilities, concerns: [:deletion]
     resources :notices, concerns: [:deletion]
     resources :public_notices, concerns: [:deletion]
+
+    namespace "apis" do
+      get "groups" => "groups#index"
+
+      resources :files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
+    end
   end
 end

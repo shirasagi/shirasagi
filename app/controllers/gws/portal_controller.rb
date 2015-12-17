@@ -12,7 +12,7 @@ class Gws::PortalController < ApplicationController
       @plans = Gws::Schedule::Plan.site(@cur_site).
         member(@cur_user).
         where(:end_at.gte => Time.zone.now).
-        allow(:read, @cur_user, site: @cur_site).
+        #allow(:read, @cur_user, site: @cur_site).
         order_by(end_at: 1, start_at: 1).
         limit(5)
 

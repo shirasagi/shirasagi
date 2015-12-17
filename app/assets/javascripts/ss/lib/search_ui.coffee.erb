@@ -46,6 +46,9 @@ class @SS_SearchUI
       )
       e.preventDefault()
 
+    $("#ajax-box #s_group").on "change", (e)->
+      $("#ajax-box form.search").submit()
+
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
       id = $(this).attr("data-id")
       $("#colorbox .items [data-id='#{id}']").remove()

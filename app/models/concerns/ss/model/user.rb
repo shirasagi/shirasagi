@@ -18,6 +18,8 @@ module SS::Model::User
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
 
+    cattr_reader(:group_class) { SS::Group }
+
     seqid :id
     field :name, type: String
     field :uid, type: String
