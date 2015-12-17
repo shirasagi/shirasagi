@@ -4,6 +4,7 @@ class Gws::Workflow::File
   include Gws::Reference::Site
   include ::Workflow::Addon::Approver
   include SS::Addon::Markdown
+  include Gws::Addon::File
   include Gws::Addon::GroupPermission
 
   cattr_reader(:approver_user_class) { Gws::User }

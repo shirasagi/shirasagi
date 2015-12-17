@@ -4,9 +4,11 @@ class Gws::Board::Post
   include Gws::Reference::User
   include Gws::Reference::Site
   include SS::Addon::Markdown
+  include Gws::Addon::File
   include Gws::Addon::GroupPermission
 
   seqid :id
+  field :state, type: String, default: 'public'
   field :name, type: String
   field :mode, type: String, default: 'thread'
   field :permit_comment, type: String, default: 'allow'

@@ -18,6 +18,13 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "groups" => "groups#index"
+
+      resources :files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
     end
   end
 end

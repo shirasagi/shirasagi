@@ -24,6 +24,14 @@ end
   <div class="toggle-body <%= 'hide' if recursion %>">
     <div class="body markdown-body"><%== comment.html %></div>
 
+    <% if comment.files.present? %>
+    <div class="files">
+      <% comment.files.each do |file| %>
+      <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+      <% end %>
+    </div>
+    <% end %>
+
     <% if menu.size > 0 %>
     <div class="menu"><%= safe_join(menu) %></div>
     <% end %>

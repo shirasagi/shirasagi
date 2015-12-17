@@ -33,6 +33,7 @@ ja:
     addons:
       gws/role: 権限/ロール
       gws/group_permission: 権限
+      gws/file: ファイル
 
   mongoid:
     models:
