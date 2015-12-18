@@ -35,7 +35,7 @@ describe "cms_node_import" do
 
       pages = Cms::ImportPage.all.entries
       nodes = Cms::Node::ImportNode.all.entries
-      expect(pages.map(&:name)).to eq %w(1.html index.html)
+      expect(pages.map(&:name)).to eq %w(page.html index.html)
       expect(nodes.map(&:name)).to eq %w(import article css img)
 
       pages.each do |page|
