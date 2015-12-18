@@ -5,6 +5,9 @@ production: &production
   # without csrf token ( /.mypage/remote_login )
   remote_login: false
 
+  # Redirects the page after login.
+  logged_in_page: /.mypage
+
 test:
   <<: *production
 

@@ -32,12 +32,11 @@ class Sns::LoginController < ApplicationController
         return
       end
 
-      if params[:ref].blank?
-        return set_user @item, session: true, redirect: true, password: password
-      end
-
       set_user @item, session: true, password: password
-      if params[:ref] =~ /^\//
+
+      if params[:ref].blank?
+        redirect_to SS.config.sns.logged_in_page
+      elsif params[:ref] =~ /^\//
         redirect_to params[:ref]
       else
         render :redirect
