@@ -3,10 +3,11 @@
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
 
   <% if item.email.present? %>
-    <span><%= mail_to item.email %></span>
+  <span><%= mail_to item.email %></span>
   <% end %>
+
   <% if item.tel.present? %>
-    <span><%= item.tel %></span>
+  <span><%= item.tel %></span>
   <% end %>
 <% end %>
 

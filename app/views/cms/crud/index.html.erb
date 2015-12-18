@@ -38,7 +38,7 @@
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
         <% if @index_title %>
-          <%== @index_title.call item %>
+          <% @index_title.call item %>
         <% else %>
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
           <%= link_to title, { action: :show, id: item }, class: "title" %>
@@ -46,7 +46,7 @@
 
         <div class="meta">
           <% if @index_meta %>
-            <%== @index_meta.call item %>
+            <% @index_meta.call item %>
           <% else %>
             <span class="id">#<%= item.id %></span>
             <% if item.try(:updated) %>
