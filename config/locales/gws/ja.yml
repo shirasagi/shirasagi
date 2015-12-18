@@ -21,6 +21,12 @@ ja:
     edit_private_gws_notices: お知らせの編集（自分）
     delete_other_gws_notices: お知らせの削除（全て）
     delete_private_gws_notices: お知らせの削除（自分）
+    read_other_gws_links: リンク集の閲覧（全て）
+    read_private_gws_links: リンク集の閲覧（自分）
+    edit_other_gws_links: リンク集の編集（全て）
+    edit_private_gws_links: リンク集の編集（自分）
+    delete_other_gws_links: リンク集の削除（全て）
+    delete_private_gws_links: リンク集の削除（自分）
     read_other_gws_facilities: 設備の閲覧（全て）
     read_private_gws_facilities: 設備の閲覧（自分）
     edit_other_gws_facilities: 設備の編集（全て）
@@ -40,12 +46,15 @@ ja:
       gws/user: ユーザー
       gws/role: 権限/ロール
       gws/notice: お知らせ
+      gws/link: リンク集
       gws/share: 共有ファイル
       gws/facility: 設備管理
     attributes:
       gws/notice:
         name: タイトル
         severity: 種別
+      gws/link:
+        name: タイトル
       gws/facility:
         name: 設備名
       gws/addon/role:

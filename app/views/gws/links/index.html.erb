@@ -2,10 +2,6 @@
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
 
-  <% if attr = item.label(:notice_severity).presence %>
-    <span><%= attr %></span>
-  <% end %>
-
   <% if item.try(:state) %>
     <span class="state">
       <%= t "views.state.#{item.state}" %>
@@ -16,4 +12,4 @@
   <% end %>
 <% end %>
 
-<%= render file: "cms/crud/index" %>
+<%= render file: "gws/crud/index" %>

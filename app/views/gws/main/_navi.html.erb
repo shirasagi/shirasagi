@@ -8,3 +8,13 @@
   <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
+
+<% links = Gws::Link.site(@cur_site).public %>
+<% links.each do |item| %>
+  <nav class="main-navi">
+    <div class="links">
+      <h2 class="link-title"><%= item.name %></h2>
+      <div class="link-body"><%== item.html %></div>
+    </div>
+  </nav>
+<% end %>
