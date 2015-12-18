@@ -14,6 +14,10 @@ module SS::Fields::Sequencer
   end
 
   public
+    def current_sequence(name)
+      SS::Sequence.current_sequence collection_name, name
+    end
+
     def next_sequence(name)
       SS::Sequence.next_sequence collection_name, name
     end

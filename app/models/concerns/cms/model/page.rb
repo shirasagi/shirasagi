@@ -20,6 +20,7 @@ module Cms::Model::Page
 
     permit_params category_ids: []
 
+    validate :validate_seq_filename, if: ->{ filename_changed? && basename =~ /^\d+(\.html)?$/ }
     after_validation :set_released, if: -> { public? }
     after_save :rename_file, if: ->{ @db_changes }
     after_save :generate_file, if: ->{ @db_changes }
@@ -113,6 +114,12 @@ module Cms::Model::Page
     end
 
   private
+    def validate_seq_filename
+      if basename.sub(/\.html$/, '').to_i > current_sequence(:id)
+        errors.add :basename, :invalid
+      end
+    end
+
     def set_released
       self.released ||= Time.zone.now
     end

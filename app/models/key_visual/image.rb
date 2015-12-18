@@ -1,5 +1,6 @@
 class KeyVisual::Image
   include Cms::Model::Page
+  include Cms::Page::SequencedFilename
   include SS::Relation::File
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
@@ -14,8 +15,6 @@ class KeyVisual::Image
 
   validates :in_file, presence: true, if: -> { file_id.blank? }
 
-  before_save :seq_filename, if: ->{ basename.blank? }
-
   permit_params :link_url
 
   default_scope ->{ where(route: "key_visual/image") }
@@ -23,14 +22,5 @@ class KeyVisual::Image
   public
     def serve_static_file?
       false
-    end
-
-  private
-    def validate_filename
-      @basename.blank? ? nil : super
-    end
-
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
 end

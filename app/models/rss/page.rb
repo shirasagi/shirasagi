@@ -10,8 +10,6 @@ class Rss::Page
 
   set_permission_name "article_pages"
 
-  before_save :seq_filename, if: ->{ basename.blank? }
-
   default_scope ->{ where(route: "rss/page") }
 
   public
@@ -47,15 +45,5 @@ class Rss::Page
 
     def serve_static_file?
       false
-    end
-
-  private
-    def validate_filename
-      # (@basename && @basename.blank?) ? nil : super
-      @basename.blank? ? nil : super
-    end
-
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
 end

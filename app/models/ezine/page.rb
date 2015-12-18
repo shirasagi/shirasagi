@@ -1,5 +1,6 @@
 class Ezine::Page
   include Cms::Model::Page
+  include Cms::Page::SequencedFilename
   include Ezine::Addon::Body
   include Ezine::Addon::DeliverPlan
   include Cms::Addon::Release
@@ -9,8 +10,6 @@ class Ezine::Page
   field :test_delivered, type: DateTime
   field :completed, type: Boolean, default: false
   embeds_many :results, class_name: "Ezine::Result"
-
-  before_save :seq_filename, if: ->{ basename.blank? }
 
   default_scope ->{ where(route: "ezine/page") }
 
@@ -67,14 +66,5 @@ class Ezine::Page
         deliver_to test_member
       end
       update test_delivered: Time.zone.now
-    end
-
-  private
-    def validate_filename
-      @basename.blank? ? nil : super
-    end
-
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
 end

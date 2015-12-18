@@ -1,5 +1,6 @@
 class Faq::Page
   include Cms::Model::Page
+  include Cms::Page::SequencedFilename
   include Cms::Addon::EditLock
   include Workflow::Addon::Branch
   include Workflow::Addon::Approver
@@ -19,16 +20,5 @@ class Faq::Page
 
   set_permission_name "faq_pages"
 
-  before_save :seq_filename, if: ->{ basename.blank? }
-
   default_scope ->{ where(route: "faq/page") }
-
-  private
-    def validate_filename
-      (@basename && @basename.blank?) ? nil : super
-    end
-
-    def seq_filename
-      self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
-    end
 end
