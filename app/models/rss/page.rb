@@ -1,5 +1,6 @@
 class Rss::Page
   include Cms::Model::Page
+  include Cms::Page::SequencedFilename
   include Rss::Addon::Page::Body
   include Category::Addon::Category
   include Cms::Addon::ParentCrumb
