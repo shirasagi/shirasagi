@@ -6,7 +6,7 @@ class Rss::PagesController < ApplicationController
   model Rss::Page
 
   append_view_path "app/views/cms/pages"
-  navi_view "article/main/navi"
+  navi_view "rss/main/navi"
 
   private
     def fix_params

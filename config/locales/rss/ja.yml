@@ -1,5 +1,7 @@
 ja:
   rss:
+    page: フィード
+
     views:
       confirm:
         import: 取り込みますが、よろしいですか？
@@ -14,7 +16,7 @@ ja:
         auto: 自動
 
   modules:
-    rss: RSS
+    rss: RSS取込
     addons:
       rss/page/body: RSS情報
       rss/import: RSS取込
