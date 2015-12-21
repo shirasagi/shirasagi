@@ -73,6 +73,7 @@ class Opendata::Appfile
       self.workflow ||= {}
       app.cur_site = app.site
       app.apply_status(status, workflow) if status.present?
+      app.released ||= Time.zone.now
       app.save(validate: false)
     end
 

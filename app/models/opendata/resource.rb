@@ -51,6 +51,7 @@ class Opendata::Resource
       self.workflow ||= {}
       dataset.cur_site = dataset.site
       dataset.apply_status(status, workflow) if status.present?
+      dataset.released ||= Time.zone.now
       dataset.save(validate: false)
     end
 end
