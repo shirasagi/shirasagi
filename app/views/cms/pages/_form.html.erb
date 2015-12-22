@@ -5,13 +5,13 @@
   <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
   <dd><%= f.text_field :basename, class: "filename" %></dd>
 
-  <% if @item.respond_to?(:body_parts) %>
-    <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
-    <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
-  <% end %>
+  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
+  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
 
-  <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
-  <dd><%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " " %></dd>
+  <% if @item.respond_to?(:body_parts) && Cms::BodyLayout.all.present? %>
+    <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
+    <dd><%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " " %></dd>
+  <% end %>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
