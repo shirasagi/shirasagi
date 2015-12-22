@@ -17,8 +17,12 @@ ja:
       approve: 承認
       pending: 下位承認待ち
       remand: 差し戻し
-      start: 選択
+    button:
+      select: 選択
       cancel: 取消
+      request: 申請
+      approve: 承認
+      remand: 差し戻し
     mail:
       subject:
         request: 承認申請
