@@ -1,5 +1,7 @@
 <%= jquery do %>
-
+if ($("#item_body_layout_id").length == 0) {
+  $("#addon-cms-agents-addons-body_part").hide();
+}
 switch ("<%= SS.config.cms.html_editor %>"){
   case "ckeditor":
     window.Cms_HTML_Editor = Cms_Editor_CKEditor
