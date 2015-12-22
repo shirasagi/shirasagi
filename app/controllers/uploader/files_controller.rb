@@ -96,6 +96,11 @@ class Uploader::FilesController < ApplicationController
       render :show
     end
 
+    def delete
+      raise "403" unless @cur_node.allowed?(:delete, @cur_user, site: @cur_site)
+      render :delete
+    end
+
     def new_files
       raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
       render :new_files
