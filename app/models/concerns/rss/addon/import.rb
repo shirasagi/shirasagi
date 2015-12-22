@@ -5,7 +5,7 @@ module Rss::Addon
 
     RSS_REFRESH_METHOD_MANUAL = 'manual'.freeze
     RSS_REFRESH_METHOD_AUTO = 'auto'.freeze
-    RSS_REFRESH_METHODS = [ RSS_REFRESH_METHOD_MANUAL, RSS_REFRESH_METHOD_AUTO ].freeze
+    RSS_REFRESH_METHODS = [ RSS_REFRESH_METHOD_AUTO, RSS_REFRESH_METHOD_MANUAL ].freeze
 
     included do
       field :rss_url, type: String
