@@ -3,7 +3,7 @@ FactoryGirl.define do
     site_id { cms_site.id }
     user_id { cms_user.id }
     name 'title'
-    filename 'magazine/1'
+    filename 'magazine/page'
     test_delivered nil
     completed false
   end

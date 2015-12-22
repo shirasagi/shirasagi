@@ -5,6 +5,12 @@ class SS::Sequence
   field :value, type: Integer
 
   class << self
+    def current_sequence(coll, name)
+      sid = "#{coll}_#{name}"
+      doc = where(_id: sid).first
+      doc ? doc.value : 0
+    end
+
     def next_sequence(coll, name)
       sid = "#{coll}_#{name}"
       doc = where(_id: sid).find_and_modify({"$inc" => { value: 1 }}, new: true)

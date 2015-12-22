@@ -5,16 +5,17 @@ module Workflow::Addon
 
     included do
       field :master_id, type: Integer
+
       belongs_to :master, foreign_key: "master_id", class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
-      define_method(:master?) { master.blank? }
-      define_method(:branch?) { master.present? }
-
       permit_params :master_id
 
-      before_save :seq_filename, if: ->{ new_clone? && basename.blank? }
+      before_save :seq_clone_filename, if: ->{ new_clone? && basename.blank? }
       after_save :merge_to_master
+
+      define_method(:master?) { master.blank? }
+      define_method(:branch?) { master.present? }
     end
 
     public
@@ -107,10 +108,10 @@ module Workflow::Addon
       end
 
       def validate_filename
-        (new_clone? && @basename && @basename.blank?) ? nil : super
+        super unless new_clone?
       end
 
-      def seq_filename
+      def seq_clone_filename
         self.filename ||= ""
         self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
       end
