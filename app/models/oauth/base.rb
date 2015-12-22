@@ -2,12 +2,12 @@ require 'oauth2'
 
 module Oauth::Base
   def site
-    host = @env["HTTP_X_FORWARDED_HOST"] || @env["HTTP_HOST"]
+    host = @env["HTTP_X_FORWARDED_HOST"] || @env["HTTP_HOST"] || request.host_with_port
     @site ||= SS::Site.find_by_domain host
   end
 
   def node
-    path = request.env["REQUEST_PATH"]
+    path = request.env["REQUEST_PATH"] || request.path
     @node ||= Member::Node::Login.site(site).in_path(path).sort(depth: -1).first
   end
 
