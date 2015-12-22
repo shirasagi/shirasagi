@@ -13,6 +13,27 @@ class @Cms_Form
     Form_Alert.render()
     Form_Preview.render()
 
+  @addonSelector = ".mod-cms-body"
+  @editorId      = "item_html"
+  @getEditorHtml: (id = null) ->
+    id ||= Cms_Form.editorId
+
+    if (typeof tinymce != 'undefined')
+      html = "<div>" + tinymce.get(id).getContent() + "</div>"
+    else if (typeof CKEDITOR != 'undefined')
+      html = "<div>" + CKEDITOR.instances[id].getData() + "</div>"
+    else
+      html = ""
+    return html
+
+  @setEditorHtml: (html, id = null)->
+    id ||= Cms_Form.editorId
+
+    if (typeof tinymce != 'undefined')
+      tinymce.get(id).setContent(html)
+    else if (typeof CKEDITOR != 'undefined')
+      CKEDITOR.instances[id].setData(html)
+
 class @Syntax_Checker
   @message = {
     notSetImgAlt       : "<%= I18n.t('errors.messages.set_img_alt') %>"
@@ -58,15 +79,16 @@ class @Syntax_Checker
   @reset: ()->
     @errors = {}
     @errorCount = 0
+    $("#errorSyntaxChecker").remove()
     return
 
   @render: ()->
-    $(".mod-cms-body button.syntax-check").on "click", ->
+    $("button.syntax-check").on "click", ->
       Syntax_Checker.check()
 
   @check: (opts={})->
     Syntax_Checker.reset()
-    html = Syntax_Checker.getEditorHtml()
+    html = Cms_Form.getEditorHtml()
 
     Syntax_Checker.checkTable              html
     Syntax_Checker.checkMultibyteCharacter html
@@ -80,7 +102,7 @@ class @Syntax_Checker
     Syntax_Checker.checkLinkText           html
     Syntax_Checker.checkEmbeddedMedia      html
 
-    $('.mod-cms-body div#errorSyntaxChecker').remove()
+    $('#errorSyntaxChecker').remove()
 
     result = $("<div>")
     result.attr('id', 'errorSyntaxChecker')
@@ -92,12 +114,12 @@ class @Syntax_Checker
       result.append('<ul>')
       ul = result.find('ul:last')
       Syntax_Checker.appendMessage(ul, Syntax_Checker.errors)
-      $('.mod-cms-body dd:last').after(result)
+      $(Cms_Form.addonSelector).find("dd:last").after(result)
       SS_Tooltips.render(".detail")
       return false
     else
       result.append("<p>" + "<%= I18n.t('errors.template.no_errors') %>" + "</p>")
-      $('.mod-cms-body dd:last').after(result)
+      $(Cms_Form.addonSelector).find("dd:last").after(result)
       return true
 
   @validateHtml: (form, submit)->
@@ -110,7 +132,7 @@ class @Syntax_Checker
             Form_Alert.add "<%= I18n.t('cms.syntax_check') %>", this, error["msg"]
 
   @correctAll: (form, submit)->
-    html = Syntax_Checker.getEditorHtml()
+    html = Cms_Form.getEditorHtml()
 
     html = Syntax_Checker.correctMultibyteCharacter(html)
     html = Syntax_Checker.correctDependentCharacter("<div>" + html + "</div>")
@@ -126,22 +148,7 @@ class @Syntax_Checker
     if $("<div>" + html + "</div>").find("a[href]").length
       html = Syntax_Checker.correctAdjacentA($("<div>" + html + "</div>").find("a[href]"))
 
-    Syntax_Checker.setEditorHtml(html)
-
-  @getEditorHtml: ()->
-    if (typeof tinymce != 'undefined')
-      html = "<div>" + tinymce.get('item_html').getContent() + "</div>"
-    else if (typeof CKEDITOR != 'undefined')
-      html = "<div>" + CKEDITOR.instances.item_html.getData() + "</div>"
-    else
-      html = ""
-    return html
-
-  @setEditorHtml: (html)->
-    if (typeof tinymce != 'undefined')
-      tinymce.get('item_html').setContent(html)
-    else if (typeof CKEDITOR != 'undefined')
-      CKEDITOR.instances.item_html.setData(html)
+    Cms_Form.setEditorHtml(html)
 
   @pushError: (errors) ->
     key = Syntax_Checker.errorCount
@@ -184,8 +191,8 @@ class @Syntax_Checker
           correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct.link') %>" + '</a>')
           correct.on "click", {error: error}, (e)->
             html = e.data.error["correct"](e.data.error["ele"])
-            Syntax_Checker.setEditorHtml(html)
-            $(".mod-cms-body button.syntax-check").trigger("click")
+            Cms_Form.setEditorHtml(html)
+            $(Cms_Form.addonSelector).find("button.syntax-check").trigger("click")
             return false
           li.append(correct)
 
@@ -512,18 +519,12 @@ class @Link_Checker
   @rootUrl = ""
 
   @render: ()->
-    $(".mod-cms-body button.link-check").on "click", ->
+    $("button.link-check").on "click", ->
       $.support.cors = true
       button = this
       $(button).attr('disabled', true)
       Link_Checker.reset()
-
-      if (typeof tinymce != 'undefined')
-        html = "<div>" + tinymce.get('item_html').getContent() + "</div>"
-      else if (typeof CKEDITOR != 'undefined')
-        html = "<div>" + CKEDITOR.instances.item_html.getData() + "</div>"
-      else
-        html = "<div></div>"
+      html = Cms_Form.getEditorHtml()
 
       Link_Checker.check html, ()->
         result = $("<div>")
@@ -541,13 +542,14 @@ class @Link_Checker
             ul.append('<li>')
             ul.find('li:last').append(msg)
 
-        $('.mod-cms-body div#errorLinkChecker').remove()
-        $('.mod-cms-body').append(result)
+        $(Cms_Form.addonSelector).find("#errorLinkChecker").remove()
+        $(Cms_Form.addonSelector).append(result)
         $(button).removeAttr('disabled')
         return
       return
 
   @reset: ()->
+    $("#errorLinkChecker").remove()
     @links = {}
     @error = ""
     return
@@ -686,17 +688,8 @@ class @Form_Preview
   @form_preview_path
   @page_route
 
-  @getEditorHtml: (selector)->
-    if (typeof tinymce != 'undefined')
-      html = "<div>" + tinymce.get(selector).getContent() + "</div>"
-    else if (typeof CKEDITOR != 'undefined')
-      html = "<div>" + CKEDITOR.instances[selector].getData() + "</div>"
-    else
-      html = ""
-    return html
-
   @render: ->
-    $(".mod-cms-body .preview").on "click", (e) ->
+    $("button.preview").on "click", (e) ->
       name = $("#item-form #item_name").val()
       basename = $("#item-form #item_basename").val()
       errors = []
@@ -711,10 +704,16 @@ class @Form_Preview
       for i, v of $("#item-form").serializeArray()
         continue unless /^item\[/.test(v["name"])
         continue if "item[html]" == v["name"]
+        continue if "item[body_parts][]" == v["name"]
         params.push(name: v["name"].replace(/^item\[/, "preview_item["), value: v["value"])
 
       params.push(name: "preview_item[route]", value: Form_Preview.page_route)
-      params.push(name: "preview_item[html]", value: Form_Preview.getEditorHtml("item_html"))
+      params.push(name: "preview_item[html]", value: Cms_Form.getEditorHtml("item_html"))
+
+      $("textarea[id^=item_html_part_]").each ()->
+        id = $(this).attr("id")
+        name = $(this).attr("name").replace(/^item\[/, "preview_item[")
+        params.push(name: name, value: Cms_Form.getEditorHtml(id))
 
       $.post(Form_Preview.form_preview_path,
         params,

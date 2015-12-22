@@ -1,0 +1,51 @@
+<%= jquery do %>
+
+Cms_HTML_Editor = Cms_Editor_CKEditor
+var body_parts = <%= raw @item.body_parts.to_json %>;
+var body_latyout_id = <%= raw @item.body_layout_id.to_json %>;
+var site = <%= raw @cur_site.id.to_json %>;
+$(".mod-body-part-html").html(SS.loading);
+if (body_latyout_id) {
+  $("#addon-cms-agents-addons-body").hide();
+  $("#addon-cms-agents-addons-body_part").show();
+
+  url = "/.s" + site + "/cms/body_layouts/" + body_latyout_id + ".json";
+  $.get(url, function(resp){
+    $(".mod-body-part-html").html("");
+    var body_layout = resp;
+    var parts = body_layout["parts"];
+    var tags = [];
+    var editor_opts = <%= raw ckeditor_editor_options(readonly: true).to_json %>;
+    var select = $('<select>');
+    $(".mod-body-part-html").append($('<div style="padding-bottom: 10px;">').append(select));
+
+    $.each(parts, function(i){
+      var selector = "#item_html_part_" + i;
+      tag = $('<textarea name="item[body_parts][]" id="item_html_part_' + i + '", style="height: 200px;"></textarea>');
+      tag.val(body_parts[i]);
+      tags.push(tag);
+      $(".mod-body-part-html").append($('<dd class="wide"></dd>').append(tag));
+      window.Cms_HTML_Editor.render(selector, editor_opts);
+      select.append($("<option>").attr('value', i).text(this));
+    });
+
+    var select_part = function(tags){
+      $.each(tags, function(i){
+        (i == select.val()) ? $(this).parent().show() : $(this).parent().hide();
+      });
+    }
+
+    select_part(tags);
+    select.on("change", function() {
+      select_part(tags);
+    });
+  });
+}
+else {
+  $("#addon-cms-agents-addons-body").show();
+  $("#addon-cms-agents-addons-body_part").hide();
+}
+<% end %>
+
+<dl class="see mod-body-part-html">
+</dl>

@@ -1,4 +1,4 @@
-<%= form_for :item, url: { action: :show }, html: { method: :delete, multipart: true } do |f| %>
+<%= form_for :item, url: { action: :destroy }, html: { method: :delete, multipart: true } do |f| %>
 <%= error_messages_for :item %>
 
 <div class="addon-view" id="addon-basic">
@@ -7,6 +7,6 @@
 
 <footer class="send">
 <%= f.submit t("views.button.delete"), class: "delete btn-primary" %>
-<%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
+<%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
 </footer>
 <% end %>

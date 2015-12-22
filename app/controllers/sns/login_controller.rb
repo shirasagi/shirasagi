@@ -10,7 +10,17 @@ class Sns::LoginController < ApplicationController
 
   private
     def get_params
-      params.require(:item).permit(:uid, :email, :password)
+      params.require(:item).permit(:uid, :email, :password, :encryption_type)
+    end
+
+    def login_success
+      if params[:ref].blank?
+        redirect_to SS.config.sns.logged_in_page
+      elsif params[:ref] =~ /^\//
+        redirect_to params[:ref]
+      else
+        render :redirect
+      end
     end
 
   public
@@ -21,25 +31,28 @@ class Sns::LoginController < ApplicationController
         return
       end
 
-      safe_params  = get_params
-      email_or_uid = safe_params[:email].presence || safe_params[:uid]
-      password     = safe_params[:password]
-
-      @item = SS::User.authenticate(email_or_uid, password)
-      unless @item
-        @item  = SS::User.new email: email_or_uid
-        @error = t "sns.errors.invalid_login"
-        return
+      safe_params     = get_params
+      email_or_uid    = safe_params[:email].presence || safe_params[:uid]
+      password        = safe_params[:password]
+      encryption_type = safe_params[:encryption_type]
+      if encryption_type.present?
+        password = SS::Crypt.decrypt(password, type: encryption_type) rescue nil
       end
 
-      set_user @item, session: true, password: password
-
-      if params[:ref].blank?
-        redirect_to SS.config.sns.logged_in_page
-      elsif params[:ref] =~ /^\//
-        redirect_to params[:ref]
+      @item = SS::User.authenticate(email_or_uid, password) rescue false
+      if @item
+        set_user @item, session: true, password: password
+        respond_to do |format|
+          format.html { login_success }
+          format.json { head :no_content }
+        end
       else
-        render :redirect
+        @item = SS::User.new email: email_or_uid
+        @error = t "sns.errors.invalid_login"
+        respond_to do |format|
+          format.html { render }
+          format.json { render json: @error, status: :unprocessable_entity }
+        end
       end
     end
 
@@ -52,6 +65,10 @@ class Sns::LoginController < ApplicationController
 
     def logout
       put_history_log
-      unset_user redirect: true
+      unset_user
+      respond_to do |format|
+        format.html { redirect_to sns_login_path }
+        format.json { head :no_content }
+      end
     end
 end

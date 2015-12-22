@@ -30,7 +30,9 @@ class Cms::PreviewController < ApplicationController
       page.basename = page.basename.sub(/\..+?$/, "") + ".html"
 
       @cur_layout = Cms::Layout.where(id: page.layout_id).first
+      @cur_body_layout = Cms::BodyLayout.where(id: page.body_layout_id).first
       page.layout_id = nil if @cur_layout.nil?
+      page.body_layout_id = nil if @cur_body_layout.nil?
       @cur_node = Cms::Node.where(filename: /^#{path.sub(/\/$/, "")}/).first
       @cur_page = page
       @preview_page = page

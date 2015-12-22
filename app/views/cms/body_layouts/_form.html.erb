@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :parts %><%= @model.tt :parts %></dt>
+  <dd><%= f.text_area :parts, value: @item.parts.join("\n"), style: "height: 100px;" %></dd>
+</dl>

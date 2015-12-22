@@ -1,0 +1,86 @@
+<%= jquery do %>
+
+switch ("<%= SS.config.cms.html_editor %>"){
+  case "ckeditor":
+    window.Cms_HTML_Editor = Cms_Editor_CKEditor
+    break;
+  case "tinymce":
+    window.Cms_HTML_Editor = Cms_Editor_TinyMCE
+    break;
+}
+
+var body_parts = <%= raw @item.body_parts.to_json %>;
+var body_latyout_id = $("#item_body_layout_id").val();
+var select_body_layout = function() {
+  var site = <%= @cur_site.id %>;
+  var id = $(this).val();
+  if (id) {
+    $("#addon-cms-agents-addons-body").hide();
+    $("#addon-cms-agents-addons-body_part").show();
+    $(".mod-body-part-html .buttons").prevAll().remove();
+
+    $(".mod-body-part-html").prepend(SS.loading);
+    $(".mod-body-part-html .buttons").hide();
+
+    url = "/.s" + site + "/cms/body_layouts/" + id + ".json";
+    $.get(url, function(resp){
+      $(".mod-body-part-html .buttons").prevAll().remove();
+      $(".mod-body-part-html .buttons").show();
+
+      var body_layout = resp;
+      var parts = body_layout["parts"];
+      var tags = [];
+      var editor_opts = <%= raw html_editor_options.to_json %>;
+      var select = $('<select style="margin-bottom: 5px;">');
+
+      $.each(parts, function(i){
+        var selector = "#item_html_part_" + i;
+        tag = $('<textarea name="item[body_parts][]" id="item_html_part_' + i + '", style="height: 200px;"></textarea>');
+        tag.val(body_parts[i]);
+        tags.push(tag);
+        $(".mod-body-part-html .buttons").before($('<dd class="wide"></dd>').append(tag));
+        window.Cms_HTML_Editor.render(selector, editor_opts);
+        select.append($("<option>").attr('value', i).text(this));
+        $(".mod-body-part-html").prepend(select);
+      });
+
+      var select_part = function(tags){
+        $.each(tags, function(i){
+          if (i == select.val()) {
+            $(this).parent().show();
+            Cms_Form.editorId = $(this).attr("id");
+            Cms_Form.addonSelector = ".mod-body-part-html";
+          }
+          else {
+            $(this).parent().hide();
+          }
+        });
+      }
+
+      select_part(tags);
+      select.on("change", function() {
+        Syntax_Checker.reset();
+        Link_Checker.reset();
+        select_part(tags);
+      });
+    });
+  }
+  else {
+    Cms_Form.editorId = "item_html";
+    Cms_Form.addonSelector = ".mod-cms-body";
+    $("#addon-cms-agents-addons-body").show();
+    $("#addon-cms-agents-addons-body_part").hide();
+  }
+}
+
+$("#item_body_layout_id").on("change", select_body_layout);
+$("#item_body_layout_id").trigger("change");
+<% end %>
+
+<dl class="see mod-body-part-html">
+  <dd class="wide buttons">
+    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+    <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
+  </dd>
+</dl>

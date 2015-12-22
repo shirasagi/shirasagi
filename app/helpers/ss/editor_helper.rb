@@ -51,10 +51,18 @@ module SS::EditorHelper
     end
   end
 
-  def html_editor_ckeditor(elem, opts = {})
-    controller.javascript "/assets/js/ckeditor/ckeditor.js"
-    controller.javascript "/assets/js/ckeditor/adapters/jquery.js"
+  def html_editor_options(opts = {})
+    case SS.config.cms.html_editor
+    when "ckeditor"
+      ckeditor_editor_options(opts = {})
+    when "tinymce"
+      tinymce_editor_options(opts = {})
+    when "markdown"
+      #html_editor_markdown(elem, opts)
+    end
+  end
 
+  def ckeditor_editor_options(opts = {})
     opts = { extraPlugins: "", removePlugins: "" }.merge(opts)
 
     if opts[:readonly]
@@ -72,17 +80,21 @@ module SS::EditorHelper
 
     opts[:templates] = 'shirasagi'
     opts[:templates_files] = [ "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}" ]
+    opts
+  end
 
+  def html_editor_ckeditor(elem, opts = {})
+    controller.javascript "/assets/js/ckeditor/ckeditor.js"
+    controller.javascript "/assets/js/ckeditor/adapters/jquery.js"
+    opts = ckeditor_editor_options(opts)
     jquery do
       "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
     end
   end
 
-  def html_editor_tinymce(elem, opts = {})
-    controller.javascript "/assets/js/tinymce/tinymce.min.js"
-
+  def tinymce_editor_options(opts = {})
     editor_opts = {}
-    editor_opts[:selector] = elem
+    #editor_opts[:selector] = elem
     editor_opts[:language] = "ja"
 
     if opts[:readonly]
@@ -102,7 +114,12 @@ module SS::EditorHelper
       # editor_opts[:templates] = [ { title: 'Some title 1', description: 'Some desc 1', content: 'My content' } ]
       editor_opts[:templates] = "#{template_cms_editor_templates_path}.json?_=#{Time.zone.now.to_i}"
     end
+    editor_opts
+  end
 
+  def html_editor_tinymce(elem, opts = {})
+    controller.javascript "/assets/js/tinymce/tinymce.min.js"
+    editor_opts = tinymce_editor_options(opts)
     jquery do
       "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json});".html_safe
     end

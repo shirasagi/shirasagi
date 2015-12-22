@@ -4,12 +4,13 @@
 <%= error_messages_for :item %>
 
 <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_form.html.erb") %>
-<%= render partial: 'form', locals: { f: f } %>
+  <%= render partial: 'form', locals: { f: f } %>
 <% else %>
-<%= render file: "#{Rails.root}/app/views/ss/crud/_form", locals: { f: f } %>
+  <%= render file: "#{Rails.root}/app/views/ss/crud/_form", locals: { f: f } %>
 <% end %>
+
 <footer class="send">
-<%= f.submit t("views.button.save"), class: "save btn-primary" %>
-<%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
+  <%= f.submit t("views.button.save"), class: "save btn-primary" %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
 </footer>
 <% end %>

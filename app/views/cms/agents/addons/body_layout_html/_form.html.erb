@@ -1,0 +1,21 @@
+<%= code_editor ".mod-cms-html-form textarea", mode: :html %>
+
+<%= jquery do %>
+$(".addon-paster").on("change", function() {
+  if (!($(this).val())) {
+    return false;
+  }
+  editor = $("#item_html").next(".CodeMirror")[0].CodeMirror;
+  editor.replaceRange($(this).val(), editor.getCursor());
+  $(this).val("")
+  return false;
+});
+
+<% end %>
+
+<dl class="see mod-cms-html-form">
+  <dd class="wide">
+    <%= f.text_area :html, style: "height: 400px" %>
+    <%= select_tag :addon, options_for_select(@item.body_layout_addon_options), include_blank: "アドオンを設置する", class: "addon-paster", style: "margin-top: 10px;" %>
+  </dd>
+</dl>

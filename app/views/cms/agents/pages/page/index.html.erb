@@ -1,3 +1,7 @@
-<% @cur_page.class.addons.each do |addon| %>
-  <%= render file: addon.view_file if addon.view_file %>
+<% if @cur_page.body_layout.present? %>
+  <%= render file: "cms/agents/addons/body_part/view/index" %>
+<% else %>
+  <% @cur_page.class.addons.each do |addon| %>
+    <%= render file: addon.view_file if addon.view_file %>
+  <% end %>
 <% end %>
