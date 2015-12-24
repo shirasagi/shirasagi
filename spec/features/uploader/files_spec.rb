@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "uploader_files" do
+describe "uploader_files", dbscope: :example, type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :uploader_node_file, name: "uploader" }
   subject(:item) { Uploader::File.last }

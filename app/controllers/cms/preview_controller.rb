@@ -51,8 +51,8 @@ class Cms::PreviewController < ApplicationController
       else
         @_response_body = response.body
       end
-    rescue => e
-      rescue_action(e)
+    rescue
+      render_error 400
     end
 
   private
