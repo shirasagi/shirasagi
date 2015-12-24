@@ -66,10 +66,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
         end
         @answer.save
         if @cur_node.notify_mail_enabled?
-          Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer).deliver_now
+          Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer).deliver_now rescue nil
         end
         if @cur_node.reply_mail_enabled?
-          Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer).try(:deliver_now)
+          Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer).deliver_now rescue nil
         end
         redirect_to "#{@cur_node.url}sent.html"
       else
