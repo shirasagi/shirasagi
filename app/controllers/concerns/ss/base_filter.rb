@@ -9,6 +9,7 @@ module SS::BaseFilter
     cattr_accessor :model_class
 
     helper SS::EditorHelper
+    helper SS::JbuilderHelper
     before_action :set_model
     before_action :logged_in?
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
