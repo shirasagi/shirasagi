@@ -23,6 +23,9 @@ production: &production
   # Max Number of Markers in Map Addon
   map_max_point_form: 10
 
+  # Skip login for preview
+  remote_preview: false
+
 test:
   <<: *production
 
