@@ -15,10 +15,10 @@
         <%= link_to :upload, {action: :file, filename: @item.filename, do: "new_files" }, class: "icon-page" if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
       <% end %>
     <% elsif params[:action] =~ /create/ %>
-      <%= link_to :back_to_index, { action: :file, filename: @item.dirname } %>
+      <%= link_to :back_to_index, { action: :file, filename: @item.filename } %>
     <% elsif params[:action] =~ /update/ %>
       <%= link_to :back_to_show, { action: :file, filename: @item.filename, do: "show" } %>
-      <%= link_to :back_to_index, { action: :file, filename: @item.dirname } %>
+      <%= link_to :back_to_index, { action: :file, filename: @item.filename } %>
     <% end %>
   </nav>
 <% end %>
