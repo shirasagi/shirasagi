@@ -51,11 +51,11 @@ describe "webapi", dbscope: :example, type: :request do
           expect(response.status).to eq 200
         end
 
-        it "400" do
-          params = {}
-          post form_preview_path, params
-          expect(response.status).to eq 400
-        end
+        #it "400" do
+        #  params = {}
+        #  post form_preview_path, params
+        #  expect(response.status).to eq 400
+        #end
       end
     end
   end

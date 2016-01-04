@@ -52,7 +52,7 @@ class Cms::PreviewController < ApplicationController
         @_response_body = response.body
       end
     rescue
-      render_error 400
+      render_error 400, status: 400
     end
 
   private
