@@ -11,6 +11,8 @@ class Sns::LoginController < ApplicationController
   private
     def get_params
       params.require(:item).permit(:uid, :email, :password, :encryption_type)
+    rescue
+      raise "400"
     end
 
     def login_success

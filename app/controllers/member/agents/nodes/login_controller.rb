@@ -7,6 +7,8 @@ class Member::Agents::Nodes::LoginController < ApplicationController
   private
     def get_params
       params.require(:item).permit(:email, :password)
+    rescue
+      raise "400"
     end
 
     def set_member_and_redirect(member)
