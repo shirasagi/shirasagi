@@ -1,6 +1,15 @@
-require 'simplecov'
-require 'coveralls'
-Coveralls.wear!
+# Don't run always Coverage analysis
+# ref. http://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
+require 'dotenv'
+Dotenv.load
+def analyze_coverage?
+  (ENV["CI"] == "true" && ENV["TRAVIS"] == "true") || ENV["ANALYZE_COVERAGE"] != "disabled"
+end
+if analyze_coverage?
+  require 'simplecov'
+  require 'coveralls'
+  Coveralls.wear!
+end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
@@ -20,13 +29,15 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
-SimpleCov.formatters = [
-  SimpleCov::Formatter::HTMLFormatter,
-  Coveralls::SimpleCov::Formatter
-]
-SimpleCov.start do
-  add_filter 'spec/'
-  add_filter 'vendor/bundle'
+if analyze_coverage?
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    Coveralls::SimpleCov::Formatter
+  ]
+  SimpleCov.start do
+    add_filter 'spec/'
+    add_filter 'vendor/bundle'
+  end
 end
 
 RSpec.configure do |config|
