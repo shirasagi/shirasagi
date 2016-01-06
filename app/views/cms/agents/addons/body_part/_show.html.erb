@@ -1,6 +1,8 @@
+<% controller.javascript "/assets/js/ckeditor/ckeditor.js" %>
+<% controller.javascript "/assets/js/ckeditor/adapters/jquery.js" %>
+
 <%= jquery do %>
 
-Cms_HTML_Editor = Cms_Editor_CKEditor
 var body_parts = <%= raw @item.body_parts.to_json %>;
 var body_latyout_id = <%= raw @item.body_layout_id.to_json %>;
 var site = <%= raw @cur_site.id.to_json %>;
@@ -25,7 +27,7 @@ if (body_latyout_id) {
       tag.val(body_parts[i]);
       tags.push(tag);
       $(".mod-body-part-html").append($('<dd class="wide"></dd>').append(tag));
-      window.Cms_HTML_Editor.render(selector, editor_opts);
+      Cms_Editor_CKEditor.render(selector, editor_opts);
       select.append($("<option>").attr('value', i).text(this));
     });
 
