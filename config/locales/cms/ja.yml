@@ -258,6 +258,7 @@ ja:
         name: レイアウト名
         html: HTML
       cms/body_layout:
+        name: 本文レイアウト名
         parts: パーツ名
       cms/page:
         html: 本文
@@ -766,6 +767,14 @@ ja:
         - レイアウトのファイル名を入力します。
         - 半角英数字で入力してください。
         - .htmlなどの拡張子の記述は不要です。
+
+    cms/body_layout:
+      name:
+        - 本文レイアウト名を入力します。
+        - 日本語での入力が可能です。
+      parts:
+        - 本文レイアウトにて展開するパーツ名を入力します。
+        - 複数のパーツ名を改行区切りで記述してください。
 
     cms/editor_template:
       name:
