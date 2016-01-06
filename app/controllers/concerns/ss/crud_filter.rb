@@ -22,6 +22,10 @@ module SS::CrudFilter
       args.size == 0 ? super(file: params[:action]) : super
     end
 
+    def json_content_type
+      (browser.ie? && browser.version.to_i <= 9) ? "text/plain" : "application/json"
+    end
+
     def set_item
       @item = @model.find params[:id]
       @item.attributes = fix_params
@@ -104,12 +108,12 @@ module SS::CrudFilter
       if result
         respond_to do |format|
           format.html { redirect_to location, notice: notice }
-          format.json { render json: @item.to_json, status: :created }
+          format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
         end
       else
         respond_to do |format|
           format.html { render render_opts }
-          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
+          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
         end
       end
     end
@@ -127,7 +131,7 @@ module SS::CrudFilter
       else
         respond_to do |format|
           format.html { render render_opts }
-          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
+          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
         end
       end
     end
