@@ -3,4 +3,5 @@ json.array!(@items) do |item|
   #json.url item_url(item, format: :json)
   json.extract! *([item] + @model.fields.keys.map {|m| m.to_sym })
   json.url url_for(action: :show, id: item, format: :json)
+  format_json_datetime(json, @item)
 end

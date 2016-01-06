@@ -11,6 +11,11 @@ class Cms::PreviewController < ApplicationController
   after_action :render_preview, if: ->{ @file =~ /\.html$/ }
   after_action :render_mobile, if: ->{ mobile_path? }
 
+  if SS.config.cms.remote_preview
+    skip_filter :logged_in?
+    skip_filter :set_group
+  end
+
   public
     def form_preview
       preview_item = params.require(:preview_item).permit!
@@ -46,8 +51,8 @@ class Cms::PreviewController < ApplicationController
       else
         @_response_body = response.body
       end
-    rescue => e
-      rescue_action(e)
+    rescue
+      render_error 400, status: 400
     end
 
   private

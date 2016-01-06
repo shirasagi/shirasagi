@@ -38,3 +38,7 @@ mime_type_map:
 #   underscore - replace multibyte characters to underscore
 #   sequence - replace filename to sequence id if filename include multibyte characters
 multibyte_filename: underscore
+
+# json response datetime_format
+#   %Y/%m/%d %H:%M:%S - 2015/12/25 12:00:00
+json_datetime_format:

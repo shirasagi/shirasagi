@@ -26,8 +26,9 @@ class Uploader::FilesController < ApplicationController
       filename = ::CGI.unescape params[:filename]
       return unless filename.sub(/\/.+$/, "") == @cur_node.filename
       @item = @model.file "#{@cur_node.site.path}/#{filename}"
+      raise "404" unless @item
       @item.site = @cur_site
-      @item.read if @item && @item.text?
+      @item.read if @item.text?
     end
 
     def set_items(path)
@@ -39,8 +40,7 @@ class Uploader::FilesController < ApplicationController
     end
 
     def create_files
-      files = params[:item][:files]
-      files.each do |file|
+      @files.each do |file|
         next unless file.present?
         path = ::File.join(@cur_site.path, @item.filename, file.original_filename)
         item = @model.new(path: path, binary: file.read)
@@ -56,19 +56,22 @@ class Uploader::FilesController < ApplicationController
     end
 
     def create_directory
-      path = "#{@item.path}/#{params[:item][:directory]}"
+      path = "#{@item.path}/#{@directory}"
       item = @model.new path: path, is_dir: true
 
-      result = item.save
-      unless result
+      if !item.save
         item.errors.each do |n, e|
           @item.errors.add :path, e
         end
-        @directory = params[:item][:directory]
       end
-
       location = "#{uploader_files_path}/#{@item.filename}"
-      render_create result, location: location, render: { file: :new_directory }
+      render_create  @item.errors.empty?, location: location, render: { file: :new_directory }
+    end
+
+    def set_params(*keys)
+      keys.each { |key| instance_variable_set("@#{key}", params[:item][key]) }
+    rescue
+      raise "400"
     end
 
   public
@@ -112,31 +115,29 @@ class Uploader::FilesController < ApplicationController
     end
 
     def create
-      if params[:item][:directory]
+      set_params(:directory, :files)
+      if @directory
         create_directory
-      else
+      elsif @files
         create_files
+      else
+        raise "400"
       end
     end
 
     def update
+      set_params(:filename, :files, :text)
       raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
-
-      filename = params[:item][:filename]
-      text = params[:item][:text]
-      file = params[:item][:files].find(&:present?)
+      raise "400" unless @filename
 
       if !@item.directory?
-        if text
-          @item.text = text
-        else
-          @item.read
-        end
+        @text ? (@item.text = @text) : @item.read
       end
-
-      @item.filename = filename if filename && filename =~ /^#{@cur_node.filename}/
+      @item.filename = @filename if @filename && @filename =~ /^#{@cur_node.filename}/
       result = @item.save
       @item.path = @item.saved_path unless result
+
+      file = @files.find(&:present?) rescue nil
       Fs.binwrite @item.saved_path, file.read if result && file
 
       location = "#{uploader_files_path}/#{@item.filename}?do=edit"

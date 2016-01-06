@@ -26,6 +26,8 @@ module Cms::PublicFilter::Crud
 
     def get_params
       params.require(:item).permit(permit_fields).merge(fix_params)
+    rescue
+      raise "400"
     end
 
   public

@@ -16,6 +16,7 @@ class Fs::FilesController < ApplicationController
 
     def deny
       return if @item.public?
+      return if SS.config.env.remote_preview
       raise "404" unless get_user_by_session
     end
 
