@@ -83,16 +83,16 @@ describe "webapi", dbscope: :example, type: :request do
         expect(response.status).to eq 204
         updated_page = Cms::Page.find(page.id)
 
-        expect(params[:item][:name]).to eq updated_page.name
-        expect(params[:item][:body_parts]).to eq updated_page.body_parts
-        expect(params[:item][:layout_id]).to eq updated_page.layout_id
+        expect(updated_page.name).to eq params[:item][:name]
+        expect(updated_page.body_parts).to eq params[:item][:body_parts]
+        expect(updated_page.layout_id).to eq params[:item][:layout_id]
         expect("ready").to eq updated_page.state
 
         release_date = updated_page.release_date.strftime(format) rescue nil
-        expect(params[:item][:release_date]).to eq release_date
+        expect(release_date).to eq params[:item][:release_date]
 
         close_date = updated_page.close_date.strftime(format) rescue nil
-        expect(params[:item][:close_date]).to eq close_date
+        expect(close_date).to eq params[:item][:close_date]
       end
 
       it "200" do
@@ -100,13 +100,13 @@ describe "webapi", dbscope: :example, type: :request do
         put update_page_path, params
         expect(response.status).to eq 204
         updated_page = Cms::Page.find(page.id)
-        expect(params[:item][:state]).to eq updated_page.state
+        expect(updated_page.state).to eq params[:item][:state]
 
         params = { item: { state: "public" } }
         put update_page_path, params
         expect(response.status).to eq 204
         updated_page = Cms::Page.find(page.id)
-        expect(params[:item][:state]).to eq updated_page.state
+        expect(updated_page.state).to eq params[:item][:state]
       end
 
       it "400" do
