@@ -13,5 +13,10 @@ module Ckan::Addon
       def ckan_status_options
         %w(dataset tag group related_item).map { |m| [ I18n.t("ckan.options.ckan_status.#{m}"), m ] }.to_a
       end
+
+      def value
+        137
+        # TODO: Implement
+      end
   end
 end
