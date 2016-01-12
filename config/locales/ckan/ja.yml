@@ -1,0 +1,19 @@
+ja:
+  ckan:
+    options:
+      ckan_status:
+        dataset: データセット
+        tag: タグ
+        group: グループ
+        related_item: 関連アイテム
+
+  modules:
+    ckan: CKAN
+    addons:
+      ckan/status: CKAN 件数
+
+  mongoid:
+    attributes:
+      ckan/part/status:
+        ckan_url: URL
+        ckan_status: 種類
