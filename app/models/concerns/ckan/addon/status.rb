@@ -15,8 +15,32 @@ module Ckan::Addon
       end
 
       def value
-        137
-        # TODO: Implement
+        uri = URI.parse ckan_url + '/api/3/action/' + action_name
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true if uri.scheme == 'https'
+        req = Net::HTTP::Get.new(uri.path)
+        res = http.request(req)
+        if res.code != '200'
+          # HTTP Error
+          'NaN'
+        else
+          h = JSON.parse(res.body)
+          if h['success']
+            h['result'].count
+          else
+            # Failure
+            'NaN'
+          end
+        end
+      end
+
+      def action_name
+        {
+          'dataset' => 'package_list',
+          'tag' => 'tag_list',
+          'group' => 'group_list',
+          'related_item' => 'related_list'
+        }[ckan_status]
       end
   end
 end
