@@ -10,10 +10,14 @@ ja:
   modules:
     ckan: CKAN
     addons:
+      ckan/server: CKAN 新着
       ckan/status: CKAN 件数
 
   mongoid:
     attributes:
+      ckan/node/page:
+        ckan_url: URL
+        ckan_max_docs: 最大件数
       ckan/part/status:
         ckan_url: URL
         ckan_status: 種類
@@ -31,3 +35,11 @@ ja:
         - タグ： tag_list
         - グループ： group_list
         - 関連アイテム： related_list
+    ckan/addon/server:
+      ckan_url:
+        - URLの可変部分を設定します。
+        - 例：
+        - http://example.jp/a/b/c/api/3/action/package_list の利用が想定される場合
+        - http://example.jp/a/b/c を設定します。
+      ckan_max_docs:
+        - 取得する最大件数を設定します。
