@@ -1,7 +1,7 @@
 <dl class="see mod-ckan-part-status">
-  <dt><%= @model.t :ckan_url %></dt>
+  <dt><%= @model.t :ckan_url %><%= @model.tt :ckan_url %></dt>
   <dd><%= f.text_field :ckan_url, class: "ckan-url" %></dd>
 
-  <dt><%= @model.t :ckan_status %></dt>
+  <dt><%= @model.t :ckan_status %><%= @model.tt :ckan_status %></dt>
   <dd><%= f.select :ckan_status, @item.ckan_status_options  %></dd>
 </dl>
