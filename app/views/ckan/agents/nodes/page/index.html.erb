@@ -1,1 +1,9 @@
-ckan agens addons nodes page index.html.erb
+<ul>
+<% @cur_node.values.each do |e| %>
+  <li>
+    <span><%= e['metadata_created'] %></span>
+    <span><%= e['metadata_modified'] %></span>
+    <span><%= e['name'] %></span>
+  </li>
+<% end %>
+</ul>
