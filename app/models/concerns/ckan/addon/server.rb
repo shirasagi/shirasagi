@@ -7,6 +7,9 @@ module Ckan::Addon
       field :ckan_url, type: String
       field :ckan_max_docs, type: Integer
       permit_params :ckan_url, :ckan_max_docs
+
+      validates :ckan_url, format: /\Ahttps?:\/\//
+      validates :ckan_max_docs, numericality: { greater_than_or_equal_to: 0 }
     end
 
     public
