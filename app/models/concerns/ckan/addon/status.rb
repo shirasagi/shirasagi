@@ -7,6 +7,9 @@ module Ckan::Addon
       field :ckan_url, type: String
       field :ckan_status, type: String
       permit_params :ckan_url, :ckan_status
+
+      validates :ckan_url, format: /\Ahttps?:\/\//
+      validates :ckan_status, inclusion: { in: %w(dataset tag group related_item) }
     end
 
     public
