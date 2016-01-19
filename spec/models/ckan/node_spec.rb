@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'webmock/rspec'
 
 RSpec.describe Ckan::Node, type: :model, dbscope: :example do
   describe "validation" do
