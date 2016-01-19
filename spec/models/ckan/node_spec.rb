@@ -38,6 +38,8 @@ RSpec.describe Ckan::Node, type: :model, dbscope: :example do
   end
 
   describe "#values" do
+    before(:all) { WebMock.enable! }
+
     let(:page) { build :ckan_node_page }
 
     before do
@@ -65,5 +67,7 @@ RSpec.describe Ckan::Node, type: :model, dbscope: :example do
       let(:body) { "{\"success\":false}" }
       it { is_expected.to eq [] }
     end
+
+    after(:all) { WebMock.disable! }
   end
 end

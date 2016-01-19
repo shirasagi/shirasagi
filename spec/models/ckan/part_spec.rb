@@ -40,6 +40,8 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
   end
 
   describe '#value' do
+    before(:all) { WebMock.enable! }
+
     let(:status) { build :ckan_part_status }
 
     before do
@@ -67,5 +69,7 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
       let(:body) { "{\"success\":false}" }
       it { is_expected.to eq 'NaN' }
     end
+
+    after(:all) { WebMock.disable! }
   end
 end
