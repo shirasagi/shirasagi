@@ -13,6 +13,7 @@ SS::Application.routes.draw do
 
   node "ckan" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
+    get "page/rss" => "public#rss", cell: "nodes/page"
   end
 
   part "ckan" do
