@@ -49,3 +49,4 @@ ja:
         - http://example.jp/a/b/c を設定します。
       ckan_max_docs:
         - 取得する最大件数を設定します。
+        - 0以上の整数値で指定します。
