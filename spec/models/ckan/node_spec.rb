@@ -36,4 +36,34 @@ RSpec.describe Ckan::Node, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe "#values" do
+    let(:page) { build :ckan_node_page }
+
+    before do
+      stub_request(:get, "#{page.ckan_url}/api/3/action/package_search?rows=10&sort=metadata_modified%20desc").
+        with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+        to_return(:status => status, :body => body, :headers => {})
+    end
+
+    subject { page.values }
+
+    context "ok" do
+      let(:status) { 200 }
+      let(:body) { "{\"success\":true,\"result\":{\"results\":[1,2,3,4,5]}}" }
+      it { is_expected.to eq [1, 2, 3, 4, 5] }
+    end
+
+    context "HTTP error" do
+      let(:status) { 500 }
+      let(:body) { "" }
+      it { is_expected.to eq [] }
+    end
+
+    context "failure" do
+      let(:status) { 200 }
+      let(:body) { "{\"success\":false}" }
+      it { is_expected.to eq [] }
+    end
+  end
 end
