@@ -12,6 +12,7 @@ ja:
       ckan/page: 新着
     parts:
       ckan/status: 件数
+      ckan/page: ページリスト
 
   modules:
     ckan: CKAN

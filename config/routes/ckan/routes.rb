@@ -17,5 +17,6 @@ SS::Application.routes.draw do
 
   part "ckan" do
     get "status" => "public#index", cell: "parts/status"
+    get "page" => "public#index", cell: "parts/page"
   end
 end
