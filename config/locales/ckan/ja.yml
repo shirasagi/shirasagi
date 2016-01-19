@@ -7,6 +7,12 @@ ja:
         group: グループ
         related_item: 関連アイテム
 
+  cms:
+    nodes:
+      ckan/page: 新着
+    parts:
+      ckan/status: 件数
+
   modules:
     ckan: CKAN
     addons:
