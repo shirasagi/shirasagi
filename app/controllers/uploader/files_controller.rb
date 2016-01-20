@@ -126,7 +126,7 @@ class Uploader::FilesController < ApplicationController
     end
 
     def update
-      set_params(:filename, :files, :text)
+      set_params(:filename, :files, :text, :file)
       raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
       raise "400" unless @filename
 
@@ -138,6 +138,7 @@ class Uploader::FilesController < ApplicationController
       @item.path = @item.saved_path unless result
 
       file = @files.find(&:present?) rescue nil
+      file = @file if @file.present?
       Fs.binwrite @item.saved_path, file.read if result && file
 
       location = "#{uploader_files_path}/#{@item.filename}?do=edit"
