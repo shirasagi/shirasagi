@@ -39,7 +39,7 @@ class Gws::Workflow::WizardController < ApplicationController
         if @item.apply_workflow?(@route)
           render file: "approver_setting_multi", layout: false
         else
-          render json: @item.errors.full_messages, status: :bad_request
+          render json: { errors: json_response_errors(@item) }, status: :bad_request
         end
       else
         render file: :approver_setting, layout: false

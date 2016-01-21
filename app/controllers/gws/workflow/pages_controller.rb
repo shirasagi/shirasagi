@@ -49,7 +49,7 @@ class Gws::Workflow::PagesController < ApplicationController
         request_approval
         render json: { workflow_state: @item.workflow_state }
       else
-        render json: @item.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: json_response_errors(@item) }, status: :unprocessable_entity
       end
 
     end
@@ -84,7 +84,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
         render json: { workflow_state: workflow_state }
       else
-        render json: @item.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: json_response_errors(@item) }, status: :unprocessable_entity
       end
     end
 
@@ -103,7 +103,7 @@ class Gws::Workflow::PagesController < ApplicationController
         end
         render json: { workflow_state: @item.workflow_state }
       else
-        render json: @item.errors.full_messages, status: :unprocessable_entity
+        render json: { errors: json_response_errors(@item) }, status: :unprocessable_entity
       end
     end
 

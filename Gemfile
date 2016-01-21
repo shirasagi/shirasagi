@@ -49,6 +49,7 @@ gem 'fullcalendar.io-rails'
 gem 'bxslider-rails'
 gem 'marked-rails'
 gem 'clam_scan'
+gem "active_model-errors_details"
 
 # OAuth
 gem 'omniauth'

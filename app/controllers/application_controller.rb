@@ -61,4 +61,16 @@ class ApplicationController < ActionController::Base
         response.headers["Expires"] = "-1"
       end
     end
+
+    def json_response_errors(item)
+      full_messages = item.errors.full_messages
+      details = item.errors.details
+      item.errors.keys.map.with_index do |key, i|
+        {
+          field: key,
+          details: details[key],
+          message: full_messages[i]
+        }
+      end
+    end
 end

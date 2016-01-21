@@ -46,8 +46,10 @@ class Uploader::FilesController < ApplicationController
         item = @model.new(path: path, binary: file.read)
 
         if !item.save
-          item.errors.each do |n, e|
-            @item.errors.add item.name, e
+          item.errors.details.each do |name, errors|
+            errors.each do |error|
+              @item.errors.add name, error[:error]
+            end
           end
         end
       end
@@ -60,8 +62,10 @@ class Uploader::FilesController < ApplicationController
       item = @model.new path: path, is_dir: true
 
       if !item.save
-        item.errors.each do |n, e|
-          @item.errors.add :path, e
+        item.errors.details.each do |name, errors|
+          errors.each do |error|
+            @item.errors.add name, error[:error]
+          end
         end
       end
       location = "#{uploader_files_path}/#{@item.filename}"
