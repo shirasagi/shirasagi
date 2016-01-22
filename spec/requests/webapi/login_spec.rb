@@ -39,6 +39,12 @@ describe "webapi login", dbscope: :example, type: :request do
         expect(response.status).to eq 422
       end
 
+      it "400" do
+        params = {}
+        post login_path, params
+        expect(response.status).to eq 400
+      end
+
       it "204" do
         post login_path, correct_login_params
         expect(response.status).to eq 204

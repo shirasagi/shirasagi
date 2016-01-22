@@ -30,6 +30,10 @@ class Sns::LoginController < ApplicationController
       if !request.post?
         # retrieve parameters from get parameter. this is bookmark support.
         @item = SS::User.new email: params[:email]
+        respond_to do |format|
+          format.html { render :login }
+          format.json { head 404 }
+        end
         return
       end
 
@@ -50,10 +54,10 @@ class Sns::LoginController < ApplicationController
         end
       else
         @item = SS::User.new email: email_or_uid
-        @error = t "sns.errors.invalid_login"
+        @item.errors.add :base, :invalid_login
         respond_to do |format|
           format.html { render }
-          format.json { render json: @error, status: :unprocessable_entity }
+          format.json { render json: { errors: json_response_errors(@item) }, status: :unprocessable_entity }
         end
       end
     end

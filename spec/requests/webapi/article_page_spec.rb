@@ -66,7 +66,7 @@ describe "webapi", dbscope: :example, type: :request do
     end
 
     describe "POST /.s{site}/article{cid}/pages/{id}.json" do
-      it "200" do
+      it "204" do
         format = SS.config.env.json_datetime_format
         params = {
           item: {
@@ -95,7 +95,7 @@ describe "webapi", dbscope: :example, type: :request do
         expect(close_date).to eq params[:item][:close_date]
       end
 
-      it "200" do
+      it "204" do
         params = { item: { state: "closed" } }
         put update_page_path, params
         expect(response.status).to eq 204

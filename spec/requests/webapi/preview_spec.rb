@@ -51,11 +51,21 @@ describe "webapi", dbscope: :example, type: :request do
           expect(response.status).to eq 200
         end
 
-        #it "400" do
-        #  params = {}
-        #  post form_preview_path, params
-        #  expect(response.status).to eq 400
-        #end
+        it "400" do
+          params = {}
+
+          if Rails.application.config.consider_all_requests_local
+            begin
+              post form_preview_path, params
+              violated "Rails.application.config.consider_all_requests_local"
+            rescue => e
+              # succeed
+            end
+          else
+            post form_preview_path, params
+            expect(response.status).to eq 400
+          end
+        end
       end
     end
   end
