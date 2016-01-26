@@ -1,9 +1,17 @@
-<ul>
+<div class="ckan-pages pages">
 <% @cur_node.values.each do |e| %>
-  <li>
-    <span><%= e['metadata_created'] %></span>
-    <span><%= e['metadata_modified'] %></span>
-    <span><%= e['name'] %></span>
-  </li>
+  <% modified = Time.zone.parse(e['metadata_modified']).to_date %>
+  <%# def in_new_days?(date) %>
+  <%#   date + new_days > (@cur_date || Time.zone.now) %>
+  <%# end %>
+  <%# # NOTE: `@cur_date` is `nil` always. %>
+  <%# in_new_days = (modified + @cur_node.new_days > (@cur_date || Time.zone.now)) %>
+  <% in_new_days = (modified + @cur_node.new_days > Time.zone.now) %>
+  <article class="item-<%= e['name'] %> <%= in_new_days ? 'new' : nil %>">
+    <header>
+      <time datetime="<%= I18n.l modified, format: :iso %>"><%= I18n.l modified, format: :long %></time>
+      <h2><%= link_to e['title'], root_url %></h2>
+    </header>
+  </article>
 <% end %>
-</ul>
+</div>
