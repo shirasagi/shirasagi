@@ -5,6 +5,13 @@ production: &production
   # you can specify one of these: none, mobile, always
   trans_sid: none
 
+  # you can specify mobile css files.
+  #
+  # put %{assets_prefix} in file path if you want use css file under asset pipeline.
+  # - "%{assets_prefix}/cms/mobile.css"
+  css:
+    - "/css/mobile.css"
+
 test:
   <<: *production
 

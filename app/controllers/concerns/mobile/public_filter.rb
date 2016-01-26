@@ -55,11 +55,6 @@ module Mobile::PublicFilter
       body = Mobile::Converter.new(body)
       body.convert!
 
-      # css
-      dir = "#{@cur_site.path}/css"
-      css = Fs.exists?("#{dir}/mobile.css") || Fs.exists?("#{dir}/mobile.scss")
-      css = css ? "/css/mobile.css" : "#{Rails.application.config.assets.prefix}/cms/mobile.css"
-
       # doctype
       head  = []
       head << %(<?xml version="1.0" encoding="UTF-8"?>)
@@ -68,7 +63,10 @@ module Mobile::PublicFilter
       head << %(<head>)
       head << %(<title>#{body.match(/<title>(.*?)<\/title>/).try(:[], 1)}</title>)
       head << %(<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />)
-      head << %(<link rel="stylesheet" href="#{css}" />)
+      SS.config.mobile.css.each do |css|
+        css = css % { assets_prefix: Rails.application.config.assets.prefix }
+        head << %(<link rel="stylesheet" href="#{css}" />)
+      end
       head << %(</head>)
 
       body.sub!(/.*?<\/head>/m, head.join("\n"))
