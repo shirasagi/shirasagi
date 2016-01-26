@@ -1,19 +1,21 @@
 <div class="ckan-pages pages">
 <%= @cur_node.upper_html.html_safe if @cur_node.upper_html.present? %>
+<% if @cur_node.loop_html.present? %>
+  <% loop_html = @cur_node.loop_html %>
+<% else %>
+  <%
+    loop_html = <<EOS
+<article class="item-\#{class} \#{new}">
+  <header>
+    <time datetime="\#{updated_date.iso}">\#{updated_date.long}</time>
+    <h2><a href="\#{url}">\#{name}</a></h2>
+  </header>
+</article>
+EOS
+  %>
+<% end %>
 <% @cur_node.values.each do |e| %>
-  <% modified = Time.zone.parse(e['metadata_modified']).to_date %>
-  <%# def in_new_days?(date) %>
-  <%#   date + new_days > (@cur_date || Time.zone.now) %>
-  <%# end %>
-  <%# # NOTE: `@cur_date` is `nil` always. %>
-  <%# in_new_days = (modified + @cur_node.new_days > (@cur_date || Time.zone.now)) %>
-  <% in_new_days = (modified + @cur_node.new_days > Time.zone.now) %>
-  <article class="item-<%= e['name'] %> <%= in_new_days ? 'new' : nil %>">
-    <header>
-      <time datetime="<%= I18n.l modified, format: :iso %>"><%= I18n.l modified, format: :long %></time>
-      <h2><%= link_to e['title'], root_url %></h2>
-    </header>
-  </article>
+<%= @cur_node.render_loop_html(e, html: loop_html).html_safe %>
 <% end %>
 <%= @cur_node.lower_html.html_safe if @cur_node.lower_html.present? %>
 </div>

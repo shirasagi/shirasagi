@@ -32,5 +32,49 @@ module Ckan::Addon
           end
         end
       end
+
+      def render_loop_html(value, html: nil)
+        (html || loop_html).gsub(/\#\{(.*?)\}/) do |m|
+          str = template_variable_get(value, $1) rescue false
+          str == false ? m : str
+        end
+      end
+
+      def template_variable_get(value, name)
+        if name == "name"
+          value['name']
+        elsif name == "url"
+          self.try(:url) # TODO: Fix me
+        elsif name == "summary"
+          value['notes']
+        elsif name == "class"
+          value['name']
+        elsif name == "new"
+          in_new_days?(Time.zone.parse(value['metadata_modified']).to_date) ? "new" : nil
+        elsif name == "created_date"
+          I18n.l Time.zone.parse(value['metadata_created']).to_date
+        elsif name =~ /\Acreated_date\.(\w+)\z/
+          I18n.l Time.zone.parse(value['metadata_created']).to_date, format: $1.to_sym
+        elsif name == "updated_date"
+          I18n.l Time.zone.parse(value['metadata_modified']).to_date
+        elsif name =~ /\Aupdated_date\.(\w+)\z/
+          I18n.l Time.zone.parse(value['metadata_modified']).to_date, format: $1.to_sym
+        elsif name == "created_time"
+          I18n.l Time.zone.parse(value['metadata_created'])
+        elsif name =~ /\Acreated_time\.(\w+)\z/
+          I18n.l Time.zone.parse(value['metadata_created']), format: $1.to_sym
+        elsif name == "updated_time"
+          I18n.l Time.zone.parse(value['metadata_modified'])
+        elsif name =~ /\Aupdated_time\.(\w+)\z/
+          I18n.l Time.zone.parse(value['metadata_modified']), format: $1.to_sym
+        elsif name == "group"
+          group = value['groups'].first
+          group ? group['display_name'] : ""
+        elsif name == "groups"
+          value['groups'].map { |g| g['display_name'] }.join(", ")
+        else
+          false
+        end
+      end
   end
 end
