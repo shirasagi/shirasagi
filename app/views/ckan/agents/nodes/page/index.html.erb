@@ -1,4 +1,5 @@
 <div class="ckan-pages pages">
+<%= @cur_node.upper_html.html_safe if @cur_node.upper_html.present? %>
 <% @cur_node.values.each do |e| %>
   <% modified = Time.zone.parse(e['metadata_modified']).to_date %>
   <%# def in_new_days?(date) %>
@@ -14,4 +15,5 @@
     </header>
   </article>
 <% end %>
+<%= @cur_node.lower_html.html_safe if @cur_node.lower_html.present? %>
 </div>
