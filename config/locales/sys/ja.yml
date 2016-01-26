@@ -33,11 +33,6 @@ ja:
       sys/user: ユーザー
       sys/role: ロール
     attributes:
-      sys/site:
-        name: サイト名
-        host: ホスト名
-        domains: ドメイン
-        group_ids: グループ
       sys/addon/role:
         sys_role_ids: ロール
 

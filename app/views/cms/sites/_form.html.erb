@@ -7,4 +7,7 @@
 
   <dt><%= @model.t :domains %></dt>
   <dd><%= f.text_field :domains %></dd>
+
+  <dt><%= @model.t :https %></dt>
+  <dd><%= f.select :https, @item.https_options %></dd>
 </dl>

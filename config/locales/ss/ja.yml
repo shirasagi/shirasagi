@@ -146,10 +146,11 @@ ja:
         layout_id: レイアウト
         shortcut: ショートカット
         view_state: 状態
-      ss/site:
+      ss/model/site:
         name: サイト名
         host: ホスト名
         domains: ドメイン
+        https: HTTPS
         group_ids: グループ
       ss/model/user:
         name: 氏名

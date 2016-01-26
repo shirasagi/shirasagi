@@ -268,10 +268,6 @@ ja:
       cms/reference/page_layout:
         page_layout_id: ページレイアウト
       cms/site:
-        name: サイト名
-        host: ホスト名
-        domains: ドメイン
-        group_ids: グループ
         auto_keywords: キーワード自動設定
         auto_description: 概要自動設定
         keywords: 追加キーワード

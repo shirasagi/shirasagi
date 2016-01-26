@@ -8,6 +8,9 @@
   <dt><%= @model.t :domains %></dt>
   <dd><%= f.text_field :domains %></dd>
 
+  <dt><%= @model.t :https %></dt>
+  <dd><%= f.select :https, @item.https_options %></dd>
+
   <dt><%= @model.t :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
