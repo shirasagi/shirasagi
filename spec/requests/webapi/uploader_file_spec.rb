@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'fileutils'
 
 describe "webapi", dbscope: :example, type: :request do
   before do
@@ -73,10 +74,12 @@ describe "webapi", dbscope: :example, type: :request do
               ]
             }
           }
+          multibyte_filepath = ::File.join(site.path, "ロゴ.png")
+          ::FileUtils.cp("#{::Rails.root}/spec/fixtures/webapi/logo.png", multibyte_filepath)
           invalid_upload_file_params = {
             :item => {
               :files => [
-                Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/webapi/ロゴ.png", nil, true)
+                Rack::Test::UploadedFile.new(multibyte_filepath, nil, true)
               ]
             }
           }
