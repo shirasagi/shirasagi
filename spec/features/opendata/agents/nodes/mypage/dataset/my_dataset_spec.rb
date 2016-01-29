@@ -15,7 +15,14 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example do
 
   let!(:node_login) { create :member_node_login, redirect_url: node_my_dataset.url }
 
-  let!(:category) { create :opendata_node_category, name: "カテゴリー０１" }
+  let(:node_category_folder) { create_once(:cms_node_node, basename: "category") }
+  let!(:category) do
+    create_once(
+      :opendata_node_category,
+      name: "カテゴリー０１",
+      filename: "#{node_category_folder.filename}/#{unique_id}",
+      depth: node_category_folder.depth + 1)
+  end
   let!(:node_area) { create :opendata_node_area, name: "地域Ａ" }
 
   let!(:node_search) { create :opendata_node_search_dataset }

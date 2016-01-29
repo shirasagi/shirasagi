@@ -1,8 +1,3 @@
-<%
-
-categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
-
-%>
 <%= javascript_include_tag "opendata/opendata" %>
 
 <table class="see opendata-dataset">
@@ -24,10 +19,7 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1)
   <tr class="parent-row">
     <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
     <td class="input">
-      <%= f.hidden_field "category_ids[]", value: "" %>
-      <% categories.each do |c| %>
-        <label class="category"><%= f.check_box("category_ids[]", {}, c.id) %> <%= c.name %></label>
-      <% end %>
+      <%= render(file: 'opendata/agents/nodes/mypage/main/_category_form', locals: { f: f, model: Opendata::Node::Dataset }) %>
     </td>
   </tr>
 

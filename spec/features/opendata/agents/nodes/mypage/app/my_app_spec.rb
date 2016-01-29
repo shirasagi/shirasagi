@@ -18,7 +18,14 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
 
   let!(:node_search) { create :opendata_node_search_app }
 
-  let!(:category) { create_once :opendata_node_category, name: "カテゴリー" }
+  let(:node_category_folder) { create_once(:cms_node_node, basename: "category") }
+  let!(:category) do
+    create_once(
+      :opendata_node_category,
+      name: "カテゴリー",
+      filename: "#{node_category_folder.filename}/#{unique_id}",
+      depth: node_category_folder.depth + 1)
+  end
   let!(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", member_id: "1" }
   let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
@@ -91,7 +98,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
     within "form#item-form" do
       click_on "公開保存"
     end
-    expect("#{current_path}/").to eq show_path
+    expect("#{current_path}").to eq show_path
   end
 
   it "#delete" do

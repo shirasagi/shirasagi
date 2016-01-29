@@ -10,6 +10,7 @@ describe "opendata_agents_nodes_app", dbscope: :example do
 
   let(:site) { cms_site }
   let!(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_app" }
+  let!(:node_idea) { create_once :opendata_node_idea, name: "opendata_agents_nodes_idea" }
   let!(:node_member) { create_once :opendata_node_member }
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
   let!(:node_myidea) { create_once :opendata_node_my_idea, filename: "#{node_mypage.filename}/idea" }
