@@ -51,3 +51,34 @@ ja:
       ckan_max_docs:
         - 取得する最大件数を設定します。
         - 0以上の整数値で指定します。
+    ckan/node/page:
+      loop_html:
+        - 自動生成されたページのリスト表示部分のHTMLを指定することが可能です。
+        - |-
+          下記のように記述します。
+          #{name}　CKANデータセットのname。
+          #{url}　CKANデータセットへのURL。
+          #{summary}　CKANデータセットのnotes。
+          #{new}　CKANデータセットのmetadata_modifiedがnew_days以内かどうかの結果。
+          #{created_date}　CKANデータセットのmetadata_createdを「2015/4/1」の形式で表示します。。
+          #{created_date.iso}　CKANデータセットのmetadata_createdを「2015-04-01」の形式で表示します。
+          #{created_date.long}　CKANデータセットのmetadata_createdを「2015年4月1日」の形式で表示します。
+          #{updated_date}　CKANデータセットのmetadata_modifiedを「2015/4/1」の形式で表示します。
+          #{updated_date.iso}　CKANデータセットのmetadata_modifiedを「2015-04-01」の形式で表示します。
+          #{updated_date.long}　CKANデータセットのmetadata_modifiedを「2015年4月1日」の形式で表示します。
+          #{created_time}　CKANデータセットのmetadata_createdを「2015/4/1 09:08」の形式で表示します。。
+          #{created_time.iso}　CKANデータセットのmetadata_createdを「2015-04-01 09:08」の形式で表示します。
+          #{created_time.long}　CKANデータセットのmetadata_createdを「2015年4月1日 09時08分」の形式で表示します。
+          #{updated_time}　CKANデータセットのmetadata_modifiedを「2015/4/1 09:08」の形式で表示します。。
+          #{updated_time.iso}　CKANデータセットのmetadata_modifiedを「2015-04-01 09:08」の形式で表示します。
+          #{updated_time.long}　CKANデータセットのmetadata_modifiedを「2015年4月1日 09時08分」の形式で表示します。
+          #{group}　リンク先ページの所有グループが表示されます。
+          #{groups}　リンク先ページの全ての所有グループが表示されます。
+
+          使用例：
+          &lt;article class="#{class}">
+            &lt;header>
+              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
