@@ -24,6 +24,27 @@ describe Mobile::Converter do
     end
   end
 
+  describe "#s_to_attr" do
+    def do_s_to_attr(str)
+      val = described_class.new.s_to_attr(str)
+    end
+
+    context "when div tag string is given" do
+      subject { do_s_to_attr(%( div class="cls" )) }
+      it { is_expected.to eq({ "class"=>"cls" }) }
+    end
+
+    context "when img tag string is given" do
+      subject { do_s_to_attr(%(img alt="image" src="/path")) }
+      it { is_expected.to eq({ "alt"=>"image", "src"=>"/path" }) }
+    end
+
+    context "when img tag string (include empty attribute) is given" do
+      subject { do_s_to_attr(%(img alt="" src="/path")) }
+      it { is_expected.to eq({ "alt"=>"", "src"=>"/path" }) }
+    end
+  end
+
   describe "#convert!" do
     def do_convert!(text)
       val = described_class.new(text)
