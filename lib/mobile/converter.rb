@@ -28,8 +28,8 @@ class Mobile::Converter < String
     end
 
     def s_to_attr(str)
-      str.scan(/\S+?=".+?"/m).
-        map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
+      str.scan(/\S+?=".*?"/m).
+        map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/, -1) : nil }.
         compact.to_h
     end
 
