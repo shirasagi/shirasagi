@@ -85,7 +85,7 @@ $ git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi /var/www/
 ```
 $ cd /var/www/shirasagi
 $ cp -n config/samples/*.{yml,rb} config/
-$ bundle install
+$ bundle install --without development test
 ```
 
 Web サーバの起動
