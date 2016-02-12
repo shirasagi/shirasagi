@@ -99,4 +99,32 @@ describe Opendata::Dataset, dbscope: :example do
     it { expect(described_class.search(format: "csv").selector.to_h).to format_matcher }
     it { expect(described_class.search(license_id: "28").selector.to_h).to license_id_matcher }
   end
+
+  describe ".format_options" do
+    context "empty dataset" do
+      it { expect(described_class.format_options).to eq [] }
+    end
+
+    context "CSV Resource" do
+      let(:file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
+      let(:content_type) { "application/vnd.ms-excel" }
+      let(:license_logo_file) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
+
+      before do
+        license = Fs::UploadedFile.create_from_file(license_logo_file, basename: "spec") do |uploaded_file|
+          create(:opendata_license, site: node.site, file: uploaded_file)
+        end
+
+        dataset = create(:opendata_dataset, node: node)
+        resource = dataset.resources.new(attributes_for(:opendata_resource))
+        Fs::UploadedFile.create_from_file(file, basename: "spec", content_type: content_type) do |uploaded_file|
+          resource.in_file = uploaded_file
+          resource.license_id = license.id
+          resource.save!
+        end
+      end
+
+      it { expect(described_class.format_options).to include(%w(CSV CSV)) }
+    end
+  end
 end

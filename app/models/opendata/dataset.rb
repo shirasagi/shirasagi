@@ -147,6 +147,17 @@ class Opendata::Dataset
         criteria
       end
 
+      def format_options
+        pipes = []
+        pipes << { "$match" => { "route" => "opendata/dataset" } }
+        pipes << { "$unwind" => "$resources" }
+        pipes << { "$group" => { "_id" => "$resources.format", "count" => { "$sum" => 1 } } }
+        self.collection.aggregate(pipes).map do |data|
+          format = data["_id"]
+          [format, format]
+        end
+      end
+
     private
       def search_keyword(params, criteria)
         if params[:keyword].present?
