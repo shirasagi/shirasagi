@@ -38,7 +38,7 @@ class Opendata::Agents::Pages::App::AppController < ApplicationController
       end
 
       if @cur_page.dataset_ids.empty? == false
-        @ds = Opendata::Dataset.site(@cur_site).public.find(@cur_page.dataset_ids)
+        @ds = Opendata::Dataset.site(@cur_site).public.in(id: @cur_page.dataset_ids)
       end
 
       @app_idea = Opendata::Idea.site(@cur_site).public.where(app_ids: @cur_page.id)
