@@ -54,6 +54,7 @@ class Opendata::Idea::CommentsController < ApplicationController
       idea = Opendata::Idea.site(@cur_site).find(idea_id)
       idea.commented = Time.zone.now
       idea.total_comment += 1
+      idea.cur_site = idea.site
       idea.save
 
       update_member_notices(idea)
