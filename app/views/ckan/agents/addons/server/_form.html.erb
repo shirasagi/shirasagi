@@ -2,6 +2,15 @@
   <dt><%= @model.t :ckan_url %><%= @model.tt :ckan_url %></dt>
   <dd><%= f.text_field :ckan_url, class: "ckan-url" %></dd>
 
+  <dt><%= @model.t :ckan_basicauth_state %><%= @model.tt :ckan_basicauth_state %></dt>
+  <dd><%= f.select :ckan_basicauth_state, @item.ckan_basicauth_state_options  %></dd>
+
+  <dt><%= @model.t :ckan_basicauth_username %><%= @model.tt :ckan_basicauth_username %></dt>
+  <dd><%= f.text_field :ckan_basicauth_username, class: "ckan-basicauth-username" %></dd>
+
+  <dt><%= @model.t :ckan_basicauth_password %><%= @model.tt :ckan_basicauth_password %></dt>
+  <dd><%= f.password_field :in_ckan_basicauth_password, class: "ckan-basicauth-password" %></dd>
+
   <dt><%= @model.t :ckan_max_docs %><%= @model.tt :ckan_max_docs %></dt>
   <dd><%= f.text_field :ckan_max_docs, class: "ckan-max-docs" %></dd>
 </dl>

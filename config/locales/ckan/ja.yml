@@ -6,6 +6,9 @@ ja:
         tag: タグ
         group: グループ
         related_item: 関連アイテム
+      ckan_basicauth_state:
+        enabled: 有効
+        disabled: 無効
 
   cms:
     nodes:
@@ -24,9 +27,15 @@ ja:
     attributes:
       ckan/node/page:
         ckan_url: URL
+        ckan_basicauth_state: Basic認証
+        ckan_basicauth_username: Basic認証ユーザー名
+        ckan_basicauth_password: Basic認証パスワード
         ckan_max_docs: 最大件数
       ckan/part/status:
         ckan_url: URL
+        ckan_basicauth_state: Basic認証
+        ckan_basicauth_username: Basic認証ユーザー名
+        ckan_basicauth_password: Basic認証パスワード
         ckan_status: 種類
 
   tooltip:
