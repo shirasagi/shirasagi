@@ -5,6 +5,7 @@ FactoryGirl.define do
     filename { "#{name}" }
     route "ckan/page"
     ckan_url "http://example.com"
+    ckan_basicauth_state "disabled"
     ckan_max_docs 10
   end
 end

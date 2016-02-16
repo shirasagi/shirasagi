@@ -5,6 +5,7 @@ FactoryGirl.define do
     filename { "#{name}.part.html" }
     route "ckan/status"
     ckan_url "http://example.com"
+    ckan_basicauth_state "disabled"
     ckan_status "dataset"
   end
 end
