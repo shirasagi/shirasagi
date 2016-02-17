@@ -9,14 +9,16 @@ module Ckan::Addon
       field :ckan_basicauth_username, type: String
       field :ckan_basicauth_password, type: String
       field :ckan_max_docs, type: Integer
+      field :ckan_item_url, type: String
       field :ckan_values_cache, type: Binary
       attr_accessor :in_ckan_basicauth_password
       permit_params :ckan_url, :ckan_max_docs
-      permit_params :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password
+      permit_params :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password, :ckan_item_url
 
       before_validation :set_ckan_basicauth_password, if: ->{ in_ckan_basicauth_password.present? }
       validates :ckan_url, format: /\Ahttps?:\/\//
       validates :ckan_max_docs, numericality: { greater_than_or_equal_to: 0 }
+      validates :ckan_item_url, format: /\Ahttps?:\/\//
     end
 
     private
@@ -81,7 +83,7 @@ module Ckan::Addon
         if name == "name"
           value['name']
         elsif name == "url"
-          self.try(:url) # TODO: Fix me
+          "#{ckan_item_url}/#{value['name']}"
         elsif name == "summary"
           value['notes']
         elsif name == "class"

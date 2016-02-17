@@ -35,6 +35,23 @@ RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
         it { is_expected.to be_falsy }
       end
     end
+
+    describe "ckan_item_url" do
+      context "valid format http" do
+        before { @page.ckan_item_url = 'http://example.com' }
+        it { is_expected.to be_truthy }
+      end
+
+      context "valid format https" do
+        before { @page.ckan_item_url = 'https://example.com' }
+        it { is_expected.to be_truthy }
+      end
+
+      context "invalid format" do
+        before { @page.ckan_item_url = 'ftp://example.com' }
+        it { is_expected.to be_falsy }
+      end
+    end
   end
 
   # NOTE: Skip tests with WebMock now.

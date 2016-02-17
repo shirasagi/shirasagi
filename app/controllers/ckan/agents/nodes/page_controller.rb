@@ -13,8 +13,7 @@ class Ckan::Agents::Nodes::PageController < ApplicationController
         date = value['metadata_modified']
         rss.items.new_item do |entry|
           entry.title       = value['name']
-          entry.link        = root_url # TODO: Fix me
-                                       # NOTE: `value['url']` doesn't exist
+          entry.link        = "#{@cur_node.ckan_item_url}/#{value['name']}"
           entry.description = nil
           entry.pubDate     = date.to_s
         end

@@ -32,6 +32,7 @@ ja:
         ckan_basicauth_username: Basic認証ユーザー名
         ckan_basicauth_password: Basic認証パスワード
         ckan_max_docs: 最大件数
+        ckan_item_url: リンクのURL共通部分
       ckan/part/status:
         ckan_url: URL
         ckan_basicauth_state: Basic認証
@@ -65,6 +66,12 @@ ja:
       ckan_max_docs:
         - 取得する最大件数を設定します。
         - 0以上の整数値で指定します。
+      ckan_item_url:
+        - アイテムのリンク先URLの共通部分を設定します。
+        - アイテムのnameフィールドがこれに付随してフルのURLとなります。
+        - 例：
+        - http://example.jp/a/b/c/<name> をリンク先にしたい場合
+        - http://example.jp/a/b/c を設定します。
     ckan/node/page:
       loop_html:
         - 自動生成されたページのリスト表示部分のHTMLを指定することが可能です。
