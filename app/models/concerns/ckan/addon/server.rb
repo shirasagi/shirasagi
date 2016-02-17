@@ -111,6 +111,20 @@ module Ckan::Addon
           group ? group['display_name'] : ""
         elsif name == "groups"
           value['groups'].map { |g| g['display_name'] }.join(", ")
+        elsif name == "add_or_update"
+          diff = Time.zone.parse(value['metadata_modified']) - Time.zone.parse(value['metadata_created'])
+          if diff < 10.seconds || value['metadata_modified'].nil?
+            "add"
+          else
+            "update"
+          end
+        elsif name == "add_or_update_text"
+          diff = Time.zone.parse(value['metadata_modified']) - Time.zone.parse(value['metadata_created'])
+          if diff < 10.seconds || value['metadata_modified'].nil?
+            I18n.t("ckan.node.page.add")
+          else
+            I18n.t("ckan.node.page.update")
+          end
         else
           false
         end

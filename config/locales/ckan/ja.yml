@@ -10,6 +10,10 @@ ja:
       ckan_basicauth_state:
         enabled: 有効
         disabled: 無効
+    node:
+      page:
+        add: データ追加
+        update: データ更新
 
   cms:
     nodes:
