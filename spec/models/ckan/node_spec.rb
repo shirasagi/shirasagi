@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Ckan::Node, type: :model, dbscope: :example do
+RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
   describe "validation" do
     subject { @page.valid? }
 
