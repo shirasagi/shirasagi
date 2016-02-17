@@ -9,9 +9,10 @@ module Ckan::Addon
       field :ckan_basicauth_username, type: String
       field :ckan_basicauth_password, type: String
       field :ckan_status, type: String
+      field :ckan_value_url, type: String
       attr_accessor :in_ckan_basicauth_password
       permit_params :ckan_url, :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password
-      permit_params :ckan_status
+      permit_params :ckan_status, :ckan_value_url
 
       before_validation :set_ckan_basicauth_password, if: ->{ in_ckan_basicauth_password.present? }
       validates :ckan_url, format: /\Ahttps?:\/\//

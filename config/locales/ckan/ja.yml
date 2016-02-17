@@ -38,6 +38,7 @@ ja:
         ckan_basicauth_username: Basic認証ユーザー名
         ckan_basicauth_password: Basic認証パスワード
         ckan_status: 種類
+        ckan_value_url: 件数部分のリンクURL
 
   tooltip:
     ckan/addon/status:
@@ -53,6 +54,8 @@ ja:
         - グループ： group_list
         - 関連アイテム： related_list
         - 組織： organization_list
+      ckan_value_url:
+        - URLを設定しておくと件数部分がそのリンクに変わります。
     ckan/addon/server:
       ckan_url:
         - URLの可変部分を設定します。
