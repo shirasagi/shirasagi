@@ -16,7 +16,7 @@ module Ckan::Addon
       before_validation :set_ckan_basicauth_password, if: ->{ in_ckan_basicauth_password.present? }
       validates :ckan_url, format: /\Ahttps?:\/\//
       validates :ckan_basicauth_state, inclusion: { in: %w(enabled disabled) }
-      validates :ckan_status, inclusion: { in: %w(dataset tag group related_item) }
+      validates :ckan_status, inclusion: { in: %w(dataset tag group related_item organization) }
     end
 
     private
@@ -26,7 +26,7 @@ module Ckan::Addon
 
     public
       def ckan_status_options
-        %w(dataset tag group related_item).map { |m| [ I18n.t("ckan.options.ckan_status.#{m}"), m ] }.to_a
+        %w(dataset tag group related_item organization).map { |m| [ I18n.t("ckan.options.ckan_status.#{m}"), m ] }.to_a
       end
 
       def ckan_basicauth_state_options
@@ -65,7 +65,8 @@ module Ckan::Addon
           'dataset' => 'package_list',
           'tag' => 'tag_list',
           'group' => 'group_list',
-          'related_item' => 'related_list'
+          'related_item' => 'related_list',
+          'organization' => 'organization_list'
         }[ckan_status]
       end
   end

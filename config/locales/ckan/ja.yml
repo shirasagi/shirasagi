@@ -6,6 +6,7 @@ ja:
         tag: タグ
         group: グループ
         related_item: 関連アイテム
+        organization: 組織
       ckan_basicauth_state:
         enabled: 有効
         disabled: 無効
@@ -51,6 +52,7 @@ ja:
         - タグ： tag_list
         - グループ： group_list
         - 関連アイテム： related_list
+        - 組織： organization_list
     ckan/addon/server:
       ckan_url:
         - URLの可変部分を設定します。
