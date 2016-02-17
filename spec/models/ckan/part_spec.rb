@@ -39,38 +39,37 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
     end
   end
 
-  # NOTE: Skip tests with WebMock now.
   describe '#value' do
-    # before(:all) { WebMock.enable! }
+    before(:all) { WebMock.enable! }
 
     let(:status) { build :ckan_part_status }
 
-    # before do
-    #   stub_request(:get, "#{status.ckan_url}/api/3/action/package_list").
-    #     with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
-    #     to_return(:status => http_status, :body => body, :headers => {})
-    # end
+    before do
+      stub_request(:get, "#{status.ckan_url}/api/3/action/package_list").
+        with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+        to_return(:status => http_status, :body => body, :headers => {})
+    end
 
     subject { status.value }
 
     context "ok" do
       let(:http_status) { 200 }
       let(:body) { "{\"success\":true,\"result\":[{},{},{},{},{}]}" }
-      xit { is_expected.to eq 5 }
+      it { is_expected.to eq 5 }
     end
 
     context "HTTP error" do
       let(:http_status) { 500 }
       let(:body) { "" }
-      xit { is_expected.to eq 'NaN' }
+      it { is_expected.to eq 'NaN' }
     end
 
     context "failure" do
       let(:http_status) { 200 }
       let(:body) { "{\"success\":false}" }
-      xit { is_expected.to eq 'NaN' }
+      it { is_expected.to eq 'NaN' }
     end
 
-    # after(:all) { WebMock.disable! }
+    after(:all) { WebMock.disable! }
   end
 end
