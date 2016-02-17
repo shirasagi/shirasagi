@@ -10,6 +10,7 @@ module Ckan::Addon
       field :ckan_basicauth_password, type: String
       field :ckan_status, type: String
       field :ckan_value_url, type: String
+      field :ckan_value_cache, type: Integer
       attr_accessor :in_ckan_basicauth_password
       permit_params :ckan_url, :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password
       permit_params :ckan_status, :ckan_value_url
@@ -49,14 +50,16 @@ module Ckan::Addon
         res = http.request(req)
         if res.code != '200'
           # HTTP Error
-          'NaN'
+          ckan_value_cache_restore
         else
           h = JSON.parse(res.body)
           if h['success']
-            h['result'].count
+            count = h['result'].count
+            ckan_value_cache_store(count)
+            count
           else
             # Failure
-            'NaN'
+            ckan_value_cache_restore
           end
         end
       end
@@ -69,6 +72,14 @@ module Ckan::Addon
           'related_item' => 'related_list',
           'organization' => 'organization_list'
         }[ckan_status]
+      end
+
+      def ckan_value_cache_restore
+        self.ckan_value_cache || 'NaN'
+      end
+
+      def ckan_value_cache_store(new_value)
+        self.update ckan_value_cache: new_value
       end
   end
 end

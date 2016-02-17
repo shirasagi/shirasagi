@@ -9,6 +9,7 @@ module Ckan::Addon
       field :ckan_basicauth_username, type: String
       field :ckan_basicauth_password, type: String
       field :ckan_max_docs, type: Integer
+      field :ckan_values_cache, type: Binary
       attr_accessor :in_ckan_basicauth_password
       permit_params :ckan_url, :ckan_max_docs
       permit_params :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password
@@ -43,16 +44,30 @@ module Ckan::Addon
         res = http.request(req)
         if res.code != '200'
           # HTTP Error
-          []
+          ckan_values_cache_restore
         else
           h = JSON.parse(res.body)
           if h['success']
-            h['result']['results']
+            results = h['result']['results']
+            ckan_values_cache_store results
+            results
           else
             # Failure
-            []
+            ckan_values_cache_restore
           end
         end
+      end
+
+      def ckan_values_cache_restore
+        if self.ckan_values_cache.present?
+          Marshal.load(ckan_values_cache)
+        else
+          []
+        end
+      end
+
+      def ckan_values_cache_store new_values
+        self.update ckan_values_cache: Marshal.dump(new_values)
       end
 
       def render_loop_html(value, html: nil)
