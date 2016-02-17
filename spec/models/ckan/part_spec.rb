@@ -56,18 +56,46 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
       let(:http_status) { 200 }
       let(:body) { "{\"success\":true,\"result\":[{},{},{},{},{}]}" }
       it { is_expected.to eq 5 }
+
+      describe "ckan_value_cache update" do
+        let(:status) { create :ckan_part_status, ckan_value_cache: 4 }
+
+        it "updates ckan_value_cache" do
+          expect { subject }.to change {
+            described_class.find(status.id).ckan_value_cache
+          }.from(4).to(5)
+        end
+      end
     end
 
     context "HTTP error" do
       let(:http_status) { 500 }
       let(:body) { "" }
-      it { is_expected.to eq 'NaN' }
+
+      context "no cache value is stored" do
+        before { status.ckan_value_cache = nil }
+        it { is_expected.to eq 'NaN' }
+      end
+
+      context "a cache value is stored" do
+        before { status.ckan_value_cache = 1 }
+        it { is_expected.to eq 1 }
+      end
     end
 
     context "failure" do
       let(:http_status) { 200 }
       let(:body) { "{\"success\":false}" }
-      it { is_expected.to eq 'NaN' }
+
+      context "no cache value is stored" do
+        before { status.ckan_value_cache = nil }
+        it { is_expected.to eq 'NaN' }
+      end
+
+      context "a cache value is stored" do
+        before { status.ckan_value_cache = 1 }
+        it { is_expected.to eq 1 }
+      end
     end
 
     after(:all) { WebMock.disable! }
