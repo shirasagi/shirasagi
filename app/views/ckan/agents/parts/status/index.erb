@@ -1,7 +1,9 @@
 <div class="<%= @cur_part.ckan_status %>">
   <% if @cur_part.ckan_value_url.present? %>
-  <span><%= link_to @cur_part.value, @cur_part.ckan_value_url %></span>
-  <span><%= link_to @cur_part.label(:ckan_status), @cur_part.ckan_value_url %></span>
+  <%= link_to @cur_part.ckan_value_url do %>
+  <span><%= @cur_part.value %></span>
+  <span><%= @cur_part.label :ckan_status %></span>
+  <% end %>
   <% else %>
   <span><%= @cur_part.value %></span>
   <span><%= @cur_part.label :ckan_status %></span>
