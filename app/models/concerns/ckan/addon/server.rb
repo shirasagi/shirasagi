@@ -42,17 +42,17 @@ module Ckan::Addon
       template_variable_handler :class, :template_variable_class
       template_variable_handler :new, :template_variable_new
       template_variable_handler :created_date, :template_variable_created_date
-      template_variable_handler :'created_date.iso', :template_variable_created_date
-      template_variable_handler :'created_date.long', :template_variable_created_date
+      template_variable_handler :'created_date.iso', ->(name, value){ template_variable_created_date(name, value, 'iso') }
+      template_variable_handler :'created_date.long', ->(name, value){ template_variable_created_date(name, value, 'long') }
       template_variable_handler :updated_date, :template_variable_updated_date
-      template_variable_handler :'updated_date.iso', :template_variable_updated_date
-      template_variable_handler :'updated_date.long', :template_variable_updated_date
+      template_variable_handler :'updated_date.iso', ->(name, value){ template_variable_updated_date(name, value, 'iso') }
+      template_variable_handler :'updated_date.long', ->(name, value){ template_variable_updated_date(name, value, 'long') }
       template_variable_handler :created_time, :template_variable_created_time
-      template_variable_handler :'created_time.iso', :template_variable_created_time
-      template_variable_handler :'created_time.long', :template_variable_created_time
+      template_variable_handler :'created_time.iso', ->(name, value){ template_variable_created_time(name, value, 'iso') }
+      template_variable_handler :'created_time.long', ->(name, value){ template_variable_created_time(name, value, 'long') }
       template_variable_handler :updated_time, :template_variable_updated_time
-      template_variable_handler :'updated_time.iso', :template_variable_updated_time
-      template_variable_handler :'updated_time.long', :template_variable_updated_time
+      template_variable_handler :'updated_time.iso', ->(name, value){ template_variable_updated_time(name, value, 'iso') }
+      template_variable_handler :'updated_time.long', ->(name, value){ template_variable_updated_time(name, value, 'long') }
       template_variable_handler :group, :template_variable_group
       template_variable_handler :groups, :template_variable_groups
       template_variable_handler :organization, :template_variable_organization
@@ -84,11 +84,15 @@ module Ckan::Addon
         handler_def = self.class.template_variable_handlers.find { |handler_name, _| handler_name == name }
         return nil unless handler_def
 
-        handler = handler_def[1]
-        if handler.is_a?(Symbol) || handler.is_a?(String)
-          handler = method(handler)
+        case handler = handler_def[1]
+        when ::Symbol, ::String
+          method(handler)
+        when ::Proc
+          myself = self
+          lambda { |name, value| myself.instance_exec(name, value, &handler) }
+        else
+          handler
         end
-        handler
       end
 
       def template_variable_common(name, value)
@@ -112,10 +116,6 @@ module Ckan::Addon
       end
 
       def template_variable_created_date(name, value, format = nil)
-        if index = name.index('.')
-          format = name[index + 1, name.length]
-        end
-
         if format.present?
           I18n.l Time.zone.parse(value['metadata_created']).to_date, format: format.to_sym
         else
@@ -123,11 +123,7 @@ module Ckan::Addon
         end
       end
 
-      def template_variable_updated_date(name, value)
-        if index = name.index('.')
-          format = name[index + 1, name.length]
-        end
-
+      def template_variable_updated_date(name, value, format = nil)
         if format.present?
           I18n.l Time.zone.parse(value['metadata_modified']).to_date, format: format.to_sym
         else
@@ -135,11 +131,7 @@ module Ckan::Addon
         end
       end
 
-      def template_variable_created_time(name, value)
-        if index = name.index('.')
-          format = name[index + 1, name.length]
-        end
-
+      def template_variable_created_time(name, value, format = nil)
         if format.present?
           I18n.l Time.zone.parse(value['metadata_created']), format: format.to_sym
         else
@@ -147,11 +139,7 @@ module Ckan::Addon
         end
       end
 
-      def template_variable_updated_time(name, value)
-        if index = name.index('.')
-          format = name[index + 1, name.length]
-        end
-
+      def template_variable_updated_time(name, value, format = nil)
         if format.present?
           I18n.l Time.zone.parse(value['metadata_modified']), format: format.to_sym
         else
