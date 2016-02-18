@@ -1,0 +1,13 @@
+<dl class="see mod-mobile-setting">
+  <dt><%= @model.t :mobile_state %></dt>
+  <dd><%= @item.label :mobile_state %></dd>
+
+  <dt><%= @model.t :mobile_location %></dt>
+  <dd><%= @item.mobile_location %></dd>
+
+  <dt><%= @model.t :mobile_css %></dt>
+  <dd><%= br(@item.mobile_css.join("\n")) %></dd>
+
+  <dt><%= @model.t :trans_sid %></dt>
+  <dd><%= @item.label :trans_sid %></dd>
+</dl>

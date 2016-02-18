@@ -16,7 +16,7 @@ module SS::TransSidFilter
     end
 
     def set_trans_sid
-      case SS.config.mobile.trans_sid.to_sym
+      case @cur_site.trans_sid.to_sym
       when :always
         self.trans_sid_mode = :always
       when :mobile

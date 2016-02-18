@@ -8,8 +8,9 @@ module Mobile::PublicFilter
 
   private
     def set_request_path_with_mobile
-      return if @cur_path !~ /^#{SS.config.mobile.location}\//
-      @cur_path.sub!(/^#{SS.config.mobile.location}\//, "/")
+      return if @cur_site.mobile_disabled?
+      return if @cur_path !~ /^#{@cur_site.mobile_location}\//
+      @cur_path.sub!(/^#{@cur_site.mobile_location}\//, "/")
       filters << :mobile
     end
 
@@ -30,7 +31,7 @@ module Mobile::PublicFilter
       body = response.body
 
       # links
-      location = SS.config.mobile.location.gsub(/^\/|\/$/, "")
+      location = @cur_site.mobile_location.gsub(/^\/|\/$/, "")
       body.gsub!(/href="\/(?!#{location}\/)(?!fs\/)(.*?)"/) do
         path_with_query = $1
         uri = URI.parse(path_with_query)
@@ -55,11 +56,6 @@ module Mobile::PublicFilter
       body = Mobile::Converter.new(body)
       body.convert!
 
-      # css
-      dir = "#{@cur_site.path}/css"
-      css = Fs.exists?("#{dir}/mobile.css") || Fs.exists?("#{dir}/mobile.scss")
-      css = css ? "/css/mobile.css" : "#{Rails.application.config.assets.prefix}/cms/mobile.css"
-
       # doctype
       head  = []
       head << %(<?xml version="1.0" encoding="UTF-8"?>)
@@ -68,9 +64,11 @@ module Mobile::PublicFilter
       head << %(<head>)
       head << %(<title>#{body.match(/<title>(.*?)<\/title>/).try(:[], 1)}</title>)
       head << %(<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />)
-      head << %(<link rel="stylesheet" href="#{css}" />)
+      @cur_site.mobile_css.each do |css|
+        css = css % { assets_prefix: Rails.application.config.assets.prefix }
+        head << %(<link rel="stylesheet" href="#{css}" />)
+      end
       head << %(</head>)
-
       body.sub!(/.*?<\/head>/m, head.join("\n"))
 
       response.body = body.to_s
@@ -95,7 +93,7 @@ module Mobile::PublicFilter
 
     def apply_trans_sid?
       applies = false
-      case SS.config.mobile.trans_sid.to_sym
+      case @cur_site.trans_sid.to_sym
       when :always
         applies = true
       when :mobile

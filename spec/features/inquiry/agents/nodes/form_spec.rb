@@ -47,13 +47,13 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
   end
 
   context "when mobile site is accessed" do
-    let(:index_url) { ::URI.parse "http://#{site.domain}#{SS.config.mobile.location}/#{node.filename}/"}
+    let(:index_url) { ::URI.parse "http://#{site.domain}#{site.mobile_location}/#{node.filename}/"}
 
     it do
       visit index_url
       expect(status_code).to eq 200
       # mobile モードの場合、form の action は /mobile/ で始まる
-      expect(find('form')['action']).to start_with "#{SS.config.mobile.location}/#{node.filename}/"
+      expect(find('form')['action']).to start_with "#{site.mobile_location}/#{node.filename}/"
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -65,9 +65,9 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
 
       expect(status_code).to eq 200
       # mobile モードの場合、/mobile/ で始まるはず
-      expect(current_path).to start_with "#{SS.config.mobile.location}/#{node.filename}/"
+      expect(current_path).to start_with "#{site.mobile_location}/#{node.filename}/"
       # mobile モードの場合、form の action は /mobile/ で始まる
-      expect(find('form')['action']).to start_with "#{SS.config.mobile.location}/#{node.filename}/"
+      expect(find('form')['action']).to start_with "#{site.mobile_location}/#{node.filename}/"
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -82,7 +82,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
 
       expect(status_code).to eq 200
       # mobile モードの場合、/mobile/ で始まるはず
-      expect(current_path).to start_with "#{SS.config.mobile.location}/#{node.filename}/"
+      expect(current_path).to start_with "#{site.mobile_location}/#{node.filename}/"
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
     end
   end
