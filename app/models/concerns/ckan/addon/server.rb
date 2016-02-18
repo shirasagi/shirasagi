@@ -176,8 +176,7 @@ module Ckan::Addon
       def template_variable_add_or_update(name, value)
         modified = Time.zone.parse(value['metadata_modified']) rescue Time.zone.at(0)
         created = Time.zone.parse(value['metadata_created']) rescue Time.zone.at(0)
-        diff = modified - created
-        if diff < 10.seconds || (modified.to_i == 0 && created.to_i != 0)
+        if in_new_days?(created.to_date)
           "add"
         elsif in_new_days?(modified.to_date)
           "update"
