@@ -20,7 +20,23 @@ module Ckan::Addon
       validates :ckan_max_docs, numericality: { greater_than_or_equal_to: 0 }
       validates :ckan_item_url, format: /\Ahttps?:\/\//
 
-      template_variable_handler :name, :template_variable_name
+      template_variable_handler :id, :template_variable_common
+      template_variable_handler :revision_id, :template_variable_common
+      template_variable_handler :name, :template_variable_common
+      template_variable_handler :title, :template_variable_common
+      template_variable_handler :license_id, :template_variable_common
+      template_variable_handler :license_title, :template_variable_common
+      template_variable_handler :license_url, :template_variable_common
+      template_variable_handler :author, :template_variable_common
+      template_variable_handler :author_email, :template_variable_common
+      template_variable_handler :maintainer, :template_variable_common
+      template_variable_handler :maintainer_email, :template_variable_common
+      template_variable_handler :num_tags, :template_variable_common
+      template_variable_handler :num_resources, :template_variable_common
+      template_variable_handler :private, :template_variable_common
+      template_variable_handler :state, :template_variable_common
+      template_variable_handler :version, :template_variable_common
+      template_variable_handler :type, :template_variable_common
       template_variable_handler :url, :template_variable_url
       template_variable_handler :summary, :template_variable_summary
       template_variable_handler :class, :template_variable_class
@@ -39,6 +55,7 @@ module Ckan::Addon
       template_variable_handler :'updated_time.long', :template_variable_updated_time
       template_variable_handler :group, :template_variable_group
       template_variable_handler :groups, :template_variable_groups
+      template_variable_handler :organization, :template_variable_organization
       template_variable_handler :add_or_update, :template_variable_add_or_update
       template_variable_handler :add_or_update_text, :template_variable_add_or_update_text
     end
@@ -74,8 +91,8 @@ module Ckan::Addon
         handler
       end
 
-      def template_variable_name(name, value)
-        value['name']
+      def template_variable_common(name, value)
+        value[name].to_s
       end
 
       def template_variable_url(name, value)
@@ -149,6 +166,11 @@ module Ckan::Addon
 
       def template_variable_groups(name, value)
         value['groups'].map { |g| g['display_name'] }.join(", ")
+      end
+
+      def template_variable_organization(name, value)
+        organization = value['organization']
+        organization ? organization['title'] : ""
       end
 
       def template_variable_add_or_update(name, value)
