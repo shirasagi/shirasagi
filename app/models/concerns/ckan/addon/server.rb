@@ -10,7 +10,7 @@ module Ckan::Addon
       field :ckan_basicauth_password, type: String
       field :ckan_max_docs, type: Integer
       field :ckan_item_url, type: String
-      field :ckan_values_cache, type: Binary
+      field :ckan_values_cache, type: String
       attr_accessor :in_ckan_basicauth_password
       permit_params :ckan_url, :ckan_max_docs
       permit_params :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password, :ckan_item_url
