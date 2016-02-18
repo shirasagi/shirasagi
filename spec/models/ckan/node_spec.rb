@@ -72,17 +72,15 @@ RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
       let(:body) { "{\"success\":true,\"result\":{\"results\":[1,2,3,4,5]}}" }
       it { is_expected.to eq [1, 2, 3, 4, 5] }
 
-      describe "ckan_values_cache update" do
-        # Marshal.dump([1,2,3,4]) #=> "\x04\b[\ti\x06i\ai\bi\t"
-        let(:page) do
-          create :ckan_node_page, ckan_values_cache: "\x04\b[\ti\x06i\ai\bi\t"
-        end
+      describe "ckan_json_cache update" do
+        let(:old_json) { "{\"success\":true,\"result\":{\"results\":[1,2,3,4]}}" }
+        let(:new_json) { body }
+        let(:page) { create :ckan_node_page, ckan_json_cache: old_json }
 
-        # Marshal.dump([1,2,3,4,5]) #=> "\x04\b[\ni\x06i\ai\bi\ti\n"
-        it "updates ckan_value_cache" do
+        it "updates ckan_json_cache" do
           expect { subject }.to change {
-            described_class.find(page.id).ckan_values_cache
-          }.from("\x04\b[\ti\x06i\ai\bi\t").to("\x04\b[\ni\x06i\ai\bi\ti\n")
+            described_class.find(page.id).ckan_json_cache
+          }.from(old_json).to(new_json)
         end
       end
     end
@@ -92,13 +90,12 @@ RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
       let(:body) { "" }
 
       context "no cache values are stored" do
-        before { page.ckan_values_cache = nil }
+        before { page.ckan_json_cache = nil }
         it { is_expected.to eq [] }
       end
 
       context "cache values are stored" do
-        # Marshal.dump([1]) #=> "\x04\b[\x06i\x06"
-        before { page.ckan_values_cache = "\x04\b[\x06i\x06" }
+        before { page.ckan_json_cache = "{\"success\":true,\"result\":{\"results\":[1]}}" }
         it { is_expected.to eq [1] }
       end
     end
@@ -108,13 +105,12 @@ RSpec.describe Ckan::Node::Page, type: :model, dbscope: :example do
       let(:body) { "{\"success\":false}" }
 
       context "no cache values are stored" do
-        before { page.ckan_values_cache = nil }
+        before { page.ckan_json_cache = nil }
         it { is_expected.to eq [] }
       end
 
       context "cache values are stored" do
-        # Marshal.dump([1]) #=> "\x04\b[\x06i\x06"
-        before { page.ckan_values_cache = "\x04\b[\x06i\x06" }
+        before { page.ckan_json_cache = "{\"success\":true,\"result\":{\"results\":[1]}}" }
         it { is_expected.to eq [1] }
       end
     end

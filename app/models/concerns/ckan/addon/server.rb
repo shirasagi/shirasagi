@@ -10,7 +10,7 @@ module Ckan::Addon
       field :ckan_basicauth_password, type: String
       field :ckan_max_docs, type: Integer
       field :ckan_item_url, type: String
-      field :ckan_values_cache, type: String, metadata: { normalize: false }
+      field :ckan_json_cache, type: String
       attr_accessor :in_ckan_basicauth_password
       permit_params :ckan_url, :ckan_max_docs
       permit_params :ckan_basicauth_state, :ckan_basicauth_username, :in_ckan_basicauth_password, :ckan_item_url
@@ -46,30 +46,29 @@ module Ckan::Addon
         res = http.request(req)
         if res.code != '200'
           # HTTP Error
-          ckan_values_cache_restore
+          ckan_json_cache_restore
         else
           h = JSON.parse(res.body)
           if h['success']
-            results = h['result']['results']
-            ckan_values_cache_store results
-            results
+            ckan_json_cache_store res.body
+            h['result']['results']
           else
             # Failure
-            ckan_values_cache_restore
+            ckan_json_cache_restore
           end
         end
       end
 
-      def ckan_values_cache_restore
-        if self.ckan_values_cache.present?
-          Marshal.load(ckan_values_cache)
+      def ckan_json_cache_restore
+        if self.ckan_json_cache.present?
+          JSON.parse(self.ckan_json_cache)['result']['results']
         else
           []
         end
       end
 
-      def ckan_values_cache_store new_values
-        self.update ckan_values_cache: Marshal.dump(new_values)
+      def ckan_json_cache_store new_json
+        self.update ckan_json_cache: new_json
       end
 
       def render_loop_html(value, html: nil)
