@@ -99,11 +99,14 @@ ja:
           #{updated_time.long}　CKANデータセットのmetadata_modifiedを「2015年4月1日 09時08分」の形式で表示します。
           #{group}　リンク先ページの所有グループが表示されます。
           #{groups}　リンク先ページの全ての所有グループが表示されます。
+          #{add_or_update}　データセットが新規の場合は「add」を、更新の場合は「update」を表示します。
+          #{add_or_update_text}　データセットが新規の場合は「データ追加」を、更新の場合は「データ更新」を表示します。
 
           使用例：
           &lt;article class="#{class}">
             &lt;header>
               &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
+              &lt;span class="#{add_or_update}">#{add_or_update_text}&lt;/span>
             &lt;/header>
             &lt;p>#{summary}&lt;/p>
           &lt;/article>

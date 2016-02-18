@@ -47,8 +47,17 @@ module Ckan::Addon
         if ckan_basicauth_enabled?
           req.basic_auth(ckan_basicauth_username, SS::Crypt.decrypt(ckan_basicauth_password))
         end
-        res = http.request(req)
-        if res.code != '200'
+        res = begin
+          res = http.request(req)
+          if res.code != '200'
+            res = nil
+          end
+          res
+        rescue
+          nil
+        end
+
+        if res.blank?
           # HTTP Error
           ckan_value_cache_restore
         else
