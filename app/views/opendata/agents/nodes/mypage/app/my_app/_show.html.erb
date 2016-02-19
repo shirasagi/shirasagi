@@ -44,6 +44,7 @@
     <td class="input"><%= @item.areas.map { |m| m.name }.join(", ") %></td>
   </tr>
 
+  <% if dataset_enabled? %>
   <tr class="parent-row">
     <td class="field"><%= @model.t :dataset_ids %></td>
     <td class="input">
@@ -54,6 +55,7 @@
     <% end %>
     </td>
   </tr>
+  <% end %>
 
   <tr class="parent-row">
     <td class="field"><%= @model.t :state %></td>

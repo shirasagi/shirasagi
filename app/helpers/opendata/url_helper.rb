@@ -17,6 +17,11 @@ module Opendata::UrlHelper
     ActionDispatch::Http::URL.path_for(path: url, params: options)
   end
 
+  def dataset_enabled?
+    node = Opendata::Node::Dataset.site(@cur_site).public.first
+    node.present?
+  end
+
   def dataset_path(options = {})
     node = Opendata::Node::Dataset.site(@cur_site).public.first
     raise "dataset search is disabled since Opendata::Node::Dataset is not registered" unless node
@@ -62,6 +67,12 @@ module Opendata::UrlHelper
   def my_dataset_path(options = {})
     node = Opendata::Node::MyDataset.site(@cur_site).public.first
     raise "mypage is disabled since Opendata::Node::MyDataset is not registered" unless node
+    build_path(node.url, options)
+  end
+
+  def my_app_path(options = {})
+    node = Opendata::Node::MyApp.site(@cur_site).public.first
+    raise "mypage is disabled since Opendata::Node::MyApp is not registered" unless node
     build_path(node.url, options)
   end
 

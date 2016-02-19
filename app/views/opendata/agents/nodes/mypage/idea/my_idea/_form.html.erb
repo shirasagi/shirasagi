@@ -28,6 +28,7 @@
     <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
   </tr>
 
+  <% if dataset_enabled? %>
   <tr class="parent-row">
     <td class="field"><%= @model.t :dataset_id %></td>
     <td class="input">
@@ -41,6 +42,7 @@
     <% end %>
   </td>
   </tr>
+  <% end %>
 
   <tr class="parent-row">
     <td class="field"><%= @model.t :app_id %></td>

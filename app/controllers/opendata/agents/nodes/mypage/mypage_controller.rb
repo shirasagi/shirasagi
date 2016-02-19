@@ -15,7 +15,11 @@ class Opendata::Agents::Nodes::Mypage::MypageController < ApplicationController
 
   public
     def index
-      redirect_to view_context.my_dataset_path
+      if view_context.dataset_enabled?
+        redirect_to view_context.my_dataset_path
+      else
+        redirect_to view_context.my_app_path
+      end
     end
 
     def show_notice
