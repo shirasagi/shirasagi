@@ -1,14 +1,15 @@
 <%
 
 @f = f
-categories = Opendata::Node::Area.site(@cur_site).where(depth: 2).sort(order: 1)
+categories = Opendata::Node::Area.site(@cur_site).public.where(depth: 2).allow(:read, @cur_user).sort(order: 1)
+disallowed_categories = @item.areas - categories.to_a
 
 def cate_form(item)
   h  = %(<label>)
   h << @f.check_box("area_ids[]", {}, item._id)
   h << %(#{item.name}</label>)
 
-  children = item.children.sort(order: 1)
+  children = item.children.allow(:read, @cur_user).sort(order: 1)
 
   if children.size > 0
     cc = children.map { |c| c.children.size }.max != 0
@@ -25,7 +26,7 @@ end
 
 %>
 <dl class="see category-form mod-opendata-category">
-  <dd class="wide">
+  <dd class="wide allowed-areas">
     <%= f.hidden_field "area_ids[]", value: "" %>
 
     <% categories.each do |cate| %>
@@ -33,4 +34,13 @@ end
       <%= cate_form cate %></div>
     <% end %>
   </dd>
+
+  <% if disallowed_categories.present? %>
+    <dd class="wide disallowed-areas">
+    <p>閲覧が許可されていない地域</p>
+    <% disallowed_categories.each do |item| %>
+      <label><%= f.check_box("area_ids[]", {}, item._id) %><%= item.name %></label>
+    <% end %>
+    </dd>
+  <% end %>
 </dl>
