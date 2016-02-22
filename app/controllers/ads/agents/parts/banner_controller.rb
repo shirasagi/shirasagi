@@ -8,7 +8,7 @@ class Ads::Agents::Parts::BannerController < ApplicationController
     cond = {}
 
     if @cur_part.with_category == "enabled"
-      if cur_page && cur_page.categories.size > 0
+      if cur_page && cur_page.categories.present?
         cond[:ads_category_ids.in] = cur_page.categories.pluck(:id)
       elsif cur_node && cur_node.route =~ /^category\//
         cond[:ads_category_ids.in] = [cur_node.id]

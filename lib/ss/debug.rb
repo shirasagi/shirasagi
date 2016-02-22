@@ -29,13 +29,13 @@ module SS
         end
 
         def scan_array(data, lev)
-          return "" if data.size == 0
+          return "" if data.empty?
           str = data.each_with_index.map { |v, k| scan_each k, v, lev }.join
           "\n#{str}#{indent(lev - 1)}"
         end
 
         def scan_hash(data, lev)
-          return "" if data.size == 0
+          return "" if data.empty?
           str = data.map { |k, v| scan_each k, v, lev }.join
           "\n#{str}#{indent(lev - 1)}"
         end

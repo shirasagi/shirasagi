@@ -29,7 +29,7 @@ class Gws::Schedule::RepeatPlan
   validates :repeat_base, presence: true, if: -> { repeat_type == 'monthly' }
 
   validate :validate_plan_date, if: -> { repeat_start.present? && repeat_end.present? }
-  validate :validate_plan_dates, if: -> { errors.size == 0 }
+  validate :validate_plan_dates, if: -> { errors.empty? }
 
   def extract_plans(plan)
     save_plans plan, plan_dates
@@ -87,7 +87,7 @@ class Gws::Schedule::RepeatPlan
     end
 
     def validate_plan_dates
-      errors.add :base, I18n.t('gws/schedule.errors.empty_plan_days') if plan_dates.size == 0
+      errors.add :base, I18n.t('gws/schedule.errors.empty_plan_days') if plan_dates.empty?
     end
 
     # 基準日から見た次の指定曜日の日付を返す

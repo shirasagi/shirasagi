@@ -124,7 +124,7 @@ class Kana::Dictionary
           item.enumerate_csv.each do |word, yomi|
             yield word, yomi
           end
-          logger.warn("dictionary #{item.name} has #{item.errors.size} error(s).") if item.errors.size > 0
+          logger.warn("dictionary #{item.name} has #{item.errors.size} error(s).") if item.errors.present?
         end
       end
 

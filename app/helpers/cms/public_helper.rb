@@ -34,7 +34,7 @@ module Cms::PublicHelper
         params[:page] = page if path !~ /\.html/
       end
 
-      if params.size > 0
+      if params.present?
         path = "#{path}?" + params.to_query
       end
 

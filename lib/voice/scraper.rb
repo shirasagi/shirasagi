@@ -47,7 +47,7 @@ class Voice::Scraper
       line
     end
     texts.select do |line|
-      line.length > 0
+      line.present?
     end
   end
 

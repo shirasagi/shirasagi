@@ -113,7 +113,7 @@ module Workflow::Addon
 
     def apply_workflow?(route)
       route.validate
-      if route.errors.size != 0
+      if route.errors.present?
         route.errors.full_messages.each do |m|
           errors.add :base, m
         end
@@ -126,7 +126,7 @@ module Workflow::Addon
       users = users.select { |_, user| user.present? }
 
       validate_user(route, users, :read, :approve)
-      errors.size == 0
+      errors.empty?
     end
 
     private
@@ -160,7 +160,7 @@ module Workflow::Addon
       end
 
       def validate_workflow_approvers_role
-        return if errors.size > 0
+        return if errors.present?
 
         # check whether approvers have read permission.
         users = workflow_approvers.map do |approver|

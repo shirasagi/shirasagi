@@ -101,7 +101,7 @@ module Cms::Content
 
   def public_node?
     return true unless dirname
-    Cms::Node.where(site_id: site_id).in_path(dirname).ne(state: "public").size == 0
+    Cms::Node.where(site_id: site_id).in_path(dirname).ne(state: "public").empty?
   end
 
   def order

@@ -81,7 +81,7 @@ module Gws::Addon::Schedule::Repeat
       if repeat_plan
         plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
         plans.delete
-        repeat_plan.destroy if plans.size == 0
+        repeat_plan.destroy if plans.empty?
       end
       remove_attribute(:repeat_plan_id)
     end

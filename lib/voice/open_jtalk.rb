@@ -71,7 +71,7 @@ class Voice::OpenJtalk
     end
 
     def join_wav(tmpdir, sources, output)
-      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.empty_source") if sources.length == 0
+      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.empty_source") if sources.empty?
 
       if sources.length == 1
         source = sources[0]

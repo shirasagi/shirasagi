@@ -7,7 +7,7 @@ module SS::Helpers
       value = options[:value] || array_value(method)
       options.delete(:value)
 
-      if !value.is_a?(Array) || value.size == 0
+      if !value.is_a?(Array) || value.empty?
         return @template.hidden_field_tag(object_method, value, options)
       end
 
