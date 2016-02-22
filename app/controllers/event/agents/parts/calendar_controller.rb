@@ -48,7 +48,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
   private
     def events(date)
       @condition_hash = {} unless @condition_hash
-      events = Cms::Page.site(@cur_site).public(@cur_date).
+      events = Cms::Page.site(@cur_site).and_public(@cur_date).
         where(@condition_hash).
         where(:event_dates.in => [date.mongoize]).
         entries.

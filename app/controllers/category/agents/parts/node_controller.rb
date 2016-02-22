@@ -17,7 +17,7 @@ class Category::Agents::Parts::NodeController < ApplicationController
         cond = { depth: 1 }
       end
 
-      @items = Category::Node::Base.site(@cur_site).public.
+      @items = Category::Node::Base.site(@cur_site).and_public.
         where(cond).
         order_by(@cur_part.sort_hash).
         limit(@cur_part.limit)

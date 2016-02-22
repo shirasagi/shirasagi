@@ -9,14 +9,11 @@ module Inquiry::Addon
       permit_params :release_date, :close_date
 
       validate :validate_release_date
-    end
 
-    module ClassMethods
-      public
-        def public(date = nil)
-          date = Time.zone.now unless date
-          super(date)
-        end
+      scope :and_public, ->(date = nil) {
+        date = Time.zone.now unless date
+        super(date)
+      }
     end
 
     public

@@ -30,6 +30,14 @@ class Cms::Notice
 
   after_validation :set_released, if: -> { state == "public" }
 
+  scope :and_public, ->(date = Time.zone.now) {
+    where("$and" => [
+      { state: "public" },
+      { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
+      { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+    ])
+  }
+
   private
     def set_released
       self.released ||= Time.zone.now
@@ -91,14 +99,6 @@ class Cms::Notice
 
   class << self
     public
-      def public(date = Time.zone.now)
-        where("$and" => [
-          { state: "public" },
-          { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
-          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-        ])
-      end
-
       def target_to(user)
         where("$or" => [
           { notice_target: NOTICE_TARGET_ALL },

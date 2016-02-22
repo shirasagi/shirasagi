@@ -6,7 +6,7 @@ class Article::Agents::Nodes::PageController < ApplicationController
 
   public
     def pages
-      Article::Page.site(@cur_site).public(@cur_date).
+      Article::Page.site(@cur_site).and_public(@cur_date).
         where(@cur_node.condition_hash)
     end
 

@@ -4,7 +4,7 @@ class Rss::Agents::Nodes::PageController < ApplicationController
 
   public
     def pages
-      Rss::Page.site(@cur_site).public(@cur_date).where(@cur_node.condition_hash)
+      Rss::Page.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
     end
 
     def index

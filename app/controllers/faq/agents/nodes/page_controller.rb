@@ -6,7 +6,7 @@ class Faq::Agents::Nodes::PageController < ApplicationController
 
   public
     def pages
-      Faq::Page.site(@cur_site).public(@cur_date).
+      Faq::Page.site(@cur_site).and_public(@cur_date).
         where(@cur_node.condition_hash)
     end
 

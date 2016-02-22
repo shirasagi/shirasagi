@@ -19,7 +19,7 @@ class Ads::Agents::Parts::BannerController < ApplicationController
       sort = @cur_part.becomes_with_route.sort_hash
       @random = sort[:random]
 
-      @items = Ads::Banner.site(@cur_site).node(@node).public(@cur_date).
+      @items = Ads::Banner.site(@cur_site).node(@node).and_public(@cur_date).
         where(cond).
         order_by(sort)
     end

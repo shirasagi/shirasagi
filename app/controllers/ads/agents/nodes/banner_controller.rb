@@ -9,7 +9,7 @@ class Ads::Agents::Nodes::BannerController < ApplicationController
     def count
       filename = @cur_path.sub(".count", "")
 
-      @item = Ads::Banner.site(@cur_site).public.
+      @item = Ads::Banner.site(@cur_site).and_public.
         filename(filename).first
 
       raise "404" unless @item

@@ -7,7 +7,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
       @tabs = []
 
       @cur_part.conditions.each do |path|
-        node = Cms::Node.site(@cur_site).public.filename(path).first
+        node = Cms::Node.site(@cur_site).and_public.filename(path).first
         next unless node
 
         node = node.becomes_with_route
@@ -30,9 +30,9 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
         if pages.nil?
           if node.class.method_defined?(:condition_hash)
-            pages = Cms::Page.site(@cur_site).public(@cur_date).where(node.condition_hash)
+            pages = Cms::Page.site(@cur_site).and_public(@cur_date).where(node.condition_hash)
           else
-            pages = Cms::Page.site(@cur_site).public(@cur_date).where(cond).node(node)
+            pages = Cms::Page.site(@cur_site).and_public(@cur_date).where(cond).node(node)
           end
         end
 

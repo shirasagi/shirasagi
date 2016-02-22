@@ -14,7 +14,7 @@ class Cms::PublicNoticesController < ApplicationController
 
   public
     def index
-      @items = @model.site(@cur_site).public.target_to(@cur_user).
+      @items = @model.site(@cur_site).and_public.target_to(@cur_user).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
         order_by(released: -1).
@@ -22,7 +22,7 @@ class Cms::PublicNoticesController < ApplicationController
     end
 
     def show
-      raise "403" unless @item = @model.site(@cur_site).public.find(params[:id])
+      raise "403" unless @item = @model.site(@cur_site).and_public.find(params[:id])
       raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
       render
     end

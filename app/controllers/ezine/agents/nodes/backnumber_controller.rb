@@ -4,7 +4,7 @@ class Ezine::Agents::Nodes::BacknumberController < ApplicationController
 
   public
     def pages
-      Ezine::Page.site(@cur_site).public(@cur_date).
+      Ezine::Page.site(@cur_site).and_public(@cur_date).
         where(@cur_node.condition_hash)
     end
 

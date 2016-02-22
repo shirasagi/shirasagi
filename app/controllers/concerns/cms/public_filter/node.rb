@@ -26,7 +26,7 @@ module Cms::PublicFilter::Node
   public
     def generate_node(node, opts = {})
       path = opts[:url] || "#{node.filename}/index.html"
-      return if Cms::Page.site(node.site).public.filename(path).first
+      return if Cms::Page.site(node.site).and_public.filename(path).first
 
       @cur_path   = opts[:url] || node.url
       @cur_site   = node.site

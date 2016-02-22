@@ -3,7 +3,7 @@ class Inquiry::Agents::Nodes::NodeController < ApplicationController
 
   public
     def index
-      @items = Inquiry::Node::Form.site(@cur_site).public.
+      @items = Inquiry::Node::Form.site(@cur_site).and_public.
         where(@cur_node.condition_hash).
         page(params[:page]).
         per(@cur_node.limit)

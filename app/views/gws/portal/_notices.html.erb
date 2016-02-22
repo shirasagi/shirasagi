@@ -1,6 +1,6 @@
 <%
 
-@notices = Gws::Notice.site(@cur_site).public.order_by(released: -1)
+@notices = Gws::Notice.site(@cur_site).and_public.order_by(released: -1)
 @important_notices = @notices.select { |notice| notice.severity == 'high' }
 @normal_notices = @notices.select { |notice| notice.severity.blank? }
 
