@@ -12,7 +12,7 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
 
   def index
     if params[:reset].present?
-      redirect_to "#{@cur_node.url}"
+      redirect_to @cur_node.url
       return
     end
     @category = params[:category]

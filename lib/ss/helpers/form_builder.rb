@@ -12,7 +12,7 @@ module SS::Helpers
       end
 
       tags = value.map do |v|
-        options[:id] ||= object_method.gsub(/\W+/, "_") + "#{v}"
+        options[:id] ||= object_method.gsub(/\W+/, "_") + v.to_s
         @template.hidden_field_tag(object_method, v, options)
       end
       tags.join.html_safe
@@ -24,7 +24,7 @@ module SS::Helpers
       object_method = "#{@object_name}[" + method.sub("[", "][")
       if method =~ /\[\]$/
         checked = array_value(method).include?(checked_value)
-        options[:id] ||= object_method.gsub(/\W+/, "_") + "#{checked_value}"
+        options[:id] ||= object_method.gsub(/\W+/, "_") + checked_value.to_s
       else
         checked = array_value(method).present?
       end

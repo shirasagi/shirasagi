@@ -137,7 +137,7 @@ module Voice::Downloadable
         host = url.host
         port = url.port
 
-        SS::Site.find_by_domain("#{host}:#{port}") || SS::Site.find_by_domain("#{host}")
+        SS::Site.find_by_domain("#{host}:#{port}") || SS::Site.find_by_domain(host.to_s)
       end
   end
 end

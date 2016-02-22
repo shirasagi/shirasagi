@@ -31,8 +31,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @items = []
       @data = {}
       @columns.each do |column|
-        @items << [column, params[:item].try(:[], "#{column.id}")]
-        @data[column.id] = [params[:item].try(:[], "#{column.id}")]
+        @items << [column, params[:item].try(:[], column.id.to_s)]
+        @data[column.id] = [params[:item].try(:[], column.id.to_s)]
         if column.input_confirm == "enabled"
           @items.last << params[:item].try(:[], "#{column.id}_confirm")
           @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")

@@ -73,7 +73,7 @@ class Rss::ImportJob
     page.permission_level = @cur_node.permission_level if page.permission_level.blank?
     page.group_ids = Array.new(@cur_node.group_ids) if page.group_ids.blank?
     unless save_or_update page
-      Rails.logger.error("#{page.errors.full_messages}")
+      Rails.logger.error(page.errors.full_messages.to_s)
       @errors.concat(page.errors.full_messages)
     end
   end

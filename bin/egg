@@ -45,7 +45,7 @@ class Frypan
 
   private
     def root
-      "#{File.dirname(__dir__)}"
+      File.dirname(__dir__).to_s
     end
 
     def zip_dir

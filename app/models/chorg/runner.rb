@@ -76,7 +76,7 @@ class Chorg::Runner
               if new_value.is_a?(String)
                 Diffy::Diff.new(old_value, new_value, diff: "-U 3").to_s.each_line do |line|
                   next if /No newline at end of file/i =~ line
-                  put_log("#{line.chomp}")
+                  put_log(line.chomp.to_s)
                 end
               elsif new_value.is_a?(Array)
                 convert_to_group_names(old_value - new_value).each do |name|

@@ -106,7 +106,7 @@ module SS::Model::User
     if uid.present?
       "#{name}(#{uid})"
     else
-      "#{name}"
+      name.to_s
     end
   end
 

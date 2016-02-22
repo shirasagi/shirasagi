@@ -36,12 +36,12 @@ class Ezine::Column
   private
     def destroy_data
       Ezine::Member.where(:"data.column_id" => id).each do |member|
-        member.in_data["#{id}"] = nil
+        member.in_data[id.to_s] = nil
         member.set_data
         member.save validate: false
       end
       Ezine::Entry.where(:"data.column_id" => id).each do |entry|
-        member.in_data["#{id}"] = nil
+        member.in_data[id.to_s] = nil
         member.set_data
         member.save validate: false
       end

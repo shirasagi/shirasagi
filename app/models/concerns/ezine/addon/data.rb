@@ -16,7 +16,7 @@ module Ezine::Addon
     def set_in_data
       return if in_data
       self.in_data = {}
-      data.each { |data| self.in_data["#{data.column_id}"] = data.value }
+      data.each { |data| self.in_data[data.column_id.to_s] = data.value }
     end
 
     def set_data

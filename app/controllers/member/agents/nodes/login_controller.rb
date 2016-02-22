@@ -43,7 +43,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     def logout
       clear_member
       flash.discard(:ref)
-      redirect_to "#{member_login_path}"
+      redirect_to member_login_path
     end
 
     def callback

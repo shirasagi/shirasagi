@@ -6,7 +6,7 @@ class Chorg::TestRunner < Chorg::Runner
       return true if entity.valid?
 
       entity.errors.full_messages.each do |message|
-        put_error("#{message}")
+        put_error(message.to_s)
       end
       false
     rescue ScriptError, StandardError => e
