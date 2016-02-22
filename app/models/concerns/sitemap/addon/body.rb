@@ -32,13 +32,13 @@ module Sitemap::Addon
     end
 
     def load_sitemap_urls(opts = {})
-      entries = Cms::Node.where(site_id: site_id).public.
+      entries = Cms::Node.where(site_id: site_id).and_public.
         where(:depth.lte => sitemap_depth).
         order_by(filename: 1).
         entries
 
       if sitemap_page_state != "hide"
-        entries += Cms::Page.where(site_id: site_id).public.
+        entries += Cms::Page.where(site_id: site_id).and_public.
           where(:depth.lte => sitemap_depth).
           not(filename: /\/index\.html$/).
           order_by(filename: 1).
@@ -90,7 +90,7 @@ module Sitemap::Addon
           url   = url.strip.sub(/\/$/, "")
           model = url =~ /(^|\/)[^\.]+$/ ? Cms::Node : Cms::Page
 
-          if item = model.where(site_id: site_id).public.filename(url).first
+          if item = model.where(site_id: site_id).and_public.filename(url).first
             data = { url: item.url, name: item.name, depth: depth }
           else
             data = { url: url, name: url, depth: depth }
