@@ -53,7 +53,7 @@
           <%= @cur_user.name %>
         </h2>
         <ul class="dropdown-menu">
-          <li><%= link_to t(:"sns.profile"), sns_user_profile_path(@cur_user) %></li>
+          <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
           <li><%= link_to :logout, sns_logout_path %></li>
         </ul>
       </div>
