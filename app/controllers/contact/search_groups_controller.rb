@@ -3,10 +3,9 @@ class Contact::SearchGroupsController < ApplicationController
 
   model Cms::Group
 
-  public
-    def index
-      @items = @model.site(@cur_site).
-        search(params[:s]).
-        page(params[:page]).per(50)
-    end
+  def index
+    @items = @model.site(@cur_site).
+      search(params[:s]).
+      page(params[:page]).per(50)
+  end
 end

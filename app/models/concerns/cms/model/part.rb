@@ -13,33 +13,32 @@ module Cms::Model::Part
     permit_params :mobile_view, :ajax_view
   end
 
-  public
-    def route_options
-      Cms::Part.plugins
-    end
+  def route_options
+    Cms::Part.plugins
+  end
 
-    def becomes_with_route(name = nil)
-      super (name || route).sub("/", "/part/")
-    end
+  def becomes_with_route(name = nil)
+    super (name || route).sub("/", "/part/")
+  end
 
-    def mobile_view_options
-      [
-        [I18n.t('views.options.state.show'), 'show'],
-        [I18n.t('views.options.state.hide'), 'hide'],
-      ]
-    end
+  def mobile_view_options
+    [
+      [I18n.t('views.options.state.show'), 'show'],
+      [I18n.t('views.options.state.hide'), 'hide'],
+    ]
+  end
 
-    def ajax_view_options
-      [
-        [I18n.t('views.options.state.enabled'), 'enabled'],
-        [I18n.t('views.options.state.disabled'), 'disabled'],
-      ]
-    end
+  def ajax_view_options
+    [
+      [I18n.t('views.options.state.enabled'), 'enabled'],
+      [I18n.t('views.options.state.disabled'), 'disabled'],
+    ]
+  end
 
-    def ajax_html
-      json = url.sub(/\.html$/, ".json")
-      %(<a class="ss-part" data-href="#{json}">#{name}</a>)
-    end
+  def ajax_html
+    json = url.sub(/\.html$/, ".json")
+    %(<a class="ss-part" data-href="#{json}">#{name}</a>)
+  end
 
   private
     def fix_extname

@@ -37,9 +37,4 @@ module Cms::BaseFilter
     def set_crumbs
       #
     end
-
-  public
-    #def url_options
-    #  {}.merge(super)
-    #end
 end

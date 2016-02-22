@@ -52,65 +52,63 @@ module SS::Model::User
   end
 
   module ClassMethods
-    public
-      def flex_find(keyword)
-        if keyword =~ /^\d+$/
-          cond = { id: keyword }
-        elsif keyword =~ /@/
-          cond = { email: keyword }
-        else
-          cond = { uid: keyword }
-        end
-        self.where(cond).first
+    def flex_find(keyword)
+      if keyword =~ /^\d+$/
+        cond = { id: keyword }
+      elsif keyword =~ /@/
+        cond = { email: keyword }
+      else
+        cond = { uid: keyword }
       end
+      self.where(cond).first
+    end
 
-      def auth_methods
-        @auth_methods ||= [ :ldap_authenticate, :dbpasswd_authenticate ]
+    def auth_methods
+      @auth_methods ||= [ :ldap_authenticate, :dbpasswd_authenticate ]
+    end
+
+    def authenticate(id, password)
+      user = uid_or_email(id).first
+      return nil unless user
+
+      auth_methods.each do |method|
+        return user if user.send(method, password)
       end
+      nil
+    end
 
-      def authenticate(id, password)
-        user = uid_or_email(id).first
-        return nil unless user
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
 
-        auth_methods.each do |method|
-          return user if user.send(method, password)
-        end
-        nil
+      if params[:name].present?
+        criteria = criteria.search_text params[:name]
       end
-
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
-
-        if params[:name].present?
-          criteria = criteria.search_text params[:name]
-        end
-        if params[:keyword].present?
-          criteria = criteria.keyword_in params[:keyword], :name, :email
-        end
-        criteria
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :name, :email
       end
+      criteria
+    end
 
-      def type_options
-        [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
-      end
+    def type_options
+      [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
+    end
   end
 
-  public
-    def encrypt_password
-      self.password = SS::Crypt.crypt(in_password)
-    end
+  def encrypt_password
+    self.password = SS::Crypt.crypt(in_password)
+  end
 
-    # detail, descriptive name
-    def long_name
-      uid = self.uid
-      uid ||= email.split("@")[0] if email.present?
-      if uid.present?
-        "#{name}(#{uid})"
-      else
-        "#{name}"
-      end
+  # detail, descriptive name
+  def long_name
+    uid = self.uid
+    uid ||= email.split("@")[0] if email.present?
+    if uid.present?
+      "#{name}(#{uid})"
+    else
+      "#{name}"
     end
+  end
 
   private
     def dbpasswd_authenticate(in_passwd)

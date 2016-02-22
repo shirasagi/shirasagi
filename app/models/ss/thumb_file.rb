@@ -13,12 +13,11 @@ class SS::ThumbFile
   validates :image_size, presence: true
   validates :image_size_name, presence: true
 
-  public
-    def public_path
-      "#{site.path}/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
-    end
+  def public_path
+    "#{site.path}/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+  end
 
-    def url
-      "/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
-    end
+  def url
+    "/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+  end
 end

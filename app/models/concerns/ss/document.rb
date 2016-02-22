@@ -174,30 +174,29 @@ module SS::Document
     end
   end
 
-  public
-    def t(name)
-      self.class.t name
-    end
+  def t(name)
+    self.class.t name
+  end
 
-    def tt(key, html_wrap = true)
-      self.class.tt key, html_wrap
-    end
+  def tt(key, html_wrap = true)
+    self.class.tt key, html_wrap
+  end
 
-    def label(name)
-      opts  = send("#{name}_options")
-      opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
+  def label(name)
+    opts  = send("#{name}_options")
+    opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
 
-      if send(name).blank?
-        opts.each {|m| return m[0] if m[1].blank? }
-      else
-        opts.each {|m| return m[0] if m[1].to_s == send(name).to_s }
-      end
-      nil
+    if send(name).blank?
+      opts.each {|m| return m[0] if m[1].blank? }
+    else
+      opts.each {|m| return m[0] if m[1].to_s == send(name).to_s }
     end
+    nil
+  end
 
-    def validate_updated
-      errors.add :base, :invalid_updated if in_updated.to_s != updated.to_s
-    end
+  def validate_updated
+    errors.add :base, :invalid_updated if in_updated.to_s != updated.to_s
+  end
 
   private
     def set_db_changes

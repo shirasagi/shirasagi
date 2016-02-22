@@ -5,150 +5,149 @@ module SS
     extend ActiveSupport::Concern
 
     class Server
-      public
-        DEFAULT_PORT = 4321
+      DEFAULT_PORT = 4321
 
-        def initialize
-          @default_options = {}
-          @options = {}
-          @started = false
-          @lock = Mutex.new
-          @cond = ConditionVariable.new
-        end
+      def initialize
+        @default_options = {}
+        @options = {}
+        @started = false
+        @lock = Mutex.new
+        @cond = ConditionVariable.new
+      end
 
-        def default(options = {})
-          @default_options.merge!(options)
-        end
+      def default(options = {})
+        @default_options.merge!(options)
+      end
 
-        def default=(options)
-          @default_options = options
-        end
+      def default=(options)
+        @default_options = options
+      end
 
-        def options(opts = {})
-          @options.merge!(opts)
-        end
+      def options(opts = {})
+        @options.merge!(opts)
+      end
 
-        def options=(opts)
-          @options = opts
-        end
+      def options=(opts)
+        @options = opts
+      end
 
-        def self.define_option_get(name, opts = {})
-          key = opts[:key] || name
-          key = key.to_sym
-          default_value = opts[:default]
+      def self.define_option_get(name, opts = {})
+        key = opts[:key] || name
+        key = key.to_sym
+        default_value = opts[:default]
 
-          define_method(name) do
-            @options.fetch(key) do
-              @default_options.fetch(key) do
-                default_value.is_a?(Proc) ? default_value.call : default_value
-              end
+        define_method(name) do
+          @options.fetch(key) do
+            @default_options.fetch(key) do
+              default_value.is_a?(Proc) ? default_value.call : default_value
             end
           end
         end
+      end
 
-        # this property does:
-        #
-        #   @options.fetch(:addr, @default_options.fetch(:addr, "127.0.0.1"))
-        define_option_get :addr, default: "127.0.0.1"
+      # this property does:
+      #
+      #   @options.fetch(:addr, @default_options.fetch(:addr, "127.0.0.1"))
+      define_option_get :addr, default: "127.0.0.1"
 
-        # this property does:
-        #
-        #   @options.fetch(:port, @default_options.fetch(:port, DEFAULT_PORT))
-        define_option_get :port, default: DEFAULT_PORT
+      # this property does:
+      #
+      #   @options.fetch(:port, @default_options.fetch(:port, DEFAULT_PORT))
+      define_option_get :port, default: DEFAULT_PORT
 
-        # this property does:
-        #
-        #   @options.fetch(:mount_dir, @default_options.fetch(:mount_dir, "/"))
-        define_option_get :mount_dir, default: "/"
+      # this property does:
+      #
+      #   @options.fetch(:mount_dir, @default_options.fetch(:mount_dir, "/"))
+      define_option_get :mount_dir, default: "/"
 
-        # this property does:
-        #
-        #   @options.fetch(:doc_root, @default_options.fetch(:doc_root, Rails.root.to_s))
-        define_option_get :doc_root, default: -> { Rails.root.to_s }
+      # this property does:
+      #
+      #   @options.fetch(:doc_root, @default_options.fetch(:doc_root, Rails.root.to_s))
+      define_option_get :doc_root, default: -> { Rails.root.to_s }
 
-        # this property does:
-        #
-        #   @options.fetch(:handler, @default_options.fetch(:handler, nil))
-        define_option_get :handler
+      # this property does:
+      #
+      #   @options.fetch(:handler, @default_options.fetch(:handler, nil))
+      define_option_get :handler
 
-        # this property does:
-        #
-        #   @options.fetch(:wait, @default_options.fetch(:wait, nil))
-        define_option_get :wait_sec, key: :wait
+      # this property does:
+      #
+      #   @options.fetch(:wait, @default_options.fetch(:wait, nil))
+      define_option_get :wait_sec, key: :wait
 
-        # this property does:
-        #
-        #   @options.fetch(:status_code, @default_options.fetch(:status_code, nil))
-        define_option_get :status_code
+      # this property does:
+      #
+      #   @options.fetch(:status_code, @default_options.fetch(:status_code, nil))
+      define_option_get :status_code
 
-        # this property does:
-        #
-        #   @options.fetch(:content_type, @default_options.fetch(:content_type, nil))
-        define_option_get :content_type
+      # this property does:
+      #
+      #   @options.fetch(:content_type, @default_options.fetch(:content_type, nil))
+      define_option_get :content_type
 
-        # this property does:
-        #
-        #   @options.fetch(:last_modified, @default_options.fetch(:last_modified, nil))
-        define_option_get :last_modified
+      # this property does:
+      #
+      #   @options.fetch(:last_modified, @default_options.fetch(:last_modified, nil))
+      define_option_get :last_modified
 
-        # this property does:
-        #
-        #   @options.fetch(:etag, @default_options.fetch(:etag, nil))
-        define_option_get :etag
+      # this property does:
+      #
+      #   @options.fetch(:etag, @default_options.fetch(:etag, nil))
+      define_option_get :etag
 
-        # this property does:
-        #
-        #   @options.fetch(:real_path, @default_options.fetch(:real_path, nil))
-        define_option_get :real_path
+      # this property does:
+      #
+      #   @options.fetch(:real_path, @default_options.fetch(:real_path, nil))
+      define_option_get :real_path
 
-        # this property does:
-        #
-        #   @options.fetch(:logger, @default_options.fetch(:logger, Rails.logger))
-        define_option_get :logger, default: -> { Rails.logger }
+      # this property does:
+      #
+      #   @options.fetch(:logger, @default_options.fetch(:logger, Rails.logger))
+      define_option_get :logger, default: -> { Rails.logger }
 
-        def started?
-          @started
-        end
+      def started?
+        @started
+      end
 
-        def stopped?
-          !started?
-        end
+      def stopped?
+        !started?
+      end
 
-        def start
-          @server_thread = Thread.start(self) do |container|
-            @server = ::WEBrick::HTTPServer.new(
-              BindAddress: addr,
-              Port: port,
-              Logger: logger,
-              AccessLog: [],
-              StartCallback: proc { set_started })
-            @server.mount_proc(mount_dir) do |request, response|
-              handle(request, response)
-            end
-            Signal.trap(:INT) do
-              @server.shutdown
-            end
-            @server.start
-            container.instance_variable_set(:@server, @server)
+      def start
+        @server_thread = Thread.start(self) do |container|
+          @server = ::WEBrick::HTTPServer.new(
+            BindAddress: addr,
+            Port: port,
+            Logger: logger,
+            AccessLog: [],
+            StartCallback: proc { set_started })
+          @server.mount_proc(mount_dir) do |request, response|
+            handle(request, response)
           end
-
-          wait
-        end
-
-        def release_wait
-          @lock.synchronize do
-            @cond.broadcast
+          Signal.trap(:INT) do
+            @server.shutdown
           end
+          @server.start
+          container.instance_variable_set(:@server, @server)
         end
 
-        def stop
-          release_wait
-          @server.shutdown
-          @server_thread.join
-          @started = false
-          @server_thread = nil
-          @server = nil
+        wait
+      end
+
+      def release_wait
+        @lock.synchronize do
+          @cond.broadcast
         end
+      end
+
+      def stop
+        release_wait
+        @server.shutdown
+        @server_thread.join
+        @started = false
+        @server_thread = nil
+        @server = nil
+      end
 
       private
         def set_started

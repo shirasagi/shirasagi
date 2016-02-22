@@ -28,6 +28,82 @@ module Cms::Model::Page
     after_destroy :remove_file
   end
 
+  def date
+    released || updated || created
+  end
+
+  def generate_file
+    return false unless serve_static_file?
+    return false unless public?
+    return false unless public_node?
+    written = Cms::Agents::Tasks::PagesController.new.generate_page(self)
+    self.class.class_variable_get(:@@_after_generate_file_callbacks).each do |c|
+      run_callback(c)
+    end
+    written
+  end
+
+  def remove_file
+    Fs.rm_rf path
+    self.class.class_variable_get(:@@_after_remove_file_callbacks).each do |c|
+      run_callback(c)
+    end
+  end
+
+  def rename_file
+    return unless @db_changes["filename"]
+    return unless @db_changes["filename"][0]
+
+    src = "#{site.path}/#{@db_changes['filename'][0]}"
+    dst = "#{site.path}/#{@db_changes['filename'][1]}"
+    dst_dir = ::File.dirname(dst)
+
+    Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
+    Fs.mv src, dst if Fs.exists?(src)
+    self.class.class_variable_get(:@@_after_rename_file_callbacks).each do |c|
+      run_callback(c, src, dst)
+    end
+  end
+
+  def validate_destination_filename(dst)
+    dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
+
+    return errors.add :filename, :empty if dst.blank?
+    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{Regexp.escape(fix_extname)})?$/
+    return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
+
+    return errors.add :base, :same_filename if filename == dst
+    return errors.add :filename, :taken if self.class.where(site_id: site_id, filename: dst).first
+    return errors.add :base, :exist_physical_file if Fs.exists?("#{site.path}/#{dst}")
+
+    if dst_dir.present?
+      dst_parent = Cms::Node.where(site_id: site_id, filename: dst_dir).first
+
+      return errors.add :base, :not_found_parent_node if dst_parent.blank?
+
+      allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      return errors.add :base, :not_have_parent_read_permission unless allowed
+    else
+      return errors.add :base, :not_cms_page_in_root if route != "cms/page"
+    end
+  end
+
+  def move(dst)
+    validate_destination_filename(dst)
+    if is_a?(Cms::Addon::EditLock)
+      errors.add :base, :locked, user: lock_owner.long_name if locked?
+    end
+    return false unless errors.empty?
+
+    @cur_node = nil
+    @basename = dst
+    if is_a?(Cms::Addon::EditLock)
+      remove_attribute(:lock_owner_id) if has_attribute?(:lock_owner_id)
+      remove_attribute(:lock_until) if has_attribute?(:lock_until)
+    end
+    save
+  end
+
   private
     def run_callback(c, *args)
       call = true
@@ -36,84 +112,6 @@ module Cms::Model::Page
       send(c[:method], *args) if call
     end
 
-  public
-    def date
-      released || updated || created
-    end
-
-    def generate_file
-      return false unless serve_static_file?
-      return false unless public?
-      return false unless public_node?
-      written = Cms::Agents::Tasks::PagesController.new.generate_page(self)
-      self.class.class_variable_get(:@@_after_generate_file_callbacks).each do |c|
-        run_callback(c)
-      end
-      written
-    end
-
-    def remove_file
-      Fs.rm_rf path
-      self.class.class_variable_get(:@@_after_remove_file_callbacks).each do |c|
-        run_callback(c)
-      end
-    end
-
-    def rename_file
-      return unless @db_changes["filename"]
-      return unless @db_changes["filename"][0]
-
-      src = "#{site.path}/#{@db_changes['filename'][0]}"
-      dst = "#{site.path}/#{@db_changes['filename'][1]}"
-      dst_dir = ::File.dirname(dst)
-
-      Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
-      Fs.mv src, dst if Fs.exists?(src)
-      self.class.class_variable_get(:@@_after_rename_file_callbacks).each do |c|
-        run_callback(c, src, dst)
-      end
-    end
-
-    def validate_destination_filename(dst)
-      dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
-
-      return errors.add :filename, :empty if dst.blank?
-      return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{Regexp.escape(fix_extname)})?$/
-      return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
-
-      return errors.add :base, :same_filename if filename == dst
-      return errors.add :filename, :taken if self.class.where(site_id: site_id, filename: dst).first
-      return errors.add :base, :exist_physical_file if Fs.exists?("#{site.path}/#{dst}")
-
-      if dst_dir.present?
-        dst_parent = Cms::Node.where(site_id: site_id, filename: dst_dir).first
-
-        return errors.add :base, :not_found_parent_node if dst_parent.blank?
-
-        allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-        return errors.add :base, :not_have_parent_read_permission unless allowed
-      else
-        return errors.add :base, :not_cms_page_in_root if route != "cms/page"
-      end
-    end
-
-    def move(dst)
-      validate_destination_filename(dst)
-      if is_a?(Cms::Addon::EditLock)
-        errors.add :base, :locked, user: lock_owner.long_name if locked?
-      end
-      return false unless errors.empty?
-
-      @cur_node = nil
-      @basename = dst
-      if is_a?(Cms::Addon::EditLock)
-        remove_attribute(:lock_owner_id) if has_attribute?(:lock_owner_id)
-        remove_attribute(:lock_until) if has_attribute?(:lock_until)
-      end
-      save
-    end
-
-  private
     def validate_seq_filename
       if basename.sub(/\.html$/, '').to_i > current_sequence(:id)
         errors.add :basename, :invalid

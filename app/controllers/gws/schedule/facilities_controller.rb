@@ -3,9 +3,8 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   #include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
-  public
-    def index
-      @items = Gws::Facility.site(@cur_site).
-        order_by(name: 1)
-    end
+  def index
+    @items = Gws::Facility.site(@cur_site).
+      order_by(name: 1)
+  end
 end

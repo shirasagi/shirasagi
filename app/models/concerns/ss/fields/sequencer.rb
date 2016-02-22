@@ -13,18 +13,17 @@ module SS::Fields::Sequencer
     end
   end
 
-  public
-    def current_sequence(name)
-      SS::Sequence.current_sequence collection_name, name
-    end
+  def current_sequence(name)
+    SS::Sequence.current_sequence collection_name, name
+  end
 
-    def next_sequence(name)
-      SS::Sequence.next_sequence collection_name, name
-    end
+  def next_sequence(name)
+    SS::Sequence.next_sequence collection_name, name
+  end
 
-    def unset_sequence(name)
-      SS::Sequence.unset_sequence collection_name, name
-    end
+  def unset_sequence(name)
+    SS::Sequence.unset_sequence collection_name, name
+  end
 
   private
     def set_sequence

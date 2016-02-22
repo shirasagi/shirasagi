@@ -3,38 +3,37 @@ class Event::Agents::Nodes::PageController < ApplicationController
   include Event::EventHelper
   helper Event::EventHelper
 
-  public
-    def index
-      @year  = Time.zone.today.year.to_i
-      @month = Time.zone.today.month.to_i
+  def index
+    @year  = Time.zone.today.year.to_i
+    @month = Time.zone.today.month.to_i
 
-      monthly
+    monthly
+  end
+
+  def monthly
+    @year  = params[:year].to_i if @year.blank?
+    @month = params[:month].to_i if @month.blank?
+
+    if within_one_year?(Date.new(@year, @month, 1))
+      index_monthly
+    elsif within_one_year?(Date.new(@year, @month, 1).advance(months: 1, days: -1))
+      index_monthly
+    else
+      raise "404"
     end
+  end
 
-    def monthly
-      @year  = params[:year].to_i if @year.blank?
-      @month = params[:month].to_i if @month.blank?
+  def daily
+    @year  = params[:year].to_i
+    @month = params[:month].to_i
+    @day   = params[:day].to_i
 
-      if within_one_year?(Date.new(@year, @month, 1))
-        index_monthly
-      elsif within_one_year?(Date.new(@year, @month, 1).advance(months: 1, days: -1))
-        index_monthly
-      else
-        raise "404"
-      end
+    if within_one_year?(Date.new(@year, @month, @day))
+      index_daily
+    else
+      raise "404"
     end
-
-    def daily
-      @year  = params[:year].to_i
-      @month = params[:month].to_i
-      @day   = params[:day].to_i
-
-      if within_one_year?(Date.new(@year, @month, @day))
-        index_daily
-      else
-        raise "404"
-      end
-    end
+  end
 
   private
     def events(date)

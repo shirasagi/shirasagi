@@ -9,14 +9,13 @@ class Cms::Node::ImportController < ApplicationController
 
   before_action :set_item
 
-  public
-    def import
-      @item.attributes = get_params
-      @item.cur_site = @cur_site
-      result = @item.import
-      flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
-      render_create result, location: redirect_url, render: { file: :index }
-    end
+  def import
+    @item.attributes = get_params
+    @item.cur_site = @cur_site
+    result = @item.import
+    flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
+    render_create result, location: redirect_url, render: { file: :index }
+  end
 
   private
     def set_item

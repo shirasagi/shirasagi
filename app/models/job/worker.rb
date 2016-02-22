@@ -70,17 +70,16 @@ module Job::Worker
   end
 
   class PoolConfig
-    public
-      def initialize(config)
-        @config = config || {}
-      end
+    def initialize(config)
+      @config = config || {}
+    end
 
-      def max_size?
-        @config.key?('max_size')
-      end
+    def max_size?
+      @config.key?('max_size')
+    end
 
-      def max_size
-        @config['max_size'].to_i
-      end
+    def max_size
+      @config['max_size'].to_i
+    end
   end
 end

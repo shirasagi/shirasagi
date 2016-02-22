@@ -14,31 +14,30 @@ class History::Backup
   validates :ref_coll, presence: true
   validates :data, presence: true
 
-  public
-    def coll
-      collection.database[ref_coll]
+  def coll
+    collection.database[ref_coll]
+  end
+
+  def get
+    coll.where(_id: data["_id"]).first
+  end
+
+  def restore
+    data  = self.data.dup
+    query = coll.find _id: data["_id"]
+    if query.count != 1
+      errors.add :base, "#{query.count} documents were found."
+      return false
     end
 
-    def get
-      coll.where(_id: data["_id"]).first
-    end
+    data.delete("_id")
+    data.delete("file_id")
+    data.delete("file_ids") # TODO: for attachment files
 
-    def restore
-      data  = self.data.dup
-      query = coll.find _id: data["_id"]
-      if query.count != 1
-        errors.add :base, "#{query.count} documents were found."
-        return false
-      end
+    resp = query.update('$set' => data)
+    return true if resp["err"].blank?
 
-      data.delete("_id")
-      data.delete("file_id")
-      data.delete("file_ids") # TODO: for attachment files
-
-      resp = query.update('$set' => data)
-      return true if resp["err"].blank?
-
-      errors.add :base, "error. #{resp['err']}"
-      false
-    end
+    errors.add :base, "error. #{resp['err']}"
+    false
+  end
 end

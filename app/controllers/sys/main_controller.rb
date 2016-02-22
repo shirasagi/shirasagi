@@ -3,8 +3,7 @@ class Sys::MainController < ApplicationController
 
   navi_view "sys/main/navi"
 
-  public
-    def index
-      redirect_to sys_info_path
-    end
+  def index
+    redirect_to sys_info_path
+  end
 end

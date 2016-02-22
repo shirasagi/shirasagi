@@ -11,24 +11,35 @@ module Cms::Addon::Import
     end
 
     module ClassMethods
-      public
-        def to_csv
-          csv = CSV.generate do |data|
-            data << %w(id name email password uid ldap_dn groups cms_roles)
-            criteria.each do |item|
-              line = []
-              line << item.id
-              line << item.name
-              line << item.email
-              line << ""
-              line << item.uid
-              line << item.ldap_dn
-              line << item.groups.map(&:name).join("\n")
-              line << item.cms_roles.map(&:name).join("\n")
-              data << line
-            end
+      def to_csv
+        csv = CSV.generate do |data|
+          data << %w(id name email password uid ldap_dn groups cms_roles)
+          criteria.each do |item|
+            line = []
+            line << item.id
+            line << item.name
+            line << item.email
+            line << ""
+            line << item.uid
+            line << item.ldap_dn
+            line << item.groups.map(&:name).join("\n")
+            line << item.cms_roles.map(&:name).join("\n")
+            data << line
           end
         end
+      end
+    end
+
+    def import
+      @imported = 0
+      validate_import
+      return false unless errors.empty?
+
+      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+      table.each_with_index do |row, i|
+        update_row(row, i + 2)
+      end
+      return errors.empty?
     end
 
     private
@@ -99,19 +110,6 @@ module Cms::Addon::Import
           error += "#{item.class.t(n)}#{e} "
         end
         self.errors.add :base, "#{index}: #{error}"
-      end
-
-    public
-      def import
-        @imported = 0
-        validate_import
-        return false unless errors.empty?
-
-        table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        table.each_with_index do |row, i|
-          update_row(row, i + 2)
-        end
-        return errors.empty?
       end
   end
 end

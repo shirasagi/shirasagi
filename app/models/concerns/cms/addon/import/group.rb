@@ -11,23 +11,34 @@ module Cms::Addon::Import
     end
 
     module ClassMethods
-      public
-        def to_csv
-          csv = CSV.generate do |data|
-            data << %w(id name order ldap_dn contact_tel contact_fax contact_email)
-            criteria.each do |item|
-              line = []
-              line << item.id
-              line << item.name
-              line << item.order
-              line << item.ldap_dn
-              line << item.contact_tel
-              line << item.contact_fax
-              line << item.contact_email
-              data << line
-            end
+      def to_csv
+        csv = CSV.generate do |data|
+          data << %w(id name order ldap_dn contact_tel contact_fax contact_email)
+          criteria.each do |item|
+            line = []
+            line << item.id
+            line << item.name
+            line << item.order
+            line << item.ldap_dn
+            line << item.contact_tel
+            line << item.contact_fax
+            line << item.contact_email
+            data << line
           end
         end
+      end
+    end
+
+    def import
+      @imported = 0
+      validate_import
+      return false unless errors.empty?
+
+      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+      table.each_with_index do |row, i|
+        item = update_row(row, i + 2)
+      end
+      return errors.empty?
     end
 
     private
@@ -91,19 +102,6 @@ module Cms::Addon::Import
           error += "#{item.class.t(n)}#{e} "
         end
         self.errors.add :base, "#{index}: #{error}"
-      end
-
-    public
-      def import
-        @imported = 0
-        validate_import
-        return false unless errors.empty?
-
-        table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-        table.each_with_index do |row, i|
-          item = update_row(row, i + 2)
-        end
-        return errors.empty?
       end
   end
 end

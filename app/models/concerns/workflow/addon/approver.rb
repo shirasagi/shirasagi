@@ -31,104 +31,103 @@ module Workflow::Addon
       validate :validate_workflow_required_counts, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     end
 
-    public
-      def status
-        if state == "public" || state == "ready"
-          state
-        elsif workflow_state.present?
-          workflow_state
-        else
-          state
-        end
+    def status
+      if state == "public" || state == "ready"
+        state
+      elsif workflow_state.present?
+        workflow_state
+      else
+        state
       end
+    end
 
-      def workflow_user
-        if workflow_user_id.present?
-          SS::User.where(id: workflow_user_id).first
-        else
-          nil
-        end
-      end
-
-      def workflow_levels
-        workflow_approvers.map { |h| h[:level] }.uniq.compact.sort
-      end
-
-      def workflow_current_level
-        workflow_levels.each do |level|
-          return level unless complete?(level)
-        end
+    def workflow_user
+      if workflow_user_id.present?
+        SS::User.where(id: workflow_user_id).first
+      else
         nil
       end
+    end
 
-      def workflow_approvers_at(level)
-        return [] if level.nil?
-        self.workflow_approvers.select do |workflow_approver|
-          workflow_approver[:level] == level
-        end
+    def workflow_levels
+      workflow_approvers.map { |h| h[:level] }.uniq.compact.sort
+    end
+
+    def workflow_current_level
+      workflow_levels.each do |level|
+        return level unless complete?(level)
+      end
+      nil
+    end
+
+    def workflow_approvers_at(level)
+      return [] if level.nil?
+      self.workflow_approvers.select do |workflow_approver|
+        workflow_approver[:level] == level
+      end
+    end
+
+    def workflow_required_counts_at(level)
+      self.workflow_required_counts[level - 1] || false
+    end
+
+    def set_workflow_approver_state_to_request(level = workflow_current_level)
+      return false if level.nil?
+
+      copy = workflow_approvers.to_a
+      targets = copy.select do |workflow_approver|
+        workflow_approver[:level] == level && workflow_approver[:state] == WORKFLOW_STATE_PENDING
+      end
+      targets.each do |workflow_approver|
+        workflow_approver[:state] = WORKFLOW_STATE_REQUEST
       end
 
-      def workflow_required_counts_at(level)
-        self.workflow_required_counts[level - 1] || false
+      # Be careful, partial update is meaningless. We must update entirely.
+      self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+      true
+    end
+
+    def update_current_workflow_approver_state(user, state, comment)
+      level = workflow_current_level
+      return false if level.nil?
+
+      user = user._id if user.respond_to?(:_id)
+      copy = workflow_approvers.to_a
+      targets = copy.select do |workflow_approver|
+        workflow_approver[:level] == level && workflow_approver[:user_id] == user
+      end
+      # do loop even though targets length is always 1
+      targets.each do |workflow_approver|
+        workflow_approver[:state] = state
+        workflow_approver[:comment] = comment.gsub(/\n|\r\n/, " ")
       end
 
-      def set_workflow_approver_state_to_request(level = workflow_current_level)
-        return false if level.nil?
+      # Be careful, partial update is meaningless. We must update entirely.
+      self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+      true
+    end
 
-        copy = workflow_approvers.to_a
-        targets = copy.select do |workflow_approver|
-          workflow_approver[:level] == level && workflow_approver[:state] == WORKFLOW_STATE_PENDING
-        end
-        targets.each do |workflow_approver|
-          workflow_approver[:state] = WORKFLOW_STATE_REQUEST
-        end
+    def finish_workflow?
+      workflow_current_level.nil?
+    end
 
-        # Be careful, partial update is meaningless. We must update entirely.
-        self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
-        true
+    def apply_workflow?(route)
+      route.validate
+      if route.errors.size != 0
+        route.errors.full_messages.each do |m|
+          errors.add :base, m
+        end
+        return false
       end
 
-      def update_current_workflow_approver_state(user, state, comment)
-        level = workflow_current_level
-        return false if level.nil?
-
-        user = user._id if user.respond_to?(:_id)
-        copy = workflow_approvers.to_a
-        targets = copy.select do |workflow_approver|
-          workflow_approver[:level] == level && workflow_approver[:user_id] == user
-        end
-        # do loop even though targets length is always 1
-        targets.each do |workflow_approver|
-          workflow_approver[:state] = state
-          workflow_approver[:comment] = comment.gsub(/\n|\r\n/, " ")
-        end
-
-        # Be careful, partial update is meaningless. We must update entirely.
-        self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
-        true
+      users = route.approvers.map do |approver|
+        [ approver[:level], self.class.approver_user_class.where(id: approver[:user_id]).first ]
       end
+      users = users.select { |_, user| user.present? }
 
-      def finish_workflow?
-        workflow_current_level.nil?
-      end
-
-      def apply_workflow?(route)
-        route.validate
-        if route.errors.size != 0
-          route.errors.full_messages.each do |m|
-            errors.add :base, m
-          end
-          return false
-        end
-
-        users = route.approvers.map do |approver|
-          [ approver[:level], self.class.approver_user_class.where(id: approver[:user_id]).first ]
-        end
-        users = users.select { |_, user| user.present? }
-
-        validate_user(route, users, :read, :approve)
-        errors.size == 0
-      end
+      validate_user(route, users, :read, :approve)
+      errors.size == 0
+    end
 
     private
       def reset

@@ -21,18 +21,17 @@ class Ezine::Column
     where(state: 'public')
   }
 
-  public
-    def state_options
-      [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-      ]
-    end
+  def state_options
+    [
+      [I18n.t('views.options.state.public'), 'public'],
+      [I18n.t('views.options.state.closed'), 'closed'],
+    ]
+  end
 
-    def order
-      value = self[:order].to_i
-      value < 0 ? 0 : value
-    end
+  def order
+    value = self[:order].to_i
+    value < 0 ? 0 : value
+  end
 
   private
     def destroy_data

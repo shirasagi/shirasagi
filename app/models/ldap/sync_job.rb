@@ -3,40 +3,39 @@ class Ldap::SyncJob
 
   attr_reader :results
 
-  public
-    def call(group_id, item_id)
-      @group = Cms::Group.find(group_id).root
-      @item = Ldap::Import.find(item_id)
-      @results = { group: {}, user: {} }
-      @results[:group][:successed] = 0
-      @results[:group][:failed] = 0
-      @results[:group][:deleted] = 0
-      @results[:group][:errors] = []
-      @results[:group][:warnings] = []
-      @results[:user][:successed] = 0
-      @results[:user][:failed] = 0
-      @results[:user][:deleted] = 0
-      @results[:user][:errors] = []
-      @results[:user][:warnings] = []
+  def call(group_id, item_id)
+    @group = Cms::Group.find(group_id).root
+    @item = Ldap::Import.find(item_id)
+    @results = { group: {}, user: {} }
+    @results[:group][:successed] = 0
+    @results[:group][:failed] = 0
+    @results[:group][:deleted] = 0
+    @results[:group][:errors] = []
+    @results[:group][:warnings] = []
+    @results[:user][:successed] = 0
+    @results[:user][:failed] = 0
+    @results[:user][:deleted] = 0
+    @results[:user][:errors] = []
+    @results[:user][:warnings] = []
 
-      old_ldap_group_ids = Cms::Group.where(name: /^#{Regexp.escape(@group.name)}\//).exists(ldap_dn: true).pluck(:id)
+    old_ldap_group_ids = Cms::Group.where(name: /^#{Regexp.escape(@group.name)}\//).exists(ldap_dn: true).pluck(:id)
 
-      sync_ldap_groups(@group, @item.ldap.root_groups)
+    sync_ldap_groups(@group, @item.ldap.root_groups)
 
-      # delete old entities
-      individual_criteria = [ Cms::Group.where(name: /^#{Regexp.escape(@group.name)}\//),
-                              Cms::User.in(group_ids: old_ldap_group_ids) ]
-      num_deletes = individual_criteria.map do |c|
-        # append common criteria
-        c = c.exists(ldap_dn: true).ne(ldap_import_id: @item.id)
-        # and delete
-        c.delete
-      end
-      @results[:group][:deleted], @results[:user][:deleted] = num_deletes
-
-      rearrange_group_order
-      @results
+    # delete old entities
+    individual_criteria = [ Cms::Group.where(name: /^#{Regexp.escape(@group.name)}\//),
+                            Cms::User.in(group_ids: old_ldap_group_ids) ]
+    num_deletes = individual_criteria.map do |c|
+      # append common criteria
+      c = c.exists(ldap_dn: true).ne(ldap_import_id: @item.id)
+      # and delete
+      c.delete
     end
+    @results[:group][:deleted], @results[:user][:deleted] = num_deletes
+
+    rearrange_group_order
+    @results
+  end
 
   private
     def sync_ldap_groups(ss_group, ldap_groups)

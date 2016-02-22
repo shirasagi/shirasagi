@@ -45,20 +45,19 @@ class Voice::File
   after_destroy :delete_file
 
   class << self
-    public
-      def root
-        return test_root if Rails.env.test?
-        ::File.join(Rails.root, "private", "files")
-      end
+    def root
+      return test_root if Rails.env.test?
+      ::File.join(Rails.root, "private", "files")
+    end
 
-      def save_term_options
-        [
-          [I18n.t(:"history.save_term.day"), "day"],
-          [I18n.t(:"history.save_term.month"), "month"],
-          [I18n.t(:"history.save_term.year"), "year"],
-          [I18n.t(:"history.save_term.all_save"), "all_save"],
-        ]
-      end
+    def save_term_options
+      [
+        [I18n.t(:"history.save_term.day"), "day"],
+        [I18n.t(:"history.save_term.month"), "month"],
+        [I18n.t(:"history.save_term.year"), "year"],
+        [I18n.t(:"history.save_term.all_save"), "all_save"],
+      ]
+    end
 
     private
       def test_root
@@ -70,79 +69,78 @@ class Voice::File
       end
   end
 
-  public
-    def file
-      site_part = site_id.to_s.split(//).join("/")
-      id_part = Digest::SHA1.hexdigest(id.to_s).scan(/.{1,2}/).shift(2).join("/")
-      file_part = "#{id}.mp3"
+  def file
+    site_part = site_id.to_s.split(//).join("/")
+    id_part = Digest::SHA1.hexdigest(id.to_s).scan(/.{1,2}/).shift(2).join("/")
+    file_part = "#{id}.mp3"
 
-      "#{self.class.root}/voice_files/#{site_part}/#{id_part}/_/#{file_part}"
-    end
+    "#{self.class.root}/voice_files/#{site_part}/#{id_part}/_/#{file_part}"
+  end
 
-    def exists?
-      Fs.exists?(file)
-    end
+  def exists?
+    Fs.exists?(file)
+  end
 
-    def latest?(margin = 60)
-      return false unless exists?
+  def latest?(margin = 60)
+    return false unless exists?
 
-      # check for whether file is fresh enough to prevent infinite loops in voice synthesis.
-      return true if fresh?(margin)
+    # check for whether file is fresh enough to prevent infinite loops in voice synthesis.
+    return true if fresh?(margin)
 
-      download
+    download
 
-      # check for whether this has same identity
-      return false unless same_identity?
+    # check for whether this has same identity
+    return false unless same_identity?
 
-      # check for whether kana dictionary is updated.
-      Kana::Dictionary.pull(self.site_id) do |kanadic|
-        if kanadic
-          kanadic_modified = ::File.mtime(kanadic)
-          file_modified = Fs.stat(self.file).mtime
-          return false if file_modified < kanadic_modified
-        end
+    # check for whether kana dictionary is updated.
+    Kana::Dictionary.pull(self.site_id) do |kanadic|
+      if kanadic
+        kanadic_modified = ::File.mtime(kanadic)
+        file_modified = Fs.stat(self.file).mtime
+        return false if file_modified < kanadic_modified
       end
-
-      # this one is latest.
-      true
     end
 
-    def synthesize(force = false)
-      self.class.ensure_release_lock(self) do
-        begin
-          download
-          unless force
-            if self.latest?
-              # voice file is up-to-date
-              Rails.logger.info("voice file up-to-date: #{self.url}")
-              break
-            end
+    # this one is latest.
+    true
+  end
+
+  def synthesize(force = false)
+    self.class.ensure_release_lock(self) do
+      begin
+        download
+        unless force
+          if self.latest?
+            # voice file is up-to-date
+            Rails.logger.info("voice file up-to-date: #{self.url}")
+            break
           end
+        end
 
-          Fs.mkdir_p(::File.dirname(self.file))
-          Voice::Converter.convert(self.site_id, @cached_page.html, self.file)
+        Fs.mkdir_p(::File.dirname(self.file))
+        Voice::Converter.convert(self.site_id, @cached_page.html, self.file)
 
-          self.page_identity = @cached_page.page_identity
-          self.error = nil
-          # incrementing age ensures that 'updated' field is updated.
-          self.age += 1
+        self.page_identity = @cached_page.page_identity
+        self.error = nil
+        # incrementing age ensures that 'updated' field is updated.
+        self.age += 1
+        self.save!
+      rescue OpenURI::HTTPError
+        raise
+      rescue Exception => e
+        self.page_identity = nil
+        self.error = e.to_s
+        # incrementing age ensures that 'updated' field is updated.
+        self.age += 1
+        guard_from_exception(self.url) do
           self.save!
-        rescue OpenURI::HTTPError
-          raise
-        rescue Exception => e
-          self.page_identity = nil
-          self.error = e.to_s
-          # incrementing age ensures that 'updated' field is updated.
-          self.age += 1
-          guard_from_exception(self.url) do
-            self.save!
-          end
-          raise
         end
+        raise
       end
-
-      true
     end
+
+    true
+  end
 
   private
     def set_has_error

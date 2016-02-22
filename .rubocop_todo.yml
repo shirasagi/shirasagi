@@ -230,6 +230,9 @@ Style/HashSyntax:
 Style/IfUnlessModifier:
   Enabled: false
 
+Style/IndentArray :
+  Enabled: false
+
 # Offense count: 1027
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

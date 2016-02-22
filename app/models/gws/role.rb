@@ -11,8 +11,7 @@ class Gws::Role
 
   validates :permission_level, presence: true
 
-  public
-    def permission_level_options
-      [%w(1 1), %w(2 2), %w(3 3)]
-    end
+  def permission_level_options
+    [%w(1 1), %w(2 2), %w(3 3)]
+  end
 end

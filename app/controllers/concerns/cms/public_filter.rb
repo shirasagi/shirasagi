@@ -14,35 +14,34 @@ module Cms::PublicFilter
     before_action :x_sendfile, if: ->{ filters.blank? }
   end
 
-  public
-    def index
-      if @cur_path =~ /\.p[1-9]\d*\.html$/
-        page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
-        params[:page] = page.to_i
-        @cur_path.sub!(/\.p\d+\.html$/, ".html")
-      end
-
-      if @html =~ /\.part\.html$/
-        part = find_part(@html)
-        raise "404" unless part
-        @cur_path = params[:ref] || "/"
-        if resp = render_part(part)
-          return send_part(resp)
-        end
-      elsif page = find_page(@cur_path)
-        if resp = render_page(page)
-          self.response = resp
-          return send_page(page)
-        end
-      elsif node = find_node(@cur_path)
-        if resp = render_node(node)
-          self.response = resp
-          return send_page(node)
-        end
-      end
-
-      page_not_found if response.body.blank?
+  def index
+    if @cur_path =~ /\.p[1-9]\d*\.html$/
+      page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
+      params[:page] = page.to_i
+      @cur_path.sub!(/\.p\d+\.html$/, ".html")
     end
+
+    if @html =~ /\.part\.html$/
+      part = find_part(@html)
+      raise "404" unless part
+      @cur_path = params[:ref] || "/"
+      if resp = render_part(part)
+        return send_part(resp)
+      end
+    elsif page = find_page(@cur_path)
+      if resp = render_page(page)
+        self.response = resp
+        return send_page(page)
+      end
+    elsif node = find_node(@cur_path)
+      if resp = render_node(node)
+        self.response = resp
+        return send_page(node)
+      end
+    end
+
+    page_not_found if response.body.blank?
+  end
 
   private
     def set_site

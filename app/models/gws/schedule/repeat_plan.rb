@@ -31,55 +31,54 @@ class Gws::Schedule::RepeatPlan
   validate :validate_plan_date, if: -> { repeat_start.present? && repeat_end.present? }
   validate :validate_plan_dates, if: -> { errors.size == 0 }
 
-  public
-    def extract_plans(plan)
-      save_plans plan, plan_dates
+  def extract_plans(plan)
+    save_plans plan, plan_dates
+  end
+
+  def plan_dates
+    case repeat_type
+    when 'daily'
+      daily_dates
+    when 'weekly'
+      weekly_dates
+    when 'monthly'
+      monthly_dates
+    else
+      []
     end
+  end
 
-    def plan_dates
-      case repeat_type
-      when 'daily'
-        daily_dates
-      when 'weekly'
-        weekly_dates
-      when 'monthly'
-        monthly_dates
-      else
-        []
-      end
-    end
+  # 繰り返し予定を登録する日付の配列を返す（毎日）
+  # @return [Array] 繰り返し予定を登録する日付の配列
+  def daily_dates
+    repeat_start.step(repeat_end, interval).to_a
+  end
 
-    # 繰り返し予定を登録する日付の配列を返す（毎日）
-    # @return [Array] 繰り返し予定を登録する日付の配列
-    def daily_dates
-      repeat_start.step(repeat_end, interval).to_a
-    end
+  # 繰り返し予定を登録する日付の配列を返す（毎週X曜日）
+  # @return [Array] 繰り返し予定を登録する日付の配列
+  def weekly_dates
+    wdays = self.wdays.presence || [repeat_start.wday.to_s]
+    dates = []
 
-    # 繰り返し予定を登録する日付の配列を返す（毎週X曜日）
-    # @return [Array] 繰り返し予定を登録する日付の配列
-    def weekly_dates
-      wdays = self.wdays.presence || [repeat_start.wday.to_s]
-      dates = []
-
-      (0..6).each do |i|
-        if wdays.include?(i.to_s)
-          date = get_date_next_specified_wday(repeat_start, i)
-          dates << date if date <= repeat_end
-        end
-      end
-
-      dates.each do |date|
-        date += interval.week
+    (0..6).each do |i|
+      if wdays.include?(i.to_s)
+        date = get_date_next_specified_wday(repeat_start, i)
         dates << date if date <= repeat_end
       end
-      dates.sort
     end
 
-    # 繰り返し予定を登録する日付の配列を返す（毎月）
-    # @return [Array] 繰り返し予定を登録する日付の配列
-    def monthly_dates
-      repeat_base == 'date' ? monthly_dates_by_date : monthly_dates_by_week
+    dates.each do |date|
+      date += interval.week
+      dates << date if date <= repeat_end
     end
+    dates.sort
+  end
+
+  # 繰り返し予定を登録する日付の配列を返す（毎月）
+  # @return [Array] 繰り返し予定を登録する日付の配列
+  def monthly_dates
+    repeat_base == 'date' ? monthly_dates_by_date : monthly_dates_by_week
+  end
 
   private
     def validate_plan_date

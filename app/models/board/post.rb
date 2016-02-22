@@ -24,44 +24,43 @@ class Board::Post
   validate :validate_banned_words, if: -> { node.banned_words.present? }
   validate :validate_deny_url, if: -> { node.deny_url? }
 
-  public
-    def valid_with_captcha?(node)
-      node.captcha_enabled? ? super() : true
-    end
+  def valid_with_captcha?(node)
+    node.captcha_enabled? ? super() : true
+  end
 
-    def validate_text
-      if text.size > node.text_size_limit
-        errors.add :text, :too_long, count: node.text_size_limit
-      end
+  def validate_text
+    if text.size > node.text_size_limit
+      errors.add :text, :too_long, count: node.text_size_limit
     end
+  end
 
-    def validate_delete_key
-      if delete_key !~ /^[a-zA-Z0-9]{4}$/
-        errors.add :delete_key, I18n.t('board.errors.invalid_delete_key')
-      end
+  def validate_delete_key
+    if delete_key !~ /^[a-zA-Z0-9]{4}$/
+      errors.add :delete_key, I18n.t('board.errors.invalid_delete_key')
     end
+  end
 
-    def validate_banned_words
-      cur_node.banned_words.each do |word|
-        errors.add :name, :invalid_word, word: word if name =~ /#{word}/
-        errors.add :text, :invalid_word, word: word if text =~ /#{word}/
-        errors.add :poster, :invalid_word, word: word if poster =~ /#{word}/
-      end
+  def validate_banned_words
+    cur_node.banned_words.each do |word|
+      errors.add :name, :invalid_word, word: word if name =~ /#{word}/
+      errors.add :text, :invalid_word, word: word if text =~ /#{word}/
+      errors.add :poster, :invalid_word, word: word if poster =~ /#{word}/
     end
+  end
 
-    def validate_deny_url
-      if text =~ %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}
-        errors.add :text, I18n.t('board.errors.not_allow_urls')
-      end
+  def validate_deny_url
+    if text =~ %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}
+      errors.add :text, I18n.t('board.errors.not_allow_urls')
     end
+  end
 
-    def modified_text
-      text = self.text
-      text.gsub!(%r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}) do |href|
-        "<a href=\"#{href}\">#{href}</a>"
-      end
-      text.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  def modified_text
+    text = self.text
+    text.gsub!(%r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}) do |href|
+      "<a href=\"#{href}\">#{href}</a>"
     end
+    text.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  end
 
   class << self
     def to_csv

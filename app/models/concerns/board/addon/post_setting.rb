@@ -18,56 +18,55 @@ module Board::Addon
       permit_params :banned_words, :deny_ips, :text_size_limit
     end
 
-    public
-      def show_email?
-        show_email == "enabled"
-      end
+    def show_email?
+      show_email == "enabled"
+    end
 
-      def show_url?
-        show_url == "enabled"
-      end
+    def show_url?
+      show_url == "enabled"
+    end
 
-      def deletable_post?
-        deletable_post == "enabled"
-      end
+    def deletable_post?
+      deletable_post == "enabled"
+    end
 
-      def deny_url?
-        deny_url == "deny"
-      end
+    def deny_url?
+      deny_url == "deny"
+    end
 
-      def show_email_options
-        [
-          [I18n.t('board.options.show_email.enabled'), 'enabled'],
-          [I18n.t('board.options.show_email.disabled'), 'disabled'],
-        ]
-      end
+    def show_email_options
+      [
+        [I18n.t('board.options.show_email.enabled'), 'enabled'],
+        [I18n.t('board.options.show_email.disabled'), 'disabled'],
+      ]
+    end
 
-      def show_url_options
-        [
-          [I18n.t('board.options.show_url.enabled'), 'enabled'],
-          [I18n.t('board.options.show_url.disabled'), 'disabled'],
-        ]
-      end
+    def show_url_options
+      [
+        [I18n.t('board.options.show_url.enabled'), 'enabled'],
+        [I18n.t('board.options.show_url.disabled'), 'disabled'],
+      ]
+    end
 
-      def deletable_post_options
-        [
-          [I18n.t('board.options.deletable_post.enabled'), 'enabled'],
-          [I18n.t('board.options.deletable_post.disabled'), 'disabled'],
-        ]
-      end
+    def deletable_post_options
+      [
+        [I18n.t('board.options.deletable_post.enabled'), 'enabled'],
+        [I18n.t('board.options.deletable_post.disabled'), 'disabled'],
+      ]
+    end
 
-      def deny_url_options
-        [
-          [I18n.t('board.options.deny_url.deny'), 'deny'],
-          [I18n.t('board.options.deny_url.allow'), 'allow'],
-        ]
-      end
+    def deny_url_options
+      [
+        [I18n.t('board.options.deny_url.deny'), 'deny'],
+        [I18n.t('board.options.deny_url.allow'), 'allow'],
+      ]
+    end
 
-      def text_size_limit_options
-        [
-          [I18n.t('board.options.text_size_limit.l400'), 400],
-          [I18n.t('board.options.text_size_limit.l0'), 0],
-        ]
-      end
+    def text_size_limit_options
+      [
+        [I18n.t('board.options.text_size_limit.l400'), 400],
+        [I18n.t('board.options.text_size_limit.l0'), 0],
+      ]
+    end
   end
 end

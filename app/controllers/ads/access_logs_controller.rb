@@ -5,28 +5,27 @@ class Ads::AccessLogsController < ApplicationController
 
   navi_view "ads/main/navi"
 
-  public
-    def index
-      if s = params[:s]
-        @year  = s[:year].presence
-        @month = s[:month].presence
-      end
-
-      sy = Time.zone.today.year - 10
-      ey = Time.zone.today.year
-      @years = (sy..ey).to_a.reverse.map { |d| ["#{d}#{t('datetime.prompts.year')}", d] }
-      @months = (1..12).to_a.map { |d| ["#{d}#{t('datetime.prompts.month')}", d] }
-
-      @items = @model.site(@cur_site).where(node_id: @cur_node.id)
-
-      if @month
-        monthly
-      elsif @year
-        yearly
-      else
-        recent
-      end
+  def index
+    if s = params[:s]
+      @year  = s[:year].presence
+      @month = s[:month].presence
     end
+
+    sy = Time.zone.today.year - 10
+    ey = Time.zone.today.year
+    @years = (sy..ey).to_a.reverse.map { |d| ["#{d}#{t('datetime.prompts.year')}", d] }
+    @months = (1..12).to_a.map { |d| ["#{d}#{t('datetime.prompts.month')}", d] }
+
+    @items = @model.site(@cur_site).where(node_id: @cur_node.id)
+
+    if @month
+      monthly
+    elsif @year
+      yearly
+    else
+      recent
+    end
+  end
 
   private
     def recent

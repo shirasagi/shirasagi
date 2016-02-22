@@ -43,7 +43,6 @@ module Inquiry::Node
 
     default_scope ->{ where(route: "inquiry/node") }
 
-    public
     def condition_hash(opts = {})
       cond = []
       cond << { filename: /^#{filename}\//, depth: depth + 1 }
@@ -65,5 +64,4 @@ module Inquiry::Node
       { '$or' => cond }
     end
   end
-
 end

@@ -34,72 +34,70 @@ class Job::Log
   scope :site, ->(site) { where(site_id: (site.nil? ? nil : site.id)) }
   scope :term, ->(from) { where(:created.lt => from) }
 
-  public
-    def save_term_options
-      [
-        [I18n.t(:"history.save_term.day"), "day"],
-        [I18n.t(:"history.save_term.month"), "month"],
-        [I18n.t(:"history.save_term.year"), "year"],
-        [I18n.t(:"history.save_term.all_save"), "all_save"],
-      ]
-    end
+  def save_term_options
+    [
+      [I18n.t(:"history.save_term.day"), "day"],
+      [I18n.t(:"history.save_term.month"), "month"],
+      [I18n.t(:"history.save_term.year"), "year"],
+      [I18n.t(:"history.save_term.all_save"), "all_save"],
+    ]
+  end
 
-    def delete_term_options
-      [
-        [I18n.t(:"history.save_term.year"), "year"],
-        [I18n.t(:"history.save_term.month"), "month"],
-        [I18n.t(:"history.save_term.all_delete"), "all_delete"],
-      ]
-    end
+  def delete_term_options
+    [
+      [I18n.t(:"history.save_term.year"), "year"],
+      [I18n.t(:"history.save_term.month"), "month"],
+      [I18n.t(:"history.save_term.all_delete"), "all_delete"],
+    ]
+  end
 
-    def start_label
-      started ? started.strftime("%Y-%m-%d %H:%m") : ""
-    end
+  def start_label
+    started ? started.strftime("%Y-%m-%d %H:%m") : ""
+  end
 
-    def closed_label
-      closed ? closed.strftime("%Y-%m-%d %H:%m") : ""
-    end
+  def closed_label
+    closed ? closed.strftime("%Y-%m-%d %H:%m") : ""
+  end
 
-    def joined_jobs
-      logs.blank? ? '' : logs.join("\n")
-    end
+  def joined_jobs
+    logs.blank? ? '' : logs.join("\n")
+  end
 
   class << self
-    public
-      def add(task)
-        # copy all members
-        log = Job::Log.new(
-          site_id: task.site_id,
-          user_id: task.user_id,
-          job_id: task.id,
-          state: task.state,
-          started: task.started,
-          closed: task.closed,
-          logs: task.logs,
-          pool: task.pool,
-          class_name: task.class_name,
-          args: task.args,
-          priority: task.priority,
-          at: task.at)
-        log.save!
-        log
-      end
+    def add(task)
+      # copy all members
+      log = Job::Log.new(
+        site_id: task.site_id,
+        user_id: task.user_id,
+        job_id: task.id,
+        state: task.state,
+        started: task.started,
+        closed: task.closed,
+        logs: task.logs,
+        pool: task.pool,
+        class_name: task.class_name,
+        args: task.args,
+        priority: task.priority,
+        at: task.at)
+      log.save!
+      log
+    end
 
-      def term_to_date(name)
-        case name.to_s
-        when "year"
-          Time.zone.now - 1.year
-        when "month"
-          Time.zone.now - 1.month
-        when "day"
-          Time.zone.now - 1.day
-        when "all_delete"
-          Time.zone.now
-        when "all_save"
-          nil
-        else
-          raise "malformed term: #{name}"
-        end
+    def term_to_date(name)
+      case name.to_s
+      when "year"
+        Time.zone.now - 1.year
+      when "month"
+        Time.zone.now - 1.month
+      when "day"
+        Time.zone.now - 1.day
+      when "all_delete"
+        Time.zone.now
+      when "all_save"
+        nil
+      else
+        raise "malformed term: #{name}"
       end
+    end
   end
 end

@@ -4,10 +4,9 @@ class Faq::Agents::Parts::SearchController < ApplicationController
   include Mobile::PublicFilter
   helper Cms::ListHelper
 
-  public
-    def index
-      @search_node = @cur_part.search_node.present? ? @cur_part.search_node : @cur_part.parent
-      @url = mobile_path? ? "#{SS.config.mobile.location}#{@search_node.url}" : @search_node.url
-      @search_node.blank? ? "" : render
-    end
+  def index
+    @search_node = @cur_part.search_node.present? ? @cur_part.search_node : @cur_part.parent
+    @url = mobile_path? ? "#{SS.config.mobile.location}#{@search_node.url}" : @search_node.url
+    @search_node.blank? ? "" : render
+  end
 end

@@ -17,30 +17,29 @@ class Inquiry::Answer
   validates :node_id, presence: true
   validate :validate_data
 
-  public
-    def set_data(hash = {})
-      self.data = []
-      hash.each do |key, data|
-        value, confirm = data
-        if value.kind_of?(Hash)
-          values = value.values
-          value  = value.map {|k, v| v}.join("\n")
-        else
-          values = [value.to_s]
-          value  = value.to_s
-        end
-
-        self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value, values: values, confirm: confirm)
+  def set_data(hash = {})
+    self.data = []
+    hash.each do |key, data|
+      value, confirm = data
+      if value.kind_of?(Hash)
+        values = value.values
+        value  = value.map {|k, v| v}.join("\n")
+      else
+        values = [value.to_s]
+        value  = value.to_s
       end
-    end
 
-    def data_summary
-      summary = ""
-      data.each do |d|
-        summary << "#{d.value} "
-      end
-      summary.gsub(/\s+/, ", ").gsub(/, $/, "").truncate(80)
+      self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value, values: values, confirm: confirm)
     end
+  end
+
+  def data_summary
+    summary = ""
+    data.each do |d|
+      summary << "#{d.value} "
+    end
+    summary.gsub(/\s+/, ", ").gsub(/, $/, "").truncate(80)
+  end
 
   private
     def validate_data

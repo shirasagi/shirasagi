@@ -31,13 +31,12 @@ class Gws::Link
     criteria
   }
 
-  public
-    def state_options
-      [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-      ]
-    end
+  def state_options
+    [
+      [I18n.t('views.options.state.public'), 'public'],
+      [I18n.t('views.options.state.closed'), 'closed'],
+    ]
+  end
 
   private
     def set_released

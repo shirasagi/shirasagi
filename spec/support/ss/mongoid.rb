@@ -11,7 +11,6 @@ end
 module Mongoid
   module Tasks
     module Database
-      private
         # rewrite logger method.
         def self.logger
           Rails.logger

@@ -20,22 +20,21 @@ class Ezine::Member
 
   scope :enabled, ->{ where(state: 'enabled') }
 
-  public
-    def email_type_options
-      [
-        [I18n.t('ezine.options.email_type.text'), 'text'],
-        [I18n.t('ezine.options.email_type.html'), 'html'],
-      ]
-    end
+  def email_type_options
+    [
+      [I18n.t('ezine.options.email_type.text'), 'text'],
+      [I18n.t('ezine.options.email_type.html'), 'html'],
+    ]
+  end
 
-    def state_options
-      [
-        [I18n.t('ezine.options.delivery_state.enabled'), 'enabled'],
-        [I18n.t('ezine.options.delivery_state.disabled'), 'disabled'],
-      ]
-    end
+  def state_options
+    [
+      [I18n.t('ezine.options.delivery_state.enabled'), 'enabled'],
+      [I18n.t('ezine.options.delivery_state.disabled'), 'disabled'],
+    ]
+  end
 
-    def test_member?
-      false
-    end
+  def test_member?
+    false
+  end
 end
