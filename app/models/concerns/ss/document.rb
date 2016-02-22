@@ -28,7 +28,6 @@ module SS::Document
       end
       where("$and" => cond)
     }
-
     scope :search_text, ->(words) {
       words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i } if words.is_a?(String)
       if self.class_variable_get(:@@_text_index_fields).present?

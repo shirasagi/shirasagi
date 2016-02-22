@@ -38,7 +38,6 @@ class Gws::Board::Post
 
   scope :topic, ->{ exists parent_id: false }
   scope :comment, ->{ exists parent_id: true }
-
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?

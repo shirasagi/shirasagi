@@ -23,7 +23,7 @@ class Chorg::Changeset
   field :destinations, type: Array
   permit_params :cur_revision, :cur_type
   permit_params :type, :sources, :destinations
-  permit_params(sources: [ "id", "name"])
+  permit_params(sources: %w(id name))
   permit_params(destinations: GROUP_ATTRIBUTES)
 
   validates :revision_id, presence: true
