@@ -16,12 +16,10 @@ class Uploader::File
     return false unless valid?
     begin
       if saved_path && path != saved_path #persisted AND path chenged
-        if directory?
-          Fs.mv saved_path, path
-        else
+        if !directory?
           Fs.binwrite saved_path, binary
-          Fs.mv saved_path, path
         end
+        Fs.mv saved_path, path
       else
         directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
       end

@@ -62,7 +62,7 @@ class Frypan
     end
 
     def mod
-      name.gsub("-", "_")
+      name.tr("-", "_")
     end
 
     def ver

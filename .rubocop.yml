@@ -1,10 +1,13 @@
 inherit_from: .rubocop_todo.yml
-Rails:
-  Enabled: true
+
+AllCops:
   Exclude:
     - Guardfile
     - bin/*
     - vendor/bundle/**/*
+
+Rails:
+  Enabled: true
 
 # Cop supports --auto-correct.
 Rails/Output:

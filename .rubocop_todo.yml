@@ -230,7 +230,7 @@ Style/HashSyntax:
 Style/IfUnlessModifier:
   Enabled: false
 
-Style/IndentArray :
+Style/IndentArray:
   Enabled: false
 
 # Offense count: 1027
@@ -259,6 +259,9 @@ Style/LeadingCommentSpace:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/MethodDefParentheses:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
   Enabled: false
 
 # Offense count: 242

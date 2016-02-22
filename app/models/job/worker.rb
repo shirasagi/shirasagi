@@ -27,7 +27,7 @@ module Job::Worker
         &block)
     end
 
-    alias_method :call_at, :call_in
+    alias call_at call_in
 
     def job_options
       @job_options_hash ||= {}

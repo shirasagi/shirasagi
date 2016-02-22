@@ -21,7 +21,7 @@ class Ldap::Entry
     self.class.normalize(@entry[name])
   end
 
-  alias_method :values, :[]
+  alias values []
 
   def value(name)
     self[name].first

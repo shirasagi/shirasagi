@@ -12,8 +12,8 @@ class Cms::PreviewController < ApplicationController
   after_action :render_mobile, if: ->{ mobile_path? }
 
   if SS.config.cms.remote_preview
-    skip_filter :logged_in?
-    skip_filter :set_group
+    skip_action_callback :logged_in?
+    skip_action_callback :set_group
   end
 
   def form_preview
@@ -92,11 +92,9 @@ class Cms::PreviewController < ApplicationController
         if @thumb_width && @thumb_height
           send_thumb @item.read, type: @item.content_type, filename: @item.filename,
             disposition: :inline, width: @thumb_width, height: @thumb_height
-          return
         else
           send_file @item.path, type: @item.content_type, filename: @item.filename,
             disposition: :inline, x_sendfile: true
-          return
         end
       end
       #raise "404" unless Fs.exists?(file)
