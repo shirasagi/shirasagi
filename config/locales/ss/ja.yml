@@ -129,6 +129,7 @@ ja:
       ss/site: サイト
       ss/user: ユーザー
       ss/group: グループ
+      ss/file: ファイル
       ss/temp_file: 一時ファイル
       ss/user_file: ユーザーファイル
       ss/group_file: グループファイル
@@ -178,7 +179,12 @@ ja:
         current_count: 処理件数
         log: ログ
       ss/model/file:
+        model: モデル
+        state: 状態
         name: ファイル名（表示用）
+        filename: ファイル名
+        size: ファイルサイズ
+        content_type: Content Type
       ss/model/role:
         name: ロール名
         permission_level: 権限レベル
