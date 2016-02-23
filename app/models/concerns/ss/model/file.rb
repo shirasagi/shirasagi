@@ -171,7 +171,7 @@ module SS::Model::File
 
   private
     def set_filename
-      self.name         ||= in_file.original_filename
+      self.name         = in_file.original_filename if self[:name].blank?
       self.filename     = in_file.original_filename if filename.blank?
       self.size         = in_file.size
       self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
