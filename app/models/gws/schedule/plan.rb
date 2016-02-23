@@ -49,8 +49,8 @@ class Gws::Schedule::Plan
     return criteria if params.blank?
 
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
-    criteria = criteria.where :start_at.gte => params[:start] if params[:start].present?
-    criteria = criteria.where :end_at.lte => params[:end] if params[:end].present?
+    criteria = criteria.where :end_at.gte => params[:start] if params[:start].present?
+    criteria = criteria.where :start_at.lte => params[:end] if params[:end].present?
     criteria
   }
 
