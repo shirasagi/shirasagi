@@ -5,3 +5,7 @@
 //= require fullcalendar/lang/ja
 //= require gws/schedule/lib/calendar
 //= require gws/schedule/lib/plan
+
+$ ->
+  # external link
+  $('a[href^=http]').not('[href*="'+location.hostname+'"]').attr({ target: '_blank' })

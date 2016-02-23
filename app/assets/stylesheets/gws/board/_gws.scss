@@ -4,6 +4,7 @@
 .gws-board {
   .topic, .comment {
     @include box;
+    margin-bottom: 2px;
     header {
       @include box-head;
     }
@@ -21,9 +22,6 @@
       }
     }
   }
-  .comment {
-    margin-top: 10px;
-  }
   .meta {
     .user {
       margin-right: 5px;
@@ -33,12 +31,15 @@
   .menu {
     padding: 10px 5px;
     border-top: 1px solid #eee;
-    text-align: center;
+    text-align: right;
     a {
-      margin: 0 5px;
+      margin: 0 4px;
+    }
+    a.primary {
+      @include grd-orange;
     }
   }
   .comments {
-    padding-left: 25px;
+    padding-left: 20px;
   }
 }

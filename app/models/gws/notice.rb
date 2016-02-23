@@ -21,6 +21,9 @@ class Gws::Notice
 
   after_validation :set_released, if: -> { state == "public" }
 
+  default_scope -> {
+    order_by released: -1
+  }
   scope :and_public, ->(date = Time.zone.now) {
     where("$and" => [
       { state: "public" },

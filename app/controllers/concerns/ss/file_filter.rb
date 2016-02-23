@@ -58,10 +58,10 @@ module SS::FileFilter
       set_last_modified
 
       if Fs.mode == :file && Fs.file?(@item.path)
-        send_file @item.path, type: @item.content_type, filename: @item.filename,
+        send_file @item.path, type: @item.content_type, filename: @item.download_filename,
           disposition: :attachment, x_sendfile: true
       else
-        send_data @item.read, type: @item.content_type, filename: @item.filename,
+        send_data @item.read, type: @item.content_type, filename: @item.download_filename,
           disposition: :attachment
       end
     end

@@ -102,6 +102,10 @@ module SS::Model::File
     "#{name} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
+  def download_filename
+    name =~ /\./ ? name : name.sub(/\..*/, '') + extname
+  end
+
   def basename
     filename.to_s.sub(/.*\//, "")
   end
@@ -167,6 +171,7 @@ module SS::Model::File
 
   private
     def set_filename
+      self.name         ||= in_file.original_filename
       self.filename     = in_file.original_filename if filename.blank?
       self.size         = in_file.size
       self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)

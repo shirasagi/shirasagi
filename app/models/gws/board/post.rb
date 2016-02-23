@@ -18,9 +18,9 @@ class Gws::Board::Post
   belongs_to :parent, class_name: "Gws::Board::Post", inverse_of: :children
 
   has_many :children, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :parent,
-    order: { created: 1 }
+    order: { created: -1 }
   has_many :descendants, class_name: "Gws::Board::Post", dependent: :destroy, inverse_of: :topic,
-    order: { created: 1 }
+    order: { created: -1 }
 
   permit_params :name, :mode, :permit_comment
 

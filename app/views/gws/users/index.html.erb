@@ -1,5 +1,5 @@
 <% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
+  <span class="id">#<%= item.uid.presence || item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
 
   <% if item.email.present? %>

@@ -1,6 +1,9 @@
 <%
 
 menu = []
+if @item.permit_comment?
+  menu << link_to(t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary")
+end
 menu << link_to(:edit, { action: :edit, id: @item }, class: "btn") if @item.allowed?(:edit, @cur_user, site: @cur_site)
 menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.allowed?(:delete, @cur_user, site: @cur_site)
 
@@ -27,21 +30,14 @@ menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.
     </div>
     <% end %>
 
-    <% if menu.size > 0 %>
+    <% if menu.present? %>
     <div class="menu"><%= safe_join(menu) %></div>
     <% end %>
   </article>
 
-  <% if @item.children.size > 0 %>
+  <% if @item.children.present? %>
   <div class="comments">
     <%= render partial: 'gws/board/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
   </div>
   <% end %>
 </div>
-
-<% if @item.permit_comment? %>
-<footer class="send">
-  <%= link_to t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-    class: "btn-primary" %>
-</footer>
-<% end %>

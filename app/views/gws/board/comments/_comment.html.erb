@@ -2,7 +2,7 @@
 
 menu = []
 if @item.permit_comment? && recursion
-  menu << link_to(t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id), class: "btn")
+  menu << link_to(t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id), class: "btn primary")
 end
 if comment.allowed?(:edit, @cur_user, site: @cur_site)
   menu << link_to(:edit, edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id), class: "btn")
@@ -32,13 +32,13 @@ end
     </div>
     <% end %>
 
-    <% if menu.size > 0 %>
+    <% if menu.present? %>
     <div class="menu"><%= safe_join(menu) %></div>
     <% end %>
   </div>
 </aside>
 
-<% if comment.children.size > 0 %>
+<% if comment.children.present? %>
 <div class="comments">
   <%= render partial: 'gws/board/comments/comment', collection: comment.children, locals: {parent: comment, recursion: recursion} if recursion %>
 </div>

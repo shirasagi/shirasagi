@@ -48,6 +48,9 @@ module SS::Model::User
     before_validation :encrypt_password, if: ->{ in_password.present? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
+    default_scope -> {
+      order_by uid: 1, email: 1
+    }
     scope :uid_or_email, ->(id) { self.or({email: id}, {uid: id}) }
   end
 

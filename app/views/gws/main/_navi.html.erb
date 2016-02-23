@@ -9,12 +9,12 @@
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
 
-<% links = Gws::Link.site(@cur_site).and_public %>
-<% links.each do |item| %>
-  <nav class="main-navi">
-    <div class="links">
-      <h2 class="link-title"><%= item.name %></h2>
-      <div class="link-body"><%== item.html %></div>
-    </div>
-  </nav>
+<% links = Gws::Link.site(@cur_site).and_public.allow(:read, @cur_user, site: @cur_site) %>
+<% if links.present? %>
+<nav class="mod-navi">
+  <h2><%= link_to t('mongoid.models.gws/link'), gws_public_links_path %></h2>
+  <% links.each do |item| %>
+  <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
+  <% end %>
+</nav>
 <% end %>

@@ -20,6 +20,9 @@ class Gws::Link
 
   after_validation :set_released, if: -> { state == "public" }
 
+  default_scope -> {
+    order_by released: -1
+  }
   scope :and_public, -> {
     where state: "public"
   }

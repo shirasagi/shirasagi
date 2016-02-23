@@ -1,0 +1,16 @@
+<div class="index notices">
+  <div class="list-head"><%= t "mongoid.models.gws/link" %></div>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, { action: :show, id: item} %>
+        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

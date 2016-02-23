@@ -16,23 +16,23 @@ ja:
   gws_role:
     edit_gws_users: ユーザの編集
     read_other_gws_notices: お知らせの閲覧（全て）
-    read_private_gws_notices: お知らせの閲覧（自分）
+    read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
-    edit_private_gws_notices: お知らせの編集（自分）
+    edit_private_gws_notices: お知らせの編集（所有）
     delete_other_gws_notices: お知らせの削除（全て）
-    delete_private_gws_notices: お知らせの削除（自分）
+    delete_private_gws_notices: お知らせの削除（所有）
     read_other_gws_links: リンク集の閲覧（全て）
-    read_private_gws_links: リンク集の閲覧（自分）
+    read_private_gws_links: リンク集の閲覧（所有）
     edit_other_gws_links: リンク集の編集（全て）
-    edit_private_gws_links: リンク集の編集（自分）
+    edit_private_gws_links: リンク集の編集（所有）
     delete_other_gws_links: リンク集の削除（全て）
-    delete_private_gws_links: リンク集の削除（自分）
+    delete_private_gws_links: リンク集の削除（所有）
     read_other_gws_facilities: 設備の閲覧（全て）
-    read_private_gws_facilities: 設備の閲覧（自分）
+    read_private_gws_facilities: 設備の閲覧（所有）
     edit_other_gws_facilities: 設備の編集（全て）
-    edit_private_gws_facilities: 設備の編集（自分）
+    edit_private_gws_facilities: 設備の編集（所有）
     delete_other_gws_facilities: 設備の削除（全て）
-    delete_private_gws_facilities: 設備の削除（自分）
+    delete_private_gws_facilities: 設備の削除（所有）
 
   modules:
     gws: 標準機能

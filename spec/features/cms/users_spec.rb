@@ -148,14 +148,14 @@ describe "cms_users", dbscope: :example do
       users = Cms::User.site(cms_site).ne(id: cms_user.id)
       expected_emails = %w(
         import_admin@example.jp
+        import_sys@example.jp
         import_user1@example.jp
         import_user2@example.jp
-        import_sys@example.jp
       )
-      expected_names = %w(import_admin import_user1 import_user2 import_sys)
-      expected_uids = %w(admin user1 user2 sys)
-      expected_groups = [ ["A/B/C"], ["A/B/C", "A/B/D"], ["A/B/D"], ["A"] ]
-      expected_cms_roles = [ %w(all), %w(edit), %w(edit), %w(all edit) ]
+      expected_names = %w(import_admin import_sys import_user1 import_user2)
+      expected_uids = %w(admin sys user1 user2)
+      expected_groups = [ ["A/B/C"], ["A"], ["A/B/C", "A/B/D"], ["A/B/D"] ]
+      expected_cms_roles = [ %w(all), %w(all edit), %w(edit), %w(edit) ]
 
       expect(users.map(&:name)).to eq expected_names
       expect(users.map(&:email)).to eq expected_emails
