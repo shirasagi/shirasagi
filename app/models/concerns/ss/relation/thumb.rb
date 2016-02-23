@@ -23,40 +23,39 @@ module SS::Relation::Thumb
       end
   end
 
-  public
-    def thumb(key = nil)
-      if key.nil?
-        normal = thumbs.where(image_size_name: :normal).first
-        normal ? normal : thumbs.first
-      elsif key.kind_of?(Array)
-        thumbs.where(image_size: key).first
-      else
-        thumbs.where(image_size_name: key).first
-      end
+  def thumb(key = nil)
+    if key.nil?
+      normal = thumbs.where(image_size_name: :normal).first
+      normal ? normal : thumbs.first
+    elsif key.kind_of?(Array)
+      thumbs.where(image_size: key).first
+    else
+      thumbs.where(image_size_name: key).first
     end
+  end
 
-    def thumb_url
-      thumb ? thumb.url : super
-    end
+  def thumb_url
+    thumb ? thumb.url : super
+  end
 
-    def destroy_thumbs
-      return if thumbs.blank?
+  def destroy_thumbs
+    return if thumbs.blank?
 
-      result = thumbs.destroy_all
-      reload
-      result
-    end
+    result = thumbs.destroy_all
+    reload
+    result
+  end
 
-    ## generate first thumb file
-    def generate_public_file(*args)
-      super
-      thumb.generate_public_file if thumb
-    end
+  ## generate first thumb file
+  def generate_public_file(*args)
+    super
+    thumb.generate_public_file if thumb
+  end
 
-    def remove_public_file(*args)
-      super
-      thumb.remove_public_file if thumb
-    end
+  def remove_public_file(*args)
+    super
+    thumb.remove_public_file if thumb
+  end
 
   private
     def save_thumbs

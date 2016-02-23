@@ -5,8 +5,7 @@ class Cms::MainController < ApplicationController
 
   navi_view "cms/main/navi"
 
-  public
-    def index
-      # redirect
-    end
+  def index
+    # redirect
+  end
 end

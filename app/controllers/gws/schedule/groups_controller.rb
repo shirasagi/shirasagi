@@ -3,8 +3,7 @@ class Gws::Schedule::GroupsController < ApplicationController
   #include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
-  public
-    def index
-      @items = @cur_site.descendants
-    end
+  def index
+    @items = @cur_site.descendants
+  end
 end

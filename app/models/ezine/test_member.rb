@@ -17,15 +17,14 @@ class Ezine::TestMember
   # Test member is always "enabled".
   scope :enabled, ->{ all }
 
-  public
-    def email_type_options
-      [
-        [I18n.t('ezine.options.email_type.text'), 'text'],
-        [I18n.t('ezine.options.email_type.html'), 'html'],
-      ]
-    end
+  def email_type_options
+    [
+      [I18n.t('ezine.options.email_type.text'), 'text'],
+      [I18n.t('ezine.options.email_type.html'), 'html'],
+    ]
+  end
 
-    def test_member?
-      true
-    end
+  def test_member?
+    true
+  end
 end

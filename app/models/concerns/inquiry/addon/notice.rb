@@ -13,17 +13,16 @@ module Inquiry::Addon
       validate :validate_notify_mail
     end
 
-    public
-      def notice_state_options
-        [
-          [I18n.t('inquiry.options.state.enabled'), 'enabled'],
-          [I18n.t('inquiry.options.state.disabled'), 'disabled'],
-        ]
-      end
+    def notice_state_options
+      [
+        [I18n.t('inquiry.options.state.enabled'), 'enabled'],
+        [I18n.t('inquiry.options.state.disabled'), 'disabled'],
+      ]
+    end
 
-      def notify_mail_enabled?
-        notice_state == "enabled"
-      end
+    def notify_mail_enabled?
+      notice_state == "enabled"
+    end
 
     private
       def validate_notify_mail

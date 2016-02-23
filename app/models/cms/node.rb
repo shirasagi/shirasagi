@@ -51,20 +51,19 @@ class Cms::Node
   class << self
     @@plugins = []
 
-    public
-      def plugin(path)
-        name = I18n.t("modules.#{path.sub(/\/.*/, '')}", default: path.titleize)
-        name << "/" + I18n.t("cms.nodes.#{path}", default: path.titleize)
-        @@plugins << [name, path]
-      end
+    def plugin(path)
+      name = I18n.t("modules.#{path.sub(/\/.*/, '')}", default: path.titleize)
+      name << "/" + I18n.t("cms.nodes.#{path}", default: path.titleize)
+      @@plugins << [name, path]
+    end
 
-      def plugins
-        @@plugins
-      end
+    def plugins
+      @@plugins
+    end
 
-      def modules
-        keys = @@plugins.map {|m| m[1].sub(/\/.*/, "") }.uniq
-        keys.map {|key| [I18n.t("modules.#{key}", default: key.to_s.titleize), key] }
-      end
+    def modules
+      keys = @@plugins.map {|m| m[1].sub(/\/.*/, "") }.uniq
+      keys.map {|key| [I18n.t("modules.#{key}", default: key.to_s.titleize), key] }
+    end
   end
 end

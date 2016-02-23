@@ -43,7 +43,7 @@ describe "cms_generate_nodes" do
       end
       task = Cms::Task.where(name: "cms:generate_nodes", site_id: site.id, node_id: node.id).first
       expect(task.started).to be >= start_at if task.state != "stop"
-      expect(task.state).to satisfy { |v| ["running", "stop"].include?(v) }
+      expect(task.state).to satisfy { |v| %w(running stop).include?(v) }
     end
   end
 end

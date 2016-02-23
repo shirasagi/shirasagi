@@ -1,23 +1,22 @@
 module Cms::PublicHelper
-  public
-    def paginate(*args)
-      super.gsub(/href=".*?"/) do |m|
-        url  = convert_static_url m.sub(/href="(.*?)"/, '\\1')
-        href = %(href="#{url}")
-        m.sub(/href=".*?"/, href)
-      end.html_safe
-    end
+  def paginate(*args)
+    super.gsub(/href=".*?"/) do |m|
+      url  = convert_static_url m.sub(/href="(.*?)"/, '\\1')
+      href = %(href="#{url}")
+      m.sub(/href=".*?"/, href)
+    end.html_safe
+  end
 
-    def body_id(path)
-      "body-" + path.to_s.sub(/\/$/, "/index").sub(/\.html$/, "").gsub(/[^\w-]+/, "-")
-    end
+  def body_id(path)
+    "body-" + path.to_s.sub(/\/$/, "/index").sub(/\.html$/, "").gsub(/[^\w-]+/, "-")
+  end
 
-    def body_class(path)
-      prefix = "body-"
-      nodes  = path.to_s.sub(/\/[^\/]+\.html$/, "").sub(/^\//, "").split("/")
-      nodes  = nodes.map { |node| prefix = "#{prefix}-" + node.gsub(/[^\w-]+/, "-") }
-      nodes.join(" ")
-    end
+  def body_class(path)
+    prefix = "body-"
+    nodes  = path.to_s.sub(/\/[^\/]+\.html$/, "").sub(/^\//, "").split("/")
+    nodes  = nodes.map { |node| prefix = "#{prefix}-" + node.gsub(/[^\w-]+/, "-") }
+    nodes.join(" ")
+  end
 
   private
     def convert_static_url(url)
@@ -35,7 +34,7 @@ module Cms::PublicHelper
         params[:page] = page if path !~ /\.html/
       end
 
-      if params.size > 0
+      if params.present?
         path = "#{path}?" + params.to_query
       end
 

@@ -11,7 +11,7 @@ namespace :ss do
         fs = Mongoid::GridFs.get file[:file_id]
         File.binwrite file.path, fs.data
       rescue StandardError => e
-        puts "#{e}"
+        puts e.to_s
       end
     end
   end

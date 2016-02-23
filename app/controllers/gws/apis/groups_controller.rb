@@ -3,12 +3,11 @@ class Gws::Apis::GroupsController < ApplicationController
 
   model Gws::Group
 
-  public
-    def index
-      @single = params[:single].present?
-      @multi = !@single
-      @items = @model.site(@cur_site).
-        search(params[:s]).
-        page(params[:page]).per(50)
-    end
+  def index
+    @single = params[:single].present?
+    @multi = !@single
+    @items = @model.site(@cur_site).
+      search(params[:s]).
+      page(params[:page]).per(50)
+  end
 end

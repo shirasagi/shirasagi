@@ -11,15 +11,14 @@ module Inquiry::Addon
       validate :validate_reception_date
     end
 
-    public
-      def reception_enabled?
-        if (reception_start_date.present? && reception_start_date.to_date > Time.zone.now.to_date) ||
-           (reception_close_date.present? && reception_close_date.to_date < Time.zone.now.to_date)
-          false
-        else
-          true
-        end
+    def reception_enabled?
+      if (reception_start_date.present? && reception_start_date.to_date > Time.zone.now.to_date) ||
+         (reception_close_date.present? && reception_close_date.to_date < Time.zone.now.to_date)
+        false
+      else
+        true
       end
+    end
 
     private
       def validate_reception_date

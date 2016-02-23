@@ -87,11 +87,11 @@ describe Chorg::MainRunner, dbscope: :example do
 
     context "with workflow approving Article::Page" do
       let(:user1) do
-        create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp",
+        create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp",
                group_ids: [group.id], cms_role_ids: [cms_role.id])
       end
       let(:user2) do
-        create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp",
+        create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp",
                group_ids: [group.id], cms_role_ids: [cms_role.id])
       end
       let(:page) do
@@ -131,8 +131,8 @@ describe Chorg::MainRunner, dbscope: :example do
     context "with Article::Page" do
       let(:group1) { create(:revision_new_group) }
       let(:group2) { create(:revision_new_group) }
-      let(:user1) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
-      let(:user2) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
+      let(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
+      let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
       let(:page) { create(:revisoin_page, site: site, group: group1) }
@@ -170,8 +170,8 @@ describe Chorg::MainRunner, dbscope: :example do
     context "unify to existing group" do
       let(:group1) { create(:revision_new_group, contact_email: "foobar02@example.jp") }
       let(:group2) { create(:revision_new_group, contact_email: "foobar@example.jp") }
-      let(:user1) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
-      let(:user2) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
+      let(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
+      let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
         create(:unify_changeset, revision_id: revision.id, sources: [group1, group2], destination: group1)
@@ -223,7 +223,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:group0) { create(:revision_new_group) }
       let(:group1) { build(:revision_new_group) }
       let(:group2) { build(:revision_new_group) }
-      let(:user) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group0.id]) }
+      let(:user) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group0.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
         create(:division_changeset, revision_id: revision.id, source: group0, destinations: [group1, group2])
@@ -260,7 +260,7 @@ describe Chorg::MainRunner, dbscope: :example do
     context "divide from existing group to existing group" do
       let(:group1) { create(:revision_new_group) }
       let(:group2) { build(:revision_new_group) }
-      let(:user) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
+      let(:user) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) do
         create(:division_changeset, revision_id: revision.id, source: group1, destinations: [group1, group2])

@@ -1,16 +1,15 @@
 class Event::Agents::Tasks::Node::PagesController < ApplicationController
   include Cms::PublicFilter::Node
 
-  public
-    def generate
-      generate_node @node
+  def generate
+    generate_node @node
 
-      @start_date = Time.zone.today.advance(years: -1)
-      @close_date = Time.zone.today.advance(years: 1)
+    @start_date = Time.zone.today.advance(years: -1)
+    @close_date = Time.zone.today.advance(years: 1)
 
-      remove_old_pages
-      generate_new_pages
-    end
+    remove_old_pages
+    generate_new_pages
+  end
 
   private
     def remove_old_pages

@@ -27,7 +27,7 @@ module Job::Worker
         &block)
     end
 
-    alias_method :call_at, :call_in
+    alias call_at call_in
 
     def job_options
       @job_options_hash ||= {}
@@ -70,17 +70,16 @@ module Job::Worker
   end
 
   class PoolConfig
-    public
-      def initialize(config)
-        @config = config || {}
-      end
+    def initialize(config)
+      @config = config || {}
+    end
 
-      def max_size?
-        @config.key?('max_size')
-      end
+    def max_size?
+      @config.key?('max_size')
+    end
 
-      def max_size
-        @config['max_size'].to_i
-      end
+    def max_size
+      @config['max_size'].to_i
+    end
   end
 end

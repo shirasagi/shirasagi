@@ -19,8 +19,7 @@ class KeyVisual::Image
 
   default_scope ->{ where(route: "key_visual/image") }
 
-  public
-    def serve_static_file?
-      false
-    end
+  def serve_static_file?
+    false
+  end
 end

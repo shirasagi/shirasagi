@@ -13,33 +13,32 @@ module Ezine::Addon
       validate :validate_select_options
     end
 
-    public
-      def input_type_options
-        [
-          [I18n.t('inquiry.options.input_type.text_field'), 'text_field'],
-          [I18n.t('inquiry.options.input_type.text_area'), 'text_area'],
-          [I18n.t('inquiry.options.input_type.radio_button'), 'radio_button'],
-          [I18n.t('inquiry.options.input_type.select'), 'select'],
-          [I18n.t('inquiry.options.input_type.check_box'), 'check_box'],
-        ]
-      end
+    def input_type_options
+      [
+        [I18n.t('inquiry.options.input_type.text_field'), 'text_field'],
+        [I18n.t('inquiry.options.input_type.text_area'), 'text_area'],
+        [I18n.t('inquiry.options.input_type.radio_button'), 'radio_button'],
+        [I18n.t('inquiry.options.input_type.select'), 'select'],
+        [I18n.t('inquiry.options.input_type.check_box'), 'check_box'],
+      ]
+    end
 
-      def required_options
-        [
-          [I18n.t('inquiry.options.required.required'), 'required'],
-          [I18n.t('inquiry.options.required.optional'), 'optional'],
-        ]
-      end
+    def required_options
+      [
+        [I18n.t('inquiry.options.required.required'), 'required'],
+        [I18n.t('inquiry.options.required.optional'), 'optional'],
+      ]
+    end
 
-      def required?
-        required == "required"
-      end
+    def required?
+      required == "required"
+    end
 
-      def additional_attr_to_h
-        additional_attr.scan(/\S+?=".+?"/m).
-          map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
-          compact.to_h
-      end
+    def additional_attr_to_h
+      additional_attr.scan(/\S+?=".+?"/m).
+        map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
+        compact.to_h
+    end
 
     private
       def validate_select_options

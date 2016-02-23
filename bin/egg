@@ -45,7 +45,7 @@ class Frypan
 
   private
     def root
-      "#{File.dirname(__dir__)}"
+      File.dirname(__dir__).to_s
     end
 
     def zip_dir
@@ -62,7 +62,7 @@ class Frypan
     end
 
     def mod
-      name.gsub("-", "_")
+      name.tr("-", "_")
     end
 
     def ver

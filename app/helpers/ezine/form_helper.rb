@@ -20,7 +20,7 @@ module Ezine::FormHelper
       column.select_options.each_with_index do |v, i|
         opt = { id: "column_tag_#{column.id}_#{i}" }
         opt.merge!(column.additional_attr_to_h)
-        checked = value.try(:[], "#{i}") ? true : false
+        checked = value.try(:[], i.to_s) ? true : false
         h << send(column.input_type + "_tag", "#{name}[#{column.id}][#{i}]", v, checked, opt)
         h << label_tag("column_tag_#{column.id}_#{i}", v)
       end

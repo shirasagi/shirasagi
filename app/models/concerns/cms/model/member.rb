@@ -42,13 +42,12 @@ module Cms::Model::Member
     before_save :set_site_email, if: ->{ email.present? }
   end
 
+  def encrypt_password
+    self.password = SS::Crypt.crypt(in_password)
+  end
+
   private
     def set_site_email
       self.site_email = "#{site_id}_#{email}"
-    end
-
-  public
-    def encrypt_password
-      self.password = SS::Crypt.crypt(in_password)
     end
 end

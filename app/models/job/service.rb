@@ -11,14 +11,13 @@ class Job::Service
   DEFAULT_LOG_LEVEL = Logger::INFO
 
   class << self
-    public
-      def run(config = nil)
-        config ||= SS.config.job.default
-        with_lock(config) do |service|
-          service.config = config
-          service.run
-        end
+    def run(config = nil)
+      config ||= SS.config.job.default
+      with_lock(config) do |service|
+        service.config = config
+        service.run
       end
+    end
 
     private
       def with_lock(config)
@@ -73,15 +72,14 @@ class Job::Service
       end
   end
 
-  public
-    def run
-      open_logger
-      begin
-        execute_loop
-      ensure
-        close_logger
-      end
+  def run
+    open_logger
+    begin
+      execute_loop
+    ensure
+      close_logger
     end
+  end
 
   private
     def execute_loop

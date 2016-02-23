@@ -19,7 +19,7 @@ FactoryGirl.define do
     end
 
     trait :cms_user_uid do
-      uid { "#{name}" }
+      uid { name.to_s }
     end
 
     trait :cms_user_email do

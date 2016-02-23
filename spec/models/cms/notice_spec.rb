@@ -35,29 +35,29 @@ describe Cms::Notice, dbscope: :example do
     context "when no release_date/close_date is given" do
       subject { described_class.search(nil) }
       before { create(:cms_notice) }
-      it { expect(subject.public.count).to eq 1 }
+      it { expect(subject.and_public.count).to eq 1 }
     end
 
     context "when release_date is given / no close_date is given" do
       subject { described_class.search(nil) }
       before { create(:cms_notice, release_date: 5.minutes.ago ) }
-      it { expect(subject.public.count).to eq 1 }
-      it { expect(subject.public(10.minutes.ago).count).to eq 0 }
+      it { expect(subject.and_public.count).to eq 1 }
+      it { expect(subject.and_public(10.minutes.ago).count).to eq 0 }
     end
 
     context "when no release_date is given / close_date is given" do
       subject { described_class.search(nil) }
       before { create(:cms_notice, close_date: 5.minutes.from_now ) }
-      it { expect(subject.public.count).to eq 1 }
-      it { expect(subject.public(10.minutes.from_now).count).to eq 0 }
+      it { expect(subject.and_public.count).to eq 1 }
+      it { expect(subject.and_public(10.minutes.from_now).count).to eq 0 }
     end
 
     context "when release_date/close_date is given" do
       subject { described_class.search(nil) }
       before { create(:cms_notice, release_date: 5.minutes.ago, close_date: 5.minutes.from_now ) }
-      it { expect(subject.public.count).to eq 1 }
-      it { expect(subject.public(10.minutes.ago).count).to eq 0 }
-      it { expect(subject.public(10.minutes.from_now).count).to eq 0 }
+      it { expect(subject.and_public.count).to eq 1 }
+      it { expect(subject.and_public(10.minutes.ago).count).to eq 0 }
+      it { expect(subject.and_public(10.minutes.from_now).count).to eq 0 }
     end
   end
 

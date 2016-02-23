@@ -14,20 +14,19 @@ module Contact::Addon
       permit_params :contact_tel, :contact_fax, :contact_email
     end
 
-    public
-      def contact_state_options
-        [
-          [I18n.t('views.options.state.show'), 'show'],
-          [I18n.t('views.options.state.hide'), 'hide'],
-        ]
-      end
+    def contact_state_options
+      [
+        [I18n.t('views.options.state.show'), 'show'],
+        [I18n.t('views.options.state.hide'), 'hide'],
+      ]
+    end
 
-      def contact_present?
-        [contact_charge,
-         contact_tel,
-         contact_fax,
-         contact_email
-        ].map(&:present?).any?
-      end
+    def contact_present?
+      [contact_charge,
+       contact_tel,
+       contact_fax,
+       contact_email
+      ].map(&:present?).any?
+    end
   end
 end

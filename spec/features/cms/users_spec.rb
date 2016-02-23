@@ -155,7 +155,7 @@ describe "cms_users", dbscope: :example do
       expected_names = %w(import_admin import_user1 import_user2 import_sys)
       expected_uids = %w(admin user1 user2 sys)
       expected_groups = [ ["A/B/C"], ["A/B/C", "A/B/D"], ["A/B/D"], ["A"] ]
-      expected_cms_roles = [ ["all"], ["edit"], ["edit"], ["all", "edit"] ]
+      expected_cms_roles = [ %w(all), %w(edit), %w(edit), %w(all edit) ]
 
       expect(users.map(&:name)).to eq expected_names
       expect(users.map(&:email)).to eq expected_emails

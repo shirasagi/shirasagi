@@ -11,10 +11,9 @@ module Cms::Addon
       validate :convert_markdown, if: -> { SS.config.cms.html_editor == "markdown" }
     end
 
-    public
-      def markdown2html
-        ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
-      end
+    def markdown2html
+      ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
+    end
 
     private
       def convert_markdown

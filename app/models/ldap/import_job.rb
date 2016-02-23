@@ -3,21 +3,20 @@ class Ldap::ImportJob
 
   attr_accessor :exclude_groups
 
-  public
-    def call(site_id, user_id, password)
-      @site = SS::Site.find(site_id)
-      @user = SS::User.find(user_id)
-      @group_count = 0
-      @user_count = 0
-      @exclude_groups ||= SS.config.ldap.exclude_groups
+  def call(site_id, user_id, password)
+    @site = SS::Site.find(site_id)
+    @user = SS::User.find(user_id)
+    @group_count = 0
+    @user_count = 0
+    @exclude_groups ||= SS.config.ldap.exclude_groups
 
-      connection = Ldap::Connection.connect(base_dn: @site.root_group.ldap_dn, username: @user.ldap_dn, password: password)
-      if connection.blank?
-        raise I18n.t("ldap.errors.connection_setting_not_found")
-      end
-
-      import_groups(nil, connection.groups)
+    connection = Ldap::Connection.connect(base_dn: @site.root_group.ldap_dn, username: @user.ldap_dn, password: password)
+    if connection.blank?
+      raise I18n.t("ldap.errors.connection_setting_not_found")
     end
+
+    import_groups(nil, connection.groups)
+  end
 
   private
     def import_groups(parent_dn, groups)

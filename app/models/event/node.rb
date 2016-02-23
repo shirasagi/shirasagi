@@ -17,10 +17,9 @@ module Event::Node
 
     default_scope ->{ where(route: "event/page") }
 
-    public
-      def condition_hash
-        cond = super
-        cond.merge "event_dates.0" => { "$exists" => true }
-      end
+    def condition_hash
+      cond = super
+      cond.merge "event_dates.0" => { "$exists" => true }
+    end
   end
 end

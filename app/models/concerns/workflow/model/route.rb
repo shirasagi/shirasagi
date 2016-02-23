@@ -23,28 +23,61 @@ module Workflow::Model::Route
   end
 
   module ClassMethods
-    public
-      def route_options(user)
-        ret = [ [ t("my_group"), "my_group" ] ]
-        group_ids = user.group_ids.to_a
-        Workflow::Route.where(:group_ids.in => group_ids).each do |route|
-          ret << [ route.name, route.id ]
-        end
-        ret
+    def route_options(user)
+      ret = [ [ t("my_group"), "my_group" ] ]
+      group_ids = user.group_ids.to_a
+      Workflow::Route.where(:group_ids.in => group_ids).each do |route|
+        ret << [ route.name, route.id ]
       end
+      ret
+    end
 
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
 
-        if params[:name].present?
-          criteria = criteria.search_text params[:name]
-        end
-        if params[:keyword].present?
-          criteria = criteria.keyword_in params[:keyword], :name
-        end
-        criteria
+      if params[:name].present?
+        criteria = criteria.search_text params[:name]
       end
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :name
+      end
+      criteria
+    end
+  end
+
+  def levels
+    approvers.map { |h| h[:level] }.uniq.compact.sort
+  end
+
+  def approvers_at(level)
+    approvers.select { |h| level == h[:level] }
+  end
+
+  def approver_users_at(level)
+    approvers_at(level).map { |h| self.class.approver_user_class.where(id: h[:user_id]).first }
+  end
+
+  def required_count_at(level)
+    self.required_counts[level - 1] || false
+  end
+
+  def required_count_label_at(level)
+    required_count = required_count_at(level)
+    case required_count
+    when false then
+      I18n.t("workflow.required_count_label.all")
+    else
+      I18n.t("workflow.required_count_label.minimum", required_count: required_count)
+    end
+  end
+
+  def required_count_options
+    ret = [ [ I18n.t("workflow.options.required_count.all"), false ] ]
+    5.downto(1) do |required_count|
+      ret << [ I18n.t("workflow.options.required_count.minimum", required_count: required_count), required_count ]
+    end
+    ret
   end
 
   private
@@ -85,40 +118,5 @@ module Workflow::Model::Route
 
     def validate_groups
       self.errors.add :group_ids, :blank if groups.blank?
-    end
-
-  public
-    def levels
-      approvers.map { |h| h[:level] }.uniq.compact.sort
-    end
-
-    def approvers_at(level)
-      approvers.select { |h| level == h[:level] }
-    end
-
-    def approver_users_at(level)
-      approvers_at(level).map { |h| self.class.approver_user_class.where(id: h[:user_id]).first }
-    end
-
-    def required_count_at(level)
-      self.required_counts[level - 1] || false
-    end
-
-    def required_count_label_at(level)
-      required_count = required_count_at(level)
-      case required_count
-      when false then
-        I18n.t("workflow.required_count_label.all")
-      else
-        I18n.t("workflow.required_count_label.minimum", required_count: required_count)
-      end
-    end
-
-    def required_count_options
-      ret = [ [ I18n.t("workflow.options.required_count.all"), false ] ]
-      5.downto(1) do |required_count|
-        ret << [ I18n.t("workflow.options.required_count.minimum", required_count: required_count), required_count ]
-      end
-      ret
     end
 end

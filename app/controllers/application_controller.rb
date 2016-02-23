@@ -7,27 +7,26 @@ class ApplicationController < ActionController::Base
   #before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
 
-  public
-    def t(key, opts = {})
-      opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
-      I18n.t key, opts.merge(default: key.to_s.humanize)
-    end
+  def t(key, opts = {})
+    opts[:scope] = [:views] if key !~ /\./ && !opts[:scope]
+    I18n.t key, opts.merge(default: key.to_s.humanize)
+  end
 
-    def new_agent(controller_name)
-      agent = SS::Agent.new controller_name
-      agent.controller.params  = params
-      agent.controller.request = request
-      agent.controller.instance_variable_set :@controller, self
-      agent
-    end
+  def new_agent(controller_name)
+    agent = SS::Agent.new controller_name
+    agent.controller.params  = params
+    agent.controller.request = request
+    agent.controller.instance_variable_set :@controller, self
+    agent
+  end
 
-    def render_agent(controller_name, action)
-      new_agent(controller_name).render(action)
-    end
+  def render_agent(controller_name, action)
+    new_agent(controller_name).render(action)
+  end
 
-    def invoke_agent(controller_name, action)
-      new_agent(controller_name).invoke(action)
-    end
+  def invoke_agent(controller_name, action)
+    new_agent(controller_name).invoke(action)
+  end
 
   private
     def remote_addr

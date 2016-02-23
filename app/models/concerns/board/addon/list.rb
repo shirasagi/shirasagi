@@ -9,17 +9,16 @@ module Board::Addon
       permit_params :mode
     end
 
-    public
-      def limit
-        value = self[:limit].to_i
-        (value < 1 || 1000 < value) ? 10 : value
-      end
+    def limit
+      value = self[:limit].to_i
+      (value < 1 || 1000 < value) ? 10 : value
+    end
 
-      def mode_options
-        [
-          [I18n.t('board.options.mode.thread'), 'thread'],
-          [I18n.t('board.options.mode.tree'), 'tree']
-        ]
-      end
+    def mode_options
+      [
+        [I18n.t('board.options.mode.thread'), 'thread'],
+        [I18n.t('board.options.mode.tree'), 'tree']
+      ]
+    end
   end
 end

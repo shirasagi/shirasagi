@@ -17,35 +17,31 @@ class Ezine::Column
   validates :state, :name, presence: true
   before_destroy :destroy_data
 
-  class << self
-    public
-      def public
-        where(state: 'public')
-      end
+  scope :and_public, -> {
+    where(state: 'public')
+  }
+
+  def state_options
+    [
+      [I18n.t('views.options.state.public'), 'public'],
+      [I18n.t('views.options.state.closed'), 'closed'],
+    ]
   end
 
-  public
-    def state_options
-      [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-      ]
-    end
-
-    def order
-      value = self[:order].to_i
-      value < 0 ? 0 : value
-    end
+  def order
+    value = self[:order].to_i
+    value < 0 ? 0 : value
+  end
 
   private
     def destroy_data
       Ezine::Member.where(:"data.column_id" => id).each do |member|
-        member.in_data["#{id}"] = nil
+        member.in_data[id.to_s] = nil
         member.set_data
         member.save validate: false
       end
       Ezine::Entry.where(:"data.column_id" => id).each do |entry|
-        member.in_data["#{id}"] = nil
+        member.in_data[id.to_s] = nil
         member.set_data
         member.save validate: false
       end

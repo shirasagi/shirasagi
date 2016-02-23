@@ -21,12 +21,11 @@ class Ads::Banner
 
   default_scope ->{ where(route: "ads/banner") }
 
-  public
-    def url
-      super + "?redirect=#{link_url}"
-    end
+  def url
+    super + "?redirect=#{link_url}"
+  end
 
-    def count_url
-      url.sub(".html", ".html.count")
-    end
+  def count_url
+    url.sub(".html", ".html.count")
+  end
 end
