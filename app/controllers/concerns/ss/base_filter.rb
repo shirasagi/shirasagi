@@ -24,24 +24,23 @@ module SS::BaseFilter
       end
   end
 
-  public
-    def stylesheets
-      @stylesheets || []
-    end
+  def stylesheets
+    @stylesheets || []
+  end
 
-    def stylesheet(path)
-      @stylesheets ||= []
-      @stylesheets << path unless @stylesheets.include?(path)
-    end
+  def stylesheet(path)
+    @stylesheets ||= []
+    @stylesheets << path unless @stylesheets.include?(path)
+  end
 
-    def javascripts
-      @javascripts || []
-    end
+  def javascripts
+    @javascripts || []
+  end
 
-    def javascript(path)
-      @javascripts ||= []
-      @javascripts << path unless @javascripts.include?(path)
-    end
+  def javascript(path)
+    @javascripts ||= []
+    @javascripts << path unless @javascripts.include?(path)
+  end
 
   private
     def set_model

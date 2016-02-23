@@ -10,12 +10,11 @@ module KeyVisual::Addon
       permit_params :link_target, :upper_html, :lower_html
     end
 
-    public
-      def link_target_options
-        [
-          [I18n.t('key_visual.options.link_target.self'), ''],
-          [I18n.t('key_visual.options.link_target.blank'), 'blank'],
-        ]
-      end
+    def link_target_options
+      [
+        [I18n.t('key_visual.options.link_target.self'), ''],
+        [I18n.t('key_visual.options.link_target.blank'), 'blank'],
+      ]
+    end
   end
 end

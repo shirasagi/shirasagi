@@ -230,6 +230,9 @@ Style/HashSyntax:
 Style/IfUnlessModifier:
   Enabled: false
 
+Style/IndentArray:
+  Enabled: false
+
 # Offense count: 1027
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -256,6 +259,9 @@ Style/LeadingCommentSpace:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/MethodDefParentheses:
+  Enabled: false
+
+Style/MultilineMethodCallIndentation:
   Enabled: false
 
 # Offense count: 242
@@ -323,7 +329,7 @@ Style/SignalException:
 
 # Offense count: 17
 # Cop supports --auto-correct.
-Style/SingleSpaceBeforeFirstArg:
+Style/SpaceBeforeFirstArg:
   Enabled: false
 
 # Offense count: 1
@@ -408,7 +414,7 @@ Style/TrailingBlankLines:
 # Offense count: 42
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
-Style/TrailingComma:
+Style/TrailingCommaInLiteral:
   Enabled: false
 
 # Offense count: 4

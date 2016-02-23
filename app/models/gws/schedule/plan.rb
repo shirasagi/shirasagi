@@ -54,46 +54,45 @@ class Gws::Schedule::Plan
     criteria
   }
 
-  public
-    def allday_options
-      [[I18n.t("gws/schedule.options.allday.allday"), "allday"]]
+  def allday_options
+    [[I18n.t("gws/schedule.options.allday.allday"), "allday"]]
+  end
+
+  def allday?
+    allday == "allday"
+  end
+
+  def category_options
+    cond = { site_id: @cur_site ? @cur_site.id: site_id }
+    Gws::Schedule::Category.where(cond).order(name: 1).map { |c| [c.name, c.id] }
+  end
+
+  # event options
+  # http://fullcalendar.io/docs/event_data/Event_Object/
+  def calendar_format
+    data = { id: id, title: ERB::Util.h(name), start: start_at, end: end_at, allDay: allday? }
+
+    if allday? || start_at.to_date != end_at.to_date
+      data[:className] = 'fc-event-days'
+      data[:backgroundColor] = category.color if category
+      data[:textColor] = category.text_color if category
+    else
+      data[:className] = 'fc-event-one'
+      data[:textColor] = category.color if category
     end
 
-    def allday?
-      allday == "allday"
+    if allday?
+      data[:start] = start_at.to_date
+      data[:end] = (end_at + 1.day).to_date
+      data[:className] += " fc-event-allday"
     end
 
-    def category_options
-      cond = { site_id: @cur_site ? @cur_site.id: site_id }
-      Gws::Schedule::Category.where(cond).order(name: 1).map { |c| [c.name, c.id] }
+    if repeat_plan_id
+      data[:title]      = " #{data[:title]}"
+      data[:className] += " fc-event-repeat"
     end
-
-    # event options
-    # http://fullcalendar.io/docs/event_data/Event_Object/
-    def calendar_format
-      data = { id: id, title: ERB::Util.h(name), start: start_at, end: end_at, allDay: allday? }
-
-      if allday? || start_at.to_date != end_at.to_date
-        data.merge! className: 'fc-event-days'
-        data[:backgroundColor] = category.color if category
-        data[:textColor] = category.text_color if category
-      else
-        data.merge! className: 'fc-event-one'
-        data[:textColor] = category.color if category
-      end
-
-      if allday?
-        data.merge! start: start_at.to_date
-        data.merge! end: (end_at + 1.day).to_date
-        data[:className] += " fc-event-allday"
-      end
-
-      if repeat_plan_id
-        data[:title]      = " #{data[:title]}"
-        data[:className] += " fc-event-repeat"
-      end
-      data
-    end
+    data
+  end
 
   private
     # Mode: month, week, day

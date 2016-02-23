@@ -77,5 +77,5 @@ class Ldap::Extensions::LdapEntity < Hash
     nil
   end
 
-  alias_method :contact_email, :email
+  alias contact_email email
 end

@@ -5,6 +5,30 @@ class Cms::Task
   belongs_to :node, class_name: "Cms::Node"
 
   class << self
+    def generate_nodes(opts = {})
+      process_with_node "cms:generate_nodes", Cms::Agents::Tasks::NodesController, :generate, opts
+    end
+
+    def generate_pages(opts = {})
+      process_with_node "cms:generate_pages", Cms::Agents::Tasks::PagesController, :generate, opts
+    end
+
+    def update_pages(opts = {})
+      process_with_node "cms:update_pages", Cms::Agents::Tasks::PagesController, :update, opts
+    end
+
+    def release_pages(opts = {})
+      process_with_site "cms:release_pages", Cms::Agents::Tasks::PagesController, :release, opts
+    end
+
+    def remove_pages(opts = {})
+      process_with_site "cms:remove_pages", Cms::Agents::Tasks::PagesController, :remove, opts
+    end
+
+    def check_links(opts = {})
+      process_with_node "cms:check_links", Cms::Agents::Tasks::LinksController, :check, opts
+    end
+
     private
       def find_sites(opts)
         return Cms::Site unless opts[:site]
@@ -33,31 +57,6 @@ class Cms::Task
             task.process controller, action, opts.merge(site: site, node: node)
           end
         end
-      end
-
-    public
-      def generate_nodes(opts = {})
-        process_with_node "cms:generate_nodes", Cms::Agents::Tasks::NodesController, :generate, opts
-      end
-
-      def generate_pages(opts = {})
-        process_with_node "cms:generate_pages", Cms::Agents::Tasks::PagesController, :generate, opts
-      end
-
-      def update_pages(opts = {})
-        process_with_node "cms:update_pages", Cms::Agents::Tasks::PagesController, :update, opts
-      end
-
-      def release_pages(opts = {})
-        process_with_site "cms:release_pages", Cms::Agents::Tasks::PagesController, :release, opts
-      end
-
-      def remove_pages(opts = {})
-        process_with_site "cms:remove_pages", Cms::Agents::Tasks::PagesController, :remove, opts
-      end
-
-      def check_links(opts = {})
-        process_with_node "cms:check_links", Cms::Agents::Tasks::LinksController, :check, opts
       end
   end
 end

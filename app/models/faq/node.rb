@@ -30,9 +30,8 @@ module Faq::Node
 
     default_scope ->{ where(route: "faq/search") }
 
-    public
-      def condition_hash
-        conditions.present? ? super : {}
-      end
+    def condition_hash
+      conditions.present? ? super : {}
+    end
   end
 end

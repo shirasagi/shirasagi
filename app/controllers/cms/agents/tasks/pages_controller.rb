@@ -13,14 +13,14 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     def generate
       @task.log "# #{@site.name}"
 
-      pages = Cms::Page.site(@site).public
+      pages = Cms::Page.site(@site).and_public
       pages = pages.node(@node) if @node
       ids   = pages.pluck(:id)
       @task.total_count = ids.size
 
       ids.each do |id|
         @task.count
-        page = Cms::Page.site(@site).public.where(id: id).first
+        page = Cms::Page.site(@site).and_public.where(id: id).first
         next unless page
         page.serve_static_relation_files = @attachments
         @task.log page.url if page.becomes_with_route.generate_file

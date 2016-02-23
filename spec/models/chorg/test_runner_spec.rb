@@ -48,8 +48,8 @@ describe Chorg::TestRunner, dbscope: :example do
   context "with unify" do
     let(:group1) { create(:revision_new_group) }
     let(:group2) { create(:revision_new_group) }
-    let(:user1) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
-    let(:user2) { create(:cms_user, name: "#{unique_id}", email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
+    let(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
+    let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
     let(:revision) { create(:revision, site_id: site.id) }
     let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
 

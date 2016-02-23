@@ -1,10 +1,9 @@
 module Mobile::PublicFilter
   extend ActiveSupport::Concern
 
-  public
-    def mobile_path?
-      filters.include?(:mobile)
-    end
+  def mobile_path?
+    filters.include?(:mobile)
+  end
 
   private
     def set_request_path_with_mobile

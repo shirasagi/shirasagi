@@ -3,8 +3,7 @@ class Category::PagesController < ApplicationController
 
   prepend_before_action ->{ redirect_to category_nodes_path }, only: :index
 
-  public
-    def index
-      # redirect
-    end
+  def index
+    # redirect
+  end
 end

@@ -12,48 +12,47 @@ class Cms::PreviewController < ApplicationController
   after_action :render_mobile, if: ->{ mobile_path? }
 
   if SS.config.cms.remote_preview
-    skip_filter :logged_in?
-    skip_filter :set_group
+    skip_action_callback :logged_in?
+    skip_action_callback :set_group
   end
 
-  public
-    def form_preview
-      preview_item = params.require(:preview_item).permit!
-      path = params[:path]
-      id = preview_item.delete("id")
-      route = preview_item.delete("route")
+  def form_preview
+    preview_item = params.require(:preview_item).permit!
+    path = params[:path]
+    id = preview_item.delete("id")
+    route = preview_item.delete("route")
 
-      page = Cms::Page.find(id) rescue Cms::Page.new(route: route)
-      page = page.becomes_with_route
-      page.attributes = preview_item
-      page.site = @cur_site
-      page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
-      page.lock_until = nil if page.respond_to?(:lock_until)
+    page = Cms::Page.find(id) rescue Cms::Page.new(route: route)
+    page = page.becomes_with_route
+    page.attributes = preview_item
+    page.site = @cur_site
+    page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
+    page.lock_until = nil if page.respond_to?(:lock_until)
 
-      raise page_not_found unless page.name.present?
-      raise page_not_found unless page.basename.present?
-      page.basename = page.basename.sub(/\..+?$/, "") + ".html"
+    raise page_not_found unless page.name.present?
+    raise page_not_found unless page.basename.present?
+    page.basename = page.basename.sub(/\..+?$/, "") + ".html"
 
-      @cur_layout = Cms::Layout.where(id: page.layout_id).first
-      @cur_body_layout = Cms::BodyLayout.where(id: page.body_layout_id).first
-      page.layout_id = nil if @cur_layout.nil?
-      page.body_layout_id = nil if @cur_body_layout.nil?
-      @cur_node = Cms::Node.where(filename: /^#{path.sub(/\/$/, "")}/).first
-      @cur_page = page
-      @preview_page = page
+    @cur_layout = Cms::Layout.where(id: page.layout_id).first
+    @cur_body_layout = Cms::BodyLayout.where(id: page.body_layout_id).first
+    page.layout_id = nil if @cur_layout.nil?
+    page.body_layout_id = nil if @cur_body_layout.nil?
+    @cur_node = Cms::Node.where(filename: /^#{path.sub(/\/$/, "")}/).first
+    @cur_page = page
+    @preview_page = page
 
-      resp = render_page(page, method: "GET")
-      return page_not_found unless resp
-      self.response = resp
+    resp = render_page(page, method: "GET")
+    return page_not_found unless resp
+    self.response = resp
 
-      if page.layout
-        render inline: render_layout(page.layout), layout: "cms/page"
-      else
-        @_response_body = response.body
-      end
-    rescue
-      render_error 400, status: 400
+    if page.layout
+      render inline: render_layout(page.layout), layout: "cms/page"
+    else
+      @_response_body = response.body
     end
+  rescue
+    render_error 400, status: 400
+  end
 
   private
     def set_site
@@ -93,11 +92,9 @@ class Cms::PreviewController < ApplicationController
         if @thumb_width && @thumb_height
           send_thumb @item.read, type: @item.content_type, filename: @item.filename,
             disposition: :inline, width: @thumb_width, height: @thumb_height
-          return
         else
           send_file @item.path, type: @item.content_type, filename: @item.filename,
             disposition: :inline, x_sendfile: true
-          return
         end
       end
       #raise "404" unless Fs.exists?(file)

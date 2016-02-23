@@ -12,14 +12,13 @@ module Ldap::Addon
       before_save :normalize_or_remove_ldap_dn
     end
 
-    public
-      def ldap_authenticate(password)
-        return false unless login_roles.include?(SS::User::LOGIN_ROLE_LDAP)
-        return false if ldap_dn.blank?
-        Ldap::Connection.authenticate(username: ldap_dn, password: password)
-      rescue => e
-        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        false
-      end
+    def ldap_authenticate(password)
+      return false unless login_roles.include?(SS::User::LOGIN_ROLE_LDAP)
+      return false if ldap_dn.blank?
+      Ldap::Connection.authenticate(username: ldap_dn, password: password)
+    rescue => e
+      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      false
+    end
   end
 end

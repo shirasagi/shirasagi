@@ -9,7 +9,7 @@
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
 
-<% links = Gws::Link.site(@cur_site).public %>
+<% links = Gws::Link.site(@cur_site).and_public %>
 <% links.each do |item| %>
   <nav class="main-navi">
     <div class="links">

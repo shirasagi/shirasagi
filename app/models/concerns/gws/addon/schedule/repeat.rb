@@ -16,6 +16,39 @@ module Gws::Addon::Schedule::Repeat
     before_destroy :remove_repeat_plan
   end
 
+  # 繰り返し予定を作成しているか。
+  def repeat?
+    repeat_type.present?
+  end
+
+  # repleat_plan が持つ値をコピーする。
+  # 同期後にplanを更新するとrepeat_planの更新処理も実行する。
+  def sync_repeat_plan
+    if rp = repeat_plan || Gws::Schedule::RepeatPlan.new
+      repeat_plan_fields.each { |name| self.send "#{name}=", rp.send(name) }
+    end
+  end
+
+  def repeat_type_options
+    [:daily, :weekly, :monthly].map do |name|
+      [I18n.t("gws/schedule.options.repeat_type.#{name}"), name.to_s]
+    end
+  end
+
+  def repeat_base_options
+    [:date, :wday].map do |name|
+      [I18n.t("gws/schedule.options.repeat_base.#{name}"), name.to_s]
+    end
+  end
+
+  def interval_options
+    1..10
+  end
+
+  def extract_repeat_plans
+    repeat_plan.extract_plans(self)
+  end
+
   private
     def repeat_plan_fields
       [:repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays]
@@ -48,42 +81,8 @@ module Gws::Addon::Schedule::Repeat
       if repeat_plan
         plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
         plans.delete
-        repeat_plan.destroy if plans.size == 0
+        repeat_plan.destroy if plans.empty?
       end
       remove_attribute(:repeat_plan_id)
-    end
-
-  public
-    # 繰り返し予定を作成しているか。
-    def repeat?
-      repeat_type.present?
-    end
-
-    # repleat_plan が持つ値をコピーする。
-    # 同期後にplanを更新するとrepeat_planの更新処理も実行する。
-    def sync_repeat_plan
-      if rp = repeat_plan || Gws::Schedule::RepeatPlan.new
-        repeat_plan_fields.each { |name| self.send "#{name}=", rp.send(name) }
-      end
-    end
-
-    def repeat_type_options
-      [:daily, :weekly, :monthly].map do |name|
-        [I18n.t("gws/schedule.options.repeat_type.#{name}"), name.to_s]
-      end
-    end
-
-    def repeat_base_options
-      [:date, :wday].map do |name|
-        [I18n.t("gws/schedule.options.repeat_base.#{name}"), name.to_s]
-      end
-    end
-
-    def interval_options
-      1..10
-    end
-
-    def extract_repeat_plans
-      repeat_plan.extract_plans(self)
     end
 end

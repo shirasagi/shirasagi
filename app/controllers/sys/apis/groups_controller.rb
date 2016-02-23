@@ -5,9 +5,8 @@ class Sys::Apis::GroupsController < ApplicationController
 
   model Sys::Group
 
-  public
-    def index
-      @items = @model.
-        search(params[:s])
-    end
+  def index
+    @items = @model.
+      search(params[:s])
+  end
 end

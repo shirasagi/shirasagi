@@ -14,6 +14,6 @@ module Chorg::Context
   end
 
   def inc_counter(method, type)
-    @results["#{method}"]["#{type}"] += 1
+    @results[method.to_s][type.to_s] += 1
   end
 end

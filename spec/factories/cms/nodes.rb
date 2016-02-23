@@ -2,8 +2,8 @@ FactoryGirl.define do
   trait :cms_node do
     site_id { cms_site.id }
     user_id { cms_user.id }
-    name "#{unique_id}"
-    filename "#{unique_id}"
+    name { unique_id.to_s }
+    filename { unique_id.to_s }
     route "cms/node"
   end
 

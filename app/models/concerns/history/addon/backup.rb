@@ -8,10 +8,9 @@ module History::Addon
       before_destroy :destroy_backups
     end
 
-    public
-      def backups
-        History::Backup.where(ref_coll: collection_name, "data._id" => id).sort(created: -1)
-      end
+    def backups
+      History::Backup.where(ref_coll: collection_name, "data._id" => id).sort(created: -1)
+    end
 
     private
       def save_backup

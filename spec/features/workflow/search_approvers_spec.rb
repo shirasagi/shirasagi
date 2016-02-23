@@ -25,10 +25,10 @@ describe "workflow_search_approvers" do
       # save_and_open_page
       # print page.html
       within("form.search") do
-        expect(all("option").reduce([]) { |a, e| a << e.value }).to include "#{group.id}"
+        expect(all("option").reduce([]) { |a, e| a << e.value }).to include group.id.to_s
       end
       within("table.index") do
-        expect(find("a.select-item").text).to eq "#{user.long_name}"
+        expect(find("a.select-item").text).to eq user.long_name.to_s
       end
 
       expect(current_path).not_to eq sns_login_path

@@ -18,88 +18,87 @@ module Workflow::Addon
       define_method(:branch?) { master.present? }
     end
 
-    public
-      def new_clone?
-        @new_clone == true
+    def new_clone?
+      @new_clone == true
+    end
+
+    def cloned_name?
+      prefix = I18n.t("workflow.cloned_name_prefix")
+      name =~ /^\[#{Regexp.escape(prefix)}\]/
+    end
+
+    def new_clone(attributes = {})
+      attributes = self.attributes.merge(attributes).select{ |k| self.fields.keys.include?(k) }
+
+      item = self.class.new(attributes)
+      item.id = nil
+      item.state = "closed"
+      item.cur_user = @cur_user
+      item.cur_site = @cur_site
+      item.cur_node = @cur_node
+      if attributes[:filename].nil?
+        item.filename = "#{dirname}/"
+        item.basename = ""
       end
 
-      def cloned_name?
-        prefix = I18n.t("workflow.cloned_name_prefix")
-        name =~ /^\[#{Regexp.escape(prefix)}\]/
+      item.workflow_user_id = nil
+      item.workflow_state = nil
+      item.workflow_comment = nil
+      item.workflow_approvers = nil
+      item.workflow_required_counts = nil
+
+      if item.is_a?(Cms::Addon::EditLock)
+        item.lock_owner_id = nil
+        item.lock_until = nil
       end
 
-      def new_clone(attributes = {})
-        attributes = self.attributes.merge(attributes).select{ |k| self.fields.keys.include?(k) }
+      item.instance_variable_set(:@new_clone, true)
+      item
+    end
 
-        item = self.class.new(attributes)
-        item.id = nil
-        item.state = "closed"
-        item.cur_user = @cur_user
-        item.cur_site = @cur_site
-        item.cur_node = @cur_node
-        if attributes[:filename].nil?
-          item.filename = "#{dirname}/"
-          item.basename = ""
-        end
+    def clone_files
+      ids = SS::Extensions::Words.new
+      files.each do |f|
+        attributes = Hash[f.attributes]
+        attributes.select!{ |k| f.fields.keys.include?(k) }
 
-        item.workflow_user_id = nil
-        item.workflow_state = nil
-        item.workflow_comment = nil
-        item.workflow_approvers = nil
-        item.workflow_required_counts = nil
+        file = SS::File.new(attributes)
+        file.id = nil
+        file.in_file = f.uploaded_file
+        file.user_id = @cur_user.id if @cur_user
 
-        if item.is_a?(Cms::Addon::EditLock)
-          item.lock_owner_id = nil
-          item.lock_until = nil
-        end
+        file.save validate: false
+        ids << file.id.mongoize
 
-        item.instance_variable_set(:@new_clone, true)
-        item
+        html = self.html
+        html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
+        html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+        self.html = html
       end
+      self.file_ids = ids
+    end
 
-      def clone_files
-        ids = SS::Extensions::Words.new
-        files.each do |f|
-          attributes = Hash[f.attributes]
-          attributes.select!{ |k| f.fields.keys.include?(k) }
+    def merge(branch)
+      attributes = Hash[branch.attributes]
+      attributes.delete("_id")
+      attributes.delete("filename")
+      attributes.select!{ |k| self.fields.keys.include?(k) }
 
-          file = SS::File.new(attributes)
-          file.id = nil
-          file.in_file = f.uploaded_file
-          file.user_id = @cur_user.id if @cur_user
+      self.attributes = attributes
+      self.master_id = nil
+      self.allow_other_user_files if respond_to?(:allow_other_user_files)
+      self.save
+    end
 
-          file.save validate: false
-          ids << file.id.mongoize
+    def merge_to_master
+      return unless branch?
+      return unless state == "public"
 
-          html = self.html
-          html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-          html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-          self.html = html
-        end
-        self.file_ids = ids
-      end
-
-      def merge(branch)
-        attributes = Hash[branch.attributes]
-        attributes.delete("_id")
-        attributes.delete("filename")
-        attributes.select!{ |k| self.fields.keys.include?(k) }
-
-        self.attributes = attributes
-        self.master_id = nil
-        self.allow_other_user_files if respond_to?(:allow_other_user_files)
-        self.save
-      end
-
-      def merge_to_master
-        return unless branch?
-        return unless state == "public"
-
-        master = self.master
-        master.cur_user = @cur_user
-        master.cur_site = @cur_site
-        master.merge(self)
-      end
+      master = self.master
+      master.cur_user = @cur_user
+      master.cur_site = @cur_site
+      master.merge(self)
+    end
 
     private
       def serve_static_file?

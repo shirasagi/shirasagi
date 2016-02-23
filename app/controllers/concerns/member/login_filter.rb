@@ -46,7 +46,7 @@ module Member::LoginFilter
 
     def member_login_node
       @member_login_node ||= begin
-        node = Member::Node::Login.site(@cur_site).public.first
+        node = Member::Node::Login.site(@cur_site).and_public.first
         node.present? ? node : false
       end
     end

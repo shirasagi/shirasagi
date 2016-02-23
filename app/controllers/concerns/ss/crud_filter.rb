@@ -19,7 +19,7 @@ module SS::CrudFilter
     end
 
     def render(*args)
-      args.size == 0 ? super(file: params[:action]) : super
+      args.empty? ? super(file: params[:action]) : super
     end
 
     def json_content_type

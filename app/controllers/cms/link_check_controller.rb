@@ -6,22 +6,21 @@ class Cms::LinkCheckController < ApplicationController
   skip_before_action :verify_authenticity_token unless SS.config.env.csrf_protect
   before_action :accept_cors_request
 
-  public
-    def check
-      result = {}
-      url = params[:url]
+  def check
+    result = {}
+    url = params[:url]
 
-      raise "400" if url.blank?
-      url = url.values if url.is_a?(Hash)
-      url.each do |link|
-        next if result[link]
-        result[link] = check_url(::URI.escape(link))
-      end
-
-      respond_to do |format|
-        format.json { render json: result.to_json }
-      end
+    raise "400" if url.blank?
+    url = url.values if url.is_a?(Hash)
+    url.each do |link|
+      next if result[link]
+      result[link] = check_url(::URI.escape(link))
     end
+
+    respond_to do |format|
+      format.json { render json: result.to_json }
+    end
+  end
 
   private
     def check_url(url)

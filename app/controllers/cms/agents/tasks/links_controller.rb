@@ -173,7 +173,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       rescue TimeoutError
         return false
       rescue => e
-        return "#{e}" == "200"
+        return e.to_s == "200"
       end
     end
 end

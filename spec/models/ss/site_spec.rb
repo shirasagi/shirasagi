@@ -46,7 +46,7 @@ describe SS::Site do
   end
 
   describe "#root_group" do
-    subject { create(:ss_site, host: "#{unique_id}", domains: ["#{unique_id}.com"], group_ids: [ss_group.id]) }
+    subject { create(:ss_site, host: unique_id.to_s, domains: ["#{unique_id}.com"], group_ids: [ss_group.id]) }
     it { expect(subject.root_group).not_to be_nil }
   end
 end

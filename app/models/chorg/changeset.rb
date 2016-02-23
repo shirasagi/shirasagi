@@ -23,7 +23,7 @@ class Chorg::Changeset
   field :destinations, type: Array
   permit_params :cur_revision, :cur_type
   permit_params :type, :sources, :destinations
-  permit_params(sources: [ "id", "name"])
+  permit_params(sources: %w(id name))
   permit_params(destinations: GROUP_ATTRIBUTES)
 
   validates :revision_id, presence: true
@@ -51,12 +51,12 @@ class Chorg::Changeset
     destinations.map {|s| s["name"] }.join(",")
   end
 
-  alias_method :add_description, :after_unify
-  alias_method :before_move, :before_unify
-  alias_method :after_move, :after_unify
-  alias_method :before_division, :before_unify
-  alias_method :after_division, :after_unify
-  alias_method :delete_description, :before_unify
+  alias add_description after_unify
+  alias before_move before_unify
+  alias after_move after_unify
+  alias before_division before_unify
+  alias after_division after_unify
+  alias delete_description before_unify
 
   private
     def set_revision_id

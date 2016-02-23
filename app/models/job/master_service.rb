@@ -2,21 +2,20 @@ require 'English'
 
 class Job::MasterService
   class << self
-    public
-      def run(config = nil)
-        config ||= SS.config.job.default
-        num_workers = config["num_workers"]
+    def run(config = nil)
+      config ||= SS.config.job.default
+      num_workers = config["num_workers"]
 
-        if num_workers == 0
-          # execute jobs in-place
-          Job::Service.run config
-          return true
-        end
-
-        # execute jobs in external process
-        start_slave_in_external_process(config)
-        true
+      if num_workers == 0
+        # execute jobs in-place
+        Job::Service.run config
+        return true
       end
+
+      # execute jobs in external process
+      start_slave_in_external_process(config)
+      true
+    end
 
     private
       def start_slave_in_external_process(config)

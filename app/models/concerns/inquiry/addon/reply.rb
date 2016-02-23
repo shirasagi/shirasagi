@@ -13,17 +13,16 @@ module Inquiry::Addon
       validate :validate_reply_mail
     end
 
-    public
-      def reply_state_options
-        [
-          [I18n.t('inquiry.options.state.enabled'), 'enabled'],
-          [I18n.t('inquiry.options.state.disabled'), 'disabled'],
-        ]
-      end
+    def reply_state_options
+      [
+        [I18n.t('inquiry.options.state.enabled'), 'enabled'],
+        [I18n.t('inquiry.options.state.disabled'), 'disabled'],
+      ]
+    end
 
-      def reply_mail_enabled?
-        reply_state == "enabled"
-      end
+    def reply_mail_enabled?
+      reply_state == "enabled"
+    end
 
     private
       def validate_reply_mail

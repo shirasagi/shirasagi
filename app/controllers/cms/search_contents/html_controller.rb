@@ -6,67 +6,66 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
   navi_view "cms/search_contents/navi"
 
-  public
-    def index
-      raise "403" unless Cms::User.allowed?(:edit, @cur_user, site: @cur_site)
+  def index
+    raise "403" unless Cms::User.allowed?(:edit, @cur_user, site: @cur_site)
 
-      @keyword = params[:keyword]
-      @replacement = params[:replacement]
-      @updated_items = params[:updated_items]
-      if @updated_items
-        page_ids   = params[:updated_items][:page_ids]
-        layout_ids = params[:updated_items][:layout_ids]
-        part_ids   = params[:updated_items][:part_ids]
+    @keyword = params[:keyword]
+    @replacement = params[:replacement]
+    @updated_items = params[:updated_items]
+    if @updated_items
+      page_ids   = params[:updated_items][:page_ids]
+      layout_ids = params[:updated_items][:layout_ids]
+      part_ids   = params[:updated_items][:part_ids]
 
-        @pages = Cms::Page.site(@cur_site).in(id: page_ids).order_by(filename: 1).limit(500)
-        @parts = Cms::Part.site(@cur_site).in(id: part_ids).order_by(filename: 1).limit(500)
-        @layouts = Cms::Layout.site(@cur_site).in(id: layout_ids).order_by(filename: 1).limit(500)
+      @pages = Cms::Page.site(@cur_site).in(id: page_ids).order_by(filename: 1).limit(500)
+      @parts = Cms::Part.site(@cur_site).in(id: part_ids).order_by(filename: 1).limit(500)
+      @layouts = Cms::Layout.site(@cur_site).in(id: layout_ids).order_by(filename: 1).limit(500)
+    end
+  end
+
+  def update
+    keyword     = params[:keyword].to_s
+    replacement = params[:replacement].to_s
+    option      = params[:option]
+    page_ids    = params[:page_ids].to_a.map(&:to_i)
+    part_ids    = params[:part_ids].to_a.map(&:to_i)
+    layout_ids  = params[:layout_ids].to_a.map(&:to_i)
+
+    @pages   = []
+    @layouts = []
+    @parts   = []
+
+    begin
+      raise "400" if keyword.blank?
+      if option == "regexp"
+        search_html_with_regexp(keyword)
+        exclude_search_results(page_ids, part_ids, layout_ids)
+        replace_html_with_regexp(keyword, replacement)
+      elsif option == "url"
+        search_html_with_url(keyword)
+        exclude_search_results(page_ids, part_ids, layout_ids)
+        replace_html_with_url(keyword, replacement)
+      else
+        search_html_with_string(keyword)
+        exclude_search_results(page_ids, part_ids, layout_ids)
+        replace_html_with_string(keyword, replacement)
       end
+    rescue => e
+      #
     end
 
-    def update
-      keyword     = params[:keyword].to_s
-      replacement = params[:replacement].to_s
-      option      = params[:option]
-      page_ids    = params[:page_ids].to_a.map(&:to_i)
-      part_ids    = params[:part_ids].to_a.map(&:to_i)
-      layout_ids  = params[:layout_ids].to_a.map(&:to_i)
-
-      @pages   = []
-      @layouts = []
-      @parts   = []
-
-      begin
-        raise "400" if keyword.blank?
-        if option == "regexp"
-          search_html_with_regexp(keyword)
-          exclude_search_results(page_ids, part_ids, layout_ids)
-          replace_html_with_regexp(keyword, replacement)
-        elsif option == "url"
-          search_html_with_url(keyword)
-          exclude_search_results(page_ids, part_ids, layout_ids)
-          replace_html_with_url(keyword, replacement)
-        else
-          search_html_with_string(keyword)
-          exclude_search_results(page_ids, part_ids, layout_ids)
-          replace_html_with_string(keyword, replacement)
-        end
-      rescue => e
-        #
-      end
-
-      location = {
-        action: :index,
-        keyword: keyword,
-        replacement: replacement,
-        updated_items: {
-          page_ids: @pages.map(&:id),
-          layout_ids: @layouts.map(&:id),
-          part_ids: @parts.map(&:id)
-        }
+    location = {
+      action: :index,
+      keyword: keyword,
+      replacement: replacement,
+      updated_items: {
+        page_ids: @pages.map(&:id),
+        layout_ids: @layouts.map(&:id),
+        part_ids: @parts.map(&:id)
       }
-      redirect_to location, notice: t("views.notice.saved")
-    end
+    }
+    redirect_to location, notice: t("views.notice.saved")
+  end
 
   private
     def replace_html_with_string(string, replacement)

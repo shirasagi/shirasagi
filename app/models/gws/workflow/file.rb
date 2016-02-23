@@ -26,16 +26,15 @@ class Gws::Workflow::File
     criteria
   }
 
-  public
-    def status
-      if state == "approve"
-        state
-      elsif workflow_state.present?
-        workflow_state
-      elsif state == "closed"
-        'draft'
-      else
-        state
-      end
+  def status
+    if state == "approve"
+      state
+    elsif workflow_state.present?
+      workflow_state
+    elsif state == "closed"
+      'draft'
+    else
+      state
     end
+  end
 end

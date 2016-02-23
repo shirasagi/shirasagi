@@ -13,10 +13,9 @@ class Cms::Group
 
   validate :validate_sites
 
-  public
-    def users
-      Cms::User.in(group_ids: id)
-    end
+  def users
+    Cms::User.in(group_ids: id)
+  end
 
   private
     def validate_sites

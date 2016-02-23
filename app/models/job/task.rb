@@ -18,20 +18,19 @@ class Job::Task
   scope :site, ->(site) { where(site_id: (site.nil? ? nil : site.id)) }
 
   class << self
-    public
-      def enqueue(entity)
-        model = Job::Task.new(entity)
-        yield model if block_given?
-        model.save!
-        model
-      end
+    def enqueue(entity)
+      model = Job::Task.new(entity)
+      yield model if block_given?
+      model.save!
+      model
+    end
 
-      def dequeue(name)
-        criteria = Job::Task.where(pool: name, started: nil)
-        criteria = criteria.lte(at: Time.zone.now)
-        criteria = criteria.asc(:priority)
-        criteria.find_and_modify({ '$set' => { started: Time.zone.now }}, new: true)
-      end
+    def dequeue(name)
+      criteria = Job::Task.where(pool: name, started: nil)
+      criteria = criteria.lte(at: Time.zone.now)
+      criteria = criteria.asc(:priority)
+      criteria.find_and_modify({ '$set' => { started: Time.zone.now }}, new: true)
+    end
   end
 
   private

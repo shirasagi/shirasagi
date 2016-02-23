@@ -5,11 +5,10 @@ class Gws::Schedule::ListPlansController < ApplicationController
 
   menu_view "gws/crud/menu"
 
-  public
-    def index
-      @items = Gws::Schedule::Plan.site(@cur_site).member(@cur_user).
-        search(params[:s]).
-        order_by(updated: -1).
-        page(params[:page]).per(50)
-    end
+  def index
+    @items = Gws::Schedule::Plan.site(@cur_site).member(@cur_user).
+      search(params[:s]).
+      order_by(updated: -1).
+      page(params[:page]).per(50)
+  end
 end

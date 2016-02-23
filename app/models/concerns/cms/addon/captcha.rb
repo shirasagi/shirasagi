@@ -8,16 +8,15 @@ module Cms::Addon
       permit_params :captcha
     end
 
-    public
-      def captcha_options
-        [
-          [I18n.t('cms.options.state.enabled'), 'enabled'],
-          [I18n.t('cms.options.state.disabled'), 'disabled'],
-        ]
-      end
+    def captcha_options
+      [
+        [I18n.t('cms.options.state.enabled'), 'enabled'],
+        [I18n.t('cms.options.state.disabled'), 'disabled'],
+      ]
+    end
 
-      def captcha_enabled?
-        captcha == "enabled"
-      end
+    def captcha_enabled?
+      captcha == "enabled"
+    end
   end
 end

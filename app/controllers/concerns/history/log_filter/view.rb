@@ -1,10 +1,9 @@
 module History::LogFilter::View
   extend ActiveSupport::Concern
 
-  public
-    def delete
-      @item = @model.new
-    end
+  def delete
+    @item = @model.new
+  end
 
   private
     def send_csv(items)

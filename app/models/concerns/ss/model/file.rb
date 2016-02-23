@@ -56,116 +56,114 @@ module SS::Model::File
       ]
     end
 
-    public
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
 
-        if params[:name].present?
-          criteria = criteria.search_text params[:name]
-        end
-        if params[:keyword].present?
-          criteria = criteria.keyword_in params[:keyword], :name, :filename
-        end
-        criteria
+      if params[:name].present?
+        criteria = criteria.search_text params[:name]
       end
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :name, :filename
+      end
+      criteria
+    end
   end
 
-  public
-    def path
-      "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+  def path
+    "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+  end
+
+  def public_path
+    "#{site.path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+  end
+
+  def url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+  end
+
+  def thumb_url
+    "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
+  end
+
+  def public?
+    state == "public"
+  end
+
+  def state_options
+    [[I18n.t('views.options.state.public'), 'public']]
+  end
+
+  def name
+    self[:name].presence || basename
+  end
+
+  def humanized_name
+    "#{name} (#{extname.upcase} #{number_to_human_size(size)})"
+  end
+
+  def basename
+    filename.to_s.sub(/.*\//, "")
+  end
+
+  def extname
+    filename.to_s.sub(/.*\W/, "")
+  end
+
+  def image?
+    filename =~ /\.(bmp|gif|jpe?g|png)$/i
+  end
+
+  def resizing
+    (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
+  end
+
+  def resizing=(s)
+    @resizing = (s.class == String) ? s.split(",") : s
+  end
+
+  def read
+    Fs.exists?(path) ? Fs.binread(path) : nil
+  end
+
+  def save_files
+    return false unless valid?
+
+    in_files.each do |file|
+      item = self.class.new(attributes)
+      item.in_file = file
+      item.resizing = resizing
+      next if item.save
+
+      item.errors.full_messages.each { |m| errors.add :base, m }
+      return false
     end
+    true
+  end
 
-    def public_path
-      "#{site.path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+  def uploaded_file
+    file = Fs::UploadedFile.new("ss_file")
+    file.binmode
+    file.write(read)
+    file.rewind
+    file.original_filename = basename
+    file.content_type = content_type
+    file
+  end
+
+  def generate_public_file
+    if site && basename.ascii_only?
+      file = public_path
+      data = self.read
+
+      return if Fs.exists?(file) && data == Fs.read(file)
+      Fs.binwrite file, data
     end
+  end
 
-    def url
-      "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
-    end
-
-    def thumb_url
-      "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
-    end
-
-    def public?
-      state == "public"
-    end
-
-    def state_options
-      [[I18n.t('views.options.state.public'), 'public']]
-    end
-
-    def name
-      self[:name].presence || basename
-    end
-
-    def humanized_name
-      "#{name} (#{extname.upcase} #{number_to_human_size(size)})"
-    end
-
-    def basename
-      filename.to_s.sub(/.*\//, "")
-    end
-
-    def extname
-      filename.to_s.sub(/.*\W/, "")
-    end
-
-    def image?
-      filename =~ /\.(bmp|gif|jpe?g|png)$/i
-    end
-
-    def resizing
-      (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
-    end
-
-    def resizing=(s)
-      @resizing = (s.class == String) ? s.split(",") : s
-    end
-
-    def read
-      Fs.exists?(path) ? Fs.binread(path) : nil
-    end
-
-    def save_files
-      return false unless valid?
-
-      in_files.each do |file|
-        item = self.class.new(attributes)
-        item.in_file = file
-        item.resizing = resizing
-        next if item.save
-
-        item.errors.full_messages.each { |m| errors.add :base, m }
-        return false
-      end
-      true
-    end
-
-    def uploaded_file
-      file = Fs::UploadedFile.new("ss_file")
-      file.binmode
-      file.write(read)
-      file.rewind
-      file.original_filename = basename
-      file.content_type = content_type
-      file
-    end
-
-    def generate_public_file
-      if site && basename.ascii_only?
-        file = public_path
-        data = self.read
-
-        return if Fs.exists?(file) && data == Fs.read(file)
-        Fs.binwrite file, data
-      end
-    end
-
-    def remove_public_file
-      Fs.rm_rf(public_path) if site #TODO: modify the trriger
-    end
+  def remove_public_file
+    Fs.rm_rf(public_path) if site #TODO: modify the trriger
+  end
 
   private
     def set_filename

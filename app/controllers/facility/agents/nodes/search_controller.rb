@@ -21,7 +21,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
     end
 
     def set_items
-      @items = Facility::Node::Page.site(@cur_site).public.
+      @items = Facility::Node::Page.site(@cur_site).and_public.
         where(@cur_node.condition_hash).
         search(name: @keyword).
         in(@q_category).
@@ -35,9 +35,9 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       @markers = []
       images = SS::File.all.map {|image| [image.id, image.url]}.to_h
 
-      Facility::Map.site(@cur_site).public.each do |map|
+      Facility::Map.site(@cur_site).and_public.each do |map|
         parent_path = ::File.dirname(map.filename)
-        item = Facility::Node::Page.site(@cur_site).public.
+        item = Facility::Node::Page.site(@cur_site).and_public.
           where(@cur_node.condition_hash).
           in_path(parent_path).
           search(name: @keyword).
@@ -72,7 +72,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       @filter_locations = @cur_node.st_locations.entries.select{ |l| l.center_point[:loc].present? }
       @focus_options = @filter_locations.map do |l|
         opts = {}
-        opts.merge!({ "data-zoom-level" => l.center_point[:zoom_level] }) if l.center_point[:zoom_level]
+        opts["data-zoom-level"] = l.center_point[:zoom_level] if l.center_point[:zoom_level]
         [l.name, l.center_point[:loc].join(","), opts]
       end
       @focus_options.unshift [I18n.t("facility.select_location"), ""]

@@ -13,16 +13,15 @@ module Cms::Addon
       before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
     end
 
-    public
-      def summary
-        return summary_html if summary_html.present?
-        return nil unless respond_to?(:html)
-        ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
-      end
+    def summary
+      return summary_html if summary_html.present?
+      return nil unless respond_to?(:html)
+      ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
+    end
 
-      def meta_present?
-        [keywords, description, summary_html].map(&:present?).any?
-      end
+    def meta_present?
+      [keywords, description, summary_html].map(&:present?).any?
+    end
 
     private
       def set_keywords

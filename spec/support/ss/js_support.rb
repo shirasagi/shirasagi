@@ -18,9 +18,7 @@ module SS
       end
 
       start_at = Time.zone.now.to_f
-      while !block.call && (Time.zone.now.to_f - start_at) < ajax_timeout
-        sleep 0.1
-      end
+      sleep 0.1 while !yield && (Time.zone.now.to_f - start_at) < ajax_timeout
     end
 
     def wait_for_selector(*args)

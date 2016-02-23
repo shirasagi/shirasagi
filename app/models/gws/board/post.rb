@@ -38,7 +38,6 @@ class Gws::Board::Post
 
   scope :topic, ->{ exists parent_id: false }
   scope :comment, ->{ exists parent_id: true }
-
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
@@ -47,34 +46,33 @@ class Gws::Board::Post
     criteria
   }
 
-  public
-    # Returns the topic.
-    def root_post
-      parent.nil? ? self : parent.root_post
-    end
+  # Returns the topic.
+  def root_post
+    parent.nil? ? self : parent.root_post
+  end
 
-    # is comment?
-    def comment?
-      parent_id.present?
-    end
+  # is comment?
+  def comment?
+    parent_id.present?
+  end
 
-    def permit_comment?
-      permit_comment == 'allow'
-    end
+  def permit_comment?
+    permit_comment == 'allow'
+  end
 
-    def mode_options
-      [
-        [I18n.t('gws/board.options.mode.thread'), 'thread'],
-        [I18n.t('gws/board.options.mode.tree'), 'tree']
-      ]
-    end
+  def mode_options
+    [
+      [I18n.t('gws/board.options.mode.thread'), 'thread'],
+      [I18n.t('gws/board.options.mode.tree'), 'tree']
+    ]
+  end
 
-    def permit_comment_options
-      [
-        [I18n.t('gws/board.options.permit_comment.allow'), 'allow'],
-        [I18n.t('gws/board.options.permit_comment.deny'), 'deny']
-      ]
-    end
+  def permit_comment_options
+    [
+      [I18n.t('gws/board.options.permit_comment.allow'), 'allow'],
+      [I18n.t('gws/board.options.permit_comment.deny'), 'deny']
+    ]
+  end
 
   private
     # topic(root_post)を設定
