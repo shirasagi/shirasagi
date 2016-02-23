@@ -15,6 +15,12 @@ describe SS::Site do
     it { expect(subject.path).not_to eq nil }
     it { expect(subject.url).not_to eq nil }
     it { expect(subject.full_url).not_to eq nil }
+    it { expect(subject.mobile_state).to eq 'enabled' }
+    it { expect(subject.mobile_location).to eq '/mobile' }
+    it { expect(subject.mobile_css).to eq ['%{assets_prefix}/cms/mobile.css'] }
+    it { expect(subject.trans_sid).to eq 'none' }
+    it { expect(subject.mobile_disabled?).to be_falsey }
+    it { expect(subject.mobile_enabled?).to be_truthy }
   end
 
   describe "#find_by_domain" do
@@ -25,6 +31,12 @@ describe SS::Site do
       it { expect(subject.path).not_to eq nil }
       it { expect(subject.url).not_to eq nil }
       it { expect(subject.full_url).not_to eq nil }
+      it { expect(subject.mobile_state).to eq 'enabled' }
+      it { expect(subject.mobile_location).to eq '/mobile' }
+      it { expect(subject.mobile_css).to eq ['%{assets_prefix}/cms/mobile.css'] }
+      it { expect(subject.trans_sid).to eq 'none' }
+      it { expect(subject.mobile_disabled?).to be_falsey }
+      it { expect(subject.mobile_enabled?).to be_truthy }
     end
 
     context "when domain cannot find" do

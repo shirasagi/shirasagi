@@ -127,14 +127,14 @@ class Cms::PreviewController < ApplicationController
       unless @preview_page
         h << '<script>'
         h << '$(function(){'
-        h << '  SS_Preview.mobile_path = "' + SS.config.mobile.location + '";'
+        h << '  SS_Preview.mobile_path = "' + @cur_site.mobile_location + '";'
         h << '  SS_Preview.render();'
         h << '});'
         h << '</script>'
         h << '<div id="ss-preview">'
         h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
         h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
-        h << '<input type="button" class="mobile" value=' + t("views.links.mobile") + '>'
+        h << '<input type="button" class="mobile" value=' + t("views.links.mobile") + '>' if @cur_site.mobile_enabled?
         h << '</div>'
       end
 

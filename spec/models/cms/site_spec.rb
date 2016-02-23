@@ -14,6 +14,12 @@ describe Cms::Site do
     it { expect(item.path).not_to eq nil }
     it { expect(item.url).not_to eq nil }
     it { expect(item.full_url).not_to eq nil }
+    it { expect(item.mobile_state).to eq 'enabled' }
+    it { expect(item.mobile_location).to eq '/mobile' }
+    it { expect(item.mobile_css).to eq ['%{assets_prefix}/cms/mobile.css'] }
+    it { expect(item.trans_sid).to eq 'none' }
+    it { expect(item.mobile_disabled?).to be_falsey }
+    it { expect(item.mobile_enabled?).to be_truthy }
   end
 
   context "when multiple rooted site is given" do

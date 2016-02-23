@@ -28,9 +28,9 @@ module SS
       !absolute_path?(request, uri)
     end
 
-    def mobile_path?(_, uri)
+    def mobile_path?(request, uri)
       return false if uri.path.blank?
-      uri.path.start_with?("#{SS.config.mobile.location}/")
+      uri.path.start_with?("#{cur_site(request).mobile_location}/")
     end
 
     def fs_path?(_, uri)
@@ -44,7 +44,7 @@ module SS
       return url if relative_path?(request, uri)
       return url if mobile_path?(request, uri)
       return url if fs_path?(request, uri)
-      uri.path = "#{SS.config.mobile.location}#{uri.path}"
+      uri.path = "#{cur_site(request).mobile_location}#{uri.path}"
       uri.to_s
     end
 
