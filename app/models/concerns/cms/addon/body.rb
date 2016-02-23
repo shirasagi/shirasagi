@@ -7,17 +7,14 @@ module Cms::Addon
       field :html, type: String
       field :markdown, type: String
       permit_params :html, :markdown
-
-      validate :convert_markdown, if: -> { SS.config.cms.html_editor == "markdown" }
     end
 
-    def markdown2html
-      ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(markdown)
-    end
-
-    private
-      def convert_markdown
-        self.html = markdown2html
+    def html
+      if SS.config.cms.html_editor == "markdown"
+        Kramdown::Document.new(markdown.to_s).to_html
+      else
+        self[:html]
       end
+    end
   end
 end

@@ -5,20 +5,11 @@ module SS::Addon
 
     included do
       field :text, type: String
-      field :html, type: String
       permit_params :text
-
-      validate :convert_html
     end
 
-    private
-      def convert_html
-        if text.blank?
-          self.html = nil
-        else
-          markdown = ::Redcarpet::Markdown.new Redcarpet::Render::HTML, autolink: true, tables: true
-          self.html = markdown.render(text)
-        end
-      end
+    def html
+      Kramdown::Document.new(text).to_html
+    end
   end
 end

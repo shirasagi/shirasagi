@@ -26,7 +26,7 @@ gem "zipruby"
 gem "jquery-turbolinks"
 gem "jquery-cookie-rails"
 gem 'jquery-form-rails'
-gem "redcarpet"
+gem "kramdown"
 gem "compass-rails"
 gem "kaminari"
 gem "non-stupid-digest-assets"
