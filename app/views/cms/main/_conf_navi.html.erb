@@ -3,29 +3,29 @@
 
   <h3><%= link_to :"cms.site_info", cms_site_path %></h3>
 
-  <% if Cms::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.notice", cms_notices_path %></h3>
-  <% end %>
-  <% if Cms::Role.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.role", cms_roles_path %></h3>
+  <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.group", cms_groups_path %></h3>
   <% end %>
   <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.user", cms_users_path %></h3>
   <% end %>
-  <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.group", cms_groups_path %></h3>
+  <% if Cms::Role.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.role", cms_roles_path %></h3>
+  <% end %>
+  <% if Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"workflow.name", workflow_routes_path %></h3>
   <% end %>
   <% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.member", cms_members_path %></h3>
   <% end %>
-  <% if Cms::BodyLayout.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"cms.body_layout", cms_body_layouts_path %></h3>
+  <% if Cms::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.notice", cms_notices_path %></h3>
   <% end %>
   <% if Cms::EditorTemplate.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.editor_template", cms_editor_templates_path %></h3>
   <% end %>
-  <% if Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to :"workflow.name", workflow_routes_path %></h3>
+  <% if Cms::BodyLayout.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.body_layout", cms_body_layouts_path %></h3>
   <% end %>
   <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"ldap", ldap_import_index_path %></h3>

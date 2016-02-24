@@ -53,6 +53,8 @@ ja:
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。
     links:
+      cms: サイト管理
+      gws: グループ
       new: 新規作成
       show: 詳細を見る
       edit: 編集する

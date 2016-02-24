@@ -23,30 +23,24 @@
 
     <div class="cms">
       <% if @ss_mode == :cms %>
-      <h2><%= link_to "CMS", cms_contents_path(@cur_site), class: "current" %></h2>
+      <h2><%= link_to :cms, cms_contents_path(@cur_site), class: "current" %></h2>
       <% else %>
-      <h2><%= link_to "CMS", sns_cms_path %></h2>
+      <h2><%= link_to :cms, sns_cms_path %></h2>
       <% end %>
     </div>
 
     <% if SS.config.gws.disable.blank? %>
     <div class="gws">
       <% if @ss_mode == :gws %>
-      <h2><%= link_to "GWS", gws_portal_path(@cur_site), class: "current" %></h2>
+      <h2><%= link_to :gws, gws_portal_path(@cur_site), class: "current" %></h2>
       <% else %>
-      <h2><%= link_to "GWS", sns_gws_path %></h2>
+      <h2><%= link_to :gws, sns_gws_path %></h2>
       <% end %>
     </div>
     <% end %>
 
-    <% if 0 == 1 %>
-    <div class="sns">
-      <h2><%= link_to "SNS", "/.mypage" %></h2>
-    </div>
-    <% end %>
-
     <% if Rails.env.development? %>
-    <div class="env dev">[dev]</div>
+    <div class="env dev">&lt;Development&gt;</div>
     <% end %>
 
     <% if @cur_user %>

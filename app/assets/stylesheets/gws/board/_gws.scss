@@ -12,7 +12,10 @@
       @include box-body;
     }
     .files {
-      @include box-body;
+      margin: 10px;
+      padding: 15px;
+      border-radius: 4px;
+      background-color: $gray1;
       a {
         display: inline-block;
         margin-right: 2em;
