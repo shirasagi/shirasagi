@@ -6,6 +6,7 @@ SS::Application.routes.draw do
   end
 
   gws "schedule" do
+    resources :holidays, concerns: [:deletion]
     resources :categories, concerns: [:deletion]
     resources :plans, concerns: [:deletion]
     resources :list_plans, concerns: [:deletion]

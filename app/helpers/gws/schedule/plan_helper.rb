@@ -15,7 +15,8 @@ module Gws::Schedule::PlanHelper
   end
 
   def calendar_holidays(start_at, end_at)
-    HolidayJapan.between(start_at, end_at).map do |date, name|
+    holidays = Gws::Schedule::Holiday.search(start_at: start_at, end_at: end_at).map(&:calendar_format)
+    holidays + HolidayJapan.between(start_at, end_at).map do |date, name|
       { className: 'fc-holiday', title: "  #{name}", start: date, allDay: true, editable: false }
     end
   end

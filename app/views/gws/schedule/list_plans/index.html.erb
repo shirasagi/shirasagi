@@ -1,7 +1,7 @@
 <% @index_meta = proc do |item| %>
   <span class="datetime"><%= term(item) %></span>
 
-  <% if item.facilities.size > 0 %>
+  <% if item.facilities.present? %>
   <span class="user"><%= item.facilities.map(&:name).join(', ') %></span>
   <% end %>
 

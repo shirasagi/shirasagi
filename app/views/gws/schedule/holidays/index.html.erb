@@ -1,0 +1,5 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= term(item) %></span>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

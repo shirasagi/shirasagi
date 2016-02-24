@@ -1,0 +1,16 @@
+<%= jquery do %>
+  $(".date").datetimepicker({ lang: "ja", timepicker: false, format:'Y/m/d', closeOnDateSelect: true, scrollInput: false });
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :term %></dt>
+  <dd>
+    <div class="dates-field">
+      <%= f.text_field :start_on, class: "date start", value: tryb{@item.start_on.strftime("%Y/%m/%d")} %>
+      - <%= f.text_field :end_on, class: "date end", value: tryb{@item.end_on.strftime("%Y/%m/%d")} %>
+    </div>
+  </dd>
+</dl>
