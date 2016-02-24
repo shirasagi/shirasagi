@@ -11,12 +11,16 @@
   <dd class="role-permissions">
     <%= hidden_field_tag "item[permissions][]" %>
 
-    <% @model.module_permission_names.each do |mod, names| %>
+    <% @model.module_permission_names(separator: true).each do |mod, names| %>
     <div class="module">
-      <p class="module-name"><%= @model.mod_name(mod) %></p>
+      <p class="module-name">[<%= @model.mod_name(mod) %>]</p>
       <div class="permissions">
         <% names.each do |name| %>
-        <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("#{@model.collection_name.to_s.singularize}.#{name}") %></label>
+          <% if name == :separator %>
+            <div style="height: 1em;"></div>
+            <% next %>
+          <% end %>
+          <label><%= f.check_box("permissions[]", {}, name.to_s) %> <%= t("#{@model.collection_name.to_s.singularize}.#{name}") %></label>
         <% end %>
       </div>
     </div>
