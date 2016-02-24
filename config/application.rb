@@ -15,6 +15,7 @@ module SS
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/app/validators"
 
+    config.assets.paths << "#{config.root}/public/assets/css"
     config.assets.paths << "#{config.root}/public/assets/js"
     config.assets.precompile << proc do |path, fn|
       fn =~ /app\/assets/ && %w(.js .css).include?(::File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/

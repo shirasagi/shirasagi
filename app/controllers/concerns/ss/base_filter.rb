@@ -52,7 +52,6 @@ module SS::BaseFilter
       SS.config.ss.stylesheets.each { |m| stylesheet(m) }
       SS.config.ss.javascripts.each { |m| javascript(m) }
       stylesheet("/assets/css/colorbox/colorbox.css")
-      javascript("/assets/js/jquery.colorbox-min.js")
     end
 
     def logged_in?
