@@ -1,5 +1,5 @@
 class SS::RakeRunner
-  NULL_DEVICE = "/dev/null"
+  NULL_DEVICE = "/dev/null".freeze
 
   class << self
     def run_async(task, *args)

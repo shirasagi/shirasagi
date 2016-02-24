@@ -3,7 +3,7 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    SERVICES = %w(fb_like fb_share twitter hatena google evernote)
+    SERVICES = %w(fb_like fb_share twitter hatena google evernote).freeze
 
     included do
       field :sns_share_states, type: Hash

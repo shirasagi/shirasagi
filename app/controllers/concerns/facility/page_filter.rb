@@ -7,7 +7,7 @@ module Facility::PageFilter
     filename name layout kana address postcode tel
     fax related_url categories locations services
     map_points groups
-  )
+  ).freeze
 
   private
     def attributes_to_row(item, additional_columns)

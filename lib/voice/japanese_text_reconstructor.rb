@@ -3,7 +3,7 @@ class Voice::JapaneseTextReconstructor
   include Enumerable
 
   SEPARATOR = /[\s　。、]+/
-  PAUSE_TEXT = '。'
+  PAUSE_TEXT = '。'.freeze
 
   def initialize(texts, max_length)
     @texts = texts

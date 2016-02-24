@@ -87,8 +87,8 @@ module Workflow::Model::Route
         errors.add :base, :approvers_level_blank if approver[:level].blank?
         if approver[:user_id].blank?
           errors.add :base, :approvers_user_id_blank
-        else
-          errors.add :base, :approvers_user_missing if self.class.approver_user_class.where(id: approver[:user_id]).first.blank?
+        elsif self.class.approver_user_class.where(id: approver[:user_id]).first.blank?
+          errors.add :base, :approvers_user_missing
         end
       end
     end

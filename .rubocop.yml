@@ -3,6 +3,8 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   Exclude:
     - Guardfile
+    - Vagrantfile
+    - ",memo/*"
     - bin/*
     - vendor/bundle/**/*
 
