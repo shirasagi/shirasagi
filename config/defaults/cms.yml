@@ -1,6 +1,12 @@
 # cms
 
 production: &production
+  # StyleSheets on gws pages.
+  stylesheets: []
+
+  # JavaScripts on gws pages.
+  javascripts: []
+
   # Static files
   serve_static_pages: true
 

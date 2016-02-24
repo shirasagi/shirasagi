@@ -8,6 +8,7 @@ module Cms::BaseFilter
     helper Cms::NodeHelper
     helper Cms::FormHelper
     helper Cms::PathHelper
+    before_action :set_cms_assets
     before_action :set_site
     before_action :set_node
     before_action :set_group
@@ -15,6 +16,11 @@ module Cms::BaseFilter
   end
 
   private
+    def set_cms_assets
+      SS.config.cms.stylesheets.each { |m| stylesheet(m) }
+      SS.config.cms.javascripts.each { |m| javascript(m) }
+    end
+
     def set_site
       @ss_mode = :cms
       @cur_site = Cms::Site.find params[:site]

@@ -7,7 +7,7 @@ module Gws::BaseFilter
 
     helper Gws::LayoutHelper
 
-    before_action :set_assets
+    before_action :set_gws_assets
     before_action :set_current_site
     before_action :set_current_group
     before_action :set_crumbs
@@ -15,8 +15,9 @@ module Gws::BaseFilter
   end
 
   private
-    def set_assets
-      javascript 'gws/script'
+    def set_gws_assets
+      SS.config.gws.stylesheets.each { |m| stylesheet(m) }
+      SS.config.gws.javascripts.each { |m| javascript(m) }
     end
 
     def set_current_site

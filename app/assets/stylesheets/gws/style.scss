@@ -1,7 +1,10 @@
 //= require fullcalendar
 
-@import "gws/board/gws";
-@import "gws/schedule/gws";
+@import "ss/init";
+@import "ss/lib";
+@import "ss/pc_mb";
+@import "board/gws";
+@import "schedule/gws";
 
 .portal-box {
   float: left;

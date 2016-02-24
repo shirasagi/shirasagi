@@ -1,0 +1,19 @@
+# ss
+
+production: &production
+  # Application name
+  application_name: SHIRASAGI
+
+  # StyleSheets on management pages.
+  stylesheets: ["ss/style"]
+
+  # JavaScripts on management pages.
+  javascripts: ["ss/script"]
+
+test:
+  <<: *production
+  disable: false
+
+development:
+  <<: *production
+  disable: false

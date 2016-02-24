@@ -11,6 +11,7 @@ module SS::BaseFilter
     helper SS::EditorHelper
     helper SS::JbuilderHelper
     before_action :set_model
+    before_action :set_ss_assets
     before_action :logged_in?
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
     rescue_from RuntimeError, with: :rescue_action
@@ -45,6 +46,13 @@ module SS::BaseFilter
   private
     def set_model
       @model = self.class.model_class
+    end
+
+    def set_ss_assets
+      SS.config.ss.stylesheets.each { |m| stylesheet(m) }
+      SS.config.ss.javascripts.each { |m| javascript(m) }
+      stylesheet("/assets/css/colorbox/colorbox.css")
+      javascript("/assets/js/jquery.colorbox-min.js")
     end
 
     def logged_in?

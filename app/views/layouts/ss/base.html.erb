@@ -4,21 +4,13 @@
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
-<title>SHIRASAGI</title>
-<%= stylesheet_link_tag "ss/style", media: "all" %>
-<link media="all" rel="stylesheet" href="/assets/css/colorbox/colorbox.css" />
-<% controller.stylesheets.each do |path| %>
-<%= stylesheet_link_tag path, media: "all" %>
-<% end %>
+<title><%= SS.config.ss.application_name %></title>
+<%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+<%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
 <!--[if lt IE 9]>
 <script src="/assets/js/html5.js"></script>
 <script src="/assets/js/selectivizr-min.js"></script>
 <![endif]-->
-<%= javascript_include_tag "ss/script" %>
-<script src="/assets/js/jquery.colorbox.js"></script>
-<% controller.javascripts.each do |path| %>
-<%= javascript_include_tag path %>
-<% end %>
 <%= csrf_meta_tags %>
 </head>
 <body>
@@ -27,7 +19,7 @@
 
 <header id="head">
   <div class="wrap">
-    <h1><%= link_to "SHIRASAGI", sns_mypage_path %></h1>
+    <h1 class="application-name"><%= link_to SS.config.ss.application_name, sns_mypage_path %></h1>
 
     <div class="cms">
       <% if @ss_mode == :cms %>
