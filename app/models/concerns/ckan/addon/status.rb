@@ -26,6 +26,33 @@ module Ckan::Addon
         self.ckan_basicauth_password = SS::Crypt.encrypt(in_ckan_basicauth_password)
       end
 
+      def send_request
+        uri = URI.parse ckan_url + '/api/3/action/' + action_name
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true if uri.scheme == 'https'
+        req = Net::HTTP::Get.new(uri.path)
+        if ckan_basicauth_enabled?
+          req.basic_auth(ckan_basicauth_username, SS::Crypt.decrypt(ckan_basicauth_password))
+        end
+
+        http.request(req)
+      end
+
+      def raw_value
+        res = send_request
+        return nil if res.code != '200'
+
+        h = JSON.parse(res.body)
+        return nil unless h['success']
+
+        h['result'].count
+      end
+
+      def refresh_ckan_value_cache
+        value = raw_value
+        ckan_value_cache_store(value) unless value.nil?
+      end
+
     public
       def ckan_status_options
         %w(dataset tag group related_item organization).map { |m| [ I18n.t("ckan.options.ckan_status.#{m}"), m ] }.to_a
@@ -40,37 +67,12 @@ module Ckan::Addon
       end
 
       def value
-        uri = URI.parse ckan_url + '/api/3/action/' + action_name
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true if uri.scheme == 'https'
-        req = Net::HTTP::Get.new(uri.path)
-        if ckan_basicauth_enabled?
-          req.basic_auth(ckan_basicauth_username, SS::Crypt.decrypt(ckan_basicauth_password))
-        end
-        res = begin
-          res = http.request(req)
-          if res.code != '200'
-            res = nil
-          end
-          res
+        begin
+          refresh_ckan_value_cache
         rescue
-          nil
         end
 
-        if res.blank?
-          # HTTP Error
-          ckan_value_cache_restore
-        else
-          h = JSON.parse(res.body)
-          if h['success']
-            count = h['result'].count
-            ckan_value_cache_store(count)
-            count
-          else
-            # Failure
-            ckan_value_cache_restore
-          end
-        end
+        ckan_value_cache_restore
       end
 
       def action_name
