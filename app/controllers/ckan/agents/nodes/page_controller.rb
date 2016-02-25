@@ -12,7 +12,7 @@ class Ckan::Agents::Nodes::PageController < ApplicationController
       @cur_node.values.each do |value|
         date = value['metadata_modified']
         rss.items.new_item do |entry|
-          entry.title       = value['name']
+          entry.title       = value['title'] || value['name']
           entry.link        = "#{@cur_node.ckan_item_url}/#{value['name']}"
           entry.description = nil
           entry.pubDate     = date.to_s
