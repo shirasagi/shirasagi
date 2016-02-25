@@ -10,7 +10,7 @@ class Chorg::Changeset
   TYPE_DELETE = "delete".freeze
   TYPES = [TYPE_ADD, TYPE_MOVE, TYPE_UNIFY, TYPE_DIVISION, TYPE_DELETE].freeze
 
-  set_permission_name "cms_users", :edit
+  set_permission_name "chorg_revisions", :edit
 
   attr_accessor :cur_revision, :cur_type
 

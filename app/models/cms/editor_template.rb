@@ -6,7 +6,7 @@ class Cms::EditorTemplate
   include Cms::Addon::Html
   include Cms::Addon::Thumb
 
-  set_permission_name "cms_users", :edit
+  set_permission_name "cms_editor_templates", :edit
 
   seqid :id
   field :name, type: String

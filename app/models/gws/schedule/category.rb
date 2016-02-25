@@ -2,20 +2,24 @@ class Gws::Schedule::Category
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::SitePermission
+  include Gws::Content::Targetable
+  include Gws::Addon::GroupPermission
 
-  set_permission_name "gws_users", :edit
-
+  field :state, type: String, default: "public"
   field :name, type: String
   field :color, type: String, default: "#48b"
 
   has_many :plans, class_name: 'Gws::Schedule::Plan', dependent: :destroy
 
-  permit_params :name, :color
+  permit_params :state, :name, :color
 
+  validates :state, presence: true
   validates :name, presence: true
   validates :color, presence: true
 
+  default_scope -> {
+    order_by name: 1
+  }
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?

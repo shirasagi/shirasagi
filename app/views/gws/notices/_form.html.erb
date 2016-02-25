@@ -9,4 +9,7 @@
       <%= t "gws.options.severity.high" %>
     </label>
   </dd>
+
+  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
+  <dd><%= f.select :target, @item.target_options %></dd>
 </dl>

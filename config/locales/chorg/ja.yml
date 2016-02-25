@@ -72,6 +72,9 @@ ja:
   modules:
     chorg: 組織変更
 
+  cms_role:
+    edit_chorg_revisions: 組織変更の管理
+
   job:
     models:
       chorg/test_runner: 組織変更/テスト実行

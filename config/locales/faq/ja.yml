@@ -31,15 +31,19 @@ ja:
         search_node: 検索フォルダー
 
   cms_role:
-    read_other_faq_pages: FAQページの閲覧（全て）
-    read_private_faq_pages: FAQページの閲覧（所有）
-    edit_other_faq_pages: FAQページの編集（全て）
-    edit_private_faq_pages: FAQページの編集（所有）
-    delete_other_faq_pages: FAQページの削除（全て）
-    delete_private_faq_pages: FAQページの削除（所有）
-    move_other_faq_pages: FAQページの移動（全て）
-    move_private_faq_pages: FAQページの移動（所有）
-    unlock_other_faq_pages: FAQページのロック解除（全て）
+    read_other_faq_pages: ページの閲覧（全て）
+    read_private_faq_pages: ページの閲覧（所有）
+    edit_other_faq_pages: ページの編集（全て）
+    edit_private_faq_pages: ページの編集（所有）
+    delete_other_faq_pages: ページの削除（全て）
+    delete_private_faq_pages: ページの削除（所有）
+    move_other_faq_pages: ページの移動（全て）
+    move_private_faq_pages: ページの移動（所有）
+    unlock_other_faq_pages: ページのロック解除（全て）
+    release_other_faq_pages: ページの公開（全て）
+    release_private_faq_pages: ページの公開（所有）
+    approve_other_faq_pages: ページの承認（全て）
+    approve_private_faq_pages: ページの承認（所有）
 
   tooltip:
     faq/part/search:

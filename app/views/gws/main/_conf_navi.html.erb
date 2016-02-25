@@ -1,10 +1,19 @@
 <nav class="mod-navi">
   <h2><%= t "gws.site_config" %></h2>
-
   <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
-  <h3><%= link_to t('mongoid.models.ss/user'), gws_users_path %></h3>
-  <h3><%= link_to t('mongoid.models.gws/role'), gws_roles_path %></h3>
-  <h3><%= link_to t('workflow.name'), gws_workflow_routes_path %></h3>
+
+  <% if Gws::Group.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.ss/group'), gws_groups_path %></h3>
+  <% end %>
+  <% if Gws::User.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.ss/user'), gws_users_path %></h3>
+  <% end %>
+  <% if Gws::Role.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/role'), gws_roles_path %></h3>
+  <% end %>
+  <% if Gws::Workflow::Route.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('workflow.name'), gws_workflow_routes_path %></h3>
+  <% end %>
   <% if Gws::Notice.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/notice'), gws_notices_path %></h3>
   <% end %>
@@ -14,6 +23,10 @@
   <% if Gws::Schedule::Holiday.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/schedule.holiday'), gws_schedule_holidays_path %></h3>
   <% end %>
-  <h3><%= link_to t('mongoid.models.gws/facility'), gws_facilities_path %></h3>
-  <h3><%= link_to t('gws/schedule.category'), gws_schedule_categories_path %></h3>
+  <% if Gws::Facility.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/facility'), gws_facilities_path %></h3>
+  <% end %>
+  <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/schedule.category'), gws_schedule_categories_path %></h3>
+  <% end %>
 </nav>

@@ -1,6 +1,8 @@
 module Gws
   class Initializer
+    Gws::Role.permission :edit_gws_groups
     Gws::Role.permission :edit_gws_users
+    Gws::Role.permission :edit_gws_roles
 
     Gws::Role.permission :read_other_gws_notices
     Gws::Role.permission :read_private_gws_notices

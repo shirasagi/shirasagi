@@ -7,7 +7,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
   navi_view "cms/search_contents/navi"
 
   def index
-    raise "403" unless Cms::User.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
 
     @keyword = params[:keyword]
     @replacement = params[:replacement]

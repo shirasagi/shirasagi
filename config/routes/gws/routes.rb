@@ -10,6 +10,7 @@ SS::Application.routes.draw do
 
   namespace "gws", path: ".g:site/gws" do
     resource  :site
+    resources :groups, concerns: [:deletion]
     resources :users, concerns: [:deletion]
     resources :roles, concerns: [:deletion]
     resources :facilities, concerns: [:deletion]

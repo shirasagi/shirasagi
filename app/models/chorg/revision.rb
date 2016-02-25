@@ -5,16 +5,27 @@ class Chorg::Revision
   include Cms::SitePermission
   include Voice::Lockable
 
-  set_permission_name "cms_users", :edit
+  set_permission_name "chorg_revisions", :edit
 
   attr_accessor :add_newly_created_group_to_site
 
   seqid :id
   field :name, type: String
-  has_many :changesets, class_name: "Chorg::Changeset", dependent: :destroy
   field :job_ids, type: Array
+
+  has_many :changesets, class_name: "Chorg::Changeset", dependent: :destroy
+
   permit_params :name, :changesets, :add_newly_created_group_to_site
+
   validates :name, presence: true, length: { maximum: 80 }, uniqueness: { scope: :site_id }
+
+  scope :search, ->(params) {
+    criteria = where({})
+    return criteria if params.blank?
+
+    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+    criteria
+  }
 
   def add_changesets
     changesets.select { |e| e.type == Chorg::Changeset::TYPE_ADD }

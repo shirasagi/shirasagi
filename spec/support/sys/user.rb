@@ -5,8 +5,8 @@ def sys_user
 end
 
 def sys_role
-  sys_role = Sys::Role.where(name: build(:sys_user_role).name).first
-  sys_role ||= create(:sys_user_role)
+  sys_role = Sys::Role.where(name: build(:sys_role_admin).name).first
+  sys_role ||= create(:sys_role_admin)
   sys_role
 end
 

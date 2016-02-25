@@ -1,7 +1,6 @@
 class Cms::EditorTemplatesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  include Cms::SearchableCrudFilter
   helper SS::EditorHelper
 
   model Cms::EditorTemplate

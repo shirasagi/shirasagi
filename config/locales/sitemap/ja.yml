@@ -13,18 +13,18 @@ ja:
       sitemap/page: サイトマップ
 
   cms_role:
-    read_other_sitemap_pages: サイトマップページの閲覧（全て）
-    read_private_sitemap_pages: サイトマップページの閲覧（所有）
-    edit_other_sitemap_pages: サイトマップページの編集（全て）
-    edit_private_sitemap_pages: サイトマップページの編集（所有）
-    delete_other_sitemap_pages: サイトマップページの削除（全て）
-    delete_private_sitemap_pages: サイトマップページの削除（所有）
-    move_other_sitemap_pages: サイトマップページの移動（全て）
-    move_private_sitemap_pages: サイトマップページの移動（所有）
-    release_other_sitemap_pages: サイトマップページの公開（全て）
-    release_private_sitemap_pages: サイトマップページの公開（所有）
-    approve_other_sitemap_pages: サイトマップページの承認（全て）
-    approve_private_sitemap_pages: サイトマップページの承認（所有）
+    read_other_sitemap_pages: ページの閲覧（全て）
+    read_private_sitemap_pages: ページの閲覧（所有）
+    edit_other_sitemap_pages: ページの編集（全て）
+    edit_private_sitemap_pages: ページの編集（所有）
+    delete_other_sitemap_pages: ページの削除（全て）
+    delete_private_sitemap_pages: ページの削除（所有）
+    move_other_sitemap_pages: ページの移動（全て）
+    move_private_sitemap_pages: ページの移動（所有）
+    release_other_sitemap_pages: ページの公開（全て）
+    release_private_sitemap_pages: ページの公開（所有）
+    approve_other_sitemap_pages: ページの承認（全て）
+    approve_private_sitemap_pages: ページの承認（所有）
 
   mongoid:
     models:

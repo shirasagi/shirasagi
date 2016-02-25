@@ -4,7 +4,7 @@ class Cms::Group
   include Contact::Addon::Group
   include Cms::Addon::Import::Group
 
-  set_permission_name "cms_users", :edit
+  set_permission_name "cms_groups", :edit
 
   attr_accessor :cur_site, :cms_role_ids
   permit_params :cms_role_ids

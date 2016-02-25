@@ -3,7 +3,7 @@ class Cms::Role
   include SS::Reference::Site
   include Cms::SitePermission
 
-  set_permission_name "cms_users", :edit
+  set_permission_name "cms_roles", :edit
 
   field :permission_level, type: Integer, default: 1
 

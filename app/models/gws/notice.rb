@@ -2,6 +2,7 @@ class Gws::Notice
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Content::Targetable
   #include SS::Addon::Body
   include SS::Addon::Markdown
   include Cms::Addon::Release

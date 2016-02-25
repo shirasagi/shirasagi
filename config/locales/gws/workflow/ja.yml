@@ -5,14 +5,21 @@ ja:
     gws/workflow: ワークフロー
 
   gws_role:
-    read_other_gws_workflow_files: ワークフローの閲覧（全て）
-    read_private_gws_workflow_files: ワークフローの閲覧（所有）
-    edit_other_gws_workflow_files: ワークフローの編集（全て）
-    edit_private_gws_workflow_files: ワークフローの編集（所有）
-    delete_other_gws_workflow_files: ワークフローの削除（全て）
-    delete_private_gws_workflow_files: ワークフローの削除（所有）
-    approve_other_gws_workflow_files: ワークフローの承認（全て）
-    approve_private_gws_workflow_files: ワークフローの承認（所有）
+    read_other_gws_workflow_routes: 承認ルートの閲覧（全て）
+    read_private_gws_workflow_routes: 承認ルートの閲覧（所有）
+    edit_other_gws_workflow_routes: 承認ルートの編集（全て）
+    edit_private_gws_workflow_routes: 承認ルートの編集（所有）
+    delete_other_gws_workflow_routes: 承認ルートの削除（全て）
+    delete_private_gws_workflow_routes: 承認ルートの削除（所有）
+
+    read_other_gws_workflow_files: 申請の閲覧（全て）
+    read_private_gws_workflow_files: 申請の閲覧（所有）
+    edit_other_gws_workflow_files: 申請の編集（全て）
+    edit_private_gws_workflow_files: 申請の編集（所有）
+    delete_other_gws_workflow_files: 申請の削除（全て）
+    delete_private_gws_workflow_files: 申請の削除（所有）
+    approve_other_gws_workflow_files: 申請の承認（全て）
+    approve_private_gws_workflow_files: 申請の承認（所有）
 
   mongoid:
     models:

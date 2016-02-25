@@ -28,12 +28,12 @@ ja:
       ads/banner: 広告バナー
 
   cms_role:
-    read_other_ads_banners: 広告バナーの閲覧（全て）
-    read_private_ads_banners: 広告バナーの閲覧（所有）
-    edit_other_ads_banners: 広告バナーの編集（全て）
-    edit_private_ads_banners: 広告バナーの編集（所有）
-    delete_other_ads_banners: 広告バナーの削除（全て）
-    delete_private_ads_banners: 広告バナーの削除（所有）
+    read_other_ads_banners: バナーの閲覧（全て）
+    read_private_ads_banners: バナーの閲覧（所有）
+    edit_other_ads_banners: バナーの編集（全て）
+    edit_private_ads_banners: バナーの編集（所有）
+    delete_other_ads_banners: バナーの削除（全て）
+    delete_private_ads_banners: バナーの削除（所有）
 
   mongoid:
     models:

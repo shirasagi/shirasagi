@@ -37,14 +37,13 @@ module Gws::GroupPermission
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
       action = permission_action || action
-      permit = "#{action}_other_#{permission_name}"
 
-      level = user.gws_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
-      return where("$or" => [{permission_level: {"$lte" => level }}, {permission_level: nil}]) if level
+      level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
+      return where("$or" => [{ permission_level: { "$lte" => level }}, { permission_level: nil }]) if level
 
-      permit = "#{action}_private_#{permission_name}"
-      level = user.gws_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
-      return self.in(group_ids: user.group_ids).where(permission_level: {"$lte" => level }) if level
+      level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
+      return self.in(group_ids: user.group_ids).
+        where("$or" => [{ permission_level: { "$lte" => level }}, { permission_level: nil }]) if level
 
       where({ _id: -1 })
     end

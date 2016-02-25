@@ -1,7 +1,6 @@
 class Workflow::RoutesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  include Cms::SearchableCrudFilter
 
   model Workflow::Route
 

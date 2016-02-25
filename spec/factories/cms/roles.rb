@@ -11,8 +11,8 @@ FactoryGirl.define do
     permissions ["release_private_cms_pages"]
   end
 
-  factory :cms_user_role, class: Cms::Role do
-    name "cms_user_role"
+  factory :cms_role_admin, class: Cms::Role do
+    name "cms_role_admin"
     permissions Cms::Role.permission_names
     site_id 1
   end
