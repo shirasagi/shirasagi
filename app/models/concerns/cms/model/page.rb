@@ -83,8 +83,8 @@ module Cms::Model::Page
 
       allowed = dst_parent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
       return errors.add :base, :not_have_parent_read_permission unless allowed
-    else
-      return errors.add :base, :not_cms_page_in_root if route != "cms/page"
+    elsif route != "cms/page"
+      return errors.add :base, :not_cms_page_in_root
     end
   end
 

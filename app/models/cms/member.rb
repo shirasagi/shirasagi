@@ -1,7 +1,7 @@
 class Cms::Member
   include Cms::Model::Member
 
-  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
+  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
   index({ site_email: 1 }, { unique: true, sparse: true })
 

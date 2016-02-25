@@ -98,8 +98,8 @@ module Cms::Addon::Import
               @imported += 1 if save_import_node(f, import_filename)
             elsif ::File.extname(import_filename) =~ /^\.(html|htm)$/i
               @imported += 1 if save_import_page(f, import_filename)
-            else
-              @imported += 1 if upload_import_file(f, import_filename)
+            elsif upload_import_file(f, import_filename)
+              @imported += 1
             end
           end
         end
@@ -112,8 +112,8 @@ module Cms::Addon::Import
 
         if ::File.extname(import_filename) =~ /^\.(html|htm)$/i
           @imported += 1 if save_import_page(in_file, import_filename)
-        else
-          @imported += 1 if upload_import_file(in_file, import_filename)
+        elsif upload_import_file(in_file, import_filename)
+          @imported += 1
         end
 
         return errors.empty?

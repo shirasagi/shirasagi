@@ -4,8 +4,8 @@ class Ldap::Import
   include SS::Reference::Site
   include Cms::SitePermission
 
-  TYPE_GROUP = "group"
-  TYPE_USER = "user"
+  TYPE_GROUP = "group".freeze
+  TYPE_USER = "user".freeze
 
   set_permission_name "cms_users", :edit
 

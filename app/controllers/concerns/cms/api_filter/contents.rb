@@ -3,7 +3,7 @@ module Cms::ApiFilter::Contents
 
   HTML_FIELDS = [
     :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel, :contact_fax, :contact_email
-  ]
+  ].freeze
 
   private
     def search_html_with_string(string)

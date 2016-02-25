@@ -5,11 +5,11 @@ module SS::EditorHelper
     scss: :css,
     js: :javascript,
     coffee: :coffeescript,
-  }
+  }.freeze
 
   CODE_MODE_FILES = {
     htmlmixed: %w(xml javascript css vbscript htmlmixed),
-  }
+  }.freeze
 
   def code_editor(elem, opts = {})
     mode   = opts[:mode].to_s.presence

@@ -92,7 +92,7 @@ class Job::Service
 
           time = Benchmark.realtime do
             job = create_job(task)
-            job.call *(task.args)
+            job.call *task.args
           end
 
           job_log.state = Job::Log::STATE_COMPLETED

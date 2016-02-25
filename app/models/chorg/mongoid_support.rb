@@ -76,8 +76,8 @@ module Chorg::MongoidSupport
     @exclude_fields.each do |filter|
       if filter.is_a?(Regexp)
         return false if filter =~ k
-      else
-        return false if k == filter
+      elsif k == filter
+        return false
       end
     end
     true

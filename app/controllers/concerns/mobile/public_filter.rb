@@ -56,7 +56,7 @@ module Mobile::PublicFilter
       body.convert!
 
       # doctype
-      head  = []
+      head = []
       head << %(<?xml version="1.0" encoding="UTF-8"?>)
       head << %(<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">)
       head << %(<html xmlns="http://www.w3.org/1999/xhtml">)

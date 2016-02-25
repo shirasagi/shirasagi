@@ -65,7 +65,7 @@ class Uploader::FilesController < ApplicationController
         end
       end
       location = "#{uploader_files_path}/#{@item.filename}"
-      render_create  @item.errors.empty?, location: location, render: { file: :new_directory }
+      render_create @item.errors.empty?, location: location, render: { file: :new_directory }
     end
 
     def set_params(*keys)
