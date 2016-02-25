@@ -1,7 +1,6 @@
 class Cms::NoticesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  include Cms::SearchableCrudFilter
 
   model Cms::Notice
 

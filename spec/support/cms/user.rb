@@ -18,8 +18,8 @@ def cms_site
 end
 
 def cms_role
-  cms_role = Cms::Role.where(name: build(:cms_user_role).name).first
-  cms_role ||= create(:cms_user_role, site_id: cms_site.id)
+  cms_role = Cms::Role.where(name: build(:cms_role_admin).name).first
+  cms_role ||= create(:cms_role_admin, site_id: cms_site.id)
   cms_role
 end
 

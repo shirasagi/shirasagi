@@ -6,12 +6,12 @@ ja:
     gws/share: 共有ファイル
 
   gws_role:
-    read_other_gws_share_files: 共有ファイルの閲覧（全て）
-    read_private_gws_share_files: 共有ファイルの閲覧（所有）
-    edit_other_gws_share_files: 共有ファイルの編集（全て）
-    edit_private_gws_share_files: 共有ファイルの編集（所有）
-    delete_other_gws_share_files: 共有ファイルの削除（全て）
-    delete_private_gws_share_files: 共有ファイルの削除（所有）
+    read_other_gws_share_files: ファイルの閲覧（全て）
+    read_private_gws_share_files: ファイルの閲覧（所有）
+    edit_other_gws_share_files: ファイルの編集（全て）
+    edit_private_gws_share_files: ファイルの編集（所有）
+    delete_other_gws_share_files: ファイルの削除（全て）
+    delete_private_gws_share_files: ファイルの削除（所有）
 
   views:
     button:

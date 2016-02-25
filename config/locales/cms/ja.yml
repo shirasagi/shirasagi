@@ -135,48 +135,58 @@ ja:
 
   cms_role:
     edit_cms_sites: サイトの管理
+    edit_cms_groups: グループの管理
     edit_cms_users: ユーザーの管理
+    edit_cms_roles: 権限/ロールの管理
+    edit_cms_members: メンバーの管理
+    edit_cms_editor_templates: テンプレートの管理
+    #edit_cms_body_layouts: 本文レイアウトの管理
+    use_cms_tools: 運用ツールの利用
     read_other_cms_nodes: フォルダーの閲覧（全て）
-    read_other_cms_pages: 固定ページの閲覧（全て）
-    read_other_cms_parts: パーツの閲覧（全て）
-    read_other_cms_layouts: レイアウトの閲覧（全て）
-    read_other_cms_files: 共有ファイルの閲覧（全て）
-    read_other_cms_notices: お知らせの閲覧（全て）
     read_private_cms_nodes: フォルダーの閲覧（所有）
-    read_private_cms_pages: 固定ページの閲覧（所有）
-    read_private_cms_parts: パーツの閲覧（所有）
-    read_private_cms_layouts: レイアウトの閲覧（所有）
-    read_private_cms_files: 共有ファイルの閲覧（所有）
-    read_private_cms_notices: お知らせの閲覧（所有）
     edit_other_cms_nodes: フォルダーの編集（全て）
-    edit_other_cms_pages: 固定ページの編集（全て）
-    edit_other_cms_parts: パーツの編集（全て）
-    edit_other_cms_layouts: レイアウトの編集（全て）
-    edit_other_cms_files: 共有ファイルの編集（全て）
-    edit_other_cms_notices: お知らせの編集（全て）
     edit_private_cms_nodes: フォルダーの編集（所有）
-    edit_private_cms_pages: 固定ページの編集（所有）
-    edit_private_cms_parts: パーツの編集（所有）
-    edit_private_cms_layouts: レイアウトの編集（所有）
-    edit_private_cms_files: 共有ファイルの編集（所有）
-    edit_private_cms_notices: お知らせの編集（所有）
     delete_other_cms_nodes: フォルダーの削除（全て）
-    delete_other_cms_pages: 固定ページの削除（全て）
-    delete_other_cms_parts: パーツの削除（全て）
-    delete_other_cms_layouts: レイアウトの削除（全て）
-    delete_other_cms_files: 共有ファイルの削除（全て）
-    delete_other_cms_notices: お知らせの削除（全て）
     delete_private_cms_nodes: フォルダーの削除（所有）
-    delete_private_cms_pages: 固定ページの削除（所有）
-    delete_private_cms_parts: パーツの削除（所有）
-    delete_private_cms_layouts: レイアウトの削除（所有）
-    delete_private_cms_files: 共有ファイルの削除（所有）
-    delete_private_cms_notices: お知らせの削除（所有）
     move_other_cms_nodes: フォルダーの移動（全て）
-    move_other_cms_pages: 固定ページの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
+    read_other_cms_pages: 固定ページの閲覧（全て）
+    read_private_cms_pages: 固定ページの閲覧（所有）
+    edit_other_cms_pages: 固定ページの編集（全て）
+    edit_private_cms_pages: 固定ページの編集（所有）
+    delete_other_cms_pages: 固定ページの削除（全て）
+    delete_private_cms_pages: 固定ページの削除（所有）
+    move_other_cms_pages: 固定ページの移動（全て）
     move_private_cms_pages: 固定ページの移動（所有）
     unlock_other_cms_pages: 固定ページのロック解除（全て）
+    release_other_cms_pages: 固定ページの公開（全て）
+    release_private_cms_pages: 固定ページの公開（所有）
+    approve_other_cms_pages: 固定ページの承認（全て）
+    approve_private_cms_pages: 固定ページの承認（所有）
+    read_other_cms_parts: パーツの閲覧（全て）
+    read_private_cms_parts: パーツの閲覧（所有）
+    edit_other_cms_parts: パーツの編集（全て）
+    edit_private_cms_parts: パーツの編集（所有）
+    delete_other_cms_parts: パーツの削除（全て）
+    delete_private_cms_parts: パーツの削除（所有）
+    read_other_cms_layouts: レイアウトの閲覧（全て）
+    read_private_cms_layouts: レイアウトの閲覧（所有）
+    edit_other_cms_layouts: レイアウトの編集（全て）
+    edit_private_cms_layouts: レイアウトの編集（所有）
+    delete_other_cms_layouts: レイアウトの削除（全て）
+    delete_private_cms_layouts: レイアウトの削除（所有）
+    read_other_cms_files: 共有ファイルの閲覧（全て）
+    read_private_cms_files: 共有ファイルの閲覧（所有）
+    edit_other_cms_files: 共有ファイルの編集（全て）
+    edit_private_cms_files: 共有ファイルの編集（所有）
+    delete_other_cms_files: 共有ファイルの削除（全て）
+    delete_private_cms_files: 共有ファイルの削除（所有）
+    read_other_cms_notices: お知らせの閲覧（全て）
+    read_private_cms_notices: お知らせの閲覧（所有）
+    edit_other_cms_notices: お知らせの編集（全て）
+    edit_private_cms_notices: お知らせの編集（所有）
+    delete_other_cms_notices: お知らせの削除（全て）
+    delete_private_cms_notices: お知らせの削除（所有）
 
   modules:
     cms: 標準機能
@@ -287,7 +297,7 @@ ja:
       cms/notice:
         name: タイトル
         notice_severity: 種別
-        notice_target: 掲載範囲
+        notice_target: 公開範囲
       cms/addon/meta:
         keywords: キーワード
         description: 概要

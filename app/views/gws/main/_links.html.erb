@@ -1,0 +1,13 @@
+<%
+
+links = Gws::Link.site(@cur_site).and_public.target_to(@cur_user)
+return if links.blank?
+
+%>
+<nav class="mod-navi">
+  <h2><%= link_to t('mongoid.models.gws/link'), gws_public_links_path %></h2>
+
+  <% links.each do |item| %>
+  <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
+  <% end %>
+</nav>

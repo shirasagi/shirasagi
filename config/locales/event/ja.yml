@@ -27,14 +27,18 @@ ja:
       event/calendar: カレンダー
 
   cms_role:
-    read_other_event_pages: イベントページの閲覧（全て）
-    read_private_event_pages: イベントページの閲覧（所有）
-    edit_other_event_pages: イベントページの編集（全て）
-    edit_private_event_pages: イベントページの編集（所有）
-    delete_other_event_pages: イベントページの削除（全て）
-    delete_private_event_pages: イベントページの削除（所有）
-    move_other_event_pages: イベントページの移動（全て）
-    move_private_event_pages: イベントページの移動（所有）
+    read_other_event_pages: ページの閲覧（全て）
+    read_private_event_pages: ページの閲覧（所有）
+    edit_other_event_pages: ページの編集（全て）
+    edit_private_event_pages: ページの編集（所有）
+    delete_other_event_pages: ページの削除（全て）
+    delete_private_event_pages: ページの削除（所有）
+    move_other_event_pages: ページの移動（全て）
+    move_private_event_pages: ページの移動（所有）
+    release_other_event_pages: ページの公開（全て）
+    release_private_event_pages: ページの公開（所有）
+    approve_other_event_pages: ページの承認（全て）
+    approve_private_event_pages: ページの承認（所有）
 
   mongoid:
     attributes:

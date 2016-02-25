@@ -3,7 +3,7 @@ class Gws::Role
   include Gws::Reference::Site
   include Gws::SitePermission
 
-  set_permission_name "gws_users", :edit
+  set_permission_name "gws_roles", :edit
 
   field :permission_level, type: Integer, default: 1
 

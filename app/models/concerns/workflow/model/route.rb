@@ -20,6 +20,8 @@ module Workflow::Model::Route
     validate :validate_approvers_consecutiveness
     validate :validate_required_counts
     validate :validate_groups
+
+    default_scope ->{ order_by name: 1 }
   end
 
   module ClassMethods

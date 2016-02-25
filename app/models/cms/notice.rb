@@ -30,12 +30,29 @@ class Cms::Notice
 
   after_validation :set_released, if: -> { state == "public" }
 
+  default_scope -> {
+    order_by released: -1
+  }
   scope :and_public, ->(date = Time.zone.now) {
     where("$and" => [
       { state: "public" },
       { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
       { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
     ])
+  }
+  scope :target_to, ->(user) {
+    where("$or" => [
+      { notice_target: NOTICE_TARGET_ALL },
+      { "$and" => [ { notice_target: NOTICE_TARGET_SAME_GROUP }, { :group_ids.in => user.group_ids } ] }
+    ])
+  }
+  scope :search, ->(params = {}) {
+    criteria = self.where({})
+    return criteria if params.blank?
+
+    criteria = criteria.search_text params[:name] if params[:name].present?
+    criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
+    criteria
   }
 
   def notice_severity_options
@@ -95,26 +112,4 @@ class Cms::Notice
     def set_released
       self.released ||= Time.zone.now
     end
-
-  class << self
-    def target_to(user)
-      where("$or" => [
-        { notice_target: NOTICE_TARGET_ALL },
-        { "$and" => [ { notice_target: NOTICE_TARGET_SAME_GROUP }, { :group_ids.in => user.group_ids } ] }
-      ])
-    end
-
-    def search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
-
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :html
-      end
-      criteria
-    end
-  end
 end

@@ -7,6 +7,6 @@ class Job::Cms::LogsController < ApplicationController
 
   private
     def filter_permission
-      raise "403" unless Cms::User.allowed?(:edit, @cur_user, site: @cur_site)
+      raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
     end
 end

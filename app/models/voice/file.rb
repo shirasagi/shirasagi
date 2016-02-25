@@ -11,8 +11,7 @@ class Voice::File
   include Voice::Downloadable
   include Voice::Lockable
 
-  # permissions are delegated to edit_cms_users.
-  set_permission_name :cms_users, :edit
+  set_permission_name "cms_tools", :use
 
   field :error, type: String
   field :has_error, type: Integer, default: 0

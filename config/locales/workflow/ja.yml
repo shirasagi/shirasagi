@@ -47,9 +47,18 @@ ja:
       search: 検索
 
   modules:
+    workflow: ワークフロー
     addons:
       workflow/approver: 承認
       workflow/branch: 差し替えページ
+
+  cms_role:
+    read_other_workflow_routes: 承認ルートの閲覧（全て）
+    read_private_workflow_routes: 承認ルートの閲覧（所有）
+    edit_other_workflow_routes: 承認ルートの編集（全て）
+    edit_private_workflow_routes: 承認ルートの編集（所有）
+    delete_other_workflow_routes: 承認ルートの削除（全て）
+    delete_private_workflow_routes: 承認ルートの削除（所有）
 
   mongoid:
     attributes:
@@ -89,24 +98,6 @@ ja:
       route_approver_unable_to_approve: "承認経路「%{route}」に設定されているユーザ「%{user}」は記事承認権がありません。"
       cloned_name: "タイトルに[複製]が含まれています。"
       invalid_approve_name: "複製後のタイトルを変更し承認申請を行ってください。"
-
-  cms_role:
-    release_other_article_pages: 記事ページの公開（全て）
-    release_private_article_pages: 記事ページの公開（所有）
-    release_other_cms_pages: 固定ページの公開（全て）
-    release_private_cms_pages: 固定ページの公開（所有）
-    release_other_faq_pages: FAQページの公開（全て）
-    release_private_faq_pages: FAQページの公開（所有）
-    release_other_event_pages: イベントページの公開（全て）
-    release_private_event_pages: イベントページの公開（所有）
-    approve_other_article_pages: 記事ページの承認（全て）
-    approve_private_article_pages: 記事ページの承認（所有）
-    approve_other_cms_pages: 固定ページの承認（全て）
-    approve_private_cms_pages: 固定ページの承認（所有）
-    approve_other_faq_pages: FAQページの承認（全て）
-    approve_private_faq_pages: FAQページの承認（所有）
-    approve_other_event_pages: イベントページの承認（全て）
-    approve_private_event_pages: イベントページの承認（所有）
 
   tooltip:
     workflow/addon/approver:

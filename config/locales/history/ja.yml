@@ -4,6 +4,7 @@ ja:
     user: ユーザー
     target: 操作対象
     action: アクション
+    backup: バックアップ
     current_version: 現在のバージョン
     backup_version: バックアップ時のバージョン
     save_term:

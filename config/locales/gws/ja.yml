@@ -10,11 +10,16 @@ ja:
     options:
       severity:
         high: 重要なお知らせ
+      target:
+        all: 全ユーザー
+        group: 同一グループ内
     links:
       back_to_portal: ポータルへ戻る
 
   gws_role:
+    edit_gws_groups: グループの管理
     edit_gws_users: ユーザの管理
+    edit_gws_roles: 権限/ロールの管理
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
@@ -43,6 +48,7 @@ ja:
 
   mongoid:
     models:
+      gws/group: グループ
       gws/user: ユーザー
       gws/role: 権限/ロール
       gws/notice: お知らせ
@@ -50,6 +56,8 @@ ja:
       gws/share: 共有ファイル
       gws/facility: 設備管理
     attributes:
+      gws/content/targetable:
+        target: 公開範囲
       gws/notice:
         name: タイトル
         severity: 種別
@@ -65,3 +73,12 @@ ja:
       gws/addon/group_permission:
         group_ids: 管理グループ
         permission_level: 権限レベル
+
+  tooltip:
+    gws/content/targetable:
+      severity:
+        - 「重要なお知らせ」の場合、チェックをつけます。
+        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
+      target:
+        - 「全ユーザー」に表示するか、「同一グループ内」に表示するかを選択します。
+        - 「同一グループ内」を選択した場合、「管理グループ」欄に設定したグループに表示されます。

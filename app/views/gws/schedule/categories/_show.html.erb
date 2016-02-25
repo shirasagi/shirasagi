@@ -8,4 +8,7 @@
       <%= @item.name %></span>
     <span style="<%= "color: #{@item.color};" %>"><%= @item.name %></span>
   </dd>
+
+  <dt><%= @model.t :target %></dt>
+  <dd><%= @item.label :target %></dd>
 </dl>

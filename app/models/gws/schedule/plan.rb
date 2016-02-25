@@ -17,8 +17,9 @@ class Gws::Schedule::Plan
   validates :end_at, presence: true, if: -> { !repeat? }
 
   def category_options
-    cond = { site_id: @cur_site ? @cur_site.id: site_id }
-    Gws::Schedule::Category.where(cond).order(name: 1).map { |c| [c.name, c.id] }
+    Gws::Schedule::Category.site(@cur_site || site).
+      target_to(@cur_user || user).
+      map { |c| [c.name, c.id] }
   end
 
   # event options

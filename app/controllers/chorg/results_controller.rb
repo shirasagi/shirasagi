@@ -16,7 +16,7 @@ class Chorg::ResultsController < ApplicationController
     end
 
     def filter_permission
-      raise "403" unless Cms::User.allowed?(:edit, @cur_user, site: @cur_site)
+      raise "403" unless Chorg::Revision.allowed?(:edit, @cur_user, site: @cur_site)
     end
 
     def set_revision

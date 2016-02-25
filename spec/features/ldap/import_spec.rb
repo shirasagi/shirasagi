@@ -10,7 +10,7 @@ describe "ldap_import", ldap: true do
              group_ids: [group.id])
     end
     let(:role) do
-      create(:cms_user_role, name: "ldap_user_role_#{unique_id}", site_id: site.id)
+      create(:cms_role_admin, name: "ldap_user_role_#{unique_id}", site_id: site.id)
     end
     let(:user) do
       create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",

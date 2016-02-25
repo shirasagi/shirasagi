@@ -6,8 +6,8 @@ FactoryGirl.define do
     #permission_level 1
   end
 
-  factory :sys_user_role, class: Sys::Role do
-    name "sys_user_role"
-    permissions %w(edit_sys_users edit_sys_sites)
+  factory :sys_role_admin, class: Sys::Role do
+    name "sys_role_admin"
+    permissions Sys::Role.permission_names
   end
 end

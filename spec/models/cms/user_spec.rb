@@ -51,8 +51,8 @@ describe Cms::User do
   end
 
   context "shirasagi-424" do
-    let(:role1) { create(:cms_user_role, name: unique_id) }
-    let(:role2) { create(:cms_user_role, name: unique_id) }
+    let(:role1) { create(:cms_role_admin, name: unique_id) }
+    let(:role2) { create(:cms_role_admin, name: unique_id) }
     subject { create(:cms_user_base, :cms_user_rand_name, :cms_user_email, group: group1, cms_role_ids: [ role1.id, role2.id ]) }
 
     its(:cms_role_permissions) { is_expected.to be_a(Hash) }

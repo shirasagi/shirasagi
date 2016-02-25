@@ -17,8 +17,7 @@ module Cms::Model::Member
 
   included do
     store_in collection: "cms_members"
-
-    set_permission_name :cms_users, :edit
+    set_permission_name "cms_members", :edit
 
     seqid :id
     field :name, type: String

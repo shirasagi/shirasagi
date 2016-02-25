@@ -1,5 +1,7 @@
 SS::Application.routes.draw do
 
+  Workflow::Initializer
+
   concern :deletion do
     get :delete, on: :member
     delete action: :destroy_all, :on => :collection

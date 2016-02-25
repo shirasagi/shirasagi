@@ -1,6 +1,6 @@
 SS::Application.routes.draw do
 
-  # Chorg::Initializer
+  Chorg::Initializer
 
   concern :deletion do
     get :delete, on: :member
