@@ -134,8 +134,8 @@ ja:
       cms/sns_share: SNSシェアボタン
 
   cms_role:
-    edit_cms_sites: サイトの編集
-    edit_cms_users: ユーザーの編集
+    edit_cms_sites: サイトの管理
+    edit_cms_users: ユーザーの管理
     read_other_cms_nodes: フォルダーの閲覧（全て）
     read_other_cms_pages: 固定ページの閲覧（全て）
     read_other_cms_parts: パーツの閲覧（全て）

@@ -19,19 +19,10 @@ module Gws::GroupPermission
   # @param [String] action
   # @param [Gws::User] user
   def allowed?(action, user, opts = {})
-    site = opts[:site] || @cur_site
-
-    if self.new_record?
-      access = :other
-    else
-      access = owned?(user) ? :private : :other
-    end
-
-    action = permission_action || action
-
-    permits = []
-    permits << "#{action}_#{access}_#{self.class.permission_name}"
-    permits << "#{action}_other_#{self.class.permission_name}" if access == :private
+    site    = opts[:site] || @cur_site
+    action  = permission_action || action
+    permits = ["#{action}_other_#{self.class.permission_name}"]
+    permits << "#{action}_private_#{self.class.permission_name}" if owned?(user) || new_record?
 
     permits.each do |permit|
       return true if user.gws_role_permissions["#{permit}_#{site.id}"].to_i > 0

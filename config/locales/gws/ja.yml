@@ -14,7 +14,7 @@ ja:
       back_to_portal: ポータルへ戻る
 
   gws_role:
-    edit_gws_users: ユーザの編集
+    edit_gws_users: ユーザの管理
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
