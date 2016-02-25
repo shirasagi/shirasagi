@@ -45,6 +45,7 @@ ja:
       gws/schedule/repeat: 繰り返し
 
   gws_role:
+    edit_gws_schedule_holidays: 休日の管理
     read_other_gws_schedule_plans: スケジュールの閲覧（全て）
     read_private_gws_schedule_plans: スケジュールの閲覧（所有）
     edit_other_gws_schedule_plans: スケジュールの編集（全て）
@@ -58,16 +59,17 @@ ja:
       gws/schedule/category: スケジュール種類
       gws/schedule/holiday: 休日
     attributes:
-      gws/schedule/plan:
-        repeat_plan_id: 繰り返し
+      gws/schedule/planable:
         name: タイトル
         start_at: 開始日時
         end_at: 終了日時
         start_on: 開始日
         end_on: 終了日
         allday: 終日
-        category_id: スケジュール種別
         term: 日時
+      gws/schedule/plan:
+        repeat_plan_id: 繰り返し
+        category_id: スケジュール種別
       gws/schedule/repeat_plan: &repeat_plan
         repeat_type: 繰り返し設定
         interval: 繰り返し間隔
@@ -80,14 +82,6 @@ ja:
         color: 表示色
         bg_color: 背景色
         text_color: 文字色
-      gws/schedule/holiday:
-        name: タイトル
-        start_at: 開始日時
-        end_at: 終了日時
-        start_on: 開始日
-        end_on: 終了日
-        term: 日時
-
       gws/addon/schedule/repeat:
         <<: *repeat_plan
         repeat_start: 繰り返し - 開始日
