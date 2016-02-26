@@ -27,8 +27,12 @@ module Cms::Model::Node
     after_destroy :remove_directory
     after_destroy :destroy_children
 
-    scope :root, ->{ where(depth: 1) }
-    scope :in_path, ->(path) { where :filename.in => Cms::Node.split_path(path.sub(/^\//, "")) }
+    scope :root, ->{ where depth: 1 }
+    scope :in_path, ->(path) {
+      paths = Cms::Node.split_path(path.sub(/^\//, ""))
+      paths.pop if paths.last =~ /\./
+      where :filename.in => paths
+    }
   end
 
   def becomes_with_route(name = nil)

@@ -49,7 +49,7 @@ module Cms::Content
   module ClassMethods
     def split_path(path)
       last = nil
-      dirs = path.split('/').map {|n| last = last ? "#{last}/#{n}" : n }
+      dirs = path.split('/').map { |n| last = last ? "#{last}/#{n}" : n }
     end
 
     def search(params)

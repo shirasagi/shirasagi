@@ -4,7 +4,7 @@ module Cms::PublicFilter::Node
 
   private
     def find_node(path)
-      node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
+      node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).to_a.first
       return unless node
       @preview || node.public? ? node.becomes_with_route : nil
     end
