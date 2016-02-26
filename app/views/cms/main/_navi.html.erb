@@ -11,8 +11,8 @@
   <% if Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to :"cms.layout", cms_layouts_path, class: "icon-layout" %></h2>
   <% end %>
-
 </nav>
+
 <nav class="main-navi">
   <h2><%= link_to :"cms.file", cms_files_path, class: "icon-conv" %></h2>
   <h2><%= link_to :"cms.search_contents", cms_search_contents_pages_path, class: "icon-conv" %></h2>
@@ -36,5 +36,4 @@
   <% if true %>
     <h2><%= link_to :"cms.site_config", cms_site_path, class: "icon-conf" %></h2>
   <% end %>
-
 </nav>
