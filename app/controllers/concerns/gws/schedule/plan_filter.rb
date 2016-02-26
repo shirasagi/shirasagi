@@ -3,7 +3,6 @@ module Gws::Schedule::PlanFilter
 
   included do
     prepend_view_path "app/views/gws/schedule/plans"
-    navi_view "gws/schedule/main/navi"
     menu_view "gws/schedule/main/menu"
     helper Gws::Schedule::PlanHelper
     model Gws::Schedule::Plan

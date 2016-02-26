@@ -1,12 +1,13 @@
 ja:
   gws/schedule:
-    plan: 予定リスト
-    user_plan: 個人の予定
-    group_plan: グループの予定
-    facility_plan: 設備の予定
     category: スケジュール種別
     holiday: 休日管理
     reminder: リマインダー
+    tabs:
+      personal: 個人
+      personal_list: 予定リスト
+      group: 全体
+      facility: 設備
 
     calendar:
       titleFormat:

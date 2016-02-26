@@ -1,6 +1,8 @@
 <%= render partial: 'notices' %>
 
 <%= jquery do %>
+$(".gws-schedule-tabs .personal").addClass("current");
+
 Gws_Schedule_Calendar.renderController('#calendar-controller');
 Gws_Schedule_Calendar.render('#calendar', {
   defaultView: 'basicWeek',
@@ -9,6 +11,7 @@ Gws_Schedule_Calendar.render('#calendar', {
 });
 <% end %>
 
+<%= render partial: "gws/schedule/main/tabs" %>
 <section class="main-box">
   <!-- <header><h2><%= t('modules.gws/schedule') %></h2></header> -->
   <div class="calendar" id="calendar-controller"></div>

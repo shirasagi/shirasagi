@@ -2,8 +2,10 @@
 Gws_Schedule_Calendar.renderController('#calendar-controller');
 <% end %>
 
+<%= render "gws/schedule/main/tabs" %>
+
 <section class="main-box">
-  <header><h2><%= t('gws/schedule.facility_plan') %></h2></header>
+  <header><h2><%= t('gws/schedule.tabs.facility') %></h2></header>
 
   <div class="calendar" id="calendar-controller"></div>
 

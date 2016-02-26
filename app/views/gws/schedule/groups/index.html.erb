@@ -3,8 +3,10 @@ SS_TreeUI.render(".index.groups");
 $(".index.groups tbody tr[data-depth='1'] img").click();
 <% end %>
 
+<%= render "gws/schedule/main/tabs" %>
+
 <section class="main-box">
-  <header><h2><%= t('gws/schedule.group_plan') %></h2></header>
+  <header><h2><%= t('gws/schedule.tabs.group') %></h2></header>
 
   <table class="index groups">
     <tbody>

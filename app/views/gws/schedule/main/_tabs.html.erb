@@ -1,0 +1,7 @@
+<div class="gws-schedule-tabs">
+  <%= link_to t('gws/schedule.tabs.personal'), gws_schedule_plans_path, class: "personal" %>
+  <%= link_to @cur_group.trailing_name, gws_schedule_group_plans_path(group: @cur_group.id), class: "group" %>
+  <%= link_to t('gws/schedule.tabs.group'), gws_schedule_all_groups_path, class: "group-all" %>
+  <%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path, class: "facility" %>
+  <%= link_to t('gws/schedule.tabs.personal_list'), gws_schedule_list_plans_path, class: "personal-list" %>
+</div>

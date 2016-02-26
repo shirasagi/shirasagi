@@ -1,11 +1,11 @@
-<%#= render "search" %>
-
 <%= jquery do %>
 Gws_Schedule_Calendar.render('#calendar', {
   restUrl: '<%= url_for action: :index %>',
   eventSources: [{ url: '<%= url_for action: :index, format: :json %>' }],
 });
 <% end %>
+
+<%= render "gws/schedule/main/tabs" %>
 
 <section class="main-box schedule-calendar">
   <header>

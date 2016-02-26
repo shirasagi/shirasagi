@@ -1,4 +1,10 @@
-#
+$ ->
+  # tabs
+  path = location.pathname + "/"
+  $(".gws-schedule-tabs a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+
 # RepeatPlan.fields :repeat_type, :interval, :start_date, :end_date, :repeat_base, :wdays
 #
 class @Gws_Schedule_Plan_Form
