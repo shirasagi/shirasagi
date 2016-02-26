@@ -1,6 +1,6 @@
 <%
 
-links = Gws::Link.site(@cur_site).and_public.target_to(@cur_user)
+links = Gws::Link.site(@cur_site).and_public.target_to(@cur_user).to_a
 return if links.blank?
 
 %>
