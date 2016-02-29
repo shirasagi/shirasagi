@@ -3,14 +3,23 @@ class @SS_TreeUI
   @closeImagePath = "/assets/img/tree-close.png"
 
   @render: (tree)->
+    root = []
+    $(tree).find("tbody tr").each ->
+      root.push(parseInt($(this).attr("data-depth")))
+    root = Math.min.apply(null, root)
+    return unless Number.isInteger(root) && root > 0
+
+    first_root = null
     $(tree).find("tbody tr").each ->
       td = $(this).find(".expandable")
       depth = parseInt($(this).attr("data-depth"))
+      first_root = root if root == depth
 
       td.prepend('<img src="' + SS_TreeUI.closeImagePath + '" alt="toggle" class="toggle">')
-      $(this).hide() if (depth != 1)
-      for i in [1...depth]
-        td.prepend('<span class="padding">')
+      if (first_root && depth != root)
+        $(this).hide()
+        for i in [root...depth]
+          td.prepend('<span class="padding">')
 
       d = parseInt($(this).next("tr").attr("data-depth")) || 0
       i = $(this).find(".toggle:first")
