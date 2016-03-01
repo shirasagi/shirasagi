@@ -1,17 +1,11 @@
 class SS::Migration20160225000000
   def change
-    Sys::Role.where(permissions: 'edit_sys_users').each do |item|
-      permissions = item.permissions
-      %w(
-        edit_sys_groups
-        edit_sys_roles
-      ).each do |name|
-        permissions << name unless item.permissions.include?(name)
-      end
-      item.permissions = permissions
-      item.save! if item.changed?
-    end
+    change_cms_role
+    change_gws_role
+    change_sys_role
+  end
 
+  def change_cms_role
     Cms::Role.where(permissions: 'edit_cms_users').each do |item|
       permissions = item.permissions
       %w(
@@ -33,7 +27,9 @@ class SS::Migration20160225000000
       item.permissions = permissions
       item.save! if item.changed?
     end
+  end
 
+  def change_gws_role
     Gws::Role.where(permissions: 'edit_gws_users').each do |item|
       permissions = item.permissions
       %w(
@@ -45,6 +41,20 @@ class SS::Migration20160225000000
         edit_private_gws_workflow_routes
         delete_other_gws_workflow_routes
         delete_private_gws_workflow_routes
+      ).each do |name|
+        permissions << name unless item.permissions.include?(name)
+      end
+      item.permissions = permissions
+      item.save! if item.changed?
+    end
+  end
+
+  def change_sys_role
+    Sys::Role.where(permissions: 'edit_sys_users').each do |item|
+      permissions = item.permissions
+      %w(
+        edit_sys_groups
+        edit_sys_roles
       ).each do |name|
         permissions << name unless item.permissions.include?(name)
       end
