@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :extensions %></dt>
+  <dd><%= @item.extensions %></dd>
+
+  <dt><%= @model.t :size %></dt>
+  <dd><%= number_to_human_size(@item.size) %></dd>
+
+  <dt><%= @model.t :order %></dt>
+   <dd><%=br @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+</dl>
