@@ -8,7 +8,7 @@
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
 
-  <% if @item.respond_to?(:body_parts) && Cms::BodyLayout.all.present? %>
+  <% if @item.respond_to?(:body_parts) && Cms::BodyLayout.site(@cur_site).present? %>
     <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
     <dd><%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " " %></dd>
   <% end %>
