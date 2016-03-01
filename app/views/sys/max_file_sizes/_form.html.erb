@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :extensions %><%= @model.tt :extensions %></dt>
+  <dd><%= f.text_field :extensions %></dd>
+
+  <dt><%= @model.t :size %><%= @model.tt :size %></dt>
+  <dd><%= f.number_field :size %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>
