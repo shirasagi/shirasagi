@@ -61,6 +61,20 @@ module Cms::PublicFilter::Layout
         m
       end
 
+      html = render_layout_parts(body)
+
+      if notice
+        notice_html   = %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
+        response.body = %(#{notice_html}#{response.body})
+      end
+
+      html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
+      html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
+      html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
+      html
+    end
+
+    def render_layout_parts(body)
       # TODO: deprecated </ />
       parts = {}
       body = body.gsub(/(<\/|\{\{) part ".+?" (\/>|\}\})/) do |m|
@@ -74,21 +88,11 @@ module Cms::PublicFilter::Layout
       criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
       criteria.each { |part| parts[part.filename] = part }
 
-      html = body.gsub(/(<\/|\{\{) part ".+?" (\/>|\}\})/) do |m|
-        path = m.sub(/(?:<\/|\{\{) part "(.+)?" (?:\/>|\}\})/, '\\1')
+      return body.gsub(/\{\{ part ".+?" \}\}/) do |m|
+        path = m.sub(/(?:\{\{) part "(.+)?" (?:\}\})/, '\\1')
         part = parts[path]
         part ? render_layout_part(part) : ''
       end
-
-      if notice
-        notice_html   = %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
-        response.body = %(#{notice_html}#{response.body})
-      end
-
-      html.gsub!('#{page_name}', ERB::Util.html_escape(@cur_item.name))
-      html.gsub!('#{parent_name}', ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : ""))
-      html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
-      html
     end
 
     def render_layout_part(part)
