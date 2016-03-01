@@ -15,6 +15,7 @@ class SS::Agent
   end
 
   def invoke(action)
+    # rubocop:disable Lint/NestedMethodDefinition
     def @controller.render(*args); end
     @controller.params[:action] = action
     @controller.process action
