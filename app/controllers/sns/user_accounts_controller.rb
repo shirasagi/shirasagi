@@ -8,7 +8,7 @@ class Sns::UserAccountsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"sns.account", sns_user_account_path]
+      @crumbs << [:"sns.account", params.include?(:user) ? sns_user_account_path : sns_cur_user_account_path]
     end
 
     def permit_fields

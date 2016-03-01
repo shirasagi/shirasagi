@@ -11,8 +11,13 @@ module Sns::UserFilter
 
   private
     def set_sns_user
-      @sns_user = SS::User.find params[:user]
-      @crumbs <<  [@sns_user.name, sns_user_profile_path(@sns_user)]
+      if params.include?(:user)
+        @sns_user = SS::User.find params[:user]
+        @crumbs <<  [@sns_user.name, sns_user_profile_path(@sns_user)]
+      else
+        @sns_user = @cur_user
+        @crumbs <<  [@sns_user.name, sns_cur_user_profile_path]
+      end
     end
 
     def require_self
