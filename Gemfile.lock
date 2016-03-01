@@ -54,7 +54,7 @@ GEM
       slim (>= 1.3.6, < 4.0)
       terminal-table (~> 1.4)
     browser (1.1.0)
-    bson (3.2.6)
+    bson (4.0.3)
     bson_ext (1.5.1)
     builder (3.2.2)
     bxslider-rails (4.2.5.1)
@@ -94,7 +94,6 @@ GEM
       sass-rails (< 5.1)
       sprockets (< 4.0)
     concurrent-ruby (1.0.1)
-    connection_pool (2.2.0)
     coveralls (0.8.10)
       json (~> 1.8)
       rest-client (>= 1.6.8, < 2)
@@ -167,8 +166,6 @@ GEM
     jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
-    jnunemaker-validatable (1.8.4)
-      activesupport (>= 2.3.4)
     jquery-cookie-rails (1.3.1.1)
       railties (>= 3.2.0, < 5.0)
     jquery-form-rails (1.0.1)
@@ -205,28 +202,20 @@ GEM
     minitest (5.8.4)
     momentjs-rails (2.11.0)
       railties (>= 3.1)
-    mongo (1.3.1)
-      bson (>= 1.3.1)
-    mongo_mapper (0.8.6)
-      activesupport (>= 2.3.4)
-      jnunemaker-validatable (~> 1.8.4)
-      plucky (~> 0.3.6)
-    mongoid (4.0.2)
+    mongo (2.2.4)
+      bson (~> 4.0)
+    mongoid (5.1.1)
       activemodel (~> 4.0)
-      moped (~> 2.0.0)
-      origin (~> 2.1)
+      mongo (~> 2.1)
+      origin (~> 2.2)
       tzinfo (>= 0.3.37)
     mongoid-grid_fs (2.2.1)
       mime-types (>= 1.0, < 3.0)
       mongoid (>= 3.0, < 6.0)
-    mongoid-rspec (2.2.0)
-      mongoid (~> 4.0.0)
+    mongoid-rspec (3.0.0)
+      mongoid (~> 5.0)
       rake
-      rspec (~> 3.1)
-    moped (2.0.7)
-      bson (~> 3.0)
-      connection_pool (~> 2.0)
-      optionable (~> 0.2.0)
+      rspec (~> 3.3)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
@@ -274,12 +263,9 @@ GEM
       httpauth
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
-    optionable (0.2.0)
     origin (2.2.0)
     parser (2.3.0.4)
       ast (~> 2.2)
-    plucky (0.3.8)
-      mongo (~> 1.3)
     poltergeist (1.9.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -490,8 +476,7 @@ DEPENDENCIES
   mail-iso-2022-jp
   marked-rails
   momentjs-rails
-  mongo_mapper
-  mongoid (~> 4.0.0)
+  mongoid (~> 5.1.0)
   mongoid-grid_fs
   mongoid-rspec
   net-ldap
@@ -531,4 +516,4 @@ DEPENDENCIES
   zipruby
 
 BUNDLED WITH
-   1.10.6
+   1.11.2

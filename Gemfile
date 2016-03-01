@@ -16,11 +16,10 @@ gem "unicorn-worker-killer"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
-gem "mongoid", "~> 4.0.0"
+gem "mongoid", "~> 5.1.0"
 gem "mongoid-rspec"
-gem "mongo_mapper"
+#gem "mongo_mapper"
 gem "bson_ext"
-#gem "cells"
 gem "dynamic_form"
 gem "zipruby"
 gem "jquery-turbolinks"
