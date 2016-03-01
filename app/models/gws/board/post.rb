@@ -37,7 +37,6 @@ class Gws::Board::Post
   after_save :update_topic_descendants_updated, if: -> { topic_id.present? }
 
   scope :topic, ->{ exists parent_id: false }
-  scope :comment, ->{ exists parent_id: true }
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
