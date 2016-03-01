@@ -29,7 +29,7 @@ class Job::Task
       criteria = Job::Task.where(pool: name, started: nil)
       criteria = criteria.lte(at: Time.zone.now)
       criteria = criteria.asc(:priority)
-      criteria.find_and_modify({ '$set' => { started: Time.zone.now }}, new: true)
+      criteria.find_one_and_update({ '$set' => { started: Time.zone.now }}, new: true)
     end
   end
 

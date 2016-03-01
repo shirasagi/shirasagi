@@ -27,7 +27,7 @@ module Cms::Addon::EditLock
         { :lock_until.lt => Time.zone.now },
       ])
     end
-    x = criteria.find_and_modify({ '$set' => { lock_owner_id: user.id, lock_until: lock_until }}, new: true)
+    x = criteria.find_one_and_update({ '$set' => { lock_owner_id: user.id, lock_until: lock_until }}, new: true)
     if x
       self.lock_owner_id = x.lock_owner_id
       self.lock_until = x.lock_until
@@ -48,7 +48,7 @@ module Cms::Addon::EditLock
       ])
     end
 
-    x = criteria.find_and_modify({ '$unset' => { lock_owner_id: nil, lock_until: nil }}, new: true)
+    x = criteria.find_one_and_update({ '$unset' => { lock_owner_id: nil, lock_until: nil }}, new: true)
     if x
       remove_attribute(:lock_owner_id) if has_attribute?(:lock_owner_id)
       remove_attribute(:lock_until) if has_attribute?(:lock_until)

@@ -39,7 +39,7 @@ class Job::Service
 
         # increment atomically
         criteria = Job::Service.where(id: service_id)
-        service = criteria.find_and_modify({ '$inc' => { current_count: 1 } }, new: true)
+        service = criteria.find_one_and_update({ '$inc' => { current_count: 1 } }, new: true)
         if service.current_count > limits
           # already started a service
           Rails.logger.debug("already started a service")
@@ -62,7 +62,7 @@ class Job::Service
         # decrement atomically
         criteria = Job::Service.where(id: service_id)
         criteria = criteria.gt(current_count: 0)
-        service = criteria.find_and_modify({ '$inc' => { current_count: -1, total_count: 1 }}, new: true)
+        service = criteria.find_one_and_update({ '$inc' => { current_count: -1, total_count: 1 }}, new: true)
         if service && service.current_count == 0
           service.state = "stop"
           service.closed = Time.zone.now

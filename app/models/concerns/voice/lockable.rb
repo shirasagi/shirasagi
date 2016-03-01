@@ -12,13 +12,13 @@ module Voice::Lockable
       lock_timeout ||= 5.minutes.from_now
       criteria = item.class.where(id: item.id)
       criteria = criteria.lt(lock_until: Time.zone.now)
-      criteria.find_and_modify({ '$set' => { lock_until: lock_timeout }}, new: true)
+      criteria.find_one_and_update({ '$set' => { lock_until: lock_timeout }}, new: true)
     end
 
     def release_lock(item)
       criteria = item.class.where(id: item.id)
       criteria = criteria.ne(lock_until: EPOCH)
-      criteria.find_and_modify({ '$set' => { lock_until: EPOCH }}, new: true)
+      criteria.find_one_and_update({ '$set' => { lock_until: EPOCH }}, new: true)
     end
 
     def ensure_release_lock(item)
