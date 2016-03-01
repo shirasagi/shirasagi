@@ -1,5 +1,11 @@
 class SS::Migration20160225000000
   def change
+    change_sys
+    change_cms
+    change_gws
+  end
+
+  def change_sys
     Sys::Role.where(permissions: 'edit_sys_users').each do |item|
       permissions = item.permissions
       %w(
@@ -11,7 +17,9 @@ class SS::Migration20160225000000
       item.permissions = permissions
       item.save! if item.changed?
     end
+  end
 
+  def change_cms
     Cms::Role.where(permissions: 'edit_cms_users').each do |item|
       permissions = item.permissions
       %w(
@@ -33,7 +41,9 @@ class SS::Migration20160225000000
       item.permissions = permissions
       item.save! if item.changed?
     end
+  end
 
+  def change_gws
     Gws::Role.where(permissions: 'edit_gws_users').each do |item|
       permissions = item.permissions
       %w(
