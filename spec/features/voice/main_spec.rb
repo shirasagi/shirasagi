@@ -42,7 +42,7 @@ describe "voice_main", http_server: true do
 
         # wait for a while or wait until status_code turns to 200.
         require 'timeout'
-        timeout(60) do
+        Timeout.timeout(60) do
           loop do
             visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
             break if status_code == 200
@@ -167,7 +167,7 @@ describe "voice_main", http_server: true do
 
         # wait for a while or wait until status_code turns to 200.
         require 'timeout'
-        timeout(60) do
+        Timeout.timeout(60) do
           loop do
             visit voice_path(URI.escape(url, /[^0-9a-zA-Z]/n))
             break if status_code == 200

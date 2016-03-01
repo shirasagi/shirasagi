@@ -41,7 +41,7 @@ describe "chorg_run", dbscope: :example do
       revision.reload
       expect(revision.job_ids.length).to eq 1
       # job should be started within 1.minute
-      timeout(60) do
+      Timeout.timeout(60) do
         loop do
           count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
           break if count > 0
@@ -88,7 +88,7 @@ describe "chorg_run", dbscope: :example do
       revision.reload
       expect(revision.job_ids.length).to eq 1
       # job should be started within 1.minute
-      timeout(60) do
+      Timeout.timeout(60) do
         loop do
           count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
           break if count > 0

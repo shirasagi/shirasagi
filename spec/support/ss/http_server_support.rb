@@ -182,12 +182,12 @@ module SS
 
           begin
             wait_sec = wait_sec.to_f if wait_sec.respond_to?(:to_f)
-            timeout(wait_sec) do
+            Timeout.timeout(wait_sec) do
               @lock.synchronize do
                 @cond.wait(@lock)
               end
             end
-          rescue TimeoutError
+          rescue Timeout::Error
             # ignore TimeoutError
           end
         end
