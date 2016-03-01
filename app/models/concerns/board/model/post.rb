@@ -31,7 +31,6 @@ module Board::Model::Post
     after_save :update_topic_descendants_updated, if: -> { topic_id.present? }
 
     scope :topic, ->{ exists parent_id: false }
-    scope :comment, ->{ exists parent_id: true }
   end
 
   def root_post
