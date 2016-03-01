@@ -16,19 +16,17 @@ $(".index.groups tbody tr[data-depth='1'] img").click();
 
     <tbody>
       <% @items.each do |item| %>
-      <%
-        groups = item.name.split(/\//).map.with_index{ |name, idx| "#{idx}#{name}" }
-        depth = @prev ? (groups & @prev).count + 1 : groups.count
-        @prev = groups
-      %>
-      <tr data-depth="<%= depth %>">
+      <% keyword = params[:s][:keyword] rescue nil %>
+      <% depth   = keyword.present? ? "" : %( data-depth=#{item.name.count("/") + 1}) %>
+      <% name    = keyword.present? ? item.trailing_name : item.name %>
+      <tr<%= depth %>>
         <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>
           <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to :delete, action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         </nav>
         <td class="expandable">
-          <%= link_to item.trailing_name, { action: :show, id: item}, class: "title" %>
+          <%= link_to item.name, { action: :show, id: item}, class: "title" %>
         </td>
         <td><%= item.updated.strftime("%Y/%m/%d") %></td>
       </tr>
