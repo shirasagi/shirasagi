@@ -34,7 +34,7 @@ describe "cms_generate_pages" do
         click_button I18n.t("views.button.run")
       end
       # task should be started within a minute.
-      timeout(60) do
+      Timeout.timeout(60) do
         loop do
           task = Cms::Task.where(name: "cms:generate_pages", site_id: site.id, node_id: node.id).first
           break if task.state != "ready"

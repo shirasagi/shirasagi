@@ -328,7 +328,7 @@ describe Voice::SynthesisJob, http_server: true do
       subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
 
       it "creates dows not voice file" do
-        expect { Voice::SynthesisJob.new.call(subject.id) }.to raise_error TimeoutError
+        expect { Voice::SynthesisJob.new.call(subject.id) }.to raise_error Timeout::Error
         expect(Voice::File.where(id: subject.id).count).to eq 0
       end
     end
