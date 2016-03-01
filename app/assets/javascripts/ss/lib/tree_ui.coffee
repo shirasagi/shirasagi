@@ -9,19 +9,14 @@ class @SS_TreeUI
     root = Math.min.apply(null, root)
     return unless Number.isInteger(root) && root > 0
 
-    parent = null
     $(tree).find("tbody tr").each ->
       td = $(this).find(".expandable")
       depth = parseInt($(this).attr("data-depth"))
 
       td.prepend('<img src="' + SS_TreeUI.closeImagePath + '" alt="toggle" class="toggle">')
-      if (parent && depth > parent)
-        $(this).hide()
-        for i in [root...depth]
-          td.prepend('<span class="padding">')
-
-      parent = depth unless parent
-      parent = depth if parent > depth
+      $(this).hide() if (depth != root)
+      for i in [root...depth]
+        td.prepend('<span class="padding">')
 
       d = parseInt($(this).next("tr").attr("data-depth")) || 0
       i = $(this).find(".toggle:first")
