@@ -10,10 +10,8 @@ namespace :ss do
       end
     end
 
-    Dir.glob("#{assets_path}/.*") do |file|
-      if file =~ /-[0-9a-f]{32,}\./
-        File.rename file, file.sub(/-[0-9a-f]{32,}\./, '.')
-      end
+    Dir.glob("#{assets_path}/.sprockets-manifest*") do |file|
+      File.unlink file
     end
   end
 end
