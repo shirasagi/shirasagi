@@ -11,8 +11,11 @@ module Inquiry::Addon
       validate :validate_release_date
 
       scope :and_public, ->(date = nil) {
-        date = Time.zone.now unless date
-        super(date)
+        date ||= Time.zone.now
+        where("$and" => [
+          { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
+          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+        ])
       }
     end
 
