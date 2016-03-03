@@ -1,6 +1,7 @@
 # MongoDB Configuration
-# https://docs.mongodb.org/ecosystem/tutorial/mongoid-installation/#anatomy-of-a-mongoid-config
-
+#
+# if you want to know about detail configuration,
+# see: https://docs.mongodb.org/ecosystem/tutorial/mongoid-installation/#mongoid-configuration
 production:
   clients:
     default:
@@ -15,9 +16,8 @@ test:
       hosts:
         - localhost:27017
       options:
-        read: primary
-        max_retries: 1
-        retry_interval: 0
+        read:
+          mode: :primary
 
 development:
   clients:

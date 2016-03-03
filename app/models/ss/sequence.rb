@@ -13,7 +13,7 @@ class SS::Sequence
 
     def next_sequence(coll, name)
       sid = "#{coll}_#{name}"
-      doc = where(_id: sid).find_one_and_update({"$inc" => { value: 1 }}, return_document: :after, upsert: true)
+      doc = where(_id: sid).find_one_and_update({"$inc" => { value: 1 }}, return_document: :after, upsert: false)
       return doc.value if doc
 
       key = (name == :id) ? :_id : name
