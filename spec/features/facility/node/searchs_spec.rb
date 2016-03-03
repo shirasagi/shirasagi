@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "facility_node_searches", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :cms_node_node }
+  let(:node) { create :cms_node }
   let(:item) { create :facility_node_search, filename: "#{node.filename}/name" }
   let(:index_path)  { facility_searches_path site.id, node }
   let(:new_path)    { "#{index_path}/new" }

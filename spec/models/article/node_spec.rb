@@ -1,17 +1,11 @@
 require 'spec_helper'
 
-describe Article::Node::Base do
-  subject(:model) { Article::Node::Base }
-  subject(:factory) { :article_node_base }
-
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+describe Article::Node::Base, type: :model, dbscope: :example do
+  let(:item) { create :article_node_base }
+  it_behaves_like "cms_node#spec"
 end
 
-describe Article::Node::Page do
-  subject(:model) { Article::Node::Page }
-  subject(:factory) { :article_node_page }
-
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+describe Article::Node::Page, type: :model, dbscope: :example do
+  let(:item) { create :article_node_page }
+  it_behaves_like "cms_node#spec"
 end

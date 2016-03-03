@@ -1,25 +1,16 @@
 require 'spec_helper'
 
-describe Faq::Node::Base do
-  subject(:model) { Faq::Node::Base }
-  subject(:factory) { :faq_node_base }
-
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+describe Faq::Node::Base, type: :model, dbscope: :example do
+  let(:item) { create :faq_node_base }
+  it_behaves_like "cms_node#spec"
 end
 
-describe Faq::Node::Page do
-  subject(:model) { Faq::Node::Page }
-  subject(:factory) { :faq_node_page }
-
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+describe Faq::Node::Page, type: :model, dbscope: :example do
+  let(:item) { create :faq_node_page }
+  it_behaves_like "cms_node#spec"
 end
 
-describe Faq::Node::Search do
-  subject(:model) { Faq::Node::Search }
-  subject(:factory) { :faq_node_search }
-
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+describe Faq::Node::Search, type: :model, dbscope: :example do
+  let(:item) { create :faq_node_search }
+  it_behaves_like "cms_node#spec"
 end
