@@ -99,7 +99,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     # `rake db:drop`
-    ::Mongoid::Sessions.default.drop
+    ::Mongoid::Clients.default.database.drop
     # `rake db:create_indexes`
     ::Rails.application.eager_load!
     ::Mongoid::Tasks::Database.create_indexes
