@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "cms_node_pages", dbscope: :example do
+describe "cms_node_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :cms_node_page, name: "cms" }
-  let(:index_path) { node_pages_path site.id, node }
-  let(:new_path) { new_node_page_path site.id, node }
-  let(:item) { create(:cms_page) }
-  let(:show_path) { node_page_path site.id, node, item }
-  let(:edit_path) { edit_node_page_path site.id, node, item }
-  let(:delete_path) { delete_node_page_path site.id, node, item }
+  let(:node) { create :cms_node }
+  let(:item) { create :cms_page, filename: "#{node.filename}/name" }
+  let(:index_path)  { node_pages_path site.id, node }
+  let(:new_path)    { "#{index_path}/new" }
+  let(:show_path)   { "#{index_path}/#{item.id}" }
+  let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
 
   it "without login" do
     visit index_path

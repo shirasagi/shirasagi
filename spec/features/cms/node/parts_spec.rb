@@ -1,30 +1,14 @@
 require 'spec_helper'
 
-describe "cms_node_parts" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :cms_node_page, name: "cms" }
-  subject(:item) { Cms::Part.last }
-  subject(:index_path) { node_parts_path site.id, node }
-  subject(:new_path) { new_node_part_path site.id, node }
-  subject(:show_path) { node_part_path site.id, node, item }
-  subject(:edit_path) { edit_node_part_path site.id, node, item }
-  subject(:delete_path) { delete_node_part_path site.id, node, item }
-
-  before(:all) do
-    # TODO:
-    # 前提条件:
-    # * Cms::Node::PartsController は Cms::PartFilter を include している。
-    # * Cms::PartFilter は Cms::NodeFilter を include している。
-    # * Cms::NodeFilter#set_item で、"@item.id == @cur_node.id" の場合 404 を発生させている。
-    # * つまり、パーツの ID と パーツを入れているフォルダの ID が同じ場合、404 となる。
-    #
-    # 問題点:
-    # 本テストを単独で実行した場合、node の ID は 1 である。
-    # 本テストの #new で初めてパーツが作成されるので、その ID は 1 である。
-    # このため @item.id = 1, @cur_node.id = 1 となり、条件 "@item.id == @cur_node.id" が成立し 404 が発生する。
-    # これを防ぐためにダミーのパーツを作成し、@item.id = 2 となるようにする。
-    Cms::Part.create!(site_id: cms_site.id, name: "dummy", basename: "dummy")
-  end
+describe "cms_node_parts", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:node) { create :cms_node }
+  let(:item) { create :cms_part, filename: "#{node.filename}/name" }
+  let(:index_path)  { node_parts_path site.id, node }
+  let(:new_path)    { "#{index_path}/new" }
+  let(:show_path)   { "#{index_path}/#{item.id}" }
+  let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
 
   it "without login" do
     visit index_path

@@ -3,7 +3,7 @@ FactoryGirl.define do
     site_id { cms_site.id }
     user_id { cms_user.id }
     name { unique_id.to_s }
-    filename { "#{name}.part.html" }
+    filename { "#{unique_id}.part.html" }
     route "cms/free"
   end
 

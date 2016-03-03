@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "category_nodes" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :category_node_node, name: "category" }
-  subject(:item) { Cms::Node.last }
-  subject(:index_path) { category_nodes_path site.id, node }
-  subject(:new_path) { new_category_node_path site.id, node }
-  subject(:show_path) { category_node_path site.id, node, item }
-  subject(:edit_path) { edit_category_node_path site.id, node, item }
-  subject(:delete_path) { delete_category_node_path site.id, node, item }
+describe "category_nodes", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:node) { create :cms_node_node }
+  let(:item) { create :category_node_node, filename: "#{node.filename}/name" }
+  let(:index_path)  { category_nodes_path site.id, node }
+  let(:new_path)    { "#{index_path}/new" }
+  let(:show_path)   { "#{index_path}/#{item.id}" }
+  let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
 
   it "without login" do
     visit index_path
@@ -42,6 +42,7 @@ describe "category_nodes" do
     end
 
     it "#show" do
+      dump show_path
       visit show_path
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
