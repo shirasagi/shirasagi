@@ -16,11 +16,10 @@ gem "unicorn-worker-killer"
 # gem 'capistrano-rails', group: :development
 # gem "debugger", group: [:development, :test]
 
-gem "mongoid", "~> 4.0.0"
+gem "mongoid", "~> 5.1.0"
 gem "mongoid-rspec"
-gem "mongo_mapper"
+#gem "mongo_mapper"
 gem "bson_ext"
-#gem "cells"
 gem "dynamic_form"
 gem "zipruby"
 gem "jquery-turbolinks"
@@ -85,7 +84,7 @@ group :development, :test do
   gem 'pry-stack_explorer'
   # The latest version is 1.5.0 now, but getting the same error again.
   # ref. https://github.com/DatabaseCleaner/database_cleaner/issues/390
-  gem 'database_cleaner', '1.4.1'
+  gem 'database_cleaner'
   gem 'dotenv-rails'
 end
 

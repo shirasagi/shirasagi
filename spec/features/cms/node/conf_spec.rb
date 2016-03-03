@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe "cms_generate_pages" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :cms_node_page, name: "cms" }
-  subject(:index_path) { node_conf_path site.id, node }
+describe "cms_generate_pages", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:node) { create :cms_node }
+  let(:index_path) { node_conf_path site.id, node }
 
   it "without login" do
     visit index_path

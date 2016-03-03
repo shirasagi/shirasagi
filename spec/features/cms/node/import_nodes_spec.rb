@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "cms_node_import_nodes" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :cms_node_import_node, name: "import" }
-  subject(:item) { Cms::Node::ImportNode.last }
-  subject(:index_path) { node_import_nodes_path site.id, node }
-  subject(:new_path) { new_node_import_node_path site.id, node }
-  subject(:show_path) { node_import_node_path site.id, node, item }
-  subject(:edit_path) { edit_node_import_node_path site.id, node, item }
-  subject(:delete_path) { delete_node_import_node_path site.id, node, item }
+describe "cms_node_import_nodes", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:node) { create :cms_node }
+  let(:item) { create :cms_node_import_node, filename: "#{node.filename}/name" }
+  let(:index_path)  { node_import_nodes_path site.id, node }
+  let(:new_path)    { "#{index_path}/new" }
+  let(:show_path)   { "#{index_path}/#{item.id}" }
+  let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
 
   it "without login" do
     visit index_path

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe "cms_node_import" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :cms_node_import_node, name: "import" }
-  subject(:index_path) { node_import_path site.id, node }
+describe "cms_node_import", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:node) { create_once :cms_node_import_node, name: "import" }
+  let(:index_path) { node_import_path site.id, node }
 
   it "without login" do
     visit index_path

@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe "facility_node_nodes" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :facility_node_node, name: "facility" }
-  subject(:item) { Cms::Node.last }
-  subject(:index_path) { facility_nodes_path site.id, node }
-  subject(:page_index_path) { facility_pages_path site.id, node }
-  subject(:new_path) { new_facility_node_path site.id, node }
-  subject(:show_path) { facility_node_path site.id, node, item }
-  subject(:edit_path) { edit_facility_node_path site.id, node, item }
-  subject(:delete_path) { delete_facility_node_path site.id, node, item }
+describe "facility_node_nodes", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:node) { create :cms_node }
+  let(:item) { create :facility_node_node, filename: "#{node.filename}/name" }
+  let(:index_path)  { facility_nodes_path site.id, node }
+  let(:new_path)    { "#{index_path}/new" }
+  let(:show_path)   { "#{index_path}/#{item.id}" }
+  let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:pages_path)  { facility_pages_path site.id, node }
 
   it "without login" do
     visit index_path
@@ -63,7 +63,7 @@ describe "facility_node_nodes" do
       within "form" do
         click_button "削除"
       end
-      expect(current_path).to eq page_index_path
+      expect(current_path).to eq pages_path
     end
   end
 end

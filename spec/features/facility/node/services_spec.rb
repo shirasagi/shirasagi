@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "facility_node_services" do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :facility_node_service, name: "facility" }
-  subject(:item) { Cms::Node.last }
-  subject(:index_path) { facility_services_path site.id, node }
-  subject(:new_path) { new_facility_service_path site.id, node }
-  subject(:show_path) { facility_service_path site.id, node, item }
-  subject(:edit_path) { edit_facility_service_path site.id, node, item }
-  subject(:delete_path) { delete_facility_service_path site.id, node, item }
+describe "facility_node_services", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:node) { create :cms_node }
+  let(:item) { create :facility_node_service, filename: "#{node.filename}/name" }
+  let(:index_path)  { facility_services_path site.id, node }
+  let(:new_path)    { "#{index_path}/new" }
+  let(:show_path)   { "#{index_path}/#{item.id}" }
+  let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
 
   it "without login" do
     visit index_path

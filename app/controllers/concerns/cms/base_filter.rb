@@ -23,8 +23,7 @@ module Cms::BaseFilter
 
     def set_site
       @ss_mode = :cms
-      @cur_site = Cms::Site.where(id: params[:site]).first
-      raise "404" unless @cur_site
+      @cur_site = Cms::Site.find id: params[:site]
       @crumbs << [@cur_site.name, cms_contents_path]
     end
 
