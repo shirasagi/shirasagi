@@ -1,5 +1,5 @@
 # Cms::Node
-shared_examples "cms_node#spec" do
+shared_examples "cms_part#spec" do
   let(:item_class) { item.class }
 
   describe "scopes" do
@@ -17,10 +17,10 @@ shared_examples "cms_node#spec" do
     it { expect(item.order).not_to eq nil }
   end
 
-  describe "node_fields" do
+  describe "part_fields" do
     it { expect(item.route).not_to eq nil }
-    #it { expect(item.view_route).not_to eq nil }
-    it { expect(item.shortcut).not_to eq nil }
+    it { expect(item.mobile_view).not_to eq nil }
+    it { expect(item.ajax_view).not_to eq nil }
   end
 
   describe "content_methods" do
@@ -42,12 +42,9 @@ shared_examples "cms_node#spec" do
     it { expect(item.serve_static_relation_files?).not_to eq nil }
   end
 
-  describe "node_methods" do
-    it { expect(item.parents).not_to eq nil }
-    it { expect(item.nodes).not_to eq nil }
-    it { expect(item.children).not_to eq nil }
-    it { expect(item.pages).not_to eq nil }
-    it { expect(item.parts).not_to eq nil }
-    it { expect(item.layouts).not_to eq nil }
+  describe "part_methods" do
+    it { expect(item.mobile_view_options).not_to eq nil }
+    it { expect(item.ajax_view_options).not_to eq nil }
+    it { expect(item.ajax_html).not_to eq nil }
   end
 end

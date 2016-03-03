@@ -1,17 +1,11 @@
 require 'spec_helper'
 
-describe Category::Part::Base do
-  subject(:model) { Category::Part::Base }
-  subject(:factory) { :category_part_base }
-
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+describe Category::Part::Base, type: :model, dbscope: :example do
+  let(:item) { create :category_part_base }
+  it_behaves_like "cms_part#spec"
 end
 
-describe Category::Part::Node do
-  subject(:model) { Category::Part::Node }
-  subject(:factory) { :category_part_node }
-
-  it_behaves_like "mongoid#save"
-  it_behaves_like "mongoid#find"
+describe Category::Part::Node, type: :model, dbscope: :example do
+  let(:item) { create :category_part_node }
+  it_behaves_like "cms_part#spec"
 end
