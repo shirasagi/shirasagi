@@ -34,4 +34,8 @@ FactoryGirl.define do
   factory :cms_part_crumb, class: Cms::Part::Crumb, traits: [:cms_part] do
     route "cms/crumb"
   end
+
+  factory :cms_part_sns_share, class: Cms::Part::Crumb, traits: [:cms_part] do
+    route "cms/sns_share"
+  end
 end
