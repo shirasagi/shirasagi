@@ -48,7 +48,7 @@ gem 'fullcalendar.io-rails'
 gem 'bxslider-rails'
 gem 'marked-rails'
 gem 'clam_scan'
-gem 'escape_utils'
+#gem 'escape_utils'
 gem 'fast_blank'
 gem 'oj'
 
