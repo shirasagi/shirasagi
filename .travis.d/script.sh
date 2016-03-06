@@ -5,11 +5,4 @@ export PATH=$PATH:$HOME/.local/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
 export LD_RUN_PATH=$LD_RUN_PATH:$HOME/.local/lib
 
-for script in $base_dir/install.d/*.sh
-do
-  echo "== $script"
-  bash $script
-  if [ $? -ne 0 ]; then
-    exit $?
-  fi
-done
+allow_open_jtalk=1 bundle exec rspec
