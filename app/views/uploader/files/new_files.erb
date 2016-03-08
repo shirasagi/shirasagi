@@ -6,7 +6,6 @@
   <dl class="see">
     <dt><%= t('uploader.new_files')  %></dt>
     <dd>
-      <%= hidden_field_tag "item[files][]" %>
       <%= f.file_field :files, multiple: :multiple %>
     </dd>
   </dl>
