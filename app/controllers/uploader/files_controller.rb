@@ -69,8 +69,9 @@ class Uploader::FilesController < ApplicationController
     end
 
     def set_params(*keys)
-      keys.each { |key| instance_variable_set("@#{key}", params[:item][key]) }
-    rescue
+      keys.each { |key| instance_variable_set("@#{key}", params[:item].try(:[], key)) }
+    rescue => e
+      Rails.logger.debug("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       raise "400"
     end
 
