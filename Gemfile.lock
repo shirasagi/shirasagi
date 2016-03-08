@@ -55,7 +55,6 @@ GEM
       terminal-table (~> 1.4)
     browser (1.1.0)
     bson (4.0.3)
-    bson_ext (1.5.1)
     builder (3.2.2)
     bxslider-rails (4.2.5.1)
     byebug (8.2.2)
@@ -444,7 +443,6 @@ PLATFORMS
 DEPENDENCIES
   brakeman
   browser
-  bson_ext
   bxslider-rails
   capybara
   clam_scan
