@@ -9,7 +9,6 @@
       <% if @item.image? %>
       <dt><%= @model.t :image %></dt>
       <dd>
-        <%= hidden_field_tag "item[file]" %>
         <%= f.file_field :files, multiple: :multiple %>
       </dd>
       <dd><%= image_tag @item.link %></dd>
