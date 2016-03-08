@@ -39,7 +39,6 @@ module Sys::Model::SSO
   end
 
   def url
-    ".#{route}/#{filename}/init"
   end
 
   private

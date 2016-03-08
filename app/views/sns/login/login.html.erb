@@ -32,6 +32,7 @@
 <% if sso.present? %>
   <ul class="sso">
     <% sso.each do |sso| %>
+    <% sso = sso.becomes_with_route %>
     <li class="<%= sso.filename %>">
       <%= link_to(sso.url) do %>
         <h2 class="name"><%= sso.name %></h2>

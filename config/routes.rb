@@ -51,5 +51,12 @@ SS::Application.routes.draw do
     get   "auth_token" => "auth_token#index", as: :auth_token
     get   "cms" => "mypage#cms"
     get   "gws" => "mypage#gws"
+
+    namespace "sso_login" do
+      # SAML SSO
+      get  "saml/:id/init" => "saml#init"
+      post "saml/:id/consume" => "saml#consume"
+      get  "saml/:id/metadata" => "saml#metadata"
+    end
   end
 end
