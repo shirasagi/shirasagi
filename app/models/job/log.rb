@@ -52,11 +52,11 @@ class Job::Log
   end
 
   def start_label
-    started ? started.strftime("%Y-%m-%d %H:%m") : ""
+    started ? started.strftime("%Y-%m-%d %H:%M") : ""
   end
 
   def closed_label
-    closed ? closed.strftime("%Y-%m-%d %H:%m") : ""
+    closed ? closed.strftime("%Y-%m-%d %H:%M") : ""
   end
 
   def joined_jobs

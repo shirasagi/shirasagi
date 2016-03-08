@@ -13,7 +13,7 @@ module History::LogFilter::View
         data << %w(Date User Target Action URL)
         items.each do |item|
           line = []
-          line << item.created.strftime("%Y-%m-%d %H:%m")
+          line << item.created.strftime("%Y-%m-%d %H:%M")
           line << item.user_label
           line << item.target_label
           line << item.action
