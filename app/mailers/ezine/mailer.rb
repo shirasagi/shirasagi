@@ -29,6 +29,10 @@ class Ezine::Mailer < ActionMailer::Base
       when "text"
         format.text
       when "html"
+        # send multipart mail.
+        # format order is important. text is first, then html is last
+        # see: http://monmon.hatenablog.com/entry/2015/02/02/141722
+        format.text
         format.html
       else
         # Invalid
