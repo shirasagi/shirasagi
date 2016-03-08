@@ -17,8 +17,8 @@ module Cms::BaseFilter
 
   private
     def set_cms_assets
-      SS.config.cms.stylesheets.each { |m| stylesheet(m) }
-      SS.config.cms.javascripts.each { |m| javascript(m) }
+      SS.config.cms.stylesheets.each { |m| stylesheet(m) } if SS.config.cms.stylesheets.present?
+      SS.config.cms.javascripts.each { |m| javascript(m) } if SS.config.cms.javascripts.present?
     end
 
     def set_site

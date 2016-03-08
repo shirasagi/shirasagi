@@ -16,6 +16,9 @@ class Cms::PreviewController < ApplicationController
     skip_action_callback :set_group
   end
 
+  skip_action_callback :set_ss_assets
+  skip_action_callback :set_cms_assets
+
   def form_preview
     preview_item = params.require(:preview_item).permit!
     path = params[:path]

@@ -49,8 +49,8 @@ module SS::BaseFilter
     end
 
     def set_ss_assets
-      SS.config.ss.stylesheets.each { |m| stylesheet(m) }
-      SS.config.ss.javascripts.each { |m| javascript(m) }
+      SS.config.ss.stylesheets.each { |m| stylesheet(m) } if SS.config.ss.stylesheets.present?
+      SS.config.ss.javascripts.each { |m| javascript(m) } if SS.config.ss.javascripts.present?
       stylesheet("/assets/css/colorbox/colorbox.css")
     end
 
