@@ -44,7 +44,7 @@ $ su -
 ## MongoDB のインストール
 
 ```
-# vi /etc/yum.repos.d/CentOS-Base.repo
+# vi /etc/yum.repos.d/mongodb-org-3.2.repo
 ```
 
 ```
