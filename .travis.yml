@@ -1,19 +1,34 @@
 language: ruby
-cache: bundler
-sudo: true
+sudo: false
 rvm:
   - 2.3.0
+
+cache:
+  apt: true
+  bundler: true
+  directories:
+    - $HOME/.local
 
 services:
   - mongodb
 
+addons:
+  apt:
+    packages:
+      - imagemagick
+      - libmagick++-dev
+      - sox
+      - libsox-dev
+      - lame
+      - libmp3lame-dev
+      # open-jtalk package is blacklisted
+      # - open-jtalk
+      # ubuntu 12.04 mecab is too old to work
+      # - mecab
+      # - libmecab-dev
+      # - mecab-ipadic-utf8
+
 bundler_args: "--without development"
-install:
-  - pushd .
-  - bash .travis.d/install.sh
-  - popd
-before_script:
-  - pushd .
-  - bash .travis.d/before_script.sh
-  - popd
-script: allow_open_jtalk=1 bundle exec rspec
+install: bash .travis.d/install.sh
+before_script: bash .travis.d/before_script.sh
+script: bash .travis.d/script.sh
