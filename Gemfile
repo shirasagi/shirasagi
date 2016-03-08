@@ -62,6 +62,9 @@ gem 'omniauth-yahoojp'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
 
+# saml
+gem 'ruby-saml'
+
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
 group :development, :test do
