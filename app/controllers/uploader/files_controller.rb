@@ -36,7 +36,7 @@ class Uploader::FilesController < ApplicationController
       dirs  = @items.select{ |item| item.directory?  }.sort_by { |item| item.name.capitalize }
       files = @items.select{ |item| !item.directory? }.sort_by { |item| item.name.capitalize }
       @items = dirs + files
-      @items.each {|item| item.site = @cur_site }
+      @items.each { |item| item.site = @cur_site }
     end
 
     def create_files
@@ -148,7 +148,19 @@ class Uploader::FilesController < ApplicationController
     def destroy
       raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
 
-      dirname = @item.dirname
-      render_destroy @item.destroy, location: "#{uploader_files_path}/#{dirname}"
+      if params[:ids].present?
+        destroy_all
+      else
+        render_destroy @item.destroy, location: "#{uploader_files_path}/#{@item.dirname}"
+      end
+    end
+
+    def destroy_all
+      @paths = params[:ids]
+      @paths.each do |path|
+        item = @model.file("#{@item.path}/#{path}")
+        item.destroy
+      end
+      render_destroy true, location: "#{uploader_files_path}/#{@item.filename}"
     end
 end
