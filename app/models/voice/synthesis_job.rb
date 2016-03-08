@@ -14,7 +14,7 @@ class Voice::SynthesisJob
     begin
       Rails.logger.info("synthesize: #{voice_file.url}")
       voice_file.synthesize force
-    rescue OpenURI::HTTPError, TimeoutError
+    rescue OpenURI::HTTPError, ::Timeout::Error
       # do not record http errors like 404, 500.
       voice_file.destroy
       raise
