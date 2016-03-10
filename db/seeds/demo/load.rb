@@ -812,12 +812,18 @@ banner4.set(state: "public")
 banner5.set(state: "public")
 banner6.set(state: "public")
 
-save_page route: "ads/banner", filename: "add/page30.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner1.id
-save_page route: "ads/banner", filename: "add/page31.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner2.id
-save_page route: "ads/banner", filename: "add/page32.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner3.id
-save_page route: "ads/banner", filename: "add/page33.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner4.id
-save_page route: "ads/banner", filename: "add/page34.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner5.id
-save_page route: "ads/banner", filename: "add/page35.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner6.id
+save_page route: "ads/banner", filename: "add/page30.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner1.id
+save_page route: "ads/banner", filename: "add/page31.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner2.id
+save_page route: "ads/banner", filename: "add/page32.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner3.id
+save_page route: "ads/banner", filename: "add/page33.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner4.id
+save_page route: "ads/banner", filename: "add/page34.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner5.id
+save_page route: "ads/banner", filename: "add/page35.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner6.id
 
 ## -------------------------------------
 puts "# facility"
