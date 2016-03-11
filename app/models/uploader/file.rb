@@ -16,10 +16,8 @@ class Uploader::File
     return false unless valid?
     begin
       if saved_path && path != saved_path #persisted AND path chenged
-        if !directory?
-          Fs.binwrite saved_path, binary
-        end
-        Fs.mv saved_path, path
+        Fs.binwrite(saved_path, binary) unless directory?
+        Fs.mv(saved_path, path)
       else
         directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
       end
@@ -147,10 +145,8 @@ class Uploader::File
       return if ::File.basename(@path)[0] == "_"
       opts = Rails.application.config.sass
       sass = Sass::Engine.new @binary.force_encoding("utf-8"), filename: @path,
-        syntax: :scss, cache: false,
-        load_paths: opts.load_paths[1..-1],
-        style: :expanded,
-        debug_info: true
+        syntax: :scss, cache: false, load_paths: opts.load_paths[1..-1],
+        style: :expanded, debug_info: true
       @css = sass.render
     rescue Sass::SyntaxError => e
       msg = e.backtrace[0].sub(/.*?\/_\//, "")
@@ -189,11 +185,10 @@ class Uploader::File
     def find(path)
       items = []
       return items if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+      return items unless Fs.directory?(path)
 
-      if Fs.directory? path
-        Fs.glob("#{path}/*").each do |f|
-          items << Uploader::File.new(path: f, saved_path: f, is_dir: Fs.directory?(f))
-        end
+      Fs.glob("#{path}/*").each do |f|
+        items << Uploader::File.new(path: f, saved_path: f, is_dir: Fs.directory?(f))
       end
       items
     end
@@ -203,8 +198,7 @@ class Uploader::File
       return items if params.blank?
 
       if params[:keyword].present?
-        keyword = params[:keyword]
-        items = items.select { |item| item.basename =~ /#{Regexp.escape(keyword)}/i }
+        items = items.select { |item| item.basename =~ /#{Regexp.escape(params[:keyword])}/i }
       end
       items
     end
