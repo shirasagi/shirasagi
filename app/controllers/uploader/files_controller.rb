@@ -32,7 +32,7 @@ class Uploader::FilesController < ApplicationController
     end
 
     def set_items(path)
-      @items = @model.find(path).sort_by
+      @items = @model.search(path, params[:s]).sort_by
       dirs  = @items.select{ |item| item.directory?  }.sort_by { |item| item.name.capitalize }
       files = @items.select{ |item| !item.directory? }.sort_by { |item| item.name.capitalize }
       @items = dirs + files
@@ -143,7 +143,7 @@ class Uploader::FilesController < ApplicationController
       Fs.binwrite @item.saved_path, file.read if result && file
 
       location = "#{uploader_files_path}/#{@item.filename}?do=edit"
-      render_update true, location: location
+      render_update result, location: location
     end
 
     def destroy
