@@ -60,7 +60,7 @@ module Cms::Content
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :html
+        criteria = criteria.keyword_in params[:keyword], :name, :filename, :html
       end
       criteria
     end
