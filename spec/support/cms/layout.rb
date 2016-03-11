@@ -1,4 +1,4 @@
-def create_cms_layout(parts)
+def create_cms_layout(parts = [])
   html = []
   html << "<html><body>"
   html << parts.map { |m| '{{ part "/' + m.filename.sub(/\..*/, '') + '" }}' }.join("\n")

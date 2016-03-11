@@ -3,6 +3,6 @@ FactoryGirl.define do
     filename { "dir/#{unique_id}" }
     route "key_visual/image"
     link_url "/example/"
-    file_id 1
+    in_file { Fs::UploadedFile.create_from_file "#{Rails.root}/spec/fixtures/ss/logo.png", content_type: 'image/png' }
   end
 end
