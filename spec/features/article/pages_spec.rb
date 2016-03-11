@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "article_pages", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
-  let(:item) { create(:article_page, node: node) }
+  let(:item) { create(:article_page, cur_node: node) }
   let(:index_path) { article_pages_path site.id, node }
   let(:new_path) { new_article_page_path site.id, node }
   let(:show_path) { article_page_path site.id, node, item }
