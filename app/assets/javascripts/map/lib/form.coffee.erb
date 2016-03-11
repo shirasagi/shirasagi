@@ -161,7 +161,7 @@ class @Map_Form
       Map_Form.createMarker($(this).closest("dd.marker"))
       return false
 
-    $(".mod-map .location-search").on 'click', (e)->
+    $(".mod-map .location-search button").on 'click', (e)->
       Map_Form.geocoderSearch($(".mod-map .keyword").val())
       return false
 

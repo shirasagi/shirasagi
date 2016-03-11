@@ -257,15 +257,15 @@ end
 
 puts "# articles"
 
-save_page route: "article/page", name: "お知らせ情報が入ります。", filename: "news/314.html",
+save_page route: "article/page", name: "お知らせ情報が入ります。", filename: "news/page1.html",
   layout_id: layouts["news"].id, category_ids: [categories["oshirase"].id]
-save_page route: "article/page", name: "お知らせ情報が入ります。お知らせ情報が入ります。", filename: "news/315.html",
+save_page route: "article/page", name: "お知らせ情報が入ります。お知らせ情報が入ります。", filename: "news/page2.html",
   layout_id: layouts["news"].id, category_ids: [categories["oshirase"].id]
-save_page route: "article/page", name: "お知らせ情報が入ります。お知らせ情報が入ります。", filename: "news/316.html",
+save_page route: "article/page", name: "お知らせ情報が入ります。お知らせ情報が入ります。", filename: "news/page3.html",
   layout_id: layouts["news"].id, category_ids: [categories["oshirase"].id]
-save_page route: "article/page", name: "新卒採用", filename: "news/334.html",
+save_page route: "article/page", name: "新卒採用", filename: "news/page4.html",
   layout_id: layouts["recruit"].id, category_ids: [categories["oshirase"].id, categories["recruit"].id]
-save_page route: "article/page", name: "中途採用", filename: "news/335.html",
+save_page route: "article/page", name: "中途採用", filename: "news/page5.html",
   layout_id: layouts["recruit"].id, category_ids: [categories["oshirase"].id, categories["recruit"].id]
 
 puts "# pages"
