@@ -18,7 +18,7 @@
       <%= link_to :back_to_index, { action: :file, filename: @item.filename } %>
     <% elsif params[:action] =~ /update/ %>
       <%= link_to :back_to_show, { action: :file, filename: @item.filename, do: "show" } %>
-      <%= link_to :back_to_index, { action: :file, filename: @item.filename } %>
+      <%= link_to :back_to_index, { action: :file, filename: @item.dirname } %>
     <% end %>
   </nav>
 <% end %>

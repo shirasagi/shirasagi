@@ -92,6 +92,10 @@ class Uploader::File
     @path = "#{path.sub(filename, '')}#{n}"
   end
 
+  def basename
+    ::File.basename(filename)
+  end
+
   def name
     path.sub(/^.*\//, "")
   end
@@ -131,7 +135,7 @@ class Uploader::File
     end
 
     def validate_exists
-      errors.add :name, :taken if Fs.exists? path
+      errors.add :filename, :taken if Fs.exists? path
     end
 
     def path_chenged?
@@ -190,6 +194,17 @@ class Uploader::File
         Fs.glob("#{path}/*").each do |f|
           items << Uploader::File.new(path: f, saved_path: f, is_dir: Fs.directory?(f))
         end
+      end
+      items
+    end
+
+    def search(path, params = {})
+      items = find(path)
+      return items if params.blank?
+
+      if params[:keyword].present?
+        keyword = params[:keyword]
+        items = items.select { |item| item.basename =~ /#{Regexp.escape(keyword)}/i }
       end
       items
     end
