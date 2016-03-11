@@ -98,7 +98,7 @@ describe SS::File do
       end
 
       after do
-        SS.config.replace_value_at(:env, :max_filesize, @save_config)
+        SS.config.replace_value_at(:env, :max_filesize_ext, @save_config)
       end
 
       it do
