@@ -7,6 +7,13 @@ module Cms::PageFilter
   end
 
   private
+    def set_item
+      super
+      return unless @cur_node
+      return if (@item.filename =~ /^#{@cur_node.filename}\//) && (@item.depth == @cur_node.depth + 1)
+      raise "404"
+    end
+
     def pre_params
       if @cur_node
         layout_id = @cur_node.page_layout_id || @cur_node.layout_id
