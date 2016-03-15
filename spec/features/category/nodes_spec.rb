@@ -42,7 +42,6 @@ describe "category_nodes", type: :feature, dbscope: :example do
     end
 
     it "#show" do
-      dump show_path
       visit show_path
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
