@@ -46,6 +46,7 @@ ja:
       import: 取り込み
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
+      random_password: ランダム生成
     confirm:
       delete: 削除してよろしいですか？
       convert: 変換してよろしいですか？
@@ -79,6 +80,8 @@ ja:
     notice:
       saved: 保存しました。
       deleted: 削除しました。
+    warning:
+      initial_password: 初期パスワードを変更してください。
     options:
       state:
         show: 表示
@@ -172,6 +175,9 @@ ja:
         type: ユーザータイプ
         sns: SNSユーザー
         ldap: LDAPユーザー
+        account_start_date: 有効期限（開始）
+        account_expiration_date: 有効期限（終了）
+        initial_password_warning: 初期パスワード警告
       ss/model/group:
         name: グループ名
         order: 表示順

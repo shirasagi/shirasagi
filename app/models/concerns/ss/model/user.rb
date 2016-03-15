@@ -5,7 +5,7 @@ module SS::Model::User
   include SS::Fields::Normalizer
   include Ldap::Addon::User
 
-  attr_accessor :cur_user, :in_password
+  attr_accessor :cur_user, :in_password, :self_edit
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -29,11 +29,17 @@ module SS::Model::User
     field :type, type: String
     field :login_roles, type: Array, default: [LOGIN_ROLE_DBPASSWD]
     field :last_loggedin, type: DateTime
+    field :account_start_date, type: DateTime
+    field :account_expiration_date, type: DateTime
+
+    # 初期パスワード警告 / nil: 無効, 1: 有効
+    field :initial_password_warning, type: Integer
 
     embeds_ids :groups, class_name: "SS::Group"
 
     permit_params :name, :uid, :email, :password, :tel, :type, :login_roles, group_ids: []
     permit_params :in_password
+    permit_params :account_start_date, :account_expiration_date, :initial_password_warning
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :uid, length: { maximum: 40 }
@@ -44,6 +50,8 @@ module SS::Model::User
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
     validate :validate_type
     validate :validate_uid
+    validate :validate_account_expiration_date
+    validate :validate_initial_password, if: -> { self_edit }
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
@@ -113,6 +121,20 @@ module SS::Model::User
     end
   end
 
+  def enabled?
+    now = Time.zone.now
+    return false if account_start_date.present? && account_start_date > now
+    return false if account_expiration_date.present? && account_expiration_date <= now
+    true
+  end
+
+  def initial_password_warning_options
+    [
+      [I18n.t('views.options.state.disabled'), ''],
+      [I18n.t('views.options.state.enabled'), 1],
+    ]
+  end
+
   private
     def dbpasswd_authenticate(in_passwd)
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
@@ -136,5 +158,16 @@ module SS::Model::User
       else
         return true
       end
+    end
+
+    def validate_account_expiration_date
+      return if account_start_date.blank? || account_expiration_date.blank?
+      if account_start_date >= account_expiration_date
+        errors.add :account_expiration_date, :greater_than, count: t(:account_start_date)
+      end
+    end
+
+    def validate_initial_password
+      self.initial_password_warning = nil if password_changed?
     end
 end

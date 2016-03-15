@@ -16,6 +16,21 @@
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.send :type %></dd>
 
+  <% if @item.account_start_date.present? %>
+  <dt><%= @model.t :account_start_date %></dt>
+  <dd><%= tryb{@item.account_start_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <% end %>
+
+  <% if @item.account_expiration_date.present? %>
+  <dt><%= @model.t :account_expiration_date %></dt>
+  <dd><%= tryb{@item.account_expiration_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <% end %>
+
+  <% if @item.initial_password_warning.present? %>
+  <dt><%= @model.t :initial_password_warning %></dt>
+  <dd><%= @item.label :initial_password_warning %></dd>
+  <% end %>
+
   <dt><%= @model.t :group_ids %></dt>
   <dd><%= br @item.groups.order_by(name: 1).select{ |c| Cms::Group.site(@cur_site).pluck(:id).include?(c.id) }.map{|c| c.name}.join("\n") %></dd>
 </dl>

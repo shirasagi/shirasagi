@@ -612,6 +612,21 @@ td {
 }
 
 // -------------------------------------------------------------------------------------------------
+// warning
+.warning {
+  @include clear;
+  margin: 0 0 1px;
+  padding: 10px 10px;
+  padding-left: 220px;
+  background: #f99;
+  a {
+    color: $black;
+    font-weight: bold;
+  }
+  @include mb { padding-left: 10px; }
+}
+
+// -------------------------------------------------------------------------------------------------
 // menu
 #menu {
   .nav-menu {

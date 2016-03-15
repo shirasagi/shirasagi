@@ -93,6 +93,12 @@
     </div>
 
     <article id="main">
+      <% if @cur_user.initial_password_warning.present? %>
+      <div class="warning">
+        <%= link_to t("views.warning.initial_password"), sns_cur_user_account_path %>
+      </div>
+      <% end %>
+
       <% if @crumbs.size > 0 %>
       <ol class="breadcrumb" id="crumbs">
         <% @crumbs.each_with_index do |item, idx| %>

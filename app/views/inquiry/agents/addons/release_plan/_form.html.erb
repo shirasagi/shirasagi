@@ -10,8 +10,8 @@
 
 <dl class="see mod-cms-release_plan">
   <dt><%= @model.t :release_date %><%= @model.tt :release_date %></dt>
-  <dd><%= f.text_field :release_date, class: "datetime", value: tryb{@item.release_date.strftime("%Y/%m/%d %H:%M")} %>
+  <dd><%= f.text_field :release_date, class: "datetime", value: tryb{@item.release_date.strftime("%Y/%m/%d %H:%M")} %></dd>
 
   <dt><%= @model.t :close_date %><%= @model.tt :close_date %></dt>
-  <dd><%= f.text_field :close_date, class: "datetime", value: tryb{@item.close_date.strftime("%Y/%m/%d %H:%M")} %>
+  <dd><%= f.text_field :close_date, class: "datetime", value: tryb{@item.close_date.strftime("%Y/%m/%d %H:%M")} %></dd>
 </dl>

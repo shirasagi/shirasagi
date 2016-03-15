@@ -151,3 +151,11 @@ class @SS
         return "<%= t('views.confirm.unload') %>"
     $("input[type=submit]").click ->
       $(window).off "beforeunload"
+
+  @randomPassword: (length = 8) ->
+    chars = 'abcdefghijkmnopqrstuvwxyz!@#$%&-+ABCDEFGHIJKLMNOP234567890'
+    pass = ''
+    for i in [0..length]
+      i = Math.floor(Math.random() * chars.length)
+      pass += chars.charAt(i)
+    return pass

@@ -11,6 +11,8 @@ module SS::AuthFilter
     u = SS::Crypt.decrypt(session[:user]).to_s.split(",", 3)
     #return unset_user redirect: true if u[1] != remote_addr.to_s
     #return unset_user redirect: true if u[2] != request.user_agent.to_s
-    self.user_class.find u[0].to_i rescue nil
+    user = self.user_class.find(u[0].to_i) rescue nil
+    user = nil unless user.enabled?
+    user
   end
 end
