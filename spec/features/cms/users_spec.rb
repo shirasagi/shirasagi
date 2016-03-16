@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe "cms_users", dbscope: :example do
-  subject(:site) { cms_site }
-  subject(:group) { cms_group }
-  subject(:item) { create(:cms_test_user, group: group) }
-  subject(:index_path) { cms_users_path site.id }
-  subject(:new_path) { new_cms_user_path site.id }
-  subject(:show_path) { cms_user_path site.id, item }
-  subject(:edit_path) { edit_cms_user_path site.id, item }
-  subject(:delete_path) { delete_cms_user_path site.id, item }
-  subject(:import_path) { import_cms_users_path site.id }
+describe "cms_users", type: :feature, dbscope: :example  do
+  let(:site) { cms_site }
+  let(:group) { cms_group }
+  let(:item) { create(:cms_test_user, group: group) }
+  let(:index_path) { cms_users_path site.id }
+  let(:new_path) { new_cms_user_path site.id }
+  let(:show_path) { cms_user_path site.id, item }
+  let(:edit_path) { edit_cms_user_path site.id, item }
+  let(:delete_path) { delete_cms_user_path site.id, item }
+  let(:import_path) { import_cms_users_path site.id }
 
   it "without login" do
     visit index_path
@@ -28,16 +28,20 @@ describe "cms_users", dbscope: :example do
     expect(current_path).not_to eq sns_login_path
   end
 
-  context "with sns user" do
+  context "with sns user", js: true do
     it "#new" do
       login_cms_user
+
       visit new_path
+      click_on "グループを選択する"
+      wait_for_cbox
+      click_on group.name
+
       within "form#item-form" do
         name = unique_id
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         fill_in "item[in_password]", with: "pass"
-        check "item[group_ids][]"
         check "item[cms_role_ids][]"
         click_button "保存"
       end
@@ -76,16 +80,20 @@ describe "cms_users", dbscope: :example do
     end
   end
 
-  context "with ldap user" do
+  context "with ldap user", js: true do
     it "#new" do
       login_cms_user
+
       visit new_path
+      click_on "グループを選択する"
+      wait_for_cbox
+      click_on group.name
+
       within "form#item-form" do
         name = unique_id
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: name
         fill_in "item[ldap_dn]", with: "dc=#{name},dc=city,dc=example,dc=jp"
-        check "item[group_ids][]"
         check "item[cms_role_ids][]"
         click_button "保存"
       end
