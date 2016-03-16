@@ -11,6 +11,10 @@ class Sns::UserAccountsController < ApplicationController
       @crumbs << [:"sns.account", params.include?(:user) ? sns_user_account_path : sns_cur_user_account_path]
     end
 
+    def fix_params
+      { self_edit: true }
+    end
+
     def permit_fields
       [:name, :email, :in_password, :tel]
     end

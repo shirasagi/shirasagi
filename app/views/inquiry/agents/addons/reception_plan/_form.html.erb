@@ -10,8 +10,8 @@
 
 <dl class="see mod-inquiry-reception_plan">
   <dt><%= @model.t :reception_start_date %><%= @model.tt :reception_start_date %></dt>
-  <dd><%= f.text_field :reception_start_date, class: "datetime", value: tryb{@item.reception_start_date.strftime("%Y/%m/%d")} %>
+  <dd><%= f.text_field :reception_start_date, class: "datetime", value: tryb{@item.reception_start_date.strftime("%Y/%m/%d")} %></dd>
 
   <dt><%= @model.t :reception_close_date %><%= @model.tt :reception_close_date %></dt>
-  <dd><%= f.text_field :reception_close_date, class: "datetime", value: tryb{@item.reception_close_date.strftime("%Y/%m/%d")} %>
+  <dd><%= f.text_field :reception_close_date, class: "datetime", value: tryb{@item.reception_close_date.strftime("%Y/%m/%d")} %></dd>
 </dl>

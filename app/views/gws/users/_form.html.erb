@@ -1,4 +1,16 @@
-<dl class="see">
+<%= jquery do %>
+if ($.support.opacity) {
+  // above IE9
+  $(".mod-gws-user .datetime").
+    datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
+}
+$("#random-password").click(function() {
+  var password = SS.randomPassword();
+  $("#item_in_password").val(password);
+  $("#random-password-view").html(password);
+});
+<% end %>
+<dl class="see mod-gws-user">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
@@ -9,7 +21,11 @@
   <dd><%= f.email_field :email %></dd>
 
   <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
-  <dd><%= f.password_field :in_password %></dd>
+  <dd>
+    <%= f.password_field :in_password, style: "width: 200px" %>
+    <%= button_tag t("views.button.random_password"), type: :button, id: "random-password" %>
+    <span id="random-password-view"></span>
+  </dd>
 
   <dt><%= @model.t :tel %><%= @model.tt :tel %></dt>
   <dd><%= f.text_field :tel %></dd>
@@ -17,11 +33,36 @@
   <dt><%= @model.t :type %><%= @model.tt :type %></dt>
   <dd><%= f.select :type, @model.type_options %></dd>
 
+  <dt><%= @model.t :account_start_date %><%= @model.tt :account_start_date %></dt>
+  <dd><%= f.text_field :account_start_date, class: "datetime", value: tryb{@item.account_start_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+
+  <dt><%= @model.t :account_expiration_date %><%= @model.tt :account_expiration_date %></dt>
+  <dd><%= f.text_field :account_expiration_date, class: "datetime", value: tryb{@item.account_expiration_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+
+  <dt><%= @model.t :initial_password_warning %><%= @model.tt :initial_password_warning %></dt>
+  <dd><%= f.select :initial_password_warning, @item.initial_password_warning_options %></dd>
+
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
-    <%= hidden_field_tag "item[group_ids][]" %>
-    <% Gws::Group.site(@cur_site).order_by(name: 1).each do |item| %>
-    <label><%= f.check_box "group_ids[]", {}, item._id %><%= item.name %></label><br />
-    <% end %>
+    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("sys.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= Sys::Group.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.groups.each do |group| %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </dd>
 </dl>

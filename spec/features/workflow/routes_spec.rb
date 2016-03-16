@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "workflow_routes", dbscope: :example do
+describe "workflow_routes", type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:group) { cms_group }
