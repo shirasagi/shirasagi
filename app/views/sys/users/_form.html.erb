@@ -5,9 +5,7 @@ if ($.support.opacity) {
     datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
 }
 $("#random-password").click(function() {
-  var password = SS.randomPassword();
-  $("#item_in_password").val(password);
-  $("#random-password-view").html(password);
+  $("#item_in_password").attr({ type: 'text' }).val(SS.randomPassword());
 });
 <% end %>
 <dl class="see mod-sys-user">
