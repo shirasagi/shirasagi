@@ -25,6 +25,7 @@ ja:
     sys: システム
     addons:
       sys/role: ロール
+      sys/saml_setting: SAML設定
 
   sys_role:
     edit_sys_sites: サイトの管理
@@ -46,6 +47,9 @@ ja:
         text: 説明
         order: 並び順
         state: ステータス
+      sys/addon/saml_setting:
+        metadata: メタデータ
+        identifier: Identifier
 
   tooltip:
     sys/addon/role:

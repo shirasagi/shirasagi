@@ -1,0 +1,10 @@
+<dl class="see mod-sys-samle-setting">
+  <dt><%= @model.t :metadata %><%= @model.tt :metadata %></dt>
+  <dd><%= f.file_field :in_metadata %></dd>
+  <% if @item.metadata %>
+    <dd><label><%= f.check_box :rm_metadata %> <%= t "views.button.delete" %></label></dd>
+  <% end %>
+
+  <dt><%= @model.t :identifier %><%= @model.tt :identifier %></dt>
+  <dd><%= f.text_field :identifier %></dd>
+</dl>
