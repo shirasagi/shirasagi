@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe "gws_notices", type: :feature, dbscope: :example do
+describe "gws_links", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:item) { create :gws_notice }
-  let(:index_path) { gws_notices_path site }
-  let(:new_path) { new_gws_notice_path site }
-  let(:show_path) { gws_notice_path site.id, item }
-  let(:edit_path) { edit_gws_notice_path site, item }
-  let(:delete_path) { delete_gws_notice_path site, item }
-  let(:public_index_path) { gws_public_notices_path site }
-  let(:public_show_path) { gws_public_notice_path site, item }
+  let(:item) { create :gws_link }
+  let(:index_path) { gws_links_path site }
+  let(:new_path) { "#{index_path}/new" }
+  let(:show_path) { "#{index_path}/#{item.id}" }
+  let(:edit_path) { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:public_index_path) { gws_public_links_path site }
+  let(:public_show_path) { gws_public_link_path site, item }
 
   it "without login" do
     visit index_path
@@ -35,7 +35,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[text]", with: "text"
+        fill_in "item[html]", with: "text"
         click_button "保存"
       end
       expect(status_code).to eq 200
@@ -53,7 +53,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[text]", with: "text"
+        fill_in "item[html]", with: "text"
         click_button "保存"
       end
       expect(status_code).to eq 200

@@ -1,15 +1,14 @@
 require 'spec_helper'
 
-describe "gws_notices", type: :feature, dbscope: :example do
+describe "gws_users", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:item) { create :gws_notice }
-  let(:index_path) { gws_notices_path site }
-  let(:new_path) { new_gws_notice_path site }
-  let(:show_path) { gws_notice_path site.id, item }
-  let(:edit_path) { edit_gws_notice_path site, item }
-  let(:delete_path) { delete_gws_notice_path site, item }
-  let(:public_index_path) { gws_public_notices_path site }
-  let(:public_show_path) { gws_public_notice_path site, item }
+  let(:group) { gws_group }
+  let(:item) { create :ss_user, group_ids: [gws_user.group_ids.first] }
+  let(:index_path) { gws_users_path site }
+  let(:new_path) { "#{index_path}/new" }
+  let(:show_path) { "#{index_path}/#{item.id}" }
+  let(:edit_path) { "#{index_path}/#{item.id}/edit" }
+  let(:delete_path) { "#{index_path}/#{item.id}/delete" }
 
   it "without login" do
     visit index_path
@@ -31,11 +30,17 @@ describe "gws_notices", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
     end
 
-    it "#new" do
+    it "#new", js: true do
       visit new_path
+      click_on "グループを選択する"
+      wait_for_cbox
+      click_on gws_user.groups.first.name
+
       within "form#item-form" do
-        fill_in "item[name]", with: "name"
-        fill_in "item[text]", with: "text"
+        name = unique_id
+        fill_in "item[name]", with: name
+        fill_in "item[email]", with: "#{name}@example.jp"
+        fill_in "item[in_password]", with: "pass"
         click_button "保存"
       end
       expect(status_code).to eq 200
@@ -53,7 +58,6 @@ describe "gws_notices", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[text]", with: "text"
         click_button "保存"
       end
       expect(status_code).to eq 200
@@ -68,18 +72,6 @@ describe "gws_notices", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
-    end
-
-    it "#index" do
-      visit public_index_path
-      expect(status_code).to eq 200
-      expect(current_path).to eq public_index_path
-    end
-
-    it "#show" do
-      visit public_show_path
-      expect(status_code).to eq 200
-      expect(current_path).to eq public_show_path
     end
   end
 end
