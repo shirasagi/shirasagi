@@ -2,6 +2,7 @@ module Gws
   class Initializer
     Gws::Role.permission :edit_gws_groups
     Gws::Role.permission :edit_gws_users
+    Gws::Role.permission :edit_gws_user_titles, module_name: 'gws'
     Gws::Role.permission :edit_gws_roles
 
     Gws::Role.permission :read_other_gws_notices

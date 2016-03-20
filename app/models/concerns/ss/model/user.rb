@@ -36,10 +36,13 @@ module SS::Model::User
     field :initial_password_warning, type: Integer
 
     embeds_ids :groups, class_name: "SS::Group"
+    embeds_ids :titles, class_name: "SS::UserTitle"
 
     permit_params :name, :uid, :email, :password, :tel, :type, :login_roles, group_ids: []
     permit_params :in_password
     permit_params :account_start_date, :account_expiration_date, :initial_password_warning
+
+    before_validation :encrypt_password, if: ->{ in_password.present? }
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :uid, length: { maximum: 40 }
@@ -53,7 +56,6 @@ module SS::Model::User
     validate :validate_account_expiration_date
     validate :validate_initial_password, if: -> { self_edit }
 
-    before_validation :encrypt_password, if: ->{ in_password.present? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
     default_scope -> {
@@ -121,6 +123,10 @@ module SS::Model::User
     end
   end
 
+  def title(group)
+    titles.select { |m| m.group_id == cur_site.id }.first
+  end
+
   def enabled?
     now = Time.zone.now
     return false if account_start_date.present? && account_start_date > now
@@ -140,6 +146,10 @@ module SS::Model::User
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
       return false if password.blank?
       password == SS::Crypt.crypt(in_passwd)
+    end
+
+    def set_title_ids
+      #
     end
 
     def validate_type

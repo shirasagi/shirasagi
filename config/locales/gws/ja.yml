@@ -19,6 +19,7 @@ ja:
   gws_role:
     edit_gws_groups: グループの管理
     edit_gws_users: ユーザの管理
+    edit_gws_user_titles: 役職の管理
     edit_gws_roles: 権限/ロールの管理
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）

@@ -138,6 +138,7 @@ ja:
     models:
       ss/site: サイト
       ss/user: ユーザー
+      ss/user_title: 役職
       ss/group: グループ
       ss/file: ファイル
       ss/temp_file: 一時ファイル
@@ -171,6 +172,8 @@ ja:
         password: パスワード
         in_password: パスワード
         tel: 電話番号
+        title_ids: 役職
+        in_title_id: 役職
         group_ids: グループ
         type: ユーザータイプ
         sns: SNSユーザー
@@ -178,6 +181,10 @@ ja:
         account_start_date: 有効期限（開始）
         account_expiration_date: 有効期限（終了）
         initial_password_warning: 初期パスワード警告
+      ss/model/user_title:
+        name: 役職名
+        order: 並び順
+        group_id: グループ
       ss/model/group:
         name: グループ名
         order: 表示順

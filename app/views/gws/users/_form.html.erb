@@ -28,6 +28,9 @@ $("#random-password").click(function() {
   <dt><%= @model.t :tel %><%= @model.tt :tel %></dt>
   <dd><%= f.text_field :tel %></dd>
 
+  <dt><%= @model.t :title_ids %><%= @model.tt :title_ids %></dt>
+  <dd><%= f.select :in_title_id, @item.title_id_options, selected: tryb { @item.title(@cur_site).id }, include_blank: "" %></dd>
+
   <dt><%= @model.t :type %><%= @model.tt :type %></dt>
   <dd><%= f.select :type, @model.type_options %></dd>
 

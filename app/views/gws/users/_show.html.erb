@@ -13,6 +13,11 @@
   <dd><%= @item.send :tel %></dd>
   <% end %>
 
+  <% if title = @item.title(@cur_site) %>
+  <dt><%= @model.t :title_ids %></dt>
+  <dd><%= title.name %></dd>
+  <% end %>
+
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.send :type %></dd>
 
