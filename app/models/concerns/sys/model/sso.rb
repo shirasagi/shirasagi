@@ -33,6 +33,10 @@ module Sys::Model::SSO
     item
   end
 
+  def state_options
+    %w(enabled disabled).map { |v| [I18n.t("sys.options.sso_state.#{v}"), v] }
+  end
+
   private
 
   def set_route

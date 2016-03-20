@@ -16,6 +16,10 @@ ja:
     sso: SSO
     saml: SAML
     open_id_connect: OpenID Connect
+    options:
+      sso_state:
+        enabled: 有効
+        disabled: 無効
 
   modules:
     sys: システム
@@ -36,6 +40,11 @@ ja:
     attributes:
       sys/addon/role:
         sys_role_ids: ロール
+      sys/model/sso:
+        name: 名前
+        filename: ファイル名
+        order: 並び順
+        state: ステータス
 
   tooltip:
     sys/addon/role:
