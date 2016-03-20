@@ -43,6 +43,7 @@ ja:
       sys/model/sso:
         name: 名前
         filename: ファイル名
+        text: 説明
         order: 並び順
         state: ステータス
 

@@ -10,10 +10,11 @@ module Sys::Model::SSO
     seqid :id
     field :name, type: String
     field :filename, type: String
+    field :text, type: String
     field :order, type: Integer, default: 0
     field :state, type: String, default: 'enabled'
     field :route, type: String
-    permit_params :name, :filename, :order, :state
+    permit_params :name, :filename, :text, :order, :state
 
     before_validation :set_route
     validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
@@ -35,6 +36,10 @@ module Sys::Model::SSO
 
   def state_options
     %w(enabled disabled).map { |v| [I18n.t("sys.options.sso_state.#{v}"), v] }
+  end
+
+  def url
+    ".#{route}/#{filename}/init"
   end
 
   private
