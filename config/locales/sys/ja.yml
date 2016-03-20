@@ -13,6 +13,9 @@ ja:
     max_file_size: 最大ファイルサイズ
     roles:
       admin: 管理者
+    sso: SSO
+    saml: SAML
+    open_id_connect: OpenID Connect
 
   modules:
     sys: システム

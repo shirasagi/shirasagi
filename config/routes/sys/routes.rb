@@ -35,6 +35,12 @@ SS::Application.routes.draw do
       resources :colls, concerns: :deletion
       resources :docs, concerns: :deletion, path: "colls/:coll/docs"
     end
+
+    namespace "sso" do
+      get "/" => redirect { |p, req| "#{req.path}/samls" }
+      resources :samls, concerns: :deletion
+      resources :open_id_connects, concerns: :deletion
+    end
   end
 
 end
