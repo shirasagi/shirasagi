@@ -1,0 +1,13 @@
+<%= form_tag({ action: :callback }, { class: :sso }) do %>
+<% end %>
+
+<%= jquery do %>
+  var fragment = location.hash.substring(1);
+  var regex = /([^&=]+)=([^&]*)/g, m;
+  while (m = regex.exec(fragment)) {
+    key = decodeURIComponent(m[1]);
+    value = decodeURIComponent(m[2]);
+    $("form.sso").append('<input type="hidden" name="' + key + '" value="' + value + '" />')
+  }
+  $("form.sso").submit();
+<% end %>

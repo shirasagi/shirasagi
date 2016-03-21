@@ -1,0 +1,25 @@
+<dl class="see mod-sys-open-id-connect-setting">
+  <dt><%= @model.t :auth_url %><%= @model.tt :auth_url %></dt>
+  <dd><%= f.text_field :auth_url %></dd>
+
+  <dt><%= @model.t :token_url %><%= @model.tt :token_url %></dt>
+  <dd><%= f.text_field :token_url %></dd>
+
+  <dt><%= @model.t :client_id %><%= @model.tt :client_id %></dt>
+  <dd><%= f.text_field :client_id %></dd>
+
+  <dt><%= @model.t :client_secret %><%= @model.tt :client_secret %></dt>
+  <dd><%= f.text_field :in_client_secret %></dd>
+  <% if @item.client_secret %>
+    <dd><label><%= f.check_box :rm_client_secret %> <%= t "views.button.delete" %></label></dd>
+  <% end %>
+
+  <dt><%= @model.t :response_type %><%= @model.tt :response_type %></dt>
+  <dd><%= f.text_field :response_type %></dd>
+
+  <dt><%= @model.t :scope %><%= @model.tt :scope %></dt>
+  <dd><%= f.text_field :scope %></dd>
+
+  <dt><%= @model.t :claims %><%= @model.tt :claims %></dt>
+  <dd><%= f.text_field :claims %></dd>
+</dl>
