@@ -64,6 +64,8 @@ gem 'omniauth-github'
 
 # saml
 gem 'ruby-saml'
+# JWT/JWS
+gem 'json-jwt'
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 
