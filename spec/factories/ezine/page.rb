@@ -4,6 +4,8 @@ FactoryGirl.define do
     user_id { cms_user.id }
     name 'title'
     filename 'magazine/page'
+    text 'text'
+    html 'html'
     test_delivered nil
     completed false
   end
