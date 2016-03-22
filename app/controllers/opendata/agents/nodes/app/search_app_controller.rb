@@ -6,10 +6,10 @@ class Opendata::Agents::Nodes::App::SearchAppController < ApplicationController
     def pages
       @model = Opendata::App
 
-      focus = params[:s] || {}
+      focus = params.permit(s: [@model.search_params])[:s].presence || {}
       focus = focus.merge(site: @cur_site)
 
-      case params[:sort]
+      case params.permit(:sort)[:sort]
       when "released"
         sort = { released: -1 }
       when "popular"

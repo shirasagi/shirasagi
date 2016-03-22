@@ -136,6 +136,18 @@ class Opendata::Dataset
         Opendata::Common.get_tag(self, tag_name)
       end
 
+      def search_params
+        params = []
+        params << :keyword
+        params << :tag
+        params << :area_id
+        params << :category_id
+        params << :dataset_group
+        params << :format
+        params << :license_id
+        params
+      end
+
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?

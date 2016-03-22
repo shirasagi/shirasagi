@@ -6,10 +6,10 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     def pages
       @model = Opendata::Dataset
 
-      focus = params[:s] || {}
+      focus = params.permit(s: [@model.search_params])[:s].presence || {}
       focus = focus.merge(site: @cur_site)
 
-      sort = Opendata::Dataset.sort_hash params[:sort]
+      sort = Opendata::Dataset.sort_hash params.permit(:sort)[:sort]
 
       @model.site(@cur_site).public.
         search(focus).

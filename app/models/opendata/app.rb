@@ -152,6 +152,16 @@ class Opendata::App
         Opendata::Common.get_aggregate_array(self, name, opts)
       end
 
+      def search_params
+        params = []
+        params << :keyword
+        params << :tag
+        params << :area_id
+        params << :category_id
+        params << :license
+        params
+      end
+
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?
