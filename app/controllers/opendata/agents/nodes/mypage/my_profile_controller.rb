@@ -46,6 +46,13 @@ class Opendata::Agents::Nodes::Mypage::MyProfileController < ApplicationControll
       @item.attributes = get_params
 
       if @item.update
+        Member::ActivityLog.create(
+          cur_site: @cur_site,
+          cur_member: @cur_member,
+          activity_type: :update_profile,
+          remote_addr: remote_addr,
+          user_agent: request.user_agent)
+
         redirect_to @cur_node.url, notice: t("views.notice.saved")
       else
         render action: :edit

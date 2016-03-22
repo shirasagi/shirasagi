@@ -96,6 +96,13 @@ class Opendata::Agents::Nodes::Mypage::App::MyAppController < ApplicationControl
       set_status
 
       if @item.save
+        Member::ActivityLog.create(
+          cur_site: @cur_site,
+          cur_member: @cur_member,
+          activity_type: :create_app,
+          remote_addr: remote_addr,
+          user_agent: request.user_agent)
+
         redirect_to @cur_node.url, notice: t("views.notice.saved")
       else
         render action: :new
@@ -111,6 +118,13 @@ class Opendata::Agents::Nodes::Mypage::App::MyAppController < ApplicationControl
       set_status
 
       if @item.update
+        Member::ActivityLog.create(
+          cur_site: @cur_site,
+          cur_member: @cur_member,
+          activity_type: :update_app,
+          remote_addr: remote_addr,
+          user_agent: request.user_agent)
+
         redirect_to "#{@cur_node.url}#{@item.id}/", notice: t("views.notice.saved")
       else
         render action: :edit
