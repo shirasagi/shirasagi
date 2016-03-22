@@ -45,18 +45,7 @@ class Inquiry::Answer
     def validate_data
       columns = Inquiry::Column.where(node_id: self.node_id, state: "public").order_by(order: 1)
       columns.each do |column|
-        if column.required?
-          required_data = data.select { |d| column.id == d.column_id }.shift
-          if required_data.blank? || required_data.value.blank?
-            errors.add :base, "#{column.name}#{I18n.t('errors.messages.blank')}"
-          end
-        end
-        if column.input_confirm == "enabled"
-          required_data = data.select { |d| column.id == d.column_id }.shift
-          if required_data.present? && required_data.value != required_data.confirm
-            errors.add :base, "#{column.name}#{I18n.t('errors.messages.input_confirm_not_match')}"
-          end
-        end
+        column.validate_data(self, data.select { |d| column.id == d.column_id }.shift)
       end
     end
 end

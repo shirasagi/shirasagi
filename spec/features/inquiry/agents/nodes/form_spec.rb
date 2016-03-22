@@ -111,36 +111,20 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       visit index_url
       expect(status_code).to eq 200
 
-      puts page.html
-
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
           fill_in "item[2]", with: "株式会社シラサギ"
           fill_in "item[3]", with: "<script>alert(\"hello\");</script>"
+          fill_in "item[3_confirm]", with: "<script>alert(\"hello\");</script>"
         end
         click_button "確認画面へ"
       end
 
       expect(status_code).to eq 200
       within 'div.inquiry-form' do
-        expect(page).to have_css(".errorExplanation li", text: "メールアドレスを入力してください。")
-
-        within 'div.columns' do
-          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
-          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
-          expect(find('#item_3')['value']).to eq 'shirasagi@example.jp'
-        end
-        # within 'div.simple-captcha' do
-        #   fill_in "answer[captcha]", with: "xxxx"
-        # end
-        within 'footer.send' do
-          click_button "送信する"
-        end
+        expect(page).to have_css(".errorExplanation li", text: "メールアドレスは有効な電子メールアドレスを入力してください。")
       end
-
-      expect(status_code).to eq 200
-      expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
     end
   end
 end
