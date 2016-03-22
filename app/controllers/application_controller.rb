@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
 
     def browser
       require "browser"
-      Browser.new(ua: request.user_agent, accept_language: request.accept_language)
+      Browser.new(request.user_agent, accept_language: request.accept_language)
     end
 
     # Accepts the request for Cross-Origin Resource Sharing.
