@@ -9,7 +9,7 @@ describe "webapi", dbscope: :example, type: :request do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:node) { create(:article_node_page) }
-  let!(:page) { create(:article_page, node: node) }
+  let!(:page) { create(:article_page, cur_node: node) }
   let!(:uploader_node) { create(:uploader_node_file, filename: "img", name: "img") }
 
   ## paths

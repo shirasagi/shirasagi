@@ -21,7 +21,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     end
 
     describe "GET /pages.json" do
-      let!(:page) { create(:article_page, node: node) }
+      let!(:page) { create(:article_page, cur_node: node) }
 
       it do
         get index_path
@@ -49,7 +49,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     end
 
     describe "GET /page/:id/lock.json" do
-      let!(:item) { create(:article_page, node: node) }
+      let!(:item) { create(:article_page, cur_node: node) }
       let!(:lock_path) { lock_article_page_path(site.id, node, item, format: :json) }
 
       context "with no lock" do
@@ -81,7 +81,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     end
 
     describe "DELETE /page/:id/lock.json" do
-      let!(:item) { create(:article_page, node: node) }
+      let!(:item) { create(:article_page, cur_node: node) }
       let!(:lock_path) { lock_article_page_path(site.id, node, item, format: :json) }
 
       context "with owned lock" do
@@ -158,7 +158,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     end
 
     describe "GET /page/:id/lock.json" do
-      let!(:item) { create(:article_page, node: node) }
+      let!(:item) { create(:article_page, cur_node: node) }
       let!(:lock_path) { lock_article_page_path(site.id, node, item, format: :json) }
 
       context "with no lock" do
@@ -190,7 +190,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     end
 
     describe "DELETE /page/:id/lock.json" do
-      let!(:item) { create(:article_page, node: node) }
+      let!(:item) { create(:article_page, cur_node: node) }
       let!(:lock_path) { lock_article_page_path(site.id, node, item, format: :json) }
 
       context "with owned lock" do
