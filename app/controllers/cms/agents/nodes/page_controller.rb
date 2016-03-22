@@ -20,8 +20,8 @@ class Cms::Agents::Nodes::PageController < ApplicationController
 
   def rss
     @items = pages.
-      order_by(publushed: -1).
-      per(@cur_node.limit)
+      order_by(released: -1).
+      limit(@cur_node.limit)
 
     render_rss @cur_node, @items
   end
