@@ -17,6 +17,16 @@
     <td class="field"><%= @model.t :email %></td>
     <td class="input"><%= @cur_member.email %></td>
   </tr>
+
+  <tr class="parent-row">
+    <% activity_log = Member::ActivityLog.site(@cur_site).where(member_id: @item, activity_type: 'login').order_by(updated: -1).first %>
+    <% browser = Browser.new(activity_log.user_agent, accept_language: request.accept_language) if activity_log %>
+    <td class="field"><%= t "opendata.labels.last_login" %></td>
+    <td class="input">
+      <%= activity_log ? activity_log.created.strftime("%Y/%m/%d %H:%M") : nil %>
+      <%= browser ? "#{browser.name} #{browser.full_version}" : nil %>
+    </td>
+  </tr>
 </table>
 
 <nav class="account">
