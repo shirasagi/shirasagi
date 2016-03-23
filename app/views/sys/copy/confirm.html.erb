@@ -1,0 +1,73 @@
+<article id="main" class="sys-copy">
+	<%= form_for :@copy_run, url:"run" do |f| %>
+		<div class="addon-views">
+			<div class="addon-view" id="addon-basic">
+				<div class="addon-body">
+					<dl class="see">
+						<dt><%= t("sys.name") %></dt>
+						<dd>
+							<% if params["@copy"]["name"].present? %>
+								<%= params["@copy"]["name"] %>
+							<% else %>
+								<span style="background-color:#ffff00;"><%= @er_name_mes %></span>
+							<% end %>
+							<%= hidden_field_tag "@copy_run[name]", params["@copy"]["name"] %>
+						</dd>
+						<dt><%= t("sys.host") %></dt>
+						<dd>
+							<% if @host_flag == 1 %>
+								<%= params["@copy"]["host"] %>
+							<% else %>
+								<span style="background-color:#ffff00;"><%= @er_host_mes %></span>
+							<% end %>
+							<%= hidden_field_tag "@copy_run[host]", params["@copy"]["host"] %>
+						</dd>
+						<dt><%= t("sys.domains") %></dt>
+						<dd>
+							<% if @domain_flag == 1 %>
+								<%= params["@copy"]["domains"] %>
+							<% else %>
+								<span style="background-color:#ffff00;"><%= @er_domains_mes %></span>
+							<% end %>
+							<%= hidden_field_tag "@copy_run[domains]", params["@copy"]["domains"] %>
+						</dd>
+						<dt><%= t("sys.copy_site") %></dt>
+						<dd>
+							<% if @site.present? && @site.name.present? %>
+								<%= @site.name %>
+								<%= hidden_field_tag "@copy_run[copy_site]", @site.id %>
+							<% else %>
+								<span style="background-color:#ffff00;"><%= @er_copy_site_mes %></span>
+							<% end %>
+						</dd>
+						<dt><%= t("sys.copy_content") %></dt>
+						<dd>
+							<%= hidden_field_tag "@copy_run[article]", params["@copy"]["article"] %>
+							<%= hidden_field_tag "@copy_run[files]", params["@copy"]["files"] %>
+							<%= hidden_field_tag "@copy_run[editor_templates]", params["@copy"]["editor_templates"] %>
+							<%= hidden_field_tag "@copy_run[dictionaries]", params["@copy"]["dictionaries"] %>
+							<% if params["@copy"]["article"] == "1" %>
+								記事・その他ページ<br />
+							<% end %>
+							<% if params["@copy"]["files"] == "1" %>
+								共有ファイル<br />
+							<% end %>
+							<% if params["@copy"]["editor_templates"] == "1" %>
+								テンプレート<br />
+							<% end %>
+							<% if params["@copy"]["dictionaries"] == "1" %>
+								かな辞書<br />
+							<% end %>
+						</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+		<footer class="send">
+			<% if @run_flag == 1 %>
+				<%= f.submit '実行', class: 'btn btn-primary save' %>
+			<% end %>
+			<%= button_tag "戻る", :type => 'button', :class=>'btn-default cancel', :onclick =>"location.href='#{sys_copy_path}'" %>
+		</footer>
+	<% end %>
+</article>

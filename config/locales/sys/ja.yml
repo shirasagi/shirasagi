@@ -18,7 +18,22 @@ ja:
         index: グループを選択する
         search: グループを検索
         select: グループを設定する
-
+      sites:
+        index: サイトを選択する
+        search: サイトを検索
+        select: サイトを設定する
+    copy: サイト複製
+    name: サイト名
+    host: ホスト名
+    domains: ドメイン
+    copy_site: 複製するサイト
+    copy_content: 複製する項目
+    copy_contents:
+      article: 記事、その他ページ
+      files: 共有ファイル
+      editor_templates: テンプレート
+      dictionaries: かな辞書
+      description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
   modules:
     sys: システム
     addons:
@@ -36,6 +51,11 @@ ja:
       sys/user: ユーザー
       sys/role: ロール
     attributes:
+      sys/site:
+        name: サイト名
+        host: ホスト名
+        domains: ドメイン
+        group_ids: グループ
       sys/addon/role:
         sys_role_ids: ロール
 
