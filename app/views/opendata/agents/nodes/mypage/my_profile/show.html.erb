@@ -3,28 +3,34 @@
 </nav>
 
 <table class="see">
-  <tr class="parent-row">
+  <tr class="parent-row icon">
     <td class="field"><%= @model.t :icon_id %></td>
     <td class="input"><%= member_icon @cur_member %></td>
   </tr>
 
-  <tr class="parent-row">
+  <tr class="parent-row name">
     <td class="field"><%= @model.t :name %></td>
     <td class="input"><%= @cur_member.name %></td>
   </tr>
 
-  <tr class="parent-row">
+  <tr class="parent-row email">
     <td class="field"><%= @model.t :email %></td>
     <td class="input"><%= @cur_member.email %></td>
   </tr>
 
-  <tr class="parent-row">
-    <% activity_log = Member::ActivityLog.site(@cur_site).where(member_id: @item, activity_type: 'login').order_by(updated: -1).first %>
-    <% browser = Browser.new(activity_log.user_agent, accept_language: request.accept_language) if activity_log %>
-    <td class="field"><%= t "opendata.labels.last_login" %></td>
+  <tr class="parent-row login-history">
+    <td class="field"><%= t "opendata.labels.login_history" %></td>
     <td class="input">
-      <%= activity_log ? activity_log.created.strftime("%Y/%m/%d %H:%M") : nil %>
-      <%= browser ? "#{browser.name} #{browser.full_version}" : nil %>
+      <ul>
+        <% Member::ActivityLog.site(@cur_site).where(member_id: @item, activity_type: 'login').order_by(updated: -1).limit(8).each do |activity_log| %>
+        <% browser = Browser.new(activity_log.user_agent, accept_language: request.accept_language) %>
+        <li>
+          <time class="time" datetime="<%= activity_log.created.utc.iso8601 %>"><%= activity_log.created.strftime("%Y/%m/%d %H:%M") %></time>
+          <span class="browser"><%= "#{browser.name} #{browser.version}" %></span>
+          <span class="platform"><%= browser.platform.version == "0" ? "#{browser.platform.name}" : "#{browser.platform.name} #{browser.platform.version}" %></span>
+        </li>
+        <% end %>
+      </ul>
     </td>
   </tr>
 </table>
