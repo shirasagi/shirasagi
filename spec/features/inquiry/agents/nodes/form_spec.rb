@@ -53,6 +53,23 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
 
       expect(status_code).to eq 200
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
+
+      expect(Inquiry::Answer.site(site).count).to eq 1
+      answer = Inquiry::Answer.first
+      expect(answer.node_id).to eq node.id
+      expect(answer.data.count).to eq 6
+      expect(answer.data[0].value).to eq 'シラサギ太郎'
+      expect(answer.data[0].confirm).to be_nil
+      expect(answer.data[1].value).to eq '株式会社シラサギ'
+      expect(answer.data[1].confirm).to be_nil
+      expect(answer.data[2].value).to eq 'shirasagi@example.jp'
+      expect(answer.data[2].confirm).to eq 'shirasagi@example.jp'
+      expect(answer.data[3].value).to eq '男性'
+      expect(answer.data[3].confirm).to be_nil
+      expect(answer.data[4].value).to eq '50代'
+      expect(answer.data[4].confirm).to be_nil
+      expect(answer.data[5].values).to eq ['申請について']
+      expect(answer.data[5].confirm).to be_nil
     end
   end
 
@@ -101,6 +118,23 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       # mobile モードの場合、/mobile/ で始まるはず
       expect(current_path).to start_with "#{site.mobile_location}/#{node.filename}/"
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
+
+      expect(Inquiry::Answer.site(site).count).to eq 1
+      answer = Inquiry::Answer.first
+      expect(answer.node_id).to eq node.id
+      expect(answer.data.count).to eq 6
+      expect(answer.data[0].value).to eq 'シラサギ太郎'
+      expect(answer.data[0].confirm).to be_nil
+      expect(answer.data[1].value).to eq '株式会社シラサギ'
+      expect(answer.data[1].confirm).to be_nil
+      expect(answer.data[2].value).to eq 'shirasagi@example.jp'
+      expect(answer.data[2].confirm).to eq 'shirasagi@example.jp'
+      expect(answer.data[3].value).to eq '男性'
+      expect(answer.data[3].confirm).to be_nil
+      expect(answer.data[4].value).to eq '50代'
+      expect(answer.data[4].confirm).to be_nil
+      expect(answer.data[5].values).to eq ['申請について']
+      expect(answer.data[5].confirm).to be_nil
     end
   end
 
@@ -125,6 +159,8 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       within 'div.inquiry-form' do
         expect(page).to have_css(".errorExplanation li", text: "メールアドレスは有効な電子メールアドレスを入力してください。")
       end
+
+      expect(Inquiry::Answer.site(site).count).to eq 0
     end
   end
 end
