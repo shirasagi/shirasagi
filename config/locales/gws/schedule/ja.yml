@@ -89,6 +89,8 @@ ja:
         color: 表示色
         bg_color: 背景色
         text_color: 文字色
+      gws/schedule/holiday:
+        color: 表示色
       gws/addon/schedule/repeat:
         <<: *repeat_plan
         repeat_start: 繰り返し - 開始日

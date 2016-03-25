@@ -1,5 +1,8 @@
+<%= javascript_include_tag "/assets/js/tinyColorPicker/jqColorPicker.min.js" %>
+
 <%= jquery do %>
   $(".date").datetimepicker({ lang: "ja", timepicker: false, format:'Y/m/d', closeOnDateSelect: true, scrollInput: false });
+  $('#item_color').colorPicker();
 <% end %>
 
 <dl class="see">
@@ -13,4 +16,7 @@
       - <%= f.text_field :end_on, class: "date end", value: tryb{@item.end_on.strftime("%Y/%m/%d")} %>
     </div>
   </dd>
+
+  <dt><%= @model.t :color %></dt>
+  <dd><%= f.text_field :color %></dd>
 </dl>
