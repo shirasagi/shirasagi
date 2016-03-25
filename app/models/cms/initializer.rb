@@ -15,8 +15,8 @@ module Cms
     Cms::Role.permission :edit_cms_users
     Cms::Role.permission :edit_cms_roles
     Cms::Role.permission :edit_cms_members
-    Cms::Role.permission :edit_cms_editor_templates, module_name: "cms"
-    #Cms::Role.permission :edit_cms_body_layouts, module_name: "cms"
+    Cms::Role.permission :edit_cms_editor_templates
+    #Cms::Role.permission :edit_cms_body_layouts
     Cms::Role.permission :use_cms_tools
     Cms::Role.permission :read_other_cms_nodes
     Cms::Role.permission :read_other_cms_pages
