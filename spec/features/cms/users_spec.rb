@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_users", type: :feature, dbscope: :example  do
+describe "cms_users", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:item) { create(:cms_test_user, group: group) }
