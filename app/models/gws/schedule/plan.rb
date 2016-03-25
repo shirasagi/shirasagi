@@ -25,7 +25,7 @@ class Gws::Schedule::Plan
   # event options
   # http://fullcalendar.io/docs/event_data/Event_Object/
   def calendar_format
-    data = { id: id, title: ERB::Util.h(name), start: start_at, end: end_at, allDay: allday? }
+    data = { id: id.to_s, title: ERB::Util.h(name), start: start_at, end: end_at, allDay: allday? }
 
     if allday? || start_at.to_date != end_at.to_date
       data[:className] = 'fc-event-days'
