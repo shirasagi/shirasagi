@@ -1,7 +1,7 @@
-class Workflow::SearchApproversController < ApplicationController
-  include Cms::ApiFilter
+class Gws::Apis::UsersController < ApplicationController
+  include Gws::ApiFilter
 
-  model Cms::User
+  model Gws::User
 
   private
     def group_id
@@ -19,7 +19,7 @@ class Workflow::SearchApproversController < ApplicationController
     end
 
     def group_options
-      Cms::Group.site(@cur_site).reduce([]) do |ret, g|
+      Gws::Group.site(@cur_site).reduce([]) do |ret, g|
         indent = "&nbsp;" * g.name.scan('/').size * 4
         ret << [ indent.html_safe + g.trailing_name, g.id ]
       end.to_a

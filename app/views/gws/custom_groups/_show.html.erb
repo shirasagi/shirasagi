@@ -1,0 +1,14 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+
+  <dt><%= @model.t :target %></dt>
+  <dd><%= @item.label :target %></dd>
+
+  <dt><%= @model.t :users %></dt>
+  <dd><%= link_to :edit, gws_custom_group_users_path(custom_group_id: @item) %></dd>
+  <dd><%= @item.real_users.map(&:name).join(', ') %></dd>
+</dl>

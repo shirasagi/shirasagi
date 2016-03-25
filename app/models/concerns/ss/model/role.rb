@@ -58,7 +58,7 @@ module SS::Model::Role
         new_names = []
         last_name = nil
         names.each do |name|
-          cur_name = name.to_s.sub(/.*_/, '')
+          cur_name = name.to_s.sub(/.*?#{mod.to_s.tr('/', '_')}_/, '')
           new_names << :separator if last_name.present? && cur_name != last_name
           new_names << name
           last_name = cur_name

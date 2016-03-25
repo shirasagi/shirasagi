@@ -1,13 +1,15 @@
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-  <%= form_for :s, url: { action: :index, level: @level }, html: { method: "GET", class: :search } do |f| %>
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <dl class="see">
-      <dt><%= t "cms.group" %></dt>
+      <dt><%= t "mongoid.models.gws/group" %></dt>
       <dd><%= select_tag "s[group]", options_for_select(@group_options, @group_id) %></dd>
-      <dt><%= t "cms.user" %></dt>
-      <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %>
-      <%= f.submit t("workflow.search_approvers.search"), class: "btn" %></dd>
+      <dt><%= t "mongoid.models.gws/user" %></dt>
+      <dd>
+        <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+        <%= f.submit  t("ss.apis.users.search"), class: :btn %>
+      </dd>
     </dl>
   <% end %>
 </div>
@@ -15,24 +17,30 @@
 <table class="index">
   <thead>
     <tr>
+      <% if @multi %>
       <th class="checkbox"><input type="checkbox" /></th>
+      <% end %>
       <th class="name"><%= @model.t :name %></th>
     </tr>
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <tr data-id="<%= "#{@level},#{item.id}" %>">
+      <tr data-id="<%= item.id %>">
+        <% if @multi %>
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
-        <td class="name"><%= link_to item.long_name, "#", class: "select-item" %></td>
+        <% end %>
+        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<% if @multi %>
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-  <%= button_tag t("workflow.search_approvers.select"), { type: :button, class: "select-items btn" } %>
+  <%= button_tag t("ss.apis.groups.select"), { type: :button, class: "select-items btn" } %>
 </div>
+<% end %>
 
 <%= paginate @items if @items.try(:current_page) %>

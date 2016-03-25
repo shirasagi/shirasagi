@@ -11,6 +11,9 @@ SS::Application.routes.draw do
   namespace "gws", path: ".g:site/gws" do
     resource  :site
     resources :groups, concerns: [:deletion]
+    resources :custom_groups, concerns: [:deletion] do
+      resources :users, controller: "custom_groups/users", concerns: [:deletion]
+    end
     resources :users, concerns: [:deletion]
     resources :user_titles, concerns: [:deletion]
     resources :roles, concerns: [:deletion]
@@ -22,6 +25,7 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "groups" => "groups#index"
+      get "users" => "users#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

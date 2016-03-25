@@ -21,6 +21,12 @@ ja:
     edit_gws_users: ユーザの管理
     edit_gws_user_titles: 役職の管理
     edit_gws_roles: 権限/ロールの管理
+    read_other_gws_custom_groups: カスタムグループの閲覧（全て）
+    read_private_gws_custom_groups: カスタムグループの閲覧（所有）
+    edit_other_gws_custom_groups: カスタムグループの編集（全て）
+    edit_private_gws_custom_groups: カスタムグループの編集（所有）
+    delete_other_gws_custom_groups: カスタムグループの削除（全て）
+    delete_private_gws_custom_groups: カスタムグループの削除（所有）
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
@@ -50,6 +56,8 @@ ja:
   mongoid:
     models:
       gws/group: グループ
+      gws/custom_group: カスタムグループ
+      gws/custom_group_user: カスタムグループユーザー
       gws/user: ユーザー
       gws/role: 権限/ロール
       gws/notice: お知らせ
@@ -59,6 +67,14 @@ ja:
     attributes:
       gws/content/targetable:
         target: 公開範囲
+      gws/custom_group:
+        name: グループ名
+        order: 表示順
+        users: ユーザー
+      gws/custom_group_user:
+        user_id: ユーザー
+        name: 氏名
+        order: 表示順
       gws/notice:
         name: タイトル
         severity: 種別
