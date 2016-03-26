@@ -15,6 +15,10 @@ module Gws::Content::Targetable
     }
   end
 
+  def targetable?
+    true
+  end
+
   def target_options
     [
       [I18n.t('gws.options.target.all'), 'all'],

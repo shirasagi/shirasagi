@@ -52,6 +52,7 @@ ja:
       gws/role: 権限/ロール
       gws/group_permission: 権限
       gws/file: ファイル
+      gws/release: 公開設定
 
   mongoid:
     models:
@@ -90,6 +91,10 @@ ja:
       gws/addon/group_permission:
         group_ids: 管理グループ
         permission_level: 権限レベル
+      gws/addon/release:
+        released: 公開日時
+        release_date: 公開開始日時(予約)
+        close_date: 公開終了日時(予約)
 
   tooltip:
     gws/content/targetable:
