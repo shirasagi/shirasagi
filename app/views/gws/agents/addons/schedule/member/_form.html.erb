@@ -10,7 +10,20 @@
 <dl class="see gws-schedule-member">
   <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
   <dd>
-    <%= f.select :member_ids, Gws::User.site(@cur_site).map { |c| [c.name, c.id] }, {},
-      { multiple: true, size: 5, style: "min-width: 300px" } %>
+    <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th></th></tr></thead>
+      <tbody>
+        <% @item.members.each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
   </dd>
 </dl>

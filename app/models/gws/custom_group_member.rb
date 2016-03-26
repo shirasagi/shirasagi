@@ -1,4 +1,4 @@
-class Gws::CustomGroupUser
+class Gws::CustomGroupMember
   include SS::Document
   include SS::Fields::Normalizer
   include Gws::Reference::User
@@ -9,12 +9,12 @@ class Gws::CustomGroupUser
   field :order, type: Integer, default: 0
 
   belongs_to :custom_group, class_name: "Gws::CustomGroup"
-  belongs_to :user, class_name: "Gws::User"
+  belongs_to :member, class_name: "Gws::User"
 
-  permit_params :order, :user_id
+  permit_params :order, :member_id
 
   validates :custom_group_id, presence: true
-  validates :user_id, presence: true
+  validates :member_id, presence: true
 
   default_scope ->{ order_by order: 1 }
 
@@ -33,19 +33,19 @@ class Gws::CustomGroupUser
   }
 
   def uid
-    user ? user.uid : nil
+    member ? member.uid : nil
   end
 
   def name
-    user ? user.name : "User Not Found"
+    member ? member.name : "User Not Found"
   end
 
   def email
-    user ? user.email : nil
+    member ? member.email : nil
   end
 
   def tel
-    user ? user.tel : nil
+    member ? member.tel : nil
   end
 
   def allowed?(action, user, opts = {})

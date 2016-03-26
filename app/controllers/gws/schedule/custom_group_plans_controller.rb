@@ -12,6 +12,6 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
 
   public
     def index
-      @items = @group.real_users
+      @items = @group.member_users
     end
 end

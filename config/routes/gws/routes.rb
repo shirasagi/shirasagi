@@ -12,7 +12,7 @@ SS::Application.routes.draw do
     resource  :site
     resources :groups, concerns: [:deletion]
     resources :custom_groups, concerns: [:deletion] do
-      resources :users, controller: "custom_groups/users", concerns: [:deletion]
+      resources :members, controller: "custom_groups/members", concerns: [:deletion]
     end
     resources :users, concerns: [:deletion]
     resources :user_titles, concerns: [:deletion]

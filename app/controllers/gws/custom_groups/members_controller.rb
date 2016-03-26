@@ -1,8 +1,8 @@
-class Gws::CustomGroups::UsersController < ApplicationController
+class Gws::CustomGroups::MembersController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::CustomGroupUser
+  model Gws::CustomGroupMember
 
   navi_view "gws/main/conf_navi"
 
@@ -12,8 +12,7 @@ class Gws::CustomGroups::UsersController < ApplicationController
     def set_crumbs
       set_custom_group
       @crumbs << [:"mongoid.models.gws/custom_group", gws_custom_groups_path]
-      @crumbs << [@custom_group.name, gws_custom_group_users_path]
-      #@crumbs << [:"mongoid.models.gws/user", gws_custom_group_users_path]
+      @crumbs << [@custom_group.name, gws_custom_group_members_path]
     end
 
     def fix_params

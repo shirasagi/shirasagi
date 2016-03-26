@@ -57,7 +57,7 @@ ja:
     models:
       gws/group: グループ
       gws/custom_group: カスタムグループ
-      gws/custom_group_user: カスタムグループユーザー
+      gws/custom_group_member: カスタムグループメンバー
       gws/user: ユーザー
       gws/role: 権限/ロール
       gws/notice: お知らせ
@@ -70,9 +70,9 @@ ja:
       gws/custom_group:
         name: グループ名
         order: 表示順
-        users: ユーザー
-      gws/custom_group_user:
-        user_id: ユーザー
+        members: メンバー
+      gws/custom_group_member:
+        member_id: ユーザー
         name: 氏名
         order: 表示順
       gws/notice:

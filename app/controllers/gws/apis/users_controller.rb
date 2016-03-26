@@ -27,6 +27,8 @@ class Gws::Apis::UsersController < ApplicationController
 
   public
     def index
+      @single = params[:single].present?
+      @multi = !@single
       @level = params[:level]
       @group_id = group_id
       @group_options = group_options

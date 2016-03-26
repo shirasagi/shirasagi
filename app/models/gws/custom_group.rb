@@ -10,7 +10,7 @@ class Gws::CustomGroup
   field :name, type: String
   field :order, type: Integer, default: 0
 
-  has_many :users, class_name: "Gws::CustomGroupUser", dependent: :destroy
+  has_many :members, class_name: "Gws::CustomGroupMember", dependent: :destroy
 
   permit_params :name, :order
 
@@ -26,7 +26,7 @@ class Gws::CustomGroup
     criteria
   }
 
-  def real_users
-    users.map(&:user).compact
+  def member_users
+    members.map(&:member).compact
   end
 end
