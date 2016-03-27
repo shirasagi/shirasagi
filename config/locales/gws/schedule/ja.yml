@@ -3,6 +3,7 @@ ja:
     category: スケジュール種別
     holiday: 休日管理
     reminder: リマインダー
+    private_plan: 非公開予定
     tabs:
       personal: 個人
       personal_list: 予定リスト

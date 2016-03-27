@@ -17,15 +17,27 @@ class Gws::Schedule::Plan
   validates :end_at, presence: true, if: -> { !repeat? }
 
   def category_options
-    Gws::Schedule::Category.site(@cur_site || site).
+    @category_options ||= Gws::Schedule::Category.site(@cur_site || site).
       target_to(@cur_user || user).
       map { |c| [c.name, c.id] }
   end
 
   # event options
   # http://fullcalendar.io/docs/event_data/Event_Object/
-  def calendar_format
-    data = { id: id.to_s, title: ERB::Util.h(name), start: start_at, end: end_at, allDay: allday? }
+  def calendar_format(user, site)
+    data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
+
+    data[:readable] = allowed?(:read, user, site: site) || true #TODO:
+    data[:editable] = allowed?(:edit, user, site: site)
+    data[:deletable] = allowed?(:delete, user, site: site)
+
+    if data[:readable]
+      data[:title] = ERB::Util.h(name)
+      data[:description] = ERB::Util.h(text.to_s.gsub(/^(.{40,}?).*$/m,'\1...'))
+      data[:members] = t(:member_ids) + ": " + members.map(&:name).join(', ')
+    else
+      data[:title] = I18n.t("gws/schedule.private_plan")
+    end
 
     if allday? || start_at.to_date != end_at.to_date
       data[:className] = 'fc-event-days'

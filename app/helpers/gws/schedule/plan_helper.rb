@@ -9,7 +9,7 @@ module Gws::Schedule::PlanHelper
   end
 
   def calendar_format(plans, opts = {})
-    events  = plans.map(&:calendar_format)
+    events  = plans.map { |m| m.calendar_format(@cur_user, @cur_site) }
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
     events += group_holidays opts[:holiday][0], opts[:holiday][1] if opts[:holiday]
     events

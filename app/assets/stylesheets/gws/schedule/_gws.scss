@@ -130,6 +130,34 @@
   color: #000;
   &:hover { color: #000; }
 }
+.fc-popup {
+  position: absolute;
+  //display: none;
+  left: -230px;
+  width: 30em;
+  padding: 15px;
+  border: $border-gray4;
+  line-height: 1.6;
+  z-index: 100;
+  background: $white;
+  @include box-shadow(0 1px 6px $gray4);
+  color: $black;
+  font-weight: normal;
+  text-align: left;
+  cursor: auto;
+  .title {
+    font-size: 120%;
+  }
+  .description {
+    padding: 10px 0 0;
+    color: #888;
+  }
+  .menu {
+    padding: 10px 0 0;
+    text-align: center;
+    a { margin: 0 10px; }
+  }
+}
 
 //
 // original settings
