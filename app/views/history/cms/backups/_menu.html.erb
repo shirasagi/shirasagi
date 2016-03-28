@@ -1,4 +1,7 @@
 <nav class="nav-menu">
-  <%= link_to :show, action: :show %>
+  <% show_path = show_path_with_route(@item.original) %>
+  <% if show_path.present? %>
+    <%= link_to :show, show_path %>
+  <% end %>
   <%= link_to :"history.restore", action: :restore if @item.data != @data %>
 </nav>
