@@ -146,14 +146,18 @@
   text-align: left;
   cursor: auto;
   .title {
-    font-size: 120%;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
   }
   .description {
-    padding: 10px 0 0;
+    padding: 5px 0;
     color: #888;
   }
+  .members {
+    padding: 5px 0;
+  }
   .menu {
-    padding: 10px 0 0;
+    padding: 5px 0;
     text-align: center;
     a { margin: 0 10px; }
   }

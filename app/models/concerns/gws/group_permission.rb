@@ -9,7 +9,7 @@ module Gws::GroupPermission
 
     permit_params :permission_level, group_ids: []
 
-    validates :group_ids, presence: true
+    #validates :group_ids, presence: true
   end
 
   def owned?(user)
