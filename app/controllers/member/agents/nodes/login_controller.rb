@@ -70,6 +70,6 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       session[:member] = nil
       flash.discard(:ref)
 
-      redirect_to "#{@cur_node.url}/login.html", alert: params[:message]
+      redirect_to "#{@cur_node.url}/login.html"
     end
 end
