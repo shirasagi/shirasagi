@@ -1,6 +1,12 @@
 @import "github-markdown";
 
 // board
+.gws-board-flag-new {
+  margin-left: 5px;
+  color: #d00;
+  font-weight: bold;
+  &:after { content: "New!"; }
+}
 .gws-board {
   .topic, .comment {
     @include box;

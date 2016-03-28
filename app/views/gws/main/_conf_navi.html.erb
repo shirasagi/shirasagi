@@ -5,6 +5,9 @@
   <% if Gws::Group.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.ss/group'), gws_groups_path %></h3>
   <% end %>
+  <% if Gws::CustomGroup.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/custom_group'), gws_custom_groups_path %></h3>
+  <% end %>
   <% if Gws::User.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.ss/user'), gws_users_path %></h3>
   <% end %>

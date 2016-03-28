@@ -5,32 +5,19 @@ class Gws::Notice
   include Gws::Content::Targetable
   #include SS::Addon::Body
   include SS::Addon::Markdown
-  include Cms::Addon::Release
-  include Cms::Addon::ReleasePlan
+  include Gws::Addon::Release
   include Gws::Addon::GroupPermission
 
   seqid :id
-  field :state, type: String, default: "public"
   field :name, type: String
-  field :released, type: DateTime
   field :severity, type: String
 
-  permit_params :state, :name, :released, :severity
+  permit_params :name, :severity
 
-  validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
-
-  after_validation :set_released, if: -> { state == "public" }
 
   default_scope -> {
     order_by released: -1
-  }
-  scope :and_public, ->(date = Time.zone.now) {
-    where("$and" => [
-      { state: "public" },
-      { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
-      { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-    ])
   }
   scope :search, ->(params) {
     criteria = where({})
@@ -40,21 +27,9 @@ class Gws::Notice
     criteria
   }
 
-  def state_options
-    [
-      [I18n.t('views.options.state.public'), 'public'],
-      [I18n.t('views.options.state.closed'), 'closed'],
-    ]
-  end
-
   def severity_options
     [
       [I18n.t('gws.options.severity.high'), 'high'],
     ]
   end
-
-  private
-    def set_released
-      self.released ||= Time.zone.now
-    end
 end

@@ -5,7 +5,7 @@ model = Gws::Schedule::RepeatPlan
 
 %>
 <%= jquery do %>
-  Gws_Schedule_Plan_Repeat_Form.render();
+  Gws_Schedule_Repeat_Plan.renderForm();
 <% end %>
 
 <dl class="see">
@@ -41,8 +41,8 @@ model = Gws::Schedule::RepeatPlan
   </dd>
 
   <dt><%= model.t :repeat_start %><%= model.tt :repeat_start %></dt>
-  <dd><%= f.text_field :repeat_start, class: :date, value: tryb{@item.repeat_start.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= f.text_field :repeat_start, class: "date repeat_start", value: tryb{@item.repeat_start.strftime("%Y/%m/%d")} %></dd>
 
   <dt><%= model.t :repeat_end %><%= model.tt :repeat_end %></dt>
-  <dd><%= f.text_field :repeat_end, class: :date, value: tryb{@item.repeat_end.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= f.text_field :repeat_end, class: "date repeat_end", value: tryb{@item.repeat_end.strftime("%Y/%m/%d")} %></dd>
 </dl>

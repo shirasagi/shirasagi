@@ -3,9 +3,18 @@
 //= require fullcalendar
 //= require fullcalendar/gcal
 //= require fullcalendar/lang/ja
+//= require sprintf
+//= require tinyColorPicker/jqColorPicker.min.js
 //= require gws/schedule/lib/calendar
 //= require gws/schedule/lib/plan
+//= require gws/schedule/lib/repeat_plan
 
 $ ->
   # external link
   $('a[href^=http]').not('[href*="'+location.hostname+'"]').attr({ target: '_blank' })
+
+  # tabs
+  path = location.pathname + "/"
+  $(".gws-schedule-tabs a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))

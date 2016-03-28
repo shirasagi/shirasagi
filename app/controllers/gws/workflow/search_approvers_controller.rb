@@ -22,7 +22,8 @@ class Gws::Workflow::SearchApproversController < ApplicationController
 
     def group_options
       Gws::Group.site(@cur_site).reduce([]) do |ret, g|
-        ret << [ g.name, g.id ]
+        indent = "&nbsp;" * g.name.scan('/').size * 4
+        ret << [ indent.html_safe + g.trailing_name, g.id ]
       end.to_a
     end
 

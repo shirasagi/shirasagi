@@ -1,18 +1,17 @@
-$ ->
-  # tabs
-  path = location.pathname + "/"
-  $(".gws-schedule-tabs a").each ->
-    menu = $(this)
-    menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+class @Gws_Schedule_Plan
+  @diffOn: 0
 
-# RepeatPlan.fields :repeat_type, :interval, :start_date, :end_date, :repeat_base, :wdays
-#
-class @Gws_Schedule_Plan_Form
-  @render: ->
-    @changeDateForm();
+  @renderForm: ->
+    $(".date").datetimepicker({ lang: "ja", timepicker: false, format:'Y/m/d', closeOnDateSelect: true, scrollInput: false })
+    $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 30 })
+    @relateDateForm()
+    @relateDateTimeForm()
+
+  @renderAlldayForm: ->
+    @changeDateForm()
     $('#item_allday').change ->
-      Gws_Schedule_Plan_Form.changeDateValue();
-      Gws_Schedule_Plan_Form.changeDateForm();
+      Gws_Schedule_Plan.changeDateValue()
+      Gws_Schedule_Plan.changeDateForm()
 
   # @example
   #   2015/09/29 00:00 => 2015/09/29
@@ -37,18 +36,23 @@ class @Gws_Schedule_Plan_Form
       $('.dates-field').hide()
       $('.datetimes-field').show()
 
-class @Gws_Schedule_Plan_Repeat_Form
-  @render: ->
-    @changeRepeatForm();
-    $('#item_repeat_type').change ->
-      Gws_Schedule_Plan_Repeat_Form.changeRepeatForm();
+  @relateDateForm: (start_sel = '.date.start', end_sel = '.date.end') ->
+    $("#{start_sel}, #{end_sel}").click ->
+      Gws_Schedule_Plan.diffOn = Gws_Schedule_Plan.diffDates($(start_sel).val(), $(end_sel).val())
+    $(start_sel).change ->
+      start = $(start_sel).val()
+      return unless start
+      date = new Date()
+      date.setTime((new Date(start)).getTime() + Gws_Schedule_Plan.diffOn)
+      format = '%d/%02d/%02d'
+      format = '%d/%02d/%02d %02d:%02d' if $(start_sel).hasClass('datetime')
+      $(end_sel).val(sprintf(format, date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()))
 
-  @changeRepeatForm: ->
-    repeat_type = $('#item_repeat_type').val()
+  @relateDateTimeForm: ->
+    @relateDateForm('.datetime.start', '.datetime.end')
 
-    if repeat_type == ''
-      $('.gws-schedule-repeat').hide()
-    else
-      $('.gws-schedule-repeat').show()
-      $(".repeat-daily, .repeat-weekly, .repeat-monthly").hide()
-      $(".repeat-#{repeat_type}").show()
+  @diffDates: (src, dst)->
+    return 0 if !src || !dst
+    diff = (new Date(dst)).getTime() - (new Date(src)).getTime();
+    return 0 if diff < 0
+    diff

@@ -6,12 +6,12 @@ class Gws::UserTitle
 
   attr_accessor :cur_user, :cur_site
 
-  before_validation :set_group, if: ->{ cur_site.present? }
+  before_validation :set_group_id, if: ->{ cur_site.present? }
 
   scope :site, ->(site) { where group_id: site.id }
 
   private
-    def set_group
+    def set_group_id
       self.group_id = cur_site.id
     end
 end

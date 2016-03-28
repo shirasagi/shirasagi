@@ -52,6 +52,9 @@ Gws_Schedule_Calendar.render('#calendar', {
       <li class="list-item">
         <div class="info">
           <%= link_to item.name, gws_board_topic_path(id: item), class: 'title' %>
+          <% if item.new_flag? %>
+          <span class="gws-board-flag-new"></span>
+          <% end %>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
         </div>
       </li>

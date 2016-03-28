@@ -1,0 +1,19 @@
+class @Gws_Schedule_Repeat_Plan
+  @renderForm: ->
+    @changeRepeatForm()
+    @relateDateForm()
+    $('#item_repeat_type').change ->
+      Gws_Schedule_Repeat_Plan.changeRepeatForm()
+
+  @changeRepeatForm: ->
+    repeat_type = $('#item_repeat_type').val()
+
+    if repeat_type == ''
+      $('.gws-schedule-repeat').hide()
+    else
+      $('.gws-schedule-repeat').show()
+      $(".repeat-daily, .repeat-weekly, .repeat-monthly").hide()
+      $(".repeat-#{repeat_type}").show()
+
+  @relateDateForm: ->
+    Gws_Schedule_Plan.relateDateForm('.date.repeat_start', '.date.repeat_end')
