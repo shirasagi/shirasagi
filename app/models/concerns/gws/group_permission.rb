@@ -4,8 +4,12 @@ module Gws::GroupPermission
 
   included do
     field :permission_level, type: Integer, default: 1
+
     embeds_ids :groups, class_name: "SS::Group"
+
     permit_params :permission_level, group_ids: []
+
+    validates :group_ids, presence: true
   end
 
   def owned?(user)

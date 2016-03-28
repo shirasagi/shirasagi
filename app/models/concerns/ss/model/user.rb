@@ -124,7 +124,7 @@ module SS::Model::User
   end
 
   def title(group)
-    titles.select { |m| m.group_id == cur_site.id }.first
+    titles.where(group_id: cur_site.id).first
   end
 
   def enabled?

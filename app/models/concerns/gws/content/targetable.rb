@@ -9,11 +9,14 @@ module Gws::Content::Targetable
 
     scope :target_to, ->(user) {
       where("$or" => [
-        { target: nil }, #TODO: remove
         { target: "all" },
-        { "$and" => [ { target: "group" }, { :group_ids.in => user.group_ids } ] }
+        { target: "group", :group_ids.in => user.group_ids }
       ])
     }
+  end
+
+  def targetable?
+    true
   end
 
   def target_options

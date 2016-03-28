@@ -17,7 +17,7 @@ class Gws::PortalController < ApplicationController
         limit(5)
 
       @boards = Gws::Board::Post.site(@cur_site).topic.
-        allow(:read, @cur_user, site: @cur_site).
+        target_to(@cur_user).
         order(descendants_updated: -1).
         limit(5)
     end

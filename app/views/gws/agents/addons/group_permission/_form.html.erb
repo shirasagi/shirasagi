@@ -4,7 +4,7 @@
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("cms.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -15,12 +15,15 @@
         </tr>
       </thead>
       <tbody>
+        <% if params[:action] =~ /new/ %>
         <tr data-id="<%= @cur_group.id %>">
           <td><%= f.hidden_field "group_ids[]", value: @cur_group.id %> <%= @cur_group.name %></td>
           <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
         </tr>
+        <% end %>
+
         <% @item.groups.each do |group| %>
-        <% next if group.id == @cur_group.id %>
+        <%# next if group.id == @cur_group.id %>
         <tr data-id="<%= group.id %>">
           <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
           <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>

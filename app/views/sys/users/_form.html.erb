@@ -43,7 +43,7 @@ $("#random-password").click(function() {
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("sys.apis.groups.index"), sys_apis_groups_path, class: "ajax-box" %>
+    <%= link_to t("ss.apis.groups.index"), sys_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

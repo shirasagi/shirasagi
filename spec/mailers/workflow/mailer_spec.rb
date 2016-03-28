@@ -14,7 +14,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
         site: site,
         page: page,
         url: "http://example.jp/",
-        comment: "comment",
+        comment: "comment"
       )
     end
 
@@ -33,7 +33,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
         t_uid: user2.id,
         site: site,
         page: page,
-        url: "http://example.jp/",
+        url: "http://example.jp/"
       )
     end
 
@@ -53,7 +53,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
         site: site,
         page: page,
         url: "http://example.jp/",
-        comment: "comment",
+        comment: "comment"
       )
     end
 

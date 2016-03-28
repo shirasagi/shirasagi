@@ -9,6 +9,7 @@ module SS::Addon
     end
 
     def html
+      return nil if text.blank?
       Kramdown::Document.new(text).to_html
     end
   end

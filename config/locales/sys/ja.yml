@@ -13,11 +13,6 @@ ja:
     max_file_size: 最大ファイルサイズ
     roles:
       admin: 管理者
-    apis:
-      groups:
-        index: グループを選択する
-        search: グループを検索
-        select: グループを設定する
 
   modules:
     sys: システム

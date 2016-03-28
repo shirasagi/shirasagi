@@ -6,6 +6,7 @@ module Cms::Addon
     included do
       field :release_date, type: DateTime
       field :close_date, type: DateTime
+
       permit_params :release_date, :close_date
 
       validate :validate_release_date
@@ -15,10 +16,8 @@ module Cms::Addon
     def validate_release_date
       self.released ||= release_date if respond_to?(:released)
 
-      if close_date.present?
-        if release_date.present? && release_date >= close_date
-          errors.add :close_date, :greater_than, count: t(:release_date)
-        end
+      if close_date.present? && release_date.present? && release_date >= close_date
+        errors.add :close_date, :greater_than, count: t(:release_date)
       end
     end
 

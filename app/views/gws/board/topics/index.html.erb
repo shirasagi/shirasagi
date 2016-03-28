@@ -1,0 +1,13 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+  <% if item.new_flag? %>
+  <span class="gws-board-flag-new"></span>
+  <% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

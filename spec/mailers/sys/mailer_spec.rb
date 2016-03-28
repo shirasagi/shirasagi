@@ -10,7 +10,7 @@ describe Sys::Mailer, type: :mailer, dbscope: :example do
         from: user1.email,
         to: user2.email,
         subject: "subject",
-        body: "body",
+        body: "body"
       )
     end
 

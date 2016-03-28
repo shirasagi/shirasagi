@@ -1,13 +1,3 @@
-<%
-
-menu = []
-if @item.permit_comment?
-  menu << link_to(t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary")
-end
-menu << link_to(:edit, { action: :edit, id: @item }, class: "btn") if @item.allowed?(:edit, @cur_user, site: @cur_site)
-menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.allowed?(:delete, @cur_user, site: @cur_site)
-
-%>
 <div class="gws-board gws-board-tree">
   <article class="topic">
     <header>
@@ -20,8 +10,11 @@ menu << link_to(:delete, { action: :delete, id: @item }, class: "btn") if @item.
 
     <div class="body markdown-body"><%== @item.html %></div>
 
-    <% if menu.present? %>
-    <div class="menu"><%= safe_join(menu) %></div>
+    <% if @item.permit_comment? %>
+    <div class="menu">
+      <%= link_to(t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
+        class: "btn primary") %>
+    </div>
     <% end %>
   </article>
 

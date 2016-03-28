@@ -6,6 +6,9 @@ class @Gws_Schedule_Calendar
     $.extend params, opts
     $(selector).fullCalendar(params)
 
+    $(document).click (ev) ->
+      $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove()
+
   @defaultParams: (opts) ->
     lang: 'ja'
     titleFormat: {
@@ -57,8 +60,34 @@ class @Gws_Schedule_Calendar
 
     editable: true,
     eventClick: (event, jsEvent, view) ->
-      return false if $(this).hasClass('fc-holiday')
-      location.href = "#{url}/" + event.id
+      return if $(this).hasClass('fc-holiday')
+      return if $(this).find('.gws-schedule-popup').length
+      return unless event.readable
+
+      h = "<div class='fc-popup'>"
+      h += "<div class='title'><a href='#{url}/#{event.id}'>#{event.title}</a></div>"
+      h += "<div class='description'>#{event.description}</div>" if event.description
+      h += "<div class='members'>#{event.members}</div>" if event.members
+      h += "<div class='menu'>"
+      h += "<a href='#{url}/#{event.id}/edit'><%= I18n.t('views.links.edit') %></a>" if event.editable
+      h += "<a href='#{url}/#{event.id}/delete'><%= I18n.t('views.links.delete') %></a>" if event.deletable
+      h += "</div>"
+      h += "</div>"
+      $(this).append(h)
+
+      name = ".fc-popup"
+      view = $(this).find(name)
+      hgt = view.outerHeight()
+
+      if $(this).offset().top - hgt < 0
+        view.addClass("position-bottom")
+        view.css("bottom", (hgt * (-1) - 15) + "px")
+        $("#{name} style").replaceWith("<style>#{name}:after { bottom: " + (hgt - 5) + "px; }</style>")
+      else
+        view.addClass("position-top")
+        view.css("bottom", "20px")
+        $("#{name} style").replaceWith("<style>#{name}:after { bottom: -13px; }</style>")
+
     eventDrop: (event, delta, revertFunc) ->
       end = null
       end = event.end.format() if event.end

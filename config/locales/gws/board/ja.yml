@@ -56,9 +56,9 @@ ja:
 
   mongoid:
     models:
-      gws/board: 掲示板
+      gws/board_posts: 掲示板
     attributes:
-      gws/board/post:
+      gws/board/postable:
         name: タイトル
         created: 投稿日
         updated: 最終更新日
