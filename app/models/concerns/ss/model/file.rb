@@ -99,7 +99,7 @@ module SS::Model::File
   end
 
   def humanized_name
-    "#{name} (#{extname.upcase} #{number_to_human_size(size)})"
+    "#{name.sub(/\.[^\.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
   def download_filename

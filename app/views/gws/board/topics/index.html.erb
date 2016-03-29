@@ -1,5 +1,8 @@
 <% @index_title = proc do |item| %>
   <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+  <% if item.descendants_files_count.to_i > 0 %>
+  <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+  <% end %>
   <% if item.new_flag? %>
   <span class="gws-board-flag-new"></span>
   <% end %>

@@ -1,12 +1,19 @@
 @import "github-markdown";
 
-// board
+// list
+.gws-board-file-count {
+  img {
+    margin: 0 2px 0 5px;
+  }
+}
 .gws-board-flag-new {
   margin-left: 5px;
   color: #d00;
   font-weight: bold;
   &:after { content: "New!"; }
 }
+
+// show
 .gws-board {
   .topic, .comment {
     @include box;
@@ -24,7 +31,7 @@
       background-color: $gray1;
       a {
         display: inline-block;
-        margin-right: 2em;
+        margin-right: 8px;
         line-height: 1.5;
         word-break: normal;
         word-wrap: normal;
