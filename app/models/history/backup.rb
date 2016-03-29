@@ -19,7 +19,7 @@ class History::Backup
   end
 
   def get
-    coll.where(_id: data["_id"]).first
+    coll.find(_id: data["_id"]).first
   end
 
   def restore
