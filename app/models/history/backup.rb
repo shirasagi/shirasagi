@@ -34,10 +34,12 @@ class History::Backup
     data.delete("file_id")
     data.delete("file_ids") # TODO: for attachment files
 
-    resp = query.update('$set' => data)
-    return true if resp["err"].blank?
-
-    errors.add :base, "error. #{resp['err']}"
-    false
+    begin
+      resp = query.update_many('$set' => data)
+      return true
+    rescue => e
+      errors.add :base, "error. #{e}"
+      return false
+    end
   end
 end
