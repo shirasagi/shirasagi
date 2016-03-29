@@ -71,6 +71,8 @@ module Workflow::Addon
         ids << file.id.mongoize
 
         html = self.html
+        next unless html.present?
+
         html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
         html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
         self.html = html
