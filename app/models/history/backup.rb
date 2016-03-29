@@ -42,4 +42,11 @@ class History::Backup
       return false
     end
   end
+
+  def original
+    klass = ref_class.constantize
+    klass.where(_id: data["_id"]).first
+  rescue
+    nil
+  end
 end

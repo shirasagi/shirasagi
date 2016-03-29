@@ -27,7 +27,7 @@ module Cms::FormHelper
   end
 
   def show_path_with_route(item)
-    model = item.class.name.underscore.sub(/^.+?\//, "")
+    model = item.class.name.underscore.sub(/^.+?\//, "").sub(/\/.+$/, "")
 
     path = "cms_#{model}_path".to_sym
     return send(path, id: item.id) if item.parent.blank?
@@ -40,6 +40,8 @@ module Cms::FormHelper
 
     path = "node_#{model}_path".to_sym
     return send(path, cid: item.parent.id, id: item.id)
+  rescue
+    nil
   end
 
   def show_image_info(file)
