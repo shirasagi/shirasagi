@@ -135,7 +135,7 @@
   //display: none;
   left: -230px;
   width: 30em;
-  padding: 15px;
+  padding: 10px;
   border: $border-gray4;
   line-height: 1.6;
   z-index: 100;
@@ -145,19 +145,36 @@
   font-weight: normal;
   text-align: left;
   cursor: auto;
-  .title {
-    padding-bottom: 5px;
-    border-bottom: 1px solid #ddd;
+}
+.fc-popup {
+  .popup-title {
+    overflow: hidden;
+    font-size: 130%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .description {
-    padding: 5px 0;
+  .popup-date {
+    margin: 0 0 10px;
+  }
+  .popup-label {
+    display: inline-block;
+    min-width: 60px;
+    color: #800;
+  }
+  .popup-description {
+    padding: 5px 0 0;
     color: #888;
   }
-  .members {
-    padding: 5px 0;
+  .popup-members {
+    padding: 5px 0 0;
   }
-  .menu {
-    padding: 5px 0;
+  .popup-facilities {
+    padding: 5px 0 0;
+  }
+  .popup-menu {
+    margin: 10px 0 0;
+    padding: 10px 0 0;
+    border-top: 1px solid #eee;
     text-align: center;
     a { margin: 0 10px; }
   }

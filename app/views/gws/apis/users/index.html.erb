@@ -2,6 +2,7 @@
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= t "mongoid.models.gws/group" %></dt>
       <dd><%= select_tag "s[group]", options_for_select(@group_options, @group_id) %></dd>

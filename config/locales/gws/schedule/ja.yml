@@ -35,6 +35,10 @@ ja:
       repeat_base:
         date: 日付
         wday: 曜日
+      target:
+        all: 全ユーザー
+        group: 同一グループ内
+        member: 参加者のみ
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
@@ -77,6 +81,7 @@ ja:
         term: 日時
       gws/schedule/plan:
         repeat_plan_id: 繰り返し
+        target: 公開範囲
         category_id: スケジュール種別
       gws/schedule/repeat_plan: &repeat_plan
         repeat_type: 繰り返し設定
