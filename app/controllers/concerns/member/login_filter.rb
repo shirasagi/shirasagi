@@ -16,17 +16,17 @@ module Member::LoginFilter
 
     def logged_in?(opts = {})
       if @cur_member
-        reset_expires_at
+        set_last_logged_in
         return @cur_member
       end
 
-      if session[:member] && Time.zone.now.to_i < session[:member]["expires_at"]
+      if session_alives?
         member_id = session[:member]["member_id"]
         @cur_member = Cms::Member.site(@cur_site).find(member_id) rescue nil
       end
 
       if @cur_member
-        reset_expires_at
+        set_last_logged_in
         return @cur_member
       end
 
@@ -38,17 +38,21 @@ module Member::LoginFilter
       nil
     end
 
-    def set_member(member)
+    def set_member(member, timestamp = Time.zone.now.to_i)
       session[:member] = {
         "member_id" => member.id,
         "remote_addr" => remote_addr,
         "user_agent" => request.user_agent,
-        "expires_at" => Time.zone.now.to_i + SS.config.cms.session_lifetime }
+        "last_logged_in" => timestamp }
       @cur_member = member
     end
 
-    def reset_expires_at
-      session[:member]["expires_at"] = Time.zone.now.to_i + SS.config.cms.session_lifetime if session[:member]
+    def set_last_logged_in(timestamp = Time.zone.now.to_i)
+      session[:member]["last_logged_in"] = timestamp if session[:member]
+    end
+
+    def session_alives?(timestamp = Time.zone.now.to_i)
+      session[:member] && timestamp <= session[:member]["last_logged_in"] + SS.config.cms.session_lifetime
     end
 
     def clear_member
