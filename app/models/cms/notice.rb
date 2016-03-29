@@ -31,7 +31,7 @@ class Cms::Notice
   after_validation :set_released, if: -> { state == "public" }
 
   default_scope -> {
-    order_by notice_severity: 1, released: -1
+    order_by released: -1
   }
   scope :and_public, ->(date = Time.zone.now) {
     where("$and" => [

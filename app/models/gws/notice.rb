@@ -17,7 +17,7 @@ class Gws::Notice
   validates :name, presence: true, length: { maximum: 80 }
 
   default_scope -> {
-    order_by severity: -1, released: -1
+    order_by released: -1
   }
   scope :search, ->(params) {
     criteria = where({})
