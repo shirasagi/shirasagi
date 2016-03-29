@@ -74,7 +74,7 @@ module SS::Model::Site
 
     private
       def validate_domains
-        errors.add :domains, :duplicate if self.class.any_in(domains: domains).exists?
+        errors.add :domains, :duplicate if self.class.ne(id: id).any_in(domains: domains).exists?
       end
 
     class << self
