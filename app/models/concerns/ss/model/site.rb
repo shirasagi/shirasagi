@@ -28,6 +28,8 @@ module SS::Model::Site
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
 
+    validate :validate_domains, if: ->{ domains.present? }
+
     def domain
       domains[0]
     end
@@ -69,6 +71,11 @@ module SS::Model::Site
         [I18n.t("views.options.state.disabled"), "disabled"],
       ]
     end
+
+    private
+      def validate_domains
+        errors.add :domains, :duplicate if self.class.any_in(domains: domains).exists?
+      end
 
     class << self
       def root
