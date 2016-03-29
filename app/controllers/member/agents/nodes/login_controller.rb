@@ -16,7 +16,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
       Member::ActivityLog.create(
         cur_site: @cur_site,
         cur_member: member,
-        activity_type: :login,
+        activity_type: "login",
         remote_addr: remote_addr,
         user_agent: request.user_agent)
 
