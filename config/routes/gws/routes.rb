@@ -22,10 +22,13 @@ SS::Application.routes.draw do
     resources :public_notices, only: [:index, :show]
     resources :links, concerns: [:deletion]
     resources :public_links, only: [:index, :show]
+    resources :reminders, only: [:index, :destroy], concerns: [:deletion]
 
     namespace "apis" do
       get "groups" => "groups#index"
       get "users" => "users#index"
+      post "reminders" => "reminders#create"
+      delete "reminders" => "reminders#destroy"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

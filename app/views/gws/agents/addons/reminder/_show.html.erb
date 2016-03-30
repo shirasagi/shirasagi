@@ -1,0 +1,26 @@
+<%= jquery do %>
+  //$(".addon-views").prepend($(".gws-addon-reminder").closest(".addon-view"));
+  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 30 });
+
+  Gws_Reminder.renderAddon({ url: "<%= gws_apis_reminders_path %>" });
+<% end %>
+<%
+
+reminder = @item.reminder(@cur_user)
+date = reminder ? reminder.date : @item.reminder_date
+date ||= Time.zone.now + 7.day unless reminder
+
+%>
+<div class="see gws-addon-reminder">
+  <%= hidden_field_tag "item_name", @item.reminder_name %>
+  <%= hidden_field_tag "item_url", request.path %>
+  <%= hidden_field_tag "item_collection", @item.collection_name %>
+  <%= hidden_field_tag "item_id", @item.id %>
+
+  <span class="gws-addon-reminder-label">
+    <%= reminder ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
+  </span>
+  <%= text_field_tag "item_date", tryb { date.strftime("%Y/%m/%d %H:%M") }, class: "datetime" %>
+  <%= button_tag t("gws.buttons.register"), id: "gws-addon-reminder-set", class: :btn %>
+  <%= button_tag t("gws.buttons.unset"), id: "gws-addon-reminder-unset", class: :btn %>
+</div>

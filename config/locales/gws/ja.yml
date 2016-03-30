@@ -7,6 +7,10 @@ ja:
     roles:
       admin: 管理者
       user: 一般ユーザー
+    reminder:
+      states:
+        entry: 登録済み
+        empty: 未登録
     options:
       severity:
         high: 重要なお知らせ
@@ -15,6 +19,16 @@ ja:
         group: 同一グループ内
     links:
       back_to_portal: ポータルへ戻る
+    buttons:
+      register: 登録
+      unset: 解除
+
+  date:
+    formats:
+      gws_long: ! '%Y年 %1m月 %1d日 (%a)'
+  time:
+    formats:
+      gws_long: ! '%Y年 %1m月 %1d日 (%a) %H時 %M分'
 
   gws_role:
     edit_gws_groups: グループの管理
@@ -53,6 +67,7 @@ ja:
       gws/group_permission: 権限
       gws/file: ファイル
       gws/release: 公開設定
+      gws/reminder: リマインダー設定
 
   mongoid:
     models:
@@ -65,6 +80,7 @@ ja:
       gws/link: リンク集
       gws/share: 共有ファイル
       gws/facility: 設備管理
+      gws/reminder: リマインダー
     attributes:
       gws/content/targetable:
         target: 公開範囲
@@ -83,6 +99,10 @@ ja:
         name: タイトル
       gws/facility:
         name: 設備名
+      gws/reminder:
+        name: タイトル
+        date: 日時
+        url: URL
       gws/addon/role:
         gws_role_ids: ロール
       gws/addon/permission:

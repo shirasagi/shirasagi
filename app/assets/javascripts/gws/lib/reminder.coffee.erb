@@ -1,0 +1,32 @@
+class @Gws_Reminder
+  @renderAddon: (opts = {})->
+    addon = $(".gws-addon-reminder")
+
+    params = {
+      data:
+        item:
+          url: addon.find("#item_url").val()
+          item_collection: addon.find("#item_collection").val()
+          item_id: addon.find("#item_id").val()
+      beforeSend: (data)->
+        $(".gws-addon-reminder-label").html("")
+      success: (data)->
+        $(".gws-addon-reminder-label").html(data)
+      error: (data)->
+        alert("Error")
+    }
+    $.extend params, opts
+
+    console.log params
+
+    $("#gws-addon-reminder-set").click ->
+      ajax_params = { method: "post" }
+      $.extend ajax_params, params, opts
+      ajax_params["data"]["item"]["name"] = addon.find("#item_name").val()
+      ajax_params["data"]["item"]["date"] = addon.find("#item_date").val()
+      $.ajax(ajax_params)
+
+    $("#gws-addon-reminder-unset").click ->
+      ajax_params = { method: "delete" }
+      $.extend ajax_params, params, opts
+      $.ajax(ajax_params)

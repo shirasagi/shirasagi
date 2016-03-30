@@ -43,21 +43,17 @@ Gws_Schedule_Calendar.render('#calendar', {
   <div class="index">
     <div class="list-head"><%= t('gws/schedule.reminder') %></div>
     <ul class="list-items">
-      <% @plans.each do |item| %>
+      <% @reminders.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <%= link_to item.name, gws_schedule_plan_path(id: item), class: 'title' %>
-          <% if item.allday? %>
-          <span class="datetime"><%= item.end_at.strftime("%Y/%m/%d") %></span>
-          <% else %>
-          <span class="datetime"><%= item.end_at.strftime("%Y/%m/%d %H:%M") %></span>
-          <% end %>
+          <%= link_to item.name, item.url, class: 'title' %>
+          <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d") } %></span>
         </div>
       </li>
       <% end %>
     </ul>
-    <% if @plans.next_page %>
-    <div class="more"><%= link_to I18n.t("views.links.more"), gws_board_topics_path %></div>
+    <% if @reminders.next_page %>
+    <div class="more"><%= link_to I18n.t("views.links.more"), gws_reminders_path %></div>
     <% end %>
   </div>
 </div>

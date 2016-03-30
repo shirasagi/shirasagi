@@ -3,6 +3,7 @@ class Gws::Schedule::Plan
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Schedule::Planable
+  include Gws::Addon::Reminder
   include Gws::Addon::Schedule::Repeat
   include SS::Addon::Markdown
   include Gws::Addon::File

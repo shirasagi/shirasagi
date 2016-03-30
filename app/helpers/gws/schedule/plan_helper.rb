@@ -1,9 +1,10 @@
 module Gws::Schedule::PlanHelper
   def term(item)
+    dates = [item.start_at, item.end_at]
     if item.allday?
-      dates = [item.start_at.strftime('%Y/%m/%d'), item.end_at.strftime('%Y/%m/%d')]
+      dates.map! { |m| I18n.l(m.to_date, format: :gws_long) }
     else
-      dates = [item.start_at.strftime('%Y/%m/%d %H:%M'), item.end_at.strftime('%Y/%m/%d %H:%M')]
+      dates.map! { |m| I18n.l(m, format: :gws_long) }
     end
     dates.uniq.join(" - ")
   end

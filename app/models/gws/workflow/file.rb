@@ -2,6 +2,7 @@ class Gws::Workflow::File
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Addon::Reminder
   include ::Workflow::Addon::Approver
   include SS::Addon::Markdown
   include Gws::Addon::File
