@@ -15,16 +15,20 @@ module Member::LoginFilter
     end
 
     def logged_in?(opts = {})
-      return @cur_member if @cur_member
-
-      if session[:member]
-        u = SS::Crypt.decrypt(session[:member]).to_s.split(",", 3)
-        # return unset_member redirect: true if u[1] != remote_addr
-        # return unset_member redirect: true if u[2] != request.user_agent.to_s
-        @cur_member = Cms::Member.site(@cur_site).find u[0].to_i rescue nil
+      if @cur_member
+        set_last_logged_in
+        return @cur_member
       end
 
-      return @cur_member if @cur_member
+      if session_alives?
+        member_id = session[:member]["member_id"]
+        @cur_member = Cms::Member.site(@cur_site).find(member_id) rescue nil
+      end
+
+      if @cur_member
+        set_last_logged_in
+        return @cur_member
+      end
 
       clear_member
       return nil if translate_redirect_option(opts) == REDIRECT_OPTION_DISABLED
@@ -34,9 +38,21 @@ module Member::LoginFilter
       nil
     end
 
-    def set_member(member)
-      session[:member] = SS::Crypt.encrypt("#{member._id},#{remote_addr},#{request.user_agent}")
+    def set_member(member, timestamp = Time.zone.now.to_i)
+      session[:member] = {
+        "member_id" => member.id,
+        "remote_addr" => remote_addr,
+        "user_agent" => request.user_agent,
+        "last_logged_in" => timestamp }
       @cur_member = member
+    end
+
+    def set_last_logged_in(timestamp = Time.zone.now.to_i)
+      session[:member]["last_logged_in"] = timestamp if session[:member]
+    end
+
+    def session_alives?(timestamp = Time.zone.now.to_i)
+      session[:member] && timestamp <= session[:member]["last_logged_in"] + SS.config.cms.session_lifetime
     end
 
     def clear_member

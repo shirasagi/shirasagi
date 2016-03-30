@@ -32,6 +32,9 @@ production: &production
   # Skip login for preview
   remote_preview: false
 
+  # Session Lifetime in seconds
+  session_lifetime: 1800
+
 test:
   <<: *production
 
