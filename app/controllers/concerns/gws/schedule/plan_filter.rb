@@ -25,4 +25,14 @@ module Gws::Schedule::PlanFilter
     def index
       render
     end
+
+    def show
+      raise "403" if !@item.allowed?(:read, @cur_user, site: @cur_site) && !@item.targeted?(@cur_user)
+      render
+    end
+
+    def popup
+      set_item
+      render file: "popup", layout: false
+    end
 end

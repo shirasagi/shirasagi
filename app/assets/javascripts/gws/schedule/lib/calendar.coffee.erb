@@ -35,13 +35,13 @@ class @Gws_Schedule_Calendar
 
     dayClick: (date, event, view) ->
       links  = "<a href='#{url}/new?start=#{date.format()}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
-      if opts['defaultView'] != 'basicWeek'
-        if view.name != 'month'
-          links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
-        if view.name != 'basicWeek'
-          links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>'
-        if view.name != 'agendaDay'
-          links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>'
+      #if opts['defaultView'] != 'basicWeek'
+      #  if view.name != 'month'
+      #    links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
+      #  if view.name != 'basicWeek'
+      #    links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>'
+      #  if view.name != 'agendaDay'
+      #    links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>'
       $("body").append('<div class="tap-menu">' + links + '</div>')
       $(".tap-menu").show().css("left", event.pageX - 5).css("top", event.pageY - 5).show()
 
@@ -61,32 +61,27 @@ class @Gws_Schedule_Calendar
     editable: true,
     eventClick: (event, jsEvent, view) ->
       return if $(this).hasClass('fc-holiday')
-      return if $(this).find('.gws-schedule-popup').length
       return unless event.readable
 
-      h = "<div class='fc-popup'>"
-      h += "<div class='title'><a href='#{url}/#{event.id}'>#{event.title}</a></div>"
-      h += "<div class='description'>#{event.description}</div>" if event.description
-      h += "<div class='members'>#{event.members}</div>" if event.members
-      h += "<div class='menu'>"
-      h += "<a href='#{url}/#{event.id}/edit'><%= I18n.t('views.links.edit') %></a>" if event.editable
-      h += "<a href='#{url}/#{event.id}/delete'><%= I18n.t('views.links.delete') %></a>" if event.deletable
-      h += "</div>"
-      h += "</div>"
-      $(this).append(h)
+      popup = "fc-popup"
+      if $(this).find(".#{popup}").length == 0
+        $(this).append("<div class='#{popup}'><span class='fc-loading'>Loading..</span></div>")
 
-      name = ".fc-popup"
-      view = $(this).find(name)
+      view = $(this).find(".#{popup}")
       hgt = view.outerHeight()
-
       if $(this).offset().top - hgt < 0
         view.addClass("position-bottom")
         view.css("bottom", (hgt * (-1) - 15) + "px")
-        $("#{name} style").replaceWith("<style>#{name}:after { bottom: " + (hgt - 5) + "px; }</style>")
+        $(".#{popup} style").replaceWith("<style>.#{popup}:after { bottom: " + (hgt - 5) + "px; }</style>")
       else
         view.addClass("position-top")
         view.css("bottom", "20px")
-        $("#{name} style").replaceWith("<style>#{name}:after { bottom: -13px; }</style>")
+        $(".#{popup} style").replaceWith("<style>.#{popup}:after { bottom: -13px; }</style>")
+
+      $.ajax
+        url: "#{url}/#{event.id}/popup"
+        success: (data)->
+          view.html(data)
 
     eventDrop: (event, delta, revertFunc) ->
       end = null

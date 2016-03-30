@@ -56,25 +56,29 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     def create
-      if params[:submit].present?
-        if @cur_node.captcha_enabled?
-          @answer.captcha = params[:answer].try(:[], :captcha)
-          @answer.captcha_key = params[:answer].try(:[], :captcha_key)
-          unless @answer.valid_with_captcha?
-            return render action: :confirm
-          end
-        end
-        @answer.save
-        if @cur_node.notify_mail_enabled?
-          Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer).deliver_now rescue nil
-        end
-        if @cur_node.reply_mail_enabled?
-          Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer).deliver_now rescue nil
-        end
-        redirect_to "#{@cur_node.url}sent.html"
-      else
+      if !@answer.valid? || params[:submit].blank?
         render action: :new
+        return
       end
+
+      if @cur_node.captcha_enabled?
+        @answer.captcha = params[:answer].try(:[], :captcha)
+        @answer.captcha_key = params[:answer].try(:[], :captcha_key)
+        unless @answer.valid_with_captcha?
+          render action: :confirm
+          return
+        end
+      end
+
+      @answer.save
+      if @cur_node.notify_mail_enabled?
+        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer).deliver_now
+      end
+      if @cur_node.reply_mail_enabled?
+        Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer).try(:deliver_now)
+      end
+
+      redirect_to "#{@cur_node.url}sent.html"
     end
 
     def sent
