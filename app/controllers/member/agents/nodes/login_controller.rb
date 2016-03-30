@@ -13,6 +13,12 @@ class Member::Agents::Nodes::LoginController < ApplicationController
 
     def set_member_and_redirect(member)
       set_member member
+      Member::ActivityLog.create(
+        cur_site: @cur_site,
+        cur_member: member,
+        activity_type: "login",
+        remote_addr: remote_addr,
+        user_agent: request.user_agent)
 
       ref = URI::decode(params[:ref] || flash[:ref] || "")
       ref = redirect_url if ref.blank?
@@ -41,7 +47,8 @@ class Member::Agents::Nodes::LoginController < ApplicationController
     end
 
     def logout
-      clear_member
+      # discard all session info
+      reset_session
       flash.discard(:ref)
       redirect_to member_login_path
     end

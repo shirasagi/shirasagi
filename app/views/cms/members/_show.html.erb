@@ -14,3 +14,35 @@
   <dt><%= @model.t :oauth_token %></dt>
   <dd><%= @item.send :oauth_token %></dd>
 </dl>
+
+<% activity_logs = Member::ActivityLog.site(@cur_site).where(member_id: @item).order_by(updated: -1).limit(8) %>
+<% if activity_logs.present? %>
+  <header><h2><%= I18n.t "mongoid.models.#{Member::ActivityLog.to_s.underscore}" %></h2></header>
+<dl class="see">
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="activity-type"><%= Member::ActivityLog.t :activity_type %></th>
+        <th class="remote-addr"><%= Member::ActivityLog.t :remote_addr %></th>
+        <th class="browser"><%= t "member.view.browser" %></th>
+        <th class="platform"><%= t "member.view.platform" %></th>
+        <th class="datetime created"><%= Member::ActivityLog.t :created %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% activity_logs.each do |activity_log| %>
+      <% browser = Browser.new(activity_log.user_agent, accept_language: request.accept_language) %>
+      <tr>
+        <td class="activity-type"><%= activity_log.activity_type %></td>
+        <td class="remote-addr"><%= activity_log.remote_addr %></td>
+        <td class="browser"><%= browser.name %> <%= browser.full_version %></td>
+        <td class="platform"><%= browser.platform.name %></td>
+        <td class="datetime created"><%= activity_log.created.strftime("%Y/%m/%d %H:%M") %></td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+<% end %>

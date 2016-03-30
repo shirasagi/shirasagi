@@ -10,11 +10,34 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::GroupPermission
 
+  # 公開範囲
+  field :target, type: String, default: "all"
+
   # 種別
   belongs_to :category, class_name: 'Gws::Schedule::Category'
 
+  permit_params :target
+
   validates :start_at, presence: true, if: -> { !repeat? }
   validates :end_at, presence: true, if: -> { !repeat? }
+
+  def target_options
+    [
+      [I18n.t('gws/schedule.options.target.all'), 'all'],
+      [I18n.t('gws/schedule.options.target.group'), 'group'],
+      [I18n.t('gws/schedule.options.target.member'), 'member'],
+    ]
+  end
+
+  def targeted?(user)
+    if target == "group"
+      return group_ids.any? { |m| user.group_ids.include?(m) }
+    elsif target == "member"
+      return member_ids.include?(user.id)
+    else
+      true
+    end
+  end
 
   def category_options
     @category_options ||= Gws::Schedule::Category.site(@cur_site || site).
@@ -27,17 +50,11 @@ class Gws::Schedule::Plan
   def calendar_format(user, site)
     data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
 
-    data[:readable] = allowed?(:read, user, site: site) || true #TODO:
+    data[:readable] = allowed?(:read, user, site: site) || targeted?(user)
     data[:editable] = allowed?(:edit, user, site: site)
-    data[:deletable] = allowed?(:delete, user, site: site)
 
-    if data[:readable]
-      data[:title] = ERB::Util.h(name)
-      data[:description] = ERB::Util.h(text.to_s.gsub(/^(.{40,}?).*$/m,'\1...'))
-      data[:members] = t(:member_ids) + ": " + members.map(&:name).join(', ')
-    else
-      data[:title] = I18n.t("gws/schedule.private_plan")
-    end
+    data[:title] = I18n.t("gws/schedule.private_plan")
+    data[:title] = ERB::Util.h(name) if data[:readable]
 
     if allday? || start_at.to_date != end_at.to_date
       data[:className] = 'fc-event-days'

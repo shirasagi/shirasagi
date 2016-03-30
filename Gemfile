@@ -18,6 +18,7 @@ gem "unicorn-worker-killer"
 
 gem "mongoid", "~> 5.1.0"
 gem "mongoid-rspec"
+gem "mongo_session_store-rails4"
 #gem "mongo_mapper"
 #gem "bson_ext"
 gem "dynamic_form"

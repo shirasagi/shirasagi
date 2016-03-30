@@ -28,4 +28,7 @@
   <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
   <dd><%= f.select :category_id, @item.category_options, include_blank: " " %></dd>
   <% end %>
+
+  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
+  <dd><%= f.select :target, @item.target_options %></dd>
 </dl>

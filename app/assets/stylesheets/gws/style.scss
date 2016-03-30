@@ -9,9 +9,6 @@
 .portal-box {
   float: left;
   width: 50%;
-  &.reminder .index {
-    margin-right: 10px;
-  }
   .index {
     min-height: 245px;
     .datetime {
@@ -19,5 +16,17 @@
       margin-left: 5px;
       color: #888;
     }
+  }
+}
+.portal-reminder .index {
+  margin-right: 10px;
+}
+.portal-notice, .portal-reminder, .portal-board {
+  .list-items a:visited {
+    color: #666 !important;
+  }
+  .more {
+    padding: 0 10px 10px;
+    text-align: right;
   }
 }

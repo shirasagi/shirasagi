@@ -1,0 +1,38 @@
+<% if @item.targeted?(@cur_user) %>
+
+  <div class="popup-title"><%= link_to @item.name, { action: :show } %></div>
+  <div class="popup-date"><%= term(@item) %></div>
+
+  <% if @item.text.present? %>
+  <!--
+  <div class="popup-description"><%= truncate @item.text, length: 30 %></div>
+  -->
+  <% end %>
+
+  <% if @item.members.present? %>
+  <div class="popup-members">
+    <div class="popup-label"><%= @item.t :member_ids %></div>
+    <%= @item.members.map(&:name).join(', ') %>
+  <% end %>
+
+  <% if @item.facilities.present? %>
+  <div class="popup-facilities">
+    <div class="popup-label"><%= @item.t :facility_ids %></div>
+    <%= @item.facilities.map(&:name).join(', ') %></div>
+  <% end %>
+
+  <%
+  menu = []
+  menu << link_to(I18n.t('views.links.show'), { action: :show })
+  menu << link_to(I18n.t('views.links.edit'), { action: :edit }) if @item.allowed?(:edit, @cur_user, @cur_site)
+  menu << link_to(I18n.t('views.links.delete'), { action: :delete }) if @item.allowed?(:delete, @cur_user, @cur_site)
+  %>
+  <% if menu.present? %>
+  <div class="popup-menu"><%= safe_join(menu) %></div>
+  <% end %>
+
+<% else %>
+
+  <div class="popup-title"><%= I18n.t("gws/schedule.private_plan") %></div>
+
+<% end %>

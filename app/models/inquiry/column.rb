@@ -33,4 +33,39 @@ class Inquiry::Column
     value = self[:order].to_i
     value < 0 ? 0 : value
   end
+
+  def validate_data(answer, data)
+    if required?
+      if data.blank? || data.value.blank?
+        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.blank')}"
+      end
+    end
+
+    if input_confirm == "enabled"
+      if data.present? && data.value.present? && data.value != data.confirm
+        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.input_confirm_not_match')}"
+      end
+    end
+
+    case input_type
+    when "email_field"
+      if data.present? && data.value.present?
+        unless data.value =~ Cms::Member::EMAIL_REGEX
+          answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
+        end
+      end
+    when "radio_button", "select"
+      if data.present? && data.value.present?
+        unless select_options.include?(data.value)
+          answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
+        end
+      end
+    when "check_box"
+      if data.present? && data.values.present?
+        if (data.values.select(&:present?) - select_options).present?
+          answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
+        end
+      end
+    end
+  end
 end

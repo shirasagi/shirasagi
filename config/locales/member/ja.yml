@@ -23,6 +23,8 @@ ja:
     view:
       email: メールアドレス
       password: パスワード
+      browser: ブラウザ
+      platform: プラットフォーム
 
   modules:
     member: メンバー
@@ -40,6 +42,8 @@ ja:
       member/login: ログイン
 
   mongoid:
+    models:
+      member/activity_log: 活動履歴
     attributes:
       member/addon/redirection:
         redirect_url: リダイレクトURL
@@ -65,6 +69,10 @@ ja:
         github_oauth: OAuth 認証
         github_client_id: Client ID
         github_client_secret: Client Secret
+      member/activity_log:
+        activity_type: 種別
+        remote_addr: リモートアドレス
+        user_agent: ユーザーエージェント
 
   tooltip:
     member/addon/redirection:
