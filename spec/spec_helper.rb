@@ -98,6 +98,13 @@ RSpec.configure do |config|
     config.filter_run_excluding(js: true)
   end
 
+  # ref.
+  #   http://kakakakakku.hatenablog.com/entry/2015/05/14/124653
+  #   http://qiita.com/upinetree/items/4d4022c90ce32b68c38d
+  Capybara.configure do |config|
+    config.ignore_hidden_elements = false
+  end
+
   config.before(:suite) do
     # `rake db:drop`
     ::Mongoid::Clients.default.database.drop
