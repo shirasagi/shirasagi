@@ -7,11 +7,9 @@ module SS::Addon
       field :mobile_state, type: String
       field :mobile_location, type: String
       field :mobile_css, type: SS::Extensions::Words
-      field :trans_sid, type: String
-      permit_params :mobile_state, :mobile_location, :mobile_css, :trans_sid
+      permit_params :mobile_state, :mobile_location, :mobile_css
       before_validation :normalize_mobile_location
       validates :mobile_state, inclusion: { in: %w(disabled enabled) }, if: ->{ mobile_state.present? }
-      validates :trans_sid, inclusion: { in: %w(none mobile always) }, if: ->{ trans_sid.present? }
     end
 
     private
@@ -44,11 +42,6 @@ module SS::Addon
         [css]
       end
 
-      def trans_sid
-        return 'none' unless value = self.attributes["trans_sid"]
-        value
-      end
-
       def mobile_disabled?
         !mobile_enabled?
       end
@@ -59,10 +52,6 @@ module SS::Addon
 
       def mobile_state_options
         %w(disabled enabled).map { |m| [ I18n.t("views.options.state.#{m}"), m ] }.to_a
-      end
-
-      def trans_sid_options
-        %w(none mobile always).map { |m| [ I18n.t("views.options.trans_sid.#{m}"), m ] }.to_a
       end
   end
 end

@@ -18,7 +18,6 @@ describe SS::Site do
     it { expect(subject.mobile_state).to eq 'enabled' }
     it { expect(subject.mobile_location).to eq '/mobile' }
     it { expect(subject.mobile_css).to eq ['%{assets_prefix}/cms/mobile.css'] }
-    it { expect(subject.trans_sid).to eq 'none' }
     it { expect(subject.mobile_disabled?).to be_falsey }
     it { expect(subject.mobile_enabled?).to be_truthy }
   end
@@ -34,7 +33,6 @@ describe SS::Site do
       it { expect(subject.mobile_state).to eq 'enabled' }
       it { expect(subject.mobile_location).to eq '/mobile' }
       it { expect(subject.mobile_css).to eq ['%{assets_prefix}/cms/mobile.css'] }
-      it { expect(subject.trans_sid).to eq 'none' }
       it { expect(subject.mobile_disabled?).to be_falsey }
       it { expect(subject.mobile_enabled?).to be_truthy }
     end

@@ -7,7 +7,4 @@
 
   <dt><%= @model.t :mobile_css %><%= @model.tt :mobile_css %></dt>
   <dd><%= f.text_area :mobile_css, value: @item.mobile_css == @item.default_mobile_css ? nil : @item.mobile_css.join("\n") %></dd>
-
-  <dt><%= @model.t :trans_sid %><%= @model.tt :trans_sid %></dt>
-  <dd><%= f.select :trans_sid, @item.trans_sid_options %></dd>
 </dl>
