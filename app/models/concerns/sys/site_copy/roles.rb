@@ -2,7 +2,6 @@ module Sys::SiteCopyRoles
   private
     def self.copy_roles(site_old, site)
   #権限複製：OK
-Rails.logger.fatal "copy_roles"
       cms_roles = Cms::Role.where(site_id: site_old.id)
       new_cms_roles_id = {}
       cms_roles.each do |cms_role|
