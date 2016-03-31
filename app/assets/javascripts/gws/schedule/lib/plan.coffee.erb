@@ -1,9 +1,19 @@
 class @Gws_Schedule_Plan
   @diffOn: 0
 
-  @renderForm: ->
-    $(".date").datetimepicker({ lang: "ja", timepicker: false, format:'Y/m/d', closeOnDateSelect: true, scrollInput: false })
-    $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 30 })
+  @renderForm: (opts = {})->
+    $(".date").datetimepicker
+      lang: "ja"
+      timepicker: false
+      format:'Y/m/d'
+      closeOnDateSelect: true
+      scrollInput: false
+      maxDate: opts["maxDate"]
+    $(".datetime").datetimepicker
+      lang: "ja"
+      roundTime: 'ceil'
+      step: 30
+      maxDate: opts["maxDate"]
     @relateDateForm()
     @relateDateTimeForm()
 

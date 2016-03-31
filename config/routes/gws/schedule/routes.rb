@@ -18,5 +18,7 @@ SS::Application.routes.draw do
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     #resources :facility_group_plans, path: 'fg:group/plans', concerns: :plans
+
+    resource :setting, only: [:show, :edit, :update]
   end
 end

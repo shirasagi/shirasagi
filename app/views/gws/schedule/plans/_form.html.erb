@@ -1,5 +1,5 @@
 <%= jquery do %>
-  Gws_Schedule_Plan.renderForm();
+  Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
   Gws_Schedule_Plan.renderAlldayForm();
 <% end %>
 
