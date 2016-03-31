@@ -21,6 +21,11 @@ class Gws::Workflow::PagesController < ApplicationController
       { cur_user: @cur_user, cur_site: @cur_site }
     end
 
+    def validate_domain(user_id)
+      email = SS::User.find(user_id).email
+      @cur_site.email_domain_allowed?(email)
+    end
+
     def request_approval
       current_level = @item.workflow_current_level
       current_workflow_approvers = @item.workflow_approvers_at(current_level)
@@ -28,7 +33,7 @@ class Gws::Workflow::PagesController < ApplicationController
         args = { f_uid: @cur_user._id, t_uid: workflow_approver[:user_id],
                  site: @cur_site, page: @item,
                  url: params[:url], comment: params[:workflow_comment] }
-        Workflow::Mailer.request_mail(args).deliver_now
+        Workflow::Mailer.request_mail(args).deliver_now if validate_domain(args[:t_uid])
       end
 
       @item.set_workflow_approver_state_to_request
@@ -78,7 +83,7 @@ class Gws::Workflow::PagesController < ApplicationController
           args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                    site: @cur_site, page: @item,
                    url: params[:url], comment: params[:remand_comment] }
-          Workflow::Mailer.approve_mail(args).deliver_now
+          Workflow::Mailer.approve_mail(args).deliver_now if validate_domain(args[:t_uid])
           @item.delete if @item.try(:branch?) && @item.state == "public"
         end
 
@@ -99,7 +104,7 @@ class Gws::Workflow::PagesController < ApplicationController
           args = { f_uid: @cur_user._id, t_uid: @item.workflow_user_id,
                    site: @cur_site, page: @item,
                    url: params[:url], comment: params[:remand_comment] }
-          Workflow::Mailer.remand_mail(args).deliver_now
+          Workflow::Mailer.remand_mail(args).deliver_now if validate_domain(args[:t_uid])
         end
         render json: { workflow_state: @item.workflow_state }
       else
