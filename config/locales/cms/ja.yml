@@ -237,6 +237,7 @@ ja:
       cms/content:
         released: 公開日時
         name: タイトル
+        index_name: 一覧用タイトル
         depth: フォルダ階層
         order: 並び順
         md5: ハッシュ値
