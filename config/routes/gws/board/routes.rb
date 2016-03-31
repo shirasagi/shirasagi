@@ -12,5 +12,7 @@ SS::Application.routes.draw do
         resources :comments, controller: '/gws/board/comments', concerns: [:deletion]
       end
     end
+
+    resource :setting, only: [:show, :edit, :update]
   end
 end

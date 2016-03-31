@@ -69,7 +69,7 @@ module Gws::Board::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - 7.day #TODO: Use setting.
+    descendants_updated > Time.zone.now - site.board_new_days.day
   end
 
   def mode_options

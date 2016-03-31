@@ -45,6 +45,8 @@ ja:
 
   modules:
     gws/board: 掲示板
+    settings:
+      gws/board: 掲示板
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -64,3 +66,5 @@ ja:
         updated: 最終更新日
         mode: 表示形式
         permit_comment: コメント
+      gws/board/setting:
+        board_new_days: 新着表示期間
