@@ -4,6 +4,7 @@ ja:
     portal: ポータル
     site_config: 設定
     site_info: グループ情報
+    setting: 詳細設定
     roles:
       admin: 管理者
       user: 一般ユーザー
@@ -28,7 +29,7 @@ ja:
       gws_long: ! '%Y年 %1m月 %1d日 (%a)'
   time:
     formats:
-      gws_long: ! '%Y年 %1m月 %1d日 (%a) %H時 %M分'
+      gws_long: ! '%Y年 %1m月%1d日(%a) %1H時%M分'
 
   gws_role:
     edit_gws_groups: グループの管理
@@ -68,6 +69,8 @@ ja:
       gws/file: ファイル
       gws/release: 公開設定
       gws/reminder: リマインダー設定
+    settings:
+      gws/system: システム
 
   mongoid:
     models:
@@ -115,6 +118,8 @@ ja:
         released: 公開日時
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
+      gws/system/setting:
+        sendmail_domains: メール送信許可ドメイン
 
   tooltip:
     gws/content/targetable:

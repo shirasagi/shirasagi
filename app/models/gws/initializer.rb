@@ -1,5 +1,7 @@
 module Gws
   class Initializer
+    Gws::Setting.plugin Gws::System::Setting, ->{ gws_system_setting_path }
+
     Gws::Role.permission :edit_gws_groups
     Gws::Role.permission :edit_gws_users
     Gws::Role.permission :edit_gws_user_titles
