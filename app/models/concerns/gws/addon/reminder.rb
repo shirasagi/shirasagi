@@ -29,7 +29,7 @@ module Gws::Addon
 
     private
       def update_reminders
-        reminders.update_all(name: reminder_name)
+        reminders.update_all(updated: updated, name: reminder_name)
       end
   end
 end
