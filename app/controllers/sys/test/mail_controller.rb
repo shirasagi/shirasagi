@@ -17,7 +17,12 @@ class Sys::Test::MailController < ApplicationController
     def index
       raise "403" unless SS::User.allowed?(:edit, @cur_user)
 
-      @item = OpenStruct.new from: @cur_user.email, to: @cur_user.email, subject: "TEST MAIL", body: ""
+      @item = OpenStruct.new({
+        from: @cur_user.email,
+        to: @cur_user.email,
+        subject: "TEST MAIL",
+        body: "Message\nMessage\nMessage"
+      })
     end
 
     def create
@@ -36,9 +41,8 @@ class Sys::Test::MailController < ApplicationController
           subject: @item.subject,
           body: @item.body
         ).deliver_now
-        redirect_to({ action: :index }, { notice: "Sent." })
-      else
-        render action: :index
       end
+
+      render action: :index
     end
 end
