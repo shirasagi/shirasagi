@@ -1,4 +1,4 @@
 <nav class="nav-menu">
-  <%= link_to :show, action: :show %>
+  <%= link_to :show, CGI.unescape(params[:source]) %>
   <%= link_to :"history.restore", action: :restore if @item.data != @data %>
 </nav>
