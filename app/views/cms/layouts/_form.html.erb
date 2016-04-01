@@ -1,19 +1,7 @@
-<%= jquery do %>
-  this.showBasenameField = function() {
-    $('#cms-layouts-form-dt-basename-button').remove();
-    $('#cms-layouts-form-dd-basename-dummy').remove();
-    $('#cms-layouts-form-dt-basename').toggle();
-    $('#cms-layouts-form-dd-basename').toggle();
-    return false;
-  }
-<% end %>
-
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt id="cms-layouts-form-dt-basename" style="display: none"><%= @model.t :basename %><%= @model.tt :basename %></dt>
-  <dt id="cms-layouts-form-dt-basename-button"><%= link_to @model.t(:basename), '#', onclick: "showBasenameField();" %></dt>
-  <dd id="cms-layouts-form-dd-basename" style="display: none"><%= f.text_field :basename, class: "filename" %></dd>
-  <dd id="cms-layouts-form-dd-basename-dummy"></dd>
+  <dt><%= @model.t :basename %><%= @model.tt :basename %></dt>
+  <dd><%= f.text_field :basename, class: "filename" %></dd>
 </dl>

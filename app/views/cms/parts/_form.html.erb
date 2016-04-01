@@ -1,13 +1,3 @@
-<%= jquery do %>
-  this.showBasenameField = function() {
-    $('#cms-parts-form-dt-basename-button').remove();
-    $('#cms-parts-form-dd-basename-dummy').remove();
-    $('#cms-parts-form-dt-basename').toggle();
-    $('#cms-parts-form-dd-basename').toggle();
-    return false;
-  }
-<% end %>
-
 <%
 
 file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/parts/') + "/edit/_form.html.erb"
@@ -24,10 +14,8 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt id="cms-parts-form-dt-basename" style="display: none"><%= @model.t :basename %><%= @model.tt :filename %></dt>
-  <dt id="cms-parts-form-dt-basename-button"><%= link_to @model.t(:basename), '#', onclick: "showBasenameField();" %></dt>
-  <dd id="cms-parts-form-dd-basename" style="display: none"><%= f.text_field :basename, class: "filename" %></dd>
-  <dd id="cms-parts-form-dd-basename-dummy"></dd>
+  <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
+  <dd><%= f.text_field :basename, class: "filename" %></dd>
 
   <dt><%= @model.t :mobile_view %><%= @model.tt :mobile_view %></dt>
   <dd><%= f.select :mobile_view, @item.mobile_view_options %></dd>

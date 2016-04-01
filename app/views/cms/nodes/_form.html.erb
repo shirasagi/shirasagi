@@ -1,13 +1,3 @@
-<%= jquery do %>
-  this.showBasenameField = function() {
-    $('#cms-nodes-form-dt-basename-button').remove();
-    $('#cms-nodes-form-dd-basename-dummy').remove();
-    $('#cms-nodes-form-dt-basename').toggle();
-    $('#cms-nodes-form-dd-basename').toggle();
-    return false;
-  }
-<% end %>
-
 <%
 
 file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/edit/_form.html.erb"
@@ -24,10 +14,8 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt id="cms-nodes-form-dt-basename" style="display: none"><%= @model.t :basename %><%= @model.tt :foldername %></dt>
-  <dt id="cms-nodes-form-dt-basename-button"><%= link_to @model.t(:basename), '#', onclick: "showBasenameField();" %></dt>
-  <dd id="cms-nodes-form-dd-basename" style="display: none"><%= f.text_field :basename, class: "filename" %></dd>
-  <dd id="cms-nodes-form-dd-basename-dummy"></dd>
+  <dt><%= @model.t :basename %><%= @model.tt :foldername %></dt>
+  <dd><%= f.text_field :basename, class: "filename" %></dd>
 
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
