@@ -3,6 +3,8 @@ module Gws::Schedule::PlanHelper
     dates = [item.start_at, item.end_at]
     if item.allday?
       dates.map! { |m| I18n.l(m.to_date, format: :gws_long) }
+    elsif item.start_at.to_date == item.end_at.to_date
+      dates = [I18n.l(item.start_at, format: :gws_long), I18n.l(item.end_at, format: :gws_time)]
     else
       dates.map! { |m| I18n.l(m, format: :gws_long) }
     end

@@ -37,3 +37,17 @@
   min-width: 180px;
   font-weight: bold;
 }
+.gws-reminder-updated-flag {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  @include border-radius(8px);
+  background: $orange;
+  color: $white;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.1;
+  &:after {
+    content: "!";
+  }
+}

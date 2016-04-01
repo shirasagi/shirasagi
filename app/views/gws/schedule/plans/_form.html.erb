@@ -10,12 +10,12 @@
   <dt><%= @model.t :term %></dt>
   <dd>
     <div class="datetimes-field">
-      <%= f.text_field :start_at, class: "datetime start", value: tryb{@item.start_at.strftime("%Y/%m/%d %H:%M")} %>
-      - <%= f.text_field :end_at, class: "datetime end", value: tryb{@item.end_at.strftime("%Y/%m/%d %H:%M")} %>
+      <%= f.text_field :start_at, class: "datetime start", value: tryb { @item.start_at.strftime("%Y/%m/%d %H:%M") } %>
+      - <%= f.text_field :end_at, class: "datetime end", value: tryb { @item.end_at.strftime("%Y/%m/%d %H:%M") } %>
     </div>
     <div class="dates-field">
-      <%= f.text_field :start_on, class: "date start", value: tryb{@item.start_on.strftime("%Y/%m/%d")} %>
-      - <%= f.text_field :end_on, class: "date end", value: tryb{@item.end_on.strftime("%Y/%m/%d")} %>
+      <%= f.text_field :start_on, class: "date start", value: tryb { @item.start_on.strftime("%Y/%m/%d") } %>
+      - <%= f.text_field :end_on, class: "date end", value: tryb { @item.end_on.strftime("%Y/%m/%d") } %>
     </div>
   </dd>
   <dd>

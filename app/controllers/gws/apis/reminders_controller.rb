@@ -19,9 +19,10 @@ class Gws::Apis::RemindersController < ApplicationController
     def find_item
       attr = get_params
       reminder = @model.where({
+        site_id: @cur_site.id,
+        user_id: @cur_user.id,
         item_collection: attr[:item_collection],
         item_id: attr[:item_id],
-        user_id: @cur_user.id,
       }).first
     end
 
@@ -40,7 +41,7 @@ class Gws::Apis::RemindersController < ApplicationController
     def destroy
       item = find_item
 
-      if item.destroy
+      if item.blank? || item.destroy
         render inline: I18n.t("gws.reminder.states.empty"), layout: false
       else
         render inline: "Error", layout: false

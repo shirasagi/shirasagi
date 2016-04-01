@@ -30,11 +30,15 @@ class Gws::Schedule::Plan
     ]
   end
 
+  def member?(user)
+    member_ids.include?(user.id)
+  end
+
   def targeted?(user)
     if target == "group"
       return group_ids.any? { |m| user.group_ids.include?(m) }
     elsif target == "member"
-      return member_ids.include?(user.id)
+      return member?(user)
     else
       true
     end
@@ -51,7 +55,7 @@ class Gws::Schedule::Plan
   def calendar_format(user, site)
     data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
 
-    data[:readable] = allowed?(:read, user, site: site) || targeted?(user)
+    data[:readable] = allowed?(:read, user, site: site)
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")
@@ -77,5 +81,15 @@ class Gws::Schedule::Plan
       data[:className] += " fc-event-repeat"
     end
     data
+  end
+
+  def allowed?(action, user, opts = {})
+    if action == :read
+      super || targeted?(user) || member?(user)
+    elsif action =~ /edit|delete/
+      super || member?(user)
+    else
+      super
+    end
   end
 end

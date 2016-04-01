@@ -34,7 +34,9 @@ class @Gws_Schedule_Calendar
     url = opts['restUrl']
 
     dayClick: (date, event, view) ->
-      links  = "<a href='#{url}/new?start=#{date.format()}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
+      now = new Date
+      start = "#{date.format()}T#{now.getHours()}:00:00"
+      links  = "<a href='#{url}/new?start=#{start}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
       #if opts['defaultView'] != 'basicWeek'
       #  if view.name != 'month'
       #    links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
@@ -61,7 +63,7 @@ class @Gws_Schedule_Calendar
     editable: true,
     eventClick: (event, jsEvent, view) ->
       return if $(this).hasClass('fc-holiday')
-      return unless event.readable
+      #return unless event.readable
 
       popup = "fc-popup"
       if $(this).find(".#{popup}").length == 0

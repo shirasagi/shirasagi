@@ -10,6 +10,7 @@ class Gws::Reminder
   field :date, type: DateTime
   field :item_collection, type: String
   field :item_id, type: String
+  field :read_at, type: DateTime
 
   permit_params :name, :url, :date, :item_collection, :item_id
 
@@ -26,4 +27,8 @@ class Gws::Reminder
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
     criteria
   }
+
+  def reminder_updated?
+    read_at.to_i < updated.to_i
+  end
 end

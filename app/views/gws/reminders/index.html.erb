@@ -10,6 +10,7 @@
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
+        <% if item.reminder_updated? %><span class="gws-reminder-updated-flag"></span><% end %>
         <%= link_to item.name, item.url, class: "title" %>
 
         <div class="meta">

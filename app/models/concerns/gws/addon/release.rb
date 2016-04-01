@@ -24,7 +24,7 @@ module Gws::Addon
       }
       scope :and_closed, ->(date = Time.zone.now) {
         where("$and" => [
-          { "$or" => [{ state: "closed" }, { :release_date.gt => date }, { :close_date.lt => date }] }
+          { "$or" => [{ state: "closed" }, { released: nil }, { :release_date.gt => date }, { :close_date.lt => date }] }
         ])
       }
     end

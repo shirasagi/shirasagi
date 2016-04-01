@@ -10,7 +10,7 @@ class Gws::Schedule::Category
   field :name, type: String
   field :color, type: String, default: "#4488bb"
 
-  has_many :plans, class_name: 'Gws::Schedule::Plan', dependent: :destroy
+  has_many :plans, class_name: 'Gws::Schedule::Plan'
 
   permit_params :state, :name, :color
 

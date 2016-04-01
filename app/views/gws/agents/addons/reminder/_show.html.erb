@@ -7,6 +7,7 @@
 <%
 
 reminder = @item.reminder(@cur_user)
+reminder.update_attributes(read_at: Time.zone.now) if reminder
 date = reminder ? reminder.date : @item.reminder_date
 date ||= Time.zone.now + 7.day unless reminder
 

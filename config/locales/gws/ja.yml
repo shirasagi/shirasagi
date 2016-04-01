@@ -29,7 +29,8 @@ ja:
       gws_long: ! '%Y年 %1m月 %1d日 (%a)'
   time:
     formats:
-      gws_long: ! '%Y年 %1m月%1d日(%a) %1H時%M分'
+      gws_long: ! '%Y年 %1m月 %1d日 (%a) %1H:%M'
+      gws_time: ! '%1H:%M'
 
   gws_role:
     edit_gws_groups: グループの管理

@@ -45,9 +45,9 @@ Gws_Schedule_Calendar.render('#calendar', {
     <ul class="list-items">
       <% @reminders.each do |item| %>
       <li class="list-item">
-        <%= link_to item.name, item.url, class: 'title' %>
-        <span><%= "[変更]" if item.created.to_i != item.updated.to_i %></span>
         <div class="info">
+          <% if item.reminder_updated? %><span class="gws-reminder-updated-flag"></span><% end %>
+          <%= link_to item.name, item.url, class: 'title' %>
           <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d") } %></span>
         </div>
       </li>

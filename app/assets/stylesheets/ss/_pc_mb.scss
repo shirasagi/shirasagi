@@ -362,6 +362,12 @@ td {
   .icon-conf:hover:before {
     background-position: -32px -224px;
   }
+  .icon-portal:before {
+    background-position: left -256px;
+  }
+  .icon-portal:hover:before {
+    background-position: -32px -256px;
+  }
   .icon-schedule:before {
     background-position: left -288px;
   }
@@ -391,12 +397,6 @@ td {
       }
     }
   }
-}
-.portal h2 a:before {
-  background-position: left -256px;
-}
-.portal h2 a:hover:before {
-  background-position: -32px -256px;
 }
 
 // -------------------------------------------------------------------------------------------------

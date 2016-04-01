@@ -1,12 +1,27 @@
 <div class="gws-schedule-tabs">
-  <%= link_to t('gws/schedule.tabs.personal'), gws_schedule_plans_path, class: "personal" %>
-  <%= link_to @cur_group.trailing_name, gws_schedule_group_plans_path(group: @cur_group.id), class: "group" %>
-
-  <% Gws::CustomGroup.site(@cur_site).target_to(@cur_user).each do |g| %>
-    <%= link_to g.name, gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" %>
+  <%= link_to gws_schedule_plans_path, class: "personal" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.personal') %></span>
   <% end %>
 
-  <%= link_to t('gws/schedule.tabs.group'), gws_schedule_all_groups_path, class: "group-all" %>
-  <%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path, class: "facility" %>
-  <%= link_to t('gws/schedule.tabs.personal_list'), gws_schedule_list_plans_path, class: "personal-list" %>
+  <% @cur_user.groups.each do |group| %>
+    <%= link_to gws_schedule_group_plans_path(group: group.id), class: "group" do %>
+      <span class="tab-name"><%= group.trailing_name %></span>
+    <% end %>
+  <% end %>
+
+  <% Gws::CustomGroup.site(@cur_site).target_to(@cur_user).each do |g| %>
+    <%= link_to gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" do %>
+      <span class="tab-name"><%= g.name %></span>
+    <% end %>
+  <% end %>
+
+  <%= link_to gws_schedule_all_groups_path, class: "group-all" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.group') %></span>
+  <% end %>
+  <%= link_to gws_schedule_facilities_path, class: "facility" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.facility') %></span>
+  <% end %>
+  <%= link_to gws_schedule_list_plans_path, class: "personal-list" do %>
+    <span class="tab-name"><%= t('gws/schedule.tabs.personal_list') %></span>
+  <% end %>
 </div>

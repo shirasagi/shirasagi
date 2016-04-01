@@ -5,22 +5,29 @@
   a {
     display: block;
     float: left;
-    min-width: 60px;
     margin: 0 0 -1px 10px;
-    padding: 4px 8px;
+    padding: 4px 4px;
     border: 1px solid $gray4;
     border-radius: 3px 3px 0 0;
     background-color: $gray5;
     color: #000;
-    text-align: center;
     &:hover {
       background-color: #fff;
       text-decoration: none;
+    }
+    .tab-name {
+      display: block;
+      padding: 0 5px 0 8px;
+      border-left: 3px solid #bbb;
+      text-align: center;
     }
   }
   a.current {
     border-bottom-color: #fff;
     background-color: #fff;
+    .tab-name {
+      border-color: $orange;
+    }
   }
 }
 
@@ -51,6 +58,9 @@
   th {
     padding: 4px;
   }
+}
+.fc-state-active {
+  z-index: 0 !important;
 }
 .fc-view-container {
   background-color: #fff;
@@ -136,11 +146,11 @@
   left: -230px;
   width: 30em;
   padding: 10px;
-  border: $border-gray4;
+  border: 1px solid #bbb;
   line-height: 1.6;
   z-index: 100;
   background: $white;
-  @include box-shadow(0 1px 6px $gray4);
+  @include box-shadow(0 1px 6px #888);
   color: $black;
   font-weight: normal;
   text-align: left;
