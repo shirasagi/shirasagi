@@ -78,10 +78,6 @@
           <h2><%= link_to :"cms.view_site", @cur_site.full_url, target: "_blank" %></h2>
           <h2><%= link_to :"cms.preview_site", "#{cms_preview_path}/", target: "_blank" %></h2>
         </nav>
-        <% elsif @ss_mode == :gws %>
-        <nav class="main-navi portal">
-          <h2><%= link_to t('gws.portal'), "#{gws_portal_path}/" %></h2>
-        </nav>
         <% end %>
 
         <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
