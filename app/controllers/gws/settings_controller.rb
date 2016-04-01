@@ -3,7 +3,7 @@ class Gws::SettingsController < ApplicationController
 
   public
     def index
-      url_proc = Gws::Setting.plugins.first[1]
-      redirect_to instance_exec(&url_proc)
+      url_lazy = Gws::Setting.plugins.first[1]
+      redirect_to instance_exec(&url_lazy)
     end
 end

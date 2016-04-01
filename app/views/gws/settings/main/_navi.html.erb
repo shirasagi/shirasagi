@@ -1,8 +1,8 @@
 <nav class="mod-navi">
   <h2><%= t "gws.setting" %></h2>
 
-  <% Gws::Setting.plugins.each do |name, url| %>
-    <h3><%= link_to name, instance_exec(&url) %></h3>
+  <% Gws::Setting.plugins.each do |name, url_lazy| %>
+    <h3><%= link_to name, instance_exec(&url_lazy) %></h3>
   <% end %>
 </nav>
 
