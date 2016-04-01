@@ -18,7 +18,7 @@ $ ->
       error: (xhr, status) ->
         try
           errors = $.parseJSON(xhr.responseText)
-          alert(["== Error =="].concat(errors).join("\n"));
+          alert(errors.join("\n"));
         catch
           alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
     e.preventDefault()
