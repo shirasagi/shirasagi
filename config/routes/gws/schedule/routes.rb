@@ -2,8 +2,9 @@ SS::Application.routes.draw do
   Gws::Schedule::Initializer
 
   concern :plans do
-    get :delete, on: :member
     get :popup, on: :member
+    get :delete, on: :member
+    delete action: :destroy_all, :on => :collection
   end
 
   gws "schedule" do

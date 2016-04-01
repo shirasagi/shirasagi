@@ -35,7 +35,7 @@ module SS::CrudFilter
       ids = params[:ids]
       raise "400" unless ids
       ids = ids.split(",") if ids.kind_of?(String)
-      ids = ids.map(&:to_i)
+      #ids = ids.map(&:to_i)
       @items = @model.in(id: ids)
       raise "400" unless @items.present?
     end
