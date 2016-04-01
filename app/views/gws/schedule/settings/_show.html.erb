@@ -1,7 +1,4 @@
 <dl class="see">
   <dt><%= @model.t :schedule_max_date %></dt>
-  <dd>
-    <%= @item.label :schedule_max_date %>
-    (<%= @item.schedule_max_at.strftime("%Y/%m/%d %H:%M") %>)
-  </dd>
+  <dd><%= I18n.l @item.schedule_max_at.to_date, format: :gws_long %></dd>
 </dl>

@@ -39,9 +39,6 @@ ja:
         all: 全ユーザー
         group: 同一グループ内
         member: 参加者のみ
-      max_date:
-        fyear: 年度末
-        fyear1: 翌年度末
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
@@ -113,3 +110,5 @@ ja:
         facility_ids: 設備予約
       gws/schedule/setting:
         schedule_max_date: 入力可能期間
+        schedule_max_years: 年数
+        schedule_max_month: 期末月

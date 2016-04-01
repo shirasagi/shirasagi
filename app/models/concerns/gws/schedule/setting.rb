@@ -3,27 +3,30 @@ module Gws::Schedule::Setting
   extend SS::Translation
 
   included do
-    field :schedule_max_date, type: String
+    field :schedule_max_month, type: Integer
+    field :schedule_max_years, type: Integer
 
-    permit_params :schedule_max_date
+    permit_params :schedule_max_month, :schedule_max_years
   end
 
-  def schedule_max_date
-    self[:schedule_max_date].presence || "fyear"
+  def schedule_max_month
+    self[:schedule_max_month].presence || 3
+  end
+
+  def schedule_max_years
+    self[:schedule_max_years].presence || 1
   end
 
   def schedule_max_at
-    if schedule_max_date == "fyear1"
-      Date.new (Time.zone.today << 3).year + 2, 3, 31
-    else
-      Date.new (Time.zone.today << 3).year + 1, 3, 31
-    end
+    year = (Time.zone.today << schedule_max_month).year + schedule_max_years + 1
+    Date.new year, schedule_max_month, -1
   end
 
-  def schedule_max_date_options
-    [
-      [I18n.t("gws/schedule.options.max_date.fyear"), "fyear"],
-      [I18n.t("gws/schedule.options.max_date.fyear1"), "fyear1"],
-    ]
+  def schedule_max_month_options
+    1..12
+  end
+
+  def schedule_max_years_options
+    (0..10).map { |m| ["+#{m}", m] }
   end
 end
