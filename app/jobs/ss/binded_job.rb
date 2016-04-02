@@ -1,6 +1,6 @@
 class SS::BindedJob < ActiveJob::ConfiguredJob
-  def initialize(job_class, bindings={})
-    super(job_class, {})
+  def initialize(job_class, options={}, bindings={})
+    super(job_class, options)
     @bindings = bindings.dup.stringify_keys
   end
 

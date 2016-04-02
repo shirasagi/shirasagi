@@ -2,8 +2,12 @@ module Job::SS::Core
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def bind(bindings={})
-      ::SS::BindedJob.new(self, bindings)
+    def bind(bindings)
+      ::SS::BindedJob.new(self, {}, bindings)
+    end
+
+    def set(options)
+      ::SS::BindedJob.new(self, options, {})
     end
   end
 
@@ -16,7 +20,7 @@ module Job::SS::Core
   end
 
   def serialize
-    super.merge('bindings' => serialize_bindings)
+    super.merge('serialized_bindings' => serialize_bindings)
   end
 
   def deserialize(job_data)
@@ -31,7 +35,7 @@ module Job::SS::Core
   end
 
   def deserialize_bindings(job_data)
-    bindings = job_data['bindings']
+    bindings = job_data['serialized_bindings']
     if bindings.present?
       bindings = ActiveJob::Arguments.deserialize(bindings)
       bindings = bindings.first

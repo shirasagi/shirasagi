@@ -18,13 +18,19 @@
 #     job = job.bind(user_id: @cur_user) if @cur_user
 #     job.perform_later('world')
 #
-# set を用いる場合は、最後にする。
+# set を用いて job / queue の設定を追加することもできる。
 #
 #     Cms::ExampleJob.bind(site_id: @cur_site).set(queue: "severity_high").perform_later('world')
 #     Cms::ExampleJob.bind(site_id: @cur_site).set(queue: "severity_high", wait: 30.seconds).perform_later('world')
 #
+# bind と set の順番は関係ない。set を先にしてもいける。
+#
+#     Cms::ExampleJob.set(queue: "severity_high").bind(site_id: @cur_site).perform_later('world')
+#     Cms::ExampleJob.set(queue: "severity_high", wait: 30.seconds).bind(site_id: @cur_site).perform_later('world')
+#
 class Cms::ExampleJob < Cms::ApplicationJob
   def perform(param)
     puts "hello #{param} @ #{site.domain}"
+    Rails.logger.info "hello #{param} @ #{site.domain}"
   end
 end
