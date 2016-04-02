@@ -1,4 +1,4 @@
-module Job::Cms::Reference::Page
+module Job::Cms::Binding::Page
   extend ActiveSupport::Concern
 
   included do
@@ -17,5 +17,19 @@ module Job::Cms::Reference::Page
       end
       page
     end
+  end
+
+  def bind(bindings)
+    if bindings['page_id'].present?
+      self.page_id = bindings['page_id'].to_param
+      @page = nil
+    end
+    super
+  end
+
+  def bindings
+    ret = super
+    ret.merge!({ 'page_id' => page_id }) if page_id.present?
+    ret
   end
 end

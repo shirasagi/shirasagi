@@ -1,6 +1,6 @@
-module Job::Cms::Reference::Group
+module Job::Cms::Binding::Group
   extend ActiveSupport::Concern
-  include Job::SS::Reference::Group
+  include Job::SS::Binding::Group
 
   included do
     self.group_class = Cms::Group

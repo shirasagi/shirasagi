@@ -1,4 +1,4 @@
-module Job::SS::Reference::User
+module Job::SS::Binding::User
   extend ActiveSupport::Concern
 
   included do
@@ -11,5 +11,19 @@ module Job::SS::Reference::User
   def user
     return nil if user_id.blank?
     @user ||= self.class.user_class.find(user_id) rescue nil
+  end
+
+  def bind(bindings)
+    if bindings['user_id'].present?
+      self.user_id = bindings['user_id'].to_param
+      @user = nil
+    end
+    super
+  end
+
+  def bindings
+    ret = super
+    ret.merge!({ 'user_id' => user_id }) if user_id.present?
+    ret
   end
 end

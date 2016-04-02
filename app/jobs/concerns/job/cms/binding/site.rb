@@ -1,6 +1,6 @@
-module Job::Cms::Reference::Site
+module Job::Cms::Binding::Site
   extend ActiveSupport::Concern
-  include Job::SS::Reference::Site
+  include Job::SS::Binding::Site
 
   included do
     self.site_class = Cms::Site

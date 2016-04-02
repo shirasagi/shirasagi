@@ -1,4 +1,4 @@
-module Job::Cms::Reference::Node
+module Job::Cms::Binding::Node
   extend ActiveSupport::Concern
 
   included do
@@ -17,5 +17,19 @@ module Job::Cms::Reference::Node
       end
       node
     end
+  end
+
+  def bind(bindings)
+    if bindings['node_id'].present?
+      self.node_id = bindings['node_id'].to_param
+      @node = nil
+    end
+    super
+  end
+
+  def bindings
+    ret = super
+    ret.merge!({ 'node_id' => node_id }) if node_id.present?
+    ret
   end
 end
