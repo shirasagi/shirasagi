@@ -23,7 +23,8 @@ module Cms::BaseFilter
 
     def set_site
       @ss_mode = :cms
-      @cur_site = request.env["ss.site"] = Cms::Site.find id: params[:site]
+      @cur_site = Cms::Site.find id: params[:site]
+      request.env["ss.site"] = @cur_site
       @crumbs << [@cur_site.name, cms_contents_path]
     end
 

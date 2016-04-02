@@ -27,8 +27,7 @@ module Gws::BaseFilter
     end
 
     def set_current_group
-      cur_groups = @cur_user.groups.in(name: /^#{@cur_site.name}(\/|$)/)
-      @cur_group = cur_groups.first # select one group
+      @cur_group = @cur_user.groups.in_group(@cur_site).first # select one group
       raise "403" unless @cur_group
     end
 

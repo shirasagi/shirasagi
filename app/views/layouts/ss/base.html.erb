@@ -48,7 +48,7 @@
       <div class="dropdown">
         <h2>
           <% if @cur_group %>
-          <span class="group"><%= @cur_group.name.sub(/.*\//, "") %></span>
+          <span class="group"><%= @cur_group.trailing_name %></span>
           <% end %>
           <%= @cur_user.name %>
         </h2>
