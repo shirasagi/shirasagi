@@ -26,6 +26,10 @@ module Gws::Schedule::PlanFilter
       render
     end
 
+    def events
+      @items = []
+    end
+
     def popup
       set_item
 

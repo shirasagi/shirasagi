@@ -2,9 +2,10 @@ SS::Application.routes.draw do
   Gws::Schedule::Initializer
 
   concern :plans do
+    get :events, on: :collection
     get :popup, on: :member
     get :delete, on: :member
-    delete action: :destroy_all, :on => :collection
+    delete action: :destroy_all, on: :collection
   end
 
   gws "schedule" do
@@ -18,7 +19,7 @@ SS::Application.routes.draw do
     resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
-    #resources :facility_group_plans, path: 'fg:group/plans', concerns: :plans
+    resources :reserve_facilities, concerns: :plans
 
     resource :setting, only: [:show, :edit, :update]
   end

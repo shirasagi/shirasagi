@@ -11,4 +11,10 @@ class Gws::Schedule::PlansController < ApplicationController
       #allow(:read, @cur_user, site: @cur_site).
       search(params[:s])
   end
+
+  def events
+    @items = Gws::Schedule::Plan.site(@cur_site).
+      member(@cur_user).
+      search(params[:s])
+  end
 end

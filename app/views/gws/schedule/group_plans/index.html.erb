@@ -20,7 +20,7 @@ Gws_Schedule_Calendar.renderController('#calendar-controller');
     Gws_Schedule_Calendar.render('#cal-<%= item.id %>', {
       defaultView: 'basicWeek',
       restUrl: '<%= url_for action: :index %>',
-      eventSources: [{ url: '<%= gws_schedule_user_plans_path(user: item.id, format: :json) %>' }]
+      eventSources: [{ url: '<%= events_gws_schedule_user_plans_path(user: item.id, format: :json) %>' }]
     });
     <% end %>
   <% end %>

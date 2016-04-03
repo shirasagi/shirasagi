@@ -1,7 +1,7 @@
 <%= jquery do %>
 Gws_Schedule_Calendar.render('#calendar', {
   restUrl: '<%= url_for action: :index %>',
-  eventSources: [{ url: '<%= url_for action: :index, format: :json %>' }]
+  eventSources: [{ url: '<%= url_for action: :events, format: :json %>' }]
 });
 <% end %>
 
