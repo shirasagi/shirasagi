@@ -7,7 +7,7 @@ class Gws::Workflow::SearchApproversController < ApplicationController
 
   private
     def group_id
-      default_group_id = @cur_user.group_ids.first
+      default_group_id = @cur_user.groups.in_group(@cur_site).map(&:id).first
       return default_group_id if params[:s].blank?
       return default_group_id if params[:s][:group].blank?
 

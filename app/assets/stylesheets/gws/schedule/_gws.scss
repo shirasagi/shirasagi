@@ -1,5 +1,3 @@
-// schedule
-
 .gws-schedule-tabs {
   @include clear;
   a {
@@ -204,22 +202,29 @@
   }
 }
 #calendar-controller {
-  //.fc-widget-header { border-bottom-width: 0; }
-  .fc-body { display: none; }
+  //.fc-body { display: none; }
 }
 .calendar.multiple {
   .fc-toolbar, .fc-head { display: none; }
 }
-.calendar-name {
-  text-align: left;
-  padding: 5px;
+.fc-body .fc-scrollpane-inner {
+  min-height: 60px;
+}
+.fc-scrollpane > div {
+  overflow: visible !important;
+}
+.calendar-multiple-header {
+  padding: 5px 8px;
   border: 1px solid #ddd;
   border-width: 0 1px;
-  background: #eee;
+  background-color: #f9f9f9;
+  @include background(linear-gradient(#fff, #eee));
+  a {
+    color: #444;
+    &:hover { color: $orange; }
+  }
   .add-plan {
     float: right;
-    color: #888;
-    &:hover { color: $orange; }
   }
 }
 .calendar {

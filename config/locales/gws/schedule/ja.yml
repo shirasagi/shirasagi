@@ -8,7 +8,7 @@ ja:
       personal: 個人
       personal_list: 予定リスト
       group: 全体
-      facility: 設備
+      facility: 設備予約
 
     calendar:
       titleFormat:
@@ -16,7 +16,7 @@ ja:
         week: (YYYY年 M月 D日)
         day: YYYY年 M月 D日
     links:
-      add_plan: 予定を登録する
+      add_plan: 予定を作成
       show_month: 月表示
       show_week: 週表示
       show_day: 日表示

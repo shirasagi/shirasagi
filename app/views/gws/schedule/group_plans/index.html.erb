@@ -10,8 +10,8 @@ Gws_Schedule_Calendar.renderController('#calendar-controller');
   <div class="calendar" id="calendar-controller"></div>
 
   <% @items.each_with_index do |item, idx| %>
-    <div class="calendar-name" id="cal-<%= item.id %>-name">
-      <%= link_to item.name, gws_schedule_user_plans_path(user: item.id) %>
+    <div class="calendar-multiple-header">
+      <%= link_to item.name, gws_schedule_user_plans_path(user: item.id), class: "calendar-name" %>
       <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: item.id), class: 'add-plan' %>
     </div>
     <div class="calendar multiple" id="cal-<%= item.id %>"></div>

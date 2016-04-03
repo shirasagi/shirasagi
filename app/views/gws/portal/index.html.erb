@@ -32,8 +32,8 @@ Gws_Schedule_Calendar.render('#calendar', {
 <section class="main-box">
   <!-- <header><h2><%= t('modules.gws/schedule') %></h2></header> -->
   <div class="calendar" id="calendar-controller"></div>
-  <div class="calendar-name">
-    <%= link_to @cur_user.name, gws_schedule_plans_path %>
+  <div class="calendar-multiple-header">
+    <%= link_to @cur_user.name, gws_schedule_plans_path, class: "calendar-name" %>
     <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_plan_path, class: 'add-plan' %>
   </div>
   <div class="calendar multiple" id="calendar"></div>
