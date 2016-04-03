@@ -3,11 +3,11 @@ module Job::SS::Core
 
   module ClassMethods
     def bind(bindings)
-      ::SS::BindedJob.new(self, {}, bindings)
+      ::Job::BindedJob.new(self, {}, bindings)
     end
 
     def set(options)
-      ::SS::BindedJob.new(self, options, {})
+      ::Job::BindedJob.new(self, options, {})
     end
   end
 
