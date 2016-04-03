@@ -11,7 +11,7 @@ module Job::Cms::Binding::Node
   def node
     return nil if node_id.blank?
     @node ||= begin
-      node = self.class.node_class.find(node_id) rescue nil
+      node = self.class.node_class.or({ id: node_id }, { filename: node_id }).first
       if node
         node = node.becomes_with_route rescue node
       end

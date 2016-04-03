@@ -10,7 +10,7 @@ module Job::SS::Binding::User
 
   def user
     return nil if user_id.blank?
-    @user ||= self.class.user_class.find(user_id) rescue nil
+    @user ||= self.class.user_class.or({ id: user_id }, { uid: user_id }, { email: user_id }).first
   end
 
   def bind(bindings)

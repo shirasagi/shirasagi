@@ -10,7 +10,7 @@ module Job::SS::Binding::Site
 
   def site
     return nil if site_id.blank?
-    @site ||= self.class.site_class.find(site_id) rescue nil
+    @site ||= self.class.site_class.or({ id: site_id }, { host: site_id }).first
   end
 
   def bind(bindings)

@@ -11,7 +11,7 @@ module Job::Cms::Binding::Page
   def page
     return nil if page_id.blank?
     @page ||= begin
-      page = self.class.page_class.find(page_id) rescue nil
+      page = self.class.page_class.or({ id: page_id }, { filename: page_id }).first
       if page
         page = page.becomes_with_route rescue page
       end

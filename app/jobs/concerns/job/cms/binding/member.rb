@@ -10,7 +10,7 @@ module Job::Cms::Binding::Member
 
   def member
     return nil if member_id.blank?
-    @member ||= self.class.member_class.find(member_id) rescue nil
+    @member ||= self.class.member_class.or({ id: member_id }, { email: member_id }).first
   end
 
   def bind(bindings)
