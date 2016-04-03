@@ -5,14 +5,6 @@ class Cms::Task
   belongs_to :node, class_name: "Cms::Node"
 
   class << self
-    def generate_nodes(opts = {})
-      process_with_node "cms:generate_nodes", Cms::Agents::Tasks::NodesController, :generate, opts
-    end
-
-    def generate_pages(opts = {})
-      process_with_node "cms:generate_pages", Cms::Agents::Tasks::PagesController, :generate, opts
-    end
-
     def update_pages(opts = {})
       process_with_node "cms:update_pages", Cms::Agents::Tasks::PagesController, :update, opts
     end

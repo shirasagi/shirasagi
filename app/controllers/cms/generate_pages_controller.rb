@@ -1,6 +1,6 @@
 class Cms::GeneratePagesController < ApplicationController
   include Cms::BaseFilter
-  include SS::ExecFilter
+  include SS::JobFilter
 
   navi_view "cms/main/navi"
 
@@ -9,11 +9,12 @@ class Cms::GeneratePagesController < ApplicationController
       "cms:generate_pages"
     end
 
-    def task_command
-      [ task_name, "site=#{@cur_site.host}" ]
-    end
-
     def set_item
       @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil
+      @job_class = Cms::Page::GeneratorJob
+      @job_bindings = {
+        site_id: @cur_site,
+      }
+      @job_options = {}
     end
 end

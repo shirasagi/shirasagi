@@ -1,10 +1,23 @@
 namespace :cms do
+  def find_sites(site)
+    return Cms::Site unless site
+    Cms::Site.where host: site
+  end
+
   task :generate_nodes => :environment do
-    Cms::Task.generate_nodes site: ENV["site"], node: ENV["node"]
+    find_sites(ENV["site"]).each do |site|
+      job = Cms::Node::GeneratorJob.bind(site_id: site)
+      job = job.bind(node_id: ENV["node"]) if ENV["node"]
+      job.perform_now
+    end
   end
 
   task :generate_pages => :environment do
-    Cms::Task.generate_pages site: ENV["site"], node: ENV["node"], attachments: ENV["attachments"]
+    find_sites(ENV["site"]).each do |site|
+      job = Cms::Page::GeneratorJob.bind(site_id: site)
+      job = job.bind(node_id: ENV["node"]) if ENV["node"]
+      job.perform_now
+    end
   end
 
   task :update_pages => :environment do
