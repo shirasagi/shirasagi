@@ -380,6 +380,24 @@ td {
   .icon-board:hover:before {
     background-position: -32px -320px;
   }
+  .icon-reminder:before {
+    background-position: left -352px;
+  }
+  .icon-reminder:hover:before {
+    background-position: -32px -352px;
+  }
+  .icon-facility:before {
+    background-position: left -384px;
+  }
+  .icon-facility:hover:before {
+    background-position: -32px -384px;
+  }
+  .icon-workflow:before {
+    background-position: left -416px;
+  }
+  .icon-workflow:hover:before {
+    background-position: -32px -416px;
+  }
   @include mb {
     @include clear;
     h2 {

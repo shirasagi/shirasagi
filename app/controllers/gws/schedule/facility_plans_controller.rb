@@ -19,5 +19,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
       @items = Gws::Schedule::Plan.site(@cur_site).
         facility(@facility).
         search(params[:s])
+
+      render json: @items.map { |m| m.calendar_facility_format(@cur_user, @cur_site) }.to_json
     end
 end

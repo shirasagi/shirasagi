@@ -10,7 +10,12 @@ class @Gws_Schedule_Calendar
       $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove()
 
   @defaultParams: (opts) ->
+    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
     lang: 'ja'
+    views:
+      timelineAlign:
+        type: 'day'
+        buttonText: '日' # TODO: Use lang.
     titleFormat:
       month: "<%= I18n.t('gws/schedule.calendar.titleFormat.month') %>"
       week: "<%= I18n.t('gws/schedule.calendar.titleFormat.week') %>"
@@ -23,7 +28,6 @@ class @Gws_Schedule_Calendar
     fixedWeekCount: false
     startParam: 's[start]'
     endParam: 's[end]'
-    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
     loading: (isLoading, view) ->
       if isLoading
         $(this).find('.fc-day:first-child').append('<span class="fc-loading">Loading..</span>')
@@ -101,36 +105,3 @@ class @Gws_Schedule_Calendar
         data: { item: { api: 'resize', api_start: event.start.format(), api_end: event.end.format() } }
         error: (xhr, status, error) ->
           revertFunc()
-
-  @renderController: (selector) ->
-    controller = $(selector)
-    $(selector).fullCalendar
-      lang: 'ja'
-      titleFormat:
-        month: "<%= I18n.t('gws/schedule.calendar.titleFormat.month') %>"
-        week: "<%= I18n.t('gws/schedule.calendar.titleFormat.week') %>"
-        day: "<%= I18n.t('gws/schedule.calendar.titleFormat.day') %>"
-      timeFormat: 'HH:mm'
-      columnFormat: { month: 'ddd', week: 'M/D [(]ddd[)]', day: 'M/D [(]ddd[)]' }
-      #slotLabelFormat: 'HH:mm'
-      slotLabelFormat: 'H'
-      slotDuration: '01:00'
-      defaultView: 'basicWeek'
-      #defaultView: 'timelineDay'
-      header: { left: 'today prev next title', right: 'basicWeek timelineDay' }
-      contentHeight: 'auto'
-      eventSources: []
-      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
-      eventAfterAllRender: ->
-        $("#calendar-controller .fc-body").html("")
-
-    controller.find('.fc-today-button').click ->
-      $('.calendar.multiple .fc-today-button').click()
-    controller.find('.fc-prev-button').click ->
-      $('.calendar.multiple .fc-prev-button').click()
-    controller.find('.fc-next-button').click ->
-      $('.calendar.multiple .fc-next-button').click()
-    controller.find('.fc-basicWeek-button').click ->
-      $('.calendar.multiple .fc-basicWeek-button').click()
-    controller.find('.fc-timelineDay-button').click ->
-      $('.calendar.multiple .fc-timelineDay-button').click()

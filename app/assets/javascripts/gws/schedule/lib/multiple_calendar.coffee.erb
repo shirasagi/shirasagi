@@ -1,0 +1,46 @@
+class @Gws_Schedule_Multiple_Calendar
+  @render: (selector, opts = {})->
+    params = Gws_Schedule_Calendar.defaultParams(opts)
+    $.extend params, Gws_Schedule_Calendar.editableParams(opts) if opts['restUrl']
+    $.extend params, Gws_Schedule_Calendar.tapMenuParams(opts) if opts['restUrl']
+    $.extend params, @defaultParams(opts)
+    $.extend params, opts
+    $(selector).fullCalendar(params)
+
+    $(document).click (ev) ->
+      $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove()
+
+  @defaultParams: (opts) ->
+    defaultView: 'basicWeek'
+    slotLabelFormat: 'H'
+    slotDuration: '01:00'
+    #header: { left: 'today prev next title', right: 'basicWeek timelineAlign' }
+    header: { left: 'today prev next title', right: '' }
+    eventRender: (event, element, view)->
+      if view.name == 'timelineAlign'
+        TimelineAlignView.eventRender(event, element, view)
+
+  @controllerParams: (opts)->
+    eventSources: []
+    eventAfterAllRender: ->
+      $("#calendar-controller .fc-body").html("")
+
+  @renderController: (selector, opts = {}) ->
+    params = Gws_Schedule_Calendar.defaultParams(opts)
+    $.extend params, @defaultParams(opts)
+    $.extend params, @controllerParams(opts)
+    $.extend params, opts
+
+    $(selector).fullCalendar(params)
+
+    controller = $(selector)
+    controller.find('.fc-today-button').click ->
+      $('.calendar.multiple .fc-today-button').click()
+    controller.find('.fc-prev-button').click ->
+      $('.calendar.multiple .fc-prev-button').click()
+    controller.find('.fc-next-button').click ->
+      $('.calendar.multiple .fc-next-button').click()
+    controller.find('.fc-basicWeek-button').click ->
+      $('.calendar.multiple .fc-basicWeek-button').click()
+    controller.find('.fc-timelineAlign-button').click ->
+      $('.calendar.multiple .fc-timelineAlign-button').click()

@@ -62,11 +62,11 @@ class Gws::Schedule::Plan
     data[:title] = ERB::Util.h(name) if data[:readable]
 
     if allday? || start_at.to_date != end_at.to_date
-      data[:className] = 'fc-event-days'
+      data[:className] = 'fc-event-range'
       data[:backgroundColor] = category.color if category
       data[:textColor] = category.text_color if category
     else
-      data[:className] = 'fc-event-one'
+      data[:className] = 'fc-event-point'
       data[:textColor] = category.color if category
     end
 
@@ -80,6 +80,14 @@ class Gws::Schedule::Plan
       data[:title]      = " #{data[:title]}"
       data[:className] += " fc-event-repeat"
     end
+    data
+  end
+
+  def calendar_facility_format(user, site)
+    data = calendar_format(user, site)
+    data[:className] = 'fc-event-range'
+    data[:backgroundColor] = category.color if category
+    data[:textColor] = category.text_color if category
     data
   end
 

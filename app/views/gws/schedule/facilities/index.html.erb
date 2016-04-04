@@ -1,5 +1,8 @@
 <%= jquery do %>
-Gws_Schedule_Calendar.renderController('#calendar-controller');
+Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
+  defaultView: 'timelineAlign',
+  header: { left: 'today prev next title', right: 'basicWeek timelineAlign' },
+});
 <% end %>
 
 <%= render "gws/schedule/main/tabs" %>
@@ -17,12 +20,9 @@ Gws_Schedule_Calendar.renderController('#calendar-controller');
     <div class="calendar multiple" id="cal-<%= item.id %>"></div>
 
     <%= jquery do %>
-    Gws_Schedule_Calendar.render('#cal-<%= item.id %>', {
-      defaultView: 'basicWeek',
-      //defaultView: 'timelineDay',
-      slotLabelFormat: 'H',
-      slotDuration: '01:00',
-      header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+    Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
+      defaultView: 'timelineAlign',
+      header: { left: 'today prev next title', right: 'basicWeek timelineAlign' },
       restUrl: '<%= gws_schedule_facility_plans_path(facility: item.id) %>',
       eventSources: [{ url: '<%= events_gws_schedule_facility_plans_path(facility: item.id, format: :json) %>' }]
     });
