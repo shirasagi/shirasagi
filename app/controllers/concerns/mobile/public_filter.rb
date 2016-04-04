@@ -56,17 +56,6 @@ module Mobile::PublicFilter
       response.body = body.to_s
     end
 
-    def session_key
-      unless key = Rails.application.config.session_options.merge(request.session_options || {})[:key]
-        key = ActionDispatch::Session::AbstractStore::DEFAULT_OPTIONS[:key]
-      end
-      key
-    end
-
-    def mobile_session_id
-      request.session_options[:id] || request.session.id
-    end
-
     def same_host?(uri)
       return true unless domain = uri.host
       domain = "#{domain}:#{uri.port}" if uri.port
