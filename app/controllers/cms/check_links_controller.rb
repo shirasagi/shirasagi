@@ -1,16 +1,22 @@
 class Cms::CheckLinksController < ApplicationController
   include Cms::BaseFilter
-  include SS::ExecFilter
+  include SS::JobFilter
 
   navi_view "cms/main/conf_navi"
 
   private
-    def task_name
-      "cms:check_links"
+    def job_class
+      Cms::CheckLinksJob
     end
 
-    def task_command
-      [ task_name, "site=#{@cur_site.host}" ]
+    def job_bindings
+      {
+        site_id: @cur_site.id,
+      }
+    end
+
+    def task_name
+      job_class.task_name
     end
 
     def set_item

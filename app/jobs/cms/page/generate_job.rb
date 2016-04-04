@@ -1,4 +1,4 @@
-class Cms::Page::GeneratorJob < Cms::ApplicationJob
+class Cms::Page::GenerateJob < Cms::ApplicationJob
   include Job::Cms::GeneratorFilter
 
   self.task_name = "cms:generate_pages"

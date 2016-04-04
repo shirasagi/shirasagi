@@ -4,35 +4,42 @@ namespace :cms do
     Cms::Site.where host: site
   end
 
-  task :generate_nodes => :environment do
+  def with_site(job_class)
     find_sites(ENV["site"]).each do |site|
-      job = Cms::Node::GeneratorJob.bind(site_id: site)
+      job = job_class.bind(site_id: site)
+      job.perform_now
+    end
+  end
+
+  def with_node(job_class)
+    find_sites(ENV["site"]).each do |site|
+      job = job_class.bind(site_id: site)
       job = job.bind(node_id: ENV["node"]) if ENV["node"]
       job.perform_now
     end
+  end
+
+  task :generate_nodes => :environment do
+    with_node(Cms::Node::GenerateJob)
   end
 
   task :generate_pages => :environment do
-    find_sites(ENV["site"]).each do |site|
-      job = Cms::Page::GeneratorJob.bind(site_id: site)
-      job = job.bind(node_id: ENV["node"]) if ENV["node"]
-      job.perform_now
-    end
+    with_node(Cms::Page::GenerateJob)
   end
 
   task :update_pages => :environment do
-    Cms::Task.update_pages site: ENV["site"], node: ENV["node"]
+    with_node(Cms::Page::UpdateJob)
   end
 
   task :release_pages => :environment do
-    Cms::Task.release_pages site: ENV["site"]
+    with_site(Cms::Page::ReleaseJob)
   end
 
   task :remove_pages => :environment do
-    Cms::Task.remove_pages site: ENV["site"]
+    with_site(Cms::Page::RemoveJob)
   end
 
   task :check_links => :environment do
-    Cms::Task.check_links site: ENV["site"], node: ENV["node"], email: ENV["email"]
+    with_node(Cms::CheckLinksJob)
   end
 end

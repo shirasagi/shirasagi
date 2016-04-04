@@ -1,4 +1,4 @@
-class Cms::Node::GeneratorJob < Cms::ApplicationJob
+class Cms::Node::GenerateJob < Cms::ApplicationJob
 include Job::Cms::GeneratorFilter
 
   self.task_name = "cms:generate_nodes"

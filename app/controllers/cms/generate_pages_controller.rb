@@ -5,16 +5,21 @@ class Cms::GeneratePagesController < ApplicationController
   navi_view "cms/main/navi"
 
   private
+    def job_class
+      Cms::Page::GenerateJob
+    end
+
+    def job_bindings
+      {
+        site_id: @cur_site.id,
+      }
+    end
+
     def task_name
-      "cms:generate_pages"
+      job_class.task_name
     end
 
     def set_item
       @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil
-      @job_class = Cms::Page::GeneratorJob
-      @job_bindings = {
-        site_id: @cur_site,
-      }
-      @job_options = {}
     end
 end

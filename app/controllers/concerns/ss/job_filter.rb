@@ -2,9 +2,6 @@ module SS::JobFilter
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :job_class
-    attr_accessor :job_bindings
-    attr_accessor :job_options
     before_action :set_item
   end
 
@@ -15,13 +12,25 @@ module SS::JobFilter
     end
   end
 
+  def job_class
+    raise NotImplementedError
+  end
+
+  def job_bindings
+    {}
+  end
+
+  def job_options
+    {}
+  end
+
   def run
     return stop if params[:stop]
     return reset if params[:reset]
     return redirect_to({ action: :index }) if @item.running?
 
     @item.update_attributes state: "ready"
-    @job_class.bind(@job_bindings).perform_later(@job_options)
+    job_class.bind(job_bindings).perform_later(job_options)
 
     redirect_to({ action: :index }, { notice: t("views.task.started") })
   end
