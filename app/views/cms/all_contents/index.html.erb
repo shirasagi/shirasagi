@@ -1,0 +1,13 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head">
+      <h2><%= t("cms.all_contents") %></h2>
+    </div>
+    <div class="addon-body">
+      <p><%= t("cms.all_content.description") %></p>
+    </div>
+  </div>
+</div>
+<footer class="send">
+  <%= link_to :download, cms_all_contents_path(format: :csv), { class: "btn btn-primary" } %>
+</footer>
