@@ -2,7 +2,7 @@
   <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= link_to @model.t(:basename), '#', onclick: '$("#article-pages-form-dd-input").toggle(); false;' %><%= @model.tt :title %></dt>
+  <dt><%= link_to @model.t(:basename), '#', onclick: '$("#article-pages-form-dd-input").toggle(); return false;' %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename", style: "display: none" %></dd>
 
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
