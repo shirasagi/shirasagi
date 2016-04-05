@@ -11,7 +11,7 @@ SS_Tabs.render("#cms-tabs-<%= @cur_part.id %>");
       <article class="<%= 'new' if @cur_part.in_new_days?(item.date) %>">
         <header>
           <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-          <h3><%= link_to item.name, item.url %></h3>
+          <h3><%= link_to item.name_for_index, item.url %></h3>
         </header>
       </article>
       <% end %>

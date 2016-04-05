@@ -14,6 +14,9 @@ bind << "location.href = '#{url}?route=' + $(this).val();"
   <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>
 
+  <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
+  <dd><%= f.text_field :index_name %></dd>
+
   <dt><%= @model.t :basename %><%= @model.tt :foldername %></dt>
   <dd><%= f.text_field :basename, class: "filename" %></dd>
 
