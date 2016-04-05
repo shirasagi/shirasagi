@@ -24,8 +24,8 @@ SS::Application.routes.draw do
     get "logs/download" => "logs#download", as: :download
     post "logs/download" => "logs#download"
 
-    get "backups/:id" => "backups#show", as: :backup
-    put "backups/:id" => "backups#update"
-    get "backups/:id/restore" => "backups#restore", as: :restore
+    get "backups/:source/:id" => "backups#show", as: :backup, source: /[^\/]+/
+    put "backups/:source/:id" => "backups#update", source: /[^\/]+/
+    get "backups/:source/:id/restore" => "backups#restore", as: :restore, source: /[^\/]+/
   end
 end

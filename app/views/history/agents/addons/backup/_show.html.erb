@@ -7,7 +7,8 @@ return render(text: "") if @item.backups.size == 0
   <% @item.backups.limit(10).each do |item| %>
   <dd>
     <% if @item.allowed?(:edit, @cur_user) %>
-      <%= link_to l(item.created), history_cms_backup_path(id: item.id) %>
+      <% source = ERB::Util.url_encode(request.path) %>
+      <%= link_to l(item.created), history_cms_backup_path(source: source, id: item.id) %>
     <% else %>
       <%= l(item.created) %>
     <% end %>
