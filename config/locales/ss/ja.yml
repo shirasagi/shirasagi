@@ -103,10 +103,6 @@ ja:
         768x1024: 768x1024(XGA縦)
         1280x720: 1280x720(HD横)
         720x1280: 720x1280(HD縦)
-      trans_sid:
-        none: 無効
-        mobile: モバイルのみ
-        always: いつも
     state:
       public: 公開中
       closed: 非公開
@@ -228,7 +224,6 @@ ja:
         mobile_state: 状態
         mobile_location: ロケーション
         mobile_css: CSS
-        trans_sid: Trans SID
       ss/max_file_size:
         name: 名前
         extensions: 拡張子
