@@ -2,6 +2,9 @@
   <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>
 
+  <dt><%= @model.t :index_name %><%= @model.tt :index_name %></dt>
+  <dd><%= f.text_field :index_name %></dd>
+
   <dt><%= link_to @model.t(:basename), '#', onclick: '$("#article-pages-form-dd-input").toggle(); return false;' %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename", style: "display: none" %></dd>
 

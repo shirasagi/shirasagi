@@ -2,6 +2,9 @@
   <dt><%= @model.t :name %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :name %></dd>
 
+  <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
+  <dd><%= f.text_field :index_name %></dd>
+
   <dt><%= link_to @model.t(:basename), '#', onclick: '$("#facility-maps-form-dd-input").toggle(); return false;' %><%= @model.tt :title %></dt>
   <dd><%= f.text_field :basename, id: "facility-maps-form-dd-input", class: "filename", style: "display: none" %></dd>
 
