@@ -17,12 +17,10 @@ describe Workflow::Addon::Branch, dbscope: :example do
     let(:page_filename) { page.filename.gsub('.html', '') }
 
     it "contains \"page filename\"" do
-      pending
       expect(subject.include? page_filename).to eq true
     end
 
     it "is the one that \"_01\" is appended to the tail" do
-      pending
       expect(subject).to eq "#{page_filename}_01"
     end
 
@@ -38,12 +36,10 @@ describe Workflow::Addon::Branch, dbscope: :example do
       subject { @cloned_page2.filename.gsub('.html', '') }
 
       it "contains \"page filename\"" do
-        pending
         expect(subject.include? page_filename).to eq true
       end
 
       it "is the one that \"_02\" is appended to the tail" do
-        pending
         expect(subject).to eq "#{page_filename}_02"
       end
     end

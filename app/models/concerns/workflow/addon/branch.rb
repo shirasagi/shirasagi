@@ -113,8 +113,16 @@ module Workflow::Addon
       end
 
       def seq_clone_filename
+        filename_backup = master.filename
+        last_branch = master.branches.order(created_at: -1).first
+        if last_branch.nil?
+          number = '01'
+        else
+          last_branch.filename =~ /.*_(\d\d)/
+          number = format("%02d", $1.to_i + 1)
+        end
         self.filename ||= ""
-        self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+        self.filename = dirname ? "#{dirname}#{filename_backup}_#{number}.html" : "#{filename_backup}_#{number}.html"
       end
   end
 end
