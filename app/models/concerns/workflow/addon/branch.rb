@@ -11,7 +11,7 @@ module Workflow::Addon
 
       permit_params :master_id
 
-      before_validation :seq_clone_filename, if: ->{ new_clone? && (new_record? || basename.blank?) && master.present? }
+      before_validation :seq_clone_filename, if: ->{ new_clone? && (new_record? || basename.blank?) }
       after_save :merge_to_master
 
       define_method(:master?) { master.blank? }
@@ -113,6 +113,14 @@ module Workflow::Addon
       end
 
       def seq_clone_filename
+        if master.present?
+          seq_clone_filename_with_master
+        else
+          seq_clone_filename_without_master
+        end
+      end
+
+      def seq_clone_filename_with_master
         filename_backup = master.filename.gsub(File.extname(master.filename), '')
         last_branch = master.branches.order(created_at: -1).first
         if last_branch.nil?
@@ -128,6 +136,11 @@ module Workflow::Addon
         end
         self.filename ||= ""
         self.filename = dirname ? "#{dirname}#{filename_backup}_#{number}.html" : "#{filename_backup}_#{number}.html"
+      end
+
+      def seq_clone_filename_without_master
+        self.filename ||= ""
+        self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
       end
   end
 end
