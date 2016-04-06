@@ -1,4 +1,4 @@
-module Sys::SiteCopyTemplates
+module Sys::SiteCopy::Templates
   private
 #テンプレート:OK
     def self.copy_templates(site_old, site)

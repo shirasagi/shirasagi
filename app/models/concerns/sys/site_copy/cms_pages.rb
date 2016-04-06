@@ -1,4 +1,4 @@
-module Sys::SiteCopyCmsPages
+module Sys::SiteCopy::CmsPages
   private
 #固定ページ:OK
     def self.copy_cms_pages(site_old, site)

@@ -1,4 +1,4 @@
-module Sys::SiteCopyFiles
+module Sys::SiteCopy::Files
   private
 #共有ファイル:OK
 # 元サイトから共有ファイルを全て複製サイトへ複製

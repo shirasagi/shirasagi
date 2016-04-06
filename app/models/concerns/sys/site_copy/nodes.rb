@@ -1,4 +1,4 @@
-module Sys::SiteCopyNodes
+module Sys::SiteCopy::Nodes
   private
     @@node_fac_cat_routes = ["facility/location", "facility/category", "facility/service"]
     @@node_copied_fac_cat_routes = ["facility/search", "facility/node"]

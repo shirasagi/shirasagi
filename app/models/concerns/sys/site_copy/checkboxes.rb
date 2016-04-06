@@ -1,4 +1,4 @@
-module Sys::SiteCopyCheckboxes
+module Sys::SiteCopy::Checkboxes
   private
     @@node_fac_cat_routes = ["facility/location", "facility/category", "facility/service"]
     @@node_copied_fac_cat_routes = ["facility/search", "facility/node"]

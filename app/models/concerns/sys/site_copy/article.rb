@@ -1,4 +1,4 @@
-module Sys::SiteCopyArticle
+module Sys::SiteCopy::Article
   private
 #記事・その他ページ
     def self.copy_article(site_old, site, node_pg_cats, layout_records_map)
