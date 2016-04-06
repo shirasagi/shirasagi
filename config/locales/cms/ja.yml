@@ -828,3 +828,12 @@ ja:
     category_ids: カテゴリ
     use_map: 地図使用の有無
     have_files: 添付ファイルの有無
+
+  job:
+    models:
+      cms/node/generate_job: フォルダー書き出し
+      cms/page/generate_job: ページ書き出し
+      cms/page/release_job: ページ公開
+      cms/page/remove_job: ページ削除
+      cms/page/update_job: ページ更新
+      cms/check_links_job: リンクチェック
