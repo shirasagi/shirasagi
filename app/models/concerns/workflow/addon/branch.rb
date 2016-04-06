@@ -36,7 +36,7 @@ module Workflow::Addon
       item.cur_user = @cur_user
       item.cur_site = @cur_site
       item.cur_node = @cur_node
-      if attributes[:filename].nil?
+      if attributes["filename"].nil?
         item.filename = "#{dirname}/"
         item.basename = ""
       end
