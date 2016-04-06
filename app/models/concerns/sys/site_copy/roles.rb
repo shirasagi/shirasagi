@@ -1,4 +1,4 @@
-module Sys::SiteCopyRoles
+module Sys::SiteCopy::Roles
   private
     def self.copy_roles(site_old, site)
   #権限複製：OK

@@ -1,4 +1,4 @@
-module Sys::SiteCopyCmsParts
+module Sys::SiteCopy::CmsParts
   private
 #パーツ:OK
 # NOTE:cms_part.dup だと失敗する

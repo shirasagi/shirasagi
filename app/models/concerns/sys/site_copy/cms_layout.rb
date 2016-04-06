@@ -1,4 +1,4 @@
-module Sys::SiteCopyCmsLayout
+module Sys::SiteCopy::CmsLayout
   private
     @layout_records_map = {}
 #レイアウト:OK

@@ -1,4 +1,4 @@
-module Sys::SiteCopyArticle
+module Sys::SiteCopy::Article
   private
 #記事・その他ページ
     def self.copy_article(site_old, site, node_pg_cats, layout_records_map)
@@ -135,7 +135,7 @@ module Sys::SiteCopyArticle
           end
 
           if cms_page2.route == "facility/page"
-            new_cms_page2.category_ids = pase_checkboxes_for_dupcms(node_pg_cats, "merge", cms_page2.category_ids)
+            new_cms_page2.category_ids = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(node_pg_cats, "merge", cms_page2.category_ids)
           end
 
           new_cms_page2.save!

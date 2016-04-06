@@ -1,4 +1,4 @@
-module Sys::SiteCopyDictionaries
+module Sys::SiteCopy::Dictionaries
   private
 #かな辞書:OK
     def self.copy_dictionaries(site_old, site)
