@@ -113,12 +113,12 @@ module Workflow::Addon
       end
 
       def seq_clone_filename
-        filename_backup = master.filename
+        filename_backup = master.filename.gsub(File.extname(master.filename), '')
         last_branch = master.branches.order(created_at: -1).first
         if last_branch.nil?
           number = '01'
         else
-          last_branch.filename =~ /.*_(\d\d)/
+          last_branch.filename.gsub(File.extname(last_branch.filename), '') =~ /.*_(\d\d)/
           matched = $1
           if matched
             number = format("%02d", matched.to_i + 1)
