@@ -5,7 +5,7 @@
   <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
   <dd><%= f.text_field :index_name %></dd>
 
-  <dt><%= link_to @model.t(:basename), '#', onclick: '$("#event-pages-form-dd-input").toggle(); return false;' %><%= @model.tt :title %></dt>
+  <dt><%= link_to @model.t(:basename), '#', onclick: '$("#event-pages-form-dd-input").toggle(); return false;' %><%= @model.tt :filename %></dt>
   <dd><%= f.text_field :basename, id: "event-pages-form-dd-input", class: "filename", style: "display: none" %></dd>
 
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
