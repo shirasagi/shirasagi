@@ -9,6 +9,7 @@ describe Workflow::Addon::Branch, dbscope: :example do
     it { expect(cloned_page).not_to be_nil }
     it { expect(page.id).not_to eq cloned_page.id }
     it { expect(page.name).to eq cloned_page.name }
+    it { expect(page.route).to eq cloned_page.route }
   end
 
   describe "cloned page filename (without extension)" do
@@ -33,6 +34,19 @@ describe Workflow::Addon::Branch, dbscope: :example do
       it "is the one that \"_02\" is appended to the tail" do
         expect(subject).to eq "#{page_filename}_02"
       end
+    end
+  end
+
+  context "Article::Page" do
+    let(:page) { create :article_page }
+    let(:cloned_page) { x = page.new_clone; x.master_id = page.id; x.save; x }
+
+    describe "assertions" do
+      it { expect(page).not_to be_nil }
+      it { expect(cloned_page).not_to be_nil }
+      it { expect(page.id).not_to eq cloned_page.id }
+      it { expect(page.name).to eq cloned_page.name }
+      it { expect(page.route).to eq cloned_page.route }
     end
   end
 end
