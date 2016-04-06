@@ -91,8 +91,7 @@ class Job::Service
           job_log.save
 
           time = Benchmark.realtime do
-            job = create_job(task)
-            job.call *task.args
+            task.execute
           end
 
           job_log.state = Job::Log::STATE_COMPLETED
@@ -108,12 +107,7 @@ class Job::Service
     end
 
     def system_error?(e)
-      # e.kind_of?(NoMemoryError) || e.kind_of?(SignalException) || e.kind_of?(SystemExit) || e.kind_of?(fatal)
       e.kind_of?(NoMemoryError) || e.kind_of?(SignalException) || e.kind_of?(SystemExit)
-    end
-
-    def create_job(task)
-      return task.class_name.constantize.new
     end
 
     def open_logger

@@ -10,6 +10,7 @@ class Job::Task
   field :args, type: Array
   field :priority, type: Integer, default: -> { Time.zone.now.to_i }
   field :at, type: Integer, default: -> { Time.zone.now.to_i }
+  field :active_job, type: Hash
 
   belongs_to :site, class_name: "SS::Site"
 
@@ -30,6 +31,15 @@ class Job::Task
       criteria = criteria.lte(at: Time.zone.now)
       criteria = criteria.asc(:priority)
       criteria.find_one_and_update({ '$set' => { started: Time.zone.now }}, return_document: :after)
+    end
+  end
+
+  def execute
+    job = self.class_name.constantize.new
+    if job.is_a?(ActiveJob::Base)
+      ::ActiveJob::Base.execute(active_job)
+    else
+      job.call *args
     end
   end
 
