@@ -135,7 +135,7 @@ module Sys::SiteCopy::Article
           end
 
           if cms_page2.route == "facility/page"
-            new_cms_page2.category_ids = pase_checkboxes_for_dupcms(node_pg_cats, "merge", cms_page2.category_ids)
+            new_cms_page2.category_ids = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(node_pg_cats, "merge", cms_page2.category_ids)
           end
 
           new_cms_page2.save!

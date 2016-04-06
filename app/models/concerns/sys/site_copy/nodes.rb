@@ -120,13 +120,13 @@ module Sys::SiteCopy::Nodes
     def self.set_cstm_attrs(base_cmsnode, new_site, node_fac_cats, new_cmsnode_attrs)
         # 施設の種類・用途・地域
         if base_cmsnode.route == "facility/page"
-          new_cmsnode_attrs[:category_ids] = Sys::SiteCopyCheckboxes.pase_checkboxes_for_dupcms(
+          new_cmsnode_attrs[:category_ids] = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(
             node_fac_cats, "facility/category", base_cmsnode.category_ids
           )
-          new_cmsnode_attrs[:service_ids] = Sys::SiteCopyCheckboxes.pase_checkboxes_for_dupcms(
+          new_cmsnode_attrs[:service_ids] = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(
             node_fac_cats, "facility/service", base_cmsnode.service_ids
           )
-          new_cmsnode_attrs[:location_ids] = Sys::SiteCopyCheckboxes.pase_checkboxes_for_dupcms(
+          new_cmsnode_attrs[:location_ids] = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(
             node_fac_cats, "facility/location", base_cmsnode.location_ids
           )
         end
