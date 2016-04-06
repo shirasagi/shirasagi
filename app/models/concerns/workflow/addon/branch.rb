@@ -11,7 +11,7 @@ module Workflow::Addon
 
       permit_params :master_id
 
-      before_validation :seq_clone_filename, if: ->{ new_clone? && (new_record? || basename.blank?) }
+      before_validation :seq_clone_filename, if: ->{ new_clone? && (new_record? || basename.blank?) && master.present? }
       after_save :merge_to_master
 
       define_method(:master?) { master.blank? }
