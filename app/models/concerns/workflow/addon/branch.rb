@@ -136,12 +136,12 @@ module Workflow::Addon
           end
         end
         self.filename ||= ""
-        self.filename = dirname ? "#{dirname}#{filename_backup}_#{number}.html" : "#{filename_backup}_#{number}.html"
+        self.filename = dirname ? "#{dirname}/#{filename_backup}_#{number}.html" : "#{filename_backup}_#{number}.html"
       end
 
       def seq_clone_filename_without_master
         self.filename ||= ""
-        self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+        self.filename = dirname ? "#{dirname}/#{id}.html" : "#{id}.html"
       end
   end
 end
