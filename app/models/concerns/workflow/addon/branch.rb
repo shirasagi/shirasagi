@@ -121,7 +121,8 @@ module Workflow::Addon
       end
 
       def seq_clone_filename_with_master
-        filename_backup = master.filename.gsub(File.extname(master.filename), '')
+        filename_backup = File.basename(master.filename)
+        filename_backup = filename_backup.gsub(File.extname(master.filename), '')
         last_branch = master.branches.order(created_at: -1).first
         if last_branch.nil?
           number = '01'
