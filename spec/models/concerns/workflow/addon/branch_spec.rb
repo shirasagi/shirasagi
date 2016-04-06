@@ -16,28 +16,19 @@ describe Workflow::Addon::Branch, dbscope: :example do
 
     let(:page_filename) { page.filename.gsub('.html', '') }
 
-    it "contains \"page filename\"" do
-      expect(subject.include? page_filename).to eq true
-    end
-
     it "is the one that \"_01\" is appended to the tail" do
       expect(subject).to eq "#{page_filename}_01"
     end
 
     describe "2nd cloned page" do
       before do
-        page
-        cloned_page # create 1st cloned page
+        cloned_page # create 1st cloned page (and also the "page")
         @cloned_page2 = page.new_clone
         @cloned_page2.master_id = page.id
         @cloned_page2.save
       end
 
       subject { @cloned_page2.filename.gsub('.html', '') }
-
-      it "contains \"page filename\"" do
-        expect(subject.include? page_filename).to eq true
-      end
 
       it "is the one that \"_02\" is appended to the tail" do
         expect(subject).to eq "#{page_filename}_02"
