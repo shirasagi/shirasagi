@@ -119,7 +119,12 @@ module Workflow::Addon
           number = '01'
         else
           last_branch.filename =~ /.*_(\d\d)/
-          number = format("%02d", $1.to_i + 1)
+          matched = $1
+          if matched
+            number = format("%02d", matched.to_i + 1)
+          else
+            number = '01'
+          end
         end
         self.filename ||= ""
         self.filename = dirname ? "#{dirname}#{filename_backup}_#{number}.html" : "#{filename_backup}_#{number}.html"
