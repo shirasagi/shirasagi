@@ -100,6 +100,7 @@ SS::Application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "import" => "import#index"
     post "import" => "import#import"
+    get "all_contents(.:format)" => "all_contents#index", format: { default: :html }, as: "all_contents"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     get "search_contents/pages" => "search_contents/pages#index"
