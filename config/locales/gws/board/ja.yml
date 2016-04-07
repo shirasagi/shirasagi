@@ -4,6 +4,7 @@ ja:
     #descendants_num: コメント数
     #descendants_updated: 更新日時
     no_authority: 権限がありません
+    category: 掲示板種別
     topic:
       comment: コメント
       new: 新規作成
@@ -47,6 +48,8 @@ ja:
     gws/board: 掲示板
     settings:
       gws/board: 掲示板
+    addons:
+      gws/board/category: 種別
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -55,6 +58,12 @@ ja:
     edit_private_gws_board_posts: 投稿の編集（所有）
     delete_other_gws_board_posts: 投稿の削除（全て）
     delete_private_gws_board_posts: 投稿の削除（所有）
+    read_other_gws_board_categories: 種別の閲覧（全て）
+    read_private_gws_board_categories: 種別の閲覧（所有）
+    edit_other_gws_board_categories: 種別の編集（全て）
+    edit_private_gws_board_categories: 種別の編集（所有）
+    delete_other_gws_board_categories: 種別の削除（全て）
+    delete_private_gws_board_categories: 種別の削除（所有）
 
   mongoid:
     models:
@@ -68,3 +77,7 @@ ja:
         permit_comment: コメント
       gws/board/setting:
         board_new_days: 新着表示期間
+      gws/board/category:
+        name: 掲示板種別
+      gws/addon/board/category:
+        category_ids: 種別

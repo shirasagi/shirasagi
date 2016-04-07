@@ -1,7 +1,16 @@
 <div class="gws-board gws-board-thread">
   <article class="topic">
     <header>
-      <h2><%= @item.name %></h2>
+      <h2>
+        <span class="name"><%= @item.name %></span>
+        <span class="categories">
+          <% @item.categories.each do |category| %>
+            <span class="gws-share-color-block" style="<%= "background-color: #{category.color}; color: #{category.text_color}" %>">
+              <%= category.name %>
+            </span>
+          <% end %>
+        </span>
+      </h2>
       <nav class="meta">
         <span class="user"><%= @item.user.name %></span>
         <span class="datetime"><%= @item.created.strftime("%Y/%m/%d %H:%M") %></span>

@@ -1,6 +1,7 @@
 class Gws::Share::File
   include SS::Model::File
   include Gws::Reference::Site
+  include Gws::Addon::Share::Category
   include Gws::Addon::GroupPermission
 
   default_scope ->{ where(model: "share/file") }

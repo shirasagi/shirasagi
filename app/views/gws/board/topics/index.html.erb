@@ -1,5 +1,12 @@
 <% @index_title = proc do |item| %>
   <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+  <span class="categories">
+    <% item.categories.each do |category| %>
+      <span class="gws-share-color-block" style="<%= "background-color: #{category.color}; color: #{category.text_color}" %>">
+        <%= category.name %>
+      </span>
+    <% end %>
+  </span>
   <% if item.descendants_files_count.to_i > 0 %>
   <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
   <% end %>

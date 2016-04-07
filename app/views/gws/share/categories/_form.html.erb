@@ -1,0 +1,14 @@
+<%= jquery do %>
+  $('#item_color').colorPicker();
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :color %></dt>
+  <dd><%= f.text_field :color %></dd>
+
+  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
+  <dd><%= f.select :target, @item.target_options %></dd>
+</dl>

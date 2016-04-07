@@ -1,8 +1,9 @@
 require 'spec_helper'
 
-describe "gws_files", type: :feature, dbscope: :example do
+describe "gws_share_files", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:item) { create :gws_share_file }
+  let(:item) { create :gws_share_file, category_ids: [category.id] }
+  let!(:category) { create :gws_share_category }
   let(:index_path) { gws_share_files_path site }
   let(:new_path) { new_gws_share_file_path site }
   let(:show_path) { gws_share_file_path site, item }
@@ -33,11 +34,21 @@ describe "gws_files", type: :feature, dbscope: :example do
       visit new_path
       within "form#item-form" do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        check "item_category_ids_#{category.id}"
         click_button "保存"
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).not_to have_css("form#item-form")
+      expect(page).to have_css("div.info a.title", text: "logo.png")
+      expect(page).to have_css("div.info div.meta span.gws-share-color-block", text: category.name)
+
+      item = Gws::Share::File.site(site).first
+      expect(item.name).to eq "logo.png"
+      expect(item.filename).to eq "logo.png"
+      expect(item.state).to eq "closed"
+      expect(item.content_type).to eq "image/png"
+      expect(item.category_ids).to eq [category.id]
     end
 
     it "#show" do
