@@ -5,10 +5,11 @@ module Inquiry::Addon
 
     included do
       field :notice_state, type: String, default: "disabled"
+      field :notice_content, type: String, default: "disabled"
       field :notice_email, type: String
       field :from_name, type: String
       field :from_email, type: String
-      permit_params :notice_state, :notice_email, :from_name, :from_email
+      permit_params :notice_state, :notice_content, :notice_email, :from_name, :from_email
 
       validate :validate_notify_mail
     end
@@ -17,6 +18,13 @@ module Inquiry::Addon
       [
         [I18n.t('inquiry.options.state.enabled'), 'enabled'],
         [I18n.t('inquiry.options.state.disabled'), 'disabled'],
+      ]
+    end
+    
+    def notice_content_options
+      [
+        [I18n.t('inquiry.options.notice_content.link_only'), 'link_only'],
+        [I18n.t('inquiry.options.notice_content.include_answers'), 'include_answers'],
       ]
     end
 

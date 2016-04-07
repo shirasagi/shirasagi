@@ -1,6 +1,8 @@
 <dl class="see mod-inquiry-notice">
   <dt><%= @model.t :notice_state %><%= @model.tt :notice_state %></dt>
   <dd><%= f.select :notice_state, @item.notice_state_options %></dd>
+  <dt><%= @model.t :notice_content %><%= @model.tt :notice_content %></dt>
+  <dd><%= f.select :notice_content, @item.notice_content_options %></dd>
   <dt><%= @model.t :notice_email %><%= @model.tt :notice_email %></dt>
   <dd><%= f.text_field :notice_email %></dd>
   <dt><%= @model.t :from_name %><%= @model.tt :from_name %></dt>
