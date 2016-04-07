@@ -48,6 +48,8 @@ ja:
     gws/board: 掲示板
     settings:
       gws/board: 掲示板
+    addons:
+      gws/board/category: 種別
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -77,3 +79,5 @@ ja:
         board_new_days: 新着表示期間
       gws/board/category:
         name: 掲示板種別
+      gws/addon/board/category:
+        category_ids: 種別

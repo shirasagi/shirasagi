@@ -1,0 +1,14 @@
+<% categories = Gws::Board::Category.categories_for(@cur_site, @cur_user).to_a %>
+<% if categories.present? %>
+<dl class="see mod-gws-board-category">
+  <dt class="wide"><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
+  <dd class="wide">
+    <% categories.each do |category| %>
+      <%= label_tag("item_category_ids_#{category.id}") do %>
+        <%= f.check_box("category_ids[]", { }, category.id) %>
+        <span class="gws-board-color-block" style="<%= "background-color: #{category.color}; color: #{category.text_color}" %>"><%= category.name %></span>
+      <% end %>
+    <% end %>
+  </dd>
+</dl>
+<% end %>
