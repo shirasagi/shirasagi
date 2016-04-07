@@ -1,10 +1,10 @@
 FactoryGirl.define do
-  factory :gws_share_category, class: Gws::Share::Category do
+  factory :gws_board_category, class: Gws::Board::Category do
     cur_site { gws_site }
     cur_user { gws_user }
 
     name { "name-#{unique_id}" }
-    color { "#556677" }
+    color { "#aabbcc" }
     target { "all" }
   end
 end
