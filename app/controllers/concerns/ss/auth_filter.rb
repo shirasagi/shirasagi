@@ -5,13 +5,15 @@ module SS::AuthFilter
     cattr_accessor(:user_class) { SS::User }
   end
 
-  def get_user_by_session
-    return nil unless session[:user]
+  def session_alives?(timestamp = Time.zone.now.to_i)
+    session[:user] && timestamp <= session[:user]["last_logged_in"] + SS.config.sns.session_lifetime
+  end
 
-    u = SS::Crypt.decrypt(session[:user]).to_s.split(",", 3)
-    #return unset_user redirect: true if u[1] != remote_addr.to_s
-    #return unset_user redirect: true if u[2] != request.user_agent.to_s
-    user = self.user_class.find(u[0].to_i) rescue nil
+  def get_user_by_session
+    return nil unless session_alives?
+
+    user_id = session[:user]["user_id"]
+    user = self.user_class.find(user_id) rescue nil
     user = nil unless user.enabled?
     user
   end

@@ -30,7 +30,7 @@ class Ldap::ImportController < ApplicationController
     end
 
     def import
-      Ldap::ImportJob.new.call(@cur_site.id, @cur_user.id, session[:password])
+      Ldap::ImportJob.new.call(@cur_site.id, @cur_user.id, session[:user]["password"])
       respond_to do |format|
         format.html { redirect_to({ action: :index }, { notice: t("ldap.messages.import_success") }) }
         format.json { head :no_content }

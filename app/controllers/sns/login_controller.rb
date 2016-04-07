@@ -69,7 +69,8 @@ class Sns::LoginController < ApplicationController
 
     def logout
       put_history_log
-      unset_user
+      # discard all session info
+      reset_session
       respond_to do |format|
         format.html { redirect_to sns_login_path }
         format.json { head :no_content }
