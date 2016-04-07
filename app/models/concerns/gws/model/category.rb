@@ -20,5 +20,13 @@ module Gws::Model::Category
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 40 }
     validates :color, presence: true
+
+    scope :search, ->(params) do
+      criteria = where({})
+      return criteria if params.blank?
+
+      criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+      criteria
+    end
   end
 end
