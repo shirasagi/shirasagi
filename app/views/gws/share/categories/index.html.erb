@@ -1,6 +1,7 @@
 <% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="gws-schedule-color-block" style="<%= "background-color: #{item.color}; color: #{item.text_color}" %>">
+  <span class="gws-share-color-block" style="<%= "background-color: #{item.color}; color: #{item.text_color}" %>">
     <%= item.name %></span>
 <% end %>
 

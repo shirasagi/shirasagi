@@ -5,6 +5,8 @@ ja:
 
   modules:
     gws/share: 共有ファイル
+    addons:
+      gws/share/category: 種別
 
   gws_role:
     read_other_gws_share_files: ファイルの閲覧（全て）
@@ -32,3 +34,5 @@ ja:
     attributes:
       gws/share/category:
         name: 共有ファイル種別
+      gws/addon/share/category:
+        category_ids: 種別
