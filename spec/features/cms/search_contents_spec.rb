@@ -90,22 +90,28 @@ describe "cms_search", dbscope: :example do
       end
 
       it "search_with_released_or_updated" do
-        visit pages_index_path
-        expect(current_path).not_to eq sns_login_path
-
         Timecop.travel(3.days.from_now) do
+          login_cms_user
+          visit pages_index_path
+          expect(current_path).not_to eq sns_login_path
           page = Cms::Page.where(name: "[TEST]D").first
           page.state = "public"
           page.save
         end
 
         Timecop.travel(6.days.from_now) do
+          login_cms_user
+          visit pages_index_path
+          expect(current_path).not_to eq sns_login_path
           page = Cms::Page.where(name: "[TEST]A").first
           page.html = "update"
           page.save
         end
 
         Timecop.travel(1.day.from_now) do
+          login_cms_user
+          visit pages_index_path
+          expect(current_path).not_to eq sns_login_path
           start = Time.zone.now
           close = start.advance(days: 6)
           start = start.strftime("%Y/%m/%d %H:%M:%S")
