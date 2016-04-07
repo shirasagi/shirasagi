@@ -19,7 +19,6 @@ require 'rspec/rails'
 #require 'rspec/autorun'
 require 'capybara/rspec'
 require 'capybara/rails'
-require 'database_cleaner'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -106,14 +105,10 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
+    # load all models
+    ::Rails.application.eager_load!
     # `rake db:drop`
     ::Mongoid::Clients.default.database.drop
-    # `rake db:create_indexes`
-    ::Rails.application.eager_load!
-    ::Mongoid::Tasks::Database.create_indexes
-
-    #
-    DatabaseCleaner[:mongoid].strategy = :truncation
   end
 
   config.add_setting :default_dbscope, default: :context
