@@ -45,6 +45,7 @@ module Cms::Content
         ])
       end
     }
+    scope :master_only, ->{}
   end
 
   module ClassMethods
