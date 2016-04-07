@@ -23,7 +23,8 @@ class Inquiry::Mailer < ActionMailer::Base
 
      @answer_data = nil if @node.notice_content == "link_only"
 
-     mail(from: node.from_email, to: node.notice_email)
+     from = "#{node.from_name} <#{node.from_email}>"
+     mail(from: from, to: node.notice_email)
   end
 
   def reply_mail(site, node, answer)
