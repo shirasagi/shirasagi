@@ -6,11 +6,19 @@ module SS
 
       obj.prepend_before(dbscope) do
         Rails.logger.debug "start database cleaner at #{inspect}"
-        DatabaseCleaner.start
       end
       obj.after(dbscope) do
         Rails.logger.debug "clean database at #{inspect}"
-        DatabaseCleaner.clean
+        ::Mongoid::Clients.default.database.drop
+      end
+
+      obj.class_eval do
+        define_singleton_method(:clean_database) do
+          ::Mongoid::Clients.default.database.drop
+        end
+        define_method(:clean_database) do
+          ::Mongoid::Clients.default.database.drop
+        end
       end
     end
   end

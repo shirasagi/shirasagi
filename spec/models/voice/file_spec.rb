@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Voice::File, http_server: true do
+describe Voice::File, http_server: true, dbscope: :example do
   http.default port: 33_190
   http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
 
@@ -84,14 +84,13 @@ describe Voice::File, http_server: true do
   context 'when error is given, has_error is set automatically' do
     random_string = rand(0x100000000).to_s(36)
     let(:site) { cms_site }
-    let(:voice_file) { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
-    subject do
-      voice_file.error = "has error"
-      voice_file.save!
-      voice_file
-    end
+    subject { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
 
-    it { is_expected.not_to be_nil }
+    before do
+      subject.error = "has error"
+      subject.save!
+      subject
+    end
 
     describe "#has_error" do
       its(:error) { is_expected.to eq "has error" }
@@ -99,11 +98,10 @@ describe Voice::File, http_server: true do
     end
 
     describe "#search" do
-      count = nil
-      before(:all) do
-        count = described_class.search({ :has_error => 1 }).count
+      it do
+        expect(described_class.count).to be >= 1
+        expect(described_class.search({ :has_error => 1 }).count).to be >= 1
       end
-      it { expect(count).to be >= 1 }
     end
   end
 

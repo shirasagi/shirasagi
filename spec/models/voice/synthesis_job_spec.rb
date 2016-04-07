@@ -19,8 +19,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -59,8 +58,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -96,8 +94,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -129,8 +126,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -162,8 +158,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -196,8 +191,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after(:all) do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -229,8 +223,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -267,8 +260,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
@@ -297,8 +289,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
@@ -321,8 +312,7 @@ describe Voice::SynthesisJob, http_server: true do
       end
 
       after :all do
-        DatabaseCleaner.clean
-        DatabaseCleaner.start
+        clean_database
       end
 
       subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
@@ -336,8 +326,7 @@ describe Voice::SynthesisJob, http_server: true do
 
   describe '#purge_pending_tasks' do
     before do
-      DatabaseCleaner.clean
-      DatabaseCleaner.start
+      clean_database
     end
 
     context "when there is no tasks" do
