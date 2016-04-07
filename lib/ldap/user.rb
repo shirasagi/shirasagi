@@ -1,4 +1,4 @@
-class Ldap::User < Ldap::Entry
+class Ldap::UserBase < Ldap::Entry
   def initialize(connection, entry)
     super(connection, entry)
   end
@@ -10,9 +10,7 @@ class Ldap::User < Ldap::Entry
   end
 end
 
-class Ldap::InetOrgPerson < Ldap::User
-  public_class_method :new
-
+class Ldap::InetOrgPerson < Ldap::UserBase
   def name
     value(:cn)
   end
@@ -34,9 +32,7 @@ class Ldap::InetOrgPerson < Ldap::User
   end
 end
 
-# class Ldap::PosixAccount < Ldap::User
-#   public_class_method :new
-#
+# class Ldap::PosixAccount < Ldap::UserBase
 #   def name
 #     value(:cn)
 #   end
@@ -58,7 +54,7 @@ end
 #   end
 # end
 
-class Ldap::User
+class Ldap::User < Ldap::UserBase
   private_class_method :new
 
   # CONCRETE_CLASSES = [ Ldap::InetOrgPerson, Ldap::PosixAccount ].freeze

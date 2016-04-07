@@ -6,7 +6,7 @@ describe Ldap::ImportJob, ldap: true do
       subject { Ldap::ImportJob.new }
 
       it "should not raise errors" do
-        expect { subject.call(cms_site.id, cms_user.id, "pass") }.to raise_error
+        expect { subject.call(cms_site.id, cms_user.id, "pass") }.to raise_error Net::LDAP::Error
       end
     end
 
