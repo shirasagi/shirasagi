@@ -61,7 +61,10 @@ module SS::BaseFilter
       end
 
       @cur_user = get_user_by_session
-      return @cur_user if @cur_user
+      if @cur_user
+        set_last_logged_in
+        return @cur_user
+      end
       unset_user
 
       ref = request.env["REQUEST_URI"]
@@ -83,16 +86,6 @@ module SS::BaseFilter
       end
       redirect_to sns_mypage_path if opt[:redirect]
       @cur_user = user
-    end
-
-    def set_last_logged_in(timestamp = Time.zone.now.to_i)
-      session[:user]["last_logged_in"] = timestamp if session[:user]
-    end
-
-    def unset_user(opt = {})
-      session[:user] = nil
-      redirect_to sns_login_path if opt[:redirect]
-      @cur_user = nil
     end
 
     def rescue_action(e)
