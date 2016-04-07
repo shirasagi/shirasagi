@@ -121,6 +121,13 @@ ja:
         close_date: 公開終了日時(予約)
       gws/system/setting:
         sendmail_domains: メール送信許可ドメイン
+      gws/model/category:
+        model: モデル
+        state: 状態
+        name: 種別名
+        color: 表示色
+        bg_color: 背景色
+        text_color: 文字色
 
   tooltip:
     gws/content/targetable:

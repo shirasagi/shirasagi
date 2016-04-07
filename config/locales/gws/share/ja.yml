@@ -1,6 +1,7 @@
 ja:
-  share:
+  gws/share:
     file: 共有ファイル
+    category: 共有ファイル種別
 
   modules:
     gws/share: 共有ファイル
@@ -12,6 +13,12 @@ ja:
     edit_private_gws_share_files: ファイルの編集（所有）
     delete_other_gws_share_files: ファイルの削除（全て）
     delete_private_gws_share_files: ファイルの削除（所有）
+    read_other_gws_share_categories: 種別の閲覧（全て）
+    read_private_gws_share_categories: 種別の閲覧（所有）
+    edit_other_gws_share_categories: 種別の編集（全て）
+    edit_private_gws_share_categories: 種別の編集（所有）
+    delete_other_gws_share_categories: 種別の削除（全て）
+    delete_private_gws_share_categories: 種別の削除（所有）
 
   views:
     button:
@@ -19,9 +26,9 @@ ja:
       download: ダウンロード
 
   mongoid:
+    models:
+      gws/share/file: 共有ファイル
+      gws/share/category: 共有ファイル種類
     attributes:
-      share/file:
-        basename: ファイル名
-        size: ファイルサイズ
-        created: 登録日時
-        updated: 更新日時
+      gws/share/category:
+        name: 共有ファイル種別

@@ -12,5 +12,6 @@ SS::Application.routes.draw do
       get :thumb, on: :member
       get :download, on: :member
     end
+    resources :categories, concerns: [:deletion]
   end
 end
