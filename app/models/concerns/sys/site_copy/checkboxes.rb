@@ -1,11 +1,12 @@
 module Sys::SiteCopy::Checkboxes
+  extend ActiveSupport::Concern
   private
     @@node_fac_cat_routes = ["facility/location", "facility/category", "facility/service"]
     @@node_copied_fac_cat_routes = ["facility/search", "facility/node"]
     @@node_pg_cat_routes = ["category/node", "category/page"]
 
-    def self.copy_checkboxes_for_dupcms(base_site, new_site, routes)
-      if !base_site.kind_of?(Cms::Site) || !new_site.kind_of?(Cms::Site)
+    def copy_checkboxes_for_dupcms(routes)
+      if !@site_old.kind_of?(Cms::Site) || !@site.kind_of?(Cms::Site)
         logger.fatal 'Expected 2 arguments. - [0] => Cms::Site, [1] => Cms::Site'
         return false
       end
@@ -14,7 +15,7 @@ module Sys::SiteCopy::Checkboxes
       node_cats.store("merge", {})
       routes.each do |node_cat_route|
         node_cats.store(node_cat_route, {})
-        Cms::Node.where(:site_id => base_site.id).where(route: node_cat_route).each do |base_cmsnode|
+        Cms::Node.where(:site_id => @site_old.id).where(route: node_cat_route).each do |base_cmsnode|
 
           old_cmsnode_id = base_cmsnode.id
           new_cmsnode_no_attr = {}
@@ -29,7 +30,7 @@ module Sys::SiteCopy::Checkboxes
             end
           end
           new_cmsnode = Cms::Node.new(new_model_attr)
-          new_cmsnode.site_id = new_site.id
+          new_cmsnode.site_id = @site.id
 
           if new_model_attr_flag == 1
             new_cmsnode_no_attr.each do |noattr, val|
@@ -45,8 +46,8 @@ module Sys::SiteCopy::Checkboxes
       return node_cats
     end
 
-    def self.def_fac_checkboxes_for_dupcms(base_site, new_site, node_fac_cats)
-      if !base_site.kind_of?(Cms::Site) || !new_site.kind_of?(Cms::Site)
+    def def_fac_checkboxes_for_dupcms(node_fac_cats)
+      if !@site_old.kind_of?(Cms::Site) || !@site.kind_of?(Cms::Site)
         logger.fatal 'Expected 2 arguments. - [0] => Cms::Site, [1] => Cms::Site'
         return false
       end
@@ -58,7 +59,7 @@ module Sys::SiteCopy::Checkboxes
         end
       end
       @@node_copied_fac_cat_routes.each do |node_copied_cat_route|
-        Cms::Node.where(:site_id => base_site.id).where(route: node_copied_cat_route).each do |base_cmsnode|
+        Cms::Node.where(:site_id => @site_old.id).where(route: node_copied_cat_route).each do |base_cmsnode|
           old_cmsnode_id = base_cmsnode.id
           new_cmsnode_no_attr = {}
           new_model_attr_flag = 0
@@ -72,7 +73,7 @@ module Sys::SiteCopy::Checkboxes
             end
           end
           new_cmsnode = Cms::Node.new(new_model_attr)
-          new_cmsnode.site_id = new_site.id
+          new_cmsnode.site_id = @site.id
 
           if new_model_attr_flag == 1
             new_cmsnode_no_attr.each do |noattr, val|
@@ -89,7 +90,7 @@ module Sys::SiteCopy::Checkboxes
       end
     end
 
-    def self.pase_checkboxes_for_dupcms(ary, key, old_ids)
+    def pase_checkboxes_for_dupcms(ary, key, old_ids)
       chk_param = []
       old_ids.each do |old_id|
         chk_param.push(ary[key][old_id])

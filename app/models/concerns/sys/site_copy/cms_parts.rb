@@ -1,9 +1,11 @@
 module Sys::SiteCopy::CmsParts
+  extend ActiveSupport::Concern
+
   private
-#パーツ:OK
-# NOTE:cms_part.dup だと失敗する
-    def self.copy_cms_parts(site_old, site)
-      cms_parts = Cms::Part.where(site_id: site_old.id)
+    #パーツ:OK
+    # NOTE:cms_part.dup だと失敗する
+    def copy_cms_parts
+      cms_parts = Cms::Part.where(site_id: @site_old.id)
       cms_parts.each do |cms_part|
         new_cms_part_no_attr = {}
         new_model_attr_flag = 0
@@ -17,7 +19,7 @@ module Sys::SiteCopy::CmsParts
           end
         end
         new_cms_part = Cms::Part.new(new_model_attr)
-        new_cms_part.site_id = site.id
+        new_cms_part.site_id = @site.id
 
         if new_model_attr_flag == 1
           new_cms_part_no_attr.each do |noattr, val|
