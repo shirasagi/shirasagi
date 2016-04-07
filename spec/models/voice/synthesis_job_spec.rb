@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Voice::SynthesisJob, http_server: true, dbscope: :example do
+describe Voice::SynthesisJob, http_server: true do
   http.default port: 33_190
   http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
 
@@ -16,6 +16,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
 
       before do
         http.options real_path: "/test-001.html"
+      end
+
+      after :all do
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -53,6 +57,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
         http.options real_path: "/test-001.html"
       end
 
+      after :all do
+        clean_database
+      end
+
       it { expect(@job).not_to be_nil }
       it { expect(system(@cmd)).to be_truthy }
 
@@ -85,6 +93,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
         http.options real_path: "/test-001.html", status_code: 400
       end
 
+      after :all do
+        clean_database
+      end
+
       it { expect(@job).not_to be_nil }
       it { expect(system(@cmd)).to be_truthy }
 
@@ -113,6 +125,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
         http.options real_path: "/test-001.html", status_code: 404
       end
 
+      after :all do
+        clean_database
+      end
+
       it { expect(@job).not_to be_nil }
       it { expect(system(@cmd)).to be_truthy }
 
@@ -139,6 +155,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
 
       before do
         http.options real_path: "/test-001.html", status_code: 500
+      end
+
+      after :all do
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -170,6 +190,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
         http.options real_path: "/test-001.html", wait: @wait
       end
 
+      after(:all) do
+        clean_database
+      end
+
       it { expect(@job).not_to be_nil }
       it { expect(system(@cmd)).to be_truthy }
 
@@ -196,6 +220,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
 
       before do
         http.options real_path: "/test-001.html", last_modified: nil
+      end
+
+      after :all do
+        clean_database
       end
 
       it { expect(@job).not_to be_nil }
@@ -231,6 +259,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
         http.options real_path: "/test-001.html"
       end
 
+      after :all do
+        clean_database
+      end
+
       subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
 
       it "creates voice file" do
@@ -256,6 +288,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
         http.options real_path: "/test-001.html", status_code: 404
       end
 
+      after :all do
+        clean_database
+      end
+
       subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
 
       it "creates dows not voice file" do
@@ -275,6 +311,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
         http.options real_path: "/test-001.html", wait: @wait
       end
 
+      after :all do
+        clean_database
+      end
+
       subject { Voice::File.find_or_create_by(site_id: site.id, url: @url) }
 
       it "creates dows not voice file" do
@@ -285,6 +325,10 @@ describe Voice::SynthesisJob, http_server: true, dbscope: :example do
   end
 
   describe '#purge_pending_tasks' do
+    before do
+      clean_database
+    end
+
     context "when there is no tasks" do
       it do
         expect { described_class.purge_pending_tasks }.not_to raise_error

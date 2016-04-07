@@ -11,6 +11,15 @@ module SS
         Rails.logger.debug "clean database at #{inspect}"
         ::Mongoid::Clients.default.database.drop
       end
+
+      obj.class_eval do
+        define_singleton_method(:clean_database) do
+          ::Mongoid::Clients.default.database.drop
+        end
+        define_method(:clean_database) do
+          ::Mongoid::Clients.default.database.drop
+        end
+      end
     end
   end
 end
