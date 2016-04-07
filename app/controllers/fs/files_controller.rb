@@ -18,6 +18,7 @@ class Fs::FilesController < ApplicationController
       return if @item.public?
       return if SS.config.env.remote_preview
       raise "404" unless get_user_by_session
+      set_last_logged_in
     end
 
     def set_last_modified
