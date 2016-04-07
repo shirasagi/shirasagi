@@ -35,6 +35,9 @@
   <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/schedule.category'), gws_schedule_categories_path %></h3>
   <% end %>
+  <% if Gws::Board::Category.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/board.category'), gws_board_categories_path %></h3>
+  <% end %>
   <% if Gws::Share::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/share.category'), gws_share_categories_path %></h3>
   <% end %>
