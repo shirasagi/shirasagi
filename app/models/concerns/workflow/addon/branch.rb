@@ -16,6 +16,8 @@ module Workflow::Addon
 
       define_method(:master?) { master.blank? }
       define_method(:branch?) { master.present? }
+
+      scope :master_only, ->{ where(master_id: nil) }
     end
 
     def new_clone?

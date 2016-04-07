@@ -24,6 +24,7 @@ class Cms::PagesController < ApplicationController
         allow(:read, @cur_user).
         search(params[:s]).
         order_by(updated: -1).
+        master_only.
         page(params[:page]).per(50)
     end
 end
