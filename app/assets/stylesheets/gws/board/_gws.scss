@@ -108,3 +108,34 @@
     }
   }
 }
+
+.mod-gws-board-category {
+  ul.parent {
+    margin: 0 0;
+    padding-left: 24px;
+    > li {
+      padding: 15px 0;
+      border-bottom: solid 1px $gray1;
+      > label {
+        display: block;
+      }
+    }
+    input {
+      margin: 3px 4px;
+    }
+    ul.child {
+      padding-left: 30px;
+      > li {
+        padding: 10px 0;
+      }
+      .grandchild {
+        padding-left: 30px;
+        > li {
+          display: inline;
+          margin: 0 5px;
+          padding: 5px 0;
+        }
+      }
+    }
+  }
+}
