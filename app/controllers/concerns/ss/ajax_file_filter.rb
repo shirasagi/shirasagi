@@ -18,7 +18,7 @@ module SS::AjaxFileFilter
 
       @item.attributes.each do |key, val|
         next if key =~ /^(id|file_id)$/
-        next if key =~ /^(group_ids|permission_level)$/
+        next if key =~ /^(group_ids|permission_level|category_ids)$/
         item.send("#{key}=", val) unless item.send(key)
       end
 
