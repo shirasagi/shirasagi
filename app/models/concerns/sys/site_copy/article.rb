@@ -6,7 +6,7 @@ module Sys::SiteCopy::Article
     def copy_article(node_pg_cats, layout_records_map)
       @layout_records_map = layout_records_map
       create_dup_banner_for_dup_site                  #広告バナー
-      create_dup_facility_for_dup_site                #施設写真 #TODO:コピーしたレイアウトIDを適用
+      create_dup_facility_for_dup_site                #施設写真
       create_dup_key_visuals_for_dup_site             #キービジュアル
       create_dup_cms_page2_for_dup_site(node_pg_cats) #その他
     end
@@ -57,7 +57,6 @@ module Sys::SiteCopy::Article
         new_cms_facility.site_id = @site.id
         new_cms_facility.name = cms_facility.name
         new_cms_facility.filename = cms_facility.filename
-        new_cms_facility.layout_id = cms_facility.layout_id #TODO:コピーしたレイアウトIDを適用
         new_cms_facility.image_id = clone_file(cms_facility.image_id)
         if cms_facility.layout_id && @layout_records_map[cms_facility.layout_id]
           new_cms_facility.layout_id = @layout_records_map[cms_facility.layout_id]
