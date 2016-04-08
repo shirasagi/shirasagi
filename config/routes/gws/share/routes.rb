@@ -12,6 +12,16 @@ SS::Application.routes.draw do
       get :thumb, on: :member
       get :download, on: :member
     end
+
+    # with category
+    scope(path: ":category", as: "category") do
+      resources :files, concerns: [:deletion] do
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
+    end
+
     resources :categories, concerns: [:deletion]
   end
 end

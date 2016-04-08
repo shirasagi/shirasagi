@@ -1,1 +1,38 @@
-<h3>カテゴリ</h3>
+<% categories = Gws::Share::Category.grouped_categories_for(@cur_site, @cur_user) %>
+<% return if categories.blank? %>
+
+<div class="gws-share-navi-categories">
+  <ul class="level0">
+    <% categories.keys.sort.each do |name0| %>
+      <li>
+        <%= link_to gws_share_category_files_path(category: "/#{name0}") do %>
+          <span class="name"><%= name0 %></span>
+        <% end %>
+
+        <% names1 = (categories[name0] || {}).keys %>
+        <% next if names1.blank? %>
+
+        <ul class="level1">
+          <% names1.sort.each do |name1| %>
+            <li>
+              <%= link_to gws_share_category_files_path(category: "/#{name0}/#{name1}") do %>
+                <span class="name"><%= name1 %></span>
+              <% end %>
+
+              <% names2 = (categories[name0][name1] || {}).keys %>
+              <% next if names2.blank? %>
+
+              <ul class="level2">
+                <% names2.sort.each do |name2| %>
+                  <%= link_to gws_share_category_files_path(category: "/#{name0}/#{name1}/#{name2}") do %>
+                    <span class="name"><%= name2 %></span>
+                  <% end %>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+      </li>
+    <% end %>
+  </ul>
+</div>
