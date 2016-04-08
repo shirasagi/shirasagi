@@ -62,7 +62,7 @@ class @Gws_Schedule_Plan
     @relateDateForm('.datetime.start', '.datetime.end')
 
   @diffDates: (src, dst)->
-    return 0 if !src || !dst
+    return 1000 * 60 * 60 if !src || !dst
     diff = (new Date(dst)).getTime() - (new Date(src)).getTime();
     return 0 if diff < 0
     diff
