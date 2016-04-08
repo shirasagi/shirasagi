@@ -1,7 +1,7 @@
 class Sys::CopyController < ApplicationController
   include Sys::BaseFilter
 
-#app/controllers/concerns/sys 以下にて記述
+  #app/controllers/concerns/sys 以下にて記述
   include Sys::SiteCopyValid
 
   private
@@ -22,7 +22,8 @@ class Sys::CopyController < ApplicationController
 
     def run
       Thread.start do
-        Sys::Copy.run_copy(params)
+        copy = Sys::Copy.new
+        copy.run_copy(params)
       end
     end
 end

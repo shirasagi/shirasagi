@@ -1,24 +1,24 @@
 module Sys::SiteCopy::Files
+  extend ActiveSupport::Concern
+
   private
-#共有ファイル:OK
-# 元サイトから共有ファイルを全て複製サイトへ複製
+    #共有ファイル:OK
+    # 元サイトから共有ファイルを全て複製サイトへ複製
     ###
     # 元サイトから複製サイトへ、共有ファイルを複製する。
-    # @param  {Cms::Site} base_site_model_obj
-    # @param  {Cms::Site} new_site_model_obj
     ###
-    def self.create_dupfiles_for_dupsite(base_site_model_obj, new_site_model_obj)
-      if !base_site_model_obj.kind_of?(Cms::Site) || !new_site_model_obj.kind_of?(Cms::Site)
+    def create_dupfiles_for_dupsite
+      if !@site_old.kind_of?(Cms::Site) || !@site.kind_of?(Cms::Site)
         logger.fatal 'Expected the 2 arguments. - [0] => Cms::Site, [1] => Cms::Site'
         return false
       end
       # 元サイトに紐付く共有ファイルを取得.
       # JSON ライクに取り扱いたいので配列化.
-      old_file_model_list = Cms::File.where(:site_id => base_site_model_obj._id).to_a
+      old_file_model_list = Cms::File.where(:site_id => @site_old._id).to_a
 
       old_file_model_list.each do |base_file_model_obj|
         # ファイルModelを生成
-        new_file_model_obj = copy_cmsfile_for_dupcms(base_file_model_obj, new_site_model_obj)
+        new_file_model_obj = copy_cmsfile_for_dupcms(base_file_model_obj)
         # 元ファイルModelに VirtualAttribute が含まれる場合, それも複製Modelへ追加
         base_file_model_obj.attributes.keys.each do |base_obj_field|
           next if %w(id _id created updated).include? base_obj_field # 余計なものは飛ばす
@@ -37,16 +37,15 @@ module Sys::SiteCopy::Files
     ###
     # 複製元サイトのファイルModelを複製し、複製サイトへ紐付けた状態で生成する
     # @param  {Cms::File} base_file_model_obj
-    # @param  {Cms::Site} new_site_model_obj
     # @return {Cms::File}
     ###
-    def self.copy_cmsfile_for_dupcms(base_file_model_obj, new_site_model_obj)
+    def copy_cmsfile_for_dupcms(base_file_model_obj)
       psude_params = {
         :in_files         => [gen_dup_tmpfile(base_file_model_obj)],
         :permission_level => base_file_model_obj.permission_level,
         :group_ids        => base_file_model_obj.group_ids,
         :cur_user         => Cms::User.find(base_file_model_obj.user_id),
-        :cur_site         => new_site_model_obj
+        :cur_site         => @site
       }
       Cms::File.new psude_params
     end
@@ -56,7 +55,7 @@ module Sys::SiteCopy::Files
     # @param  {Cms::File} base_file_model_obj
     # @return {ActionDispatch::Http::UploadedFile}
     ###
-    def self.gen_dup_tmpfile(base_file_model_obj)
+    def gen_dup_tmpfile(base_file_model_obj)
         base_file_data = File.open(base_file_model_obj.path, 'r+b')
         tmp_file_obj   = Tempfile.new(base_file_model_obj.filename)
         IO.copy_stream(base_file_data, tmp_file_obj)
