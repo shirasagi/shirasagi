@@ -20,7 +20,7 @@ module Gws::Model::Category
     validates :model, presence: true
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }
-    validates :color, presence: true
+    validates :color, presence: true, if: ->{ color_required? }
 
     scope :search, ->(params) do
       criteria = where({})
@@ -30,4 +30,9 @@ module Gws::Model::Category
       criteria
     end
   end
+
+  private
+    def color_required?
+      true
+    end
 end

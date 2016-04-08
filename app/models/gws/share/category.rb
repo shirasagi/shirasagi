@@ -29,4 +29,9 @@ class Gws::Share::Category
       self.or({ name: name_prefix }, { name: /^Regexp.escape(name_prefix)\// })
     end
   end
+
+  private
+    def color_required?
+      false
+    end
 end
