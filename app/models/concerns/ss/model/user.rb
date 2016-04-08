@@ -31,6 +31,7 @@ module SS::Model::User
     field :last_loggedin, type: DateTime
     field :account_start_date, type: DateTime
     field :account_expiration_date, type: DateTime
+    field :remark, type: String
 
     # 初期パスワード警告 / nil: 無効, 1: 有効
     field :initial_password_warning, type: Integer
@@ -38,7 +39,7 @@ module SS::Model::User
     embeds_ids :groups, class_name: "SS::Group"
     embeds_ids :titles, class_name: "SS::UserTitle"
 
-    permit_params :name, :uid, :email, :password, :tel, :type, :login_roles, group_ids: []
+    permit_params :name, :uid, :email, :password, :tel, :type, :login_roles, :remark, group_ids: []
     permit_params :in_password
     permit_params :account_start_date, :account_expiration_date, :initial_password_warning
 

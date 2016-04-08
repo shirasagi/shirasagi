@@ -186,6 +186,7 @@ ja:
         account_start_date: 有効期限（開始）
         account_expiration_date: 有効期限（終了）
         initial_password_warning: 初期パスワード警告
+        remark: 備考
       ss/model/user_title:
         name: 役職名
         order: 並び順

@@ -66,4 +66,7 @@ $("#random-password").click(function() {
       </tbody>
     </table>
   </dd>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
 </dl>
