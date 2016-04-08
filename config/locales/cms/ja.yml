@@ -816,7 +816,8 @@ ja:
     group_names: 管理グループ名
     id: コンテンツID
     file_size: 容量
-    name: コンテンツ名
+    name: タイトル
+    index_name: 一覧用タイトル
     created: コンテンツの作成日時
     released: 公開日時
     updated: 最終更新日時
