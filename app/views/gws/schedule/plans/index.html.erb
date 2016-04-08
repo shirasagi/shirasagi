@@ -11,9 +11,7 @@ Gws_Schedule_Calendar.render('#calendar', {
   <header>
     <h2><%= (@user || @cur_user).name %></h2>
     <nav class="calendar-menu">
-      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
-      <% end %>
+      <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
     </nav>
   </header>
   <div id="calendar" class="calendar"></div>
