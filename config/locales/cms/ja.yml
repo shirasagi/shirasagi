@@ -759,7 +759,7 @@ ja:
       in_file:
         - CSVファイルを指定しユーザーのインポートを行います。
         - idが記述されていない行は新規作成になります。
-        - emailまたはuidが記述されていない行は削除となります。
+        - emailとuidが記述されていない行は削除となります。
 
     cms/addon/parent_crumb:
       parent_crumb_urls:
