@@ -38,4 +38,8 @@ class Gws::Workflow::File
       state
     end
   end
+
+  def reminder_user_ids
+    [user_id]
+  end
 end

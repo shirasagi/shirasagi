@@ -50,7 +50,7 @@ module Gws::Addon
             item_id: id,
             name: reminder_name,
             date: reminder_date,
-            url: reminder_url.sub(/#id/, id),
+            url: reminder_url.sub(/#id/, id.to_s),
           })
           reminder.save
         end
