@@ -1,7 +1,7 @@
 class Gws::Share::FilesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  include SS::FileFilter
+  include Gws::FileFilter
 
   model Gws::Share::File
 

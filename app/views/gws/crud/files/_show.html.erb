@@ -1,0 +1,12 @@
+<dl class="see">
+  <% if @item.image? %>
+  <dt><%= @model.t :image %></dt>
+  <dd><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank" } %></dd>
+  <% end %>
+
+  <dt><%= @model.t :filename %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :download %></dt>
+  <dd><%= link_to :download, { action: :download }, { class: "btn" } %></dd>
+</dl>
