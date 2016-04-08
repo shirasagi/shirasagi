@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::AllContent, type: :model, dbscope: :example  do
+describe Cms::AllContent, type: :model, dbscope: :example do
   describe ".csv" do
     let(:csv) { described_class.csv }
 

@@ -43,15 +43,15 @@ module Gws::Addon
         return unless respond_to?(:reminder_user_ids)
 
         reminder_user_ids.each do |user_id|
-          reminder = Gws::Reminder.new({
+          reminder = Gws::Reminder.new(
             site_id: site_id,
             user_id: user_id,
             item_collection: collection_name,
             item_id: id,
             name: reminder_name,
             date: reminder_date,
-            url: reminder_url.sub(/#id/, id.to_s),
-          })
+            url: reminder_url.sub(/#id/, id.to_s)
+          )
           reminder.save
         end
       end

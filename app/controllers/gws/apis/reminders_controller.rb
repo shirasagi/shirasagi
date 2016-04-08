@@ -18,12 +18,12 @@ class Gws::Apis::RemindersController < ApplicationController
 
     def find_item
       attr = get_params
-      reminder = @model.where({
+      reminder = @model.where(
         site_id: @cur_site.id,
         user_id: @cur_user.id,
         item_collection: attr[:item_collection],
-        item_id: attr[:item_id],
-      }).first
+        item_id: attr[:item_id]
+      ).first
     end
 
   public

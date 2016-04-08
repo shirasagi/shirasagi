@@ -17,12 +17,12 @@ class Sys::Test::MailController < ApplicationController
     def index
       raise "403" unless SS::User.allowed?(:edit, @cur_user)
 
-      @item = OpenStruct.new({
+      @item = OpenStruct.new(
         from: @cur_user.email,
         to: @cur_user.email,
         subject: "TEST MAIL",
         body: "Message\nMessage\nMessage"
-      })
+      )
     end
 
     def create

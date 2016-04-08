@@ -4,13 +4,13 @@ describe "history_cms_backups", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:page_item) do
-    page_item = create(:article_page, cur_node: node)    
-    Timecop.travel(1.days.from_now) do
+    page_item = create(:article_page, cur_node: node)
+    Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
       page_item.update
     end
     Timecop.travel(2.days.from_now) do
-      page_item.name = "second update"      
+      page_item.name = "second update"
       page_item.update
     end
     page_item
@@ -43,7 +43,7 @@ describe "history_cms_backups", dbscope: :example do
     it "#show" do
       visit show_path
       expect(current_path).not_to eq sns_login_path
-      
+
       click_link "詳細を見る"
       expect(current_path).to eq page_path
     end
@@ -56,16 +56,16 @@ describe "history_cms_backups", dbscope: :example do
 
       click_link I18n.l(backup_item.created)
       expect(current_path).not_to eq sns_login_path
-      
+
       click_link "復元する"
       expect(current_path).to eq restore_path
-      
+
       click_button "復元"
-      expect(current_path).to eq show_path      
+      expect(current_path).to eq show_path
 
       click_link "詳細を見る"
       expect(current_path).to eq page_path
-      
+
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("first update")).to be_truthy
     end

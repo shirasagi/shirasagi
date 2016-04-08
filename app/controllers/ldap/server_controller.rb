@@ -14,7 +14,11 @@ class Ldap::ServerController < ApplicationController
     end
 
     def connect
-      Ldap::Connection.connect(base_dn: @cur_site.root_group.ldap_dn, username: @cur_user.ldap_dn, password: session[:user]["password"])
+      Ldap::Connection.connect(
+        base_dn: @cur_site.root_group.ldap_dn,
+        username: @cur_user.ldap_dn,
+        password: session[:user]["password"]
+      )
     end
 
   public

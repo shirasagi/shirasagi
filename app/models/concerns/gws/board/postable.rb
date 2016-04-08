@@ -115,7 +115,7 @@ module Gws::Board::Postable
 
     def count_topic_files(topic)
       count = topic.file_ids.size
-      count + self.class.topic_comments(topic).map { |m| m.file_ids.size }.inject(0) { |sum, i| sum + i }
+      count + self.class.topic_comments(topic).map { |m| m.file_ids.size }.inject(0) { |a, e| a + e }
     end
 
     def set_files_count

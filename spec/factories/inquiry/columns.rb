@@ -29,7 +29,7 @@ FactoryGirl.define do
     input_type "radio_button"
     required "optional"
     html "<p>性別を選択して ください。</p>"
-    select_options ["男性", "女性"]
+    select_options %w(男性 女性)
     order 40
   end
 
@@ -38,7 +38,7 @@ FactoryGirl.define do
     input_type "select"
     required "optional"
     html "<p>年齢を選択してください。</p>"
-    select_options ["10代", "20代", "30代", "40代", "50代", "60代", "70代", "80代"]
+    select_options %w(10代 20代 30代 40代 50代 60代 70代 80代)
     order 50
   end
 
@@ -47,7 +47,7 @@ FactoryGirl.define do
     input_type "check_box"
     required "optional"
     html "<p>お問い合わせ内容の区分を選択してください。</p>"
-    select_options ["市政について", "ご意見・ご要望", "申請について", "その他"]
+    select_options %w(市政について ご意見・ご要望 申請について その他)
     order 60
   end
 end
