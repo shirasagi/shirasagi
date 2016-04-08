@@ -34,6 +34,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
+        fill_in "item[start_at]", with: Time.zone.now.strftime('%F %T')
+        fill_in "item[end_at]", with: (Time.zone.now + 5.minutes).strftime('%F %T')
         click_button "保存"
       end
       expect(status_code).to eq 200
