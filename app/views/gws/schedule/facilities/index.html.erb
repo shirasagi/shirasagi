@@ -1,7 +1,6 @@
 <%= jquery do %>
 Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
-  defaultView: 'timelineAlign',
-  header: { left: 'today prev next title', right: 'basicWeek timelineAlign' },
+  defaultView: 'basicHour',
 });
 <% end %>
 
@@ -21,8 +20,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
 
     <%= jquery do %>
     Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
-      defaultView: 'timelineAlign',
-      header: { left: 'today prev next title', right: 'basicWeek timelineAlign' },
+      defaultView: 'basicHour',
       restUrl: '<%= gws_schedule_facility_plans_path(facility: item.id) %>',
       eventSources: [{ url: '<%= events_gws_schedule_facility_plans_path(facility: item.id, format: :json) %>' }]
     });

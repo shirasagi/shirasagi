@@ -4,6 +4,7 @@ class @Gws_Schedule_Multiple_Calendar
     $.extend params, Gws_Schedule_Calendar.editableParams(opts) if opts['restUrl']
     $.extend params, Gws_Schedule_Calendar.tapMenuParams(opts) if opts['restUrl']
     $.extend params, @defaultParams(opts)
+    $.extend params, @contentParams(opts)
     $.extend params, opts
     $(selector).fullCalendar(params)
 
@@ -12,13 +13,19 @@ class @Gws_Schedule_Multiple_Calendar
 
   @defaultParams: (opts) ->
     defaultView: 'basicWeek'
-    slotLabelFormat: 'H'
+    header: { left: 'today prev next title', right: 'basicWeek basicHour' }
     slotDuration: '01:00'
-    #header: { left: 'today prev next title', right: 'basicWeek timelineAlign' }
-    header: { left: 'today prev next title', right: '' }
+    slotLabelFormat: 'H'
+    views:
+      basicHour:
+        type: 'day'
+        buttonText: '日' # TODO: Use lang.
+        contentHeight: 25
+
+  @contentParams: (opts) ->
     eventRender: (event, element, view)->
-      if view.name == 'timelineAlign'
-        TimelineAlignView.eventRender(event, element, view)
+      if view.name == 'basicHour'
+        BasicHourView.eventRender(event, element, view)
 
   @controllerParams: (opts)->
     eventSources: []
@@ -42,5 +49,10 @@ class @Gws_Schedule_Multiple_Calendar
       $('.calendar.multiple .fc-next-button').click()
     controller.find('.fc-basicWeek-button').click ->
       $('.calendar.multiple .fc-basicWeek-button').click()
-    controller.find('.fc-timelineAlign-button').click ->
-      $('.calendar.multiple .fc-timelineAlign-button').click()
+    controller.find('.fc-basicHour-button').click ->
+      $('.calendar.multiple .fc-basicHour-button').click()
+
+    controller.find('.fc-basicDay-button').click ->
+      $('.calendar.multiple .fc-basicDay-button').click()
+    controller.find('.fc-agendaDay-button').click ->
+      $('.calendar.multiple .fc-agendaDay-button').click()

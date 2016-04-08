@@ -10,24 +10,21 @@ class @Gws_Schedule_Calendar
       $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove()
 
   @defaultParams: (opts) ->
-    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
+    columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
+    contentHeight: 'auto'
+    endParam: 's[end]'
+    fixedWeekCount: false
+    header: { left: 'today prev next title', right: 'month basicWeek agendaDay' },
     lang: 'ja'
-    views:
-      timelineAlign:
-        type: 'day'
-        buttonText: '日' # TODO: Use lang.
+    nextDayThreshold: '00:00:00' # 複数日表示の閾値
+    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
+    slotLabelFormat: 'HH:mm',
+    startParam: 's[start]'
+    timeFormat: 'HH:mm'
     titleFormat:
       month: "<%= I18n.t('gws/schedule.calendar.titleFormat.month') %>"
       week: "<%= I18n.t('gws/schedule.calendar.titleFormat.week') %>"
       day: "<%= I18n.t('gws/schedule.calendar.titleFormat.day') %>"
-    timeFormat: 'HH:mm'
-    slotLabelFormat: 'HH:mm',
-    columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
-    header: { left: 'today prev next title', right: 'month basicWeek agendaDay' },
-    contentHeight: 'auto'
-    fixedWeekCount: false
-    startParam: 's[start]'
-    endParam: 's[end]'
     loading: (isLoading, view) ->
       if isLoading
         $(this).find('.fc-day:first-child').append('<span class="fc-loading">Loading..</span>')
@@ -67,7 +64,6 @@ class @Gws_Schedule_Calendar
     editable: true,
     eventClick: (event, jsEvent, view) ->
       return if $(this).hasClass('fc-holiday')
-      #return unless event.readable
 
       popup = "fc-popup"
       if $(this).find(".#{popup}").length == 0
@@ -75,6 +71,7 @@ class @Gws_Schedule_Calendar
 
       view = $(this).find(".#{popup}")
       hgt = view.outerHeight()
+      console.log $(this).offset().top
       if $(this).offset().top - hgt < 0
         view.addClass("position-bottom")
         view.css("bottom", (hgt * (-1) - 15) + "px")
