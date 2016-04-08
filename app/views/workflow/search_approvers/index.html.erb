@@ -13,7 +13,7 @@
 </div>
 
 <table class="index">
-  <thead>
+  <thead class="list-head">
     <tr>
       <th class="checkbox"><input type="checkbox" /></th>
       <th class="name"><%= @model.t :name %></th>
@@ -21,7 +21,7 @@
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <tr data-id="<%= "#{@level},#{item.id}" %>">
+      <tr data-id="<%= "#{@level},#{item.id}" %>" class="list-item">
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>

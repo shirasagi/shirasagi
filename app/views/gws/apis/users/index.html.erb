@@ -16,7 +16,7 @@
 </div>
 
 <table class="index">
-  <thead>
+  <thead class="list-head">
     <tr>
       <% if @multi %>
       <th class="checkbox"><input type="checkbox" /></th>
@@ -26,7 +26,7 @@
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <tr data-id="<%= item.id %>">
+      <tr data-id="<%= item.id %>" class="list-item">
         <% if @multi %>
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
