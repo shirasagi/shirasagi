@@ -25,6 +25,12 @@ class Gws::Board::TopicsController < ApplicationController
           target_to(@cur_user)
       end
 
+      if params[:category].present?
+        params[:s] ||= {}
+        params[:s][:site] = @cur_site
+        params[:s][:category] = params[:category]
+      end
+
       @items = @items.search(params[:s]).
         order(descendants_updated: -1).
         page(params[:page]).per(50)
