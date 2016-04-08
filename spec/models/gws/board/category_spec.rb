@@ -1,19 +1,19 @@
 require 'spec_helper'
 
-describe Cms::Group, type: :model, dbscope: :example do
+describe Gws::Board::Category, type: :model, dbscope: :example do
   context "blank params" do
     subject { described_class.new.valid? }
     it { expect(subject).to be_falsey }
   end
 
   context "default params" do
-    subject { create :cms_group }
+    subject { create :gws_board_category }
     it { expect(subject.errors.size).to eq 0 }
   end
 
   context "renaming" do
-    let!(:root) { create(:cms_group) }
-    let!(:child) { create(:cms_group, name: "#{root.name}/#{unique_id}") }
+    let!(:root) { create(:gws_board_category) }
+    let!(:child) { create(:gws_board_category, name: "#{root.name}/#{unique_id}") }
     let!(:new_name) { unique_id }
 
     it do

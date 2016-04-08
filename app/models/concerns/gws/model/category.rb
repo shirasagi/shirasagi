@@ -4,6 +4,7 @@ module Gws::Model::Category
   include SS::Document
   include Gws::Content::Targetable
   include Gws::Schedule::Colorize
+  include SS::Fields::DependantNaming
 
   included do
     store_in collection: "gws_categories"
@@ -18,7 +19,7 @@ module Gws::Model::Category
 
     validates :model, presence: true
     validates :state, presence: true
-    validates :name, presence: true, length: { maximum: 40 }
+    validates :name, presence: true, length: { maximum: 80 }
     validates :color, presence: true
 
     scope :search, ->(params) do
