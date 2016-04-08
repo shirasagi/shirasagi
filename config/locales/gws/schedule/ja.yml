@@ -4,6 +4,7 @@ ja:
     holiday: 休日管理
     reminder: リマインダー
     private_plan: 非公開予定
+    loading: 読み込み中
     tabs:
       personal: 個人
       personal_list: 予定リスト

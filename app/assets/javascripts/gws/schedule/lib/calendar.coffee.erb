@@ -27,7 +27,7 @@ class @Gws_Schedule_Calendar
       day: "<%= I18n.t('gws/schedule.calendar.titleFormat.day') %>"
     loading: (isLoading, view) ->
       if isLoading
-        $(this).find('.fc-day:first-child').append('<span class="fc-loading">Loading..</span>')
+        $(this).find('.fc-day').eq(0).append('<span class="fc-loading"><%= I18n.t('gws/schedule.loading') %></span>')
       else
         $(this).find('.fc-loading').remove()
 
