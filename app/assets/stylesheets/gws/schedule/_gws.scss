@@ -9,15 +9,18 @@
     border-radius: 3px 3px 0 0;
     background-color: $gray5;
     color: #000;
-    &:hover {
-      background-color: #fff;
-      text-decoration: none;
-    }
     .tab-name {
       display: block;
       padding: 0 5px 0 8px;
       border-left: 3px solid #bbb;
       text-align: center;
+    }
+    &:hover {
+      background-color: #fff;
+      text-decoration: none;
+      .tab-name {
+        border-color: $orange;
+      }
     }
   }
   a.current {
