@@ -98,7 +98,7 @@ module SS::Model::User
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :email
+        criteria = criteria.keyword_in params[:keyword], :name, :uid, :email
       end
       criteria
     end
