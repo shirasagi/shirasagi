@@ -1,11 +1,11 @@
-class Sns::SsoLogin::SamlController < ApplicationController
+class Sns::Login::SamlController < ApplicationController
   include Sns::BaseFilter
 
   skip_action_callback :verify_authenticity_token, only: :consume
   skip_action_callback :logged_in?
   before_action :set_item
 
-  model Sys::Sso::Saml
+  model Sys::Auth::Saml
 
   private
     def set_item

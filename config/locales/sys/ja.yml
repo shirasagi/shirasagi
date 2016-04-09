@@ -13,11 +13,11 @@ ja:
     max_file_size: 最大ファイルサイズ
     roles:
       admin: 管理者
-    sso: SSO
+    auth: 認証
     saml: SAML
     open_id_connect: OpenID Connect
     options:
-      sso_state:
+      auth_state:
         enabled: 有効
         disabled: 無効
 
@@ -42,7 +42,7 @@ ja:
     attributes:
       sys/addon/role:
         sys_role_ids: ロール
-      sys/model/sso:
+      sys/model/auth:
         name: 名前
         filename: ファイル名
         text: 説明

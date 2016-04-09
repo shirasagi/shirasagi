@@ -1,12 +1,12 @@
 require 'json/jwt'
 
-class Sns::SsoLogin::OpenIdConnectController < ApplicationController
+class Sns::Login::OpenIdConnectController < ApplicationController
   include Sns::BaseFilter
 
   skip_action_callback :logged_in?
   before_action :set_item
 
-  model Sys::Sso::OpenIdConnect
+  model Sys::Auth::OpenIdConnect
 
   layout "ss/login"
   navi_view nil

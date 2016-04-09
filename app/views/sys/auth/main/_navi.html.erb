@@ -1,0 +1,7 @@
+<nav class="mod-navi">
+  <h2><%= t "sys.auth" %></h2>
+  <h3><%= link_to :"sys.saml", sys_auth_samls_path %></h3>
+  <h3><%= link_to :"sys.open_id_connect", sys_auth_open_id_connects_path %></h3>
+</nav>
+
+<%= render partial: "sys/main/navi" %>

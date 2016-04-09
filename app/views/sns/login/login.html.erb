@@ -28,11 +28,11 @@
   </footer>
 <% end %>
 
-<% sso = Sys::Sso::Base.where(state: "enabled").order_by(order: 1).to_a %>
+<% sso = Sys::Auth::Base.where(state: "enabled").order_by(order: 1).to_a %>
 <% if sso.present? %>
   <ul class="sso">
     <% sso.each do |sso| %>
-    <% sso = sso.becomes_with_route %>
+    <% sso = sso.becomes_with_model %>
     <li class="<%= sso.filename %>">
       <%= link_to(sso.url) do %>
         <h2 class="name"><%= sso.name %></h2>

@@ -52,7 +52,7 @@ SS::Application.routes.draw do
     get   "cms" => "mypage#cms"
     get   "gws" => "mypage#gws"
 
-    namespace "sso_login" do
+    namespace "login" do
       # SAML SSO
       get  "saml/:id/init" => "saml#init"
       post "saml/:id/consume" => "saml#consume"
