@@ -12,21 +12,31 @@ class Sns::Login::SamlController < ApplicationController
       @item ||= @model.find_by(filename: params[:id])
     end
 
+    # def settings
+    #   @settings ||= begin
+    #     idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
+    #     settings = idp_metadata_parser.parse(SS::Crypt.decrypt(@item.metadata))
+    #
+    #     settings.assertion_consumer_service_url = "http://#{request.host_with_port}/.mypage/sso_login/saml/#{@item.filename}/consume"
+    #     settings.issuer = "http://#{request.host_with_port}/.mypage/sso_login/saml/#{@item.filename}/"
+    #     # settings.name_identifier_format = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+    #     # settings.name_identifier_format = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+    #     settings.name_identifier_format = @item.identifier || @item.default_identifier
+    #     # Optional for most SAML IdPs
+    #     settings.authn_context = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
+    #     Rails.logger.debug("settings.name_identifier_format=#{settings.name_identifier_format}")
+    #
+    #     settings
+    #   end
+    # end
     def settings
-      @settings ||= begin
-        idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
-        settings = idp_metadata_parser.parse(SS::Crypt.decrypt(@item.metadata))
-
-        settings.assertion_consumer_service_url = "http://#{request.host_with_port}/.mypage/sso_login/saml/#{@item.filename}/consume"
-        settings.issuer = "http://#{request.host_with_port}/.mypage/sso_login/saml/#{@item.filename}/"
-        # settings.name_identifier_format = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
-        # settings.name_identifier_format = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
-        settings.name_identifier_format = @item.identifier || @item.default_identifier
-        # Optional for most SAML IdPs
-        settings.authn_context = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
-        Rails.logger.debug("settings.name_identifier_format=#{settings.name_identifier_format}")
-
-        settings
+      @settings ||= OneLogin::RubySaml::Settings.new.tap do |settings|
+        settings.idp_entity_id = @item.entity_id
+        settings.name_identifier_format = @item.name_id_format
+        settings.idp_sso_target_url = @item.sso_url
+        settings.idp_slo_target_url = @item.slo_url
+        settings.idp_cert = Base64.encode64(SS::Crypt.decrypt(@item.x509_cert))
+        settings.idp_cert_fingerprint = @item.fingerprint
       end
     end
 

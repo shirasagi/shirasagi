@@ -20,6 +20,8 @@ ja:
       auth_state:
         enabled: 有効
         disabled: 無効
+    links:
+      new_from_metadata: メタデータ インポート
 
   modules:
     sys: システム
@@ -49,8 +51,13 @@ ja:
         order: 並び順
         state: ステータス
       sys/addon/saml_setting:
-        metadata: メタデータ
+        entity_id: Entity ID
+        name_id_format: Name ID Format
+        sso_url: SSO Url
+        slo_url: SLO Url
+        x509_cert: X509公開鍵証明書
         identifier: Identifier
+        metadata: メタデータ
       sys/addon/open_id_connect_setting:
         auth_url: Auth URL
         token_url: Token URL

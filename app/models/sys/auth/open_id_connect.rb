@@ -4,9 +4,9 @@ class Sys::Auth::OpenIdConnect
   include Sys::Permission
 
   set_permission_name "sys_users", :edit
-  default_scope ->{ where(model: 'sys/sso/open_id_connect') }
+  default_scope ->{ where(model: 'sys/auth/open_id_connect') }
 
   def url
-    "/.mypage/sso_login/oid/#{filename}/init"
+    "/.mypage/login/oid/#{filename}/init"
   end
 end
