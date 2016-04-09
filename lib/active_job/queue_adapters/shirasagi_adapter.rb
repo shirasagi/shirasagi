@@ -16,9 +16,7 @@ module ActiveJob
 
         private
           def check_size_limit(pool)
-            pool_config = SS.config.job.pool[pool] || {}
-
-            max_size = pool_config.fetch('max_size', -1)
+            max_size = Job::Service::Config.max_size_of(pool)
             return if max_size <= 0
 
             size = Job::Task.where(pool: pool).count
@@ -44,10 +42,10 @@ module ActiveJob
 
           def run_rake_if_needed
             # check for on demand run is enabled
-            return unless SS.config.job.enable_on_demand_run
+            return if Job::Service.config.mode == 'service'
 
             # check for whether service is started or not
-            name = SS.config.job['default']['model']
+            name = Job::Service.config.name
             service = Job::Service.where(name: name).order_by(updated: -1).first
             return if service && service.current_count > 0
 

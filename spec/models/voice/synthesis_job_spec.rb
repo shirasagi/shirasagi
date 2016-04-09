@@ -50,7 +50,7 @@ describe Voice::SynthesisJob, http_server: true do
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
-        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+        @cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
       before do
@@ -86,7 +86,7 @@ describe Voice::SynthesisJob, http_server: true do
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
-        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+        @cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
       before do
@@ -118,7 +118,7 @@ describe Voice::SynthesisJob, http_server: true do
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
-        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+        @cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
       before do
@@ -150,7 +150,7 @@ describe Voice::SynthesisJob, http_server: true do
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
-        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+        @cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
       before do
@@ -183,7 +183,7 @@ describe Voice::SynthesisJob, http_server: true do
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
-        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+        @cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
       before do
@@ -215,7 +215,7 @@ describe Voice::SynthesisJob, http_server: true do
 
         @item = Voice::File.find_or_create_by(site_id: cms_site.id, url: @url)
         @job = Voice::SynthesisJob.call_async @item.id.to_s
-        @cmd = "bundle exec rake job:worker RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
+        @cmd = "bundle exec rake job:run RAILS_ENV=#{Rails.env} > /dev/null 2>&1"
       end
 
       before do

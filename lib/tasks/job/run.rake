@@ -5,10 +5,6 @@ namespace :job do
   end
 
   task :run => [:environment, :setup_logger] do
-    config = ENV["config"]
-    unless config.blank?
-      config = SS.config.job[config]
-    end
-    Job::MasterService.run config
+    Job::Service.run(ENV["config"])
   end
 end

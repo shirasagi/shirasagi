@@ -1,30 +1,45 @@
 require 'logger'
 
 class Job::TaskLogger < ::Logger
+  extend Forwardable
+
   FLUSH_INTERVAL = 10.seconds
 
-  def initialize(task = nil)
+  private_class_method :new
+
+  def initialize
     @device = TaskLogDevice.new
     super(@device)
-    @device.task = task
   end
 
-  def task
-    @device.task
-  end
+  def_delegators(:@device, :loggable, :loggable=)
 
-  def task=(task)
-    @device.task = task
+  class << self
+    def attach(loggable)
+      @@task_logger ||= begin
+        logger = new
+        logger.level = ::Job::Service.config.log_level || Rails.logger.level
+        Rails.logger.extend ActiveSupport::Logger.broadcast(logger)
+        logger
+      end
+
+      @@task_logger.loggable = loggable
+    end
+
+    def detach(_)
+      return unless @@task_logger
+      @@task_logger.loggable = nil
+    end
   end
 
   class TaskLogDevice
-    attr_accessor :task
+    attr_accessor :loggable
 
     def write(message)
-      if task
-        task.logs << message.chomp
-        elapsed = Time.zone.now - task.updated
-        task.save if elapsed > FLUSH_INTERVAL
+      if loggable
+        loggable.logs << message.chomp
+        elapsed = Time.zone.now - loggable.updated
+        loggable.save if elapsed > FLUSH_INTERVAL
       end
     end
 
