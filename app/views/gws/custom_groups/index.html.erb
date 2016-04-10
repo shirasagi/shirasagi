@@ -1,0 +1,5 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, gws_custom_group_members_path(custom_group_id: item), class: "title" %>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

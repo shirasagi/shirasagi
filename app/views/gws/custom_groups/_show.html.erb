@@ -10,5 +10,4 @@
 
   <dt><%= @model.t :members %></dt>
   <dd><%= link_to :edit, gws_custom_group_members_path(custom_group_id: @item) %></dd>
-  <dd><%= @item.member_users.map(&:name).join(', ') %></dd>
 </dl>

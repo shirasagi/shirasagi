@@ -32,4 +32,10 @@ class Gws::CustomGroups::MembersController < ApplicationController
         order_by(order: 1).
         page(params[:page]).per(50)
     end
+
+    def create
+      @item = @model.new get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+      render_create @item.save_members, location: { action: :index }
+    end
 end

@@ -1,5 +1,21 @@
 <dl class="see">
   <dt><%= @model.t :member_id %><%= @model.tt :member_id %></dt>
+
+  <% if @item.new_record? %>
+
+  <dd>
+    <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </dd>
+
+  <% else %>
+
   <dd>
     <%= f.hidden_field "member_id", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path(single: 1), class: "ajax-box" %>
@@ -9,7 +25,7 @@
       <thead><tr><th class="name"><%= Gws::User.t :name %></th><th></th></tr></thead>
       <tbody>
         <% if @item.member %>
-        <tr data-id="<%= @item.user_id %>">
+        <tr data-id="<%= @item.member_id %>">
           <td><%= f.hidden_field "member_id", value: @item.member_id %> <%= @item.name %></td>
           <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
         </tr>
@@ -17,6 +33,8 @@
       </tbody>
     </table>
   </dd>
+
+  <% end %>
 
   <dt><%= @model.t :order %></dt>
   <dd><%= f.number_field :order %></dd>
