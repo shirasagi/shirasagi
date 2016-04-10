@@ -6,8 +6,8 @@
 </header>
 
 <%= form_tag action: params[:action] do |f| %>
-  <% if @error %>
-  <div class="error-message"><%= @error %></div>
+  <% if flash[:alert] %>
+  <div class="error-message"><%= flash[:alert] %></div>
   <% end %>
 
   <%= error_messages_for :item %>
@@ -34,7 +34,7 @@
     <% sso.each do |sso| %>
     <% sso = sso.becomes_with_model %>
     <li class="<%= sso.filename %>">
-      <%= link_to(sso.url) do %>
+      <%= link_to(sso.url(params.slice(:ref))) do %>
         <h2 class="name"><%= sso.name %></h2>
         <p class="text"><%= br sso.text %></p>
       <% end %>

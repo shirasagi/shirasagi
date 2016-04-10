@@ -62,6 +62,9 @@ SS::Application.routes.draw do
       get  "oid/:id/init" => "open_id_connect#init"
       get "oid/:id/callback" => "open_id_connect#callback"
       post "oid/:id/callback" => "open_id_connect#callback"
+
+      # Environment
+      get  "env/:id/login" => "environment#login"
     end
   end
 end

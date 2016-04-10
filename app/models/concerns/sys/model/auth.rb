@@ -37,7 +37,7 @@ module Sys::Model::Auth
     %w(enabled disabled).map { |v| [I18n.t("sys.options.auth_state.#{v}"), v] }
   end
 
-  def url
+  def url(options = {})
     raise NotImplementedError
   end
 end

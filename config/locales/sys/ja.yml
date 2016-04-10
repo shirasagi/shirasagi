@@ -14,8 +14,9 @@ ja:
     roles:
       admin: 管理者
     auth: 認証
-    saml: SAML
-    open_id_connect: OpenID Connect
+    auth/saml: SAML
+    auth/open_id_connect: OpenID Connect
+    auth/environment: 環境変数
     options:
       auth_state:
         enabled: 有効

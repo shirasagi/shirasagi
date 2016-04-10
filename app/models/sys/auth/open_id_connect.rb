@@ -6,7 +6,8 @@ class Sys::Auth::OpenIdConnect
   set_permission_name "sys_users", :edit
   default_scope ->{ where(model: 'sys/auth/open_id_connect') }
 
-  def url
-    "/.mypage/login/oid/#{filename}/init"
+  def url(options = {})
+    query = "?#{options.to_query}" if options.present?
+    "/.mypage/login/oid/#{filename}/init#{query}"
   end
 end

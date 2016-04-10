@@ -1,5 +1,6 @@
 class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
+  include Sns::LoginFilter
 
   protect_from_forgery except: :remote_login
   skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
@@ -13,16 +14,6 @@ class Sns::LoginController < ApplicationController
       params.require(:item).permit(:uid, :email, :password, :encryption_type)
     rescue
       raise "400"
-    end
-
-    def login_success
-      if params[:ref].blank?
-        redirect_to SS.config.sns.logged_in_page
-      elsif params[:ref] =~ /^\//
-        redirect_to params[:ref]
-      else
-        render :redirect
-      end
     end
 
   public
@@ -44,20 +35,7 @@ class Sns::LoginController < ApplicationController
       @item = SS::User.authenticate(email_or_uid, password) rescue false
       @item = nil if @item && !@item.enabled?
 
-      if @item
-        set_user @item, session: true, password: password
-        respond_to do |format|
-          format.html { login_success }
-          format.json { head :no_content }
-        end
-      else
-        @item = SS::User.new email: email_or_uid
-        @error = t "sns.errors.invalid_login"
-        respond_to do |format|
-          format.html { render }
-          format.json { render json: @error, status: :unprocessable_entity }
-        end
-      end
+      render_login @item, email_or_uid, session: true, password: password
     end
 
     def remote_login

@@ -43,6 +43,7 @@ SS::Application.routes.draw do
         post "metadata", controller: "samls/metadata", action: :create, on: :collection
       end
       resources :open_id_connects, concerns: :deletion
+      resources :environments, concerns: :deletion
     end
   end
 
