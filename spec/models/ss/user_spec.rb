@@ -1,25 +1,14 @@
 require 'spec_helper'
 
-describe SS::User do
-  subject(:model) { SS::User }
-
-  def raw_model(model, raw_query)
-    val = model.collection.find(raw_query).first
-    val.present? ? val.symbolize_keys : nil
-  end
-
-  describe "#save and #find" do
-    subject(:factory) { :ss_user }
-    it_behaves_like "mongoid#save"
-    it_behaves_like "mongoid#find"
-  end
+describe SS::User, dbscope: :example do
+  let(:model) { SS::User }
 
   describe "#save" do
-    subject(:group) { ss_group }
+    let(:group) { ss_group }
 
     context "when name is missing" do
       r = rand(0x100000000).to_s(36)
-      subject(:entity) do
+      let(:entity) do
         {
           email: "u#{r}@example.jp",
           password: SS::Crypt.crypt("p#{r}"),
@@ -35,7 +24,7 @@ describe SS::User do
 
     context "when uid and email is missing" do
       r = rand(0x100000000).to_s(36)
-      subject(:entity) do
+      let(:entity) do
         {
           name: "u#{r}",
           password: SS::Crypt.crypt("p#{r}"),
@@ -51,7 +40,7 @@ describe SS::User do
 
     context "when uid containing '@' is given" do
       r = rand(0x100000000).to_s(36)
-      subject(:entity) do
+      let(:entity) do
         {
           name: "u#{r}",
           password: SS::Crypt.crypt("p#{r}"),
@@ -68,7 +57,7 @@ describe SS::User do
 
     context "when password is missing" do
       r = rand(0x100000000).to_s(36)
-      subject(:entity) do
+      let(:entity) do
         {
           name: "u#{r}",
           email: "u#{r}@example.jp",
@@ -84,7 +73,7 @@ describe SS::User do
 
     context "when invalid type is givin" do
       r = rand(0x100000000).to_s(36)
-      subject(:entity) do
+      let(:entity) do
         {
           name: "u#{r}",
           email: "u#{r}@example.jp",
@@ -105,7 +94,7 @@ describe SS::User do
       r1= rand(0x100000000).to_s(36)
       r2 = rand(0x100000000).to_s(36)
 
-      subject(:entity1) do
+      let(:entity1) do
         {
           name: "u#{r1}",
           email: "u#{r0}@example.jp",
@@ -113,7 +102,7 @@ describe SS::User do
           group_ids: [ group.id ]
         }
       end
-      subject(:entity2) do
+      let(:entity2) do
         {
           name: "u#{r2}",
           email: "u#{r0}@example.jp",
@@ -130,7 +119,7 @@ describe SS::User do
 
     context "when valid sns user is given" do
       r = rand(0x100000000).to_s(36)
-      subject(:entity) do
+      let(:entity) do
         {
           name: "u#{r}",
           email: "u#{r}@example.jp",
@@ -148,7 +137,7 @@ describe SS::User do
 
     context "when valid ldap user is given" do
       r = rand(0x100000000).to_s(36)
-      subject(:entity) do
+      let(:entity) do
         {
           name: "u#{r}",
           type: "ldap",
@@ -161,6 +150,146 @@ describe SS::User do
 
       it do
         expect { subject.save! }.not_to raise_error
+      end
+    end
+  end
+
+  describe ".and_enabled" do
+    let(:now) { Time.zone.now }
+
+    context "account_start_date is nil" do
+      context "account_expiration_date is nil" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is enabled") { expect(model.first.enabled?).to be_truthy }
+        it("exists only one enabled item") { expect(model.and_enabled.count).to eq 1 }
+      end
+
+      context "account_expiration_date is future date" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+            account_expiration_date: now + 7.days
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is enabled") { expect(model.first.enabled?).to be_truthy }
+        it("exists only one enabled item") { expect(model.and_enabled.count).to eq 1 }
+      end
+
+      context "account_expiration_date is past date" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+            account_expiration_date: now - 7.days
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is disabled") { expect(model.first.enabled?).to be_falsey }
+        it("exists no enabled items") { expect(model.and_enabled.count).to eq 0 }
+      end
+    end
+
+    context "account_start_date is past date" do
+      context "account_expiration_date is nil" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+            account_start_date: now - 7.days
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is enabled") { expect(model.first.enabled?).to be_truthy }
+        it("exists only one enabled item") { expect(model.and_enabled.count).to eq 1 }
+      end
+
+      context "account_expiration_date is future date" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+            account_start_date: now - 7.days,
+            account_expiration_date: now + 7.days
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is enabled") { expect(model.first.enabled?).to be_truthy }
+        it("exists only one enabled item") { expect(model.and_enabled.count).to eq 1 }
+      end
+
+      context "account_expiration_date is past date" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+            account_start_date: now - 7.days,
+            account_expiration_date: now - 3.days
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is disabled") { expect(model.first.enabled?).to be_falsey }
+        it("exists no enabled items") { expect(model.and_enabled.count).to eq 0 }
+      end
+    end
+
+    context "account_start_date is future date" do
+      context "account_expiration_date is nil" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+            account_start_date: now + 3.days,
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is disabled") { expect(model.first.enabled?).to be_falsey }
+        it("exists no enabled items") { expect(model.and_enabled.count).to eq 0 }
+      end
+
+      context "account_expiration_date is future date" do
+        let(:entity) do
+          {
+            uid: unique_id,
+            in_password: 'pass',
+            name: unique_id,
+            account_start_date: now + 3.days,
+            account_expiration_date: now + 7.days,
+          }
+        end
+        before { model.create!(entity) }
+
+        it("exists only one item") { expect(model.count).to eq 1 }
+        it("is disabled") { expect(model.first.enabled?).to be_falsey }
+        it("exists no enabled items") { expect(model.and_enabled.count).to eq 0 }
       end
     end
   end

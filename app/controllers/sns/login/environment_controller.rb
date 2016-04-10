@@ -15,7 +15,7 @@ class Sns::Login::EnvironmentController < ApplicationController
     end
 
   public
-   def login
+    def login
       key = @item.keys.find do |key|
         request.env[key].present?
       end
@@ -25,7 +25,7 @@ class Sns::Login::EnvironmentController < ApplicationController
       end
 
       uid_or_email = request.env[key]
-      user = SS::User.or({ uid: uid_or_email }, { email: uid_or_email }).first
+      user = SS::User.uid_or_email(uid_or_email).and_enabled.first
       if user.blank?
         render_login nil, nil
         return
