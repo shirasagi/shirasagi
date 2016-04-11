@@ -1,87 +1,12 @@
 <%
-@f = f
-@categories = Gws::Share::Category.categories_for(@cur_site, @cur_user).to_a
-return if @categories.blank?
-
-@name_dic = {}
-@categories.map(&:name).sort.each do |name|
-  dic = @name_dic
-  name.split("/").each do |n|
-    dic[n] ||= {}
-    dic = dic[n]
-  end
-end
-
-def find_category(name)
-  @categories.find { |category| category.name == name }
-end
-
-def find_dic(*names)
-  dic = @name_dic
-  names.each do |name|
-    dic = dic[name]
-    return {} if dic.blank?
-  end
-  dic
-end
-
-def has_grandchild?(*names)
-  dic = find_dic(*names)
-  dic.keys.each do |child|
-    return true if dic[child].keys.present?
-  end
-
-  false
-end
-
-def render_content(*names)
-  category = find_category(names.join("/"))
-  if category
-    if category.color.present?
-      content = content_tag("span", names.last, class: "name", style: "background-color: #{category.color}; color: #{category.text_color}")
-    else
-      content = content_tag("span", names.last, class: "name")
-    end
-
-    label_tag("item_category_ids_#{category.id}") do
-      @f.check_box("category_ids[]", { }, category.id) + content
-    end
-  else
-    content_tag("span", names.last, class: "name")
-  end
-end
-
-def cate_form(depth, *names)
-  h = ''
-  h << render_content(*names)
-
-  dic = find_dic(*names)
-  return '<li>' + h + '</li>' if dic.blank?
-
-  if has_grandchild?(*names)
-    css_classes = %w(child)
-  else
-    css_classes = %w(grandchild)
-  end
-
-  h << "<ul class=\"depth#{depth} #{css_classes.join(" ")}\">"
-  dic.keys.sort.each do |child|
-    h << cate_form(depth + 1, *(names + [child]))
-  end
-  h << "</ul>"
-
-  '<li>' + h + '</li>'
-end
+traverser = Gws::Share::CategoryTraverser.build(@cur_site, @cur_user)
+return if traverser.blank?
 %>
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-share-category"); <% end %>
 
 <dl class="see mod-gws-share-category">
   <dt class="wide"><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
   <dd class="wide">
-    <ul class="parent depth0">
-      <% @name_dic.keys.sort.each do |name| %>
-        <%= cate_form(1, name).html_safe %>
-      <% end %>
-    </ul>
+    <%= render partial: 'gws/agents/addons/board/category/cate_form', locals: { f: f, categories: traverser, level: 0, css_class: 'parent', depth: 0 } %>
   </dd>
 </dl>

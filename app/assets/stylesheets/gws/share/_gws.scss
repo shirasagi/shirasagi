@@ -46,6 +46,13 @@
       }
     }
   }
+  span.color {
+    display: block;
+    float: right;
+    width: 11px;
+    height: 11px;
+    margin-right: 10px;
+  }
 }
 
 .mod-gws-share-category {
@@ -67,13 +74,13 @@
       > li {
         padding: 10px 0;
       }
-      .grandchild {
-        padding-left: 30px;
-        > li {
-          display: inline;
-          margin: 0 5px;
-          padding: 5px 0;
-        }
+    }
+    ul.grandchild {
+      padding-left: 30px;
+      > li {
+        display: inline;
+        margin: 0 5px;
+        padding: 5px 0;
       }
     }
   }
