@@ -7,7 +7,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
 
   private
     def set_facility
-      @facility = Gws::Facility.site(@cur_site).find(params[:facility])
+      @facility = Gws::Facility::Item.site(@cur_site).find(params[:facility])
     end
 
     def pre_params

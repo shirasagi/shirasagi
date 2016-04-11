@@ -3,7 +3,7 @@ module Gws::Addon::Schedule::Facility
   extend SS::Addon
 
   included do
-    embeds_ids :facilities, class_name: "Gws::Facility"
+    embeds_ids :facilities, class_name: "Gws::Facility::Item"
 
     permit_params facility_ids: []
 

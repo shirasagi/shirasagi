@@ -67,7 +67,7 @@ ja:
 
   mongoid:
     models:
-      gws/board_posts: 掲示板
+      gws/board/post: 掲示板
     attributes:
       gws/board/postable:
         name: タイトル

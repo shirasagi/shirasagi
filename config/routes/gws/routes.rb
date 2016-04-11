@@ -17,7 +17,6 @@ SS::Application.routes.draw do
     resources :users, concerns: [:deletion]
     resources :user_titles, concerns: [:deletion]
     resources :roles, concerns: [:deletion]
-    resources :facilities, concerns: [:deletion]
     resources :notices, concerns: [:deletion]
     resources :public_notices, only: [:index, :show]
     resources :links, concerns: [:deletion]
@@ -29,6 +28,7 @@ SS::Application.routes.draw do
     namespace "apis" do
       get "groups" => "groups#index"
       get "users" => "users#index"
+      get "facilities" => "facilities#index"
       post "reminders" => "reminders#create"
       delete "reminders" => "reminders#destroy"
 

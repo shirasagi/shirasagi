@@ -1,0 +1,33 @@
+ja:
+  gws/facility:
+    category: カテゴリー
+
+  modules:
+    gws/facility: 設備管理
+
+  gws_role:
+    read_other_gws_facility_items: 設備の閲覧（全て）
+    read_private_gws_facility_items: 設備の閲覧（所有）
+    edit_other_gws_facility_items: 設備の編集（全て）
+    edit_private_gws_facility_items: 設備の編集（所有）
+    delete_other_gws_facility_items: 設備の削除（全て）
+    delete_private_gws_facility_items: 設備の削除（所有）
+    read_other_gws_facility_categories: カテゴリーの閲覧（全て）
+    read_private_gws_facility_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_facility_categories: カテゴリーの編集（全て）
+    edit_private_gws_facility_categories: カテゴリーの編集（所有）
+    delete_other_gws_facility_categories: カテゴリーの削除（全て）
+    delete_private_gws_facility_categories: カテゴリーの削除（所有）
+
+  mongoid:
+    models:
+      gws/facility/item: 設備
+      gws/facility/category: 設備カテゴリー
+    attributes:
+      gws/facility/item:
+        name: 設備名
+        order: 並び順
+        category_id: カテゴリー
+      gws/facility/category:
+        name: カテゴリー名
+        order: 並び順

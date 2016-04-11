@@ -1,16 +1,18 @@
-class Gws::Facility
+class Gws::Facility::Category
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include SS::Addon::Markdown
   include Gws::Addon::GroupPermission
 
   seqid :id
   field :name, type: String
+  field :order, type: Integer, default: 0
 
-  permit_params :name
+  permit_params :name, :order
 
   validates :name, presence: true
+
+  default_scope -> { order_by order: 1, name: 1 }
 
   scope :search, ->(params) {
     criteria = where({})

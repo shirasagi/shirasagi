@@ -1,14 +1,26 @@
 <%= jquery do %>
-Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
-  defaultView: 'basicHour',
-  header: { left: 'today prev next title', right: 'basicWeek basicHour' },
-});
+  $("#s_category").change(function() {
+    $(".main-box form.search").submit();
+  });
+
+  Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
+    defaultView: 'basicHour',
+    header: { left: 'today prev next title', right: 'basicWeek basicHour' },
+  });
 <% end %>
 
 <%= render "gws/schedule/main/tabs" %>
 
 <section class="main-box">
-  <header><h2><%= t('gws/schedule.tabs.facility') %></h2></header>
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <header><h2>
+      <% if @categories.present? %>
+      <%= select_tag "s[category]", options_for_select(@categories, @category), include_blank: t('gws/schedule.tabs.facility') %>
+      <% else %>
+      <%= t('gws/schedule.tabs.facility') %>
+      <% end %>
+    </h2></header>
+  <% end %>
 
   <div class="calendar" id="calendar-controller"></div>
 

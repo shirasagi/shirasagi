@@ -76,6 +76,7 @@ ja:
       open: 開く
       change: 変更する
       more: もっと見る
+      select: 選択する
       delete_all: すべて削除する
     notice:
       saved: 保存しました。

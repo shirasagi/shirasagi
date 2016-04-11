@@ -4,8 +4,8 @@ class Gws::Apis::GroupsController < ApplicationController
   model Gws::Group
 
   def index
-    @single = params[:single].present?
-    @multi = !@single
+    @multi = params[:single].blank?
+
     @items = @model.site(@cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
