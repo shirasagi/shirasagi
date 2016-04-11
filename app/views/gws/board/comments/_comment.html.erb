@@ -2,13 +2,28 @@
 
 menu = []
 if @item.permit_comment? && recursion
-  menu << link_to(t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id), class: "btn primary")
+  if @category.present?
+    link = new_gws_board_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+  else
+    link = new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
+  end
+  menu << link_to(t('gws/board.links.comment'), link, class: "btn primary")
 end
 if comment.allowed?(:edit, @cur_user, site: @cur_site)
-  menu << link_to(:edit, edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id), class: "btn")
+  if @category.present?
+    link = edit_gws_board_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  else
+    link = edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  end
+  menu << link_to(:edit, link, class: "btn")
 end
 if comment.allowed?(:delete, @cur_user, site: @cur_site)
-  menu << link_to(:delete, delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id), class: "btn")
+  if @category.present?
+    link = delete_gws_board_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  else
+    link = delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
+  end
+  menu << link_to(:delete, link, class: "btn")
 end
 
 %>

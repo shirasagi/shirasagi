@@ -48,6 +48,7 @@ module Gws::Category::Traversable
       category = @categories.find { |category| category.name == full_name }
       has_grandchild = children.any? { |child| child.children? }
       OpenStruct.new(
+        id: category.try(:id),
         name: name,
         full_name: full_name,
         children: children,

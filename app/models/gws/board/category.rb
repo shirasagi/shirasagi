@@ -34,4 +34,8 @@ class Gws::Board::Category
     def color_required?
       false
     end
+
+    def default_color
+      nil
+    end
 end

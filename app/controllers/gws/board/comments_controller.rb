@@ -4,11 +4,18 @@ class Gws::Board::CommentsController < ApplicationController
 
   model Gws::Board::Post
 
+  before_action :set_category
   before_action :set_parent
 
   private
     def set_crumbs
       @crumbs << [:"modules.gws/board", gws_board_topics_path]
+    end
+
+    def set_category
+      if params[:category].present?
+        @category ||= Gws::Board::Category.site(@cur_site).where(name: params[:category].sub(/^\//, '')).first
+      end
     end
 
     def fix_params
@@ -26,10 +33,18 @@ class Gws::Board::CommentsController < ApplicationController
 
   public
     def index
-      redirect_to gws_board_topic_path(id: @topic.id)
+      if @category.present?
+        redirect_to gws_board_category_topic_path(id: @topic.id)
+      else
+        redirect_to gws_board_topic_path(id: @topic.id)
+      end
     end
 
     def show
-      redirect_to gws_board_topic_path(id: @topic.id)
+      if @category.present?
+        redirect_to gws_board_category_topic_path(id: @topic.id)
+      else
+        redirect_to gws_board_topic_path(id: @topic.id)
+      end
     end
 end

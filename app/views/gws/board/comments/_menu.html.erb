@@ -1,3 +1,3 @@
 <nav class="nav-menu">
-  <%= link_to :"gws/board.links.back_to_thread", gws_board_topic_path(id: params[:topic_id]) %>
+  <%= link_to :"gws/board.links.back_to_thread", @category.present? ? gws_board_category_topic_path(id: params[:topic_id]) : gws_board_topic_path(id: params[:topic_id]) %>
 </nav>

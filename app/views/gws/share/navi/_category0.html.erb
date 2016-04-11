@@ -1,0 +1,14 @@
+<% return if level > 2 %>
+<ul class="level<%= level %>">
+  <% categories.each do |category| %>
+    <li>
+      <%= link_to gws_share_category_files_path(category: "/#{category.full_name}") do %>
+        <span class="name"><%= category.name %></span>
+        <span class="color" style="background-color: <%= category.color %>; color: <%= category.text_color %>"></span>
+      <% end %>
+      <% if category.children? %>
+        <%= render partial: 'gws/share/navi/category0', locals: { categories: category.children, level: level + 1 } %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

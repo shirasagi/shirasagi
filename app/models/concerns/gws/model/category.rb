@@ -13,7 +13,7 @@ module Gws::Model::Category
     field :model, type: String
     field :state, type: String, default: "public"
     field :name, type: String
-    field :color, type: String, default: "#4488bb"
+    field :color, type: String, default: -> { default_color }
 
     permit_params :state, :name, :color
 
@@ -34,5 +34,13 @@ module Gws::Model::Category
   private
     def color_required?
       true
+    end
+
+    def default_color
+      "#4488bb"
+    end
+
+    def dependant_scope
+      self.class.site(@cur_site || site)
     end
 end
