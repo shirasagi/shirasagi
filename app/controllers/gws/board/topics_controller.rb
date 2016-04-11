@@ -30,6 +30,8 @@ class Gws::Board::TopicsController < ApplicationController
 
   public
     def index
+      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
       @items = @model.site(@cur_site).topic
 
       if params[:s] && params[:s][:state] == "closed"

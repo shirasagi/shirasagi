@@ -4,19 +4,34 @@ class Gws::Share::FilesController < ApplicationController
   include Gws::FileFilter
 
   model Gws::Share::File
+  before_action :set_category
 
   private
     def set_crumbs
       @crumbs << [:"mongoid.models.gws/share", action: :index]
     end
 
+    def set_category
+      if params[:category].present?
+        @category ||= Gws::Share::Category.site(@cur_site).where(name: params[:category].sub(/^\//, '')).first
+      end
+    end
+
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site }
     end
 
+    def pre_params
+      p = super
+      if @category.present?
+        p[:category_ids] = [ @category.id ]
+      end
+      p
+    end
+
   public
     def index
-      # raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
       if params[:category].present?
         params[:s] ||= {}
