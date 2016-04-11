@@ -71,7 +71,6 @@ class @Gws_Schedule_Calendar
 
       view = $(this).find(".#{popup}")
       hgt = view.outerHeight()
-      console.log $(this).offset().top
       if $(this).offset().top - hgt < 0
         view.addClass("position-bottom")
         view.css("bottom", (hgt * (-1) - 15) + "px")

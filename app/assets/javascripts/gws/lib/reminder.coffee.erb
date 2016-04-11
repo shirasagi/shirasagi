@@ -17,8 +17,6 @@ class @Gws_Reminder
     }
     $.extend params, opts
 
-    console.log params
-
     $("#gws-addon-reminder-set").click ->
       ajax_params = { method: "post" }
       $.extend ajax_params, params, opts

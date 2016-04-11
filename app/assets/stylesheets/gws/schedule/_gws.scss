@@ -147,6 +147,39 @@
   &:hover { color: #000; }
 }
 
+// timelineDay
+.fc-timelineDay-view {
+  th.fc-widget-header {
+    &:nth-child(1),&:nth-child(2),&:nth-child(3),&:nth-child(4),&:nth-child(5),&:nth-child(6),&:nth-child(7),&:nth-child(8) {
+      background-color: #f4f4f4;
+    }
+    &:nth-child(9),&:nth-child(10),&:nth-child(11),&:nth-child(12) {
+      background: #ffebeb;
+      color: #e00;
+    }
+    &:nth-child(13),&:nth-child(14),&:nth-child(15),&:nth-child(16),&:nth-child(17),&:nth-child(18) {
+      background: #fff0d0;
+      color: #f60;
+    }
+    &:nth-child(19),&:nth-child(20),&:nth-child(21),&:nth-child(22),&:nth-child(23),&:nth-child(24) {
+      background: #e0f4ff; color: #04d;
+    }
+  }
+  .fc-scrollpane, .fc-scrollpane-inner {
+    overflow: visible;
+  }
+  .fc-scrollpane > div {
+    overflow: visible !important;
+  }
+  .fc-scrollpane-inner {
+    min-height: 25px;
+  }
+  .fc-event {
+    top: 3px !important;
+    z-index: 0;
+  }
+}
+
 // basicHour
 .fc-basicHour-view {
   .fc-hour- {
@@ -239,16 +272,22 @@
   padding: 2px;
   color: #aaa;
 }
+
+// multiple calendar
 .calendar-menu {
   a {
     @include arrow;
   }
 }
 #calendar-controller {
-  //.fc-body { display: none; }
+  .fc-body {
+    //display: none;
+  }
 }
 .calendar.multiple {
-  .fc-toolbar, .fc-head { display: none; }
+  .fc-toolbar, .fc-head {
+    display: none;
+  }
 }
 .calendar-multiple-header {
   padding: 5px 8px;

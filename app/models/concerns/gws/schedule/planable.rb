@@ -80,8 +80,8 @@ module Gws::Schedule::Planable
     def set_from_drop_time_api
       self.start_at = api_start
 
-      date = api_end.present? ? Date.parse(api_end) : Date.parse(api_start)
-      time = allday? ? [start_at.hour, start_at.min] : [end_at.hour, end_at.min]
+      date = api_end.present? ? Time.parse(api_end) : Time.parse(api_start)
+      time = allday? ? [start_at.hour, start_at.min] : [date.hour, date.min]
       self.end_at = Time.zone.local date.year, date.month, date.day, time[0], time[1]
       self.allday = nil
     end
