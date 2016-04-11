@@ -1,8 +1,11 @@
 // category
 .gws-share-color-block {
-  padding: 0 5px;
+  padding: 1px 5px;
   background-image: url(/assets/img/gws/bg-plan.png);
   font-size: 90%;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
 }
 
 .gws-share-navi-categories {
