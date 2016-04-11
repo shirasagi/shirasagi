@@ -3,14 +3,29 @@ class Gws::Board::TopicsController < ApplicationController
   include Gws::CrudFilter
 
   model Gws::Board::Topic
+  before_action :set_category
 
   private
     def set_crumbs
       @crumbs << [:"modules.gws/board", gws_board_topics_path]
     end
 
+    def set_category
+      if params[:category].present?
+        @category ||= Gws::Board::Category.site(@cur_site).where(name: params[:category].sub(/^\//, '')).first
+      end
+    end
+
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site }
+    end
+
+    def pre_params
+      p = super
+      if @category.present?
+        p[:category_ids] = [ @category.id ]
+      end
+      p
     end
 
   public
