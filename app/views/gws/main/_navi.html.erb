@@ -5,18 +5,12 @@
   <h2><%= link_to t('gws/schedule.tabs.facility'), gws_schedule_facilities_path, class: "icon-facility" %></h2>
   <% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/board'), gws_board_topics_path, class: "icon-board" %></h2>
-    <% if request.path.start_with?("/.g#{@cur_site.id}/board/") %>
-      <%= render partial: 'gws/board/navi/categories' %>
-    <% end %>
   <% end %>
   <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/workflow'), gws_workflow_files_path, class: "icon-workflow" %></h2>
   <% end %>
   <% if Gws::Share::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/share'), gws_share_files_path, class: "icon-conv" %></h2>
-    <% if request.path.start_with?("/.g#{@cur_site.id}/share/") %>
-      <%= render partial: 'gws/share/navi/categories' %>
-    <% end %>
   <% end %>
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>

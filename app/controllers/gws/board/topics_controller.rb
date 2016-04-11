@@ -7,12 +7,18 @@ class Gws::Board::TopicsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.gws/board", gws_board_topics_path]
+      set_category
+      if @category.present?
+        @crumbs << [:"modules.gws/board", gws_board_topics_path]
+        @crumbs << [@category.name, action: :index]
+      else
+        @crumbs << [:"modules.gws/board", action: :index]
+      end
     end
 
     def set_category
       if params[:category].present?
-        @category ||= Gws::Board::Category.site(@cur_site).where(name: params[:category].sub(/^\//, '')).first
+        @category ||= Gws::Board::Category.site(@cur_site).where(id: params[:category]).first
       end
     end
 
@@ -42,10 +48,10 @@ class Gws::Board::TopicsController < ApplicationController
           target_to(@cur_user)
       end
 
-      if params[:category].present?
+      if @category.present?
         params[:s] ||= {}
         params[:s][:site] = @cur_site
-        params[:s][:category] = params[:category]
+        params[:s][:category] = @category.name
       end
 
       @items = @items.search(params[:s]).

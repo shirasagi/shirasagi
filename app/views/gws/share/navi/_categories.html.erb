@@ -1,8 +1,0 @@
-<%
-traverser = Gws::Share::CategoryTraverser.build(@cur_site, @cur_user)
-return if traverser.blank?
-%>
-
-<div class="gws-share-navi-categories">
-  <%= render partial: 'gws/share/navi/category0', locals: { categories: traverser, level: 0 } %>
-</div>

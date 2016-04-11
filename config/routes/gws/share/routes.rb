@@ -3,7 +3,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, :on => :collection
+    delete action: :destroy_all, on: :collection
   end
 
   gws "share" do
@@ -11,6 +11,7 @@ SS::Application.routes.draw do
       get :view, on: :member
       get :thumb, on: :member
       get :download, on: :member
+      get :categories, on: :collection
     end
 
     # with category
@@ -19,6 +20,7 @@ SS::Application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :categories, on: :collection
       end
     end
 

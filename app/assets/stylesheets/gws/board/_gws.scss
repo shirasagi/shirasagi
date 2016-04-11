@@ -69,56 +69,6 @@
   -moz-border-radius: 5px;
 }
 
-.gws-board-navi-categories {
-  ul {
-    margin: 0 0;
-    padding: 0 0;
-    a {
-      display: block;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      &:hover {
-        color: $orange;
-        text-decoration: none;
-      }
-    }
-  }
-  .level0 {
-    a {
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 30px center;
-      padding-left: 55px;
-      &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 30px center;
-      }
-    }
-  }
-  .level1 {
-    a {
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 50px center;
-      padding-left: 75px;
-      &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 50px center;
-      }
-    }
-  }
-  .level2 {
-    a {
-      background: url(/assets/img/ic-arrow16-off.png) no-repeat 70px center;
-      padding-left: 95px;
-      &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 70px center;
-      }
-    }
-  }
-  span.color {
-    display: block;
-    float: right;
-    width: 11px;
-    height: 11px;
-    margin-right: 10px;
-  }
-}
-
 .mod-gws-board-category {
   ul.parent {
     margin: 0 0;

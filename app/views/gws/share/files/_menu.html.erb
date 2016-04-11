@@ -1,11 +1,9 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <% if @category.present? %>
-        <%= link_to :new, action: :new %>
-      <% end %>
+      <%= link_to :new, action: :new %>
     <% end %>
-    <%= link_to :"gws/board.links.categories", @category.present? ? categories_gws_board_category_topics_path : categories_gws_board_topics_path %>
+    <%= link_to :"gws/share.links.categories", @category.present? ? categories_gws_share_category_files_path : categories_gws_share_files_path %>
   <% elsif params[:action] =~ /new|create|lock|categories/ %>
     <%= link_to :back_to_index, action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>

@@ -1,8 +1,0 @@
-<%
-traverser = Gws::Board::CategoryTraverser.build(@cur_site, @cur_user)
-return if traverser.blank?
-%>
-
-<div class="gws-board-navi-categories">
-  <%= render partial: 'gws/board/navi/category0', locals: { categories: traverser, level: 0 } %>
-</div>

@@ -8,12 +8,18 @@ class Gws::Share::FilesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"mongoid.models.gws/share", action: :index]
+      set_category
+      if @category.present?
+        @crumbs << [:"mongoid.models.gws/share", gws_share_files_path]
+        @crumbs << [@category.name, action: :index]
+      else
+        @crumbs << [:"mongoid.models.gws/share", action: :index]
+      end
     end
 
     def set_category
       if params[:category].present?
-        @category ||= Gws::Share::Category.site(@cur_site).where(name: params[:category].sub(/^\//, '')).first
+        @category ||= Gws::Share::Category.site(@cur_site).where(id: params[:category]).first
       end
     end
 
@@ -33,10 +39,10 @@ class Gws::Share::FilesController < ApplicationController
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
-      if params[:category].present?
+      if @category.present?
         params[:s] ||= {}
         params[:s][:site] = @cur_site
-        params[:s][:category] = params[:category]
+        params[:s][:category] = @category.name
       end
 
       @items = @model.site(@cur_site).

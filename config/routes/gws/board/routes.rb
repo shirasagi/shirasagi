@@ -11,6 +11,7 @@ SS::Application.routes.draw do
       namespace :parent, path: ":parent_id", parent_id: /\d+/ do
         resources :comments, controller: '/gws/board/comments', concerns: [:deletion]
       end
+      get :categories, on: :collection
     end
 
     # with category
@@ -19,6 +20,7 @@ SS::Application.routes.draw do
         namespace :parent, path: ":parent_id", parent_id: /\d+/ do
           resources :comments, controller: '/gws/board/comments', concerns: [:deletion]
         end
+        get :categories, on: :collection
       end
     end
 

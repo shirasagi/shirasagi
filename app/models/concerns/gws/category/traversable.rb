@@ -7,8 +7,10 @@ module Gws::Category::Traversable
   end
 
   class_methods do
-    def build(site, user)
-      raw_categories = model_class.site(site).target_to(user).to_a
+    def build(site, user = nil)
+      criteria = model_class.site(site)
+      criteria = criteria.target_to(user) if user
+      raw_categories = criteria.to_a
 
       # build category hierarchy
       hierarchy_root = {}
