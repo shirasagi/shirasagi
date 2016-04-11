@@ -1,7 +1,7 @@
 ja:
   gws/share:
     file: 共有ファイル
-    category: 共有ファイル種別
+    category: 共有ファイルカテゴリー
 
   modules:
     gws/share: 共有ファイル
@@ -37,6 +37,6 @@ ja:
           too_deep: は%{max}階層以下にしてください。
     attributes:
       gws/share/category:
-        name: 共有ファイル種別
+        name: 共有ファイルカテゴリー名
       gws/addon/share/category:
         category_ids: 種別
