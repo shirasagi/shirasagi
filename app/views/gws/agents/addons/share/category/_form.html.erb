@@ -73,6 +73,7 @@ def cate_form(depth, *names)
   '<li>' + h + '</li>'
 end
 %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-gws-share-category"); <% end %>
 
 <dl class="see mod-gws-share-category">
   <dt class="wide"><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
