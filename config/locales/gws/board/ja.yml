@@ -68,6 +68,10 @@ ja:
   mongoid:
     models:
       gws/board/post: 掲示板
+    errors:
+      models:
+        gws/board/category:
+          too_deep: は%{max}階層以下にしてください。
     attributes:
       gws/board/postable:
         name: タイトル

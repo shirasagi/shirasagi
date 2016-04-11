@@ -6,6 +6,8 @@ class Gws::Board::Category
 
   default_scope ->{ where(model: "gws/board/category").order_by(name: 1) }
 
+  validate :validate_name_depth
+
   class << self
     def categories_for(site, user)
       Gws::Board::Category.site(site).target_to(user)
@@ -37,5 +39,10 @@ class Gws::Board::Category
 
     def default_color
       nil
+    end
+
+    def validate_name_depth
+      return if name.blank?
+      errors.add :name, :too_deep, max: 2 if name.split('/').length > 2
     end
 end

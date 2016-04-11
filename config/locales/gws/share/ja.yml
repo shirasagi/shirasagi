@@ -31,6 +31,10 @@ ja:
     models:
       gws/share/file: 共有ファイル
       gws/share/category: 共有ファイル種類
+    errors:
+      models:
+        gws/share/category:
+          too_deep: は%{max}階層以下にしてください。
     attributes:
       gws/share/category:
         name: 共有ファイル種別
