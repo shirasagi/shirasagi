@@ -35,6 +35,7 @@ ja:
       models:
         gws/share/category:
           too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
     attributes:
       gws/share/category:
         name: 共有ファイルカテゴリー名

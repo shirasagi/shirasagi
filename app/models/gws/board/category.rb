@@ -7,6 +7,8 @@ class Gws::Board::Category
   default_scope ->{ where(model: "gws/board/category").order_by(name: 1) }
 
   validate :validate_name_depth
+  validate :validate_parent_name
+  before_destroy :validate_children
 
   class << self
     def categories_for(site, user)
@@ -43,6 +45,21 @@ class Gws::Board::Category
 
     def validate_name_depth
       return if name.blank?
-      errors.add :name, :too_deep, max: 2 if name.split('/').length > 2
+      errors.add :name, :too_deep, max: 2 if name.count('/') >= 2
+    end
+
+    def validate_parent_name
+      return if name.blank?
+      return if name.count('/') < 1
+
+      errors.add :base, :not_found_parent unless self.class.where(name: File.dirname(name)).exists?
+    end
+
+    def validate_children
+      if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+        errors.add :base, :found_children
+        return false
+      end
+      true
     end
 end
