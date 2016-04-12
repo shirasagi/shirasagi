@@ -1,0 +1,21 @@
+<% return if depth > 2 %>
+<ul class="<%= css_class %> depth<%= depth %>">
+  <% categories.each do |category| %>
+    <li>
+      <%= link_to gws_share_category_files_path(category: category.id) do %>
+        <span class="gws-share-color-block" style="background-color: <%= category.color || "transparent" %>; color: <%= category.text_color || "black" %>"><%= category.name %></span>
+      <% end %>
+
+      <% if category.children? %>
+        <%
+           if category.grandchild?
+             css_class = 'child'
+           else
+             css_class = 'grandchild'
+           end
+        %>
+        <%= render partial: 'category0', locals: { categories: category.children, css_class: css_class, depth: depth + 1 } %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

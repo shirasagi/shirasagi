@@ -50,6 +50,11 @@ module Gws::Board::Postable
       return criteria if params.blank?
 
       criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
+
+      if params[:category].present?
+        category_ids = Gws::Board::Category.site(params[:site]).and_name_prefix(params[:category]).pluck(:id)
+        criteria = criteria.in(category_ids: category_ids)
+      end
       criteria
     }
   end

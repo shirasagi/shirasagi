@@ -4,9 +4,10 @@
 
   <dt><%= @model.t :color %></dt>
   <dd>
-    <span class="gws-schedule-color-block" style="<%= "background-color: #{@item.color}; color: #{@item.text_color}" %>">
-      <%= @item.name %></span>
+    <% if @item.color.present? %>
+    <span class="gws-share-color-block" style="<%= "background-color: #{@item.color}; color: #{@item.text_color}" %>"><%= @item.name %></span>
     <span style="<%= "color: #{@item.color};" %>"><%= @item.name %></span>
+    <% end %>
   </dd>
 
   <dt><%= @model.t :target %></dt>

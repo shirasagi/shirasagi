@@ -1,14 +1,12 @@
-<% categories = Gws::Share::Category.categories_for(@cur_site, @cur_user).to_a %>
-<% if categories.present? %>
+<%
+traverser = Gws::Share::CategoryTraverser.build(@cur_site, @cur_user)
+return if traverser.blank?
+%>
+<%= jquery do %> SS_AddonTabs.hide(".mod-gws-share-category"); <% end %>
+
 <dl class="see mod-gws-share-category">
   <dt class="wide"><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
   <dd class="wide">
-    <% categories.each do |category| %>
-      <%= label_tag("item_category_ids_#{category.id}") do %>
-        <%= f.check_box("category_ids[]", { }, category.id) %>
-        <span class="gws-share-color-block" style="<%= "background-color: #{category.color}; color: #{category.text_color}" %>"><%= category.name %></span>
-      <% end %>
-    <% end %>
+    <%= render partial: 'gws/agents/addons/board/category/cate_form', locals: { f: f, categories: traverser, level: 0, css_class: 'parent', depth: 0 } %>
   </dd>
 </dl>
-<% end %>

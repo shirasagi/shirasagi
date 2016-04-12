@@ -4,7 +4,7 @@ ja:
     #descendants_num: コメント数
     #descendants_updated: 更新日時
     no_authority: 権限がありません
-    category: 掲示板種別
+    category: 掲示板カテゴリー
     topic:
       comment: コメント
       new: 新規作成
@@ -41,6 +41,7 @@ ja:
     links:
       back_to_thread: 戻る
       comment: 返信する
+      categories: カテゴリー一覧
     errors:
       denied_comment: コメントの投稿は許可されていません。
 
@@ -49,7 +50,7 @@ ja:
     settings:
       gws/board: 掲示板
     addons:
-      gws/board/category: 種別
+      gws/board/category: カテゴリー
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -58,16 +59,22 @@ ja:
     edit_private_gws_board_posts: 投稿の編集（所有）
     delete_other_gws_board_posts: 投稿の削除（全て）
     delete_private_gws_board_posts: 投稿の削除（所有）
-    read_other_gws_board_categories: 種別の閲覧（全て）
-    read_private_gws_board_categories: 種別の閲覧（所有）
-    edit_other_gws_board_categories: 種別の編集（全て）
-    edit_private_gws_board_categories: 種別の編集（所有）
-    delete_other_gws_board_categories: 種別の削除（全て）
-    delete_private_gws_board_categories: 種別の削除（所有）
+    read_other_gws_board_categories: カテゴリーの閲覧（全て）
+    read_private_gws_board_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_board_categories: カテゴリーの編集（全て）
+    edit_private_gws_board_categories: カテゴリーの編集（所有）
+    delete_other_gws_board_categories: カテゴリーの削除（全て）
+    delete_private_gws_board_categories: カテゴリーの削除（所有）
 
   mongoid:
     models:
       gws/board/post: 掲示板
+    errors:
+      models:
+        gws/board/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
     attributes:
       gws/board/postable:
         name: タイトル
@@ -78,6 +85,6 @@ ja:
       gws/board/setting:
         board_new_days: 新着表示期間
       gws/board/category:
-        name: 掲示板種別
+        name: 掲示板カテゴリー名
       gws/addon/board/category:
-        category_ids: 種別
+        category_ids: カテゴリー

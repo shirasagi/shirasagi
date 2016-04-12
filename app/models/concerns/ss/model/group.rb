@@ -3,6 +3,7 @@ module SS::Model::Group
   extend SS::Translation
   include SS::Document
   include Ldap::Addon::Group
+  include SS::Fields::DependantNaming
 
   attr_accessor :in_password
 
@@ -19,7 +20,6 @@ module SS::Model::Group
 
     validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
     validate :validate_name
-    after_save :rename_children, if: ->{ @db_changes }
 
     scope :in_group, ->(group) { where(name: /^#{group.name}(\/|$)/) }
   end
@@ -45,20 +45,6 @@ module SS::Model::Group
 
   def trailing_name
     name.split("/").pop
-  end
-
-  def rename_children
-    return unless @db_changes["name"]
-    return unless @db_changes["name"][0]
-    return unless @db_changes["name"][1]
-
-    src = @db_changes["name"][0]
-    dst = @db_changes["name"][1]
-
-    SS::Group.where(name: /^#{Regexp.escape(src)}\//).each do |item|
-      item.name = item.name.sub(/^#{Regexp.escape(src)}\//, "#{dst}\/")
-      item.save validate: false
-    end
   end
 
   def root

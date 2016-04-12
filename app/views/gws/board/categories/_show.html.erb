@@ -1,12 +1,14 @@
-<dl class="see">
+<dl class="see mod-gws-board-category">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 
   <dt><%= @model.t :color %></dt>
   <dd>
-    <span class="gws-schedule-color-block" style="<%= "background-color: #{@item.color}; color: #{@item.text_color}" %>">
+    <% if @item.color.present? %>
+    <span class="gws-board-color-block" style="<%= "background-color: #{@item.color}; color: #{@item.text_color}" %>">
       <%= @item.name %></span>
     <span style="<%= "color: #{@item.color};" %>"><%= @item.name %></span>
+    <% end %>
   </dd>
 
   <dt><%= @model.t :target %></dt>

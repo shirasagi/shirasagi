@@ -71,6 +71,15 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
           <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
           <% end %>
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+          <span class="gws-board-categories">
+            <% item.categories.compact.each do |category| %>
+              <%= link_to gws_board_category_topics_path(category: category.id) do %>
+                <span class="gws-board-color-block" style="<%= "background-color: #{category.color.presence || "transparent"}; color: #{category.text_color.presence || "black"}" %>">
+                  <%= category.name.split('/').last %>
+                </span>
+              <% end %>
+            <% end %>
+          </span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
         </div>
       </li>

@@ -1,0 +1,9 @@
+<%
+traverser = Gws::Board::CategoryTraverser.build(@cur_site)
+return if traverser.blank?
+%>
+
+<div class="index gws-board-categories">
+  <header class="list-head"><h2><%= @model.t :category_ids %></h2></header>
+  <%= render partial: 'category0', locals: { categories: traverser, css_class: 'list-items parent', depth: 0 } %>
+</div>

@@ -7,6 +7,7 @@ class Gws::Board::Topic
   include Gws::Addon::Release
   include Gws::Addon::GroupPermission
 
+  validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
   private

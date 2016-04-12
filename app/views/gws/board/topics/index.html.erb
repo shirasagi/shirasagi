@@ -1,12 +1,5 @@
 <% @index_title = proc do |item| %>
   <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-  <span class="categories">
-    <% item.categories.each do |category| %>
-      <span class="gws-share-color-block" style="<%= "background-color: #{category.color}; color: #{category.text_color}" %>">
-        <%= category.name %>
-      </span>
-    <% end %>
-  </span>
   <% if item.descendants_files_count.to_i > 0 %>
   <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
   <% end %>
@@ -18,6 +11,15 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="gws-board-categories">
+    <% item.categories.compact.each do |category| %>
+      <%= link_to gws_board_category_topics_path(category: category.id) do %>
+        <span class="gws-board-color-block" style="<%= "background-color: #{category.color || "transparent"}; color: #{category.text_color || "black"}" %>">
+          <%= category.name %>
+        </span>
+      <% end %>
+    <% end %>
+  </span>
 <% end %>
 
 <%= render file: "gws/crud/index" %>
