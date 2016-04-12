@@ -15,8 +15,8 @@ module Gws::Setting
   class << self
     @@plugins = []
 
-    def plugin(mod, url_lazy)
-      Gws::Group.include(mod)
+    def plugin(mod, url_lazy, opts = {})
+      Gws::Group.include(mod) if opts[:include] != false
       @@plugins << [mod, url_lazy]
     end
 

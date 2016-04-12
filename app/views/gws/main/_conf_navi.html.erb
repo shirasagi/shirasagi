@@ -26,9 +26,6 @@
   <% if Gws::Link.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/link'), gws_links_path %></h3>
   <% end %>
-  <% if Gws::Facility::Item.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('modules.gws/facility'), gws_facility_items_path %></h3>
-  <% end %>
 
   <% Gws::Setting.plugins.each do |mod, url_lazy| %>
     <% if mod.allowed?(:read, @cur_user, site: @cur_site) %>

@@ -4,6 +4,10 @@ ja:
 
   modules:
     gws/facility: 設備管理
+    settings:
+      gws/facility: 設備管理
+      gws/facility/item: 設備
+      gws/facility/category: カテゴリー
 
   gws_role:
     read_other_gws_facility_items: 設備の閲覧（全て）
