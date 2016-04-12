@@ -67,19 +67,19 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
       <li class="list-item">
         <div class="info">
           <%= link_to item.name, gws_board_topic_path(id: item), class: 'title' %>
-          <span class="gws-board-categories">
-            <% item.categories.each do |category| %>
-              <%= link_to gws_board_category_topics_path(category: "/#{category.name}") do %>
-                <span class="gws-board-color-block" style="<%= "background-color: #{category.color}; color: #{category.text_color}" %>">
-                  <%= category.name %>
-                </span>
-              <% end %>
-            <% end %>
-          </span>
           <% if item.descendants_files_count.to_i > 0 %>
           <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
           <% end %>
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+          <span class="gws-board-categories">
+            <% item.categories.compact.each do |category| %>
+              <%= link_to gws_board_category_topics_path(category: category.id) do %>
+                <span class="gws-board-color-block" style="<%= "background-color: #{category.color.presence || "transparent"}; color: #{category.text_color.presence || "black"}" %>">
+                  <%= category.name.split('/').last %>
+                </span>
+              <% end %>
+            <% end %>
+          </span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
         </div>
       </li>

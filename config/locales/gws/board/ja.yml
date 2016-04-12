@@ -50,7 +50,7 @@ ja:
     settings:
       gws/board: 掲示板
     addons:
-      gws/board/category: 種別
+      gws/board/category: カテゴリー
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -59,12 +59,12 @@ ja:
     edit_private_gws_board_posts: 投稿の編集（所有）
     delete_other_gws_board_posts: 投稿の削除（全て）
     delete_private_gws_board_posts: 投稿の削除（所有）
-    read_other_gws_board_categories: 種別の閲覧（全て）
-    read_private_gws_board_categories: 種別の閲覧（所有）
-    edit_other_gws_board_categories: 種別の編集（全て）
-    edit_private_gws_board_categories: 種別の編集（所有）
-    delete_other_gws_board_categories: 種別の削除（全て）
-    delete_private_gws_board_categories: 種別の削除（所有）
+    read_other_gws_board_categories: カテゴリーの閲覧（全て）
+    read_private_gws_board_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_board_categories: カテゴリーの編集（全て）
+    edit_private_gws_board_categories: カテゴリーの編集（所有）
+    delete_other_gws_board_categories: カテゴリーの削除（全て）
+    delete_private_gws_board_categories: カテゴリーの削除（所有）
 
   mongoid:
     models:
@@ -87,4 +87,4 @@ ja:
       gws/board/category:
         name: 掲示板カテゴリー名
       gws/addon/board/category:
-        category_ids: 種別
+        category_ids: カテゴリー

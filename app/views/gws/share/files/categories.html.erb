@@ -3,15 +3,7 @@ traverser = Gws::Share::CategoryTraverser.build(@cur_site)
 return if traverser.blank?
 %>
 
-<div class="gws-board-navi-categories">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2><%= @model.t :category_ids %></h2></div>
-    <div class="addon-body">
-      <dl class="see mod-gws-share-category">
-        <dd class="wide">
-          <%= render partial: 'category0', locals: { categories: traverser, css_class: 'parent', depth: 0 } %>
-        </dd>
-      </dl>
-    </div>
-  </div>
+<div class="index gws-share-categories">
+  <header class="list-head"><h2><%= @model.t :category_ids %></h2></header>
+  <%= render partial: 'category0', locals: { categories: traverser, css_class: 'list-items parent', depth: 0 } %>
 </div>

@@ -2,10 +2,8 @@
 <ul class="<%= css_class %> depth<%= depth %>">
   <% categories.each do |category| %>
     <li>
-      <% if category.color? %>
-        <%= link_to gws_board_category_topics_path(category: category.id) do %><span class="name" style="background-color: <%= category.color %>; color: <%= category.text_color %>"><%= category.name %></span><% end %>
-      <% else %>
-        <%= link_to category.name, gws_board_category_topics_path(category: category.id) %>
+      <%= link_to gws_board_category_topics_path(category: category.id) do %>
+        <span class="gws-board-color-block" style="background-color: <%= category.color || "transparent" %>; color: <%= category.text_color || "black" %>"><%= category.name %></span>
       <% end %>
 
       <% if category.children? %>

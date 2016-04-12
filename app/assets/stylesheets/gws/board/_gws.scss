@@ -62,14 +62,21 @@
 // category
 .gws-board-color-block {
   padding: 1px 5px;
+  margin-right: 5px;
   background-image: url(/assets/img/gws/bg-plan.png);
   font-size: 90%;
+  border: 1px solid $gray4;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
+  &:hover {
+    filter:alpha(opacity=80);
+    opacity:0.8;
+    border: 1px solid $orange;
+  }
 }
 
-.mod-gws-board-category {
+.mod-gws-board-category, .gws-board-categories {
   ul.parent {
     margin: 0 0;
     padding-left: 24px;
@@ -101,6 +108,12 @@
 }
 
 .gws-board-categories {
+  .list-head h2 {
+    font-weight: bold;
+    border-left: 3px solid $orange;
+    color: $black3;
+    padding-left: 8px;
+  }
   a {
     text-decoration: none;
   }

@@ -9,12 +9,18 @@ class Gws::Board::CommentsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.gws/board", gws_board_topics_path]
+      set_category
+      if @category.present?
+        @crumbs << [:"modules.gws/board", gws_board_topics_path]
+        @crumbs << [@category.name, gws_board_category_topics_path]
+      else
+        @crumbs << [:"modules.gws/board", gws_board_topics_path]
+      end
     end
 
     def set_category
       if params[:category].present?
-        @category ||= Gws::Board::Category.site(@cur_site).where(name: params[:category].sub(/^\//, '')).first
+        @category ||= Gws::Board::Category.site(@cur_site).where(id: params[:category]).first
       end
     end
 
