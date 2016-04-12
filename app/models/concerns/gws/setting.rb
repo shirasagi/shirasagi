@@ -1,12 +1,23 @@
 module Gws::Setting
+  def self.extended(mod)
+    mod.extend SS::Translation
+  end
+
+  def human_name
+    name = self.to_s.underscore.sub("/setting", "")
+    I18n.t "modules.settings.#{name}", default: name.titleize
+  end
+
+  def allowed?(action, user, opts = {})
+    opts[:site].allowed?(action, user, opts)
+  end
+
   class << self
     @@plugins = []
 
-    def plugin(plugin_module, url_lazy)
-      Gws::Group.include plugin_module
-      name = plugin_module.to_s.underscore.sub("/setting", "")
-      name = I18n.t "modules.settings.#{name}", default: name.titleize
-      @@plugins << [name, url_lazy]
+    def plugin(mod, url_lazy)
+      Gws::Group.include(mod)
+      @@plugins << [mod, url_lazy]
     end
 
     def plugins

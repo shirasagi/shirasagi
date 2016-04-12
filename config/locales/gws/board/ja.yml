@@ -4,7 +4,6 @@ ja:
     #descendants_num: コメント数
     #descendants_updated: 更新日時
     no_authority: 権限がありません
-    category: 掲示板カテゴリー
     topic:
       comment: コメント
       new: 新規作成
@@ -47,9 +46,10 @@ ja:
 
   modules:
     gws/board: 掲示板
-    settings:
-      gws/board: 掲示板
     addons:
+      gws/board/category: カテゴリー
+    settings:
+      gws/board: 掲示板設定
       gws/board/category: カテゴリー
 
   gws_role:

@@ -1,8 +1,8 @@
 <nav class="mod-navi">
-  <h2><%= t "gws.setting" %></h2>
+  <h2><%= t "modules.settings.gws/system" %></h2>
 
-  <% Gws::Setting.plugins.each do |name, url_lazy| %>
-    <h3><%= link_to name, instance_exec(&url_lazy) %></h3>
+  <% if Gws::System::Setting.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.module_setting'), gws_system_setting_path %></h3>
   <% end %>
 </nav>
 

@@ -1,6 +1,6 @@
 module Gws::Schedule::Setting
   extend ActiveSupport::Concern
-  extend SS::Translation
+  extend Gws::Setting
 
   included do
     field :schedule_max_month, type: Integer
@@ -28,5 +28,14 @@ module Gws::Schedule::Setting
 
   def schedule_max_years_options
     (0..10).map { |m| ["+#{m}", m] }
+  end
+
+  class << self
+    # Permission for navigation view
+    def allowed?(action, user, opts = {})
+      return true if Gws::Schedule::Holiday.allowed?(action, user, opts)
+      return true if Gws::Schedule::Category.allowed?(action, user, opts)
+      super
+    end
   end
 end

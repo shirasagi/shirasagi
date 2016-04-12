@@ -1,6 +1,6 @@
 module Gws::System::Setting
   extend ActiveSupport::Concern
-  extend SS::Translation
+  extend Gws::Setting
 
   included do
     field :sendmail_domains, type: SS::Extensions::Words

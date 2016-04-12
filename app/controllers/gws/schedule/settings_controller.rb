@@ -5,6 +5,6 @@ class Gws::Schedule::SettingsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.settings.gws/schedule", { action: :show }]
+      @crumbs << [:"modules.settings.gws/schedule", gws_schedule_setting_path]
     end
 end

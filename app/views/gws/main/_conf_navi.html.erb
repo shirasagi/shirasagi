@@ -26,23 +26,13 @@
   <% if Gws::Link.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/link'), gws_links_path %></h3>
   <% end %>
-  <% if Gws::Schedule::Holiday.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.holiday'), gws_schedule_holidays_path %></h3>
-  <% end %>
   <% if Gws::Facility::Item.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.gws/facility'), gws_facility_items_path %></h3>
   <% end %>
-  <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.category'), gws_schedule_categories_path %></h3>
-  <% end %>
-  <% if Gws::Board::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/board.category'), gws_board_categories_path %></h3>
-  <% end %>
-  <% if Gws::Share::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/share.category'), gws_share_categories_path %></h3>
-  <% end %>
 
-  <% if Gws::Group.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws.setting'), gws_settings_path %></h3>
+  <% Gws::Setting.plugins.each do |mod, url_lazy| %>
+    <% if mod.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to mod.human_name, instance_exec(&url_lazy) %></h3>
+    <% end %>
   <% end %>
 </nav>

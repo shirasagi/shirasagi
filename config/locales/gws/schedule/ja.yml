@@ -1,10 +1,9 @@
 ja:
   gws/schedule:
-    category: スケジュール種別
-    holiday: 休日管理
     reminder: リマインダー
     private_plan: 非公開予定
     loading: 読み込み中
+
     tabs:
       personal: 個人
       personal_list: 予定リスト
@@ -52,7 +51,9 @@ ja:
       gws/schedule/facility: 設備予約
       gws/schedule/repeat: 繰り返し
     settings:
-      gws/schedule: スケジュール
+      gws/schedule: スケジュール設定
+      gws/schedule/holiday: 休日設定
+      gws/schedule/category: 種別設定
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
