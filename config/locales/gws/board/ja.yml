@@ -40,7 +40,7 @@ ja:
     links:
       back_to_thread: 戻る
       comment: 返信する
-      categories: カテゴリー一覧
+      categories: カテゴリー
     errors:
       denied_comment: コメントの投稿は許可されていません。
 

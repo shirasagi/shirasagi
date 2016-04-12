@@ -3,7 +3,7 @@ ja:
     file: 共有ファイル
     category: 共有ファイルカテゴリー
     links:
-      categories: カテゴリー一覧
+      categories: カテゴリー
 
   modules:
     gws/share: 共有ファイル
