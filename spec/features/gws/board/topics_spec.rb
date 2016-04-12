@@ -66,6 +66,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        check "item_category_ids_#{category.id}"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path
