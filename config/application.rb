@@ -37,7 +37,11 @@ module SS
       config.paths["config/routes.rb"] << file
     end
 
-    config.middleware.use "Mongoid::QueryCache::Middleware"
+    # Mongoid QueryCache has some issues.
+    # Don't use Mongoid QueryCache.
+    # see: https://github.com/shirasagi/shirasagi/issues/915
+    #
+    # config.middleware.use "Mongoid::QueryCache::Middleware"
   end
 
   def self.config
