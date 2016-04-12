@@ -15,7 +15,7 @@ describe "history_cms_backups", dbscope: :example do
     end
     page_item
   end
-  let(:backup_item) { page_item.backups.select { |item| item.data["name"] == "first update" }.first }
+  let(:backup_item) { page_item.backups.find { |item| item.data["name"] == "first update" } }
   let(:page_path) { article_page_path site.id, node, page_item }
   let(:show_path) do
     source = ERB::Util.url_encode(page_path)
