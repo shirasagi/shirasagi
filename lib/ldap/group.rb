@@ -1,12 +1,10 @@
-class Ldap::Group < Ldap::Entry
+class Ldap::GroupBase < Ldap::Entry
   def initialize(connection, entry)
     super(connection, entry)
   end
 end
 
-class Ldap::OrganizationalUnit < Ldap::Group
-  public_class_method :new
-
+class Ldap::OrganizationalUnit < Ldap::GroupBase
   def name
     value(:ou)
   end
@@ -24,9 +22,7 @@ class Ldap::OrganizationalUnit < Ldap::Group
   end
 end
 
-class Ldap::Organization < Ldap::Group
-  public_class_method :new
-
+class Ldap::Organization < Ldap::GroupBase
   def name
     value(:o)
   end
@@ -73,22 +69,11 @@ end
 #   end
 # end
 
-class Ldap::Group
-  private_class_method :new
-
+class Ldap::GroupBase
   # CONCRETE_CLASSES = [ Ldap::OrganizationalUnit, Ldap::Organization, Ldap::PosixGroup ].freeze
   CONCRETE_CLASSES = [ Ldap::OrganizationalUnit, Ldap::Organization ].freeze
 
   DEFAULT_FILTER = CONCRETE_CLASSES.map { |c| c.filter }.reduce { |a, e| a | e }
-
-  def self.create(connection, entry)
-    object_classes = Ldap::Entry.normalize(entry[:objectClass])
-    CONCRETE_CLASSES.each do |c|
-      return c.new(connection, entry) if c.support?(object_classes)
-    end
-    Rails.logger.info("unknown object class: #{object_classes}")
-    nil
-  end
 
   def groups
     @connection.search(DEFAULT_FILTER, base: dn).map do |e|
@@ -101,4 +86,17 @@ class Ldap::Group
       Ldap::User.create(@connection, e)
     end
   end
+
+  def self.create(connection, entry)
+    object_classes = Ldap::Entry.normalize(entry[:objectClass])
+    CONCRETE_CLASSES.each do |c|
+      return c.new(connection, entry) if c.support?(object_classes)
+    end
+    Rails.logger.info("unknown object class: #{object_classes}")
+    nil
+  end
+end
+
+class Ldap::Group < Ldap::GroupBase
+  private_class_method :new
 end
