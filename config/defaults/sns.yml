@@ -16,3 +16,6 @@ test:
 
 development:
   <<: *production
+
+  # Session Lifetime in seconds
+  session_lifetime: 3600
