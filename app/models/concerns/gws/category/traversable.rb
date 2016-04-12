@@ -45,7 +45,7 @@ module Gws::Category::Traversable
 
   private
     def create_wrapper(name)
-      full_name = @parent.present? ? "#{@parent}/#{name}" : "#{name}"
+      full_name = @parent.present? ? "#{@parent}/#{name}" : name
       children = self.class.new(@categories, @hierarchy[name], full_name)
       category = @categories.find { |category| category.name == full_name }
       has_grandchild = children.any? { |child| child.children? }
