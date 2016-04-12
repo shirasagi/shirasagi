@@ -47,24 +47,30 @@ class Inquiry::Column
       end
     end
 
-    case input_type
-    when "email_field"
-      if data.present? && data.value.present?
-        unless data.value =~ Cms::Member::EMAIL_REGEX
-          answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
-        end
+    send("validate_#{input_type}", answer, data) if respond_to?("validate_#{input_type}")
+  end
+
+  def validate_email_field(answer, data)
+    if data.present? && data.value.present?
+      unless data.value =~ Cms::Member::EMAIL_REGEX
+        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
       end
-    when "radio_button", "select"
-      if data.present? && data.value.present?
-        unless select_options.include?(data.value)
-          answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
-        end
+    end
+  end
+
+  def validate_radio_button(answer, data)
+    if data.present? && data.value.present?
+      unless select_options.include?(data.value)
+        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
       end
-    when "check_box"
-      if data.present? && data.values.present?
-        if (data.values.select(&:present?) - select_options).present?
-          answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
-        end
+    end
+  end
+  alias validate_select validate_radio_button
+
+  def validate_check_box(answer, data)
+    if data.present? && data.values.present?
+      if (data.values.select(&:present?) - select_options).present?
+        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.invalid')}"
       end
     end
   end
