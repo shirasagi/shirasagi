@@ -3,12 +3,14 @@ module SS::Reference
     extend ActiveSupport::Concern
     extend SS::Translation
 
-    DEFAULT_TITLE_ORDER = 10_000_000
-
     included do
       embeds_ids :titles, class_name: "SS::UserTitle"
       field :title_orders, type: Hash
       before_save :update_title_order
+
+      scope :order_by_title, ->(site) {
+        order_by "title_orders.#{site.id}" => -1, uid: 1
+      }
     end
 
     class_methods do
@@ -57,7 +59,8 @@ module SS::Reference
 
       def remove_title_order
         return if cur_site.blank?
-        set_title_order(cur_site.id, DEFAULT_TITLE_ORDER)
+        return if title_orders.nil?
+        self.title_orders.delete(cur_site.id.to_s)
       end
   end
 end

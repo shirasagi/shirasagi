@@ -19,6 +19,11 @@ module SS::Model::User
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
 
+    # Create indexes each site_ids.
+    # > db.ss_users.ensureIndex({ "title_orders.1": -1, uid: 1 });
+    #
+    # index({ "title_orders.#{site_id}" => -1, uid: 1  })
+
     cattr_reader(:group_class) { SS::Group }
 
     seqid :id

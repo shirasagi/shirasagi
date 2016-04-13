@@ -50,7 +50,7 @@ describe Gws::UserTitle, type: :model, dbscope: :example do
       user1.save
 
       expect(user1.title_ids).to eq []
-      expect(user1.title_orders[title1.group_id.to_s]).to eq 10_000_000
+      expect(user1.title_orders[title1.group_id.to_s]).to eq nil
     end
   end
 end

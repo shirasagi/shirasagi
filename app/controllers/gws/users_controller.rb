@@ -23,7 +23,7 @@ class Gws::UsersController < ApplicationController
       @items = @model.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
-        order_by("title_orders.#{@cur_site.id}" => 1, name: 1).
+        order_by_title(@cur_site).
         page(params[:page]).per(50)
     end
 

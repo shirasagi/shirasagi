@@ -10,7 +10,7 @@
 <% if @item.members.present? %>
 <div class="popup-members">
   <div class="popup-label"><%= @item.t :member_ids %></div>
-  <%= @item.members.map(&:name).join(', ') %>
+  <%= @item.members.order_by_title(@cur_site).map(&:name).join(', ') %>
 <% end %>
 
 <% if @item.facilities.present? %>
