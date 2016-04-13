@@ -8,15 +8,11 @@
   <dt><%= @model.t :email %></dt>
   <dd><%= @item.send :email %></dd>
 
-  <% if @item.tel.present? %>
   <dt><%= @model.t :tel %></dt>
   <dd><%= @item.send :tel %></dd>
-  <% end %>
 
-  <% if title = @item.title %>
   <dt><%= @model.t :title_ids %></dt>
-  <dd><%= title.name %></dd>
-  <% end %>
+  <dd><%= tryb { @item.title.name } %></dd>
 
   <dt><%= @model.t :type %></dt>
   <dd><%= @item.send :type %></dd>
