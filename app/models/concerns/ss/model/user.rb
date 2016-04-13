@@ -123,7 +123,7 @@ module SS::Model::User
     uid = self.uid
     uid ||= email.split("@")[0] if email.present?
     if uid.present?
-      "#{name}(#{uid})"
+      "#{name} (#{uid})"
     else
       name.to_s
     end

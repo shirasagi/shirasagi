@@ -10,11 +10,12 @@ class Gws::CustomGroup
   field :name, type: String
   field :order, type: Integer, default: 0
 
-  has_many :members, class_name: "Gws::CustomGroupMember", dependent: :destroy
+  embeds_ids :members, class_name: "Gws::User"
 
-  permit_params :name, :order
+  permit_params :name, :order, member_ids: []
 
   validates :name, presence: true, length: { maximum: 40 }
+  validates :member_ids, presence: true
 
   default_scope ->{ order_by order: 1 }
 
@@ -25,8 +26,4 @@ class Gws::CustomGroup
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
     criteria
   }
-
-  def member_users
-    members.map(&:member).compact
-  end
 end

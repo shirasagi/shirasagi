@@ -10,7 +10,8 @@ module Gws::Content::Targetable
     scope :target_to, ->(user) {
       where("$or" => [
         { target: "all" },
-        { target: "group", :group_ids.in => user.group_ids }
+        { target: "group", :group_ids.in => user.group_ids },
+        { target: "member", member_ids: user.id }
       ])
     }
   end
@@ -20,9 +21,8 @@ module Gws::Content::Targetable
   end
 
   def target_options
-    [
-      [I18n.t('gws.options.target.all'), 'all'],
-      [I18n.t('gws.options.target.group'), 'group'],
-    ]
+    keys = %w(all group)
+    keys << 'member' if fields['member_ids']
+    keys.map { |key| [I18n.t("gws.options.target.#{key}"), key] }
   end
 end

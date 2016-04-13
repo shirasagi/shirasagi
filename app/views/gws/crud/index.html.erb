@@ -39,6 +39,9 @@
             <% if item.try(:status) %>
               <span class="state"><%= t "views.state.#{item.status}" %></span>
             <% end %>
+            <% if item.try(:order) %>
+              <span class="order"><%= item.order %></span>
+            <% end %>
           <% end %>
         </div>
       </div>

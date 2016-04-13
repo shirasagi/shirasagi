@@ -21,6 +21,7 @@ ja:
       target:
         all: 全ユーザー
         group: 同一グループ内
+        member: 参加者のみ
     links:
       back_to_portal: ポータルへ戻る
     buttons:
@@ -87,11 +88,7 @@ ja:
       gws/custom_group:
         name: グループ名
         order: 表示順
-        members: メンバー
-      gws/custom_group_member:
-        member_id: ユーザー
-        name: 氏名
-        order: 表示順
+        member_ids: 参加者
       gws/notice:
         name: タイトル
         severity: 種別

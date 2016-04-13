@@ -23,11 +23,8 @@ class Gws::Schedule::Plan
   validates :end_at, presence: true, if: -> { !repeat? }
 
   def target_options
-    [
-      [I18n.t('gws/schedule.options.target.all'), 'all'],
-      [I18n.t('gws/schedule.options.target.group'), 'group'],
-      [I18n.t('gws/schedule.options.target.member'), 'member'],
-    ]
+    keys = %w(all group member)
+    keys.map { |key| [I18n.t("gws.options.target.#{key}"), key] }
   end
 
   def member?(user)

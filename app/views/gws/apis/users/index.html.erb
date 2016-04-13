@@ -32,7 +32,7 @@
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
         <% end %>
-        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= link_to item.long_name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
       </tr>
     <% end %>
   </tbody>

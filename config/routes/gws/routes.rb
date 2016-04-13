@@ -11,9 +11,7 @@ SS::Application.routes.draw do
   namespace "gws", path: ".g:site/gws" do
     resource  :site
     resources :groups, concerns: [:deletion]
-    resources :custom_groups, concerns: [:deletion] do
-      resources :members, controller: "custom_groups/members", concerns: [:deletion]
-    end
+    resources :custom_groups, concerns: [:deletion]
     resources :users, concerns: [:deletion]
     resources :user_titles, concerns: [:deletion]
     resources :roles, concerns: [:deletion]

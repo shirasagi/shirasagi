@@ -1162,6 +1162,12 @@ div.index {
     .filename {
       color: #080;
     }
+    .order {
+      color: #888;
+      &:before {
+        content: '\25b9';
+      }
+    }
   }
 }
 table.index {
