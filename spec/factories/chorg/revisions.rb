@@ -4,11 +4,11 @@ FactoryGirl.define do
   end
 
   factory :revision_root_group, parent: :cms_group do
-    name { "シラサギ市" }
+    name { "組織変更" }
   end
 
   factory :revision_new_group, parent: :cms_group do
-    name { "シラサギ市/グループ#{unique_id}" }
+    name { "組織変更/グループ#{unique_id}" }
     contact_email { "#{unique_id}@example.jp" }
     contact_tel "03-4389-8714"
     contact_fax "03-4389-8715"

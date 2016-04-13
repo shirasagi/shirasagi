@@ -8,7 +8,7 @@ class Gws::User
 
   cattr_reader(:group_class) { Gws::Group }
 
-  attr_accessor :cur_site, :in_title_id
+  attr_accessor :in_title_id
 
   embeds_ids :groups, class_name: "Gws::Group"
 
@@ -16,6 +16,9 @@ class Gws::User
 
   before_validation :set_title_ids, if: ->{ in_title_id }
   validate :validate_groups
+
+  # reset default order
+  self.default_scoping = nil if default_scopable?
 
   scope :site, ->(site) { self.in(group_ids: Gws::Group.site(site).pluck(:id)) }
 

@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "sys_users" do
-  subject(:item) { SS::Site.last }
-  subject(:index_path) { sys_sites_path }
-  subject(:new_path) { new_sys_site_path }
-  subject(:show_path) { sys_site_path item }
-  subject(:edit_path) { edit_sys_site_path item }
-  subject(:delete_path) { delete_sys_site_path item }
+describe "sys_users", type: :feature, dbscope: :example do
+  let(:item) { create(:sys_site) }
+  let(:index_path) { sys_sites_path }
+  let(:new_path) { new_sys_site_path }
+  let(:show_path) { sys_site_path item }
+  let(:edit_path) { edit_sys_site_path item }
+  let(:delete_path) { delete_sys_site_path item }
 
   it "without login" do
     visit index_path

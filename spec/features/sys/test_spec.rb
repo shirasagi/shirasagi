@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys_test" do
+describe "sys_test", type: :feature, dbscope: :example do
   subject(:index_path) { sys_test_path }
 
   it "without login" do

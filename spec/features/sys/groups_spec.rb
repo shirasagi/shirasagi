@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "sys_groups" do
-  subject(:item) { Sys::Group.last }
-  subject(:index_path) { sys_groups_path }
-  subject(:new_path) { new_sys_group_path }
-  subject(:show_path) { sys_group_path item }
-  subject(:edit_path) { edit_sys_group_path item }
-  subject(:delete_path) { delete_sys_group_path item }
+describe "sys_groups", type: :feature, dbscope: :example do
+  let(:item) { create(:sys_group) }
+  let(:index_path) { sys_groups_path }
+  let(:new_path) { new_sys_group_path }
+  let(:show_path) { sys_group_path item }
+  let(:edit_path) { edit_sys_group_path item }
+  let(:delete_path) { delete_sys_group_path item }
 
   it "without login" do
     visit index_path

@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "sys_users" do
-  subject(:item) { Sys::Role.last }
-  subject(:index_path) { sys_roles_path }
-  subject(:new_path) { new_sys_role_path }
-  subject(:show_path) { sys_role_path item }
-  subject(:edit_path) { edit_sys_role_path item }
-  subject(:delete_path) { delete_sys_role_path item }
+describe "sys_users", type: :feature, dbscope: :example do
+  let(:item) { create(:sys_role) }
+  let(:index_path) { sys_roles_path }
+  let(:new_path) { new_sys_role_path }
+  let(:show_path) { sys_role_path item }
+  let(:edit_path) { edit_sys_role_path item }
+  let(:delete_path) { delete_sys_role_path item }
 
   it "without login" do
     visit index_path

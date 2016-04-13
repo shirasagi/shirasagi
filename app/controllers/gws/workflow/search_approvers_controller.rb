@@ -34,6 +34,6 @@ class Gws::Workflow::SearchApproversController < ApplicationController
       @group_options = group_options
       criteria = @model.site(@cur_site).search(params[:s])
       criteria = criteria.in(group_ids: [ @group_id ]) if @group_id
-      @items = criteria.order_by(_id: 1).page(params[:page]).per(50)
+      @items = criteria.order_by_title(@cur_site).page(params[:page]).per(50)
     end
 end

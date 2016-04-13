@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :add_changeset, class: Chorg::Changeset do
     type Chorg::Changeset::TYPE_ADD
-    destinations { [ { name: "シラサギ市/新設グループ_#{unique_id}" }.stringify_keys ] }
+    destinations { [ { name: "組織変更/新設グループ_#{unique_id}" }.stringify_keys ] }
   end
 
   factory :move_changeset, class: Chorg::Changeset do
@@ -12,7 +12,7 @@ FactoryGirl.define do
     type Chorg::Changeset::TYPE_MOVE
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
     destinations do
-      [ { name: "シラサギ市/新設グループ_#{unique_id}",
+      [ { name: "組織変更/新設グループ_#{unique_id}",
           order: "",
           contact_email: "mb4pjr0czv@example.jp",
           contact_tel: "03-8471-8438",
@@ -29,7 +29,7 @@ FactoryGirl.define do
     type Chorg::Changeset::TYPE_MOVE
     sources { [ { id: source.id, name: source.name }.stringify_keys ] }
     destinations do
-      [ { name: "シラサギ市/新設グループ_#{unique_id}",
+      [ { name: "組織変更/新設グループ_#{unique_id}",
           order: "",
           contact_email: "",
           contact_tel: "",
@@ -46,7 +46,7 @@ FactoryGirl.define do
 
     type Chorg::Changeset::TYPE_UNIFY
     destinations do
-      [ { name: "シラサギ市/新設グループ_#{unique_id}",
+      [ { name: "組織変更/新設グループ_#{unique_id}",
           order: "",
           contact_email: "mb4pjr0czv@example.jp",
           contact_tel: "03-8471-8438",

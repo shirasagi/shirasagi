@@ -12,6 +12,6 @@ class Gws::Schedule::GroupPlansController < ApplicationController
 
   public
     def index
-      @items = @group.users
+      @items = @group.users.order_by_title(@cur_site).compact
     end
 end
