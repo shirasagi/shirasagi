@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe "sys_db" do
-  subject(:index_path) { sys_db_colls_path }
+describe "sys_db", type: :feature, dbscope: :example do
+  let(:index_path) { sys_db_colls_path }
 
   it "without login" do
     visit index_path
