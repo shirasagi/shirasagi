@@ -3,6 +3,8 @@ module SS::Reference
     extend ActiveSupport::Concern
     extend SS::Translation
 
+    DEFAULT_TITLE_ORDER = 10_000_000
+
     included do
       embeds_ids :titles, class_name: "SS::UserTitle"
       field :title_orders, type: Hash
@@ -12,7 +14,7 @@ module SS::Reference
     class_methods do
       def update_all_title_orders(title)
         self.where(title_ids: title.id).each do |item|
-          item.send(:set_title_order, title)
+          item.send(:set_title_order, title.group_id, title.order)
           item.save
         end
       end
@@ -27,7 +29,7 @@ module SS::Reference
       title ||= self.title
 
       if title.present?
-        set_title_order(title)
+        set_title_order(title.group_id, title.order)
       else
         remove_title_order
       end
@@ -38,14 +40,16 @@ module SS::Reference
       #   #
       # end
 
-      def set_title_order(title)
+      def set_title_order(key, value)
         orders = self.title_orders
         orders = {} if orders.nil?
 
-        return if orders[title.group_id.to_s] == title.order
-
         # hash key must be string
-        orders[title.group_id.to_s] = title.order
+        key = key.to_s
+
+        return if orders[key] == value
+
+        orders[key] = value
 
         # overwrite with new hash instance
         self.title_orders = orders.deep_dup
@@ -53,15 +57,7 @@ module SS::Reference
 
       def remove_title_order
         return if cur_site.blank?
-
-        orders = self.title_orders
-        return if orders.blank?
-        return unless orders.key?(cur_site.id.to_s)
-
-        orders.delete(cur_site.id.to_s)
-
-        # overwrite with new hash instance
-        self.title_orders = orders.deep_dup
+        set_title_order(cur_site.id, DEFAULT_TITLE_ORDER)
       end
   end
 end
