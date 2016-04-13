@@ -3,7 +3,9 @@ SS_TreeUI.render(".index.groups");
 $(".index.groups tbody tr[data-depth='1'] img").click();
 <% end %>
 
-<%= render file: "_search" %>
+<div class="list-search">
+  <%= render file: "_search" %>
+</div>
 
 <div class="main-box">
   <table class="index groups">
