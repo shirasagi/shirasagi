@@ -19,6 +19,8 @@ module SS::Model::UserTitle
     validates :order, presence: true
     validates :group_id, presence: true
 
+    index({ group_id: 1, order: 1})
+
     scope :search, ->(params) {
       criteria = where({})
       return criteria if params.blank?
