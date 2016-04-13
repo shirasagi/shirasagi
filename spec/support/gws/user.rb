@@ -1,5 +1,5 @@
 def create_gws_users
-  return if SS::Group.present?
+  return if SS::Group.all.present?
 
   g00 = SS::Group.create name: "シラサギ市", order: 10
   g10 = SS::Group.create name: "シラサギ市/企画政策部", order: 20
@@ -26,7 +26,7 @@ end
 
 def gws_site
   create_gws_users
-  SS::Group.find_by name: 'シラサギ市'
+  Gws::Group.find_by name: 'シラサギ市'
 end
 
 def gws_user
