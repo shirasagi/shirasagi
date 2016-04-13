@@ -9,6 +9,7 @@ class Gws::UserTitle
   before_validation :set_group_id, if: ->{ cur_site.present? }
   after_save :update_users_title_order
 
+  default_scope -> { order_by(order: 1) }
   scope :site, ->(site) { where group_id: site.id }
 
   private

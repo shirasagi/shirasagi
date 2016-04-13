@@ -17,6 +17,9 @@ class Gws::User
   before_validation :set_title_ids, if: ->{ in_title_id }
   validate :validate_groups
 
+  # reset default order
+  self.default_scoping = nil if default_scopable?
+
   scope :site, ->(site) { self.in(group_ids: Gws::Group.site(site).pluck(:id)) }
 
   def title_id_options
