@@ -40,6 +40,8 @@ module SS
           end
 
           ss_file = SS::File.new(model: options.delete(:model) || "ss/temp_file")
+          ss_file.user_id = options[:user].id if options[:user]
+          options.delete(:user)
 
           basename = options.delete(:basename) || "spec"
           content_type = options.delete(:content_type) || "application/octet-stream"
