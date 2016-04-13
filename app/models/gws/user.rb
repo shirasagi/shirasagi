@@ -8,7 +8,7 @@ class Gws::User
 
   cattr_reader(:group_class) { Gws::Group }
 
-  attr_accessor :cur_site, :in_title_id
+  attr_accessor :in_title_id
 
   embeds_ids :groups, class_name: "Gws::Group"
 
