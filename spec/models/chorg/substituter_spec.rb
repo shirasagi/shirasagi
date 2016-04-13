@@ -64,11 +64,11 @@ describe Chorg::Substituter::StringSubstituter do
       end
 
       context "with group hierarchy" do
-        let(:from) { "シラサギ市/企画政策部/企画政策部 広報課" }
-        let(:to) { "シラサギ市/企画政策部/企画政策部 政策課" }
+        let(:from) { "組織変更/企画政策部/企画政策部 広報課" }
+        let(:to) { "組織変更/企画政策部/企画政策部 政策課" }
         subject { described_class.new(from, to) }
-        it { expect(subject.call("シラサギ市/企画政策部/企画政策部 広報課")).to eq "シラサギ市/企画政策部/企画政策部 政策課" }
-        it { expect(subject.call("シラサギ市/危機管理部/危機管理部 管理課")).to eq "シラサギ市/危機管理部/危機管理部 管理課" }
+        it { expect(subject.call("組織変更/企画政策部/企画政策部 広報課")).to eq "組織変更/企画政策部/企画政策部 政策課" }
+        it { expect(subject.call("組織変更/危機管理部/危機管理部 管理課")).to eq "組織変更/危機管理部/危機管理部 管理課" }
         it { expect(subject.call("企画政策部 広報課")).to eq "企画政策部 広報課" }
         it { expect(subject.call("危機管理部 管理課")).to eq "危機管理部 管理課" }
       end
@@ -78,7 +78,7 @@ describe Chorg::Substituter::StringSubstituter do
   describe "#<=>" do
     let(:substituer1) { described_class.new("kmsrgxit7k@example.jp", "tfszbhe91d@example.jp") }
     let(:substituer2) { described_class.new("kmsrgxit7k", "tfszbhe91d") }
-    let(:substituer3) { described_class.new("シラサギ市/企画政策部/企画政策部 長生き課", "シラサギ市/健康管理部/健康管理部 地域連携課") }
+    let(:substituer3) { described_class.new("組織変更/企画政策部/企画政策部 長生き課", "組織変更/健康管理部/健康管理部 地域連携課") }
     let(:substituer4) { described_class.new("企画政策部 長生き課", "健康管理部 地域連携課") }
     let(:substituer5) { Chorg::Substituter::IdSubstituter.new(30_016, []) }
 
@@ -101,18 +101,18 @@ end
 describe Chorg::Substituter do
   context "with simple substitution" do
     let(:from) do
-      { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課",
+      { id: 30_016, name: "組織変更/企画政策部/企画政策部 長生き課",
         contact_email: "kmsrgxit7k@example.jp", release_date: Time.zone.now }
     end
     let(:to) do
-      { id: 31_016, name: "シラサギ市/健康管理部/健康管理部 地域連携課",
+      { id: 31_016, name: "組織変更/健康管理部/健康管理部 地域連携課",
         contact_email: "1b3ubagfds@example.jp", release_date: Time.zone.now }
     end
     subject { described_class.collect(from, to) }
 
     describe "#call" do
       it { expect(subject.call(30_016)).to eq 31_016 }
-      it { expect(subject.call("シラサギ市/企画政策部/企画政策部 長生き課")).to eq "シラサギ市/健康管理部/健康管理部 地域連携課" }
+      it { expect(subject.call("組織変更/企画政策部/企画政策部 長生き課")).to eq "組織変更/健康管理部/健康管理部 地域連携課" }
       it { expect(subject.call("企画政策部 長生き課")).to eq "健康管理部 地域連携課" }
       it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "1b3ubagfds@example.jp" }
 
@@ -126,23 +126,23 @@ describe Chorg::Substituter do
   end
 
   context "with multiple substitutions" do
-    let(:from1) { { id: 30_015, name: "シラサギ市/企画政策部" } }
+    let(:from1) { { id: 30_015, name: "組織変更/企画政策部" } }
     let(:from2) do
-      { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課",
+      { id: 30_016, name: "組織変更/企画政策部/企画政策部 長生き課",
         contact_email: "kmsrgxit7k@example.jp", release_date: Time.zone.now }
     end
-    let(:to1) { { id: 31_015, name: "シラサギ市/健康管理部" } }
+    let(:to1) { { id: 31_015, name: "組織変更/健康管理部" } }
     let(:to2) do
-      { id: 31_016, name: "シラサギ市/健康管理部/健康管理部 地域連携課",
+      { id: 31_016, name: "組織変更/健康管理部/健康管理部 地域連携課",
         contact_email: "1b3ubagfds@example.jp", release_date: Time.zone.now }
     end
     subject { described_class.collect(from1, to1).collect(from2, to2) }
 
     it { expect(subject.call(30_015)).to eq 31_015 }
     it { expect(subject.call(30_016)).to eq 31_016 }
-    it { expect(subject.call("シラサギ市/企画政策部")).to eq "シラサギ市/健康管理部" }
+    it { expect(subject.call("組織変更/企画政策部")).to eq "組織変更/健康管理部" }
     it { expect(subject.call("企画政策部")).to eq "健康管理部" }
-    it { expect(subject.call("シラサギ市/企画政策部/企画政策部 長生き課")).to eq "シラサギ市/健康管理部/健康管理部 地域連携課" }
+    it { expect(subject.call("組織変更/企画政策部/企画政策部 長生き課")).to eq "組織変更/健康管理部/健康管理部 地域連携課" }
     it { expect(subject.call("企画政策部 長生き課")).to eq "健康管理部 地域連携課" }
     it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "1b3ubagfds@example.jp" }
 
@@ -167,7 +167,7 @@ describe Chorg::Substituter do
 
   describe "does not substitute to nil" do
     let(:from) do
-      { id: 30_016, name: "シラサギ市/企画政策部/企画政策部 長生き課",
+      { id: 30_016, name: "組織変更/企画政策部/企画政策部 長生き課",
         contact_email: "kmsrgxit7k@example.jp", release_date: Time.zone.now }
     end
     let(:to) { { id: 31_016 } }
@@ -175,7 +175,7 @@ describe Chorg::Substituter do
 
     describe "#call" do
       it { expect(subject.call(30_016)).to eq 31_016 }
-      it { expect(subject.call("シラサギ市/企画政策部/企画政策部 長生き課")).to eq "シラサギ市/企画政策部/企画政策部 長生き課" }
+      it { expect(subject.call("組織変更/企画政策部/企画政策部 長生き課")).to eq "組織変更/企画政策部/企画政策部 長生き課" }
       it { expect(subject.call("企画政策部 長生き課")).to eq "企画政策部 長生き課" }
       it { expect(subject.call("kmsrgxit7k@example.jp")).to eq "kmsrgxit7k@example.jp" }
     end

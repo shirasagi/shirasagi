@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "cms_groups" do
-  subject(:site) { cms_site }
-  subject(:item) { Cms::Group.last }
-  subject(:index_path) { cms_groups_path site.id }
-  subject(:new_path) { new_cms_group_path site.id }
-  subject(:show_path) { cms_group_path site.id, item }
-  subject(:edit_path) { edit_cms_group_path site.id, item }
-  subject(:delete_path) { delete_cms_group_path site.id, item }
-  subject(:import_path) { import_cms_groups_path site.id }
+describe "cms_groups", type: :feature, dbscope: :example do
+  let(:site) { cms_site }
+  let(:item) { cms_group }
+  let(:index_path) { cms_groups_path site.id }
+  let(:new_path) { new_cms_group_path site.id }
+  let(:show_path) { cms_group_path site.id, item }
+  let(:edit_path) { edit_cms_group_path site.id, item }
+  let(:delete_path) { delete_cms_group_path site.id, item }
+  let(:import_path) { import_cms_groups_path site.id }
 
   it "without login" do
     visit index_path

@@ -16,7 +16,10 @@ module SS::Model::UserTitle
     permit_params :name, :order
 
     validates :name, presence: true, length: { maximum: 40 }
+    validates :order, presence: true
     validates :group_id, presence: true
+
+    index({ group_id: 1, order: 1})
 
     scope :search, ->(params) {
       criteria = where({})

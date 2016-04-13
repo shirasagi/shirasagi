@@ -3,9 +3,10 @@ module SS::Model::User
   extend SS::Translation
   include SS::Document
   include SS::Fields::Normalizer
+  include SS::Reference::UserTitles
   include Ldap::Addon::User
 
-  attr_accessor :cur_user, :in_password, :self_edit
+  attr_accessor :cur_site, :cur_user, :in_password, :self_edit
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -37,7 +38,6 @@ module SS::Model::User
     field :initial_password_warning, type: Integer
 
     embeds_ids :groups, class_name: "SS::Group"
-    embeds_ids :titles, class_name: "SS::UserTitle"
 
     permit_params :name, :uid, :email, :password, :tel, :type, :login_roles, :remark, group_ids: []
     permit_params :in_password
@@ -124,10 +124,6 @@ module SS::Model::User
     end
   end
 
-  def title(group)
-    titles.where(group_id: cur_site.id).first
-  end
-
   def enabled?
     now = Time.zone.now
     return false if account_start_date.present? && account_start_date > now
@@ -147,10 +143,6 @@ module SS::Model::User
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
       return false if password.blank?
       password == SS::Crypt.crypt(in_passwd)
-    end
-
-    def set_title_ids
-      #
     end
 
     def validate_type

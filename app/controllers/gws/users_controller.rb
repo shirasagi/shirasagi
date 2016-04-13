@@ -17,6 +17,16 @@ class Gws::UsersController < ApplicationController
     end
 
   public
+    def index
+      #raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
+      @items = @model.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site).
+        search(params[:s]).
+        order_by("title_orders.#{@cur_site.id}" => 1, name: 1).
+        page(params[:page]).per(50)
+    end
+
     def update
       other_group_ids = Gws::Group.nin(id: Gws::Group.site(@cur_site).pluck(:id)).in(id: @item.group_ids).pluck(:id)
       other_role_ids = Gws::Role.nin(id: Gws::Role.site(@cur_site).pluck(:id)).in(id: @item.gws_role_ids).pluck(:id)
