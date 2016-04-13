@@ -16,6 +16,14 @@ RSpec.describe GravatarHelper, type: :helper do
     describe "default \"size\"" do
       it("is 150") { expect(helper.gravatar_image_url(email)).to eq  "https://gravatar.com/avatar/#{md5sum}?s=150" }
     end
+
+    describe "with a default image URL" do
+      default = "http%3A%2F%2Fexample.com%2Fimages%2Favatar.jpg"
+      default_before_escape = "http://example.com/images/avatar.jpg"
+
+      it { expect(CGI.escape(default_before_escape)).to eq default }
+      it { expect(helper.gravatar_image_url(email, 150, default: default_before_escape)).to eq "https://gravatar.com/avatar/#{md5sum}?s=150&d=#{default}" }
+    end
   end
 
   describe ".gravatar_image_tag" do
