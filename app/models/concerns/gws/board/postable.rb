@@ -110,14 +110,21 @@ module Gws::Board::Postable
 
     def validate_attached_file_size
       if limit = cur_site.board_file_size_per_post
-        size = files.map(&:size).max || 0
+        size = files.compact.map(&:size).max || 0
         if size > limit
           errors.add :base, :attached_file_too_large, size: size, limit: limit
         end
       end
 
       if limit = cur_site.board_file_size_per_topic
-        size = sum_topic_files(self)
+        size = files.compact.map(&:size).inject(:+) || 0
+
+        comments = self.class.topic_comments(topic || self).ne(_id: id)
+        comment_files = comments.map(&:files).flatten
+        size += comment_files.compact.map(&:size).inject(:+) || 0
+
+        size += topic.files.compact.map(&:size).inject(:+) || 0 if topic.present?
+
         if size > limit
           errors.add :base, :attached_file_too_large, size: size, limit: limit
         end
@@ -139,28 +146,30 @@ module Gws::Board::Postable
       topic.set descendants_updated: updated
     end
 
-    def count_topic_files(topic)
-      @count ||= begin
-        count = topic.file_ids.size
-        count + self.class.topic_comments(topic).map { |m| m.file_ids.size }.inject(0) { |a, e| a + e }
-      end
-    end
+    def topic_file_info(topic)
+      sizes = topic.files.compact.map(&:size) || []
 
-    def sum_topic_files(topic)
-      @total_size ||= begin
-        total_size = topic.files.map(&:size).inject(0) { |a, e| a + e }
-        total_size + self.class.topic_comments(topic).map { |m| m.files.map(&:size) }.flatten.inject(0) { |a, e| a + e }
-      end
+      comments = self.class.topic_comments(topic)
+      comment_files = comments.map(&:files).flatten
+
+      sizes += comment_files.compact.map(&:size) || []
+      sizes.compact!
+
+      [ sizes.length, sizes.inject(:+) || 0 ]
     end
 
     def set_file_info
-      self.descendants_files_count = count_topic_files(self)
-      self.descendants_total_file_size = sum_topic_files(self)
+      files_count, total_file_size = topic_file_info(self)
+      self.descendants_files_count = files_count
+      self.descendants_total_file_size = total_file_size
     end
 
     def update_topic_descendants_file_info
       return unless topic
-      topic.set descendants_files_count: count_topic_files(topic)
-      topic.set descendants_total_file_size: sum_topic_files(topic)
+      files_count, total_file_size = topic_file_info(topic)
+      topic.set(
+        descendants_files_count: files_count,
+        descendants_total_file_size: total_file_size,
+      )
     end
 end
