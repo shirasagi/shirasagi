@@ -111,7 +111,6 @@ module Gws::Board::Postable
     def validate_attached_file_size
       if limit = cur_site.board_file_size_per_post
         size = files.map(&:size).max || 0
-        puts "limit=#{limit}, size=#{size}"
         if size > limit
           errors.add :base, :attached_file_too_large, size: size, limit: limit
         end
@@ -119,7 +118,6 @@ module Gws::Board::Postable
 
       if limit = cur_site.board_file_size_per_topic
         size = sum_topic_files(self)
-        puts "limit=#{limit}, size=#{size}"
         if size > limit
           errors.add :base, :attached_file_too_large, size: size, limit: limit
         end
