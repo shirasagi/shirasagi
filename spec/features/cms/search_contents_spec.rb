@@ -265,5 +265,57 @@ describe "cms_search", dbscope: :example do
         expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
       end
     end
+
+    context "ss-909", js: true do
+      # see: https://github.com/shirasagi/shirasagi/issues/909
+      before(:each) do
+        create(:article_page, name: "[TEST]top",     html: '<a href="/top/" class="top">anchor</a>')
+        create(:article_page, name: "[TEST]TOP",     html: '<a href="/TOP/" class="TOP">ANCHOR</a>')
+      end
+
+      it "replace_html_with_string" do
+        visit html_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.index-search" do
+          fill_in "keyword", with: "anchor"
+          click_button "検索"
+        end
+        wait_for_ajax
+        expect(page).to     have_css(".result table a", text: "[TEST]top")
+        expect(page).not_to have_css(".result table a", text: "[TEST]TOP")
+
+        within "form.index-search" do
+          fill_in "keyword", with: "anchor"
+          fill_in "replacement", with: "アンカー"
+          click_button "全置換"
+        end
+        expect(status_code).to eq 200
+        expect(page).to     have_css(".result table a", text: "[TEST]top")
+        expect(page).not_to have_css(".result table a", text: "[TEST]TOP")
+      end
+
+      it "replace_url_with_string" do
+        visit html_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.index-search" do
+          fill_in "keyword", with: "/TOP/"
+          check "option-url"
+          click_button "検索"
+        end
+        wait_for_ajax
+        expect(page).not_to have_css(".result table a", text: "[TEST]top")
+        expect(page).to     have_css(".result table a", text: "[TEST]TOP")
+
+        within "form.index-search" do
+          fill_in "keyword", with: "/TOP/"
+          fill_in "replacement", with: "/kurashi/"
+          check "option-url"
+          click_button "全置換"
+        end
+        expect(status_code).to eq 200
+        expect(page).not_to have_css(".result table a", text: "[TEST]top")
+        expect(page).to     have_css(".result table a", text: "[TEST]TOP")
+      end
+    end
   end
 end

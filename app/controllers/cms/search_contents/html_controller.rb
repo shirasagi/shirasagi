@@ -11,11 +11,11 @@ class Cms::SearchContents::HtmlController < ApplicationController
 
     @keyword = params[:keyword]
     @replacement = params[:replacement]
-    @updated_items = params[:updated_items]
+    @updated_items = flash[:updated_items]
     if @updated_items
-      page_ids   = params[:updated_items][:page_ids]
-      layout_ids = params[:updated_items][:layout_ids]
-      part_ids   = params[:updated_items][:part_ids]
+      page_ids   = @updated_items["update_pages"].split(",")
+      layout_ids = @updated_items["update_layouts"].split(",")
+      part_ids   = @updated_items["update_parts"].split(",")
 
       @pages = Cms::Page.site(@cur_site).in(id: page_ids).order_by(filename: 1).limit(500)
       @parts = Cms::Part.site(@cur_site).in(id: part_ids).order_by(filename: 1).limit(500)
@@ -58,11 +58,11 @@ class Cms::SearchContents::HtmlController < ApplicationController
       action: :index,
       keyword: keyword,
       replacement: replacement,
-      updated_items: {
-        page_ids: @pages.map(&:id),
-        layout_ids: @layouts.map(&:id),
-        part_ids: @parts.map(&:id)
-      }
+    }
+    flash[:updated_items] = {
+      "update_pages" => @pages.map(&:id).join(","),
+      "update_layouts" => @layouts.map(&:id).join(","),
+      "update_parts" => @parts.map(&:id).join(","),
     }
     redirect_to location, notice: t("views.notice.saved")
   end
