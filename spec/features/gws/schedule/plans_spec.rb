@@ -20,13 +20,22 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     expect(status_code).to eq 403
   end
 
-  context "with auth" do
+  context "with auth", js: true do
     before { login_gws_user }
 
     it "#index" do
       visit index_path
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
+    end
+
+    it "#events" do
+      item
+      today = Time.zone.today
+      sdate = today - today.day + 1.day
+      edate = sdate + 1.month
+      visit "#{index_path}/events.json?s[start]=#{sdate}&s[end]=#{edate}"
+      expect(page.body).to have_content(item.name)
     end
 
     it "#new" do

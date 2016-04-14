@@ -21,7 +21,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
     expect(status_code).to eq 403
   end
 
-  context "with auth" do
+  context "with auth", js: true do
     before { login_gws_user }
 
     it "#index" do

@@ -11,8 +11,7 @@ SS::Application.routes.draw do
   gws "schedule" do
     get 'all_groups' => 'groups#index'
     get 'facilities' => 'facilities#index'
-    resources :holidays, concerns: :plans
-    resources :categories, concerns: :plans
+
     resources :plans, concerns: :plans
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
@@ -21,5 +20,7 @@ SS::Application.routes.draw do
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
 
     resource :setting, only: [:show, :edit, :update]
+    resources :holidays, concerns: :plans
+    resources :categories, concerns: :plans
   end
 end
