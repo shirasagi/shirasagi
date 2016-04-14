@@ -19,14 +19,14 @@ module Gws::Board::DescendantsFileInfo
 
   private
     def validate_attached_file_size
-      if limit = cur_site.board_file_size_per_post
+      if (limit = (cur_site.board_file_size_per_post || 0)) > 0
         size = files.compact.map(&:size).max || 0
         if size > limit
           errors.add :base, :attached_file_too_large, size: size, limit: limit
         end
       end
 
-      if limit = cur_site.board_file_size_per_topic
+      if (limit = (cur_site.board_file_size_per_topic || 0)) > 0
         size = files.compact.map(&:size).inject(:+) || 0
 
         comments = self.class.topic_comments(topic || self).ne(_id: id)
