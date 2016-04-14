@@ -186,14 +186,19 @@ module SS::Model::File
       return false if errors.present?
       return if in_file.blank?
 
-      if image? && resizing
-        width, height = resizing
+      if image?
         image = Magick::Image.from_blob(in_file.read).shift
-        image = image.resize_to_fit width, height if image.columns > width || image.rows > height
+        image.auto_orient!
+        image.strip!
+        if resizing
+          width, height = resizing
+          image = image.resize_to_fit width, height if image.columns > width || image.rows > height
+        end
         binary = image.to_blob
       else
         binary = in_file.read
       end
+      in_file.rewind
 
       dir = ::File.dirname(path)
       Fs.mkdir_p(dir) unless Fs.exists?(dir)
