@@ -22,3 +22,8 @@
 @import "kana/ss";
 @import "ldap/ss";
 @import "workflow/ss";
+
+// fix fullcalendar issue: https://github.com/fullcalendar/fullcalendar/issues/2852
+.fc-icon:after {
+  margin: 0 0; color: black
+}
