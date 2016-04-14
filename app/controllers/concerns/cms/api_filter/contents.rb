@@ -7,13 +7,13 @@ module Cms::ApiFilter::Contents
 
   private
     def search_html_with_string(string)
-      cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{Regexp.escape(string)}/i } } }
+      cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{Regexp.escape(string)}/ } } }
       search_html_with_condition(cond)
     end
 
     def search_html_with_url(url)
       path = "=\"#{Regexp.escape(url)}"
-      cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{path}/i } } }
+      cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{path}/ } } }
       search_html_with_condition(cond)
     end
 
