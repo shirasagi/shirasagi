@@ -129,6 +129,10 @@ module Gws::Schedule::Planable
     end
 
     def validate_datetimes_at
+      errors.add :start_on, :invalid if start_on == ::Date::EPOCH
+      errors.add :end_on, :invalid if end_on == ::Date::EPOCH
+      errors.add :start_at, :invalid if start_at == ::Time::EPOCH
+      errors.add :end_at, :invalid if end_at == ::Time::EPOCH
       errors.add :end_at, :greater_than, count: t(:start_at) if start_at > end_at
     end
 end
