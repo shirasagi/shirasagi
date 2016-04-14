@@ -1,6 +1,10 @@
 <%= jquery do %>
   Gws_Schedule_Plan.renderForm();
-  $('#item_color').colorPicker();
+  $('#item_color').colorPicker({
+    renderCallback: function (el, toggled) {
+      el.val('#' + this.color.colors.HEX);
+    }
+  });
 <% end %>
 
 <dl class="see">
