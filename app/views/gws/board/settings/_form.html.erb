@@ -1,4 +1,16 @@
+<% @item.in_board_file_size_per_topic_mb ||= @item.board_file_size_per_topic / (1_024 * 1_024) if @item.board_file_size_per_topic %>
+<% @item.in_board_file_size_per_post_mb ||= @item.board_file_size_per_post / (1_024 * 1_024) if @item.board_file_size_per_post %>
+
 <dl class="see">
   <dt><%= @model.t :board_new_days %><%= @model.tt :board_new_days %></dt>
   <dd><%= f.number_field :board_new_days %> <%= t("datetime.prompts.day") %></dd>
+
+  <dt><%= @model.t :board_file_size %><%= @model.tt :board_file_size %></dt>
+  <dd></dd>
+
+  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_topic).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_topic %></dt>
+  <dd><%= f.number_field :in_board_file_size_per_topic_mb %> <%= t("gws/board.prompts.mega_byte") %></dd>
+
+  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_post %></dt>
+  <dd><%= f.number_field :in_board_file_size_per_post_mb %> <%= t("gws/board.prompts.mega_byte") %></dd>
 </dl>

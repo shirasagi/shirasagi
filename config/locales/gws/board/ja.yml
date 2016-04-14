@@ -43,6 +43,8 @@ ja:
       categories: カテゴリー
     errors:
       denied_comment: コメントの投稿は許可されていません。
+    prompts:
+      mega_byte: MB
 
   modules:
     gws/board: 掲示板
@@ -75,6 +77,8 @@ ja:
           too_deep: は%{max}階層以下にしてください。
           not_found_parent: 親カテゴリーが存在しません。
           found_children: 子カテゴリーが存在します。
+        gws/board/postable:
+          attached_file_too_large: 添付ファイルのサイズが大きすぎます。
     attributes:
       gws/board/postable:
         name: タイトル
@@ -84,6 +88,9 @@ ja:
         permit_comment: コメント
       gws/board/setting:
         board_new_days: 新着表示期間
+        board_file_size: 添付最大サイズ
+        board_file_size_per_topic: 添付最大サイズ/トピック単位
+        board_file_size_per_post: 添付最大サイズ/投稿単位
       gws/board/category:
         name: カテゴリー名
       gws/addon/board/category:

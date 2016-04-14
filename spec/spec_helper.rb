@@ -115,6 +115,7 @@ RSpec.configure do |config|
   config.extend(SS::DatabaseCleanerSupport)
   config.include(SS::JsSupport, js: true)
   config.extend(SS::HttpServerSupport, http_server: true)
+  config.extend(SS::TmpDirSupport, tmpdir: true)
 end
 
 def unique_id
