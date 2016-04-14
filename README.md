@@ -29,19 +29,32 @@ Platform
 - MongoDB 3
 - Unicorn
 
+Installation (Auto)
+-------------------
+
+```
+# useradd rails
+# usermod -G wheel rails
+# passwd rails
+  (Input password)
+# su - rails
+
+$ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | bash -s example.jp
+```
+
 Installation (CentOS 7)
-=======================
+-----------------------
 
 拡張機能（ふりがな、読み上げ、オープンデータ等）や詳細なインストール手順は[開発マニュアル](http://shirasagi.github.io/)をご確認ください。
 
-## パッケージのダウンロード
+### パッケージのダウンロード
 
 ```
 $ su -
 # yum -y install wget git ImageMagick ImageMagick-devel
 ```
 
-## MongoDB のインストール
+### MongoDB のインストール
 
 ```
 # vi /etc/yum.repos.d/mongodb-org-3.2.repo
@@ -61,7 +74,7 @@ enabled=0
 # systemctl enable mongod
 ```
 
-## Ruby(RVM) のインストール
+### Ruby(RVM) のインストール
 
 ```
 # gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
@@ -72,7 +85,7 @@ enabled=0
 # gem install bundler
 ```
 
-## SHIRASAGI のインストール
+### SHIRASAGI のインストール
 
 SHIRASAGI のダウンロード (stable)
 
@@ -117,23 +130,24 @@ $ rake db:seed name=demo site=www
 
 ## サイトの確認
 
-### 管理画面
+#### 管理画面
+
 http://localhost:3000/.mypage にアクセスするとログイン画面が表示されます。<br />
 サイト名のリンクをクリックすると、登録したデモデータを確認・編集することができます。<br />
 [ ユーザーID： admin , パスワード： pass ]
 
-### 公開画面
+#### 公開画面
+
 http://localhost:3000/ にアクセスすると登録したデモサイトが表示されます。
 
 ## 開発・テスト環境
 
-`.env`というファイルをプロジェクトルートに用意すれば各種設定をデフォルトのものからお好みのものに切り替えられます。
+`.env`というファイルをプロジェクトルートに用意すれば各種設定をお好みのものに切り替えられます。
 
-### 例
+(設定例)
 
-デフォルトで`warn`になっているログレベルを`debug`にしたい場合。
-
-テスト時にデフォルトで実行されるカバレッジ計測を省きたい場合。
+- デフォルトで`warn`になっているログレベルを`debug`にしたい場合。
+- テスト時にデフォルトで実行されるカバレッジ計測を省きたい場合。
 
 ```
 DEVELOPMENT_LOG_LEVEL=debug
