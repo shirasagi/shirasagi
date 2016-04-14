@@ -41,12 +41,12 @@ describe Cms::User do
   describe "#long_name" do
     context "when email(sns user) is given" do
       subject { create(:cms_user_base, :cms_user_rand_name, :cms_user_email, group: group1) }
-      it { expect(subject.long_name).to eq "#{subject.name}(#{subject.email.split("@")[0]})" }
+      it { expect(subject.long_name).to eq "#{subject.name} (#{subject.email.split("@")[0]})" }
     end
 
     context "when uid(ldap user) is given" do
       subject { create(:cms_user_base, :cms_user_rand_name, :cms_user_uid, group: group1) }
-      it { expect(subject.long_name).to eq "#{subject.name}(#{subject.uid})" }
+      it { expect(subject.long_name).to eq "#{subject.name} (#{subject.uid})" }
     end
   end
 
