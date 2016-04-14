@@ -38,9 +38,12 @@ module Workflow::Addon
       item.cur_user = @cur_user
       item.cur_site = @cur_site
       item.cur_node = @cur_node
-      if attributes["filename"].nil?
+      if attributes[:filename].nil? && attributes["filename"].nil?
         item.filename = "#{dirname}/"
         item.basename = ""
+      else
+        filename = (attributes[:filename] || attributes["filename"])
+        item.filename = "#{dirname}/#{filename}"
       end
 
       item.workflow_user_id = nil
