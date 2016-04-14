@@ -17,7 +17,8 @@ module Gws::Board::Postable
     field :mode, type: String, default: 'thread'
     field :permit_comment, type: String, default: 'allow'
     field :descendants_updated, type: DateTime
-    field :descendants_files_count, type: Integer
+
+    attr_accessor :cur_site
 
     belongs_to :topic, class_name: "Gws::Board::Post", inverse_of: :descendants
     belongs_to :parent, class_name: "Gws::Board::Post", inverse_of: :children
@@ -37,10 +38,7 @@ module Gws::Board::Postable
 
     validate :validate_comment, if: :comment?
 
-    before_save :set_files_count, if: -> { topic_id.blank? }
     before_save :set_descendants_updated, if: -> { topic_id.blank? }
-
-    after_save :update_topic_descendants_files_count, if: -> { topic_id.present? }
     after_save :update_topic_descendants_updated, if: -> { topic_id.present? }
 
     scope :topic, ->{ exists parent_id: false }
@@ -116,19 +114,5 @@ module Gws::Board::Postable
       return unless topic
       return unless _id_changed?
       topic.set descendants_updated: updated
-    end
-
-    def count_topic_files(topic)
-      count = topic.file_ids.size
-      count + self.class.topic_comments(topic).map { |m| m.file_ids.size }.inject(0) { |a, e| a + e }
-    end
-
-    def set_files_count
-      self.descendants_files_count = count_topic_files(self)
-    end
-
-    def update_topic_descendants_files_count
-      return unless topic
-      topic.set descendants_files_count: count_topic_files(topic)
     end
 end
