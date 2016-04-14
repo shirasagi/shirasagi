@@ -1,9 +1,5 @@
 <%= jquery do %>
-  $('#item_color').colorPicker({
-    renderCallback: function (el, toggled) {
-      el.val('#' + this.color.colors.HEX);
-    }
-  });
+  $('#item_color').colorPicker().data('colorMode', 'HEX');
 <% end %>
 
 <dl class="see">
