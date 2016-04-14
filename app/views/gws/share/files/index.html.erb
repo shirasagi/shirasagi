@@ -3,10 +3,8 @@
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="gws-share-categories">
   <% item.categories.compact.each do |category| %>
-    <%= link_to category.name,
-          gws_share_category_files_path(category: category.id),
-          class: "gws-share-color-block",
-          style: "background-color: #{category.color || 'transparent'}; color: #{category.text_color || 'black'}" %>
+    <%= link_to category.name, gws_share_category_files_path(category: category.id),
+                class: "gws-category-label", style: category_label_css(category) %>
   <% end %>
   </span>
 <% end %>

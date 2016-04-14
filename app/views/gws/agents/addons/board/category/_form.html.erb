@@ -4,7 +4,7 @@ return if traverser.blank?
 %>
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-board-category"); <% end %>
 
-<dl class="see mod-gws-board-category">
+<dl class="see mod-gws-board-category gws-category-tree">
   <dt class="wide"><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
   <dd class="wide">
     <%= render partial: 'gws/agents/addons/board/category/cate_form', locals: { f: f, categories: traverser, level: 0, css_class: 'parent', depth: 0 } %>

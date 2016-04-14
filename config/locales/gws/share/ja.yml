@@ -43,6 +43,6 @@ ja:
           not_found_parent: 親カテゴリーが存在しません。
     attributes:
       gws/share/category:
-        name: 共有ファイルカテゴリー名
+        name: カテゴリー名
       gws/addon/share/category:
         category_ids: カテゴリー

@@ -20,6 +20,9 @@
     margin-bottom: 2px;
     header {
       @include box-head;
+      .name {
+        margin-right: 4px;
+      }
     }
     .body {
       @include box-body;
@@ -56,65 +59,5 @@
   }
   .comments {
     padding-left: 20px;
-  }
-}
-
-// category
-.gws-board-color-block {
-  padding: 1px 5px;
-  margin-right: 5px;
-  background-image: url(/assets/img/gws/bg-plan.png);
-  font-size: 90%;
-  border: 1px solid $gray4;
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  &:hover {
-    filter:alpha(opacity=80);
-    opacity:0.8;
-    border: 1px solid $orange;
-  }
-}
-
-.mod-gws-board-category, .gws-board-categories {
-  ul.parent {
-    margin: 0 0;
-    padding-left: 24px;
-    > li {
-      padding: 15px 0;
-      border-bottom: solid 1px $gray1;
-      > label {
-        display: block;
-      }
-    }
-    input {
-      margin: 3px 4px;
-    }
-    ul.child {
-      padding-left: 30px;
-      > li {
-        padding: 10px 0;
-      }
-    }
-    ul.grandchild {
-      padding-left: 30px;
-      > li {
-        display: inline;
-        margin: 0 5px;
-        padding: 5px 0;
-      }
-    }
-  }
-}
-
-.gws-board-categories {
-  .list-head h2 {
-    font-weight: bold;
-    border-left: 3px solid $orange;
-    color: $black3;
-    padding-left: 8px;
-  }
-  a {
-    text-decoration: none;
   }
 }

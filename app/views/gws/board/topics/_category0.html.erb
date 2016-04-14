@@ -1,10 +1,11 @@
 <% return if depth > 2 %>
 <ul class="<%= css_class %> depth<%= depth %>">
   <% categories.each do |category| %>
-    <li>
-      <%= link_to gws_board_category_topics_path(category: category.id) do %>
-        <span class="gws-board-color-block" style="background-color: <%= category.color || "transparent" %>; color: <%= category.text_color || "black" %>"><%= category.name %></span>
-      <% end %>
+    <li class="depth<%= depth %>">
+      <span class="depth<%= depth %>">
+      <%= link_to category.name, gws_board_category_topics_path(category: category.id),
+                  class: "gws-category-label", style: category_label_css(category) %>
+      </span>
 
       <% if category.children? %>
         <%

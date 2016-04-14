@@ -41,7 +41,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       expect(current_path).not_to eq new_path
       expect(page).not_to have_css("form#item-form")
       expect(page).to have_css("div.info a.title", text: "logo.png")
-      expect(page).to have_css("div.info div.meta a.gws-share-color-block", text: category.name)
+      expect(page).to have_css("div.info div.meta a.gws-category-label", text: category.name)
 
       item = Gws::Share::File.site(site).first
       expect(item.name).to eq "logo.png"

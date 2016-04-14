@@ -6,7 +6,6 @@
 @import "ss/pc_mb";
 @import "board/gws";
 @import "schedule/gws";
-@import "share/gws";
 
 .portal-box {
   float: left;
@@ -53,3 +52,49 @@
     content: "!";
   }
 }
+
+// Category
+.gws-category-label {
+  padding: 1px 5px;
+  @include border-radius(3px);
+  background-color: #e8e8e8;
+  background-image: url(/assets/img/gws/bg-plan.png);
+  color: #444;
+  font-size: 90%;
+  font-weight: normal;
+}
+a.gws-category-label:hover {
+  //opacity: 0.85;
+}
+.gws-category-tree, .gws-category-tree-view {
+  ul.depth0 {
+    margin-top: 10px;
+    li {
+      display: inline;
+      label, a {
+        display: inline-block;
+        margin: 0 5px 10px 0;
+      }
+    }
+    ul {
+      padding-left: 40px;
+    }
+  }
+  span.depth0 {
+    display: block;
+  }
+}
+.gws-category-tree-view {
+  ul.depth0 {
+    font-size: 115%;
+  }
+  span.depth0 {
+    margin: 10px 0 20px;
+    border-bottom: solid 1px $gray5;
+    font-size: 110%;
+  }
+  ul.depth1 {
+    margin-bottom: 20px;
+  }
+}
+

@@ -11,4 +11,9 @@ module Gws::LayoutHelper
     h << render(partial: "gws/main/navi")
     safe_join(h)
   end
+
+  def category_label_css(colorize)
+    return nil if colorize.color.blank?
+    "background-color: #{colorize.color}; color: #{colorize.text_color};"
+  end
 end

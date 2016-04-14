@@ -85,6 +85,6 @@ ja:
       gws/board/setting:
         board_new_days: 新着表示期間
       gws/board/category:
-        name: 掲示板カテゴリー名
+        name: カテゴリー名
       gws/addon/board/category:
         category_ids: カテゴリー
