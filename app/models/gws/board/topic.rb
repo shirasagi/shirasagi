@@ -3,6 +3,7 @@ class Gws::Board::Topic
   include Gws::Board::Postable
   include SS::Addon::Markdown
   include Gws::Addon::File
+  include Gws::Board::DescendantsFileInfo
   include Gws::Addon::Board::Category
   include Gws::Addon::Release
   include Gws::Addon::GroupPermission

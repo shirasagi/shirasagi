@@ -131,5 +131,14 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example, tmpdir: true d
         its(:descendants_total_file_size) { is_expected.to eq @files.map(&:size).inject(:+) }
       end
     end
+
+    context "ss file の変な仕様: 所有権のないファイルを attach してみる" do
+      let(:file) { tmp_ss_file(contents: '0123456789') }
+      subject { create :gws_board_topic, cur_user: user, file_ids: [ file.id ] }
+
+      its(:file_ids) { is_expected.to eq [] }
+      its(:descendants_files_count) { is_expected.to eq 0 }
+      its(:descendants_total_file_size) { is_expected.to eq 0 }
+    end
   end
 end

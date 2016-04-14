@@ -17,8 +17,6 @@ module Gws::Board::Postable
     field :mode, type: String, default: 'thread'
     field :permit_comment, type: String, default: 'allow'
     field :descendants_updated, type: DateTime
-    field :descendants_files_count, type: Integer
-    field :descendants_total_file_size, type: Integer
 
     attr_accessor :cur_site
 
@@ -40,12 +38,7 @@ module Gws::Board::Postable
 
     validate :validate_comment, if: :comment?
 
-    validate :validate_attached_file_size
-
-    before_save :set_file_info, if: -> { topic_id.blank? }
     before_save :set_descendants_updated, if: -> { topic_id.blank? }
-
-    after_save :update_topic_descendants_file_info, if: -> { topic_id.present? }
     after_save :update_topic_descendants_updated, if: -> { topic_id.present? }
 
     scope :topic, ->{ exists parent_id: false }
@@ -108,29 +101,6 @@ module Gws::Board::Postable
       errors.add :base, I18n.t("gws/board.errors.denied_comment")
     end
 
-    def validate_attached_file_size
-      if limit = cur_site.board_file_size_per_post
-        size = files.compact.map(&:size).max || 0
-        if size > limit
-          errors.add :base, :attached_file_too_large, size: size, limit: limit
-        end
-      end
-
-      if limit = cur_site.board_file_size_per_topic
-        size = files.compact.map(&:size).inject(:+) || 0
-
-        comments = self.class.topic_comments(topic || self).ne(_id: id)
-        comment_files = comments.map(&:files).flatten
-        size += comment_files.compact.map(&:size).inject(:+) || 0
-
-        size += topic.files.compact.map(&:size).inject(:+) || 0 if topic.present?
-
-        if size > limit
-          errors.add :base, :attached_file_too_large, size: size, limit: limit
-        end
-      end
-    end
-
     # 最新レス投稿日時の初期値をトピックのみ設定
     # 明示的に age るケースが発生するかも
     def set_descendants_updated
@@ -144,32 +114,5 @@ module Gws::Board::Postable
       return unless topic
       return unless _id_changed?
       topic.set descendants_updated: updated
-    end
-
-    def topic_file_info(topic)
-      sizes = topic.files.compact.map(&:size) || []
-
-      comments = self.class.topic_comments(topic)
-      comment_files = comments.map(&:files).flatten
-
-      sizes += comment_files.compact.map(&:size) || []
-      sizes.compact!
-
-      [ sizes.length, sizes.inject(:+) || 0 ]
-    end
-
-    def set_file_info
-      files_count, total_file_size = topic_file_info(self)
-      self.descendants_files_count = files_count
-      self.descendants_total_file_size = total_file_size
-    end
-
-    def update_topic_descendants_file_info
-      return unless topic
-      files_count, total_file_size = topic_file_info(topic)
-      topic.set(
-        descendants_files_count: files_count,
-        descendants_total_file_size: total_file_size,
-      )
     end
 end
