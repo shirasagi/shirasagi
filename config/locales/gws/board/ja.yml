@@ -88,6 +88,8 @@ ja:
         permit_comment: コメント
       gws/board/setting:
         board_new_days: 新着表示期間
+        board_file_size_per_topic: 最大サイズ（トピック全体）
+        board_file_size_per_post: 最大サイズ（投稿）
       gws/board/category:
         name: 掲示板カテゴリー名
       gws/addon/board/category:
