@@ -25,7 +25,7 @@ describe Gws::Board::Category, type: :model, dbscope: :example do
 
       child.reload
       expect(child.name).not_to start_with("#{old_name}/")
-      expect(child.name).to start_with("#{new_name}")
+      expect(child.name).to start_with(new_name)
     end
   end
 end
