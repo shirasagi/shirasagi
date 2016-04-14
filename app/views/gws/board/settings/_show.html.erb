@@ -2,9 +2,12 @@
   <dt><%= @model.t :board_new_days %></dt>
   <dd><%= @item.send :board_new_days %> <%= t("datetime.prompts.day") %></dd>
 
-  <dt><%= @model.t :board_file_size_per_topic %></dt>
+  <dt><%= @model.t :board_file_size %><%= @model.tt :board_file_size %></dt>
+  <dd></dd>
+
+  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_topic).sub(/.*\//, '') %></dt>
   <dd><%= number_to_human_size(@item.board_file_size_per_topic) %></dd>
 
-  <dt><%= @model.t :board_file_size_per_post %></dt>
+  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %></dt>
   <dd><%= number_to_human_size(@item.board_file_size_per_post) %></dd>
 </dl>
