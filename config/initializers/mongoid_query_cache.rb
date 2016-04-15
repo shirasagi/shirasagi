@@ -1,5 +1,15 @@
 module Mongoid
   module QueryCache
+    class << self
+      def without_cache
+        enabled = QueryCache.enabled?
+        QueryCache.enabled = false
+        yield
+      ensure
+        QueryCache.enabled = enabled
+      end
+    end
+
     module View
       private
       def cache_key

@@ -16,8 +16,12 @@ describe 'ss_915' do
 
   it do
     # without query cache
-    expect(model.all.order_by(released: 1).first.released).to eq Time.zone.at(100)
-    expect(model.all.order_by(released: -1).first.released).to eq Time.zone.at(200)
+    Mongoid::QueryCache.without_cache do
+      Mongoid::QueryCache.clear_cache
+
+      expect(model.all.order_by(released: 1).first.released).to eq Time.zone.at(100)
+      expect(model.all.order_by(released: -1).first.released).to eq Time.zone.at(200)
+    end
   end
 
   it do
