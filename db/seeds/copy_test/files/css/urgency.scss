@@ -1,0 +1,845 @@
+@import "init";
+@import "part";
+
+// -----------------------------------------------------------------------------
+// element
+
+html {
+  height: 100%;
+  font-family: $font-base;
+}
+body {
+  margin: 0 auto;
+  font-family: $font-base;
+  font-size: 100%;
+  color: $text;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 100%;
+  font-weight: normal;
+}
+a {
+  color: $link;
+  &:hover {
+    color: $hover;
+    text-decoration: none;
+  }
+  &:visited {
+    color: $visited;
+  }
+}
+rp, rt {
+  background: #fff;
+  color: $text;
+  font-size: $px12;
+  font-weight: normal;
+}
+rp {
+  margin: 0px;
+}
+img {
+  vertical-align: middle;
+}
+
+// -----------------------------------------------------------------------------
+// layout
+#page {
+  margin: 0 auto;
+  font-size: 87.5%;
+}
+// -----------------------------------------------------------------------------
+// mode
+#mode {
+  border-bottom: 1px solid #e03300;
+  p {
+    width: $page-width;
+    margin: 0 auto;
+    color: #e03300;
+  }
+}
+// -----------------------------------------------------------------------------
+// head
+#head {
+  width: $page-width;
+  margin: 0 auto;
+  padding: 0 10px;
+  @include clear;
+  .logo {
+    float: left;
+    padding: 17px 0;
+    font-size: $px32;
+  }
+  .menu {
+    @include float(right);
+    .u-menu {
+      @include float(right);
+      padding: 12px 0;
+      .inquiry {
+        margin-left: 12px;
+      }
+      .sitemap {
+        margin-left: 12px;
+      }
+    }
+    .l-menu {
+      clear: both;
+      text-align: right;
+      padding-bottom: 10px;
+      form {
+        float: right;
+        border: $border-hgry
+      }
+      #search-box {
+        margin-right: -10px;
+        padding: 5px;
+        border: none;
+        color: $text;
+      }
+      #search-button {
+        padding: 5px 10px;
+        border: none;
+        background: #333;
+        color: $t-white;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// navi
+#navi {
+  background: $blue;
+  @include clear;
+  min-width: 1100px;
+  border-bottom: 3px solid $orange;
+  .wrap {
+    @include clear;
+    width: 1078px;
+    margin: 0 auto;
+    border-left: $border-lblue;
+    border-right: $border-hblue;
+    li {
+      position: relative;
+      float: left;
+      color: #202020;
+    }
+    a {
+      @include inline-block;
+      width: 178px;
+      padding: 5px 0 4px;
+      border-left: $border-hblue;
+      border-right: $border-lblue;
+      color: $t-white;
+      font-size: $px16;
+      text-decoration: none;
+      text-align: center;
+      &:hover {
+        background: $hblue;
+        color: #202020;
+      }
+    }
+    .current {
+      background: $hblue;
+      color: #202020;
+    }
+    .sangyo a, .shsiei a {
+      width: 176px;
+    }
+    .current a {
+      background: $hblue;
+      color: #202020;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// wrap
+#wrap {
+  @include clear;
+  width: $page-width;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+// -----------------------------------------------------------------------------
+// main addition
+#main {
+  float: left;
+  width: 712px;
+}
+.one #main {
+  width: 100%;
+}
+#main .left, #addition .left,
+#main .center, #addition .center {
+  float: left;
+  width: 344px;
+  margin-right: $box-margin;
+}
+#main .center {
+  margin: 0;
+}
+#addition {
+  @include clear;
+  width: $page-width;
+  margin: 0 auto;
+  padding: 24px 10px 0;
+  border-top: $border-hgry;
+}
+#addition .right {
+  float: right;
+  width: 344px;
+}
+// -----------------------------------------------------------------------------
+// side
+#side {
+  float: right;
+  width: 344px;
+}
+
+// -----------------------------------------------------------------------------
+// foot
+#foot {
+  margin-top: $box-margin;
+}
+#address {
+  @include clear;
+  min-width: 1100px;
+  padding: 6px 0;
+  border-top: 2px solid $orange;
+  background: #ededed;
+  dl {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+    dt {
+      float: left;
+      clear: both;
+      width: 148px;
+      margin-right: 12px;
+      font-weight: bold;
+    }
+    dd {
+      float: left;
+      width: 920px;
+      a {
+        @include inline-block;
+        margin-left: 12px;
+        padding: 3px 4px 0;
+        border: 1px solid #999;
+        line-height: 1;
+        background: $hgry;
+        color: $text;
+        text-decoration: none;
+      }
+    }
+  }
+}
+#footer-navi {
+  width: $page-width;
+  margin: 0 auto;
+  padding: 6px 10px;
+  a {
+    margin-right: 12px;
+  }
+}
+#copyright {
+  min-width: 1100px;
+  padding: 6px 0;
+  background: $blue;
+  color: $t-white;
+  text-align: center;
+}
+#sp-view {
+  padding: 10px;
+  a {
+    @include box-sizing(border-box);
+    display: block;
+    width: 100%;
+    min-width: $page-width;
+    padding: 8px 8px 5px;
+    border: 1px solid #999;
+    background: $hgry;
+    color: $text;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+// -----------------------------------------------------------------------------
+// guide about safety oline propose useful population relations ranking topics
+#guide, #about, #safety, #online, #propose, #useful, #population, #relations, #ranking, #topics,
+#announce, #emergency, #calamity {
+  margin-bottom: $box-margin;
+  h2 {
+    margin-bottom: 6px;
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    background: $blue;
+    color: $t-white;
+  }
+}
+#announce, #calamity {
+  margin-top: $box-margin;
+}
+#safety h2, #announce h2, #emergency h2, #calamity h2 {
+  background: #e03300;
+}
+#emergency {
+  margin-top: $box-margin;
+  h2 {
+    margin-bottom: 0;
+  }
+  article {
+    padding: $item-margin $item-margin 0 $item-margin;
+    border-left: 2px solid #c42c00;
+    border-right: 2px solid #c42c00;
+    background: #ffffa4;
+    &:last-child {
+      padding-bottom: $item-margin;
+      border-bottom: 2px solid #c42c00;
+    }
+  }
+}
+#guide {
+  h2 {
+    margin: 0;
+  }
+  ul {
+    @include clear;
+  }
+  li {
+    float: left;
+    width: 166px;
+    padding: 4px 0;
+    border-bottom: $border-hgry;
+    &:nth-child(2n+1) {
+      margin-right: $item-margin;
+    }
+    a {
+      display: block;
+      padding: 8px $item-margin 5px;
+      color: $text;
+      text-decoration: none;
+      &:hover {
+        background-color: $hblue;
+      }
+    }
+  }
+}
+#about {
+  h2 {
+    margin: 0;
+  }
+  ul {
+    @include clear;
+  }
+  li {
+    float: left;
+    width: 166px;
+    padding: 4px 0;
+    border-bottom: $border-hgry;
+    &:nth-child(2n+1) {
+      margin-right: $item-margin;
+    }
+    a {
+      display: block;
+      padding: 8px $item-margin 5px;
+      color: $text;
+      text-decoration: none;
+      &:hover {
+        background-color: $hblue;
+      }
+    }
+  }
+}
+#safety, #calamity {
+  ul {
+    @include clear;
+  }
+  li {
+    float: left;
+    width: 166px;
+    &:nth-child(2n+1) {
+      margin-right: $item-margin;
+    }
+  }
+}
+#population {
+  dt {
+    float: left;
+    width: 58px;
+    margin: 0 12px 3px 0;
+    padding: 0 3px;
+    background: #ffeacc;
+    &:nth-child(4) {
+      clear: both;
+    }
+  }
+  dd {
+    float: left;
+    width: 90px;
+    margin: 0 0 3px 0;
+    padding: 0 3px;
+    background: #fff;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
+  }
+  p {
+    float: right;
+  }
+}
+#topics {
+  @include clear;
+  .thumb {
+    float: left;
+    margin-right: $item-margin;
+  }
+  h2 {
+    margin-bottom: $item-margin;
+  }
+  .more {
+    float: right;
+  }
+}
+#connect a {
+  float: left;
+  display: block;
+  width: 164px;
+  min-height: 48px;
+  line-height: 48px;
+  margin-bottom: $item-margin;
+  border: $border-hgry;
+  text-align: center;
+  &:nth-child(2n+1) {
+    margin-right: $item-margin;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// attention
+#attention {
+  margin: $box-margin 0;
+  h2 {
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    background: #f4d89a;
+    color: #282828;
+  }
+  article {
+    padding: 6px 0 3px;
+    border-bottom: $border-hgry;
+  }
+}
+// -----------------------------------------------------------------------------
+// cms-tabs
+.cms-tabs {
+  margin-bottom: $box-margin;
+  border-bottom: 2px solid $orange;
+  .names {
+    padding: 0;
+    border-bottom: 2px solid $orange;
+    .name {
+      @include inline-block;
+      width: 109px;
+      padding: 3px 0 0;
+      border-left: 5px solid #ddd;
+      background: #cccccc;
+      color: $text;
+      text-align: center;
+      text-decoration: none;
+    }
+    .name:hover, .current {
+      border-left: 5px solid $orange;
+      background: $blue;
+      color: $t-white;
+    }
+    .name:last-child {
+      width: 111px;
+    }
+  }
+  h2 {
+    padding: 3px 6px 0;
+    border-left: 5px solid $orange;
+    border-bottom: 2px solid $orange;
+    background: $blue;
+    color: $t-white;
+  }
+  .pages header {
+    padding: 3px 0;
+    border-bottom: $border-hgry;
+  }
+  time {
+    display: block;
+  }
+  h2 {
+    display: inline;
+  }
+  .new h2:after {
+    content: "NEW";
+    margin-left: 5px;
+    color: #e03300;
+  }
+  nav {
+    @include clear;
+    padding: 3px 0;
+  }
+  .rss {
+    float: left;
+    @include inline-block;
+  }
+  .more {
+    float: right;
+  }
+}
+#ss-mb {
+  padding: 10px;
+  a {
+    @include box-sizing(border-box);
+    display: block;
+    width: 100%;
+    min-width: $page-width;
+    padding: 8px 8px 5px;
+    border: 1px solid #999;
+    background: $hgry;
+    color: $text;
+    text-align: center;
+    text-decoration: none;
+  }
+}
+// -----------------------------------------------------------------------------
+// smart phone
+// -----------------------------------------------------------------------------
+@media only screen and (max-width: 600px) {
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
+  #main .left, #addition .left, #main .center, #addition .center, #addition .right,
+  #address dl, #address dl dt, #address dl dd, #footer-navi,
+  #main .category-nodes article, #mode p  {
+    float: none;
+    width: 100%;
+    padding: 0;
+  }
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+// -----------------------------------------------------------------------------
+// display:none
+  #tool, #head .menu .u-menu, #slideshow #slide-controll #pause-play,
+  #population, #add .info, .crumbs {
+    display: none;
+  }
+// -----------------------------------------------------------------------------
+// head
+  #mode p {
+    padding: 0 10px;
+  }
+// -----------------------------------------------------------------------------
+// head
+  #head .logo {
+    float: none;
+    display: block;
+    padding: 10px;
+    img {
+      width: 180px;
+      height: auto;
+    }
+  }
+  #head .menu {
+    float: none;
+    display: block;
+    padding: 0 10px;
+  }
+  #head .menu .l-menu {
+    width: 100%;
+    @include box-sizing(border-box);
+    text-align: left;
+    form {
+      float: none;
+      position: relative;
+      @include border-radius(0px);
+      #search-box {
+        width: 80%;
+        @include border-radius(0px);
+      }
+      #search-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 6px 10px;
+        @include border-radius(0);
+        -webkit-appearance: none;
+      }
+    }
+  }
+
+// -----------------------------------------------------------------------------
+// navi
+  #navi {
+    min-width: 100%;
+  }
+  #navi .wrap {
+    border-top: $border-lblue;
+    border-bottom: $border-hblue;
+    @include box-sizing(border-box);
+    li {
+      width: 50%;
+      a {
+        width: auto;
+        display: block;
+        @include box-sizing(border-box);
+        border-top: $border-hblue;
+        border-bottom: $border-lblue;
+        font-size: 100%;
+      }
+    }
+    .sangyo a, .shsiei a {
+      width: auto;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  guide about
+  #guide, #about {
+    margin: 0;
+  }
+  #guide ul, #about ul {
+    padding: 10px 10px 0;
+    li {
+      width: 50%;
+      margin-bottom: $smart-margin;
+      padding: 0;
+      border: none;
+      &:nth-child(2n+1) {
+        margin: 0;
+      }
+      &:nth-child(2n+1) a {
+        margin-right: 5px;
+      }
+      &:nth-child(2n) a {
+        margin-left: 5px;
+      }
+      a {
+        border: $border-hgry;
+        padding: 5px 10px 2px;
+      }
+    }
+  }
+// -----------------------------------------------------------------------------
+//  safety online propose attention recent useful relations ranking topics connect add links-life
+  #safety, #online, #propose, #attention, #recent, #useful, #connect, #calamity,
+  #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list {
+    margin-bottom: $smart-margin;
+    margin-top: 0;
+    header h1 {
+      margin-bottom: 0;
+    }
+  }
+  #announce p {
+    padding: 0 10px;
+  }
+  #recent-oshirase {
+    margin-top: 10px;
+    margin-bottom: 0;
+    .new h2:after {
+      display: none;
+    }
+  }
+  #safety li, #calamity li {
+    width: 50%;
+    &:nth-child(2n+1) {
+      margin: 0;
+      a {
+        border-right: $border-hgry
+      }
+    }
+    a {
+      display: block;
+      padding: 0 10px;
+      border-bottom: $border-hgry;
+    }
+  }
+  #online nav, #propose nav {
+    background: none;
+    padding: 0;
+  }
+  #online li a, #propose li a, #useful li a,
+  #relations li a, #ranking li a {
+    display: block;
+    padding: 0 10px;
+    border-bottom: $border-hgry;
+  }
+  #recent-oshirase article header {
+    padding: 0;
+  }
+  #attention h2, #recent h2, #recent-oshirase h2 {
+    display: block;
+    margin: 0;
+    padding: 0;
+    a {
+      display: block;
+      @include ic-doc;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+  #attention time, #recent time, #recent-oshirase time, .cms-tabs time {
+    display: none;
+  }
+  #topics article {
+    padding: 10px 10px 0;
+  }
+  #useful, #relations, #topics {
+    min-height: 0;
+  }
+  #connect nav {
+    padding: 0 10px;
+    a {
+      @include box-sizing(border-box);
+      width: 50%;
+      margin: 0 0 10px;
+      &:nth-child(2n+1) {
+        margin-right: 0;
+        padding-right: 5px;
+      }
+      &:nth-child(2n) {
+        padding-left: 5px;
+      }
+    }
+  }
+  #links-life li, #category-list h2 {
+    padding: 0;
+    a {
+      padding: 3px 10px;
+    }
+  }
+  .cms-tabs {
+    padding: 0;
+    .names {
+      @include clear;
+      .name {
+        display: block;
+        float: left;
+        width: 33%;
+        @include box-sizing(border-box);
+      }
+      .name:last-child {
+        width: 34%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include box-sizing(border-box);
+      }
+    }
+    .pages header {
+      padding: 3px 10px;
+    }
+    nav {
+      padding: 3px 10px;
+    }
+  }
+// -----------------------------------------------------------------------------
+//  feed
+  .feed {
+    @include clear;
+    padding: 0;
+    background: $hgry;
+    .rss {
+    float: left;
+    width: 30%;
+    @include inline-block;
+    padding: 3px 0 3px;
+    }
+    .more {
+      float: left;
+      width: 70%;
+      padding: 3px 0 3px 15px;
+    }
+  }
+  .cms-tabs {
+    nav {
+      padding: 0;
+      background: #ccc;
+    }
+    .rss {
+      width: 30%;
+      @include inline-block;
+      padding: 3px 10px 3px;
+      background: $hblue;
+      @include box-sizing(border-box);
+    }
+    .more {
+      width: 70%;
+      padding: 3px 0 3px 15px;
+      @include box-sizing(border-box);
+    }
+  }
+// -----------------------------------------------------------------------------
+//  footer
+  #foot {
+    margin-top: 0;
+  }
+  #address {
+    width: 100%;
+    min-width: 50%;
+    padding: 10px;
+    @include box-sizing(border-box);
+    dl dt {
+      font-weight: normal;
+      color: $blue;
+    }
+    dl dd a {
+      display: block;
+      margin: 0;
+      padding: 8px 8px 5px;
+      text-align: center;
+      background-position: 28% center;
+    }
+  }
+  #footer-navi nav {
+    @include clear;
+    border-top: 1px solid #999;
+    a {
+      float: left;
+      display: block;
+      width: 50%;
+      @include box-sizing(border-box);
+      margin: 0;
+      padding-left: 22px;
+      border: 1px solid #999;
+      border-top: none;
+      background-color: $hgry;
+      color: $text;
+      text-decoration: none;
+      &:nth-child(2n+1) {
+        border-right: none;
+      }
+      &:last-child {
+        border-right: 1px solid #999;
+      }
+      &:nth-child(4) {
+        display: none;
+      }
+    }
+  }
+  #copyright {
+    min-width: 100%;
+    font-size: $px12;
+  }
+  #ss-pc, #ss-mb {
+    padding: 10px;
+    a {
+      @include box-sizing(border-box);
+      display: block;
+      width: 100%;
+      padding: 8px 8px 5px;
+      border: 1px solid #999;
+      background: $hgry;
+      color: $text;
+      text-align: center;
+      text-decoration: none;
+    }
+  }
+}
