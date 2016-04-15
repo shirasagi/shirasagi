@@ -78,7 +78,8 @@ ja:
           not_found_parent: 親カテゴリーが存在しません。
           found_children: 子カテゴリーが存在します。
         gws/board/postable:
-          attached_file_too_large: 添付ファイルのサイズが大きすぎます。
+          file_size_exceeds_post_limit: 添付ファイルのサイズ（%{size}）が投稿の限度（%{limit}）を超えました。
+          file_size_exceeds_topic_limit: 添付ファイルの合計サイズ（%{size}）がトピックの限度（%{limit}）を超えました。
     attributes:
       gws/board/postable:
         name: タイトル

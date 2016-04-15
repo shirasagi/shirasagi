@@ -1,5 +1,6 @@
 module Gws::Board::DescendantsFileInfo
   extend ActiveSupport::Concern
+  include ActiveSupport::NumberHelper
 
   included do
     field :descendants_files_count, type: Integer
@@ -22,7 +23,11 @@ module Gws::Board::DescendantsFileInfo
       if (limit = (cur_site.board_file_size_per_post || 0)) > 0
         size = files.compact.map(&:size).max || 0
         if size > limit
-          errors.add :base, :attached_file_too_large, size: size, limit: limit
+          errors.add(
+            :base,
+            :file_size_exceeds_post_limit,
+            size: number_to_human_size(size),
+            limit: number_to_human_size(limit))
         end
       end
 
@@ -36,7 +41,11 @@ module Gws::Board::DescendantsFileInfo
         size += topic.files.compact.map(&:size).inject(:+) || 0 if topic.present?
 
         if size > limit
-          errors.add :base, :attached_file_too_large, size: size, limit: limit
+          errors.add(
+            :base,
+            :file_size_exceeds_topic_limit,
+            size: number_to_human_size(size),
+            limit: number_to_human_size(limit))
         end
       end
     end
