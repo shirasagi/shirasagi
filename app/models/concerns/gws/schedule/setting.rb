@@ -13,7 +13,7 @@ module Gws::Schedule::Setting
 
     before_validation :set_schedule_max_file_size
 
-    validates :schedule_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+    validates :schedule_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   end
 
   def schedule_max_month
@@ -48,7 +48,10 @@ module Gws::Schedule::Setting
 
   private
     def set_schedule_max_file_size
-      return if in_schedule_max_file_size_mb.blank?
-      self.schedule_max_file_size = Integer(in_schedule_max_file_size_mb) * 1_024 * 1_024
+      if in_schedule_max_file_size_mb.blank?
+        self.schedule_max_file_size = nil
+      else
+        self.schedule_max_file_size = Integer(in_schedule_max_file_size_mb) * 1_024 * 1_024
+      end
     end
 end
