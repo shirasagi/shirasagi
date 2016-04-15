@@ -44,6 +44,9 @@ module Workflow::Addon
       else
         filename = (attributes[:filename] || attributes["filename"])
         item.filename = "#{dirname}/#{filename}"
+        if item.class.find_by filename: item.filename
+          item.filename = "#{dirname}/#{filename}#{SecureRandom.uuid}"
+        end
       end
 
       item.workflow_user_id = nil
