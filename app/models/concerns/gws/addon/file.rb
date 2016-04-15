@@ -10,6 +10,8 @@ module Gws::Addon
       #before_save :clone_files, if: ->{ try(:new_clone?) }
       before_save :save_files
       after_destroy :destroy_files
+
+      define_model_callbacks :save_files, :destroy_files
     end
 
     def allow_other_user_files
@@ -21,30 +23,34 @@ module Gws::Addon
     end
 
     def save_files
-      add_ids = file_ids - file_ids_was.to_a
+      run_callbacks(:save_files) do
+        add_ids = file_ids - file_ids_was.to_a
 
-      ids = []
-      files.each do |file|
-        if !add_ids.include?(file.id)
-          file.update_attributes(state: state) if state_changed?
-        elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
-          next
-        else
-          file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
+        ids = []
+        files.each do |file|
+          if !add_ids.include?(file.id)
+            file.update_attributes(state: state) if state_changed?
+          elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
+            next
+          else
+            file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
+          end
+          ids << file.id
         end
-        ids << file.id
-      end
-      self.file_ids = ids
+        self.file_ids = ids
 
-      del_ids = file_ids_was.to_a - ids
-      del_ids.each do |id|
-        file = SS::File.where(id: id).first
-        file.destroy if file
+        del_ids = file_ids_was.to_a - ids
+        del_ids.each do |id|
+          file = SS::File.where(id: id).first
+          file.destroy if file
+        end
       end
     end
 
     def destroy_files
-      files.destroy_all
+      run_callbacks(:destroy_files) do
+        files.destroy_all
+      end
     end
   end
 end

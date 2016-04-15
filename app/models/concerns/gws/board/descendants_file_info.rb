@@ -9,13 +9,10 @@ module Gws::Board::DescendantsFileInfo
     validate :validate_attached_file_size
 
     # before_save :set_file_info, if: -> { topic_id.blank? }
-    after_save :update_topic_descendants_file_info, if: -> { topic_id.present? }
-  end
+    after_save_files :set_file_info, if: -> { topic_id.blank? }
 
-  # override Gws::Addon::File#save_files
-  def save_files
-    super
-    set_file_info if topic_id.blank?
+    after_save :update_topic_descendants_file_info, if: -> { topic_id.present? }
+    after_destroy_files :update_topic_descendants_file_info, if: -> { topic_id.present? }
   end
 
   private

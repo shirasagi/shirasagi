@@ -140,5 +140,25 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example, tmpdir: true d
       its(:descendants_files_count) { is_expected.to eq 0 }
       its(:descendants_total_file_size) { is_expected.to eq 0 }
     end
+
+    context "when deletes comment" do
+      subject { create(:gws_board_topic, cur_user: user) }
+      let(:file1) { tmp_ss_file(contents: '0' * (1 + rand(10)), user: user) }
+      let!(:comment1) { create(:gws_board_comment, parent: subject, cur_user: user, file_ids: [ file1.id ]) }
+      let(:file2) { tmp_ss_file(contents: '0' * (1 + rand(10)), user: user) }
+      let!(:comment2) { create(:gws_board_comment, parent: subject, cur_user: user, file_ids: [ file2.id ]) }
+
+      it do
+        subject.reload
+        expect(subject.descendants_files_count).to eq 2
+        expect(subject.descendants_total_file_size).to eq file1.size + file2.size
+
+        comment2.destroy
+
+        subject.reload
+        expect(subject.descendants_files_count).to eq 1
+        expect(subject.descendants_total_file_size).to eq file1.size
+      end
+    end
   end
 end
