@@ -25,7 +25,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
     end
 
-    it "#run" do
+    it "#run", use_query_cache: false do
       # see: https://github.com/shirasagi/shirasagi/issues/272
       start_at = Time.zone.now
       visit index_path
