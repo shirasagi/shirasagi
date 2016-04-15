@@ -209,6 +209,7 @@ ja:
       ss/model/file:
         model: モデル
         state: 状態
+        in_file: ファイル
         name: ファイル名（表示用）
         filename: ファイル名
         size: ファイルサイズ
@@ -308,3 +309,10 @@ ja:
         - このページを編集可能なユーザーのレベルを指定します。
       group_ids:
         - このページを編集可能にするグループを選択します。
+    ss/model/file:
+      in_file:
+        - ファイルを選択します。
+      name:
+        - ファイル名（表示用）を入力します。
+      filename:
+        - ファイル名を入力します。
