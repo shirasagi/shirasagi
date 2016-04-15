@@ -1,0 +1,30 @@
+require 'spec_helper'
+
+describe 'ss_915' do
+  let(:model) do
+    Class.new do
+      include Mongoid::Document
+      store_in collection: "anonymous_#{unique_id}"
+      field :released, type: DateTime
+    end
+  end
+
+  before do
+    model.create(released: Time.zone.at(100))
+    model.create(released: Time.zone.at(200))
+  end
+
+  it do
+    # without query cache
+    expect(model.all.order_by(released: 1).first.released).to eq Time.zone.at(100)
+    expect(model.all.order_by(released: -1).first.released).to eq Time.zone.at(200)
+  end
+
+  it do
+    # within query cache
+    Mongoid::QueryCache.cache do
+      expect(model.all.order_by(released: 1).first.released).to eq Time.zone.at(100)
+      expect(model.all.order_by(released: -1).first.released).to eq Time.zone.at(200)
+    end
+  end
+end
