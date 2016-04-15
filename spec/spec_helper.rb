@@ -115,6 +115,20 @@ RSpec.configure do |config|
   config.extend(SS::DatabaseCleanerSupport)
   config.include(SS::JsSupport, js: true)
   config.extend(SS::HttpServerSupport, http_server: true)
+
+  # all examples run within query cache
+  config.around(:example) do |example|
+    if example.metadata.fetch(:use_query_cache, true) && !Mongoid::QueryCache.enabled?
+      Rails.logger.debug("start mongoid query cache at #{inspect}")
+      Mongoid::QueryCache.cache do
+        example.run
+      end
+      Mongoid::QueryCache.clear_cache
+      Rails.logger.debug("stop mongoid query cache at #{inspect}")
+    else
+      example.run
+    end
+  end
 end
 
 def unique_id
