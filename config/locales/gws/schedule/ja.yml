@@ -71,6 +71,10 @@ ja:
       gws/schedule/plan: スケジュール
       gws/schedule/category: スケジュール種類
       gws/schedule/holiday: 休日
+    errors:
+      models:
+        gws/schedule/plan:
+          file_size_exceeds_limit: 添付ファイルのサイズ（%{size}）が最大サイズ（%{limit}）を超えました。
     attributes:
       gws/schedule/planable:
         name: タイトル
@@ -109,6 +113,7 @@ ja:
         schedule_max_date: 入力可能期間
         schedule_max_years: 年数
         schedule_max_month: 期末月
+        schedule_max_file_size: 添付最大サイズ
 
   tooltip:
     gws/schedule/planable:
@@ -143,6 +148,9 @@ ja:
         - 年数を入力します。
       schedule_max_month:
         - 期末月を入力します。
+      schedule_max_file_size:
+        - 添付ファイルの最大サイズを入力します。
+        - 0 は無制限を意味します。
     gws/schedule/holiday:
       name:
         - タイトルを入力します。

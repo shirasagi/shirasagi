@@ -1,3 +1,4 @@
+<% @item.in_schedule_max_file_size_mb ||= @item.schedule_max_file_size / (1_024 * 1_024) %>
 <dl class="see">
   <dt><%= @model.t :schedule_max_date %><%= @model.tt :schedule_max_date %></dt>
   <dd></dd>
@@ -7,4 +8,7 @@
 
   <dt style="padding-left: 20px;"><%= @model.t :schedule_max_years %><%= @model.tt :schedule_max_years %></dt>
   <dd><%= f.select :schedule_max_years, @item.schedule_max_years_options %> <%= t("datetime.prompts.year") %></dd>
+
+  <dt><%= @model.t :schedule_max_file_size %><%= @model.tt :schedule_max_file_size %></dt>
+  <dd><%= f.number_field :in_schedule_max_file_size_mb %> <%= t("gws/board.prompts.mega_byte") %></dd>
 </dl>

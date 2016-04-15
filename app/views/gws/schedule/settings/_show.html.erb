@@ -1,4 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :schedule_max_date %></dt>
   <dd><%= I18n.l @item.schedule_max_at.to_date, format: :gws_long %></dd>
+
+  <dt><%= @model.t :schedule_max_file_size %></dt>
+  <dd><%= number_to_human_size(@item.schedule_max_file_size) %></dd>
 </dl>
