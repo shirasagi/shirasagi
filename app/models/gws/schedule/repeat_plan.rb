@@ -31,8 +31,8 @@ class Gws::Schedule::RepeatPlan
   validate :validate_plan_date, if: -> { repeat_start.present? && repeat_end.present? }
   validate :validate_plan_dates, if: -> { errors.empty? }
 
-  def extract_plans(plan)
-    save_plans plan, plan_dates
+  def extract_plans(plan, site, user)
+    save_plans plan, site, user, plan_dates
   end
 
   def plan_dates
@@ -167,7 +167,7 @@ class Gws::Schedule::RepeatPlan
     # 繰り返し予定を登録
     # @param [Plan]  base_plan 繰り返しの基準となる予定ドキュメント
     # @param [Array] dates     繰り返し予定を登録する日付の配列
-    def save_plans(base_plan, dates)
+    def save_plans(base_plan, site, user, dates)
       time = [0, 0]
       diff = 0
 
@@ -184,6 +184,8 @@ class Gws::Schedule::RepeatPlan
 
       dates.each_with_index do |date, idx|
         plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
+        plan.cur_site = site
+        plan.cur_user = user
 
         if plan.allday?
           plan.start_on = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
