@@ -257,6 +257,16 @@ ja:
         - ユーザータイプを選択します。
         - 通常はSNSユーザーを選択します。
         - LDAPを利用する場合にLDAPユーザーを選択します。
+      title_ids:
+        - 役職を選択します。
+      account_start_date:
+        - 有効期限の開始日を入力します。
+      account_expiration_date:
+        - 有効期限の終了日を入力します。
+      initial_password_warning:
+        - 初期パスワード警告を有効にするかどうかを選択します。
+      remark:
+        - 備考を入力します。
     ss/model/group:
       name:
         - グループの名称を入力します。
@@ -316,3 +326,9 @@ ja:
         - ファイル名（表示用）を入力します。
       filename:
         - ファイル名を入力します。
+    ss/model/user_title:
+      name:
+        - 役職名を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が大きいほど上位に表示されます。

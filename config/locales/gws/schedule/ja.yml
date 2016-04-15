@@ -94,6 +94,7 @@ ja:
       gws/schedule/category:
         name: スケジュール種別
       gws/schedule/holiday:
+        term: 休日
         color: 表示色
       gws/addon/schedule/repeat:
         <<: *repeat_plan
@@ -137,3 +138,20 @@ ja:
     gws/addon/schedule/facility:
       facility_ids:
         - 使用する設備を選択します。
+    gws/schedule/setting:
+      schedule_max_years:
+        - 年数を入力します。
+      schedule_max_month:
+        - 期末月を入力します。
+    gws/schedule/holiday:
+      name:
+        - タイトルを入力します。
+      term:
+        - 休日の開始日と終了日を入力します。
+      color:
+        - 表示色を入力します。
+        -
+        - 表示色は "#RRGGBB" 形式で入力します（RR, GG, BB はそれぞれ赤、緑、青の成分を16進数で入力）。
+    gws/schedule/category:
+      name:
+        - スケジュール種別を入力します。
