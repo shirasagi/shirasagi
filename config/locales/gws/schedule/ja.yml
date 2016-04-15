@@ -130,6 +130,16 @@ ja:
     gws/schedule/repeat_plan: &repeat_plan_tooltip
       repeat_type:
         - 繰り返しを選択します。
+      interval:
+        - 繰り返し間隔を選択します。
+      repeat_start:
+        - 開始日を入力します。
+      repeat_end:
+        - 終了日を入力します。
+      repeat_base:
+        - 繰り返しの基準を選択します。
+      wdays:
+        - 曜日を選択します。
     gws/addon/schedule/repeat:
       <<: *repeat_plan_tooltip
     gws/addon/schedule/member:
