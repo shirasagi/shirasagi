@@ -18,8 +18,11 @@ date ||= Time.zone.now + 7.day unless reminder
   <%= hidden_field_tag "item_collection", @item.collection_name %>
   <%= hidden_field_tag "item_id", @item.id %>
 
-  <span class="gws-addon-reminder-label">
-    <%= reminder ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
+  <span class="gws-addon-reminder">
+    <span class="gws-addon-reminder-label">
+      <%= reminder ? t("gws.reminder.states.entry") : t("gws.reminder.states.empty") %>
+    </span>
+    <%= @model.tt :reminder_date %>
   </span>
   <%= text_field_tag "item_date", tryb { date.strftime("%Y/%m/%d %H:%M") }, class: "datetime" %>
   <%= button_tag t("gws.buttons.register"), id: "gws-addon-reminder-set", class: :btn %>

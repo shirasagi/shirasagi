@@ -94,6 +94,10 @@ ja:
         severity: 種別
       gws/link:
         name: タイトル
+      gws/addon/reminder:
+        reminder_url: リマインダーURL
+        reminder_name: リマインダー名
+        reminder_date: リマインダー日時
       gws/reminder:
         name: タイトル
         date: 日時
@@ -128,3 +132,10 @@ ja:
       target:
         - 「全ユーザー」に表示するか、「同一グループ内」に表示するかを選択します。
         - 「同一グループ内」を選択した場合、「管理グループ」欄に設定したグループに表示されます。
+    gws/addon/reminder:
+      reminder_date:
+        - リマインダー日時を登録または解除することができます。
+        -
+        - リマインダー日時を登録する場合、日時を入力後、「登録」ボタンをクリックします。
+        -
+        - リマインダー日時を解除する場合、「解除」ボタンをクリックします。

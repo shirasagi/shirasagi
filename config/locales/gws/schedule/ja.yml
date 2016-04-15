@@ -108,3 +108,32 @@ ja:
         schedule_max_date: 入力可能期間
         schedule_max_years: 年数
         schedule_max_month: 期末月
+
+  tooltip:
+    gws/schedule/planable:
+      name:
+        - スケジュールのタイトルを入力します。
+      term:
+        - スケジュールの日時か日を入力します。
+        -
+        - 「終日」をチェックすると、終日にわたって実施するスケジュールを入力することができ、「終日」にチェックが入っている場合、スケジュールの日を入力します。
+    gws/schedule/plan:
+      target:
+        - 公開範囲を選択します。
+        -
+        - "全ユーザー: すべてのユーザーにスケジュールが公開されます。"
+        - "同一グループ内: 同一グループ内のユーザーにスケジュールが公開されます。"
+        - "参加者のみ: このスケジュールの参加者にのみスケジュールが公開されます。"
+      category_id:
+        - スケジュール種別を選択します。
+    gws/schedule/repeat_plan: &repeat_plan_tooltip
+      repeat_type:
+        - 繰り返しを選択します。
+    gws/addon/schedule/repeat:
+      <<: *repeat_plan_tooltip
+    gws/addon/schedule/member:
+      member_ids:
+        - スケジュールへの参加者を選択します。
+    gws/addon/schedule/facility:
+      facility_ids:
+        - 使用する設備を選択します。

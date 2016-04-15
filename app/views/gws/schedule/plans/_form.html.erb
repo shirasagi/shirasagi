@@ -4,10 +4,10 @@
 <% end %>
 
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :term %></dt>
+  <dt><%= @model.t :term %><%= @model.tt :term %></dt>
   <dd>
     <div class="datetimes-field">
       <%= f.text_field :start_at, class: "datetime start", value: tryb { @item.start_at.strftime("%Y/%m/%d %H:%M") } %>

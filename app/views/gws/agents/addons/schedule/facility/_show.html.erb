@@ -1,6 +1,6 @@
 <% return if @item.facilities.size == 0 %>
 
 <dl class="see">
-  <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
+  <dt><%= @model.t :facility_ids %></dt>
   <dd><%=br @item.facilities.map(&:name).join("\n") %></dd>
 </dl>
