@@ -1,11 +1,5 @@
 <%= jquery do %>
   SS_AddonTabs.hide(".mod-cms-release");
-
-  if ($.support.opacity) {
-    // above IE9
-    $(".mod-cms-release .datetime").
-      datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
-  }
 <% end %>
 
 <dl class="see mod-cms-release">
@@ -13,5 +7,5 @@
   <dd><%= f.select :state, @item.state_options %></dd>
 
   <dt><%= @model.t :released %><%= @model.tt :released %></dt>
-  <dd><%= f.text_field :released, class: "datetime", value: tryb{@item.released.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></dd>
 </dl>

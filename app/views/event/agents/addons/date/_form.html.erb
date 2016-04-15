@@ -1,12 +1,6 @@
 <%= jquery do%>
   SS_AddonTabs.hide(".mod-event");
   Event_Form.render();
-
-  if ($.support.opacity) {
-    // above IE9
-    $(".mod-event .date").
-      datetimepicker({ lang: "ja", timepicker: false, scrollInput: false, closeOnDateSelect: true, format: "Y/m/d" });
-  }
 <% end %>
 
 <dl class="see mod-event">
@@ -15,8 +9,8 @@
 
   <dt><%= @model.t :event_dates %><%= @model.tt :event_dates %></dt>
   <dd class="dates">
-    <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date start" } %>
-    - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date close" } %>
+    <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
+    - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
     <%= button_tag t("event.del_date"), { type: :button, class: "clear btn" } %>
   </dd>
   <dd><%= button_tag t("event.add_date"), { type: :button, class: "add-date btn" } %></dd>

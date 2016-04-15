@@ -58,6 +58,19 @@ $ ->
     $(".dropdown").removeClass('active')
     $(".dropdown-menu").removeClass('active')
 
+  # datetimepicker
+  if ($.support.opacity)
+    $(".js-date").datetimepicker
+      lang: "ja"
+      timepicker: false
+      format:'Y/m/d'
+      closeOnDateSelect: true
+      scrollInput: false
+    $(".js-datetime").datetimepicker
+      lang: "ja"
+      roundTime: 'ceil'
+      step: 30
+
   SS_ListUI.render("table.index")
   SS_Mobile.render()
   SS_AddonTabs.render()

@@ -1,13 +1,9 @@
 <%= jquery do %>
-if ($.support.opacity) {
-  // above IE9
-  $(".mod-sys-user .datetime").
-    datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
-}
-$("#random-password").click(function() {
-  $("#item_in_password").attr({ type: 'text' }).val(SS.randomPassword());
-});
+  $("#random-password").click(function() {
+    $("#item_in_password").attr({ type: 'text' }).val(SS.randomPassword());
+  });
 <% end %>
+
 <dl class="see mod-sys-user">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -32,10 +28,10 @@ $("#random-password").click(function() {
   <dd><%= f.select :type, @model.type_options %></dd>
 
   <dt><%= @model.t :account_start_date %><%= @model.tt :account_start_date %></dt>
-  <dd><%= f.text_field :account_start_date, class: "datetime", value: tryb{@item.account_start_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= f.text_field :account_start_date, class: "datetime js-datetime", value: tryb { @item.account_start_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 
   <dt><%= @model.t :account_expiration_date %><%= @model.tt :account_expiration_date %></dt>
-  <dd><%= f.text_field :account_expiration_date, class: "datetime", value: tryb{@item.account_expiration_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= f.text_field :account_expiration_date, class: "datetime js-datetime", value: tryb { @item.account_expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 
   <dt><%= @model.t :initial_password_warning %><%= @model.tt :initial_password_warning %></dt>
   <dd><%= f.select :initial_password_warning, @item.initial_password_warning_options %></dd>

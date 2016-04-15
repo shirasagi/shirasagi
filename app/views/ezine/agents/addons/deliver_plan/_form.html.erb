@@ -1,14 +1,8 @@
 <%= jquery do %>
   SS_AddonTabs.hide(".mod-ezine-delivere-plan");
-
-  if ($.support.opacity) {
-    // above IE9
-    $(".mod-ezine-delivere-plan .datetime").
-      datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
-  }
 <% end %>
 
 <dl class="see mod-ezine-delivere-plan">
   <dt><%= @model.t :deliver_date %><%= @model.tt :deliver_date %></dt>
-  <dd><%= f.text_field :deliver_date, class: "datetime", value: tryb{@item.deliver_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= f.text_field :deliver_date, class: "datetime js-datetime", value: tryb { @item.deliver_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 </dl>

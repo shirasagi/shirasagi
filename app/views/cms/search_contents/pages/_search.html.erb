@@ -11,10 +11,6 @@ $(".reset").on("click", function(e){
 $(".state").on("click", function(e){
   $("[value!='" + $(this).attr("value") + "'].state").prop("checked", false)
 });
-if ($.support.opacity) {
-  // above IE9
-  $(".datetime").datetimepicker({ lang: "ja", roundTime: 'ceil', step: 15 });
-}
 <% end %>
 
 <%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>
@@ -86,18 +82,18 @@ if ($.support.opacity) {
   <dl class="see">
     <dt><%= @model.t("released") %><%= tt("search_contents.pages.released") %></dt>
     <dd>
-      <%= text_field_tag "s[released][start]", tryb{@released["start"]}, class: "datetime" %>
+      <%= text_field_tag "s[released][start]", tryb{@released["start"]}, class: "datetime js-datetime" %>
       <%= "-" %>
-      <%= text_field_tag "s[released][close]", tryb{@released["close"]}, class: "datetime" %>
+      <%= text_field_tag "s[released][close]", tryb{@released["close"]}, class: "datetime js-datetime" %>
     </dd>
   </dl>
 
   <dl class="see">
     <dt><%= @model.t("updated") %><%= tt("search_contents.pages.updated") %></dt>
     <dd>
-      <%= text_field_tag "s[updated][start]", tryb{@updated["start"]}, class: "datetime" %>
+      <%= text_field_tag "s[updated][start]", tryb{@updated["start"]}, class: "datetime js-datetime" %>
       <%= "-" %>
-      <%= text_field_tag "s[updated][close]", tryb{@updated["close"]}, class: "datetime" %>
+      <%= text_field_tag "s[updated][close]", tryb{@updated["close"]}, class: "datetime js-datetime" %>
     </dd>
   </dl>
 
