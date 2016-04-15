@@ -16,6 +16,7 @@ class Gws::Reminder
 
   validates :name, presence: true
   validates :url, presence: true
+  validates :date, datetime: true
 
   default_scope -> {
     order_by date: 1

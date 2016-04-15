@@ -27,6 +27,7 @@ class Cms::Notice
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
+  validates :released, datetime: true
 
   after_validation :set_released, if: -> { state == "public" }
 

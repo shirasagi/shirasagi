@@ -22,6 +22,8 @@ module SS::Model::Task
 
     validates :name, presence: true
     validates :state, presence: true
+    validates :started, datetime: true
+    validates :closed, datetime: true
 
     after_initialize :init_variables
   end

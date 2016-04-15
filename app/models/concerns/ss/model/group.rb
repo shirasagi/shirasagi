@@ -20,6 +20,7 @@ module SS::Model::Group
     default_scope -> { order_by(order: 1, name: 1) }
 
     validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
+    validates :expiration_date, datetime: true
     validate :validate_name
 
     scope :in_group, ->(group) { where(name: /^#{group.name}(\/|$)/) }

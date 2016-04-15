@@ -23,6 +23,7 @@ module Board::Model::Post
 
     validates :name, presence: true
     validates :text, presence: true
+    validates :descendants_updated, datetime: true
 
     validate :validate_children, if: -> { topic_id.present? }
 

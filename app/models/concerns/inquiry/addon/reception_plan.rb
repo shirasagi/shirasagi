@@ -8,6 +8,8 @@ module Inquiry::Addon
       field :reception_close_date, type: DateTime
       permit_params :reception_start_date, :reception_close_date
 
+      validates :reception_start_date, datetime: true
+      validates :reception_close_date, datetime: true
       validate :validate_reception_date
     end
 

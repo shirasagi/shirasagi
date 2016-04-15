@@ -33,9 +33,11 @@ module Gws::Schedule::Planable
     before_validation :set_datetimes_at
 
     validates :name, presence: true, length: { maximum: 80 }
-    validates :start_at, presence: true
-    validates :end_at, presence: true
+    validates :start_at, presence: true, datetime: true
+    validates :end_at, presence: true, datetime: true
     validates :allday, inclusion: { in: [nil, "", "allday"] }
+    validates :start_on, datetime: true
+    validates :end_on, datetime: true
 
     validate :validate_datetimes_at
 
@@ -129,10 +131,6 @@ module Gws::Schedule::Planable
     end
 
     def validate_datetimes_at
-      errors.add :start_on, :invalid if start_on == ::Date::EPOCH
-      errors.add :end_on, :invalid if end_on == ::Date::EPOCH
-      errors.add :start_at, :invalid if start_at == ::Time::EPOCH
-      errors.add :end_at, :invalid if end_at == ::Time::EPOCH
       errors.add :end_at, :greater_than, count: t(:start_at) if start_at > end_at
     end
 end

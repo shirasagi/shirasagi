@@ -13,6 +13,9 @@ module Gws::Addon
       permit_params :release_date, :close_date
 
       validates :state, presence: true
+      validates :released, datetime: true
+      validates :release_date, datetime: true
+      validates :close_date, datetime: true
       validate :validate_release_date
       after_validation :set_released, if: -> { state == "public" }
 

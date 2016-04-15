@@ -17,6 +17,7 @@ class Gws::Facility::Item
   permit_params :name, :order, :category_id, :expiration_date
 
   validates :name, presence: true
+  validates :expiration_date, datetime: true
 
   default_scope -> { order_by order: 1, name: 1 }
 

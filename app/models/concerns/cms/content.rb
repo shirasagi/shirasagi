@@ -25,6 +25,7 @@ module Cms::Content
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }
     validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
+    validates :released, datetime: true
 
     before_validation :set_filename
     before_validation :validate_filename

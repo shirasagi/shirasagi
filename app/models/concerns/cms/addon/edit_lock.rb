@@ -5,9 +5,12 @@ module Cms::Addon::EditLock
   LOCK_INTERVAL = 10.minutes.freeze
 
   included do
-    belongs_to :lock_owner, class_name: "Cms::User"
     field :lock_until, type: DateTime
+    belongs_to :lock_owner, class_name: "Cms::User"
+
+    validates :lock_until, datetime: true
     validate :validate_lock
+
     before_destroy :validate_lock
     after_save :release_lock
   end

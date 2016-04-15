@@ -11,6 +11,8 @@ module Gws::Board::Postable
     store_in collection: "gws_board_posts"
     set_permission_name "gws_board_posts"
 
+    attr_accessor :cur_site
+
     seqid :id
     field :state, type: String, default: 'public'
     field :name, type: String
@@ -18,7 +20,7 @@ module Gws::Board::Postable
     field :permit_comment, type: String, default: 'allow'
     field :descendants_updated, type: DateTime
 
-    attr_accessor :cur_site
+    validates :descendants_updated, datetime: true
 
     belongs_to :topic, class_name: "Gws::Board::Post", inverse_of: :descendants
     belongs_to :parent, class_name: "Gws::Board::Post", inverse_of: :children

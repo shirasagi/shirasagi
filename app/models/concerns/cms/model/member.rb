@@ -32,7 +32,6 @@ module Cms::Model::Member
     permit_params :name, :email, :password, :in_password
 
     validates :name, presence: true, length: { maximum: 40 }
-
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: { scope: :site_id }, presence: true, if: ->{ oauth_type.blank? }
     validates :password, presence: true, if: ->{ oauth_type.blank? }

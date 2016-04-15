@@ -19,6 +19,7 @@ module SS::Model::UserTitle
     validates :name, presence: true, length: { maximum: 40 }
     validates :order, presence: true
     validates :group_id, presence: true
+    validates :expiration_date, datetime: true
 
     index({ group_id: 1, order: 1})
 

@@ -57,6 +57,9 @@ module SS::Model::User
     validates :email, uniqueness: true, if: ->{ email.present? }
     validates :email, presence: true, if: ->{ uid.blank? }
     validates :password, presence: true, if: ->{ ldap_dn.blank? }
+    validates :last_loggedin, datetime: true
+    validates :account_start_date, datetime: true
+    validates :account_expiration_date, datetime: true
     validate :validate_type
     validate :validate_uid
     validate :validate_account_expiration_date

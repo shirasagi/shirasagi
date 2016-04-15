@@ -17,6 +17,9 @@ class Gws::Schedule::RepeatPlan
   # 曜日 / only weekly
   field :wdays, type: Array, default: []
 
+  validates :repeat_start, datetime: true
+  validates :repeat_end, datetime: true
+
   before_validation do
     self.repeat_end = repeat_start + 1.month if repeat_start.present? && repeat_end.blank?
     self.wdays.reject! { |c| c.blank? }

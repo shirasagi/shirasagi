@@ -9,6 +9,8 @@ module Cms::Addon
 
       permit_params :release_date, :close_date
 
+      validates :release_date, datetime: true
+      validates :close_date, datetime: true
       validate :validate_release_date
       validate :validate_release_state
     end
