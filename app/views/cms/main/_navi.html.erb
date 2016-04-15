@@ -17,13 +17,7 @@
   <h2><%= link_to :"cms.file", cms_files_path, class: "icon-conv" %></h2>
   <h2><%= link_to :"cms.search_contents", cms_search_contents_pages_path, class: "icon-conv" %></h2>
 
-  <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to :"cms.generate_node", cms_generate_nodes_path, class: "icon-write" %></h2>
-  <% end %>
-  <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h2><%= link_to :"cms.generate_page", cms_generate_pages_path, class: "icon-write" %></h2>
-  <% end %>
-
+  <h2><%= link_to :"cms.site_config", cms_site_path, class: "icon-conf" %></h2>
   <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <% if @cur_node %>
       <h2><%= link_to :"cms.import", node_import_path, class: "icon-conf" %></h2>
@@ -31,11 +25,12 @@
       <h2><%= link_to :"cms.import_node", cms_import_path, class: "icon-conf" %></h2>
     <% end %>
   <% end %>
-
   <h2><%= link_to :"cms.all_contents", cms_all_contents_path, class: "icon-conf" %></h2>
 
-  <!-- //TODO: -->
-  <% if true %>
-    <h2><%= link_to :"cms.site_config", cms_site_path, class: "icon-conf" %></h2>
+  <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to :"cms.generate_node", cms_generate_nodes_path, class: "icon-write" %></h2>
+  <% end %>
+  <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to :"cms.generate_page", cms_generate_pages_path, class: "icon-write" %></h2>
   <% end %>
 </nav>

@@ -1,8 +1,5 @@
 <nav class="main-navi">
   <h2><%= link_to :"cms.content", cms_contents_path, class: "icon-content" %></h2>
-</nav>
-
-<nav class="main-navi">
   <h2><%= link_to :"cms.node", node_nodes_path, class: "icon-node" %></h2>
   <% if Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to :"cms.page", node_pages_path, class: "icon-page" %></h2>
@@ -16,16 +13,16 @@
 </nav>
 
 <nav class="main-navi">
+  <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h2><%= link_to :"cms.node_config", node_conf_path, class: "icon-conf" %></h2>
+  <% end %>
+  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h2><%= link_to :"cms.import", node_import_path, class: "icon-conf" %></h2>
+  <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h2><%= link_to :"cms.generate_node", node_generate_nodes_path, class: "icon-write" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h2><%= link_to :"cms.generate_page", node_generate_pages_path, class: "icon-write" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h2><%= link_to :"cms.import", node_import_path, class: "icon-conf" %></h2>
-  <% end %>
-  <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h2><%= link_to :"cms.node_config", node_conf_path, class: "icon-conf" %></h2>
   <% end %>
 </nav>
