@@ -10,10 +10,11 @@ class Gws::Facility::Item
   seqid :id
   field :name, type: String
   field :order, type: Integer, default: 0
+  field :expiration_date, type: DateTime
 
   belongs_to :category, class_name: 'Gws::Facility::Category'
 
-  permit_params :name, :order, :category_id
+  permit_params :name, :order, :category_id, :expiration_date
 
   validates :name, presence: true
 

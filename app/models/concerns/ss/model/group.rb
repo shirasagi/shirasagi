@@ -14,7 +14,8 @@ module SS::Model::Group
     seqid :id
     field :name, type: String
     field :order, type: Integer
-    permit_params :name, :order
+    field :expiration_date, type: DateTime
+    permit_params :name, :order, :expiration_date
 
     default_scope -> { order_by(order: 1, name: 1) }
 

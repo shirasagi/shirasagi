@@ -32,6 +32,7 @@ ja:
         name: 設備名
         order: 並び順
         category_id: カテゴリー
+        expiration_date: 有効期限
       gws/facility/category:
         name: カテゴリー名
         order: 並び順

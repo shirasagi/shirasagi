@@ -10,10 +10,11 @@ module SS::Model::UserTitle
     seqid :id
     field :name, type: String
     field :order, type: Integer, default: 0
+    field :expiration_date, type: DateTime
 
     belongs_to :group, class_name: "SS::Group"
 
-    permit_params :name, :order
+    permit_params :name, :order, :expiration_date
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :order, presence: true

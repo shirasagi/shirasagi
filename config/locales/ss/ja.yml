@@ -192,9 +192,11 @@ ja:
         name: 役職名
         order: 並び順
         group_id: グループ
+        expiration_date: 有効期限
       ss/model/group:
         name: グループ名
         order: 表示順
+        expiration_date: 有効期限
       ss/reference/user:
         user_id: ユーザー
       ss/reference/site:

@@ -4,4 +4,7 @@
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
+
+  <dt><%= @model.t :expiration_date %></dt>
+  <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 </dl>
