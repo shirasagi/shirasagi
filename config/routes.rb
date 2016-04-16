@@ -54,17 +54,16 @@ SS::Application.routes.draw do
 
     namespace "login" do
       # SAML SSO
-      get  "saml/:id/init" => "saml#init"
+      get  "saml/:id/init" => "saml#init", as: :saml
       post "saml/:id/consume" => "saml#consume"
       get  "saml/:id/metadata" => "saml#metadata"
 
       # OpenID Connect SSO
-      get  "oid/:id/init" => "open_id_connect#init"
-      get "oid/:id/callback" => "open_id_connect#callback"
-      post "oid/:id/callback" => "open_id_connect#callback"
+      get  "oid/:id/init" => "open_id_connect#init", as: :open_id_connect
+      match "oid/:id/callback" => "open_id_connect#callback", as: :open_id_connect_callback, via: [:get, :post]
 
       # Environment
-      get  "env/:id/login" => "environment#login"
+      get  "env/:id/login" => "environment#login", as: :env
     end
   end
 end

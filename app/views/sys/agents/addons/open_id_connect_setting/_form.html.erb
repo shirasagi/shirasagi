@@ -1,4 +1,7 @@
 <dl class="see mod-sys-open-id-connect-setting">
+  <dt><%= @model.t :issuer %><%= @model.tt :issuer %></dt>
+  <dd><%= f.text_field :issuer %></dd>
+
   <dt><%= @model.t :auth_url %><%= @model.tt :auth_url %></dt>
   <dd><%= f.text_field :auth_url %></dd>
 
@@ -20,6 +23,15 @@
   <dt><%= @model.t :scope %><%= @model.tt :scope %></dt>
   <dd><%= f.text_field :scope %></dd>
 
+  <dt><%= @model.t :max_age %><%= @model.tt :max_age %></dt>
+  <dd><%= f.number_field :max_age %></dd>
+
   <dt><%= @model.t :claims %><%= @model.tt :claims %></dt>
   <dd><%= f.text_field :claims %></dd>
+
+  <dt><%= @model.t :response_mode %><%= @model.tt :response_mode %></dt>
+  <dd><%= f.text_field :response_mode %></dd>
+
+  <dt><%= @model.t :jwks_uri %><%= @model.tt :jwks_uri %></dt>
+  <dd><%= f.text_field :jwks_uri %></dd>
 </dl>
