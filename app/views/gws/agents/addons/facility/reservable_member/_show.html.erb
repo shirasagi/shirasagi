@@ -1,0 +1,8 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".gws-facility-reservable-member");
+<% end %>
+
+<dl class="see gws-facility-reservable-member">
+  <dt><%= @model.t :reservable_member_ids %></dt>
+  <dd><%=br @item.reservable_members.map(&:long_name).join("\n") %></dd>
+</dl>

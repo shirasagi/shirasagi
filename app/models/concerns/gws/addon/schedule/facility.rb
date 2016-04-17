@@ -8,6 +8,7 @@ module Gws::Addon::Schedule::Facility
     permit_params facility_ids: []
 
     validate :validate_facility_time, if: ->{ facilities.present? }
+    validate :validate_reservable_members, if: ->{ facilities.present? }
     validate :validate_facility_double_booking, if: ->{ facilities.present? }
 
     scope :facility, ->(item) { where facility_ids: item.id }
@@ -18,6 +19,17 @@ module Gws::Addon::Schedule::Facility
       min_time = 5
       if (end_at.to_i - start_at.to_i) < 60 * min_time
         errors.add :base, I18n.t("gws/schedule.errors.faciliy_time_gte", count: min_time)
+      end
+    end
+
+    def validate_reservable_members
+      return unless @cur_user
+
+      facilities.each do |item|
+        next if item.reservable_member_ids.blank?
+        if !item.reservable_member_ids.include?(@cur_user.id)
+          errors.add :base, I18n.t('gws/schedule.errors.invalid_faciliy_reservate_member', name: item.name)
+        end
       end
     end
 

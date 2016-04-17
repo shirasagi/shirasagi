@@ -4,6 +4,8 @@ ja:
 
   modules:
     gws/facility: 設備管理
+    addons:
+      gws/facility/reservable_member: 予約可能ユーザー
     settings:
       gws/facility: 設備管理
       gws/facility/item: 設備
@@ -33,6 +35,7 @@ ja:
         order: 並び順
         category_id: カテゴリー
         expiration_date: 有効期限
+        reservable_member_ids: 予約可能ユーザー
       gws/facility/category:
         name: カテゴリー名
         order: 並び順

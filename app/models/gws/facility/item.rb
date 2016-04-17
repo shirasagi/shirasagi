@@ -3,6 +3,7 @@ class Gws::Facility::Item
   include Gws::Reference::User
   include Gws::Reference::Site
   include SS::Addon::Markdown
+  include Gws::Addon::Facility::ReservableMember
   include Gws::Addon::GroupPermission
 
   store_in collection: "gws_facilities"
