@@ -1,0 +1,48 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag :single, params[:single] %>
+    <dl class="see">
+      <dt><%= t("gws.apis.categories.parent_id") %></dt>
+      <dd><%= select_tag "s[group]", options_for_select(@groups, @group), include_blank: "" %></dd>
+
+      <dt><%= @model.t :name %></dt>
+      <dd>
+        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+        <%= f.submit  t("views.button.search"), class: :btn %>
+      </dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <% end %>
+      <th class="name"><%= @model.t :name %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>" class="list-item">
+        <% if @multi %>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <% end %>
+        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @multi %>
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+  <%= button_tag t("views.links.select"), { type: :button, class: "select-items btn" } %>
+</div>
+<% end %>
+
+<%= paginate @items if @items.try(:current_page) %>

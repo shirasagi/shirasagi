@@ -1,9 +1,11 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-gws-share-category"); <% end %>
+
 <dl class="see mod-gws-share-category">
   <dt><%= @model.t :category_ids %></dt>
   <dd>
     <% @item.categories.each do |category| %>
       <% next unless category %>
-      <span class="gws-category-label" style="<%= category_label_css(category) %>"><%= category.name %></span>
+      <span class="gws-category-label" style="<%= category_label_css(category) %>"><%= category.trailing_name %></span>
     <% end %>
   </dd>
 </dl>

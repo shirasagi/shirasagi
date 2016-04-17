@@ -5,8 +5,22 @@ return if traverser.blank?
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-share-category"); <% end %>
 
 <dl class="see mod-gws-share-category gws-category-tree">
-  <dt class="wide"><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
-  <dd class="wide">
-    <%= render partial: 'gws/agents/addons/board/category/cate_form', locals: { f: f, categories: traverser, level: 0, css_class: 'parent', depth: 0 } %>
+  <dt><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
+  <dd>
+    <%= f.hidden_field "category_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws.apis.categories.index"), gws_share_apis_categories_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th></th></tr></thead>
+      <tbody>
+        <% @item.categories.each do |item| %>
+        <tr data-id="<%= item.id %>">
+          <td><%= f.hidden_field "category_ids[]", value: item.id %> <%= item.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
   </dd>
 </dl>

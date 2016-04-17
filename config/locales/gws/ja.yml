@@ -24,6 +24,9 @@ ja:
     apis:
       facilities:
         index: 設備を選択する
+      categories:
+        index: カテゴリーを選択する
+        parent_id: 親カテゴリー
     options:
       severity:
         high: 重要なお知らせ

@@ -25,5 +25,9 @@ SS::Application.routes.draw do
     end
 
     resources :categories, concerns: [:deletion]
+
+    namespace "apis" do
+      get "categories" => "categories#index"
+    end
   end
 end

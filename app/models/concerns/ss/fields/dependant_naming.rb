@@ -7,6 +7,10 @@ module SS::Fields::DependantNaming
     after_save :rename_children, if: ->{ @db_changes && !skip_rename_children }
   end
 
+  def trailing_name
+    send(self.class.name_field).split("/").pop
+  end
+
   private
     def dependant_scope
       self.class.all
