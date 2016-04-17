@@ -28,7 +28,7 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
 
     it "#new" do
       visit "#{path}/new"
-      click_on "ユーザーを選択する"
+      first('#addon-basic').click_on "ユーザーを選択する"
       wait_for_cbox
       click_on gws_user.long_name
 
