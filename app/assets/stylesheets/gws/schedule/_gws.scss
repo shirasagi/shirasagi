@@ -60,7 +60,7 @@
     padding: 4px;
   }
 }
-.fc-state-active {
+.fc-button {
   z-index: 0 !important;
 }
 .fc-view-container {
@@ -249,10 +249,13 @@
     color: #888;
   }
   .popup-members {
-    margin: 5px 0 0;
+    margin: 10px 0 0;
   }
   .popup-facilities {
-    margin: 5px 0 0;
+    margin: 10px 0 0;
+  }
+  .popup-histories {
+    margin: 10px 0 0;
   }
   .popup-menu {
     margin: 10px 0 0;
@@ -280,8 +283,9 @@
   }
 }
 #calendar-controller {
-  .fc-body {
-    //display: none;
+  .fc-view-container .fc-timelineDay-view {
+    height: 35px;
+    overflow: hidden;
   }
 }
 .calendar.multiple {
