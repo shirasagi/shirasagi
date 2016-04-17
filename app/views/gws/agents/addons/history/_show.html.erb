@@ -1,0 +1,27 @@
+<%= jquery do %> SS_AddonTabs.hide(".gws-addon-history"); <% end %>
+
+<div class="see gws-addon-history">
+  <dl class="see">
+    <dt><%= t('modules.addons.gws/history') %></dt>
+    <dd>
+      <% @item.histories.each do |item| %>
+        <span><%= item.mode_name %></span>
+        - <span><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
+
+        <% if item.user %>
+          - <span><%= item.user.long_name %></span>
+
+          <% if item.user.tel.present? %>
+            <span><%= item.user.tel %></span>
+          <% end %>
+        <% end %>
+
+        <% if (names = item.updated_field_names).present? %>
+        - <span><%= truncate names.join(', '), length: 30 %></span>
+        <% end %>
+
+        <br />
+      <% end %>
+    </dd>
+  </dl>
+</div>

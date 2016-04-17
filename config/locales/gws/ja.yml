@@ -12,6 +12,15 @@ ja:
       states:
         entry: 登録済み
         empty: 未登録
+    history:
+      mode:
+        create: 作成
+        update: 更新
+        delete: 削除
+      user:
+        create: 作成者
+        update: 更新者
+        delete: 削除者
     apis:
       facilities:
         index: 設備を選択する
@@ -68,6 +77,7 @@ ja:
       gws/file: ファイル
       gws/release: 公開設定
       gws/reminder: リマインダー設定
+      gws/history: 更新履歴
     settings:
       gws/system: システム設定
 
