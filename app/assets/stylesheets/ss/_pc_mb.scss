@@ -878,6 +878,9 @@ footer.send {
 // -------------------------------------------------------------------------------------------------
 // addon
 #addon-cms-agents-addons-file .see, .addon-view .see {
+  .upload-menu-select {
+    float: right;
+  }
   #selected-files {
     margin-top: 30px;
     @include clear;

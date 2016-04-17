@@ -19,12 +19,16 @@ $ ->
   }
 </style>
 
-<dl class="see">
+<dl class="see gws-addon-file">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
-    <%= link_to :upload, sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-    <%= link_to :"sns.user_file", sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-    <%= link_to :"modules.gws/share", gws_apis_files_path, class: "ajax-box btn" %>
+    <span class="upload-menu-new">
+      <%= link_to :upload, sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+    </span>
+    <span class="upload-menu-select">
+      <%= link_to :"sns.user_file", sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
+      <%= link_to :"modules.gws/share", gws_apis_files_path, class: "ajax-box btn" %>
+    </span>
 
     <div id="selected-files">
       <% @item.files.each do |file| %>

@@ -4,6 +4,7 @@
 @import "board/gws";
 @import "schedule/gws";
 
+// Portal
 .portal-box {
   float: left;
   width: 50%;
@@ -27,6 +28,11 @@
     padding: 0 10px 10px;
     text-align: right;
   }
+}
+
+// File
+.gws-addon-file .upload-menu-select {
+  float: right;
 }
 
 // Reminder
