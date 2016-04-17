@@ -74,7 +74,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <span class="gws-board-categories">
             <% item.categories.compact.each do |category| %>
-              <%= link_to category.name, gws_board_category_topics_path(category: category.id),
+              <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id),
                           class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>

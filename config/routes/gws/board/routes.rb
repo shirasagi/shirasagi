@@ -26,5 +26,9 @@ SS::Application.routes.draw do
 
     resource :setting, only: [:show, :edit, :update]
     resources :categories, concerns: [:deletion]
+
+    namespace "apis" do
+      get "categories" => "categories#index"
+    end
   end
 end

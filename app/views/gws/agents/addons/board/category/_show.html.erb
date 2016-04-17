@@ -3,7 +3,7 @@
   <dd>
     <% @item.categories.each do |category| %>
       <% next unless category %>
-      <span class="gws-category-label" style="<%= category_label_css(category) %>"><%= category.name %></span>
+      <span class="gws-category-label" style="<%= category_label_css(category) %>"><%= category.trailing_name %></span>
     <% end %>
   </dd>
 </dl>
