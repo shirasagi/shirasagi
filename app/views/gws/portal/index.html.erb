@@ -22,6 +22,7 @@ $(".gws-schedule-tabs .personal").addClass("current");
 
 Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
 Gws_Schedule_Multiple_Calendar.render('#calendar', {
+  tapMenu: true,
   defaultView: 'basicWeek',
   restUrl: '<%= gws_schedule_plans_path %>',
   eventSources: [{ url: '<%= events_gws_schedule_plans_path(format: :json) %>' }]

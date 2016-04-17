@@ -35,28 +35,29 @@ class @Gws_Schedule_Calendar
     url = opts['restUrl']
 
     dayClick: (date, event, view) ->
-      now = new Date
-      start = "#{date.format()}T#{now.getHours()}:00:00"
-      links  = "<a href='#{url}/new?start=#{start}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
-      #if opts['defaultView'] != 'basicWeek'
-      #  if view.name != 'month'
-      #    links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
-      #  if view.name != 'basicWeek'
-      #    links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>'
-      #  if view.name != 'agendaDay'
-      #    links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>'
-      $("body").append('<div class="tap-menu">' + links + '</div>')
-      $(".tap-menu").show().css("left", event.pageX - 5).css("top", event.pageY - 5).show()
+      if opts['tapMenu']
+        now = new Date
+        start = "#{date.format()}T#{now.getHours()}:00:00"
+        links  = "<a href='#{url}/new?start=#{start}' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>"
+        #if opts['defaultView'] != 'basicWeek'
+        #  if view.name != 'month'
+        #    links += '<a href="" data-view="month"><%= I18n.t "gws/schedule.links.show_month" %></a>'
+        #  if view.name != 'basicWeek'
+        #    links += '<a href="" data-view="basicWeek"><%= I18n.t "gws/schedule.links.show_week" %></a>'
+        #  if view.name != 'agendaDay'
+        #    links += '<a href="" data-view="agendaDay"><%= I18n.t "gws/schedule.links.show_day" %></a>'
+        $("body").append('<div class="tap-menu">' + links + '</div>')
+        $(".tap-menu").show().css("left", event.pageX - 5).css("top", event.pageY - 5).show()
 
-      $(".tap-menu a").click ->
-        if $(this).data('view')
-          cal = view.calendar.getCalendar()
-          cal.changeView($(this).data('view'));
-          cal.gotoDate(date);
+        $(".tap-menu a").click ->
+          if $(this).data('view')
+            cal = view.calendar.getCalendar()
+            cal.changeView($(this).data('view'));
+            cal.gotoDate(date);
+            $(".tap-menu").remove()
+            return false
+        $(".tap-menu").mouseleave ->
           $(".tap-menu").remove()
-          return false
-      $(".tap-menu").mouseleave ->
-        $(".tap-menu").remove()
 
   @editableParams: (opts)->
     url = opts['restUrl']

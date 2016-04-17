@@ -35,4 +35,9 @@ class Gws::Facility::Item
     @category_options ||= Gws::Facility::Category.site(@cur_site || site).
       map { |c| [c.name, c.id] }
   end
+
+  def reservable?(user)
+    return true if reservable_member_ids.blank?
+    reservable_member_ids.include?(user.id)
+  end
 end

@@ -26,8 +26,7 @@ module Gws::Addon::Schedule::Facility
       return unless @cur_user
 
       facilities.each do |item|
-        next if item.reservable_member_ids.blank?
-        if !item.reservable_member_ids.include?(@cur_user.id)
+        if !item.reservable?(@cur_user)
           errors.add :base, I18n.t('gws/schedule.errors.invalid_faciliy_reservate_member', name: item.name)
         end
       end
