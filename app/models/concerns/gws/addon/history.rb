@@ -29,7 +29,7 @@ module Gws::Addon
 
       def save_history(overwrite_params = {})
         item = Gws::History.new({
-          user_id: user_id,
+          user_id: @cur_user.try(:id) || 0,
           site_id: site_id,
           name: reference_name,
           model: reference_model,

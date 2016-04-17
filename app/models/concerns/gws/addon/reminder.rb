@@ -31,7 +31,7 @@ module Gws::Addon
     end
 
     def reminder_user_ids
-      [user_id]
+      [@cur_user.try(:id), user_id]
     end
 
     private

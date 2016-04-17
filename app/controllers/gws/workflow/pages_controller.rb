@@ -50,13 +50,12 @@ class Gws::Workflow::PagesController < ApplicationController
       @item.workflow_approvers = params[:workflow_approvers]
       @item.workflow_required_counts = params[:workflow_required_counts]
 
-      if @item.update
+      if @item.valid?
         request_approval
         render json: { workflow_state: @item.workflow_state }
       else
         render json: @item.errors.full_messages, status: :unprocessable_entity
       end
-
     end
 
     def approve_update

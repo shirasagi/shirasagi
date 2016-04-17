@@ -29,6 +29,13 @@ class Gws::Workflow::File
     criteria
   }
 
+  def reminder_user_ids
+    ids = [@cur_user.id, user_id]
+    ids << workflow_user_id
+    ids += workflow_approvers.map { |m| m[:user_id] }
+    ids.uniq.compact
+  end
+
   def status
     if state == "approve"
       state
