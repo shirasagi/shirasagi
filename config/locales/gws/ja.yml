@@ -156,3 +156,32 @@ ja:
         - リマインダー日時を登録する場合、日時を入力後、「登録」ボタンをクリックします。
         -
         - リマインダー日時を解除する場合、「解除」ボタンをクリックします。
+    gws/model/category:
+      name:
+        - 種別名を入力します。
+      color:
+        - 表示色を入力します。
+        -
+        - 表示色は "#RRGGBB" 形式で入力します（RR, GG, BB はそれぞれ赤、緑、青の成分を16進数で入力）。
+    gws/custom_group:
+      name:
+        - グループ名を入力します。
+      order:
+        - 表示順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      member_ids:
+        - 参加者を選択します。
+    gws/addon/role:
+      gws_role_ids:
+        - ロールを選択します。
+    gws/notice:
+      name:
+        - タイトルを入力します。
+      severity:
+        - 種別を選択します。
+    gws/link:
+      name:
+        - タイトルを入力します。
+    gws/system/setting:
+      sendmail_domains:
+        - メール送信許可ドメインを入力します。

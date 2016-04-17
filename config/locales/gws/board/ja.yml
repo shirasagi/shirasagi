@@ -78,8 +78,8 @@ ja:
           not_found_parent: 親カテゴリーが存在しません。
           found_children: 子カテゴリーが存在します。
         gws/board/postable:
-          file_size_exceeds_post_limit: 添付ファイルのサイズ（%{size}）が投稿の限度（%{limit}）を超えました。
-          file_size_exceeds_topic_limit: 添付ファイルの合計サイズ（%{size}）がトピックの限度（%{limit}）を超えました。
+          file_size_exceeds_post_limit: 添付ファイルのサイズ（%{size}）が投稿の最大サイズ（%{limit}）を超えました。
+          file_size_exceeds_topic_limit: 添付ファイルの合計サイズ（%{size}）がトピックの最大サイズ（%{limit}）を超えました。
     attributes:
       gws/board/postable:
         name: タイトル
@@ -96,3 +96,22 @@ ja:
         name: カテゴリー名
       gws/addon/board/category:
         category_ids: カテゴリー
+
+  tooltip:
+    gws/board/postable:
+      name:
+        - タイトルを入力します。
+      mode:
+        - 表示形式を選択します。
+      permit_comment:
+        - コメントを許可するかどうかを選択します。
+    gws/board/setting:
+      board_new_days:
+        - 新着表示期間を入力します。
+      board_file_size_per_topic:
+        - トピック単位での添付最大サイズを入力します。
+      board_file_size_per_post:
+        - 投稿単位での添付最大サイズを入力します。
+    gws/board/category:
+      name:
+        - カテゴリー名を入力します。

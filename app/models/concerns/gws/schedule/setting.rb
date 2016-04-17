@@ -5,8 +5,15 @@ module Gws::Schedule::Setting
   included do
     field :schedule_max_month, type: Integer
     field :schedule_max_years, type: Integer
+    field :schedule_max_file_size, type: Integer, default: 0
+    attr_accessor :in_schedule_max_file_size_mb
 
     permit_params :schedule_max_month, :schedule_max_years
+    permit_params :schedule_max_file_size, :in_schedule_max_file_size_mb
+
+    before_validation :set_schedule_max_file_size
+
+    validates :schedule_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   end
 
   def schedule_max_month
@@ -38,4 +45,13 @@ module Gws::Schedule::Setting
       super
     end
   end
+
+  private
+    def set_schedule_max_file_size
+      if in_schedule_max_file_size_mb.blank?
+        self.schedule_max_file_size = nil
+      else
+        self.schedule_max_file_size = Integer(in_schedule_max_file_size_mb) * 1_024 * 1_024
+      end
+    end
 end

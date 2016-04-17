@@ -1,15 +1,15 @@
 <dl class="see">
   <% if params[:action] =~ /new|create/ %>
-    <dt><%= @model.t :in_files %></dt>
+    <dt><%= @model.t :in_files %><%= @model.tt :in_files %></dt>
     <dd><%= f.file_field :in_files, multiple: :multiple %></dd>
   <% else %>
-    <dt><%= @model.t :in_file %></dt>
+    <dt><%= @model.t :in_file %><%= @model.tt :in_file %></dt>
     <dd><%= f.file_field :in_file %></dd>
 
-    <dt><%= @model.t :name %></dt>
+    <dt><%= @model.t :name %><%= @model.tt :name %></dt>
     <dd><%= f.text_field :name %></dd>
 
-    <dt><%= @model.t :filename %></dt>
+    <dt><%= @model.t :filename %><%= @model.tt :filename %></dt>
     <dd><%= f.text_field :filename %></dd>
   <% end %>
 </dl>

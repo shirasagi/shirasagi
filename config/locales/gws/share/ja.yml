@@ -46,3 +46,8 @@ ja:
         name: カテゴリー名
       gws/addon/share/category:
         category_ids: カテゴリー
+
+  tooltip:
+    gws/share/category:
+      name:
+        - カテゴリー名を入力します。

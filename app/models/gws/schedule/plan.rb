@@ -12,6 +12,7 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include ActiveSupport::NumberHelper
 
   # 公開範囲
   field :target, type: String, default: "all"
@@ -23,6 +24,7 @@ class Gws::Schedule::Plan
 
   validates :start_at, presence: true, if: -> { !repeat? }
   validates :end_at, presence: true, if: -> { !repeat? }
+  validate :validate_file_size
 
   def target_options
     keys = %w(all group member)
@@ -103,4 +105,19 @@ class Gws::Schedule::Plan
       super
     end
   end
+
+  private
+    def validate_file_size
+      limit = cur_site.schedule_max_file_size || 0
+      return if limit <= 0
+
+      size = files.compact.map(&:size).max || 0
+      if size > limit
+        errors.add(
+          :base,
+          :file_size_exceeds_limit,
+          size: number_to_human_size(size),
+          limit: number_to_human_size(limit))
+      end
+    end
 end
