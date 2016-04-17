@@ -3,37 +3,32 @@ class Gws::Apis::UsersController < ApplicationController
 
   model Gws::User
 
+  before_action :set_group
+
   private
-    def group_id
-      default_group_id = @cur_user.groups.in_group(@cur_site).map(&:id).first
-      return default_group_id if params[:s].blank?
-      return default_group_id if params[:s][:group].blank?
+    def set_group
+      @group = @cur_user.groups.in_group(@cur_site).map(&:id).first
+      @group = params[:s][:group] if params[:s].present? && params[:s][:group].present?
 
-      group_id = params[:s][:group]
-      case group_id
-      when "false" then
-        false
-      else
-        group_id.to_i
-      end
-    end
-
-    def group_options
-      Gws::Group.site(@cur_site).reduce([]) do |ret, g|
+      @groups = Gws::Group.site(@cur_site).reduce([]) do |ret, g|
         indent = "&nbsp;" * g.name.scan('/').size * 4
         ret << [ indent.html_safe + g.trailing_name, g.id ]
       end.to_a
     end
 
+    def group_ids
+      group = Gws::Group.find(@group)
+      Gws::Group.in_group(group).map(&:id)
+    end
+
   public
     def index
-      @single = params[:single].present?
-      @multi = !@single
-      @level = params[:level]
-      @group_id = group_id
-      @group_options = group_options
-      criteria = @model.site(@cur_site).search(params[:s])
-      criteria = criteria.in(group_ids: [ @group_id ]) if @group_id
-      @items = criteria.order_by_title(@cur_site).page(params[:page]).per(50)
+      @multi = params[:single].blank?
+
+      @items = @model.site(@cur_site).
+        in(group_ids: group_ids).
+        search(params[:s]).
+        order_by_title(@cur_site).
+        page(params[:page]).per(50)
     end
 end
