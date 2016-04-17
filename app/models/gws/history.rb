@@ -31,4 +31,10 @@ class Gws::History
     return [] if updated_fields.blank?
     updated_fields.map { |m| item.t(m) }
   end
+
+  class << self
+    def updated?
+      where(mode: 'update').exists?
+    end
+  end
 end

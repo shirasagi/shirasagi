@@ -14,8 +14,8 @@ ja:
         empty: 未登録
     history:
       mode:
-        create: 作成
-        update: 更新
+        create: 登録
+        update: 変更
         delete: 削除
       user:
         create: 作成者

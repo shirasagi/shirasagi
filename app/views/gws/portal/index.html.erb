@@ -7,6 +7,7 @@
       <div class="info">
         <%= link_to item.name, gws_public_notice_path(id: item), class: "title notice-severity-#{item.severity}" %>
         <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+        <span class="mode"><%= item.histories.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
       </div>
     </li>
     <% end %>
@@ -49,7 +50,8 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
         <div class="info">
           <% if item.reminder_updated? %><span class="gws-reminder-updated-flag"></span><% end %>
           <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
-          <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d") } %></span>
+          <span class="mode"><%= item.updated_fields.present? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
         </div>
       </li>
       <% end %>
@@ -78,6 +80,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
                           class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>
+          <span class="mode"><%= item.histories.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
         </div>
       </li>

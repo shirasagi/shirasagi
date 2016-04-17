@@ -5,6 +5,21 @@
 @import "schedule/gws";
 
 // Portal
+.portal-notice, .portal-reminder, .portal-board {
+  .list-items a:visited {
+    color: #666 !important;
+  }
+  .more {
+    padding: 0 10px 10px;
+    text-align: right;
+  }
+}
+.portal-notice {
+  .datetime {
+    margin-left: 5px;
+    color: #888;
+  }
+}
 .portal-box {
   float: left;
   width: 50%;
@@ -15,19 +30,14 @@
       margin-left: 5px;
       color: #888;
     }
+    .mode {
+      float: right;
+      margin-left: 5px;
+    }
   }
 }
 .portal-reminder .index {
   margin-right: 10px;
-}
-.portal-notice, .portal-reminder, .portal-board {
-  .list-items a:visited {
-    color: #666 !important;
-  }
-  .more {
-    padding: 0 10px 10px;
-    text-align: right;
-  }
 }
 
 // File

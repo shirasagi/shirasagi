@@ -1,5 +1,6 @@
 class Gws::Notice
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Content::Targetable
@@ -7,6 +8,7 @@ class Gws::Notice
   include SS::Addon::Markdown
   include Gws::Addon::Release
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
 
   seqid :id
   field :name, type: String
