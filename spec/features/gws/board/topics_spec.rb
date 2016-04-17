@@ -21,7 +21,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
     expect(status_code).to eq 403
   end
 
-  context "with auth" do
+  context "with auth", js: true do
     before { login_gws_user }
 
     it "#index" do
@@ -34,10 +34,13 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
       now = Time.zone.at(Time.zone.now.to_i)
       Timecop.freeze(now) do
         visit new_path
+        click_on "カテゴリーを選択する"
+        wait_for_cbox
+        click_on category.name
+
         within "form#item-form" do
           fill_in "item[name]", with: "name"
           fill_in "item[text]", with: "text"
-          check "item_category_ids_#{category.id}"
           click_button "保存"
         end
         expect(status_code).to eq 200
@@ -64,9 +67,11 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
+      click_on "カテゴリーを選択する"
+      wait_for_cbox
+      click_on category.name
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        check "item_category_ids_#{category.id}"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path

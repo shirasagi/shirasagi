@@ -21,7 +21,7 @@ describe "gws_share_files", type: :feature, dbscope: :example do
     expect(status_code).to eq 403
   end
 
-  context "with auth" do
+  context "with auth", js: true do
     before { login_gws_user }
 
     it "#index" do
@@ -32,9 +32,12 @@ describe "gws_share_files", type: :feature, dbscope: :example do
 
     it "#new" do
       visit new_path
+      first('#addon-gws-agents-addons-share-category .toggle-head').click
+      click_on "カテゴリーを選択する"
+      wait_for_cbox
+      click_on category.name
       within "form#item-form" do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        check "item_category_ids_#{category.id}"
         click_button "保存"
       end
       expect(status_code).to eq 200
