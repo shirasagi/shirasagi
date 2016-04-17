@@ -13,6 +13,14 @@ class @SS_SearchUI
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr)
     return
 
+  @selectItems: ->
+    $("#ajax-box .items input:checkbox").filter(":checked").each ->
+      id = $(this).closest("[data-id]").attr("data-id")
+      name = $(this).closest("[data-id]").find(".select-item").text()
+      name = $(this).closest("[data-id]").text() if name == ""
+      SS_SearchUI.select({ id: id, name: name })
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
+
   @deselect: (e)->
     table = $(this).parents(".ajax-selected:first")
     $(this).parents("tr:first").remove()
@@ -47,6 +55,7 @@ class @SS_SearchUI
       e.preventDefault()
 
     $("#ajax-box #s_group").on "change", (e)->
+      SS_SearchUI.selectItems()
       $("#ajax-box form.search").submit()
 
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
@@ -76,13 +85,7 @@ class @SS_SearchUI
       $.colorbox.close()
 
     $("#ajax-box .select-items").on "click", (e)->
-      $("#ajax-box .items input:checkbox").filter(":checked").each ->
-        id = $(this).closest("[data-id]").attr("data-id")
-        name = $(this).closest("[data-id]").find(".select-item").text()
-        name = $(this).closest("[data-id]").text() if name == ""
-        SS_SearchUI.select({ id: id, name: name })
-
-      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
+      SS_SearchUI.selectItems()
       e.preventDefault()
       $.colorbox.close()
 
