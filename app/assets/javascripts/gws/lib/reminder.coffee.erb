@@ -5,8 +5,8 @@ class @Gws_Reminder
     params = {
       data:
         item:
-          url: addon.find("#item_url").val()
-          item_collection: addon.find("#item_collection").val()
+          name: addon.find("#item_name").val()
+          model: addon.find("#item_model").val()
           item_id: addon.find("#item_id").val()
       beforeSend: (data)->
         $(".gws-addon-reminder-label").html("")
@@ -20,7 +20,6 @@ class @Gws_Reminder
     $("#gws-addon-reminder-set").click ->
       ajax_params = { method: "post" }
       $.extend ajax_params, params, opts
-      ajax_params["data"]["item"]["name"] = addon.find("#item_name").val()
       ajax_params["data"]["item"]["date"] = addon.find("#item_date").val()
       $.ajax(ajax_params)
 

@@ -47,7 +47,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
       <li class="list-item">
         <div class="info">
           <% if item.reminder_updated? %><span class="gws-reminder-updated-flag"></span><% end %>
-          <%= link_to item.name, item.url, class: 'title' %>
+          <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
           <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d") } %></span>
         </div>
       </li>

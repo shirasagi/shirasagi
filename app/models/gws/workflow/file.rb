@@ -1,5 +1,6 @@
 class Gws::Workflow::File
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::Reminder
@@ -7,6 +8,7 @@ class Gws::Workflow::File
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
 
   cattr_reader(:approver_user_class) { Gws::User }
 
@@ -37,9 +39,5 @@ class Gws::Workflow::File
     else
       state
     end
-  end
-
-  def reminder_user_ids
-    [user_id]
   end
 end

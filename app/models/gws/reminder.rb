@@ -6,17 +6,18 @@ class Gws::Reminder
 
   seqid :id
   field :name, type: String
-  field :url, type: String
+  field :model, type: String
   field :date, type: DateTime
-  field :item_collection, type: String
   field :item_id, type: String
   field :read_at, type: DateTime
+  field :updated_fields, type: Array
 
-  permit_params :name, :url, :date, :item_collection, :item_id
+  permit_params :name, :model, :date, :item_id
 
   validates :name, presence: true
-  validates :url, presence: true
+  validates :model, presence: true
   validates :date, datetime: true
+  validates :item_id, presence: true
 
   default_scope -> {
     order_by date: 1
@@ -29,7 +30,22 @@ class Gws::Reminder
     criteria
   }
 
+  def item
+    @item ||= model.camelize.constantize.where(id: item_id).first
+  end
+
+  def url_lazy
+    return -> { '#' } unless item
+    url, options = item.reminder_url
+    -> { send url, options }
+  end
+
   def reminder_updated?
     read_at.to_i < updated.to_i
+  end
+
+  def updated_field_names
+    return [] if updated_fields.blank?
+    updated_fields.map { |m| item.t(m) }
   end
 end

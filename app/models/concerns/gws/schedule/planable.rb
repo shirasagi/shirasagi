@@ -71,10 +71,6 @@ module Gws::Schedule::Planable
     allday == "allday"
   end
 
-  def reminder_user_ids
-    member_ids
-  end
-
   private
     # API / Mode: month, week, day
     # - 時間予定(複数日)を別の日に移動

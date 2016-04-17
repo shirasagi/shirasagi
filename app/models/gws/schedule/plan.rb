@@ -1,5 +1,6 @@
 class Gws::Schedule::Plan
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Schedule::Planable
@@ -10,6 +11,7 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Member
   include Gws::Addon::Schedule::Facility
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
 
   # 公開範囲
   field :target, type: String, default: "all"
@@ -45,6 +47,10 @@ class Gws::Schedule::Plan
     @category_options ||= Gws::Schedule::Category.site(@cur_site || site).
       target_to(@cur_user || user).
       map { |c| [c.name, c.id] }
+  end
+
+  def reminder_user_ids
+    member_ids
   end
 
   # event options

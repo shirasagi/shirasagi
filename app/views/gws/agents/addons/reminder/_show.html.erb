@@ -11,9 +11,8 @@ date ||= Time.zone.now + 7.day unless reminder
 
 %>
 <div class="see gws-addon-reminder">
-  <%= hidden_field_tag "item_name", @item.reminder_name %>
-  <%= hidden_field_tag "item_url", request.path %>
-  <%= hidden_field_tag "item_collection", @item.collection_name %>
+  <%= hidden_field_tag "item_name", @item.reference_name %>
+  <%= hidden_field_tag "item_model", @item.reference_model %>
   <%= hidden_field_tag "item_id", @item.id %>
 
   <span class="gws-addon-reminder">

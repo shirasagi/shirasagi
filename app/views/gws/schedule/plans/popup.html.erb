@@ -11,12 +11,31 @@
 <div class="popup-members">
   <div class="popup-label"><%= @item.t :member_ids %></div>
   <%= @item.members.order_by_title(@cur_site).map(&:name).join(', ') %>
+</div>
 <% end %>
 
 <% if @item.facilities.present? %>
 <div class="popup-facilities">
   <div class="popup-label"><%= @item.t :facility_ids %></div>
-  <%= @item.facilities.map(&:name).join(', ') %></div>
+  <%= @item.facilities.map(&:name).join(', ') %>
+</div>
+<% end %>
+
+<% if @item.histories.present? %>
+<div class="popup-histories">
+  <%
+  histroies = []
+  histroies << @item.histories.where(mode: 'update').first
+  histroies << @item.histories.where(mode: 'create').first
+  %>
+  <% histroies.compact.each do |hist| %>
+  <div class="popup-history">
+    <div class="popup-label"><%= t "gws.history.user.#{hist.mode}" %></div>
+    <span class="user"><%= tryb { hist.user.long_name } %></span>
+    <span class="tel"><%= tryb { hist.user.tel } %></span>
+  </div>
+  <% end %>
+</div>
 <% end %>
 
 <%

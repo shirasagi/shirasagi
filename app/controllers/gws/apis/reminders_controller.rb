@@ -21,7 +21,7 @@ class Gws::Apis::RemindersController < ApplicationController
       reminder = @model.where(
         site_id: @cur_site.id,
         user_id: @cur_user.id,
-        item_collection: attr[:item_collection],
+        model: attr[:model],
         item_id: attr[:item_id]
       ).first
     end
@@ -30,6 +30,7 @@ class Gws::Apis::RemindersController < ApplicationController
     def create
       item = find_item || @model.new
       item.attributes = get_params
+      item.read_at = Time.zone.now
 
       if item.save
         render inline: I18n.t("gws.reminder.states.entry"), layout: false
