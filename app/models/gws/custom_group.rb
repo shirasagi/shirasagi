@@ -6,6 +6,8 @@ class Gws::CustomGroup
   include Gws::Content::Targetable
   include Gws::Addon::GroupPermission
 
+  permission_include_user
+
   seqid :id
   field :name, type: String
   field :order, type: Integer, default: 0

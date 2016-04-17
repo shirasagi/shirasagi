@@ -1,7 +1,14 @@
-<dl class="see">
+<%= jquery do %> SS_AddonTabs.hide(".mod-gws-owner_permission"); <% end %>
+
+<dl class="see mod-gws-owner_permission">
+  <dt><%= @model.t :group_ids %></dt>
+  <dd><%=br @item.groups.order_by(name: 1).map { |c| c.name }.join("\n") %></dd>
+
+  <% if @item.class.permission_included_user? %>
+  <dt><%= @model.t :user_ids %></dt>
+  <dd><%=br @item.users.order_by_title(@cur_site).map { |c| c.name }.join("\n") %></dd>
+  <% end %>
+
   <dt><%= @model.t :permission_level %></dt>
   <dd><%= @item.label :permission_level %></dd>
-
-  <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
 </dl>

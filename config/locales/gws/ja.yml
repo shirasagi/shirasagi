@@ -52,10 +52,13 @@ ja:
     edit_gws_roles: 権限/ロールの管理
     read_other_gws_custom_groups: カスタムグループの閲覧（全て）
     read_private_gws_custom_groups: カスタムグループの閲覧（所有）
+    read_users_gws_custom_groups: カスタムグループの閲覧（個人）
     edit_other_gws_custom_groups: カスタムグループの編集（全て）
     edit_private_gws_custom_groups: カスタムグループの編集（所有）
+    edit_users_gws_custom_groups: カスタムグループの編集（個人）
     delete_other_gws_custom_groups: カスタムグループの削除（全て）
     delete_private_gws_custom_groups: カスタムグループの削除（所有）
+    delete_users_gws_custom_groups: カスタムグループの削除（個人）
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
@@ -119,6 +122,7 @@ ja:
         permission_level: 権限レベル
       gws/addon/group_permission:
         group_ids: 管理グループ
+        user_ids: 管理ユーザー
         permission_level: 権限レベル
       gws/addon/release:
         released: 公開日時

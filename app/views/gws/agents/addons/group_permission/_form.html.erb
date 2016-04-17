@@ -23,7 +23,6 @@
         <% end %>
 
         <% @item.groups.each do |group| %>
-        <%# next if group.id == @cur_group.id %>
         <tr data-id="<%= group.id %>">
           <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
           <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
@@ -32,7 +31,32 @@
       </tbody>
     </table>
   </dd>
+</dl>
 
+<% if @item.class.permission_included_user? %>
+<dl class="see mod-gws-owner_permission">
+  <dt><%= @model.t :user_ids %><%= @model.tt :user_ids %></dt>
+  <dd>
+    <%= f.hidden_field "user_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th></th></tr></thead>
+      <tbody>
+        <% @item.users.order_by_title(@cur_site).each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "user_ids[]", value: user.id %> <%= user.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+<% end %>
+
+<dl class="see mod-gws-owner_permission">
   <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
-  <dd><%= f.select :permission_level, (1..@cur_user.gws_role_level(@cur_site)).map { |i| %W(#{i} #{i}) } %></dd>
+  <dd><%= f.select :permission_level, (1..@cur_user.gws_role_level(@cur_site)).map { |i| [i, i] } %></dd>
 </dl>

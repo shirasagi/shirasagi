@@ -9,10 +9,13 @@ module Gws
 
     Gws::Role.permission :read_other_gws_custom_groups
     Gws::Role.permission :read_private_gws_custom_groups
+    Gws::Role.permission :read_users_gws_custom_groups
     Gws::Role.permission :edit_other_gws_custom_groups
     Gws::Role.permission :edit_private_gws_custom_groups
+    Gws::Role.permission :edit_users_gws_custom_groups
     Gws::Role.permission :delete_other_gws_custom_groups
     Gws::Role.permission :delete_private_gws_custom_groups
+    Gws::Role.permission :delete_users_gws_custom_groups
 
     Gws::Role.permission :read_other_gws_notices
     Gws::Role.permission :read_private_gws_notices
