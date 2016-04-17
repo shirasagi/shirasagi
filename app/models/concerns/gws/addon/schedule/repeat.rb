@@ -46,7 +46,7 @@ module Gws::Addon::Schedule::Repeat
   end
 
   def extract_repeat_plans
-    repeat_plan.extract_plans(self)
+    repeat_plan.extract_plans(self, cur_site, cur_user)
   end
 
   private

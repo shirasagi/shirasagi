@@ -1,11 +1,11 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :category_id %></dt>
+  <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
   <dd><%= f.select :category_id, @item.category_options, include_blank: '' %></dd>
 
-  <dt><%= @model.t :order %></dt>
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
   <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>

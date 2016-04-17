@@ -3,10 +3,10 @@
 <% end %>
 
 <dl class="see mod-gws-share-category">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :color %></dt>
+  <dt><%= @model.t :color %><%= @model.tt :color %></dt>
   <dd><%= f.text_field :color %></dd>
 
   <dt><%= @model.t :target %><%= @model.tt :target %></dt>

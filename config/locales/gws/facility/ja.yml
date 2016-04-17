@@ -39,3 +39,19 @@ ja:
       gws/facility/category:
         name: カテゴリー名
         order: 並び順
+
+  tooltip:
+    gws/facility/item:
+      name:
+        - 設備名を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      category_id:
+        - カテゴリーを選択します。
+    gws/facility/category:
+      name:
+        - カテゴリー名を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。

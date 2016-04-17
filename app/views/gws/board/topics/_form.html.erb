@@ -1,10 +1,10 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :mode %></dt>
+  <dt><%= @model.t :mode %><%= @model.tt :mode %></dt>
   <dd><%= f.select :mode, @item.mode_options %></dd>
 
-  <dt><%= @model.t :permit_comment %></dt>
+  <dt><%= @model.t :permit_comment %><%= @model.tt :permit_comment %></dt>
   <dd><%= f.select :permit_comment, @item.permit_comment_options %></dd>
 </dl>

@@ -28,3 +28,8 @@ ja:
     attributes:
       gws/workflow/file:
         name: タイトル
+
+  tooltip:
+    gws/workflow/file:
+      name:
+        - タイトルを入力します。
