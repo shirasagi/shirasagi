@@ -65,12 +65,12 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
         end
 
         # gws_reminders
-        expect(Gws::Reminder.count).to eq 1
+        expect(Gws::Reminder.count).to eq 122
         Gws::Reminder.first.tap do |item|
           expect(item.name).to eq name
-          expect(item.url).not_to be_nil
+          expect(item.url_lazy).not_to be_nil
           expect(item.date).to eq start_at
-          expect(item.item_collection).to eq 'gws_schedule_plans'
+          expect(item.model).to eq 'gws/schedule/plan'
           expect(item.item_id).not_to be_nil
           expect(item.read_at).not_to be_nil
         end
