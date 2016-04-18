@@ -204,7 +204,7 @@ module SS::Document
 
     def set_updated
       return true if !changed?
-      self.updated = Time.zone.now
+      self.updated = updated ? Time.zone.now : created
     end
 
     def set_text_index
