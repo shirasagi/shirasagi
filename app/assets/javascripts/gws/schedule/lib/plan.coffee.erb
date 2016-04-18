@@ -52,8 +52,10 @@ class @Gws_Schedule_Plan
     $(start_sel).change ->
       start = $(start_sel).val()
       return unless start
+      start = (new Date(start)).getTime()
+      return if isNaN(start)
       date = new Date()
-      date.setTime((new Date(start)).getTime() + Gws_Schedule_Plan.diffOn)
+      date.setTime(start + Gws_Schedule_Plan.diffOn)
       format = '%d/%02d/%02d'
       format = '%d/%02d/%02d %02d:%02d' if $(start_sel).hasClass('datetime')
       $(end_sel).val(sprintf(format, date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()))
