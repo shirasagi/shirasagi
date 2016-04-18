@@ -9,8 +9,8 @@
   <dd></dd>
 
   <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_topic).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_topic %></dt>
-  <dd><%= f.number_field :in_board_file_size_per_topic_mb %> <%= t("gws/board.prompts.mega_byte") %></dd>
+  <dd><%= f.number_field :in_board_file_size_per_topic_mb %> <%= t("views.units.mega_byte") %></dd>
 
   <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_post %></dt>
-  <dd><%= f.number_field :in_board_file_size_per_post_mb %> <%= t("gws/board.prompts.mega_byte") %></dd>
+  <dd><%= f.number_field :in_board_file_size_per_post_mb %> <%= t("views.units.mega_byte") %></dd>
 </dl>

@@ -3,6 +3,7 @@ module SS::Model::File
   extend SS::Translation
   include SS::Document
   include SS::Reference::User
+  include ActiveSupport::NumberHelper
 
   attr_accessor :in_file, :in_files, :resizing
 
@@ -132,6 +133,8 @@ module SS::Model::File
 
     in_files.each do |file|
       item = self.class.new(attributes)
+      item.cur_site = cur_site if respond_to?(:cur_site)
+      item.cur_user = cur_user if respond_to?(:cur_user)
       item.in_file = file
       item.resizing = resizing
       next if item.save
@@ -228,9 +231,5 @@ module SS::Model::File
                  size: number_to_human_size(file.size),
                  limit: number_to_human_size(limit_size)
       false
-    end
-
-    def number_to_human_size(size)
-      ApplicationController.helpers.number_to_human_size(size)
     end
 end

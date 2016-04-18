@@ -1,6 +1,9 @@
 <nav class="mod-navi">
   <h2><%= t "modules.settings.gws/share" %></h2>
 
+  <% if @cur_site.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.module_setting'), gws_share_setting_path %></h3>
+  <% end %>
   <% if Gws::Share::Category.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('modules.settings.gws/share/category'), gws_share_categories_path %></h3>
   <% end %>

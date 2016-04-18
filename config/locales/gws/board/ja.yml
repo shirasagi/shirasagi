@@ -43,8 +43,6 @@ ja:
       categories: カテゴリー
     errors:
       denied_comment: コメントの投稿は許可されていません。
-    prompts:
-      mega_byte: MB
 
   modules:
     gws/board: 掲示板
