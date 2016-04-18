@@ -46,6 +46,8 @@ ja:
         name: カテゴリー名
       gws/addon/share/category:
         category_ids: カテゴリー
+      gws/share/setting:
+        share_max_file_size: 最大ファイルサイズ
 
   tooltip:
     gws/share/category:

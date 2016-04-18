@@ -1,0 +1,9 @@
+<%
+
+@item.in_share_max_file_size_mb = @item.share_max_file_size.to_i / (1_024 * 1_024)
+
+%>
+<dl class="see">
+  <dt><%= @model.t :share_max_file_size %><%= @model.tt :share_max_file_size %></dt>
+  <dd><%= f.number_field :in_share_max_file_size_mb %> <%= t("views.units.mega_byte") %></dd>
+</dl>
