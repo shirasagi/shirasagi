@@ -19,11 +19,11 @@ RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
       context "when updating" do
         let(:post) { create :gws_board_post }
         before { post.text += 'added text' }
-        it { expect { post.save }.not_to change { post.descendants_updated } }
+        it { expect { post.save }.to change { post.descendants_updated } }
 
         describe "it is same to updated field" do
           before { post.save }
-          it { expect(post.descendants_updated).not_to eq_as_time post.updated }
+          it { expect(post.descendants_updated).to eq_as_time post.updated }
         end
       end
     end
