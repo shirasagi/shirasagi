@@ -26,6 +26,7 @@ class Gws::Apis::UsersController < ApplicationController
       @multi = params[:single].blank?
 
       @items = @model.site(@cur_site).
+        active.
         in(group_ids: group_ids).
         search(params[:s]).
         order_by_title(@cur_site).

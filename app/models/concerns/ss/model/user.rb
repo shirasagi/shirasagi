@@ -4,6 +4,7 @@ module SS::Model::User
   include SS::Document
   include SS::Fields::Normalizer
   include SS::Reference::UserTitles
+  include SS::Reference::UserExpiration
   include Ldap::Addon::User
 
   attr_accessor :cur_site, :cur_user, :in_password, :self_edit

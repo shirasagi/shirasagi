@@ -7,6 +7,7 @@ class Cms::Apis::GroupsController < ApplicationController
     @single = params[:single].present?
     @multi = !@single
     @items = @model.site(@cur_site).
+      active.
       search(params[:s]).
       page(params[:page]).per(50)
   end

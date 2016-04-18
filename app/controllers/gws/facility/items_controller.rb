@@ -18,10 +18,8 @@ class Gws::Facility::ItemsController < ApplicationController
 
   public
     def index
-      state = params.dig(:s, :state) || 'enabled'
-
       @items = @model.site(@cur_site).
-        state(state).
+        state(params.dig(:s, :state)).
         allow(:read, @cur_user, site: @cur_site).
         page(params[:page]).per(50)
     end

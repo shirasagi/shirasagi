@@ -82,6 +82,21 @@ module Cms::CrudFilter
       render_destroy_all(entries.size != @items.size)
     end
 
+    def disable_all
+      entries = @items.entries
+      @items = []
+
+      entries.each do |item|
+        if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+          next if item.disable
+        else
+          item.errors.add :base, :auth_error
+        end
+        @items << item
+      end
+      render_destroy_all(entries.size != @items.size)
+    end
+
     def lock
       if @item.acquire_lock(force: params[:force].present?)
         render

@@ -18,9 +18,8 @@ class Gws::UsersController < ApplicationController
 
   public
     def index
-      #raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
-
       @items = @model.site(@cur_site).
+        state(params.dig(:s, :state)).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
         order_by_title(@cur_site).
@@ -39,5 +38,15 @@ class Gws::UsersController < ApplicationController
       @item.add_to_set(gws_role_ids: other_role_ids)
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
       render_update @item.update
+    end
+
+
+    def destroy
+      raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+      render_destroy @item.disable
+    end
+
+    def destroy_all
+      disable_all
     end
 end

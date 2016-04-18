@@ -49,6 +49,7 @@ ja:
       random_password: ランダム生成
     confirm:
       delete: 削除してよろしいですか？
+      soft_delete: データの実削除ではなく無効状態として保存されます。
       convert: 変換してよろしいですか？
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？

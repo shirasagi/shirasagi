@@ -1,4 +1,4 @@
-module SS::Scope::ActivationDate
+module SS::Reference::UserExpiration
   extend ActiveSupport::Concern
 
   included do
@@ -9,22 +9,22 @@ module SS::Scope::ActivationDate
     }
     scope :active, ->(date = Time.zone.now) {
       where('$and' => [
-        { '$or' => [{ activation_date: nil }, { :activation_date.lte => date }] },
-        { '$or' => [{ expiration_date: nil }, { :expiration_date.gt => date }] }
+        { '$or' => [{ account_start_date: nil }, { :account_start_date.lte => date }] },
+        { '$or' => [{ account_expiration_date: nil }, { :account_expiration_date.gt => date }] }
       ])
     }
     scope :expired, ->(date = Time.zone.now) {
       where('$or' => [
-        { :activation_date.exists => true , :activation_date.gt => date },
-        { :expiration_date.exists => true , :expiration_date.lt => date }
+        { :account_start_date.exists => true , :account_start_date.gt => date },
+        { :account_expiration_date.exists => true , :account_expiration_date.lt => date }
       ])
     }
   end
 
   def active?
     now = Time.zone.now
-    return false if activation_date.present? && activation_date >= now
-    return false if expiration_date.present? && expiration_date < now
+    return false if account_start_date.present? && account_start_date >= now
+    return false if account_expiration_date.present? && account_expiration_date < now
     true
   end
 
@@ -42,7 +42,7 @@ module SS::Scope::ActivationDate
 
   def disable
     now = Time.zone.now
-    update_attributes(expiration_date: now) if expiration_date.blank? || expiration_date > now
+    update_attributes(account_expiration_date: now) if account_expiration_date.blank? || account_expiration_date > now
   end
 end
 

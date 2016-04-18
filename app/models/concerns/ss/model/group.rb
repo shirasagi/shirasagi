@@ -77,6 +77,12 @@ module SS::Model::Group
     self.class.where(name: /^#{name}\//)
   end
 
+  # Soft delete
+  def disable
+    super
+    descendants.each { |item| item.disable }
+  end
+
   private
     def validate_name
       if name =~ /\/$/ || name =~ /^\// || name =~ /\/\//

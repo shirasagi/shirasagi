@@ -4,4 +4,10 @@
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :activation_date %><%= @model.tt :activation_date %></dt>
+  <dd><%= f.text_field :activation_date, class: 'datetime js-datetime', value: tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>
+  <dd><%= f.text_field :expiration_date, class: 'datetime js-datetime', value: tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 </dl>

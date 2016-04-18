@@ -17,10 +17,8 @@ class Gws::UserTitlesController < ApplicationController
 
   public
     def index
-      state = params.dig(:s, :state) || 'enabled'
-
       @items = @model.site(@cur_site).
-        state(state).
+        state(params.dig(:s, :state)).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
         page(params[:page]).per(50)

@@ -23,9 +23,20 @@ class Cms::GroupsController < ApplicationController
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
       @items = @model.site(@cur_site).
+        state(params.dig(:s, :state)).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).sort_by(&:name)
+    end
+
+    def destroy
+      raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+      render_destroy @item.disable
+    end
+
+    def destroy_all
+      disable_all
     end
 
     def role_edit

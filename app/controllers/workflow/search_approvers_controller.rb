@@ -30,7 +30,7 @@ class Workflow::SearchApproversController < ApplicationController
       @level = params[:level]
       @group_id = group_id
       @group_options = group_options
-      criteria = @model.site(@cur_site).search(params[:s])
+      criteria = @model.site(@cur_site).active.search(params[:s])
       criteria = criteria.in(group_ids: [ @group_id ]) if @group_id
       @items = criteria.order_by(_id: 1).page(params[:page]).per(50)
     end
