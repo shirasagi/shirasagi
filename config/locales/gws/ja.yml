@@ -27,6 +27,8 @@ ja:
       categories:
         index: カテゴリーを選択する
         parent_id: 親カテゴリー
+      custom_groups:
+        index: カスタムグループを選択する
     options:
       severity:
         high: 重要なお知らせ
@@ -34,6 +36,7 @@ ja:
         all: 全ユーザー
         group: 同一グループ内
         member: 参加者のみ
+        custom_group: カスタムグループ
     links:
       back_to_portal: ポータルへ戻る
     buttons:
@@ -126,6 +129,7 @@ ja:
       gws/addon/group_permission:
         group_ids: 管理グループ
         user_ids: 管理ユーザー
+        custom_group_ids: 管理カスタムグループ
         permission_level: 権限レベル
       gws/addon/release:
         released: 公開日時
@@ -185,3 +189,6 @@ ja:
     gws/system/setting:
       sendmail_domains:
         - メール送信許可ドメインを入力します。
+    gws/addon/group_permission:
+      custom_group_ids:
+        - このページを編集可能にするカスタムグループを選択します。
