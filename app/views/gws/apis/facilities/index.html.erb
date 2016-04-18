@@ -4,8 +4,8 @@
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
-      <dt><%= @model.t :category_id %></dt>
-      <dd><%= select_tag "s[group]", options_for_select(@groups, @group), include_blank: "// #{t('gws/schedule.tabs.facility')}" %></dd>
+      <dt><%= @model.t(:category_id) %></dt>
+      <dd><%= select_tag "s[group]", options_for_select(@groups, @group), include_blank: @model.t(:category_id) %></dd>
 
       <dt><%= @model.t :name %></dt>
       <dd>

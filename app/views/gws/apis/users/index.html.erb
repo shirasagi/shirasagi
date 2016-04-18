@@ -4,8 +4,8 @@
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
-      <dt><%= t "mongoid.models.gws/group" %></dt>
-      <dd><%= select_tag "s[group]", options_for_select(@groups, @group) %></dd>
+      <dt><%= t("mongoid.models.gws/group") %></dt>
+      <dd><%= select_tag "s[group]", options_for_select(@groups, @group), include_blank: t("mongoid.models.gws/group") %></dd>
       <dt><%= t "mongoid.models.gws/user" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>

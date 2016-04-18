@@ -43,11 +43,11 @@ module Gws::Category::Traversable
     end
   end
 
-  def to_options(child = nil, depth = 0)
+  def to_options(child = nil)
     if child
-      indent = '-' + '-' * depth + ' '
-      options = [["#{indent}#{child.name}".html_safe, child.id]]
-      child.children.each { |c| options += to_options(c, depth + 1) }
+      indent = '-' * child.depth
+      options = [["#{indent} #{child.name}".html_safe, child.id]]
+      child.children.each { |c| options += to_options(c) }
       return options
     end
 
@@ -64,6 +64,7 @@ module Gws::Category::Traversable
       has_grandchild = children.any? { |child| child.children? }
       OpenStruct.new(
         id: category.try(:id),
+        depth: category.try(:depth),
         name: name,
         full_name: full_name,
         children: children,

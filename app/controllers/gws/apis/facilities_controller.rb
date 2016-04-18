@@ -8,7 +8,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
   private
     def set_category
       @groups = Gws::Facility::Category.site(@cur_site).reduce([]) do |ret, g|
-        ret << [ g.name.to_s, g.id ]
+        ret << [ "- #{g.name}", g.id ]
       end.to_a
 
       @group = params[:s] ? params[:s][:group] : nil

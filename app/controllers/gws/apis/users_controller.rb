@@ -11,8 +11,8 @@ class Gws::Apis::UsersController < ApplicationController
       @group = params[:s][:group] if params[:s].present? && params[:s][:group].present?
 
       @groups = Gws::Group.site(@cur_site).reduce([]) do |ret, g|
-        indent = "&nbsp;" * g.name.scan('/').size * 4
-        ret << [ indent.html_safe + g.trailing_name, g.id ]
+        indent = '-' * g.depth
+        ret << [ "#{indent} #{g.trailing_name}".html_safe, g.id ]
       end.to_a
     end
 

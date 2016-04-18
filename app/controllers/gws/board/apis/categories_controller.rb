@@ -8,8 +8,8 @@ class Gws::Board::Apis::CategoriesController < ApplicationController
   private
     def set_category
       @groups = @model.site(@cur_site).reduce([]) do |ret, g|
-        indent = "&nbsp;" * g.name.scan('/').size * 4
-        ret << [ indent.html_safe + g.trailing_name, g.id ]
+        indent = '-' * g.depth
+        ret << [ "#{indent} #{g.trailing_name}".html_safe, g.id ]
       end.to_a
 
       @group = params[:s] ? params[:s][:group] : nil

@@ -11,6 +11,10 @@ module SS::Fields::DependantNaming
     send(self.class.name_field).split("/").pop
   end
 
+  def depth
+    name.scan("/").size + 1
+  end
+
   private
     def dependant_scope
       self.class.all

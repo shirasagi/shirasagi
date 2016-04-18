@@ -15,7 +15,7 @@ options = options_for_select(categories.to_options, params[:category].to_i)
 <% end %>
 
 <div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options, include_blank: t('gws/board.links.categories') %>
+  <%= select_tag :category_id, options, include_blank: t('modules.gws/share') %>
 </div>
 
 <% @index_meta = proc do |item| %>
