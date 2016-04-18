@@ -55,7 +55,7 @@ module Gws::GroupPermission
   end
 
   def group_names
-    self[:group_names].presence || groups.order_by(name: 1).map(&:name)
+    self[:group_names].presence || groups.map(&:name)
   end
 
   def user_uids
