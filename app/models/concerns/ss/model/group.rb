@@ -51,6 +51,7 @@ module SS::Model::Group
   end
 
   def section_name
+    return name unless name.include?('/')
     name.split("/")[1..-1].join(' ')
   end
 

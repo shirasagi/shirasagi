@@ -8,9 +8,12 @@ module Gws::GroupPermission
     field :permission_level, type: Integer, default: 1
 
     field :group_names, type: Array
+    field :groups_hash, type: Hash
     field :user_uids, type: Array
     field :user_names, type: Array
+    field :users_hash, type: Hash
     field :custom_group_names, type: Array
+    field :custom_groups_hash, type: Hash
     embeds_ids :groups, class_name: "SS::Group"
     embeds_ids :users, class_name: "SS::User"
     embeds_ids :custom_groups, class_name: "Gws::CustomGroup"
@@ -66,15 +69,18 @@ module Gws::GroupPermission
   private
     def set_group_names
       self.group_names = groups.map(&:name)
+      self.groups_hash = groups.map { |m| [m.id, m.name] }.to_h
     end
 
     def set_user_names
       self.user_uids  = users.map(&:uid)
       self.user_names = users.map(&:name)
+      self.users_hash = users.map { |m| [m.id, m.name] }.to_h
     end
 
     def set_custom_group_names
       self.custom_group_names = custom_groups.map(&:name)
+      self.custom_groups_hash = custom_groups.map { |m| [m.id, m.name] }.to_h
     end
 
   module ClassMethods

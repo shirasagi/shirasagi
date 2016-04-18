@@ -5,7 +5,7 @@
   <dd>
     <% @item.group_histories.each do |item| %>
       <%= tryb { item.created.strftime('%Y/%m/%d %H:%M') } %>
-      - <%= item.groups.map(&:section_name).join(', ').presence || '-' %><br />
+      - <%= item.group_names.join(', ').presence || '-' %><br />
     <% end %>
   </dd>
 </dl>
