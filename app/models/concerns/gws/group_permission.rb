@@ -13,7 +13,6 @@ module Gws::GroupPermission
 
     permit_params :permission_level, group_ids: [], user_ids: []
 
-    #validates :group_ids, presence: true
     before_validation :set_group_names
     before_validation :set_user_names
   end
