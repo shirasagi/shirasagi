@@ -8,13 +8,8 @@
         <span><%= item.mode_name %></span>
         - <span><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
 
-        <% if item.user %>
-          - <span><%= item.user.long_name %></span>
-
-          <% if item.user.tel.present? %>
-            <span><%= item.user.tel %></span>
-          <% end %>
-        <% end %>
+        - <span><%= item.user_long_name %></span>
+        <span><%= item.user_tel %></span>
 
         <% if (names = item.updated_field_names).present? %>
         - <span><%= truncate names.join(', '), length: 30 %></span>

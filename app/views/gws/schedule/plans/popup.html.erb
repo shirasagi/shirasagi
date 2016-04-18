@@ -21,22 +21,21 @@
 </div>
 <% end %>
 
-<% if @item.histories.present? %>
 <div class="popup-histories">
-  <%
-  histroies = []
-  histroies << @item.histories.where(mode: 'update').first
-  histroies << @item.histories.where(mode: 'create').first
-  %>
-  <% histroies.compact.each do |hist| %>
+  <% if hist = @item.histories.where(mode: 'update').first %>
   <div class="popup-history">
-    <div class="popup-label"><%= t "gws.history.user.#{hist.mode}" %></div>
-    <span class="user"><%= tryb { hist.user.long_name } %></span>
-    <span class="tel"><%= tryb { hist.user.tel } %></span>
+    <div class="popup-label"><%= t "gws.history.user.update" %></div>
+    <span class="user"><%= hist.user_long_name %></span>
+    <span class="tel"><%= hist.user_tel %></span>
   </div>
   <% end %>
+
+  <div class="popup-history">
+    <div class="popup-label"><%= t "gws.history.user.create" %></div>
+    <span class="user"><%= @item.user_long_name %></span>
+    <span class="tel"><%= @item.user_tel %></span>
+  </div>
 </div>
-<% end %>
 
 <%
 menu = []

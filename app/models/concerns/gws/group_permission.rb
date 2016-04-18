@@ -5,12 +5,17 @@ module Gws::GroupPermission
   included do
     field :permission_level, type: Integer, default: 1
 
+    field :group_names, type: Array
+    field :user_uids, type: Array
+    field :user_names, type: Array
     embeds_ids :groups, class_name: "SS::Group"
     embeds_ids :users, class_name: "SS::User"
 
     permit_params :permission_level, group_ids: [], user_ids: []
 
-    #validates :group_ids, presence: true
+    validates :group_ids, presence: true
+    before_validation :set_group_names
+    before_validation :set_user_names
   end
 
   def owned?(user)
@@ -41,6 +46,28 @@ module Gws::GroupPermission
     end
     false
   end
+
+  def group_names
+    self[:group_names].presence || groups.order_by(name: 1).map(&:name)
+  end
+
+  def user_uids
+    self[:user_uids].presence || users.map(&:uid)
+  end
+
+  def user_names
+    self[:user_names].presence || users.map(&:name)
+  end
+
+  private
+    def set_group_names
+      self.group_names = groups.map(&:name)
+    end
+
+    def set_user_names
+      self.user_uids  = users.map(&:uid)
+      self.user_names = users.map(&:name)
+    end
 
   module ClassMethods
     # @param [String] action

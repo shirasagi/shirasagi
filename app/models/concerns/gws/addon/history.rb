@@ -4,7 +4,7 @@ module Gws::Addon
     extend SS::Addon
 
     included do
-      after_save :save_history_for_save
+      before_save :save_history_for_save
       after_destroy :save_history_for_destroy
     end
 
@@ -29,7 +29,7 @@ module Gws::Addon
 
       def save_history(overwrite_params = {})
         item = Gws::History.new({
-          user_id: @cur_user.try(:id) || 0,
+          cur_user: @cur_user,
           site_id: site_id,
           name: reference_name,
           model: reference_model,

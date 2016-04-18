@@ -31,7 +31,7 @@ end
   <header class="<%= 'toggle-head' if recursion %>">
     <h2><%= comment.name %></h2>
     <nav class="meta">
-      <span class="user"><%= comment.user.name %></span>
+      <span class="user"><%= comment.user_long_name %></span>
       <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
     </nav>
   </header>
