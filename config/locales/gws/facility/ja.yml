@@ -34,7 +34,8 @@ ja:
         name: 設備名
         order: 並び順
         category_id: カテゴリー
-        expiration_date: 有効期限
+        activation_date: 有効期限（開始）
+        expiration_date: 有効期限（終了）
         reservable_member_ids: 予約可能ユーザー
       gws/facility/category:
         name: カテゴリー名

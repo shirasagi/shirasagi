@@ -93,6 +93,9 @@ ja:
         closed: 非公開
         draft: 下書き
         ready: 公開待ち
+        active: 有効
+        expired: 無効
+        all: 全て
       resizing:
         320×240: 320×240(QVGA横)
         240x320: 240x320(QVGA縦)
@@ -192,11 +195,13 @@ ja:
         name: 役職名
         order: 並び順
         group_id: グループ
-        expiration_date: 有効期限
+        activation_date: 有効期限（開始）
+        expiration_date: 有効期限（終了）
       ss/model/group:
         name: グループ名
         order: 表示順
-        expiration_date: 有効期限
+        activation_date: 有効期限（開始）
+        expiration_date: 有効期限（終了）
       ss/reference/user:
         user_id: ユーザー
       ss/reference/site:

@@ -23,7 +23,11 @@ class Gws::GroupsController < ApplicationController
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+      state = params.dig(:s, :state) || 'enabled'
+
       @items = @model.site(@cur_site).
+        state(state).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).sort_by(&:name)
     end

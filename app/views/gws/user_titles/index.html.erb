@@ -1,0 +1,11 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="state"><%= item.active_state_name %></span>
+
+  <% if item.order %>
+    <span class="order"><%= item.order %></span>
+  <% end %>
+<% end %>
+
+<%= render file: "gws/crud/index" %>

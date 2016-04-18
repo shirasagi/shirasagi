@@ -2,6 +2,7 @@ class Gws::Facility::Item
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include SS::Scope::ActivationDate
   include SS::Addon::Markdown
   include Gws::Addon::Facility::ReservableMember
   include Gws::Addon::GroupPermission
@@ -11,13 +12,15 @@ class Gws::Facility::Item
   seqid :id
   field :name, type: String
   field :order, type: Integer, default: 0
+  field :activation_date, type: DateTime
   field :expiration_date, type: DateTime
 
   belongs_to :category, class_name: 'Gws::Facility::Category'
 
-  permit_params :name, :order, :category_id, :expiration_date
+  permit_params :name, :order, :category_id, :activation_date, :expiration_date
 
   validates :name, presence: true
+  validates :activation_date, datetime: true
   validates :expiration_date, datetime: true
 
   default_scope -> { order_by order: 1, name: 1 }

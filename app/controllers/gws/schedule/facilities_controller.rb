@@ -18,6 +18,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   public
     def index
       @items = Gws::Facility::Item.site(@cur_site).
+        active.
         category_id(@category)
     end
 

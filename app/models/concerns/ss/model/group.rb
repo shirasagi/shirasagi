@@ -2,6 +2,7 @@ module SS::Model::Group
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
+  include SS::Scope::ActivationDate
   include Ldap::Addon::Group
   include SS::Fields::DependantNaming
 
@@ -14,16 +15,20 @@ module SS::Model::Group
     seqid :id
     field :name, type: String
     field :order, type: Integer
+    field :activation_date, type: DateTime
     field :expiration_date, type: DateTime
-    permit_params :name, :order, :expiration_date
+    permit_params :name, :order, :activation_date, :expiration_date
 
     default_scope -> { order_by(order: 1, name: 1) }
 
     validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
+    validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
     validate :validate_name
 
-    scope :in_group, ->(group) { where(name: /^#{group.name}(\/|$)/) }
+    scope :in_group, ->(group) {
+      where(name: /^#{group.name}(\/|$)/)
+    }
   end
 
   module ClassMethods

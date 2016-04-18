@@ -20,6 +20,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
       @multi = params[:single].blank?
 
       @items = @model.site(@cur_site).
+        active.
         search(params[:s]).
         category_id(@group).
         page(params[:page]).per(50)
