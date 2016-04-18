@@ -14,6 +14,8 @@ class Gws::Schedule::Plan
   include Gws::Addon::History
   include ActiveSupport::NumberHelper
 
+  permission_include_custom_group
+
   # 公開範囲
   field :target, type: String, default: "all"
 
@@ -27,7 +29,7 @@ class Gws::Schedule::Plan
   validate :validate_file_size
 
   def target_options
-    keys = %w(all group member)
+    keys = %w(all group member custom_group)
     keys.map { |key| [I18n.t("gws.options.target.#{key}"), key] }
   end
 
@@ -40,6 +42,8 @@ class Gws::Schedule::Plan
       return group_ids.any? { |m| user.group_ids.include?(m) }
     elsif target == "member"
       return member?(user)
+    elsif target == "custom_group"
+      return Gws::CustomGroup.site(site || cur_site).where(:id.in => custom_group_ids).where(member_ids: user.id).exists?
     else
       true
     end

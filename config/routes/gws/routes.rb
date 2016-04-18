@@ -30,6 +30,7 @@ SS::Application.routes.draw do
       get "facilities" => "facilities#index"
       post "reminders" => "reminders#create"
       delete "reminders" => "reminders#destroy"
+      get "custom_groups" => "custom_groups#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member
