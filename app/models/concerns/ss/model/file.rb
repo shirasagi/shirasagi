@@ -3,6 +3,7 @@ module SS::Model::File
   extend SS::Translation
   include SS::Document
   include SS::Reference::User
+  include ActiveSupport::NumberHelper
 
   attr_accessor :in_file, :in_files, :resizing
 
@@ -228,9 +229,5 @@ module SS::Model::File
                  size: number_to_human_size(file.size),
                  limit: number_to_human_size(limit_size)
       false
-    end
-
-    def number_to_human_size(size)
-      ApplicationController.helpers.number_to_human_size(size)
     end
 end
