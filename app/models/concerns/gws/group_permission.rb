@@ -3,18 +3,23 @@ module Gws::GroupPermission
   include SS::Permission
 
   included do
+    class_variable_set(:@@_permission_include_custom_group, nil)
+
     field :permission_level, type: Integer, default: 1
 
     field :group_names, type: Array
     field :user_uids, type: Array
     field :user_names, type: Array
+    field :custom_group_names, type: Array
     embeds_ids :groups, class_name: "SS::Group"
     embeds_ids :users, class_name: "SS::User"
+    embeds_ids :custom_groups, class_name: "Gws::CustomGroup"
 
-    permit_params :permission_level, group_ids: [], user_ids: []
+    permit_params :permission_level, group_ids: [], user_ids: [], custom_group_ids: []
 
     before_validation :set_group_names
     before_validation :set_user_names
+    before_validation :set_custom_group_names
   end
 
   def owned?(user)
@@ -68,6 +73,10 @@ module Gws::GroupPermission
       self.user_names = users.map(&:name)
     end
 
+    def set_custom_group_names
+      self.custom_group_names = custom_groups.map(&:name)
+    end
+
   module ClassMethods
     # @param [String] action
     # @param [Gws::User] user
@@ -97,5 +106,14 @@ module Gws::GroupPermission
       return where("$or" => or_cond) if or_cond.present?
       where({ _id: -1 })
     end
+
+    def permission_included_custom_group?
+      class_variable_get(:@@_permission_include_custom_group)
+    end
+
+    private
+      def permission_include_custom_group
+        class_variable_set(:@@_permission_include_custom_group, true)
+      end
   end
 end
