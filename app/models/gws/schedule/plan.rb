@@ -29,7 +29,7 @@ class Gws::Schedule::Plan
   validate :validate_file_size
 
   def target_options
-    keys = %w(all group member custom_group)
+    keys = %w(all member group custom_group)
     keys.map { |key| [I18n.t("gws.options.target.#{key}"), key] }
   end
 
