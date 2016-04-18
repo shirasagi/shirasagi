@@ -121,6 +121,7 @@ ja:
       confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
     units:
       count: 件
+      mega_byte: MB
 
   ss:
     views:

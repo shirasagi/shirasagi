@@ -20,8 +20,12 @@ class SS::MaxFileSize
   field :order, type: Integer
   field :state, type: String
 
-  permit_params :name, :extensions, :order, :state, :size
+  attr_accessor :in_size_mb
 
+  permit_params :name, :extensions, :order, :state, :size
+  permit_params :in_size_mb
+
+  before_validation :set_size, if: ->{ in_size_mb }
   before_save :normalize_extensions
 
   class << self
@@ -58,6 +62,10 @@ class SS::MaxFileSize
   end
 
   private
+    def set_size
+      return if in_size_mb.blank?
+      self.size = in_size_mb.to_i * 1_024 * 1_024
+    end
 
     def normalize_extensions
       return if extensions.blank?
