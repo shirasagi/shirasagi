@@ -31,7 +31,9 @@ end
 
 def gws_user
   create_gws_users
-  Gws::User.find_by uid: 'admin'
+  user = Gws::User.find_by uid: 'admin'
+  user.cur_site = gws_site if user.present?
+  user
 end
 
 def login_gws_user
