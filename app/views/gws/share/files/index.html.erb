@@ -1,3 +1,23 @@
+<%
+
+categories = Gws::Share::CategoryTraverser.build(@cur_site, @cur_user)
+options = options_for_select(categories.to_options, params[:category].to_i)
+
+%>
+<%= jquery do %>
+
+  $('.gws-category-navi-menu #category_id').change(function() {
+    var cid = $(this).val();
+    if (cid) location.href = '<%= gws_share_category_files_path(category: 'ID') %>'.replace('ID', cid);
+    else location.href = '<%= gws_share_files_path %>';
+  });
+
+<% end %>
+
+<div class="gws-category-navi-menu">
+  <%= select_tag :category_id, options, include_blank: "// #{t('gws/board.links.categories')}" %>
+</div>
+
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>

@@ -1,6 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to :"gws/share.links.categories", categories_gws_share_files_path %>
+    <%#= link_to :"gws/share.links.categories", categories_gws_share_files_path %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to :new, action: :new %>
     <% end %>

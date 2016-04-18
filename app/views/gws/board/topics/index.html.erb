@@ -1,3 +1,23 @@
+<%
+
+categories = Gws::Board::CategoryTraverser.build(@cur_site, @cur_user)
+options = options_for_select(categories.to_options, params[:category].to_i)
+
+%>
+<%= jquery do %>
+
+  $('.gws-category-navi-menu #category_id').change(function() {
+    var cid = $(this).val();
+    if (cid) location.href = '<%= gws_board_category_topics_path(category: 'ID') %>'.replace('ID', cid);
+    else location.href = '<%= gws_board_topics_path %>';
+  });
+
+<% end %>
+
+<div class="gws-category-navi-menu">
+  <%= select_tag :category_id, options, include_blank: "// #{t('gws/board.links.categories')}" %>
+</div>
+
 <% @index_title = proc do |item| %>
   <%= link_to item.name, { action: :show, id: item }, class: "title" %>
   <% if item.descendants_files_count.to_i > 0 %>

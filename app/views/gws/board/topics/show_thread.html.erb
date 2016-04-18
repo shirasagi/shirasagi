@@ -5,7 +5,8 @@
         <span class="name"><%= @item.name %></span>
         <span class="categories">
           <% @item.categories.each do |category| %>
-            <span class="gws-category-label" style="<%= category_label_css(category) %>"><%= category.trailing_name %></span>
+            <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id),
+                        class: "gws-category-label", style: category_label_css(category) %>
           <% end %>
         </span>
       </h2>

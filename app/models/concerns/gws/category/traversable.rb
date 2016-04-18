@@ -3,7 +3,7 @@ module Gws::Category::Traversable
   include Enumerable
 
   included do
-      cattr_accessor :model_class, instance_accessor: false
+    cattr_accessor :model_class, instance_accessor: false
   end
 
   class_methods do
@@ -41,6 +41,19 @@ module Gws::Category::Traversable
     @hierarchy.keys.sort.each do |category|
       yield create_wrapper(category)
     end
+  end
+
+  def to_options(child = nil, depth = 0)
+    if child
+      indent = '&nbsp; ' * depth * 2
+      options = [["#{indent}#{child.name}".html_safe, child.id]]
+      child.children.each { |c| options += to_options(c, depth + 1) }
+      return options
+    end
+
+    options = []
+    self.each { |c| options += to_options(c) }
+    return options
   end
 
   private
