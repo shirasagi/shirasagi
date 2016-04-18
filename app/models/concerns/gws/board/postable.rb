@@ -106,15 +106,15 @@ module Gws::Board::Postable
     # 最新レス投稿日時の初期値をトピックのみ設定
     # 明示的に age るケースが発生するかも
     def set_descendants_updated
-      return unless new_record?
+      #return unless new_record?
       self.descendants_updated = updated
     end
 
-    # 最新レス投稿日時をトピックに設定
+    # 最新レス投稿日時、レス更新日時をトピックに設定
     # 明示的に age るケースが発生するかも
     def update_topic_descendants_updated
       return unless topic
-      return unless _id_changed?
+      #return unless _id_changed?
       topic.set descendants_updated: updated
     end
 end

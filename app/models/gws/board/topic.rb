@@ -13,6 +13,10 @@ class Gws::Board::Topic
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 
+  def updated?
+    created.to_i != updated.to_i || created.to_i != descendants_updated.to_i
+  end
+
   private
     def set_descendants_updated_with_released
       if descendants_updated.present?

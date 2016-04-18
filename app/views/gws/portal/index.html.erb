@@ -80,7 +80,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
                           class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>
-          <span class="mode"><%= item.histories.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
         </div>
       </li>
