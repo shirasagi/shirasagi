@@ -10,7 +10,7 @@ class Sns::LoginController < ApplicationController
 
   private
     def get_params
-      params.require(:item).permit(:uid, :email, :password, :encryption_type)
+      params.require(:item).permit(:uid, :email, :password, :encryption_type, :remember_me)
     rescue
       raise "400"
     end
@@ -28,8 +28,17 @@ class Sns::LoginController < ApplicationController
   public
     def login
       if !request.post?
+        if user = SS::UserToken.find_user_by_cookie(cookies[SS.config.sns.remember_me_key])
+          set_user user, session: true, remember_me: true
+          respond_to do |format|
+            format.html { login_success }
+            format.json { head :no_content }
+          end
+          return
+        end
+
         # retrieve parameters from get parameter. this is bookmark support.
-        @item = SS::User.new email: params[:email]
+        @item = SS::LoginParam.new email: params[:email]
         return
       end
 
@@ -45,13 +54,13 @@ class Sns::LoginController < ApplicationController
       @item = nil if @item && !@item.enabled?
 
       if @item
-        set_user @item, session: true, password: password
+        set_user @item, session: true, password: password, remember_me: safe_params[:remember_me] == 'yes'
         respond_to do |format|
           format.html { login_success }
           format.json { head :no_content }
         end
       else
-        @item = SS::User.new email: email_or_uid
+        @item = SS::LoginParam.new email: email_or_uid
         @error = t "sns.errors.invalid_login"
         respond_to do |format|
           format.html { render }
@@ -71,6 +80,9 @@ class Sns::LoginController < ApplicationController
       put_history_log
       # discard all session info
       reset_session
+      # delete remember me token
+      cookies.delete(SS.config.sns.remember_me_key)
+
       respond_to do |format|
         format.html { redirect_to sns_login_path }
         format.json { head :no_content }

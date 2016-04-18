@@ -23,6 +23,10 @@
     <%= password_field :item, :password %>
   </div>
 
+  <div class="form-group">
+    <label for="item_remember_me"><%= check_box :item, :remember_me, {}, 'yes', 'no' %><%= t("ss.views.login/login.remember_me") %></label>
+  </div>
+
   <footer class="send">
     <%= submit_tag t("views.button.login"), class: "btn-primary" %>
   </footer>

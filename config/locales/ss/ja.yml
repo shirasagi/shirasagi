@@ -129,6 +129,7 @@ ja:
       login/login:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
+        remember_me: ログインしたままにする
     apis:
       groups:
         index: グループを選択する

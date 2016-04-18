@@ -86,6 +86,14 @@ module SS::BaseFilter
       end
       redirect_to sns_mypage_path if opt[:redirect]
       @cur_user = user
+
+      if opt[:remember_me]
+        token = SS::UserToken.create(user_id: @cur_user.id)
+        cookies[SS.config.sns.remember_me_key] = {
+          value: token.cookie_value,
+          expires: 2.weeks.from_now,
+          httponly: true }
+      end
     end
 
     def rescue_action(e)
