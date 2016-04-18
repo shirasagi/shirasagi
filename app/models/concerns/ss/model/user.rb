@@ -65,6 +65,7 @@ module SS::Model::User
     validate :validate_account_expiration_date
     validate :validate_initial_password, if: -> { self_edit }
 
+    after_save :save_group_history, if: -> { @db_changes['group_ids'] }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
     default_scope -> {
@@ -180,5 +181,17 @@ module SS::Model::User
 
     def validate_initial_password
       self.initial_password_warning = nil if password_changed?
+    end
+
+    def save_group_history
+      changes = @db_changes['group_ids']
+      item = SS::UserGroupHistory.new({
+        cur_site: @cur_site,
+        user_id: id,
+        group_ids: group_ids,
+        inc_group_ids: (changes[1].to_a - changes[0].to_a),
+        dec_group_ids: (changes[0].to_a - changes[1].to_a)
+      })
+      item.save
     end
 end

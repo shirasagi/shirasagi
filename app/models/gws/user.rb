@@ -1,8 +1,8 @@
 class Gws::User
   include SS::Model::User
-  include Gws::Addon::Role
-  include Gws::Reference::Role
   include Gws::SitePermission
+  include Gws::Addon::Role
+  include SS::Addon::UserGroupHistory
 
   set_permission_name "gws_users", :edit
 

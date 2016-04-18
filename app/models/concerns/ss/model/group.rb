@@ -50,6 +50,10 @@ module SS::Model::Group
     name.tr("/", " ")
   end
 
+  def section_name
+    name.split("/")[1..-1].join(' ')
+  end
+
   def trailing_name
     name.split("/").pop
   end

@@ -143,6 +143,7 @@ ja:
       ss/body: 本文
       ss/markdown: 内容
       ss/mobile_setting: モバイル設定
+      ss/user_group_history: 異動履歴
 
   mongoid:
     models:
@@ -203,6 +204,11 @@ ja:
         order: 表示順
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+      ss/user_group_history:
+        cms_site_id: CMSサイト
+        gws_site_id: GWSサイト
+        group_ids: グループ
+        user_id: ユーザー
       ss/reference/user:
         user_id: ユーザー
       ss/reference/site:
