@@ -45,7 +45,7 @@ module Gws::Category::Traversable
 
   def to_options(child = nil, depth = 0)
     if child
-      indent = '&nbsp; ' * depth * 2
+      indent = '-' + '-' * depth + ' '
       options = [["#{indent}#{child.name}".html_safe, child.id]]
       child.children.each { |c| options += to_options(c, depth + 1) }
       return options
