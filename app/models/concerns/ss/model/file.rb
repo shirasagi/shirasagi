@@ -7,6 +7,7 @@ module SS::Model::File
   attr_accessor :in_file, :in_files, :resizing
 
   included do
+    cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/files" }
     store_in collection: "ss_files"
 
     seqid :id
@@ -37,10 +38,6 @@ module SS::Model::File
   end
 
   module ClassMethods
-    def root
-      "#{Rails.root}/private/files"
-    end
-
     def resizing_options
       [
         [I18n.t('views.options.resizing.320×240'), "320,240"],
