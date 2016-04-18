@@ -29,6 +29,7 @@ module SS::Model::User
 
     seqid :id
     field :name, type: String
+    field :kana, type: String
     field :uid, type: String
     field :email, type: String
     field :password, type: String
@@ -45,13 +46,14 @@ module SS::Model::User
 
     embeds_ids :groups, class_name: "SS::Group"
 
-    permit_params :name, :uid, :email, :password, :tel, :type, :login_roles, :remark, group_ids: []
+    permit_params :name, :kana, :uid, :email, :password, :tel, :type, :login_roles, :remark, group_ids: []
     permit_params :in_password
     permit_params :account_start_date, :account_expiration_date, :initial_password_warning
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
 
     validates :name, presence: true, length: { maximum: 40 }
+    validates :kana, length: { maximum: 40 }
     validates :uid, length: { maximum: 40 }
     validates :uid, uniqueness: true, if: ->{ uid.present? }
     validates :email, email: true, length: { maximum: 80 }
@@ -109,7 +111,7 @@ module SS::Model::User
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :uid, :email
+        criteria = criteria.keyword_in params[:keyword], :name, :kana, :uid, :email
       end
       criteria
     end

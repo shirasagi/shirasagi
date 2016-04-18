@@ -16,7 +16,7 @@ class Sns::UserAccountsController < ApplicationController
     end
 
     def permit_fields
-      [:name, :email, :in_password, :tel]
+      [:name, :kana, :email, :in_password, :tel]
     end
 
     def get_params

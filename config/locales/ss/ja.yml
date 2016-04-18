@@ -179,6 +179,7 @@ ja:
         group_ids: グループ
       ss/model/user:
         name: 氏名
+        kana: カナ
         uid: ユーザーID
         email: メールアドレス
         password: パスワード
@@ -253,6 +254,8 @@ ja:
     ss/model/user:
       name:
         - ユーザーの名称を入力します。
+      kana:
+        - ユーザーのカナを入力します。
       uid:
         - ユーザーIDを設定します。
         - ログイン時にユーザーIDもしくはメールアドレスを利用します。
