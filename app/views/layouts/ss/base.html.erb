@@ -53,6 +53,13 @@
           <%= @cur_user.name %>
         </h2>
         <ul class="dropdown-menu">
+          <% if @ss_mode == :gws %>
+            <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+            <% next if @cur_user.gws_default_group.id == group.id %>
+            <li><%= link_to group.section_name, gws_default_group_path(default_group: group) %></li>
+            <% end %>
+          <% end %>
+
           <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
           <li><%= link_to :logout, sns_logout_path %></li>
         </ul>

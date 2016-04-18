@@ -9,6 +9,7 @@ SS::Application.routes.draw do
   get '.g:site/', to: 'gws/portal#index', as: :gws_portal
 
   namespace "gws", path: ".g:site/gws" do
+    get "default_groups/:default_group" => "default_groups#update", as: :default_group
     resource  :site
     resources :groups, concerns: [:deletion]
     resources :custom_groups, concerns: [:deletion]

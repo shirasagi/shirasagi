@@ -10,6 +10,8 @@ class Gws::User
 
   attr_accessor :in_title_id
 
+  field :gws_default_group_ids, type: Hash, default: {}
+
   embeds_ids :groups, class_name: "Gws::Group"
 
   permit_params :in_title_id
@@ -24,6 +26,19 @@ class Gws::User
 
   def title_id_options
     Gws::UserTitle.site(cur_site).active.map { |m| [m.name, m.id] }
+  end
+
+  def set_gws_default_group_id(group_id)
+    self.gws_default_group_ids[@cur_site.id.to_s] = group_id
+    save
+  end
+
+  def gws_default_group
+    return @gws_default_group if @gws_default_group
+    if group_id = gws_default_group_ids[@cur_site.id.to_s]
+      @gws_default_group = groups.in_group(@cur_site).where(id: group_id).first
+    end
+    @gws_default_group ||= groups.in_group(@cur_site).first
   end
 
   private
