@@ -35,6 +35,7 @@ class Gws::User
 
   def gws_default_group
     return @gws_default_group if @gws_default_group
+    return nil unless @cur_site
     if group_id = gws_default_group_ids[@cur_site.id.to_s]
       @gws_default_group = groups.in_group(@cur_site).where(id: group_id).first
     end
