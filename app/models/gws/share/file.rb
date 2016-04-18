@@ -4,6 +4,8 @@ class Gws::Share::File
   include Gws::Addon::Share::Category
   include Gws::Addon::GroupPermission
 
+  validates :category_ids, presence: true
+
   default_scope ->{ where(model: "share/file") }
 
   class << self
