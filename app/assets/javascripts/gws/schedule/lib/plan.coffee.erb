@@ -59,7 +59,8 @@ class @Gws_Schedule_Plan
       format = '%d/%02d/%02d'
       format = '%d/%02d/%02d %02d:%02d' if $(start_sel).hasClass('datetime')
       $(end_sel).val(sprintf(format, date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()))
-    $(start_sel).change()
+    if $(end_sel).val() == ""
+      $(start_sel).change()
 
   @relateDateTimeForm: ->
     @relateDateForm('.datetime.start', '.datetime.end')
