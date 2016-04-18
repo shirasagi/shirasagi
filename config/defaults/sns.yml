@@ -11,6 +11,9 @@ production: &production
   # Session Lifetime in seconds
   session_lifetime: 1800
 
+  # remember me cookie
+  remember_me_key: _ss_user_token
+
 test:
   <<: *production
 
