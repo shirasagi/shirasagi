@@ -22,6 +22,7 @@ class Gws::PortalController < ApplicationController
 
       @boards = Gws::Board::Topic.site(@cur_site).topic.
         and_public.
+        allow(:read, @cur_user, site: @cur_site).
         target_to(@cur_user).
         order(descendants_updated: -1).
         page(1).per(items_limit)
