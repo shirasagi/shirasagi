@@ -1,6 +1,7 @@
 @import "ss/init";
 @import "board/gws";
 @import "schedule/gws";
+@import "share/gws";
 
 // Portal
 .portal-notice, .portal-reminder, .portal-board {
@@ -90,7 +91,7 @@ a.gws-category-label:hover {
     display: block;
   }
 }
-.gws-category-tree-view {
+.gws-category-tree-view, .index-category-tree-view {
   ul.depth0 {
     font-size: 115%;
   }
@@ -103,4 +104,10 @@ a.gws-category-label:hover {
     margin-bottom: 20px;
   }
 }
-
+.index-category-tree-view {
+  float: left;
+  width: 250px;
+  li.depth0 {
+    margin-bottom: 5px;
+  }
+}
