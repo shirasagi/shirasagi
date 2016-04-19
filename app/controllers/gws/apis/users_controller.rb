@@ -10,7 +10,7 @@ class Gws::Apis::UsersController < ApplicationController
       @group = @cur_user.groups.in_group(@cur_site).map(&:id).first
       @group = params[:s][:group] if params[:s].present? && params[:s][:group].present?
 
-      @groups = Gws::Group.site(@cur_site).reduce([]) do |ret, g|
+      @groups = Gws::Group.site(@cur_site).active.reduce([]) do |ret, g|
         indent = '-' * g.depth
         ret << [ "#{indent} #{g.trailing_name}".html_safe, g.id ]
       end.to_a
