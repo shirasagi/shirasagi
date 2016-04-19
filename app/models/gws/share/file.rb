@@ -37,6 +37,8 @@ class Gws::Share::File
         size = in_file.size
       elsif in_files.present?
         size = in_files.map(&:size).max || 0
+      else
+        return
       end
 
       if size > limit
