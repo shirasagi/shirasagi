@@ -6,6 +6,9 @@ class Gws::Apis::CustomGroupsController < ApplicationController
   def index
     @multi = params[:single].blank?
 
-    super
+    @items = @model.site(@cur_site).
+      target_to(@cur_user).
+      search(params[:s]).
+      page(params[:page]).per(50)
   end
 end
