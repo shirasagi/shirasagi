@@ -32,7 +32,6 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
 
 <%= render partial: "gws/schedule/main/tabs" %>
 <section class="main-box">
-  <!-- <header><h2><%= t('modules.gws/schedule') %></h2></header> -->
   <div class="calendar" id="calendar-controller"></div>
   <div class="calendar-multiple-header">
     <%= link_to @cur_user.name, gws_schedule_plans_path, class: "calendar-name" %>
@@ -48,10 +47,16 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
       <% @reminders.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <% if item.reminder_updated? %><span class="gws-reminder-updated-flag"></span><% end %>
+          <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
           <%= link_to item.name, instance_exec(&item.url_lazy), class: 'title' %>
-          <span class="mode"><%= item.updated_fields.present? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+        </div>
+        <div class="meta">
           <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
+          <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <% if item.updated_user_name.present? %>
+            <span class="label"><%= item.t :updated_user_name %></span>
+            <span class="user"><%= item.updated_user_name %></span>
+          <% end %>
         </div>
       </li>
       <% end %>
@@ -69,19 +74,21 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
       <% @boards.each do |item| %>
       <li class="list-item">
         <div class="info">
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <%= link_to item.name, gws_board_topic_path(id: item), class: 'title' %>
           <% if item.descendants_files_count.to_i > 0 %>
-          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+            <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
           <% end %>
-          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-          <span class="gws-board-categories">
+        </div>
+        <div class="meta">
+          <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <span>
             <% item.categories.compact.each do |category| %>
               <%= link_to category.trailing_name, gws_board_category_topics_path(category: category.id),
                           class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>
-          <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
-          <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
         </div>
       </li>
       <% end %>

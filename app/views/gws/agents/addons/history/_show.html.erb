@@ -1,22 +1,30 @@
 <%= jquery do %> SS_AddonTabs.hide(".gws-addon-history"); <% end %>
 
-<div class="see gws-addon-history">
-  <dl class="see">
-    <dt><%= t('modules.addons.gws/history') %></dt>
-    <dd>
+<div class="gws-addon-history">
+  <table class="index">
+    <thead>
+      <tr>
+        <th style="width: 80px"><%= Gws::History.t :mode %></th>
+        <th style="width: 140px"><%= Gws::History.t :created %></th>
+        <th><%= Gws::History.t :user_name %></th>
+        <th><%= Gws::History.t :user_tel %></th>
+        <th><%= Gws::History.t :updated_fields %></th>
+      </tr>
+    </thead>
+    <tbody>
       <% @item.histories.each do |item| %>
-        <span><%= item.mode_name %></span>
-        - <span><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></span>
-
-        - <span><%= item.user_long_name %></span>
-        <span><%= item.user_tel %></span>
-
-        <% if (names = item.updated_field_names).present? %>
-        - <span><%= truncate names.join(', '), length: 30 %></span>
-        <% end %>
-
-        <br />
+      <tr>
+        <td><%= item.mode_name %></td>
+        <td><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></td>
+        <td><%= item.user_long_name %></td>
+        <td><%= item.user_tel %></td>
+        <td>
+          <% if (names = item.updated_field_names).present? %>
+          <%= truncate names.join(', '), length: 30 %>
+          <% end %>
+        </td>
+      </tr>
       <% end %>
-    </dd>
-  </dl>
+    </tbody>
+  </table>
 </div>

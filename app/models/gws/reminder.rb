@@ -11,6 +11,9 @@ class Gws::Reminder
   field :item_id, type: String
   field :read_at, type: DateTime
   field :updated_fields, type: Array
+  field :updated_user_id, type: Integer
+  field :updated_user_uid, type: String
+  field :updated_user_name, type: String
 
   permit_params :name, :model, :date, :item_id
 
@@ -40,7 +43,11 @@ class Gws::Reminder
     -> { send url, options }
   end
 
-  def reminder_updated?
+  def updated?
+    updated_fields.present?
+  end
+
+  def unread?
     read_at.to_i < updated.to_i
   end
 

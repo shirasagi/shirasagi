@@ -55,6 +55,11 @@ module Gws::Addon
           item.name = reference_name
           item.date = reminder_date
           item.updated_fields = @db_changes.keys unless new_record
+          if @cur_user
+            item.updated_user_id = @cur_user.id
+            item.updated_user_uid = @cur_user.uid
+            item.updated_user_name = @cur_user.name
+          end
           item.save if item.changed?
         end
 

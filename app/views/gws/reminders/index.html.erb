@@ -10,13 +10,21 @@
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
-        <% if item.reminder_updated? %><span class="gws-reminder-updated-flag"></span><% end %>
+        <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
         <%= link_to item.name, instance_exec(&item.url_lazy), class: "title" %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
-          <span class="fields"><%= item.updated_field_names.join(', ') %></span>
+          <span><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <% if item.updated_user_name.present? %>
+            <span class="label"><%= item.t :updated_user_name %></span>
+            <span class="user"><%= item.updated_user_name %></span>
+          <% end %>
+          <% if item.updated_field_names.present? %>
+            <span class="label"><%= item.t :updated_fields %></span>
+            <span class="fields"><%= truncate item.updated_field_names.join(', '), length: 30 %></span>
+          <% end %>
         </div>
       </div>
     </li>

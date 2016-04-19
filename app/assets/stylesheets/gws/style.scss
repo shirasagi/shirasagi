@@ -1,6 +1,4 @@
 @import "ss/init";
-@import "ss/lib";
-@import "ss/pc_mb";
 @import "board/gws";
 @import "schedule/gws";
 
@@ -25,15 +23,6 @@
   width: 50%;
   .index {
     min-height: 245px;
-    .datetime {
-      float: right;
-      margin-left: 5px;
-      color: #888;
-    }
-    .mode {
-      float: right;
-      margin-left: 5px;
-    }
   }
 }
 .portal-reminder .index {

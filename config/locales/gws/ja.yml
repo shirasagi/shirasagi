@@ -86,7 +86,7 @@ ja:
       gws/file: ファイル
       gws/release: 公開設定
       gws/reminder: リマインダー設定
-      gws/history: 更新履歴
+      gws/history: 変更履歴
     settings:
       gws/system: システム設定
 
@@ -101,6 +101,7 @@ ja:
       gws/link: リンク集
       gws/share: 共有ファイル
       gws/reminder: リマインダー
+      gws/history: 変更履歴
     attributes:
       gws/content/targetable:
         target: 公開範囲
@@ -121,6 +122,16 @@ ja:
         name: タイトル
         date: 日時
         url: URL
+        updated_fields: 変更項目
+        updated_user_id: 更新者ID
+        updated_user_uid: 変更項目
+        updated_user_name: 更新者
+      gws/history:
+        created: 変更日時
+        mode: 区分
+        updated_fields: 変更項目
+        user_name: ユーザー
+        user_tel: 電話番号
       gws/addon/role:
         gws_role_ids: ロール
       gws/addon/permission:

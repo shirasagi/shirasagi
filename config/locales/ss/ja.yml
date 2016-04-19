@@ -152,6 +152,7 @@ ja:
       ss/user: ユーザー
       ss/user_title: 役職
       ss/group: グループ
+      ss/user_group_history: 異動履歴
       ss/file: ファイル
       ss/temp_file: 一時ファイル
       ss/user_file: ユーザーファイル
@@ -207,6 +208,7 @@ ja:
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
       ss/user_group_history:
+        created: 異動日時
         cms_site_id: CMSサイト
         gws_site_id: GWSサイト
         group_ids: グループ

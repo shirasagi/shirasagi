@@ -1162,8 +1162,17 @@ div.index {
       margin-right: 10px;
       //font-size: $px12;
     }
+    .label {
+      margin-right: 0;
+      color: #844;
+      &:before { content: '['; }
+      &:after { content: ']'; }
+    }
     .id {
-      color: #888;
+      color: #444;
+    }
+    .datetime {
+      color: #777;
     }
     .filename {
       color: #080;
