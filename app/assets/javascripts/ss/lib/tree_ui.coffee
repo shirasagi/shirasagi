@@ -7,7 +7,8 @@ class @SS_TreeUI
     $(tree).find("tbody tr").each ->
       root.push(parseInt($(this).attr("data-depth")))
     root = Math.min.apply(null, root)
-    return unless Number.isInteger(root) && root > 0
+    root = parseInt(root)
+    return if isNaN(root) || root <= 0
 
     $(tree).find("tbody tr").each ->
       td = $(this).find(".expandable")
