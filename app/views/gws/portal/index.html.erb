@@ -57,6 +57,10 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
             <span class="label"><%= item.t :updated_user_name %></span>
             <span class="user"><%= item.updated_user_name %></span>
           <% end %>
+          <% if item.updated_date.present? %>
+            <span class="label"><%= item.t :updated_date %></span>
+            <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
+          <% end %>
         </div>
       </li>
       <% end %>

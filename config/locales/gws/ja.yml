@@ -126,6 +126,7 @@ ja:
         updated_user_id: 更新者ID
         updated_user_uid: 変更項目
         updated_user_name: 更新者
+        updated_date: 更新日
       gws/history:
         created: 変更日時
         mode: 区分

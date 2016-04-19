@@ -59,6 +59,7 @@ module Gws::Addon
             item.updated_user_id = @cur_user.id
             item.updated_user_uid = @cur_user.uid
             item.updated_user_name = @cur_user.name
+            item.updated_date = updated
           end
           item.save if item.changed?
         end

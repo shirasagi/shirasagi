@@ -14,6 +14,7 @@ class Gws::Reminder
   field :updated_user_id, type: Integer
   field :updated_user_uid, type: String
   field :updated_user_name, type: String
+  field :updated_date, type: DateTime
 
   permit_params :name, :model, :date, :item_id
 
