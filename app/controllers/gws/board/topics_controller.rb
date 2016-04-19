@@ -39,10 +39,10 @@ class Gws::Board::TopicsController < ApplicationController
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
 
       @items = @model.site(@cur_site).topic
+        allow(:read, @cur_user, site: @cur_site)
 
       if params[:s] && params[:s][:state] == "closed"
-        @items = @items.and_closed.
-          allow(:read, @cur_user, site: @cur_site)
+        @items = @items.and_closed
       else
         @items = @items.and_public.
           target_to(@cur_user)
