@@ -173,8 +173,8 @@ module SS::Document
     end
   end
 
-  def t(name)
-    self.class.t name
+  def t(name, opts = {})
+    self.class.t name, opts
   end
 
   def tt(key, html_wrap = true)

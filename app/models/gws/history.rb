@@ -29,7 +29,7 @@ class Gws::History
 
   def updated_field_names
     return [] if updated_fields.blank?
-    updated_fields.map { |m| item.t(m) }
+    updated_fields.map { |m| item.t(m, default: '').presence }.compact
   end
 
   class << self

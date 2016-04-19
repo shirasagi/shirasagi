@@ -4,7 +4,7 @@ module Gws::Addon
     extend SS::Addon
 
     included do
-      before_save :save_history_for_save
+      after_save :save_history_for_save
       after_destroy :save_history_for_destroy
     end
 
@@ -19,7 +19,7 @@ module Gws::Addon
         if @db_changes.key?('_id')
           save_history mode: 'create'
         else
-          save_history mode: 'update', updated_fields: @db_changes.keys
+          save_history mode: 'update', updated_fields: @db_changes.keys.reject { |s| s =~ /_hash$/ }
         end
       end
 
