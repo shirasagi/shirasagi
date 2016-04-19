@@ -126,7 +126,7 @@ class Gws::Schedule::RepeatPlan
 
       dates.each do |dt|
         check_month = dt + interval.month
-        check_date = get_date_by_ordinal_week(check_month.year, check_month.month, week, wday)
+        check_date = get_date_by_nearest_ordinal_week(check_month.year, check_month.month, week, wday)
         dates << check_date if check_date <= repeat_end
       end
       dates
@@ -155,16 +155,30 @@ class Gws::Schedule::RepeatPlan
     # @return [nil]             条件が不正な場合はnilが返る
     def get_date_by_ordinal_week(year, month, week, wday)
       repeat_start = Date.new(year, month, 1)
-      repeat_end = repeat_start + 1.month - 1.day
-      return_date = nil
+      repeat_end = repeat_start.end_of_month
 
-      repeat_start.upto(repeat_end).each do |dt|
-        if get_week_number_of_month(dt) == week && dt.wday == wday
-          return_date = Date.parse(dt.to_s)
-          break
-        end
+      diff_wday = wday - repeat_start.wday
+      diff_wday += 7 if diff_wday < 0
+
+      repeat_start += diff_wday
+      repeat_start += (week - 1) * 7
+
+      repeat_start <= repeat_end ? repeat_start : nil
+    end
+
+    # 条件に近い日付を返す
+    # @param  [Integer] year    年
+    # @param  [Integer] month   月
+    # @param  [Integer] week    第何週
+    # @param  [Integer] wday    曜日
+    # @return [Date]            条件に合致する日付
+    #                             条件が不正な場合は近い日が返る
+    #                             例えば 4 月に第 5 月曜日が存在しなかった場合、第 4 月曜日を返す。
+    def get_date_by_nearest_ordinal_week(year, month, week, wday)
+      while week >= 0 && (ret = get_date_by_ordinal_week(year, month, week, wday)).nil?
+        week = week - 1
       end
-      return_date
+      ret
     end
 
     # 繰り返し予定を登録
