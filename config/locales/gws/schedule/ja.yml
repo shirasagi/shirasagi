@@ -70,7 +70,7 @@ ja:
   mongoid:
     models:
       gws/schedule/plan: スケジュール
-      gws/schedule/category: スケジュール種類
+      gws/schedule/category: スケジュール種別
       gws/schedule/holiday: 休日
     errors:
       models:
@@ -88,7 +88,7 @@ ja:
       gws/schedule/plan:
         repeat_plan_id: 繰り返し
         target: 公開範囲
-        category_id: スケジュール種別
+        category_id: 種別
       gws/schedule/repeat_plan: &repeat_plan
         repeat_type: 繰り返し設定
         interval: 繰り返し間隔
