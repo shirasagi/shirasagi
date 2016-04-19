@@ -109,7 +109,7 @@ module Gws::GroupPermission
         ]}
       end
 
-      return where("$or" => or_cond) if or_cond.present?
+      return where("$and" => [{ "$or" => or_cond }]) if or_cond.present?
       where({ _id: -1 })
     end
 
