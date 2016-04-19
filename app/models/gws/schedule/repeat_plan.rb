@@ -183,7 +183,9 @@ class Gws::Schedule::RepeatPlan
       attr.delete('_id')
 
       #TODO: 最適化
-      base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).delete
+      base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).each do |p|
+        p.destroy_without_repeat_plan
+      end
 
       dates.each_with_index do |date, idx|
         plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
