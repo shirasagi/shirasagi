@@ -9,6 +9,50 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example, tmpdi
   let(:friday) { 5 }
   let(:saturday) { 6 }
 
+  describe "#monthly_dates_by_date" do
+    context "with 2016/05/01～2017/5/01" do
+      let(:repeat_start) { Date.new(2016, 5, 1) }
+      let(:repeat_end) { Date.new(2017, 5, 1) }
+      let(:interval) { 1 }
+      let(:item) { described_class.new(repeat_start: repeat_start, repeat_end: repeat_end, interval: 1) }
+      subject { item.send(:monthly_dates_by_date) }
+
+      it { is_expected.to include(Date.new(2016, 5, 1)) }
+      it { is_expected.to include(Date.new(2016, 6, 1)) }
+      it { is_expected.to include(Date.new(2016, 7, 1)) }
+      it { is_expected.to include(Date.new(2016, 8, 1)) }
+      it { is_expected.to include(Date.new(2016, 9, 1)) }
+      it { is_expected.to include(Date.new(2016, 10, 1)) }
+      it { is_expected.to include(Date.new(2016, 11, 1)) }
+      it { is_expected.to include(Date.new(2016, 12, 1)) }
+      it { is_expected.to include(Date.new(2017, 1, 1)) }
+      it { is_expected.to include(Date.new(2017, 2, 1)) }
+      it { is_expected.to include(Date.new(2017, 3, 1)) }
+      it { is_expected.to include(Date.new(2017, 4, 1)) }
+    end
+
+    context "with 2016/05/31～2017/5/31" do
+      let(:repeat_start) { Date.new(2016, 5, 31) }
+      let(:repeat_end) { Date.new(2017, 5, 31) }
+      let(:interval) { 1 }
+      let(:item) { described_class.new(repeat_start: repeat_start, repeat_end: repeat_end, interval: 1) }
+      subject { item.send(:monthly_dates_by_date) }
+
+      it { is_expected.to include(Date.new(2016, 5, 31)) }
+      it { is_expected.to include(Date.new(2016, 6, 30)) }
+      it { is_expected.to include(Date.new(2016, 7, 31)) }
+      it { is_expected.to include(Date.new(2016, 8, 31)) }
+      it { is_expected.to include(Date.new(2016, 9, 30)) }
+      it { is_expected.to include(Date.new(2016, 10, 31)) }
+      it { is_expected.to include(Date.new(2016, 11, 30)) }
+      it { is_expected.to include(Date.new(2016, 12, 31)) }
+      it { is_expected.to include(Date.new(2017, 1, 31)) }
+      it { is_expected.to include(Date.new(2017, 2, 28)) }
+      it { is_expected.to include(Date.new(2017, 3, 31)) }
+      it { is_expected.to include(Date.new(2017, 4, 30)) }
+    end
+  end
+
   describe "#get_week_number_of_month" do
     context "with 2016/01/01" do
       subject { described_class.new.send(:get_week_number_of_month, Date.new(2016, 1, 1)) }
@@ -86,7 +130,7 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example, tmpdi
 
     context "5th monday of April" do
       subject { described_class.new.send(:get_date_by_nearest_ordinal_week, 2016, 4, 5, monday) }
-      it { is_expected.to  eq Date.new(2016, 4, 25) }
+      it { is_expected.to eq Date.new(2016, 4, 25) }
     end
   end
 end

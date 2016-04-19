@@ -108,9 +108,10 @@ class Gws::Schedule::RepeatPlan
       dates = []
       dates << repeat_start
 
-      dates.each do |date|
-        date += interval.month
-        dates << date if date <= repeat_end
+      1.upto(1_024) do |i|
+        date = (interval * i).months.since(repeat_start)
+        break if date > repeat_end
+        dates << date
       end
       dates
     end
@@ -175,8 +176,10 @@ class Gws::Schedule::RepeatPlan
     #                             条件が不正な場合は近い日が返る
     #                             例えば 4 月に第 5 月曜日が存在しなかった場合、第 4 月曜日を返す。
     def get_date_by_nearest_ordinal_week(year, month, week, wday)
-      while week >= 0 && (ret = get_date_by_ordinal_week(year, month, week, wday)).nil?
-        week = week - 1
+      while week > 0
+        ret = get_date_by_ordinal_week(year, month, week, wday)
+        break if ret.present?
+        week -= 1
       end
       ret
     end
