@@ -11,19 +11,15 @@ module Inquiry::Addon
       field :input_confirm, type: String, default: ""
       permit_params :input_type, :required, :additional_attr, :select_options, :input_confirm
 
+      validates :input_type, presence: true, inclusion: { in: %w(text_field text_area email_field radio_button select check_box) }
       validate :validate_select_options
       validate :validate_input_confirm_options
     end
 
     def input_type_options
-      [
-        [I18n.t('inquiry.options.input_type.text_field'), 'text_field'],
-        [I18n.t('inquiry.options.input_type.text_area'), 'text_area'],
-        [I18n.t('inquiry.options.input_type.email_field'), 'email_field'],
-        [I18n.t('inquiry.options.input_type.radio_button'), 'radio_button'],
-        [I18n.t('inquiry.options.input_type.select'), 'select'],
-        [I18n.t('inquiry.options.input_type.check_box'), 'check_box'],
-      ]
+      %w(text_field text_area email_field radio_button select check_box).map do |v|
+        [ I18n.t("inquiry.options.input_type.#{v}"), v ]
+      end
     end
 
     def required_options
