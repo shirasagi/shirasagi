@@ -1,0 +1,129 @@
+class @Gws_FileUpload
+  constructor: (elem, options) ->
+    @elem = $(elem)
+    @options = options
+    @token = $('meta[name="csrf-token"]').attr('content')
+    @bindEvents()
+    @loadPendingFiles()
+    @hideError()
+
+  bindEvents: ->
+    target = @elem.find('.droppable')
+    #target.on 'dragenter', (e) =>
+    #  target.addClass("active")
+    #  @cancelEvent(e)
+    target.on 'dragover', (e) =>
+      target.addClass("active")
+      @cancelEvent(e)
+    target.on 'dragleave', (e) =>
+      target.removeClass("active")
+      @cancelEvent(e)
+    target.on 'drop', (e) =>
+      @hideError()
+      @uploadFiles(e.originalEvent.dataTransfer.files)
+      target.removeClass("active")
+      @cancelEvent(e)
+
+    @elem.find(".select-files").on "click", (e) =>
+      $(".input-files").click()
+      @cancelEvent(e)
+
+    @elem.find(".input-files").on "change", (e) =>
+      @hideError()
+      @uploadFiles(e.target.files)
+      @cancelEvent(e)
+
+    @elem.on "click", ".delete-file", (e) =>
+      @deleteFile(e)
+
+  cancelEvent: (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    false
+
+  uploadFiles: (files) ->
+    for file in files
+      formData = new FormData()
+      formData.append("authenticity_token", @token)
+      formData.append("item[in_file]", file)
+
+      xhr = new XMLHttpRequest()
+      xhr.open("POST", @options.createUrl)
+      xhr.onload = =>
+        if (xhr.readyState == 4)
+          if (xhr.status >= 200 && xhr.status < 300)
+            @loadPendingFiles()
+          else
+            @showError([xhr.statusText])
+      xhr.onerror = =>
+        @showError([xhr.statusText])
+      xhr.send(formData)
+
+  loadPendingFiles: ->
+    $.ajax
+      type: "GET"
+      url: @options.indexUrl
+      success: (data) =>
+        @renderItems(data)
+      error: (data, status) =>
+        @showError([data, ["== Error =="].concat(data.responseJSON).join("\n")])
+
+  renderItems: (items) ->
+    target = @elem.find(".pending-files")
+    unless items
+      target.html('')
+      return
+
+    html = []
+    for item in items
+      html.push(@renderItem(item))
+    target.html(html.join(''))
+
+  renderItem: (item) ->
+    console.log("item=#{JSON.stringify(item)}")
+
+    html = []
+    html.push('<div class="file-view">')
+    html.push('<a class="thumb" href="')
+    html.push(@options.viewUrl.replace(/:id/, item._id))
+    html.push('" target="_blank">')
+    html.push('<img alt="', item.name, '" src="', @options.thumbUrl.replace(/:id/, item._id), '">')
+    html.push('</a>')
+    html.push('<div class="name"><label>')
+    html.push('<input name="item[file_ids][]" class="file-id" type="hidden" value="', item._id, '">')
+    html.push(item.name)
+    html.push('</label><br></div>')
+    html.push('<div class="action edit">')
+    html.push('<a class="edit-file" data-id="', item._id, '">編集</a>')
+    html.push('</div>')
+    html.push('<div class="action delete">')
+    html.push('<a class="delete-file" data-id="', item._id, '">削除</a>')
+    html.push('</div>')
+    html.push('</div>')
+    html.join('')
+
+  showError: (messages) ->
+    html = []
+    html.push('<h2>アップロードエラーが発生しました。</h2>')
+    html.push('<p>次の項目を確認してください。</p>')
+    html.push('<ul>')
+    for message in messages
+      html.push('<li>', message, '</li>')
+    html.push('</ul>')
+    @elem.find('.errorExplanation').html(html.join(''))
+    @elem.find('.errorExplanation').show()
+
+  hideError: ->
+    @elem.find('.errorExplanation').hide()
+
+  deleteFile: (e) ->
+    id = $(e.target).data('id')
+    @hideError()
+    $.ajax
+      type: "DELETE"
+      url: @options.destroyUrl.replace(/:id/, id)
+      success: =>
+        @loadPendingFiles()
+      error: (data, status) =>
+        @showError([data, ["== Error =="].concat(data.responseJSON).join("\n")])
+    @cancelEvent(e)
