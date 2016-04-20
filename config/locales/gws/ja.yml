@@ -56,6 +56,7 @@ ja:
     edit_gws_users: ユーザの管理
     edit_gws_user_titles: 役職の管理
     edit_gws_roles: 権限/ロールの管理
+    read_gws_histories: 変更履歴の閲覧
     read_other_gws_custom_groups: カスタムグループの閲覧（全て）
     read_private_gws_custom_groups: カスタムグループの閲覧（所有）
     read_users_gws_custom_groups: カスタムグループの閲覧（個人）
@@ -135,7 +136,7 @@ ja:
         user_id: 作成者
         user_uid: 作成者
         user_name: 作成者
-        user_tel: 作成者
+        user_tel: 電話番号
         user_group_id: 作成者
         user_group_name: 作成者
       gws/addon/role:
