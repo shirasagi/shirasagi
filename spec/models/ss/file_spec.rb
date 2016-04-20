@@ -1,6 +1,16 @@
 require 'spec_helper'
 
 describe SS::File do
+  describe "empty" do
+    subject { described_class.new }
+    its(:valid?) { is_expected.to be_falsey }
+  end
+
+  describe "factory girl" do
+    subject { create :ss_file }
+    its(:valid?) { is_expected.to be_truthy }
+  end
+
   describe "shirasagi-434" do
     before do
       @tmpdir = ::Dir.mktmpdir
