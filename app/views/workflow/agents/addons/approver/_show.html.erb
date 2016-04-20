@@ -31,7 +31,6 @@ $ ->
           location.href = redirect_location
         else
           location.reload()
-        end
       error: (xhr, status) ->
         try
           errors = $.parseJSON(xhr.responseText)
