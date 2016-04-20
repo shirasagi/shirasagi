@@ -4,6 +4,13 @@ class Inquiry::Column
   include Cms::SitePermission
   include Inquiry::Addon::InputSetting
 
+  INPUT_TYPE_VALIDATION_HANDLERS = [
+    [ :email_field, :validate_email_field ].freeze,
+    [ :radio_button, :validate_radio_button ].freeze,
+    [ :select, :validate_select ].freeze,
+    [ :check_box, :validate_check_box ].freeze,
+  ].freeze
+
   seqid :id
   field :node_id, type: Integer
   field :state, type: String, default: "public"
@@ -47,7 +54,9 @@ class Inquiry::Column
       end
     end
 
-    send("validate_#{input_type}", answer, data) if respond_to?("validate_#{input_type}")
+    handler = INPUT_TYPE_VALIDATION_HANDLERS.find { |type, handler| type == input_type.to_sym }
+    return if handler.nil? || !respond_to?(handler[1])
+    send(handler[1], answer, data)
   end
 
   def validate_email_field(answer, data)
