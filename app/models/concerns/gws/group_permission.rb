@@ -6,7 +6,6 @@ module Gws::GroupPermission
     class_variable_set(:@@_permission_include_custom_group, nil)
 
     field :permission_level, type: Integer, default: 1
-
     field :group_names, type: Array
     field :groups_hash, type: Hash
     field :user_uids, type: Array
@@ -14,6 +13,7 @@ module Gws::GroupPermission
     field :users_hash, type: Hash
     field :custom_group_names, type: Array
     field :custom_groups_hash, type: Hash
+
     embeds_ids :groups, class_name: "SS::Group"
     embeds_ids :users, class_name: "SS::User"
     embeds_ids :custom_groups, class_name: "Gws::CustomGroup"

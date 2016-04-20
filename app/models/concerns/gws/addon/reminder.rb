@@ -47,6 +47,7 @@ module Gws::Addon
           model: reference_model,
           item_id: id
         }
+        self_updated_fields = @db_changes.keys.reject { |s| s =~ /_hash$/ }
 
         ## save reminders
         reminder_user_ids.each do |user_id|
@@ -54,7 +55,7 @@ module Gws::Addon
           item = Gws::Reminder.where(cond).first || Gws::Reminder.new(cond)
           item.name = reference_name
           item.date = reminder_date
-          item.updated_fields = @db_changes.keys unless new_record
+          item.updated_fields = self_updated_fields unless new_record
           if @cur_user
             item.updated_user_id = @cur_user.id
             item.updated_user_uid = @cur_user.uid
