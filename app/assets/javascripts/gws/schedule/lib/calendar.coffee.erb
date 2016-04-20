@@ -86,19 +86,27 @@ class @Gws_Schedule_Calendar
         success: (data)->
           view.html(data)
 
-    eventDrop: (event, delta, revertFunc) ->
+    eventDrop: (event, delta, revertFunc, jsEvent, ui, view) ->
       end = null
       end = event.end.format() if event.end
       $.ajax
         type: 'PUT'
         url: "#{url}/" + event.id + ".json"
         data: { item: { api: 'drop', api_start: event.start.format(), api_end: end } }
+        success: (data, dataType) ->
+          viewId = view.el.closest('.calendar').attr('id')
+          $('.calendar.multiple').not("##{viewId}").fullCalendar('refetchEvents')
         error: (xhr, status, error) ->
+          alert xhr.responseJSON.join("\n")
           revertFunc()
     eventResize: (event, delta, revertFunc) ->
       $.ajax
         type: 'PUT'
         url: "#{url}/" + event.id + ".json"
         data: { item: { api: 'resize', api_start: event.start.format(), api_end: event.end.format() } }
+        success: (data, dataType) ->
+          viewId = view.el.closest('.calendar').attr('id')
+          $('.calendar.multiple').not("##{viewId}").fullCalendar('refetchEvents')
         error: (xhr, status, error) ->
+          alert xhr.responseJSON.join("\n")
           revertFunc()
