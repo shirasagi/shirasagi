@@ -1,27 +1,16 @@
 require 'spec_helper'
 
 describe "gws_board_topics", type: :feature, dbscope: :example do
-  let(:site) { gws_site }
-  let(:item) { create :gws_board_topic }
-  let!(:category) { create :gws_board_category }
-  let(:index_path) { gws_board_topics_path site }
-  let(:new_path) { new_gws_board_topic_path site }
-  let(:show_path) { gws_board_topic_path site, item }
-  let(:edit_path) { edit_gws_board_topic_path site, item }
-  let(:delete_path) { delete_gws_board_topic_path site, item }
+  context "basic crud", js: true do
+    let(:site) { gws_site }
+    let(:item) { create :gws_board_topic }
+    let!(:category) { create :gws_board_category }
+    let(:index_path) { gws_board_topics_path site }
+    let(:new_path) { new_gws_board_topic_path site }
+    let(:show_path) { gws_board_topic_path site, item }
+    let(:edit_path) { edit_gws_board_topic_path site, item }
+    let(:delete_path) { delete_gws_board_topic_path site, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
-  context "with auth", js: true do
     before { login_gws_user }
 
     it "#index" do
