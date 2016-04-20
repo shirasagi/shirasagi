@@ -15,15 +15,16 @@ class @Gws_Reminder
       error: (data)->
         alert("Error")
     }
-    $.extend params, opts
+    $.extend true, params, opts
 
     $("#gws-addon-reminder-set").click ->
       ajax_params = { method: "post" }
-      $.extend ajax_params, params, opts
+      $.extend true, ajax_params, params
       ajax_params["data"]["item"]["date"] = addon.find("#item_date").val()
       $.ajax(ajax_params)
 
     $("#gws-addon-reminder-unset").click ->
-      ajax_params = { method: "delete" }
-      $.extend ajax_params, params, opts
+      ajax_params = { method: "post" }
+      $.extend true, ajax_params, params
+      ajax_params["data"]["_method"] = "delete"
       $.ajax(ajax_params)
