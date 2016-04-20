@@ -1,8 +1,10 @@
 class Gws::Share::File
   include SS::Model::File
+  include Gws::Referenceable
   include Gws::Reference::Site
   include Gws::Addon::Share::Category
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
 
   validates :category_ids, presence: true
 
