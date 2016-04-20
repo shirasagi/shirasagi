@@ -1205,6 +1205,9 @@ table.index {
     border-bottom: $border-gray5;
     background: $gray1;
     color: $gray2;
+    &.deselect {
+      width: 100px;
+    }
     @include mb {
       display: inline-block;
       padding: 5px 0;

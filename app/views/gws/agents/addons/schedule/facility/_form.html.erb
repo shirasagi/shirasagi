@@ -10,7 +10,7 @@
   </dd>
   <dd>
     <table class="index ajax-selected">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th></th></tr></thead>
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
         <% @item.facilities.each do |item| %>
         <tr data-id="<%= item.id %>">

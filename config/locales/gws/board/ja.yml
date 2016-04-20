@@ -68,7 +68,8 @@ ja:
 
   mongoid:
     models:
-      gws/board/post: 掲示板
+      gws/board/topic: 掲示板トピック
+      gws/board/post: 掲示板投稿
     errors:
       models:
         gws/board/category:

@@ -54,6 +54,6 @@ class Gws::Reminder
 
   def updated_field_names
     return [] if updated_fields.blank?
-    updated_fields.map { |m| item.t(m) }
+    updated_fields.map { |m| item.t(m) }.compact.uniq
   end
 end

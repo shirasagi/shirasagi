@@ -49,12 +49,7 @@
   </dd>
   <dd>
     <table class="index ajax-selected">
-      <thead>
-        <tr>
-          <th class="name"><%= Sys::Group.t :name %></th>
-          <th></th>
-        </tr>
-      </thead>
+      <thead><tr><th class="name"><%= Sys::Group.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
         <% @item.groups.each do |group| %>
           <tr data-id="<%= group.id %>">

@@ -18,13 +18,8 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   public
     def index
       @items = Gws::Facility::Item.site(@cur_site).
-        active.
-        category_id(@category)
-    end
-
-    def events
-      @items = Gws::Schedule::Plan.site(@cur_site).
-        exists(facility_ids: true).
-        search(params[:s])
+        category_id(@category).
+        readable(@cur_user).
+        active
     end
 end

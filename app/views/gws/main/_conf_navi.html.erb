@@ -32,4 +32,8 @@
       <h3><%= link_to mod.human_name, instance_exec(&url_lazy) %></h3>
     <% end %>
   <% end %>
+
+  <% if Gws::History.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/history'), gws_histories_path %></h3>
+  <% end %>
 </nav>

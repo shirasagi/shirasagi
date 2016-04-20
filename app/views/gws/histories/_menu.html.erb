@@ -1,0 +1,6 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+  <% else %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>

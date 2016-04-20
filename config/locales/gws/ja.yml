@@ -56,6 +56,7 @@ ja:
     edit_gws_users: ユーザの管理
     edit_gws_user_titles: 役職の管理
     edit_gws_roles: 権限/ロールの管理
+    read_gws_histories: 操作履歴の閲覧
     read_other_gws_custom_groups: カスタムグループの閲覧（全て）
     read_private_gws_custom_groups: カスタムグループの閲覧（所有）
     read_users_gws_custom_groups: カスタムグループの閲覧（個人）
@@ -82,11 +83,12 @@ ja:
     gws: 標準機能
     addons:
       gws/role: 権限/ロール
-      gws/group_permission: 権限
+      gws/group_permission: 管理権限
       gws/file: ファイル
       gws/release: 公開設定
       gws/reminder: リマインダー設定
       gws/history: 変更履歴
+      gws/readable_setting: 閲覧権限
     settings:
       gws/system: システム設定
 
@@ -101,8 +103,15 @@ ja:
       gws/link: リンク集
       gws/share: 共有ファイル
       gws/reminder: リマインダー
-      gws/history: 変更履歴
+      gws/history: 操作履歴
     attributes:
+      gws/model/category:
+        model: モデル
+        state: 状態
+        name: 種別名
+        color: 表示色
+        bg_color: 背景色
+        text_color: 文字色
       gws/content/targetable:
         target: 公開範囲
       gws/custom_group:
@@ -122,17 +131,24 @@ ja:
         name: タイトル
         date: 日時
         url: URL
-        updated_fields: 変更項目
+        updated_fields: 変更内容
         updated_user_id: 更新者ID
-        updated_user_uid: 変更項目
+        updated_user_uid: 更新者UID
         updated_user_name: 更新者
         updated_date: 更新日
       gws/history:
         created: 変更日時
         mode: 区分
-        updated_fields: 変更項目
         user_name: ユーザー
         user_tel: 電話番号
+        updated_fields: 変更内容
+      gws/reference/user:
+        user_id: 作成者
+        user_uid: 作成者
+        user_name: 作成者
+        user_tel: 電話番号
+        user_group_id: 作成者
+        user_group_name: 作成者
       gws/addon/role:
         gws_role_ids: ロール
       gws/addon/permission:
@@ -140,22 +156,24 @@ ja:
         permission_level: 権限レベル
       gws/addon/group_permission:
         group_ids: 管理グループ
+        group_names: 管理グループ
+        groups_hash: 管理グループ
         user_ids: 管理ユーザー
+        user_names: 管理ユーザー
+        users_hash: 管理ユーザー
         custom_group_ids: 管理カスタムグループ
+        custom_group_names: 管理カスタムグループ
+        custom_groups_hash: 管理カスタムグループ
         permission_level: 権限レベル
       gws/addon/release:
         released: 公開日時
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
+      gws/addon/readable_setting:
+        readable_group_ids: 閲覧可能グループ
+        readable_member_ids: 閲覧可能ユーザー
       gws/system/setting:
         sendmail_domains: メール送信許可ドメイン
-      gws/model/category:
-        model: モデル
-        state: 状態
-        name: 種別名
-        color: 表示色
-        bg_color: 背景色
-        text_color: 文字色
 
   tooltip:
     gws/content/targetable:
