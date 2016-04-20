@@ -1,5 +1,5 @@
 def create_gws_users
-  return if Gws::Group.where(name: 'gws-sys').exists?
+  return if Gws::User.where(name: 'gws-sys').exists?
 
   g00 = SS::Group.create name: "シラサギ市", order: 10
   g10 = SS::Group.create name: "シラサギ市/企画政策部", order: 20
