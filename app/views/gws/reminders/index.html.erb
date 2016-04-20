@@ -18,13 +18,11 @@
           <% if item.date.present? %>
             <span class="datetime"><%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %></span>
           <% end %>
-          <span><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+          <span class="label"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
           <% if item.updated_user_name.present? %>
-            <span class="label"><%= item.t :updated_user_name %></span>
             <span class="user"><%= item.updated_user_name %></span>
           <% end %>
           <% if item.updated_date.present? %>
-            <span class="label"><%= item.t :updated_date %></span>
             <span class="datetime"><%= item.updated_date.strftime("%Y/%m/%d %H:%M") %></span>
           <% end %>
           <% if item.updated_field_names.present? %>
