@@ -38,7 +38,7 @@ module SS::Model::File
     before_destroy :remove_file
 
     default_scope ->{
-      order_by name: 1
+      order_by id: -1
     }
   end
 
