@@ -20,9 +20,11 @@ class Gws::Apis::FacilitiesController < ApplicationController
       @multi = params[:single].blank?
 
       @items = @model.site(@cur_site).
+        category_id(@group).
+        readable(@cur_user).
+        reservable(@cur_user).
         active.
         search(params[:s]).
-        category_id(@group).
         page(params[:page]).per(50)
     end
 end

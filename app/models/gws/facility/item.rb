@@ -4,7 +4,8 @@ class Gws::Facility::Item
   include Gws::Reference::Site
   include SS::Scope::ActivationDate
   include SS::Addon::Markdown
-  include Gws::Addon::Facility::ReservableMember
+  include Gws::Addon::ReadableSetting
+  include Gws::Addon::Facility::ReservableSetting
   include Gws::Addon::GroupPermission
 
   store_in collection: "gws_facilities"
@@ -37,10 +38,5 @@ class Gws::Facility::Item
   def category_options
     @category_options ||= Gws::Facility::Category.site(@cur_site || site).
       map { |c| [c.name, c.id] }
-  end
-
-  def reservable?(user)
-    return true if reservable_member_ids.blank?
-    reservable_member_ids.include?(user.id)
   end
 end

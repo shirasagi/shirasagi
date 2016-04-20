@@ -10,7 +10,7 @@
     <table class="index ajax-selected">
       <thead>
         <tr>
-          <th class="name"><%= Cms::Group.t :name %></th>
+          <th class="name"><%= Gws::Group.t :name %></th>
           <th></th>
         </tr>
       </thead>
@@ -42,7 +42,7 @@
   </dd>
   <dd>
     <table class="index ajax-selected">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th></th></tr></thead>
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
         <% @item.users.order_by_title(@cur_site).each do |user| %>
         <tr data-id="<%= user.id %>">

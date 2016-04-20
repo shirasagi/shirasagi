@@ -8,6 +8,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   private
     def set_facility
       @facility = Gws::Facility::Item.site(@cur_site).find(params[:facility])
+      raise '403' unless @facility.readable?(@cur_user)
     end
 
     def pre_params

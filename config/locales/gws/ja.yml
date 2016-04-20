@@ -83,11 +83,12 @@ ja:
     gws: 標準機能
     addons:
       gws/role: 権限/ロール
-      gws/group_permission: 権限
+      gws/group_permission: 管理権限
       gws/file: ファイル
       gws/release: 公開設定
       gws/reminder: リマインダー設定
       gws/history: 変更履歴
+      gws/readable_setting: 閲覧権限
     settings:
       gws/system: システム設定
 
@@ -104,6 +105,13 @@ ja:
       gws/reminder: リマインダー
       gws/history: 操作履歴
     attributes:
+      gws/model/category:
+        model: モデル
+        state: 状態
+        name: 種別名
+        color: 表示色
+        bg_color: 背景色
+        text_color: 文字色
       gws/content/targetable:
         target: 公開範囲
       gws/custom_group:
@@ -161,15 +169,11 @@ ja:
         released: 公開日時
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
+      gws/addon/readable_setting:
+        readable_group_ids: 閲覧可能グループ
+        readable_member_ids: 閲覧可能ユーザー
       gws/system/setting:
         sendmail_domains: メール送信許可ドメイン
-      gws/model/category:
-        model: モデル
-        state: 状態
-        name: 種別名
-        color: 表示色
-        bg_color: 背景色
-        text_color: 文字色
 
   tooltip:
     gws/content/targetable:
