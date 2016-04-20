@@ -8,6 +8,7 @@ class Gws::Schedule::UserPlansController < ApplicationController
   private
     def set_user
       @user = Gws::User.site(@cur_site).find(params[:user])
+      raise '404' unless @user.active?
     end
 
     def pre_params
