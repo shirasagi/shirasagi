@@ -74,6 +74,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
   </div>
 </div>
 
+<% if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site) %>
 <div class="portal-box portal-board">
   <div class="index">
     <div class="list-head"><%= t('modules.gws/board') %></div>
@@ -105,3 +106,4 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
     <% end %>
   </div>
 </div>
+<% end %>

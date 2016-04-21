@@ -1,6 +1,29 @@
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-owner_permission"); <% end %>
 
 <div class="mod-gws-owner_permission">
+  <% if @item.class.permission_included_custom_group? %>
+  <dl class="see mod-gws-owner_permission-custom-groups">
+    <dt><%= @model.t :custom_group_ids %><%= @model.tt :custom_group_ids %></dt>
+    <dd>
+      <%= f.hidden_field "custom_group_ids[]", value: "", class: "hidden-ids" %>
+      <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+        <% @item.custom_groups.each do |group| %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "custom_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+  <% end %>
+
   <dl class="see mod-gws-owner_permission-groups">
     <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
     <dd>
@@ -39,7 +62,7 @@
       <table class="index ajax-selected">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
-          <% if params[:action] =~ /new/ && false %>
+          <% if params[:action] =~ /new/ %>
           <tr data-id="<%= @cur_user.id %>">
             <td><%= f.hidden_field "user_ids[]", value: @cur_user.id %> <%= @cur_user.long_name %></td>
             <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
@@ -56,29 +79,6 @@
       </table>
     </dd>
   </dl>
-
-  <% if @item.class.permission_included_custom_group? %>
-  <dl class="see mod-gws-owner_permission-custom-groups">
-    <dt><%= @model.t :custom_group_ids %><%= @model.tt :custom_group_ids %></dt>
-    <dd>
-      <%= f.hidden_field "custom_group_ids[]", value: "", class: "hidden-ids" %>
-      <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "ajax-box" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-        <% @item.custom_groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "custom_group_ids[]", value: group.id %> <%= group.name %></td>
-            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </dd>
-  </dl>
-  <% end %>
 
   <dl class="see mod-gws-owner_permission-level">
     <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>

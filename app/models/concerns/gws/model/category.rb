@@ -2,7 +2,6 @@ module Gws::Model::Category
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
-  include Gws::Content::Targetable
   include Gws::Schedule::Colorize
   include SS::Fields::DependantNaming
 

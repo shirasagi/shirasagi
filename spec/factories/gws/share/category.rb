@@ -5,6 +5,5 @@ FactoryGirl.define do
 
     name { "name-#{unique_id}" }
     color { "#556677" }
-    target { "all" }
   end
 end
