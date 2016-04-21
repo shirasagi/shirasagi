@@ -7,18 +7,17 @@ class Gws::Apis::UsersController < ApplicationController
 
   private
     def set_group
-      @group = @cur_user.groups.in_group(@cur_site).map(&:id).first
-      @group = params[:s][:group] if params[:s].present? && params[:s][:group].present?
+      if params[:s].present? && params[:s][:group].present?
+        @group = @cur_site.descendants.active.find(params[:s][:group])
+      else
+        @group = @cur_user.groups.active.in_group(@cur_site).first
+      end
 
-      @groups = Gws::Group.site(@cur_site).active.reduce([]) do |ret, g|
-        indent = '-' * g.depth
-        ret << [ "#{indent} #{g.trailing_name}".html_safe, g.id ]
-      end.to_a
+      @groups = @cur_site.descendants.active
     end
 
     def group_ids
-      group = Gws::Group.find(@group)
-      Gws::Group.in_group(group).map(&:id)
+      @cur_site.descendants.active.in_group(@group).pluck(:id)
     end
 
   public

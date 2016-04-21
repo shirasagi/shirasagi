@@ -21,4 +21,10 @@ class Gws::Facility::Category
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
     criteria
   }
+
+  def trailing_name
+    index = name.rindex("/")
+    return name unless index
+    name[index..-1]
+  end
 end

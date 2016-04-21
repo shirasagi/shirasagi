@@ -56,6 +56,10 @@ module Gws::Category::Traversable
     return options
   end
 
+  def flatten
+    expand_groups(self).flatten
+  end
+
   private
     def create_wrapper(name)
       full_name = @parent.present? ? "#{@parent}/#{name}" : name
@@ -64,17 +68,23 @@ module Gws::Category::Traversable
       has_grandchild = children.any? { |child| child.children? }
       OpenStruct.new(
         id: category.try(:id),
-        depth: category.try(:depth),
+        depth: full_name.count('/'),
         name: name,
         full_name: full_name,
         children: children,
         children?: children.present?,
         real?: category.present?,
         virtual?: category.blank?,
-        color?: category && category.color.present?,
+        color?: category.try(:color).present?,
         color: category.try(:color),
         text_color: category.try(:text_color),
         grandchild?: has_grandchild
       )
+    end
+
+    def expand_groups(groups)
+      groups.map do |group|
+        [ group ] + expand_groups(group.children)
+      end
     end
 end

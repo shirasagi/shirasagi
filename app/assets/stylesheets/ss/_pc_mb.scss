@@ -1224,7 +1224,7 @@ table.index {
       }
     }
   }
-  img.toggle { cursor: pointer; }
+  .toggle { cursor: pointer; }
   @include mb {
     thead {
       background: $gray1;
@@ -1232,8 +1232,16 @@ table.index {
   }
   .padding {
     display: inline-block;
-    width: 12px;
+    width: 15px;
   }
+}
+table.pulldown-index {
+  display: none;
+  position: absolute;
+  width: 70%;
+  margin-top: 3px;
+  border: 1px solid #bbb;
+  @include box-shadow(0 1px 10px #bbb);
 }
 .ads-total table.index {
   th,td {
