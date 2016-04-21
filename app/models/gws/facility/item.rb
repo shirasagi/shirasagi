@@ -33,7 +33,13 @@ class Gws::Facility::Item
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
     criteria
   }
-  scope :category_id, ->(category_id) { where category_id: category_id.presence }
+  scope :category_id, ->(category_id) do
+    if category_id.present?
+      where category_id: category_id.presence
+    else
+      where({})
+    end
+  end
 
   def category_options
     @category_options ||= Gws::Facility::Category.site(@cur_site || site).
