@@ -62,7 +62,6 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           expect(item.allday).to be_nil
           expect(item.repeat_plan_id).not_to be_nil
           expect(item.text).to be_nil
-          expect(item.target).to eq 'all'
         end
 
         # gws_reminders
@@ -135,7 +134,6 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           expect(item.allday).to be_nil
           expect(item.repeat_plan_id).not_to be_nil
           expect(item.text).to be_nil
-          expect(item.target).to eq 'all'
         end
 
         # gws_reminders

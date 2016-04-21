@@ -6,7 +6,7 @@
     <li class="list-item">
       <div class="info">
         <%= link_to item.name, { action: :show, id: item} %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
       </div>
     </li>
     <% end %>

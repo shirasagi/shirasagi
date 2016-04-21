@@ -4,30 +4,17 @@
   <% end %>
 <% end %>
 
-<div class="see gws-addon-readable-setting">
+<div class="gws-addon-readable-setting">
   <dl class="see">
     <dt><%= @model.t :readable_group_ids %></dt>
-    <dd>
-      <table class="index">
-        <thead><tr><th class="name"><%= Gws::Group.t :name %></th></thead>
-        <tbody>
-          <% @item.readable_groups.each do |group| %>
-          <tr><td><%= group.name %></td></tr>
-          <% end %>
-        </tbody>
-      </table>
-    </dd>
+    <dd><%=br @item.readable_group_names.join("\n") %></dd>
 
     <dt><%= @model.t :readable_member_ids %></dt>
-    <dd>
-      <table class="index">
-        <thead><tr><th class="name"><%= Gws::User.t :name %></th></thead>
-        <tbody>
-          <% @item.readable_members.order_by_title(@cur_site).each do |user| %>
-          <tr><td><%= user.long_name %></td></tr>
-          <% end %>
-        </tbody>
-      </table>
-    </dd>
+    <dd><%=br @item.readable_member_names.join("\n") %></dd>
+
+    <% if @item.class.readable_setting_included_custom_group? %>
+    <dt><%= @model.t :readable_custom_group_ids %></dt>
+    <dd><%=tryb { br @item.readable_custom_group_names.join("\n") } %></dd>
+    <% end %>
   </dl>
 </div>

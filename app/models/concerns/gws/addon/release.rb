@@ -32,11 +32,20 @@ module Gws::Addon
       }
     end
 
+    def updated_after_released?
+      updated.to_i > created.to_i && updated.to_i > released.to_i
+    end
+
+    def state_with_release_date
+      now = Time.zone.now
+      return 'closed' if state == 'closed'
+      return 'closed' if release_date.present? && release_date > now
+      return 'closed' if close_date.present? && close_date < now
+      'public'
+    end
+
     def state_options
-      [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-      ]
+      %w(public closed).map { |m| [I18n.t("views.options.state.#{m}"), m] }
     end
 
     private

@@ -6,6 +6,9 @@ class @SS_AddonTabs
   @head: (content) ->
     $(content).parent().parent().find('.addon-head')
 
+  @show: (view) ->
+    $(view).parent().show()
+
   @hide: (view) ->
     $(view).parent().hide()
 

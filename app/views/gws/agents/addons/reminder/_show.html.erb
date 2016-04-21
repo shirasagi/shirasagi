@@ -10,7 +10,7 @@ date = reminder ? reminder.date : @item.reminder_date
 date ||= Time.zone.now + 7.day unless reminder
 
 %>
-<div class="see gws-addon-reminder">
+<div class="gws-addon-reminder">
   <%= hidden_field_tag "item_name", @item.reference_name %>
   <%= hidden_field_tag "item_model", @item.reference_model %>
   <%= hidden_field_tag "item_id", @item.id %>

@@ -12,14 +12,13 @@ class Gws::PublicLinksController < ApplicationController
   public
     def index
       @items = @model.site(@cur_site).and_public.
-        allow(:read, @cur_user, site: @cur_site).
+        readable(@cur_user, @cur_site, exclude_role: true).
         search(params[:s]).
         page(params[:page]).per(50)
     end
 
     def show
-      raise "403" unless @item = @model.site(@cur_site).and_public.find(params[:id])
-      raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      raise "403" unless @model.site(@cur_site).and_public.readable(@cur_user, @cur_site).find(@item.id)
       render
     end
 end

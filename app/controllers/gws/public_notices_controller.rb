@@ -12,13 +12,13 @@ class Gws::PublicNoticesController < ApplicationController
   public
     def index
       @items = @model.site(@cur_site).and_public.
-        target_to(@cur_user).
+        readable(@cur_user, @cur_site, exclude_role: true).
         search(params[:s]).
         page(params[:page]).per(50)
     end
 
     def show
-      raise "403" unless @model.site(@cur_site).and_public.target_to(@cur_user).find(@item.id)
+      raise "403" unless @model.site(@cur_site).and_public.readable(@cur_user, @cur_site).find(@item.id)
       render
     end
 end

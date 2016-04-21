@@ -6,7 +6,13 @@
     <li class="list-item">
       <div class="info">
         <%= link_to item.name, { action: :show, id: item}, class: "title notice-severity-#{item.severity}" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+      <div class="meta">
+        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+        <% if item.updated_after_released? %>
+          <span class="label"><%= t('gws.history.mode.update') %></span>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        <% end %>
       </div>
     </li>
     <% end %>

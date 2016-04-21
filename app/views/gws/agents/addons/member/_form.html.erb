@@ -1,0 +1,57 @@
+<%= jquery do %>
+  //SS_AddonTabs.hide(".gws-addon-member");
+
+  $('.set-readable-members').click(function() {
+    var table = $('.gws-addon-readable-setting-member table');
+    table.show();
+    $('.gws-addon-member tbody tr').each(function() {
+      if (table.find('tr[data-id=' + $(this).data('id') + ']').length == 0) {
+        var tr = $(this).clone(true)
+        tr.find('input').attr('name', 'item[readable_member_ids][]');
+        table.find('tbody').append(tr);
+      }
+    });
+    return false;
+  });
+
+  $('.set-editable-members').click(function() {
+    SS_AddonTabs.show(".mod-gws-owner_permission");
+    var table = $('.mod-gws-owner_permission-users table');
+    table.show();
+    $('.gws-addon-member tbody tr').each(function() {
+      if (table.find('tr[data-id=' + $(this).data('id') + ']').length == 0) {
+        var tr = $(this).clone(true)
+        tr.find('input').attr('name', 'item[user_ids][]');
+        table.find('tbody').append(tr);
+      }
+    });
+    return false;
+  });
+<% end %>
+
+<dl class="see gws-addon-member">
+  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+  <dd>
+    <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% @item.members.order_by_title(@cur_site).each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <!--
+  <dd>
+    <%#= link_to t("gws.buttons.set_readable_members"), '#', class: "btn set-readable-members" %>
+    <%#= link_to t("gws.buttons.set_editable_members"), '#', class: "btn set-editable-members" %>
+  </dd>
+  -->
+</dl>

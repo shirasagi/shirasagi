@@ -7,7 +7,7 @@ class Gws::Apis::CustomGroupsController < ApplicationController
     @multi = params[:single].blank?
 
     @items = @model.site(@cur_site).
-      target_to(@cur_user).
+      readable(@cur_user, @cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
   end

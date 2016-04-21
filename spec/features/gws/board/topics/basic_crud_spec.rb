@@ -41,7 +41,6 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(item.text).to eq "text"
         expect(item.state).to eq "public"
         expect(item.mode).to eq "thread"
-        expect(item.target).to eq "all"
         expect(item.descendants_updated).to eq now
         expect(item.descendants_files_count).to eq 0
         expect(item.category_ids).to eq [category.id]

@@ -6,11 +6,6 @@
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
 
-  <% if @item.try(:targetable?) %>
-  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
-  <dd><%= f.select :target, @item.target_options %></dd>
-  <% end %>
-
   <dt><%= @model.t :released %><%= @model.tt :released %></dt>
   <dd><%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></dd>
 

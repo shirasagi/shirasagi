@@ -12,4 +12,17 @@ class Gws::Workflow::FilesController < ApplicationController
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site, state: 'closed' }
     end
+
+  public
+    def index
+      @items = @model.site(@cur_site).
+        readable(@cur_user, @cur_site).
+        search(params[:s]).
+        page(params[:page]).per(50)
+    end
+
+    def show
+      raise "403" unless @item.readable?(@cur_user)
+      render
+    end
 end

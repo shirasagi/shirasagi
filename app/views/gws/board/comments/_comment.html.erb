@@ -1,7 +1,7 @@
 <%
 
 menu = []
-if @item.permit_comment? && recursion
+if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site: @cur_site)
   if @category.present?
     link = new_gws_board_category_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
   else

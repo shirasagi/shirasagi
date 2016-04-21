@@ -36,8 +36,8 @@ class @SS_SearchUI
 
   @render: ()->
     $(".ajax-selected").each ->
-      $(this).find(".deselect").on "click", SS_SearchUI.deselect
-      if $(this).find(".deselect").size() == 0
+      $(this).find("a.deselect").on "click", SS_SearchUI.deselect
+      if $(this).find("a.deselect").size() == 0
         $(this).hide()
 
   @modal: ()->

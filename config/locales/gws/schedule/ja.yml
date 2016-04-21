@@ -40,11 +40,11 @@ ja:
       less_than_years: は%{count}年間以内の範囲にしてください。
       faciliy_time_gte: 予約時間は%{count}分以上の値にしてください。
       invalid_faciliy_reservate_member: '%{name}を予約する権限がありません。'
+      double_booking_facility: 設備は既に予約されています。 (%{facility})
 
   modules:
     gws/schedule: スケジュール
     addons:
-      gws/schedule/member: 参加者
       gws/schedule/facility: 設備予約
       gws/schedule/repeat: 繰り返し
     settings:
@@ -87,7 +87,6 @@ ja:
         term: 日時
       gws/schedule/plan:
         repeat_plan_id: 繰り返し
-        target: 公開範囲
         category_id: 種別
       gws/schedule/repeat_plan: &repeat_plan
         repeat_type: 繰り返し設定
@@ -106,8 +105,6 @@ ja:
         repeat_start: 繰り返し - 開始日
         repeat_end: 繰り返し - 終了日
         wdays: 繰り返し曜日
-      gws/addon/schedule/member:
-        member_ids: 参加者
       gws/addon/schedule/facility:
         facility_ids: 設備予約
       gws/schedule/setting:
@@ -125,13 +122,6 @@ ja:
         -
         - 「終日」をチェックすると、終日にわたって実施するスケジュールを入力することができ、「終日」にチェックが入っている場合、スケジュールの日を入力します。
     gws/schedule/plan:
-      target:
-        - 公開範囲を選択します。
-        -
-        - "全ユーザー: すべてのユーザーにスケジュールが公開されます。"
-        - "参加者: このスケジュールの参加者にスケジュールが公開されます。"
-        - "管理グループ: 管理グループ内のユーザーにスケジュールが公開されます。"
-        - "カスタムグループ: カスタムグループ内のユーザーにスケジュールが公開されます。"
       category_id:
         - スケジュール種別を選択します。
     gws/schedule/repeat_plan: &repeat_plan_tooltip

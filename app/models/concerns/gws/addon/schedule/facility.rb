@@ -33,13 +33,16 @@ module Gws::Addon::Schedule::Facility
     end
 
     def validate_facility_double_booking
-      return unless self.class.ne(id: id).
+      plans = self.class.ne(id: id).
         where(site_id: site_id).
-        #between_dates(start_at, end_at).
         where(:end_at.gt => start_at, :start_at.lt => end_at).
-        any_in(facility_ids: facility_ids).
-        exists?
+        any_in(facility_ids: facility_ids)
+      return if plans.blank?
 
-      errors.add :facility_ids, :duplicate
+      facilities = []
+      plans.each { |plan| facilities += (plan.facilities & self.facilities) }
+
+      name = facilities.uniq.map(&:name).join(', ')
+      errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility', facility: name)
     end
 end

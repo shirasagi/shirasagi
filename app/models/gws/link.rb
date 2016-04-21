@@ -3,9 +3,9 @@ class Gws::Link
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Content::Targetable
   include SS::Addon::Body
   include Gws::Addon::Release
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
