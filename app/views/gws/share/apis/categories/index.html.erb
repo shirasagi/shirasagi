@@ -1,11 +1,56 @@
-<%= jquery do %> SS_SearchUI.modal(); <% end %>
+<%= jquery do %>
+  SS_SearchUI.modal();
+  SS_TreeUI.render("form.search .index.categories");
+
+  $("form.search .dropdown").on("click", function(e) {
+    $("form.search .index.categories").toggle();
+
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+
+  $("form.search .select-category").on("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("form.search .index.categories").hide();
+    $("#ajax-box #s_group").val($(e.target).data("id"));
+    SS_SearchUI.selectItems()
+    $("#ajax-box form.search").submit()
+    return false;
+  });
+<% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= t("gws.apis.categories.parent_id") %></dt>
-      <dd><%= select_tag "s[group]", options_for_select(@groups, @group), include_blank: t("gws.apis.categories.parent_id") %></dd>
+      <dd>
+        <button class="dropdown btn" type="button"><%= tryb { @group.name } || t("gws.apis.categories.parent_id") %> <span class="caret">&#x25BC;</span></button>
+        <%= hidden_field_tag("s[group]", @group.try(:id)) %>
+        <table class="index categories" style="display: none; position: absolute; margin-top: 2px; width: 70%;">
+          <tbody>
+          <tr data-depth="1" class="toggle">
+            <td class="expandable">
+              <%= link_to t("gws.apis.categories.parent_id"), "#", class: "select-category" %>
+            </td>
+          </tr>
+          <% @groups.each do |group| %>
+            <% next if !group.children? && group.depth > 0 %>
+            <tr data-depth="<%= group.depth + 1 %>" class="toggle">
+              <td class="expandable">
+                <% if group.id.present? %>
+                  <%= link_to group.name, "#", class: "select-category", data: { id: group.id } %>
+                <% else %>
+                  <%= group.name %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </dd>
 
       <dt><%= @model.t :name %></dt>
       <dd>
