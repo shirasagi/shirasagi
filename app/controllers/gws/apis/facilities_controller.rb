@@ -10,12 +10,10 @@ class Gws::Apis::FacilitiesController < ApplicationController
       @groups = Gws::Facility::CategoryTraverser.build(@cur_site)
       @groups = @groups.flatten
 
-      @group = params[:s] ? params[:s][:group] : nil
-      if @group.present?
+      @group = params[:s] ? params[:s][:group].presence : nil
+      if @group
         @group = Gws::Facility::Category.site(@cur_site).find(@group) rescue nil
       end
-
-      @group ||= @groups.find { |g| g.id.present? }
     end
 
   public

@@ -27,10 +27,15 @@
     <dl class="see">
       <dt><%= @model.t(:category_id) %></dt>
       <dd>
-        <button class="dropdown btn" type="button"><%= tryb { @group.name } %> <span class="caret">&#x25BC;</span></button>
+        <button class="dropdown btn" type="button"><%= tryb { @group.name } || @model.t(:category_id) %> <span class="caret">&#x25BC;</span></button>
         <%= hidden_field_tag("s[group]", @group.try(:id)) %>
         <table class="index categories" style="display: none; position: absolute; margin-top: 2px; width: 70%;">
           <tbody>
+          <tr data-depth="1" class="toggle">
+            <td class="expandable">
+              <%= link_to @model.t(:category_id), "#", class: "select-category" %>
+            </td>
+          </tr>
           <% @groups.each do |item| %>
             <tr data-depth="<%= item.depth + 1 %>" class="toggle">
               <td class="expandable">
