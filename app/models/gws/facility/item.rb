@@ -35,7 +35,7 @@ class Gws::Facility::Item
   }
   scope :category_id, ->(category_id) do
     if category_id.present?
-      where category_id: category_id.presence
+      where category_id: category_id.id
     else
       where({})
     end
