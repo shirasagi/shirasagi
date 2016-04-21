@@ -18,8 +18,7 @@ class Gws::PublicLinksController < ApplicationController
     end
 
     def show
-      raise "403" unless @item = @model.site(@cur_site).and_public.find(params[:id])
-      raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      raise "403" unless @model.site(@cur_site).and_public.readable(@cur_user).find(@item.id)
       render
     end
 end

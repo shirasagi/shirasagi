@@ -11,8 +11,11 @@ class Gws::PortalController < ApplicationController
     def index
       items_limit = 5
 
+      @links = Gws::Link.site(@cur_site).and_public.
+        readable(@cur_user).to_a
+
       @notices = Gws::Notice.site(@cur_site).and_public.
-        target_to(@cur_user).
+        readable(@cur_user).
         page(1).per(items_limit)
 
       @reminders = Gws::Reminder.site(@cur_site).
@@ -23,7 +26,7 @@ class Gws::PortalController < ApplicationController
       @boards = Gws::Board::Topic.site(@cur_site).topic.
         and_public.
         allow(:read, @cur_user, site: @cur_site).
-        target_to(@cur_user).
+        readable(@cur_user).
         order(descendants_updated: -1).
         page(1).per(items_limit)
     end

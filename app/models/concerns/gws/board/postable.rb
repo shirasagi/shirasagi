@@ -4,7 +4,6 @@ module Gws::Board::Postable
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Content::Targetable
   include Gws::GroupPermission
 
   included do

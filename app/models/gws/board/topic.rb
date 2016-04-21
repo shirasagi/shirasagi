@@ -7,6 +7,7 @@ class Gws::Board::Topic
   include Gws::Board::DescendantsFileInfo
   include Gws::Addon::Board::Category
   include Gws::Addon::Release
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
