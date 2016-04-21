@@ -32,11 +32,6 @@ ja:
     options:
       severity:
         high: 重要なお知らせ
-      target:
-        all: 全ユーザー
-        member: 参加者
-        group: 管理グループ
-        custom_group: カスタムグループ
     links:
       back_to_portal: ポータルへ戻る
     buttons:
@@ -112,8 +107,6 @@ ja:
         color: 表示色
         bg_color: 背景色
         text_color: 文字色
-      gws/content/targetable:
-        target: 公開範囲
       gws/custom_group:
         name: グループ名
         order: 表示順
@@ -176,13 +169,6 @@ ja:
         sendmail_domains: メール送信許可ドメイン
 
   tooltip:
-    gws/content/targetable:
-      severity:
-        - 「重要なお知らせ」の場合、チェックをつけます。
-        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
-      target:
-        - 「全ユーザー」に表示するか、「管理グループ」に表示するかを選択します。
-        - 「管理グループ」を選択した場合、「管理グループ」欄に設定したグループに表示されます。
     gws/addon/reminder:
       reminder_date:
         - リマインダー日時を登録または解除することができます。
@@ -213,6 +199,8 @@ ja:
         - タイトルを入力します。
       severity:
         - 種別を選択します。
+        - 「重要なお知らせ」の場合、チェックをつけます。
+        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
     gws/link:
       name:
         - タイトルを入力します。

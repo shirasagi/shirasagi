@@ -19,7 +19,6 @@ describe "gws_share_categories", type: :feature, dbscope: :example do
     let(:name) { unique_id }
     let(:name2) { unique_id }
     let(:color) { "#481357" }
-    let(:target) { %w(all group).sample }
 
     before { login_gws_user }
 
@@ -37,17 +36,14 @@ describe "gws_share_categories", type: :feature, dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[color]", with: color
-        select I18n.t("gws.options.target.#{target}"), from: "item[target]"
         click_button "保存"
       end
 
       category = Gws::Share::Category.site(site).find_by(name: name)
       expect(category.name).to eq name
       expect(category.color).to eq color
-      expect(category.target).to eq target
 
       expect(page).to have_css("div.addon-body dd", text: name)
-      expect(page).to have_css("div.addon-body dd", text: I18n.t("gws.options.target.#{target}"))
 
       #
       # edit
@@ -62,10 +58,8 @@ describe "gws_share_categories", type: :feature, dbscope: :example do
       category.reload
       expect(category.name).to eq name2
       expect(category.color).to eq color
-      expect(category.target).to eq target
 
       expect(page).to have_css("div.addon-body dd", text: name2)
-      expect(page).to have_css("div.addon-body dd", text: I18n.t("gws.options.target.#{target}"))
 
       #
       # index

@@ -2,6 +2,7 @@ class Gws::Schedule::Category
   include Gws::Model::Category
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
 
   has_many :plans, class_name: 'Gws::Schedule::Plan'
