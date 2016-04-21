@@ -7,6 +7,7 @@ class Gws::Workflow::File
   include ::Workflow::Addon::Approver
   include SS::Addon::Markdown
   include Gws::Addon::File
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
@@ -21,6 +22,9 @@ class Gws::Workflow::File
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
+  default_scope -> {
+    order_by updated: -1
+  }
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?

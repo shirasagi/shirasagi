@@ -42,6 +42,8 @@ ja:
     buttons:
       register: 登録
       unset: 解除
+      set_readable_members: 参加者を閲覧可能ユーザーに追加する
+      set_editable_members: 参加者を管理ユーザーに追加する
 
   date:
     formats:
@@ -59,13 +61,10 @@ ja:
     read_gws_histories: 操作履歴の閲覧
     read_other_gws_custom_groups: カスタムグループの閲覧（全て）
     read_private_gws_custom_groups: カスタムグループの閲覧（所有）
-    read_users_gws_custom_groups: カスタムグループの閲覧（個人）
     edit_other_gws_custom_groups: カスタムグループの編集（全て）
     edit_private_gws_custom_groups: カスタムグループの編集（所有）
-    edit_users_gws_custom_groups: カスタムグループの編集（個人）
     delete_other_gws_custom_groups: カスタムグループの削除（全て）
     delete_private_gws_custom_groups: カスタムグループの削除（所有）
-    delete_users_gws_custom_groups: カスタムグループの削除（個人）
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
@@ -89,6 +88,7 @@ ja:
       gws/reminder: リマインダー設定
       gws/history: 変更履歴
       gws/readable_setting: 閲覧権限
+      gws/member: 参加者
     settings:
       gws/system: システム設定
 
@@ -156,13 +156,10 @@ ja:
         permission_level: 権限レベル
       gws/addon/group_permission:
         group_ids: 管理グループ
-        group_names: 管理グループ
         groups_hash: 管理グループ
         user_ids: 管理ユーザー
-        user_names: 管理ユーザー
         users_hash: 管理ユーザー
         custom_group_ids: 管理カスタムグループ
-        custom_group_names: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ
         permission_level: 権限レベル
       gws/addon/release:
@@ -172,6 +169,9 @@ ja:
       gws/addon/readable_setting:
         readable_group_ids: 閲覧可能グループ
         readable_member_ids: 閲覧可能ユーザー
+        readable_custom_group_ids: 閲覧可能カスタムグループ
+      gws/addon/member:
+        member_ids: 参加者
       gws/system/setting:
         sendmail_domains: メール送信許可ドメイン
 

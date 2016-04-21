@@ -8,30 +8,22 @@ class Gws::Schedule::Plan
   include Gws::Addon::Schedule::Repeat
   include SS::Addon::Markdown
   include Gws::Addon::File
-  include Gws::Addon::Schedule::Member
+  include Gws::Addon::Member
   include Gws::Addon::Schedule::Facility
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include ActiveSupport::NumberHelper
 
   permission_include_custom_group
-
-  # 公開範囲
-  field :target, type: String, default: "all"
+  readable_setting_include_custom_group
 
   # 種別
   belongs_to :category, class_name: 'Gws::Schedule::Category'
 
-  permit_params :target
-
   validates :start_at, presence: true, if: -> { !repeat? }
   validates :end_at, presence: true, if: -> { !repeat? }
   validate :validate_file_size
-
-  def target_options
-    keys = %w(all member group custom_group)
-    keys.map { |key| [I18n.t("gws.options.target.#{key}"), key] }
-  end
 
   def member?(user)
     member_ids.include?(user.id)
@@ -39,18 +31,6 @@ class Gws::Schedule::Plan
 
   def custom_group_member?(user)
     custom_groups.where(member_ids: user.id).exists?
-  end
-
-  def targeted?(user)
-    if target == "group"
-      return group_ids.any? { |m| user.group_ids.include?(m) }
-    elsif target == "member"
-      return member?(user)
-    elsif target == "custom_group"
-      return custom_group_member?(user)
-    else
-      true
-    end
   end
 
   def category_options
@@ -68,7 +48,8 @@ class Gws::Schedule::Plan
   def calendar_format(user, site)
     data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
 
-    data[:readable] = allowed?(:read, user, site: site)
+    #data[:readable] = allowed?(:read, user, site: site)
+    data[:readable] = readable?(user)
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")
@@ -105,13 +86,8 @@ class Gws::Schedule::Plan
   end
 
   def allowed?(action, user, opts = {})
-    if action == :read
-      super || targeted?(user) || member?(user)
-    elsif action =~ /edit|delete/
-      super || member?(user) || custom_group_member?(user)
-    else
-      super
-    end
+    return true if super
+    member?(user) || custom_group_member?(user) if action =~ /edit|delete/
   end
 
   private

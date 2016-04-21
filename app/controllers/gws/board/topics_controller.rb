@@ -3,6 +3,7 @@ class Gws::Board::TopicsController < ApplicationController
   include Gws::CrudFilter
 
   model Gws::Board::Topic
+
   before_action :set_category
 
   private
@@ -36,14 +37,12 @@ class Gws::Board::TopicsController < ApplicationController
 
   public
     def index
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
-
       @items = @model.site(@cur_site).topic
 
       if params[:s] && params[:s][:state] == "closed"
         @items = @items.and_closed.allow(:read, @cur_user, site: @cur_site)
       else
-        @items = @items.and_public.readable(@cur_user)
+        @items = @items.and_public.readable(@cur_user, @cur_site)
       end
 
       if @category.present?
@@ -58,6 +57,7 @@ class Gws::Board::TopicsController < ApplicationController
     end
 
     def show
+      raise '403' unless @item.readable?(@cur_user)
       render file: "show_#{@item.mode}"
     end
 end

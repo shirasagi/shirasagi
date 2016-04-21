@@ -42,6 +42,10 @@ class Gws::User
     @gws_default_group ||= groups.in_group(@cur_site).first
   end
 
+  def custom_groups
+    Gws::CustomGroup.where(member_ids: id)
+  end
+
   private
     def set_title_ids
       title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)

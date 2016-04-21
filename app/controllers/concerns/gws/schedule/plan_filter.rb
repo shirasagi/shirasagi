@@ -27,6 +27,11 @@ module Gws::Schedule::PlanFilter
       render
     end
 
+    def show
+      raise '403' unless @item.readable?(@cur_user)
+      render
+    end
+
     def events
       @items = []
     end
@@ -34,7 +39,7 @@ module Gws::Schedule::PlanFilter
     def popup
       set_item
 
-      if @item.allowed?(:read, @cur_user, site: @cur_site)
+      if @item.readable?(@cur_user)
         render file: "popup", layout: false
       else
         render file: "popup_hidden", layout: false

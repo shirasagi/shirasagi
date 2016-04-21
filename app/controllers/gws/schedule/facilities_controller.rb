@@ -19,7 +19,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
     def index
       @items = Gws::Facility::Item.site(@cur_site).
         category_id(@category).
-        readable(@cur_user).
+        readable(@cur_user, @cur_site).
         active
     end
 end

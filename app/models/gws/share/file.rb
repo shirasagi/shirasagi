@@ -3,6 +3,7 @@ class Gws::Share::File
   include Gws::Referenceable
   include Gws::Reference::Site
   include Gws::Addon::Share::Category
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 

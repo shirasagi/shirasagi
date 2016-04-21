@@ -4,10 +4,8 @@
   <dt><%= @model.t :group_ids %></dt>
   <dd><%=br @item.group_names.join("\n") %></dd>
 
-  <% if @item.class.permission_included_user? %>
   <dt><%= @model.t :user_ids %></dt>
   <dd><%=br @item.user_names.join("\n") %></dd>
-  <% end %>
 
   <% if @item.class.permission_included_custom_group? %>
   <dt><%= @model.t :custom_group_ids %></dt>

@@ -12,21 +12,19 @@ class Gws::PortalController < ApplicationController
       items_limit = 5
 
       @links = Gws::Link.site(@cur_site).and_public.
-        readable(@cur_user).to_a
+        readable(@cur_user, @cur_site).to_a
 
       @notices = Gws::Notice.site(@cur_site).and_public.
-        readable(@cur_user).
+        readable(@cur_user, @cur_site).
         page(1).per(items_limit)
 
       @reminders = Gws::Reminder.site(@cur_site).
         user(@cur_user).
-        #where(:end_at.gte => Time.zone.now).
         page(1).per(items_limit)
 
       @boards = Gws::Board::Topic.site(@cur_site).topic.
         and_public.
-        allow(:read, @cur_user, site: @cur_site).
-        readable(@cur_user).
+        readable(@cur_user, @cur_site).
         order(descendants_updated: -1).
         page(1).per(items_limit)
     end

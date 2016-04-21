@@ -4,19 +4,4 @@
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
-
-  <dt><%= @model.t :target %></dt>
-  <dd><%= @item.label :target %></dd>
-
-  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
-  <dd>
-    <table class="index">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th></thead>
-      <tbody>
-        <% @item.members.order_by_title(@cur_site).each do |user| %>
-        <tr><td><%= user.long_name %></td></tr>
-        <% end %>
-      </tbody>
-    </table>
-  </dd>
 </dl>

@@ -21,7 +21,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
 
       @items = @model.site(@cur_site).
         category_id(@group).
-        readable(@cur_user).
+        readable(@cur_user, @cur_site).
         reservable(@cur_user).
         active.
         search(params[:s]).

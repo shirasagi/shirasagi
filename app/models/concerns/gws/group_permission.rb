@@ -6,12 +6,8 @@ module Gws::GroupPermission
     class_variable_set(:@@_permission_include_custom_group, nil)
 
     field :permission_level, type: Integer, default: 1
-    field :group_names, type: Array
     field :groups_hash, type: Hash
-    field :user_uids, type: Array
-    field :user_names, type: Array
     field :users_hash, type: Hash
-    field :custom_group_names, type: Array
     field :custom_groups_hash, type: Hash
 
     embeds_ids :groups, class_name: "SS::Group"
@@ -20,18 +16,16 @@ module Gws::GroupPermission
 
     permit_params :permission_level, group_ids: [], user_ids: [], custom_group_ids: []
 
-    before_validation :set_group_names
-    before_validation :set_user_names
-    before_validation :set_custom_group_names
+    before_validation :set_groups_hash
+    before_validation :set_users_hash
+    before_validation :set_custom_groups_hash
   end
 
   def owned?(user)
-    (self.group_ids & user.group_ids).present?
-  end
-
-  def owner?(user)
-    return false unless self.class.permission_included_user?
-    user_ids.to_a.include?(user.id)
+    return true if (self.group_ids & user.group_ids).present?
+    return true if user_ids.to_a.include?(user.id)
+    return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    false
   end
 
   def permission_level_options
@@ -46,7 +40,6 @@ module Gws::GroupPermission
 
     permits = ["#{action}_other_#{self.class.permission_name}"]
     permits << "#{action}_private_#{self.class.permission_name}" if owned?(user) || new_record?
-    permits << "#{action}_users_#{self.class.permission_name}" if owner?(user) || new_record?
 
     permits.each do |permit|
       return true if user.gws_role_permissions["#{permit}_#{site.id}"].to_i > 0
@@ -54,32 +47,40 @@ module Gws::GroupPermission
     false
   end
 
-  def group_names
-    self[:group_names].presence || groups.map(&:name)
+  def groups_hash
+    self[:groups_hash].presence || groups.map { |m| [m.id, m.name] }.to_h
   end
 
-  def user_uids
-    self[:user_uids].presence || users.map(&:uid)
+  def group_names
+    groups_hash.values
+  end
+
+  def users_hash
+    self[:users_hash].presence || users.map { |m| [m.id, m.long_name] }.to_h
   end
 
   def user_names
-    self[:user_names].presence || users.map(&:name)
+    users_hash.values
+  end
+
+  def custom_groups_hash
+    self[:custom_groups_hash].presence || custom_groups.map { |m| [m.id, m.name] }.to_h
+  end
+
+  def custom_group_names
+    custom_groups_hash.values
   end
 
   private
-    def set_group_names
-      self.group_names = groups.map(&:name)
+    def set_groups_hash
       self.groups_hash = groups.map { |m| [m.id, m.name] }.to_h
     end
 
-    def set_user_names
-      self.user_uids  = users.map(&:uid)
-      self.user_names = users.map(&:name)
-      self.users_hash = users.map { |m| [m.id, m.name] }.to_h
+    def set_users_hash
+      self.users_hash = users.map { |m| [m.id, m.long_name] }.to_h
     end
 
-    def set_custom_group_names
-      self.custom_group_names = custom_groups.map(&:name)
+    def set_custom_groups_hash
       self.custom_groups_hash = custom_groups.map { |m| [m.id, m.name] }.to_h
     end
 
@@ -87,30 +88,26 @@ module Gws::GroupPermission
     # @param [String] action
     # @param [Gws::User] user
     def allow(action, user, opts = {})
-      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
+      where(allow_condition(action, user, opts))
+    end
 
+    def allow_condition(action, user, opts = {})
+      site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
       action = permission_action || action
 
-      or_cond = []
-
-      if level = user.gws_role_permissions["#{action}_users_#{permission_name}_#{site_id}"]
-        or_cond << { user_ids: user.id }
-      end
-
       if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
-        or_cond << { permission_level: { "$lte" => level }}
-        or_cond << { permission_level: nil }
-      end
-
-      if level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        or_cond << { :group_ids.in => user.group_ids, "$or" => [
+        cond = { "$or" => [
           { permission_level: { "$lte" => level } },
           { permission_level: nil }
-        ]}
+        ] }
+      elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
+        cond = { "$and" => [
+          { "$or" => [ { :group_ids.in => user.group_ids }, { user_ids: user.id } ] },
+          { "$or" => [ { permission_level: { "$lte" => level } }, { permission_level: nil } ] }
+        ] }
       end
 
-      return where("$and" => [{ "$or" => or_cond }]) if or_cond.present?
-      where({ _id: -1 })
+      cond.presence || { _id: -1 }
     end
 
     def permission_included_custom_group?

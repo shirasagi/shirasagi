@@ -3,7 +3,8 @@ class Gws::CustomGroup
   include SS::Fields::Normalizer
   include Gws::Reference::User
   include Gws::Reference::Site
-  include Gws::Content::Targetable
+  include Gws::Addon::Member
+  include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
 
   permission_include_user

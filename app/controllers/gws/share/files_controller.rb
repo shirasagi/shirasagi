@@ -37,8 +37,6 @@ class Gws::Share::FilesController < ApplicationController
 
   public
     def index
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
-
       if @category.present?
         params[:s] ||= {}
         params[:s][:site] = @cur_site
@@ -46,8 +44,13 @@ class Gws::Share::FilesController < ApplicationController
       end
 
       @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
+        readable(@cur_user, @cur_site).
         search(params[:s]).
         page(params[:page]).per(50)
+    end
+
+    def show
+      raise "403" unless @item.readable?(@cur_user)
+      render
     end
 end
