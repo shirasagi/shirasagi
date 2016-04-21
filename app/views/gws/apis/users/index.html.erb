@@ -24,11 +24,11 @@
     <dl class="see">
       <dt><%= t("mongoid.models.gws/group") %></dt>
       <dd>
-        <button class="dropdown btn"><%= Gws::Group.find(@group).name %> <span class="caret">&#x25BC;</span></button>
-        <%= hidden_field_tag("s[group]", @group) %>
+        <button class="dropdown btn"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
+        <%= hidden_field_tag("s[group]", @group.id) %>
         <table class="index groups" style="display: none; position: absolute; margin-top: 2px; width: 70%;">
           <tbody>
-          <% @cur_site.descendants.active.each do |item| %>
+          <% @groups.each do |item| %>
             <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
               <td class="expandable">
                 <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
