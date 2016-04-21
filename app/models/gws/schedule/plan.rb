@@ -25,10 +25,6 @@ class Gws::Schedule::Plan
   validates :end_at, presence: true, if: -> { !repeat? }
   validate :validate_file_size
 
-  def member?(user)
-    member_ids.include?(user.id)
-  end
-
   def custom_group_member?(user)
     custom_groups.where(member_ids: user.id).exists?
   end

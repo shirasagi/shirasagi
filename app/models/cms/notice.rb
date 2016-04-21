@@ -12,11 +12,16 @@ class Cms::Notice
   NOTICE_SEVERITY_HIGH ="high".freeze
   NOTICE_SEVERITIES = [ NOTICE_SEVERITY_NORMAL, NOTICE_SEVERITY_HIGH ].freeze
 
+  NOTICE_TARGET_ALL = "all".freeze
+  NOTICE_TARGET_SAME_GROUP = "same_group".freeze
+  NOTICE_TARGETS = [ NOTICE_TARGET_ALL, NOTICE_TARGET_SAME_GROUP ].freeze
+
   seqid :id
   field :state, type: String, default: "public"
   field :name, type: String
   field :released, type: DateTime
   field :notice_severity, type: String, default: NOTICE_SEVERITY_NORMAL
+  field :notice_target, type: String, default: NOTICE_TARGET_ALL
 
   permit_params :state, :name, :released, :notice_severity, :notice_target
 
@@ -36,6 +41,12 @@ class Cms::Notice
       { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
     ])
   }
+  scope :target_to, ->(user) {
+    where("$or" => [
+      { notice_target: NOTICE_TARGET_ALL },
+      { "$and" => [ { notice_target: NOTICE_TARGET_SAME_GROUP }, { :group_ids.in => user.group_ids } ] }
+    ])
+  }
   scope :search, ->(params = {}) {
     criteria = self.where({})
     return criteria if params.blank?
@@ -47,6 +58,10 @@ class Cms::Notice
 
   def notice_severity_options
     NOTICE_SEVERITIES.map { |v| [ I18n.t("cms.options.notice_severity.#{v}"), v ] }.to_a
+  end
+
+  def notice_target_options
+    NOTICE_TARGETS.map { |v| [ I18n.t("cms.options.notice_target.#{v}"), v ] }.to_a
   end
 
   def state_options

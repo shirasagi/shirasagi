@@ -9,7 +9,7 @@
     <% end %>
   <% end %>
 
-  <% Gws::CustomGroup.site(@cur_site).readable(@cur_user, @cur_site).each do |g| %>
+  <% Gws::CustomGroup.site(@cur_site).readable(@cur_user, @cur_site, exclude_role: true).each do |g| %>
     <%= link_to gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" do %>
       <span class="tab-name"><%= g.name %></span>
     <% end %>

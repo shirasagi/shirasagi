@@ -97,13 +97,13 @@ module Gws::GroupPermission
 
       if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
         cond = { "$or" => [
+          { user_ids: user.id },
           { permission_level: { "$lte" => level } },
-          { permission_level: nil }
         ] }
       elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        cond = { "$and" => [
-          { "$or" => [ { :group_ids.in => user.group_ids }, { user_ids: user.id } ] },
-          { "$or" => [ { permission_level: { "$lte" => level } }, { permission_level: nil } ] }
+        cond = { "$or" => [
+          { user_ids: user.id },
+          { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
         ] }
       end
 

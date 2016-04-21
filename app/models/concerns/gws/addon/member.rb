@@ -11,4 +11,8 @@ module Gws::Addon::Member
 
     scope :member, ->(user) { where member_ids: user.id }
   end
+
+  def member?(user)
+    member_ids.include?(user.id)
+  end
 end

@@ -11,6 +11,10 @@ class Gws::CustomGroupsController < ApplicationController
       @crumbs << [:"mongoid.models.gws/custom_group", gws_custom_groups_path]
     end
 
+    def pre_params
+      { user_ids: [@cur_user.id] }
+    end
+
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site }
     end

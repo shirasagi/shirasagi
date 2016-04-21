@@ -12,7 +12,7 @@ class Gws::PublicNoticesController < ApplicationController
   public
     def index
       @items = @model.site(@cur_site).and_public.
-        readable(@cur_user, @cur_site).
+        readable(@cur_user, @cur_site, exclude_role: true).
         search(params[:s]).
         page(params[:page]).per(50)
     end

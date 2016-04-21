@@ -20,15 +20,15 @@ module Gws::Addon::ReadableSetting
     before_validation :set_readable_custom_groups_hash
 
     # Allow readable settings and readable permissions.
-    scope :readable, ->(user, site) {
+    scope :readable, ->(user, site, opts = {}) {
       cond = [
-        allow_condition(:read, user, site: site),
         { "readable_group_ids.0" => { "$exists" => false },
           "readable_member_ids.0" => { "$exists" => false },
           "readable_custom_group_ids.0" => { "$exists" => false } },
         { :readable_group_ids.in => user.group_ids },
         { readable_member_ids: user.id }
       ]
+      cond << allow_condition(:read, user, site: site) unless opts[:exclude_role]
       where("$and" => [{ "$or" => cond }])
     }
   end
