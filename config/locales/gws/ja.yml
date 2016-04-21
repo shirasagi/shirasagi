@@ -160,9 +160,9 @@ ja:
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
       gws/addon/readable_setting:
-        readable_group_ids: 閲覧可能グループ
-        readable_member_ids: 閲覧可能ユーザー
-        readable_custom_group_ids: 閲覧可能カスタムグループ
+        readable_group_ids: 閲覧グループ
+        readable_member_ids: 閲覧ユーザー
+        readable_custom_group_ids: 閲覧カスタムグループ
       gws/addon/member:
         member_ids: 参加者
       gws/system/setting:
@@ -210,3 +210,10 @@ ja:
     gws/addon/group_permission:
       custom_group_ids:
         - このページを編集可能にするカスタムグループを選択します。
+    gws/addon/readable_setting:
+      readable_custom_group_ids:
+        - このページを閲覧可能にするカスタムグループを選択します。
+      readable_group_ids:
+        - このページを閲覧可能にするグループを選択します。
+      readable_member_ids:
+        - このページを閲覧可能にするユーザーを選択します。
