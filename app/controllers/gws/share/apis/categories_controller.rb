@@ -7,19 +7,16 @@ class Gws::Share::Apis::CategoriesController < ApplicationController
 
   private
     def set_category
-      @groups = @model.site(@cur_site).reduce([]) do |ret, g|
-        indent = '-' * g.depth
-        ret << [ "#{indent} #{g.trailing_name}".html_safe, g.id ]
-      end.to_a
+      @groups = Gws::Share::CategoryTraverser.build(@cur_site, @cur_user)
+      @groups = @groups.flatten
 
-      @group = params[:s] ? params[:s][:group] : nil
+      @group = params[:s] ? params[:s][:group].presence : nil
+      @group = @model.where(id: @group).first if @group.present?
     end
 
     def parent_name
       return // unless @group
-      parent = @model.where(id: @group).first
-      return // unless parent
-      /^#{parent.name}\//
+      /^#{@group.name}\//
     end
 
   public

@@ -35,6 +35,8 @@ module Gws::GroupPermission
   # @param [String] action
   # @param [Gws::User] user
   def allowed?(action, user, opts = {})
+    return true if !new_record? && user_ids.to_a.include?(user.id)
+
     site    = opts[:site] || @cur_site
     action  = permission_action || action
 
@@ -96,18 +98,18 @@ module Gws::GroupPermission
       action = permission_action || action
 
       if level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]
-        cond = { "$or" => [
+        { "$or" => [
           { user_ids: user.id },
           { permission_level: { "$lte" => level } },
         ] }
       elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        cond = { "$or" => [
+        { "$or" => [
           { user_ids: user.id },
           { :group_ids.in => user.group_ids, "$or" => [{ permission_level: { "$lte" => level } }] }
         ] }
+      else
+        { user_ids: user.id }
       end
-
-      cond.presence || { _id: -1 }
     end
 
     def permission_included_custom_group?
