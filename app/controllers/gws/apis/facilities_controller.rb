@@ -7,12 +7,15 @@ class Gws::Apis::FacilitiesController < ApplicationController
 
   private
     def set_category
-      @groups = Gws::Facility::Category.site(@cur_site).reduce([]) do |ret, g|
-        ret << [ "- #{g.name}", g.id ]
-      end.to_a
+      @groups = Gws::Facility::CategoryTraverser.build(@cur_site)
+      @groups = @groups.flatten
 
       @group = params[:s] ? params[:s][:group] : nil
-      @group ||= @groups.first[1] if @groups.present?
+      if @group.present?
+        @group = Gws::Facility::Category.site(@cur_site).find(@group) rescue nil
+      end
+
+      @group ||= @groups.find { |g| g.id.present? }
     end
 
   public
@@ -20,7 +23,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
       @multi = params[:single].blank?
 
       @items = @model.site(@cur_site).
-        category_id(@group).
+        category_id(@group.try(:id)).
         readable(@cur_user).
         reservable(@cur_user).
         active.

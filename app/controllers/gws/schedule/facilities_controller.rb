@@ -7,18 +7,21 @@ class Gws::Schedule::FacilitiesController < ApplicationController
 
   private
     def set_category
-      @categories = Gws::Facility::Category.site(@cur_site).reduce([]) do |ret, g|
-        ret << [ "- #{g.name}", g.id ]
-      end.to_a
+      @categories = Gws::Facility::CategoryTraverser.build(@cur_site)
+      @categories = @categories.flatten
 
       @category = params[:s] ? params[:s][:category] : nil
-      @category ||= @categories.first[1] if @categories.present?
+      if @category.present?
+        @category = Gws::Facility::Category.site(@cur_site).find(@category) rescue nil
+      end
+
+      @category ||= @categories.find { |c| c.id.present? }
     end
 
   public
     def index
       @items = Gws::Facility::Item.site(@cur_site).
-        category_id(@category).
+        category_id(@category.try(:id)).
         readable(@cur_user).
         active
     end

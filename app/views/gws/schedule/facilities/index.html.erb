@@ -1,11 +1,26 @@
 <%= jquery do %>
-  $("#s_category").change(function() {
-    $(".main-box form.search").submit();
-  });
-
   Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
     defaultView: 'timelineDay',
     header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+  });
+
+  SS_TreeUI.render("form.search .index.categories");
+
+  $(".main-box form.search .dropdown").on("click", function(e) {
+    $(".main-box form.search .index.categories").toggle();
+
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+
+  $(".main-box form.search .select-category").on("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $(".main-box form.search .index.categories").hide();
+    $(".main-box form.search #s_category").val($(e.target).data("id"));
+    $(".main-box form.search").submit();
+    return false;
   });
 <% end %>
 
@@ -15,7 +30,28 @@
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <header><h2>
       <% if @categories.present? %>
-      <%= select_tag "s[category]", options_for_select(@categories, @category), include_blank: t('gws/schedule.tabs.facility') %>
+        <button class="dropdown btn" type="button"><%= tryb { @category.name } || t('gws/schedule.tabs.facility') %> <span class="caret">&#x25BC;</span></button>
+        <%= hidden_field_tag("s[category]", @category.try(:id)) %>
+        <table class="index categories" style="display: none; position: absolute; margin-top: 2px; z-index: 10; width: 70%;">
+          <tbody>
+          <tr data-depth="1" class="toggle">
+            <td class="expandable">
+              <%= link_to t('gws/schedule.tabs.facility'), "#", class: "select-category" %>
+            </td>
+          </tr>
+          <% @categories.each do |item| %>
+            <tr data-depth="<%= item.depth + 1 %>" class="toggle">
+              <td class="expandable">
+                <% if item.id.present? %>
+                  <%= link_to item.name, "#", class: "select-category", data: { id: item.id } %>
+                <% else %>
+                  <%= item.name %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
       <% else %>
       <%= t('gws/schedule.tabs.facility') %>
       <% end %>
