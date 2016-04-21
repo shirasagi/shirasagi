@@ -238,24 +238,28 @@
     font-size: 130%;
   }
   .popup-date {
-    margin: 10px 0 10px;
+    margin: 0 0 10px;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+  }
+  .popup-attr {
+    margin: 5px 0 0;
   }
   .popup-label {
     display: inline-block;
     min-width: 60px;
+    float: left;
+    &:after {
+      float: right;
+      content: ' :';
+    }
+  }
+  .popup-value {
+    margin-left: 65px;
   }
   .popup-description {
     margin: 5px 0 0;
     color: #888;
-  }
-  .popup-members {
-    margin: 10px 0 0;
-  }
-  .popup-facilities {
-    margin: 10px 0 0;
-  }
-  .popup-histories {
-    margin: 10px 0 0;
   }
   .popup-menu {
     margin: 10px 0 0;

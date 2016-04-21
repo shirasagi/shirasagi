@@ -8,32 +8,36 @@
 <% end %>
 
 <% if @item.members.present? %>
-<div class="popup-members">
+<div class="popup-attr popup-members">
   <div class="popup-label"><%= @item.t :member_ids %></div>
-  <%= @item.members.order_by_title(@cur_site).map(&:name).join(', ') %>
+  <div class="popup-value"><%= @item.members.order_by_title(@cur_site).map(&:name).join(', ') %></div>
 </div>
 <% end %>
 
 <% if @item.facilities.present? %>
-<div class="popup-facilities">
+<div class="popup-attr popup-facilities">
   <div class="popup-label"><%= @item.t :facility_ids %></div>
-  <%= @item.facilities.map(&:name).join(', ') %>
+  <div class="popup-value"><%= @item.facilities.map(&:name).join(', ') %></div>
 </div>
 <% end %>
 
 <div class="popup-histories">
   <% if hist = @item.histories.where(mode: 'update').first %>
-  <div class="popup-history">
+  <div class="popup-attr popup-history">
     <div class="popup-label"><%= t "gws.history.user.update" %></div>
-    <span class="user"><%= hist.user_long_name %></span>
-    <span class="tel"><%= hist.user_tel %></span>
+    <div class="popup-value">
+      <span class="user"><%= hist.user_long_name %></span>
+      <span class="tel"><%= hist.user_tel %></span>
+    </div>
   </div>
   <% end %>
 
-  <div class="popup-history">
+  <div class="popup-attr popup-history">
     <div class="popup-label"><%= t "gws.history.user.create" %></div>
-    <span class="user"><%= @item.user_long_name %></span>
-    <span class="tel"><%= @item.user_tel %></span>
+    <div class="popup-value">
+      <span class="user"><%= @item.user_long_name %></span>
+      <span class="tel"><%= @item.user_tel %></span>
+    </div>
   </div>
 </div>
 
