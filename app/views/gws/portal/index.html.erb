@@ -4,10 +4,13 @@
   <ul class="list-items">
     <% @notices.each do |item| %>
     <li class="list-item">
-      <div class="info">
+      <div class="meta">
         <%= link_to item.name, gws_public_notice_path(id: item), class: "title notice-severity-#{item.severity}" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
-        <span class="mode"><%= item.histories.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+        <% if item.updated_after_released? %>
+          <span class="label"><%= t('gws.history.mode.update') %></span>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        <% end %>
       </div>
     </li>
     <% end %>
