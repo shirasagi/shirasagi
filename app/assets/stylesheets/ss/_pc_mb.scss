@@ -1224,7 +1224,7 @@ table.index {
       }
     }
   }
-  img.toggle { cursor: pointer; }
+  .toggle { cursor: pointer; }
   @include mb {
     thead {
       background: $gray1;

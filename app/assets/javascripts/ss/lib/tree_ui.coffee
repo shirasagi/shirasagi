@@ -14,7 +14,7 @@ class @SS_TreeUI
       td = $(this).find(".expandable")
       depth = parseInt($(this).attr("data-depth"))
 
-      td.prepend('<img src="' + SS_TreeUI.closeImagePath + '" alt="toggle" class="toggle">')
+      td.prepend('<img src="' + SS_TreeUI.closeImagePath + '" alt="toggle" class="toggle closed">')
       $(this).hide() if (depth != root)
       for i in [root...depth]
         td.prepend('<span class="padding">')
