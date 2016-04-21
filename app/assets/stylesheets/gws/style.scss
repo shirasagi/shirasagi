@@ -104,3 +104,14 @@ a.gws-category-label:hover {
   }
 }
 
+.gws-addon-file {
+  .droppable {
+    border: solid 1px $gray5;
+    width: 100%;
+    padding: 15px;
+    @include border-radius(3px);
+  }
+  .active {
+    border: solid 1px $orange;
+  }
+}

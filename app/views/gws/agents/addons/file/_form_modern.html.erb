@@ -1,0 +1,28 @@
+<%= jquery do %>
+  new Gws_FileUpload('.gws-addon-file', {
+    createUrl: "<%= sns_apis_temp_files_path(user: @cur_user, format: :json) %>",
+    indexUrl: "<%= sns_apis_temp_files_path(user: @cur_user, format: :json) %>",
+    destroyUrl: "<%= sns_apis_temp_file_path(user: @cur_user, id: ':id', format: :json) %>",
+    viewUrl: "<%= view_sns_apis_temp_file_path(user: @cur_user, id: ':id', format: :html) %>",
+    thumbUrl: "<%= thumb_sns_apis_temp_file_path(user: @cur_user, id: ':id') %>" });
+<% end %>
+
+<dl class="see gws-addon-file">
+  <dd class="wide">
+    <div class="droppable">
+      アップロードするファイルをドロップするか、<a class="select-files" href="#">ファイルを選択</a>してください。<br>
+      <%# select_tag :resizing, options_for_select(SS::TempFile.resizing_options), { include_blank: t("views.resize_image"), class: "image-size" } %>
+    </div>
+    <input type="file" class="input-files" name="files[]" style="display: none;" multiple />
+  </dd>
+  <dd class="wide">
+    <div class="errorExplanation" style="display: none">
+      <h2>問題が発生しました。</h2>
+    </div>
+  </dd>
+
+  <dd class="wide">
+    <div class="pending-files">
+    </div>
+  </dd>
+</dl>
