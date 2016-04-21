@@ -54,6 +54,10 @@ class @SS_TreeUI
 
   @openImage = (img) ->
     img.attr("src", SS_TreeUI.openImagePath)
+    img.addClass("opened")
+    img.removeClass("closed")
 
   @closeImage = (img) ->
     img.attr("src", SS_TreeUI.closeImagePath)
+    img.removeClass("opened")
+    img.addClass("closed")

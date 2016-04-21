@@ -1,12 +1,23 @@
 <%= jquery do %>
 SS_TreeUI.render(".index.groups");
 $(".index.groups tbody tr[data-depth='1'] img").click();
+$(".expand-all").on("click", function() {
+  $(".index.groups tbody tr img.toggle.closed").click();
+});
+$(".collapse-all").on("click", function() {
+  $(".index.groups tbody tr img.toggle.opened").click();
+});
 <% end %>
 
 <%= render "gws/schedule/main/tabs" %>
 
 <section class="main-box">
   <header><h2><%= t('gws/schedule.tabs.group') %></h2></header>
+
+  <div class="gws-groups-operation">
+    <button class="btn expand-all">すべて展開</button>
+    <button class="btn collapse-all">すべて閉じる</button>
+  </div>
 
   <table class="index groups">
     <tbody>
