@@ -1,6 +1,6 @@
-module Gws::Facility::Setting
+module Gws::Facility::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::Setting
+  extend Gws::GroupSetting
 
   class << self
     # Permission for navigation view

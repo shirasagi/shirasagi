@@ -1,0 +1,7 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /edit|update|delete/ %>
+    <%= link_to :back_to_show, action: :show %>
+  <% else %>
+    <%= link_to :edit, action: :edit %>
+  <% end %>
+</nav>

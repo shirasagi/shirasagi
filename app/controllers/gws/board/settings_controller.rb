@@ -7,6 +7,6 @@ class Gws::Board::SettingsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.settings.gws/board", gws_board_setting_path]
+      @crumbs << [:"mongoid.models.gws/board/group_setting", gws_board_setting_path]
     end
 end

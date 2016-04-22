@@ -48,9 +48,6 @@ ja:
     gws/board: 掲示板
     addons:
       gws/board/category: カテゴリー
-    settings:
-      gws/board: 掲示板設定
-      gws/board/category: カテゴリー
 
   gws_role:
     read_other_gws_board_posts: 投稿の閲覧（全て）
@@ -71,6 +68,8 @@ ja:
       gws/board/topic: 掲示板トピック
       gws/board/post: 掲示板投稿
       gws/board/category: カテゴリー
+      gws/board/group_setting: 掲示板設定
+      gws/board/group_setting/category: カテゴリー
     errors:
       models:
         gws/board/category:
@@ -87,7 +86,7 @@ ja:
         updated: 最終更新日
         mode: 表示形式
         permit_comment: コメント
-      gws/board/setting:
+      gws/board/group_setting:
         board_new_days: 新着表示期間
         board_file_size: 添付最大サイズ
         board_file_size_per_topic: 添付最大サイズ/トピック単位
@@ -105,7 +104,7 @@ ja:
         - 表示形式を選択します。
       permit_comment:
         - コメントを許可するかどうかを選択します。
-    gws/board/setting:
+    gws/board/group_setting:
       board_new_days:
         - 新着表示期間を入力します。
       board_file_size_per_topic:

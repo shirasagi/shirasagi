@@ -5,6 +5,6 @@ class Gws::Share::SettingsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.settings.gws/share", gws_share_setting_path]
+      @crumbs << [:"mongoid.models.gws/share/group_setting", gws_share_setting_path]
     end
 end

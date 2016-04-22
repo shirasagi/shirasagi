@@ -200,6 +200,7 @@ td {
     .dropdown-menu {
       top: 100%;
       right: 0;
+      min-width: 200px;
       margin: 0;
       padding: 5px 0px;
       border: $border-gray4;
@@ -779,6 +780,9 @@ dl.see {
     button, .ajax-box {
       margin-right: 15px;
     }
+  }
+  > dt.depth-2 {
+    padding-left: 20px;
   }
 }
 dl.mod-cms-parent_crumbs {

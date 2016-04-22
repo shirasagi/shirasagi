@@ -27,7 +27,7 @@
     <h3><%= link_to t('mongoid.models.gws/link'), gws_links_path %></h3>
   <% end %>
 
-  <% Gws::Setting.plugins.each do |mod, url_lazy| %>
+  <% Gws::GroupSetting.plugins.each do |mod, url_lazy| %>
     <% if mod.allowed?(:read, @cur_user, site: @cur_site) %>
       <h3><%= link_to mod.human_name, instance_exec(&url_lazy) %></h3>
     <% end %>

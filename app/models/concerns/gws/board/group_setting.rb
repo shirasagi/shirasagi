@@ -1,6 +1,6 @@
-module Gws::Board::Setting
+module Gws::Board::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::Setting
+  extend Gws::GroupSetting
 
   included do
     field :board_new_days, type: Integer

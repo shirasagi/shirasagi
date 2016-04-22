@@ -9,9 +9,6 @@ ja:
     gws/share: 共有ファイル
     addons:
       gws/share/category: カテゴリー
-    settings:
-      gws/share: 共有ファイル設定
-      gws/share/category: カテゴリー
 
   gws_role:
     read_other_gws_share_files: ファイルの閲覧（全て）
@@ -35,7 +32,9 @@ ja:
   mongoid:
     models:
       gws/share/file: 共有ファイル
-      gws/share/category: カテゴリー
+      gws/share/category: 共有ファイル種類
+      gws/share/group_setting: 共有ファイル設定
+      gws/share/group_setting/category: カテゴリー
     errors:
       models:
         gws/share/file:
@@ -48,7 +47,7 @@ ja:
         name: カテゴリー名
       gws/addon/share/category:
         category_ids: カテゴリー
-      gws/share/setting:
+      gws/share/group_setting:
         share_max_file_size: 最大ファイルサイズ
 
   tooltip:

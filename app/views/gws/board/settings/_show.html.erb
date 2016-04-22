@@ -5,9 +5,9 @@
   <dt><%= @model.t :board_file_size %><%= @model.tt :board_file_size %></dt>
   <dd></dd>
 
-  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_topic).sub(/.*\//, '') %></dt>
+  <dt class="depth-2"><%= @model.t(:board_file_size_per_topic).sub(/.*\//, '') %></dt>
   <dd><%= number_to_human_size(@item.board_file_size_per_topic) %></dd>
 
-  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %></dt>
+  <dt class="depth-2"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %></dt>
   <dd><%= number_to_human_size(@item.board_file_size_per_post) %></dd>
 </dl>

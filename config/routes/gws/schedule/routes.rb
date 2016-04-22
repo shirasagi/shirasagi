@@ -18,9 +18,9 @@ SS::Application.routes.draw do
     resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
-
-    resource :setting, only: [:show, :edit, :update]
     resources :holidays, concerns: :plans
     resources :categories, concerns: :plans
+    resource :setting, only: [:show, :edit, :update]
+    resource :user_setting, only: [:show, :edit, :update]
   end
 end

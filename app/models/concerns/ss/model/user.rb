@@ -188,13 +188,13 @@ module SS::Model::User
 
     def save_group_history
       changes = @db_changes['group_ids']
-      item = SS::UserGroupHistory.new({
+      item = SS::UserGroupHistory.new(
         cur_site: @cur_site,
         user_id: id,
         group_ids: group_ids,
         inc_group_ids: (changes[1].to_a - changes[0].to_a),
         dec_group_ids: (changes[0].to_a - changes[1].to_a)
-      })
+      )
       item.save
     end
 end
