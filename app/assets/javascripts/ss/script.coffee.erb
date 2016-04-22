@@ -119,7 +119,7 @@ class @SS
         alert(["== Error =="].concat(data.responseJSON).join("\n"));
     }
     elem.on "submit", (e) ->
-      $(this).ajaxSubmit $.extend(defaults, params)
+      $(this).ajaxSubmit $.extend(true, defaults, params)
       e.preventDefault();
 
   @ajax:(elem, params = {}) ->
@@ -134,7 +134,7 @@ class @SS
         error: (data, status) ->
           alert("== Error ==");
       }
-      $.ajax $.extend(defaults, params)
+      $.ajax $.extend(true, defaults, params)
       e.preventDefault();
       return false
 
@@ -154,7 +154,7 @@ class @SS
         error: (data, status) ->
           alert(["== Error =="].concat(data.responseJSON).join("\n"));
       }
-      $.ajax $.extend(defaults, params)
+      $.ajax $.extend(true, defaults, params)
       e.preventDefault();
       return false
 

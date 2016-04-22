@@ -1,9 +1,9 @@
 class @Gws_Schedule_Calendar
   @render: (selector, opts = {})->
     params = @defaultParams(opts)
-    $.extend params, @editableParams(opts) if opts['restUrl']
-    $.extend params, @tapMenuParams(opts) if opts['restUrl']
-    $.extend params, opts
+    $.extend true, params, @editableParams(opts) if opts['restUrl']
+    $.extend true, params, @tapMenuParams(opts) if opts['restUrl']
+    $.extend true, params, opts
     $(selector).fullCalendar(params)
 
     $(document).click (ev) ->
