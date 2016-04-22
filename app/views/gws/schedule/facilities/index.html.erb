@@ -6,20 +6,14 @@
 
   SS_TreeUI.render("form.search .index.categories");
 
-  $(".main-box form.search .dropdown").on("click", function(e) {
-    $(".main-box form.search .index.categories").toggle();
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
+  SS_Dropdown.render();
 
   $(".main-box form.search .select-category").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $(".main-box form.search .index.categories").hide();
     $(".main-box form.search #s_category").val($(e.target).data("id"));
     $(".main-box form.search").submit();
+
+    e.preventDefault();
+    e.stopPropagation();
     return false;
   });
 <% end %>
@@ -32,26 +26,28 @@
       <% if @categories.present? %>
         <button class="dropdown btn" type="button"><%= tryb { @category.name } || t('gws/schedule.tabs.facility') %> <span class="caret">&#x25BC;</span></button>
         <%= hidden_field_tag("s[category]", @category.try(:id)) %>
-        <table class="index categories pulldown-index">
-          <tbody>
-          <tr data-depth="1" class="toggle">
-            <td class="expandable">
-              <%= link_to t('gws/schedule.tabs.facility'), "#", class: "select-category" %>
-            </td>
-          </tr>
-          <% @categories.each do |item| %>
-            <tr data-depth="<%= item.depth + 1 %>" class="toggle">
+        <div class="dropdown-container">
+          <table class="index categories">
+            <tbody>
+            <tr data-depth="1">
               <td class="expandable">
-                <% if item.id.present? %>
-                  <%= link_to item.name, "#", class: "select-category", data: { id: item.id } %>
-                <% else %>
-                  <%= item.name %>
-                <% end %>
+                <%= link_to t('gws/schedule.tabs.facility'), "#", class: "select-category" %>
               </td>
             </tr>
-          <% end %>
-          </tbody>
-        </table>
+            <% @categories.each do |item| %>
+              <tr data-depth="<%= item.depth + 1 %>" class="<%= item.children? ? "toggle" : nil %>">
+                <td class="expandable">
+                  <% if item.id.present? %>
+                    <%= link_to item.name, "#", class: "select-category", data: { id: item.id } %>
+                  <% else %>
+                    <%= item.name %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
       <% else %>
       <%= t('gws/schedule.tabs.facility') %>
       <% end %>

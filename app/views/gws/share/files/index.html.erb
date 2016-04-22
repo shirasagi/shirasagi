@@ -9,31 +9,17 @@ end
 %>
 <%= jquery do %>
 
-  //$('.gws-category-navi-menu #category_id').change(function() {
-  //  var cid = $(this).val();
-  //  if (cid) location.href = '<%= gws_share_category_files_path(category: 'ID') %>'.replace('ID', cid);
-  //  else location.href = '<%= gws_share_files_path %>';
-  //});
-
   SS_TreeUI.render(".gws-category-navi-menu .index.categories");
 
-  $(".gws-category-navi-menu .dropdown").on("click", function(e) {
-    $(".gws-category-navi-menu .index.categories").toggle();
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
+  SS_Dropdown.render();
 
   $(".gws-category-navi-menu .select-category").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $(".gws-category-navi-menu .index.categories").hide();
-
     var id = $(e.target).data("id");
     if (id) location.href = '<%= gws_share_category_files_path(category: 'ID') %>'.replace('ID', id);
     else location.href = '<%= gws_share_files_path %>';
 
+    e.preventDefault();
+    e.stopPropagation();
     return false;
   });
 
@@ -41,26 +27,28 @@ end
 
 <div class="gws-category-navi-menu">
   <button class="dropdown btn" type="button"><%= tryb { category.name } || t('modules.gws/share') %> <span class="caret">&#x25BC;</span></button>
-  <table class="index categories pulldown-index">
-    <tbody>
-    <tr data-depth="1" class="toggle">
-      <td class="expandable">
-        <%= link_to t('modules.gws/share'), "#", class: "select-category" %>
-      </td>
-    </tr>
-    <% categories.flatten.each do |category| %>
-      <tr data-depth="<%= category.depth + 1 %>" class="toggle">
+  <div class="dropdown-container">
+    <table class="index categories">
+      <tbody>
+      <tr data-depth="1" class="toggle">
         <td class="expandable">
-          <% if category.id.present? %>
-            <%= link_to category.name, "#", class: "select-category", data: { id: category.id } %>
-          <% else %>
-            <%= category.name %>
-          <% end %>
+          <%= link_to t('modules.gws/share'), "#", class: "select-category" %>
         </td>
       </tr>
-    <% end %>
-    </tbody>
-  </table>
+      <% categories.flatten.each do |category| %>
+        <tr data-depth="<%= category.depth + 1 %>" class="toggle">
+          <td class="expandable">
+            <% if category.id.present? %>
+              <%= link_to category.name, "#", class: "select-category", data: { id: category.id } %>
+            <% else %>
+              <%= category.name %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <% @index_meta = proc do |item| %>

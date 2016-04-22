@@ -1,0 +1,9 @@
+<%= jquery do %>
+  $("form.search #s_custom_group").on("change", function(e) {
+    SS_SearchUI.selectItems()
+    $("#ajax-box form.search").submit()
+  });
+<% end %>
+
+<dt><%= t("mongoid.models.gws/custom_group") %></dt>
+<dd><%= select_tag "s[custom_group]", options_for_select(@custom_groups.map { |g| [ g.name, g.id ] }, @custom_group.try(:id)), include_blank: t("mongoid.models.gws/custom_group") %></dd>

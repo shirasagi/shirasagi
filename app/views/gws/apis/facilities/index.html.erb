@@ -2,21 +2,15 @@
   SS_SearchUI.modal();
   SS_TreeUI.render("form.search .index.categories");
 
-  $("form.search .dropdown").on("click", function(e) {
-    $("form.search .index.categories").toggle();
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
+  SS_Dropdown.render();
 
   $("form.search .select-category").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("form.search .index.categories").hide();
     $("#ajax-box #s_group").val($(e.target).data("id"));
     SS_SearchUI.selectItems()
     $("#ajax-box form.search").submit()
+
+    e.preventDefault();
+    e.stopPropagation();
     return false;
   });
 <% end %>
@@ -29,26 +23,28 @@
       <dd>
         <button class="dropdown btn" type="button"><%= tryb { @group.name } || @model.t(:category_id) %> <span class="caret">&#x25BC;</span></button>
         <%= hidden_field_tag("s[group]", @group.try(:id)) %>
-        <table class="index categories pulldown-index">
-          <tbody>
-          <tr data-depth="1" class="toggle">
-            <td class="expandable">
-              <%= link_to @model.t(:category_id), "#", class: "select-category" %>
-            </td>
-          </tr>
-          <% @groups.each do |item| %>
-            <tr data-depth="<%= item.depth + 1 %>" class="toggle">
+        <div class="dropdown-container">
+          <table class="index categories">
+            <tbody>
+            <tr data-depth="1">
               <td class="expandable">
-                <% if item.id.present? %>
-                  <%= link_to item.name, "#", class: "select-category", data: { id: item.id } %>
-                <% else %>
-                  <%= item.name %>
-                <% end %>
+                <%= link_to @model.t(:category_id), "#", class: "select-category" %>
               </td>
             </tr>
-          <% end %>
-          </tbody>
-        </table>
+            <% @groups.each do |item| %>
+              <tr data-depth="<%= item.depth + 1 %>" class="<%= item.children? ? "toggle" : nil %>">
+                <td class="expandable">
+                  <% if item.id.present? %>
+                    <%= link_to item.name, "#", class: "select-category", data: { id: item.id } %>
+                  <% else %>
+                    <%= item.name %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
       </dd>
 
       <dt><%= @model.t :name %></dt>

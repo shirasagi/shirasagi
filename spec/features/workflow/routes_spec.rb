@@ -46,7 +46,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         end
         # wait a while to load contents of dialog
         wait_for_cbox
-        within "div#ajax-box table.index" do
+        within "div#ajax-box table.index tbody.items" do
           click_link user.name
         end
 

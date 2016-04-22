@@ -1,43 +1,13 @@
 <%= jquery do %>
   SS_SearchUI.modal();
-  SS_TreeUI.render("form.search .index.groups");
-  $("form.search .dropdown").on("click", function(e) {
-    $("form.search .index.groups").toggle();
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
-  $("form.search .index.groups .select-group").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("#ajax-box #s_group").val($(e.target).data("id"));
-    SS_SearchUI.selectItems()
-    $("#ajax-box form.search").submit()
-    return false;
-  });
 <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
-      <dt><%= t("mongoid.models.gws/group") %></dt>
-      <dd>
-        <button class="dropdown btn"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
-        <%= hidden_field_tag("s[group]", @group.id) %>
-        <table class="index groups pulldown-index">
-          <tbody>
-          <% @groups.each do |item| %>
-            <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
-              <td class="expandable">
-                <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
-              </td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
-      </dd>
+      <%= render partial: "group_dropdown", locals: { f: f } %>
+      <%= render partial: "custom_group_dropdown", locals: { f: f } %>
       <dt><%= t "mongoid.models.gws/user" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>

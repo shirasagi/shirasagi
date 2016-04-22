@@ -15,7 +15,11 @@ class Gws::Schedule::FacilitiesController < ApplicationController
         @category = Gws::Facility::Category.site(@cur_site).find(@category) rescue nil
       end
 
-      @category ||= @categories.find { |c| c.id.present? }
+      @category ||= begin
+        c = @categories.find { |c| c.id.present? }
+        c = Gws::Facility::Category.site(@cur_site).find(c.id) rescue nil
+        c
+      end
     end
 
   public

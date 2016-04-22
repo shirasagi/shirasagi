@@ -1,10 +1,39 @@
-<%= jquery do %> SS_SearchUI.modal(); <% end %>
+<%= jquery do %>
+  SS_SearchUI.modal();
+  SS_TreeUI.render("form.search .index.groups");
+  SS_Dropdown.render();
+
+  $("form.search .index.groups .select-group").on("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#ajax-box #s_group").val($(e.target).data("id"));
+    SS_SearchUI.selectItems()
+    $("#ajax-box form.search").submit()
+    return false;
+  });
+<% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= form_for :s, url: { action: :index, level: @level }, html: { method: "GET", class: :search } do |f| %>
     <dl class="see">
       <dt><%= t "cms.group" %></dt>
-      <dd><%= select_tag "s[group]", options_for_select(@group_options, @group_id) %></dd>
+      <dd>
+        <button class="dropdown btn"><%= @group.try(:name) %> <span class="caret">&#x25BC;</span></button>
+        <%= hidden_field_tag("s[group]", @group.try(:id)) %>
+        <div class="dropdown-container">
+          <table class="index groups">
+            <tbody>
+            <% @groups.each do |item| %>
+              <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
+                <td class="expandable">
+                  <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </dd>
       <dt><%= t "cms.user" %></dt>
       <dd><%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
       <%= f.submit t("workflow.search_approvers.search"), class: "btn" %></dd>
