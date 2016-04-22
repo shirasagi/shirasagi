@@ -13,7 +13,6 @@ module Gws::UserSettingFilter
       @item = @cur_user
     end
 
-  private
     def set_crumbs
       #@crumbs << [:"gws.setting", gws_settings_path]
     end
@@ -22,8 +21,11 @@ module Gws::UserSettingFilter
       {}
     end
 
-    def set_item
-      @item = @cur_user
+    def permit_fields
+      [ in_schedule_tabs_group_ids: [],
+        in_schedule_tabs_group_ids_all: [],
+        in_schedule_tabs_custom_group_ids: [],
+        in_schedule_tabs_custom_group_ids_all: [] ]
     end
 
   public
