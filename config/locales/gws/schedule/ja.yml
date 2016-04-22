@@ -47,10 +47,6 @@ ja:
     addons:
       gws/schedule/facility: 設備予約
       gws/schedule/repeat: 繰り返し
-    settings:
-      gws/schedule: スケジュール設定
-      gws/schedule/holiday: 休日設定
-      gws/schedule/category: 種別設定
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
@@ -72,6 +68,9 @@ ja:
       gws/schedule/plan: スケジュール
       gws/schedule/category: スケジュール種別
       gws/schedule/holiday: 休日
+      gws/schedule/group_setting: スケジュール設定
+      gws/schedule/group_setting/holiday: 休日設定
+      gws/schedule/group_setting/category: 種別設定
     errors:
       models:
         gws/schedule/plan:
@@ -107,7 +106,7 @@ ja:
         wdays: 繰り返し曜日
       gws/addon/schedule/facility:
         facility_ids: 設備予約
-      gws/schedule/setting:
+      gws/schedule/group_setting:
         schedule_max_date: 入力可能期間
         schedule_max_years: 年数
         schedule_max_month: 期末月
@@ -145,7 +144,7 @@ ja:
     gws/addon/schedule/facility:
       facility_ids:
         - 使用する設備を選択します。
-    gws/schedule/setting:
+    gws/schedule/group_setting:
       schedule_max_years:
         - 年数を入力します。
       schedule_max_month:

@@ -1,11 +1,11 @@
-module Gws::Setting
+module Gws::GroupSetting
   def self.extended(mod)
     mod.extend SS::Translation
   end
 
   def human_name
-    name = self.to_s.underscore.sub("/setting", "")
-    I18n.t "modules.settings.#{name}", default: name.titleize
+    name = self.to_s.underscore
+    I18n.t "mongoid.models.#{name}", default: name.titleize
   end
 
   def allowed?(action, user, opts = {})

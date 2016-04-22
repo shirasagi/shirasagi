@@ -1,6 +1,6 @@
 module Gws::Board
   class Initializer
-    Gws::Setting.plugin Gws::Board::Setting, ->{ gws_board_setting_path }
+    Gws::GroupSetting.plugin Gws::Board::GroupSetting, ->{ gws_board_setting_path }
 
     Gws::Role.permission :read_other_gws_board_posts, module_name: 'gws/board'
     Gws::Role.permission :read_private_gws_board_posts, module_name: 'gws/board'

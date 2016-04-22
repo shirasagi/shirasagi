@@ -20,15 +20,14 @@ ja:
     gws/facility: 設備管理
     addons:
       gws/facility/reservable_setting: 予約権限
-    settings:
-      gws/facility: 設備管理
-      gws/facility/item: 設備
-      gws/facility/category: カテゴリー
 
   mongoid:
     models:
       gws/facility/item: 設備
       gws/facility/category: 設備カテゴリー
+      gws/facility/group_setting: 設備管理
+      gws/facility/group_setting/item: 設備
+      gws/facility/group_setting/category: カテゴリー
     attributes:
       gws/facility/item:
         name: 設備名

@@ -1,6 +1,6 @@
-module Gws::Schedule::Setting
+module Gws::Schedule::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::Setting
+  extend Gws::GroupSetting
 
   included do
     field :schedule_max_month, type: Integer
