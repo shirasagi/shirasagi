@@ -9,9 +9,8 @@ class Workflow::SearchApproversController < ApplicationController
     def set_group
       if params[:s].present? && params[:s][:group].present?
         @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
-      else
-        @group = @cur_user.groups.active.first
       end
+      @group ||= @cur_user.groups.active.first
 
       @groups = Cms::Group.site(@cur_site).active
     end
