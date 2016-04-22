@@ -28,7 +28,7 @@ class @Gws_Schedule_Multiple_Calendar
     eventSources: []
     eventAfterAllRender: (view)->
       if view.name == 'basicWeek'
-        view.el.find(".fc-body").html("")
+        view.el.find(".fc-body").hide()
 
   @contentParams: (opts) ->
     eventRender: (event, element, view)->
