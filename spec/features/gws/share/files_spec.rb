@@ -35,7 +35,9 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       first('#addon-gws-agents-addons-share-category .toggle-head').click
       click_on "カテゴリーを選択する"
       wait_for_cbox
-      click_on category.name
+      within "tbody.items" do
+        click_on category.name
+      end
       within "form#item-form" do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
         click_button "保存"

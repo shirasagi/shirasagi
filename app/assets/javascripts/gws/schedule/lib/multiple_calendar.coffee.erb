@@ -1,11 +1,11 @@
 class @Gws_Schedule_Multiple_Calendar
   @render: (selector, opts = {})->
     params = Gws_Schedule_Calendar.defaultParams(opts)
-    $.extend params, Gws_Schedule_Calendar.editableParams(opts) if opts['restUrl']
-    $.extend params, Gws_Schedule_Calendar.tapMenuParams(opts) if opts['restUrl']
-    $.extend params, @defaultParams(opts)
-    $.extend params, @contentParams(opts)
-    $.extend params, opts
+    $.extend true, params, Gws_Schedule_Calendar.editableParams(opts) if opts['restUrl']
+    $.extend true, params, Gws_Schedule_Calendar.tapMenuParams(opts) if opts['restUrl']
+    $.extend true, params, @defaultParams(opts)
+    $.extend true, params, @contentParams(opts)
+    $.extend true, params, opts
     $(selector).fullCalendar(params)
 
     $(document).click (ev) ->
@@ -28,7 +28,7 @@ class @Gws_Schedule_Multiple_Calendar
     eventSources: []
     eventAfterAllRender: (view)->
       if view.name == 'basicWeek'
-        view.el.find(".fc-body").html("")
+        view.el.find(".fc-body").hide()
 
   @contentParams: (opts) ->
     eventRender: (event, element, view)->
@@ -39,9 +39,9 @@ class @Gws_Schedule_Multiple_Calendar
 
   @renderController: (selector, opts = {}) ->
     params = Gws_Schedule_Calendar.defaultParams(opts)
-    $.extend params, @defaultParams(opts)
-    $.extend params, @controllerParams(opts)
-    $.extend params, opts
+    $.extend true, params, @defaultParams(opts)
+    $.extend true, params, @controllerParams(opts)
+    $.extend true, params, opts
 
     $(selector).fullCalendar(params)
 

@@ -25,7 +25,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         visit new_path
         click_on "カテゴリーを選択する"
         wait_for_cbox
-        click_on category.name
+        within "tbody.items" do
+          click_on category.name
+        end
 
         within "form#item-form" do
           fill_in "item[name]", with: "name"
@@ -57,7 +59,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
       visit edit_path
       click_on "カテゴリーを選択する"
       wait_for_cbox
-      click_on category.name
+      within "tbody.items" do
+        click_on category.name
+      end
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"
