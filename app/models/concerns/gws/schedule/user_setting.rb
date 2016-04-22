@@ -24,11 +24,11 @@ module Gws::Schedule::UserSetting
   end
 
   def schedule_tabs_visible_groups(site)
-    groups.in_group(site).ne(id: schedule_tabs_group_ids)
+    groups.in_group(site).nin(id: schedule_tabs_group_ids)
   end
 
   def schedule_tabs_visible_custom_groups(site)
-    custom_groups.site(site).readable(self, site).ne(id: schedule_tabs_custom_group_ids)
+    custom_groups.site(site).readable(self, site).nin(id: schedule_tabs_custom_group_ids)
   end
 
   private
