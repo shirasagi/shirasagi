@@ -8,8 +8,8 @@ class Gws::Board::CategoriesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.settings.gws/board", gws_board_setting_path]
-      @crumbs << [:"modules.settings.gws/board/category", gws_board_topics_path]
+      @crumbs << [:"mongoid.models.gws/board/group_setting", gws_board_setting_path]
+      @crumbs << [:"mongoid.models.gws/board/group_setting/category", gws_board_topics_path]
     end
 
     def fix_params

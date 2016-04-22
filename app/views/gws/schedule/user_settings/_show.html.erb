@@ -1,0 +1,16 @@
+<%
+
+groups = @cur_user.schedule_tabs_visible_groups(@cur_site)
+custom_groups = @cur_user.schedule_tabs_visible_custom_groups(@cur_site)
+
+%>
+<dl class="see">
+  <dt><%= @model.t :schedule_tabs %><%= @model.tt :schedule_tabs %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t(:in_schedule_tabs_group_ids).sub(/.*\//, '') %></dt>
+  <dd><%=br groups.map { |m| m.name }.join("\n") %></dd>
+
+  <dt class="depth-2"><%= @model.t(:in_schedule_tabs_custom_group_ids).sub(/.*\//, '') %></dt>
+  <dd><%=br custom_groups.map { |m| m.name }.join("\n") %></dd>
+</dl>

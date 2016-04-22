@@ -1,11 +1,11 @@
 <nav class="mod-navi">
-  <h2><%= t "modules.settings.gws/board" %></h2>
+  <h2><%= t "mongoid.models.gws/board/group_setting" %></h2>
 
   <% if @cur_site.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.module_setting'), gws_board_setting_path %></h3>
   <% end %>
   <% if Gws::Board::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('modules.settings.gws/board/category'), gws_board_categories_path %></h3>
+    <h3><%= link_to t('mongoid.models.gws/board/group_setting/category'), gws_board_categories_path %></h3>
   <% end %>
 </nav>
 

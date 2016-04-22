@@ -69,8 +69,8 @@ module Gws::Board::DescendantsFileInfo
       return unless topic
       files_count, total_file_size = topic_file_info(topic)
       topic.set(
-          descendants_files_count: files_count,
-          descendants_total_file_size: total_file_size,
+        descendants_files_count: files_count,
+        descendants_total_file_size: total_file_size
       )
     end
 end

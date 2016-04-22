@@ -1,14 +1,14 @@
 <nav class="mod-navi">
-  <h2><%= t "modules.settings.gws/schedule" %></h2>
+  <h2><%= t "mongoid.models.gws/schedule/group_setting" %></h2>
 
   <% if @cur_site.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws.module_setting'), gws_schedule_setting_path %></h3>
   <% end %>
   <% if Gws::Schedule::Holiday.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('modules.settings.gws/schedule/holiday'), gws_schedule_holidays_path %></h3>
+    <h3><%= link_to t('mongoid.models.gws/schedule/group_setting/holiday'), gws_schedule_holidays_path %></h3>
   <% end %>
   <% if Gws::Schedule::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('modules.settings.gws/schedule/category'), gws_schedule_categories_path %></h3>
+    <h3><%= link_to t('mongoid.models.gws/schedule/group_setting/category'), gws_schedule_categories_path %></h3>
   <% end %>
 </nav>
 

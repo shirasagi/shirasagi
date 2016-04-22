@@ -3,13 +3,13 @@
     <span class="tab-name"><%= t('gws/schedule.tabs.personal') %></span>
   <% end %>
 
-  <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+  <% @cur_user.schedule_tabs_visible_groups(@cur_site).each do |group| %>
     <%= link_to gws_schedule_group_plans_path(group: group.id), class: "group" do %>
       <span class="tab-name"><%= group.trailing_name %></span>
     <% end %>
   <% end %>
 
-  <% Gws::CustomGroup.site(@cur_site).readable(@cur_user, @cur_site, exclude_role: true).each do |g| %>
+  <% @cur_user.schedule_tabs_visible_custom_groups(@cur_site).each do |g| %>
     <%= link_to gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" do %>
       <span class="tab-name"><%= g.name %></span>
     <% end %>

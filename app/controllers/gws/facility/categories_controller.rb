@@ -8,8 +8,8 @@ class Gws::Facility::CategoriesController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"modules.settings.gws/facility", gws_facility_items_path]
-      @crumbs << [:"modules.settings.gws/facility/category", gws_facility_categories_path]
+      @crumbs << [:"mongoid.models.gws/facility/group_setting", gws_facility_items_path]
+      @crumbs << [:"mongoid.models.gws/facility/group_setting/category", gws_facility_categories_path]
     end
 
     def fix_params

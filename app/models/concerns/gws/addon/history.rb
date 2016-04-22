@@ -28,13 +28,13 @@ module Gws::Addon
       end
 
       def save_history(overwrite_params = {})
-        item = Gws::History.new({
+        item = Gws::History.new(
           cur_user: @cur_user,
           site_id: site_id,
           name: reference_name,
           model: reference_model,
           item_id: id
-        })
+        )
         item.attributes = overwrite_params
         item.save
       end

@@ -1,6 +1,6 @@
-module Gws::Share::Setting
+module Gws::Share::GroupSetting
   extend ActiveSupport::Concern
-  extend Gws::Setting
+  extend Gws::GroupSetting
 
   included do
     field :share_max_file_size, type: Integer, default: 0

@@ -5,6 +5,7 @@ ja:
     site_config: 設定
     site_info: グループ情報
     module_setting: 全体設定
+    user_setting: ポータル設定
     roles:
       admin: 管理者
       user: 一般ユーザー
@@ -84,8 +85,6 @@ ja:
       gws/history: 変更履歴
       gws/readable_setting: 閲覧権限
       gws/member: 参加者
-    settings:
-      gws/system: システム設定
 
   mongoid:
     models:
@@ -99,6 +98,9 @@ ja:
       gws/share: 共有ファイル
       gws/reminder: リマインダー
       gws/history: 操作履歴
+      gws/group_setting: システム設定
+      gws/group_setting/system: システム設定
+      gws/user_setting: ユーザー設定
     attributes:
       gws/model/category:
         model: モデル
@@ -165,7 +167,7 @@ ja:
         readable_custom_group_ids: 閲覧カスタムグループ
       gws/addon/member:
         member_ids: 参加者
-      gws/system/setting:
+      gws/group_setting/system:
         sendmail_domains: メール送信許可ドメイン
 
   tooltip:
@@ -204,7 +206,7 @@ ja:
     gws/link:
       name:
         - タイトルを入力します。
-    gws/system/setting:
+    gws/group_setting/system:
       sendmail_domains:
         - メール送信許可ドメインを入力します。
     gws/addon/group_permission:

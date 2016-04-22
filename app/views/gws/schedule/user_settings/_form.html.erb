@@ -1,0 +1,28 @@
+<dl class="see">
+  <dt><%= @model.t :schedule_tabs %><%= @model.tt :schedule_tabs %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t(:in_schedule_tabs_group_ids).sub(/.*\//, '') %></dt>
+  <% @cur_user.groups.in_group(@cur_site).each do |item| %>
+    <% eid = "tab-g-#{item.id}" %>
+    <% checked = !@item.schedule_tabs_group_ids.include?(item.id) %>
+    <dd>
+      <%= hidden_field_tag "item[in_schedule_tabs_group_ids_all][]", item.id %>
+      <%= label_tag eid do %>
+      <%= check_box_tag "item[in_schedule_tabs_group_ids][]", item.id, checked, id: eid %> <%= item.name %>
+      <% end %>
+    </dd>
+  <% end %>
+
+  <dt class="depth-2"><%= @model.t(:in_schedule_tabs_custom_group_ids).sub(/.*\//, '') %></dt>
+  <% @cur_user.custom_groups.site(@cur_site).readable(@cur_user, @cur_site).each do |item| %>
+    <% eid = "tab-c-#{item.id}" %>
+    <% checked = !@item.schedule_tabs_custom_group_ids.include?(item.id) %>
+    <dd>
+      <%= hidden_field_tag "item[in_schedule_tabs_custom_group_ids_all][]", item.id %>
+      <%= label_tag eid do %>
+      <%= check_box_tag "item[in_schedule_tabs_custom_group_ids][]", item.id, checked, id: eid %> <%= item.name %>
+      <% end %>
+    </dd>
+  <% end %>
+</dl>

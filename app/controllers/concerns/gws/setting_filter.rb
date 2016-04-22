@@ -2,23 +2,22 @@ module Gws::SettingFilter
   extend ActiveSupport::Concern
 
   included do
-    prepend_view_path "app/views/gws/settings/main"
-    navi_view "gws/settings/main/navi"
+    prepend_view_path "app/views/gws/settings"
     menu_view "gws/crud/resource_menu"
     model Gws::Group
   end
 
   private
+    def set_item
+      @item = @cur_site
+    end
+
     def set_crumbs
       #@crumbs << [:"gws.setting", gws_settings_path]
     end
 
     def fix_params
       {}
-    end
-
-    def set_item
-      @item = @cur_site
     end
 
   public
