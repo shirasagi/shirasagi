@@ -3,10 +3,11 @@ module Gws::Schedule::GroupSetting
   extend Gws::GroupSetting
 
   included do
+    attr_accessor :in_schedule_max_file_size_mb
+
     field :schedule_max_month, type: Integer
     field :schedule_max_years, type: Integer
     field :schedule_max_file_size, type: Integer, default: 0
-    attr_accessor :in_schedule_max_file_size_mb
 
     permit_params :schedule_max_month, :schedule_max_years
     permit_params :schedule_max_file_size, :in_schedule_max_file_size_mb

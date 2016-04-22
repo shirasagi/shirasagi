@@ -8,9 +8,9 @@
   <dt><%= @model.t :board_file_size %><%= @model.tt :board_file_size %></dt>
   <dd></dd>
 
-  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_topic).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_topic %></dt>
+  <dt class="depth-2"><%= @model.t(:board_file_size_per_topic).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_topic %></dt>
   <dd><%= f.number_field :in_board_file_size_per_topic_mb %> <%= t("views.units.mega_byte") %></dd>
 
-  <dt style="padding-left: 20px"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_post %></dt>
+  <dt class="depth-2"><%= @model.t(:board_file_size_per_post).sub(/.*\//, '') %><%= @model.tt :board_file_size_per_post %></dt>
   <dd><%= f.number_field :in_board_file_size_per_post_mb %> <%= t("views.units.mega_byte") %></dd>
 </dl>

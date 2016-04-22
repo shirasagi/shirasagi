@@ -111,6 +111,12 @@ ja:
         schedule_max_years: 年数
         schedule_max_month: 期末月
         schedule_max_file_size: 添付最大サイズ
+      gws/schedule/user_setting:
+        schedule_tabs: タブ表示
+        schedule_tabs_group_ids: タブ表示/グループ
+        in_schedule_tabs_group_ids: タブ表示/グループ
+        schedule_tabs_custom_group_ids: タブ表示/カスタムグループ
+        in_schedule_tabs_custom_group_ids: タブ表示/カスタムグループ
 
   tooltip:
     gws/schedule/planable:

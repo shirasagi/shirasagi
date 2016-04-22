@@ -1,6 +1,7 @@
 module Gws::Schedule
   class Initializer
     Gws::GroupSetting.plugin Gws::Schedule::GroupSetting, ->{ gws_schedule_setting_path }
+    Gws::User.include Gws::Schedule::UserSetting
 
     Gws::Role.permission :edit_gws_schedule_holidays, module_name: 'gws/schedule'
 

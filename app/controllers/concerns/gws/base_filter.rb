@@ -39,6 +39,7 @@ module Gws::BaseFilter
         next if @cur_user.gws_default_group.id == group.id
         @account_menu << [group.section_name, gws_default_group_path(default_group: group)]
       end
+      @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
     end
 
     def set_crumbs
