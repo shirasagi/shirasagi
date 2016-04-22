@@ -1,0 +1,37 @@
+<%= jquery do %>
+  SS_TreeUI.render("form.search .index.groups");
+  SS_Dropdown.render();
+
+  $("form.search .index.groups .select-group").on("click", function(e) {
+    $("#ajax-box #s_group").val($(e.target).data("id"));
+    SS_SearchUI.selectItems()
+    $("#ajax-box form.search").submit()
+
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+<% end %>
+<dt><%= t("mongoid.models.gws/group") %></dt>
+<dd>
+  <button class="dropdown btn"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
+  <%= hidden_field_tag("s[group]", @group.id) %>
+  <div class="dropdown-container">
+    <table class="index groups">
+      <tbody>
+      <tr data-depth="0" class="toggle">
+        <td class="expandable">
+          <%= link_to @cur_site.name, "#", class: "select-group", data: { id: @cur_site.id } %>
+        </td>
+      </tr>
+      <% @groups.each do |item| %>
+        <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
+          <td class="expandable">
+            <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</dd>

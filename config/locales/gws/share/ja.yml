@@ -35,7 +35,7 @@ ja:
   mongoid:
     models:
       gws/share/file: 共有ファイル
-      gws/share/category: 共有ファイル種類
+      gws/share/category: カテゴリー
     errors:
       models:
         gws/share/file:

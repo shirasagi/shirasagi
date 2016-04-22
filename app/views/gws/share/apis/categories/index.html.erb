@@ -2,7 +2,7 @@
   SS_SearchUI.modal();
   SS_TreeUI.render("form.search .index.categories");
 
-  SS_DropDown.render();
+  SS_Dropdown.render();
 
   $("form.search .select-category").on("click", function(e) {
     $("#ajax-box #s_group").val($(e.target).data("id"));
@@ -21,29 +21,31 @@
     <dl class="see">
       <dt><%= t("gws.apis.categories.parent_id") %></dt>
       <dd>
-        <button class="dropdown btn" type="button"><%= tryb { @group.name } || t("gws.apis.categories.parent_id") %> <span class="caret">&#x25BC;</span></button>
+        <button class="dropdown btn" type="button"><%= tryb { @group.name } || t("mongoid.models.gws/share/category") %> <span class="caret">&#x25BC;</span></button>
         <%= hidden_field_tag("s[group]", @group.try(:id)) %>
-        <table class="index categories pulldown-index dropdown-target">
-          <tbody>
-          <tr data-depth="0" class="toggle">
-            <td class="expandable">
-              <%= link_to t("gws.apis.categories.parent_id"), "#", class: "select-category" %>
-            </td>
-          </tr>
-          <% @groups.each do |group| %>
-            <% next if !group.children? && group.depth > 0 %>
-            <tr data-depth="<%= group.depth + 1 %>" class="<%= group.children? ? "toggle" : nil %>">
+        <div class="dropdown-container">
+          <table class="index categories">
+            <tbody>
+            <tr data-depth="0" class="toggle">
               <td class="expandable">
-                <% if group.id.present? %>
-                  <%= link_to group.name, "#", class: "select-category", data: { id: group.id } %>
-                <% else %>
-                  <%= group.name %>
-                <% end %>
+                <%= link_to t("mongoid.models.gws/share/category"), "#", class: "select-category" %>
               </td>
             </tr>
-          <% end %>
-          </tbody>
-        </table>
+            <% @groups.each do |group| %>
+              <% next if !group.children? && group.depth > 0 %>
+              <tr data-depth="<%= group.depth + 1 %>" class="<%= group.children? ? "toggle" : nil %>">
+                <td class="expandable">
+                  <% if group.id.present? %>
+                    <%= link_to group.name, "#", class: "select-category", data: { id: group.id } %>
+                  <% else %>
+                    <%= group.name %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
       </dd>
 
       <dt><%= @model.t :name %></dt>

@@ -1,17 +1,18 @@
-class @SS_DropDown
+class @SS_Dropdown
   @render: ->
     $("button.dropdown").each ->
-      dropdown = new SS_DropDown(this, { target: $(this).siblings(".dropdown-target")[0] })
-      SS_DropDown.dropdown = dropdown unless SS_DropDown.dropdown
+      target = $(this).parent().find(".dropdown-container")[0]
+      dropdown = new SS_Dropdown(this, { target: target })
+      SS_Dropdown.dropdown = dropdown unless SS_Dropdown.dropdown
 
   @openDropdown: ->
-    SS_DropDown.dropdown.openDropdown() if SS_DropDown.dropdown
+    SS_Dropdown.dropdown.openDropdown() if SS_Dropdown.dropdown
 
   @closeDropdown: ->
-    SS_DropDown.dropdown.closeDropdown() if SS_DropDown.dropdown
+    SS_Dropdown.dropdown.closeDropdown() if SS_Dropdown.dropdown
 
   @toggleDropdown: ->
-    SS_DropDown.dropdown.toggleDropdown() if SS_DropDown.dropdown
+    SS_Dropdown.dropdown.toggleDropdown() if SS_Dropdown.dropdown
 
   constructor: (elem, options) ->
     @elem = $(elem)

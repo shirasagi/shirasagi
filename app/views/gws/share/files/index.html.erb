@@ -11,7 +11,7 @@ end
 
   SS_TreeUI.render(".gws-category-navi-menu .index.categories");
 
-  SS_DropDown.render();
+  SS_Dropdown.render();
 
   $(".gws-category-navi-menu .select-category").on("click", function(e) {
     var id = $(e.target).data("id");
@@ -27,26 +27,28 @@ end
 
 <div class="gws-category-navi-menu">
   <button class="dropdown btn" type="button"><%= tryb { category.name } || t('modules.gws/share') %> <span class="caret">&#x25BC;</span></button>
-  <table class="index categories pulldown-index dropdown-target">
-    <tbody>
-    <tr data-depth="1" class="toggle">
-      <td class="expandable">
-        <%= link_to t('modules.gws/share'), "#", class: "select-category" %>
-      </td>
-    </tr>
-    <% categories.flatten.each do |category| %>
-      <tr data-depth="<%= category.depth + 1 %>" class="toggle">
+  <div class="dropdown-container">
+    <table class="index categories">
+      <tbody>
+      <tr data-depth="1" class="toggle">
         <td class="expandable">
-          <% if category.id.present? %>
-            <%= link_to category.name, "#", class: "select-category", data: { id: category.id } %>
-          <% else %>
-            <%= category.name %>
-          <% end %>
+          <%= link_to t('modules.gws/share'), "#", class: "select-category" %>
         </td>
       </tr>
-    <% end %>
-    </tbody>
-  </table>
+      <% categories.flatten.each do |category| %>
+        <tr data-depth="<%= category.depth + 1 %>" class="toggle">
+          <td class="expandable">
+            <% if category.id.present? %>
+              <%= link_to category.name, "#", class: "select-category", data: { id: category.id } %>
+            <% else %>
+              <%= category.name %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <% @index_meta = proc do |item| %>

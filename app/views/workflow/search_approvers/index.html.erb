@@ -1,13 +1,8 @@
 <%= jquery do %>
   SS_SearchUI.modal();
   SS_TreeUI.render("form.search .index.groups");
-  $("form.search .dropdown").on("click", function(e) {
-    $("form.search .index.groups").toggle();
+  SS_Dropdown.render();
 
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
   $("form.search .index.groups .select-group").on("click", function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -25,17 +20,19 @@
       <dd>
         <button class="dropdown btn"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
         <%= hidden_field_tag("s[group]", @group.id) %>
-        <table class="index groups pulldown-index">
-          <tbody>
-          <% @groups.each do |item| %>
-            <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
-              <td class="expandable">
-                <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
-              </td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
+        <div class="dropdown-container">
+          <table class="index groups">
+            <tbody>
+            <% @groups.each do |item| %>
+              <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
+                <td class="expandable">
+                  <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
       </dd>
       <dt><%= t "cms.user" %></dt>
       <dd><%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
