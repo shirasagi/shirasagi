@@ -10,6 +10,7 @@ module Gws::BaseFilter
     before_action :set_gws_assets
     before_action :set_current_site
     before_action :set_current_group
+    before_action :set_account_menu
     before_action :set_crumbs
     navi_view "gws/main/navi"
   end
@@ -30,6 +31,14 @@ module Gws::BaseFilter
     def set_current_group
       @cur_group = @cur_user.gws_default_group
       raise "403" unless @cur_group
+    end
+
+    def set_account_menu
+      @account_menu = []
+      @cur_user.groups.in_group(@cur_site).each do |group|
+        next if @cur_user.gws_default_group.id == group.id
+        @account_menu << [group.section_name, gws_default_group_path(default_group: group)]
+      end
     end
 
     def set_crumbs
