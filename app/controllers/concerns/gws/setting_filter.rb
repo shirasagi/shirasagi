@@ -8,16 +8,16 @@ module Gws::SettingFilter
   end
 
   private
+    def set_item
+      @item = @cur_site
+    end
+
     def set_crumbs
       #@crumbs << [:"gws.setting", gws_settings_path]
     end
 
     def fix_params
       {}
-    end
-
-    def set_item
-      @item = @cur_site
     end
 
   public
