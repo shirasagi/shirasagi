@@ -70,6 +70,7 @@ ja:
     models:
       gws/board/topic: 掲示板トピック
       gws/board/post: 掲示板投稿
+      gws/board/category: カテゴリー
     errors:
       models:
         gws/board/category:

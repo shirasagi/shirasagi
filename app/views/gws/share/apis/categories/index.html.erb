@@ -2,21 +2,15 @@
   SS_SearchUI.modal();
   SS_TreeUI.render("form.search .index.categories");
 
-  $("form.search .dropdown").on("click", function(e) {
-    $("form.search .index.categories").toggle();
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
+  SS_DropDown.render();
 
   $("form.search .select-category").on("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    $("form.search .index.categories").hide();
     $("#ajax-box #s_group").val($(e.target).data("id"));
     SS_SearchUI.selectItems()
     $("#ajax-box form.search").submit()
+
+    e.preventDefault();
+    e.stopPropagation();
     return false;
   });
 <% end %>
@@ -29,16 +23,16 @@
       <dd>
         <button class="dropdown btn" type="button"><%= tryb { @group.name } || t("gws.apis.categories.parent_id") %> <span class="caret">&#x25BC;</span></button>
         <%= hidden_field_tag("s[group]", @group.try(:id)) %>
-        <table class="index categories pulldown-index">
+        <table class="index categories pulldown-index dropdown-target">
           <tbody>
-          <tr data-depth="1" class="toggle">
+          <tr data-depth="0" class="toggle">
             <td class="expandable">
               <%= link_to t("gws.apis.categories.parent_id"), "#", class: "select-category" %>
             </td>
           </tr>
           <% @groups.each do |group| %>
             <% next if !group.children? && group.depth > 0 %>
-            <tr data-depth="<%= group.depth + 1 %>" class="toggle">
+            <tr data-depth="<%= group.depth + 1 %>" class="<%= group.children? ? "toggle" : nil %>">
               <td class="expandable">
                 <% if group.id.present? %>
                   <%= link_to group.name, "#", class: "select-category", data: { id: group.id } %>
