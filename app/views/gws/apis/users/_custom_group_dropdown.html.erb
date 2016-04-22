@@ -6,4 +6,4 @@
 <% end %>
 
 <dt><%= t("mongoid.models.gws/custom_group") %></dt>
-<dd><%= select_tag "s[custom_group]", options_for_select(@custom_groups.map { |g| [ g.name, g.id ] }, @custom_group.try(:id)), include_blank: t("mongoid.models.gws/custom_group") %></dd>
+<dd><%= select_tag "s[custom_group]", options_for_select(@custom_groups.map { |g| [ g.name, g.id ] }, @custom_group.try(:id)), include_blank: '' %></dd>

@@ -19,7 +19,7 @@ class Gws::Apis::UsersController < ApplicationController
     end
 
     def set_custom_group
-      @custom_groups = Gws::CustomGroup.site(@cur_site)
+      @custom_groups = Gws::CustomGroup.site(@cur_site).readable(@cur_user, @cur_site)
 
       if params[:s].present? && params[:s][:custom_group].present?
         @custom_group = Gws::CustomGroup.site(@cur_site).find(params[:s][:custom_group]) rescue nil

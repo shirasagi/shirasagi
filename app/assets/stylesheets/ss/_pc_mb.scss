@@ -211,8 +211,9 @@ td {
         a {
           display: block;
           min-width: 120px;
-          padding: 5px 10px;
+          padding: 8px 10px;
           color: $black;
+          text-decoration: none;
           &:hover {
             color: $orange;
             background: #eee;
