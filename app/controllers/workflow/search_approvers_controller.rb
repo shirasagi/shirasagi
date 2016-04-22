@@ -3,35 +3,28 @@ class Workflow::SearchApproversController < ApplicationController
 
   model Cms::User
 
-  private
-    def group_id
-      default_group_id = @cur_user.group_ids.first
-      return default_group_id if params[:s].blank?
-      return default_group_id if params[:s][:group].blank?
+  before_action :set_group
 
-      group_id = params[:s][:group]
-      case group_id
-      when "false" then
-        false
+  private
+    def set_group
+      if params[:s].present? && params[:s][:group].present?
+        @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
       else
-        group_id.to_i
+        @group = @cur_user.groups.active.first
       end
+
+      @groups = Cms::Group.site(@cur_site).active
     end
 
-    def group_options
-      Cms::Group.site(@cur_site).reduce([]) do |ret, g|
-        indent = "&nbsp;" * g.name.scan('/').size * 4
-        ret << [ indent.html_safe + g.trailing_name, g.id ]
-      end.to_a
+    def group_ids
+      Cms::Group.site(@cur_site).active.in_group(@group).pluck(:id)
     end
 
   public
     def index
       @level = params[:level]
-      @group_id = group_id
-      @group_options = group_options
       criteria = @model.site(@cur_site).active.search(params[:s])
-      criteria = criteria.in(group_ids: [ @group_id ]) if @group_id
+      criteria = criteria.in(group_ids: group_ids) if @group
       @items = criteria.order_by(_id: 1).page(params[:page]).per(50)
     end
 end

@@ -5,35 +5,28 @@ class Gws::Workflow::SearchApproversController < ApplicationController
 
   prepend_view_path "app/views/workflow/search_approvers"
 
-  private
-    def group_id
-      default_group_id = @cur_user.groups.in_group(@cur_site).map(&:id).first
-      return default_group_id if params[:s].blank?
-      return default_group_id if params[:s][:group].blank?
+  before_action :set_group
 
-      group_id = params[:s][:group]
-      case group_id
-      when "false" then
-        false
+  private
+    def set_group
+      if params[:s].present? && params[:s][:group].present?
+        @group = @cur_site.descendants.active.find(params[:s][:group])
       else
-        group_id.to_i
+        @group = @cur_user.groups.active.in_group(@cur_site).first
       end
+
+      @groups = @cur_site.descendants.active
     end
 
-    def group_options
-      Gws::Group.site(@cur_site).reduce([]) do |ret, g|
-        indent = "&nbsp;" * g.name.scan('/').size * 4
-        ret << [ indent.html_safe + g.trailing_name, g.id ]
-      end.to_a
+    def group_ids
+      @cur_site.descendants.active.in_group(@group).pluck(:id)
     end
 
   public
     def index
       @level = params[:level]
-      @group_id = group_id
-      @group_options = group_options
       criteria = @model.site(@cur_site).active.search(params[:s])
-      criteria = criteria.in(group_ids: [ @group_id ]) if @group_id
+      criteria = criteria.in(group_ids: group_ids) if @group
       @items = criteria.order_by_title(@cur_site).page(params[:page]).per(50)
     end
 end
