@@ -1197,6 +1197,9 @@ table.index {
   tr:nth-child(2n) {
     background: $gray1;
   }
+  tr:hover {
+    background: $orange2;
+  }
   th, td {
     padding: 6px 18px;
     @include mb { display: inline-block; }
@@ -1243,14 +1246,13 @@ table.index {
 .dropdown-container {
   display: none;
   position: absolute;
+  overflow: auto;
   width: 70%;
-  margin-top: 3px;
-  border: 1px solid #bbb;
+  max-height: 70%;
+  margin-top: 2px;
+  @include box-shadow(1px 2px 4px #888);
   font-weight: normal;
   z-index: 10;
-  max-height: 250px;
-  overflow: auto;
-  @include box-shadow(0 1px 10px #bbb);
 }
 .ads-total table.index {
   th,td {

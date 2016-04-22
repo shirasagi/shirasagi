@@ -1,5 +1,6 @@
 <%= jquery do %>
   SS_TreeUI.render("form.search .index.groups");
+  $("form.search .index.groups tbody tr[data-depth='0'] img").click();
   SS_Dropdown.render();
 
   $("form.search .index.groups .select-group").on("click", function(e) {
