@@ -2,8 +2,7 @@ module Gws::SettingFilter
   extend ActiveSupport::Concern
 
   included do
-    prepend_view_path "app/views/gws/settings/main"
-    navi_view "gws/settings/main/navi"
+    prepend_view_path "app/views/gws/settings"
     menu_view "gws/crud/resource_menu"
     model Gws::Group
   end
