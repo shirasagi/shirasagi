@@ -109,3 +109,43 @@ a.gws-category-label:hover {
   margin-left: 10px;
   color: #080;
 }
+
+// Popup (tooltip)
+.gws-popup {
+  position: absolute;
+  //border: 1px solid #bbb;
+  width: 340px;
+  //height: 250px;
+  padding: 5px;
+  border-radius: 4px;
+  @include box-shadow(0 1px 6px #666);
+  background-color: #fff;
+  z-index: 100;
+  &:after {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #bbb;
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    margin-left: -10px;
+  }
+  &.top:after {
+    border-top-color: transparent;
+    border-bottom: 10px solid #bbb;
+    top: -20px;
+    bottom: auto;
+  }
+  &.left:after {
+    left: 10px;
+    margin: 0;
+  }
+  &.right:after {
+    right: 10px;
+    left: auto;
+    margin: 0;
+  }
+}

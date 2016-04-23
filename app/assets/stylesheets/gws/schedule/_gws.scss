@@ -214,21 +214,15 @@
   overflow: visible;
 }
 .fc-popup {
-  position: absolute;
-  //display: none;
-  left: -230px;
-  width: 30em;
-  padding: 10px;
-  border: 1px solid #bbb;
-  line-height: 1.6;
-  z-index: 200;
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  padding: 5px;
   background: $white;
-  @include box-shadow(0 1px 6px #888);
   color: $black;
   font-weight: normal;
   text-align: left;
   cursor: auto;
-
   .popup-title {
     @include ellipsis;
     word-break: normal;
@@ -236,34 +230,33 @@
     font-size: 130%;
   }
   .popup-date {
-    padding: 8px 0;
+    padding: 5px 0;
     border-bottom: 1px solid #eee;
   }
   .popup-description {
-    overflow: hidden;
-    max-height: 50px;
-    padding: 8px 4px;
+    overflow: auto;
+    max-height: 70px;
+    padding: 5px;
     border-bottom: 1px solid #eee;
-    background: #f4f4f4;
+    background: #f8f8f8;
     color: #666;
+    font-size: 90%;
   }
   .popup-attributes {
-    margin-top: 8px;
+    margin-top: 10px;
+    font-size: 90%;
   }
   .popup-attr {
-    margin: 5px 0 0;
-  }
-  .popup-label {
-    display: inline-block;
-    min-width: 60px;
-    float: left;
-    &:after {
-      //float: right;
-      content: ' :';
+    @include clear;
+    margin: 4px 0 0;
+    .popup-label {
+      display: inline-block;
+      float: left;
+      min-width: 65px;
     }
-  }
-  .popup-value {
-    margin-left: 65px;
+    .popup-value {
+      margin-left: 65px;
+    }
   }
   .popup-menu {
     margin: 8px 0 0;
