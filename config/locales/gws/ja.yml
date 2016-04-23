@@ -38,8 +38,8 @@ ja:
     buttons:
       register: 登録
       unset: 解除
-      set_readable_members: 参加者を閲覧可能ユーザーに追加する
-      set_editable_members: 参加者を管理ユーザーに追加する
+      set_from_members: 参加者を追加する
+      set_from_reservable_members: 予約可能ユーザーを追加する
 
   date:
     formats:

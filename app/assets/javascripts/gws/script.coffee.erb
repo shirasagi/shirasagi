@@ -22,3 +22,23 @@ $ ->
   $(".gws-schedule-tabs a").each ->
     menu = $(this)
     menu.addClass("current") if path.match(new RegExp('^' + menu.attr('href') + '(\/|$)'))
+
+  Gws_Member.render()
+
+class @Gws_Member
+  @render: ->
+    $('.js-set-from-members').click ->
+      dl = $(this).closest('dl')
+      dl.find('table').show()
+
+      name = dl.find('.hidden-ids').attr('name')
+      tbody = dl.find('tbody')
+      target = $(this).data('from')
+      target = '.gws-addon-member' unless target
+
+      $("#{target} tbody tr").each ->
+        if tbody.find('tr[data-id=' + $(this).data('id') + ']').length == 0
+          tr = $(this).clone(true)
+          tr.find('input').attr('name', name)
+          tbody.append(tr)
+      return false
