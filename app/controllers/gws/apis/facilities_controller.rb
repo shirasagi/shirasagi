@@ -16,16 +16,22 @@ class Gws::Apis::FacilitiesController < ApplicationController
       end
     end
 
+    def category_ids
+      return if @group.blank?
+      ids = Gws::Facility::Category.site(@cur_site).where(name: /^#{Regexp.escape(@group.name)}\//).pluck(:id)
+      ids << @group.id
+    end
+
   public
     def index
       @multi = params[:single].blank?
 
       @items = @model.site(@cur_site).
-        category_id(@group).
         readable(@cur_user, @cur_site, exclude_role: true).
         reservable(@cur_user).
         active.
-        search(params[:s]).
-        page(params[:page]).per(50)
+        search(params[:s])
+      @items = @items.in(category_id: category_ids) if @group.present?
+      @items = @items.page(params[:page]).per(50)
     end
 end
