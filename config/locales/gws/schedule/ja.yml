@@ -1,7 +1,7 @@
 ja:
   gws/schedule:
     reminder: リマインダー
-    private_plan: 非公開予定
+    private_plan: 予定あり
     loading: 読み込み中
 
     tabs:

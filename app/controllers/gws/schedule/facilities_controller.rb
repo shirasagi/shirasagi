@@ -7,7 +7,7 @@ class Gws::Schedule::FacilitiesController < ApplicationController
 
   private
     def set_category
-      @categories = Gws::Facility::CategoryTraverser.build(@cur_site)
+      @categories = Gws::Facility::CategoryTraverser.build(@cur_site, @cur_user)
       @categories = @categories.flatten
 
       @category = params[:s] ? params[:s][:category] : nil

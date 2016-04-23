@@ -35,6 +35,9 @@
 //
 // FullCalendar
 //
+.fc-view {
+  z-index: 100;
+}
 .fc-view table {
   box-sizing: border-box;
 }
@@ -223,7 +226,7 @@
   padding: 10px;
   border: 1px solid #bbb;
   line-height: 1.6;
-  z-index: 100;
+  z-index: 200;
   background: $white;
   @include box-shadow(0 1px 6px #888);
   color: $black;
@@ -238,9 +241,19 @@
     font-size: 130%;
   }
   .popup-date {
-    margin: 0 0 10px;
-    padding: 5px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #eee;
+  }
+  .popup-description {
+    overflow: hidden;
+    max-height: 50px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    background: #f4f4f4;
+    color: #666;
+  }
+  .popup-attributes {
+    margin-top: 8px;
   }
   .popup-attr {
     margin: 5px 0 0;
@@ -257,12 +270,8 @@
   .popup-value {
     margin-left: 65px;
   }
-  .popup-description {
-    margin: 5px 0 0;
-    color: #888;
-  }
   .popup-menu {
-    margin: 10px 0 0;
+    margin: 8px 0 0;
     padding: 10px 0 0;
     border-top: 1px solid #eee;
     text-align: center;
