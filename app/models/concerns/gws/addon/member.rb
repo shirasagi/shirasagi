@@ -19,7 +19,7 @@ module Gws::Addon::Member
   end
 
   def sorted_members
-    return members.order_by_title(site) unless self.class.keep_members_order?
+    return members.order_by_title(site || cur_site) unless self.class.keep_members_order?
     return @sorted_members if @sorted_members
 
     hash = members.map { |m| [m.id, m] }.to_h
