@@ -5,9 +5,18 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
 <%= render "gws/schedule/main/tabs" %>
 
 <section class="main-box">
-  <header><h2><%= @group.name %></h2></header>
+  <header><h2>
+    <%#= t('gws/schedule.tabs.search') %>
+    <% @s = OpenStruct.new params[:s] %>
+      <%= form_for :s, url: "", html: { method: :get } do |f| %>
+        <%= f.text_field :keyword, style: "width: 300px;" %>
+        <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+      <% end %>
+  </h2></header>
 
+  <% if @items.present? %>
   <div class="calendar" id="calendar-controller"></div>
+  <% end %>
 
   <% @items.each_with_index do |item, idx| %>
     <div class="calendar-multiple-header">
