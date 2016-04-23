@@ -25,6 +25,7 @@ end
 
 <% end %>
 
+<!--
 <div class="gws-category-navi-menu">
   <button class="dropdown btn" type="button"><%= tryb { category.name } || t('modules.gws/share') %> <span class="caret">&#x25BC;</span></button>
   <div class="dropdown-container">
@@ -50,16 +51,23 @@ end
     </table>
   </div>
 </div>
+-->
 
-<% @index_meta = proc do |item| %>
-  <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+<div class="gws-share-files-index">
+  <div class="index-category-tree-view">
+    <%= render partial: 'category0', locals: { categories: categories, css_class: 'list-items parent', depth: 0 } %>
+  </div>
+
+  <% @index_meta = proc do |item| %>
+    <span class="id">#<%= item.id %></span>
+    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="gws-share-categories">
   <% item.categories.compact.each do |category| %>
     <%= link_to category.trailing_name, gws_share_category_files_path(category: category.id),
                 class: "gws-category-label", style: category_label_css(category) %>
   <% end %>
   </span>
-<% end %>
+  <% end %>
 
-<%= render file: "gws/crud/index" %>
+  <%= render file: "gws/crud/index" %>
+</div>
