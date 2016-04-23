@@ -27,6 +27,10 @@
     });
     return false;
   });
+
+  <% if @item.class.keep_members_order? %>
+  $('.sortable-index tbody').sortable();
+  <% end %>
 <% end %>
 
 <dl class="see gws-addon-member">
@@ -36,10 +40,10 @@
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
+    <table class="index ajax-selected <%= 'sortable-index' if @item.class.keep_members_order? %>">
       <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
-        <% @item.members.order_by_title(@cur_site).each do |user| %>
+        <% @item.sorted_members.each do |user| %>
         <tr data-id="<%= user.id %>">
           <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.name %></td>
           <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>

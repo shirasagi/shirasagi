@@ -7,6 +7,9 @@ class Gws::CustomGroup
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
 
+  # Member addon setting
+  keep_members_order
+
   seqid :id
   field :name, type: String
   field :order, type: Integer, default: 0

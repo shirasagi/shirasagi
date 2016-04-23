@@ -1232,7 +1232,9 @@ table.index {
       }
     }
   }
-  .toggle { cursor: pointer; }
+  .toggle {
+    cursor: pointer;
+  }
   @include mb {
     thead {
       background: $gray1;
@@ -1241,6 +1243,17 @@ table.index {
   .padding {
     display: inline-block;
     width: 15px;
+  }
+}
+.sortable-index {
+  tr {
+    cursor: move;
+  }
+  .ui-sortable-helper {
+    @include box-shadow(0px 1px 3px #888);
+    .deselect {
+      display: none;
+    }
   }
 }
 .dropdown-container {

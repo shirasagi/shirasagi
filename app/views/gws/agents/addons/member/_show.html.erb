@@ -1,4 +1,4 @@
 <dl class="see">
   <dt><%= @model.t :member_ids %></dt>
-  <dd><%=br @item.members.order_by_title(@cur_site).map(&:long_name).join("\n") %></dd>
+  <dd><%=br @item.sorted_members.map(&:long_name).join("\n") %></dd>
 </dl>
