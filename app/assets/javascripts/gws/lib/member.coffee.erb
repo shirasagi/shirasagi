@@ -21,6 +21,12 @@ class @Gws_Member
     $('.js-paste-users').click ->
       return Gws_Member.pasteUsers($(this))
 
+  @confirmReadableSetting: ->
+    $('.save').on 'click', ->
+      #$(submit).trigger("click")
+      if $('.gws-addon-readable-setting tbody tr').length == 0
+        return confirm('<%= I18n.t("gws.confirm.readable_setting.empty") %>')
+
   @copyGroups: (el)->
     @groups = el.closest('dl').find('tbody tr').clone(true)
     @showLog(el, "#{@groups.length}<%= I18n.t('gws.member_log.copy_groups') %>")

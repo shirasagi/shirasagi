@@ -43,6 +43,9 @@ ja:
     buttons:
       register: 登録
       unset: 解除
+    confirm:
+      readable_setting:
+        empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
 
   date:
     formats:

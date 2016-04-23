@@ -11,11 +11,12 @@ SS::Application.routes.draw do
   gws "schedule" do
     get 'all_groups' => 'groups#index'
     get 'facilities' => 'facilities#index'
+    get 'group_plans' => 'group_plans#index', path: 'groups/:group/plans'
+    get 'search_plans' => 'search_plans#index'
 
     resources :plans, concerns: :plans
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
-    resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: :plans
     resources :holidays, concerns: :plans

@@ -37,7 +37,7 @@ Gws_Schedule_Multiple_Calendar.render('#calendar', {
 <section class="main-box">
   <div class="calendar" id="calendar-controller"></div>
   <div class="calendar-multiple-header">
-    <%= link_to @cur_user.name, gws_schedule_plans_path, class: "calendar-name" %>
+    <%= link_to @cur_user.long_name, gws_schedule_plans_path, class: "calendar-name" %>
     <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_plan_path, class: 'add-plan' %>
   </div>
   <div class="calendar multiple" id="calendar"></div>

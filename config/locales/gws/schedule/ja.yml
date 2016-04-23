@@ -9,6 +9,7 @@ ja:
       personal_list: 予定リスト
       group: 全体
       facility: 設備予約
+      search: 検索
 
     calendar:
       titleFormat:

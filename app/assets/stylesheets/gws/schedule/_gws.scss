@@ -3,32 +3,27 @@
   a {
     display: block;
     float: left;
-    margin: 0 0 -1px 10px;
-    padding: 4px 4px;
+    margin: 1px 0 -1px 10px;
     border: 1px solid $gray4;
-    border-radius: 3px 3px 0 0;
+    border-left: 3px solid #bbb;
+    border-radius: 0 4px 0 0;
     background-color: $gray5;
     color: #000;
     .tab-name {
       display: block;
-      padding: 0 5px 0 8px;
-      border-left: 3px solid #bbb;
+      padding: 5px 8px;
       text-align: center;
     }
     &:hover {
+      border-left-color: $orange;
       background-color: #fff;
       text-decoration: none;
-      .tab-name {
-        border-color: $orange;
-      }
     }
   }
   a.current {
     border-bottom-color: #fff;
+    border-left-color: $orange;
     background-color: #fff;
-    .tab-name {
-      border-color: $orange;
-    }
   }
 }
 
@@ -318,6 +313,7 @@
   }
   .add-plan {
     float: right;
+    font-size: $px15;
   }
 }
 .calendar {

@@ -30,7 +30,9 @@
     </h2></header>
   <% end %>
 
+  <% if @items.present? %>
   <div class="calendar" id="calendar-controller"></div>
+  <% end %>
 
   <% @items.each_with_index do |item, idx| %>
     <div class="calendar-multiple-header">
