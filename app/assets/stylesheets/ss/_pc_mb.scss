@@ -1265,7 +1265,7 @@ table.index {
   margin-top: 2px;
   @include box-shadow(1px 2px 4px #888);
   font-weight: normal;
-  z-index: 10;
+  z-index: 101;
 }
 .ads-total table.index {
   th,td {
