@@ -1,6 +1,5 @@
 <%= jquery do %>
 SS_TreeUI.render(".index.groups");
-$(".index.groups tbody tr[data-depth='1'] img").click();
 $(".expand-all").on("click", function() {
   $(".index.groups tbody tr img.toggle.closed").click();
 });

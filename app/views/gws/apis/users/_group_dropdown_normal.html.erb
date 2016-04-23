@@ -1,0 +1,12 @@
+<%
+  def groups_options_for_select
+    options = @groups.reduce([]) do |ret, g|
+      indent = "━" * (g.depth - 1)
+      ret << [ "#{indent} #{g.trailing_name}".html_safe, g.id ]
+    end.to_a
+    options.unshift([ @cur_site.name, @cur_site.id ])
+    options_for_select(options, @group.try(:id))
+  end
+%>
+<dt><%= t("mongoid.models.gws/group") %></dt>
+<dd><%= select_tag("s[group]", groups_options_for_select) %></dd>

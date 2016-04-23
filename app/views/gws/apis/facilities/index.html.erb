@@ -1,51 +1,22 @@
-<%= jquery do %>
-  SS_SearchUI.modal();
-  SS_TreeUI.render("form.search .index.categories");
+<%
+  def groups_options_for_select
+    options = @groups.reduce([]) do |ret, g|
+      indent = "━" * g.depth
+      ret << [ "#{indent} #{g.name}".html_safe, g.id ]
+    end.to_a
+    options.unshift([ @model.t(:category_id), nil ])
+    options_for_select(options, @group.try(:id))
+  end
+%>
 
-  SS_Dropdown.render();
-
-  $("form.search .select-category").on("click", function(e) {
-    $("#ajax-box #s_group").val($(e.target).data("id"));
-    SS_SearchUI.selectItems()
-    $("#ajax-box form.search").submit()
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
-<% end %>
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= @model.t(:category_id) %></dt>
-      <dd>
-        <button class="dropdown btn" type="button"><%= tryb { @group.name } || @model.t(:category_id) %> <span class="caret">&#x25BC;</span></button>
-        <%= hidden_field_tag("s[group]", @group.try(:id)) %>
-        <div class="dropdown-container">
-          <table class="index categories">
-            <tbody>
-            <tr data-depth="1">
-              <td class="expandable">
-                <%= link_to @model.t(:category_id), "#", class: "select-category" %>
-              </td>
-            </tr>
-            <% @groups.each do |item| %>
-              <tr data-depth="<%= item.depth + 1 %>" class="<%= item.children? ? "toggle" : nil %>">
-                <td class="expandable">
-                  <% if item.id.present? %>
-                    <%= link_to item.name, "#", class: "select-category", data: { id: item.id } %>
-                  <% else %>
-                    <%= item.name %>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </div>
-      </dd>
+      <dd><%= select_tag("s[group]", groups_options_for_select) %></dd>
 
       <dt><%= @model.t :name %></dt>
       <dd>
