@@ -1,52 +1,22 @@
-<%= jquery do %>
-  SS_SearchUI.modal();
-  SS_TreeUI.render("form.search .index.categories");
+<%
+  def groups_options_for_select
+    options = @groups.reduce([]) do |ret, g|
+      next ret if !g.children? && g.depth > 0
+      indent = "━" * g.depth
+      ret << [ "#{indent} #{g.name}".html_safe, g.id ]
+    end.to_a
+    options_for_select(options, @group.try(:id))
+  end
+%>
 
-  SS_Dropdown.render();
-
-  $("form.search .select-category").on("click", function(e) {
-    $("#ajax-box #s_group").val($(e.target).data("id"));
-    SS_SearchUI.selectItems()
-    $("#ajax-box form.search").submit()
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  });
-<% end %>
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= t("gws.apis.categories.parent_id") %></dt>
-      <dd>
-        <button class="dropdown btn" type="button"><%= tryb { @group.name } || t("mongoid.models.gws/share/category") %> <span class="caret">&#x25BC;</span></button>
-        <%= hidden_field_tag("s[group]", @group.try(:id)) %>
-        <div class="dropdown-container">
-          <table class="index categories">
-            <tbody>
-            <tr data-depth="0" class="toggle">
-              <td class="expandable">
-                <%= link_to t("mongoid.models.gws/share/category"), "#", class: "select-category" %>
-              </td>
-            </tr>
-            <% @groups.each do |group| %>
-              <% next if !group.children? && group.depth > 0 %>
-              <tr data-depth="<%= group.depth + 1 %>" class="<%= group.children? ? "toggle" : nil %>">
-                <td class="expandable">
-                  <% if group.id.present? %>
-                    <%= link_to group.name, "#", class: "select-category", data: { id: group.id } %>
-                  <% else %>
-                    <%= group.name %>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </div>
-      </dd>
+      <dd><%= select_tag("s[group]", groups_options_for_select, include_blank: t("mongoid.models.gws/share/category")) %></dd>
 
       <dt><%= @model.t :name %></dt>
       <dd>
