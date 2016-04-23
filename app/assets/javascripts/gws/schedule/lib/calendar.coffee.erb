@@ -6,9 +6,6 @@ class @Gws_Schedule_Calendar
     $.extend true, params, opts
     $(selector).fullCalendar(params)
 
-    $(document).click (ev) ->
-      $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove()
-
   @defaultParams: (opts) ->
     columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
     contentHeight: 'auto'
@@ -66,25 +63,14 @@ class @Gws_Schedule_Calendar
     eventClick: (event, jsEvent, view) ->
       return if $(this).hasClass('fc-holiday')
 
-      popup = "fc-popup"
-      if $(this).find(".#{popup}").length == 0
-        $(this).append("<div class='#{popup}'><span class='fc-loading'>Loading..</span></div>")
-
-      view = $(this).find(".#{popup}")
-      hgt = view.outerHeight()
-      if $(this).offset().top - hgt < 0
-        view.addClass("position-bottom")
-        view.css("bottom", (hgt * (-1) - 15) + "px")
-        $(".#{popup} style").replaceWith("<style>.#{popup}:after { bottom: " + (hgt - 5) + "px; }</style>")
-      else
-        view.addClass("position-top")
-        view.css("bottom", "20px")
-        $(".#{popup} style").replaceWith("<style>.#{popup}:after { bottom: -13px; }</style>")
+      target = $(this)
+      Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>")
 
       $.ajax
         url: "#{url}/#{event.id}/popup"
         success: (data)->
-          view.html(data)
+          $('.fc-popup').html(data)
+          Gws_Popup.renderPopup(target)
 
     eventDrop: (event, delta, revertFunc, jsEvent, ui, view) ->
       end = null
