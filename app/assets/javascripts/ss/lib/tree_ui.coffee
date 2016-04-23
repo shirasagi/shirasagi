@@ -46,6 +46,8 @@ class @SS_TreeUI
       e.stopPropagation()
       return false
 
+    $(tree).find("tr[data-depth='#{root}'] img").click();
+
   @toggleImage = (img) ->
     if img.attr("src") == SS_TreeUI.openImagePath
       SS_TreeUI.closeImage(img)
