@@ -1,8 +1,7 @@
 <%
   def categories_options_for_select
-    options = @categories.reduce([]) do |ret, c|
-      indent = "━" * c.depth
-      ret << [ "#{indent} #{c.name}".html_safe, c.id ]
+    options = @categories.reduce([]) do |ret, g|
+      ret << [Gws::Category::Traversable.option_name(g.name, g.depth), g.id]
     end.to_a
     options_for_select(options, @category.try(:id))
   end

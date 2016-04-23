@@ -1,8 +1,7 @@
 <%
   def groups_options_for_select
     options = @groups.reduce([]) do |ret, g|
-      indent = "━" * g.depth
-      ret << [ "#{indent} #{g.name}".html_safe, g.id ]
+      ret << [Gws::Category::Traversable.option_name(g.name, g.depth), g.id]
     end.to_a
     options.unshift([ @model.t(:category_id), nil ])
     options_for_select(options, @group.try(:id))

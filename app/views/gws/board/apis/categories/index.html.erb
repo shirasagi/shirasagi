@@ -2,8 +2,7 @@
   def groups_options_for_select
     options = @groups.reduce([]) do |ret, g|
       next ret if !g.children? && g.depth > 0
-      indent = "━" * g.depth
-      ret << [ "#{indent} #{g.name}".html_safe, g.id ]
+      ret << [Gws::Category::Traversable.option_name(g.name, g.depth), g.id]
     end.to_a
     options_for_select(options, @group.try(:id))
   end

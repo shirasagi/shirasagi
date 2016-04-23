@@ -45,8 +45,7 @@ module Gws::Category::Traversable
 
   def to_options(child = nil)
     if child
-      indent = '━' * child.depth
-      options = [["#{indent} #{child.name}".html_safe, child.id]]
+      options = [[option_name(child), child.id]]
       child.children.each { |c| options += to_options(c) }
       return options
     end
@@ -58,6 +57,10 @@ module Gws::Category::Traversable
 
   def flatten
     expand_groups(self).flatten
+  end
+
+  def option_name(el)
+    Gws::Category::Traversable.option_name(el.name, el.depth)
   end
 
   private
@@ -87,4 +90,13 @@ module Gws::Category::Traversable
         [ group ] + expand_groups(group.children)
       end
     end
+
+  class << self
+    def option_name(name, depth)
+      depth = 0 if depth < 0
+      indent = '&nbsp;' * 8 * depth + '+----'
+      name = ERB::Util.html_escape(name)
+      "#{indent} #{name}".html_safe
+    end
+  end
 end

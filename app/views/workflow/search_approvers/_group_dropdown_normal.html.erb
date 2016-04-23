@@ -1,8 +1,7 @@
 <%
   def groups_options_for_select
     options = @groups.reduce([]) do |ret, g|
-      indent = "━" * (g.depth - 1)
-      ret << [ "#{indent} #{g.trailing_name}".html_safe, g.id ]
+      ret << [Gws::Category::Traversable.option_name(g.trailing_name, g.name.split('/').size - 2), g.id]
     end.to_a
     options_for_select(options, @group.try(:id))
   end
