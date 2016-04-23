@@ -1,20 +1,20 @@
+<%
+  def categories_options_for_select
+    options = @categories.reduce([]) do |ret, c|
+      indent = "━" * c.depth
+      ret << [ "#{indent} #{c.name}".html_safe, c.id ]
+    end.to_a
+    options_for_select(options, @category.try(:id))
+  end
+%>
 <%= jquery do %>
+  $("#s_category").change(function() {
+    $(".main-box form.search").submit();
+  });
+
   Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
     defaultView: 'timelineDay',
     header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
-  });
-
-  SS_TreeUI.render("form.search .index.categories");
-
-  SS_Dropdown.render();
-
-  $(".main-box form.search .select-category").on("click", function(e) {
-    $(".main-box form.search #s_category").val($(e.target).data("id"));
-    $(".main-box form.search").submit();
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
   });
 <% end %>
 
@@ -24,30 +24,7 @@
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <header><h2>
       <% if @categories.present? %>
-        <button class="dropdown btn" type="button"><%= tryb { @category.name } || t('gws/schedule.tabs.facility') %> <span class="caret">&#x25BC;</span></button>
-        <%= hidden_field_tag("s[category]", @category.try(:id)) %>
-        <div class="dropdown-container">
-          <table class="index categories">
-            <tbody>
-            <tr data-depth="1">
-              <td class="expandable">
-                <%= link_to t('gws/schedule.tabs.facility'), "#", class: "select-category" %>
-              </td>
-            </tr>
-            <% @categories.each do |item| %>
-              <tr data-depth="<%= item.depth + 1 %>" class="<%= item.children? ? "toggle" : nil %>">
-                <td class="expandable">
-                  <% if item.id.present? %>
-                    <%= link_to item.name, "#", class: "select-category", data: { id: item.id } %>
-                  <% else %>
-                    <%= item.name %>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </div>
+        <%= select_tag "s[category]", categories_options_for_select, include_blank: t('gws/schedule.tabs.facility') %>
       <% else %>
       <%= t('gws/schedule.tabs.facility') %>
       <% end %>
