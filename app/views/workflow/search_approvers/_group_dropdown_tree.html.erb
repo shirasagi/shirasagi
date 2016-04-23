@@ -1,0 +1,33 @@
+<%= jquery do %>
+  SS_TreeUI.render("form.search .index.groups");
+  SS_Dropdown.render();
+
+  $("form.search .index.groups .select-group").on("click", function(e) {
+    $("#ajax-box #s_group").val($(e.target).data("id"));
+    SS_SearchUI.selectItems()
+    $("#ajax-box form.search").submit()
+
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+<% end %>
+
+<dt><%= t "cms.group" %></dt>
+<dd>
+  <button class="dropdown btn"><%= @group.try(:name) %> <span class="caret">&#x25BC;</span></button>
+  <%= hidden_field_tag("s[group]", @group.try(:id)) %>
+  <div class="dropdown-container">
+    <table class="index groups">
+      <tbody>
+      <% @groups.each do |item| %>
+        <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
+          <td class="expandable">
+            <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</dd>
