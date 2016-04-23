@@ -47,6 +47,8 @@ ja:
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
       random_password: ランダム生成
+      copy: コピー
+      paste: 貼り付け
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。

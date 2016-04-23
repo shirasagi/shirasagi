@@ -11,6 +11,8 @@
   <dd>
     <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
+    <%= link_to t("views.button.copy"), "#", class: "btn js-copy-users" %>
+    <%= link_to t("views.button.paste"), "#", class: "btn js-paste-users" %>
   </dd>
   <dd>
     <table class="index ajax-selected <%= 'sortable-index' if @item.class.keep_members_order? %>">

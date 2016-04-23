@@ -33,6 +33,8 @@
     <dd>
       <%= f.hidden_field "readable_group_ids[]", value: "", class: "hidden-ids" %>
       <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
+      <%= link_to t("views.button.copy"), "#", class: "btn js-copy-groups" %>
+      <%= link_to t("views.button.paste"), "#", class: "btn js-paste-groups" %>
     </dd>
     <dd>
       <table class="index ajax-selected">
@@ -54,13 +56,8 @@
     <dd>
       <%= f.hidden_field "readable_member_ids[]", value: "", class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
-      <% if @item.respond_to?(:member_ids) %>
-      <%= link_to t("gws.buttons.set_from_members"), '#', class: "btn js-set-from-members" %>
-      <% end %>
-      <% if @item.respond_to?(:reservable_member_ids) %>
-      <%= link_to t("gws.buttons.set_from_reservable_members"), '#', class: "btn js-set-from-members",
-        "data-from" => ".gws-addon-facility-reservable-setting-member" %>
-      <% end %>
+      <%= link_to t("views.button.copy"), "#", class: "btn js-copy-users" %>
+      <%= link_to t("views.button.paste"), "#", class: "btn js-paste-users" %>
     </dd>
     <dd>
       <table class="index ajax-selected">

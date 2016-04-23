@@ -1,0 +1,61 @@
+class @Gws_Member
+  @groups = null
+  @users = null
+
+  @render: ->
+    if $('.js-copy-groups').length < 2
+      $('.js-copy-groups').remove()
+      $('.js-paste-groups').remove()
+
+    $('.js-copy-groups').click ->
+      return Gws_Member.copyGroups($(this))
+    $('.js-paste-groups').click ->
+      return Gws_Member.pasteGroups($(this))
+
+    if $('.js-copy-users').length < 2
+      $('.js-copy-users').remove()
+      $('.js-paste-users').remove()
+
+    $('.js-copy-users').click ->
+      return Gws_Member.copyUsers($(this))
+    $('.js-paste-users').click ->
+      return Gws_Member.pasteUsers($(this))
+
+  @copyGroups: (el)->
+    @groups = el.closest('dl').find('tbody tr').clone(true)
+    @showLog(el, "#{@groups.length}<%= I18n.t('gws.member_log.copy_groups') %>")
+    return false
+
+  @pasteGroups: (el)->
+    num = @pasteItems(el, @groups)
+    @showLog(el, "#{num}<%= I18n.t('gws.member_log.paste_groups') %>")
+    return false
+
+  @copyUsers: (el)->
+    @users = el.closest('dl').find('tbody tr').clone(true)
+    @showLog(el, "#{@users.length}<%= I18n.t('gws.member_log.copy_users') %>")
+    return false
+
+  @pasteUsers: (el)->
+    num = @pasteItems(el, @users)
+    @showLog(el, "#{num}<%= I18n.t('gws.member_log.paste_users') %>")
+    return false
+
+  @pasteItems: (el, list)->
+    return 0 if !list || list.length == 0
+    dl = el.closest('dl')
+    dl.find('table').show()
+    tbody = dl.find('tbody')
+    name = dl.find('.hidden-ids').attr('name')
+    num = 0
+    list.each ->
+      if tbody.find('tr[data-id=' + $(this).data('id') + ']').length == 0
+        tr = $(this).clone(true)
+        tr.find('input').attr('name', name)
+        tbody.append(tr)
+        num += 1
+    return num
+
+  @showLog: (el, msg)->
+    $(".gws-member-log").remove()
+    $("<span class='gws-member-log'>#{msg}</span>").appendTo(el.parent()).hide().fadeIn(200)

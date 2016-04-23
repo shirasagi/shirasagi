@@ -22,6 +22,11 @@ ja:
         create: 作成者
         update: 更新者
         delete: 削除者
+    member_log:
+      copy_users: 件のユーザーをコピーしました。
+      paste_users: 件のユーザーを追加しました。
+      copy_groups: 件のグループをコピーしました。
+      paste_groups: 件のグループを追加しました。
     apis:
       facilities:
         index: 設備を選択する
@@ -38,8 +43,6 @@ ja:
     buttons:
       register: 登録
       unset: 解除
-      set_from_members: 参加者を追加する
-      set_from_reservable_members: 予約可能ユーザーを追加する
 
   date:
     formats:
