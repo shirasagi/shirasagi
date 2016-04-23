@@ -4,46 +4,20 @@ category = nil
 if params[:category].present?
   category = Gws::Board::Category.site(@cur_site).find(params[:category]) rescue nil
 end
+options = options_for_select(categories.to_options, category.try(:id))
 %>
 <%= jquery do %>
-  SS_TreeUI.render(".gws-category-navi-menu .index.categories");
-  SS_Dropdown.render();
 
-  $(".gws-category-navi-menu .select-category").on("click", function(e) {
-    var id = $(e.target).data("id");
-    if (id) location.href = '<%= gws_board_category_topics_path(category: 'ID') %>'.replace('ID', id);
+  $('.gws-category-navi-menu #category_id').change(function() {
+    var cid = $(this).val();
+    if (cid) location.href = '<%= gws_board_category_topics_path(category: 'ID') %>'.replace('ID', cid);
     else location.href = '<%= gws_board_topics_path %>';
-
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
   });
+
 <% end %>
 
 <div class="gws-category-navi-menu">
-  <button class="dropdown btn" type="button"><%= tryb { category.name } || t('modules.gws/board') %> <span class="caret">&#x25BC;</span></button>
-  <div class="dropdown-container">
-    <table class="index categories">
-      <tbody>
-      <tr data-depth="0" class="toggle">
-        <td class="expandable">
-          <%= link_to t('modules.gws/board'), "#", class: "select-category" %>
-        </td>
-      </tr>
-      <% categories.flatten.each do |category| %>
-        <tr data-depth="<%= category.depth + 1 %>" class="<%= category.children? ? "toggle" : nil %>">
-          <td class="expandable">
-            <% if category.id.present? %>
-              <%= link_to category.name, "#", class: "select-category", data: { id: category.id } %>
-            <% else %>
-              <%= category.name %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-  </div>
+  <%= select_tag :category_id, options, include_blank: t('modules.gws/board') %>
 </div>
 
 <% @index_title = proc do |item| %>

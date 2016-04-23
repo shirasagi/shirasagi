@@ -22,11 +22,18 @@ class Gws::Schedule::FacilitiesController < ApplicationController
       end
     end
 
+    def category_ids
+      return if @category.blank?
+      ids = Gws::Facility::Category.site(@cur_site).where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
+      ids << @category.id
+    end
+
   public
     def index
+      Rails.logger.debug("#index: category_ids=#{category_ids}")
       @items = Gws::Facility::Item.site(@cur_site).
-        category_id(@category).
         readable(@cur_user, @cur_site).
         active
+      @items = @items.in(category_id: category_ids) if @category.present?
     end
 end
