@@ -14,7 +14,7 @@
 <% end %>
 <dt><%= t("mongoid.models.gws/group") %></dt>
 <dd>
-  <button class="dropdown btn"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
+  <button class="dropdown btn" type="button"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
   <%= hidden_field_tag("s[group]", @group.id) %>
   <div class="dropdown-container">
     <table class="index groups">

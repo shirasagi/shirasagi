@@ -15,7 +15,7 @@
 
 <dt><%= t "cms.group" %></dt>
 <dd>
-  <button class="dropdown btn"><%= @group.try(:name) %> <span class="caret">&#x25BC;</span></button>
+  <button class="dropdown btn" type="button"><%= @group.try(:name) %> <span class="caret">&#x25BC;</span></button>
   <%= hidden_field_tag("s[group]", @group.try(:id)) %>
   <div class="dropdown-container">
     <table class="index groups">
