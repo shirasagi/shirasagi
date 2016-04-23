@@ -6,7 +6,11 @@
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
-      <%= render partial: "group_dropdown", locals: { f: f } %>
+      <% if browser.ie?(["<10"]) %>
+        <%= render partial: "group_dropdown_normal", locals: { f: f } %>
+      <% else %>
+        <%= render partial: "group_dropdown_tree", locals: { f: f } %>
+      <% end %>
       <%= render partial: "custom_group_dropdown", locals: { f: f } %>
       <dt><%= t "mongoid.models.gws/user" %></dt>
       <dd>
