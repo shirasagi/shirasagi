@@ -1,9 +1,8 @@
 require 'spec_helper'
 
-describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
+describe "gws_schedule_searc_plans", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:group) { gws_user.groups.first }
-  let(:path) { gws_schedule_group_plans_path site, group }
+  let(:path) { gws_schedule_search_plans_path site }
 
   it "without login" do
     visit path
@@ -23,6 +22,12 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example do
       visit path
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
+
+      within "form.search" do
+        fill_in "s[keyword]", with: gws_user.name
+        click_button "検索"
+      end
+      expect(page).to have_content(gws_user.name)
     end
   end
 end
