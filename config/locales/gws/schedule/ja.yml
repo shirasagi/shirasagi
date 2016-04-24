@@ -46,7 +46,7 @@ ja:
       faciliy_time_gte: 予約時間は%{count}分以上の値にしてください。
       invalid_faciliy_reservate_member: '%{name}を予約する権限がありません。'
       double_booking_facility: 設備は既に予約されています。 (%{facility})
-      over_than_facility_hours: 設備は予約可能時間内で登録してください。（%{min}時～%{max}時）
+      over_than_facility_hours: 設備予約は取得可能時間内で登録してください。（%{min}時～%{max}時）
 
   modules:
     gws/schedule: スケジュール
