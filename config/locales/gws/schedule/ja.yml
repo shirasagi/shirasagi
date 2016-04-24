@@ -39,6 +39,7 @@ ja:
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
+      less_than_max_date: は%{date}までの日時を入力してください。
       faciliy_time_gte: 予約時間は%{count}分以上の値にしてください。
       invalid_faciliy_reservate_member: '%{name}を予約する権限がありません。'
       double_booking_facility: 設備は既に予約されています。 (%{facility})
