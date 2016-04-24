@@ -65,6 +65,7 @@ class @SS_SearchUI
     SS_ListUI.render("table.index")
 
     $("#ajax-box a.select-item").on "click", (e)->
+      return false if SS.disableDoubleClick()
       id = $(this).closest("[data-id]").attr("data-id")
       name = $(this).text()
       # append newly selected item
@@ -74,6 +75,7 @@ class @SS_SearchUI
       $.colorbox.close()
 
     $("#ajax-box .select-single-item").on "click", (e)->
+      return false if SS.disableDoubleClick()
       id = $(this).closest("[data-id]").attr("data-id")
       name = $(this).text()
       # remove old items
@@ -85,6 +87,7 @@ class @SS_SearchUI
       $.colorbox.close()
 
     $("#ajax-box .select-items").on "click", (e)->
+      return false if SS.disableDoubleClick()
       SS_SearchUI.selectItems()
       e.preventDefault()
       $.colorbox.close()
