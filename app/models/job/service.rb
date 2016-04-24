@@ -17,9 +17,12 @@ class Job::Service
       load_config(config) if config
 
       @runner = Job::Service::Runner.new
-      install_signal_handlers
       @runner.run
       @runner = nil
+    end
+
+    def shutdown
+      @runner.shutdown if @runner
     end
 
     def acquire_lock(name, limits = 1)
@@ -67,19 +70,6 @@ class Job::Service
         class_eval(File.read(config), config, 1)
       else
         @config = Job::Service::Config.new(config)
-      end
-    end
-
-    def install_signal_handlers
-      signals = [:INT, :TERM]
-      signals.each do |signal|
-        Signal.trap(signal) { handle_signal(signal) }
-      end
-    end
-
-    def handle_signal(_)
-      Thread.new do
-        @runner.shutdown if @runner
       end
     end
   end
