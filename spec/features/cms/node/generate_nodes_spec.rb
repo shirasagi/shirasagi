@@ -19,6 +19,12 @@ describe "cms_generate_nodes", type: :feature, dbscope: :example do
   context "with auth" do
     before { login_cms_user }
 
+    around do |example|
+      perform_enqueued_jobs do
+        example.run
+      end
+    end
+
     it "#index" do
       visit index_path
       expect(status_code).to eq 200
