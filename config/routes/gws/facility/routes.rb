@@ -9,5 +9,6 @@ SS::Application.routes.draw do
   gws "facility" do
     resources :items, concerns: [:deletion]
     resources :categories, concerns: [:deletion]
+    resource :setting, only: [:show, :edit, :update]
   end
 end

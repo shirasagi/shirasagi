@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :facility_hours %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :facility_min_hour %></dt>
+  <dd><%= @item.facility_min_hour %> <%= t("datetime.prompts.hour") %></dd>
+
+  <dt class="depth-2"><%= @model.t :facility_max_hour %></dt>
+  <dd><%= @item.facility_max_hour %> <%= t("datetime.prompts.hour") %></dd>
+</dl>

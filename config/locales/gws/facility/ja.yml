@@ -38,6 +38,10 @@ ja:
       gws/facility/category:
         name: カテゴリー名
         order: 並び順
+      gws/facility/group_setting:
+        facility_hours: 表示時間
+        facility_min_hour: 表示開始時間
+        facility_max_hour: 表示終了時間
       gws/addon/facility/reservable_setting:
         reservable_group_ids: 予約可能グループ
         reservable_member_ids: 予約可能ユーザー

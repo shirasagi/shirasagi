@@ -14,6 +14,12 @@
   Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
     defaultView: 'timelineDay',
     header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+    views: {
+      timelineDay: {
+        minTime: '<%= @cur_site.facility_min_time %>',
+        maxTime: '<%= @cur_site.facility_max_time %>'
+      }
+    }
   });
 <% end %>
 
@@ -48,6 +54,12 @@
       tapMenu: <%= item.reservable?(@cur_user) %>,
       defaultView: 'timelineDay',
       header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+      views: {
+        timelineDay: {
+          minTime: '<%= @cur_site.facility_min_time %>',
+          maxTime: '<%= @cur_site.facility_max_time %>'
+        }
+      },
       restUrl: '<%= gws_schedule_facility_plans_path(facility: item.id) %>',
       eventSources: [{ url: '<%= events_gws_schedule_facility_plans_path(facility: item.id, format: :json) %>' }]
     });

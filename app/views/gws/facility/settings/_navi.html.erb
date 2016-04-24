@@ -1,6 +1,9 @@
 <nav class="mod-navi">
   <h2><%= t "mongoid.models.gws/facility/group_setting" %></h2>
 
+  <% if @cur_site.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws.module_setting'), gws_facility_setting_path %></h3>
+  <% end %>
   <% if Gws::Facility::Item.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/facility/group_setting/item'), gws_facility_items_path %></h3>
   <% end %>
