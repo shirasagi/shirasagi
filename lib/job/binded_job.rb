@@ -4,6 +4,9 @@ class Job::BindedJob < ::ActiveJob::ConfiguredJob
     @bindings = bindings.dup.stringify_keys
   end
 
+  attr_reader :options
+  attr_reader :bindings
+
   def perform_now(*args)
     @job_class.new(*args).bind(@bindings).perform_now
   end
