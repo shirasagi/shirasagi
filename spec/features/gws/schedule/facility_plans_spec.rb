@@ -50,7 +50,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
       expect(page).to have_css("form#item-form")
 
       within "form#item-form" do
-        fill_in "item[end_at]", with: "2016/01/01 00:10"
+        fill_in "item[start_at]", with: "2016/01/01 10:00"
+        fill_in "item[end_at]", with: "2016/01/01 10:10"
         click_button "保存"
       end
       expect(status_code).to eq 200
