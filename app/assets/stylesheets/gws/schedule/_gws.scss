@@ -272,9 +272,10 @@
 //
 .fc-loading {
   display: inline-block;
-  margin-left: 1.6em;
-  padding: 2px;
-  color: #aaa;
+  position: absolute;
+  padding: 0 2px;
+  background-color: #6ad;
+  color: #fff;
 }
 
 // multiple calendar
