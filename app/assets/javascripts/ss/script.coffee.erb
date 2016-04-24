@@ -86,7 +86,7 @@ class @SS
   @disableDoubleClick: ->
     return true if @clicked
     @clicked = true
-    setTimeout (-> SS.clicked = false), 1000
+    setTimeout (-> SS.clicked = false), 300
     return
 
   @render:(box = null) ->
