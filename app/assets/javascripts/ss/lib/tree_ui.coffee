@@ -3,14 +3,35 @@ class @SS_TreeUI
   @closeImagePath = "/assets/img/tree-close.png"
 
   @render: (tree)->
+    new SS_TreeUI(tree)
+
+  @toggleImage = (img) ->
+    if img.attr("src") == SS_TreeUI.openImagePath
+      SS_TreeUI.closeImage(img)
+    else if img.attr("src") == SS_TreeUI.closeImagePath
+      SS_TreeUI.openImage(img)
+
+  @openImage = (img) ->
+    img.attr("src", SS_TreeUI.openImagePath)
+    img.addClass("opened")
+    img.removeClass("closed")
+
+  @closeImage = (img) ->
+    img.attr("src", SS_TreeUI.closeImagePath)
+    img.removeClass("opened")
+    img.addClass("closed")
+
+  constructor: (tree)->
+    @tree = $(tree)
+
     root = []
-    $(tree).find("tbody tr").each ->
+    @tree.find("tbody tr").each ->
       root.push(parseInt($(this).attr("data-depth")))
     root = Math.min.apply(null, root)
     root = parseInt(root)
     return if isNaN(root) || root < 0
 
-    $(tree).find("tbody tr").each ->
+    @tree.find("tbody tr").each ->
       td = $(this).find(".expandable")
       depth = parseInt($(this).attr("data-depth"))
 
@@ -23,11 +44,11 @@ class @SS_TreeUI
       i = $(this).find(".toggle:first")
       i.replaceWith('<span class="padding">') if (d == 0 || depth >= d)
 
-    $(tree).find(".toggle").on "mousedown mouseup", (e) ->
+    @tree.find(".toggle").on "mousedown mouseup", (e) ->
       e.stopPropagation()
       return false
 
-    $(tree).find(".toggle").on "click", (e) ->
+    @tree.find(".toggle").on "click", (e) ->
       tr    = $(this).closest("tr")
       img   = tr.find(".toggle:first")
       depth = parseInt(tr.attr("data-depth"))
@@ -46,20 +67,11 @@ class @SS_TreeUI
       e.stopPropagation()
       return false
 
-    $(tree).find("tr[data-depth='#{root}'] img").click();
+    @tree.find("tr[data-depth='#{root}'] img").click()
 
-  @toggleImage = (img) ->
-    if img.attr("src") == SS_TreeUI.openImagePath
-      SS_TreeUI.closeImage(img)
-    else if img.attr("src") == SS_TreeUI.closeImagePath
-      SS_TreeUI.openImage(img)
+  expandAll: ->
+    @tree.find("tr img.toggle.closed").click()
 
-  @openImage = (img) ->
-    img.attr("src", SS_TreeUI.openImagePath)
-    img.addClass("opened")
-    img.removeClass("closed")
-
-  @closeImage = (img) ->
-    img.attr("src", SS_TreeUI.closeImagePath)
-    img.removeClass("opened")
-    img.addClass("closed")
+  collapseAll: ->
+    $(@tree.find("tr img.toggle.opened").get().reverse()).each ->
+      $(this).click();

@@ -36,6 +36,9 @@ ja:
       repeat_base:
         date: 日付
         wday: 曜日
+    operations:
+      expand_all: すべて展開
+      collapse_all: すべて閉じる
     errors:
       empty_plan_days: 予定を登録できる日が存在しません。
       less_than_years: は%{count}年間以内の範囲にしてください。
