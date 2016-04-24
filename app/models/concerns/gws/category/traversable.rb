@@ -38,7 +38,7 @@ module Gws::Category::Traversable
   end
 
   def each
-    @hierarchy.keys.sort.each do |category|
+    @hierarchy.keys.each do |category|
       yield create_wrapper(category)
     end
   end
