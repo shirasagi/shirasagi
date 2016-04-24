@@ -116,6 +116,10 @@ RSpec.configure do |config|
   config.include(SS::JsSupport, js: true)
   config.extend(SS::HttpServerSupport, http_server: true)
   config.extend(SS::TmpDirSupport, tmpdir: true)
+
+  config.include(ActiveJob::TestHelper)
+  # travel_to
+  config.include(ActiveSupport::Testing::TimeHelpers)
 end
 
 def unique_id
