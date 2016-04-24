@@ -15,7 +15,7 @@
   <% end %>
 
   <dt class="depth-2"><%= @model.t(:in_schedule_tabs_custom_group_ids).sub(/.*\//, '') %></dt>
-  <% @cur_user.custom_groups.site(@cur_site).readable(@cur_user, @cur_site).each do |item| %>
+  <% Gws::CustomGroup.site(@cur_site).readable(@cur_user, @cur_site).each do |item| %>
     <% eid = "tab-c-#{item.id}" %>
     <% checked = !@item.schedule_tabs_custom_group_ids.include?(item.id) %>
     <dd>

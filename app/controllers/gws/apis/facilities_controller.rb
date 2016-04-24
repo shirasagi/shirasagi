@@ -27,7 +27,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
       @multi = params[:single].blank?
 
       @items = @model.site(@cur_site).
-        readable(@cur_user, @cur_site, exclude_role: true).
+        readable(@cur_user, @cur_site).
         reservable(@cur_user).
         active.
         search(params[:s])

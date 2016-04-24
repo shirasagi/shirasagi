@@ -15,7 +15,6 @@ class Gws::Schedule::SearchPlansController < ApplicationController
       @items = Gws::User.site(@cur_site).
         active.
         search(params[:s]).
-        order_by_title(@cur_site).
-        limit(10)
+        order_by_title(@cur_site)
     end
 end

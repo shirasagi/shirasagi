@@ -12,10 +12,10 @@ class Gws::PortalController < ApplicationController
       items_limit = 5
 
       @links = Gws::Link.site(@cur_site).and_public.
-        readable(@cur_user, @cur_site, exclude_role: true).to_a
+        readable(@cur_user, @cur_site).to_a
 
       @notices = Gws::Notice.site(@cur_site).and_public.
-        readable(@cur_user, @cur_site, exclude_role: true).
+        readable(@cur_user, @cur_site).
         page(1).per(items_limit)
 
       @reminders = Gws::Reminder.site(@cur_site).

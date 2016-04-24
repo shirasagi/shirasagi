@@ -30,7 +30,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
     <%= jquery do %>
     Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
       tapMenu: <%= item.id == @cur_user.id %>,
-      restUrl: '<%= url_for action: :index %>',
+      restUrl: '<%= gws_schedule_user_plans_path(user: item.id) %>',
       eventSources: [{ url: '<%= events_gws_schedule_user_plans_path(user: item.id, format: :json) %>' }]
     });
     <% end %>

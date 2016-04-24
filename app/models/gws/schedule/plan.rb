@@ -31,7 +31,7 @@ class Gws::Schedule::Plan
 
   def category_options
     @category_options ||= Gws::Schedule::Category.site(@cur_site || site).
-      readable(@cur_user || user, site, exclude_role: true).
+      readable(@cur_user || user, site).
       map { |c| [c.name, c.id] }
   end
 

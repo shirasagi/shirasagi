@@ -28,7 +28,7 @@ module Gws::Addon::ReadableSetting
         { :readable_group_ids.in => user.group_ids },
         { readable_member_ids: user.id }
       ]
-      cond << allow_condition(:read, user, site: site) unless opts[:exclude_role]
+      cond << allow_condition(:read, user, site: site) if opts[:include_role]
       where("$and" => [{ "$or" => cond }])
     }
   end

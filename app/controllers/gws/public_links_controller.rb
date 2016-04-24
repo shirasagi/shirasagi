@@ -12,7 +12,7 @@ class Gws::PublicLinksController < ApplicationController
   public
     def index
       @items = @model.site(@cur_site).and_public.
-        readable(@cur_user, @cur_site, exclude_role: true).
+        readable(@cur_user, @cur_site).
         search(params[:s]).
         page(params[:page]).per(50)
     end
