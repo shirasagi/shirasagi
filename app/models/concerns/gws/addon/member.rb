@@ -9,6 +9,8 @@ module Gws::Addon::Member
 
     permit_params member_ids: []
 
+    before_validation :validate_member_ids, if: -> { member_ids.present? }
+
     validates :member_ids, presence: true
 
     scope :member, ->(user) { where member_ids: user.id }
@@ -25,6 +27,11 @@ module Gws::Addon::Member
     hash = members.map { |m| [m.id, m] }.to_h
     @sorted_members = member_ids.map { |id| hash[id] }.compact
   end
+
+  private
+    def validate_member_ids
+      self.member_ids = member_ids.uniq
+    end
 
   module ClassMethods
     def keep_members_order?
