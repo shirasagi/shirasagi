@@ -20,7 +20,7 @@ production: &production
     # プールの監視設定です。
     polling:
       # どのプールを監視するかを配列で指定します。
-      pools:
+      queues:
         - 'default'
         - 'voice_synthesis'
 
