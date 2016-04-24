@@ -10,6 +10,7 @@ module Gws::Addon::Schedule::Facility
     validate :validate_facility_time, if: ->{ facilities.present? }
     validate :validate_reservable_members, if: ->{ facilities.present? }
     validate :validate_facility_double_booking, if: ->{ facilities.present? }
+    validate :validate_facility_hours, if: ->{ facilities.present? }
 
     scope :facility, ->(item) { where facility_ids: item.id }
   end
@@ -44,5 +45,32 @@ module Gws::Addon::Schedule::Facility
 
       name = facilities.uniq.map(&:name).join(', ')
       errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility', facility: name)
+    end
+
+    def validate_facility_hours
+      return if allday?
+      site = @cur_site || self.site
+
+      over = false
+      time = start_at
+      while time <= end_at
+        if time.hour < site.facility_min_hour
+          over = :min
+          break
+        elsif time.hour > site.facility_max_hour
+          over = :max
+          break
+        elsif time.hour == site.facility_max_hour && end_at.min + end_at.sec > 0
+          over = :max
+          break
+        end
+        time = time + 1.hour
+      end
+
+      if over
+        min = site.facility_min_hour
+        max = site.facility_max_hour
+        errors.add :base, I18n.t('gws/schedule.errors.over_than_facility_hours', min: min, max: max)
+      end
     end
 end
