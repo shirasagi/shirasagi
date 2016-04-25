@@ -45,17 +45,9 @@ module SS::Model::File
   module ClassMethods
     def resizing_options
       [
-        [I18n.t('views.options.resizing.320×240'), "320,240"],
-        [I18n.t('views.options.resizing.240x320'), "240,320"],
-        [I18n.t('views.options.resizing.640x480'), "640,480"],
-        [I18n.t('views.options.resizing.480x640'), "480,640"],
-        [I18n.t('views.options.resizing.800x600'), "800,600"],
-        [I18n.t('views.options.resizing.600x800'), "600,800"],
-        [I18n.t('views.options.resizing.1024×768'), "1024,768"],
-        [I18n.t('views.options.resizing.768x1024'), "768,1024"],
-        [I18n.t('views.options.resizing.1280x720'), "1280,720"],
-        [I18n.t('views.options.resizing.720x1280'), "720,1280"],
-      ]
+        [320,240], [240,320], [640,480], [480,640], [800,600], [600,800],
+        [1024,768], [768,1024], [1280,720], [720,1280]
+      ].map { |x, y| [I18n.t("views.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
     end
 
     def search(params)
