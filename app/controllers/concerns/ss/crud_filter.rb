@@ -29,13 +29,15 @@ module SS::CrudFilter
     def set_item
       @item = @model.find params[:id]
       @item.attributes = fix_params
+    rescue Mongoid::Errors::DocumentNotFound => e
+      return render_destroy(true) if params[:action] == 'destroy'
+      raise e
     end
 
     def set_destroy_items
       ids = params[:ids]
       raise "400" unless ids
       ids = ids.split(",") if ids.kind_of?(String)
-      #ids = ids.map(&:to_i)
       @items = @model.in(id: ids)
       raise "400" unless @items.present?
     end
