@@ -31,8 +31,8 @@ class Sns::Login::SamlController < ApplicationController
     # end
     def settings
       @settings ||= OneLogin::RubySaml::Settings.new.tap do |settings|
-        settings.assertion_consumer_service_url = sns_login_saml_path(id: @item.filename).sub(/\/init$/, "/consume")
-        settings.issuer = sns_login_saml_path(id: @item.filename).sub(/\/init$/, "")
+        settings.assertion_consumer_service_url = sns_login_saml_url(id: @item.filename).sub(/\/init$/, "/consume")
+        settings.issuer = sns_login_saml_url(id: @item.filename).sub(/\/init$/, "")
         settings.authn_context = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
 
         settings.idp_entity_id = @item.entity_id
