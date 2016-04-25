@@ -81,13 +81,11 @@ $ ->
 
 class @SS
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
-  @clicked = false
 
-  @disableDoubleClick: ->
-    return true if @clicked
-    @clicked = true
-    setTimeout (-> SS.clicked = false), 300
-    return
+  @disableClick: (el)->
+    return false if el.data('clicked')
+    el.data('clicked', true)
+    return true
 
   @render:(box = null) ->
     if box
