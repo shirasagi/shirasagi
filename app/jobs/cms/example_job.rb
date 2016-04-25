@@ -29,8 +29,13 @@
 #     Cms::ExampleJob.set(queue: "severity_high", wait: 30.seconds).bind(site_id: @cur_site).perform_later('world')
 #
 class Cms::ExampleJob < Cms::ApplicationJob
-  def perform(param)
-    puts "hello #{param} @ #{site.domain}"
-    Rails.logger.info "hello #{param} @ #{site.domain}"
+  def perform(param = "")
+    Rails.logger.info "Hello, #{site.domain}!" if site.present?
+    Rails.logger.info "Hello, #{group.name}!" if group.present?
+    Rails.logger.info "Hello, #{user.uid}!" if user.present?
+    Rails.logger.info "Hello, #{node.filename}!" if node.present?
+    Rails.logger.info "Hello, #{page.filename}!" if page.present?
+    Rails.logger.info "Hello, #{member.email}!" if member.present?
+    Rails.logger.info "Hello, #{param}!" if param.present?
   end
 end
