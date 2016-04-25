@@ -25,3 +25,5 @@ end
 RSpec.configuration.after(:suite) do
   ::FileUtils.rm_rf Voice::File.root if ::Dir.exists?(Voice::File.root)
 end
+
+RSpec.configuration.filter_run_excluding(open_jtalk: true) unless can_test_open_jtalk_spec?

@@ -264,3 +264,5 @@ module SS
     end
   end
 end
+
+RSpec.configuration.extend(SS::HttpServerSupport, http_server: true)
