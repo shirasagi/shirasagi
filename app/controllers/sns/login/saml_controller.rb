@@ -12,23 +12,6 @@ class Sns::Login::SamlController < ApplicationController
       @item ||= @model.find_by(filename: params[:id])
     end
 
-    # def settings
-    #   @settings ||= begin
-    #     idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
-    #     settings = idp_metadata_parser.parse(SS::Crypt.decrypt(@item.metadata))
-    #
-    #     settings.assertion_consumer_service_url = "http://#{request.host_with_port}/.mypage/sso_login/saml/#{@item.filename}/consume"
-    #     settings.issuer = "http://#{request.host_with_port}/.mypage/sso_login/saml/#{@item.filename}/"
-    #     # settings.name_identifier_format = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
-    #     # settings.name_identifier_format = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
-    #     settings.name_identifier_format = @item.identifier || @item.default_identifier
-    #     # Optional for most SAML IdPs
-    #     settings.authn_context = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
-    #     Rails.logger.debug("settings.name_identifier_format=#{settings.name_identifier_format}")
-    #
-    #     settings
-    #   end
-    # end
     def settings
       @settings ||= OneLogin::RubySaml::Settings.new.tap do |settings|
         settings.assertion_consumer_service_url = sns_login_saml_url(id: @item.filename).sub(/\/init$/, "/consume")
@@ -50,7 +33,6 @@ class Sns::Login::SamlController < ApplicationController
     end
 
   public
-
     def init
       request = OneLogin::RubySaml::Authrequest.new
       state = session['ss.sso.state'] = SecureRandom.hex(24)
@@ -66,16 +48,15 @@ class Sns::Login::SamlController < ApplicationController
 
       raise "403" unless response.is_valid?
 
-      # Rails.logger.debug("response.nameid=#{response.nameid}")
-      # Rails.logger.debug("response.attributes=#{response.attributes}")
-      # if response.attributes
-      #   Rails.logger.debug("response.attributes.count=#{response.attributes.count}")
-      #   response.attributes.each do |name, values|
-      #     Rails.logger.debug("response.attributes[#{name}]=#{values}(#{values.class})")
-      #   end
-      # end
+      user = SS::User.uid_or_email(response.nameid).first
+      user = nil if user && !user.enabled?
 
-      render text: response.nameid, layout: false
+      if user
+        set_user(user, { session: true, password: user.password })
+        redirect_to SS.config.sns.logged_in_page
+      else
+        redirect_to SS.config.sns.logged_in_page, alert: t("sns.errors.invalid_login")
+      end
     end
 
     def metadata
