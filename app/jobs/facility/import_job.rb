@@ -1,19 +1,15 @@
 require "csv"
 
-class Facility::ImportJob
-  include Job::Worker
-
+class Facility::ImportJob < Cms::ApplicationJob
   def put_log(message)
     Rails.logger.info(message)
   end
 
-  def call(ss_file_id, host, filename)
-    @ss_file  = ::SS::File.where(id: ss_file_id).first
-    @cur_site = Cms::Site.where(host: host).first
-    @cur_node = ::Facility::Node::Node.where(filename: filename, site_id: @cur_site.id).first
+  def perform(ss_file_id)
+    @ss_file = ::SS::File.where(id: ss_file_id).first
 
-    put_log("destory all pages /#{@cur_node.filename}/*")
-    ::Facility::Node::Page.where(filename: /^#{@cur_node.filename}\//, site_id: @cur_site.id).destroy_all
+    put_log("destory all pages /#{node.filename}/*")
+    ::Facility::Node::Page.where(filename: /^#{node.filename}\//, site_id: site.id).destroy_all
 
     put_log("import start " + ::File.basename(@ss_file.name))
     import_csv(@ss_file)
@@ -36,9 +32,9 @@ class Facility::ImportJob
   end
 
   def update_row(row)
-    filename = "#{@cur_node.filename}/#{row[@model.t(:filename)]}"
+    filename = "#{node.filename}/#{row[@model.t(:filename)]}"
     item = @model.find_or_create_by filename: filename
-    item.cur_site = @cur_site
+    item.cur_site = site
     set_page_attributes(row, item)
 
     if item.save
@@ -50,7 +46,7 @@ class Facility::ImportJob
     if row[@model.t(:map_points)].present?
       filename = "#{filename}/map.html"
       map = ::Facility::Map.find_or_create_by filename: filename
-      map.cur_site = @cur_site
+      map.cur_site = site
       set_map_attributes(row, map)
       map.save
       name += " #{map.map_points.first[:loc]}"
@@ -78,15 +74,15 @@ class Facility::ImportJob
 
   def set_page_categories(row, item)
     names = row[@model.t(:categories)].to_s.split(/\n/).map(&:strip)
-    ids = @cur_node.st_categories.in(name: names).map(&:id)
+    ids = node.st_categories.in(name: names).map(&:id)
     item.category_ids = SS::Extensions::ObjectIds.new(ids)
 
     names = row[@model.t(:locations)].to_s.split(/\n/).map(&:strip)
-    ids = @cur_node.st_locations.in(name: names).map(&:id)
+    ids = node.st_locations.in(name: names).map(&:id)
     item.location_ids = SS::Extensions::ObjectIds.new(ids)
 
     names = row[@model.t(:services)].to_s.split(/\n/).map(&:strip)
-    ids = @cur_node.st_services.in(name: names).map(&:id)
+    ids = node.st_services.in(name: names).map(&:id)
     item.service_ids = SS::Extensions::ObjectIds.new(ids)
   end
 
