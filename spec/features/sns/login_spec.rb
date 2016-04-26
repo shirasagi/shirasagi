@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_login", dbscope: :example do
+describe "sns_login", type: :feature, dbscope: :example do
   it "invalid login" do
     visit sns_login_path
     within "form" do
@@ -87,6 +87,17 @@ describe "sns_login", dbscope: :example do
       end
       expect(current_path).to eq sns_mypage_path
       expect(page).not_to have_css(".login-box")
+    end
+  end
+
+  context 'loggedin status' do
+    it do
+      visit sns_login_status_path
+      expect(status_code).to eq 403
+
+      login_sys_user
+      visit sns_login_status_path
+      expect(status_code).to eq 200
     end
   end
 end
