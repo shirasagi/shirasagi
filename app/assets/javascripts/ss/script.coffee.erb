@@ -7,6 +7,7 @@
 //= require jquery.multi-select
 //= require jquery.colorbox-min.js
 //= require_self
+//= require ss/lib/login
 //= require ss/lib/addon_tabs
 //= require ss/lib/list_ui
 //= require ss/lib/tree_ui
@@ -31,6 +32,7 @@ $ ->
   $.ajaxSetup
     # prevent caching ajax response. see #596.
     cache: false
+    global: true
     # headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
 
   SS.render()
@@ -89,17 +91,9 @@ class @SS
 
   @render:(box = null) ->
     if box
-      anchorCallback = ()->
-        $("#cboxLoadedContent a").each ->
-          elem = $(this)
-          elem.addClass("cboxElement")
-          if !elem.attr("target") && !elem.data("target")
-            elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
-
-      $(box).find("a").each ->
-        elem = $(this)
-        if !elem.attr("target") && !elem.data("target")
-          elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
+      @renderInBox(box)
+    else
+      @renderNotInBox()
 
     # default
     box = $(document)
@@ -114,6 +108,22 @@ class @SS
       return true if elem.hasClass("cboxElement")
       if !elem.attr("target") && !elem.data("target")
         elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+
+  @renderNotInBox: ->
+    SS_Login.render()
+
+  @renderInBox:(box) ->
+    anchorCallback = ()->
+      $("#cboxLoadedContent a").each ->
+        elem = $(this)
+        elem.addClass("cboxElement")
+        if !elem.attr("target") && !elem.data("target")
+          elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
+
+    $(box).find("a").each ->
+      elem = $(this)
+      if !elem.attr("target") && !elem.data("target")
+        elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
 
   @ajaxForm:(elem, params = {}) ->
     elem = $(elem)

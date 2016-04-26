@@ -3,7 +3,7 @@ class Sns::LoginController < ApplicationController
 
   protect_from_forgery except: :remote_login
   skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
-  skip_action_callback :logged_in?, only: [:login, :remote_login]
+  skip_action_callback :logged_in?, only: [:login, :remote_login, :status]
 
   layout "ss/login"
   navi_view nil
@@ -65,6 +65,14 @@ class Sns::LoginController < ApplicationController
 
       login
       render :login if response.body.blank?
+    end
+
+    def status
+      if @cur_user = get_user_by_session
+        render inline: 'OK'
+      else
+        raise '403'
+      end
     end
 
     def logout

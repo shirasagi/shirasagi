@@ -65,7 +65,13 @@ module SS::BaseFilter
         set_last_logged_in
         return @cur_user
       end
+
       unset_user
+
+      if request.xhr?
+        response.headers['ajaxRedirect'] = true
+        return render inline: ''
+      end
 
       ref = request.env["REQUEST_URI"]
       ref = (ref == sns_mypage_path) ? "" : "?ref=" + CGI.escape(ref.to_s)

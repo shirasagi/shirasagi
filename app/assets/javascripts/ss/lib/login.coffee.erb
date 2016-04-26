@@ -1,0 +1,26 @@
+class @SS_Login
+  @intervalID = null
+  @intervalTime = 600000
+
+  @render: ->
+    $(document).on 'ajaxComplete', (e, xhr, status)->
+      if xhr.getResponseHeader('ajaxRedirect')
+        location.reload() if xhr.readyState == 4 && xhr.status == 200
+
+    setTimeout @startLoggedinCheck, @intervalTime
+
+  @startLoggedinCheck: ->
+    $.ajax
+      url: '/.mypage/status'
+      complete: (xhr, status)->
+        if xhr.readyState == 4 && xhr.status == 200
+          SS_Login.intervalID = setInterval(SS_Login.keepLoggedinCheck, SS_Login.intervalTime)
+
+  @keepLoggedinCheck: ->
+    $.ajax
+      url: '/.mypage/status'
+      complete: (xhr, status)->
+        if xhr.readyState == 4 && xhr.status == 403
+          clearInterval(SS_Login.intervalID) if SS_Login.intervalID
+          alert('<%= I18n.t("views.warning.session_timeout") %>')
+

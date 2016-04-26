@@ -48,6 +48,7 @@ SS::Application.routes.draw do
     get   "logout" => "login#logout", as: :logout
     match "login"  => "login#login", as: :login, via: [:get, :post]
     match "remote_login" => "login#remote_login", as: :remote_login, via: [:get, :post]
+    get   "status" => "login#status", as: :login_status
     get   "auth_token" => "auth_token#index", as: :auth_token
     get   "cms" => "mypage#cms"
     get   "gws" => "mypage#gws"

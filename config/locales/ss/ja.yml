@@ -86,6 +86,7 @@ ja:
       deleted: 削除しました。
     warning:
       initial_password: 初期パスワードを変更してください。
+      session_timeout: セッションの有効期限が切れました。
     options:
       state:
         show: 表示
