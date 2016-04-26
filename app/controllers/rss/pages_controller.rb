@@ -20,11 +20,7 @@ class Rss::PagesController < ApplicationController
         return
       end
 
-      Rss::ImportJob.call_async(@cur_site.host, @cur_node.id, @cur_user.id) do |job|
-        job.site_id = @cur_site.id
-        job.user_id = @cur_user.id
-      end
-      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+      Rss::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id).perform_later
       redirect_to({ action: :index }, { notice: t("rss.messages.job_started") })
     rescue => e
       Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

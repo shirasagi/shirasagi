@@ -10,9 +10,10 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
+    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.new.call(site.host, node.id, user.id) }.to change { Rss::Page.count }.from(0).to(5)
+      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
       expect(Rss::Page.where(rss_link: "http://example.jp/rdf/1.html").first).not_to be_nil
     end
   end
@@ -23,9 +24,10 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
+    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.new.call(site.host, node.id, user.id) }.to change { Rss::Page.count }.from(0).to(5)
+      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
       expect(Rss::Page.where(rss_link: "http://example.jp/rss/1.html").first).not_to be_nil
     end
   end
@@ -36,9 +38,10 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
+    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.new.call(site.host, node.id, user.id) }.to change { Rss::Page.count }.from(0).to(5)
+      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(5)
       expect(Rss::Page.where(rss_link: "http://example.jp/atom/1.html").first).not_to be_nil
     end
   end
@@ -53,7 +56,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       let!(:node) { create :rss_node_page, site: site, rss_url: url, rss_refresh_method: refresh_method }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change(Job::Task, :count).by(1)
+        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(1)
       end
     end
 
@@ -66,7 +69,7 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       let!(:node) { create :rss_node_page, site: site, rss_url: url, rss_refresh_method: refresh_method }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change(Job::Task, :count).by(0)
+        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(0)
       end
     end
   end
@@ -77,9 +80,10 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url, rss_max_docs: 3 }
     let(:user) { cms_user }
+    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
 
     it do
-      expect { described_class.new.call(site.host, node.id, user.id) }.to change { Rss::Page.count }.from(0).to(3)
+      expect { described_class.bind(bindings).perform_now }.to change { Rss::Page.count }.from(0).to(3)
     end
   end
 
@@ -89,14 +93,15 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
     let(:site) { cms_site }
     let(:node) { create :rss_node_page, site: site, rss_url: url }
     let(:user) { cms_user }
+    let(:bindings) { { site_id: site.host, node_id: node.id, user_id: user.id } }
 
     it do
-      described_class.new.call(site.host, node.id, user.id)
+      described_class.bind(bindings).perform_now
       expect(Rss::Page.count).to eq 5
 
       http.options real_path: "/sample-rdf-2.xml"
 
-      described_class.new.call(site.host, node.id, user.id)
+      described_class.bind(bindings).perform_now
       # expected count is 5, 1 added, 1 deleted, 1 updated.
       expect(Rss::Page.count).to eq 5
       # doc1 is updated.
