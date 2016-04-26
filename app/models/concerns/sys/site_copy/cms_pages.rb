@@ -7,7 +7,6 @@ module Sys::SiteCopy::CmsPages
         new_cms_page = Cms::Page.new
         new_cms_page = cms_page.dup
         new_cms_page.site_id = @site.id
-        new_cms_page.layout_id = @layout_records_map[cms_page.layout_id]
         new_cms_page.save
       end
     end

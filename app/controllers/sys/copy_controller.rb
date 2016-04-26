@@ -21,7 +21,9 @@ class Sys::CopyController < ApplicationController
     end
 
     def run
-      Sys::CopyJob.call_async(params)
-      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+      Thread.start do
+        copy = Sys::Copy.new
+        copy.run_copy(params)
+      end
     end
 end
