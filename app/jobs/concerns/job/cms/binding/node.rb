@@ -29,7 +29,7 @@ module Job::Cms::Binding::Node
 
   def bindings
     ret = super
-    ret.merge!({ 'node_id' => node_id }) if node_id.present?
+    ret['node_id'] = node_id if node_id.present?
     ret
   end
 end

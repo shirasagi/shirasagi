@@ -23,7 +23,7 @@ module Job::SS::Binding::Group
 
   def bindings
     ret = super
-    ret.merge!({ 'group_id' => group_id }) if group_id.present?
+    ret['group_id'] = group_id if group_id.present?
     ret
   end
 end

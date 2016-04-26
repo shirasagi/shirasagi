@@ -23,7 +23,7 @@ module Job::Cms::Binding::Member
 
   def bindings
     ret = super
-    ret.merge!({ 'member_id' => member_id }) if member_id.present?
+    ret['member_id'] = member_id if member_id.present?
     ret
   end
 end

@@ -23,7 +23,7 @@ module Job::SS::Binding::Site
 
   def bindings
     ret = super
-    ret.merge!({ 'site_id' => site_id }) if site_id.present?
+    ret['site_id'] = site_id if site_id.present?
     ret
   end
 end

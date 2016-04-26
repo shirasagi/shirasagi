@@ -29,7 +29,7 @@ module Job::Cms::Binding::Page
 
   def bindings
     ret = super
-    ret.merge!({ 'page_id' => page_id }) if page_id.present?
+    ret['page_id'] = page_id if page_id.present?
     ret
   end
 end

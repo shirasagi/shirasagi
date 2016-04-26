@@ -122,7 +122,6 @@ RSpec::Matchers.define :eq_as_time do |expected_time|
 end
 # TODO: Should this code be written here? Another more correctly place?
 
-
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }

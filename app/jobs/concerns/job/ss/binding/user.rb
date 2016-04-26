@@ -23,7 +23,7 @@ module Job::SS::Binding::User
 
   def bindings
     ret = super
-    ret.merge!({ 'user_id' => user_id }) if user_id.present?
+    ret['user_id'] = user_id if user_id.present?
     ret
   end
 end
