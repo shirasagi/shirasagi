@@ -85,7 +85,7 @@ module Sys::SiteCopy::Checkboxes
           new_cmsnode["st_service_ids"] = node_fac_new_cats["facility/service"]
           new_cmsnode["st_location_ids"] = node_fac_new_cats["facility/location"]
 
-          new_cmsnode.save validate: false
+          new_cmsnode.save
         end
       end
     end
