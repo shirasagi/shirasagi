@@ -9,6 +9,7 @@ class Cms::Group
   attr_accessor :cur_site, :cms_role_ids
   permit_params :cms_role_ids
 
+  default_scope -> { active }
   scope :site, ->(site) { self.in(name: site.groups.pluck(:name).map{ |name| /^#{Regexp.escape(name)}(\/|$)/ }) }
 
   validate :validate_sites, if: ->{ cur_site.present? }
