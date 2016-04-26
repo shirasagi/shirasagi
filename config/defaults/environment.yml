@@ -42,3 +42,8 @@ multibyte_filename: underscore
 # json response datetime_format
 #   %Y/%m/%d %H:%M:%S - 2015/12/25 12:00:00
 json_datetime_format:
+
+# image file exif option in SS::Model::File
+#   auto_orient - fix exif rotation (ImageMagick --auto-orient)
+#   strip - remove exif
+image_exif_option: auto_orient
