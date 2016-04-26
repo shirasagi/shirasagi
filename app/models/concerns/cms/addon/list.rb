@@ -2,6 +2,7 @@ module Cms::Addon::List
   module Model
     extend ActiveSupport::Concern
     extend SS::Translation
+    include SS::TemplateVariable
 
     attr_accessor :cur_date
 
@@ -16,6 +17,25 @@ module Cms::Addon::List
       permit_params :conditions, :sort, :limit, :loop_html, :upper_html, :lower_html, :new_days
 
       before_validation :validate_conditions
+
+      template_variable_handler(:name, :template_variable_handler_name)
+      template_variable_handler(:url, :template_variable_handler_name)
+      template_variable_handler(:summary, :template_variable_handler_name)
+      template_variable_handler(:index_name, :template_variable_handler_index_name)
+      template_variable_handler(:class, :template_variable_handler_class)
+      template_variable_handler(:new, :template_variable_handler_new)
+      template_variable_handler(:date, :template_variable_handler_date)
+      template_variable_handler('date.default') { |name, item| template_variable_handler_date(name, item, :default) }
+      template_variable_handler('date.iso') { |name, item| template_variable_handler_date(name, item, :iso) }
+      template_variable_handler('date.long') { |name, item| template_variable_handler_date(name, item, :long) }
+      template_variable_handler('date.short') { |name, item| template_variable_handler_date(name, item, :short) }
+      template_variable_handler(:time, :template_variable_handler_time)
+      template_variable_handler('time.default') { |name, item| template_variable_handler_time(name, item, :default) }
+      template_variable_handler('time.iso') { |name, item| template_variable_handler_time(name, item, :iso) }
+      template_variable_handler('time.long') { |name, item| template_variable_handler_time(name, item, :long) }
+      template_variable_handler('time.short') { |name, item| template_variable_handler_time(name, item, :short) }
+      template_variable_handler(:group, :template_variable_handler_group)
+      template_variable_handler(:groups, :template_variable_handler_groups)
     end
 
     def sort_options
@@ -85,37 +105,7 @@ module Cms::Addon::List
 
     def render_loop_html(item, opts = {})
       item = item.becomes_with_route rescue item
-      (opts[:html] || loop_html).gsub(/\#\{(.*?)\}/) do |m|
-        str = template_variable_get(item, $1) rescue false
-        str == false ? m : str
-      end
-    end
-
-    def template_variable_get(item, name)
-      if name =~ /^(name|url|summary)$/
-        ERB::Util.html_escape item.send(name)
-      elsif name == "index_name"
-        ERB::Util.html_escape item.name_for_index
-      elsif name == "class"
-        item.basename.sub(/\..*/, "").dasherize
-      elsif name == "new"
-        respond_to?(:in_new_days?) && in_new_days?(item.date) ? "new" : nil
-      elsif name == "date"
-        I18n.l item.date.to_date
-      elsif name =~ /^date\.(\w+)$/
-        I18n.l item.date.to_date, format: $1.to_sym
-      elsif name == "time"
-        I18n.l item.date
-      elsif name =~ /^time\.(\w+)$/
-        I18n.l item.date, format: $1.to_sym
-      elsif name == "group"
-        group = item.groups.first
-        group ? group.name.split(/\//).pop : ""
-      elsif name == "groups"
-        item.groups.map { |g| g.name.split(/\//).pop }.join(", ")
-      else
-        false
-      end
+      render_template(opts[:html] || loop_html, item)
     end
 
     private
@@ -123,6 +113,47 @@ module Cms::Addon::List
         self.conditions = conditions.map do |m|
           m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
         end.compact.uniq
+      end
+
+      def template_variable_handler_name(name, item)
+        ERB::Util.html_escape item.send(name)
+      end
+
+      def template_variable_handler_index_name(name, item)
+        ERB::Util.html_escape item.name_for_index
+      end
+
+      def template_variable_handler_class(name, item)
+        item.basename.sub(/\..*/, "").dasherize
+      end
+
+      def template_variable_handler_new(name, item)
+        respond_to?(:in_new_days?) && in_new_days?(item.date) ? "new" : nil
+      end
+
+      def template_variable_handler_date(name, item, format = nil)
+        if format.nil?
+          I18n.l item.date.to_date
+        else
+          I18n.l item.date.to_date, format: format.to_sym
+        end
+      end
+
+      def template_variable_handler_time(name, item, format = nil)
+        if format.nil?
+          I18n.l item.date
+        else
+          I18n.l item.date, format: format.to_sym
+        end
+      end
+
+      def template_variable_handler_group(name, item)
+        group = item.groups.first
+        group ? group.name.split(/\//).pop : ""
+      end
+
+      def template_variable_handler_groups(name, item)
+        item.groups.map { |g| g.name.split(/\//).pop }.join(", ")
       end
   end
 end
