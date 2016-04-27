@@ -23,6 +23,9 @@ ja:
       state:
         enabled: 使用する
         disabled: 使用しない
+      notice_content:
+        link_only: 通知のみ
+        include_answers: 投稿内容含む
       required:
         required: 必須
         optional: 任意
@@ -62,6 +65,7 @@ ja:
         inquiry_results_html: 集計結果テキスト
         inquiry_captcha: 画像認証
         notice_state: 通知設定
+        notice_content: 通知内容
         notice_email: 通知メールアドレス
         from_name: 差出人名
         from_email: 差出人メールアドレス
@@ -112,6 +116,10 @@ ja:
     inquiry/addon/notice:
       notice_state:
         - フォームへの投稿があったことを通知することが可能です。
+      notice_content:
+        - 通知メールの内容を設定します。
+        - 「通知のみ」 回答へのリンクが記載されます。
+        - 「投稿内容含む」回答へのリンクと回答内容すべてが記載されます。
       notice_email:
         - フォームへの投稿があったことを通知する先のメールアドレスを入力します。
       from_name:
