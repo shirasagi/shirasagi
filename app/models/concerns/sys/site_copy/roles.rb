@@ -7,10 +7,14 @@ module Sys::SiteCopy::Roles
       cms_roles = Cms::Role.where(site_id: @site_old.id)
       new_cms_roles_id = {}
       cms_roles.each do |cms_role|
-        new_cms_role = Cms::Role.new
-        new_cms_role = cms_role.dup
+        new_cms_role = Cms::Role.new cms_role.attributes.except(:id, :_id, :site_id, :created, :updated)
         new_cms_role.site_id = @site.id
-        new_cms_role.save
+        begin
+          new_cms_role.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
         new_cms_roles_id.store(cms_role.id, new_cms_role.id)
       end
 
@@ -19,7 +23,12 @@ module Sys::SiteCopy::Roles
         cms_users = Cms::User.where(cms_role_ids: old_role_id)
         cms_users.each do |cms_user|
           cms_user.cms_role_ids = cms_user.cms_role_ids.push(new_role_id)
-          cms_user.save
+          begin
+            cms_user.save!
+          rescue => exception
+            Rails.logger.error(exception.message)
+            throw exception
+          end
         end
       end
     end

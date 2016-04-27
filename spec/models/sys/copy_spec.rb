@@ -7,8 +7,8 @@ describe Sys::Copy, type: :model, dbscope: :example do
 
     # for app/models/concerns/sys/site_copy/nodes.rb copy_nodes_for_dupcms & copy_file_dir
     def check_nodes
-      src_site_dir = Rails.public_path.to_s+'/sites/'+(@src_site.host.split('').join('/'))+'/_'
-      dest_site_dir = Rails.public_path.to_s+'/sites/'+(@dest_site.host.split('').join('/'))+'/_'
+      src_site_dir = Rails.public_path.to_s+'/sites/' + @src_site.host.split('').join('/') + '/_'
+      dest_site_dir = Rails.public_path.to_s+'/sites/' + @dest_site.host.split('').join('/') + '/_'
 
       source = Cms::Node.where(site_id: @src_site.id)
       print "number of nodes: " + source.count.to_s + "\n"
@@ -28,7 +28,7 @@ describe Sys::Copy, type: :model, dbscope: :example do
         check_dir = dest_site_dir + "/" + dest_item.filename
 
         Dir.exist?(subject_dir) && Dir.entries(subject_dir).each do |filename|
-          next if /^(\.|\.\.)$/.match(filename)
+          next if /^(\.|\.\.)$/ =~ filename
           return false unless File.exist?(check_dir + "/" + filename)
         end
       end
@@ -77,7 +77,8 @@ describe Sys::Copy, type: :model, dbscope: :example do
 
     # for app/models/concerns/sys/site_copy/article.rb create_dup_cms_page2_for_dup_site & clone_files
     def check_pages
-      source = Cms::Page.where(site_id: @src_site.id, :route.nin => ["cms/page", "ads/banner", "facility/image", "key_visual/image"])
+      source = Cms::Page.where(site_id: @src_site.id,
+          :route.nin => ["cms/page", "ads/banner", "facility/image", "key_visual/image"])
       print "number of pages: " + source.count.to_s + "\n"
       source.each do |item|
         dest_item = Cms::Page.where(site_id: @dest_site.id, route: item.route, filename: item.filename).one

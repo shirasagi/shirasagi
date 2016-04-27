@@ -15,7 +15,7 @@ module Sys::SiteCopy::CmsParts
           if !Cms::Part.fields.keys.include?(key)
             new_model_attr_flag = 1
             new_cms_part_no_attr.store(key, cms_part[key])
-            new_model_attr.delete("#{key}")
+            new_model_attr.delete(key)
           end
         end
         new_cms_part = Cms::Part.new(new_model_attr)
@@ -26,7 +26,12 @@ module Sys::SiteCopy::CmsParts
             new_cms_part[noattr] = val
           end
         end
-        new_cms_part.save
+        begin
+          new_cms_part.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 end

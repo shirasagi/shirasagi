@@ -5,10 +5,9 @@ class Sys::Apis::SitesController < ApplicationController
 
   model Sys::Site
 
-  public
-    def index
-        @items = @model.
-            search(params[:s])
-    end
+  def index
+      @items = @model.
+          search(params[:s])
+  end
 
 end

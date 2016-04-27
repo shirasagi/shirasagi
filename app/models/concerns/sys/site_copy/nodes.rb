@@ -72,7 +72,12 @@ module Sys::SiteCopy::Nodes
         # 物理的なディレクトリ作成とファイル複製が必要な場合
         copy_file_dir(base_cmsnode, basesite_public_dir, site_public_dir) if ['uploader/file'].include? base_cmsnode.route
 
-        cms_node_obj.save
+        begin
+          cms_node_obj.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 

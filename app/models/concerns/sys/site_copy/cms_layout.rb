@@ -9,12 +9,15 @@ module Sys::SiteCopy::CmsLayout
     # ex) {<BaseLayoutID>: <DupLayoutID>[, ...]}
     def copy_cms_layout
       Cms::Layout.where(site_id: @site_old.id).each do |cms_layout|
-        new_cms_layout = Cms::Layout.new
-        new_cms_layout = cms_layout.dup
+        new_cms_layout = Cms::Layout.new cms_layout.attributes.except(:id, :_id, :site_id, :created, :updated)
         new_cms_layout.site_id = @site.id
-        if new_cms_layout.save
-          @layout_records_map[cms_layout.id] = new_cms_layout.id
+        begin
+          new_cms_layout.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
         end
+        @layout_records_map[cms_layout.id] = new_cms_layout.id
       end
       return @layout_records_map
     end

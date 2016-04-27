@@ -28,12 +28,14 @@ class Sys::Copy
 
   def run_copy(params)
     @site_old = Cms::Site.find(params["@copy_run"]["copy_site"])
-    @site = Cms::Site.create({
-                              group_ids:  @site_old.group_ids,
-                              name:       params["@copy_run"]["name"],
-                              host:       params["@copy_run"]["host"],
-                              domains:    params["@copy_run"]["domains"]
-                            })
+    @site = Cms::Site.create(
+      {
+        group_ids:  @site_old.group_ids,
+        name:       params["@copy_run"]["name"],
+        host:       params["@copy_run"]["host"],
+        domains:    params["@copy_run"]["domains"]
+      }
+    )
 
     copy_roles
 

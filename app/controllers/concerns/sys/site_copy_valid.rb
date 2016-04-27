@@ -21,11 +21,11 @@ module Sys::SiteCopyValid
     end
 
     def chk_host
-      if params["@copy"]["host"].blank?
+      if params["@copy"]["host"].empty?
         @run_flag = 0
         @host_flag = 0
         @er_host_mes = "「ホスト名」を入力してください。"
-      elsif Cms::Site.where(host: params["@copy"]["host"]).length > 0
+      elsif !Cms::Site.where(host: params["@copy"]["host"]).empty?
         @run_flag = 0
         @host_flag = 0
         @er_host_mes = "入力したホスト名は既に使用しています。別のホスト名を入力してください。"
@@ -41,7 +41,7 @@ module Sys::SiteCopyValid
         @run_flag = 0
         @domain_flag = 0
         @er_domains_mes = "「ドメイン」を入力してください。"
-      elsif Cms::Site.where(domains: params["@copy"]["domains"]).length > 0
+      elsif !Cms::Site.where(domains: params["@copy"]["domains"]).empty?
         @run_flag = 0
         @domain_flag = 0
         @er_domains_mes = "入力したドメインは既に使用しています。別のドメインを入力してください。"

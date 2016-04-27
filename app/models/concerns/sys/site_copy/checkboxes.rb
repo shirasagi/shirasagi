@@ -26,7 +26,7 @@ module Sys::SiteCopy::Checkboxes
             if !Cms::Node.fields.keys.include?(key)
               new_model_attr_flag = 1
               new_cmsnode_no_attr.store(key, base_cmsnode[key])
-              new_model_attr.delete("#{key}")
+              new_model_attr.delete(key)
             end
           end
           new_cmsnode = Cms::Node.new(new_model_attr)
@@ -38,7 +38,12 @@ module Sys::SiteCopy::Checkboxes
             end
           end
 
-          new_cmsnode.save validate: false
+          begin
+            new_cmsnode.save!
+          rescue => exception
+            Rails.logger.error(exception.message)
+            throw exception
+          end
           node_cats[node_cat_route].store(old_cmsnode_id, new_cmsnode.id.mongoize)
           node_cats["merge"].store(old_cmsnode_id, new_cmsnode.id.mongoize)
         end
@@ -59,33 +64,42 @@ module Sys::SiteCopy::Checkboxes
         end
       end
       @@node_copied_fac_cat_routes.each do |node_copied_cat_route|
-        Cms::Node.where(:site_id => @site_old.id).where(route: node_copied_cat_route).each do |base_cmsnode|
-          old_cmsnode_id = base_cmsnode.id
-          new_cmsnode_no_attr = {}
-          new_model_attr_flag = 0
-          new_model_attr = base_cmsnode.attributes.to_hash
-          new_model_attr.delete("_id") if new_model_attr["_id"]
-          new_model_attr.keys.each do |key|
-            if !Cms::Node.fields.keys.include?(key)
-              new_model_attr_flag = 1
-              new_cmsnode_no_attr.store(key, base_cmsnode[key])
-              new_model_attr.delete("#{key}")
-            end
+        copy_cat_route node_fac_new_cats, node_copied_cat_route
+      end
+    end
+
+    def copy_cat_route(node_fac_new_cats, node_copied_cat_route)
+      Cms::Node.where(:site_id => @site_old.id).where(route: node_copied_cat_route).each do |base_cmsnode|
+        old_cmsnode_id = base_cmsnode.id
+        new_cmsnode_no_attr = {}
+        new_model_attr_flag = 0
+        new_model_attr = base_cmsnode.attributes.to_hash
+        new_model_attr.delete("_id") if new_model_attr["_id"]
+        new_model_attr.keys.each do |key|
+          if !Cms::Node.fields.keys.include?(key)
+            new_model_attr_flag = 1
+            new_cmsnode_no_attr.store(key, base_cmsnode[key])
+            new_model_attr.delete(key)
           end
-          new_cmsnode = Cms::Node.new(new_model_attr)
-          new_cmsnode.site_id = @site.id
+        end
+        new_cmsnode = Cms::Node.new(new_model_attr)
+        new_cmsnode.site_id = @site.id
 
-          if new_model_attr_flag == 1
-            new_cmsnode_no_attr.each do |noattr, val|
-                new_cmsnode[noattr] = val
-            end
+        if new_model_attr_flag == 1
+          new_cmsnode_no_attr.each do |noattr, val|
+            new_cmsnode[noattr] = val
           end
+        end
 
-          new_cmsnode["st_category_ids"] = node_fac_new_cats["facility/category"]
-          new_cmsnode["st_service_ids"] = node_fac_new_cats["facility/service"]
-          new_cmsnode["st_location_ids"] = node_fac_new_cats["facility/location"]
+        new_cmsnode["st_category_ids"] = node_fac_new_cats["facility/category"]
+        new_cmsnode["st_service_ids"] = node_fac_new_cats["facility/service"]
+        new_cmsnode["st_location_ids"] = node_fac_new_cats["facility/location"]
 
-          new_cmsnode.save
+        begin
+          new_cmsnode.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
         end
       end
     end

@@ -37,7 +37,12 @@ module Sys::SiteCopy::Article
           new_cms_ad.layout_id = @layout_records_map[cms_ad.layout_id]
         end
 
-        new_cms_ad.save!
+        begin
+          new_cms_ad.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -61,7 +66,12 @@ module Sys::SiteCopy::Article
         if cms_facility.layout_id && @layout_records_map[cms_facility.layout_id]
           new_cms_facility.layout_id = @layout_records_map[cms_facility.layout_id]
         end
-        new_cms_facility.save!
+        begin
+          new_cms_facility.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -73,11 +83,11 @@ module Sys::SiteCopy::Article
         new_model_attr_flag = 0
         new_model_attr = cms_key_visual.attributes.to_hash
         new_model_attr.delete("_id") if new_model_attr["_id"]
-        new_model_attr.keys.each do |key|
+        new_model_attr.keys.each do |key, value|
           if !KeyVisual::Image.fields.keys.include?(key)
             new_model_attr_flag = 1
             new_cms_key_visual_no_attr.store(key, cms_key_visual[key])
-            new_model_attr.delete("#{key}")
+            new_model_attr.delete(key)
           end
         end
         new_cms_key_visual = KeyVisual::Image.new(new_model_attr)
@@ -94,7 +104,12 @@ module Sys::SiteCopy::Article
           new_cms_key_visual.layout_id = @layout_records_map[cms_key_visual.layout_id]
         end
 
-        new_cms_key_visual.save!
+        begin
+          new_cms_key_visual.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -115,7 +130,7 @@ module Sys::SiteCopy::Article
           if !Cms::Page.fields.keys.include?(key)
             new_model_attr_flag = 1
             new_cms_page2_no_attr.store(key, cms_page2[key])
-            new_model_attr.delete("#{key}")
+            new_model_attr.delete(key)
           end
         end
         new_cms_page2 = Cms::Page.new(new_model_attr)
@@ -136,10 +151,17 @@ module Sys::SiteCopy::Article
         end
 
         if cms_page2.route == "facility/page"
-          new_cms_page2.category_ids = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(node_pg_cats, "merge", cms_page2.category_ids)
+          new_cms_page2.category_ids = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(node_pg_cats,
+                                                                                            "merge",
+                                                                                            cms_page2.category_ids)
         end
 
-        new_cms_page2.save!
+        begin
+          new_cms_page2.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -154,7 +176,12 @@ module Sys::SiteCopy::Article
       file.in_file = old_file.uploaded_file
       file.user_id = @cur_user.id if @cur_user
 
-      file.save validate: false
+      begin
+        file.save!
+      rescue => exception
+        Rails.logger.error(exception.message)
+        throw exception
+      end
       return file.id.mongoize
     end
 
@@ -175,7 +202,12 @@ module Sys::SiteCopy::Article
         file.in_file = old_file.uploaded_file
         file.user_id = @cur_user.id if @cur_user
 
-        file.save validate: false
+        begin
+          file.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
         return_param["file_ids"].push(file.id.mongoize)
 
         # NOTE:trだと複数ファイルコピー時にURL置換の挙動がおかしい（本来ファイルAを指すパスをファイルBのパスで書き換えている）
