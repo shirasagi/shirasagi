@@ -44,7 +44,7 @@ module Sys::SiteCopy::Files
         :in_files         => [gen_dup_tmpfile(base_file_model_obj)],
         :permission_level => base_file_model_obj.permission_level,
         :group_ids        => base_file_model_obj.group_ids,
-        :cur_user         => Cms::User.find(base_file_model_obj.user_id),
+        :user_id          => base_file_model_obj.user_id,
         :cur_site         => @site
       }
       Cms::File.new psude_params

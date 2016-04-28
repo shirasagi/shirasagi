@@ -138,7 +138,7 @@ module Sys::SiteCopy::Nodes
       # 紐付くサイト
       new_cmsnode_attrs[:cur_site] = @site
       # フォルダを作成したユーザー or false
-      new_cmsnode_attrs[:cur_user] = base_cmsnode.user_id ? Cms::User.find(base_cmsnode.user_id) : false
+      new_cmsnode_attrs[:user_id] = base_cmsnode.user_id
       # レイアウトID
       if base_cmsnode.layout_id && @layout_records_map[base_cmsnode.layout_id]
         new_cmsnode_attrs[:layout_id] = @layout_records_map[base_cmsnode.layout_id]

@@ -142,7 +142,7 @@ module Sys::SiteCopy::Article
           end
         end
 
-        files_param = clone_files(cms_page2.file_ids, cms_page2.html)
+        files_param = clone_files(cms_page2.file_ids, cms_page2.html) if defined?(cms_page2.file_ids)
         new_cms_page2["file_ids"] = files_param["file_ids"]
         new_cms_page2["html"] = files_param["html"]
 
