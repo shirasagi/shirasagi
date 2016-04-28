@@ -35,6 +35,8 @@ cp -n config/samples/*.{rb,yml} config/
 bundle install --without development test --path vendor/bundle
 bundle exec rake unicorn:start
 
+sudo firewall-cmd --add-port=http/tcp --permanent
+sudo firewall-cmd --add-port=https/tcp --permanent
 sudo firewall-cmd --add-port=3000/tcp --permanent
 sudo firewall-cmd --reload
 
