@@ -117,7 +117,10 @@ module Sys::SiteCopy::Article
     def create_dup_cms_page2_for_dup_site(node_pg_cats)
       cms_pages2 = Cms::Page.where(site_id: @site_old.id)
       cms_page2_skip = ["cms/page", "ads/banner", "facility/image", "key_visual/image"]
-      cms_pages2.each do |cms_page2|
+      cms_pages2_ids = cms_pages2.pluck(:id)
+      cms_pages2_ids.each do |cms_page2_id|
+        cms_page2 = cms_pages2.find(cms_page2_id) rescue nil
+        next unless cms_page2
         if cms_page2_skip.include?(cms_page2.route)
             next
         end
