@@ -5,7 +5,7 @@ module SS::CrudFilter
     before_action :prepend_current_view_path
     before_action :append_view_paths
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
-    before_action :set_destroy_items, only: [:destroy_all]
+    before_action :set_selected_items, only: [:destroy_all, :download]
     menu_view "ss/crud/menu"
   end
 
@@ -34,7 +34,7 @@ module SS::CrudFilter
       raise e
     end
 
-    def set_destroy_items
+    def set_selected_items
       ids = params[:ids]
       raise "400" unless ids
       ids = ids.split(",") if ids.kind_of?(String)

@@ -22,11 +22,20 @@ SS::Application.routes.draw do
     delete :lock, action: :unlock, :on => :member
   end
 
+  concern :download do
+    get :download, on: :collection
+  end
+
+  concern :import do
+    get :import, on: :collection
+    post :import, :on => :collection
+  end
+
   content "article" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     get "generate" => "generate#index"
     post "generate" => "generate#run"
-    resources :pages, concerns: [:deletion, :copy, :move, :lock]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import]
   end
 
   content "article" do
