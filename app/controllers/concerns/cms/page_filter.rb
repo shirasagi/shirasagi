@@ -4,6 +4,7 @@ module Cms::PageFilter
 
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock, :move, :copy]
+    before_action :set_selected_items, only: [:destroy_all, :download]
   end
 
   private
