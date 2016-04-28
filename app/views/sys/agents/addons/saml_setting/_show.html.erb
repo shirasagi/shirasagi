@@ -1,4 +1,7 @@
 <dl class="see mod-sys-samle-setting">
+  <dt><%= @model.t :metadata %></dt>
+  <dd><%= link_to sns_login_saml_metadata_url(id: @item.filename), sns_login_saml_metadata_url(id: @item.filename) %></dd>
+
   <dt><%= @model.t :entity_id %></dt>
   <dd><%= @item.entity_id %></dd>
 

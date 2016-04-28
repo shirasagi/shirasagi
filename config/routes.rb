@@ -56,7 +56,7 @@ SS::Application.routes.draw do
       # SAML SSO
       get  "saml/:id/init" => "saml#init", as: :saml
       post "saml/:id/consume" => "saml#consume"
-      get  "saml/:id/metadata" => "saml#metadata"
+      get  "saml/:id/metadata" => "saml#metadata", as: :saml_metadata
 
       # OpenID Connect SSO
       get  "oid/:id/init" => "open_id_connect#init", as: :open_id_connect
