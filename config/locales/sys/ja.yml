@@ -71,3 +71,8 @@ ja:
     sys/addon/role:
       sys_role_ids:
         - ユーザーのロール/権限を指定します。
+    sys/model/auth:
+      name:
+        - 認証の名前を設定します。
+      text:
+        - 認証の説明を記載することができます。
