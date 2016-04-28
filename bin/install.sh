@@ -256,3 +256,9 @@ sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
 sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
 sudo systemctl daemon-reload
 sudo systemctl enable shirasagi-unicorn.service
+
+cd ~/shirasagi
+bundle exec rake db:drop
+bundle exec rake db:create_indexes
+bundle exec rake ss:create_site data="{ name: \"サイト名\", host: \"www\", domains: \"${HOSTNAME}\" }"
+bundle exec rake db:seed name=demo site=www
