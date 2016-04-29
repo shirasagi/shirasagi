@@ -12,7 +12,7 @@ namespace :voice do
     if id_or_url.blank?
       Rails.logger.error("url parameter is not given")
     else
-      Voice::SynthesisJob.new.call id_or_url, force
+      Voice::SynthesisJob.perform_now id_or_url, force
     end
   end
 end

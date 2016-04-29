@@ -1,12 +1,11 @@
 require 'bson'
 require 'open-uri'
 
-class Voice::SynthesisJob
-  include Job::Worker
+class Voice::SynthesisJob < Cms::ApplicationJob
 
-  self.job_options = { 'pool' => 'voice_synthesis' }
+  queue_as :voice_synthesis
 
-  def call(id_or_url, force = false)
+  def perform(id_or_url, force = false)
     voice_file = Voice::File.find(id_or_url) rescue nil
     voice_file ||= Voice::File.find_or_create_by_url(id_or_url)
     return unless voice_file

@@ -57,10 +57,7 @@ class Voice::MainController < ApplicationController
 
       # create voice file in background if successfully acquire lock
       # and do not release lock while voice is creating.
-      Voice::SynthesisJob.call_async @voice_file.id do |job|
-        job.site_id = @voice_file.site_id
-      end
-      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+      Voice::SynthesisJob.bind(site_id: @voice_file.site_id).perform_later @voice_file.id.to_s
       head :accepted, retry_after: SS.config.voice.controller["retry_after"]
     rescue => e
       logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
