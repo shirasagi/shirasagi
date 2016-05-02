@@ -125,29 +125,16 @@ module Sys::SiteCopy::Article
             next
         end
 
-        new_cms_page2_no_attr = {}
-        new_model_attr_flag = 0
-        new_model_attr = cms_page2.attributes.to_hash
-        new_model_attr.delete("_id") if new_model_attr["_id"]
-        new_model_attr.keys.each do |key|
-          if !Cms::Page.fields.keys.include?(key)
-            new_model_attr_flag = 1
-            new_cms_page2_no_attr.store(key, cms_page2[key])
-            new_model_attr.delete(key)
-          end
-        end
-        new_cms_page2 = Cms::Page.new(new_model_attr)
+        base_attributes = cms_page2.becomes_with_route
+        new_cms_page2 = base_attributes.class.new base_attributes.attributes.except(:id,
+            :_id, :site_id, :file_ids, :map_points, :related_page_ids, :body_parts, :created, :updated)
         new_cms_page2.site_id = @site.id
 
-        if new_model_attr_flag == 1
-          new_cms_page2_no_attr.each do |noattr, val|
-            new_cms_page2[noattr] = val
-          end
+        if defined?(cms_page2.file_ids)
+          files_param = clone_files(cms_page2.file_ids, cms_page2.html)
+          new_cms_page2["file_ids"] = files_param["file_ids"]
+          new_cms_page2["html"] = files_param["html"]
         end
-
-        files_param = clone_files(cms_page2.file_ids, cms_page2.html) if defined?(cms_page2.file_ids)
-        new_cms_page2["file_ids"] = files_param["file_ids"]
-        new_cms_page2["html"] = files_param["html"]
 
         if cms_page2.layout_id && @layout_records_map[cms_page2.layout_id]
           new_cms_page2.layout_id = @layout_records_map[cms_page2.layout_id]

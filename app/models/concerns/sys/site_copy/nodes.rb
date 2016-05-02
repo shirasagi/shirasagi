@@ -55,7 +55,7 @@ module Sys::SiteCopy::Nodes
 
         new_cmsnode_no_attr = {}
         new_model_attr_flag = 0
-        new_model_attr = base_cmsnode.attributes.to_hash
+        new_model_attr = base_cmsnode.becomes_with_route.attributes.except(:id, :_id, :site_id, :created, :updated).to_hash
         new_model_attr.delete("_id") if new_model_attr["_id"]
         new_model_attr.keys.each do |key|
           new_model_attr_flag = 1 if !Cms::Node.fields.keys.include?(key)
@@ -65,7 +65,7 @@ module Sys::SiteCopy::Nodes
         new_cmsnode_attrs = set_cstm_attrs(base_cmsnode, node_fac_cats, new_cmsnode_attrs)
 
         # レコードモデル生成
-        cms_node_obj = Cms::Node.new new_cmsnode_attrs
+        cms_node_obj = base_cmsnode.class.new new_cmsnode_attrs
 
         new_cmsnode_no_attr.each { |noattr, val| cms_node_obj[noattr] = val } if new_model_attr_flag == 1
 

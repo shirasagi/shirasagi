@@ -70,10 +70,12 @@ module Sys::SiteCopy::Checkboxes
 
     def copy_cat_route(node_fac_new_cats, node_copied_cat_route)
       Cms::Node.where(:site_id => @site_old.id).where(route: node_copied_cat_route).each do |base_cmsnode|
+        base_cmsnode = base_cmsnode.becomes_with_route
         old_cmsnode_id = base_cmsnode.id
         new_cmsnode_no_attr = {}
         new_model_attr_flag = 0
-        new_model_attr = base_cmsnode.attributes.to_hash
+        # new_model_attr = base_cmsnode.attributes.to_hash
+        new_model_attr = base_cmsnode.attributes.except(:id, :_id, :site_id, :created, :updated).to_hash
         new_model_attr.delete("_id") if new_model_attr["_id"]
         new_model_attr.keys.each do |key|
           if !Cms::Node.fields.keys.include?(key)
@@ -82,7 +84,8 @@ module Sys::SiteCopy::Checkboxes
             new_model_attr.delete(key)
           end
         end
-        new_cmsnode = Cms::Node.new(new_model_attr)
+        # new_cmsnode = Cms::Node.new(new_model_attr)
+        new_cmsnode = base_cmsnode.class.new new_model_attr
         new_cmsnode.site_id = @site.id
 
         if new_model_attr_flag == 1
