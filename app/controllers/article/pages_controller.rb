@@ -7,12 +7,11 @@ class Article::PagesController < ApplicationController
 
   append_view_path "app/views/cms/pages"
   navi_view "article/main/navi"
-
   menu_view "cms/pages/menu"
 
   public
     def download
-      csv = @items.site(@cur_site).allow(:read, @cur_user, site: @cur_site).order_by(_id:1).to_csv
+      csv = @items.site(@cur_site).order_by(_id:1).to_csv
       send_data csv.encode("SJIS"), filename: "article_pages_#{Time.zone.now.to_i}.csv"
     end
  
