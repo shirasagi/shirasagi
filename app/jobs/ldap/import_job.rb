@@ -1,9 +1,8 @@
-class Ldap::ImportJob
-  include Job::Worker
+class Ldap::ImportJob < Cms::ApplicationJob
 
   attr_accessor :exclude_groups
 
-  def call(site_id, user_id, password)
+  def perform(site_id, user_id, password)
     @site = SS::Site.find(site_id)
     @user = SS::User.find(user_id)
     @group_count = 0

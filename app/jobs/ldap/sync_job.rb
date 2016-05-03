@@ -1,9 +1,8 @@
-class Ldap::SyncJob
-  include Job::Worker
+class Ldap::SyncJob < Cms::ApplicationJob
 
   attr_reader :results
 
-  def call(group_id, item_id)
+  def perform(group_id, item_id)
     @group = Cms::Group.find(group_id).root
     @item = Ldap::Import.find(item_id)
     @results = { group: {}, user: {} }
@@ -34,7 +33,7 @@ class Ldap::SyncJob
     @results[:group][:deleted], @results[:user][:deleted] = num_deletes
 
     rearrange_group_order
-    @results
+    self
   end
 
   private

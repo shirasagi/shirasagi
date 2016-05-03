@@ -30,7 +30,8 @@ class Ldap::ImportController < ApplicationController
     end
 
     def import
-      Ldap::ImportJob.new.call(@cur_site.id, @cur_user.id, session[:user]["password"])
+      Ldap::ImportJob.bind(site_id: @cur_site, user_id: @cur_user).
+        perform_now(@cur_site.id, @cur_user.id, session[:user]["password"])
       respond_to do |format|
         format.html { redirect_to({ action: :index }, { notice: t("ldap.messages.import_success") }) }
         format.json { head :no_content }
@@ -48,8 +49,8 @@ class Ldap::ImportController < ApplicationController
     end
 
     def sync
-      @job = Ldap::SyncJob.new
-      @job.call(@cur_site.root_group.id, @item.id)
+      @job = Ldap::SyncJob.bind(site_id: @cur_site, user_id: @cur_user).
+        perform_now(@cur_site.root_group.id, @item.id)
       @item.results = @job.results
       @item.save!
       respond_to do |format|
@@ -57,6 +58,7 @@ class Ldap::ImportController < ApplicationController
         format.json { head :no_content }
       end
     rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       raise if e.to_s =~ /^\d+$/
       @errors = @item.errors.empty? ? [ e.to_s ] : @item.errors.full_messages
       respond_to do |format|
