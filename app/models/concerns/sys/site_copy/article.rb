@@ -140,10 +140,10 @@ module Sys::SiteCopy::Article
           new_cms_page2.layout_id = @layout_records_map[cms_page2.layout_id]
         end
 
-        if cms_page2.route == "facility/page"
-          new_cms_page2.category_ids = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(node_pg_cats,
-                                                                                            "merge",
-                                                                                            cms_page2.category_ids)
+        if defined?(cms_page2.category_ids)
+          new_cms_page2.category_ids = pase_checkboxes_for_dupcms(node_pg_cats,
+                                                                 "merge",
+                                                                 cms_page2.category_ids)
         end
 
         begin
