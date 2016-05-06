@@ -38,6 +38,10 @@ module Sys::SiteCopy::Checkboxes
             end
           end
 
+          if defined? base_cmsnode.layout_id
+            new_cmsnode.layout_id = @layout_records_map[base_cmsnode.layout_id]
+          end
+
           begin
             new_cmsnode.save!
           rescue => exception
