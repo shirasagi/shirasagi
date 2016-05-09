@@ -165,6 +165,7 @@ module Sys::SiteCopy::Article
       file.id = nil
       file.in_file = old_file.uploaded_file
       file.user_id = @cur_user.id if @cur_user
+      file.site_id = @site.id
 
       begin
         file.save!
@@ -191,6 +192,7 @@ module Sys::SiteCopy::Article
         file.id = nil
         file.in_file = old_file.uploaded_file
         file.user_id = @cur_user.id if @cur_user
+        file.site_id = @site.id
 
         begin
           file.save!
