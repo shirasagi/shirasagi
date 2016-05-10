@@ -48,9 +48,7 @@ class Sns::Login::SamlController < ApplicationController
 
       raise "403" unless response.is_valid?
 
-      user = SS::User.uid_or_email(response.nameid).first
-      user = nil if user && !user.enabled?
-
+      user = SS::User.uid_or_email(response.nameid).and_enabled.first
       if user
         set_user(user, { session: true, password: user.password })
         redirect_to SS.config.sns.logged_in_page
