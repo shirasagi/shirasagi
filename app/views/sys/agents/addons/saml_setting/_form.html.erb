@@ -1,0 +1,16 @@
+<dl class="see mod-sys-samle-setting">
+  <dt><%= @model.t :entity_id %><%= @model.tt :entity_id %></dt>
+  <dd><%= f.text_field :entity_id %></dd>
+
+  <dt><%= @model.t :name_id_format %><%= @model.tt :name_id_format %></dt>
+  <dd><%= f.select :name_id_format, @item.name_id_format_options %></dd>
+
+  <dt><%= @model.t :sso_url %><%= @model.tt :sso_url %></dt>
+  <dd><%= f.text_field :sso_url %></dd>
+
+  <dt><%= @model.t :slo_url %><%= @model.tt :slo_url %></dt>
+  <dd><%= f.text_field :slo_url %></dd>
+
+  <dt><%= @model.t :x509_cert %><%= @model.tt :x509_cert %></dt>
+  <dd><%= f.file_field :in_x509_cert %></dd>
+</dl>

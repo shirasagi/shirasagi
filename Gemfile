@@ -4,7 +4,7 @@ gem "rails", "4.2.5.2"
 gem 'sass-rails', '~> 5.0'
 gem "uglifier", ">= 1.3.0"
 gem 'coffee-rails', '~> 4.1.0'
-gem "therubyracer", "~> 0.10.2", platforms: :ruby
+gem "therubyracer"
 gem "jquery-rails"
 gem 'jquery-ui-rails'
 gem "turbolinks"
@@ -61,6 +61,11 @@ gem 'omniauth-facebook'
 gem 'omniauth-yahoojp'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-github'
+
+# saml
+gem 'ruby-saml'
+# JWT/JWS
+gem 'json-jwt'
 
 #gem "rails-dev-boost", git: "git://github.com/thedarkone/rails-dev-boost.git", group: :development
 

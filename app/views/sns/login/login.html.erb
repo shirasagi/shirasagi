@@ -6,8 +6,8 @@
 </header>
 
 <%= form_tag action: params[:action] do |f| %>
-  <% if @error %>
-  <div class="error-message"><%= @error %></div>
+  <% if flash[:alert] %>
+  <div class="error-message"><%= flash[:alert] %></div>
   <% end %>
 
   <%= error_messages_for :item %>
@@ -28,4 +28,18 @@
   </footer>
 <% end %>
 
+<% sso = Sys::Auth::Base.where(state: "enabled").order_by(order: 1).to_a %>
+<% if sso.present? %>
+  <ul class="sso">
+    <% sso.each do |sso| %>
+    <% sso = sso.becomes_with_model %>
+    <li class="<%= sso.filename %>">
+      <%= link_to(sso.url(params.slice(:ref))) do %>
+        <h2 class="name"><%= sso.name %></h2>
+        <p class="text"><%= br sso.text %></p>
+      <% end %>
+    </li>
+    <% end %>
+  </ul>
+<% end %>
 </section>

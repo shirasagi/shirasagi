@@ -75,6 +75,11 @@ module SS::Model::User
       order_by uid: 1, email: 1
     }
     scope :uid_or_email, ->(id) { self.or({email: id}, {uid: id}) }
+    scope :and_enabled, ->(now = Time.zone.now) do
+      self.and(
+        self.or({ account_start_date: nil }, { :account_start_date.lte => now }).selector,
+        self.or({ account_expiration_date: nil }, { :account_expiration_date.gt => now }).selector)
+    end
   end
 
   module ClassMethods

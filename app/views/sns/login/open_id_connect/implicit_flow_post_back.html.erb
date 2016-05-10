@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
+  <title><%= SS.config.ss.application_name %></title>
+  <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+  <%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
+  <!--[if lt IE 9]>
+  <script src="/assets/js/html5.js"></script>
+  <script src="/assets/js/selectivizr-min.js"></script>
+  <![endif]-->
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= form_tag({ action: :callback }, { class: :sso }) do %>
+<% end %>
+
+<%= jquery do %>
+  var fragment = location.hash.substring(1);
+  var regex = /([^&=]+)=([^&]*)/g, m;
+  while (m = regex.exec(fragment)) {
+    key = decodeURIComponent(m[1]);
+    value = decodeURIComponent(m[2]);
+    $("form.sso").append('<input type="hidden" name="' + key + '" value="' + value + '" />')
+  }
+  $("form.sso").submit();
+<% end %>
+
+</body>
+</html>
