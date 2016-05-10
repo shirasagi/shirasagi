@@ -55,7 +55,7 @@ module Sys::SiteCopy::Nodes
 
         new_cmsnode_no_attr = {}
         new_model_attr_flag = 0
-        new_model_attr = base_cmsnode.attributes.to_hash
+        new_model_attr = base_cmsnode.becomes_with_route.attributes.except(:id, :_id, :site_id, :created, :updated).to_hash
         new_model_attr.delete("_id") if new_model_attr["_id"]
         new_model_attr.keys.each do |key|
           new_model_attr_flag = 1 if !Cms::Node.fields.keys.include?(key)
@@ -65,14 +65,19 @@ module Sys::SiteCopy::Nodes
         new_cmsnode_attrs = set_cstm_attrs(base_cmsnode, node_fac_cats, new_cmsnode_attrs)
 
         # レコードモデル生成
-        cms_node_obj = Cms::Node.new new_cmsnode_attrs
+        cms_node_obj = base_cmsnode.class.new new_cmsnode_attrs
 
         new_cmsnode_no_attr.each { |noattr, val| cms_node_obj[noattr] = val } if new_model_attr_flag == 1
 
         # 物理的なディレクトリ作成とファイル複製が必要な場合
         copy_file_dir(base_cmsnode, basesite_public_dir, site_public_dir) if ['uploader/file'].include? base_cmsnode.route
 
-        cms_node_obj.save
+        begin
+          cms_node_obj.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -133,7 +138,7 @@ module Sys::SiteCopy::Nodes
       # 紐付くサイト
       new_cmsnode_attrs[:cur_site] = @site
       # フォルダを作成したユーザー or false
-      new_cmsnode_attrs[:cur_user] = base_cmsnode.user_id ? Cms::User.find(base_cmsnode.user_id) : false
+      new_cmsnode_attrs[:user_id] = base_cmsnode.user_id
       # レイアウトID
       if base_cmsnode.layout_id && @layout_records_map[base_cmsnode.layout_id]
         new_cmsnode_attrs[:layout_id] = @layout_records_map[base_cmsnode.layout_id]

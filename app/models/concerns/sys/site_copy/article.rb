@@ -37,7 +37,12 @@ module Sys::SiteCopy::Article
           new_cms_ad.layout_id = @layout_records_map[cms_ad.layout_id]
         end
 
-        new_cms_ad.save!
+        begin
+          new_cms_ad.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -61,7 +66,12 @@ module Sys::SiteCopy::Article
         if cms_facility.layout_id && @layout_records_map[cms_facility.layout_id]
           new_cms_facility.layout_id = @layout_records_map[cms_facility.layout_id]
         end
-        new_cms_facility.save!
+        begin
+          new_cms_facility.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -73,11 +83,11 @@ module Sys::SiteCopy::Article
         new_model_attr_flag = 0
         new_model_attr = cms_key_visual.attributes.to_hash
         new_model_attr.delete("_id") if new_model_attr["_id"]
-        new_model_attr.keys.each do |key|
+        new_model_attr.keys.each do |key, value|
           if !KeyVisual::Image.fields.keys.include?(key)
             new_model_attr_flag = 1
             new_cms_key_visual_no_attr.store(key, cms_key_visual[key])
-            new_model_attr.delete("#{key}")
+            new_model_attr.delete(key)
           end
         end
         new_cms_key_visual = KeyVisual::Image.new(new_model_attr)
@@ -94,7 +104,12 @@ module Sys::SiteCopy::Article
           new_cms_key_visual.layout_id = @layout_records_map[cms_key_visual.layout_id]
         end
 
-        new_cms_key_visual.save!
+        begin
+          new_cms_key_visual.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -102,44 +117,41 @@ module Sys::SiteCopy::Article
     def create_dup_cms_page2_for_dup_site(node_pg_cats)
       cms_pages2 = Cms::Page.where(site_id: @site_old.id)
       cms_page2_skip = ["cms/page", "ads/banner", "facility/image", "key_visual/image"]
-      cms_pages2.each do |cms_page2|
+      cms_pages2_ids = cms_pages2.pluck(:id)
+      cms_pages2_ids.each do |cms_page2_id|
+        cms_page2 = cms_pages2.find(cms_page2_id) rescue nil
+        next unless cms_page2
         if cms_page2_skip.include?(cms_page2.route)
             next
         end
 
-        new_cms_page2_no_attr = {}
-        new_model_attr_flag = 0
-        new_model_attr = cms_page2.attributes.to_hash
-        new_model_attr.delete("_id") if new_model_attr["_id"]
-        new_model_attr.keys.each do |key|
-          if !Cms::Page.fields.keys.include?(key)
-            new_model_attr_flag = 1
-            new_cms_page2_no_attr.store(key, cms_page2[key])
-            new_model_attr.delete("#{key}")
-          end
-        end
-        new_cms_page2 = Cms::Page.new(new_model_attr)
+        base_attributes = cms_page2.becomes_with_route
+        new_cms_page2 = base_attributes.class.new base_attributes.attributes.except(:id,
+            :_id, :site_id, :file_ids, :map_points, :related_page_ids, :body_parts, :created, :updated)
         new_cms_page2.site_id = @site.id
 
-        if new_model_attr_flag == 1
-          new_cms_page2_no_attr.each do |noattr, val|
-            new_cms_page2[noattr] = val
-          end
+        if defined?(cms_page2.file_ids)
+          files_param = clone_files(cms_page2.file_ids, cms_page2.html)
+          new_cms_page2["file_ids"] = files_param["file_ids"]
+          new_cms_page2["html"] = files_param["html"]
         end
-
-        files_param = clone_files(cms_page2.file_ids, cms_page2.html)
-        new_cms_page2["file_ids"] = files_param["file_ids"]
-        new_cms_page2["html"] = files_param["html"]
 
         if cms_page2.layout_id && @layout_records_map[cms_page2.layout_id]
           new_cms_page2.layout_id = @layout_records_map[cms_page2.layout_id]
         end
 
-        if cms_page2.route == "facility/page"
-          new_cms_page2.category_ids = Sys::SiteCopy::Checkboxes.pase_checkboxes_for_dupcms(node_pg_cats, "merge", cms_page2.category_ids)
+        if defined?(cms_page2.category_ids)
+          new_cms_page2.category_ids = pase_checkboxes_for_dupcms(node_pg_cats,
+                                                                 "merge",
+                                                                 cms_page2.category_ids)
         end
 
-        new_cms_page2.save!
+        begin
+          new_cms_page2.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
@@ -153,8 +165,14 @@ module Sys::SiteCopy::Article
       file.id = nil
       file.in_file = old_file.uploaded_file
       file.user_id = @cur_user.id if @cur_user
+      file.site_id = @site.id
 
-      file.save validate: false
+      begin
+        file.save!
+      rescue => exception
+        Rails.logger.error(exception.message)
+        throw exception
+      end
       return file.id.mongoize
     end
 
@@ -174,8 +192,14 @@ module Sys::SiteCopy::Article
         file.id = nil
         file.in_file = old_file.uploaded_file
         file.user_id = @cur_user.id if @cur_user
+        file.site_id = @site.id
 
-        file.save validate: false
+        begin
+          file.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
         return_param["file_ids"].push(file.id.mongoize)
 
         # NOTE:trだと複数ファイルコピー時にURL置換の挙動がおかしい（本来ファイルAを指すパスをファイルBのパスで書き換えている）

@@ -169,10 +169,8 @@ def save_dictionary(data)
   item
 end
 
-
 site = SS::Site.create({ name: "コピーテスト", host: "copy_test", domains: "localhost:3000" })
 @site = site
-
 
 puts "# files"
 Dir.chdir @root = File.dirname(__FILE__)
@@ -180,7 +178,6 @@ Dir.glob "files/**/*.*" do |file|
   puts name = file.sub(/^files\//, "")
   Fs.binwrite "#{@site.path}/#{name}", File.binread(file)
 end
-
 
 puts "# groups"
 g00 = save_group name: "シラサギ市", order: 10
@@ -190,12 +187,10 @@ g20 = save_group name: "シラサギ市/危機管理部", order: 50
 
 @site.add_to_set group_ids: g00.id
 
-
 puts "# roles"
 user_permissions = Cms::Role.permission_names.select {|n| n =~ /_(private|other)_/ }
 r01 = save_role name: I18n.t('cms.roles.admin'), site_id: @site.id, permissions: Cms::Role.permission_names, permission_level: 3
 r02 = save_role name: I18n.t('cms.roles.user'), site_id: @site.id, permissions: user_permissions, permission_level: 1
-
 
 puts "# users"
 sys = save_user name: "システム管理者", uid: "sys", email: "sys@example.jp", in_password: "pass", group_ids: [g11.id]
@@ -206,17 +201,10 @@ Cms::User.find_by(uid: "sys").add_to_set(cms_role_ids: r01.id)
 Cms::User.find_by(uid: "admin").add_to_set(cms_role_ids: r01.id)
 Cms::User.find_by(uid: "user1").add_to_set(cms_role_ids: r02.id)
 
-
 puts "# workflow"
-approvers = Workflow::Extensions::Route::Approvers.new(
-    [ { level: 1, user_id: u01.id }, { level: 2, user_id: adm.id } ]
-)
-required_counts = Workflow::Extensions::Route::RequiredCounts.new(
-    [ false, false, false, false, false ]
-)
-save_workflow_route name: "多段承認", group_ids: [g00.id],
-                    approvers: approvers, required_counts: required_counts
-
+approvers = Workflow::Extensions::Route::Approvers.new([ { level: 1, user_id: u01.id }, { level: 2, user_id: adm.id } ])
+required_counts = Workflow::Extensions::Route::RequiredCounts.new([ false, false, false, false, false ])
+save_workflow_route name: "多段承認", group_ids: [g00.id], approvers: approvers, required_counts: required_counts
 
 puts "# layouts"
 save_layout filename: "category-kanko.layout.html", name: "カテゴリー：観光・文化・スポーツ"
@@ -234,7 +222,6 @@ save_layout filename: "event.layout.html", name: "イベントカレンダー"
 save_layout filename: "map.layout.html", name: "施設ガイド"
 array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 layouts = Hash[*array.flatten]
-
 
 puts "# nodes"
 save_node route: "category/node", filename: "shisei", name: "市政情報"
@@ -271,11 +258,9 @@ Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "oshirase").
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "kanko").update_all(layout_id: layouts["category-kanko"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "kenko").update_all(layout_id: layouts["category-kenko"].id)
 
-
 puts "# parts"
 save_part route: "cms/free", filename: "about.part.html", name: "シラサギ市について"
 save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
-
 
 puts "# articles"
 contact_group = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
@@ -284,7 +269,7 @@ contact_email = contact_group_id ? "kikakuseisaku@example.jp" : nil
 contact_tel = contact_group_id ? "000-000-0000" : nil
 contact_fax = contact_group_id ? "000-000-0000" : nil
 save_page route: "article/page", filename: "docs/page1.html", name: "インフルエンザによる学級閉鎖状況",
-          layout_id: layouts["pages"].id,category_ids: [categories["attention"].id],
+          layout_id: layouts["pages"].id, category_ids: [categories["attention"].id],
           contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 file = save_ss_files "ss_files/article/pdf_file.pdf", filename: "pdf_file.pdf", model: "article/page"
 save_page route: "article/page", filename: "docs/page27.html", name: "ふれあいフェスティバル",
@@ -299,7 +284,6 @@ save_page route: "article/page", filename: "docs/page27.html", name: "ふれあ�
           html: '<p><a class="icon-pdf" href="' + file.url + '">サンプルファイル (PDF 783KB)</a></p>',
           contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 
-
 puts "# ads"
 banner1 = save_ss_files "ss_files/ads/dummy_banner_1.gif", filename: "dummy_banner_1.gif", model: "ads/banner"
 banner2 = save_ss_files "ss_files/ads/dummy_banner_2.gif", filename: "dummy_banner_2.gif", model: "ads/banner"
@@ -309,7 +293,6 @@ save_page route: "ads/banner", filename: "add/page30.html", name: "シラサギ"
           link_url: "http://www.ss-proj.org/", file_id: banner1.id
 save_page route: "ads/banner", filename: "add/page31.html", name: "シラサギ",
           link_url: "http://www.ss-proj.org/", file_id: banner2.id
-
 
 puts "# facility"
 Dir.glob "ss_files/facility/*.*" do |file|
@@ -324,7 +307,6 @@ save_page route: "facility/image", filename: "institution/shisetsu/library/equip
 save_page route: "facility/map", filename: "institution/shisetsu/library/map.html", name: "地図",
           layout_id: layouts["map"].id, map_points: [ { name: "シラサギ市立図書館", loc: [ 34.067035, 134.589971 ], text: "" } ]
 
-
 puts "# key visual"
 keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
 keyvisual2 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", model: "key_visual/image"
@@ -332,7 +314,6 @@ keyvisual1.set(state: "public")
 keyvisual2.set(state: "public")
 save_page route: "key_visual/image", filename: "key_visual/page37.html", name: "キービジュアル1", order: 10, file_id: keyvisual1.id
 save_page route: "key_visual/image", filename: "key_visual/page38.html", name: "キービジュアル2", order: 20, file_id: keyvisual2.id
-
 
 puts "# editor templates"
 thumb_left  = save_ss_files("editor_templates/float-left.jpg", filename: "float-left.jpg", model: "cms/editor_template")
@@ -349,14 +330,13 @@ editor_template_html = File.read("editor_templates/clear.html") rescue nil
 save_editor_template name: "回り込み解除", description: "回り込みを解除します",
                      html: editor_template_html, order: 30, site_id: @site.id
 
-
 puts "# board"
 node = save_node route: "board/post", filename: "board", name: "災害掲示板", layout_id: layouts["one"].id,
                  mode: "tree", file_limit: 1, text_size_limit: 400, captcha: "enabled", deletable_post: "enabled",
-                 deny_url: "deny", file_size_limit: (1024 * 1024 * 2), file_scan: "disabled", show_email: "enabled", show_url: "enabled"
+                 deny_url: "deny", file_size_limit: (1024 * 1024 * 2), file_scan: "disabled", show_email: "enabled",
+                 show_url: "enabled"
 topic1 = save_board_post name: "テスト投稿", text: "テスト投稿です。", site_id: @site.id, node_id: node.id,
                          poster: "白鷺　太郎", delete_key: 1234
-
 
 puts "# body_layouts"
 body_layout_html = File.read("body_layouts/layout.layout.html") rescue nil
@@ -368,14 +348,12 @@ save_page route: "article/page", filename: "docs/body_layout.html", name: "本�
           layout_id: layouts["pages"].id, body_layout_id: body_layout.id, body_parts: %W(本文1 本文2 本文3),
           contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 
-
 puts "# cms pages"
 save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id
 save_page route: "cms/page", filename: "mobile.html", name: "スマートフォン・携帯サイト", layout_id: layouts["pages"].id
 save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内", layout_id: layouts["category-middle"].id
-
 
 puts "# max file size"
 save_max_file_size name: '画像ファイル', extensions: %w(gif png jpg jpeg bmp), order: 1, state: 'enabled'
@@ -385,11 +363,9 @@ save_max_file_size name: 'Microsoft Office', extensions: %w(doc docx ppt pptx xl
 save_max_file_size name: 'PDF', extensions: %w(pdf), order: 5, state: 'enabled'
 save_max_file_size name: 'その他', extensions: %w(*), order: 9999, state: 'enabled'
 
-
 puts "# dictionary"
 save_dictionary site_id: @site.id, name: 'テスト1', body: 'テスト1,テストイチ'
 save_dictionary site_id: @site.id, name: 'テスト2', body: 'テスト2,テストニ'
-
 
 print "##################################################################################\n"
 print " end regist test data\n"
