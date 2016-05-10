@@ -34,8 +34,8 @@ module Sys::SiteCopy::Nodes
     def copy_nodes_for_dupcms(node_fac_cats, layout_records_map)
       # 新サイト用の public 配下ディレクトリ
       # ex: /var/www/shirasagi/public/sites/h/o/s/t/n/a/m/e
-      basesite_public_dir = Rails.public_path.to_s+'/sites/'+(@site_old.host.split('').join('/'))+'/_'
-      site_public_dir     = Rails.public_path.to_s+'/sites/'+(@site.host.split('').join('/'))+'/_'
+      basesite_public_dir = @site_old.path
+      site_public_dir     = @site.path
       @layout_records_map = layout_records_map
 
       # 階層の浅い物から実施
