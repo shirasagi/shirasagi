@@ -1,0 +1,76 @@
+<article id="main" class="sys-copy">
+	<%= form_for :@copy, url:"copy/confirm" do |f| %>
+		<div class="addon-views">
+			<div class="addon-view" id="addon-basic">
+				<div class="addon-body">
+					<dl class="see">
+						<dt><%= t("sys.name") %></dt>
+						<dd><%= f.text_field :name %></dd>
+
+						<dt><%= t("sys.host") %></dt>
+						<dd><%= f.text_field :host %></dd>
+
+						<dt><%= t("sys.domains") %></dt>
+						<dd><%= f.text_field :domains %></dd>
+
+						<dt><%= t("sys.copy_site") %></dt>
+						<dd>
+							<%= f.hidden_field "copy_site", value: "", class: "hidden-ids" %>
+							<%= link_to t("sys.apis.sites.index"), sys_apis_sites_path, :action => :index, class: "ajax-box" %>
+						</dd>
+						<dd>
+							<table class="index ajax-selected">
+								<thead>
+									<tr>
+										<th class="name"><%= Sys::Site.t :name %></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<% @items.each do |item| %>
+									  <tr data-id="<%= item.id %>">
+									    <td><%= f.hidden_field "item_ids[]", value: item.id %> <%= item.name %></td>
+									    <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+									  </tr>
+									<% end %>
+								</tbody>
+							</table>
+						</dd>
+
+						<dt><%= t("sys.copy_content") %></dt>
+						<dd>
+							<ul>
+								<li>
+									<%= f.check_box 'article' %>&nbsp;
+									<%= f.label 'article', t("sys.copy_contents.article") %>
+								</li>
+								<li>
+									<%= f.check_box 'files' %>&nbsp;
+									<%= f.label 'files', t("sys.copy_contents.files") %>
+								</li>
+								<li>
+									<%= f.check_box 'editor_templates' %>&nbsp;
+									<%= f.label 'editor_templates', t("sys.copy_contents.editor_templates") %>
+								</li>
+								<li>
+									<%= f.check_box 'dictionaries' %>&nbsp;
+									<%= f.label 'dictionaries', t("sys.copy_contents.dictionaries") %>
+								</li>
+							</ul>
+							<p class="description"><%= t('sys.copy_contents.description') %></p>
+						</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+		<p>※サイト複製実施後、サイト毎の設定ページにて「フォルダー書き出し」「ページ書き出し」を実施してください。</p>
+		<footer class="send">
+			<%= f.submit :複製する, class: 'btn btn-primary save' %>
+			<%= button_tag( :キャンセル, {
+				:type => :reset, 
+				:class=>'btn-default cancel', 
+				:onclick =>"location.href='#{sys_info_path}'"
+			}) %>
+		</footer>
+	<% end %>
+</article>
