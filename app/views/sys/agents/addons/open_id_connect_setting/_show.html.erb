@@ -1,0 +1,34 @@
+<dl class="see mod-sys-open-id-connect-setting">
+  <dt><%= @model.t :issuer %></dt>
+  <dd><%= @item.issuer %></dd>
+
+  <dt><%= @model.t :auth_url %></dt>
+  <dd><%= @item.auth_url %></dd>
+
+  <dt><%= @model.t :token_url %></dt>
+  <dd><%= @item.token_url %></dd>
+
+  <dt><%= @model.t :client_id %></dt>
+  <dd><%= @item.client_id %></dd>
+
+  <dt><%= @model.t :response_type %></dt>
+  <dd><%= @item.response_type %></dd>
+
+  <dt><%= @model.t :max_age %></dt>
+  <dd><%= @item.max_age %></dd>
+
+  <dt><%= @model.t :scope %></dt>
+  <dd><%= @item.scope %></dd>
+
+  <dt><%= @model.t :claims %></dt>
+  <dd><%= tryb { @item.claims.join(" ") } %></dd>
+
+  <dt><%= @model.t :response_mode %></dt>
+  <dd><%= @item.response_mode %></dd>
+
+  <dt><%= @model.t :jwks_uri %></dt>
+  <dd><%= @item.jwks_uri %></dd>
+
+  <dt><%= @model.t :redirect_uri %></dt>
+  <dd><%= @item.redirect_uri(request.host_with_port) %></dd>
+</dl>

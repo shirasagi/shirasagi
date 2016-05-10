@@ -13,11 +13,23 @@ ja:
     max_file_size: 最大ファイルサイズ
     roles:
       admin: 管理者
+    auth: 認証
+    auth/saml: SAML
+    auth/open_id_connect: OpenID Connect
+    auth/environment: 環境変数
+    options:
+      auth_state:
+        enabled: 有効
+        disabled: 無効
+    links:
+      new_from_metadata: メタデータ インポート
 
   modules:
     sys: システム
     addons:
       sys/role: ロール
+      sys/saml_setting: SAML設定
+      sys/open_id_connect_setting: OpenId Connect設定
 
   sys_role:
     edit_sys_sites: サイトの管理
@@ -33,8 +45,34 @@ ja:
     attributes:
       sys/addon/role:
         sys_role_ids: ロール
+      sys/model/auth:
+        name: 名前
+        filename: ファイル名
+        text: 説明
+        order: 並び順
+        state: ステータス
+      sys/addon/saml_setting:
+        entity_id: Entity ID
+        name_id_format: Name ID Format
+        sso_url: SSO Url
+        slo_url: SLO Url
+        x509_cert: X509公開鍵証明書
+        identifier: Identifier
+        metadata: メタデータ
+      sys/addon/open_id_connect_setting:
+        auth_url: Auth URL
+        token_url: Token URL
+        client_id: Client ID
+        client_secret: Client Secret
+        response_type: Response Type
+        scope: Scope
 
   tooltip:
     sys/addon/role:
       sys_role_ids:
         - ユーザーのロール/権限を指定します。
+    sys/model/auth:
+      name:
+        - 認証の名前を設定します。
+      text:
+        - 認証の説明を記載することができます。

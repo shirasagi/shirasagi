@@ -35,6 +35,16 @@ SS::Application.routes.draw do
       resources :colls, concerns: :deletion
       resources :docs, concerns: :deletion, path: "colls/:coll/docs"
     end
+
+    namespace "auth" do
+      get "/" => redirect { |p, req| "#{req.path}/samls" }
+      resources :samls, concerns: :deletion do
+        get "metadata/new", controller: "samls/metadata", action: :new, on: :collection
+        post "metadata", controller: "samls/metadata", action: :create, on: :collection
+      end
+      resources :open_id_connects, concerns: :deletion
+      resources :environments, concerns: :deletion
+    end
   end
 
 end

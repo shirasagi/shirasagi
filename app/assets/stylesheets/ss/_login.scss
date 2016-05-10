@@ -54,6 +54,19 @@
     margin: 20px;
     padding: 0px;
   }
+  .sso {
+    list-style: none;
+    width: 525px;
+    padding: 0;
+    margin: 0;
+    li {
+      margin: 15px 0;
+      a {
+        display: block;
+        border: 1px solid #b2b2b2
+      }
+    }
+  }
 }
 
 @include mb {

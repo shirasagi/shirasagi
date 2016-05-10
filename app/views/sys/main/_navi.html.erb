@@ -14,6 +14,9 @@
     <h3><%= link_to :"sys.role", sys_roles_path %></h3>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to :"sys.auth", sys_auth_path %></h3>
+  <% end %>
+  <% if SS::User.allowed?(:edit, @cur_user) %>
     <h3><%= link_to :"sys.max_file_size", sys_max_file_sizes_path %></h3>
   <% end %>
   <% if SS::User.allowed?(:edit, @cur_user) %>

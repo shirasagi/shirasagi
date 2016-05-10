@@ -7,7 +7,7 @@ module History::LogFilter
       log.url          = request.path
       log.controller   = params[:controller]
       log.action       = params[:action]
-      log.user_id      = @cur_user.id
+      log.user_id      = @cur_user.id if @cur_user
       log.site_id      = @cur_site.id if @cur_site
 
       if @item && @item.respond_to?(:new_record?)
