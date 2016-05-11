@@ -146,8 +146,10 @@ module Sys::SiteCopy::Article
                                                                  cms_page2.category_ids)
         end
 
+        new_cms_page2.body_parts = cms_page2.body_parts if defined? new_cms_page2.body_parts
+
         begin
-          new_cms_page2.save!
+          new_cms_page2.save! validate: false
         rescue => exception
           Rails.logger.error(exception.message)
           throw exception
