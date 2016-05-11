@@ -1,0 +1,125 @@
+$page-width: 1080px;
+
+// -----------------------------------------------------------------------------
+// font
+$px10:72%;
+$px11:79%;
+$px12:86%;
+$px13:93%;
+$px14:100%;
+$px15:108%;
+$px16:115%;
+$px17:122%;
+$px18:129%;
+$px19:136%;
+$px20:143%;
+$px21:150%;
+$px22:158%;
+$px23:165%;
+$px24:172%;
+$px25:179%;
+$px26:186%;
+$px27:193%;
+$px28:200%;
+$px29:208%;
+$px30:215%;
+$px31:222%;
+$px32:229%;
+
+$font-base: Meiryo, "メイリオ", Tahoma, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-head: Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+
+// -----------------------------------------------------------------------------
+// color
+$text: #666666;
+$link: #0066cc;
+$hover: #d00000;
+$visited: #9000ff;
+$t-white: #fff;
+$orange: #f08300;
+$red: #d90000;
+$blue: #007acd;
+$hblue: #cceeee;
+$hgry: #ccc;
+$border-lblue: 1px solid #005797;
+$border-hblue: 1px solid #439bd5;
+$border-hgry: 1px solid #ccc;
+
+// -----------------------------------------------------------------------------
+// margin
+$box-margin: 24px;
+$item-margin: 12px;
+$smart-margin: 10px;
+
+// -----------------------------------------------------------------------------
+// mixin
+@mixin u-arrow {
+  display: inline-block;
+  padding-left: 17px;
+  background: url(../img/u-arrow.png) no-repeat left center;
+}
+@mixin r-arrow {
+  display: inline-block;
+  padding-left: 15px;
+  background: url(../img/r-arrow.png) no-repeat 2px 7px;
+}
+@mixin l-arrow {
+  display: inline-block;
+  padding-left: 15px;
+  background: url(../img/l-arrow.png) no-repeat 2px 7px;
+}
+@mixin r-arrow-s {
+  padding: 3px 0 3px 25px;
+  background: url(../img/r-arrow.png) no-repeat 12px 10px;
+}
+@mixin li {
+  padding-left: 15px;
+  background: url(../img/ic-li.png) no-repeat 2px 8px;
+}
+@mixin ic-doc {
+  padding: 3px 25px 3px 10px;
+  background: url(../img/ic-doc.png) no-repeat 97% center;
+}
+@mixin grd-blue {
+  background: $blue;
+  @include background-image(linear-gradient(top, #007acd, #0069cc));
+  @include filter-gradient(#007acd, #0069cc, vertical);
+  background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDdBQ0QiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMwMDY5Q0MiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3NTIpIiAvPgo8L3N2Zz4=);
+}
+@mixin grd-org {
+  background: #f4d89a;
+  @include background-image(linear-gradient(top, #f4d89a, #f48b22));
+  @include filter-gradient(#f4d89a, #f48b22, vertical);
+  background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc4MDEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGNEQ4OUEiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNGNDhCMjIiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c4MDEpIiAvPgo8L3N2Zz4=);
+}
+@mixin grd-red {
+  background: #e03300;
+  @include background-image(linear-gradient(top, #e03300, #c42c00));
+  @include filter-gradient(#e03300, #c42c00, vertical);
+  background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3MDciIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNFMDMzMDAiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNDNDJDMDAiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3MDcpIiAvPgo8L3N2Zz4=);
+}
+
+@mixin grd-gry {
+  background: #cccccc;
+  @include background-image(linear-gradient(top, #cccccc, #bbbbbb));
+  @include filter-gradient(#cccccc, #bbbbbb, vertical);
+  background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc4MzIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNDQ0NDQ0MiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNCQkJCQkIiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c4MzIpIiAvPgo8L3N2Zz4=);
+}
+@mixin btn-org {
+  padding: 6px 12px;
+  border: 1px solid $orange;
+  @include border-radius(5px);
+  @include grd-org;
+  &:hover {
+    background: #f48b22;
+  }
+}
+@mixin btn-gry {
+  padding: 6px 12px;
+  border: 1px solid #bbbbbb;
+  @include border-radius(5px);
+  @include grd-gry;
+  &:hover {
+    background: #bbbbbb;
+  }
+}

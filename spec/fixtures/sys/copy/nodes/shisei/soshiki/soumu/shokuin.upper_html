@@ -1,0 +1,14 @@
+<div class="page">
+<article class="body">
+    <h1>職員課の概要</h1>
+    <table>
+        <tbody>
+            <tr><th scope="row">所在地</th><td>シラサギ市本庁舎　3階<br /><a href="/shisei/chosha/">庁舎案内</a></td></tr>
+            <tr><th>電話番号</th><td>000-000-0000</td></tr>
+            <tr><th scope="row">ファックス番号</th><td>000-000-0000</td></tr>
+            <tr><th scope="row">メールアドレス</th><td>shokuin@example.jp</td></tr>
+        </tbody>
+    </table>
+    <h1>業務概要</h1>
+    <p>職員の人事、研修、採用、福利厚生、健康管理</p>
+    <h1>お知らせ</h1>
