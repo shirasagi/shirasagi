@@ -1,8 +1,6 @@
-if [ $# -lt 1 ]; then
-  HOSTNAME=example.jp
-else
-  HOSTNAME=$1
-fi
+SS_HOSTNAME=${1:-"example.jp"}
+SS_USER=${2:-"$USER"}
+SS_DIR=${3:-"$(pwd)"}
 
 cat <<EOS | sudo tee -a /etc/yum.repos.d/CentOS-Base.repo
 [mongodb-org-3.0]
@@ -30,7 +28,7 @@ gem install bundler
 
 git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
 
-cd ~/shirasagi
+cd $SS_DIR
 cp -n config/samples/*.{rb,yml} config/
 bundle install --without development test --path vendor/bundle
 bundle exec rake unicorn:start
@@ -210,32 +208,32 @@ EOF
 cat <<EOF | sudo tee /etc/nginx/conf.d/virtual.conf
 server {
     include conf.d/server/shirasagi.conf;
-    server_name ${HOSTNAME};
+    server_name ${SS_HOSTNAME};
 }
 EOF
 
 sudo mkdir /etc/nginx/conf.d/server/
 cat <<EOF | sudo tee /etc/nginx/conf.d/server/shirasagi.conf
 include conf.d/common/drop.conf;
-root /home/rails/shirasagi/public/sites/w/w/w/_/;
+root ${SS_DIR}/public/sites/w/w/w/_/;
 
 location @app {
     include conf.d/header.conf;
     if (\$request_filename ~ .*\\.(ico|gif|jpe?g|png|css|js)$) { access_log off; }
     proxy_pass http://127.0.0.1:3000;
-    proxy_set_header X-Accel-Mapping /home/rails/shirasagi/=/private_files/;
+    proxy_set_header X-Accel-Mapping ${SS_DIR}/=/private_files/;
 }
 location / {
     try_files \$uri \$uri/index.html @app;
 }
 location /assets/ {
-    root /home/rails/shirasagi/public/;
+    root ${SS_DIR}/public/;
     expires 1h;
     access_log off;
 }
 location /private_files/ {
     internal;
-    alias /home/rails/shirasagi/;
+    alias ${SS_DIR}/;
 }
 EOF
 
@@ -249,7 +247,7 @@ Description=Shirasagi Unicorn Server
 After=mongod.service
 
 [Service]
-ExecStart=/bin/su -l rails -c "cd shirasagi && bundle exec rake unicorn:start"
+ExecStart=/bin/su -l ${SS_USER} -c "cd ${SS_DIR} && bundle exec rake unicorn:start"
 
 [Install]
 WantedBy=multi-user.target
@@ -259,8 +257,8 @@ sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
 sudo systemctl daemon-reload
 sudo systemctl enable shirasagi-unicorn.service
 
-cd ~/shirasagi
+cd $SS_DIR
 bundle exec rake db:drop
 bundle exec rake db:create_indexes
-bundle exec rake ss:create_site data="{ name: \"サイト名\", host: \"www\", domains: \"${HOSTNAME}\" }"
+bundle exec rake ss:create_site data="{ name: \"サイト名\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
 bundle exec rake db:seed name=demo site=www
