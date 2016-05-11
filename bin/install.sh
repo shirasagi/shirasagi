@@ -26,7 +26,8 @@ rvm install 2.3.0
 rvm use 2.3.0 --default
 gem install bundler
 
-git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi $SS_DIR
+git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
+sudo mv shirasagi $SS_DIR
 
 cd $SS_DIR
 cp -n config/samples/*.{rb,yml} config/
