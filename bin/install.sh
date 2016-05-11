@@ -1,6 +1,6 @@
 SS_HOSTNAME=${1:-"example.jp"}
 SS_USER=${2:-"$USER"}
-SS_DIR=${3:-"$(pwd)"}
+SS_DIR=/var/www/shirasagi
 
 cat <<EOS | sudo tee -a /etc/yum.repos.d/CentOS-Base.repo
 [mongodb-org-3.0]
@@ -26,7 +26,7 @@ rvm install 2.3.0
 rvm use 2.3.0 --default
 gem install bundler
 
-git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
+git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi $SS_DIR
 
 cd $SS_DIR
 cp -n config/samples/*.{rb,yml} config/
