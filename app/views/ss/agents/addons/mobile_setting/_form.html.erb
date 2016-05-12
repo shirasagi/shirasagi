@@ -1,4 +1,7 @@
-<dl class="see mod-mobile-setting">
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-mobile-setting");
+<% end %>
+<dl class="see mod-ss-mobile-setting">
   <dt><%= @model.t :mobile_state %><%= @model.tt :mobile_state %></dt>
   <dd><%= f.select :mobile_state, @item.mobile_state_options %></dd>
 
