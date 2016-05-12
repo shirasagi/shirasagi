@@ -21,7 +21,12 @@ sudo yum -y install \
 
 gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 \curl -sSL https://get.rvm.io | bash -s stable
-source ~/.profile
+if [ `whoami` = root ]; then
+  source /usr/local/rvm/scripts/rvm
+else
+  export PATH="$PATH:$HOME/.rvm/bin"
+  source $HOME/.rvm/scripts/rvm
+fi
 rvm install 2.3.0
 rvm use 2.3.0 --default
 gem install bundler
