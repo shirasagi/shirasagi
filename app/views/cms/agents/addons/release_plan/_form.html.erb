@@ -2,7 +2,7 @@
   SS_AddonTabs.hide(".mod-cms-release_plan");
 <% end %>
 <%
-  if (@item.state == 'closed' || @item.new_record?) && @item.default_release_plan_enabled?
+  if @item.new_record? && @item.default_release_plan_enabled?
     @item.release_date ||= @item.default_release_date
     @item.close_date ||= @item.default_close_date
   end
