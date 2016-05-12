@@ -31,6 +31,7 @@ module Facility::Node
     include Facility::Addon::Service
     include Facility::Addon::Location
     include Cms::Addon::Release
+    include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

@@ -12,6 +12,7 @@ module Article::Node
     include Cms::Addon::PageList
     include Category::Addon::Setting
     include Cms::Addon::Release
+    include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

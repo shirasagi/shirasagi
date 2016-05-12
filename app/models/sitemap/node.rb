@@ -10,6 +10,7 @@ module Sitemap::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::Release
+    include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
