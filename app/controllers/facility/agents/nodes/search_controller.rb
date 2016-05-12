@@ -56,7 +56,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
         marker_info = view_context.render_marker_info(item)
 
         map.map_points.each do |point|
-          point[:facility_id] = item.id
+          point[:id] = item.id
           point[:html] = marker_info
           point[:category] = category_ids
           point[:image] = image_url if image_url.present?

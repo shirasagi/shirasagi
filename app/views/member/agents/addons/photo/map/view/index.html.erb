@@ -1,10 +1,6 @@
 <% return if @cur_page.map_points.blank? %>
 
-<%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
-<%= jquery do %>
-  Map.load("#map-canvas");
-  Map.setMarkers(<%= raw @cur_page.map_points.to_json %>);
-<% end %>
+<%= render_map "#map-canvas", markers: @cur_page.map_points %>
 
 <section class="map-page">
   <header>

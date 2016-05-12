@@ -40,22 +40,6 @@ class @Member_Photo_Form
       return
     return
 
-  @geocoderSearch: (address) ->
-    geocoder = new google.maps.Geocoder()
-    geocoder.geocode(
-      { "address" : address, "region" : "jp" },
-      (results, status) ->
-        if(status==google.maps.GeocoderStatus.OK)
-          result = results[0]
-          Map.map.setCenter(result.geometry.location)
-          if (result.geometry.viewport)
-            Map.map.fitBounds(result.geometry.viewport)
-        else
-          alert("<%= I18n.t('map.alert.invalid_center') %>")
-        return
-    )
-    return false
-
   @clearMarker: (ele)->
     dataId = 0
     if ele.val() != ""
@@ -116,6 +100,8 @@ class @Member_Photo_Form
 
   @setExifLatLng: (selector)->
     $(selector).change (e)->
+      return unless e.target.files[0]
+
       EXIF.getData e.target.files[0], ->
         lat    = EXIF.getTag(this, 'GPSLatitude')
         lon    = EXIF.getTag(this, 'GPSLongitude')
@@ -140,16 +126,3 @@ class @Member_Photo_Form
     $(".mod-map .clear-marker").on 'click', (e)->
       Member_Photo_Form.clearMarker($(".mod-map .marker-loc"))
       return false
-
-    #$(".mod-map .location-search").on 'click', (e)->
-    #  Member_Photo_Form.geocoderSearch($(".mod-map .keyword").val())
-    #  return false
-
-    #$(".mod-map .keyword").on 'keypress', (e)->
-    #  if e.which == 13
-    #    Member_Photo_Form.geocoderSearch($(this).val())
-    #    return false
-
-    #$(".mod-map .marker-name").on 'keypress', (e)->
-    #  if e.which == 13
-    #    return false

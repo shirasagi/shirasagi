@@ -1,94 +1,15 @@
 <%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
 
-<%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3" %>
+<%= render_facility_search_map("#map-canvas", markers: @markers, center: SS.config.map.map_center) %>
+
 <%= coffee do %>
 $(window).on "load", ->
-  # define functions
-  slideSidebar = (column) ->
-    columnTop = column.offset().top
-    indexTop  = column.closest("#map-sidebar").offset().top
-    scrolled  = column.closest("#map-sidebar").scrollTop()
-    column.closest("#map-sidebar").animate({ scrollTop: columnTop - indexTop + scrolled }, 'fast')
-
-  # setup map
-  Map.load("#map-canvas")
-
-  # setup markers
-  overrided = Map.attachMessage
-  Map.attachMessage = (id) ->
-    overrided(id)
-    google.maps.event.addListener Map.markers[id]["marker"], 'click', (event) ->
-      $("#map-sidebar .column").removeClass("current")
-      dataID = Map.markers[id]["facility_id"]
-      column = $('#map-sidebar .column[data-id="' + dataID + '"]')
-      column.addClass("current")
-      slideSidebar(column)
-    google.maps.event.addListener Map.markers[id]["window"], 'closeclick', (event) ->
-      $("#map-sidebar .column").removeClass("current");
-  Map.setMarkers(<%= raw @markers.to_json %>)
-
-  # setup sidebar
-  $("#map-sidebar .column .click-marker").on "click", ->
-    dataID = parseInt($(this).closest(".column").attr("data-id"))
-    $("#map-sidebar .column").removeClass("current")
-    $.each Map.markers, (i, m) ->
-      if dataID == m["facility_id"]
-        if Map.openedInfo
-          Map.openedInfo.close()
-        m["window"].open(m["marker"].getMap(), m["marker"]);
-        Map.openedInfo = m["window"]
-        column = $('#map-sidebar .column[data-id="' + dataID + '"]')
-        column.addClass("current")
-        slideSidebar(column)
-        return false
-    return false
-
-  # setup category filter
-  $(".filters a").on "click", ->
-    if $(this).hasClass("clicked")
-       $(this).removeClass("clicked")
-    else
-      $(this).addClass("clicked")
-
-    dataIDs = []
-    $(".filters a.clicked").each ->
-      dataIDs.push parseInt($(this).attr("data-id"))
-
-    $.each Map.markers, (id, value) ->
-      visible = false
-      $.each dataIDs, ->
-        if $.inArray(parseInt(this), Map.markers[id]["category"]) >= 0
-          visible = true
-          return false
-
-      dataID = Map.markers[id]["facility_id"]
-      column = $('#map-sidebar .column[data-id="' + dataID + '"]')
-      if visible
-        Map.markers[id]["marker"].setVisible(true)
-        column.show()
-      else
-        Map.markers[id]["marker"].setVisible(false)
-        Map.markers[id]["window"].close()
-        column.hide()
-    return false
-
-  # setup location filter
-  $(".filters .focus").on "change", ->
-    select = $(this)
-    select.find("option:selected").each ->
-      return false if $(this).val() == ""
-      loc = $(this).val().split(",")
-      zoomLevel = $(this).attr("data-zoom-level")
-      latlng = new google.maps.LatLng(loc[0], loc[1])
-      Map.map.setCenter latlng
-      Map.map.setZoom(parseInt(zoomLevel)) if zoomLevel
-      select.val("")
-
   # setup search modal window
   $(".ajax-box").on "click", ->
     $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "./map.html" }) %>"})
     return false
 <% end %>
+
 <%= render file: "facility/agents/addons/search_result/view/upper" %>
 <%= render file: "facility/agents/addons/search_result/view/map" %>

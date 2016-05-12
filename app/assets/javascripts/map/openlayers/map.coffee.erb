@@ -1,0 +1,207 @@
+class @Openlayers_Map
+  constructor: (canvas, opts = {}) ->
+    @canvas        = canvas
+    @opts          = opts
+    @markerFeature = null
+    @markerLayer   = null
+    @popup         = null
+    @markerIcon    = '/assets/img/map-marker.png'
+
+    @render()
+
+  render: () ->
+    @initMap()
+    @initPopup()
+    if @opts['markers']
+      @renderMarkers(@opts['markers'])
+    @resize()
+    @renderEvents()
+
+  createLayers: (layerOpts) ->
+    layers = []
+    for opts in layerOpts
+      source     = opts["source"]
+      url        = opts["url"]
+      projection = opts["projection"]
+
+      layer = new ol.layer.Tile({
+        source: new ol.source[source]({
+          url: url
+          projection: projection
+        })
+      })
+      layers.push layer
+    layers
+
+  initMap: ->
+    center = @opts['center'] || [138.252924,36.204824]
+
+    layerOpts = @opts['layers']
+    layerOpts ||= [
+      source: "XYZ"
+      url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+      projection: "EPSG:3857"
+    ]
+
+    @map = new ol.Map
+      target: @canvas
+      renderer: ['canvas', 'dom']
+      layers: @createLayers(layerOpts)
+      controls: ol.control.defaults
+        attributionOptions:
+          collapsible: false
+      view: new ol.View
+        projection: "EPSG:3857"
+        center: ol.proj.transform(center, "EPSG:4326", "EPSG:3857")
+        maxZoom: 18
+        zoom: @opts['zoom'] || 10
+      logo: true
+
+  initPopup: ->
+    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content"></div></div>')
+    @popup = $('#marker-popup')
+    @popup.hide()
+
+    @popupOverlay = new ol.Overlay(({
+      element: @popup.get(0),
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250
+      }
+    }))
+    @map.addOverlay(@popupOverlay)
+
+    @map.on 'pointermove', (e) =>
+      if (e.dragging)
+        @popup.hide()
+        return
+      pixel = @map.getEventPixel(e.originalEvent)
+      hit = @map.hasFeatureAtPixel(pixel)
+      cursor = `hit ? 'pointer' : ''`
+      @map.getTarget().style.cursor = cursor
+
+    @popup.find('.closer').on 'click', (e) =>
+      @popupOverlay.setPosition(undefined)
+      $(this).blur()
+      return false
+
+  showPopup: (feature, coordinate) ->
+    markerHtml = feature.get("markerHtml")
+    unless markerHtml
+      @popup.hide()
+      return
+
+    @popup.find('.content').html(markerHtml)
+    @popup.show()
+    @popupOverlay.setPosition(coordinate)
+
+  renderEvents: ()->
+    @map.on 'click', (e)=>
+      feature = @map.forEachFeatureAtPixel(e.pixel, (feature, layer) ->
+        return feature
+      )
+
+      if feature
+        @showPopup(feature, e.coordinate)
+        return
+
+  createMarkerStyle: (iconSrc) ->
+    new ol.style.Style({
+      image: new ol.style.Icon({
+        anchor: [0.5, 1]
+        anchorXUnits: 'fraction'
+        anchorYUnits: 'fraction'
+        src: iconSrc
+      })
+    })
+
+  setMarker: (loc, opts={}) ->
+    iconSrc = @markerIcon
+    iconSrc = opts['image'] if opts['image']
+    style = @createMarkerStyle(iconSrc)
+    pos = [opts['loc'][1], opts['loc'][0]]
+
+    feature = new ol.Feature({
+      geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857"))
+      markerId: (opts['id'] ? null)
+      markerHtml: (opts['html'] ? null)
+      category: (opts['category'] ? null)
+      iconSrc: iconSrc
+    })
+    feature.setStyle(style)
+
+    if !@markerLayer
+      @markerLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [feature]
+        })
+      })
+      @map.addLayer(@markerLayer)
+    else
+      @markerLayer.getSource().addFeature(feature)
+
+    return feature
+
+  getMarker: (markerId) ->
+    ret = null
+    return ret unless @markerLayer
+
+    source = @markerLayer.getSource()
+    source.forEachFeature (feature) ->
+      if feature.get("markerId") == markerId
+        ret = feature
+    return ret
+
+  getMarkers: ()->
+    source = @markerLayer.getSource()
+    features = source.getFeatures();
+    return features
+
+  setCenter: (pos) ->
+    @map.getView().setCenter(ol.proj.transform(pos, 'EPSG:4326', 'EPSG:3857'))
+
+  setZoom: (level) ->
+    @map.getView().setZoom(level)
+
+  renderMarkers: (markers) ->
+    for id, marker of markers
+      iconSrc = '/assets/img/map-marker.png'
+      iconSrc = marker['image'] if marker['image']
+      style = @createMarkerStyle(iconSrc)
+
+      markerHtml = ""
+      name = marker['name']
+      text = marker['text']
+      if name
+        markerHtml += '<p>' + name + '</p>'
+      if text
+        $.each text.split(/[\r\n]+/), ->
+          if this.match(/^https?:\/\//)
+            markerHtml += '<p><a href="' + this + '">' + this + '</a></p>'
+          else
+            markerHtml += '<p>' + this + '</p>'
+
+      pos = [marker['loc'][1], marker['loc'][0]]
+      feature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857"))
+        markerId: (marker['id'] ? id)
+        markerHtml: (marker['html'] ? markerHtml)
+        category: (marker['category'] ? null)
+        iconSrc: iconSrc
+      })
+      feature.setStyle(style)
+
+      if !@markerLayer
+        @markerLayer = new ol.layer.Vector({
+          source: new ol.source.Vector({
+            features: [feature]
+          })
+        })
+        @map.addLayer(@markerLayer)
+      else
+        @markerLayer.getSource().addFeature(feature)
+
+  resize: () ->
+    return unless @markerLayer
+    extent = @markerLayer.getSource().getExtent()
+    @map.getView().fit(extent, @map.getSize())

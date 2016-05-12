@@ -1,15 +1,4 @@
-<% controller.javascript "//maps.googleapis.com/maps/api/js?v=3" %>
-<% controller.javascript "/assets/js/exif-js.js" %>
-<%= jquery do %>
-  Map.center = <%= SS.config.cms.map_center.to_json %>;
-  Map.zoom = 12;
-  Map.setForm(Member_Photo_Form);
-
-  Map.load("#map-canvas");
-  Map.renderMarkers();
-  Map.renderEvents();
-  Member_Photo_Form.setExifLatLng("#item_in_image");
-<% end %>
+<%= render_member_photo_form_map("#map-canvas", center: SS.config.map.map_center) %>
 
 <div class="mod-map">
   <dl class="marker-setting">

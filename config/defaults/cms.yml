@@ -50,15 +50,7 @@ production: &production
   # Correct Page's HTML When Saving
   auto_correct_page_html: false
 
-  # Google Map API Center Location
-  map_center:
-    - 36.204824
-    - 138.252924
-
   editor_template_thumb: "/assets/img/editor-template.png"
-
-  # Max Number of Markers in Map Addon
-  map_max_point_form: 10
 
   # Skip login for preview
   remote_preview: false
