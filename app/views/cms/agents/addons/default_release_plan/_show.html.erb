@@ -1,0 +1,18 @@
+<dl class="see">
+  <dt><%= @model.t :default_release_plan_state %></dt>
+  <dd><%= @item.label :default_release_plan_state %></dd>
+
+  <dt><%= @model.t :default_release_date_delay %></dt>
+  <dd>
+    <% if @item.default_release_date_delay %>
+    <%= @item.default_release_date_delay %> <%= t("views.units.days_after") %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :default_close_date_delay %></dt>
+  <dd>
+    <% if @item.default_close_date_delay %>
+    <%= @item.default_close_date_delay %> <%= t("views.units.days_after") %>
+    <% end %>
+  </dd>
+</dl>

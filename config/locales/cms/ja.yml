@@ -214,6 +214,7 @@ ja:
       cms/sns_share: SNS共有
       cms/captcha: 認証
       cms/body_layout_html: HTML
+      cms/default_release_plan: 公開予約の既定値
 
   mongoid:
     models:
@@ -345,6 +346,10 @@ ja:
         in_file: ファイル
       cms/addon/import/user:
         in_file: ファイル
+      cms/addon/default_release_plan:
+        default_release_plan_state: 公開予約の既定値
+        default_release_date_delay: 公開開始日
+        default_close_date_delay: 公開終了日
 
   errors:
     messages:
@@ -810,6 +815,18 @@ ja:
       notice_target:
         - 「全ユーザー」に表示するか、「管理グループ」に表示するかを選択します。
         - 「管理グループ」を選択した場合、「管理グループ」欄に設定したグループに表示されます。
+
+    cms/addon/default_release_plan:
+      default_release_plan_state:
+        - 既定で公開予約を設定するかどうかを選択します。
+        - 「無効]を選択している場合、既定で公開予約を設定しません。
+        - 「有効]を選択している場合、既定で公開予約開始日と公開予約終了日を設定します。
+      default_release_date_delay:
+        - 公開開始日を設定します。
+        - 「3 日後」を設定した場合、当日日付＋3日後の0時0分に公開開始日時が設定されます。
+      default_close_date_delay:
+        - 公開終了日を設定します。
+        - 「1000 日後」を設定した場合、当日日付＋1,000日後の0時0分に公開開始日時が設定されます。
 
   all_content:
     url: URL

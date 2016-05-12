@@ -126,6 +126,7 @@ ja:
     units:
       count: 件
       mega_byte: MB
+      days_after: 日後
 
   ss:
     views:
