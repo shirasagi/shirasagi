@@ -11,20 +11,8 @@ describe "article_pages", dbscope: :example do
   let(:delete_path) { delete_article_page_path site.id, node, item }
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
-  let(:lock_path) { lock_article_page_path site.id, node, item }
 
-  it "without login" do
-    visit index_path
-    expect(current_path).to eq sns_login_path
-  end
-
-  it "without auth" do
-    login_ss_user
-    visit index_path
-    expect(status_code).to eq 403
-  end
-
-  context "with auth" do
+  context "basic crud" do
     before { login_cms_user }
 
     it "#index" do
@@ -96,37 +84,6 @@ describe "article_pages", dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
-    end
-
-    feature "lock and unlock" do
-      given(:group) { cms_group }
-      given(:user1) { create(:cms_test_user, group: group) }
-
-      background do
-        item.acquire_lock(user: user1)
-      end
-
-      scenario "locked by other then unlock and edit forcibly" do
-        expect(item.lock_owner_id).not_to eq cms_user.id
-
-        visit show_path
-        expect(status_code).to eq 200
-
-        within "div#addon-cms-agents-addons-edit_lock" do
-          expect(page).to have_content(I18n.t("errors.messages.locked", user: item.lock_owner.long_name))
-        end
-
-        click_link "編集する"
-        expect(status_code).to eq 200
-        expect(current_path).to eq lock_path
-
-        click_button I18n.t("views.button.unlock_and_edit_forcibly")
-        expect(status_code).to eq 200
-        expect(current_path).to eq edit_path
-
-        item.reload
-        expect(item.lock_owner_id).to eq cms_user.id
-      end
     end
   end
 end
