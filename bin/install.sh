@@ -27,6 +27,7 @@ rvm use 2.3.0 --default
 gem install bundler
 
 git clone -b stable --depth 1 https://github.com/shirasagi/shirasagi
+sudo mkdir -p /var/www
 sudo mv shirasagi $SS_DIR
 
 cd $SS_DIR
