@@ -1,0 +1,114 @@
+require 'spec_helper'
+
+describe "article_pages", dbscope: :example do
+  context "default release plan" do
+    let(:site) { cms_site }
+    let(:node) { create :article_node_page, filename: "docs", name: "article" }
+    let(:index_path) { article_pages_path site.id, node }
+
+    before { login_cms_user }
+
+    context "with site setting" do
+      before do
+        site.default_release_plan_state = 'enabled'
+        site.default_release_date_delay = 3
+        site.default_close_date_delay = 100
+        site.save!
+      end
+
+      it do
+        Timecop.travel("2016/04/12 16:32") do
+          visit index_path
+          click_on "新規作成"
+
+          expect(page).to have_field("item[release_date]", with: "2016/04/15 00:00")
+          expect(page).to have_field("item[close_date]", with: "2016/07/21 00:00")
+
+          within "form#item-form" do
+            fill_in "item[name]", with: "sample"
+            fill_in "item[basename]", with: "sample"
+            click_button "保存"
+          end
+          expect(status_code).to eq 200
+
+          expect(Article::Page.count).to eq 1
+          page = Article::Page.first
+          expect(page.state).to eq "ready"
+          expect(page.release_date).to eq Time.zone.parse("2016/04/15 00:00")
+          expect(page.close_date).to eq Time.zone.parse("2016/07/21 00:00")
+        end
+      end
+    end
+
+    context "with node setting" do
+      before do
+        node.default_release_plan_state = 'enabled'
+        node.default_release_date_delay = 4
+        node.default_close_date_delay = 71
+        node.save!
+      end
+
+      it do
+        Timecop.travel("2016/04/12 16:32") do
+          visit index_path
+          click_on "新規作成"
+
+          expect(page).to have_field("item[release_date]", with: "2016/04/16 00:00")
+          expect(page).to have_field("item[close_date]", with: "2016/06/22 00:00")
+
+          within "form#item-form" do
+            fill_in "item[name]", with: "sample"
+            fill_in "item[basename]", with: "sample"
+            click_button "保存"
+          end
+          expect(status_code).to eq 200
+
+          expect(Article::Page.count).to eq 1
+          page = Article::Page.first
+          expect(page.state).to eq "ready"
+          expect(page.release_date).to eq Time.zone.parse("2016/04/16 00:00")
+          expect(page.close_date).to eq Time.zone.parse("2016/06/22 00:00")
+        end
+      end
+    end
+
+    context "with site setting and node setting" do
+      before do
+        site.default_release_plan_state = 'enabled'
+        site.default_release_date_delay = 3
+        site.default_close_date_delay = 100
+        site.save!
+      end
+
+      before do
+        node.default_release_plan_state = 'enabled'
+        node.default_release_date_delay = 4
+        node.default_close_date_delay = 71
+        node.save!
+      end
+
+      it do
+        Timecop.travel("2016/04/12 16:32") do
+          visit index_path
+          click_on "新規作成"
+
+          expect(page).to have_field("item[release_date]", with: "2016/04/16 00:00")
+          expect(page).to have_field("item[close_date]", with: "2016/06/22 00:00")
+
+          within "form#item-form" do
+            fill_in "item[name]", with: "sample"
+            fill_in "item[basename]", with: "sample"
+            click_button "保存"
+          end
+          expect(status_code).to eq 200
+
+          expect(Article::Page.count).to eq 1
+          page = Article::Page.first
+          expect(page.state).to eq "ready"
+          expect(page.release_date).to eq Time.zone.parse("2016/04/16 00:00")
+          expect(page.close_date).to eq Time.zone.parse("2016/06/22 00:00")
+        end
+      end
+    end
+  end
+end
