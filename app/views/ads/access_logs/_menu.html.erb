@@ -1,0 +1,9 @@
+<nav class="nav-menu">
+  <% if @action == :recent %>
+    <%= link_to :download, ads_access_logs_download_path(page: params[:page]) %>
+  <% elsif @action == :monthly %>
+    <%= link_to :download, ads_access_logs_download_path(s: { year: params[:s][:year], month: params[:s][:month] }) %>
+  <% elsif @action == :yearly %>
+    <%= link_to :download, ads_access_logs_download_path(s: { year: params[:s][:year], month: params[:s][:month] }) %>
+  <% end %>
+</nav>
