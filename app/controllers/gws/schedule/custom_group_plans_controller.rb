@@ -10,6 +10,10 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
       @group = Gws::CustomGroup.site(@cur_site).find params[:group]
     end
 
+    def redirection_view
+      'timelineDay'
+    end
+
   public
     def index
       @items = @group.sorted_members

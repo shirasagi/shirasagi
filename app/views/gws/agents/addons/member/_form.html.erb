@@ -6,25 +6,50 @@
   <% end %>
 <% end %>
 
-<dl class="see gws-addon-member">
-  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
-  <dd>
-    <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
-    <%= link_to t("views.button.copy"), "#", class: "btn js-copy-users" %>
-    <%= link_to t("views.button.paste"), "#", class: "btn js-paste-users" %>
-  </dd>
-  <dd>
-    <table class="index ajax-selected <%= 'sortable-index' if @item.class.keep_members_order? %>">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
-      <tbody>
-        <% @item.sorted_members.each do |user| %>
-        <tr data-id="<%= user.id %>">
-          <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.name %></td>
-          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
-        </tr>
+<div class="gws-addon-member">
+  <% if @model.member_include_custom_groups? %>
+  <dl class="see">
+    <dt><%= @model.t :member_custom_group_ids %><%= @model.tt :member_custom_group_ids %></dt>
+    <dd>
+      <%= f.hidden_field "member_custom_group_ids[]", value: "", class: "hidden-ids" %>
+      <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+        <% @item.member_custom_groups.each do |group| %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "member_custom_group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
         <% end %>
-      </tbody>
-    </table>
-  </dd>
-</dl>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+  <% end %>
+
+  <dl class="see">
+    <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+    <dd>
+      <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+      <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
+      <%= link_to t("views.button.copy"), "#", class: "btn js-copy-users" %>
+      <%= link_to t("views.button.paste"), "#", class: "btn js-paste-users" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected <%= 'sortable-index' if @item.class.keep_members_order? %>">
+        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+          <% @item.sorted_members.each do |user| %>
+          <tr data-id="<%= user.id %>">
+            <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.long_name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+</div>

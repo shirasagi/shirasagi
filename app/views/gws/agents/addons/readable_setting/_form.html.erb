@@ -5,7 +5,7 @@
 <% end %>
 
 <div class="gws-addon-readable-setting">
-  <% if @item.class.readable_setting_included_custom_group? %>
+  <% if @item.class.readable_setting_included_custom_groups? %>
   <dl class="see gws-addon-readable-setting-custom-group">
     <dt><%= @model.t :readable_custom_group_ids %><%= @model.tt :readable_custom_group_ids %></dt>
     <dd>
@@ -65,7 +65,7 @@
         <tbody>
           <% @item.readable_members.each do |user| %>
           <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "readable_member_ids[]", value: user.id %> <%= user.name %></td>
+            <td><%= f.hidden_field "readable_member_ids[]", value: user.id %> <%= user.long_name %></td>
             <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>

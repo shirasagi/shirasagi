@@ -1,3 +1,10 @@
+<% if @model.member_include_custom_groups? && @item.member_custom_groups.present? %>
+<dl class="see">
+  <dt><%= @model.t :member_custom_group_ids %></dt>
+  <dd><%=br @item.member_custom_groups.map(&:name).join("\n") %></dd>
+</dl>
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :member_ids %></dt>
   <dd><%=br @item.sorted_members.map(&:long_name).join("\n") %></dd>

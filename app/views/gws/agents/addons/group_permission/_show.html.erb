@@ -1,7 +1,7 @@
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-owner_permission"); <% end %>
 
 <dl class="see mod-gws-owner_permission">
-  <% if @item.class.permission_included_custom_group? %>
+  <% if @item.class.permission_included_custom_groups? %>
   <dt><%= @model.t :custom_group_ids %></dt>
   <dd><%=tryb { br @item.custom_group_names.join("\n") } %></dd>
   <% end %>

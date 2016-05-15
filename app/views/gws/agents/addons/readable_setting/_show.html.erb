@@ -6,7 +6,7 @@
 
 <div class="gws-addon-readable-setting">
   <dl class="see">
-    <% if @item.class.readable_setting_included_custom_group? %>
+    <% if @item.class.readable_setting_included_custom_groups? %>
     <dt><%= @model.t :readable_custom_group_ids %></dt>
     <dd><%=tryb { br @item.readable_custom_group_names.join("\n") } %></dd>
     <% end %>

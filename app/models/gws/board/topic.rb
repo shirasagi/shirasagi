@@ -11,6 +11,8 @@ class Gws::Board::Topic
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  readable_setting_include_custom_groups
+
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
 

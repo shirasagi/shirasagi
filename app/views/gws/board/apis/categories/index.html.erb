@@ -10,7 +10,7 @@
 
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
@@ -50,7 +50,7 @@
 </table>
 
 <% if @multi %>
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-select">
   <%= button_tag t("views.links.select"), { type: :button, class: "select-items btn" } %>
 </div>
 <% end %>

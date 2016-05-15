@@ -11,6 +11,10 @@ class Gws::Schedule::GroupPlansController < ApplicationController
       raise '404' unless @group.active?
     end
 
+    def redirection_view
+      'timelineDay'
+    end
+
   public
     def index
       @items = @group.users.active.order_by_title(@cur_site).compact

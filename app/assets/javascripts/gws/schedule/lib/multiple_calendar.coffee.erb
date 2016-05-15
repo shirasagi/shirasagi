@@ -1,5 +1,5 @@
 class @Gws_Schedule_Multiple_Calendar
-  @render: (selector, opts = {})->
+  @render: (selector, opts = {}, init = {})->
     params = Gws_Schedule_Calendar.defaultParams(opts)
     $.extend true, params, Gws_Schedule_Calendar.editableParams(opts) if opts['restUrl']
     $.extend true, params, Gws_Schedule_Calendar.tapMenuParams(opts) if opts['restUrl']
@@ -7,13 +7,14 @@ class @Gws_Schedule_Multiple_Calendar
     $.extend true, params, @contentParams(opts)
     $.extend true, params, opts
     $(selector).fullCalendar(params)
+    Gws_Schedule_Calendar.renderInitialize(selector, init)
 
     $(document).click (ev) ->
       $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove()
 
   @defaultParams: (opts) ->
     defaultView: 'basicWeek'
-    header: { left: 'today prev next title', right: '' }
+    header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
     slotDuration: '01:00'
     slotLabelFormat: 'H'
     views:
@@ -27,6 +28,7 @@ class @Gws_Schedule_Multiple_Calendar
         maxTime: '22:00'
 
   @controllerParams: (opts)->
+    header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
     eventSources: []
     eventAfterAllRender: (view)->
       if view.name == 'basicWeek'
@@ -39,13 +41,13 @@ class @Gws_Schedule_Multiple_Calendar
     eventAfterAllRender: (view)->
     #  view.el.find(".fc-toolbar, .fc-head").remove("")
 
-  @renderController: (selector, opts = {}) ->
+  @renderController: (selector, opts = {}, init = {}) ->
     params = Gws_Schedule_Calendar.defaultParams(opts)
     $.extend true, params, @defaultParams(opts)
     $.extend true, params, @controllerParams(opts)
     $.extend true, params, opts
-
     $(selector).fullCalendar(params)
+    Gws_Schedule_Calendar.renderInitialize(selector, init)
 
     controller = $(selector)
     controller.find('.fc-today-button').click ->

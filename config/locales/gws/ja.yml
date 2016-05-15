@@ -118,7 +118,6 @@ ja:
       gws/custom_group:
         name: グループ名
         order: 表示順
-        member_ids: 参加者
       gws/notice:
         name: タイトル
         severity: 種別
@@ -172,7 +171,8 @@ ja:
         readable_member_ids: 閲覧ユーザー
         readable_custom_group_ids: 閲覧カスタムグループ
       gws/addon/member:
-        member_ids: 参加者
+        member_ids: 参加ユーザー
+        member_custom_group_ids: 参加カスタムグループ
       gws/group_setting/system:
         sendmail_domains: メール送信許可ドメイン
 

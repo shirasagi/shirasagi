@@ -3,7 +3,7 @@ module Gws::GroupPermission
   include SS::Permission
 
   included do
-    class_variable_set(:@@_permission_include_custom_group, nil)
+    class_variable_set(:@@_permission_include_custom_groups, nil)
 
     field :permission_level, type: Integer, default: 1
     field :groups_hash, type: Hash
@@ -112,13 +112,13 @@ module Gws::GroupPermission
       end
     end
 
-    def permission_included_custom_group?
-      class_variable_get(:@@_permission_include_custom_group)
+    def permission_included_custom_groups?
+      class_variable_get(:@@_permission_include_custom_groups)
     end
 
     private
-      def permission_include_custom_group
-        class_variable_set(:@@_permission_include_custom_group, true)
+      def permission_include_custom_groups
+        class_variable_set(:@@_permission_include_custom_groups, true)
       end
   end
 end

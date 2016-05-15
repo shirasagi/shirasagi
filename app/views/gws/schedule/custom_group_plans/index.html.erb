@@ -1,5 +1,5 @@
 <%= jquery do %>
-Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
+Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%== (params[:calendar] || {}).to_json %>);
 <% end %>
 
 <%= render "gws/schedule/main/tabs" %>
@@ -23,7 +23,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
       tapMenu: <%= item.id == @cur_user.id %>,
       restUrl: '<%= url_for action: :index %>',
       eventSources: [{ url: '<%= events_gws_schedule_user_plans_path(user: item.id, format: :json) %>' }]
-    });
+    }, <%== (params[:calendar] || {}).to_json %>);
     <% end %>
   <% end %>
 </section>

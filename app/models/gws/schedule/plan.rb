@@ -15,8 +15,9 @@ class Gws::Schedule::Plan
   include Gws::Addon::History
   include ActiveSupport::NumberHelper
 
-  permission_include_custom_group
-  readable_setting_include_custom_group
+  member_include_custom_groups
+  permission_include_custom_groups
+  readable_setting_include_custom_groups
 
   # 種別
   belongs_to :category, class_name: 'Gws::Schedule::Category'

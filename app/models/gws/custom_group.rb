@@ -20,6 +20,8 @@ class Gws::CustomGroup
 
   default_scope ->{ order_by order: 1 }
 
+  scope :member, ->(user) { where member_ids: user.id }
+
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?

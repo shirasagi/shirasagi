@@ -18,7 +18,7 @@ SS.ajaxDelete ".user-files .delete"
   <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
   <%= error_messages_for :item %>
 
-    <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+    <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %>
       <%= f.submit t("views.button.save"), class: "btn save", style: "margin-left: 10px;" %>

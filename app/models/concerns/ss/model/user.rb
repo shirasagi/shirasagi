@@ -34,6 +34,7 @@ module SS::Model::User
     field :email, type: String
     field :password, type: String
     field :tel, type: String
+    field :tel_ext, type: String
     field :type, type: String
     field :login_roles, type: Array, default: [LOGIN_ROLE_DBPASSWD]
     field :last_loggedin, type: DateTime
@@ -46,7 +47,7 @@ module SS::Model::User
 
     embeds_ids :groups, class_name: "SS::Group"
 
-    permit_params :name, :kana, :uid, :email, :password, :tel, :type, :login_roles, :remark, group_ids: []
+    permit_params :name, :kana, :uid, :email, :password, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
     permit_params :in_password
     permit_params :account_start_date, :account_expiration_date, :initial_password_warning
 

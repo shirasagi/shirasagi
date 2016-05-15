@@ -1,3 +1,11 @@
+<%= jquery do %>
+  $('input.alnum').on({
+    focus: function() { $(this).attr('type', 'tel').css('width', '100%'); },
+    blur: function() { $(this).attr('type', 'text'); },
+    keypress: function(ev) { if (ev.which == 13) { $('#item_password').focus(); return false; } }
+  });
+<% end %>
+
 <section class="main-box login-box">
 
 <header>
@@ -15,7 +23,7 @@
 
   <div class="form-group">
     <label><%== t("ss.views.login/login.id") %></label>
-    <%= text_field :item, :email, style: "ime-mode: disabled;", autofocus: true %>
+    <%= text_field :item, :email, class: "alnum", autofocus: true %>
   </div>
 
   <div class="form-group">

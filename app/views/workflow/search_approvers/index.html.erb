@@ -1,6 +1,6 @@
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-form">
   <%= form_for :s, url: { action: :index, level: @level }, html: { method: "GET", class: :search } do |f| %>
     <dl class="see">
       <% if browser.ie?(["<10"]) %>
@@ -34,7 +34,7 @@
   </tbody>
 </table>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-select">
   <%= button_tag t("workflow.search_approvers.select"), { type: :button, class: "select-items btn" } %>
 </div>
 

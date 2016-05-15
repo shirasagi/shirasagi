@@ -20,13 +20,19 @@ $(".collapse-all").on("click", function() {
 
   <table class="index groups">
     <tbody>
+      <tr data-depth="1">
+        <td class="expandable">
+          <%= link_to @cur_site.trailing_name, gws_schedule_group_plans_path(group: @cur_site.id) %>
+        </td>
+      </tr>
+
       <% @items.each do |item| %>
-      <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>">
+      <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") + 1%>">
         <td class="expandable">
           <% if item.users.size > 0 %>
             <%= link_to item.trailing_name, gws_schedule_group_plans_path(group: item.id) %>
           <% else %>
-            <%= item.trailing_name %>
+            <span class="toggle"><%= item.trailing_name %></span>
           <% end %>
         </td>
       </tr>

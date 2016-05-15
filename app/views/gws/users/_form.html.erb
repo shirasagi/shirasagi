@@ -27,6 +27,9 @@
   <dt><%= @model.t :tel %><%= @model.tt :tel %></dt>
   <dd><%= f.text_field :tel %></dd>
 
+  <dt><%= @model.t :tel_ext %><%= @model.tt :tel_ext %></dt>
+  <dd><%= f.text_field :tel_ext %></dd>
+
   <dt><%= @model.t :title_ids %><%= @model.tt :title_ids %></dt>
   <dd><%= f.select :in_title_id, @item.title_id_options, selected: tryb { @item.title.id }, include_blank: "" %></dd>
 

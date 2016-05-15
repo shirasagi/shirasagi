@@ -6,12 +6,12 @@
 <% end %>
 
 <div class="popup-attributes">
-  <% if @item.members.present? %>
+  <% members = @item.member_custom_groups.map(&:name) %>
+  <% members += @item.members.order_by_title(@cur_site).map(&:long_name) %>
   <div class="popup-attr popup-members">
-    <div class="popup-label"><%= @item.t :member_ids %></div>
-    <div class="popup-value"><%= @item.members.order_by_title(@cur_site).map(&:name).join(', ') %></div>
+    <div class="popup-label"><%= t("modules.addons.gws/member") %></div>
+    <div class="popup-value"><%= members.join(', ') %></div>
   </div>
-  <% end %>
 
   <% if @item.facilities.present? %>
   <div class="popup-attr popup-facilities">
@@ -25,7 +25,9 @@
     <div class="popup-label"><%= t "gws.history.user.update" %></div>
     <div class="popup-value">
       <span class="user"><%= hist.user_long_name %></span>
-      <span class="tel"><%= hist.user_tel %></span>
+    </div>
+    <div class="popup-value">
+      <span class="tel">TEL: <%= hist.user_tel %><%= " (#{hist.user.tel_ext})" if tryb { hist.user.tel_ext } %></span>
     </div>
   </div>
   <% end %>
@@ -34,7 +36,9 @@
     <div class="popup-label"><%= t "gws.history.user.create" %></div>
     <div class="popup-value">
       <span class="user"><%= @item.user_long_name %></span>
-      <span class="tel"><%= @item.user_tel %></span>
+    </div>
+    <div class="popup-value">
+      <span class="tel">TEL: <%= @item.user_tel %><%= " (#{@item.user.tel_ext})" if tryb { @item.user.tel_ext } %></span>
     </div>
   </div>
 </div>

@@ -54,13 +54,20 @@ class @SS_SearchUI
       )
       e.preventDefault()
 
+    $("#ajax-box .pagination a").on "click", (e)->
+      console.log "a"
+      SS_SearchUI.selectItems()
+
     $("#ajax-box #s_group").on "change", (e)->
       SS_SearchUI.selectItems()
       $("#ajax-box form.search").submit()
 
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
       id = $(this).attr("data-id")
-      $("#colorbox .items [data-id='#{id}']").remove()
+      tr = $("#colorbox .items [data-id='#{id}']")
+      tr.find("input[type=checkbox]").remove()
+      item = tr.find(".select-item").html()
+      tr.find(".select-item").replaceWith("<span class='select-item' style='color: #888'>#{item}</span>")
 
     SS_ListUI.render("table.index")
 

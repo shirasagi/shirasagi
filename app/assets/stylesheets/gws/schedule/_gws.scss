@@ -30,6 +30,10 @@
 //
 // FullCalendar
 //
+.fc-toolbar h2 {
+  text-decoration: underline;
+  cursor: pointer;
+}
 .fc-view {
   z-index: 100;
 }
@@ -147,22 +151,6 @@
 
 // timelineDay
 .fc-timelineDay-view {
-  th.fc-widget-header {
-    &:nth-child(1),&:nth-child(2),&:nth-child(3),&:nth-child(4),&:nth-child(5),&:nth-child(6),&:nth-child(7),&:nth-child(8) {
-      //background-color: #f4f4f4;
-    }
-    &:nth-child(9),&:nth-child(10),&:nth-child(11),&:nth-child(12) {
-      //background: #ffebeb;
-      //color: #e00;
-    }
-    &:nth-child(13),&:nth-child(14),&:nth-child(15),&:nth-child(16),&:nth-child(17),&:nth-child(18) {
-      //background: #fff0d0;
-      //color: #f60;
-    }
-    &:nth-child(19),&:nth-child(20),&:nth-child(21),&:nth-child(22),&:nth-child(23),&:nth-child(24) {
-      //background: #e0f4ff; color: #04d;
-    }
-  }
   .fc-scrollpane, .fc-scrollpane-inner {
     overflow: visible;
   }
@@ -173,8 +161,12 @@
     min-height: 27px;
   }
   .fc-event {
-    top: 4px !important;
     z-index: 0;
+  }
+}
+.facility.calendar .fc-timelineDay-view {
+  .fc-event {
+    top: 4px !important;
   }
 }
 

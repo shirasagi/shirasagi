@@ -189,6 +189,7 @@ ja:
         password: パスワード
         in_password: パスワード
         tel: 電話番号
+        tel_ext: 内線番号
         title_ids: 役職
         in_title_id: 役職
         group_ids: グループ
@@ -272,6 +273,8 @@ ja:
         - ログイン時に利用するパスワードを入力します。
       tel:
         - ユーザーの電話番号を設定します。
+      tel:
+        - ユーザーの内線番号を設定します。
       group:
         - ユーザーの所属するグループを選択します。
       group_ids:

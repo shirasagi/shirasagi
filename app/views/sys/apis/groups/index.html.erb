@@ -1,6 +1,6 @@
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-form">
 <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
   <%= f.text_field :name, value: params[:s].try(:[], :name) %>
   <%= f.submit  t("ss.apis.groups.search"), class: :btn %>
@@ -26,6 +26,6 @@
   </tbody>
 </table>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-select">
   <%= button_tag t("ss.apis.groups.select"), { type: :button, class: "select-items btn" } %>
 </div>

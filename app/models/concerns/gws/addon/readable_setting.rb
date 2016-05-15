@@ -3,7 +3,7 @@ module Gws::Addon::ReadableSetting
   extend SS::Addon
 
   included do
-    class_variable_set(:@@_readable_setting_include_custom_group, nil)
+    class_variable_set(:@@_readable_setting_include_custom_groups, nil)
 
     field :readable_groups_hash, type: Hash
     field :readable_members_hash, type: Hash
@@ -26,8 +26,12 @@ module Gws::Addon::ReadableSetting
           "readable_member_ids.0" => { "$exists" => false },
           "readable_custom_group_ids.0" => { "$exists" => false } },
         { :readable_group_ids.in => user.group_ids },
-        { readable_member_ids: user.id }
+        { readable_member_ids: user.id },
       ]
+      if readable_setting_included_custom_groups?
+        cond << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+      end
+
       cond << allow_condition(:read, user, site: site) if opts[:include_role]
       where("$and" => [{ "$or" => cond }])
     }
@@ -87,13 +91,13 @@ module Gws::Addon::ReadableSetting
     end
 
   module ClassMethods
-    def readable_setting_included_custom_group?
-      class_variable_get(:@@_readable_setting_include_custom_group)
+    def readable_setting_included_custom_groups?
+      class_variable_get(:@@_readable_setting_include_custom_groups)
     end
 
     private
-      def readable_setting_include_custom_group
-        class_variable_set(:@@_readable_setting_include_custom_group, true)
+      def readable_setting_include_custom_groups
+        class_variable_set(:@@_readable_setting_include_custom_groups, true)
       end
   end
 end

@@ -14,8 +14,8 @@ ja:
     calendar:
       titleFormat:
         month: YYYY年 M月
-        week: (YYYY年 M月 D日)
-        day: YYYY年 M月 D日
+        week: (YYYY年 M月 D日（ddd）)
+        day: YYYY年 M月 D日（ddd）
     links:
       add_plan: 予定を作成
       show_month: 月表示

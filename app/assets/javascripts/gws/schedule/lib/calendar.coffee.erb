@@ -1,10 +1,23 @@
 class @Gws_Schedule_Calendar
-  @render: (selector, opts = {})->
+  @render: (selector, opts = {}, init = {})->
     params = @defaultParams(opts)
     $.extend true, params, @editableParams(opts) if opts['restUrl']
     $.extend true, params, @tapMenuParams(opts) if opts['restUrl']
     $.extend true, params, opts
     $(selector).fullCalendar(params)
+    @renderInitialize(selector, init)
+
+  @renderInitialize: (selector, init = {})->
+    $(selector).fullCalendar('changeView', init['view']) if init['view']
+    $(selector).fullCalendar('gotoDate', init['date']) if init['date']
+    $(selector).find('.fc-toolbar h2').datetimepicker
+      lang: "ja"
+      timepicker: false
+      format:'Y/m/d'
+      closeOnDateSelect: true
+      scrollInput: false
+      onSelectDate: (ct, i) ->
+        $('.calendar').fullCalendar('gotoDate', ct.dateFormat('Y-m-d'))
 
   @defaultParams: (opts) ->
     columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
@@ -18,6 +31,7 @@ class @Gws_Schedule_Calendar
     slotLabelFormat: 'HH:mm',
     startParam: 's[start]'
     timeFormat: 'HH:mm'
+    a: 1
     titleFormat:
       month: "<%= I18n.t('gws/schedule.calendar.titleFormat.month') %>"
       week: "<%= I18n.t('gws/schedule.calendar.titleFormat.week') %>"
