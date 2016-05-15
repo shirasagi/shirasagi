@@ -141,8 +141,8 @@ ja:
       header:
         #one: ! '%{model}にエラーが発生しました。'
         #other: ! '%{model}に%{count}個のエラーが発生しました。'
-        one: ! '問題が発生しました。'
-        other: ! '%{count}個の問題が発生しました。'
+        one: ! '登録内容を確認してください。'
+        other: ! '登録内容を確認してください。'
   helpers:
     select:
       prompt: 選択してください。
