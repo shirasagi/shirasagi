@@ -8,7 +8,7 @@ describe "article_pages", dbscope: :example do
 
     before { login_cms_user }
 
-    context "with site setting" do
+    context "with site setting", js: true do
       before do
         site.default_release_plan_state = 'enabled'
         site.default_release_date_delay = 3
@@ -17,7 +17,7 @@ describe "article_pages", dbscope: :example do
       end
 
       it do
-        Timecop.travel("2016/04/12 16:32") do
+        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
           visit index_path
           click_on "新規作成"
 
@@ -27,9 +27,17 @@ describe "article_pages", dbscope: :example do
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
             fill_in "item[basename]", with: "sample"
-            click_button "保存"
+            Rails.logger.debug("click 公開保存")
+            click_button "公開保存"
           end
+          # submit form forcibly, I dont't know why form is submitted.
+          page.execute_script("$('form#item-form').submit()")
           expect(status_code).to eq 200
+
+          # wait for a while because executes save in asynchornously
+          within "div#addon-basic" do
+            expect(page).to have_css("dd", text: "sample")
+          end
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -40,7 +48,46 @@ describe "article_pages", dbscope: :example do
       end
     end
 
-    context "with node setting" do
+    context "save as draft with site setting", js: true do
+      before do
+        site.default_release_plan_state = 'enabled'
+        site.default_release_date_delay = 3
+        site.default_close_date_delay = 100
+        site.save!
+      end
+
+      it do
+        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
+          visit index_path
+          click_on "新規作成"
+
+          expect(page).to have_field("item[release_date]", with: "2016/04/15 00:00")
+          expect(page).to have_field("item[close_date]", with: "2016/07/21 00:00")
+
+          within "form#item-form" do
+            fill_in "item[name]", with: "sample"
+            fill_in "item[basename]", with: "sample"
+            click_button "下書き保存"
+          end
+          # submit form forcibly, I dont't know why form is submitted.
+          page.execute_script("$('form#item-form').submit()")
+          expect(status_code).to eq 200
+
+          # wait for a while because executes save in asynchornously
+          within "div#addon-basic" do
+            expect(page).to have_css("dd", text: "sample")
+          end
+
+          expect(Article::Page.count).to eq 1
+          page = Article::Page.first
+          expect(page.state).to eq "closed"
+          expect(page.release_date).to eq Time.zone.parse("2016/04/15 00:00")
+          expect(page.close_date).to eq Time.zone.parse("2016/07/21 00:00")
+        end
+      end
+    end
+
+    context "with node setting", js: true do
       before do
         node.default_release_plan_state = 'enabled'
         node.default_release_date_delay = 4
@@ -49,7 +96,7 @@ describe "article_pages", dbscope: :example do
       end
 
       it do
-        Timecop.travel("2016/04/12 16:32") do
+        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
           visit index_path
           click_on "新規作成"
 
@@ -59,9 +106,16 @@ describe "article_pages", dbscope: :example do
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
             fill_in "item[basename]", with: "sample"
-            click_button "保存"
+            click_button "公開保存"
           end
+          # submit form forcibly, I dont't know why form is submitted.
+          page.execute_script("$('form#item-form').submit()")
           expect(status_code).to eq 200
+
+          # wait for a while because executes save in asynchornously
+          within "div#addon-basic" do
+            expect(page).to have_css("dd", text: "sample")
+          end
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -72,7 +126,7 @@ describe "article_pages", dbscope: :example do
       end
     end
 
-    context "with site setting and node setting" do
+    context "with site setting and node setting", js: true do
       before do
         site.default_release_plan_state = 'enabled'
         site.default_release_date_delay = 3
@@ -88,7 +142,7 @@ describe "article_pages", dbscope: :example do
       end
 
       it do
-        Timecop.travel("2016/04/12 16:32") do
+        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
           visit index_path
           click_on "新規作成"
 
@@ -98,9 +152,16 @@ describe "article_pages", dbscope: :example do
           within "form#item-form" do
             fill_in "item[name]", with: "sample"
             fill_in "item[basename]", with: "sample"
-            click_button "保存"
+            click_button "公開保存"
           end
+          # submit form forcibly, I dont't know why form is submitted.
+          page.execute_script("$('form#item-form').submit()")
           expect(status_code).to eq 200
+
+          # wait for a while because executes save in asynchornously
+          within "div#addon-basic" do
+            expect(page).to have_css("dd", text: "sample")
+          end
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
