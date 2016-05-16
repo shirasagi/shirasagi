@@ -254,7 +254,12 @@ Description=Shirasagi Unicorn Server
 After=mongod.service
 
 [Service]
-ExecStart=/bin/su -l ${SS_USER} -c "cd ${SS_DIR} && bundle exec rake unicorn:start"
+User=${SS_USER}
+WorkingDirectory=${SS_DIR}
+ExecStart=/usr/local/rvm/wrappers/default/bundle exec rake unicorn:start
+ExecStop=/usr/local/rvm/wrappers/default/bundle exec rake unicorn:stop
+Type=forking
+PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
 
 [Install]
 WantedBy=multi-user.target
