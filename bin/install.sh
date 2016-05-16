@@ -22,11 +22,12 @@ sudo yum -y install \
 gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
 \curl -sSL https://get.rvm.io | bash -s stable
 if [ `whoami` = root ]; then
-  source /usr/local/rvm/scripts/rvm
+  RVM_HOME=/usr/local/rvm
 else
-  export PATH="$PATH:$HOME/.rvm/bin"
-  source $HOME/.rvm/scripts/rvm
+  RVM_HOME=$HOME/.rvm
 fi
+export PATH="$PATH:$RVM_HOME/bin"
+source $RVM_HOME/scripts/rvm
 rvm install 2.3.0
 rvm use 2.3.0 --default
 gem install bundler
@@ -256,8 +257,8 @@ After=mongod.service
 [Service]
 User=${SS_USER}
 WorkingDirectory=${SS_DIR}
-ExecStart=/usr/local/rvm/wrappers/default/bundle exec rake unicorn:start
-ExecStop=/usr/local/rvm/wrappers/default/bundle exec rake unicorn:stop
+ExecStart=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:start
+ExecStop=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:stop
 Type=forking
 PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
 
