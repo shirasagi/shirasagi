@@ -46,7 +46,14 @@ sudo mv shirasagi $SS_DIR
 
 cd $SS_DIR
 cp -n config/samples/*.{rb,yml} config/
-bundle install --without development test --path vendor/bundle
+for i in $(seq 1 5)
+do
+  bundle install --without development test --path vendor/bundle
+  if [ $? -eq 0 ]; then
+    break
+  fi
+  sleep 5s
+done
 
 sudo firewall-cmd --add-port=http/tcp --permanent
 sudo firewall-cmd --add-port=https/tcp --permanent
