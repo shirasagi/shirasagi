@@ -33,6 +33,7 @@ module Sys::SiteCopy::Article
         new_cms_ad.filename = cms_ad.filename
         new_cms_ad.link_url = cms_ad.link_url
         new_cms_ad.file_id  = clone_file(cms_ad.file_id)
+        new_cms_ad.ads_category_ids = cms_ad.ads_category_ids
         if cms_ad.layout_id && @layout_records_map[cms_ad.layout_id]
           new_cms_ad.layout_id = @layout_records_map[cms_ad.layout_id]
         end
@@ -149,11 +150,26 @@ module Sys::SiteCopy::Article
         new_cms_page2.body_parts = cms_page2.body_parts if defined? new_cms_page2.body_parts
 
         begin
-          new_cms_page2.save! validate: false
+          new_cms_page2.save!
         rescue => exception
           Rails.logger.error(exception.message)
           throw exception
         end
+      end
+
+      # set related_page_ids
+      cms_pages2_ids.each do |cms_page2_id|
+        source_cms_page = Cms::Page.where(id: cms_page2_id).one
+        dest_attributes = Cms::Page.where(site_id: @site.id, filename: source_cms_page.filename).one.becomes_with_route
+        next if source_cms_page.related_page_ids.empty?
+        related_page_ids = []
+        source_cms_page.related_page_ids.each do |related_page_id|
+          source_related_page = Cms::Page.where(id: related_page_id).one
+          dest_related_page = Cms::Page.where(site_id: @site.id, filename: source_related_page.filename).one
+          related_page_ids.push(dest_related_page.id)
+        end
+        dest_attributes.related_page_ids = related_page_ids
+        dest_attributes.update
       end
     end
 
