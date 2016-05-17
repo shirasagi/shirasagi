@@ -17,7 +17,7 @@ describe "article_pages", dbscope: :example do
       end
 
       it do
-        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
+        Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
           click_on "新規作成"
 
@@ -32,12 +32,9 @@ describe "article_pages", dbscope: :example do
           end
           # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
-          expect(status_code).to eq 200
 
           # wait for a while because executes save in asynchornously
-          within "div#addon-basic" do
-            expect(page).to have_css("dd", text: "sample")
-          end
+          wait_for_selector("div#addon-basic dd", text: "sample")
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -57,7 +54,7 @@ describe "article_pages", dbscope: :example do
       end
 
       it do
-        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
+        Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
           click_on "新規作成"
 
@@ -71,12 +68,9 @@ describe "article_pages", dbscope: :example do
           end
           # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
-          expect(status_code).to eq 200
 
           # wait for a while because executes save in asynchornously
-          within "div#addon-basic" do
-            expect(page).to have_css("dd", text: "sample")
-          end
+          wait_for_selector("div#addon-basic dd", text: "sample")
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -96,7 +90,7 @@ describe "article_pages", dbscope: :example do
       end
 
       it do
-        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
+        Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
           click_on "新規作成"
 
@@ -110,12 +104,9 @@ describe "article_pages", dbscope: :example do
           end
           # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
-          expect(status_code).to eq 200
 
           # wait for a while because executes save in asynchornously
-          within "div#addon-basic" do
-            expect(page).to have_css("dd", text: "sample")
-          end
+          wait_for_selector("div#addon-basic dd", text: "sample")
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
@@ -142,7 +133,7 @@ describe "article_pages", dbscope: :example do
       end
 
       it do
-        Timecop.travel(Time.new(2016, 4, 12, 16, 32)) do
+        Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
           click_on "新規作成"
 
@@ -156,12 +147,9 @@ describe "article_pages", dbscope: :example do
           end
           # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
-          expect(status_code).to eq 200
 
           # wait for a while because executes save in asynchornously
-          within "div#addon-basic" do
-            expect(page).to have_css("dd", text: "sample")
-          end
+          wait_for_selector("div#addon-basic dd", text: "sample")
 
           expect(Article::Page.count).to eq 1
           page = Article::Page.first
