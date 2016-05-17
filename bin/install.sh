@@ -39,7 +39,6 @@ sudo mv shirasagi $SS_DIR
 cd $SS_DIR
 cp -n config/samples/*.{rb,yml} config/
 bundle install --without development test --path vendor/bundle
-bundle exec rake unicorn:start
 
 sudo firewall-cmd --add-port=http/tcp --permanent
 sudo firewall-cmd --add-port=https/tcp --permanent
@@ -269,6 +268,7 @@ sudo chown root: /etc/systemd/system/shirasagi-unicorn.service
 sudo chmod 644 /etc/systemd/system/shirasagi-unicorn.service
 sudo systemctl daemon-reload
 sudo systemctl enable shirasagi-unicorn.service
+sudo systemctl start shirasagi-unicorn.service
 
 cd $SS_DIR
 bundle exec rake db:drop
