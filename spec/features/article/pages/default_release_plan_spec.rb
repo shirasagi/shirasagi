@@ -11,8 +11,8 @@ describe "article_pages", dbscope: :example do
     context "with site setting", js: true do
       before do
         site.default_release_plan_state = 'enabled'
-        site.default_release_date_delay = 3
-        site.default_close_date_delay = 100
+        site.default_release_days_after = 3
+        site.default_close_days_after = 100
         site.save!
       end
 
@@ -48,8 +48,8 @@ describe "article_pages", dbscope: :example do
     context "save as draft with site setting", js: true do
       before do
         site.default_release_plan_state = 'enabled'
-        site.default_release_date_delay = 3
-        site.default_close_date_delay = 100
+        site.default_release_days_after = 3
+        site.default_close_days_after = 100
         site.save!
       end
 
@@ -84,8 +84,8 @@ describe "article_pages", dbscope: :example do
     context "with node setting", js: true do
       before do
         node.default_release_plan_state = 'enabled'
-        node.default_release_date_delay = 4
-        node.default_close_date_delay = 71
+        node.default_release_days_after = 4
+        node.default_close_days_after = 71
         node.save!
       end
 
@@ -120,15 +120,15 @@ describe "article_pages", dbscope: :example do
     context "with site setting and node setting", js: true do
       before do
         site.default_release_plan_state = 'enabled'
-        site.default_release_date_delay = 3
-        site.default_close_date_delay = 100
+        site.default_release_days_after = 3
+        site.default_close_days_after = 100
         site.save!
       end
 
       before do
         node.default_release_plan_state = 'enabled'
-        node.default_release_date_delay = 4
-        node.default_close_date_delay = 71
+        node.default_release_days_after = 4
+        node.default_close_days_after = 71
         node.save!
       end
 

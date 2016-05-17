@@ -348,8 +348,8 @@ ja:
         in_file: ファイル
       cms/addon/default_release_plan:
         default_release_plan_state: 公開予約の既定値
-        default_release_date_delay: 公開開始日
-        default_close_date_delay: 公開終了日
+        default_release_days_after: 公開開始日
+        default_close_days_after: 公開終了日
 
   errors:
     messages:
@@ -821,10 +821,10 @@ ja:
         - 既定で公開予約を設定するかどうかを選択します。
         - 「無効]を選択している場合、既定で公開予約を設定しません。
         - 「有効]を選択している場合、既定で公開予約開始日と公開予約終了日を設定します。
-      default_release_date_delay:
+      default_release_days_after:
         - 公開開始日を設定します。
         - 「3 日後」を設定した場合、当日日付＋3日後の0時0分に公開開始日時が設定されます。
-      default_close_date_delay:
+      default_close_days_after:
         - 公開終了日を設定します。
         - 「1000 日後」を設定した場合、当日日付＋1,000日後の0時0分に公開開始日時が設定されます。
 
