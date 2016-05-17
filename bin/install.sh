@@ -56,8 +56,8 @@ do
 done
 
 sudo firewall-cmd --add-port=http/tcp --permanent
-sudo firewall-cmd --add-port=https/tcp --permanent
-sudo firewall-cmd --add-port=3000/tcp --permanent
+#sudo firewall-cmd --add-port=https/tcp --permanent
+#sudo firewall-cmd --add-port=3000/tcp --permanent
 sudo firewall-cmd --reload
 
 #### Furigana
