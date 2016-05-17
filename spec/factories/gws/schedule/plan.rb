@@ -15,7 +15,7 @@ FactoryGirl.define do
     name { "name-#{unique_id}" }
     text { "text-#{unique_id}" }
     member_ids { [gws_user.id] }
-    start_at { Time.zone.now }
-    end_at { Time.zone.now + 5.minutes }
+    start_at { Time.zone.today.strftime('Y-m-d') + '10:00' }
+    end_at { Time.zone.today.strftime('Y-m-d') + '11:00' }
   end
 end
