@@ -11,6 +11,7 @@ SS::Application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/banners" }, as: :main
     resources :banners, concerns: :deletion
     get "access_logs" => "access_logs#index", as: :access_logs
+    get "access_logs/download" => "access_logs#download", as: :access_logs_download
   end
 
   node "ads" do

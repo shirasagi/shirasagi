@@ -13,4 +13,19 @@ class Ads::AccessLog
   validates :node_id, presence: true
   validates :link_url, presence: true
   validates :date, presence: true
+
+  class << self
+    def to_csv
+      CSV.generate do |data|
+        data << %w(date link_url count)
+        criteria.each do |item|
+          line = []
+          line << item.date.strftime("%Y-%m-%d")
+          line << item.link_url
+          line << item.count
+          data << line
+        end
+      end
+    end
+  end
 end
