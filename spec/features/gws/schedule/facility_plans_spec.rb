@@ -54,7 +54,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
         fill_in "item[end_at]", with: "2016/01/01 10:10"
         click_button "保存"
       end
-      expect(status_code).to eq 200
+      expect(status_code.to_s).to match /200|302/
       expect(current_path).not_to eq new_path
       expect(page).not_to have_css("form#item-form")
     end
