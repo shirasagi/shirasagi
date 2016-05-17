@@ -72,6 +72,16 @@ module Sys::SiteCopy::Nodes
         # 物理的なディレクトリ作成とファイル複製が必要な場合
         copy_file_dir(base_cmsnode, basesite_public_dir, site_public_dir) if ['uploader/file'].include? base_cmsnode.route
 
+        unless base_cmsnode.st_category_ids.empty?
+          st_category_ids = []
+          base_cmsnode.st_category_ids.each do |st_category_id|
+            source_node = Cms::Node.where(id: st_category_id).one
+            dest_node = Cms::Node.where(site_id: @site.id, filename: source_node.filename).one
+            st_category_ids.push(dest_node.id)
+          end
+          cms_node_obj.st_category_ids = st_category_ids
+        end
+
         begin
           cms_node_obj.save!
         rescue => exception
