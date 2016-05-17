@@ -19,7 +19,15 @@ sudo yum -y install \
   openssl-devel readline libyaml-devel readline-devel zlib zlib-devel \
   wget git ImageMagick ImageMagick-devel
 
-gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+for i in $(seq 1 3)
+do
+  gpg2 --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
+  if [ $? -eq 0 ]; then
+    break
+  fi
+  sleep 5s
+done
+
 \curl -sSL https://get.rvm.io | bash -s stable
 if [ `whoami` = root ]; then
   RVM_HOME=/usr/local/rvm
