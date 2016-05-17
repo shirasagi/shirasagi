@@ -290,6 +290,8 @@ bundle exec rake db:drop
 bundle exec rake db:create_indexes
 bundle exec rake ss:create_site data="{ name: \"サイト名\", host: \"www\", domains: \"${SS_HOSTNAME}\" }"
 bundle exec rake db:seed name=demo site=www
+bundle exec rake cms:generate_nodes
+bundle exec rake cms:generate_pages
 
 cat <<EOF | crontab -
 */15 * * * * /bin/bash -l -c 'cd $SS_DIR && ${RVM_HOME}/wrappers/default/bundle exec rake cms:release_pages && ${RVM_HOME}/wrappers/default/bundle exec rake cms:generate_nodes' >/dev/null
