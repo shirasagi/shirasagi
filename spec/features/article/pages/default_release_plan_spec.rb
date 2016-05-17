@@ -30,7 +30,7 @@ describe "article_pages", dbscope: :example do
             Rails.logger.debug("click 公開保存")
             click_button "公開保存"
           end
-          # submit form forcibly, I dont't know why form is submitted.
+          # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
           expect(status_code).to eq 200
 
@@ -69,7 +69,7 @@ describe "article_pages", dbscope: :example do
             fill_in "item[basename]", with: "sample"
             click_button "下書き保存"
           end
-          # submit form forcibly, I dont't know why form is submitted.
+          # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
           expect(status_code).to eq 200
 
@@ -108,7 +108,7 @@ describe "article_pages", dbscope: :example do
             fill_in "item[basename]", with: "sample"
             click_button "公開保存"
           end
-          # submit form forcibly, I dont't know why form is submitted.
+          # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
           expect(status_code).to eq 200
 
@@ -154,7 +154,7 @@ describe "article_pages", dbscope: :example do
             fill_in "item[basename]", with: "sample"
             click_button "公開保存"
           end
-          # submit form forcibly, I dont't know why form is submitted.
+          # submit form forcibly because form doesn't submit any data
           page.execute_script("$('form#item-form').submit()")
           expect(status_code).to eq 200
 
