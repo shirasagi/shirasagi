@@ -38,6 +38,16 @@ module Sys::SiteCopy::Article
           new_cms_ad.layout_id = @layout_records_map[cms_ad.layout_id]
         end
 
+        unless cms_ad.ads_category_ids.empty?
+          ads_category_ids = []
+          cms_ad.ads_category_ids.each do |ads_category_id|
+            source_category = Cms::Node.where(id: ads_category_id).one
+            dest_category = Cms::Node.where(site_id: @site.id, filename: source_category.filename).one
+            ads_category_ids.push(dest_category.id)
+          end
+          new_cms_ad.ads_category_ids = ads_category_ids
+        end
+
         begin
           new_cms_ad.save!
         rescue => exception

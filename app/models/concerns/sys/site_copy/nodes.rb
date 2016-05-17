@@ -78,6 +78,26 @@ module Sys::SiteCopy::Nodes
           Rails.logger.error(exception.message)
           throw exception
         end
+
+        if base_cmsnode.route == 'inquiry/form'
+          copy_inquiry_columns base_cmsnode, cms_node_obj
+        end
+      end
+    end
+
+    def copy_inquiry_columns(source_node, dest_node)
+      Inquiry::Column.where(node_id: source_node.id).each do |source_inquiry_column|
+        dest_inquiry_column = Inquiry::Column.new source_inquiry_column.attributes.except(
+            :id, :_id, :node_id, :site_id, :created, :updated
+        ).to_hash
+        dest_inquiry_column.node_id = dest_node.id
+        dest_inquiry_column.site_id = @site.id
+        begin
+          dest_inquiry_column.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
       end
     end
 
