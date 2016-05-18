@@ -1,0 +1,18 @@
+<%# TODO: HTMLの構造とCSSは現状何も考えずに書かれているので必要な修正をして欲しい %>
+
+<% if @cur_page.gravatar_screen_name.present? %>
+<div class="gravatar-screen-name">
+  <%= @cur_page.gravatar_screen_name %>
+</div>
+<% end %>
+
+<% email = @cur_page.email_for_gravatar %>
+<% unless email.nil? %>
+<div class="gravatar-icon">
+  <% size = 150 %><%# TODO: Adjust the icon image size %>
+  <% default = "https://s.ourtokushima.jp/img/sudachikun-s.png" %><%# TODO: Fix the default icon image URL %>
+  <%= tag(:img, src: "https://gravatar.com/avatar/#{Digest::MD5.hexdigest(email)}?s=#{size}&d=#{CGI.escape(default)}") %>
+  <%#= gravatar_image_tag email, size, default: default %><%# TODO: Use helper %>
+  <%# NOTE: e1c2e2c1021f449d99dcf643c418ea7ab19685b0 の変更で helper が読み込まれないようになっている．こういう場合はどうすればhelperが使えるのか？(ここで include GravatarHelper は出来ない) %>
+</div>
+<% end %>
