@@ -158,6 +158,11 @@ module Sys::SiteCopy::Article
         end
 
         new_cms_page2.body_parts = cms_page2.body_parts if defined? new_cms_page2.body_parts
+        if defined? cms_page2.maste_id
+          source_master_page = Cms::Page.where(id: cms_page2.master_id).one
+          dest_master_page = Cms::Page.where(site_id: @site.id, filename: source_master_page.filename).one
+          new_cms_page2.master_id = dest_master_page.id
+        end
 
         begin
           new_cms_page2.save!
