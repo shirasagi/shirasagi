@@ -10,6 +10,7 @@ module Sys::SiteCopy::Templates
         new_cms_template = Cms::EditorTemplate.new cms_template.attributes.except(:id, :_id, :site_id, :created, :updated)
         new_cms_template.site_id = @site.id
         if cms_template.thumb_id
+          source_thumbnail = SS::File.where(id: cms_template.thumb_id).one
           dest_thumbnail = SS::File.where(site_id: @site.id, filename: source_thumbnail.filename).one
           new_cms_template.thumb_id = dest_thumbnail._id
         end
