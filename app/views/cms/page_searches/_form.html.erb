@@ -1,0 +1,90 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name, class: :name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= f.number_field :order, class: :order %></dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :search_name %><%= @model.tt :search_name %></dt>
+  <dd><%= f.text_field :search_name, class: "search-name" %></dd>
+
+  <dt><%= @model.t :search_filename %><%= @model.tt :search_filename %></dt>
+  <dd><%= f.text_field :search_filename, class: "search-filename" %></dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :search_category_ids %><%= @model.tt :search_category_ids %></dt>
+  <dd class="wide">
+    <%= hidden_field_tag "item[search_category_ids][]", nil, class: "hidden-ids" %>
+    <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :search_category_ids %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.search_categories.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= hidden_field_tag "item[search_category_ids][]", item.id %> <%= item.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :search_group_ids %><%= @model.tt :search_group_ids %></dt>
+  <dd class="wide">
+    <%= hidden_field_tag "item[search_group_ids][]", nil, class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :search_group_ids %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.search_groups.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= hidden_field_tag "item[search_group_ids][]", item.id %> <%= item.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see released">
+  <dt><%= @model.t :search_released %><%= @model.tt :search_released %></dt>
+  <dd>
+    <%= f.text_field :search_released_start, class: "datetime js-datetime search-released-start" %>
+    <%= "-" %>
+    <%= f.text_field :search_released_close, class: "datetime js-datetime search-released-close" %>
+  </dd>
+</dl>
+
+<dl class="see updated">
+  <dt><%= @model.t :search_updated %><%= @model.tt :search_updated %></dt>
+  <dd>
+    <%= f.text_field :search_updated_start, class: "datetime js-datetime search-updated-start" %>
+    <%= "-" %>
+    <%= f.text_field :search_updated_close, class: "datetime js-datetime search-updated-close" %>
+  </dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :search_state %><%= @model.tt :search_state %></dt>
+  <dd><%= f.select :search_state, @item.search_state_options, include_blank: true %></dd>
+</dl>

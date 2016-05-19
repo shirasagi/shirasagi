@@ -1,0 +1,7 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="condition">検索条件: <%= item.brief_search_condition %></span>
+<% end %>
+
+<%= render file: "cms/crud/index" %>

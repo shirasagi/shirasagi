@@ -94,6 +94,10 @@ SS::Application.routes.draw do
       get :download, on: :member
     end
 
+    resources :page_searches, concerns: :deletion do
+      get :search, on: :member
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"

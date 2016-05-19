@@ -63,5 +63,12 @@ module Cms
     Cms::Role.permission :move_other_cms_nodes
     Cms::Role.permission :move_other_cms_pages
     Cms::Role.permission :unlock_other_cms_pages
+
+    Cms::Role.permission :read_other_cms_page_searches
+    Cms::Role.permission :read_private_cms_page_searches
+    Cms::Role.permission :edit_other_cms_page_searches
+    Cms::Role.permission :edit_private_cms_page_searches
+    Cms::Role.permission :delete_other_cms_page_searches
+    Cms::Role.permission :delete_private_cms_page_searches
   end
 end
