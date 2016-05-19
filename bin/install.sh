@@ -273,6 +273,7 @@ User=${SS_USER}
 WorkingDirectory=${SS_DIR}
 ExecStart=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:start
 ExecStop=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:stop
+ExecReload=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:restart
 Type=forking
 PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
 
