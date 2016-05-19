@@ -13,6 +13,7 @@ describe Article::Page, dbscope: :example do
     it { expect(item.url).not_to be_nil }
     it { expect(item.full_url).not_to be_nil }
     it { expect(item.parent).to eq node }
+    it { expect(item.private_show_path).to eq Rails.application.routes.url_helpers.article_page_path(site: subject.site, cid: node, id: subject) }
   end
 
   describe "shirasagi-442" do

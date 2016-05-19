@@ -18,6 +18,7 @@ describe Cms::Page do
     it { expect(item.full_url).not_to eq nil }
     it { expect(item.public?).not_to eq nil }
     it { expect(item.parent).to eq false }
+    it { expect(item.private_show_path).to eq Rails.application.routes.url_helpers.cms_page_path(site: subject.site, id: subject) }
   end
 
   describe "#becomes_with_route" do

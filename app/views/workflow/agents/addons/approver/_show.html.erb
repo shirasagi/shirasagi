@@ -15,7 +15,7 @@ $ ->
     uri = location.pathname.split("/")
     uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
     uri[3] = "pages"
-    redirect_location = "<%= @item.try(:branch?) ? show_path_with_route(@item.master) : "" %>"
+    redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>"
     $.ajax
       type: "post"
       url: uri.join("/")  + "/" + $(this).attr("updatetype") + "_update"

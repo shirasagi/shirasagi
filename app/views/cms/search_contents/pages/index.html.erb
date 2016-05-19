@@ -13,7 +13,7 @@
     <tbody>
     <% @items.each do |item| %>
       <tr>
-        <td><%= link_to(item.name, show_path_with_route(item), target: "_blank") %></td>
+        <td><%= link_to(item.name, item.private_show_path, target: "_blank") %></td>
         <td class="filename"><%= item.filename %></td>
         <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
         <td class="state"><%= t "views.state.#{item.status}" %></td>
