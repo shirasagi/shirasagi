@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe "cms_search", dbscope: :example do
-  subject(:site) { cms_site }
-  subject(:pages_index_path) { cms_search_contents_pages_path site.id }
-  subject(:html_index_path) { cms_search_contents_html_path site.id }
+  let(:site) { cms_site }
+  let(:pages_index_path) { cms_search_contents_pages_path site.id }
+  let(:html_index_path) { cms_search_contents_html_path site.id }
+  let(:user) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
 
   it "without login" do
     visit html_index_path
@@ -86,6 +87,27 @@ describe "cms_search", dbscope: :example do
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
       end
 
+      it "search with ready state" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          select "公開待ち", from: "s_state"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
+
+        Article::Page.first.tap do |item|
+          item.state = "ready"
+          item.save!
+        end
+
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+      end
+
       it "search with released_or_updated" do
         Timecop.travel(3.days.from_now) do
           login_cms_user
@@ -137,6 +159,58 @@ describe "cms_search", dbscope: :example do
           expect(page).to have_css("div.info a.title", text: "[TEST]A")
           expect(page).to have_css("div.info a.title", text: "[TEST]D")
         end
+      end
+
+      it "search with request approver_state" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          select "申請したもの", from: "s_approver_state"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
+
+        Article::Page.first.tap do |item|
+          item.cur_site = site
+          item.cur_user = cms_user
+          item.workflow_state = "request"
+          item.workflow_user_id = cms_user.id
+          item.workflow_approvers = [{ level: 1, user_id: user.id, state: "request" }]
+          item.workflow_required_counts = [ false ]
+          item.save!
+        end
+
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+      end
+
+      it "search with approve approver_state" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          select "依頼されたもの", from: "s_approver_state"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
+
+        Article::Page.first.tap do |item|
+          item.cur_site = site
+          item.cur_user = user
+          item.workflow_state = "request"
+          item.workflow_user_id = user.id
+          item.workflow_approvers = [{ level: 1, user_id: cms_user.id, state: "request" }]
+          item.workflow_required_counts = [ false ]
+          item.save!
+        end
+
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
     end
 
