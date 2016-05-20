@@ -12,6 +12,7 @@ class Cms::PageSearch
   field :search_name, type: String
   field :search_filename, type: String
   field :search_state, type: String
+  field :search_approver_state, type: String
   field :search_released_start, type: DateTime
   field :search_released_close, type: DateTime
   field :search_updated_start, type: DateTime
@@ -20,12 +21,13 @@ class Cms::PageSearch
   embeds_ids :search_groups, class_name: "SS::Group"
 
   permit_params :name, :order
-  permit_params :search_name, :search_filename, :search_state
+  permit_params :search_name, :search_filename, :search_state, :search_approver_state
   permit_params :search_released_start, :search_released_close, :search_updated_start, :search_updated_close
   permit_params search_category_ids: [], search_group_ids: []
 
   validates :name, presence: true
   validates :search_state, inclusion: { in: %w(public closed ready), allow_blank: true }
+  validates :search_approver_state, inclusion: { in: %w(request approve), allow_blank: true }
   validates :search_released_start, datetime: true
   validates :search_released_close, datetime: true
   validates :search_updated_start, datetime: true
@@ -61,6 +63,19 @@ class Cms::PageSearch
       updated << { :updated.gte => search_updated_start } if search_updated_start.present?
       updated << { :updated.lte => search_updated_close } if search_updated_close.present?
 
+      approver = []
+      case search_approver_state
+      when 'request'
+        approver << { workflow_user_id: @cur_user._id }
+      when 'approve'
+        approver << {
+          workflow_state: "request",
+          workflow_approvers: {
+            "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" }
+          }
+        }
+      end
+
       criteria = Cms::Page.site(@cur_site).
         allow(:read, @cur_user).
         search(name: search_name).
@@ -69,7 +84,8 @@ class Cms::PageSearch
         in(groups).
         where(state).
         and(released).
-        and(updated)
+        and(updated).
+        and(approver)
       @search_count = criteria.count
       criteria.order_by(filename: 1)
     end
@@ -86,8 +102,14 @@ class Cms::PageSearch
     end
   end
 
+  def search_approver_state_options
+    %w(request approve).map do |w|
+      [ I18n.t("workflow.page.#{w}"), w ]
+    end
+  end
+
   def search_condition?
-    [ :search_name, :search_filename, :search_category_ids, :search_group_ids, :search_released_start, :search_released_close, :search_updated_start, :search_updated_close, :search_state ].any? do |k|
+    [ :search_name, :search_filename, :search_category_ids, :search_group_ids, :search_released_start, :search_released_close, :search_updated_start, :search_updated_close, :search_state, :search_approver_state ].any? do |k|
       self[k].present?
     end
   end
@@ -102,6 +124,7 @@ class Cms::PageSearch
     info << "#{Cms::Page.t(:released)}: #{search_released_start.try(:strftime, "%Y/%m/%d %H:%M")}-#{search_released_close.try(:strftime, "%Y/%m/%d %H:%M")}" if search_released_start.present? || search_released_close.present?
     info << "#{Cms::Page.t(:updated)}: #{search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")}-#{search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")}" if search_updated_start.present? || search_updated_close.present?
     info << "#{Cms::Page.t(:state)}: #{I18n.t :"views.options.state.#{search_state}"}" if search_state.present?
+    info << "#{Cms::Page.t(:workflow_state)}: #{I18n.t :"workflow.page.#{search_approver_state}"}" if search_approver_state.present?
 
     info.join(", ")
   end

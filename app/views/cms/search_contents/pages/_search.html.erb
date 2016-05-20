@@ -8,9 +8,6 @@ $(".reset").on("click", function(e){
   $(".datetime").val("");
   return false;
 });
-$(".state").on("click", function(e){
-  $("[value!='" + $(this).attr("value") + "'].state").prop("checked", false)
-});
 <% end %>
 
 <%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>
@@ -99,16 +96,12 @@ $(".state").on("click", function(e){
 
   <dl class="see">
     <dt><%= @model.t :search_state %><%= @model.tt :search_state %></dt>
-    <dd>
-      <label>
-        <%= check_box_tag "s[state]", "public", (@item.search_state == "public"), id: :s_public, class: :state %>
-        <%= t("views.options.state.public") %>
-      </label>
-      <label>
-        <%= check_box_tag "s[state]", "closed", (@item.search_state == "closed"), id: :s_closed, class: :state %>
-        <%= t("views.options.state.closed") %>
-      </label>
-    </dd>
+    <dd><%= select_tag "s[state]", options_for_select(@item.search_state_options, selected: @item.search_state), include_blank: true %></dd>
+  </dl>
+
+  <dl class="see">
+    <dt><%= @model.t :search_approver_state %><%= @model.tt :search_approver_state %></dt>
+    <dd><%= select_tag "s[approver_state]", options_for_select(@item.search_approver_state_options, selected: @item.search_approver_state), include_blank: true %></dd>
   </dl>
 
   <dl class="see">

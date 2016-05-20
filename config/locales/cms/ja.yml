@@ -376,6 +376,7 @@ ja:
         search_updated_start: 検索更新日時（開始）
         search_updated_close: 検索更新日時（終了）
         search_state: 検索ステータス
+        search_approver_state: 検索承認ステータス
 
   errors:
     messages:
@@ -860,6 +861,8 @@ ja:
         - 検索したい更新日時の範囲を入力します。
       search_state:
         - 検索したいページのステータスを選択します。
+      search_approver_state:
+        - 検索したいページの承認ステータスを選択します。
 
   all_content:
     url: URL

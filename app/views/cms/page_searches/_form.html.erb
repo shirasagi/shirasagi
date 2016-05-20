@@ -88,3 +88,8 @@
   <dt><%= @model.t :search_state %><%= @model.tt :search_state %></dt>
   <dd><%= f.select :search_state, @item.search_state_options, include_blank: true %></dd>
 </dl>
+
+<dl class="see">
+  <dt><%= @model.t :search_approver_state %><%= @model.tt :search_approver_state %></dt>
+  <dd><%= f.select :search_approver_state, @item.search_approver_state_options, include_blank: true %></dd>
+</dl>
