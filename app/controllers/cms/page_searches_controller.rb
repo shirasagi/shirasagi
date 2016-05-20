@@ -10,6 +10,14 @@ class Cms::PageSearchesController < ApplicationController
       { cur_site: @cur_site, cur_user: @cur_user }
     end
 
+    def pre_params
+      if params[:item].present?
+        params.require(:item).permit(permit_fields)
+      else
+        {}
+      end
+    end
+
   public
     def search
       set_item

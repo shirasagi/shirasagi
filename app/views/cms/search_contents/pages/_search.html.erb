@@ -115,7 +115,10 @@ $(".state").on("click", function(e){
     <dt></dt>
     <dd class="wide">
       <%= f.submit t("views.button.search"), name: "search", class: "search btn-primary" %>
-      <%= f.submit t("views.button.reset"), name: "reset", class: "reset btn-default" %>
+      <%= f.button t("views.button.reset"), name: "reset", type: "reset", class: "reset btn-default" %>
+      <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
+        <%= f.button t("views.button.save"), name: "save", class: "save btn-default" %>
+      <% end %>
     </dd>
   </dl>
 </div>

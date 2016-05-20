@@ -29,4 +29,12 @@ class Cms::SearchContents::PagesController < ApplicationController
     def set_item
       @item = @model.new pre_params.merge(fix_params)
     end
+
+  public
+    def index
+      if params[:save]
+        redirect_to new_cms_page_search_path(item: @item.attributes.except(:site_id, :_id, :id, :order))
+        return
+      end
+    end
 end
