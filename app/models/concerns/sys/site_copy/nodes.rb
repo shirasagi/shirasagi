@@ -82,6 +82,12 @@ module Sys::SiteCopy::Nodes
           cms_node_obj.st_category_ids = st_category_ids
         end
 
+        if base_cmsnode.attributes['urgency_default_layout_id']
+          source_default_layout = Cms::Layout.where(id: base_cmsnode.attributes['urgency_default_layout_id']).one
+          dest_default_layout = Cms::Layout.where(site_id: @site.id, filename: source_default_layout.filename).one
+          cms_node_obj.attributes['urgency_default_layout_id'] = dest_default_layout.id
+        end
+
         begin
           cms_node_obj.save!
         rescue => exception
