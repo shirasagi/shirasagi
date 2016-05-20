@@ -16,17 +16,17 @@ $(".state").on("click", function(e){
 <%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>
 <div class="search-contents-pages">
   <dl class="see">
-    <dt><%= @model.t("name") %><%= tt("search_contents.pages.name") %></dt>
-    <dd><%= text_field_tag "s[name]", @name, class: :name %></dd>
+    <dt><%= @model.t :search_name %><%= @model.tt :search_name %></dt>
+    <dd><%= text_field_tag "s[name]", @item.search_name, class: :name %></dd>
   </dl>
 
   <dl class="see">
-    <dt><%= @model.t("filename") %><%= tt("search_contents.pages.filename") %></dt>
-    <dd><%= text_field_tag "s[filename]", @filename, class: :filename %></dd>
+    <dt><%= @model.t :search_filename %><%= @model.tt :search_filename %></dt>
+    <dd><%= text_field_tag "s[filename]", @item.search_filename, class: :filename %></dd>
   </dl>
 
   <dl class="see">
-    <dt><%= @model.t("category_ids") %><%= tt("search_contents.pages.category") %></dt>
+    <dt><%= @model.t :search_category_ids %><%= @model.tt :search_category_ids %></dt>
     <dd class="wide">
       <%= hidden_field_tag "s[category_ids][]", nil, class: "hidden-ids" %>
       <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
@@ -41,7 +41,7 @@ $(".state").on("click", function(e){
           </tr>
         </thead>
         <tbody>
-          <% @categories.each do |item| %>
+          <% @item.search_categories.each do |item| %>
           <tr data-id="<%= item.id %>">
             <td><%= hidden_field_tag "s[category_ids][]", item.id %> <%= item.name %></td>
             <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
@@ -53,7 +53,7 @@ $(".state").on("click", function(e){
   </dl>
 
   <dl class="see">
-    <dt><%= @model.t("group_ids") %><%= tt("search_contents.pages.group") %></dt>
+    <dt><%= @model.t :search_group_ids %><%= @model.tt :search_group_ids %></dt>
     <dd class="wide">
       <%= hidden_field_tag "s[group_ids][]", nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
@@ -68,7 +68,7 @@ $(".state").on("click", function(e){
           </tr>
         </thead>
         <tbody>
-          <% @groups.each do |item| %>
+          <% @item.search_groups.each do |item| %>
           <tr data-id="<%= item.id %>">
             <td><%= hidden_field_tag "s[group_ids][]", item.id %> <%= item.name %></td>
             <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
@@ -80,32 +80,32 @@ $(".state").on("click", function(e){
   </dl>
 
   <dl class="see">
-    <dt><%= @model.t("released") %><%= tt("search_contents.pages.released") %></dt>
+    <dt><%= @model.t :search_released %><%= @model.tt :search_released %></dt>
     <dd>
-      <%= text_field_tag "s[released][start]", tryb{@released["start"]}, class: "datetime js-datetime" %>
+      <%= text_field_tag "s[released_start]", tryb{@item.search_released_start.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
       <%= "-" %>
-      <%= text_field_tag "s[released][close]", tryb{@released["close"]}, class: "datetime js-datetime" %>
+      <%= text_field_tag "s[released_close]", tryb{@item.search_released_close.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
     </dd>
   </dl>
 
   <dl class="see">
-    <dt><%= @model.t("updated") %><%= tt("search_contents.pages.updated") %></dt>
+    <dt><%= @model.t :search_updated %><%= @model.tt :search_updated %></dt>
     <dd>
-      <%= text_field_tag "s[updated][start]", tryb{@updated["start"]}, class: "datetime js-datetime" %>
+      <%= text_field_tag "s[updated_start]", tryb{@item.search_updated_start.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
       <%= "-" %>
-      <%= text_field_tag "s[updated][close]", tryb{@updated["close"]}, class: "datetime js-datetime" %>
+      <%= text_field_tag "s[updated_close]", tryb{@item.search_updated_close.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
     </dd>
   </dl>
 
   <dl class="see">
-    <dt><%= @model.t("state") %><%= tt("search_contents.pages.state") %></dt>
+    <dt><%= @model.t :search_state %><%= @model.tt :search_state %></dt>
     <dd>
       <label>
-        <%= check_box_tag "s[state]", "public", (@state == "public"), id: :s_public, class: :state %>
+        <%= check_box_tag "s[state]", "public", (@item.search_state == "public"), id: :s_public, class: :state %>
         <%= t("views.options.state.public") %>
       </label>
       <label>
-        <%= check_box_tag "s[state]", "closed", (@state == "closed"), id: :s_closed, class: :state %>
+        <%= check_box_tag "s[state]", "closed", (@item.search_state == "closed"), id: :s_closed, class: :state %>
         <%= t("views.options.state.closed") %>
       </label>
     </dd>

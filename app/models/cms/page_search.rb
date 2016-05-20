@@ -86,6 +86,12 @@ class Cms::PageSearch
     end
   end
 
+  def search_condition?
+    [ :search_name, :search_filename, :search_category_ids, :search_group_ids, :search_released_start, :search_released_close, :search_updated_start, :search_updated_close, :search_state ].any? do |k|
+      self[k].present?
+    end
+  end
+
   def brief_search_condition
     info = []
 
@@ -93,9 +99,9 @@ class Cms::PageSearch
     info << "#{Cms::Page.t(:filename)}: #{search_filename}" if search_filename.present?
     info << "#{Cms::Page.t(:category_ids)}: #{search_categories.pluck(:name).join(",")}" if search_category_ids.present?
     info << "#{Cms::Page.t(:group_ids)}: #{search_groups.pluck(:name).join(",")}" if search_group_ids.present?
-    info << "#{t(:released)}: #{search_released_start.try(:strftime, "%Y-%m-%d %H:%M")}-#{search_released_close.try(:strftime, "%Y-%m-%d %H:%M")}" if search_released_start.present? || search_released_close.present?
-    info << "#{t(:updated)}: #{search_updated_start.try(:strftime, "%Y-%m-%d %H:%M")}-#{search_updated_close.try(:strftime, "%Y-%m-%d %H:%M")}" if search_updated_start.present? || search_updated_close.present?
-    info << "#{Cms::Page.t(:state)}: #{t "views.state.#{search_state}"}" if search_state.present?
+    info << "#{Cms::Page.t(:released)}: #{search_released_start.try(:strftime, "%Y/%m/%d %H:%M")}-#{search_released_close.try(:strftime, "%Y/%m/%d %H:%M")}" if search_released_start.present? || search_released_close.present?
+    info << "#{Cms::Page.t(:updated)}: #{search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")}-#{search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")}" if search_updated_start.present? || search_updated_close.present?
+    info << "#{Cms::Page.t(:state)}: #{I18n.t :"views.options.state.#{search_state}"}" if search_state.present?
 
     info.join(", ")
   end
