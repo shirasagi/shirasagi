@@ -4,8 +4,8 @@
 %>
 <div class="index">
   <div class="list-head">
-    <div class="search-info" style="float: right;">検索条件: <%= truncate(@item.brief_search_condition, length: 60) %></div>
-    <div class="search-count"><%= @result_count %> 件の検索結果</div>
+    <div class="search-info" style="float: right;"><%= I18n.t("cms.search_contents_condition", condition: truncate(@item.brief_search_condition, length: 60)) %></div>
+    <div class="search-count"><%= I18n.t("cms.search_contents_count", count: @result_count) %></div>
   </div>
 
   <ul class="list-items">

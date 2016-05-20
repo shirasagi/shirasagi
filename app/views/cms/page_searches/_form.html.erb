@@ -1,8 +1,8 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, class: :name %></dd>
 
-  <dt><%= @model.t :order %></dt>
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order, class: :order %></dd>
 </dl>
 
