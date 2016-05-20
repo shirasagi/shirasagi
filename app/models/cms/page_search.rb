@@ -109,8 +109,8 @@ class Cms::PageSearch
   end
 
   def search_condition?
-    [ :search_name, :search_filename, :search_category_ids, :search_group_ids, :search_released_start, :search_released_close, :search_updated_start, :search_updated_close, :search_state, :search_approver_state ].any? do |k|
-      self[k].present?
+    self.class.fields.keys.any? do |k|
+      k.start_with?("search_") && self[k].present?
     end
   end
 
@@ -121,10 +121,20 @@ class Cms::PageSearch
     info << "#{Cms::Page.t(:filename)}: #{search_filename}" if search_filename.present?
     info << "#{Cms::Page.t(:category_ids)}: #{search_categories.pluck(:name).join(",")}" if search_category_ids.present?
     info << "#{Cms::Page.t(:group_ids)}: #{search_groups.pluck(:name).join(",")}" if search_group_ids.present?
-    info << "#{Cms::Page.t(:released)}: #{search_released_start.try(:strftime, "%Y/%m/%d %H:%M")}-#{search_released_close.try(:strftime, "%Y/%m/%d %H:%M")}" if search_released_start.present? || search_released_close.present?
-    info << "#{Cms::Page.t(:updated)}: #{search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")}-#{search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")}" if search_updated_start.present? || search_updated_close.present?
+    if search_released_start.present? || search_released_close.present?
+      start = search_released_start.try(:strftime, "%Y/%m/%d %H:%M")
+      close = search_released_close.try(:strftime, "%Y/%m/%d %H:%M")
+      info << "#{Cms::Page.t(:released)}: #{start}-#{close}"
+    end
+    if search_updated_start.present? || search_updated_close.present?
+      start = search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")
+      close = search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")
+      info << "#{Cms::Page.t(:updated)}: #{start}-#{close}"
+    end
     info << "#{Cms::Page.t(:state)}: #{I18n.t :"views.options.state.#{search_state}"}" if search_state.present?
-    info << "#{Cms::Page.t(:workflow_state)}: #{I18n.t :"workflow.page.#{search_approver_state}"}" if search_approver_state.present?
+    if search_approver_state.present?
+      info << "#{Cms::Page.t(:workflow_state)}: #{I18n.t :"workflow.page.#{search_approver_state}"}"
+    end
 
     info.join(", ")
   end
