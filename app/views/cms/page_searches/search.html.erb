@@ -19,29 +19,4 @@
   SS_AddonTabs.hide(".addon-body dl.see");
 <% end %>
 
-<div class="main-box">
-  <div><%= @item.search_count %> 件の検索結果</div>
-  <table class="index">
-    <thead>
-    <tr>
-      <th><%= t("cms.apis.contents.title") %></th>
-      <th class="filename"><%= Cms::Page.t :filename %></th>
-      <th class="datetime"><%= Cms::Page.t :updated %></th>
-      <th class="state"><%= Cms::Page.t :view_state %></th>
-    </tr>
-    </thead>
-    <tbody>
-    <% @results = @item.search.page(params[:page]).per(25) %>
-    <% @results.each do |item| %>
-      <tr>
-        <td><%= link_to(item.name, item.private_show_path, target: "_blank") %></td>
-        <td class="filename"><%= item.filename %></td>
-        <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-        <td class="state"><%= t "views.state.#{item.status}" %></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-</div>
-
-<%= paginate @results if @results.try(:current_page) %>
+<%= render file: "cms/page_search_contents/show" %>
