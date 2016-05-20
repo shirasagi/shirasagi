@@ -53,7 +53,7 @@ class Cms::PageSearch
       filename   = search_filename.present? ? { filename: /#{Regexp.escape(search_filename)}/i } : {}
       categories = search_category_ids.present? ? { category_ids: search_category_ids } : {}
       groups     = search_group_ids.present? ? { group_ids: search_group_ids } : {}
-      state      = search_state ? { state: search_state } : {}
+      state      = search_state.present? ? { state: search_state } : {}
 
       released = []
       released << { :released.gte => search_released_start } if search_released_start.present?

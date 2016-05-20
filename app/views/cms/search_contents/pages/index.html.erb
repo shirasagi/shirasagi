@@ -1,5 +1,5 @@
 <%= render file: "_search" %>
 
-<% if @item.search_condition? %>
+<% if params[:search] %>
   <%= render file: "cms/page_search_contents/show" %>
 <% end %>
