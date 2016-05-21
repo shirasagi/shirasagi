@@ -1,4 +1,5 @@
 module Chorg::MongoidSupport
+  extend ActiveSupport::Concern
   include Chorg::Context
   include Chorg::Loggable
 

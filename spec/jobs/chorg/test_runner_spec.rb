@@ -7,12 +7,11 @@ describe Chorg::TestRunner, dbscope: :example do
   context "with add" do
     let(:revision) { create(:revision, site_id: site.id) }
     let(:changeset) { create(:add_changeset, revision_id: revision.id) }
-    subject { described_class.new }
 
     it do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
-      expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+      expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).to be_nil
     end
   end
@@ -24,14 +23,13 @@ describe Chorg::TestRunner, dbscope: :example do
 
     context "with Article::Page" do
       let(:page) { create(:revisoin_page, site: site, group: group) }
-      subject { described_class.new }
 
       it do
         # ensure create models
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # check for not changed
-        expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(id: group.id).first).not_to be_nil
         expect(Cms::Group.where(id: group.id).first.name).to eq changeset.sources.first["name"]
 
@@ -55,7 +53,6 @@ describe Chorg::TestRunner, dbscope: :example do
 
     context "with Article::Page" do
       let(:page) { create(:revisoin_page, site: site, group: group1) }
-      subject { described_class.new }
 
       it do
         # ensure create models
@@ -66,7 +63,7 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page).not_to be_nil
 
         # check for not changed
-        expect { subject.call(site.host, user1.id, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(id: group1.id).first).not_to be_nil
         expect(Cms::Group.where(id: group1.id).first.name).to eq group1.name
         expect(Cms::Group.where(id: group2.id).first).not_to be_nil
@@ -91,13 +88,12 @@ describe Chorg::TestRunner, dbscope: :example do
     let(:group) { create(:revision_new_group) }
     let(:revision) { create(:revision, site_id: site.id) }
     let(:changeset) { create(:delete_changeset, revision_id: revision.id, source: group) }
-    subject { described_class.new }
 
     it do
       # ensure create models
       expect(changeset).not_to be_nil
       # change group.
-      expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+      expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
       # check for not changed
       expect(Cms::Group.where(id: group.id).first).not_to be_nil
     end

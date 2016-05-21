@@ -1,4 +1,4 @@
-class Chorg::Runner
+class Chorg::Runner < Cms::ApplicationJob
   include Chorg::Context
   include Chorg::Loggable
   include Chorg::MongoidSupport
@@ -7,28 +7,27 @@ class Chorg::Runner
   MAIN = "main".freeze
   TEST = "test".freeze
 
-  def self.call_async(*args, &block)
-    type = args.pop
-
+  def self.job_class(type)
     case type
     when MAIN then
-      Chorg::MainRunner.call_async(*args, &block)
+      Chorg::MainRunner
     when TEST then
-      Chorg::TestRunner.call_async(*args, &block)
+      Chorg::TestRunner
     else
       nil
     end
   end
 
-  def initialize(config = SS.config.chorg)
+  before_perform do
+    config = SS.config.chorg
     @config = config
     @models = config.models.map(&:constantize).freeze
     build_exclude_fields(config.exclude_fields)
   end
 
-  def call(host, user, name, adds_group_to_site)
-    @cur_site = Cms::Site.find_by(host: host)
-    @cur_user = Cms::User.site(@cur_site).or({id: user}, {name: user}).first if user.present?
+  def perform(name, adds_group_to_site)
+    @cur_site = self.site
+    @cur_user = self.user
     @adds_group_to_site = adds_group_to_site
     @item = Chorg::Revision.site(@cur_site).find_by(name: name)
     @item = Chorg::Revision.acquire_lock(@item, 1.hour.from_now)

@@ -7,11 +7,10 @@ describe Chorg::MainRunner, dbscope: :example do
   context "with add" do
     let(:revision) { create(:revision, site_id: site.id) }
     let(:changeset) { create(:add_changeset, revision_id: revision.id) }
-    subject { described_class.new }
 
     it do
       expect(changeset).not_to be_nil
-      expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+      expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).not_to be_nil
     end
   end
@@ -23,14 +22,13 @@ describe Chorg::MainRunner, dbscope: :example do
 
     context "with Article::Page" do
       let(:page) { create(:revisoin_page, site: site, group: group) }
-      subject { described_class.new }
 
       it do
         # ensure create models
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # execute
-        expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(name: group.name).first).to be_nil
         expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
         expect(Cms::Group.where(id: group.id).first.contact_email).to eq changeset.destinations.first["contact_email"]
@@ -57,14 +55,13 @@ describe Chorg::MainRunner, dbscope: :example do
 
       context "with Article::Page" do
         let(:page) { create(:revisoin_page, site: site, group: group) }
-        subject { described_class.new }
 
         it do
           # ensure create models
           expect(changeset).not_to be_nil
           expect(page).not_to be_nil
           # execute
-          expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+          expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
           expect(Cms::Group.where(name: group.name).first).to be_nil
           expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
           # these attributes are expected not to be changed.
@@ -104,14 +101,13 @@ describe Chorg::MainRunner, dbscope: :example do
         page.save!
         page
       end
-      subject { described_class.new }
 
       it do
         # ensure create models
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # execute
-        expect { subject.call(site.host, user1.id, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(name: group.name).first).to be_nil
         expect(Cms::Group.where(id: group.id).first.name).to eq changeset.destinations.first["name"]
         # check page
@@ -136,7 +132,6 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
       let(:page) { create(:revisoin_page, site: site, group: group1) }
-      subject { described_class.new }
 
       it do
         # ensure create models
@@ -145,7 +140,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # execute
-        expect { subject.call(site.host, user1.id, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(id: group1.id).first).to be_nil
         expect(Cms::Group.where(name: group1.name).first).to be_nil
         expect(Cms::Group.where(id: group2.id).first).to be_nil
@@ -177,7 +172,6 @@ describe Chorg::MainRunner, dbscope: :example do
         create(:unify_changeset, revision_id: revision.id, sources: [group1, group2], destination: group1)
       end
       let(:page) { create(:revisoin_page, site: site, group: group1) }
-      subject { described_class.new }
 
       it do
         # ensure create models
@@ -191,7 +185,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         expect(page.contact_email).to eq "foobar02@example.jp"
         # execute
-        expect { subject.call(site.host, user1.name, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site, user_id: user1).perform_now(revision.name, 1) }.not_to raise_error
         # group1 shoud be exist because group1 is destination_group.
         expect(Cms::Group.where(id: group1.id).first).not_to be_nil
         expect(Cms::Group.where(name: group1.name).first).not_to be_nil
@@ -229,7 +223,6 @@ describe Chorg::MainRunner, dbscope: :example do
         create(:division_changeset, revision_id: revision.id, source: group0, destinations: [group1, group2])
       end
       let(:page) { create(:revisoin_page, site: site, group: group0) }
-      subject { described_class.new }
 
       it do
         # ensure create models
@@ -237,7 +230,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # execute
-        expect { subject.call(site.host, user.name, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site, user_id: user).perform_now(revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(id: group0.id).first).to be_nil
         expect(Cms::Group.where(name: group0.name).first).to be_nil
         new_group1 = Cms::Group.where(name: changeset.destinations[0]["name"]).first
@@ -266,7 +259,6 @@ describe Chorg::MainRunner, dbscope: :example do
         create(:division_changeset, revision_id: revision.id, source: group1, destinations: [group1, group2])
       end
       let(:page) { create(:revisoin_page, site: site, group: group1) }
-      subject { described_class.new }
 
       it do
         # ensure create models
@@ -274,7 +266,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # execute
-        expect { subject.call(site.host, user.id, revision.name, 1) }.not_to raise_error
+        expect { described_class.bind(site_id: site, user_id: user).perform_now(revision.name, 1) }.not_to raise_error
         expect(Cms::Group.where(id: group1.id).first).not_to be_nil
         expect(Cms::Group.where(name: group1.name).first).not_to be_nil
         # expect(Cms::Group.where(id: group2.id).first).not_to be_nil
@@ -302,13 +294,12 @@ describe Chorg::MainRunner, dbscope: :example do
     let(:group) { create(:revision_new_group) }
     let(:revision) { create(:revision, site_id: site.id) }
     let(:changeset) { create(:delete_changeset, revision_id: revision.id, source: group) }
-    subject { described_class.new }
 
     it do
       # ensure create models
       expect(changeset).not_to be_nil
       # execute
-      expect { subject.call(site.host, nil, revision.name, 1) }.not_to raise_error
+      expect { described_class.bind(site_id: site).perform_now(revision.name, 1) }.not_to raise_error
       expect(Cms::Group.where(id: group.id).first).to be_nil
     end
   end

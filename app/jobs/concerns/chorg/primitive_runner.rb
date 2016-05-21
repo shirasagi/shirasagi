@@ -1,4 +1,5 @@
 module Chorg::PrimitiveRunner
+  extend ActiveSupport::Concern
   include Chorg::Context
   include Chorg::Loggable
   include Chorg::MongoidSupport

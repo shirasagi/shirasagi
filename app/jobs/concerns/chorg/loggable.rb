@@ -1,4 +1,6 @@
 module Chorg::Loggable
+  extend ActiveSupport::Concern
+
   def logger
     @logger ||= Rails.logger
   end

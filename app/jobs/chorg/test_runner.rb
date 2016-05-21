@@ -1,6 +1,4 @@
 class Chorg::TestRunner < Chorg::Runner
-  include Job::Worker
-
   private
     def save_or_collect_errors(entity)
       return true if entity.valid?

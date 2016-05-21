@@ -1,4 +1,6 @@
 module Chorg::Context
+  extend ActiveSupport::Concern
+
   attr_reader :cur_site, :cur_user, :adds_group_to_site, :item
   attr_reader :results, :substituter, :validation_substituter, :delete_group_ids
 
