@@ -7,9 +7,9 @@ class Job::Service::Runner
 
   def run
     name = Job::Service.config.name
-    return unless Job::Service.acquire_lock(name)
+    Job::Service.advertise(name)
 
-    rescue_with(ensure_p: ->{ Job::Service.release_lock(name) }) do
+    rescue_with(ensure_p: ->{ Job::Service.unadvertise(name) }) do
       service_loop
     end
   end

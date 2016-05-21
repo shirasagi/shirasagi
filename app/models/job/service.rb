@@ -25,19 +25,13 @@ class Job::Service
       @runner.shutdown if @runner
     end
 
-    def acquire_lock(name, limits = 1)
+    def advertise(name)
       # ensure that service is existed.
       service_id = Job::Service.find_or_create_by(name: name).id
 
       # increment atomically
       criteria = Job::Service.where(id: service_id)
       service = criteria.find_one_and_update({ '$inc' => { current_count: 1 } }, return_document: :after)
-      if service.current_count > limits
-        # already started a service
-        Rails.logger.info("already started a job service")
-        release_lock(name)
-        return nil
-      end
 
       if service.current_count == 1
         service.state = "running"
@@ -48,7 +42,7 @@ class Job::Service
       service
     end
 
-    def release_lock(name)
+    def unadvertise(name)
       service_id = Job::Service.find_or_create_by(name: name).id
 
       # decrement atomically
