@@ -36,6 +36,7 @@ class @SS_ListUI
       if checked.length == 0
         checked = $(".list-item input:checkbox").map ->
           $(this).val()
+      return false if checked.length == 0
       return false unless confirm("<%= I18n.t("views.confirm.download") %>")
  
       urlArray = window.location.href.split("?")
