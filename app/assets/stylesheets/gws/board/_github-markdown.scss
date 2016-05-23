@@ -1,12 +1,11 @@
+.markdown-body { padding: 0 7px; }
+.markdown-body ul li { list-style: disc outside none }
+
 /**
  * github-markdown-css
  * MIT © Sindre Sorhus
  * https://github.com/sindresorhus/github-markdown-css
  */
-
-.markdown-body p { white-space: pre; }
-.markdown-body ul li { list-style: disc outside none }
-//
 
 .markdown-body {
   //-webkit-text-size-adjust: 100%;

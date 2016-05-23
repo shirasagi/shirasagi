@@ -10,7 +10,7 @@ module SS::Addon
 
     def html
       return nil if text.blank?
-      Kramdown::Document.new(text).to_html
+      Kramdown::Document.new(text, input: 'GFM').to_html
     end
   end
 end
