@@ -17,7 +17,7 @@ module Sys::SiteCopy::Article
         logger.fatal 'Expected 2 arguments. - [0] => Cms::Site, [1] => Cms::Site'
         return false
       end
-      cms_ads = Ads::Banner.where(site_id: @site_old.id).where(route: "ads/banner").order('depth ASC')
+      cms_ads = Ads::Banner.where(site_id: @site_old.id).where(route: "ads/banner").order('depth ASC, updated ASC')
       cms_ads.each do |cms_ad|
         new_cms_ad = Ads::Banner.new
          # 基本項目の情報コピー
@@ -59,7 +59,7 @@ module Sys::SiteCopy::Article
 
     #施設写真
     def create_dup_facility_for_dup_site
-      cms_facilities = Facility::Image.where(site_id: @site_old.id).where(route: "facility/image")
+      cms_facilities = Facility::Image.where(site_id: @site_old.id).where(route: "facility/image").order('updated ASC')
       cms_facilities.each do |cms_facility|
         new_cms_facility = Facility::Image.new
         # 基本項目の情報コピー
@@ -88,7 +88,8 @@ module Sys::SiteCopy::Article
 
     #キービジュアル
     def create_dup_key_visuals_for_dup_site
-      cms_key_visuals = KeyVisual::Image.where(site_id: @site_old.id).where(route: "key_visual/image")
+      cms_key_visuals = KeyVisual::Image.where(site_id: @site_old.id)
+                            .where(route: "key_visual/image").order('updated ASC')
       cms_key_visuals.each do |cms_key_visual|
         new_cms_key_visual_no_attr = {}
         new_model_attr_flag = 0
@@ -126,7 +127,7 @@ module Sys::SiteCopy::Article
 
     #その他の記事・その他ページ
     def create_dup_cms_page2_for_dup_site(node_pg_cats)
-      cms_pages2 = Cms::Page.where(site_id: @site_old.id)
+      cms_pages2 = Cms::Page.where(site_id: @site_old.id).order('updated ASC')
       cms_page2_skip = ["cms/page", "ads/banner", "facility/image", "key_visual/image"]
       cms_pages2_ids = cms_pages2.pluck(:id)
       cms_pages2_ids.each do |cms_page2_id|

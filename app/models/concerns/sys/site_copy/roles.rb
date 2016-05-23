@@ -4,7 +4,7 @@ module Sys::SiteCopy::Roles
   private
     def copy_roles
       #権限複製：OK
-      cms_roles = Cms::Role.where(site_id: @site_old.id)
+      cms_roles = Cms::Role.where(site_id: @site_old.id).order('updated ASC')
       new_cms_roles_id = {}
       cms_roles.each do |cms_role|
         new_cms_role = Cms::Role.new cms_role.attributes.except(:id, :_id, :site_id, :created, :updated)

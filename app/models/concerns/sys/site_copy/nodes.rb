@@ -39,7 +39,7 @@ module Sys::SiteCopy::Nodes
       @layout_records_map = layout_records_map
 
       # 階層の浅い物から実施
-      Cms::Node.where(:site_id => @site_old.id).order('depth ASC').each do |base_cmsnode|
+      Cms::Node.where(:site_id => @site_old.id).order('depth ASC, updated ASC').each do |base_cmsnode|
         next if @@node_fac_cat_routes.include?(base_cmsnode.route)
         next if @@node_copied_fac_cat_routes.include?(base_cmsnode.route)
         next if @@node_pg_cat_routes.include?(base_cmsnode.route)
@@ -102,7 +102,7 @@ module Sys::SiteCopy::Nodes
     end
 
     def copy_inquiry_columns(source_node, dest_node)
-      Inquiry::Column.where(node_id: source_node.id).each do |source_inquiry_column|
+      Inquiry::Column.where(node_id: source_node.id).order('updated ASC').each do |source_inquiry_column|
         dest_inquiry_column = Inquiry::Column.new source_inquiry_column.attributes.except(
             :id, :_id, :node_id, :site_id, :created, :updated
         ).to_hash

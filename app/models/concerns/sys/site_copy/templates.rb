@@ -5,7 +5,7 @@ module Sys::SiteCopy::Templates
     #テンプレート:OK
     def copy_templates
       copy_template_thumbnails
-      cms_templates = Cms::EditorTemplate.where(site_id: @site_old.id)
+      cms_templates = Cms::EditorTemplate.where(site_id: @site_old.id).order('updated ASC')
       cms_templates.each do |cms_template|
         new_cms_template = Cms::EditorTemplate.new cms_template.attributes.except(:id, :_id, :site_id, :created, :updated)
         new_cms_template.site_id = @site.id

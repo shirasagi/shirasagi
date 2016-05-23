@@ -15,7 +15,8 @@ module Sys::SiteCopy::Checkboxes
       node_cats.store("merge", {})
       routes.each do |node_cat_route|
         node_cats.store(node_cat_route, {})
-        Cms::Node.where(:site_id => @site_old.id).where(route: node_cat_route).each do |base_cmsnode|
+        Cms::Node.where(:site_id => @site_old.id)
+            .where(route: node_cat_route).order('updated ASC').each do |base_cmsnode|
 
           old_cmsnode_id = base_cmsnode.id
           new_cmsnode_no_attr = {}

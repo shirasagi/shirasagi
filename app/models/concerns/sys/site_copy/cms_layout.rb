@@ -8,7 +8,7 @@ module Sys::SiteCopy::CmsLayout
     # 新旧レイアウトレコードIDのKeyVal
     # ex) {<BaseLayoutID>: <DupLayoutID>[, ...]}
     def copy_cms_layout
-      Cms::Layout.where(site_id: @site_old.id).each do |cms_layout|
+      Cms::Layout.where(site_id: @site_old.id).order('updated ASC').each do |cms_layout|
         new_cms_layout = Cms::Layout.new cms_layout.attributes.except(:id, :_id, :site_id, :created, :updated)
         new_cms_layout.site_id = @site.id
         begin
