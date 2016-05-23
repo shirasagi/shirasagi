@@ -9,7 +9,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
     <%#= t('gws/schedule.tabs.search') %>
     <% @s = OpenStruct.new params[:s] %>
       <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
-        <%= f.text_field :keyword, style: "width: 300px;" %>
+        <%= f.text_field :keyword, style: "width: 300px;", placeholder: t("gws/schedule.placeholders.search") %>
         <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
       <% end %>
   </h2></header>

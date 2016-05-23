@@ -11,7 +11,7 @@ end
 %>
 <dl class="see workflow-basic">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>

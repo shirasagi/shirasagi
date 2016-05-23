@@ -22,6 +22,8 @@ class @Gws_Schedule_Calendar
   @defaultParams: (opts) ->
     columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
     contentHeight: 'auto'
+    displayEventEnd:
+      basicWeek: true
     endParam: 's[end]'
     fixedWeekCount: false
     header: { left: 'today prev next title', right: 'month basicWeek agendaDay' },
@@ -31,7 +33,6 @@ class @Gws_Schedule_Calendar
     slotLabelFormat: 'HH:mm',
     startParam: 's[start]'
     timeFormat: 'HH:mm'
-    a: 1
     titleFormat:
       month: "<%= I18n.t('gws/schedule.calendar.titleFormat.month') %>"
       week: "<%= I18n.t('gws/schedule.calendar.titleFormat.week') %>"

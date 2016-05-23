@@ -16,6 +16,8 @@ ja:
         month: YYYY年 M月
         week: (YYYY年 M月 D日（ddd）)
         day: YYYY年 M月 D日（ddd）
+    placeholders:
+      search: 検索語句を入力してください
     links:
       add_plan: 予定を作成
       show_month: 月表示

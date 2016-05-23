@@ -27,6 +27,11 @@
   }
 }
 
+// Form
+.gws-schedule-plan .dates-field {
+  display: none;
+}
+
 //
 // FullCalendar
 //
@@ -149,7 +154,14 @@
   &:hover { color: #000; }
 }
 
-// timelineDay
+// View: basicWeek
+.fc-basicWeek-view {
+  .fc-title {
+    display: block;
+  }
+}
+
+// View: timelineDay
 .fc-timelineDay-view {
   .fc-scrollpane, .fc-scrollpane-inner {
     overflow: visible;
@@ -170,7 +182,7 @@
   }
 }
 
-// basicHour
+// View: basicHour
 .fc-basicHour-view {
   .fc-hour- {
     &0,&1,&2,&3,&4,&5,&6,&7 {

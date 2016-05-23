@@ -3,9 +3,9 @@
   Gws_Schedule_Plan.renderAlldayForm();
 <% end %>
 
-<dl class="see">
+<dl class="see gws-schedule-plan">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
 
   <dt><%= @model.t :term %><%= @model.tt :term %></dt>
   <dd>

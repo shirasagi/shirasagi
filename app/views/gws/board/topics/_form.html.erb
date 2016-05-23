@@ -1,6 +1,6 @@
 <dl class="see">
   <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
 
   <dt><%= @model.t :mode %><%= @model.tt :mode %></dt>
   <dd><%= f.select :mode, @item.mode_options %></dd>

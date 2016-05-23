@@ -124,7 +124,7 @@ module Gws::Schedule::Planable
     def set_datetimes_at
       self.start_at = Time.zone.now.strftime('%Y/%m/%d %H:00') if start_at.blank?
       self.end_at   = start_at if end_at.blank?
-      self.end_at   = start_at if start_at > end_at
+      #self.end_at   = start_at if start_at > end_at
     end
 
     def validate_datetimes_at

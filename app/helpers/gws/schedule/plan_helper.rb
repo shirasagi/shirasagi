@@ -2,18 +2,16 @@ module Gws::Schedule::PlanHelper
   def term(item)
     if item.allday?
       dates = [item.start_at.to_date, item.end_at.to_date].uniq
-      dates.map! { |m| I18n.l(m, format: :gws_long) }
     else
       dates = [item.start_at, item.end_at].uniq
-      if dates.size == 1
-        dates.map! { |m| I18n.l(m, format: :gws_long) }
-      elsif dates[0].to_date == dates[1].to_date
-        dates = [I18n.l(item.start_at, format: :gws_long), I18n.l(item.end_at, format: :gws_time)]
-      else
-        dates.map! { |m| I18n.l(m, format: :gws_long) }
-      end
     end
-    dates.join(" - ")
+    dates.map! { |m| I18n.l(m, format: :gws_long) }
+    return dates[0] if dates.size == 1
+
+    dates[1].split(/ /).each_with_index do |s, i|
+      next if s == dates[0].split(/ /)[i]
+      return [dates[0], dates[1].split(/ /)[i..-1].join(' ')].join(' - ')
+    end
   end
 
   def calendar_format(plans, opts = {})

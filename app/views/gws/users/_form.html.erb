@@ -6,7 +6,7 @@
 
 <dl class="see mod-gws-user">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
 
   <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>
   <dd><%= f.text_field :kana %></dd>

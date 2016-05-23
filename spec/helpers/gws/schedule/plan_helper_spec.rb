@@ -23,7 +23,7 @@ describe Gws::Schedule::PlanHelper, type: :helper, dbscope: :example do
       item.end_at   = '2016-01-02 00:00:00'
       term = helper.term(item)
       expect(term).to include I18n.l(item.start_at.to_date, format: :gws_long)
-      expect(term).to include I18n.l(item.end_at.to_date, format: :gws_long)
+      expect(term).not_to include I18n.l(item.end_at.to_date, format: :gws_long)
     end
 
     it "same timestamp" do
@@ -33,16 +33,33 @@ describe Gws::Schedule::PlanHelper, type: :helper, dbscope: :example do
       expect(term).to eq I18n.l(item.start_at, format: :gws_long)
     end
 
-    it "different time" do
+    it "different hour" do
       item.start_at = '2016-01-01 00:00:00'
       item.end_at   = '2016-01-01 01:00:00'
       term = helper.term(item)
-      expect(term).to eq I18n.l(item.start_at, format: :gws_long) + ' - 1:00'
+      expect(term).to include I18n.l(item.start_at, format: :gws_long)
+      expect(term).not_to include I18n.l(item.end_at, format: :gws_long)
     end
 
-    it "different timestamp" do
+    it "different day" do
       item.start_at = '2016-01-01 00:00:00'
-      item.end_at   = '2016-01-02 01:00:00'
+      item.end_at   = '2016-01-02 00:00:00'
+      term = helper.term(item)
+      expect(term).to include I18n.l(item.start_at, format: :gws_long)
+      expect(term).not_to include I18n.l(item.end_at, format: :gws_long)
+    end
+
+    it "different month" do
+      item.start_at = '2016-01-01 00:00:00'
+      item.end_at   = '2016-02-01 00:00:00'
+      term = helper.term(item)
+      expect(term).to include I18n.l(item.start_at, format: :gws_long)
+      expect(term).not_to include I18n.l(item.end_at, format: :gws_long)
+    end
+
+    it "different year" do
+      item.start_at = '2016-01-01 00:00:00'
+      item.end_at   = '2017-01-01 00:00:00'
       term = helper.term(item)
       expect(term).to include I18n.l(item.start_at, format: :gws_long)
       expect(term).to include I18n.l(item.end_at, format: :gws_long)

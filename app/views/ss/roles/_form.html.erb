@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <dd><%= f.text_field :name, autofocus: true %></dd>
 
   <% if @item.respond_to?(:permission_level) %>
   <dt><%= @model.t :permission_level %></dt>
