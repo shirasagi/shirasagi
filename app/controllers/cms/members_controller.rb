@@ -21,7 +21,17 @@ class Cms::MembersController < ApplicationController
 
       @items = @model.site(@cur_site).
         allow(:edit, @cur_user, site: @cur_site).
-        order_by(name: 1).
+        order_by(name: 1, id: 1).
         page(params[:page]).per(50)
+    end
+
+    def download
+      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
+      csv = @model.site(@cur_site).
+        allow(:edit, @cur_user, site: @cur_site).
+        order_by(id: 1).
+        to_csv
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "members_#{Time.zone.now.to_i}.csv"
     end
 end

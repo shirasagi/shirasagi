@@ -62,7 +62,9 @@ SS::Application.routes.draw do
     resources :roles, concerns: :deletion
     resources :users, concerns: [:deletion, :download, :import]
     resources :groups, concerns: [:deletion, :role, :download, :import]
-    resources :members, concerns: :deletion
+    resources :members, concerns: :deletion do
+      get :download, on: :collection
+    end
     resources :contents, path: "contents/(:mod)"
 
     resources :nodes, concerns: :deletion do

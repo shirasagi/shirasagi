@@ -40,6 +40,34 @@ module Cms::Model::Member
     before_save :set_site_email, if: ->{ email.present? }
   end
 
+  module ClassMethods
+    def search(params = {})
+      criteria = self.where({})
+      return criteria if params.blank?
+
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :name, :email
+      end
+      criteria
+    end
+
+    def to_csv
+      CSV.generate do |data|
+        data << %w(id name email email_type updated created)
+        criteria.each do |item|
+          line = []
+          line << item.id
+          line << item.name
+          line << item.email
+          line << item.email_type
+          line << item.updated.strftime("%Y/%m/%d %H:%M")
+          line << item.created.strftime("%Y/%m/%d %H:%M")
+          data << line
+        end
+      end
+    end
+  end
+
   def encrypt_password
     self.password = SS::Crypt.crypt(in_password)
   end
