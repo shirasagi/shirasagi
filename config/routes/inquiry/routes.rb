@@ -29,4 +29,8 @@ SS::Application.routes.draw do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
   end
 
+  part "inquiry" do
+    get "feedback" => "public#index", cell: "parts/feedback"
+  end
+
 end
