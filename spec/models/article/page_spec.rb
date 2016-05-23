@@ -26,11 +26,6 @@ describe Article::Page, dbscope: :example do
     let!(:item) { build :article_page, cur_node: node, gravatar_email: 'gravatar@example.jp' }
 
     it do
-      item.gravatar_image_view_kind = nil
-      expect(item.email_for_gravatar).to be_nil
-    end
-
-    it do
       item.gravatar_image_view_kind = 'disable'
       expect(item.email_for_gravatar).to be_nil
     end

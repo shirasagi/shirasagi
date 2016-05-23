@@ -1,6 +1,8 @@
+<% return unless SS.config.gravatar.state == 'enabled' %>
+
 <dl class="see mod-gravatar-gravatar">
   <dt><%= @model.t :gravatar_image_view_kind %><%= @model.tt :gravatar_image_view_kind %></dt>
-  <dd><%= f.select(:gravatar_image_view_kind, @item.gravatar_image_view_kind_options) %></dd>
+  <dd><%= f.select(:gravatar_image_view_kind, @item.gravatar_image_view_kind_options, include_blank: I18n.t('sys.conf')) %></dd>
 
   <dt><%= @model.t :gravatar_email %><%= @model.tt :gravatar_email %></dt>
   <dd><%= f.email_field :gravatar_email %></dd>

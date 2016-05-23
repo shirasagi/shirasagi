@@ -1,0 +1,23 @@
+production: &production
+  # gravatar addon state. you can specify one of these:
+  #  enabled: enable gravatar addon
+  #  disabled: disable gravatar addon
+  state: disabled
+
+  # you can specify one of these:
+  #   disable: do not show avatar
+  #   cms_user_email: use page author's email
+  #   special_email: use email specified by page
+  view_kind: cms_user_email
+
+  # avatar size. default is 80
+  image_size:
+
+  # default avatar path. default is gravatar image
+  default_imag_path:
+
+test:
+  <<: *production
+
+development:
+  <<: *production
