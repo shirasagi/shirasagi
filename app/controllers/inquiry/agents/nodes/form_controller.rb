@@ -38,9 +38,11 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
           @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")
         end
       end
-      @answer = Inquiry::Answer.new(site_id: @cur_site.id, node_id: @cur_node.id)
+      @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
       @answer.remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip
       @answer.user_agent = request.user_agent
+      @answer.in_source_page = params[:item].try(:[], :in_source_page)
+      @answer.in_source_node = params[:item].try(:[], :in_source_node)
       @answer.set_data(@data)
     end
 

@@ -22,7 +22,7 @@ describe Inquiry::Answer, dbscope: :example do
 
   let(:remote_addr) { "X.X.X.X" }
   let(:user_agent) { unique_id }
-  subject { Inquiry::Answer.new(site_id: site.id, node_id: node.id, remote_addr: remote_addr, user_agent: user_agent) }
+  subject { Inquiry::Answer.new(cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent) }
 
   describe "create answer" do
     let(:name) { unique_id }
