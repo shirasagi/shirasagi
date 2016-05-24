@@ -57,7 +57,7 @@ class Cms::UsersController < ApplicationController
 
     def download
       csv = @model.site(@cur_site).order_by(_id: 1).to_csv
-      send_data csv.encode("SJIS"), filename: "cms_users_#{Time.zone.now.to_i}.csv"
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_users_#{Time.zone.now.to_i}.csv"
     end
 
     def import
