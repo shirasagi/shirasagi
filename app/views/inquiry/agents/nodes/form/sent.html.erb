@@ -1,3 +1,6 @@
 <div class="inquiry-sent">
 <%= raw @cur_node.send :inquiry_sent_html %>
 </div>
+<% if params[:ref].present? %>
+<div class="back-to-ref"><%= link_to I18n.t("inquiry.links.back_to_page"), params[:ref] %></div>
+<% end %>

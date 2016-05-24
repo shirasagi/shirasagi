@@ -40,6 +40,9 @@ ja:
         disabled: しない
         enabled: する
 
+    links:
+      back_to_page: 元のページに戻る
+
   modules:
     inquiry: メールフォーム
     addons:
