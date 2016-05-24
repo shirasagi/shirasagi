@@ -41,8 +41,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
       @answer.remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip
       @answer.user_agent = request.user_agent
-      @answer.in_source_page = params[:item].try(:[], :in_source_page)
-      @answer.in_source_node = params[:item].try(:[], :in_source_node)
+      @answer.source_url = params[:item].try(:[], :source_url)
       @answer.set_data(@data)
     end
 

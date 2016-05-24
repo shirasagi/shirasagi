@@ -18,10 +18,9 @@
         <%= error_messages_for :answer, header_message: false %>
         <%= render partial: "inquiry/agents/nodes/form/form", locals: { f: f, confirm: false }  %>
         <% if @cur_page %>
-          <%= hidden_field_tag "#{f.object_name}[in_source_page]", @cur_page.url %>
-        <% end %>
-        <% if @cur_node %>
-          <%= hidden_field_tag "#{f.object_name}[in_source_node]", @cur_node.url %>
+          <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_page.url %>
+        <% elsif @cur_node %>
+          <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_node.url %>
         <% end %>
         <footer class="send">
           <%= f.submit t('inquiry.submit'), name: :submit %>

@@ -4,25 +4,23 @@ class Inquiry::Answer
   include SimpleCaptcha::ModelHelpers
 
   attr_accessor :cur_node
-  attr_accessor :in_source_node, :in_source_page
 
   seqid :id
   field :node_id, type: Integer
   field :remote_addr, type: String
   field :user_agent, type: String
+  field :source_url, type: String
+  field :source_name, type: String
 
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   embeds_many :data, class_name: "Inquiry::Answer::Data"
-  belongs_to :source_node, class_name: "Cms::Node"
-  belongs_to :source_page, class_name: "Cms::Page"
 
   permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_key
 
   apply_simple_captcha
 
   before_validation :set_node, if: ->{ cur_node.present? }
-  before_validation :set_source_node, if: ->{ in_source_node.present? }
-  before_validation :set_source_page, if: ->{ in_source_page.present? }
+  before_validation :copy_contents_info
   validates :node_id, presence: true
   validate :validate_data
 
@@ -62,19 +60,30 @@ class Inquiry::Answer
       self.node_id = cur_node.id
     end
 
-    def set_source_node
-      path = in_source_node
+    def find_node
+      return if source_url.blank?
+      path = source_url
       path = path[1..-1] if path.start_with?("/")
 
-      node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
-      self.source_node_id = node.id if node.present?
+      Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
     end
 
-    def set_source_page
-      path = in_source_page
+    def find_page
+      return if source_url.blank?
+      path = source_url
       path = path[1..-1] if path.start_with?("/")
 
-      page = Cms::Page.site(@cur_site).filename(path).first
-      self.source_page_id = page.id if page.present?
+      Cms::Page.site(@cur_site).filename(path).first
+    end
+
+    def find_content
+      find_page || find_node
+    end
+
+    def copy_contents_info
+      source = find_content
+      return if source.blank?
+
+      self.source_name = source.name
     end
 end
