@@ -7,6 +7,10 @@ class Cms::PublicController < ApplicationController
   after_action :render_mobile, if: ->{ mobile_path? }
 
   private
+    def protect_csrf?
+      false
+    end
+
     def put_access_log
       #
     end
