@@ -18,6 +18,11 @@ class Inquiry::ResultsController < ApplicationController
 
       @cur_node = @cur_node.becomes_with_route
       @columns = @cur_node.columns.order_by(order: 1)
-      @aggregation = @cur_node.aggregate_select_columns
+      @answer_count = @cur_node.answers.count
+
+      options = params[:s] || {}
+      options[:site] = @cur_site
+      options[:node] = @cur_node
+      @aggregation = @cur_node.aggregate_select_columns(options)
     end
 end

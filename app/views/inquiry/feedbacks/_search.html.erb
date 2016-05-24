@@ -1,0 +1,20 @@
+<%
+  @s = OpenStruct.new params[:s]
+  @s[:year]  ||= Time.zone.today.year
+  @s[:month] ||= Time.zone.today.month
+
+  sy = Time.zone.today.year - 10
+  ey = Time.zone.today.year
+  @years = (sy..ey).to_a.reverse.map { |d| ["#{d}#{t('datetime.prompts.year')}", d] }
+  @months = (1..12).to_a.map { |d| ["#{d}#{t('datetime.prompts.month')}", d] }
+%>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <span style="margin-right: 10px;">
+      <%= f.select :year, @years, include_blank: true %>
+      <%= f.select :month, @months, include_blank: t("ads.yearly") %>
+    </span>
+    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+    <input type="button" value="<%= t('views.button.reset') %>" onclick="location.href='?'" class="btn", type: :reset />
+  <% end %>
+</div>

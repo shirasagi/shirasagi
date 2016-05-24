@@ -18,6 +18,7 @@ SS::Application.routes.draw do
     resources :columns, concerns: :deletion
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :destroy]
     get "results" => "results#index", as: :results
+    resources :feedbacks, only: [:index, :show]
   end
 
   node "inquiry" do

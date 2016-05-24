@@ -5,6 +5,7 @@ ja:
     column: 質問項目
     answer: 回答データ
     result: 集計結果
+    feedback: フィードバック
     required_field: ※必須入力
     confirm_message: 下記事項をご確認の上、送信ボタンを押してください。
     submit: 送信する
