@@ -13,6 +13,7 @@ module Ezine::Node
     include Ezine::Addon::SenderAddress
     include Ezine::Addon::Reply
     include Cms::Addon::Release
+    include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 

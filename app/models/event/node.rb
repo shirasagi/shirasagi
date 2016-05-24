@@ -12,6 +12,7 @@ module Event::Node
     include Category::Addon::Setting
     include Event::Addon::PageList
     include Cms::Addon::Release
+    include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
