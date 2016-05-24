@@ -59,7 +59,7 @@ class Ads::AccessLogsController < ApplicationController
       recent_common
 
       csv = @items.to_csv
-      send_data csv.encode("SJIS"), filename: "ads_access_logs_#{Time.zone.now.to_i}.csv"
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "ads_access_logs_#{Time.zone.now.to_i}.csv"
     end
 
     def monthly_commont
@@ -148,6 +148,6 @@ class Ads::AccessLogsController < ApplicationController
         end
       end
 
-      send_data csv.encode("SJIS"), filename: filename
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
     end
 end

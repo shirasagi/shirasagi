@@ -80,7 +80,7 @@ module Voice::FilesFilter
         end
       end
 
-      send_data csv.encode("SJIS"), filename: "voice_files_#{Time.zone.now.to_i}.csv"
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "voice_files_#{Time.zone.now.to_i}.csv"
     end
 
     def send_audio_file(file)
