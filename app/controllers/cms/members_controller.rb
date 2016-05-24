@@ -21,6 +21,7 @@ class Cms::MembersController < ApplicationController
 
       @items = @model.site(@cur_site).
         allow(:edit, @cur_user, site: @cur_site).
+        search(params[:s]).
         order_by(name: 1, id: 1).
         page(params[:page]).per(50)
     end
@@ -30,6 +31,7 @@ class Cms::MembersController < ApplicationController
 
       csv = @model.site(@cur_site).
         allow(:edit, @cur_user, site: @cur_site).
+        search(params[:s]).
         order_by(id: 1).
         to_csv
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "members_#{Time.zone.now.to_i}.csv"

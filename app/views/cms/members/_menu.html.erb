@@ -4,7 +4,7 @@
       <%= link_to :new, { action: :new }, class: :new %>
     <% end %>
     <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to :download, { action: :download }, class: :download %>
+      <%= link_to :download, { action: :download }.merge(s: params[:s]), class: :download %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>
     <%= link_to :back_to_index, { action: :index }, class: "back-to-index" %>
