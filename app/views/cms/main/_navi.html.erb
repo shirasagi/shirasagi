@@ -13,6 +13,15 @@
   <% end %>
 </nav>
 
+<% search_folders = Cms::PageSearch.site(@cur_site).allow(:read, @cur_user, site: @cur_site).order_by(order: 1) %>
+<% if search_folders.present? %>
+  <nav class="main-navi">
+    <% search_folders.each do |search_folder| %>
+      <h2><%= link_to search_folder.name, cms_page_search_contents_path(id: search_folder), class: "icon-conv" %></h2>
+    <% end %>
+  </nav>
+<% end %>
+
 <nav class="main-navi">
   <h2><%= link_to :"cms.file", cms_files_path, class: "icon-conv" %></h2>
   <h2><%= link_to :"cms.search_contents", cms_search_contents_pages_path, class: "icon-conv" %></h2>

@@ -103,6 +103,33 @@ module Cms::Model::Page
     save
   end
 
+  # returns admin side show path
+  def private_show_path(*args)
+    model = self.class.name.underscore.sub(/^.+?\//, "")
+    options = args.extract_options!
+    methods = []
+    if parent.blank?
+      options = options.merge(site: site || cur_site, id: self)
+      methods << "cms_#{model}_path"
+    else
+      options = options.merge(site: site || cur_site, cid: parent, id: self)
+      if respond_to?(:route)
+        route = self.route
+        route = route =~ /cms\// ? "node_page" : route.tr("/", "_")
+        methods << "#{route}_path"
+      end
+      methods << "node_#{model}_path"
+    end
+
+    helper_mod = Rails.application.routes.url_helpers
+    methods.each do |method|
+      path = helper_mod.send(method, *args, options) rescue nil
+      return path if path.present?
+    end
+
+    nil
+  end
+
   private
     def run_callback(c, *args)
       call = true

@@ -1,0 +1,36 @@
+<%
+  @results = @item.search.page(params[:page]).per(25)
+  @result_count = @item.search_count
+%>
+<div class="index">
+  <div class="list-head">
+    <div class="search-info" style="float: right;"><%= I18n.t("cms.search_contents_condition", condition: truncate(@item.brief_search_condition, length: 60)) %></div>
+    <div class="search-count"><%= I18n.t("cms.search_contents_count", count: @result_count) %></div>
+  </div>
+
+  <ul class="list-items">
+    <% @results.each do |item| %>
+      <li class="list-item">
+        <nav class="tap-menu">
+          <%= link_to :"cms.content", item.private_show_path %>
+          <%= link_to :view_site, item.full_url, target: :_blank %>
+          <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+          <%= link_to(:mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank) if @cur_site.mobile_enabled? %>
+        </nav>
+        <div class="info">
+          <%= link_to item.name, item.private_show_path, class: "title" %>
+
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="filename"><%= item.filename %></span>
+            <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+            <span class="state"><%= t "views.state.#{item.status}" %></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @results if @results.try(:current_page) %>

@@ -9,6 +9,7 @@ describe Cms::Page do
 
   describe "#attributes" do
     subject(:item) { model.last }
+    let(:show_path) { Rails.application.routes.url_helpers.cms_page_path(site: subject.site, id: subject) }
 
     it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.dirname).to eq nil }
@@ -18,6 +19,7 @@ describe Cms::Page do
     it { expect(item.full_url).not_to eq nil }
     it { expect(item.public?).not_to eq nil }
     it { expect(item.parent).to eq false }
+    it { expect(item.private_show_path).to eq show_path }
   end
 
   describe "#becomes_with_route" do

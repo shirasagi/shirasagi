@@ -9,7 +9,7 @@
   <tbody>
     <% @items.each do |item| %>
     <tr>
-      <td class="name"><%= link_to item.name, show_path_with_route(item) %></td>
+      <td class="name"><%= link_to item.name, item.private_show_path %></td>
       <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
     </tr>
     <% end %>

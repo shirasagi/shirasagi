@@ -94,6 +94,10 @@ SS::Application.routes.draw do
       get :download, on: :member
     end
 
+    resources :page_searches, concerns: :deletion do
+      get :search, on: :member
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
@@ -106,6 +110,7 @@ SS::Application.routes.draw do
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     get "search_contents/pages" => "search_contents/pages#index"
+    get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
 
     namespace "apis" do
       get "groups" => "groups#index"

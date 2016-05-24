@@ -5,6 +5,7 @@ describe Article::Page, dbscope: :example do
 
   describe "#attributes" do
     subject(:item) { create :article_page, cur_node: node }
+    let(:show_path) { Rails.application.routes.url_helpers.article_page_path(site: subject.site, cid: node, id: subject) }
 
     it { expect(item.becomes_with_route).not_to be_nil }
     it { expect(item.dirname).to eq node.filename }
@@ -13,6 +14,7 @@ describe Article::Page, dbscope: :example do
     it { expect(item.url).not_to be_nil }
     it { expect(item.full_url).not_to be_nil }
     it { expect(item.parent).to eq node }
+    it { expect(item.private_show_path).to eq show_path }
   end
 
   describe "shirasagi-442" do

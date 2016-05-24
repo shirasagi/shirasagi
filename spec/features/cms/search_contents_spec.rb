@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe "cms_search", dbscope: :example do
-  subject(:site) { cms_site }
-  subject(:pages_index_path) { cms_search_contents_pages_path site.id }
-  subject(:html_index_path) { cms_search_contents_html_path site.id }
+  let(:site) { cms_site }
+  let(:pages_index_path) { cms_search_contents_pages_path site.id }
+  let(:html_index_path) { cms_search_contents_html_path site.id }
+  let(:user) { create :cms_test_user, group_ids: cms_user.group_ids, cms_role_ids: cms_user.cms_role_ids }
 
   it "without login" do
     visit html_index_path
@@ -21,24 +22,25 @@ describe "cms_search", dbscope: :example do
 
     context "search_contents_pages" do
       before(:each) do
-        create(:cms_page, name: "[TEST]A", filename: "A.html", state: "public")
-        create(:article_page, name: "[TEST]B", filename: "base/B.html", state: "public")
-        create(:event_page, name: "[TEST]C", filename: "base/C.html", state: "closed")
-        create(:faq_page, name: "[TEST]D", filename: "base/D.html", state: "closed")
+        create(:cms_page, cur_site: site, name: "[TEST]A", filename: "A.html", state: "public")
+        create(:article_page, cur_site: site, name: "[TEST]B", filename: "base/B.html", state: "public")
+        create(:event_page, cur_site: site, name: "[TEST]C", filename: "base/C.html", state: "closed")
+        create(:faq_page, cur_site: site, name: "[TEST]D", filename: "base/D.html", state: "closed")
       end
 
-      it "search" do
+      it "search with empty conditions" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         click_button "検索"
         expect(status_code).to eq 200
-        expect(page).to have_css("table a", text: "[TEST]A")
-        expect(page).to have_css("table a", text: "[TEST]B")
-        expect(page).to have_css("table a", text: "[TEST]C")
-        expect(page).to have_css("table a", text: "[TEST]D")
+        expect(page).to have_css(".search-count", text: "4 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+        expect(page).to have_css("div.info a.title", text: "[TEST]C")
+        expect(page).to have_css("div.info a.title", text: "[TEST]D")
       end
 
-      it "search_with_name" do
+      it "search with name" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
@@ -46,13 +48,11 @@ describe "cms_search", dbscope: :example do
           click_button "検索"
         end
         expect(status_code).to eq 200
-        expect(page).to     have_css("table a", text: "[TEST]A")
-        expect(page).not_to have_css("table a", text: "[TEST]B")
-        expect(page).not_to have_css("table a", text: "[TEST]C")
-        expect(page).not_to have_css("table a", text: "[TEST]D")
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
       end
 
-      it "search_with_filename" do
+      it "search with filename" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
@@ -60,36 +60,55 @@ describe "cms_search", dbscope: :example do
           click_button "検索"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_css("table a", text: "[TEST]A")
-        expect(page).to     have_css("table a", text: "[TEST]B")
-        expect(page).to     have_css("table a", text: "[TEST]C")
-        expect(page).to     have_css("table a", text: "[TEST]D")
+        expect(page).to have_css(".search-count", text: "3 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+        expect(page).to have_css("div.info a.title", text: "[TEST]C")
+        expect(page).to have_css("div.info a.title", text: "[TEST]D")
       end
 
-      it "search_with_state" do
+      it "search with state" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          check "s_public"
+          select "公開", from: "s_state"
           click_button "検索"
         end
         expect(status_code).to eq 200
-        expect(page).to     have_css("table a", text: "[TEST]A")
-        expect(page).to     have_css("table a", text: "[TEST]B")
-        expect(page).not_to have_css("table a", text: "[TEST]C")
-        expect(page).not_to have_css("table a", text: "[TEST]D")
+        expect(page).to have_css(".search-count", text: "2 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
         within "form.search-pages" do
-          check "s_closed"
+          select "非公開", from: "s_state"
           click_button "検索"
         end
         expect(status_code).to eq 200
-        expect(page).not_to have_css("table a", text: "[TEST]A")
-        expect(page).not_to have_css("table a", text: "[TEST]B")
-        expect(page).to     have_css("table a", text: "[TEST]C")
-        expect(page).to     have_css("table a", text: "[TEST]D")
+        expect(page).to have_css(".search-count", text: "2 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]C")
+        expect(page).to have_css("div.info a.title", text: "[TEST]D")
       end
 
-      it "search_with_released_or_updated" do
+      it "search with ready state" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          select "公開待ち", from: "s_state"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
+
+        Article::Page.first.tap do |item|
+          item.state = "ready"
+          item.save!
+        end
+
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+      end
+
+      it "search with released_or_updated" do
         Timecop.travel(3.days.from_now) do
           login_cms_user
           visit pages_index_path
@@ -125,10 +144,8 @@ describe "cms_search", dbscope: :example do
             click_button "検索"
           end
           expect(status_code).to eq 200
-          expect(page).not_to have_css("table a", text: "[TEST]A")
-          expect(page).not_to have_css("table a", text: "[TEST]B")
-          expect(page).not_to have_css("table a", text: "[TEST]C")
-          expect(page).to     have_css("table a", text: "[TEST]D")
+          expect(page).to have_css(".search-count", text: "1 件の検索結果")
+          expect(page).to have_css("div.info a.title", text: "[TEST]D")
 
           within "form.search-pages" do
             fill_in "s_released_start", with: ""
@@ -138,11 +155,62 @@ describe "cms_search", dbscope: :example do
             click_button "検索"
           end
           expect(status_code).to eq 200
-          expect(page).to     have_css("table a", text: "[TEST]A")
-          expect(page).not_to have_css("table a", text: "[TEST]B")
-          expect(page).not_to have_css("table a", text: "[TEST]C")
-          expect(page).to     have_css("table a", text: "[TEST]D")
+          expect(page).to have_css(".search-count", text: "2 件の検索結果")
+          expect(page).to have_css("div.info a.title", text: "[TEST]A")
+          expect(page).to have_css("div.info a.title", text: "[TEST]D")
         end
+      end
+
+      it "search with request approver_state" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          select "申請したもの", from: "s_approver_state"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
+
+        Article::Page.first.tap do |item|
+          item.cur_site = site
+          item.cur_user = cms_user
+          item.workflow_state = "request"
+          item.workflow_user_id = cms_user.id
+          item.workflow_approvers = [{ level: 1, user_id: user.id, state: "request" }]
+          item.workflow_required_counts = [ false ]
+          item.save!
+        end
+
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+      end
+
+      it "search with approve approver_state" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          select "依頼されたもの", from: "s_approver_state"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "0 件の検索結果")
+
+        Article::Page.first.tap do |item|
+          item.cur_site = site
+          item.cur_user = user
+          item.workflow_state = "request"
+          item.workflow_user_id = user.id
+          item.workflow_approvers = [{ level: 1, user_id: cms_user.id, state: "request" }]
+          item.workflow_required_counts = [ false ]
+          item.save!
+        end
+
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
     end
 
@@ -154,7 +222,7 @@ describe "cms_search", dbscope: :example do
         create(:article_page, name: "[TEST]nothing", html: '')
       end
 
-      it "replace_html_with_string" do
+      it "replace_html with string" do
         visit html_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.index-search" do
@@ -189,7 +257,7 @@ describe "cms_search", dbscope: :example do
         expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
       end
 
-      it "replace_html_with_url" do
+      it "replace_html with url" do
         visit html_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.index-search" do
@@ -227,7 +295,7 @@ describe "cms_search", dbscope: :example do
         expect(page).not_to have_css(".result table a", text: "[TEST]nothing")
       end
 
-      it "replace_html_with_regexp" do
+      it "replace_html with regexp" do
         visit html_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.index-search" do
@@ -273,7 +341,7 @@ describe "cms_search", dbscope: :example do
         create(:article_page, name: "[TEST]TOP",     html: '<a href="/TOP/" class="TOP">ANCHOR</a>')
       end
 
-      it "replace_html_with_string" do
+      it "replace_html with string" do
         visit html_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.index-search" do
@@ -294,7 +362,7 @@ describe "cms_search", dbscope: :example do
         expect(page).not_to have_css(".result table a", text: "[TEST]TOP")
       end
 
-      it "replace_url_with_string" do
+      it "replace_url with string" do
         visit html_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.index-search" do
