@@ -9,6 +9,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   before_action :set_answer, only: [:new, :confirm, :create]
 
   private
+    def protect_csrf?
+      false
+    end
+
     def check_release_state
       raise "404" unless @cur_node.public?
     end
