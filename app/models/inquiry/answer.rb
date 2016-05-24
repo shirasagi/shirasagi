@@ -48,6 +48,10 @@ class Inquiry::Answer
     summary.gsub(/\s+/, ", ").gsub(/, $/, "").truncate(80)
   end
 
+  def source_content
+    find_page || find_node
+  end
+
   private
     def validate_data
       columns = Inquiry::Column.where(node_id: self.node_id, state: "public").order_by(order: 1)
@@ -76,12 +80,8 @@ class Inquiry::Answer
       Cms::Page.site(@cur_site).filename(path).first
     end
 
-    def find_content
-      find_page || find_node
-    end
-
     def copy_contents_info
-      source = find_content
+      source = source_content
       return if source.blank?
 
       self.source_name = source.name

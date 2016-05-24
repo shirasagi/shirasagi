@@ -83,7 +83,19 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
         Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer).try(:deliver_now)
       end
 
-      redirect_to "#{@cur_node.url}sent.html"
+      query = {}
+      if @answer.source_url.present?
+        if params[:preview]
+          query[:ref] = view_context.cms_preview_path(site: @cur_site, path: @answer.source_content.filename)
+        else
+          query[:ref] = @answer.source_url
+        end
+      end
+      query = query.to_query
+
+      url = "#{@cur_node.url}sent.html"
+      url = "#{url}?#{query}" if query.present?
+      redirect_to url
     end
 
     def sent

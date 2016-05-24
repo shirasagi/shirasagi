@@ -8,23 +8,27 @@
       return
 <% end %>
 
-<div class="inquiry-html">
-  <%== @cur_parent.inquiry_html %>
-</div>
+<div class="inquiry">
+  <div class="inquiry-html">
+    <%== @cur_parent.inquiry_html %>
+  </div>
 
-<% if @columns.count > 0 %>
-  <%= form_for :item, url: "#{@cur_parent.url}create.html", html: { multipart: true }, authenticity_token: false do |f| %>
-      <div class="inquiry-form">
-        <%= error_messages_for :answer, header_message: false %>
+  <%
+    url = "#{@cur_parent.url}create.html"
+    if @preview
+      url = "#{url}?preview=1"
+    end
+  %>
+  <%= form_for :item, url: url, html: { multipart: true }, authenticity_token: false do |f| %>
+    <div class="inquiry-form">
+      <%= error_messages_for :answer, header_message: false %>
+      <% if @columns.count > 0 %>
         <%= render partial: "inquiry/agents/nodes/form/form", locals: { f: f, confirm: false }  %>
-        <% if @cur_page %>
-          <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_page.url %>
-        <% elsif @cur_node %>
-          <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_node.url %>
-        <% end %>
-        <footer class="send">
-          <%= f.submit t('inquiry.submit'), name: :submit %>
-        </footer>
-      </div>
+      <% end %>
+      <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_path %>
+      <footer class="send">
+        <%= f.submit t('inquiry.submit'), name: :submit %>
+      </footer>
+    </div>
   <% end %>
-<% end %>
+</div>
