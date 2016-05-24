@@ -13,7 +13,7 @@ class Job::Log
   attr_accessor :save_term
 
   seqid :id
-  field :job_id, type: Integer
+  field :job_id, type: String
   field :state, type: String
   field :started, type: DateTime
   field :closed, type: DateTime
@@ -81,6 +81,18 @@ class Job::Log
         at: task.at)
       log.save!
       log
+    end
+
+    def create_from_active_job(job)
+      self.create(
+        site_id: job.try(:site_id),
+        user_id: job.try(:user_id),
+        job_id: job.job_id,
+        state: 'stop',
+        pool: job.queue_name,
+        class_name: job.class.name,
+        args: job.arguments
+      )
     end
 
     def term_to_date(name)

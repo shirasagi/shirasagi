@@ -100,6 +100,7 @@ module SS::Model::Task
 
   def log(msg)
     puts msg
+    Rails.logger.info msg
     self.logs << msg
   end
 

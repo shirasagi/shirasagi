@@ -75,10 +75,7 @@ module Facility::PageFilter
         ss_file.save
 
         # call job
-        @job = Facility::ImportJob.call_async(ss_file.id, @cur_site.host, @cur_node.filename) do |job|
-          job.site_id = @cur_site.id
-        end
-        SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+        Facility::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
         flash.now[:notice] = I18n.t("facility.import.start")
       rescue => e
         @item.errors.add :base, e.to_s

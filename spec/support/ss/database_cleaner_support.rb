@@ -23,3 +23,5 @@ module SS
     end
   end
 end
+
+RSpec.configuration.extend(SS::DatabaseCleanerSupport)

@@ -32,3 +32,5 @@ module SS
     end
   end
 end
+
+RSpec.configuration.include(SS::JsSupport, js: true)

@@ -5,9 +5,9 @@ describe Ldap::SyncJob do
   subject(:item) { create(:ldap_import) }
   subject { Ldap::SyncJob.new }
 
-  describe "#call" do
+  describe "#perform" do
     it do
-      expect { subject.call(group.id, item.id) }.not_to raise_error
+      expect { subject.perform(group.id, item.id) }.not_to raise_error
       expect(subject.results).not_to be_nil
     end
   end

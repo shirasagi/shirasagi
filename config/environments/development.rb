@@ -31,4 +31,7 @@ Rails.application.configure do
   config.logger = Logger.new("#{Rails.root}/log/development.log")
   config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :warn
   # config.log_level = :debug
+
+  # ActiveJob Queue Adapter
+  config.active_job.queue_adapter = :shirasagi
 end

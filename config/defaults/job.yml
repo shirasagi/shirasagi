@@ -1,17 +1,39 @@
 # job
 
 production: &production
+  # `rake job:run` コマンドで読み込む設定を記述します。
+  # `rake job:run` コマンドを引数をつけずに実行すると default セクションが読み込まれます。
+  # `rake job:run config=mail` と `config` オプションをつけて実行すると、mail セクションが読み込まれます。
   default:
-    name: default
-    model: "job:service"
-    num_workers: 0
-    log_file: log/job.log
+    # サービスの名前を設定します。
+    # サービスの名前は 2 重起動チェックに利用され、同一の名前を持つサービスは 2 つ以上起動できません。
+    name: "job:service"
+
+    # サービスのモードを設定します。
+    #   on_demand: 規定のモードで、ジョブがプールに追加されるたびにサービスが起動され、プールが空の場合速やかにサービスを終了します。
+    #     service: プールが空でもサービスは起動し続けるモードです。
+    mode: "on_demand"
+
+    # ジョブのログレベルを指定します。規定値は Rails.logger のレベルと同じレベルです。
     log_level: info
-    poll:
-      - 'default'
-      - 'voice_synthesis'
+
+    # プールの監視設定です。
+    polling:
+      # どのプールを監視するかを配列で指定します。
+      queues:
+        - 'default'
+        - 'voice_synthesis'
+
+      # プールの監視間隔を秒で指定します。規定値は 5 秒です。
+      # この設定は、mode が service の場合のみ有効です。
+      interval: 5
+
+  # プールの設定です。
   pool:
+    # 音声読み上げプールの設定です。
     voice_synthesis:
+      # プールに登録できるジョブの最大数を設定します。
+      # 指定がない場合、無制限にジョブをプールへ登録できます。
       max_size: 100
 
 test:

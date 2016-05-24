@@ -20,10 +20,6 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 
-# Requires supporting ruby files with custom matchers and macros, etc,
-# in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
@@ -70,16 +66,14 @@ RSpec.configure do |config|
 
   config.include Rails.application.routes.url_helpers
   config.include Capybara::DSL
+  config.include ActiveJob::TestHelper
+  config.include ActiveSupport::Testing::TimeHelpers
 
   config.include FactoryGirl::Syntax::Methods
   config.before(:all) do
     FactoryGirl.reload
     Capybara.app_host = nil
   end
-
-  config.filter_run_excluding(mecab: true) unless can_test_mecab_spec?
-  config.filter_run_excluding(open_jtalk: true) unless can_test_open_jtalk_spec?
-  config.filter_run_excluding(ldap: true) unless can_test_ldap_spec?
 
   if system("which phantomjs > /dev/null 2>&1")
     begin
@@ -112,10 +106,6 @@ RSpec.configure do |config|
   end
 
   config.add_setting :default_dbscope, default: :context
-  config.extend(SS::DatabaseCleanerSupport)
-  config.include(SS::JsSupport, js: true)
-  config.extend(SS::HttpServerSupport, http_server: true)
-  config.extend(SS::TmpDirSupport, tmpdir: true)
 end
 
 def unique_id
@@ -131,3 +121,7 @@ RSpec::Matchers.define :eq_as_time do |expected_time|
   end
 end
 # TODO: Should this code be written here? Another more correctly place?
+
+# Requires supporting ruby files with custom matchers and macros, etc,
+# in spec/support/ and its subdirectories.
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }

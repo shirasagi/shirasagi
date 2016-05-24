@@ -1,12 +1,10 @@
 require 'spec_helper'
 
-describe Ldap::ImportJob, ldap: true do
-  describe "#call" do
+describe Ldap::ImportJob, dbscope: :example, ldap: true do
+  describe "#perform" do
     context "when no ldap connection is set" do
-      subject { Ldap::ImportJob.new }
-
       it "should not raise errors" do
-        expect { subject.call(cms_site.id, cms_user.id, "pass") }.to raise_error Net::LDAP::Error
+        expect { described_class.perform_now(cms_site.id, cms_user.id, "pass") }.to raise_error Net::LDAP::Error
       end
     end
 
@@ -25,7 +23,6 @@ describe Ldap::ImportJob, ldap: true do
         create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
                group_ids: [group.id], cms_role_ids: [role.id])
       end
-      subject { Ldap::ImportJob.new }
 
       around(:each) do |example|
         save_auth_method = SS.config.ldap.auth_method
@@ -36,7 +33,7 @@ describe Ldap::ImportJob, ldap: true do
 
       import = nil
       it "should not raise errors" do
-        expect { import = subject.call(site.id, user.id, "pass") }.not_to raise_error
+        expect { import = described_class.perform_now(site.id, user.id, "pass") }.not_to raise_error
       end
       it "should return non-nil" do
         expect(import).not_to be_nil

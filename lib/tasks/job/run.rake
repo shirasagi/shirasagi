@@ -5,10 +5,19 @@ namespace :job do
   end
 
   task :run => [:environment, :setup_logger] do
-    config = ENV["config"]
-    unless config.blank?
-      config = SS.config.job[config]
+    install_signal_handlers
+    Job::Service.run(ENV["config"])
+  end
+
+  def install_signal_handlers
+    [:INT, :TERM].each do |signal|
+      Signal.trap(signal) { handle_signal(signal) }
     end
-    Job::MasterService.run config
+  end
+
+  def handle_signal(_)
+    Thread.new do
+      Job::Service.shutdown
+    end
   end
 end

@@ -28,4 +28,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # ActiveJob Queue Adapter
+  config.active_job.queue_adapter = :test
 end

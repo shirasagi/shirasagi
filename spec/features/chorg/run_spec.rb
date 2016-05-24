@@ -6,6 +6,12 @@ describe "chorg_run", dbscope: :example do
   let(:changeset) { create(:add_changeset, revision_id: revision.id) }
   let(:revision_show_path) { chorg_revisions_revision_path site.id, revision.id }
 
+  around do |example|
+    perform_enqueued_jobs do
+      example.run
+    end
+  end
+
   context "with test run" do
     let(:test_run_path) { chorg_run_confirmation_path site.id, revision.id, "test" }
 
@@ -40,14 +46,14 @@ describe "chorg_run", dbscope: :example do
       expect(current_path).to eq revision_show_path
       revision.reload
       expect(revision.job_ids.length).to eq 1
-      # job should be started within 1.minute
-      Timeout.timeout(60) do
-        loop do
-          count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
-          break if count > 0
-          sleep 0.1
-        end
-      end
+      # # job should be started within 1.minute
+      # Timeout.timeout(60) do
+      #   loop do
+      #     count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
+      #     break if count > 0
+      #     sleep 0.1
+      #   end
+      # end
       log = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).first
       expect(log).not_to be_nil
     end
@@ -87,14 +93,14 @@ describe "chorg_run", dbscope: :example do
       expect(current_path).to eq revision_show_path
       revision.reload
       expect(revision.job_ids.length).to eq 1
-      # job should be started within 1.minute
-      Timeout.timeout(60) do
-        loop do
-          count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
-          break if count > 0
-          sleep 0.1
-        end
-      end
+      # # job should be started within 1.minute
+      # Timeout.timeout(60) do
+      #   loop do
+      #     count = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).count
+      #     break if count > 0
+      #     sleep 0.1
+      #   end
+      # end
       log = Job::Log.where(site_id: site.id, job_id: revision.job_ids.first).first
       expect(log).not_to be_nil
     end

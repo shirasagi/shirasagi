@@ -9,6 +9,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example do
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:import_path) { "#{index_path}/import" }
 
   it "without login" do
     visit index_path
@@ -63,6 +64,19 @@ describe "facility_node_pages", type: :feature, dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#import" do
+      visit import_path
+      perform_enqueued_jobs do
+        within "form" do
+          attach_file "item[file]", Rails.root.join("spec", "fixtures", "facility", "facility.csv")
+          click_button "インポート"
+        end
+      end
+      expect(current_path).to eq import_path
+
+      expect(Facility::Node::Page.site(site).where(filename: /^#{node.filename}\//, depth: node.depth + 1).count).to eq 1
     end
   end
 end

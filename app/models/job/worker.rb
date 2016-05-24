@@ -60,26 +60,11 @@ module Job::Worker
       end
 
       def check_size_limit(pool)
-        pool_config = PoolConfig.new(SS.config.job.pool[pool])
+        max_size = Job::Service::Config.max_size_of(pool)
+        return if max_size <= 0
 
-        if pool_config.max_size?
-          size = Job::Task.where(pool: pool).count
-          raise Job::SizeLimitExceededError, "size limit exceeded" if size >= pool_config.max_size
-        end
+        size = Job::Task.where(pool: pool).count
+        raise Job::SizeLimitExceededError, "size limit exceeded" if size >= max_size
       end
-  end
-
-  class PoolConfig
-    def initialize(config)
-      @config = config || {}
-    end
-
-    def max_size?
-      @config.key?('max_size')
-    end
-
-    def max_size
-      @config['max_size'].to_i
-    end
   end
 end
