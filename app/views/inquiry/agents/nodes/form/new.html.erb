@@ -17,6 +17,10 @@ $ ->
   <div class="inquiry-form">
     <%= error_messages_for :answer, header_message: false %>
     <%= render partial: "form", locals: { f: f, confirm: false }  %>
+    <% if params[:preview] %>
+      <%= hidden_field_tag "preview", params[:preview] %>
+    <% end %>
+    <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
     <footer class="send">
     <%= f.submit t('inquiry.confirm'), name: :confirm %>
     </footer>

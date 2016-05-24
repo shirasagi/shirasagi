@@ -28,6 +28,7 @@ module Cms::PublicFilter::Layout
 
       agent = new_agent controller
       agent.controller.params.merge! spec
+      agent.controller.request = ActionDispatch::Request.new(request.env.merge("REQUEST_METHOD" => "GET"))
       resp = agent.render spec[:action]
       body = resp.body
 

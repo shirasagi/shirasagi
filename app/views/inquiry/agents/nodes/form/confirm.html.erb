@@ -15,6 +15,10 @@ $ ->
   <% end %>
   <%= error_messages_for :answer, header_message: false %>  
   <%= render partial: "form", locals: { f: f, confirm: true }  %>
+  <% if params[:preview] %>
+    <%= hidden_field_tag "preview", params[:preview] %>
+  <% end %>
+  <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
   <% if @cur_node.captcha_enabled? %>
     <%= show_simple_captcha(object: :answer, code_type: 'numeric', input_html: { required: nil }) %>
   <% end %>

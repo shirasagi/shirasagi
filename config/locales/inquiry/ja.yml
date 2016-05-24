@@ -55,6 +55,7 @@ ja:
       inquiry/release_plan: 公開期間
       inquiry/reception_plan: 回答受付期間
       inquiry/aggregation: 集計
+      inquiry/feedback_setting: フィードバック設定
 
   cms:
     nodes:
@@ -93,6 +94,7 @@ ja:
         required: 必須入力
         additional_attr: 追加属性
         input_confirm: 入力確認
+
       inquiry/answer:
         remote_addr: IPアドレス
         user_agent: ユーザーエージェント
@@ -100,6 +102,9 @@ ja:
         captcha: 画像の数字
         source_url: ページURL
         source_name: ページタイトル
+
+      inquiry/addon/feedback_setting:
+        feedback_confirmation: 確認画面
 
   simple_captcha:
     placeholder: ""
@@ -185,6 +190,9 @@ ja:
     inquiry/addon/aggregation:
       aggregation_state:
         - 公開側で集計機能を使用するかを選択します。
+    inquiry/addon/feedback_setting:
+      feedback_confirmation:
+        - 確認画面を利用する場合は「使用する」を選択してください。
 
   errors:
     messages:
