@@ -1,12 +1,21 @@
 <dl class="see">
-   <% @item.data.each do |data| %>
-   <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
-   <dd><%= data.value %></dd>
-   <% end %>
+  <% @item.data.each do |data| %>
+  <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
+  <dd><%= data.value %></dd>
+  <% end %>
 
-   <dt><%= @model.t :remote_addr %></dt>
-   <dd><%= @item.send(:remote_addr) %></dd>
+  <dt><%= @model.t :remote_addr %></dt>
+  <dd><%= @item.remote_addr %></dd>
 
-   <dt><%= @model.t :user_agent %></dt>
-   <dd><%= @item.send(:user_agent) %></dd>
+  <dt><%= @model.t :user_agent %></dt>
+  <dd>
+    <div>
+      <% browser = Browser.new(@item.user_agent, accept_language: request.accept_language) %>
+      <span class="browser"><%= browser.name %> <%= browser.full_version %></span>
+      @
+      <span class="platform"><%= browser.platform.name %></span>
+    </div>
+    <br>
+    <div class="user-agent"><%= @item.user_agent %></div>
+  </dd>
 </dl>
