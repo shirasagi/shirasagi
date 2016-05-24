@@ -24,6 +24,33 @@ class Inquiry::Answer
   validates :node_id, presence: true
   validate :validate_data
 
+  class << self
+    def search(params)
+      criteria = self.where({})
+      return criteria if params.blank?
+
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :source_url, :source_name, "data.values"
+      end
+
+      if params[:year].present?
+        year = params[:year].to_i
+        if params[:month].present?
+          month = params[:month].to_i
+          sdate = Date.new year, month, 1
+          edate = sdate + 1.month
+        else
+          sdate = Date.new year, 1, 1
+          edate = sdate + 1.year
+        end
+
+        criteria = criteria.where("updated" => { "$gte" => sdate, "$lt" => edate })
+      end
+
+      criteria
+    end
+  end
+
   def set_data(hash = {})
     self.data = []
     hash.each do |key, data|

@@ -1,29 +1,19 @@
-<div class="main-box">
-  <table class="index">
-    <thead>
-      <tr>
-        <th class="checkbox"><input type="checkbox" /></th>
-        <th><%= @model.t :data_summary %></th>
-        <th class="datetime"><%= @model.t :updated %></th>
-      </tr>
-    </thead>
+<% @tap_menu = proc do |item| %>
+  <%= link_to :show, action: :show, id: item  if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+<% end %>
+<% @index_title = proc do |item| %>
+  <td><%= link_to item.data_summary, action: :show, id: item %></td>
+<% end %>
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% if item.source_url.present? %>
+  <span class="url"><%= item.source_url %></span>
+  <% end %>
+  <% if item.source_name.present? %>
+  <span class="name"><%= item.source_name %></span>
+  <% end %>
+<% end %>
 
-    <tbody>
-      <% @items.each do |item| %>
-      <tr class="list-item">
-        <td class="checkbox">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-          <nav class="tap-menu">
-            <%= link_to :show, action: :show, id: item  if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-            <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-          </nav>
-        </td>
-        <td><%= link_to item.data_summary, action: :show, id: item %></td>
-        <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
-<%= paginate @items if @items.try(:current_page) %>
+<%= render file: "cms/crud/index" %>
