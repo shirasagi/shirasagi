@@ -98,6 +98,8 @@ ja:
         user_agent: ユーザーエージェント
         data_summary: 回答内容
         captcha: 画像の数字
+        source_url: ページURL
+        source_name: ページタイトル
 
   simple_captcha:
     placeholder: ""

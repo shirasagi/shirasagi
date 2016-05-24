@@ -18,4 +18,14 @@
     <br>
     <div class="user-agent"><%= @item.user_agent %></div>
   </dd>
+
+  <% if @item.source_url.present? %>
+  <dt><%= @model.t :source_url %></dt>
+  <dd><%= @item.source_url %></dd>
+  <% end %>
+
+  <% if @item.source_name.present? %>
+  <dt><%= @model.t :source_name %></dt>
+  <dd><%= @item.source_name %></dd>
+  <% end %>
 </dl>
