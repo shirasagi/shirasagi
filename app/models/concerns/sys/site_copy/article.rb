@@ -158,8 +158,9 @@ module Sys::SiteCopy::Article
                                                                  cms_page2.category_ids)
         end
 
+        new_cms_page2.map_points = cms_page2.map_points unless cms_page2.map_points.empty?
         new_cms_page2.body_parts = cms_page2.body_parts if defined? new_cms_page2.body_parts
-        if defined? cms_page2.maste_id
+        if defined?(cms_page2.master_id) && cms_page2.master_id != nil
           source_master_page = Cms::Page.where(id: cms_page2.master_id).one
           dest_master_page = Cms::Page.where(site_id: @site.id, filename: source_master_page.filename).one
           new_cms_page2.master_id = dest_master_page.id
