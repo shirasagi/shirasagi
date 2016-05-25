@@ -4,12 +4,12 @@ module Inquiry::Addon
     extend SS::Addon
 
     included do
-      field :feedback_confirmation, type: String, default: "disabled"
+      field :feedback_confirmation, type: String, default: "enabled"
       permit_params :feedback_confirmation
     end
 
     def feedback_confirmation_options
-      %w(disabled enabled).map do |w|
+      %w(enabled disabled).map do |w|
         [I18n.t("inquiry.options.state.#{w}"), w]
       end
     end

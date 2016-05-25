@@ -1,19 +1,11 @@
 FactoryGirl.define do
   factory :inquiry_node_base, class: Inquiry::Node::Base, traits: [:cms_node] do
-    transient do
-      site nil
-    end
-
-    cur_site { site ? site : cms_site }
+    cur_site { cms_site }
     route "inquiry/base"
   end
 
   factory :inquiry_node_form, class: Inquiry::Node::Form, traits: [:cms_node] do
-    transient do
-      site nil
-    end
-
-    cur_site { site ? site : cms_site }
+    cur_site { cms_site }
     route "inquiry/form"
     from_email "from@example.jp"
     notice_email "notice@example.jp"
