@@ -8,6 +8,10 @@ class Inquiry::AnswersController < ApplicationController
   navi_view "inquiry/main/navi"
 
   private
+    def fix_params
+      { cur_site: @cur_site, cur_node: @cur_node }
+    end
+
     def send_csv(items)
       require "csv"
 
@@ -18,6 +22,7 @@ class Inquiry::AnswersController < ApplicationController
       csv = CSV.generate do |data|
         data << headers
         items.each do |item|
+          item.attributes = fix_params
           values = item.data.map{|d| [d.column.name, d.value]}.to_h
 
           row = []
@@ -26,7 +31,7 @@ class Inquiry::AnswersController < ApplicationController
             row << values[col]
           end
           row << item.updated.strftime("%Y/%m/%d %H:%M")
-          row << item.source_url
+          row << item.source_full_url
           row << item.source_name
 
           data << row
