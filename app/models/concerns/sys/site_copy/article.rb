@@ -9,6 +9,7 @@ module Sys::SiteCopy::Article
       create_dup_facility_for_dup_site                #施設写真
       create_dup_key_visuals_for_dup_site             #キービジュアル
       create_dup_cms_page2_for_dup_site(node_pg_cats) #その他
+      renew_master_ids
     end
 
     #広告バナー
@@ -17,7 +18,7 @@ module Sys::SiteCopy::Article
         logger.fatal 'Expected 2 arguments. - [0] => Cms::Site, [1] => Cms::Site'
         return false
       end
-      cms_ads = Ads::Banner.where(site_id: @site_old.id).where(route: "ads/banner").order('depth ASC')
+      cms_ads = Ads::Banner.where(site_id: @site_old.id).where(route: "ads/banner").order('depth ASC, updated ASC')
       cms_ads.each do |cms_ad|
         new_cms_ad = Ads::Banner.new
          # 基本項目の情報コピー
@@ -33,8 +34,19 @@ module Sys::SiteCopy::Article
         new_cms_ad.filename = cms_ad.filename
         new_cms_ad.link_url = cms_ad.link_url
         new_cms_ad.file_id  = clone_file(cms_ad.file_id)
+        new_cms_ad.ads_category_ids = cms_ad.ads_category_ids
         if cms_ad.layout_id && @layout_records_map[cms_ad.layout_id]
           new_cms_ad.layout_id = @layout_records_map[cms_ad.layout_id]
+        end
+
+        unless cms_ad.ads_category_ids.empty?
+          ads_category_ids = []
+          cms_ad.ads_category_ids.each do |ads_category_id|
+            source_category = Cms::Node.where(id: ads_category_id).one
+            dest_category = Cms::Node.where(site_id: @site.id, filename: source_category.filename).one
+            ads_category_ids.push(dest_category.id)
+          end
+          new_cms_ad.ads_category_ids = ads_category_ids
         end
 
         begin
@@ -48,7 +60,7 @@ module Sys::SiteCopy::Article
 
     #施設写真
     def create_dup_facility_for_dup_site
-      cms_facilities = Facility::Image.where(site_id: @site_old.id).where(route: "facility/image")
+      cms_facilities = Facility::Image.where(site_id: @site_old.id).where(route: "facility/image").order('updated ASC')
       cms_facilities.each do |cms_facility|
         new_cms_facility = Facility::Image.new
         # 基本項目の情報コピー
@@ -77,7 +89,8 @@ module Sys::SiteCopy::Article
 
     #キービジュアル
     def create_dup_key_visuals_for_dup_site
-      cms_key_visuals = KeyVisual::Image.where(site_id: @site_old.id).where(route: "key_visual/image")
+      cms_key_visuals = KeyVisual::Image.where(site_id: @site_old.id)
+                            .where(route: "key_visual/image").order('updated ASC')
       cms_key_visuals.each do |cms_key_visual|
         new_cms_key_visual_no_attr = {}
         new_model_attr_flag = 0
@@ -115,7 +128,7 @@ module Sys::SiteCopy::Article
 
     #その他の記事・その他ページ
     def create_dup_cms_page2_for_dup_site(node_pg_cats)
-      cms_pages2 = Cms::Page.where(site_id: @site_old.id)
+      cms_pages2 = Cms::Page.where(site_id: @site_old.id).order('updated ASC')
       cms_page2_skip = ["cms/page", "ads/banner", "facility/image", "key_visual/image"]
       cms_pages2_ids = cms_pages2.pluck(:id)
       cms_pages2_ids.each do |cms_page2_id|
@@ -146,14 +159,40 @@ module Sys::SiteCopy::Article
                                                                  cms_page2.category_ids)
         end
 
+        new_cms_page2.map_points = cms_page2.map_points unless cms_page2.map_points.empty?
         new_cms_page2.body_parts = cms_page2.body_parts if defined? new_cms_page2.body_parts
 
         begin
-          new_cms_page2.save! validate: false
+          new_cms_page2.save!
         rescue => exception
           Rails.logger.error(exception.message)
           throw exception
         end
+      end
+
+      # set related_page_ids
+      cms_pages2_ids.each do |cms_page2_id|
+        source_cms_page = Cms::Page.where(id: cms_page2_id).one
+        dest_attributes = Cms::Page.where(site_id: @site.id, filename: source_cms_page.filename).one.becomes_with_route
+        next if source_cms_page.related_page_ids.empty?
+        related_page_ids = []
+        source_cms_page.related_page_ids.each do |related_page_id|
+          source_related_page = Cms::Page.where(id: related_page_id).one
+          dest_related_page = Cms::Page.where(site_id: @site.id, filename: source_related_page.filename).one
+          related_page_ids.push(dest_related_page.id)
+        end
+        dest_attributes.related_page_ids = related_page_ids
+        dest_attributes.update
+      end
+    end
+
+    def renew_master_ids
+      Cms::Page.where(site_id: @site.id, :master_id.nin => ["", nil]).order('updated ASC').each do |dest_replacement_page|
+        source_master_page = Cms::Page.where(id: dest_replacement_page.master_id).one
+        dest_master_page = Cms::Page.where(site_id: @site.id, filename: source_master_page.filename).one
+        Cms::Page.skip_callback(:save, :before, :set_updated)
+        dest_replacement_page.update_attribute(:master_id, dest_master_page.id)
+        Cms::Page.set_callback(:save, :before, :set_updated)
       end
     end
 

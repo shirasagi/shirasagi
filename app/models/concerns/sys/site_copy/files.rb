@@ -14,7 +14,7 @@ module Sys::SiteCopy::Files
       end
       # 元サイトに紐付く共有ファイルを取得.
       # JSON ライクに取り扱いたいので配列化.
-      old_file_model_list = Cms::File.where(:site_id => @site_old._id).to_a
+      old_file_model_list = Cms::File.where(:site_id => @site_old._id).order('updated ASC').to_a
 
       old_file_model_list.each do |base_file_model_obj|
         # ファイルModelを生成

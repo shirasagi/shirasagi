@@ -39,7 +39,7 @@ module Sys::SiteCopy::Nodes
       @layout_records_map = layout_records_map
 
       # 階層の浅い物から実施
-      Cms::Node.where(:site_id => @site_old.id).order('depth ASC').each do |base_cmsnode|
+      Cms::Node.where(:site_id => @site_old.id).order('depth ASC, updated ASC').each do |base_cmsnode|
         next if @@node_fac_cat_routes.include?(base_cmsnode.route)
         next if @@node_copied_fac_cat_routes.include?(base_cmsnode.route)
         next if @@node_pg_cat_routes.include?(base_cmsnode.route)
@@ -72,8 +72,44 @@ module Sys::SiteCopy::Nodes
         # 物理的なディレクトリ作成とファイル複製が必要な場合
         copy_file_dir(base_cmsnode, basesite_public_dir, site_public_dir) if ['uploader/file'].include? base_cmsnode.route
 
+        unless base_cmsnode.st_category_ids.empty?
+          st_category_ids = []
+          base_cmsnode.st_category_ids.each do |st_category_id|
+            source_node = Cms::Node.where(id: st_category_id).one
+            dest_node = Cms::Node.where(site_id: @site.id, filename: source_node.filename).one
+            st_category_ids.push(dest_node.id)
+          end
+          cms_node_obj.st_category_ids = st_category_ids
+        end
+
+        if base_cmsnode.attributes['urgency_default_layout_id']
+          source_default_layout = Cms::Layout.where(id: base_cmsnode.attributes['urgency_default_layout_id']).one
+          dest_default_layout = Cms::Layout.where(site_id: @site.id, filename: source_default_layout.filename).one
+          cms_node_obj.attributes['urgency_default_layout_id'] = dest_default_layout.id
+        end
+
         begin
           cms_node_obj.save!
+        rescue => exception
+          Rails.logger.error(exception.message)
+          throw exception
+        end
+
+        if base_cmsnode.route == 'inquiry/form'
+          copy_inquiry_columns base_cmsnode, cms_node_obj
+        end
+      end
+    end
+
+    def copy_inquiry_columns(source_node, dest_node)
+      Inquiry::Column.where(node_id: source_node.id).order('updated ASC').each do |source_inquiry_column|
+        dest_inquiry_column = Inquiry::Column.new source_inquiry_column.attributes.except(
+            :id, :_id, :node_id, :site_id, :created, :updated
+        ).to_hash
+        dest_inquiry_column.node_id = dest_node.id
+        dest_inquiry_column.site_id = @site.id
+        begin
+          dest_inquiry_column.save!
         rescue => exception
           Rails.logger.error(exception.message)
           throw exception
