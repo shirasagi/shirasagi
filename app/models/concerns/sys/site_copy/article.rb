@@ -9,6 +9,7 @@ module Sys::SiteCopy::Article
       create_dup_facility_for_dup_site                #施設写真
       create_dup_key_visuals_for_dup_site             #キービジュアル
       create_dup_cms_page2_for_dup_site(node_pg_cats) #その他
+      renew_master_ids
     end
 
     #広告バナー
@@ -160,11 +161,6 @@ module Sys::SiteCopy::Article
 
         new_cms_page2.map_points = cms_page2.map_points unless cms_page2.map_points.empty?
         new_cms_page2.body_parts = cms_page2.body_parts if defined? new_cms_page2.body_parts
-        if defined?(cms_page2.master_id) && cms_page2.master_id != nil
-          source_master_page = Cms::Page.where(id: cms_page2.master_id).one
-          dest_master_page = Cms::Page.where(site_id: @site.id, filename: source_master_page.filename).one
-          new_cms_page2.master_id = dest_master_page.id
-        end
 
         begin
           new_cms_page2.save!
@@ -190,6 +186,16 @@ module Sys::SiteCopy::Article
       end
     end
 
+    def renew_master_ids
+      Cms::Page.where(site_id: @site.id, :master_id.nin => ["", nil]).order('updated ASC').each do |dest_replacement_page|
+        source_master_page = Cms::Page.where(id: dest_replacement_page.master_id).one
+        dest_master_page = Cms::Page.where(site_id: @site.id, filename: source_master_page.filename).one
+        Cms::Page.skip_callback(:save, :before, :set_updated)
+        dest_replacement_page.update_attribute(:master_id, dest_master_page.id)
+        Cms::Page.set_callback(:save, :before, :set_updated)
+      end
+    end
+
     # ファイルを複製しファイルidを返す(単体)
     def clone_file(old_file_id)
       old_file = SS::File.find(old_file_id)
@@ -205,7 +211,7 @@ module Sys::SiteCopy::Article
       begin
         file.save!
       rescue => exception
-        Rails.logger.error(exception.message)
+ils.logger.error(exception.message)
         throw exception
       end
       return file.id.mongoize
