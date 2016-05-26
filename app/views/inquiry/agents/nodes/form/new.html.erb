@@ -1,13 +1,4 @@
-<%= coffee do %>
-$ ->
-  $('.inquiry-form input').keypress (ev) ->
-    if (ev.which and ev.which is 13) or (ev.keyCode and ev.keyCode is 13)
-      return false
-    else
-      return true
-  return
-<% end %>
-
+<%= jquery do %>Inquiry_Form.render();<% end %>
 <div class="inquiry-html">
   <%== @cur_node.inquiry_html %>
 </div>
