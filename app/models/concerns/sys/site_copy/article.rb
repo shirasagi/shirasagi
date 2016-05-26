@@ -211,7 +211,7 @@ module Sys::SiteCopy::Article
       begin
         file.save!
       rescue => exception
-ils.logger.error(exception.message)
+        Rails.logger.error(exception.message)
         throw exception
       end
       return file.id.mongoize
