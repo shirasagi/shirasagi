@@ -33,13 +33,8 @@ Installation (Auto)
 -------------------
 
 ```
-# useradd rails
-# usermod -G wheel rails
-# passwd rails
-  (Input password)
-# su - rails
-
-$ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | bash -s example.jp
+$ su - user-which-executes-shirasagi-server
+$ curl https://raw.githubusercontent.com/shirasagi/shirasagi/master/bin/install.sh | SS_HOSTNAME=example.jp bash -s
 ```
 
 Installation (CentOS 7)
