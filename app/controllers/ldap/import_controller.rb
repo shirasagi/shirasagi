@@ -42,24 +42,25 @@ class Ldap::ImportController < ApplicationController
     end
 
     def sync
-      @job = Ldap::SyncJob.bind(site_id: @cur_site, user_id: @cur_user).
-        perform_now(@cur_site.root_group.id, @item.id)
-      @item.results = @job.results
-      @item.save!
-      respond_to do |format|
-        format.html { redirect_to({ action: :results }) }
-        format.json { head :no_content }
+      task = Ldap::SyncTask.site(@cur_site).first_or_create
+      if task.running?
+        # already started
+        redirect_to({ action: :results }, { notice: t("ldap.messages.sync_already_started") })
+        return
       end
-    rescue => e
-      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      raise if e.to_s =~ /^\d+$/
-      @errors = @item.errors.empty? ? [ e.to_s ] : @item.errors.full_messages
+
+      task.results = nil
+      task.save
+      Ldap::SyncJob.bind(site_id: @cur_site, user_id: @cur_user).
+        perform_later(@cur_site.root_group.id, @item.id)
       respond_to do |format|
-        format.html { render file: :import, status: :unprocessable_entity }
-        format.json { render json: @errors, status: :unprocessable_entity }
+        format.html { redirect_to({ action: :results }, { notice: t("ldap.messages.sync_started") }) }
+        format.json { head :no_content }
       end
     end
 
     def results
+      @task = Ldap::SyncTask.site(@cur_site).first_or_create
+      @results = @task.results
     end
 end

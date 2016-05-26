@@ -1,4 +1,8 @@
 class Ldap::SyncJob < Cms::ApplicationJob
+  include Job::Cms::GeneratorFilter
+
+  self.task_class = Ldap::SyncTask
+  self.task_name = "ldap::sync"
 
   attr_reader :results
 
@@ -33,6 +37,8 @@ class Ldap::SyncJob < Cms::ApplicationJob
     @results[:group][:deleted], @results[:user][:deleted] = num_deletes
 
     rearrange_group_order
+    task.results = @results
+
     self
   end
 

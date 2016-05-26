@@ -1,38 +1,38 @@
-<% if @item.results.present? %>
+<% if @results.present? %>
 <dl class="see">
   <dt><%= t "ldap.views.import/sync.header" %></dt>
   <dd></dd>
   <dt><%= t "ldap.views.import/sync.group" %></dt>
   <dd></dd>
   <dt><%= t "ldap.views.import/sync.success" %></dt>
-  <dd><%= @item.results["group"]["successed"] %></dd>
+  <dd><%= @results["group"]["successed"] %></dd>
   <dt><%= t "ldap.views.import/sync.delete" %></dt>
-  <dd><%= @item.results["group"]["deleted"] %></dd>
+  <dd><%= @results["group"]["deleted"] %></dd>
   <dt><%= t "ldap.views.import/sync.fail" %></dt>
-  <dd><%= @item.results["group"]["failed"] %></dd>
-  <% if @item.results["group"]["errors"].present? %>
+  <dd><%= @results["group"]["failed"] %></dd>
+  <% if @results["group"]["errors"].present? %>
   <dt><%= t "ldap.views.import/sync.error" %></dt>
-  <dd><%= br @item.results["group"]["errors"].join("\n")%></dd>
+  <dd><%= br @results["group"]["errors"].join("\n")%></dd>
   <% end %>
-  <% if @item.results["group"]["warnings"].present? %>
+  <% if @results["group"]["warnings"].present? %>
   <dt><%= t "ldap.views.import/sync.warning" %></dt>
-  <dd><%= br @item.results["group"]["warnings"].join("\n")%></dd>
+  <dd><%= br @results["group"]["warnings"].join("\n")%></dd>
   <% end %>
   <dt><%= t "ldap.views.import/sync.user" %></dt>
   <dd></dd>
   <dt><%= t "ldap.views.import/sync.success" %></dt>
-  <dd><%= @item.results["user"]["successed"] %></dd>
+  <dd><%= @results["user"]["successed"] %></dd>
   <dt><%= t "ldap.views.import/sync.delete" %></dt>
-  <dd><%= @item.results["user"]["deleted"] %></dd>
+  <dd><%= @results["user"]["deleted"] %></dd>
   <dt><%= t "ldap.views.import/sync.fail" %></dt>
-  <dd><%= @item.results["user"]["failed"] %></dd>
-  <% if @item.results["user"]["errors"].present? %>
+  <dd><%= @results["user"]["failed"] %></dd>
+  <% if @results["user"]["errors"].present? %>
   <dt><%= t "ldap.views.import/sync.error" %></dt>
-  <dd><%= br @item.results["user"]["errors"].join("\n")%></dd>
+  <dd><%= br @results["user"]["errors"].join("\n")%></dd>
   <% end %>
-  <% if @item.results["user"]["warnings"].present? %>
+  <% if @results["user"]["warnings"].present? %>
   <dt><%= t "ldap.views.import/sync.warning" %></dt>
-  <dd><%= br @item.results["user"]["warnings"].join("\n")%></dd>
+  <dd><%= br @results["user"]["warnings"].join("\n")%></dd>
   <% end %>
 </dl>
 <% end %>

@@ -13,5 +13,4 @@ class Ldap::Import
   field :group_count, type: Integer
   field :user_count, type: Integer
   field :ldap, type: Ldap::Extensions::LdapArray
-  field :results, type: Hash
 end

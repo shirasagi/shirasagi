@@ -32,6 +32,8 @@ ja:
       no_groups: グループが見つかりません。
       no_users: ユーザが見つかりません。
       import_started: インポート処理を開始しました。
+      sync_started: 同期処理を開始しました。
+      sync_already_started: 同期処理は開始されています。
       sync_success: "同期に成功しました。グループ数: %{group_count}、ユーザー数: %{user_count}"
       group_moved: "%{user_name} がグループ「%{group_name}」へ移動しました。"
     errors:
