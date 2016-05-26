@@ -164,4 +164,19 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
       expect(item.source_content.becomes_with_route).to eq page1
     end
   end
+
+  context "with upper_html and lower_html" do
+    before do
+      part.upper_html = '<div class="upper">upper</div>'
+      part.lower_html = '<div class="lower">lower</div>'
+      part.save!
+    end
+
+    it do
+      visit page1.full_url
+
+      expect(page).to have_css("div.upper", text: "upper")
+      expect(page).to have_css("div.lower", text: "lower")
+    end
+  end
 end

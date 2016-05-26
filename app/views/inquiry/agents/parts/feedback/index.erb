@@ -1,3 +1,5 @@
+<%== @cur_part.upper_html %>
+
 <%= coffee do %>
   $ ->
     $('.inquiry-form input').keypress (ev) ->
@@ -9,9 +11,11 @@
 <% end %>
 
 <div class="inquiry">
-  <div class="inquiry-html">
-    <%== @cur_parent.inquiry_html %>
-  </div>
+  <% if @cur_parent.inquiry_html.present? %>
+    <div class="inquiry-html">
+      <%== @cur_parent.inquiry_html %>
+    </div>
+  <% end %>
 
   <%
     confirmation_enabled = @cur_part.feedback_confirmation_enabled? || @cur_parent.captcha_enabled?
@@ -37,3 +41,5 @@
     </div>
   <% end %>
 </div>
+
+<%== @cur_part.lower_html %>

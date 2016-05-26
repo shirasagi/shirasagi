@@ -116,6 +116,8 @@ ja:
         source_name: ページタイトル
 
       inquiry/addon/feedback_setting:
+        upper_html: 上部HTML
+        lower_html: 下部HTML
         feedback_confirmation: 確認画面
 
   simple_captcha:
@@ -203,6 +205,10 @@ ja:
       aggregation_state:
         - 公開側で集計機能を使用するかを選択します。
     inquiry/addon/feedback_setting:
+      upper_html:
+        - 上部に任意の内容をHTMLで記述することが可能です。
+      lower_html:
+        - 下部に任意の内容をHTMLで記述することが可能です。
       feedback_confirmation:
         - 確認画面を利用する場合は「使用する」を選択してください。
 

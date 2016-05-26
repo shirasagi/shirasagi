@@ -4,8 +4,10 @@ module Inquiry::Addon
     extend SS::Addon
 
     included do
+      field :upper_html, type: String
+      field :lower_html, type: String
       field :feedback_confirmation, type: String, default: "enabled"
-      permit_params :feedback_confirmation
+      permit_params :upper_html, :lower_html, :feedback_confirmation
     end
 
     def feedback_confirmation_options
