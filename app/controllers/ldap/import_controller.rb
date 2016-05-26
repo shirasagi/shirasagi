@@ -31,17 +31,10 @@ class Ldap::ImportController < ApplicationController
 
     def import
       Ldap::ImportJob.bind(site_id: @cur_site, user_id: @cur_user).
-        perform_now(@cur_site.id, @cur_user.id, session[:user]["password"])
+        perform_later(@cur_site.id, @cur_user.id, session[:user]["password"])
       respond_to do |format|
-        format.html { redirect_to({ action: :index }, { notice: t("ldap.messages.import_success") }) }
+        format.html { redirect_to({ action: :index }, { notice: t("ldap.messages.import_started") }) }
         format.json { head :no_content }
-      end
-    rescue => e
-      raise if e.to_s =~ /^\d+$/
-      @errors = [ e.to_s ]
-      respond_to do |format|
-        format.html { render status: :bad_request }
-        format.json { render json: @errors, status: :bad_request }
       end
     end
 
