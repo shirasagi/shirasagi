@@ -42,6 +42,7 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
 
       click_on "確認画面へ"
 
+      expect(page).to have_css("dd", text: page1.name)
       expect(page).to have_css("label", text: contents_column.name)
       expect(page).to have_css("label", text: findable_column.name)
       expect(page).to have_css("label", text: comment_column.name)
@@ -74,6 +75,7 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
 
       click_on "確認画面へ"
 
+      expect(page).to have_css("dd", text: page1.name)
       expect(page).to have_css("label", text: contents_column.name)
       expect(page).to have_css("label", text: findable_column.name)
       expect(page).to have_css("label", text: comment_column.name)
@@ -106,6 +108,7 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
 
       click_on "確認画面へ"
 
+      expect(page).to have_css("dd", text: page1.name)
       expect(page).to have_css("label", text: contents_column.name)
       expect(page).to have_css("label", text: findable_column.name)
       expect(page).to have_css("label", text: comment_column.name)
