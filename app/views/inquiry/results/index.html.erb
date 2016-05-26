@@ -1,11 +1,15 @@
 <div class="main-box">
-  <dl class="see" style="padding-bottom: 10px">
+  <% if @main_box %>
+    <% @main_box.call %>
+  <% else %>
+  <dl class="see">
     <dt><%= t "inquiry.total_count" %></dt>
     <dd>
       <%= @answer_count %>
       <%= t "views.units.count" %>
     </dd>
   </dl>
+  <% end %>
 </div>
 
 <% @columns.each do |column| %>

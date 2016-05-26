@@ -49,6 +49,26 @@ class Inquiry::Answer
 
       criteria
     end
+
+    def find_node(site, source_url)
+      return if source_url.blank?
+      path = source_url
+      path = path[1..-1] if path.start_with?("/")
+
+      Cms::Node.site(site).in_path(path).sort(depth: -1).first
+    end
+
+    def find_page(site, source_url)
+      return if source_url.blank?
+      path = source_url
+      path = path[1..-1] if path.start_with?("/")
+
+      Cms::Page.site(site).filename(path).first
+    end
+
+    def find_content(site, source_url)
+      find_page(site, source_url) || find_node(site, source_url)
+    end
   end
 
   def set_data(hash = {})
@@ -76,7 +96,7 @@ class Inquiry::Answer
   end
 
   def source_content
-    find_page || find_node
+    self.class.find_content(@cur_site, source_url)
   end
 
   def source_full_url
@@ -97,22 +117,6 @@ class Inquiry::Answer
 
     def set_node
       self.node_id = cur_node.id
-    end
-
-    def find_node
-      return if source_url.blank?
-      path = source_url
-      path = path[1..-1] if path.start_with?("/")
-
-      Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
-    end
-
-    def find_page
-      return if source_url.blank?
-      path = source_url
-      path = path[1..-1] if path.start_with?("/")
-
-      Cms::Page.site(@cur_site).filename(path).first
     end
 
     def copy_contents_info

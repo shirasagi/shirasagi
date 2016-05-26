@@ -1,1 +1,19 @@
+<% @main_box = proc do %>
+<dl class="see">
+  <% if @source_content %>
+  <dt><%= Inquiry::Answer.t :source_name %></dt>
+  <dd><%= @source_content.public? ? link_to(@source_content.name, @source_content.full_url, target: "_blank") : @source_content.name %></dd>
+  <% end %>
+  <% if @source_url %>
+  <dt><%= Inquiry::Answer.t :source_url %></dt>
+  <dd><%= @source_url %></dd>
+  <% end %>
+  <dt><%= t "inquiry.total_count" %></dt>
+  <dd>
+    <%= @answer_count %>
+    <%= t "views.units.count" %>
+  </dd>
+</dl>
+<% end %>
+
 <%= render file: 'inquiry/results/index' %>

@@ -39,6 +39,9 @@ class Inquiry::FeedbacksController < ApplicationController
       @cur_node = @cur_node.becomes_with_route
       @columns = @cur_node.columns.order_by(order: 1)
       @items = @cur_node.aggregate_for_list(options)
+      @source_url = options[:url]
+      @source_url = "#{@source_url}.#{params[:format]}" if params[:format].present?
+      @source_content = Inquiry::Answer.find_content(@cur_site, @source_url)
       @answer_count = @items.first["count"]
       @aggregation = @cur_node.aggregate_select_columns(options)
     end
