@@ -1,3 +1,12 @@
-<div class="mod-ss-markdown">
-  <%= f.text_area :text, class: "markdown", style: "height: 240px;" %>
+<%= jquery do %>
+  SS_Addon_Markdown.render();
+<% end %>
+
+<div class="ss-addon-markdown">
+  <div class="ss-addon-markdown-toolbar">
+    <%= f.select :text_type, @item.text_type_options, {},  class: "ss-addon-markdown-type" %>
+  </div>
+  <div class="ss-addon-markdown-content">
+    <%= f.text_area :text, class: "markdown", style: "height: 240px;" %>
+  </div>
 </div>
