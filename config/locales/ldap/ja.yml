@@ -83,3 +83,8 @@ ja:
     ldap/addon/user:
       ldap_dn:
       - LDAPを利用している場合にユーザーのDN（識別子）を入力します。
+
+  job:
+    models:
+      ldap/import_job: LDAPインポート
+      ldap/sync_job: LDAP同期
