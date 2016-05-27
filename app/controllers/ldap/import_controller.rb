@@ -6,7 +6,7 @@ class Ldap::ImportController < ApplicationController
 
   model Ldap::Import
 
-  before_action :set_item, only: [ :show, :delete, :destroy, :sync_confirmation, :sync, :results ]
+  before_action :set_item, only: [ :show, :delete, :destroy, :sync_confirmation, :sync ]
 
   # delete unnecessary Cms::CrudFilter methods
   undef_method :new, :create, :edit, :update
@@ -45,7 +45,7 @@ class Ldap::ImportController < ApplicationController
       task = Ldap::SyncTask.site(@cur_site).first_or_create
       if task.running?
         # already started
-        redirect_to({ action: :results }, { notice: t("ldap.messages.sync_already_started") })
+        redirect_to(ldap_result_index_path, { notice: t("ldap.messages.sync_already_started") })
         return
       end
 
@@ -54,13 +54,8 @@ class Ldap::ImportController < ApplicationController
       Ldap::SyncJob.bind(site_id: @cur_site, user_id: @cur_user).
         perform_later(@cur_site.root_group.id, @item.id)
       respond_to do |format|
-        format.html { redirect_to({ action: :results }, { notice: t("ldap.messages.sync_started") }) }
+        format.html { redirect_to(ldap_result_index_path, { notice: t("ldap.messages.sync_started") }) }
         format.json { head :no_content }
       end
-    end
-
-    def results
-      @task = Ldap::SyncTask.site(@cur_site).first_or_create
-      @results = @task.results
     end
 end

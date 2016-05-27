@@ -2,6 +2,7 @@ ja:
   ldap:
     server: サーバー情報
     import: インポート
+    result: 同期結果
     views:
       button:
         import: インポート
@@ -19,6 +20,8 @@ ja:
         fail: 失敗
         error: エラー
         warning: 警告
+        no_results: 結果がありません
+        task_info: タスク
       server/index:
         group:
           root: ルート
@@ -67,6 +70,8 @@ ja:
       index: サーバー情報
     ldap/import:
       index: インポート
+    ldap/result:
+      index: 同期結果
     links:
       ldap: LDAP
       sync: 同期する

@@ -81,12 +81,12 @@ describe "ldap_import", ldap: true, dbscope: :example do
         #
         click_on "同期する"
         click_on "同期"
-        expect(page).to have_selector("article#main dl.see dt", text: "同期結果")
+        expect(page).to have_selector("article#main h2", text: "同期結果")
 
         #
         # delete
         #
-        click_on "一覧へ戻る"
+        visit index_path
         click_on item.created.strftime("%Y/%m/%d %H:%M")
         click_on "削除する"
         click_on "削除"
