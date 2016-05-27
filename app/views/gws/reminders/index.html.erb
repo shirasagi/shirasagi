@@ -1,12 +1,17 @@
+<%= jquery do %>
+  Gws_Reminder.renderList({ url: "<%= gws_apis_reminders_path %>" });
+<% end %>
+
 <div class="index">
   <%= render file: "_list_head" %>
 
   <ul class="list-items">
     <% @items.each do |item| %>
-    <li class="list-item">
-      <nav class="tap-menu">
-        <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      </nav>
+    <li class="list-item"
+      data-id="<%= item.item_id %>"
+      data-name="<%= item.name %>"
+      data-model="<%= item.model %>"
+      data-date="<%= tryb { item.date.strftime("%Y/%m/%d %H:%M") } %>">
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
@@ -30,6 +35,10 @@
             <span class="fields"><%= truncate item.updated_field_names.join(', '), length: 30 %></span>
           <% end %>
         </div>
+      </div>
+
+      <div class="links">
+        <input type="button" class="btn delete" value="削除" />
       </div>
     </li>
     <% end %>

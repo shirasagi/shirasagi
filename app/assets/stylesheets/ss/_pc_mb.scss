@@ -1161,6 +1161,9 @@ div.index {
     font-size: $px15;
     @include mb { font-size: $px14; }
   }
+  .info {
+    display: inline-block;
+  }
   .meta {
     span {
       display: inline-block;
@@ -1188,6 +1191,9 @@ div.index {
         content: '\25b9';
       }
     }
+  }
+  .links {
+    float: right;
   }
 }
 table.index {

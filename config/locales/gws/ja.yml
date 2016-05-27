@@ -40,6 +40,7 @@ ja:
         high: 重要なお知らせ
     links:
       back_to_portal: ポータルへ戻る
+      restore_reminder: 元に戻す
     buttons:
       register: 登録
       unset: 解除
