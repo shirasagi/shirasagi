@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/AbcSize
+
 module Sys::SiteCopy::Nodes
   extend ActiveSupport::Concern
 
@@ -103,9 +105,8 @@ module Sys::SiteCopy::Nodes
 
     def copy_inquiry_columns(source_node, dest_node)
       Inquiry::Column.where(node_id: source_node.id).order('updated ASC').each do |source_inquiry_column|
-        dest_inquiry_column = Inquiry::Column.new source_inquiry_column.attributes.except(
-            :id, :_id, :node_id, :site_id, :created, :updated
-        ).to_hash
+        dest_inquiry_column = Inquiry::Column.new source_inquiry_column.
+            attributes.except(:id, :_id, :node_id, :site_id, :created, :updated).to_hash
         dest_inquiry_column.node_id = dest_node.id
         dest_inquiry_column.site_id = @site.id
         begin

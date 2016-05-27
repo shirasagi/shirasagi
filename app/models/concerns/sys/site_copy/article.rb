@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/ModuleLength, Metrics/MethodLength, Metrics/AbcSize
+
 module Sys::SiteCopy::Article
   extend ActiveSupport::Concern
 

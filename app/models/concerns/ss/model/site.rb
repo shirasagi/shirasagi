@@ -91,7 +91,6 @@ module SS::Model::Site
   end
 
   module ClassMethods
-    public
       def search(params)
         criteria = self.where({})
         return criteria if params.blank?

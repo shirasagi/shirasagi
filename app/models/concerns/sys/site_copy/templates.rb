@@ -25,8 +25,8 @@ module Sys::SiteCopy::Templates
 
     def copy_template_thumbnails
       SS::File.where(site_id: @site_old.id, model: 'cms/editor_template').each do |source_template_thumbnail|
-        dest_template_thumbnail = SS::File.new source_template_thumbnail.attributes.except(
-            :id, :_id, :site_id, :created, :updated)
+        dest_template_thumbnail = SS::File.new source_template_thumbnail.attributes.
+            except(:id, :_id, :site_id, :created, :updated)
         dest_template_thumbnail.in_file = source_template_thumbnail.uploaded_file
         dest_template_thumbnail.site_id = @site.id
         dest_template_thumbnail.save!

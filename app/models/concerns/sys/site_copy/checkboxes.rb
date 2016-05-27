@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/MethodLength
+
 module Sys::SiteCopy::Checkboxes
   extend ActiveSupport::Concern
   private
