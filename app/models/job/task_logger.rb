@@ -18,7 +18,7 @@ class Job::TaskLogger < ::Logger
     def attach(loggable)
       @@task_logger ||= begin
         logger = new
-        logger.level = ::Job::Service.config.log_level || Rails.logger.level
+        logger.level = translate_severity(::Job::Service.config.log_level) || Rails.logger.level
         Rails.logger.extend ActiveSupport::Logger.broadcast(logger)
         logger
       end
@@ -29,6 +29,28 @@ class Job::TaskLogger < ::Logger
     def detach(_)
       return unless @@task_logger
       @@task_logger.loggable = nil
+    end
+
+    def translate_severity(severity)
+      return severity if severity.is_a?(Integer)
+
+      _severity = severity.to_s.downcase
+      case _severity
+      when 'debug'.freeze
+        ::Logger::DEBUG
+      when 'info'.freeze
+        ::Logger::INFO
+      when 'warn'.freeze
+        ::Logger::WARN
+      when 'error'.freeze
+        ::Logger::ERROR
+      when 'fatal'.freeze
+        ::Logger::FATAL
+      when 'unknown'.freeze
+        ::Logger::UNKNOWN
+      else
+        raise ArgumentError, "invalid log level: #{severity}"
+      end
     end
   end
 
