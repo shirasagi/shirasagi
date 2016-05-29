@@ -49,12 +49,13 @@ class Sns::Login::SamlController < ApplicationController
       raise "403" unless response.is_valid?
 
       user = SS::User.uid_or_email(response.nameid).and_enabled.first
-      if user
-        set_user(user, { session: true, password: user.password })
-        redirect_to SS.config.sns.logged_in_page
-      else
-        redirect_to SS.config.sns.logged_in_page, alert: t("sns.errors.invalid_login")
+      if user.blank?
+        Rails.logger.info("#{response.nameid}: user not found")
+        render_login nil, nil
+        return
       end
+
+      render_login user, nil, session: true
     end
 
     def metadata

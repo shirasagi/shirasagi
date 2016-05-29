@@ -14,11 +14,14 @@ class Sys::Auth::Samls::MetadataController < ApplicationController
     end
 
   public
+    def show
+      redirect_to sys_auth_saml_path
+    end
+
     def create
       @item = @model.new get_params
       raise "403" unless @item.allowed?(:edit, @cur_user)
 
-      location = @item.id ? sys_auth_saml_path(id: @item.id) : nil
-      render_create(@item.save, location: location)
+      render_create @item.save
     end
 end

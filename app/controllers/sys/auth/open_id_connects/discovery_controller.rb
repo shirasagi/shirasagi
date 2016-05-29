@@ -22,9 +22,6 @@ class Sys::Auth::OpenIdConnects::DiscoveryController < ApplicationController
       @item = @model.new get_params
       raise "403" unless @item.allowed?(:edit, @cur_user)
 
-      # result = @item.save
-      # location = @item.id ? sys_auth_open_id_connect_path(id: @item.id) : nil
-      # render_create result, location: location
       render_create @item.save
     end
 end
