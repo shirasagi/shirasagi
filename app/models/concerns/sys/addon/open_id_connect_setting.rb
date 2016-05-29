@@ -89,9 +89,7 @@ module Sys::Addon
         self.token_url = discovery['token_endpoint']
         self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
         self.scopes = discovery['scopes_supported']
-        # self.max_age = discovery['x']
         self.claims = default_claims - discovery['claims_supported']
-        # self.response_mode = discovery['x']
         self.jwks_uri = discovery['jwks_uri']
       end
 

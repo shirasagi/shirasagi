@@ -27,7 +27,7 @@ module Sns::LoginFilter
         @item.email = email_or_uid if email_or_uid.present?
         respond_to do |format|
           flash[:alert] = alert
-          format.html { render "sns/login/login" }
+          format.html { redirect_to sns_login_path }
           format.json { render json: alert, status: :unprocessable_entity }
         end
       end
