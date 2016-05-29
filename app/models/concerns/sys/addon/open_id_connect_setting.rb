@@ -4,24 +4,28 @@ module Sys::Addon
     extend SS::Addon
 
     included do
+      field :client_id, type: String
+      field :client_secret, type: String
       field :issuer, type: String
       field :auth_url, type: String
       field :token_url, type: String
-      field :client_id, type: String
-      field :client_secret, type: String
       field :response_type, type: String, default: ->{ default_response_type }
-      field :scope, type: String, default: ->{ default_scope }
+      field :scopes, type: SS::Extensions::Words, default: ->{ default_scopes }
       field :max_age, type: Integer
       field :claims, type: SS::Extensions::Words, default: ->{ default_claims }
       field :response_mode, type: String
       field :jwks_uri, type: String
       embeds_many :jwks, class_name: "Sys::Auth::OpenIdConnect::JsonWebKey"
+      attr_accessor :in_discovery_file
       attr_accessor :in_client_secret, :rm_client_secret
       permit_params :issuer, :auth_url, :token_url, :client_id, :client_secret, :response_type
       permit_params :scope, :max_age, :claims, :response_mode, :jwks_uri
-      permit_params :in_client_secret
+      permit_params :in_discovery_file
+      permit_params :in_client_secret, :rm_client_secret
+      before_validation :load_discovery_file, if: ->{ in_discovery_file }
       before_validation :set_client_secret, if: ->{ in_client_secret }
       before_validation :reset_client_secret, if: ->{ rm_client_secret }
+      before_validation :load_discovery_file, if: ->{ in_discovery_file }
     end
 
     def redirect_uri(host)
@@ -32,8 +36,8 @@ module Sys::Addon
       "id_token"
     end
 
-    def default_scope
-      "openid"
+    def default_scopes
+      %w(openid email)
     end
 
     def default_claims
@@ -78,6 +82,19 @@ module Sys::Addon
     end
 
     private
+      def load_discovery_file
+        discovery = JSON.parse(in_discovery_file.read)
+        self.issuer = discovery['issuer']
+        self.auth_url = discovery['authorization_endpoint']
+        self.token_url = discovery['token_endpoint']
+        self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
+        self.scopes = discovery['scopes_supported']
+        # self.max_age = discovery['x']
+        self.claims = default_claims - discovery['claims_supported']
+        # self.response_mode = discovery['x']
+        self.jwks_uri = discovery['jwks_uri']
+      end
+
       def set_client_secret
         self.client_secret = SS::Crypt.encrypt(in_client_secret)
       end

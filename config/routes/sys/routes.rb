@@ -42,7 +42,11 @@ SS::Application.routes.draw do
         get "metadata/new", controller: "samls/metadata", action: :new, on: :collection
         post "metadata", controller: "samls/metadata", action: :create, on: :collection
       end
-      resources :open_id_connects, concerns: :deletion
+      resources :open_id_connects, concerns: :deletion do
+        get "discovery/:id", controller: "open_id_connects/discovery", action: :show, on: :member
+        get "discovery/new", controller: "open_id_connects/discovery", action: :new, on: :collection
+        post "discovery", controller: "open_id_connects/discovery", action: :create, on: :collection
+      end
       resources :environments, concerns: :deletion
     end
   end

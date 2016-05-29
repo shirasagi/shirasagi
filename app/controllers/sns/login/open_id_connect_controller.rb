@@ -93,7 +93,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
         redirect_uri: @item.redirect_uri(request.host_with_port),
         response_type: @item.response_type || @item.default_response_type,
         nonce: nonce,
-        scope: @item.scope || @item.default_scope,
+        scope: @item.scopes.join(" ") || @item.default_scopes.join(" "),
         state: state,
       }
       params[:max_age] = @item.max_age if @item.max_age.present?

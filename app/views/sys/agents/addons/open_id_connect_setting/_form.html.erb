@@ -1,13 +1,4 @@
 <dl class="see mod-sys-open-id-connect-setting">
-  <dt><%= @model.t :issuer %><%= @model.tt :issuer %></dt>
-  <dd><%= f.text_field :issuer %></dd>
-
-  <dt><%= @model.t :auth_url %><%= @model.tt :auth_url %></dt>
-  <dd><%= f.text_field :auth_url %></dd>
-
-  <dt><%= @model.t :token_url %><%= @model.tt :token_url %></dt>
-  <dd><%= f.text_field :token_url %></dd>
-
   <dt><%= @model.t :client_id %><%= @model.tt :client_id %></dt>
   <dd><%= f.text_field :client_id %></dd>
 
@@ -17,11 +8,20 @@
     <dd><label><%= f.check_box :rm_client_secret %> <%= t "views.button.delete" %></label></dd>
   <% end %>
 
+  <dt><%= @model.t :issuer %><%= @model.tt :issuer %></dt>
+  <dd><%= f.text_field :issuer %></dd>
+
+  <dt><%= @model.t :auth_url %><%= @model.tt :auth_url %></dt>
+  <dd><%= f.text_field :auth_url %></dd>
+
+  <dt><%= @model.t :token_url %><%= @model.tt :token_url %></dt>
+  <dd><%= f.text_field :token_url %></dd>
+
   <dt><%= @model.t :response_type %><%= @model.tt :response_type %></dt>
   <dd><%= f.text_field :response_type %></dd>
 
-  <dt><%= @model.t :scope %><%= @model.tt :scope %></dt>
-  <dd><%= f.text_field :scope %></dd>
+  <dt><%= @model.t :scopes %><%= @model.tt :scopes %></dt>
+  <dd><%= f.text_field :scopes %></dd>
 
   <dt><%= @model.t :max_age %><%= @model.tt :max_age %></dt>
   <dd><%= f.number_field :max_age %></dd>
