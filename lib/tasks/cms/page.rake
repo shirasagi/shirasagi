@@ -4,18 +4,18 @@ namespace :cms do
     Cms::Site.where host: site
   end
 
-  def with_site(job_class)
+  def with_site(job_class, opts = {})
     find_sites(ENV["site"]).each do |site|
       job = job_class.bind(site_id: site)
-      job.perform_now
+      job.perform_now(opts)
     end
   end
 
-  def with_node(job_class)
+  def with_node(job_class, opts = {})
     find_sites(ENV["site"]).each do |site|
       job = job_class.bind(site_id: site)
       job = job.bind(node_id: ENV["node"]) if ENV["node"]
-      job.perform_now
+      job.perform_now(opts)
     end
   end
 
@@ -24,7 +24,7 @@ namespace :cms do
   end
 
   task :generate_pages => :environment do
-    with_node(Cms::Page::GenerateJob)
+    with_node(Cms::Page::GenerateJob, attachments: ENV["attachments"])
   end
 
   task :update_pages => :environment do
