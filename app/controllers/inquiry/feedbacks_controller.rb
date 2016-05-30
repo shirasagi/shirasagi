@@ -50,5 +50,6 @@ class Inquiry::FeedbacksController < ApplicationController
       @source_content = Inquiry::Answer.find_content(@cur_site, @source_url)
       @answer_count = @items.first["count"]
       @aggregation = @cur_node.aggregate_select_columns(options)
+      @answer_data_opts = options
     end
 end

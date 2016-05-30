@@ -47,6 +47,12 @@ class Inquiry::Answer
         criteria = criteria.where("updated" => { "$gte" => sdate, "$lt" => edate })
       end
 
+      if params[:url].present?
+        criteria = criteria.where(source_url: /^#{Regexp.escape(params[:url])}/)
+      elsif params[:feedback]
+        criteria = criteria.where(source_url: { "$exists" => true, "$ne" => nil })
+      end
+
       criteria
     end
 

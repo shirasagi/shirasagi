@@ -29,7 +29,7 @@
             </tr>
           <% end %>
         <% else %>
-          <% column.answer_data.each do |data| %>
+          <% column.answer_data(@answer_data_opts).each do |data| %>
             <% if data.value.present? %>
               <tr><td colspan="2"><%= data.value %></td></tr>
             <% end %>
