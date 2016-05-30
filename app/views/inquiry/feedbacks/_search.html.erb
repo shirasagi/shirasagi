@@ -1,7 +1,5 @@
 <%
   @s = OpenStruct.new params[:s]
-  @s[:year]  ||= Time.zone.today.year
-  @s[:month] ||= Time.zone.today.month
 
   sy = Time.zone.today.year - 10
   ey = Time.zone.today.year
@@ -11,7 +9,7 @@
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <span style="margin-right: 10px;">
-      <%= f.select :year, @years, include_blank: true %>
+      <%= f.select :year, @years %>
       <%= f.select :month, @months, include_blank: t("ads.yearly") %>
     </span>
     <input type="submit" value="<%= t('views.button.search') %>" class="btn" />

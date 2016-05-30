@@ -19,6 +19,11 @@ class Inquiry::FeedbacksController < ApplicationController
     def index
       raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 
+      if params[:s].blank?
+        redirect_to action: :index, s: { year: Time.zone.today.year, month: Time.zone.today.month }
+        return
+      end
+
       @cur_node = @cur_node.becomes_with_route
 
       options = params[:s] || {}
@@ -26,6 +31,7 @@ class Inquiry::FeedbacksController < ApplicationController
       options[:node] = @cur_node
       options[:feedback] = true
       @items = @cur_node.aggregate_for_list(options)
+      @items = Kaminari.paginate_array(@items.to_a).page(params[:page]).per(50)
     end
 
     def show
