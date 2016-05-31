@@ -1,4 +1,11 @@
 <div class="columns">
+<% content = @answer.source_content if @answer %>
+<% if content %>
+  <dl class="column">
+    <dt><%= Cms::Page.t :name %></dt>
+    <dd><%= content.name %></dd>
+  </dl>
+<% end %>
 <% @items.each do |column, data, confirm_data| %>
   <dl class="column">
     <dt>

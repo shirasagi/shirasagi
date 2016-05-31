@@ -1,6 +1,6 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to :download, action: :download %>
+    <%= link_to :download, action: :download, s: params[:s] %>
   <% elsif params[:action] =~ /new|create/ %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <%= link_to :back_to_show, action: :show, id: @item %>

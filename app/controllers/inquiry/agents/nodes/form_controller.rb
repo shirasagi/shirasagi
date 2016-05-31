@@ -9,6 +9,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   before_action :set_answer, only: [:new, :confirm, :create]
 
   private
+    def protect_csrf?
+      false
+    end
+
     def check_release_state
       raise "404" unless @cur_node.public?
     end
@@ -38,9 +42,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
           @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")
         end
       end
-      @answer = Inquiry::Answer.new(site_id: @cur_site.id, node_id: @cur_node.id)
+      @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
       @answer.remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip
       @answer.user_agent = request.user_agent
+      @answer.source_url = params[:item].try(:[], :source_url)
       @answer.set_data(@data)
     end
 
@@ -78,7 +83,19 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
         Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer).try(:deliver_now)
       end
 
-      redirect_to "#{@cur_node.url}sent.html"
+      query = {}
+      if @answer.source_url.present?
+        if params[:preview]
+          query[:ref] = view_context.cms_preview_path(site: @cur_site, path: @answer.source_content.filename)
+        else
+          query[:ref] = @answer.source_url
+        end
+      end
+      query = query.to_query
+
+      url = "#{@cur_node.url}sent.html"
+      url = "#{url}?#{query}" if query.present?
+      redirect_to url
     end
 
     def sent

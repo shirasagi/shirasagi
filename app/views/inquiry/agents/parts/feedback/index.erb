@@ -1,0 +1,37 @@
+<%= jquery do %>Inquiry_Form.render();<% end %>
+
+<%== @cur_part.upper_html %>
+
+<div class="inquiry">
+  <% if @cur_parent.inquiry_html.present? %>
+    <div class="inquiry-html">
+      <%== @cur_parent.inquiry_html %>
+    </div>
+  <% end %>
+
+  <%
+    confirmation_enabled = @cur_part.feedback_confirmation_enabled? || @cur_parent.captcha_enabled?
+    if confirmation_enabled
+      url = "#{@cur_parent.url}confirm.html"
+    else
+      url = "#{@cur_parent.url}create.html"
+    end
+  %>
+  <%= form_for :item, url: url, html: { multipart: true }, authenticity_token: false do |f| %>
+    <div class="inquiry-form">
+      <%= error_messages_for :answer, header_message: false %>
+      <% if @columns.count > 0 %>
+        <%= render partial: "inquiry/agents/nodes/form/form", locals: { f: f, confirm: false }  %>
+      <% end %>
+      <% if @preview %>
+      <%= hidden_field_tag "preview", @preview %>
+      <% end %>
+      <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_path %>
+      <footer class="send">
+        <%= f.submit confirmation_enabled ? t('inquiry.confirm') : t('inquiry.submit'), name: :submit %>
+      </footer>
+    </div>
+  <% end %>
+</div>
+
+<%== @cur_part.lower_html %>

@@ -1,0 +1,18 @@
+<dl class="see mod-feedback-setting">
+  <dt><%= @model.t :upper_html %></dt>
+  <dd>
+    <% if @item.upper_html.present? %>
+      <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :lower_html %></dt>
+  <dd>
+    <% if @item.lower_html.present? %>
+      <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :feedback_confirmation %></dt>
+  <dd><%= @item.label :feedback_confirmation %></dd>
+</dl>

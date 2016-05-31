@@ -1,12 +1,30 @@
 <dl class="see">
-   <% @item.data.each do |data| %>
-   <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
-   <dd><%= data.value %></dd>
-   <% end %>
+  <% @item.data.each do |data| %>
+  <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
+  <dd><%= data.value %></dd>
+  <% end %>
 
-   <dt><%= @model.t :remote_addr %></dt>
-   <dd><%= @item.send(:remote_addr) %></dd>
+  <dt><%= @model.t :remote_addr %></dt>
+  <dd><%= @item.remote_addr %></dd>
 
-   <dt><%= @model.t :user_agent %></dt>
-   <dd><%= @item.send(:user_agent) %></dd>
+  <dt><%= @model.t :user_agent %></dt>
+  <% browser = Browser.new(@item.user_agent, accept_language: request.accept_language) rescue nil %>
+  <% if browser %>
+  <dd>
+    <span class="browser"><%= browser.name %> <%= browser.full_version %></span>
+    @
+    <span class="platform"><%= browser.platform.name %></span>
+  </dd>
+  <% end %>
+  <dd><%= @item.user_agent %></dd>
+
+  <% if @item.source_url.present? %>
+  <dt><%= @model.t :source_url %></dt>
+  <dd><%= @item.source_content && @item.source_content.public? ? link_to(@item.source_content.full_url, @item.source_content.full_url, target: "_blank") : @item.source_url %></dd>
+  <% end %>
+
+  <% if @item.source_name.present? %>
+  <dt><%= @model.t :source_name %></dt>
+  <dd><%= @item.source_name %></dd>
+  <% end %>
 </dl>

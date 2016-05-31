@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Inquiry::Answer, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :inquiry_node_form, site: site }
+  let(:node) { create :inquiry_node_form, cur_site: site }
 
   before do
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})
@@ -22,7 +22,7 @@ describe Inquiry::Answer, dbscope: :example do
 
   let(:remote_addr) { "X.X.X.X" }
   let(:user_agent) { unique_id }
-  subject { Inquiry::Answer.new(site_id: site.id, node_id: node.id, remote_addr: remote_addr, user_agent: user_agent) }
+  subject { Inquiry::Answer.new(cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent) }
 
   describe "create answer" do
     let(:name) { unique_id }
@@ -241,5 +241,65 @@ describe Inquiry::Answer, dbscope: :example do
       expect(subject.errors.blank?).to be_falsey
       expect(subject.errors.full_messages).to include("#{check_column.name}は不正な値です。")
     end
+  end
+
+  describe "with page's source_url" do
+    let(:name) { unique_id }
+    let(:email) { "#{unique_id}@example.jp" }
+    let(:email_confirmation) { email }
+    let(:radio) { radio_column.select_options.sample }
+    let(:select) { select_column.select_options.sample }
+    let(:check) { Hash[check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2)] }
+    let(:page) { create :cms_page, cur_site: site }
+
+    let(:data) do
+      data = {}
+      data[name_column.id] = [name]
+      data[email_column.id] = [email, email_confirmation]
+      data[radio_column.id] = [radio]
+      data[select_column.id] = [select]
+      data[check_column.id] = [check]
+      data
+    end
+
+    before do
+      subject.source_url = page.url
+      subject.set_data(data)
+      subject.save
+    end
+
+    its(:source_name) { is_expected.to eq page.name }
+    its(:source_full_url) { is_expected.to eq page.full_url }
+    its(:source_content) { expect(subject.source_content.becomes_with_route).to eq page }
+  end
+
+  describe "with node's source_url" do
+    let(:name) { unique_id }
+    let(:email) { "#{unique_id}@example.jp" }
+    let(:email_confirmation) { email }
+    let(:radio) { radio_column.select_options.sample }
+    let(:select) { select_column.select_options.sample }
+    let(:check) { Hash[check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2)] }
+    let(:node1) { create :category_node_page, cur_site: site }
+
+    let(:data) do
+      data = {}
+      data[name_column.id] = [name]
+      data[email_column.id] = [email, email_confirmation]
+      data[radio_column.id] = [radio]
+      data[select_column.id] = [select]
+      data[check_column.id] = [check]
+      data
+    end
+
+    before do
+      subject.source_url = node1.url
+      subject.set_data(data)
+      subject.save
+    end
+
+    its(:source_name) { is_expected.to eq node1.name }
+    its(:source_full_url) { is_expected.to eq node1.full_url }
+    its(:source_content) { expect(subject.source_content.becomes_with_route).to eq node1 }
   end
 end

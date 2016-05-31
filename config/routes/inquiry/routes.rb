@@ -18,6 +18,7 @@ SS::Application.routes.draw do
     resources :columns, concerns: :deletion
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :destroy]
     get "results" => "results#index", as: :results
+    resources :feedbacks, only: [:index, :show]
   end
 
   node "inquiry" do
@@ -27,6 +28,10 @@ SS::Application.routes.draw do
     post "form/confirm.html" => "public#confirm", cell: "nodes/form"
     post "form/create.html" => "public#create", cell: "nodes/form"
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
+  end
+
+  part "inquiry" do
+    get "feedback" => "public#index", cell: "parts/feedback"
   end
 
 end

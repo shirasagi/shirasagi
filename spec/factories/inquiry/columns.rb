@@ -50,4 +50,30 @@ FactoryGirl.define do
     select_options %w(市政について ご意見・ご要望 申請について その他)
     order 60
   end
+
+  factory :inquiry_column_radio_contents, class: Inquiry::Column do
+    name "内容"
+    input_type "radio_button"
+    required "optional"
+    html "<p>このページの情報は役に立ちましたか？</p>"
+    select_options %w(役に立った どちらかと言えば役に立った どちらかと言えば役に立たない 役に立たない)
+    order 10
+  end
+
+  factory :inquiry_column_radio_findable, class: Inquiry::Column do
+    name "見つけやすさ"
+    input_type "radio_button"
+    required "optional"
+    html "<p>このページの情報は見つけやすかったですか？</p>"
+    select_options %w(見つけやすかった どちらかと言えば見つけやすかった どちらかと言えば見つけにくかった 見つけにくかった)
+    order 20
+  end
+
+  factory :inquiry_column_text_comment, class: Inquiry::Column do
+    name "ご意見・ご要望"
+    input_type "text_area"
+    required "optional"
+    html "<p>このページに関するご意見・ご要望がありましたらご記入ください。</p>"
+    order 30
+  end
 end

@@ -1,0 +1,21 @@
+<%
+  @item_decorator = proc do |item|
+    item = OpenStruct.new item
+    item.id = item._id
+    item.updated = item.updated.localtime
+    item
+  end
+%>
+<% @tap_menu = proc do |item| %>
+  <%= link_to :show, { action: :show, id: CGI.escape(item.id) }.merge(s: params[:s]) %>
+<% end %>
+<% @index_title = proc do |item| %>
+  <%= link_to item.source_name, { action: :show, id: CGI.escape(item.id) }.merge(s: params[:s]), class: "title" %>
+<% end %>
+<% @index_meta = proc do |item| %>
+  <span class="filename"><%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="count"><%= item.count %><%= t "views.units.count" %></span>
+<% end %>
+
+<%= render file: "cms/crud/index" %>

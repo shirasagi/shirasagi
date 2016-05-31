@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "inquiry_agents_nodes_form", dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :inquiry_node_form, site: site, inquiry_captcha: 'disabled' }
+  let(:node) { create :inquiry_node_form, cur_site: site, inquiry_captcha: 'disabled' }
 
   before do
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})

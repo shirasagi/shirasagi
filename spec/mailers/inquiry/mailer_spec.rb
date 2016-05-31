@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Inquiry::Mailer, type: :mailer, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :inquiry_node_form }
+  let(:node) { create :inquiry_node_form, cur_site: site }
   let(:answer) { Inquiry::Answer.new }
 
   describe "#notify_mail" do

@@ -23,12 +23,18 @@ module Inquiry::Addon
       end
     end
 
-    def aggregate_select_columns
-      selects = columns.select { |c| c.input_type =~ /(select|radio_button|check_box)/ }
+    def aggregate_select_columns(params = {})
       pipes = []
       pipes << { "$unwind"=>"$data" }
       pipes << { "$unwind"=>"$data.values" }
-      pipes << { "$match" => { "data.column_id" => { "$in" => selects.map(&:id) } } }
+
+      match = build_match_stage(params)
+
+      selects = columns.select { |c| c.input_type =~ /(select|radio_button|check_box)/ }
+      match["data.column_id"] = { "$in" => selects.map(&:id) }
+
+      pipes << { "$match" => match } if match.present?
+
       pipes << { "$group" => {
         _id: { "column_id" => "$data.column_id", "value" => "$data.values" },
         count: { "$sum"=> 1 }
@@ -42,5 +48,49 @@ module Inquiry::Addon
       aggregation.each { |k, v| count[{ "column_id" => k["column_id"] }] += v }
       aggregation.merge(count)
     end
+
+    def aggregate_for_list(params = {})
+      pipes = []
+
+      match = build_match_stage(params)
+      pipes << { "$match" => match } if match.present?
+
+      pipes << { "$group" => {
+        "_id" => "$source_url",
+        "source_name" => { "$max" => "$source_name" },
+        "count" => { "$sum" => 1 },
+        "updated" => { "$max" => "$updated" } } }
+      pipes << { "$sort" => { "updated" => -1 } }
+
+      Inquiry::Answer.collection.aggregate(pipes)
+    end
+
+    private
+      def build_match_stage(params = {})
+        match = {}
+
+        match["site_id"] = params[:site].id if params[:site].present?
+
+        match["node_id"] = params[:node].id if params[:node].present?
+
+        match["source_url"] = /^#{Regexp.escape(params[:url])}/ if params[:url].present?
+        match["source_url"] ||= { "$exists" => true, "$ne" => nil } if params[:feedback]
+
+        if params[:year].present?
+          year = params[:year].to_i
+          if params[:month].present?
+            month = params[:month].to_i
+            sdate = Date.new year, month, 1
+            edate = sdate + 1.month
+          else
+            sdate = Date.new year, 1, 1
+            edate = sdate + 1.year
+          end
+
+          match["updated"] = { "$gte" => sdate, "$lt" => edate }
+        end
+
+        match
+      end
   end
 end

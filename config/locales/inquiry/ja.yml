@@ -5,6 +5,7 @@ ja:
     column: 質問項目
     answer: 回答データ
     result: 集計結果
+    feedback: フィードバック
     required_field: ※必須入力
     confirm_message: 下記事項をご確認の上、送信ボタンを押してください。
     submit: 送信する
@@ -40,6 +41,9 @@ ja:
         disabled: しない
         enabled: する
 
+    links:
+      back_to_page: 元のページに戻る
+
   modules:
     inquiry: メールフォーム
     addons:
@@ -51,33 +55,48 @@ ja:
       inquiry/release_plan: 公開期間
       inquiry/reception_plan: 回答受付期間
       inquiry/aggregation: 集計
+      inquiry/feedback_setting: フィードバック設定
 
   cms:
     nodes:
       inquiry/form: フォーム
       inquiry/node: フォーム一覧
+    parts:
+      inquiry/feedback: フィードバック
 
   mongoid:
     attributes:
-      inquiry/node/form:
+      inquiry/addon/message:
         inquiry_html: 説明テキスト
         inquiry_sent_html: 送信完了テキスト
         inquiry_results_html: 集計結果テキスト
+
+      inquiry/addon/captcha:
         inquiry_captcha: 画像認証
+
+      inquiry/addon/notice:
         notice_state: 通知設定
         notice_content: 通知内容
         notice_email: 通知メールアドレス
         from_name: 差出人名
         from_email: 差出人メールアドレス
+
+      inquiry/addon/reply:
         reply_state: 返信設定
         reply_subject: 返信件名
         reply_upper_text: 上部返信テキスト
         reply_lower_text: 下部返信テキスト
-        aggregation_state: 集計設定
+
+      inquiry/addon/release_plan:
         release_date: 公開開始日
         close_date: 公開終了日
+
+      inquiry/addon/reception_plan:
         reception_start_date: 回答受付開始日
         reception_close_date: 回答受付終了日
+
+      inquiry/addon/aggregation:
+        aggregation_state: 集計設定
 
       inquiry/column:
         name: 項目名
@@ -89,11 +108,19 @@ ja:
         required: 必須入力
         additional_attr: 追加属性
         input_confirm: 入力確認
+
       inquiry/answer:
         remote_addr: IPアドレス
         user_agent: ユーザーエージェント
         data_summary: 回答内容
         captcha: 画像の数字
+        source_url: ページURL
+        source_name: ページタイトル
+
+      inquiry/addon/feedback_setting:
+        upper_html: 上部HTML
+        lower_html: 下部HTML
+        feedback_confirmation: 確認画面
 
   simple_captcha:
     placeholder: ""
@@ -179,6 +206,13 @@ ja:
     inquiry/addon/aggregation:
       aggregation_state:
         - 公開側で集計機能を使用するかを選択します。
+    inquiry/addon/feedback_setting:
+      upper_html:
+        - 上部に任意の内容をHTMLで記述することが可能です。
+      lower_html:
+        - 下部に任意の内容をHTMLで記述することが可能です。
+      feedback_confirmation:
+        - 確認画面を利用する場合は「使用する」を選択してください。
 
   errors:
     messages:

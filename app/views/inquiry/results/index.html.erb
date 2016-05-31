@@ -1,11 +1,15 @@
 <div class="main-box">
-  <dl class="see" style="padding-bottom: 10px">
+  <% if @main_box %>
+    <% @main_box.call %>
+  <% else %>
+  <dl class="see">
     <dt><%= t "inquiry.total_count" %></dt>
     <dd>
-      <%= @cur_node.answers.count %>
+      <%= @answer_count %>
       <%= t "views.units.count" %>
     </dd>
   </dl>
+  <% end %>
 </div>
 
 <% @columns.each do |column| %>
@@ -25,7 +29,7 @@
             </tr>
           <% end %>
         <% else %>
-          <% column.answer_data.each do |data| %>
+          <% column.answer_data(@answer_data_opts).each do |data| %>
             <% if data.value.present? %>
               <tr><td colspan="2"><%= data.value %></td></tr>
             <% end %>
