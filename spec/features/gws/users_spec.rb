@@ -32,7 +32,7 @@ describe "gws_users", type: :feature, dbscope: :example do
 
     it "#new", js: true do
       visit new_path
-      click_on "グループを選択する"
+      first('.mod-gws-user').click_on "グループを選択する"
       wait_for_cbox
       click_on gws_user.groups.first.name
 
