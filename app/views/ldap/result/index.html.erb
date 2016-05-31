@@ -1,0 +1,64 @@
+<div class="addon-views">
+  <div class="addon-view" id="results">
+    <div class="addon-head toggle-head"><h2><%= t "ldap.views.import/sync.header" %></h2></div>
+    <div class="addon-body toggle-body">
+      <% if @items.present? %>
+        <dl class="see">
+          <dt><%= t "ldap.views.import/sync.group" %></dt>
+          <dd></dd>
+          <dt><%= t "ldap.views.import/sync.success" %></dt>
+          <dd><%= @items["group"]["successed"] %></dd>
+          <dt><%= t "ldap.views.import/sync.delete" %></dt>
+          <dd><%= @items["group"]["deleted"] %></dd>
+          <dt><%= t "ldap.views.import/sync.fail" %></dt>
+          <dd><%= @items["group"]["failed"] %></dd>
+          <% if @items["group"]["errors"].present? %>
+            <dt><%= t "ldap.views.import/sync.error" %></dt>
+            <dd><%= br @items["group"]["errors"].join("\n")%></dd>
+          <% end %>
+          <% if @items["group"]["warnings"].present? %>
+            <dt><%= t "ldap.views.import/sync.warning" %></dt>
+            <dd><%= br @items["group"]["warnings"].join("\n")%></dd>
+          <% end %>
+          <dt><%= t "ldap.views.import/sync.user" %></dt>
+          <dd></dd>
+          <dt><%= t "ldap.views.import/sync.success" %></dt>
+          <dd><%= @items["user"]["successed"] %></dd>
+          <dt><%= t "ldap.views.import/sync.delete" %></dt>
+          <dd><%= @items["user"]["deleted"] %></dd>
+          <dt><%= t "ldap.views.import/sync.fail" %></dt>
+          <dd><%= @items["user"]["failed"] %></dd>
+          <% if @items["user"]["errors"].present? %>
+            <dt><%= t "ldap.views.import/sync.error" %></dt>
+            <dd><%= br @items["user"]["errors"].join("\n")%></dd>
+          <% end %>
+          <% if @items["user"]["warnings"].present? %>
+            <dt><%= t "ldap.views.import/sync.warning" %></dt>
+            <dd><%= br @items["user"]["warnings"].join("\n")%></dd>
+          <% end %>
+        </dl>
+      <% else %>
+        <%= t "ldap.views.import/sync.no_results" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="addon-view" id="task-info">
+    <div class="addon-head toggle-head"><h2><%= t "ldap.views.import/sync.task_info" %></h2></div>
+    <div class="addon-body toggle-body">
+      <dl class="see">
+        <dt><%= @model.t :state %></dt>
+        <dd class="state"><%= @task.state %></dd>
+        <dt><%= @model.t :started %></dt>
+        <dd class="started"><%= tryb { @task.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+        <dt><%= @model.t :closed %></dt>
+        <dd class="closed"><%= tryb { @task.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+      </dl>
+
+      <dl class="see">
+        <dd class="wide">
+          <textarea class="log" readonly="readonly"><%= @task.logs.join("\n") %></textarea>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>

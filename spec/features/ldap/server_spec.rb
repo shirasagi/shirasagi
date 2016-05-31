@@ -82,7 +82,7 @@ describe "ldap_server", ldap: true do
         visit index_path
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
-        expect(page).to have_selector("div#errorExplanation h2", text: "問題が発生しました。")
+        expect(page).to have_selector("div#errorExplanation h2", text: I18n.t("errors.template.header.one"))
         expect(page).to have_selector("div#errorExplanation ul li", text: "Invalid binding information")
       end
     end

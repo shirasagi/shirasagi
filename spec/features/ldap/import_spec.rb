@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ldap_import", ldap: true do
+describe "ldap_import", ldap: true, dbscope: :example do
   context "with ldap site" do
     let(:group) do
       create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")
@@ -38,6 +38,12 @@ describe "ldap_import", ldap: true do
     end
 
     context "with auth" do
+      around do |example|
+        perform_enqueued_jobs do
+          example.run
+        end
+      end
+
       it "#index" do
         login_user(user)
         visit index_path
@@ -54,58 +60,53 @@ describe "ldap_import", ldap: true do
         end
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
+        expect(page).to have_selector("aside#notice .wrap", text: I18n.t("ldap.messages.import_started"))
         expect(page).to have_selector("table.index tbody tr")
-      end
+        expect(Ldap::Import.count).to eq 1
+        item = Ldap::Import.last
 
-      context "with item" do
-        let(:item) { Ldap::Import.last }
-        let(:show_path) { ldap_import_path site.id, item }
-        let(:sync_confirmation_path) { "/.s#{site.id}/ldap/import/sync_confirmation/#{item.id}" }
-        let(:sync_path) { "/.s#{site.id}/ldap/import/sync/#{item.id}" }
-        let(:results_path) { "/.s#{site.id}/ldap/import/results/#{item.id}" }
-        let(:delete_path) { delete_ldap_import_path site.id, item }
+        expect(Job::Log.count).to eq 1
+        log = Job::Log.first
+        expect(log.logs).to include(include("INFO -- : Started Job"))
+        expect(log.logs).to include(include("INFO -- : Completed Job"))
 
-        it "#show" do
-          login_user(user)
-          visit show_path
-          expect(status_code).to eq 200
-          expect(current_path).to eq show_path
-        end
+        #
+        # show
+        #
+        click_on item.created.strftime("%Y/%m/%d %H:%M")
+        expect(page).to have_css(".ldap-import-ldap dt", text: "LDAPインポート結果")
 
-        it "#sync" do
-          login_user(user)
-          visit sync_confirmation_path
-          expect(status_code).to eq 200
-          expect(current_path).to eq sync_confirmation_path
-          within "form" do
-            click_button "同期"
-          end
-          expect(status_code).to eq 200
-          expect(current_path).to eq results_path
-          expect(page).to have_selector("article#main div dl.see")
-        end
+        #
+        # sync
+        #
+        click_on "同期する"
+        click_on "同期"
+        expect(page).to have_selector("article#main h2", text: "同期結果")
 
-        it "#delete" do
-          login_user(user)
-          visit delete_path
-          expect(status_code).to eq 200
-          expect(current_path).to eq delete_path
-          within "form" do
-            click_button "削除"
-          end
-          expect(status_code).to eq 200
-          expect(current_path).to eq index_path
-        end
+        #
+        # delete
+        #
+        visit index_path
+        click_on item.created.strftime("%Y/%m/%d %H:%M")
+        click_on "削除する"
+        click_on "削除"
+        expect(Ldap::Import.count).to eq 0
       end
     end
   end
 
   context "with non-ldap site" do
     let(:site) { cms_site }
+    let(:index_path) { ldap_import_index_path site.id }
     let(:import_confirmation_path) { ldap_import_import_confirmation_path site.id }
-    let(:import_path) { ldap_import_import_path site.id }
 
     context "with auth" do
+      around do |example|
+        perform_enqueued_jobs do
+          example.run
+        end
+      end
+
       it "#import" do
         login_cms_user
         visit import_confirmation_path
@@ -113,10 +114,16 @@ describe "ldap_import", ldap: true do
         within "form#item-form" do
           click_button "インポート"
         end
-        expect(status_code).to eq 400
-        expect(current_path).to eq import_path
-        expect(page).to have_selector("div#errorSyntaxChecker h2")
-        expect(page).to have_selector("div#errorSyntaxChecker ul")
+        expect(status_code).to eq 200
+        expect(current_path).to eq index_path
+        expect(page).to have_selector("aside#notice .wrap", text: I18n.t("ldap.messages.import_started"))
+
+        # job should be failed
+        expect(Job::Log.count).to eq 1
+        log = Job::Log.first
+        expect(log.logs).to include(include("INFO -- : Started Job"))
+        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        expect(log.logs).to include(include("Net::LDAP::BindingInformationInvalidError"))
       end
     end
   end

@@ -6,6 +6,7 @@
   <% end %>
   <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"views.ldap/import.index", ldap_import_index_path %></h3>
+    <h3><%= link_to :"views.ldap/result.index", ldap_result_index_path %></h3>
   <% end %>
 </nav>
 

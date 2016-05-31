@@ -16,7 +16,7 @@ SS::Application.routes.draw do
     post "import/import" => "import#import"
     get "import/sync_confirmation/:id" => "import#sync_confirmation"
     post "import/sync/:id" => "import#sync"
-    get "import/results/:id" => "import#results"
     resources :import, concerns: :deletion, except: [:new, :create, :edit, :update]
+    resources :result, only: [:index]
   end
 end

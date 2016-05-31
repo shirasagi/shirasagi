@@ -3,8 +3,14 @@ require 'spec_helper'
 describe Ldap::ImportJob, dbscope: :example, ldap: true do
   describe "#perform" do
     context "when no ldap connection is set" do
-      it "should not raise errors" do
-        expect { described_class.perform_now(cms_site.id, cms_user.id, "pass") }.to raise_error Net::LDAP::Error
+      it "should raise errors" do
+        described_class.perform_now(cms_site.id, cms_user.id, "pass")
+
+        expect(Job::Log.count).to eq 1
+        log = Job::Log.first
+        expect(log.logs).to include(include("INFO -- : Started Job"))
+        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        expect(log.logs).to include(include("Net::LDAP::BindingInformationInvalidError"))
       end
     end
 

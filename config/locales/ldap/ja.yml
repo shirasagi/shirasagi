@@ -2,6 +2,7 @@ ja:
   ldap:
     server: サーバー情報
     import: インポート
+    result: 同期結果
     views:
       button:
         import: インポート
@@ -19,6 +20,8 @@ ja:
         fail: 失敗
         error: エラー
         warning: 警告
+        no_results: 結果がありません
+        task_info: タスク
       server/index:
         group:
           root: ルート
@@ -31,7 +34,9 @@ ja:
     messages:
       no_groups: グループが見つかりません。
       no_users: ユーザが見つかりません。
-      import_success: インポートに成功しました。
+      import_started: インポート処理を開始しました。
+      sync_started: 同期処理を開始しました。
+      sync_already_started: 同期処理は開始されています。
       sync_success: "同期に成功しました。グループ数: %{group_count}、ユーザー数: %{user_count}"
       group_moved: "%{user_name} がグループ「%{group_name}」へ移動しました。"
     errors:
@@ -65,6 +70,8 @@ ja:
       index: サーバー情報
     ldap/import:
       index: インポート
+    ldap/result:
+      index: 同期結果
     links:
       ldap: LDAP
       sync: 同期する
@@ -76,3 +83,8 @@ ja:
     ldap/addon/user:
       ldap_dn:
       - LDAPを利用している場合にユーザーのDN（識別子）を入力します。
+
+  job:
+    models:
+      ldap/import_job: LDAPインポート
+      ldap/sync_job: LDAP同期
