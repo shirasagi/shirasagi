@@ -1,8 +1,8 @@
-class Sys::Auth::Samls::MetadataController < ApplicationController
+class Sys::Auth::OpenIdConnects::DiscoveryController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter
 
-  model Sys::Auth::Saml
+  model Sys::Auth::OpenIdConnect
 
   navi_view "sys/auth/main/navi"
   menu_view "sys/crud/menu"
@@ -15,7 +15,7 @@ class Sys::Auth::Samls::MetadataController < ApplicationController
 
   public
     def show
-      redirect_to sys_auth_saml_path
+      redirect_to sys_auth_open_id_connect_path
     end
 
     def create

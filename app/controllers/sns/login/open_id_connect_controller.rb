@@ -2,6 +2,7 @@ require 'json/jwt'
 
 class Sns::Login::OpenIdConnectController < ApplicationController
   include Sns::BaseFilter
+  include Sns::LoginFilter
 
   skip_action_callback :logged_in?
   before_action :set_item
@@ -49,14 +50,12 @@ class Sns::Login::OpenIdConnectController < ApplicationController
         raise "403"
       end
 
-      token_resp = token_req.execute
-      token_resp.session_nonce = session.delete('ss.sso.nonce')
-      if token_resp.invalid?
-        Rails.logger.warn(token_resp.errors.full_messages.join("\n"))
+      @resp = token_req.execute
+      @resp.session_nonce = session.delete('ss.sso.nonce')
+      if @resp.invalid?
+        Rails.logger.warn(@resp.errors.full_messages.join("\n"))
         raise "403"
       end
-
-      render text: token_resp.id, laytout: false
     end
 
     def implicit_flow_callback
@@ -75,13 +74,11 @@ class Sns::Login::OpenIdConnectController < ApplicationController
         cur_item: @item,
         session_state: session.delete('ss.sso.state'),
         session_nonce: session.delete('ss.sso.nonce'))
-      resp = Sys::Auth::OpenIdConnect::ImplicitFlowResponse.new(auth_resp)
-      unless resp.valid?
-        Rails.logger.warn(resp.errors.full_messages.join("\n"))
+      @resp = Sys::Auth::OpenIdConnect::ImplicitFlowResponse.new(auth_resp)
+      unless @resp.valid?
+        Rails.logger.warn(@resp.errors.full_messages.join("\n"))
         raise "403"
       end
-
-      render text: resp.id, laytout: false
     end
 
   public
@@ -93,7 +90,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
         redirect_uri: @item.redirect_uri(request.host_with_port),
         response_type: @item.response_type || @item.default_response_type,
         nonce: nonce,
-        scope: @item.scope || @item.default_scope,
+        scope: @item.scopes.join(" ") || @item.default_scopes.join(" "),
         state: state,
       }
       params[:max_age] = @item.max_age if @item.max_age.present?
@@ -110,5 +107,16 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       else
         raise "404"
       end
+
+      return unless @resp
+
+      user = SS::User.uid_or_email(@resp.id).and_enabled.first
+      if user.blank?
+        Rails.logger.info("#{@resp.id}: user not found")
+        render_login nil, nil
+        return
+      end
+
+      render_login user, nil, session: true
     end
 end

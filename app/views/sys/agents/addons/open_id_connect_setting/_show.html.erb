@@ -1,4 +1,7 @@
 <dl class="see mod-sys-open-id-connect-setting">
+  <dt><%= @model.t :client_id %></dt>
+  <dd><%= @item.client_id %></dd>
+
   <dt><%= @model.t :issuer %></dt>
   <dd><%= @item.issuer %></dd>
 
@@ -8,9 +11,6 @@
   <dt><%= @model.t :token_url %></dt>
   <dd><%= @item.token_url %></dd>
 
-  <dt><%= @model.t :client_id %></dt>
-  <dd><%= @item.client_id %></dd>
-
   <dt><%= @model.t :response_type %></dt>
   <dd><%= @item.response_type %></dd>
 
@@ -18,7 +18,7 @@
   <dd><%= @item.max_age %></dd>
 
   <dt><%= @model.t :scope %></dt>
-  <dd><%= @item.scope %></dd>
+  <dd><%= tryb { @item.scopes.join(" ") } %></dd>
 
   <dt><%= @model.t :claims %></dt>
   <dd><%= tryb { @item.claims.join(" ") } %></dd>

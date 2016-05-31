@@ -23,6 +23,7 @@ ja:
         disabled: 無効
     links:
       new_from_metadata: メタデータ インポート
+      new_from_discovery: Discovery から作成
 
   modules:
     sys: システム
@@ -60,12 +61,18 @@ ja:
         identifier: Identifier
         metadata: メタデータ
       sys/addon/open_id_connect_setting:
-        auth_url: Auth URL
-        token_url: Token URL
         client_id: Client ID
         client_secret: Client Secret
+        issuer: Issuer
+        auth_url: Auth URL
+        token_url: Token URL
         response_type: Response Type
-        scope: Scope
+        scopes: Scope
+        max_age: Max Age
+        claims: Claim
+        response_mode: Response Mode
+        jwks_uri: JWKS Uri
+        in_discovery_file: Discovery File
 
   tooltip:
     sys/addon/role:

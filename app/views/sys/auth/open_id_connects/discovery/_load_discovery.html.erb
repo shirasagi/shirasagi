@@ -1,0 +1,10 @@
+<dl class="see mod-sys-openid-connect-load-discovery">
+  <dt><%= @model.t :client_id %><%= @model.tt :client_id %></dt>
+  <dd><%= f.text_field :client_id %></dd>
+
+  <dt><%= @model.t :client_secret %><%= @model.tt :client_secret %></dt>
+  <dd><%= f.text_field :in_client_secret %></dd>
+
+  <dt><%= @model.t :in_discovery_file %><%= @model.tt :in_discovery_file %></dt>
+  <dd><%= f.file_field :in_discovery_file %></dd>
+</dl>
