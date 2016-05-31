@@ -1,18 +1,15 @@
 <% @index_meta = proc do |item| %>
-  <% item.cur_site = @cur_site %>
   <span class="id">#<%= item.uid.presence || item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-
+  <span class="group"><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></span>
+  <% if title = item.title(@cur_site) %>
+    <span class="user-title"><%= title.name %></span>
+  <% end %>
   <% if item.email.present? %>
-  <span class="email"><%= mail_to item.email %></span>
+    <span class="email"><%= mail_to item.email %></span>
   <% end %>
-
   <% if item.tel.present? %>
-  <span class="tel"><%= item.tel %></span>
-  <% end %>
-
-  <% if item.title.present? %>
-  <span class="user-title"><%= item.title.name %></span>
+    <span class="tel">TEL: <%= item.tel %><%= " (#{item.tel_ext})" if item.tel_ext.present? %></span>
   <% end %>
 <% end %>
 

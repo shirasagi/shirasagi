@@ -8,16 +8,19 @@ class Gws::User
 
   cattr_reader(:group_class) { Gws::Group }
 
-  attr_accessor :in_title_id
+  attr_accessor :in_title_id, :in_gws_main_group_id
 
+  field :gws_main_group_ids, type: Hash, default: {}
   field :gws_default_group_ids, type: Hash, default: {}
 
   embeds_ids :groups, class_name: "Gws::Group"
 
-  permit_params :in_title_id
+  permit_params :in_title_id, :in_gws_main_group_id
 
   before_validation :set_title_ids, if: ->{ in_title_id }
+  before_validation :set_gws_main_group_id, if: ->{ @cur_site && in_gws_main_group_id }
   validate :validate_groups
+  validate :validate_gws_main_group, if: ->{ @cur_site }
 
   # reset default order
   self.default_scoping = nil if default_scopable?
@@ -44,6 +47,15 @@ class Gws::User
     @gws_default_group ||= groups.in_group(@cur_site).first
   end
 
+  def gws_main_group(site = nil)
+    site ||= @cur_site
+    if group_id = gws_main_group_ids[site.id.to_s]
+      main_group = groups.in_group(site).where(id: group_id).first
+    end
+    main_group ||= groups.in_group(site).first
+    main_group
+  end
+
   private
     def set_title_ids
       title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)
@@ -51,7 +63,20 @@ class Gws::User
       self.title_ids = title_ids
     end
 
+    def set_gws_main_group_id
+      group_ids = gws_main_group_ids
+      group_ids[@cur_site.id.to_s] = in_gws_main_group_id.present? ? in_gws_main_group_id.to_i : nil
+      self.gws_main_group_ids = group_ids.select { |k, v| v.present? }
+    end
+
     def validate_groups
       self.errors.add :group_ids, :blank if groups.blank?
+    end
+
+    def validate_gws_main_group
+      group_id = gws_main_group_ids[@cur_site.id.to_s]
+      return true if group_id.blank?
+      return true if group_ids.include?(group_id)
+      errors.add :gws_main_group_ids, :invalid
     end
 end

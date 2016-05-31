@@ -22,9 +22,10 @@ module SS::Reference
       end
     end
 
-    def title
-      return nil if cur_site.blank?
-      titles.where(group_id: cur_site.id).first
+    def title(site = nil)
+      site ||= cur_site
+      return nil if site.blank?
+      titles.where(group_id: site.id).first
     end
 
     def update_title_order(title = nil)

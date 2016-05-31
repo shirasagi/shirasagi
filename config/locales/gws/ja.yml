@@ -116,6 +116,9 @@ ja:
         color: 表示色
         bg_color: 背景色
         text_color: 文字色
+      gws/user:
+        gws_main_group_ids: グループ（主）
+        gws_default_group_ids: グループ（既定）
       gws/custom_group:
         name: グループ名
         order: 表示順
@@ -192,6 +195,9 @@ ja:
         - 表示色を入力します。
         -
         - 表示色は "#RRGGBB" 形式で入力します（RR, GG, BB はそれぞれ赤、緑、青の成分を16進数で入力）。
+    gws/user:
+      gws_main_group_ids:
+        - ユーザーの所属する主なグループを選択します。
     gws/custom_group:
       name:
         - グループ名を入力します。

@@ -61,6 +61,10 @@ class @SS_SearchUI
       SS_SearchUI.selectItems()
       $("#ajax-box form.search").submit()
 
+    $("#ajax-box .submit-on-change").on "change", (e)->
+      SS_SearchUI.selectItems()
+      $("#ajax-box form.search").submit()
+
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
       id = $(this).attr("data-id")
       tr = $("#colorbox .items [data-id='#{id}']")

@@ -116,6 +116,9 @@ module SS::Model::User
       if params[:name].present?
         criteria = criteria.search_text params[:name]
       end
+      if params[:title_ids].present?
+        criteria = criteria.where title_ids: params[:title_ids].to_i
+      end
       if params[:keyword].present?
         criteria = criteria.keyword_in params[:keyword], :name, :kana, :uid, :email
       end

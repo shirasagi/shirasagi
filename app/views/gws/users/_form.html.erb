@@ -63,7 +63,30 @@
       </tbody>
     </table>
   </dd>
+</dl>
 
+<dl class="see mod-gws-user">
+  <dt><%= @model.t :gws_main_group_ids %><%= @model.tt :gws_main_group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "in_gws_main_group_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path(single: true), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Sys::Group.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% if @item.gws_main_group_ids[@cur_site.id.to_s] && group = @item.gws_main_group(@cur_site) %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "in_gws_main_group_id", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-gws-user">
   <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
   <dd><%= f.text_area :remark %></dd>
 </dl>

@@ -6,12 +6,24 @@
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
-      <% if browser.ie?(["<10"]) %>
-        <%= render partial: "group_dropdown_normal", locals: { f: f } %>
-      <% else %>
-        <%= render partial: "group_dropdown_tree", locals: { f: f } %>
-      <% end %>
+      <dt><%= t("mongoid.models.gws/group") %></dt>
+      <dd>
+        <% if browser.ie?(["<10"]) %>
+          <%= render partial: "group_dropdown_normal", locals: { f: f } %>
+        <% else %>
+          <%= render partial: "group_dropdown_tree", locals: { f: f } %>
+        <% end %>
+      </dd>
+
       <%= render partial: "custom_group_dropdown", locals: { f: f } %>
+
+      <dt><%= @model.t :title_ids %></dt>
+      <dd>
+        <%= f.select :title_ids, @model.new(cur_site: @cur_site).title_id_options,
+          { selected: params[:s].try(:[], :title_ids), include_blank: true },
+          { class: "submit-on-change" } %>
+      </dd>
+
       <dt><%= t "mongoid.models.gws/user" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
@@ -28,6 +40,8 @@
       <th class="checkbox"><input type="checkbox" /></th>
       <% end %>
       <th class="name"><%= @model.t :name %></th>
+      <th><%= @model.t :group_ids %></th>
+      <th><%= @model.t :title_ids %></th>
     </tr>
   </thead>
   <tbody class="items">
@@ -39,6 +53,8 @@
         </td>
         <% end %>
         <td><%= link_to item.long_name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></td>
+        <td><%= tryb { item.title(@cur_site).name } %></td>
       </tr>
     <% end %>
   </tbody>
