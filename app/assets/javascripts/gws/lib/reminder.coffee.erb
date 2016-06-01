@@ -5,9 +5,9 @@ class @Gws_Reminder
     params = {
       data:
         item:
-          name: addon.find("#item_name").val()
-          model: addon.find("#item_model").val()
           item_id: addon.find("#item_id").val()
+          model: addon.find("#item_model").val()
+          name: addon.find("#item_name").val()
       beforeSend: (data)->
         $(".gws-addon-reminder-label").html("")
       success: (data)->
@@ -28,3 +28,44 @@ class @Gws_Reminder
       $.extend true, ajax_params, params
       ajax_params["data"]["_method"] = "delete"
       $.ajax(ajax_params)
+
+  @renderList: (opts = {})->
+    $('.list-item').each ->
+      $(this).find('.links').append('<a class="restore" href="#" style="display: none;"><%= I18n.t('gws.links.restore_reminder') %></a>')
+
+    $('.list-item .delete').click ->
+      item = $(this).closest('.list-item')
+      $.ajax
+        url: opts['url']
+        method: 'post'
+        data:
+          _method: 'delete'
+          item:
+            item_id: item.data('id')
+            model: item.data('model')
+            name: item.data('name')
+            date: item.data('date')
+        success: (data)->
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').hide()
+          item.find('.restore').show()
+          return false
+        error: (data)->
+          alert('Error')
+
+    $('.list-item .restore').click ->
+      item = $(this).closest('.list-item')
+      $.ajax
+        url: opts['url']
+        method: 'post'
+        data:
+          item:
+            item_id: item.data('id')
+            model: item.data('model')
+            name: item.data('name')
+            date: item.data('date')
+        success: (data)->
+          item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').show()
+          item.find('.restore').hide()
+          return false
+        error: (data)->
+          alert('Error')

@@ -1,0 +1,17 @@
+// -------------------------------------------------------------------------------------------------
+// Markdown
+
+.ss-addon-markdown-toolbar {
+  margin: 0 0 10px;
+  .btn {
+    margin-left: 5px;
+  }
+  .active {
+    background: #ddd;
+    color: #888;
+  }
+  .ss-addon-markdown-help-button {
+    float: right;
+    margin: 14px 0 0;
+  }
+}

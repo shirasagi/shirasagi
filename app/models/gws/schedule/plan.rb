@@ -50,7 +50,7 @@ class Gws::Schedule::Plan
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")
-    data[:title] = ERB::Util.h(name) if data[:readable]
+    data[:title] = name if data[:readable]
 
     if allday? || start_at.to_date != end_at.to_date
       data[:className] = 'fc-event-range'

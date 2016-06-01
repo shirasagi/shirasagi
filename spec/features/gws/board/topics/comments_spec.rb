@@ -15,7 +15,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
       it "#show" do
         visit show_path
         expect(page).to have_css("article.topic .name", text: topic.name)
-        expect(page).to have_css("article.topic .body p", text: topic.text)
+        expect(page).to have_css("article.topic .body", text: topic.text)
 
         within "article.topic div.menu" do
           click_on "返信する"
@@ -28,7 +28,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         end
 
         expect(page).to have_css("aside.comment h2", text: name)
-        expect(page).to have_css("aside.comment .body p", text: text)
+        expect(page).to have_css("aside.comment .body", text: text)
 
         expect(Gws::Board::Post.where(topic_id: topic.id).count).to eq 1
         comment = Gws::Board::Post.where(topic_id: topic.id).first
@@ -45,7 +45,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
       it "#show" do
         visit show_path
         expect(page).to have_css("article.topic .name", text: topic.name)
-        expect(page).to have_css("article.topic .body p", text: topic.text)
+        expect(page).to have_css("article.topic .body", text: topic.text)
 
         within "article.topic div.menu" do
           click_on "返信する"
@@ -58,7 +58,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         end
 
         expect(page).to have_css("aside.comment h2", text: name)
-        expect(page).to have_css("aside.comment .body p", text: text)
+        expect(page).to have_css("aside.comment .body", text: text)
 
         expect(Gws::Board::Post.where(topic_id: topic.id).count).to eq 1
         comment = Gws::Board::Post.where(topic_id: topic.id).first
@@ -77,9 +77,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
         # puts page.html
         expect(page).to have_css("aside.comment h2", text: name)
-        expect(page).to have_css("aside.comment .body p", text: text)
+        expect(page).to have_css("aside.comment .body", text: text)
         expect(page).to have_css("aside.comment h2", text: name2)
-        expect(page).to have_css("aside.comment .body p", text: text2)
+        expect(page).to have_css("aside.comment .body", text: text2)
 
         expect(Gws::Board::Post.where(topic_id: topic.id).count).to eq 2
         comment = Gws::Board::Post.where(topic_id: topic.id).order_by(created: -1).first

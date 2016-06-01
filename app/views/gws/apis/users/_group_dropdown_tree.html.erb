@@ -12,26 +12,23 @@
     return false;
   });
 <% end %>
-<dt><%= t("mongoid.models.gws/group") %></dt>
-<dd>
-  <button class="dropdown btn" type="button"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
-  <%= hidden_field_tag("s[group]", @group.id) %>
-  <div class="dropdown-container">
-    <table class="index groups">
-      <tbody>
-      <tr data-depth="0" class="toggle">
+<button class="dropdown btn" type="button"><%= @group.name %> <span class="caret">&#x25BC;</span></button>
+<%= hidden_field_tag("s[group]", @group.id) %>
+<div class="dropdown-container">
+  <table class="index groups">
+    <tbody>
+    <tr data-depth="0" class="toggle">
+      <td class="expandable">
+        <%= link_to @cur_site.name, "#", class: "select-group", data: { id: @cur_site.id } %>
+      </td>
+    </tr>
+    <% @groups.each do |item| %>
+      <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
         <td class="expandable">
-          <%= link_to @cur_site.name, "#", class: "select-group", data: { id: @cur_site.id } %>
+          <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
         </td>
       </tr>
-      <% @groups.each do |item| %>
-        <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
-          <td class="expandable">
-            <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-  </div>
-</dd>
+    <% end %>
+    </tbody>
+  </table>
+</div>

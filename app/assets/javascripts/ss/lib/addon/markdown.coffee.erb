@@ -1,0 +1,41 @@
+class @SS_Addon_Markdown
+  @container: 'ss-addon-markdown'
+  @content: 'ss-addon-markdown-content'
+  @toolbar: 'ss-addon-markdown-toolbar'
+  @options: 'ss-addon-markdown-options'
+  @type: 'ss-addon-markdown-type'
+  @previewButton: 'ss-addon-markdown-preview-button'
+  @previewLabel: '<%= I18n.t("views.links.preview") %>'
+  @helpButton: 'ss-addon-markdown-help-button'
+  @helpUrl: 'https://help.github.com/articles/basic-writing-and-formatting-syntax/'
+  @helpLabel: '<%= I18n.t("views.links.markdown_help") %>'
+
+  @render: ()->
+    $(".#{@toolbar}").append("<span class='#{@options}'></span>")
+    $(".#{@container}").append("<div class='#{@preview} markdown-body'>preview</div>")
+    @renderForm($(".#{@type}").val())
+
+    $(".#{@type}").change ->
+      SS_Addon_Markdown.renderForm($(this).val())
+
+  @resetContent: ()->
+    $(".#{@preview}").html('').hide()
+    $(".#{@content} textarea").show()
+
+  @renderForm: (type)->
+    $(".#{@options}").html('')
+    @resetContent()
+    @renderFormMarkdown() if type == 'markdown'
+
+  @renderFormMarkdown: ()->
+    $(".#{@options}").append("<input type='button' class='btn #{@previewButton}' value='#{@previewLabel}' />")
+    $(".#{@options}").append("<a href='#{@helpUrl}' class='#{@helpButton}' target='_blank'>#{@helpLabel}</a>")
+
+    $(".#{@previewButton}").on 'click', ->
+      $(this).toggleClass('active')
+      if $(this).hasClass('active')
+        text = $(".#{SS_Addon_Markdown.content} textarea").val()
+        $(".#{SS_Addon_Markdown.content} textarea").hide()
+        $(".#{SS_Addon_Markdown.preview}").html(marked(text, breaks: true)).show()
+      else
+        SS_Addon_Markdown.resetContent()

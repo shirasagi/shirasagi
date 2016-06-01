@@ -7,5 +7,4 @@
     options_for_select(options, @group.try(:id))
   end
 %>
-<dt><%= t("mongoid.models.gws/group") %></dt>
-<dd><%= select_tag("s[group]", groups_options_for_select) %></dd>
+<%= select_tag("s[group]", groups_options_for_select) %>

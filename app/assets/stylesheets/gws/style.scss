@@ -55,6 +55,11 @@
     content: "!";
   }
 }
+.gws-list-item--deleted {
+  .title {
+    color: #888;
+  }
+}
 
 // Category
 .gws-category-navi-menu {

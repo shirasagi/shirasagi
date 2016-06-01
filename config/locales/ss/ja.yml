@@ -81,6 +81,7 @@ ja:
       more: もっと見る
       select: 選択する
       delete_all: すべて削除する
+      markdown_help: Markdown ヘルプ
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -111,6 +112,9 @@ ja:
         768x1024: 768x1024 (XGA縦)
         1280x720: 1280x720 (HD横)
         720x1280: 720x1280 (HD縦)
+      text_type:
+        plain: テキスト形式
+        markdown: Markdown形式
     state:
       public: 公開中
       closed: 非公開

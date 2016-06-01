@@ -41,6 +41,9 @@
   <dt><%= @model.t :group_ids %></dt>
   <dd><%= br @item.groups.order_by(name: 1).select{ |c| Gws::Group.site(@cur_site).pluck(:id).include?(c.id) }.map{|c| c.name}.join("\n") %></dd>
 
+  <dt><%= @model.t :gws_main_group_ids %></dt>
+  <dd><%= tryb { @item.gws_main_group(@cur_site).name } %></dd>
+
   <% if @item.remark.present? %>
   <dt><%= @model.t :remark %></dt>
   <dd><%=br @item.send :remark %></dd>
