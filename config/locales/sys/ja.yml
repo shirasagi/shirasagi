@@ -11,6 +11,9 @@ ja:
     db_tool: DBツール
     role: 権限/ロール
     max_file_size: 最大ファイルサイズ
+    site_copy: サイト複製
+    site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
+    site_copy/started_job: サイト複製を開始しました。
     roles:
       admin: 管理者
     auth: 認証
@@ -21,9 +24,19 @@ ja:
       auth_state:
         enabled: 有効
         disabled: 無効
+      copy_contents:
+        pages: 記事、その他ページ
+        files: 共有ファイル
+        editor_templates: テンプレート
+        dictionaries: かな辞書
     links:
       new_from_metadata: メタデータ インポート
       new_from_discovery: Discovery から作成
+    apis:
+      sites:
+        index: サイトを選択する
+        search: サイトを検索
+        select: サイトを設定する
 
   modules:
     sys: システム
@@ -43,6 +56,7 @@ ja:
       sys/site: サイト
       sys/user: ユーザー
       sys/role: ロール
+      sys/site_copy_task: サイト複製タスク
     attributes:
       sys/addon/role:
         sys_role_ids: ロール
@@ -73,6 +87,12 @@ ja:
         response_mode: Response Mode
         jwks_uri: JWKS Uri
         in_discovery_file: Discovery File
+      sys/site_copy_task:
+        target_host_name: サイト名
+        target_host_host: ホスト名
+        target_host_domains: ドメイン
+        source_site_id: 複製するサイト
+        copy_contents: 複製する項目
 
   tooltip:
     sys/addon/role:
