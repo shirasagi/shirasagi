@@ -44,7 +44,6 @@ module SS::Model::Role
     end
 
     def module_permission_names(opts = {})
-      scope = collection_name.to_s.singularize
       permissions = _module_permission_names.sort_by { |k, v| k }.map do |mod, names|
         [mod, names.sort_by { |name| name.to_s.split('_').reverse.join } ]
       end.to_h
