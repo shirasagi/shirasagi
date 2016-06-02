@@ -17,7 +17,7 @@
 <% if search_folders.present? %>
   <nav class="main-navi">
     <% search_folders.each do |search_folder| %>
-      <h2><%= link_to search_folder.name, cms_page_search_contents_path(id: search_folder), class: "icon-conv" %></h2>
+      <h2><%= link_to search_folder.name, cms_page_search_contents_path(id: search_folder), class: "icon-search" %></h2>
     <% end %>
   </nav>
 <% end %>
