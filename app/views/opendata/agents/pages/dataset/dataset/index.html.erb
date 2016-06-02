@@ -7,8 +7,10 @@ $ ->
   # Tabs
   SS_Tabs.render("#dataset-tabs-<%= @cur_node.id %>");
 
+  <% if @cur_node.show_point? %>
   # show point
   Opendata_Point.render("<%= @cur_page.point_url %>");
+  <% end %>
 
   # show apps
   $.ajax
@@ -38,12 +40,14 @@ $ ->
   <h1 class="name"><%= @cur_page.send :name %></h1>
 </header>
 
+<% if @cur_node.show_point? %>
 <div class="point">
   <div class="count">
     <span class="label"><%= I18n.t("opendata.labels.iine") %></span>
     <span class="number"><%= @cur_page.point %></span>
   </div>
 </div>
+<% end %>
 
 <%
 max = 3
@@ -178,6 +182,7 @@ categories = [
     </div>
     <nav class="feed"></nav>
   </article>
+  <% if app_enabled? %>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
     <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
     <div class="pages">
@@ -188,6 +193,8 @@ categories = [
     </div>
     <nav class="feed"></nav>
   </article>
+  <% end %>
+  <% if idea_enabled? %>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
     <header><h1><%= I18n.t("opendata.labels.relation_idea") %></h1></header>
     <div class="pages">
@@ -198,6 +205,7 @@ categories = [
     </div>
     <nav class="feed"></nav>
   </article>
+  <% end %>
 </div>
 
 <%= render file: "cms/agents/addons/related_page/view/index" %>

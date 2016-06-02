@@ -18,8 +18,24 @@ module Opendata::UrlHelper
   end
 
   def dataset_enabled?
-    node = Opendata::Node::Dataset.site(@cur_site).public.first
-    node.present?
+    # node = Opendata::Node::Dataset.site(@cur_site).public.first
+    # node.present?
+    @cur_site = Cms::Site.find(@cur_site.id) if @cur_site.is_a?(SS::Site)
+    @cur_site.dataset_enabled?
+  end
+
+  def app_enabled?
+    # node = Opendata::Node::App.site(@cur_site).public.first
+    # node.present?
+    @cur_site = Cms::Site.find(@cur_site.id) if @cur_site.is_a?(SS::Site)
+    @cur_site.app_enabled?
+  end
+
+  def idea_enabled?
+    # node = Opendata::Node::Idea.site(@cur_site).public.first
+    # node.present?
+    @cur_site = Cms::Site.find(@cur_site.id) if @cur_site.is_a?(SS::Site)
+    @cur_site.idea_enabled?
   end
 
   def dataset_path(options = {})
@@ -66,19 +82,25 @@ module Opendata::UrlHelper
 
   def my_dataset_path(options = {})
     node = Opendata::Node::MyDataset.site(@cur_site).public.first
-    raise "mypage is disabled since Opendata::Node::MyDataset is not registered" unless node
+    raise "mydataset is disabled since Opendata::Node::MyDataset is not registered" unless node
     build_path(node.url, options)
   end
 
   def my_app_path(options = {})
     node = Opendata::Node::MyApp.site(@cur_site).public.first
-    raise "mypage is disabled since Opendata::Node::MyApp is not registered" unless node
+    raise "myapp is disabled since Opendata::Node::MyApp is not registered" unless node
     build_path(node.url, options)
   end
 
   def my_idea_path(options = {})
     node = Opendata::Node::MyIdea.site(@cur_site).public.first
-    raise "mypage is disabled since Opendata::Node::MyIdea is not registered" unless node
+    raise "myidea is disabled since Opendata::Node::MyIdea is not registered" unless node
+    build_path(node.url, options)
+  end
+
+  def my_profile_path(options = {})
+    node = Opendata::Node::MyProfile.site(@cur_site).public.first
+    raise "myprofile is disabled since Opendata::Node::MyProfile is not registered" unless node
     build_path(node.url, options)
   end
 

@@ -1,3 +1,5 @@
+<% return if @cur_node.hide_point? %>
+
 <%= jquery do %>
   Opendata_Point.renderButton();
   $(".point .label a").colorbox({ fixed: true, width: "300px", height: "50%" });

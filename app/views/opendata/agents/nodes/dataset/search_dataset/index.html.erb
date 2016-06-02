@@ -65,7 +65,11 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
   <article>
     <header>
       <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-      <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+      <h2><%= link_to item.name, item.url %>
+        <% if item.parent.becomes_with_route.show_point? %>
+        <span class="point"><%= item.point.to_i %></span>
+        <% end %>
+      </h2>
     </header>
   </article>
   <% end %>

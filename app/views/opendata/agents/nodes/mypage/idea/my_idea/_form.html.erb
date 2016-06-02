@@ -44,6 +44,7 @@
   </tr>
   <% end %>
 
+  <% if app_enabled? %>
   <tr class="parent-row">
     <td class="field"><%= @model.t :app_id %></td>
     <td class="input">
@@ -57,4 +58,5 @@
     <% end %>
   </td>
   </tr>
+  <% end %>
 </table>

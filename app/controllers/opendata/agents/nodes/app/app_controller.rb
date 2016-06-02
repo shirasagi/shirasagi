@@ -53,10 +53,12 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
       @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_apps_path}rss.xml", options) }
       @tabs = []
       Opendata::App.sort_options.each do |options|
-        @tabs << { name: options[0],
-                   url: "#{@search_path.call("sort" => "#{options[1]}")}",
-                   pages: pages.order_by(Opendata::App.sort_hash(options[1])).limit(10),
-                   rss: "#{@rss_path.call("sort" => "#{options[1]}")}"}
+        if @cur_node.show_tab?(options[1])
+          @tabs << { name: options[0], id: options[1],
+                     url: "#{@search_path.call("sort" => "#{options[1]}")}",
+                     pages: pages.order_by(Opendata::App.sort_hash(options[1])).limit(10),
+                     rss: "#{@rss_path.call("sort" => "#{options[1]}")}"}
+        end
       end
 
       max = 50

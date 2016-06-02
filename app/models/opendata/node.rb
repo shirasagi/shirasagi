@@ -34,6 +34,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::Addon::DatasetPageSetting
     include Opendata::Addon::CategorySetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -104,6 +105,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::Addon::AppPageSetting
     include Opendata::Addon::CategorySetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -140,6 +142,7 @@ module Opendata::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
+    include Opendata::Addon::IdeaPageSetting
     include Opendata::Addon::CategorySetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

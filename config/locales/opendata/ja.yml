@@ -245,8 +245,11 @@ ja:
       opendata/rdf_store: RDFストア
       opendata/url_rdf_store: RDFストア
       opendata/comment: コメント
-      opendata/mypage_setting: マイページ設定
+      opendata/site_setting: オープンデータ設定
       opendata/workflow/idea_comment_approver: 承認
+      opendata/dataset_page_setting: データセット詳細ページ設定
+      opendata/app_page_setting: アプリ詳細ページ設定
+      opendata/idea_page_setting: アイデア詳細ページ設定
 
   cms:
     nodes:
@@ -436,10 +439,13 @@ ja:
         header_labels: タイトル
         class: RDFクラス
         column_types: 列設定
-      opendata/addon/mypage_setting:
+      opendata/addon/site_setting:
         dataset_workflow_route: データセット承認
         app_workflow_route: アプリ承認
         idea_workflow_route: アイデア承認
+        dataset_state: データセット
+        app_state: アプリ
+        idea_state: アイデア
       opendata/addon/workflow/idea_comment_approver:
         workflow_user_id: 申請者
         workflow_state: 承認状態
@@ -448,6 +454,15 @@ ja:
         workflow_required_counts: 必要承認数
         comment: 差し戻しコメント
         approver_comment: 承認者コメント
+      opendata/addon/dataset_page_setting:
+        show_point: ポイント表示
+        show_tabs: タブ表示
+      opendata/addon/app_page_setting:
+        show_point: ポイント表示
+        show_tabs: タブ表示
+      opendata/addon/idea_page_setting:
+        show_point: ポイント表示
+        show_tabs: タブ表示
 
   tooltip:
     opendata/dataset:
@@ -489,6 +504,24 @@ ja:
     opendata/csv2rdf_settings:
       rdf_property:
         - 適切な RDF プロパティを一覧内から選択し、「保存」ボタンをクリックします。
+    opendata/addon/dataset_page_setting:
+      show_point:
+        - ポイントを表示するかどうかを選択します。
+        - 未選択の場合、ポイントを表示します。
+      show_tabs:
+        - 表示するタブを選択します。
+    opendata/addon/app_page_setting:
+      show_point:
+        - ポイントを表示するかどうかを選択します。
+        - 未選択の場合、ポイントを表示します。
+      show_tabs:
+        - 表示するタブを選択します。
+    opendata/addon/idea_page_setting:
+      show_point:
+        - ポイントを表示するかどうかを選択します。
+        - 未選択の場合、ポイントを表示します。
+      show_tabs:
+        - 表示するタブを選択します。
 
   job:
     models:

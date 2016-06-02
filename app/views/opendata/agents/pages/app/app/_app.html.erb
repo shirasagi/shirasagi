@@ -1,6 +1,14 @@
+<%
+  tab_count = 0
+  tab_count += 1 if @tab_display == "tab_url"
+  tab_count += 5 if @tab_display == "tab_html"
+  tab_count += 1 if dataset_enabled?
+  tab_count += 1 if idea_enabled?
+%>
 <div class="application">
   <div class="appContainer">
     <div id="tabs">
+      <% if tab_count > 1 %>
       <nav class="names">
         <% if @tab_display == "tab_url" %>
           <a id="url" class="name" href="#tab-url" onclick="ChangeTab('tab-url','url'); return false;">
@@ -19,11 +27,16 @@
               <%= I18n.t("opendata.labels.sample") %></a>
           <% end %>
         <% end %>
+        <% if dataset_enabled? %>
         <a id="dataset" class="name dataset" href="#tab-dataset" onclick="ChangeTab('tab-dataset','dataset'); return false;">
           <%= I18n.t("opendata.labels.relation_dataset") %></a>
+        <% end %>
+        <% if idea_enabled? %>
         <a id="idea" class="name idea" href="#tab-idea" onclick="ChangeTab('tab-idea','idea'); return false;">
           <%= I18n.t("opendata.labels.relation_idea") %></a>
+        <% end %>
       </nav>
+      <% end %>
 
       <div class="tab-body">
         <% if @tab_display =="tab_url" %>
@@ -77,16 +90,20 @@
             </div>
           <% end %>
         <% end %>
+        <% if dataset_enabled? %>
         <div id="tab-dataset">
           <header><h1><%= I18n.t("opendata.labels.relation_dataset") %></h1></header>
           <% if @ds.present? %>
             <%= render partial: "opendata/agents/pages/app/app/dataset" %>
           <% end %>
         </div>
+        <% end %>
+        <% if idea_enabled? %>
         <div id="tab-idea">
           <header><h1><%= I18n.t("opendata.labels.relation_idea") %></h1></header>
           <div class="app-ideas" id="app-ideas"></div>
         </div>
+        <% end %>
       </div>
     </div>
   </div>

@@ -17,7 +17,11 @@ $ ->
             <article>
               <header>
                 <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-                <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+                <h2><%= link_to item.name, item.url %>
+                  <% if item.node.becomes_with_route.try(:show_point?) || true %>
+                  <span class="point"><%= item.point.to_i %></span>
+                  <% end %>
+                </h2>
               </header>
             </article>
           <% end %>
@@ -34,7 +38,11 @@ $ ->
             <article>
               <header>
                 <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-                <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+                <h2><%= link_to item.name, item.url %>
+                  <% if item.node.becomes_with_route.try(:show_point?) || true %>
+                  <span class="point"><%= item.point.to_i %></span>
+                  <% end %>
+                </h2>
               </header>
             </article>
           <% end %>
@@ -52,7 +60,11 @@ $ ->
             <article>
               <header>
                 <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-                <h2><%= link_to item.name, item.url %><span class="point"><%= item.point.to_i %></span></h2>
+                <h2><%= link_to item.name, item.url %>
+                  <% if item.node.becomes_with_route.try(:show_point?) || true %>
+                  <span class="point"><%= item.point.to_i %></span>
+                  <% end %>
+                </h2>
               </header>
             </article>
           <% end %>

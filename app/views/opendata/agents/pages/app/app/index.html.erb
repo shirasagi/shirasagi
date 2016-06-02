@@ -3,9 +3,12 @@
 <%= javascript_include_tag "opendata/public" %>
 <%= coffee do %>
 $ ->
+  <% if @cur_node.show_point? %>
   # show point
   Opendata_Point.render("<%= @cur_page.point_url %>");
+  <% end %>
 
+  <% if @tab_display == "tab_html" %>
   # show executed
   $.ajax
     url: "<%= @cur_page.executed_show_url %>"
@@ -13,12 +16,15 @@ $ ->
     type: "GET"
     success: (data)->
       $("#executed").html data
+  <% end %>
 
+  <% if idea_enabled? %>
   # show ideas
   $.ajax
     url: "<%= @cur_page.app_ideas_url %>"
     success: (data)->
       $(".app-ideas").html data
+  <% end %>
 
   # hide categories
   $(".categories a[data-class=other]").click ->
@@ -30,7 +36,6 @@ $ ->
   # preview
   $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
   $("a.json").colorbox({ fixed: true, width: "90%", height: "90%" })
-
 <% end %>
 
 <header>
@@ -38,12 +43,14 @@ $ ->
 </header>
 
 <div class="side-right">
+  <% if @cur_node.show_point? %>
   <div class="point">
     <div class="count">
       <span class="label"><%= I18n.t("opendata.labels.iine") %></span>
       <span class="number"><%= @cur_page.point %></span>
     </div>
   </div>
+  <% end %>
 
   <% if @tab_display == "tab_html" %>
     <div class="download-all">
@@ -100,8 +107,10 @@ categories = [
         <dd><%= @cur_page.groups.first.name %><br /></dd>
       <% end %>
 
+      <% if @tab_display == "tab_html" %>
       <dt><%= @cur_page.t :executed %></dt>
       <dd><div id="executed"></div></dd>
+      <% end %>
 
       <dt><%= @cur_page.t :license %></dt>
       <dd><%= @cur_page.license %></dd>

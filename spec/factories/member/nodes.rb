@@ -4,11 +4,11 @@ FactoryGirl.define do
     route "member/login"
     filename { SS.config.oauth.prefix_path.sub(/^\//, '') || "auth" }
     twitter_oauth "enabled"
-    twitter_client_id unique_id.to_s
-    twitter_client_secret unique_id.to_s
+    twitter_client_id { "#{unique_id}" }
+    twitter_client_secret { "#{unique_id}" }
     facebook_oauth "enabled"
-    facebook_client_id unique_id.to_s
-    facebook_client_secret unique_id.to_s
+    facebook_client_id { "#{unique_id}" }
+    facebook_client_secret { "#{unique_id}" }
   end
 
   factory :member_node_mypage, class: Member::Node::Mypage, traits: [:cms_node] do

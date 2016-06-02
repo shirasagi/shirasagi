@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_app", dbscope: :example do
+describe "opendata_agents_nodes_app", dbscope: :example, js: true do
   def create_appfile(app, file, format)
     appfile = app.appfiles.new(text: "aaa", format: format)
     appfile.in_file = file
@@ -9,29 +9,29 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   end
 
   let(:site) { cms_site }
-  let!(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_app" }
-  let!(:node_idea) { create_once :opendata_node_idea, name: "opendata_agents_nodes_idea" }
-  let!(:node_member) { create_once :opendata_node_member }
-  let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
-  let!(:node_myidea) { create_once :opendata_node_my_idea, filename: "#{node_mypage.filename}/idea" }
+  let(:layout) { create_cms_layout }
+  let!(:node) { create :opendata_node_app, cur_site: cms_site, layout_id: layout.id }
+  let!(:node_idea) { create :opendata_node_idea, cur_site: cms_site, layout_id: layout.id }
+  let!(:node_member) { create :opendata_node_member, cur_site: cms_site, layout_id: layout.id }
+  let!(:node_mypage) { create :opendata_node_mypage, cur_site: cms_site, layout_id: layout.id, filename: "mypage" }
+  let!(:node_myidea) { create :opendata_node_my_idea, cur_site: cms_site, cur_node: node_mypage, layout_id: layout.id, filename: "idea" }
 
-  let!(:node_search) { create :opendata_node_search_app }
+  let!(:node_search) { create :opendata_node_search_app, cur_site: cms_site, layout_id: layout.id }
 
-  let!(:area) { create_once :opendata_node_area, basename: "opendata_area_1" }
-  let!(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", area_ids: [ area.id ] }
+  let!(:node_login) { create :member_node_login, cur_site: cms_site, layout_id: layout.id, redirect_url: node.url }
+
+  let!(:area) { create :opendata_node_area, cur_site: cms_site, layout_id: layout.id }
+  let!(:app) { create :opendata_app, cur_site: cms_site, cur_node: node, layout_id: layout.id, area_ids: [ area.id ] }
   let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
   let!(:appfile) { create_appfile(app, file, "CSV") }
-
-  # let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
 
   let(:index_path) { "#{node.url}index.html" }
   let(:download_path) { "#{node.url}#{app.id}/zip" }
   let(:show_point_path) { "#{node.url}#{app.id}/point.html" }
   let(:point_members_path) { "#{node.url}#{app.id}/point/members.html" }
   let(:rss_path) { "#{node.url}rss.xml" }
-  let(:show_executed_path) { "#{node.url}#{app.id}/executed/show.html" }
-  let(:show_ideas_path) { "#{node.url}#{app.id}/ideas/show.html" }
+  let(:show_ideas_path) { "/#{app.filename.sub('.html', '')}/ideas/show.html" }
   let(:index_areas_path) { "#{node.url}areas.html" }
   let(:index_tags_path) { "#{node.url}tags.html" }
   let(:index_licenses_path) { "#{node.url}licenses.html" }
@@ -39,119 +39,92 @@ describe "opendata_agents_nodes_app", dbscope: :example do
   let(:file_index_path) { Rails.root.join("spec", "fixtures", "opendata", "index.html") }
   let(:file_index) { Fs::UploadedFile.create_from_file(file_index_path, basename: "spec") }
   let(:appfile) { create_appfile(app, file_index, "HTML") }
-  let(:full_path) { "#{node.url}#{app.id}/full/index.html" }
-  let(:app_index_path) { "#{node.url}#{app.id}/file_index/index.html" }
-  let(:text_path) { "#{node.url}#{app.id}/file_text/index.html" }
+  let(:full_path) { "/#{app.filename.sub('.html', '')}/full/index.html" }
+  let(:app_index_path) { "/#{app.filename.sub('.html', '')}/file_index/index.html" }
+  let(:text_path) { "/#{app.filename.sub('.html', '')}/file_text/index.html" }
 
   it "#index" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit index_path
-      expect(current_path).to eq index_path
-    end
+    visit index_path
+    expect(current_path).to eq index_path
+    expect(page).to have_css(".app-count .count", text: "1")
+
+    expect(page).to have_css(".opendata-tabs .names a.tab-released", text: "新着順")
+    expect(page).to have_css(".opendata-tabs .names a.tab-popular", text: "人気順")
+    expect(page).to have_css(".opendata-tabs .names a.tab-attention", text: "注目順")
+
+    expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: app.name)
+    expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: app.point.to_s)
+    expect(page).to have_css(".opendata-tabs .tab-popular h1", text: "人気順", visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: app.name, visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: app.point.to_s, visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-attention h1", text: "注目順", visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-attention .pages h2 a", text: app.name, visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: app.point.to_s, visible: false)
+    expect(page).to have_css(".areas .name", text: area.name)
+    expect(page).to have_css(".tags .name", text: app.tags[0])
+    expect(page).to have_css(".tags .name", text: app.tags[1])
+    licenses = Opendata::App.aggregate_field(:license, limit: 10)
+    expect(page).to have_css(".licenses .name", text: licenses.first["id"])
   end
 
   it "#download" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit download_path
-      expect(current_path).to eq download_path
+    visit index_path
+    within "article.tab-released" do
+      click_on app.name
     end
-  end
-
-  it "#show_point" do
-    visit "http://#{site.domain}#{show_point_path}"
-    expect(current_path).to eq show_point_path
-    within "div.like" do
-      expect(page).not_to have_selector("a.update")
-    end
-  end
-
-  it "#point_members" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit point_members_path
-      expect(current_path).to eq point_members_path
-    end
+    click_on "一括ダウンロード"
+    expect(status_code).to eq 200
+    expect(page.response_headers['Content-Type']).to eq("application/zip")
   end
 
   it "#rss" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit rss_path
-      expect(current_path).to eq rss_path
-    end
-  end
-
-  it "#show_executed" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit show_executed_path
-      expect(current_path).to eq show_executed_path
-    end
+    visit rss_path
+    expect(current_path).to eq rss_path
   end
 
   it "#show_ideas" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit show_ideas_path
-      expect(current_path).to eq show_ideas_path
-    end
+    visit show_ideas_path
+    expect(current_path).to eq show_ideas_path
+    expect(page).to have_css(".app-ideas")
   end
 
   it "#full" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit full_path
-      expect(current_path).to eq full_path
-    end
+    visit full_path
+    expect(current_path).to eq full_path
+    expect(page).to have_css(".app-body iframe")
   end
 
   it "#app_index" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit app_index_path
-      expect(current_path).to eq app_index_path
-    end
+    visit app_index_path
+    expect(current_path).to eq app_index_path
+    expect(page).to have_css("body p", text: "test")
   end
 
   it "#text" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit text_path
-      expect(current_path).to eq text_path
-    end
+    visit text_path
+    expect(current_path).to eq text_path
+    expect(page).to have_css("body pre")
   end
 
   context "app_filter" do
     it "#index_areas" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        visit index_areas_path
-        expect(current_path).to eq index_areas_path
-      end
+      visit index_areas_path
+      expect(current_path).to eq index_areas_path
     end
 
     it "#index_tags" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        visit index_tags_path
-        expect(current_path).to eq index_tags_path
-      end
+      visit index_tags_path
+      expect(current_path).to eq index_tags_path
     end
 
     it "#index_licenses" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-        visit index_licenses_path
-        expect(current_path).to eq index_licenses_path
-      end
+      visit index_licenses_path
+      expect(current_path).to eq index_licenses_path
     end
   end
 
   context "when logged in" do
-    let!(:node_login) { create :member_node_login, redirect_url: node.url }
-
     before do
       login_opendata_member(site, node_login)
     end
@@ -160,25 +133,83 @@ describe "opendata_agents_nodes_app", dbscope: :example do
       logout_opendata_member(site, node_login)
     end
 
-    it "#show_point" do
-      visit "http://#{site.domain}#{show_point_path}"
-      expect(current_path).to eq show_point_path
-      within "div.like" do
-        expect(page).to have_selector("a.update")
+    it "shows point" do
+      visit index_path
+      within "article.tab-released" do
+        click_on app.name
       end
-      click_link "いいね！"
-      expect(current_path).to eq show_point_path
+      expect(page).to have_css(".count .number", text: "0")
+      within "div.like" do
+        click_on "いいね！"
+      end
+      expect(page).to have_css(".count .number", text: "1")
+
+      app.reload
+      expect(app.point).to eq 1
+
+      within ".count .label" do
+        click_on "いいね！"
+      end
+
+      expect(page).to have_css(".point-members")
     end
 
-    it "#show_ideas" do
-      visit "http://#{site.domain}#{show_ideas_path}"
-      expect(current_path).to eq show_ideas_path
-      within "div.ideas" do
-        expect(page).to have_selector("a.contribute")
+    it "shows new idea" do
+      visit index_path
+      within "article.tab-released" do
+        click_on app.name
+      end
+
+      within "nav.names" do
+        click_link "関連アイデア"
       end
 
       click_link "アイデアを投稿する"
       expect(current_path).to eq "#{node_myidea.url}new"
+    end
+  end
+
+  context "when point is hide" do
+    before do
+      node.show_point = 'hide'
+      node.save!
+
+      app.touch
+      app.save!
+    end
+
+    it do
+      visit index_path
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: app.name)
+      expect(page).not_to have_css(".opendata-tabs .tab-released .pages h2 .point", text: app.point.to_s, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular h1", text: "人気順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: app.name, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: app.point.to_s, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-attention h1", text: "注目順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-attention .pages h2 a", text: app.name, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: app.point.to_s, visible: false)
+    end
+  end
+
+  context "when only released is enabled" do
+    before do
+      node.show_tabs = 'released'
+      node.save!
+
+      app.touch
+      app.save!
+    end
+
+    it do
+      visit index_path
+      expect(page).not_to have_css(".opendata-tabs .names", visible: false)
+
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: app.name)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: app.point.to_s, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-popular", visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
     end
   end
 end

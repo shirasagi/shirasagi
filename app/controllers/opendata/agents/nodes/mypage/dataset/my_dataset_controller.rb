@@ -2,6 +2,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
   include Cms::NodeFilter::View
   include Member::LoginFilter
   include Opendata::MemberFilter
+  helper Opendata::UrlHelper
   helper Opendata::FormHelper
   helper Opendata::ListHelper
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Oauth::Facebook, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :member_node_login, site: cms_site }
+  let(:node) { create :member_node_login, cur_site: cms_site }
   let(:app) { OpenStruct.new }
   let(:env) { OpenStruct.new("HTTP_HOST" => site.domain, "REQUEST_PATH" => node.url) }
 
