@@ -1,8 +1,16 @@
 <% if SS.config.cms.html_editor == "markdown" %>
 
-  <dl class="see mod-cms-body">
-    <dd class="wide"><%= f.text_area :markdown, class: "html", style: "height: 400px;" %></dd>
-  </dl>
+  <%= jquery do %>
+    SS_Addon_Markdown.render();
+    SS_Addon_Markdown.renderFormMarkdown()
+  <% end %>
+
+  <div class="ss-addon-markdown">
+    <div class="ss-addon-markdown-toolbar"></div>
+    <div class="ss-addon-markdown-content">
+      <%= f.text_area :markdown, class: "markdown", style: "height: 240px;" %>
+    </div>
+  </div>
 
 <% else %>
 

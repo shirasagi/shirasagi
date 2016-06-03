@@ -11,7 +11,7 @@ module Cms::Addon
 
     def html
       if SS.config.cms.html_editor == "markdown"
-        Kramdown::Document.new(markdown.to_s).to_html
+        Kramdown::Document.new(markdown.to_s, input: 'GFM').to_html
       else
         self[:html]
       end
