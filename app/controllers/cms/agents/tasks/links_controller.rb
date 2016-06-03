@@ -56,6 +56,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     # Checks the url.
     def check_url(url, ref)
+      Rails.logger.info("#{url}: check by referer: #{ref}")
       if url =~ /(\/|\.html?)$/
         check_html(url, ref)
       else
