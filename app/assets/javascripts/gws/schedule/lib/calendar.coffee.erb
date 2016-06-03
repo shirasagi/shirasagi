@@ -1,4 +1,7 @@
 class @Gws_Schedule_Calendar
+  @messages:
+    noPlan: '<%= I18n.t('gws/schedule.no_plan') %>'
+
   @render: (selector, opts = {}, init = {})->
     params = @defaultParams(opts)
     $.extend true, params, @editableParams(opts) if opts['restUrl']
@@ -20,13 +23,15 @@ class @Gws_Schedule_Calendar
         $('.calendar').fullCalendar('gotoDate', ct.dateFormat('Y-m-d'))
 
   @defaultParams: (opts) ->
+    buttonText:
+      listMonth: "<%= I18n.t('gws/schedule.calendar.buttonText.listMonth') %>"
     columnFormat: { month: "ddd", week: "M/D [(]ddd[)]", day: "M/D [(]ddd[)]" }
     contentHeight: 'auto'
     displayEventEnd:
       basicWeek: true
     endParam: 's[end]'
     fixedWeekCount: false
-    header: { left: 'today prev next title', right: 'month basicWeek agendaDay' },
+    header: { left: 'today prev next title', right: 'month basicWeek agendaDay listMonth' },
     lang: 'ja'
     nextDayThreshold: '00:00:00' # 複数日表示の閾値
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'

@@ -1,5 +1,5 @@
 /**
- * TimelineAlign View
+ * BasicHour View
  */
 var FC = $.fullCalendar;
 var View = FC.View;

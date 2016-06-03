@@ -40,6 +40,14 @@ class Gws::Schedule::Plan
     member_ids
   end
 
+  def date_label(datetime)
+    I18n.l(datetime.to_date, format: :gws_long)
+  end
+
+  def time_label(datetime)
+    sprintf('%d:%02d', datetime.hour, datetime.minute)
+  end
+
   # event options
   # http://fullcalendar.io/docs/event_data/Event_Object/
   def calendar_format(user, site)
@@ -51,6 +59,11 @@ class Gws::Schedule::Plan
 
     data[:title] = I18n.t("gws/schedule.private_plan")
     data[:title] = name if data[:readable]
+
+    #data[:termLabel] = Gws::Schedule::PlansController.helpers.term(self)
+    data[:startDateLabel] = date_label(start_at)
+    data[:startTimeLabel] = time_label(start_at)
+    data[:allDayLabel] = label(:allday)
 
     if allday? || start_at.to_date != end_at.to_date
       data[:className] = 'fc-event-range'

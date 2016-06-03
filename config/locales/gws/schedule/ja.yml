@@ -3,6 +3,7 @@ ja:
     reminder: リマインダー
     private_plan: 予定あり
     loading: 読み込み中
+    no_plan: 予定はありません
 
     tabs:
       personal: 個人
@@ -12,6 +13,8 @@ ja:
       search: 検索
 
     calendar:
+      buttonText:
+        listMonth: リスト
       titleFormat:
         month: YYYY年 M月
         week: (YYYY年 M月 D日（ddd）)

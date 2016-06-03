@@ -161,6 +161,36 @@
   }
 }
 
+// View: listMonth
+.fc-listMonth-view {
+  table {
+    display: none;
+  }
+}
+.fc-listMonth-view-table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  .tr {
+    display: table-row;
+    border-bottom: 1px solid #eee;
+  }
+  .td {
+    display: table-cell;
+    padding: 8px;
+    white-space: nowrap;
+  }
+  .date {
+    width: 130px;
+  }
+  .time {
+    width: 50px;
+  }
+  .fc-event {
+    display: inline;
+  }
+}
+
 // View: timelineDay
 .fc-timelineDay-view {
   .fc-scrollpane, .fc-scrollpane-inner {
@@ -232,19 +262,19 @@
     @include ellipsis;
     word-break: normal;
     word-wrap: normal;
-    font-size: 130%;
+    font-size: 120%;
   }
   .popup-date {
-    padding: 5px 0;
+    padding: 5px 0 8px;
     border-bottom: 1px solid #eee;
   }
   .popup-description {
     overflow: auto;
     max-height: 70px;
-    padding: 5px;
+    padding: 3px 5px;
     border-bottom: 1px solid #eee;
     background: #f8f8f8;
-    color: #666;
+    color: #222;
     font-size: 90%;
   }
   .popup-attributes {
@@ -254,13 +284,16 @@
   .popup-attr {
     @include clear;
     margin: 4px 0 0;
-    .popup-label {
-      display: inline-block;
-      float: left;
-      min-width: 65px;
-    }
-    .popup-value {
-      margin-left: 65px;
+  }
+  .popup-label {
+    display: inline-block;
+    float: left;
+    min-width: 60px;
+  }
+  .popup-value {
+    margin-left: 60px;
+    .tel {
+      margin-left: 5px;
     }
   }
   .popup-menu {
