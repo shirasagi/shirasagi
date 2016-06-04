@@ -1,0 +1,10 @@
+<dl class="see mod-gravatar-gravatar">
+  <dt><%= @model.t :gravatar_image_view_kind %></dt>
+  <dd><%= @item.label :gravatar_image_view_kind %></dd>
+
+  <dt><%= @model.t :gravatar_email %></dt>
+  <dd><%= @item.send :gravatar_email %></dd>
+
+  <dt><%= @model.t :gravatar_screen_name %></dt>
+  <dd><%= @item.send :gravatar_screen_name %></dd>
+</dl>
