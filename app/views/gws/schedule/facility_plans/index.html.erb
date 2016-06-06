@@ -2,19 +2,20 @@
 Gws_Schedule_Calendar.render('#calendar', {
   tapMenu: <%= @facility.reservable?(@cur_user) %>,
   restUrl: '<%= url_for action: :index %>',
-  eventSources: [{ url: '<%= url_for action: :events, format: :json %>' }],
+  eventSources: [{ url: '<%= url_for action: :events, format: :json %>?<%= search_query %>' }],
 }, <%== (params[:calendar] || {}).to_json %>);
 <% end %>
 
 <%= render "gws/schedule/main/tabs" %>
 
-<section class="main-box schedule-calendar">
+<section class="main-box gws-schedule-box">
   <header>
     <h2><%= @facility.name %></h2>
     <nav class="calendar-menu">
       <% if @facility.reservable?(@cur_user) %>
       <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
       <% end %>
+      <%= render file: '_search' %>
     </nav>
   </header>
   <div id="calendar" class="calendar"></div>

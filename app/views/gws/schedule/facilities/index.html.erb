@@ -32,16 +32,19 @@ end
 
 <%= render "gws/schedule/main/tabs" %>
 
-<section class="main-box">
-  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
-    <header><h2>
-      <% if @categories.present? %>
-        <%= select_tag "s[category]", categories_options_for_select, include_blank: t('gws/schedule.tabs.facility') %>
-      <% else %>
-      <%= t('gws/schedule.tabs.facility') %>
+<section class="main-box gws-schedule-box">
+  <header>
+    <h2>
+      <%= form_for :s, url: { action: :index }, html: { method: :get, class: :search } do |f| %>
+        <% if @categories.present? %>
+          <%= select_tag "s[category]", categories_options_for_select, include_blank: t('gws/schedule.tabs.facility') %>
+        <% else %>
+          <%= t('gws/schedule.tabs.facility') %>
+        <% end %>
       <% end %>
-    </h2></header>
-  <% end %>
+    </h2>
+    <nav><%= render file: '_search' %></nav>
+  </header>
 
   <div class="calendar" id="calendar-controller"></div>
 
@@ -66,7 +69,7 @@ end
         }
       },
       restUrl: '<%= gws_schedule_facility_plans_path(facility: item.id) %>',
-      eventSources: [{ url: '<%= events_gws_schedule_facility_plans_path(facility: item.id, format: :json) %>' }]
+      eventSources: [{ url: '<%= events_gws_schedule_facility_plans_path facility: item.id, format: :json %>?<%= search_query %>' }]
     }, <%== (params[:calendar] || {}).to_json %>);
     <% end %>
   <% end %>

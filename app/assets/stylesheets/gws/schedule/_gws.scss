@@ -1,9 +1,11 @@
+// calendar box
 .gws-schedule-tabs {
   @include clear;
+  margin-top: -1px;
   a {
     display: block;
     float: left;
-    margin: 1px 0 -1px 10px;
+    margin: 1px 0 -1px 6px;
     border: 1px solid $gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
@@ -26,6 +28,22 @@
     background-color: #fff;
   }
 }
+.gws-schedule-box {
+  header {
+    @include clear;
+    line-height: 1.4;
+    .add-plan {
+      @include arrow;
+    }
+    .search {
+      float: right;
+      margin: -5px 0 -5px 20px;
+    }
+    h2 .search {
+      margin: -5px 0;
+    }
+  }
+}
 
 // Form
 .gws-schedule-plan .dates-field {
@@ -36,8 +54,14 @@
 // FullCalendar
 //
 .fc-toolbar h2 {
-  text-decoration: underline;
+  margin: 2px 0 -2px;
+  border-bottom: 1px solid #333;
+  font-size: 120%;
   cursor: pointer;
+  &:hover {
+    color: $orange;
+    border-color: $orange;
+  }
 }
 .fc-view {
   z-index: 100;
@@ -45,12 +69,8 @@
 .fc-view table {
   box-sizing: border-box;
 }
-.fc-left h2 {
-  margin: 5px 0 -5px;
-  font-size: 120%;
-}
 .fc-right .fc-button, .fc-today-button {
-  min-width: 80px;
+  min-width: 50px;
 }
 .fc-month-view .fc-body .fc-row {
   min-height: 7em;
@@ -202,13 +222,16 @@
   .fc-scrollpane-inner {
     min-height: 27px;
   }
+  .fc-body .fc-scrollpane-inner {
+    padding-top: 4px;
+  }
   .fc-event {
     z-index: 0;
   }
 }
 .facility.calendar .fc-timelineDay-view {
   .fc-event {
-    top: 4px !important;
+    //top: 4px !important;
   }
 }
 
@@ -317,11 +340,6 @@
 }
 
 // multiple calendar
-.calendar-menu {
-  a {
-    @include arrow;
-  }
-}
 #calendar-controller {
   .fc-view-container .fc-timelineDay-view {
     height: 35px;

@@ -1,4 +1,8 @@
 module Gws::Schedule::PlanHelper
+  def search_query
+    params.select { |k, v| k == 's' }.to_query
+  end
+
   def term(item)
     if item.allday?
       dates = [item.start_at.to_date, item.end_at.to_date].uniq
@@ -23,7 +27,7 @@ module Gws::Schedule::PlanHelper
 
   def group_holidays(start_at, end_at)
     Gws::Schedule::Holiday.site(@cur_site).and_public.
-      search(start_at: start_at, end_at: end_at).
+      search(start: start_at, end: end_at).
       map(&:calendar_format)
   end
 

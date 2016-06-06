@@ -4,6 +4,8 @@ class @Gws_Popup
   @render: (target, content)->
     if !@init
       @init = true
+      $(window).resize ->
+        $('.gws-popup').remove()
       $(document).click (ev) ->
         if !$(ev.target).closest('.gws-popup, .gws-popup-event').length
           $('.gws-popup').remove()
@@ -15,7 +17,7 @@ class @Gws_Popup
     target.addClass('gws-popup-event')
 
     @renderPopup(target)
-    $(window).resize(@renderPopup)
+    #$(window).resize(@renderPopup)
 
   @renderPopup: (target)->
     popup = $('.gws-popup')
