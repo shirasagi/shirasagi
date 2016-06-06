@@ -4,8 +4,11 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%==
 
 <%= render "gws/schedule/main/tabs" %>
 
-<section class="main-box">
-  <header><h2><%= @group.name %></h2></header>
+<section class="main-box gws-schedule-box">
+  <header>
+    <h2><%= @group.name %></h2>
+    <nav><%= render file: '_search' %></nav>
+  </header>
 
   <div class="calendar" id="calendar-controller"></div>
 
@@ -32,7 +35,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%==
     Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
       tapMenu: <%= item.id == @cur_user.id %>,
       restUrl: '<%= url_for action: :index %>',
-      eventSources: [{ url: '<%= events_gws_schedule_user_plans_path(user: item.id, format: :json) %>' }]
+      eventSources: [{ url: '<%= events_gws_schedule_user_plans_path user: item.id, format: :json %>?<%= search_query %>' }]
     }, <%== (params[:calendar] || {}).to_json %>);
     <% end %>
   <% end %>

@@ -92,9 +92,10 @@ $border-white: 1px solid $white;
   background: $white;
 }
 @mixin box-head {
-  padding: 12px;
   line-height: 1;
   h2 {
+    display: inline-block;
+    margin: 12px;
     padding-left: 8px;
     border-left: 3px solid $orange;
     color: $black3;
@@ -104,12 +105,11 @@ $border-white: 1px solid $white;
   nav {
     position: relative;
     float: right;
-    margin-top: -14px;
+    margin: 12px;
     color: $gray3;
   }
   @include mb {
     margin-bottom: 10px;
-    padding: 15px 10px;
     h2 {
       font-size: $px14;
     }

@@ -1316,8 +1316,9 @@ select, input, textarea, button {
 }
 select {
   @include input;
-  max-width: 95%;
-  padding: 4px;
+  height: 2.4em;
+  max-width: 100%;
+  padding: 0 4px;
 }
 input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
 input[type=email], input[type=number], input[type=tel] {

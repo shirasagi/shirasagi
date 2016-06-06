@@ -58,6 +58,9 @@ module Gws::Schedule::Planable
       if params[:start].present? && params[:end].present?
         criteria = criteria.between_dates params[:start], params[:end]
       end
+      if params[:category_id].present?
+        criteria = criteria.where category_id: params[:category_id]
+      end
 
       criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
       criteria

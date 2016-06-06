@@ -20,7 +20,8 @@ ja:
         week: (YYYY年 M月 D日（ddd）)
         day: YYYY年 M月 D日（ddd）
     placeholders:
-      search: 検索語句を入力してください
+      search_plans: 予定を検索
+      search_users: ユーザーを検索
     links:
       add_plan: 予定を作成
       show_month: 月表示

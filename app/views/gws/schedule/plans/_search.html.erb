@@ -1,7 +1,11 @@
+<%
+
+category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options
+
+%>
 <% @s = OpenStruct.new params[:s] %>
-<div class="list-head-search">
-  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
-  <% end %>
-</div>
+<%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
+  <%= f.select :category_id, category_options, include_blank: " " if category_options.present? %>
+  <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.placeholders.search_plans") %>
+  <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+<% end %>
