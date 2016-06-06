@@ -34,3 +34,5 @@ module SS::ExecFilter
     redirect_to({ action: :index }, { notice: t("views.notice.deleted") })
   end
 end
+
+SS.deprecate_constant 'ExecFilter'
