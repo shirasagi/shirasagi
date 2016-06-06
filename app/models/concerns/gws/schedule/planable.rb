@@ -62,7 +62,7 @@ module Gws::Schedule::Planable
         criteria = criteria.where category_id: params[:category_id]
       end
 
-      criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+      criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
       criteria
     }
   end
