@@ -20,11 +20,6 @@ module SS::Model::Site
 
     permit_params :name, :host, :domains, :https, group_ids: []
 
-    has_many :pages, class_name: "Cms::Page", dependent: :destroy
-    has_many :nodes, class_name: "Cms::Node", dependent: :destroy
-    has_many :parts, class_name: "Cms::Part", dependent: :destroy
-    has_many :layouts, class_name: "Cms::Layout", dependent: :destroy
-
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
 
