@@ -47,7 +47,7 @@ describe "cms_page_search", dbscope: :example do
       end
 
       click_on "サイト管理"
-      expect(page).to have_css("nav.main-navi h2 a.icon-conv", text: name)
+      expect(page).to have_css("nav.main-navi h2 a.icon-search", text: name)
 
       visit index_path
       click_on name
@@ -66,7 +66,7 @@ describe "cms_page_search", dbscope: :example do
       end
 
       click_on "サイト管理"
-      expect(page).to have_css("nav.main-navi h2 a.icon-conv", text: name2)
+      expect(page).to have_css("nav.main-navi h2 a.icon-search", text: name2)
 
       visit index_path
       click_on name2

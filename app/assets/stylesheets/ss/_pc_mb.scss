@@ -399,6 +399,12 @@ td {
   .icon-workflow:hover:before {
     background-position: -32px -416px;
   }
+  .icon-search:before {
+    background-position: left -448px;
+  }
+  .icon-search:hover:before {
+    background-position: -32px -448px;
+  }
   @include mb {
     @include clear;
     h2 {
