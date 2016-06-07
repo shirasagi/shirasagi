@@ -124,12 +124,10 @@ class @Member_Photo_Form
         return false unless lat && lon
         return false unless confirm(Member_Photo_Form.setExifMessage)
 
-        console.log(lat, lon)
         latRef = if latRef == "N" then 1 else -1
         lonRef = if lonRef == "W" then -1 else 1
         lat = (lat[0] + (lat[1] / 60) + (lat[2] / 3600)) * latRef
         lon = (lon[0] + (lon[1] / 60) + (lon[2] / 3600)) * lonRef
-        console.log(lat, lon)
         $(".mod-map .clicked").val([lat, lon].join())
         Member_Photo_Form.createMarker($(".mod-map .marker-loc"))
         Map.map.setCenter(new google.maps.LatLng(lat, lon))
