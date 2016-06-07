@@ -7,8 +7,7 @@ module Member::LoginFilter
   REDIRECT_OPTION_DISABLED = 2
 
   included do
-    # before_action :logged_in?, if: -> { member_login_path }
-    before_action :logged_in?
+    before_action :logged_in?, if: -> { member_login_path }
   end
 
   private
@@ -17,9 +16,17 @@ module Member::LoginFilter
     end
 
     def logged_in?(opts = {})
-      return @cur_member if @cur_member
-      @cur_member = get_member_by_session(@cur_site)
-      return @cur_member if @cur_member
+      if @cur_member
+        set_last_logged_in
+        return @cur_member
+      end
+
+      @cur_member = get_member_by_session rescue nil
+
+      if @cur_member
+        set_last_logged_in
+        return @cur_member
+      end
 
       clear_member
       return nil if translate_redirect_option(opts) == REDIRECT_OPTION_DISABLED
@@ -29,9 +36,17 @@ module Member::LoginFilter
       nil
     end
 
-    def set_member(member)
-      session[:member] = SS::Crypt.encrypt("#{member._id},#{remote_addr},#{request.user_agent}")
+    def set_member(member, timestamp = Time.zone.now.to_i)
+      session[:member] = {
+        "member_id" => member.id,
+        "remote_addr" => remote_addr,
+        "user_agent" => request.user_agent,
+        "last_logged_in" => timestamp }
       @cur_member = member
+    end
+
+    def set_last_logged_in(timestamp = Time.zone.now.to_i)
+      session[:member]["last_logged_in"] = timestamp if session[:member]
     end
 
     def clear_member
@@ -47,7 +62,7 @@ module Member::LoginFilter
     end
 
     def member_login_path
-      raise "404" unless member_login_node
+      return false unless member_login_node
       "#{member_login_node.url}login.html"
     end
 
