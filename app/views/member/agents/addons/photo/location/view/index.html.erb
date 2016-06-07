@@ -1,0 +1,10 @@
+<section class="photo-locations">
+  <header><h2>地域</h2></header>
+  <div class="nodes">
+    <ul>
+      <% @cur_page.photo_locations.order_by(order: 1).each do |item| %>
+        <li><%= link_to item.name, item.url %></li>
+      <% end %>
+    </ul>
+  </div>
+</section>

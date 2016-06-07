@@ -1,0 +1,34 @@
+<% controller.javascript "//maps.googleapis.com/maps/api/js?v=3" %>
+<% controller.javascript "/assets/js/exif-js.js" %>
+<%= jquery do %>
+  Map.center = <%= SS.config.cms.map_center.to_json %>;
+  Map.zoom = 12;
+  Map.setForm(Member_Photo_Form);
+
+  Map.load("#map-canvas");
+  Map.renderMarkers();
+  Map.renderEvents();
+  Member_Photo_Form.setExifLatLng("#item_in_image");
+<% end %>
+
+<div class="mod-map">
+  <dl class="marker-setting">
+    <dt>
+      <%= @model.t :map_points %>
+      <%= hidden_field_tag :clicked, nil, class: "loc clicked" %>
+    </dt>
+    <dd class="marker">
+      <% if @item.map_points.blank? %>
+        <%= hidden_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
+        <%#= text_field_tag "item[map_points][][loc]", nil, class: "loc marker-loc" %>
+      <% else %>
+        <% @item.map_points.each do |point| %>
+          <%= hidden_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+          <%#= text_field_tag "item[map_points][][loc]", point[:loc].join(","), class: "loc marker-loc" %>
+        <% end %>
+      <% end %>
+      <div id="map-canvas" style="width: 100%; height: 320px"></div>
+      <%= button_tag t("map.button.clear_marker"), { type: :button, class: "clear-marker btn" } %>
+    </dd>
+  </dl>
+</div>

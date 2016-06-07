@@ -1,0 +1,10 @@
+<%= form_for :item, url: "#{@cur_node.url}registration.html", html: { method: "POST" } do |f| %>
+  <div class="cms-member-registration-verify columns">
+    <%= error_messages_for :item, header_message: false %>
+    <%= render partial: "verify", locals: { f: f, confirm: false }  %>
+    <footer class="send">
+      <%= f.submit I18n.t("member.button.register"), name: :submit %>
+    </footer>
+  </div>
+<% end %>
+

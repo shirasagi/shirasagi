@@ -1,0 +1,15 @@
+<dl class="column photo-body">
+  <dt><%= @model.t :image_id %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd><%= f.file_field :in_image %></dd>
+</dl>
+
+<% if @item.image %>
+<dl class="column">
+  <dd><%= image_tag @item.image.thumb_url %></dd>
+</dl>
+<% end %>
+
+<dl class="column">
+  <dt><%= @model.t :caption %></dt>
+  <dd><%= f.text_area :caption %></dd>
+</dl>

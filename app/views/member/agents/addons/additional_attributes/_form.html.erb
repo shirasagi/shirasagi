@@ -1,0 +1,32 @@
+<dl class="see mod-member-additional-attributes">
+  <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>
+  <dd><%= f.text_field :kana %></dd>
+  <dt><%= @model.t :organization_name %><%= @model.tt :organization_name %></dt>
+  <dd><%= f.text_field :organization_name %></dd>
+  <dt><%= @model.t :job %><%= @model.tt :job %></dt>
+  <dd><%= f.text_field :job %></dd>
+  <dt><%= @model.t :tel %><%= @model.tt :tel %></dt>
+  <dd><%= f.text_field :tel %></dd>
+  <dt><%= @model.t :postal_code %><%= @model.tt :postal_code %></dt>
+  <dd><%= f.text_field :postal_code %></dd>
+  <dt><%= @model.t :addr %><%= @model.tt :addr %></dt>
+  <dd><%= f.text_field :addr %></dd>
+  <dt><%= @model.t :sex %><%= @model.tt :sex %></dt>
+  <dd>
+    <% @item.sex_options.each do |text, val| %>
+      <%= label_tag("item_sex_#{val}", class: val) do %>
+        <%= f.radio_button :sex, val %><%= text %>
+      <% end %>
+    <% end %>
+  </dd>
+  <dt><%= @model.t :birthday %><%= @model.tt :birthday %></dt>
+  <dd><%= f.text_field :birthday, class: "datetime", value: tryb { @item.birthday.strftime('%Y/%m/%d') } %></dd>
+</dl>
+
+<%= jquery do %>
+  if ($.support.opacity) {
+    // above IE9
+    $(".mod-member-additional-attributes .datetime").
+    datetimepicker({ lang: "ja", timepicker: false, format: "Y/m/d" });
+  }
+<% end %>

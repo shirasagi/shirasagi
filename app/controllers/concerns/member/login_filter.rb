@@ -1,5 +1,6 @@
 module Member::LoginFilter
   extend ActiveSupport::Concern
+  include Member::AuthFilter
 
   REDIRECT_OPTION_UNDEFINED = 0
   REDIRECT_OPTION_ENABLED = 1
@@ -20,10 +21,7 @@ module Member::LoginFilter
         return @cur_member
       end
 
-      if session_alives?
-        member_id = session[:member]["member_id"]
-        @cur_member = Cms::Member.site(@cur_site).find(member_id) rescue nil
-      end
+      @cur_member = get_member_by_session rescue nil
 
       if @cur_member
         set_last_logged_in
@@ -49,10 +47,6 @@ module Member::LoginFilter
 
     def set_last_logged_in(timestamp = Time.zone.now.to_i)
       session[:member]["last_logged_in"] = timestamp if session[:member]
-    end
-
-    def session_alives?(timestamp = Time.zone.now.to_i)
-      session[:member] && timestamp <= session[:member]["last_logged_in"] + SS.config.cms.session_lifetime
     end
 
     def clear_member

@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :image_id %></dt>
+  <dd><%= image_tag @item.thumb_url %></dd>
+
+  <dt><%= @model.t :description %></dt>
+  <dd><%= @item.description %></dd>
+
+  <dt><%= @model.t :genres %></dt>
+  <dd><%=br @item.genres.join("\n") %></dd>
+
+  <dt><%= @model.t :blog_page_locations %></dt>
+  <dd><%=br @item.blog_page_locations.map(&:name).join("\n") %></dd>
+</dl>

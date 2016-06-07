@@ -1,0 +1,30 @@
+<%= render partial: "menu" %>
+
+<table class="index mypage-index member-blog-page">
+  <thead>
+    <tr>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="datetime updated"><%= @model.t :updated %></th>
+      <th class="datetime released"><%= @model.t :released %></th>
+      <th class="state"><%= @model.t :state %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td class="item name"><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
+        <td class="item datetime updated"><%=tryb { item.updated.strftime('%Y/%m/%d %H:%M') } %></td>
+        <td class="item datetime released"><%=tryb { item.released.strftime('%Y/%m/%d %H:%M') } %></td>
+        <td class="item state">
+          <% if item.parent.public? && item.public? %>
+            <%= link_to item.label(:state), item.url %>
+          <% else %>
+            <%= item.label :state %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

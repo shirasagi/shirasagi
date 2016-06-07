@@ -1,5 +1,8 @@
 ja:
   member:
+    my_blog: ブログ
+    blog_layout: ブログレイアウト
+    photo: フォト
     login_by:
       twitter: Twitter ID でログイン
       facebook: Facebook ID でログイン
@@ -20,11 +23,42 @@ ja:
         <<: *disabled_enabled
       github_oauth:
         <<: *disabled_enabled
+      sex:
+        male: 男性
+        female: 女性
+      license_name:
+        free: 誰でも利用可
+        not_free: 許可が必要
+      confirm_personal_data_state:
+        enabled: 有効
+        disabled: 無効
     view:
       email: メールアドレス
       password: パスワード
       browser: ブラウザ
       platform: プラットフォーム
+      new_password: 新しいパスワード
+      new_password_again: 新しいパスワード（入力確認）
+      mail_subscription: メルマガ購読
+      retired_member: 退会済み
+    button:
+      register: 登録
+      back: 戻る
+      confirm: 確認画面へ
+      leave: 退会する
+      send: 送信する
+      change_password: パスワードを変更
+      resend_confirmation_mail: 確認メールを再送
+      accept: 参加する
+      reject: 辞退する
+      address_search: 住所検索
+    links:
+      blog_setting: ブログ設定
+      invite: 招待する
+      map: 地図表示
+    notice:
+      accepted: 参加しました。
+      rejected: 辞退しました。
 
   modules:
     member: メンバー
@@ -36,9 +70,50 @@ ja:
       member/yahoo_jp_oauth: Yahoo! OAuth 認証
       member/google_oauth: Google OAuth 認証
       member/github_oauth: GitHub OAuth 認証
+      member/file: ファイル
+      member/blog/body: 本文
+      member/blog/genre: ジャンル
+      member/blog/location: 地域
+      member/blog/blog_setting: ブログ設定
+      member/blog/page_setting: ブログ設定
+      member/photo/body: フォト
+      member/photo/category: カテゴリ
+      member/photo/location: 地域
+      member/photo/map: 地図
+      member/photo/spot: フォト
+      member/photo/photo: フォトライブラリ
+      member/photo/slide: フォトスライド
+      member/photo/license: ライセンス
+      member/photo/license_setting: ライセンス
+      member/registration/sender_address: 送信者設定
+      member/registration/confirmation: 登録確認
+      member/registration/reply: 登録確認メール
+      member/registration/reset_password_mail: パスワード再設定メール
+      member/member_invitation_setting: 会員招待メール
+      member/additional_attributes: 追加情報
 
   cms:
     nodes:
+      member/login: ログイン
+      member/registration: 会員登録
+      member/mypage: マイページ
+      member/my_profile: プロフィール
+      member/my_blog: マイブログ
+      member/blog: ブログ
+      member/blog_page_location: ブログの地域
+      member/my_photo: マイフォト
+      member/my_anpi_post: 安否
+      member/photo: フォト
+      member/photo_category: フォトカテゴリー
+      member/photo_location: フォトロケーション
+      member/photo_search: フォトサーチ
+      member/photo_spot: フォトスポット
+
+    parts:
+      member/blog_page: ブログページ一覧
+      member/photo: フォト一覧
+      member/photo_search: フォトサーチ
+      member/photo_slide: フォトスライド
       member/login: ログイン
 
   mongoid:
@@ -73,6 +148,132 @@ ja:
         activity_type: 種別
         remote_addr: リモートアドレス
         user_agent: ユーザーエージェント
+      member/addon/blog/blog_setting:
+        page_limit: ページ表示件数
+      member/addon/blog/page_setting:
+        description: 紹介文
+        genres: ジャンル設定
+        image_id: サムネイル
+        blog_page_location_ids: 地域設定
+        blog_page_locations: 地域設定
+      member/node/blog_page:
+        title: ブログタイトル
+        basename: ブログURL
+        filename: ブログURL
+        foldername: フォルダー名
+        layout: レイアウト
+      member/blog_page:
+        name: タイトル
+        body: 本文
+        genres: ジャンル
+        blog_page_locations: 地域
+      member/photo:
+        listable_state: 一覧及び検索結果への表示
+        slideable_state: スライドへの表示
+        slide_order: スライド並び順
+        image: 画像
+        image_id: 画像
+        caption: キャプション
+        photo_categories: カテゴリ
+        photo_locations: 地域
+        map_points: 地図
+        contributor: 投稿者
+        keyword: キーワード
+      member/addon/photo/license:
+        license_name: ライセンス
+      member/addon/photo/license_setting:
+        license_free: 誰でも利用可
+        license_not_free: 許可が必要
+      member/addon/registration/sender_address:
+        sender_name: 送信者名
+        sender_email: 送信メールアドレス
+      member/addon/registration/confirmation:
+        confirm_personal_data_state: 個人情報保護状態
+        confirm_personal_data_html: 個人情報保護HTML
+        header_html: ヘッダーHTML
+        footer_html: フッターHTML
+      member/addon/registration/reply:
+        subject: 件名
+        reply_upper_text: 上部確認テキスト
+        reply_lower_text: 下部確認テキスト
+        reply_signature: 署名
+      member/addon/registration/reset_password_mail:
+        reset_password_subject: 件名
+        reset_password_upper_text: 上部確認テキスト
+        reset_password_lower_text: 下部確認テキスト
+        reset_password_signature: 署名
+      member/addon/additional_attributes:
+        kana: 氏名（ふりがな）
+        organization_name: 会社、団体名
+        job: 職種
+        tel: 電話番号
+        postal_code: 郵便番号
+        addr: 住所
+        sex: 性別
+        birthday: 生年月日
+        in_birth: 生年月日
+
+  cms_role:
+    read_other_member_blogs: メンバーブログの閲覧（全て）
+    read_private_member_blogs: メンバーブログの閲覧（所有）
+    edit_other_member_blogs: メンバーブログの編集（全て）
+    edit_private_member_blogs: メンバーブログの編集（所有）
+    delete_other_member_blogs: メンバーブログの削除（全て）
+    delete_private_member_blogs: メンバーブログの削除（所有）
+    release_other_member_blogs: メンバーブログの公開（全て）
+    release_private_member_blogs: メンバーブログの公開（所有）
+    approve_other_member_blogs: メンバーブログの承認（全て）
+    approve_private_member_blogs: メンバーブログの承認（所有）
+    read_other_member_photos: メンバーフォトの閲覧（全て）
+    read_private_member_photos: メンバーフォトの閲覧（所有）
+    edit_other_member_photos: メンバーフォトの編集（全て）
+    edit_private_member_photos: メンバーフォトの編集（所有）
+    delete_other_member_photos: メンバーフォトの削除（全て）
+    delete_private_member_photos: メンバーフォトの削除（所有）
+    release_other_member_photos: メンバーフォトの公開（全て）
+    release_private_member_photos: メンバーフォトの公開（所有）
+    approve_other_member_photos: メンバーフォトの承認（全て）
+    approve_private_member_photos: メンバーフォトの承認（所有）
+
+  views:
+    registration:
+      confirm_email_address: |-
+        %{sender_email} からメールが届きます。
+        迷惑メールの防止のためメールの受信設定を行っている方は、「 %{sender_domain} 」からのメールが受信できるように、ドメイン指定受信の設定を行ってください。
+      verify_email_address_html: |-
+        %{sender_email} から登録案内メールを %{email} に送りました。
+        メールに記載の案内を読み、登録を完了してください。
+        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>から登録案内メールを再送信してください。
+    reset_password:
+      link_text_html: |-
+        パスワードをお忘れの場合は、<a href="%{reset_password_url}" target="_blank">こちら</a>のリンクからパスワードを再設定してください。
+      description: |-
+        ご登録されている以下のメールアドレスにパスワードの再設定用のURLをお送りします。
+      sent_email: |-
+        %{sender_email} からパスワード再設定の案内を送りました。
+        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>からパスワード再設定案内メールを再送信してください。
+    confirm_password:
+      title: パスワードの変更
+      password_changed: |-
+        パスワードを変更しました。
+        メールアドレスとパスワードで、<a href="%{login_url}">ログイン</a>してください。
+  notice:
+    resend_confirmation_mail: 確認メールを再送しました。
+
+  errors:
+    messages:
+      not_input: を入力してください。
+      input_again: をもう一度入力してください。
+      mismatch: が一致しません。
+      not_registerd: は登録されていません。
+      already_registerd: は、確認済みです。
+      password_short: は6文字以上にしてください。
+      password_alphabet_only: に英字のみの文字は使用できません。
+      password_numeric_only: に数字のみの文字は使用できません。
+      password_include_email: にメールアドレスが含まれています。
+      password_include_name: に氏名が含まれています。
+      password_include_kana: によみがなが含まれています。
+      please_confirm_personal_data_protection: 個人情報の保護に同意してください。
 
   tooltip:
     member/addon/redirection:
@@ -135,3 +336,75 @@ ja:
       github_client_secret:
         - GitHub でアプリケーションを作成した際に付与される「Client Secret」を設定します。
         - GitHub でアプリケーションを作成するには、https://github.com/settings/developers にブラウザでアクセスします。
+    member/addon/registration/sender_address:
+      sender_name:
+        - 送信者名を設定します。
+      sender_email:
+        - 送信メールアドレスを設定します。
+    member/photo:
+      listable_state:
+        - 一覧及びフォトサーチの検索結果に表示するかを設定します。
+      slideable_state:
+        - フォトスライドパーツに表示するかを設定します。
+      slide_order:
+        - スライドに表示する際の並び順を設定します。
+      image_id:
+        - 画像を設定します。
+      caption:
+        - 画像のキャプションを設定します。
+      photo_categories:
+        - 画像のカテゴリを設定します。
+      photo_locations:
+        - 画像の地域を設定します。
+      license_name:
+        - ライセンスを設定します。
+        - フォルダーに設定したテキストが表示されます。
+    member/addon/blog/blog_setting:
+      page_limit:
+        - ページ表示件数を設定します。
+    member/addon/blog/page_setting:
+      description:
+        - ブログの紹介文を設定します。
+      genres:
+        - ブログのジャンルを改行区切りで設定します。
+        - 設定したジャンルはページ作成時に選択できます。
+      blog_page_locations:
+        - ブログの地域を設定します。
+      image_id:
+        - ブログのサムネイルを設定します。
+    member/addon/blog/genre:
+      genres:
+        - ジャンルを設定します。
+    member/addon/blog/location:
+      blog_page_locations:
+        - 地域を設定します。
+
+  remarks:
+    cms/model/member:
+      name:
+        - お名前を入力してください。
+      kana:
+        - お名前のふりがなをひらがなで入力してください。
+      email:
+        - 半角英数字記号で入力してください。
+        - ログインに利用したり、大切な情報を配信したりする際に利用させていただきます。
+      email_again:
+        - メールアドレスの確認として、上記と同じメールアドレスを入力してください。
+      email_type:
+        - 受信可能なメールの形式を選択してください。
+      organization_name:
+        - 勤務先の会社名や所属する団体名を入力してください。
+      job:
+        - 職種を入力してください。
+      tel:
+        - 電話番号を入力してください。
+      addr:
+        - 住所を入力してください。
+      postal_code:
+        - 郵便番号を入力してください。
+      birthday:
+        - 生年月日を入力してください。
+      in_password:
+        - パスワードを入力してください。
+      in_password_again:
+        - パスワードの確認として、上記と同じパスワードを入力してください。

@@ -6,6 +6,12 @@
 <title><%= @window_name %></title>
 <%= stylesheet_link_tag "cms/public" %>
 <%= javascript_include_tag "cms/public" %>
+<% controller.stylesheets.each do |path| %>
+  <%= stylesheet_link_tag path, media: "all" %>
+<% end %>
+<% controller.javascripts.each do |path| %>
+  <%= javascript_include_tag path %>
+<% end %>
 <%== @cur_layout.head %>
 <%= csrf_meta_tags if @csrf_token != false %>
 </head>

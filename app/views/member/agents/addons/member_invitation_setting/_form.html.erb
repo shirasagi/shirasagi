@@ -1,0 +1,10 @@
+<dl class="see mod-member-group-invitation-setting">
+  <dt><%= @model.t :member_invitation_subject %><%= @model.tt :member_invitation_subject %></dt>
+  <dd><%= f.text_field :member_invitation_subject %></dd>
+  <dt><%= @model.t :member_invitation_template %><%= @model.tt :member_invitation_template %></dt>
+  <dd><%= f.text_area :member_invitation_template %></dd>
+  <dt><%= @model.t :member_invitation_signature %><%= @model.tt :member_invitation_signature %></dt>
+  <dd><%= f.text_area :member_invitation_signature %></dd>
+  <dt><%= @model.t :member_joins_to_invited_group %><%= @model.tt :member_joins_to_invited_group %></dt>
+  <dd><%= f.select :member_joins_to_invited_group, @item.member_joins_to_invited_group_options, include_blank: true %></dd>
+</dl>

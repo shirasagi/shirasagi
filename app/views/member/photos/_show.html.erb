@@ -1,0 +1,32 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :basename %></dt>
+  <dd><%= @item.send :basename %></dd>
+  <dd>
+    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
+    (
+    <%= link_to :"cms.preview_pc_page", cms_preview_path(path: @item.filename), target: "_blank" %>
+    |
+    <%= link_to :"cms.preview_mobile_page", cms_mobile_preview_path(path: @item.filename), target: :_blank %>
+    )
+  </dd>
+
+  <% if @item.send(:layout_id).present? %>
+  <dt><%= @model.t :layout_id %></dt>
+  <dd><%= tryb{@item.layout.name} %></dd>
+  <% end %>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :listable_state %></dt>
+  <dd><%= @item.label :listable_state %></dd>
+
+  <dt><%= @model.t :slideable_state %></dt>
+  <dd><%= @item.label :slideable_state %></dd>
+
+  <dt><%= @model.t :slide_order %></dt>
+  <dd><%= @item.slide_order %></dd>
+</dl>

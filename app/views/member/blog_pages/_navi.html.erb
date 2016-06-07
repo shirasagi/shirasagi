@@ -1,0 +1,15 @@
+<%= node_navi :member do %>
+
+<%
+  #TODO: fix @cur_node.parent
+  parent = Cms::Node.site(@cur_site).
+    where(filename: File.dirname(@cur_node.filename), depth: @cur_node.depth - 1).first
+%>
+
+<h3><%= link_to :"member.my_blog", member_blogs_path(cid: parent.id) %></h3>
+
+<ul class="narrow-page">
+  <li><%= link_to @cur_node.name, member_blog_pages_path(cid: @cur_node.id) %></li>
+</ul>
+
+<% end %>

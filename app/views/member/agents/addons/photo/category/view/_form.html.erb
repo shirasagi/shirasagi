@@ -1,0 +1,14 @@
+<dl class="column photo-categories">
+  <dt><%= @model.t :photo_categories %></dt>
+  <dd>
+    <%= f.hidden_field "photo_category_ids[]", value: "" %>
+    <% if @categories.present? %>
+      <% @categories.each do |cate| %>
+        <label>
+          <%= f.check_box("photo_category_ids[]", {}, cate.id) %>
+          <%= cate.name %>
+        </label>
+      <% end %>
+    <% end %>
+  </dd>
+</dl>

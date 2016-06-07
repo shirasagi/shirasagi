@@ -1,0 +1,6 @@
+<% return "" unless @item.blog_page_locations.present? %>
+
+<dl class="column blog_page-locations">
+  <dt><%= @model.t :blog_page_locations %></dt>
+  <dd><%=br @item.blog_page_locations.map(&:name).join("\n") %></dd>
+</dl>

@@ -1,0 +1,8 @@
+<% message.subject = @node.subject %>
+<%= @node.reply_upper_text %>
+
+<%= "#{@node.full_url}verify?#{ { token: @member.verification_token }.to_query }" %>
+
+<%= @node.reply_lower_text %>
+
+<%= @node.reply_signature %>

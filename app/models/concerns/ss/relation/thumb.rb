@@ -38,6 +38,10 @@ module SS::Relation::Thumb
     thumb ? thumb.url : super
   end
 
+  def thumb?
+    model == "ss/thumb_file"
+  end
+
   def destroy_thumbs
     return if thumbs.blank?
 

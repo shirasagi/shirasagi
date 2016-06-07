@@ -1,0 +1,54 @@
+class PostalCodeSearch
+  defaults:
+    postal_code: "input[name='item[postal_code]']"
+    addr: "input[name='item[addr]']"
+    error: '.postal-code-search-error'
+    error_message: '郵便番号が見つかりません'
+
+  constructor: (el, options = {}) ->
+    @el = $(el)
+    @options = $.extend({}, @defaults, options)
+    @el.on 'click', (e) =>
+      @search()
+
+  search: ->
+    @clear_error()
+    postal_code = $(@options.postal_code).val()
+    @el.css('cursor', 'wait')
+    $.ajax
+      type: "POST"
+      url: @options.path
+      data:
+        code: postal_code
+      success: (data) =>
+        @set_address(data)
+      error: () =>
+        @set_error()
+      complete: =>
+        @el.css('cursor', '')
+
+  set_address: (data) ->
+    return unless data.prefecture
+    addr = data.prefecture
+    if (data.city)
+      addr += data.city
+    if (data.town)
+      addr += data.town
+    $(@options.addr).val(addr)
+
+  set_error: ->
+    $(@options.error).html(@options.error_message)
+
+  clear_error: ->
+    $(@options.error).html("")
+
+$.fn.extend
+  postalCodeSearch: (options, args...) ->
+    @each ->
+      $this = $(this)
+      data = $this.data('postalCodeSearch')
+
+      if !data
+        $this.data 'postalCodeSearch', (data = new PostalCodeSearch(this, options))
+      if typeof options == 'string'
+        data[options].apply(data, args)

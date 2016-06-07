@@ -1,0 +1,92 @@
+<%= stylesheet_link_tag 'member/public', media: 'all' %>
+<%= javascript_include_tag 'member/public' %>
+
+<%= f.hidden_field_tag("token", params[:token]) %>
+<%= f.hidden_field_tag("group", params[:group]) if params[:group].present? %>
+
+<dl class="colum name">
+  <dt><%= @item.class.t :name %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd><%= f.text_field :name %><%= remarks :name %></dd>
+</dl>
+
+<dl class="colum email">
+  <dt><%= @item.class.t :email %></dt>
+  <dd><%= @item.email %></dd>
+</dl>
+
+<dl class="colum password">
+  <dt><%= @item.t :in_password %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd><%= f.password_field :in_password %><%= remarks :in_password %></dd>
+
+  <dt><%= @item.class.t :in_password_again %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd><%= f.password_field :in_password_again %><%= remarks :in_password_again %></dd>
+</dl>
+
+<dl class="colum kana">
+  <dt><%= @item.class.t :kana %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd><%= f.text_field :kana %><%= remarks :kana %></dd>
+</dl>
+
+<dl class="colum organization-name">
+  <dt><%= @item.class.t :organization_name %></dt>
+  <dd><%= f.text_field :organization_name %><%= remarks :organization_name %></dd>
+</dl>
+
+<dl class="colum job">
+  <dt><%= @item.class.t :job %></dt>
+  <dd><%= f.text_field :job %><%= remarks :job %></dd>
+</dl>
+
+<dl class="colum tel">
+  <dt><%= @item.class.t :tel %></dt>
+  <dd><%= f.text_field :tel %><%= remarks :tel %></dd>
+</dl>
+
+<dl class="colum postal-code">
+  <dt><%= @item.class.t :postal_code %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd>
+    <%= f.text_field :postal_code %>
+    <%= f.button t('member.button.address_search'), name: 'postal-code-search', type: :button %>
+    <span class="postal-code-search-error"></span>
+    <%= remarks :postal_code %>
+  </dd>
+</dl>
+
+<dl class="colum addr">
+  <dt><%= @item.class.t :addr %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd><%= f.text_field :addr %><%= remarks :addr %></dd>
+</dl>
+
+<dl class="colum sex">
+  <dt><%= @item.class.t :sex %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd>
+    <% @item.sex_options.each do |text, val| %>
+      <%= label_tag("item_sex_#{val}", class: val) do %>
+        <%= f.radio_button :sex, val %><%= text %>
+      <% end %>
+    <% end %>
+    <%= remarks :sex %>
+  </dd>
+</dl>
+
+<dl class="colum birthday">
+  <dt><%= @item.class.t :birthday %><span class="required"><%= t('views.required_field') %></span></dt>
+  <dd>
+    <%= f.fields_for :in_birth do |birth_f| %>
+      <%= birth_f.select :era, options_for_select(%w(西暦 明治 大正 昭和 平成), tryb { @item.in_birth[:era] } || @item.birthday ? '西暦' : nil), include_blank: true %>
+      <%= birth_f.number_field :year, value: tryb { @item.in_birth[:year] } || @item.birthday.try(:year) %>
+      年
+      <%= birth_f.select :month, options_for_select((1..12).to_a, tryb { @item.in_birth[:month] } || @item.birthday.try(:month)), include_blank: true %>
+      月
+      <%= birth_f.select :day, options_for_select((1..31).to_a, tryb { @item.in_birth[:day] } || @item.birthday.try(:day)), include_blank: true %>
+      日
+    <% end %>
+    <%= remarks :birthday %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  $("button[name='postal-code-search']").postalCodeSearch({
+    path: "<%= "#{@cur_node.url}postal_code" %>"
+  });
+<% end %>

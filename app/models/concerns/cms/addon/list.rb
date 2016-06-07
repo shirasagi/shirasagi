@@ -34,6 +34,7 @@ module Cms::Addon::List
       template_variable_handler('time.iso') { |name, item| template_variable_handler_time(name, item, :iso) }
       template_variable_handler('time.long') { |name, item| template_variable_handler_time(name, item, :long) }
       template_variable_handler('time.short') { |name, item| template_variable_handler_time(name, item, :short) }
+      template_variable_handler('img.src') { |name, item| template_variable_handler_img_src(name, item) }
       template_variable_handler(:group, :template_variable_handler_group)
       template_variable_handler(:groups, :template_variable_handler_groups)
     end
@@ -145,6 +146,25 @@ module Cms::Addon::List
         else
           I18n.l item.date, format: format.to_sym
         end
+      end
+
+      def template_variable_handler_img_src(name, item)
+        dummy_source = ERB::Util.html_escape("/assets/img/dummy.png")
+
+        return dummy_source unless item.respond_to?(:html)
+        return dummy_source unless item.html =~ /\<\s*?img\s+[^>]*\/?>/i
+
+        img_tag = $&
+        return dummy_source unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
+
+        img_source = $1
+        img_source = img_source[1..-1] if img_source.start_with?("'") || img_source.start_with?('"')
+        img_source = img_source[0..-2] if img_source.end_with?("'") || img_source.end_with?('"')
+        img_source = img_source.strip
+        if img_source.start_with?('.')
+          #img_source = File.dirname(item.url) + '/' + img_source
+        end
+        img_source
       end
 
       def template_variable_handler_group(name, item)

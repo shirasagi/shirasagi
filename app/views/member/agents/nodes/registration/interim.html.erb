@@ -1,0 +1,4 @@
+<div class="cms-member-registration-notice">
+  <h2>メールアドレスの確認</h2>
+  <%= simple_format I18n.t("views.registration.verify_email_address_html", sender_email: @cur_node.sender_email, email: @item.email, resend_url: "#{@cur_node.url}send_again") %>
+</div>

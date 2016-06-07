@@ -1,0 +1,10 @@
+<section class="blog_page-locations">
+  <header><h2><%= @cur_page.t :blog_page_locations %></h2></header>
+  <div class="nodes">
+    <ul>
+      <% @cur_page.blog_page_locations.order_by(order: 1).each do |item| %>
+        <li><%= link_to item.name, item.url %></li>
+      <% end %>
+    </ul>
+  </div>
+</section>

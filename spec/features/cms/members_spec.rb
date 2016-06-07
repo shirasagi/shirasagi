@@ -33,7 +33,7 @@ describe "cms_members" do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[email]", with: "member_sample@example.jp"
-        fill_in "item[in_password]", with: "pass"
+        fill_in "item[in_password]", with: "abc123"
         click_button "保存"
       end
       expect(status_code).to eq 200

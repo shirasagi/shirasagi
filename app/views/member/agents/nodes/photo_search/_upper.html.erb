@@ -1,0 +1,42 @@
+<% controller.javascript "/assets/js/jquery.colorbox.js" %>
+<% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
+
+<%= coffee do %>
+$(window).on "load", ->
+  $(".ajax-box").on "click", ->
+    $.colorbox({ html: "<%=j render(partial: "modal", locals: { search_path: "" }) %>"})
+    return false
+<% end %>
+
+<dl class="condition">
+  <dt class="keyword"><%= "キーワード" %></dt>
+  <dd><%= @query[:keyword] %></dd>
+  <dt class="contributor"><%= "投稿者" %></dt>
+  <dd><%= @query[:contributor] %></dd>
+  <dt class="location"><%= "地域" %></dt>
+  <dd><%= @query[:locations].pluck(:name).join("、") %></dd>
+  <dt class="category"><%= "カテゴリー" %></dt>
+  <dd><%= @query[:categories].pluck(:name).join("、") %></dd>
+</dl>
+
+<%= link_to "検索条件を変更する", "#", class: "ajax-box" %>
+
+<section class="result">
+  <h2>
+    <%= t("views.search_result") %>
+    <span class="total"><%= @items.count %></span>
+    <%= t("views.units.count") %>
+  </h2>
+</section>
+
+<nav class="tabs">
+  <ul>
+    <% q = @query.slice(:keyword, :contributor, :location_ids, :category_ids).to_query %>
+    <li class="tab list<%= action_name == "index" ? " current" : "" %>">
+      <%= link_to "一覧表示", "#{@cur_node.url}?#{q}" %>
+    </li>
+    <li class="tab map<%= action_name == "map" ? " current" : "" %>">
+      <%= link_to "地図表示", "#{@cur_node.url}map.html?#{q}" %>
+    </li>
+  </ul>
+</nav>

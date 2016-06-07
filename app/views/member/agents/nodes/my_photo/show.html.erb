@@ -1,0 +1,19 @@
+<%= render partial: "menu" %>
+
+<div class="mypage-show member-photo-page">
+  <div class="columns">
+    <dl class="column name">
+      <dt><%= @model.t :name %></dt>
+      <dd><%= @item.name %></dd>
+    </dl>
+    <% @model.addons.each do |addon| %>
+      <% file = "#{Rails.root}/app/views/#{addon.path}/view/_show.html.erb" %>
+      <%= render file: file if File.exists?(file) %>
+    <% end %>
+
+    <dl class="column state">
+      <dt><%= @model.t :state %></dt>
+      <dd><%= @item.label :state %></dd>
+    </dl>
+  </div>
+</div>

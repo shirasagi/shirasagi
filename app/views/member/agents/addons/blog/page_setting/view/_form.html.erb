@@ -1,0 +1,37 @@
+<dl class="column">
+  <dt><%= @model.t :image_id %></dt>
+  <dd><%= f.file_field :in_image %></dd>
+  <% if @item.image %>
+    <dd>
+      <%= image_tag @item.image.thumb_url %>
+      <label>
+        <%= f.check_box :rm_image %><%= t "views.button.delete" %> (<%= @item.image.filename %>)
+      </label>
+    </dd>
+  <% end %>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :description %></dt>
+  <dd><%= f.text_area :description %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :genres %></dt>
+  <dd><%= f.text_area :genres %></dd>
+</dl>
+
+<% if @locations.present? %>
+<dl class="column">
+  <dt><%= @model.t :blog_page_locations %></dt>
+  <dd>
+    <%= f.hidden_field "blog_page_location_ids[]", value: "" %>
+    <% @locations.each do |loc| %>
+      <label>
+        <%= f.check_box("blog_page_location_ids[]", {}, loc.id) %>
+        <%= loc.name %>
+      </label>
+    <% end %>
+  </dd>
+</dl>
+<% end %>

@@ -1,0 +1,60 @@
+<%= coffee do %>
+$ ->
+  @insertContent = (cont) ->
+    if (typeof tinymce) != "undefined"
+      tinymce.get("item_html").execCommand("mceInsertContent", false, cont)
+    else if (typeof CKEDITOR != "undefined")
+      CKEDITOR.instances.item_html.insertHtml(cont)
+
+  @deleteContent = (id) ->
+    $(".file-view").each ->
+      #$(this).remove() if id == $(this).find("input[type=checkbox]").attr("value")
+      $(this).remove() if id == $(this).find(".file-id").attr("value")
+
+<% end %>
+
+<dl class="see">
+  <dd class="wide">
+    <%= f.hidden_field "file_ids[]", value: "" %>
+    <%= link_to :upload, sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+    <%= link_to :"sns.user_file", sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
+    <%= link_to :"cms.file", cms_apis_files_path, class: "ajax-box btn" %>
+
+    <div id="selected-files">
+      <% @item.files.each do |file| %>
+        <div class="file-view">
+
+          <%= link_to file.url, class: :thumb, target: "_blank" do %>
+            <% if file.image? %>
+              <%= image_tag file.thumb_url, alt: file.name %>
+            <% else %>
+              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <% end %>
+          <% end %>
+
+          <div class="name">
+            <label>
+              <%#= f.check_box "file_ids[]", {}, file.id %>
+              <%#= f.hidden_field "file_ids[]", {}, file.id, class: "file-id" %>
+              <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
+              <%= file.name %>
+            </label><br />
+          </div>
+
+          <div class="action paste">
+            <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
+            <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <% if file.image? %>
+              <% content = image_tag file.url, alt: "#{file.name}" %>
+              <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <% end %>
+          </div>
+          <div class="action delete">
+            <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+  </dd>
+</dl>

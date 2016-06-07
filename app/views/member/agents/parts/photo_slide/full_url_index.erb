@@ -1,0 +1,36 @@
+<%
+
+return if @items.blank?
+wrap_id = "member-photo-slide-#{@items[0].id}"
+target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") : nil
+
+%>
+<%= jquery do %>
+  KeyVisual_Image.slide("#<%= wrap_id %>");
+<% end %>
+
+<div class="member-photo-slide" id="<%= wrap_id %>">
+  <%== @cur_part.upper_html if @cur_part.upper_html.present? %>
+
+  <ul class="images">
+    <% @items.each do |item| %>
+    <% file = item.image %>
+    <% next unless file %>
+      <li>
+        <a href="<%= item.full_url %>" <%== target %>><%= image_tag file.url, alt: item.name %></a>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="bx-thumbs">
+    <% @items.each_with_index do |item, idx| %>
+    <% file = item.image %>
+    <% next unless file %>
+      <a data-slide-index="<%= idx %>" href="">
+        <%= image_tag file.thumb_url, alt: item.name %>
+      </a>
+    <% end %>
+  </div>
+
+  <%== @cur_part.lower_html if @cur_part.lower_html.present? %>
+</div>

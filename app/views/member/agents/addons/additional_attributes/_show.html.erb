@@ -1,0 +1,18 @@
+<dl class="see mod-member-additional-attributes">
+  <dt><%= @model.t :kana %></dt>
+  <dd><%= @item.kana %></dd>
+  <dt><%= @model.t :organization_name %></dt>
+  <dd><%= @item.organization_name %></dd>
+  <dt><%= @model.t :job %></dt>
+  <dd><%= @item.job %></dd>
+  <dt><%= @model.t :tel %></dt>
+  <dd><%= @item.tel %></dd>
+  <dt><%= @model.t :postal_code %></dt>
+  <dd><%= @item.postal_code %></dd>
+  <dt><%= @model.t :addr %></dt>
+  <dd><%= @item.addr %></dd>
+  <dt><%= @model.t :sex %></dt>
+  <dd><%= @item.label :sex %></dd>
+  <dt><%= @model.t :birthday %></dt>
+  <dd><%= tryb { @item.birthday.strftime('%Y/%m/%d') } %></dd>
+</dl>

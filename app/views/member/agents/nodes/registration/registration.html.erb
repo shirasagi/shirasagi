@@ -1,0 +1,8 @@
+<%
+@member_login_node = Member::Node::Login.site(@cur_site).and_public.first
+@redirect_url = @member_login_node.try(:redirect_url) || "/"
+%>
+<div class="cms-member-registration-complete">
+  <p>会員登録が完了しました</p>
+  <p>登録したメールアドレスとパスワードで、<a href="<%= @redirect_url %>">ログイン</a>してください。</p>
+</div>

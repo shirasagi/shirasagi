@@ -1,0 +1,51 @@
+<% member_photos = Member::Photo.and_public %>
+<% return "" unless member_photos.present? %>
+
+<%= coffee do %>
+$ ->
+  SS_AddonTabs.hide(".mod-member-photo")
+
+  @insertPhotoContent = (cont) ->
+    if (typeof tinymce) != "undefined"
+      tinymce.get("item_html").execCommand("mceInsertContent", false, cont)
+    else if (typeof CKEDITOR != "undefined")
+      CKEDITOR.instances.item_html.insertHtml(cont)
+
+  @deletePhotoContent = (id) ->
+    $(".file-view").each ->
+      $(this).remove() if id == $(this).find(".photo-id").attr("value")
+
+<% end %>
+
+<dl class="see mod-member-photo spot">
+  <dd class="wide">
+    <%= f.hidden_field "member_photo_ids[]", value: "" %>
+    <%= link_to "ページを選択", member_apis_photos_path(@cur_site), class: "ajax-box btn" %>
+
+    <div id="selected-member-photos">
+      <% @item.member_photos.each do |item| %>
+        <article class="file-view member-photo">
+          <%= hidden_field_tag "item[member_photo_ids][]", item.id, class: "photo-id" %>
+          <div class="thumb">
+            <%= image_tag item.image.thumb_url, alt: item.name %>
+          </div>
+          <div class="name">
+            <%= item.name %>
+          </div>
+
+          <div class="action paste">
+            <%
+              content = link_to(item.image.url, alt: item.name, class: "ajax-box member-photo", onclick: "return false;") do
+                image_tag(item.image.thumb_url.sub(/\/thumb\//, "/thumb/detail/"), alt: item.name, onerror: '$(this).parent("a").hide();')
+              end
+            %>
+            <%= link_to :"sns.image_paste", "#", :onclick => "insertPhotoContent('#{escape_javascript(content)}'); return false;" %>
+          </div>
+          <div class="action delete">
+            <%= link_to t("views.button.delete"), "#", :onclick => "deletePhotoContent('#{item.id}'); return false;" %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </dd>
+</dl>

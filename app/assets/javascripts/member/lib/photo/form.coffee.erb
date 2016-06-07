@@ -1,0 +1,155 @@
+class @Member_Photo_Form
+  @maxPointForm   = 10
+  @deleteMessage  = "<%= I18n.t('map.confirm.delete_marker') %>"
+  @setExifMessage = "画像に位置情報が含まれています。位置情報を地図に設定しますか？"
+  @dataID         = 0
+  @clickIcon      = "//maps.google.com/mapfiles/ms/icons/blue-dot.png"
+  @clickMarker    = null
+
+  @setMapLoc: (ele, lat, lon) ->
+    lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6)
+    lon = Math.ceil(lon * Math.pow(10,6)) / Math.pow(10,6)
+    ele.val(lat.toFixed(6) + "," + lon.toFixed(6))
+    return
+
+  @getMapLoc: (ele) ->
+    latlon = ele.val().split(',')
+    return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
+
+  @attachMessage: (id) ->
+    google.maps.event.addListener Map.markers[id], 'click', (event) ->
+      if(Map.openedInfo)
+        Map.openedInfo.close()
+      $('dd[data-id = "' + id + '"]').each ->
+        name = $(this).find(".marker-name").val()
+        text = $(this).find(".marker-text").val()
+        if name != "" || text != ""
+          marker_html = '<div class="marker-info">'
+          if name != ""
+            marker_html += '<p>' + name + '</p>'
+          if text != ""
+            $.each text.split(/[\r\n]+/), ->
+              if this.match(/^https?:\/\//)
+                marker_html += '<p><a href="' + this + '">' + this + '</a></p>'
+              else
+                marker_html += '<p>' + this + '</p>'
+
+          Map.openedInfo = new google.maps.InfoWindow(content: marker_html, maxWidth: 260)
+          Map.openedInfo.open(Map.markers[id].getMap(), Map.markers[id])
+        return false
+      return
+    return
+
+  @geocoderSearch: (address) ->
+    geocoder = new google.maps.Geocoder()
+    geocoder.geocode(
+      { "address" : address, "region" : "jp" },
+      (results, status) ->
+        if(status==google.maps.GeocoderStatus.OK)
+          result = results[0]
+          Map.map.setCenter(result.geometry.location)
+          if (result.geometry.viewport)
+            Map.map.fitBounds(result.geometry.viewport)
+        else
+          alert("<%= I18n.t('map.alert.invalid_center') %>")
+        return
+    )
+    return false
+
+  @clearMarker: (ele)->
+    dataId = 0
+    if ele.val() != ""
+      if confirm(Member_Photo_Form.deleteMessage)
+        if Map.markers[dataId]
+          Map.markers[dataId].setMap(null)
+          ele.val("")
+    else
+      if Map.markers[dataId]
+        Map.markers[dataId].setMap(null)
+    return
+
+  @createMarker: (ele)->
+    if $(".mod-map .clicked").val() != ""
+      ele.val($(".mod-map .clicked").val())
+      dataId = 0
+
+      Map.markers[dataId].setMap(null) if Map.markers[dataId]
+      Map.markers[dataId] = new google.maps.Marker(
+        position: Member_Photo_Form.getMapLoc($(".mod-map .marker-loc")),
+        map: Map.map
+      )
+      Member_Photo_Form.attachMessage(dataId)
+    return
+
+  @renderMarkers: ()->
+    markerBounds = new google.maps.LatLngBounds()
+
+    if Map.markers
+      for m in Map.markers
+        m.setMap(null)
+    Map.markers = []
+    Member_Photo_Form.dataID = 0
+
+    $(".mod-map .marker").each ->
+      $(this).attr("data-id", Member_Photo_Form.dataID)
+
+      if $(this).find(".marker-loc").val() != ""
+        loc = Member_Photo_Form.getMapLoc($(this).find(".marker-loc"))
+        Map.markers[Member_Photo_Form.dataID] = new google.maps.Marker(
+          position: loc,
+          map: Map.map
+        )
+        Member_Photo_Form.attachMessage(Member_Photo_Form.dataID)
+        markerBounds.extend(loc)
+      Member_Photo_Form.dataID += 1
+
+    if Map.markers.length > 0
+      zoomChangeBoundsListener = google.maps.event.addListener Map.map, 'bounds_changed', ( event ) ->
+        if this.getZoom() > 13 && this.initialZoom == true
+          this.setZoom(13)
+          this.initialZoom = false
+        google.maps.event.removeListener(zoomChangeBoundsListener)
+
+      Map.map.initialZoom = true
+      Map.map.fitBounds(markerBounds)
+    return
+
+  @setExifLatLng: (selector)->
+    $(selector).change (e)->
+      EXIF.getData e.target.files[0], ->
+        lat    = EXIF.getTag(this, 'GPSLatitude')
+        lon    = EXIF.getTag(this, 'GPSLongitude')
+        latRef = EXIF.getTag(this, 'GPSLatitudeRef') || "N"
+        lonRef = EXIF.getTag(this, 'GPSLongitudeRef') || "W"
+        return false unless lat && lon
+        return false unless confirm(Member_Photo_Form.setExifMessage)
+
+        latRef = if latRef == "N" then 1 else -1
+        lonRef = if lonRef == "W" then -1 else 1
+        lat = (lat[0] + (lat[1] / 60) + (lat[2] / 3600)) * latRef
+        lon = (lon[0] + (lon[1] / 60) + (lon[2] / 3600)) * lonRef
+        $(".mod-map .clicked").val([lat, lon].join())
+        Member_Photo_Form.createMarker($(".mod-map .marker-loc"))
+        Map.map.setCenter(new google.maps.LatLng(lat, lon))
+
+  @renderEvents: ()->
+    google.maps.event.addListener Map.map, 'click', (event) ->
+      Member_Photo_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng())
+      Member_Photo_Form.createMarker($(".mod-map .marker-loc"))
+
+    $(".mod-map .clear-marker").on 'click', (e)->
+      Member_Photo_Form.clearMarker($(".mod-map .marker-loc"))
+      return false
+
+    #$(".mod-map .location-search").on 'click', (e)->
+    #  Member_Photo_Form.geocoderSearch($(".mod-map .keyword").val())
+    #  return false
+
+    #$(".mod-map .keyword").on 'keypress', (e)->
+    #  if e.which == 13
+    #    Member_Photo_Form.geocoderSearch($(this).val())
+    #    return false
+
+    #$(".mod-map .marker-name").on 'keypress', (e)->
+    #  if e.which == 13
+    #    return false

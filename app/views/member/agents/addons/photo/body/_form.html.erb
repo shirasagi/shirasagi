@@ -1,0 +1,10 @@
+<dl class="see photo-body">
+  <dt><%= @model.t :image_id %><%= @model.tt :image_id %></dt>
+  <dd><%= f.file_field :in_image %></dd>
+  <% if @item.image %>
+    <dd><%= image_tag @item.image.thumb_url %></dd>
+  <% end %>
+
+  <dt><%= @model.t :caption %><%= @model.tt :caption %></dt>
+  <dd><%= f.text_area :caption %></dd>
+</dl>

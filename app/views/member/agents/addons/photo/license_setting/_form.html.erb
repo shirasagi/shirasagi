@@ -1,0 +1,9 @@
+<%= code_editor ".mod-member-photo-license-setting .html", mode: :html %>
+
+<dl class="see mod-member-photo-license-setting">
+  <dt><%= @model.t :license_free %><%= @model.tt :license_free %></dt>
+  <dd><%= f.text_area :license_free, class: :html, style: "height: 220px" %></dd>
+
+  <dt><%= @model.t :license_not_free %><%= @model.tt :license_not_free %></dt>
+  <dd><%= f.text_area :license_not_free, class: :html, style: "height: 220px" %></dd>
+</dl>

@@ -1,0 +1,117 @@
+<div class="columns">
+  <% if @cur_node.header_html.present? %>
+  <header class="header">
+    <%= simple_format(@cur_node.header_html, {}, sanitize: false) %>
+  </header>
+  <% end %>
+
+  <%= f.hidden_field :sends_verification_mail, value: 'yes' %>
+
+  <dl class="colum name">
+    <dt><%= @item.class.t :name %></dt>
+    <dd>
+      <%= @item.name %>
+      <%= f.hidden_field :name, value: @item.name %>
+    </dd>
+  </dl>
+
+  <dl class="colum email">
+    <dt><%= @item.class.t :email %></dt>
+    <dd>
+      <%= @item.email %>
+      <%= f.hidden_field :email, value: @item.email %>
+    </dd>
+  </dl>
+
+  <dl class="colum kana">
+    <dt><%= @item.class.t :kana %></dt>
+    <dd>
+      <%= @item.kana %>
+      <%= f.hidden_field :kana, value: @item.kana %>
+    </dd>
+  </dl>
+
+  <dl class="colum organization-name">
+    <dt><%= @item.class.t :organization_name %></dt>
+    <dd>
+      <%= @item.organization_name %>
+      <%= f.hidden_field :organization_name, value: @item.organization_name %>
+    </dd>
+  </dl>
+
+  <dl class="colum job">
+    <dt><%= @item.class.t :job %></dt>
+    <dd>
+      <%= @item.job %>
+      <%= f.hidden_field :job, value: @item.job %>
+    </dd>
+  </dl>
+
+  <dl class="colum tel">
+    <dt><%= @item.class.t :tel %></dt>
+    <dd>
+      <%= @item.tel %>
+      <%= f.hidden_field :tel, value: @item.tel %>
+    </dd>
+  </dl>
+
+  <dl class="colum postal-code">
+    <dt><%= @item.class.t :postal_code %></dt>
+    <dd>
+      <%= @item.postal_code %>
+      <%= f.hidden_field :postal_code, value: @item.postal_code %>
+    </dd>
+  </dl>
+
+  <dl class="colum addr">
+    <dt><%= @item.class.t :addr %></dt>
+    <dd>
+      <%= @item.addr %>
+      <%= f.hidden_field :addr, value: @item.addr %>
+    </dd>
+  </dl>
+
+  <dl class="colum sex">
+    <dt><%= @item.class.t :sex %></dt>
+    <dd>
+      <%= @item.label :sex %>
+      <%= f.hidden_field :sex, value: @item.sex %>
+    </dd>
+  </dl>
+
+  <dl class="colum birthday">
+    <dt><%= @item.class.t :birthday %></dt>
+    <dd>
+      <% if @item.in_birth.present? %>
+        <%= tryb { @item.in_birth[:era] } %>
+        <%= tryb { "#{@item.in_birth[:year]}年" } %>
+        <%= tryb { "#{@item.in_birth[:month]}月" } %>
+        <%= tryb { "#{@item.in_birth[:day]}日" } %>
+      <% end %>
+      <%= f.fields_for :in_birth do |birth_f| %>
+        <%= birth_f.hidden_field :era, value: tryb { @item.in_birth[:era] } %>
+        <%= birth_f.hidden_field :year, value: tryb { @item.in_birth[:year] } %>
+        <%= birth_f.hidden_field :month, value: tryb { @item.in_birth[:month] } %>
+        <%= birth_f.hidden_field :day, value: tryb { @item.in_birth[:day] } %>
+      <% end %>
+    </dd>
+  </dl>
+
+  <% if @cur_node.confirm_personal_data_state == 'enabled' %>
+  <dl class="colum personal-info">
+    <dt><%= @item.class.t :in_confirm_personal_info %><span class="required"><%= t('views.required_field') %></span></dt>
+    <dd>
+      <%= f.label(:in_confirm_personal_info) do %>
+        <%= f.check_box(:in_confirm_personal_info, {}, 'yes', 'no') %>
+        <%= simple_format(@cur_node.confirm_personal_data_html, {}, sanitize: false, wrapper_tag: :span) %>
+      <% end %>
+    </dd>
+  </dl>
+  <% end %>
+
+  <% if @cur_node.footer_html.present? %>
+  <footer class="footer">
+    <%= simple_format(@cur_node.footer_html, {}, sanitize: false) %>
+  </footer>
+  <% end %>
+</div>

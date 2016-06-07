@@ -1,0 +1,6 @@
+<% if @cur_member %>
+  <%= link_to "#{@cur_member.name}さん", "#{@mypage_node.url}", class: "member", rel: "nofollow" %>
+  <%= link_to t("views.logout"), "#{@login_node.url}logout.html?ref=#{@cur_path}", class: "logout", rel: "nofollow" %>
+<% else %>
+  <%= link_to t("views.login"), "#{@mypage_node.url}", class: "login", rel: "nofollow" %>
+<% end %>

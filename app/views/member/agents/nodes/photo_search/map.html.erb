@@ -1,0 +1,13 @@
+<%= render partial: "upper" %>
+
+<%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3" %>
+
+<%= coffee do %>
+$(window).on "load", ->
+  Map.load("#map-canvas")
+  Map.setMarkers(<%= raw @markers.to_json %>)
+<% end %>
+
+<div id="map-canvas" style="width: 100%; height: 400px;"></div>
+
+<%= paginate @items if @items.try(:current_page) %>

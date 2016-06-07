@@ -103,4 +103,23 @@ module Cms::PublicFilter::Layout
         render_part(part.becomes_with_route)
       end
     end
+
+  public
+    def stylesheets
+      @stylesheets || []
+    end
+
+    def stylesheet(path)
+      @stylesheets ||= []
+      @stylesheets << path unless @stylesheets.include?(path)
+    end
+
+    def javascripts
+      @javascripts || []
+    end
+
+    def javascript(path)
+      @javascripts ||= []
+      @javascripts << path unless @javascripts.include?(path)
+    end
 end

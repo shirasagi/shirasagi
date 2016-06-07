@@ -1,0 +1,14 @@
+<% return if @cur_page.map_points.blank? %>
+
+<%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3&sensor=false" %>
+<%= jquery do %>
+  Map.load("#map-canvas");
+  Map.setMarkers(<%= raw @cur_page.map_points.to_json %>);
+<% end %>
+
+<section class="map-page">
+  <header>
+    <h2><%= t("map.map") %></h2>
+  </header>
+  <div id="map-canvas" style="width: 100%; height: 400px;"></div>
+</section>

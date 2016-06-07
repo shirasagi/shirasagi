@@ -1,0 +1,17 @@
+<dl class="see">
+  <%= f.hidden_field :basename, value: "" %>
+  <dt><%= @model.t :name %><%= @model.tt :title %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
+  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
+
+  <dt><%= @model.t :listable_state %><%= @model.tt :listable_state %></dt>
+  <dd><%= f.select :listable_state, @item.listable_state_options %></dd>
+
+  <dt><%= @model.t :slideable_state %><%= @model.tt :slideable_state %></dt>
+  <dd><%= f.select :slideable_state, @item.slideable_state_options %></dd>
+
+  <dt><%= @model.t :slide_order %><%= @model.tt :slide_order %></dt>
+  <dd><%= f.number_field :slide_order %></dd>
+</dl>

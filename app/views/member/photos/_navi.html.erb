@@ -1,0 +1,10 @@
+<%= node_navi :member do %>
+
+<h3><%= link_to :"member.photo", member_photos_path %></h3>
+
+<ul class="narrow-page">
+  <li><%= link_to "一覧表示", index_listable_member_photos_path %></li>
+  <li><%= link_to "スライド", index_slideable_member_photos_path %></li>
+</ul>
+
+<% end %>

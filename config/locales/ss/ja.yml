@@ -25,6 +25,7 @@ ja:
       selectable_head: 選択候補
       selection_head: 選択済み
     required_field: ※必須入力
+    search_result: 検索結果
 
     button:
       login: ログイン
