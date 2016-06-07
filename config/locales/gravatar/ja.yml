@@ -1,0 +1,13 @@
+ja:
+  modules:
+    addons:
+      gravatar/gravatar: Gravatar
+  mongoid:
+    attributes:
+      gravatar/addon/gravatar:
+        gravatar_image_view_kind: 画像表示ステータス
+        gravatar_image_view_kind_disable: 表示しない
+        gravatar_image_view_kind_cms_user_email: ページ作成者の画像を表示する
+        gravatar_image_view_kind_special_email: Gravatar用メールアドレス欄に記載した画像を表示する
+        gravatar_email: Gravatar用メールアドレス
+        gravatar_screen_name: 投稿者表示名

@@ -5,6 +5,7 @@ class Faq::Page
   include Workflow::Addon::Branch
   include Workflow::Addon::Approver
   include Cms::Addon::Meta
+  include Gravatar::Addon::Gravatar
   include Faq::Addon::Question
   include Cms::Addon::Body
   include Cms::Addon::File

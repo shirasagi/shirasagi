@@ -1,0 +1,16 @@
+<% return if SS.config.gravatar.disable %>
+
+<div class="gravatar">
+  <% email = @cur_page.email_for_gravatar %>
+  <% unless email.nil? %>
+      <div class="gravatar-icon">
+        <%= gravatar_image_tag email, size: SS.config.gravatar.image_size, default: SS.config.gravatar.default_image_path %>
+      </div>
+  <% end %>
+
+  <% if @cur_page.gravatar_screen_name.present? %>
+  <p class="gravatar-screen-name">
+    <%= @cur_page.gravatar_screen_name %>
+  </p>
+  <% end %>
+</div>
