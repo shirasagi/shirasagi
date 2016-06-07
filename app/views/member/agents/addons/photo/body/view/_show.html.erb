@@ -1,0 +1,9 @@
+<dl class="column photo-body">
+  <dt><%= @model.t :image_id %></dt>
+  <dd><%= image_tag @item.image.thumb_url %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :caption %></dt>
+  <dd><%=br @item.caption %></dd>
+</dl>

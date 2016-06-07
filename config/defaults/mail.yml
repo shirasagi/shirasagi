@@ -19,7 +19,8 @@ production: &production
   default_charset: iso-2022-jp
 
 test:
-  <<: *production
+  delivery_method: test
+  default_charset: utf-8
 
 development:
   <<: *production

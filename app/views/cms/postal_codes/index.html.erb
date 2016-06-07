@@ -1,0 +1,65 @@
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% if @cur_node %>
+      <li class="list-item">
+        <div class="info">
+          <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
+          <%= link_to :parent_directory, link, class: "up" %>
+        </div>
+      </li>
+    <% end %>
+
+    <% @items.each do |item| %>
+    <li class="list-item">
+      <nav class="tap-menu">
+        <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      </nav>
+
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <div class="info">
+        <% if @index_title %>
+          <% @index_title.call item %>
+        <% else %>
+          <%= link_to({ action: :show, id: item }, class: "title") do %>
+            <span class="code"><%= item.code %></span>
+            <span class="prefecture"><%= item.prefecture %></span>
+            <% if item.city.present? %>
+            <span class="city"><%= item.city %></span>
+            <% end %>
+            <% if item.town.present? %>
+            <span class="town"><%= item.town %></span>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <div class="meta">
+          <% if @index_meta %>
+            <% @index_meta.call item %>
+          <% else %>
+            <span class="id">#<%= item.id %></span>
+            <span class="prefecture-code"><%= item.prefecture_code %></span>
+            <% if item.try(:updated) %>
+              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <% end %>
+            <% if item.try(:filename) %>
+              <span class="filename"><%= File.basename item.filename %></span>
+            <% end %>
+            <% if item.try(:route) %>
+              <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+            <% end %>
+            <% if item.try(:status) %>
+              <span class="state"><%= t "views.state.#{item.status}" %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

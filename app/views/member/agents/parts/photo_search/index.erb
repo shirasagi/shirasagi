@@ -1,0 +1,22 @@
+<% controller.javascript "/assets/js/jquery.colorbox.js" %>
+<% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
+<%
+  search_path = @node.url
+%>
+
+<%= coffee do %>
+$(window).on "load", ->
+  $(".member-photo-search-part .ajax-box").on "click", ->
+    $.colorbox({ html: "<%=j render(file: "app/views/member/agents/nodes/photo_search/_modal", locals: { search_path: search_path }) %>"})
+    return false
+<% end %>
+
+<div class="member-photo-search-part">
+  <%= form_tag search_path, multipart: true, method: "get" do %>
+  <div class="keyword">
+    <%= text_field_tag :keyword, nil, class: "keyword" %>
+    <%= submit_tag "検索" %>
+  </div>
+  <% end %>
+  <%= link_to "詳細検索", "#", class: "ajax-box" %>
+</div>

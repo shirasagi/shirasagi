@@ -17,4 +17,21 @@ module SS::AgentFilter
         instance_variable_set name, controller.instance_variable_get(name)
       end
     end
+
+  public
+    def stylesheets
+      controller.stylesheets
+    end
+
+    def stylesheet(path)
+      controller.stylesheet(path)
+    end
+
+    def javascripts
+      controller.javascripts
+    end
+
+    def javascript(path)
+      controller.javascript(path)
+    end
 end

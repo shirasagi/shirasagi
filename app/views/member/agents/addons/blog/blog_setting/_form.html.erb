@@ -1,0 +1,5 @@
+<% @item.page_limit ||= 3 %>
+<dl class="see mod-member-blog-blog-setting">
+  <dt><%= @model.t :page_limit %><%= @model.tt :page_limit %></dt>
+  <dd><%= f.number_field :page_limit %></dd>
+</dl>

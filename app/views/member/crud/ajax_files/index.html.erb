@@ -1,0 +1,53 @@
+<%= coffee do %>
+
+SS.ajaxForm "form.user-file",
+  success: ->
+    $("#cboxLoadedContent").load "<%= url_for(action: :index) %>"
+
+SS.ajax ".user-files .select",
+  success: (data) ->
+    $("#selected-files").append data
+    $.colorbox.close()
+
+SS.ajaxDelete ".user-files .delete"
+
+<% end %>
+
+<% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+  <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+    <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+      <%= f.file_field :in_files, multiple: :multiple, required: :required %>
+      <%= f.select :resizing, @model.resizing_options, { include_blank: t("views.resize_image") }, { class: "image-size" } %>
+      <%= f.submit t("views.button.save"), class: "save btn", style: "margin-left: 10px;" %>
+    </div>
+
+  <% end %>
+<% end %>
+
+<div class="index user-files">
+  <% @items.each do |item| %>
+  <article class="file-view" id="user-file<%= item.id %>">
+    <a class="thumb select" href="<%= url_for action: :select, id: item %>">
+      <% if item.image? %>
+      <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
+      <% else %>
+      <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+      <% end %>
+    </a>
+    <div class="name">
+      <%= item.name %>
+    </div>
+    <nav class="menu">
+      <% if item.allowed?(:delete, @cur_member, site: @cur_site) %>
+        <%= link_to t("views.button.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
+      <% end %>
+    </nav>
+  </article>
+  <% end %>
+</div>
+
+<div style="clear: both;"></div>
+
+<%= paginate @items if @items.try(:current_page) %>

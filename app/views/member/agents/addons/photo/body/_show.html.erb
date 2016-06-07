@@ -1,0 +1,11 @@
+<dl class="see photo-body">
+  <dt><%= @model.t :image %></dt>
+  <dd>
+    <a href="<%= @item.image.url%>" target="_blank">
+      <%= image_tag @item.image.thumb_url %>
+    </a>
+  </dd>
+
+  <dt><%= @model.t :caption %></dt>
+  <dd><%=br @item.caption %></dd>
+</dl>

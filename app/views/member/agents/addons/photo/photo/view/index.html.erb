@@ -1,0 +1,6 @@
+<% controller.javascript "/assets/js/jquery.colorbox.js" %>
+<% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
+
+<%= jquery do %>
+$(".ajax-box").each(function(){$(this).colorbox();});
+<% end %>

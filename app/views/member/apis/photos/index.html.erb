@@ -1,0 +1,25 @@
+<%= coffee do %>
+SS_SearchUI.modal()
+SS.ajax "#ajax-box .select",
+  success: (data) ->
+    $("#selected-member-photos").append data
+    $.colorbox.close()
+<% end %>
+
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit "検索", class: :btn %>
+<% end %>
+</div>
+
+<% @items.each do |item| %>
+  <article class="file-view member-photo">
+    <a class="thumb select cboxElement" href="<%= select_member_apis_photo_path(id: item.id, site: @cur_site) %>">
+      <%= image_tag item.image.thumb_url, alt: item.name %>
+    </a>
+    <div class="name">
+      <%= item.name %>
+    </div>
+  </article>
+<% end %>

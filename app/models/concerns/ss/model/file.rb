@@ -84,6 +84,22 @@ module SS::Model::File
     state == "public"
   end
 
+  def becomes_with_model(name = nil)
+    name ||= model.sub(/\/.+?$/, "/file").sub(/^ss\//, "SS/")
+    klass = name.camelize.constantize rescue nil
+    return self unless klass
+
+    item = klass.new
+    item.instance_variable_set(:@new_record, nil) unless new_record?
+    instance_variables.each {|k| item.instance_variable_set k, instance_variable_get(k) }
+    item
+  end
+
+  def previewable?(opts = {})
+    cur_user = opts[:user]
+    cur_user.present?
+  end
+
   def state_options
     [[I18n.t('views.options.state.public'), 'public']]
   end

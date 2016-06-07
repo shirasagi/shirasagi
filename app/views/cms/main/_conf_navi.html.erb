@@ -29,6 +29,9 @@
   <% if Cms::PageSearch.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.page_search", cms_page_searches_path %></h3>
   <% end %>
+  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.postal_code", cms_postal_codes_path %></h3>
+  <% end %>
   <% if SS.config.kana.disable.blank? && Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"kana.dictionary", kana_dictionaries_path %></h3>
   <% end %>

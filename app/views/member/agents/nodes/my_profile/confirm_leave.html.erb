@@ -1,0 +1,13 @@
+<%= render partial: "menu" %>
+
+<%= form_for :item, url: "#{@cur_node.url}complete_leave.html", html: { method: "POST", class: "mypage-confirm_leave member-profile" } do |f| %>
+
+<div class="mypage-form member-profile">
+  <p><%= I18n.t("member.button.leave") %>ボタンをクリックすると退会します。よろしいですか。</p>
+  <footer class="send">
+    <%= f.submit I18n.t("member.button.leave"), name: :submit %>
+    <%= f.submit I18n.t("member.button.back"), name: :back %>
+  </footer>
+</div>
+
+<% end %>

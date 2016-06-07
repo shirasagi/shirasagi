@@ -1,0 +1,10 @@
+<section class="photo-categories">
+  <header><h2>タグ</h2></header>
+  <div class="nodes">
+    <ul>
+      <% @cur_page.photo_categories.order_by(order: 1).each do |item| %>
+        <li><%= link_to item.name, item.url %></li>
+      <% end %>
+    </ul>
+  </div>
+</section>

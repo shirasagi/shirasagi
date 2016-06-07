@@ -1,0 +1,12 @@
+<dl class="see">
+  <dt><%= @model.t :genres %><%= @model.tt :genres %></dt>
+  <dd>
+    <%= f.hidden_field "genres[]", value: "", class: "hidden-ids" %>
+    <% @cur_node.genres.each do |genre| %>
+      <label>
+        <%= f.check_box("genres[]", { checked: @item.genres.index(genre) }, genre) %>
+        <%= genre %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

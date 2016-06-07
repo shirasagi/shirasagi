@@ -1,0 +1,4 @@
+<dl class="column photo-categories">
+  <dt><%= @model.t :photo_categories %></dt>
+  <dd><%=br @item.photo_categories.map(&:name).join("\n") %></dd>
+</dl>

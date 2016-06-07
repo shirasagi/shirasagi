@@ -53,6 +53,8 @@ ja:
       delete_item: 項目を削除してよろしいですか？
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
+    postal_code: 郵便番号
+    import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
 
     adobe_reader:
       remark:
@@ -295,6 +297,7 @@ ja:
       cms/model/member:
         name: 氏名
         email: メールアドレス
+        email_again: メールアドレス（確認用）
         in_password: パスワード
         oauth_type: OAuth Type
         oauth_id: OAuth ID

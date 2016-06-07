@@ -78,8 +78,13 @@ module SS::EditorHelper
     opts[:allowedContent] = true
     opts[:height] ||= "360px"
 
-    opts[:templates] = 'shirasagi'
-    opts[:templates_files] = [ "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}" ]
+
+    if opts[:public_side]
+      #
+    else
+      opts[:templates] = 'shirasagi'
+      opts[:templates_files] = [ "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}" ]
+    end
     opts
   end
 
@@ -111,8 +116,12 @@ module SS::EditorHelper
       editor_opts[:toolbar] = "insertfile undo redo | styleselect | bold italic | forecolor backcolor" \
         " | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"
 
-      # editor_opts[:templates] = [ { title: 'Some title 1', description: 'Some desc 1', content: 'My content' } ]
-      editor_opts[:templates] = "#{template_cms_editor_templates_path}.json?_=#{Time.zone.now.to_i}"
+      if opts[:public_side]
+        #
+      else
+        # editor_opts[:templates] = [ { title: 'Some title 1', description: 'Some desc 1', content: 'My content' } ]
+        editor_opts[:templates] = "#{template_cms_editor_templates_path}.json?_=#{Time.zone.now.to_i}"
+      end
     end
     editor_opts
   end

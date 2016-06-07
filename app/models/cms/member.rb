@@ -1,5 +1,7 @@
 class Cms::Member
   include Cms::Model::Member
+  include ::Member::ExpirableSecureId
+  include ::Member::Addon::AdditionalAttributes
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
@@ -31,6 +33,40 @@ class Cms::Member
       end
 
       name
+    end
+
+    def search(params = {})
+      criteria = self.where({})
+      return criteria if params.blank?
+
+      if params[:keyword].present?
+        criteria = criteria.keyword_in params[:keyword], :name, :email, :kana, :organization_name, :job, :tel, :postal_code, :addr
+      end
+      criteria
+    end
+
+    def to_csv
+      CSV.generate do |data|
+        data << %w(id state name email kana organization_name job tel postal_code addr sex birthday updated created)
+        criteria.each do |item|
+          line = []
+          line << item.id
+          line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
+          line << item.name
+          line << item.email
+          line << item.kana
+          line << item.organization_name
+          line << item.job
+          line << item.tel
+          line << item.postal_code
+          line << item.addr
+          line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
+          line << item.birthday.try(:strftime, "%Y/%m/%d")
+          line << item.updated.strftime("%Y/%m/%d %H:%M")
+          line << item.created.strftime("%Y/%m/%d %H:%M")
+          data << line
+        end
+      end
     end
   end
 end

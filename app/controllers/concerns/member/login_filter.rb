@@ -1,12 +1,14 @@
 module Member::LoginFilter
   extend ActiveSupport::Concern
+  include Member::AuthFilter
 
   REDIRECT_OPTION_UNDEFINED = 0
   REDIRECT_OPTION_ENABLED = 1
   REDIRECT_OPTION_DISABLED = 2
 
   included do
-    before_action :logged_in?, if: -> { member_login_path }
+    # before_action :logged_in?, if: -> { member_login_path }
+    before_action :logged_in?
   end
 
   private
@@ -15,20 +17,9 @@ module Member::LoginFilter
     end
 
     def logged_in?(opts = {})
-      if @cur_member
-        set_last_logged_in
-        return @cur_member
-      end
-
-      if session_alives?
-        member_id = session[:member]["member_id"]
-        @cur_member = Cms::Member.site(@cur_site).find(member_id) rescue nil
-      end
-
-      if @cur_member
-        set_last_logged_in
-        return @cur_member
-      end
+      return @cur_member if @cur_member
+      @cur_member = get_member_by_session(@cur_site)
+      return @cur_member if @cur_member
 
       clear_member
       return nil if translate_redirect_option(opts) == REDIRECT_OPTION_DISABLED
@@ -38,21 +29,9 @@ module Member::LoginFilter
       nil
     end
 
-    def set_member(member, timestamp = Time.zone.now.to_i)
-      session[:member] = {
-        "member_id" => member.id,
-        "remote_addr" => remote_addr,
-        "user_agent" => request.user_agent,
-        "last_logged_in" => timestamp }
+    def set_member(member)
+      session[:member] = SS::Crypt.encrypt("#{member._id},#{remote_addr},#{request.user_agent}")
       @cur_member = member
-    end
-
-    def set_last_logged_in(timestamp = Time.zone.now.to_i)
-      session[:member]["last_logged_in"] = timestamp if session[:member]
-    end
-
-    def session_alives?(timestamp = Time.zone.now.to_i)
-      session[:member] && timestamp <= session[:member]["last_logged_in"] + SS.config.cms.session_lifetime
     end
 
     def clear_member
@@ -68,7 +47,7 @@ module Member::LoginFilter
     end
 
     def member_login_path
-      return false unless member_login_node
+      raise "404" unless member_login_node
       "#{member_login_node.url}login.html"
     end
 

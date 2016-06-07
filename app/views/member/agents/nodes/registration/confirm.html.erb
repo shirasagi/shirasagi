@@ -1,0 +1,10 @@
+<%= form_for :item, url: "#{@cur_node.url}interim.html", html: { method: "POST" } do |f| %>
+  <div class="member-registration-form confirm">
+    <%= error_messages_for :item, header_message: false %>
+    <%= render partial: "confirm", locals: { f: f, confirm: false }  %>
+    <footer class="send">
+      <%= f.submit I18n.t("member.button.register"), name: :submit %>
+      <%= f.submit I18n.t("member.button.back"), name: :back %>
+    </footer>
+</div>
+<% end %>

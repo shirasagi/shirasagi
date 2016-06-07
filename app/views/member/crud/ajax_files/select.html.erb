@@ -1,0 +1,27 @@
+<div class="file-view">
+  <a class="thumb" href="<%= view_member_apis_temp_file_path(member: @cur_member.id, id: @item) %>" target="_blank">
+    <% if @item.image? %>
+    <img src="<%= thumb_member_apis_temp_file_path(member: @cur_member.id, id: @item, _: @item.updated.to_i) %>" alt="<%= @item.basename %>" />
+    <% else %>
+    <span class="ext icon-<%= @item.extname %>"><%= @item.extname %></span>
+    <% end %>
+  </a>
+  <div class="name">
+    <label>
+      <!-- <input type="checkbox" name="item[file_ids][]" value="<%= @item.id %>" checked="checked" /> -->
+      <input type="hidden" name="item[file_ids][]" value="<%= @item.id %>" class="file-id" />
+      <%= @item.name %>
+    </label><br />
+  </div>
+  <div class="action paste">
+    <% content = link_to "#{@item.name} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", @item.url, class: "icon-#{@item.extname}" %>
+    <%= link_to :"sns.file_attach", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+    <% if @item.image? %>
+      <% content = image_tag @item.url, alt: "#{@item.basename}" %>
+      <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+    <% end %>
+  </div>
+  <div class="action delete">
+    <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{@item.id}'); return false;" %>
+  </div>
+</div>

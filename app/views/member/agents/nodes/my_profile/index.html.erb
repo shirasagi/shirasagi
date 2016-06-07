@@ -1,0 +1,55 @@
+<%= render partial: "menu" %>
+
+<div class="mypage-show member-profile">
+  <div class="columns">
+    <dl class="column">
+      <dt><%= @model.t :name %></dt>
+      <dd><%= @item.name %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :email %></dt>
+      <dd><%= @item.email %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :kana %></dt>
+      <dd><%= @item.kana %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :organization_name %></dt>
+      <dd><%= @item.organization_name %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :job %></dt>
+      <dd><%= @item.job %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :postal_code %></dt>
+      <dd><%= @item.postal_code %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :tel %></dt>
+      <dd><%= @item.tel %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :addr %></dt>
+      <dd><%= @item.addr %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :sex %></dt>
+      <dd><%= @item.label :sex %></dd>
+    </dl>
+
+    <dl class="column">
+      <dt><%= @model.t :birthday %></dt>
+      <dd><%= tryb { @item.birthday.strftime("西暦 %Y年 %m月 %d日") } %></dd>
+    </dl>
+  </div>
+</div>

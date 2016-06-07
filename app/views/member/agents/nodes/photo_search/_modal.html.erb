@@ -1,0 +1,49 @@
+<%= coffee do %>
+$ ->
+  $(".reset").on "click", ->
+    $(".prop").prop "checked", false
+    $(".keyword").val("")
+    $(".contributor").val("")
+    return false
+<% end %>
+
+<%= form_tag search_path, multipart: true, method: "get" do %>
+  <h2><%= "キーワード" %></h2>
+  <div class="keyword">
+    <%= text_field_tag :keyword, @query[:keyword], class: "keyword" %>
+  </div>
+
+  <h2><%= "投稿者名" %></h2>
+  <div class="contributor">
+    <%= text_field_tag :contributor, @query[:contributor], class: "contributor" %>
+  </div>
+
+  <h2><%= "地域" %></h2>
+  <div class="location">
+    <%= hidden_field_tag 'location_ids[]', "" %>
+    <% @locations.order_by(order: 1).each do |item| %>
+      <div class="<%= item.basename %>">
+        <%= check_box_tag 'location_ids[]', item.id, @query[:location_ids].index(item.id),
+          { :id => "q_location_ids_#{item.id}", :class => "prop"} %>
+      <label for=<%= "q_location_ids_#{item.id}" %>><%= item.name %></label>
+      </div>
+    <% end %>
+  </div>
+
+  <h2><%= "タグ" %></h2>
+  <div class="category">
+    <%= hidden_field_tag 'category_ids[]', "" %>
+    <% @categories.order_by(order: 1).each do |item| %>
+      <div class="<%= item.basename %>">
+        <%= check_box_tag 'category_ids[]', item.id, @query[:category_ids].index(item.id),
+          { :id => "q_category_ids_#{item.id}", :class => "prop"} %>
+      <label for=<%= "q_category_ids_#{item.id}" %>><%= item.name %></label>
+      </div>
+    <% end %>
+  </div>
+
+  <footer class="send">
+    <%= submit_tag t('facility.submit.search'), name: nil %>
+    <%= submit_tag t('facility.submit.reset'), name: nil, class: :reset %>
+  </footer>
+<% end %>

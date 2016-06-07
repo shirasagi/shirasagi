@@ -1,0 +1,16 @@
+<%= render partial: "menu" %>
+
+<%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { method: :delete, multipart: true, class: "mypage-delete member-photo-page" } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="mypage-form member-photo-page">
+    <div class="columns">
+      <%= render file: "_delete" %>
+    </div>
+
+    <footer class="send">
+      <%= f.submit t("views.button.delete"), class: 'btn-danger delete' %>
+      <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+    </footer>
+  </div>
+<% end %>
