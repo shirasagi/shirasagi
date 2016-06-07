@@ -1,5 +1,6 @@
 class Job::Sys::LogsController < ApplicationController
   include Sys::BaseFilter
+  include Sys::CrudFilter
   include Job::LogsFilter
 
   private

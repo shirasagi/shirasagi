@@ -1,0 +1,44 @@
+<dl class="info mod-ss-task">
+  <dt><%= @item.t :state %></dt>
+  <dd class="state"><%= @item.send :state %></dd>
+
+  <dt><%= @item.t :started %></dt>
+  <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+
+  <dt><%= @item.t :closed %></dt>
+  <dd class="closed"><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+</dl>
+
+<div class="logs">
+  <textarea class="log" readonly="readonly"><%= @item.logs.join("\n") %></textarea>
+</div>
+
+<%= jquery do %>
+  var reload = function() {
+    if ($("#task-form .state").html().match(/(ready|running)/)) {
+      $.ajax({
+        url: "<%= url_for(action: :index, format: :json) %>",
+        success: function(data) {
+          var started = data.started;
+          if (! started) {
+            started = "";
+          }
+          var closed  = data.closed;
+          if (! closed) {
+            closed = "";
+          }
+          $("#task-form .state").html(data.state);
+          $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
+          $("#task-form .log").val(data.logs.join("\n"));
+          //if (data["state"] == "stop") {
+          //  $("#task-form .stop-button").hide();
+          //  $("#task-form .run-button").show();
+          //}
+        }
+      });
+    }
+  }
+
+  setInterval(reload, 10000);
+<% end %>

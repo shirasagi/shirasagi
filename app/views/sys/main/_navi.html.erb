@@ -23,6 +23,10 @@
     <h3><%= link_to :"sys.test", sys_test_path %></h3>
     <h3><%= link_to :"history.log", history_sys_logs_path %></h3>
   <% end %>
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to :"job.log", job_sys_logs_path %></h3>
+  <% end %>
 
   <h3><%= link_to :"sys.info", sys_info_path %></h3>
+  <h3><%= link_to :"sys.site_copy", sys_site_copy_path %></h3>
 </nav>

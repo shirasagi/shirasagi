@@ -1,0 +1,35 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<%= form_for :item, url: { action: :confirm }, html: { id: "item-form", autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head toggle-head"><h2><%= t :basic_info %></h2></div>
+    <div class="addon-body toggle-body">
+      <%= render file: '_form', locals: { f: f } %>
+    </div>
+  </div>
+  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+
+  <div class="addon-view" id="task-form">
+    <div class="addon-head toggle-head"><h2>Task</h2></div>
+    <div class="addon-body toggle-body">
+      <%= render partial: 'task' %>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("views.button.confirm"), class: 'btn-primary save' %>
+</footer>
+<% end %>
+
+<%= jquery do %>
+SS.confirmUnloading();
+  <% if @item.running? || @item.state == 'ready' %>
+  SS_AddonTabs.hide(".sys-site-copy");
+  <% else %>
+  SS_AddonTabs.hide(".mod-ss-task");
+  <% end %>
+<% end %>

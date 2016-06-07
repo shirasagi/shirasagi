@@ -20,10 +20,11 @@ module SS::Model::Site
 
     permit_params :name, :host, :domains, :https, group_ids: []
 
-    has_many :pages, class_name: "Cms::Page", dependent: :destroy
-    has_many :nodes, class_name: "Cms::Node", dependent: :destroy
-    has_many :parts, class_name: "Cms::Part", dependent: :destroy
-    has_many :layouts, class_name: "Cms::Layout", dependent: :destroy
+    has_many :pages, class_name: "Cms::Page", foreign_key: "site_id", dependent: :destroy
+    has_many :nodes, class_name: "Cms::Node", foreign_key: "site_id", dependent: :destroy
+    has_many :parts, class_name: "Cms::Part", foreign_key: "site_id", dependent: :destroy
+    has_many :layouts, class_name: "Cms::Layout", foreign_key: "site_id", dependent: :destroy
+    has_many :files, class_name: "SS::File", foreign_key: "site_id", dependent: :destroy
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
@@ -89,4 +90,20 @@ module SS::Model::Site
       end
     end
   end
+
+  module ClassMethods
+      def search(params)
+        criteria = self.where({})
+        return criteria if params.blank?
+
+        if params[:name].present?
+          criteria = criteria.search_text params[:name]
+        end
+        if params[:keyword].present?
+          criteria = criteria.keyword_in params[:keyword], :name
+        end
+        criteria
+      end
+  end
+
 end
