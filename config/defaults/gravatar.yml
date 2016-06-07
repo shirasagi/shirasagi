@@ -2,7 +2,7 @@ production: &production
   # gravatar addon state. you can specify one of these:
   #  enabled: enable gravatar addon
   #  disabled: disable gravatar addon
-  state: disabled
+  disable: true
 
   # you can specify one of these:
   #   disable: do not show avatar
@@ -14,7 +14,7 @@ production: &production
   image_size:
 
   # default avatar path. default is gravatar image
-  default_imag_path:
+  default_image_path:
 
 test:
   <<: *production

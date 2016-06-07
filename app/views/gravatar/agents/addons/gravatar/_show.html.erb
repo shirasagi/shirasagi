@@ -1,4 +1,4 @@
-<% return unless SS.config.gravatar.state == 'enabled' %>
+<% return if SS.config.gravatar.disable %>
 
 <% @item.gravatar_image_view_kind ||= SS.config.gravatar.view_kind %>
 <dl class="see mod-gravatar-gravatar">
