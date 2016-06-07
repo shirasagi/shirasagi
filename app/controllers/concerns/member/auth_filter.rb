@@ -2,7 +2,7 @@ module Member::AuthFilter
   extend ActiveSupport::Concern
 
   def get_member_by_session(site = false)
-    return nil unless session_alives?
+    return nil unless member_session_alives?
 
     member_id = session[:member]["member_id"]
     if site == false
@@ -12,7 +12,7 @@ module Member::AuthFilter
     end
   end
 
-  def session_alives?(timestamp = Time.zone.now.to_i)
+  def member_session_alives?(timestamp = Time.zone.now.to_i)
     session[:member] && timestamp <= session[:member]["last_logged_in"] + SS.config.cms.session_lifetime
   end
 
