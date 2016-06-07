@@ -68,3 +68,5 @@ module Job::Worker
       end
   end
 end
+
+Job.deprecate_constant 'Worker'
