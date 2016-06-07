@@ -6,7 +6,7 @@ RSpec.configuration.before(:suite) do
   ::Fs.rm_rf(root_dir)
 
   models = ::Mongoid.models
-  models = models.select { |model| model.is_a?(::SS::Model::File) }
+  models = models.select { |model| model.ancestors.include?(::SS::Model::File) }
   models.each do |model|
     model.root = root_dir
   end

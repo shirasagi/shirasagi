@@ -205,6 +205,7 @@ module SS::Model::File
       dir = ::File.dirname(path)
       Fs.mkdir_p(dir) unless Fs.exists?(dir)
       Fs.binwrite(path, binary)
+      self.size = binary.length
     end
 
     def remove_file
