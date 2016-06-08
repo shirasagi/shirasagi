@@ -42,13 +42,14 @@ describe "ads_access_logs" do
         click_on "ダウンロード"
         expect(status_code).to eq 200
 
-        expect(page.html).to include("date,link_url,count")
-        expect(page.html).to include("#{access_log0.date.strftime("%Y-%m-%d")},#{access_log0.link_url},#{access_log0.count}")
-        expect(page.html).to include("#{access_log1.date.strftime("%Y-%m-%d")},#{access_log1.link_url},#{access_log1.count}")
-        expect(page.html).to include("#{access_log2.date.strftime("%Y-%m-%d")},#{access_log2.link_url},#{access_log2.count}")
-        expect(page.html).to include("#{access_log3.date.strftime("%Y-%m-%d")},#{access_log3.link_url},#{access_log3.count}")
-        expect(page.html).to include("#{access_log4.date.strftime("%Y-%m-%d")},#{access_log4.link_url},#{access_log4.count}")
-        expect(page.html).to include("#{access_log5.date.strftime("%Y-%m-%d")},#{access_log5.link_url},#{access_log5.count}")
+        html = page.html.encode("UTF-8")
+        expect(html).to include("アクセス日,リンクURL,アクセス数")
+        expect(html).to include("#{access_log0.date.strftime("%Y-%m-%d")},#{access_log0.link_url},#{access_log0.count}")
+        expect(html).to include("#{access_log1.date.strftime("%Y-%m-%d")},#{access_log1.link_url},#{access_log1.count}")
+        expect(html).to include("#{access_log2.date.strftime("%Y-%m-%d")},#{access_log2.link_url},#{access_log2.count}")
+        expect(html).to include("#{access_log3.date.strftime("%Y-%m-%d")},#{access_log3.link_url},#{access_log3.count}")
+        expect(html).to include("#{access_log4.date.strftime("%Y-%m-%d")},#{access_log4.link_url},#{access_log4.count}")
+        expect(html).to include("#{access_log5.date.strftime("%Y-%m-%d")},#{access_log5.link_url},#{access_log5.count}")
       end
     end
 
@@ -59,19 +60,20 @@ describe "ads_access_logs" do
         click_on "ダウンロード"
         expect(status_code).to eq 200
 
-        expect(page.html).to include("link_url,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28")
-        expect(page.html).to include("#{access_log0.link_url},")
-        expect(page.html).to include("#{access_log1.link_url},")
-        expect(page.html).to include("#{access_log2.link_url},")
-        expect(page.html).to include("#{access_log3.link_url},")
-        expect(page.html).to include("#{access_log4.link_url},")
-        expect(page.html).to include("#{access_log5.link_url},")
-        expect(page.html).to include(",#{access_log0.count}")
-        expect(page.html).to include(",#{access_log1.count}")
-        expect(page.html).to include(",#{access_log2.count}")
-        expect(page.html).to include(",#{access_log3.count}")
-        expect(page.html).to include(",#{access_log4.count}")
-        expect(page.html).to include(",#{access_log5.count}")
+        html = page.html.encode("UTF-8")
+        expect(html).to include("リンクURL,1日,2日,3日,4日,5日,6日,7日,8日,9日,10日,11日,12日,13日,14日,15日,16日,17日,18日,19日,20日,21日,22日,23日,24日,25日,26日,27日,28日")
+        expect(html).to include("#{access_log0.link_url},")
+        expect(html).to include("#{access_log1.link_url},")
+        expect(html).to include("#{access_log2.link_url},")
+        expect(html).to include("#{access_log3.link_url},")
+        expect(html).to include("#{access_log4.link_url},")
+        expect(html).to include("#{access_log5.link_url},")
+        expect(html).to include(",#{access_log0.count}")
+        expect(html).to include(",#{access_log1.count}")
+        expect(html).to include(",#{access_log2.count}")
+        expect(html).to include(",#{access_log3.count}")
+        expect(html).to include(",#{access_log4.count}")
+        expect(html).to include(",#{access_log5.count}")
       end
     end
 
@@ -83,19 +85,20 @@ describe "ads_access_logs" do
         click_on "ダウンロード"
         expect(status_code).to eq 200
 
-        expect(page.html).to include("link_url,1,2,3,4,5,6,7,8,9,10,11,12,total")
-        expect(page.html).to include("#{access_log0.link_url},")
-        expect(page.html).to include("#{access_log1.link_url},")
-        expect(page.html).to include("#{access_log2.link_url},")
-        expect(page.html).to include("#{access_log3.link_url},")
-        expect(page.html).to include("#{access_log4.link_url},")
-        expect(page.html).to include("#{access_log5.link_url},")
-        expect(page.html).to include(",#{access_log0.count}")
-        expect(page.html).to include(",#{access_log1.count}")
-        expect(page.html).to include(",#{access_log2.count}")
-        expect(page.html).to include(",#{access_log3.count}")
-        expect(page.html).to include(",#{access_log4.count}")
-        expect(page.html).to include(",#{access_log5.count}")
+        html = page.html.encode("UTF-8")
+        expect(html).to include("リンクURL,1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月,合計")
+        expect(html).to include("#{access_log0.link_url},")
+        expect(html).to include("#{access_log1.link_url},")
+        expect(html).to include("#{access_log2.link_url},")
+        expect(html).to include("#{access_log3.link_url},")
+        expect(html).to include("#{access_log4.link_url},")
+        expect(html).to include("#{access_log5.link_url},")
+        expect(html).to include(",#{access_log0.count}")
+        expect(html).to include(",#{access_log1.count}")
+        expect(html).to include(",#{access_log2.count}")
+        expect(html).to include(",#{access_log3.count}")
+        expect(html).to include(",#{access_log4.count}")
+        expect(html).to include(",#{access_log5.count}")
       end
     end
   end
