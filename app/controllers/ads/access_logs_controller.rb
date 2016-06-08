@@ -126,12 +126,17 @@ class Ads::AccessLogsController < ApplicationController
 
     def send_total(filename = "ads_access_logs_#{Time.zone.now.to_i}.csv")
       csv = CSV.generate do |data|
+        title = "#{@year}#{t('datetime.prompts.year')}"
+        title = "#{title}#{@month}#{t('datetime.prompts.month')}" if @month
+        data << [title]
+
+        suffix = @month ? I18n.t('datetime.prompts.day') : I18n.t('datetime.prompts.month')
         header = []
-        header << 'link_url'
+        header << I18n.t("mongoid.attributes.ads/access_log.link_url")
         (1..@max_cell).each do |day|
-          header << day
+          header << "#{day}#{suffix}"
         end
-        header << 'total'
+        header << I18n.t("ads.total")
         data << header
 
         @totals.each do |link_url, counts|

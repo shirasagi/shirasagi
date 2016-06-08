@@ -1,5 +1,5 @@
 class Ads::AccessLog
-  include Mongoid::Document
+  include SS::Document
   include SS::Reference::Site
 
   #index({ site_id: 1, node_id: 1, date: -1 })
@@ -17,7 +17,7 @@ class Ads::AccessLog
   class << self
     def to_csv
       CSV.generate do |data|
-        data << %w(date link_url count)
+        data << %w(date link_url count).map { |k| t(k) }
         criteria.each do |item|
           line = []
           line << item.date.strftime("%Y-%m-%d")
