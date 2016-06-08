@@ -3,7 +3,7 @@
 <%= form_for :item, url: "#{@cur_node.url}confirm_leave.html", html: { method: "POST", class: "mypage-leave member-profile" } do |f| %>
 
 <div class="mypage-form member-profile">
-  <p>退会します。</p>
+  <p><%= I18n.t("member.button.leave") %></p>
   <div class="columns">
     <%= error_messages_for :item, header_message: false %>
     <%= render partial: "form_password", locales: { f: f, confirm: false } %>

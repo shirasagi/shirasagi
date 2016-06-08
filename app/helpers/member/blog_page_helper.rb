@@ -44,7 +44,7 @@ module Member::BlogPageHelper
 
     h = []
     h << %(<div class="member-blog-pages genres">)
-    h << %(<h2>記事ジャンル</h2>)
+    h << %(<h2>#{I18n.t('member.view.blog.genres')}</h2>)
     h << %(<ul>)
 
     pages = node.pages.and_public

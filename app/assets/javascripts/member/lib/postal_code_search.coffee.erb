@@ -3,7 +3,7 @@ class PostalCodeSearch
     postal_code: "input[name='item[postal_code]']"
     addr: "input[name='item[addr]']"
     error: '.postal-code-search-error'
-    error_message: '郵便番号が見つかりません'
+    error_message: "<%= I18n.t('errors.messages.not_found_postal_code') %>"
 
   constructor: (el, options = {}) ->
     @el = $(el)

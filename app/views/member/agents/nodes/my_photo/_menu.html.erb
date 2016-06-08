@@ -2,7 +2,7 @@
 
 <nav class="mypage-nav nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to "新規投稿", "#{@cur_node.url}new" %>
+    <%= link_to :new_post, "#{@cur_node.url}new" %>
   <% elsif params[:action] =~ /show/ %>
     <%= link_to :edit, "#{@cur_node.url}#{@item.id}/edit" %>
     <%= link_to :delete, "#{@cur_node.url}#{@item.id}/delete" %>

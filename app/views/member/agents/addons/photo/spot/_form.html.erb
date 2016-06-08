@@ -3,13 +3,12 @@ $ ->
   @deleteContent = (id) ->
     $(".file-view").each ->
       $(this).remove() if id == $(this).find(".photo-id").attr("value")
-
 <% end %>
 
 <dl class="see mod-photo spot">
   <dd class="wide">
     <%= f.hidden_field "photo_ids[]", value: "" %>
-    <%= link_to "ページを選択", member_apis_photos_path(@cur_site), class: "ajax-box btn" %>
+    <%= link_to t("member.view.select_page"), member_apis_photos_path(@cur_site), class: "ajax-box btn" %>
 
    <div id="selected-member-photos">
       <% @item.member_photos.each do |item| %>
