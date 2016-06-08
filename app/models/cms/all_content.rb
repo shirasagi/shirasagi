@@ -1,11 +1,15 @@
 require "csv"
 
 class Cms::AllContent
+  cattr_accessor :site
+
   class << self
-    def csv(encode: nil)
+    def csv(site, encode: nil)
+      self.site = site
+
       CSV.generate do |data|
         data << header
-        (Cms::Page.all + Cms::Node.all).each do |content|
+        (Cms::Page.site(site).all + Cms::Node.site(site).all).each do |content|
           data << row(content)
         end
       end
@@ -19,6 +23,7 @@ class Cms::AllContent
       end
 
       def row(content)
+        content.site ||= site
         page_id    = (content.class == Cms::Page) ? content.id : ""
         node_id    = (content.class == Cms::Node) ? content.id : ""
         files      = content.files.map(&:name).join("\n") rescue ""
