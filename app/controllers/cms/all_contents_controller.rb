@@ -1,6 +1,8 @@
 class Cms::AllContentsController < ApplicationController
   include Cms::BaseFilter
 
+  navi_view "cms/main/navi"
+
   def index
     respond_to do |format|
       format.html

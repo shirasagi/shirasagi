@@ -130,6 +130,10 @@ module Cms::Content
     state
   end
 
+  def status_options
+    state_options
+  end
+
   def parent
     return @cur_node if @cur_node
     return @parent unless @parent.nil?

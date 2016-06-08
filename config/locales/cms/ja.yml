@@ -872,22 +872,24 @@ ja:
         - 検索したいページの承認ステータスを選択します。
 
   all_content:
+    page_id: ページID
+    node_id: フォルダーID
     url: URL
     group_ids: 管理グループID
     group_names: 管理グループ名
-    id: コンテンツID
-    file_size: 容量
+    file_size: 静的ファイル容量
     name: タイトル
     index_name: 一覧用タイトル
-    created: コンテンツの作成日時
+    created: 作成日時
     released: 公開日時
     updated: 最終更新日時
     close_date: 公開終了日時
     status: 状態
     route: 登録種別 (ページ属性等)
     category_ids: カテゴリ
-    use_map: 地図使用の有無
-    have_files: 添付ファイルの有無
+    use_map: 地図のマーカー座標
+    files: 添付ファイル
+    file_urls: 添付ファイルURL
 
   job:
     models:
