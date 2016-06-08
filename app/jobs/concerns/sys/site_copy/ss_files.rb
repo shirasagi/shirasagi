@@ -71,6 +71,8 @@ module Sys::SiteCopy::SsFiles
       SS::UserFile
     when "share/file"
       Gws::Share::File
+    when "member/photo"
+      Member::PhotoFile
     else
       Rails.logger.info("unknown file model: #{model}")
       SS::File
