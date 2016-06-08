@@ -36,6 +36,8 @@ describe "cms_page_search", dbscope: :example do
 
       within "#addon-basic .addon-body .see" do
         expect(page).to have_css("dd", text: name)
+      end
+      within "#addon-cms-agents-addons-page_search .addon-body .mod-cms-page-search" do
         expect(page).to have_css("dd", text: search_name)
       end
 
