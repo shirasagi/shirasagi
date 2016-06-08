@@ -42,7 +42,7 @@
     <% sso.each do |sso| %>
     <% sso = sso.becomes_with_model %>
     <li class="<%= sso.filename %>">
-      <%= link_to(sso.url(params.slice(:ref))) do %>
+      <%= link_to(sso.url(params.slice(:ref)), class: "btn-default") do %>
         <h2 class="name"><%= sso.name %></h2>
         <p class="text"><%= br sso.text %></p>
       <% end %>

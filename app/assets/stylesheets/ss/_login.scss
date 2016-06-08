@@ -57,16 +57,22 @@
   }
   .sso {
     list-style: none;
-    width: 525px;
-    padding: 0;
+    width: 100%;
     margin: 0;
+    padding: 0;
     li {
-      margin: 15px 0;
+      margin: 1em 20px;
       a {
         display: block;
-        border: 1px solid #b2b2b2
+        text-align: center;
+        font-size: 100%;
       }
     }
+    .name {
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+    .text { font-size: $px12; }
   }
 }
 
