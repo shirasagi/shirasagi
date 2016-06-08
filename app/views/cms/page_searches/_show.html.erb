@@ -4,31 +4,4 @@
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.order %></dd>
-
-  <dt><%= @model.t :search_name %></dt>
-  <dd><%= @item.search_name %></dd>
-
-  <dt><%= @model.t :search_filename %></dt>
-  <dd><%= @item.search_filename %></dd>
-
-  <dt><%= @model.t :search_state %></dt>
-  <dd><%= @item.label :search_state %></dd>
-
-  <dt><%= @model.t :search_released %></dt>
-  <dd>
-    <% if @item.search_released_start || @item.search_released_close %>
-        <%= @item.search_released_start %>
-        -
-        <%= @item.search_released_close %>
-    <% end %>
-  </dd>
-
-  <dt><%= @model.t :search_updated %></dt>
-  <dd>
-    <% if @item.search_updated_start || @item.search_updated_close %>
-        <%= @item.search_updated_start %>
-        -
-        <%= @item.search_updated_close %>
-    <% end %>
-  </dd>
 </dl>
