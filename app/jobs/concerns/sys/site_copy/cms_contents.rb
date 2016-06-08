@@ -63,6 +63,8 @@ module Sys::SiteCopy::CmsContents
       :page
     elsif ancestors.include?(Cms::Model::Part)
       :part
+    elsif ancestors.include?(Cms::Model::Member)
+      :member
     else
       raise "unknown reference type: #{klass}"
     end
