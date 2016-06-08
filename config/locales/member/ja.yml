@@ -71,6 +71,7 @@ ja:
       map: 地図表示
       index: 一覧表示
       slide: スライド
+      search: 検索
     notice:
       accepted: 参加しました。
       rejected: 辞退しました。

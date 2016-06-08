@@ -1,6 +1,6 @@
 <%= coffee do %>
 $ ->
-  @deleteContent = (id) ->
+  @deletePhotoContent = (id) ->
     $(".file-view").each ->
       $(this).remove() if id == $(this).find(".photo-id").attr("value")
 <% end %>
@@ -21,7 +21,7 @@ $ ->
             <%= item.name %>
           </div>
           <div class="action delete">
-            <%= link_to t("views.button.delete"), "#", :onclick => "deleteContent('#{item.id}'); return false;" %>
+            <%= link_to t("views.button.delete"), "#", :onclick => "deletePhotoContent('#{item.id}'); return false;" %>
           </div>
         </article>
       <% end %>
