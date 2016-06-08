@@ -51,6 +51,6 @@ class Cms::PostalCodesController < ApplicationController
       end
       SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
 
-      redirect_to({ action: :index }, { notice: 'インポートを開始しました。' })
+      redirect_to({ action: :index }, { notice: I18n.t('cms.messages.import') })
     end
 end

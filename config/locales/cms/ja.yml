@@ -51,10 +51,13 @@ ja:
       user: 編集者
     confirm:
       delete_item: 項目を削除してよろしいですか？
+    messages:
+      import: インポートを開始しました
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
     postal_code: 郵便番号
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
+    postal_code_normalize_city: 以下に掲載がない場合
 
     adobe_reader:
       remark:
@@ -410,6 +413,7 @@ ja:
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: "リンクのテキストを確認してください。"
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      not_found_postal_code: 郵便番号が見つかりません
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。

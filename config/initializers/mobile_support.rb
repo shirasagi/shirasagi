@@ -57,4 +57,30 @@ module SS
     module_function :fs_path?
     module_function :embed_mobile_path
   end
+
+  module MobileRedirecting
+    extend ActiveSupport::Concern
+
+    def redirect_to_with_shirasagi(options = {}, response_status = {})
+      redirect_to_without_shirasagi(options, response_status)
+      if SS::MobileSupport.mobile?(request)
+        save_location = self.location
+        self.location = SS::MobileSupport.embed_mobile_path(request, save_location)
+        if save_location != location
+          self.response_body = <<HTML
+          <html><body>You are being <a href=\"#{ERB::Util.unwrapped_html_escape(location)}\">redirected</a>.</body></html>
+HTML
+        end
+      end
+    end
+
+    included do
+      alias_method_chain :redirect_to, :shirasagi
+    end
+  end
+end
+
+ActiveSupport.on_load(:action_controller) do
+  # include SS::MobileUrlFor
+  include SS::MobileRedirecting
 end

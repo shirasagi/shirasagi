@@ -39,8 +39,17 @@ ja:
       platform: プラットフォーム
       new_password: 新しいパスワード
       new_password_again: 新しいパスワード（入力確認）
+      change_password: パスワードを変更します。
+      leave: 退会しました。
       mail_subscription: メルマガ購読
       retired_member: 退会済み
+      location: 地域
+      keyword: キーワード
+      contributor: 投稿者
+      category: カテゴリー
+      select_page: ページを選択
+      blog:
+        genres: 記事ジャンル
     button:
       register: 登録
       back: 戻る
@@ -53,12 +62,21 @@ ja:
       reject: 辞退する
       address_search: 住所検索
     links:
+      profile: プロフィール編集
+      leave: 退会
+      change_password: パスワード変更
       blog_setting: ブログ設定
+      search_condition: 検索条件を変更する
       invite: 招待する
       map: 地図表示
+      index: 一覧表示
+      slide: スライド
+      search: 検索
     notice:
       accepted: 参加しました。
       rejected: 辞退しました。
+    confirm:
+      leave: ボタンをクリックすると退会します。よろしいですか。
 
   modules:
     member: メンバー
@@ -241,9 +259,15 @@ ja:
         %{sender_email} からメールが届きます。
         迷惑メールの防止のためメールの受信設定を行っている方は、「 %{sender_domain} 」からのメールが受信できるように、ドメイン指定受信の設定を行ってください。
       verify_email_address_html: |-
+        <h2>メールアドレスの確認</h2>
+        <div>
         %{sender_email} から登録案内メールを %{email} に送りました。
         メールに記載の案内を読み、登録を完了してください。
         しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>から登録案内メールを再送信してください。
+        </div>
+      complete_html: |-
+        <p>会員登録が完了しました</p>
+        <p>登録したメールアドレスとパスワードで、<a href="%{redirect_url}">ログイン</a>してください。</p>
     reset_password:
       link_text_html: |-
         パスワードをお忘れの場合は、<a href="%{reset_password_url}" target="_blank">こちら</a>のリンクからパスワードを再設定してください。

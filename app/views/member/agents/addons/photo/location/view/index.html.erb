@@ -1,5 +1,5 @@
 <section class="photo-locations">
-  <header><h2>地域</h2></header>
+  <header><h2><%= t("member.view.location") %></h2></header>
   <div class="nodes">
     <ul>
       <% @cur_page.photo_locations.order_by(order: 1).each do |item| %>

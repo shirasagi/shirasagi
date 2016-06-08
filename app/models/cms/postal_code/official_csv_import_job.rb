@@ -48,7 +48,7 @@ class Cms::PostalCode::OfficialCsvImportJob
     end
 
     def normalize_city(city)
-      city = city.sub("以下に掲載がない場合", "")
+      city = city.sub(I18n.t('cms.postal_code_normalize_city'), "")
       city = city.gsub(/（.+）/, "")
       city
     end

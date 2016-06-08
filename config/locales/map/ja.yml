@@ -16,6 +16,7 @@ ja:
       clear_marker: 削除
     confirm:
       delete_marker: マーカーを削除してよろしいですか？
+      find_exif: 画像に位置情報が含まれています。位置情報を地図に設定しますか？
 
   modules:
     map: 地図

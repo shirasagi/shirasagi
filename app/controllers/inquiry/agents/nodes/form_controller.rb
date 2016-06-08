@@ -93,7 +93,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
       query = query.to_query
 
-      url = mobile_path? ? "#{@cur_site.mobile_location}#{@cur_node.url}sent.html" : "#{@cur_node.url}sent.html"
+      url = "#{@cur_node.url}sent.html"
       url = "#{url}?#{query}" if query.present?
       redirect_to url
     end

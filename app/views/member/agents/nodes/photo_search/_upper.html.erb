@@ -9,17 +9,17 @@ $(window).on "load", ->
 <% end %>
 
 <dl class="condition">
-  <dt class="keyword"><%= "キーワード" %></dt>
+  <dt class="keyword"><%= t('member.view.keyword') %></dt>
   <dd><%= @query[:keyword] %></dd>
-  <dt class="contributor"><%= "投稿者" %></dt>
+  <dt class="contributor"><%= t('member.view.contributor') %></dt>
   <dd><%= @query[:contributor] %></dd>
-  <dt class="location"><%= "地域" %></dt>
+  <dt class="location"><%= t('member.view.location') %></dt>
   <dd><%= @query[:locations].pluck(:name).join("、") %></dd>
-  <dt class="category"><%= "カテゴリー" %></dt>
+  <dt class="category"><%= t('member.view.category') %></dt>
   <dd><%= @query[:categories].pluck(:name).join("、") %></dd>
 </dl>
 
-<%= link_to "検索条件を変更する", "#", class: "ajax-box" %>
+<%= link_to t('member.links.search_condition'), "#", class: "ajax-box" %>
 
 <section class="result">
   <h2>
@@ -33,10 +33,10 @@ $(window).on "load", ->
   <ul>
     <% q = @query.slice(:keyword, :contributor, :location_ids, :category_ids).to_query %>
     <li class="tab list<%= action_name == "index" ? " current" : "" %>">
-      <%= link_to "一覧表示", "#{@cur_node.url}?#{q}" %>
+      <%= link_to t('member.links.index'), "#{@cur_node.url}?#{q}" %>
     </li>
     <li class="tab map<%= action_name == "map" ? " current" : "" %>">
-      <%= link_to "地図表示", "#{@cur_node.url}map.html?#{q}" %>
+      <%= link_to t('member.links.map'), "#{@cur_node.url}map.html?#{q}" %>
     </li>
   </ul>
 </nav>

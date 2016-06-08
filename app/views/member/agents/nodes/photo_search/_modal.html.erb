@@ -8,17 +8,17 @@ $ ->
 <% end %>
 
 <%= form_tag search_path, multipart: true, method: "get" do %>
-  <h2><%= "キーワード" %></h2>
+  <h2><%= t('member.view.keyword') %></h2>
   <div class="keyword">
     <%= text_field_tag :keyword, @query[:keyword], class: "keyword" %>
   </div>
 
-  <h2><%= "投稿者名" %></h2>
+  <h2><%= t('member.view.contributor') %></h2>
   <div class="contributor">
     <%= text_field_tag :contributor, @query[:contributor], class: "contributor" %>
   </div>
 
-  <h2><%= "地域" %></h2>
+  <h2><%= t('member.view.location') %></h2>
   <div class="location">
     <%= hidden_field_tag 'location_ids[]', "" %>
     <% @locations.order_by(order: 1).each do |item| %>
@@ -30,7 +30,7 @@ $ ->
     <% end %>
   </div>
 
-  <h2><%= "タグ" %></h2>
+  <h2><%= t('member.view.category') %></h2>
   <div class="category">
     <%= hidden_field_tag 'category_ids[]', "" %>
     <% @categories.order_by(order: 1).each do |item| %>

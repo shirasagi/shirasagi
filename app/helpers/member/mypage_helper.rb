@@ -17,18 +17,6 @@ module Member::MypageHelper
     content_tag('span', t('views.required_field'), class: :required)
   end
 
-  # def example(key, html_wrap = true)
-  #   modelnames = @model.ancestors.select { |x| x.respond_to?(:model_name) }
-  #   msg = ""
-  #   modelnames.each do |modelname|
-  #     msg = I18n.t("examples.#{modelname.model_name.i18n_key}.#{key}", default: "")
-  #     break if msg.present?
-  #   end
-  #   return msg if msg.blank? || !html_wrap
-  #   msg = msg.join(", ") if msg.respond_to?(:join)
-  #   %(<span class="example">#{msg}</span>).html_safe
-  # end
-
   def remarks(key, html_wrap = true, options = {})
     modelnames = @model.ancestors.select { |x| x.respond_to?(:model_name) }
     msg = ""
