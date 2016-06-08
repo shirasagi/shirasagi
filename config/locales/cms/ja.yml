@@ -226,6 +226,7 @@ ja:
       cms/captcha: 認証
       cms/body_layout_html: HTML
       cms/default_release_plan: 公開予約の既定値
+      cms/page_search: 検索条件
 
   mongoid:
     models:
@@ -366,20 +367,21 @@ ja:
       cms/page_search:
         name: 名前
         order: 並び順
-        search_name: 検索タイトル
-        search_filename: 検索ファイル名
-        search_categories: 検索カテゴリー
-        search_category_ids: 検索カテゴリー
-        search_groups: 検索グループ
-        search_group_ids: 検索グループ
-        search_released: 検索公開日時
-        search_released_start: 検索公開日時（開始）
-        search_released_close: 検索公開日時（終了）
-        search_updated: 検索更新日時
-        search_updated_start: 検索更新日時（開始）
-        search_updated_close: 検索更新日時（終了）
-        search_state: 検索ステータス
-        search_approver_state: 検索承認ステータス
+      cms/addon/page_search:
+        search_name: タイトル
+        search_filename: ファイル名
+        search_categories: カテゴリー
+        search_category_ids: カテゴリー
+        search_groups: グループ
+        search_group_ids: グループ
+        search_released: 公開日時
+        search_released_start: 公開日時（開始）
+        search_released_close: 公開日時（終了）
+        search_updated: 更新日時
+        search_updated_start: 更新日時（開始）
+        search_updated_close: 更新日時（終了）
+        search_state: ステータス
+        search_approver_state: 承認ステータス
 
   errors:
     messages:
@@ -848,6 +850,8 @@ ja:
       order:
         - 並び順を入力します。
         - 入力した順でナビビューに表示されます。
+
+    cms/addon/page_search:
       search_name:
         - 検索したいページタイトルを入力します。
       search_filename:
