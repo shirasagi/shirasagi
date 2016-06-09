@@ -17,8 +17,10 @@ class Cms::AllContent
 
     private
       def header
-        fields = %w(page_id node_id route name index_name url category_ids files file_urls
-          use_map group_ids group_names close_date created released updated status file_size)
+        fields = %w(
+          page_id node_id route name index_name url category_ids files file_urls use_map
+          group_ids group_names close_date created released updated status file_size
+         )
         fields.map { |e| I18n.t("all_content.#{e}") }
       end
 
