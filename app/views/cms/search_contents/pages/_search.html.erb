@@ -1,15 +1,3 @@
-<%= jquery do %>
-$(".reset").on("click", function(e){
-  $(".ajax-selected tbody").html("");
-  $(".ajax-selected").hide();
-  $(".filename").val("");
-  $(".name").val("");
-  $(".state").prop("checked", false);
-  $(".datetime").val("");
-  return false;
-});
-<% end %>
-
 <%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>
 <div class="search-contents-pages">
   <dl class="see">
@@ -108,7 +96,7 @@ $(".reset").on("click", function(e){
     <dt></dt>
     <dd class="wide">
       <%= f.submit t("views.button.search"), name: "search", class: "search btn-primary" %>
-      <%= f.button t("views.button.reset"), name: "reset", type: "reset", class: "reset btn-default" %>
+      <%= link_to t("views.button.reset"), "./pages", class: "reset btn-default" %>
       <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
         <%= f.button t("views.button.save"), name: "save", class: "save btn-default" %>
       <% end %>
