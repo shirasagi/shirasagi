@@ -78,7 +78,6 @@ module SS::EditorHelper
     opts[:allowedContent] = true
     opts[:height] ||= "360px"
 
-
     if opts[:public_side]
       #
     else
