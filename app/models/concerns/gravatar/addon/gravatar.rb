@@ -25,7 +25,7 @@ module Gravatar::Addon
       when 'special_email'
         gravatar_email
       else
-        raise StandardError.new "Error! gravatar_image_view_kind is \"#{gravatar_image_view_kind}\"."
+        raise StandardError, "Error! gravatar_image_view_kind is \"#{gravatar_image_view_kind}\"."
       end
     end
 
