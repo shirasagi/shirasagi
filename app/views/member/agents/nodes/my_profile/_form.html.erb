@@ -1,5 +1,10 @@
 <%= stylesheet_link_tag 'member/public', media: 'all' %>
 <%= javascript_include_tag 'member/public' %>
+<%= jquery do %>
+  $("button[name='postal-code-search']").postalCodeSearch({
+    path: "<%= "#{@cur_node.url}postal_code" %>"
+  });
+<% end %>
 
 <dl class="column name">
   <dt>
@@ -26,7 +31,6 @@
 <dl class="column kana">
   <dt>
     <%= @model.t :kana %>
-    <%= required_label %>
   </dt>
   <dd>
     <%= f.text_field :kana %>
@@ -61,7 +65,6 @@
 <dl class="colum postal-code">
   <dt>
     <%= @model.t :postal_code %>
-    <%= required_label %>
   </dt>
   <dd>
     <%= f.text_field :postal_code %>
@@ -74,7 +77,6 @@
 <dl class="column">
   <dt>
     <%= @model.t :addr %>
-    <%= required_label %>
   </dt>
   <dd>
     <%= f.text_field :addr %>
@@ -85,7 +87,6 @@
 <dl class="column">
   <dt>
     <%= @model.t :sex %>
-    <%= required_label %>
   </dt>
   <dd>
     <% @item.sex_options.each do |text, val| %>
@@ -100,24 +101,30 @@
 <dl class="column">
   <dt>
     <%= @model.t :birthday %>
-    <%= required_label %>
   </dt>
   <dd>
     <%= f.fields_for :in_birth do |birth_f| %>
-      <%= birth_f.select :era, options_for_select(%w(西暦 明治 大正 昭和 平成), tryb { @item.in_birth[:era] } || @item.birthday ? '西暦' : nil), include_blank: true %>
-      <%= birth_f.number_field :year, value: tryb { @item.in_birth[:year] } || @item.birthday.try(:year) %>
-      年
-      <%= birth_f.select :month, options_for_select((1..12).to_a, tryb { @item.in_birth[:month] } || @item.birthday.try(:month)), include_blank: true %>
-      月
-      <%= birth_f.select :day, options_for_select((1..31).to_a, tryb { @item.in_birth[:day] } || @item.birthday.try(:day)), include_blank: true %>
-      日
+      <%
+        if @item.in_birth
+          era   = @item.in_birth["era"]
+          year  = @item.in_birth["year"]
+          month = @item.in_birth["month"]
+          day   = @item.in_birth["day"]
+        else
+          era   = @item.birthday ? "seireki" : nil
+          year  = @item.birthday.try(:year)
+          month = @item.birthday.try(:month)
+          day   = @item.birthday.try(:day)
+        end
+      %>
+      <%= birth_f.select :era, @item.wareki_options, selected: era, include_blank: true %>
+      <%= birth_f.number_field :year, value: year %>
+      <%= t("datetime.prompts.year") %>
+      <%= birth_f.select :month, options_for_select((1..12).to_a, month), include_blank: true  %>
+      <%= t("datetime.prompts.month") %>
+      <%= birth_f.select :day, options_for_select((1..31).to_a, day), include_blank: true %>
+      <%= t("datetime.prompts.day") %>
     <% end %>
     <%= remarks :birthday %>
   </dd>
 </dl>
-
-<%= jquery do %>
-  $("button[name='postal-code-search']").postalCodeSearch({
-    path: "<%= "#{@cur_node.url}postal_code" %>"
-  });
-<% end %>

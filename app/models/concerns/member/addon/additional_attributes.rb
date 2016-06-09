@@ -47,6 +47,10 @@ module Member::Addon
       %w(male female).map { |m| [ I18n.t("member.options.sex.#{m}"), m ] }.to_a
     end
 
+    def wareki_options
+       I18n.t("views.options.wareki").map { |k, v| [v, k] }
+    end
+
     def age(now = Time.zone.now)
       return nil if birthday.blank?
       return nil if now < birthday
@@ -70,9 +74,9 @@ module Member::Addon
         month = in_birth[:month].to_i
         day = in_birth[:day].to_i
 
-        wareki = SS.config.ss.wareki[era]
+        wareki = I18n.t("ss.wareki")[era.to_sym]
         return nil if wareki.blank?
-        min = Date.parse(wareki['min'])
+        min = Date.parse(wareki[:min])
 
         self.birthday = Date.new(min.year + year - 1, month, day)
       end
