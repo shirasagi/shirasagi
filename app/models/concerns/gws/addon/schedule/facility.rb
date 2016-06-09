@@ -64,7 +64,7 @@ module Gws::Addon::Schedule::Facility
           over = :max
           break
         end
-        time = time + 1.hour
+        time += 1.hour
       end
 
       if over

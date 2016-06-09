@@ -61,7 +61,9 @@ describe "ads_access_logs" do
         expect(status_code).to eq 200
 
         html = page.html.encode("UTF-8")
-        expect(html).to include("リンクURL,1日,2日,3日,4日,5日,6日,7日,8日,9日,10日,11日,12日,13日,14日,15日,16日,17日,18日,19日,20日,21日,22日,23日,24日,25日,26日,27日,28日")
+
+        header = "リンクURL,1日,2日,3日,4日,5日,6日,7日,8日,9日,10日,11日,12日,13日,14日,15日,16日,17日,18日,19日,20日,21日,22日,23日,24日,25日,26日,27日,28日"
+        expect(html).to include(header)
         expect(html).to include("#{access_log0.link_url},")
         expect(html).to include("#{access_log1.link_url},")
         expect(html).to include("#{access_log2.link_url},")
@@ -86,7 +88,8 @@ describe "ads_access_logs" do
         expect(status_code).to eq 200
 
         html = page.html.encode("UTF-8")
-        expect(html).to include("リンクURL,1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月,合計")
+        header = "リンクURL,1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月,合計"
+        expect(html).to include(header)
         expect(html).to include("#{access_log0.link_url},")
         expect(html).to include("#{access_log1.link_url},")
         expect(html).to include("#{access_log2.link_url},")

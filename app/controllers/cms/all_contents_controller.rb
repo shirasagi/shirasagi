@@ -6,7 +6,9 @@ class Cms::AllContentsController < ApplicationController
   def index
     respond_to do |format|
       format.html
-      format.csv { send_data Cms::AllContent.csv(@cur_site).encode("SJIS", invalid: :replace, undef: :replace), filename: "all_contents.csv" }
+      format.csv do
+        send_data Cms::AllContent.csv(@cur_site).encode("SJIS", invalid: :replace, undef: :replace), filename: "all_contents.csv"
+      end
     end
   end
 end

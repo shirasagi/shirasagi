@@ -64,7 +64,7 @@ SS::Application.routes.draw do
       match "oid/:id/callback" => "open_id_connect#callback", as: :open_id_connect_callback, via: [:get, :post]
 
       # Environment
-      get  "env/:id/login" => "environment#login", as: :env
+      get "env/:id/login" => "environment#login", as: :env
     end
   end
 end

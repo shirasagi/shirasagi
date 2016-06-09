@@ -20,7 +20,7 @@ module Inquiry::Addon
         [I18n.t('inquiry.options.state.disabled'), 'disabled'],
       ]
     end
-    
+
     def notice_content_options
       [
         [I18n.t('inquiry.options.notice_content.link_only'), 'link_only'],

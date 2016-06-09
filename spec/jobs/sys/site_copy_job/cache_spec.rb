@@ -15,10 +15,10 @@ describe Sys::SiteCopyJob, dbscope: :example do
     it "executes a block only once" do
       count = 0
       10.times do
-        subject.cache(:id, :key) {
+        subject.cache(:id, :key) do
           count += 1
           nil
-        }
+        end
       end
       expect(count).to eq 1
     end

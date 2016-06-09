@@ -158,8 +158,8 @@ module Cms::Addon::List
         return dummy_source unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
 
         img_source = $1
-        img_source = img_source[1..-1] if img_source.start_with?("'") || img_source.start_with?('"')
-        img_source = img_source[0..-2] if img_source.end_with?("'") || img_source.end_with?('"')
+        img_source = img_source[1..-1] if img_source.start_with?("'", '"')
+        img_source = img_source[0..-2] if img_source.end_with?("'", '"')
         img_source = img_source.strip
         if img_source.start_with?('.')
           #img_source = File.dirname(item.url) + '/' + img_source

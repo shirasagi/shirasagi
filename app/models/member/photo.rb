@@ -25,15 +25,15 @@ class Member::Photo
 
   def listable_state_options
     [
-      %w(表示 public),
-      %w(非表示 closed),
+      [I18n.t('views.options.state.public'), 'public'],
+      [I18n.t('views.options.state.closed'), 'closed'],
     ]
   end
 
   def slideable_state_options
     [
-      %w(表示 public),
-      %w(非表示 closed),
+      [I18n.t('views.options.state.public'), 'public'],
+      [I18n.t('views.options.state.closed'), 'closed'],
     ]
   end
 

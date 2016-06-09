@@ -14,7 +14,7 @@ RSpec.describe Gravatar::GravatarHelper, type: :helper do
     end
 
     describe "default \"size\"" do
-      it("returns no queries") { expect(helper.gravatar_image_url(email)).to eq  "https://gravatar.com/avatar/#{md5sum}" }
+      it("returns no queries") { expect(helper.gravatar_image_url(email)).to eq "https://gravatar.com/avatar/#{md5sum}" }
     end
 
     describe "with a default image URL" do
@@ -22,7 +22,11 @@ RSpec.describe Gravatar::GravatarHelper, type: :helper do
       default_before_escape = "http://example.com/images/avatar.jpg"
 
       it { expect(CGI.escape(default_before_escape)).to eq default }
-      it { expect(helper.gravatar_image_url(email, size: 150, default: default_before_escape)).to eq "https://gravatar.com/avatar/#{md5sum}?d=#{default}&s=150" }
+      it do
+        expect(helper.gravatar_image_url(email, size: 150, default: default_before_escape)).to eq(
+          "https://gravatar.com/avatar/#{md5sum}?d=#{default}&s=150"
+        )
+      end
     end
   end
 
@@ -33,8 +37,8 @@ RSpec.describe Gravatar::GravatarHelper, type: :helper do
 
     it "returns an img element which has some attributes" do
       expect(helper.gravatar_image_tag(email, { size: 100 }, { alt: "alt", title: "title" })).to eq(
-          "<img alt=\"alt\" title=\"title\" src=\"https://gravatar.com/avatar/#{md5sum}?s=100\" />"
-        )
+        "<img alt=\"alt\" title=\"title\" src=\"https://gravatar.com/avatar/#{md5sum}?s=100\" />"
+      )
     end
   end
 end

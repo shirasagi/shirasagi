@@ -3,15 +3,15 @@ class Inquiry::Mailer < ActionMailer::Base
      @node = node
      @answer = answer
      @answer_url = ::File.join(
-         site.full_url,
-         Rails.application.routes.url_helpers.inquiry_answer_path(site: site.id, cid: node.id, id: answer.id)
-       )
+       site.full_url,
+       Rails.application.routes.url_helpers.inquiry_answer_path(site: site.id, cid: node.id, id: answer.id)
+     )
      @subject = "[#{I18n.t('inquiry.notify')}]#{node.name} - #{site.name}"
 
      @answer_data = []
      @answer.data.each do |data|
        @answer_data << "- #{data.column.name}"
-       @answer_data << "#{data.value}"
+       @answer_data << data.value.to_s
        @answer_data << ""
      end
      @answer_data << "- #{@answer.class.t('remote_addr')}"

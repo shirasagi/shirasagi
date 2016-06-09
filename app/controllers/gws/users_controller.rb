@@ -51,7 +51,6 @@ class Gws::UsersController < ApplicationController
       render_update @item.update
     end
 
-
     def destroy
       raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
       render_destroy @item.disable
