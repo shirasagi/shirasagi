@@ -168,7 +168,10 @@ module Sys::SiteCopy::CmsContents
       [ src_file_id, cache(:files, src_file_id) ]
     end
 
-    file_id_map = file_id_map.select { |src_file_id, dest_file_id| dest_file_id.present? && dest_file_ids.include?(dest_file_id) }
+    file_id_map = file_id_map.select do |src_file_id, dest_file_id|
+      dest_file_id.present? && dest_file_ids.include?(dest_file_id)
+    end
+
     file_id_map.map do |src_file_id, dest_file_id|
       src_file = SS::File.where(site_id: @src_site.id).find(src_file_id)
       dest_file = SS::File.where(site_id: @dest_site.id).find(dest_file_id)
