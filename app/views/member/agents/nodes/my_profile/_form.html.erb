@@ -104,19 +104,7 @@
   </dt>
   <dd>
     <%= f.fields_for :in_birth do |birth_f| %>
-      <%
-        if @item.in_birth
-          era   = @item.in_birth["era"]
-          year  = @item.in_birth["year"]
-          month = @item.in_birth["month"]
-          day   = @item.in_birth["day"]
-        else
-          era   = @item.birthday ? "seireki" : nil
-          year  = @item.birthday.try(:year)
-          month = @item.birthday.try(:month)
-          day   = @item.birthday.try(:day)
-        end
-      %>
+      <% era, year, month, day = @item.parse_in_birth %>
       <%= birth_f.select :era, @item.wareki_options, selected: era, include_blank: true %>
       <%= birth_f.number_field :year, value: year %>
       <%= t("datetime.prompts.year") %>

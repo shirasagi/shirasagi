@@ -83,10 +83,10 @@
     <dt><%= @item.class.t :birthday %></dt>
     <dd>
       <% if @item.in_birth.present? %>
-        <%= tryb { @item.in_birth[:era] } %>
-        <%= tryb { "#{@item.in_birth[:year]}年" } %>
-        <%= tryb { "#{@item.in_birth[:month]}月" } %>
-        <%= tryb { "#{@item.in_birth[:day]}日" } %>
+        <%= tryb { t("ss.wareki.#{ @item.in_birth[:era] }.name") } %>
+        <%= tryb { "#{@item.in_birth[:year]}#{t("datetime.prompts.year")}" } %>
+        <%= tryb { "#{@item.in_birth[:month]}#{t("datetime.prompts.month")}" } %>
+        <%= tryb { "#{@item.in_birth[:day]}#{t("datetime.prompts.day")}" } %>
       <% end %>
       <%= f.fields_for :in_birth do |birth_f| %>
         <%= birth_f.hidden_field :era, value: tryb { @item.in_birth[:era] } %>

@@ -66,13 +66,14 @@
     <dt><%= @item.class.t :birthday %><span class="required"><%= t('views.required_field') %></span></dt>
     <dd>
       <%= f.fields_for :in_birth do |birth_f| %>
-        <%= birth_f.select :era, options_for_select(%w(西暦 明治 大正 昭和 平成), tryb { @item.in_birth[:era] }), include_blank: true %>
-        <%= birth_f.number_field :year, value: tryb { @item.in_birth[:year] } %>
-        年
-        <%= birth_f.select :month, options_for_select((1..12).to_a, tryb { @item.in_birth[:month] }), include_blank: true %>
-        月
-        <%= birth_f.select :day, options_for_select((1..31).to_a, tryb { @item.in_birth[:day] }), include_blank: true %>
-        日
+        <% era, year, month, day = @item.parse_in_birth %>
+        <%= birth_f.select :era, @item.wareki_options, selected: era, include_blank: true %>
+        <%= birth_f.number_field :year, value: year %>
+        <%= t("datetime.prompts.year") %>
+        <%= birth_f.select :month, options_for_select((1..12).to_a, month), include_blank: true  %>
+        <%= t("datetime.prompts.month") %>
+        <%= birth_f.select :day, options_for_select((1..31).to_a, day), include_blank: true %>
+        <%= t("datetime.prompts.day") %>
       <% end %>
       <%= remarks :birthday %>
     </dd>

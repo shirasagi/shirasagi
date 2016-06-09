@@ -260,14 +260,12 @@ ja:
         迷惑メールの防止のためメールの受信設定を行っている方は、「 %{sender_domain} 」からのメールが受信できるように、ドメイン指定受信の設定を行ってください。
       verify_email_address_html: |-
         <h2>メールアドレスの確認</h2>
-        <div>
         %{sender_email} から登録案内メールを %{email} に送りました。
         メールに記載の案内を読み、登録を完了してください。
         しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>から登録案内メールを再送信してください。
-        </div>
       complete_html: |-
-        <p>会員登録が完了しました</p>
-        <p>登録したメールアドレスとパスワードで、<a href="%{redirect_url}">ログイン</a>してください。</p>
+        会員登録が完了しました
+        登録したメールアドレスとパスワードで、<a href="%{redirect_url}">ログイン</a>してください。</p>
     reset_password:
       link_text_html: |-
         パスワードをお忘れの場合は、<a href="%{reset_password_url}" target="_blank">こちら</a>のリンクからパスワードを再設定してください。

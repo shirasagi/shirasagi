@@ -51,6 +51,22 @@ module Member::Addon
        I18n.t("views.options.wareki").map { |k, v| [v, k] }
     end
 
+    def parse_in_birth
+      if in_birth
+        era   = in_birth["era"]
+        year  = in_birth["year"]
+        month = in_birth["month"]
+        day   = in_birth["day"]
+      else
+        era   = birthday ? "seireki" : nil
+        year  = birthday.try(:year)
+        month = birthday.try(:month)
+        day   = birthday.try(:day)
+      end
+
+      [era, year, month, day]
+    end
+
     def age(now = Time.zone.now)
       return nil if birthday.blank?
       return nil if now < birthday

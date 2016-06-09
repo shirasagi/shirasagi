@@ -302,7 +302,9 @@ ja:
         name: 氏名
         email: メールアドレス
         email_again: メールアドレス（確認用）
+        password: パスワード
         in_password: パスワード
+        in_password_again: パスワード（確認用）
         oauth_type: OAuth Type
         oauth_id: OAuth ID
         oauth_token: OAuth トークン
