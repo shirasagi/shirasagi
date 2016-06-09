@@ -21,9 +21,7 @@ module SS
           mode = options[:binary] ? "wb" : "w"
           mode = "#{mode}:#{options[:encoding]}" if options[:encoding]
 
-          ::File.open(tmpfile, mode) do |file|
-            yield file
-          end
+          ::File.open(tmpfile, mode) { |file| yield file }
           tmpfile
         end
 
@@ -34,9 +32,7 @@ module SS
           if contents.respond_to?(:path)
             source_file = contents.path
           else
-            source_file = tmpfile(binary: options.delete(:binary)) do |file|
-              file.write contents
-            end
+            source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
           end
 
           ss_file = SS::File.new(model: options.delete(:model) || "ss/temp_file")
