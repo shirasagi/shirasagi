@@ -3,9 +3,9 @@ class Inquiry::Mailer < ActionMailer::Base
      @node = node
      @answer = answer
      @answer_url = ::File.join(
-         site.full_url,
-         Rails.application.routes.url_helpers.inquiry_answer_path(site: site.id, cid: node.id, id: answer.id)
-       )
+       site.full_url,
+       Rails.application.routes.url_helpers.inquiry_answer_path(site: site.id, cid: node.id, id: answer.id)
+     )
      @subject = "[#{I18n.t('inquiry.notify')}]#{node.name} - #{site.name}"
 
      @answer_data = []
