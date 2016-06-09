@@ -44,58 +44,57 @@ module Sys::SiteCopy::SsFiles
   end
 
   private
-
-  def detect_file_class(model)
-    case model
-    when "ads/banner"
-      SS::File
-    when "article/page"
-      SS::File
-    when "board/post"
-      Board::File
-    when "cms/editor_template"
-      SS::File
-    when "cms/file"
-      Cms::File
-    when "cms/page"
-      SS::File
-    when "facility/file"
-      SS::File
-    when "key_visual/image"
-      SS::File
-    when "ss/temp_file"
-      SS::TempFile
-    when "ss/thumb_file"
-      SS::ThumbFile
-    when "ss/user_file"
-      SS::UserFile
-    when "share/file"
-      Gws::Share::File
-    when "member/photo"
-      Member::PhotoFile
-    else
-      Rails.logger.info("unknown file model: #{model}")
-      SS::File
+    def detect_file_class(model)
+      case model
+      when "ads/banner"
+        SS::File
+      when "article/page"
+        SS::File
+      when "board/post"
+        Board::File
+      when "cms/editor_template"
+        SS::File
+      when "cms/file"
+        Cms::File
+      when "cms/page"
+        SS::File
+      when "facility/file"
+        SS::File
+      when "key_visual/image"
+        SS::File
+      when "ss/temp_file"
+        SS::TempFile
+      when "ss/thumb_file"
+        SS::ThumbFile
+      when "ss/user_file"
+        SS::UserFile
+      when "share/file"
+        Gws::Share::File
+      when "member/photo"
+        Member::PhotoFile
+      else
+        Rails.logger.info("unknown file model: #{model}")
+        SS::File
+      end
     end
-  end
 
-  def pseudo_file(src_file)
-    base_file_data = ::File.open(src_file.path, 'rb:ASCII-8BIT')
-    base_file_hash = {
-      tempfile: base_file_data,
-      filename: src_file.filename,
-      type:     src_file.content_type,
-      head:     pseudo_http_header(src_file)
-    }
-    yield ActionDispatch::Http::UploadedFile.new(base_file_hash)
-  ensure
-    base_file_data.close if base_file_data
-  end
+    def pseudo_file(src_file)
+      base_file_data = ::File.open(src_file.path, 'rb:ASCII-8BIT')
+      base_file_hash = {
+        tempfile: base_file_data,
+        filename: src_file.filename,
+        type:     src_file.content_type,
+        head:     pseudo_http_header(src_file)
+      }
+      yield ActionDispatch::Http::UploadedFile.new(base_file_hash)
+    ensure
+      base_file_data.close if base_file_data
+    end
 
-  def pseudo_http_header(src_file)
-    headers = []
-    headers << "Content-Disposition: form-data; name=\"item[in_files][]\"; filename=\"#{src_file.filename}\""
-    headers << "Content-Type: #{src_file.content_type}"
-    headers.join("\r\n")
-  end
+    def pseudo_http_header(src_file)
+      headers = []
+      headers << "Content-Disposition: form-data; name=\"item[in_files][]\"; filename=\"#{src_file.filename}\""
+      headers << "Content-Type: #{src_file.content_type}"
+      headers.join("\r\n")
+    end
 end
