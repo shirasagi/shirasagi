@@ -29,11 +29,6 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
       @item = @model.new get_params
       @item.in_check_name = true
       @item.in_check_email_again = true
-      @item.kana_required = true
-      @item.birthday_required = true
-      @item.sex_required = true
-      @item.postal_code_required = true
-      @item.addr_required = true
       @item.state = 'temporary'
 
       render action: :new unless @item.valid?
@@ -43,11 +38,6 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     def interim
       @item = @model.new get_params
       @item.in_check_name = true
-      @item.kana_required = true
-      @item.birthday_required = true
-      @item.sex_required = true
-      @item.postal_code_required = true
-      @item.addr_required = true
       @item.state = 'temporary'
 
       # 戻るボタンのクリック
@@ -80,11 +70,6 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
 
       @item.attributes = get_params
       @item.in_check_password = true
-      @item.kana_required = true
-      @item.birthday_required = true
-      @item.sex_required = true
-      @item.postal_code_required = true
-      @item.addr_required = true
       @item.state = 'enabled'
 
       unless @item.update

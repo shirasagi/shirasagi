@@ -96,7 +96,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         expect(page.find("input[name='item[postal_code]']", visible: false).value).to eq postal_code
         expect(page.find("input[name='item[addr]']", visible: false).value).to eq addr
         expect(page.find("input[name='item[sex]']", visible: false).value).to eq sex
-        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq era
+        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq "seireki"
         expect(page.find("input[name='item[in_birth][year]']", visible: false).value).to eq birthday.year.to_s
         expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
         expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
@@ -206,7 +206,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         expect(page.find("input[name='item[postal_code]']", visible: false).value).to eq postal_code
         expect(page.find("input[name='item[addr]']", visible: false).value).to eq addr
         expect(page.find("input[name='item[sex]']", visible: false).value).to eq sex
-        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq era
+        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq "seireki"
         expect(page.find("input[name='item[in_birth][year]']", visible: false).value).to eq birthday.year.to_s
         expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
         expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s

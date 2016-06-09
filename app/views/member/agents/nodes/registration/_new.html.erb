@@ -16,7 +16,7 @@
   </dl>
 
   <dl class="colum kana">
-    <dt><%= @item.class.t :kana %><span class="required"><%= t('views.required_field') %></span></dt>
+    <dt><%= @item.class.t :kana %></dt>
     <dd><%= f.text_field :kana %><%= remarks :kana %></dd>
   </dl>
 
@@ -36,7 +36,7 @@
   </dl>
 
   <dl class="colum postal-code">
-    <dt><%= @item.class.t :postal_code %><span class="required"><%= t('views.required_field') %></span></dt>
+    <dt><%= @item.class.t :postal_code %></dt>
     <dd>
       <%= f.text_field :postal_code %>
       <%= f.button t('member.button.address_search'), name: 'postal-code-search', type: :button %>
@@ -46,12 +46,12 @@
   </dl>
 
   <dl class="colum addr">
-    <dt><%= @item.class.t :addr %><span class="required"><%= t('views.required_field') %></span></dt>
+    <dt><%= @item.class.t :addr %></dt>
     <dd><%= f.text_field :addr %><%= remarks :addr %></dd>
   </dl>
 
   <dl class="colum sex">
-    <dt><%= @item.class.t :sex %><span class="required"><%= t('views.required_field') %></span></dt>
+    <dt><%= @item.class.t :sex %></dt>
     <dd>
       <% @item.sex_options.each do |text, val| %>
         <%= label_tag("item_sex_#{val}", class: val) do %>
@@ -63,16 +63,17 @@
   </dl>
 
   <dl class="colum birthday">
-    <dt><%= @item.class.t :birthday %><span class="required"><%= t('views.required_field') %></span></dt>
+    <dt><%= @item.class.t :birthday %></dt>
     <dd>
       <%= f.fields_for :in_birth do |birth_f| %>
-        <%= birth_f.select :era, options_for_select(%w(西暦 明治 大正 昭和 平成), tryb { @item.in_birth[:era] }), include_blank: true %>
-        <%= birth_f.number_field :year, value: tryb { @item.in_birth[:year] } %>
-        年
-        <%= birth_f.select :month, options_for_select((1..12).to_a, tryb { @item.in_birth[:month] }), include_blank: true %>
-        月
-        <%= birth_f.select :day, options_for_select((1..31).to_a, tryb { @item.in_birth[:day] }), include_blank: true %>
-        日
+        <% era, year, month, day = @item.parse_in_birth %>
+        <%= birth_f.select :era, @item.wareki_options, selected: era, include_blank: true %>
+        <%= birth_f.number_field :year, value: year %>
+        <%= t("datetime.prompts.year") %>
+        <%= birth_f.select :month, options_for_select((1..12).to_a, month), include_blank: true  %>
+        <%= t("datetime.prompts.month") %>
+        <%= birth_f.select :day, options_for_select((1..31).to_a, day), include_blank: true %>
+        <%= t("datetime.prompts.day") %>
       <% end %>
       <%= remarks :birthday %>
     </dd>

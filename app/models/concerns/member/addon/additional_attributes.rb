@@ -13,8 +13,6 @@ module Member::Addon
       field :sex, type: String
       field :birthday, type: Date
 
-      attr_accessor :kana_required, :organization_name_required, :job_required, :tel_required, :postal_code_required
-      attr_accessor :addr_required, :sex_required, :birthday_required
       attr_accessor :in_birth
 
       permit_params :kana, :organization_name, :job, :tel, :postal_code, :addr, :sex, :birthday
@@ -24,27 +22,39 @@ module Member::Addon
       before_validation :normalize_in_birth
 
       validates :kana, length: { maximum: 40 }
-      validates :kana, presence: true, if: ->{ kana_required }
       validates :organization_name, length: { maximum: 40 }
-      validates :organization_name, presence: true, if: ->{ organization_name_required }
       validates :job, length: { maximum: 40 }
-      validates :job, presence: true, if: ->{ job_required }
       validates :tel, length: { maximum: 40 }
-      validates :tel, presence: true, if: ->{ tel_required }
       validates :postal_code, length: { maximum: 40 }
-      validates :postal_code, presence: true, if: ->{ postal_code_required }
       validates :addr, length: { maximum: 80 }
-      validates :addr, presence: true, if: ->{ addr_required }
       validates :sex, inclusion: { in: %w(male female), allow_blank: true }
-      validates :sex, presence: true, if: ->{ sex_required }
       validates_with Member::BirthValidator, attributes: :in_birth, if: ->{ in_birth.present? }
-      validates :in_birth, presence: true, if: ->{ birthday_required }
 
       before_save :set_birthday, if: ->{ in_birth.present? }
     end
 
     def sex_options
       %w(male female).map { |m| [ I18n.t("member.options.sex.#{m}"), m ] }.to_a
+    end
+
+    def wareki_options
+       I18n.t("views.options.wareki").map { |k, v| [v, k] }
+    end
+
+    def parse_in_birth
+      if in_birth
+        era   = in_birth["era"]
+        year  = in_birth["year"]
+        month = in_birth["month"]
+        day   = in_birth["day"]
+      else
+        era   = birthday ? "seireki" : nil
+        year  = birthday.try(:year)
+        month = birthday.try(:month)
+        day   = birthday.try(:day)
+      end
+
+      [era, year, month, day]
     end
 
     def age(now = Time.zone.now)
@@ -70,9 +80,9 @@ module Member::Addon
         month = in_birth[:month].to_i
         day = in_birth[:day].to_i
 
-        wareki = SS.config.ss.wareki[era]
+        wareki = I18n.t("ss.wareki")[era.to_sym]
         return nil if wareki.blank?
-        min = Date.parse(wareki['min'])
+        min = Date.parse(wareki[:min])
 
         self.birthday = Date.new(min.year + year - 1, month, day)
       end
