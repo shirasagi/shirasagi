@@ -11,7 +11,7 @@ class Inquiry::Mailer < ActionMailer::Base
      @answer_data = []
      @answer.data.each do |data|
        @answer_data << "- #{data.column.name}"
-       @answer_data << "#{data.value}"
+       @answer_data << data.value.to_s
        @answer_data << ""
      end
      @answer_data << "- #{@answer.class.t('remote_addr')}"
