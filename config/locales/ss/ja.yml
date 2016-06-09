@@ -50,6 +50,7 @@ ja:
       random_password: ランダム生成
       copy: コピー
       paste: 貼り付け
+      confirm: 確認
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。

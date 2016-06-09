@@ -1,0 +1,85 @@
+<%= jquery do %>
+  SS_SearchUI.modal();
+
+  if(!SS_SearchUI.applyCopySiteRadio){
+    // ラジオボタンが変化した時に
+    // 対応する画面外のチェックボックスのチェックを切り替える
+    SS_SearchUI.applyCopySiteRadio = function(){
+      $('#ajax-box .index.sys-copy input[type=radio]').on('change.applyCopySiteRadio', function(e){
+        // 要素が変化したら処理
+        $('#ajax-box .index.sys-copy tr>td.checkbox').each(function(){
+          // tr 毎に処理
+          if($(this).find('input[type=radio]').is(':checked')){
+            // ラジオボタンがチェックされている場合
+            if ($(this).find('input[type=checkbox]').prop('checked')){
+              // 既にチェックが付いていたら静的に外して click 発火させてチェック入れる
+              $(this).find('input[type=checkbox]').prop('checked', false).click();
+            }else{
+              // チェックがされていなければ click 発火
+              $(this).find('input[type=checkbox]').click();
+            }
+          }else{
+            // ラジオボタンがチェックされていない場合
+            if ($(this).find('input[type=checkbox]').prop('checked')){
+              // 既にチェックが付いていたら click 発火させてチェック外す
+              $(this).find('input[type=checkbox]').click();
+            }else{
+              // チェックがされていなければ 静的に入れて click 発火させてチェック外す
+              $(this).find('input[type=checkbox]').prop('checked', true).click();
+            }
+          }
+        })
+      });
+      SS_SearchUI.toggleSelectButton();
+    }
+  }
+  SS_SearchUI.applyCopySiteRadio();
+
+  if(!SS_SearchUI.remoteEndCopySite){
+    // 2 度目のサイト選択が行われた時、先に選択していたサイトを取り除く
+    SS_SearchUI.remoteEndCopySite = function(){
+      $('#ajax-box .sys-copy .select-items').on('click.remoteEndCopySite', function(e){
+        if( 1 < SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody tr").size() ){
+          // 選択済みが 1 件以上の場合のみ, 先に選択されていたものを削除
+          SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody tr").last().find('a.deselect.btn').click();
+        }
+      });
+    }
+  }
+  SS_SearchUI.remoteEndCopySite();
+<% end %>
+
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit  t("sys.apis.sites.search"), class: :btn %>
+<% end %>
+</div>
+
+<table class="index sys-copy">
+  <thead>
+    <tr>
+      <th class="checkbox">&nbsp;</th>
+      <th class="name"><%= @model.t :name %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>">
+        <td class="checkbox">
+          <input type="radio" name="ids[]-radio" value="<%= item.id %>" id="radio-<%= item.id %>" />
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" style="position: absolute; left: -9999px; top: -9999px;" />
+        </td>
+        <td><label for="radio-<%= item.id %>" style="cursor:pointer;"><span class="select-item"><%= item.name %></span></label><%=
+=begin
+link_to item.name, "#", class: "select-item" 
+=end
+%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="sys-copy" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+  <%= button_tag t("sys.apis.sites.select"), { type: :button, class: "select-items btn" } %>
+</div>

@@ -15,6 +15,9 @@ SS::Application.routes.draw do
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
     get "info" => "info#index", as: :info
+    get "site_copy" => "site_copy#index", as: :site_copy
+    post "site_copy/confirm" => "site_copy#confirm"
+    post "site_copy/run" => "site_copy#run"
     get "test" => "test#index", as: :test
     get "test/http" => "test/http#index", as: :test_http
     get "test/mail" => "test/mail#index", as: :test_mail
@@ -28,6 +31,7 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "groups" => "groups#index"
+      get "sites" => "sites#index"
     end
 
     namespace "db" do

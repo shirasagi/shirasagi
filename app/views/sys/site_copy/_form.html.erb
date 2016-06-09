@@ -1,0 +1,57 @@
+<dl class="see sys-site-copy">
+  <dt><%= @model.t :target_host_name %></dt>
+  <dd><%= f.text_field :target_host_name %></dd>
+
+  <dt><%= @model.t :target_host_host %></dt>
+  <dd><%= f.text_field :target_host_host %></dd>
+
+  <dt><%= @model.t :target_host_domains %></dt>
+  <dd><%= f.text_field :target_host_domains %></dd>
+
+  <dt><%= @model.t :source_site_id %></dt>
+  <dd>
+    <%= f.hidden_field "source_site_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("sys.apis.sites.index"), sys_apis_sites_path, :action => :index, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= Sys::Site.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @item.source_site.present? %>
+          <tr data-id="<%= @item.source_site_id %>">
+            <td><%= f.hidden_field "item_ids[]", value: @item.source_site_id %> <%= @item.source_site.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :copy_contents %></dt>
+  <dd>
+    <ul>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'pages', @item.copy_contents.include?('pages'), { id: "#{f.object_name}_copy_contents_pages" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_pages", t('sys.options.copy_contents.pages') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'files', @item.copy_contents.include?('files'), { id: "#{f.object_name}_copy_contents_files" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_files", t('sys.options.copy_contents.files') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'editor_templates', @item.copy_contents.include?('editor_templates'), { id: "#{f.object_name}_copy_contents_editor_templates" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_editor_templates", t('sys.options.copy_contents.editor_templates') %>
+      </li>
+      <li>
+        <%= check_box_tag "#{f.object_name}[copy_contents][]", 'dictionaries', @item.copy_contents.include?('dictionaries'), { id: "#{f.object_name}_copy_contents_dictionaries" } %>
+        <%= label_tag "#{f.object_name}_copy_contents_dictionaries", t('sys.options.copy_contents.dictionaries') %>
+      </li>
+    </ul>
+    <p class="description"><%= t('sys.site_copy/description') %></p>
+  </dd>
+</dl>
