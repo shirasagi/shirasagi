@@ -1,118 +1,93 @@
-<%= jquery do %>
-$(".reset").on("click", function(e){
-  $(".ajax-selected tbody").html("");
-  $(".ajax-selected").hide();
-  $(".filename").val("");
-  $(".name").val("");
-  $(".state").prop("checked", false);
-  $(".datetime").val("");
-  return false;
-});
-<% end %>
-
 <%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>
-<div class="search-contents-pages">
-  <dl class="see">
-    <dt><%= @model.t :search_name %><%= @model.tt :search_name %></dt>
-    <dd><%= text_field_tag "s[name]", @item.search_name, class: :name %></dd>
-  </dl>
+  <div class="search-contents-pages">
+    <dl class="see">
+      <dt><%= @model.t :search_name %><%= @model.tt :search_name %></dt>
+      <dd><%= text_field_tag "s[name]", @item.search_name, class: :name %></dd>
 
-  <dl class="see">
-    <dt><%= @model.t :search_filename %><%= @model.tt :search_filename %></dt>
-    <dd><%= text_field_tag "s[filename]", @item.search_filename, class: :filename %></dd>
-  </dl>
+      <dt><%= @model.t :search_filename %><%= @model.tt :search_filename %></dt>
+      <dd><%= text_field_tag "s[filename]", @item.search_filename, class: :filename %></dd>
 
-  <dl class="see">
-    <dt><%= @model.t :search_category_ids %><%= @model.tt :search_category_ids %></dt>
-    <dd class="wide">
-      <%= hidden_field_tag "s[category_ids][]", nil, class: "hidden-ids" %>
-      <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
-    </dd>
-    <dd>
-      <table class="index" style="visibility:hidden"></teble>
-      <table class="index ajax-selected">
-        <thead>
-          <tr>
-            <th class="name"><%= @model.t("category_ids") %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @item.search_categories.each do |item| %>
-          <tr data-id="<%= item.id %>">
-            <td><%= hidden_field_tag "s[category_ids][]", item.id %> <%= item.name %></td>
-            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </dd>
-  </dl>
+      <dt><%= @model.t :search_category_ids %><%= @model.tt :search_category_ids %></dt>
+      <dd class="wide">
+        <%= hidden_field_tag "s[category_ids][]", nil, class: "hidden-ids" %>
+        <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
+      </dd>
+      <dd>
+        <table class="index" style="visibility:hidden"></teble>
+        <table class="index ajax-selected">
+          <thead>
+            <tr>
+              <th class="name"><%= @model.t :search_category_ids %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @item.search_categories.each do |item| %>
+            <tr data-id="<%= item.id %>">
+              <td><%= hidden_field_tag "s[category_ids][]", item.id %> <%= item.name %></td>
+              <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
 
-  <dl class="see">
-    <dt><%= @model.t :search_group_ids %><%= @model.tt :search_group_ids %></dt>
-    <dd class="wide">
-      <%= hidden_field_tag "s[group_ids][]", nil, class: "hidden-ids" %>
-      <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
-    </dd>
-    <dd>
-      <table class="index" style="visibility:hidden"></teble>
-      <table class="index ajax-selected">
-        <thead>
-          <tr>
-            <th class="name"><%= @model.t("group_ids") %></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @item.search_groups.each do |item| %>
-          <tr data-id="<%= item.id %>">
-            <td><%= hidden_field_tag "s[group_ids][]", item.id %> <%= item.name %></td>
-            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </dd>
-  </dl>
+    <dl class="see">
+      <dt><%= @model.t :search_group_ids %><%= @model.tt :search_group_ids %></dt>
+      <dd class="wide">
+        <%= hidden_field_tag "s[group_ids][]", nil, class: "hidden-ids" %>
+        <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
+      </dd>
+      <dd>
+        <table class="index" style="visibility:hidden"></teble>
+        <table class="index ajax-selected">
+          <thead>
+            <tr>
+              <th class="name"><%= @model.t :search_group_ids %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @item.search_groups.each do |item| %>
+            <tr data-id="<%= item.id %>">
+              <td><%= hidden_field_tag "s[group_ids][]", item.id %> <%= item.name %></td>
+              <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
 
-  <dl class="see">
-    <dt><%= @model.t :search_released %><%= @model.tt :search_released %></dt>
-    <dd>
-      <%= text_field_tag "s[released_start]", tryb{@item.search_released_start.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
-      <%= "-" %>
-      <%= text_field_tag "s[released_close]", tryb{@item.search_released_close.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
-    </dd>
-  </dl>
+    <dl class="see">
+      <dt><%= @model.t :search_released %><%= @model.tt :search_released %></dt>
+      <dd>
+        <%= text_field_tag "s[released_start]", tryb{@item.search_released_start.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
+        <%= "-" %>
+        <%= text_field_tag "s[released_close]", tryb{@item.search_released_close.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
+      </dd>
 
-  <dl class="see">
-    <dt><%= @model.t :search_updated %><%= @model.tt :search_updated %></dt>
-    <dd>
-      <%= text_field_tag "s[updated_start]", tryb{@item.search_updated_start.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
-      <%= "-" %>
-      <%= text_field_tag "s[updated_close]", tryb{@item.search_updated_close.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
-    </dd>
-  </dl>
+      <dt><%= @model.t :search_updated %><%= @model.tt :search_updated %></dt>
+      <dd>
+        <%= text_field_tag "s[updated_start]", tryb{@item.search_updated_start.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
+        <%= "-" %>
+        <%= text_field_tag "s[updated_close]", tryb{@item.search_updated_close.strftime("%Y/%m/%d %H:%M")}, class: "datetime js-datetime" %>
+      </dd>
 
-  <dl class="see">
-    <dt><%= @model.t :search_state %><%= @model.tt :search_state %></dt>
-    <dd><%= select_tag "s[state]", options_for_select(@item.search_state_options, selected: @item.search_state), include_blank: true %></dd>
-  </dl>
+      <dt><%= @model.t :search_state %><%= @model.tt :search_state %></dt>
+      <dd><%= select_tag "s[state]", options_for_select(@item.search_state_options, selected: @item.search_state), include_blank: true %></dd>
 
-  <dl class="see">
-    <dt><%= @model.t :search_approver_state %><%= @model.tt :search_approver_state %></dt>
-    <dd><%= select_tag "s[approver_state]", options_for_select(@item.search_approver_state_options, selected: @item.search_approver_state), include_blank: true %></dd>
-  </dl>
+      <dt><%= @model.t :search_approver_state %><%= @model.tt :search_approver_state %></dt>
+      <dd><%= select_tag "s[approver_state]", options_for_select(@item.search_approver_state_options, selected: @item.search_approver_state), include_blank: true %></dd>
+    </dl>
+  </div>
 
-  <dl class="see">
-    <dt></dt>
-    <dd class="wide">
-      <%= f.submit t("views.button.search"), name: "search", class: "search btn-primary" %>
-      <%= f.button t("views.button.reset"), name: "reset", type: "reset", class: "reset btn-default" %>
-      <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
-        <%= f.button t("views.button.save"), name: "save", class: "save btn-default" %>
-      <% end %>
-    </dd>
-  </dl>
-</div>
+  <footer class="send">
+    <%= f.submit t("views.button.search"), name: "search", class: "search btn-primary" %>
+    <%= link_to t("views.button.reset"), "./pages", class: "reset btn-default" %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.search_condition? %>
+      <%= f.button t("views.button.save"), name: "save", class: "save btn-default" %>
+    <% end %>
+  </footer>
 <% end %>
