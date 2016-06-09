@@ -16,6 +16,33 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
       @item = @cur_member
     end
 
+    def validate_password_params
+      if params[:item][:in_password].blank?
+        @item.errors.add :in_password, I18n.t("errors.messages.not_input")
+        return
+      end
+
+      if params[:item][:new_password].blank?
+        @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.not_input")
+        return
+      end
+
+      if params[:item][:new_password_again].blank?
+        @item.errors.add I18n.t("member.view.new_password_again"), I18n.t("errors.messages.not_input")
+        return
+      end
+
+      if params[:item][:new_password] != params[:item][:new_password_again]
+        @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.mismatch")
+        return
+      end
+
+      if @item.password != SS::Crypt.crypt(params[:item][:in_password])
+        @item.errors.add :in_password, I18n.t("errors.messages.mismatch")
+        return
+      end
+    end
+
   public
     def index
     end
@@ -69,35 +96,7 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
         return
       end
 
-      if params[:item][:in_password].blank?
-        @item.errors.add :in_password, I18n.t("errors.messages.not_input")
-        render action: :change_password
-        return
-      end
-
-      if params[:item][:new_password].blank?
-        @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.not_input")
-        render action: :change_password
-        return
-      end
-
-      if params[:item][:new_password_again].blank?
-        @item.errors.add I18n.t("member.view.new_password_again"), I18n.t("errors.messages.not_input")
-        render action: :change_password
-        return
-      end
-
-      if params[:item][:new_password] != params[:item][:new_password_again]
-        @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.mismatch")
-        render action: :change_password
-        return
-      end
-
-      if @item.password != SS::Crypt.crypt(params[:item][:in_password])
-        @item.errors.add :in_password, I18n.t("errors.messages.mismatch")
-        render action: :change_password
-        return
-      end
+      render action: :change_password unless @item.errors.empty?
 
       @item.in_password = params[:item][:new_password]
       @item.in_password_again = params[:item][:new_password_again]
