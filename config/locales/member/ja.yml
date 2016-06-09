@@ -265,7 +265,7 @@ ja:
         しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>から登録案内メールを再送信してください。
       complete_html: |-
         会員登録が完了しました
-        登録したメールアドレスとパスワードで、<a href="%{redirect_url}">ログイン</a>してください。</p>
+        登録したメールアドレスとパスワードで、<a href="%{redirect_url}">ログイン</a>してください。
     reset_password:
       link_text_html: |-
         パスワードをお忘れの場合は、<a href="%{reset_password_url}" target="_blank">こちら</a>のリンクからパスワードを再設定してください。
