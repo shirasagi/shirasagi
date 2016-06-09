@@ -368,7 +368,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 // -----------------------------------------------------------------------------
 // slide
-.key_visual-slide {
+.key_visual-slide, .member-photo-slide {
   margin: $box-margin 0;
   padding: 5px 0;
   background: #333;
@@ -398,6 +398,10 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     a {
       display: inline-block;
       margin-bottom: 5px;
+    }
+    img {
+      width: 120px;
+      height: auto;
     }
   }
 }
@@ -834,7 +838,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 
 // -----------------------------------------------------------------------------
 // links-life, side-menu
-#links-life, #side-menu {
+#links-life, #side-menu, #recent-photo, #side-blog {
   margin-bottom: $box-margin;
   h2 {
     padding: 3px 6px 0;
@@ -857,7 +861,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 
 // -----------------------------------------------------------------------------
 // category-nodes
-#main .category-nodes {
+#main .category-nodes, #main .cms-nodes {
   margin-bottom: $box-margin;
   article {
     float: left;
@@ -996,9 +1000,11 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 .page article, .one article.body,
 .page .related-pages, .page footer.contact,
+.page #feedback,
 .inquiry-html, .inquiry-form,
 .faq-question, .faq .body,
 .map-page, .inquiry-nodes, .columns,
+.blog-center .blog, .mypage-show article,
 .cke_editable {
   article {
     h2 {
@@ -1422,8 +1428,8 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 // -----------------------------------------------------------------------------
-// inquiry
-.inquiry-form, .columns {
+// inquiry login
+.inquiry-form, .columns, .form-login {
   dl {
     @include clear;
     clear: both;
@@ -1494,7 +1500,35 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     margin-bottom: $box-margin;
   }
 }
-
+#feedback .inquiry-form {
+  dl {
+    margin-bottom: 1em;
+    padding: 0;
+    border: none;
+  }
+  dl dt {
+    width: 100%;
+    float: none;
+    padding: 0;
+    background: none;
+    font-weight: bold;
+    .required {
+      display: inline;
+    }
+  }
+  dl dd {
+    float: none;
+    width: 100%;
+    padding: 0;
+  }
+}
+.back-to-ref a {
+  @include btn-gry;
+  display: inline-block;
+  margin: 1em 0 2em;
+  color: $text;
+  text-decoration: none;
+}
 // -----------------------------------------------------------------------------
 // faq
 .faq-question {
@@ -1995,13 +2029,369 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 // -----------------------------------------------------------------------------
+// gravator
+.gravatar {
+  margin-bottom: 1em;
+  text-align: right;
+  .gravatar-icon, .gravatar-screen-name {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .gravatar-icon img {
+    width: auto;
+    height: 32px;
+  }
+}
+// -----------------------------------------------------------------------------
+// photo blog
+#recent-photo {
+  li {
+    width: 50%;
+    float: left;
+    padding: 12px 0 0;
+    list-style: none;
+    border: none;
+    text-align: center;
+  }
+  .more {
+    text-align: right;
+    a {
+      @include r-arrow;
+    }
+  }
+}
+#side-blog {
+  li {
+    list-style: none;
+    padding: 12px 0 0;
+    span {
+      display: block;
+      width: 120px;
+      min-height: 70px;
+      float: left;
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+    a:hover { background: none; }
+  }
+  .more {
+    text-align: right;
+    a {
+      @include r-arrow;
+    }
+  }
+}
+.photos {
+  @include clear;
+  .photo {
+    width: 166px;
+    float: left;
+    padding: 0 6px 12px;
+    text-align: center;
+    a {
+      display: block;
+      padding: 6px;
+      &:hover { background: $hblue; }
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+}
+.member-photo-search-part {
+  margin-bottom: 1em;
+  form {
+    display: inline-block;
+    margin-right: 1em;
+    border: $border-hgry;
+  }
+  #keyword {
+    width: 24em;
+    padding: 5px;
+    border: none;
+    color: $text;
+  }
+  input[type="submit"] {
+    padding: 5px 10px;
+    border: none;
+    background: #333;
+    color: $t-white;
+  }
+}
+.kanko-info {
+ .condition {
+    @include clear;
+    dt {
+      clear: both;
+      width: 160px;
+      @include float(left);
+      margin: 0 $box-margin 12px 0;
+      padding: 3px 10px;
+      @include border-radius(3px);
+      background: $hblue;
+    }
+    dd {
+      @include float(left);
+      margin-bottom: 6px;
+      padding: 3px 0;
+    }
+  }
+  .condition + .ajax-box {
+    display: block;
+    @include float(right);
+    @include btn-org;
+    margin-bottom: $box-margin;
+    color: $text;
+    text-decoration: none;
+  }
+  .result {
+    clear: right;
+    @include float(left);
+    h2 {
+      border: none;
+      font-size: $px14;
+      font-weight: normal;
+    }
+  }
+  .tabs {
+    @include clear;
+    border-bottom: 2px solid $orange;
+    ul {
+      @include clear;
+      @include float(right);
+      li {
+        @include float(left);
+        a {
+          display: block;
+          margin-left: $item-margin;
+          padding: 3px 30px;
+          @include border-top-left-radius(3px);
+          @include border-top-right-radius(3px);
+          @include grd-gry;
+          color: $text;
+          text-decoration: none;
+        }
+      }
+      .current a {
+        @include grd-blue;
+        color: $t-white;
+      }
+    }
+  }
+}
+.photo-body {
+  .ajax-box img {
+    margin-bottom: 1em;
+  }
+  time, .contributor {
+    display: inline-block;
+    margin: 0 1em 2em 0;
+  }
+  .contributor {
+    font-weight: bold;
+  }
+  .caption {
+    margin-bottom: 2em;
+  }
+  .license {
+    margin-bottom: 2em;
+    padding: 12px;
+    border: $border-hgry;
+    h2 { font-weight: bold; }
+  }
+}
+.photo-categories, .photo-locations {
+  display: inline-block;
+  margin-bottom: 2em;
+  h2 { display: none; }
+  ul { @include clear; }
+  li {
+    display: inline-block;
+    list-style: none;
+    a {
+      display: inlein-block;
+      @include btn-gry;
+      color: $text;
+      text-decoration: none;
+    }
+  }
+}
+.member-blogs {
+  .blog {
+    margin-bottom: 1em;
+    padding: 12px;
+    border: $border-hgry;
+    img {
+      float: left;
+    }
+    header {
+      margin-left: 132px;
+    }
+    .description {
+      margin-left: 132px;
+    }
+  }
+}
+.blog #main {
+  @include clear;
+}
+.blog-center {
+  float: right;
+  width: 500px;
+  .blog {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: $border-hgry;
+    .genres {
+      li {
+        display: inline-block;
+        padding: 0;
+        background: none;
+      }
+      a {
+        display: block;
+        @include btn-gry;
+        margin: 6px 0;
+        color: $text;
+        text-decoration: none;
+      }
+    }
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+.blog-left {
+  float: left;
+  width: 198px;
+  border: $border-hgry;
+}
+.blog-profile {
+  margin-bottom: 1em;
+  padding: 12px;
+  text-align: center;
+  img {
+    margin-bottom: 0.5em;
+  }
+  header, .contributor, .description {
+    text-align: left;
+  }
+  .contributor {
+    font-weight: bold;
+  }
+}
+.blog-left .blog-genres {
+  padding: 12px;
+  li {
+    list-style: none;
+    @include li;
+  }
+}
+// -----------------------------------------------------------------------------
+// login
+#side .login, #side .registration {
+  display: block;
+  @include btn-org;
+  margin-bottom: 2em;
+  color: $text;
+  text-align: center;
+  text-decoration: none;
+}
+#side .logout {
+  display: inline-block;
+  @include btn-org;
+  margin: 0 0 2em 1em;
+  padding: 0px 6px;
+  color: $text;
+  text-decoration: none;
+}
+.form-login {
+  dt, dd {
+    margin-bottom: 1em;
+  }
+}
+.reset_password {
+  margin: 1em 0;
+}
+.member-registration-form,
+.mypage-form {
+  .send {
+    margin-bottom: 2em;
+    padding: 0;
+    text-align: center;
+    input, button {
+      display: inline-block;
+      @include btn-org;
+      vertical-align: middle;
+    }
+    input[name="back"], button[type="reset"] {
+      @include btn-gry;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// mypage
+#mypage-tabs {
+  @include clear;
+  margin-bottom: 1em;
+  border-bottom: 2px solid $orange;
+  a {
+    display: block;
+    float: left;
+    margin-left: $item-margin;
+    padding: 3px 30px;
+    @include border-top-left-radius(3px);
+    @include border-top-right-radius(3px);
+    @include grd-gry;
+    color: $text;
+    text-decoration: none;
+  }
+  a.current {
+    @include grd-blue;
+    color: $t-white;
+  }
+}
+.mypage-nav {
+  margin-bottom: 1em;
+  a {
+    display: inline-block;
+    @include btn-gry;
+    margin-bottom: 1em;
+    color: $text;
+    text-decoration: none;
+  }
+}
+table.mypage-index {
+  width: 100%;
+  margin-bottom: $box-margin;
+  caption {
+    padding: 0 10px;
+    color: $blue;
+    text-align: left;
+  }
+  th {
+    padding: 3px 8px 0;
+    border: $border-hgry;
+    background: #ffefbb;
+    text-align: left;
+  }
+  td {
+    padding: 3px 8px 0;
+    border: $border-hgry;
+  }
+}
+// -----------------------------------------------------------------------------
 // smart phone
 // -----------------------------------------------------------------------------
 @media only screen and (max-width: 600px) {
   #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
-  #main .category-nodes article  {
+  #main .category-nodes article, #main .cms-nodes article {
     float: none;
     width: 100%;
     padding: 0;
@@ -2082,7 +2472,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 // -----------------------------------------------------------------------------
 //  slide
-  .key_visual-slide {
+  .key_visual-slide, .member-photo-slide {
     margin: $smart-margin 0;
     .bx-controls, .bx-thumbs {
       display :none;
@@ -2378,7 +2768,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 // -----------------------------------------------------------------------------
 //  category-nodes
-  #main .category-nodes {
+  #main .category-nodes, #main .cms-nodes {
     margin: $smart-margin 0 0 0;
     padding: 0 10px;
     article {
@@ -2492,7 +2882,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
   }
-  .inquiry-form, .columns {
+  .inquiry-form, .columns, .form-login {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
     dl {
@@ -2519,7 +2909,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       text-align: center;
     }
   }
-  .columns {
+  .columns, .form-login {
     margin-top: $smart-margin;
   }
 // -----------------------------------------------------------------------------
@@ -2697,4 +3087,122 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       margin: 0 $smart-margin $smart-margin;
     }
   }
+// -----------------------------------------------------------------------------
+//  photo blog
+  .member-photo-search-part {
+    margin: 10px;
+    .keyword {
+      position: relative;
+    }
+    #keyword {
+      width: 100%;
+    }
+    input[type="submit"] {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+  .photos .photo {
+    max-width: 50%;
+    @include box-sizing(border-box);
+  }
+  .kanko-info {
+    .condition {
+      padding: 10px 10px 0;
+      dt, dd {
+        float: none;
+        display: block;
+        width: 100%;
+        margin: 0;
+        @include box-sizing(border-box);
+      }
+    }
+    .result {
+      clear: both;
+      padding: 0 10px;
+    }
+    .condition + .ajax-box {
+      margin-right: 10px;
+    }
+    .tabs {
+      padding: 0 10px;
+    }
+ }
+ .photo-body {
+   padding: 10px;
+ }
+ .photo-categories,
+ .photo-locations {
+   display: block;
+   padding: 0 10px;
+ }
+ .map-page img {
+   max-width: none !important;
+ }
+ .body--kanko-info-photo #map-canvas {
+   height: 300px !important;
+ }
+ .member-blogs {
+   padding: 10px;
+ }
+ .blog-center, .blog-left {
+   float: none;
+   width: auto;
+   margin: 10px;
+ }
+// -----------------------------------------------------------------------------
+//  login
+  #side .login, #side .registration {
+    margin: 0 10px 1em;
+  }
+  #side .member {
+    margin-left: 10px;
+  }
+  #side .logout {
+    margin: 0 10px 1em 0;
+  }
+  .reset_password {
+    padding: 10px;
+  }
+// -----------------------------------------------------------------------------
+// mypage
+  #mypage-tabs {
+    padding: 10px 10px 0;
+    a {
+      padding: 3px 10px;
+    }
+  }
+  .mypage-nav {
+    padding: 0 10px;
+    a {
+      margin-bottom: 0.5em;
+      font-size: $px12;
+    }
+  }
+  table.mypage-index {
+    display: block;
+    @include border-radius(0);
+    thead {
+      display: block;
+      float: left;
+      th {
+        display: block;
+        width: auto;
+      }
+    }
+    tbody {
+      display: block;
+      width: auto;
+      overflow-x: scroll;
+      white-space: nowrap;
+      tr {
+        display: inline-block;
+      }
+    }
+    td {
+      display: block;
+    }
+  }
+
 }

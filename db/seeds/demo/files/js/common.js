@@ -51,7 +51,7 @@ $(function() {
   }
 
 // block link
-  $(".category-nodes article, .ezine-pages li").click(function(){
+  $(".category-nodes article, .cms-nodes article, .ezine-pages li").click(function(){
     window.location=$(this).find("a").attr("href");
     return false;
   });
