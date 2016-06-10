@@ -18,7 +18,7 @@ module SS::Relation::File
       after_save "update_relation_#{name}_state", if: ->{ send(name).present? }
 
       define_method("validate_relation_#{name}") do
-        file = relation_file(name)
+        file = relation_file(name, opts)
         return true if file.valid?
 
         file.errors.full_messages.each do |msg|
@@ -28,7 +28,7 @@ module SS::Relation::File
       end
 
       define_method("save_relation_#{name}") do
-        file = relation_file(name)
+        file = relation_file(name, opts)
         file.save
         send("#{store}=", file.id)
       end
@@ -57,8 +57,10 @@ module SS::Relation::File
     end
   end
 
-  def relation_file(name)
-    file = send(name) || SS::File.new
+  def relation_file(name, opts = {})
+    class_name = opts[:class_name] || "SS::File"
+
+    file = send(name) || class_name.constantize.new
     file.in_file  = send("in_#{name}")
     file.filename = file.in_file.original_filename
     #file.model    = class_name.underscore
