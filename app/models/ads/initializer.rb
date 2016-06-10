@@ -9,5 +9,7 @@ module Ads
     Cms::Role.permission :edit_private_ads_banners
     Cms::Role.permission :delete_other_ads_banners
     Cms::Role.permission :delete_private_ads_banners
+
+    SS::File.model "ads/banner", SS::File
   end
 end
