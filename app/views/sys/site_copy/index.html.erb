@@ -13,7 +13,7 @@
   <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 
   <div class="addon-view" id="task-form">
-    <div class="addon-head toggle-head"><h2>Task</h2></div>
+    <div class="addon-head toggle-head"><h2><%= t 'sys.site_copy/task_status' %></h2></div>
     <div class="addon-body toggle-body">
       <%= render partial: 'task' %>
     </div>
