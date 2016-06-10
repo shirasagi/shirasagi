@@ -47,7 +47,7 @@ end
 
 @member_1 = save_member(
   email: "member@example.jp",
-  in_password: "pass$member1",
+  in_password: "pass$member",
   name: "白鷺　太郎",
   kana: "しらさぎ　たろう",
   job: "シラサギ株式会社",
