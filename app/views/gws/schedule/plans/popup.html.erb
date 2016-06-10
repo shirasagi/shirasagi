@@ -2,7 +2,7 @@
 <div class="popup-date"><%= term(@item) %></div>
 
 <% if @item.text.present? %>
-<div class="popup-description""><%=br @item.text %></div>
+<div class="popup-description <%= "markdown-body" if @item.text_type == "markdown" %>"><%== @item.html %></div>
 <% end %>
 
 <div class="popup-attributes">
@@ -23,9 +23,9 @@
   <% if hist = @item.histories.where(mode: 'update').first %>
   <div class="popup-attr popup-history">
     <div class="popup-label"><%= t "gws.history.user.update" %></div>
-    <div class="popup-value">
+    <div class="popup-value">5
       <span class="user"><%= hist.user_long_name %></span>
-      <span class="tel">TEL: <%= hist.user_tel %><%= " (#{hist.user.tel_ext})" if tryb { hist.user.tel_ext } %></span>
+      <% if hist.user_tel %><span class="tel"><%= hist.user_tel %></span><% end %>
     </div>
   </div>
   <% end %>
@@ -34,7 +34,7 @@
     <div class="popup-label"><%= t "gws.history.user.create" %></div>
     <div class="popup-value">
       <span class="user"><%= @item.user_long_name %></span>
-      <span class="tel">TEL: <%= @item.user_tel %><%= " (#{@item.user.tel_ext})" if tryb { @item.user.tel_ext } %></span>
+      <% if @item.user_tel %><span class="tel"><%= @item.user_tel %></span><% end %>
     </div>
   </div>
 </div>

@@ -145,6 +145,13 @@ module SS::Model::User
     end
   end
 
+  def tel_label
+    str = ""
+    str += "TEL:#{tel}" if tel.present?
+    str += "(#{t(:tel_ext_short)}:#{tel_ext})" if tel_ext.present?
+    str
+  end
+
   def enabled?
     now = Time.zone.now
     return false if account_start_date.present? && account_start_date > now

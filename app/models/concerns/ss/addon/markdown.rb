@@ -16,9 +16,16 @@ module SS::Addon
     def html
       return nil if text.blank?
       if text_type == 'markdown'
-        Kramdown::Document.new(text, input: 'GFM').to_html
+        SS::Addon::Markdown.text_to_html(text)
       else
         text.gsub(/(\r\n?)|(\n)/, "<br />")
+      end
+    end
+
+    class << self
+      def text_to_html(text)
+        return nil if text.blank?
+        Kramdown::Document.new(text, input: 'GFM').to_html
       end
     end
   end
