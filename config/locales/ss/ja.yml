@@ -293,6 +293,15 @@ ja:
         size: 制限サイズ
         order: 並び順
         state: 状態
+      ss/model/postal_code:
+        code: 郵便番号
+        prefecture: 都道府県
+        prefecture_kana: 都道府県（カナ）
+        prefecture_code: 都道府県コード
+        city: 区市町村
+        city_kana: 区市町村（カナ）
+        town: 町名
+        town_kana: 町名（カナ）
 
   tooltip:
     ss/model/user:

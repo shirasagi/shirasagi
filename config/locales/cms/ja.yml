@@ -253,6 +253,7 @@ ja:
       cms/file: 共有ファイル
       cms/notice: お知らせ
       cms/page_search: ページ検索
+      cms/postal_code: 郵便番号
     attributes:
       cms/content:
         released: 公開日時
