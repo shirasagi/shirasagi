@@ -230,6 +230,7 @@ ja:
         in_password: パスワード
         tel: 電話番号
         tel_ext: 内線番号
+        tel_ext_short: 内線
         title_ids: 役職
         in_title_id: 役職
         group_ids: グループ

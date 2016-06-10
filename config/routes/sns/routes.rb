@@ -16,6 +16,10 @@ SS::Application.routes.draw do
       get :thumb, on: :member
       get :download, on: :member
     end
+
+    namespace "addons", module: "agents/addons" do
+      post "markdown" => "markdown#preview"
+    end
   end
 
   namespace "sns", path: ".u:user", user: /\d+/ do

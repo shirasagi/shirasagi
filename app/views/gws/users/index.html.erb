@@ -8,8 +8,8 @@
   <% if item.email.present? %>
     <span class="email"><%= mail_to item.email %></span>
   <% end %>
-  <% if item.tel.present? %>
-    <span class="tel">TEL: <%= item.tel %><%= " (#{item.tel_ext})" if item.tel_ext.present? %></span>
+  <% if item.tel_label.present? %>
+    <span class="tel"><%= item.tel_label %></span>
   <% end %>
 <% end %>
 

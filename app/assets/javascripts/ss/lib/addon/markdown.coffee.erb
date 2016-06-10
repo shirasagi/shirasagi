@@ -5,11 +5,12 @@ class @SS_Addon_Markdown
   @options: 'ss-addon-markdown-options'
   @type: 'ss-addon-markdown-type'
   @preview: 'ss-addon-markdown-preview'
-  @previewButton: 'ss-addon-markdown-preview-button'
+  @previewUrl: '/.u/addons/markdown'
   @previewLabel: '<%= I18n.t("views.links.preview") %>'
-  @helpButton: 'ss-addon-markdown-help-button'
+  @previewButton: 'ss-addon-markdown-preview-button'
   @helpUrl: 'https://help.github.com/articles/basic-writing-and-formatting-syntax/'
   @helpLabel: '<%= I18n.t("views.links.markdown_help") %>'
+  @helpButton: 'ss-addon-markdown-help-button'
 
   @render: ()->
     $(".#{@toolbar}").append("<span class='#{@options}'></span>")
@@ -37,6 +38,13 @@ class @SS_Addon_Markdown
       if $(this).hasClass('active')
         text = $(".#{SS_Addon_Markdown.content} textarea").val()
         $(".#{SS_Addon_Markdown.content} textarea").hide()
-        $(".#{SS_Addon_Markdown.preview}").html(marked(text, breaks: true)).show()
+        #$(".#{SS_Addon_Markdown.preview}").html(marked(text, breaks: true)).show()
+        $.ajax
+          url: SS_Addon_Markdown.previewUrl
+          method: "post"
+          data:
+            text: text
+          success: (data)->
+            $(".#{SS_Addon_Markdown.preview}").html(data).show()
       else
         SS_Addon_Markdown.resetContent()
