@@ -123,11 +123,11 @@ module Member::Node
 
     private
       def template_variable_handler_description(name, item)
-        item.description
+        ERB::Util.html_escape item.description
       end
 
       def template_variable_handler_contributor(name, item)
-        item.contributor
+        ERB::Util.html_escape item.contributor
       end
   end
 
@@ -188,7 +188,7 @@ module Member::Node
     end
 
     def template_variable_handler_contributor(item, name)
-      item.contributor
+      ERB::Util.html_escape item.contributor
     end
   end
 
