@@ -51,10 +51,10 @@ end
   name: "白鷺　太郎",
   kana: "しらさぎ　たろう",
   job: "シラサギ株式会社",
-  postal_code: "7700872",
-  addr: "徳島県徳島市北沖洲",
+  postal_code: "1050001",
+  addr: "東京都港区虎ノ門1-1-1",
   sex: "male",
-  birthday: Date.parse("1972/10/10")
+  birthday: Date.parse("1988/10/10")
 )
 
 ## -------------------------------------
