@@ -47,7 +47,7 @@ end
 
 @member_1 = save_member(
   email: "member@example.jp",
-  in_password: "pass$member",
+  in_password: "pass123",
   name: "白鷺　太郎",
   kana: "しらさぎ　たろう",
   job: "シラサギ株式会社",
@@ -923,17 +923,17 @@ banner5.set(state: "public")
 banner6.set(state: "public")
 
 save_page route: "ads/banner", filename: "add/page30.html", name: "くらし・手続き",
-  link_url: "/kurashi/", file_id: banner1.id, category_ids: [categories["kurashi"].id], order: 10
+  link_url: "/kurashi/", file_id: banner1.id, ads_category_ids: [categories["kurashi"].id], order: 10
 save_page route: "ads/banner", filename: "add/page31.html", name: "子育て・教育",
-  link_url: "/kosodate/", file_id: banner2.id, category_ids: [categories["kosodate"].id], order: 20
+  link_url: "/kosodate/", file_id: banner2.id, ads_category_ids: [categories["kosodate"].id], order: 20
 save_page route: "ads/banner", filename: "add/page32.html", name: "健康・福祉",
-  link_url: "/kenko/", file_id: banner3.id, category_ids: [categories["kenko"].id], order: 30
+  link_url: "/kenko/", file_id: banner3.id, ads_category_ids: [categories["kenko"].id], order: 30
 save_page route: "ads/banner", filename: "add/page33.html", name: "観光・文化・スポーツ",
-  link_url: "/kanko/", file_id: banner4.id, category_ids: [categories["kanko"].id], order: 40
+  link_url: "/kanko/", file_id: banner4.id, ads_category_ids: [categories["kanko"].id], order: 40
 save_page route: "ads/banner", filename: "add/page34.html", name: "産業・仕事",
-  link_url: "/sangyo/", file_id: banner5.id, category_ids: [categories["sangyo"].id], order: 50
+  link_url: "/sangyo/", file_id: banner5.id, ads_category_ids: [categories["sangyo"].id], order: 50
 save_page route: "ads/banner", filename: "add/page35.html", name: "市政情報",
-  link_url: "/shisei/", file_id: banner6.id, category_ids: [categories["shisei"].id], order: 60
+  link_url: "/shisei/", file_id: banner6.id, ads_category_ids: [categories["shisei"].id], order: 60
 
 ## -------------------------------------
 puts "# facility"
