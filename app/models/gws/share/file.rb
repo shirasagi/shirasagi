@@ -8,6 +8,7 @@ class Gws::Share::File
   include Gws::Addon::History
 
   validates :category_ids, presence: true
+  validate :validate_size
 
   default_scope ->{ where(model: "share/file") }
 
@@ -31,8 +32,6 @@ class Gws::Share::File
 
   private
     def validate_size
-      super
-
       limit = cur_site.share_max_file_size || 0
       return if limit <= 0
 

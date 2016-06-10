@@ -30,7 +30,7 @@ module SS::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
-    validate :validate_size
+    validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
     before_save :validate_filename
     before_save :rename_file, if: ->{ @db_changes.present? }
@@ -158,13 +158,7 @@ module SS::Model::File
   end
 
   def uploaded_file
-    file = Fs::UploadedFile.new("ss_file")
-    file.binmode
-    file.write(read)
-    file.rewind
-    file.original_filename = basename
-    file.content_type = content_type
-    file
+    Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type)
   end
 
   def generate_public_file
@@ -234,26 +228,5 @@ module SS::Model::File
       return unless @db_changes["filename"][0]
 
       remove_public_file if site
-    end
-
-    def validate_size
-      if in_file.present?
-        validate_limit(in_file)
-      elsif in_files.present?
-        in_files.each { |file| validate_limit(file) }
-      end
-    end
-
-    def validate_limit(file)
-      filename = file.original_filename
-      ext = filename.sub(/.*\./, "").downcase
-      limit_size = SS::MaxFileSize.find_size(ext)
-
-      return true if file.size <= limit_size
-
-      errors.add :base, :too_large_file, filename: filename,
-                 size: number_to_human_size(file.size),
-                 limit: number_to_human_size(limit_size)
-      false
     end
 end
