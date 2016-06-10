@@ -19,28 +19,30 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
     def validate_password_params
       if params[:item][:in_password].blank?
         @item.errors.add :in_password, I18n.t("errors.messages.not_input")
-        return
+        return false
       end
 
       if params[:item][:new_password].blank?
         @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.not_input")
-        return
+        return false
       end
 
       if params[:item][:new_password_again].blank?
         @item.errors.add I18n.t("member.view.new_password_again"), I18n.t("errors.messages.not_input")
-        return
+        return false
       end
 
       if params[:item][:new_password] != params[:item][:new_password_again]
         @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.mismatch")
-        return
+        return false
       end
 
       if @item.password != SS::Crypt.crypt(params[:item][:in_password])
-        @item.errors.add :in_password, I18n.t("errors.messages.mismatch")
-        return
+        @item.errors.add I18n.t("member.view.old_password"), I18n.t("errors.messages.mismatch")
+        return false
       end
+
+      return true
     end
 
   public
@@ -96,10 +98,12 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
         return
       end
 
-      render action: :change_password unless @item.errors.empty?
+      unless validate_password_params
+        render action: :change_password
+        return
+      end
 
       @item.in_password = params[:item][:new_password]
-      @item.in_password_again = params[:item][:new_password_again]
       @item.encrypt_password
 
       unless @item.update

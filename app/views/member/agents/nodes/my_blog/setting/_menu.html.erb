@@ -2,6 +2,6 @@
 
 <% if params[:action] =~ /edit|update/ %>
 <nav class="mypage-nav nav-menu">
-  <%= link_to :back_to_index, @cur_node.url %>
+  <%= link_to :back, @cur_node.url %>
 </nav>
 <% end %>

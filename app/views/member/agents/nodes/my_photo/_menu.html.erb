@@ -8,6 +8,6 @@
     <%= link_to :delete, "#{@cur_node.url}#{@item.id}/delete" %>
     <%= link_to :back_to_index, @cur_node.url %>
   <% else %>
-    <%= link_to :back_to_index, @cur_node.url %>
+    <%= link_to :back, @cur_node.url %>
   <% end %>
 </nav>
