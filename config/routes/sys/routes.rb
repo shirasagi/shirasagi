@@ -18,6 +18,7 @@ SS::Application.routes.draw do
     get "site_copy" => "site_copy#index", as: :site_copy
     post "site_copy/confirm" => "site_copy#confirm"
     post "site_copy/run" => "site_copy#run"
+    post "site_copy/reset_state" => "site_copy#reset_state"
     get "test" => "test#index", as: :test
     get "test/http" => "test/http#index", as: :test_http
     get "test/mail" => "test/mail#index", as: :test_mail

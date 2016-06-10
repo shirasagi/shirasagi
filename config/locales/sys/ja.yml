@@ -14,6 +14,8 @@ ja:
     site_copy: サイト複製
     site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
     site_copy/started_job: サイト複製を開始しました。
+    site_copy/task_status: 実行状況
+    site_copy/reseted_state: 状態を初期化しました。
     roles:
       admin: 管理者
     auth: 認証
@@ -110,3 +112,7 @@ ja:
     sys/addon/environment_setting:
       keys:
         - HTTP サーバーが認証したユーザー情報を設定した環境変数のキー名を設定します。
+
+  job:
+    models:
+      sys/site_copy_job: サイト複製

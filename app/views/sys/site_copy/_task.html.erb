@@ -1,6 +1,11 @@
 <dl class="info mod-ss-task">
   <dt><%= @item.t :state %></dt>
-  <dd class="state"><%= @item.send :state %></dd>
+  <dd class="state">
+    <%= status = @item.send :state %>
+    <% if status.present? && status != 'stop' %>
+    <%= button_tag '初期化', class: 'btn reset-state', type: :reset %>
+    <% end %>
+  </dd>
 
   <dt><%= @item.t :started %></dt>
   <dd class="started"><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
@@ -41,4 +46,14 @@
   }
 
   setInterval(reload, 10000);
+
+  $(".reset-state").on("click", function() {
+    $.ajax({
+      type: "POST",
+      url: "<%= url_for(action: :reset_state, format: :json) %>",
+      success: function() {
+        reload();
+      }
+    });
+  });
 <% end %>
