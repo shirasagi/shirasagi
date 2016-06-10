@@ -10,8 +10,10 @@ module Cms::Addon
 
       permit_params :default_release_plan_state, :default_release_days_after, :default_close_days_after
 
-      validates :default_release_days_after, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: ->{ default_release_plan_enabled? }
-      validates :default_close_days_after, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, if: ->{ default_release_plan_enabled? }
+      validates :default_release_days_after, numericality: { only_integer: true, greater_than_or_equal_to: 0 },
+                if: ->{ default_release_plan_enabled? }
+      validates :default_close_days_after, numericality: { only_integer: true, greater_than_or_equal_to: 0 },
+                if: ->{ default_release_plan_enabled? }
       validate :validate_default_close_days_after
     end
 
