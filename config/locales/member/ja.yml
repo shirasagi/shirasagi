@@ -39,6 +39,7 @@ ja:
       platform: プラットフォーム
       new_password: 新しいパスワード
       new_password_again: 新しいパスワード（入力確認）
+      old_password: 現在のパスワード
       change_password: パスワードを変更します。
       leave: 退会しました。
       mail_subscription: メルマガ購読
