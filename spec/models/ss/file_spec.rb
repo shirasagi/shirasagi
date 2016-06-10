@@ -11,6 +11,22 @@ describe SS::File do
     its(:valid?) { is_expected.to be_truthy }
   end
 
+  describe "#uploaded_file" do
+    let(:file) { create :ss_file }
+    subject { file.uploaded_file }
+    its(:original_filename) { is_expected.to eq file.basename }
+    its(:content_type) { is_expected.to eq file.content_type }
+    # its(:tempfile) { is_expected.not_to be_nil }
+    # its(:headers) { is_expected.not_to be_nil }
+    its(:path) { is_expected.not_to be_nil }
+    its(:size) { is_expected.to eq file.size }
+    its(:eof?) { is_expected.to be_falsey }
+    its(:read) { expect(subject.respond_to?(:read)).to be_truthy }
+    its(:open) { expect(subject.respond_to?(:open)).to be_truthy }
+    its(:close) { expect(subject.respond_to?(:close)).to be_truthy }
+    its(:rewind) { expect(subject.respond_to?(:rewind)).to be_truthy }
+  end
+
   describe "shirasagi-434" do
     before do
       @tmpdir = ::Dir.mktmpdir
