@@ -1,7 +1,7 @@
 <dl class="info mod-ss-task">
   <dt><%= @item.t :state %></dt>
-  <dd class="state">
-    <%= status = @item.send :state %>
+  <dd>
+    <span class="state"><%= status = @item.send :state %></span>
     <% if status.present? && status != 'stop' %>
     <%= button_tag '初期化', class: 'btn reset-state', type: :reset %>
     <% end %>
@@ -36,10 +36,9 @@
           $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
           $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
           $("#task-form .log").val(data.logs.join("\n"));
-          //if (data["state"] == "stop") {
-          //  $("#task-form .stop-button").hide();
-          //  $("#task-form .run-button").show();
-          //}
+          if (data["state"] == "stop") {
+            $("#task-form .reset-state").hide();
+          }
         }
       });
     }
