@@ -14,7 +14,10 @@ module Sys::SiteCopy::CmsPages
   end
 
   def copy_cms_pages
-    Cms::Page.site(@src_site).each do |page|
+    page_ids = Cms::Page.site(@src_site).pluck(:id)
+    page_ids.each do |page_id|
+      page = Cms::Page.site(@src_site).find(page_id) rescue nil
+      next if page.blank?
       copy_cms_page(page)
     end
   end

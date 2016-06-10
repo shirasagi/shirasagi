@@ -3,9 +3,10 @@ module Sys::SiteCopy::CmsRoles
 
   def copy_cms_roles
     role_dic = {}
-    cms_roles = Cms::Role.where(site_id: @src_site.id).order_by(updated: 1)
-    cms_roles.each do |cms_role|
+    cms_roles_ids = Cms::Role.where(site_id: @src_site.id).order_by(updated: 1).pluck(:id)
+    cms_roles_ids.each do |cms_roles_id|
       begin
+        cms_role = Cms::Role.where(site_id: @src_site.id).find(cms_roles_id)
         Rails.logger.debug("#{cms_role.name}(#{cms_role.id}): 権限/ロールのコピーを開始します。")
         new_cms_role = Cms::Role.new cms_role.attributes.except(:id, :_id, :site_id, :created, :updated)
         new_cms_role.site_id = @dest_site.id
@@ -20,8 +21,10 @@ module Sys::SiteCopy::CmsRoles
     end
 
     #ユーザへ新規権限付与：OK
-    Cms::User.all.each do |cms_user|
+    cms_user_ids = Cms::User.all.pluck(:id)
+    cms_user_ids.each do |cms_user_id|
       begin
+        cms_user = Cms::User.find(cms_user_id)
         Rails.logger.debug("#{cms_user.name}(#{cms_user.id}): ユーザーの権限をコピーします。")
 
         add_role_ids = cms_user.cms_role_ids.map { |role_id| role_dic[role_id] }

@@ -2,9 +2,10 @@ module Sys::SiteCopy::CmsEditorTemplates
   extend ActiveSupport::Concern
 
   def copy_cms_editor_templates
-    cms_templates = Cms::EditorTemplate.where(site_id: @src_site.id).order_by(updated: 1)
-    cms_templates.each do |src_template|
+    cms_templates_ids = Cms::EditorTemplate.where(site_id: @src_site.id).order_by(updated: 1).pluck(:id)
+    cms_templates_ids.each do |src_template_id|
       begin
+        src_template = Cms::EditorTemplate.find(src_template_id)
         Rails.logger.debug("#{src_template.name}(#{src_template.id}): テンプレートのコピーを開始します。")
         attr = src_template.attributes.except(:_id, :id, :site_id, :thumb_id, :created, :updated)
         dest_template = Cms::EditorTemplate.new attr
