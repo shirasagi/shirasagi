@@ -905,3 +905,5 @@ ja:
       cms/page/remove_job: ページ削除
       cms/page/update_job: ページ更新
       cms/check_links_job: リンクチェック
+      cms/postal_code/import_job: 郵便番号インポート
+      cms/postal_code/official_csv_import_job: 日本郵便CSVインポート

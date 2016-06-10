@@ -39,17 +39,11 @@ class Cms::PostalCodesController < ApplicationController
       temp_file.save!
 
       if safe_params[:in_official_csv] == '1'
-        Cms::PostalCode::OfficialCsvImportJob.call_async(temp_file.id) do |job|
-          job.site_id = @cur_site.id
-          job.user_id = @cur_user.id
-        end
+        job_class = Cms::PostalCode::OfficialCsvImportJob
       else
-        Cms::PostalCode::ImportJob.call_async(temp_file.id) do |job|
-          job.site_id = @cur_site.id
-          job.user_id = @cur_user.id
-        end
+        job_class = Cms::PostalCode::ImportJob
       end
-      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+      job_class.bind(site_id: @cur_site, user_id: @cur_user).perform_later(temp_file.id)
 
       redirect_to({ action: :index }, { notice: I18n.t('cms.messages.import') })
     end

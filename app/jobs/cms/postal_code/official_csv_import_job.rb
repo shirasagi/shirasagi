@@ -1,10 +1,8 @@
 require 'csv'
 require 'nkf'
 
-class Cms::PostalCode::OfficialCsvImportJob
-  include Job::Worker
-
-  def call(temp_file_id)
+class Cms::PostalCode::OfficialCsvImportJob < Cms::ApplicationJob
+  def perform(temp_file_id)
     @cur_file = SS::TempFile.find(temp_file_id)
 
     import_file
