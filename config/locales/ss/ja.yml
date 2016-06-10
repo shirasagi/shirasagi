@@ -51,6 +51,7 @@ ja:
       copy: コピー
       paste: 貼り付け
       confirm: 確認
+      setting: 設定
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -72,6 +73,7 @@ ja:
       delete: 削除する
       import: インポート
       reply: 返信する
+      back: 戻る
       back_to_show: 詳細へ戻る
       back_to_index: 一覧へ戻る
       parent_directory: 上の階層へ

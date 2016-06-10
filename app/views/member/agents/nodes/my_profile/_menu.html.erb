@@ -6,6 +6,6 @@
     <%= link_to t("member.links.change_password"), "#{@cur_node.url}change_password" %>
     <%= link_to t("member.links.leave"), "#{@cur_node.url}leave" %>
   <% else %>
-    <%= link_to :back_to_index, @cur_node.url %>
+    <%= link_to :back, @cur_node.url %>
   <% end %>
 </nav>

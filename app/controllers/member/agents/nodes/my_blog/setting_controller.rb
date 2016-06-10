@@ -16,7 +16,7 @@ class Member::Agents::Nodes::MyBlog::SettingController < ApplicationController
       @blog_node = Member::Node::Blog.site(@cur_site).first
       @locations = Member::Node::BlogPageLocation.site(@cur_site).order_by(order: 1)
       @item = @model.site(@cur_site).node(@blog_node).member(@cur_member).first
-      @cur_node.name += "設定"
+      @cur_node.name += I18n.t("views.button.setting")
     end
 
     def redirect_to_edit
