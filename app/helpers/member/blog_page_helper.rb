@@ -51,7 +51,8 @@ module Member::BlogPageHelper
     node.genres.each do |genre|
       count = pages.in(genres: genre).count
       next unless count > 0
-      h << %(<li><a href="#{node.url}?g=#{genre}">#{genre}(#{count})</a></li>)
+      genre_name = sanitize genre
+      h << %(<li><a href="#{node.url}?g=#{genre_name}">#{genre_name}(#{count})</a></li>)
     end
 
     h << %(</ul>)
@@ -63,7 +64,7 @@ module Member::BlogPageHelper
     h = []
     h << %(<article class="member-blog-pages thumb">)
     h << %(<img src="#{node.thumb_url}" class="thumb" />)
-    h << %(<header><h2><a href="#{node.url}">#{node.name}</a></h2></header>)
+    h << %(<header><h2><a href="#{node.url}">#{sanitize node.name}</a></h2></header>)
     h << %(<div class="contributor">#{sanitize node.contributor}</div>)
     h << %(<div class="description">#{sanitize node.description}</div>)
     h << %(</article>)
