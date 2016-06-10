@@ -972,3 +972,7 @@ save_max_file_size name: '動画ファイル', extensions: %w(wmv avi mpeg mpg f
 save_max_file_size name: 'Microsoft Office', extensions: %w(doc docx ppt pptx xls xlsx), order: 4, state: 'enabled'
 save_max_file_size name: 'PDF', extensions: %w(pdf), order: 5, state: 'enabled'
 save_max_file_size name: 'その他', extensions: %w(*), order: 9999, state: 'enabled'
+
+## -------------------------------------
+puts "# postal code"
+Cms::PostalCode::OfficialCsvImportJob.import_from_zip("postal_code/13tokyo.zip")

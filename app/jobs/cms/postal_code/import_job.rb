@@ -1,17 +1,6 @@
 require 'csv'
 
-class Cms::PostalCode::ImportJob
-  include Job::Worker
-
-  def call(temp_file_id)
-    @cur_file = SS::TempFile.find(temp_file_id)
-
-    import_file
-  ensure
-    @cur_file.destroy
-  end
-
-  private
+class Cms::PostalCode::ImportJob < Cms::PostalCode::ImportBase
   def import_file
     table = ::CSV.read(@cur_file.path, headers: false, encoding: 'SJIS:UTF-8')
     table.each_with_index do |row, i|
