@@ -62,7 +62,7 @@ $(function() {
   });
 
 // block link
-  $("#wrap").on('click', '#product article, .product article', function(){
+  $("#wrap").on('click', '#product .cms-pages article, .product .cms-pages article', function(){
     location.href = $(this).find("a").attr("href");
     return false;
   });
@@ -88,4 +88,3 @@ $(function() {
   }
 
 });
-

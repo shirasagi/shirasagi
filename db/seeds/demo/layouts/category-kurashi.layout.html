@@ -2,6 +2,7 @@
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
   <link href="/css/style.css" media="all" rel="stylesheet" />
+  <link href="/css/example.css" media="all" rel="stylesheet" />
   <script src="/js/common.js"></script>
   <!--[if lt IE 9]>
   <script src="/js/selectivizr.js"></script>
@@ -26,8 +27,20 @@
   <div id="side">
     {{ part "links-life" }}
   </div>
+
+  <div id="side">
+    {{ part "example" }}
+  </div>
+
 </div>
 
+<div id="add">
+  <header>
+    <h2>広告</h2>
+  </header>
+  <div class="info"><a href="#">広告バナーのご案内</a></div>
+  {{ part "add/add" }}
+</div>
 {{ part "foot" }}
 
 </div>

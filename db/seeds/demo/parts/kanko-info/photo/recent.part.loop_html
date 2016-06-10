@@ -1,0 +1,1 @@
+<li><a href="#{url}"><img src="#{img.src}" /><br />#{name}</a></li>

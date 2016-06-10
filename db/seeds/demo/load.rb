@@ -34,6 +34,30 @@ def save_ss_files(path, data)
 end
 
 ## -------------------------------------
+def save_member(data)
+  puts data[:email]
+  cond = { site_id: @site._id, email: data[:email] }
+  cond[:in_password] = data[:in_password]
+
+  item = Cms::Member.find_or_create_by(cond)
+  item.attributes = data
+  item.update
+  item
+end
+
+@member_1 = save_member(
+  email: "member@example.jp",
+  in_password: "pass123",
+  name: "白鷺　太郎",
+  kana: "しらさぎ　たろう",
+  job: "シラサギ株式会社",
+  postal_code: "7700872",
+  addr: "徳島県徳島市北沖洲",
+  sex: "male",
+  birthday: Date.parse("1972/10/10")
+)
+
+## -------------------------------------
 puts "# layouts"
 
 def save_layout(data)
@@ -69,6 +93,12 @@ save_layout filename: "ezine.layout.html", name: "メールマガジン"
 save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
 save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
 save_layout filename: "urgency-layout/top-level3.layout.html", name: "緊急災害3：トップページ"
+save_layout filename: "kanko-info.layout.html", name: "写真データベース、ブログ"
+save_layout filename: "kanko-info-top.layout.html", name: "観光情報"
+save_layout filename: "kanko-info-photo.layout.html", name: "写真データベース：検索"
+save_layout filename: "login.layout.html", name: "ログイン"
+save_layout filename: "kanko-info/blog/blog1.layout.html", name: "ブログレイアウト1"
+save_layout filename: "kanko-info/blog/blog2.layout.html", name: "ブログレイアウト2"
 
 array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 layouts = Hash[*array.flatten]
@@ -298,6 +328,15 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "市�
   reply_lower_text: "以上。",
   aggregation_state: "disabled"
 
+## feedback
+feedback_html = File.read("nodes/feedback.inquiry_html") rescue nil
+feedback_sent_html = File.read("nodes/feedback.inquiry_sent_html") rescue nil
+feedback_node = save_node route: "inquiry/form", filename: "feedback", name: "この情報はお役に立ちましたか？",
+  inquiry_captcha: "disabled", notice_state: "disabled",
+  inquiry_html: feedback_html, inquiry_sent_html: feedback_sent_html,
+  reply_state: "disabled",
+  aggregation_state: "disabled"
+
 ## public comment
 save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント", upper_html: "パブリックコメント一覧です。"
 inquiry_comment_1 = save_node route: "inquiry/form", filename: "comment/comment01", name: "シラサギ市政について",
@@ -497,6 +536,69 @@ save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
     column_opinion.id => "意見があります。"
   }
 
+puts "# feedback"
+
+column_feedback_1 = save_inquiry_column node_id: feedback_node.id, name: "このページの内容は役に立ちましたか？", order: 10, input_type: "radio_button",
+  select_options: %w(役に立った どちらともいえない 役に立たなかった), required: "required", site_id: @site._id
+column_feedback_2 = save_inquiry_column node_id: feedback_node.id, name: "このページの内容は分かりやすかったですか？", order: 20, input_type: "radio_button",
+  select_options: %w(分かりやすかった どちらともいえない 分かりにくかった), required: "required", site_id: @site._id
+column_feedback_3 = save_inquiry_column node_id: feedback_node.id, name: "このページの情報は見つけやすかったですか？", order: 30, input_type: "radio_button",
+  select_options: %w(見つけやすかった どちらともいえない 見つけにくかった), required: "required", site_id: @site._id
+
+save_inquiry_answer node_id: feedback_node.id, site_id: @site._id,
+  remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
+  data: {
+    column_feedback_1.id => "どちらともいえない",
+    column_feedback_2.id => "どちらともいえない",
+    column_feedback_3.id => "どちらともいえない"
+  }
+
+## member
+save_node route: "member/login", filename: "login", name: "ログイン", layout_id: layouts["login"].id, form_auth: "enabled", redirect_url: "/mypage/"
+save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: layouts["one"].id,
+  sender_email: "info@example.jp", sender_name: "送信者名"
+save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: layouts["one"].id
+save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: layouts["one"].id, order: 10
+save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: layouts["one"].id, order: 20
+save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: layouts["one"].id, order: 30
+
+## member blog
+save_node route: "cms/node", filename: "kanko-info", name: "観光情報", layout_id: layouts["kanko-info-top"].id
+save_node route: "member/blog", filename: "kanko-info/blog", name: "ブログ", layout_id: layouts["kanko-info"].id, order: 20, page_limit: 4
+
+save_node route: "cms/node", filename: "kanko-info/blog/area", name: "地域", layout_id: layouts["kanko-info"].id
+blog_l1 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/east", name: "東区", layout_id: layouts["kanko-info"].id, order: 10
+blog_l2 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/west", name: "西区", layout_id: layouts["kanko-info"].id, order: 20
+blog_l3 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/south", name: "南区", layout_id: layouts["kanko-info"].id, order: 30
+blog_l4 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/north", name: "北区", layout_id: layouts["kanko-info"].id, order: 40
+blog_thumb = Fs::UploadedFile.create_from_file("files/img/logo.png")
+
+save_node route: "member/blog_page", filename: "kanko-info/blog/shirasagi", name: "白鷺太郎のブログ", layout_id: layouts["kanko-info/blog/blog1"].id,
+  member_id: @member_1.id, description: "白鷺太郎のブログです。よろしくお願いしいます。", genres: %w(ジャンル1 ジャンル2 ジャンル3),
+  blog_page_location_ids: [blog_l1.id], in_image: blog_thumb
+
+## member photo
+save_node route: "member/photo", filename: "kanko-info/photo", name: "写真データベース", layout_id: layouts["kanko-info-photo"].id, order: 10,
+  license_free: "<h2>ライセンスについて</h2><p>どなたでも自由にご利用いただけます。<br />肖像権については、使用者の判断によるものとし、当サイトは関与しません。</p>",
+  license_not_free: "<h2>ライセンスについて</h2><p>画像のご利用には画像投稿者からの利用許可が必要です。</p>",
+  limit: 40,
+  page_layout_id: layouts["kanko-info"].id
+
+save_node route: "cms/node", filename: "kanko-info/photo/area", name: "地域", layout_id: layouts["kanko-info"].id
+photo_l1 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/east", name: "東区", layout_id: layouts["kanko-info"].id, order: 10
+photo_l2 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/west", name: "西区", layout_id: layouts["kanko-info"].id, order: 20
+photo_l3 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/south", name: "南区", layout_id: layouts["kanko-info"].id, order: 30
+photo_l4 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/north", name: "北区", layout_id: layouts["kanko-info"].id, order: 40
+
+save_node route: "cms/node", filename: "kanko-info/photo/category", name: "カテゴリー", layout_id: layouts["kanko-info"].id
+photo_c1 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/institution", name: "施設", layout_id: layouts["kanko-info"].id, order: 10
+photo_c2 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/nature", name: "自然", layout_id: layouts["kanko-info"].id, order: 20
+photo_c3 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/souvenir", name: "物産", layout_id: layouts["kanko-info"].id, order: 30
+photo_c4 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/other", name: "その他", layout_id: layouts["kanko-info"].id, order: 40
+
+save_node route: "member/photo_search", filename: "kanko-info/photo/search", name: "検索結果", layout_id: layouts["kanko-info"].id
+save_node route: "member/photo_spot", filename: "kanko-info/photo/spot", name: "おすすめスポット", layout_id: layouts["kanko-info"].id
+
 ## layout
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: layouts["pages"].id)
 Cms::Node.where(site_id: @site._id, route: /^event\//).update_all(layout_id: layouts["event"].id)
@@ -608,9 +710,17 @@ save_part route: "article/page", filename: "urgency/recent.part.html", name: "�
 save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
 save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
 save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
-save_part route: "ads/banner", filename: "add/add.part.html", name: "広告バナー", mobile_view: "hide"
+save_part route: "ads/banner", filename: "add/add.part.html", name: "広告バナー", mobile_view: "hide", with_category: "enabled"
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
 save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
+save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", name: "フィードバック", mobile_view: "hide",
+  upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
+  lower_html: '</section>'
+save_part route: "member/photo", filename: "kanko-info/photo/recent.part.html", name: "新着写真一覧", mobile_view: "hide", limit: 4
+save_part route: "member/photo_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド", mobile_view: "hide"
+save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
+save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
+save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"
 
 ## -------------------------------------
 def save_page(data)
@@ -695,7 +805,7 @@ save_page route: "article/page", filename: "docs/page9.html", name: "広報SHIRA
 save_page route: "article/page", filename: "docs/page10.html", name: "インフルエンザ流行警報がでています",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
-save_page route: "article/page", filename: "docs/page11.html", name: "転出届",
+save_page route: "article/page", filename: "docs/page11.html", name: "転出届", gravatar_screen_name: "サイト管理者",
   layout_id: layouts["pages"].id, category_ids: [categories["kurashi/koseki/jyumin"].id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax
 save_page route: "article/page", filename: "docs/page12.html", name: "転入届",
@@ -812,18 +922,18 @@ banner4.set(state: "public")
 banner5.set(state: "public")
 banner6.set(state: "public")
 
-save_page route: "ads/banner", filename: "add/page30.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner1.id
-save_page route: "ads/banner", filename: "add/page31.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner2.id
-save_page route: "ads/banner", filename: "add/page32.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner3.id
-save_page route: "ads/banner", filename: "add/page33.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner4.id
-save_page route: "ads/banner", filename: "add/page34.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner5.id
-save_page route: "ads/banner", filename: "add/page35.html", name: "シラサギ",
-  link_url: "http://www.ss-proj.org/", file_id: banner6.id
+save_page route: "ads/banner", filename: "add/page30.html", name: "くらし・手続き",
+  link_url: "/kurashi/", file_id: banner1.id, ads_category_ids: [categories["kurashi"].id], order: 10
+save_page route: "ads/banner", filename: "add/page31.html", name: "子育て・教育",
+  link_url: "/kosodate/", file_id: banner2.id, ads_category_ids: [categories["kosodate"].id], order: 20
+save_page route: "ads/banner", filename: "add/page32.html", name: "健康・福祉",
+  link_url: "/kenko/", file_id: banner3.id, ads_category_ids: [categories["kenko"].id], order: 30
+save_page route: "ads/banner", filename: "add/page33.html", name: "観光・文化・スポーツ",
+  link_url: "/kanko/", file_id: banner4.id, ads_category_ids: [categories["kanko"].id], order: 40
+save_page route: "ads/banner", filename: "add/page34.html", name: "産業・仕事",
+  link_url: "/sangyo/", file_id: banner5.id, ads_category_ids: [categories["sangyo"].id], order: 50
+save_page route: "ads/banner", filename: "add/page35.html", name: "市政情報",
+  link_url: "/shisei/", file_id: banner6.id, ads_category_ids: [categories["shisei"].id], order: 60
 
 ## -------------------------------------
 puts "# facility"
@@ -846,6 +956,79 @@ puts "# ezine"
 save_page route: "ezine/page", filename: "ezine/page36.html", name: "シラサギ市メールマガジン", completed: true,
   layout_id: layouts["ezine"].id, html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
   text: "シラサギ市メールマガジンを配信します。\r\n"
+
+## -------------------------------------
+puts "# member blog"
+file = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "member/blog_page"
+blog_page = save_page route: "member/blog_page", filename: "kanko-info/blog/shirasagi/page1.html", name: "初投稿です。",
+  member_id: @member_1.id,
+  genres: %w(ジャンル1 ジャンル2 ジャンル3)
+
+blog_page.file_ids = [file.id]
+blog_page.html = blog_page.html.sub("src=\"#\"", "src=\"#{file.url}\"")
+blog_page.update
+
+## -------------------------------------
+puts "# member photo"
+
+photo_page_1 = save_page route: "member/photo", filename: "kanko-info/photo/page1.html", name: "観光地1",
+  member_id: @member_1.id,
+  layout_id: layouts["kanko-info"].id,
+  map_points: [ { loc: [33.902679, 134.526215] } ],
+  listable_state: "public",
+  slideable_state: "hide",
+  license_name: "not_free",
+  photo_category_ids: [photo_c1.id],
+  photo_location_ids: [photo_l3.id],
+  in_image: Fs::UploadedFile.create_from_file("ss_files/key_visual/keyvisual01.jpg")
+
+photo_page_2 = save_page route: "member/photo", filename: "kanko-info/photo/page2.html", name: "観光地2",
+  member_id: @member_1.id,
+  layout_id: layouts["kanko-info"].id,
+  map_points: [ { loc: [33.729822, 134.538575] } ],
+  listable_state: "public",
+  slideable_state: "public",
+  license_name: "not_free",
+  photo_category_ids: [photo_c1.id, photo_c2.id, photo_c3.id, photo_c4.id],
+  photo_location_ids: [photo_l1.id, photo_l2.id, photo_l3.id, photo_l4.id],
+  in_image: Fs::UploadedFile.create_from_file("ss_files/key_visual/keyvisual02.jpg")
+
+photo_page_3 = save_page route: "member/photo", filename: "kanko-info/photo/page3.html", name: "観光地3",
+  member_id: @member_1.id,
+  layout_id: layouts["kanko-info"].id,
+  map_points: [ { loc: [33.839396, 134.450684] } ],
+  listable_state: "public",
+  slideable_state: "public",
+  license_name: "not_free",
+  photo_category_ids: [photo_c2.id, photo_c3.id],
+  photo_location_ids: [photo_l2.id, photo_l3.id],
+  in_image: Fs::UploadedFile.create_from_file("ss_files/key_visual/keyvisual03.jpg")
+
+photo_page_4 = save_page route: "member/photo", filename: "kanko-info/photo/page4.html", name: "観光地4",
+  member_id: @member_1.id,
+  layout_id: layouts["kanko-info"].id,
+  map_points: [ { loc: [33.946095, 134.088135] } ],
+  listable_state: "public",
+  slideable_state: "public",
+  license_name: "not_free",
+  photo_category_ids: [photo_c1.id, photo_c2.id, photo_c4.id],
+  photo_location_ids: [photo_l1.id, photo_l4.id],
+  in_image: Fs::UploadedFile.create_from_file("ss_files/key_visual/keyvisual04.jpg")
+
+photo_page_5 = save_page route: "member/photo", filename: "kanko-info/photo/page5.html", name: "観光地5",
+  member_id: @member_1.id,
+  layout_id: layouts["kanko-info"].id,
+  map_points: [ { loc: [33.793757, 134.538575] } ],
+  listable_state: "public",
+  slideable_state: "hide",
+  license_name: "not_free",
+  photo_category_ids: [photo_c1.id, photo_c2.id, photo_c4.id],
+  photo_location_ids: [photo_l3.id, photo_l4.id],
+  in_image: Fs::UploadedFile.create_from_file("ss_files/key_visual/keyvisual05.jpg")
+
+save_page route: "member/photo_spot", filename: "kanko-info/photo/spot/index.html", name: "スポット",
+  layout_id: layouts["kanko-info"].id,
+  member_photo_ids: [photo_page_1.id, photo_page_2.id, photo_page_3.id]
 
 ## -------------------------------------
 def save_editor_template(data)

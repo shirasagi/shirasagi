@@ -4,31 +4,31 @@
   <link href="/css/style.css" media="all" rel="stylesheet" />
   <script src='/js/jquery.min.js'></script>
   <script src="/js/common.js"></script>
-  <!--[if lt IE9]>
+  <!--[if lt IE 9]>
   <script src="/js/selectivizr.js"></script>
   <script src="/js/html5shiv.js"></script>
   <![endif]-->
 </head>
 <body>
 <div id="page">
-  </ part "head" />
+  {{ part "head" }}
   <div id="wrap" class="two">
-    </ part "breadcrumbs" />
+    {{ part "breadcrumbs" }}
     <div id="side">
       <article id="side-menu">
         <header><h1 class="company">会社案内</h1></header>
         <div class="menu">
-          </ part "company/side-menu" />
+          {{ part "company/side-menu" }}
         </div>
       </article>
     </div>
     <div id="main" class="company">
       <header><h1 id="ss-page-name">#{page_name}</h1></header>
-      </ yield />
+      {{ yield }}
     </div>
   </div>
-  </ part "page-top" />
-  </ part "foot" />
+  {{ part "page-top" }}
+  {{ part "foot" }}
 </div>
 </body>
 </html>
