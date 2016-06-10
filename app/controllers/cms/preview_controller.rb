@@ -78,14 +78,19 @@ class Cms::PreviewController < ApplicationController
       return if response.body.present?
 
       if @cur_path =~ /^\/fs\//
-        path = @cur_path.sub("/thumb/", "/")
-        filename = ::File.basename(path)
-        id = ::File.dirname(path).sub("/fs/", "").sub("/_", "").delete("/")
-        @item = SS::File.find_by id: id, filename: filename
+        fs_path  = SS::Application.routes.recognize_path(@cur_path)
+        id_path  = fs_path[:id_path]
+        action   = fs_path[:action]
+        size     = fs_path[:size]
+        filename = fs_path[:filename]
 
-        if @cur_path =~ /\/thumb\//
-          if @item.thumb
-            @item = @item.thumb
+        id = id_path.delete("/")
+        @item = SS::File.find_by id: id, filename: filename
+        if action == "thumb"
+          thumb = size ? @item.thumb : @item.thumb(size)
+
+          if thumb
+            @item = thumb
           else
             @thumb_width  = params[:width]
             @thumb_height = params[:height]
