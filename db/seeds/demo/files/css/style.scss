@@ -2333,6 +2333,22 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     }
   }
 }
+.member-registration-form {
+  #errorExplanation {
+    margin-bottom: $box-margin;
+    padding: $item-margin $item-margin 0;
+    border: 2px solid $red;
+    @include border-radius(5px);
+    background: #ffffa4;
+    ul {
+      margin-bottom: $item-margin;
+      list-style: none;
+      li {
+        @include li;
+      }
+    }
+  }
+}
 // -----------------------------------------------------------------------------
 // mypage
 #mypage-tabs {
@@ -2382,6 +2398,52 @@ table.mypage-index {
   td {
     padding: 3px 8px 0;
     border: $border-hgry;
+  }
+}
+.body--mypage {
+  .ajax-box {
+    display: inline-block;
+    @include btn-gry;
+    color: $text;
+    text-decoration: none;
+  }
+  #selected-files {
+    margin-top: 12px;
+  }
+  .file-view {
+    float: left;
+    margin: 0 12px 12px 0;
+    .thumb {
+      display: block;
+      width: 120px;
+      height: 90px;
+      margin-bottom: 7px;
+      padding: 20px;
+      border: 10px solid $link;
+      background: $t-white;
+      font-size: $px30;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      line-height: 90px;
+      &:hover {
+        background: $hblue;
+      }
+    }
+    .name { margin-bottom: 7px; }
+    .action a, .menu a {
+      display: inline-block;
+      @include btn-gry;
+      margin-bottom: 12px;
+      padding: 0.2em 1em;
+      color: $text;
+      text-decoration: none;
+      letter-spacing: 0;
+    }
+  }
+  .clear-marker {
+    @include btn-gry;
+    margin-top: 6px;
   }
 }
 // -----------------------------------------------------------------------------

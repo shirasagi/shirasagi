@@ -64,8 +64,8 @@ module Member::BlogPageHelper
     h << %(<article class="member-blog-pages thumb">)
     h << %(<img src="#{node.thumb_url}" class="thumb" />)
     h << %(<header><h2><a href="#{node.url}">#{node.name}</a></h2></header>)
-    h << %(<div class="contributor">#{node.contributor}</div>)
-    h << %(<div class="description">#{node.description}</div>)
+    h << %(<div class="contributor">#{sanitize node.contributor}</div>)
+    h << %(<div class="description">#{sanitize node.description}</div>)
     h << %(</article>)
     h.join
   end
