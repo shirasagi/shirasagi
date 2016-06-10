@@ -3,12 +3,11 @@ module Sys::SiteCopy::SsFiles
   include Sys::SiteCopy::Cache
 
   def copy_ss_file(src_file)
+    src_file = src_file.becomes_with_model
+    klass = src_file.class
     dest_file = nil
-    klass = detect_file_class(src_file.model)
     id = cache(:files, src_file.id) do
       Rails.logger.debug("#{src_file.filename}(#{src_file.id}): ファイルのコピーを開始します。")
-      src_file = klass.find(src_file.id) if klass != src_file.class
-
       dest_file = klass.new(site_id: @dest_site.id)
       dest_file.attributes = copy_basic_attributes(src_file, klass)
       pseudo_file(src_file) do |tempfile|
@@ -44,40 +43,6 @@ module Sys::SiteCopy::SsFiles
   end
 
   private
-    def detect_file_class(model)
-      case model
-      when "ads/banner"
-        SS::File
-      when "article/page"
-        SS::File
-      when "board/post"
-        Board::File
-      when "cms/editor_template"
-        SS::File
-      when "cms/file"
-        Cms::File
-      when "cms/page"
-        SS::File
-      when "facility/file"
-        SS::File
-      when "key_visual/image"
-        SS::File
-      when "ss/temp_file"
-        SS::TempFile
-      when "ss/thumb_file"
-        SS::ThumbFile
-      when "ss/user_file"
-        SS::UserFile
-      when "share/file"
-        Gws::Share::File
-      when "member/photo"
-        Member::PhotoFile
-      else
-        Rails.logger.info("unknown file model: #{model}")
-        SS::File
-      end
-    end
-
     def pseudo_file(src_file)
       base_file_data = ::File.open(src_file.path, 'rb:ASCII-8BIT')
       base_file_hash = {

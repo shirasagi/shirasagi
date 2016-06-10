@@ -84,9 +84,8 @@ module SS::Model::File
     state == "public"
   end
 
-  def becomes_with_model(name = nil)
-    name ||= model.sub(/\/.+?$/, "/file").sub(/^ss\//, "SS/")
-    klass = name.camelize.constantize rescue nil
+  def becomes_with_model
+    klass = SS::File.find_model_class(model)
     return self unless klass
 
     item = klass.new

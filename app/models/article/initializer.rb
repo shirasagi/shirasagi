@@ -16,5 +16,7 @@ module Article
     Cms::Role.permission :move_private_article_pages
     Cms::Role.permission :move_other_article_pages
     Cms::Role.permission :unlock_other_article_pages
+
+    SS::File.model "article/page", SS::File
   end
 end

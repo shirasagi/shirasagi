@@ -46,5 +46,7 @@ module Member
     Cms::Role.permission :delete_private_member_photos
     Cms::Role.permission :release_other_member_photos
     Cms::Role.permission :release_private_member_photos
+
+    SS::File.model "member/photo", Member::PhotoFile
   end
 end

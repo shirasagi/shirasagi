@@ -28,5 +28,7 @@ module Gws
     Gws::Role.permission :edit_private_gws_links
     Gws::Role.permission :delete_other_gws_links
     Gws::Role.permission :delete_private_gws_links
+
+    SS::File.model "share/file", Gws::Share::File
   end
 end
