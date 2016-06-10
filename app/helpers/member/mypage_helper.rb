@@ -1,7 +1,7 @@
 module Member::MypageHelper
   def render_mypage_navi(opts = {})
-    @mypage_node = Member::Node::Mypage.site(@cur_site).first
     current_node = opts[:current_node]
+    @mypage_node = Member::Node::Mypage.site(current_node.site).first
 
     h = []
     h << %(<nav id="mypage-tabs">)
