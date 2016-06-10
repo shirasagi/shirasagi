@@ -3,8 +3,8 @@
 <nav class="mypage-nav nav-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to t("member.links.profile"), "#{@cur_node.url}edit" %>
-    <%= link_to t("member.links.leave"), "#{@cur_node.url}leave" %>
     <%= link_to t("member.links.change_password"), "#{@cur_node.url}change_password" %>
+    <%= link_to t("member.links.leave"), "#{@cur_node.url}leave" %>
   <% else %>
     <%= link_to :back_to_index, @cur_node.url %>
   <% end %>
