@@ -145,7 +145,7 @@ module Member::Node
 
       def html
         ## for loop html img summary
-        %(<img alt="#{name}" src="#{thumb_url}">) rescue ""
+        %(<img src="#{thumb_url}">) rescue ""
       end
 
       def pages
