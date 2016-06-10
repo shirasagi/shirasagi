@@ -12,7 +12,10 @@ module Sys::SiteCopy::CmsParts
   end
 
   def copy_cms_parts
-    Cms::Part.site(@src_site).each do |part|
+    part_ids = Cms::Part.site(@src_site).pluck(:id)
+    part_ids.each do |part_id|
+      part = Cms::Part.site(@src_site).find(part_id) rescue nil
+      next if part.blank?
       copy_cms_part(part)
     end
   end

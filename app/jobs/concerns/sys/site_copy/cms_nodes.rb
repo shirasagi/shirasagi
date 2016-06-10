@@ -12,7 +12,10 @@ module Sys::SiteCopy::CmsNodes
   end
 
   def copy_cms_nodes
-    Cms::Node.site(@src_site).each do |node|
+    node_ids = Cms::Node.site(@src_site).pluck(:id)
+    node_ids.each do |node_id|
+      node = Cms::Node.site(@src_site).find(node_id) rescue nil
+      next if node.blank?
       copy_cms_node(node)
     end
   end

@@ -11,7 +11,10 @@ module Sys::SiteCopy::CmsLayouts
   end
 
   def copy_cms_layouts
-    Cms::Layout.site(@src_site).each do |layout|
+    layout_ids = Cms::Layout.site(@src_site).pluck(:id)
+    layout_ids.each do |layout_id|
+      layout = Cms::Layout.site(@src_site).find(layout_id) rescue nil
+      next if layout.blank?
       copy_cms_layout(layout)
     end
   end
