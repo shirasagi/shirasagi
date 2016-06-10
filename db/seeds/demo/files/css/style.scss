@@ -2333,22 +2333,6 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     }
   }
 }
-.member-registration-form {
-  #errorExplanation {
-    margin-bottom: $box-margin;
-    padding: $item-margin $item-margin 0;
-    border: 2px solid $red;
-    @include border-radius(5px);
-    background: #ffffa4;
-    ul {
-      margin-bottom: $item-margin;
-      list-style: none;
-      li {
-        @include li;
-      }
-    }
-  }
-}
 // -----------------------------------------------------------------------------
 // mypage
 #mypage-tabs {
