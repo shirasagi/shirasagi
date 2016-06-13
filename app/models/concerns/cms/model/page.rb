@@ -28,7 +28,7 @@ module Cms::Model::Page
   end
 
   def date
-    released || updated || created
+    released || super
   end
 
   def generate_file

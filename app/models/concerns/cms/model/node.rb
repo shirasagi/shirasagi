@@ -51,10 +51,6 @@ module Cms::Model::Node
     "#{site.full_url}#{filename}/"
   end
 
-  def date
-    updated || created
-  end
-
   def parents
     dirs = self.class.split_path(filename)
     dirs.pop

@@ -6,6 +6,11 @@ module Cms::GroupPermission
     field :permission_level, type: Integer, default: 1
     embeds_ids :groups, class_name: "SS::Group"
     permit_params :permission_level, group_ids: []
+
+    if respond_to?(:template_variable_handler)
+      template_variable_handler(:group, :template_variable_handler_group)
+      template_variable_handler(:groups, :template_variable_handler_groups)
+    end
   end
 
   def owned?(user)
@@ -50,4 +55,14 @@ module Cms::GroupPermission
       where({ _id: -1 })
     end
   end
+
+  private
+    def template_variable_handler_group(name, issuer)
+      group = self.groups.first
+      group ? group.name.split(/\//).pop : ""
+    end
+
+    def template_variable_handler_groups(name, issuer)
+      self.groups.map { |g| g.name.split(/\//).pop }.join(", ")
+    end
 end
