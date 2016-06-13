@@ -690,8 +690,8 @@ class @Form_Preview
 
   @render: ->
     $("button.preview").on "click", (e) ->
-      name = $("#item-form #item_name").val()
-      basename = $("#item-form #item_basename").val()
+      name = $("#item-form input[name='item[name]']").val()
+      basename = $("#item-form input[name='item[basename]']").val()
       errors = []
 
       errors.push "<%= I18n.t('errors.messages.set_name') %>" unless name
