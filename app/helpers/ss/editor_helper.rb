@@ -63,33 +63,43 @@ module SS::EditorHelper
   end
 
   def ckeditor_editor_options(opts = {})
-    opts = { extraPlugins: "", removePlugins: "" }.merge(opts)
+    opts = opts.symbolize_keys
 
-    if opts[:readonly]
-      opts[:removePlugins] << ",toolbar"
-      #opts[:removePlugins] << ",resize"
-      #opts[:extraPlugins] << ",autogrow"
-      opts[:readOnly] = true
-      opts.delete :readonly
+    base_opts = SS.config.cms.ckeditor['options'].symbolize_keys
+    if opts.delete(:readonly)
+      readonly_options = SS.config.cms.ckeditor['readonly_options'].presence
+      readonly_options ||= {}
+      base_opts.merge!(readonly_options.symbolize_keys)
     end
-    opts[:extraPlugins] << ",templates,justify"
-    #opts[:enterMode] = 2 #BR
-    #opts[:shiftEnterMode] = 1 #P
-    opts[:allowedContent] = true
-    opts[:height] ||= "360px"
+    if opts.delete(:public_side)
+      public_side_options = SS.config.cms.ckeditor['public_side_options'].presence
+      public_side_options ||= {}
+      base_opts.merge!(public_side_options.symbolize_keys)
+    end
 
-    if opts[:public_side]
-      #
+    opts.reverse_merge!(base_opts)
+    opts[:extraPlugins] = opts[:extraPlugins].join(',') if opts[:extraPlugins].is_a?(Array)
+    opts[:removePlugins] = opts[:removePlugins].join(',') if opts[:removePlugins].is_a?(Array)
+    opts[:extraPlugins] ||= ''
+    opts[:removePlugins] ||= ''
+
+    if opts[:templates]
+      opts[:templates_files] ||= []
+      opts[:templates_files] << "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}"
     else
-      opts[:templates] = 'shirasagi'
-      opts[:templates_files] = [ "#{template_cms_editor_templates_path}.js?_=#{Time.zone.now.to_i}" ]
+      opts.delete(:templates)
+      opts.delete(:templates_files)
     end
     opts
   end
 
   def html_editor_ckeditor(elem, opts = {})
-    controller.javascript "/assets/js/ckeditor/ckeditor.js"
-    controller.javascript "/assets/js/ckeditor/adapters/jquery.js"
+    SS.config.cms.ckeditor.fetch('stylesheets', []).each do |ss|
+      controller.stylesheet ss
+    end
+    SS.config.cms.ckeditor.fetch('javascripts', []).each do |js|
+      controller.javascript js
+    end
     opts = ckeditor_editor_options(opts)
     jquery do
       "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
