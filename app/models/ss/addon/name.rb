@@ -20,6 +20,24 @@ class SS::Addon::Name
     path.tr('/', '-')
   end
 
+  def disabled?
+    section, *paths, name = klass.name.underscore.split('/')
+    return false unless SS.config.respond_to?(section)
+
+    config = SS.config.send(section).to_h.stringify_keys
+    paths.each do |path|
+      return false unless config.key?(path)
+      config = config[path]
+      return false unless config.is_a?(Hash)
+    end
+
+    config.fetch(name, 'enabled') == 'disabled'
+  end
+
+  def enabled?
+    !disabled?
+  end
+
   def controller_file
     file = "#{Rails.root}/app/controllers/#{self.path}_controller.rb"
     File.exists?(file) ? path : nil
