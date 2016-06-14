@@ -75,7 +75,25 @@ class Cms::Part
     def plugin(path)
       name = I18n.t("modules.#{path.sub(/\/.*/, '')}", default: path.titleize)
       name << "/" + I18n.t("cms.parts.#{path}", default: path.titleize)
-      @@plugins << [name, path]
+      @@plugins << [name, path, plugin_enabled?(path)]
+    end
+
+    def plugin_enabled?(path)
+      paths = path.split('/')
+      paths.insert(1, 'part')
+
+      section = paths.shift
+      return true unless SS.config.respond_to?(section)
+
+      config = SS.config.send(section).to_h.stringify_keys
+      while paths.length > 1
+        path = paths.shift
+        return true unless config.key?(path)
+        config = config[path]
+        return true unless config.is_a?(Hash)
+      end
+
+      config.fetch(paths.last, 'enabled') != 'disabled'
     end
 
     def plugins

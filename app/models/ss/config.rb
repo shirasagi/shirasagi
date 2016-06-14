@@ -1,5 +1,11 @@
 module SS::Config
   class << self
+    def config_exists?(name)
+      main_conf = "#{Rails.root}/config/defaults/#{name}.yml"
+      user_conf = "#{Rails.root}/config/#{name}.yml"
+      File.exists?(main_conf) || File.exists?(user_conf)
+    end
+
     def load_config(name, section = nil)
       main_conf = load_yml("#{Rails.root}/config/defaults/#{name}.yml", section)
       user_conf = load_yml("#{Rails.root}/config/#{name}.yml", section)
@@ -23,6 +29,14 @@ module SS::Config
 
     def method_missing(name, *args, &block)
       load_config(name, Rails.env)
+    end
+
+    def respond_to?(name, *args)
+      config_exists?(name)
+    end
+
+    def respond_to_missing?(*args)
+      true
     end
   end
 end
