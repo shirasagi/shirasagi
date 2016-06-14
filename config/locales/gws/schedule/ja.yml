@@ -27,6 +27,10 @@ ja:
       show_month: 月表示
       show_week: 週表示
       show_day: 日表示
+    buttons:
+      delete_one: 今回のみ
+      delete_later: 以降すべて
+      delete_all: 一連のスケジュールすべて
     options:
       allday:
         allday: 終日

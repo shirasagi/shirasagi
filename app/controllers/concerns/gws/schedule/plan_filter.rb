@@ -68,4 +68,10 @@ module Gws::Schedule::PlanFilter
 
       render_update @item.update, location: redirection_url
     end
+
+    def destroy
+      raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+      @item.destroy_mode = params[:destroy_mode]
+      render_destroy @item.destroy
+    end
 end

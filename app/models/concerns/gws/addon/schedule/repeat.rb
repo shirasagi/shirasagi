@@ -3,9 +3,9 @@ module Gws::Addon::Schedule::Repeat
   extend SS::Addon
 
   included do
-    attr_accessor :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays
+    attr_accessor :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays, :destroy_mode
     belongs_to :repeat_plan, class_name: "Gws::Schedule::RepeatPlan"
-    permit_params :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, wdays: []
+    permit_params :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :destroy_mode, wdays: []
 
     validate :validate_repeat_params, if: -> { repeat? }
     validate :validate_repeat_plan, if: -> { repeat? }
@@ -13,7 +13,7 @@ module Gws::Addon::Schedule::Repeat
     before_save :save_repeat_plan, if: -> { repeat? }
     before_save :remove_repeat_plan, if: -> { repeat_type == '' }
     after_save :extract_repeat_plans, if: -> { repeat? }
-    before_destroy :remove_repeat_plan
+    before_destroy :remove_repeat_plan, if: -> { repeat_plan }
   end
 
   # 繰り返し予定を作成しているか。
@@ -85,11 +85,29 @@ module Gws::Addon::Schedule::Repeat
     def remove_repeat_plan
       return if @skip_remove_repeat_plan
 
+      if destroy_mode == "later"
+        remove_later_repeat_plan
+      elsif destroy_mode == "all"
+        remove_all_repeat_plan
+      end
+
+      if self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).empty?
+        repeat_plan.destroy
+        remove_attribute(:repeat_plan_id)
+      end
+    end
+
+    def remove_later_repeat_plan
+      if repeat_plan
+        plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at)
+        plans.each { |plan| plan.destroy_without_repeat_plan }
+      end
+    end
+
+    def remove_all_repeat_plan
       if repeat_plan
         plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
         plans.each { |plan| plan.destroy_without_repeat_plan }
-        repeat_plan.destroy #if plans.empty?
       end
-      remove_attribute(:repeat_plan_id)
     end
 end
