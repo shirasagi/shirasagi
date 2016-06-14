@@ -202,6 +202,7 @@ ja:
       ss/group_file: グループファイル
       ss/task: タスク
       ss/max_file_size: 最大ファイルサイズ
+      ss/thumb_file: サムネイルファイル
     attributes:
       ss/document:
         created: 作成日時
@@ -305,6 +306,12 @@ ja:
         city_kana: 区市町村（カナ）
         town: 町名
         town_kana: 町名（カナ）
+      ss/thumb_file:
+        original_id: 元画像ID
+        image_size: 画像サイズ
+        image_size_name: 画像サイズ名
+        thumb_width: 幅
+        thumb_height: 高さ
 
   tooltip:
     ss/model/user:
