@@ -1,9 +1,4 @@
 production: &production
-  # gravatar addon state. you can specify one of these:
-  #  enabled: enable gravatar addon
-  #  disabled: disable gravatar addon
-  disable: true
-
   # you can specify one of these:
   #   disable: do not show avatar
   #   cms_user_email: use page author's email
@@ -15,6 +10,12 @@ production: &production
 
   # default avatar path. default is gravatar image
   default_image_path:
+
+  # gravatar addon state. you can specify one of these:
+  #  enabled: enable gravatar addon
+  #  disabled: disable gravatar addon
+  addon:
+    gravatar: disabled
 
 test:
   <<: *production

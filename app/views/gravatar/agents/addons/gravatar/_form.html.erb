@@ -1,5 +1,3 @@
-<% return if SS.config.gravatar.disable %>
-
 <dl class="see mod-gravatar-gravatar">
   <dt><%= @model.t :gravatar_image_view_kind %><%= @model.tt :gravatar_image_view_kind %></dt>
   <dd><%= f.select(:gravatar_image_view_kind, @item.gravatar_image_view_kind_options, include_blank: I18n.t('sys.conf')) %></dd>
