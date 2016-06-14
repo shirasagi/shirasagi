@@ -87,11 +87,11 @@ module Gws::Addon::Schedule::Repeat
 
       if destroy_mode == "later"
         remove_later_repeat_plan
-      elsif destroy_mode == "all"
+      elsif destroy_mode == "all" || repeat_type == ''
         remove_all_repeat_plan
       end
 
-      if self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).empty?
+      if repeat_plan && self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).empty?
         repeat_plan.destroy
         remove_attribute(:repeat_plan_id)
       end
