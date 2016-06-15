@@ -700,28 +700,28 @@ class @Form_Preview
         alert(errors.join("\n"))
         return false
 
-      params = []
+      form = $("<form>")
+      $(form).attr("method", "post")
+      $(form).attr("action", Form_Preview.form_preview_path)
+      $(form).attr("target", "FormPreview")
+
       for i, v of $("#item-form").serializeArray()
         continue unless /^item\[/.test(v["name"])
         continue if "item[html]" == v["name"]
         continue if "item[body_parts][]" == v["name"]
-        params.push(name: v["name"].replace(/^item\[/, "preview_item["), value: v["value"])
-
-      params.push(name: "preview_item[route]", value: Form_Preview.page_route)
-      params.push(name: "preview_item[html]", value: Cms_Form.getEditorHtml("item_html"))
+        form.append($("<input/>", name: v["name"].replace(/^item\[/, "preview_item["), value: v["value"], type: "hidden" ))
 
       $("textarea[id^=item_html_part_]").each ()->
         id = $(this).attr("id")
         name = $(this).attr("name").replace(/^item\[/, "preview_item[")
-        params.push(name: name, value: Cms_Form.getEditorHtml(id))
+        form.append($("<input/>", name: name, value: Cms_Form.getEditorHtml(id), type: "hidden" ))
 
-      $.post(Form_Preview.form_preview_path,
-        params,
-        (data)->
-          width = $(window).width()
-          height = $(window).height()
-          w = window.open("about:blank", "WindowName","width=#{width},height=#{height},resizable=yes,scrollbars=yes")
-          w.document.write(data)
-          w.document.close()
-      )
+      form.append($("<input/>", name: "preview_item[route]", value: Form_Preview.page_route, type: "hidden" ))
+      form.append($("<input/>", name: "preview_item[html]", value: Cms_Form.getEditorHtml("item_html"), type: "hidden" ))
+
+      width = $(window).width()
+      height = $(window).height()
+      window.open("about:blank", "FormPreview", "width=#{width},height=#{height},resizable=yes,scrollbars=yes")
+      form.appendTo("body")
+      form.submit()
       return false

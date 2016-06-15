@@ -20,14 +20,14 @@ class Cms::PreviewController < ApplicationController
   skip_action_callback :set_cms_assets
 
   def form_preview
-    preview_item = params.require(:preview_item).permit!
     path = params[:path]
-    id = preview_item.delete("id")
-    route = preview_item.delete("route")
+    preview_item = params.require(:preview_item).permit!
+    id = preview_item[:id]
+    route = preview_item[:route]
 
     page = Cms::Page.find(id) rescue Cms::Page.new(route: route)
     page = page.becomes_with_route
-    page.attributes = preview_item
+    page.attributes = preview_item.select { |k, v| k != "id" }
     page.site = @cur_site
     page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
     page.lock_until = nil if page.respond_to?(:lock_until)
@@ -43,6 +43,7 @@ class Cms::PreviewController < ApplicationController
     @cur_node = Cms::Node.where(filename: /^#{path.sub(/\/$/, "")}/).first
     @cur_page = page
     @preview_page = page
+    @preview_item = preview_item
 
     resp = render_page(page, method: "GET")
     return page_not_found unless resp
@@ -129,23 +130,25 @@ class Cms::PreviewController < ApplicationController
       h << view_context.javascript_include_tag("cms/preview")
       h << '<link href="/assets/css/colorbox/colorbox.css" rel="stylesheet" />'
       h << '<script src="/assets/js/jquery.colorbox.js"></script>'
-      unless @preview_page
-        h << '<script>'
-        h << '$(function(){'
-        h << '  SS_Preview.mobile_path = "' + @cur_site.mobile_location + '";'
-        h << '  SS_Preview.render();'
-        h << '});'
-        h << '</script>'
-        h << '<div id="ss-preview">'
-        h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
-        if @cur_site.mobile_enabled?
-          h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
-          h << '<input type="button" class="mobile" value=' + t("views.links.mobile") + '>'
-        else
-          h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
-        end
-        h << '</div>'
+      h << '<script>'
+      h << '$(function(){'
+      h << '  SS_Preview.mobile_path = "' + @cur_site.mobile_location + '";'
+      if @preview_page
+        h << 'SS_Preview.request_path = "' + request.path + '";'
+        h << 'SS_Preview.form_item = ' + @preview_item.to_json + ';'
       end
+      h << '  SS_Preview.render();'
+      h << '});'
+      h << '</script>'
+      h << '<div id="ss-preview">'
+      h << '<input type="text" class="date" value="' + @cur_date.strftime("%Y/%m/%d %H:%M") + '" />'
+      if @cur_site.mobile_enabled?
+        h << '<input type="button" class="preview" value="' + t("views.links.pc") + '">'
+        h << '<input type="button" class="mobile" value="' + t("views.links.mobile") + '">'
+      else
+        h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
+      end
+
 
       body.sub!("</body>", h.join("\n") + "</body>")
 
@@ -162,7 +165,7 @@ class Cms::PreviewController < ApplicationController
 
         if scheme
           m
-        elsif url =~ /^\/\//
+        elsif url =~ /^\/\/|^#/
           m
         else
           full_url = @cur_node ? @cur_node.full_url : @cur_site.full_url
