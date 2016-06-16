@@ -149,7 +149,6 @@ class Cms::PreviewController < ApplicationController
         h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
       end
 
-
       body.sub!("</body>", h.join("\n") + "</body>")
 
       response.body = body
