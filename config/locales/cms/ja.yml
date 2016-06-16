@@ -132,6 +132,7 @@ ja:
       cms/node: フォルダーリスト
       cms/page: ページリスト
       cms/import_node: 取り込みページ
+      cms/archive: アーカイブ
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト

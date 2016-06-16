@@ -26,4 +26,8 @@ FactoryGirl.define do
   factory :cms_node_import_node, class: Cms::Node::ImportNode, traits: [:cms_node] do
     route "cms/import_node"
   end
+
+  factory :cms_node_archive, class: Cms::Node::Archive, traits: [:cms_node] do
+    route "cms/archive"
+  end
 end
