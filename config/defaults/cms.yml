@@ -13,6 +13,29 @@ production: &production
   # HTML editor (ckeditor, tinymce, markdown)
   html_editor: ckeditor
 
+  # CKEditor setting
+  ckeditor:
+    # base options
+    options:
+      allowedContent: true
+      height: 360px
+      templates: 'shirasagi'
+      extraPlugins:
+        - templates
+        - justify
+    # readonly options override base options when mode is readonly
+    readonly_options:
+      readOnly: true
+      removePlugins:
+        - toolbar
+    # public-side options override base options when mode is public-side
+    public_side_options:
+      templates:
+    # ckeditor's javascripts options
+    javascripts:
+      - /assets/js/ckeditor/ckeditor.js
+      - /assets/js/ckeditor/adapters/jquery.js
+
   # Link Check Ajax URL
   link_check_url: /.cms/link_check/check.json
 
