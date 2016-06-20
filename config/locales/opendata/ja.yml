@@ -250,6 +250,7 @@ ja:
       opendata/dataset_page_setting: データセット詳細ページ設定
       opendata/app_page_setting: アプリ詳細ページ設定
       opendata/idea_page_setting: アイデア詳細ページ設定
+      opendata/list_node_setting: 基本設定
 
   cms:
     nodes:
@@ -466,6 +467,8 @@ ja:
       opendata/addon/idea_page_setting:
         show_point: ポイント表示
         show_tabs: タブ表示
+      opendata/addon/list_node_setting:
+        limit: 表示件数
 
   tooltip:
     opendata/dataset:
@@ -525,6 +528,10 @@ ja:
         - 未選択の場合、ポイントを表示します。
       show_tabs:
         - 表示するタブを選択します。
+    opendata/addon/list_node_setting:
+      limit:
+        - |-
+          リストの表示件数を指定します。
 
   job:
     models:

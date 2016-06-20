@@ -139,7 +139,7 @@ module Opendata::Node
 
   class Idea
     include Cms::Model::Node
-    include Cms::Addon::NodeSetting
+    include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Opendata::Addon::IdeaPageSetting
@@ -164,7 +164,7 @@ module Opendata::Node
 
   class SearchIdea
     include Cms::Model::Node
-    include Cms::Addon::NodeSetting
+    include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Opendata::IdeaChildNode

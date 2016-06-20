@@ -1,0 +1,16 @@
+<dl class="see mod-opendata-list-node-setting">
+  <dt><%= @model.t :page_layout_id %></dt>
+  <dd><%= tryb { @item.page_layout.name }%></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+
+  <dt><%= @model.t :shortcut %></dt>
+  <dd><%= @item.label :shortcut %></dd>
+
+  <dt><%= @model.t :view_route %></dt>
+  <dd><%= Cms::Node.new.route_options.map(&:reverse).to_h[@item.view_route] if @item.view_route.present? %></dd>
+
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.send :limit %></dd>
+</dl>
