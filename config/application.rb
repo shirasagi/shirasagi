@@ -31,6 +31,9 @@ module SS
     Dir["#{config.root}/config/locales/**/*.{rb,yml}"].each do |file|
       config.i18n.load_path << file unless config.i18n.load_path.index(file)
     end
+    Dir["#{config.root}/config/oem/locales/**/*.{rb,yml}"].each do |file|
+      config.i18n.load_path << file unless config.i18n.load_path.index(file)
+    end
     Dir["#{config.root}/config/routes/**/routes.rb"].sort.each do |file|
       config.paths["config/routes.rb"] << file
     end
