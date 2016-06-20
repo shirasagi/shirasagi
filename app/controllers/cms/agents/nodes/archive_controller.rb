@@ -9,19 +9,19 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
     def set_range
       ymd = params[:ymd].presence
       case ymd.length
-      when 4 then
+      when 4
         # year is specified
         from = Time.zone.local(ymd.to_i, 1, 1)
         to = from + 1.year - 1.second
         @range = from..to
-      when 6 then
+      when 6
         # year/month is specified
         year = ymd[0..3].to_i
         month = ymd[4..5].to_i
         from = Time.zone.local(year, month, 1)
         to = from + 1.month - 1.second
         @range = from..to
-      when 8 then
+      when 8
         # year/month/day is specified
         year = ymd[0..3].to_i
         month = ymd[4..5].to_i
