@@ -4,8 +4,10 @@ module Opendata::Addon::CommonPageSetting
   included do
     field :show_point, type: String, default: 'show'
     field :show_tabs, type: SS::Extensions::Words
+    field :tab_titles, type: Hash
     permit_params :show_point
     permit_params show_tabs: []
+    permit_params tab_titles: [ :released, :popular, :attention ]
     validates :show_point, inclusion: { in: %w(show hide), allow_blank: true }
   end
 
@@ -26,5 +28,9 @@ module Opendata::Addon::CommonPageSetting
   def show_tab?(option)
     return true if show_tabs.blank?
     show_tabs.include?(option)
+  end
+
+  def tab_title(option)
+    tab_titles[option] if tab_titles.present?
   end
 end

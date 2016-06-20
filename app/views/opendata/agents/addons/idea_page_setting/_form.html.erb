@@ -1,4 +1,20 @@
-<dl class="see mypage-setting">
+<dl class="see mod-idea-page-setting">
   <dt><%= @model.t :show_point %><%= @model.tt :show_point %></dt>
   <dd><%= f.select :show_point, @item.show_point_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :show_tabs %><%= @model.tt :show_tabs %></dt>
+  <dd>
+    <% %w(released popular attention).each do |option| %>
+      <% check = @item.show_tab?(option) %>
+      <% title = @item.tab_title(option) %>
+      <% id = "#{f.object_name}_show_tabs_#{option}" %>
+      <fieldset>
+        <label for="<%= "#{f.object_name}_show_tabs_#{option}" %>">
+          <%= check_box_tag "#{f.object_name}[show_tabs][]", option, check, { id: id } %>
+          <%= t("opendata.sort_options.#{option}") %>
+        </label>
+        <%= text_field_tag "#{f.object_name}[tab_titles][#{option}]", title, class: [ :tab_titles, "tab_title_#{option}" ] %>
+      </fieldset>
+    <% end %>
+  </dd>
 </dl>
