@@ -17,8 +17,12 @@
           <nav class="tap-menu">
             <%= link_to :show, action: :show, id: item %>
             <% unless selected_layout?(item) %>
-              <%= link_to :pc_preview, cms_preview_path(path: layout_path), target: "_blank" %>
-              <%= link_to(:mobile_preview, cms_mobile_preview_path(path: layout_path), target: :_blank) if @cur_site.mobile_enabled? %>
+              <% if @cur_site.mobile_enabled? %>
+                <%= link_to :pc_preview, cms_preview_path(path: layout_path), target: "_blank" %>
+                <%= link_to(:mobile_preview, cms_mobile_preview_path(path: layout_path), target: :_blank) %>
+              <% else %>
+                <%= link_to :preview, cms_preview_path(path: layout_path), target: "_blank" %>
+              <% end %>
             <% end %>
           </nav>
           <%= link_to item.name, { action: :show, id: item }, class: "icon-layout" %>

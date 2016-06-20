@@ -19,8 +19,12 @@
         <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <% if @model.collection_name =~ /^cms_(nodes|pages)$/ %>
         <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
-        <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
-        <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank) if @cur_site.mobile_enabled? %>
+          <% if @cur_site.mobile_enabled? %>
+            <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
+            <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank) %>
+          <% else %>
+            <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
+          <% end %>
         <% end %>
         <% if item.try(:image?) %>
           <%= link_to image_tag(url_for(action: :thumb, id: item.id)),
