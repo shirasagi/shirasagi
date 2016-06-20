@@ -39,7 +39,9 @@ module SS
     end
 
     def embed_mobile_path(request, url)
-      uri = URI.parse(url)
+      uri = URI.parse(url) rescue nil
+
+      return url unless uri
       return url unless same_host?(request, uri)
       return url if relative_path?(request, uri)
       return url if mobile_path?(request, uri)
