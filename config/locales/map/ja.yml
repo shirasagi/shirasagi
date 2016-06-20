@@ -10,6 +10,9 @@ ja:
     clicked: クリック座標
     alert:
       invalid_center: 座標を取得できませんでした。
+      invalid_location:
+        - "正しい座標をカンマ(,)区切りで入力してください。"
+        - "例）33.8957612,133.6806607"
     button:
       set_marker: マーカーの設置
       add_marker: マーカーを追加する
@@ -24,11 +27,12 @@ ja:
 
   mongoid:
     attributes:
-      cms/model/page:
+      map/addon/page:
         map_loc: 緯度,経度
         map_zoom: 縮尺
         marker_name: マーカー名
         marker_text: 説明
+        marker_loc: 座標
         marker_link: リンク
 
   tooltip:

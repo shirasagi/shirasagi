@@ -29,6 +29,9 @@
     <% if @item.map_points.blank? %>
       <dd class="marker">
         <p>
+          <%= text_field_tag "item[map_points][][loc_]", nil, class: "marker-loc-input loc", placeholder: @item.t(:marker_loc) %>
+        </p>
+        <p>
           <%= text_field_tag "item[map_points][][name]", nil, class: "marker-name", placeholder: @item.t(:marker_name) %>
         </p>
         <p>
@@ -43,6 +46,9 @@
     <% end %>
     <% @item.map_points.each do |point| %>
       <dd class="marker">
+        <p>
+          <%= text_field_tag "item[map_points][][loc_]", point[:loc].join(","), class: "marker-loc-input loc", placeholder: @item.t(:marker_loc) %>
+        </p>
         <p>
           <%= text_field_tag "item[map_points][][name]", point[:name], class: "marker-name", placeholder: @item.t(:marker_name) %>
         </p>

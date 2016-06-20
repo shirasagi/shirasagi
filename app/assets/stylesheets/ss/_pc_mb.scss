@@ -1022,7 +1022,7 @@ footer.send {
       &.marker {
         padding-bottom: 18px
       }
-      .marker-name,.marker-text {
+      .marker-name,.marker-text,.marker-loc-input {
         width: 260px;
         @include mb {
           width: 100%;
