@@ -1,4 +1,4 @@
-<dl class="see mypage-setting">
+<dl class="see mod-app-page-setting">
   <dt><%= @model.t :show_point %></dt>
   <dd><%= @item.label :show_point %></dd>
 
@@ -7,6 +7,10 @@
     <% %w(released popular attention).each do |option| %>
       <% if @item.show_tab?(option) %>
         <%= t("opendata.sort_options.#{option}") %>
+      <% end %>
+      <% title = @item.tab_title(option) %>
+      <% if title.present? %>
+        (表示: <%= title %>)
       <% end %>
     <% end %>
   </dd>
