@@ -1,9 +1,21 @@
 <dl class="see">
+  <dt><%= @model.t :id %></dt>
+  <dd><%= @item.id %></dd>
+
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
+  <dt><%= @model.t :issue %></dt>
+  <dd><%= auto_link br(@item.issue), html: { target: "_blank" } %></dd>
+
   <dt><%= @model.t :text %></dt>
   <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+
+  <dt><%= @model.t :data %></dt>
+  <dd><%= br @item.data %></dd>
+
+  <dt><%= @model.t :note %></dt>
+  <dd><%= auto_link br(@item.note), html: { target: "_blank" } %></dd>
 
   <dt><%= @model.t :tags %></dt>
   <dd><%= @item.tags %></dd>

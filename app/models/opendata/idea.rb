@@ -22,6 +22,10 @@ class Opendata::Idea
   field :commented, type: DateTime
   field :total_comment, type: Integer, default: "0"
 
+  field :issue, type: String
+  field :data, type: String
+  field :note, type: String
+
   embeds_ids :datasets, class_name: "Opendata::Dataset"
   embeds_ids :apps, class_name: "Opendata::App"
   belongs_to :member, class_name: "Opendata::Member"
@@ -36,6 +40,7 @@ class Opendata::Idea
   validates :state, presence: true
 
   permit_params :text, :point, :commented, :total_comment, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []
+  permit_params :issue, :data, :note
 
   before_save :seq_filename, if: ->{ basename.blank? }
 

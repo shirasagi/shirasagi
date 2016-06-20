@@ -424,11 +424,14 @@ ja:
         dataset_id: 関連データセット
         app_id: 関連アプリ
         point: 評価
-        text: コメント
+        text: アイデア
         tags: タグ
         comment_body: 本文
         commented: 合計コメント数
         request_comment: 未承認コメント
+        issue: 課題
+        data: データ
+        note: 備考
       opendata/idea_comment:
         text: コメント
         member_name: 投稿者名
