@@ -106,9 +106,6 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    template_variable_handler "description", :template_variable_handler_description
-    template_variable_handler "contributor", :template_variable_handler_contributor
-
     default_scope ->{ where(route: "member/blog") }
 
     def sort_hash
@@ -120,15 +117,6 @@ module Member::Node
       Member::BlogLayout.where(filename: /^#{filename}\//).
         map { |item| [item.name, item.id] }
     end
-
-    private
-      def template_variable_handler_description(name, item)
-        ERB::Util.html_escape item.description
-      end
-
-      def template_variable_handler_contributor(name, item)
-        ERB::Util.html_escape item.contributor
-      end
   end
 
   class BlogPage
@@ -164,8 +152,6 @@ module Member::Node
 
     default_scope ->{ where(route: "member/blog_page_location") }
 
-    template_variable_handler "contributor", :template_variable_handler_contributor
-
     def sort_hash
       return { created: -1 } if sort.blank?
       super
@@ -185,10 +171,6 @@ module Member::Node
       cond << { :blog_page_location_ids.in => cids } if cids.present?
 
       { '$or' => cond }
-    end
-
-    def template_variable_handler_contributor(item, name)
-      ERB::Util.html_escape item.contributor
     end
   end
 

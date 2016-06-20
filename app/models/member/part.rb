@@ -17,23 +17,16 @@ module Member::Part
 
     default_scope ->{ where(route: "member/blog_page") }
 
-    template_variable_handler :contributor, :template_variable_handler_contributor
-
     def condition_hash(opts = {})
       cond = []
-      cids = []
-      cond_url = []
+      # cids = []
+      # cond_url = []
 
       cond << { filename: /^#{parent.filename}\// }
       #cids << id
       #cond_url = conditions
       { '$or' => cond }
     end
-
-    private
-      def template_variable_handler_contributor(name, item)
-        item.contributor
-      end
   end
 
   class Photo

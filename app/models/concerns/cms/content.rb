@@ -2,6 +2,7 @@ module Cms::Content
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
+  include Cms::TemplateVariable
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::GroupPermission
@@ -99,6 +100,10 @@ module Cms::Content
 
   def json_url
     site.url + filename.sub(/(\/|\.html)?$/, ".json")
+  end
+
+  def date
+    updated || created
   end
 
   def public?

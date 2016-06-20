@@ -10,6 +10,10 @@ module Cms::Reference
       before_validation :set_member_id, if: ->{ @cur_member }
 
       scope :member, ->(member) { where(member_id: member.id) }
+
+      if respond_to?(:template_variable_handler)
+        template_variable_handler :contributor, :template_variable_handler_contributor
+      end
     end
 
     def contributor
@@ -21,6 +25,10 @@ module Cms::Reference
     private
       def set_member_id
         self.member_id ||= @cur_member.id
+      end
+
+      def template_variable_handler_contributor(name, issuer)
+        ERB::Util.html_escape contributor
       end
   end
 end

@@ -11,6 +11,11 @@ module Cms::Addon
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
       before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
+
+      if respond_to? :template_variable_handler
+        template_variable_handler :summary, :template_variable_handler_name
+        template_variable_handler :description, :template_variable_handler_name
+      end
     end
 
     def summary
