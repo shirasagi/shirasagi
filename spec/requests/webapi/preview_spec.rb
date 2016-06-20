@@ -8,13 +8,15 @@ describe "webapi", dbscope: :example, type: :request do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:node) { create(:article_node_page) }
-  let!(:page) { create(:article_page, cur_node: node) }
+  let!(:item) { create(:article_page, cur_node: node) }
+  let!(:layout) { create(:cms_layout) }
+  let!(:body_layout) { create(:cms_body_layout) }
 
   ## paths
   let!(:login_path) { sns_login_path(format: :json) }
   let!(:logout_path) { sns_logout_path(format: :json) }
-  let!(:preview_path) { cms_preview_path(site: site.id, path: page.filename) }
-  let!(:form_preview_path) { cms_form_preview_path(site: site.id, path: "#{page.parent.filename}/.html") }
+  let!(:preview_path) { cms_preview_path(site: site.id, path: item.filename) }
+  let!(:form_preview_path) { cms_form_preview_path(site: site.id, path: "#{item.parent.filename}/.html") }
 
   ## request params
   let!(:correct_login_params) do
@@ -42,13 +44,32 @@ describe "webapi", dbscope: :example, type: :request do
     context "form preview" do
       describe "POST /.s{site}/preview/{path}" do
         it "200" do
-          preview_page          = Cms::Page.new page.attributes
+          preview_page          = Cms::Page.new item.attributes
           preview_page.name     = "preview test"
           preview_page.basename = "preview_test.html"
 
           params = { preview_item: { id: preview_page.id } }
           post form_preview_path, params
           expect(response.status).to eq 200
+        end
+
+        it "200 with page id" do
+          params = { preview_item: {
+            id: item.id,
+            layout_id: layout.id,
+            body_layout_id: body_layout.id,
+            body_parts: %w(パーツ１ パーツ２ パーツ３),
+          } }
+
+          post form_preview_path, params
+          expect(response.status).to eq 200
+
+          expect(response.body.include?('パーツ１')).to be_truthy
+          expect(response.body.include?('パーツ２')).to be_truthy
+          expect(response.body.include?('パーツ３')).to be_truthy
+          expect(response.body.include?('<div id="ss-preview">')).to be_truthy
+          expect(response.body.include?('<input type="button" class="preview" value="PC">')).to be_truthy
+          expect(response.body.include?('<input type="button" class="mobile" value="携帯">')).to be_truthy
         end
 
         #it "400" do

@@ -2,6 +2,8 @@
 
 class @SS_Preview
   @mobile_path = "/mobile"
+  @request_path = null
+  @form_item = null
 
   @render: ->
     $("#ss-preview .date").datetimepicker
@@ -12,13 +14,50 @@ class @SS_Preview
       return if date == ""
 
       date = date.replace(/[^\d]/g, "")
-      path = location.pathname.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date) + location.search
-      location.href = path
+      path = SS_Preview.request_path
+      path ||= location.pathname
+      path = path.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date ) + location.search
+
+      if SS_Preview.request_path
+        SS_Preview.submitFormPreview(path, SS_Preview.form_item)
+      else
+        location.href = path
 
     $("#ss-preview .mobile").click ->
       date = $("#ss-preview .date").val()
       return if date == ""
 
       date = date.replace(/[^\d]/g, "")
-      path = location.pathname.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date + "/mobile" ) + location.search
-      location.href = path
+      path = SS_Preview.request_path
+      path ||= location.pathname
+      path = path.replace(///\/preview\d*(#{SS_Preview.mobile_path})?///, "/preview" + date + "/mobile" ) + location.search
+
+      if SS_Preview.request_path
+        SS_Preview.submitFormPreview(path, SS_Preview.form_item)
+      else
+        location.href = path
+
+
+    if SS_Preview.request_path
+      $('body a [href="#"]').val("onclick", "return false;")
+
+  @submitFormPreview: (path, form_item) ->
+    form = $("<form>")
+    $(form).attr("method", "post")
+    $(form).attr("action", path)
+    SS_Preview.appendParams(form, "preview_item", form_item)
+    form.appendTo("body")
+    form.submit()
+    return false
+
+  @appendParams: (form, name, params) ->
+    if params.length <= 0
+      form.append($("<input/>", name: "#{name}[]", value: "", type: "hidden" ))
+
+    for k, v of params
+      k = "" if k.match(/^\d+$/)
+      if typeof v == 'object'
+        SS_Preview.appendParams(form, "#{name}[#{k}]", v)
+      else
+        form.append($("<input/>", name: "#{name}[#{k}]", value: v, type: "hidden" ))
+
