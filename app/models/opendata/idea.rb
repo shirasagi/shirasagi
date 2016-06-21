@@ -139,7 +139,14 @@ class Opendata::Idea
         params << :tag
         params << :area_id
         params << :category_id
+        params << :option
         params
+      end
+
+      def search_options
+        %w(all_keywords any_keywords any_conditions).map do |w|
+          [I18n.t("opendata.search_options.#{w}"), w]
+        end
       end
 
       def search(params)
@@ -158,27 +165,33 @@ class Opendata::Idea
 
       def search_keyword(params, criteria)
         if params[:keyword].present?
-          criteria = criteria.keyword_in params[:keyword], :name, :text
+          option = params[:option].presence
+          method = option == 'all_keywords' ? 'and' : 'any'
+          criteria = criteria.keyword_in params[:keyword], :name, :text, :issue, :data, :note, method: method
         end
         criteria
       end
 
       def search_tag(params, criteria)
         if params[:tag].present?
-          criteria = criteria.where tags: params[:tag]
+          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+          criteria = criteria.where(operator => [ tags: params[:tag] ])
         end
         criteria
       end
 
       def search_area_id(params, criteria)
         if params[:area_id].present?
-          criteria = criteria.where area_ids: params[:area_id].to_i
+          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+          criteria = criteria.where(operator => [ area_ids: params[:area_id].to_i ])
         end
         criteria
       end
 
       def search_category_id(params, criteria)
         return criteria if params[:category_id].blank?
+
+        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
 
         category_id = params[:category_id].to_i
         category_node = Cms::Node.site(params[:site]).public.where(id: category_id).first
@@ -189,7 +202,7 @@ class Opendata::Idea
           category_ids << child.id
         end
 
-        criteria.in(category_ids: category_ids)
+        criteria.where(operator => [ category_ids: { "$in" => category_ids } ])
       end
 
       def search_poster(params, criteria)
@@ -197,7 +210,8 @@ class Opendata::Idea
           cond = {}
           cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
           cond = { :workflow_member_id => nil } if params[:poster] == "admin"
-          criteria = criteria.where(cond)
+          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+          criteria = criteria.where(operator => [ cond ])
         end
         criteria
       end

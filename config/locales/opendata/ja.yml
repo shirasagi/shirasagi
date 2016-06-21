@@ -145,6 +145,7 @@ ja:
         -
         - '-'
       login_history: ログイン履歴
+      search_option: 検索オプション
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。
@@ -169,6 +170,10 @@ ja:
     state_options:
       public: 公開
       closed: 非公開
+    search_options:
+      all_keywords: すべてのキーワードを含む
+      any_keywords: いずれかのキーワードを含む
+      any_conditions: すべてをOR条件で検索する
 
     # Web API
     api:
