@@ -110,6 +110,11 @@ module Opendata::UrlHelper
     build_path(node.url, options)
   end
 
+  def member_login_enabled?
+    node = Member::Node::Login.site(@cur_site).public.first
+    node.present?
+  end
+
   def member_login_path(options = {})
     node = Member::Node::Login.site(@cur_site).public.first
     raise "member login is disabled since Member::Node::Login is not registered" unless node
