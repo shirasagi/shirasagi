@@ -297,6 +297,7 @@ class @SS_Tabs
       base_id = tab.attr("id")
       name_id = base_id + "-name"
       view_id = base_id + "-view"
+      url = "##{view_id}" unless url
 
       tab_cls   = "name"
       tab_cls   = "name current" if i == 0
