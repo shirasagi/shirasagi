@@ -146,6 +146,9 @@ ja:
         - '-'
       login_history: ログイン履歴
       search_option: 検索オプション
+      issue: 課題
+      data: データ
+      note: 備考
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       build_rdf_success: RDFの作成に成功しました。

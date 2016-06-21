@@ -10,6 +10,10 @@ class Opendata::Agents::Pages::Idea::IdeaController < ApplicationController
 
       @search_path = method(:search_ideas_path)
 
+      @tab_count = 1
+      @tab_count += 1 if view_context.dataset_enabled?
+      @tab_count += 1 if view_context.app_enabled?
+
       render
     end
 end
