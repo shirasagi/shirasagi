@@ -17,11 +17,19 @@ class Opendata::Dataset
   set_permission_name "opendata_datasets"
 
   scope :formast_is, ->(word, *fields) {
-    where("$and" => [{ "$or" => fields.map { |field| { field => word.to_s } } } ])
+    options = fields.extract_options!
+    method = options[:method].presence || 'and'
+    operator = method == 'and' ? "$and" : "$or"
+
+    where(operator => [{ "$or" => fields.map { |field| { field => word.to_s } } } ])
   }
 
   scope :license_is, ->(id, *fields) {
-    where("$and" => [{ "$or" => fields.map { |field| { field => id.to_i } } } ])
+    options = fields.extract_options!
+    method = options[:method].presence || 'and'
+    operator = method == 'and' ? "$and" : "$or"
+
+    where(operator => [{ "$or" => fields.map { |field| { field => id.to_i } } } ])
   }
 
   set_permission_name "opendata_datasets"
@@ -145,7 +153,14 @@ class Opendata::Dataset
         params << :dataset_group
         params << :format
         params << :license_id
+        params << :option
         params
+      end
+
+      def search_options
+        %w(all_keywords any_keywords any_conditions).map do |w|
+          [I18n.t("opendata.search_options.#{w}"), w]
+        end
       end
 
       def search(params)
@@ -173,9 +188,12 @@ class Opendata::Dataset
     private
       def search_keyword(params, criteria)
         if params[:keyword].present?
+          option = params[:option].presence
+          method = option == 'all_keywords' ? 'and' : 'any'
           criteria = criteria.keyword_in params[:keyword],
                        :name, :text, "resources.name", "resources.filename", "resources.text",
-                       "url_resources.name", "url_resources.filename", "url_resources.text"
+                       "url_resources.name", "url_resources.filename", "url_resources.text",
+                       method: method
         end
         criteria
       end
@@ -208,7 +226,8 @@ class Opendata::Dataset
 
       def search_area_id(params, criteria)
         if params[:area_id].present?
-          criteria = criteria.where area_ids: params[:area_id].to_i
+          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+          criteria = criteria.where(operator => [ area_ids: params[:area_id].to_i ])
         end
         criteria
       end
@@ -225,29 +244,35 @@ class Opendata::Dataset
           category_ids << child.id
         end
 
-        criteria.in(category_ids: category_ids)
+        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+        criteria.where(operator => [ category_ids: { "$in" => category_ids } ])
       end
 
       def search_dataset_group(params, criteria)
-        site = params[:site]
         if params[:dataset_group].present?
+          site = params[:site]
           groups = Opendata::DatasetGroup.site(site).public.search_text(params[:dataset_group])
           groups = groups.pluck(:id).presence || [-1]
-          criteria = criteria.any_in dataset_group_ids: groups
+          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+          criteria = criteria.where(operator => [ dataset_group_ids: { "$in" => groups } ])
         end
         criteria
       end
 
       def search_format(params, criteria)
         if params[:format].present?
-          criteria = criteria.formast_is  params[:format].upcase, "resources.format", "url_resources.format"
+          option = params[:option].presence
+          method = option == 'all_keywords' ? 'and' : 'any'
+          criteria = criteria.formast_is params[:format].upcase, "resources.format", "url_resources.format", method: method
         end
         criteria
       end
 
       def search_license_id(params, criteria)
         if params[:license_id].present?
-          criteria = criteria.license_is  params[:license_id].to_i, "resources.license_id", "url_resources.license_id"
+          option = params[:option].presence
+          method = option == 'all_keywords' ? 'and' : 'any'
+          criteria = criteria.license_is params[:license_id].to_i, "resources.license_id", "url_resources.license_id", method: method
         end
         criteria
       end
@@ -257,7 +282,8 @@ class Opendata::Dataset
           cond = {}
           cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
           cond = { :workflow_member_id => nil } if params[:poster] == "admin"
-          criteria = criteria.where(cond)
+          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+          criteria = criteria.where(operator => cond)
         end
         criteria
       end

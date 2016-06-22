@@ -52,6 +52,10 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
     <dt><%= I18n.t("opendata.labels.sort") %></dt>
     <dd><%= select_tag :sort, options_for_select(@model.sort_options, params[:sort]) %></dd>
   </dl>
+  <dl class="option">
+    <dt><%= I18n.t("opendata.labels.search_option") %></dt>
+    <dd><%= f.select :option, @model.search_options %></dd>
+  </dl>
 
   <div class="send">
     <%= submit_tag t("views.button.search"), name: :search %>
