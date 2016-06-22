@@ -7,6 +7,7 @@
 //= require jquery.multi-select
 //= require jquery.colorbox-min.js
 //= require marked
+//= require tinyColorPicker/jqColorPicker.min.js
 //= require_self
 //= require ss/lib/login
 //= require ss/lib/addon_tabs
@@ -82,6 +83,9 @@ $ ->
       roundTime: 'ceil'
       step: 30
 
+  # colorpicker
+  $(".js-color").colorPicker().data('colorMode', 'HEX')
+
   SS_ListUI.render("table.index")
   SS_Mobile.render()
   SS_AddonTabs.render()
@@ -90,6 +94,8 @@ $ ->
 
 class @SS
   @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+
+  @config = {}
 
   @disableClick: (el)->
     return false if el.data('clicked')

@@ -27,6 +27,7 @@ $ ->
   SS_Voice.render()
   $(".ss-part").each ->
     SS.renderPart $(this)
+  SS_Theme.render()
 
 class @SS
   @head = ""
@@ -38,6 +39,8 @@ class @SS
 
   @load: ->
     #deprecated
+
+  @config = {}
 
   @renderLayout: (url) ->
     head = $("head")
@@ -198,6 +201,53 @@ class @SS_Kana
         body.data("kana", elem.hasClass("on"))
         body.html data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1")
     return false
+
+class @SS_Theme
+  @render: ->
+    return unless $("#ss-theme").length > 0
+
+    theme = SS.config["theme"]
+    $("#ss-theme").html("")
+
+    css = ""
+    for cls, v of theme
+      a = $('<a href="#" class="' + cls + '">' + v["name"] + '</a>')
+
+      if v["css_path"]
+        $('head').append('<link rel="alternate stylesheet" type="text/css" title="' + v["name"] + '" href="' + v["css_path"] + '" class="ss-theme ' + cls + '" disabled />')
+
+      if v["font_color"] && v["background_color"]
+        css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n"
+
+      a.on "click", (e) ->
+        cls = $(this).attr("class")
+        $.cookie("ss-theme", cls, { expires: 7, path: '/' })
+        SS_Theme.switchTheme(cls)
+        return false
+
+      $("#ss-theme").append(a)
+
+    style = $('<style type="text/css" class="ss-theme">' + css + '</style>')
+    $("head").append(style)
+
+    cls = $.cookie("ss-theme")
+    if cls
+      SS_Theme.switchTheme(cls)
+
+  @cssTemplate: (cls, color, backgroundColor) ->
+    """
+    body.#{cls} * {
+      border-color: #{color} !important;
+      background: #{backgroundColor} !important;
+      color: #{color} !important;
+    }
+    """
+
+  @switchTheme: (cls) ->
+    $('head link.ss-theme').prop("disabled", true)
+    $('head link.ss-theme.' + cls).prop("disabled", false)
+    $("body").attr("class", "")
+    $("body").addClass(cls)
 
 class @SS_Font
   @size = null # %

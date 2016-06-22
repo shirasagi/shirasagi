@@ -122,4 +122,13 @@ module Cms::PublicFilter::Layout
       @javascripts ||= []
       @javascripts << path unless @javascripts.include?(path)
     end
+
+    def javascript_configs
+      @javascript_config ||= Cms::ThemeTemplate.to_config(site: @cur_site)
+    end
+
+    def javascript_config(conf)
+      javascript_configs
+      @javascript_config.merge!(conf)
+    end
 end

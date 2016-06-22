@@ -12,6 +12,9 @@
 <% controller.javascripts.each do |path| %>
   <%= javascript_include_tag path %>
 <% end %>
+<%= javascript_tag do %>
+  SS.config = <%= raw controller.javascript_configs.to_json %>;
+<% end %>
 <%== @cur_layout.head %>
 <%= csrf_meta_tags if @csrf_token != false %>
 </head>
