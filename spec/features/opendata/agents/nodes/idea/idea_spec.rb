@@ -1,89 +1,67 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_idea", dbscope: :example do
-  before do
-    create_once :opendata_node_search_idea, basename: "idea/search"
-  end
-
+describe "opendata_agents_nodes_idea", dbscope: :example, js: true do
   let(:site) { cms_site }
-  let!(:node_idea) { create_once :opendata_node_idea }
-  let!(:node_member) { create_once :opendata_node_member }
-  let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
-  let!(:node_login) { create :member_node_login, redirect_url: node_idea.url }
+  let(:layout) { create_cms_layout }
+  let!(:node_idea) { create :opendata_node_idea, cur_site: site, layout_id: layout.id }
+  let!(:node_member) { create :opendata_node_member, cur_site: site, layout_id: layout.id }
+  let!(:node_mypage) { create :opendata_node_mypage, cur_site: site, layout_id: layout.id, filename: "mypage" }
+  let!(:node_login) { create :member_node_login, cur_site: site, layout_id: layout.id, redirect_url: node_idea.url }
 
-  let!(:node_area) { create :opendata_node_area }
+  let!(:node_area) { create :opendata_node_area, cur_site: site, layout_id: layout.id }
+  let!(:node_idea_search) { create :opendata_node_search_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id }
 
-  let(:page_idea) { create_once :opendata_idea, filename: "#{node_idea.filename}/1.html", area_ids: [ node_area.id ] }
+  let!(:page_idea) { create :opendata_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id, filename: "1.html", area_ids: [ node_area.id ] }
   let(:index_path) { "#{node_idea.url}index.html" }
-  let(:show_point_path) { "#{node_idea.url}#{page_idea.id}/point.html" }
-  let(:point_members_path) { "#{node_idea.url}#{page_idea.id}/point/members.html" }
-  let(:show_comment_path) { "#{node_idea.url}#{page_idea.id}/comment/show.html" }
-  let(:show_dataset_path) { "#{node_idea.url}#{page_idea.id}/dataset/show.html" }
-  let(:show_app_path) { "#{node_idea.url}#{page_idea.id}/app/show.html" }
   let(:rss_path) { "#{node_idea.url}rss.xml" }
   let(:areas_path) { "#{node_idea.url}areas.html" }
   let(:tags_path) { "#{node_idea.url}tags.html" }
 
-  context "without auth" do
+  context "without login" do
     it "#index" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      visit index_path
+      expect(current_path).to eq index_path
+      expect(page).to have_css(".idea-count .count", text: "1")
 
-        visit index_path
-        expect(current_path).to eq index_path
-      end
-    end
+      expect(page).to have_css(".opendata-tabs .names a.tab-released", text: "新着順")
+      expect(page).to have_css(".opendata-tabs .names a.tab-popular", text: "人気順")
+      expect(page).to have_css(".opendata-tabs .names a.tab-attention", text: "注目順")
 
-    it "#ajax_path" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-
-        visit show_point_path
-        expect(current_path).to eq show_point_path
-
-        visit point_members_path
-        expect(current_path).to eq point_members_path
-
-        visit show_comment_path
-        expect(current_path).to eq show_comment_path
-
-        visit show_dataset_path
-        expect(current_path).to eq show_dataset_path
-
-        visit show_app_path
-        expect(current_path).to eq show_app_path
-      end
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s)
+      expect(page).to have_css(".opendata-tabs .tab-popular h1", text: "人気順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: page_idea.name, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-attention h1", text: "注目順", visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 a", text: page_idea.name, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_css(".areas .name", text: node_area.name)
+      expect(page).to have_css(".tags .name", text: page_idea.tags[0])
+      expect(page).to have_css(".tags .name", text: page_idea.tags[1])
     end
 
     it "#rss" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-
-        visit rss_path
-        expect(current_path).to eq rss_path
-      end
+      visit rss_path
+      expect(current_path).to eq rss_path
     end
 
     it "#areas" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-
-        visit areas_path
-        expect(current_path).to eq areas_path
-      end
+      visit areas_path
+      expect(current_path).to eq areas_path
+      expect(page).to have_css('article header h2 .name', text: node_area.name)
+      expect(page).to have_css('article header h2 .count', text: '(1)')
     end
 
     it "#tags" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-
-        visit tags_path
-        expect(current_path).to eq tags_path
-      end
+      visit tags_path
+      expect(current_path).to eq tags_path
+      expect(page).to have_css('article header h2 .name', text: page_idea.tags[0])
+      expect(page).to have_css('article header h2 .name', text: page_idea.tags[1])
     end
   end
 
-  context "with auth" do
+  context "with login" do
     before do
       login_opendata_member(site, node_login)
     end
@@ -93,61 +71,126 @@ describe "opendata_agents_nodes_idea", dbscope: :example do
     end
 
     it "#index" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      visit index_path
+      expect(current_path).to eq index_path
+      expect(page).to have_css(".idea-count .count", text: "1")
 
-        visit index_path
-        expect(current_path).to eq index_path
+      expect(page).to have_css(".opendata-tabs .names a.tab-released", text: "新着順")
+      expect(page).to have_css(".opendata-tabs .names a.tab-popular", text: "人気順")
+      expect(page).to have_css(".opendata-tabs .names a.tab-attention", text: "注目順")
+
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s)
+      expect(page).to have_css(".opendata-tabs .tab-popular h1", text: "人気順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: page_idea.name, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-attention h1", text: "注目順", visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 a", text: page_idea.name, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_css(".areas .name", text: node_area.name)
+      expect(page).to have_css(".tags .name", text: page_idea.tags[0])
+      expect(page).to have_css(".tags .name", text: page_idea.tags[1])
+
+      within "article.tab-released" do
+        click_on page_idea.name
       end
-    end
 
-    it "#ajax_path" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-
-        visit show_point_path
-        expect(current_path).to eq show_point_path
-
-        visit point_members_path
-        expect(current_path).to eq point_members_path
-
-        visit show_comment_path
-        expect(current_path).to eq show_comment_path
-
-        visit show_dataset_path
-        expect(current_path).to eq show_dataset_path
-
-        visit show_app_path
-        expect(current_path).to eq show_app_path
-
+      expect(page).to have_css(".count .number", text: "1")
+      within "div.like" do
+        click_on "いいね！"
       end
+      expect(page).to have_css(".count .number", text: "2")
+
+      within ".count .label" do
+        click_on "いいね！"
+      end
+      expect(page).to have_css(".point-members")
     end
 
     it "#rss" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-
-        visit rss_path
-        expect(current_path).to eq rss_path
-      end
+      visit rss_path
+      expect(current_path).to eq rss_path
     end
 
     it "#areas" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
-
-        visit areas_path
-        expect(current_path).to eq areas_path
-      end
+      visit areas_path
+      expect(current_path).to eq areas_path
+      expect(page).to have_css('article header h2 .name', text: node_area.name)
+      expect(page).to have_css('article header h2 .count', text: '(1)')
     end
 
     it "#tags" do
-      page.driver.browser.with_session("public") do |session|
-        session.env("HTTP_X_FORWARDED_HOST", site.domain)
+      visit tags_path
+      expect(current_path).to eq tags_path
+      expect(page).to have_css('article header h2 .name', text: page_idea.tags[0])
+      expect(page).to have_css('article header h2 .name', text: page_idea.tags[1])
+    end
+  end
 
-        visit tags_path
-        expect(current_path).to eq tags_path
-      end
+  context "when point is hide" do
+    before do
+      node_idea.show_point = 'hide'
+      node_idea.save!
+
+      page_idea.touch
+      page_idea.save!
+    end
+
+    it do
+      visit index_path
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
+      expect(page).not_to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular h1", text: "人気順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: page_idea.name, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-attention h1", text: "注目順", visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 a", text: page_idea.name, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: page_idea.point.to_s, visible: false)
+    end
+  end
+
+  context "when only released is enabled" do
+    before do
+      node_idea.show_tabs = 'released'
+      node_idea.save!
+
+      page_idea.touch
+      page_idea.save!
+    end
+
+    it do
+      visit index_path
+      expect(page).not_to have_css(".opendata-tabs .names", visible: false)
+
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-popular", visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
+    end
+  end
+
+  context "when only released is enabled and tab title is renamed" do
+    before do
+      node_idea.show_tabs = 'released'
+      node_idea.tab_titles = { 'released' => 'アイデア一覧' }
+      node_idea.save!
+
+      page_idea.touch
+      page_idea.save!
+    end
+
+    it do
+      visit index_path
+      expect(page).not_to have_css(".opendata-tabs .names", visible: false)
+
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "アイデア一覧", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: page_idea.name)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: page_idea.point.to_s, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-popular", visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
     end
   end
 end

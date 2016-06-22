@@ -212,4 +212,26 @@ describe "opendata_agents_nodes_app", dbscope: :example, js: true do
       expect(page).not_to have_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
     end
   end
+
+  context "when only released is enabled" do
+    before do
+      node.show_tabs = 'released'
+      node.tab_titles = { 'released' => 'アプリ一覧' }
+      node.save!
+
+      app.touch
+      app.save!
+    end
+
+    it do
+      visit index_path
+      expect(page).not_to have_css(".opendata-tabs .names", visible: false)
+
+      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "アプリ一覧", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: app.name)
+      expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: app.point.to_s, visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-popular", visible: false)
+      expect(page).not_to have_css(".opendata-tabs .tab-attention", text: "注目順", visible: false)
+    end
+  end
 end
