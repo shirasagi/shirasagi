@@ -34,5 +34,10 @@ module Cms::PluginRepository
 
       !config.fetch('disable', false)
     end
+
+    def modules
+      keys = self.plugins.select { |m| m[2] }.map {|m| m[1].sub(/\/.*/, "") }.uniq
+      keys.map {|key| [I18n.t("modules.#{key}", default: key.to_s.titleize), key] }
+    end
   end
 end
