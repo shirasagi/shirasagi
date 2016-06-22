@@ -85,31 +85,31 @@ categories = [
 </nav>
 
 <% if @cur_page.issue.present? %>
-<article class="issue">
-  <header><h1><%= I18n.t("opendata.labels.issue") %></h1></header>
+<div class="issue">
+  <h2><%= I18n.t("opendata.labels.issue") %></h2>
   <p><%= auto_link br(@cur_page.issue) %></p>
-</article>
+</div>
 <% end %>
 
 <% if @cur_page.text.present? %>
-<article class="idea">
-  <header><h1><%= I18n.t("opendata.labels.idea") %></h1></header>
+<div class="idea">
+  <h2><%= I18n.t("opendata.labels.idea") %></h2>
   <p><%= auto_link br(@cur_page.text) %></p>
-</article>
+</div>
 <% end %>
 
 <% if @cur_page.data.present? %>
-<article class="data">
-  <header><h1><%= I18n.t("opendata.labels.data") %></h1></header>
+<div class="data">
+  <h2><%= I18n.t("opendata.labels.data") %></h2>
   <p><%= auto_link br(@cur_page.data) %></p>
-</article>
+</div>
 <% end %>
 
 <% if @cur_page.note.present? %>
-<article class="note">
-  <header><h1><%= I18n.t("opendata.labels.note") %></h1></header>
+<div class="note">
+  <h2><%= I18n.t("opendata.labels.note") %></h2>
   <p><%= auto_link br(@cur_page.note) %></p>
-</article>
+</div>
 <% end %>
 
 <% if @tab_count > 0 %>
