@@ -5,7 +5,5 @@
   <h2><%= link_to :"sns.file", sns_cur_user_files_path, class: 'icon-conv' %></h2>
   <h2><%= link_to :"sns.account", sns_cur_user_account_path, class: 'icon-conf' %></h2>
 
-  <% if SS::User.allowed?(:edit, @cur_user) %>
-  <h2><%= link_to :"sys.conf", sys_sites_path, class: 'icon-conf' %></h2>
-  <% end %>
+  <h2><%= link_to :"sys.conf", sys_conf_index_path, class: 'icon-conf' %></h2>
 </nav>

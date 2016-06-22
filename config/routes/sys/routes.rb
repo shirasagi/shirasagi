@@ -30,6 +30,8 @@ SS::Application.routes.draw do
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
 
+    resources :conf, only: [:index]
+
     namespace "apis" do
       get "groups" => "groups#index"
       get "sites" => "sites#index"
