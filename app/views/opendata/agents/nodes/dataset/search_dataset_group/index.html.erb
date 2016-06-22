@@ -4,7 +4,7 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [
 @s = OpenStruct.new params[:s]
 
 %>
-<%= form_for :s, url: "", html: { class: "opendata-search-groups-form", method: :get } do |f| %>
+<%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-groups-form", method: :get } do |f| %>
   <dl class="keyword">
     <dt><%= I18n.t("opendata.labels.keyword") %></dt>
     <dd><%= f.text_field :name %></dd>
