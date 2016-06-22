@@ -193,7 +193,7 @@ class Opendata::App
 
       def search_keyword(params, criteria)
         if params[:keyword].present?
-          option = params[:option].presence
+          option = params[:option].presence || 'all_keywords'
           method = option == 'all_keywords' ? 'and' : 'any'
           criteria = criteria.keyword_in params[:keyword],
             :name, :text, "appfiles.name", "appfiles.filename", "appfiles.text", method: method

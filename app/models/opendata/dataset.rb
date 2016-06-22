@@ -188,7 +188,7 @@ class Opendata::Dataset
     private
       def search_keyword(params, criteria)
         if params[:keyword].present?
-          option = params[:option].presence
+          option = params[:option].presence || 'all_keywords'
           method = option == 'all_keywords' ? 'and' : 'any'
           criteria = criteria.keyword_in params[:keyword],
                        :name, :text, "resources.name", "resources.filename", "resources.text",
@@ -219,7 +219,8 @@ class Opendata::Dataset
 
       def search_tag(params, criteria)
         if params[:tag].present?
-          criteria = criteria.where tags: params[:tag]
+          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+          criteria = criteria.where(operator => [ tags: params[:tag] ])
         end
         criteria
       end
@@ -261,8 +262,8 @@ class Opendata::Dataset
 
       def search_format(params, criteria)
         if params[:format].present?
-          option = params[:option].presence
-          method = option == 'all_keywords' ? 'and' : 'any'
+          option = params[:option].presence || 'all_keywords'
+          method = option == 'any_conditions' ? 'any' : 'and'
           criteria = criteria.formast_is params[:format].upcase, "resources.format", "url_resources.format", method: method
         end
         criteria
@@ -270,8 +271,8 @@ class Opendata::Dataset
 
       def search_license_id(params, criteria)
         if params[:license_id].present?
-          option = params[:option].presence
-          method = option == 'all_keywords' ? 'and' : 'any'
+          option = params[:option].presence || 'all_keywords'
+          method = option == 'any_conditions' ? 'any' : 'and'
           criteria = criteria.license_is params[:license_id].to_i, "resources.license_id", "url_resources.license_id", method: method
         end
         criteria
