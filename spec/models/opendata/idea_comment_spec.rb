@@ -10,8 +10,8 @@ describe Opendata::IdeaComment, dbscope: :example do
   let!(:node_area) { create_once :opendata_node_area }
 
   let!(:page_idea) do
-    create_once :opendata_idea,
-      filename: "#{node_idea.filename}/1.html", area_ids: [ node_area.id ]
+    create :opendata_idea, cur_site: node_idea.site, cur_node: node_idea,
+      filename: "1.html", area_ids: [ node_area.id ]
   end
 
   let!(:member) { opendata_member }

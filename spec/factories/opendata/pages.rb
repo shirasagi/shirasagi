@@ -28,13 +28,11 @@ FactoryGirl.define do
   end
 
   factory :opendata_idea, class: Opendata::Idea, traits: [:cms_page] do
-    transient do
-      node nil
-    end
-
-    filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/idea"
+    issue "eeee\nffff"
     text "cccc\ndddd"
+    data "gggg\nhhhh"
+    note "iiii\njjjj"
     tags ["ccc", "ddd"]
     category_ids [1]
     area_ids [1]

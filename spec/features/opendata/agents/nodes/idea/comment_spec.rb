@@ -10,10 +10,12 @@ describe "opendata_agents_nodes_comment", dbscope: :example do
   let!(:category) { create_once :opendata_node_category }
   let!(:area) { create_once :opendata_node_area }
   let!(:idea) do
-    create_once :opendata_idea,
-    filename: "#{node_idea.filename}/1.html",
-    category_ids: [ category.id ],
-    area_ids: [ area.id ]
+    create :opendata_idea,
+      cur_site: site,
+      cur_node: node_idea,
+      filename: "1.html",
+      category_ids: [ category.id ],
+      area_ids: [ area.id ]
   end
   let(:index_path) { "#{node_idea.url}#{idea.id}/comment/show.html" }
 
