@@ -57,7 +57,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
           @tabs << { name: @cur_node.tab_title(options[1]).presence || options[0],
                      id: options[1],
                      url: "#{@search_path.call("sort" => "#{options[1]}")}",
-                     pages: pages.order_by(Opendata::App.sort_hash(options[1])).limit(10),
+                     pages: pages.order_by(Opendata::App.sort_hash(options[1])).limit(@cur_node.limit || 10),
                      rss: "#{@rss_path.call("sort" => "#{options[1]}")}"}
         end
       end

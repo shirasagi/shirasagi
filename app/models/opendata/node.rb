@@ -31,7 +31,7 @@ module Opendata::Node
 
   class Dataset
     include Cms::Model::Node
-    include Cms::Addon::NodeSetting
+    include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Opendata::Addon::DatasetPageSetting
@@ -56,7 +56,7 @@ module Opendata::Node
 
   class SearchDatasetGroup
     include Cms::Model::Node
-    include Cms::Addon::NodeSetting
+    include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Opendata::DatasetChildNode
@@ -68,7 +68,7 @@ module Opendata::Node
 
   class SearchDataset
     include Cms::Model::Node
-    include Cms::Addon::NodeSetting
+    include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Opendata::DatasetChildNode
@@ -102,7 +102,7 @@ module Opendata::Node
 
   class App
     include Cms::Model::Node
-    include Cms::Addon::NodeSetting
+    include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Opendata::Addon::AppPageSetting
@@ -127,7 +127,7 @@ module Opendata::Node
 
   class SearchApp
     include Cms::Model::Node
-    include Cms::Addon::NodeSetting
+    include Opendata::Addon::ListNodeSetting
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Opendata::AppChildNode

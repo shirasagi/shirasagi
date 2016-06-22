@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetGroupController < Applicati
         search(params[:s]).
         order_by(name: 1).
         page(params[:page]).
-        per(20)
+        per(@cur_node.limit || 20)
 
       render
     end

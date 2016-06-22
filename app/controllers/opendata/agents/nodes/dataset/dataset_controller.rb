@@ -60,7 +60,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
       Opendata::Dataset.sort_options.each do |options|
         @tabs << { name: options[0],
                    url: "#{@search_path.call("sort" => "#{options[1]}")}",
-                   pages: pages.order_by(Opendata::Dataset.sort_hash(options[1])).limit(10),
+                   pages: pages.order_by(Opendata::Dataset.sort_hash(options[1])).limit(@cur_node.limit || 10),
                    rss: "#{@rss_path.call("sort" => "#{options[1]}")}"}
       end
 
