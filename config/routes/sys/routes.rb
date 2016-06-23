@@ -14,7 +14,7 @@ SS::Application.routes.draw do
 
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
-    get "info" => "info#index", as: :info
+    get "conf" => "conf#index", as: :conf
     get "site_copy" => "site_copy#index", as: :site_copy
     post "site_copy/confirm" => "site_copy#confirm"
     post "site_copy/run" => "site_copy#run"

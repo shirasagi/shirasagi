@@ -1,0 +1,12 @@
+<div class="addon-view" id="addon-basic">
+  <div class="addon-head"><h2><%= t "sys.connect_info" %></h2></div>
+  <div class="addon-body">
+    <dl class="see">
+      <dt><%= t("sys.server_name") %></dt>
+      <dd><%= request.env['SERVER_NAME'] %></dd>
+
+      <dt><%= t("sys.remote_addr") %></dt>
+      <dd><%= request.env['REMOTE_ADDR'] %></dd>
+    </dl>
+  </div>
+</div>

@@ -1,6 +1,8 @@
 <nav class="mod-navi">
   <h2><%= link_to :"sys.conf", sys_sites_path %></h2>
 
+  <h3><%= link_to :"sys.info", sys_conf_path %></h3>
+
   <% if Sys::Site.allowed?(:edit, @cur_user) %>
     <h3><%= link_to :"sys.site", sys_sites_path %></h3>
   <% end %>
@@ -30,5 +32,4 @@
     <h3><%= link_to :"job.log", job_sys_logs_path %></h3>
   <% end %>
 
-  <h3><%= link_to :"sys.info", sys_info_path %></h3>
 </nav>
