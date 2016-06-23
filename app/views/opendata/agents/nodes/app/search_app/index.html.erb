@@ -66,6 +66,17 @@ categories = transform_category(@cur_categories)
         <% end %>
       </h2>
     </header>
+    <div class="categories">
+      <% item.categories.each_with_index do |category, idx| %>
+        <span class="category"><%= category.name %></span>
+      <% end %>
+      <% item.areas.each_with_index do |area, idx| %>
+        <span class="area"><%= area.name %></span>
+      <% end %>
+      <% item.tags.each_with_index do |tag, idx| %>
+        <span class="tag"><%= tag %></span>
+      <% end %>
+    </div>
   </article>
   <% end %>
 

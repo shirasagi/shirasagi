@@ -15,9 +15,7 @@ end
 
 areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
 categories = transform_category(@cur_categories)
-licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
 @s = OpenStruct.new params[:s]
-
 %>
 <%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-ideas-form", method: :get } do |f| %>
   <dl class="keyword">
@@ -63,6 +61,17 @@ licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.
         <% end %>
       </h2>
     </header>
+    <div class="categories">
+      <% item.categories.each_with_index do |category, idx| %>
+        <span class="category"><%= category.name %></span>
+      <% end %>
+      <% item.areas.each_with_index do |area, idx| %>
+        <span class="area"><%= area.name %></span>
+      <% end %>
+      <% item.tags.each_with_index do |tag, idx| %>
+        <span class="tag"><%= tag %></span>
+      <% end %>
+    </div>
   </article>
   <% end %>
 
