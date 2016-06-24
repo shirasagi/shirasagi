@@ -46,6 +46,7 @@ module Mobile::PublicFilter
       head << %(<head>)
       head << %(<title>#{body.match(/<title>(.*?)<\/title>/).try(:[], 1)}</title>)
       head << %(<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />)
+      head << view_context.csrf_meta_tags if @csrf_token != false
       @cur_site.mobile_css.each do |css|
         css = css % { assets_prefix: Rails.application.config.assets.prefix }
         head << %(<link rel="stylesheet" href="#{css}" />)

@@ -42,10 +42,12 @@ class @SS_Preview
       $('body a [href="#"]').val("onclick", "return false;")
 
   @submitFormPreview: (path, form_item) ->
+    token = $('meta[name="csrf-token"]').attr('content')
     form = $("<form>")
     $(form).attr("method", "post")
     $(form).attr("action", path)
     SS_Preview.appendParams(form, "preview_item", form_item)
+    form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden" ))
     form.appendTo("body")
     form.submit()
     return false
