@@ -32,7 +32,7 @@ ja:
   mongoid:
     models:
       gws/share/file: 共有ファイル
-      gws/share/category: 共有ファイル種類
+      gws/share/category: 共有ファイルカテゴリー
       gws/share/group_setting: 共有ファイル設定
       gws/share/group_setting/category: カテゴリー
     errors:

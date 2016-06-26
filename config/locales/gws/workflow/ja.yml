@@ -23,6 +23,7 @@ ja:
 
   mongoid:
     models:
+      gws/workflow/route: ワークフロー経路
       gws/workflow/file: ワークフロー
       gws/workflow/category: ワークフロー種類
     attributes:

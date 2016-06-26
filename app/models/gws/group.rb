@@ -1,10 +1,12 @@
 class Gws::Group
   include SS::Model::Group
+  include Gws::Referenceable
   include Gws::SitePermission
+  include Gws::Addon::History
 
   set_permission_name "gws_groups", :edit
 
-  attr_accessor :cur_site
+  attr_accessor :cur_user, :cur_site
 
   has_many :users, foreign_key: :group_ids, class_name: "Gws::User"
 

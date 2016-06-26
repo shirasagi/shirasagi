@@ -99,6 +99,7 @@ ja:
       gws/custom_group: カスタムグループ
       gws/custom_group_member: カスタムグループメンバー
       gws/user: ユーザー
+      gws/user_title: 役職
       gws/role: 権限/ロール
       gws/notice: お知らせ
       gws/link: リンク集

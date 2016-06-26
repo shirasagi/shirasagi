@@ -1,5 +1,6 @@
 class Gws::Facility::Item
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include SS::Scope::ActivationDate
@@ -7,6 +8,7 @@ class Gws::Facility::Item
   include Gws::Addon::Facility::ReservableSetting
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
 
   store_in collection: "gws_facilities"
 

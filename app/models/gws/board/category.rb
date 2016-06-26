@@ -1,9 +1,11 @@
 class Gws::Board::Category
   include Gws::Model::Category
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
 
   default_scope ->{ where(model: "gws/board/category").order_by(name: 1) }
 
