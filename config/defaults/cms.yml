@@ -23,6 +23,9 @@ production: &production
       extraPlugins:
         - templates
         - justify
+        - panelbutton
+        - colorbutton
+        - font
     # readonly options override base options when mode is readonly
     readonly_options:
       readOnly: true
