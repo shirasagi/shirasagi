@@ -700,6 +700,7 @@ class @Form_Preview
         alert(errors.join("\n"))
         return false
 
+      token = $('meta[name="csrf-token"]').attr('content')
       form = $("<form>")
       $(form).attr("method", "post")
       $(form).attr("action", Form_Preview.form_preview_path)
@@ -718,6 +719,7 @@ class @Form_Preview
 
       form.append($("<input/>", name: "preview_item[route]", value: Form_Preview.page_route, type: "hidden" ))
       form.append($("<input/>", name: "preview_item[html]", value: Cms_Form.getEditorHtml("item_html"), type: "hidden" ))
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden" ))
 
       width = $(window).width()
       height = $(window).height()
