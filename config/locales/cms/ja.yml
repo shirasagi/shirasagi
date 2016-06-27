@@ -391,8 +391,9 @@ ja:
 
   errors:
     messages:
-      set_filename: ファイル名を設定してください。
-      set_name: タイトルを設定してください。
+      set_filename: ファイル名を入力してください。
+      invalid_filename: ファイル名は不正な値です。
+      set_name: タイトルを入力してください。
       same_filename: 移動先と移動前が同じファイル名です。
       exist_physical_file: 移動先に物理ファイルが既に存在します。
       not_found_parent_node: 移動先の親フォルダーが存在しません。
