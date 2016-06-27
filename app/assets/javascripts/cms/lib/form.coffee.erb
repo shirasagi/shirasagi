@@ -695,7 +695,11 @@ class @Form_Preview
       errors = []
 
       errors.push "<%= I18n.t('errors.messages.set_name') %>" unless name
-      errors.push "<%= I18n.t('errors.messages.set_filename') %>" unless basename
+      if basename
+        errors.push "<%= I18n.t('errors.messages.invalid_filename') %>" unless /^[\w\-]+(\.html)?$/.test(basename)
+      else
+        errors.push "<%= I18n.t('errors.messages.set_filename') %>"
+
       unless $.isEmptyObject(errors)
         alert(errors.join("\n"))
         return false
