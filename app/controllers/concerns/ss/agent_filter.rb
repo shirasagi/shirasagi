@@ -1,6 +1,5 @@
 module SS::AgentFilter
   extend ActiveSupport::Concern
-  include SS::TransSidFilter
 
   included do
     before_action :inherit_variables
@@ -33,5 +32,19 @@ module SS::AgentFilter
 
     def javascript(path)
       controller.javascript(path)
+    end
+
+    def filters
+      @filters ||= begin
+        request.env["ss.filters"] ||= []
+      end
+    end
+
+    def mobile_path?
+      filters.include?(:mobile)
+    end
+
+    def preview_path?
+      filters.include?(:preview)
     end
 end

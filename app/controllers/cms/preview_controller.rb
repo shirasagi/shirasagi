@@ -70,6 +70,7 @@ class Cms::PreviewController < ApplicationController
       @cur_path = "index.html" if @cur_path.blank?
       @cur_path = URI.decode(@cur_path)
       @cur_date = params[:preview_date].present? ? params[:preview_date].in_time_zone : Time.zone.now
+      filters << :preview
     end
 
     def x_sendfile(file = @file)
