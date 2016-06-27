@@ -169,4 +169,68 @@ describe "uploader_files", dbscope: :example, type: :feature do
       end
     end
   end
+
+  context "under subfolder" do
+    let(:node_root) { create :cms_node_node, name: "parent" }
+    let(:node) { create :uploader_node_file, cur_node: node_root, name: "uploader" }
+    let(:index_path) { uploader_files_path site.id, node }
+
+    before { login_cms_user }
+
+    it do
+      visit index_path
+
+      #
+      # examine file crud
+      #
+      click_link "アップロード"
+      within "form" do
+        attach_file "item[files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+        click_button "保存"
+      end
+      expect(page).to have_css(".list-item a", text: "logo.png")
+
+      click_link "logo.png"
+      expect(page).to have_css(".see dd", text: "#{node.filename}/logo.png")
+      expect(page).to have_css(".see dd img")
+
+      click_link "編集する"
+      expect(page).to have_css("form")
+      fill_in "item[filename]", with: "#{node.filename}/replace.png"
+      click_button "保存"
+
+      click_link "詳細へ戻る"
+      expect(page).to have_css(".see dd", text: "#{node.filename}/replace.png")
+      expect(page).to have_css(".see dd img")
+
+      click_link "削除する"
+      click_button "削除"
+      expect(page).not_to have_css(".list-item")
+
+      #
+      # examine directory crud
+      #
+      click_link "新規フォルダー"
+      fill_in "item[directory]", with: "foo"
+      click_button "保存"
+
+      expect(page).to have_css(".list-item a", text: "foo")
+      click_link "foo"
+
+      expect(page).to have_css(".list-item a.up", text: "上の階層へ")
+      click_link "上の階層へ"
+
+      click_link "詳細を見る"
+      expect(page).to have_css(".see dd", text: "#{node.filename}/foo")
+      click_link "編集する"
+      fill_in "item[filename]", with: "#{node.filename}/bar"
+      click_button "保存"
+      click_link "詳細へ戻る"
+      expect(page).to have_css(".see dd", text: "#{node.filename}/bar")
+
+      click_link "削除する"
+      click_button "削除"
+      expect(page).not_to have_css(".list-item")
+    end
+  end
 end
