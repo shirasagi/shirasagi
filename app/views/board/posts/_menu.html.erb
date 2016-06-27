@@ -16,6 +16,9 @@
       <%= link_to :edit, action: :edit, id: @item %>
       <%= link_to :reply, action: :new_reply, id: @item unless @item.topic? %>
     <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :delete, action: :delete, id: @item %>
+    <% end %>
     <%= link_to :back_to_index, action: :index %>
   <% end %>
 </nav>
