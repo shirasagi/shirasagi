@@ -1,9 +1,11 @@
 class Gws::Facility::Category
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
+  include Gws::Addon::History
 
   seqid :id
   field :name, type: String

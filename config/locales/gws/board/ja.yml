@@ -67,7 +67,7 @@ ja:
     models:
       gws/board/topic: 掲示板トピック
       gws/board/post: 掲示板投稿
-      gws/board/category: カテゴリー
+      gws/board/category: 掲示板カテゴリー
       gws/board/group_setting: 掲示板設定
       gws/board/group_setting/category: カテゴリー
     errors:

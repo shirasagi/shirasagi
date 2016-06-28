@@ -1,10 +1,12 @@
 class Gws::Schedule::Holiday
   include SS::Document
+  include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::SitePermission
+  include Gws::Addon::History
 
   set_permission_name "gws_schedule_holidays", :edit
 

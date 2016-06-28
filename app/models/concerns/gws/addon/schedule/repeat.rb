@@ -100,14 +100,20 @@ module Gws::Addon::Schedule::Repeat
     def remove_later_repeat_plan
       if repeat_plan
         plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at)
-        plans.each { |plan| plan.destroy_without_repeat_plan }
+        plans.each do |plan|
+          plan.skip_gws_history
+          plan.destroy_without_repeat_plan
+        end
       end
     end
 
     def remove_all_repeat_plan
       if repeat_plan
         plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
-        plans.each { |plan| plan.destroy_without_repeat_plan }
+        plans.each do |plan|
+          plan.skip_gws_history
+          plan.destroy_without_repeat_plan
+        end
       end
     end
 end

@@ -17,7 +17,7 @@ module Gws::SettingFilter
     end
 
     def fix_params
-      {}
+      { cur_user: @cur_user, cur_site: @cur_site }
     end
 
   public

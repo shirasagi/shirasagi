@@ -1,6 +1,8 @@
 class Gws::UserTitle
   include SS::Model::UserTitle
+  include Gws::Referenceable
   include Gws::SitePermission
+  include Gws::Addon::History
 
   set_permission_name "gws_user_titles", :edit
 

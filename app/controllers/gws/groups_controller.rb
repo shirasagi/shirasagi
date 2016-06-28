@@ -12,7 +12,7 @@ class Gws::GroupsController < ApplicationController
     end
 
     def fix_params
-      { cur_site: @cur_site }
+      { cur_user: @cur_user, cur_site: @cur_site }
     end
 
     def set_item

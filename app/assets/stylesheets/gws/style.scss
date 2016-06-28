@@ -126,7 +126,7 @@ a.gws-category-label:hover {
   border-radius: 4px;
   @include box-shadow(0 1px 6px #666);
   background-color: #fff;
-  z-index: 100;
+  z-index: 200;
   &:after {
     width: 0;
     height: 0;

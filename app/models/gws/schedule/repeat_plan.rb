@@ -201,6 +201,7 @@ class Gws::Schedule::RepeatPlan
 
       #TODO: 最適化
       base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).each do |p|
+        p.skip_gws_history
         p.destroy_without_repeat_plan
       end
 
@@ -216,6 +217,8 @@ class Gws::Schedule::RepeatPlan
           plan.start_at = Time.zone.local date.year, date.month, date.day, time[0], time[1], 0
           plan.end_at   = plan.start_at + diff.seconds
         end
+
+        plan.skip_gws_history
         plan.save
       end
     end
