@@ -26,6 +26,7 @@ production: &production
         - panelbutton
         - colorbutton
         - font
+      removeButtons: 'Underline,Subscript,Superscript,Font,BGColor,Source'
     # readonly options override base options when mode is readonly
     readonly_options:
       readOnly: true
@@ -34,6 +35,9 @@ production: &production
     # public-side options override base options when mode is public-side
     public_side_options:
       templates:
+    # advanced options override base options when mode is advanced
+    advanced_options:
+      removeButtons: 'Underline,Subscript,Superscript,Font,BGColor'
     # ckeditor's javascripts options
     javascripts:
       - /assets/js/ckeditor/ckeditor.js
