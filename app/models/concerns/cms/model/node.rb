@@ -78,7 +78,7 @@ module Cms::Model::Node
   end
 
   def route_options
-    Cms::Node.plugins
+    Cms::Node.plugins.select { |name, path, enabled| enabled }.map { |name, path, enabled| [name, path] }
   end
 
   def shortcut_options

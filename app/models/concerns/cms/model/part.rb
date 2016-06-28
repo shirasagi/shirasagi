@@ -14,7 +14,7 @@ module Cms::Model::Part
   end
 
   def route_options
-    Cms::Part.plugins
+    Cms::Part.plugins.select { |name, path, enabled| enabled }.map { |name, path, enabled| [name, path] }
   end
 
   def becomes_with_route(name = nil)

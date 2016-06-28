@@ -1,7 +1,10 @@
 class Cms::Part
   include Cms::Model::Part
+  include Cms::PluginRepository
 
   index({ site_id: 1, filename: 1 }, { unique: true })
+
+  plugin_type "part"
 
   class Base
     include Cms::Model::Part
@@ -67,19 +70,5 @@ class Cms::Part
     include History::Addon::Backup
 
     default_scope ->{ where(route: "cms/sns_share") }
-  end
-
-  class << self
-    @@plugins = []
-
-    def plugin(path)
-      name = I18n.t("modules.#{path.sub(/\/.*/, '')}", default: path.titleize)
-      name << "/" + I18n.t("cms.parts.#{path}", default: path.titleize)
-      @@plugins << [name, path]
-    end
-
-    def plugins
-      @@plugins
-    end
   end
 end
