@@ -1,4 +1,4 @@
-<%= html_editor ".mod-cms-body .html", removeFormatTags: "", advanced: Cms::Editor.allowed?(:advanced, @cur_user, site: @cur_site) %>
+<%= html_editor ".mod-cms-body .html", removeFormatTags: "", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 <%= jquery do %>
   Link_Checker.url           = "<%= SS.config.cms.link_check_url %>";
   Link_Checker.rootUrl       = "<%= @cur_site.full_url %>";

@@ -5,6 +5,9 @@ RSpec.describe SS::EditorHelper, type: :helper do
     before do
       controller.request.path_parameters = { site: 1 }
     end
+    let(:fontSize_sizes) do
+      '60%/60%;70%/70%;80%/80%;90%/90%;100%/100%;110%/110%;120%/120%;130%/130%;140%/140%;150%/150%;160%/160%;170%/170%;180%/180%;190%/190%;200%/200%;'
+    end
 
     context 'with no options' do
       subject { helper.ckeditor_editor_options }
@@ -17,6 +20,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.blank?).to be_truthy
       end
     end
@@ -33,6 +37,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.blank?).to be_truthy
       end
     end
@@ -48,6 +53,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.key?(:templates)).to be_falsey
         expect(subject.key?(:templates_files)).to be_falsey
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.blank?).to be_truthy
       end
     end
@@ -64,6 +70,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.blank?).to be_truthy
       end
     end
@@ -81,6 +88,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.blank?).to be_truthy
       end
     end
@@ -99,8 +107,8 @@ RSpec.describe SS::EditorHelper, type: :helper do
           group_ids: [group.id], cms_role_ids: [admin_role.id])
       end
 
-      subject(:standard) { helper.ckeditor_editor_options(advanced: Cms::Editor.allowed?(:advanced, user, site: site)) }
-      subject(:advanced) { helper.ckeditor_editor_options(advanced: Cms::Editor.allowed?(:advanced, admin, site: site)) }
+      subject(:standard) { helper.ckeditor_editor_options(advanced: Cms::EditorExtension.allowed?(:use, user, site: site)) }
+      subject(:advanced) { helper.ckeditor_editor_options(advanced: Cms::EditorExtension.allowed?(:use, admin, site: site)) }
 
       it "advanced: false" do
         expect(standard.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
@@ -110,6 +118,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(standard.delete(:templates)).to eq 'shirasagi'
         expect(standard.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(standard.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(standard.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(standard.blank?).to be_truthy
       end
 
@@ -121,6 +130,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(advanced.delete(:templates)).to eq 'shirasagi'
         expect(advanced.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(advanced.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor'
+        expect(advanced.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(advanced.blank?).to be_truthy
       end
     end

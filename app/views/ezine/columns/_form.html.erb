@@ -1,4 +1,4 @@
-<%= html_editor ".column-html", height: "180px", advanced: Cms::Editor.allowed?(:advanced, @cur_user, site: @cur_site) %>
+<%= html_editor ".column-html", height: "180px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>

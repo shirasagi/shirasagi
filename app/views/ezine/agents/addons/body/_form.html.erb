@@ -19,7 +19,7 @@
     html = html.replace(/&nbsp;|&#160;/g, ' ')
 <% end %>
 
-<%= html_editor ".ezine-page-html", height: "400px", advanced: Cms::Editor.allowed?(:advanced, @cur_user, site: @cur_site) %>
+<%= html_editor ".ezine-page-html", height: "400px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
 <dl class="see mod-ezine-page-body">
   <dt><%= @model.t :html %></dt>
