@@ -15,6 +15,20 @@ class @Map_Form
     latlon = ele.val().split(',')
     return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]))
 
+  @validateLoc: (ele) ->
+    latlon = ele.val().split(',')
+
+    lat = parseFloat(latlon[0])
+    lon = parseFloat(latlon[1])
+
+    return false unless (lat && !isNaN(lat))
+    return false unless (lon && !isNaN(lon))
+
+    if lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180
+      return true
+    else
+      return false
+
   @attachMessage: (id) ->
     google.maps.event.addListener Map.markers[id], 'click', (event) ->
       if(Map.openedInfo)
@@ -69,6 +83,14 @@ class @Map_Form
       cln.find(".marker-name").on 'keypress', (e)->
         if e.which == 13
           return false
+      cln.find(".marker-loc-input").on 'keypress', (e)->
+        if e.which == 13
+          $(this).closest("dd.marker").find(".set-marker").trigger("click")
+          return false
+      cln.find(".marker-loc-input").on 'focus', (e)->
+        if Map_Form.clickMarker != null
+          Map_Form.clickMarker.setMap(null)
+          $(".mod-map .clicked").val("")
     if $(".mod-map dd.marker").length == Map_Form.maxPointForm
       $(".mod-map dd .add-marker").parent().hide()
     return
@@ -91,18 +113,31 @@ class @Map_Form
     return
 
   @createMarker: (ele)->
-    if $(".mod-map .clicked").val() != ""
-      ele.find(".marker-loc").val($(".mod-map .clicked").val())
-      dataId = parseInt(ele.attr("data-id"))
+    loc = null
 
-      if Map.markers[dataId]
-        Map.markers[dataId].setMap(null)
-      Map.markers[dataId] = new google.maps.Marker(
-        position: Map_Form.getMapLoc(ele.find(".marker-loc")),
-        map: Map.map
-      )
-      Map_Form.attachMessage(dataId)
-    return
+    if $(".mod-map .clicked").val() != ""
+      loc = $(".mod-map .clicked").val()
+    else if ele.find(".marker-loc-input").val() != ""
+      if Map_Form.validateLoc(ele.find(".marker-loc-input"))
+        loc = ele.find(".marker-loc-input").val()
+      else
+        alert("<%= I18n.t('map.alert.invalid_location').join("\n") %>")
+    return unless loc
+
+    ele.find(".marker-loc").val(loc)
+    ele.find(".marker-loc-input").val(loc)
+    dataId = parseInt(ele.attr("data-id"))
+
+    if Map.markers[dataId]
+      Map.markers[dataId].setMap(null)
+    Map.markers[dataId] = new google.maps.Marker(
+      position: Map_Form.getMapLoc(ele.find(".marker-loc")),
+      map: Map.map
+    )
+    Map_Form.attachMessage(dataId)
+    if Map_Form.clickMarker
+      $(".mod-map .clicked").val("")
+      Map_Form.clickMarker.setMap(null)
 
   @renderMarkers: ()->
     markerBounds = new google.maps.LatLngBounds()
@@ -173,3 +208,14 @@ class @Map_Form
     $(".mod-map .marker-name").on 'keypress', (e)->
       if e.which == 13
         return false
+
+    $(".mod-map .marker-loc-input").on 'keypress', (e)->
+      if e.which == 13
+        $(this).closest("dd.marker").find(".set-marker").trigger("click")
+        return false
+
+    $(".mod-map .marker-loc-input").on 'focus', (e)->
+      if Map_Form.clickMarker != null
+        Map_Form.clickMarker.setMap(null)
+        $(".mod-map .clicked").val("")
+
