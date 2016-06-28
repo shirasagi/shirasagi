@@ -40,4 +40,24 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
     end
   end
+
+  context "public" do
+    let!(:item) { create :article_page, filename: "node/item" }
+
+    before do
+      chars = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f"
+      chars << "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f"
+      chars << "\x7f"
+      node.description = "<span class=\"control-chars\">#{chars}</span>"
+      node.save!
+
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    it "#rss" do
+      visit "#{node.url}rss.xml"
+      expect(status_code).to eq 200
+      expect(page).to have_content("<span class=\"control-chars\"></span>")
+    end
+  end
 end
