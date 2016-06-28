@@ -27,10 +27,16 @@ describe "board_posts", dbscope: :example do
     it "#index" do
       visit index_path
       expect(current_path).not_to eq sns_login_path
+
+      expect(page).to have_css('div#menu nav a', text: '新規作成')
+      expect(page).to have_css('div#menu nav a', text: 'ダウンロード')
     end
 
     it "#new" do
       visit new_path
+
+      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
+
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[poster]", with: "sample"
@@ -47,10 +53,19 @@ describe "board_posts", dbscope: :example do
       visit show_path
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
+
+      expect(page).to have_css('div#menu nav a', text: '編集する')
+      expect(page).to have_css('div#menu nav a', text: '返信する')
+      expect(page).to have_css('div#menu nav a', text: '削除する')
+      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
     end
 
     it "#edit" do
       visit edit_path
+
+      expect(page).to have_css('div#menu nav a', text: '詳細へ戻る')
+      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
+
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"
@@ -61,6 +76,10 @@ describe "board_posts", dbscope: :example do
 
     it "#delete" do
       visit delete_path
+
+      expect(page).to have_css('div#menu nav a', text: '詳細へ戻る')
+      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
+
       within "form" do
         click_button "削除"
       end
