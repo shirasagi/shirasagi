@@ -31,28 +31,28 @@ class Opendata::Agents::Nodes::App::AppCategoryController < ApplicationControlle
       @rss_path       = ->(options = {}) { build_path("#{search_apps_path}rss.xml", default_options.merge(options)) }
       @items          = pages.order_by(released: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
-      @execute_items   = pages.order_by(executed: -1).limit(10)
+      @execute_items  = pages.order_by(executed: -1).limit(10)
+      @app_node       = @cur_node.parent_app_node
 
       controller.instance_variable_set :@cur_node, @item
 
-      @app_node = @cur_node.parent.becomes_with_route
       @tabs = []
       if @app_node.show_tab?("released")
-        @tabs << { name: I18n.t("opendata.sort_options.released"),
+        @tabs << { name: @app_node.tab_title("released").presence || I18n.t("opendata.sort_options.released"),
             id: "released",
             url: "#{@search_path.call("sort" => "released")}",
             pages: @items,
             rss: "#{@rss_path.call("sort" => "released")}" }
       end
       if @app_node.show_tab?("popular")
-        @tabs << { name: I18n.t("opendata.sort_options.popular"),
+        @tabs << { name: @app_node.tab_title("popular").presence || I18n.t("opendata.sort_options.popular"),
             id: "popular",
             url: "#{@search_path.call("sort" => "popular")}",
             pages: @point_items,
             rss: "#{@rss_path.call("sort" => "popular")}" }
       end
       if @app_node.show_tab?("attention")
-        @tabs << { name: I18n.t("opendata.sort_options.attention"),
+        @tabs << { name: @app_node.tab_title("attention").presence || I18n.t("opendata.sort_options.attention"),
             id: "attention",
             url: "#{@search_path.call("sort" => "attention")}",
             pages: @execute_items,

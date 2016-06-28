@@ -16,6 +16,7 @@ module Opendata::AppChildNode
           end
           node = node.parent
         end
+        node ||= Opendata::Node::App.site(site).public.first
         node
       end
     end

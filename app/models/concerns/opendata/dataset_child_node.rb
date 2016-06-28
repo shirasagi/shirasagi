@@ -16,6 +16,7 @@ module Opendata::DatasetChildNode
           end
           node = node.parent
         end
+        node ||= Opendata::Node::Dataset.site(site).public.first
         node
       end
     end

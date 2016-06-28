@@ -31,24 +31,33 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
       @rss_path       = ->(options = {}) { build_path("#{search_ideas_path}rss.xml", default_options.merge(options)) }
       @items          = pages.order_by(updated: -1).limit(10)
       @point_items    = pages.order_by(point: -1).limit(10)
-      @comment_items = pages.excludes(commented: nil).order_by(commented: -1).limit(10)
+      @comment_items  = pages.excludes(commented: nil).order_by(commented: -1).limit(10)
+      @idea_node      = @cur_node.parent_idea_node
 
       controller.instance_variable_set :@cur_node, @item
 
-      @tabs = [
-        { name: I18n.t("opendata.sort_options.released"),
+      @tabs = []
+      if @idea_node.show_tab?("released")
+        @tabs << { name: @idea_node.tab_title("released").presence || I18n.t("opendata.sort_options.released"),
+          id: "released",
           url: "#{@search_path.call("sort" => "updated")}",
           pages: @items,
-          rss: "#{@rss_path.call("sort" => "updated")}" },
-        { name: I18n.t("opendata.sort_options.popular"),
+          rss: "#{@rss_path.call("sort" => "updated")}" }
+      end
+      if @idea_node.show_tab?("popular")
+        @tabs << { name: @idea_node.tab_title("popular").presence || I18n.t("opendata.sort_options.popular"),
+          id: "popular",
           url: "#{@search_path.call("sort" => "popular")}",
           pages: @point_items,
-          rss: "#{@rss_path.call("sort" => "popular")}" },
-        { name: I18n.t("opendata.sort_options.attention"),
+          rss: "#{@rss_path.call("sort" => "popular")}" }
+      end
+      if @idea_node.show_tab?("attention")
+        @tabs << { name: @idea_node.tab_title("attention").presence || I18n.t("opendata.sort_options.attention"),
+          id: "attention",
           url: "#{@search_path.call("sort" => "attention")}",
           pages: @comment_items,
           rss: "#{@rss_path.call("sort" => "attention")}" }
-      ]
+      end
 
       max = 50
       @areas    = aggregate_areas(max)

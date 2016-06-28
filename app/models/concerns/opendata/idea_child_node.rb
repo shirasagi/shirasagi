@@ -16,6 +16,7 @@ module Opendata::IdeaChildNode
           end
           node = node.parent
         end
+        node ||= Opendata::Node::Idea.site(site).public.first
         node
       end
     end
