@@ -4,6 +4,7 @@ ja:
     info: システム情報
     connect_info: 接続情報
     server_name: サーバー名
+    server_addr: サーバーIPアドレス
     remote_addr: 接続元IPアドレス
     site: サイト
     user: ユーザー
