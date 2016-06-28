@@ -3,10 +3,15 @@
   <div class="addon-body">
     <dl class="see">
       <dt><%= t("sys.server_name") %></dt>
-      <dd><%= request.env['SERVER_NAME'] %></dd>
+      <dd><%= Socket.gethostname %></dd>
+
+      <!--
+      <dt><%= t("sys.server_addr") %></dt>
+      <dd><%#= Socket::getaddrinfo(Socket.gethostname, 'echo', Socket::AF_INET)[0][3] rescue nil %></dd>
+      -->
 
       <dt><%= t("sys.remote_addr") %></dt>
-      <dd><%= request.env['REMOTE_ADDR'] %></dd>
+      <dd><%= request.env["HTTP_X_REAL_IP"] || request.remote_addr %></dd>
     </dl>
   </div>
 </div>
