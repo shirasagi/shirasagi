@@ -125,8 +125,8 @@ ja:
       wareki:
         seireki: 西暦
         meiji: 明治
-        taisyo: 大正
-        syowa: 昭和
+        taisho: 大正
+        showa: 昭和
         heisei: 平成
 
     state:
@@ -169,11 +169,11 @@ ja:
         name: 明治
         min: 1868/1/25
         max: 1912/7/30
-      taisyo:
+      taisho:
         name: 大正
         min: 1912/7/30
         max: 1926/12/25
-      syowa:
+      showa:
         name: 昭和
         min: 1926/12/25
         max: 1989/1/8
