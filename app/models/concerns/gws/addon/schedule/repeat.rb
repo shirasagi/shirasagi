@@ -7,6 +7,8 @@ module Gws::Addon::Schedule::Repeat
     belongs_to :repeat_plan, class_name: "Gws::Schedule::RepeatPlan"
     permit_params :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :destroy_mode, wdays: []
 
+    validates :start_at, presence: true, if: -> { !repeat? }
+    validates :end_at, presence: true, if: -> { !repeat? }
     validate :validate_repeat_params, if: -> { repeat? }
     validate :validate_repeat_plan, if: -> { repeat? }
 

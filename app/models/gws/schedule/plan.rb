@@ -22,8 +22,6 @@ class Gws::Schedule::Plan
   # 種別
   belongs_to :category, class_name: 'Gws::Schedule::Category'
 
-  validates :start_at, presence: true, if: -> { !repeat? }
-  validates :end_at, presence: true, if: -> { !repeat? }
   validate :validate_file_size
 
   def custom_group_member?(user)
@@ -38,14 +36,6 @@ class Gws::Schedule::Plan
 
   def reminder_user_ids
     member_ids
-  end
-
-  def date_label(datetime)
-    I18n.l(datetime.to_date, format: :gws_long)
-  end
-
-  def time_label(datetime)
-    sprintf('%d:%02d', datetime.hour, datetime.minute)
   end
 
   # event options

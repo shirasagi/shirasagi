@@ -5,6 +5,7 @@ class Gws::Schedule::Holiday
   include Gws::Reference::Site
   include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
+  include Gws::Addon::Schedule::Repeat
   include Gws::SitePermission
   include Gws::Addon::History
 

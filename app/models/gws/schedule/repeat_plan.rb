@@ -206,7 +206,7 @@ class Gws::Schedule::RepeatPlan
       end
 
       dates.each_with_index do |date, idx|
-        plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
+        plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new.assign_attributes_safe(attr)
         plan.cur_site = site
         plan.cur_user = user
 

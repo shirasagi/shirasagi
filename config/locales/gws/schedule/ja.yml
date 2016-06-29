@@ -113,7 +113,7 @@ ja:
       gws/schedule/category:
         name: スケジュール種別
       gws/schedule/holiday:
-        term: 休日
+        term: 日付
         color: 表示色
       gws/addon/schedule/repeat:
         <<: *repeat_plan

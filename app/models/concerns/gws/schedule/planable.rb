@@ -75,6 +75,14 @@ module Gws::Schedule::Planable
     allday == "allday"
   end
 
+  def date_label(datetime)
+    I18n.l(datetime.to_date, format: :gws_long)
+  end
+
+  def time_label(datetime)
+    sprintf('%d:%02d', datetime.hour, datetime.minute)
+  end
+
   private
     # API / Mode: month, week, day
     # - 時間予定(複数日)を別の日に移動
