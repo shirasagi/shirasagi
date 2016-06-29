@@ -4,6 +4,6 @@ class Gws::Schedule::GroupsController < ApplicationController
   include Gws::Schedule::PlanFilter
 
   def index
-    @items = @cur_site.descendants.active
+    @items = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
   end
 end
