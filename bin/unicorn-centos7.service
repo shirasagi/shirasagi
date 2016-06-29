@@ -2,16 +2,19 @@
 
 [Unit]
 Description=SHIRASAGI Unicorn Server
+After=mongod.service
 
 [Service]
+User=root
 WorkingDirectory=/var/www/shirasagi
 Environment=RAILS_ENV=production
 SyslogIdentifier=unicorn
 PIDFile=/var/www/shirasagi/tmp/pids/unicorn.pid
+Type=forking
 
 ExecStart=/usr/local/rvm/bin/start_unicorn  -c config/unicorn.rb -E production -D
 ExecStop=/usr/bin/kill -QUIT $MAINPID
-ExecReload=/bin/kill -USR2 $MAINPID
+ExecReload=/usr/bin/kill -USR2 $MAINPID
 
 [Install]
 WantedBy=multi-user.target
