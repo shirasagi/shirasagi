@@ -22,6 +22,7 @@ module SS::Model::Group
     default_scope -> { order_by(order: 1, name: 1) }
 
     validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
+    validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999999, allow_blank: true }
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
     validate :validate_name
@@ -44,6 +45,10 @@ module SS::Model::Group
       end
       criteria
     end
+
+    def tree_sort(options = {})
+      SS::TreeList.build self, options
+    end
   end
 
   def full_name
@@ -56,7 +61,7 @@ module SS::Model::Group
   end
 
   def trailing_name
-    name.split("/").pop
+    name.split("/")[level..-1].join("/")
   end
 
   def root
@@ -84,10 +89,33 @@ module SS::Model::Group
     descendants.each { |item| item.disable }
   end
 
+  def level
+    effective_parent_count
+  end
+
   private
     def validate_name
       if name =~ /\/$/ || name =~ /^\// || name =~ /\/\//
         errors.add :name, :invalid
+      end
+    end
+
+    def effective_parent_count
+      @effective_parent_count ||= begin
+        count = 0
+        full_name = ""
+        name.split('/').map do |part|
+          full_name << "/" if full_name.present?
+          full_name << part
+
+          break if name == full_name
+
+          found = self.class.where(name: full_name).first
+          break if found.blank?
+
+          count += 1
+        end
+        count
       end
     end
 end

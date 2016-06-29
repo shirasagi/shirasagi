@@ -28,4 +28,186 @@ describe Cms::Group, type: :model, dbscope: :example do
       expect(child.name).to start_with(new_name)
     end
   end
+
+  describe "#trailing_name" do
+    let!(:root) { create(:cms_group, name: 'AA') }
+
+    context "group with parent" do
+      subject { create(:cms_group, name: 'AA/BBB') }
+      its(:trailing_name) { is_expected.to eq 'BBB' }
+      its(:level) { is_expected.to eq 1 }
+    end
+
+    context "group without parent" do
+      subject { create(:cms_group, name: 'AA/HHH/IIII') }
+      its(:trailing_name) { is_expected.to eq 'HHH/IIII' }
+      its(:level) { is_expected.to eq 1 }
+    end
+  end
+
+  describe ".tree_sort" do
+    before do
+      create(:cms_group, name: 'AA', order: 10)
+      create(:cms_group, name: 'AA/BBB')
+      create(:cms_group, name: 'AA/CCC', order: 30)
+      create(:cms_group, name: 'AA/BBB/DDDD', order: 40)
+      create(:cms_group, name: 'AA/BBB/EEEE', order: 70)
+      create(:cms_group, name: 'AA/CCC/FFFF', order: 50)
+      create(:cms_group, name: 'AA/CCC/GGGG', order: 60)
+      # lost child
+      create(:cms_group, name: 'AA/HHH/IIII', order: 0)
+    end
+
+    context "without descendants" do
+      subject { described_class.tree_sort.to_a }
+
+      it do
+        expect(subject[0].name).to eq 'AA'
+        expect(subject[0].level).to eq 0
+        expect(subject[0].trailing_name).to eq 'AA'
+
+        expect(subject[1].name).to eq 'AA/BBB'
+        expect(subject[1].level).to eq 1
+        expect(subject[1].trailing_name).to eq 'BBB'
+
+        expect(subject[2].name).to eq 'AA/BBB/DDDD'
+        expect(subject[2].level).to eq 2
+        expect(subject[2].trailing_name).to eq 'DDDD'
+
+        expect(subject[3].name).to eq 'AA/BBB/EEEE'
+        expect(subject[3].level).to eq 2
+        expect(subject[3].trailing_name).to eq 'EEEE'
+
+        expect(subject[4].name).to eq 'AA/CCC'
+        expect(subject[4].level).to eq 1
+        expect(subject[4].trailing_name).to eq 'CCC'
+
+        expect(subject[5].name).to eq 'AA/CCC/FFFF'
+        expect(subject[5].level).to eq 2
+        expect(subject[5].trailing_name).to eq 'FFFF'
+
+        expect(subject[6].name).to eq 'AA/CCC/GGGG'
+        expect(subject[6].level).to eq 2
+        expect(subject[6].trailing_name).to eq 'GGGG'
+
+        expect(subject[7].name).to eq 'AA/HHH/IIII'
+        expect(subject[7].level).to eq 1
+        expect(subject[7].trailing_name).to eq 'HHH/IIII'
+      end
+    end
+
+    context "with descendants of root group" do
+      let(:root) { Cms::Group.find_by(name: 'AA') }
+      subject { root.descendants.active.tree_sort(root_name: root.name).to_a }
+
+      it do
+        expect(subject[0].name).to eq 'AA/BBB'
+        expect(subject[0].level).to eq 1
+        expect(subject[0].trailing_name).to eq 'BBB'
+
+        expect(subject[1].name).to eq 'AA/BBB/DDDD'
+        expect(subject[1].level).to eq 2
+        expect(subject[1].trailing_name).to eq 'DDDD'
+
+        expect(subject[2].name).to eq 'AA/BBB/EEEE'
+        expect(subject[2].level).to eq 2
+        expect(subject[2].trailing_name).to eq 'EEEE'
+
+        expect(subject[3].name).to eq 'AA/CCC'
+        expect(subject[3].level).to eq 1
+        expect(subject[3].trailing_name).to eq 'CCC'
+
+        expect(subject[4].name).to eq 'AA/CCC/FFFF'
+        expect(subject[4].level).to eq 2
+        expect(subject[4].trailing_name).to eq 'FFFF'
+
+        expect(subject[5].name).to eq 'AA/CCC/GGGG'
+        expect(subject[5].level).to eq 2
+        expect(subject[5].trailing_name).to eq 'GGGG'
+
+        expect(subject[6].name).to eq 'AA/HHH/IIII'
+        expect(subject[6].level).to eq 1
+        expect(subject[6].trailing_name).to eq 'HHH/IIII'
+      end
+    end
+
+    context "with descendants of second level group" do
+      let(:second_level_group) { Cms::Group.find_by(name: 'AA/BBB') }
+      subject { second_level_group.descendants.active.tree_sort(root_name: second_level_group.name).to_a }
+
+      it do
+        expect(subject[0].name).to eq 'AA/BBB/DDDD'
+        expect(subject[0].level).to eq 2
+        expect(subject[0].trailing_name).to eq 'DDDD'
+
+        expect(subject[1].name).to eq 'AA/BBB/EEEE'
+        expect(subject[1].level).to eq 2
+        expect(subject[1].trailing_name).to eq 'EEEE'
+      end
+    end
+
+    context "with invalid root name" do
+      subject { described_class.tree_sort(root_name: "#{unique_id}/#{unique_id}").to_a }
+
+      it do
+        expect(subject[0].name).to eq 'AA'
+        expect(subject[0].level).to eq 0
+        expect(subject[0].trailing_name).to eq 'AA'
+
+        expect(subject[1].name).to eq 'AA/BBB'
+        expect(subject[1].level).to eq 1
+        expect(subject[1].trailing_name).to eq 'BBB'
+
+        expect(subject[2].name).to eq 'AA/BBB/DDDD'
+        expect(subject[2].level).to eq 2
+        expect(subject[2].trailing_name).to eq 'DDDD'
+
+        expect(subject[3].name).to eq 'AA/BBB/EEEE'
+        expect(subject[3].level).to eq 2
+        expect(subject[3].trailing_name).to eq 'EEEE'
+
+        expect(subject[4].name).to eq 'AA/CCC'
+        expect(subject[4].level).to eq 1
+        expect(subject[4].trailing_name).to eq 'CCC'
+
+        expect(subject[5].name).to eq 'AA/CCC/FFFF'
+        expect(subject[5].level).to eq 2
+        expect(subject[5].trailing_name).to eq 'FFFF'
+
+        expect(subject[6].name).to eq 'AA/CCC/GGGG'
+        expect(subject[6].level).to eq 2
+        expect(subject[6].trailing_name).to eq 'GGGG'
+
+        expect(subject[7].name).to eq 'AA/HHH/IIII'
+        expect(subject[7].level).to eq 1
+        expect(subject[7].trailing_name).to eq 'HHH/IIII'
+      end
+    end
+  end
+
+  describe ".to_options" do
+    before do
+      create(:cms_group, name: 'AA', order: 10)
+      create(:cms_group, name: 'AA/BBB')
+      create(:cms_group, name: 'AA/CCC', order: 30)
+      create(:cms_group, name: 'AA/BBB/DDDD', order: 40)
+      create(:cms_group, name: 'AA/BBB/EEEE', order: 70)
+      create(:cms_group, name: 'AA/CCC/FFFF', order: 50)
+      create(:cms_group, name: 'AA/CCC/GGGG', order: 60)
+      # lost child
+      create(:cms_group, name: 'AA/HHH/IIII', order: 0)
+    end
+
+    subject { described_class.tree_sort.to_options }
+    it do
+      expect(subject[0]).to eq [ 'AA', 1 ]
+      expect(subject[1]).to eq [ '+---- BBB', 2 ]
+      expect(subject[2]).to eq [ '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---- DDDD', 4 ]
+      expect(subject[3]).to eq [ '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---- EEEE', 5 ]
+      expect(subject[4]).to eq [ '+---- CCC', 3 ]
+      expect(subject[5]).to eq [ '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---- FFFF', 6 ]
+      expect(subject[6]).to eq [ '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---- GGGG', 7 ]
+      expect(subject[7]).to eq [ '+---- HHH/IIII', 8 ]
+    end
+  end
 end
