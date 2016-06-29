@@ -27,7 +27,7 @@ class Gws::GroupsController < ApplicationController
       @items = @model.site(@cur_site).
         state(params.dig(:s, :state)).
         allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).sort_by(&:name)
+        search(params[:s]).tree_sort
     end
 
     def destroy
