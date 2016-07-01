@@ -18,7 +18,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
     end
 
     def pre_params
-      {}
+      { start_on: params[:start] || Time.zone.now.strftime('%Y/%m/%d') }
     end
 
     def redirection_view
