@@ -1,0 +1,12 @@
+<div class="popup-title"><%= link_to @item.name, { action: :show } %></div>
+<div class="popup-date"><%= term(@item) %></div>
+
+<%
+menu = []
+menu << link_to(I18n.t('views.links.show'), { action: :show })
+menu << link_to(I18n.t('views.links.edit'), { action: :edit }) if @item.allowed?(:edit, @cur_user, @cur_site)
+menu << link_to(I18n.t('views.links.delete'), { action: :delete }) if @item.allowed?(:delete, @cur_user, @cur_site)
+%>
+<% if menu.present? %>
+<div class="popup-menu"><%= safe_join(menu) %></div>
+<% end %>

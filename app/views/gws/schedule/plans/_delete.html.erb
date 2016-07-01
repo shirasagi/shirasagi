@@ -1,22 +1,5 @@
 <%= jquery do %>
+  <% if @item.repeat_plan.present? %> Gws_Schedule_Repeat_Plan.renderSubmitButtons(); <% end %>
+<% end %>
 
-  var buttons = '';
-  buttons += '<input type="submit" class="btn-danger delete delete-later" value="<%= t('gws/schedule.buttons.delete_later') %>" />';
-  buttons += '<input type="submit" class="btn-danger delete delete-all" value="<%= t('gws/schedule.buttons.delete_all') %>" />';
-
-  $('input.delete').val("<%= t('gws/schedule.buttons.delete_one') %>");
-  $('input.delete').after(buttons);
-
-  $('.delete-later').click(function() {
-    $(this).append('<input tyoe="hidden" name="destroy_mode" value="later" />');
-  });
-  $('.delete-all').click(function() {
-    $(this).append('<input tyoe="hidden" name="destroy_mode" value="all" />');
-  });
-
-<% end if @item.repeat_plan_id.present? %>
-
-<dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.name %></dd>
-</dl>
+<%= render file: "ss/crud/_delete" %>

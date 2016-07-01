@@ -1,7 +1,7 @@
 class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
-  helper Gws::Schedule::PlanHelper
+  include Gws::Schedule::PlanFilter
 
   navi_view "gws/schedule/settings/navi"
 
@@ -10,19 +10,27 @@ class Gws::Schedule::HolidaysController < ApplicationController
   private
     def set_crumbs
       @crumbs << [:"mongoid.models.gws/schedule/group_setting", gws_schedule_setting_path]
-      @crumbs << [:"mongoid.models.gws/schedule/group_setting/holiday", gws_schedule_plans_path]
+      @crumbs << [:"mongoid.models.gws/schedule/group_setting/holiday", gws_schedule_holidays_path]
     end
 
     def fix_params
       { cur_user: @cur_user, cur_site: @cur_site }
     end
 
+    def pre_params
+      { start_on: params[:start] || Time.zone.now.strftime('%Y/%m/%d') }
+    end
+
+    def redirection_view
+      'month'
+    end
+
   public
-    def index
+    def events
       @items = @model.site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
-        order_by(start_at: -1).
-        page(params[:page]).per(50)
+        search(params[:s])
+
+      render json: @items.map { |m| m.calendar_format(editable: true) }.to_json
     end
 end

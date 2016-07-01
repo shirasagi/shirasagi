@@ -17,3 +17,24 @@ class @Gws_Schedule_Repeat_Plan
 
   @relateDateForm: ->
     Gws_Schedule_Plan.relateDateForm('.date.repeat_start', '.date.repeat_end')
+
+  @renderSubmitButtons: ->
+    form = $("#main form")
+    b1 = $('<input type="button" class="btn-danger" value="<%= I18n.t('gws/schedule.buttons.delete_one') %>" />')
+    b2 = $('<input type="button" class="btn-danger" value="<%= I18n.t('gws/schedule.buttons.delete_later') %>" />')
+    b3 = $('<input type="button" class="btn-danger" value="<%= I18n.t('gws/schedule.buttons.delete_all') %>" />')
+
+    b1.bind 'click', ->
+      form.append('<input type="hidden" name="item[edit_range]" value="one" />').submit()
+    b2.bind 'click', ->
+      form.append('<input type="hidden" name="item[edit_range]" value="later" />').submit()
+    b3.bind 'click', ->
+      form.append('<input type="hidden" name="item[edit_range]" value="all" />').submit()
+
+    buttons = $('<div class="gws-schedule-repeat-submit"></div>')
+    buttons.append(b1).append(b2).append(b3)
+
+    $('.send .save, .send .delete').click ->
+      if $("#item_repeat_type").val() != ""
+        $.colorbox({ inline: true, href: buttons })
+        return false

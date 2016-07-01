@@ -97,7 +97,7 @@ class @Gws_Schedule_Calendar
 
     editable: true,
     eventClick: (event, jsEvent, view) ->
-      return if $(this).hasClass('fc-holiday')
+      return if event.noPopup
 
       target = $(this)
       Gws_Popup.render(target, "<div class='fc-popup'><span class='fc-loading'><%= I18n.t('gws/schedule.loading') %></span></div>")

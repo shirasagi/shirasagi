@@ -173,6 +173,11 @@ module SS::Document
     end
   end
 
+  def assign_attributes_safe(attr)
+    self.attributes = attr.slice(*self.class.fields.keys)
+    self
+  end
+
   def t(name, opts = {})
     self.class.t name, opts
   end

@@ -188,6 +188,8 @@ class Gws::Schedule::RepeatPlan
     # @param [Plan]  base_plan 繰り返しの基準となる予定ドキュメント
     # @param [Array] dates     繰り返し予定を登録する日付の配列
     def save_plans(base_plan, site, user, dates)
+      return if base_plan.edit_range == "one"
+
       time = [0, 0]
       diff = 0
 
@@ -199,14 +201,20 @@ class Gws::Schedule::RepeatPlan
       attr = base_plan.attributes.dup
       attr.delete('_id')
 
-      #TODO: 最適化
-      base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).each do |p|
-        p.skip_gws_history
-        p.destroy_without_repeat_plan
+      # Remove
+      base_plan.class.where(repeat_plan_id: id, :_id.ne => base_plan.id).each do |plan|
+        next if base_plan.edit_range == "later" && plan.start_at < base_plan.start_at
+
+        plan.skip_gws_history
+        plan.destroy_without_repeat_plan
       end
 
-      dates.each_with_index do |date, idx|
-        plan = (idx == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new(attr)
+      # Add
+      saved = 0
+      dates.each do |date|
+        next if base_plan.edit_range == "later" && date < base_plan.start_at.to_date
+
+        plan = (saved == 0) ? base_plan.class.find(base_plan.id) : base_plan.class.new.assign_attributes_safe(attr)
         plan.cur_site = site
         plan.cur_user = user
 
@@ -220,6 +228,7 @@ class Gws::Schedule::RepeatPlan
 
         plan.skip_gws_history
         plan.save
+        saved += 1
       end
     end
 end

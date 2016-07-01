@@ -6,6 +6,7 @@ model = Gws::Schedule::RepeatPlan
 %>
 <%= jquery do %>
   Gws_Schedule_Repeat_Plan.renderForm();
+  <% if @item.repeat_plan.present? %> Gws_Schedule_Repeat_Plan.renderSubmitButtons(); <% end %>
 <% end %>
 
 <dl class="see">
