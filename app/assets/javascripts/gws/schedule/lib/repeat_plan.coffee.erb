@@ -20,9 +20,10 @@ class @Gws_Schedule_Repeat_Plan
 
   @renderSubmitButtons: ->
     form = $("#main form")
-    b1 = $('<input type="button" class="btn-danger" value="<%= I18n.t('gws/schedule.buttons.delete_one') %>" />')
-    b2 = $('<input type="button" class="btn-danger" value="<%= I18n.t('gws/schedule.buttons.delete_later') %>" />')
-    b3 = $('<input type="button" class="btn-danger" value="<%= I18n.t('gws/schedule.buttons.delete_all') %>" />')
+    sp = '<span class="gws-schedule-btn-space"></span>'
+    b1 = $('<input type="button" class="btn" value="<%= I18n.t('gws/schedule.buttons.delete_one') %>" />')
+    b2 = $('<input type="button" class="btn" value="<%= I18n.t('gws/schedule.buttons.delete_later') %>" />')
+    b3 = $('<input type="button" class="btn" value="<%= I18n.t('gws/schedule.buttons.delete_all') %>" />')
 
     b1.bind 'click', ->
       form.append('<input type="hidden" name="item[edit_range]" value="one" />').submit()
@@ -32,7 +33,7 @@ class @Gws_Schedule_Repeat_Plan
       form.append('<input type="hidden" name="item[edit_range]" value="all" />').submit()
 
     buttons = $('<div class="gws-schedule-repeat-submit"></div>')
-    buttons.append(b1).append(b2).append(b3)
+    buttons.append(b1).append(sp).append(b2).append(sp).append(b3)
 
     $('.send .save, .send .delete').click ->
       if $("#item_repeat_type").val() != ""

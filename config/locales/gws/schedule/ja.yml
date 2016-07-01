@@ -39,10 +39,12 @@ ja:
         daily: 毎日
         weekly: 毎週
         monthly: 毎月
+        yearly: 毎年
       interval:
         daily: 日
         weekly: 週
         monthly: 月
+        yearly: 年
       repeat_base:
         date: 日付
         wday: 曜日
