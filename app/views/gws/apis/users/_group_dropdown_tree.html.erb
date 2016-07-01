@@ -23,7 +23,7 @@
       </td>
     </tr>
     <% @groups.each do |item| %>
-      <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") %>" class="toggle">
+      <tr data-depth="<%= item.level + @cur_site.name.count("/") %>" class="toggle">
         <td class="expandable">
           <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
         </td>

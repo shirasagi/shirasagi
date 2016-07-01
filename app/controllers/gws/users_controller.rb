@@ -26,7 +26,7 @@ class Gws::UsersController < ApplicationController
 
   public
     def index
-      @groups = @cur_site.descendants.active
+      @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
 
       @items = @model.site(@cur_site).
         state(params.dig(:s, :state)).
