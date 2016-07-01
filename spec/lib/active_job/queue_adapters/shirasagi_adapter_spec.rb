@@ -11,6 +11,10 @@ describe ActiveJob::QueueAdapters::ShirasagiAdapter, dbscope: :example do
     end
   end
 
+  before do
+    Job::Task.create!(name: Job::Service.config.name)
+  end
+
   describe ".enqueue" do
     let(:job) { SS::ExampleJob.new }
 
