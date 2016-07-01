@@ -6,9 +6,14 @@ class Gws::Apis::GroupsController < ApplicationController
   def index
     @multi = params[:single].blank?
 
-    @items = @model.site(@cur_site).
-      active.
-      search(params[:s]).
-      page(params[:page]).per(50)
+    @s = params[:s].presence
+
+    @items = @model.site(@cur_site).active
+    if @s.present?
+      @items = @items.search(params[:s]).
+        page(params[:page]).per(50)
+    else
+      @items = @items.tree_sort
+    end
   end
 end
