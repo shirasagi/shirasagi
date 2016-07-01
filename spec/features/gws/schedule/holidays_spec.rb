@@ -34,7 +34,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
         fill_in "item[end_on]", with: "2016/01/02"
         click_button "保存"
       end
-      expect(status_code).to eq 200
+      expect(status_code.to_s).to match(/200|302/)
       expect(page).not_to have_css("form#item-form")
     end
 
@@ -50,7 +50,6 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "name2"
         click_button "保存"
       end
-      expect(status_code).to eq 200
       expect(page).not_to have_css("form#item-form")
     end
 
@@ -59,7 +58,6 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(status_code).to eq 200
       expect(page).not_to have_content(item.name)
     end
   end
