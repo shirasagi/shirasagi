@@ -15,11 +15,13 @@ describe "move_cms_pages" do
     expect(status_code).to eq 403
   end
 
-  context "with auth" do
+  context "with auth", js: true do
     before { login_cms_user }
     before(:each) do
-      create(:cms_page, filename: "page", name: "page", html: "page")
-      create(:cms_page, filename: "A/B/C/page2", name: "page2", html: "page2")
+      create(:cms_page, filename: "page.html", name: "page", html: '<a href="/A/B/C/">/A/B/C/</a>')
+      create(:cms_page, filename: "A/B/C/page2.html", name: "page2", html: '<a href="/page.html">page.html</a>')
+      create(:cms_layout, filename: "layout.layout.html", name: "latyout", html: '<a href="/page.html">page.html</a><a href="/A/B/C/">/A/B/C/</a>')
+      create(:cms_part_free, filename: "part.part.html", name: "part", html: '<a href="/page.html">page.html</a><a href="/A/B/C/">/A/B/C/</a>')
       create(:cms_node_page, site: site, filename: "A", name: "A")
       create(:cms_node_page, site: site, filename: "A/B", name: "B" )
       create(:cms_node_page, site: site, filename: "A/B/C", name: "C" )
