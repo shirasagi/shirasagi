@@ -1,5 +1,19 @@
-<% @index_meta = proc do |item| %>
-  <span class="datetime"><%= term(item) %></span>
+<%= jquery do %>
+Gws_Schedule_Calendar.render('#calendar', {
+  tapMenu: <%= @model.allowed?(:create, @cur_user, site: @cur_site) %>,
+  restUrl: '<%= url_for action: :index %>',
+  eventSources: [{ url: '<%= url_for action: :events, format: :json %>?<%= search_query %>' }]
+}, <%== (params[:calendar] || {}).to_json %>);
 <% end %>
 
-<%= render file: "gws/crud/index" %>
+<section class="main-box gws-schedule-box">
+  <header>
+    <h2><%= t "mongoid.models.gws/schedule/group_setting/holiday" %></h2>
+    <nav>
+      <% if @model.allowed?(:create, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
+      <% end %>
+    </nav>
+  </header>
+  <div id="calendar" class="calendar"></div>
+</section>

@@ -2,7 +2,11 @@
 <div class="popup-date"><%= term(@item) %></div>
 
 <% if @item.text.present? %>
-<div class="popup-description <%= "markdown-body" if @item.text_type == "markdown" %>"><%== @item.html %></div>
+<div class="popup-description">
+  <div class="text <%= "markdown-body" if @item.text_type == "markdown" %>">
+    <%== @item.html %>
+  </div>
+</div>
 <% end %>
 
 <div class="popup-attributes">

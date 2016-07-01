@@ -3,9 +3,9 @@ module Gws::Addon::Schedule::Repeat
   extend SS::Addon
 
   included do
-    attr_accessor :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays, :destroy_mode
+    attr_accessor :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :wdays, :edit_range
     belongs_to :repeat_plan, class_name: "Gws::Schedule::RepeatPlan"
-    permit_params :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :destroy_mode, wdays: []
+    permit_params :repeat_type, :interval, :repeat_start, :repeat_end, :repeat_base, :edit_range, wdays: []
 
     validates :start_at, presence: true, if: -> { !repeat? }
     validates :end_at, presence: true, if: -> { !repeat? }
@@ -87,10 +87,10 @@ module Gws::Addon::Schedule::Repeat
     def remove_repeat_plan
       return if @skip_remove_repeat_plan
 
-      if destroy_mode == "later"
-        remove_later_repeat_plan
-      elsif destroy_mode == "all" || repeat_type == ''
+      if edit_range == "all" || repeat_type == ''
         remove_all_repeat_plan
+      elsif edit_range == "later"
+        remove_later_repeat_plan
       end
 
       if repeat_plan && self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).empty?
@@ -99,23 +99,21 @@ module Gws::Addon::Schedule::Repeat
       end
     end
 
-    def remove_later_repeat_plan
-      if repeat_plan
-        plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at)
-        plans.each do |plan|
-          plan.skip_gws_history
-          plan.destroy_without_repeat_plan
-        end
+    def remove_all_repeat_plan
+      return unless repeat_plan
+      plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
+      plans.each do |plan|
+        plan.skip_gws_history
+        plan.destroy_without_repeat_plan
       end
     end
 
-    def remove_all_repeat_plan
-      if repeat_plan
-        plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id)
-        plans.each do |plan|
-          plan.skip_gws_history
-          plan.destroy_without_repeat_plan
-        end
+    def remove_later_repeat_plan
+      return unless repeat_plan
+      plans = self.class.where(repeat_plan_id: repeat_plan_id, :_id.ne => id).gte(start_at: start_at)
+      plans.each do |plan|
+        plan.skip_gws_history
+        plan.destroy_without_repeat_plan
       end
     end
 end

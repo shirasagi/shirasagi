@@ -79,7 +79,13 @@
 .gws-schedule-plan .dates-field {
   display: none;
 }
-
+.gws-schedule-repeat-submit {
+  padding: 10px;
+  input {
+    margin: 0 5px;
+    cursor: pointer;
+  }
+}
 //
 // FullCalendar
 //
@@ -318,39 +324,43 @@
     font-size: 120%;
   }
   .popup-date {
-    padding: 5px 0 8px;
-    border-bottom: 1px solid #eee;
+    padding: 2px 0 0;
   }
   .popup-description {
-    overflow: auto;
-    max-height: 70px;
-    padding: 3px 5px;
-    border-bottom: 1px solid #eee;
-    color: #222;
-    font-size: 90%;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #eee;
+    .text {
+      overflow: auto;
+      max-height: 70px;
+      color: #222;
+      font-size: 90%;
+    }
   }
   .popup-attributes {
-    margin-top: 10px;
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid #eee;
     font-size: 90%;
-  }
-  .popup-attr {
-    @include clear;
-    margin: 4px 0 0;
-  }
-  .popup-label {
-    display: inline-block;
-    float: left;
-    min-width: 60px;
-  }
-  .popup-value {
-    margin-left: 60px;
-    .tel {
-      margin-left: 5px;
+    .popup-attr {
+      @include clear;
+      margin: 2px 0;
+    }
+    .popup-label {
+      display: inline-block;
+      float: left;
+      min-width: 60px;
+    }
+    .popup-value {
+      margin-left: 60px;
+      .tel {
+        margin-left: 5px;
+      }
     }
   }
   .popup-menu {
-    margin: 8px 0 0;
-    padding: 10px 0 0;
+    margin-top: 5px;
+    padding-top: 8px;
     border-top: 1px solid #eee;
     text-align: center;
     a { margin: 0 10px; }

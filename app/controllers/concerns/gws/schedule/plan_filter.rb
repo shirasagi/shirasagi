@@ -71,7 +71,7 @@ module Gws::Schedule::PlanFilter
 
     def destroy
       raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-      @item.destroy_mode = params[:destroy_mode]
+      @item.edit_range = params.dig(:item, :edit_range)
       render_destroy @item.destroy
     end
 end

@@ -17,20 +17,32 @@ class Gws::Schedule::Holiday
 
   validates :color, presence: true
 
+  def readable?(user)
+    true
+  end
+
   def allday?
     true
   end
 
-  def calendar_format
-    {
-      className: 'fc-holiday',
-      title: "  #{name}",
+  def calendar_format(opts = {})
+    data = {
+      id: id.to_s,
       start: start_at,
       end: (end_at + 1.day).to_date,
+      title: "  #{name}",
+      className: 'fc-holiday',
       allDay: allday?,
       backgroundColor: color,
       textColor: text_color,
-      editable: false
+      editable: false,
+      noPopup: true
     }
+    return data unless opts[:editable]
+
+    data.merge({
+      editable: true,
+      noPopup: false
+    })
   end
 end
