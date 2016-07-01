@@ -77,7 +77,7 @@ module Sitemap::Addon
 
     def sitemap_list
       list = []
-      urls = sitemap_urls.presence || load_sitemap_urls(name: true)
+      urls = sitemap_urls.presence || load_sitemap_urls(name: false)
       urls.each do |url|
         next if url.strip.blank?
 
