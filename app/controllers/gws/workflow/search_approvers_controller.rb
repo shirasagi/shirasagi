@@ -15,7 +15,7 @@ class Gws::Workflow::SearchApproversController < ApplicationController
         @group = @cur_user.groups.active.in_group(@cur_site).first
       end
 
-      @groups = @cur_site.descendants.active
+      @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
     end
 
     def group_ids

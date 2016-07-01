@@ -27,7 +27,7 @@ $(".collapse-all").on("click", function() {
       </tr>
 
       <% @items.each do |item| %>
-      <tr data-depth="<%= item.name.count("/") + @cur_site.name.count("/") + 1%>">
+      <tr data-depth="<%= item.level + @cur_site.name.count("/") + 1%>">
         <td class="expandable">
           <% if item.users.size > 0 %>
             <%= link_to item.trailing_name, gws_schedule_group_plans_path(group: item.id) %>

@@ -12,7 +12,7 @@ class Workflow::SearchApproversController < ApplicationController
       end
       @group ||= @cur_user.groups.active.first
 
-      @groups = Cms::Group.site(@cur_site).active
+      @groups = Cms::Group.site(@cur_site).active.tree_sort
     end
 
     def group_ids
