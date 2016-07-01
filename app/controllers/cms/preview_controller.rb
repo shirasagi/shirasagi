@@ -125,6 +125,12 @@ class Cms::PreviewController < ApplicationController
         end
       end
 
+      body.sub!("</body>", preview_template_html + "</body>")
+
+      response.body = body
+    end
+
+    def preview_template_html
       h = []
       h << view_context.stylesheet_link_tag("cms/preview")
       h << view_context.javascript_include_tag("cms/public") if mobile_path?
@@ -150,9 +156,7 @@ class Cms::PreviewController < ApplicationController
         h << '<input type="button" class="preview" value="' + t("cms.preview_page") + '">'
       end
 
-      body.sub!("</body>", h.join("\n") + "</body>")
-
-      response.body = body
+       h.join("\n")
     end
 
     def render_form_preview
