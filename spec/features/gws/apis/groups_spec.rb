@@ -21,7 +21,7 @@ describe "gws_apis_groups", type: :feature, dbscope: :example do
     it "index" do
       visit path
       expect(status_code).to eq 200
-      expect(page).to have_content(gws_user.groups.first.name)
+      expect(page).to have_content(gws_user.groups.first.trailing_name)
 
       click_on "検索"
       expect(status_code).to eq 200
