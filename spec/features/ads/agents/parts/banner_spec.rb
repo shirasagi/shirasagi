@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "ads_agents_parts_banner", type: :feature, dbscope: :example, js: true do
   let(:site)  { cms_site }
   let(:node)  { create :ads_node_banner, cur_site: site }
-  let!(:part)  { create :ads_part_banner, cur_site: site, cur_node: node, filename: "add" }
+  let!(:part) { create :ads_part_banner, cur_site: site, cur_node: node, filename: "add" }
   let!(:item) { create :ads_banner, cur_site: site, cur_node: node }
 
   let(:layout)   { create_cms_layout [part] }
