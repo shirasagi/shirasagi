@@ -168,7 +168,9 @@ class Cms::PreviewController < ApplicationController
         elsif url =~ /^\/\/|^#/
           m
         else
-          full_url = @cur_node ? @cur_node.full_url : @cur_site.full_url
+          full_url = [ request.protocol, request.host_with_port ]
+          full_url << "/#{@cur_node.filename}" if @cur_node
+          full_url = full_url.join
           m.sub(url, ::URI.join(full_url, url).to_s)
         end
       end
