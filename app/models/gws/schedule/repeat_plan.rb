@@ -1,7 +1,7 @@
 class Gws::Schedule::RepeatPlan
   include SS::Document
 
-  # 繰り返し daily, weekly, monthly
+  # 繰り返し daily, weekly, monthly, yearly
   field :repeat_type, type: String
 
   # 繰り返しの間隔
@@ -25,7 +25,7 @@ class Gws::Schedule::RepeatPlan
     self.wdays.reject! { |c| c.blank? }
   end
 
-  validates :repeat_type, inclusion: { in: ['', 'daily', 'weekly', 'monthly'] }
+  validates :repeat_type, inclusion: { in: ['', 'daily', 'weekly', 'monthly', 'yearly'] }
   validates :interval, presence: true, if: -> { repeat_type.present? }
   validates :interval, inclusion: { in: 1..10 }, if: -> { interval.present? }
   validates :repeat_start, presence: true, if: -> { repeat_type.present? }
@@ -46,6 +46,8 @@ class Gws::Schedule::RepeatPlan
       weekly_dates
     when 'monthly'
       monthly_dates
+    when 'yearly'
+      yearly_dates
     else
       []
     end
@@ -83,10 +85,24 @@ class Gws::Schedule::RepeatPlan
     repeat_base == 'date' ? monthly_dates_by_date : monthly_dates_by_week
   end
 
+  # 繰り返し予定を登録する日付の配列を返す（毎年）
+  # @return [Array] 繰り返し予定を登録する日付の配列
+  def yearly_dates
+    dates = []
+    date = repeat_start
+    while date <= repeat_end
+      dates << date
+      date += 1.year
+    end
+    dates
+  end
+
   private
     def validate_plan_date
       errors.add :repeat_end, :greater_than, count: t(:repeat_start) if repeat_end < repeat_start
-      errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1)) if repeat_end > (repeat_start + 1.year)
+      if repeat_type != "yearly" && repeat_end > (repeat_start + 1.year)
+        errors.add(:repeat_end, I18n.t("gws/schedule.errors.less_than_years", count: 1))
+      end
     end
 
     def validate_plan_dates

@@ -34,7 +34,7 @@ describe "gws_users", type: :feature, dbscope: :example do
       visit new_path
       first('.mod-gws-user').click_on "グループを選択する"
       wait_for_cbox
-      first('a', text: gws_user.groups.first.name).trigger('click')
+      first('a', text: gws_user.groups.first.trailing_name).trigger('click')
 
       within "form#item-form" do
         name = unique_id

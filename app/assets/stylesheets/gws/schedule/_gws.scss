@@ -80,10 +80,14 @@
   display: none;
 }
 .gws-schedule-repeat-submit {
-  padding: 10px;
+  padding: 20px;
   input {
-    margin: 0 5px;
+    min-width: 200px;
     cursor: pointer;
+  }
+  .gws-schedule-btn-space {
+    display: block;
+    height: 15px;
   }
 }
 //
