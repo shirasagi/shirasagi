@@ -18,6 +18,7 @@ module Cms::TemplateVariable
     template_variable_handler('time.iso') { |name, issuer| template_variable_handler_time(name, issuer, :iso) }
     template_variable_handler('time.long') { |name, issuer| template_variable_handler_time(name, issuer, :long) }
     template_variable_handler('time.short') { |name, issuer| template_variable_handler_time(name, issuer, :short) }
+    template_variable_handler(:current, :template_variable_handler_current)
   end
 
   private
@@ -47,5 +48,9 @@ module Cms::TemplateVariable
       else
         I18n.l self.date, format: format.to_sym
       end
+    end
+
+    def template_variable_handler_current(name, issuer)
+      false
     end
 end
