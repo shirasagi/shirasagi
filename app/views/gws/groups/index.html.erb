@@ -17,7 +17,7 @@ SS_TreeUI.render(".index.groups");
 
     <tbody>
       <% @items.each do |item| %>
-      <% depth   = @search_params ? "" : %( data-depth=#{item.level + 1}) %>
+      <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
       <% name    = @search_params ? item.name : item.trailing_name %>
       <tr<%= depth %>>
         <nav class="tap-menu">

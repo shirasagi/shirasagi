@@ -6,7 +6,10 @@ class Gws::Apis::GroupsController < ApplicationController
   def index
     @multi = params[:single].blank?
 
-    @s = params[:s].presence
+    # @s = params[:s].presence
+    @search_params = params[:s]
+    @search_params = @search_params.except(:state).delete_if { |k, v| v.blank? } if @search_params
+    @search_params = @search_params.presence
 
     @items = @model.site(@cur_site).active
     if @s.present?

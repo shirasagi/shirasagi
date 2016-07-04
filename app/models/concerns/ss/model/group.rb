@@ -61,7 +61,7 @@ module SS::Model::Group
   end
 
   def trailing_name
-    name.split("/")[level..-1].join("/")
+    @trailing_name ||= name.split("/")[depth..-1].join("/")
   end
 
   def root
@@ -89,33 +89,29 @@ module SS::Model::Group
     descendants.each { |item| item.disable }
   end
 
-  def level
-    effective_parent_count
+  def depth
+    @depth ||= begin
+      count = 0
+      full_name = ""
+      name.split('/').map do |part|
+        full_name << "/" if full_name.present?
+        full_name << part
+
+        break if name == full_name
+
+        found = self.class.where(name: full_name).first
+        break if found.blank?
+
+        count += 1
+      end
+      count
+    end
   end
 
   private
     def validate_name
       if name =~ /\/$/ || name =~ /^\// || name =~ /\/\//
         errors.add :name, :invalid
-      end
-    end
-
-    def effective_parent_count
-      @effective_parent_count ||= begin
-        count = 0
-        full_name = ""
-        name.split('/').map do |part|
-          full_name << "/" if full_name.present?
-          full_name << part
-
-          break if name == full_name
-
-          found = self.class.where(name: full_name).first
-          break if found.blank?
-
-          count += 1
-        end
-        count
       end
     end
 end
