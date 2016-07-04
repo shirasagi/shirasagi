@@ -131,14 +131,9 @@ module Member::Node
 
     before_validation ->{ self.page_layout = layout }
 
-      def html
-        ## for loop html img summary
-        %(<img src="#{thumb_url}">) rescue ""
-      end
-
-      def pages
-        Member::BlogPage.where(filename: /^#{filename}\//, depth: depth + 1).and_public
-      end
+    def pages
+      Member::BlogPage.where(filename: /^#{filename}\//, depth: depth + 1).and_public
+    end
   end
 
   class BlogPageLocation

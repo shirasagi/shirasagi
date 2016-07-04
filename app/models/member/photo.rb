@@ -42,11 +42,6 @@ class Member::Photo
     value < 0 ? 0 : value
   end
 
-  def html
-    ## for loop html img summary
-    %(<img alt="#{name}" src="#{image.thumb_url}">) rescue ""
-  end
-
   private
     def validate_filename
       (@basename && @basename.blank?) ? nil : super

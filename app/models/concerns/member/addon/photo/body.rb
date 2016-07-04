@@ -14,6 +14,19 @@ module Member::Addon::Photo
       validate :validate_in_image
 
       after_save :update_relation_image_member
+
+      if respond_to?(:template_variable_handler)
+        template_variable_handler('img.src', :template_variable_handler_img_src)
+      end
+    end
+
+    def template_variable_handler_img_src(name, issuer)
+      img_source = ERB::Util.html_escape("/assets/img/dummy.png")
+
+      if image && image.thumb_url.present?
+        img_source = ERB::Util.html_escape(image.thumb_url)
+      end
+      img_source
     end
 
     def validate_image

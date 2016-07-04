@@ -18,10 +18,18 @@ module Member::Addon::Blog
 
       permit_params :image_id, :description, :genres
       permit_params blog_page_location_ids: []
+
+      if respond_to?(:template_variable_handler)
+        template_variable_handler('img.src', :template_variable_handler_img_src)
+      end
     end
 
     def thumb_url
       image ? image.thumb_url : "/assets/img/dummy.png"
+    end
+
+    def template_variable_handler_img_src(name, issuer)
+      ERB::Util.html_escape(thumb_url)
     end
 
     private
