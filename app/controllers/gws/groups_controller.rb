@@ -25,7 +25,7 @@ class Gws::GroupsController < ApplicationController
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
       @search_params = params[:s]
-      @search_params = @search_params.except(:state) if @search_params
+      @search_params = @search_params.except(:state).delete_if { |k, v| v.blank? } if @search_params
       @search_params = @search_params.presence
 
       @items = @model.site(@cur_site).

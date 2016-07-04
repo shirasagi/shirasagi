@@ -35,13 +35,13 @@ describe Cms::Group, type: :model, dbscope: :example do
     context "group with parent" do
       subject { create(:cms_group, name: 'AA/BBB') }
       its(:trailing_name) { is_expected.to eq 'BBB' }
-      its(:level) { is_expected.to eq 1 }
+      its(:depth) { is_expected.to eq 1 }
     end
 
     context "group without parent" do
       subject { create(:cms_group, name: 'AA/HHH/IIII') }
       its(:trailing_name) { is_expected.to eq 'HHH/IIII' }
-      its(:level) { is_expected.to eq 1 }
+      its(:depth) { is_expected.to eq 1 }
     end
   end
 
@@ -63,35 +63,35 @@ describe Cms::Group, type: :model, dbscope: :example do
 
       it do
         expect(subject[0].name).to eq 'AA'
-        expect(subject[0].level).to eq 0
+        expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'AA'
 
         expect(subject[1].name).to eq 'AA/BBB'
-        expect(subject[1].level).to eq 1
+        expect(subject[1].depth).to eq 1
         expect(subject[1].trailing_name).to eq 'BBB'
 
         expect(subject[2].name).to eq 'AA/BBB/DDDD'
-        expect(subject[2].level).to eq 2
+        expect(subject[2].depth).to eq 2
         expect(subject[2].trailing_name).to eq 'DDDD'
 
         expect(subject[3].name).to eq 'AA/BBB/EEEE'
-        expect(subject[3].level).to eq 2
+        expect(subject[3].depth).to eq 2
         expect(subject[3].trailing_name).to eq 'EEEE'
 
         expect(subject[4].name).to eq 'AA/CCC'
-        expect(subject[4].level).to eq 1
+        expect(subject[4].depth).to eq 1
         expect(subject[4].trailing_name).to eq 'CCC'
 
         expect(subject[5].name).to eq 'AA/CCC/FFFF'
-        expect(subject[5].level).to eq 2
+        expect(subject[5].depth).to eq 2
         expect(subject[5].trailing_name).to eq 'FFFF'
 
         expect(subject[6].name).to eq 'AA/CCC/GGGG'
-        expect(subject[6].level).to eq 2
+        expect(subject[6].depth).to eq 2
         expect(subject[6].trailing_name).to eq 'GGGG'
 
         expect(subject[7].name).to eq 'AA/HHH/IIII'
-        expect(subject[7].level).to eq 1
+        expect(subject[7].depth).to eq 1
         expect(subject[7].trailing_name).to eq 'HHH/IIII'
       end
     end
@@ -102,46 +102,46 @@ describe Cms::Group, type: :model, dbscope: :example do
 
       it do
         expect(subject[0].name).to eq 'AA/BBB'
-        expect(subject[0].level).to eq 1
+        expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'BBB'
 
         expect(subject[1].name).to eq 'AA/BBB/DDDD'
-        expect(subject[1].level).to eq 2
+        expect(subject[1].depth).to eq 1
         expect(subject[1].trailing_name).to eq 'DDDD'
 
         expect(subject[2].name).to eq 'AA/BBB/EEEE'
-        expect(subject[2].level).to eq 2
+        expect(subject[2].depth).to eq 1
         expect(subject[2].trailing_name).to eq 'EEEE'
 
         expect(subject[3].name).to eq 'AA/CCC'
-        expect(subject[3].level).to eq 1
+        expect(subject[3].depth).to eq 0
         expect(subject[3].trailing_name).to eq 'CCC'
 
         expect(subject[4].name).to eq 'AA/CCC/FFFF'
-        expect(subject[4].level).to eq 2
+        expect(subject[4].depth).to eq 1
         expect(subject[4].trailing_name).to eq 'FFFF'
 
         expect(subject[5].name).to eq 'AA/CCC/GGGG'
-        expect(subject[5].level).to eq 2
+        expect(subject[5].depth).to eq 1
         expect(subject[5].trailing_name).to eq 'GGGG'
 
         expect(subject[6].name).to eq 'AA/HHH/IIII'
-        expect(subject[6].level).to eq 1
+        expect(subject[6].depth).to eq 0
         expect(subject[6].trailing_name).to eq 'HHH/IIII'
       end
     end
 
-    context "with descendants of second level group" do
-      let(:second_level_group) { Cms::Group.find_by(name: 'AA/BBB') }
-      subject { second_level_group.descendants.active.tree_sort(root_name: second_level_group.name).to_a }
+    context "with descendants of second depth group" do
+      let(:second_depth_group) { Cms::Group.find_by(name: 'AA/BBB') }
+      subject { second_depth_group.descendants.active.tree_sort(root_name: second_depth_group.name).to_a }
 
       it do
         expect(subject[0].name).to eq 'AA/BBB/DDDD'
-        expect(subject[0].level).to eq 2
+        expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'DDDD'
 
         expect(subject[1].name).to eq 'AA/BBB/EEEE'
-        expect(subject[1].level).to eq 2
+        expect(subject[1].depth).to eq 0
         expect(subject[1].trailing_name).to eq 'EEEE'
       end
     end
@@ -151,35 +151,35 @@ describe Cms::Group, type: :model, dbscope: :example do
 
       it do
         expect(subject[0].name).to eq 'AA'
-        expect(subject[0].level).to eq 0
+        expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'AA'
 
         expect(subject[1].name).to eq 'AA/BBB'
-        expect(subject[1].level).to eq 1
+        expect(subject[1].depth).to eq 1
         expect(subject[1].trailing_name).to eq 'BBB'
 
         expect(subject[2].name).to eq 'AA/BBB/DDDD'
-        expect(subject[2].level).to eq 2
+        expect(subject[2].depth).to eq 2
         expect(subject[2].trailing_name).to eq 'DDDD'
 
         expect(subject[3].name).to eq 'AA/BBB/EEEE'
-        expect(subject[3].level).to eq 2
+        expect(subject[3].depth).to eq 2
         expect(subject[3].trailing_name).to eq 'EEEE'
 
         expect(subject[4].name).to eq 'AA/CCC'
-        expect(subject[4].level).to eq 1
+        expect(subject[4].depth).to eq 1
         expect(subject[4].trailing_name).to eq 'CCC'
 
         expect(subject[5].name).to eq 'AA/CCC/FFFF'
-        expect(subject[5].level).to eq 2
+        expect(subject[5].depth).to eq 2
         expect(subject[5].trailing_name).to eq 'FFFF'
 
         expect(subject[6].name).to eq 'AA/CCC/GGGG'
-        expect(subject[6].level).to eq 2
+        expect(subject[6].depth).to eq 2
         expect(subject[6].trailing_name).to eq 'GGGG'
 
         expect(subject[7].name).to eq 'AA/HHH/IIII'
-        expect(subject[7].level).to eq 1
+        expect(subject[7].depth).to eq 1
         expect(subject[7].trailing_name).to eq 'HHH/IIII'
       end
     end
@@ -208,6 +208,54 @@ describe Cms::Group, type: :model, dbscope: :example do
       expect(subject[5]).to eq [ '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---- FFFF', 6 ]
       expect(subject[6]).to eq [ '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---- GGGG', 7 ]
       expect(subject[7]).to eq [ '+---- HHH/IIII', 8 ]
+    end
+  end
+
+  describe ".tree_sort with 2nd depth group" do
+    before do
+      create(:cms_group, name: 'A/AA', order: 10)
+      create(:cms_group, name: 'A/AA/BBB')
+      create(:cms_group, name: 'A/AA/CCC', order: 30, expiration_date: 1.day.ago)
+      create(:cms_group, name: 'A/AA/BBB/DDDD', order: 40)
+      create(:cms_group, name: 'A/AA/BBB/EEEE', order: 70)
+      create(:cms_group, name: 'A/AA/CCC/FFFF', order: 50)
+      create(:cms_group, name: 'A/AA/CCC/GGGG', order: 60)
+      # lost child
+      create(:cms_group, name: 'A/AA/HHH/IIII', order: 0)
+    end
+
+    context "without descendants" do
+      subject { described_class.where(name: /^A\//).tree_sort.to_a }
+
+      it do
+        expect(subject[0].name).to eq 'A/AA'
+        expect(subject[0].depth).to eq 0
+        expect(subject[0].trailing_name).to eq 'A/AA'
+
+        expect(subject[1].name).to eq 'A/AA/BBB'
+        expect(subject[1].depth).to eq 1
+        expect(subject[1].trailing_name).to eq 'BBB'
+
+        expect(subject[2].name).to eq 'A/AA/BBB/DDDD'
+        expect(subject[2].depth).to eq 2
+        expect(subject[2].trailing_name).to eq 'DDDD'
+
+        expect(subject[3].name).to eq 'A/AA/BBB/EEEE'
+        expect(subject[3].depth).to eq 2
+        expect(subject[3].trailing_name).to eq 'EEEE'
+
+        expect(subject[4].name).to eq 'A/AA/CCC/FFFF'
+        expect(subject[4].depth).to eq 1
+        expect(subject[4].trailing_name).to eq 'CCC/FFFF'
+
+        expect(subject[5].name).to eq 'A/AA/CCC/GGGG'
+        expect(subject[5].depth).to eq 1
+        expect(subject[5].trailing_name).to eq 'CCC/GGGG'
+
+        expect(subject[6].name).to eq 'A/AA/HHH/IIII'
+        expect(subject[6].depth).to eq 1
+        expect(subject[6].trailing_name).to eq 'HHH/IIII'
+      end
     end
   end
 end
