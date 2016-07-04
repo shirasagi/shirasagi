@@ -40,7 +40,7 @@ class @SS_SearchUI
       if $(this).find("a.deselect").size() == 0
         $(this).hide()
 
-  @modal: ()->
+  @modal: (options = {})->
     if $.colorbox.element().hasClass("ajax-box")
       SS_SearchUI.anchorAjaxBox = $.colorbox.element()
 
@@ -57,9 +57,12 @@ class @SS_SearchUI
     $("#ajax-box .pagination a").on "click", (e)->
       SS_SearchUI.selectItems()
 
-    $("#ajax-box #s_group").on "change", (e)->
-      SS_SearchUI.selectItems()
-      $("#ajax-box form.search").submit()
+    submit_on_changes = options.submit_on_changes
+    submit_on_changes = [ "#s_group" ] unless submit_on_changes
+    for el in submit_on_changes
+      $("#ajax-box #{el}").on "change", (e)->
+        SS_SearchUI.selectItems()
+        $("#ajax-box form.search").submit()
 
     $("#ajax-box .submit-on-change").on "change", (e)->
       SS_SearchUI.selectItems()

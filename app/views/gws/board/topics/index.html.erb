@@ -1,11 +1,3 @@
-<%
-categories = Gws::Board::CategoryTraverser.build(@cur_site, @cur_user)
-category = nil
-if params[:category].present?
-  category = Gws::Board::Category.site(@cur_site).find(params[:category]) rescue nil
-end
-options = options_for_select(categories.to_options, category.try(:id))
-%>
 <%= jquery do %>
 
   $('.gws-category-navi-menu #category_id').change(function() {
@@ -17,7 +9,7 @@ options = options_for_select(categories.to_options, category.try(:id))
 <% end %>
 
 <div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options, include_blank: t('modules.gws/board') %>
+  <%= select_tag :category_id, options_for_select(@categories.to_options, @category.try(:id)), include_blank: t('modules.gws/board') %>
 </div>
 
 <% @index_title = proc do |item| %>

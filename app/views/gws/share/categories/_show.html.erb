@@ -6,4 +6,7 @@
   <dt><%= @model.t :color %></dt>
   <dd><span class="gws-category-label" style="<%= category_label_css(@item) %>"><%= @item.name %></span></dd>
   <% end %>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
 </dl>

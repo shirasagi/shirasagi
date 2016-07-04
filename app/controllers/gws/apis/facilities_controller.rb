@@ -7,19 +7,18 @@ class Gws::Apis::FacilitiesController < ApplicationController
 
   private
     def set_category
-      @groups = Gws::Facility::CategoryTraverser.build(@cur_site)
-      @groups = @groups.flatten
+      @categories = Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
 
-      @group = params[:s] ? params[:s][:group].presence : nil
-      if @group
-        @group = Gws::Facility::Category.site(@cur_site).find(@group) rescue nil
+      category_id = params.dig(:s, :category)
+      if category_id
+        @category = Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site).find(category_id) rescue nil
       end
     end
 
     def category_ids
-      return if @group.blank?
-      ids = Gws::Facility::Category.site(@cur_site).where(name: /^#{Regexp.escape(@group.name)}\//).pluck(:id)
-      ids << @group.id
+      return if @category.blank?
+      ids = Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site).where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
+      ids << @category.id
     end
 
   public
@@ -31,7 +30,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
         reservable(@cur_user).
         active.
         search(params[:s])
-      @items = @items.in(category_id: category_ids) if @group.present?
+      @items = @items.in(category_id: category_ids) if @category.present?
       @items = @items.page(params[:page]).per(50)
     end
 end

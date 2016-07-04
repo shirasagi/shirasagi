@@ -1,21 +1,11 @@
-<%
-  def groups_options_for_select
-    options = @groups.reduce([]) do |ret, g|
-      ret << [Gws::Category::Traversable.option_name(g.name, g.depth), g.id]
-    end.to_a
-    options.unshift([ @model.t(:category_id), nil ])
-    options_for_select(options, @group.try(:id))
-  end
-%>
-
-<%= jquery do %> SS_SearchUI.modal(); <% end %>
+<%= jquery do %> SS_SearchUI.modal({ submit_on_changes: [ "#s_category" ] }); <% end %>
 
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
     <dl class="see">
       <dt><%= @model.t(:category_id) %></dt>
-      <dd><%= select_tag("s[group]", groups_options_for_select) %></dd>
+      <dd><%= select_tag("s[category]", options_for_select(@categories.to_options, @category.try(:id))) %></dd>
 
       <dt><%= @model.t :name %></dt>
       <dd>

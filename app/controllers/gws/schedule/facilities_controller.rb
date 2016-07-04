@@ -7,24 +7,23 @@ class Gws::Schedule::FacilitiesController < ApplicationController
 
   private
     def set_category
-      @categories = Gws::Facility::CategoryTraverser.build(@cur_site, @cur_user)
-      @categories = @categories.flatten
+      @categories = Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
 
-      @category = params[:s] ? params[:s][:category] : nil
-      if @category.present?
-        @category = Gws::Facility::Category.site(@cur_site).find(@category) rescue nil
+      category_id = params.dig(:s, :category)
+      if category_id.present?
+        @category = Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site).find(category_id) rescue nil
       end
 
       @category ||= begin
         c = @categories.find { |c| c.id.present? }
-        c = Gws::Facility::Category.site(@cur_site).find(c.id) rescue nil
+        c = Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site).find(c.id) rescue nil
         c
       end
     end
 
     def category_ids
       return if @category.blank?
-      ids = Gws::Facility::Category.site(@cur_site).where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
+      ids = Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site).where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
       ids << @category.id
     end
 

@@ -84,8 +84,12 @@ class SS::TreeList
     @items.each { |item, parts, orders| yield item }
   end
 
-  def to_options
-    @items.map { |item, parts, orders| [ option_name(item), item.id ] }
+  def to_options(options = {})
+    if depth = options[:depth]
+      @items.select { |item, _, _| item.depth <= depth }.map { |item, _, _| [ option_name(item), item.id ] }
+    else
+      @items.map { |item, _, _| [ option_name(item), item.id ] }
+    end
   end
 
   private

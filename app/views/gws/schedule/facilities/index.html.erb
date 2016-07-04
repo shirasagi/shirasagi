@@ -1,13 +1,3 @@
-<%
-
-def categories_options_for_select
-  options = @categories.reduce([]) do |ret, g|
-    ret << [Gws::Category::Traversable.option_name(g.name, g.depth), g.id]
-  end.to_a
-  options_for_select(options, @category.try(:id))
-end
-
-%>
 <%= jquery do %>
   $("form.category-search #s_category").change(function() {
     if ($('#calendar-controller').length) {
@@ -37,7 +27,7 @@ end
     <h2>
       <%= form_for :s, url: { action: :index }, html: { method: :get, class: "category-search" } do |f| %>
         <% if @categories.present? %>
-          <%= select_tag "s[category]", categories_options_for_select, include_blank: t('gws/schedule.tabs.facility') %>
+          <%= select_tag "s[category]", options_for_select(@categories.to_options, @category.try(:id)), include_blank: t('gws/schedule.tabs.facility') %>
         <% else %>
           <%= t('gws/schedule.tabs.facility') %>
         <% end %>

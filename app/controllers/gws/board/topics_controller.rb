@@ -18,8 +18,9 @@ class Gws::Board::TopicsController < ApplicationController
     end
 
     def set_category
-      if params[:category].present?
-        @category ||= Gws::Board::Category.site(@cur_site).where(id: params[:category]).first
+      @categories = Gws::Board::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+      if category_id = params[:category].presence
+        @category ||= Gws::Board::Category.site(@cur_site).readable(@cur_user, @cur_site).where(id: category_id).first
       end
     end
 

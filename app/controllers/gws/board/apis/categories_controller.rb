@@ -7,16 +7,15 @@ class Gws::Board::Apis::CategoriesController < ApplicationController
 
   private
     def set_category
-      @groups = Gws::Board::CategoryTraverser.build(@cur_site, @cur_user)
-      @groups = @groups.flatten
+      @categories = Gws::Board::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
 
-      @group = params[:s] ? params[:s][:group].presence : nil
-      @group = @model.where(id: @group).first if @group.present?
+      category_id = params.dig(:s, :category).presence
+      @category = @model.where(id: category_id).first if category_id.present?
     end
 
     def parent_name
-      return // unless @group
-      /^#{@group.name}\//
+      return // unless @category
+      /^#{Regexp.escape(@category.name)}\//
     end
 
   public
@@ -24,8 +23,10 @@ class Gws::Board::Apis::CategoriesController < ApplicationController
       @multi = params[:single].blank?
 
       @items = @model.site(@cur_site).
+        readable(@cur_user, @cur_site).
         search(params[:s]).
         where(name: parent_name).
-        page(params[:page]).per(50)
+        tree_sort
+      @items = Kaminari.paginate_array(@items.to_a).page(params[:page]).per(50)
     end
 end
