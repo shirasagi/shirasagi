@@ -24,11 +24,20 @@ class Cms::GroupsController < ApplicationController
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
+      @search_params = params[:s]
+      @search_params = @search_params.except(:state).delete_if { |k, v| v.blank? } if @search_params
+      @search_params = @search_params.presence if @search_params
+
       @items = @model.unscoped.site(@cur_site).
         state(params.dig(:s, :state)).
-        allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
-        order_by(name: 1, order: 1, id: 1)
+        allow(:read, @cur_user, site: @cur_site)
+
+      if @search_params
+        @items = @items.search(@search_params).
+          order_by(name: 1, order: 1, id: 1)
+      else
+        @items = @items.tree_sort
+      end
     end
 
     def destroy

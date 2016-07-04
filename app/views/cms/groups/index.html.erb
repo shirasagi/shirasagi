@@ -17,9 +17,8 @@ SS_TreeUI.render(".index.groups");
 
     <tbody>
       <% @items.each do |item| %>
-      <% keyword = params[:s][:keyword] rescue nil %>
-      <% depth   = keyword.present? ? "" : %( data-depth=#{item.name.count("/") + 1}) %>
-      <% name    = keyword.present? ? item.trailing_name : item.name %>
+      <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
+      <% name    = @search_params ? item.name : item.trailing_name %>
       <tr<%= depth %>>
         <nav class="tap-menu">
           <%= link_to :show, action: :show, id: item %>
@@ -27,7 +26,7 @@ SS_TreeUI.render(".index.groups");
           <%= link_to :delete, action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         </nav>
         <td class="expandable">
-          <%= link_to item.name, { action: :show, id: item}, class: "title" %>
+          <%= link_to name, { action: :show, id: item}, class: "title" %>
         </td>
         <td><%= item.updated.strftime("%Y/%m/%d") %></td>
       </tr>

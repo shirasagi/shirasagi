@@ -1,4 +1,7 @@
-<%= jquery do %> SS_SearchUI.modal(); <% end %>
+<%= jquery do %>
+SS_SearchUI.modal();
+SS_TreeUI.render(".index.groups");
+<% end %>
 
 <div class="search-ui-form">
 <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
@@ -7,7 +10,7 @@
 <% end %>
 </div>
 
-<table class="index">
+<table class="index groups">
   <thead class="list-head">
     <tr>
       <% if @multi %>
@@ -18,13 +21,17 @@
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <tr data-id="<%= item.id %>" class="list-item">
+      <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
+      <% name    = @search_params ? item.name : item.trailing_name %>
+      <tr data-id="<%= item.id %>" class="list-item" <%= depth %>>
         <% if @multi %>
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
         <% end %>
-        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td class="expandable">
+          <%= link_to name, "#", class: @multi ? "select-item" : "select-single-item" %>
+        </td>
       </tr>
     <% end %>
   </tbody>
