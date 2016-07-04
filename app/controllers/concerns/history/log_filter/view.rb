@@ -1,8 +1,39 @@
 module History::LogFilter::View
   extend ActiveSupport::Concern
 
+  def index
+    @items = @model.where(cond).
+      order_by(created: -1, id: -1).
+      page(params[:page]).per(50)
+  end
+
   def delete
     @item = @model.new
+  end
+
+  def destroy
+    from = @model.term_to_date params[:item][:save_term]
+    raise "500" if from == false
+
+    num  = @model.where(cond).where(created: { "$lt" => from }).destroy_all
+
+    coll = @model.collection
+    coll.client.command({ compact: coll.name })
+
+    render_destroy num
+  end
+
+  def download
+    @item = @model.new
+    return if request.get?
+
+    from = @model.term_to_date params[:item][:save_term]
+    raise "500" if from == false
+
+    @items = @model.where(cond)
+    @items = @items.where(created: { "$gte" => from }) if from
+    @items = @items.sort(created: 1, id: 1)
+    send_csv @items
   end
 
   private
