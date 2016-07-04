@@ -80,7 +80,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
         Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer).deliver_now
       end
       if @cur_node.reply_mail_enabled?
-        Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer).try(:deliver_now)
+        # `try` method doesn't work as you think because mail is an instance of Delegator.
+        # see: http://tech.misoca.jp/entry/2015/12/04/110000
+        mail = Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer)
+        mail.deliver_now if mail.present?
       end
 
       query = {}

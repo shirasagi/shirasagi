@@ -2,7 +2,23 @@ require 'spec_helper'
 
 describe "inquiry_agents_nodes_form", dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :inquiry_node_form, cur_site: site, inquiry_captcha: 'disabled' }
+  let(:layout) { create_cms_layout }
+  let(:node) do
+    create(
+      :inquiry_node_form,
+      cur_site: site,
+      layout_id: layout.id,
+      inquiry_captcha: 'disabled',
+      notice_state: 'enabled',
+      notice_content: 'enabled',
+      notice_email: 'notice@example.jp',
+      from_name: 'admin',
+      from_email: 'admin@example.jp',
+      reply_state: 'enabled',
+      reply_subject: 'お問い合わせを受け付けました',
+      reply_upper_text: '上部テキスト',
+      reply_lower_text: '下部テキスト')
+  end
 
   before do
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})
@@ -12,6 +28,14 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
     node.columns.create! attributes_for(:inquiry_column_select).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_check).reverse_merge({cur_site: site})
     node.reload
+  end
+
+  before do
+    ActionMailer::Base.deliveries = []
+  end
+
+  after do
+    ActionMailer::Base.deliveries = []
   end
 
   context "when pc site is accessed" do
@@ -70,6 +94,26 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       expect(answer.data[4].confirm).to be_nil
       expect(answer.data[5].values).to eq ['申請について']
       expect(answer.data[5].confirm).to be_nil
+
+      expect(ActionMailer::Base.deliveries.count).to eq 2
+
+      ActionMailer::Base.deliveries.first.tap do |notify_mail|
+        expect(notify_mail.from.first).to eq 'admin@example.jp'
+        expect(notify_mail.to.first).to eq 'notice@example.jp'
+        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
+        expect(notify_mail.body.multipart?).to be_falsey
+        expect(notify_mail.body.raw_source).to include("「#{node.name}」に回答がありました。")
+        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+      end
+
+      ActionMailer::Base.deliveries.last.tap do |reply_mail|
+        expect(reply_mail.from.first).to eq 'admin@example.jp'
+        expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
+        expect(reply_mail.subject).to eq 'お問い合わせを受け付けました'
+        expect(reply_mail.body.multipart?).to be_falsey
+        expect(reply_mail.body.raw_source).to include('上部テキスト')
+        expect(reply_mail.body.raw_source).to include('下部テキスト')
+      end
     end
   end
 
@@ -135,6 +179,8 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       expect(answer.data[4].confirm).to be_nil
       expect(answer.data[5].values).to eq ['申請について']
       expect(answer.data[5].confirm).to be_nil
+
+      expect(ActionMailer::Base.deliveries.count).to eq 2
     end
   end
 
@@ -161,6 +207,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
       end
 
       expect(Inquiry::Answer.site(site).count).to eq 0
+      expect(ActionMailer::Base.deliveries.count).to eq 0
     end
   end
 end
