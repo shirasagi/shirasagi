@@ -40,10 +40,7 @@ class Gws::Schedule::Holiday
     }
     return data unless opts[:editable]
 
-    data.merge({
-      editable: true,
-      noPopup: false
-    })
+    data.merge({ editable: true, noPopup: false })
   end
 
   private
