@@ -142,7 +142,9 @@ SS::Application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "import" => "import#index"
     post "import" => "import#import"
-    resource :conf, concerns: [:deletion, :copy, :move]
+    resource :conf, concerns: [:copy, :move] do
+      get :delete, :on => :member
+    end
     resources :nodes, concerns: :deletion
     resources :pages, concerns: [:deletion, :copy, :move, :lock]
     resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]
