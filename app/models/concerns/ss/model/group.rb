@@ -22,7 +22,7 @@ module SS::Model::Group
     default_scope -> { order_by(order: 1, name: 1) }
 
     validates :name, presence: true, uniqueness: true, length: { maximum: 80 }
-    validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999999, allow_blank: true }
+    validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
     validate :validate_name

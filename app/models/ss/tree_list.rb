@@ -3,7 +3,7 @@ class SS::TreeList
 
   private_class_method :new
 
-  MAX_ORDER = 2147483647
+  MAX_ORDER = 2_147_483_647
 
   def initialize(items, options)
     @items = items
