@@ -1,11 +1,2 @@
-<%
-  def groups_options_for_select
-    options = @groups.reduce([]) do |ret, g|
-      ret << [Gws::Category::Traversable.option_name(g.trailing_name, g.name.split('/').size - 2), g.id]
-    end.to_a
-    options_for_select(options, @group.try(:id))
-  end
-%>
-
 <dt><%= t "cms.group" %></dt>
-<dd><%= select_tag("s[group]", groups_options_for_select) %></dd>
+<dd><%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id))) %></dd>
