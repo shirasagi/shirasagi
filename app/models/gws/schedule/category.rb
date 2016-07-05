@@ -12,4 +12,10 @@ class Gws::Schedule::Category
   default_scope -> {
     where(model: "gws/schedule/category").order_by(name: 1)
   }
+
+  class << self
+    def to_options
+      self.all.map { |c| [c.name, c.id] }
+    end
+  end
 end

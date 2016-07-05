@@ -9,7 +9,7 @@
 <% end %>
 
 <div class="gws-category-navi-menu">
-  <%= select_tag :category_id, options_for_select(@categories.to_options, @category.try(:id)), include_blank: t('modules.gws/board') %>
+  <%= select_tag :category_id, options_for_select(@categories.to_options(offset: 1), @category.try(:id)), include_blank: t('modules.gws/board') %>
 </div>
 
 <% @index_title = proc do |item| %>

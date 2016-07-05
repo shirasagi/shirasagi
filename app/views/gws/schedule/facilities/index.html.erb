@@ -1,13 +1,4 @@
 <%= jquery do %>
-  $("form.category-search #s_category").change(function() {
-    if ($('#calendar-controller').length) {
-      var view = $('#calendar-controller').fullCalendar('getView');
-      $('form.category-search').append('<input type="hidden" name="calendar[view]" value="' + view.name + '" />');
-      $('form.category-search').append('<input type="hidden" name="calendar[date]" value="' + view.start.format() + '" />');
-    }
-    $(".main-box form.category-search").submit();
-  });
-
   Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
     defaultView: 'timelineDay',
     header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
@@ -24,16 +15,8 @@
 
 <section class="main-box gws-schedule-box">
   <header>
-    <h2>
-      <%= form_for :s, url: { action: :index }, html: { method: :get, class: "category-search" } do |f| %>
-        <% if @categories.present? %>
-          <%= select_tag "s[category]", options_for_select(@categories.to_options, @category.try(:id)), include_blank: t('gws/schedule.tabs.facility') %>
-        <% else %>
-          <%= t('gws/schedule.tabs.facility') %>
-        <% end %>
-      <% end %>
-    </h2>
-    <nav><%= render file: '_search' %></nav>
+    <h2><%= t('gws/schedule.tabs.facility') %></h2>
+    <nav><%= render file: 'gws/schedule/facilities/_search' %></nav>
   </header>
 
   <div class="calendar" id="calendar-controller"></div>

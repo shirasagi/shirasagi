@@ -1,5 +1,5 @@
 <%
-options = options_for_select(@categories.to_options, @category.try(:id))
+options = options_for_select(@categories.to_options(offset: 1), @category.try(:id))
 %>
 <%= jquery do %>
 

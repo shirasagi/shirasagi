@@ -31,8 +31,8 @@ class Gws::Schedule::Plan
 
   def category_options
     @category_options ||= Gws::Schedule::Category.site(@cur_site || site).
-      readable(@cur_user || user, site).
-      map { |c| [c.name, c.id] }
+      readable(@cur_user || user, @cur_site || site).
+      to_options
   end
 
   def reminder_user_ids

@@ -85,11 +85,12 @@ class SS::TreeList
   end
 
   def to_options(options = {})
-    if depth = options[:depth]
-      @items.select { |item, _, _| item.depth <= depth }.map { |item, _, _| [ option_name(item), item.id ] }
-    else
-      @items.map { |item, _, _| [ option_name(item), item.id ] }
-    end
+    depth = options[:depth]
+    offset = options[:offset] || 0
+
+    options = @items
+    options = options.select { |item, _, _| item.depth <= depth } if depth
+    options.map { |item, _, _| [ option_name(item, offset), item.id ] }
   end
 
   private
@@ -129,8 +130,8 @@ class SS::TreeList
       ret
     end
 
-    def option_name(item)
-      depth = item.depth
+    def option_name(item, offset)
+      depth = item.depth + offset
 
       indent = '&nbsp;' * 8 * (depth - 1) + '+---- ' if depth > 0
       "#{indent}#{item.trailing_name}".html_safe
