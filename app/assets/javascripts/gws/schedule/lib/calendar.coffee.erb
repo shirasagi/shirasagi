@@ -17,7 +17,13 @@ class @Gws_Schedule_Calendar
     $(selector).find('.fc-toolbar h2').click ->
       name = "gws-schedule-tool-calendars"
       if $(".#{name}").length == 0
-        $('.gws-schedule-box .calendar:first').before("<div class='#{name}'></div>")
+        h = "<div class='#{name}'>" +
+            "<div class='xdsoft_datetimepicker controller'>" +
+            "<button type='button' class='xdsoft_prev' />" +
+            "<button type='button' class='xdsoft_next' />" +
+            "</div></div>"
+        $('.gws-schedule-box .calendar:first').before(h)
+
         for i in [1..4]
           $(".#{name}").append("<div class='#{name}-cal#{i}'></div>")
           $(".#{name}-cal#{i}").datetimepicker
@@ -36,6 +42,16 @@ class @Gws_Schedule_Calendar
             onSelectDate: (ct, i) ->
               date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate())
               $('.calendar').fullCalendar('gotoDate', date)
+
+        $(".#{name}").find(".xdsoft_month, .xdsoft_year").unbind('mousedown').find("i").remove()
+        $(".#{name} .xdsoft_datetimepicker").not(".controller.controller").find(".xdsoft_prev, .xdsoft_next").hide()
+        $(".#{name} .controller .xdsoft_prev").mousedown ->
+          for i in [1..4]
+            $(".#{name} .xdsoft_prev").not(this).mousedown().mouseup()
+        $(".#{name} .controller .xdsoft_next").mousedown ->
+          for i in [1..4]
+            $(".#{name} .xdsoft_next").not(this).mousedown().mouseup()
+
       $(".#{name}").animate({ width: 'toggle' }, 'fast' )
 
   @defaultParams: (opts) ->
