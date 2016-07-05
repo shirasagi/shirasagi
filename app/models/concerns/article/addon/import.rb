@@ -15,7 +15,7 @@ module Article::Addon
     public
       def to_csv
         csv = CSV.generate do |data|
-          data << %w(id name file_name layout order keywords description summary_html html categories event_name event_dates contact_state contact_group contact_charge contact_tel contact_fax contact_email released release_date close_date groups permission_level)
+          data << %w(id name file_name layout order keywords description summary_html html categories parent_crumb_urls event_name event_dates contact_state contact_group contact_charge contact_tel contact_fax contact_email released release_date close_date groups permission_level).map { |k| Article::Page.t k.to_sym }
           criteria.each do |item|
             line = []
             line << item.id
@@ -28,6 +28,7 @@ module Article::Addon
             line << item.summary_html
             line << item.html
             line << get_category_tree(item)
+            line << item.parent_crumb_urls
             line << item.event_name
             line << item.event_dates
             if item.contact_state == "show"
@@ -35,7 +36,7 @@ module Article::Addon
             else
               line << I18n.t("views.options.state.hide")
             end
-            line << item.contact_group.name
+            line << item.contact_group
             line << item.contact_charge
             line << item.contact_tel
             line << item.contact_fax
@@ -109,11 +110,11 @@ module Article::Addon
     def update_row(row, index)
       e = I18n.t("errors.messages.invalid")
 
-      id = row["id"].to_s.strip
-      name = row["name"].to_s.strip
-      file_name = row["file_name"].to_s.strip
-      if row["layout"].to_s.strip != ""
-        layout_id = Cms::Layout.where(name: row["layout"].to_s.strip).map(&:_id).first
+      id = row[Article::Page.t "id".to_sym].to_s.strip
+      name = row[Article::Page.t "name".to_sym].to_s.strip
+      file_name = row[Article::Page.t "file_name".to_sym].to_s.strip
+      if row[Article::Page.t "layout".to_sym].to_s.strip != ""
+        layout_id = Cms::Layout.where(name: row[Article::Page.t "layout".to_sym].to_s.strip).map(&:_id).first
         if layout_id.blank?
           self.errors.add :base, "#{index}: layout#{e}"
           return nil
@@ -121,32 +122,33 @@ module Article::Addon
       else
         layout_id = nil
       end
-      order = row["order"].to_s
-      keywords = row["keywords"].to_s.strip
-      description = row["description"].to_s.strip
-      summary_html = row["summary_html"].to_s.strip
-      html = row["html"].to_s.strip
-      categories = row["categories"].to_s.split(/\n/)
-      event_name = row["event_name"].to_s.strip
-      event_dates = row["event_dates"].to_s.strip
-      if row["contact_state"].to_s.strip == I18n.t("views.options.state.show")
+      order = row[Article::Page.t "order".to_sym].to_s
+      keywords = row[Article::Page.t "keywords".to_sym].to_s.strip
+      description = row[Article::Page.t "description".to_sym].to_s.strip
+      summary_html = row[Article::Page.t "summary_html".to_sym].to_s.strip
+      html = row[Article::Page.t "html".to_sym].to_s.strip
+      categories = row[Article::Page.t "categories".to_sym].to_s.split(/\n/)
+      parent_crumb_urls = row[Article::Page.t "parent_crumb_urls".to_sym].to_s.strip
+      event_name = row[Article::Page.t "event_name".to_sym].to_s.strip
+      event_dates = row[Article::Page.t "event_dates".to_sym].to_s.strip
+      if row[Article::Page.t "contact_state".to_sym].to_s.strip == I18n.t("views.options.state.show")
         contact_state = "show"
-      elsif row["contact_state"].to_s.strip == I18n.t("views.options.state.hide")
+      elsif row[Article::Page.t "contact_state".to_sym].to_s.strip == I18n.t("views.options.state.hide")
         contact_state = "hide"
       else
         self.errors.add :base, "#{index}: contact_state#{e}"
         return nil
       end 
-      contact_group = row["contact_group"].to_s.strip
-      contact_charge = row["contact_charge"].to_s.strip
-      contact_tel = row["contact_tel"].to_s.strip
-      contact_fax = row["contact_fax"].to_s.strip
-      contact_email = row["contact_email"].to_s.strip
-      released = row["released"].to_s.strip
-      release_date = row["release_date"].to_s.strip
-      close_date = row["close_date"].to_s.strip
-      groups = row["groups"].to_s.split(/\n/)
-      permission_level = row["permission_level"].to_s
+      contact_group = row[Article::Page.t "contact_group".to_sym].to_s.strip
+      contact_charge = row[Article::Page.t "contact_charge".to_sym].to_s.strip
+      contact_tel = row[Article::Page.t "contact_tel".to_sym].to_s.strip
+      contact_fax = row[Article::Page.t "contact_fax".to_sym].to_s.strip
+      contact_email = row[Article::Page.t "contact_email".to_sym].to_s.strip
+      released = row[Article::Page.t "released".to_sym].to_s.strip
+      release_date = row[Article::Page.t "release_date".to_sym].to_s.strip
+      close_date = row[Article::Page.t "close_date".to_sym].to_s.strip
+      groups = row[Article::Page.t "groups".to_sym].to_s.split(/\n/)
+      permission_level = row[Article::Page.t "permission_level".to_sym].to_s
  
       if id.present?
         item = self.class.where(id: id).first
@@ -192,6 +194,7 @@ module Article::Addon
       item.description = description
       item.summary_html = summary_html
       item.html = html
+      item.parent_crumb_urls = parent_crumb_urls
       item.event_name = event_name
       item.event_dates = event_dates
       item.contact_state = contact_state

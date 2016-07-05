@@ -7,7 +7,6 @@
   <dl class="see">
     <dt><%= t :file %><%= @model.tt :in_file %></dt>
     <dd>
-      <%= f.hidden_field "item[in_file]", value: "" %>
       <%= f.file_field :in_file %>
     </dd>
   </dl>
@@ -15,6 +14,6 @@
  
 <footer class="send">
   <%= f.submit t(:import), class: :save %>
-  <%= f.button t("views.button.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
 </footer>
 <% end %>

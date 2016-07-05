@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "csv"
 
 describe "article_pages", dbscope: :example do
   let(:site) { cms_site }
@@ -125,6 +126,10 @@ describe "article_pages", dbscope: :example do
     end
 
     feature "#download", js: true do
+      background do
+        create :article_page, cur_site: site, cur_node: node
+      end
+
       scenario "button click" do
         visit index_path
         expect(status_code).to eq 200
@@ -132,6 +137,15 @@ describe "article_pages", dbscope: :example do
         click_button I18n.t("views.links.download")
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
+
+        csv_lines = CSV.parse(page.html.encode("UTF-8"))
+        expect(csv_lines.length).to eq 1
+        expect(csv_lines[0]).to eq %w(id name file_name layout order keywords description summary_html html categories parent_crumb_urls event_name event_dates contact_state contact_group contact_charge contact_tel contact_fax contact_email released release_date close_date groups permission_level).map { |k| Article::Page.t k.to_sym }
+#        expect(csv_lines[1]).to include(logs[0].class_name)
+#        expect(csv_lines[1]).to include(logs[0].start_label)
+#        expect(csv_lines[1]).to include(I18n.t(logs[0].state, scope: "job.state"))
+
+
       end
     end
 
