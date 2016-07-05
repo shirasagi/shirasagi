@@ -21,7 +21,7 @@ module Gws::Model::Category
     validates :state, presence: true
     validates :name, presence: true, length: { maximum: 80 }
     validates :color, presence: true, if: ->{ color_required? }
-    validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999999, allow_blank: true }
+    validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
 
     scope :search, ->(params) do
       criteria = where({})
