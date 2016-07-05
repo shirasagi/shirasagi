@@ -18,15 +18,18 @@ class Gws::Schedule::FacilitiesController < ApplicationController
     def set_facility_category
       @facility_categories = facility_category_criteria.tree_sort
 
+      if params[:s].blank?
+        @facility_category ||= begin
+          c = @facility_categories.find { |c| c.id.present? }
+          c = facility_category_criteria.find(c.id) rescue nil
+          c
+        end
+        return
+      end
+
       facility_category_id = params.dig(:s, :facility_category_id)
       if facility_category_id.present?
         @facility_category = facility_category_criteria.find(facility_category_id) rescue nil
-      end
-
-      @facility_category ||= begin
-        c = @facility_categories.find { |c| c.id.present? }
-        c = facility_category_criteria.find(c.id) rescue nil
-        c
       end
     end
 
@@ -50,6 +53,6 @@ class Gws::Schedule::FacilitiesController < ApplicationController
       @items = Gws::Facility::Item.site(@cur_site).
         readable(@cur_user, @cur_site).
         active
-      @items = @items.in(category_id: category_ids) if @facility_category.present?
+      @items = @items.in(category_id: category_ids) #if @facility_category.present?
     end
 end
