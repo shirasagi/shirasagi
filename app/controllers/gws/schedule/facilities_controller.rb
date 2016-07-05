@@ -6,37 +6,50 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   before_action :set_category, only: :index
 
   private
-    def category_criteria
+    def facility_category_criteria
       Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site)
     end
 
     def set_category
-      @categories = category_criteria.tree_sort
+      set_facility_category
+      set_schedule_category
+    end
 
-      category_id = params.dig(:s, :category)
-      if category_id.present?
-        @category = category_criteria.find(category_id) rescue nil
+    def set_facility_category
+      @facility_categories = facility_category_criteria.tree_sort
+
+      facility_category_id = params.dig(:s, :facility_category_id)
+      if facility_category_id.present?
+        @facility_category = facility_category_criteria.find(facility_category_id) rescue nil
       end
 
-      @category ||= begin
-        c = @categories.find { |c| c.id.present? }
-        c = category_criteria.find(c.id) rescue nil
+      @facility_category ||= begin
+        c = @facility_categories.find { |c| c.id.present? }
+        c = facility_category_criteria.find(c.id) rescue nil
         c
       end
     end
 
+    def set_schedule_category
+      @schedule_categories = Gws::Schedule::Category.site(@cur_site).readable(@cur_user, @cur_site)
+
+      schedule_category_id = params.dig(:s, :category_id)
+      if schedule_category_id.present?
+        @schedule_category = @schedule_categories.find(schedule_category_id) rescue nil
+      end
+    end
+
     def category_ids
-      return if @category.blank?
-      ids = category_criteria.where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
-      ids << @category.id
+      return if @facility_category.blank?
+      ids = facility_category_criteria.where(name: /^#{Regexp.escape(@facility_category.name)}\//).pluck(:id)
+      ids << @facility_category.id
     end
 
   public
     def index
-      Rails.logger.debug("#index: category_ids=#{category_ids}")
       @items = Gws::Facility::Item.site(@cur_site).
         readable(@cur_user, @cur_site).
         active
-      @items = @items.in(category_id: category_ids) if @category.present?
+      @items = @items.in(category_id: category_ids) if @facility_category.present?
     end
 end

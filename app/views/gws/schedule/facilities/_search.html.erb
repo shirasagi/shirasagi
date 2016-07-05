@@ -1,0 +1,21 @@
+<%= jquery do %>
+  var submit_search = function() {
+    if ($('#calendar-controller').length) {
+      var view = $('#calendar-controller').fullCalendar('getView');
+      $('form.search').append('<input type="hidden" name="calendar[view]" value="' + view.name + '" />');
+      $('form.search').append('<input type="hidden" name="calendar[date]" value="' + view.start.format() + '" />');
+    }
+    $("form.search").submit();
+  };
+
+  $("form.search #s_facility_category_id").change(submit_search);
+  $("form.search #s_category_id").change(submit_search);
+<% end %>
+
+<% @s = OpenStruct.new params[:s] %>
+<%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
+  <%= f.select :facility_category_id, options_for_select(@facility_categories.to_options, @facility_category.try(:id)), include_blank: t('gws/schedule.tabs.facility') if @facility_categories.present? %>
+  <%= f.select :category_id, options_for_select(@schedule_categories.to_options, @schedule_category.try(:id)), include_blank: " " if @schedule_categories.present? %>
+  <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.placeholders.search_plans") %>
+  <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+<% end %>
