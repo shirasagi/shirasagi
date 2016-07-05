@@ -1,7 +1,3 @@
-<%
-traverser = Gws::Share::CategoryTraverser.build(@cur_site, @cur_user)
-return if traverser.blank?
-%>
 <%= jquery do %> SS_AddonTabs.hide(".mod-gws-share-category"); <% end %>
 
 <dl class="see mod-gws-share-category gws-category-tree">

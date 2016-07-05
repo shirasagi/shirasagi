@@ -6,25 +6,28 @@ class Gws::Schedule::FacilitiesController < ApplicationController
   before_action :set_category, only: :index
 
   private
-    def set_category
-      @categories = Gws::Facility::CategoryTraverser.build(@cur_site, @cur_user)
-      @categories = @categories.flatten
+    def category_criteria
+      Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site)
+    end
 
-      @category = params[:s] ? params[:s][:category] : nil
-      if @category.present?
-        @category = Gws::Facility::Category.site(@cur_site).find(@category) rescue nil
+    def set_category
+      @categories = category_criteria.tree_sort
+
+      category_id = params.dig(:s, :category)
+      if category_id.present?
+        @category = category_criteria.find(category_id) rescue nil
       end
 
       @category ||= begin
         c = @categories.find { |c| c.id.present? }
-        c = Gws::Facility::Category.site(@cur_site).find(c.id) rescue nil
+        c = category_criteria.find(c.id) rescue nil
         c
       end
     end
 
     def category_ids
       return if @category.blank?
-      ids = Gws::Facility::Category.site(@cur_site).where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
+      ids = category_criteria.where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
       ids << @category.id
     end
 

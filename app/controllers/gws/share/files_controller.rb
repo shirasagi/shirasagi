@@ -18,8 +18,9 @@ class Gws::Share::FilesController < ApplicationController
     end
 
     def set_category
-      if params[:category].present?
-        @category ||= Gws::Share::Category.site(@cur_site).where(id: params[:category]).first
+      @categories = Gws::Share::Category.site(@cur_site).readable(@cur_user, @cur_site).tree_sort
+      if category_id = params[:category].presence
+        @category ||= Gws::Share::Category.site(@cur_site).where(id: category_id).first
       end
     end
 

@@ -6,20 +6,23 @@ class Gws::Apis::FacilitiesController < ApplicationController
   before_action :set_category
 
   private
-    def set_category
-      @groups = Gws::Facility::CategoryTraverser.build(@cur_site)
-      @groups = @groups.flatten
+    def category_criteria
+      Gws::Facility::Category.site(@cur_site).readable(@cur_user, @cur_site)
+    end
 
-      @group = params[:s] ? params[:s][:group].presence : nil
-      if @group
-        @group = Gws::Facility::Category.site(@cur_site).find(@group) rescue nil
+    def set_category
+      @categories = category_criteria.tree_sort
+
+      category_id = params.dig(:s, :category)
+      if category_id
+        @category = category_criteria.find(category_id) rescue nil
       end
     end
 
     def category_ids
-      return if @group.blank?
-      ids = Gws::Facility::Category.site(@cur_site).where(name: /^#{Regexp.escape(@group.name)}\//).pluck(:id)
-      ids << @group.id
+      return if @category.blank?
+      ids = category_criteria.where(name: /^#{Regexp.escape(@category.name)}\//).pluck(:id)
+      ids << @category.id
     end
 
   public
@@ -31,7 +34,7 @@ class Gws::Apis::FacilitiesController < ApplicationController
         reservable(@cur_user).
         active.
         search(params[:s])
-      @items = @items.in(category_id: category_ids) if @group.present?
+      @items = @items.in(category_id: category_ids) if @category.present?
       @items = @items.page(params[:page]).per(50)
     end
 end

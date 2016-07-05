@@ -84,41 +84,48 @@ class SS::TreeList
     @items.each { |item, parts, orders| yield item }
   end
 
-  def to_options
-    @items.map { |item, parts, orders| [ option_name(item), item.id ] }
+  def to_options(options = {})
+    if depth = options[:depth]
+      @items.select { |item, _, _| item.depth <= depth }.map { |item, _, _| [ option_name(item), item.id ] }
+    else
+      @items.map { |item, _, _| [ option_name(item), item.id ] }
+    end
   end
 
   private
     def join_part(part_orders)
       ret = []
-
       pending_part_order = nil
-      while part_order = part_orders.shift
-        part = part_order[0]
-        order = part_order[1]
 
-        if order != MAX_ORDER
-          if pending_part_order
-            pending_part_order[0] << '/' << part
-            pending_part_order[1] = order
-            ret << pending_part_order
-            pending_part_order = nil
-          else
-            ret << part_order
-          end
+      reducer = ->(part, order) do
+        if pending_part_order
+          pending_part_order[0] << '/' << part
+          pending_part_order[1] = order
+          ret << pending_part_order
+          pending_part_order = nil
         else
-          if pending_part_order
-            pending_part_order[0] << "/#{part}"
-          else
-            pending_part_order = part_order.dup
-          end
+          ret << [ part, order ]
         end
       end
 
-      if pending_part_order
-        ret << pending_part_order
+      shifter = ->(part, order) do
+        if pending_part_order
+          pending_part_order[0] << "/#{part}"
+        else
+          pending_part_order = [ part, order ]
+        end
       end
 
+      while part_order = part_orders.shift
+        order = part_order[1]
+        if order != MAX_ORDER
+          reducer.call(*part_order)
+        else
+          shifter.call(*part_order)
+        end
+      end
+
+      ret << pending_part_order if pending_part_order
       ret
     end
 

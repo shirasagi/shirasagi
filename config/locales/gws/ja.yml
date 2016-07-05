@@ -115,6 +115,7 @@ ja:
         state: 状態
         name: 種別名
         color: 表示色
+        order: 並び順
         bg_color: 背景色
         text_color: 文字色
       gws/user:
@@ -196,6 +197,9 @@ ja:
         - 表示色を入力します。
         -
         - 表示色は "#RRGGBB" 形式で入力します（RR, GG, BB はそれぞれ赤、緑、青の成分を16進数で入力）。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
     gws/user:
       gws_main_group_ids:
         - ユーザーの所属する主なグループを選択します。

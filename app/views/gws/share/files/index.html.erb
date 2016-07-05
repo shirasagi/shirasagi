@@ -1,10 +1,5 @@
 <%
-categories = Gws::Share::CategoryTraverser.build(@cur_site, @cur_user)
-category = nil
-if params[:category].present?
-  category = Gws::Share::Category.site(@cur_site).find(params[:category]) rescue nil
-end
-options = options_for_select(categories.to_options, category.try(:id))
+options = options_for_select(@categories.to_options, @category.try(:id))
 %>
 <%= jquery do %>
 
