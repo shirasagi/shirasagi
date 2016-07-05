@@ -13,8 +13,7 @@
   </div>
 
 <% else %>
-
-  <%= html_editor ".mod-cms-body .html" %>
+  <%= html_editor ".mod-cms-body .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
   <%= jquery do %>
     Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
     Link_Checker.rootUrl           = "<%= @cur_site.full_url %>";

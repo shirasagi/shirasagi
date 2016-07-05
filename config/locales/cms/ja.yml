@@ -149,6 +149,7 @@ ja:
     edit_cms_editor_templates: テンプレートの管理
     #edit_cms_body_layouts: 本文レイアウトの管理
     use_cms_tools: 運用ツールの利用
+    use_cms_editor_extensions: エディターの高度な利用
     read_other_cms_nodes: フォルダーの閲覧（全て）
     read_private_cms_nodes: フォルダーの閲覧（所有）
     edit_other_cms_nodes: フォルダーの編集（全て）

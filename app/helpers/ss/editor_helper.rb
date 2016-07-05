@@ -76,6 +76,11 @@ module SS::EditorHelper
       public_side_options ||= {}
       base_opts.merge!(public_side_options.symbolize_keys)
     end
+    if opts.delete(:advanced)
+      advanced_options = SS.config.cms.ckeditor['advanced_options'].presence
+      advanced_options ||= {}
+      base_opts.merge!(advanced_options.symbolize_keys)
+    end
 
     opts.reverse_merge!(base_opts)
     opts[:extraPlugins] = opts[:extraPlugins].join(',') if opts[:extraPlugins].is_a?(Array)

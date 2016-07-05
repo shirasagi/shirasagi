@@ -1,4 +1,4 @@
-<%= html_editor ".ezine-signature-html", height: "400px" %>
+<%= html_editor ".ezine-signature-html", height: "400px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
 <dl class="see mod-ezine-page-body">
   <dt><%= @model.t :signature_html %><%= @model.tt :signature_html %></dt>

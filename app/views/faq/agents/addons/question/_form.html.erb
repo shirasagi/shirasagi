@@ -1,4 +1,4 @@
-<%= html_editor ".mod-faq-question .question", height: "300px" %>
+<%= html_editor ".mod-faq-question .question", height: "300px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
 <%= jquery do %>
   $("dl.mod-cms-body").prevAll("header").text("<%= @model.t :answer %>");
