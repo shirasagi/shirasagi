@@ -27,7 +27,7 @@
   <% if hist = @item.histories.where(mode: 'update').first %>
   <div class="popup-attr popup-history">
     <div class="popup-label"><%= t "gws.history.user.update" %></div>
-    <div class="popup-value">5
+    <div class="popup-value">
       <span class="user"><%= hist.user_long_name %></span>
       <% if hist.user_tel %><span class="tel"><%= hist.user_tel %></span><% end %>
     </div>
