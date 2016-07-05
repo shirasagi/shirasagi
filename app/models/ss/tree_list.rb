@@ -47,16 +47,16 @@ class SS::TreeList
           found = item if item.name == full_name
           found ||= items.find { |item| item.name == full_name }
           if found.present?
-            [ part, found.order || 0 ]
+            [ part, found.order || 0, found.id ]
           else
-            [ part, MAX_ORDER ]
+            [ part, MAX_ORDER, MAX_ORDER ]
           end
         end
       end
 
       def compare_orders(lhs, rhs)
-        lhs_item, lhs_parts, lhs_orders = lhs
-        rhs_item, rhs_parts, rhs_orders = rhs
+        lhs_item, lhs_parts, lhs_orders, lhs_ids = lhs
+        rhs_item, rhs_parts, rhs_orders, rhs_ids = rhs
 
         d = 0
         max = lhs_orders.length >= rhs_orders.length ? lhs_orders.length : rhs_orders.length
@@ -65,8 +65,11 @@ class SS::TreeList
           rhs_order = rhs_orders[idx] || 0
           lhs_part = lhs_parts[idx]
           rhs_part = rhs_parts[idx]
+          lhs_id = lhs_ids[idx] || 0
+          rhs_id = rhs_ids[idx] || 0
 
           d = lhs_order <=> rhs_order
+          d = lhs_id <=> rhs_id if d == 0
           # In the case of virtual part, compare with the name
           d = lhs_part <=> rhs_part if d == 0 && lhs_order == MAX_ORDER
           break d if d != 0
