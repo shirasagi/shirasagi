@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "gws_apis_facilities", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:path) { gws_apis_facilities_path site }
-  let(:item) { create :gws_facility, name: 'Facility' }
+  let(:item) { create :gws_facility_item, name: 'Facility' }
 
   it "without login" do
     visit path

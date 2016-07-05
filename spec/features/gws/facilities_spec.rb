@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_facility_items", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:item) { create :gws_facility }
+  let(:item) { create :gws_facility_item }
   let(:index_path) { gws_facility_items_path site }
   let(:new_path) { new_gws_facility_item_path site }
   let(:show_path) { gws_facility_item_path site, item }

@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :gws_facility, class: Gws::Facility::Item do
+  factory :gws_facility_item, class: Gws::Facility::Item do
     cur_site { gws_site }
     cur_user { gws_user }
 

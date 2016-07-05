@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_schedule_facility_plans", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:facility) { create :gws_facility }
+  let(:facility) { create :gws_facility_item }
   let(:item) { create :gws_schedule_facility_plan, facility_ids: [facility.id] }
   let(:index_path) { gws_schedule_facility_plans_path site, facility }
   let(:new_path) { new_gws_schedule_facility_plan_path site, facility }

@@ -4,7 +4,7 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
   let(:site) { gws_site }
 
   describe "facility_plan_with_max_hour" do
-    let(:facility) { create :gws_facility }
+    let(:facility) { create :gws_facility_item }
     let(:item) { build :gws_schedule_plan, name: 'test', facility_ids: [facility.id] }
 
     before do
