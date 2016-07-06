@@ -12,7 +12,7 @@ module Cms::PublicFilter
     before_action :parse_path
     before_action :compile_scss
     before_action :x_sendfile, unless: ->{ filters.include?(:mobile) || filters.include?(:kana) }
- end
+  end
 
   def index
     if @cur_path =~ /\.p[1-9]\d*\.html$/
