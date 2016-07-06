@@ -48,6 +48,7 @@ class @Gws_Reminder
         success: (data)->
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').hide()
           item.find('.restore').show()
+          item.find('.notification').hide()
           return false
         error: (data)->
           alert('Error')
@@ -66,6 +67,28 @@ class @Gws_Reminder
         success: (data)->
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').show()
           item.find('.restore').hide()
+          if item.find('.notification')[0]
+            item.find('.notification')[0].selectedIndex = 0
+          item.find('.notification').show()
+          return false
+        error: (data)->
+          alert('Error')
+
+    $('.list-item .notification').change ->
+      item = $(this).closest('.list-item')
+      idx = this.selectedIndex
+      value = this.options[idx].value
+      $.ajax
+        url: "#{opts['url']}/notifications"
+        method: 'post'
+        data:
+          item:
+            item_id: item.data('id')
+            model: item.data('model')
+            in_notify_before: value
+        success: (data)->
+          #item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').hide()
+          #item.find('.restore').show()
           return false
         error: (data)->
           alert('Error')

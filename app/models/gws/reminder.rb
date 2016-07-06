@@ -15,6 +15,7 @@ class Gws::Reminder
   field :updated_user_uid, type: String
   field :updated_user_name, type: String
   field :updated_date, type: DateTime
+  embeds_many :notifications, class_name: "Gws::Reminder::Notification"
 
   permit_params :name, :model, :date, :item_id
 
@@ -55,5 +56,11 @@ class Gws::Reminder
   def updated_field_names
     return [] if updated_fields.blank?
     updated_fields.map { |m| item.try(:t, m) }.compact.uniq
+  end
+
+  def notification_options
+    %w(-1 10 30 60).map do |v|
+      [ I18n.t("gws.options.reminder/notification.#{v}"), v ]
+    end
   end
 end
