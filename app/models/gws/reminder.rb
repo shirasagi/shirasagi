@@ -34,6 +34,23 @@ class Gws::Reminder
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
     criteria
   }
+  scope :notification_activated, -> {
+    where("notifications.notify_at" => { "$exists" => true, "$ne" => Time.zone.at(0) })
+  }
+  scope :notify_around, ->(from, to) {
+    notification_activated.where("notifications.notify_at" => { "$gte" => from, "$lt" => to })
+  }
+
+  class << self
+    def send_notification_mail(from, to)
+      reminder_ids = notify_around(from, to).pluck(:id)
+      reminder_ids.each do |reminder_id|
+        item = find(reminder_id)
+        mail = Gws::Reminder::Mailer.notify_mail(item)
+        mail.deliver_now if mail.present?
+      end
+    end
+  end
 
   def item
     @item ||= model.camelize.constantize.where(id: item_id).first

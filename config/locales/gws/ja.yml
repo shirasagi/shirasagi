@@ -13,6 +13,8 @@ ja:
       states:
         entry: 登録済み
         empty: 未登録
+      notification:
+        subject: "[リマインダー] %{model} - %{name}"
     history:
       mode:
         create: 登録
