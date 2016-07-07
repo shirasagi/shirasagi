@@ -17,6 +17,13 @@ SS::Application.routes.draw do
       get :download, on: :member
     end
 
+    namespace "messages" do
+      get "/" => "main#index"
+      resources :threads, concerns: :deletion do
+        resources :posts, concerns: :deletion
+      end
+    end
+
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
     end
