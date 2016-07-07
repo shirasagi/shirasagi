@@ -244,3 +244,7 @@ ja:
         - このページを閲覧可能にするグループを選択します。
       readable_member_ids:
         - このページを閲覧可能にするユーザーを選択します。
+
+  job:
+    models:
+      gws/reminder/notification_job: リマインダー通知
