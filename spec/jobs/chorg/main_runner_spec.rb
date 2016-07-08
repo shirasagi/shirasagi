@@ -21,7 +21,7 @@ describe Chorg::MainRunner, dbscope: :example do
     let(:changeset) { create(:move_changeset, revision_id: revision.id, source: group) }
 
     context "with Article::Page" do
-      let(:page) { create(:revisoin_page, site: site, group: group) }
+      let(:page) { create(:revisoin_page, cur_site: site, group: group) }
 
       it do
         # ensure create models
@@ -54,7 +54,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:changeset) { create(:move_changeset_only_name, revision_id: revision.id, source: group) }
 
       context "with Article::Page" do
-        let(:page) { create(:revisoin_page, site: site, group: group) }
+        let(:page) { create(:revisoin_page, cur_site: site, group: group) }
 
         it do
           # ensure create models
@@ -92,7 +92,7 @@ describe Chorg::MainRunner, dbscope: :example do
                group_ids: [group.id], cms_role_ids: [cms_role.id])
       end
       let(:page) do
-        page = build(:revisoin_page, site: site, group: group, workflow_user_id: user1.id,
+        page = build(:revisoin_page, cur_site: site, group: group, workflow_user_id: user1.id,
                workflow_state: "request",
                workflow_comment: "",
                workflow_approvers: [{level: 1, user_id: user2.id, state: "request", comment: ""}],
@@ -131,7 +131,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
       let(:revision) { create(:revision, site_id: site.id) }
       let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
-      let(:page) { create(:revisoin_page, site: site, group: group1) }
+      let(:page) { create(:revisoin_page, cur_site: site, group: group1) }
 
       it do
         # ensure create models
@@ -171,7 +171,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:changeset) do
         create(:unify_changeset, revision_id: revision.id, sources: [group1, group2], destination: group1)
       end
-      let(:page) { create(:revisoin_page, site: site, group: group1) }
+      let(:page) { create(:revisoin_page, cur_site: site, group: group1) }
 
       it do
         # ensure create models
@@ -222,7 +222,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:changeset) do
         create(:division_changeset, revision_id: revision.id, source: group0, destinations: [group1, group2])
       end
-      let(:page) { create(:revisoin_page, site: site, group: group0) }
+      let(:page) { create(:revisoin_page, cur_site: site, group: group0) }
 
       it do
         # ensure create models
@@ -258,7 +258,7 @@ describe Chorg::MainRunner, dbscope: :example do
       let(:changeset) do
         create(:division_changeset, revision_id: revision.id, source: group1, destinations: [group1, group2])
       end
-      let(:page) { create(:revisoin_page, site: site, group: group1) }
+      let(:page) { create(:revisoin_page, cur_site: site, group: group1) }
 
       it do
         # ensure create models

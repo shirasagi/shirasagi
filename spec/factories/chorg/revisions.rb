@@ -17,11 +17,10 @@ FactoryGirl.define do
 
   factory :revisoin_page, class: Article::Page do
     transient do
-      site nil
       group nil
     end
 
-    site_id { site.id }
+    cur_site { site }
     name "自動交付機・コンビニ交付サービスについて"
     filename { group.contact_email.gsub(/[@.]+/, "_") }
     layout_id 10

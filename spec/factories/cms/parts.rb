@@ -1,7 +1,7 @@
 FactoryGirl.define do
   trait :cms_part do
-    site_id { cur_site ? cur_site.id : cms_site.id }
-    user_id { cur_user ? cur_user.id : cms_user.id }
+    cur_site { cms_site }
+    cur_user { cms_user }
     name { unique_id.to_s }
     filename { "#{unique_id}.part.html" }
     route "cms/free"

@@ -1,7 +1,7 @@
 FactoryGirl.define do
   trait :gws_role do
-    site_id { gws_site.id }
-    user_id { gws_user.id }
+    cur_site { gws_site }
+    cur_user { gws_user }
     name { "role-#{unique_id}" }
     permissions []
     permission_level 1

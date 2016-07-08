@@ -3,7 +3,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "#{n}@example.jp" }
     email_type "text"
     state "enabled"
-    site_id { cms_site.id }
+    cur_site { cms_site }
     association :node, factory: :ezine_node
   end
 end

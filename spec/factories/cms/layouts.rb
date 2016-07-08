@@ -1,7 +1,7 @@
 FactoryGirl.define do
   trait :cms_layout do
-    site_id { cms_site.id }
-    user_id { cms_user.id }
+    cur_site { cms_site }
+    cur_user { cms_user }
     name { unique_id.to_s }
     filename { "#{unique_id}.layout.html" }
     html { "<html><head></head><body></ yield /></body></html>" }

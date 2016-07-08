@@ -1,12 +1,10 @@
 FactoryGirl.define do
   factory :job_model, class: Job::Task do
     transient do
-      site nil
-      user nil
+      cur_site { cms_site }
     end
 
-    site_id { site.present? ? site.id : nil }
-    user_id { user.present? ? user.id : nil }
+    site_id { cur_site.try(:id) }
     pool "default"
     class_name "Class"
     args [ "hello" ]

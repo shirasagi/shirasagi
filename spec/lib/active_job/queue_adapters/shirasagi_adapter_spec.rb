@@ -12,7 +12,13 @@ describe ActiveJob::QueueAdapters::ShirasagiAdapter, dbscope: :example do
   end
 
   before do
+    @save_job_default = SS.config.job.default
+    SS.config.replace_value_at(:job, :default, @save_job_default.merge('mode' => 'on_demand'))
     Job::Task.create!(name: Job::Service.config.name)
+  end
+
+  after do
+    SS.config.replace_value_at(:job, :default, @save_job_default)
   end
 
   describe ".enqueue" do
