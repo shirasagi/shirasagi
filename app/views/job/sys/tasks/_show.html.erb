@@ -1,0 +1,54 @@
+<%= jquery do %>
+  if ($(".state").html().match(/(ready|running)/)) {
+    $(".reset-state").show();
+  } else {
+    $(".reset-state").hide();
+  }
+
+  $(".reset-state").on("click", function() {
+    $.ajax({
+      type: "POST",
+      url: "<%= url_for(action: :reset_state, format: :json) %>",
+      success: function(data) {
+        $(".state").html(data.state)
+        if ($(".state").html().match(/(ready|running)/)) {
+          $(".reset-state").show();
+        } else {
+          $(".reset-state").hide();
+        }
+      }
+    });
+  });
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :site_id %></dt>
+  <dd><%= tryb { @item.site.name } %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd>
+    <span class="state"><%= @item.state %></span>
+    <%= button_tag t('job.button.reset'), class: 'btn reset-state', type: :reset, style: 'display: none' %>
+  </dd>
+
+  <dt><%= @model.t :interrupt %></dt>
+  <dd><%= @item.interrupt %></dd>
+
+  <dt><%= @model.t :started %></dt>
+  <dd><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :closed %></dt>
+  <dd><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :total_count %></dt>
+  <dd><%= @item.total_count %></dd>
+
+  <dt><%= @model.t :current_count %></dt>
+  <dd><%= @item.current_count %></dd>
+
+  <dt><%= @model.t :logs %></dt>
+  <dd><%= text_area_tag :logs, @item.logs.blank? ? "" : safe_join(@item.logs, "\n"), readonly: true, style: "height: 400px" %></dd>
+</dl>

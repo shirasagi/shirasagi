@@ -1,0 +1,10 @@
+<nav class="mod-navi">
+  <h2><%= t "job.main" %></h2>
+
+  <% if SS::User.allowed?(:edit, @cur_user) %>
+    <h3><%= link_to :"job.log", job_sys_logs_path %></h3>
+    <h3><%= link_to :"job.task", job_sys_tasks_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "sys/main/navi" %>

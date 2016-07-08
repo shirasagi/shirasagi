@@ -17,7 +17,6 @@ ja:
     site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
     site_copy/started_job: サイト複製を開始しました。
     site_copy/task_status: 実行状況
-    site_copy/reseted_state: 状態を初期化しました。
     roles:
       admin: 管理者
     auth: 認証

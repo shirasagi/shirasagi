@@ -5,14 +5,18 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="tap-menu">
-        <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user) %>
-        <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user) %>
-        <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user) %>
+        <% if @tap_menu %>
+          <% @tap_menu.call item %>
+        <% else %>
+          <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user) %>
+          <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user) %>
+          <%= link_to :delete, action: :delete, id: item  if item.allowed?(:delete, @cur_user) %>
 
-        <% if item.try(:image) %>
-          <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
-        <% elsif item.try(:image?) %>
-          <%= link_to image_tag("#{item.thumb_url}?_=#{item.updated.to_i}", alt: ''), item.url, { class: "thumb", target: "_blank" } %>
+          <% if item.try(:image) %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+          <% elsif item.try(:image?) %>
+            <%= link_to image_tag("#{item.thumb_url}?_=#{item.updated.to_i}", alt: ''), item.url, { class: "thumb", target: "_blank" } %>
+          <% end %>
         <% end %>
       </nav>
 

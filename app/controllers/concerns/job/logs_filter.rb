@@ -15,7 +15,7 @@ module Job::LogsFilter
 
     def set_item
       @item = @model.site(@cur_site).find(params[:id])
-      raise "403" unless @item
+      raise "404" unless @item
     end
 
   public
@@ -35,7 +35,7 @@ module Job::LogsFilter
       from = @model.term_to_date params[:item][:save_term]
       raise "400" if from == false
 
-      cond = { site_id: @cur_site.id }
+      cond = { site_id: @cur_site.try(:id) }
       cond[:created] = { "$gte" => from } if from
 
       @items = @model.where(cond).sort(closed: 1)

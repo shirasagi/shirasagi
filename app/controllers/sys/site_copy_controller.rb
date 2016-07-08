@@ -65,20 +65,4 @@ class Sys::SiteCopyController < ApplicationController
         end
       end
     end
-
-    def reset_state
-      set_item
-      @item.state = 'stop'
-      if @item.save
-        respond_to do |format|
-          format.html { redirect_to({ action: :index }, { notice: I18n.t('sys.site_copy/reseted_state') }) }
-          format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
-        end
-      else
-        respond_to do |format|
-          format.html { render action: :index }
-          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
-        end
-      end
-    end
 end
