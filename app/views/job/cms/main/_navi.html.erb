@@ -1,0 +1,10 @@
+<nav class="mod-navi">
+  <h2><%= t "job.main" %></h2>
+
+  <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"job.log", job_cms_logs_path %></h3>
+    <h3><%= link_to :"job.task", job_cms_tasks_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/conf_navi" %>

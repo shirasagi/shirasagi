@@ -19,7 +19,7 @@ ja:
       reseted_state: 状態を初期化しました。
     button:
       restore: 復元
-      reset: 初期化
+      reset: 停止する
     state:
       stop: 停止
       start: 開始

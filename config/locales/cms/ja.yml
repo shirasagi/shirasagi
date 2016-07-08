@@ -255,6 +255,7 @@ ja:
       cms/notice: お知らせ
       cms/page_search: ページ検索
       cms/postal_code: 郵便番号
+      cms/task: タスク
     attributes:
       cms/content:
         released: 公開日時
@@ -389,6 +390,8 @@ ja:
         search_updated_close: 更新日時（終了）
         search_state: ステータス
         search_approver_state: 承認ステータス
+      cms/task:
+        node_id: フォルダー
 
   errors:
     messages:
