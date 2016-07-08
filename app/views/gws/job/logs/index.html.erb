@@ -1,0 +1,13 @@
+<% @index_title = proc do |item| %>
+  <% title = t(item.class_name.underscore, scope: "job.models") %>
+  <%= link_to title, { action: :show, id: item }, class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.job_id %></span>
+  <span class="state"><%= t(item.state, scope: "job.state") %></span>
+  <span class="datetime"><%= tryb { item.started.strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="datetime"><%= tryb { item.closed.strftime("%Y/%m/%d %H:%M") } %></span>
+<% end %>
+
+<%= render file: "gws/crud/index.html.erb" %>

@@ -33,12 +33,3 @@ ja:
   mongoid:
     models:
       job/log: ジョブ実行履歴
-    attributes:
-      job/log:
-        class_name: ジョブ名
-        started: 開始日時
-        closed: 終了日時
-        state: 状態
-        args: パラメータ
-        logs: ログ
-        save_term: 保存期間

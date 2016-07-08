@@ -9,4 +9,8 @@ class Job::Sys::LogsController < ApplicationController
     def filter_permission
       raise "403" unless SS::User.allowed?(:edit, @cur_user)
     end
+
+    def log_criteria
+      @model.all
+    end
 end

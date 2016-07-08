@@ -9,6 +9,8 @@ module SS::Model::JobLog
   STATE_FAILED = "failed".freeze
 
   included do
+    store_in collection: "job_logs"
+
     index({ updated: -1 })
 
     attr_accessor :save_term

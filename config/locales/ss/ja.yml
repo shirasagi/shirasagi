@@ -314,6 +314,15 @@ ja:
         image_size_name: 画像サイズ名
         thumb_width: 幅
         thumb_height: 高さ
+      ss/model/job_log:
+        job_id: ジョブID
+        class_name: ジョブ名
+        started: 開始日時
+        closed: 終了日時
+        state: 状態
+        args: パラメータ
+        logs: ログ
+        save_term: 保存期間
 
   tooltip:
     ss/model/user:

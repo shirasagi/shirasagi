@@ -1,0 +1,7 @@
+ja:
+  gws_role:
+    read_gws_job_logs: ジョブ実行履歴の閲覧
+
+  mongoid:
+    models:
+      gws/job/log: ジョブ実行履歴

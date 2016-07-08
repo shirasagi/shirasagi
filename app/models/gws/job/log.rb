@@ -1,31 +1,19 @@
 class Gws::Job::Log
   include SS::Model::JobLog
+  # include Gws::Reference::Site
+  include Gws::SitePermission
 
-  belongs_to :site, class_name: "Gws::Group"
+  belongs_to :group, class_name: "Gws::Group"
+  validates :group_id, presence: true
+  scope :site, ->(site) { where( group_id: site.id ) }
+
+  alias :site :group
+  alias :site_id :group_id
 
   class << self
-    # def add(task)
-    #   # copy all members
-    #   log = Gws::Job::Log.new(
-    #     site_id: task.site_id,
-    #     user_id: task.user_id,
-    #     job_id: task.id,
-    #     state: task.state,
-    #     started: task.started,
-    #     closed: task.closed,
-    #     logs: task.logs,
-    #     pool: task.pool,
-    #     class_name: task.class_name,
-    #     args: task.args,
-    #     priority: task.priority,
-    #     at: task.at)
-    #   log.save!
-    #   log
-    # end
-
     def create_from_active_job(job)
       self.create(
-        site_id: job.try(:site_id),
+        group_id: job.try(:site_id),
         user_id: job.try(:user_id),
         job_id: job.job_id,
         state: 'stop',
