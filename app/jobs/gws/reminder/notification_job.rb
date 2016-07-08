@@ -14,6 +14,8 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
       if mail.present?
         Rails.logger.info("#{mail.to.first}: リマインダーメール送信")
         mail.deliver_now
+        item.notifications.first.delivered_at = Time.zone.now
+        item.save!
         send_count += 1
       end
     end

@@ -3,6 +3,7 @@ class Gws::Reminder::Notification
 
   attr_accessor :in_notify_before
   field :notify_at, type: DateTime
+  field :delivered_at, type: DateTime
 
   embedded_in :reminder, inverse_of: :notifications
 
@@ -30,6 +31,7 @@ class Gws::Reminder::Notification
       else
         # enable notification
         self.notify_at = reminder.date - in_notify_before.minutes
+        self.delivered_at = Time.zone.at(0)
       end
     end
 end

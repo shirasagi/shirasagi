@@ -35,7 +35,9 @@ class Gws::Reminder
     criteria
   }
   scope :notification_activated, -> {
-    where("notifications.notify_at" => { "$exists" => true, "$ne" => Time.zone.at(0) })
+    where(
+      "notifications.notify_at" => { "$exists" => true, "$ne" => Time.zone.at(0) },
+      "notifications.delivered_at" => Time.zone.at(0))
   }
   scope :notify_between, ->(from, to) {
     notification_activated.where("notifications.notify_at" => { "$gte" => from, "$lt" => to })
