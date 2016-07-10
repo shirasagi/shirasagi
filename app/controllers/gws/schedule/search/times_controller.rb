@@ -4,12 +4,34 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   include Gws::Schedule::PlanFilter
 
   def index
-    @items = []
-    return if params.dig(:s, :member_ids).blank?
+    @s = params[:s] || {}
+    @schedule_params = {}
+    or_cond = []
 
-    safe_params = params.require(:s).permit(member_ids: [])
-    @members = Gws::User.site(@cur_site).any_in(id: safe_params[:member_ids])
-    return if @members.blank?
+    if @s[:member_ids].class == Array
+      @members = Gws::User.site(@cur_site).
+        active.
+        any_in(id: @s[:member_ids])
+
+      if @members.present?
+        @schedule_params[:member_ids] = @members.map(&:id)
+        or_cond << { member_ids: { '$in' => @schedule_params[:member_ids] } }
+      end
+    end
+
+    if @s[:facility_ids].class == Array
+      @facilities = Gws::Facility::Item.site(@cur_site).
+        readable(@cur_user, @cur_site).
+        active.
+        any_in(id: @s[:facility_ids])
+
+      if @facilities.present?
+        @schedule_params[:facility_ids] = @facilities.map(&:id)
+        or_cond << { facility_ids: { '$in' => @schedule_params[:facility_ids] } }
+      end
+    end
+
+    return @items = [] if or_cond.blank?
 
     sdate = Time.zone.today
     edate = sdate + 21.days
@@ -19,8 +41,8 @@ class Gws::Schedule::Search::TimesController < ApplicationController
     @hours = (min_hour..max_hour).to_a
 
     plans = Gws::Schedule::Plan.site(@cur_site).
-      any_in(member_ids: @members.map(&:id)).
-      between_dates(sdate.to_s, edate.to_s)
+      between_dates(sdate.to_s, edate.to_s).
+      and('$or' => or_cond)
 
     @items = plans.free_times(sdate, edate, min_hour, max_hour)
   end

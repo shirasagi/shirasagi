@@ -6,11 +6,13 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
 
 <section class="main-box gws-schedule-box">
   <header>
-    <h2><%= t('gws/schedule.placeholders.search_users') %></h2>
-    <nav><%= render "search" %></nav>
+    <h2><%= t('gws/schedule.tabs.search') %></h2>
   </header>
 
+  <%= render "search" %>
+
   <% if @items.present? %>
+  <div class="gws-schedule-search-hr"></div>
   <div class="calendar" id="calendar-controller"></div>
   <% end %>
 

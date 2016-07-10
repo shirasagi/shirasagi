@@ -24,7 +24,7 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example do
       expect(current_path).not_to eq sns_login_path
 
       within "form.search" do
-        click_button "検索"
+        first('input[type=submit]').click
       end
       expect(page).to have_content(gws_user.name)
     end

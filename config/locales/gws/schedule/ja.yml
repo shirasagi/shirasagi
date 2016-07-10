@@ -4,7 +4,9 @@ ja:
     private_plan: 予定あり
     loading: 読み込み中
     no_plan: 予定はありません
-    free_time_mark: ●
+    search_plans: 予定を検索
+    search_users: ユーザーを検索
+    search_times: 空き時間を検索
 
     tabs:
       personal: 個人
@@ -12,7 +14,6 @@ ja:
       group: 全体
       facility: 設備予約
       search: 検索
-
     calendar:
       buttonText:
         listMonth: リスト
@@ -20,10 +21,6 @@ ja:
         month: YYYY年 M月
         week: (YYYY年 M月 D日（ddd）)
         day: YYYY年 M月 D日（ddd）
-    placeholders:
-      search_plans: 予定を検索
-      search_users: ユーザーを検索
-      search_times: 空いている時間帯を検索
     links:
       add_plan: 予定を作成
       show_month: 月表示

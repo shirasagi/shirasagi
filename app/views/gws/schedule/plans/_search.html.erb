@@ -6,6 +6,6 @@ category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
   <%= f.select :category_id, category_options, include_blank: " " if category_options.present? %>
-  <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.placeholders.search_plans") %>
+  <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
 <% end %>
