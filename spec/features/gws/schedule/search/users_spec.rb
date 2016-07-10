@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "gws_schedule_searc_plans", type: :feature, dbscope: :example do
+describe "gws_schedule_search_users", type: :feature, dbscope: :example do
   let(:site) { gws_site }
-  let(:path) { gws_schedule_search_plans_path site }
+  let(:path) { gws_schedule_search_users_path site }
 
   it "without login" do
     visit path

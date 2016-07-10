@@ -1,0 +1,5 @@
+<% @s = OpenStruct.new params[:s] %>
+<%= form_for :s, url: gws_schedule_search_users_path, html: { method: :get, class: :search } do |f| %>
+  <%= f.text_field :keyword, style: "width: 200px;", placeholder: t("gws/schedule.placeholders.search_users") %>
+  <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+<% end %>

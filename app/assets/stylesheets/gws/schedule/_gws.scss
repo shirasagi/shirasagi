@@ -83,6 +83,49 @@
     }
   }
 }
+.gws-schedule-search-title {
+  margin: 0 0 10px;
+  padding: 0 0 0 8px;
+  border-left: 3px solid #888;
+}
+.gws-schedule-search-users {
+  margin: 0 0 20px;
+  padding: 0 0 20px;
+  border-bottom: 1px solid #eee;
+}
+.gws-schedule-search-times-members {
+  dt {
+    margin: 0;
+  }
+  dd {
+    margin: 10px 0 0;
+  }
+}
+.gws-schedule-search-times-result {
+  .date {
+    min-width: 160px;
+  }
+  .hour {
+    min-width: 30px;
+    border-left: 1px solid #ddd;
+    text-align: center;
+  }
+  th.hour {
+    padding: 6px 0;
+  }
+  td.hour {
+    padding: 0;
+    color: #ccc;
+    a, span {
+      display: block;
+      padding: 6px 2px;
+      text-align: center;
+    }
+    a:hover {
+      color: $black;
+    }
+  }
+}
 
 // Form
 .gws-schedule-plan .dates-field {

@@ -1,13 +1,11 @@
-class Gws::Schedule::SearchPlansController < ApplicationController
+class Gws::Schedule::Search::UsersController < ApplicationController
   include Gws::BaseFilter
   #include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
 
   def index
-    if params[:s].blank?
-      @items = []
-      return
-    end
+    @items = []
+    return if params.dig(:s, :keyword).blank?
 
     @items = Gws::User.site(@cur_site).
       active.

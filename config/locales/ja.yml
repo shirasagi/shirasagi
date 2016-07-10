@@ -33,8 +33,8 @@ ja:
     formats:
       default: ! '%Y/%1m/%1d'
       iso: ! '%Y-%m-%d'
-      long: ! '%Y年%1m月%1d日' #(%a)
-      full: ! '%Y年%1m月%1d日 %1H時%M分'
+      long: ! '%Y年%1m月%1d日'
+      full: ! '%Y年%1m月%1d日 (%a)'
       short: ! '%1m/%1d'
     month_names:
     -
