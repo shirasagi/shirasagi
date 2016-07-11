@@ -25,6 +25,8 @@ module Cms::Model::Page
     after_save :generate_file, if: ->{ @db_changes }
     after_save :remove_file, if: ->{ @db_changes && @db_changes["state"] && !public? }
     after_destroy :remove_file
+
+    template_variable_handler(:categories, :template_variable_handler_categories)
   end
 
   def date
@@ -144,6 +146,16 @@ module Cms::Model::Page
 
     def fix_extname
       ".html"
+    end
+
+    def template_variable_handler_categories(name, issuer)
+      ret = categories.map do |category|
+        html = "<span class=\"#{category.filename.tr('/', '-')}\">"
+        html << "<a href=\"#{category.url}\">#{ERB::Util.html_escape(category.name)}</a>"
+        html << "</span>"
+        html
+      end
+      ret.join("\n").html_safe
     end
 
   module ClassMethods
