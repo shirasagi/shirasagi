@@ -177,4 +177,22 @@ describe Article::Part::Page, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe '#render_loop_html - current' do
+    let(:page) { create(:article_page) }
+
+    it do
+      expect(item.render_loop_html(page, html: '#{current}')).to eq('#{current}')
+    end
+  end
+
+  describe '#render_loop_html - categories' do
+    let(:node_category) { create :category_node_page }
+    let(:page) { create(:article_page, category_ids: [ node_category.id ]) }
+
+    it do
+      expect(item.render_loop_html(page, html: '#{categories}')).to \
+        eq("<span class=\"#{node_category.filename}\"><a href=\"#{node_category.url}\">#{node_category.name}</a></span>")
+    end
+  end
 end
