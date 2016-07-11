@@ -1,6 +1,10 @@
 module Map::MapHelper
   def include_googlemaps_api
-    controller.javascript "//maps.googleapis.com/maps/api/js?v=3"
+    params = {}
+    params[:v] = 3
+    params[:key] = SS.config.map.api_key if SS.config.map.api_key.present?
+
+    controller.javascript "//maps.googleapis.com/maps/api/js?#{params.to_query}"
   end
 
   def include_openlayers_api
