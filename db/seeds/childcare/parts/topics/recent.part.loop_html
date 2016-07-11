@@ -1,0 +1,5 @@
+<article>
+  <img src="#{img.src}" alt="" />
+  <time>#{date.long}</time>
+  <a href="#{url}">#{name}</a>
+</article>

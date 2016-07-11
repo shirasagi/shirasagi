@@ -1,0 +1,373 @@
+// -----------------------------------------------------------------------------
+// font
+$px10:72%;
+$px11:79%;
+$px12:86%;
+$px13:93%;
+$px14:100%;
+$px15:108%;
+$px16:115%;
+$px17:122%;
+$px18:129%;
+$px19:136%;
+$px20:143%;
+$px21:150%;
+$px22:158%;
+$px23:165%;
+$px24:172%;
+$px25:179%;
+$px26:186%;
+$px27:193%;
+$px28:200%;
+$px29:208%;
+$px30:215%;
+$px31:222%;
+$px32:229%;
+$px33:236%;
+$px34:243%;
+$px35:250%;
+$px36:258%;
+$px37:265%;
+$px38:272%;
+$px39:279%;
+$px40:286%;
+$px41:293%;
+$px42:300%;
+$px43:308%;
+$px44:315%;
+$px45:322%;
+$px46:329%;
+$px47:336%;
+$px48:343%;
+$px49:350%;
+$px50:358%;
+$px51:365%;
+$px52:372%;
+$px53:379%;
+$px54:386%;
+$px55:393%;
+$px56:400%;
+$px57:408%;
+$px58:415%;
+$px59:422%;
+$px60:429%;
+$px61:436%;
+$px62:443%;
+$px63:450%;
+$px64:458%;
+$px65:465%;
+$px66:472%;
+$px67:479%;
+$px68:486%;
+$px69:493%;
+$px70:500%;
+$px71:508%;
+$px72:515%;
+
+$font-base: 'YuGothic', 'Yu Gothic', '游ゴシック', '游ゴシック体', 'Noto Sans Japanese', Meiryo, "メイリオ", Tahoma, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-head: 'YuGothic', 'Yu Gothic', '游ゴシック', '游ゴシック体', 'Noto Sans Japanese', Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+
+// -----------------------------------------------------------------------------
+// color
+$white: #ffffff;
+$black: #434343;
+$link: #0066cc;
+$visited: #004499;
+$primary1: #006ea6;
+$primary2: #009dd5;
+$primary3: #42bfed;
+$primary4: #c7e3ff;
+$secondary1: #ff6272;
+$secondary2: #ff8a95;
+$secondary3: #ffb8b7;
+$secondary4: #ffdeda;
+$gray1: #404040;
+$gray2: #999999;
+$gray3: #e1e1e1;
+$gray4: #ededed;
+$red: #dd0000;
+$blue: #0033cc;
+
+// -----------------------------------------------------------------------------
+// layout
+$page-width: 1080px;
+@mixin page-width {
+  max-width: $page-width;
+  margin: 0 auto;
+  @include mb {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// media query
+@mixin tb {
+  @media only screen and (max-width: 960px) { @content; }
+}
+@mixin mb {
+  @media only screen and (max-width: 768px) { @content; }
+}
+// -----------------------------------------------------------------------------
+// btn
+@include keyframes(flash) {
+  0% { opacity: 1; }
+  10% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+@mixin btn {
+  display: block;
+  text-decoration: none;
+  color: $black;
+  text-align: center;
+  vertical-align: bottom;
+  @include transition(background-color 0.5s ease 0s);
+}
+@mixin btn-primary-l {
+  @include btn;
+  padding: 20px 0;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 4px solid $primary2;
+  @include border-radius(6px);
+  background: $primary3;
+  @include box-shadow(0 4px 4px rgba(0,0,0,.2));
+  font-size: $px18;
+  @include transition(0.3s);
+  &:hover, &.current {
+    margin-top: 2px;
+    border-bottom: 2px solid $primary2;
+    @include box-shadow(0 2px 2px rgba(0,0,0,.2));
+    @include animation(flash 0.5s);
+  }
+  @include mb {
+    font-size: $px16;
+  }
+}
+@mixin btn-primary-m {
+  @include btn;
+  padding: 10px 0;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 3px solid $primary2;
+  @include border-radius(3px);
+  background: $primary3;
+  @include box-shadow(0 3px 3px rgba(0,0,0,.2));
+  &:hover, &.current {
+    margin-top: 1px;
+    border-bottom: 2px solid $primary2;
+    @include box-shadow(0 2px 2px rgba(0,0,0,.2));
+    @include animation(flash 0.5s);
+  }
+}
+@mixin btn-primary-s {
+  @include btn;
+  padding: 3px 10px 1px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 2px solid $primary2;
+  @include border-radius(3px);
+  background: $primary3;
+  @include box-shadow(0 2px 2px rgba(0,0,0,.2));
+  &:hover, &.current {
+    margin-top: 1px;
+    border-bottom: 1px solid $primary2;
+    @include box-shadow(0 1px 1px rgba(0,0,0,.2));
+    @include animation(flash 0.5s);
+  }
+}
+@mixin btn-white-l {
+  @include btn;
+  padding: 20px 0;
+  border-bottom: 4px solid $gray3;
+  @include border-radius(6px);
+  background: $white;
+  font-size: $px18;
+  @include box-shadow(0 4px 4px rgba(0,0,0,.05));
+  @include transition(0.3s);
+  &:hover, &.current {
+    margin-top: 2px;
+    border-bottom: 2px solid $gray3;
+    background-color: #f6f6f6;
+    @include box-shadow(0 2px 2px rgba(0,0,0,.05));
+    @include animation(flash 0.5s);
+  }
+  @include mb {
+    font-size: $px16;
+  }
+}
+@mixin btn-white-m {
+  @include btn;
+  padding: 10px 0;
+  border: 1px solid $gray3;
+  border-bottom: 3px solid $gray3;
+  @include border-radius(3px);
+  background: $white;
+  @include box-shadow(0 3px 3px rgba(0,0,0,.05));
+  &:hover, &.current {
+    margin-top: 1px;
+    border-bottom: 2px solid $gray3;
+    background-color: #f6f6f6;
+    @include box-shadow(0 2px 2px rgba(0,0,0,.05));
+    @include animation(flash 0.5s);
+  }
+}
+@mixin btn-white-s {
+  @include btn;
+  padding: 3px 10px 1px;
+  border: 1px solid $gray3;
+  border-bottom: 2px solid $gray3;
+  @include border-radius(3px);
+  background: $white;
+  @include box-shadow(0 1px 1px rgba(0,0,0,.05));
+  &:hover, &.current {
+    margin-top: 1px;
+    border-bottom: 1px solid $gray3;
+    background-color: #f6f6f6;
+    @include box-shadow(0 1px 1px rgba(0,0,0,.05));
+    @include animation(flash 0.5s);
+  }
+}
+// -----------------------------------------------------------------------------
+// page
+@mixin h2 {
+  margin-bottom: 0.6em;
+  padding-bottom: 2px;
+  border-bottom: 2px solid $primary2;
+  color: $primary1;
+  font-size: $px20;
+  font-weight: bold;
+}
+@mixin h3 {
+  margin-bottom: 0.6em;
+  font-size: $px18;
+  font-weight: bold;
+}
+@mixin h4 {
+  font-size: $px16;
+}
+@mixin li {
+  position: relative;
+  padding-left: 12px;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0.6em;
+    left: 3px;
+    width: 6px;
+    height: 6px;
+    @include border-radius(3px);
+    background: $primary1;
+  }
+}
+@mixin arrow {
+  position: relative;
+  padding-left: 15px;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 10px solid $primary2;
+  }
+}
+@mixin table {
+  margin-bottom: 2em;
+  caption {
+    font-size: $px16;
+    text-align: left;
+  }
+  th, td {
+    min-width: 75px;
+    padding: 10px 15px;
+    border: 1px solid $gray3;
+    text-align: left;
+    font-weight: normal;
+  }
+  thead th {
+    background: $primary1;
+    color: $white;
+  }
+  tbody th {
+    background: $primary4;
+  }
+}
+// -----------------------------------------------------------------------------
+// box
+@mixin content-box {
+  margin: 0 15px 30px;
+  background: $white;
+  @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+}
+@mixin content-head {
+  padding: 8px 15px;
+  border-bottom: 2px solid $primary2;
+  h2 {
+    font-size: $px18;
+  }
+}
+@mixin content-body {
+  @include clear;
+  padding: 15px;
+  .normal {
+    h3 {
+      font-size: $px16;
+      font-weight: bold;
+    }
+    h4 {
+      font-weight: bold;
+    }
+    ul li {
+      @include li;
+    }
+  }
+}
+@mixin content-foot {
+  clear: both;
+  padding: 5px 15px 0;
+  border-top: 1px solid $gray3;
+  text-align: right;
+  p {
+    display: inline-block;
+    margin: 0 0 5px 5px;
+    vertical-align: bottom;
+  }
+  a {
+    @include btn-primary-s;
+    padding-left: 25px;
+  }
+  p.feed a {
+    background-image: url(../img/ic-rss.png);
+    background-repeat: no-repeat;
+    background-position: 10px center;
+  }
+  p.more a {
+    background-image: url(../img/ic-arrow.png);
+    background-repeat: no-repeat;
+    background-position: 10px center;
+  }
+}
+// -----------------------------------------------------------------------------
+// filters
+@mixin filters {
+  margin-bottom: 15px;
+  li {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: bottom;
+    a {
+      @include btn-white-s;
+      &.clicked {
+        margin-top: 1px;
+        border-bottom: 1px solid $gray3;
+        background: #f6f6f6;
+        @include box-shadow(0 1px 1px rgba(0,0,0,.05));
+      }
+    }
+  }
+}

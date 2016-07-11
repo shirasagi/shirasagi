@@ -1,0 +1,1648 @@
+@import "init";
+@import "part";
+
+// -----------------------------------------------------------------------------
+// element
+@include mb {
+  * {
+    @include box-sizing(border-box);
+  }
+  input[type="submit"], button, select, textarea {
+    -webkit-appearance: none;
+  }
+}
+html {
+  height: 100%;
+  font-family: $font-base;
+}
+body {
+  margin: 0 auto;
+  font-family: $font-base;
+  font-size: 100%;
+  color: $black;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 100%;
+  font-weight: normal;
+}
+a {
+  color: $link;
+  &:hover {
+    text-decoration: none;
+  }
+  &:visited {
+    color: $visited;
+  }
+  img:hover {
+    opacity: 0.8;
+  }
+}
+rp, rt {
+  color: $black;
+  font-size: $px10;
+  font-weight: normal;
+  background: $white;
+}
+rp {
+  margin: 0px;
+}
+img {
+  vertical-align: middle;
+  @include mb {
+    max-width: 100%;
+    height: auto !important;
+  }
+}
+ul li {
+  list-style: none;
+}
+#ss-preview {
+  z-index: 1000;
+}
+// -----------------------------------------------------------------------------
+//form
+select, input, textarea, button {
+  font-size: 100%;
+  font-family: $font-base;
+}
+select {
+  padding: 4px 5px;
+}
+input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
+input[type=email], input[type=number] {
+  width: 70%;
+  min-height: 1.8em;
+  margin: 0 0;
+  padding: 3px 10px;
+  border: 1px solid $gray3;
+  background: $white;
+  @include mb {
+    width: 100%;
+  }
+  &:focus {
+    border: 1px solid $primary3;
+    @include box-shadow(0 2px 2px rgba(0,0,0,.1) inset);
+  }
+}
+input[type=checkbox], input[type=radio] {
+  vertical-align: -0.1em;
+}
+input[type=number] {
+  width: 12em;
+}
+input[type=submit] {
+  cursor: pointer;
+}
+@include mb {
+  select {
+    width: 100%;
+  }
+}
+textarea {
+  width: 70%;
+  height: 6.5em;
+  padding: 12px;
+  line-height: 1.4;
+}
+.send {
+  padding: 15px 0;
+  text-align: center;
+  vertical-align: bottom;
+  input, button {
+    @include btn-primary-m;
+    display: inline-block;
+    min-width: 100px;
+    margin: 0 5px 15px;
+    vertical-align: bottom;
+    &[name="cancel"], &.reset,
+    &[type="reset"] {
+      @include btn-white-m;
+      display: inline-block;
+    }
+  }
+}
+#errorExplanation {
+  margin-bottom: 30px;
+  color: $red;
+  li {
+    @include li;
+    &:before { background: $red; }
+  }
+}
+#ss-notice {
+  color: $red;
+  margin-bottom: 30px;
+}
+.simple-captcha {
+  padding: 15px 0;
+  text-align: center;
+  input[type="text"] {
+    width: 10em;
+  }
+}
+.menu {
+  margin-bottom: 15px;
+  a {
+    @include btn-primary-s;
+    display: inline-block;
+    margin-right: 5px;
+  }
+}
+// -----------------------------------------------------------------------------
+// layout
+#page {
+  margin: 0 auto;
+  font-size: 87.5%;
+  @include mb {
+    overflow-x: hidden;
+  }
+}
+#wrap {
+  @include clear;
+  position: relative;
+  overflow: visible;
+  @include page-width;
+  margin: 0 auto;
+  padding: 0;
+  @include mb {
+    display: block;
+  }
+}
+#main {
+  width: 66.7%;
+  float: left;
+  @include mb {
+    width: 100%;
+  }
+}
+#side {
+  width: 33.3%;
+  float: right;
+  @include mb {
+    width: 100%;
+  }
+}
+// -----------------------------------------------------------------------------
+// tool
+#tool {
+  background: $primary1;
+  color: $white;
+  @include mb {
+    display: none;
+  }
+  a { color: $white; }
+  nav {
+    position: relative;
+    @include clear;
+    @include page-width;
+    margin: 0 auto;
+    padding: 5px 15px;
+    #nocssread {
+      float: left;
+      padding: 3px 10px 3px 0;
+    }
+    #size, #ss-voice, #ss-kana, #info {
+      float: right;
+    }
+    #size {
+      padding-left: 10px;
+      span a {
+        @include btn-primary-s;
+        display: inline-block;
+        margin-left: 5px;
+      }
+    }
+    #ss-voice-controller {
+      position: absolute;
+      top: 3em;
+      right: 0;
+    }
+    #ss-voice, #info, #ss-kana {
+      padding: 3px 10px;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// head
+#head {
+  position: relative;
+  z-index: 100;
+  background: $white;
+}
+#head .wrap {
+  @include page-width;
+  padding: 0 15px;
+  @include clear;
+  #logo {
+    float: left;
+    @include mb {
+      width: 70%;
+    }
+    a {
+      display: block;
+      padding: 10px 0;
+      color: $primary1;
+      font-size: $px34;
+      font-weight: bold;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+      @include mb {
+        padding: 10px 0 0;
+        font-size: $px24;
+      }
+    }
+  }
+  #sp-btn {
+    display: none;
+    @include mb {
+      display: block;
+      float: right;
+      padding: 10px 0 7px;
+      li {
+        display: inline-block;
+      }
+      a {
+        display: block;
+        padding: 10px;
+        line-height: 1;
+        @include border-radius(6px);
+        background: $primary3;
+        img {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+  #search {
+    float: right;
+    padding: 20px 0;
+    @include mb {
+      float: none;
+      clear: both;
+      display: none;
+    }
+    form {
+      @include clear;
+      border: 2px solid $gray2;
+      background: $gray4;
+    }
+    #search-box {
+      float: left;
+      width: 20em;
+      padding: 0.4em 1em 0;
+      border: none;
+      background: none;
+      @include mb {
+        max-width: 70%;
+      }
+      &:focus {
+        @include box-shadow(none);
+      }
+    }
+    #search-button {
+      float: left;
+      @include btn-primary-s;
+      padding: 5px 10px;
+      border: none;
+      @include border-radius(0);
+      @include mb {
+        float: right;
+      }
+      &:hover {
+        margin: 0;
+        border: none;
+        background: $primary2;
+        color: $white;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// navi
+#navi {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 30px;
+  @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+  @include mb {
+    min-height: 3px;
+    .wrap { display: none; }
+  }
+  ul {
+    @include page-width;
+    padding: 0 15px;
+    @include display-flex;
+    @include flex-direction(row);
+    -js-display: flex;
+    @include mb { display: block; }
+    li {
+      flex-grow: 1;
+    }
+    a {
+      display: block;
+      padding: 10px 10px 5px;
+      border-bottom: 5px solid $white;
+      color: $black;
+      font-size: $px16;
+      text-align: center;
+      text-decoration: none;
+      @include transition(0.5s);
+    }
+    li.current a, a:hover {
+      border-bottom: 5px solid $primary1;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// pagetop
+.pagetop {
+  display: none;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  a {
+    position: relative;
+    display: block;
+    padding: 40px 10px 10px;
+    @include border-radius(6px);
+    background: $primary2 url(../img/ic-pagetop.png) no-repeat center 10px;
+    opacity: 0.8;
+    @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+    text-align: center;
+    color: #fff;
+    font-size: $px12;
+    text-decoration: none;
+    @include mb {
+      padding: 0;
+      background-position: center center;
+      color: transparent;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// foot
+#foot {
+  background: $primary1;
+  color: $white;
+  .foot-navi {
+    padding: 10px 15px;
+    background: $gray4;
+    text-align: center;
+    @include mb {
+      padding: 0;
+      ul { @include clear; }
+    }
+    li {
+      display: inline-block;
+      padding: 0 1em;
+      border-left: 1px solid $black;
+      @include mb {
+        width: 50%;
+        float: left;
+        padding: 0;
+        border: none;
+        border-right: 1px solid $white;
+        border-bottom: 1px solid $white;
+        a {
+          display: block;
+          padding: 10px 0;
+          color: $black;
+          text-decoration: none;
+        }
+      }
+      &:first-child {
+        border-left: none;
+      }
+    }
+  }
+  address {
+    @include page-width;
+    padding: 10px 15px;
+    font-style: normal;
+    span {
+      font-size: $px16;
+    }
+  }
+  .copyright {
+    padding-bottom: 10px;
+    text-align: center;
+  }
+}
+#ss-pc, #ss-mb {
+  padding: 15px 0;
+  text-align: center;
+  a {
+    @include btn-primary-m;
+    display: inline-block;
+    min-width: 200px;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// content-box
+.content-box {
+  @include content-box;
+  .content-head {
+    @include content-head;
+  }
+  .content-body {
+    @include content-body;
+  }
+  footer {
+    @include content-foot;
+  }
+}
+.box-half {
+  width: 50%;
+  float: left;
+  @include mb {
+    width: 100%;
+    float: none;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// slide
+#slide {
+  @include clear;
+  padding: 0;
+  .images {
+    li {
+      max-width: 100%;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  .bx-controls {
+    display: inline-block;
+    padding: 5px 15px;
+    @include mb { display: none; }
+    .bx-controls-auto-item a {
+      position: relative;
+      padding-left: 16px;
+      &.active {
+        text-decoration: none;
+      }
+      &:before {
+        content: "";
+        position:absolute;
+        top: 4px;
+        left: 0;
+      }
+    }
+    .bx-start:before {
+      top: 3px;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 10px solid $primary2;
+    }
+    .bx-stop:before {
+      width: 10px;
+      height: 10px;
+      background: $primary2;
+    }
+  }
+  .bx-thumbs {
+    float: right;
+    margin: -3.6em 15px 0px 0px;
+    padding-left: 10em;
+    @include mb { display: none; }
+    a {
+      display: inline-block;
+      margin: 0 0 10px 5px;
+      img {
+        opacity: 0.6;
+      }
+      &.active img {
+        opacity: 1;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// pages
+.article-pages li, .category-pages li, .cms-pages li, .faq-pages li, .ezine-pages li {
+  @include mb {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted $gray3;
+    &:last-child {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+  }
+  time {
+    clear: left;
+    float: left;
+    width: 8em;
+    @include mb {
+      float: none;
+    }
+  }
+  .title {
+    display: block;
+    padding: 0 0 0 9em;
+    @include mb {
+      padding-left: 0;
+    }
+  }
+}
+#yield .article-pages li, #yield .category-pages li,
+#yield .cms-pages li, #yield .faq-pages li, .ezine-pages li {
+  @include arrow;
+  .title {
+    padding-left: 0;
+  }
+  time + .title {
+    padding: 0 0 0 9em;
+    @include mb {
+      padding-left: 0;
+    }
+  }
+}
+#side {
+  .article-pages li, .category-pages li, .cms-pages li, .faq-pages li, .ezine-pages li  {
+    time {
+      float: none;
+    }
+    .title {
+      padding: 0;
+    }
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted $gray3;
+    &:last-child {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// pagination
+.pagination {
+  margin-top: 30px;
+  text-align: center;
+  span {
+    display: inline-block;
+    margin: 0 5px 10px;
+    @include border-radius(3px);
+    background: $primary2;
+    &.current {
+      padding: 6px 15px;
+    }
+    a {
+      @include btn-primary-s;
+      padding: 6px 15px;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// category-nodes cms-nodes
+.category-nodes, .cms-nodes {
+ @include clear;
+  article {
+    width: 50%;
+    float: left;
+    a {
+      @include btn-primary-l;
+      margin-bottom: 30px;
+      @include mb { margin-bottom: 10px; }
+    }
+    &:nth-child(2n+1) {
+      clear: left;
+      a {
+        margin-right: 15px;
+        @include mb { margin-right: 5px; }
+      }
+    }
+    &:nth-child(2n) a {
+      margin-left: 15px;
+      @include mb { margin-left: 5px; }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// topics
+#topics {
+  img {
+    width: 120px;
+    height: auto;
+    float: left;
+    @include tb {
+      float: none;
+    }
+    @include mb {
+      float: left;
+    }
+  }
+  .content-body time, .content-body a {
+    display: block;
+    padding-left: 135px;
+    @include tb {
+      padding-left: 0;
+    }
+    @include mb {
+      padding-left: 135px;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// tabs
+.cms-tabs {
+  @include content-box;
+  .names {
+    @include content-head;
+    position: relative;
+    padding-left: 8em;
+    padding-bottom: 0;
+    @include mb {
+      padding-left: 5px;
+    }
+    &:before {
+      content: "新着情報";
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      font-size: $px18;
+      @include mb { display: none; }
+    }
+    a {
+      @include btn-primary-s;
+      display: inline-block;
+      margin: 0 0 8px 10px;
+      font-size: $px18;
+      @include mb {
+        font-size: $px14;
+      }
+    }
+  }
+  .pages {
+    @include content-body;
+    @include mb {
+      article {
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px dotted $gray3;
+        &:last-child {
+          margin: 0;
+          padding: 0;
+          border: none;
+        }
+      }
+    }
+    time {
+      clear: left;
+      float: left;
+      width: 8em;
+      @include mb {
+        float: none;
+      }
+    }
+    h3 {
+      display: block;
+      padding: 0 0 0 9em;
+      @include mb {
+        padding-left: 0;
+      }
+    }
+  }
+  .view nav {
+    @include content-foot;
+    a {
+      display: inline-block;
+      margin: 0 0 5px 5px;
+    }
+    a.rss {
+      background-image: url(../img/ic-rss.png);
+      background-repeat: no-repeat;
+      background-position: 10px center;
+    }
+    a.more {
+      background-image: url(../img/ic-arrow.png);
+      background-repeat: no-repeat;
+      background-position: 10px center;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// folder
+.cms-nodes {
+  .content-body {
+    padding: 15px 10px;
+    @include mb { padding: 15px 10px 5px; }
+  }
+  .content-body ul {
+    @include clear;
+    li {
+      float: left;
+      width: 20%;
+      @include mb {
+        width: 50%;
+      }
+      a {
+        @include btn-white-m;
+        margin: 0 5px;
+        padding-top: 80px;
+        background-repeat: no-repeat;
+        background-position: center 15px;
+        @include mb {
+          height: auto !important;
+          margin-bottom: 10px;
+          padding: 10px 0;
+          background-image: none !important;
+        }
+      }
+    }
+    .birth a {
+      background-image: url(../img/ic-birth.png);
+    }
+    .health a {
+      background-image: url(../img/ic-health.png);
+    }
+    .leave a {
+      background-image: url(../img/ic-leave.png);
+    }
+    .work a {
+      background-image: url(../img/ic-work.png);
+    }
+    .circle a {
+      background-image: url(../img/ic-circle.png);
+    }
+    .pregnancy a {
+      background-image: url(../img/ic-birth.png);
+    }
+    .zero a {
+      background-image: url(../img/ic-0.png);
+    }
+    .one a {
+      background-image: url(../img/ic-1.png);
+    }
+    .three a {
+      background-image: url(../img/ic-3.png);
+    }
+    .primary a {
+      background-image: url(../img/ic-primary.png);
+    }
+  }
+}
+#side .cms-nodes .content-body {
+  padding: 15px 10px 5px;
+  li {
+    width: 50%;
+    a {
+      margin-bottom: 10px;
+      padding: 10px 0;
+      background-image: none;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// banners
+.banners {
+  @include clear;
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+#sub-menu {
+  margin-bottom: 15px;
+  span {
+    dispaly: block;
+    width: 50%;
+    float: left;
+    @include mb {
+      width: 100%;
+      float: none;
+    }
+  }
+  a {
+    display: block;
+    margin: 0 15px 15px;
+    @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+  }
+}
+#side #sub-menu {
+  span {
+    width: 100%;
+    float: none;
+  }
+}
+#relation {
+  @include mb {
+    .content-body {
+      padding: 15px 10px 5px;
+    }
+  }
+  span {
+    display: block;
+    margin-bottom: 15px;
+    &:last-child { margin: 0; }
+    @include mb {
+      width: 50%;
+      float: left;
+      margin-bottom: 0;
+      a {
+        margin: 0 5px 10px;
+      }
+    }
+  }
+  a {
+    display: block;
+  }
+}
+#add {
+  clear: both;
+  .content-body {
+    padding: 15px 0 0 15px;
+    @include mb {
+      padding: 15px 10px 5px 10px;
+    }
+  }
+  span {
+    float: left;
+    margin: 0 15px 15px 0;
+    a { display: block; }
+    @include mb {
+      width: 50%;
+      margin: 0;
+      a {
+        margin: 0 5px 10px;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// crumbs
+.crumbs {
+  margin: -10px 15px 15px;
+  @include mb {
+    display: none;
+  }
+  .separator {
+    margin: 0.5em;
+  }
+}
+// -----------------------------------------------------------------------------
+// yield
+#yield {
+  margin: 0 15px 30px;
+}
+// -----------------------------------------------------------------------------
+// content-title
+#content-title h1 {
+  margin-bottom: 30px;
+  padding: 10px 15px;
+  background: $primary4;
+  font-size: $px16;
+  font-weight: bold;
+}
+// -----------------------------------------------------------------------------
+// local-menu
+#local-menu .list {
+  li {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid $gray3;
+    &:last-child {
+      border: none;
+    }
+  }
+  a {
+    position: relative;
+    display: block;
+    padding: 10px 15px 10px 30px;
+    @include transition(0.3s);
+    &:before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 10px solid $primary1;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 13px;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 10px solid $white;
+    }
+    &:hover, .current {
+      background: $primary4;
+      color: $black;
+      &:after {
+        border-left: 10px solid $primary4;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// page
+#page-title {
+  padding: 15px 15px 0;
+  h1 {
+    margin-bottom: 0.6em;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $gray3;
+    font-size: $px24;
+    font-weight: bold;
+  }
+}
+.released {
+  margin: 0 15px 15px;
+  text-align: right;
+}
+.content-page {
+  overflow: hidden;
+  background: $white;
+  @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+  .body, .map-page, .related-pages,
+  .faq-question {
+    @include clear;
+    padding: 0 15px;
+    h1, h2 {
+      @include h2;
+    }
+    h3 {
+      @include h3;
+    }
+    h4 {
+      @include h4;
+    }
+    p {
+      margin-bottom: 2em;
+    }
+    ul {
+      margin-bottom: 2em;
+      li {
+        @include li;
+      }
+    }
+    ol {
+      margin: 0 0 2em 20px;
+    }
+    .wrap-table {
+      overflow-x: auto;
+    }
+    table {
+      @include table;
+    }
+    .float-left {
+      float: left;
+      margin: 0 15px 15px 0;
+      @include mb {
+        float: none;
+        margin: 0 0 15px 0;
+      }
+    }
+    .float-right {
+      float: right;
+      margin: 0 0 15px 15px;
+      @include mb {
+        float: none;
+        margin: 0 0 15px 0;
+      }
+    }
+    .clear {
+      clear: both;
+    }
+  }
+  .categories {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-top: 1px solid $gray3;
+    text-align: right;
+    header, .nodes {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .nodes li {
+      display: inline-block;
+      margin-left: 10px;
+      padding-left: 10px;
+      border-left: 1px solid $gray3;
+      vertical-align: bottom;
+    }
+  }
+  #map-canvas {
+    margin-bottom: 30px;
+    @include mb {
+      height: 300px !important;
+    }
+  }
+  .contact {
+    margin: 0 15px 30px;
+    padding: 0 15px 15px;
+    border: 2px solid $primary1;
+    h2 {
+      margin: 0 -15px 10px;
+      padding: 5px 15px;
+      background: $primary1;
+      color: $white;
+      font-size: $px16;
+    }
+    .group {
+      font-weight: bold;
+    }
+    dl, dt, dd {
+      display: inline-block;
+    }
+    dl {
+      margin-right: 10px;
+    }
+  }
+  .cms-sns_share {
+    @include clear;
+    margin: 0 15px 15px;
+    .site {
+      float: left;
+      margin-right: 10px;
+    }
+    .fb, .evernote {
+      margin-top: -5px;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// faq
+.faq {
+  .body, .faq-question {
+    position: relative;
+    padding-left: 45px;
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 15px;
+      height: auto;
+      color: $primary1;
+      font-size: $px18;
+      font-weight: bold;
+    }
+  }
+  .faq-question:before {
+    content: "Q:";
+  }
+  .body:before {
+    content: "A:";
+  }
+
+}
+.faq-search {
+  @include content-box;
+  margin: 0 0 30px;
+  form {
+    padding: 15px;
+  }
+  .category, .keyword {
+    display: inline-block;
+    margin: 0 10px 10px 0;
+  }
+  .submitters {
+    text-align: center;
+    input {
+      @include btn-primary-s;
+      display: inline-block;
+      margin: 0 5px;
+    }
+  }
+}
+.faq-search + .result {
+  margin-bottom: 10px;
+}
+.faq-search.pages {
+  @include box-shadow(none);
+}
+.faq-search.pages article {
+  @include arrow;
+  time {
+    clear: left;
+    float: left;
+    width: 8em;
+    @include mb {
+      float: none;
+    }
+  }
+  h2 {
+    padding-left: 0;
+  }
+  time + h2 {
+    padding: 0 0 0 9em;
+    @include mb {
+      padding-left: 0;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// inquiry
+.inquiry-html {
+  margin-bottom: 2em;
+}
+.columns {
+  border-top: 1px solid $gray3;
+  border-bottom: 1px solid $gray3;
+  dl {
+    @include clear;
+    padding: 10px 0;
+    border-bottom: 1px dotted $gray3;
+    &:last-child {
+      border: none;
+    }
+  }
+  dt {
+    clear: left;
+    float: left;
+    width: 12em;
+    font-weight: bold;
+    @include mb {
+      float: none;
+      width: 100%;
+    }
+  }
+  dd {
+    padding-left: 13em;
+    @include mb {
+      padding: 0;
+    }
+  }
+  .required {
+    display: block;
+    color: $red;
+    @include mb {
+      display: inline;
+    }
+  }
+  label {
+    margin-right: 10px;
+  }
+}
+// -----------------------------------------------------------------------------
+// event calendar
+.event-pages-filter {
+  @include filters;
+}
+.event-date {
+  position: relative;
+  h2 {
+    @include h2;
+  }
+  ul {
+    position: absolute;
+    top: 0.4em;
+    right: 0;
+  }
+  li {
+    display: inline-block;
+    padding: 0 10px;
+    &:first-child {
+      border-right: 1px solid $gray3;
+    }
+  }
+}
+#event-list {
+  border-top: 1px solid $gray3;
+  dl {
+    @include clear;
+    padding: 10px;
+    border-bottom: 1px dotted $gray3;
+    &:last-child {
+      border-bottom: 1px solid $gray3;
+    }
+    &.sat {
+      background: #e1ebf1;
+    }
+    &.sun {
+      background: #fee;
+    }
+  }
+  dt {
+    clear: left;
+    float: left;
+    width: 11em;
+    @include mb {
+      width: 100%;
+      float: none;
+    }
+  }
+  dd {
+    display: block;
+    margin-bottom: 5px;
+    padding-left: 12em;
+    @include mb {
+      padding: 0;
+    }
+    &:last-child {
+      margin: 0;
+    }
+    div, header {
+      display: inline-block;
+    }
+    div {
+      margin-right: 5px;
+      a {
+        @include btn-white-s;
+      }
+    }
+  }
+  div.page article{
+    padding: 10px;
+    border-bottom: 1px dotted $gray3;
+    &:last-child {
+      border-bottom: 1px solid $gray3;
+    }
+    .categories li {
+      display: inline-block;
+      margin-right: 5px;
+      vertical-align: bottom;
+      a {
+        @include btn-white-s;
+      }
+    }
+  }
+}
+.event .see {
+  margin-bottom: 30px;
+  padding: 0 15px;
+  dt {
+    clear: left;
+    float: left;
+    width: 10em;
+    padding: 10px 0;
+    font-weight: bold;
+    @include mb {
+      float: none;
+      widht: 100%;
+      padding-bottom: 0;
+    }
+  }
+  dd {
+    display: block;
+    padding: 10px 0 10px 11em;
+    border-bottom: 1px dotted $gray3;
+    @include mb {
+      padding-left: 0;
+    }
+  }
+}
+.event-calendar {
+  text-align: center;
+  .calendar-nav {
+    li {
+      display: inline-block;
+      margin: 0 5px;
+      font-size: $px12;
+    }
+  }
+  .calendar {
+    width: 100%;
+    max-width: 255px;
+    margin: 0 auto;
+    caption {
+      font-size: $px16;
+    }
+    th, td {
+      padding: 3px ;
+      border: 1px solid $gray3;
+    }
+    th {
+      background: $primary4;
+      font-weight: normal;
+      .unit {
+        display: none;
+      }
+    }
+    td.sun {
+      color: $red;
+    }
+    td.sat {
+      color: $blue;
+    }
+    td.today {
+      background: $secondary4;
+    }
+    td.next-month, td.prev-month {
+      color: $gray2;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// institution
+.institution {
+  form {
+    h2 {
+      @include h2;
+    }
+    .keyword, .category, .service, .location {
+      margin-bottom: 15px;
+      div {
+        display: inline-block;
+        min-width: 150px;
+        @include mb {
+          display: block;
+        }
+      }
+    }
+  }
+  .condition {
+    @include clear;
+    margin-bottom: 15px;
+    dt {
+      clear: left;
+      float: left;
+      width: 10em;
+      font-weight: bold;
+      @include mb {
+        float: none;
+        width: 100%;
+      }
+    }
+    dd {
+      display: block;
+      min-height: 1.79em;
+      padding-left: 11em;
+      @include mb {
+        padding: 0;
+      }
+    }
+  }
+  .settings {
+    text-align: right;
+    margin-bottom: 30px;
+    a {
+      @include btn-primary-s;
+      display: inline-block;
+    }
+  }
+  .result {
+    margin-bottom: -2.2em;
+  }
+  .tabs {
+    margin-bottom: 15px;
+    text-align: right;
+    li {
+      display: inline-block;
+      margin-left: 5px;
+      a {
+        @include btn-primary-s;
+        display: inline-block;
+      }
+    }
+  }
+  #map-sidebar {
+    @include box-sizing(border-box);
+    @include content-box;
+    float: left;
+    width: 25%;
+    margin: 0 0 15px;
+    padding: 10px;
+    overflow-y: scroll;
+    @include mb {
+      display: none;
+    }
+    .column {
+      margin: 0 0 10px;
+      padding: 0 0 10px;
+      border-bottom: 1px dotted $gray3;
+      &:last-chid {
+        margin: 0;
+        border: none;
+      }
+    }
+  }
+  #map-canvas {
+    @include content-box;
+    float: right;
+    width: 75% !important;
+    margin: 0 0 15px;
+    @include mb {
+      floatg: none;
+      width: 100% !important;
+      height: 300px !important;
+    }
+  }
+  .map-page #map-canvas {
+    width: 100% !important;
+    @include box-shadow(none);
+  }
+  .filters {
+    @include clear;
+    @include filters;
+    clear: both;
+    ul, select {
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    select {
+      float: right;
+      @include mb {
+        float: none;
+      }
+    }
+  }
+  .column {
+    padding: 10px 0;
+    .name {
+      margin-bottom: 10px;
+      font-size: $px16;
+    }
+    .categories {
+      @include filters;
+    }
+  }
+  .facility-nodes {
+    table {
+      width: 100%;
+      @include table;
+    }
+  }
+  .summary-image {
+    float: right;
+    width: 120px;
+    margin: 0 15px 30px;
+    @include mb {
+      float: none;
+      width: 100%;
+    }
+  }
+  .see {
+    padding: 0 150px 0 15px;
+    &.additional-info {
+      padding: 0 15px;
+    }
+    @include mb {
+      padding: 0 15px;
+    }
+    dt {
+      clear: left;
+      float: left;
+      width: 12em;
+      margin-bottom: 10px;
+      font-weight: bold;
+      @include mb {
+        float: none;
+        width: 100%;
+        margin-bottom: 0;
+      }
+    }
+    dd {
+      display: block;
+      margin-bottom: 10px;
+      padding-left: 13em;
+      @include mb {
+        padding: 0 0 10px;
+        border-bottom: 1px dotted $gray3;
+      }
+    }
+  }
+  .see + h2 {
+    @include h2;
+    margin: 0 15px 1em;
+  }
+  .images {
+    margin: 0 15px 30px;
+    .image {
+      display: inline-block;
+      width: 120px;
+      margin: 0 5px 10px 0;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// colorbox
+#colorbox {
+  h2 {
+    @include h2;
+  }
+  .keyword, .category, .service, .location {
+    margin-bottom: 15px;
+    div {
+      display: inline-block;
+      min-width: 150px;
+      @include mb {
+        display: block;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// sitemap
+.sitemap-body {
+  h2 {
+    @include h2;
+  }
+  h3 {
+    @include h3;
+  }
+  h4 {
+    @include h4;
+  }
+  ul {
+    margin-bottom: 30px;
+  }
+  li {
+    display: inline-block;
+    margin: 0 10px 5px 0;
+    padding-right: 10px;
+    border-right: 1px solid $gray3;
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// ezine
+h2.ezine-html {
+  @include h2;
+}
+.ezine-form {
+  .columns {
+    dt {
+      width: 25%;
+      @include mb {
+        width: 100%;
+      }
+    }
+    dd {
+      float: left;
+      width: 75%;
+      padding: 0;
+      @include mb {
+        width: 100%;
+        float: none;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// board
+article.post {
+  @include content-box;
+  margin: 0 0 15px;
+  padding: 15px;
+  &.admin-user {
+    .title {
+      color: $primary1;
+    }
+  }
+  .title {
+    font-size: $px16;
+    font-weight: bold;
+  }
+  .body {
+    margin-bottom: 1em;
+  }
+  .poster {
+    span, a {
+      display: inline-block;
+      margin-right: 15px;
+    }
+  }
+  .action {
+    text-align: right;
+    a {
+      @include btn-white-s;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  }
+  .toggle {
+    position: relative;
+    display: block;
+    width: 4em;
+    margin-top: -2em;
+    padding-left: 15px;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 7px;
+      left: 0;
+      border-top: 10px solid $primary2;
+      border-right: 7px solid transparent;
+      border-left: 7px solid transparent;
+    }
+  }
+  .children .post {
+    @include box-shadow(none);
+    margin: 15px 0 0;
+    padding: 15px 0 0 15px;
+    border-top: 1px solid $gray3;
+  }
+}
+.search-settings {
+  margin-bottom: 30px;
+  input[name="search"] {
+    @include btn-primary-s;
+    display: inline-block;
+  }
+}
