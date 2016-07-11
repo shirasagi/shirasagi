@@ -195,4 +195,13 @@ describe Article::Part::Page, type: :model, dbscope: :example do
         eq("<span class=\"#{node_category.filename}\"><a href=\"#{node_category.url}\">#{node_category.name}</a></span>")
     end
   end
+
+  describe '#render_loop_html - pages.count' do
+    let(:node_category) { create :category_node_page }
+    let(:page) { create(:article_page, category_ids: [ node_category.id ]) }
+
+    it do
+      expect(item.render_loop_html(page, html: '#{pages.count}')).to eq('')
+    end
+  end
 end

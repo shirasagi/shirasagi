@@ -33,6 +33,8 @@ module Cms::Model::Node
       paths.pop if paths.last =~ /\./
       where :filename.in => paths
     }
+
+    template_variable_handler('pages.count', :template_variable_handler_pages_count)
   end
 
   def becomes_with_route(name = nil)
@@ -176,5 +178,13 @@ module Cms::Model::Node
       %w(nodes pages parts layouts).each do |name|
         send(name).destroy_all
       end
+    end
+
+    def template_variable_handler_pages_count(name, issuer)
+      date = issuer.try(:cur_date) || Time.zone.now
+      Cms::Page.site(issuer.site).
+        and_public(date).
+        or({ filename: /^#{filename}\//, depth: depth + 1 }, { category_ids: id }).
+        count.to_s
     end
 end
