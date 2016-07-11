@@ -1,0 +1,28 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :kana %></dt>
+  <dd><%= @item.kana %></dd>
+
+  <dt><%= @model.t :tel %></dt>
+  <dd><%= @item.tel %></dd>
+
+  <dt><%= @model.t :addr %></dt>
+  <dd><%= @item.addr %></dd>
+
+  <dt><%= @model.t :sex %></dt>
+  <dd><%= @item.label :sex %></dd>
+
+  <dt><%= @model.t :age %></dt>
+  <dd><%= @item.age %></dd>
+
+  <dt><%= @model.t :email %></dt>
+  <dd><%= @item.email %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= br @item.text %></dd>
+
+  <dt><%= @model.t :member_id %></dt>
+  <dd><%= @item.member.try(:name) %></dd>
+</dl>

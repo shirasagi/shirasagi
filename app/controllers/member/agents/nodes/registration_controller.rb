@@ -5,6 +5,8 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
   model Cms::Member
   helper Member::MypageHelper
 
+  after_action :try_to_join_group, only: :registration
+
   private
     def fix_params
       { cur_site: @cur_site }
@@ -18,6 +20,21 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
       params.require(:item).permit(permit_fields).merge(fix_params)
     end
 
+    def try_to_join_group
+      group_id = params[:group].presence
+      return if group_id.blank?
+
+      group_id = SS::Crypt.decrypt(group_id) rescue nil
+      return if group_id.blank?
+
+      group = Member::Group.site(@cur_site).where(id: group_id).first
+      return if group.blank?
+
+      return if @item.errors.present?
+
+      group.accept(@item)
+    end
+
   public
     # 新規登録
     def new
@@ -29,6 +46,14 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
       @item = @model.new get_params
       @item.in_check_name = true
       @item.in_check_email_again = true
+      @item.kana_required = @cur_node.kana_required?
+      @item.organization_name_required = @cur_node.organization_name_required?
+      @item.job_required = @cur_node.job_required?
+      @item.tel_required = @cur_node.tel_required?
+      @item.birthday_required = @cur_node.birthday_required?
+      @item.sex_required = @cur_node.sex_required?
+      @item.postal_code_required = @cur_node.postal_code_required?
+      @item.addr_required = @cur_node.addr_required?
       @item.state = 'temporary'
 
       render action: :new unless @item.valid?
@@ -38,6 +63,14 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     def interim
       @item = @model.new get_params
       @item.in_check_name = true
+      @item.kana_required = @cur_node.kana_required?
+      @item.organization_name_required = @cur_node.organization_name_required?
+      @item.job_required = @cur_node.job_required?
+      @item.tel_required = @cur_node.tel_required?
+      @item.birthday_required = @cur_node.birthday_required?
+      @item.sex_required = @cur_node.sex_required?
+      @item.postal_code_required = @cur_node.postal_code_required?
+      @item.addr_required = @cur_node.addr_required?
       @item.state = 'temporary'
 
       # 戻るボタンのクリック
@@ -70,6 +103,14 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
 
       @item.attributes = get_params
       @item.in_check_password = true
+      @item.kana_required = @cur_node.kana_required?
+      @item.organization_name_required = @cur_node.organization_name_required?
+      @item.job_required = @cur_node.job_required?
+      @item.tel_required = @cur_node.tel_required?
+      @item.birthday_required = @cur_node.birthday_required?
+      @item.sex_required = @cur_node.sex_required?
+      @item.postal_code_required = @cur_node.postal_code_required?
+      @item.addr_required = @cur_node.addr_required?
       @item.state = 'enabled'
 
       unless @item.update

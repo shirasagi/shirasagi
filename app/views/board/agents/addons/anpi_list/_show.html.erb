@@ -1,0 +1,22 @@
+<%= code_editor ".mod-board-list .html", mode: :html, readonly: true %>
+
+<dl class="see mod-board-list">
+  <dt><%= @model.t :show_email %></dt>
+  <dd>
+    <%= @item.label :show_email %>
+  </dd>
+
+  <dt><%= @model.t :upper_html %></dt>
+  <dd>
+    <% if @item.upper_html.present? %>
+    <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :lower_html %></dt>
+  <dd>
+    <% if @item.lower_html.present? %>
+    <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+    <% end %>
+  </dd>
+</dl>

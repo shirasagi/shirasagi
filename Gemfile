@@ -98,3 +98,7 @@ group :development do
   gem 'yard', require: false
   #gem 'rack-mini-profiler'
 end
+
+group :test do
+  gem 'webmock'
+end

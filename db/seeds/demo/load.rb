@@ -560,9 +560,12 @@ save_inquiry_answer node_id: feedback_node.id, site_id: @site._id,
 save_node route: "member/login", filename: "login", name: "ログイン", layout_id: layouts["login"].id,
   form_auth: "enabled", redirect_url: "/mypage/"
 save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: layouts["one"].id,
-  sender_email: "info@example.jp", sender_name: "送信者名"
+  sender_email: "info@example.jp", sender_name: "送信者名", kana_required: "required", postal_code_required: "required",
+  addr_required: "required", sex_required: "required", birthday_required: "required"
 save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: layouts["one"].id
-save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: layouts["one"].id, order: 10
+save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: layouts["one"].id, order: 10,
+  kana_required: "required", postal_code_required: "required", addr_required: "required", sex_required: "required",
+  birthday_required: "required"
 save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: layouts["one"].id, order: 20
 save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: layouts["one"].id, order: 30
 

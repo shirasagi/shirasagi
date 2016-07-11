@@ -1,0 +1,12 @@
+<%= code_editor ".mod-board-list .html", mode: :html %>
+
+<dl class="see mod-board-list">
+  <dt><%= @model.t :show_email %><%= @model.tt :show_email %></dt>
+  <dd><%= f.select :show_email, @item.show_email_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+  <dd><%= f.text_area :upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
+  <dd><%= f.text_area :lower_html, class: :html %></dd>
+</dl>

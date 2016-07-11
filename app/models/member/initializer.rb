@@ -21,6 +21,10 @@ module Member
     Cms::Node.plugin "member/photo_location"
     Cms::Node.plugin "member/photo_spot"
 
+    # anpi
+    Cms::Node.plugin "member/my_anpi_post"
+    Cms::Node.plugin "member/my_group"
+
     Cms::Part.plugin "member/login"
     Cms::Part.plugin "member/blog_page"
     Cms::Part.plugin "member/photo"

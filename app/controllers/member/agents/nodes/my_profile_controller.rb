@@ -16,6 +16,19 @@ class Member::Agents::Nodes::MyProfileController < ApplicationController
       @item = @cur_member
     end
 
+    def fix_params
+      params = {}
+      params[:kana_required] = true if @cur_node.kana_required?
+      params[:organization_name_required] = true if @cur_node.organization_name_required?
+      params[:job_required] = true if @cur_node.job_required?
+      params[:postal_code_required] = true if @cur_node.postal_code_required?
+      params[:tel_required] = true if @cur_node.tel_required?
+      params[:addr_required] = true if @cur_node.addr_required?
+      params[:sex_required] = true if @cur_node.sex_required?
+      params[:birthday_required] = true if @cur_node.birthday_required?
+      params
+    end
+
     def validate_password_params
       if params[:item][:in_password].blank?
         @item.errors.add :in_password, I18n.t("errors.messages.not_input")

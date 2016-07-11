@@ -1,0 +1,28 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if Member::Group.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :new, { action: :new }, class: :new %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock/ %>
+    <%= link_to :back_to_index, { action: :index }, class: "back-to-index" %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <% if @cur_member_group.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :back_to_show, { action: :show, id: @item }, class: "back-to-show" %>
+    <% end %>
+    <%= link_to :back_to_index, { action: :index }, class: "back-to-index" %>
+  <% else %>
+    <% if @cur_member_group.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :edit, { action: :edit, id: @item }, class: :edit %>
+    <% end %>
+    <% if @cur_member_group.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(:copy, { action: :copy, id: @item }, class: :copy) rescue nil %>
+    <% end %>
+    <% if @cur_member_group.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(:move, { action: :move, id: @item }, class: :move) rescue nil %>
+    <% end %>
+    <% if @cur_member_group.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :delete, { action: :delete, id: @item }, class: :delete %>
+    <% end %>
+    <%= link_to :back_to_index, { action: :index }, class: "back-to-index" %>
+  <% end %>
+</nav>

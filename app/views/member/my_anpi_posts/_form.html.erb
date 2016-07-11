@@ -1,0 +1,50 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>
+  <dd><%= f.text_field :kana %></dd>
+
+  <dt><%= @model.t :tel %><%= @model.tt :tel %></dt>
+  <dd><%= f.text_field :tel %></dd>
+
+  <dt><%= @model.t :addr %><%= @model.tt :addr %></dt>
+  <dd><%= f.text_field :addr %></dd>
+
+  <dt><%= @model.t :sex %><%= @model.tt :sex %></dt>
+  <dd><%= f.select :sex, @item.sex_options %></dd>
+
+  <dt><%= @model.t :age %><%= @model.tt :age %></dt>
+  <dd><%= f.number_field :age %></dd>
+
+  <dt><%= @model.t :email %><%= @model.tt :email %></dt>
+  <dd><%= f.email_field :email %></dd>
+
+  <dt><%= @model.t :text %><%= @model.tt :text %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :member_id %><%= @model.tt :member_id %></dt>
+  <dd>
+    <%= f.hidden_field "member_id", value: "", class: "hidden-ids" %>
+    <%= link_to :"cms.apis.members.index", cms_apis_members_path(single: 1), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Member.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% member = @item.member %>
+      <% if member.present? %>
+        <tr data-id="<%= member["id"] %>">
+          <td><%= f.hidden_field "member_id", value: member["id"] %> <%= member["name"] %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

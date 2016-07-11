@@ -1,0 +1,13 @@
+<dl class="see mod-board-google-person-finder-setting">
+  <dt><%= @model.t :gpf_state %><%= @model.tt :gpf_state %></dt>
+  <dd><%= f.select :gpf_state, @item.gpf_state_options %></dd>
+
+  <dt><%= @model.t :gpf_repository %><%= @model.tt :gpf_repository %></dt>
+  <dd><%= f.text_field :gpf_repository %></dd>
+
+  <dt><%= @model.t :gpf_domain_name %><%= @model.tt :gpf_domain_name %></dt>
+  <dd><%= f.text_field :gpf_domain_name %></dd>
+
+  <dt><%= @model.t :gpf_api_key %><%= @model.tt :gpf_api_key %></dt>
+  <dd><%= f.text_field :in_gpf_api_key %></dd>
+</dl>

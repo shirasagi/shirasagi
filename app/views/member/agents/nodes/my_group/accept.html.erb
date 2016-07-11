@@ -1,0 +1,18 @@
+<%= render partial: "menu" %>
+
+<%= form_for :item, url: "#{@cur_node.url}#{@item.id}/accept", html: { method: :post, multipart: true } do |f| %>
+  <div class="member-my-group member-my-group-accept">
+    <%= error_messages_for :item %>
+
+    <div class="head"><h2><%= t("member.confirm.group.accept") %></h2></div>
+
+    <div class="columns">
+      <%= render file: "_accept" %>
+    </div>
+
+    <footer class="send">
+      <%= f.submit t("member.button.accept") %>
+      <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+    </footer>
+  </div>
+<% end %>

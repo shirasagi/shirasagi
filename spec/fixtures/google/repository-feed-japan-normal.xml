@@ -1,0 +1,35 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:gpf="http://schemas.google.com/personfinder/2012"
+      xmlns:georss="http://www.georss.org/georss">
+  <id>https://www.google.org/personfinder/japan/feeds/repo</id>
+  <title>Person Finder Repository Feed</title>
+  <updated>2015-09-24T05:52:14Z</updated>
+  <entry>
+    <id>http://google.org/personfinder/japan</id>
+    <updated>2015-09-24T05:52:14Z</updated>
+    <title xml:lang="ja">日本</title>
+    <content type="text/xml">
+      <gpf:repo>
+        <gpf:title xml:lang="ja">日本</gpf:title>
+        <gpf:title xml:lang="en">Japan</gpf:title>
+        <gpf:title xml:lang="zh-CN">日本</gpf:title>
+        <gpf:title xml:lang="ko">일본</gpf:title>
+        <gpf:title xml:lang="fil">Hapon</gpf:title>
+        <gpf:title xml:lang="th">ประเทศญี่ปุ่น</gpf:title>
+        <gpf:title xml:lang="pt-BR">Japão</gpf:title>
+        <gpf:title xml:lang="vi">sơn mài Nhật</gpf:title>
+        <gpf:title xml:lang="es">Japón</gpf:title>
+        <gpf:title xml:lang="pt-PT">Japão</gpf:title>
+        <gpf:title xml:lang="af">Japan</gpf:title>
+        <gpf:read_auth_key_required>true</gpf:read_auth_key_required>
+        <gpf:search_auth_key_required>true</gpf:search_auth_key_required>
+        <gpf:test_mode>false</gpf:test_mode>
+        <gpf:location>
+          <georss:point>35.69377 139.70359</georss:point>
+        </gpf:location>
+      </gpf:repo>
+    </content>
+  </entry>
+</feed>

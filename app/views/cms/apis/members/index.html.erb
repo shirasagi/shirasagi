@@ -1,0 +1,37 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<div class="search-ui-form">
+<%= form_for :s, url: { action: :index, single: @single ? '1' : nil }, html: { method: "GET", class: :search } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit  t("cms.apis.members.search"), class: :btn %>
+<% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <% end %>
+      <th class="name"><%= @model.t :name %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>">
+        <% if @multi %>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <% end %>
+        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select">
+  <%= button_tag t("cms.apis.members.select"), { type: :button, class: "select-items" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

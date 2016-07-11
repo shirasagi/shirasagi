@@ -1,0 +1,13 @@
+<%= render partial: "menu" %>
+
+<div class="member-my-group member-my-group-show">
+  <%= error_messages_for :item, header_message: false %>
+
+  <div class="columns">
+    <%= render partial: "show" %>
+    <% @model.addons.each do |addon| %>
+      <% file = "#{Rails.root}/app/views/#{addon.path}/view/_show.html.erb" %>
+      <%= render file: file if File.exists?(file) %>
+    <% end %>
+  </div>
+</div>

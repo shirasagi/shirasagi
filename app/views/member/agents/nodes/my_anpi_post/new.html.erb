@@ -1,0 +1,22 @@
+<%= render partial: "menu" %>
+
+<%= form_for :item, url: @cur_node.url, html: { method: :post, multipart: true, autocomplete: :off, class: "mypage-new member-anpi-post-page" } do |f| %>
+
+  <div class="mypage-form member-anpi-post-page">
+    <%= error_messages_for :item, header_message: false %>
+
+    <div class="columns">
+      <%= render partial: "form", locals: { f: f }  %>
+      <% @model.addons.each do |addon| %>
+        <% file = "#{Rails.root}/app/views/#{addon.path}/view/_form.html.erb" %>
+        <%= render file: file, locals: { f: f } if File.exists?(file) %>
+      <% end %>
+    </div>
+
+    <footer class="send">
+      <%= f.submit t("views.button.save") %>
+      <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+    </footer>
+  </div>
+
+<% end %>

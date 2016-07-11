@@ -84,6 +84,10 @@ ja:
         index: 関連記事を選択する
         search: 関連記事を検索
         select: 関連記事を設定する
+      members:
+        index: メンバーを選択する
+        search: メンバーを検索
+        select: メンバーを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）

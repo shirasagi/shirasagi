@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<status:status>
+  <status:write>
+    <status:record_type>pfif:person</status:record_type>
+    <status:parsed>1</status:parsed>
+    <status:written>1</status:written>
+    <status:skipped>
+    </status:skipped>
+  </status:write>
+  <status:write>
+    <status:record_type>pfif:note</status:record_type>
+    <status:parsed>1</status:parsed>
+    <status:written>0</status:written>
+    <status:skipped>
+      <pfif:note_record_id>testkey.personfinder.google.org/1e9e9c4a-698c-4968-91e1-cc413a418a51.1458044588</pfif:note_record_id>
+      <status:error>Not authorized to post notes with the status "believed_dead"</status:error>
+    </status:skipped>
+  </status:write>
+</status:status>
