@@ -134,4 +134,87 @@ describe SS::File do
       end
     end
   end
+
+  describe "shirasagi-1066" do
+    let(:single_frame_image) { "#{::Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
+    let(:multi_frame_image) { "#{::Rails.root}/spec/fixtures/ss/file/keyvisual.gif" }
+
+    context "when save single frame image" do
+      subject do
+        file = SS::File.new model: "article/page"
+        Fs::UploadedFile.create_from_file(single_frame_image) do |f|
+          file.in_file = f
+          file.save!
+          file.in_file = nil
+        end
+        file.reload
+        file
+      end
+
+      it "#save_file" do
+        list = Magick::ImageList.new
+        list.from_blob(subject.read)
+        expect(list.size).to eq 1
+      end
+    end
+
+    context "when save single frame image with resizing" do
+      subject do
+        file = SS::File.new model: "article/page"
+        Fs::UploadedFile.create_from_file(single_frame_image) do |f|
+          file.in_file = f
+          file.resizing = [320,240]
+          file.save!
+          file.in_file = nil
+        end
+        file.reload
+        file
+      end
+
+      it "#save_file" do
+        list = Magick::ImageList.new
+        list.from_blob(subject.read)
+        expect(list.size).to eq 1
+      end
+    end
+
+    context "when save multi frame image" do
+      subject do
+        file = SS::File.new model: "article/page"
+        Fs::UploadedFile.create_from_file(multi_frame_image) do |f|
+          file.in_file = f
+          file.save!
+          file.in_file = nil
+        end
+        file.reload
+        file
+      end
+
+      it "#save_file" do
+        list = Magick::ImageList.new
+        list.from_blob(subject.read)
+        expect(list.size).to eq 5
+      end
+    end
+
+    context "when save multi frame image with resizing" do
+      subject do
+        file = SS::File.new model: "article/page"
+        Fs::UploadedFile.create_from_file(multi_frame_image) do |f|
+          file.in_file = f
+          file.resizing = [320,240]
+          file.save!
+          file.in_file = nil
+        end
+        file.reload
+        file
+      end
+
+      it "#save_file" do
+        list = Magick::ImageList.new
+        list.from_blob(subject.read)
+        expect(list.size).to eq 5
+      end
+    end
+  end
 end
