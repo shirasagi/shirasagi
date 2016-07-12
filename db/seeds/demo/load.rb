@@ -378,18 +378,22 @@ end
 
 ezine_signature_html = File.read("nodes/ezine.signature_html") rescue nil
 ezine_signature_text = File.read("nodes/ezine.signature_text") rescue nil
-ezine_reply_signature = File.read("nodes/ezine.reply_signature") rescue nil
-ezine_page_node = save_node route: "ezine/page", filename: "ezine", name: "メールマガジン",
-  sender_name: "シラサギサンプルサイト",
-  sender_email: "admin@example.jp",
-  reply_upper_text: "メールマガジン登録を受け付けました。",
-  signature_html: ezine_signature_html,
-  signature_text: ezine_signature_text,
-  reply_signature: ezine_reply_signature
-ezine_backnumber_node = save_node route: "ezine/backnumber", filename: "ezine/backnumber",
-  name: "メールマガジン　バックナンバー", conditions: %w(ezine)
-save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_type: "radio_button",
-  select_options: %w(男性 女性), required: "required", site_id: @site._id
+save_node route: "ezine/category_node", filename: "ezine", name: "メールマガジン"
+ezine_anpi = save_node route: "ezine/member_page", filename: "ezine/anpi", name: "安否確認", shortcut: "show",
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text
+save_node route: "ezine/category_node", filename: "ezine/magazine", name: "シラサギ市からのお知らせ"
+ezine_food = save_node route: "ezine/member_page", filename: "ezine/magazine/food", name: "食品衛生に関する注意喚起",
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text
+ezine_safety = save_node route: "ezine/member_page", filename: "ezine/magazine/safety", name: "安全・安心メール",
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text
+ezine_town = save_node route: "ezine/member_page", filename: "ezine/magazine/town", name: "タウン情報",
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text
+@member_1.subscription_ids = [ ezine_anpi.id, ezine_food.id, ezine_safety.id, ezine_town.id ]
+@member_1.save
 
 ## facility
 save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域", layout_id: layouts["one"].id

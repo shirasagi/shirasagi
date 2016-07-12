@@ -3,9 +3,5 @@
   <dd><%= f.text_field :email %></dd>
 
   <dt><%= @model.t :email_type %></dt>
-  <dd>
-  <% @item.email_type_options.each do |email_type| %>
-    <%= f.radio_button :email_type, email_type[1] %><%= email_type[0] %>
-  <% end %>
-  </dd>
+  <dd><%= f.select :email_type, @item.email_type_options %></dd>
 </dl>

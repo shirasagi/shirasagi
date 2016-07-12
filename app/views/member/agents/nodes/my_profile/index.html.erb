@@ -51,5 +51,7 @@
       <dt><%= @model.t :birthday %></dt>
       <dd><%= tryb { @item.birthday.strftime("西暦 %Y年 %m月 %d日") } %></dd>
     </dl>
+
+    <%= render file: '_mail_category_show' %>
   </div>
 </div>

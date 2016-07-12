@@ -1,0 +1,15 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to :show, cms_member_path(id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.name || item.id, cms_member_path(id: item), class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="email"><%= item.email %></span>
+<% end %>
+
+<%= render file: "cms/crud/index" %>
