@@ -1,0 +1,55 @@
+<% @s = OpenStruct.new params[:s] %>
+<%= form_for :s, url: gws_schedule_search_times_path, html: { method: :get, class: :search } do |f| %>
+  <h3 class="gws-schedule-search-title">
+    <%= t("gws/schedule.search_times") %>
+  </h3>
+
+  <dl class="gws-schedule-search-field">
+    <dt>
+      <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+      <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box btn" %>
+      <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+          <% if @s[:member_ids].blank? %>
+          <tr data-id="<%= @cur_user.id %>">
+            <td><%= f.hidden_field "member_ids[]", value: @cur_user.id %> <%= @cur_user.long_name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end %>
+
+          <% @members.each do |user| %>
+          <tr data-id="<%= user.id %>">
+            <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.long_name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end if @members.present? %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+
+  <dl class="gws-schedule-search-field">
+    <dt>
+      <%= f.hidden_field "facility_ids[]", value: "", class: "hidden-ids" %>
+      <%= link_to t("gws.apis.facilities.index"), gws_apis_facilities_path, class: "ajax-box btn" %>
+      <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+    </dt>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+          <% @facilities.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= f.hidden_field "facility_ids[]", value: item.id %> <%= item.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end if @facilities.present? %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+<% end %>

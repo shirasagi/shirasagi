@@ -58,4 +58,30 @@ class Gws::Schedule::Plan
           limit: number_to_human_size(limit))
       end
     end
+
+  class << self
+    def free_times(sdate, edate, min_hour, max_hour)
+      hours = (min_hour..max_hour).to_a
+
+      plan_times = {}
+      self.each do |plan|
+        time = Time.zone.parse plan.start_at.strftime("%Y-%m-%d %H:00:00")
+        while time < plan.end_at
+          hour = time.hour
+          plan_times[time.strftime("%Y-%m-%d #{hour}")] = nil if hour >= min_hour && hour <= max_hour
+          time += 1.hour
+        end
+      end
+
+      free_times = []
+      (sdate..(edate - 1.day)).each do |date|
+        ymd = date.strftime('%Y-%m-%d')
+        hours = []
+        (min_hour..max_hour).each { |i| hours << i unless plan_times.key?("#{ymd} #{i}") }
+        free_times << [date, hours] if hours.present?
+      end
+
+      return free_times
+    end
+  end
 end

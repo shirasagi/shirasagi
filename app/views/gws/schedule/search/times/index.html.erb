@@ -1,0 +1,33 @@
+<%= jquery do %>
+Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
+<% end %>
+
+<%= render "gws/schedule/main/tabs" %>
+
+<section class="main-box gws-schedule-box">
+  <header>
+    <h2><%= t('gws/schedule.tabs.search') %></h2>
+  </header>
+
+  <%= render "search" %>
+
+  <% if @items.present? %>
+  <div class="gws-schedule-search-hr"></div>
+  <div class="gws-schedule-search-times-result">
+    <% @items.each do |date, hours| %>
+    <div class="date <%= date.strftime('%a').downcase %>">
+      <p class="label"><%= l date, format: :full %></p>
+
+      <% @hours.each do |hour| %>
+        <% if hours.index(hour) %>
+          <% link_params = @schedule_params.merge(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
+          <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
+        <% else %>
+          <span class="hour exist"><%= hour %></span>
+        <% end %>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+  <% end %>
+</section>
