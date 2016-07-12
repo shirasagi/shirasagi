@@ -13,7 +13,7 @@ module Job::SS::TaskFilter
   private
     def task_cond
       cond = { name: self.class.task_name }
-      cond[:site_id] = site_id if site_id.present?
+      cond[:site_id] = site_id
       cond
     end
 
