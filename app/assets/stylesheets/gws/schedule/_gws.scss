@@ -283,6 +283,11 @@
     display: block;
   }
 }
+.calendar.multiple .fc-basicWeek-view {
+  .fc-title {
+    display: inline;
+  }
+}
 
 // View: listMonth
 .fc-listMonth-view {
