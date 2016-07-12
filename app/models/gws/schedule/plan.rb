@@ -78,7 +78,7 @@ class Gws::Schedule::Plan
         ymd = date.strftime('%Y-%m-%d')
         hours = []
         (min_hour..max_hour).each { |i| hours << i unless plan_times.key?("#{ymd} #{i}") }
-        free_times << [date, hours] if hours.present?
+        free_times << [date, hours] # if hours.present?
       end
 
       return free_times
