@@ -34,14 +34,14 @@ class Gws::Schedule::Search::TimesController < ApplicationController
     return @items = [] if or_cond.blank?
 
     sdate = Time.zone.today
-    edate = sdate + 21.days
+    edate = sdate + 30.days
 
     min_hour = 8  # 08:00
     max_hour = 21 # 22:00
     @hours = (min_hour..max_hour).to_a
 
     plans = Gws::Schedule::Plan.site(@cur_site).
-      between_dates(sdate.to_s, edate.to_s).
+      between_dates(sdate, edate).
       and('$or' => or_cond)
 
     @items = plans.free_times(sdate, edate, min_hour, max_hour)
