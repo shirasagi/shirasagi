@@ -8,12 +8,12 @@ Gws_Schedule_Calendar.render('#calendar', {
 
 <section class="main-box gws-schedule-box">
   <header>
-    <h2><%= t "mongoid.models.gws/schedule/group_setting/holiday" %></h2>
-    <nav>
+    <h2>
+      <%= t "mongoid.models.gws/schedule/group_setting/holiday" %>
       <% if @model.allowed?(:create, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
+        <%= link_to t('gws/schedule.links.add_holiday'), { action: :new }, { class: 'add-plan' } %>
       <% end %>
-    </nav>
+    </h2>
   </header>
   <div id="calendar" class="calendar"></div>
 </section>

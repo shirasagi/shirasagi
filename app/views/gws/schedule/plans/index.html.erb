@@ -10,11 +10,13 @@ Gws_Schedule_Calendar.render('#calendar', {
 
 <section class="main-box gws-schedule-box">
   <header>
-    <h2><%= (@user || @cur_user).long_name %></h2>
-    <nav>
+    <h2>
+      <%= (@user || @cur_user).long_name %>
       <% if @user.blank? || @user.id == @cur_user.id %>
-      <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
+        <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
       <% end %>
+    </h2>
+    <nav>
       <%= render file: '_search' %>
     </nav>
   </header>

@@ -10,11 +10,13 @@ Gws_Schedule_Calendar.render('#calendar', {
 
 <section class="main-box gws-schedule-box">
   <header>
-    <h2><%= @facility.name %></h2>
-    <nav class="calendar-menu">
+    <h2>
+      <%= @facility.name %>
       <% if @facility.reservable?(@cur_user) %>
-      <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
+        <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
       <% end %>
+    </h2>
+    <nav class="calendar-menu">
       <%= render file: '_search' %>
     </nav>
   </header>

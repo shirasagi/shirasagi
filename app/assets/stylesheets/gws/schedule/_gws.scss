@@ -72,7 +72,17 @@
     @include clear;
     line-height: 1.4;
     .add-plan {
-      @include arrow;
+      margin-left: 8px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background-color: #f40;
+      color: #fff;
+      font-size: 95%;
+      font-weight: normal;
+      text-decoration: none;
+      &:hover {
+        background-color: #f60;
+      }
     }
     .search {
       float: right;
@@ -445,9 +455,10 @@
 .fc-loading {
   display: inline-block;
   position: absolute;
-  padding: 0 2px;
+  padding: 0 5px;
   background-color: #6ad;
   color: #fff;
+  z-index: 2;
 }
 
 // multiple calendar
@@ -472,12 +483,26 @@
     color: #444;
     &:hover { color: $orange; }
   }
-  span {
-    margin: 0 0 0 12px;
-  }
   .add-plan {
+    margin-left: 8px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background-color: #f40;
+    color: #fff;
+    text-decoration: none;
+    &:hover {
+      background-color: #f60;
+      color: #fff;
+    }
+  }
+  .calendar-name {
+    font-weight: bold;
+  }
+  .calendar-attr {
     float: right;
-    font-size: $px15;
+    span {
+      margin-left: 8px;
+    }
   }
 }
 .calendar {

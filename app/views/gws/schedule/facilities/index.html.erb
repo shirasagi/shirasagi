@@ -25,7 +25,7 @@
     <div class="calendar-multiple-header">
       <%= link_to item.name, gws_schedule_facility_plans_path(facility: item.id), class: "calendar-name" %>
       <% if item.reservable?(@cur_user) %>
-      <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_facility_plan_path(facility: item.id), class: 'add-plan' %>
+        <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_facility_plan_path(facility: item.id), class: 'add-plan' %>
       <% end %>
     </div>
     <div class="calendar multiple facility" id="cal-<%= item.id %>"></div>
