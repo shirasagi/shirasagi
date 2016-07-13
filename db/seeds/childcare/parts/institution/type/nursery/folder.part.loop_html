@@ -1,0 +1,1 @@
+<li><a class="#{current}" href="#{url}">#{name}</a></li>
