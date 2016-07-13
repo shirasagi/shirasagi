@@ -1,19 +1,11 @@
-<%= javascript_include_tag "//maps.googleapis.com/maps/api/js?v=3" %>
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-map");
-
-  Map.center = <%= SS.config.cms.map_center.to_json %>
-  Map_Form.maxPointForm = <%= SS.config.cms.map_max_point_form %>
-  Map.setForm(Map_Form);
-
-  Map.load("#map-canvas");
-  Map.renderMarkers();
-  Map.renderEvents();
-
-  SS_AddonTabs.head(".mod-map").click(function() {
-    Map.resize();
-  });
-<% end %>
+<%
+  opts = {
+    center: SS.config.map.map_center,
+    max_point_form: SS.config.map.map_max_point_form,
+#    markers: @item.map_points.to_json,
+  }
+%>
+<%= render_map_form "#map-canvas", opts %>
 
 <div class="mod-map">
   <div class="location-search">

@@ -1,0 +1,202 @@
+class @Openlayers_Member_Photo_Form
+  constructor: (canvas, opts = {}) ->
+    @canvas         = canvas
+    @opts           = opts
+    @markerFeature  = null
+    @markerLayer    = null
+    @popup          = null
+    @maxPointForm   = 10
+    @deleteMessage  = "<%= I18n.t('map.confirm.delete_marker') %>"
+    @setExifMessage = "<%= I18n.t('map.confirm.find_exif') %>"
+    @dataID         = 0
+    @markerIcon     = '/assets/img/map-marker.png'
+    @clickIcon      = '/assets/img/map-marker-click.png'
+    @clickMarkerId  = null
+
+    @render()
+
+  getMapLoc: (ele) ->
+    latlon = ele.val().split(',')
+    return [parseFloat(latlon[0]), parseFloat(latlon[1])]
+
+  setMapLoc: (ele, lat, lon)->
+    lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6)
+    lon = Math.ceil(lon * Math.pow(10,6)) / Math.pow(10,6)
+    ele.val(lat.toFixed(6) + "," + lon.toFixed(6))
+    return
+
+  render: () ->
+    @initMap()
+    @renderMarkers()
+    @resize()
+    @renderEvents()
+
+  createLayers: (layerOpts) ->
+    layers = []
+    for opts in layerOpts
+      source     = opts["source"]
+      url        = opts["url"]
+      projection = opts["projection"]
+
+      layer = new ol.layer.Tile({
+        source: new ol.source[source]({
+          url: url
+          projection: projection
+        })
+      })
+      layers.push layer
+    layers
+
+  initMap: ->
+    center = @opts['center'] || [138.252924,36.204824]
+
+    layerOpts = @opts['layers']
+    layerOpts ||= [
+      source: "XYZ"
+      url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+      projection: "EPSG:3857"
+    ]
+
+    @map = new ol.Map
+      target: @canvas
+      renderer: ['canvas', 'dom']
+      layers: @createLayers(layerOpts)
+      controls: ol.control.defaults
+        attributionOptions:
+          collapsible: false
+      view: new ol.View
+        projection: "EPSG:3857"
+        center: ol.proj.transform(center, "EPSG:4326", "EPSG:3857")
+        maxZoom: 18
+        zoom: @opts['zoom'] || 10
+      logo: false
+
+  setCenter: (loc) ->
+    pos = [loc[1], loc[0]]
+    @map.getView().setCenter(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857"));
+
+  renderMarkers: () ->
+    $(".mod-map .marker").each (i, e) =>
+      $(e).attr("data-id", @dataID)
+
+      if $(e).find(".marker-loc").val() != ""
+        loc = @getMapLoc($(e).find(".marker-loc"))
+        @setMarker(loc, { id: parseInt(@dataID) })
+      @dataID += 1
+
+  setMarker: (loc, opts={}) ->
+    src = @markerIcon
+    src = opts['image'] if opts['image']
+
+    style = new ol.style.Style({
+      image: new ol.style.Icon({
+        anchor: [0.5, 1]
+        anchorXUnits: 'fraction'
+        anchorYUnits: 'fraction'
+        src: src
+      })
+    })
+
+    pos = [loc[1], loc[0]]
+    feature = new ol.Feature({
+      geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857"))
+      markerId: (opts['id'] ? null)
+      markerHtml: (opts['html'] ? null)
+      category: (opts['category'] ? null)
+    })
+    feature.setStyle(style)
+
+    if !@markerLayer
+      @markerLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [feature]
+        })
+      })
+      @map.addLayer(@markerLayer)
+    else
+      console.log(@markerLayer.getSource())
+      @markerLayer.getSource().addFeature(feature)
+
+    return feature
+
+  getMarker: (markerId) ->
+    ret = null
+    return ret unless @markerLayer
+
+    source = @markerLayer.getSource()
+    source.forEachFeature (feature) ->
+      if feature.get("markerId") == markerId
+        ret = feature
+    return ret
+
+  removeMarker: (markerId) ->
+    feature = @getMarker(markerId)
+    if feature
+      source = @markerLayer.getSource()
+      source.removeFeature(feature)
+      return true
+    return false
+
+  renderEvents: () ->
+    @map.on 'click', (e) =>
+      feature = @map.forEachFeatureAtPixel(e.pixel, (feature, layer) ->
+        return feature
+      )
+
+      pos = ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326")
+      # normalize geo position
+      pos[0] += 360 while pos[0] < 180
+      pos[0] -= 360 while pos[0] > 180
+      pos.reverse()
+
+      @setMapLoc($(".mod-map .clicked"), pos[0], pos[1])
+      @setMapLoc($(".mod-map .marker-loc"), pos[0], pos[1])
+      console.log()
+
+      @createMarker($(".mod-map .marker-loc"))
+
+    $(".mod-map .clear-marker").on 'click', (e) =>
+      @clearMarker($(".mod-map .marker-loc"))
+      return false
+
+  createMarker: (ele) ->
+    dataId = 0
+    @removeMarker(dataId)
+    @setMarker(@getMapLoc(ele), { id: dataId })
+
+  clearMarker: (ele) ->
+    dataId = 0
+    if ele.val() != ""
+      if confirm(@deleteMessage)
+        @removeMarker(dataId)
+        ele.val("")
+    else
+      @removeMarker(dataId)
+    return
+
+  setExifLatLng: (selector) ->
+    $(selector).change (e) =>
+      return unless e.target.files[0]
+
+      self = @
+      EXIF.getData e.target.files[0], ->
+        lat    = EXIF.getTag(this, 'GPSLatitude')
+        lon    = EXIF.getTag(this, 'GPSLongitude')
+        latRef = EXIF.getTag(this, 'GPSLatitudeRef') || "N"
+        lonRef = EXIF.getTag(this, 'GPSLongitudeRef') || "W"
+        return false unless lat && lon
+        return false unless confirm(self.setExifMessage)
+
+        latRef = if latRef == "N" then 1 else -1
+        lonRef = if lonRef == "W" then -1 else 1
+        lat = (lat[0] + (lat[1] / 60) + (lat[2] / 3600)) * latRef
+        lon = (lon[0] + (lon[1] / 60) + (lon[2] / 3600)) * lonRef
+        $(".mod-map .clicked").val([lat, lon].join())
+        $(".mod-map .marker-loc").val([lat, lon].join())
+        self.createMarker($(".mod-map .marker-loc"))
+        self.setCenter([lat, lon])
+
+  resize: () ->
+    return unless @markerLayer
+    extent = @markerLayer.getSource().getExtent();
+    @map.getView().fit(extent, @map.getSize());

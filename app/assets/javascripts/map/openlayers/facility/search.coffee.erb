@@ -1,0 +1,80 @@
+class @Openlayers_Facility_Search
+  @render :(selector, opts = {})->
+    # define functions
+    slideSidebar = (column) ->
+      columnTop = column.offset().top
+      indexTop  = column.closest("#map-sidebar").offset().top
+      scrolled  = column.closest("#map-sidebar").scrollTop()
+      column.closest("#map-sidebar").animate({ scrollTop: columnTop - indexTop + scrolled }, 'fast')
+
+    # setup map
+    canvas = $(selector)[0]
+    map = new Openlayers_Map(canvas, opts)
+
+    # setup markers
+    overrided = map.showPopup
+    map.showPopup = (feature, coordinate) ->
+      overrided.call(map, feature, coordinate)
+      $("#map-sidebar .column").removeClass("current")
+      dataId = feature.get("markerId")
+      column = $('#map-sidebar .column[data-id="' + dataId + '"]')
+      column.addClass("current")
+      slideSidebar(column)
+
+    # setup sidebar
+    $("#map-sidebar .column .click-marker").on "click", ->
+      dataId = parseInt($(this).closest(".column").attr("data-id"))
+      $("#map-sidebar .column").removeClass("current")
+      marker = map.getMarker(dataId)
+      return false unless marker
+
+      coordinate = marker.getGeometry().getCoordinates()
+      map.showPopup(marker, coordinate)
+      return false
+
+    # setup category filter
+    $(".filters a").on "click", ->
+      if $(this).hasClass("clicked")
+         $(this).removeClass("clicked")
+      else
+        $(this).addClass("clicked")
+
+      dataIds = []
+      $(".filters a.clicked").each ->
+        dataIds.push parseInt($(this).attr("data-id"))
+
+      markers = map.getMarkers()
+      $.each markers, ->
+        visible = false
+        category = this.get("category")
+
+        $.each dataIds, ->
+          if $.inArray(parseInt(this), category) >= 0
+            visible = true
+            return false
+
+        dataId = this.get("markerId")
+        column = $('#map-sidebar .column[data-id="' + dataId + '"]')
+
+        map.popup.hide()
+        if visible
+          iconSrc = this.get("iconSrc")
+          style = map.createMarkerStyle(iconSrc)
+          this.setStyle(style)
+        else
+          style = new ol.style.Style({})
+          this.setStyle(style)
+
+      return false
+
+    # setup location filter
+    $(".filters .focus").on "change", ->
+      select = $(this)
+      select.find("option:selected").each ->
+        return false if $(this).val() == ""
+        loc = $(this).val().split(",")
+        zoomLevel = $(this).attr("data-zoom-level")
+        pos = [parseFloat(loc[1]), parseFloat(loc[0])]
+        map.setCenter(pos)
+        map.setZoom(parseInt(zoomLevel)) if zoomLevel
+        select.val("")

@@ -1,0 +1,319 @@
+class @Openlayers_Map_Form
+  constructor: (canvas, opts = {}) ->
+    @canvas        = canvas
+    @opts          = opts
+    @markerFeature = null
+    @markerLayer   = null
+    @popup         = null
+    @maxPointForm  = 10
+    @deleteMessage = "<%= I18n.t('map.confirm.delete_marker') %>"
+    @dataID        = 0
+    @markerIcon    = '/assets/img/map-marker.png'
+    @clickIcon     = '/assets/img/map-marker-click.png'
+    @clickMarkerId = null
+
+    @render()
+
+  getMapLoc: (ele) ->
+    latlon = ele.val().split(',')
+    return [parseFloat(latlon[0]), parseFloat(latlon[1])]
+
+  setMapLoc: (ele, lat, lon)->
+    lat = Math.ceil(lat * Math.pow(10,6)) / Math.pow(10,6)
+    lon = Math.ceil(lon * Math.pow(10,6)) / Math.pow(10,6)
+    ele.val(lat.toFixed(6) + "," + lon.toFixed(6))
+    return
+
+  render: () ->
+    @initMap()
+    @renderMarkers()
+    @initPopup()
+    @resize()
+    @renderEvents()
+
+  createLayers: (layerOpts) ->
+    layers = []
+    for opts in layerOpts
+      source     = opts["source"]
+      url        = opts["url"]
+      projection = opts["projection"]
+
+      layer = new ol.layer.Tile({
+        source: new ol.source[source]({
+          url: url
+          projection: projection
+        })
+      })
+      layers.push layer
+    layers
+
+  initMap: ->
+    center = @opts['center'] || [138.252924,36.204824]
+    layerOpts = @opts['layers']
+    layerOpts ||= [
+      source: "XYZ"
+      url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+      projection: "EPSG:3857"
+    ]
+    @maxPointForm = @opts['max_point_form'] || 10
+
+    @map = new ol.Map
+      target: @canvas
+      renderer: ['canvas', 'dom']
+      layers: @createLayers(layerOpts)
+      controls: ol.control.defaults
+        attributionOptions:
+          collapsible: false
+      view: new ol.View
+        projection: "EPSG:3857"
+        center: ol.proj.transform(center, "EPSG:4326", "EPSG:3857")
+        maxZoom: 18
+        zoom: @opts['zoom'] || 10
+      logo: false
+
+  initPopup: ->
+    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content"></div></div>')
+    @popup = $('#marker-popup')
+    @popup.hide()
+
+    @popupOverlay = new ol.Overlay(({
+      element: @popup.get(0),
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250
+      }
+    }))
+    @map.addOverlay(@popupOverlay)
+
+    @map.on 'pointermove', (e) =>
+      if (e.dragging)
+        @popup.hide()
+        return
+      pixel = @map.getEventPixel(e.originalEvent)
+      hit = @map.hasFeatureAtPixel(pixel)
+      cursor = `hit ? 'pointer' : ''`
+      @map.getTarget().style.cursor = cursor
+
+    @popup.find('.closer').on 'click', (e) =>
+      @popupOverlay.setPosition(undefined)
+      $(this).blur()
+      return false
+
+  renderMarkers: () ->
+    $(".mod-map dd.marker").each (i, e) =>
+      $(e).attr("data-id", @dataID)
+
+      if $(e).find(".marker-loc").val() != ""
+        loc = @getMapLoc($(e).find(".marker-loc"))
+        @setMarker(loc, { id: parseInt(@dataID) })
+        #Map_Form.attachMessage(Map_Form.dataID)
+      @dataID += 1
+
+  showPopup: (e, feature) ->
+    markerId = feature.get("markerId")
+    if markerId != 0 && !markerId
+      @popup.hide()
+      return
+
+    markerHtml = ""
+    $('dd[data-id = "' + markerId + '"]').each ->
+      name = $(this).find(".marker-name").val()
+      text = $(this).find(".marker-text").val()
+      if name
+        markerHtml += '<p>' + name + '</p>'
+      if text
+        $.each text.split(/[\r\n]+/), ->
+          if this.match(/^https?:\/\//)
+            markerHtml += '<p><a href="' + this + '">' + this + '</a></p>'
+          else
+            markerHtml += '<p>' + this + '</p>'
+
+    unless markerHtml
+      return
+
+    @popup.find('.content').html(markerHtml)
+    @popup.attr(dataId: markerId)
+    @popup.show()
+    @popupOverlay.setPosition(e.coordinate)
+
+  setMarker: (loc, opts={}) ->
+    src = @markerIcon
+    src = opts['image'] if opts['image']
+
+    style = new ol.style.Style({
+      image: new ol.style.Icon({
+        anchor: [0.5, 1]
+        anchorXUnits: 'fraction'
+        anchorYUnits: 'fraction'
+        src: src
+      })
+    })
+
+    pos = [loc[1], loc[0]]
+    feature = new ol.Feature({
+      geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857"))
+      markerId: (opts['id'] ? null)
+      markerHtml: (opts['html'] ? null)
+      category: (opts['category'] ? null)
+    })
+    feature.setStyle(style)
+
+    if !@markerLayer
+      @markerLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+          features: [feature]
+        })
+      })
+      @map.addLayer(@markerLayer)
+    else
+      @markerLayer.getSource().addFeature(feature)
+
+    return feature
+
+  getMarker: (markerId) ->
+    ret = null
+    return ret unless @markerLayer
+
+    source = @markerLayer.getSource()
+    source.forEachFeature (feature) ->
+      if feature.get("markerId") == markerId
+        ret = feature
+    return ret
+
+  removeMarker: (markerId) ->
+    feature = @getMarker(markerId)
+    if feature
+      source = @markerLayer.getSource()
+      source.removeFeature(feature)
+      if feature.get("markerId") == parseInt(@popup.attr("dataId"))
+        @popup.hide()
+      return true
+    return false
+
+  renderEvents: ()->
+    @map.on 'click', (e) =>
+      feature = @map.forEachFeatureAtPixel(e.pixel, (feature, layer) ->
+        return feature
+      )
+
+      if feature
+        @showPopup(e, feature)
+        return
+
+      if @clickMarkerId
+        feature = @getMarker(@clickMarkerId)
+        source = @markerLayer.getSource()
+        source.removeFeature(feature)
+
+      pos = ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326")
+      # normalize geo position
+      pos[0] += 360 while pos[0] < 180
+      pos[0] -= 360 while pos[0] > 180
+      pos.reverse()
+
+      @clickMarkerId = "click"
+      @setMarker(pos, { image: @clickIcon, id: @clickMarkerId })
+      @setMapLoc($(".mod-map .clicked"), pos[0], pos[1])
+
+    $(".mod-map .add-marker").on 'click', (e) =>
+      @clonePointForm()
+      return false
+
+    $(".mod-map .clear-marker").on 'click', (e) =>
+      ele = e.target
+      @clearPointForm($(ele).closest("dd.marker"))
+      return false
+
+    $(".mod-map .set-marker").on 'click', (e) =>
+      ele = e.target
+      @createMarker($(ele).closest("dd.marker"))
+      return false
+
+    $(".mod-map .marker-name").on 'keypress', (e) ->
+      if e.which == 13
+        return false
+
+    $(".mod-map .marker-loc-input").on 'keypress', (e) ->
+      if e.which == 13
+        $(this).closest("dd.marker").find(".set-marker").trigger("click")
+        return false
+
+    $(".mod-map .marker-loc-input").on 'focus', (e) =>
+      if @clickMarkerId
+        feature = @getMarker(@clickMarkerId)
+        source = @markerLayer.getSource()
+        source.removeFeature(feature)
+        @clickMarkerId = null
+        $(".mod-map .clicked").val("")
+
+    # not supported
+    $(".location-search").hide()
+
+  clonePointForm: () =>
+    if $(".mod-map dd.marker").length < @maxPointForm
+      cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"))
+      cln.attr("data-id", @dataID)
+      @dataID += 1
+      cln.find("input,textarea").val ""
+      cln.find(".marker-name").val("")
+      cln.find(".clear-marker").on 'click', =>
+        @clearPointForm(cln)
+      cln.find(".set-marker").on 'click', =>
+        @createMarker(cln)
+      cln.find(".marker-name").on 'keypress', (e)=>
+        if e.which == 13
+          return false
+      cln.find(".marker-loc-input").on 'keypress', (e) ->
+        if e.which == 13
+          $(e.target).closest("dd.marker").find(".set-marker").trigger("click")
+          return false
+      cln.find(".marker-loc-input").on 'focus', (e) =>
+        if @clickMarkerId
+          feature = @getMarker(@clickMarkerId)
+          source = @markerLayer.getSource()
+          source.removeFeature(feature)
+          @clickMarkerId = null
+          $(".mod-map .clicked").val("")
+    if $(".mod-map dd.marker").length == @maxPointForm
+      $(".mod-map dd .add-marker").parent().hide()
+    return
+
+  createMarker: (ele)->
+    loc = null
+    if $(".mod-map .clicked").val() != ""
+      loc = $(".mod-map .clicked").val()
+    else if ele.find(".marker-loc-input").val() != ""
+      if Map_Form.validateLoc(ele.find(".marker-loc-input"))
+        loc = ele.find(".marker-loc-input").val()
+      else
+        alert("<%= I18n.t('map.alert.invalid_location').join("\n") %>")
+    return unless loc
+
+    ele.find(".marker-loc").val(loc)
+    ele.find(".marker-loc-input").val(loc)
+    dataId = parseInt(ele.attr("data-id"))
+
+    @removeMarker(dataId)
+    @setMarker(@getMapLoc(ele.find(".marker-loc")), { id: dataId })
+
+  clearPointForm: (ele)->
+    if ele.find(".marker-loc").val() != ""
+      if confirm(@deleteMessage)
+        dataId = parseInt(ele.attr("data-id"))
+        @removeMarker(dataId)
+        ele.find("input,textarea").val("")
+        if $(".mod-map dd.marker").length > 1
+          ele.remove()
+    else
+      dataId = parseInt(ele.attr("data-id"))
+      @removeMarker(dataId)
+      ele.find("input,textarea").val("")
+      if $(".mod-map dd.marker").length > 1
+        ele.remove()
+    $(".mod-map dd .add-marker").parent().show()
+    return
+
+  resize: () ->
+    return unless @markerLayer
+    extent = @markerLayer.getSource().getExtent();
+    @map.getView().fit(extent, @map.getSize());

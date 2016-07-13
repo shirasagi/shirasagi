@@ -1,0 +1,24 @@
+production: &production
+  # Map Api
+  #   googlemaps - use googlemaps v3
+  #   openlayers - use openlayers3
+  api: googlemaps
+  api_key:
+  layers:
+    - source: "XYZ"
+      url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+      projection: "EPSG:3857"
+
+  # Map Addon Center Location
+  map_center:
+    - 36.204824
+    - 138.252924
+
+  # Max Number of Markers in Map Addon
+  map_max_point_form: 10
+
+test:
+  <<: *production
+
+development:
+  <<: *production
