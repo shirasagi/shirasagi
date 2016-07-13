@@ -172,4 +172,26 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map{|u| u.cms_roles.order_by(name: 1).map(&:name)}).to eq expected_cms_roles
     end
   end
+
+  context "ss-1075" do
+    let(:site2) { create(:cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp") }
+    let(:role) { create(:cms_role, cur_site: site, name: '管理者1', permissions: Cms::Role.permission_names) }
+    let(:role2) { create(:cms_role, cur_site: site2, name: '管理者2', permissions: Cms::Role.permission_names) }
+
+    before do
+      item.cms_role_ids = [ role.id, role2.id ]
+      item.save!
+
+      login_cms_user
+    end
+
+    it do
+      visit index_path
+      click_on 'ダウンロード'
+
+      csv = page.html.encode("UTF-8")
+      expect(csv).to include("id,name,email,password,uid,ldap_dn,groups,cms_roles")
+      expect(csv).to include("#{item.id},#{item.name},#{item.email},,#{item.uid},#{item.ldap_dn},#{item.groups.first.name},管理者1\n")
+    end
+  end
 end

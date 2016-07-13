@@ -1,4 +1,7 @@
 <dl class="see">
+  <dt><%= @model.t :job_id %></dt>
+  <dd><%= @item.job_id %></dd>
+
   <dt><%= @model.t :class_name %></dt>
   <dd><%= t(@item.class_name.underscore, scope: "job.models") %></dd>
 

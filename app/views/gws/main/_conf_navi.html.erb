@@ -36,4 +36,8 @@
   <% if Gws::History.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.gws/history'), gws_histories_path %></h3>
   <% end %>
+
+  <% if Gws::Job::Log.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('mongoid.models.gws/job/log'), gws_job_logs_path %></h3>
+  <% end %>
 </nav>

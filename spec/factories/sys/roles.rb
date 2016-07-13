@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :sys_role, class: Sys::Role do
-    user_id { ss_user.id }
+    cur_user { ss_user }
     name "sys_role"
     permissions ["edit_sys_users"]
     #permission_level 1

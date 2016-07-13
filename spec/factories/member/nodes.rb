@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :member_node_login, class: Member::Node::Login, traits: [:cms_node] do
-    site_id { cur_site.present? ? cur_site.id : cms_site.id }
+    cur_site { cms_site }
     route "member/login"
     filename { SS.config.oauth.prefix_path.sub(/^\//, '') || "auth" }
     twitter_oauth "enabled"

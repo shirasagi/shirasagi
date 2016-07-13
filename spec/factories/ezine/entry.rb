@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :ezine_entry, class: Ezine::Entry do
-    site_id { cms_site.id }
+    cur_site { cms_site }
     email "entry@example.jp"
     email_type "text"
     entry_type "add"

@@ -135,14 +135,15 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
     describe "copy article/page with files" do
       let(:user) { cms_user }
-      let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
-      let!(:page) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id }
+      let(:node) { create :article_node_page, cur_site: site, cur_user: user, layout_id: layout.id }
+      let!(:page) { create :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id }
 
       before do
         task.copy_contents = 'pages'
         task.save!
 
-        file = create :ss_file, site_id: site.id
+        file = create :ss_file, site_id: site.id, cur_user: user
+        raise if file.errors.count > 0
         page.file_ids = [ file.id ]
         page.html = "<div>#{file.url}</div>"
         page.save!

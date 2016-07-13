@@ -4,9 +4,7 @@ require "csv"
 describe "job_cms_logs", dbscope: :example do
   let(:site) { cms_site }
   let(:index_path) { job_cms_logs_path site.id }
-  let(:download_path) { job_cms_download_path site.id }
-  let(:batch_destroy) { job_cms_batch_destroy_path site.id }
-  let(:job) { create(:job_model, site: site) }
+  let(:job) { create(:job_model, cur_site: site) }
   let(:log1) { create(:job_log, :job_log_running, job: job) }
   let(:log2) { create(:job_log, :job_log_completed, job: job) }
   let(:log3) { create(:job_log, :job_log_failed, job: job) }
@@ -43,9 +41,9 @@ describe "job_cms_logs", dbscope: :example do
         expect(log).not_to be_nil
       end
 
-      visit download_path
+      visit index_path
+      click_on 'ダウンロード'
       expect(status_code).to eq 200
-      expect(current_path).to eq download_path
 
       within "form" do
         click_button I18n.t(:download, scope: "views")
@@ -75,9 +73,9 @@ describe "job_cms_logs", dbscope: :example do
       end
       expect(Job::Log.count).to be > 0
 
-      visit batch_destroy
+      visit index_path
+      click_on '削除する'
       expect(status_code).to eq 200
-      expect(current_path).to eq batch_destroy
 
       within "form" do
         select I18n.t("history.save_term.all_delete"), from: "item_save_term"

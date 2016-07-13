@@ -13,14 +13,18 @@ module Job::LogsFilter
       @crumbs << [:"job.log", action: :index]
     end
 
+    def log_criteria
+      @model.site(@cur_site)
+    end
+
     def set_item
-      @item = @model.site(@cur_site).find(params[:id])
-      raise "403" unless @item
+      @item = log_criteria.find(params[:id])
+      raise "404" unless @item
     end
 
   public
     def index
-      @items = @model.site(@cur_site).order_by(updated: -1).page(params[:page]).per(50)
+      @items = log_criteria.order_by(updated: -1).page(params[:page]).per(50)
     end
 
     def show
@@ -35,10 +39,10 @@ module Job::LogsFilter
       from = @model.term_to_date params[:item][:save_term]
       raise "400" if from == false
 
-      cond = { site_id: @cur_site.id }
+      cond = {}
       cond[:created] = { "$gte" => from } if from
 
-      @items = @model.where(cond).sort(closed: 1)
+      @items = log_criteria.where(cond).sort(closed: 1)
       send_csv @items
     end
 
@@ -54,7 +58,7 @@ module Job::LogsFilter
           return
         end
 
-        num = @model.site(@cur_site).term(from).delete
+        num = log_criteria.term(from).delete
 
         compact
 

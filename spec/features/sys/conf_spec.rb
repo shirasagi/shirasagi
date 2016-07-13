@@ -24,7 +24,7 @@ describe "sys_conf", type: :feature, dbscope: :example do
         expect(page).to have_css('h3 a', text: 'サイト複製')
         expect(page).to have_css('h3 a', text: 'テスト')
         expect(page).to have_css('h3 a', text: '操作履歴')
-        expect(page).to have_css('h3 a', text: 'ジョブ実行履歴')
+        expect(page).to have_css('h3 a', text: 'ジョブ')
       end
     end
   end
@@ -52,7 +52,7 @@ describe "sys_conf", type: :feature, dbscope: :example do
         expect(page).not_to have_css('h3 a', text: 'サイト複製')
         expect(page).not_to have_css('h3 a', text: 'テスト')
         expect(page).not_to have_css('h3 a', text: '操作履歴')
-        expect(page).not_to have_css('h3 a', text: 'ジョブ実行履歴')
+        expect(page).not_to have_css('h3 a', text: 'ジョブ')
       end
     end
   end
@@ -80,7 +80,7 @@ describe "sys_conf", type: :feature, dbscope: :example do
         expect(page).not_to have_css('h3 a', text: 'サイト複製')
         expect(page).not_to have_css('h3 a', text: 'テスト')
         expect(page).not_to have_css('h3 a', text: '操作履歴')
-        expect(page).not_to have_css('h3 a', text: 'ジョブ実行履歴')
+        expect(page).not_to have_css('h3 a', text: 'ジョブ')
       end
     end
   end
@@ -108,7 +108,7 @@ describe "sys_conf", type: :feature, dbscope: :example do
         expect(page).to     have_css('h3 a', text: 'サイト複製')
         expect(page).not_to have_css('h3 a', text: 'テスト')
         expect(page).not_to have_css('h3 a', text: '操作履歴')
-        expect(page).not_to have_css('h3 a', text: 'ジョブ実行履歴')
+        expect(page).not_to have_css('h3 a', text: 'ジョブ')
       end
     end
   end
@@ -136,7 +136,7 @@ describe "sys_conf", type: :feature, dbscope: :example do
         expect(page).not_to have_css('h3 a', text: 'サイト複製')
         expect(page).to     have_css('h3 a', text: 'テスト')
         expect(page).to     have_css('h3 a', text: '操作履歴')
-        expect(page).to     have_css('h3 a', text: 'ジョブ実行履歴')
+        expect(page).to     have_css('h3 a', text: 'ジョブ')
       end
     end
   end
@@ -163,7 +163,7 @@ describe "sys_conf", type: :feature, dbscope: :example do
         expect(page).not_to have_css('h3 a', text: 'サイト複製')
         expect(page).not_to have_css('h3 a', text: 'テスト')
         expect(page).not_to have_css('h3 a', text: '操作履歴')
-        expect(page).not_to have_css('h3 a', text: 'ジョブ実行履歴')
+        expect(page).not_to have_css('h3 a', text: 'ジョブ')
       end
     end
   end

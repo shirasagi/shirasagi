@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :ezine_column, class: Ezine::Column do
     state "public"
     required "required"
-    site_id { cms_site.id }
+    cur_site { cms_site }
     association :node, factory: :ezine_node
   end
 end

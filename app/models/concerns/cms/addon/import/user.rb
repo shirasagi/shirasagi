@@ -11,19 +11,21 @@ module Cms::Addon::Import
     end
 
     module ClassMethods
-      def to_csv
-        csv = CSV.generate do |data|
+      def to_csv(opts = {})
+        CSV.generate do |data|
           data << %w(id name email password uid ldap_dn groups cms_roles)
           criteria.each do |item|
+            roles = item.cms_roles
+            roles = roles.site(opts[:site]) if opts[:site]
             line = []
             line << item.id
             line << item.name
             line << item.email
-            line << ""
+            line << nil
             line << item.uid
             line << item.ldap_dn
             line << item.groups.map(&:name).join("\n")
-            line << item.cms_roles.map(&:name).join("\n")
+            line << roles.map(&:name).join("\n")
             data << line
           end
         end

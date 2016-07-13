@@ -1,0 +1,13 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to :show, action: :show, id: item %>
+  <%= link_to :delete, action: :delete, id: item %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="state"><%= item.state %></span>
+  <span class="started"><%= tryb { item.started.strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="closed"><%= tryb { item.closed.strftime("%Y/%m/%d %H:%M") } %></span>
+<% end %>
+
+<%= render file: "cms/crud/index" %>

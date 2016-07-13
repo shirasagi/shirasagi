@@ -3,7 +3,7 @@ class Job::Cms::LogsController < ApplicationController
   include Cms::CrudFilter
   include Job::LogsFilter
 
-  navi_view "cms/main/conf_navi"
+  navi_view "job/cms/main/navi"
 
   private
     def filter_permission

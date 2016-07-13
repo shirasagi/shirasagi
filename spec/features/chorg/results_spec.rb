@@ -28,7 +28,7 @@ describe "chorg_results", dbscope: :example do
     end
 
     context "with item" do
-      let(:job) { create(:job_model, site: site) }
+      let(:job) { create(:job_model, cur_site: site) }
       let(:job_log) { create(:job_log, :job_log_running, job: job) }
       let(:revision) { create(:revision, site_id: site.id, job_ids: [job.id]) }
       let(:index_path) { chorg_results_results_path site.id, revision.id }
@@ -49,7 +49,7 @@ describe "chorg_results", dbscope: :example do
   end
 
   describe "#show" do
-    let(:job) { create(:job_model, site: site) }
+    let(:job) { create(:job_model, cur_site: site) }
     let(:job_log) { create(:job_log, :job_log_running, job: job) }
     let(:revision) { create(:revision, site_id: site.id, job_ids: [job.id]) }
     let(:show_path) { chorg_results_result_path site.id, revision.id, job_log.id }

@@ -30,6 +30,26 @@ class @Gws_Reminder
       $.ajax(ajax_params)
 
   @renderList: (opts = {})->
+    @noticeTimer = null
+    showInformation = (item, state) ->
+      switch state
+        when 'updating'
+          item.find('.updated').hide()
+          clearTimeout(@noticeTimer) if @noticeTimer
+          $('#notice').hide()
+        when 'updated'
+          item.find('.updated').show()
+          unless $('#notice')[0]
+            $('#page').append('<aside id="notice"><div class="wrap"></div></aside>')
+          $('#notice .wrap').html "<%= I18n.t('views.notice.saved') %>"
+          $('#notice').show()
+          @noticeTimer = setTimeout ->
+            $('#notice').slideUp("fast")
+          , 1500
+        else
+          item.find('.updated').hide()
+
+
     $('.list-item').each ->
       $(this).find('.links').append('<a class="restore" href="#" style="display: none;"><%= I18n.t('gws.links.restore_reminder') %></a>')
 
@@ -48,6 +68,7 @@ class @Gws_Reminder
         success: (data)->
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').hide()
           item.find('.restore').show()
+          item.find('.notification').hide()
           return false
         error: (data)->
           alert('Error')
@@ -66,6 +87,29 @@ class @Gws_Reminder
         success: (data)->
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete').show()
           item.find('.restore').hide()
+          if item.find('.notification')[0]
+            item.find('.notification')[0].selectedIndex = 0
+          item.find('.notification').show()
           return false
         error: (data)->
+          alert('Error')
+
+    $('.list-item .notification').change ->
+      item = $(this).closest('.list-item')
+      idx = this.selectedIndex
+      value = this.options[idx].value
+      showInformation(item, 'updating')
+      $.ajax
+        url: "#{opts['url']}/notifications"
+        method: 'post'
+        data:
+          item:
+            item_id: item.data('id')
+            model: item.data('model')
+            in_notify_before: value
+        success: (data)->
+          showInformation(item, 'updated')
+          return false
+        error: (data)->
+          showInformation(item, 'none')
           alert('Error')

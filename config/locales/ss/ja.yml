@@ -264,12 +264,14 @@ ja:
       ss/reference/site:
         site_id: サイト
       ss/model/task:
+        site_id: サイト
         name: タスク名
         started: 開始日時
         closed: 終了日時
+        interrupt: 中止命令
         total_count: 全体件数
         current_count: 処理件数
-        log: ログ
+        logs: ログ
       ss/model/file:
         model: モデル
         state: 状態
@@ -312,6 +314,15 @@ ja:
         image_size_name: 画像サイズ名
         thumb_width: 幅
         thumb_height: 高さ
+      ss/model/job_log:
+        job_id: ジョブID
+        class_name: ジョブ名
+        started: 開始日時
+        closed: 終了日時
+        state: 状態
+        args: パラメータ
+        logs: ログ
+        save_term: 保存期間
 
   tooltip:
     ss/model/user:

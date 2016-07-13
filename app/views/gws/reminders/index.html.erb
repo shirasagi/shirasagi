@@ -38,6 +38,10 @@
       </div>
 
       <div class="links">
+        <img class="updated" src="/assets/img/ic-check.png" alt="" style="display: none; vertical-align: middle; margin: 0px 4px" />
+        <% if item.date.present? %>
+        <%= select_tag :notification, options_for_select(item.notification_options, tryb { item.notifications.first.notify_before }), class: :notification %>
+        <% end %>
         <input type="button" class="btn delete" value="削除" />
       </div>
     </li>

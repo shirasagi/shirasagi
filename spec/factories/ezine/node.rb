@@ -1,15 +1,15 @@
 FactoryGirl.define do
   factory :ezine_node, class: Cms::Node do
-    site_id { cms_site.id }
-    user_id { cms_user.id }
+    cur_site { cms_site }
+    cur_user { cms_user }
     name 'title'
     filename 'magazine'
     route 'magazine'
   end
 
   factory :ezine_node_page, class: Ezine::Node::Page do
-    site_id { cms_site.id }
-    user_id { cms_user.id }
+    cur_site { cms_site }
+    cur_user { cms_user }
     route 'ezine/page'
     name 'ezine'
     filename 'ezine'

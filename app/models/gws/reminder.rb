@@ -15,6 +15,7 @@ class Gws::Reminder
   field :updated_user_uid, type: String
   field :updated_user_name, type: String
   field :updated_date, type: DateTime
+  embeds_many :notifications, class_name: "Gws::Reminder::Notification"
 
   permit_params :name, :model, :date, :item_id
 
@@ -32,6 +33,14 @@ class Gws::Reminder
 
     criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
     criteria
+  }
+  scope :notification_activated, -> {
+    where(
+      "notifications.notify_at" => { "$exists" => true, "$ne" => Time.zone.at(0) },
+      "notifications.delivered_at" => Time.zone.at(0))
+  }
+  scope :notify_between, ->(from, to) {
+    notification_activated.where("notifications.notify_at" => { "$gte" => from, "$lt" => to })
   }
 
   def item
@@ -55,5 +64,11 @@ class Gws::Reminder
   def updated_field_names
     return [] if updated_fields.blank?
     updated_fields.map { |m| item.try(:t, m) }.compact.uniq
+  end
+
+  def notification_options
+    %w(-1 10 30 60).map do |v|
+      [ I18n.t("gws.options.reminder/notification.#{v}"), v ]
+    end
   end
 end

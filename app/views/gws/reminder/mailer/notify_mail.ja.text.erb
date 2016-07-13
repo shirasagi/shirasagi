@@ -1,0 +1,10 @@
+[<%= @item.class.t :name %>] <%= @item.name %>
+
+[<%= @item.class.t :term %>] <%= term(@item) %>
+
+--------
+
+[<%= @item.class.t :member_ids %>]
+<% @item.sorted_members.map(&:long_name).each do |long_name| %>
+・<%= long_name %>
+<% end %>

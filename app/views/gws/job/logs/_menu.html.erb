@@ -1,0 +1,8 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to :download, action: :download %>
+    <%= link_to :delete, action: :batch_destroy %>
+  <% else %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>

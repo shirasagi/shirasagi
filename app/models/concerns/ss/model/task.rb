@@ -2,6 +2,7 @@ module SS::Model::Task
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
+  # include SS::Reference::Site
   include SS::Reference::User
 
   attr_accessor :log_buffer
@@ -9,7 +10,10 @@ module SS::Model::Task
   included do
     store_in collection: "ss_tasks"
 
+    attr_accessor :cur_site
+
     seqid :id
+    belongs_to :site, class_name: "SS::Site"
     field :name, type: String
     #field :command, type: String
     field :state, type: String, default: "stop"
@@ -20,12 +24,16 @@ module SS::Model::Task
     field :current_count, type: Integer, default: 0
     field :logs, type: Array, default: []
 
+    before_validation :set_site_id, if: ->{ @cur_site }
+
     validates :name, presence: true
     validates :state, presence: true
     validates :started, datetime: true
     validates :closed, datetime: true
 
     after_initialize :init_variables
+
+    scope :site, ->(site) { where(site_id: site.id) }
   end
 
   class Interrupt < StandardError
@@ -112,4 +120,9 @@ module SS::Model::Task
     end
     agent.invoke action
   end
+
+  private
+    def set_site_id
+      self.site_id ||= @cur_site.id
+    end
 end

@@ -1,6 +1,8 @@
 ja:
   job:
-    log: ジョブ実行履歴
+    main: ジョブ
+    log: 実行履歴
+    task: タスク
     save_term:
       day: １日
       month: １ヶ月
@@ -14,8 +16,10 @@ ja:
     notice:
       restore: システムのバージョンが異なる場合、正常に動作しなくなる可能性があります。
       restored: 復元しました。
+      reseted_state: 状態を初期化しました。
     button:
       restore: 復元
+      reset: 停止する
     state:
       stop: 停止
       start: 開始
@@ -29,12 +33,3 @@ ja:
   mongoid:
     models:
       job/log: ジョブ実行履歴
-    attributes:
-      job/log:
-        class_name: ジョブ名
-        started: 開始日時
-        closed: 終了日時
-        state: 状態
-        args: パラメータ
-        logs: ログ
-        save_term: 保存期間

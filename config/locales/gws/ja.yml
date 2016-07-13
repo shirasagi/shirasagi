@@ -13,6 +13,8 @@ ja:
       states:
         entry: 登録済み
         empty: 未登録
+      notification:
+        subject: "[リマインダー] %{model} - %{name}"
     history:
       mode:
         create: 登録
@@ -38,6 +40,11 @@ ja:
     options:
       severity:
         high: 重要なお知らせ
+      reminder/notification:
+        '-1': 通知しない
+        '10': 10分前
+        '30': 30分前
+        '60': 1時間前
     links:
       back_to_portal: ポータルへ戻る
       restore_reminder: 元に戻す
@@ -237,3 +244,7 @@ ja:
         - このページを閲覧可能にするグループを選択します。
       readable_member_ids:
         - このページを閲覧可能にするユーザーを選択します。
+
+  job:
+    models:
+      gws/reminder/notification_job: リマインダー通知

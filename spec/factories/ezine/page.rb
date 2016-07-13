@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :ezine_page, class: Ezine::Page do
-    site_id { cms_site.id }
-    user_id { cms_user.id }
+    cur_site { cms_site }
+    cur_user { cms_user }
     name 'title'
     filename 'magazine/page'
     text 'text'

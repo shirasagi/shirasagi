@@ -48,4 +48,19 @@ class Gws::Apis::RemindersController < ApplicationController
         render inline: "Error", layout: false
       end
     end
+
+    def notification
+      item = find_item
+      raise "404" if item.blank?
+
+      notification = item.notifications.first
+      notification = item.notifications.new unless notification
+      notification.attributes = params.require(:item).permit(:in_notify_before)
+
+      if notification.valid? && item.save
+        render inline: I18n.t("gws.reminder.states.entry"), layout: false
+      else
+        render inline: "Error", layout: false
+      end
+    end
 end
