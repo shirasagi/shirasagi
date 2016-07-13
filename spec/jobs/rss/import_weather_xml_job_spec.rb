@@ -230,6 +230,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail.from.first).to eq "test@example.jp"
         expect(Cms::Member.site(site).map(&:email)).to include mail.to.first
         expect(mail.subject).to eq '2011年03月11日 14時46分 ころ地震がありました'
+        puts mail.body.raw_source
         expect(mail.body.raw_source).to include('2011年03月11日 14時46分 ころ地震がありました。')
         expect(mail.body.raw_source).to include('岩手県沿岸南部：6弱')
         expect(mail.body.raw_source).to include('岩手県内陸南部：6弱')

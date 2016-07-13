@@ -40,8 +40,11 @@ rp {
 }
 img {
   vertical-align: middle;
+  @include mb {
+    max-width: 100% !important;
+    height: auto !important;
+  }
 }
-
 // -----------------------------------------------------------------------------
 // layout
 #page {
@@ -53,6 +56,7 @@ img {
 #tool {
   border-bottom: 3px solid $orange;
   nav {
+    position: relative;
     @include clear;
     width: $page-width;
     margin: 0 auto;
@@ -86,11 +90,11 @@ img {
       position: relative;
       padding: 0 10px 0 35px;
       background: url(../img/voice.png) no-repeat 10px center;
-      .ss-voice-container {
-        position: absolute;
-        top: 100%;
-        left: 0;
-      }
+    }
+    #ss-voice-controller {
+      position: absolute;
+      top: 2.5em;
+      right: 0;
     }
     #ss-kana {
       padding: 0 10px;
@@ -114,9 +118,23 @@ img {
   .logo {
     float: left;
     padding: 17px 0;
+    @include mb {
+      float: none;
+      display: block;
+      padding: 10px;
+      img {
+        width: 180px;
+        height: auto;
+      }
+    }
   }
   .menu {
     @include float(right);
+    @include mb {
+      float: none;
+      display: block;
+      padding: 0 10px;
+    }
     .u-menu {
       @include float(right);
       padding: 12px 0;
@@ -139,21 +157,44 @@ img {
       clear: both;
       text-align: right;
       padding-bottom: 10px;
+      @include mb {
+        width: 100%;
+        @include box-sizing(border-box);
+        text-align: left;
+      }
       form {
         float: right;
-        border: $border-hgry
+        border: $border-hgry;
+        @include mb {
+          float: none;
+          position: relative;
+          @include border-radius(0px);
+        }
       }
       #search-box {
         margin-right: -10px;
         padding: 5px;
         border: none;
         color: $text;
+        @include mb {
+          width: 80%;
+          @include border-radius(0px);
+        }
       }
       #search-button {
         padding: 5px 10px;
         border: none;
         background: #333;
         color: $t-white;
+        @include mb {
+          position: absolute;
+          top: 0;
+          right: 0;
+          margin: 0;
+          padding: 6px 10px;
+          @include border-radius(0);
+          -webkit-appearance: none;
+        }
       }
     }
   }
@@ -165,16 +206,27 @@ img {
   @include clear;
   min-width: 1100px;
   border-bottom: 3px solid $orange;
+  @include mb {
+    min-width: 100%;
+  }
   .wrap {
     @include clear;
     width: 1078px;
     margin: 0 auto;
     border-left: $border-lblue;
     border-right: $border-hblue;
+    @include mb {
+      border-top: $border-lblue;
+      border-bottom: $border-hblue;
+      @include box-sizing(border-box);
+    }
     li {
       position: relative;
       float: left;
       color: #202020;
+      @include mb {
+        width: 50%;
+      }
     }
     a {
       @include inline-block;
@@ -186,6 +238,14 @@ img {
       font-size: $px16;
       text-decoration: none;
       text-align: center;
+      @include mb {
+        width: auto;
+        display: block;
+        @include box-sizing(border-box);
+        border-top: $border-hblue;
+        border-bottom: $border-lblue;
+        font-size: 100%;
+      }
       &:hover {
         background: $hblue;
         color: #202020;
@@ -197,6 +257,9 @@ img {
     }
     .sangyo a, .shsiei a {
       width: 176px;
+      @include mb {
+        width: auto;
+      }
     }
     .current a {
       background: $hblue;
@@ -372,10 +435,14 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   margin: $box-margin 0;
   padding: 5px 0;
   background: #333;
+  @include mb {
+    margin: $smart-margin 0;
+  }
   .bx-controls {
     padding: 0 10px;
     background: #333;
     text-align: right;
+    @include mb {display :none;}
     div {
       display: inline-block;
     }
@@ -395,6 +462,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
   .bx-thumbs {
     padding: 0 10px;
+    @include mb {display :none;}
     a {
       display: inline-block;
       margin-bottom: 5px;
@@ -441,6 +509,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 #guide {
+  @include mb {margin: 0;}
   h2 {
     margin: 0;
   }
@@ -491,6 +560,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 #about {
+  @include mb {margin: 0;}
   h2 {
     margin: 0;
   }
@@ -733,6 +803,9 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       display: block;
       float: left;
       margin-right: 12px;
+      @include mb {
+        margin: 0 0 10px 10px;
+      }
       &:last-child {
         margin: 0;
       }
@@ -894,7 +967,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 .page .category-pages article,
-.page .article-pages article, {
+.page .article-pages article {
   padding: 12px 0 9px;
   border-bottom: $border-hgry;
   time {
@@ -910,8 +983,8 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     font-size: $px14;
     font-weight: normal;
     a {
-     padding: 0;
-     background: none;
+      padding: 0;
+      background: none;
     }
   }
 }
@@ -991,7 +1064,8 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 
 // -----------------------------------------------------------------------------
 //  page sitemap
-.page header.released, .one header.released, .faq header.released {
+.page header.released, .one header.released, .faq header.released,
+.body--anpi-ezine-anpi header.released, .body--anpi-ezine-event header.released {
   margin-bottom: $item-margin;
   text-align: right;
 }
@@ -1005,7 +1079,8 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 .faq-question, .faq .body,
 .map-page, .inquiry-nodes, .columns,
 .blog-center .blog, .mypage-show article,
-.cke_editable {
+.cke_editable,
+.body--anpi-ezine-anpi article.body, .body--anpi-ezine-event article.body {
   article {
     h2 {
       padding: 0;
@@ -1297,7 +1372,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
         display: block;
         min-width: 85px;
         padding: 0 5px;
-        border: border-lblue;
+        border: $border-lblue;
         background: $hblue;
         color: $text;
         text-decoration: none;
@@ -1704,7 +1779,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       padding-bottom: 5px;
       border-bottom: $border-hgry;
       &:last-child {
-        margin-bottom: none;
+        margin-bottom: 0;
         border-bottom: none;
       }
     }
@@ -2090,6 +2165,10 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     float: left;
     padding: 0 6px 12px;
     text-align: center;
+    @include mb {
+      max-width: 50%;
+      @include box-sizing(border-box);
+    }
     a {
       display: block;
       padding: 6px;
@@ -2103,6 +2182,12 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 .member-photo-search-part {
   margin-bottom: 1em;
+  @include mb {
+    margin: 10px;
+    .keyword {
+      position: relative;
+    }
+  }
   form {
     display: inline-block;
     margin-right: 1em;
@@ -2113,17 +2198,28 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     padding: 5px;
     border: none;
     color: $text;
+    @include mb {
+      width: 100%;
+    }
   }
   input[type="submit"] {
     padding: 5px 10px;
     border: none;
     background: #333;
     color: $t-white;
+    @include mb {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
   }
 }
 .kanko-info {
- .condition {
+  .condition {
     @include clear;
+    @include mb {
+      padding: 10px 10px 0;
+    }
     dt {
       clear: both;
       width: 160px;
@@ -2138,6 +2234,15 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
       margin-bottom: 6px;
       padding: 3px 0;
     }
+    @include mb {
+      dt, dd {
+        float: none;
+        display: block;
+        width: 100%;
+        margin: 0;
+        @include box-sizing(border-box);
+      }
+    }
   }
   .condition + .ajax-box {
     display: block;
@@ -2146,10 +2251,17 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     margin-bottom: $box-margin;
     color: $text;
     text-decoration: none;
+    @include mb {
+      margin-right: 10px;
+    }
   }
   .result {
     clear: right;
     @include float(left);
+    @include mb {
+      clear: both;
+      padding: 0 10px;
+    }
     h2 {
       border: none;
       font-size: $px14;
@@ -2159,6 +2271,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   .tabs {
     @include clear;
     border-bottom: 2px solid $orange;
+    @include mb {padding: 0 10px;}
     ul {
       @include clear;
       @include float(right);
@@ -2183,6 +2296,9 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 .photo-body {
+  @include mb {
+    padding: 10px;
+  }
   .ajax-box img {
     margin-bottom: 1em;
   }
@@ -2206,13 +2322,17 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 .photo-categories, .photo-locations {
   display: inline-block;
   margin-bottom: 2em;
+  @include mb {
+    display: block;
+    padding: 0 10px;
+  }
   h2 { display: none; }
   ul { @include clear; }
   li {
     display: inline-block;
     list-style: none;
     a {
-      display: inlein-block;
+      display: inline-block;
       @include btn-gry;
       color: $text;
       text-decoration: none;
@@ -2291,6 +2411,22 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     @include li;
   }
 }
+@include mb {
+  .map-page img {
+    max-width: none !important;
+  }
+  .body--kanko-info-photo #map-canvas {
+    height: 300px !important;
+  }
+  .member-blogs {
+    padding: 10px;
+  }
+  .blog-center, .blog-left {
+    float: none;
+    width: auto;
+    margin: 10px;
+  }
+}
 // -----------------------------------------------------------------------------
 // login
 #side .login, #side .registration {
@@ -2300,6 +2436,14 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   color: $text;
   text-align: center;
   text-decoration: none;
+  @include mb {
+    margin: 0 10px 1em;
+  }
+}
+@include mb {
+  #side .member {
+    margin-left: 10px;
+  }
 }
 #side .logout {
   display: inline-block;
@@ -2308,6 +2452,9 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   padding: 0px 6px;
   color: $text;
   text-decoration: none;
+  @include mb {
+    margin: 0 10px 1em 0;
+  }
 }
 .form-login {
   dt, dd {
@@ -2316,9 +2463,13 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 .reset_password {
   margin: 1em 0;
+  @include mb {
+    padding: 10px;
+  }
 }
 .member-registration-form,
-.mypage-form {
+.mypage-form, .member-my-group
+{
   .send {
     margin-bottom: 2em;
     padding: 0;
@@ -2333,21 +2484,26 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     }
   }
 }
-.member-registration-form {
-  #errorExplanation {
-    margin-bottom: $box-margin;
-    padding: $item-margin $item-margin 0;
-    border: 2px solid $red;
-    @include border-radius(5px);
-    background: #ffffa4;
-    ul {
-      margin-bottom: $item-margin;
-      list-style: none;
-      li {
-        @include li;
-      }
+#errorExplanation {
+  margin-bottom: $box-margin;
+  padding: $item-margin $item-margin 0;
+  border: 2px solid $red;
+  @include border-radius(5px);
+  background: #ffffa4;
+  ul {
+    margin-bottom: $item-margin;
+    list-style: none;
+    li {
+      @include li;
     }
   }
+}
+#ss-notice {
+  margin-bottom: 1em;
+  padding: $item-margin;
+  border: 2px solid $red;
+  @include border-radius(5px);
+  color: $red;
 }
 // -----------------------------------------------------------------------------
 // mypage
@@ -2355,6 +2511,10 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   @include clear;
   margin-bottom: 1em;
   border-bottom: 2px solid $orange;
+  @include mb {
+    padding: 10px 10px 0;
+    border: none;
+  }
   a {
     display: block;
     float: left;
@@ -2365,6 +2525,11 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     @include grd-gry;
     color: $text;
     text-decoration: none;
+    @include mb {
+      margin: 0 10px 10px 0;
+      padding: 3px 10px;
+      @include border-radius(3px);
+    }
   }
   a.current {
     @include grd-blue;
@@ -2373,17 +2538,41 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 .mypage-nav {
   margin-bottom: 1em;
+  @include mb {
+    padding: 0 10px;
+  }
   a {
     display: inline-block;
     @include btn-gry;
     margin-bottom: 1em;
     color: $text;
     text-decoration: none;
+    @include mb {
+      margin-bottom: 0.5em;
+      font-size: $px12;
+    }
   }
 }
-table.mypage-index {
+table.mypage-index, .member-my-group .index {
   width: 100%;
   margin-bottom: $box-margin;
+  @include mb {
+    display: block;
+    @include border-radius(0);
+    thead {
+      display: block;
+      float: left;
+    }
+    tbody {
+      display: block;
+      width: auto;
+      overflow-x: scroll;
+      white-space: nowrap;
+      tr {
+        display: inline-block;
+      }
+    }
+  }
   caption {
     padding: 0 10px;
     color: $blue;
@@ -2394,10 +2583,17 @@ table.mypage-index {
     border: $border-hgry;
     background: #ffefbb;
     text-align: left;
+    @include mb {
+      display: block;
+      width: auto;
+    }
   }
   td {
     padding: 3px 8px 0;
     border: $border-hgry;
+    @include mb {
+      display: block;
+    }
   }
 }
 .body--mypage {
@@ -2446,10 +2642,51 @@ table.mypage-index {
     margin-top: 6px;
   }
 }
+.body--mypage-anpi {
+  form.search {
+    float: left;
+    margin-bottom: 10px;
+    @include mb {
+      float: none;
+      padding: 0 10px;
+    }
+    select {
+      padding: 7px 10px;
+    }
+    .btn {
+      @include btn-gry;
+    }
+  }
+}
+.member-anpi-map {
+  float: right;
+  margin-bottom: 10px;
+  @include mb {
+    float: none;
+    padding: 0 10px;
+  }
+  a {
+    @include btn-org;
+    color: $text;
+    text-decoration: none;
+  }
+}
+.body--anpi form {
+  margin-bottom: 10px;
+  @include mb {
+    padding: 0 10px;
+  }
+  #keyword {
+    margin-bottom: 10px;
+    padding: 7px 10px;
+  }
+  input[type="submit"] {
+    @include btn-gry;
+    margin-bottom: 10px;
+  }
+}
 // -----------------------------------------------------------------------------
-// smart phone
-// -----------------------------------------------------------------------------
-@media only screen and (max-width: 600px) {
+@include mb {
   #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
@@ -2458,90 +2695,13 @@ table.mypage-index {
     width: 100%;
     padding: 0;
   }
-  img {
-    max-width: 100% !important;
-    height: auto !important;
-  }
-// -----------------------------------------------------------------------------
-// display:none
   #tool, #head .menu .u-menu, #slideshow #slide-controll #pause-play,
   #population, #add .info, .crumbs {
     display: none;
   }
-// -----------------------------------------------------------------------------
-// head
-  #head .logo {
-    float: none;
-    display: block;
-    padding: 10px;
-    img {
-      width: 180px;
-      height: auto;
-    }
-  }
-  #head .menu {
-    float: none;
-    display: block;
-    padding: 0 10px;
-  }
-  #head .menu .l-menu {
-    width: 100%;
-    @include box-sizing(border-box);
-    text-align: left;
-    form {
-      float: none;
-      position: relative;
-      @include border-radius(0px);
-      #search-box {
-        width: 80%;
-        @include border-radius(0px);
-      }
-      #search-button {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin: 0;
-        padding: 6px 10px;
-        @include border-radius(0);
-        -webkit-appearance: none;
-      }
-    }
-  }
 
-// -----------------------------------------------------------------------------
-// navi
-  #navi {
-    min-width: 100%;
-  }
-  #navi .wrap {
-    border-top: $border-lblue;
-    border-bottom: $border-hblue;
-    @include box-sizing(border-box);
-    li {
-      width: 50%;
-      a {
-        width: auto;
-        display: block;
-        @include box-sizing(border-box);
-        border-top: $border-hblue;
-        border-bottom: $border-lblue;
-        font-size: 100%;
-      }
-    }
-    .sangyo a, .shsiei a {
-      width: auto;
-    }
-  }
-// -----------------------------------------------------------------------------
-//  slide
-  .key_visual-slide, .member-photo-slide {
-    margin: $smart-margin 0;
-    .bx-controls, .bx-thumbs {
-      display :none;
-    }
-  }
-// -----------------------------------------------------------------------------
-//  guide about
+  // -----------------------------------------------------------------------------
+  //  guide about
   #guide, #about {
     margin: 0;
   }
@@ -2573,8 +2733,8 @@ table.mypage-index {
       background-size: auto 24px;
     }
   }
-// -----------------------------------------------------------------------------
-//  safety online propose attention recent useful relations ranking topics connect add links-life
+  // -----------------------------------------------------------------------------
+  //  safety online propose attention recent useful relations ranking topics connect add links-life
   #safety, #online, #propose, #attention, #recent, #useful, #connect
   #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list {
     margin-bottom: $smart-margin;
@@ -2698,18 +2858,18 @@ table.mypage-index {
       padding: 3px 10px;
     }
   }
-// -----------------------------------------------------------------------------
-//  feed
+  // -----------------------------------------------------------------------------
+  //  feed
   .feed {
     @include clear;
     padding: 0;
     background: $hgry;
     .rss {
-    float: left;
-    width: 30%;
-    @include inline-block;
-    padding: 3px 0 3px 30px;
-    background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
+      float: left;
+      width: 30%;
+      @include inline-block;
+      padding: 3px 0 3px 30px;
+      background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
     }
     .more {
       float: left;
@@ -2737,8 +2897,8 @@ table.mypage-index {
       @include box-sizing(border-box);
     }
   }
-// -----------------------------------------------------------------------------
-//  footer
+  // -----------------------------------------------------------------------------
+  //  footer
   #foot {
     margin-top: 0;
   }
@@ -2805,8 +2965,8 @@ table.mypage-index {
       text-decoration: none;
     }
   }
-// -----------------------------------------------------------------------------
-//  pagetop
+  // -----------------------------------------------------------------------------
+  //  pagetop
   .pagetop {
     right: 20px;
     bottom: 20px;
@@ -2823,13 +2983,13 @@ table.mypage-index {
       text-indent: -9999px;
     }
   }
-// -----------------------------------------------------------------------------
-//  ss-page-name
+  // -----------------------------------------------------------------------------
+  //  ss-page-name
   #ss-page-name {
     margin: $smart-margin 0 0 0;
   }
-// -----------------------------------------------------------------------------
-//  category-nodes
+  // -----------------------------------------------------------------------------
+  //  category-nodes
   #main .category-nodes, #main .cms-nodes {
     margin: $smart-margin 0 0 0;
     padding: 0 10px;
@@ -2839,8 +2999,8 @@ table.mypage-index {
       padding: 5px;
     }
   }
-// -----------------------------------------------------------------------------
-//  category-pages article-pages faq-search
+  // -----------------------------------------------------------------------------
+  //  category-pages article-pages faq-search
   .category-pages, .article-pages, .faq-search {
     margin-bottom: $smart-margin;
     a {
@@ -2883,8 +3043,8 @@ table.mypage-index {
       }
     }
   }
-// -----------------------------------------------------------------------------
-//  page sitemap
+  // -----------------------------------------------------------------------------
+  //  page sitemap
   .page article, .one article.body, .related-pages, .page footer.contact {
     padding: 10px 10px 0;
   }
@@ -2897,8 +3057,8 @@ table.mypage-index {
   .related-pages article {
     padding: 0;
   }
-// -----------------------------------------------------------------------------
-//  event
+  // -----------------------------------------------------------------------------
+  //  event
   .event-pages-filter {
     padding: 10px 10px 0;
   }
@@ -2938,8 +3098,8 @@ table.mypage-index {
       padding: 0;
     }
   }
-// -----------------------------------------------------------------------------
-// inquiry
+  // -----------------------------------------------------------------------------
+  // inquiry
   .inquiry-html {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
@@ -2974,8 +3134,8 @@ table.mypage-index {
   .columns, .form-login {
     margin-top: $smart-margin;
   }
-// -----------------------------------------------------------------------------
-// faq
+  // -----------------------------------------------------------------------------
+  // faq
   .faq-question, .faq .body {
     padding: $smart-margin;
     &:before {
@@ -2983,12 +3143,12 @@ table.mypage-index {
     }
   }
   .faq-search form {
-    keyword input {
+    .keyword input {
       width: 200px;
     }
   }
-// -----------------------------------------------------------------------------
-// map
+  // -----------------------------------------------------------------------------
+  // map
   .map {
     .keyword input {
       width: 100%;
@@ -3015,7 +3175,7 @@ table.mypage-index {
       }
     }
     .settings {
-        padding: 0 10px;
+      padding: 0 10px;
     }
     .tabs {
       padding: 0 10px;
@@ -3099,8 +3259,8 @@ table.mypage-index {
     width: 100% !important;
   }
 
-// -----------------------------------------------------------------------------
-// ezine
+  // -----------------------------------------------------------------------------
+  // ezine
   .ezine-pages {
     @include clear;
     margin: $smart-margin 0 0 0;
@@ -3139,131 +3299,14 @@ table.mypage-index {
       text-align: center;
     }
   }
-// -----------------------------------------------------------------------------
-// board
+  // -----------------------------------------------------------------------------
+  // board
   .body--board {
     .menu {
       margin: $smart-margin;
     }
     .post {
       margin: 0 $smart-margin $smart-margin;
-    }
-  }
-// -----------------------------------------------------------------------------
-//  photo blog
-  .member-photo-search-part {
-    margin: 10px;
-    .keyword {
-      position: relative;
-    }
-    #keyword {
-      width: 100%;
-    }
-    input[type="submit"] {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-  }
-  .photos .photo {
-    max-width: 50%;
-    @include box-sizing(border-box);
-  }
-  .kanko-info {
-    .condition {
-      padding: 10px 10px 0;
-      dt, dd {
-        float: none;
-        display: block;
-        width: 100%;
-        margin: 0;
-        @include box-sizing(border-box);
-      }
-    }
-    .result {
-      clear: both;
-      padding: 0 10px;
-    }
-    .condition + .ajax-box {
-      margin-right: 10px;
-    }
-    .tabs {
-      padding: 0 10px;
-    }
- }
- .photo-body {
-   padding: 10px;
- }
- .photo-categories,
- .photo-locations {
-   display: block;
-   padding: 0 10px;
- }
- .map-page img {
-   max-width: none !important;
- }
- .body--kanko-info-photo #map-canvas {
-   height: 300px !important;
- }
- .member-blogs {
-   padding: 10px;
- }
- .blog-center, .blog-left {
-   float: none;
-   width: auto;
-   margin: 10px;
- }
-// -----------------------------------------------------------------------------
-//  login
-  #side .login, #side .registration {
-    margin: 0 10px 1em;
-  }
-  #side .member {
-    margin-left: 10px;
-  }
-  #side .logout {
-    margin: 0 10px 1em 0;
-  }
-  .reset_password {
-    padding: 10px;
-  }
-// -----------------------------------------------------------------------------
-// mypage
-  #mypage-tabs {
-    padding: 10px 10px 0;
-    a {
-      padding: 3px 10px;
-    }
-  }
-  .mypage-nav {
-    padding: 0 10px;
-    a {
-      margin-bottom: 0.5em;
-      font-size: $px12;
-    }
-  }
-  table.mypage-index {
-    display: block;
-    @include border-radius(0);
-    thead {
-      display: block;
-      float: left;
-      th {
-        display: block;
-        width: auto;
-      }
-    }
-    tbody {
-      display: block;
-      width: auto;
-      overflow-x: scroll;
-      white-space: nowrap;
-      tr {
-        display: inline-block;
-      }
-    }
-    td {
-      display: block;
     }
   }
 
