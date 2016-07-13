@@ -1118,8 +1118,8 @@ div.index {
   @include mb { margin: 0 10px 10px; }
   label {
     float: left;
+    width: 50px;
     margin-left: -15px;
-    margin-right: 5px;
     padding: 0 3px 16px 13px;
     input {
       margin: 2px 4px;
