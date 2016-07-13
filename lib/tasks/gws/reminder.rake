@@ -3,8 +3,8 @@ namespace :gws do
     namespace :notification do
       task :deliver => :environment do
         opts = {}
-        opts[:from] = Time.zone.parse(ENV['from']) if ENV['from']
-        opts[:to] = Time.zone.parse(ENV['to']) if ENV['to']
+        opts[:from] = Time.zone.at(Integer(ENV['from'])) rescue Time.zone.parse(ENV['from']) if ENV['from']
+        opts[:to] = Time.zone.at(Integer(ENV['to'])) rescue Time.zone.parse(ENV['to']) if ENV['to']
 
         gws_sites.each do |site|
           puts site.name

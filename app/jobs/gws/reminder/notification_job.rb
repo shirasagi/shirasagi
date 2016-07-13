@@ -1,6 +1,6 @@
 class Gws::Reminder::NotificationJob < Gws::ApplicationJob
   def now
-    @now ||= Time.zone.now
+    @now ||= round_down_seconds(Time.zone.now)
   end
 
   def perform(opts = {})
@@ -21,4 +21,9 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     end
     Rails.logger.info("#{send_count} 通のメールを送りました")
   end
+
+  private
+    def round_down_seconds(time)
+      Time.zone.at((time.to_i / 60) * 60)
+    end
 end
