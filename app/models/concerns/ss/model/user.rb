@@ -166,6 +166,10 @@ module SS::Model::User
     ]
   end
 
+  def root_groups
+    groups.active.map(&:root).uniq
+  end
+
   private
     def dbpasswd_authenticate(in_passwd)
       return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)

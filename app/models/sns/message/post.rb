@@ -14,7 +14,7 @@ class Sns::Message::Post
   validates :thread_id, presence: true
   validates :text, presence: true
 
-  after_save :set_thread_updated
+  after_save :set_thread_updated, if: -> { @cur_user.present? }
 
   default_scope -> {
     order_by created: -1
@@ -23,12 +23,20 @@ class Sns::Message::Post
     criteria = where({})
     return criteria if params.blank?
 
-    #criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
+    criteria = criteria.keyword_in params[:keyword], :text if params[:keyword].present?
     criteria
   }
 
+  def set_seen(user)
+    return if seen_member_ids.include?(user.id)
+    #dump seen_member_ids.push(user.id)
+    #self.set seen_member_ids: seen_member_ids.push(user.id)
+    self.add_to_set seen_member_ids: user.id
+  end
+
   private
     def set_thread_updated
-      thread.set updated: updated
+      thread.activate_members if thread.active_member_ids.size == 1
+      thread.reset_unseen(@cur_user)
     end
 end

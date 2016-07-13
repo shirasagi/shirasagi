@@ -1,4 +1,4 @@
-class Sns::Messages::PostsController < ApplicationController
+class Sns::Message::PostsController < ApplicationController
   include Sns::BaseFilter
   include Sns::CrudFilter
 
@@ -15,20 +15,35 @@ class Sns::Messages::PostsController < ApplicationController
 
     def set_crumbs
       set_thread
-      @crumbs << [:"messages", sns_messages_path]
-      @crumbs << [:"threads", sns_messages_threads_path]
-      @crumbs << [@thread.id, sns_messages_thread_path(id: @thread)]
+      @crumbs << [:"sns.message", sns_message_threads_path]
+      @crumbs << [@thread.name(@cur_user), { action: :index }]
     end
 
     def fix_params
       { cur_user: @cur_user, thread_id: @thread.id }
     end
 
+    def crud_redirect_url
+      { action: :index }
+    end
+
   public
     def index
       @items = @model.
         where(thread_id: @thread.id).
+        search(params[:s]).
         page(params[:page]).
         per(20)
+
+      @items.map { |item| item.set_seen(@cur_user) }
+      @thread.set_seen(@cur_user)
+    end
+
+    def edit
+      raise '404'
+    end
+
+    def update
+      raise '404'
     end
 end

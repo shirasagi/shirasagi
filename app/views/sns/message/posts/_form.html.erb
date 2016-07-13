@@ -1,0 +1,8 @@
+<div class="sns-message-post-form">
+  <dl class="see sns-message-thread-members">
+    <dd class="wide"><%= @thread.name(@cur_user) %></dd>
+  </dl>
+  <dl class="see sns-message-thread-text">
+    <dd class="wide"><%= f.text_area :text, placeholder: @model.t(:text) %></dd>
+  </dl>
+</div>

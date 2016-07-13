@@ -1,6 +1,7 @@
 ja:
   sns:
     profile: プロフィール
+    message: メッセージ
     file: ファイル
     user_file: ユーザーファイル
     group_file: グループファイル
@@ -21,3 +22,10 @@ ja:
         in_files: ファイル
         image: 画像
         download: ダウンロード
+      sns/message/thread:
+        member_ids: 宛先
+        active_member_ids: 参加者
+        unseen_member_ids: 未読ユーザー
+        text: 内容
+      sns/message/post:
+        text: 内容

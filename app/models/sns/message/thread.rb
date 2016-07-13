@@ -3,22 +3,16 @@ class Sns::Message::Thread
   include SS::Reference::User
   include SS::UserPermission
 
-  # first post message
   attr_accessor :text
 
-  #field :descendants_created, type: DateTime, default: -> { created }
-  #field :descendants_updated, type: DateTime, default: -> { created }
+  #field :name, type: String
 
-  field :name, type: String
   embeds_ids :members, class_name: "SS::User"
-  has_many :posts, class_name: "Sns::Message::Post"
+  embeds_ids :active_members, class_name: "SS::User"
+  embeds_ids :unseen_members, class_name: "SS::User"
+  has_many :posts, class_name: "Sns::Message::Post", dependent: :destroy
 
   permit_params :text, member_ids: []
-
-  ## TODO: Delete
-  field :member_ids, type: SS::Extensions::Words ##
-  permit_params :member_ids
-  ##
 
   before_validation :set_member_ids
 
@@ -39,19 +33,53 @@ class Sns::Message::Thread
     criteria
   }
 
-  def name
-    self[:name] || members.map(&:name).join(', ') || id
+  def name(user = nil)
+    if active_member_ids == [user.id]
+      mem = members
+      mem = mem.where(:_id.ne => user.id) if user
+      "(" + mem.map(&:name).join(', ') + ")"
+    else
+      mem = active_members
+      mem = mem.where(:_id.ne => user.id) if user
+      mem.map(&:name).join(', ')
+    end
+  end
+
+  def unseen?(user)
+    unseen_member_ids.include?(user.id)
+  end
+
+  def set_seen(user)
+    if unseen?(user)
+      ids = unseen_member_ids
+      ids.delete(user.id)
+      self.set unseen_member_ids: ids
+    end
+  end
+
+  def reset_unseen(user)
+    ids = active_member_ids
+    ids.delete(user.id)
+    self.set unseen_member_ids: ids, updated: Time.zone.now
+  end
+
+  def activate_members
+    self.set active_member_ids: member_ids
+  end
+
+  def allowed?(action, user, opts = {})
+    return true if super
+    active_member_ids.include?(user.id) if action =~ /edit|delete/
   end
 
   def recycle_create
     @recycle_create = true
     return false unless valid?
-
     thread = recycle_thread
     return false unless thread.save
 
     post = Sns::Message::Post.new({
-      user_id: user_id,
+      cur_user: @cur_user,
       thread_id: thread.id,
       text: text,
       seen_member_ids: [user_id]
@@ -66,11 +94,24 @@ class Sns::Message::Thread
     thread || self.class.new(attributes)
   end
 
+  def leave_member(user)
+    return destroy if active_member_ids.size <= 1
+    ids = active_member_ids
+    ids.delete(user.id)
+    self.set active_member_ids: ids
+    true
+  end
+
   private
     def set_member_ids
-      member_ids = self.member_ids
-      member_ids << user_id
-      self.member_ids = member_ids.map(&:to_i).uniq.compact
+      ids = self.member_ids.map(&:to_i)
+      ids << user_id
+      ids = ids.uniq.compact
+      self.member_ids = ids
+      self.active_member_ids = ids
+
+      ids.delete(user_id)
+      self.unseen_member_ids = ids
     end
 
     def validate_member_ids

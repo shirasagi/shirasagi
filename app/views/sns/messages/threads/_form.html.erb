@@ -1,9 +1,0 @@
-<dl class="see">
-  <% if params[:action] =~ /new|create/ %>
-  <dt><%= @model.t :text %></dt>
-  <dd><%= f.text_field :text %></dd>
-  <% end %>
-
-  <dt><%= @model.t :member_ids %></dt>
-  <dd><%= f.text_field :member_ids %></dd>
-</dl>

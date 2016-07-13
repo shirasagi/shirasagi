@@ -17,8 +17,7 @@ SS::Application.routes.draw do
       get :download, on: :member
     end
 
-    namespace "messages" do
-      get "/" => "main#index"
+    namespace "message" do
       resources :threads, concerns: :deletion do
         resources :posts, concerns: :deletion
       end

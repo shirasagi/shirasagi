@@ -1,0 +1,31 @@
+<div class="index ">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items sns-message-threads">
+    <% @items.each do |item| %>
+    <li class="list-item <%= 'unseen' if item.unseen?(@cur_user) %>">
+      <!--
+      <nav class="tap-menu">
+        <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      </nav>
+      -->
+
+      <label class="check">
+        <% disabled = 'disabled' unless item.allowed?(:delete, @cur_user) %>
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" <%= disabled %> />
+      </label>
+      <div class="info">
+        <%= link_to item.name(@cur_user), sns_message_thread_posts_path(thread_id: item), class: "title" %>
+
+        <div class="meta">
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
