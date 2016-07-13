@@ -43,6 +43,7 @@ class @Syntax_Checker
     invalidOrderOfH    : "<%= I18n.t('errors.messages.invalid_order_of_h') %>"
     invalidMultibyteCharacter : "<%= I18n.t('errors.messages.invalid_multibyte_character') %>"
     invalidDependentCharacter : "<%= I18n.t('errors.messages.invalid_dependent_character') %>"
+    invalidKanaCharacter : "<%= I18n.t('errors.messages.invalid_kana_character') %>"
     invalidDateFormat : "<%= I18n.t('errors.messages.invalid_date_format') %>"
     invalidAdjacentA : "<%= I18n.t('errors.messages.invalid_adjacent_a') %>"
     checkInterwordSpace : "<%= I18n.t('errors.messages.check_interword_space') %>"
@@ -58,6 +59,7 @@ class @Syntax_Checker
     invalidOrderOfH    : <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>
     invalidMultibyteCharacter : <%= I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character').to_json %>
     invalidDependentCharacter : <%= I18n.t('errors.messages.syntax_check_detail.invalid_dependent_character').to_json %>
+    invalidKanaCharacter : <%= I18n.t('errors.messages.syntax_check_detail.invalid_kana_character').to_json %>
     invalidDateFormat : <%= I18n.t('errors.messages.syntax_check_detail.invalid_date_format').to_json %>
     invalidAdjacentA : <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>
     checkInterwordSpace : <%= I18n.t('errors.messages.syntax_check_detail.check_interword_space').to_json %>
@@ -93,6 +95,7 @@ class @Syntax_Checker
     Syntax_Checker.checkTable              html
     Syntax_Checker.checkMultibyteCharacter html
     Syntax_Checker.checkDependentCharacter html
+    Syntax_Checker.checkKanaCharacter      html
     Syntax_Checker.checkDateFormat         html
     Syntax_Checker.checkAdjacentA          html
     Syntax_Checker.checkOrderOfH           html
@@ -136,6 +139,7 @@ class @Syntax_Checker
 
     html = Syntax_Checker.correctMultibyteCharacter(html)
     html = Syntax_Checker.correctDependentCharacter("<div>" + html + "</div>")
+    html = Syntax_Checker.correctKanaCharacter("<div>" + html + "</div>")
     html = Syntax_Checker.correctDateFormat("<div>" + html + "</div>")
 
     if $("<div>" + html + "</div>").find("table").length
@@ -389,6 +393,35 @@ class @Syntax_Checker
     html = html.replace regex, (c)->
       "<%= I18n.t('cms.auto_correct.dependent_character') %>"
     return $(html).html()
+
+  @checkKanaCharacter: (html)->
+    c = html.match(/[｡-ﾟ]/g)
+    unless $.isEmptyObject(c)
+      errors = [{
+        code: c.join(",")
+        msg: Syntax_Checker.message["invalidKanaCharacter"]
+        detail: Syntax_Checker.detail["invalidKanaCharacter"]
+        ele: html
+        correct: Syntax_Checker.correctKanaCharacter
+      }]
+      Syntax_Checker.pushError(errors)
+
+  @correctKanaCharacter: (html)->
+    half = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ".split("")
+    full = "。「」、・ヲァィゥェォャュョッーアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン゛゜".split("")
+
+    kanaMap = {}
+    for v, i in half
+      kanaMap[v] = full[i]
+
+    ret = $(html)
+    ret.find(":not(iframe)").addBack().contents().filter ->
+      return this.nodeType == 3
+    .each ->
+      text = this.textContent.replace /[｡-ﾟ]/g, (c)->
+        kanaMap[c]
+      this.textContent = text
+    return ret.html()
 
   @checkDateFormat: (html)->
     dates = html.match(/[^\d-]\d{4}[ \　\.\-\/]\d{1,2}[ \　\.\-\/]\d{1,2}[^\d-]/g)
