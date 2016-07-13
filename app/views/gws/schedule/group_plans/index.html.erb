@@ -15,19 +15,23 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%==
   <% @items.each_with_index do |item, idx| %>
     <div class="calendar-multiple-header">
       <%= link_to item.long_name, gws_schedule_user_plans_path(user: item.id), class: "calendar-name" %>
-      <span class="group"><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></span>
-      <% if title = item.title(@cur_site) %>
-        <span class="user-title"><%= title.name %></span>
-      <% end %>
-      <% if item.email.present? %>
-        <span class="email"><%= mail_to item.email %></span>
-      <% end %>
-      <% if item.tel_label.present? %>
-        <span class="tel"><%= item.tel_label %></span>
-      <% end %>
       <% if item.id == @cur_user.id %>
         <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: item.id), class: 'add-plan' %>
       <% end %>
+      <div class="calendar-attr">
+        <span class="group">
+          <%= tryb { item.gws_main_group(@cur_site).trailing_name } %>
+        </span>
+        <% if title = item.title(@cur_site) %>
+          <span class="user-title"><%= title.name %></span>
+        <% end %>
+        <% if item.email.present? %>
+          <span class="email"><%= mail_to item.email %></span>
+        <% end %>
+        <% if item.tel_label.present? %>
+          <span class="tel"><%= item.tel_label %></span>
+        <% end %>
+      </div>
     </div>
     <div class="calendar multiple" id="cal-<%= item.id %>"></div>
 
