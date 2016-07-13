@@ -11,7 +11,7 @@ module Cms::PublicFilter
     before_action :deny_path
     before_action :parse_path
     before_action :compile_scss
-    before_action :x_sendfile, if: ->{ !filters.include?(:mobile) }
+    before_action :x_sendfile, unless: ->{ filters.include?(:mobile) || filters.include?(:kana) }
   end
 
   def index
