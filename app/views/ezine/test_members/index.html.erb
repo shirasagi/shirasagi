@@ -5,7 +5,7 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="email"><%= item.label :email_type %></span>
+  <span class="email-type"><%= item.label :email_type %></span>
 <% end %>
 
 <%= render file: "cms/crud/index" %>

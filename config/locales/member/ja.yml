@@ -62,6 +62,11 @@ ja:
       select_page: ページを選択
       blog:
         genres: 記事ジャンル
+      invited_group:
+        header: 招待されたグループがあります。
+        operation: "参加 | 辞退"
+      registered_person: 登録者
+      delete: 削除
     button:
       register: 登録
       back: 戻る
@@ -84,11 +89,16 @@ ja:
       index: 一覧表示
       slide: スライド
       search: 検索
+      create_unregisted_anpi: 未登録者安否作成
     notice:
       accepted: 参加しました。
       rejected: 辞退しました。
     confirm:
       leave: ボタンをクリックすると退会します。よろしいですか。
+      group:
+        accept: グループに参加しますか？
+        reject: グループへの参加を辞退しますか？
+      post_gpf: Google Person Finder に登録してよろしいですか？
 
   modules:
     member: メンバー
@@ -148,6 +158,7 @@ ja:
       member/photo_search: フォトサーチ
       member/photo_slide: フォトスライド
       member/login: ログイン
+      member/invited_group: 招待されたグループ
 
   mongoid:
     models:

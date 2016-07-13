@@ -79,7 +79,7 @@ class Member::Agents::Nodes::MyAnpiPostController < ApplicationController
     end
 
     def set_map_center
-      @map_center = @cur_node.map_center || Map::Extensions::Loc[*SS.config.cms.map_center]
+      @map_center = @cur_node.map_center.presence || Map::Extensions::Loc[*SS.config.map.map_center]
       return if @items.blank?
 
       # collect locations

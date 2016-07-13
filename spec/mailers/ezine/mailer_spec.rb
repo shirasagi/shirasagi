@@ -9,7 +9,7 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
     let(:mail) { Ezine::Mailer.verification_mail(entry) }
 
     it "mail attributes" do
-      expect(mail.from.first).to eq "from@example.jp"
+      expect(mail.from.first).to eq node.sender_email
       expect(mail.to.first).to eq "entry@example.jp"
       expect(mail.subject.to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
@@ -21,10 +21,10 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
     let(:mail) { Ezine::Mailer.page_mail(page, member) }
 
     describe "text_mail" do
-      let(:member) { create :ezine_member, email: "member@example.jp", email_type: "text" }
+      let(:member) { create :ezine_member, node: node, email: "member@example.jp", email_type: "text" }
 
       it "mail attributes" do
-        expect(mail.from.first).to eq "from@example.jp"
+        expect(mail.from.first).to eq node.sender_email
         expect(mail.to.first).to eq "member@example.jp"
         expect(mail.subject.to_s).not_to eq ""
         expect(mail.body.to_s).not_to eq ""
@@ -32,10 +32,10 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
     end
 
     describe "html_mail" do
-      let(:member) { create :ezine_member, email: "member@example.jp", email_type: "html" }
+      let(:member) { create :ezine_member, node: node, email: "member@example.jp", email_type: "html" }
 
       it "mail attributes" do
-        expect(mail.from.first).to eq "from@example.jp"
+        expect(mail.from.first).to eq node.sender_email
         expect(mail.to.first).to eq "member@example.jp"
         expect(mail.subject.to_s).not_to eq ""
         #expect(mail.body.to_s).not_to eq ""

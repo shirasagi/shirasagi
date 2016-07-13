@@ -29,13 +29,13 @@ module Member::Addon::Registration
         [ I18n.t("inquiry.options.required.#{v}"), v ]
       end
     end
-    alias :organization_name_required_options :kana_required_options
-    alias :job_required_options :kana_required_options
-    alias :tel_required_options :kana_required_options
-    alias :birthday_required_options :kana_required_options
-    alias :sex_required_options :kana_required_options
-    alias :postal_code_required_options :kana_required_options
-    alias :addr_required_options :kana_required_options
+    alias organization_name_required_options kana_required_options
+    alias job_required_options kana_required_options
+    alias tel_required_options kana_required_options
+    alias birthday_required_options kana_required_options
+    alias sex_required_options kana_required_options
+    alias postal_code_required_options kana_required_options
+    alias addr_required_options kana_required_options
 
     def kana_required?
       kana_required == 'required'

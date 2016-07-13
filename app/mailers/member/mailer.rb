@@ -54,10 +54,10 @@ class Member::Mailer < ActionMailer::Base
     to = recipent.email
     subject = node.member_invitation_subject
     body = Member::Renderer::MemberInvitation.render_template(
-        node.member_invitation_template,
-        group: group,
-        sender: sender,
-        recipent: recipent)
+      node.member_invitation_template,
+      group: group,
+      sender: sender,
+      recipent: recipent)
     return if body.blank?
     if node.member_invitation_signature.present?
       body << "\n"

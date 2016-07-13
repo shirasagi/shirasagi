@@ -21,7 +21,8 @@ class Ezine::Mailer < ActionMailer::Base
   def page_mail(page, member)
     @page = page
     @member = member
-    @node = Ezine::Node::Page.find page.parent.id
+    @node = Cms::Node.find page.parent.id
+    @node = @node.becomes_with_route
     sender = "#{@node.sender_name} <#{@node.sender_email}>"
 
     mail from: sender, to: member.email do |format|
@@ -35,7 +36,8 @@ class Ezine::Mailer < ActionMailer::Base
         format.text
         format.html
       else
-        # Invalid
+        # default
+        format.text
       end
     end
   end

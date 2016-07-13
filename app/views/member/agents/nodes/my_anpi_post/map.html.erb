@@ -10,10 +10,9 @@
 <% end %>
 
 <% if @items.present? %>
-<%# stylesheet_link_tag 'board/map', media: 'all' %>
 <%= javascript_include_tag "board/script" %>
 
-<div id="map-canvas" style="width: 100%; height: 400px;"></div>
+<div id="map-canvas"></div>
 
 <div style="display: none;">
   <% @items.each do |item| %>

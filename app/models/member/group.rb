@@ -4,7 +4,7 @@ class Member::Group
   include SS::Reference::Site
   include Cms::SitePermission
 
-  set_permission_name :cms_users, :edit
+  set_permission_name :cms_members, :edit
 
   seqid :id
   field :name, type: String

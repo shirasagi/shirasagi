@@ -20,6 +20,14 @@ module Ezine::Node
     has_many :columns, class_name: "Ezine::Column"
 
     default_scope ->{ where(route: "ezine/page") }
+
+    def members_to_deliver(model = Ezine::Member)
+      model.site(site).where(node_id: id).enabled
+    end
+
+    def test_members_to_deliver
+      members_to_deliver(Ezine::TestMember)
+    end
   end
 
   class MemberPage

@@ -17,13 +17,13 @@
 
 <% if params[:action] != 'invite' %>
 <dl class="column admin">
-  <dt>管理者</dt>
+  <dt><%= Member::Group.t :in_admin_member_ids %></dt>
   <dd><%= @cur_member.name %></dd>
 </dl>
 <% end %>
 
 <dl class="column invitees">
-  <dt>メンバー</dt>
+  <dt><%= Member::Group.t :members %></dt>
   <dd>
     <%= f.text_area :in_invitees %>
     <%= remarks :in_invitees %>

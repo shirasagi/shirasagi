@@ -30,6 +30,7 @@ module Member
     Cms::Part.plugin "member/photo"
     Cms::Part.plugin "member/photo_search"
     Cms::Part.plugin "member/photo_slide"
+    Cms::Part.plugin "member/invited_group"
 
     Cms::Role.permission :read_other_member_blogs
     Cms::Role.permission :read_private_member_blogs

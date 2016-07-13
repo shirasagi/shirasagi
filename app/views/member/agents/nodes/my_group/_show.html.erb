@@ -27,8 +27,8 @@ states += %w(inviting rejected) if @item.admin_member?(@cur_member)
 <table class="index">
   <thead>
   <tr>
-    <th class="name">名前</th>
-    <th class="state">状態</th>
+    <th class="name"><%= Cms::Member.t :name %></th>
+    <th class="state"><%= Member::GroupMember.t :state %></th>
   </tr>
   </thead>
   <tbody>

@@ -41,9 +41,9 @@ SS::Application.routes.draw do
     resources :photo_spots, concerns: :deletion
     resources :registrations, concerns: :deletion
 
-    resources :groups, concerns: :deletion do
-      resources :members, controller: :group_members, concerns: :deletion
-    end
+    # resources :groups, concerns: :deletion do
+    #   resources :members, controller: :group_members, concerns: :deletion
+    # end
   end
 
   node "member" do
@@ -154,11 +154,15 @@ SS::Application.routes.draw do
     end
   end
 
-  namespace "member", path: ".s:site/member", module: "member", servicer: /\d+/ do
+  namespace "member", path: ".s:site/member", module: "member" do
     namespace "apis" do
       resources :photos, concerns: :deletion do
         get :select, on: :member
       end
+    end
+
+    resources :groups, concerns: :deletion do
+      resources :members, controller: :group_members, concerns: :deletion
     end
   end
 end

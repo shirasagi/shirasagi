@@ -16,6 +16,10 @@ ja:
       marker_clear: マーカーをクリアする
       show_gpf: Google Person Finderを表示する
       post_gpf: Google Person Finderに安否情報を提供する
+      search_person: 人を探す
+
+    button:
+      search_person: 人を探す
 
     errors:
       not_same_delete_key: 削除キーが違います。

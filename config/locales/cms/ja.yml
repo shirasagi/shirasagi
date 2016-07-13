@@ -120,6 +120,10 @@ ja:
       state:
         enabled: 使用する
         disabled: 使用しない
+      member_state:
+        enabled: 有効
+        disabled: 無効
+        temporary: 仮登録
 
     sns_share:
       fb_like: Facebook いいね！

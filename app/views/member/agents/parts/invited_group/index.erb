@@ -1,11 +1,11 @@
 <% if @items.present? %>
   <div class="invited-groups">
-    <h3>招待されたグループがあります。</h3>
-    <table class="index mypage-index member-group-page">
+    <h3><%= t "member.view.invited_group.header" %></h3>
+    <table class="index member-invited-group">
       <thead>
       <tr>
-        <th class="name">名前</th>
-        <th class="operation">参加 | 辞退</th>
+        <th class="name"><%= Member::Group.t :name %></th>
+        <th class="operation"><%= t "member.view.invited_group.operation" %></th>
       </tr>
       </thead>
       <tbody>

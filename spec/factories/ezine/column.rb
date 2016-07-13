@@ -3,6 +3,6 @@ FactoryGirl.define do
     state "public"
     required "required"
     cur_site { cms_site }
-    association :node, factory: :ezine_node
+    association :node, factory: :ezine_node_page
   end
 end
