@@ -1,5 +1,5 @@
 class Ldap::SyncJob < Cms::ApplicationJob
-  include Job::Cms::GeneratorFilter
+  include Job::SS::TaskFilter
 
   self.task_class = Ldap::SyncTask
   self.task_name = "ldap::sync"
