@@ -3,6 +3,6 @@
 <dl class="column">
   <dt><%= I18n.t('board.views.gpf') %></dt>
   <dd>
-    Google Person Finderに提供した安否情報を削除するには、<%= link_to('Google Person Finder 登録情報', @item.gpf_url.to_s, target: :_blank) %>にアクセスし削除してください。
+    <%== I18n.t('board.views.gpf_delete_info_html', url: @item.gpf_url) %>
   </dd>
 </dl>

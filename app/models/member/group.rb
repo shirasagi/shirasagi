@@ -113,7 +113,7 @@ class Member::Group
 
     def validate_admin
       has_admin = self.members.where(state: 'admin').map(&:member).compact.present?
-      errors.add :base, '管理者が設定されていません。' unless has_admin
+      errors.add :base, :no_admins unless has_admin
     end
 
     def set_invitees
@@ -122,7 +122,7 @@ class Member::Group
 
       in_invitees.split(/\r\n|\n/).each do |email|
         unless Cms::Member::EMAIL_REGEX =~ email
-          errors.add :base, "#{email} は不正です。"
+          errors.add :base, :malformed_email, email: email
           next
         end
 
@@ -166,7 +166,7 @@ class Member::Group
 
       in_remove_member_ids.each do |member_id|
         if last_admin?(member_id)
-          errors.add :base, "管理者が設定されていません。"
+          errors.add :base, :no_admins
           next
         end
         members.where(member_id: member_id).destroy

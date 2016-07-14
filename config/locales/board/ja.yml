@@ -17,6 +17,8 @@ ja:
       show_gpf: Google Person Finderを表示する
       post_gpf: Google Person Finderに安否情報を提供する
       search_person: 人を探す
+      gpf: Google Person Finder
+      gpf_delete_info_html: "Google Person Finderに提供した安否情報を削除するには、<a target=\"_blank\" href=\"%{url}\">Google Person Finder 登録情報</a>にアクセスし削除してください。"
 
     button:
       search_person: 人を探す

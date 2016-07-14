@@ -28,7 +28,7 @@ class Member::MyAnpiPostsController < ApplicationController
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
       csv = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user, site: @cur_site).order(updated: -1).to_csv
-      send_data csv.encode("SJIS"), filename: "anpi_posts_#{Time.zone.now.to_i}.csv"
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "anpi_posts_#{Time.zone.now.to_i}.csv"
     end
 
     # Google Person Finder
@@ -41,6 +41,6 @@ class Member::MyAnpiPostsController < ApplicationController
       set_item
 
       @item.upload_to_gpf
-      redirect_to({ action: :show }, { notice: 'Google Person Finder に登録しました。' })
+      redirect_to({ action: :show }, { notice: I18n.t("member.notice.posted_gpf") })
     end
 end

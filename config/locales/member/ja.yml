@@ -93,12 +93,15 @@ ja:
     notice:
       accepted: 参加しました。
       rejected: 辞退しました。
+      posted_gpf: Google Person Finder に登録しました。
     confirm:
       leave: ボタンをクリックすると退会します。よろしいですか。
       group:
         accept: グループに参加しますか？
         reject: グループへの参加を辞退しますか？
       post_gpf: Google Person Finder に登録してよろしいですか？
+    units:
+      person: "%{count} 人"
 
   modules:
     member: メンバー
@@ -165,6 +168,11 @@ ja:
       member/activity_log: 活動履歴
       member/group: グループ
       member/group_member: グループメンバー
+    errors:
+      models:
+        member/group:
+          no_admins: 管理者が設定されていません。
+          malformed_email: "%{email} は不正です。"
     attributes:
       member/addon/redirection:
         redirect_url: リダイレクトURL

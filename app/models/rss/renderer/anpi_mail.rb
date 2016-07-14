@@ -32,7 +32,7 @@ class Rss::Renderer::AnpiMail
 
   private
     def template_variable_handler_target_time(*_)
-      @cur_infos[:target_time].strftime("%Y年%m月%d日 %H時%M分")
+      I18n.l(@cur_infos[:target_time], format: :long)
     end
 
     def template_variable_handler_anpi_post_url(*_)

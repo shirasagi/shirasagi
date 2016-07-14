@@ -14,12 +14,12 @@
         <tr>
           <td class="item name"><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
           <td class="item state">
-            <span class="admin">管理者: <%= item.members.where(state: 'admin').count %> 人</span>
+            <span class="admin"><%= t "member.options.group_member_state.admin" %>: <%= t "member.units.person", count: item.members.where(state: 'admin').count %></span>
             、
-            <span class="user">ユーザー: <%= item.members.where(state: 'user').count %> 人</span>
+            <span class="user"><%= t "member.options.group_member_state.user" %>: <%= t "member.units.person", count: item.members.where(state: 'user').count %></span>
             <% if item.admin_member?(@cur_member) %>
             、
-            <span class="invitee">招待中: <%= item.members.where(state: 'inviting').count %> 人</span>
+            <span class="invitee"><%= t "member.options.group_member_state.inviting" %>: <%= t "member.units.person", count: item.members.where(state: 'inviting').count %></span>
             <% end %>
           </td>
         </tr>
