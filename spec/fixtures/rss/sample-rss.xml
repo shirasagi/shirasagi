@@ -12,6 +12,7 @@
       <pubDate>Fri, 12 Jun 2015 19:00:00 +0900</pubDate>
       <category>カテゴリ1</category>
       <category>カテゴリ2</category>
+      <author>momose_tomoka@example.com (百瀬 友香)</author>
     </item>
     <item>
       <title>記事2</title>
@@ -20,6 +21,7 @@
       <pubDate>Thu, 11 Jun 2015 14:00:00 +0900</pubDate>
       <category>カテゴリ2</category>
       <category>カテゴリ3</category>
+      <author></author>
     </item>
     <item>
       <title>記事3</title>
@@ -36,6 +38,7 @@
       <pubDate>Tue, 09 Jun 2015 15:00:00 +0900</pubDate>
       <category>カテゴリ4</category>
       <category>カテゴリ5</category>
+      <author>miyauchi_kaoru@example.com (宮内 薫)</author>
     </item>
     <item>
       <title>記事5</title>
@@ -44,6 +47,7 @@
       <pubDate>Mon, 08 Jun 2015 10:00:00 +0900</pubDate>
       <category>カテゴリ5</category>
       <category>カテゴリ1</category>
+      <author>takei_miduki@example.com (武井 美月)</author>
     </item>
   </channel>
 </rss>

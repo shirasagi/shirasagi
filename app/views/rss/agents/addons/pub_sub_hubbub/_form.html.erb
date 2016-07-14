@@ -1,0 +1,14 @@
+<dl class="see mod-rss-import">
+  <dt><%= @model.t :hub_url %><%= @model.tt :hub_url %></dt>
+  <dd><%= f.text_field :hub_url %></dd>
+  <dt><%= @model.t :topic_urls %><%= @model.tt :topic_urls %></dt>
+  <dd><%= f.text_area :topic_urls, value: @item.topic_urls.join("\n"), style: "height: 100px;" %></dd>
+  <dt><%= @model.t :lease_seconds %><%= @model.tt :lease_seconds %></dt>
+  <dd><%= f.number_field :lease_seconds %></dd>
+  <dt><%= @model.t :secret %><%= @model.tt :secret %></dt>
+  <dd><%= f.text_field :secret %></dd>
+  <dt><%= @model.t :rss_max_docs %><%= @model.tt :rss_max_docs %></dt>
+  <dd><%= f.number_field :rss_max_docs %></dd>
+  <dt><%= @model.t :page_state %><%= @model.tt :page_state %></dt>
+  <dd><%= f.select :page_state, @item.page_state_options, include_blank: true %></dd>
+</dl>

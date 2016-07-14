@@ -117,6 +117,7 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "groups" => "groups#index"
+      get "nodes" => "nodes#index"
       get "pages" => "pages#index"
       get "categories" => "categories#index"
       get "contents" => "contents#index"

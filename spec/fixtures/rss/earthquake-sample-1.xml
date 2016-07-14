@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>JMAXML publishing feed</title>
+  <subtitle>this feed is published by JMA</subtitle>
+  <updated>2016-03-08T04:34:18Z</updated>
+  <id>urn:uuid:be4342e2-ff73-363c-a3ed-66e05e977224</id>
+  <link href="http://www.jma.go.jp/" rel="related"/>
+  <link href="http://xml.kishou.go.jp/feed/extra.xml" rel="self"/>
+  <rights>Published by Japan Meteorological Agency</rights>
+  <entry>
+    <title>震度速報</title>
+    <id>urn:uuid:9b43a982-fecf-3866-95e7-c375226a7c87</id>
+    <updated>2016-03-08T04:34:18Z</updated>
+    <author><name>気象庁</name></author>
+    <link href="http://xml.kishou.go.jp/data/9b43a982-fecf-3866-95e7-c375226a7c87.xml" type="application/xml"/>
+    <content type="text">【震度速報】　８日１３時３２分ころ、地震による強い揺れを感じました。震度３以上が観測された地域をお知らせします。</content>
+  </entry>
+</feed>

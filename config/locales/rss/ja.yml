@@ -1,6 +1,8 @@
 ja:
   rss:
     page: フィード
+    weather_xml_page: 気象庁防災情報XML
+    weather_xml_region: 気象庁地域
 
     views:
       confirm:
@@ -14,30 +16,86 @@ ja:
       rss_refresh_method:
         manual: 手動
         auto: 自動
+      earthquake_intensity:
+        '0': 0
+        '1': 1
+        '2': 2
+        '3': 3
+        '4': 4
+        5-: 5弱
+        5+: 5強
+        6-: 6弱
+        6+: 6強
+        '7': 7
+    apis:
+      weather_xml_regions:
+        index: 地域を選択する
+        search: 地域を検索
+        select: 地域を設定する
 
   modules:
     rss: RSS取込
     addons:
       rss/page/body: RSS情報
       rss/import: RSS取込
+      rss/page/weather_xml: 気象庁防災情報XML
+      rss/pub_sub_hubbub: PubSubHubbub
+      rss/anpi_mail_setting: 安否確認メール設定
 
   cms:
     nodes:
       rss/page: RSS取込
+      rss/weather_xml: 気象庁防災情報XML
 
   mongoid:
+    models:
+      rss/weather_xml_region: 気象庁地域
     attributes:
       rss/node/page:
       rss/page:
+      rss/weather_xml_region:
+        name: 名称
+        code: コード
+        order: 並び順
       rss/addon/import:
         rss_url: RSS配信URL
         rss_max_docs: 最大保存件数
         rss_refresh_method: 更新方法
+        page_state: ページステータス
       rss/addon/page/body:
         rss_link: ソースURL
         html: 本文
+        authors: 作成者
+      rss/addon/page/weather_xml:
+        xml: XML
+      rss/addon/pub_sub_hubbub:
+        hub_url: Hub URL
+        callback_url: Callback URL
+        topic_urls: Topic URL
+        lease_seconds: Lease秒
+        secret: HMAC Key
+        rss_max_docs: 最大保存件数
+        page_state: ページステータス
+      rss/addon/anpi_mail_setting:
+        earthquake_intensity: 震度
+        target_regions: 対象地域
+        my_anpi_post: 安否掲示板
+        anpi_mail: 安否メール
+        title_mail_text: メール件名
+        upper_mail_text: 上部メール
+        loop_mail_text: ループメール
+        lower_mail_text: 下部メール
 
   tooltip:
+    rss/weather_xml_region:
+      name:
+        - 地域の名称を指定します。
+      code:
+        - 地域コードを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+
     rss/addon/import:
       rss_url:
         - RSS配信URLを設定します。
@@ -56,6 +114,7 @@ ja:
         - RSS取り込みの更新方法を指定します。
         - 手動の場合は、管理画面上でインポートを行うことで取り込みを行います。
         - 自動の場合は、インストール時に設定した周期で自動で取り込みを行います。
+
     rss/addon/page/body:
       rss_link:
         - ソースURLを設定します。
@@ -64,3 +123,75 @@ ja:
         -
         - 「本文」は公開画面に表示されませんが、「本文」に設定した文字列は「サイト内検索」で検索することができます。
         - 取り込んだ RSS 記事を管理しやすくすることができます。
+
+    rss/addon/pub_sub_hubbub:
+      hub_url:
+        - Hub URL を指定します。
+        - 例 http://pubsubhubbub.appspot.com/subscribe
+      topic_urls:
+        - 購読する RSS の URL を指定します。
+      lease_seconds:
+        - 購読が有効な期間を秒で指定します。
+        - 設定した秒数経過すると、再度、Hub より購読確認が実施されます。
+        - この設定は Hub がサポートしている場合もあれば、サポートしていない場合もあります。
+      secret:
+        - 秘密鍵を指定します。
+        - 秘密鍵を指定すると、認証された RSS を受け取ることができるようになります。
+      rss_max_docs:
+        - 最大保存件数を設定します。
+        -
+        - RSS を取り込んだ際に記事数が「最大保存件数」を超えた場合、公開日時の古い順に記事を削除し、記事数が「最大保存件数」以下になるように調整します。
+        -
+        - 「最大保存件数」に 0 を指定すると、無制限に記事を保存します。
+
+    rss/addon/anpi_mail_setting:
+      earthquake_intensity:
+        - 安否メールを送信する震度を指定します。
+        - 指定された震度以上の地震が対象地域内で観測された場合、安否メールを送信します。
+      target_regions:
+        - 指定された震度以上の地震が対象地域内で観測された場合、安否メールを送信します。
+      my_anpi_post:
+        - 安否掲示板フォルダーを指定します。
+        - 安否確認メールに指定したフォルダーの URL を記載します。
+      anpi_mail:
+        - 安否メールフォルダーを指定します。
+        - 指定したフォルダーから安否メールを送信します。
+      title_mail_text:
+        - 安否確認メールの件名を指定します。
+        - |-
+          下記のように記述します。
+          #{target_time}　地震発生日が「2015年4月1日 12時34分」の形式で表示されます。
+
+          使用例：
+          #{target_time} ころ地震がありました
+      upper_mail_text:
+        - 安否確認メールの上部メールを指定します。
+        - |-
+          下記のように記述します。
+          #{target_time}　地震発生日が「2015年4月1日 12時34分」の形式で表示されます。
+          #{anpi_post_url}　安否投稿 URL が表示されます。
+
+          使用例：
+          #{target_time} ころ地震がありました。
+          各地の震度は下記の通りです。
+      loop_mail_text:
+        - 安否確認メールのループメールを指定します。
+        - |-
+          下記のように記述します。
+          #{target_time}　地震発生日が「2015年4月1日 12時34分」の形式で表示されます。
+          #{anpi_post_url}　安否投稿 URL が表示されます。
+          #{area_name}　地震発生地域が表示されます。
+          #{intensity_label}　震度が表示されます。
+
+          使用例：
+          #{area_name}：震度 #{intensity_label}
+      lower_mail_text:
+        - 安否確認メールの下部メールを指定します。
+        - |-
+          下記のように記述します。
+          #{target_time}　地震発生日が「2015年4月1日 12時34分」の形式で表示されます。
+          #{anpi_post_url}　安否投稿 URL が表示されます。
+
+          使用例：
+          下記の URL にアクセスし、安否を入力してください。
+          #{anpi_post_url}

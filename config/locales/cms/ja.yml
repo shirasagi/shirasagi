@@ -80,6 +80,10 @@ ja:
         replacement: 置換文字
         option: オプション
         confirm_message: 全置換を行ってもよろしいですか？
+      nodes:
+        index: フォルダーを選択する
+        search: フォルダーを検索
+        select: フォルダーを設定する
       pages:
         index: 関連記事を選択する
         search: 関連記事を検索

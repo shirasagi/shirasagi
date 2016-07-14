@@ -13,6 +13,9 @@
     <category term="category1" scheme="http://example.jp/category/1" label="カテゴリ1"/>
     <category term="category2" scheme="http://example.jp/category/2" label="カテゴリ2"/>
     <author>
+      <name>臼井 杏</name>
+      <email>usui_ann@example.com</email>
+      <uri>http://example.com/usui_ann</uri>
     </author>
   </entry>
   <entry>
@@ -24,6 +27,7 @@
     <category term="category1" scheme="http://example.jp/category/2" label="カテゴリ2"/>
     <category term="category2" scheme="http://example.jp/category/3" label="カテゴリ3"/>
     <author>
+      <name>落合 フミヤ</name>
     </author>
   </entry>
   <entry>
@@ -46,6 +50,9 @@
     <category term="category1" scheme="http://example.jp/category/4" label="カテゴリ4"/>
     <category term="category2" scheme="http://example.jp/category/5" label="カテゴリ5"/>
     <author>
+      <name>伊藤 亜希</name>
+      <email>itou_aki@example.com</email>
+      <uri>http://example.com/itou_aki</uri>
     </author>
   </entry>
   <entry>
@@ -57,6 +64,9 @@
     <category term="category1" scheme="http://example.jp/category/5" label="カテゴリ5"/>
     <category term="category2" scheme="http://example.jp/category/1" label="カテゴリ1"/>
     <author>
+      <name>渡部 勇介</name>
+      <email>watabe_yuusuke@example.com</email>
+      <uri>http://example.com/watabe_yuusuke</uri>
     </author>
   </entry>
 </feed>

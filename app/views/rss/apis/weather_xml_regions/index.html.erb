@@ -1,0 +1,39 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit  t("rss.apis.weather_xml_regions.search"), class: :btn %>
+<% end %>
+</div>
+
+<table class="index">
+  <thead>
+    <tr>
+      <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <% end %>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="code"><%= @model.t :code %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>">
+        <% if @multi %>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <% end %>
+        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= item.code %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+  <%= button_tag t("rss.apis.weather_xml_regions.select"), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -5,4 +5,6 @@
   <dd><%= f.number_field :rss_max_docs %></dd>
   <dt><%= @model.t :rss_refresh_method %><%= @model.tt :rss_refresh_method %></dt>
   <dd><%= f.select :rss_refresh_method, @item.rss_refresh_method_options %></dd>
+  <dt><%= @model.t :page_state %><%= @model.tt :page_state %></dt>
+  <dd><%= f.select :page_state, @item.page_state_options, include_blank: true %></dd>
 </dl>
