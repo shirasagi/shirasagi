@@ -1,9 +1,12 @@
 module Map::MapHelper
-  def include_googlemaps_api
+  def include_googlemaps_api(opts = {})
+    site = opts[:site]
+    key = site.map_setting[:api_key] rescue nil
+    key = SS.config.map.api_key if key.blank?
+
     params = {}
     params[:v] = 3
-    params[:key] = SS.config.map.api_key if SS.config.map.api_key.present?
-
+    params[:key] = key if key.present?
     controller.javascript "//maps.googleapis.com/maps/api/js?#{params.to_query}"
   end
 
@@ -29,7 +32,7 @@ module Map::MapHelper
       s << '};'
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
 
       s = []
       s << 'Map.load("' + selector + '");'
@@ -60,7 +63,7 @@ module Map::MapHelper
       s << 'var map = new Openlayers_Map_Form(canvas, opts);'
       s << 'SS_AddonTabs.hide(".mod-map");'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
 
       s = []
       s << 'SS_AddonTabs.hide(".mod-map");'
@@ -93,7 +96,7 @@ module Map::MapHelper
       s << '};'
       s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
 
       s << 'Map.center = ' + center.to_json + ';' if center.present?
       s << 'var opts = {'
@@ -123,7 +126,7 @@ module Map::MapHelper
       s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'
       s << 'map.setExifLatLng("#item_in_image");'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
       controller.javascript "/assets/js/exif-js.js"
 
       s << 'Map.center = ' + center.to_json + ';' if center.present?

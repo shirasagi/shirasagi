@@ -188,6 +188,7 @@ ja:
       ss/markdown: 内容
       ss/mobile_setting: モバイル設定
       ss/user_group_history: 異動履歴
+      ss/map_setting: 地図設定
 
   mongoid:
     models:
@@ -293,6 +294,8 @@ ja:
         mobile_state: 状態
         mobile_location: ロケーション
         mobile_css: CSS
+      ss/addon/map_setting:
+        map_api_key: APIキー
       ss/max_file_size:
         name: 名前
         extensions: 拡張子
