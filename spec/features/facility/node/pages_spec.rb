@@ -50,6 +50,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
+      expect(addon_titles).to eq expected_addon_titles
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"

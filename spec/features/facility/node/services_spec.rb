@@ -9,6 +9,8 @@ describe "facility_node_services", type: :feature, dbscope: :example do
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
+  let(:expected_addon_titles) { %w(フォルダー設定 メタ情報 リスト表示 公開設定 基本情報 施設の地域 施設の用途 施設の種類 権限).sort }
 
   it "without login" do
     visit index_path
