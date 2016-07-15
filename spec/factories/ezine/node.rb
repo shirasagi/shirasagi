@@ -8,4 +8,8 @@ FactoryGirl.define do
   factory :ezine_node_member_page, class: Ezine::Node::MemberPage, traits: [:cms_node] do
     route 'ezine/member_page'
   end
+
+  factory :ezine_node_category_node, class: Ezine::Node::CategoryNode, traits: [:cms_node] do
+    route 'ezine/category_node'
+  end
 end
