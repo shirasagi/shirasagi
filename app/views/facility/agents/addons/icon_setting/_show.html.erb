@@ -1,0 +1,21 @@
+<dl class="see">
+  <dd class="wide">
+    <% if @item.image.present? %>
+    <div id="selected-files">
+        <div class="file-view">
+          <%= link_to @item.image.url, class: :thumb, target: "_blank" do %>
+            <% if @item.image.image? %>
+              <%= image_tag @item.image.thumb_url, alt: @item.image.basename %>
+            <% else %>
+              <span class="ext icon-<%= @item.image.extname %>"><%= @item.image.extname %></span>
+            <% end %>
+          <% end %>
+
+          <div class="name">
+            <%= @item.image.basename %>
+          </div>
+        </div>
+    </div>
+    <% end %>
+  </dd>
+</dl>
