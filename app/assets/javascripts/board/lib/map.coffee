@@ -7,7 +7,6 @@ class @Board_Map
   constructor: (canvas, opts = {}) ->
     @canvas = canvas
     @opts = opts
-    @handlers = {}
     @markerFeature = null
     @markerLayer = null
     @popup = null
@@ -130,7 +129,7 @@ class @Board_Map
       })
       @map.addLayer(@markerLayer)
 
-    @handlers['position'](position: position, zoom: @map.getView().getZoom(), event: 'updated') if @handlers['position']
+    $(@canvas).trigger('position:set', { position: position, zoom: @map.getView().getZoom() })
 
   addMarker: (position, opts = {}) ->
     src = '/assets/img/map-marker.png'
@@ -167,12 +166,9 @@ class @Board_Map
       @map.removeLayer(@markerLayer)
       @markerFeature = null
       @markerLayer = null
-    @handlers['position'](position: null, event: 'removed') if @handlers['position']
+    $(@canvas).trigger('position:unset')
 
   setMarkerFromGps: () ->
     return unless navigator.geolocation
     navigator.geolocation.getCurrentPosition (position) =>
       @setMarker([position.coords.longitude, position.coords.latitude])
-
-  on: (name, handler) ->
-    @handlers[name] = handler

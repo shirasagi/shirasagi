@@ -39,15 +39,13 @@
   <% end %>
 
   var map = new Board_Map(canvas, opts);
-  map.on('position', function (e) {
-    if (e.event == 'removed') {
-      $("#item_map_center_lng").val(0);
-      $("#item_map_center_lat").val(0);
-    } else {
-      $("#item_map_zoom_level").val(e.zoom);
-      $("#item_map_center_lng").val(e.position[0]);
-      $("#item_map_center_lat").val(e.position[1]);
-    }
+  $(canvas).on('position:set', function (ev, data) {
+    $("#item_map_zoom_level").val(data.zoom);
+    $("#item_map_center_lng").val(data.position[0]);
+    $("#item_map_center_lat").val(data.position[1]);
+  }).on('position:unset', function (ev) {
+    $("#item_map_center_lng").val(0);
+    $("#item_map_center_lat").val(0);
   });
 
   if (! navigator.geolocation) {
