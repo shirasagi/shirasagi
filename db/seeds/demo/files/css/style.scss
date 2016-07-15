@@ -267,7 +267,7 @@ img {
     }
   }
 }
-_::content, _:future, #navi .wrap .sangyo a:not(*:root) {
+_::content, #navi .wrap .sangyo a:not(*:root) {
   width: 175px;
 }
 #navi .wrap li ul, #navi .wrap .current ul {
@@ -983,8 +983,8 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     font-size: $px14;
     font-weight: normal;
     a {
-      padding: 0;
-      background: none;
+     padding: 0;
+     background: none;
     }
   }
 }
@@ -2215,7 +2215,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 .kanko-info {
-  .condition {
+ .condition {
     @include clear;
     @include mb {
       padding: 10px 10px 0;
@@ -2469,7 +2469,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
 }
 .member-registration-form,
 .mypage-form, .member-my-group
-{
+ {
   .send {
     margin-bottom: 2em;
     padding: 0;
@@ -2553,7 +2553,7 @@ _::content, _:future, #navi .wrap .sangyo a:not(*:root) {
     }
   }
 }
-table.mypage-index, .member-my-group .index {
+table.mypage-index, .member-my-group .index, table.member-invited-group {
   width: 100%;
   margin-bottom: $box-margin;
   @include mb {
@@ -2594,6 +2594,11 @@ table.mypage-index, .member-my-group .index {
     @include mb {
       display: block;
     }
+  }
+}
+@include mb {
+  .invited-groups {
+    margin: 0 10px;
   }
 }
 .body--mypage {
@@ -2671,18 +2676,44 @@ table.mypage-index, .member-my-group .index {
     text-decoration: none;
   }
 }
-.body--anpi form {
+.body--anpi .search-settings form {
   margin-bottom: 10px;
   @include mb {
     padding: 0 10px;
   }
+  h2 {
+    display: inline-block;
+    margin-right: 10px;
+  }
   #keyword {
-    margin-bottom: 10px;
     padding: 7px 10px;
+    @include mb { margin-bottom: 10px; }
   }
   input[type="submit"] {
     @include btn-gry;
-    margin-bottom: 10px;
+  }
+}
+.anpi-post {
+  margin-bottom: $item-margin;
+  padding: $item-margin;
+  border: $border-hgry;
+  h2 {
+    font-size: $px16;
+    font-weight: bold;
+  }
+  .body {
+    margin-bottom: $item-margin;
+    padding-bottom: $item-margin;
+    border-bottom: $border-hgry;
+  }
+  .poster span {
+    display: inline-block;
+    margin-right: 20px;
+  }
+}
+#map-canvas {
+  .ol-unselectable {
+    height: 70% !important;
   }
 }
 // -----------------------------------------------------------------------------
@@ -2700,8 +2731,8 @@ table.mypage-index, .member-my-group .index {
     display: none;
   }
 
-  // -----------------------------------------------------------------------------
-  //  guide about
+// -----------------------------------------------------------------------------
+//  guide about
   #guide, #about {
     margin: 0;
   }
@@ -2733,8 +2764,8 @@ table.mypage-index, .member-my-group .index {
       background-size: auto 24px;
     }
   }
-  // -----------------------------------------------------------------------------
-  //  safety online propose attention recent useful relations ranking topics connect add links-life
+// -----------------------------------------------------------------------------
+//  safety online propose attention recent useful relations ranking topics connect add links-life
   #safety, #online, #propose, #attention, #recent, #useful, #connect
   #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list {
     margin-bottom: $smart-margin;
@@ -2858,18 +2889,18 @@ table.mypage-index, .member-my-group .index {
       padding: 3px 10px;
     }
   }
-  // -----------------------------------------------------------------------------
-  //  feed
+// -----------------------------------------------------------------------------
+//  feed
   .feed {
     @include clear;
     padding: 0;
     background: $hgry;
     .rss {
-      float: left;
-      width: 30%;
-      @include inline-block;
-      padding: 3px 0 3px 30px;
-      background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
+    float: left;
+    width: 30%;
+    @include inline-block;
+    padding: 3px 0 3px 30px;
+    background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
     }
     .more {
       float: left;
@@ -2897,8 +2928,8 @@ table.mypage-index, .member-my-group .index {
       @include box-sizing(border-box);
     }
   }
-  // -----------------------------------------------------------------------------
-  //  footer
+// -----------------------------------------------------------------------------
+//  footer
   #foot {
     margin-top: 0;
   }
@@ -2965,8 +2996,8 @@ table.mypage-index, .member-my-group .index {
       text-decoration: none;
     }
   }
-  // -----------------------------------------------------------------------------
-  //  pagetop
+// -----------------------------------------------------------------------------
+//  pagetop
   .pagetop {
     right: 20px;
     bottom: 20px;
@@ -2983,13 +3014,13 @@ table.mypage-index, .member-my-group .index {
       text-indent: -9999px;
     }
   }
-  // -----------------------------------------------------------------------------
-  //  ss-page-name
+// -----------------------------------------------------------------------------
+//  ss-page-name
   #ss-page-name {
     margin: $smart-margin 0 0 0;
   }
-  // -----------------------------------------------------------------------------
-  //  category-nodes
+// -----------------------------------------------------------------------------
+//  category-nodes
   #main .category-nodes, #main .cms-nodes {
     margin: $smart-margin 0 0 0;
     padding: 0 10px;
@@ -2999,8 +3030,8 @@ table.mypage-index, .member-my-group .index {
       padding: 5px;
     }
   }
-  // -----------------------------------------------------------------------------
-  //  category-pages article-pages faq-search
+// -----------------------------------------------------------------------------
+//  category-pages article-pages faq-search
   .category-pages, .article-pages, .faq-search {
     margin-bottom: $smart-margin;
     a {
@@ -3043,8 +3074,8 @@ table.mypage-index, .member-my-group .index {
       }
     }
   }
-  // -----------------------------------------------------------------------------
-  //  page sitemap
+// -----------------------------------------------------------------------------
+//  page sitemap
   .page article, .one article.body, .related-pages, .page footer.contact {
     padding: 10px 10px 0;
   }
@@ -3057,8 +3088,8 @@ table.mypage-index, .member-my-group .index {
   .related-pages article {
     padding: 0;
   }
-  // -----------------------------------------------------------------------------
-  //  event
+// -----------------------------------------------------------------------------
+//  event
   .event-pages-filter {
     padding: 10px 10px 0;
   }
@@ -3098,8 +3129,8 @@ table.mypage-index, .member-my-group .index {
       padding: 0;
     }
   }
-  // -----------------------------------------------------------------------------
-  // inquiry
+// -----------------------------------------------------------------------------
+// inquiry
   .inquiry-html {
     margin-bottom: $box-margin;
     padding: 0 $smart-margin;
@@ -3134,8 +3165,8 @@ table.mypage-index, .member-my-group .index {
   .columns, .form-login {
     margin-top: $smart-margin;
   }
-  // -----------------------------------------------------------------------------
-  // faq
+// -----------------------------------------------------------------------------
+// faq
   .faq-question, .faq .body {
     padding: $smart-margin;
     &:before {
@@ -3147,8 +3178,8 @@ table.mypage-index, .member-my-group .index {
       width: 200px;
     }
   }
-  // -----------------------------------------------------------------------------
-  // map
+// -----------------------------------------------------------------------------
+// map
   .map {
     .keyword input {
       width: 100%;
@@ -3175,7 +3206,7 @@ table.mypage-index, .member-my-group .index {
       }
     }
     .settings {
-      padding: 0 10px;
+        padding: 0 10px;
     }
     .tabs {
       padding: 0 10px;
@@ -3259,8 +3290,8 @@ table.mypage-index, .member-my-group .index {
     width: 100% !important;
   }
 
-  // -----------------------------------------------------------------------------
-  // ezine
+// -----------------------------------------------------------------------------
+// ezine
   .ezine-pages {
     @include clear;
     margin: $smart-margin 0 0 0;
@@ -3299,8 +3330,8 @@ table.mypage-index, .member-my-group .index {
       text-align: center;
     }
   }
-  // -----------------------------------------------------------------------------
-  // board
+// -----------------------------------------------------------------------------
+// board
   .body--board {
     .menu {
       margin: $smart-margin;

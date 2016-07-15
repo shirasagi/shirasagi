@@ -114,6 +114,7 @@ save_layout filename: "kanko-info-photo.layout.html", name: "写真データベ�
 save_layout filename: "login.layout.html", name: "ログイン"
 save_layout filename: "kanko-info/blog/blog1.layout.html", name: "ブログレイアウト1"
 save_layout filename: "kanko-info/blog/blog2.layout.html", name: "ブログレイアウト2"
+save_layout filename: "mypage.layout.html", name: "マイページ"
 
 array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 layouts = Hash[*array.flatten]
@@ -407,12 +408,12 @@ save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_t
   select_options: %w(男性 女性), required: "required", site_id: @site._id
 
 # ezine anpi
-save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン"
-ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認",
+save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン", layout_id: layouts["kanko-info"].id
+ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認", layout_id: layouts["kanko-info"].id,
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
   signature_html: ezine_signature_html, signature_text: ezine_signature_text,
   subscription_constraint: "required"
-ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event", name: "イベント情報",
+ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event", name: "イベント情報", layout_id: layouts["kanko-info"].id,
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
   signature_html: ezine_signature_html, signature_text: ezine_signature_text
 @member_1.subscription_ids = [ ezine_anpi.id, ezine_event.id ]
@@ -591,15 +592,15 @@ save_node route: "member/login", filename: "login", name: "ログイン", layout
 save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: layouts["one"].id,
   sender_email: "info@example.jp", sender_name: "送信者名", kana_required: "required", postal_code_required: "required",
   addr_required: "required", sex_required: "required", birthday_required: "required"
-save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: layouts["one"].id
-save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: layouts["one"].id, order: 10,
+save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: layouts["mypage"].id
+save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: layouts["mypage"].id, order: 10,
   kana_required: "required", postal_code_required: "required", addr_required: "required", sex_required: "required",
   birthday_required: "required"
-save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: layouts["one"].id, order: 20
-save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: layouts["one"].id, order: 30
-anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否", layout_id: layouts["one"].id, order: 40,
+save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: layouts["mypage"].id, order: 20
+save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: layouts["mypage"].id, order: 30
+anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否", layout_id: layouts["mypage"].id, order: 40,
   map_state: "enabled", map_view_state: "enabled", text_size_limit: 400
-save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: layouts["one"].id, order: 50,
+save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: layouts["mypage"].id, order: 50,
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
 
 ## member blog
@@ -1190,11 +1191,11 @@ end
 
 save_board_anpi_post member_id: @member_1.id, name: @member_1.name, kana: @member_1.kana, tel: @member_1.tel,
   addr: @member_1.addr, sex: @member_1.sex, age: @member_1.age, email: @member_1.email,
-  text: "立川の避難所に花子と一緒に居ます。\r\n私も花子も無事です。", public_scope: "group",
+  text: "立川の避難所に花子と一緒に居ます。\r\n私も花子も無事です。", public_scope: "public",
   point: { "loc"=>[35.712948784, 139.399852752], "zoom_level"=>11 }
 save_board_anpi_post member_id: @member_2.id, name: @member_2.name, kana: @member_2.kana, tel: @member_2.tel,
   addr: @member_2.addr, sex: @member_2.sex, age: @member_2.age, email: @member_2.email,
-  text: "主人と一緒に必死で立川の避難所まで避難してきました。", public_scope: "group",
+  text: "主人と一緒に必死で立川の避難所まで避難してきました。", public_scope: "public",
   point: { "loc"=>[35.713576996, 139.407887933], "zoom_level"=>11 }
 
 puts "# body_layouts"
