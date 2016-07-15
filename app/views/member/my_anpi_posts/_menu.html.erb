@@ -15,6 +15,9 @@
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, action: :edit, id: @item %>
     <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :delete, { action: :delete, id: @item }, class: :delete %>
+    <% end %>
     <%= link_to :back_to_index, action: :index %>
   <% end %>
 </nav>
