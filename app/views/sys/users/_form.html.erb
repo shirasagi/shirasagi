@@ -20,7 +20,7 @@
   <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
   <dd>
     <%= f.password_field :in_password, style: "width: 200px" %>
-    <%= button_tag t("views.button.random_password"), type: :button, id: "random-password" %>
+    <%= button_tag t("views.button.random_password"), type: :button, id: "random-password", class: "btn" %>
     <span id="random-password-view"></span>
   </dd>
 
