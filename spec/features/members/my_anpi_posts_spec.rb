@@ -91,6 +91,20 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
     end
   end
 
+  context "download" do
+    let!(:item) { create :board_anpi_post, cur_site: site, cur_member: member, text: unique_id }
+
+    before { login_cms_user }
+
+    it do
+      visit index_path
+      expect(page).to have_css('.list-item .title', text: item.name)
+      click_on 'ダウンロード'
+      expect(status_code).to eq 200
+      expect(page.response_headers['Content-Disposition']).to include('filename="anpi_posts_')
+    end
+  end
+
   context "post to google person finder" do
     let!(:item) { create :board_anpi_post, cur_site: site, cur_member: member, text: unique_id }
     let(:repository) { Google::PersonFinder.new.repository }
