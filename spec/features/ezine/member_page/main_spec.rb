@@ -32,6 +32,35 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
     end
 
+    describe "node conf" do
+      let!(:member) { cms_member }
+
+      it do
+        member.reload
+        expect(member.subscription_ids).to eq []
+
+        visit index_path
+        click_on "フォルダー設定"
+        click_on "編集する"
+
+        fill_in "item[signature_html]", with: "<hr><p>#{unique_id}<p>"
+        fill_in "item[signature_text]", with: "----\n#{unique_id}"
+        fill_in "item[sender_name]", with: unique_id
+        fill_in "item[sender_email]", with: "#{unique_id}@example.jp"
+        select "必須", from: "item[subscription_constraint]"
+        click_on "保存"
+
+        expect(page).to have_css("#notice", text: "保存しました。")
+
+        # after setting subscription_constraint to required, existing member's subscription_ids is chagned.
+        member.reload
+        expect(member.subscription_ids).to eq [ node.id ]
+
+        member1 = create :cms_member, cur_site: site
+        expect(member1.subscription_ids).to eq [ node.id ]
+      end
+    end
+
     describe "create item" do
       let(:new_path) { new_ezine_member_page_path site, node }
       let(:name) { "test #{unique_id}" }
@@ -121,6 +150,32 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
       let(:text) { "test #{unique_id}" }
       let!(:item) { create(:ezine_page, cur_site: site, cur_node: node, cur_user: cms_user, html: html, text: text) }
       let(:email) { "#{unique_id}@example.jp" }
+
+      it "search test member" do
+        visit index_path
+
+        click_link "フォルダー設定"
+        click_link "テスト読者"
+        click_link "新規作成"
+
+        within "form" do
+          fill_in "item[email]", with: email
+          select I18n.t("ezine.options.email_type.text"), from: "item[email_type]"
+          click_button "保存"
+        end
+
+        click_link "フォルダー設定"
+        click_link "テスト読者"
+        expect(page).to have_css(".list-item .title", text: email)
+
+        fill_in "s[keyword]", with: email
+        click_on "検索"
+        expect(page).to have_css(".list-item .title", text: email)
+
+        fill_in "s[keyword]", with: unique_id
+        click_on "検索"
+        expect(page).not_to have_css(".list-item .title", text: email)
+      end
 
       it "sends text mail" do
         visit index_path
