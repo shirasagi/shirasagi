@@ -135,8 +135,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail).not_to be_nil
         expect(mail.from.first).to eq "test@example.jp"
         expect(Cms::Member.site(site).map(&:email)).to include mail.to.first
-        expect(mail.subject).to eq '2016年03月08日 13時32分 ころ地震がありました'
-        expect(mail.body.raw_source).to include('2016年03月08日 13時32分 ころ地震がありました。')
+        expect(mail.subject).to eq '2016年3月8日 13時32分 ころ地震がありました'
+        expect(mail.body.raw_source).to include('2016年3月8日 13時32分 ころ地震がありました。')
         expect(mail.body.raw_source).to include('日高地方東部：3')
         expect(mail.body.raw_source).to include(node_my_anpi_post.full_url)
         expect(mail.body.raw_source).to end_with("\n--------\ntest@example.jp\n")
@@ -229,9 +229,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail).not_to be_nil
         expect(mail.from.first).to eq "test@example.jp"
         expect(Cms::Member.site(site).map(&:email)).to include mail.to.first
-        expect(mail.subject).to eq '2011年03月11日 14時46分 ころ地震がありました'
-        puts mail.body.raw_source
-        expect(mail.body.raw_source).to include('2011年03月11日 14時46分 ころ地震がありました。')
+        expect(mail.subject).to eq '2011年3月11日 14時46分 ころ地震がありました'
+        expect(mail.body.raw_source).to include('2011年3月11日 14時46分 ころ地震がありました。')
         expect(mail.body.raw_source).to include('岩手県沿岸南部：6弱')
         expect(mail.body.raw_source).to include('岩手県内陸南部：6弱')
         expect(mail.body.raw_source).to include('岩手県沿岸北部：5強')
