@@ -408,7 +408,7 @@ save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_t
 
 # ezine anpi
 save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン"
-ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認", shortcut: "show",
+ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認",
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
   signature_html: ezine_signature_html, signature_text: ezine_signature_text,
   subscription_constraint: "required"
