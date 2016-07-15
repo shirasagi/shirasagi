@@ -19,15 +19,20 @@ class Board::AnpiPost
     public
       def to_csv
         CSV.generate do |data|
-          data << %w(name poster text email poster_url delete_key)
+          data << %w(name kana tel addr sex age email text member_id public_scope point).map { |k| t k }
           criteria.each do |item|
             line = []
             line << item.name
-            line << item.poster
-            line << item.text
+            line << item.kana
+            line << item.tel
+            line << item.addr
+            line << item.label(:sex)
+            line << item.age
             line << item.email
-            line << item.poster_url
-            line << item.delete_key
+            line << item.text
+            line << item.member.name
+            line << item.label(:public_scope)
+            line << "#{item.point.loc.lat},#{item.point.loc.lng}"
             data << line
           end
         end
