@@ -45,6 +45,14 @@
 
     <% if @cur_user %>
     <nav class="user">
+      <%= jquery do %>
+        // Sns_Message.renderUnseen('<%= sns_message_apis_unseen_path %>');
+      <% end %>
+      <div class="user-message">
+        <% count = Sns::Message::Thread.where(unseen_member_ids: @cur_user.id).size %>
+        <a href="<%= sns_message_threads_path %>" class="unseen"><%= count if count > 0 %></a>
+      </div>
+
       <div class="dropdown">
         <h2>
           <% if @cur_group %>

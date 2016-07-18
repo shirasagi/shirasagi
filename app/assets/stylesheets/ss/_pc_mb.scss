@@ -170,6 +170,21 @@ td {
     color: $white;
     @include mb { display: none; }
   }
+  .user-message {
+    float: left;
+    width: 50px;
+    :hover {
+      background-color: $gray3;
+    }
+    .unseen {
+      display: block;
+      width: 100%;
+      height: 49px;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+    }
+  }
   .user {
     float: right;
     a {

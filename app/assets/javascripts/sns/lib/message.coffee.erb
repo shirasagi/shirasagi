@@ -1,0 +1,6 @@
+class @Sns_Message
+  @renderUnseen: (url) ->
+    $.ajax
+      url: url
+      success: (data, status)->
+        $('.user-message .unseen').html(data) if data > 0

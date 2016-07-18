@@ -90,7 +90,7 @@ class Sns::Message::Thread
   end
 
   def recycle_thread
-    thread = self.class.where(member_ids: member_ids).first if member_ids.size == 2
+    thread = self.class.all_in(member_ids: member_ids).first if member_ids.size == 2
     thread || self.class.new(attributes)
   end
 

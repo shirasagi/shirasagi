@@ -21,6 +21,9 @@ SS::Application.routes.draw do
       resources :threads, concerns: :deletion do
         resources :posts, concerns: :deletion
       end
+      namespace "apis" do
+        get 'unseen' => "unseen#index"
+      end
     end
 
     namespace "addons", module: "agents/addons" do
