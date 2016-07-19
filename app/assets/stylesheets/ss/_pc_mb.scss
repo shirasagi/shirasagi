@@ -203,14 +203,12 @@ td {
       float: left;
       h2 {
         padding: 15px 40px 15px 20px;
-        border-left: $border-black2;
         background: url(/assets/img/arrow-usr.png) no-repeat 90% center;
         color: $white;
         @include mb { padding: 10px 40px 10px 20px; }
       }
       &:hover h2, &.active h2 {
         position: relative;
-        border-left: $border-black;
         background-color: $gray3;
         text-decoration: none;
       }

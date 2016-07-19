@@ -24,7 +24,7 @@ class Sns::Message::ThreadsController < ApplicationController
   public
     def index
       @items = @model.
-        where(active_member_ids: @cur_user.id).
+        allow(:read, @cur_user).
         search(params[:s]).
         page(params[:page]).
         per(20)

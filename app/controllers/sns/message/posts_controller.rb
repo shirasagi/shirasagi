@@ -9,8 +9,8 @@ class Sns::Message::PostsController < ApplicationController
   private
     def set_thread
       @thread ||= Sns::Message::Thread.find params[:thread_id]
-      #TODO: readable
       raise '404' unless @thread
+      raise '404' unless @thread.allowed?(:read, @cur_user)
     end
 
     def set_crumbs
@@ -39,10 +39,10 @@ class Sns::Message::PostsController < ApplicationController
     end
 
     def edit
-      raise '404'
+      raise '403'
     end
 
     def update
-      raise '404'
+      raise '403'
     end
 end

@@ -9,8 +9,7 @@ class Sns::MypageController < ApplicationController
     end
 
     def gws_sites
-      ids = @cur_user.groups.map { |group| group.root.try(:id) }.uniq.compact
-      SS::Group.where(:id.in => ids)
+      @cur_user.root_groups
     end
 
   public

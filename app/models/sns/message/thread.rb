@@ -1,11 +1,11 @@
 class Sns::Message::Thread
   include SS::Document
   include SS::Reference::User
-  include SS::UserPermission
+  include Sns::Message::MemberPermission
 
   attr_accessor :text
 
-  #field :name, type: String
+  field :members_type, type: String # only, many
 
   embeds_ids :members, class_name: "SS::User"
   embeds_ids :active_members, class_name: "SS::User"
@@ -22,8 +22,9 @@ class Sns::Message::Thread
 
   validate :validate_member_ids
 
+  before_create :set_members_type
   before_create :reset_unseen_member_ids
-  before_update :update_unseen_member_ids
+  before_update :update_unseen_member_ids, if: -> { member_ids_changed? }
 
   default_scope -> {
     order_by updated: -1
@@ -36,16 +37,11 @@ class Sns::Message::Thread
     criteria
   }
 
-  def allowed?(action, user, opts = {})
-    return true if super
-    active_member_ids.include?(user.id) if action =~ /edit|delete/
-  end
-
   def editable_members?
-    member_ids.size > 2
+    members_type == "many"
   end
 
-  def name(user = nil)
+  def name(user)
     if active_member_ids == [user.id]
       mem = members
       mem = mem.where(:_id.ne => user.id) if user
@@ -113,7 +109,7 @@ class Sns::Message::Thread
 
   private
     def set_member_ids
-      ids = self.member_ids.map(&:to_i)
+      ids = member_ids.map(&:to_i)
       ids << user_id
       ids = ids.uniq.compact
       self.member_ids = ids
@@ -122,6 +118,10 @@ class Sns::Message::Thread
 
     def validate_member_ids
       errors.add :member_ids, :blank if member_ids.size < 2
+    end
+
+    def set_members_type
+      self.members_type = (member_ids.size == 2) ? 'only' : 'many'
     end
 
     def reset_unseen_member_ids
