@@ -1,1 +1,5 @@
+<header class="released">
+  <time datetime="<%= I18n.l @cur_page.date.to_date, format: :iso %>"><%= I18n.l @cur_page.date.to_date, format: :long %></time>
+</header>
+
 <%= render file: "cms/agents/pages/page/index" %>
