@@ -21,10 +21,12 @@ RSpec.describe Map::MapHelper, type: :helper do
     ]
   end
   subject(:googlemaps_site) do
-    create_once :cms_site, name: "A", host: "googlemaps", domains:"googlemaps.localhost.jp", map_api: "googlemaps", map_api_key: "AAA"
+    create_once :cms_site, name: "A", host: "googlemaps", domains: "googlemaps.localhost.jp",
+      map_api: "googlemaps", map_api_key: "AAA"
   end
   subject(:openlayers_site) do
-    create_once :cms_site, name: "B", host: "openlayers", domains: "openlayers.localhost.jp", map_api: "openlayers"
+    create_once :cms_site, name: "B", host: "openlayers", domains: "openlayers.localhost.jp",
+      map_api: "openlayers"
   end
 
   subject(:map) { helper.render_map "#map-canvas", markers: markers }
