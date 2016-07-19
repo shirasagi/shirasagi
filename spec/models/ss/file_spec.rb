@@ -163,7 +163,7 @@ describe SS::File do
         file = SS::File.new model: "article/page"
         Fs::UploadedFile.create_from_file(single_frame_image) do |f|
           file.in_file = f
-          file.resizing = [320,240]
+          file.resizing = [320, 240]
           file.save!
           file.in_file = nil
         end
@@ -202,7 +202,7 @@ describe SS::File do
         file = SS::File.new model: "article/page"
         Fs::UploadedFile.create_from_file(multi_frame_image) do |f|
           file.in_file = f
-          file.resizing = [320,240]
+          file.resizing = [320, 240]
           file.save!
           file.in_file = nil
         end

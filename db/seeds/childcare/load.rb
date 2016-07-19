@@ -537,7 +537,7 @@ article2 = save_page route: "article/page", filename: "docs/page2.html", name: "
 file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
   contact_charge: "担当者", contact_email: "admin@example.jp", contact_tel: "000-000-0000", contact_fax: "000-000-0000"
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article3.update
@@ -554,7 +554,7 @@ dates = (Time.zone.today..(Time.zone.today + 20)).map { |d| d.mongoize }
 save_page route: "event/page", filename: "event/page1.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_dates: dates,
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: "http://demo.ss-proj.org/"
@@ -562,7 +562,7 @@ save_page route: "event/page", filename: "event/page1.html", name: "イベント
 save_page route: "event/page", filename: "event/2.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_dates: dates,
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: "http://demo.ss-proj.org/"
@@ -595,7 +595,7 @@ save_page route: "facility/image", filename: "institution/list/shirsagi/page4.ht
   image_alt: "写真1", image_comment: "写真です。"
 
 save_page route: "facility/map", filename: "institution/list/shirsagi/map.html", name: "地図",
-  layout_id: layouts["institution-page"].id, map_points: [ { loc: [ 34.074722,134.5516 ] } ]
+  layout_id: layouts["institution-page"].id, map_points: [ { loc: [34.074722, 134.5516] } ]
 
 puts "# key visual"
 keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
@@ -661,7 +661,7 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 10
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -672,7 +672,7 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 20
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -682,7 +682,7 @@ file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model
 page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name: "赤ちゃんが生まれたら",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 30
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -693,7 +693,7 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 40
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -704,7 +704,7 @@ page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", n
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 50
 page5.html = page5.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
