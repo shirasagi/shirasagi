@@ -374,38 +374,41 @@ center_point_2 = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], z
 center_point_3 = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
 center_point_4 = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
 
-facility_locations << save_node(route: "facility/location", filename: "institution/area/east",
+node = save_node route: "facility/location", filename: "institution/area/east",
   name: "東区", layout_id: layouts["institution"].id, order: 10, center_point: center_point_1
-)
-facility_locations << save_node(route: "facility/location", filename: "institution/area/south",
+facility_locations << node
+node = save_node route: "facility/location", filename: "institution/area/south",
   name: "西区", layout_id: layouts["institution"].id, order: 20, center_point: center_point_2
-)
-facility_locations << save_node(route: "facility/location", filename: "institution/area/west",
+facility_locations << node
+node = save_node route: "facility/location", filename: "institution/area/west",
   name: "南区", layout_id: layouts["institution"].id, order: 30, center_point: center_point_3
-)
-facility_locations << save_node(route: "facility/location", filename: "institution/area/north",
+facility_locations << node
+node = save_node route: "facility/location", filename: "institution/area/north",
   name: "北区", layout_id: layouts["institution"].id, order: 40, center_point: center_point_4
-)
+facility_locations << node
 
-facility_categories << save_node(route: "facility/category", filename: "institution/type/kindergarten",
+node = save_node route: "facility/category", filename: "institution/type/kindergarten",
   name: "幼稚園", layout_id: layouts["institution"].id, order: 10
-)
-facility_categories << save_node(route: "facility/category", filename: "institution/type/nursery",
+facility_categories << node
+node = save_node route: "facility/category", filename: "institution/type/nursery",
   name: "保育所", layout_id: layouts["institution"].id, order: 20
-)
-facility_categories << save_node(route: "facility/category", filename: "institution/type/primary",
+facility_categories << node
+node = save_node route: "facility/category", filename: "institution/type/primary",
   name: "小学校", layout_id: layouts["institution"].id, order: 30
-)
+facility_categories << node
 
-facility_services << save_node(route: "facility/service", filename: "institution/use/leave",
+node = save_node route: "facility/service", filename: "institution/use/leave",
   name: "預ける", layout_id: layouts["institution"].id, order: 10
-)
-facility_services << save_node(route: "facility/service", filename: "institution/use/play",
+facility_services << node
+node = save_node route: "facility/service", filename: "institution/use/leave",
+  name: "預ける", layout_id: layouts["institution"].id, order: 10
+facility_services << node
+node = save_node route: "facility/service", filename: "institution/use/play",
   name: "遊ぶ", layout_id: layouts["institution"].id, order: 20
-)
-facility_services << save_node(route: "facility/service", filename: "institution/use/study",
+facility_services << node
+node = save_node route: "facility/service", filename: "institution/use/study",
   name: "学ぶ", layout_id: layouts["institution"].id, order: 30
-)
+facility_services << node
 
 save_node route: "facility/search", filename: "institution", name: "施設情報", order: 37,
   layout_id: layouts["institution"].id,
