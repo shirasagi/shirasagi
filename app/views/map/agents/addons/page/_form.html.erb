@@ -1,11 +1,4 @@
-<%
-  opts = {
-    center: SS.config.map.map_center,
-    max_point_form: SS.config.map.map_max_point_form,
-#    markers: @item.map_points.to_json,
-  }
-%>
-<%= render_map_form "#map-canvas", opts %>
+<%= render_map_form "#map-canvas", site: @cur_site %>
 
 <div class="mod-map">
   <div class="location-search">

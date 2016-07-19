@@ -1,7 +1,7 @@
 <%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css" %>
 
-<%= render_facility_search_map("#map-canvas", markers: @markers, center: SS.config.map.map_center) %>
+<%= render_facility_search_map "#map-canvas", markers: @markers, site: @cur_site %>
 
 <%= coffee do %>
 $(window).on "load", ->

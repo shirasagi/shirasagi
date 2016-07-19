@@ -128,6 +128,9 @@ ja:
         taisho: 大正
         showa: 昭和
         heisei: 平成
+      map_api:
+        googlemaps: Googleマップ
+        openlayers: OpenLayers
 
     state:
       public: 公開中
@@ -188,6 +191,7 @@ ja:
       ss/markdown: 内容
       ss/mobile_setting: モバイル設定
       ss/user_group_history: 異動履歴
+      ss/map_setting: 地図設定
 
   mongoid:
     models:
@@ -293,6 +297,9 @@ ja:
         mobile_state: 状態
         mobile_location: ロケーション
         mobile_css: CSS
+      ss/addon/map_setting:
+        map_api: 地図API
+        map_api_key: APIキー
       ss/max_file_size:
         name: 名前
         extensions: 拡張子

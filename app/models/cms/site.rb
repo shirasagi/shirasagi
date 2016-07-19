@@ -4,6 +4,7 @@ class Cms::Site
   include Cms::Addon::PageSetting
   include Cms::Addon::DefaultReleasePlan
   include SS::Addon::MobileSetting
+  include SS::Addon::MapSetting
 
   set_permission_name "cms_sites"
 end

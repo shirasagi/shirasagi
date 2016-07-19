@@ -1,9 +1,12 @@
 module Map::MapHelper
-  def include_googlemaps_api
+  def include_googlemaps_api(opts = {})
+    map_setting = opts[:site].map_setting rescue {}
+
+    key = opts[:api_key] || map_setting[:api_key] || SS.config.map.api_key
+
     params = {}
     params[:v] = 3
-    params[:key] = SS.config.map.api_key if SS.config.map.api_key.present?
-
+    params[:key] = key if key.present?
     controller.javascript "//maps.googleapis.com/maps/api/js?#{params.to_query}"
   end
 
@@ -13,11 +16,14 @@ module Map::MapHelper
   end
 
   def render_map(selector, opts = {})
-    #center  = opts[:center]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    #center = opts[:center]
     markers = opts[:markers]
 
     h = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
 
       s = []
@@ -29,7 +35,7 @@ module Map::MapHelper
       s << '};'
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
 
       s = []
       s << 'Map.load("' + selector + '");'
@@ -41,12 +47,15 @@ module Map::MapHelper
   end
 
   def render_map_form(selector, opts = {})
-    center         = opts[:center]
-    max_point_form = opts[:max_point_form]
-    #markers        = opts[:markers]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    center = opts[:center] || SS.config.map.map_center
+    max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
+    #markers = opts[:markers]
 
     h = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
 
       s = []
@@ -60,7 +69,7 @@ module Map::MapHelper
       s << 'var map = new Openlayers_Map_Form(canvas, opts);'
       s << 'SS_AddonTabs.hide(".mod-map");'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
 
       s = []
       s << 'SS_AddonTabs.hide(".mod-map");'
@@ -78,11 +87,14 @@ module Map::MapHelper
   end
 
   def render_facility_search_map(selector, opts = {})
-    center  = opts[:center]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    center = opts[:center] || SS.config.map.map_center
     markers = opts[:markers]
 
     s = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
 
       s << 'var opts = {'
@@ -93,7 +105,7 @@ module Map::MapHelper
       s << '};'
       s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
 
       s << 'Map.center = ' + center.to_json + ';' if center.present?
       s << 'var opts = {'
@@ -106,10 +118,13 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
-    center = opts[:center]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    center = opts[:center] || SS.config.map.map_center
 
     s = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
       controller.javascript "/assets/js/exif-js.js"
 
@@ -123,7 +138,7 @@ module Map::MapHelper
       s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'
       s << 'map.setExifLatLng("#item_in_image");'
     else
-      include_googlemaps_api
+      include_googlemaps_api(opts)
       controller.javascript "/assets/js/exif-js.js"
 
       s << 'Map.center = ' + center.to_json + ';' if center.present?
