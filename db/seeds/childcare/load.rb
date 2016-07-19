@@ -259,7 +259,7 @@ save_node route: "uploader/file", name: "JavaScript", filename: "js"
 ## category
 save_node route: "category/node", name: "知りたい", filename: "know",
   layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 10
-save_node route: "category/page", name: "相談したい",filename: "consultation",
+save_node route: "category/page", name: "相談したい", filename: "consultation",
  layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 20
 save_node route: "category/page", name: "つながりたい", filename: "lead",
   layout_id: layouts["folder"].id, sort: "order", limit: 100, order: 30
@@ -374,38 +374,41 @@ center_point_2 = Map::Extensions::Point.mongoize(loc: [34.034417, 133.808902], z
 center_point_3 = Map::Extensions::Point.mongoize(loc: [33.609123, 134.352387], zoom_level: 10)
 center_point_4 = Map::Extensions::Point.mongoize(loc: [34.179472, 134.608579], zoom_level: 10)
 
-facility_locations << save_node(route: "facility/location", filename: "institution/area/east",
+node = save_node route: "facility/location", filename: "institution/area/east",
   name: "東区", layout_id: layouts["institution"].id, order: 10, center_point: center_point_1
-)
-facility_locations << save_node(route: "facility/location", filename: "institution/area/south",
+facility_locations << node
+node = save_node route: "facility/location", filename: "institution/area/south",
   name: "西区", layout_id: layouts["institution"].id, order: 20, center_point: center_point_2
-)
-facility_locations << save_node(route: "facility/location", filename: "institution/area/west",
+facility_locations << node
+node = save_node route: "facility/location", filename: "institution/area/west",
   name: "南区", layout_id: layouts["institution"].id, order: 30, center_point: center_point_3
-)
-facility_locations << save_node(route: "facility/location", filename: "institution/area/north",
+facility_locations << node
+node = save_node route: "facility/location", filename: "institution/area/north",
   name: "北区", layout_id: layouts["institution"].id, order: 40, center_point: center_point_4
-)
+facility_locations << node
 
-facility_categories << save_node(route: "facility/category", filename: "institution/type/kindergarten",
+node = save_node route: "facility/category", filename: "institution/type/kindergarten",
   name: "幼稚園", layout_id: layouts["institution"].id, order: 10
-)
-facility_categories << save_node(route: "facility/category", filename: "institution/type/nursery",
+facility_categories << node
+node = save_node route: "facility/category", filename: "institution/type/nursery",
   name: "保育所", layout_id: layouts["institution"].id, order: 20
-)
-facility_categories << save_node(route: "facility/category", filename: "institution/type/primary",
+facility_categories << node
+node = save_node route: "facility/category", filename: "institution/type/primary",
   name: "小学校", layout_id: layouts["institution"].id, order: 30
-)
+facility_categories << node
 
-facility_services << save_node(route: "facility/service", filename: "institution/use/leave",
+node = save_node route: "facility/service", filename: "institution/use/leave",
   name: "預ける", layout_id: layouts["institution"].id, order: 10
-)
-facility_services << save_node(route: "facility/service", filename: "institution/use/play",
+facility_services << node
+node = save_node route: "facility/service", filename: "institution/use/leave",
+  name: "預ける", layout_id: layouts["institution"].id, order: 10
+facility_services << node
+node = save_node route: "facility/service", filename: "institution/use/play",
   name: "遊ぶ", layout_id: layouts["institution"].id, order: 20
-)
-facility_services << save_node(route: "facility/service", filename: "institution/use/study",
+facility_services << node
+node = save_node route: "facility/service", filename: "institution/use/study",
   name: "学ぶ", layout_id: layouts["institution"].id, order: 30
-)
+facility_services << node
 
 save_node route: "facility/search", filename: "institution", name: "施設情報", order: 37,
   layout_id: layouts["institution"].id,
@@ -537,7 +540,7 @@ article2 = save_page route: "article/page", filename: "docs/page2.html", name: "
 file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
   contact_charge: "担当者", contact_email: "admin@example.jp", contact_tel: "000-000-0000", contact_fax: "000-000-0000"
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article3.update
@@ -554,7 +557,7 @@ dates = (Time.zone.today..(Time.zone.today + 20)).map { |d| d.mongoize }
 save_page route: "event/page", filename: "event/page1.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_dates: dates,
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: "http://demo.ss-proj.org/"
@@ -562,7 +565,7 @@ save_page route: "event/page", filename: "event/page1.html", name: "イベント
 save_page route: "event/page", filename: "event/2.html", name: "イベントタイトルが入ります。",
   layout_id: layouts["event-page"].id, event_dates: dates,
   category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   related_page_ids: [article1.id, article2.id, article3.id],
   schedule: "○月○日○時から○時", venue: "某所", cost: "○○○○円", contact: "シラサギ市",
   content: "イベントを開催します。", related_url: "http://demo.ss-proj.org/"
@@ -595,7 +598,7 @@ save_page route: "facility/image", filename: "institution/list/shirsagi/page4.ht
   image_alt: "写真1", image_comment: "写真です。"
 
 save_page route: "facility/map", filename: "institution/list/shirsagi/map.html", name: "地図",
-  layout_id: layouts["institution-page"].id, map_points: [ { loc: [ 34.074722,134.5516 ] } ]
+  layout_id: layouts["institution-page"].id, map_points: [ { loc: [34.074722, 134.5516] } ]
 
 puts "# key visual"
 keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
@@ -661,7 +664,7 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 10
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -672,7 +675,7 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 20
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -682,7 +685,7 @@ file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model
 page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name: "赤ちゃんが生まれたら",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 30
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -693,7 +696,7 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 40
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
@@ -704,7 +707,7 @@ page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", n
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
   related_page_ids: [article1.id, article2.id, article3.id],
-  map_points: [ { name: "徳島駅", loc: [ 34.074722,134.5516 ], text: "徳島駅です。" } ],
+  map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   order: 50
 page5.html = page5.html.gsub("src=\"#\"", "src=\"#{file.url}\"")

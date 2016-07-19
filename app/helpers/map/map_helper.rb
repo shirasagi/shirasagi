@@ -28,15 +28,14 @@ module Map::MapHelper
       s << '  layers: ' + SS.config.map.layers.to_json + ','
       s << '};'
       s << 'var map = new Openlayers_Map(canvas, opts);'
-      h << jquery { s.join("\n").html_safe }
     else
       include_googlemaps_api
 
       s = []
       s << 'Map.load("' + selector + '");'
       s << 'Map.setMarkers(' + markers.to_json + ');' if markers.present?
-      h << jquery { s.join("\n").html_safe }
     end
+    h << jquery { s.join("\n").html_safe }
 
     h.join.html_safe
   end
@@ -60,7 +59,6 @@ module Map::MapHelper
       s << '};'
       s << 'var map = new Openlayers_Map_Form(canvas, opts);'
       s << 'SS_AddonTabs.hide(".mod-map");'
-      h << jquery { s.join("\n").html_safe }
     else
       include_googlemaps_api
 
@@ -73,8 +71,8 @@ module Map::MapHelper
       s << 'Map.renderMarkers();'
       s << 'Map.renderEvents();'
       s << 'SS_AddonTabs.head(".mod-map").click(function() { Map.resize(); });'
-      h << jquery { s.join("\n").html_safe }
     end
+    h << jquery { s.join("\n").html_safe }
 
     h.join.html_safe
   end
@@ -108,7 +106,7 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
-    center  = opts[:center]
+    center = opts[:center]
 
     s = []
     if SS.config.map.api == "openlayers"
