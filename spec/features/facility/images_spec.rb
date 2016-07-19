@@ -9,6 +9,8 @@ describe "facility_images" do
   subject(:show_path) { facility_image_path site.id, node, item }
   subject(:edit_path) { edit_facility_image_path site.id, node, item }
   subject(:delete_path) { delete_facility_image_path site.id, node, item }
+  let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
+  let(:expected_addon_titles) { %w(メタ情報 公開予約 公開設定 写真情報 基本情報 承認 施設写真 権限).sort }
 
   it "without login" do
     visit index_path
@@ -49,6 +51,7 @@ describe "facility_images" do
 
     it "#edit" do
       visit edit_path
+      expect(addon_titles).to eq expected_addon_titles
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"

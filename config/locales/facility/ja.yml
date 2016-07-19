@@ -57,7 +57,8 @@ ja:
       facility/body: 施設情報
       facility/additional_info: 追加情報
       facility/focus_setting: フォーカス設定
-      facility/image: 施設写真
+      facility/icon_setting: アイコン設定
+      facility/image_file: 施設写真
       facility/image_info: 写真情報
       facility/pointer_image: ポインタ画像
       facility/search_setting: 施設検索

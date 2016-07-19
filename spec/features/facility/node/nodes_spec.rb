@@ -10,6 +10,8 @@ describe "facility_node_nodes", type: :feature, dbscope: :example do
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
   let(:pages_path)  { facility_pages_path site.id, node }
+  let(:addon_titles) { page.all("form .addon-head h2").map(&:text).sort }
+  let(:expected_addon_titles) { %w(フォルダー設定 メタ情報 リスト表示 公開設定 基本情報 施設の地域 施設の用途 施設の種類 権限).sort }
 
   it "without login" do
     visit index_path
@@ -50,6 +52,7 @@ describe "facility_node_nodes", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
+      expect(addon_titles).to eq expected_addon_titles
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button "保存"

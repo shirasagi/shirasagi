@@ -76,7 +76,7 @@ module Facility::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
-    include Facility::Addon::Image
+    include Facility::Addon::IconSetting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

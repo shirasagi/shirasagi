@@ -1,7 +1,7 @@
-module Facility::Addon
-  module Image
+module Facility::Addon::Image
+  module Model
     extend ActiveSupport::Concern
-    extend SS::Addon
+    extend SS::Translation
 
     included do
       belongs_to :image, class_name: "SS::File"
