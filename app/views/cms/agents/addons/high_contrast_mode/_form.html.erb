@@ -1,0 +1,10 @@
+<dl class="see mod-hight-contrast-mode">
+  <dt><%= @model.t :high_contrast_mode %><%= @model.tt :high_contrast_mode %></dt>
+  <dd><%= f.select :high_contrast_mode, @item.high_contrast_mode_options %></dd>
+
+  <dt><%= @model.t :font_color %><%= @model.tt :font_color %></dt>
+  <dd><%= f.text_field :font_color, class: "js-color" %></dd>
+
+  <dt><%= @model.t :background_color %><%= @model.tt :background_color %></dt>
+  <dd><%= f.text_field :background_color, class: "js-color" %></dd>
+</dl>

@@ -23,6 +23,9 @@
   <% if Cms::EditorTemplate.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.editor_template", cms_editor_templates_path %></h3>
   <% end %>
+  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.theme_template", cms_theme_templates_path %></h3>
+  <% end %>
   <% if Cms::BodyLayout.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.body_layout", cms_body_layouts_path %></h3>
   <% end %>

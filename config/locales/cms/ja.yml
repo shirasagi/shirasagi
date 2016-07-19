@@ -42,6 +42,7 @@ ja:
     view_page: 公開画面
     view_site: サイト確認
     editor_template: テンプレート
+    theme_template: Theme切り替え
     convert_to_cms_page: 固定ページに変換する
     notice: お知らせ
     important_notice: 重要なお知らせ
@@ -232,6 +233,7 @@ ja:
       cms/body_layout_html: HTML
       cms/default_release_plan: 公開予約の既定値
       cms/page_search: 検索条件
+      cms/high_contrast_mode: ハイコントラストモード
 
   mongoid:
     models:
@@ -252,6 +254,7 @@ ja:
       cms/workflow/route: 承認経路
       cms/role: ロール
       cms/editor_template: テンプレート
+      cms/theme_template: Theme切り替え
       cms/file: 共有ファイル
       cms/notice: お知らせ
       cms/page_search: ページ検索
@@ -316,6 +319,11 @@ ja:
         name: 名前
         description: 説明
         order: 並び順
+      cms/theme_template:
+        name: 名前
+        class_name: class属性
+        order: 並び順
+        css_path: cssパス
       cms/addon/crumb:
         home_label: ホームラベル
       cms/notice:
@@ -393,6 +401,10 @@ ja:
         search_approver_state: 承認ステータス
       cms/task:
         node_id: フォルダー
+      cms/addon/high_contrast_mode:
+        high_contrast_mode: 設定
+        font_color: 文字色
+        background_color: 背景色
 
   errors:
     messages:
@@ -835,6 +847,28 @@ ja:
       thumb_id:
         - サムネイル画像を指定します。
         - サムネイル画像は、ご使用のエディターが CKEditor の場合にのみ表示されます。
+
+    cms/theme_template:
+      name:
+        - 名前を入力します。
+        - Theme切り替えリンクのテキストとして表示されます。
+      class_name:
+        - Theme切り替えリンクのclass属性を入力します。
+        - 一意な値である必要があります。
+      css_path:
+        - Theme切り替え時に読み込むcssファイルのパスを入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      state:
+        - 公開状態を入力します。
+      high_contrast_mode:
+        - ハイコントラストモードの有効/無効を入力します。
+        - 設定を有効にするとTheme切り替え時に、文字色と背景色のstyleを表示HTMLに埋め込みます。
+      font_color:
+        - 文字色を設定します。
+      background_color:
+        - 背景色を設定します。
 
     cms/addon/role:
       cms_role_ids:
