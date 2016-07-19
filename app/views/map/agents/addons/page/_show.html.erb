@@ -1,6 +1,6 @@
 <% return if @item.map_points.blank? %>
 
-<%= render_map "#map-canvas", markers: @item.map_points %>
+<%= render_map "#map-canvas", markers: @item.map_points, site: @cur_site %>
 
 <dl class="see mod-page">
   <div id="map-canvas" style="width: 100%; height: 320px"></div>

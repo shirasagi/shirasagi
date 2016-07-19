@@ -1,8 +1,8 @@
 module Map::MapHelper
   def include_googlemaps_api(opts = {})
-    site = opts[:site]
-    key = site.map_setting[:api_key] rescue nil
-    key = SS.config.map.api_key if key.blank?
+    map_setting = opts[:site].map_setting rescue {}
+
+    key = opts[:api_key] || map_setting[:api_key] || SS.config.map.api_key
 
     params = {}
     params[:v] = 3
@@ -16,11 +16,14 @@ module Map::MapHelper
   end
 
   def render_map(selector, opts = {})
-    #center  = opts[:center]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    #center = opts[:center]
     markers = opts[:markers]
 
     h = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
 
       s = []
@@ -44,12 +47,15 @@ module Map::MapHelper
   end
 
   def render_map_form(selector, opts = {})
-    center         = opts[:center]
-    max_point_form = opts[:max_point_form]
-    #markers        = opts[:markers]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    center = opts[:center] || SS.config.map.map_center
+    max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
+    #markers = opts[:markers]
 
     h = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
 
       s = []
@@ -81,11 +87,14 @@ module Map::MapHelper
   end
 
   def render_facility_search_map(selector, opts = {})
-    center  = opts[:center]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    center = opts[:center] || SS.config.map.map_center
     markers = opts[:markers]
 
     s = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
 
       s << 'var opts = {'
@@ -109,10 +118,13 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
-    center = opts[:center]
+    map_setting = opts[:site].map_setting rescue {}
+
+    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    center = opts[:center] || SS.config.map.map_center
 
     s = []
-    if SS.config.map.api == "openlayers"
+    if api == "openlayers"
       include_openlayers_api
       controller.javascript "/assets/js/exif-js.js"
 
