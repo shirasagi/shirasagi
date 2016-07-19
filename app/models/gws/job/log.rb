@@ -7,8 +7,8 @@ class Gws::Job::Log
   validates :group_id, presence: true
   scope :site, ->(site) { where( group_id: site.id ) }
 
-  alias :site :group
-  alias :site_id :group_id
+  alias site group
+  alias site_id group_id
 
   class << self
     def create_from_active_job(job)
