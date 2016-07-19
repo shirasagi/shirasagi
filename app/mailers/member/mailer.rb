@@ -31,11 +31,11 @@ class Member::Mailer < ActionMailer::Base
     to = recipent.email
     subject = node.group_invitation_subject
     body = Member::Renderer::GroupInvitation.render_template(
-        node.group_invitation_template,
-        node: node,
-        group: group,
-        sender: sender,
-        recipent: recipent)
+      node.group_invitation_template,
+      node: node,
+      group: group,
+      sender: sender,
+      recipent: recipent)
     return if body.blank?
     if node.group_invitation_signature.present?
       body << "\n"

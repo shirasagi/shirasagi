@@ -354,7 +354,8 @@ feedback_node = save_node route: "inquiry/form", filename: "feedback", name: "�
   aggregation_state: "disabled"
 
 ## public comment
-save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント", upper_html: "パブリックコメント一覧です。"
+save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント",
+  upper_html: "パブリックコメント一覧です。"
 inquiry_comment_1 = save_node route: "inquiry/form", filename: "comment/comment01", name: "シラサギ市政について",
   from_name: "シラサギサンプルサイト",
   inquiry_captcha: "enabled", notice_state: "disabled",
@@ -409,11 +410,13 @@ save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_t
 
 # ezine anpi
 save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン", layout_id: layouts["kanko-info"].id
-ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認", layout_id: layouts["kanko-info"].id,
+ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認",
+  layout_id: layouts["kanko-info"].id,
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
   signature_html: ezine_signature_html, signature_text: ezine_signature_text,
   subscription_constraint: "required"
-ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event", name: "イベント情報", layout_id: layouts["kanko-info"].id,
+ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event", name: "イベント情報",
+  layout_id: layouts["kanko-info"].id,
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
   signature_html: ezine_signature_html, signature_text: ezine_signature_text
 @member_1.subscription_ids = [ ezine_anpi.id, ezine_event.id ]
@@ -533,7 +536,8 @@ save_inquiry_column node_id: inquiry_comment_1.id, name: "意見", order: 20, in
 column_gender = save_inquiry_column node_id: inquiry_comment_2.id, name: "性別", order: 0, input_type: "radio_button",
   html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
 column_age = save_inquiry_column node_id: inquiry_comment_2.id, name: "年齢", order: 10, input_type: "select",
-  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required",
+  site_id: @site._id
 column_opinion = save_inquiry_column node_id: inquiry_comment_2.id, name: "意見", order: 20, input_type: "text_area",
   html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
 
@@ -598,8 +602,8 @@ save_node route: "member/my_profile", filename: "mypage/profile", name: "プロ�
   birthday_required: "required"
 save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: layouts["mypage"].id, order: 20
 save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: layouts["mypage"].id, order: 30
-anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否", layout_id: layouts["mypage"].id, order: 40,
-  map_state: "enabled", map_view_state: "enabled", text_size_limit: 400
+anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否",
+  layout_id: layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled", text_size_limit: 400
 save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: layouts["mypage"].id, order: 50,
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
 
@@ -1242,7 +1246,7 @@ CSV.table("weather_xml_regions/regions.csv").each do |row|
 end
 
 save_node route: "rss/weather_xml", filename: "weather", name: "気象庁防災XML", layout_id: layouts["one"].id,
-  page_state: "closed", earthquake_intensity: "5+", anpi_mail_id: ezine_anpi.id, my_anpi_post_id: ezine_anpi.id,
+  page_state: "closed", earthquake_intensity: "5+", anpi_mail_id: ezine_anpi.id, my_anpi_post_id: anpi_node.id,
   target_region_ids: %w(350 351 352).map { |code| Rss::WeatherXmlRegion.site(@site).find_by(code: code).id }
 
 ## -------------------------------------

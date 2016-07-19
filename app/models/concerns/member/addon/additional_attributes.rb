@@ -73,6 +73,17 @@ module Member::Addon
       (now.strftime('%Y%m%d').to_i - birthday.strftime('%Y%m%d').to_i) / 10_000
     end
 
+    def set_required(node)
+      self.kana_required = node.kana_required?
+      self.organization_name_required = node.organization_name_required?
+      self.job_required = node.job_required?
+      self.tel_required = node.tel_required?
+      self.birthday_required = node.birthday_required?
+      self.sex_required = node.sex_required?
+      self.postal_code_required = node.postal_code_required?
+      self.addr_required = node.addr_required?
+    end
+
     private
       def normalize_postal_code
         return if postal_code.blank?
