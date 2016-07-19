@@ -106,7 +106,7 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
-    center  = opts[:center]
+    center = opts[:center]
 
     s = []
     if SS.config.map.api == "openlayers"
