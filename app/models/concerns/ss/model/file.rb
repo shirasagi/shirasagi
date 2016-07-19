@@ -21,9 +21,8 @@ module SS::Model::File
 
     belongs_to :site, class_name: "SS::Site"
 
-    permit_params :state, :name, :filename
+    permit_params :state, :name, :filename, :resizing
     permit_params :in_file, :in_files, in_files: []
-    permit_params :resizing
 
     before_validation :set_filename, if: ->{ in_file.present? }
 
@@ -37,9 +36,7 @@ module SS::Model::File
     before_save :save_file
     before_destroy :remove_file
 
-    default_scope ->{
-      order_by id: -1
-    }
+    default_scope ->{ order_by id: -1 }
   end
 
   module ClassMethods
