@@ -177,6 +177,8 @@ describe "cms_users", type: :feature, dbscope: :example do
     let(:site2) { create(:cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp") }
     let(:role) { create(:cms_role, cur_site: site, name: '管理者1', permissions: Cms::Role.permission_names) }
     let(:role2) { create(:cms_role, cur_site: site2, name: '管理者2', permissions: Cms::Role.permission_names) }
+    let(:header) { "id,name,email,password,uid,ldap_dn,groups,cms_roles" }
+    let(:values) { "#{item.id},#{item.name},#{item.email},,#{item.uid},#{item.ldap_dn},#{item.groups.first.name},管理者1\n" }
 
     before do
       item.cms_role_ids = [ role.id, role2.id ]
@@ -190,8 +192,8 @@ describe "cms_users", type: :feature, dbscope: :example do
       click_on 'ダウンロード'
 
       csv = page.html.encode("UTF-8")
-      expect(csv).to include("id,name,email,password,uid,ldap_dn,groups,cms_roles")
-      expect(csv).to include("#{item.id},#{item.name},#{item.email},,#{item.uid},#{item.ldap_dn},#{item.groups.first.name},管理者1\n")
+      expect(csv).to include(header)
+      expect(csv).to include(values)
     end
   end
 end
