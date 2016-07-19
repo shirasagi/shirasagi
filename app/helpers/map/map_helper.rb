@@ -22,7 +22,6 @@ module Map::MapHelper
     #center = opts[:center]
     markers = opts[:markers]
 
-    h = []
     if api == "openlayers"
       include_openlayers_api
 
@@ -41,9 +40,8 @@ module Map::MapHelper
       s << 'Map.load("' + selector + '");'
       s << 'Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
-    h << jquery { s.join("\n").html_safe }
 
-    h.join.html_safe
+    jquery { s.join("\n").html_safe }
   end
 
   def render_map_form(selector, opts = {})
@@ -54,7 +52,6 @@ module Map::MapHelper
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     #markers = opts[:markers]
 
-    h = []
     if api == "openlayers"
       include_openlayers_api
 
@@ -81,9 +78,8 @@ module Map::MapHelper
       s << 'Map.renderEvents();'
       s << 'SS_AddonTabs.head(".mod-map").click(function() { Map.resize(); });'
     end
-    h << jquery { s.join("\n").html_safe }
 
-    h.join.html_safe
+    jquery { s.join("\n").html_safe }
   end
 
   def render_facility_search_map(selector, opts = {})
