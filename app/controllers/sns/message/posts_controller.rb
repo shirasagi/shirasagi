@@ -35,7 +35,6 @@ class Sns::Message::PostsController < ApplicationController
         page(params[:page]).
         per(20)
 
-      @items.map { |item| item.set_seen(@cur_user) }
       @thread.set_seen(@cur_user)
     end
 

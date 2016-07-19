@@ -6,7 +6,6 @@ class Sns::Message::Post
   field :text, type: String
 
   belongs_to :thread, class_name: "Sns::Message::Thread"
-  embeds_ids :seen_members, class_name: "SS::User"
 
   permit_params :text
 
@@ -14,7 +13,7 @@ class Sns::Message::Post
   validates :thread_id, presence: true
   validates :text, presence: true
 
-  after_save :set_thread_updated, if: -> { @cur_user.present? }
+  after_save :update_thread, if: -> { @cur_user.present? }
 
   default_scope -> {
     order_by created: -1
@@ -27,16 +26,9 @@ class Sns::Message::Post
     criteria
   }
 
-  def set_seen(user)
-    return if seen_member_ids.include?(user.id)
-    #dump seen_member_ids.push(user.id)
-    #self.set seen_member_ids: seen_member_ids.push(user.id)
-    self.add_to_set seen_member_ids: user.id
-  end
-
   private
-    def set_thread_updated
+    def update_thread
       thread.activate_members if thread.active_member_ids.size == 1
-      thread.reset_unseen(@cur_user)
+      thread.post_created(@cur_user)
     end
 end

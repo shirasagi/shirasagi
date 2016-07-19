@@ -1,6 +1,17 @@
 class @Sns_Message
+  @url = null
+  @intervalID = null
+  @intervalTime = 300000
+
   @renderUnseen: (url) ->
+    @url = url
+    @intervalID = setInterval(@checkMessage, @intervalTime) if @url
+
+  @checkMessage: ->
     $.ajax
-      url: url
+      url: Sns_Message.url
       success: (data, status)->
-        $('.user-message .unseen').html(data) if data > 0
+        if data.match(/^\d+$/)
+          $('.user-message ').html("<span class='unseen'>#{data}</span>") if data > 0
+        else
+          clearInterval(Sns_Message.intervalID) if Sns_Message.intervalID

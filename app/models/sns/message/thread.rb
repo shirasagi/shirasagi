@@ -22,6 +22,9 @@ class Sns::Message::Thread
 
   validate :validate_member_ids
 
+  before_create :reset_unseen_member_ids
+  before_update :update_unseen_member_ids
+
   default_scope -> {
     order_by updated: -1
   }
@@ -32,6 +35,15 @@ class Sns::Message::Thread
     #criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
     criteria
   }
+
+  def allowed?(action, user, opts = {})
+    return true if super
+    active_member_ids.include?(user.id) if action =~ /edit|delete/
+  end
+
+  def editable_members?
+    member_ids.size > 2
+  end
 
   def name(user = nil)
     if active_member_ids == [user.id]
@@ -49,15 +61,18 @@ class Sns::Message::Thread
     unseen_member_ids.include?(user.id)
   end
 
-  def set_seen(user)
-    if unseen?(user)
-      ids = unseen_member_ids
-      ids.delete(user.id)
-      self.set unseen_member_ids: ids
-    end
+  def seen?(user)
+    !unseen?(user)
   end
 
-  def reset_unseen(user)
+  def set_seen(user)
+    return unless unseen?(user)
+    ids = unseen_member_ids
+    ids.delete(user.id)
+    self.set unseen_member_ids: ids
+  end
+
+  def post_created(user)
     ids = active_member_ids
     ids.delete(user.id)
     self.set unseen_member_ids: ids, updated: Time.zone.now
@@ -65,11 +80,6 @@ class Sns::Message::Thread
 
   def activate_members
     self.set active_member_ids: member_ids
-  end
-
-  def allowed?(action, user, opts = {})
-    return true if super
-    active_member_ids.include?(user.id) if action =~ /edit|delete/
   end
 
   def recycle_create
@@ -81,8 +91,7 @@ class Sns::Message::Thread
     post = Sns::Message::Post.new({
       cur_user: @cur_user,
       thread_id: thread.id,
-      text: text,
-      seen_member_ids: [user_id]
+      text: text
     })
     return false unless post.save
 
@@ -109,12 +118,21 @@ class Sns::Message::Thread
       ids = ids.uniq.compact
       self.member_ids = ids
       self.active_member_ids = ids
-
-      ids.delete(user_id)
-      self.unseen_member_ids = ids
     end
 
     def validate_member_ids
       errors.add :member_ids, :blank if member_ids.size < 2
+    end
+
+    def reset_unseen_member_ids
+      ids = active_member_ids
+      ids.delete(user_id)
+      self.unseen_member_ids = ids
+    end
+
+    def update_unseen_member_ids
+      dec_ids = member_ids_was - member_ids
+      return if dec_ids.blank?
+      self.unseen_member_ids = unseen_member_ids.reject { |id| dec_ids.include?(id) }
     end
 end
