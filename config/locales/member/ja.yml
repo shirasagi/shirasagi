@@ -3,6 +3,8 @@ ja:
     my_blog: ブログ
     blog_layout: ブログレイアウト
     photo: フォト
+    group: グループ
+    group_member: グループメンバー
     login_by:
       twitter: Twitter ID でログイン
       facebook: Facebook ID でログイン
@@ -32,6 +34,15 @@ ja:
       confirm_personal_data_state:
         enabled: 有効
         disabled: 無効
+      group_member_state:
+        admin: 管理者
+        user: ユーザー
+        inviting: 招待中
+        disabled: 無効
+        rejected: 辞退
+      member_joins_to_invited_group:
+        manual: 手動
+        auto: 自動
     view:
       email: メールアドレス
       password: パスワード
@@ -51,6 +62,11 @@ ja:
       select_page: ページを選択
       blog:
         genres: 記事ジャンル
+      invited_group:
+        header: 招待されたグループがあります。
+        operation: "参加 | 辞退"
+      registered_person: 登録者
+      delete: 削除
     button:
       register: 登録
       back: 戻る
@@ -73,11 +89,19 @@ ja:
       index: 一覧表示
       slide: スライド
       search: 検索
+      create_unregisted_anpi: 未登録者安否作成
     notice:
       accepted: 参加しました。
       rejected: 辞退しました。
+      posted_gpf: Google Person Finder に登録しました。
     confirm:
       leave: ボタンをクリックすると退会します。よろしいですか。
+      group:
+        accept: グループに参加しますか？
+        reject: グループへの参加を辞退しますか？
+      post_gpf: Google Person Finder に登録してよろしいですか？
+    units:
+      person: "%{count} 人"
 
   modules:
     member: メンバー
@@ -108,8 +132,10 @@ ja:
       member/registration/confirmation: 登録確認
       member/registration/reply: 登録確認メール
       member/registration/reset_password_mail: パスワード再設定メール
-      member/member_invitation_setting: 会員招待メール
+      member/registration/required_fields: 必須入力
       member/additional_attributes: 追加情報
+      member/group_invitation_setting: グループ招待メール設定
+      member/member_invitation_setting: 会員招待メール
 
   cms:
     nodes:
@@ -122,6 +148,7 @@ ja:
       member/blog_page_location: ブログの地域
       member/my_photo: マイフォト
       member/my_anpi_post: 安否
+      member/my_group: グループ
       member/photo: フォト
       member/photo_category: フォトカテゴリー
       member/photo_location: フォトロケーション
@@ -134,10 +161,18 @@ ja:
       member/photo_search: フォトサーチ
       member/photo_slide: フォトスライド
       member/login: ログイン
+      member/invited_group: 招待されたグループ
 
   mongoid:
     models:
       member/activity_log: 活動履歴
+      member/group: グループ
+      member/group_member: グループメンバー
+    errors:
+      models:
+        member/group:
+          no_admins: 管理者が設定されていません。
+          malformed_email: "%{email} は不正です。"
     attributes:
       member/addon/redirection:
         redirect_url: リダイレクトURL
@@ -221,6 +256,15 @@ ja:
         reset_password_upper_text: 上部確認テキスト
         reset_password_lower_text: 下部確認テキスト
         reset_password_signature: 署名
+      member/addon/registration/required_fields:
+        kana_required: 氏名（ふりがな）
+        organization_name_required: 会社、団体名
+        job_required: 職種
+        tel_required: 電話番号
+        postal_code_required: 郵便番号
+        addr_required: 住所
+        sex_required: 性別
+        birthday_required: 生年月日
       member/addon/additional_attributes:
         kana: 氏名（ふりがな）
         organization_name: 会社、団体名
@@ -231,6 +275,23 @@ ja:
         sex: 性別
         birthday: 生年月日
         in_birth: 生年月日
+      member/group:
+        name: グループ名
+        invitation_message: 招待メッセージ
+        members: メンバー
+        in_admin_member_ids: 管理者
+      member/group_member:
+        state: 状態
+        member_id: メンバー
+      member/addon/group_invitation_setting:
+        group_invitation_subject: 件名
+        group_invitation_template: メールテンプレート
+        group_invitation_signature: 署名
+      member/addon/member_invitation_setting:
+        member_invitation_subject: 件名
+        member_invitation_template: メールテンプレート
+        member_invitation_signature: 署名
+        member_joins_to_invited_group: 招待グループへの参加
 
   cms_role:
     read_other_member_blogs: メンバーブログの閲覧（全て）
@@ -364,6 +425,23 @@ ja:
         - 送信者名を設定します。
       sender_email:
         - 送信メールアドレスを設定します。
+    member/addon/registration/required_fields:
+      kana_required:
+        - 氏名（ふりがな）の入力を必須とする場合、「必須」を選択します。
+      organization_name_required:
+        - 会社、団体名の入力を必須とする場合、「必須」を選択します。
+      job_required:
+        - 職種の入力を必須とする場合、「必須」を選択します。
+      tel_required:
+        - 電話番号の入力を必須とする場合、「必須」を選択します。
+      postal_code_required:
+        - 郵便番号の入力を必須とする場合、「必須」を選択します。
+      addr_required:
+        - 住所の入力を必須とする場合、「必須」を選択します。
+      sex_required:
+        - 性別の入力を必須とする場合、「必須」を選択します。
+      birthday_required:
+        - 生年月日の入力を必須とする場合、「必須」を選択します。
     member/photo:
       listable_state:
         - 一覧及びフォトサーチの検索結果に表示するかを設定します。
@@ -401,6 +479,63 @@ ja:
     member/addon/blog/location:
       blog_page_locations:
         - 地域を設定します。
+
+    member/addon/group_invitation_setting:
+      group_invitation_subject:
+        - メールの件名を設定します。
+      group_invitation_template:
+        - メールのテンプレートを設定します。
+        - |-
+          下記のように記述します。
+          #{sender_name}　招待した人の名前が表示されます。
+          #{sender_email}　招待した人のメールアドレスが表示されます。
+          #{group_name}　招待するグループ名が表示されます。
+          #{invitation_message}　招待するグループの招待メッセージが表示されます。
+          #{accept_url}　グループへの招待を承諾するための URL が表示されます。
+          #{reject_url}　グループへの招待を辞退するための URL が表示されます。
+
+          使用例：
+          #{sender_name} さんがあなたをグループへ招待しました。
+
+          #{invitation_message}
+
+          グループに参加する場合は、下の URL をクリックしてください。
+          #{accept_url}
+
+          グループへの参加を辞退する場合は、下の URL をクリックしてください。
+          #{reject_url}
+
+          このメールに覚えのない方は、お手数ですが本メールを削除してください。
+      group_invitation_signature:
+        - メールの末尾につける署名を設定します。
+
+    member/addon/member_invitation_setting:
+      member_invitation_subject:
+        - メールの件名を設定します。
+      member_invitation_template:
+        - メールのテンプレートを設定します。
+        - |-
+          下記のように記述します。
+          #{sender_name}　招待した人の名前が表示されます。
+          #{sender_email}　招待した人のメールアドレスが表示されます。
+          #{group_name}　招待するグループ名が表示されます。
+          #{invitation_message}　招待するグループの招待メッセージが表示されます。
+          #{registration_url}　会員登録するための URL が表示されます。
+
+          使用例：
+          #{sender_name} さんがあなたを招待しました。
+
+          #{invitation_message}
+
+          会員登録する場合は、下の URL をクリックしてください。
+          #{registration_url}
+
+          このメールに覚えのない方は、お手数ですが本メールを削除してください。
+      member_invitation_signature:
+        - メールの末尾につける署名を設定します。
+      member_joins_to_invited_group:
+        - 会員登録完了時に招待されたグループへ自動的に参加するかどうかを指定します。
+        - 「自動」を指定すると、会員登録完了後、自動的にグループへも参加します。
 
   remarks:
     cms/model/member:

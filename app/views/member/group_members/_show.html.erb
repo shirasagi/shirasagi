@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :member_id %></dt>
+  <dd><%= @item.member.try(:name) || @item.member.try(:email) %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+</dl>

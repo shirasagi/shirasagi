@@ -1,0 +1,23 @@
+<dl class="see mod-pub-sub-hubbub">
+  <dt><%= @model.t :callback_url %></dt>
+  <dd><%= @item.callback_url %></dd>
+  <dt><%= @model.t :hub_url %></dt>
+  <dd><%= @item.hub_url %></dd>
+  <% if false %>
+  <dd>
+    <% if @item.hub_url.present? %>
+      <%= link_to :'rss.views.links.subscribe', subscribe_rss_pub_sub_hubbubs_path(cid: @item), class: :subscribe %>
+      |
+      <%= link_to :'rss.views.links.unsubscribe', unsubscribe_rss_pub_sub_hubbubs_path(cid: @item), class: :unsubscribe %>
+    <% end %>
+  </dd>
+  <% end %>
+  <dt><%= @model.t :topic_urls %></dt>
+  <dd><%= br(@item.topic_urls.join("\n")) %></dd>
+  <dt><%= @model.t :lease_seconds %></dt>
+  <dd><%= @item.lease_seconds %></dd>
+  <dt><%= @model.t :rss_max_docs %></dt>
+  <dd><%= @item.rss_max_docs %></dd>
+  <dt><%= @model.t :page_state %></dt>
+  <dd><%= @item.label :page_state %></dd>
+</dl>

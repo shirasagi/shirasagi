@@ -1,0 +1,21 @@
+<div class="ezine-html">
+  <table class="index">
+    <thead>
+      <tr>
+        <th><%= @items.t :email %></th>
+        <th class="datetime"><%= @items.t :created %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td><%= item.email %></td>
+          <td><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+</div>

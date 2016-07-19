@@ -1,9 +1,20 @@
 <%= node_navi :ezine do %>
 
+<% if @cur_node.route == 'ezine/page' %>
 <h3><%= link_to :"ezine.page", ezine_pages_path %></h3>
-<h3><%= link_to :"ezine.member", ezine_members_path %></h3>
-<h3><%= link_to :"ezine.test_member", ezine_test_members_path %></h3>
-<h3><%= link_to :"ezine.column", ezine_columns_path %></h3>
-<h3><%= link_to :"ezine.entry", ezine_entries_path %></h3>
+<ul class="narrow-page">
+  <li><%= link_to :"ezine.member", ezine_members_path %></li>
+  <li><%= link_to :"ezine.test_member", ezine_test_members_path %></li>
+  <li><%= link_to :"ezine.column", ezine_columns_path %></li>
+  <li><%= link_to :"ezine.entry", ezine_entries_path %></li>
+</ul>
+<% end %>
+<% if @cur_node.route == 'ezine/member_page' %>
+<h3><%= link_to :"cms.nodes.ezine/member_page", ezine_member_pages_path %></h3>
+<ul class="narrow-page">
+  <li><%= link_to :"ezine.member_page_member", members_ezine_member_pages_path %></li>
+  <li><%= link_to :"ezine.test_member", ezine_test_members_path %></li>
+</ul>
+<% end %>
 
 <% end %>

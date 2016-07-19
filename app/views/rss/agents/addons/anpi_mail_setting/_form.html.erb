@@ -1,0 +1,97 @@
+<% @item.earthquake_intensity ||= '5+' %>
+<% @item.my_anpi_post_id ||= @item.default_my_anpi_post.try(:id) %>
+<% @item.anpi_mail_id ||= @item.default_anpi_mail.try(:id) %>
+<dl class="see mod-rss-anpi-mail-setting-basic">
+  <dt><%= @model.t :title_mail_text %><%= @model.tt :title_mail_text %></dt>
+  <dd><%= f.text_field :title_mail_text %></dd>
+
+  <dt><%= @model.t :upper_mail_text %><%= @model.tt :upper_mail_text %></dt>
+  <dd><%= f.text_area :upper_mail_text, style: "height: 150px;" %></dd>
+
+  <dt><%= @model.t :loop_mail_text %><%= @model.tt :loop_mail_text %></dt>
+  <dd><%= f.text_area :loop_mail_text, style: "height: 150px;" %></dd>
+
+  <dt><%= @model.t :lower_mail_text %><%= @model.tt :lower_mail_text %></dt>
+  <dd><%= f.text_area :lower_mail_text, style: "height: 150px;" %></dd>
+
+  <dt><%= @model.t :earthquake_intensity %><%= @model.tt :earthquake_intensity %></dt>
+  <dd><%= f.select :earthquake_intensity, @item.earthquake_intensity_options %></dd>
+</dl>
+
+<dl class="see mod-rss-anpi-mail-setting-regions">
+  <dt><%= @model.t :target_regions %><%= @model.tt :target_regions %></dt>
+  <dd>
+    <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to :"rss.apis.weather_xml_regions.index", rss_apis_weather_xml_regions_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Rss::WeatherXmlRegion.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.target_regions.each do |region| %>
+        <tr data-id="<%= region.id %>">
+          <td><%= f.hidden_field "target_region_ids[]", value: region.id %> <%= region.name %></td>
+          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-rss-anpi-mail-setting-my-anpi-post">
+  <dt><%= @model.t :my_anpi_post %><%= @model.tt :my_anpi_post %></dt>
+  <dd>
+    <%= f.hidden_field "my_anpi_post_id", value: "", class: "hidden-ids" %>
+    <%= link_to :"cms.apis.nodes.index", cms_apis_nodes_path(single: 1, model: 'Member::Node::MyAnpiPost'), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Member::Node::MyAnpiPost.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.my_anpi_post.present? %>
+        <tr data-id="<%= @item.my_anpi_post.id %>">
+          <td><%= f.hidden_field "my_anpi_post_id", value: @item.my_anpi_post.id %> <%= @item.my_anpi_post.name %></td>
+          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-rss-anpi-mail-setting-anpi-mail">
+  <dt><%= @model.t :anpi_mail %><%= @model.tt :anpi_mail %></dt>
+  <dd>
+    <%= f.hidden_field "anpi_mail_id", value: "", class: "hidden-ids" %>
+    <%= link_to :"cms.apis.nodes.index", cms_apis_nodes_path(single: 1, model: 'Ezine::Node::MemberPage'), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Ezine::Node::MemberPage.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.anpi_mail.present? %>
+        <tr data-id="<%= @item.anpi_mail.id %>">
+          <td><%= f.hidden_field "anpi_mail_id", value: @item.anpi_mail.id %> <%= @item.anpi_mail.name %></td>
+          <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

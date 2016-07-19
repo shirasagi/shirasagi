@@ -1,0 +1,10 @@
+<dl class="see mod-board-anpi-post-setting">
+  <dt><%= @model.t :text_size_limit %><%= @model.tt :text_size_limit %></dt>
+  <dd><%= f.select :text_size_limit, @item.text_size_limit_options %></dd>
+
+  <dt><%= @model.t :show_email %><%= @model.tt :show_email %></dt>
+  <dd><%= f.select :show_email, @item.show_email_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :deny_ips %><%= @model.tt :deny_ips %></dt>
+  <dd><%= f.text_area :deny_ips, value: @item.deny_ips.join("\n") %></dd>
+</dl>

@@ -45,6 +45,7 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Member::Addon::Registration::RequiredFields
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -60,6 +61,7 @@ module Member::Node
     include Member::Addon::Registration::Confirmation
     include Member::Addon::Registration::Reply
     include Member::Addon::Registration::ResetPasswordMail
+    include Member::Addon::Registration::RequiredFields
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
@@ -260,5 +262,33 @@ module Member::Node
 
       { '$or' => cond }
     end
+  end
+
+  class MyAnpiPost
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Board::Addon::AnpiPostSetting
+    include Board::Addon::GooglePersonFinderSetting
+    include Board::Addon::MapSetting
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "member/my_anpi_post") }
+  end
+
+  class MyGroup
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Member::Addon::Registration::SenderAddress
+    include Member::Addon::GroupInvitationSetting
+    include Member::Addon::MemberInvitationSetting
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "member/my_group") }
   end
 end

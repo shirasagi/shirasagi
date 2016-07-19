@@ -1,0 +1,45 @@
+<%
+   members = @item.members.page(params[:page]).per(20)
+%>
+<dl class="column name">
+  <dt><%= @model.t :name %><%= required_label %></dt>
+  <dd>
+    <%= f.text_field :name %>
+    <%= remarks :name %>
+  </dd>
+</dl>
+
+<dl class="column members">
+  <dt><%= @model.t :members %></dt>
+  <dd>
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Member.t :name %></th>
+        <th class="state"><%= Member::GroupMember.t :state %></th>
+        <th class="admin"><%= Member::Group.t :in_admin_member_ids %></th>
+        <th class="remove"><%= t "member.view.delete" %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% members.each do |member| %>
+        <% next unless %w(admin user inviting rejected).include?(member.state) %>
+        <tr class="member-<%= member.id %>">
+          <td class="item name"><%= member.member ? member.member.name || member.member.email : t('member.view.retired_member') %></td>
+          <td class="item state"><%= member.label :state %></td>
+          <td class="item admin">
+            <% if %w(admin user).include?(member.state) %>
+            <%= check_box_tag('item[in_admin_member_ids][]', member.member_id, member.state == 'admin', id: "item_in_admin_member_ids_#{member.member_id}") %>
+            <% end %>
+          </td>
+          <td class="item remove">
+            <%= check_box_tag('item[in_remove_member_ids][]', member.member_id, false, id: "item_in_remove_member_ids_#{member.member_id}") %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate members if members.try(:current_page) %>
+  </dd>
+</dl>

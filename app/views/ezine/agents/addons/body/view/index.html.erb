@@ -1,9 +1,13 @@
-<% if @cur_page.html.present? %>
+<% if @cur_page.html.present? || @cur_page.text.present? %>
 <article class="body">
-  <% if SS.config.cms.html_editor == "markdown" %>
-  <%== ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@cur_page.html) %>
+  <% if @cur_page.html.present? %>
+    <% if SS.config.cms.html_editor == "markdown" %>
+    <%== ::Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@cur_page.html) %>
+    <% else %>
+    <%== @cur_page.html %>
+    <% end %>
   <% else %>
-  <%== @cur_page.html %>
+    <p><%= br auto_link @cur_page.text %></p>
   <% end %>
 </article>
 <% end %>

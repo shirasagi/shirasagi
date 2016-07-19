@@ -1,0 +1,27 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-member-registration-required-fields"); <% end %>
+
+<dl class="see mod-cms-member-registration-required-fields">
+  <dt><%= @model.t :kana_required %><%= @model.tt :kana_required %></dt>
+  <dd><%= f.select :kana_required, @item.kana_required_options %></dd>
+
+  <dt><%= @model.t :organization_name_required %><%= @model.tt :organization_name_required %></dt>
+  <dd><%= f.select :organization_name_required, @item.organization_name_required_options %></dd>
+
+  <dt><%= @model.t :job_required %><%= @model.tt :job_required %></dt>
+  <dd><%= f.select :job_required, @item.job_required_options %></dd>
+
+  <dt><%= @model.t :tel_required %><%= @model.tt :tel_required %></dt>
+  <dd><%= f.select :tel_required, @item.tel_required_options %></dd>
+
+  <dt><%= @model.t :postal_code_required %><%= @model.tt :postal_code_required %></dt>
+  <dd><%= f.select :postal_code_required, @item.postal_code_required_options %></dd>
+
+  <dt><%= @model.t :addr_required %><%= @model.tt :addr_required %></dt>
+  <dd><%= f.select :addr_required, @item.addr_required_options %></dd>
+
+  <dt><%= @model.t :sex_required %><%= @model.tt :sex_required %></dt>
+  <dd><%= f.select :sex_required, @item.sex_required_options %></dd>
+
+  <dt><%= @model.t :birthday_required %><%= @model.tt :birthday_required %></dt>
+  <dd><%= f.select :birthday_required, @item.birthday_required_options %></dd>
+</dl>

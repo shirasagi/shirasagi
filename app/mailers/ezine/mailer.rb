@@ -21,7 +21,8 @@ class Ezine::Mailer < ActionMailer::Base
   def page_mail(page, member)
     @page = page
     @member = member
-    @node = Ezine::Node::Page.find page.parent.id
+    @node = Cms::Node.find page.parent.id
+    @node = @node.becomes_with_route
     sender = "#{@node.sender_name} <#{@node.sender_email}>"
 
     mail from: sender, to: member.email do |format|
@@ -33,9 +34,10 @@ class Ezine::Mailer < ActionMailer::Base
         # format order is important. text is first, then html is last
         # see: http://monmon.hatenablog.com/entry/2015/02/02/141722
         format.text
-        format.html
+        format.html if @page.html.present?
       else
-        # Invalid
+        # default
+        format.text
       end
     end
   end

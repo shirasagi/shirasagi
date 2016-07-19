@@ -1,0 +1,37 @@
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% if @cur_node %>
+      <li class="list-item">
+        <div class="info">
+          <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
+          <%= link_to :parent_directory, link, class: "up" %>
+        </div>
+      </li>
+    <% end %>
+
+    <% @items.each do |item| %>
+    <li class="list-item">
+      <nav class="tap-menu">
+        <%= link_to :show, action: :show, id: item if @cur_member_group.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to :edit, action: :edit, id: item if @cur_member_group.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to :delete, action: :delete, id: item if @cur_member_group.allowed?(:delete, @cur_user, site: @cur_site) %>
+      </nav>
+
+      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+      <div class="info">
+        <%= link_to item.member.try(:name) || item.id, { action: :show, id: item }, class: "title" %>
+
+        <div class="meta">
+          <span class="id">#<%= item.id %></span>
+          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="state"><%= item.label :state %></span>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

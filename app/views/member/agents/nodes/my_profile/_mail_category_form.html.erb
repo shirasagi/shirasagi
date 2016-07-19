@@ -1,0 +1,58 @@
+<%
+   def root_ezine_node(node)
+     if node.parent && node.parent.route =~ /^ezine\//
+       root_ezine_node(node.parent)
+     else
+       node
+     end
+   end
+
+   def cate_form(item)
+     item = item.becomes_with_route
+     children = item.children.and_public.sort(order: 1)
+     if children.size > 0
+       cc = children.map { |c| c.children.size }.max != 0
+       h = %(<label class="parent">)
+       if item.is_a?(Ezine::Node::MemberPage)
+         checked = item.subscription_requried?
+         h << @f.check_box("subscription_ids[]", { checked: checked, readonly: checked, disabled: checked }, item._id)
+         requried_label = checked ? " (#{item.label :subscription_constraint})" : ''
+       end
+       h << %(#{item.name}#{requried_label}</label>)
+       h << %(<div class="child #{cc ? 'grandchild' : ''}">).html_safe
+       children.each { |c| h += cate_form(c) }
+       h << %(</div>).html_safe
+     else
+       h  = %(<label>)
+       if item.is_a?(Ezine::Node::MemberPage)
+         checked = item.subscription_requried?
+         h << @f.check_box("subscription_ids[]", { checked: checked, readonly: checked, disabled: checked }, item._id)
+         requried_label = checked ? " (#{item.label :subscription_constraint})" : ''
+       end
+       h << %(#{item.name}#{requried_label}</label>)
+     end
+
+     h.html_safe
+   end
+
+   @f = f
+
+   @categories = Ezine::Node::MemberPage.site(@cur_site).all
+   @categories = @categories.map do |cate|
+     root_ezine_node(cate)
+   end
+   @categories.uniq!
+   @categories.sort { |lhs, rhs| lhs.order <=> rhs.order }
+%>
+
+<dl class="column">
+  <dt><%= I18n.t 'member.view.mail_subscription' %></dt>
+  <dd>
+    <%= f.hidden_field "subscription_ids[]", value: "" %>
+    <% @categories.each do |cate| %>
+      <div class="parent">
+        <%= cate_form(cate) %>
+      </div>
+    <% end %>
+  </dd>
+</dl>

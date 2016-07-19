@@ -58,4 +58,14 @@ FactoryGirl.define do
   factory :member_node_registration, class: Member::Node::Registration, traits: [:cms_node] do
     route "member/registration"
   end
+
+  factory :member_node_my_anpi_post, class: Member::Node::MyAnpiPost, traits: [:cms_node] do
+    route "member/my_anpi_post"
+  end
+
+  factory :member_node_my_group, class: Member::Node::MyGroup, traits: [:cms_node] do
+    route "member/my_group"
+    sender_name { unique_id }
+    sender_email { "#{sender_name}@example.jp" }
+  end
 end

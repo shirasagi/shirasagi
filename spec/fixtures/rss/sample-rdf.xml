@@ -10,6 +10,7 @@
     <description>本文1</description>
     <link>http://example.jp/rdf/1.html</link>
     <dc:date>2015-06-12T19:00:00+09:00</dc:date>
+    <dc:creator>鶴田 結衣</dc:creator>
   </item>
   <item rdf:about="http://example.jp/rdf/2.html">
     <title>記事2</title>
@@ -22,17 +23,20 @@
     <description>本文3</description>
     <link>http://example.jp/rdf/3.html</link>
     <dc:date>2015-06-10T09:00:00+09:00</dc:date>
+    <dc:creator></dc:creator>
   </item>
   <item rdf:about="http://example.jp/rdf/4.html">
     <title>記事4</title>
     <description>本文4</description>
     <link>http://example.jp/rdf/4.html</link>
     <dc:date>2015-06-09T15:00:00+09:00</dc:date>
+    <dc:creator>田原 まなみ</dc:creator>
   </item>
   <item rdf:about="http://example.jp/rdf/5.html">
     <title>記事5</title>
     <description>本文5</description>
     <link>http://example.jp/rdf/5.html</link>
     <dc:date>2015-06-08T10:00:00+09:00</dc:date>
+    <dc:creator>天野 勝久</dc:creator>
   </item>
 </rdf:RDF>

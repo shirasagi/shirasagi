@@ -57,8 +57,8 @@ describe 'members/agents/nodes/my_photo', type: :feature, dbscope: :example do
         expect(photo_page.state).to eq 'public'
 
         expect(page).to have_css('table.member-photo-page tbody .name', text: photo_name)
-        expect(page).to have_css('table.member-photo-page tbody .updated', text: photo_page.updated.strftime('%Y/%m/%d %H:%M'))
-        expect(page).to have_css('table.member-photo-page tbody .released', text: photo_page.released.strftime('%Y/%m/%d %H:%M'))
+        expect(page).to have_css('table.member-photo-page tbody .updated', text: I18n.l(photo_page.updated, format: :long))
+        expect(page).to have_css('table.member-photo-page tbody .released', text: I18n.l(photo_page.released, format: :long))
         expect(page).to have_css('table.member-photo-page tbody .state', text: photo_page.label(:state))
 
         click_link photo_name

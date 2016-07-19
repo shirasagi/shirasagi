@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "ezine_members" do
   subject(:site) { cms_site }
-  subject(:node) { create_once :ezine_node }
+  subject(:node) { create_once :ezine_node_page }
   subject(:item) { Ezine::Member.last }
   subject(:index_path) { ezine_members_path site.id, node }
   subject(:new_path) { new_ezine_member_path site.id, node }

@@ -2,6 +2,7 @@ ja:
   board:
     board: 掲示板
     post: 投稿
+    anpi_post: 安否投稿
 
     views:
       reply: 返信
@@ -11,6 +12,16 @@ ja:
       new: 新規投稿
       search: 検索
       unlimited: 制限なし
+      gps_position: 現在位置を取得する
+      marker_clear: マーカーをクリアする
+      show_gpf: Google Person Finderを表示する
+      post_gpf: Google Person Finderに安否情報を提供する
+      search_person: 人を探す
+      gpf: Google Person Finder
+      gpf_delete_info_html: "Google Person Finderに提供した安否情報を削除するには、<a target=\"_blank\" href=\"%{url}\">Google Person Finder 登録情報</a>にアクセスし削除してください。"
+
+    button:
+      search_person: 人を探す
 
     errors:
       not_same_delete_key: 削除キーが違います。
@@ -54,6 +65,16 @@ ja:
       file_scan:
         enabled: 使用する
         disabled: 使用しない
+      gpf_state:
+        enabled: 有効
+        disabled: 無効
+      map_state:
+        enabled: 有効
+        disabled: 無効
+      public_scope:
+        private: 非公開
+        group: グループ内
+        public: 全体に公開
 
   modules:
     board: 掲示板
@@ -63,10 +84,17 @@ ja:
       board/list: リスト表示
       board/post_setting: 投稿設定
       board/file_setting: 添付ファイル設定
+      board/anpi_post_setting: 安否投稿設定
+      board/google_person_finder_setting: Google Person Finder 設定
+      board/map_setting: 地図設定
+      board/public_scope: 公開範囲
+      board/map_point: 地図
+      board/anpi_list: リスト表示
 
   cms:
     nodes:
       board/post: 掲示板
+      board/anpi_post: 安否掲示板
 
   views:
     notice:
@@ -76,6 +104,9 @@ ja:
     read_board_posts: 投稿の閲覧
     edit_board_posts: 投稿の編集
     delete_board_posts: 投稿の削除
+    read_board_anpi_posts: 安否の閲覧
+    edit_board_anpi_posts: 安否の編集
+    delete_board_anpi_posts: 安否の削除
 
   mongoid:
     models:
@@ -108,6 +139,37 @@ ja:
         file_size_limit: 容量制限
         file_ext_limit: ファイル拡張子
         file_scan: ウイルスチェック
+      board/model/anpi_post:
+        name: 名前
+        kana: 名前（かな）
+        tel: 電話番号
+        addr: 住所
+        sex: 性別
+        age: 年齢
+        email: メールアドレス
+        text: 安否情報
+        member_id: 登録者
+      board/addon/anpi_post_setting:
+        text_size_limit: 本文の最大文字数
+        show_email: メールアドレスの公開
+        deny_ips: 拒否IPアドレス
+      board/addon/google_person_finder_setting:
+        gpf_state: 状態
+        gpf_repository: リポジトリ
+        gpf_domain_name: ドメイン名
+        gpf_api_key: APIキー
+        gpf_mode: モード
+      board/addon/map_setting:
+        map_state: 状態
+        map_zoom_level: 縮尺レベル
+        map_center: 中心座標
+        map_view_state: 地図表示状態
+      board/addon/public_scope:
+        public_scope: 公開範囲
+      board/addon/map_point:
+        point: 位置
+      board/addon/anpi_list:
+        show_email: メールアドレスの表示
 
   tooltip:
     board/addon/list:
@@ -148,3 +210,60 @@ ja:
         - 指定がない場合は制限無く添付可能となります。
       file_scan:
         - 添付ファイルのウイルススキャンを有効にできます。
+    board/model/anpi_post:
+      name:
+        - 名前を設定します。
+      kana:
+        - 名前（かな）を設定します。
+      tel:
+        - 電話番号を設定します。
+      addr:
+        - 住所を設定します。
+      sex:
+        - 性別を指定します。
+      age:
+        - 年齢を設定します。
+      email:
+        - メールアドレスを設定します。
+      text:
+        - メッセージを設定します。
+    board/addon/anpi_post_setting:
+      text_size_limit:
+        - 投稿可能な最大文字数を指定します。
+      show_email:
+        - メールアドレスを公開するかどうかを指定します。
+      deny_ips:
+        - 投稿、返信等を拒否するIPアドレスを設定します。
+        - 帯域での設定が可能です。
+        - 複数のIPアドレスを設定する場合は改行区切りで記述します。
+    board/addon/google_person_finder_setting:
+      gpf_state:
+        - Google Person Finder との連携を有効にするかどうかを指定します。
+      gpf_repository:
+        - "リポジトリを指定します。"
+        - "テストの場合は 'test' を指定します。"
+      gpf_domain_name:
+        - ドメイン名を指定します。
+        - "テストの場合は 'testkey.personfinder.google.org' を指定します。"
+      gpf_api_key:
+        - APIキーを指定します。
+        - "テストの場合は '43HxMWGBijFaYEr5' を指定します。"
+    board/addon/map_setting:
+      map_state:
+        - 地図入力を有効にするかどうかを指定します。
+      map_zoom_level:
+        - 地図の縮尺を 0 ～ 18 の数値で指定します。
+      map_center:
+        - 中心座標を指定します。
+        - 地図の中心座標を指定する際、自動的に縮尺レベルも設定されます。
+      map_view_state:
+        - 地図表示を有効にするかどうかを指定します。
+    board/addon/public_scope:
+      public_scope:
+        - 安否の公開範囲を指定します。
+        - 「全体に公開」を指定すると、誰でも安否を見ることができるようになります。
+        - 「グループに公開」を指定すると、グループ内の会員のみが安否を見ることができます。
+        - 「非公開」を指定すると、自分以外は安否を見ることができなくなります。
+    board/addon/map_point:
+      point:
+        - 位置を設定します。

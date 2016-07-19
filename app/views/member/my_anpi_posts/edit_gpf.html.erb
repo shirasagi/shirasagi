@@ -1,0 +1,17 @@
+<%= form_for :item, url: { action: :update_gpf } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t "member.confirm.post_gpf" %></h2></div>
+      <div class="addon-body">
+        <%= render file: "_gpf" %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("member.button.register"), class: 'btn-danger delete' %>
+    <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  </footer>
+<% end %>

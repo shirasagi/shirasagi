@@ -1,0 +1,46 @@
+<% return unless @cur_node.map_view_enabled? %>
+
+<%= render partial: "menu" %>
+
+<% if @cur_member_groups.present? %>
+  <%= form_tag '', class: "search", method: :get, enforce_utf8: false do %>
+    <%= select_tag :g, options_from_collection_for_select(@cur_member_groups, :id, :name, selected: @cur_member_group.try(:id)), include_blank: true %>
+    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+  <% end %>
+<% end %>
+
+<% if @items.present? %>
+<%= javascript_include_tag "board/script" %>
+
+<div id="map-canvas"></div>
+
+<div style="display: none;">
+  <% @items.each do |item| %>
+  <div id="marker-html-<%= item.id %>">
+    <div class="anpi-head">
+      <span class="name"><%= item.name %></span>
+      <span class="register"><%= item.member.name %></span>
+      <span class="updated"><%= l item.updated, format: :long %></span>
+    </div>
+    <div class="anpi-text"><%= br item.text %></div>
+  </div>
+  <% end %>
+</div>
+
+<%= jquery do %>
+  canvas = $("div#map-canvas")[0];
+
+  var opts = { readonly: true, popup: true };
+  opts['center'] = [<%= @map_center.lng %>,<%= @map_center.lat %>];
+
+  <% if @cur_node.respond_to?(:map_zoom_level) && @cur_node.map_zoom_level.present? %>
+  opts['zoom'] = <%= @cur_node.map_zoom_level %>;
+  <% end %>
+
+  var map = new Board_Map(canvas, opts);
+  <% @items.each do |item| %>
+  <% next if item.point.blank? || item.point.loc.blank? %>
+  map.addMarker([<%= item.point.loc.lng %>, <%= item.point.loc.lat %>], { markerId: "<%= item.id %>" });
+  <% end %>
+<% end %>
+<% end %>

@@ -16,7 +16,7 @@
     <li class="list-item">
       <nav class="tap-menu">
         <% if @tap_menu %>
-            <% @tap_menu.call item %>
+          <% @tap_menu.call item %>
         <% else %>
           <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
           <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>

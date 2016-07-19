@@ -1,5 +1,12 @@
 <%= node_navi :rss do %>
 
-<h3><%= link_to :"rss.page", rss_pages_path %></h3>
+<% if @cur_node.route == 'rss/page' %>
+  <h3><%= link_to :"rss.page", rss_pages_path %></h3>
+<% elsif @cur_node.route == 'rss/weather_xml' %>
+  <h3><%= link_to :"rss.weather_xml_page", rss_weather_xmls_path %></h3>
+  <% if Rss::WeatherXmlRegion.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"rss.weather_xml_region", rss_weather_xml_regions_path %></h3>
+  <% end %>
+<% end %>
 
 <% end %>

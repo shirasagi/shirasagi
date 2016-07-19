@@ -31,6 +31,33 @@ module Rss::Wrappers
       def released
         @item.try(:updated).try(:content) || @item.try(:published).try(:content) || Time.zone.now
       end
+
+      def author_name
+        @item.try(:author).try(:name).try(:content)
+      end
+
+      def author_email
+        @item.try(:author).try(:email).try(:content)
+      end
+
+      def author_uri
+        @item.try(:author).try(:uri).try(:content)
+      end
+
+      def authors
+        name = author_name
+        email = author_email
+        uri = author_uri
+
+        ret = {}
+        ret[:name] = name if name.present?
+        ret[:email] = email if email.present?
+        ret[:uri] = uri if uri.present?
+
+        return [] if ret.blank?
+
+        [ ret ]
+      end
     end
 
     class Rss
@@ -57,9 +84,19 @@ module Rss::Wrappers
       def released
         @item.pubDate || @item.date || Time.zone.now
       end
+
+      def authors
+        return [] if @item.author.blank?
+        address = ::Mail::Address.new(@item.author)
+        [ { name: address.display_name, email: address.address } ]
+      rescue
+        [ { email: @item.author } ]
+      end
     end
 
     class RDF
+      attr_reader :rss
+
       def initialize(item)
         @item = item
       end
@@ -83,10 +120,17 @@ module Rss::Wrappers
       def released
         @item.date || Time.zone.now
       end
+
+      def authors
+        return [] if @item.dc_creator.blank?
+        [ { name: @item.dc_creator } ]
+      end
     end
   end
 
   class Atom
+    attr_reader :rss
+
     def initialize(rss)
       @rss = rss
     end
@@ -103,6 +147,8 @@ module Rss::Wrappers
   end
 
   class Rss
+    attr_reader :rss
+
     def initialize(rss)
       @rss = rss
     end
@@ -131,6 +177,10 @@ module Rss::Wrappers
       new(rss)
     end
 
+    def items
+      @rss.items
+    end
+
     def each(&block)
       @rss.items.each do |item|
         yield ::Rss::Wrappers::Items::RDF.wrap(item)
@@ -138,8 +188,14 @@ module Rss::Wrappers
     end
   end
 
-  def self.parse(url)
-    rss = ::RSS::Parser.parse(url, false)
+  def self.parse(url_or_file, opts = {})
+    require 'open-uri'
+    if url_or_file.respond_to?(:path)
+      rss_source = url_or_file.read
+    else
+      rss_source = open(url_or_file, opts)
+    end
+    rss = ::RSS::Parser.parse(rss_source, false)
 
     case rss
     when ::RSS::Atom::Feed

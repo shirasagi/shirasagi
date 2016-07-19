@@ -1,0 +1,39 @@
+<dl class="column">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :text %></dt>
+  <dd><%= br @item.text %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :kana %></dt>
+  <dd><%= @item.kana %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :tel %></dt>
+  <dd><%= @item.tel %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :addr %></dt>
+  <dd><%= @item.addr %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :sex %></dt>
+  <dd><%= @item.label :sex %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= @model.t :age %></dt>
+  <dd><%= @item.age %></dd>
+</dl>
+
+<dl class="column">
+  <dt><%= t "member.view.registered_person" %></dt>
+  <dd><%= @item.member.name %></dd>
+</dl>

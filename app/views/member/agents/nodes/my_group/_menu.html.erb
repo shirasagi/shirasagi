@@ -1,0 +1,16 @@
+<%== render_mypage_navi current_node: @cur_node %>
+
+<nav class="mypage-nav nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to :new, "#{@cur_node.url}new" %>
+  <% elsif params[:action] =~ /show/ %>
+    <% if @item.admin_member?(@cur_member) %>
+      <%= link_to :edit, "#{@cur_node.url}#{@item.id}/edit" %>
+      <%= link_to t('member.links.invite'), "#{@cur_node.url}#{@item.id}/invite" %>
+      <%= link_to :delete, "#{@cur_node.url}#{@item.id}/delete" %>
+    <% end %>
+    <%= link_to :back_to_index, @cur_node.url %>
+  <% else %>
+    <%= link_to :back_to_index, @cur_node.url %>
+  <% end %>
+</nav>

@@ -21,11 +21,16 @@ module Member
     Cms::Node.plugin "member/photo_location"
     Cms::Node.plugin "member/photo_spot"
 
+    # anpi
+    Cms::Node.plugin "member/my_anpi_post"
+    Cms::Node.plugin "member/my_group"
+
     Cms::Part.plugin "member/login"
     Cms::Part.plugin "member/blog_page"
     Cms::Part.plugin "member/photo"
     Cms::Part.plugin "member/photo_search"
     Cms::Part.plugin "member/photo_slide"
+    Cms::Part.plugin "member/invited_group"
 
     Cms::Role.permission :read_other_member_blogs
     Cms::Role.permission :read_private_member_blogs

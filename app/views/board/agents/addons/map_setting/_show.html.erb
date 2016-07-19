@@ -1,0 +1,35 @@
+<%# stylesheet_link_tag 'board/map', media: 'all' %>
+<%= javascript_include_tag "board/script" %>
+
+<dl class="see mod-board-map-setting">
+  <dt><%= @model.t :map_state %></dt>
+  <dd><%= @item.label :map_state %></dd>
+
+  <dt><%= @model.t :map_zoom_level %></dt>
+  <dd><%= @item.map_zoom_level %></dd>
+
+  <dt><%= @model.t :map_view_state %></dt>
+  <dd><%= @item.label :map_view_state %></dd>
+
+  <dt><%= @model.t :map_center %></dt>
+  <dd>
+    <div id="map-canvas" style="width: 100%; height: 400px;"></div>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  canvas = $("div#map-canvas")[0];
+
+  var opts = { readonly: true };
+
+  <% if @item.map_center.present? %>
+  opts['center'] = opts['marker'] = [<%= @item.map_center.lng %>, <%= @item.map_center.lat %>];
+  <% else %>
+  opts['center'] = [<%= SS.config.map.map_center[1] %>,<%= SS.config.map.map_center[0] %>];
+  <% end %>
+  <% if @item.map_zoom_level.present? %>
+  opts['zoom'] = <%= @item.map_zoom_level %>;
+  <% end %>
+
+  var map = new Board_Map(canvas, opts);
+<% end %>

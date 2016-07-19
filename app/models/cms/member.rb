@@ -2,6 +2,7 @@ class Cms::Member
   include Cms::Model::Member
   include ::Member::ExpirableSecureId
   include ::Member::Addon::AdditionalAttributes
+  include Ezine::Addon::Subscription
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
 
@@ -39,6 +40,9 @@ class Cms::Member
       criteria = self.where({})
       return criteria if params.blank?
 
+      if params[:name].present?
+        criteria = criteria.search_text params[:name]
+      end
       if params[:keyword].present?
         criteria = criteria.keyword_in params[:keyword], :name, :email, :kana, :organization_name, :job, :tel, :postal_code, :addr
       end

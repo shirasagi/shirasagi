@@ -1,0 +1,45 @@
+<%= render partial: "menu" %>
+
+<% if @cur_member_groups.present? %>
+<%= form_tag '', class: "search", method: :get, enforce_utf8: false do %>
+  <%= select_tag :g, options_from_collection_for_select(@cur_member_groups, :id, :name, selected: @cur_member_group.try(:id)), include_blank: true %>
+  <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+<% end %>
+<% end %>
+
+<% if @items.present? %>
+<% if @cur_node.map_view_enabled? %>
+<div class="member-anpi-map">
+  <%
+    map_url = "#{@cur_node.url}map"
+    map_url = "#{map_url}?#{ { g: params[:g] }.to_query }" if params[:g].present?
+  %>
+  <%= link_to t("member.links.map"), map_url %>
+</div>
+<% end %>
+
+<table class="index mypage-index member-anpi-post">
+  <thead>
+  <tr>
+    <th class="name"><%= @model.t :name %></th>
+    <th class="text"><%= @model.t :text %></th>
+    <th class="register"><%= t "member.view.registered_person" %></th>
+    <th class="datetime updated"><%= @model.t :updated %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @items.each do |item| %>
+    <tr>
+      <td class="item name"><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
+      <td class="item text">
+        <%= truncate(item.text.squish, length: 100, separator: /\w/, omission: "&hellip;") %>
+      </td>
+      <td class="item register"><%= item.member.name %></td>
+      <td class="item datetime updated"><%=tryb { I18n.l(item.updated, format: :long) } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>
+<% end %>

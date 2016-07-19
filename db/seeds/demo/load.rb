@@ -37,7 +37,6 @@ end
 def save_member(data)
   puts data[:email]
   cond = { site_id: @site._id, email: data[:email] }
-  cond[:in_password] = data[:in_password]
 
   item = Cms::Member.find_or_create_by(cond)
   item.attributes = data
@@ -48,6 +47,7 @@ end
 @member_1 = save_member(
   email: "member@example.jp",
   in_password: "pass123",
+  state: "enabled",
   name: "白鷺　太郎",
   kana: "しらさぎ　たろう",
   job: "シラサギ株式会社",
@@ -56,6 +56,21 @@ end
   sex: "male",
   birthday: Date.parse("1988/10/10")
 )
+@member_2 = save_member(
+  email: "shirasagi_hanako@example.jp",
+  in_password: "pass123",
+  state: "enabled",
+  name: "白鷺　花子",
+  kana: "しらさぎ　はなこ",
+  postal_code: "1050001",
+  addr: "東京都港区虎ノ門1-1-1",
+  sex: "female",
+  birthday: Date.parse("1990/07/07")
+)
+member_group = Member::Group.create cur_site: @site, name: "白鷺家",
+  invitation_message: "白鷺家のグループです。", in_admin_member_ids: [ @member_1.id ]
+member_group.members.new(member_id: @member_2.id, state: "user")
+member_group.save
 
 ## -------------------------------------
 puts "# layouts"
@@ -99,6 +114,7 @@ save_layout filename: "kanko-info-photo.layout.html", name: "写真データベ�
 save_layout filename: "login.layout.html", name: "ログイン"
 save_layout filename: "kanko-info/blog/blog1.layout.html", name: "ブログレイアウト1"
 save_layout filename: "kanko-info/blog/blog2.layout.html", name: "ブログレイアウト2"
+save_layout filename: "mypage.layout.html", name: "マイページ"
 
 array   = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 layouts = Hash[*array.flatten]
@@ -338,7 +354,8 @@ feedback_node = save_node route: "inquiry/form", filename: "feedback", name: "�
   aggregation_state: "disabled"
 
 ## public comment
-save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント", upper_html: "パブリックコメント一覧です。"
+save_node route: "inquiry/node", filename: "comment", name: "パブリックコメント",
+  upper_html: "パブリックコメント一覧です。"
 inquiry_comment_1 = save_node route: "inquiry/form", filename: "comment/comment01", name: "シラサギ市政について",
   from_name: "シラサギサンプルサイト",
   inquiry_captcha: "enabled", notice_state: "disabled",
@@ -390,6 +407,22 @@ ezine_backnumber_node = save_node route: "ezine/backnumber", filename: "ezine/ba
   name: "メールマガジン　バックナンバー", conditions: %w(ezine)
 save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_type: "radio_button",
   select_options: %w(男性 女性), required: "required", site_id: @site._id
+
+# ezine anpi
+save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン", layout_id: layouts["kanko-info"].id
+ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認",
+  layout_id: layouts["kanko-info"].id,
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text,
+  subscription_constraint: "required"
+ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event", name: "イベント情報",
+  layout_id: layouts["kanko-info"].id,
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
+  signature_html: ezine_signature_html, signature_text: ezine_signature_text
+@member_1.subscription_ids = [ ezine_anpi.id, ezine_event.id ]
+@member_1.save
+@member_2.subscription_ids = [ ezine_anpi.id, ezine_event.id ]
+@member_2.save
 
 ## facility
 save_node route: "cms/node", filename: "institution/chiki", name: "施設のある地域", layout_id: layouts["one"].id
@@ -503,7 +536,8 @@ save_inquiry_column node_id: inquiry_comment_1.id, name: "意見", order: 20, in
 column_gender = save_inquiry_column node_id: inquiry_comment_2.id, name: "性別", order: 0, input_type: "radio_button",
   html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
 column_age = save_inquiry_column node_id: inquiry_comment_2.id, name: "年齢", order: 10, input_type: "select",
-  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required",
+  site_id: @site._id
 column_opinion = save_inquiry_column node_id: inquiry_comment_2.id, name: "意見", order: 20, input_type: "text_area",
   html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
 
@@ -560,11 +594,18 @@ save_inquiry_answer node_id: feedback_node.id, site_id: @site._id,
 save_node route: "member/login", filename: "login", name: "ログイン", layout_id: layouts["login"].id,
   form_auth: "enabled", redirect_url: "/mypage/"
 save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: layouts["one"].id,
-  sender_email: "info@example.jp", sender_name: "送信者名"
-save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: layouts["one"].id
-save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: layouts["one"].id, order: 10
-save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: layouts["one"].id, order: 20
-save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: layouts["one"].id, order: 30
+  sender_email: "info@example.jp", sender_name: "送信者名", kana_required: "required", postal_code_required: "required",
+  addr_required: "required", sex_required: "required", birthday_required: "required"
+save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: layouts["mypage"].id
+save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: layouts["mypage"].id, order: 10,
+  kana_required: "required", postal_code_required: "required", addr_required: "required", sex_required: "required",
+  birthday_required: "required"
+save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: layouts["mypage"].id, order: 20
+save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: layouts["mypage"].id, order: 30
+anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否",
+  layout_id: layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled", text_size_limit: 400
+save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: layouts["mypage"].id, order: 50,
+  sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
 
 ## member blog
 save_node route: "cms/node", filename: "kanko-info", name: "観光情報", layout_id: layouts["kanko-info-top"].id
@@ -975,6 +1016,18 @@ save_page route: "ezine/page", filename: "ezine/page36.html", name: "シラサ�
   layout_id: layouts["ezine"].id, html: "<p>シラサギ市メールマガジンを配信します。</p>\r\n",
   text: "シラサギ市メールマガジンを配信します。\r\n"
 
+puts "# anpi-ezine"
+anpi_text = File.read("pages/anpi-ezine/anpi/anpi37.text.txt") rescue nil
+save_page route: "ezine/page", filename: "anpi-ezine/anpi/anpi37.html",
+  name: "2011年03月11日 14時46分 ころ地震がありました", completed: true, layout_id: layouts["ezine"].id,
+  text: anpi_text
+save_page route: "ezine/page", filename: "anpi-ezine/event/page38.html",
+  name: "シラサギ市イベント情報 No.12", completed: true, layout_id: layouts["ezine"].id,
+  html: "<p>シラサギ市イベント情報を配信します。</p>\r\n",
+  text: "シラサギ市イベント情報を配信します。\r\n"
+
+puts "# weather-xml"
+
 ## -------------------------------------
 puts "# member blog"
 file = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "member/blog_page"
@@ -1118,6 +1171,8 @@ comment2 = save_board_post name: "Re:テスト投稿", text: "返信します。
 topic2 = save_board_post name: "タイトル", text: "投稿します。", site_id: @site.id, node_id: node.id,
   poster: "白鷺　太郎", delete_key: 1234
 
+save_node route: "board/anpi_post", filename: "anpi", name: "安否掲示板", layout_id: layouts["one"].id
+
 user = Cms::User.first
 if user
   file = save_ss_files "ss_files/article/pdf_file.pdf", filename: "file.pdf", model: "board/post", site_id: @site.id
@@ -1125,6 +1180,27 @@ if user
   topic3 = save_board_post name: "管理画面から", text: "管理画面からの投稿です。", site_id: @site.id, node_id: node.id,
     user_id: user.id, poster: "管理者", delete_key: 1234, poster_url: " http://demo.ss-proj.org/", file_ids: [file.id]
 end
+
+puts "# anpi"
+
+def save_board_anpi_post(data)
+  puts data[:name]
+  cond = { site_id: @site._id, member_id: data[:member_id] }
+  item = Board::AnpiPost.find_or_create_by(cond)
+  item.attributes = data
+  item.save
+
+  item
+end
+
+save_board_anpi_post member_id: @member_1.id, name: @member_1.name, kana: @member_1.kana, tel: @member_1.tel,
+  addr: @member_1.addr, sex: @member_1.sex, age: @member_1.age, email: @member_1.email,
+  text: "立川の避難所に花子と一緒に居ます。\r\n私も花子も無事です。", public_scope: "public",
+  point: { "loc"=>[35.712948784, 139.399852752], "zoom_level"=>11 }
+save_board_anpi_post member_id: @member_2.id, name: @member_2.name, kana: @member_2.kana, tel: @member_2.tel,
+  addr: @member_2.addr, sex: @member_2.sex, age: @member_2.age, email: @member_2.email,
+  text: "主人と一緒に必死で立川の避難所まで避難してきました。", public_scope: "public",
+  point: { "loc"=>[35.713576996, 139.407887933], "zoom_level"=>11 }
 
 puts "# body_layouts"
 def save_body_layouts(data)
@@ -1151,6 +1227,27 @@ save_page route: "cms/page", filename: "mobile.html", name: "スマートフォ�
 save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
 save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内", layout_id: layouts["category-middle"].id
+
+## -------------------------------------
+puts "# weather xml"
+
+def save_rss_weather_xml_region(data)
+  # puts data[:name]
+  cond = { site_id: @site._id, code: data[:code], name: data[:name] }
+  item = Rss::WeatherXmlRegion.find_or_create_by(cond)
+  item.attributes = data
+  item.save
+
+  item
+end
+
+CSV.table("weather_xml_regions/regions.csv").each do |row|
+  save_rss_weather_xml_region code: row[:code].to_s, name: row[:name], order: row[:code].to_i
+end
+
+save_node route: "rss/weather_xml", filename: "weather", name: "気象庁防災XML", layout_id: layouts["one"].id,
+  page_state: "closed", earthquake_intensity: "5+", anpi_mail_id: ezine_anpi.id, my_anpi_post_id: anpi_node.id,
+  target_region_ids: %w(350 351 352).map { |code| Rss::WeatherXmlRegion.site(@site).find_by(code: code).id }
 
 ## -------------------------------------
 puts "# max file size"

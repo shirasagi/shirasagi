@@ -23,27 +23,52 @@
 </dl>
 
 <dl class="colum kana">
-  <dt><%= @item.class.t :kana %></dt>
+  <dt>
+    <%= @item.class.t :kana %>
+    <% if @cur_node.kana_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd><%= f.text_field :kana %><%= remarks :kana %></dd>
 </dl>
 
 <dl class="colum organization-name">
-  <dt><%= @item.class.t :organization_name %></dt>
+  <dt>
+    <%= @item.class.t :organization_name %>
+    <% if @cur_node.organization_name_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd><%= f.text_field :organization_name %><%= remarks :organization_name %></dd>
 </dl>
 
 <dl class="colum job">
-  <dt><%= @item.class.t :job %></dt>
+  <dt>
+    <%= @item.class.t :job %>
+    <% if @cur_node.job_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd><%= f.text_field :job %><%= remarks :job %></dd>
 </dl>
 
 <dl class="colum tel">
-  <dt><%= @item.class.t :tel %></dt>
+  <dt>
+    <%= @item.class.t :tel %>
+    <% if @cur_node.tel_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd><%= f.text_field :tel %><%= remarks :tel %></dd>
 </dl>
 
 <dl class="colum postal-code">
-  <dt><%= @item.class.t :postal_code %></dt>
+  <dt>
+    <%= @item.class.t :postal_code %>
+    <% if @cur_node.postal_code_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd>
     <%= f.text_field :postal_code %>
     <%= f.button t('member.button.address_search'), name: 'postal-code-search', type: :button %>
@@ -53,12 +78,22 @@
 </dl>
 
 <dl class="colum addr">
-  <dt><%= @item.class.t :addr %></dt>
+  <dt>
+    <%= @item.class.t :addr %>
+    <% if @cur_node.addr_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd><%= f.text_field :addr %><%= remarks :addr %></dd>
 </dl>
 
 <dl class="colum sex">
-  <dt><%= @item.class.t :sex %></dt>
+  <dt>
+    <%= @item.class.t :sex %>
+    <% if @cur_node.sex_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd>
     <% @item.sex_options.each do |text, val| %>
       <%= label_tag("item_sex_#{val}", class: val) do %>
@@ -70,7 +105,12 @@
 </dl>
 
 <dl class="colum birthday">
-  <dt><%= @item.class.t :birthday %></dt>
+  <dt>
+    <%= @item.class.t :birthday %>
+    <% if @cur_node.birthday_required? %>
+    <span class="required"><%= t('views.required_field') %></span>
+    <% end %>
+  </dt>
   <dd>
     <%= f.fields_for :in_birth do |birth_f| %>
       <% era, year, month, day = @item.parse_in_birth %>

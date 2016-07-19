@@ -1,0 +1,22 @@
+<%= render partial: "menu" %>
+
+<%= form_for :item, url: "#{@cur_node.url}#{@item.id}", html: { method: :delete, multipart: true } do |f| %>
+  <div class="member-my-group member-my-group-delete">
+    <%= error_messages_for :item %>
+
+    <div class="head"><h2><%= t("views.confirm.delete") %></h2></div>
+
+    <div class="columns">
+      <%= render file: "_delete" %>
+      <% @model.addons.each do |addon| %>
+        <% file = "#{Rails.root}/app/views/#{addon.path}/view/_delete.html.erb" %>
+        <%= render file: file, locals: { f: f } if File.exists?(file) %>
+      <% end %>
+    </div>
+
+    <footer class="send">
+      <%= f.submit t("views.button.delete"), class: 'btn-danger delete' %>
+      <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
+    </footer>
+  </div>
+<% end %>

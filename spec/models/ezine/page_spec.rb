@@ -3,16 +3,16 @@ require 'spec_helper'
 RSpec.describe Ezine::Page, type: :model, dbscope: :example do
   describe "#members_to_deliver" do
     subject { page.members_to_deliver }
+    let!(:node) { create :ezine_node_page }
 
     context "completed flag is true" do
-      let(:page) { create :ezine_page, completed: true }
+      let(:page) { create :ezine_page, cur_site: node.site, cur_node: node, completed: true }
 
       it { is_expected.to be_empty }
     end
 
     context "completed flag is false" do
-      let!(:node) { create :ezine_node }
-      let!(:page) { create :ezine_page }
+      let!(:page) { create :ezine_page, cur_site: node.site, cur_node: node }
       let!(:member) { create :ezine_member, node: node }
 
       context "delivered to all members" do

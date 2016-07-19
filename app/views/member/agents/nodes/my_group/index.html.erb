@@ -1,0 +1,32 @@
+<%= render partial: "menu" %>
+
+<% if @items.present? %>
+  <div class="member-my-group joined-groups">
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Member.t :name %></th>
+        <th class="state"><%= Member::GroupMember.t :state %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td class="item name"><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
+          <td class="item state">
+            <span class="admin"><%= t "member.options.group_member_state.admin" %>: <%= t "member.units.person", count: item.members.where(state: 'admin').count %></span>
+            、
+            <span class="user"><%= t "member.options.group_member_state.user" %>: <%= t "member.units.person", count: item.members.where(state: 'user').count %></span>
+            <% if item.admin_member?(@cur_member) %>
+            、
+            <span class="invitee"><%= t "member.options.group_member_state.inviting" %>: <%= t "member.units.person", count: item.members.where(state: 'inviting').count %></span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate @items if @items.try(:current_page) %>
+  </div>
+<% end %>

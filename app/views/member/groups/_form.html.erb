@@ -1,0 +1,27 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :invitation_message %><%= @model.tt :invitation_message %></dt>
+  <dd><%= f.text_area :invitation_message %></dd>
+
+  <% if @item.new_record? %>
+  <dt><%= @model.t :in_admin_member_ids %><%= @model.tt :in_admin_member_ids %></dt>
+  <dd>
+    <%= f.hidden_field "in_admin_member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to :"cms.apis.members.index", cms_apis_members_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Member.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
+</dl>

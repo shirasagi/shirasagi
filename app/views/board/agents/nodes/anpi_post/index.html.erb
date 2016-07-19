@@ -1,0 +1,21 @@
+<%= @cur_node.upper_html.to_s.html_safe %>
+<nav class="search-settings">
+  <%= form_tag "#{@cur_node.url}", { method: :get, enforce_utf8: false } do %>
+    <h2><%= t('board.views.search_person') %></h2>
+    <%= remarks :search_person %>
+    <%= text_field_tag :keyword, params[:keyword] %>
+    <input type="submit" value="<%= t('board.button.search_person') %>" />
+  <% end %>
+</nav>
+
+<% if @items.present? %>
+<% @items.each do |item| %>
+  <%= render partial: "anpi_post", locals: { item: item }  %>
+<% end %>
+<% end %>
+
+<%= @cur_node.lower_html.to_s.html_safe %>
+
+<% if @items.present? %>
+<%= paginate @items if @items.try(:current_page) %>
+<% end %>

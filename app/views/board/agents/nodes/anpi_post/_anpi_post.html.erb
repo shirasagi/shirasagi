@@ -1,0 +1,33 @@
+<article class="anpi-post">
+  <header>
+    <h2 class="title"><%= item.name %></h2>
+  </header>
+  <div class="body"><%= item.modified_text %></div>
+  <div class="date"><%= t("board.views.date") %><%= I18n.l(item.updated, format: :long) %>
+  </div>
+  <div class="poster">
+    <% if item.kana.present? %>
+    <span class="kana"><%= @model.t :kana %>: <%= item.kana %></span>
+    <% end %>
+    <% if item.tel.present? %>
+    <span class="tel"><%= @model.t :tel %>: <%= item.tel %></span>
+    <% end %>
+    <% if item.addr.present? %>
+    <span class="addr"><%= @model.t :addr %>: <%= item.addr %></span>
+    <% end %>
+    <% if item.sex.present? %>
+    <span class="sex"><%= @model.t :sex %>: <%= item.label :sex %></span>
+    <% end %>
+    <% if item.age.present? %>
+    <span class="age"><%= @model.t :age %>: <%= item.age %></span>
+    <% end %>
+    <% if @cur_node.show_email? && item.email.present? %>
+    <span class="email"><%= @model.t :email %>: <%= item.email %></span>
+    <% end %>
+    <% if @cur_node.show_email? %>
+    <span class="member"><%= @model.t :member_id %>: <%= mail_to item.member.email, "#{item.member.name} <#{item.member.email}>", class: "email" %></span>
+    <% else %>
+    <span class="member"><%= @model.t :member_id %>: <%= item.member.name %></span>
+    <% end %>
+  </div>
+</article>

@@ -1,34 +1,11 @@
-<%= render file: "app/views/ss/crud/_search" %>
+<% @index_title = proc do |item| %>
+  <%= link_to item.email, { action: :show, id: item }, class: "title" %>
+<% end %>
 
-<div class="main-box">
-  <table class="index">
-    <thead>
-      <tr>
-        <th class="checkbox"><input type="checkbox" /></th>
-        <th><%= @model.t :email %></th>
-        <th><%= @model.t :email_type %></th>
-        <th class="datetime"><%= @model.t :updated %></th>
-      </tr>
-    </thead>
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="email-type"><%= item.label :email_type %></span>
+<% end %>
 
-    <tbody>
-      <% @items.each do |item| %>
-      <tr class="list-item">
-        <td class="checkbox">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-          <nav class="tap-menu">
-            <%= link_to :show, action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-            <%= link_to :edit, action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to :delete, action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-          </nav>
-        </td>
-        <td><%= link_to item.email, { action: :show, id: item } %></td>
-        <td><%= item.email_type %></td>
-        <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
-
-<%= paginate @items if @items.try(:current_page) %>
+<%= render file: "cms/crud/index" %>

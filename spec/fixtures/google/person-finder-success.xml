@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<status:status>
+  <status:write>
+    <status:record_type>pfif:person</status:record_type>
+    <status:parsed>1</status:parsed>
+    <status:written>1</status:written>
+    <status:skipped>
+    </status:skipped>
+  </status:write>
+  <status:write>
+    <status:record_type>pfif:note</status:record_type>
+    <status:parsed>1</status:parsed>
+    <status:written>1</status:written>
+    <status:skipped>
+    </status:skipped>
+  </status:write>
+</status:status>

@@ -1,0 +1,42 @@
+<dl class="column name">
+  <dt>
+    <%= @model.t :name %>
+    <% if params[:action] != 'invite' %>
+    <%= required_label %>
+    <% end %>
+  </dt>
+  <dd>
+    <% if params[:action] == 'invite' %>
+      <%= @item.name %>
+    <% else %>
+      <%= f.text_field :name %>
+      <%= remarks :name %>
+    <% end %>
+  </dd>
+</dl>
+
+<% if params[:action] != 'invite' %>
+<dl class="column admin">
+  <dt><%= Member::Group.t :in_admin_member_ids %></dt>
+  <dd><%= @cur_member.name %></dd>
+</dl>
+<% end %>
+
+<dl class="column invitees">
+  <dt><%= Member::Group.t :members %></dt>
+  <dd>
+    <%= f.text_area :in_invitees %>
+    <%= remarks :in_invitees %>
+  </dd>
+</dl>
+
+<dl class="column invitation-message">
+  <dt>
+    <%= @model.t :invitation_message %>
+    <%= required_label %>
+  </dt>
+  <dd>
+    <%= f.text_area :invitation_message %>
+    <%= remarks :invitation_message %>
+  </dd>
+</dl>

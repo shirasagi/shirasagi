@@ -117,10 +117,12 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "groups" => "groups#index"
+      get "nodes" => "nodes#index"
       get "pages" => "pages#index"
       get "categories" => "categories#index"
       get "contents" => "contents#index"
       get "contents/html" => "contents/html#index"
+      get "members" => "members#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

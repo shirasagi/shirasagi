@@ -33,7 +33,8 @@ class Ezine::Page
   def members_to_deliver
     return [] if completed
     emails = Ezine::SentLog.where(page_id: id).map(&:email)
-    Ezine::Member.where(state: "enabled", node_id: parent.id, email: {"$nin" => emails})
+    parent_node = parent.becomes_with_route
+    parent_node.members_to_deliver.where(email: {"$nin" => emails})
   end
 
   # Deliver a mail to a member.
@@ -61,9 +62,11 @@ class Ezine::Page
   #
   # テスト配信を行う。
   def deliver_to_test_members
-    Ezine::TestMember.where(node_id: parent.id).each do |test_member|
+    parent_node = parent.becomes_with_route
+    parent_node.test_members_to_deliver.each do |test_member|
       deliver_to test_member
     end
+
     update test_delivered: Time.zone.now
   end
 end

@@ -13,8 +13,8 @@
     <% @items.each do |item| %>
       <tr>
         <td class="item name"><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
-        <td class="item datetime updated"><%=tryb { item.updated.strftime('%Y/%m/%d %H:%M') } %></td>
-        <td class="item datetime released"><%=tryb { item.released.strftime('%Y/%m/%d %H:%M') } %></td>
+        <td class="item datetime updated"><%=tryb { I18n.l(item.updated, format: :long) } %></td>
+        <td class="item datetime released"><%=tryb { I18n.l(item.released, format: :long) } %></td>
         <td class="item state">
           <% if item.public? %>
             <%= link_to item.label(:state), item.url %>

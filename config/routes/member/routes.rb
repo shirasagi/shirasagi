@@ -11,6 +11,12 @@ SS::Application.routes.draw do
     get :download, :on => :collection
   end
 
+  # Google Person Finder
+  concern :gpf do
+    get :gpf, action: :edit_gpf, on: :member
+    post :gpf, action: :update_gpf, on: :member
+  end
+
   content "member" do
     get "/" => redirect { |p, req| "#{req.path}/logins" }, as: :main
     resources :logins, only: [:index]
@@ -18,6 +24,7 @@ SS::Application.routes.draw do
     resources :my_profiles, concerns: :deletion
     resources :my_blogs, concerns: :deletion
     resources :my_photos, concerns: :deletion
+    resources :my_anpi_posts, concerns: [:deletion, :download, :gpf]
     resources :my_groups, concerns: :deletion
     resources :blog_layouts, concerns: :deletion
     resources :blogs, concerns: :deletion
@@ -34,9 +41,9 @@ SS::Application.routes.draw do
     resources :photo_spots, concerns: :deletion
     resources :registrations, concerns: :deletion
 
-    resources :groups, concerns: :deletion do
-      resources :members, controller: :group_members, concerns: :deletion
-    end
+    # resources :groups, concerns: :deletion do
+    #   resources :members, controller: :group_members, concerns: :deletion
+    # end
   end
 
   node "member" do
@@ -87,6 +94,21 @@ SS::Application.routes.draw do
     get "my_photo(index.:format)" => "public#index", cell: "nodes/my_photo"
     resources :my_photo, concerns: :deletion, controller: "public", cell: "nodes/my_photo", except: :index
 
+    resources :my_anpi_post, concerns: :deletion, controller: "public", cell: "nodes/my_anpi_post" do
+      get "others/new(.:format)", action: :others_new, on: :collection, as: :new_others
+      post "others(.:format)", action: :others_create, on: :collection
+      get "map", on: :collection
+    end
+
+    resources :my_group, concerns: :deletion, controller: "public", cell: "nodes/my_group" do
+      get "invite(.:format)", action: :invite, on: :member
+      post "invite(.:format)", action: :invite, on: :member
+      get "accept(.:format)", action: :accept, on: :member
+      post "accept(.:format)", action: :accept, on: :member
+      get "reject(.:format)", action: :reject, on: :member
+      post "reject(.:format)", action: :reject, on: :member
+    end
+
     ## registration
     get "registration/(index.html)" => "public#new", cell: "nodes/registration"
     match "registration/new.html" => "public#new", cell: "nodes/registration", via: [:get, :post]
@@ -132,11 +154,15 @@ SS::Application.routes.draw do
     end
   end
 
-  namespace "member", path: ".s:site/member", module: "member", servicer: /\d+/ do
+  namespace "member", path: ".s:site/member", module: "member" do
     namespace "apis" do
       resources :photos, concerns: :deletion do
         get :select, on: :member
       end
+    end
+
+    resources :groups, concerns: :deletion do
+      resources :members, controller: :group_members, concerns: :deletion
     end
   end
 end

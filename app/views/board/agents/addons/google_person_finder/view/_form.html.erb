@@ -1,0 +1,17 @@
+<% return unless @cur_node.gpf_enabled? %>
+
+<dl class="column">
+  <dt><%= I18n.t('board.views.gpf') %></dt>
+  <dd>
+    <%= f.label(:in_post_gpf_after_save, title: I18n.t('board.views.post_gpf')) do %>
+      <%= f.check_box(:in_post_gpf_after_save, { checked: false }, 'enable', 'disable') %>
+      <%= I18n.t('board.views.post_gpf') %>
+    <% end %>
+    <% if @cur_node.gpf_mode == 'normal' %>
+      <%= remarks :gpf_normal_mode_warning %>
+    <% else %>
+      <%= remarks :gpf_test_mode_info %>
+    <% end %>
+    <%= remarks(:in_post_gpf_after_save, true, gpf_url: @cur_node.accessor.base_uri) %>
+  </dd>
+</dl>

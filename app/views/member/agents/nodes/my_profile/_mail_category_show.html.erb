@@ -1,0 +1,4 @@
+<dl class="column">
+  <dt><%= I18n.t 'member.view.mail_subscription' %></dt>
+  <dd><%= @item.subscriptions.map { |mag| mag.name }.join(", ") %></dd>
+</dl>

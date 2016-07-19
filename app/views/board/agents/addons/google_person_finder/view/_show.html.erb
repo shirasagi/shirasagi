@@ -1,0 +1,6 @@
+<% return unless @cur_node.gpf_enabled? %>
+
+<dl class="column">
+  <dt><%= I18n.t('board.views.gpf') %></dt>
+  <dd><%= link_to(I18n.t('board.views.show_gpf'), @item.gpf_url.to_s, target: :_blank) %></dd>
+</dl>

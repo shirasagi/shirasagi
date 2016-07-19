@@ -1,6 +1,7 @@
 def cms_member(site: cms_site, email: 'admin@example.jp')
   member = Cms::Member.where(email: email).first
   member ||= create(:cms_member, site: site, email: email, in_password: "abc123", in_password_again: "abc123")
+  member.attributes = { in_password: "abc123", in_password_again: "abc123" }
   member
 end
 

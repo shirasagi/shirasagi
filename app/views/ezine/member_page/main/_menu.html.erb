@@ -1,0 +1,30 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :new, action: :new %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|delivery|sent_logs/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :back_to_show, action: :show, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :edit, action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :delete, action: :delete, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>
+
+<% if params[:action] =~ /show/ && @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+<nav class="nav-menu">
+  <%= link_to t("ezine.deliver_test"), action: :delivery_test_confirmation, id: @item %>
+  <%= link_to t("ezine.deliver"), action: :delivery_confirmation, id: @item %>
+  <%= link_to t("ezine.sent_log"), action: :sent_logs, id: @item %>
+</nav>
+<% end %>

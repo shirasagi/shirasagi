@@ -1,0 +1,29 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :new, action: :new %>
+      <%= link_to :download, action: :download %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to :back_to_index, action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :back_to_show, action: :show, id: @item %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :edit, action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to :delete, { action: :delete, id: @item }, class: :delete %>
+    <% end %>
+    <%= link_to :back_to_index, action: :index %>
+  <% end %>
+</nav>
+<% if params[:action] =~ /show/ %>
+<nav class="nav-menu">
+  <%= link_to(I18n.t('board.views.post_gpf'), gpf_member_my_anpi_post_path) %>
+  <%= link_to(I18n.t('board.views.show_gpf'), @item.gpf_url.to_s, target: :_blank) %>
+</nav>
+<% end %>

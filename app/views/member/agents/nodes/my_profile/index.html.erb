@@ -49,7 +49,9 @@
 
     <dl class="column">
       <dt><%= @model.t :birthday %></dt>
-      <dd><%= tryb { @item.birthday.strftime("西暦 %Y年 %m月 %d日") } %></dd>
+      <dd><%= tryb { I18n.l(@item.birthday.to_date, format: :long) } %></dd>
     </dl>
+
+    <%= render file: '_mail_category_show' %>
   </div>
 </div>

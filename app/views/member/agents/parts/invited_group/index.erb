@@ -1,0 +1,25 @@
+<% if @items.present? %>
+  <div class="invited-groups">
+    <h3><%= t "member.view.invited_group.header" %></h3>
+    <table class="index member-invited-group">
+      <thead>
+      <tr>
+        <th class="name"><%= Member::Group.t :name %></th>
+        <th class="operation"><%= t "member.view.invited_group.operation" %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td class="item name"><%= link_to item.name, "#{@my_group_node.url}#{item.id}/" %></td>
+          <td class="item operation">
+            <%= link_to t("member.button.accept"), "#{@my_group_node.url}#{item.id}/accept" %>
+            |
+            <%= link_to t("member.button.reject"), "#{@my_group_node.url}#{item.id}/reject" %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

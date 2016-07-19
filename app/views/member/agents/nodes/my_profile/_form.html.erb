@@ -31,6 +31,9 @@
 <dl class="column kana">
   <dt>
     <%= @model.t :kana %>
+    <% if @cur_node.kana_required? %>
+    <%= required_label %>
+    <% end %>
   </dt>
   <dd>
     <%= f.text_field :kana %>
@@ -39,7 +42,12 @@
 </dl>
 
 <dl class="column">
-  <dt><%= @model.t :organization_name %></dt>
+  <dt>
+    <%= @model.t :organization_name %>
+    <% if @cur_node.organization_name_required? %>
+    <%= required_label %>
+    <% end %>
+  </dt>
   <dd>
     <%= f.text_field :organization_name %>
     <%= remarks :organization_name %>
@@ -47,7 +55,12 @@
 </dl>
 
 <dl class="column">
-  <dt><%= @model.t :job %></dt>
+  <dt>
+    <%= @model.t :job %>
+    <% if @cur_node.job_required? %>
+    <%= required_label %>
+    <% end %>
+  </dt>
   <dd>
     <%= f.text_field :job %>
     <%= remarks :job %>
@@ -55,7 +68,12 @@
 </dl>
 
 <dl class="column">
-  <dt><%= @model.t :tel %></dt>
+  <dt>
+    <%= @model.t :tel %>
+    <% if @cur_node.tel_required? %>
+    <%= required_label %>
+    <% end %>
+  </dt>
   <dd>
     <%= f.text_field :tel %>
     <%= remarks :tel %>
@@ -65,6 +83,9 @@
 <dl class="colum postal-code">
   <dt>
     <%= @model.t :postal_code %>
+    <% if @cur_node.postal_code_required? %>
+    <%= required_label %>
+    <% end %>
   </dt>
   <dd>
     <%= f.text_field :postal_code %>
@@ -77,6 +98,9 @@
 <dl class="column">
   <dt>
     <%= @model.t :addr %>
+    <% if @cur_node.addr_required? %>
+    <%= required_label %>
+    <% end %>
   </dt>
   <dd>
     <%= f.text_field :addr %>
@@ -87,6 +111,9 @@
 <dl class="column">
   <dt>
     <%= @model.t :sex %>
+    <% if @cur_node.sex_required? %>
+    <%= required_label %>
+    <% end %>
   </dt>
   <dd>
     <% @item.sex_options.each do |text, val| %>
@@ -101,6 +128,9 @@
 <dl class="column">
   <dt>
     <%= @model.t :birthday %>
+    <% if @cur_node.birthday_required? %>
+    <%= required_label %>
+    <% end %>
   </dt>
   <dd>
     <%= f.fields_for :in_birth do |birth_f| %>
@@ -116,3 +146,5 @@
     <%= remarks :birthday %>
   </dd>
 </dl>
+
+<%= render file: '_mail_category_form', locals: { f: f } %>

@@ -1,0 +1,15 @@
+<nav class="mod-navi">
+  <h2><%= t "cms.member" %></h2>
+
+  <% if Cms::Member.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.member", cms_members_path %></h3>
+    <h3><%= link_to :"member.group", member_groups_path %></h3>
+    <% if params[:action] =~ /show/ %>
+    <ul class="narrow-page">
+      <%= link_to :"member.group_member", member_group_members_path(group_id: @item) %>
+    </ul>
+    <% end %>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/conf_navi" %>

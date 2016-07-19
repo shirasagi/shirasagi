@@ -26,7 +26,7 @@ class Cms::PostalCodesController < ApplicationController
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
       csv = @model.allow(:read, @cur_user, site: @cur_site).order(code: 1, id: 1).to_csv
-      send_data csv.encode("SJIS"), filename: "postal_code_#{Time.zone.now.to_i}.csv"
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "postal_code_#{Time.zone.now.to_i}.csv"
     end
 
     def import

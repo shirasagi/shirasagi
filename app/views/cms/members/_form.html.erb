@@ -8,6 +8,9 @@
   <dt><%= @model.t :in_password %></dt>
   <dd><%= f.password_field :in_password %></dd>
 
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.select :state, @item.state_options  %></dd>
+
   <dt><%= @model.t :oauth_type %></dt>
   <dd><%= f.text_field :oauth_type %></dd>
 

@@ -35,6 +35,11 @@ if analyze_coverage?
   end
 end
 
+if Module.const_defined?(:WebMock)
+  require "webmock/rspec"
+  WebMock.allow_net_connect!
+end
+
 RSpec.configure do |config|
   # ## Mock Framework
   #

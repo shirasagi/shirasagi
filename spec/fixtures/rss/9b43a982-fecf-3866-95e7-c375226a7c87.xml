@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://xml.kishou.go.jp/jmaxml1/" xmlns:jmx="http://xml.kishou.go.jp/jmaxml1/">
+  <Control>
+    <Title>震度速報</Title>
+    <DateTime>2016-03-08T04:34:18Z</DateTime>
+    <Status>通常</Status>
+    <EditorialOffice>気象庁本庁</EditorialOffice>
+    <PublishingOffice>気象庁</PublishingOffice>
+  </Control>
+  <Head xmlns="http://xml.kishou.go.jp/jmaxml1/informationBasis1/">
+    <Title>震度速報</Title>
+    <ReportDateTime>2016-03-08T13:34:00+09:00</ReportDateTime>
+    <TargetDateTime>2016-03-08T13:32:00+09:00</TargetDateTime>
+    <EventID>20160308133250</EventID>
+    <InfoType>発表</InfoType>
+    <Serial></Serial>
+    <InfoKind>震度速報</InfoKind>
+    <InfoKindVersion>1.0_1</InfoKindVersion>
+    <Headline>
+      <Text>　８日１３時３２分ころ、地震による強い揺れを感じました。震度３以上が観測された地域をお知らせします。</Text>
+      <Information type="震度速報">
+        <Item>
+          <Kind><Name>震度３</Name></Kind>
+          <Areas codeType="地震情報／細分区域">
+            <Area><Name>日高地方東部</Name><Code>152</Code></Area>
+          </Areas>
+        </Item>
+      </Information>
+    </Headline>
+  </Head>
+  <Body xmlns="http://xml.kishou.go.jp/jmaxml1/body/seismology1/" xmlns:jmx_eb="http://xml.kishou.go.jp/jmaxml1/elementBasis1/">
+    <Intensity>
+      <Observation>
+        <CodeDefine>
+          <Type xpath="Pref/Code">地震情報／都道府県等</Type>
+          <Type xpath="Pref/Area/Code">地震情報／細分区域</Type>
+        </CodeDefine>
+        <MaxInt>3</MaxInt>
+        <Pref>
+          <Name>北海道</Name><Code>01</Code><MaxInt>3</MaxInt>
+          <Area><Name>日高地方東部</Name><Code>152</Code><MaxInt>3</MaxInt></Area>
+        </Pref>
+      </Observation>
+    </Intensity>
+    <Comments>
+      <ForecastComment codeType="固定付加文">
+        <Text>今後の情報に注意してください。</Text>
+        <Code>0217</Code>
+      </ForecastComment>
+    </Comments>
+  </Body>
+</Report>

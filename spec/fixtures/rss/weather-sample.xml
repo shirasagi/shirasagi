@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>JMAXML publishing feed</title>
+  <subtitle>this feed is published by JMA</subtitle>
+  <updated>2012-08-15T07:01:01+09:00</updated>
+  <id>urn:uuid:be4342e2-ff73-363c-a3ed-66e05e977224</id>
+  <link href="http://www.jma.go.jp/" rel="related"/>
+  <link href="http://xml.kishou.go.jp/feed/extra.xml" rel="self"/>
+  <rights>Published by Japan Meteorological Agency</rights>
+  <entry>
+    <title>気象警報・注意報</title>
+    <id>urn:uuid:afeedc52-107a-3d1d-9196-b108234d6e0f</id>
+    <updated>2016-03-10T09:22:41Z</updated>
+    <author><name>福島地方気象台</name></author>
+    <link href="http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml" type="application/xml"/>
+    <content type="text">【福島県気象警報・注意報】注意報を解除します。</content>
+  </entry>
+  <entry>
+    <title>気象特別警報・警報・注意報</title>
+    <id>urn:uuid:2b441518-4e79-342c-a271-7c25597f3a69</id>
+    <updated>2016-03-10T09:22:41Z</updated>
+    <author><name>福島地方気象台</name></author>
+    <link href="http://xml.kishou.go.jp/data/2b441518-4e79-342c-a271-7c25597f3a69.xml" type="application/xml"/>
+    <content type="text">【福島県気象警報・注意報】注意報を解除します。</content>
+  </entry>
+</feed>

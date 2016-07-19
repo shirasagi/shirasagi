@@ -1,0 +1,64 @@
+<%# stylesheet_link_tag 'board/map', media: 'all' %>
+<%= javascript_include_tag "board/script" %>
+
+<dl class="see mod-board-map-point">
+  <dt><%= @model.t :map_state %><%= @model.tt :map_state %></dt>
+  <dd><%= f.select :map_state, @item.map_state_options %></dd>
+
+  <dt><%= @model.t :map_zoom_level %><%= @model.tt :map_zoom_level %></dt>
+  <dd><%= f.number_field :map_zoom_level %></dd>
+
+  <dt><%= @model.t :map_view_state %><%= @model.tt :map_view_state %></dt>
+  <dd><%= f.select :map_view_state, @item.map_view_state_options %></dd>
+
+  <dt><%= @model.t :map_center %><%= @model.tt :map_center %></dt>
+  <dd>
+    <a id="search-loc" href="#"><%= t("board.views.gps_position") %></a>
+    |
+    <a id="clear-marker" href="#"><%= t("board.views.marker_clear") %></a>
+    <div id="map-canvas" style="width: 100%; height: 400px;"></div>
+    <%= f.fields_for :map_center do |loc| %>
+      <%= loc.hidden_field(:lng, value: @item.map_center.present? ? @item.map_center.lng : nil) %>
+      <%= loc.hidden_field(:lat, value: @item.map_center.present? ? @item.map_center.lat : nil) %>
+    <% end %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  canvas = $("div#map-canvas")[0];
+
+  var opts = {};
+
+  <% if @item.map_center.present? %>
+  opts['center'] = opts['marker'] = [<%= @item.map_center.lng %>, <%= @item.map_center.lat %>];
+  <% else %>
+  opts['center'] = [<%= SS.config.map.map_center[1] %>,<%= SS.config.map.map_center[0] %>];
+  <% end %>
+  <% if @item.map_zoom_level.present? %>
+  opts['zoom'] = <%= @item.map_zoom_level %>;
+  <% end %>
+
+  var map = new Board_Map(canvas, opts);
+  $(canvas).on('position:set', function (ev, data) {
+    $("#item_map_zoom_level").val(data.zoom);
+    $("#item_map_center_lng").val(data.position[0]);
+    $("#item_map_center_lat").val(data.position[1]);
+  }).on('position:unset', function (ev) {
+    $("#item_map_center_lng").val(0);
+    $("#item_map_center_lat").val(0);
+  });
+
+  if (! navigator.geolocation) {
+    $("#search-loc").hide();
+  } else {
+    $("#search-loc").on("click", function () {
+      map.setMarkerFromGps();
+      return false;
+    });
+  }
+
+  $("#clear-marker").on("click", function() {
+    map.resetMarker();
+    return false;
+  });
+<% end %>

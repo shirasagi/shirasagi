@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://xml.kishou.go.jp/jmaxml1/" xmlns:jmx="http://xml.kishou.go.jp/jmaxml1/">
+<Control>
+<Title>震度速報</Title>
+<DateTime>2011-03-11T05:48:10Z</DateTime>
+<Status>通常</Status>
+<EditorialOffice>気象庁本庁</EditorialOffice>
+<PublishingOffice>気象庁</PublishingOffice>
+</Control>
+<Head xmlns="http://xml.kishou.go.jp/jmaxml1/informationBasis1/">
+<Title>震度速報</Title>
+<ReportDateTime>2011-03-11T14:48:00+09:00</ReportDateTime>
+<TargetDateTime>2011-03-11T14:46:00+09:00</TargetDateTime>
+<EventID>20110311144640</EventID>
+<InfoType>発表</InfoType>
+<Serial></Serial>
+<InfoKind>震度速報</InfoKind>
+<InfoKindVersion>1.0_1</InfoKindVersion>
+<Headline>
+<Text>１１日１４時４６分ころ、地震による強い揺れを感じました。震度３以上が観測された地域をお知らせします。</Text>
+<Information type="震度速報">
+<Item>
+<Kind><Name>震度６強</Name></Kind>
+<Areas codeType="地震情報／細分区域">
+<Area><Name>宮城県北部</Name><Code>220</Code></Area>
+<Area><Name>宮城県中部</Name><Code>222</Code></Area>
+</Areas>
+</Item>
+<Item>
+<Kind><Name>震度６弱</Name></Kind>
+<Areas codeType="地震情報／細分区域">
+<Area><Name>岩手県沿岸南部</Name><Code>211</Code></Area>
+<Area><Name>岩手県内陸南部</Name><Code>213</Code></Area>
+<Area><Name>宮城県南部</Name><Code>221</Code></Area>
+</Areas>
+</Item>
+<Item>
+<Kind><Name>震度５強</Name></Kind>
+<Areas codeType="地震情報／細分区域">
+<Area><Name>岩手県沿岸北部</Name><Code>210</Code></Area>
+<Area><Name>岩手県内陸北部</Name><Code>212</Code></Area>
+<Area><Name>福島県中通り</Name><Code>250</Code></Area>
+<Area><Name>福島県浜通り</Name><Code>251</Code></Area>
+</Areas>
+</Item>
+<Item>
+<Kind><Name>震度５弱</Name></Kind>
+<Areas codeType="地震情報／細分区域">
+<Area><Name>山形県村山</Name><Code>242</Code></Area>
+</Areas>
+</Item>
+<Item>
+<Kind><Name>震度４</Name></Kind>
+<Areas codeType="地震情報／細分区域">
+<Area><Name>秋田県沿岸南部</Name><Code>231</Code></Area>
+<Area><Name>秋田県内陸南部</Name><Code>233</Code></Area>
+<Area><Name>山形県庄内</Name><Code>240</Code></Area>
+<Area><Name>山形県置賜</Name><Code>243</Code></Area>
+<Area><Name>茨城県北部</Name><Code>300</Code></Area>
+</Areas>
+</Item>
+<Item>
+<Kind><Name>震度３</Name></Kind>
+<Areas codeType="地震情報／細分区域">
+<Area><Name>山形県最上</Name><Code>241</Code></Area>
+<Area><Name>福島県会津</Name><Code>252</Code></Area>
+</Areas>
+</Item>
+</Information>
+</Headline>
+</Head>
+<Body xmlns="http://xml.kishou.go.jp/jmaxml1/body/seismology1/" xmlns:jmx_eb="http://xml.kishou.go.jp/jmaxml1/elementBasis1/">
+<Intensity>
+<Observation>
+<CodeDefine>
+<Type xpath="Pref/Code">地震情報／都道府県等</Type>
+<Type xpath="Pref/Area/Code">地震情報／細分区域</Type>
+</CodeDefine>
+<MaxInt>6+</MaxInt>
+<Pref>
+<Name>宮城県</Name><Code>04</Code><MaxInt>6+</MaxInt>
+<Area><Name>宮城県北部</Name><Code>220</Code><MaxInt>6+</MaxInt></Area>
+<Area><Name>宮城県中部</Name><Code>222</Code><MaxInt>6+</MaxInt></Area>
+<Area><Name>宮城県南部</Name><Code>221</Code><MaxInt>6-</MaxInt></Area>
+</Pref>
+<Pref>
+<Name>岩手県</Name><Code>03</Code><MaxInt>6-</MaxInt>
+<Area><Name>岩手県沿岸南部</Name><Code>211</Code><MaxInt>6-</MaxInt></Area>
+<Area><Name>岩手県内陸南部</Name><Code>213</Code><MaxInt>6-</MaxInt></Area>
+<Area><Name>岩手県沿岸北部</Name><Code>210</Code><MaxInt>5+</MaxInt></Area>
+<Area><Name>岩手県内陸北部</Name><Code>212</Code><MaxInt>5+</MaxInt></Area>
+</Pref>
+<Pref>
+<Name>福島県</Name><Code>07</Code><MaxInt>5+</MaxInt>
+<Area><Name>福島県中通り</Name><Code>250</Code><MaxInt>5+</MaxInt></Area>
+<Area><Name>福島県浜通り</Name><Code>251</Code><MaxInt>5+</MaxInt></Area>
+<Area><Name>福島県会津</Name><Code>252</Code><MaxInt>3</MaxInt></Area>
+</Pref>
+<Pref>
+<Name>山形県</Name><Code>06</Code><MaxInt>5-</MaxInt>
+<Area><Name>山形県村山</Name><Code>242</Code><MaxInt>5-</MaxInt></Area>
+<Area><Name>山形県庄内</Name><Code>240</Code><MaxInt>4</MaxInt></Area>
+<Area><Name>山形県置賜</Name><Code>243</Code><MaxInt>4</MaxInt></Area>
+<Area><Name>山形県最上</Name><Code>241</Code><MaxInt>3</MaxInt></Area>
+</Pref>
+<Pref>
+<Name>秋田県</Name><Code>05</Code><MaxInt>4</MaxInt>
+<Area><Name>秋田県沿岸南部</Name><Code>231</Code><MaxInt>4</MaxInt></Area>
+<Area><Name>秋田県内陸南部</Name><Code>233</Code><MaxInt>4</MaxInt></Area>
+</Pref>
+<Pref>
+<Name>茨城県</Name><Code>08</Code><MaxInt>4</MaxInt>
+<Area><Name>茨城県北部</Name><Code>300</Code><MaxInt>4</MaxInt></Area>
+</Pref>
+</Observation>
+</Intensity>
+<Comments>
+<ForecastComment codeType="固定付加文">
+<Text>今後の情報に注意してください。</Text>
+<Code>0217</Code>
+</ForecastComment>
+</Comments>
+</Body>
+</Report>

@@ -1,0 +1,65 @@
+<% return unless @cur_node.map_enabled? %>
+
+<%# stylesheet_link_tag 'board/map', media: 'all' %>
+<%= javascript_include_tag "board/script" %>
+
+<dl class="column">
+  <dt><%= @model.t :point %></dt>
+  <dd>
+    <a id="search-loc" href="#"><%= t("board.views.gps_position") %></a>
+    |
+    <a id="clear-marker" href="#"><%= t("board.views.marker_clear") %></a>
+    <div id="map-canvas" style="width: 100%; height: 400px;"></div>
+    <%= f.fields_for :point do |point| %>
+      <%= point.fields_for :loc do |loc| %>
+        <%= loc.hidden_field(:lng, value: @item.point.present? ? @item.point.loc.lng : nil) %>
+        <%= loc.hidden_field(:lat, value: @item.point.present? ? @item.point.loc.lat : nil) %>
+      <% end %>
+      <%= point.hidden_field(:zoom_level, value: @item.point.present? ? @item.point.zoom_level : nil) %>
+    <% end %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  canvas = $("div#map-canvas")[0];
+
+  var opts = {};
+
+  <% if @item.point.present? %>
+  opts['center'] = opts['marker'] = [<%= @item.point.loc.lng %>, <%= @item.point.loc.lat %>];
+  <% elsif @cur_node.try(:map_center).present? && @cur_node.map_center.present? %>
+  opts['center'] = [<%= @cur_node.map_center.lng %>,<%= @cur_node.map_center.lat %>];
+  <% else %>
+  opts['center'] = [<%= SS.config.map.map_center[1] %>,<%= SS.config.map.map_center[0] %>];
+  <% end %>
+
+  <% if @item.point.present? && @item.point.zoom_level.present? %>
+  opts['zoom'] = <%= @item.point.zoom_level %>;
+  <% elsif @cur_node.respond_to?(:map_zoom_level) && @cur_node.map_zoom_level.present? %>
+  opts['zoom'] = <%= @cur_node.map_zoom_level %>;
+  <% end %>
+
+  var map = new Board_Map(canvas, opts);
+  $(canvas).on('position:set', function (ev, data) {
+    $("#item_map_zoom_level").val(data.zoom);
+    $("#item_map_center_lng").val(data.position[0]);
+    $("#item_map_center_lat").val(data.position[1]);
+  }).on('position:unset', function (ev) {
+    $("#item_map_center_lng").val(0);
+    $("#item_map_center_lat").val(0);
+  });
+
+  if (! navigator.geolocation) {
+    $("#search-loc").hide();
+  } else {
+    $("#search-loc").on("click", function () {
+      map.setMarkerFromGps();
+      return false;
+    });
+  }
+
+  $("#clear-marker").on("click", function() {
+    map.resetMarker();
+    return false;
+  });
+<% end %>

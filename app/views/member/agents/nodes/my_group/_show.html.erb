@@ -1,0 +1,48 @@
+<%
+members = @item.members.page(params[:page]).per(20)
+states = %w(admin user)
+states += %w(inviting rejected) if @item.admin_member?(@cur_member)
+%>
+
+<div class="columns">
+  <dl class="column name">
+    <dt><%= @model.t :name %></dt>
+    <dd><%= @item.name %></dd>
+  </dl>
+</div>
+
+<% if @item.admin_member?(@cur_member) %>
+<div class="columns">
+  <dl class="column invitation-message">
+    <dt><%= @model.t :invitation_message %></dt>
+    <dd><%= br @item.invitation_message %></dd>
+  </dl>
+</div>
+<% end %>
+
+<div class="columns">
+  <dl class="column members">
+    <dt><%= @model.t :members %></dt>
+    <dd>
+<table class="index">
+  <thead>
+  <tr>
+    <th class="name"><%= Cms::Member.t :name %></th>
+    <th class="state"><%= Member::GroupMember.t :state %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% members.each do |member| %>
+    <% next unless states.include?(member.state) %>
+    <tr class="member-<%= member.id %>">
+      <td class="item name"><%= member.member ? member.member.name || member.member.email : t('member.view.retired_member') %></td>
+      <td class="item state"><%= member.label :state %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate members if members.try(:current_page) %>
+    </dd>
+  </dl>
+</div>
