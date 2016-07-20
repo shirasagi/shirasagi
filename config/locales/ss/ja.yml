@@ -435,3 +435,20 @@ ja:
       order:
         - 並び順を入力します。
         - 数字が大きいほど上位に表示されます。
+    ss/addon/mobile_setting:
+      mobile_state:
+        - モバイルページの有効無効を設定します。
+      mobile_location:
+        - モバイルページのパスを設定します。
+      mobile_css:
+        - モバイルページで使用するCSSパスを設定できます。
+        - 複数の場合は改行区切りで入力します。
+        - 空欄の場合は既定のCSS
+        - /css/mobile.css
+        - が設定されます。
+    ss/addon/map_setting:
+      map_api:
+        - サイトで使用する地図APIを選択します。
+      map_api_key:
+        - 地図APIで使用するAPIキーを入力します。
+        - GoogleマップのAPIキーはこの項目に設定します。
