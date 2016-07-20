@@ -69,6 +69,7 @@ class Cms::ThemeTemplate
       return path unless path.present?
       return path unless opts[:preview_path]
       return path unless opts[:site]
+      return path unless path =~ /^\/(?!\/)/
 
       preview_path = Rails.application.routes.url_helpers.cms_preview_path(site: opts[:site].id)
       ::File.join(preview_path, path)
