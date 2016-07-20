@@ -16,7 +16,7 @@ class Cms::ThemeTemplate
   permit_params :name, :class_name, :order, :css_path, :state
 
   validates :name, presence: true, length: { maximum: 40 }
-  validates :class_name, presence: true, uniqueness: true
+  validates :class_name, presence: true, uniqueness: { scope: :site_id }
 
   default_scope -> { order_by(order: 1, name: 1) }
   scope :and_public, ->{ where state: "public" }
