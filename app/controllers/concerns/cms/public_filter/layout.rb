@@ -105,6 +105,14 @@ module Cms::PublicFilter::Layout
     end
 
   public
+    def mobile_path?
+      filters.include?(:mobile)
+    end
+
+    def preview_path?
+      filters.include?(:preview)
+    end
+
     def stylesheets
       @stylesheets || []
     end
@@ -124,7 +132,7 @@ module Cms::PublicFilter::Layout
     end
 
     def javascript_configs
-      @javascript_config ||= Cms::ThemeTemplate.to_config(site: @cur_site)
+      @javascript_config ||= Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?)
     end
 
     def javascript_config(conf)

@@ -236,7 +236,7 @@ class @SS_Theme
 
   @cssTemplate: (cls, color, backgroundColor) ->
     """
-    body.#{cls} * {
+    body[data-ss-theme="#{cls}"] * {
       border-color: #{color} !important;
       background: #{backgroundColor} !important;
       color: #{color} !important;
@@ -246,8 +246,8 @@ class @SS_Theme
   @switchTheme: (cls) ->
     $('head link.ss-theme').prop("disabled", true)
     $('head link.ss-theme.' + cls).prop("disabled", false)
-    $("body").attr("class", "")
-    $("body").addClass(cls)
+    $("body").attr("data-ss-theme", "")
+    $("body").attr("data-ss-theme", cls)
 
 class @SS_Font
   @size = null # %

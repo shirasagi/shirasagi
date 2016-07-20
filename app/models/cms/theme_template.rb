@@ -16,7 +16,7 @@ class Cms::ThemeTemplate
   permit_params :name, :class_name, :order, :css_path, :state
 
   validates :name, presence: true, length: { maximum: 40 }
-  validates :class_name, presence: true, uniqueness: true
+  validates :class_name, presence: true, uniqueness: { scope: :site_id }
 
   default_scope -> { order_by(order: 1, name: 1) }
   scope :and_public, ->{ where state: "public" }
@@ -50,7 +50,7 @@ class Cms::ThemeTemplate
       criteria = criteria.site(opts[:site]) if opts[:site]
       criteria.each do |item|
         h[:theme][item.class_name] = {}
-        h[:theme][item.class_name]["css_path"] = item.css_path
+        h[:theme][item.class_name]["css_path"] = replace_with_preview_path(item.css_path, opts)
         h[:theme][item.class_name]["name"] = item.name
 
         if item.high_contrast_mode_enabled?
@@ -63,6 +63,16 @@ class Cms::ThemeTemplate
       end
 
       h
+    end
+
+    def replace_with_preview_path(path, opts = {})
+      return path unless path.present?
+      return path unless opts[:preview_path]
+      return path unless opts[:site]
+      return path unless path =~ /^\/(?!\/)/
+
+      preview_path = Rails.application.routes.url_helpers.cms_preview_path(site: opts[:site].id)
+      ::File.join(preview_path, path)
     end
   end
 end
