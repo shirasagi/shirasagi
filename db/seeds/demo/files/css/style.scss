@@ -67,7 +67,7 @@ img {
       border-right: $border-hgry;
       @include u-arrow;
     }
-    #size, #ss-voice, #ss-kana, #info {
+    #size, #theme, #ss-voice, #ss-kana, #info {
       float: right;
       border-left: $border-hgry;
     }
@@ -84,6 +84,32 @@ img {
           @include grd-blue;
           color: $t-white;
         }
+      }
+    }
+    #theme {
+      padding: 0 10px;
+    }
+    #ss-theme {
+      a {
+        margin-left: 5px;
+        padding: 3px 5px;
+        border: $border-hgry;
+        @include border-radius(3px);
+        color: $t-white;
+        text-decoration: none;
+        &:hover { opacity: 0.7; }
+      }
+      .white {
+        background: $t-white;
+        color: $text;
+      }
+      .blue {
+        border-color: #06c;
+        background: #06c;
+      }
+      .black {
+        border-color: #000;
+        background: #000;
       }
     }
     #ss-voice {
@@ -954,8 +980,8 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
 }
 
 // -----------------------------------------------------------------------------
-// category-pages .article-pages faq-search
-.category-pages, .article-pages, .faq-search {
+// category-pages .article-pages cms-pages faq-search
+.category-pages, .article-pages, .cms-pages, .faq-search {
   margin-bottom: $box-margin;
   a {
     @include r-arrow;
@@ -967,7 +993,8 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 .page .category-pages article,
-.page .article-pages article {
+.page .article-pages article,
+.page .cms-pages article {
   padding: 12px 0 9px;
   border-bottom: $border-hgry;
   time {

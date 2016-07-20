@@ -308,6 +308,9 @@ save_node route: "cms/node", filename: "use", name: "ご利用案内"
 ## article
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
 
+## archive
+save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: layouts["more"].id
+
 ## sitemap
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 
@@ -1101,18 +1104,6 @@ save_page route: "member/photo_spot", filename: "kanko-info/photo/spot/index.htm
   layout_id: layouts["kanko-info"].id,
   member_photo_ids: [photo_page_1.id, photo_page_2.id, photo_page_3.id]
 
-## -------------------------------------
-def save_editor_template(data)
-  puts data[:name]
-  cond = { site_id: data[:site_id], name: data[:name] }
-
-  item = Cms::EditorTemplate.find_or_create_by(cond)
-  item.attributes = data
-  item.update
-
-  item
-end
-
 puts "# key visual"
 keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
 keyvisual2 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", model: "key_visual/image"
@@ -1129,6 +1120,18 @@ save_page route: "key_visual/image", filename: "key_visual/page38.html", name: "
 save_page route: "key_visual/image", filename: "key_visual/page39.html", name: "キービジュアル3", order: 30, file_id: keyvisual3.id
 save_page route: "key_visual/image", filename: "key_visual/page40.html", name: "キービジュアル4", order: 40, file_id: keyvisual4.id
 save_page route: "key_visual/image", filename: "key_visual/page50.html", name: "キービジュアル5", order: 50, file_id: keyvisual5.id
+
+## -------------------------------------
+def save_editor_template(data)
+  puts data[:name]
+  cond = { site_id: data[:site_id], name: data[:name] }
+
+  item = Cms::EditorTemplate.find_or_create_by(cond)
+  item.attributes = data
+  item.update
+
+  item
+end
 
 puts "# editor templates"
 thumb_left  = save_ss_files("editor_templates/float-left.jpg", filename: "float-left.jpg", model: "cms/editor_template")
@@ -1147,6 +1150,26 @@ thumb_right.set(state: "public")
 editor_template_html = File.read("editor_templates/clear.html") rescue nil
 save_editor_template name: "回り込み解除", description: "回り込みを解除します",
   html: editor_template_html, order: 30, site_id: @site.id
+
+## -------------------------------------
+def save_theme_template(data)
+  puts data[:class_name]
+  cond = { site_id: data[:site_id], name: data[:class_name] }
+
+  item = Cms::ThemeTemplate.find_or_create_by(cond)
+  item.attributes = data
+  item.update
+
+  item
+end
+
+puts "# theme templates"
+save_theme_template class_name: "white", name: "白", order: 0, state: "public", site_id: @site.id,
+  high_contrast_mode: "disabled"
+save_theme_template class_name: "blue", name: "青", order: 10, state: "public", site_id: @site.id,
+  high_contrast_mode: "enabled", font_color: '#FFFFFF', background_color: '#0066CC'
+save_theme_template class_name: "black", name: "黒", order: 20, state: "public", site_id: @site.id,
+  high_contrast_mode: "disabled", css_path: "/css/black.css"
 
 puts "# board"
 def save_board_post(data)
