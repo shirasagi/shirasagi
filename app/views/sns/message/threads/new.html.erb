@@ -1,0 +1,6 @@
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("views.button.send"), class: 'btn-primary save' %>
+  <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+<% end %>
+
+<%= render file: "ss/crud/new" %>

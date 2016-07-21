@@ -16,4 +16,13 @@ class Sns::UserProfilesController < ApplicationController
     def set_item
       @item = @sns_user
     end
+
+  public
+    def show
+      render
+    end
+
+    #def new, create, edit, update, destroy;
+    #  raise '404'
+    #end
 end

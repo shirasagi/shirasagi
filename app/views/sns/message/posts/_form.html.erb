@@ -1,0 +1,17 @@
+<div class="sns-message-post-form">
+  <dl class="see sns-message-thread-members">
+    <dd class="wide">
+      <% if @thread.editable_members? %>
+      <div class="edit-members">
+        <%= link_to t("sns/message.links.edit_members"), edit_sns_message_thread_path(id: @thread.id), class: "btn" %>
+      </div>
+      <% end %>
+      <div class="members">
+        <%= @thread.name(@cur_user) %>
+      </div>
+    </dd>
+  </dl>
+  <dl class="see sns-message-thread-text">
+    <dd class="wide"><%= f.text_area :text, placeholder: @model.t(:text), required: true %></dd>
+  </dl>
+</div>

@@ -1,0 +1,37 @@
+<%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+<div class="main-box">
+  <%= error_messages_for :item %>
+  <%= render file: '_form', locals: { f: f } %>
+  <footer style="text-align: center">
+    <%= f.submit t("views.button.send"), class: 'btn-primary save' %>
+  </footer>
+</div>
+<% end %>
+
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items sns-message-posts">
+    <% @items.each do |item| %>
+    <li class="list-item">
+      <label class="check">
+        <% disabled = 'disabled' unless item.allowed?(:delete, @cur_user) %>
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" <%= disabled %> />
+      </label>
+      <div class="info">
+        <%= link_to tryb { item.user.long_name }, sns_user_profile_path(user: item.user), class: "title" %>
+
+        <div class="meta">
+          <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+        </div>
+      <div class="text">
+        <%=br item.text %>
+      </div>
+      </div>
+
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

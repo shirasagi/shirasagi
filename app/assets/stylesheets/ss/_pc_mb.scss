@@ -170,6 +170,27 @@ td {
     color: $white;
     @include mb { display: none; }
   }
+  .user-message {
+    float: left;
+    width: 50px;
+    height: 49px;
+    text-decoration: none;
+    text-align: center;
+    &:hover {
+      background-color: $gray3;
+    }
+    .unseen {
+      display: inline-block;
+      min-width: 18px;
+      margin: 16px 0 0;
+      padding: 0 2px;
+      border-radius: 4px;
+      background-color: #f00;
+      color: #fff;
+      font-size: 90%;
+      text-align: center;
+    }
+  }
   .user {
     float: right;
     a {
@@ -182,14 +203,12 @@ td {
       float: left;
       h2 {
         padding: 15px 40px 15px 20px;
-        border-left: $border-black2;
         background: url(/assets/img/arrow-usr.png) no-repeat 90% center;
         color: $white;
         @include mb { padding: 10px 40px 10px 20px; }
       }
       &:hover h2, &.active h2 {
         position: relative;
-        border-left: $border-black;
         background-color: $gray3;
         text-decoration: none;
       }
@@ -404,6 +423,12 @@ td {
   }
   .icon-search:hover:before {
     background-position: -32px -448px;
+  }
+  .icon-message:before {
+    background-position: left -480px;
+  }
+  .icon-message:hover:before {
+    background-position: -32px -480px;
   }
   @include mb {
     @include clear;
@@ -1118,8 +1143,8 @@ div.index {
   @include mb { margin: 0 10px 10px; }
   label {
     float: left;
+    width: 50px;
     margin-left: -15px;
-    margin-right: 5px;
     padding: 0 3px 16px 13px;
     input {
       margin: 2px 4px;

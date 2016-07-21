@@ -16,8 +16,12 @@
 </div>
 
 <footer class="send">
-  <%= f.submit t("views.button.save"), class: 'btn-primary save' %>
-  <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  <% if @crud_buttons %>
+    <% @crud_buttons.call f %>
+  <% else %>
+    <%= f.submit t("views.button.save"), class: 'btn-primary save' %>
+    <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  <% end %>
 </footer>
 
 <% end %>
