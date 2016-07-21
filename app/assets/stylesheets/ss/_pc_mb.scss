@@ -424,6 +424,12 @@ td {
   .icon-search:hover:before {
     background-position: -32px -448px;
   }
+  .icon-message:before {
+    background-position: left -480px;
+  }
+  .icon-message:hover:before {
+    background-position: -32px -480px;
+  }
   @include mb {
     @include clear;
     h2 {

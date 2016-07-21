@@ -14,14 +14,22 @@ describe Sns::Message::Post, type: :model, dbscope: :example do
   describe 'unseen' do
     let(:member_ids) { [user1.id, user2.id, user3.id] }
     let(:thread) { build(:sns_message_thread, member_ids: member_ids, text: 'text').recycle_create }
-    let(:post) { create :sns_message_post, thread_id: thread.id, text: 'text' }
+    let(:post) { create :sns_message_post, thread_id: thread.id, text: 'text', cur_user: user2 }
 
-    it do
-      expect(thread.unseen_member_ids).to eq [user2.id, user3.id]
+    it 'unseen_members' do
       expect(Sns::Message::Post.where(thread_id: thread.id).size).to eq 1
+      expect(thread.unseen_member_ids).to eq [user2.id, user3.id]
+      expect(thread.unseen?(user1)).to be_falsey
+      expect(thread.unseen?(user2)).to be_truthy
+      expect(thread.unseen?(user3)).to be_truthy
+    end
 
+    it 'new post' do
       created = thread.updated
       expect(post.thread.updated).to be > created
+      expect(post.thread.unseen?(user1)).to be_truthy
+      expect(post.thread.unseen?(user2)).to be_falsey
+      expect(post.thread.unseen?(user3)).to be_truthy
     end
   end
 end

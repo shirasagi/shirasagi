@@ -84,11 +84,11 @@ class Sns::Message::Thread
     thread = recycle_thread
     return false unless thread.save
 
-    post = Sns::Message::Post.new({
+    post = Sns::Message::Post.new(
       cur_user: @cur_user,
       thread_id: thread.id,
       text: text
-    })
+    )
     return false unless post.save
 
     thread

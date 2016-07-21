@@ -17,4 +17,10 @@ FactoryGirl.define do
     email "user3@example.jp"
     in_password "pass"
   end
+
+  factory :ss_user4, class: SS::User do
+    name "user4"
+    email "user4@example.jp"
+    in_password "pass"
+  end
 end
