@@ -42,15 +42,23 @@ class Sns::Message::Thread
   end
 
   def name(user)
-    if active_member_ids == [user.id]
-      mem = members
-      mem = mem.where(:_id.ne => user.id) if user
-      "(" + mem.map(&:name).join(', ') + ")"
+    if members_type == 'only'
+      other_members(user).map(&:name).join(', ')
+    elsif active_member_ids == [user.id]
+      "(" + other_members(user).map(&:name).join(', ') + ")"
     else
-      mem = active_members
-      mem = mem.where(:_id.ne => user.id) if user
-      mem.map(&:name).join(', ')
+      other_active_members(user).map(&:name).join(', ')
     end
+  end
+
+  def other_members(user = nil)
+    user ||= self.user
+    members.where(:_id.ne => user.id)
+  end
+
+  def other_active_members(user = nil)
+    user ||= self.user
+    active_members.where(:_id.ne => user.id)
   end
 
   def unseen?(user)
@@ -95,15 +103,19 @@ class Sns::Message::Thread
   end
 
   def recycle_thread
-    thread = self.class.all_in(member_ids: member_ids).first if member_ids.size == 2
+    if member_ids.size == 2
+      thread = self.class.all_in(member_ids: member_ids).where(members_type: 'only').first
+    end
     thread || self.class.new(attributes)
   end
 
   def leave_member(user)
     return destroy if active_member_ids.size <= 1
-    ids = active_member_ids
-    ids.delete(user.id)
-    self.set active_member_ids: ids
+    active_ids = active_member_ids
+    active_ids.delete(user.id)
+    unseen_ids = unseen_member_ids
+    unseen_ids.delete(user.id)
+    self.set active_member_ids: active_ids, unseen_member_ids: unseen_ids
     true
   end
 

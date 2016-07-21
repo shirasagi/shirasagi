@@ -1,6 +1,7 @@
 class Sns::Message::ThreadsController < ApplicationController
   include Sns::BaseFilter
   include Sns::CrudFilter
+  include Sns::Message::MailFilter
 
   model Sns::Message::Thread
 
@@ -33,8 +34,11 @@ class Sns::Message::ThreadsController < ApplicationController
     def create
       @item = @model.new get_params
 
-      thread = @item.recycle_create
-      @item = thread if thread
+      if thread = @item.recycle_create
+        @item = thread
+        post = thread.posts.reorder(created: -1).first
+        send_notification_mail(post)
+      end
 
       render_create thread
     end

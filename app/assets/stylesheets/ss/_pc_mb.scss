@@ -174,20 +174,24 @@ td {
     float: left;
     width: 50px;
     height: 49px;
+    background-image: url(/assets/img/ic-message-off.png);
+    background-repeat: no-repeat;
+    background-position: center center;
     text-decoration: none;
-    text-align: center;
+    text-align: right;
     &:hover {
+      background-image: url(/assets/img/ic-message-on.png);
       background-color: $gray3;
     }
     .unseen {
       display: inline-block;
-      min-width: 18px;
-      margin: 16px 0 0;
+      min-width: 16px;
+      margin: 8px 8px 0 0;
       padding: 0 2px;
       border-radius: 4px;
       background-color: #f00;
       color: #fff;
-      font-size: 90%;
+      font-size: 80%;
       text-align: center;
     }
   }

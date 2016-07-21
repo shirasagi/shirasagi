@@ -14,6 +14,14 @@ ja:
   sns/message:
     links:
       edit_members: 参加者を編集する
+    mail_templates:
+      notification:
+        subject: "%{user}さんからメッセージが届きました。"
+        text: |+
+          %{text}
+
+          下記のURLにアクセスして確認してください。
+          %{url}
 
   modules:
     sns: SNS
