@@ -2,7 +2,7 @@
 
 production: &production
   # Disable GWS.
-  disable: true
+  disable: false
 
   # StyleSheets on gws pages.
   stylesheets: ["gws/style"]
