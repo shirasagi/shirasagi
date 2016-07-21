@@ -43,14 +43,20 @@ class Sns::Message::Thread
 
   def name(user)
     if active_member_ids == [user.id]
-      mem = members
-      mem = mem.where(:_id.ne => user.id) if user
-      "(" + mem.map(&:name).join(', ') + ")"
+      "(" + other_members(user).map(&:name).join(', ') + ")"
     else
-      mem = active_members
-      mem = mem.where(:_id.ne => user.id) if user
-      mem.map(&:name).join(', ')
+      other_active_members(user).map(&:name).join(', ')
     end
+  end
+
+  def other_members(self_user = nil)
+    self_user ||= user
+    members.where(:_id.ne => user.id)
+  end
+
+  def other_active_members(self_user = nil)
+    self_user ||= user
+    active_members.where(:_id.ne => user.id)
   end
 
   def unseen?(user)
@@ -95,7 +101,9 @@ class Sns::Message::Thread
   end
 
   def recycle_thread
-    thread = self.class.all_in(member_ids: member_ids).first if member_ids.size == 2
+    if member_ids.size == 2
+      thread = self.class.all_in(member_ids: member_ids).where("member_ids.3" => { "$exists" => false }).first
+    end
     thread || self.class.new(attributes)
   end
 

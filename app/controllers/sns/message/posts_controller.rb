@@ -1,6 +1,7 @@
 class Sns::Message::PostsController < ApplicationController
   include Sns::BaseFilter
   include Sns::CrudFilter
+  include Sns::Message::MailFilter
 
   model Sns::Message::Post
 
@@ -36,6 +37,16 @@ class Sns::Message::PostsController < ApplicationController
         per(20)
 
       @thread.set_seen(@cur_user)
+    end
+
+    def create
+      @item = @model.new get_params
+      raise "403" unless @item.allowed?(:edit, @cur_user)
+
+      if result = @item.save
+        send_notification_mail(@item)
+      end
+      render_create result
     end
 
     def edit
