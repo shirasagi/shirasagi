@@ -9,7 +9,7 @@
     <table class="index ajax-selected">
       <thead><tr><th class="name"><%= SS::User.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
-        <% @item.members.each do |user| %>
+        <% @item.active_members.each do |user| %>
         <% next if user.id == @cur_user.id %>
         <tr data-id="<%= user.id %>">
           <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.long_name %></td>

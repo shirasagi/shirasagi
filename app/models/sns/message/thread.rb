@@ -42,20 +42,22 @@ class Sns::Message::Thread
   end
 
   def name(user)
-    if active_member_ids == [user.id]
+    if members_type == 'only'
+      other_members(user).map(&:name).join(', ')
+    elsif active_member_ids == [user.id]
       "(" + other_members(user).map(&:name).join(', ') + ")"
     else
       other_active_members(user).map(&:name).join(', ')
     end
   end
 
-  def other_members(self_user = nil)
-    self_user ||= user
+  def other_members(user = nil)
+    user ||= self.user
     members.where(:_id.ne => user.id)
   end
 
-  def other_active_members(self_user = nil)
-    self_user ||= user
+  def other_active_members(user = nil)
+    user ||= self.user
     active_members.where(:_id.ne => user.id)
   end
 
