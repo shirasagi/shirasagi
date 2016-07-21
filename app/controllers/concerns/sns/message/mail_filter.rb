@@ -7,6 +7,8 @@ module Sns::Message::MailFilter
       url = sns_message_thread_posts_url(thread_id: thread.id)
 
       thread.other_active_members(@cur_user).each do |user|
+        next if user.email.blank?
+
         send_params = {
           from: "shirasagi@#{request.domain}",
           to: user.email,
