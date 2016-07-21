@@ -714,7 +714,7 @@ page5.html = page5.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page5.update
 
 save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["general"].id
-save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id
+save_page route: "cms/page", filename: "index.html", name: "子育て支援サンプル", layout_id: layouts["top"].id
 
 ## -------------------------------------
 def save_editor_template(data)

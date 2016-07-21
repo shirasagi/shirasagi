@@ -18,7 +18,7 @@ class @Facility_Search
       overrided(id)
       google.maps.event.addListener Map.markers[id]["marker"], 'click', (event) ->
         $("#map-sidebar .column").removeClass("current")
-        dataID = Map.markers[id]["facility_id"]
+        dataID = Map.markers[id]["id"]
         column = $('#map-sidebar .column[data-id="' + dataID + '"]')
         column.addClass("current")
         slideSidebar(column)
@@ -31,7 +31,7 @@ class @Facility_Search
       dataID = parseInt($(this).closest(".column").attr("data-id"))
       $("#map-sidebar .column").removeClass("current")
       $.each Map.markers, (i, m) ->
-        if dataID == m["facility_id"]
+        if dataID == m["id"]
           if Map.openedInfo
             Map.openedInfo.close()
           m["window"].open(m["marker"].getMap(), m["marker"]);
@@ -60,7 +60,7 @@ class @Facility_Search
             visible = true
             return false
 
-        dataID = Map.markers[id]["facility_id"]
+        dataID = Map.markers[id]["id"]
         column = $('#map-sidebar .column[data-id="' + dataID + '"]')
         if visible
           Map.markers[id]["marker"].setVisible(true)
