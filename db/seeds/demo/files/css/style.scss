@@ -1812,8 +1812,10 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     }
   }
   #map-canvas {
+    position: relative;
     width: 100% !important;
     height: 500px !important;
+    overflow: hidden;
     margin-bottom: $item-margin;
     .maker-info {
       width: 300px;
