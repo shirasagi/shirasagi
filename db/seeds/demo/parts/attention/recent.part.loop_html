@@ -1,5 +1,5 @@
 <article class="#{class}">
   <header>
-    <h3><a href="#{url}">#{name}</a></h3>
+    <h3><a href="#{url}">#{index_name}</a></h3>
   </header>
 </article>

@@ -1,1 +1,1 @@
-<li><span><a href="#{url}"><img src="#{img.src}" /></a></span><time>#{date.long}</time><a href="#{url}">#{name}</a><div>#{contributor}</div></li>
+<li><span><a href="#{url}"><img src="#{img.src}" /></a></span><time>#{date.long}</time><a href="#{url}">#{index_name}</a><div>#{contributor}</div></li>

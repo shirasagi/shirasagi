@@ -1,1 +1,1 @@
-<li class="#{class}"><span class="title"><a class="heightLine-group1" href="#{url}">#{name}</a></span></li>
+<li class="#{class}"><span class="title"><a class="heightLine-group1" href="#{url}">#{index_name}</a></span></li>

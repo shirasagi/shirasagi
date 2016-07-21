@@ -1,6 +1,6 @@
 <article class="#{class}">
   <header>
     <time>#{date.long}</time>
-    <h3><a href="#{url}">#{name}</a></h3>
+    <h3><a href="#{url}">#{index_name}</a></h3>
   </header>
 </article>

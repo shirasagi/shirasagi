@@ -1,1 +1,1 @@
-<li class="#{current}"><a href="#{url}">#{name}</a></li>
+<li class="#{current}"><a href="#{url}">#{index_name}</a></li>
