@@ -2738,11 +2738,6 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     margin-right: 20px;
   }
 }
-#map-canvas {
-  .ol-unselectable {
-    height: 70% !important;
-  }
-}
 // -----------------------------------------------------------------------------
 @include mb {
   #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
