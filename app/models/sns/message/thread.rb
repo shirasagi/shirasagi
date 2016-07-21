@@ -102,7 +102,7 @@ class Sns::Message::Thread
 
   def recycle_thread
     if member_ids.size == 2
-      thread = self.class.all_in(member_ids: member_ids).where("member_ids.3" => { "$exists" => false }).first
+      thread = self.class.all_in(member_ids: member_ids).where(members_type: 'only').first
     end
     thread || self.class.new(attributes)
   end
