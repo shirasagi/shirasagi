@@ -1812,8 +1812,10 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     }
   }
   #map-canvas {
+    position: relative;
     width: 100% !important;
     height: 500px !important;
+    overflow: hidden;
     margin-bottom: $item-margin;
     .maker-info {
       width: 300px;
@@ -2736,11 +2738,6 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   .poster span {
     display: inline-block;
     margin-right: 20px;
-  }
-}
-#map-canvas {
-  .ol-unselectable {
-    height: 70% !important;
   }
 }
 // -----------------------------------------------------------------------------
