@@ -412,7 +412,7 @@ class @Syntax_Checker
 
   @correctDateFormat: (html)->
     html = html.replace /([^\d-])(\d{4})[ \　\.\-\/](\d{1,2})[ \　\.\-\/](\d{1,2})([^\d-])/g, (date,head,y,m,d,tail)->
-      if Syntax_Checker.isValidDate(new Date([y,m,d].join(" ")))
+      if Syntax_Checker.isValidDate(new Date([y,m,d].join("/")))
         head +
         y + "<%= I18n.t("datetime.prompts.year") %>" +
         m + "<%= I18n.t("datetime.prompts.month") %>" +
