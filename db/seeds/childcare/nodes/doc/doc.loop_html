@@ -1,1 +1,1 @@
-<li><time>#{date.long}</time><span class="title"><a href="#{url}">#{name}</a></span></li>
+<li><time>#{date.long}</time><span class="title"><a href="#{url}">#{index_name}</a></span></li>

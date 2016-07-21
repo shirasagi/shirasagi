@@ -1,1 +1,1 @@
-<li><a href="#{url}"><img src="#{img.src}" /><br />#{name}</a></li>
+<li><a href="#{url}"><img src="#{img.src}" /><br />#{index_name}</a></li>

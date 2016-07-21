@@ -1,1 +1,1 @@
-<div class="cms-pages #{current}"><header><h2><a href="#{url}">#{name}</a></h2></header></div>
+<div class="cms-pages #{current}"><header><h2><a href="#{url}">#{index_name}</a></h2></header></div>

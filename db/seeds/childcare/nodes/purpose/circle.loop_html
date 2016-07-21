@@ -1,1 +1,1 @@
-<li><span class="title"><a href="#{url}">#{name}</a></span></li>
+<li><span class="title"><a href="#{url}">#{index_name}</a></span></li>

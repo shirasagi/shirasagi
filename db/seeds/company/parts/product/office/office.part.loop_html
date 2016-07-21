@@ -1,6 +1,6 @@
 <article class="item-#{class}">
   <header>
-    <h2><a href="#{url}">#{name}</a></h2>
+    <h2><a href="#{url}">#{index_name}</a></h2>
   </header>
   <p>#{summary}</p>
 </article>
