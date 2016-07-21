@@ -28,6 +28,10 @@
 .see.sns-message-thread-members {
   .index {
     margin-top: 5px;
+    .disabled {
+      border-color: #ccc;
+      color: #ccc;
+    }
   }
 }
 .see.sns-message-thread-text {

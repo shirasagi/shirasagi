@@ -34,7 +34,7 @@ ja:
         image: 画像
         download: ダウンロード
       sns/message/thread:
-        member_ids: 宛先
+        member_ids: 参加者
         active_member_ids: 参加者
         unseen_member_ids: 未読ユーザー
         name: スレッド名
