@@ -111,9 +111,11 @@ class Sns::Message::Thread
 
   def leave_member(user)
     return destroy if active_member_ids.size <= 1
-    ids = active_member_ids
-    ids.delete(user.id)
-    self.set active_member_ids: ids
+    active_ids = active_member_ids
+    active_ids.delete(user.id)
+    unseen_ids = unseen_member_ids
+    unseen_ids.delete(user.id)
+    self.set active_member_ids: active_ids, unseen_member_ids: unseen_ids
     true
   end
 
