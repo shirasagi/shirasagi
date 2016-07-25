@@ -7,9 +7,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   private
     def set_params
-      if @opts
-        @email = @opts[:email]
-      end
+      #
     end
 
   public

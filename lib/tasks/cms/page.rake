@@ -40,6 +40,6 @@ namespace :cms do
   end
 
   task :check_links => :environment do
-    with_node(Cms::CheckLinksJob)
+    with_node(Cms::CheckLinksJob, email: ENV["email"])
   end
 end
