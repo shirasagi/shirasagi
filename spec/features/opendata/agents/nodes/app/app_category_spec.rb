@@ -47,8 +47,8 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
     appfile
   end
 
-  let(:index_path) { "#{node.url}/kurashi" }
-  let(:rss_path) { "#{node.url}/kurashi/rss.xml" }
+  let(:index_path) { "#{node.url}kurashi" }
+  let(:rss_path) { "#{node.url}kurashi/rss.xml" }
 
   it "#index" do
     visit index_path
@@ -59,13 +59,13 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
     expect(page).to have_css(".opendata-tabs .names a.tab-popular", text: "人気順")
     expect(page).to have_css(".opendata-tabs .names a.tab-attention", text: "注目順")
 
-    expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-released h2", text: "新着順", visible: false)
     expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: app.name)
     expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: app.point.to_s)
-    expect(page).to have_css(".opendata-tabs .tab-popular h1", text: "人気順", visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-popular h2", text: "人気順", visible: false)
     expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: app.name, visible: false)
     expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: app.point.to_s, visible: false)
-    expect(page).to have_css(".opendata-tabs .tab-attention h1", text: "注目順", visible: false)
+    expect(page).to have_css(".opendata-tabs .tab-attention h2", text: "注目順", visible: false)
     expect(page).to have_css(".opendata-tabs .tab-attention .pages h2 a", text: app.name, visible: false)
     expect(page).to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: app.point.to_s, visible: false)
     expect(page).to have_css(".areas .name", text: node_area.name)
@@ -92,13 +92,13 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
 
     it do
       visit index_path
-      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released h2", text: "新着順", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: app.name)
       expect(page).not_to have_css(".opendata-tabs .tab-released .pages h2 .point", text: app.point.to_s, visible: false)
-      expect(page).to have_css(".opendata-tabs .tab-popular h1", text: "人気順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-popular h2", text: "人気順", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-popular .pages h2 a", text: app.name, visible: false)
       expect(page).not_to have_css(".opendata-tabs .tab-popular .pages h2 .point", text: app.point.to_s, visible: false)
-      expect(page).to have_css(".opendata-tabs .tab-attention h1", text: "注目順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-attention h2", text: "注目順", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-attention .pages h2 a", text: app.name, visible: false)
       expect(page).not_to have_css(".opendata-tabs .tab-attention .pages h2 .point", text: app.point.to_s, visible: false)
     end
@@ -117,7 +117,7 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
       visit index_path
       expect(page).not_to have_css(".opendata-tabs .names", visible: false)
 
-      expect(page).to have_css(".opendata-tabs .tab-released h1", text: "新着順", visible: false)
+      expect(page).to have_css(".opendata-tabs .tab-released h2", text: "新着順", visible: false)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 a", text: app.name)
       expect(page).to have_css(".opendata-tabs .tab-released .pages h2 .point", text: app.point.to_s, visible: false)
       expect(page).not_to have_css(".opendata-tabs .tab-popular", visible: false)

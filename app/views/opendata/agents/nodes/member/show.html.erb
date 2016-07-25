@@ -11,7 +11,7 @@ $ ->
 <div class="contents">
   <div class="member-tabs tabs"  id="member-tabs-<%= @cur_node.id %>">
     <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
-      <header><h1><%= I18n.t("opendata.labels.dataset") %></h1></header>
+      <header><h2><%= I18n.t("opendata.labels.dataset") %></h2></header>
         <div class="pages">
           <% @datasets.each do |item| %>
             <article>
@@ -31,7 +31,7 @@ $ ->
         </nav>
     </article>
     <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
-      <header><h1><%= I18n.t("opendata.labels.app") %></h1></header>
+      <header><h2><%= I18n.t("opendata.labels.app") %></h2></header>
       <section class="apps" id="apps">
         <div class="pages">
           <% @apps.each do |item| %>
@@ -53,7 +53,7 @@ $ ->
       </section>
     </article>
     <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
-      <header><h1><%= I18n.t("opendata.labels.idea") %></h1></header>
+      <header><h2><%= I18n.t("opendata.labels.idea") %></h2></header>
       <section class="ideas" id="ideas">
         <div class="pages">
           <% @ideas.each do |item| %>

@@ -17,7 +17,7 @@
 <div class="opendata-tabs tabs" id="opendata-tabs-<%= @cur_node.id %>">
   <% @tabs.each_with_index do |tab, idx| %>
   <article class="tab tab-<%= tab[:id] %>" id="cms-tab-<%= @cur_node.id %>-<%= idx %>" data-class="tab-<%= tab[:id] %>">
-    <header><h1><%= tab[:name] %></h1></header>
+    <header><h2><%= tab[:name] %></h2></header>
     <div class="pages">
       <% tab[:pages].each do |item| %>
       <article>

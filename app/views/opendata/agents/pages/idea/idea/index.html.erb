@@ -115,7 +115,7 @@ categories = [
 <% if @tab_count > 0 %>
 <div class="idea-tabs tabs" id="idea-tabs-<%= @cur_node.id %>">
   <article class="tab comment" id="cms-tab-<%= @cur_node.id %>-0">
-    <header><h1><%= I18n.t("opendata.labels.comment") %></h1></header>
+    <header><h2><%= I18n.t("opendata.labels.comment") %></h2></header>
     <div class="pages">
       <div class="info-wrap">
         <div id="tab-comment">
@@ -128,7 +128,7 @@ categories = [
   </article>
   <% if dataset_enabled? %>
   <article class="tab related-dataset" id="cms-tab-<%= @cur_node.id %>-1">
-    <header><h1><%= I18n.t("opendata.labels.relation_dataset") %></h1></header>
+    <header><h2><%= I18n.t("opendata.labels.relation_dataset") %></h2></header>
     <div class="pages">
       <div id="tab-dataset">
         <header><h1><%= I18n.t("opendata.labels.relation_dataset") %></h1></header>
@@ -140,7 +140,7 @@ categories = [
   <% end %>
   <% if app_enabled? %>
   <article class="tab related-app" id="cms-tab-<%= @cur_node.id %>-2">
-    <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
+    <header><h2><%= I18n.t("opendata.labels.relation_app") %></h2></header>
     <div class="pages">
       <div id="tab-app">
         <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
