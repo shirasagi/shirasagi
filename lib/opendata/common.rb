@@ -16,10 +16,10 @@ module Opendata::Common
   class << self
     public
       def limit_aggregation(model, pipes, limit)
-        return model.collection.aggregate(pipes) unless limit
+        return model.collection.aggregate(pipes).to_a unless limit
 
         pipes << { "$limit" => limit + 1 }
-        aggr = model.collection.aggregate(pipes)
+        aggr = model.collection.aggregate(pipes).to_a
 
         def aggr.popped=(bool)
           @popped = bool
@@ -64,7 +64,7 @@ module Opendata::Common
         pipes << { "$group" => { _id: "$tags", count: { "$sum" =>  1 } }}
         pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
         pipes << { "$sort" => { name: 1 } }
-        model.collection.aggregate(pipes)
+        model.collection.aggregate(pipes).to_a
       end
 
       def get_tag(model, tag_name)
@@ -76,7 +76,7 @@ module Opendata::Common
         pipes << { "$project" => { _id: 0, name: "$_id", count: 1 } }
         pipes << { "$match" => { name: tag_name }}
         pipes << { "$sort" => { name: 1 } }
-        model.collection.aggregate(pipes)
+        model.collection.aggregate(pipes).to_a
       end
 
       def get_aggregate_resources(model, name, opts = {})
