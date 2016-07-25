@@ -11,7 +11,7 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
 
       @cur_node.name = @item.name
 
-      Opendata::Idea.site(@cur_site).search(site: @cur_site, category_id: @item.id).public
+      Opendata::Idea.site(@cur_site).search(site: @cur_site, category_id: @item.id).and_public
     end
 
     def node_url

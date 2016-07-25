@@ -27,7 +27,7 @@ class Opendata::License
 
   class << self
     public
-      def public
+      def and_public
         where(state: "public")
       end
 

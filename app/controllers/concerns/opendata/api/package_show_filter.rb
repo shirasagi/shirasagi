@@ -32,7 +32,7 @@ module Opendata::Api::PackageShowFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      datasets = Opendata::Dataset.site(@cur_site).public
+      datasets = Opendata::Dataset.site(@cur_site).and_public
       datasets = datasets.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
       if datasets.count > 0

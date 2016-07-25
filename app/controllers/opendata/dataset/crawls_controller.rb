@@ -8,7 +8,7 @@ class Opendata::Dataset::CrawlsController < ApplicationController
 
   public
   def index
-    @datasets = Opendata::Dataset.site(@cur_site).public.order_by(name: 1)
+    @datasets = Opendata::Dataset.site(@cur_site).and_public.order_by(name: 1)
     @items = []
     package_list = []
     @datasets.each do |dataset|

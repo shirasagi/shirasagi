@@ -31,12 +31,12 @@ module Opendata::Api::GroupShowFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      groups = Opendata::DatasetGroup.site(@cur_site).public
+      groups = Opendata::DatasetGroup.site(@cur_site).and_public
       groups = groups.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
 
       if groups.count > 0
         group = convert_dataset_group(groups[0][:id])
-        datasets = Opendata::Dataset.site(@cur_site).public.any_in dataset_group_ids: group[:id]
+        datasets = Opendata::Dataset.site(@cur_site).and_public.any_in dataset_group_ids: group[:id]
         group[:package_count] = datasets.count
         if include_datasets =~ /^true$/i
           group[:packages] = convert_packages(datasets)

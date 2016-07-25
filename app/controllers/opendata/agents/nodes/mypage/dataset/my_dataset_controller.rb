@@ -13,7 +13,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
 
   protected
     def dataset_node
-      @dataset_node ||= Opendata::Node::Dataset.site(@cur_site).public.first
+      @dataset_node ||= Opendata::Node::Dataset.site(@cur_site).and_public.first
     end
 
     def set_model

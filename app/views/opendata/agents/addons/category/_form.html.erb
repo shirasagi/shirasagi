@@ -16,7 +16,7 @@ end
 
 def cate_form(item)
   item = item.becomes_with_route
-  children = item.children.public.allow(:read, @cur_user).sort(order: 1)
+  children = item.children.and_public.allow(:read, @cur_user).sort(order: 1)
   if children.size > 0
     cc = children.map { |c| c.children.size }.max != 0
     h = %(<label class="parent">)

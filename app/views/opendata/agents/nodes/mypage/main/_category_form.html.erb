@@ -1,14 +1,14 @@
 <%
 categories ||= begin
-  node = model.site(@cur_site).public.first
+  node = model.site(@cur_site).and_public.first
   ret = node.st_categories.presence || node.default_st_categories
-  ret = ret.first.children.public.sort(order: 1) if ret.one?
+  ret = ret.first.children.and_public.sort(order: 1) if ret.one?
   ret
 end
 
 def cate_form(f, item)
   item = item.becomes_with_route
-  children = item.children.public.sort(order: 1)
+  children = item.children.and_public.sort(order: 1)
   if children.size > 0
     cc = children.map { |c| c.children.size }.max != 0
     h = %(<label class="parent category">)

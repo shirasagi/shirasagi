@@ -13,7 +13,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   private
     def set_dataset
       @dataset_path = Opendata::Dataset.to_dataset_path(@cur_path)
-      @dataset = Opendata::Dataset.site(@cur_site).public.
+      @dataset = Opendata::Dataset.site(@cur_site).and_public.
         filename(@dataset_path).
         first
 
@@ -23,7 +23,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     def set_apps
       @dataset_app_path = Opendata::Dataset.to_dataset_path(@cur_path)
 
-      @dataset_app = Opendata::Dataset.site(@cur_site).public.
+      @dataset_app = Opendata::Dataset.site(@cur_site).and_public.
         filename(@dataset_app_path).
         first
 
@@ -36,7 +36,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     def set_ideas
       @dataset_idea_path = Opendata::Dataset.to_dataset_path(@cur_path)
 
-      @dataset_idea = Opendata::Dataset.site(@cur_site).public.
+      @dataset_idea = Opendata::Dataset.site(@cur_site).and_public.
         filename(@dataset_idea_path).
         first
 
@@ -48,7 +48,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
 
   public
     def pages
-      Opendata::Dataset.site(@cur_site).public
+      Opendata::Dataset.site(@cur_site).and_public
     end
 
     def index

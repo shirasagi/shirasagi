@@ -13,7 +13,7 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
 
   protected
     def idea_node
-      @idea_node ||= Opendata::Node::Idea.site(@cur_site).public.first
+      @idea_node ||= Opendata::Node::Idea.site(@cur_site).and_public.first
     end
 
     def set_model

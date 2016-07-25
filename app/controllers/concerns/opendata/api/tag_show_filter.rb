@@ -13,7 +13,7 @@ module Opendata::Api::TagShowFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      datasets = Opendata::Dataset.site(@cur_site).public.search({tag: id})
+      datasets = Opendata::Dataset.site(@cur_site).and_public.search({tag: id})
 
       if datasets.count > 0
         res = {help: help, success: true, result: convert_packages(datasets)}

@@ -237,11 +237,11 @@ class Opendata::Dataset
         return criteria if params[:category_id].blank?
 
         category_id = params[:category_id].to_i
-        category_node = Cms::Node.site(params[:site]).public.where(id: category_id).first
+        category_node = Cms::Node.site(params[:site]).and_public.where(id: category_id).first
         return criteria if category_node.blank?
 
         category_ids = [ category_id ]
-        category_node.all_children.public.each do |child|
+        category_node.all_children.and_public.each do |child|
           category_ids << child.id
         end
 
@@ -252,7 +252,7 @@ class Opendata::Dataset
       def search_dataset_group(params, criteria)
         if params[:dataset_group].present?
           site = params[:site]
-          groups = Opendata::DatasetGroup.site(site).public.search_text(params[:dataset_group])
+          groups = Opendata::DatasetGroup.site(site).and_public.search_text(params[:dataset_group])
           groups = groups.pluck(:id).presence || [-1]
           operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
           criteria = criteria.where(operator => [ dataset_group_ids: { "$in" => groups } ])

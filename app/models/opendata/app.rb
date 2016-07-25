@@ -222,11 +222,11 @@ class Opendata::App
         return criteria if params[:category_id].blank?
 
         category_id = params[:category_id].to_i
-        category_node = Cms::Node.site(params[:site]).public.where(id: category_id).first
+        category_node = Cms::Node.site(params[:site]).and_public.where(id: category_id).first
         return criteria if category_node.blank?
 
         category_ids = [ category_id ]
-        category_node.all_children.public.each do |child|
+        category_node.all_children.and_public.each do |child|
           category_ids << child.id
         end
 

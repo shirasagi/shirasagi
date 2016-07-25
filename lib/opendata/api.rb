@@ -165,7 +165,7 @@ module Opendata::Api
     def convert_dataset_group(group_id)
       package_group = {}
 
-      dataset_group = Opendata::DatasetGroup.site(@cur_site).public.where(id: group_id).first
+      dataset_group = Opendata::DatasetGroup.site(@cur_site).and_public.where(id: group_id).first
 
       if dataset_group
         package_group[:display_name] = dataset_group[:name]

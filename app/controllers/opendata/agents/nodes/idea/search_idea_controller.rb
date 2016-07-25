@@ -20,7 +20,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
         sort = { released: -1 }
       end
 
-      @model.site(@cur_site).public.
+      @model.site(@cur_site).and_public.
         search(focus).
         order_by(sort)
     end
@@ -31,7 +31,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
 
   public
     def index
-      @cur_categories = st_categories.map { |cate| cate.children.public.sort(order: 1).to_a }.flatten
+      @cur_categories = st_categories.map { |cate| cate.children.and_public.sort(order: 1).to_a }.flatten
       @items = pages.page(params[:page]).per(@cur_node.limit || 20)
     end
 

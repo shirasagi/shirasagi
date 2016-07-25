@@ -90,7 +90,7 @@ module Opendata::Api::ResourceSearchFilter
     def resource_search
       @result_list = []
 
-      datasets = Opendata::Dataset.site(@cur_site).public
+      datasets = Opendata::Dataset.site(@cur_site).and_public
       datasets.each do |dataset|
         resources = dataset.resources
         resources.each do |resource|

@@ -13,7 +13,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyAppController < ApplicationControl
 
   protected
     def app_node
-      @app_node ||= Opendata::Node::App.site(@cur_site).public.first
+      @app_node ||= Opendata::Node::App.site(@cur_site).and_public.first
     end
 
     def set_model

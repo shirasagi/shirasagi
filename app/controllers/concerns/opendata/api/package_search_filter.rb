@@ -36,7 +36,7 @@ module Opendata::Api::PackageSearchFilter
         render json: {help: help, success: false, error: error} and return
       end
 
-      datasets = Opendata::Dataset.site(@cur_site).public.search({keyword: URI.decode(query)})
+      datasets = Opendata::Dataset.site(@cur_site).and_public.search({keyword: URI.decode(query)})
 
       all_count = datasets.count
       datasets = datasets.skip(start) if start

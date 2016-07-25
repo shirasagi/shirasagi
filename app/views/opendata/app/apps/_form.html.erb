@@ -1,5 +1,5 @@
 <%
-licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
+licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c| [c.name, c.id] }
 %>
 
 <dl class="see">

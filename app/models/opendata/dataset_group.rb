@@ -25,7 +25,7 @@ class Opendata::DatasetGroup
 
   class << self
     public
-      def public
+      def and_public
         where(state: "public")
       end
 

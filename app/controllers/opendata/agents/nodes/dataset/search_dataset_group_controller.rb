@@ -4,7 +4,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetGroupController < Applicati
 
   public
     def index
-      @items = Opendata::DatasetGroup.site(@cur_site).public.
+      @items = Opendata::DatasetGroup.site(@cur_site).and_public.
         search(params[:s]).
         order_by(name: 1).
         page(params[:page]).

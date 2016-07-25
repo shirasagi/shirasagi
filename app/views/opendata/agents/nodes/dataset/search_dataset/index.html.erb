@@ -4,7 +4,7 @@ def transform_category(categories, indent = 0)
   ret = []
   categories.each do |m|
     ret << ["#{"　　" * indent}#{indent_chars[indent]} #{m.name}", m.id]
-    children = m.children.public.sort(order: 1)
+    children = m.children.and_public.sort(order: 1)
     cc = children.count
     if cc > 0
       ret += transform_category(children, indent + 1)
@@ -15,7 +15,7 @@ end
 
 areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
 categories = transform_category(@cur_categories)
-licenses = Opendata::License.site(@cur_site).public.sort(order: 1).map { |c| [c.name, c.id] }
+licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c| [c.name, c.id] }
 @s = OpenStruct.new params[:s]
 
 %>

@@ -16,7 +16,7 @@ module Opendata::DatasetChildNode
           end
           node = node.parent
         end
-        node ||= Opendata::Node::Dataset.site(site).public.first
+        node ||= Opendata::Node::Dataset.site(site).and_public.first
         node
       end
     end
@@ -26,11 +26,11 @@ module Opendata::DatasetChildNode
       category_path = category_path[0..-2] if category_path.end_with?('/')
       category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
 
-      node = Cms::Node.site(@cur_site || self.site).public.where(filename: category_path).first
+      node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
       return node.becomes_with_route if node
 
       (parent_dataset_node.st_categories || parent_dataset_node.default_st_categories || []).each do |cate|
-        node = Cms::Node.site(@cur_site || self.site).public.where(filename: "#{cate.filename}/#{category_path}").first
+        node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: "#{cate.filename}/#{category_path}").first
         return node.becomes_with_route if node
       end
 

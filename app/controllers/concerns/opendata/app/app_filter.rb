@@ -15,7 +15,7 @@ module Opendata::App::AppFilter
       counts = pages.aggregate_array(:area_ids, limit: limit).map { |c| [c["id"], c["count"]] }.to_h
 
       areas = []
-      Opendata::Node::Area.site(@cur_site).public.order_by(order: 1).map do |item|
+      Opendata::Node::Area.site(@cur_site).and_public.order_by(order: 1).map do |item|
         next unless counts[item.id]
         item.count = counts[item.id]
         areas << item

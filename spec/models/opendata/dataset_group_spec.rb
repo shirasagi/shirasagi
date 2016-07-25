@@ -7,7 +7,7 @@ describe Opendata::DatasetGroup, dbscope: :example do
   end
 
   describe ".public" do
-    it { expect(described_class.public.selector.to_h).to include("state" => "public") }
+    it { expect(described_class.and_public.selector.to_h).to include("state" => "public") }
   end
 
   describe ".search" do

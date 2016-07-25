@@ -1,7 +1,7 @@
 <%
 
 @f = f
-categories = Opendata::Node::Area.site(@cur_site).public.where(depth: 2).allow(:read, @cur_user).sort(order: 1)
+categories = Opendata::Node::Area.site(@cur_site).and_public.where(depth: 2).allow(:read, @cur_user).sort(order: 1)
 disallowed_categories = @item.areas - categories.to_a
 
 def cate_form(item)

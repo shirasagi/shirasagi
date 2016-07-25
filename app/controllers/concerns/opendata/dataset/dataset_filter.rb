@@ -16,7 +16,7 @@ module Opendata::Dataset::DatasetFilter
       counts = pages.aggregate_array(:area_ids, limit: limit).map { |c| [c["id"], c["count"]] }.to_h
 
       areas = []
-      Opendata::Node::Area.site(@cur_site).public.order_by(order: 1).map do |item|
+      Opendata::Node::Area.site(@cur_site).and_public.order_by(order: 1).map do |item|
         next unless counts[item.id]
         item.count = counts[item.id]
         areas << item
@@ -36,7 +36,7 @@ module Opendata::Dataset::DatasetFilter
       licenses = pages.aggregate_resources :license_id, limit: limit
 
       licenses.each_with_index do |data, idx|
-        if rel = Opendata::License.site(@cur_site).public.where(id: data["id"]).first
+        if rel = Opendata::License.site(@cur_site).and_public.where(id: data["id"]).first
           licenses[idx] = { "id" => rel.id, "name" => rel.name, "count" => data["count"] }
         else
           licenses[idx] = nil

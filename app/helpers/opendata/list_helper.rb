@@ -38,7 +38,7 @@ module Opendata::ListHelper
     cur_item = @cur_part || @cur_node
     cur_item.cur_date = @cur_date
 
-    dataset_node = Opendata::Node::Dataset.site(@cur_site).public.first
+    dataset_node = Opendata::Node::Dataset.site(@cur_site).and_public.first
     show_point = dataset_node.show_point?
 
     h  = []
@@ -107,7 +107,7 @@ module Opendata::ListHelper
     cur_item = @cur_part || @cur_node
     cur_item.cur_date = @cur_date
 
-    app_node = Opendata::Node::App.site(@cur_site).public.first
+    app_node = Opendata::Node::App.site(@cur_site).and_public.first
     show_point = app_node.show_point?
 
     h  = []
@@ -162,7 +162,7 @@ module Opendata::ListHelper
     cur_item = @cur_part || @cur_node
     cur_item.cur_date = @cur_date
 
-    idea_node = Opendata::Node::Idea.site(@cur_site).public.first
+    idea_node = Opendata::Node::Idea.site(@cur_site).and_public.first
     show_point = idea_node.show_point?
 
     h  = []
