@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "csv"
 
 describe "Article::PagesController", type: :request, dbscope: :example do
   let!(:group) { cms_group }
@@ -7,6 +8,8 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   let(:auth_token_path) { sns_auth_token_path(format: :json) }
   let(:index_path) { article_pages_path(site.id, node, format: :json) }
   let!(:admin_user) { cms_user }
+
+  let(:download_pages_path) { download_article_pages_path(site: site.id, cid: node.id) }
 
   context "admin user" do
     before do
@@ -132,6 +135,72 @@ describe "Article::PagesController", type: :request, dbscope: :example do
 
           item.reload
           expect(item.lock_owner_id).to be_nil
+        end
+      end
+    end
+
+    context "article download" do
+      before do
+        #create(:article_page, cur_site: site, cur_node: node, name: 'test1_article')
+        create(:cms_node, cur_site: site, name: "くらしのガイド", filename: "filename")
+        create(:cms_layout, cur_site: site, name: "記事レイアウト")
+        create(:ss_group, name: "シラサギ市/企画政策部/政策課")
+        create(:article_page, cur_site: site, cur_node: node,
+               name: 'test1_article',
+               filename: 'test1_filename.html',
+               layout: 1,
+               order: 0,
+               keywords: 'test1_keywords',
+               description: 'test1_description',
+               summary_html: 'test1_summary_html',
+               html: 'test1_html',
+               category_ids: [2],
+               parent_crumb_urls: 'test1_parent_crumb_urls',
+               event_name: 'test1_event_name',
+               event_dates: "2016/7/6",
+               contact_state: 'show',
+               contact_group: 2,
+               contact_charge: 'test1_contact_charge',
+               contact_tel: 'test1_contact_tel',
+               contact_fax: 'test1_contact_fax',
+               contact_email: 'test1_contact_email',
+               released: "2016/7/6 0:0:0",
+               release_date: "2016/7/6 1:1:1",
+               close_date: "2016/7/6 2:2:2",
+               group_ids: [2],
+               permission_level: 1
+        )
+      end
+
+      describe "GET /.s{site}/article{cid}/pages/download?ids[]=1" do
+        it do
+          params = { 'ids[]' => 1 }
+          get download_pages_path, params
+          expect(response.status).to eq 200
+
+          expect(response.body).to include "test1_article"
+          expect(response.body).to include "test1_filename.html"
+          expect(response.body).to include "記事レイアウト".encode!("Windows-31J")
+          expect(response.body).to include "記事レイアウト,0".encode!("Windows-31J")
+          expect(response.body).to include "test1_keywords"
+          expect(response.body).to include "test1_description"
+          expect(response.body).to include "test1_summary_html"
+          expect(response.body).to include "test1_html"
+          expect(response.body).to include "くらしのガイド".encode!("Windows-31J")
+          expect(response.body).to include "test1_parent_crumb_urls"
+          expect(response.body).to include "test1_event_name"
+          expect(response.body).to include "2016/07/06"
+          expect(response.body).to include "表示".encode!("Windows-31J")
+          expect(response.body).to include "表示,シラサギ市/企画政策部/政策課".encode!("Windows-31J")
+          expect(response.body).to include "test1_contact_charge"
+          expect(response.body).to include "test1_contact_tel"
+          expect(response.body).to include "test1_contact_fax"
+          expect(response.body).to include "test1_contact_email"
+          expect(response.body).to include "2016-07-06T00:00:00+09:00"
+          expect(response.body).to include "2016-07-06T01:01:01+09:00"
+          expect(response.body).to include "2016-07-06T02:02:02+09:00"
+          expect(response.body).to include "09:00,シラサギ市/企画政策部/政策課".encode!("Windows-31J")
+          expect(response.body).to include "政策課,1".encode!("Windows-31J")
         end
       end
     end

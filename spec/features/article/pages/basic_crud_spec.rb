@@ -128,35 +128,107 @@ describe "article_pages", dbscope: :example do
     feature "#download", js: true do
       background do
         create :article_page, cur_site: site, cur_node: node
+        create :article_page, cur_site: site, cur_node: node
       end
 
-      scenario "button click" do
+      scenario "click on download button without check in checkbox" do
         visit index_path
         expect(status_code).to eq 200
 
         click_button I18n.t("views.links.download")
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
+        expect(page.response_headers['Content-Disposition']).to match(/filename="article_pages_[\d]+\.csv"$/)
+      end
 
-        csv_lines = CSV.parse(page.html.encode("UTF-8"))
-        expect(csv_lines.length).to eq 1
-        expect(csv_lines[0]).to eq %w(id name file_name layout order keywords description summary_html html categories parent_crumb_urls event_name event_dates contact_state contact_group contact_charge contact_tel contact_fax contact_email released release_date close_date groups permission_level).map { |k| Article::Page.t k.to_sym }
-#        expect(csv_lines[1]).to include(logs[0].class_name)
-#        expect(csv_lines[1]).to include(logs[0].start_label)
-#        expect(csv_lines[1]).to include(I18n.t(logs[0].state, scope: "job.state"))
+      scenario "click on download button to check in checkbox" do
+        visit index_path
+        expect(status_code).to eq 200
 
+        all(".check")[1].click
+        expect(page).to have_checked_field 'ids[]'
 
+        click_button I18n.t("views.links.download")
+        expect(status_code).to eq 200
+        expect(current_path).to eq index_path
+        expect(page.response_headers['Content-Disposition']).to match(/filename="article_pages_[\d]+\.csv"$/)
       end
     end
 
     feature "#import", js: true do
-      scenario "button click" do
-        visit index_path
-        expect(status_code).to eq(200).or eq(304)
 
-        click_button I18n.t("views.links.import")
-        expect(status_code).to eq(200)
-        expect(current_path).to eq import_path
+      feature "import success" do
+        background do
+          create :cms_node, cur_site: site, name: "くらしのガイド"
+          create :cms_layout, cur_site: site, name: "記事レイアウト"
+          create :ss_group, name: "シラサギ市/企画政策部/政策課"
+          create :article_page, cur_site: site, cur_node: node
+          create :article_page, cur_site: site, cur_node: node
+        end
+
+        scenario "exec import process" do
+          visit index_path
+          expect(status_code).to eq(200).or eq(304)
+
+          click_button I18n.t("views.links.import")
+          expect(status_code).to eq(200)
+          expect(current_path).to eq import_path
+
+          attach_file "item_in_file", "spec/fixtures/article/article_import_test_1.csv"
+          click_button I18n.t("views.links.import")
+          expect(status_code).to eq(200)
+          expect(page).to have_content I18n.t("views.notice.saved") 
+        end
+
+        scenario "check import data" do
+          visit index_path
+          click_button I18n.t("views.links.import")
+          expect(current_path).to eq import_path
+
+          attach_file "item_in_file", "spec/fixtures/article/article_import_test_1.csv"
+          click_button I18n.t("views.links.import")
+          expect(status_code).to eq(200)
+
+          click_link 'test_1_title' 
+          expect(status_code).to eq(200)
+
+          expect(page).to have_content 'test_1_title'
+          expect(page).to have_content 'docs/test_1.html'
+          expect(page).to have_content '記事レイアウト'
+          expect(page).to have_content 'test_1_keyword'
+          expect(page).to have_content 'test_1_overview'
+          expect(page).to have_content 'test_1_summary'
+          expect(page).to have_content 'test_1_parent_crumb_urls'
+          expect(page).to have_content 'test_1_event_title'
+          expect(page).to have_content 'シラサギ市/企画政策部/政策課'
+          expect(page).to have_content 'test_1_contact_charge'
+          expect(page).to have_content 'test_1_contact_tel'
+          expect(page).to have_content 'test_1_contact_fax'
+          expect(page).to have_content 'test_1_contact_mail'
+        end
+
+        scenario "fail import process" do
+          visit index_path
+          expect(status_code).to eq(200).or eq(304)
+
+          click_button I18n.t("views.links.import")
+          expect(status_code).to eq(200)
+          expect(current_path).to eq import_path
+
+          attach_file "item_in_file", "spec/fixtures/article/article_import_test_2.csv"
+          click_button I18n.t("views.links.import")
+          expect(status_code).to eq(200)
+          expect(current_path).to eq import_path
+          expect(page).to have_content I18n.t("views.notice.saved") 
+          expect(page).to have_content I18n.t('errors.messages.invalid')
+
+          visit index_path
+          expect(page).to have_content 'test_1_title'
+          expect(page).to have_content 'test_2_title'
+          expect(page).to_not have_content 'test_3_title'
+        end
+
+
       end
     end
 >>>>>>> RSpec code created AND some bug fix:spec/features/article/pages_spec.rb

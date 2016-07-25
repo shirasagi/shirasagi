@@ -36,7 +36,7 @@ module Article::Addon
             else
               line << I18n.t("views.options.state.hide")
             end
-            line << item.contact_group
+            line << SS::Group.where(_id: item.contact_group_id).map(&:name).first
             line << item.contact_charge
             line << item.contact_tel
             line << item.contact_fax
@@ -67,7 +67,6 @@ module Article::Addon
           categories << name_list.join("/")
         end
         return categories.join("\n")
-     
       end
   end
 
