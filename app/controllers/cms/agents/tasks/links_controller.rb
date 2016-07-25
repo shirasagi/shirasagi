@@ -146,7 +146,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       url = File.join(@base_url, url) if url[0] == "/"
 
       begin
-        timeout(10) do
+        Timeout.timeout(10) do
           data = []
           open(url, proxy: true) do |f|
             f.each_line { |line| data << line }
@@ -165,7 +165,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       url = File.join(@base_url, url) if url[0] == "/"
 
       begin
-        timeout(5) do
+        Timeout.timeout(5) do
           open url, proxy: true, progress_proc: ->(size) { raise "200" }
         end
         false
