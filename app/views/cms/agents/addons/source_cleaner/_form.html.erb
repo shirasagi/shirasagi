@@ -1,0 +1,27 @@
+<%= jquery do %>
+  var toggleActionType = function() {
+    val = $(".action-type").val();
+    if (val == "remove") {
+      $(".replaced-value").hide();
+    } else if (val == "replace") {
+      $(".replaced-value").show();
+    }
+  }
+
+  $(".action-type").on("change", toggleActionType);
+  toggleActionType();
+<% end %>
+
+<dl class="see mod-cms-sourcecleaner">
+  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
+  <dd>
+    <%= f.select :target_type, @item.target_type_options, {}, style: "width: 70px" %>
+    <%= f.text_field :target_value, placeholder: "div" %>
+  </dd>
+
+  <dt><%= @model.t :action %><%= @model.tt :action %></dt>
+  <dd>
+    <%= f.select :action_type, @item.action_type_options, {}, class: "action-type", style: "width: 70px" %>
+    <%= f.text_field :replaced_value, class: "replaced-value" %>
+  </dd>
+</dl>

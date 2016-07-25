@@ -1,0 +1,13 @@
+<dl class="see mod-cms-sourcecleaner">
+  <dt><%= @model.t :target %></dt>
+  <dd>
+    <span>[<%= @item.label :target_type %>]</span>
+    <span style="margin-left: 4px;"><%= @item.target_value %></span>
+  </dd>
+
+  <dt><%= @model.t :action %></dt>
+  <dd>
+    <span>[<%= @item.label :action_type %>]</span>
+    <span style="margin-left: 4px;"><%= @item.replaced_value %></span>
+  </dd>
+</dl>

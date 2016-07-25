@@ -1,3 +1,25 @@
+class @Cms_Editor_Module
+  @editorId = "item_html"
+
+  @getEditorHtml: (id = null) ->
+    id ||= Cms_Form.editorId
+
+    if (typeof tinymce != 'undefined')
+      html = tinymce.get(id).getContent()
+    else if (typeof CKEDITOR != 'undefined')
+      html = CKEDITOR.instances[id].getData()
+    else
+      html = ""
+    return html
+
+  @setEditorHtml: (html, id = null)->
+    id ||= Cms_Form.editorId
+
+    if (typeof tinymce != 'undefined')
+      tinymce.get(id).setContent(html)
+    else if (typeof CKEDITOR != 'undefined')
+      CKEDITOR.instances[id].setData(html)
+
 class @Cms_Editor_CodeMirror
   # Render CodeMirror
   @render: (selector, opts = {}) ->

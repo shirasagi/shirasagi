@@ -80,6 +80,7 @@ SS::Application.routes.draw do
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :theme_templates, concerns: [:deletion, :template]
+    resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :notices, concerns: :deletion do
       get :copy, :on => :member
       put :copy, :on => :member

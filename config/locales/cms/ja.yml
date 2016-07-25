@@ -18,6 +18,7 @@ ja:
     layout: レイアウト
     body_layout: 本文レイアウト
     link_check: リンクチェック
+    source_cleaner: ソースクリーニング
     preview: プレビュー
     member: メンバー
     modules: モジュール
@@ -43,6 +44,7 @@ ja:
     view_site: サイト確認
     editor_template: テンプレート
     theme_template: Theme切り替え
+    source_cleaner_template: ソースクリーニング
     convert_to_cms_page: 固定ページに変換する
     notice: お知らせ
     important_notice: 重要なお知らせ
@@ -128,6 +130,14 @@ ja:
         enabled: 有効
         disabled: 無効
         temporary: 仮登録
+      target_type:
+        tag: タグ
+        attribute: 属性
+        string: 文字列
+        regexp: 正規表現
+      action_type:
+        remove: 削除
+        replace: 置換
 
     sns_share:
       fb_like: Facebook いいね！
@@ -246,6 +256,7 @@ ja:
       cms/default_release_plan: 公開予約の既定値
       cms/page_search: 検索条件
       cms/high_contrast_mode: ハイコントラストモード
+      cms/source_cleaner: ソースクリーニング
 
   mongoid:
     models:
@@ -336,6 +347,9 @@ ja:
         class_name: class属性
         order: 並び順
         css_path: cssパス
+      cms/source_cleaner_template:
+        name: 名前
+        order: 並び順
       cms/addon/crumb:
         home_label: ホームラベル
       cms/notice:
@@ -417,6 +431,10 @@ ja:
         high_contrast_mode: 設定
         font_color: 文字色
         background_color: 背景色
+      cms/addon/source_cleaner:
+        target: 対象
+        action: 操作
+        replaced_value: 置換後の値
 
   errors:
     messages:
@@ -939,6 +957,15 @@ ja:
         - 検索したいページのステータスを選択します。
       search_approver_state:
         - 検索したいページの承認ステータスを選択します。
+
+    cms/addon/source_cleaner:
+      target:
+        - クリーニングの対象を設定します。
+        - タグ、属性、文字列の中から種別を選択し、右欄に対象を入力します。
+      action:
+        - 対象のクリーニング方法を設定します。
+        - 置換または削除が選択できます。
+        - 置換後のタグや属性の値、文字列を右欄に入力します。
 
   all_content:
     page_id: ページID
