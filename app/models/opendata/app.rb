@@ -12,6 +12,8 @@ class Opendata::App
   include Cms::Addon::RelatedPage
   include Cms::Addon::GroupPermission
   include Workflow::MemberPermission
+  include Opendata::AppSearchable
+  include Opendata::AppTemplateVariables
 
   set_permission_name "opendata_apps"
 

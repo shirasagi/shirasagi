@@ -11,6 +11,8 @@ class Opendata::Idea
   include Cms::Addon::RelatedPage
   include Cms::Addon::GroupPermission
   include Workflow::MemberPermission
+  include Opendata::IdeaSearchable
+  include Opendata::IdeaTemplateVariables
 
   set_permission_name "opendata_ideas"
 

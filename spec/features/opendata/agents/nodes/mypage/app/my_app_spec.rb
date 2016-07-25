@@ -9,104 +9,122 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
   end
 
   let(:site) { cms_site }
-  let!(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_my_app" }
-  let!(:node_member) { create_once :opendata_node_member }
-  let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
-  let!(:node_myapp) { create_once :opendata_node_my_app, filename: "#{node_mypage.filename}/app" }
+  let(:member) { opendata_member(site: site) }
+  let!(:node) { create :opendata_node_app, name: "opendata_agents_nodes_my_app" }
+  let!(:node_member) { create :opendata_node_member }
+  let!(:node_mypage) { create :opendata_node_mypage, filename: "mypage" }
+  let!(:upper_html) { '<a href="new/">新規作成</a><table class="opendata-app apps"><tbody>' }
+  let!(:node_myapp) { create :opendata_node_my_app, cur_node: node_mypage, filename: "app", upper_html: upper_html }
   let!(:node_login) { create :member_node_login, redirect_url: node_myapp.url }
-  let!(:node_dataset) { create_once :opendata_node_dataset }
+  let!(:node_dataset) { create :opendata_node_dataset }
 
   let!(:node_search) { create :opendata_node_search_app }
 
-  let(:node_category_folder) { create_once(:cms_node_node, basename: "category") }
+  let(:node_category_folder) { create(:cms_node_node, basename: "category") }
   let!(:category) do
-    create_once(
+    create(
       :opendata_node_category,
+      cur_node: node_category_folder,
       name: "カテゴリー",
-      filename: "#{node_category_folder.filename}/#{unique_id}",
-      depth: node_category_folder.depth + 1)
+      filename: "#{unique_id}")
   end
-  let!(:app) { create_once :opendata_app, filename: "#{node.filename}/1.html", member_id: "1" }
-  let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
-  let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
-  let!(:appfile) { create_appfile(app, file, "CSV") }
 
-  let!(:node_auth) { create_once :opendata_node_mypage, basename: "opendata/mypage" }
+  let!(:node_auth) { create :opendata_node_mypage, basename: "opendata/mypage" }
 
   let(:index_path) { "#{node_myapp.url}" }
-  let(:new_path) { "#{node_myapp.url}new/" }
-  let(:show_path) { "#{node_myapp.url}#{app.id}/" }
-  let(:edit_path) { "#{node_myapp.url}#{app.id}/edit/" }
-  let(:delete_path) { "#{node_myapp.url}#{app.id}/delete/" }
+  # let(:show_path) { "#{node_myapp.url}#{app.id}/" }
+  # let(:delete_path) { "#{node_myapp.url}#{app.id}/delete/" }
 
   before do
-    login_opendata_member(site, node_login)
+    login_opendata_member(site, node_login, member)
   end
 
   after do
-    logout_opendata_member(site, node_login)
+    logout_opendata_member(site, node_login, member)
   end
 
-  it "#index" do
-    visit "http://#{site.domain}#{index_path}"
-    expect(current_path).to eq index_path
-  end
+  describe "basic crud" do
+    it do
+      visit "http://#{site.domain}#{index_path}"
+      expect(current_path).to eq index_path
 
-  it "#new" do
-    visit "http://#{site.domain}#{new_path}"
-    expect(current_path).to eq new_path
-    within "form#item-form" do
-      fill_in "item[name]", with: "あぷり"
-      fill_in "item[text]", with: "せつめい"
-      fill_in "item[license]", with: "MIT"
-      check category.name
-      click_on "公開保存"
+      click_link "新規作成"
+      within "form#item-form" do
+        fill_in "item[name]", with: "あぷり"
+        fill_in "item[text]", with: "せつめい"
+        fill_in "item[license]", with: "MIT"
+        check category.name
+        click_on "公開保存"
+      end
+      expect(current_path).to eq index_path
+
+      click_link "あぷり"
+      expect(status_code).to eq 200
+
+      within "table.opendata-app" do
+        expect(page).to have_content "あぷり"
+        expect(page).to have_content "せつめい"
+        expect(page).to have_content "MIT"
+      end
+
+      click_link "編集"
+      expect(status_code).to eq 200
+      within "form#item-form" do
+        fill_in "item[name]", with: "あぷり2"
+        fill_in "item[text]", with: "こうしん"
+        fill_in "item[license]", with: "GPL"
+        check category.name
+        click_on "公開保存"
+      end
+      expect(status_code).to eq 200
+
+      within "table.opendata-app" do
+        expect(page).to have_content "あぷり2"
+        expect(page).to have_content "こうしん"
+        expect(page).to have_content "GPL"
+      end
+
+      click_link "削除"
+      click_button "削除"
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+
+      within "table.opendata-app" do
+        expect(page).not_to have_content "あぷり2"
+      end
     end
-    expect(current_path).to eq index_path
   end
 
-  it "#new error" do
-    visit "http://#{site.domain}#{new_path}"
-    expect(current_path).to eq new_path
-    within "form#item-form" do
-      click_on "公開保存"
+  describe "new error" do
+    it do
+      visit "http://#{site.domain}#{index_path}"
+      click_link "新規作成"
+      within "form#item-form" do
+        click_on "公開保存"
+      end
+      expect(page).to have_css('#errorExplanation', text: '登録内容を確認してください。')
     end
-    expect(current_path).to eq index_path
   end
 
-  it "#show" do
-    visit "http://#{site.domain}#{show_path}"
-    expect(current_path).to eq show_path
-  end
+  describe "edit error" do
+    let!(:app) { create :opendata_app, cur_node: node, filename: "1.html", member_id: member.id }
+    let!(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
+    let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
+    let!(:appfile) { create_appfile(app, file, "CSV") }
 
-  it "#edit" do
-    visit "http://#{site.domain}#{edit_path}"
-    expect(current_path).to eq edit_path
-    within "form#item-form" do
-      fill_in "item[name]", with: "あぷり"
-      fill_in "item[text]", with: "こうしん"
-      fill_in "item[license]", with: "MIT"
-      check category.name
-      click_on "公開保存"
+    let(:edit_path) { "#{node_myapp.url}#{app.id}/edit/" }
+
+    it do
+      visit "http://#{site.domain}#{index_path}"
+      click_link app.name
+      click_link "編集"
+
+      within "form#item-form" do
+        fill_in "item[name]", with: ""
+        click_on "公開保存"
+      end
+
+      expect(page).to have_css('#errorExplanation', text: '登録内容を確認してください。')
     end
-    expect(current_path).to eq show_path
-  end
-
-  it "#edit error" do
-    visit "http://#{site.domain}#{edit_path}"
-    expect(current_path).to eq edit_path
-    within "form#item-form" do
-      click_on "公開保存"
-    end
-    expect("#{current_path}").to eq show_path
-  end
-
-  it "#delete" do
-    visit "http://#{site.domain}#{delete_path}"
-    expect(current_path).to eq delete_path
-    within "form" do
-      click_on I18n.t("views.button.delete")
-    end
-    expect(current_path).to eq index_path
   end
 end

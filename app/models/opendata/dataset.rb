@@ -13,6 +13,8 @@ class Opendata::Dataset
   include Cms::Addon::RelatedPage
   include Cms::Addon::GroupPermission
   include Workflow::MemberPermission
+  include Opendata::DatasetSearchable
+  include Opendata::DatasetTemplateVariables
 
   set_permission_name "opendata_datasets"
 

@@ -210,7 +210,7 @@ module Opendata::Node
   class MyDataset
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Opendata::Addon::MyDatasetList
+    include Cms::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::GroupPermission
@@ -222,7 +222,7 @@ module Opendata::Node
   class MyApp
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Opendata::Addon::MyAppList
+    include Cms::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::GroupPermission
@@ -234,7 +234,7 @@ module Opendata::Node
   class MyIdea
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Opendata::Addon::MyIdeaList
+    include Cms::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::GroupPermission

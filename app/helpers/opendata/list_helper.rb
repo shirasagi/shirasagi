@@ -75,7 +75,7 @@ module Opendata::ListHelper
           ih = []
           ih << '<tr>'
           ih << '  <td><a href="#{dataset_url}">#{dataset_name}</a></td>'
-          ih << '  <td>#{dataset_updated.%Y年%1m月%1d日 %1H時%1M分}</td>'
+          ih << '  <td>#{dataset_updated}</td>'
           ih << '  <td>#{dataset_state}</td>'
           if show_point
             ih << '  <td>#{dataset_point}</td>'
@@ -137,7 +137,7 @@ module Opendata::ListHelper
           ih = []
           ih << '<tr>'
           ih << '  <td><a href="#{app_url}">#{app_name}</a></td>'
-          ih << '  <td>#{app_updated.%Y年%1m月%1d日 %1H時%1M分}</td>'
+          ih << '  <td>#{app_updated}</td>'
           ih << '  <td>#{app_state}</td>'
           if show_point
             ih << '  <td>#{app_point}</td>'
@@ -198,7 +198,7 @@ module Opendata::ListHelper
           ih = []
           ih << '<tr>'
           ih << '  <td><a href="#{idea_url}">#{idea_name}</a></td>'
-          ih << '  <td>#{idea_updated.%Y年%1m月%1d日 %1H時%1M分}</td>'
+          ih << '  <td>#{idea_updated}</td>'
           ih << '  <td>#{idea_state}</td>'
           if show_point
             ih << '  <td>#{idea_point}</td>'
