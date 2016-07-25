@@ -38,7 +38,7 @@ class Opendata::UrlResource
 
       puts self.original_url
 
-      last_modified = timeout(time_out) do
+      last_modified = Timeout.timeout(time_out) do
         open(self.original_url, proxy: true) { |url_file| url_file.last_modified }
       end
 
@@ -51,7 +51,7 @@ class Opendata::UrlResource
       elsif self.crawl_update == "auto"
         do_crawl_auto(last_modified)
       end
-    rescue TimeoutError
+    rescue Timeout::Error
       puts I18n.t("opendata.errors.messages.invalid_timeout")
     rescue => e
       puts "Error: #{e}"
@@ -119,7 +119,7 @@ class Opendata::UrlResource
         send("file_id=", ss_file.id)
         self.crawl_state = "same"
       end
-    rescue TimeoutError => e
+    rescue Timeout::Error => e
       logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       errors.add :base, I18n.t("opendata.errors.messages.invalid_timeout")
     rescue => e
@@ -137,7 +137,7 @@ class Opendata::UrlResource
       require 'nkf'
 
       temp_file.binmode
-      timeout(time_out) do
+      Timeout.timeout(time_out) do
         open(original_url, proxy: true) do |data|
 
           data.binmode
