@@ -1,4 +1,4 @@
-<% advanced = advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+<% advanced = Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 <%= html_editor ".mod-inquiry-message .inquiry-html", height: "180px", advanced: advanced %>
 <%= html_editor ".mod-inquiry-message .inquiry-sent-html", height: "180px", advanced: advanced %>
 <%= html_editor ".mod-inquiry-message .inquiry-results-html", height: "180px", advanced: advanced %>
