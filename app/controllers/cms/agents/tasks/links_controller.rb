@@ -153,7 +153,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
           end
           return data.join
         end
-      rescue TimeoutError
+      rescue Timeout::Error
         nil
       rescue => e
         nil
@@ -169,7 +169,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
           open url, proxy: true, progress_proc: ->(size) { raise "200" }
         end
         false
-      rescue TimeoutError
+      rescue Timeout::Error
         return false
       rescue => e
         return e.to_s == "200"
