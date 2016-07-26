@@ -1,5 +1,16 @@
+## -------------------------------------
+# Require
+
+puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
+
+@site = SS::Site.where(host: ENV['site']).first
+puts "Site not found: #{ENV['site']}" or exit unless @site
+
+require "#{Rails.root}/db/seeds/cms/users"
+require "#{Rails.root}/db/seeds/cms/workflow"
+require "#{Rails.root}/db/seeds/cms/members"
+
 Dir.chdir @root = File.dirname(__FILE__)
-@site = SS::Site.find_by host: ENV["site"]
 
 ## -------------------------------------
 puts "# roles"
@@ -47,22 +58,6 @@ def save_ss_files(path, data)
 
   item
 end
-
-## -------------------------------------
-puts "# members"
-
-def save_member(data)
-  puts data[:name]
-  cond = { site_id: @site._id, email: data[:email] }
-
-  item = Cms::Member.find_or_create_by(cond)
-  item.attributes = data
-  item.update
-
-  item
-end
-
-member = save_member email: "member@example.jp", name: "member", in_password: "pass"
 
 ## -------------------------------------
 puts "# layouts"
@@ -436,7 +431,7 @@ end
 
 1.step(5) do |i|
   dataset = save_data filename: "dataset/#{i}.html", name: "サンプルデータ【#{i}】", text: "サンプルデータ【#{i}】",
-    route: "opendata/dataset", layout_id: layouts["dataset-page"].id, member_id: member.id, tags: %w(タグ),
+    route: "opendata/dataset", layout_id: layouts["dataset-page"].id, member_id: @member_1.id, tags: %w(タグ),
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
@@ -474,7 +469,7 @@ end
 1.step(5) do |i|
   app = save_app filename: "app/#{i}.html", name: "サンプルアプリ【#{i}】", text: "サンプルアプリ【#{i}】",
     license: %w(MIT BSD Apache).sample, route: "opendata/app", layout_id: layouts["app-page"].id,
-    member_id: member.id, tags: %w(タグ),
+    member_id: @member_1.id, tags: %w(タグ),
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
@@ -497,7 +492,7 @@ end
 
 1.step(5) do |i|
   idea = save_idea filename: "idea/#{i}.html", name: "サンプルアイデア【#{i}】", text: "サンプルコメント",
-    route: "opendata/idea", layout_id: layouts["idea-page"].id, member_id: member.id, tags: %w(タグ),
+    route: "opendata/idea", layout_id: layouts["idea-page"].id, member_id: @member_1.id, tags: %w(タグ),
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_ids: Opendata::Dataset.site(@site).pluck(:_id).sample(1),
     app_ids: Opendata::App.site(@site).pluck(:_id).sample(1),

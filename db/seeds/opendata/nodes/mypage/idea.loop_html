@@ -1,6 +1,6 @@
 <tr>
   <td><a href="#{idea_url}">#{idea_name}</a></td>
-  <td>#{idea_updated.%Y年%1m月%1d日 %1H時%1M分}</td>
+  <td>#{idea_updated}</td>
   <td>#{idea_state}</td>
   <td>#{idea_point}</td>
   <td>#{idea_datasets}</td>

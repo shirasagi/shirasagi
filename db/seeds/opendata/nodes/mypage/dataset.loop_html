@@ -1,6 +1,6 @@
 <tr>
   <td><a href="#{dataset_url}">#{dataset_name}</a></td>
-  <td>#{dataset_updated.%Y年%1m月%1d日 %1H時%1M分}</td>
+  <td>#{dataset_updated}</td>
   <td>#{dataset_state}</td>
   <td>#{dataset_point}</td>
   <td>#{dataset_downloaded}</td>

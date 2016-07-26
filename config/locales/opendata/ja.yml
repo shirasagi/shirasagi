@@ -258,7 +258,7 @@ ja:
       opendata/dataset_page_setting: データセット詳細ページ設定
       opendata/app_page_setting: アプリ詳細ページ設定
       opendata/idea_page_setting: アイデア詳細ページ設定
-      opendata/list_node_setting: 基本設定
+      opendata/list_node_setting: フォルダー設定
 
   cms:
     nodes:

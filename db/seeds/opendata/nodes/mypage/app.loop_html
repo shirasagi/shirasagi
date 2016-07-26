@@ -1,6 +1,6 @@
 <tr>
   <td><a href="#{app_url}">#{app_name}</a></td>
-  <td>#{app_updated.%Y年%1m月%1d日 %1H時%1M分}</td>
+  <td>#{app_updated}</td>
   <td>#{app_state}</td>
   <td>#{app_point}</td>
 </tr>
