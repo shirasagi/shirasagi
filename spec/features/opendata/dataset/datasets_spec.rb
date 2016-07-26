@@ -4,8 +4,8 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
   let!(:node_search) { create_once :opendata_node_search_dataset }
-  let(:index_path) { opendata_datasets_path site.host, node }
-  let(:new_path) { new_opendata_dataset_path site.host, node }
+  let(:index_path) { opendata_datasets_path site, node }
+  let(:new_path) { new_opendata_dataset_path site, node }
 
   it "without login" do
     visit index_path
@@ -78,9 +78,9 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
                     category_ids: [ category.id ],
                     area_ids: [ area.id ]
       end
-      let(:show_path) { opendata_dataset_path site.host, node, item }
-      let(:edit_path) { edit_opendata_dataset_path site.host, node, item }
-      let(:delete_path) { delete_opendata_dataset_path site.host, node, item }
+      let(:show_path) { opendata_dataset_path site, node, item }
+      let(:edit_path) { edit_opendata_dataset_path site, node, item }
+      let(:delete_path) { delete_opendata_dataset_path site, node, item }
 
       describe "#show" do
         it do
@@ -188,9 +188,9 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         site_id: site.id
       )
     end
-    let(:show_path) { opendata_dataset_path(site.host, node, item) }
-    let(:edit_path) { edit_opendata_dataset_path(site.host, node, item) }
-    let(:delete_path) { delete_opendata_dataset_path(site.host, node, item) }
+    let(:show_path) { opendata_dataset_path(site, node, item) }
+    let(:edit_path) { edit_opendata_dataset_path(site, node, item) }
+    let(:delete_path) { delete_opendata_dataset_path(site, node, item) }
 
     before do
       group_ids = node.group_ids

@@ -4,7 +4,7 @@ describe "opendata_search_apps", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_search_app, name: "opendata_search_apps" }
 
-  let(:index_path) { opendata_search_apps_path site.host, node }
+  let(:index_path) { opendata_search_apps_path site, node }
 
   context "search_app" do
     before { login_cms_user }

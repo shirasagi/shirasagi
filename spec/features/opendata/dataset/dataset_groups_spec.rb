@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "opendata_dataset_groups", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-  let(:index_path) { opendata_dataset_groups_path site.host, node }
-  let(:new_path) { new_opendata_dataset_group_path site.host, node }
+  let(:index_path) { opendata_dataset_groups_path site, node }
+  let(:new_path) { new_opendata_dataset_group_path site, node }
 
   it "without login" do
     visit index_path
@@ -56,7 +56,7 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
           depth: category_folder.depth + 1)
       end
       let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
-      let(:show_path) { opendata_dataset_group_path site.host, node, item }
+      let(:show_path) { opendata_dataset_group_path site, node, item }
 
       it do
         visit show_path
@@ -74,7 +74,7 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
           depth: category_folder.depth + 1)
       end
       let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
-      let(:edit_path) { edit_opendata_dataset_group_path site.host, node, item }
+      let(:edit_path) { edit_opendata_dataset_group_path site, node, item }
 
       it do
         visit edit_path
@@ -96,7 +96,7 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
           depth: category_folder.depth + 1)
       end
       let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
-      let(:delete_path) { delete_opendata_dataset_group_path site.host, node, item }
+      let(:delete_path) { delete_opendata_dataset_group_path site, node, item }
 
       it do
         visit delete_path

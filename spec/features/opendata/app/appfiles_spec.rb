@@ -15,9 +15,9 @@ describe "opendata_appfiles", dbscope: :example do
   let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
   let(:appfile) { create_appfile(app, file) }
-  let(:index_path) { opendata_app_appfiles_path site.host, node, app_id: app.id }
-  let(:new_path) { new_opendata_app_appfile_path site.host, node, app_id: app.id }
-  let(:download_path) { opendata_app_appfile_file_path site.host, node, app_id: app.id, appfile_id: appfile.id }
+  let(:index_path) { opendata_app_appfiles_path site, node, app_id: app.id }
+  let(:new_path) { new_opendata_app_appfile_path site, node, app_id: app.id }
+  let(:download_path) { opendata_app_appfile_file_path site, node, app_id: app.id, appfile_id: appfile.id }
 
   it "without login" do
     visit index_path

@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe "rdf_vocabs", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:index_path) { rdf_vocabs_path site.host }
-  let(:new_path) { new_rdf_vocab_path site.host }
+  let(:index_path) { rdf_vocabs_path site }
+  let(:new_path) { new_rdf_vocab_path site }
 
   it "without login" do
     visit index_path
@@ -43,7 +43,7 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
 
     describe "#show" do
       let(:item) { create(:rdf_vocab, site: site) }
-      let(:show_path) { rdf_vocab_path site.host, item }
+      let(:show_path) { rdf_vocab_path site, item }
 
       it do
         visit show_path
@@ -54,7 +54,7 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
 
     describe "#edit" do
       let(:item) { create(:rdf_vocab, site: site) }
-      let(:edit_path) { edit_rdf_vocab_path site.host, item }
+      let(:edit_path) { edit_rdf_vocab_path site, item }
 
       it do
         visit edit_path
@@ -69,7 +69,7 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
 
     describe "#delete" do
       let(:item) { create(:rdf_vocab, site: site) }
-      let(:delete_path) { delete_rdf_vocab_path site.host, item }
+      let(:delete_path) { delete_rdf_vocab_path site, item }
 
       it do
         visit delete_path
@@ -81,7 +81,7 @@ describe "rdf_vocabs", type: :feature, dbscope: :example do
     end
 
     describe "#import" do
-      let(:import_path) { import_rdf_vocabs_path site.host }
+      let(:import_path) { import_rdf_vocabs_path site }
 
       it do
         visit import_path

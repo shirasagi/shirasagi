@@ -5,7 +5,7 @@ describe "opendata_main", dbscope: :example do
 
   context "without login" do
     let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-    let(:index_path) { opendata_main_path site.host, node }
+    let(:index_path) { opendata_main_path site, node }
 
     it do
       visit index_path
@@ -15,7 +15,7 @@ describe "opendata_main", dbscope: :example do
 
   context "without auth" do
     let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-    let(:index_path) { opendata_main_path site.host, node }
+    let(:index_path) { opendata_main_path site, node }
 
     it do
       login_ss_user
@@ -29,34 +29,34 @@ describe "opendata_main", dbscope: :example do
 
     context "when dataset node is given" do
       let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-      let(:index_path) { opendata_main_path site.host, node }
+      let(:index_path) { opendata_main_path site, node }
 
       it do
         visit index_path
         expect(status_code).to eq 200
-        expect(current_path).to eq opendata_datasets_path(site.host, node)
+        expect(current_path).to eq opendata_datasets_path(site, node)
       end
     end
 
     context "when app node is given" do
       let(:node) { create_once :opendata_node_app, name: "opendata_app" }
-      let(:index_path) { opendata_main_path site.host, node }
+      let(:index_path) { opendata_main_path site, node }
 
       it do
         visit index_path
         expect(status_code).to eq 200
-        expect(current_path).to eq opendata_apps_path(site.host, node)
+        expect(current_path).to eq opendata_apps_path(site, node)
       end
     end
 
     context "when idea node is given" do
       let(:node) { create_once :opendata_node_idea, name: "opendata_idea" }
-      let(:index_path) { opendata_main_path site.host, node }
+      let(:index_path) { opendata_main_path site, node }
 
       it do
         visit index_path
         expect(status_code).to eq 200
-        expect(current_path).to eq opendata_ideas_path(site.host, node)
+        expect(current_path).to eq opendata_ideas_path(site, node)
       end
     end
   end

@@ -47,19 +47,19 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
       resource.reload
     end
 
-    let(:header_size_path) { opendata_dataset_resource_header_size_path site.host, node.id, dataset.id, resource.id }
-    let(:rdf_class_path) { opendata_dataset_resource_rdf_class_path site.host, node.id, dataset.id, resource.id }
-    let(:rdf_class_preview_path) { opendata_dataset_resource_rdf_class_preview_path site.host, node.id, dataset.id, resource.id }
-    let(:column_types_path) { opendata_dataset_resource_column_types_path site.host, node.id, dataset.id, resource.id }
+    let(:header_size_path) { opendata_dataset_resource_header_size_path site, node.id, dataset.id, resource.id }
+    let(:rdf_class_path) { opendata_dataset_resource_rdf_class_path site, node.id, dataset.id, resource.id }
+    let(:rdf_class_preview_path) { opendata_dataset_resource_rdf_class_preview_path site, node.id, dataset.id, resource.id }
+    let(:column_types_path) { opendata_dataset_resource_column_types_path site, node.id, dataset.id, resource.id }
     let(:rdf_prop_select_path) do
       routes = Rails.application.routes.url_helpers
       url = routes.url_for host: "example.com", controller: "opendata/dataset/csv2rdf_settings", action: "rdf_prop_select",
-        site: site.host, cid: node.id, dataset_id: dataset.id, resource_id: resource.id, column_index: 1
+        site: site.id, cid: node.id, dataset_id: dataset.id, resource_id: resource.id, column_index: 1
       url = ::URI.parse(url)
       url.path
     end
-    let(:confirmation_path) { opendata_dataset_resource_confirmation_path site.host, node.id, dataset.id, resource.id }
-    let(:show_resource_path) { opendata_dataset_resource_path site.host, node.id, dataset.id, resource.id }
+    let(:confirmation_path) { opendata_dataset_resource_confirmation_path site, node.id, dataset.id, resource.id }
+    let(:show_resource_path) { opendata_dataset_resource_path site, node.id, dataset.id, resource.id }
 
     it do
       expect(SS.config.opendata.fuseki["disable"]).to be_truthy
@@ -139,8 +139,8 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   describe "convert 2-rows-csv to rdf" do
     let(:csv_file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis-3.csv") }
     let(:resource) { dataset.resources.new(attributes_for(:opendata_resource, license_id: license.id)) }
-    let(:header_size_path) { opendata_dataset_resource_header_size_path site.host, node.id, dataset.id, resource.id }
-    let(:show_resource_path) { opendata_dataset_resource_path site.host, node.id, dataset.id, resource.id }
+    let(:header_size_path) { opendata_dataset_resource_header_size_path site, node.id, dataset.id, resource.id }
+    let(:show_resource_path) { opendata_dataset_resource_path site, node.id, dataset.id, resource.id }
 
     before do
       Fs::UploadedFile.create_from_file(csv_file, basename: "spec") do |f|

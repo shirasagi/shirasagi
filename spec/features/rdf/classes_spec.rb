@@ -4,8 +4,8 @@ describe "rdf_classes", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let!(:category) { create(:opendata_node_category, cur_site: site) }
   let(:vocab) { create(:rdf_vocab, site: site) }
-  let(:index_path) { rdf_classes_classes_path site.host, vocab.id }
-  let(:new_path) { new_rdf_classes_class_path site.host, vocab.id }
+  let(:index_path) { rdf_classes_classes_path site, vocab.id }
+  let(:new_path) { new_rdf_classes_class_path site, vocab.id }
 
   it "without login" do
     visit index_path
@@ -44,7 +44,7 @@ describe "rdf_classes", type: :feature, dbscope: :example do
 
     describe "#show" do
       let(:item) { create(:rdf_class, vocab: vocab) }
-      let(:show_path) { rdf_classes_class_path site.host, vocab.id, item }
+      let(:show_path) { rdf_classes_class_path site, vocab.id, item }
 
       it do
         visit show_path
@@ -55,7 +55,7 @@ describe "rdf_classes", type: :feature, dbscope: :example do
 
     describe "#edit" do
       let(:item) { create(:rdf_class, vocab: vocab) }
-      let(:edit_path) { edit_rdf_classes_class_path site.host, vocab.id, item }
+      let(:edit_path) { edit_rdf_classes_class_path site, vocab.id, item }
 
       it do
         visit edit_path
@@ -70,7 +70,7 @@ describe "rdf_classes", type: :feature, dbscope: :example do
 
     describe "#delete" do
       let(:item) { create(:rdf_class, vocab: vocab) }
-      let(:delete_path) { delete_rdf_classes_class_path site.host, vocab.id, item }
+      let(:delete_path) { delete_rdf_classes_class_path site, vocab.id, item }
 
       it do
         visit delete_path
@@ -86,7 +86,7 @@ describe "rdf_classes", type: :feature, dbscope: :example do
     let!(:rdf_class1) { create(:rdf_class, vocab: vocab) }
     let!(:rdf_class2) { create(:rdf_class, vocab: vocab) }
     let(:item) { create(:rdf_class, vocab: vocab) }
-    let(:edit_path) { edit_rdf_classes_class_path site.host, vocab.id, item }
+    let(:edit_path) { edit_rdf_classes_class_path site, vocab.id, item }
 
     before { login_cms_user }
 

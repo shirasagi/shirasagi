@@ -4,8 +4,8 @@ describe "rdf_props", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let!(:category) { create(:opendata_node_category, cur_site: site) }
   let(:vocab) { create(:rdf_vocab, site: site) }
-  let(:index_path) { rdf_props_props_path site.host, vocab.id }
-  let(:new_path) { new_rdf_props_prop_path site.host, vocab.id }
+  let(:index_path) { rdf_props_props_path site, vocab.id }
+  let(:new_path) { new_rdf_props_prop_path site, vocab.id }
 
   it "without login" do
     visit index_path
@@ -45,7 +45,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
       describe "#show" do
         let(:item) { create(:rdf_prop, vocab: vocab) }
-        let(:show_path) { rdf_props_prop_path site.host, vocab.id, item }
+        let(:show_path) { rdf_props_prop_path site, vocab.id, item }
 
         it do
           visit show_path
@@ -56,7 +56,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
       describe "#edit" do
         let(:item) { create(:rdf_prop, vocab: vocab) }
-        let(:edit_path) { edit_rdf_props_prop_path site.host, vocab.id, item }
+        let(:edit_path) { edit_rdf_props_prop_path site, vocab.id, item }
 
         it do
           visit edit_path
@@ -71,7 +71,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
       describe "#delete" do
         let(:item) { create(:rdf_prop, vocab: vocab) }
-        let(:delete_path) { delete_rdf_props_prop_path site.host, vocab.id, item }
+        let(:delete_path) { delete_rdf_props_prop_path site, vocab.id, item }
 
         it do
           visit delete_path
@@ -85,8 +85,8 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
     context "with class" do
       let(:rdf_class) { create(:rdf_class, vocab: vocab) }
-      let(:index_path) { rdf_classes_props_props_path site.host, vocab.id, rdf_class.id }
-      let(:new_path) { new_rdf_classes_props_prop_path site.host, vocab.id, rdf_class.id }
+      let(:index_path) { rdf_classes_props_props_path site, vocab.id, rdf_class.id }
+      let(:new_path) { new_rdf_classes_props_prop_path site, vocab.id, rdf_class.id }
 
       describe "#index" do
         it do
@@ -111,7 +111,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
       describe "#show" do
         let(:item) { create(:rdf_prop, vocab: vocab, rdf_class: rdf_class) }
-        let(:show_path) { rdf_classes_props_prop_path site.host, vocab.id, rdf_class.id, item }
+        let(:show_path) { rdf_classes_props_prop_path site, vocab.id, rdf_class.id, item }
 
         it do
           visit show_path
@@ -122,7 +122,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
       describe "#edit" do
         let(:item) { create(:rdf_prop, vocab: vocab, rdf_class: rdf_class) }
-        let(:edit_path) { edit_rdf_classes_props_prop_path site.host, vocab.id, rdf_class.id, item }
+        let(:edit_path) { edit_rdf_classes_props_prop_path site, vocab.id, rdf_class.id, item }
 
         it do
           visit edit_path
@@ -137,7 +137,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
       describe "#unlink" do
         let(:item) { create(:rdf_prop, vocab: vocab, rdf_class: rdf_class) }
-        let(:unlink_path) { unlink_rdf_classes_props_prop_path site.host, vocab.id, rdf_class.id, item }
+        let(:unlink_path) { unlink_rdf_classes_props_prop_path site, vocab.id, rdf_class.id, item }
 
         it do
           visit unlink_path
@@ -153,7 +153,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
 
       describe "#import" do
         let!(:item) { create(:rdf_prop, vocab: vocab) }
-        let(:import_path) { import_rdf_classes_props_props_path site.host, vocab.id, rdf_class.id }
+        let(:import_path) { import_rdf_classes_props_props_path site, vocab.id, rdf_class.id }
 
         it do
           visit import_path

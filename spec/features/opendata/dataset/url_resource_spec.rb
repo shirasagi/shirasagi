@@ -17,11 +17,11 @@ describe "opendata_url_resource", dbscope: :example, http_server: true do
     create(:opendata_license, site: site, file: file)
   end
   let(:content_type) { "application/vnd.ms-excel" }
-  let(:index_path) { opendata_dataset_url_resources_path site.host, node, dataset_id: dataset.id }
-  let(:new_path) { new_opendata_dataset_url_resource_path site.host, node, dataset_id: dataset.id }
+  let(:index_path) { opendata_dataset_url_resources_path site, node, dataset_id: dataset.id }
+  let(:new_path) { new_opendata_dataset_url_resource_path site, node, dataset_id: dataset.id }
   let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let(:download_path) do
-    opendata_dataset_url_resource_file_path site.host,
+    opendata_dataset_url_resource_file_path site,
       node,
       dataset_id: dataset.id,
       url_resource_id: subject.id

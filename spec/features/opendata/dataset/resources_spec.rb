@@ -8,7 +8,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
   let!(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
   let!(:license) { create(:opendata_license, site: site, file: license_logo_file) }
   let(:dataset) { create(:opendata_dataset, node: node) }
-  let(:index_path) { opendata_dataset_resources_path site.host, node, dataset.id }
+  let(:index_path) { opendata_dataset_resources_path site, node, dataset.id }
 
   it "without login" do
     visit index_path
@@ -24,7 +24,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
   context "with auth" do
     let(:resource_file_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
     let(:resource_tsv_path) { "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv" }
-    let(:new_path) { new_opendata_dataset_resource_path site.host, node, dataset.id }
+    let(:new_path) { new_opendata_dataset_resource_path site, node, dataset.id }
 
     before { login_cms_user }
 
@@ -54,12 +54,12 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
 
     context "with item" do
       let(:item) { dataset.resources.new(attributes_for(:opendata_resource)) }
-      let(:show_path) { opendata_dataset_resource_path site.host, node, dataset, item }
-      let(:edit_path) { edit_opendata_dataset_resource_path site.host, node, dataset, item }
-      let(:delete_path) { delete_opendata_dataset_resource_path site.host, node, dataset, item }
-      let(:download_path) { opendata_dataset_resource_file_path site.host, node, dataset, item }
-      let(:download_tsv_path) { opendata_dataset_resource_tsv_path site.host, node, dataset, item }
-      let(:content_path) { opendata_dataset_resource_content_path site.host, node, dataset, item }
+      let(:show_path) { opendata_dataset_resource_path site, node, dataset, item }
+      let(:edit_path) { edit_opendata_dataset_resource_path site, node, dataset, item }
+      let(:delete_path) { delete_opendata_dataset_resource_path site, node, dataset, item }
+      let(:download_path) { opendata_dataset_resource_file_path site, node, dataset, item }
+      let(:download_tsv_path) { opendata_dataset_resource_tsv_path site, node, dataset, item }
+      let(:content_path) { opendata_dataset_resource_content_path site, node, dataset, item }
 
       before do
         Fs::UploadedFile.create_from_file(resource_file_path, basename: "spec") do |f1|
@@ -131,7 +131,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
     context "with item having tsv" do
       let(:resource_file_path) { "#{Rails.root}/spec/fixtures/opendata/test.json" }
       let(:item) { dataset.resources.new(attributes_for(:opendata_resource)) }
-      let(:download_tsv_path) { opendata_dataset_resource_tsv_path site.host, node, dataset, item }
+      let(:download_tsv_path) { opendata_dataset_resource_tsv_path site, node, dataset, item }
 
       before do
         Fs::UploadedFile.create_from_file(resource_file_path, basename: "spec") do |f1|
@@ -196,7 +196,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
 
           dataset.reload
           item = dataset.resources.first
-          show_path = opendata_dataset_resource_path site.host, node, dataset, item
+          show_path = opendata_dataset_resource_path site, node, dataset, item
           expect(current_path).to eq show_path
           # acquire that tsv file is not saved.
           expect(item.tsv).to be_nil
