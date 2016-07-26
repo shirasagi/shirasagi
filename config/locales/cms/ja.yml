@@ -443,6 +443,7 @@ ja:
       invalid_order_of_h: 見出しの順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
       invalid_dependent_character: 機種依存文字が含まれています。
+      invalid_kana_character: 半角カナ文字が含まれています。
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
@@ -471,6 +472,9 @@ ja:
         invalid_dependent_character:
           - 本文に機種依存文字が含まれています。
           - 他の文字に置き換えるか削除してください。
+        invalid_kana_character:
+          - 本文に半角カナ文字が含まれています。
+          - 全角文字に置き換えるか削除してください。
         invalid_date_format:
           - 日付の形式を修正してください。
         invalid_adjacent_a:
