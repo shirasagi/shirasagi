@@ -41,27 +41,28 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
 
   # NOTE: Skip tests with WebMock now.
   describe '#value' do
-    # before(:all) { WebMock.enable! }
+    before { WebMock.reset! }
+    after { WebMock.reset! }
 
     let(:status) { build :ckan_part_status }
 
-    # before do
-    #   stub_request(:get, "#{status.ckan_url}/api/3/action/package_list").
-    #     with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
-    #     to_return(:status => http_status, :body => body, :headers => {})
-    # end
+    before do
+      stub_request(:get, "#{status.ckan_url}/api/3/action/package_list").
+        with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+        to_return(:status => http_status, :body => body, :headers => {})
+    end
 
     subject { status.value }
 
     context "ok" do
       let(:http_status) { 200 }
       let(:body) { "{\"success\":true,\"result\":[{},{},{},{},{}]}" }
-      xit { is_expected.to eq 5 }
+      it { is_expected.to eq 5 }
 
       describe "ckan_value_cache update" do
         let(:status) { create :ckan_part_status, ckan_value_cache: 4 }
 
-        xit "updates ckan_value_cache" do
+        it "updates ckan_value_cache" do
           expect { subject }.to change {
             described_class.find(status.id).ckan_value_cache
           }.from(4).to(5)
@@ -75,12 +76,12 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
 
       context "no cache value is stored" do
         before { status.ckan_value_cache = nil }
-        xit { is_expected.to eq 'NaN' }
+        it { is_expected.to eq 'NaN' }
       end
 
       context "a cache value is stored" do
         before { status.ckan_value_cache = 1 }
-        xit { is_expected.to eq 1 }
+        it { is_expected.to eq 1 }
       end
     end
 
@@ -90,15 +91,13 @@ RSpec.describe Ckan::Part::Status, type: :model, dbscope: :example do
 
       context "no cache value is stored" do
         before { status.ckan_value_cache = nil }
-        xit { is_expected.to eq 'NaN' }
+        it { is_expected.to eq 'NaN' }
       end
 
       context "a cache value is stored" do
         before { status.ckan_value_cache = 1 }
-        xit { is_expected.to eq 1 }
+        it { is_expected.to eq 1 }
       end
     end
-
-    # after(:all) { WebMock.disable! }
   end
 end
