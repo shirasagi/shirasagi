@@ -1,4 +1,4 @@
-<nav class="act-menu">
+<nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @vocab.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, action: :new %>
@@ -37,7 +37,3 @@
     <% end %>
   <% end %>
 </nav>
-
-<% if params[:action] =~ /show|new|edit|create|update/ %>
-<%= render file: "_addons_menu" %>
-<% end %>
