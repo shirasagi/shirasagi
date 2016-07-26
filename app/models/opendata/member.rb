@@ -35,6 +35,9 @@ class Opendata::Member
     def image.read
       to_blob
     end
+    def image.rewind
+      0
+    end
 
     image.original_filename = in_icon.original_filename
 
