@@ -13,7 +13,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   before do
     # To stabilize spec, csv2tdf convert job is executed in-place process .
     allow(SS::RakeRunner).to receive(:run_async).and_wrap_original do |_, *args|
-      config = { name: "default", model: "job:service", num_workers: 0, poll: %w(default voice_synthesis) }
+      config = { name: "job:service", model: "on_demand", polling: { queues: %w(default voice_synthesis) } }
       config.stringify_keys!
       Job::Service.run config
     end
