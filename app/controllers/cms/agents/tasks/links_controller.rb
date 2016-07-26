@@ -7,9 +7,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   private
     def set_params
-      if @opts
-        @email = @opts[:email]
-      end
+      #
     end
 
   public
@@ -148,14 +146,14 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       url = File.join(@base_url, url) if url[0] == "/"
 
       begin
-        timeout(10) do
+        Timeout.timeout(10) do
           data = []
           open(url, proxy: true) do |f|
             f.each_line { |line| data << line }
           end
           return data.join
         end
-      rescue TimeoutError
+      rescue Timeout::Error
         nil
       rescue => e
         nil
@@ -167,11 +165,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       url = File.join(@base_url, url) if url[0] == "/"
 
       begin
-        timeout(5) do
+        Timeout.timeout(5) do
           open url, proxy: true, progress_proc: ->(size) { raise "200" }
         end
         false
-      rescue TimeoutError
+      rescue Timeout::Error
         return false
       rescue => e
         return e.to_s == "200"
