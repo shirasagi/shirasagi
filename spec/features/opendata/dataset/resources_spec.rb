@@ -171,7 +171,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           expect(status_code).to eq 200
           expect(current_path).to eq index_path
           within "div#errorExplanation" do
-            expect(page).to have_content("問題が発生しました。")
+            expect(page).to have_content("登録内容を確認してください。")
             expect(page).to have_content("プレビュー用データは不正な値です。")
           end
         end
