@@ -1236,7 +1236,6 @@ textarea {
 // -----------------------------------------------------------------------------
 // calendar
 .event-date {
-  position: relative;
   h1 {
     margin-bottom: $item-margin;
     padding: 7px 0 4px 50px;
@@ -1279,10 +1278,11 @@ textarea {
   h1.dec {
     background: url(../img/ic-december.png) no-repeat 10px bottom;
   }
+  > h2 {
+    display: inline-block;
+  }
   ul {
-    position: absolute;
-    top: 9px;
-    right: 0;
+    float: right;
     .prev {
       @include inline-block;
       margin-right: 10px;
