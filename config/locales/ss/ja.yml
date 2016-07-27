@@ -55,6 +55,8 @@ ja:
       confirm: 確認
       setting: 設定
       request: 公開申請
+      split: 分割
+      integrate: 統合
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -92,6 +94,8 @@ ja:
       select: 選択する
       delete_all: すべて削除する
       markdown_help: Markdown ヘルプ
+      split: 分割する
+      integrate: 統合する
     notice:
       saved: 保存しました。
       deleted: 削除しました。

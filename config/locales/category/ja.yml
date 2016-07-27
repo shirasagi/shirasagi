@@ -22,8 +22,32 @@ ja:
       cms/model/page:
         st_categories: カテゴリー
         st_category_ids: カテゴリー
+      category/addon/split:
+        split_master_node: 分割元フォルダー
+        split_partial_node: 新規フォルダー
+      category/addon/integration:
+        partial_node: フォルダー
+        integration_master_node: 統合元フォルダー
+        integration_partial_node: 対象フォルダー
+
+  errors:
+    messages:
+      partial_auth_error: "%{name}(%{filename}) : 権限がありません。"
+      partial_ancestor_error: "%{name}(%{filename}) : 対象フォルダーが統合元フォルダーの親フォルダーです。"
+      partial_children_basename_duplication: "%{name}(%{filename}) : 統合元フォルダーの下に同名のコンテンツがあります。"
+      partial_children_static_file_duplication: "%{file} : 統合元フォルダーの下に同名の静的ファイルがあります。"
+      partial_children_locked: "%{name}(%{filename}) : 編集ロックされています。"
 
   tooltip:
     category/addon/category:
       categories:
         - 表示するカテゴリーページの名称にチェックを入れます。
+    category/addon/split:
+      split_partial_node_name:
+        - 分割後のフォルダータイトルを入力します。
+      split_partial_node_basename:
+        - 分割後のフォルダー名を入力します。
+    category/addon/integration:
+      integration_partial_node:
+        - 統合対象となるフォルダーを選択します。
+        - 統合後は削除されます。

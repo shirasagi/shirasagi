@@ -1,0 +1,36 @@
+<%= form_for :item, url: { action: :split }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<section class="main-box">
+  <header><h2><%= @model.t :split_master_node %></h2></header>
+
+  <dl class="see">
+    <dt><%= @item.t :name %></dt>
+    <dd><%= @item.name %></dd>
+
+    <dt><%= @item.t :filename %></dt>
+    <dd>
+      <%= @item.basename %>
+      <%= "(#{@item.filename})" if @item.depth != 1 %>
+    </dd>
+  </dl>
+</section>
+
+<section class="main-box">
+  <header><h2><%= @model.t :split_partial_node %></h2></header>
+
+  <dl class="see">
+    <dt><%= @item.t :name %><%= @model.tt :split_partial_node_name %></dt>
+    <dd><%= f.text_field :in_partial_name %></dd>
+
+    <dt><%= @item.t :filename %><%= @model.tt :split_partial_node_basename %></dt>
+    <dd><%= f.text_field :in_partial_basename %></dd>
+  </dl>
+</section>
+
+<footer class="send">
+  <%= f.submit t("views.button.split"), class: "btn-primary" %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+</footer>
+
+<% end %>

@@ -1,0 +1,65 @@
+<%
+  options = Category::Node::Base.site(@cur_site).where(filename: @cur_node)
+%>
+
+<%= form_for :item, url: { action: :integrate }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<section class="main-box">
+  <header><h2><%= @item.t :integration_master_node %></h2></header>
+
+  <dl class="see">
+    <dt><%= @item.t :name %></dt>
+    <dd><%= @item.name %></dd>
+
+    <dt><%= @item.t :filename %></dt>
+    <dd>
+      <%= @item.basename %>
+      <%= "(#{@item.filename})" if @item.depth != 1 %>
+    </dd>
+  </dl>
+</section>
+
+<section class="main-box">
+  <header><h2><%= @item.t :integration_partial_node %></h2></header>
+
+  <dl class="see">
+    <dt><%= @model.t :partial_node %><%= @model.tt :integration_partial_node %></dt>
+    <dd>
+      <%= hidden_field_tag "item[in_partial_id]", nil, class: "hidden-ids" %>
+      <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path(single: true), class: "btn ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead>
+        <tr>
+          <th class="name"><%= @model.t :name %></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          <% item = Category::Node::Base.site(@cur_site).find(@item.in_partial_id) rescue nil %>
+          <% if item %>
+          <tr data-id="<%= item.id %>">
+            <td><%= f.hidden_field "item[in_partial_id]", value: item.id %> <%= item.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end %>
+          <tr style="display:none;" <%= "data-id=#{@item.id}" %>></tr>
+          <% @item.parents.each do |parent| %>
+          <tr style="display:none;" <%= "data-id=#{parent.id}" %>></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+
+  </dl>
+</section>
+
+<footer class="send">
+  <%= f.submit t("views.button.integrate"), class: "btn-primary" %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+</footer>
+
+<% end %>
