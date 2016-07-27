@@ -143,7 +143,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     # Returns the HTML response with HTTP request.
     def get_http(url)
-      url = File.join(@base_url, url) if url[0] == "/"
+      if url =~ /^\/\//
+        url = @base_url.sub(/\/\/.*$/, url)
+      elsif url[0] == "/"
+        url = File.join(@base_url, url)
+      end
 
       begin
         Timeout.timeout(10) do
@@ -162,7 +166,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     # Cheks the existence with HEAD request.
     def check_head(url)
-      url = File.join(@base_url, url) if url[0] == "/"
+      if url =~ /^\/\//
+        url = @base_url.sub(/\/\/.*$/, url)
+      elsif url[0] == "/"
+        url = File.join(@base_url, url)
+      end
 
       begin
         Timeout.timeout(5) do
