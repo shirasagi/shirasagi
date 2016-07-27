@@ -1,5 +1,6 @@
 require "timeout"
 require "open-uri"
+require 'open_uri_redirections'
 require 'nkf'
 
 class Cms::Agents::Tasks::LinksController < ApplicationController
@@ -152,7 +153,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       begin
         Timeout.timeout(10) do
           data = []
-          open(url, proxy: true) do |f|
+          open(url, proxy: true, allow_redirections: :all) do |f|
             f.each_line { |line| data << line }
           end
           return data.join
@@ -174,7 +175,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       begin
         Timeout.timeout(5) do
-          open url, proxy: true, progress_proc: ->(size) { raise "200" }
+          open url, proxy: true, allow_redirections: :all, progress_proc: ->(size) { raise "200" }
         end
         false
       rescue Timeout::Error

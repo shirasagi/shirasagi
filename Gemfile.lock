@@ -267,6 +267,7 @@ GEM
       httpauth
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
+    open_uri_redirections (0.2.1)
     origin (2.2.0)
     parser (2.3.0.6)
       ast (~> 2.2)
@@ -499,6 +500,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-twitter
   omniauth-yahoojp
+  open_uri_redirections
   poltergeist
   pry-byebug
   pry-doc
@@ -529,4 +531,4 @@ DEPENDENCIES
   zipruby
 
 BUNDLED WITH
-   1.12.1
+   1.12.5
