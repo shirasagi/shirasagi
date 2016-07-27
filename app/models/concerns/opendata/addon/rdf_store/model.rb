@@ -16,7 +16,7 @@ module Opendata::Addon::RdfStore::Model
 
   private
     def save_rdf_graph
-      if format.upcase == "TTL"
+      if format.casecmp("TTL") == 0
         remove_rdf_graph
         send_rdf_graph if dataset.state == "public"
       elsif rdf_iri.present?

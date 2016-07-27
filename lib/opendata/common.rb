@@ -1,17 +1,15 @@
 module Opendata::Common
+  def get_url(url, page)
+    url.sub(/\.html$/, "") + page
+  end
 
-  public
-    def get_url(url, page)
-      url.sub(/\.html$/, "") + page
-    end
+  def get_app_url(app, page)
+    app.url.sub(/\.html$/, "") + page
+  end
 
-    def get_app_url(app, page)
-      app.url.sub(/\.html$/, "") + page
-    end
-
-    def get_app_full_url(app, page)
-      app.full_url.sub(/\.html$/, "") + page
-    end
+  def get_app_full_url(app, page)
+    app.full_url.sub(/\.html$/, "") + page
+  end
 
   class << self
     public
@@ -38,7 +36,7 @@ module Opendata::Common
 
       def get_aggregate_field(model, name, opts = {})
         pipes = []
-        pipes << { "$match" => model.where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
+        pipes << { "$match" => model.where({}).selector.merge(name.to_s => { "$exists" => 1 }) }
         pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
         pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }
         pipes << { "$sort" => { count: -1 } }
@@ -47,8 +45,8 @@ module Opendata::Common
 
       def get_aggregate_array(model, name, opts = {})
         pipes = []
-        pipes << { "$match" => model.where({}).selector.merge("#{name}" => { "$exists" => 1 }) }
-        pipes << { "$project" => { _id: 0, "#{name}" => 1 } }
+        pipes << { "$match" => model.where({}).selector.merge(name.to_s => { "$exists" => 1 }) }
+        pipes << { "$project" => { _id: 0, name.to_s => 1 } }
         pipes << { "$unwind" => "$#{name}" }
         pipes << { "$group" => { _id: "$#{name}", count: { "$sum" =>  1 } }}
         pipes << { "$project" => { _id: 0, id: "$_id", count: 1 } }

@@ -1,5 +1,5 @@
 class Rdf::PropertyExpander
-  DEPTH_LIMIT = 5.freeze
+  DEPTH_LIMIT = 5
 
   def initialize(depth_limit = DEPTH_LIMIT)
     @depth_limit = depth_limit

@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   before_action :set_app, only: [:download, :show_point, :add_point, :point_members, :show_executed, :add_executed, :full]
   before_action :set_ideas, only: [:show_ideas]
   before_action :set_file, only: [:app_index, :text]
-  skip_filter :logged_in?
+  skip_action_callback :logged_in?
 
   private
     def set_app
@@ -48,7 +48,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
 
     def index
       @count          = pages.size
-      @node_url       = "#{@cur_node.url}"
+      @node_url       = @cur_node.url
       @search_path    = view_context.method(:search_apps_path)
       @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_apps_path}rss.xml", options) }
       @tabs = []
@@ -56,9 +56,9 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
         if @cur_node.show_tab?(options[1])
           @tabs << { name: @cur_node.tab_title(options[1]).presence || options[0],
                      id: options[1],
-                     url: "#{@search_path.call("sort" => "#{options[1]}")}",
+                     url: @search_path.call("sort" => options[1]),
                      pages: pages.order_by(Opendata::App.sort_hash(options[1])).limit(@cur_node.limit || 10),
-                     rss: "#{@rss_path.call("sort" => "#{options[1]}")}"}
+                     rss: @rss_path.call("sort" => options[1])}
         end
       end
 

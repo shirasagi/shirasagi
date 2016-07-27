@@ -145,7 +145,7 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
              category_ids: [ category.id ],
              area_ids: [ area.id ]
     end
-    let(:public_path) { "#{item.url}" }
+    let(:public_path) { item.url }
 
     it do
       # blow code can only work with Rack::Test.

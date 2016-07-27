@@ -7,6 +7,6 @@ FactoryGirl.define do
     site_id { site.present? ? site.id : nil }
     prefix { unique_id }
     uri { "http://example.jp/#{prefix}/rdf#" }
-    labels { { "ja": unique_id } }
+    labels { { "ja" => unique_id } }
   end
 end

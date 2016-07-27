@@ -9,9 +9,9 @@ module Opendata::Sparql
   PORT    = SS.config.opendata.fuseki["port"]
   DATASET = SS.config.opendata.fuseki["dataset"]
 
-  QUERY_SITE  = "http://#{SERVER}:#{PORT}/#{DATASET}/query"
-  UPDATE_SITE = "http://#{SERVER}:#{PORT}/#{DATASET}/update"
-  DATA_SITE   = "http://#{SERVER}:#{PORT}/#{DATASET}/data"
+  QUERY_SITE  = "http://#{SERVER}:#{PORT}/#{DATASET}/query".freeze
+  UPDATE_SITE = "http://#{SERVER}:#{PORT}/#{DATASET}/update".freeze
+  DATA_SITE   = "http://#{SERVER}:#{PORT}/#{DATASET}/data".freeze
 
   class << self
     public

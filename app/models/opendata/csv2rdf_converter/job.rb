@@ -6,26 +6,25 @@ class Opendata::Csv2rdfConverter::Job
   include Opendata::Csv2rdfConverter::Helpers::Footer
   include Opendata::Csv2rdfConverter::Helpers::TtlResource
 
-  public
-    def call(host, user, cid, dataset, resource)
-      init_context(host, user, cid, dataset, resource)
-      create_tempfile do
-        put_header
-        put_linkdata
-        put_footer
+  def call(host, user, cid, dataset, resource)
+    init_context(host, user, cid, dataset, resource)
+    create_tempfile do
+      put_header
+      put_linkdata
+      put_footer
 
-        @tmp_file.flush
-        @tmp_file.rewind
-        save_and_send_ttl
-      end
-      dispose_context
-      Rails.logger.info(I18n.t("opendata.messages.build_rdf_success"))
-      nil
-    rescue => e
-      Rails.logger.error("#{I18n.t("opendata.errors.messages.build_rdf_failed")}\n" \
-        "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-      raise
+      @tmp_file.flush
+      @tmp_file.rewind
+      save_and_send_ttl
     end
+    dispose_context
+    Rails.logger.info(I18n.t("opendata.messages.build_rdf_success"))
+    nil
+  rescue => e
+    Rails.logger.error("#{I18n.t("opendata.errors.messages.build_rdf_failed")}\n" \
+      "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    raise
+  end
 
   private
     def put_linkdata

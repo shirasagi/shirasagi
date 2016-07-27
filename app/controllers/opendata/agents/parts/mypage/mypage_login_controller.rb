@@ -4,11 +4,10 @@ class Opendata::Agents::Parts::Mypage::MypageLoginController < ApplicationContro
   include Opendata::MemberFilter
   helper Opendata::UrlHelper
 
-  skip_filter :logged_in?
+  skip_action_callback :logged_in?
 
-  public
-    def index
-      logged_in? redirect: false
-      render
-    end
+  def index
+    logged_in? redirect: false
+    render
+  end
 end

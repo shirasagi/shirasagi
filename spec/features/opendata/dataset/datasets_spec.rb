@@ -124,7 +124,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
                   category_ids: [ category.id ],
                   area_ids: [ area.id ]
     end
-    let(:public_path) { "#{item.url}" }
+    let(:public_path) { item.url }
 
     it do
       # blow code can only work with Rack::Test.
@@ -239,7 +239,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           expect(page).to have_content("#{category_root.name}/#{category1.name}")
         end
         within 'div#addon-opendata-agents-addons-area' do
-          expect(page).to have_content("#{area1.name}")
+          expect(page).to have_content(area1.name)
         end
 
         visit edit_path
@@ -249,7 +249,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         end
         within 'div#addon-opendata-agents-addons-area dd.disallowed-areas' do
           expect(page).to have_content('閲覧が許可されていない地域')
-          expect(page).to have_content("#{area1.name}")
+          expect(page).to have_content(area1.name)
         end
       end
     end

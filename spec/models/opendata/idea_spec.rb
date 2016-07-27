@@ -10,7 +10,7 @@ describe Opendata::Idea, dbscope: :example do
     its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
-    its(:path) { is_expected.to end_with  "/#{subject.dirname}/#{subject.basename}" }
+    its(:path) { is_expected.to end_with "/#{subject.dirname}/#{subject.basename}" }
     its(:url) { is_expected.to eq "/#{subject.dirname}/#{subject.basename}" }
     its(:full_url) { is_expected.to eq "http://#{cms_site.domain}/#{subject.dirname}/#{subject.basename}" }
     its(:parent) { expect(subject.parent.id).to eq node.id }

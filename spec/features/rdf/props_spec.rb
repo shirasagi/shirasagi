@@ -33,8 +33,8 @@ describe "rdf_props", type: :feature, dbscope: :example do
         it do
           visit new_path
           within "form#item-form" do
-            fill_in "item[name]", with: "#{unique_id}"
-            fill_in "item[labels][ja]", with: "#{unique_id}"
+            fill_in "item[name]", with: unique_id
+            fill_in "item[labels][ja]", with: unique_id
             click_button I18n.t("views.button.save")
           end
           expect(status_code).to eq 200
@@ -99,8 +99,8 @@ describe "rdf_props", type: :feature, dbscope: :example do
         it do
           visit new_path
           within "form#item-form" do
-            fill_in "item[name]", with: "#{unique_id}"
-            fill_in "item[labels][ja]", with: "#{unique_id}"
+            fill_in "item[name]", with: unique_id
+            fill_in "item[labels][ja]", with: unique_id
             click_button I18n.t("views.button.save")
           end
           expect(status_code).to eq 200

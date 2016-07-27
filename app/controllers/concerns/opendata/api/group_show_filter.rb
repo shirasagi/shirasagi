@@ -9,9 +9,9 @@ module Opendata::Api::GroupShowFilter
       id_messages << "Missing value" if id.blank?
 
       messages = {}
-      messages[:name_or_id] = id_messages if id_messages.size > 0
+      messages[:name_or_id] = id_messages if id_messages.present?
 
-      if messages.size > 0
+      if messages.present?
         error = {__type: "Validation Error"}
         error = error.merge(messages)
       end

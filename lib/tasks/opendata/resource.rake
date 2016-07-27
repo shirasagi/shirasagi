@@ -1,7 +1,7 @@
 namespace :opendata do
   task :export_resources => :environment do
     Opendata::Dataset.each do |dataset|
-      next if dataset.resources.size == 0
+      next if dataset.resources.blank?
       puts dataset.name
       dataset.resources.each do |resource|
         next unless resource.file
@@ -17,7 +17,7 @@ namespace :opendata do
 
   task :fuseki_import => :environment do
     Opendata::Dataset.each do |dataset|
-      next if dataset.resources.size == 0
+      next if dataset.resources.blank?
       puts dataset.name
       dataset.resources.each do |resource|
         next unless resource.file

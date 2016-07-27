@@ -42,7 +42,7 @@ describe Opendata::Sparql do
       allow(sparql_client_stub).to receive(:clear_graph).with(graph_name).and_return("this is stub")
       allow(SPARQL::Client).to receive(:new).and_return(sparql_client_stub)
 
-      expect(Opendata::Sparql.clear graph_name).to eq "this is stub"
+      expect(Opendata::Sparql.clear(graph_name)).to eq "this is stub"
     end
   end
 

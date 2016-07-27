@@ -26,14 +26,12 @@ describe "opendata_agents_nodes_my_app", dbscope: :example do
       :opendata_node_category,
       cur_node: node_category_folder,
       name: "カテゴリー",
-      filename: "#{unique_id}")
+      filename: unique_id)
   end
 
   let!(:node_auth) { create :opendata_node_mypage, basename: "opendata/mypage" }
 
-  let(:index_path) { "#{node_myapp.url}" }
-  # let(:show_path) { "#{node_myapp.url}#{app.id}/" }
-  # let(:delete_path) { "#{node_myapp.url}#{app.id}/delete/" }
+  let(:index_path) { node_myapp.url }
 
   before do
     login_opendata_member(site, node_login, member)

@@ -2,45 +2,44 @@ class Rdf::VocabImportJob
   include Job::Worker
   include Rdf::Builders::Traversable
 
-  public
-    def call(host, prefix, file_or_id, owner = Rdf::Vocab::OWNER_USER, order = nil)
-      begin
-        @cur_site = SS::Site.find_by(host: host)
-        @prefix = prefix
-        if file_or_id.is_a?(Numeric)
-          @temp_file = SS::TempFile.where(_id: file_or_id).first
-          @filename = @temp_file.path
-          @format = format_of(@temp_file.filename)
-        else
-          @filename = file_or_id.try(:path) || file_or_id.to_s
-          @format = format_of(@filename)
-        end
-        @graph = RDF::Graph.load(@filename, format: @format)
-        @owner = owner
-        @order = order
-        @vocabs = []
-        @pending_classes = []
-        @pending_prop_attributes = []
-        @pending_class_attributes = []
-        @vocab_count = 0
-        @class_count = 0
-        @property_count = 0
-
-        load_and_create_vocab
-        @vocabs.each do |vocab|
-          load_and_create_objects(vocab)
-        end
-
-        do_process_pending_classes
-        do_process_pending_prop_attributes
-        do_process_pending_class_attributes
-
-        Rails.logger.info("imported from #{@filename}: vocab count=#{@vocab_count}, class count=#{@class_count}, " \
-          "property count=#{@property_count}")
-      ensure
-        @temp_file.delete if @temp_file
+  def call(host, prefix, file_or_id, owner = Rdf::Vocab::OWNER_USER, order = nil)
+    begin
+      @cur_site = SS::Site.find_by(host: host)
+      @prefix = prefix
+      if file_or_id.is_a?(Numeric)
+        @temp_file = SS::TempFile.where(_id: file_or_id).first
+        @filename = @temp_file.path
+        @format = format_of(@temp_file.filename)
+      else
+        @filename = file_or_id.try(:path) || file_or_id.to_s
+        @format = format_of(@filename)
       end
+      @graph = RDF::Graph.load(@filename, format: @format)
+      @owner = owner
+      @order = order
+      @vocabs = []
+      @pending_classes = []
+      @pending_prop_attributes = []
+      @pending_class_attributes = []
+      @vocab_count = 0
+      @class_count = 0
+      @property_count = 0
+
+      load_and_create_vocab
+      @vocabs.each do |vocab|
+        load_and_create_objects(vocab)
+      end
+
+      do_process_pending_classes
+      do_process_pending_prop_attributes
+      do_process_pending_class_attributes
+
+      Rails.logger.info("imported from #{@filename}: vocab count=#{@vocab_count}, class count=#{@class_count}, " \
+        "property count=#{@property_count}")
+    ensure
+      @temp_file.delete if @temp_file
     end
+  end
 
   private
     def format_of(file)

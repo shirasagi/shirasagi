@@ -14,7 +14,9 @@ describe "opendata_agents_nodes_app", dbscope: :example, js: true do
   let!(:node_idea) { create :opendata_node_idea, cur_site: cms_site, layout_id: layout.id }
   let!(:node_member) { create :opendata_node_member, cur_site: cms_site, layout_id: layout.id }
   let!(:node_mypage) { create :opendata_node_mypage, cur_site: cms_site, layout_id: layout.id, filename: "mypage" }
-  let!(:node_myidea) { create :opendata_node_my_idea, cur_site: cms_site, cur_node: node_mypage, layout_id: layout.id, filename: "idea" }
+  let!(:node_myidea) do
+    create :opendata_node_my_idea, cur_site: cms_site, cur_node: node_mypage, layout_id: layout.id, filename: "idea"
+  end
 
   let!(:node_search) { create :opendata_node_search_app, cur_site: cms_site, layout_id: layout.id }
 

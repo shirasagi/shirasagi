@@ -18,26 +18,25 @@ module Opendata::Addon
       permit_params st_category_ids: []
     end
 
-    public
-      def default_st_categories
-        site = self.try(:cur_site) || self.try(:site)
-        return [] if site.blank?
-        categories = Opendata::Node::Category.site(site).sort(depth: 1, order: 1)
-        first_node = categories.first
-        return [] if first_node.blank?
-        return [first_node.parent].compact
-      end
+    def default_st_categories
+      site = self.try(:cur_site) || self.try(:site)
+      return [] if site.blank?
+      categories = Opendata::Node::Category.site(site).sort(depth: 1, order: 1)
+      first_node = categories.first
+      return [] if first_node.blank?
+      return [first_node.parent].compact
+    end
 
-      def st_parent_categories
-        categories = []
-        parents = st_categories.sort_by { |cate| cate.filename.count("/") }
-        while parents.present?
-          parent = parents.shift
-          parents = parents.map { |c| c.filename !~ /^#{parent.filename}\// ? c : nil }.compact
-          categories << parent
-        end
-        categories
+    def st_parent_categories
+      categories = []
+      parents = st_categories.sort_by { |cate| cate.filename.count("/") }
+      while parents.present?
+        parent = parents.shift
+        parents = parents.map { |c| c.filename !~ /^#{parent.filename}\// ? c : nil }.compact
+        categories << parent
       end
+      categories
+    end
   end
 
   module Area

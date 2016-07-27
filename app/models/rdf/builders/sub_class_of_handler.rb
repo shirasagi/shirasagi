@@ -37,7 +37,7 @@ class Rdf::Builders::SubClassOfHandler < Rdf::Builders::BaseHandler
               property[:datatype] = value.first.to_s
             end
           when "owl:qualifiedCardinality", "owl:cardinality" then
-            property[:cardinality] = "#{value.first.value}"
+            property[:cardinality] = value.first.value.to_s
           when "owl:maxQualifiedCardinality", "owl:maxCardinality" then
             property[:cardinality] = "0..#{value.first.value}"
           when "owl:minQualifiedCardinality", "owl:minCardinality" then

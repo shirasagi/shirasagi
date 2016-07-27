@@ -41,7 +41,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         visit new_path
         within "form#item-form" do
           attach_file "item[in_file]", resource_file_path
-          fill_in "item[name]", with: "#{unique_id}"
+          fill_in "item[name]", with: unique_id
           select license.name, from: "item_license_id"
           attach_file "item[in_tsv]", resource_tsv_path
           click_button "保存"
@@ -163,7 +163,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           visit new_path
           within "form#item-form" do
             attach_file "item[in_file]", resource_file_path
-            fill_in "item[name]", with: "#{unique_id}"
+            fill_in "item[name]", with: unique_id
             select license.name, from: "item_license_id"
             attach_file "item[in_tsv]", resource_tsv_path
             click_button "保存"
@@ -186,7 +186,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         it do
           visit new_path
           within "form#item-form" do
-            fill_in "item[name]", with: "#{unique_id}"
+            fill_in "item[name]", with: unique_id
             select license.name, from: "item_license_id"
             attach_file "item[in_tsv]", resource_tsv_path
             attach_file "item[in_file]", resource_file_path

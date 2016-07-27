@@ -18,9 +18,6 @@ module Opendata::Addon::SiteSetting
     validates :dataset_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validates :app_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validates :idea_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
-
-    alias :app_state_options :dataset_state_options
-    alias :idea_state_options :dataset_state_options
   end
 
   def dataset_state_options
@@ -28,6 +25,8 @@ module Opendata::Addon::SiteSetting
       [ I18n.t("views.options.state.#{v}"), v ]
     end
   end
+  alias app_state_options dataset_state_options
+  alias idea_state_options dataset_state_options
 
   def dataset_disabled?
     dataset_state == 'disabled'

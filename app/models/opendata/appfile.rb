@@ -26,34 +26,33 @@ class Opendata::Appfile
   after_save :save_app
   after_destroy -> { app.save(validate: false) }
 
-  public
-    def url
-      get_app_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
-    end
+  def url
+    get_app_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
+  end
 
-    def full_url
-      get_app_full_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
-    end
+  def full_url
+    get_app_full_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
+  end
 
-    def content_url
-      get_app_full_url(app, "/appfile/#{id}/content.html")
-    end
+  def content_url
+    get_app_full_url(app, "/appfile/#{id}/content.html")
+  end
 
-    def json_url
-      get_app_full_url(app, "/appfile/#{id}/json.html")
-    end
+  def json_url
+    get_app_full_url(app, "/appfile/#{id}/json.html")
+  end
 
-    def path
-      file ? file.path : nil
-    end
+  def path
+    file ? file.path : nil
+  end
 
-    def content_type
-      file ? file.content_type : nil
-    end
+  def content_type
+    file ? file.content_type : nil
+  end
 
-    def size
-      file ? file.size : nil
-    end
+  def size
+    file ? file.size : nil
+  end
 
   private
     def set_filename

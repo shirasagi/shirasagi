@@ -2,8 +2,10 @@ module Opendata::UrlHelper
   def member_icon(member, opts = {})
     opts[:alt] ||= ""
     if opts[:size]
-      opts.merge!(width: 38, height: 38) if opts[:size] == :small
-      opts.delete :size
+      if opts.delete(:size) == :small
+        opts[:width] = 38
+        opts[:height] = 38
+      end
     end
 
     url = member.icon ? member.icon.url : "opendata/icon-user.png"

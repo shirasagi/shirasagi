@@ -18,7 +18,12 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
   let!(:node_area) { create :opendata_node_area, cur_site: site, layout_id: layout.id, name: '地域Ａ' }
 
   before do
-    params = { cur_site: site, cur_node: node_idea, layout_id: layout.id, category_ids: [ node_category.id ], area_ids: [ node_area.id ] }
+    params = {
+      cur_site: site,
+      cur_node: node_idea,
+      layout_id: layout.id,
+      category_ids: [ node_category.id ],
+      area_ids: [ node_area.id ] }
 
     10.times.each do |index|
       params[:issue] = "issue#{index}"

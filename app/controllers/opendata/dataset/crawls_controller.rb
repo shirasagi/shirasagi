@@ -6,7 +6,6 @@ class Opendata::Dataset::CrawlsController < ApplicationController
 
   navi_view "opendata/main/navi"
 
-  public
   def index
     @datasets = Opendata::Dataset.site(@cur_site).and_public.order_by(name: 1)
     @items = []

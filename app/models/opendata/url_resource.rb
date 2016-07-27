@@ -20,44 +20,43 @@ class Opendata::UrlResource
   after_save -> { dataset.save(validate: false) }
   after_destroy -> { dataset.save(validate: false) }
 
-  public
-    def context_path
-      "/url_resource"
+  def context_path
+    "/url_resource"
+  end
+
+  def crawl_update_options
+    [
+      [I18n.t("opendata.crawl_update_name.none"), "none"],
+      [I18n.t("opendata.crawl_update_name.auto"), "auto"]
+    ]
+  end
+
+  def do_crawl(time_out: 30)
+    require 'net/http'
+    require "open-uri"
+
+    puts self.original_url
+
+    last_modified = Timeout.timeout(time_out) do
+      open(self.original_url, proxy: true) { |url_file| url_file.last_modified }
     end
 
-    def crawl_update_options
-      [
-        [I18n.t("opendata.crawl_update_name.none"), "none"],
-        [I18n.t("opendata.crawl_update_name.auto"), "auto"]
-      ]
+    if last_modified.blank?
+      last_modified = Time.zone.now
     end
 
-    def do_crawl(time_out: 30)
-      require 'net/http'
-      require "open-uri"
-
-      puts self.original_url
-
-      last_modified = Timeout.timeout(time_out) do
-        open(self.original_url, proxy: true) { |url_file| url_file.last_modified }
-      end
-
-      if last_modified.blank?
-        last_modified = Time.zone.now
-      end
-
-      if self.crawl_update == "none"
-        do_crawl_none(last_modified)
-      elsif self.crawl_update == "auto"
-        do_crawl_auto(last_modified)
-      end
-    rescue Timeout::Error
-      puts I18n.t("opendata.errors.messages.invalid_timeout")
-    rescue => e
-      puts "Error: #{e}"
-      self.crawl_state = "deleted"
-      self.save(validate: false)
+    if self.crawl_update == "none"
+      do_crawl_none(last_modified)
+    elsif self.crawl_update == "auto"
+      do_crawl_auto(last_modified)
     end
+  rescue Timeout::Error
+    puts I18n.t("opendata.errors.messages.invalid_timeout")
+  rescue => e
+    puts "Error: #{e}"
+    self.crawl_state = "deleted"
+    self.save(validate: false)
+  end
 
   private
     def do_crawl_none(last_modified)

@@ -57,22 +57,20 @@ module Opendata::Csv2rdfConverter::Helpers
       last_class = classes.last
       if last_class == "xsd:integer"
         if /^[-+]?[0-9,]+$/ =~ value
-          "\"#{value.gsub(/,/, '')}\"^^#{last_class}"
+          "\"#{value.delete(",")}\"^^#{last_class}"
         else
-          "\"#{value.gsub(/,/, '')}\""
+          "\"#{value.delete(",")}\""
         end
       elsif last_class == "xsd:decimal"
         if /^[-+]?[0-9,]+\.[0-9]+$/ =~ value
-          "\"#{value.gsub(/,/, '')}\"^^#{last_class}"
+          "\"#{value.delete(",")}\"^^#{last_class}"
         else
-          "\"#{value.gsub(/,/, '')}\""
+          "\"#{value.delete(",")}\""
         end
+      elsif value.start_with?("http:", "https:")
+        "<#{value}>"
       else
-        if value.start_with?("http:") || value.start_with?("https:")
-          "<#{value}>"
-        else
-          "\"#{value}\""
-        end
+        "\"#{value}\""
       end
     end
   end

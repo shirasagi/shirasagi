@@ -14,19 +14,19 @@ describe Opendata::UrlHelper, type: :helper, dbscope: :example do
     context "when menber doesn't have icon" do
       let(:member) { create(:opendata_member) }
       subject { helper.member_icon(member) }
-      it { is_expected.to match /<img alt="" src="\/assets\/opendata\/icon-user(-\w+)?\.png" \/>/ }
+      it { is_expected.to match(/<img alt="" src="\/assets\/opendata\/icon-user(-\w+)?\.png" \/>/) }
     end
 
     context "when size parameter is given" do
       let(:member) { create(:opendata_member) }
       subject { helper.member_icon(member, size: :small) }
-      it { is_expected.to match /<img alt="" width="38" height="38" src="\/assets\/opendata\/icon-user(-\w+)?\.png" \/>/ }
+      it { is_expected.to match(/<img alt="" width="38" height="38" src="\/assets\/opendata\/icon-user(-\w+)?\.png" \/>/) }
     end
 
     context "when alt parameter is given" do
       let(:member) { create(:opendata_member) }
       subject { helper.member_icon(member, alt: "alt") }
-      it { is_expected.to match /<img alt="alt" src="\/assets\/opendata\/icon-user(-\w+)?\.png" \/>/ }
+      it { is_expected.to match(/<img alt="alt" src="\/assets\/opendata\/icon-user(-\w+)?\.png" \/>/) }
     end
   end
 

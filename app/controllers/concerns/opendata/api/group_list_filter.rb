@@ -6,14 +6,14 @@ module Opendata::Api::GroupListFilter
     def group_list_check(sort)
 
       sort_messages = []
-      sort_values = ["name", "packages"]
+      sort_values = %w(name packages)
 
       sort_messages << "Cannot sort by field `#{sort}`" if !sort_values.include?(sort)
 
       messages = {}
-      messages[:sort] = sort_messages if sort_messages.size > 0
+      messages[:sort] = sort_messages if sort_messages.present?
 
-      if messages.size > 0
+      if messages.present?
         error = {__type: "Validation Error"}
         error = error.merge(messages)
       end

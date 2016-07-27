@@ -23,18 +23,23 @@ class Opendata::Member
     def image.size
       filesize
     end
+
     def image.content_type
       mime_type
     end
+
     def image.original_filename=(filename)
       @filename = filename
     end
+
     def image.original_filename
       @filename
     end
+
     def image.read
       to_blob
     end
+
     def image.rewind
       0
     end

@@ -13,7 +13,7 @@ describe "opendata_agents_pages_dataset", dbscope: :example do
   let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
   let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
   let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
-  let(:index_path) { "#{page_dataset.url}" }
+  let(:index_path) { page_dataset.url }
 
   before do
     Fs::UploadedFile.create_from_file(dataset_resource_file_path, basename: "spec") do |f|

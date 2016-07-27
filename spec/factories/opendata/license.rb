@@ -6,7 +6,7 @@ FactoryGirl.define do
       file nil
     end
 
-    name { "#{unique_id}" }
+    name { unique_id }
     site_id { site.present? ? site.id : nil }
     user_id { user.present? ? user.id : nil }
     in_file { file }

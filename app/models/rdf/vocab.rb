@@ -4,7 +4,7 @@ class Rdf::Vocab
   include SS::Reference::Site
   include Cms::SitePermission
 
-  DEFAULT_ORDER = 100.freeze
+  DEFAULT_ORDER = 100
 
   OWNER_SYSTEM = "system".freeze
   OWNER_USER = "user".freeze

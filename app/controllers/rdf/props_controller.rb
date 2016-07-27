@@ -16,7 +16,7 @@ class Rdf::PropsController < ApplicationController
 
     def fix_params
       params = super
-      params.merge!({ class_ids: [ @rdf_class.id ] }) if @rdf_class
+      params[:class_ids] = [ @rdf_class.id ] if @rdf_class
       params
     end
 
@@ -58,7 +58,7 @@ class Rdf::PropsController < ApplicationController
       unless request.post?
         @vocab_options = vocab_options
         params[:s] ||= {}
-        params[:s][:vocab] ||= "#{@vocab.id}"
+        params[:s][:vocab] ||= @vocab.id
         @items = @model.
           search(params[:s]).
           order_by(_id: 1).

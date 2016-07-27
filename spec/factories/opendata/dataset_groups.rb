@@ -6,7 +6,7 @@ FactoryGirl.define do
       categories nil
     end
 
-    name { "#{unique_id}" }
+    name { unique_id }
     site_id { site.present? ? site.id : cms_site.id }
     user_id { user.present? ? user.id : nil }
     category_ids { categories.present? ? categories.map(&:_id).to_a : nil }

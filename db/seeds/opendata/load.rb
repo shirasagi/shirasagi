@@ -332,7 +332,7 @@ event0 = save_page route: "event/page", filename: "event/4.html", name: "オー�
   layout_id: layouts["portal-event"].id,
   schedule: "#{7.days.since.strftime("%m").sub(/^0+/, '')}月#{7.days.since.strftime("%d").sub(/^0+/, '')}日", \
   venue: "シラサギ市図書館", related_url: "http://demo.ss-proj.org/", \
-  event_dates: 7.upto(18).map { |d| "#{d.days.since.strftime("%Y/%m/%d")}" }.join("\r\n")
+  event_dates: 7.upto(18).map { |d| d.days.since.strftime("%Y/%m/%d") }.join("\r\n")
 page0.related_page_ids = [ page2.id, event0.id ]
 page0.save!
 

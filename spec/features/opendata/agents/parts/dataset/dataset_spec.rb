@@ -12,7 +12,7 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
 
   describe "#index" do
     it do
-      visit "#{index_url}"
+      visit index_url.to_s
       expect(status_code).to eq 200
       expect(current_path).to eq index_url.path
       within "div.pages" do

@@ -22,40 +22,39 @@ class Opendata::IdeaComment
   validates :idea_id, presence: true
   validates :text, presence: true, length: { maximum: 400 }
 
-  public
-    def get_member_name
-      if member
-        name = member.name
-      elsif contact_group
-        name = contact_group.name.sub(/.*\//, "")
-      elsif user && user.groups && user.groups.size > 0
-        name = user.groups.first.name
-      else
-        name = I18n.t("opendata.labels.guest_user")
-      end
-
-      return name
+  def get_member_name
+    if member
+      name = member.name
+    elsif contact_group
+      name = contact_group.name.sub(/.*\//, "")
+    elsif user && user.groups && user.groups.present?
+      name = user.groups.first.name
+    else
+      name = I18n.t("opendata.labels.guest_user")
     end
 
-    def owned?(user)
-      idea.owned(user)
-    end
+    return name
+  end
 
-    def allowed?(action, user, opts = {})
-      if idea
-        opts[:site] ||= idea.site
-        idea.allowed?(action, user, opts)
-      else
-        Opendata::Idea.allowed?(action, user, opts)
-      end
-    end
+  def owned?(user)
+    idea.owned(user)
+  end
 
-    def state_options
-      [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-      ]
+  def allowed?(action, user, opts = {})
+    if idea
+      opts[:site] ||= idea.site
+      idea.allowed?(action, user, opts)
+    else
+      Opendata::Idea.allowed?(action, user, opts)
     end
+  end
+
+  def state_options
+    [
+      [I18n.t('views.options.state.public'), 'public'],
+      [I18n.t('views.options.state.closed'), 'closed'],
+    ]
+  end
 
   class << self
     public

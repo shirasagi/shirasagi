@@ -40,59 +40,58 @@ class Opendata::App
 
   default_scope ->{ where(route: "opendata/app") }
 
-  public
-    def point_url
-      get_url(url, "/point.html")
-    end
+  def point_url
+    get_url(url, "/point.html")
+  end
 
-    def point_members_url
-      get_url(url, "/point/members.html")
-    end
+  def point_members_url
+    get_url(url, "/point/members.html")
+  end
 
-    def app_ideas_url
-      get_url(url, "/ideas/show.html")
-    end
+  def app_ideas_url
+    get_url(url, "/ideas/show.html")
+  end
 
-    def zip_url
-      get_url(url, "/zip")
-    end
+  def zip_url
+    get_url(url, "/zip")
+  end
 
-    def executed_show_url
-      get_url(url, "/executed/show.html")
-    end
+  def executed_show_url
+    get_url(url, "/executed/show.html")
+  end
 
-    def executed_add_url
-      get_url(url, "/executed/add.html")
-    end
+  def executed_add_url
+    get_url(url, "/executed/add.html")
+  end
 
-    def full_screen_url
-      get_url(url, "/full/")
-    end
+  def full_screen_url
+    get_url(url, "/full/")
+  end
 
-    def file_text_url
-      get_url(url, "/file_text/")
-    end
+  def file_text_url
+    get_url(url, "/file_text/")
+  end
 
-    def file_index_url
-      get_url(url, "/file_index/")
-    end
+  def file_index_url
+    get_url(url, "/file_index/")
+  end
 
-    def contact_present?
-      return false if member_id.present?
-      super
-    end
+  def contact_present?
+    return false if member_id.present?
+    super
+  end
 
-    def create_zip
-      zip_filename = self.class.zip_dir.join("#{id}.zip").to_s
-      File.unlink(zip_filename) if File.exist?(zip_filename)
+  def create_zip
+    zip_filename = self.class.zip_dir.join("#{id}.zip").to_s
+    File.unlink(zip_filename) if File.exist?(zip_filename)
 
-      Zip::Archive.open(zip_filename, Zip::CREATE) do |ar|
-        appfiles.each do |appfile|
-          ar.add_file(appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_'), appfile.file.path)
-        end
+    Zip::Archive.open(zip_filename, Zip::CREATE) do |ar|
+      appfiles.each do |appfile|
+        ar.add_file(appfile.filename.encode('cp932', invalid: :replace, undef: :replace, replace: '_'), appfile.file.path)
       end
-      return zip_filename
     end
+    return zip_filename
+  end
 
   private
     def validate_filename
@@ -154,103 +153,10 @@ class Opendata::App
         Opendata::Common.get_aggregate_array(self, name, opts)
       end
 
-      def search_params
-        params = []
-        params << :keyword
-        params << :tag
-        params << :area_id
-        params << :category_id
-        params << :license
-        params << :option
-        params
-      end
-
-      def search_options
-        %w(all_keywords any_keywords any_conditions).map do |w|
-          [I18n.t("opendata.search_options.#{w}"), w]
-        end
-      end
-
-      def search(params)
-        criteria = self.where({})
-        return criteria if params.blank?
-
-        SEARCH_HANDLERS.each do |handler|
-          criteria = send(handler, params, criteria)
-        end
-
-        criteria
-      end
-
       def zip_dir
         dir = Rails.root.join('tmp', 'opendata')
         FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
         dir
-      end
-
-    private
-      SEARCH_HANDLERS = [
-        :search_keyword, :search_name, :search_tag, :search_area_id, :search_category_id,
-        :search_license, :search_poster ].freeze
-
-      def search_keyword(params, criteria)
-        if params[:keyword].present?
-          option = params[:option].presence || 'all_keywords'
-          method = option == 'all_keywords' ? 'and' : 'any'
-          criteria = criteria.keyword_in params[:keyword],
-            :name, :text, "appfiles.name", "appfiles.filename", "appfiles.text", method: method
-        end
-        criteria
-      end
-
-      def search_name(params, criteria)
-        criteria = criteria.keyword_in params[:keyword], :name if params[:name].present?
-        criteria
-      end
-
-      def search_tag(params, criteria)
-        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-        criteria = criteria.where(operator => [ tags: params[:tag] ]) if params[:tag].present?
-        criteria
-      end
-
-      def search_area_id(params, criteria)
-        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-        criteria = criteria.where(operator => [ area_ids: params[:area_id].to_i ]) if params[:area_id].present?
-        criteria
-      end
-
-      def search_category_id(params, criteria)
-        return criteria if params[:category_id].blank?
-
-        category_id = params[:category_id].to_i
-        category_node = Cms::Node.site(params[:site]).and_public.where(id: category_id).first
-        return criteria if category_node.blank?
-
-        category_ids = [ category_id ]
-        category_node.all_children.and_public.each do |child|
-          category_ids << child.id
-        end
-
-        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-        criteria.where(operator => [ category_ids: { '$in' => category_ids } ])
-      end
-
-      def search_license(params, criteria)
-        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-        criteria = criteria.where(operator => [ license: params[:license] ]) if params[:license].present?
-        criteria
-      end
-
-      def search_poster(params, criteria)
-        if params[:poster].present?
-          cond = {}
-          cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
-          cond = { :workflow_member_id => nil } if params[:poster] == "admin"
-          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-          criteria = criteria.where(operator => cond)
-        end
-        criteria
       end
   end
 end

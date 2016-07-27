@@ -5,10 +5,18 @@ module Opendata::IdeaTemplateVariables
     template_variable_handler(:idea_name, :template_variable_handler_idea_name)
     template_variable_handler(:idea_url, :template_variable_handler_idea_url)
     template_variable_handler(:idea_updated, :template_variable_handler_idea_updated)
-    template_variable_handler('idea_updated.default') { |name, issuer| template_variable_handler_idea_updated(name, issuer, :default) }
-    template_variable_handler('idea_updated.iso') { |name, issuer| template_variable_handler_idea_updated(name, issuer, :iso) }
-    template_variable_handler('idea_updated.long') { |name, issuer| template_variable_handler_idea_updated(name, issuer, :long) }
-    template_variable_handler('idea_updated.short') { |name, issuer| template_variable_handler_idea_updated(name, issuer, :short) }
+    template_variable_handler('idea_updated.default') do |name, issuer|
+      template_variable_handler_idea_updated(name, issuer, :default)
+    end
+    template_variable_handler('idea_updated.iso') do |name, issuer|
+      template_variable_handler_idea_updated(name, issuer, :iso)
+    end
+    template_variable_handler('idea_updated.long') do |name, issuer|
+      template_variable_handler_idea_updated(name, issuer, :long)
+    end
+    template_variable_handler('idea_updated.short') do |name, issuer|
+      template_variable_handler_idea_updated(name, issuer, :short)
+    end
     template_variable_handler(:idea_state, :template_variable_handler_idea_state)
     template_variable_handler(:idea_point, :template_variable_handler_idea_point)
     template_variable_handler(:idea_datasets, :template_variable_handler_idea_datasets)
@@ -30,7 +38,7 @@ module Opendata::IdeaTemplateVariables
     end
 
     def template_variable_handler_idea_state(name, issuer)
-      ERB::Util.html_escape(label :status)
+      ERB::Util.html_escape(label(:status))
     end
 
     def template_variable_handler_idea_point(name, issuer)
@@ -38,7 +46,7 @@ module Opendata::IdeaTemplateVariables
     end
 
     def template_variable_handler_idea_datasets(name, issuer)
-      if dataset_ids.length > 0
+      if dataset_ids.present?
         ERB::Util.html_escape(datasets[0].name)
       else
         ERB::Util.html_escape(I18n.t("opendata.labels.not_exist"))
@@ -46,7 +54,7 @@ module Opendata::IdeaTemplateVariables
     end
 
     def template_variable_handler_idea_apps(name, issuer)
-      if app_ids.length > 0
+      if app_ids.present?
         ERB::Util.html_escape(apps[0].name)
       else
         ERB::Util.html_escape(I18n.t("opendata.labels.not_exist"))

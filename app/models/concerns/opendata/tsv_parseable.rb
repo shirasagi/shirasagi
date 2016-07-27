@@ -16,7 +16,7 @@ module Opendata::TsvParseable
     begin
       data = NKF.nkf("-wd", src.read)
       src.try(:rewind)
-      sep  = data =~ /\t/ ? "\t" : ","
+      sep = data =~ /\t/ ? "\t" : ","
       CSV.parse(data, col_sep: sep, quote_char: '"')
     rescue => e
       logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -25,6 +25,6 @@ module Opendata::TsvParseable
     end
   end
 
-  alias_method :csv_present?, :tsv_present?
-  alias_method :parse_csv, :parse_tsv
+  alias csv_present? tsv_present?
+  alias parse_csv parse_tsv
 end

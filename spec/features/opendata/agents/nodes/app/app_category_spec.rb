@@ -21,11 +21,19 @@ describe "opendata_agents_nodes_app_category", dbscope: :example, js: true do
       cur_node: node_app,
       layout_id: layout.id,
       name: "opendata_agents_nodes_app_category",
-      filename: "#{node_category_root.filename}",
+      filename: node_category_root.filename,
       depth: node_app.depth + 1)
   end
   let(:node_area) { create :opendata_node_area, cur_site: site, layout_id: layout.id }
-  let(:app) { create :opendata_app, cur_site: site, cur_node: node_app, layout_id: layout.id, area_ids: [ node_area.id ], category_ids: [ node_category1.id ] }
+  let(:app) do
+    create(
+      :opendata_app,
+      cur_site: site,
+      cur_node: node_app,
+      layout_id: layout.id,
+      area_ids: [ node_area.id ],
+      category_ids: [ node_category1.id ])
+  end
   before do
     create(:opendata_node_search_app, cur_site: site, cur_node: node_app, layout_id: layout.id)
 

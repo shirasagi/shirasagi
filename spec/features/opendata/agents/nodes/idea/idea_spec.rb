@@ -9,9 +9,19 @@ describe "opendata_agents_nodes_idea", dbscope: :example, js: true do
   let!(:node_login) { create :member_node_login, cur_site: site, layout_id: layout.id, redirect_url: node_idea.url }
 
   let!(:node_area) { create :opendata_node_area, cur_site: site, layout_id: layout.id }
-  let!(:node_idea_search) { create :opendata_node_search_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id }
+  let!(:node_idea_search) do
+    create :opendata_node_search_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id
+  end
 
-  let!(:page_idea) { create :opendata_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id, filename: "1.html", area_ids: [ node_area.id ] }
+  let!(:page_idea) do
+    create(
+      :opendata_idea,
+      cur_site: site,
+      cur_node: node_idea,
+      layout_id: layout.id,
+      filename: "1.html",
+      area_ids: [ node_area.id ])
+  end
   let(:index_path) { "#{node_idea.url}index.html" }
   let(:rss_path) { "#{node_idea.url}rss.xml" }
   let(:areas_path) { "#{node_idea.url}areas.html" }

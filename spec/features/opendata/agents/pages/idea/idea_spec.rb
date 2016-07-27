@@ -8,9 +8,15 @@ describe "opendata_agents_pages_idea", dbscope: :example, js: true do
   let(:node_area) { create :opendata_node_area, cur_site: site, layout_id: layout.id }
   let!(:node_search) { create :opendata_node_search_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id }
   let(:page_idea) do
-    create :opendata_idea, cur_site: site, cur_node: node_idea, layout_id: layout.id, category_ids: [ node_category.id ], area_ids: [ node_area.id ]
+    create(
+      :opendata_idea,
+      cur_site: site,
+      cur_node: node_idea,
+      layout_id: layout.id,
+      category_ids: [ node_category.id ],
+      area_ids: [ node_area.id ])
   end
-  let(:index_path) { "#{page_idea.url}" }
+  let(:index_path) { page_idea.url }
 
   context "without login" do
     it do

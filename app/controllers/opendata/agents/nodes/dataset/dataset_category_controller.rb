@@ -18,7 +18,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
       if name = params[:name]
         "#{@cur_node.url}#{name}/"
       else
-        "#{@cur_node.url}"
+        @cur_node.url
       end
     end
 
@@ -26,7 +26,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
     def index
       @count          = pages.size
       @node_url       = node_url
-      default_options = { "s[category_id]" => "#{@item.id}" }
+      default_options = { "s[category_id]" => @item.id }
       @search_path    = ->(options = {}) { search_datasets_path(default_options.merge(options)) }
       @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml", default_options.merge(options)) }
       @items          = pages.order_by(released: -1).limit(10)
@@ -37,17 +37,17 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
 
       @tabs = [
         { name: I18n.t("opendata.sort_options.released"),
-          url: "#{@search_path.call("sort" => "released")}",
+          url: @search_path.call("sort" => "released"),
           pages: @items,
-          rss: "#{@rss_path.call("sort" => "released")}" },
+          rss: @rss_path.call("sort" => "released") },
         { name: I18n.t("opendata.sort_options.popular"),
-          url: "#{@search_path.call("sort" => "popular")}",
+          url: @search_path.call("sort" => "popular"),
           pages: @point_items,
-          rss: "#{@rss_path.call("sort" => "popular")}" },
+          rss: @rss_path.call("sort" => "popular") },
         { name: I18n.t("opendata.sort_options.attention"),
-          url: "#{@search_path.call("sort" => "attention")}",
+          url: @search_path.call("sort" => "attention"),
           pages: @download_items,
-          rss: "#{@rss_path.call("sort" => "attention")}" }
+          rss: @rss_path.call("sort" => "attention") }
       ]
 
       max = 50

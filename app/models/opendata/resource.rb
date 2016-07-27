@@ -21,10 +21,9 @@ class Opendata::Resource
   after_save :save_dataset
   after_destroy -> { dataset.save(validate: false) }
 
-  public
-    def context_path
-      "/resource"
-    end
+  def context_path
+    "/resource"
+  end
 
   private
     def set_filename

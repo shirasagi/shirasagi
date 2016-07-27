@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "opendata_agents_nodes_sparql", dbscope: :example do
 
   let(:node) { create_once :opendata_node_sparql, name: "opendata_sparql" }
-  let(:index_path) { "#{node.url}" }
+  let(:index_path) { node.url }
 
   let(:search_label) { "Run Query" }
 

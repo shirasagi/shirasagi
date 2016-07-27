@@ -18,10 +18,10 @@ module Opendata::Api::ResourceSearchFilter
 
       messages = {}
       messages[:query] = query_message if query_message
-      messages[:offset] = offset_messages if offset_messages.size > 0
-      messages[:limit] = limit_messages if limit_messages.size > 0
+      messages[:offset] = offset_messages if offset_messages.present?
+      messages[:limit] = limit_messages if limit_messages.present?
 
-      if messages.size > 0
+      if messages.present?
         error = {__type: "Validation Error"}
         error = error.merge(messages)
       end
@@ -47,7 +47,7 @@ module Opendata::Api::ResourceSearchFilter
       result = true
 
       queries.each do |query|
-        field, term =  URI.decode(query).split(":")
+        field, term = URI.decode(query).split(":")
         property = convert_property_name(field)
         if resource[property.to_sym] !~ /#{term}/i
           result = false
@@ -71,7 +71,7 @@ module Opendata::Api::ResourceSearchFilter
         return
       end
 
-      field, term =  URI.decode(@queries[0]).split(":")
+      field, term = URI.decode(@queries[0]).split(":")
 
       field_list = %w(name description filename format)
       unless field_list.include?(field)

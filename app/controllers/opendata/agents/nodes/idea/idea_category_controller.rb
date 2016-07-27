@@ -18,7 +18,7 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
       if name = params[:name]
         "#{@cur_node.url}#{name}/"
       else
-        "#{@cur_node.url}"
+        @cur_node.url
       end
     end
 
@@ -26,7 +26,7 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
     def index
       @count          = pages.size
       @node_url       = node_url
-      default_options = { "s[category_id]" => "#{@item.id}" }
+      default_options = { "s[category_id]" => @item.id }
       @search_path    = ->(options = {}) { search_ideas_path(default_options.merge(options)) }
       @rss_path       = ->(options = {}) { build_path("#{search_ideas_path}rss.xml", default_options.merge(options)) }
       @items          = pages.order_by(updated: -1).limit(10)
@@ -40,23 +40,23 @@ class Opendata::Agents::Nodes::Idea::IdeaCategoryController < ApplicationControl
       if @idea_node.show_tab?("released")
         @tabs << { name: @idea_node.tab_title("released").presence || I18n.t("opendata.sort_options.released"),
           id: "released",
-          url: "#{@search_path.call("sort" => "updated")}",
+          url: @search_path.call("sort" => "updated"),
           pages: @items,
-          rss: "#{@rss_path.call("sort" => "updated")}" }
+          rss: @rss_path.call("sort" => "updated") }
       end
       if @idea_node.show_tab?("popular")
         @tabs << { name: @idea_node.tab_title("popular").presence || I18n.t("opendata.sort_options.popular"),
           id: "popular",
-          url: "#{@search_path.call("sort" => "popular")}",
+          url: @search_path.call("sort" => "popular"),
           pages: @point_items,
-          rss: "#{@rss_path.call("sort" => "popular")}" }
+          rss: @rss_path.call("sort" => "popular") }
       end
       if @idea_node.show_tab?("attention")
         @tabs << { name: @idea_node.tab_title("attention").presence || I18n.t("opendata.sort_options.attention"),
           id: "attention",
-          url: "#{@search_path.call("sort" => "attention")}",
+          url: @search_path.call("sort" => "attention"),
           pages: @comment_items,
-          rss: "#{@rss_path.call("sort" => "attention")}" }
+          rss: @rss_path.call("sort" => "attention") }
       end
 
       max = 50

@@ -5,10 +5,18 @@ module Opendata::AppTemplateVariables
     template_variable_handler(:app_name, :template_variable_handler_app_name)
     template_variable_handler(:app_url, :template_variable_handler_app_url)
     template_variable_handler(:app_updated, :template_variable_handler_app_updated)
-    template_variable_handler('app_updated.default') { |name, issuer| template_variable_handler_app_updated(name, issuer, :default) }
-    template_variable_handler('app_updated.iso') { |name, issuer| template_variable_handler_app_updated(name, issuer, :iso) }
-    template_variable_handler('app_updated.long') { |name, issuer| template_variable_handler_app_updated(name, issuer, :long) }
-    template_variable_handler('app_updated.short') { |name, issuer| template_variable_handler_app_updated(name, issuer, :short) }
+    template_variable_handler('app_updated.default') do |name, issuer|
+      template_variable_handler_app_updated(name, issuer, :default)
+    end
+    template_variable_handler('app_updated.iso') do |name, issuer|
+      template_variable_handler_app_updated(name, issuer, :iso)
+    end
+    template_variable_handler('app_updated.long') do |name, issuer|
+      template_variable_handler_app_updated(name, issuer, :long)
+    end
+    template_variable_handler('app_updated.short') do |name, issuer|
+      template_variable_handler_app_updated(name, issuer, :short)
+    end
     template_variable_handler(:app_state, :template_variable_handler_app_state)
     template_variable_handler(:app_point, :template_variable_handler_app_point)
   end
@@ -28,7 +36,7 @@ module Opendata::AppTemplateVariables
     end
 
     def template_variable_handler_app_state(name, issuer)
-      ERB::Util.html_escape(label :status)
+      ERB::Util.html_escape(label(:status))
     end
 
     def template_variable_handler_app_point(name, issuer)

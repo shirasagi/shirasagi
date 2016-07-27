@@ -5,10 +5,18 @@ module Opendata::DatasetTemplateVariables
     template_variable_handler(:dataset_name, :template_variable_handler_dataset_name)
     template_variable_handler(:dataset_url, :template_variable_handler_dataset_url)
     template_variable_handler(:dataset_updated, :template_variable_handler_dataset_updated)
-    template_variable_handler('dataset_updated.default') { |name, issuer| template_variable_handler_dataset_updated(name, issuer, :default) }
-    template_variable_handler('dataset_updated.iso') { |name, issuer| template_variable_handler_dataset_updated(name, issuer, :iso) }
-    template_variable_handler('dataset_updated.long') { |name, issuer| template_variable_handler_dataset_updated(name, issuer, :long) }
-    template_variable_handler('dataset_updated.short') { |name, issuer| template_variable_handler_dataset_updated(name, issuer, :short) }
+    template_variable_handler('dataset_updated.default') do |name, issuer|
+      template_variable_handler_dataset_updated(name, issuer, :default)
+    end
+    template_variable_handler('dataset_updated.iso') do |name, issuer|
+      template_variable_handler_dataset_updated(name, issuer, :iso)
+    end
+    template_variable_handler('dataset_updated.long') do |name, issuer|
+      template_variable_handler_dataset_updated(name, issuer, :long)
+    end
+    template_variable_handler('dataset_updated.short') do |name, issuer|
+      template_variable_handler_dataset_updated(name, issuer, :short)
+    end
     template_variable_handler(:dataset_state, :template_variable_handler_dataset_state)
     template_variable_handler(:dataset_point, :template_variable_handler_dataset_point)
     template_variable_handler(:dataset_downloaded, :template_variable_handler_dataset_downloaded)
@@ -31,7 +39,7 @@ module Opendata::DatasetTemplateVariables
     end
 
     def template_variable_handler_dataset_state(name, issuer)
-      ERB::Util.html_escape(label :status)
+      ERB::Util.html_escape(label(:status))
     end
 
     def template_variable_handler_dataset_point(name, issuer)

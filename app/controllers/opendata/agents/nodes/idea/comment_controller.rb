@@ -9,7 +9,7 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
   before_action :set_comments, only: [:index, :add, :delete]
   before_action :set_workflow
 
-  skip_filter :logged_in?
+  skip_action_callback :logged_in?
 
   private
     def set_comments
@@ -25,11 +25,11 @@ class Opendata::Agents::Nodes::Idea::CommentController < ApplicationController
       @comment_mode = logged_in?(redirect: false)
 
       raise "404" unless @idea
+    end
 
-      def set_workflow
-        @cur_site = Cms::Site.find(@cur_site.id)
-        @route = @cur_site.idea_workflow_route
-      end
+    def set_workflow
+      @cur_site = Cms::Site.find(@cur_site.id)
+      @route = @cur_site.idea_workflow_route
     end
 
   public

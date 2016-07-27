@@ -12,10 +12,10 @@ module Opendata::Api::PackageSearchFilter
       check_num(start, start_messages)
 
       messages = {}
-      messages[:rows] = rows_messages if rows_messages.size > 0
-      messages[:start] = start_messages if start_messages.size > 0
+      messages[:rows] = rows_messages if rows_messages.present?
+      messages[:start] = start_messages if start_messages.present?
 
-      if messages.size > 0
+      if messages.present?
         error = {__type: "Validation Error"}
         error = error.merge(messages)
       end

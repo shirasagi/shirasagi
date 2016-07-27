@@ -35,10 +35,8 @@ module Opendata::Idea::CommentFilter
         if idea.member_id && idea.member_id != @cur_member.id
           member_ids << idea.member_id
         end
-      else
-        if idea.member_id
-          member_ids << idea.member_id
-        end
+      elsif idea.member_id
+        member_ids << idea.member_id
       end
 
       update_commented_count(member_ids.uniq, 1)

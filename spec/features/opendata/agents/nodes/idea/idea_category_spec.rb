@@ -12,7 +12,7 @@ describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
       cur_site: site,
       cur_node: node_idea,
       layout_id: layout.id,
-      basename: "#{node_category_folder.filename}",
+      basename: node_category_folder.filename,
       name: "opendata_agents_nodes_idea_category")
   end
   let!(:node_cate) do

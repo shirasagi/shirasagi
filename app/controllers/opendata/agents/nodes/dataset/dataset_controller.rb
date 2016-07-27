@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   before_action :set_dataset, only: [:show_point, :add_point, :point_members]
   before_action :set_apps, only: [:show_apps]
   before_action :set_ideas, only: [:show_ideas]
-  skip_filter :logged_in?
+  skip_action_callback :logged_in?
 
   private
     def set_dataset
@@ -53,15 +53,15 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
 
     def index
       @count          = pages.size
-      @node_url       = "#{@cur_node.url}"
+      @node_url       = @cur_node.url
       @search_path    = view_context.method(:search_datasets_path)
       @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_datasets_path}rss.xml?", options) }
       @tabs = []
       Opendata::Dataset.sort_options.each do |options|
         @tabs << { name: options[0],
-                   url: "#{@search_path.call("sort" => "#{options[1]}")}",
+                   url: @search_path.call("sort" => options[1]),
                    pages: pages.order_by(Opendata::Dataset.sort_hash(options[1])).limit(@cur_node.limit || 10),
-                   rss: "#{@rss_path.call("sort" => "#{options[1]}")}"}
+                   rss: @rss_path.call("sort" => options[1]) }
       end
 
       max = 50

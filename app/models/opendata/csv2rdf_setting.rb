@@ -4,8 +4,8 @@ class Opendata::Csv2rdfSetting
   include SS::Reference::Site
   include SS::Reference::User
 
-  SIMILARITY_THRESHOLD = 0.6.freeze
-  MAX_ROWS = 19.freeze
+  SIMILARITY_THRESHOLD = 0.6
+  MAX_ROWS = 19
 
   attr_accessor :cur_dataset, :cur_resource
 
@@ -61,7 +61,7 @@ class Opendata::Csv2rdfSetting
   def fetch_header_labels
     tsv = resource.parse_tsv
     actual_rows = tsv.size
-    max_rows = header_rows < actual_rows ? header_rows :  actual_rows
+    max_rows = header_rows < actual_rows ? header_rows : actual_rows
 
     labels = []
     0.upto(max_rows - 1) do |i|

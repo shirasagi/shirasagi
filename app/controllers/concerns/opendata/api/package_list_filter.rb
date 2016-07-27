@@ -12,10 +12,10 @@ module Opendata::Api::PackageListFilter
       check_num(offset, offset_messages)
 
       messages = {}
-      messages[:limit] = limit_messages if limit_messages.size > 0
-      messages[:offset] = offset_messages if offset_messages.size > 0
+      messages[:limit] = limit_messages if limit_messages.present?
+      messages[:offset] = offset_messages if offset_messages.present?
 
-      if messages.size > 0
+      if messages.present?
         error = {__type: "Validation Error"}
         error = error.merge(messages)
       end

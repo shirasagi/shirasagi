@@ -2,6 +2,14 @@ class Opendata::Agents::Parts::Dataset::DatasetGroupController < ApplicationCont
   include Cms::PartFilter::View
   helper Opendata::UrlHelper
 
+  private
+    def category
+      return nil unless @cur_node = cur_node
+      return nil if @cur_node.route != "opendata/dataset_category"
+      name = File.basename(File.dirname(@cur_path))
+      Opendata::Node::Category.site(@cur_site).and_public.where(filename: /\/#{name}$/).first
+    end
+
   public
     def index
       cond = {}
@@ -13,13 +21,5 @@ class Opendata::Agents::Parts::Dataset::DatasetGroupController < ApplicationCont
         limit(10)
 
       render
-    end
-
-  private
-    def category
-      return nil unless @cur_node = cur_node
-      return nil if @cur_node.route != "opendata/dataset_category"
-      name = File.basename(File.dirname(@cur_path))
-      Opendata::Node::Category.site(@cur_site).and_public.where(filename: /\/#{name}$/).first
     end
 end

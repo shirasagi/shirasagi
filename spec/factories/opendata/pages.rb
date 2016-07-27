@@ -7,7 +7,7 @@ FactoryGirl.define do
     filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/dataset"
     text "aaaa\naaaa"
-    tags ["aaa", "bbb"]
+    tags %w(aaa bbb)
     category_ids [1]
     area_ids [1]
     dataset_group_ids [1]
@@ -21,7 +21,7 @@ FactoryGirl.define do
     filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/app"
     text "aaaa\naaaa"
-    tags ["aaa", "bbb"]
+    tags %w(aaa bbb)
     category_ids [1]
     area_ids [1]
     license { unique_id }
@@ -33,24 +33,24 @@ FactoryGirl.define do
     text "cccc\ndddd"
     data "gggg\nhhhh"
     note "iiii\njjjj"
-    tags ["ccc", "ddd"]
+    tags %w(aaa bbb)
     category_ids [1]
     area_ids [1]
     point 1
   end
 
   factory :opendata_resource, class: Opendata::Resource do
-    name { "#{unique_id}" }
+    name { unique_id }
     text "bbbb\nbbbb"
   end
 
   factory :opendata_url_resource, class: Opendata::Resource do
-    name { "#{unique_id}" }
+    name { unique_id }
     text "eeee\nffff"
   end
 
   factory :opendata_idea_comment, class: Opendata::IdeaComment do
-    name { "#{unique_id}" }
+    name { unique_id }
     text "12345\n67890"
   end
 
