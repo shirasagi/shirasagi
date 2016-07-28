@@ -37,7 +37,7 @@ class Opendata::Dataset::CrawlsController < ApplicationController
             original_updated: urlresource.original_updated,
             original_url: urlresource.original_url,
             crawl_update:   urlresource.crawl_update}
-        @items << item
+        @items << OpenStruct.new(item)
       end
     end
   end

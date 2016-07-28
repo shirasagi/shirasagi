@@ -5,10 +5,10 @@ $(".select-submit").on("change", function() {
 <% end %>
 
 <% @s = OpenStruct.new params[:s] %>
-<div class="search-form">
+<div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.select :poster, @model.new.posted_by_options, { include_blank: "" }, { class: "select-submit" } %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('views.button.search') %>" />
+    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
   <% end %>
 </div>

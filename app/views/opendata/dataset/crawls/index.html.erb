@@ -1,51 +1,26 @@
-<script type="text/javascript">
-  $(function(){
-    $(".crawl_state").css("width", "60px");
-    $(".crawl_update").css("width", "60px");
-    $(".crawl_state_updated").css("color", "#FF0000");
-  });
-</script>
+<% @tap_menu = proc do |item| %>
+  <%= link_to :show, opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <%= link_to :edit, edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <%= link_to :delete, delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
 
-<%= render file: "_search" %>
+  <%= link_to :preview, opendata_dataset_url_resource_content_path(dataset_id: item[:id], url_resource_id: item[:urlresourceid]) %>
+<% end %>
 
-<table class="index">
-  <thead>
-    <tr>
-      <th class="crawl_state"><%= @model.t :crawl_state %></th>
-      <th class="crawl_update"><%= @model.t :crawl_update %></th>
-      <th class="name"><%= @model.t :name %></th>
-      <th class="resourcename"><%= t "mongoid.attributes.opendata/dataset.name" %></th>
-      <th class="original_url"><%= @model.t :original_url %></th>
-      <th class="datetime"><%= @model.t :original_updated %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
-    <tr>
-      <td class="crawl_state_<%= item[:crawl_state] %>"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %>
-        <nav class="tap-menu">
-          <%= link_to :show, opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
-          <%= link_to :edit, edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
-          <%= link_to :delete, delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
-        </nav>
-      </td>
+<% @index_title = proc do |item| %>
+  <% title = "#{item[:name]} - #{item[:resourcename]}" %>
+  <% if item[:crawl_state] == "deleted" %>
+    <%= link_to title , delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <% else %>
+    <%= link_to title , edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <% end %>
+<% end %>
 
-      <td class="crawl_update"><%= t "opendata.crawl_update.#{item[:crawl_update]}" %></td>
-      <% if item[:crawl_state] == "deleted" %>
-        <td class="name"><%= link_to item[:name] , delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %></td>
-      <% else %>
-        <td class="name"><%= link_to item[:name] , edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %></td>
-      <% end %>
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= tryb { item[:original_updated].strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="original-url"><%= item[:original_url] %></span>
+  <span class="state"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></span>
+  <span class="crawl-update"><%= t "opendata.crawl_update.#{item[:crawl_update]}" %></span>
+<% end %>
 
-      <td class="resourcename"><%= item[:resourcename] %></td>
-      <td class="original_url"><input type="button" value=<%= @model.t :tsv_id %> onClick="window.open('<%= item[:original_url] %>')">　<%= item[:original_url] %></td>
-      <% if item[:original_updated].present? %>
-      <td class="datetime"><%= item[:original_updated].strftime("%Y/%m/%d %H:%M") %></td>
-      <% end %>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<%= paginate @items if @items.try(:current_page) %>
-
+<%= render file: "cms/crud/index" %>
