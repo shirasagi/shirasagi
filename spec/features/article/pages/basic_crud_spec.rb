@@ -12,11 +12,8 @@ describe "article_pages", dbscope: :example do
   let(:delete_path) { delete_article_page_path site.id, node, item }
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
-<<<<<<< HEAD:spec/features/article/pages/basic_crud_spec.rb
-=======
   let(:lock_path) { lock_article_page_path site.id, node, item }
   let(:import_path) { import_article_pages_path site.id, node }
->>>>>>> RSpec code created AND some bug fix:spec/features/article/pages_spec.rb
 
   context "basic crud" do
     before { login_cms_user }
@@ -91,8 +88,6 @@ describe "article_pages", dbscope: :example do
       end
       expect(current_path).to eq index_path
     end
-<<<<<<< HEAD:spec/features/article/pages/basic_crud_spec.rb
-=======
 
     feature "lock and unlock" do
       given(:group) { cms_group }
