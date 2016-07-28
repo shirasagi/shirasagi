@@ -89,6 +89,12 @@ describe Opendata::Dataset, dbscope: :example do
       let(:license_id_matcher) do
         include("$and" => include("$or" => include("resources.license_id" => 28).and(include("url_resources.license_id" => 28))))
       end
+      let(:poster_admin_matcher) do
+        include("$and" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$and" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/dataset") }
       it { expect(described_class.search(keyword: "キーワード").selector.to_h).to normal_keyword_matcher }
       it { expect(described_class.search(ids: "11,31").selector.to_h).to ids_matcher }
@@ -102,6 +108,8 @@ describe Opendata::Dataset, dbscope: :example do
       it { expect(described_class.search(dataset_group: "データセット", site: cms_site).selector.to_h).to dataset_group_matcher }
       it { expect(described_class.search(format: "csv").selector.to_h).to format_matcher }
       it { expect(described_class.search(license_id: "28").selector.to_h).to license_id_matcher }
+      it { expect(described_class.search(poster: "admin").selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member").selector.to_h).to poster_member_matcher }
     end
 
     context 'with all_keywords option' do
@@ -144,6 +152,12 @@ describe Opendata::Dataset, dbscope: :example do
       let(:license_id_matcher) do
         include("$and" => include("$or" => include("resources.license_id" => 28).and(include("url_resources.license_id" => 28))))
       end
+      let(:poster_admin_matcher) do
+        include("$and" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$and" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/dataset") }
       it { expect(described_class.search(keyword: "キーワード", option: 'all_keywords').selector.to_h).to normal_keyword_matcher }
       it { expect(described_class.search(ids: "11,31", option: 'all_keywords').selector.to_h).to ids_matcher }
@@ -157,6 +171,8 @@ describe Opendata::Dataset, dbscope: :example do
       it { expect(described_class.search(dataset_group_params).selector.to_h).to dataset_group_matcher }
       it { expect(described_class.search(format: "csv", option: 'all_keywords').selector.to_h).to format_matcher }
       it { expect(described_class.search(license_id: "28", option: 'all_keywords').selector.to_h).to license_id_matcher }
+      it { expect(described_class.search(poster: "admin", option: 'all_keywords').selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member", option: 'all_keywords').selector.to_h).to poster_member_matcher }
     end
 
     context 'with any_keywords option' do
@@ -199,6 +215,12 @@ describe Opendata::Dataset, dbscope: :example do
       let(:license_id_matcher) do
         include("$and" => include("$or" => include("resources.license_id" => 28).and(include("url_resources.license_id" => 28))))
       end
+      let(:poster_admin_matcher) do
+        include("$and" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$and" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/dataset") }
       it { expect(described_class.search(keyword: "キーワード", option: 'any_keywords').selector.to_h).to normal_keyword_matcher }
       it { expect(described_class.search(ids: "11,31", option: 'any_keywords').selector.to_h).to ids_matcher }
@@ -212,6 +234,8 @@ describe Opendata::Dataset, dbscope: :example do
       it { expect(described_class.search(dataset_group_params).selector.to_h).to dataset_group_matcher }
       it { expect(described_class.search(format: "csv", option: 'any_keywords').selector.to_h).to format_matcher }
       it { expect(described_class.search(license_id: "28", option: 'any_keywords').selector.to_h).to license_id_matcher }
+      it { expect(described_class.search(poster: "admin", option: 'any_keywords').selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member", option: 'any_keywords').selector.to_h).to poster_member_matcher }
     end
 
     context 'with any_conditions option' do
@@ -254,6 +278,12 @@ describe Opendata::Dataset, dbscope: :example do
       let(:license_id_matcher) do
         include("$or" => include("$or" => include("resources.license_id" => 28).and(include("url_resources.license_id" => 28))))
       end
+      let(:poster_admin_matcher) do
+        include("$or" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$or" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/dataset") }
       it { expect(described_class.search(keyword: "キーワード", option: 'any_conditions').selector.to_h).to normal_keyword_matcher }
       it { expect(described_class.search(ids: "11,31", option: 'any_conditions').selector.to_h).to ids_matcher }
@@ -267,6 +297,8 @@ describe Opendata::Dataset, dbscope: :example do
       it { expect(described_class.search(dataset_group_params).selector.to_h).to dataset_group_matcher }
       it { expect(described_class.search(format: "csv", option: 'any_conditions').selector.to_h).to format_matcher }
       it { expect(described_class.search(license_id: "28", option: 'any_conditions').selector.to_h).to license_id_matcher }
+      it { expect(described_class.search(poster: "admin", option: 'any_conditions').selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member", option: 'any_conditions').selector.to_h).to poster_member_matcher }
     end
   end
 

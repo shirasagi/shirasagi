@@ -85,14 +85,19 @@ module Opendata::AppSearchable
       end
 
       def search_poster(params, criteria)
-        if params[:poster].present?
-          cond = {}
-          cond = { :workflow_member_id.exists => true } if params[:poster] == "member"
-          cond = { :workflow_member_id => nil } if params[:poster] == "admin"
-          operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
-          criteria = criteria.where(operator => cond)
-        end
-        criteria
+        poster = params[:poster]
+        return criteria if poster.blank?
+
+        cond = case poster
+               when "member"
+                 { :workflow_member_id.exists => true }
+               when "admin"
+                 { :workflow_member_id => nil }
+               end
+        return criteria if cond.blank?
+
+        operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+        criteria.where(operator => [ cond ])
       end
   end
 end

@@ -60,6 +60,12 @@ describe Opendata::App, dbscope: :example do
       let(:category_id_matcher) do
         include("$and" => include("category_ids" => include("$in" => include(node_category.id))))
       end
+      let(:poster_admin_matcher) do
+        include("$and" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$and" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({}).selector.to_h).to include("route" => "opendata/app") }
       it { expect(described_class.search(keyword: "キーワード").selector.to_h).to include("$and") }
       it { expect(described_class.search(name: true, keyword: "キーワード").selector.to_h).to name_keyword_matcher }
@@ -68,6 +74,8 @@ describe Opendata::App, dbscope: :example do
       it { expect(described_class.search(area_id: "43").selector.to_h).to include("$and" => include("area_ids" => 43)) }
       it { expect(described_class.search(category_id_params).selector.to_h).to category_id_matcher }
       it { expect(described_class.search(license: "ライセンス").selector.to_h).to include("$and" => include("license" => "ライセンス")) }
+      it { expect(described_class.search(poster: "admin").selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member").selector.to_h).to poster_member_matcher }
     end
 
     context 'with all_keywords option' do
@@ -94,6 +102,12 @@ describe Opendata::App, dbscope: :example do
       end
       let(:license_params) { { license: "ライセンス", option: 'all_keywords' } }
       let(:license_matcher) { include("$and" => include("license" => "ライセンス")) }
+      let(:poster_admin_matcher) do
+        include("$and" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$and" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({ option: 'all_keywords' }).selector.to_h).to include("route" => "opendata/app") }
       it { expect(described_class.search(keyword: "キーワード", option: 'all_keywords').selector.to_h).to keyword_matcher }
       # it { expect(described_class.search(name: true, keyword: "キーワード").selector.to_h).to name_keyword_matcher }
@@ -102,6 +116,8 @@ describe Opendata::App, dbscope: :example do
       it { expect(described_class.search(area_id_params).selector.to_h).to area_id_matcher }
       it { expect(described_class.search(category_id_params).selector.to_h).to category_id_matcher }
       it { expect(described_class.search(license_params).selector.to_h).to license_matcher }
+      it { expect(described_class.search(poster: "admin", option: 'all_keywords').selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member", option: 'all_keywords').selector.to_h).to poster_member_matcher }
     end
 
     context 'with any_keywords option' do
@@ -128,6 +144,12 @@ describe Opendata::App, dbscope: :example do
       end
       let(:license_params) { { license: "ライセンス", option: 'any_keywords' } }
       let(:license_matcher) { include("$and" => include("license" => "ライセンス")) }
+      let(:poster_admin_matcher) do
+        include("$and" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$and" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({ option: 'any_keywords' }).selector.to_h).to include("route" => "opendata/app") }
       it { expect(described_class.search(keyword: "キーワード", option: 'any_keywords').selector.to_h).to keyword_matcher }
       # it { expect(described_class.search(name: true, keyword: "キーワード").selector.to_h).to name_keyword_matcher }
@@ -136,6 +158,8 @@ describe Opendata::App, dbscope: :example do
       it { expect(described_class.search(area_id_params).selector.to_h).to area_id_matcher }
       it { expect(described_class.search(category_id_params).selector.to_h).to category_id_matcher }
       it { expect(described_class.search(license_params).selector.to_h).to license_matcher }
+      it { expect(described_class.search(poster: "admin", option: 'any_keywords').selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member", option: 'any_keywords').selector.to_h).to poster_member_matcher }
     end
 
     context 'with any_conditions option' do
@@ -162,6 +186,12 @@ describe Opendata::App, dbscope: :example do
       end
       let(:license_params) { { license: "ライセンス", option: 'any_conditions' } }
       let(:license_matcher) { include("$or" => include("license" => "ライセンス")) }
+      let(:poster_admin_matcher) do
+        include("$or" => include("workflow_member_id" => nil))
+      end
+      let(:poster_member_matcher) do
+        include("$or" => include("workflow_member_id" => include("$exists" => true)))
+      end
       it { expect(described_class.search({ option: 'any_conditions' }).selector.to_h).to include("route" => "opendata/app") }
       it { expect(described_class.search(keyword: "キーワード", option: 'any_conditions').selector.to_h).to keyword_matcher }
       # it { expect(described_class.search(name: true, keyword: "キーワード").selector.to_h).to name_keyword_matcher }
@@ -170,6 +200,8 @@ describe Opendata::App, dbscope: :example do
       it { expect(described_class.search(area_id_params).selector.to_h).to area_id_matcher }
       it { expect(described_class.search(category_id_params).selector.to_h).to category_id_matcher }
       it { expect(described_class.search(license_params).selector.to_h).to license_matcher }
+      it { expect(described_class.search(poster: "admin", option: 'any_conditions').selector.to_h).to poster_admin_matcher }
+      it { expect(described_class.search(poster: "member", option: 'any_conditions').selector.to_h).to poster_member_matcher }
     end
   end
 
