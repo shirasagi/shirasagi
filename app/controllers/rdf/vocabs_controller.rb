@@ -59,11 +59,7 @@ class Rdf::VocabsController < ApplicationController
       @file = save_file
       @params.in_file.try(:delete)
 
-      Rdf::VocabImportJob.call_async(@cur_site.host, @params.prefix, @file.id, @params.owner, @params.order) do |job|
-        job.site_id = @cur_site.id
-      end
-      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
-
+      Rdf::VocabImportJob.bind(site_id: @cur_site).perform_later(@params.prefix, @file.id, @params.owner, @params.order)
       respond_to do |format|
         format.html { redirect_to({ action: :index }, { notice: t("rdf.notices.start_import_job") }) }
         format.json { render json: @params.to_json, status: :created }

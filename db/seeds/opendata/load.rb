@@ -504,7 +504,7 @@ puts "# rdf vocabs"
 
 def import_vocab(data)
   puts data[:prefix]
-  Rdf::VocabImportJob.new.call(@site.host, data[:prefix], data[:file], data[:owner] || Rdf::Vocab::OWNER_SYSTEM, data[:order])
+  Rdf::VocabImportJob.bind(site_id: @site).perform_now(data[:prefix], data[:file], data[:owner] || Rdf::Vocab::OWNER_SYSTEM, data[:order])
 end
 
 import_vocab prefix: "xsd", file: "rdf/xsd.ttl", order: 2000

@@ -1,13 +1,12 @@
-class Opendata::Csv2rdfConverter::Job
-  include ::Job::Worker
+class Opendata::Csv2rdfConverter::Job < Cms::ApplicationJob
   include Opendata::Csv2rdfConverter::Helpers::Context
   include Opendata::Csv2rdfConverter::Helpers::Common
   include Opendata::Csv2rdfConverter::Helpers::Header
   include Opendata::Csv2rdfConverter::Helpers::Footer
   include Opendata::Csv2rdfConverter::Helpers::TtlResource
 
-  def call(host, user, cid, dataset, resource)
-    init_context(host, user, cid, dataset, resource)
+  def perform(dataset, resource)
+    init_context(dataset, resource)
     create_tempfile do
       put_header
       put_linkdata

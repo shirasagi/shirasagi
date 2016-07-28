@@ -22,7 +22,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
     let(:content_type) { "application/vnd.ms-excel" }
     let(:vocab) { create(:rdf_vocab, site: site) }
     let(:rdf_class) { create(:rdf_class, vocab: vocab) }
-    subject { described_class.new }
+    subject { described_class.bind(site_id: host, user_id: user, node_id: node) }
 
     before do
       resource.in_file = upload_file(csv_file, content_type)
@@ -36,7 +36,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
     it do
       allow(Opendata::Sparql).to receive(:clear).and_return(nil)
       allow(Opendata::Sparql).to receive(:save).and_return(true)
-      expect { subject.call(host, user, node.id, dataset.id, resource.id) }.to \
+      expect { subject.perform_now(dataset.id, resource.id) }.to \
         change { Opendata::Dataset.find(dataset.id).resources.size }.from(1).to(2)
       dataset.reload
       expect(dataset.resources.where(format: "TTL").size).to eq 1

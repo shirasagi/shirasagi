@@ -11,15 +11,6 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   let(:ipa_core_sample_file) { Rails.root.join("spec", "fixtures", "rdf", "ipa-core-sample.ttl") }
 
   before do
-    # To stabilize spec, csv2tdf convert job is executed in-place process .
-    allow(SS::RakeRunner).to receive(:run_async).and_wrap_original do |_, *args|
-      config = { name: "job:service", model: "on_demand", polling: { queues: %w(default voice_synthesis) } }
-      config.stringify_keys!
-      Job::Service.run config
-    end
-  end
-
-  before do
     # overwrite config to disable fuseki
     @save_fuseki = SS.config.opendata.fuseki
     SS::Config.replace_value_at(:opendata, :fuseki, "disable" => true)
@@ -30,7 +21,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   end
 
   before do
-    Rdf::VocabImportJob.new.call(site.host, "ic", ipa_core_sample_file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+    Rdf::VocabImportJob.bind(site_id: site).perform_now("ic", ipa_core_sample_file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
   end
 
   before { login_cms_user }
@@ -122,8 +113,10 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(current_path).to eq confirmation_path
 
-      within "form#item-form" do
-        click_button I18n.t("opendata.button.build")
+      perform_enqueued_jobs do
+        within "form#item-form" do
+          click_button I18n.t("opendata.button.build")
+        end
       end
 
       expect(status_code).to eq 200

@@ -7,7 +7,7 @@ describe Rdf::PropertyExpander, dbscope: :example do
   let(:file) { Rails.root.join("spec", "fixtures", "rdf", "ipa-core-sample.ttl") }
 
   before do
-    Rdf::VocabImportJob.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+    Rdf::VocabImportJob.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
   end
 
   # describe "#expand" do

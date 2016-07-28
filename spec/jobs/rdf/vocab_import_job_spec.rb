@@ -10,7 +10,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
     let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "ipa-core.ttl") }
 
     it "import from IPA Core Vocab ttl" do
-      described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
       expect(Rdf::Vocab.count).to eq 1
       vocab = Rdf::Vocab.first
       expect(Rdf::Class.count).to be > 0
@@ -39,7 +39,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
     let(:file) { Rails.root.join("spec", "fixtures", "rdf", "rdf.xml") }
 
     xit "import from IPA Core Vocab xml" do
-      described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
       expect(Rdf::Vocab.count).to eq 1
       expect(Rdf::Class.count).to be > 0
       expect(Rdf::Prop.count).to be > 0
@@ -51,7 +51,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
     let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "xsd.ttl") }
 
     xit "import from XMLSchema ttl" do
-      described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
       expect(Rdf::Vocab.count).to eq 1
       expect(Rdf::Class.count).to be > 0
       expect(Rdf::Prop.count).to eq 0
@@ -63,7 +63,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
     let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "dcterms.ttl") }
 
     xit "import from Dublin Core Term ttl" do
-      described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
       expect(Rdf::Vocab.count).to eq 1
       expect(Rdf::Class.count).to be > 0
       expect(Rdf::Prop.count).to be > 0
@@ -75,7 +75,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
     let(:file) { Rails.root.join("spec", "fixtures", "rdf", "foaf.rdf.xml") }
 
     xit "import from Friend of a Friend rdf" do
-      described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
       expect(Rdf::Vocab.count).to eq 1
       expect(Rdf::Class.count).to be > 0
       expect(Rdf::Prop.count).to be > 0
@@ -95,7 +95,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
     let(:file) { Rails.root.join("spec", "fixtures", "rdf", "dbpedia_2014.owl.xml") }
 
     xit "import from DBpedia Ontology rdf" do
-      described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
       expect(Rdf::Vocab.count).to eq 1
       expect(Rdf::Class.count).to be > 0
       expect(Rdf::Prop.count).to be > 0
@@ -115,7 +115,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
     let(:file) { Rails.root.join("spec", "fixtures", "rdf", "wgs84_pos.xml") }
 
     xit "import from WGS84 Geo Positioning" do
-      described_class.new.call(site.host, prefix, file, Rdf::Vocab::OWNER_SYSTEM, 1000)
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
       expect(Rdf::Vocab.count).to eq 1
       expect(Rdf::Class.count).to be > 0
       expect(Rdf::Prop.count).to be > 0

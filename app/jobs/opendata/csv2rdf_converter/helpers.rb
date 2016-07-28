@@ -3,10 +3,10 @@ module Opendata::Csv2rdfConverter::Helpers
     attr_reader :cur_site, :cur_user, :cur_node, :cur_dataset, :cur_resource
     attr_reader :item, :csv, :uri, :tmp_dir, :tmp_file
 
-    def init_context(host, user, cid, dataset, resource)
-      @cur_site = SS::Site.find_by(host: host)
-      @cur_user = Cms::User.site(@cur_site).or({id: user}, {name: user}).first if user.present?
-      @cur_node = Cms::Node.site(@cur_site).find(cid)
+    def init_context(dataset, resource)
+      @cur_site = self.site
+      @cur_user = self.user
+      @cur_node = self.node
       @cur_dataset = Opendata::Dataset.site(@cur_site).node(@cur_node).find(dataset)
       @cur_resource = @cur_dataset.resources.find(resource)
       @item = Opendata::Csv2rdfSetting.site(@cur_site).resource(@cur_resource).first

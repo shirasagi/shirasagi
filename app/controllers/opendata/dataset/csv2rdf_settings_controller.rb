@@ -125,12 +125,8 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     def confirmation
       return render(file: "wizards") unless request.post?
 
-      Opendata::Csv2rdfConverter::Job.call_async(@cur_site.host, @cur_user.name,
-                                                 @cur_node.id, @cur_dataset.id, @cur_resource.id) do |job|
-        job.site_id = @cur_site.id
-        job.user_id = @cur_user.id
-      end
-      SS::RakeRunner.run_async "job:run", "RAILS_ENV=#{Rails.env}"
+      Opendata::Csv2rdfConverter::Job.bind(site_id: @cur_site, user_id: @cur_user, node_id: @cur_node).
+        perform_later(@cur_dataset.id, @cur_resource.id)
       respond_to do |format|
         format.html do
           redirect_to({ controller: :resources, action: :show, id: @cur_resource },

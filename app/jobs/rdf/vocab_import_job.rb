@@ -1,10 +1,9 @@
-class Rdf::VocabImportJob
-  include Job::Worker
+class Rdf::VocabImportJob < Cms::ApplicationJob
   include Rdf::Builders::Traversable
 
-  def call(host, prefix, file_or_id, owner = Rdf::Vocab::OWNER_USER, order = nil)
+  def perform(prefix, file_or_id, owner = Rdf::Vocab::OWNER_USER, order = nil)
     begin
-      @cur_site = SS::Site.find_by(host: host)
+      @cur_site = self.site
       @prefix = prefix
       if file_or_id.is_a?(Numeric)
         @temp_file = SS::TempFile.where(_id: file_or_id).first
