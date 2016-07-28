@@ -7,14 +7,14 @@ describe "opendata_url_resource", dbscope: :example, http_server: true do
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
-  let(:dataset) { create(:opendata_dataset, node: node) }
+  let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:license) do
     file = Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png"))
-    create(:opendata_license, site: site, file: file)
+    create(:opendata_license, cur_site: site, in_file: file)
   end
   let!(:item) do
     file = Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png"))
-    create(:opendata_license, site: site, file: file)
+    create(:opendata_license, cur_site: site, in_file: file)
   end
   let(:content_type) { "application/vnd.ms-excel" }
   let(:index_path) { opendata_dataset_url_resources_path site, node, dataset_id: dataset.id }

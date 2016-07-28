@@ -1,10 +1,5 @@
 FactoryGirl.define do
   factory :opendata_dataset, class: Opendata::Dataset, traits: [:cms_page] do
-    transient do
-      node nil
-    end
-
-    filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/dataset"
     text "aaaa\naaaa"
     tags %w(aaa bbb)
@@ -14,11 +9,6 @@ FactoryGirl.define do
   end
 
   factory :opendata_app, class: Opendata::App, traits: [:cms_page] do
-    transient do
-      node nil
-    end
-
-    filename { node.blank? ? "dir/#{unique_id}.html" : "#{node.filename}/#{unique_id}.html" }
     route "opendata/app"
     text "aaaa\naaaa"
     tags %w(aaa bbb)

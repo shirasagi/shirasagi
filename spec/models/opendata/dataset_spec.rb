@@ -6,7 +6,7 @@ describe Opendata::Dataset, dbscope: :example do
   let(:node) { create(:opendata_node_dataset) }
 
   context "check attributes with typical url resource" do
-    subject { create(:opendata_dataset, node: node) }
+    subject { create(:opendata_dataset, cur_node: node) }
     its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
@@ -282,10 +282,10 @@ describe Opendata::Dataset, dbscope: :example do
 
       before do
         license = Fs::UploadedFile.create_from_file(license_logo_file, basename: "spec") do |uploaded_file|
-          create(:opendata_license, site: node.site, file: uploaded_file)
+          create(:opendata_license, cur_site: node.site, in_file: uploaded_file)
         end
 
-        dataset = create(:opendata_dataset, node: node)
+        dataset = create(:opendata_dataset, cur_node: node)
         resource = dataset.resources.new(attributes_for(:opendata_resource))
         Fs::UploadedFile.create_from_file(file, basename: "spec", content_type: content_type) do |uploaded_file|
           resource.in_file = uploaded_file

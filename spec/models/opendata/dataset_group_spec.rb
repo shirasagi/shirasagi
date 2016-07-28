@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Opendata::DatasetGroup, dbscope: :example do
   describe "#state_options" do
-    subject { create(:opendata_dataset_group, site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
+    subject { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
     its(:state_options) { is_expected.to include %w(公開 public) }
   end
 

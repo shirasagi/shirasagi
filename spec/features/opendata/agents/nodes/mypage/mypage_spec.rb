@@ -6,7 +6,7 @@ describe "opendata_agents_nodes_mypage", dbscope: :example do
   let(:node_mypage) { create :opendata_node_mypage, filename: "mypage", basename: "mypage" }
   let!(:node_my_dataset) { create :opendata_node_my_dataset, filename: "#{node_mypage.filename}/dataset" }
   let!(:member) { opendata_member }
-  let!(:member_notice) { create(:opendata_member_notice, member: member) }
+  let!(:member_notice) { create(:opendata_member_notice, member_id: member.id) }
 
   context "with email and password" do
     let!(:node_login) { create :member_node_login, redirect_url: node_mypage.url, form_auth: "enabled" }

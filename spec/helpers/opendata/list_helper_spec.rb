@@ -11,9 +11,9 @@ describe Opendata::ListHelper, type: :helper, dbscope: :example do
         @cur_part = create(:opendata_part_dataset)
         @cur_node = create(:opendata_node_dataset)
         @cur_path = @cur_node.filename
-        @item1 = create(:opendata_dataset, node: @cur_node)
-        @item2 = create(:opendata_dataset, node: @cur_node)
-        @item3 = create(:opendata_dataset, node: @cur_node)
+        @item1 = create(:opendata_dataset, cur_node: @cur_node)
+        @item2 = create(:opendata_dataset, cur_node: @cur_node)
+        @item3 = create(:opendata_dataset, cur_node: @cur_node)
         @items = Opendata::Dataset.all
       end
 
@@ -37,9 +37,9 @@ describe Opendata::ListHelper, type: :helper, dbscope: :example do
         @cur_part = create(:opendata_part_dataset)
         @cur_node = create(:opendata_node_dataset)
         @cur_path = @cur_node.filename
-        @item1 = create(:opendata_dataset, node: @cur_node)
-        @item2 = create(:opendata_dataset, node: @cur_node)
-        @item3 = create(:opendata_dataset, node: @cur_node)
+        @item1 = create(:opendata_dataset, cur_node: @cur_node)
+        @item2 = create(:opendata_dataset, cur_node: @cur_node)
+        @item3 = create(:opendata_dataset, cur_node: @cur_node)
         @items = Opendata::Dataset.all
       end
 

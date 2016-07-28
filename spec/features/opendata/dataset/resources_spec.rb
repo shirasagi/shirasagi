@@ -6,8 +6,8 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
   let!(:node_search) { create_once :opendata_node_search_dataset }
   let!(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s }
   let!(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let!(:license) { create(:opendata_license, site: site, file: license_logo_file) }
-  let(:dataset) { create(:opendata_dataset, node: node) }
+  let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:index_path) { opendata_dataset_resources_path site, node, dataset.id }
 
   it "without login" do

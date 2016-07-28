@@ -5,7 +5,7 @@ describe "opendata_agents_nodes_dataset_group", dbscope: :example do
   let!(:category) { create :opendata_node_category, basename: "bunya/kurashi" }
   let!(:dataset_group) { create :opendata_dataset_group, categories: [ category ] }
   let(:node) { create :opendata_node_dataset_category }
-  let(:part) { create :opendata_part_dataset_group, node: node }
+  let(:part) { create :opendata_part_dataset_group, cur_node: node }
   before do
     create :opendata_node_search_dataset, basename: "dataset/search"
     create :opendata_node_search_dataset_group

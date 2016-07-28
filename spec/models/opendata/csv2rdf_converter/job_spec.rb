@@ -15,8 +15,8 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
     let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
     let(:node) { create(:opendata_node_dataset) }
     let(:license_logo_file) { upload_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-    let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
-    let(:dataset) { create(:opendata_dataset, node: node) }
+    let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+    let(:dataset) { create(:opendata_dataset, cur_node: node) }
     let(:resource) { dataset.resources.new(attributes_for(:opendata_resource)) }
     let(:csv_file) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
     let(:content_type) { "application/vnd.ms-excel" }
@@ -30,7 +30,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
       resource.save!
       resource.in_file.close
 
-      @setting = create(:opendata_csv2rdf_setting, site: site, resource: resource, header_rows: 1, class_id: rdf_class.id)
+      @setting = create(:opendata_csv2rdf_setting, cur_site: site, resource: resource, header_rows: 1, class_id: rdf_class.id)
     end
 
     it do

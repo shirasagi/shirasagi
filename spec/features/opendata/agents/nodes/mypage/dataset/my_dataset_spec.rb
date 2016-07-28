@@ -46,7 +46,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example do
   end
 
   describe "#index" do
-    let!(:dataset) { create :opendata_dataset, node: node_dataset, member_id: member.id }
+    let!(:dataset) { create :opendata_dataset, cur_node: node_dataset, member_id: member.id }
 
     it do
       visit index_url

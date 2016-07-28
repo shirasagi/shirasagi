@@ -6,7 +6,7 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
   let!(:node_search_dataset) { create :opendata_node_search_dataset, basename: "dataset/search" }
   let!(:node_search_dataset_group) { create :opendata_node_search_dataset_group }
   let!(:node_dataset) { create(:opendata_node_dataset) }
-  let!(:page_dataset) { create(:opendata_dataset, node: node_dataset) }
+  let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset) }
   let(:part) { create :opendata_part_dataset, sort: 'attention' }
   let(:index_url) { ::URI.parse "http://#{site.domain}#{part.url}" }
 

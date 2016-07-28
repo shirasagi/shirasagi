@@ -44,7 +44,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example do
     describe "#show" do
       let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
       let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-      let(:item) { create(:opendata_license, site: site, file: license_logo_file) }
+      let(:item) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
       let(:show_path) { opendata_license_path site, node, item }
 
       it do
@@ -57,7 +57,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example do
     describe "#edit" do
       let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
       let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-      let(:item) { create(:opendata_license, site: site, file: license_logo_file) }
+      let(:item) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
       let(:edit_path) { edit_opendata_license_path site, node, item }
 
       it do
@@ -74,7 +74,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example do
     describe "#delete" do
       let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
       let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-      let(:item) { create(:opendata_license, site: site, file: license_logo_file) }
+      let(:item) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
       let(:delete_path) { delete_opendata_license_path site, node, item }
 
       it do

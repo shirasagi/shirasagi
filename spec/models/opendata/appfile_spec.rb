@@ -12,7 +12,7 @@ describe Opendata::Appfile, dbscope: :example do
   let(:node) { create(:opendata_node_app) }
 
   context "check attributes with typical url resource" do
-    let(:app) { create(:opendata_app, node: node) }
+    let(:app) { create(:opendata_app, cur_node: node) }
     let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
     let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
     subject { create_appfile(app, file) }
@@ -28,7 +28,7 @@ describe Opendata::Appfile, dbscope: :example do
 
   describe "#parse_csv" do
     context "when shift_jis csv is given" do
-      let(:app) { create(:opendata_app, node: node) }
+      let(:app) { create(:opendata_app, cur_node: node) }
       let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
       let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
       subject { create_appfile(app, file) }
@@ -44,7 +44,7 @@ describe Opendata::Appfile, dbscope: :example do
     end
 
     context "when euc-jp csv is given" do
-      let(:app) { create(:opendata_app, node: node) }
+      let(:app) { create(:opendata_app, cur_node: node) }
       let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "euc-jp.csv") }
       let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
       subject { create_appfile(app, file) }
@@ -60,7 +60,7 @@ describe Opendata::Appfile, dbscope: :example do
     end
 
     context "when utf-8 csv is given" do
-      let(:app) { create(:opendata_app, node: node) }
+      let(:app) { create(:opendata_app, cur_node: node) }
       let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
       let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
       subject { create_appfile(app, file) }
@@ -90,7 +90,7 @@ describe Opendata::Appfile, dbscope: :example do
   end
 
   context "when app has appurl" do
-    let(:app) { create(:opendata_app, node: node, appurl: "http://example.jp/") }
+    let(:app) { create(:opendata_app, cur_node: node, appurl: "http://example.jp/") }
     let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
     let(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
     subject { create_appfile(app, file) }
@@ -98,7 +98,7 @@ describe Opendata::Appfile, dbscope: :example do
   end
 
   context "when japanese filename is uploaded" do
-    let(:app) { create(:opendata_app, node: node, appurl: "http://example.jp/") }
+    let(:app) { create(:opendata_app, cur_node: node, appurl: "http://example.jp/") }
     let(:tmpdir) { Dir.mktmpdir }
     let(:file_path) do
       File.open("#{tmpdir}/index - コピー.json", "w") do |fp|

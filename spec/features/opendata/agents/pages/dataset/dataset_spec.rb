@@ -6,13 +6,13 @@ describe "opendata_agents_pages_dataset", dbscope: :example do
   let!(:node_dataset) { create_once :opendata_node_dataset }
   let!(:node_area) { create :opendata_node_area }
   let!(:node_search_dataset) { create_once :opendata_node_search_dataset, basename: "dataset/search" }
-  let!(:page_dataset) { create(:opendata_dataset, node: node_dataset, area_ids: [ node_area.id ]) }
+  let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset, area_ids: [ node_area.id ]) }
   let!(:node_dataset_category) { create_once :opendata_node_dataset_category }
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let(:dataset_resource) { page_dataset.resources.new(attributes_for(:opendata_resource)) }
   let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
   let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
   let(:index_path) { page_dataset.url }
 
   before do

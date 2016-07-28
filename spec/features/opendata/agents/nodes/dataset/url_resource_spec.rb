@@ -17,12 +17,12 @@ describe "opendata_agents_nodes_url_resource", dbscope: :example, http_server: t
   let(:site) { cms_site }
   let!(:node_search) { create :opendata_node_search_dataset }
 
-  let!(:node) { create_once :opendata_node_dataset, name: "opendata_agents_nodes_url_resource" }
-  let!(:dataset) { create_once :opendata_dataset, filename: "#{node.filename}/1.html" }
+  let!(:node) { create :opendata_node_dataset, name: "opendata_agents_nodes_url_resource" }
+  let!(:dataset) { create :opendata_dataset, cur_node: node, filename: "1.html" }
 
   let!(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
   let!(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let!(:license) { create(:opendata_license, site: site, file: license_logo_file) }
+  let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
   let!(:original_url) do
     "http://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2014/qe143_2/__icsFiles/afieldfile/2014/12/09/gaku-mg1432.csv"
   end

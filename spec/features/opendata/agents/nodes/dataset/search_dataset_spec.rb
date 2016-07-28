@@ -18,7 +18,7 @@ describe "opendata_agents_nodes_search_dataset", dbscope: :example do
       basename: "#{node_dataset.filename}/search",
       depth: node_dataset.depth + 1)
   end
-  let!(:page_dataset) { create(:opendata_dataset, node: node_dataset, area_ids: [ node_area.id ]) }
+  let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset, area_ids: [ node_area.id ]) }
   let!(:node_dataset_category) do
     create_once(
       :opendata_node_dataset_category,
@@ -29,7 +29,7 @@ describe "opendata_agents_nodes_search_dataset", dbscope: :example do
   let(:dataset_resource) { page_dataset.resources.new(attributes_for(:opendata_resource)) }
   let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
   let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
   let(:index_path) { "#{node_search_dataset.url}index.html" }
   let(:rss_path) { "#{node_search_dataset.url}rss.xml" }
 

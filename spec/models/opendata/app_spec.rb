@@ -4,7 +4,7 @@ describe Opendata::App, dbscope: :example do
   context "check attributes with typical url resource" do
     let!(:node_search_app) { create(:opendata_node_search_app) }
     let(:node) { create(:opendata_node_app) }
-    subject { create(:opendata_app, node: node) }
+    subject { create(:opendata_app, cur_node: node) }
     its(:becomes_with_route) { is_expected.not_to be_nil }
     its(:dirname) { is_expected.to eq node.filename }
     its(:basename) { is_expected.to eq subject.filename.split('/').last }
@@ -176,7 +176,7 @@ describe Opendata::App, dbscope: :example do
   describe "#create_zip" do
     let!(:node_search_app) { create(:opendata_node_search_app) }
     let!(:node) { create(:opendata_node_app) }
-    let!(:app) { create(:opendata_app, node: node) }
+    let!(:app) { create(:opendata_app, cur_node: node) }
 
     def create_appfile(app, file)
       appfile = app.appfiles.new(text: "aaa", format: "csv")

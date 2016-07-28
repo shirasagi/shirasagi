@@ -8,9 +8,9 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
-  let(:dataset) { create(:opendata_dataset, node: node) }
+  let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, site: site, file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
 
   context "check attributes with typical url resource" do
     subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }

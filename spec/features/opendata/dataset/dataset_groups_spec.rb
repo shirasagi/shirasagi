@@ -55,7 +55,7 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
           basename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
       end
-      let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
+      let(:item) { create(:opendata_dataset_group, cur_site: site, category_ids: [ category.id ]) }
       let(:show_path) { opendata_dataset_group_path site, node, item }
 
       it do
@@ -73,7 +73,7 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
           basename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
       end
-      let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
+      let(:item) { create(:opendata_dataset_group, cur_site: site, category_ids: [ category.id ]) }
       let(:edit_path) { edit_opendata_dataset_group_path site, node, item }
 
       it do
@@ -95,7 +95,7 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
           basename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
       end
-      let(:item) { create(:opendata_dataset_group, site: site, category_ids: [ category.id ]) }
+      let(:item) { create(:opendata_dataset_group, cur_site: site, category_ids: [ category.id ]) }
       let(:delete_path) { delete_opendata_dataset_group_path site, node, item }
 
       it do

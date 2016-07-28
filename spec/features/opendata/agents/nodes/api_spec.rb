@@ -17,15 +17,15 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
   let(:resource_search_path) { "#{node.url}1/resource_search" }
 
   let!(:node_dataset) { create_once :opendata_node_dataset }
-  let!(:node_dataset_group_01) { create(:opendata_dataset_group, site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
-  let!(:node_dataset_group_02) { create(:opendata_dataset_group, site: cms_site, categories: [ OpenStruct.new({ _id: 2 }) ]) }
+  let!(:node_dataset_group_01) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 1 }) ]) }
+  let!(:node_dataset_group_02) { create(:opendata_dataset_group, cur_site: cms_site, categories: [ OpenStruct.new({ _id: 2 }) ]) }
   let!(:node_search_dataset) { create_once :opendata_node_search_dataset, basename: "dataset/search" }
   let!(:page_dataset_01) do
-    create(:opendata_dataset, node: node_dataset, dataset_group_ids: [node_dataset_group_01.id],
+    create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_01.id],
                               area_ids: [ node_area.id ], tags: ["TEST_1"])
   end
   let!(:page_dataset_02) do
-    create(:opendata_dataset, node: node_dataset, dataset_group_ids: [node_dataset_group_02.id],
+    create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_02.id],
                               area_ids: [ node_area.id ], tags: ["TEST_2"])
   end
 
@@ -34,7 +34,7 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
   let(:dataset_url_resource) { page_dataset_01.url_resources.new(attributes_for(:opendata_url_resource)) }
 
   let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, site: cms_site, file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: cms_site, in_file: license_logo_file) }
 
   before do
 

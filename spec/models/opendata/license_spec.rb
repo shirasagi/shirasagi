@@ -5,7 +5,7 @@ describe Opendata::License, dbscope: :example do
     let(:site) { cms_site }
     let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
     let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-    subject { create(:opendata_license, site: site, file: license_logo_file) }
+    subject { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
     its(:state_options) { is_expected.to include %w(非公開 closed) }
   end
 
