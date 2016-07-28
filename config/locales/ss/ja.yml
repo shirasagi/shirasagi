@@ -90,12 +90,9 @@ ja:
       more: もっと見る
       select: 選択する
       delete_all: すべて削除する
-<<<<<<< HEAD
       markdown_help: Markdown ヘルプ
-=======
       download: ダウンロード
       import: インポート
->>>>>>> download/import function implemented
     notice:
       saved: 保存しました。
       deleted: 削除しました。
