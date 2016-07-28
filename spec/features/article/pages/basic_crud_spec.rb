@@ -226,6 +226,5 @@ describe "article_pages", dbscope: :example do
 
       end
     end
->>>>>>> RSpec code created AND some bug fix:spec/features/article/pages_spec.rb
   end
 end
