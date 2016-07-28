@@ -34,6 +34,7 @@ module Opendata::ListHelpers::App
     cur_item.cur_date = @cur_date
 
     app_node = Opendata::Node::App.site(@cur_site).and_public.first
+    return if app_node.blank?
     show_point = app_node.show_point?
 
     h = []

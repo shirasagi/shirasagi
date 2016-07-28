@@ -52,7 +52,7 @@ SS::Application.routes.draw do
     get "api/1/package_search" => "public#package_search", cell: "nodes/api"
     get "api/1/resource_search" => "public#resource_search", cell: "nodes/api"
 
-    get "member/" => "public#index", cell: "nodes/member"
+    # get "member/" => "public#index", cell: "nodes/member"
     get "member/:member" => "public#show", cell: "nodes/member"
     get "member/:member/datasets/(:filename.:format)" => "public#datasets", cell: "nodes/member"
     get "member/:member/apps/(:filename.:format)" => "public#apps", cell: "nodes/member"

@@ -40,6 +40,7 @@ module Opendata::ListHelpers::Idea
     cur_item.cur_date = @cur_date
 
     idea_node = Opendata::Node::Idea.site(@cur_site).and_public.first
+    return if idea_node.blank?
     show_point = idea_node.show_point?
 
     h = []
