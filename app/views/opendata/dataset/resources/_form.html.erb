@@ -1,8 +1,7 @@
 <%
 licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c| [c.name, c.id] }
 %>
-<%= stylesheet_link_tag "/assets/css/jquery-ui/smoothness/custom.min.css" %>
-<%= javascript_include_tag "/assets/js/jquery-ui-1.10.4.custom.min.js" %>
+<%= stylesheet_link_tag "opendata/form" %>
 <%= javascript_include_tag "opendata/form" %>
 
 <%= jquery do %>
@@ -50,7 +49,7 @@ $(".publish_save").on("click", function(e){
   <dd><%= f.text_area :text %></dd>
 
   <dt class="in_tsv"><%= @model.t :tsv_id %><%= @model.tt :tsv_id %></dt>
-  <dd class="in_tsv"><%= f.file_field :in_tsv %></td>
+  <dd class="in_tsv"><%= f.file_field :in_tsv %></dd>
   <% if @item.tsv_id %>
   <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "views.button.delete" %> (<%= @item.tsv.filename %>)</label></dd>
   <% end %>

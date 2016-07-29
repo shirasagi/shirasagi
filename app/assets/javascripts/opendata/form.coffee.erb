@@ -1,3 +1,5 @@
+//= require jquery-ui/autocomplete
+
 # opendata resource form
 $ ->
   Opendata_ResourceForm.render()
@@ -5,7 +7,7 @@ $ ->
 
 class @Opendata_ResourceForm
   @render: ->
-    formats = <%= Opendata::Resource.format_options.to_json %>
+    formats = <%= Opendata::Resource.format_options.sort.to_json %>
 
     $("#item_format").autocomplete
       source: (request, response) ->
