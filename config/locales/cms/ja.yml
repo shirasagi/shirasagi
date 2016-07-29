@@ -403,6 +403,8 @@ ja:
         search_category_ids: カテゴリー
         search_groups: グループ
         search_group_ids: グループ
+        search_nodes: フォルダー
+        search_node_ids: フォルダー
         search_released: 公開日時
         search_released_start: 公開日時（開始）
         search_released_close: 公開日時（終了）
@@ -931,6 +933,9 @@ ja:
       search_category_ids:
         - 検索したいカテゴリーを選択します。
         - いずれかのカテゴリーに該当するページが検索されます。
+      search_node_ids:
+        - 検索したいフォルダーを選択します。
+        - いずれかのフォルダー配下に存在するページが検索されます。
       search_released:
         - 検索したい公開日時の範囲を入力します。
       search_updated:

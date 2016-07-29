@@ -11,6 +11,9 @@
   <dt><%= @model.t :search_group_ids %></dt>
   <dd><%= tryb { @item.search_groups.pluck(:name).join(",") } %></dd>
 
+  <dt><%= @model.t :search_node_ids %></dt>
+  <dd><%= tryb { @item.search_nodes.pluck(:name).join(",") } %></dd>
+
   <dt><%= @model.t :search_released %></dt>
   <dd>
     <% if @item.search_released_start || @item.search_released_close %>

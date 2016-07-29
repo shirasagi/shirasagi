@@ -13,7 +13,6 @@
         <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
       </dd>
       <dd>
-        <table class="index" style="visibility:hidden"></teble>
         <table class="index ajax-selected">
           <thead>
             <tr>
@@ -40,7 +39,6 @@
         <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
       </dd>
       <dd>
-        <table class="index" style="visibility:hidden"></teble>
         <table class="index ajax-selected">
           <thead>
             <tr>
@@ -55,6 +53,32 @@
               <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
             </tr>
             <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+
+    <dl class="see">
+      <dt><%= @model.t :search_node_ids %><%= @model.tt :search_node_ids %></dt>
+      <dd class="wide">
+        <%= hidden_field_tag "s[node_ids][]", nil, class: "hidden-ids" %>
+        <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path, class: "btn ajax-box" %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead>
+          <tr>
+            <th class="name"><%= @model.t :search_node_ids %></th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @item.search_nodes.each do |item| %>
+              <tr data-id="<%= item.id %>">
+                <td><%= hidden_field_tag "s[node_ids][]", item.id %> <%= item.filename %></td>
+                <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+              </tr>
+          <% end %>
           </tbody>
         </table>
       </dd>

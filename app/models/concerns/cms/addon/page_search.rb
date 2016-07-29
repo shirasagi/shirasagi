@@ -14,10 +14,11 @@ module Cms::Addon
       field :search_updated_close, type: DateTime
       embeds_ids :search_categories, class_name: "Category::Node::Base"
       embeds_ids :search_groups, class_name: "SS::Group"
+      embeds_ids :search_nodes, class_name: "Cms::Node"
 
       permit_params :search_name, :search_filename, :search_state, :search_approver_state
       permit_params :search_released_start, :search_released_close, :search_updated_start, :search_updated_close
-      permit_params search_category_ids: [], search_group_ids: []
+      permit_params search_category_ids: [], search_group_ids: [], search_node_ids: []
 
       validates :search_state, inclusion: { in: %w(public closed ready), allow_blank: true }
       validates :search_approver_state, inclusion: { in: %w(request approve), allow_blank: true }
@@ -33,6 +34,7 @@ module Cms::Addon
         categories = search_category_ids.present? ? { category_ids: search_category_ids } : {}
         groups     = search_group_ids.present? ? { group_ids: search_group_ids } : {}
         state      = search_state.present? ? { state: search_state } : {}
+        nodes      = search_node_ids.present? ? { filename: /^#{search_nodes.map { |node| Regexp.escape("#{node.filename}/") }.join("|")}/ } : {}
 
         released = []
         released << { :released.gte => search_released_start } if search_released_start.present?
@@ -61,6 +63,7 @@ module Cms::Addon
           where(filename).
           in(categories).
           in(groups).
+          where(nodes).
           where(state).
           and(released).
           and(updated).
@@ -100,6 +103,7 @@ module Cms::Addon
       info << "#{Cms::Page.t(:filename)}: #{search_filename}" if search_filename.present?
       info << "#{Cms::Page.t(:category_ids)}: #{search_categories.pluck(:name).join(",")}" if search_category_ids.present?
       info << "#{Cms::Page.t(:group_ids)}: #{search_groups.pluck(:name).join(",")}" if search_group_ids.present?
+      info << "#{I18n.t 'cms.node'}: #{search_nodes.pluck(:name).join(",")}" if search_node_ids.present?
       if search_released_start.present? || search_released_close.present?
         start = search_released_start.try(:strftime, "%Y/%m/%d %H:%M")
         close = search_released_close.try(:strftime, "%Y/%m/%d %H:%M")
