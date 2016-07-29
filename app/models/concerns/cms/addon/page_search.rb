@@ -12,7 +12,7 @@ module Cms::Addon
       field :search_released_close, type: DateTime
       field :search_updated_start, type: DateTime
       field :search_updated_close, type: DateTime
-      embeds_ids :search_categories, class_name: "Category::Node::Base"
+      embeds_ids :search_categories, class_name: "Cms::Node"
       embeds_ids :search_groups, class_name: "SS::Group"
       embeds_ids :search_nodes, class_name: "Cms::Node"
 
