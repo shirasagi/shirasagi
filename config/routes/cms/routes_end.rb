@@ -119,6 +119,7 @@ SS::Application.routes.draw do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
       get "pages" => "pages#index"
+      get "pages/routes" => "pages#routes"
       get "categories" => "categories#index"
       get "contents" => "contents#index"
       get "contents/html" => "contents/html#index"

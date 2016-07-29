@@ -88,6 +88,10 @@ ja:
         index: 関連記事を選択する
         search: 関連記事を検索
         select: 関連記事を設定する
+      pages_routes:
+        index: ページ属性を選択する
+        search: ページ属性を検索
+        select: ページ属性を設定する
       members:
         index: メンバーを選択する
         search: メンバーを検索
@@ -405,6 +409,7 @@ ja:
         search_group_ids: グループ
         search_nodes: フォルダー
         search_node_ids: フォルダー
+        search_routes: ページ属性
         search_released: 公開日時
         search_released_start: 公開日時（開始）
         search_released_close: 公開日時（終了）
@@ -936,6 +941,9 @@ ja:
       search_node_ids:
         - 検索したいフォルダーを選択します。
         - いずれかのフォルダー配下に存在するページが検索されます。
+      search_routes:
+        - 検索したいページ属性を選択します。
+        - いずれかのページ属性に該当するページが検索されます。
       search_released:
         - 検索したい公開日時の範囲を入力します。
       search_updated:
