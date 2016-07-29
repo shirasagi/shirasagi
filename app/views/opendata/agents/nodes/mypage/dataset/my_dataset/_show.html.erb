@@ -1,9 +1,9 @@
 <table class="see opendata-dataset show">
-  <tr class="parent-row">
+  <tr class="parent-row name">
     <td class="field"><%= @model.t :name %></td>
     <td class="input"><%= @item.send :name %></td>
   </tr>
-  <tr class="parent-row">
+  <tr class="parent-row resources">
     <td class="field"><%= @model.t :resources %></td>
     <td class="input">
       <div class="resources"><%= link_to :"opendata.manage_resources", "#{@cur_node.url}#{@item.id}/resources/" %></div>
@@ -13,30 +13,30 @@
       <% end %>
     </td>
   </tr>
-  <tr class="parent-row">
+  <tr class="parent-row text">
     <td class="field"><%= @model.t :text %></td>
     <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
   </tr>
-  <tr class="parent-row">
+  <tr class="parent-row tags">
     <td class="field"><%= @model.t :tags %></td>
     <td class="input"><%= @item.tags.join(", ") %></td>
   </tr>
-  <tr class="parent-row">
+  <tr class="parent-row categories">
     <td class="field"><%= @model.t :category_ids %></td>
     <td class="input"><%= @item.categories.map { |m| m.name }.join(", ") %></td>
   </tr>
-  <tr class="parent-row">
+  <tr class="parent-row areas">
     <td class="field"><%= @model.t :area_ids %></td>
     <td class="input"><%= @item.areas.map { |m| m.name }.join(", ") %></td>
   </tr>
-  <tr class="parent-row">
+  <tr class="parent-row status">
     <td class="field"><%= @model.t :state %></td>
     <td class="input"><%= @item.label :status %></td>
   </tr>
   <% approver = @item.workflow_approvers.try(:last) %>
   <% workflow_comment = tryb{ approver[:comment] } %>
   <% if workflow_comment.present? %>
-    <tr class="parent-row">
+    <tr class="parent-row workflow-comment">
       <td class="field"><%= @model.t :approver_comment %></td>
       <td class="input">
         <%= workflow_comment %>
