@@ -72,7 +72,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
         t_uid: @app.workflow_approvers.first[:user_id],
         site: @cur_site,
         item: @app,
-        url: ::File.join(@cur_site.full_url, opendata_app_path(cid: @cur_node.id, site: @cur_site.host, id: @app.id))
+        url: ::File.join(@cur_site.full_url, opendata_app_path(site: @cur_site, cid: @app.parent.id, id: @app))
       }
       Opendata::Mailer.request_resource_mail(args).deliver_now rescue nil
     end

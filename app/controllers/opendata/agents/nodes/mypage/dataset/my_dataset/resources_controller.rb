@@ -72,7 +72,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
         t_uid: @dataset.workflow_approvers.first[:user_id],
         site: @cur_site,
         item: @dataset,
-        url: ::File.join(@cur_site.full_url, opendata_dataset_path(cid: @cur_node.id, site: @cur_site.host, id: @dataset.id))
+        url: ::File.join(@cur_site.full_url, opendata_dataset_path(site: @cur_site, cid: @dataset.parent, id: @dataset))
       }
       Opendata::Mailer.request_resource_mail(args).deliver_now rescue nil
     end
