@@ -44,7 +44,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          fill_in "s_name", with: "A"
+          fill_in "item[search_name]", with: "A"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -56,7 +56,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          fill_in "s_filename", with: "base/"
+          fill_in "item[search_filename]", with: "base/"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -70,7 +70,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "公開", from: "s_state"
+          select "公開", from: "item[search_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -78,7 +78,7 @@ describe "cms_search", dbscope: :example do
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         within "form.search-pages" do
-          select "非公開", from: "s_state"
+          select "非公開", from: "item[search_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -91,7 +91,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "公開待ち", from: "s_state"
+          select "公開待ち", from: "item[search_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -137,10 +137,10 @@ describe "cms_search", dbscope: :example do
           close = close.strftime("%Y/%m/%d %H:%M:%S")
 
           within "form.search-pages" do
-            fill_in "s_released_start", with: start
-            fill_in "s_released_close", with: close
-            fill_in "s_updated_start", with: ""
-            fill_in "s_updated_close", with: ""
+            fill_in "item[search_released_start]", with: start
+            fill_in "item[search_released_close]", with: close
+            fill_in "item[search_updated_start]", with: ""
+            fill_in "item[search_updated_close]", with: ""
             click_button "検索"
           end
           expect(status_code).to eq 200
@@ -148,10 +148,10 @@ describe "cms_search", dbscope: :example do
           expect(page).to have_css("div.info a.title", text: "[TEST]D")
 
           within "form.search-pages" do
-            fill_in "s_released_start", with: ""
-            fill_in "s_released_close", with: ""
-            fill_in "s_updated_start", with: start
-            fill_in "s_updated_close", with: close
+            fill_in "item[search_released_start]", with: ""
+            fill_in "item[search_released_close]", with: ""
+            fill_in "item[search_updated_start]", with: start
+            fill_in "item[search_updated_close]", with: close
             click_button "検索"
           end
           expect(status_code).to eq 200
@@ -165,7 +165,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "申請したもの", from: "s_approver_state"
+          select "申請したもの", from: "item[search_approver_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -191,7 +191,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "依頼されたもの", from: "s_approver_state"
+          select "依頼されたもの", from: "item[search_approver_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
