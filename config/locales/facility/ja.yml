@@ -80,6 +80,9 @@ ja:
       facility/search: 施設検索
 
   mongoid:
+    models:
+      facility/image: 施設写真
+      facility/map: 地図
     attributes:
       facility/node/page:
         name: 施設名

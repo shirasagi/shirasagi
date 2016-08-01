@@ -276,6 +276,7 @@ ja:
       cms/page_search: ページ検索
       cms/postal_code: 郵便番号
       cms/task: タスク
+      cms/import_page: 取り込みページ
     attributes:
       cms/content:
         released: 公開日時
