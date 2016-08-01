@@ -14,6 +14,7 @@ module Facility::Node
     include Facility::Addon::CategorySetting
     include Facility::Addon::ServiceSetting
     include Facility::Addon::LocationSetting
+    include Facility::Addon::OpendataAssoc
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

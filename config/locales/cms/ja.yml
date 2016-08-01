@@ -96,6 +96,10 @@ ja:
         index: メンバーを選択する
         search: メンバーを検索
         select: メンバーを設定する
+      sites:
+        index: サイトを選択する
+        search: サイトを検索
+        select: サイトを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
@@ -253,6 +257,7 @@ ja:
 
   mongoid:
     models:
+      cms/site: サイト
       cms/user: ユーザー
       cms/member: メンバー
       cms/node: フォルダー
