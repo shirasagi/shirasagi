@@ -1,4 +1,4 @@
-<%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :get } do |f| %>
+<%= form_for :item, url: { action: :index }, html: { class: "search-pages", multipart: true, method: :post } do |f| %>
   <%= render file: "cms/agents/addons/page_search/_form.html.erb", locals: { f: f } %>
 
   <footer class="send">

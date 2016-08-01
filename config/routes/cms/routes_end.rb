@@ -112,7 +112,7 @@ SS::Application.routes.draw do
     get "all_contents(.:format)" => "all_contents#index", format: { default: :html }, as: "all_contents"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
-    get "search_contents/pages" => "search_contents/pages#index"
+    match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
 
     namespace "apis" do
