@@ -177,6 +177,9 @@ ja:
       all_keywords: すべてのキーワードを含む
       any_keywords: いずれかのキーワードを含む
       any_conditions: すべてをOR条件で検索する
+    assoc_job:
+      dataset_text: "%{name} の一覧は %{url} でも公開されているので、%{url} もご覧ください。"
+      resource_text: "%{name} は %{now} 時点の情報を元に作成しています。"
 
     # Web API
     api:
@@ -259,6 +262,7 @@ ja:
       opendata/app_page_setting: アプリ詳細ページ設定
       opendata/idea_page_setting: アイデア詳細ページ設定
       opendata/list_node_setting: フォルダー設定
+      opendata/site_association: サイト連携
 
   cms:
     nodes:
@@ -476,6 +480,9 @@ ja:
         show_tabs: タブ表示
       opendata/addon/list_node_setting:
         limit: 表示件数
+      opendata/addon/site_association:
+        assoc_site_id: 連携サイト
+        assoc_node_id: 連携フォルダー
 
   tooltip:
     opendata/dataset:
@@ -543,3 +550,4 @@ ja:
   job:
     models:
       opendata/csv2rdf_converter/job: RDF変換ジョブ
+      opendata/facility/assoc_job: 施設CSV取り込みジョブ

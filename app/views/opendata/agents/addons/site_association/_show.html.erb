@@ -1,0 +1,16 @@
+<% return "" if @item.assoc_site_id.blank? || @item.assoc_node_id.blank? %>
+<% return "" unless @item.assoc_node.allowed?(:read, @cur_user, site: @item.assoc_site) %>
+
+<dl class="see mod-opendata-site-association">
+  <% if @item.assoc_site_id != @cur_site.id %>
+  <dt><%= @model.t :assoc_site_id %></dt>
+  <dd>
+    <%= link_to @item.assoc_site.name, cms_contents_path(site: @item.assoc_site) %>
+  </dd>
+  <% end %>
+
+  <dt><%= @model.t :assoc_node_id %></dt>
+  <dd>
+    <%= link_to @item.assoc_node.name, @item.assoc_node.private_show_path %>
+  </dd>
+</dl>
