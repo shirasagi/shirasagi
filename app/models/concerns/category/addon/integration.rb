@@ -11,7 +11,7 @@ module Category::Addon
     def integrate
       partial = ::Category::Node::Base.site(@cur_site).find(in_partial_id) rescue nil
       if !partial
-        self.errors.add :base, "not found node"
+        self.errors.add :base, I18n.t("errors.messages.partial_node_not_found")
         return false
       end
 

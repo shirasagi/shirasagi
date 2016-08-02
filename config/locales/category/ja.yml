@@ -32,6 +32,7 @@ ja:
 
   errors:
     messages:
+      partial_node_not_found: "フォルダーが見つかりません。"
       partial_auth_error: "%{name}(%{filename}) : 権限がありません。"
       partial_ancestor_error: "%{name}(%{filename}) : 対象フォルダーが統合元フォルダーの親フォルダーです。"
       partial_children_basename_duplication: "%{name}(%{filename}) : 統合元フォルダーの下に同名のコンテンツがあります。"
