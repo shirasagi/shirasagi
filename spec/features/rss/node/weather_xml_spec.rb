@@ -97,11 +97,13 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
         click_on 'フォルダーを選択する'
       end
-      click_on member_node_my_anpi_post.name
+      expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
+      click_on "close"
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
         click_on 'フォルダーを選択する'
       end
-      click_on ezine_node_member_page.name
+      expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
+      click_on "close"
 
       click_on '保存'
       expect(page).to have_css('#notice', text: '保存しました。')
