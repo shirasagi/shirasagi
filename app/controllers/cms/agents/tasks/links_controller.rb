@@ -1,5 +1,6 @@
 require "timeout"
 require "open-uri"
+require 'open_uri_redirections'
 require 'nkf'
 
 class Cms::Agents::Tasks::LinksController < ApplicationController
@@ -143,12 +144,16 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     # Returns the HTML response with HTTP request.
     def get_http(url)
-      url = File.join(@base_url, url) if url[0] == "/"
+      if url =~ /^\/\//
+        url = @base_url.sub(/\/\/.*$/, url)
+      elsif url[0] == "/"
+        url = File.join(@base_url, url)
+      end
 
       begin
         Timeout.timeout(10) do
           data = []
-          open(url, proxy: true) do |f|
+          open(url, proxy: true, allow_redirections: :all) do |f|
             f.each_line { |line| data << line }
           end
           return data.join
@@ -162,11 +167,15 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     # Cheks the existence with HEAD request.
     def check_head(url)
-      url = File.join(@base_url, url) if url[0] == "/"
+      if url =~ /^\/\//
+        url = @base_url.sub(/\/\/.*$/, url)
+      elsif url[0] == "/"
+        url = File.join(@base_url, url)
+      end
 
       begin
         Timeout.timeout(5) do
-          open url, proxy: true, progress_proc: ->(size) { raise "200" }
+          open url, proxy: true, allow_redirections: :all, progress_proc: ->(size) { raise "200" }
         end
         false
       rescue Timeout::Error
