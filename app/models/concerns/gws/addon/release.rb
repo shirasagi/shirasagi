@@ -4,7 +4,7 @@ module Gws::Addon
     extend SS::Addon
 
     included do
-      field :state, type: String, default: "public"
+      field :state, type: String, default: "public", overwrite: true
       field :released, type: DateTime
       field :release_date, type: DateTime
       field :close_date, type: DateTime
