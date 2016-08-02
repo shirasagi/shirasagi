@@ -28,3 +28,37 @@ class @SS_ListUI
       for id in checked
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
       form.appendTo(document.body).submit()
+
+    $(".list-head .download").on "click", ->
+      token   = $('meta[name="csrf-token"]').attr('content')
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      if checked.length == 0
+        checked = $(".list-item input:checkbox").map ->
+          $(this).val()
+      return false if checked.length == 0
+      return false unless confirm("<%= I18n.t("views.confirm.download") %>")
+ 
+      urlArray = window.location.href.split("?")
+      if "?" in window.location.href
+        url = urlArray[0] + "/download?" + urlArray[1]
+      else
+        url = urlArray[0] + "/download"
+ 
+      form = $("<form/>", action: url, method: "post")
+      form.append($("<input/>", name: "_method", value: "get", type: "hidden" ))
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden" ))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
+ 
+    $(".list-head .import").on "click", ->
+      token = $('meta[name="csrf-token"]').attr('content')
+ 
+      urlArray = window.location.href.split("?")
+      if "?" in window.location.href
+        url = urlArray[0] + "/import?" + urlArray[1]
+      else
+        url = urlArray[0] + "/import"
+ 
+      window.location.href = url

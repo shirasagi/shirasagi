@@ -62,6 +62,7 @@ ja:
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。
+      download: ダウンロードしてよろしいですか？
     links:
       cms: サイト管理
       gws: グループ
@@ -92,6 +93,8 @@ ja:
       select: 選択する
       delete_all: すべて削除する
       markdown_help: Markdown ヘルプ
+      download: ダウンロード
+      import: インポート
     notice:
       saved: 保存しました。
       deleted: 削除しました。
