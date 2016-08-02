@@ -1,0 +1,38 @@
+<%= render file: "_search" %>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="text"><%= @model.t :text %></th>
+      <td class="member_name"><%= @model.t :member_name %></td>
+      <td class="state"><%= @model.t :state %></td>
+      <th class="datetime"><%= @model.t :updated %></th>
+      <th class="datetime"><%= @model.t :deleted %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+    <tr>
+      <td class="checkbox">
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, { action: :show, id: item } %>
+          <%= link_to :delete, { action: :delete, id: item } %>
+        </nav>
+      </td>
+      <td class="text"><%= link_to item.text, { action: :show, id: item } %></td>
+      <td class="member_name"><%= item.get_member_name %></td>
+      <td class="member_name"><%= item.label :status %></td>
+      <td class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
+      <td class="datetime">
+        <% if item.comment_deleted.present? %>
+        <%= item.comment_deleted.strftime("%Y/%m/%d %H:%M") %>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

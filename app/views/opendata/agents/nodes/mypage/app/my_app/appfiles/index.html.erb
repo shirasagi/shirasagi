@@ -1,0 +1,24 @@
+<nav class="menu">
+  <%= link_to :"opendata.labels.new", "#{@cur_node.url}#{@app.id}/appfiles/new/" %>
+</nav>
+
+<table class="opendata-appfiles index">
+  <thead>
+    <tr>
+      <th class="name"><%= I18n.t("opendata.labels.appfile_name") %></th>
+      <th class="updated"><%= I18n.t("opendata.labels.update_datetime") %></th>
+      <th class="size"><%= I18n.t("opendata.labels.size") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+    <tr>
+      <td><%= link_to item.filename, "#{@cur_node.url}#{@app.id}/appfiles/#{item.id}/" %></td>
+      <td><%= tryb{item.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
+      <td><%= number_to_human_size item.size %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

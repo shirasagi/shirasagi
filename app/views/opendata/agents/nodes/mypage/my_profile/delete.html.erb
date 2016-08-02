@@ -1,0 +1,14 @@
+<%= form_for :item, url: @cur_node.url, html: { id: "item-form", method: :delete } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="deletion-confirm">
+    <%= I18n.t("opendata.labels.delete_account_q") %><br />
+    <%= I18n.t("opendata.labels.delete_account_remain") %>
+  </div>
+
+  <footer class="send">
+  	<div>
+  	  <%= submit_tag t("opendata.button.delete_account"), name: :delete %>
+  	</div>
+  </footer>
+<% end %>

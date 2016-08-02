@@ -1,0 +1,8 @@
+<tr>
+  <td><a href="#{idea_url}">#{idea_name}</a></td>
+  <td>#{idea_updated}</td>
+  <td>#{idea_state}</td>
+  <td>#{idea_point}</td>
+  <td>#{idea_datasets}</td>
+  <td>#{idea_apps}</td>
+</tr>

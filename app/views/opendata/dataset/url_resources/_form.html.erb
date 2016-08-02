@@ -1,0 +1,29 @@
+<%
+licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c| [c.name, c.id] }
+%>
+<%= stylesheet_link_tag "opendata/form" %>
+<%= javascript_include_tag "opendata/form" %>
+
+<dl class="see">
+
+  <dt><%= @model.t :original_url %><%= required_label %></dt>
+  <dd><%= f.url_field :original_url %></dd>
+  <dd><input type="button" value=<%= @model.t :tsv_id %> onClick="window.open(item_original_url.value)"></dd>
+
+  <dt><%= @model.t :name %><%= required_label %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <%= f.hidden_field :format %>
+
+  <dt><%= @model.t :license_id %><%= required_label %></dt>
+  <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
+
+  <dt><%= @model.t :crawl_update %><%= @model.tt :crawl_update %><%= required_label %></dt>
+  <dd><%= f.select :crawl_update, @item.crawl_update_options %></dd>
+
+  <dt><%= @model.t :text %><%= @model.tt :text %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+
+</dl>
+

@@ -1,0 +1,13 @@
+<div class="opendata-dataset_groups nodes">
+  <% @items.each do |item| %>
+  <article>
+    <header>
+      <h2><%= link_to item.name, search_datasets_path("s[dataset_group]" => item.name) %></h2>
+    </header>
+  </article>
+  <% end %>
+</div>
+
+<nav>
+  <%= link_to I18n.t("opendata.labels.more"), search_groups_path, class: "more" %>
+</nav>

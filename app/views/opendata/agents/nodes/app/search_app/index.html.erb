@@ -1,0 +1,92 @@
+<%
+def transform_category(categories, indent = 0)
+  indent_chars = t('opendata.labels.category_prefixes')
+  ret = []
+  categories.each do |m|
+    ret << ["#{"　　" * indent}#{indent_chars[indent]} #{m.name}", m.id]
+    children = m.children.and_public.sort(order: 1)
+    cc = children.count
+    if cc > 0
+      ret += transform_category(children, indent + 1)
+    end
+  end
+  ret
+end
+
+areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+categories = transform_category(@cur_categories)
+@s = OpenStruct.new params[:s]
+
+%>
+<%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-apps-form", method: :get } do |f| %>
+  <dl class="keyword">
+    <dt><%= I18n.t("opendata.labels.keyword") %></dt>
+    <dd><%= f.text_field :keyword %></dd>
+  </dl>
+  <dl class="category">
+    <dt><%= I18n.t("opendata.labels.category_ids") %></dt>
+    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
+  </dl>
+  <dl class="area">
+    <dt><%= I18n.t("opendata.labels.area") %></dt>
+    <dd><%= f.select :area_id, areas, include_blank: "" %></dd>
+  </dl>
+  <dl class="tag">
+    <dt><%= I18n.t("opendata.labels.tag") %></dt>
+    <dd><%= f.text_field :tag %></dd>
+  </dl>
+  <dl class="license">
+    <dt><%= I18n.t("opendata.labels.license") %></dt>
+    <dd><%= f.text_field :license %></dd>
+  </dl>
+  <dl class="sort">
+    <dt><%= I18n.t("opendata.labels.sort") %></dt>
+    <dd><%= select_tag :sort, options_for_select(@model.sort_options, params[:sort]) %></dd>
+  </dl>
+  <dl class="option">
+    <dt><%= I18n.t("opendata.labels.search_option") %></dt>
+    <dd><%= f.select :option, @model.search_options %></dd>
+  </dl>
+
+  <div class="send">
+    <%= submit_tag t("views.button.search"), name: :search %>
+  </div>
+<% end %>
+
+<%= paginate @items %>
+
+<div class="opendata-search-apps pages">
+  <% @items.each do |item| %>
+  <article>
+    <header>
+      <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+      <h2><%= link_to item.name, item.url %>
+        <% if item.parent.becomes_with_route.show_point? %>
+        <span class="point"><%= item.point.to_i %></span>
+        <% end %>
+      </h2>
+    </header>
+    <div class="categories">
+      <% item.categories.each_with_index do |category, idx| %>
+        <span class="category"><%= category.name %></span>
+      <% end %>
+      <% item.areas.each_with_index do |area, idx| %>
+        <span class="area"><%= area.name %></span>
+      <% end %>
+      <% item.tags.each_with_index do |tag, idx| %>
+        <span class="tag"><%= tag %></span>
+      <% end %>
+    </div>
+  </article>
+  <% end %>
+
+  <% if @items.blank? %>
+  <article>
+    <header>
+      <h2><%= I18n.t("opendata.labels.no_app") %></h2>
+    </header>
+  </article>
+  <% end %>
+</div>
+
+<%= paginate @items %>

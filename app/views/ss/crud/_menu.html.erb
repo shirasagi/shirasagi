@@ -10,5 +10,5 @@
     <%= link_to(:edit, { action: :edit, id: @item }, class: :edit) if @model.allowed?(:edit, @cur_user) %>
     <%= link_to(:delete, { action: :delete, id: @item }, class: :delete) if @model.allowed?(:delete, @cur_user) %>
     <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
-   <% end %>
+  <% end %>
 </nav>

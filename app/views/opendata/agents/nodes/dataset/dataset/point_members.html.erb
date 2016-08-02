@@ -1,0 +1,10 @@
+<ul class="point-members">
+  <% @items.each do |item| %>
+    <% if item.member.present? %>
+      <li>
+        <%= member_icon item.member, size: :small %>
+        <span><%= link_to item.member.name, "#{member_path}#{item.member.id}" %></span>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

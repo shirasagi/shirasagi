@@ -1,0 +1,51 @@
+<%= stylesheet_link_tag "opendata/private", media: "all" %>
+
+<%= render file: "_search" %>
+
+<%= scss do %>
+table.rdf-props {
+  th.name, th.range {
+    width: 20%;
+  }
+}
+<% end %>
+
+<table class="index rdf-props">
+  <thead>
+  <tr>
+    <th class="checkbox"><input type="checkbox" /></th>
+    <th class="name"><%= @model.t :name %></th>
+    <th class="range"><%= @model.t :range %></th>
+    <th class="comments"><%= @model.t :comments %></th>
+    <th class="datetime"><%= @model.t :updated %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @items.each do |item| %>
+    <tr>
+      <td class="checkbox">
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, vocab_id: item.vocab, id: item %>
+          <%= link_to :edit, action: :edit, vocab_id: item.vocab, id: item %>
+          <% if @rdf_class.present? %>
+            <%= link_to :delete, action: :unlink, vocab_id: item.vocab, id: item %>
+          <% else %>
+            <%= link_to :delete, action: :delete, vocab_id: item.vocab, id: item %>
+          <% end %>
+        </nav>
+      </td>
+      <td class="name"><%= link_to("#{item.vocab.prefix}:#{item.name}", action: :show, vocab_id: item.vocab, id: item) %></td>
+      <td class="range">
+        <% if item.range.present? %>
+          <%= link_to(item.range.try(:preferred_label), controller: :classes, action: :show, vocab_id: item.range.vocab, id: item.range) %></td>
+        <% end %>
+      <td class="comments"><%= item.comments.try(:preferred_value) %></td>
+      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d") %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

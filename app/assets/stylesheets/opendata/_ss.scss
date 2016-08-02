@@ -1,0 +1,143 @@
+@import "ss/init";
+
+div.csv2rdf-settings-table-container {
+  width: 90%;
+  overflow-x: scroll;
+  white-space: pre;
+
+  table {
+    table-layout:fixed;
+    th, td {
+      padding: 4px 8px;
+      max-width: 200px;
+    }
+    thead {
+      tr {
+        //&:nth-child(even) { background-color: #fff; }
+        &:hover { background-color: $gray3; }
+        th {
+          font-weight: bold;
+        }
+      }
+      border-bottom: $border-gray4;
+    }
+    tbody {
+      tr {
+        &:nth-child(even) { background-color: #fff; }
+        &:hover { background-color: $gray3; }
+        &.selected {
+          font-weight: bold;
+        }
+        &.last_child {
+          border-bottom: $border-gray4;
+        }
+      }
+      tr.depth1 td.name {
+        padding-left: 24px;
+      }
+      tr.depth2 td.name {
+        padding-left: 48px;
+      }
+      tr.depth3 td.name {
+        padding-left: 72px;
+      }
+      tr.depth4 td.name {
+        padding-left: 96px;
+      }
+      tr.depth5 td.name {
+        padding-left: 120px;
+      }
+      tr.depth6 td.name {
+        padding-left: 144px;
+      }
+    }
+    tr.rdf-prop, tr.rdf-class {
+      border-bottom: $border-gray4;
+      td {
+        padding: 10px 8px;
+      }
+    }
+  }
+}
+
+.od-icon {
+  &:before {
+    display: inline-block;
+    position: relative;
+    bottom: -1px;
+    width: 12px;
+    height: 12px;
+    margin: 0px 4px 0px 0px;
+    text-indent: -99px;
+    background-image: url("/assets/img/icons.png");
+    content: " ";
+  }
+}
+.od-icon-node-prop {
+  &:before {
+    background-position: -15px 0px;
+  }
+}
+.od-icon-leaf-prop {
+  &:before {
+    background-position: -45px 0px;
+  }
+}
+
+textarea.readonly {
+  background-color: #eee;
+}
+
+.rdf-prop-search-form {
+  @include clear;
+  margin-bottom: 20px;
+  padding: 5px 10px;
+  background: $gray3;
+  form.index-search {
+    @include clear;
+    float: left;
+    border: 2px solid $white;
+    select {
+      float: left;
+      height: 2em;
+      border: none;
+      &:focus {
+        @include box-shadow(none);
+      }
+      margin-right: 3px;
+    }
+    input[type="text"] {
+      float: left;
+      height: 2em;
+      border: none;
+      &:focus {
+        @include box-shadow(none);
+      }
+    }
+    input[type="submit"] {
+      float: left;
+      margin: 0;
+      padding: 2px 20px 1px;
+      border: none;
+      background: $gray3;
+      &:hover {
+        background: $pink;
+        color: $white;
+      }
+    }
+  }
+}
+
+div.opendata-csv2rdf-settings-class-search {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: #dedede;
+}
+
+.csv2rdf-settings-rdf-prop-select {
+  textarea {
+    height: 200px;
+    background-color: #eee;
+  }
+}

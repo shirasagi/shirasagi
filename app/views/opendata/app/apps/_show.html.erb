@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+
+  <dt><%= @model.t :license %></dt>
+  <dd><%= @item.send :license %></dd>
+
+  <dt><%= @model.t :tags %></dt>
+  <dd><%= @item.send :tags %></dd>
+
+  <dt><%= @model.t :appurl %></dt>
+  <dd><%= auto_link br(@item.appurl), html: { target: "_blank" } %></dd>
+
+  <dt><%= @model.t :point %></dt>
+  <dd><%= @item.point %></dd>
+</dl>

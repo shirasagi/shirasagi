@@ -1,0 +1,47 @@
+<dl class="see">
+  <dt><%= @model.t :id %></dt>
+  <dd><%= @item.id %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :issue %></dt>
+  <dd><%= auto_link br(@item.issue), html: { target: "_blank" } %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+
+  <dt><%= @model.t :data %></dt>
+  <dd><%= br @item.data %></dd>
+
+  <dt><%= @model.t :note %></dt>
+  <dd><%= auto_link br(@item.note), html: { target: "_blank" } %></dd>
+
+  <dt><%= @model.t :tags %></dt>
+  <dd><%= @item.tags %></dd>
+
+  <dt><%= @model.t :dataset_id %></dt>
+  <dd>
+    <% if @item.dataset_ids.length > 0 %>
+      <% if @item.datasets.length > 0 %>
+      <%= @item.datasets[0].name %>
+      <% else %>
+      <%= I18n.t("opendata.labels.not_exist") %>
+      <% end %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :app_id %></dt>
+  <dd>
+    <% if @item.app_ids.length > 0 %>
+      <% if @item.apps.length > 0 %>
+      <%= @item.apps[0].name %>
+      <% else %>
+      <%= I18n.t("opendata.labels.not_exist") %>
+      <% end %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :point %></dt>
+  <dd><%= @item.point %></dd>
+</dl>

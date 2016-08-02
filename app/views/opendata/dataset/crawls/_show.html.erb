@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <% if @item.file %>
+  <dt><%= @model.t :file_id %></dt>
+  <dd><%= image_tag @item.file.url %></dd>
+  <% end %>
+
+  <dt><%= @model.t :related_url %></dt>
+  <dd><%= @item.send :related_url %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+</dl>
+

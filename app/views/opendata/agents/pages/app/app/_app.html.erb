@@ -1,0 +1,110 @@
+<%
+  tab_count = 0
+  tab_count += 1 if @tab_display == "tab_url"
+  tab_count += 5 if @tab_display == "tab_html"
+  tab_count += 1 if dataset_enabled?
+  tab_count += 1 if idea_enabled?
+%>
+<div class="application">
+  <div class="appContainer">
+    <div id="tabs">
+      <% if tab_count > 1 %>
+      <nav class="names">
+        <% if @tab_display == "tab_url" %>
+          <a id="url" class="name" href="#tab-url" onclick="ChangeTab('tab-url','url'); return false;">
+            <%= I18n.t("opendata.labels.public_url") %></a>
+        <% else %>
+          <% if @tab_display == "tab_html" %>
+            <a id="play" class="name" href="#tab-play" onclick="ChangeTab('tab-play','play'); return false;">
+              <%= I18n.t("opendata.labels.execute") %></a>
+            <a id="html" class="name" href="#tab-html" onclick="ChangeTab('tab-html','html'); return false;">
+              <%= I18n.t("opendata.labels.html") %></a>
+            <a id="css" class="name" href="#tab-css" onclick="ChangeTab('tab-css','css'); return false;">
+              <%= I18n.t("opendata.labels.css") %></a>
+            <a id="js" class="name" href="#tab-js" onclick="ChangeTab('tab-js','js'); return false;">
+              <%= I18n.t("opendata.labels.javascript") %></a>
+            <a id="sample" class="name" href="#tab-sample" onclick="ChangeTab('tab-sample','sample'); return false;">
+              <%= I18n.t("opendata.labels.sample") %></a>
+          <% end %>
+        <% end %>
+        <% if dataset_enabled? %>
+        <a id="dataset" class="name dataset" href="#tab-dataset" onclick="ChangeTab('tab-dataset','dataset'); return false;">
+          <%= I18n.t("opendata.labels.relation_dataset") %></a>
+        <% end %>
+        <% if idea_enabled? %>
+        <a id="idea" class="name idea" href="#tab-idea" onclick="ChangeTab('tab-idea','idea'); return false;">
+          <%= I18n.t("opendata.labels.relation_idea") %></a>
+        <% end %>
+      </nav>
+      <% end %>
+
+      <div class="tab-body">
+        <% if @tab_display =="tab_url" %>
+          <div id="tab-url">
+            <header><h1><%= I18n.t("opendata.labels.public_url") %></h1></header>
+            <p><%= auto_link br(@cur_page.appurl), html: { target: "_blank" } %></p>
+          </div>
+        <% else %>
+          <% if @tab_display == "tab_html" %>
+            <div id="tab-play">
+              <header><h1><%= I18n.t("opendata.labels.execute") %></h1></header>
+              <div class="fullscreen">
+                <%= link_to I18n.t("opendata.labels.execute_fullscreen"), @cur_page.full_screen_url, :target=>["_blank"] %>
+              </div>
+              <div class="frame">
+                <iframe class="frmPlay" src="" style="width: 100%; height: 100%"></iframe>
+              </div>
+            </div>
+            <div id="tab-html">
+              <header><h1><%= I18n.t("opendata.labels.html") %></h1></header>
+              <% @html_src.each do |h| %>
+                <div id="html-<%= h.id %>" class="frame">
+                  <div class="app-filename"><%= h.filename %></div>
+                  <iframe class="frmHtml" src="<%= "#{@cur_page.file_text_url}#{URI.escape(h.filename)}" %>"></iframe>
+                </div>
+              <% end %>
+            </div>
+            <div id="tab-css">
+              <header><h1><%= I18n.t("opendata.labels.css") %></h1></header>
+              <% @css_src.each do |c| %>
+                <div id="css-<%= c.id %>" class="frame">
+                  <div class="app-filename"><%= c.filename %></div>
+                  <iframe class="frmCss" src="<%= "#{@cur_page.file_text_url}#{URI.escape(c.filename)}" %>"></iframe>
+                </div>
+              <% end %>
+            </div>
+            <div id="tab-js">
+              <header><h1><%= I18n.t("opendata.labels.javascript") %></h1></header>
+              <% @js_src.each do |j| %>
+                <div id="js-<%= j.id %>" class="frame">
+                  <div class="app-filename"><%= j.filename %></div>
+                  <iframe class="frmJs" src="<%= "#{@cur_page.file_text_url}#{URI.escape(j.filename)}" %>"></iframe>
+                </div>
+              <% end %>
+            </div>
+            <div id="tab-sample">
+              <header><h1><%= I18n.t("opendata.labels.sample") %></h1></header>
+              <% if @csv.present? or @json.present? %>
+                <%= render partial: "opendata/agents/pages/app/app/content" %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+        <% if dataset_enabled? %>
+        <div id="tab-dataset">
+          <header><h1><%= I18n.t("opendata.labels.relation_dataset") %></h1></header>
+          <% if @ds.present? %>
+            <%= render partial: "opendata/agents/pages/app/app/dataset" %>
+          <% end %>
+        </div>
+        <% end %>
+        <% if idea_enabled? %>
+        <div id="tab-idea">
+          <header><h1><%= I18n.t("opendata.labels.relation_idea") %></h1></header>
+          <div class="app-ideas" id="app-ideas"></div>
+        </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

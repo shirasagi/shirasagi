@@ -113,7 +113,7 @@ class Cms::PreviewController < ApplicationController
     def render_preview
       preview_url = cms_preview_path preview_date: params[:preview_date]
 
-      body = response.body
+      body = response.body.force_encoding("utf-8")
       body.gsub!(/(href|src)=".*?"/) do |m|
         url = m.match(/.*?="(.*?)"/)[1]
         if url =~ /^\/(assets|assets-dev)\//

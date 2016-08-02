@@ -1,0 +1,7 @@
+<%
+
+return if @item.areas.blank?
+
+%><dl class="see">
+  <dd class="wide"><%= @item.areas.pluck(:name).join(", ") %></dd>
+</dl>

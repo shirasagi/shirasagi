@@ -292,20 +292,25 @@ class @SS_Tabs
       name = tab.find('header > h2').html()
       nav  = tab.find('nav')
       url  = nav.find(".more").attr("href")
+      alt_class = tab.attr('data-class')
 
       base_id = tab.attr("id")
       name_id = base_id + "-name"
       view_id = base_id + "-view"
+      url = "##{view_id}" unless url
 
-      cls   = "name"
-      cls   = "name current" if i == 0
+      tab_cls   = "name"
+      tab_cls   = "name current" if i == 0
+      tab_cls   = "#{tab_cls} #{alt_class}" if alt_class
       bind  = 'return SS_Tabs.select("' + elem + '", "#' + name_id + '", "#' + view_id + '")'
-      tabs += "<a id='" + name_id + "' onclick='" + bind + "' class='" + cls + "' href='" + url + "'>" + name + "</a>"
+      tabs += "<a id='" + name_id + "' onclick='" + bind + "' class='" + tab_cls + "' href='" + url + "'>" + name + "</a>"
 
       disp = ""
       disp = "style='display: none;'" if i != 0
 
-      html  = "<article id='" + view_id + "' class='view' " + disp + ">"
+      body_css = 'view'
+      body_css = "#{body_css} #{alt_class}" if alt_class
+      html  = "<article id='" + view_id + "' class='" + body_css + "' " + disp + ">"
       html += "<h2 style='display: none'>" + name + "</h2>"
       html += "<div class='pages'>" + tab.find(".pages").html() + "</div>"
       html += "<nav>" + tab.find('nav').html() + "</nav>"

@@ -1,0 +1,17 @@
+<%= form_for :item, url: @item_url, html: { id: "item-form", method: :delete, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<table class="see opendata-app show">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :filename %></td>
+    <td class="input"><%= @item.send :filename %></td>
+  </tr>
+</table>
+
+<footer class="send">
+  <div>
+  	<%= f.submit t("views.button.delete"), class: :delete %>
+  </div>
+</footer>
+
+<% end %>

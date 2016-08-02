@@ -1,0 +1,2070 @@
+@import "init";
+@import "part";
+
+// -----------------------------------------------------------------------------
+// element
+html {
+  height: 100%;
+  font-family: $font-base;
+}
+body {
+  height: 100%;
+  margin: 0 auto;
+  font-family: $font-base;
+  font-size: 100%;
+  line-height: 1.5;
+  color: $black1;
+}
+h1, h2, h3, h4, h5 {
+  margin: 0px;
+  font-size: 100%;
+  font-weight: normal;
+}
+a {
+  color: $link;
+  &:visited {
+    color: $visited;
+  }
+  &:hover, &:active {
+    color: $hover;
+  }
+}
+rp, rt {
+  background: #fff;
+  color: $black1;
+  font-size: $px12;
+  font-weight: normal;
+}
+rp {
+  margin: 0px;
+}
+img {
+  vertical-align: middle;
+}
+
+// -----------------------------------------------------------------------------
+//form
+select, input, textarea, button {
+  font-size: 100%;
+  font-family: $font-base;
+}
+select {
+  padding: 4px 5px;
+}
+input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
+input[type=email], input[type=number] {
+  width: 70%;
+  min-height: 1.8em;
+  margin: 0 0;
+  padding: 3px 5px;
+}
+input[type=number] {
+  width: 12em;
+}
+textarea {
+  width: 70%;
+  height: 6.5em;
+  padding: 12px;
+  line-height: 1.4;
+}
+
+// -----------------------------------------------------------------------------
+// layout
+#page {
+  position: relative;
+  min-height: 100%;
+  margin: 0 auto;
+  font-size: 87.5%;
+}
+
+// -----------------------------------------------------------------------------
+// head
+#head {
+  @include grd-black;
+  border-bottom: 2px solid $beige;
+  .wrap {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 10px 10px 0;
+  }
+  .logo {
+    float: left;
+    margin-right: 40px;
+  }
+  .tab {
+    float: left;
+    margin-bottom: -2px;
+    li {
+      float: left;
+      margin-right: 10px;
+      a {
+        display: block;
+        padding: 8px 8px 8px 40px;
+        border: 2px solid $beige;
+        @include border-radius(5px 5px 0 0);
+        color: $black1;
+        text-decoration: none;
+        &:hover {
+          border-bottom: 2px solid #fff;
+        }
+      }
+    }
+    .dataset a {
+      background: $beige url(../img/ic-data-wh.png) no-repeat 10px center;
+      &:hover {
+        background: $white url(../img/ic-data-bk.png) no-repeat 10px center;
+      }
+    }
+    .app a {
+      background: $beige url(../img/ic-app-wh.png) no-repeat 10px center;
+      &:hover {
+        background: $white url(../img/ic-app-bk.png) no-repeat 10px center;
+      }
+    }
+    .idea a {
+      background: $beige url(../img/ic-idea-wh.png) no-repeat 10px center;
+      &:hover {
+        background: $white url(../img/ic-idea-bk.png) no-repeat 10px center;
+      }
+    }
+  }
+  .login {
+    float: right;
+    a {
+      margin-left: $item-margin;
+      padding: 5px 0 5px 25px;
+      background: url(../img/ic-login.png) no-repeat left center;
+      color: $white;
+      &:hover {text-decoration: none;}
+    }
+  }
+}
+.dataset #head .tab .dataset a {
+  border-bottom: 2px solid #fff;
+  background: $white url(../img/ic-data-bk.png) no-repeat 10px center;
+}
+.app #head .tab .app a {
+  border-bottom: 2px solid #fff;
+  background: $white url(../img/ic-app-bk.png) no-repeat 10px center;
+}
+.idea #head .tab .idea a {
+  border-bottom: 2px solid #fff;
+  background: $white url(../img/ic-idea-bk.png) no-repeat 10px center;
+}
+// -----------------------------------------------------------------------------
+// site-title
+#site-title {
+  @include clear;
+  width: $page-width;
+  margin: 0 auto;
+  padding: 0 10px;
+  .logo {
+    float: left;
+    margin-top: 18px;
+  }
+  .menu {
+    float: right;
+    padding: $item-margin 0;
+    .u-menu {
+      @include clear;
+      float: right;
+      margin-bottom: $item-margin;
+    }
+    .search {
+      float: left;
+    }
+    form {
+      @include clear;
+      padding: 3px 10px;
+      border: 1px solid $beige;
+      @include border-radius(3px);
+      input[type=text] {
+        float: left;
+        width: auto;
+        min-height: 1em;
+        padding: 0;
+        border: none;
+      }
+      #search-button {
+        float: left;
+      }
+    }
+    .inquiry {
+      float: left;
+      margin: 4px 0 0 $item-margin;
+      padding-left: 20px;
+      background: url(../img/ic-info.png) no-repeat left center;
+    }
+    .l-menu {
+      @include clear;
+      clear: both;
+      float: right;
+      li {
+        float: left;
+        margin-left: $item-margin;
+        list-style: none;
+        a {
+          @include btn-black;
+          padding-left: 35px;
+        }
+        .entry {
+          background: $black1 url(../img/ic-upload.png) no-repeat 6px center;
+        }
+        .search {
+          background: $black1 url(../img/ic-search-wh.png) no-repeat 6px center;
+        }
+        .group {
+          background: $black1 url(../img/ic-group.png) no-repeat 6px center;
+        }
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// gnav
+#gnav {
+  width: 100%;
+  ul {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+    li {
+      float: left;
+      width: 179px;
+      border-left: 1px solid #fff;
+      list-style: none;
+      &:last-child {
+        width: 178px;
+        border-right: 1px solid #fff;
+      }
+    }
+    a {
+      display: block;
+      padding: 10px 0;
+      color: $black1;
+      font-size: $px16;
+      text-decoration: none;
+      text-align: center;
+    }
+  }
+}
+.dataset #gnav {
+  border-bottom: $border-yellow;
+  background: $sky;
+  ul li a:hover, ul li.current a {
+    background: #cef3ff;
+  }
+}
+.app #gnav {
+  border-bottom: $border-orange;
+  background: $green;
+  ul li a:hover, ul li.current a {
+    background: #d9ffe6;
+  }
+}
+.idea #gnav {
+  border-bottom: $border-red;
+  background: $yellow;
+  ul li a:hover, ul li.current a {
+    background: #fff0ca;
+  }
+}
+// -----------------------------------------------------------------------------
+// keyvisual
+#portal-kv {
+  position: relative;
+  width: 100%;
+  margin-bottom: $box-margin;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    @include grd-gray;
+  }
+  @include grd-sky;
+  .wrap {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  h2 {
+    float: left;
+    margin-top: 55px;
+  }
+  nav {
+    float: right;
+    margin: $box-margin 0;
+    li {
+      width: 249px;
+      margin-bottom: $item-margin;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      a {
+        text-decoration: none;
+      }
+      .title {
+        display: block;
+        padding: $item-margin $item-margin $item-margin 50px;
+        color: $black1;
+        font-size: $px16;
+        font-weight: bold;
+      }
+      .summary {
+        display:block;
+        padding: 3px 0;
+        color: $white;
+        text-align: center;
+      }
+    }
+    .dataset {
+      background: $sky;
+      &:hover {
+        background: #00686b;
+        .title {color: $white;}
+      }
+      .title {
+        background: url(../img/ic-data-wh-l.png) no-repeat 13px center;
+      }
+      .summary {
+        background: #00686b;
+      }
+    }
+    .app {
+      background: $green;
+      &:hover {
+        background: #68931d;
+        .title {color: $white;}
+      }
+      .title {
+        background: url(../img/ic-app-wh-l.png) no-repeat 10px center;
+      }
+      .summary {
+        background: #68931d;
+      }
+    }
+    .idea {
+      background: $yellow;
+      &:hover {
+        background: #c79d00;
+        .title {color: $white;}
+      }
+      .title {
+        background: url(../img/ic-idea-wh-l.png) no-repeat 15px center;
+      }
+      .summary {
+        background: #c79d00;
+      }
+    }
+  }
+}
+#dataset-kv, #app-kv, #idea-kv {
+  position: relative;
+  width: 100%;
+  margin-bottom: $box-margin;
+  @include grd-sky;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    @include grd-gray;
+  }
+  .wrap {
+    @include clear;
+    width: $page-width;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+  nav {
+    margin: 134px 0 $box-margin 0;
+    ul {
+      @include clear;
+    }
+    li {
+      float: left;
+      width: 249px;
+      list-style: none;
+      &:first-child {
+        margin-right: $box-margin;
+      }
+      a {
+        @include btn-black;
+        display: block;
+        padding-left: 35px;
+      }
+      .entry {
+        background: $black1 url(../img/ic-upload.png) no-repeat 6px center;
+      }
+      .search {
+        background: $black1 url(../img/ic-search-wh.png) no-repeat 6px center;
+      }
+    }
+  }
+}
+#dataset-kv .wrap {
+  background: url(../img/kv-data.png) no-repeat 660px center;
+}
+#app-kv .wrap {
+  background: url(../img/kv-app.png) no-repeat 660px center;
+}
+#idea-kv .wrap {
+  background: url(../img/kv-idea.png) no-repeat 660px center;
+}
+#body--dataset-index .dataset-count,
+#body--app-index .app-count,
+#body--idea-index .idea-count {
+  @include clear;
+  position: absolute;
+  top: -197px;
+  left: 10px;
+  width: 524px;
+  margin: 0;
+  padding: 0;
+  border: $border-gray2;
+  background: $white;
+  line-height: 6em;
+  .count-label {
+    display: inline-block;
+    float: left;
+    padding: 33px 10px;
+    background: $gray2;
+    line-height: 1em;
+    font-size: $px18;
+  }
+  .count {
+    display: inline-block;
+    float: left;
+    padding: 26px 10px 26px 90px;
+    font-size: $px32;
+    line-height: 1em;
+  }
+}
+#body--dataset-index .dataset-count {
+  .count {
+    background: url(../img/ic-data.png) no-repeat 45px 0.7em;
+  }
+}
+#body--app-index .app-count {
+  .count {
+    background: url(../img/ic-app.png) no-repeat 45px 0.7em;
+  }
+}
+#body--idea-index .idea-count {
+  .count {
+    background: url(../img/ic-idea.png) no-repeat 45px 0.7em;
+  }
+}
+// -----------------------------------------------------------------------------
+// wrap main side
+#wrap {
+  position: relative;
+  @include clear;
+  width: $page-width;
+  margin: 0 auto $box-margin;
+  padding: 0 10px;
+}
+#main {
+  float: left;
+  width: 803px;
+}
+.one #main {
+  float: none;
+  width: $page-width;
+}
+#side {
+  float: right;
+  width: 249px;
+}
+// -----------------------------------------------------------------------------
+// add
+#add {
+  margin-bottom: $box-margin;
+  padding: $item-margin;
+  background: $gray1;
+  h2 {
+    margin-bottm: $item-margin;
+    font-size: $px16;
+  }
+  .banners {
+    text-align: center;
+    a {
+      display: block;
+      margin-bottom: $item-margin;
+    }
+    span:last-child a {
+      margin-bottom: 0;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// foot
+#foot {
+  width: 100%;
+  margin: 0 auto;
+  border-top: $border-gray2;
+  text-align: center;
+  nav {
+    padding: 7px 0;
+    background: $gray1;
+  }
+  #copyright {
+    padding: 7px 0;
+    @include grd-black;
+    color: $white;
+  }
+}
+// -----------------------------------------------------------------------------
+// crumbs
+.crumbs {
+  margin: $item-margin 0;
+  .separator {
+    margin: 0 3px;
+  }
+}
+// -----------------------------------------------------------------------------
+// page-list
+.pages, .opendata-search-groups {
+  article {
+    padding: 14px;
+    border-bottom: $border-gray2;
+    header {
+      @include clear;
+    }
+    time {
+      float: left;
+      width: 20%;
+    }
+   h2 {
+     float: left;
+     width: 80%;
+   }
+   .point {
+     margin-left: 7px;
+     padding: 3px 5px 0 35px;
+     border: $border-gray2;
+     @include border-radius(3px);
+     background: url(../img/ic-like.png) no-repeat 5px center;
+   }
+  }
+}
+// -----------------------------------------------------------------------------
+// feed
+.feed {
+  @include feed;
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.areas, .tags, .formats, .licenses {
+  clear: both;
+  div {
+    @include clear;
+    margin-bottom: $box-margin;
+  }
+  article {
+    float: left;
+    margin: 14px 7px 0;
+    a {
+      display: block;
+      padding: 3px 10px;
+      @include border-radius(3px);
+      color: $black1;
+      text-decoration: none;
+    }
+  }
+  nav {
+    clear: both;
+    text-align: right;
+    a {
+      @include btn-black;
+    }
+  }
+}
+.areas article a {
+  background: $hgreen;
+  &:hover {
+    background: #e9f7cb;
+  }
+}
+.tags article a {
+  background: $hblue;
+  &:hover {
+    background: #e4f5ff;
+  }
+}
+.formats article a {
+  background: $hred;
+  &:hover {
+    background: #ffe4e4;
+  }
+}
+.licenses article a {
+  background: $brown;
+  &:hover {
+    background: #f2e4cb;
+  }
+}
+// -----------------------------------------------------------------------------
+// sns
+.cms-sns_share {
+  @include clear;
+  display: block;
+  div {
+    float: left;
+    margin-right: $item-margin;
+  }
+}
+// -----------------------------------------------------------------------------
+// count
+.dataset-count, .app-count, .idea-count {
+  float: right;
+  margin: $item-margin 0;
+  padding-right: 10px;
+  border: $border-gray2;
+  .count-label {
+    display: inline-block;
+    margin-right: $item-margin;
+    padding: 5px 10px;
+    background: $gray2;
+  }
+}
+// -----------------------------------------------------------------------------
+// search
+.opendata-search-datasets-form, .opendata-search-groups-form,
+.opendata-search-apps-form,
+.opendata-search-ideas-form {
+  @include clear;
+  margin: $box-margin 0;
+  padding: 12px;
+  border: 2px solid $sky;
+  dl {
+    float: left;
+    width: 249px;
+    margin-right: $item-margin;
+    &:nth-child(4n), &:nth-child(7n) {
+      margin-right: 0;
+    }
+    &:nth-child(5n), &:nth-child(8n) {
+      clear: both;
+    }
+    &.group {
+      margin-right: $item-margin;
+    }
+    dd {
+      margin-bottom: $item-margin;
+    }
+    input {
+      width: 237px;
+    }
+    select {
+      width: 249px;
+    }
+  }
+  .send input {
+    float: right;
+    @include btn-black;
+  }
+}
+.opendata-search-apps-form {
+  border: 2px solid $green;
+}
+.opendata-search-ideas-form {
+  border: 2px solid $yellow;
+}
+// -----------------------------------------------------------------------------
+// one
+.dataset .one, .app .one, .idea .one {
+  h1.name {
+    margin: $item-margin 0;
+    color: #005c7b;
+    font-size: $px32;
+    font-weight: bold;
+  }
+  .point {
+    float: right;
+    width: 247px;
+    padding: $item-margin 0;
+    border: $border-gray2;
+    text-align: center;
+    .number {
+      font-size: $px32;
+    }
+    .like a {
+      @include btn-black;
+    }
+  }
+  .categories {
+    @include clear;
+    float: left;
+    width: 803px;
+    margin-bottom: $item-margin;
+    a {
+      float: left;
+      display: block;
+      margin: 0 7px 7px 0;
+      padding: 3px 10px;
+      @include border-radius(3px);
+      color: $black1;
+      text-decoration: none;
+    }
+    .category {
+      background: #ffcf38;
+      &:hover {
+        background: #ffe593;
+      }
+    }
+    .area {
+      background: $hgreen;
+      &:hover {
+        background: #e9f7cb;
+      }
+    }
+    .tag {
+      background: $hblue;
+      &:hover {
+        background: #e4f5ff;
+      }
+    }
+  }
+  .text {
+    float: left;
+    width: 803px;
+    margin-bottom: $box-margin;
+  }
+  .tabs {
+    clear:both;
+  }
+  .names {
+    clear: both;
+    @include tab;
+    margin-bottom: $box-margin;
+    border-bottom: 2px solid $sky;
+    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
+      background: $sky;
+      filter: none;
+      color: $black1;
+    }
+  }
+  .resources, #tab-sample {
+    margin-bottom: $box-margin;
+    border: 2px solid $sky;
+    h1 {
+      @include midashi-dataset;
+      border-bottom: none;
+    }
+    .resource, .appfile {
+      @include clear;
+      padding: 12px;
+      border-bottom: $border-gray2;
+      .info {
+        float: left;
+        div {
+          padding: 7px 0 7px 35px;
+        }
+        .format-csv {
+          background: url(../img/file-csv.png) no-repeat left center;
+        }
+        .format-xlsx, .format-xls {
+          background: url(../img/file-xls.png) no-repeat left center;
+        }
+        .format-doc, .format-docx {
+          background: url(../img/file-word.png) no-repeat left center;
+        }
+        .format-txt {
+          background: url(../img/file-txt.png) no-repeat left center;
+        }
+        .format-rdf {
+          background: url(../img/file-rdf.png) no-repeat left center;
+        }
+        .format-xml {
+          background: url(../img/file-txt.png) no-repeat left center;
+        }
+        .format-zip {
+          background: url(../img/file-zip.png) no-repeat left center;
+        }
+        .format-html {
+          background: url(../img/file-html.png) no-repeat left center;
+        }
+        .format-ppt, .format-pptx {
+          background: url(../img/file-ppt.png) no-repeat left center;
+        }
+        .format-kml {
+          background: url(../img/file-kml.png) no-repeat left center;
+        }
+        .format-jpg {
+          background: url(../img/file-jpg.png) no-repeat left center;
+        }
+        .format-gif {
+          background: url(../img/file-gif.png) no-repeat left center;
+        }
+        .format-png {
+          background: url(../img/file-png.png) no-repeat left center;
+        }
+        .format-bmp {
+          background: url(../img/file-bmp.png) no-repeat left center;
+        }
+      }
+      .icons {
+        @include clear;
+        float: right;
+        span, div {
+          float: left;
+          margin-left: $item-margin;
+          &:empty {
+            display: none;
+          }
+        }
+        span {
+          margin: 2px 0;
+        }
+        div a {
+          @include btn-black;
+        }
+      }
+    }
+  }
+  #tab-app, #tab-idea, #tab-play, #tab-html, #tab-css, #tab-js, #tab-sample, #tab-dataset,
+  #tab-comment {
+    margin-bottom: $box-margin;
+    border: 2px solid $green;
+    h1 {
+      @include midashi-app;
+      border-bottom: none;
+    }
+    .contribute-wrap {
+      padding: 12px;
+    }
+    .contribute {
+      @include btn-black;
+    }
+    table {
+      width: 100%;
+    }
+    tr {
+      border-top:$border-gray2;
+    }
+    td {
+      padding: 12px;
+    }
+  }
+  #tab-sample, #tab-dataset {
+    border: 2px solid $sky;
+    h1 {
+      @include midashi-dataset;
+      border-bottom: none;
+    }
+  }
+  #tab-idea, #tab-comment {
+    border: 2px solid $yellow;
+    h1 {
+      @include midashi-idea;
+      border-bottom: none;
+    }
+  }
+  .fullscreen {
+    padding: 12px 12px 0;
+    a {
+      @include btn-black;
+    }
+  }
+  .frame {
+    padding: 12px;
+    iframe {
+      width: 100%;
+      min-height: 360px;
+    }
+  }
+  .app-filename {
+    margin-bottom: $item-margin;
+    padding-bottom: 7px;
+    border-bottom: $border-gray2;
+    font-size: $px16;
+  }
+  .comments {
+    .comment {
+      padding: 12px;
+      border-bottom: $border-gray2;
+      .text {
+        width: 100%;
+        margin-bottom: $box-margin;
+      }
+      a {
+        margin-right: $item-margin;
+      }
+    }
+  }
+  #idea-comments .invite {
+    padding: 12px;
+  }
+  .opendata-add-comment-form {
+    @include clear;
+    padding: 12px;
+    background: $gray2;
+    dl {
+      float: left;
+    }
+    dt {
+      display: none;
+    }
+    textarea {
+      width: 780px;
+    }
+    .comment-add {
+      float: left;
+      @include btn-black;
+      margin: 40px;
+    }
+  }
+  .related_app, .related_dataset {
+    @include clear;
+    div {
+      float: left;
+    }
+    .app, .dataset {
+      clear: both;
+      width: 550px;
+      padding: 12px;
+    }
+    .app-executed, .dataset-downloaded {
+      width: 150px;
+      padding: 12px;
+    }
+    .app-updated, .dataset-updated {
+      width: 304px;
+      padding: 12px;
+    }
+  }
+  .author {
+    @include clear;
+    margin-bottom: $box-margin;
+    padding: 3px 3px 0;
+    border: $border-gray2;
+    dt {
+      clear: both;
+      float: left;
+      width: 230px;
+      margin: 0 $item-margin 3px 0;
+      padding: 3px 10px;
+      background: $sky;
+    }
+    dd {
+      float: left;
+      width: 808px;
+      margin-bottom: 3px;
+      padding: 3px 0;
+    }
+  }
+  .related-pages, .contact {
+    @include clear;
+    margin-bottom: $box-margin;
+    h1 {
+      @include midashi-dataset;
+    }
+    article {
+      padding: 7px 14px;
+    }
+    .group {
+      margin-top: $item-margin;
+    }
+    dl {
+      @include clear;
+      float: left;
+      margin-right: $item-margin;
+      dt, dd {
+        float: left;
+      }
+    }
+  }
+}
+.app .one {
+  h1.name {
+    color: #025931;
+  }
+  .names {
+    border-bottom: 2px solid $green;
+    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
+      background: $green;
+    }
+  }
+  .author dt {
+    background: $green;
+  }
+  .related-pages, .contact {
+    h1 {
+      @include midashi-app;
+    }
+  }
+}
+.app-body .frm-app {
+  width: 100%;
+  height: 100%;
+}
+.idea .one {
+  h1.name {
+    color: #006f47;
+  }
+  .names {
+    border-bottom: 2px solid $yellow;
+    a:hover, a.current, a.dataset-current, a.app_current, a.idea-current {
+      background: $yellow;
+    }
+  }
+  .author dt {
+    background: $yellow;
+  }
+  .related-pages, .contact {
+    h1 {
+      @include midashi-idea;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// portal
+// -----------------------------------------------------------------------------
+// about
+#about {
+  margin-bottom: $box-margin;
+  h2 {
+    @include midashi;
+    @include grd-blue;
+    color: $white;
+  }
+  p {
+    margin-top: $item-margin;
+    padding: 0 10px;
+  }
+}
+// -----------------------------------------------------------------------------
+// cms-tabs
+.cms-tabs {
+  @include tabs;
+}
+:root .cms-tabs .names a:hover,
+:root .cms-tabs a.current {
+  filter: none\0;
+}
+
+// -----------------------------------------------------------------------------
+// portal-dataset
+#portal-dataset, #portal-app, #portal-idea {
+  margin-bottom: $box-margin;
+  header h1 {
+    @include midashi-dataset;
+  }
+  nav {
+    @include feed;
+  }
+}
+#portal-app header h1 {
+  @include midashi-app;
+}
+#portal-idea header h1 {
+  @include midashi-idea;
+}
+// -----------------------------------------------------------------------------
+// doc
+.portal {
+  #page-name h1 {
+    margin-bottom: $item-margin;
+    @include midashi;
+    @include grd-blue;
+    color: $white;
+    font-size: $px24;
+    font-weight: bold;
+  }
+  .released {
+    margin-bottom: $box-margin;
+    text-align: right;
+  }
+  .body, .inquiry-html, .inquiry-form {
+    h1 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      @include grd-blue;
+      color: $white;
+      font-size: $px18;
+      font-weight: bold;
+    }
+    h2 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      border-bottom: 2px solid $blue;
+    }
+    h3 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      padding: 0 0 0 5px;
+      border-left: 5px solid $blue;
+    }
+    h4 {
+      margin-bottom: $item-margin;
+      padding: 0 10px;
+      color: $blue;
+      font-weight: bold;
+    }
+    p {
+      margin-bottom: $box-margin;
+      padding: 0 10px;
+    }
+    table {
+      margin-bottom: $box-margin;
+      caption {
+        padding: 0 10px;
+        text-align: left;
+      }
+      th, td {
+        padding: 5px 10px;
+        border: $border-gray2;
+      }
+      th {
+        background: $gray3;
+      }
+    }
+    ul, ol {
+      margin: 0 0 $box-margin 25px;
+    }
+  }
+  .related-pages, .map-page, .contact {
+    margin-bottom: $box-margin;
+    h1 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      @include grd-blue;
+      color: $white;
+      font-size: $px18;
+      font-weight: bold;
+    }
+  }
+  .map-page {
+    margin-bottom: $box-margin;
+    h2 {
+      margin-bottom: $item-margin;
+      @include midashi;
+      @include grd-blue;
+      color: $white;
+      font-size: $px18;
+      font-weight: bold;
+    }
+  }
+  .contact {
+    @include clear;
+    dl {@include clear;}
+    dt, dd {
+      float: left;
+    }
+    .tel, .fax, .email {
+      float: left;
+      margin-right: $item-margin;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// inquiry event
+.inquiry-form, .body--event .see {
+  dl {
+    clear: both;
+    @include clear;
+    margin-bottom: $item-margin;
+  }
+  dt {
+    width: 200px;
+    float: left;
+    margin-right: $item-margin;
+    padding: 10px;
+    background: $gray3;
+  }
+  dd {
+    float: left;
+    width: 569px;
+    margin-top: 4px;
+  }
+  .send {
+    text-align: center;
+    input {
+      @include btn-blue;
+    }
+  }
+  .simple-captcha {
+    margin: 0 0 $box-margin 234px;
+  }
+  #answer_captcha {
+   width: 10%;
+  }
+}
+:root .inquiry-form .send input,
+:root .body--event .see .send input {
+  filter: none\0;
+}
+#ss-notice {
+  margin-bottom: $box-margin;
+  color: #e00;
+}
+#errorExplanation {
+  margin: $box-margin 0;
+  p, ul {
+    color: #e00;
+  }
+  p {
+    margin: $item-margin 0;
+  }
+  ul {
+    margin: $item-margin 0 $item-margin 25px;
+  }
+}
+.body--event {
+  .body {
+    clear: both;
+  }
+  .see {
+    dt {
+      clear: both;
+      margin-bottom: $item-margin;
+    }
+    dd {
+      margin: 10px 0  $item-margin;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// calendar
+.event-date {
+  h1 {
+    margin-bottom: $item-margin;
+    padding: 7px 0 4px 50px;
+    border-bottom: 2px solid $orange;
+    font-size: $px16;
+  }
+  h1.jan {
+    background: url(../img/ic-january.png) no-repeat 10px bottom;
+  }
+  h1.feb {
+    background: url(../img/ic-february.png) no-repeat left bottom;
+  }
+  h1.may {
+    background: url(../img/ic-may.png) no-repeat left bottom;
+  }
+  h1.apr {
+    background: url(../img/ic-april.png) no-repeat left bottom;
+  }
+  h1.mar {
+    background: url(../img/ic-march.png) no-repeat left bottom;
+  }
+  h1.jun {
+    background: url(../img/ic-june.png) no-repeat 10px bottom;
+  }
+  h1.jul {
+    background: url(../img/ic-july.png) no-repeat left bottom;
+  }
+  h1.aug {
+    background: url(../img/ic-august.png) no-repeat 5px bottom;
+  }
+  h1.sep {
+    background: url(../img/ic-september.png) no-repeat 9px bottom;
+  }
+  h1.oct {
+    background: url(../img/ic-october.png) no-repeat 10px bottom;
+  }
+  h1.nov {
+    background: url(../img/ic-november.png) no-repeat 8px bottom;
+  }
+  h1.dec {
+    background: url(../img/ic-december.png) no-repeat 10px bottom;
+  }
+  > h2 {
+    display: inline-block;
+  }
+  ul {
+    float: right;
+    .prev {
+      @include inline-block;
+      margin-right: 10px;
+      padding: 0 15px;
+      border-right: $border-gray2;
+    }
+    .next {
+      @include inline-block;
+      padding-right: 13px;
+    }
+  }
+}
+#event-list {
+  clear: both;
+  margin-bottom: 2em;
+  border-top: $border-gray2;
+  dl {
+    margin: 0;
+    padding: 6px 10px 3px;
+    border-bottom: $border-gray2;
+    zoom:1;
+    &:before {
+      content: "\0020";
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+    &:after {
+      content: "\0020";
+      clear: both;
+      display: block;
+      height: 0;
+      overflow: hidden;
+    }
+    .page {
+      margin-bottom: 0;
+      padding-bottom: 6px;
+      border: none;
+      &:last-child {
+        padding-bottom: 3px;
+      }
+    }
+  }
+  dl.sat {
+    background: #e1ebf1;
+    color: #039;
+  }
+  dl.sun, dl.holiday {
+    background: #ffeeee;
+    color: #e00;
+  }
+  dt {
+    float: left;
+    width: 20%;
+  }
+  dd {
+    margin-left: 20%;
+    h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 100%;
+      font-weight: normal;
+    }
+    div {
+      @include float(left);
+      min-width: 85px;
+      margin-right: $item-margin;
+      a {
+        display: block;
+        min-width: 85px;
+        padding: 0 5px;
+        border: $border-gray2;
+        background: $hblue;
+        color: $black1;
+        text-decoration: none;
+      }
+    }
+  }
+  .page {
+    margin-bottom: 10px;
+    border-bottom: $border-gray2;
+    h2 {
+      margin: 0;
+      padding: 0;
+      border: none;
+      font-size: 100%;
+      font-weight: normal;
+    }
+    p {
+      margin-bottom: $item-margin;
+    }
+    .categories {
+      @include clear;
+      margin-bottom: 0;
+      border: none;
+      li {
+        padding-left: 0;
+      }
+      li a {
+        display: block;
+        @include float(left);
+        margin: 0 10px 10px 0;
+        padding: 3px 5px;
+        @include border-radius(3px);
+        background: $hblue;
+        color: $black1;
+        text-decoration: none;
+        &:hover {
+          background-color: $blue;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+.event .see {
+  @include clear;
+  dt {
+    clear: both;
+    @include float(left);
+    width: 150px;
+    margin: 0 $box-margin $item-margin 0;
+    padding: 3px 5px;
+    @include border-radius(3px);
+    background: $hblue;
+  }
+  dd {
+    @include float(left);
+    width: 528px;
+    margin-bottom: $item-margin;
+    padding: 3px 0;
+    word-break: break-all;
+  }
+}
+.event-calendar {
+  margin-bottom: $box-margin;
+  .title h2 {
+    margin-bottom: 6px;
+    padding: 5px $item-margin;
+    @include grd-blue;
+    color: $white;
+  }
+  .calendar-nav {
+    text-align: center;
+    li {
+      display: inline-block;
+      font-size: $px12;
+    }
+    .current {
+      margin: 0 5px;
+    }
+  }
+  .calendar {
+    margin: 0 auto;
+    caption {
+      font-size: $px16;
+    }
+    th, td {
+      width: 40px;
+      border: $border-gray2;
+      text-align: center;
+    }
+    th {
+      background: $hblue;
+    }
+    .unit {
+      display: none;
+    }
+    td.sun {
+      color: #e00;
+    }
+    td.sat {
+      color: #03c;
+    }
+    .today {
+      background: #ffeacc;
+    }
+    td.prev-month, td.next-month {
+      color: $gray4;
+      a {
+        color: $gray4;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// dataset
+// -----------------------------------------------------------------------------
+// opendata-tabs
+.dataset .opendata-tabs {
+  @include tabs;
+  clear: both;
+  .names {
+    border-bottom: 2px solid $sky;
+    a:hover, a.current {
+      background: $sky;
+      filter: none;
+      color: $black1;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.dataset {
+  .areas, .tags, .formats, .licenses {
+    h1 {
+      @include midashi-dataset;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// page-name
+.dataset #page-name {
+  @include midashi-dataset;
+}
+// -----------------------------------------------------------------------------
+// search-group
+#search-group {
+  margin-bottom: $box-margin;
+  h1 {
+    @include midashi-beige;
+    padding-left: 35px;
+    background: $beige2 url(../img/ic-group-gr.png) no-repeat 10px center;
+  }
+  h2 a {
+    display: block;
+    padding: 7px $item-margin;
+    border-bottom: $border-gray2;
+    &:hover {
+      background: $gray3;
+    }
+  }
+  nav {
+    text-align: right;
+  }
+  .more {
+    margin-top: $item-margin;
+    @include btn-black;
+    text-align: right;
+  }
+}
+// -----------------------------------------------------------------------------
+// dataset-attention
+#dataset-attention {
+  margin-bottom: $box-margin;
+  h1 {
+    @include midashi-dataset;
+  }
+  li {
+    list-style: none;
+    a {
+      display: block;
+      padding: 7px $item-margin;
+      border-bottom: $border-gray2;
+      &:hover {
+        background: $gray3;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// app
+// -----------------------------------------------------------------------------
+// app-attention
+#app-attention {
+  margin-bottom: $box-margin;
+  h1 {
+    @include midashi-app;
+  }
+  li {
+    list-style: none;
+    a {
+      display: block;
+      padding: 7px $item-margin;
+      border-bottom: $border-gray2;
+      &:hover {
+        background: $gray3;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// opendata-tabs
+.app .opendata-tabs {
+  @include tabs;
+  clear: both;
+  .names {
+    border-bottom: 2px solid $green;
+    a:hover, a.current {
+      background: $green;
+      filter: none;
+      color: $black1;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.app {
+  .areas, .tags, .formats, .licenses {
+    h1 {
+      @include midashi-app;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// page-name
+.app #page-name {
+  @include midashi-app;
+}
+// -----------------------------------------------------------------------------
+// idea
+// -----------------------------------------------------------------------------
+// idea-attention
+#idea-attention {
+  margin-bottom: $box-margin;
+  h1 {
+    @include midashi-idea;
+  }
+  li {
+    list-style: none;
+    a {
+      display: block;
+      padding: 7px $item-margin;
+      border-bottom: $border-gray2;
+      &:hover {
+        background: $gray3;
+      }
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// opendata-tabs
+.idea .opendata-tabs {
+  @include tabs;
+  clear: both;
+  .names {
+    border-bottom: 2px solid $yellow;
+    a:hover, a.current {
+      background: $yellow;
+      filter: none;
+      color: $black1;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// .areas, .tags, .formats, .licenses
+.idea {
+  .areas, .tags, .formats, .licenses {
+    h1 {
+      @include midashi-idea;
+    }
+  }
+}
+// -----------------------------------------------------------------------------
+// page-name
+.idea #page-name {
+  @include midashi-idea;
+}
+// -----------------------------------------------------------------------------
+// mypage
+// -----------------------------------------------------------------------------
+// mypage
+.body--mypage {
+  .Twitter, .facebook, .Yahoo, .Google, .github {
+    list-style: none;
+    a {
+      display: block;
+      width: 498px;
+      margin-bottom: $item-margin;
+      padding: $item-margin $box-margin;
+      border: $border-gray2;
+      color: $black1;
+      text-decoration: none;
+      &:hover {
+        background: $gray2;
+      }
+    }
+  }
+  .menu {
+    float: left;
+    margin-bottom: $item-margin;
+    a {
+      @include btn-blue;
+      padding: 7px 12px;
+      width: 180px;
+    }
+  }
+  .tutorial-data {
+    float: right;
+    margin-bottom: $item-margin;
+    a {
+      @include btn-black;
+    }
+  }
+  .index {
+    clear: both;
+    width: 100%;
+    margin-bottom: $box-margin;
+    thead {
+      border-bottom: 2px solid $blue;
+    }
+    tr {
+      border-bottom: $border-gray2;
+    }
+    th {
+      font-weight: normal;
+      text-align: left;
+    }
+    th, td {
+      padding: 10px;
+    }
+  }
+  .see {
+    width: 100%;
+    margin-bottom: $box-margin;
+    border-top: 2px solid $blue;
+    border-bottom: 2px solid $blue;
+    tr {
+      border-bottom: $border-gray2;
+    }
+    td {
+      padding: $item-margin;
+      input[type="text"], textarea {
+        width: 100%;
+        @include box-sizing(border-box);
+      }
+      label {
+        margin-right: $item-margin;
+      }
+      label.parent {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 7px;
+        padding-bottom: 7px;
+        border-bottom: $border-gray2;
+      }
+    }
+    .field {
+      width: 200px;
+      background: $gray3;
+      vertical-align: top;
+    }
+  }
+  .ajax-selected {
+    width: 100%;
+    margin-top: $item-margin;
+    th {
+      padding: 0 $item-margin 7px;
+      font-weight: normal;
+      text-align: left;
+    }
+  }
+  #item-form {
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      @include border-radius(8px);
+      background: $black1;
+      line-height: 18px;
+      color: $white;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      ul {
+        position: absolute;
+        bottom: 18px;
+        left: -30px;
+        display: none;
+        width: 22em;
+        padding: 10px;
+        border: $border-gray2;
+        background: $white;
+        line-height: 1.6em;
+        color: $black1;
+        font-weight: normal;
+        text-align: left;
+        list-style: none;
+        &:before {
+          content: "";
+          position: absolute;
+          bottom: -11px;
+          left: 30px;
+          width: 0;
+          height: 0;
+          border-top: 10px solid $gray2;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          bottom: -16px;
+          left: 30px;
+          width: 0;
+          height: 0;
+          border-top: 10px solid $white;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+        }
+      }
+    }
+    .deletion-confirm {
+      margin-bottom: $box-margin;
+    }
+    .send {
+      text-align: center;
+      input {
+        @include btn-blue;
+      }
+    }
+  }
+  .account {
+    margin-bottom: $box-margin;
+    text-align: right;
+    a {
+      @include btn-black;
+    }
+  }
+  #ajax-box {
+    font-size: 87.5%;
+    input[type="text"] {
+      height: 1em;
+      padding: 2px;
+    }
+    input {
+      font-weight: $px14;
+    }
+    thead {
+      border-bottom: $border-gray2;
+    }
+    tr:hover {
+      background: $gray1;
+    }
+    th {
+      font-weight: normal;
+      text-align: left;
+      white-space: nowrap;
+    }
+    th, td {
+      padding: 5px 10px;
+    }
+    .checkbox {
+      width: 20px;
+    }
+  }
+}
+:root .body--mypage .menu a {
+  filter: none\0;
+}
+:root .body--mypage #item-form .send input {
+  filter: none\0;
+}
+.member-login-box {
+  .twitter, .facebook, .yahoojp, .google_oauth2, .github {
+    list-style: none;
+    a {
+      display: block;
+      width: 498px;
+      margin-bottom: $item-margin;
+      padding: $item-margin $box-margin;
+      border: $border-gray2;
+      color: $black1;
+      text-decoration: none;
+      &:hover {
+        background: $gray2;
+      }
+    }
+  }
+  .form-login {
+    @include clear;
+    dl {
+      clear: both;
+      @include clear;
+      margin-bottom: $item-margin;
+    }
+    dt, dd {
+      float: left;
+      margin-right: $item-margin;
+    }
+    dt {
+      padding: 3px 5px;
+    }
+    dd input {
+      width: 350px;
+    }
+    .send {
+      clear: both;
+      text-align: center;
+      input {
+        @include btn-blue;
+      }
+    }
+  }
+}
+:root .member-login .send input {
+  filter: none\0;
+}
+#mypage-tabs {
+  @include tab;
+  margin: $box-margin 0;
+  a {
+    position: relative;
+    padding: 8px 10px 5px 40px;
+  }
+  .dataset:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-data-wh.png) no-repeat left center;
+  }
+  .app:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 10px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-app-wh.png) no-repeat left center;
+  }
+  .idea:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-idea-wh.png) no-repeat left center;
+  }
+  .profile:after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 14px;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background: url(../img/ic-login.png) no-repeat left center;
+  }
+}
+:root #mypage-tabs a:hover,
+:root #mypage-tabs a.current {
+  filter: none\0;
+}
+// -----------------------------------------------------------------------------
+// members
+.members {
+  ul {
+    @include clear;
+  }
+  li {
+    float: left;
+    width: 332px;
+    margin: 0 $item-margin $item-margin;
+    list-style: none;
+    vertical-align: middle;
+    img {
+      width: 50px;
+      height: 50px;
+      margin-right: $item-margin;
+      padding: 2px;
+      border: $border-gray2;
+    }
+  }
+}
+.member-tabs {
+  @include tabs;
+  clear: both;
+}
+:root .member-tabs .names a:hover,
+:root .member-tabs .names a.current {
+  filter: none\0;
+}
+
+.body--member .profile {
+  .icon {
+    float: left;
+    margin: 0 $box-margin $box-margin 0;
+    padding: 2px;
+    border: $border-gray2;
+  }
+  .name {
+    float: left;
+    width: 903px;
+    margin: $box-margin 0;
+    font-size: $px32;
+    font-weight: bold;
+  }
+}
+.body--member .contents {
+  clear: both;
+  .datasets header h2 {
+    @include midashi-dataset;
+  }
+  .apps header h2 {
+    @include midashi-app;
+  }
+  .ideas header h2 {
+    @include midashi-idea;
+  }
+  .datasets .pages header h2,
+  .apps .pages header h2,
+  .ideas .pages header h2 {
+    padding: 0;
+    border-bottom: none;
+    background: none;
+    font-size: $px14;
+  }
+}
+// -----------------------------------------------------------------------------
+// sparql
+.opendata-sparql {
+  table {
+    width: 100%;
+    margin-bottom: $box-margin;
+    border-top: 2px solid $blue;
+    border-bottom: 2px solid $blue;
+    tr {
+      border-bottom: $border-gray2;
+    }
+    td {
+      padding: $item-margin;
+      input[type="text"], textarea {
+        width: 100%;
+        @include box-sizing(border-box);
+      }
+      label {
+        margin-right: $item-margin;
+      }
+      label.parent {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 7px;
+        padding-bottom: 7px;
+        border-bottom: $border-gray2;
+      }
+    }
+    th {
+      width: 200px;
+      padding: $item-margin;
+      background: $gray3;
+      vertical-align: middle;
+    }
+  }
+  div {
+    text-align: center;
+    input {
+      @include btn-blue;
+    }
+  }
+}
+:root .opendata-sparql div input {
+  filter: none\0;
+}
+// -----------------------------------------------------------------------------
+//  pagination
+.pagination {
+  margin: $box-margin 0;
+  text-align: center;
+  a {
+    @include inline-block;
+    padding: 4px 10px;
+    background: $gray1;
+    color: $black1;
+    text-decoration: none;
+    &:hover {
+      background: $gray3;
+    }
+  }
+  .current {
+    @include inline-block;
+    padding: 4px 10px;
+    background: $gray3;
+  }
+}

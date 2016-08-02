@@ -1,0 +1,13 @@
+<%= javascript_include_tag "opendata/opendata" %>
+
+<table class="see opendata-app-appfiles">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :file_id %><%= required_label %></td>
+    <td class="input"><%= f.file_field :in_file %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
+</table>

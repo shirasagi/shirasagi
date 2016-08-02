@@ -1,0 +1,35 @@
+<%= coffee do %>
+$ ->
+  $(".addon-menu").find("[data-id=#addon-workflow-agents-addons-approver]").remove()
+  $("#addon-opendata-agents-addons-workflow-idea_comment_approver").remove()
+
+  state = $("#item_state").parent()
+  state.prev().remove()
+  state.remove()
+
+  <% if @item.allowed?(:release, @cur_user, site: @cur_site) %>
+  $(".save").val "<%= t("views.button.draft_save") %>"
+  $("<input />").attr("type", "submit")
+    .attr("name", "publish_save")
+    .attr("value", "<%= t("views.button.publish_save") %>")
+    .attr("class", "publish_save")
+    .insertAfter("#item-form input.save")
+  <% end %>
+
+  $(".save").on "click", (e) ->
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[state]")
+      .attr("value", "closed")
+      .appendTo("#item-form")
+
+  $(".publish_save").on "click", (e) ->
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[state]")
+      .attr("value", "public")
+      .appendTo("#item-form")
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[workflow_reset]")
+      .attr("value", "1")
+      .appendTo("#item-form")
+
+<% end %>

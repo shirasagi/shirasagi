@@ -1,0 +1,6 @@
+<tr>
+  <td><a href="#{app_url}">#{app_name}</a></td>
+  <td>#{app_updated}</td>
+  <td>#{app_state}</td>
+  <td>#{app_point}</td>
+</tr>

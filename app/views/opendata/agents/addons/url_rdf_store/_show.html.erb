@@ -1,0 +1,16 @@
+<%
+
+return if @item.rdf_iri.blank? && @item.rdf_error.blank?
+
+%>
+<dl class="see">
+  <% if @item.rdf_iri.present? %>
+  <dt><%= @model.t :rdf_iri %></dt>
+  <dd><%= @item.send :rdf_iri %></dd>
+  <% end %>
+
+  <% if @item.rdf_error.present? %>
+  <dt><%= @model.t :rdf_error %></dt>
+  <dd><%= @item.send :rdf_error %></dd>
+  <% end %>
+</dl>

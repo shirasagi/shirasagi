@@ -1,0 +1,34 @@
+<%= render file: "_search" %>
+
+<table class="index">
+  <thead>
+  <tr>
+    <th class="checkbox"><input type="checkbox" /></th>
+    <th><%= @model.t :property %></th>
+    <th><%= @model.t :datatype %></th>
+    <th><%= @model.t :cardinality %></th>
+    <th><%= @model.t :comments %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @items.each do |item| %>
+    <tr>
+      <td class="checkbox">
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item %>
+          <%= link_to :edit, action: :edit, id: item %>
+          <%= link_to :delete, action: :delete, id: item %>
+        </nav>
+      </td>
+      <td><%= link_to("#{item.property.preferred_label}", action: :show, id: item) %></td>
+      <td><%= item.datatype.preferred_label %></td>
+      <td><%= item.cardinality %></td>
+      <td><%= item.comments.try(:preferred_value) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

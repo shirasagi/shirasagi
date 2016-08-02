@@ -1,0 +1,15 @@
+<%= form_for :item, url: { action: :unlink }, html: { method: :post, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <header><h2><%= t("views.confirm.delete") %></h2></header>
+    <%= render file: "_delete" %>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("views.button.delete"), class: :delete %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+<% end %>

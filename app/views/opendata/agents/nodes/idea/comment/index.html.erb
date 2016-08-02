@@ -1,0 +1,73 @@
+<%= coffee do %>
+  $ ->
+
+  $(".comment-add").click (event)->
+    text = $('#s_comment_body').val()
+    if text.length > 0
+      $(@).css('pointer-events', 'none')
+      $.ajax
+        url: "<%= @idea.comment_add_url %>"
+        type: "POST"
+        data: { comment_body : text, authenticity_token: "<%= form_authenticity_token %>" }
+        success: (data)->
+          $("#idea-comments").html data
+    event.preventDefault()
+
+  $(".comment_delete").click (event)->
+    $.ajax
+      url: "<%= @idea.comment_delete_url %>"
+      type: "POST"
+      data: { comment : $(this).attr("id"), authenticity_token: "<%= form_authenticity_token %>" }
+      success: (data)->
+        $("#idea-comments").html data
+    event.preventDefault()
+
+  $(".comment .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
+
+<% end %>
+
+  <div class="info-wrap">
+
+    <div class="comments">
+      <% @comments.each do |comment| %>
+        <div class="comment">
+          <div class="text">
+            <% if comment.comment_deleted %>
+            <%= I18n.t("opendata.labels.delete_comment") %>
+            <% elsif comment.status == "request" %>
+            <%= I18n.t("opendata.labels.request_comment") %>
+            <% elsif comment.state == "closed" %>
+            <%= I18n.t("opendata.labels.closed_comment") %>
+            <% else %>
+            <%= simple_format(h(comment.text)) %>
+            <% end %>
+          </div>
+          <% if @comment_mode && [@idea.member_id, comment.member_id].include?(@cur_member.id) %>
+          <%= link_to I18n.t("opendata.labels.delete"), "", class: "comment_delete", id: comment.id if comment.comment_deleted.nil? %>
+          <% end %>
+
+          <% member_name = comment.get_member_name %>
+          <% if comment.member %>
+          <%= link_to member_name, "#{member_path}#{comment.member_id}" %>
+          <% else %>
+          <%= member_name %>
+          <% end %>
+
+          <%= tryb{comment.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @comment_mode %>
+      <%= form_for :s, url: "", html: { class: "opendata-add-comment-form", method: :get } do |f| %>
+        <dl class="comment-body">
+          <dt>本文</dt>
+          <dd><%= f.text_area :comment_body, maxlength: "400" %></dd>
+        </dl>
+        <%= link_to I18n.t("opendata.labels.add_comment"), "", class: "comment-add" %>
+      <% end %>
+    <% elsif member_login_enabled? %>
+      <div class="invite"><%= I18n.t("opendata.labels.comment_invite_start") %><%= link_to I18n.t("opendata.labels.login"),"#{member_login_path}login.html?ref=#{CGI.escape(@idea.url)}" %><%= I18n.t("opendata.labels.comment_invite_end") %></div>
+    <% end %>
+
+  </div>

@@ -1,0 +1,11 @@
+<% unless @item.nil? || @item.new_record? %>
+<nav class="sub-menu">
+  <header><h1><%= t :"views.links.rdf.vocabs" %></h1></header>
+  <div>
+    <%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @item %>
+    <%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @item %>
+    <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @item %>
+  </div>
+</nav>
+<% end %>
+<%= render partial: "cms/main/navi" %>

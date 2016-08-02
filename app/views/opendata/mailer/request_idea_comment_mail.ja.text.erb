@@ -1,0 +1,12 @@
+<% message.subject = @subject %>
+<%= @from_user.name %>(ログインメンバー)さんが<%= @idea.name %>にコメントしました。
+承認作業を行ってください。
+
+- アイデア
+  <%= @idea.name %>
+
+- コメント
+  <%= @comment.text %>
+
+- URL
+  <%= @url %>

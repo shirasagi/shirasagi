@@ -1,0 +1,45 @@
+<%
+header_rows_options = []
+actual_rows = @cur_resource.parse_tsv.size
+1.upto(actual_rows - 1).each { |i| header_rows_options << [i.to_s, i] }
+%>
+<dl class="see csv2rdf-settings-header">
+  <dt><%= @cur_resource.class.t :name %></dt>
+  <dd><%= @cur_resource.name %></dd>
+
+  <dt><%= @model.t :header_rows %></dt>
+  <dd><%= select_tag "item[header_rows]",  options_for_select(header_rows_options, @item.header_rows) %></dd>
+</dl>
+
+<div class="csv2rdf-settings-table-container">
+  <table>
+    <tbody>
+    <% tsv = @cur_resource.parse_tsv %>
+    <% tsv[0..19].each do |row| %>
+      <tr>
+        <% row.each do |col| %>
+        <td><%= col %></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<p><%= t("opendata.messages.max_row_notice", max: 20)%></p>
+
+<%= coffee do %>
+$ ->
+  render_table_header = ->
+    val = parseInt($("select[name='item[header_rows]']").val())
+    $("div.csv2rdf-settings-table-container table tr").removeClass("selected").removeClass("last_child")
+    if val > 0
+      for i in [0..val - 1]
+        $("div.csv2rdf-settings-table-container table tr:eq(#{i})").addClass("selected")
+      $("div.csv2rdf-settings-table-container table tr:eq(#{val - 1})").addClass("last_child")
+
+  $("select[name='item[header_rows]']").on 'change', ->
+    render_table_header()
+
+  render_table_header()
+<% end %>

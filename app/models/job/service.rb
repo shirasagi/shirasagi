@@ -60,7 +60,9 @@ class Job::Service
     private
 
     def load_config(config)
-      if File.exist?(config)
+      if config.is_a?(Hash)
+        @config = Job::Service::Config.from_hash(config)
+      elsif File.exist?(config)
         class_eval(File.read(config), config, 1)
       else
         @config = Job::Service::Config.new(config)

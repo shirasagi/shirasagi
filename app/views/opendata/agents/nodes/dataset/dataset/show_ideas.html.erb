@@ -1,0 +1,22 @@
+<div class="detail">
+  <div class="info-wrap">
+    <div class="dataset-ideas">
+      <div class="ideas">
+        <% if @login_mode %>
+          <div class="contribute-wrap"><a class="contribute" href="<%= "#{my_idea_path}new?dataset=#{@dataset_idea.id}" %>">アイデアを投稿する</a></div>
+        <% end %>
+        <table class="index">
+          <tbody>
+          <% @ideas.each do |idea| %>
+            <tr>
+              <td class="name"><%= link_to idea.name, idea.url %></td>
+              <td><%= I18n.t("opendata.labels.comment_count") %>(<% i = @idea_comment.where("idea_id": idea.id) %><% if i.present? %><%= i.count.to_i %><% else %>0<% end %>)</td>
+              <td><%= I18n.t("opendata.labels.update_datetime") %> <%= tryb{idea.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+<%= scss do %>
+table.rdf_classes__properties {
+  th.name, th.range {
+    width: 20%;
+  }
+}
+<% end %>
+
+<dl class="see rdf-class">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.preferred_label %></dd>
+
+  <dt><%= @model.t :label_ja %></dt>
+  <dd><%= @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %></dt>
+  <dd><%= @item.labels.try(:preferred_value, ["en", "invariant"]) %></dd>
+
+  <dt><%= @model.t :sub_class %></dt>
+  <dd>
+    <% if @item.sub_class.present? %>
+      <%= link_to @item.sub_class.try(:preferred_label), action: :show, vocab_id: @item.sub_class.vocab, id: @item.sub_class %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :comments %></dt>
+  <dd><%= br(@item.comments.try(:preferred_value)) %></dd>
+
+  <dt><%= @model.t :properties %></dt>
+  <dd>
+    <%= link_to(controller: :props, action: :index, class_id: @item) do%>
+      <button><%= t("rdf.button.manage_props") %></button>
+    <% end %>
+  </dd>
+  <dd>
+    <% if @item.properties.present? %>
+    <table class="index rdf_classes__properties">
+      <thead>
+      <tr>
+        <th class="checkbox"><input type="checkbox" /></th>
+        <th class="name"><%= Rdf::Prop.t :name %></th>
+        <th class="range"><%= Rdf::Prop.t :range %></th>
+        <th class="comments"><%= Rdf::Prop.t :comments %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.properties.each do |prop| %>
+        <tr>
+          <td class="checkbox">
+            <input type="checkbox" name="ids[]" value="<%= prop.id %>" />
+            <nav class="tap-menu">
+              <%= link_to :show, controller: :props, action: :show, class_id: @item, id: prop %>
+              <%= link_to :edit, controller: :props, action: :edit, class_id: @item, id: prop %>
+              <%= link_to :delete, controller: :props, action: :unlink, class_id: @item, id: prop %>
+            </nav>
+          </td>
+          <td class="name"><%= link_to prop.preferred_label, controller: :props, action: :show, vocab_id: @item.vocab, class_id: @item, id: prop %></td>
+          <td class="range">
+            <% if prop.range.present? %>
+              <%= link_to prop.range.try(:preferred_label), action: :show, vocab_id: prop.range.vocab, id: prop.range %>
+            <% end %>
+          </td>
+          <td class="comments"><%= prop.comments.try(:preferred_value) %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <% end %>
+  </dd>
+</dl>

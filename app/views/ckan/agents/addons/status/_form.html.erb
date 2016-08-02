@@ -1,0 +1,19 @@
+<dl class="see mod-ckan-part-status">
+  <dt><%= @model.t :ckan_url %><%= @model.tt :ckan_url %></dt>
+  <dd><%= f.text_field :ckan_url, class: "ckan-url" %></dd>
+
+  <dt><%= @model.t :ckan_basicauth_state %><%= @model.tt :ckan_basicauth_state %></dt>
+  <dd><%= f.select :ckan_basicauth_state, @item.ckan_basicauth_state_options  %></dd>
+
+  <dt><%= @model.t :ckan_basicauth_username %><%= @model.tt :ckan_basicauth_username %></dt>
+  <dd><%= f.text_field :ckan_basicauth_username, class: "ckan-basicauth-username" %></dd>
+
+  <dt><%= @model.t :ckan_basicauth_password %><%= @model.tt :ckan_basicauth_password %></dt>
+  <dd><%= f.password_field :in_ckan_basicauth_password, class: "ckan-basicauth-password" %></dd>
+
+  <dt><%= @model.t :ckan_status %><%= @model.tt :ckan_status %></dt>
+  <dd><%= f.select :ckan_status, @item.ckan_status_options  %></dd>
+
+  <dt><%= @model.t :ckan_value_url %><%= @model.tt :ckan_value_url %></dt>
+  <dd><%= f.text_field :ckan_value_url, class: "ckan-value-url" %></dt>
+</dl>

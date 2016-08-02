@@ -1,0 +1,48 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <dl class="see csv2rdf-settings-rdf-class-preview">
+      <dt><%= @rdf_class.t :name %></dt>
+      <dd><%= "#{@rdf_class.vocab.prefix}:#{@rdf_class.name}" %></dd>
+      <dt><%= t("opendata.labels.auto_assing") %></dt>
+      <dd>
+        <% Rails.logger.debug("rdf_class_preview.html.erb: expand_properties") %>
+        <% properties = @rdf_class.expand_properties %>
+        <% if properties.present? %>
+          <div class="csv2rdf-settings-table-container" style="white-space: normal;">
+            <table>
+              <thead>
+              <tr>
+                <th class="header">CSV</th>
+                <th class="name" colspan="3">RDF</th>
+              </tr>
+              <tr>
+                <th class="header"><%= @model.t :header_labels %></th>
+                <th class="name"><%= @rdf_class.t :property_property %></th>
+                <th class="class"><%= @rdf_class.t :property_class %></th>
+                <th class="comment"><%= @rdf_class.t :property_comment %></th>
+              </tr>
+              </thead>
+              <tbody>
+              <% Rails.logger.debug("rdf_class_preview.html.erb: each_expand_properties") %>
+              <% each_expand_properties(properties) do |id, name, klass, comment, sub_props, depth, ids, names, classes| %>
+              <tr class="depth<%= depth %>" data-depth="<%= depth %>">
+                <td class="header"><%= find_header_labels(names) %></td>
+                <td class="name"><span class="od-icon <%= sub_props.present? ? "od-icon-node-prop" : "od-icon-leaf-prop" %>"><%= name %></span></td>
+                <td class="class"><%= klass %></td>
+                <td class="comment"><%= comment %></td>
+              </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+      </dd>
+      <% if unmapped_headers.present? %>
+        <dt><%= t("opendata.labels.auto_mis_assing") %></dt>
+        <dd>
+          <%= br(unmapped_headers.map { |e| e.join(", ")}.join("\n")) %>
+        </dd>
+      <% end %>
+    </dl>
+  </div>
+</div>

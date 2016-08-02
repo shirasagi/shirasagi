@@ -1,0 +1,72 @@
+<%
+
+@f = f
+
+@categories ||= begin
+  @cur_node = @cur_node.becomes_with_route
+  @cur_node.st_categories.presence || @cur_node.default_st_categories
+end
+@categories = @categories.select do |cate|
+  if cate.site.nil?
+    Rails.logger.debug(cate.name)
+  end
+  cate.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+end
+@disallowed_categories = @item.categories - @categories.to_a
+
+def cate_form(item)
+  item = item.becomes_with_route
+  children = item.children.and_public.allow(:read, @cur_user).sort(order: 1)
+  if children.size > 0
+    cc = children.map { |c| c.children.size }.max != 0
+    h = %(<label class="parent">)
+    if item.is_a?(Opendata::Node::Category)
+      h << @f.check_box("category_ids[]", {}, item._id)
+    end
+    h << %(#{item.name}</label>)
+    h << %(<div class="child #{cc ? 'grandchild' : ''}">).html_safe
+    children.each { |c| h += cate_form(c) }
+    h << %(</div>).html_safe
+    @disallowed_categories.delete(item)
+  else
+    h  = %(<label>)
+    if item.is_a?(Opendata::Node::Category)
+      h << @f.check_box("category_ids[]", {}, item._id)
+    end
+    h << %(#{item.name}</label>)
+    @disallowed_categories.delete(item)
+  end
+
+  h.html_safe
+end
+
+def name_hier(category)
+  names = []
+  names << category.name
+  while category.parent.present?
+    category = category.parent
+    names << category.name
+  end
+  names.reverse.join('/')
+end
+%>
+<dl class="see category-form mod-opendata-category">
+  <dd class="wide allowed-categories">
+    <%= required_label %>
+    <%= f.hidden_field "category_ids[]", value: "" %>
+
+    <% @categories.each do |cate| %>
+      <div class="parent">
+        <%= cate_form(cate) %>
+      </div>
+    <% end %>
+  </dd>
+  <% if @disallowed_categories.present? %>
+    <dd class="wide disallowed-categories">
+      <p>閲覧が許可されていない分野</p>
+      <% @disallowed_categories.each do |item| %>
+        <label><%= f.check_box("category_ids[]", {}, item._id) %><%= name_hier(item) %></label>
+      <% end %>
+    </dd>
+  <% end %>
+</dl>

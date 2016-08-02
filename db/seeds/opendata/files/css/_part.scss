@@ -1,0 +1,204 @@
+$page-width: 1080px;
+
+// -----------------------------------------------------------------------------
+// font
+$px10:72%;
+$px11:79%;
+$px12:86%;
+$px13:93%;
+$px14:100%;
+$px15:108%;
+$px16:115%;
+$px17:122%;
+$px18:129%;
+$px19:136%;
+$px20:143%;
+$px21:150%;
+$px22:158%;
+$px23:165%;
+$px24:172%;
+$px25:179%;
+$px26:186%;
+$px27:193%;
+$px28:200%;
+$px29:208%;
+$px30:215%;
+$px31:222%;
+$px32:229%;
+
+$font-base: Meiryo, "メイリオ", Tahoma, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+$font-head: Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
+
+// -----------------------------------------------------------------------------
+// color
+$black1: #383838;
+$black2: #000;
+$link: #d81272;
+$hover: #8647d6;
+$visited: #005c7b;
+$white: #fff;
+$blue: #005a96;
+$sky: #00b2c4;
+$green: #90cd4c;
+$yellow: #ffd400;
+$orange: #f09700;
+$red: #f0392f;
+$beige: #ddcfcc;
+$beige2: #ffe7a5;
+$hgreen: #d4ef97;
+$hblue: #caebff;
+$hred: #ffcaca;
+$brown: #e5c998;
+$gray1: #eee;
+$gray2: #ccc;
+$gray3: #ccd6d6;
+$gray4: #666;
+
+$border-yellow: 2px solid $yellow;
+$border-orange: 2px solid $orange;
+$border-red: 2px solid $red;
+$border-gray2: 1px solid $gray2;
+$border-black1: 1px solid $black1;
+
+// -----------------------------------------------------------------------------
+// margin
+$box-margin: 28px;
+$item-margin: 14px;
+
+// -----------------------------------------------------------------------------
+// mixin
+@mixin grd-blue {
+  background: $blue;
+  @include background-image(linear-gradient(top, #0069ac, #005a96));
+  @include filter-gradient(#0069ac, #005a96, vertical);
+  background: $blue url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc5MzgiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDY5QUMiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMwMDVBOTYiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c5MzgpIiAvPgo8L3N2Zz4=);
+}
+@mixin grd-sky {
+  background: #cef3ff;
+  @include background-image(linear-gradient(top, #cef3ff, #ffffff));
+  @include filter-gradient(#cef3ff, #ffffff, vertical);
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc4NTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNDRUYzRkYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c4NTMpIiAvPgo8L3N2Zz4=);
+}
+@mixin grd-black {
+  background: $black1;
+  @include background-image(linear-gradient(top, #666666, #383838));
+  @include filter-gradient(#666666, #383838, vertical);
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc5NDAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiM2NjY2NjYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMzODM4MzgiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c5NDApIiAvPgo8L3N2Zz4=);
+}
+@mixin grd-gray {
+  background: $white;
+  @include background-image(linear-gradient(top, #ffffff, #dedede));
+  @include filter-gradient(#ffffff, #dedede, vertical);
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImcxNTAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNERURFREUiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2cxNTApIiAvPgo8L3N2Zz4=);
+}
+@mixin btn-black {
+  display: inline-block;
+  padding: 6px 12px 6px 28px;
+  border: $border-black1;
+  @include border-radius(3px);
+  background: $black1 url(../img/ic-arrow-wh.png) no-repeat 12px center;
+  color: $white;
+  text-decoration: none;
+  &:hover {
+    background-color: $gray4;
+  }
+}
+@mixin btn-blue {
+  display: inline-block;
+  padding: $item-margin $box-margin;
+  border: none;
+  @include border-radius(5px);
+  @include grd-blue;
+  color: $white;
+  text-decoration: none;
+  &:hover {
+    background: $blue;
+    background-image: none;
+  }
+}
+@mixin rss {
+  float: left;
+  margin-top: 5px;
+  padding-left: 26px;
+  background: url(../img/ic-rss.png) no-repeat left center;
+}
+
+@mixin midashi {
+  padding: 10px;
+  font-size: $px16;
+}
+@mixin midashi-dataset {
+  padding: 10px;
+  font-size: $px16;
+  border-bottom: $border-yellow;
+  background: $sky;
+}
+@mixin midashi-app {
+  padding: 10px;
+  font-size: $px16;
+  border-bottom: $border-orange;
+  background: $green;
+}
+@mixin midashi-idea {
+  padding: 10px;
+  font-size: $px16;
+  border-bottom: $border-red;
+  background: $yellow;
+}
+@mixin midashi-beige {
+  padding: 10px;
+  font-size: $px16;
+  background: $beige2;
+}
+@mixin tab {
+  border-bottom: 2px solid $blue;
+  @include clear;
+  a {
+    display: block;
+    float: left;
+    min-width: 100px;
+    margin-right: 10px;
+    padding: 8px 10px 5px;
+    @include border-radius(5px 5px 0 0);
+    background: $gray3;
+    color: $black1;
+    font-size: $px16;
+    text-decoration: none;
+    text-align: center;
+    &:hover, &.current {
+      @include grd-blue;
+      color: $white;
+    }
+  }
+}
+@mixin tabs{
+  margin-bottom: $box-margin;
+  .names {
+    @include tab;
+  }
+  article {
+    nav {
+      @include clear;
+      padding-top: $item-margin;
+    }
+    .more {
+      float: right;
+      @include btn-black;
+    }
+    .rss {
+      @include rss
+    }
+  }
+}
+@mixin feed {
+  @include clear;
+  padding-top: $item-margin;
+  .more {
+    float: right;
+    @include btn-black;
+  }
+  .rss {
+    float: left;
+    @include rss;
+  }
+}

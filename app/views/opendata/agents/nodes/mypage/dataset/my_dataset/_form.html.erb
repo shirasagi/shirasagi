@@ -1,0 +1,30 @@
+<%= javascript_include_tag "opendata/opendata" %>
+
+<table class="see opendata-dataset">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="input"><%= f.text_field :name %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %><%= required_label %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :tags %><%= @item.tt :tags %></td>
+    <td class="input"><%= f.text_field :tags %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
+    <td class="input">
+      <%= render(file: 'opendata/agents/nodes/mypage/main/_category_form', locals: { f: f, model: Opendata::Node::Dataset }) %>
+    </td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
+  </tr>
+</table>

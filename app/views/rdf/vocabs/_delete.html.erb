@@ -1,0 +1,10 @@
+<dl class="see rdf-vocab">
+  <dt><%= @model.t :uri %></dt>
+  <dd><%= @item.uri %></dd>
+
+  <dt><%= @model.t :label_ja %></dt>
+  <dd><%= @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %></dt>
+  <dd><%= @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+</dl>

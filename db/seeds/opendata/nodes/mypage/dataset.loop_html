@@ -1,0 +1,9 @@
+<tr>
+  <td><a href="#{dataset_url}">#{dataset_name}</a></td>
+  <td>#{dataset_updated}</td>
+  <td>#{dataset_state}</td>
+  <td>#{dataset_point}</td>
+  <td>#{dataset_downloaded}</td>
+  <td>#{dataset_apps_count}</td>
+  <td>#{dataset_ideas_count}</td>
+</tr>

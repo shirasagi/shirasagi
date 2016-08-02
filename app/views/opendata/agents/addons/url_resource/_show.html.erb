@@ -1,0 +1,24 @@
+<dl class="see">
+  <dd class="wide">
+    <%= link_to opendata_dataset_url_resources_path(dataset_id: @item) do %>
+      <button><%= t("opendata.manage_url_resources") %></button>
+    <% end %>
+  </dd>
+
+  <% if @item.url_resources.present? %>
+  <dd class="wide">
+    <table class="index">
+      <tbody>
+        <% @item.url_resources.order(name: 1).each do |rs| %>
+        <tr>
+          <td><%= link_to rs.name, opendata_dataset_url_resource_path(dataset_id: @item.id, id: rs.id) %>
+          <td><%= rs.format.upcase %></td>
+          <td><%= number_to_human_size rs.size %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
+</dl>
+

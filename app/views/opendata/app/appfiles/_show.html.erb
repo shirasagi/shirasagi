@@ -1,0 +1,17 @@
+<dl class="see">
+  <% if @item.file %>
+  <dt><%= @model.t :file_id %></dt>
+  <dd>
+    <%= link_to @item.filename, opendata_app_appfile_file_path(appfile_id: @item.id) %>
+    (<%= number_to_human_size @item.size %>)
+  </dd>
+  <% end %>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+
+</dl>
+
+<footer class="send">
+  <%= button_tag t("opendata.links.add_appfile"), onclick: "location.href='#{url_for(action: :new)}'; return false;" %>
+</footer>

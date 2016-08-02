@@ -1,0 +1,152 @@
+<%= coffee do %>
+$ ->
+  $(document).on "click", ".update-item", (e) ->
+    approvers = []
+    $(".workflow-multi-select").each (e) ->
+      approvers = approvers.concat($(this).val())
+    $("input[name='workflow_approvers']").each (e) ->
+      approvers.push($(this).prop("value"))
+    if approvers.length == 0 && $(this).attr("type") == "request"
+      alert "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>"
+      return
+    required_counts = []
+    $("input[name='workflow_required_counts']").each (e) ->
+      required_counts.push($(this).prop("value"))
+
+    uri = []
+    uri[0] = location.pathname.split("/")[0]
+    uri[1] = location.pathname.split("/")[1]
+    uri[2] = "opendata" + "<%= @cur_node? @cur_node.id : "" %>"
+    uri[3] = "workflow"
+    uri[4] = "idea_comments"
+    uri[5] = "<%= @item.id %>"
+    uri[6] = $(this).attr("updatetype") + "_update"
+    uri = uri.join("/")
+
+
+    redirect_location = "<%= opendata_idea_comments_path(cid: @cur_node.id, idea_id: params[:idea_id]) %>"
+    $.ajax
+      type: "post"
+      url: uri
+      async: false
+      data:
+        workflow_comment: $("#workflow_comment").prop("value")
+        workflow_approvers: approvers
+        workflow_required_counts: required_counts
+        remand_comment: $("#remand_comment").prop("value")
+        url: "<%= request.url %>"
+        model: "<%= @model %>"
+      success: (data) ->
+        if data["workflow_state"] == "approve" && redirect_location != ""
+          location.href = redirect_location
+        else
+          location.reload()
+        end
+      error: (xhr, status) ->
+        try
+          errors = $.parseJSON(xhr.responseText)
+          alert(["== Error =="].concat(errors).join("\n"));
+        catch
+          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+
+  $(".mod-workflow-approve").insertBefore("#addon-basic")
+
+  $(".mod-workflow .toggle-label").on "click", (e) ->
+    $(".mod-workflow .request-setting").slideToggle()
+    return false
+
+  $(".workflow-partial-section").each ->
+    uri = []
+    uri[0] = location.pathname.split("/")[0]
+    uri[1] = location.pathname.split("/")[1]
+    uri[2] = "opendata" + "<%= @cur_node? @cur_node.id : "" %>"
+    uri[3] = "workflow"
+    uri[4] = "idea_comments"
+    uri[5] = "<%= @item.id %>"
+    uri[6] = "wizard"
+    uri = uri.join("/")
+    $.ajax
+      type: "get"
+      url: uri
+      async: false
+      success: (html, status) ->
+        $(html).find("#xxxxxx").html()
+        $(".workflow-partial-section").html(html)
+      error: (msg, status) ->
+        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
+
+<% end %>
+
+<link data-turbolinks-track="true" href="/assets/css/multi-select/css/multi-select.css" media="all" rel="stylesheet" />
+<script data-turbolinks-track="true" src="/assets/js/jquery.multi-select.js"></script>
+
+<div class="mod-workflow">
+
+  <% if @item.state == "closed" %>
+    <% if @item.allowed?(:approve, @cur_user) && @item.workflow_state == "request" %>
+      <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
+        <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
+        <section class="mod-workflow-approve">
+          <h1><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h1>
+          <%= text_area :remand, :comment, value: "", style: "display: none;" %>
+          <div class="buttons">
+            <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item" } %>
+            <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item" } %>
+          </div>
+        </section>
+      <% end %>
+    <% end %>
+
+    <% if @item.allowed?(:edit, @cur_user) && @item.workflow_member.blank? %>
+      <% if @item.try(:cloned_name?) %>
+        <section class="mod-workflow-request">
+          <h1><%= t("errors.messages.invalid_approve_name") %></h1>
+        </section>
+      <% else %>
+        <section class="mod-workflow-request">
+          <h1><%= link_to t("workflow.request"), '#', class: "toggle-label" %></h1>
+          <div class="see request-setting workflow-partial-section" style="display: none;"></div>
+        </section>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if @item.workflow_state? %>
+  <div class="mod-workflow-view">
+    <dl class="see">
+      <dt><%= @model.t :workflow_user_id %></dt>
+      <dd>
+        <% if @item.workflow_member.present? %>
+          <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
+        <% elsif @item.workflow_user.present? %>
+          <%= "#{@item.workflow_user.long_name}" %>
+        <% else %>
+          <%= t("workflow.user_deleted") %>
+        <% end %>
+      </dd>
+
+      <dt><%= @model.t :workflow_state %></dt>
+      <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
+
+      <% if @item.workflow_comment.present? %>
+        <dt><%= @model.t :workflow_comment %></dt>
+        <dd><%= @item.workflow_comment %></dd>
+      <% end %>
+
+      <dt><%= @model.t :workflow_approvers %></dt>
+      <dd>
+        <% @item.workflow_approvers.each do |workflow_approver| %>
+          <% user  = Cms::User.where(id: workflow_approver[:user_id]).first %>
+          <% state = t("workflow.state.#{workflow_approver[:state]}") %>
+          <% if user %>
+            <%= "#{workflow_approver[:level]}:#{user.long_name}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+          <% else %>
+            <%= "#{workflow_approver[:level]}:#{t("workflow.user_deleted")}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+          <% end %>
+        <% end if @item.workflow_approvers.present? %>
+      </dd>
+    </dl>
+  </div>
+  <% end %>
+
+</div>

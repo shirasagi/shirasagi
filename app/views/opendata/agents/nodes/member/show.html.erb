@@ -1,0 +1,84 @@
+<%= coffee do %>
+$ ->
+
+  # Tabs
+  SS_Tabs.render("#member-tabs-<%= @cur_node.id %>");
+
+<% end %>
+
+<%= render "head" %>
+
+<div class="contents">
+  <div class="member-tabs tabs" id="member-tabs-<%= @cur_node.id %>">
+    <% if dataset_enabled? %>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
+      <header><h2><%= I18n.t("opendata.labels.dataset") %></h2></header>
+        <div class="pages">
+          <% @datasets.each do |item| %>
+            <article>
+              <header>
+                <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+                <h2><%= link_to item.name, item.url %>
+                  <% if item.parent.becomes_with_route.try(:show_point?) %>
+                  <span class="point"><%= item.point.to_i %></span>
+                  <% end %>
+                </h2>
+              </header>
+            </article>
+          <% end %>
+        </div>
+        <nav>
+          <%= link_to :more, "#{@member_url}datasets/", class: "more", id: "ds-more" %>
+        </nav>
+    </article>
+    <% end %>
+    <% if app_enabled? %>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
+      <header><h2><%= I18n.t("opendata.labels.app") %></h2></header>
+      <section class="apps" id="apps">
+        <div class="pages">
+          <% @apps.each do |item| %>
+            <article>
+              <header>
+                <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+                <h2><%= link_to item.name, item.url %>
+                  <% if item.parent.becomes_with_route.try(:show_point?) %>
+                  <span class="point"><%= item.point.to_i %></span>
+                  <% end %>
+                </h2>
+              </header>
+            </article>
+          <% end %>
+        </div>
+        <nav>
+          <%= link_to :more, "#{@member_url}apps/", class: "more", id: "app-more" %>
+        </nav>
+      </section>
+    </article>
+    <% end %>
+    <% if idea_enabled? %>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
+      <header><h2><%= I18n.t("opendata.labels.idea") %></h2></header>
+      <section class="ideas" id="ideas">
+        <div class="pages">
+          <% @ideas.each do |item| %>
+            <article>
+              <header>
+                <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+                <h2><%= link_to item.name, item.url %>
+                  <% if item.parent.becomes_with_route.try(:show_point?) %>
+                  <span class="point"><%= item.point.to_i %></span>
+                  <% end %>
+                </h2>
+              </header>
+            </article>
+          <% end %>
+        </div>
+        <nav>
+          <%= link_to :more, "#{@member_url}ideas/", class: "more", id: "idea-more" %>
+        </nav>
+      </section>
+    </article>
+    <% end %>
+  </div>
+</div>

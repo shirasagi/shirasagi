@@ -1,0 +1,32 @@
+
+<div class="opendata-sparql">
+  <h1>SPARQL Endpoint</h1>
+  <br>
+  <%= form_tag("", method: :get) do %>
+    <table>
+      <tr>
+        <th>Query</th>
+        <td>
+          <textarea name="query"><%= @default_query %></textarea>
+        </td>
+      </tr>
+      <tr>
+        <th>Format</th>
+        <td>
+          <select name="format">
+            <option value="HTML">HTML</option>
+            <option value="HTML_TABLE">HTML (TABLE Only)</option>
+            <option value="JSON">JSON</option>
+            <option value="CSV">CSV</option>
+            <option value="TSV">TSV</option>
+            <option value="XML">XML</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+
+    <div>
+      <%= submit_tag "Run Query" %>
+    </div>
+  <% end %>
+</div>

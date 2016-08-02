@@ -1,0 +1,23 @@
+<dl class="see">
+  <dd class="wide">
+    <%= link_to opendata_idea_comments_path(idea_id: @item) do %>
+      <button><%= t("opendata.manage_comments") %></button>
+    <% end %>
+  </dd>
+
+  <% if @comments.present? %>
+  <dd class="wide">
+    <table class="index">
+      <tbody>
+        <% @comments.order(name: 1).each do |comment| %>
+        <tr>
+          <td><%= link_to comment.text, opendata_idea_comment_path(idea_id: @item.id, id: comment.id) %></td>
+          <td><%= comment.label :status %></td>
+          <td><%= comment.get_member_name %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+  <% end %>
+</dl>

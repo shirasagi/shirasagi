@@ -1,0 +1,14 @@
+<%= form_for :item, url: @appfile_url, html: { id: "item-form", multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<%= render partial: "form", locals: { f: f } %>
+
+<footer class="send">
+  <div>
+    <% name = @route ? "request" : "publish_save" %>
+  	<%= f.submit t("views.button.#{name}"), name: name, class: :save %>
+  	<%= f.submit t("views.button.closed_save"), name: :save, class: :save %>
+  </div>
+</footer>
+
+<% end %>

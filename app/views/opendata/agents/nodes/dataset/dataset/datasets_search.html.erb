@@ -1,0 +1,41 @@
+<%= coffee do %>
+
+$ ->
+  Opendata_SearchUI.modal()
+
+<% end %>
+
+<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.hidden_field :modal, value: "modal" %>
+  <%= f.submit t("opendata.search_datasets.search") %>
+<% end %>
+</div>
+
+<table class="od-modal">
+  <thead>
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="name"><%= @model.t :text %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <td><%= link_to item.name, "#", class: "select-item" %></td>
+        <td><%= item.text %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div style="margin-top: 10px; padding: 10px; border: 1px solid #ddd;">
+  <%= button_tag t("opendata.search_datasets.select"), { type: :button, class: "select-items" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

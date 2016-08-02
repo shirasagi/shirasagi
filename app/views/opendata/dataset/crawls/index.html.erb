@@ -1,0 +1,26 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to :show, opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <%= link_to :edit, edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <%= link_to :delete, delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+
+  <%= link_to :preview, opendata_dataset_url_resource_content_path(dataset_id: item[:id], url_resource_id: item[:urlresourceid]) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <% title = "#{item[:name]} - #{item[:resourcename]}" %>
+  <% if item[:crawl_state] == "deleted" %>
+    <%= link_to title , delete_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <% else %>
+    <%= link_to title , edit_opendata_dataset_url_resource_path(id: item[:urlresourceid], dataset_id: item[:id]) %>
+  <% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= tryb { item[:original_updated].strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="original-url"><%= item[:original_url] %></span>
+  <span class="state"><%= t "opendata.crawl_state.#{item[:crawl_state]}" %></span>
+  <span class="crawl-update"><%= t "opendata.crawl_update.#{item[:crawl_update]}" %></span>
+<% end %>
+
+<%= render file: "cms/crud/index" %>

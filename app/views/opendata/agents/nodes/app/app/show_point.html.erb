@@ -1,0 +1,21 @@
+<% return if @cur_node.hide_point? %>
+
+<%= jquery do %>
+  Opendata_Point.renderButton();
+  $(".point .label a").colorbox({ fixed: true, width: "300px", height: "50%" })
+<% end %>
+
+<div class="count">
+  <span class="label">
+    <% if @app.point == 0 %>
+      いいね！
+    <% else %>
+      <%= link_to I18n.t("opendata.labels.iine"), @app.point_members_url %>
+    <% end %>
+  </span>
+  <span class="number">
+    <%= @app.point %>
+  </span>
+</div>
+
+<div class="like"><%= link_to I18n.t("opendata.labels.iine"), "#{@app.point_url}", class: "update #{@mode}", "data-auth-token" => form_authenticity_token, rel: "nofollow" if @mode %></div>

@@ -1,0 +1,6 @@
+<nav class="menu">
+  <%= link_to :"opendata.labels.edit", "#{@cur_node.url}#{@item.id}/edit/" %>
+  <%= link_to :"opendata.labels.delete", "#{@cur_node.url}#{@item.id}/delete/" %>
+</nav>
+
+<%= render partial: "show" %>

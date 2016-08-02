@@ -1,0 +1,37 @@
+<%= form_for :item, url: @cur_node.url, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <table class="see">
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :icon_id %></td>
+      <td class="input"><%= f.file_field :in_icon %>
+    <% if @item.icon_id %>
+      <div class="in-icon"><label><%= f.check_box :rm_icon %><%= t "views.button.delete" %> (<%= @item.icon.filename %>)</label></div>
+    <% end %>
+      </td>
+    </tr>
+
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :name %><%= required_label %></td>
+      <td class="input"><%= f.text_field :name %></td>
+    </tr>
+
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :email %></td>
+      <td class="input"><%= f.email_field :email %></td>
+    </tr>
+
+    <% if @item.oauth_type.blank? %>
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :in_password %></td>
+      <td class="input"><%= f.password_field :in_password %></td>
+    </tr>
+    <% end %>
+  </table>
+
+  <footer class="send">
+    <div>
+      <%= submit_tag t("views.button.save"), name: :save %>
+    </div>
+  </footer>
+<% end %>

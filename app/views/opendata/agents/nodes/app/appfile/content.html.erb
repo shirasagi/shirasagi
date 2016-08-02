@@ -1,0 +1,19 @@
+<% limit = 100 %>
+
+<div class="appfile-content">
+  <table class="cells" summary="<%= @item.filename %>">
+    <tbody>
+      <% @data.slice(0, limit).each do |line| %>
+      <tr>
+        <% line.each do |col| %>
+        <td><%= col %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @data.size > limit %>
+  <div><%= limit %><%= I18n.t("opendata.labels.count_display") %></div>
+  <% end %>
+</div>

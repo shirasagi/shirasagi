@@ -1,0 +1,28 @@
+<% @s = OpenStruct.new params[:s] %>
+<%
+   category_options = []
+   Opendata::Node::Category.each { |e| category_options << [e.name, e._id]}
+ %>
+<%= scss do %>
+.search-form {
+  form.index-search {
+    select {
+      float: left;
+      height: 2em;
+      border: none;
+      margin-left: 3px;
+      max-width: 100px;
+      &:focus {
+        @include box-shadow(none);
+      }
+    }
+  }
+}
+<% end %>
+<div class="search-form">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= f.text_field :keyword, style: "width: 250px;" %>
+    <%= f.select :category, category_options, include_blank: true %>
+    <input type="submit" value="<%= t('views.button.search') %>" />
+  <% end %>
+</div>

@@ -1,0 +1,278 @@
+#//= #require jquery.turbolinks
+#//= #require turbolinks
+
+<% environment.context_class.instance_eval { include ApplicationHelper } %>
+
+##
+#  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
+##
+
+$ ->
+  # $.ajaxSetup
+  #   headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') }
+
+  Opendata.render()
+
+  # navi
+  path = location.pathname + "/"
+  $("#navi .main-menu a, #navi .sub-menu a").each ->
+    menu = $(this)
+    menu.addClass("current") if path.indexOf(menu.attr("href")) == 0
+
+  # pulldown menu
+  if $(window).width() >= 800
+    menu = $(".pulldown-menu")
+    link = menu.find("a")
+    menu.each ->
+      link.not(".current").hide()
+      link.filter(".current").prependTo(menu).click ->
+        link.not(".current").slideToggle("fast")
+        return false
+
+  Opendata_Tooltips.render()
+  Opendata_SearchUI.render()
+  Opendata_ListUI.render("table.od-modal")
+  Opendata_HieraricalCheckbox.render()
+
+class @Opendata
+  @loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+
+  @render:(box = null) ->
+    if box
+      anchorCallback = ()->
+        $("#cboxLoadedContent a").each ->
+          elem = $(this)
+          elem.addClass("cboxElement")
+          if !elem.attr("target") && !elem.data("target")
+            elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
+
+      $(box).find("a").each ->
+        elem = $(this)
+        if !elem.attr("target") && !elem.data("target")
+          elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
+
+    # default
+    box = $(document)
+
+    # external links
+    box.find("a[href^=http]").each ->
+      $(this).addClass("external")
+
+    # ajax to (color)box
+    box.find(".ajax-box").each ->
+      elem = $(this)
+      return true if elem.hasClass("cboxElement")
+      if !elem.attr("target") && !elem.data("target")
+        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
+
+  @ajaxForm:(elem, params = {}) ->
+    elem = $(elem)
+    defaults = {
+      url: elem.attr("action") + ".json"
+      dataType: "json"
+      success: ->
+        #
+      error: (data, status) ->
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+    }
+    elem.on "submit", (e) ->
+      $(this).ajaxSubmit $.extend(defaults, params)
+      e.preventDefault();
+
+  @ajax:(elem, params = {}) ->
+    $(elem).click (e) ->
+      self = $(this)
+      defaults = {
+        url: self.attr("href")
+        beforeSend: ->
+          self.html Opendata.loading
+        success: ->
+          console.log "success"
+        error: (data, status) ->
+          alert("== Error ==");
+      }
+      $.ajax $.extend(defaults, params)
+      e.preventDefault();
+      return false
+
+  @ajaxDelete:(elem, params = {}) ->
+    $(elem).click (e) ->
+      return false if !confirm("<%= t "views.confirm.delete" %>")
+      self = $(this)
+      defaults = {
+        type: "DELETE",
+        data: "_method=delete",
+        url: self.attr("href") + ".json"
+        dataType: "json"
+        beforeSend: ->
+          self.html Opendata.loading
+        success: ->
+          $(self.data("remove")).remove() if self.data("remove")
+        error: (data, status) ->
+          alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+      $.ajax $.extend(defaults, params)
+      e.preventDefault();
+      return false
+
+  @confirmUnloading: ->
+    $("input[type=text],textarea,select").change ->
+      $(window).on "beforeunload", ->
+        return "<%= t('views.confirm.unload') %>"
+    $("input[type=submit]").click ->
+      $(window).off "beforeunload"
+
+class @Opendata_Tooltips
+  @render: ->
+    ttips = $(".tooltip")
+    ttips.click (ev) ->
+      $(".tooltip ul").hide()
+      cur = $(this)
+      hgt = cur.find("ul").outerHeight()
+      ofs = cur.offset()
+      if ofs.top - hgt < 0
+        cur.find("ul").css("bottom", (hgt * (-1) - 15) + "px")
+        css = "ul:after {border: 8px solid transparent; border-bottom-color:#fff; bottom:" + (hgt - 5) + "px;}"
+        style = $("<style>").append(document.createTextNode(css))
+        $(".tooltip ul style").remove()
+        cur.find("ul").append(style)
+      else
+        cur.find("ul").css("bottom", "18px")
+        css = "ul:after {border: 8px solid transparent; border-top-color:#fff; bottom:-13px;}"
+        style = $("<style>").append(document.createTextNode(css))
+        $(".tooltip ul style").remove()
+        cur.find("ul").append(style)
+      cur.find("ul").show()
+
+    $(document).click (ev) ->
+      $(".tooltip ul").hide() unless ttips.is($(ev.target).closest("div"))
+
+
+class @Opendata_ListUI
+  @render: (list)->
+    $("table.od-modal tbody tr").each ->
+      tr    = $(this)
+      tbody = tr.parent()
+      tr.find(".tap-menu a").each ->
+        if $(this).attr("href")[-7..-1] == "/delete"
+          tr.find(".tap-menu").after("<nav class='multiple-menu'><a href='multipleDelete' ><%= t 'views.links.delete_all' %></a></nav>")
+      tr.find("input[type=checkbox]").each ->
+        tr.toggleClass("checked", $(this).prop("checked"))
+      tr.find("input[type=checkbox]").change ->
+        tr.toggleClass("checked", $(this).prop("checked"))
+        chkcnt = 0
+        for chkbox in $("input[name='ids[]']")
+          chkcnt++ if chkbox.checked
+        $("thead input[type=checkbox]").
+          prop("checked", (chkcnt > 0 && $("input[name='ids[]']").length == chkcnt) )
+        tr.find(".multiple-menu").hide() if !@checked
+      tr.find("input[type=checkbox]").mouseover (e) ->
+        tr.find(".multiple-menu").css("left", e.pageX + 15).css("top", e.pageY - 5).show() if @checked
+      tr.mouseup (e) ->
+        if !$(e.target).is('a') && !$(e.target).is("input")
+          tbody.find("input[type=checkbox]").attr("checked", false)
+          tbody.find("tr").removeClass("checked")
+          tr.find(".tap-menu").css("left", e.pageX + 2).css("top", e.pageY).show()
+          tr.find("input[type=checkbox]").trigger("click")
+      tr.mouseleave ->
+        tr.find(".tap-menu").hide()
+        tr.find(".multiple-menu").hide()
+      tr.find(".multiple-menu a").on "click", (e) ->
+        if $(this).attr("href") == "multipleDelete"
+          e.preventDefault();
+          for chkbox in $("input[name='ids[]']")
+            if chkbox.checked
+              return if Opendata_ListUI.deleteitem( chkbox.value ).status != 200
+              chkbox.checked = false
+          location.reload()
+    $("thead input[type=checkbox]").change ->
+      for chkbox in $("input[name='ids[]']")
+        chkbox.checked = @checked
+
+  @deleteitem: (id)->
+    $.ajax
+      type: "post"
+      url: location.pathname + "/" + id
+      async: false
+      data: "_method=delete"
+      success: (msg) ->
+        #
+      error: (msg, status) ->
+        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
+
+class @Opendata_SearchUI
+  @select: (item) ->
+    # create tr element and append to form
+
+    tr    = $("<tr>").attr("data-id", item["id"])
+    input = $.colorbox.element().closest("dl").find(".hidden-ids").clone(false)
+    input = input.val(item["id"]).removeClass("hidden-ids")
+    a     = $('<a class="deselect" href="#">削除</a>').on "click", Opendata_SearchUI.deselect
+
+    tr.append($('<td>').append($(input)).append(item["name"]))
+    tr.append($('<td>').append($(a)))
+    $.colorbox.element().closest("dl").find(".ajax-selected tbody").prepend(tr)
+    return
+
+  @deselect: (e)->
+    $(this).parents("tr:first").remove()
+    e.preventDefault()
+
+  @toggleSelectButton: ()->
+    if $("#ajax-box .items input:checkbox").filter(":checked").size() > 0
+      $("#ajax-box .select-items").parent("div").show()
+    else
+      $("#ajax-box .select-items").parent("div").hide()
+
+  @render: ()->
+    $(".ajax-selected").each ->
+      $(this).find(".deselect").on "click", Opendata_SearchUI.deselect
+      if $(this).find(".deselect").size() == 0
+        $(this).hide()
+
+  @modal: ()->
+    $("#ajax-box form.search").on "submit", (e)->
+      $(this).ajaxSubmit(
+        url: $(this).attr("action")
+        success: (data) ->
+          $("#cboxLoadedContent").html data
+        error: (data, status) ->
+          alert("== Error ==")
+      )
+      e.preventDefault()
+
+    $.colorbox.element().closest("dl").find(".ajax-selected tr[data-id]").each ->
+      id = $(this).attr("data-id")
+      $("#ajax-box .items [data-id=#{id}]").remove()
+
+    Opendata_ListUI.render("table.od-modal")
+
+    $("#ajax-box a.select-item").on "click", (e)->
+      id = $(this).closest("[data-id]").attr("data-id")
+      name = $(this).text()
+      Opendata_SearchUI.select({ id: id, name: name })
+
+      $.colorbox.element().closest("dl").find(".ajax-selected").show()
+      e.preventDefault()
+      $.colorbox.close()
+
+    $("#ajax-box .select-items").on "click", (e)->
+      $("#ajax-box .items input:checkbox").filter(":checked").each ->
+        id = $(this).closest("[data-id]").attr("data-id")
+        name = $(this).closest("[data-id]").find(".select-item").text()
+        name = $(this).closest("[data-id]").text() if name == ""
+        Opendata_SearchUI.select({ id: id, name: name })
+
+      $.colorbox.element().closest("dl").find(".ajax-selected").show()
+      e.preventDefault()
+      $.colorbox.close()
+
+    $("#ajax-box .od-modal").on "change", (e)->
+      Opendata_SearchUI.toggleSelectButton()
+    Opendata_SearchUI.toggleSelectButton()
+
+class @Opendata_HieraricalCheckbox
+  @render: ()->
+    $("label.parent input[type='checkbox']").on "change", (e)->
+      checked = $(this).is(':checked')
+      $(this).closest('div.parent').find("input[type='checkbox']").prop('checked', checked)

@@ -1,0 +1,38 @@
+<%= render file: "_search" %>
+
+<%= scss do %>
+table.rdf-vocabs th.owner {
+  width: 20%;
+}
+<% end %>
+
+<table class="index rdf-vocabs">
+  <thead>
+  <tr>
+    <th class="checkbox"><input type="checkbox" /></th>
+    <th class="label"><%= @model.t :label %></th>
+    <th class="owner"><%= @model.t :owner %></th>
+    <th class="datetime"><%= @model.t :updated %></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @items.each do |item| %>
+    <tr>
+      <td class="checkbox">
+        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        <nav class="tap-menu">
+          <%= link_to :show, action: :show, id: item %>
+          <%= link_to :edit, action: :edit, id: item %>
+          <%= link_to :delete, action: :delete, id: item %>
+        </nav>
+      </td>
+      <td class="label"><%= link_to item.labels.try(:preferred_value), action: :show, id: item %></td>
+      <td class="owner"><%= t :"rdf.vocabs.owner_#{item.owner}" %></td>
+      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d") %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -1,0 +1,53 @@
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+
+<%= jquery do %>
+  <% if @tabs.count > 1 %>
+  SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
+  <% end %>
+  $(".areas a.more").colorbox({ fixed: true, height: "80%" })
+  $(".tags a.more").colorbox({ fixed: true, height: "80%" })
+<% end %>
+
+<div class="idea-count">
+  <span class="count-label"><%= I18n.t("opendata.labels.ideas_count") %></span><span class="count"><%= @count %></span>件
+</div>
+
+<div class="opendata-tabs tabs" id="opendata-tabs-<%= @cur_node.id %>">
+  <% @tabs.each_with_index do |tab, idx| %>
+  <article class="tab tab-<%= tab[:id] %>" id="cms-tab-<%= @cur_node.id %>-<%= idx %>" data-class="tab-<%= tab[:id] %>">
+    <header><h2><%= tab[:name] %></h2></header>
+    <div class="pages">
+      <% tab[:pages].each do |item| %>
+      <article>
+        <header>
+          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
+          <h2><%= link_to item.name, item.url %>
+            <% if item.parent.becomes_with_route.show_point? %>
+            <span class="point"><%= item.point.to_i %></span>
+            <% end %>
+          </h2>
+        </header>
+      </article>
+      <% end %>
+    </div>
+    <nav class="feed">
+      <%= link_to :more, tab[:url], class: "more" if tab[:url] %>
+      <%= link_to "RSS", tab[:rss], class: "rss" if tab[:rss] %>
+    </nav>
+  </article>
+  <% end %>
+</div>
+
+<article class="areas nodes">
+  <header><h1><%= I18n.t("opendata.labels.area") %></h1></header>
+  <%= render file: "opendata/agents/nodes/idea/idea/areas" %>
+</article>
+
+<article class="tags nodes">
+  <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
+  <%= render file: "opendata/agents/nodes/idea/idea/tags" %>
+  <% if @tags.popped? %>
+  <nav><%= link_to :more, "#{@node_url}tags/", class: "more" %></nav>
+  <% end %>
+</article>

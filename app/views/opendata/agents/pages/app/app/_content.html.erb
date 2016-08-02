@@ -1,0 +1,37 @@
+<% @cur_page.appfiles.order(name: 1).each do |file| %>
+<% if file.format.downcase == "csv" %>
+  <div class="appfile">
+    <div class="info">
+      <div class="name format-<%= file.format.downcase %>">
+        <%= file.filename %> (<%= file.format %> <%= number_to_human_size(file.size) %>)
+      </div>
+      <% if file.text.present? %>
+      <div class="text">
+        <%= auto_link br(file.text) %>
+      </div>
+      <% end %>
+    </div>
+    <div class="icons">
+      <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), file.content_url, class: "content" %></div>
+      <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), file.url, class: "download" %></div>
+    </div>
+  </div>
+<% elsif file.format.downcase == "json" %>
+  <div class="appfile">
+    <div class="info">
+      <div class="name format-<%= file.format.downcase %>">
+        <%= file.filename %> (<%= file.format %> <%= number_to_human_size(file.size) %>)
+      </div>
+      <% if file.text.present? %>
+      <div class="text">
+        <%= auto_link br(file.text) %>
+      </div>
+      <% end %>
+    </div>
+    <div class="icons">
+      <div class="json-wrap"><%= link_to I18n.t("opendata.labels.preview"), file.json_url, class: "json" %></div>
+      <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), file.url, class: "download" %></div>
+    </div>
+  </div>
+<% end %>
+<% end %>

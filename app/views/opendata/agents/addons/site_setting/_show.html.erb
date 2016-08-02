@@ -1,0 +1,19 @@
+<dl class="see mypage-setting">
+  <dt><%= @model.t :dataset_workflow_route %></dt>
+  <dd><%= @item.dataset_workflow_route.name rescue "" %></dd>
+
+  <dt><%= @model.t :app_workflow_route %></dt>
+  <dd><%= @item.app_workflow_route.name rescue "" %></dd>
+
+  <dt><%= @model.t :idea_workflow_route %></dt>
+  <dd><%= @item.idea_workflow_route.name rescue "" %></dd>
+
+  <dt><%= @model.t :dataset_state %></dt>
+  <dd><%= @item.label :dataset_state %></dd>
+
+  <dt><%= @model.t :app_state %></dt>
+  <dd><%= @item.label :app_state %></dd>
+
+  <dt><%= @model.t :idea_state %></dt>
+  <dd><%= @item.label :idea_state %></dd>
+</dl>

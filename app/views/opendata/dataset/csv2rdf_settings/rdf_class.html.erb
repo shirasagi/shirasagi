@@ -1,0 +1,89 @@
+<%
+last = nil
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).select do |cate|
+ if last == nil
+   last = cate
+ elsif cate.filename =~ /^#{last.filename}\//
+   false
+ else
+   last = cate
+ end
+end
+%>
+
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="opendata-csv2rdf-settings-class-search">
+      <dl class="see rdf-search-classes-search-options">
+        <dt><%= t "opendata.labels.category_ids" %></dt>
+        <dd>
+          <span style="inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", false, params[:s].try(:[], :category_ids).try(:include?, "false")) %>すべて</label></span>
+          <% categories.each do |cate| %>
+            <span style="inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", cate._id, params[:s].try(:[], :category_ids).try(:include?, cate._id.to_s)) %><%= cate.name %></label></span>
+          <% end %>
+        </dd>
+        <dt><%= t "rdf.apis.search_options.vocab" %></dt>
+        <dd><%= select_tag "s[vocab]", options_for_select(vocab_options, params[:s].try(:[], :vocab)) %></dd>
+        <dt><%= t "rdf.apis.search_options.name" %></dt>
+        <dd><%= text_field_tag "s[name]", params[:s].try(:[], :name) %></dd>
+        <dd><%= link_to(t("rdf.apis.search_options.search"), { action: params[:action] }, { class: "opendata-csv2rdf-settings-class-search__search cboxElement" }) %></dd>
+      </dl>
+    </div>
+
+    <%= form_for :item, url: { action: params[:action] }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+      <table class="index opendata-csv2rdf-settings-class-list">
+        <thead>
+        <tr>
+          <th class="checkbox"></th>
+          <th class="name"><%= Rdf::Class.t :name %></th>
+          <th><%= Rdf::Class.t :comment %></th>
+        </tr>
+        </thead>
+        <tbody class="items">
+        <% classes.each do |item| %>
+          <tr data-id="<%= item.id %>" data-uri="<%= "#{item.vocab.uri}#{item.name}" %>">
+            <td class="checkbox"><%= f.radio_button(:class_id, item.id, checked: @item.class_id == item.id) %></td>
+            <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", action: :rdf_class_preview, rdf_cid: item.id, s: params[:s] %></td>
+            <td><%= item.comments.try(:preferred_value) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+      <%= paginate classes if classes.try(:current_page) %>
+
+      <footer class="send">
+        <%= f.submit t("opendata.button.next"), class: :save %>
+        <%= f.button t("opendata.button.back"), type: :reset, onclick: "location.href='#{prev_url}'; return false;" %>
+      </footer>
+
+      <%= f.hidden_field "xxxxx", value: "" %>
+    <% end %>
+  </div>
+</div>
+
+
+<%= coffee do %>
+$ ->
+  $(".opendata-csv2rdf-settings-class-search__search").on "click", (e) ->
+    params = []
+    $("input[name='s[category_ids][]'").each (i, e) ->
+      if $(e).prop("checked")
+        params.push("s[category_ids][]=#{$(e).val()}")
+    vocab = $("select[name='s[vocab]'").val()
+    if vocab
+      params.push("s[vocab]=#{vocab}")
+    name = $("input[name='s[name]'").val()
+    if name
+      params.push("s[name]=#{name}")
+    href = $(this).attr('href')
+    params = params.join("&")
+    if params
+      href = "#{href}?#{params}"
+    location.href = href
+    e.preventDefault();
+    false
+
+<% end %>

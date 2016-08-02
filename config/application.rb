@@ -14,6 +14,7 @@ module SS
   class Application < Rails::Application
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/app/validators"
+    config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
 
     config.assets.paths << "#{config.root}/vendor/assets/packages"

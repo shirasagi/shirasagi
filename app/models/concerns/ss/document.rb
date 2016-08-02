@@ -21,12 +21,16 @@ module SS::Document
     before_save :set_text_index
 
     scope :keyword_in, ->(words, *fields) {
+      options = fields.extract_options!
+      method = options[:method].presence || 'and'
+      operator = method == 'and' ? "$and" : "$or"
+
       words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i } if words.is_a?(String)
       words = words[0..4]
       cond  = words.map do |word|
         { "$or" => fields.map { |field| { field => word } } }
       end
-      where("$and" => cond)
+      where(operator => cond)
     }
     scope :search_text, ->(words) {
       words = words.split(/[\s　]+/).uniq.compact.map { |w| /#{Regexp.escape(w)}/i } if words.is_a?(String)

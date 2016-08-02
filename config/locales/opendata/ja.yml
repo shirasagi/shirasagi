@@ -1,0 +1,546 @@
+ja:
+  opendata:
+    create: 新規登録
+    manage_resources: リソースを管理する
+    manage_url_resources: クローリングを管理する
+    manage_appfiles: アプリファイルを管理する
+    manage_comments: コメントを管理する
+    links:
+      add_resource: 新しいリソースを追加する
+      add_url_resource: 新しいURLを追加する
+      add_appfile: 新しいアプリファイルを追加する
+      add_comment: 新しいコメントを追加する
+      build_rdf: RDFに変換する
+      back_to_resource: リソースへ戻る
+      back_to_rdf_class: 戻る
+      back_to_column_types: 戻る
+    search_datasets:
+      index: データセットを選択する
+      search: データセットを検索
+      select: データセットを設定する
+      deselect: 削除
+    search_dataset_groups:
+      index: データセットグループを選択する
+      search: データセットグループを検索
+      select: データセットグループを設定する
+      deselect: 削除
+    button:
+      delete_account: アカウント削除
+      next: 次へ進む
+      build: RDFを作成する
+      back: 前へ戻る
+    notice:
+      deleted_account: アカウントを削除しました。
+      started_building_rdf_job: "RDF 変換処理を開始しました。処理結果は「ジョブ実行履歴」で確認してください。"
+    errors:
+      messages:
+        invalid_rdf: RDFストアの登録に失敗しました。
+        invalid_timeout: タイムアウトしました。
+        dynamic_file: 動的ファイルはクローリングできません。
+        property_not_selected: プロパティが選択されていません。
+        build_rdf_failed: RDFの作成に失敗しました。
+        validate_appurl: はアプリのファイルを登録している場合、入力できません。
+        validate_appfile: はアプリの公開URLを登録している場合、登録できません。
+    crawl_state:
+      same: 　
+      updated: 更新
+      deleted: 削除
+    crawl_update:
+      none: 　
+      auto: 自動
+    crawl_update_name:
+      none: 手動
+      auto: 自動
+
+    confirm:
+      build_csv2rdf: "RDF 変換処理を開始します。よろしいですか？"
+    labels:
+      auto_assing: "自動割付結果"
+      auto_mis_assing: "自動割付ミス"
+      samples: "データ"
+      rdf_property: RDF プロパティ
+      category_ids: 分野
+      group_ids: グループ
+      group: 分類
+      guest_user: ゲストユーザー
+      area: 地域
+      tag: タグ
+      license: ライセンス
+      format: フォーマット
+      keyword: キーワード
+      sort: 並び順
+      size: サイズ
+      state: 状態
+      point: いいね
+      time: 回
+      other: 他
+      count: 件
+      app: アプリ
+      dataset: データセット
+      idea: アイデア
+      resource: リソース
+      comment: コメント
+      app_name: アプリ名
+      appfile_name: アプリファイル名
+      dataset_name: データセット名
+      idea_name: アイデア名
+      resource_name: リソース名
+      comment_count: コメント数
+      update_datetime: 更新日時
+      executed_count: 実行回数
+      downloaded_count: 合計ダウンロード数
+      downloaded_wrap: 一括ダウンロード
+      iine: いいね！
+      public_url: 公開URL
+      execute: 実 行
+      execute_fullscreen: 全画面表示で実行
+      html: HTML
+      css: CSS
+      javascript: JavaScript
+      sample: サンプルデータ
+      relation_dataset: 関連データセット
+      relation_app: 関連アプリ
+      relation_idea: 関連アイデア
+      characteristic: ファイル固有
+      login: ログイン
+      new: 新規作成
+      edit: 編集
+      delete: 削除
+      edit_profile: プロフィールの編集
+      delete_account: アカウントの削除
+      downloaded: ダウンロード
+      preview: プレビュー
+      add_comment: コメントを投稿
+      add_idea: アイデアを投稿する
+      more: もっと見る
+      apps_count: 登録アプリ件数
+      datasets_count: 登録データセット件数
+      ideas_count: 登録アイデア件数
+      login_twitter: twitter ID でログイン
+      login_facebook: Facebook ID でログイン
+      login_yahoo: YAHOO!JAPAN ID でログイン
+      login_google: Google アカウントでログイン
+      login_github: GitHub アカウントでログイン
+      comment_invite_start: コメントしたい場合には
+      comment_invite_end: してください
+      not_exist: 存在しません
+      not_data: 該当するデータは登録されていません
+      delete_comment: コメントは削除されました
+      request_comment: コメントは承認待ちです
+      closed_comment: コメントは非公開です
+      delete_account_q: アカウントを削除してよろしいですか？
+      delete_account_remain: ユーザー情報は消えますが、過去に投稿したデータは残ります。
+      count_display: 件のデータを表示しています。
+      no_app: アプリは見つかりませんでした。
+      no_dataset: データセットは見つかりませんでした。
+      no_dataset_group: データセットグループは見つかりませんでした。
+      no_idea: アイデアは見つかりませんでした。
+      management_page: 下記のページで管理することが出来ます。
+      popular_string: 一般的な文字列データを表します。
+      popular_integer: 一般的な整数データを表します。
+      popular_real: 一般的な実数データを表します。
+      no_change_rdf: この列は RDF へ変換しない
+      updated: "%Y年%1m月%1d日 %1H時%1M分"
+      category_prefixes:
+        -
+        - '-'
+      login_history: ログイン履歴
+      search_option: 検索オプション
+      issue: 課題
+      data: データ
+      note: 備考
+    messages:
+      max_row_notice: "最大 %{max} 行を表示しています。"
+      build_rdf_success: RDFの作成に成功しました。
+      sent_rdf_success: RDFストアの登録に成功しました。
+      require_at_least_two_rows: "2 行以下の CSV ファイルは変換できません。"
+    sort_options:
+      released: 新着順
+      popular: 人気順
+      attention: 注目順
+      datasets:
+        released: 新着データセット
+        popular: 人気データセット
+        attention: 注目データセット
+      apps:
+        released: 新着アプリ
+        popular: 人気アプリ
+        attention: 注目アプリ
+      ideas:
+        released: 新着アイデア
+        popular: 人気アイデア
+        attention: 注目アイデア
+    state_options:
+      public: 公開
+      closed: 非公開
+    search_options:
+      all_keywords: すべてのキーワードを含む
+      any_keywords: いずれかのキーワードを含む
+      any_conditions: すべてをOR条件で検索する
+
+    # Web API
+    api:
+      package_list_help: |-
+        [api] package_list - 公開データセット名一覧を取得する。
+        [param1] limit - 出力するデータセット名の最大件数を指定する。
+                         0を指定した場合は件数を制限しない。
+        [param2] offset - 出力を開始するデータセットの配列インデックスを指定する。
+                          limitが設定された場合のみ、有効とする。
+      group_list_help: |-
+        [api] group_list - データセットグループ情報の一覧を取得する。
+        [param1] sort - 戻り値のソート対象の項目。
+                        name（デフォルト）またはpackagesを指定する。
+        [param2] all_fields - 全項目を出力するかどうかを指定する。
+                              True：表示、False：非表示（デフォルト）。
+        [param3] groups - 未実装。
+      tag_list_help: |-
+        [api] tag_list - タグ名一覧を取得する。
+        [param1] query - 指定した文字列を含むタグ名を出力対象とする。
+        [param2] all_fields - 未実装。
+        [param3] vocabulary_id - 未実装。
+      package_show_help: |-
+        [api] package_show - 公開データセット情報を取得する。
+        [param1] id - IDまたは名称が指定した文字列と一致するデータセット情報を出力する。（必須）
+        [param2] use_default_schema - 未実装。
+      tag_show_help: |-
+        [api] tag_show - タグが指定した文字列と一致する公開データセット情報の一覧を取得する。
+        [param1] id - 指定した文字列と一致するタグを出力対象とする。（必須）
+      group_show_help: |-
+        [api] group_show - 公開データセットグループ情報を取得する。
+        [param1] id - IDまたは名称が指定した文字列と一致するデータセットグループ情報を出力対象とする。（必須）
+        [param2] include_datasets - データセットグループに属するデータセット情報を含めるかどうかを指定する。
+                                    true：含む（デフォルト）。
+                                    false：含まない。（packagesの値は空の配列となる。）
+      package_search_help: |-
+        [api] package_search - 公開データセット情報に対して、全文検索を行う。
+        [param1] q - 全文検索のキーワードを指定する。（初期値：":"）
+        [param2] fq - 未実装。
+        [param3] sort - 未実装。
+        [param4] rows - 取得するデータセット情報の最大数を指定する。
+        [param5] start - 取得を開始するデータセット情報の配列インデックスを指定する。
+        [param6] facet - 未実装。
+        [param7] facet.mincount - 未実装。
+        [param8] facet.field - 未実装。
+      resource_search_help: |-
+        [api] resource_search - 指定項目に指定値を部分一致で含む公開リソース情報を取得する。
+        [param1] query - 検索条件を指定する。（必須）
+                         検索条件は"項目名:値"の形式で指定する。（1セットのみ、指定可能。）
+                         下記の項目名のいずれかを指定した場合のみ、有効となる。
+                         （name、description、filename、format）
+        [param2] fields - 未実装。（Deprecated）
+        [param3] order_by - 昇順でソートを行う項目名を指定する。
+                            下記の項目名のいずれかを指定した場合のみ、有効となる。
+                            （name、description、filename、format）
+        [param4] offset - 取得を開始するリソースの配列インデックスを指定する。
+        [param5] limit - 取得するリソースの最大件数を指定する。
+
+  modules:
+    opendata: オープンデータ
+    addons:
+      opendata/category: 分野
+      opendata/category_setting: カテゴリ設定
+      opendata/dataset_group: データセットグループ
+      opendata/area: 地域
+      opendata/dataset_node: データセット
+      opendata/dataset: データセット
+      opendata/app: アプリ
+      opendata/idea_node: アイデア
+      opendata/idea: アイデア
+      opendata/release: 公開設定
+      opendata/resource: リソース
+      opendata/url_resource: クローリング
+      opendata/appfile: アプリファイル
+      opendata/rdf_store: RDFストア
+      opendata/url_rdf_store: RDFストア
+      opendata/comment: コメント
+      opendata/site_setting: オープンデータ設定
+      opendata/workflow/idea_comment_approver: 承認
+      opendata/dataset_page_setting: データセット詳細ページ設定
+      opendata/app_page_setting: アプリ詳細ページ設定
+      opendata/idea_page_setting: アイデア詳細ページ設定
+      opendata/list_node_setting: フォルダー設定
+
+  cms:
+    nodes:
+      opendata/category: 分野
+      opendata/area: 地域
+      opendata/dataset: データセット
+      opendata/dataset_category: データセット分野
+      opendata/search_dataset_group: データセットグループ検索
+      opendata/search_dataset: データセット検索
+      opendata/sparql: SPARQL
+      opendata/api: API
+      opendata/app: アプリ
+      opendata/app_category: アプリ分野
+      opendata/search_app: アプリ検索
+      opendata/idea: アイデアボックス
+      opendata/idea_category: アイデア分野
+      opendata/search_idea: アイデア検索
+      opendata/mypage: マイページ
+      opendata/member: メンバー
+      opendata/my_profile: マイプロフィール
+      opendata/my_dataset: マイデータセット
+      opendata/my_app: マイアプリ
+      opendata/my_idea: マイアイデア
+    parts:
+      opendata/mypage_login: ログイン
+      opendata/dataset: データセット
+      opendata/dataset_group: データセットグループ
+      opendata/app: アプリ
+      opendata/idea: アイデア
+
+  cms_role:
+    read_other_opendata_datasets: データセットの閲覧（全て）
+    read_private_opendata_datasets: データセットの閲覧（所有）
+    read_member_opendata_datasets: データセットの閲覧（メンバー）
+    edit_other_opendata_datasets: データセットの編集（全て）
+    edit_private_opendata_datasets: データセットの編集（所有）
+    edit_member_opendata_datasets: データセットの編集（メンバー）
+    delete_other_opendata_datasets: データセットの削除（全て）
+    delete_private_opendata_datasets: データセットの削除（所有）
+    delete_member_opendata_datasets: データセットの削除（メンバー）
+    release_other_opendata_datasets: データセットの公開（全て）
+    release_private_opendata_datasets: データセットの公開（所有）
+    release_member_opendata_datasets: データセットの公開（メンバー）
+    approve_other_opendata_datasets: データセットの承認（全て）
+    approve_private_opendata_datasets: データセットの承認（所有）
+    approve_member_opendata_datasets: データセットの承認（メンバー）
+    read_other_opendata_apps: アプリの閲覧（全て）
+    read_private_opendata_apps: アプリの閲覧（所有）
+    read_member_opendata_apps: アプリの閲覧（メンバー）
+    edit_other_opendata_apps: アプリの編集（全て）
+    edit_private_opendata_apps: アプリの編集（所有）
+    edit_member_opendata_apps: アプリの編集（メンバー）
+    delete_other_opendata_apps: アプリの削除（全て）
+    delete_private_opendata_apps: アプリの削除（所有）
+    delete_member_opendata_apps: アプリの削除（メンバー）
+    release_other_opendata_apps: アプリの公開（全て）
+    release_private_opendata_apps: アプリの公開（所有）
+    release_member_opendata_apps: アプリの公開（メンバー）
+    approve_other_opendata_apps: アプリの承認（全て）
+    approve_private_opendata_apps: アプリの承認（所有）
+    approve_member_opendata_apps: アプリの承認（メンバー）
+    read_other_opendata_ideas: アイデアの閲覧（全て）
+    read_private_opendata_ideas: アイデアの閲覧（所有）
+    read_member_opendata_ideas: アイデアの閲覧（メンバー）
+    edit_other_opendata_ideas: アイデアの編集（全て）
+    edit_private_opendata_ideas: アイデアの編集（所有）
+    edit_member_opendata_ideas: アイデアの編集（メンバー）
+    delete_other_opendata_ideas: アイデアの削除（全て）
+    delete_private_opendata_ideas: アイデアの削除（所有）
+    delete_member_opendata_ideas: アイデアの削除（メンバー）
+    release_other_opendata_ideas: アイデアの公開（全て）
+    release_private_opendata_ideas: アイデアの公開（所有）
+    release_member_opendata_ideas: アイデアの公開（メンバー）
+    approve_other_opendata_ideas: アイデアの承認（全て）
+    approve_private_opendata_ideas: アイデアの承認（所有）
+    approve_member_opendata_ideas: アイデアの承認（メンバー）
+
+  mongoid:
+    models:
+      opendata/license: ライセンス
+      opendata/dataset_group: データセットグループ
+      opendata/dataset: データセット
+      opendata/crawl: クローリング
+      opendata/app: アプリ
+      opendata/idea: アイデア
+      opendata/idea_comment: コメント
+      opendata/csv2rdf_setting: RDF変換設定
+    attributes:
+      opendata/addon/category:
+        category_ids: 分野
+      opendata/addon/category_setting:
+        st_category_ids: 分野
+      opendata/addon/rdf_store:
+        rdf_iri: グラフ名
+        rdf_error: RDF登録エラー
+      opendata/addon/url_rdf_store:
+        rdf_iri: グラフ名
+        rdf_error: RDF登録エラー
+      opendata/member:
+        icon_id: アイコン画像
+      opendata/license:
+        name: ライセンス名
+        file_id: ライセンス画像
+        in_file: ファイル
+        related_url: 関連URL
+        order: 並び順
+      opendata/dataset_group:
+        name: グループ名
+      opendata/dataset:
+        name: データセット名
+        text: 説明
+        site_id: サイト
+        user_id: データ作成者
+        group_id: 所属グループ
+        categry_ids: 分野
+        point: 評価
+        license: ライセンス
+        tags: タグ
+        category_ids: 分野
+        dataset_group_ids: グループ
+        area_ids: 地域
+        resources: リソース
+        downloaded: 合計ダウンロード数
+      opendata/resource:
+        file_id: ファイル
+        in_file: ファイル
+        name: リソース名
+        text: 説明
+        format: フォーマット
+        license_id: ライセンス
+        tsv_id: プレビュー用データ
+        content: データの内容
+      opendata/url_resource:
+        file_id: クローリングファイル
+        in_file: クローリングファイル
+        name: リソース名
+        text: 説明
+        format: フォーマット
+        original_url: URL
+        license_id: ライセンス
+        tsv_id: プレビュー
+        content: クローリングデータの内容
+        crawl_state: ステータス
+        original_updated: 元ファイル更新日時
+        crawl_update: 更新方法
+      opendata/app:
+        name: アプリ名
+        text: 説明
+        license: ライセンス
+        appurl: 公開URL
+        tags: タグ
+        categry_ids: 分野
+        area_ids: 地域
+        group_id: 所属グループ
+        dataset_ids: 関連データセット
+        point: 評価
+        executed: 実行回数
+        site_id: サイト
+        user_id: アプリ作成者
+        appfiles: アプリファイル
+      opendata/appfile:
+        file_id: ファイル
+        in_file: ファイル
+        name: アプリファイル名
+        text: 説明
+      opendata/idea:
+        name: タイトル
+        site_id: サイト
+        user_id: 作成者
+        categry_ids: カテゴリー
+        area_ids: 地域
+        dataset_id: 関連データセット
+        app_id: 関連アプリ
+        point: 評価
+        text: アイデア
+        tags: タグ
+        comment_body: 本文
+        commented: 合計コメント数
+        request_comment: 未承認コメント
+        issue: 課題
+        data: データ
+        note: 備考
+      opendata/idea_comment:
+        text: コメント
+        member_name: 投稿者名
+        deleted: 削除日時
+      opendata/csv2rdf_setting:
+        dataset: データセット
+        header_rows: タイトル行数
+        header_labels: タイトル
+        class: RDFクラス
+        column_types: 列設定
+      opendata/addon/site_setting:
+        dataset_workflow_route: データセット承認
+        app_workflow_route: アプリ承認
+        idea_workflow_route: アイデア承認
+        dataset_state: データセット
+        app_state: アプリ
+        idea_state: アイデア
+      opendata/addon/workflow/idea_comment_approver:
+        workflow_user_id: 申請者
+        workflow_state: 承認状態
+        workflow_comment: 申請コメント
+        workflow_approvers: 承認者
+        workflow_required_counts: 必要承認数
+        comment: 差し戻しコメント
+        approver_comment: 承認者コメント
+      opendata/addon/dataset_page_setting:
+        show_point: ポイント表示
+        show_tabs: タブ表示
+      opendata/addon/app_page_setting:
+        show_point: ポイント表示
+        show_tabs: タブ表示
+      opendata/addon/idea_page_setting:
+        show_point: ポイント表示
+        show_tabs: タブ表示
+      opendata/addon/list_node_setting:
+        limit: 表示件数
+
+  tooltip:
+    opendata/dataset:
+      text: &text
+        - データセットの説明を入力します。
+        - URLは自動的にリンクが設定されます。
+      tags:
+        - 関連する単語を登録します。
+        - カンマ、スペースで区切ることにより複数の単語を設定することができます。
+    opendata/resource:
+      format:
+        - ファイルのフォーマットを半角英数の大文字で入力します。
+        - 「 TTL 」を入力した場合はRDFサーバにデータが登録されます。
+      text: *text
+      tsv_id:
+        - TSV、CSVファイルを登録しておくとデータセットのページでプレビュー表示ができます。
+        - リソースファイルがTSV、CSVファイルの場合は登録する必要はありません。
+    opendata/app:
+      text:
+        - アプリの説明を入力します。
+        - URLは自動的にリンクが設定されます。
+      tags:
+        - 関連する単語を登録します。
+        - カンマ、スペースで区切ることにより複数の単語を設定することができます。
+    opendata/appfile:
+      text:
+        - ファイルの説明を入力します。
+        - URLは自動的にリンクが設定されます。
+    opendata/idea:
+      text:
+        - コメント内容を入力します。
+        - URLは自動的にリンクが設定されます。
+      tags:
+        - 関連する単語を登録します。
+        - カンマ、スペースで区切ることにより複数の単語を設定することができます。
+    opendata/license:
+      related_url:
+        - 登録するライセンスの公式ページや説明ページのURLを登録します。
+    opendata/csv2rdf_settings:
+      rdf_property:
+        - 適切な RDF プロパティを一覧内から選択し、「保存」ボタンをクリックします。
+    opendata/addon/dataset_page_setting:
+      show_point:
+        - ポイントを表示するかどうかを選択します。
+        - 未選択の場合、ポイントを表示します。
+      show_tabs:
+        - 表示するタブを選択します。
+    opendata/addon/app_page_setting:
+      show_point:
+        - ポイントを表示するかどうかを選択します。
+        - 未選択の場合、ポイントを表示します。
+      show_tabs:
+        - 表示するタブを選択します。
+    opendata/addon/idea_page_setting:
+      show_point:
+        - ポイントを表示するかどうかを選択します。
+        - 未選択の場合、ポイントを表示します。
+      show_tabs:
+        - 表示するタブを選択します。
+    opendata/addon/list_node_setting:
+      limit:
+        - |-
+          リストの表示件数を指定します。
+
+  job:
+    models:
+      opendata/csv2rdf_converter/job: RDF変換ジョブ

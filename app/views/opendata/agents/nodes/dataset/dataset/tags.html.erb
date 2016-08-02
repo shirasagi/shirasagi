@@ -1,0 +1,17 @@
+<div>
+  <% @tags.each do |data| %>
+  <article>
+    <header>
+      <h2>
+        <a href="<%= @search_path.call("s[tag]" => "#{data['id']}") %>">
+          <span class="name"><%= data["id"] %></span>
+          <span class="count">(<%= data["count"] %>)</span>
+        </a>
+      </h2>
+    </header>
+  </article>
+  <% end %>
+  <% if @tags.count == 0 %>
+    <div><%= I18n.t("opendata.labels.not_data") %></div>
+  <% end %>
+</div>

@@ -1,0 +1,62 @@
+<%= javascript_include_tag "opendata/opendata" %>
+
+<table class="see opendata-idea">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="input"><%= f.text_field :name %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %><%= required_label %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :tags %><%= @item.tt :tags %></td>
+    <td class="input"><%= f.text_field :tags %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
+    <td class="input">
+      <%= render(file: 'opendata/agents/nodes/mypage/main/_category_form', locals: { f: f, model: Opendata::Node::Idea }) %>
+  </td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
+  </tr>
+
+  <% if dataset_enabled? %>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :dataset_id %></td>
+    <td class="input">
+    <%= f.hidden_field "dataset_ids[]", value: params[:dataset] %>
+    <% if @item.dataset_ids.length > 0 %>
+      <% if @item.datasets.length > 0 %>
+      <%= @item.datasets[0].send :name %>
+      <% else %>
+      <%= I18n.t("opendata.labels.not_exist") %>
+      <% end %>
+    <% end %>
+  </td>
+  </tr>
+  <% end %>
+
+  <% if app_enabled? %>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :app_id %></td>
+    <td class="input">
+    <%= f.hidden_field "app_ids[]", value: params[:app] %>
+    <% if @item.app_ids.length > 0 %>
+      <% if @item.apps.length > 0 %>
+      <%= @item.apps[0].send :name %>
+      <% else %>
+      <%= I18n.t("opendata.labels.not_exist") %>
+      <% end %>
+    <% end %>
+  </td>
+  </tr>
+  <% end %>
+</table>

@@ -1,0 +1,7 @@
+</ul>
+<footer>
+  <nav class="feed">
+    <a class="more" href="/dataset/search/?sort=attention">もっと見る</a>
+    <a class="rss" href="/dataset/search/rss.xml?sort=attention">RSS</a>
+  </nav>
+</footer>

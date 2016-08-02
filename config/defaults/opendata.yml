@@ -1,0 +1,17 @@
+# Fuseki Server
+
+production: &production
+  # SPARQL Endpoint
+  fuseki:
+    disable: true
+    host: 127.0.0.1
+    port: 3030
+    dataset: opendata
+
+test:
+  <<: *production
+  fuseki:
+    disable: true
+
+development:
+  <<: *production

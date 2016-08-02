@@ -1,0 +1,11 @@
+<table class="index">
+  <tbody>
+  <% @ds.each do |ds| %>
+    <tr>
+      <td class="name"><%= link_to ds.name, ds.url %></td>
+      <td><%= I18n.t("opendata.labels.downloaded_count") %>(<%= ds.downloaded.to_i %>)</td>
+      <td><%= I18n.t("opendata.labels.update_datetime") %> <%= tryb{ds.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

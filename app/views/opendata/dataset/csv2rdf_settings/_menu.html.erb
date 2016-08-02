@@ -1,0 +1,9 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /rdf_class_preview/ %>
+    <%= link_to :"opendata.links.back_to_rdf_class", action: :rdf_class, s: params[:s] %>
+  <% elsif params[:action] =~ /rdf_prop_select/ %>
+    <%= link_to :"opendata.links.back_to_column_types", action: :column_types %>
+  <% else %>
+    <%= link_to :"opendata.links.back_to_resource", controller: :resources, action: :show, id: @cur_resource %>
+  <% end %>
+</nav>

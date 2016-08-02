@@ -1,0 +1,75 @@
+<%
+=begin
+%>
+<%= scss do %>
+.name {
+  width: 200px;
+}
+<% end %>
+
+<div class="rdf-search-props-search-form" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search, multipart: true } do |f| %>
+  <dl class="see rdf-search-props-search-options">
+    <dt><%= t "rdf.apis.search_options.vocab" %></dt>
+    <dd><%= select_tag "s[vocab]",  options_for_select(@vocab_options, params[:s][:vocab]) %></dd>
+    <dt><%= t "rdf.apis.search_options.name" %></dt>
+    <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %></dd>
+    <dd><%= f.submit  t("rdf.apis.search_options.search") %></dd>
+  </dl>
+<% end %>
+</div>
+
+<table class="index rdf-search-props-props-list">
+  <thead>
+    <tr>
+      <th class="name"><%= @model.t :name %></th>
+      <th><%= @model.t :comment %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>" data-uri="<%= "#{item.vocab.uri}#{item.name}" %>">
+        <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", "#", class: "select-item" %></td>
+        <td><%= item.comment %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="rdf-search-classes-loading" style="display: none"></div>
+
+<%= paginate @items if @items.try(:current_page) %>
+
+<%= coffee do %>
+$ ->
+  $("#ajax-box form.search").on "submit", (e)->
+    $(this).ajaxSubmit(
+      url: $(this).attr("action")
+      beforeSend: ->
+        $(".rdf-search-classes-class-list").hide()
+        $(".rdf-search-classes-loading").show()
+      success: (data) ->
+        $("#cboxLoadedContent").html data
+      error: (data, status) ->
+        $(".rdf-search-classes-loading").hide()
+        $(".rdf-search-classes-class-list").show()
+        alert("== Error ==")
+    )
+    e.preventDefault()
+
+  $("#ajax-box a.select-item").on "click", (e) ->
+    id = $(this).closest("[data-id]").attr("data-id")
+    uri = $(this).closest("[data-uri]").attr("data-uri")
+    name = $(this).text()
+
+    # target = $(this).closest("[data-target]").attr("data-target")
+    # $("#item_" + target).val(uri)
+    # $("#item_pname_" + target).val(name)
+    e.preventDefault()
+    $.colorbox.close()
+
+  $(".rdf-search-classes-loading").html(SS.loading)
+<% end %>
+<%
+=end
+%>

@@ -1,0 +1,180 @@
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+<%= javascript_include_tag "opendata/public" %>
+<%= coffee do %>
+$ ->
+  <% if @cur_node.show_point? %>
+  # show point
+  Opendata_Point.render("<%= @cur_page.point_url %>");
+  <% end %>
+
+  <% if @tab_display == "tab_html" %>
+  # show executed
+  $.ajax
+    url: "<%= @cur_page.executed_show_url %>"
+    data: { tab_display: "<%= @tab_display %>" }
+    type: "GET"
+    success: (data)->
+      $("#executed").html data
+  <% end %>
+
+  <% if idea_enabled? %>
+  # show ideas
+  $.ajax
+    url: "<%= @cur_page.app_ideas_url %>"
+    success: (data)->
+      $(".app-ideas").html data
+  <% end %>
+
+  # hide categories
+  $(".categories a[data-class=other]").click ->
+    type = $(this).attr("class")
+    $(".categories a." + type).show()
+    $(this).remove()
+    return false
+
+  # preview
+  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
+  $("a.json").colorbox({ fixed: true, width: "90%", height: "90%" })
+<% end %>
+
+<header>
+  <h1 class="name"><%= @cur_page.send :name %></h1>
+</header>
+
+<div class="side-right">
+  <% if @cur_node.show_point? %>
+  <div class="point">
+    <div class="count">
+      <span class="label"><%= I18n.t("opendata.labels.iine") %></span>
+      <span class="number"><%= @cur_page.point %></span>
+    </div>
+  </div>
+  <% end %>
+
+  <% if @tab_display == "tab_html" %>
+    <div class="download-all">
+      <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded_wrap"), @cur_page.zip_url, class: "download" %></div>
+    </div>
+  <% end %>
+</div>
+<%
+max = 3
+categories = [
+  { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
+  { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
+]
+%>
+<nav class="categories">
+  <% categories.each do |cate| %>
+    <% cate[:items].each_with_index do |item, idx| %>
+      <% hide = (idx >= max) ? "display: none" : nil %>
+      <%= link_to item.send(cate[:name]), @search_path.call("s[#{cate[:key]}]" => "#{item.send(cate[:val])}"),
+        class: cate[:type], style: hide %>
+    <% end %>
+    <% if cate[:items].size > max %>
+      <%= link_to  I18n.t("opendata.labels.other") + "#{cate[:items].size-max}" + I18n.t("opendata.labels.count") , "#",
+        class: "#{cate[:type]}", "data-class" => "other" %>
+    <% end %>
+  <% end %>
+</nav>
+
+<div class="text">
+  <%= auto_link br(@cur_page.text) %>
+</div>
+
+<div class="detail">
+
+  <%= render partial: "opendata/agents/pages/app/app/app" %>
+
+  <div class="info-wrap">
+    <dl class="author">
+      <% if @cur_page.member_id.present? %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd>
+          <% if @cur_page.member %>
+          <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
+          <% else %>
+          <%= I18n.t("opendata.labels.guest_user") %>
+          <% end %>
+        </dd>
+      <% elsif @cur_page.contact_group %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br /></dd>
+      <% elsif @cur_page.groups.present? %>
+        <dt><%= @cur_page.t :user_id %></dt>
+        <dd><%= @cur_page.groups.first.name %><br /></dd>
+      <% end %>
+
+      <% if @tab_display == "tab_html" %>
+      <dt><%= @cur_page.t :executed %></dt>
+      <dd><div id="executed"></div></dd>
+      <% end %>
+
+      <dt><%= @cur_page.t :license %></dt>
+      <dd><%= @cur_page.license %></dd>
+
+      <dt><%= @cur_page.t :updated %></dt>
+      <dd><%= tryb{@cur_page.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %><br /></dd>
+    </dl>
+  </div>
+</div>
+
+<%= render file: "cms/agents/addons/related_page/view/index" %>
+<%= render file: "contact/agents/addons/page/view/index" %>
+
+<script type="text/javascript"><!--
+var tab_display = "<%= @tab_display %>";
+function PlayApp() {
+  if (tab_display == "tab_html") {
+    $(".frmPlay").attr("src", "");
+    $(".frmPlay").attr("src", "<% if @app_html.present? %><%= "#{@cur_page.file_index_url}#{@app_html.filename}" %><% end %>");
+  }
+}
+function ChangeTab(tabname, current) {
+  $("#tab-dataset").hide();
+  $("#tab-idea").hide();
+  $("#dataset").removeClass("dataset-current");
+  $("#idea").removeClass("idea-current");
+  if (tab_display == "tab_url") {
+    $("#tab-url").hide();
+    $("#url").removeClass("current");
+  } else {
+    if (tab_display == "tab_html") {
+      $("#tab-play").hide();
+      $("#tab-html").hide();
+      $("#tab-css").hide();
+      $("#tab-js").hide();
+      $("#tab-sample").hide();
+      $("#play").removeClass("current");
+      $("#html").removeClass("current");
+      $("#css").removeClass("current");
+      $("#js").removeClass("current");
+      $("#sample").removeClass("current");
+    }
+  }
+  $("#" + tabname).show();
+  if (current == "dataset") {
+    $("#" + current).addClass("dataset-current");
+  } else if (current == "idea") {
+    $("#" + current).addClass("idea-current");
+  } else {
+    $("#" + current).addClass("current");
+  }
+}
+
+function LoadTab(){
+  if (tab_display == "tab_url") {
+    ChangeTab("tab-url", "url")
+  } else {
+    if (tab_display == "tab_html") {
+      ChangeTab("tab-play", "play")
+    } else {
+      ChangeTab("tab-dataset", "dataset")
+    }
+  }
+}
+$(LoadTab);
+$(PlayApp);
+// --></script>

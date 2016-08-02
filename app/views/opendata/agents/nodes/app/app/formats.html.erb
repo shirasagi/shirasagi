@@ -1,0 +1,14 @@
+<div>
+  <% @formats.each do |data| %>
+  <article>
+    <header>
+      <h2><a href="<%= @search_path.call("s[format]" => "#{data['id']}") %>">
+        <span class="name"><%= data["id"] %></span>
+        <span class="count">(<%= data["count"] %>)</span></a></h2>
+    </header>
+  </article>
+  <% end %>
+  <% if @formats.count == 0 %>
+    <div><%= I18n.t("opendata.labels.not_data") %></div>
+  <% end %>
+</div>

@@ -1,0 +1,20 @@
+<%
+licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c| [c.name, c.id] }
+%>
+
+<dl class="see">
+  <dt><%= @model.t :name %><%= required_label %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :license %><%= required_label %></dt>
+  <dd><%= f.text_field :license %></dd>
+
+  <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
+
+  <dt><%= @model.t :appurl %></dt>
+  <dd><%= f.text_area :appurl %></dd>
+</dl>

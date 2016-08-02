@@ -1,0 +1,42 @@
+<%
+
+categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [m.name, m.id] }
+@s = OpenStruct.new params[:s]
+
+%>
+<%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-groups-form", method: :get } do |f| %>
+  <dl class="keyword">
+    <dt><%= I18n.t("opendata.labels.keyword") %></dt>
+    <dd><%= f.text_field :name %></dd>
+  </dl>
+  <dl class="category">
+    <dt><%= I18n.t("opendata.labels.category_ids") %></dt>
+    <dd><%= f.select :category_id, categories, include_blank: "" %></dd>
+  </dl>
+
+  <div class="send">
+    <%= submit_tag t("views.button.search"), name: :search %>
+  </div>
+<% end %>
+
+<%= paginate @items %>
+
+<div class="opendata-search-groups nodes">
+  <% @items.each do |item| %>
+  <article>
+    <header>
+      <h2><%= link_to item.name, search_datasets_path("s[dataset_group]" => item.name) %></h2>
+    </header>
+  </article>
+  <% end %>
+
+  <% if @items.blank? %>
+  <article>
+    <header>
+      <h2><%= I18n.t("opendata.labels.no_dataset_group") %></h2>
+    </header>
+  </article>
+  <% end %>
+</div>
+
+<%= paginate @items %>

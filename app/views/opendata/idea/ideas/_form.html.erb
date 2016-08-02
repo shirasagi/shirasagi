@@ -1,0 +1,46 @@
+<dl class="see">
+  <% if @item.persisted? %>
+  <dt><%= @model.t :id %></dt>
+  <dd><%= @item.id %></dd>
+  <% end %>
+
+  <dt><%= @model.t :name %><%= required_label %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :issue %><%= @item.tt :issue %></dt>
+  <dd><%= f.text_area :issue %></dd>
+
+  <dt><%= @model.t :text %><%= @item.tt :text %><%= required_label %></dt>
+  <dd><%= f.text_area :text %></dd>
+
+  <dt><%= @model.t :data %><%= @item.tt :data %></dt>
+  <dd><%= f.text_area :data %></dd>
+
+  <dt><%= @model.t :note %><%= @item.tt :note %></dt>
+  <dd><%= f.text_area :note %></dd>
+
+  <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
+  <dd><%= f.text_field :tags %></dd>
+
+  <dt><%= @model.t :dataset_id %></dt>
+  <dd>
+    <% if @item.dataset_ids.length > 0 %>
+      <% if @item.datasets.length > 0 %>
+      <%= @item.datasets[0].name %>
+      <% else %>
+      <%= I18n.t("opendata.labels.not_exist") %>
+      <% end %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :app_id %></dt>
+  <dd>
+    <% if @item.app_ids.length > 0 %>
+      <% if @item.apps.length > 0 %>
+      <%= @item.apps[0].name %>
+      <% else %>
+      <%= I18n.t("opendata.labels.not_exist") %>
+      <% end %>
+    <% end %>
+  </dd>
+</dl>

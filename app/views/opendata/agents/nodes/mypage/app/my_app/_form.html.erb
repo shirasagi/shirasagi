@@ -1,0 +1,55 @@
+<%= javascript_include_tag "opendata/opendata" %>
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+<%= coffee do %>
+$ ->
+
+  $("a.ajax-box").colorbox({ fixed: true, width: "90%", height: "90%" })
+
+<% end %>
+
+<table class="see opendata-app">
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :name %><%= required_label %></td>
+    <td class="input"><%= f.text_field :name %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :text %><%= @item.tt :text %><%= required_label %></td>
+    <td class="input"><%= f.text_area :text %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :license %><%= required_label %></td>
+    <td class="input"><%= f.text_field :license %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :tags %><%= @item.tt :tags %></td>
+    <td class="input"><%= f.text_field :tags %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :appurl %></td>
+    <td class="input"><%= f.text_area :appurl %></td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
+    <td class="input">
+      <%= render(file: 'opendata/agents/nodes/mypage/main/_category_form', locals: { f: f, model: Opendata::Node::App }) %>
+    </td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/area/view/form", locals: { f: f } %></td>
+  </tr>
+
+  <% if dataset_enabled? %>
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :dataset_ids %></td>
+    <td class="input"><%= render partial: "opendata/agents/addons/dataset/view/form", locals: { f: f } %></td>
+  </tr>
+  <% end %>
+</table>

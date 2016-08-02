@@ -1,0 +1,16 @@
+<nav class="menu">
+  <a href="/mypage/app/new/">新規作成</a>
+</nav>
+<nav class="tutorial-data">
+  <a class="tutorial-app" href="/tutorial-app.html">アプリ登録手順</a>
+</nav>
+<table class="opendata-apps index">
+  <thead>
+  <tr>
+    <th class="name">アプリ名</th>
+    <th class="updated">更新日時</th>
+    <th class="state">状態</th>
+    <th class="point">いいね</th>
+  </tr>
+  </thead>
+  <tbody>

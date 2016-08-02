@@ -1,0 +1,23 @@
+<%= scss do %>
+<% end %>
+
+<dl class="see rdf-props">
+  <dt><%= @model.t :property %><%= @model.tt :property %></dt>
+  <dd>
+    <label for="item_in_property_name"><%= @vocab.prefix %>:</label>
+    <%= text_field_tag "item[in_property_name]", @item.property.try(:name) %>
+  </dd>
+
+  <dt><%= @model.t :datatype %><%= @model.tt :datatype %></dt>
+  <dd class="rdf-owl-restrictions__datatype">
+    <%= hidden_field_tag "item[datatype]", @item.datatype.try(:uri), "data-type" => :uri %>
+    <span data-type="pname"><%= @item.datatype.try(:preferred_label) %></span>
+    <%= link_to t("rdf.owl.restrictions.search_datatype"), rdf_apis_classes_path(target: "rdf-owl-restrictions__datatype"), class: "ajax-box" %>
+  </dd>
+
+  <dt><%= @model.t :cardinality %><%= @model.tt :cardinality %></dt>
+  <dd><%= text_field_tag "item[cardinality]", @item.cardinality %></dd>
+
+  <dt><%= @model.t :comments %><%= @model.tt :comments %></dt>
+  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:preferred_value), style: "height: 200px;" %></dd>
+</dl>

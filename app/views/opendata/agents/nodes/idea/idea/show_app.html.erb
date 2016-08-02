@@ -1,0 +1,17 @@
+<% return if !dataset_enabled? %>
+
+<% if @idea_ap.app_ids.length > 0 %>
+<div class="detail">
+  <% app = @idea_ap.apps[0] %>
+  <div class="info-wrap">
+    <% if app %>
+      <div class="app"><%= link_to app.name, app.url %></div>
+      <% if app.executed then executed = app.executed else executed = 0 end %>
+      <div class="app-executed"><%= I18n.t("opendata.labels.executed_count") %>(<%= executed %>)</div>
+      <div class="app-updated"><%= I18n.t("opendata.labels.update_datetime") %> <%= tryb{app.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></div>
+    <% else %>
+      <div class="app"><%= I18n.t("opendata.labels.not_exist") %></div>
+    <% end %>
+  </div>
+</div>
+<% end %>

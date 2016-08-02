@@ -1,0 +1,37 @@
+<dl class="see rdf-vocab">
+  <dt><%= @model.t :prefix %></dt>
+  <dd><%= @item.prefix %></dd>
+
+  <dt><%= @model.t :uri %></dt>
+  <dd><%= @item.uri %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :label_ja %></dt>
+  <dd><%= @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %></dt>
+  <dd><%= @item.labels.try(:[], "en") || @item.labels.try(:[], "invariant") %></dd>
+
+  <dt><%= @model.t :creator_name_ja %></dt>
+  <dd><%= @item.creators.try(:first).try(:[], "names").try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :creator_name_en %></dt>
+  <dd><%= @item.creators.try(:first).try(:[], "names").try(:[], "en") || @item.creators.try(:first).try(:[], "names").try(:[], "invariant") %></dd>
+
+  <dt><%= @model.t :creator_homepage %></dt>
+  <dd><%= @item.creators.try(:first).try(:[], "homepage") %></dd>
+
+  <dt><%= @model.t :license %></dt>
+  <dd><%= @item.license %></dd>
+
+  <dt><%= @model.t :version %></dt>
+  <dd><%= @item.version %></dd>
+
+  <dt><%= @model.t :published %></dt>
+  <dd><%= @item.published %></dd>
+
+  <dt><%= @model.t :comments %></dt>
+  <dd><%= br(@item.comments.try(:[], "ja") || @item.comments.try(:[], "en") || @item.comments.try(:[], "invariant")) %></dd>
+</dl>

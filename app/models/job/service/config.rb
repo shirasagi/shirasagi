@@ -5,6 +5,14 @@ class Job::Service::Config
   # -1 means unlimited
   DEFAULT_POOL_MAX_SIZE = -1
 
+  class << self
+    def from_hash(hash)
+      instance = Job::Service::Config.new
+      instance.instance_variable_set(:@config, OpenStruct.new(hash))
+      instance
+    end
+  end
+
   def initialize(section = 'default')
     @config = OpenStruct.new(::SS.config.job[section])
   end

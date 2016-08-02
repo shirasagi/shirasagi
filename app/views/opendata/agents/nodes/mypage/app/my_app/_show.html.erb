@@ -1,0 +1,75 @@
+<table class="see opendata-app show">
+  <tr class="parent-row name">
+    <td class="field"><%= @model.t :name %></td>
+    <td class="input"><%= @item.send :name %></td>
+  </tr>
+
+  <tr class="parent-row appfiles">
+    <td class="field"><%= @model.t :appfiles %></td>
+    <td class="input">
+      <div class="resources"><%= link_to :"opendata.manage_appfiles", "#{@cur_node.url}#{@item.id}/appfiles/" %></div>
+      <% @item.appfiles.order(name: 1).each do |af| %>
+        <div class="resource"><%= link_to af.filename, "#{@cur_node.url}#{@item.id}/appfiles/#{af.id}/" %>(<%= number_to_human_size af.size %>)</div>
+      <% end %>
+    </td>
+  </tr>
+
+  <tr class="parent-row text">
+    <td class="field"><%= @model.t :text %></td>
+    <td class="input"><%= auto_link br(@item.text), html: { target: "_blank" } %></td>
+  </tr>
+
+  <tr class="parent-row license">
+    <td class="field"><%= @model.t :license %></td>
+    <td class="input"><%= @item.send :license %></td>
+  </tr>
+
+  <tr class="parent-row tags">
+    <td class="field"><%= @model.t :tags %></td>
+    <td class="input"><%= @item.tags.join(", ") %></td>
+  </tr>
+
+  <tr class="parent-row appurl">
+    <td class="field"><%= @model.t :appurl %></td>
+    <td class="input"><%= auto_link br(@item.appurl), html: { target: "_blank" } %></td>
+  </tr>
+
+  <tr class="parent-row categories">
+    <td class="field"><%= @model.t :category_ids %></td>
+    <td class="input"><%= @item.categories.map { |m| m.name }.join(", ") %></td>
+  </tr>
+
+  <tr class="parent-row areas">
+    <td class="field"><%= @model.t :area_ids %></td>
+    <td class="input"><%= @item.areas.map { |m| m.name }.join(", ") %></td>
+  </tr>
+
+  <% if dataset_enabled? %>
+  <tr class="parent-row datasets">
+    <td class="field"><%= @model.t :dataset_ids %></td>
+    <td class="input">
+    <% if @item.datasets.present? %>
+      <% @item.datasets.map { |m| m.name }.each do |i| %>
+        <div><%= i %></div>
+      <% end %>
+    <% end %>
+    </td>
+  </tr>
+  <% end %>
+
+  <tr class="parent-row status">
+    <td class="field"><%= @model.t :state %></td>
+    <td class="input"><%= @item.label :status %></td>
+  </tr>
+  <% approver = @item.workflow_approvers.try(:last) %>
+  <% workflow_comment = tryb{ approver[:comment] } %>
+  <% if workflow_comment.present? %>
+    <tr class="parent-row workflow-comment">
+      <td class="field"><%= @model.t :approver_comment %></td>
+      <td class="input">
+        <%= workflow_comment %>
+        <%= tryb{ "(#{Cms::User.find(approver[:user_id]).name})" } %>
+      </td>
+    </tr>
+  <% end %>
+</table>

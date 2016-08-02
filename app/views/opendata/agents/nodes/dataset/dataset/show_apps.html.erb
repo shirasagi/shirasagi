@@ -1,0 +1,19 @@
+<div class="detail">
+  <div class="info-wrap">
+    <div class="dataset-apps">
+      <div class="apps">
+        <table class="index">
+        <tbody>
+          <% @apps.each do |app| %>
+            <tr>
+              <td class="name"><%= link_to app.name, app.url %></td>
+              <td><%= app.t :executed %> (<%= app.executed.to_i %>)</td>
+              <td><%= app.t :updated %> <%= tryb{app.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

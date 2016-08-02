@@ -12,6 +12,7 @@ ja:
     branch_page: 差し替えページ
     create_branch: 差し替えページを作成する
     cloned_name_prefix: 複製
+    member: ログインメンバー
     state:
       request: 申請中
       approve: 承認
@@ -46,6 +47,12 @@ ja:
       select: 承認者を設定する
       search: 検索
 
+  views:
+    options:
+      posted_by:
+        member: マイページ投稿
+        admin: 管理側投稿
+
   modules:
     workflow: ワークフロー
     addons:
@@ -69,6 +76,7 @@ ja:
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
         comment: 差し戻しコメント
+        approver_comment: 承認者コメント
       workflow/model/route:
         name: 名前
         approvers: 承認者

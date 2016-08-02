@@ -1,0 +1,1236 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ood: <http://ouropendata.jp/rdf#> .
+@prefix ic: <http://imi.ipa.go.jp/ns/core/rdf#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+@prefix dc11: <http://purl.org/dc/elements/1.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix endemic_vocab: <http://localhost:3010/dataset/209/resource/106/にょー.csv#> .
+
+## ファイル情報 ####
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#>
+  rdfs:label "グラフ簡易版テスト用"@ja ;
+  rdfs:comment "ぐらぐらぐらぐら"@ja ;
+  cc:license "表示（CC BY）" ;
+  dc:modified "2015-03-26"^^<http://www.w3.org/2001/XMLSchema#date> .
+
+## 固有プロパティ ####
+endemic_vocab:推計世帯数 a rdf:Property ;
+  rdfs:label "推計世帯数"@ja ;
+  rdfs:range xsd:integer .
+endemic_vocab:世帯の移動増加 a rdf:Property ;
+  rdfs:label "世帯の移動増加"@ja ;
+  rdfs:range xsd:integer .
+endemic_vocab:世帯の移動減少 a rdf:Property ;
+  rdfs:label "世帯の移動減少"@ja ;
+  rdfs:range xsd:integer .
+endemic_vocab:世帯の移動増減計 a rdf:Property ;
+  rdfs:label "世帯の移動増減計"@ja ;
+  rdfs:range xsd:integer .
+endemic_vocab:1世帯当たりの人員 a rdf:Property ;
+  rdfs:label "１世帯当たりの人員"@ja ;
+  rdfs:range xsd:decimal .
+
+## リンクデータ ####
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#1>
+  a ood:にょー型 ;
+  ood:県市町村 "県計" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "768658"^^xsd:integer ;
+    ood:男 "364992"^^xsd:integer ;
+    ood:女 "403666"^^xsd:integer
+  ] ;
+  ood:増減合計 "-487"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "458"^^xsd:integer ;
+      ood:男 "244"^^xsd:integer ;
+      ood:女 "214"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "879"^^xsd:integer ;
+      ood:男 "449"^^xsd:integer ;
+      ood:女 "430"^^xsd:integer
+    ] ;
+    ood:増減 "-421"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "1600"^^xsd:integer ;
+      ood:男 "794"^^xsd:integer ;
+      ood:女 "806"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "1666"^^xsd:integer ;
+      ood:男 "808"^^xsd:integer ;
+      ood:女 "858"^^xsd:integer
+    ] ;
+    ood:増減 "-66"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "307028"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "1096"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "1185"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-89"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.5"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#2>
+  a ood:にょー型 ;
+  ood:県市町村 "徳島市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "262498"^^xsd:integer ;
+    ood:男 "124660"^^xsd:integer ;
+    ood:女 "137838"^^xsd:integer
+  ] ;
+  ood:増減合計 "-68"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "152"^^xsd:integer ;
+      ood:男 "89"^^xsd:integer ;
+      ood:女 "63"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "244"^^xsd:integer ;
+      ood:男 "123"^^xsd:integer ;
+      ood:女 "121"^^xsd:integer
+    ] ;
+    ood:増減 "-92"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "536"^^xsd:integer ;
+      ood:男 "276"^^xsd:integer ;
+      ood:女 "260"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "512"^^xsd:integer ;
+      ood:男 "260"^^xsd:integer ;
+      ood:女 "252"^^xsd:integer
+    ] ;
+    ood:増減 "24"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "113909"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "423"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "426"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-3"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.3"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#3>
+  a ood:にょー型 ;
+  ood:県市町村 "鳴門市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "59964"^^xsd:integer ;
+    ood:男 "28381"^^xsd:integer ;
+    ood:女 "31583"^^xsd:integer
+  ] ;
+  ood:増減合計 "-27"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "34"^^xsd:integer ;
+      ood:男 "18"^^xsd:integer ;
+      ood:女 "16"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "74"^^xsd:integer ;
+      ood:男 "38"^^xsd:integer ;
+      ood:女 "36"^^xsd:integer
+    ] ;
+    ood:増減 "-40"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "123"^^xsd:integer ;
+      ood:男 "56"^^xsd:integer ;
+      ood:女 "67"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "110"^^xsd:integer ;
+      ood:男 "62"^^xsd:integer ;
+      ood:女 "48"^^xsd:integer
+    ] ;
+    ood:増減 "13"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "23159"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "87"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "97"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-10"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.59"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#4>
+  a ood:にょー型 ;
+  ood:県市町村 "小松島市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "39400"^^xsd:integer ;
+    ood:男 "18914"^^xsd:integer ;
+    ood:女 "20486"^^xsd:integer
+  ] ;
+  ood:増減合計 "-87"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "18"^^xsd:integer ;
+      ood:男 "9"^^xsd:integer ;
+      ood:女 "9"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "37"^^xsd:integer ;
+      ood:男 "16"^^xsd:integer ;
+      ood:女 "21"^^xsd:integer
+    ] ;
+    ood:増減 "-19"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "60"^^xsd:integer ;
+      ood:男 "33"^^xsd:integer ;
+      ood:女 "27"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "128"^^xsd:integer ;
+      ood:男 "70"^^xsd:integer ;
+      ood:女 "58"^^xsd:integer
+    ] ;
+    ood:増減 "-68"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "15145"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "38"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "83"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-45"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.6"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#5>
+  a ood:にょー型 ;
+  ood:県市町村 "阿南市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "74575"^^xsd:integer ;
+    ood:男 "35918"^^xsd:integer ;
+    ood:女 "38657"^^xsd:integer
+  ] ;
+  ood:増減合計 "-47"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "36"^^xsd:integer ;
+      ood:男 "15"^^xsd:integer ;
+      ood:女 "21"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "71"^^xsd:integer ;
+      ood:男 "43"^^xsd:integer ;
+      ood:女 "28"^^xsd:integer
+    ] ;
+    ood:増減 "-35"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "82"^^xsd:integer ;
+      ood:男 "40"^^xsd:integer ;
+      ood:女 "42"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "94"^^xsd:integer ;
+      ood:男 "58"^^xsd:integer ;
+      ood:女 "36"^^xsd:integer
+    ] ;
+    ood:増減 "-12"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "27538"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "66"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "62"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "4"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.71"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#6>
+  a ood:にょー型 ;
+  ood:県市町村 "吉野川市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "42582"^^xsd:integer ;
+    ood:男 "19903"^^xsd:integer ;
+    ood:女 "22679"^^xsd:integer
+  ] ;
+  ood:増減合計 "-34"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "19"^^xsd:integer ;
+      ood:男 "10"^^xsd:integer ;
+      ood:女 "9"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "48"^^xsd:integer ;
+      ood:男 "25"^^xsd:integer ;
+      ood:女 "23"^^xsd:integer
+    ] ;
+    ood:増減 "-29"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "82"^^xsd:integer ;
+      ood:男 "44"^^xsd:integer ;
+      ood:女 "38"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "87"^^xsd:integer ;
+      ood:男 "31"^^xsd:integer ;
+      ood:女 "56"^^xsd:integer
+    ] ;
+    ood:増減 "-5"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "15988"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "55"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "54"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "1"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.66"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#7>
+  a ood:にょー型 ;
+  ood:県市町村 "阿波市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "37842"^^xsd:integer ;
+    ood:男 "17878"^^xsd:integer ;
+    ood:女 "19964"^^xsd:integer
+  ] ;
+  ood:増減合計 "-41"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "23"^^xsd:integer ;
+      ood:男 "10"^^xsd:integer ;
+      ood:女 "13"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "48"^^xsd:integer ;
+      ood:男 "28"^^xsd:integer ;
+      ood:女 "20"^^xsd:integer
+    ] ;
+    ood:増減 "-25"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "65"^^xsd:integer ;
+      ood:男 "29"^^xsd:integer ;
+      ood:女 "36"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "81"^^xsd:integer ;
+      ood:男 "34"^^xsd:integer ;
+      ood:女 "47"^^xsd:integer
+    ] ;
+    ood:増減 "-16"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "13456"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "47"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "49"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-2"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.81"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#8>
+  a ood:にょー型 ;
+  ood:県市町村 "美馬市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "30999"^^xsd:integer ;
+    ood:男 "14641"^^xsd:integer ;
+    ood:女 "16358"^^xsd:integer
+  ] ;
+  ood:増減合計 "-32"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "27"^^xsd:integer ;
+      ood:男 "17"^^xsd:integer ;
+      ood:女 "10"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "40"^^xsd:integer ;
+      ood:男 "25"^^xsd:integer ;
+      ood:女 "15"^^xsd:integer
+    ] ;
+    ood:増減 "-13"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "45"^^xsd:integer ;
+      ood:男 "20"^^xsd:integer ;
+      ood:女 "25"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "64"^^xsd:integer ;
+      ood:男 "24"^^xsd:integer ;
+      ood:女 "40"^^xsd:integer
+    ] ;
+    ood:増減 "-19"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "11506"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "29"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "35"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-6"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.69"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#9>
+  a ood:にょー型 ;
+  ood:県市町村 "三好市" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "27899"^^xsd:integer ;
+    ood:男 "12928"^^xsd:integer ;
+    ood:女 "14971"^^xsd:integer
+  ] ;
+  ood:増減合計 "-70"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "13"^^xsd:integer ;
+      ood:男 "6"^^xsd:integer ;
+      ood:女 "7"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "61"^^xsd:integer ;
+      ood:男 "28"^^xsd:integer ;
+      ood:女 "33"^^xsd:integer
+    ] ;
+    ood:増減 "-48"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "46"^^xsd:integer ;
+      ood:男 "25"^^xsd:integer ;
+      ood:女 "21"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "68"^^xsd:integer ;
+      ood:男 "37"^^xsd:integer ;
+      ood:女 "31"^^xsd:integer
+    ] ;
+    ood:増減 "-22"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "12024"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "33"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "57"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-24"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.32"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#10>
+  a ood:にょー型 ;
+  ood:県市町村 "勝浦町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "5468"^^xsd:integer ;
+    ood:男 "2604"^^xsd:integer ;
+    ood:女 "2864"^^xsd:integer
+  ] ;
+  ood:増減合計 "3"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "3"^^xsd:integer ;
+      ood:男 "2"^^xsd:integer ;
+      ood:女 "1"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "3"^^xsd:integer ;
+      ood:男 "0"^^xsd:integer ;
+      ood:女 "3"^^xsd:integer
+    ] ;
+    ood:増減 "0"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "13"^^xsd:integer ;
+      ood:男 "4"^^xsd:integer ;
+      ood:女 "9"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "10"^^xsd:integer ;
+      ood:男 "3"^^xsd:integer ;
+      ood:女 "7"^^xsd:integer
+    ] ;
+    ood:増減 "3"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "1859"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "4"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "5"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-1"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.94"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#11>
+  a ood:にょー型 ;
+  ood:県市町村 "上勝町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "1640"^^xsd:integer ;
+    ood:男 "787"^^xsd:integer ;
+    ood:女 "853"^^xsd:integer
+  ] ;
+  ood:増減合計 "-9"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "3"^^xsd:integer ;
+      ood:男 "3"^^xsd:integer ;
+      ood:女 "0"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "2"^^xsd:integer ;
+      ood:男 "1"^^xsd:integer ;
+      ood:女 "1"^^xsd:integer
+    ] ;
+    ood:増減 "1"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "8"^^xsd:integer ;
+      ood:男 "5"^^xsd:integer ;
+      ood:女 "3"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "18"^^xsd:integer ;
+      ood:男 "9"^^xsd:integer ;
+      ood:女 "9"^^xsd:integer
+    ] ;
+    ood:増減 "-10"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "747"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "4"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "10"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-6"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.2"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#12>
+  a ood:にょー型 ;
+  ood:県市町村 "佐那河内村" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "2382"^^xsd:integer ;
+    ood:男 "1144"^^xsd:integer ;
+    ood:女 "1238"^^xsd:integer
+  ] ;
+  ood:増減合計 "0"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "1"^^xsd:integer ;
+      ood:男 "1"^^xsd:integer ;
+      ood:女 "0"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "5"^^xsd:integer ;
+      ood:男 "4"^^xsd:integer ;
+      ood:女 "1"^^xsd:integer
+    ] ;
+    ood:増減 "-4"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "10"^^xsd:integer ;
+      ood:男 "4"^^xsd:integer ;
+      ood:女 "6"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "6"^^xsd:integer ;
+      ood:男 "3"^^xsd:integer ;
+      ood:女 "3"^^xsd:integer
+    ] ;
+    ood:増減 "4"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "824"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "6"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "4"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "2"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.89"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#13>
+  a ood:にょー型 ;
+  ood:県市町村 "石井町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "25810"^^xsd:integer ;
+    ood:男 "12217"^^xsd:integer ;
+    ood:女 "13593"^^xsd:integer
+  ] ;
+  ood:増減合計 "-5"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "23"^^xsd:integer ;
+      ood:男 "9"^^xsd:integer ;
+      ood:女 "14"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "30"^^xsd:integer ;
+      ood:男 "12"^^xsd:integer ;
+      ood:女 "18"^^xsd:integer
+    ] ;
+    ood:増減 "-7"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "66"^^xsd:integer ;
+      ood:男 "31"^^xsd:integer ;
+      ood:女 "35"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "64"^^xsd:integer ;
+      ood:男 "30"^^xsd:integer ;
+      ood:女 "34"^^xsd:integer
+    ] ;
+    ood:増減 "2"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "9305"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "33"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "33"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "0"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.77"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#14>
+  a ood:にょー型 ;
+  ood:県市町村 "神山町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "5552"^^xsd:integer ;
+    ood:男 "2597"^^xsd:integer ;
+    ood:女 "2955"^^xsd:integer
+  ] ;
+  ood:増減合計 "-6"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "2"^^xsd:integer ;
+      ood:男 "0"^^xsd:integer ;
+      ood:女 "2"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "14"^^xsd:integer ;
+      ood:男 "6"^^xsd:integer ;
+      ood:女 "8"^^xsd:integer
+    ] ;
+    ood:増減 "-12"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "19"^^xsd:integer ;
+      ood:男 "6"^^xsd:integer ;
+      ood:女 "13"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "13"^^xsd:integer ;
+      ood:男 "3"^^xsd:integer ;
+      ood:女 "10"^^xsd:integer
+    ] ;
+    ood:増減 "6"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "2290"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "11"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "11"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "0"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.42"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#15>
+  a ood:にょー型 ;
+  ood:県市町村 "那賀町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "8623"^^xsd:integer ;
+    ood:男 "4052"^^xsd:integer ;
+    ood:女 "4571"^^xsd:integer
+  ] ;
+  ood:増減合計 "-17"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "0"^^xsd:integer ;
+      ood:男 "0"^^xsd:integer ;
+      ood:女 "0"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "11"^^xsd:integer ;
+      ood:男 "5"^^xsd:integer ;
+      ood:女 "6"^^xsd:integer
+    ] ;
+    ood:増減 "-11"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "10"^^xsd:integer ;
+      ood:男 "5"^^xsd:integer ;
+      ood:女 "5"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "16"^^xsd:integer ;
+      ood:男 "6"^^xsd:integer ;
+      ood:女 "10"^^xsd:integer
+    ] ;
+    ood:増減 "-6"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "3680"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "9"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "8"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "1"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.34"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#16>
+  a ood:にょー型 ;
+  ood:県市町村 "牟岐町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "4428"^^xsd:integer ;
+    ood:男 "2056"^^xsd:integer ;
+    ood:女 "2372"^^xsd:integer
+  ] ;
+  ood:増減合計 "-9"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "3"^^xsd:integer ;
+      ood:男 "1"^^xsd:integer ;
+      ood:女 "2"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "6"^^xsd:integer ;
+      ood:男 "4"^^xsd:integer ;
+      ood:女 "2"^^xsd:integer
+    ] ;
+    ood:増減 "-3"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "5"^^xsd:integer ;
+      ood:男 "3"^^xsd:integer ;
+      ood:女 "2"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "11"^^xsd:integer ;
+      ood:男 "4"^^xsd:integer ;
+      ood:女 "7"^^xsd:integer
+    ] ;
+    ood:増減 "-6"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "1972"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "3"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "5"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-2"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.25"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#17>
+  a ood:にょー型 ;
+  ood:県市町村 "美波町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "7210"^^xsd:integer ;
+    ood:男 "3361"^^xsd:integer ;
+    ood:女 "3849"^^xsd:integer
+  ] ;
+  ood:増減合計 "-25"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "1"^^xsd:integer ;
+      ood:男 "1"^^xsd:integer ;
+      ood:女 "0"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "24"^^xsd:integer ;
+      ood:男 "14"^^xsd:integer ;
+      ood:女 "10"^^xsd:integer
+    ] ;
+    ood:増減 "-23"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "5"^^xsd:integer ;
+      ood:男 "1"^^xsd:integer ;
+      ood:女 "4"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "7"^^xsd:integer ;
+      ood:男 "3"^^xsd:integer ;
+      ood:女 "4"^^xsd:integer
+    ] ;
+    ood:増減 "-2"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "3011"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "3"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "12"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-9"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.39"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#18>
+  a ood:にょー型 ;
+  ood:県市町村 "海陽町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "9695"^^xsd:integer ;
+    ood:男 "4554"^^xsd:integer ;
+    ood:女 "5141"^^xsd:integer
+  ] ;
+  ood:増減合計 "-3"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "2"^^xsd:integer ;
+      ood:男 "1"^^xsd:integer ;
+      ood:女 "1"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "15"^^xsd:integer ;
+      ood:男 "6"^^xsd:integer ;
+      ood:女 "9"^^xsd:integer
+    ] ;
+    ood:増減 "-13"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "31"^^xsd:integer ;
+      ood:男 "7"^^xsd:integer ;
+      ood:女 "24"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "21"^^xsd:integer ;
+      ood:男 "6"^^xsd:integer ;
+      ood:女 "15"^^xsd:integer
+    ] ;
+    ood:増減 "10"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "4364"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "22"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "16"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "6"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.22"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#19>
+  a ood:にょー型 ;
+  ood:県市町村 "松茂町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "15327"^^xsd:integer ;
+    ood:男 "7577"^^xsd:integer ;
+    ood:女 "7750"^^xsd:integer
+  ] ;
+  ood:増減合計 "22"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "21"^^xsd:integer ;
+      ood:男 "12"^^xsd:integer ;
+      ood:女 "9"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "14"^^xsd:integer ;
+      ood:男 "11"^^xsd:integer ;
+      ood:女 "3"^^xsd:integer
+    ] ;
+    ood:増減 "7"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "92"^^xsd:integer ;
+      ood:男 "47"^^xsd:integer ;
+      ood:女 "45"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "77"^^xsd:integer ;
+      ood:男 "39"^^xsd:integer ;
+      ood:女 "38"^^xsd:integer
+    ] ;
+    ood:増減 "15"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "5886"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "70"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "45"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "25"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.6"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#20>
+  a ood:にょー型 ;
+  ood:県市町村 "北島町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "22221"^^xsd:integer ;
+    ood:男 "10729"^^xsd:integer ;
+    ood:女 "11492"^^xsd:integer
+  ] ;
+  ood:増減合計 "-17"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "23"^^xsd:integer ;
+      ood:男 "10"^^xsd:integer ;
+      ood:女 "13"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "15"^^xsd:integer ;
+      ood:男 "8"^^xsd:integer ;
+      ood:女 "7"^^xsd:integer
+    ] ;
+    ood:増減 "8"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "62"^^xsd:integer ;
+      ood:男 "33"^^xsd:integer ;
+      ood:女 "29"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "87"^^xsd:integer ;
+      ood:男 "38"^^xsd:integer ;
+      ood:女 "49"^^xsd:integer
+    ] ;
+    ood:増減 "-25"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "8701"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "39"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "42"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-3"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.55"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#21>
+  a ood:にょー型 ;
+  ood:県市町村 "藍住町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "34217"^^xsd:integer ;
+    ood:男 "16299"^^xsd:integer ;
+    ood:女 "17918"^^xsd:integer
+  ] ;
+  ood:増減合計 "-9"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "27"^^xsd:integer ;
+      ood:男 "15"^^xsd:integer ;
+      ood:女 "12"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "42"^^xsd:integer ;
+      ood:男 "21"^^xsd:integer ;
+      ood:女 "21"^^xsd:integer
+    ] ;
+    ood:増減 "-15"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "101"^^xsd:integer ;
+      ood:男 "52"^^xsd:integer ;
+      ood:女 "49"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "95"^^xsd:integer ;
+      ood:男 "46"^^xsd:integer ;
+      ood:女 "49"^^xsd:integer
+    ] ;
+    ood:増減 "6"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "12895"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "56"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "62"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-6"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.65"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#22>
+  a ood:にょー型 ;
+  ood:県市町村 "板野町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "13810"^^xsd:integer ;
+    ood:男 "6590"^^xsd:integer ;
+    ood:女 "7220"^^xsd:integer
+  ] ;
+  ood:増減合計 "-10"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "7"^^xsd:integer ;
+      ood:男 "4"^^xsd:integer ;
+      ood:女 "3"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "24"^^xsd:integer ;
+      ood:男 "11"^^xsd:integer ;
+      ood:女 "13"^^xsd:integer
+    ] ;
+    ood:増減 "-17"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "32"^^xsd:integer ;
+      ood:男 "13"^^xsd:integer ;
+      ood:女 "19"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "25"^^xsd:integer ;
+      ood:男 "9"^^xsd:integer ;
+      ood:女 "16"^^xsd:integer
+    ] ;
+    ood:増減 "7"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "4962"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "12"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "14"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-2"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.78"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#23>
+  a ood:にょー型 ;
+  ood:県市町村 "上板町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "12315"^^xsd:integer ;
+    ood:男 "5870"^^xsd:integer ;
+    ood:女 "6445"^^xsd:integer
+  ] ;
+  ood:増減合計 "7"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "4"^^xsd:integer ;
+      ood:男 "3"^^xsd:integer ;
+      ood:女 "1"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "15"^^xsd:integer ;
+      ood:男 "5"^^xsd:integer ;
+      ood:女 "10"^^xsd:integer
+    ] ;
+    ood:増減 "-11"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "39"^^xsd:integer ;
+      ood:男 "23"^^xsd:integer ;
+      ood:女 "16"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "21"^^xsd:integer ;
+      ood:男 "7"^^xsd:integer ;
+      ood:女 "14"^^xsd:integer
+    ] ;
+    ood:増減 "18"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "4291"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "14"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "14"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "0"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.87"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#24>
+  a ood:にょー型 ;
+  ood:県市町村 "つるぎ町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "9623"^^xsd:integer ;
+    ood:男 "4473"^^xsd:integer ;
+    ood:女 "5150"^^xsd:integer
+  ] ;
+  ood:増減合計 "-9"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "5"^^xsd:integer ;
+      ood:男 "2"^^xsd:integer ;
+      ood:女 "3"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "14"^^xsd:integer ;
+      ood:男 "8"^^xsd:integer ;
+      ood:女 "6"^^xsd:integer
+    ] ;
+    ood:増減 "-9"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "23"^^xsd:integer ;
+      ood:男 "11"^^xsd:integer ;
+      ood:女 "12"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "23"^^xsd:integer ;
+      ood:男 "14"^^xsd:integer ;
+      ood:女 "9"^^xsd:integer
+    ] ;
+    ood:増減 "0"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "4107"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "12"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "15"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-3"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.34"^^xsd:decimal .
+
+<http://localhost:3010/dataset/209/resource/106/にょー.csv#25>
+  a ood:にょー型 ;
+  ood:県市町村 "東みよし町" ;
+  ood:推計人口 [
+    a ood:男女別総数型 ;
+    ood:総数 "14578"^^xsd:integer ;
+    ood:男 "6859"^^xsd:integer ;
+    ood:女 "7719"^^xsd:integer
+  ] ;
+  ood:増減合計 "6"^^xsd:integer ;
+  ood:自然動態 [
+    a ood:自然動態型 ;
+    ood:出生 [
+      a ood:男女別総数型 ;
+      ood:総数 "11"^^xsd:integer ;
+      ood:男 "6"^^xsd:integer ;
+      ood:女 "5"^^xsd:integer
+    ] ;
+    ood:死亡 [
+      a ood:男女別総数型 ;
+      ood:総数 "22"^^xsd:integer ;
+      ood:男 "7"^^xsd:integer ;
+      ood:女 "15"^^xsd:integer
+    ] ;
+    ood:増減 "-11"^^xsd:integer
+  ] ;
+  ood:社会動態 [
+    a ood:社会動態型 ;
+    ood:転入 [
+      a ood:男女別総数型 ;
+      ood:総数 "45"^^xsd:integer ;
+      ood:男 "26"^^xsd:integer ;
+      ood:女 "19"^^xsd:integer
+    ] ;
+    ood:転出 [
+      a ood:男女別総数型 ;
+      ood:総数 "28"^^xsd:integer ;
+      ood:男 "12"^^xsd:integer ;
+      ood:女 "16"^^xsd:integer
+    ] ;
+    ood:増減 "17"^^xsd:integer
+  ] ;
+  endemic_vocab:推計世帯数 "5409"^^xsd:integer ;
+  endemic_vocab:世帯の移動増加 "20"^^xsd:integer ;
+  endemic_vocab:世帯の移動減少 "26"^^xsd:integer ;
+  endemic_vocab:世帯の移動増減計 "-6"^^xsd:integer ;
+  endemic_vocab:1世帯当たりの人員 "2.7"^^xsd:decimal .
+

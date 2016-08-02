@@ -1,0 +1,5 @@
+<dl class="see">
+  <% @item.send(:datasets).pluck(:name).each do |i| %>
+    <dd class="wide"><%= i %></dd>
+  <% end %>
+</dl>

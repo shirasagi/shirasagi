@@ -1,0 +1,23 @@
+<%
+  routes_options = Workflow::Route.site(@cur_site).map { |item| [ item.name, item.id ] }
+%>
+
+<dl class="see mypage-setting">
+  <dt><%= @model.t :dataset_workflow_route %><%= @model.tt :dataset_workflow_route %></dt>
+  <dd><%= f.select :dataset_workflow_route_id, routes_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :app_workflow_route %><%= @model.tt :app_workflow_route %></dt>
+  <dd><%= f.select :app_workflow_route_id, routes_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :idea_workflow_route %><%= @model.tt :idea_workflow_route %></dt>
+  <dd><%= f.select :idea_workflow_route_id, routes_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :dataset_state %><%= @model.tt :dataset_state %></dt>
+  <dd><%= f.select :dataset_state, @item.dataset_state_options %></dd>
+
+  <dt><%= @model.t :app_state %><%= @model.tt :app_state %></dt>
+  <dd><%= f.select :app_state, @item.app_state_options %></dd>
+
+  <dt><%= @model.t :idea_state %><%= @model.tt :idea_state %></dt>
+  <dd><%= f.select :idea_state, @item.idea_state_options %></dd>
+</dl>

@@ -1,0 +1,45 @@
+{
+  "help": "http://demo.ckan.org/api/3/action/help_show?name=package_search",
+  "success": true,
+  "result": {
+    "count": 1861,
+    "sort": "metadata_modified desc",
+    "facets": {},
+    "results": [
+      {
+        "id": "58a796a2-b085-43f4-9c05-b2b97395a871",
+        "revision_id": "3d0665cf-1a68-4319-8b27-6fba35389055",
+        "name": "test-dataset-1",
+        "title": "テストデータセット1",
+        "notes": "これはテストデータセット1です。",
+        "license_id": "cc-by",
+        "license_url": "http://www.opendefinition.org/licenses/cc-by",
+        "license_title": "Creative Commons Attribution",
+        "author": "author",
+        "author_email": "author@example.jp",
+        "maintainer": "maintainer",
+        "maintainer_email": "maintainer@example.jp",
+        "num_tags": 1,
+        "num_resources": 12,
+        "private": false,
+        "state": "active",
+        "version": "1.5",
+        "type": "dataset",
+        "metadata_created": "2016-07-22T23:31:27.409162",
+        "metadata_modified": "2016-07-27T21:58:52.687035",
+        "groups": [
+          {
+            "display_name": "グループ1"
+          },
+          {
+            "display_name": "グループ2"
+          }
+        ],
+        "organization": {
+          "title": "組織1"
+        }
+      }
+    ],
+    "search_facets": {}
+  }
+}

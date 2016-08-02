@@ -1,0 +1,26 @@
+<dl class="see mod-opendata_dataset_groups">
+  <dt><%= @model.t :dataset_group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "dataset_group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("opendata.search_dataset_groups.index"), search_opendata_dataset_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.t :dataset_group_ids %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.dataset_groups.each do |group| %>
+        <tr data-id="<%= group.id %>">
+          <td><%= f.hidden_field "dataset_group_ids[]", value: group.id %> <%= group.name %></td>
+          <td><%= link_to t("opendata.search_dataset_groups.deselect"), "#", class: :deselect %></td>
+        </tr>
+        <% end %>
+        <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>
+      </tbody>
+    </table>
+  </dd>
+</dl>

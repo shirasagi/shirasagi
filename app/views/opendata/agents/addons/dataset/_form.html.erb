@@ -1,0 +1,26 @@
+<dl class="see mod-opendata_datasets">
+  <dt><%= @model.t :dataset_ids %></dt>
+  <dd>
+    <%= f.hidden_field "dataset_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("opendata.search_datasets.index"), search_opendata_datasets_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.t :dataset_ids %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.datasets.each do |dataset| %>
+        <tr data-id="<%= dataset.id %>">
+          <td><%= f.hidden_field "dataset_ids[]", value: dataset.id %> <%= dataset.name %></td>
+          <td><%= link_to t("opendata.search_datasets.deselect"), "#", class: :deselect %></td>
+        </tr>
+        <% end %>
+        <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>
+      </tbody>
+    </table>
+  </dd>
+</dl>

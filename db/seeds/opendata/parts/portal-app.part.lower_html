@@ -1,0 +1,6 @@
+<footer>
+  <nav class="feed">
+    <a class="more" href="/app/search/?sort=released">もっと見る</a>
+    <a class="rss" href="/app/search/rss.xml?sort=released">RSS</a>
+  </nav>
+</footer>

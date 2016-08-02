@@ -1,0 +1,39 @@
+<%= form_for :params, url: { action: :import }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+<%# error_messages_for :item %>
+<% if @errors.present? %>
+  <div id="errorSyntaxChecker" class="errorExplanation">
+    <h2><%= t "errors.template.header.one" %></h2>
+    <p><%= t "errors.template.body" %></p>
+    <ul>
+      <% @errors.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <dl class="see rdf-vocab">
+      <dt><%= @model.t :prefix %><%= @model.tt :prefix %></dt>
+      <dd><%= f.text_field :prefix %></dd>
+
+      <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+      <dd><%= f.number_field :order %></dd>
+
+      <dt><%= @model.t :owner %><%= @model.tt :owner %></dt>
+      <dd><%= f.select :owner, @model.owner_options %></dd>
+
+      <dt><%= t("rdf.vocabs.in_file") %><%= @model.tt :in_file %></dt>
+      <dd><%= f.file_field :in_file %></dd>
+    </dl>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("rdf.vocabs.import"), class: :save %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

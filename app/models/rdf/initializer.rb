@@ -1,0 +1,2 @@
+class Rdf::Initializer
+end

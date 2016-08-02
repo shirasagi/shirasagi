@@ -1,0 +1,86 @@
+<%= scss do %>
+.name {
+  width: 200px;
+}
+<% end %>
+
+<div class="rdf-search-classes-search-form" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<%= form_for :s, url: { action: :index, target: @target }, html: { method: "GET", class: :search, multipart: true } do |f| %>
+  <dl class="see rdf-search-classes-search-options">
+    <dt><%= t "rdf.apis.search_options.vocab" %></dt>
+    <dd><%= select_tag "s[vocab]",  options_for_select(@vocab_options, params[:s][:vocab]) %></dd>
+    <dt><%= t "rdf.apis.search_options.name" %></dt>
+    <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %></dd>
+    <dd><%= f.submit  t("rdf.apis.search_options.search") %></dd>
+  </dl>
+<% end %>
+</div>
+
+<table class="index rdf-search-classes-class-list" data-target="<%= @target %>">
+  <thead>
+    <tr>
+      <th class="name"><%= @model.t :name %></th>
+      <th><%= @model.t :comment %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>" data-uri="<%= "#{item.vocab.uri}#{item.name}" %>">
+        <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", "#", class: "select-item" %></td>
+        <td><%= item.comments.try(:preferred_value) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="rdf-search-classes-loading" style="display: none"></div>
+
+<%= paginate @items if @items.try(:current_page) %>
+
+<%= coffee do %>
+$ ->
+  $("#ajax-box form.search").on "submit", (e)->
+    $(this).ajaxSubmit(
+      url: $(this).attr("action")
+      beforeSend: ->
+        $(".rdf-search-classes-class-list").hide()
+        $(".rdf-search-classes-loading").show()
+      success: (data) ->
+        $("#cboxLoadedContent").html data
+      error: (data, status) ->
+        $(".rdf-search-classes-loading").hide()
+        $(".rdf-search-classes-class-list").show()
+        alert("== Error ==")
+    )
+    e.preventDefault()
+
+  $("#ajax-box a.select-item").on "click", (e) ->
+    id = $(this).closest("[data-id]").attr("data-id")
+    uri = $(this).closest("[data-uri]").attr("data-uri")
+    name = $(this).text()
+
+    target = $(this).closest("[data-target]").attr("data-target")
+    if target
+      $(".#{target}").children("[data-type='id']").val(id)
+      $(".#{target}").children("[data-type='uri']").val(uri)
+      $(".#{target}").children("[data-type='pname']").text(name)
+    e.preventDefault()
+    $.colorbox.close()
+
+  target = $("table.rdf-search-classes-class-list").attr("data-target")
+  if target
+    id = $(".#{target}").children("[data-type='id']").val()
+    url = $(".#{target}").children("[data-type='uri']").val()
+    remove_id = $(".#{target}").children("[data-type='remove-id']").val()
+    remove_url = $(".#{target}").children("[data-type='remove-uri']").val()
+    if id
+      $("table.rdf-search-classes-class-list tr[data-id='#{id}']").hide()
+    if url
+      $("table.rdf-search-classes-class-list tr[data-url='#{url}']").hide()
+    if remove_id
+      $("table.rdf-search-classes-class-list tr[data-id='#{remove_id}']").hide()
+    if remove_url
+      $("table.rdf-search-classes-class-list tr[data-url='#{remove_url}']").hide()
+
+  $(".rdf-search-classes-loading").html(SS.loading)
+<% end %>

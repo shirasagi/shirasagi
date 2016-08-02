@@ -1,0 +1,72 @@
+<%= form_for :item, url: { action: params[:action] }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <dl class="see csv2rdf-settings-rdf-prop-select">
+        <dt><%= @model.t :header_labels %></dt>
+        <dd><%= br @header_labels.join("\n") %></dd>
+
+        <dt><%= t("opendata.labels.samples") %></dt>
+        <dd><%= text_area_tag "samples", safe_join(@samples, "\n"), readonly: true, class: "sample" %></dd>
+
+        <dt><%= t("opendata.labels.rdf_property") %><%= tt("opendata/csv2rdf_settings.rdf_property") %></dt>
+        <dd>
+          <div class="csv2rdf-settings-table-container" style="white-space: normal;">
+            <table>
+              <thead>
+              <tr>
+                <th class="checkbox"></th>
+                <th><%= @rdf_class.t :property_property %></th>
+                <th><%= @rdf_class.t :property_class %></th>
+                <th><%= @rdf_class.t :property_comment %></th>
+              </tr>
+              </thead>
+              <tbody>
+              <% each_expand_properties do |id, name, klass, comment, sub_props, depth, ids, names, classes| %>
+                <tr data-depth="<%= depth %>" class="depth<%= depth %>">
+                  <td class="checkbox">
+                    <% if sub_props.blank? %>
+                      <%= f.radio_button(:prop_id, names.join(","), checked: @column_type["properties"] == names && @column_type["classes"] == classes) %>
+                    <% end %>
+                  </td>
+                  <td class="name"><% if sub_props.present? %><span class="od-icon od-icon-node-prop"><%= name %></span><% else %><span class="od-icon od-icon-leaf-prop"><%= name %></span><% end %></td>
+                  <td class="class"><%= klass %></td>
+                  <td class="comment"><%= comment %></td>
+                </tr>
+              <% end %>
+              <tr data-depth="0" class="depth0">
+                <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:string", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:string"]) %></td>
+                <td class="name"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.characteristic") %></span></td>
+                <td class="class">xsd:string</td>
+                <td class="comment"><%= I18n.t("opendata.labels.popular_string") %></td>
+              </tr>
+              <tr data-depth="0" class="depth0">
+                <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:integer", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:integer"]) %></td>
+                <td class="name"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.characteristic") %></span></td>
+                <td class="class">xsd:integer</td>
+                <td class="comment"><%= I18n.t("opendata.labels.popular_number") %></td>
+              </tr>
+              <tr data-depth="0" class="depth0">
+                <td class="checkbox"><%= f.radio_button(:prop_id, "endemic:decimal", checked: @column_type["properties"].nil? && @column_type["classes"] == ["xsd:decimal"]) %></td>
+                <td class="name"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.characteristic") %></span></td>
+                <td class="class">xsd:decimal</td>
+                <td class="comment"><%= I18n.t("opendata.labels.popular_real") %></td>
+              </tr>
+              <tr data-depth="0" class="depth0">
+                <td class="checkbox"><%= f.radio_button(:prop_id, "false", checked: @column_type["properties"].nil? && @column_type["classes"].first == false) %></td>
+                <td colspan="3"><span class="od-icon od-icon-leaf-prop"><%= I18n.t("opendata.labels.no_change_rdf") %></span></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("views.button.save"), class: :save %>
+    <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :column_types)}'; return false;" %>
+  </footer>
+<% end %>

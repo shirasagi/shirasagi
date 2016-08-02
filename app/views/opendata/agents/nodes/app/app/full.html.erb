@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
+<link rel="shortcut icon" href="/img/favicon.ico" />
+<% unless Rails.env.test? %>
+<link href="/css/style.css" media="all" rel="stylesheet" />
+<% end %>
+<title><%= @item.name %></title>
+<!--[if lt IE 9]>
+<script src="/js/html5shiv.js"></script>
+<script src="/js/selectivizr.js"></script>
+<script src="/assets/js/IE9.js"></script>
+<![endif]-->
+</head>
+<body>
+<div class="app-body">
+  <% if @app_html.present? %>
+  <iframe class="frm-app" src="<%= "#{@app.file_index_url}#{@app_html.filename}" %>" frameborder="0">
+  </iframe>
+  <% end %>
+</div>
+</body>
+</html>

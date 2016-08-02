@@ -1,0 +1,31 @@
+<%= stylesheet_link_tag "opendata/private", media: "all" %>
+
+<dl class="see rdf-class">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= "#{@item.vocab.prefix}:#{@item.name}" %></dd>
+
+  <dt><%= @model.t :label_ja %></dt>
+  <dd><%= @item.labels.try(:[], "ja") %></dd>
+
+  <dt><%= @model.t :label_en %></dt>
+  <dd><%= @item.labels.try(:preferred_value, ["en", "invariant"]) %></dd>
+
+  <dt><%= @model.t :classes %></dt>
+  <dd>
+    <% if @item.classes.present? %>
+      <% @item.classes.each do |rdf_class| %>
+        <%= link_to(rdf_class.preferred_label, controller: :classes, action: :show, vocab_id: rdf_class.vocab, id: rdf_class) %><br />
+      <% end %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :range %></dt>
+  <dd>
+    <% if @item.range.present? %>
+      <%= link_to @item.range.try(:preferred_label), controller: :classes, action: :show, vocab_id: @item.range.vocab, id: @item.range %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :comments %></dt>
+  <dd><%= text_area_tag "item[comments][ja]", @item.comments.try(:preferred_value), style: "height: 200px;", readonly: true, class: :readonly %></dd>
+</dl>

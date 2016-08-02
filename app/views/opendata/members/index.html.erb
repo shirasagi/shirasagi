@@ -1,0 +1,6 @@
+<% if Cms::Group.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <div>
+    <%= I18n.t("opendata.labels.management_page") %>
+    <p><%= link_to :"cms.member", cms_members_path %></p>
+  </div>
+<% end %>
