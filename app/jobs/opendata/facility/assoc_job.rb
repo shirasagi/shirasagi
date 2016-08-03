@@ -45,7 +45,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
     end
 
     def find_or_create_dataset
-      @dataset = Opendata::Dataset.site(self.site).node(@dataset_node).and_associated(@facility_node).first
+      @dataset = Opendata::Dataset.site(self.site).node(@dataset_node).and_associated_node(@facility_node).first
       @dataset ||= begin
         dataset = Opendata::Dataset.create(
           cur_site: self.site,
@@ -57,7 +57,7 @@ class Opendata::Facility::AssocJob < Cms::ApplicationJob
           assoc_site_id: @facility_site.id,
           assoc_node_id: @facility_node.id,
           state: 'closed')
-        Rails.logger.info("created node: #{dataset.name}")
+        Rails.logger.info("created dataset: #{dataset.name}")
         dataset
       end
     end

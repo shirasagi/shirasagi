@@ -483,6 +483,7 @@ ja:
       opendata/addon/site_association:
         assoc_site_id: 連携サイト
         assoc_node_id: 連携フォルダー
+        assoc_page_id: 連携ページ
 
   tooltip:
     opendata/dataset:

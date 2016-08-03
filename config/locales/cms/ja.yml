@@ -265,6 +265,8 @@ ja:
       cms/page_search: 検索条件
       cms/high_contrast_mode: ハイコントラストモード
       cms/source_cleaner: ソースクリーニング
+      cms/opendata_site: オープンデータサイト
+      cms/opendata: オープンデータ
 
   mongoid:
     models:
@@ -448,6 +450,10 @@ ja:
         target: 対象
         action: 操作
         replaced_value: 置換後の値
+      cms/addon/opendata_site:
+        opendata_site_ids: サイト
+      cms/addon/opendata:
+        opendata_state: 公開状態
 
   errors:
     messages:
@@ -985,6 +991,16 @@ ja:
         - 対象のクリーニング方法を設定します。
         - 置換または削除が選択できます。
         - 置換後のタグや属性の値、文字列を右欄に入力します。
+
+    cms/addon/opendata_site:
+      opendata_site_ids:
+        - オープンデータサイトを設定します。
+        - 設定したサイトのデータセットにページが連携されるようになります。
+
+    cms/addon/opendata:
+      opendata_state:
+        - ページをオープンデータとして公開するかどうかを選択します。
+        - 「公開」を選択するとオープンデータとして公開されます。
 
   all_content:
     page_id: ページID
