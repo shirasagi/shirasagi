@@ -103,16 +103,13 @@ module Cms::Addon
     end
 
     def brief_search_condition
-      info = []
-
-      [ :search_name_info, :search_filename_info, :search_category_ids_info, :search_group_ids_info,
-        :search_node_ids, :search_routes_info, :search_released_info, :search_updated_info,
-        :search_state_info, :search_approver_state_info ].each do |m|
-        i = method(m).call
-        info << i if i.present?
+      info = [
+        :search_name_info, :search_filename_info, :search_category_ids_info, :search_group_ids_info,
+        :search_node_ids_info, :search_routes_info, :search_released_info, :search_updated_info,
+        :search_state_info, :search_approver_state_info ].map do |m|
+        method(m).call
       end
-
-      info.join(", ")
+      info.select(&:present?).join(", ")
     end
 
     private
