@@ -32,7 +32,7 @@ module Sys::SiteCopy::SsFiles
   def resolve_file_reference(id)
     cache(:files, id) do
       src_file = SS::File.find(id) rescue nil
-      if src_file.blank? || src_file.site_id != @src_site.id
+      if src_file.blank?
         Rails.logger.warn("#{id}: 参照されているファイルが存在しません。")
         return nil
       end

@@ -21,8 +21,8 @@ class Opendata::Idea
   field :point, type: Integer, default: "0"
   field :text, type: String
   field :tags, type: SS::Extensions::Words
-  field :commented, type: DateTime
-  field :total_comment, type: Integer, default: "0"
+  field :commented, type: DateTime, metadata: { on_copy: :clear }
+  field :total_comment, type: Integer, default: "0", metadata: { on_copy: :clear }
 
   field :issue, type: String
   field :data, type: String
