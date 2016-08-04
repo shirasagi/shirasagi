@@ -77,6 +77,38 @@
           <% end %>
         </div>
       </div>
+
+      <% if item.try(:master?) && item.branches.present? %>
+        <% branch = item.branches.first %>
+        <div class="info" style="padding-left: 50px"><%# TODO: Move the style specification to .scss %>
+          <% if @index_title %>
+            <% @index_title.call branch %>
+          <% else %>
+            <% title = branch.try(:name) || branch.try(:title) || branch.try(:filename) || "##{branch.id}" %>
+            <%= link_to title, { action: :show, id: branch }, class: "title" %>
+          <% end %>
+
+          <div class="meta">
+            <% if @index_meta %>
+              <% @index_meta.call branch %>
+            <% else %>
+              <span class="id">#<%= branch.id %></span>
+              <% if branch.try(:updated) %>
+                <span class="datetime"><%= branch.updated.strftime("%Y/%m/%d %H:%M") %></span>
+              <% end %>
+              <% if branch.try(:filename) %>
+                <span class="filename"><%= File.basename branch.filename %></span>
+              <% end %>
+              <% if branch.try(:route) %>
+                <span class="route"><%= t "modules.#{branch.route.sub(/\/.*/, '')}" %></span>
+              <% end %>
+              <% if branch.try(:status) %>
+                <span class="state"><%= t "views.state.#{branch.status}" %></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </li>
     <% end %>
   </ul>

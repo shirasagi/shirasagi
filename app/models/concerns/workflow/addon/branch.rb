@@ -11,11 +11,13 @@ module Workflow::Addon
 
       permit_params :master_id
 
-      before_save :seq_clone_filename, if: ->{ new_clone? && basename.blank? }
+      before_save :seq_clone_filename, if: ->{ new_clone? && (new_record? || basename.blank?) }
       after_save :merge_to_master
 
       define_method(:master?) { master.blank? }
       define_method(:branch?) { master.present? }
+
+      scope :master_only, ->{ where(master_id: nil) }
     end
 
     def new_clone?
@@ -36,9 +38,15 @@ module Workflow::Addon
       item.cur_user = @cur_user
       item.cur_site = @cur_site
       item.cur_node = @cur_node
-      if attributes[:filename].nil?
+      if attributes[:filename].nil? && attributes["filename"].nil?
         item.filename = "#{dirname}/"
         item.basename = ""
+      else
+        filename = (attributes[:filename] || attributes["filename"])
+        item.filename = "#{dirname}/#{filename}"
+        if item.class.find_by filename: item.filename
+          item.filename = "#{dirname}/#{filename}#{SecureRandom.uuid}"
+        end
       end
 
       item.workflow_user_id = nil
@@ -113,8 +121,34 @@ module Workflow::Addon
       end
 
       def seq_clone_filename
+        if master.present?
+          seq_clone_filename_with_master
+        else
+          seq_clone_filename_without_master
+        end
+      end
+
+      def seq_clone_filename_with_master
+        filename_backup = File.basename(master.filename, '.*')
+        last_branch = master.branches.order(created_at: -1).first
+        if last_branch.nil?
+          number = '01'
+        else
+          last_branch.filename.gsub(File.extname(last_branch.filename), '') =~ /.*_(\d\d)/
+          matched = $1
+          if matched
+            number = format("%02d", matched.to_i + 1)
+          else
+            number = '01'
+          end
+        end
         self.filename ||= ""
-        self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+        self.filename = dirname ? "#{dirname}/#{filename_backup}_#{number}.html" : "#{filename_backup}_#{number}.html"
+      end
+
+      def seq_clone_filename_without_master
+        self.filename ||= ""
+        self.filename = dirname ? "#{dirname}/#{id}.html" : "#{id}.html"
       end
   end
 end
