@@ -47,6 +47,13 @@ module Sys::SiteCopy::CmsContents
     klass
   end
 
+  def on_copy(name, field)
+    metadata = field.metadata
+    return nil if metadata.blank?
+
+    metadata[:on_copy]
+  end
+
   def reference_type(klass)
     ancestors = klass.ancestors
     if ancestors.include?(SS::Model::Group)
@@ -84,6 +91,13 @@ module Sys::SiteCopy::CmsContents
       next nil if %w(_id id site_id created updated).include?(field_name)
       next nil unless fields.key?(field_name)
 
+      case on_copy(field_name, fields[field_name])
+      when :clear
+        next [field_name, nil]
+      when :value
+        next [field_name, field_value]
+      end
+
       ref_class = reference_class(field_name, fields[field_name])
       next [field_name, field_value] if ref_class.blank?
 
@@ -105,6 +119,8 @@ module Sys::SiteCopy::CmsContents
 
       next nil if field_names.present? && !field_names.include?(field_name)
       next [field_name, field_value] if field_value.blank?
+
+      next nil if on_copy(field_name, fields[field_name])
 
       ref_class = reference_class(field_name, fields[field_name])
       next nil if ref_class.nil?

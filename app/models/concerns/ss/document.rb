@@ -80,7 +80,7 @@ module SS::Document
     def embeds_ids(name, opts = {})
       store = opts[:store_as] || "#{name.to_s.singularize}_ids"
       field store, type: SS::Extensions::ObjectIds, default: [],
-            overwrite: true, metadata: { elem_class: opts[:class_name] }
+            overwrite: true, metadata: { elem_class: opts[:class_name] }.merge(opts[:metadata] || {})
       define_method(name) { opts[:class_name].constantize.where :_id.in => send(store) }
     end
 
