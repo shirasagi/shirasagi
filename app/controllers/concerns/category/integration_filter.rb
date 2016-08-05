@@ -9,7 +9,7 @@ module Category::IntegrationFilter
     return if request.get?
     @item.attributes = get_params
     #@item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_create @item.split, location: { action: :index }, render: { file: :split }
+    render_create @item.category_split, location: { action: :index }, render: { file: :split }
   end
 
   def integrate
@@ -20,6 +20,6 @@ module Category::IntegrationFilter
     return if request.get?
     @item.attributes = get_params
     #@item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_create @item.integrate, location: { action: :index }, render: { file: :integrate }
+    render_create @item.category_integrate, location: { action: :index }, render: { file: :integrate }
   end
 end

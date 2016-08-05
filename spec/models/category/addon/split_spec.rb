@@ -46,7 +46,7 @@ describe Category::Addon::Integration, dbscope: :example do
       master_node.cur_site = site
 
       # do split
-      expect(master_node.split).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
+      expect(master_node.category_split).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
       partial_node = master_node.class.site(site).find_by(filename: "partial")
 
       # compare contents
@@ -105,7 +105,7 @@ describe Category::Addon::Integration, dbscope: :example do
       master_node.cur_site = site
 
       # do split
-      expect(master_node.split).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
+      expect(master_node.category_split).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
       partial_node = master_node.class.site(site).find_by(filename: "integration/partial")
 
       # compare contents

@@ -2,20 +2,21 @@ module Category::Addon
   module Integration
     extend SS::Addon
     extend ActiveSupport::Concern
+    include ::Category::Addon::Model::Integration
 
     included do
       attr_accessor :in_partial_id
       permit_params :in_partial_id
     end
 
-    def integrate
+    def category_integrate
       partial = ::Category::Node::Base.site(@cur_site).find(in_partial_id) rescue nil
       if !partial
         self.errors.add :base, I18n.t("errors.messages.partial_node_not_found")
         return false
       end
 
-      validate_integration(partial)
+      validate_category_integration(partial)
       if errors.empty?
         rename_partial_children(partial)
         integrate_embeds_ids(partial, self, Cms::Node)
@@ -27,7 +28,7 @@ module Category::Addon
       end
     end
 
-    def validate_integration(partial)
+    def validate_category_integration(partial)
       error_opts = { name: partial.name, filename: partial.filename }
 
       # validate allowed partial node
@@ -42,12 +43,12 @@ module Category::Addon
         return
       end
 
-      # validate child basenames duplication
+      # validate children basenames duplication
       basenames = []
       %w(pages nodes parts layouts).each do |name|
         send(name).where(depth: depth + 1).each do |item|
           basenames << item.basename
-          validate_editor_lock(item)
+          validate_partial_editor_lock(item)
         end
 
         partial.send(name).where(depth: partial.depth + 1).each do |item|
@@ -55,7 +56,7 @@ module Category::Addon
             error_opts = { name: item.name, filename: item.filename }
             self.errors.add :base, I18n.t("errors.messages.partial_children_basename_duplication", error_opts)
           end
-          validate_editor_lock(item)
+          validate_partial_editor_lock(item)
         end
       end
 
@@ -73,9 +74,11 @@ module Category::Addon
       end
     end
 
-    def validate_editor_lock(item)
+    def validate_partial_editor_lock(partial)
+      error_opts = { name: partial.name, filename: partial.filename }
+
       # validate editor lock
-      if item.respond_to?(:locked?) && item.locked?
+      if partial.respond_to?(:locked?) && partial.locked?
         self.errors.add :base, I18n.t("errors.messages.partial_children_static_file_duplication", error_opts)
       end
     end
@@ -102,32 +105,6 @@ module Category::Addon
             filename: dst,
             depth: dst.scan("/").size + 1
           )
-        end
-      end
-    end
-
-    def integrate_embeds_ids(embedded, insert, content_model)
-      item_ids = content_model.site(@cur_site).pluck(:id)
-      item_ids.each do |item_id|
-        item = content_model.site(@cur_site).find(item_id).becomes_with_route rescue nil
-        next false unless item
-
-        embeds_fields = item.fields.select do |n, v|
-          next false unless n =~ /_ids$/
-          next false unless v.type == SS::Extensions::ObjectIds
-
-          begin
-            elem_class = v.metadata[:elem_class]
-            elem_class.constantize.include?(Cms::Model::Node)
-          rescue
-            false
-          end
-        end
-
-        embeds_fields.keys.each do |k|
-          ids = item.send(k)
-          next unless ids.include?(embedded.id)
-          item.add_to_set(k => insert.id)
         end
       end
     end

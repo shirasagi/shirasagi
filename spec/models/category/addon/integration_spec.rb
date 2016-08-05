@@ -85,7 +85,7 @@ describe Category::Addon::Integration, dbscope: :example do
       master_node.cur_site = site
 
       # do integrate
-      expect(master_node.integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
+      expect(master_node.category_integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
 
       # compare contents
       integrated_nodes = Cms::Node.site(site).map { |item| [item.name, item.filename, item.depth] }
@@ -187,7 +187,7 @@ describe Category::Addon::Integration, dbscope: :example do
       master_node.cur_site = site
 
       # do integrate
-      expect(master_node.integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
+      expect(master_node.category_integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
 
       # compare contents
       integrated_nodes = Cms::Node.site(site).map { |item| [item.name, item.filename, item.depth] }
@@ -291,7 +291,7 @@ describe Category::Addon::Integration, dbscope: :example do
       master_node.cur_site = site
 
       # do integrate
-      expect(master_node.integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
+      expect(master_node.category_integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
 
       # compare contents
       integrated_nodes = Cms::Node.site(site).map { |item| [item.name, item.filename, item.depth] }
@@ -393,7 +393,7 @@ describe Category::Addon::Integration, dbscope: :example do
       master_node.cur_site = site
 
       # do integrate
-      expect(master_node.integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
+      expect(master_node.category_integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
 
       # compare contents
       integrated_nodes = Cms::Node.site(site).map { |item| [item.name, item.filename, item.depth] }
@@ -492,7 +492,7 @@ describe Category::Addon::Integration, dbscope: :example do
       master_node.cur_site = site
 
       # do integrate
-      expect(master_node.integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
+      expect(master_node.category_integrate).to be_truthy, "validation error\n#{master_node.errors.full_messages.join("\n")}"
 
       # compare contents
       integrated_nodes = Cms::Node.site(site).map { |item| [item.name, item.filename, item.depth] }
