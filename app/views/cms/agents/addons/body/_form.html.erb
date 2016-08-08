@@ -21,6 +21,13 @@
     Form_Preview.page_route        = "<%= @item.try(:route) %>";
     Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";
     Cms_Form.render();
+
+    <% conf = Cms::SourceCleanerTemplate.to_config(site: @cur_site) %>
+    <% if conf.present? %>
+      Cms_Source_Cleaner.config = <%= raw conf.to_json %>
+      Cms_Source_Cleaner.render();
+    <% end %>
+
   <% end %>
 
   <dl class="see mod-cms-body">
@@ -28,6 +35,7 @@
     <dd class="wide">
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
     <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+    <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } %>
     <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
     </dd>
   </dl>
