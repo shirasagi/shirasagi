@@ -13,6 +13,8 @@ module Category::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Category::Addon::Integration
+    include Category::Addon::Split
 
     default_scope ->{ where(route: "category/node") }
   end
@@ -26,6 +28,8 @@ module Category::Node
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Category::Addon::Integration
+    include Category::Addon::Split
 
     default_scope ->{ where(route: "category/page") }
   end
