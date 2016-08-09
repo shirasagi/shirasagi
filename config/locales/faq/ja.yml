@@ -23,6 +23,8 @@ ja:
       faq/search: FAQ記事検索
 
   mongoid:
+    models:
+      faq/page: FAQ記事
     attributes:
       cms/model/page:
         question: 質問

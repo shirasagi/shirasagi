@@ -1,0 +1,28 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <th class="checkbox"><input type="checkbox" /></th>
+    <th class="name"><%= @model.t :name %></th>
+    <th class="filename"><%= @model.t :route %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @items.each do |item| %>
+      <tr data-id="<%= item[:route] %>" class="list-item">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item[1] %>" />
+        </td>
+        <td class="name"><%= link_to "#{item[:module_name]}/#{item[:name]}", "#", class: "select-item" %></td>
+        <td class="filename"><%= item[:route] %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select">
+  <%= button_tag t("cms.apis.pages_routes.select"), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

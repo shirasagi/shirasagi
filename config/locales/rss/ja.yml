@@ -49,6 +49,8 @@ ja:
 
   mongoid:
     models:
+      rss/page: フィード
+      rss/weather_xml_page:  気象庁防災情報XML
       rss/weather_xml_region: 気象庁地域
     attributes:
       rss/node/page:

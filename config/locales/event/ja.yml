@@ -41,6 +41,8 @@ ja:
     approve_private_event_pages: ページの承認（所有）
 
   mongoid:
+    models:
+      event/page: イベントページ
     attributes:
       cms/model/page:
         event_name: イベントタイトル

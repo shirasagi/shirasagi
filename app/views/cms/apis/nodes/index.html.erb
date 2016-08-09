@@ -1,6 +1,6 @@
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-form">
 <%= form_tag({ action: :index }, { method: "GET", class: :search }) do %>
   <%= text_field_tag 's[name]', params[:s].try(:[], :name) %>
   <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
@@ -10,7 +10,7 @@
 </div>
 
 <table class="index">
-  <thead>
+  <thead class="list-head">
     <tr>
       <% if @multi %>
       <th class="checkbox"><input type="checkbox" /></th>
@@ -23,22 +23,22 @@
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <tr data-id="<%= item.id %>">
+      <tr data-id="<%= item.id %>" class="list-item">
         <% if @multi %>
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
         <% end %>
-        <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
-        <td><%= item.url %></td>
-        <td><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
-        <td><%= tryb { item.updated.strftime("%Y/%m/%d %H:%M") } %></td>
+        <td class="name"><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td class="url"><%= item.url %></td>
+        <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
+        <td class="updated"><%= tryb { item.updated.strftime("%Y/%m/%d %H:%M") } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+<div class="search-ui-select">
   <%= button_tag t("cms.apis.nodes.select"), { type: :button, class: "select-items btn" } %>
 </div>
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_search", dbscope: :example do
+describe "cms_search", dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:pages_index_path) { cms_search_contents_pages_path site.id }
   let(:html_index_path) { cms_search_contents_html_path site.id }
@@ -21,11 +21,35 @@ describe "cms_search", dbscope: :example do
     before { login_cms_user }
 
     context "search_contents_pages" do
+      let(:node_name) { unique_id }
+      let(:node_filename) { 'base' }
+      let(:cate_name1) { unique_id }
+      let(:opendata_cate_name1) { unique_id }
+
       before(:each) do
-        create(:cms_page, cur_site: site, name: "[TEST]A", filename: "A.html", state: "public")
-        create(:article_page, cur_site: site, name: "[TEST]B", filename: "base/B.html", state: "public")
-        create(:event_page, cur_site: site, name: "[TEST]C", filename: "base/C.html", state: "closed")
-        create(:faq_page, cur_site: site, name: "[TEST]D", filename: "base/D.html", state: "closed")
+        node = create(:cms_node_page, name: node_name, filename: node_filename)
+        cate1 = create(:category_node_page, name: cate_name1)
+        cate2 = create(:category_node_page)
+        cate3 = create(:category_node_page)
+        cate4 = create(:category_node_page)
+        create(
+          :cms_page, cur_site: site, name: "[TEST]A", filename: "A.html", state: "public",
+          category_ids: [ cate1.id ], group_ids: [ cms_group.id ])
+        create(
+          :article_page, cur_site: site, cur_node: node, name: "[TEST]B", filename: "B.html", state: "public",
+          category_ids: [ cate2.id ], group_ids: [ cms_group.id ])
+        create(
+          :event_page, cur_site: site, cur_node: node, name: "[TEST]C", filename: "C.html", state: "closed",
+          category_ids: [ cate3.id ], group_ids: [ cms_group.id ])
+        create(
+          :faq_page, cur_site: site, cur_node: node, name: "[TEST]D", filename: "D.html", state: "closed",
+          category_ids: [ cate4.id ], group_ids: [ cms_group.id ])
+
+        opendata_node = create(:opendata_node_dataset)
+        opendata_cate = create(:opendata_node_category, name: opendata_cate_name1)
+        create(
+          :opendata_dataset, cur_node: opendata_node, name: "[TEST]E", state: "closed",
+          category_ids: [ opendata_cate.id ], group_ids: [ cms_group.id ])
       end
 
       it "search with empty conditions" do
@@ -33,18 +57,19 @@ describe "cms_search", dbscope: :example do
         expect(current_path).not_to eq sns_login_path
         click_button "検索"
         expect(status_code).to eq 200
-        expect(page).to have_css(".search-count", text: "4 件の検索結果")
+        expect(page).to have_css(".search-count", text: "5 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
+        expect(page).to have_css("div.info a.title", text: "[TEST]E")
       end
 
       it "search with name" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          fill_in "s_name", with: "A"
+          fill_in "item[search_name]", with: "A"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -56,7 +81,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          fill_in "s_filename", with: "base/"
+          fill_in "item[search_filename]", with: "#{node_filename}/"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -70,7 +95,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "公開", from: "s_state"
+          select "公開", from: "item[search_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -78,20 +103,21 @@ describe "cms_search", dbscope: :example do
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         within "form.search-pages" do
-          select "非公開", from: "s_state"
+          select "非公開", from: "item[search_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
-        expect(page).to have_css(".search-count", text: "2 件の検索結果")
+        expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
+        expect(page).to have_css("div.info a.title", text: "[TEST]E")
       end
 
       it "search with ready state" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "公開待ち", from: "s_state"
+          select "公開待ち", from: "item[search_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -133,25 +159,35 @@ describe "cms_search", dbscope: :example do
           expect(current_path).not_to eq sns_login_path
           start = Time.zone.now
           close = start.advance(days: 6)
-          start = start.strftime("%Y/%m/%d %H:%M:%S")
-          close = close.strftime("%Y/%m/%d %H:%M:%S")
+          start = start.strftime("%Y/%m/%d %H:%M")
+          close = close.strftime("%Y/%m/%d %H:%M")
 
+          # disable datetimepicker because I can't find the way to work with datetimepicker
+          page.execute_script("$('#item_search_released_start').datetimepicker('destroy');")
+          page.execute_script("$('#item_search_released_close').datetimepicker('destroy');")
+          page.execute_script("$('#item_search_updated_start').datetimepicker('destroy');")
+          page.execute_script("$('#item_search_updated_close').datetimepicker('destroy');")
           within "form.search-pages" do
-            fill_in "s_released_start", with: start
-            fill_in "s_released_close", with: close
-            fill_in "s_updated_start", with: ""
-            fill_in "s_updated_close", with: ""
+            fill_in "item[search_released_start]", with: start
+            fill_in "item[search_released_close]", with: close
+            fill_in "item[search_updated_start]", with: ""
+            fill_in "item[search_updated_close]", with: ""
             click_button "検索"
           end
           expect(status_code).to eq 200
           expect(page).to have_css(".search-count", text: "1 件の検索結果")
           expect(page).to have_css("div.info a.title", text: "[TEST]D")
 
+          # disable datetimepicker because I can't find the way to work with datetimepicker
+          page.execute_script("$('#item_search_released_start').datetimepicker('destroy');")
+          page.execute_script("$('#item_search_released_close').datetimepicker('destroy');")
+          page.execute_script("$('#item_search_updated_start').datetimepicker('destroy');")
+          page.execute_script("$('#item_search_updated_close').datetimepicker('destroy');")
           within "form.search-pages" do
-            fill_in "s_released_start", with: ""
-            fill_in "s_released_close", with: ""
-            fill_in "s_updated_start", with: start
-            fill_in "s_updated_close", with: close
+            fill_in "item[search_released_start]", with: ""
+            fill_in "item[search_released_close]", with: ""
+            fill_in "item[search_updated_start]", with: start
+            fill_in "item[search_updated_close]", with: close
             click_button "検索"
           end
           expect(status_code).to eq 200
@@ -165,7 +201,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "申請したもの", from: "s_approver_state"
+          select "申請したもの", from: "item[search_approver_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -191,7 +227,7 @@ describe "cms_search", dbscope: :example do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
-          select "依頼されたもの", from: "s_approver_state"
+          select "依頼されたもの", from: "item[search_approver_state]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -212,9 +248,65 @@ describe "cms_search", dbscope: :example do
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
+
+      it "search with categories" do
+        visit pages_index_path
+        click_on 'カテゴリーを選択する'
+        click_on cate_name1
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
+      end
+
+      it "search with opendata categories" do
+        visit pages_index_path
+        click_on 'カテゴリーを選択する'
+        click_on opendata_cate_name1
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]E")
+      end
+
+      it "search with groups" do
+        visit pages_index_path
+        click_on 'グループを選択する'
+        click_on cms_group.name
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "5 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+        expect(page).to have_css("div.info a.title", text: "[TEST]C")
+        expect(page).to have_css("div.info a.title", text: "[TEST]D")
+        expect(page).to have_css("div.info a.title", text: "[TEST]E")
+      end
+
+      it "search with nodes" do
+        visit pages_index_path
+        click_on 'フォルダーを選択する'
+        click_on node_name
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "3 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+        expect(page).to have_css("div.info a.title", text: "[TEST]C")
+        expect(page).to have_css("div.info a.title", text: "[TEST]D")
+      end
+
+      it "search with routes" do
+        visit pages_index_path
+        click_on 'ページ属性を選択する'
+        click_on '記事/記事ページ'
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+      end
     end
 
-    context "search_contents_html", js: true do
+    context "search_contents_html" do
       before(:each) do
         create(:article_page, name: "[TEST]top",     html: '<a href="/top/" class="top">anchor</a>')
         create(:article_page, name: "[TEST]child",   html: '<a href="/top/child/">anchor2</a><p>くらし\r\nガイド</p>')
@@ -334,7 +426,7 @@ describe "cms_search", dbscope: :example do
       end
     end
 
-    context "ss-909", js: true do
+    context "ss-909" do
       # see: https://github.com/shirasagi/shirasagi/issues/909
       before(:each) do
         create(:article_page, name: "[TEST]top",     html: '<a href="/top/" class="top">anchor</a>')

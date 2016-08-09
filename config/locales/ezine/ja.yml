@@ -60,6 +60,8 @@ ja:
       ezine/category_node: カテゴリ
 
   mongoid:
+    models:
+      ezine/page: メルマガ記事
     attributes:
       ezine/node/page:
         column_ids: カラム
