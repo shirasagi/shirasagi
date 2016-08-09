@@ -352,12 +352,18 @@ banner4.set(state: "public")
 banner5.set(state: "public")
 banner6.set(state: "public")
 
-save_page route: "ads/banner", filename: "ads/600.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner1.id
-save_page route: "ads/banner", filename: "ads/601.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner2.id
-save_page route: "ads/banner", filename: "ads/602.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner3.id
-save_page route: "ads/banner", filename: "ads/603.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner4.id
-save_page route: "ads/banner", filename: "ads/604.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner5.id
-save_page route: "ads/banner", filename: "ads/605.html", name: "シラサギ", link_url: "http://www.ss-proj.org/", file_id: banner6.id
+save_page route: "ads/banner", filename: "ads/page600.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner1.id
+save_page route: "ads/banner", filename: "ads/page601.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner2.id
+save_page route: "ads/banner", filename: "ads/page602.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner3.id
+save_page route: "ads/banner", filename: "ads/page603.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner4.id
+save_page route: "ads/banner", filename: "ads/page604.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner5.id
+save_page route: "ads/banner", filename: "ads/page605.html", name: "シラサギ",
+  link_url: "http://www.ss-proj.org/", file_id: banner6.id
 
 ## -------------------------------------
 puts "# licenses"
@@ -430,8 +436,8 @@ def save_resource(dataset, data)
 end
 
 1.step(5) do |i|
-  dataset = save_data filename: "dataset/#{i}.html", name: "サンプルデータ【#{i}】", text: "サンプルデータ【#{i}】",
-    route: "opendata/dataset", layout_id: layouts["dataset-page"].id, member_id: @member_1.id, tags: %w(タグ),
+  dataset = save_data filename: "dataset/#{i}.html", name: "サンプルデータ【#{i}】", route: "opendata/dataset",
+    layout_id: layouts["dataset-page"].id, text: "サンプルデータ【#{i}】", member_id: @member_1.id, tags: %w(タグ),
     category_ids: Opendata::Node::Category.site(@site).pluck(:_id).sample(1),
     dataset_group_ids: Opendata::DatasetGroup.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
@@ -504,7 +510,8 @@ puts "# rdf vocabs"
 
 def import_vocab(data)
   puts data[:prefix]
-  Rdf::VocabImportJob.bind(site_id: @site).perform_now(data[:prefix], data[:file], data[:owner] || Rdf::Vocab::OWNER_SYSTEM, data[:order])
+  Rdf::VocabImportJob.bind(site_id: @site).
+    perform_now(data[:prefix], data[:file], data[:owner] || Rdf::Vocab::OWNER_SYSTEM, data[:order])
 end
 
 import_vocab prefix: "xsd", file: "rdf/xsd.ttl", order: 2000
