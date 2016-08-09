@@ -8,6 +8,7 @@ class Opendata::Dataset
   include Opendata::Addon::DatasetGroup
   include Opendata::Reference::Member
   include Opendata::Common
+  include Opendata::Addon::SiteAssociation
   include Cms::Addon::Release
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage

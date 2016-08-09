@@ -14,6 +14,7 @@ module Facility::Node
     include Facility::Addon::CategorySetting
     include Facility::Addon::ServiceSetting
     include Facility::Addon::LocationSetting
+    include Facility::Addon::OpendataAssoc
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -39,6 +40,58 @@ module Facility::Node
 
     def serve_static_file?
       false
+    end
+
+    COLUMNS = %w(
+      filename name layout kana address postcode tel
+      fax related_url categories locations services
+      map_points groups
+    ).freeze
+
+    PUBLIC_COLUMNS = %w(
+      name kana address postcode tel
+      fax related_url categories locations services
+      map_points
+    ).freeze
+
+    class << self
+      def to_csv(opts = {})
+        t_columns = (opts[:public] ? PUBLIC_COLUMNS : COLUMNS).map { |c| t(c) }
+        additional_columns = criteria.map { |item| item.additional_info.map { |i| i[:field] } }.flatten.compact.uniq
+
+        CSV.generate do |data|
+          data << t_columns + additional_columns.map { |c| "#{@model.t(:additional_info)}:#{c}" }
+          criteria.each do |item|
+            data << attributes_to_row(item, additional_columns, opts)
+          end
+        end
+      end
+
+      private
+        def attributes_to_row(item, additional_columns, opts)
+          maps = Facility::Map.site(item.site).where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+          points = maps.map{ |m| m.map_points }.flatten.map{ |m| m[:loc].join(",") }
+
+          row = []
+          row << item.basename unless opts[:public]
+          row << item.name
+          row << item.layout.try(:name) unless opts[:public]
+          row << item.kana
+          row << item.address
+          row << item.postcode
+          row << item.tel
+          row << item.fax
+          row << item.related_url
+          row << item.categories.map(&:name).join("\n")
+          row << item.locations.map(&:name).join("\n")
+          row << item.services.map(&:name).join("\n")
+          row << points.join("\n")
+          row << item.groups.pluck(:name).join("\n") unless opts[:public]
+          additional_columns.each do |c|
+            row << item.additional_info.map { |i| [i[:field], i[:value]] }.to_h[c]
+          end
+          row
+        end
     end
   end
 

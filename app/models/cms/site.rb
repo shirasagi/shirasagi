@@ -7,5 +7,5 @@ class Cms::Site
   include SS::Addon::MapSetting
   include Opendata::Addon::SiteSetting
 
-  set_permission_name "cms_sites"
+  set_permission_name "cms_sites", :edit
 end

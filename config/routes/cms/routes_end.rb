@@ -125,6 +125,7 @@ SS::Application.routes.draw do
       get "contents" => "contents#index"
       get "contents/html" => "contents/html#index"
       get "members" => "members#index"
+      get "sites" => "sites#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member
