@@ -1,11 +1,10 @@
 <% unless @item.nil? || @item.new_record? %>
-<nav class="sub-menu">
-  <header><h1><%= t :"views.links.rdf.vocabs" %></h1></header>
-  <div>
-    <%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @item %>
-    <%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @item %>
-    <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @item %>
-  </div>
+<nav class="mod-navi">
+  <h2><%= t :"views.links.rdf.vocabs" %></h2>
+  <h3><%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @item %></h3>
+  <h3><%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @item %></h3>
+  <h3><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @item %></h3>
 </nav>
 <% end %>
-<%= render partial: "cms/main/navi" %>
+
+<%= render partial: "cms/main/conf_navi" %>

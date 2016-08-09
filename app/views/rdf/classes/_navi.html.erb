@@ -1,11 +1,9 @@
 <% if @vocab.present? %>
-<nav class="sub-menu">
-  <header><h1><%= t :"views.links.rdf.vocabs" %></h1></header>
-  <div>
-    <%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @vocab %>
-    <%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @vocab %>
-    <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %>
-  </div>
+<nav class="mod-navi">
+  <h2><%= t :"views.links.rdf.vocabs" %></h2>
+  <h3><%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @vocab %></h3>
+  <h3><%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @vocab %></h3>
+  <h3><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %></h3>
 </nav>
 <% end %>
-<%= render partial: "cms/main/navi" %>
+<%= render partial: "cms/main/conf_navi" %>
