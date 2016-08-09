@@ -1,0 +1,34 @@
+<%= form_for :item, url: { action: :run }, html: { id: "item-form", autocomplete: :off } do |f| %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head toggle-head"><h2><%= t "cms.copy_nodes.from" %></h2></div>
+    <div class="addon-body toggle-body">
+      <dl class="see">
+        <dt><%= t "mongoid.attributes.cms/content.name" %></dt>
+        <dd><%= tryb { @cur_node.name }%></dd>
+        <dt><%= t "mongoid.attributes.cms/model/node.filename" %></dt>
+        <dd><%= tryb { @cur_node.basename }%> <%= tryb { "(#{@cur_node.filename})" } if @cur_node.depth != 1 %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head toggle-head"><h2><%= t "cms.copy_nodes.to" %></h2></div>
+    <div class="addon-body toggle-body">
+      <dl class="see">
+        <dt><%= t "cms.copy_nodes.target_node_name" %><%= @model.tt :filename %></dt>
+        <dd><%= text_field_tag :target_node_name,   "#{@cur_node.filename}", class: :filename %></dd>
+        <dt><%= t "cms.copy_nodes.job_history" %></dt>
+        <dd><%= link_to t("cms.copy_nodes.link_to_job_history"), job_cms_logs_path %></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t("views.button.run"), class: "btn-primary" %>
+  <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+</footer>
+
+<% end %>

@@ -105,6 +105,12 @@ ja:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
       link_to_replace: URLを置換する
+    copy_nodes:
+      from: 複製元フォルダー
+      to: 複製先
+      job_history: 実行ログ
+      link_to_job_history: ジョブ実行履歴
+      target_node_name: フォルダー名
     options:
       sort:
         name: タイトル

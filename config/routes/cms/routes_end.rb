@@ -145,6 +145,8 @@ SS::Application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "import" => "import#index"
     post "import" => "import#import"
+    get "copy_nodes" => "copy_nodes#index", as: :copy
+    post "copy_nodes" => "copy_nodes#run"
     resource :conf, concerns: [:copy, :move] do
       get :delete, :on => :member
     end
