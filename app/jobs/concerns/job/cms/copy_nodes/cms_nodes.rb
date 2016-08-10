@@ -56,7 +56,7 @@ module Job::Cms::CopyNodes::CmsNodes
       copy_ezine_columns(src_node, dest_node)
     end
 
-    @task.log("#{src_node.filename}(#{src_node.id}): フォルダーをコピーしました。")
+    @task.log("#{dest_node.filename}(#{dest_node.id}): フォルダーをコピーしました。")
   end
 
   def copy_node_files(src_node, dest_node)

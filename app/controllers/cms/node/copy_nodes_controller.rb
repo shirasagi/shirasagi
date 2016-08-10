@@ -5,7 +5,6 @@ class Cms::Node::CopyNodesController < ApplicationController
   navi_view "cms/node/main/navi"
   model Cms::CopyNodesTask
 
-
   private
     def job_class
       Cms::Node::CopyNodesJob
@@ -43,7 +42,7 @@ class Cms::Node::CopyNodesController < ApplicationController
     end
 
     def run
-      # TODO バリデーションの設定
+      # TODO: バリデーションの設定 親フォルダーが検索できない、同名のfilenameが存在する
       job_class.bind(job_bindings).perform_later(job_options)
       redirect_to({ action: :index }, { notice: "処理開始、ジョブ実行履歴で内容をご確認下さい #TODO 文言" })
     end

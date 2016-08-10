@@ -2,7 +2,7 @@ class Cms::Node::CopyNodesJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
   include Sys::SiteCopy::SsFiles
   include Sys::SiteCopy::CmsRoles
-  include Sys::SiteCopy::CmsLayouts
+  include Job::Cms::CopyNodes::CmsLayouts
   include Job::Cms::CopyNodes::CmsNodes
   include Sys::SiteCopy::CmsParts
   include Sys::SiteCopy::CmsPages
@@ -11,8 +11,6 @@ class Cms::Node::CopyNodesJob < Cms::ApplicationJob
   include Sys::SiteCopy::KanaDictionaries
 
   self.task_name = "cms:copy_nodes"
-
-  #attr_accessor :target_node_name, :base_node_name, :cur_site, :cur_node
 
   def perform(target_node_name)
     @cur_site = Cms::Site.find(site_id)
