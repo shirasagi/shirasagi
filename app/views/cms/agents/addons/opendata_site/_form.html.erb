@@ -1,10 +1,10 @@
 <% return "" unless Cms::Site.allowed?(:read, @cur_user, site: @cur_site) %>
 
 <%= jquery do %>
-  SS_AddonTabs.hide(".mod-facility-opendata-assoc");
+  SS_AddonTabs.hide(".mod-cms-opendata-site");
 <% end %>
 
-<dl class="see mod-facility-opendata-assoc">
+<dl class="see mod-cms-opendata-site">
   <dt><%= @model.t :opendata_site_ids %><%= @model.tt :opendata_site_ids %></dt>
   <dd>
     <%= f.hidden_field "opendata_site_ids[]", value: "", class: "hidden-ids" %>
@@ -28,7 +28,4 @@
       </tbody>
     </table>
   </dd>
-
-  <dt><%= @model.t :csv_assoc %></dt>
-  <dd><%= f.select :csv_assoc, @item.csv_assoc_options %></dd>
 </dl>

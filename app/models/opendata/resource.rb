@@ -2,6 +2,7 @@ class Opendata::Resource
   include SS::Document
   include Opendata::Resource::Model
   include Opendata::Addon::RdfStore
+  include Opendata::Addon::SiteAssociation
 
   attr_accessor :workflow, :status
 

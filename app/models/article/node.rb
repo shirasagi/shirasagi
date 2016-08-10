@@ -11,6 +11,7 @@ module Article::Node
     include Cms::Addon::Meta
     include Cms::Addon::PageList
     include Category::Addon::Setting
+    include Cms::Addon::OpendataSite
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
