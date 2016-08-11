@@ -16,7 +16,9 @@ module Job::Cms::CopyNodes::CmsLayouts
     end
   end
 
-  def resolve_layout_reference(id); id; end
+  def resolve_layout_reference(id)
+    id
+  end
 
   private
 

@@ -17,7 +17,9 @@ module Job::Cms::CopyNodes::CmsNodes
     end
   end
 
-  def resolve_node_reference(id); id; end
+  def resolve_node_reference(id)
+    id
+  end
 
   private
 
@@ -45,10 +47,10 @@ module Job::Cms::CopyNodes::CmsNodes
     @task.log("#{dest_node.filename}(#{dest_node.id}): フォルダーをコピーしました。")
   end
 
-  def copy_node_files(src_node, dest_node) # :TODO
+  def copy_node_files(src_node, dest_node)
     # ディレクトリ複製
-    src_dir_path = @src_site.path + '/' + src_node.filename
-    dest_dir_path = @dest_site.path + '/' + dest_node.filename
+    src_dir_path = src_node.site.path + '/' + src_node.filename
+    dest_dir_path = dest_node.site.path + '/' + dest_node.filename
 
     return unless Dir.exist?(src_dir_path)
 
@@ -58,9 +60,9 @@ module Job::Cms::CopyNodes::CmsNodes
       next unless File.exist?(src_dir_path + '/' + filename)
       next if Dir.exist?(src_dir_path + '/' + filename)
 
-      Rails.logger.debug("#{src_dir_path + '/' + filename}: ファイルをコピーします。")
+      @task.log("#{src_dir_path + '/' + filename}: ファイルをコピーします。")
       ::FileUtils.cp(src_dir_path + '/' + filename, dest_dir_path)
-      Rails.logger.info("#{src_dir_path + '/' + filename}: ファイルをコピーしました。")
+      @task.log("#{src_dir_path + '/' + filename}: ファイルをコピーしました。")
     end
   end
 

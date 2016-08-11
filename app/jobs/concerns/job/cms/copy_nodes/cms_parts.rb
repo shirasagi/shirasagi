@@ -17,7 +17,9 @@ module Job::Cms::CopyNodes::CmsParts
     end
   end
 
-  def resolve_part_reference(id); id; end
+  def resolve_part_reference(id)
+    id
+  end
 
   private
 

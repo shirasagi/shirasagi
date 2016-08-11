@@ -17,7 +17,9 @@ module Job::Cms::CopyNodes::CmsPages
     end
   end
 
-  def resolve_page_reference(id); id; end
+  def resolve_page_reference(id)
+    id
+  end
 
   private
 
