@@ -51,11 +51,15 @@ class Cms::Node::CopyNodesController < ApplicationController
 
       if @item.save
         job_class.bind(job_bindings).perform_later(job_options)
-        redirect_to({ action: :index }, { notice: "処理開始、ジョブ実行履歴で内容をご確認下さい #TODO 文言" })
-        # TODO: format.json
+
+        respond_to do |format|
+          format.html { redirect_to({ action: :index }, { notice: I18n.t('cms.copy_nodes.started_job') }) }
+          format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
+        end
       else
         respond_to do |format|
           format.html { render action: :index }
+          format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
         end
       end
     end

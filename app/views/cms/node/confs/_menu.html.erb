@@ -1,5 +1,5 @@
 <nav class="nav-menu">
-  <% if params[:action] =~ /edit|update|delete|move/ %> <%# TODO: リンク設定 %>
+  <% if params[:action] =~ /edit|update|delete|move/ %>
     <%= link_to :back_to_show, action: :show %>
     <%= link_to :back_to_index, controller: :nodes %>
   <% else %>
