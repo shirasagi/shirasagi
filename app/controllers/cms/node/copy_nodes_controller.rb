@@ -19,7 +19,7 @@ class Cms::Node::CopyNodesController < ApplicationController
 
     def job_options
       {
-        target_node_name: params[:target_node_name]
+        target_node_name: params[:item][:target_node_name]
       }
     end
 
@@ -28,7 +28,11 @@ class Cms::Node::CopyNodesController < ApplicationController
     end
 
     def set_item
-      @item = Cms::CopyNodesTask.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: @cur_node.id
+      @item ||= Cms::CopyNodesTask.first_or_initialize name: task_name, site_id: @cur_site.id, node_id: @cur_node.id
+    end
+
+    def get_params
+      params.require(:item).permit(@model.permitted_fields).merge({})
     end
 
   public
@@ -42,8 +46,17 @@ class Cms::Node::CopyNodesController < ApplicationController
     end
 
     def run
-      # TODO: バリデーションの設定 親フォルダーが検索できない、同名のfilenameが存在する
-      job_class.bind(job_bindings).perform_later(job_options)
-      redirect_to({ action: :index }, { notice: "処理開始、ジョブ実行履歴で内容をご確認下さい #TODO 文言" })
+      set_item
+      @item.attributes = get_params
+
+      if @item.save
+        job_class.bind(job_bindings).perform_later(job_options)
+        redirect_to({ action: :index }, { notice: "処理開始、ジョブ実行履歴で内容をご確認下さい #TODO 文言" })
+        # TODO: format.json
+      else
+        respond_to do |format|
+          format.html { render action: :index }
+        end
+      end
     end
 end
