@@ -12,26 +12,12 @@ module Job::Cms::CopyNodes::CmsNodes
   end
 
   def copy_cms_nodes
-    node_ids = Array[@cur_node.id] + @cur_node.all_children.pluck(:id)
-    node_ids.each do |node_id|
-      node = Cms::Node.site(@cur_site).find(node_id) rescue nil
-      next if node.blank?
+    Cms::Node.where(filename: /^#{@cur_node.filename}\/|^#{@cur_node.filename}$/).each do |node|
       copy_cms_node(node)
     end
   end
 
-  def resolve_node_reference(id)
-    cache(:nodes, id) do
-      src_node = Cms::Node.site(@cur_site).find(id) rescue nil
-      if src_node.blank?
-        Rails.logger.warn("#{id}: 参照されているフォルダーが存在しません。")
-        return nil
-      end
-
-      dest_node = copy_cms_node(src_node)
-      dest_node.try(:id)
-    end
-  end
+  def resolve_node_reference(id); id; end
 
   private
 
@@ -43,7 +29,7 @@ module Job::Cms::CopyNodes::CmsNodes
   end
 
   def before_copy_cms_node(src_node)
-    Rails.logger.info("#{src_node.filename}(#{src_node.id}): フォルダーのコピーを開始します。")
+    @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーを開始します。")
   end
 
   def after_copy_cms_node(src_node, dest_node)
@@ -59,7 +45,7 @@ module Job::Cms::CopyNodes::CmsNodes
     @task.log("#{dest_node.filename}(#{dest_node.id}): フォルダーをコピーしました。")
   end
 
-  def copy_node_files(src_node, dest_node)
+  def copy_node_files(src_node, dest_node) # :TODO
     # ディレクトリ複製
     src_dir_path = @src_site.path + '/' + src_node.filename
     dest_dir_path = @dest_site.path + '/' + dest_node.filename
@@ -79,30 +65,27 @@ module Job::Cms::CopyNodes::CmsNodes
   end
 
   def copy_inquiry_columns(src_node, dest_node)
-    Inquiry::Column.where(site_id: @src_site.id, node_id: src_node.id).order_by(updated: 1).each do |src_inquiry_column|
-      Rails.logger.debug("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry::Column をコピーします。")
+    Inquiry::Column.where(site_id: src_node.site_id, node_id: src_node.id).order_by(updated: 1).each do |src_inquiry_column|
+      @task.log("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry::Column をコピーします。")
       dest_inquiry_column = Inquiry::Column.new src_inquiry_column.
         attributes.except(:id, :_id, :node_id, :site_id, :created, :updated)
-      dest_inquiry_column.cur_site = @dest_site
-      dest_inquiry_column.site_id = @dest_site.id
-      # dest_inquiry_column.cur_node = dest_node
+
+      dest_inquiry_column.site_id = dest_node.site_id
       dest_inquiry_column.node_id = dest_node.id
       dest_inquiry_column.save!
-      Rails.logger.info("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry::Column をコピーしました。")
+      @task.log("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry::Column をコピーしました。")
     end
   end
 
   def copy_ezine_columns(src_node, dest_node)
-    Ezine::Column.where(site_id: @src_site.id, node_id: src_node.id).order_by(updated: 1).each do |src_ezine_column|
-      Rails.logger.debug("#{src_ezine_column.name}(#{src_ezine_column.id}): Ezine::Column をコピーします。")
+    Ezine::Column.where(site_id: src_node.site_id, node_id: src_node.id).order_by(updated: 1).each do |src_ezine_column|
+      @task.log("#{src_ezine_column.name}(#{src_ezine_column.id}): Ezine::Column をコピーします。")
       dest_ezine_column = Ezine::Column.new src_ezine_column.
           attributes.except(:id, :_id, :node_id, :site_id, :created, :updated)
-      dest_ezine_column.cur_site = @dest_site
-      dest_ezine_column.site_id = @dest_site.id
-      dest_ezine_column.cur_node = dest_node
+      dest_ezine_column.site_id = dest_node.site_id
       dest_ezine_column.node_id = dest_node.id
       dest_ezine_column.save!
-      Rails.logger.info("#{src_ezine_column.name}(#{src_ezine_column.id}): Ezine::Column をコピーしました。")
+      @task.log("#{dest_ezine_column.name}(#{dest_ezine_column.id}): Ezine::Column にコピーしました。")
     end
   end
 end

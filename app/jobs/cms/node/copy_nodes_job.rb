@@ -1,14 +1,10 @@
 class Cms::Node::CopyNodesJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
-  include Sys::SiteCopy::SsFiles
-  include Sys::SiteCopy::CmsRoles
+  include Job::Cms::CopyNodes::SsFiles
   include Job::Cms::CopyNodes::CmsLayouts
   include Job::Cms::CopyNodes::CmsNodes
-  include Sys::SiteCopy::CmsParts
-  include Sys::SiteCopy::CmsPages
-  include Sys::SiteCopy::CmsFiles
-  include Sys::SiteCopy::CmsEditorTemplates
-  include Sys::SiteCopy::KanaDictionaries
+  include Job::Cms::CopyNodes::CmsParts
+  include Job::Cms::CopyNodes::CmsPages
 
   self.task_name = "cms:copy_nodes"
 
@@ -16,8 +12,10 @@ class Cms::Node::CopyNodesJob < Cms::ApplicationJob
     @cur_site = Cms::Site.find(site_id)
     @cur_node = Cms::Node.find(node_id)
     @target_node_name = target_node_name.values.first
-    @base_node_name = @cur_node.filename
 
     copy_cms_nodes
+    copy_cms_pages
+    copy_cms_layouts
+    copy_cms_parts
   end
 end
