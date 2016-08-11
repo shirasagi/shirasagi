@@ -423,6 +423,8 @@ ja:
         high_contrast_mode: 設定
         font_color: 文字色
         background_color: 背景色
+      cms/copy_nodes_task:
+        target_node_name: 複製先フォルダー名
 
   errors:
     messages:
@@ -976,3 +978,4 @@ ja:
       cms/check_links_job: リンクチェック
       cms/postal_code/import_job: 郵便番号インポート
       cms/postal_code/official_csv_import_job: 日本郵便CSVインポート
+      cms/node/copy_nodes_job: フォルダー複製
