@@ -18,7 +18,7 @@
     <div class="addon-head toggle-head"><h2><%= t "cms.copy_nodes.to" %></h2></div>
     <div class="addon-body toggle-body">
       <dl class="see">
-        <dt><%= t "cms.copy_nodes.target_node_name" %><%= @model.tt :filename %></dt>
+        <dt><%= t "cms.copy_nodes.target_node_name" %><%= tt "cms/model/node.foldername" %></dt>
         <dd><%= f.text_field :target_node_name, class: :filename %></dd>
         <dt><%= t "cms.copy_nodes.job_history" %></dt>
         <dd><%= link_to t("cms.copy_nodes.link_to_job_history"), job_cms_logs_path %></dd>

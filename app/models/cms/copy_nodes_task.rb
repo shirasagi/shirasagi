@@ -16,7 +16,7 @@ class Cms::CopyNodesTask
       if Cms::Node.where(filename: target_node_name).exists?
         errors.add :target_node_name, :duplicate
       elsif !parent_node_name.nil? && !Cms::Node.where(filename: parent_node_name.gsub(/\/$/, "")).exists?
-        errors.add :target_node_name, :not_found_parent_nodes, name: parent_node_name
+        errors.add :target_node_name, :not_found_parent_nodes, name: parent_node_name.gsub(/\/$/, "")
       end
     end
 end

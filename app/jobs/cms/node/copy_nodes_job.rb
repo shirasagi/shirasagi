@@ -8,7 +8,7 @@ class Cms::Node::CopyNodesJob < Cms::ApplicationJob
 
   self.task_name = "cms:copy_nodes"
 
-  def perform(target_node_name)
+  def perform(target_node_name={})
     @cur_site = Cms::Site.find(site_id)
     @cur_node = Cms::Node.find(node_id)
     @target_node_name = target_node_name.values.first

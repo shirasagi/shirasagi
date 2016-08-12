@@ -24,6 +24,7 @@ module Job::Cms::CopyNodes::CmsContents
       # after create item, copy references which have possibility of circular reference
       dest_content.attributes = resolve_unsafe_references(src_content, klass)
       update_html_strings(src_content, dest_content) if src_content.class.to_s =~ /Part/
+      dest_content.keywords = src_content.keywords if src_content.try(:keywords)
       dest_content.save!
 
       options[:after].call(src_content, dest_content) if options[:after]
