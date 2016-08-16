@@ -37,7 +37,8 @@ module Kana::Convertor
         mecab.parse(text).split(/\n/).each do |line|
           next if line == "EOS"
           data = line.split(",")
-          next if data[2] !~ /[一-龠]/
+          next if data[2] !~ /[一-龠a-zA-Z]/
+          next if data[10].blank?
 
           ps = data[0].to_i
           pe = data[1].to_i
