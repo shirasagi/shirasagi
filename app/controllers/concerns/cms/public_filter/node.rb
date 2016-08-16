@@ -3,6 +3,12 @@ module Cms::PublicFilter::Node
   include Cms::PublicFilter::Layout
 
   private
+    def init_context
+      self.params   = ActionController::Parameters.new
+      self.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
+      self.response = ActionDispatch::Response.new
+    end
+
     def find_node(path)
       node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).to_a.first
       return unless node
