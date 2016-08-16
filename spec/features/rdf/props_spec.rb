@@ -145,7 +145,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
             click_button I18n.t("views.button.delete")
           end
           expect(current_path).to eq index_path
-          within "table.index" do
+          within "ul.list-items" do
             expect(page).not_to have_text(item.name)
           end
         end
@@ -162,7 +162,7 @@ describe "rdf_props", type: :feature, dbscope: :example do
             click_button I18n.t("rdf.button.import")
           end
           expect(current_path).to eq index_path
-          within "table.index" do
+          within "ul.list-items" do
             expect(page).to have_text(item.name)
           end
         end
