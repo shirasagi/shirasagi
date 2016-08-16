@@ -18,7 +18,7 @@ module Cms::Addon::EditLock
   def acquire_lock(user: @cur_user, force: false)
     return if user.blank?
 
-    lock_until = LOCK_INTERVAL.from_now
+    lock_until = LOCK_INTERVAL.from_now.utc
     criteria = self.class.where(id: id)
     unless force
       criteria = criteria.where("$or" => [
