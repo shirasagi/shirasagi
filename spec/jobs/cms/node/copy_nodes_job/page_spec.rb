@@ -24,12 +24,12 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
         end
       end
 
-      it "was copied with original file_ids under target node" do
+      it "created new copied file under target node" do
         copied_node = Cms::Node.site(site).find_by(filename: target_node_name)
         copied_page = Cms::Page.site(site).where(filename: /^#{target_node_name}\//).first
         expect(copied_node.filename).to eq target_node_name
         expect(copied_page.filename).to eq "#{target_node_name}/page.html"
-        expect(copied_page.file_ids).to include file.id
+        expect(copied_page.file_ids).not_to include file.id
       end
     end
   end
