@@ -19,10 +19,10 @@
   }
 }
 <% end %>
-<div class="search-form">
+<div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.text_field :keyword, style: "width: 250px;" %>
     <%= f.select :category, category_options, include_blank: true %>
-    <input type="submit" value="<%= t('views.button.search') %>" />
+    <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
   <% end %>
 </div>

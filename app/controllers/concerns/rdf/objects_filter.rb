@@ -34,6 +34,10 @@ module Rdf::ObjectsFilter
     def set_categories
       # TODO: 後で修正するつもりだが、いいアイデアがない
       node = Opendata::Node::Category.site(@cur_site).and_public.first
+      if node.blank?
+        @categories = []
+        return
+      end
       node = node.parent while node.parent.present?
 
       @categories = [node.becomes_with_route]

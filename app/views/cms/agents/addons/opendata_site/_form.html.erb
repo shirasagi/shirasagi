@@ -1,0 +1,31 @@
+<% return "" unless Cms::Site.allowed?(:read, @cur_user, site: @cur_site) %>
+
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-cms-opendata-site");
+<% end %>
+
+<dl class="see mod-cms-opendata-site">
+  <dt><%= @model.t :opendata_site_ids %><%= @model.tt :opendata_site_ids %></dt>
+  <dd>
+    <%= f.hidden_field "opendata_site_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("cms.apis.sites.index"), cms_apis_sites_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= t("mongoid.models.cms/site") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.opendata_sites.each do |site| %>
+        <tr data-id="<%= site.id %>">
+          <td><%= f.hidden_field "opendata_site_ids[]", value: site.id %> <%= site.host %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

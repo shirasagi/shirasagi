@@ -7,10 +7,17 @@ SS::Application.routes.draw do
     delete action: :destroy_all, :on => :collection
   end
 
+  concern :integration do
+    get :split, :on => :collection
+    post :split, :on => :collection
+    get :integrate, :on => :collection
+    post :integrate, :on => :collection
+  end
+
   content "category" do
     get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
-    resources :nodes, concerns: :deletion
-    resources :pages, concerns: :deletion
+    resources :nodes, concerns: [:deletion, :integration]
+    resources :pages
   end
 
   node "category" do

@@ -165,6 +165,9 @@ ja:
 
   mongoid:
     models:
+      member/blog_page: ブログページ
+      member/photo: フォト
+      member/photo_spot: フォトスポット
       member/activity_log: 活動履歴
       member/group: グループ
       member/group_member: グループメンバー

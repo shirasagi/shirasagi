@@ -4,7 +4,7 @@ module Opendata::Addon
     extend ActiveSupport::Concern
 
     included do
-      embeds_ids :categories, class_name: "Opendata::Node::Category"
+      embeds_ids :categories, class_name: "Opendata::Node::Category", metadata: { on_copy: :safe }
       permit_params category_ids: []
     end
   end

@@ -49,6 +49,59 @@ module Sys::SiteCopy::CmsPages
   end
 
   def after_copy_cms_page(src_page, dest_page)
+    case src_page.route
+    when "opendata/dataset"
+      copy_opendata_dataset_groups(src_page, dest_page)
+      copy_opendata_dataset_resources(src_page, dest_page)
+    when "opendata/app"
+      copy_opendata_app_appfiles(src_page, dest_page)
+    end
+
     @task.log("#{src_page.filename}(#{src_page.id}): ページをコピーしました。")
+  end
+
+  def copy_opendata_dataset_groups(src_page, dest_page)
+    dest_page.dataset_group_ids = src_page.dataset_groups.map do |dataset_group|
+      resolve_opendata_dataset_group_reference(dataset_group.id)
+    end
+
+    dest_page.save!
+  end
+
+  def copy_opendata_dataset_resources(src_page, dest_page)
+    cache(:opendata_dataset_resources, src_page.id) do
+      src_page.resources.each do |resource|
+        dest_resource = dest_page.resources.new
+        dest_resource.name = resource.name
+        dest_resource.text = resource.text
+        dest_resource.filename = resource.filename
+        dest_resource.format = resource.format
+        dest_resource.rdf_iri = resource.rdf_iri
+        dest_resource.rdf_error = resource.rdf_error
+        dest_resource.license_id = resolve_opendata_license_reference(resource.license_id) if resource.license_id.present?
+        dest_resource.file_id = resolve_file_reference(resource.file_id) if resource.file_id.present?
+        dest_resource.tsv_id = resolve_file_reference(resource.tsv_id) if resource.tsv_id.present?
+        dest_resource.assoc_site_id = resource.assoc_site_id
+        dest_resource.assoc_node_id = resource.assoc_node_id
+        dest_resource.assoc_page_id = resource.assoc_page_id
+        dest_resource.assoc_file_id = resource.assoc_file_id
+        dest_resource.save!(validate: false)
+      end
+      dest_page.id
+    end
+  end
+
+  def copy_opendata_app_appfiles(src_page, dest_page)
+    cache(:opendata_app_appfiles, src_page.id) do
+      src_page.appfiles.each do |appfile|
+        dest_appfile = dest_page.appfiles.new
+        dest_appfile.text = appfile.text
+        dest_appfile.filename = appfile.filename
+        dest_appfile.format = appfile.format
+        dest_appfile.file_id = resolve_file_reference(appfile.file_id) if appfile.file_id.present?
+        dest_appfile.save!
+      end
+      dest_page.id
+    end
   end
 end

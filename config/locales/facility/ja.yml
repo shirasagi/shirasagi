@@ -69,6 +69,7 @@ ja:
       facility/service_setting: 施設の用途
       facility/category: 施設の種類
       facility/category_setting: 施設の種類
+      facility/opendata_assoc: オープンデータ連携
 
   cms:
     nodes:
@@ -80,6 +81,9 @@ ja:
       facility/search: 施設検索
 
   mongoid:
+    models:
+      facility/image: 施設写真
+      facility/map: 地図
     attributes:
       facility/node/page:
         name: 施設名
@@ -110,6 +114,9 @@ ja:
         image_thumb_size: サムネイルサイズ
         image_thumb_width: 幅
         image_thumb_height: 高さ
+      facility/addon/opendata_assoc:
+        opendata_site_ids: オープンデータサイト
+        csv_assoc: CSV連携
 
   job:
     models:

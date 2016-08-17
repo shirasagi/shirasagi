@@ -13,21 +13,20 @@ class Cms::SearchContents::PagesController < ApplicationController
       { cur_site: @cur_site, cur_user: @cur_user }
     end
 
-    def pre_params
-      if params[:s].present?
-        params[:s] = params[:s].map { |k, v| [ "search_#{k}".to_sym, v ] }.to_h
-        params.require(:s).permit(permit_fields)
-      else
-        {}
-      end
-    end
-
     def permit_fields
       @model.permitted_fields
     end
 
+    def get_params
+      if params[:item].present?
+        params.require(:item).permit(permit_fields).merge(fix_params)
+      else
+        fix_params
+      end
+    end
+
     def set_item
-      @item = @model.new pre_params.merge(fix_params)
+      @item = @model.new get_params
     end
 
   public

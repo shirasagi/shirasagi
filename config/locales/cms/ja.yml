@@ -18,6 +18,7 @@ ja:
     layout: レイアウト
     body_layout: 本文レイアウト
     link_check: リンクチェック
+    source_cleaner: ソースクリーニング
     preview: プレビュー
     member: メンバー
     modules: モジュール
@@ -43,6 +44,7 @@ ja:
     view_site: サイト確認
     editor_template: テンプレート
     theme_template: Theme切り替え
+    source_cleaner_template: ソースクリーニング
     convert_to_cms_page: 固定ページに変換する
     notice: お知らせ
     important_notice: 重要なお知らせ
@@ -88,10 +90,18 @@ ja:
         index: 関連記事を選択する
         search: 関連記事を検索
         select: 関連記事を設定する
+      pages_routes:
+        index: ページ属性を選択する
+        search: ページ属性を検索
+        select: ページ属性を設定する
       members:
         index: メンバーを選択する
         search: メンバーを検索
         select: メンバーを設定する
+      sites:
+        index: サイトを選択する
+        search: サイトを検索
+        select: サイトを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
@@ -135,6 +145,14 @@ ja:
         enabled: 有効
         disabled: 無効
         temporary: 仮登録
+      target_type:
+        tag: タグ
+        attribute: 属性
+        string: 文字列
+        regexp: 正規表現
+      action_type:
+        remove: 削除
+        replace: 置換
 
     sns_share:
       fb_like: Facebook いいね！
@@ -253,9 +271,13 @@ ja:
       cms/default_release_plan: 公開予約の既定値
       cms/page_search: 検索条件
       cms/high_contrast_mode: ハイコントラストモード
+      cms/source_cleaner: ソースクリーニング
+      cms/opendata_site: オープンデータサイト
+      cms/opendata: オープンデータ
 
   mongoid:
     models:
+      cms/site: サイト
       cms/user: ユーザー
       cms/member: メンバー
       cms/node: フォルダー
@@ -279,6 +301,7 @@ ja:
       cms/page_search: ページ検索
       cms/postal_code: 郵便番号
       cms/task: タスク
+      cms/import_page: 取り込みページ
     attributes:
       cms/content:
         released: 公開日時
@@ -343,6 +366,9 @@ ja:
         class_name: class属性
         order: 並び順
         css_path: cssパス
+      cms/source_cleaner_template:
+        name: 名前
+        order: 並び順
       cms/addon/crumb:
         home_label: ホームラベル
       cms/notice:
@@ -410,6 +436,9 @@ ja:
         search_category_ids: カテゴリー
         search_groups: グループ
         search_group_ids: グループ
+        search_nodes: フォルダー
+        search_node_ids: フォルダー
+        search_routes: ページ属性
         search_released: 公開日時
         search_released_start: 公開日時（開始）
         search_released_close: 公開日時（終了）
@@ -426,6 +455,14 @@ ja:
         background_color: 背景色
       cms/copy_nodes_task:
         target_node_name: 複製先フォルダー名
+      cms/addon/source_cleaner:
+        target: 対象
+        action: 操作
+        replaced_value: 置換後の値
+      cms/addon/opendata_site:
+        opendata_site_ids: サイト
+      cms/addon/opendata:
+        opendata_state: 公開状態
 
   errors:
     messages:
@@ -940,6 +977,12 @@ ja:
       search_category_ids:
         - 検索したいカテゴリーを選択します。
         - いずれかのカテゴリーに該当するページが検索されます。
+      search_node_ids:
+        - 検索したいフォルダーを選択します。
+        - いずれかのフォルダー配下に存在するページが検索されます。
+      search_routes:
+        - 検索したいページ属性を選択します。
+        - いずれかのページ属性に該当するページが検索されます。
       search_released:
         - 検索したい公開日時の範囲を入力します。
       search_updated:
@@ -948,6 +991,25 @@ ja:
         - 検索したいページのステータスを選択します。
       search_approver_state:
         - 検索したいページの承認ステータスを選択します。
+
+    cms/addon/source_cleaner:
+      target:
+        - クリーニングの対象を設定します。
+        - タグ、属性、文字列の中から種別を選択し、右欄に対象を入力します。
+      action:
+        - 対象のクリーニング方法を設定します。
+        - 置換または削除が選択できます。
+        - 置換後のタグや属性の値、文字列を右欄に入力します。
+
+    cms/addon/opendata_site:
+      opendata_site_ids:
+        - オープンデータサイトを設定します。
+        - 設定したサイトのデータセットにページが連携されるようになります。
+
+    cms/addon/opendata:
+      opendata_state:
+        - ページをオープンデータとして公開するかどうかを選択します。
+        - 「公開」を選択するとオープンデータとして公開されます。
 
   all_content:
     page_id: ページID

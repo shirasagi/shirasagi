@@ -20,4 +20,15 @@ class Cms::Page
   include History::Addon::Backup
 
   index({ site_id: 1, filename: 1 }, { unique: true })
+
+  class << self
+    def routes
+      pages = ::Mongoid.models.select { |model| model.ancestors.include?(Cms::Model::Page) }
+      routes = pages.map { |model| model.name.underscore }.sort.uniq
+      routes.map do |route|
+        mod = route.sub(/\/.*/, '')
+        { route: route, module: mod, module_name: I18n.t("modules.#{mod}"), name: I18n.t("mongoid.models.#{route}") }
+      end
+    end
+  end
 end

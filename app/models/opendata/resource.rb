@@ -1,8 +1,8 @@
 class Opendata::Resource
   include SS::Document
   include Opendata::Resource::Model
-  include SS::Relation::File
   include Opendata::Addon::RdfStore
+  include Opendata::Addon::SiteAssociation
 
   attr_accessor :workflow, :status
 
@@ -19,7 +19,6 @@ class Opendata::Resource
   before_validation :set_format
 
   after_save :save_dataset
-  after_destroy -> { dataset.save(validate: false) }
 
   def context_path
     "/resource"

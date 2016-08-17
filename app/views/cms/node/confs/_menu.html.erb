@@ -6,6 +6,14 @@
     <%= link_to :edit, action: :edit if @item.allowed?(:edit, @cur_user)  %>
     <%= link_to :move, action: :move if @item.allowed?(:move, @cur_user)  %>
     <%= link_to :copy, :node_copy if @item.allowed?(:edit, @cur_user)  %>
+
+    <% if @item.route == "category/node"|| @item.route == "category/page" %>
+      <% if @item.allowed?(:edit, @cur_user) %>
+        <%= link_to :split, split_category_nodes_path %>
+        <%= link_to :integrate, integrate_category_nodes_path %>
+      <% end %>
+    <% end %>
+
     <%= link_to :delete, action: :delete if @item.allowed?(:edit, @cur_user)  %>
     <%= link_to :back_to_index, controller: :nodes %>
   <% end %>

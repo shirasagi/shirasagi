@@ -9,6 +9,8 @@ class Sys::SiteCopyJob < SS::ApplicationJob
   include Sys::SiteCopy::CmsFiles
   include Sys::SiteCopy::CmsEditorTemplates
   include Sys::SiteCopy::KanaDictionaries
+  include Sys::SiteCopy::OpendataDatasetGroups
+  include Sys::SiteCopy::OpendataLicenses
 
   self.task_class = Sys::SiteCopyTask
   self.task_name = "sys::site_copy"

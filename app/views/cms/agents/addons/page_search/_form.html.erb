@@ -7,7 +7,7 @@
 
   <dt><%= @model.t :search_category_ids %><%= @model.tt :search_category_ids %></dt>
   <dd>
-    <%= hidden_field_tag "item[search_category_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[search_category_ids][]", nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path, class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -21,7 +21,7 @@
       <tbody>
       <% @item.search_categories.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= hidden_field_tag "item[search_category_ids][]", item.id %> <%= item.name %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[search_category_ids][]", item.id %> <%= item.name %></td>
           <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
@@ -33,7 +33,7 @@
 <dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_group_ids %><%= @model.tt :search_group_ids %></dt>
   <dd>
-    <%= hidden_field_tag "item[search_group_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[search_group_ids][]", nil, class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -47,7 +47,60 @@
       <tbody>
       <% @item.search_groups.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= hidden_field_tag "item[search_group_ids][]", item.id %> <%= item.name %></td>
+          <td><%= hidden_field_tag "#{f.object_name}[search_group_ids][]", item.id %> <%= item.name %></td>
+          <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-cms-page-search">
+  <dt><%= @model.t :search_node_ids %><%= @model.tt :search_node_ids %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[search_node_ids][]", nil, class: "hidden-ids" %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path, class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :search_node_ids %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.search_nodes.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= hidden_field_tag "#{f.object_name}[search_node_ids][]", item.id %> <%= item.name %></td>
+            <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-cms-page-search">
+  <dt><%= @model.t :search_routes %><%= @model.tt :search_routes %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[search_routes][]", nil, class: "hidden-ids" %>
+    <%= link_to t("cms.apis.pages_routes.index"), cms_apis_pages_routes_path, class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :search_routes %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.search_routes.each do |route| %>
+        <% next if route.blank? %>
+        <tr data-id="<%= route %>">
+          <td><%= hidden_field_tag "#{f.object_name}[search_routes][]", route %> <%= I18n.t("mongoid.models.#{route}") %></td>
           <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

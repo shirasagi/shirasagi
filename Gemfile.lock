@@ -463,7 +463,7 @@ GEM
       json (>= 1.8.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.1)
+    unf_ext (0.0.7.2)
     ungarbled (0.0.10)
       activesupport
       browser (>= 0.4)

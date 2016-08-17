@@ -5,9 +5,9 @@ module Cms::Model::Page
   include Cms::Reference::Layout
 
   included do
-    class_variable_set(:@@_after_generate_file_callbacks, [])
-    class_variable_set(:@@_after_remove_file_callbacks, [])
-    class_variable_set(:@@_after_rename_file_callbacks, [])
+    define_model_callbacks :generate_file
+    define_model_callbacks :remove_file
+    define_model_callbacks :rename_file
 
     store_in collection: "cms_pages"
     set_permission_name "cms_pages"
@@ -37,17 +37,14 @@ module Cms::Model::Page
     return false unless serve_static_file?
     return false unless public?
     return false unless public_node?
-    written = Cms::Agents::Tasks::PagesController.new.generate_page(self)
-    self.class.class_variable_get(:@@_after_generate_file_callbacks).each do |c|
-      run_callback(c)
+    run_callbacks :generate_file do
+      Cms::Agents::Tasks::PagesController.new.generate_page(self)
     end
-    written
   end
 
   def remove_file
-    Fs.rm_rf path
-    self.class.class_variable_get(:@@_after_remove_file_callbacks).each do |c|
-      run_callback(c)
+    run_callbacks :remove_file do
+      Fs.rm_rf path
     end
   end
 
@@ -59,10 +56,9 @@ module Cms::Model::Page
     dst = "#{site.path}/#{@db_changes['filename'][1]}"
     dst_dir = ::File.dirname(dst)
 
-    Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
-    Fs.mv src, dst if Fs.exists?(src)
-    self.class.class_variable_get(:@@_after_rename_file_callbacks).each do |c|
-      run_callback(c, src, dst)
+    run_callbacks :rename_file do
+      Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
+      Fs.mv src, dst if Fs.exists?(src)
     end
   end
 
@@ -133,13 +129,6 @@ module Cms::Model::Page
   end
 
   private
-    def run_callback(c, *args)
-      call = true
-      call = instance_exec(&c[:if]) if c[:if]
-      call = !instance_exec(&c[:unless]) if c[:unless]
-      send(c[:method], *args) if call
-    end
-
     def set_released
       self.released ||= Time.zone.now
     end
@@ -157,24 +146,4 @@ module Cms::Model::Page
       end
       ret.join("\n").html_safe
     end
-
-  module ClassMethods
-    def after_generate_file(method, opts = {})
-      callback = opts.merge(method: method)
-      callbacks = class_variable_get(:@@_after_generate_file_callbacks)
-      class_variable_set(:@@_after_generate_file_callbacks, callbacks << callback)
-    end
-
-    def after_remove_file(method, opts = {})
-      callback = opts.merge(method: method)
-      callbacks = class_variable_get(:@@_after_remove_file_callbacks)
-      class_variable_set(:@@_after_remove_file_callbacks, callbacks << callback)
-    end
-
-    def after_rename_file(method, opts = {})
-      callback = opts.merge(method: method)
-      callbacks = class_variable_get(:@@_after_rename_file_callbacks)
-      class_variable_set(:@@_after_rename_file_callbacks, callbacks << callback)
-    end
-  end
 end

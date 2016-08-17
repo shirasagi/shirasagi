@@ -72,8 +72,8 @@ class @SS_SearchUI
       id = $(this).attr("data-id")
       tr = $("#colorbox .items [data-id='#{id}']")
       tr.find("input[type=checkbox]").remove()
-      item = tr.find(".select-item").html()
-      tr.find(".select-item").replaceWith("<span class='select-item' style='color: #888'>#{item}</span>")
+      item = tr.find(".select-item,.select-single-item").html()
+      tr.find(".select-item,.select-single-item").replaceWith("<span class='select-item' style='color: #888'>#{item}</span>")
 
     SS_ListUI.render("table.index")
 
@@ -92,7 +92,9 @@ class @SS_SearchUI
       id = $(this).closest("[data-id]").attr("data-id")
       name = $(this).text()
       # remove old items
-      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").remove()
+      SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each ->
+        if $(this).find("input[value]").length
+          $(this).remove()
       # append newly selected item
       SS_SearchUI.select({ id: id, name: name })
       SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()

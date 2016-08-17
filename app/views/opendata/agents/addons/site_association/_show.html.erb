@@ -1,0 +1,31 @@
+<% return "" if @item.assoc_site_id.blank? %>
+
+<dl class="see mod-opendata-site-association">
+  <% if @item.assoc_site_id != @cur_site.id %>
+  <dt><%= @model.t :assoc_site_id %></dt>
+  <dd>
+    <%= link_to @item.assoc_site.name, cms_contents_path(site: @item.assoc_site) %>
+  </dd>
+  <% end %>
+
+  <% if @item.assoc_node.present? && @item.assoc_node.allowed?(:read, @cur_user, site: @item.assoc_site) %>
+  <dt><%= @model.t :assoc_node_id %></dt>
+  <dd>
+    <%= link_to @item.assoc_node.name, @item.assoc_node.private_show_path %>
+  </dd>
+  <% end %>
+
+  <% if @item.assoc_page.present? && @item.assoc_page.allowed?(:read, @cur_user, site: @item.assoc_site) %>
+  <dt><%= @model.t :assoc_page_id %></dt>
+  <dd>
+    <%= link_to @item.assoc_page.name, @item.assoc_page.private_show_path %>
+  </dd>
+  <% end %>
+
+  <% if @item.assoc_file.present? && @item.assoc_file.allowed?(:read, @cur_user, site: @item.assoc_site) %>
+    <dt><%= @model.t :assoc_file_id %></dt>
+    <dd>
+      <%= @item.assoc_file.name %>
+    </dd>
+  <% end %>
+</dl>

@@ -1,0 +1,9 @@
+<% return "" unless Cms::Site.allowed?(:read, @cur_user, site: @cur_site) %>
+
+<dl class="see mod-facility-opendata-assoc">
+  <dt><%= @model.t :opendata_site_ids %></dt>
+  <dd><%= br @item.opendata_sites.pluck(:host).join("\n") %></dd>
+
+  <dt><%= @model.t :csv_assoc %></dt>
+  <dd><%= br @item.label :csv_assoc %></dd>
+</dl>

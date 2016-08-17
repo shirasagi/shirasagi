@@ -148,7 +148,10 @@ module Sitemap::Addon
         Fs.rm_rf(file) if Fs.file?(file)
       end
 
-      def rename_sitemap_xml(src, dst)
+      def rename_sitemap_xml
+        src = "#{site.path}/#{@db_changes['filename'][0]}"
+        dst = "#{site.path}/#{@db_changes['filename'][1]}"
+
         src = src.sub(/\.[^\/]+$/, ".xml")
         dst = dst.sub(/\.[^\/]+$/, ".xml")
         Fs.mv src, dst if Fs.exists?(src)

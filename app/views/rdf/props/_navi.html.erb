@@ -1,21 +1,18 @@
 <% if @vocab.present? %>
-<nav class="sub-menu">
-  <header><h1><%= t :"views.links.rdf.vocabs" %></h1></header>
-  <div>
-    <%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @vocab %>
-    <%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @vocab %>
-    <% if @rdf_class.present? %>
-      <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab, class_id: nil %>
-      <nav class="sub-menu">
-        <div>
-          <header><h1><%= @rdf_class.name %></h1></header>
-          <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %>
-        </div>
-      </nav>
-    <% else %>
-      <%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %>
-    <% end %>
-  </div>
+<nav class="mod-navi">
+  <h2><%= t :"views.links.rdf.vocabs" %></h2>
+  <h3><%= link_to :"rdf.vocab", controller: :vocabs, action: :show, id: @vocab %></h3>
+  <h3><%= link_to :"rdf.classes", controller: :classes, action: :index, vocab_id: @vocab %></h3>
+  <% if @rdf_class.present? %>
+    <h3><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab, class_id: nil %></h3>
+    <h3><span><%= @rdf_class.name %></span></h3>
+    <ul class="narrow-page">
+      <li><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %></li>
+    </ul>
+  <% else %>
+    <h3><%= link_to :"rdf.props", controller: :props, action: :index, vocab_id: @vocab %></h3>
+  <% end %>
 </nav>
 <% end %>
-<%= render partial: "cms/main/navi" %>
+
+<%= render partial: "cms/main/conf_navi" %>
