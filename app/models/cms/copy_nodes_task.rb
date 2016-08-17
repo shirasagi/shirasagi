@@ -13,9 +13,9 @@ class Cms::CopyNodesTask
   private
     def validate_node_name
       parent_node_name = target_node_name.match(/(.*\/)*(.+)/)[1]
-      if Cms::Node.where(filename: target_node_name).exists?
+      if Cms::Node.where(filename: target_node_name, site_id: self.site_id).exists?
         errors.add :target_node_name, :duplicate
-      elsif !parent_node_name.nil? && !Cms::Node.where(filename: parent_node_name.gsub(/\/$/, "")).exists?
+      elsif !parent_node_name.nil? && !Cms::Node.where(filename: parent_node_name.gsub(/\/$/, ""), site_id: self.site_id).exists?
         errors.add :target_node_name, :not_found_parent_nodes, name: parent_node_name.gsub(/\/$/, "")
       end
     end

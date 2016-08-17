@@ -28,7 +28,7 @@ class Cms::Node::CopyNodesController < ApplicationController
     end
 
     def set_item
-      @item ||= Cms::CopyNodesTask.first_or_initialize name: task_name, site_id: @cur_site.id, node_id: @cur_node.id
+      @item = Cms::CopyNodesTask.find_or_initialize_by name: task_name, site_id: @cur_site.id, node_id: @cur_node.id
     end
 
     def get_params
