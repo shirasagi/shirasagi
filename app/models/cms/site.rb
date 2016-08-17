@@ -5,6 +5,7 @@ class Cms::Site
   include Cms::Addon::DefaultReleasePlan
   include SS::Addon::MobileSetting
   include SS::Addon::MapSetting
+  include SS::Addon::KanaSetting
   include Opendata::Addon::SiteSetting
 
   set_permission_name "cms_sites", :edit

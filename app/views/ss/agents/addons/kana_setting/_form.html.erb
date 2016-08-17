@@ -1,0 +1,7 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-map-setting");
+<% end %>
+<dl class="see mod-ss-kana-setting">
+  <dt><%= @model.t :kana_format %><%= @model.tt :kana_format %></dt>
+  <dd><%= f.select :kana_format, @item.kana_format_options %></dd>
+</dl>

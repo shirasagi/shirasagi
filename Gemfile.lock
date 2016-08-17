@@ -355,6 +355,8 @@ GEM
       json (~> 1.4)
     ref (2.0.0)
     rmagick (2.15.4)
+    romaji (0.2.3)
+      rake (>= 0.8.0)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -551,6 +553,7 @@ DEPENDENCIES
   rdf-rdfxml
   rdf-turtle
   rmagick
+  romaji
   rspec
   rspec-collection_matchers
   rspec-its
