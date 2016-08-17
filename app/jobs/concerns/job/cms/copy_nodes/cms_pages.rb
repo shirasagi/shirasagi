@@ -12,7 +12,7 @@ module Job::Cms::CopyNodes::CmsPages
   end
 
   def copy_cms_pages
-    Cms::Page.where(filename: /^#{@cur_node.filename}\//).each do |page|
+    Cms::Page.site(@cur_site).where(filename: /^#{@cur_node.filename}\//).each do |page|
       copy_cms_page(page)
     end
   end

@@ -11,7 +11,7 @@ module Job::Cms::CopyNodes::CmsLayouts
   end
 
   def copy_cms_layouts
-    Cms::Layout.excludes(depth: 1).where(filename: /^#{@cur_node.filename}\//).each do |layout|
+    Cms::Layout.site(@cur_site).excludes(depth: 1).where(filename: /^#{@cur_node.filename}\//).each do |layout|
       copy_cms_layout(layout)
     end
   end

@@ -19,7 +19,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
         end
       end
 
-      it "coped nodes and it refer original layout id ,and alse child nodes" do
+      it "coped nodes and it refer original layout id ,and also child nodes" do
         copied_node = Cms::Node.site(site).where(filename: /^#{target_node_name}\//, depth: 3).first
         expect(copied_node.filename).to eq "#{target_node_name}/node2/node3"
         expect(copied_node.layout_id).to eq layout.id
@@ -34,6 +34,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
           .perform_now( {target_node_name: target_node_name} )
         end
       end
+
       it "copied" do
         copied_node = Cms::Node.site(site).where(filename: /^#{target_node_name}\//, depth: 4).first
         expect(copied_node.filename).to eq "#{target_node_name}/node2/node3"

@@ -12,7 +12,7 @@ module Job::Cms::CopyNodes::CmsParts
   end
 
   def copy_cms_parts
-    Cms::Part.where(filename: /^#{@cur_node.filename}\//).each do |part|
+    Cms::Part.site(@cur_site).where(filename: /^#{@cur_node.filename}\//).each do |part|
       copy_cms_part(part)
     end
   end
