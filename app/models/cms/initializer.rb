@@ -10,6 +10,7 @@ module Cms
     Cms::Part.plugin "cms/tabs"
     Cms::Part.plugin "cms/crumb"
     Cms::Part.plugin "cms/sns_share"
+    Cms::Part.plugin "cms/monthly_nav"
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups
