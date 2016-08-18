@@ -2,7 +2,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   include Cms::NodeFilter::View
   helper Cms::ListHelper
 
-  before_action :set_range
+  before_action :set_range, only: :index
   before_action :becomes_with_route_node
 
   private
@@ -60,6 +60,10 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
         per(@cur_node.limit)
 
       render_with_pagination @items
+    end
+
+    def redirect_to_archive_index
+      redirect_to "#{@cur_site.full_url}#{params[:public_path]}/#{Time.zone.now.strftime('%Y%m')}"
     end
 
     # def rss
