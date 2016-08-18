@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "event_agents_parts_calendar", type: :feature, dbscope: :example do
+describe "cms_agents_parts_calendar_nav", type: :feature, dbscope: :example do
   let(:site)   { cms_site }
   let(:layout) { create_cms_layout [part] }
   let(:node) { create :cms_node_archive, cur_site: site, layout_id: layout.id, filename: "node" }
