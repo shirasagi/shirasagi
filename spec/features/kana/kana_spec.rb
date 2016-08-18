@@ -29,7 +29,6 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       expect(page).not_to have_css('ruby')
 
       click_on 'ふりがなをつける'
-      puts page.html
       expect(page).to have_css('ruby')
 
       click_on 'ふりがなをはずす'
