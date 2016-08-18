@@ -54,6 +54,7 @@ gem 'clam_scan'
 gem 'fast_blank'
 gem 'oj'
 gem 'open_uri_redirections'
+gem 'romaji'
 
 # OAuth
 gem 'omniauth'

@@ -10,7 +10,7 @@ module Kana::Convertor
   end
 
   class << self
-    def kana_html(site_id, html)
+    def kana_html(site, html)
       return html unless @@mecab
 
       text = html.gsub(/[\r\n\t]/, " ")
@@ -26,7 +26,7 @@ module Kana::Convertor
       kana = ""
       pl   = 0
 
-      Kana::Dictionary.pull(site_id) do |userdic|
+      Kana::Dictionary.pull(site.id) do |userdic|
         mecab_param = '--node-format=%ps,%pe,%m,%H\n --unk-format='
         unless userdic.blank?
           mecab_param = "-u #{userdic} " + mecab_param
@@ -37,12 +37,13 @@ module Kana::Convertor
         mecab.parse(text).split(/\n/).each do |line|
           next if line == "EOS"
           data = line.split(",")
-          next if data[2] !~ /[一-龠]/
+          next if data[2] !~ /[一-龠a-zA-Z]/
+          next if data[10].blank?
 
           ps = data[0].to_i
           pe = data[1].to_i
           kana << byte[pl..ps-1].pack("C*").force_encoding("utf-8") if ps != pl
-          yomi = data[10].to_s.tr("ァ-ン", "ぁ-ん")
+          yomi = katakana_to_yomi(data[10].to_s, site.kana_format)
           kana << "<ruby>#{data[2]}<rp>(</rp><rt>#{yomi}</rt><rp>)</rp></ruby>"
           pl = pe
         end
@@ -55,6 +56,18 @@ module Kana::Convertor
     private
       def mpad(str)
         str.gsub(/[^ -~]/, "   ")
+      end
+
+      def katakana_to_yomi(str, format)
+        case format
+        when "katakana"
+          str
+        when "romaji"
+          require "romaji"
+          Romaji.kana2romaji(str)
+        else #hiragana
+          str.tr("ァ-ン", "ぁ-ん")
+        end
       end
   end
 end
