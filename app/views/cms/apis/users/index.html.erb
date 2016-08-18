@@ -1,0 +1,35 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<div class="search-ui-form">
+<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.submit  t("cms.apis.users.search"), class: :btn %>
+<% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="name"><%= @model.t :name %></th>
+      <th class="updated"><%= @model.t :updated %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= item.id %>" class="list-item">
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <td class="name"><%= link_to item.name, "#", class: "select-item" %></td>
+        <td class="updated"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select">
+  <%= button_tag t("cms.apis.users.select"), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

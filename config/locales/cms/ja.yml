@@ -104,6 +104,10 @@ ja:
         index: サイトを選択する
         search: サイトを検索
         select: サイトを設定する
+      users:
+        index: ユーザーを選択する
+        search: ユーザーを検索
+        select: ユーザーを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
@@ -313,9 +317,11 @@ ja:
       cms/content:
         released: 公開日時
         name: タイトル
+        keyword: キーワード
         index_name: 一覧用タイトル
         depth: フォルダ階層
         order: 並び順
+        user: 作成者
         md5: ハッシュ値
       cms/model/node:
         filename: フォルダー名
@@ -439,6 +445,7 @@ ja:
       cms/addon/page_search:
         search_name: タイトル
         search_filename: ファイル名
+        search_keyword: キーワード
         search_categories: カテゴリー
         search_category_ids: カテゴリー
         search_groups: グループ
@@ -446,6 +453,8 @@ ja:
         search_nodes: フォルダー
         search_node_ids: フォルダー
         search_routes: ページ属性
+        search_users: 作成者
+        search_user_ids: 作成者
         search_released: 公開日時
         search_released_start: 公開日時（開始）
         search_released_close: 公開日時（終了）
@@ -453,7 +462,9 @@ ja:
         search_updated_start: 更新日時（開始）
         search_updated_close: 更新日時（終了）
         search_state: ステータス
+        search_first_released: 公開ステータス
         search_approver_state: 承認ステータス
+        search_sort: 検索結果の並び順
       cms/task:
         node_id: フォルダー
       cms/addon/high_contrast_mode:
@@ -576,7 +587,7 @@ ja:
         keyword:
           - 検索を行う文字列を入力します。
           - 検索文字をHTMLに含むページ、パーツ、レイアウトを検索します。
-          - "検索と置換の対象となる項目は以下です。\nページ：本文、連絡先、FAQの質問回答\nパーツ：HTML、上部下部HTML\nレイアウト:HTML"
+          - "検索と置換の対象となる項目は以下です。\nページ：タイトル、本文、連絡先、FAQの質問回答\nパーツ：タイトル、HTML、上部下部HTML\nレイアウト:タイトル、HTML"
         replacement:
           - 置換後の文字列を入力します。
           - 検索を行った後、置換を行うページ、パーツ、レイアウトにチェックを入れ全置換ボタンをクリックします。
@@ -990,9 +1001,15 @@ ja:
         - 検索したいページタイトルを入力します。
       search_filename:
         - 検索したいファイル名を入力します。
+      search_keyword:
+        - 検索したいキーワードを入力します。
+        - ページ本文等にヒットします。
       search_group_ids:
         - 検索したい管理グループを選択します。
         - いずれかのグループに該当するページが検索されます。
+      search_user_ids:
+        - 検索したい作成者（ユーザー）を選択します。
+        - いずれかのユーザーが作成者に該当するページが検索されます。
       search_category_ids:
         - 検索したいカテゴリーを選択します。
         - いずれかのカテゴリーに該当するページが検索されます。
@@ -1008,8 +1025,13 @@ ja:
         - 検索したい更新日時の範囲を入力します。
       search_state:
         - 検索したいページのステータスを選択します。
+      search_first_released:
+        - 検索したいページの公開ステータスを選択します。
       search_approver_state:
         - 検索したいページの承認ステータスを選択します。
+      search_sort:
+        - 検索結果のページ並び順を選択します。
+        - 指定が無い場合、ファイル名での並び順となります。
 
     cms/addon/source_cleaner:
       target:

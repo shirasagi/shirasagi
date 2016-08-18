@@ -28,7 +28,9 @@ module Inquiry::Node
 
     private
       def set_released
-        self.released ||= Time.zone.now
+        now = Time.zone.now
+        self.released ||= now
+        self.first_released ||= now
       end
   end
 

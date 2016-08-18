@@ -32,18 +32,22 @@ describe "cms_search", dbscope: :example, js: true do
         cate2 = create(:category_node_page)
         cate3 = create(:category_node_page)
         cate4 = create(:category_node_page)
+        html1 = "<div>html1</div>"
+        html2 = "<div>[TEST]A</div>"
+        html3 = "<div>html3</div>"
+        html4 = "<div>html4</div>"
         create(
-          :cms_page, cur_site: site, name: "[TEST]A", filename: "A.html", state: "public",
-          category_ids: [ cate1.id ], group_ids: [ cms_group.id ])
+          :cms_page, cur_site: site, user: user, name: "[TEST]A", filename: "A.html", state: "public",
+          category_ids: [ cate1.id ], group_ids: [ cms_group.id ], html: html1)
         create(
           :article_page, cur_site: site, cur_node: node, name: "[TEST]B", filename: "B.html", state: "public",
-          category_ids: [ cate2.id ], group_ids: [ cms_group.id ])
+          category_ids: [ cate2.id ], group_ids: [ cms_group.id ], html: html2)
         create(
           :event_page, cur_site: site, cur_node: node, name: "[TEST]C", filename: "C.html", state: "closed",
-          category_ids: [ cate3.id ], group_ids: [ cms_group.id ])
+          category_ids: [ cate3.id ], group_ids: [ cms_group.id ], html: html3)
         create(
           :faq_page, cur_site: site, cur_node: node, name: "[TEST]D", filename: "D.html", state: "closed",
-          category_ids: [ cate4.id ], group_ids: [ cms_group.id ])
+          category_ids: [ cate4.id ], group_ids: [ cms_group.id ], html: html4)
 
         opendata_node = create(:opendata_node_dataset)
         opendata_cate = create(:opendata_node_category, name: opendata_cate_name1)
@@ -91,6 +95,19 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
       end
 
+      it "search with keyword" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          fill_in "item[search_keyword]", with: "[TEST]A"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "2 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+      end
+
       it "search with state" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
@@ -104,6 +121,28 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         within "form.search-pages" do
           select "非公開", from: "item[search_state]"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "3 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]C")
+        expect(page).to have_css("div.info a.title", text: "[TEST]D")
+        expect(page).to have_css("div.info a.title", text: "[TEST]E")
+      end
+
+      it "search with publishable" do
+        visit pages_index_path
+        expect(current_path).not_to eq sns_login_path
+        within "form.search-pages" do
+          select "公開済み", from: "item[search_first_released]"
+          click_button "検索"
+        end
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "2 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
+        expect(page).to have_css("div.info a.title", text: "[TEST]B")
+        within "form.search-pages" do
+          select "未公開", from: "item[search_first_released]"
           click_button "検索"
         end
         expect(status_code).to eq 200
@@ -281,6 +320,16 @@ describe "cms_search", dbscope: :example, js: true do
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
         expect(page).to have_css("div.info a.title", text: "[TEST]D")
         expect(page).to have_css("div.info a.title", text: "[TEST]E")
+      end
+
+      it "search with user" do
+        visit pages_index_path
+        click_on 'ユーザーを選択する'
+        click_on user.name
+        click_button "検索"
+        expect(status_code).to eq 200
+        expect(page).to have_css(".search-count", text: "1 件の検索結果")
+        expect(page).to have_css("div.info a.title", text: "[TEST]A")
       end
 
       it "search with nodes" do

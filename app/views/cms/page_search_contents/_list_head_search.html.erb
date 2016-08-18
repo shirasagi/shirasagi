@@ -1,0 +1,6 @@
+<% @s = OpenStruct.new params[:s] %>
+<%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+  <%= f.text_field :name, style: "width: 300px;" %>
+  <%= f.select :status, @model.new.status_options, include_blank: true %>
+  <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
+<% end %>
