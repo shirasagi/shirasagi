@@ -1,0 +1,53 @@
+<%= jquery do %> Event_Calendar.render("<%= raw @cur_part.url %>"); <% end %>
+
+<div class="event-calendar">
+  <nav class="calendar-nav">
+    <ul>
+      <li class="prev">
+        <% if within_one_year?(@prev_month_date) %>
+          <%= link_to t("event.prev_month"), "#", class: :paginate,
+            "data-year" => @prev_month_date.year, "data-month" => @prev_month_date.month %>
+        <% else %>
+          <%= t("event.prev_month") %>
+        <% end %>
+      </li>
+      <li class="current">
+        <%= link_to t("event.current_month"), "#", class: :paginate,
+          "data-year" => Time.zone.today.year, "data-month" => Time.zone.today.month %>
+      </li>
+      <li class="next">
+        <% if within_one_year?(@next_month_date) %>
+          <%= link_to t("event.next_month"), "#", class: :paginate,
+            "data-year" => @next_month_date.year, "data-month" => @next_month_date.month  %>
+        <% else %>
+          <%= t("event.next_month") %>
+        <% end %>
+      </li>
+    </ul>
+  </nav>
+  <table class="calendar">
+    <caption>
+      <%= link_to_monthly @current_month_date, name: "#{@year}#{t_date('year')}#{@month}#{t_date('month')}",
+        path: @cur_part.parent.try(:url).to_s %>
+    </caption>
+    <thead>
+      <tr>
+        <% t_wdays.each do |wday| %>
+          <th><span class="wday"><%= wday %><span class="unit"><%= t_date('wday') %></span></span></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <% @dates.each_with_index do |(date, blog), i| %>
+          <% if i != 0 && (i % 7) == 0 %>
+            </tr><tr>
+          <% end %>
+          <td class="<%= event_td_class(date, @current_month_date) %>">
+            <%= link_to_archive_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: blog ? true : false %>
+          </td>
+        <% end %>
+      </tr>
+    </tbody>
+  </table>
+</div>

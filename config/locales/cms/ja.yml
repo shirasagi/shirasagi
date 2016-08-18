@@ -171,6 +171,7 @@ ja:
       cms/tabs: 新着タブ
       cms/crumb: パンくずリスト
       cms/sns_share: SNSシェアボタン
+      cms/calendar_nav: アーカイブナビ(カレンダー)
 
   cms_role:
     edit_cms_sites: サイトの管理
