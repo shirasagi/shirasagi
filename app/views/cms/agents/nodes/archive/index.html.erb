@@ -1,5 +1,38 @@
-<div class="cms-pages pages">
-<%= render_page_list %>
+<% if params[:ymd].length == 6 && !params[:page]%>
+  <%= jquery do %>
+  $(document).ready(function(){
+    $("#goto-list").css("display", "")
+    $("#goto-calendar").css("display", "none")
+    $("#normal-list").css("display", "none")
+    $("#calendar-list").css("display", "")
+    $("#goto-list").on('click', function(){
+      $("#goto-list").css("display", "none")
+      $("#goto-calendar").css("display", "")
+      $("#normal-list").css("display", "")
+      $("#calendar-list").css("display", "none")
+    })
+    $("#goto-calendar").on('click', function(){
+      $("#goto-calendar").css("display", "none")
+      $("#goto-list").css("display", "")
+      $("#calendar-list").css("display", "")
+      $("#normal-list").css("display", "none")
+    })
+  });
+  <% end %>
+<% end %>
+
+
+<div class="">
+  <button type="button" name="button" id="goto-calendar" style="display:none; float:right;">カレンダーリスト表示</button>
+  <button type="button" name="button" id="goto-list" style="display:none; float:right;">リスト表示</button>
 </div>
 
-<%= paginate @items if @items.try(:current_page) %>
+<% if params[:ymd].length == 6 %>
+  <div id="calendar-list" style="display:none; margin-top: 50px;">
+  <%= render "monthly"  %>
+  </div>
+<% end %>
+<div class="cms-pages pages" id="normal-list">
+  <%= render_page_list %>
+  <%= paginate @items if @items.try(:current_page) %>
+</div>
