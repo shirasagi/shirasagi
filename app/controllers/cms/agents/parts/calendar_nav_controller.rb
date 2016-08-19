@@ -53,6 +53,6 @@ class Cms::Agents::Parts::CalendarNavController < ApplicationController
       @condition_hash = {} unless @condition_hash
       Cms::Page.site(@cur_site).and_public(@cur_date).
         where(@condition_hash).
-        where(:released.gt => date.beginning_of_day, :released.lt => date.end_of_day).exists?
+        where(:released.gte => date.beginning_of_day, :released.lte => date.end_of_day).exists?
     end
 end
