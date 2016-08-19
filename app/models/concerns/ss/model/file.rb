@@ -73,6 +73,10 @@ module SS::Model::File
     "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
+  def full_url
+    "#{site.full_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+  end
+
   def thumb_url
     "/fs/" + id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
   end

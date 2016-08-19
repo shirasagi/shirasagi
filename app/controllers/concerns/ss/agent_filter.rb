@@ -34,6 +34,14 @@ module SS::AgentFilter
       controller.javascript(path)
     end
 
+    def opengraph(key, *values)
+      controller.opengraph(key, *values)
+    end
+
+    def twitter_card(key, *values)
+      controller.twitter_card(key, *values)
+    end
+
     def filters
       @filters ||= begin
         request.env["ss.filters"] ||= []

@@ -1,0 +1,13 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-facebook-setting");
+<% end %>
+<dl class="see mod-ss-facebook-setting">
+  <dt><%= @model.t :facebook_app_id %><%= @model.tt :facebook_app_id %></dt>
+  <dd><%= f.text_field :facebook_app_id %></dd>
+
+  <dt><%= @model.t :facebook_page_url %><%= @model.tt :facebook_page_url %></dt>
+  <dd><%= f.text_field :facebook_page_url %></dd>
+
+  <dt><%= @model.t :opengraph_type %><%= @model.tt :opengraph_type %></dt>
+  <dd><%= f.select :opengraph_type, @item.opengraph_type_options %></dd>
+</dl>

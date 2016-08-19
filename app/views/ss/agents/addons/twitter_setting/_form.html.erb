@@ -1,0 +1,10 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-twitter-setting");
+<% end %>
+<dl class="see mod-ss-twitter-setting">
+  <dt><%= @model.t :twitter_card %><%= @model.tt :twitter_card %></dt>
+  <dd><%= f.select :twitter_card, @item.twitter_card_options %></dd>
+
+  <dt><%= @model.t :twitter_username %><%= @model.tt :twitter_username %></dt>
+  <dd>@ <%= f.text_field :twitter_username %></dd>
+</dl>

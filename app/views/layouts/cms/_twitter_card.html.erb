@@ -1,0 +1,23 @@
+<% return unless @cur_site.twitter_card_enabled? %>
+
+<% card = controller.twitter_card("twitter:card").first %>
+
+<meta name="twitter:card" content="<%= card %>">
+<% if @cur_site.twitter_username.present? %>
+<meta name="twitter:site" content="@<%= controller.twitter_card("twitter:site").first %>">
+<% end %>
+<meta name="twitter:title" content="<%= controller.twitter_card("twitter:title").first %>">
+<meta name="twitter:description" content="<%= controller.twitter_card("twitter:description").first %>">
+<% controller.twitter_card("twitter:image").each do |url| %>
+<meta name="twitter:image" content="<%= url %>">
+<% end %>
+
+<% if card == "player" %>
+<meta name="twitter:player" content="<%= controller.twitter_card("twitter:player").first %>">
+<meta name="twitter:player:width" content="<%= controller.twitter_card("twitter:player:width").first %>">
+<meta name="twitter:player:height" content="<%= controller.twitter_card("twitter:player:height").first %>">
+<% if stream_url = controller.twitter_card("twitter:player:stream").first %>
+<meta name="twitter:player:stream" content="<%= stream_url %>">
+<meta name="twitter:player:stream:content_type" content="<%= controller.twitter_card("twitter:player:stream:content_type").first %>">
+<% end %>
+<% end %>
