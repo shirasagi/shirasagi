@@ -34,8 +34,8 @@ class Facility::ImportJob < Cms::ApplicationJob
   def update_row(row)
     filename = "#{node.filename}/#{row[@model.t(:filename)]}"
     item = @model.find_or_create_by filename: filename
-    item.cur_site = site
     set_page_attributes(row, item)
+    item.site = site
 
     if item.save
       name = item.name
@@ -46,8 +46,8 @@ class Facility::ImportJob < Cms::ApplicationJob
     if row[@model.t(:map_points)].present?
       filename = "#{filename}/map.html"
       map = ::Facility::Map.find_or_create_by filename: filename
-      map.cur_site = site
       set_map_attributes(row, map)
+      map.site = site
       map.save
       name += " #{map.map_points.first[:loc]}"
     end
