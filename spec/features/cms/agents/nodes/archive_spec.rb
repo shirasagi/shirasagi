@@ -23,6 +23,8 @@ describe 'cms_agents_nodes_archive', type: :feature, dbscope: :example, js: true
     it do
       visit index_url
       expect(page).to have_css('body > div.cms-pages > article')
+      click_on I18n.t("cms.calendar_view")
+      expect(page).to have_css('#goto-list')
     end
   end
 end
