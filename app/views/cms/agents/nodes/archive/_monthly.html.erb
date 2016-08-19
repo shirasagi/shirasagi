@@ -5,8 +5,8 @@
 <nav class="event-date">
   <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
   <ul>
-    <li class="prev"><%= link_to_archive_monthly Date.new(@year, @month, 1).advance(days: -1) %></li>
-    <li class="next"><%= link_to_archive_monthly Date.new(@year, @month, 1).advance(months: 1) %></li>
+    <li class="prev"><%= link_to_archive_monthly Date.new(@year, @month, 1).advance(days: -1), calendar: true %></li>
+    <li class="next"><%= link_to_archive_monthly Date.new(@year, @month, 1).advance(months: 1),  calendar: true %></li>
   </ul>
 </nav>
 

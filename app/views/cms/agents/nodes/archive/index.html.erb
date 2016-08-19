@@ -1,10 +1,9 @@
-<% if params[:ymd].length == 6 && !params[:page]%>
+<% if params[:ymd].length == 6 %>
   <%= jquery do %>
   $(document).ready(function(){
-    $("#goto-list").css("display", "")
-    $("#goto-calendar").css("display", "none")
-    $("#normal-list").css("display", "none")
-    $("#calendar-list").css("display", "")
+    $("#goto-list").css("display", "none")
+    $("#goto-calendar").css("display", "")
+
     $("#goto-list").on('click', function(){
       $("#goto-list").css("display", "none")
       $("#goto-calendar").css("display", "")
@@ -20,11 +19,20 @@
   });
   <% end %>
 <% end %>
-
+<% if params[:calendar] && !params[:page]%>
+<%= jquery do %>
+$(document).ready(function(){
+  $("#goto-calendar").css("display", "none")
+  $("#goto-list").css("display", "")
+  $("#calendar-list").css("display", "")
+  $("#normal-list").css("display", "none")
+});
+ <% end %>
+<% end %>
 
 <div class="">
-  <button type="button" name="button" id="goto-calendar" style="display:none; float:right;">カレンダーリスト表示</button>
-  <button type="button" name="button" id="goto-list" style="display:none; float:right;">リスト表示</button>
+  <button type="button" name="button" id="goto-calendar" style="display:none; float:right;"><%= t("cms.calendar_view") %></button>
+  <button type="button" name="button" id="goto-list" style="display:none; float:right;"><%= t("cms.list_view") %></button>
 </div>
 
 <% if params[:ymd].length == 6 %>

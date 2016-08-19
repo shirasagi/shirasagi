@@ -61,6 +61,8 @@ ja:
     postal_code: 郵便番号
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
     postal_code_normalize_city: 以下に掲載がない場合
+    calendar_view: カレンダー表示
+    list_view: リスト表示
 
     adobe_reader:
       remark:
