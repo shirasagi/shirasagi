@@ -1,4 +1,18 @@
 module Cms::ArchiveHelper
+  def link_to_archive_monthly(date, opts = {})
+    year  = date.year
+    month = date.month
+    name = opts[:name].present? ? opts[:name] : "#{month}#{t_date('month')}"
+    path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
+    enable = (opts[:enable] != nil) ? opts[:enable] : true
+
+    if enable && within_one_year?(date)
+      link_to name , sprintf("#{path}%04d%02d", year, month)
+    else
+      name
+    end
+  end
+
   def link_to_archive_daily(date, opts = {})
     year  = date.year
     month = date.month
