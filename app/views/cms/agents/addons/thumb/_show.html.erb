@@ -1,6 +1,7 @@
+<% return if @item.thumb.blank? %>
+
 <dl class="see mod-cms-thumb-form">
   <dt><%= @model.t :thumb_id %></dt>
-  <% if @item.thumb.present? %>
   <dd>
     <a class="thumb" href="/fs/<%= @item.thumb.id %>/<%= @item.thumb.filename %>" target="_blank">
       <% if @item.thumb.image? %>
@@ -10,5 +11,4 @@
       <% end %>
     </a>
   </dd>
-  <% end %>
 </dl>
