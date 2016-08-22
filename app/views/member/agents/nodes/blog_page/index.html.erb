@@ -1,29 +1,37 @@
+<%== @cur_node.upper_html unless @cur_node.loop_html %>
+
 <div class="member-blog-pages pages">
-  <% @items.each do |item| %>
-    <article class="blog page">
-      <header>
-        <h2><%= link_to item.name, item.url %></h2>
-        <time class="released" datetime="<%= I18n.l item.date.to_date, format: :iso %>"><%= I18n.l item.date.to_date, format: :long %></time>
-      </header>
-      <div class="genres">
-        <ul>
-          <% item.genres.each do |genre| %>
-            <li><%= link_to genre, "#{@cur_node.url}?g=#{genre}" %></li>
-          <% end %>
-        </ul>
-      </div>
-      <div class="locations">
-        <ul>
-          <% item.blog_page_locations.order_by(order: 1).each do |loc| %>
-            <li><%= link_to loc.name, loc.url %></li>
-          <% end %>
-        </ul>
-      </div>
-      <div class="body">
-        <%== item.html %>
-      </div>
-    </article>
+  <% if @cur_node.loop_html.present? %>
+    <%= render_page_list %>
+  <% else %>
+    <% @items.each do |item| %>
+      <article class="blog page">
+        <header>
+          <h2><%= link_to item.name, item.url %></h2>
+          <time class="released" datetime="<%= I18n.l item.date.to_date, format: :iso %>"><%= I18n.l item.date.to_date, format: :long %></time>
+        </header>
+        <div class="genres">
+          <ul>
+            <% item.genres.each do |genre| %>
+              <li><%= link_to genre, "#{@cur_node.url}?g=#{genre}" %></li>
+            <% end %>
+          </ul>
+        </div>
+        <div class="locations">
+          <ul>
+            <% item.blog_page_locations.order_by(order: 1).each do |loc| %>
+              <li><%= link_to loc.name, loc.url %></li>
+            <% end %>
+          </ul>
+        </div>
+        <div class="body">
+          <%== item.html %>
+        </div>
+      </article>
+    <% end %>
   <% end %>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+
+<%== @cur_node.lower_html unless @cur_node.loop_html %>

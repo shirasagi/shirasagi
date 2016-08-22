@@ -125,6 +125,7 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Reference::Member
     include Member::Addon::Blog::PageSetting
+    include Cms::Addon::PageList
     include Cms::Addon::GroupPermission
 
     set_permission_name "member_blogs"
