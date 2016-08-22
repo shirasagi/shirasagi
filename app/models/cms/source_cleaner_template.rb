@@ -43,9 +43,7 @@ class Cms::SourceCleanerTemplate
       h = {}
       h[:source_cleaner] = {}
 
-      criteria = self.and_public
-      criteria = criteria.site(opts[:site]) if opts[:site]
-      criteria.each_with_index do |item, idx|
+      self.all.each_with_index do |item, idx|
         h[:source_cleaner][idx] = {}
         h[:source_cleaner][idx]["target_type"] = item.target_type
         h[:source_cleaner][idx]["target_value"] = item.target_value

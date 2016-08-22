@@ -1,3 +1,7 @@
+<%
+  source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config
+%>
+
 <% if SS.config.cms.html_editor == "markdown" %>
 
   <%= jquery do %>
@@ -22,9 +26,8 @@
     Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";
     Cms_Form.render();
 
-    <% conf = Cms::SourceCleanerTemplate.to_config(site: @cur_site) %>
-    <% if conf.present? %>
-      Cms_Source_Cleaner.config = <%= raw conf.to_json %>
+    <% if source_cleaner_conf[:source_cleaner].present? %>
+      Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
       Cms_Source_Cleaner.render();
     <% end %>
 
@@ -35,7 +38,7 @@
     <dd class="wide">
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
     <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
-    <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } %>
+    <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? %>
     <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
     </dd>
   </dl>
