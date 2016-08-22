@@ -7,6 +7,8 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   before_action :set_range
   before_action :becomes_with_route_node
 
+  prepend_view_path "app/views/cms/agents/nodes/archive"
+
   private
     def set_range
       ymd = params[:ymd].presence
@@ -86,9 +88,14 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
 
   public
     def index
-      set_items
       set_contents if params[:ymd].length == 6
-      render_with_pagination @items
+      if @cur_node.archive_view == 1
+        set_items
+        render_with_pagination @items
+      else
+        set_contents
+        render template: 'monthly'
+      end
     end
 
     # def rss

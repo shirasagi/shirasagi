@@ -269,6 +269,7 @@ ja:
       cms/source_cleaner: ソースクリーニング
       cms/opendata_site: オープンデータサイト
       cms/opendata: オープンデータ
+      cms/archive_view_switcher: アーカイブ用表示設定
 
   mongoid:
     models:
@@ -456,6 +457,8 @@ ja:
         opendata_site_ids: サイト
       cms/addon/opendata:
         opendata_state: 公開状態
+      cms/addon/archive_view_switcher:
+        archive_view: 表示設定
 
   errors:
     messages:
@@ -565,7 +568,9 @@ ja:
         option:
           - "検索時に検索文字の形式を設定します。\n未設定時は通常のテキスト検索となります。"
           - "URL選択時は \'=\"検索文字\' でテキスト検索を行います"
-
+    cms/addon/archive_view_switcher:
+      archive_view:
+        - 月次表示の場合、リスト表示またはカレンダー表示が選択できます。
 
     cms/model/node:
       route:
