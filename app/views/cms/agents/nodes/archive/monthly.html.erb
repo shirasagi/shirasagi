@@ -11,7 +11,7 @@
 </nav>
 
 <div id="event-list">
-  <% @contents.each do |date, pages| %>
+  <% @items.each do |date, pages| %>
   <dl class="<%= event_dl_class date %>">
     <dt>
       <%= time_tag(date) do %>

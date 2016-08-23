@@ -32,7 +32,7 @@ describe 'cms_agents_nodes_archive', type: :feature, dbscope: :example, js: true
       cur_site: site,
       layout_id: layout.id,
       conditions: root_node.filename,
-      archive_view: 2
+      archive_view: 'calendar'
     end
     let(:index_url) { "#{archive_node.full_url}#{Time.zone.now.year}#{format('%02d', Time.zone.now.month)}" }
 

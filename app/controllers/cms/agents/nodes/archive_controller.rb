@@ -64,19 +64,19 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
     end
 
     def set_contents
-      @contents = {}
+      @items = {}
       if @year && @month
         start_date = Date.new(@year, @month, 1)
         close_date = start_date.end_of_month
         (start_date..close_date).each do |d|
-          @contents[d] = []
+          @items[d] = []
         end
 
         dates = (start_date..close_date).map { |m| m.mongoize }
         dates.each do |time|
           d = time.to_date
           if contents_sort(time).exists?
-            @contents[d] << contents_sort(time)
+            @items[d] << contents_sort(time)
           end
         end
       end
@@ -88,13 +88,12 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
 
   public
     def index
-      set_contents if params[:ymd].length == 6
-      if @cur_node.archive_view == 1
-        set_items
-        render_with_pagination @items
-      else
+      if @cur_node.archive_view == 'calendar' && params[:ymd].length == 6
         set_contents
         render template: 'monthly'
+      else
+        set_items
+        render_with_pagination @items
       end
     end
 
