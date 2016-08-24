@@ -745,6 +745,8 @@ save_part route: "member/photo_slide", filename: "kanko-info/photo/slide.part.ht
 save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
 save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
 save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"
+save_part route: "member/invited_group", filename: "invited_group.part.html", name: "招待されたグループ",
+  mobile_view: "hide", ajax_view: "enabled"
 
 ## -------------------------------------
 def save_page(data)
