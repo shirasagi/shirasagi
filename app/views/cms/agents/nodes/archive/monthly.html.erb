@@ -1,0 +1,40 @@
+<%= jquery do %> Event_Monthly.render(); <% end %>
+
+<%== @cur_node.upper_html %>
+
+<nav class="event-date">
+  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <ul>
+    <li class="prev"><%= link_to_archive_monthly Date.new(@year, @month, 1).advance(days: -1) %></li>
+    <li class="next"><%= link_to_archive_monthly Date.new(@year, @month, 1).advance(months: 1) %></li>
+  </ul>
+</nav>
+
+<div id="event-list">
+  <% @items.each do |date, pages| %>
+  <dl class="<%= event_dl_class date %>">
+    <dt>
+      <%= time_tag(date) do %>
+      <%= link_to_archive_daily date, name: "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}" %>
+      <span class="wday">(<%= t_wday(date) %><span class="unit"><%= t_date('wday') %></span>)</span>
+      <% end %>
+    </dt>
+
+    <% if date.national_holiday? %>
+    <dd class="holiday"><%= HolidayJapan.name date %></dd>
+    <% end %>
+
+    <% if pages.size != 0 %>
+      <% pages.first.each do |page| %>
+      <dd class="page">
+        <header>
+          <h2><%= link_to page.name, page.url %></h2>
+        </header>
+      </dd>
+      <% end %>
+    <% end %>
+  </dl>
+  <% end %>
+</div>
+
+<%== @cur_node.lower_html %>
