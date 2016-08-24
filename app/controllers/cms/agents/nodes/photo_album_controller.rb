@@ -3,7 +3,7 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   helper Cms::ListHelper
 
   before_action :becomes_with_route_node
-  ALLOWED_EXTS = %w(gif png jpg jpeg bmp)
+  ALLOWED_EXTS = %w(gif png jpg jpeg bmp).freeze
 
   private
     def becomes_with_route_node
@@ -33,7 +33,7 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
     def index
       box = []
       file_id_name_url.each do |i|
-        if SS::File.any_in(filename: ALLOWED_EXTS.map{|ext| %r(#{ext}$)i}, id: i[0]).present?
+        if SS::File.any_in(filename: ALLOWED_EXTS.map{|ext| %r{#{ext}$}i}, id: i[0]).present?
           box << [SS::File.find(i[0]), i[1], i[2]]
         end
       end
