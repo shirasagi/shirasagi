@@ -80,4 +80,14 @@ class Cms::Part
 
     default_scope ->{ where(route: "cms/calendar_nav") }
   end
+
+  class MonthlyNav
+    include Cms::Model::Part
+    include Cms::Addon::MonthlyNav
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/monthly_nav") }
+  end
 end

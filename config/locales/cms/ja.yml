@@ -179,6 +179,7 @@ ja:
       cms/crumb: パンくずリスト
       cms/sns_share: SNSシェアボタン
       cms/calendar_nav: アーカイブナビ(カレンダー)
+      cms/monthly_nav: アーカイブナビ（月次）
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -275,6 +276,7 @@ ja:
       cms/source_cleaner: ソースクリーニング
       cms/opendata_site: オープンデータサイト
       cms/opendata: オープンデータ
+      cms/monthly_nav: アーカイブナビ（月次）
 
   mongoid:
     models:
@@ -464,6 +466,8 @@ ja:
         opendata_site_ids: サイト
       cms/addon/opendata:
         opendata_state: 公開状態
+      cms/addon/monthly_nav:
+        periods: 表示期間
 
   errors:
     messages:
@@ -880,6 +884,10 @@ ja:
       parent_crumb_urls:
         - 親フォルダーのURLを記述します。
         - 設定しているカテゴリーから選択することも可能です。
+
+    cms/addon/monthly_nav:
+      periods:
+        - アーカイブナビで表示する期間を設定します。
 
     cms/layout:
       name:
