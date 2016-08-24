@@ -38,4 +38,8 @@ FactoryGirl.define do
   factory :cms_part_sns_share, class: Cms::Part::Crumb, traits: [:cms_part] do
     route "cms/sns_share"
   end
+
+  factory :cms_part_calendar_nav, class: Cms::Part::CalendarNav, traits: [:cms_part] do
+    route "cms/calendar_nav"
+  end
 end

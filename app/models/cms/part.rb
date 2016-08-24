@@ -71,4 +71,13 @@ class Cms::Part
 
     default_scope ->{ where(route: "cms/sns_share") }
   end
+
+  class CalendarNav
+    include Cms::Model::Part
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/calendar_nav") }
+  end
 end
