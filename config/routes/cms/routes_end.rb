@@ -180,6 +180,7 @@ SS::Application.routes.draw do
     get "crumb" => "public#index", cell: "parts/crumb"
     get "sns_share" => "public#index", cell: "parts/sns_share"
     get "calendar_nav" => "public#index", cell: "parts/calendar_nav"
+    get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
   end
 
   page "cms" do
