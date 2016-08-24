@@ -204,4 +204,22 @@ describe Article::Part::Page, type: :model, dbscope: :example do
       expect(item.render_loop_html(page, html: '#{pages.count}')).to eq('')
     end
   end
+
+  describe '#render_loop_html - html' do
+    context 'no html' do
+      let(:page) { create(:article_page) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{html}')).to eq('')
+      end
+    end
+
+    context 'a html' do
+      let(:page) { create(:article_page, html: '<h1>Hello,&nbsp;Shirasagi!</h1>')}
+
+      it do
+        expect(item.render_loop_html(page, html: '#{html}')).to eq('<h1>Hello,&nbsp;Shirasagi!</h1>')
+      end
+    end
+  end
 end

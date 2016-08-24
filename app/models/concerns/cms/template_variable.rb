@@ -5,6 +5,7 @@ module Cms::TemplateVariable
   included do
     template_variable_handler(:name, :template_variable_handler_name)
     template_variable_handler(:url, :template_variable_handler_name)
+    template_variable_handler(:html, :template_variable_handler_html)
     template_variable_handler(:index_name) { |name, issuer| template_variable_handler_name(:name_for_index, issuer) }
     template_variable_handler(:class, :template_variable_handler_class)
     template_variable_handler(:new, :template_variable_handler_new)
@@ -24,6 +25,11 @@ module Cms::TemplateVariable
   private
     def template_variable_handler_name(name, issuer)
       ERB::Util.html_escape self.send(name)
+    end
+
+    def template_variable_handler_html(name, issuer)
+      return nil unless respond_to?(:name)
+      self.send(name).present? ? self.send(name).html_safe : nil
     end
 
     def template_variable_handler_class(name, issuer)
