@@ -11,6 +11,13 @@ RSpec.describe SS::EditorHelper, type: :helper do
          140%/140%; 150%/150%; 160%/160%; 170%/170%; 180%/180%; 190%/190%; 200%/200%;
         ).join
     end
+    let(:colorButton_colors) do
+      %w(
+         Maroon/800000 SaddleBrown/8B4513 DarkSlateGray/2F4F4F Teal/008080 Navy/000080 Indigo/4B0082
+         DarkGray/696969 FireBrick/B22222 Brown/A52A2A GoldenRod/DAA520 DarkGreen/006400 MediumBlue/0000CD
+         Purple/800080 Gray/808080 Red/EE0000 Green/008000 Blue/0000FF
+        ).join(",")
+    end
 
     context 'with no options' do
       subject { helper.ckeditor_editor_options }
@@ -24,6 +31,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
+        expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
       end
     end
@@ -41,6 +49,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
+        expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
       end
     end
@@ -57,6 +66,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.key?(:templates_files)).to be_falsey
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
+        expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
       end
     end
@@ -74,6 +84,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
+        expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
       end
     end
@@ -92,6 +103,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
+        expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
       end
     end
@@ -122,6 +134,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(standard.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(standard.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
         expect(standard.delete(:fontSize_sizes)).to eq fontSize_sizes
+        expect(standard.delete(:colorButton_colors)).to eq colorButton_colors
         expect(standard.blank?).to be_truthy
       end
 
@@ -134,6 +147,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(advanced.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
         expect(advanced.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor'
         expect(advanced.delete(:fontSize_sizes)).to eq fontSize_sizes
+        expect(advanced.delete(:colorButton_colors)).to eq colorButton_colors
         expect(advanced.blank?).to be_truthy
       end
     end

@@ -148,6 +148,8 @@ SS::Application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "import" => "import#index"
     post "import" => "import#import"
+    get "copy_nodes" => "copy_nodes#index", as: :copy
+    post "copy_nodes" => "copy_nodes#run"
     resource :conf, concerns: [:copy, :move] do
       get :delete, :on => :member
     end
@@ -168,6 +170,7 @@ SS::Application.routes.draw do
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
     get "import_node/rss.xml"         => "public#rss", cell: "nodes/import_node", format: "xml"
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
+    get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
   end
 
@@ -178,6 +181,8 @@ SS::Application.routes.draw do
     get "tabs"  => "public#index", cell: "parts/tabs"
     get "crumb" => "public#index", cell: "parts/crumb"
     get "sns_share" => "public#index", cell: "parts/sns_share"
+    get "calendar_nav" => "public#index", cell: "parts/calendar_nav"
+    get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
   end
 
   page "cms" do

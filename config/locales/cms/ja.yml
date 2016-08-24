@@ -61,6 +61,8 @@ ja:
     postal_code: 郵便番号
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
     postal_code_normalize_city: 以下に掲載がない場合
+    calendar_view: カレンダー表示
+    list_view: リスト表示
 
     adobe_reader:
       remark:
@@ -115,6 +117,13 @@ ja:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
       link_to_replace: URLを置換する
+    copy_nodes:
+      from: 複製元フォルダー
+      to: 複製先
+      job_history: 実行ログ
+      link_to_job_history: ジョブ実行履歴
+      target_node_name: フォルダー名
+      started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     options:
       sort:
         name: タイトル
@@ -172,6 +181,8 @@ ja:
       cms/tabs: 新着タブ
       cms/crumb: パンくずリスト
       cms/sns_share: SNSシェアボタン
+      cms/calendar_nav: アーカイブナビ(カレンダー)
+      cms/monthly_nav: アーカイブナビ（月次）
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -268,6 +279,8 @@ ja:
       cms/source_cleaner: ソースクリーニング
       cms/opendata_site: オープンデータサイト
       cms/opendata: オープンデータ
+      cms/monthly_nav: アーカイブナビ（月次）
+      cms/archive_view_switcher: アーカイブ用表示設定
 
   mongoid:
     models:
@@ -447,6 +460,8 @@ ja:
         high_contrast_mode: 設定
         font_color: 文字色
         background_color: 背景色
+      cms/copy_nodes_task:
+        target_node_name: 複製先フォルダー名
       cms/addon/source_cleaner:
         target: 対象
         action: 操作
@@ -455,6 +470,10 @@ ja:
         opendata_site_ids: サイト
       cms/addon/opendata:
         opendata_state: 公開状態
+      cms/addon/monthly_nav:
+        periods: 表示期間
+      cms/addon/archive_view_switcher:
+        archive_view: 表示設定
 
   errors:
     messages:
@@ -564,7 +583,9 @@ ja:
         option:
           - "検索時に検索文字の形式を設定します。\n未設定時は通常のテキスト検索となります。"
           - "URL選択時は \'=\"検索文字\' でテキスト検索を行います"
-
+    cms/addon/archive_view_switcher:
+      archive_view:
+        - 月次表示の場合、リスト表示またはカレンダー表示が選択できます。
 
     cms/model/node:
       route:
@@ -690,6 +711,7 @@ ja:
           #{url}　リンク先ページのURLが表示されます。
           #{name}　リンク先ページのタイトルが表示されます。
           #{summary}　リンク先ページのSummaryが表示されます。
+          #{html}　リンク先ページの本文が表示されます。
           #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
           #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
           #{group}　リンク先ページの所有グループが表示されます。
@@ -813,6 +835,7 @@ ja:
           #{name}　リンク先ページのタイトルが表示されます。
           #{index_name}　リンク先ページの一覧用タイトルが表示されます。未設定の場合はタイトルが表示されます。
           #{summary}　リンク先ページのSummaryが表示されます。
+          #{html}　リンク先ページの本文が表示されます。
           #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
           #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
           #{group}　リンク先ページの所有グループが表示されます。
@@ -871,6 +894,10 @@ ja:
       parent_crumb_urls:
         - 親フォルダーのURLを記述します。
         - 設定しているカテゴリーから選択することも可能です。
+
+    cms/addon/monthly_nav:
+      periods:
+        - アーカイブナビで表示する期間を設定します。
 
     cms/layout:
       name:
@@ -1033,3 +1060,4 @@ ja:
       cms/check_links_job: リンクチェック
       cms/postal_code/import_job: 郵便番号インポート
       cms/postal_code/official_csv_import_job: 日本郵便CSVインポート
+      cms/node/copy_nodes_job: フォルダー複製

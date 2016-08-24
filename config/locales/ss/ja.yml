@@ -144,6 +144,10 @@ ja:
       map_api:
         googlemaps: Googleマップ
         openlayers: OpenLayers
+      kana_format:
+        hiragana: ひらがな
+        katakana: カタカナ
+        romaji: ローマ字
 
     state:
       public: 公開中
@@ -205,6 +209,7 @@ ja:
       ss/mobile_setting: モバイル設定
       ss/user_group_history: 異動履歴
       ss/map_setting: 地図設定
+      ss/kana_setting: かな設定
 
   mongoid:
     models:
@@ -313,6 +318,8 @@ ja:
       ss/addon/map_setting:
         map_api: 地図API
         map_api_key: APIキー
+      ss/addon/kana_setting:
+        kana_format: ふりがなの形式
       ss/max_file_size:
         name: 名前
         extensions: 拡張子
@@ -465,3 +472,6 @@ ja:
       map_api_key:
         - 地図APIで使用するAPIキーを入力します。
         - GoogleマップのAPIキーはこの項目に設定します。
+    ss/addon/kana_setting:
+      kana_format:
+        - かな機能にて公開画面にふりがなを付与した際の表記形式を設定します。

@@ -1,9 +1,13 @@
 class Cms::Agents::Nodes::ArchiveController < ApplicationController
   include Cms::NodeFilter::View
   helper Cms::ListHelper
+  helper Cms::ArchiveHelper
+  helper Event::EventHelper
 
-  before_action :set_range
+  before_action :set_range, only: :index
   before_action :becomes_with_route_node
+
+  prepend_view_path "app/views/cms/agents/nodes/archive"
 
   private
     def set_range
@@ -16,9 +20,9 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
         @range = from..to
       when 6
         # year/month is specified
-        year = ymd[0..3].to_i
-        month = ymd[4..5].to_i
-        from = Time.zone.local(year, month, 1)
+        @year = ymd[0..3].to_i
+        @month = ymd[4..5].to_i
+        from = Time.zone.local(@year, @month, 1)
         to = from + 1.month - 1.second
         @range = from..to
       when 8
@@ -52,14 +56,49 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
       Cms::Page.site(@cur_site).and_public(@cur_date).where(condition_hash).where(released: @range)
     end
 
-  public
-    def index
+    def set_items
       @items = pages.
         order_by(@cur_node.sort_hash).
         page(params[:page]).
         per(@cur_node.limit)
+    end
 
-      render_with_pagination @items
+    def set_contents
+      @items = {}
+      if @year && @month
+        start_date = Date.new(@year, @month, 1)
+        close_date = start_date.end_of_month
+        (start_date..close_date).each do |d|
+          @items[d] = []
+        end
+
+        dates = (start_date..close_date).map { |m| m.mongoize }
+        dates.each do |time|
+          d = time.to_date
+          if contents_sort(time).exists?
+            @items[d] << contents_sort(time)
+          end
+        end
+      end
+    end
+
+    def contents_sort(date)
+      pages.where(:released.gte => date.getlocal.beginning_of_day, :released.lte => date.getlocal.end_of_day)
+    end
+
+  public
+    def index
+      if @cur_node.archive_view == 'calendar' && params[:ymd].length == 6
+        set_contents
+        render template: 'monthly'
+      else
+        set_items
+        render_with_pagination @items
+      end
+    end
+
+    def redirect_to_archive_index
+      redirect_to "#{@cur_site.full_url}#{params[:public_path]}/#{Time.zone.now.strftime('%Y%m')}"
     end
 
     # def rss

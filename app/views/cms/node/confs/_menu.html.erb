@@ -5,6 +5,7 @@
   <% else %>
     <%= link_to :edit, action: :edit if @item.allowed?(:edit, @cur_user)  %>
     <%= link_to :move, action: :move if @item.allowed?(:move, @cur_user)  %>
+    <%= link_to :copy, :node_copy if @item.allowed?(:edit, @cur_user)  %>
 
     <% if @item.route == "category/node"|| @item.route == "category/page" %>
       <% if @item.allowed?(:edit, @cur_user) %>
