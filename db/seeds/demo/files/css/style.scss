@@ -2209,6 +2209,12 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     }
   }
 }
+#photo-album {
+  height: 170px;
+  .title{
+    font-size: 12px;
+  }
+}
 .member-photo-search-part {
   margin-bottom: 1em;
   @include mb {
