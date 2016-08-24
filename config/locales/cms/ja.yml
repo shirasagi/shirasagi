@@ -115,6 +115,13 @@ ja:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
       link_to_replace: URLを置換する
+    copy_nodes:
+      from: 複製元フォルダー
+      to: 複製先
+      job_history: 実行ログ
+      link_to_job_history: ジョブ実行履歴
+      target_node_name: フォルダー名
+      started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     options:
       sort:
         name: タイトル
@@ -446,6 +453,8 @@ ja:
         high_contrast_mode: 設定
         font_color: 文字色
         background_color: 背景色
+      cms/copy_nodes_task:
+        target_node_name: 複製先フォルダー名
       cms/addon/source_cleaner:
         target: 対象
         action: 操作
@@ -1032,3 +1041,4 @@ ja:
       cms/check_links_job: リンクチェック
       cms/postal_code/import_job: 郵便番号インポート
       cms/postal_code/official_csv_import_job: 日本郵便CSVインポート
+      cms/node/copy_nodes_job: フォルダー複製
