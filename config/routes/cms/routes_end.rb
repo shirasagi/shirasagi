@@ -169,6 +169,7 @@ SS::Application.routes.draw do
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
     get "import_node/rss.xml"         => "public#rss", cell: "nodes/import_node", format: "xml"
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
+    get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
   end
 
   part "cms" do
