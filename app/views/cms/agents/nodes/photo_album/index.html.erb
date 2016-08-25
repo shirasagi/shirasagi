@@ -1,9 +1,9 @@
 <div class="member-photos photos">
   <% @items.each do |item| %>
-    <div class="photo" id="photo-album">
+    <div class="photo">
       <%= link_to item[2] do %>
         <%= image_tag item[0].thumb_url, alt: item[0].name, class: :thumb %>
-        <div><span class="title"><%= item[1].truncate(35) %></span></div>
+        <span class="title"><%= item[1].truncate(35) %></span>
       <% end %>
     </div>
   <% end %>
