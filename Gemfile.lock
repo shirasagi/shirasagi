@@ -155,7 +155,7 @@ GEM
     haml (4.0.7)
       tilt
     hashdiff (0.3.0)
-    hashie (3.4.3)
+    hashie (3.4.4)
     highline (1.7.8)
     holiday_japan (1.2.2)
     htmlentities (4.3.4)
@@ -184,7 +184,7 @@ GEM
       multi_json (>= 1.3)
       securecompare
       url_safe_base64
-    jwt (1.5.1)
+    jwt (1.5.4)
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -227,7 +227,7 @@ GEM
       mongoid (~> 5.0)
       rake
       rspec (~> 3.3)
-    multi_json (1.11.2)
+    multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     nenv (0.3.0)
@@ -241,9 +241,9 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     oauth (0.5.1)
-    oauth2 (1.1.0)
+    oauth2 (1.2.0)
       faraday (>= 0.8, < 0.10)
-      jwt (~> 1.0, < 1.5.2)
+      jwt (~> 1.0)
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
@@ -270,7 +270,7 @@ GEM
     omniauth-twitter (1.2.1)
       json (~> 1.3)
       omniauth-oauth (~> 1.1)
-    omniauth-yahoojp (0.1.1)
+    omniauth-yahoojp (0.1.2)
       httpauth
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
