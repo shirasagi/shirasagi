@@ -173,6 +173,7 @@ ja:
       cms/page: ページリスト
       cms/import_node: 取り込みページ
       cms/archive: アーカイブ
+      cms/photo_album: 写真一覧
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト

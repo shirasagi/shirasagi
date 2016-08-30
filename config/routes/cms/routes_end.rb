@@ -160,6 +160,7 @@ SS::Application.routes.draw do
     resources :parts, concerns: :deletion
     resources :layouts, concerns: :deletion
     resources :archives, only: [:index]
+    resources :photo_albums, only: [:index]
   end
 
   node "cms" do
@@ -170,6 +171,7 @@ SS::Application.routes.draw do
     get "import_node/rss.xml"         => "public#rss", cell: "nodes/import_node", format: "xml"
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
+    get "photo_album" => "public#index", cell: "nodes/photo_album"
   end
 
   part "cms" do

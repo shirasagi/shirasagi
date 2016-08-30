@@ -62,4 +62,30 @@ class Cms::Node
 
     default_scope ->{ where(route: "cms/archive") }
   end
+
+  class PhotoAlbum
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::PageList
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/photo_album") }
+
+    def condition_hash
+      cond = []
+
+      cond << { filename: /^#{filename}\// } if conditions.blank?
+      conditions.each do |url|
+        node = Cms::Node.filename(url).first
+        next unless node
+        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+      end
+
+      { '$or' => cond }
+    end
+  end
+
 end
