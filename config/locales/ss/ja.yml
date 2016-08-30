@@ -148,6 +148,13 @@ ja:
         hiragana: ひらがな
         katakana: カタカナ
         romaji: ローマ字
+      opengraph_type:
+        none: なし
+        article: 記事
+      twitter_card:
+        none: なし
+        summary: サマリー形式
+        summary_large_image: 大きな画像形式
 
     state:
       public: 公開中
@@ -210,6 +217,8 @@ ja:
       ss/user_group_history: 異動履歴
       ss/map_setting: 地図設定
       ss/kana_setting: かな設定
+      ss/facebook_setting: Facebook設定
+      ss/twitter_setting: Twitter設定
 
   mongoid:
     models:
@@ -320,6 +329,13 @@ ja:
         map_api_key: APIキー
       ss/addon/kana_setting:
         kana_format: ふりがなの形式
+      ss/addon/facebook_setting:
+        facebook_app_id: App ID
+        facebook_page_url: ページURL
+        opengraph_type: OpenGraph
+      ss/addon/twitter_setting:
+        twitter_card: カード形式
+        twitter_username: ユーザー名
       ss/max_file_size:
         name: 名前
         extensions: 拡張子
@@ -475,3 +491,20 @@ ja:
     ss/addon/kana_setting:
       kana_format:
         - かな機能にて公開画面にふりがなを付与した際の表記形式を設定します。
+    ss/addon/facebook_setting:
+      facebook_app_id:
+        - Facebook の App Id を設定します。
+        - 設定すると「Facebook インサイト」でアクセスを解析できるようになります。
+      facebook_page_url:
+        - Facebook ページの URL を設定します。
+        - 設定するとシェアされた記事を見た別のユーザーが「いいね！」をすることができます。
+      opengraph_type:
+        - Open Graph 形式を選択します。
+        - Facebook でどのような見え方をするかは「Facebook Sharing Debugger（https://developers.facebook.com/tools/debug/sharing/）」で確認することができます。
+    ss/addon/twitter_setting:
+      twitter_card:
+        - Twitter のカード形式を選択します。
+        - Twitter でどのような見え方をするかは「Twitter Card Validator（https://cards-dev.twitter.com/validator）」で確認することができます。
+      twitter_username:
+        - Twitter のユーザー名を設定します。
+        - 設定すると「Twitter Card Analytics」でアクセスを解析できるようになります。

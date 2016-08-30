@@ -2,6 +2,8 @@ module Cms::PublicFilter::Layout
   extend ActiveSupport::Concern
   include Cms::PublicFilter::Agent
   include Cms::PublicHelper
+  include Cms::PublicFilter::OpenGraph
+  include Cms::PublicFilter::TwitterCard
 
   private
     def filters

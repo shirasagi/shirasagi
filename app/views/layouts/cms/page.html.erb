@@ -16,6 +16,8 @@
   SS.config = <%= raw controller.javascript_configs.to_json %>;
 <% end %>
 <%== @cur_layout.head %>
+<%= render file: "layouts/cms/_opengraph" %>
+<%= render file: "layouts/cms/_twitter_card" %>
 <%= csrf_meta_tags if @csrf_token != false %>
 </head>
 
