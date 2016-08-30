@@ -31,7 +31,7 @@ module Cms::Addon::Opendata
       return if opendata_sites.blank?
 
       opendata_sites.each do |site|
-        Opendata::Cms::AssocJob.bind(site_id: site).perform_later(self.site.id, parent.id, self.id, action.to_s)
+        Opendata::CmsIntegration::AssocJob.bind(site_id: site).perform_later(self.site.id, parent.id, self.id, action.to_s)
       end
     end
 end
