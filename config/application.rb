@@ -42,6 +42,8 @@ module SS
       config.paths["config/routes.rb"] << file
     end
 
+    config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
+
     config.middleware.use "Mongoid::QueryCache::Middleware"
   end
 
