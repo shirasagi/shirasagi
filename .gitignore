@@ -5,6 +5,7 @@
 /.project
 
 /config/*.yml
+/config/after_initializers
 /config/environments
 /config/unicorn.rb
 /coverage
