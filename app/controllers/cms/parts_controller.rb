@@ -5,6 +5,7 @@ class Cms::PartsController < ApplicationController
   model Cms::Part
 
   navi_view "cms/main/navi"
+  lang_view "cms/parts/lang"
 
   private
     def set_crumbs

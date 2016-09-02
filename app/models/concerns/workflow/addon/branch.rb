@@ -27,8 +27,8 @@ module Workflow::Addon
       name =~ /^\[#{Regexp.escape(prefix)}\]/
     end
 
-    def new_clone(attributes = {})
-      attributes = self.attributes.merge(attributes).select{ |k| self.fields.keys.include?(k) }
+    def new_clone
+      attributes = self.attributes.select{ |k| self.fields.keys.include?(k) }
 
       item = self.class.new(attributes)
       item.id = nil
@@ -36,10 +36,11 @@ module Workflow::Addon
       item.cur_user = @cur_user
       item.cur_site = @cur_site
       item.cur_node = @cur_node
-      if attributes[:filename].nil?
-        item.filename = "#{dirname}/"
-        item.basename = ""
-      end
+      item.master_id = nil
+
+      item.filename = "#{dirname}/"
+      item.basename = nil
+      item.basename = "" if @cur_node == false
 
       item.workflow_user_id = nil
       item.workflow_state = nil

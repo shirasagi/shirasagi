@@ -1,6 +1,7 @@
 module Inquiry::Node
   class Base
     include Cms::Model::Node
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^inquiry\//) }
   end
@@ -19,6 +20,7 @@ module Inquiry::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     has_many :columns, class_name: "Inquiry::Column"
     has_many :answers, class_name: "Inquiry::Answer"
@@ -40,6 +42,7 @@ module Inquiry::Node
     include Cms::Addon::NodeList
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "inquiry/node") }
 

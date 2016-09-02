@@ -1,6 +1,7 @@
 module Ezine::Node
   class Base
     include Cms::Model::Node
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^ezine\//) }
   end
@@ -28,6 +29,8 @@ module Ezine::Node
     def test_members_to_deliver
       members_to_deliver(Ezine::TestMember)
     end
+
+    include Multilingual::Addon::Node
   end
 
   class MemberPage
@@ -59,6 +62,8 @@ module Ezine::Node
     def test_members_to_deliver
       Ezine::TestMember.site(site).where(node_id: id).enabled
     end
+
+    include Multilingual::Addon::Node
   end
 
   class Backnumber
@@ -77,10 +82,13 @@ module Ezine::Node
       h['$or'] << { filename: /^#{parent.filename}\//, depth: self.depth }
       h
     end
+
+    include Multilingual::Addon::Node
   end
 
   class CategoryBase
     include Cms::Model::Node
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^ezine\/category_/) }
   end
@@ -93,6 +101,7 @@ module Ezine::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "ezine/category_node") }
   end

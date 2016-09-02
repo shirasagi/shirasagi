@@ -7,6 +7,7 @@ class Facility::Map
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Multilingual::Addon::Page
 
   default_scope ->{ where(route: "facility/map") }
 

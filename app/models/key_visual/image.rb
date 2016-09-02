@@ -22,4 +22,6 @@ class KeyVisual::Image
   def serve_static_file?
     false
   end
+
+  include Multilingual::Addon::Page
 end

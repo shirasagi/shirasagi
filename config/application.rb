@@ -24,10 +24,11 @@ module SS
       fn =~ /app\/assets/ && %w(.js .css).include?(::File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/
     end
 
-    I18n.enforce_available_locales = true
+    I18n.enforce_available_locales = false
     config.time_zone = 'Tokyo'
     config.i18n.default_locale = :ja
-    config.i18n.fallbacks = [ :en ]
+    config.i18n.available_locales = [:ja, :en]
+    config.i18n.fallbacks = [ :ja ]
 
     Dir["#{config.root}/config/locales/**/*.{rb,yml}"].each do |file|
       config.i18n.load_path << file unless config.i18n.load_path.index(file)

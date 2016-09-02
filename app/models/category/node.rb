@@ -1,6 +1,7 @@
 module Category::Node
   class Base
     include Cms::Model::Node
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^category\//) }
   end
@@ -15,6 +16,7 @@ module Category::Node
     include History::Addon::Backup
     include Category::Addon::Integration
     include Category::Addon::Split
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "category/node") }
   end
@@ -30,6 +32,7 @@ module Category::Node
     include History::Addon::Backup
     include Category::Addon::Integration
     include Category::Addon::Split
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "category/page") }
   end

@@ -4,6 +4,7 @@ module Member::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "member/login") }
   end
@@ -14,6 +15,7 @@ module Member::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "member/blog_page") }
 
@@ -35,6 +37,7 @@ module Member::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "member/photo") }
   end
@@ -45,6 +48,7 @@ module Member::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "member/photo_search") }
   end
@@ -56,6 +60,7 @@ module Member::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "member/photo_slide") }
   end
@@ -65,6 +70,7 @@ module Member::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "member/invited_group") }
   end

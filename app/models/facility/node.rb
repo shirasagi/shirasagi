@@ -2,6 +2,7 @@ module Facility::Node
   class Base
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^facility\//) }
   end
@@ -18,6 +19,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "facility/node") }
   end
@@ -35,6 +37,7 @@ module Facility::Node
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "facility/page") }
 
@@ -107,6 +110,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "facility/search") }
 
@@ -133,6 +137,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "facility/category") }
 
@@ -161,6 +166,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "facility/service") }
 
@@ -190,6 +196,7 @@ module Facility::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "facility/location") }
 

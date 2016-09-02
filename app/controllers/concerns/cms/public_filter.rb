@@ -11,7 +11,7 @@ module Cms::PublicFilter
     before_action :deny_path
     before_action :parse_path
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filters.include?(:mobile) || filters.include?(:kana) }
+    before_action :x_sendfile, unless: ->{ filters.include?(:mobile) || filters.include?(:kana) || filters.include?(:multilingual) }
   end
 
   def index
@@ -59,7 +59,7 @@ module Cms::PublicFilter
       filter_methods = self.class.private_instance_methods.select { |m| m =~ /^set_request_path_with_/ }
       filter_methods.each do |name|
         send(name)
-        break if cur_path != @cur_path
+        #break if cur_path != @cur_path
       end
     end
 

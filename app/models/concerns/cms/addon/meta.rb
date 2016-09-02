@@ -20,7 +20,7 @@ module Cms::Addon
 
     def summary
       return summary_html if summary_html.present?
-      return nil unless respond_to?(:html)
+      return nil unless try(:html)
       ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
     end
 

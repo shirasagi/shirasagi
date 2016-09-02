@@ -6,6 +6,7 @@ class Ads::BannersController < ApplicationController
 
   prepend_view_path "app/views/cms/pages"
   navi_view "ads/main/navi"
+  lang_view "cms/node/pages/lang"
 
   private
     def fix_params

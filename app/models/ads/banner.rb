@@ -28,4 +28,6 @@ class Ads::Banner
   def count_url
     url.sub(".html", ".html.count")
   end
+
+  include Multilingual::Addon::Page
 end

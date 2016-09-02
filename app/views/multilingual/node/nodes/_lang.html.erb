@@ -1,0 +1,12 @@
+<% langs = Multilingual::Node::Lang.site(@cur_site).and_public %>
+<% return "" if langs.blank? %>
+
+<nav class="nav-menu">
+  <% path = @native_item.private_show_path %>
+  <%= link_to I18n.default_locale, path, request.path.include?(path) ? { class: :current } : {} %>
+
+  <% langs.each do |item| %>
+    <% path = multilingual_node_nodes_path(native_id: @native_item.id, lang: item.filename) %>
+    <%= link_to item.name, path, request.path.include?(path) ? { class: :current } : {} %>
+  <% end %>
+</nav>

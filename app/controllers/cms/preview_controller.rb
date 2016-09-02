@@ -1,6 +1,7 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
   include Cms::PublicFilter
+  include Multilingual::PublicFilter
   include Mobile::PublicFilter
   include Kana::PublicFilter
   include Fs::FileFilter
@@ -10,6 +11,7 @@ class Cms::PreviewController < ApplicationController
   after_action :render_form_preview, only: :form_preview
   after_action :render_preview, if: ->{ @file =~ /\.html$/ }
   after_action :render_mobile, if: ->{ mobile_path? }
+  after_action :render_multilingual, if: ->{ multilingual_path? }
 
   if SS.config.cms.remote_preview
     skip_action_callback :logged_in?

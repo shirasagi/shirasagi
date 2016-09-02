@@ -1,3 +1,8 @@
+<%
+  request_update_url = "/.s#{@cur_site.id}/workflow#{@cur_node.try(:id)}/pages/#{@item.id}"
+  request_wizard_url = "/.s#{@cur_site.id}/workflow#{@cur_node.try(:id)}/wizard/#{@item.id}"
+%>
+
 <%= coffee do %>
 $ ->
   $(document).on "click", ".update-item", (e) ->
@@ -12,13 +17,10 @@ $ ->
     required_counts = []
     $("input[name='workflow_required_counts']").each (e) ->
       required_counts.push($(this).prop("value"))
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "pages"
     redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>"
     $.ajax
       type: "post"
-      url: uri.join("/")  + "/" + $(this).attr("updatetype") + "_update"
+      url: "<%= request_update_url %>"  + "/" + $(this).attr("updatetype") + "_update"
       async: false
       data:
         workflow_comment: $("#workflow_comment").prop("value")
@@ -45,13 +47,9 @@ $ ->
     return false
 
   $(".workflow-partial-section").each ->
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "wizard"
-    uri = uri.join("/")
     $.ajax
       type: "get"
-      url: uri
+      url: "<%= request_wizard_url %>"
       async: false
       success: (html, status) ->
         $(html).find("#xxxxxx").html()

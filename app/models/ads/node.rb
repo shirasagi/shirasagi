@@ -4,6 +4,7 @@ module Ads::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "ads/banner") }
   end

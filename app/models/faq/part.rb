@@ -5,6 +5,7 @@ module Faq::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "faq/search") }
   end

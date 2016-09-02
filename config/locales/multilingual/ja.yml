@@ -1,0 +1,14 @@
+ja:
+  multilingual:
+    page: ページ
+    node: フォルダー
+    part: パーツ
+
+  modules:
+    multilingual: 多言語
+    addons:
+      multilingual/swap/partial_html: リスト表示
+
+  cms:
+    nodes:
+      multilingual/lang: 多言語

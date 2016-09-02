@@ -48,7 +48,7 @@ module Member::Addon
     end
 
     def wareki_options
-       I18n.t("views.options.wareki").map { |k, v| [v, k] }
+       I18n.t("views.options.wareki", locale: :ja).map { |k, v| [v, k] }
     end
 
     def parse_in_birth

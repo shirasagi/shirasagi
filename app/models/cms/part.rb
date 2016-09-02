@@ -1,6 +1,7 @@
 class Cms::Part
   include Cms::Model::Part
   include Cms::PluginRepository
+  include Multilingual::Addon::Part
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
@@ -18,6 +19,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/free") }
   end
@@ -28,6 +30,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/node") }
   end
@@ -38,6 +41,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/page") }
   end
@@ -48,6 +52,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/tabs") }
   end
@@ -58,6 +63,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/crumb") }
   end
@@ -68,6 +74,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/sns_share") }
   end
@@ -77,6 +84,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/calendar_nav") }
   end
@@ -87,6 +95,7 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Part
 
     default_scope ->{ where(route: "cms/monthly_nav") }
   end
