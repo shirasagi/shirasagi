@@ -1,5 +1,5 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :roles %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: true %></dd>
 
   <% if @item.respond_to?(:permission_level) %>
@@ -7,7 +7,7 @@
   <dd><%= f.select :permission_level, @item.permission_level_options %></dd>
   <% end %>
 
-  <dt><%= @model.t :permissions %><%= @model.tt :permission_select %></dt>
+  <dt><%= @model.t :permissions %><%= @model.tt :permissions %></dt>
   <dd class="role-permissions">
     <%= hidden_field_tag "item[permissions][]" %>
 

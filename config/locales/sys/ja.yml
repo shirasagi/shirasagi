@@ -114,6 +114,37 @@ ja:
       keys:
         - HTTP サーバーが認証したユーザー情報を設定した環境変数のキー名を設定します。
 
+    sys/site_copy_task:
+      target_host_name:
+        - 複製するサイトの名前を入力します。
+      target_host_host:
+        - 複製するサイトのホスト名を入力します。
+      target_host_domains:
+        - 複製するサイトのドメインを入力します。
+      source_site_id:
+        - 複製の元となるサイトを選択します。
+      copy_contents:
+        - 複製する元となるサイトから複製する項目を選択します。
+    sys/role:
+      name:
+        - ロールの名称を入力します。
+      permissions:
+        - 所持する権限を設定します。
+    sys/auth/saml:
+      name:
+        - 認証の名前を設定します。
+      filename:
+        - ファイル名はURLに利用します。
+        - 半角英数字で入力します。
+        - .html等の拡張子の記述は不要です。
+      text:
+        - 認証の説明を記載することができます。
+      order:
+        - フォルダーの並び順の設定で「指定順」を指定している場合に利用します。
+        - 数字が小さいほど一覧ページの上位にリンクが表示されます。
+      state:
+        -  このシステム設定を有効にするかを設定します。
+
   job:
     models:
       sys/site_copy_job: サイト複製
