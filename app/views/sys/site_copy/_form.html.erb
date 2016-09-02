@@ -1,14 +1,14 @@
 <dl class="see sys-site-copy">
-  <dt><%= @model.t :target_host_name %></dt>
+  <dt><%= @model.t :target_host_name %><%= @model.tt :target_host_name %></dt>
   <dd><%= f.text_field :target_host_name %></dd>
 
-  <dt><%= @model.t :target_host_host %></dt>
+  <dt><%= @model.t :target_host_host %><%= @model.tt :target_host_host %></dt>
   <dd><%= f.text_field :target_host_host %></dd>
 
-  <dt><%= @model.t :target_host_domains %></dt>
+  <dt><%= @model.t :target_host_domains %><%= @model.tt :target_host_domains %></dt>
   <dd><%= f.text_field :target_host_domains %></dd>
 
-  <dt><%= @model.t :source_site_id %></dt>
+  <dt><%= @model.t :source_site_id %><%= @model.tt :source_site_id %></dt>
   <dd>
     <%= f.hidden_field "source_site_id", value: "", class: "hidden-ids" %>
     <%= link_to t("sys.apis.sites.index"), sys_apis_sites_path, :action => :index, class: "ajax-box" %>
@@ -32,7 +32,7 @@
     </table>
   </dd>
 
-  <dt><%= @model.t :copy_contents %></dt>
+  <dt><%= @model.t :copy_contents %><%= @model.tt :copy_contents %></dt>
   <dd>
     <ul>
       <li>
