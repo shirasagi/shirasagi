@@ -5,7 +5,7 @@
   <header><h2><%= t :"download" %></h2></header>
 
   <dl class="see">
-    <dt><%= @item.t :save_term %></dt>
+    <dt><%= @item.t :save_term %><%= @model.tt :dl_term %></dt>
     <dd><%= f.select :save_term, @item.save_term_options %></dd>
   </dl>
 </section>

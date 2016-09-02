@@ -1,17 +1,17 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :host %></dt>
+  <dt><%= @model.t :host %><%= @model.tt :host %></dt>
   <dd><%= f.text_field :host %></dd>
 
-  <dt><%= @model.t :domains %></dt>
+  <dt><%= @model.t :domains %><%= @model.tt :domains %></dt>
   <dd><%= f.text_field :domains %></dd>
 
-  <dt><%= @model.t :https %></dt>
+  <dt><%= @model.t :https %><%= @model.tt :https %></dt>
   <dd><%= f.select :https, @item.https_options %></dd>
 
-  <dt><%= @model.t :group_ids %></dt>
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), sys_apis_groups_path, class: "ajax-box" %>
