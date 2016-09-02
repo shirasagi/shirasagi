@@ -1,0 +1,165 @@
+en:
+  chorg:
+    revision: 組織変更
+    changeset: 組織変更内容
+    views:
+      revisions/edit: &revisions_edit
+        add: 新設
+        move: 移動
+        unify: 統合
+        division: 分割
+        delete: 廃止
+        add_description: グループ名
+        move_before: 移動元
+        move_after: 移動先
+        unify_before: 統合元
+        unify_after: 統合先
+        division_before: 分割元
+        division_after: 分割先
+        delete_description: グループ名
+      revisions/show:
+        <<: *revisions_edit
+      run/confirmation:
+        test:
+          header: テスト実行しますが、よろしいですか？
+          run_button: テスト実行
+        main:
+          header: 本番実行しますが、よろしいですか？
+          run_button: 本番実行
+        run_options: 実行オプション
+      add_changesets:  &group_props
+        name: グループ名
+        order: 表示順
+        contact_tel: 電話番号
+        contact_fax: ファックス番号
+        contact_email: メールアドレス
+        ldap_dn: DN
+      move_changesets:
+        before_move: 移動元
+        after_move: 移動先
+        select_group: 移動グループを選択する
+        <<: *group_props
+      unify_changesets:
+        before_unify: 統合元
+        after_unify: 統合先
+        select_group: 統合グループを選択する
+        <<: *group_props
+      division_changesets:
+        before_division: 分割元
+        after_division:
+          zero: 分割先
+          one: "%{count} 番目の分割先"
+          other: "%{count} 番目の分割先"
+        select_group: 分割グループを選択する
+        <<: *group_props
+      delete_changesets:
+        select_group: 廃止グループを選択する
+        <<: *group_props
+    menus:
+      revisions:
+        add: 新設を追加する
+        move: 移動を追加する
+        unify: 統合を追加する
+        division: 分割を追加する
+        delete: 廃止を追加する
+        test_execute: テスト実行する
+        production_execute: 本番実行する
+        execute_results: 実行結果を閲覧する
+    messages:
+      job_started: 組織変更処理を開始しました。
+      test_run: テスト実行
+
+  modules:
+    chorg: 組織変更
+
+  cms_role:
+    edit_chorg_revisions: 組織変更の管理
+
+  job:
+    models:
+      chorg/test_runner: 組織変更/テスト実行
+      chorg/main_runner: 組織変更/本番実行
+
+  mongoid:
+    models:
+      chorg/changeset: 変更内容
+      chorg/revision: リビジョン
+    attributes:
+      chorg/revision:
+        name: 名前
+        add_newly_created_group_to_site: 新規作成グループをサイトに追加
+      chorg/changeset:
+        type: 種別
+
+  tooltip:
+    chorg/revision:
+      name:
+        - 組織変更の名称を入力します。
+    chorg:
+      views:
+        add_changesets:
+          name:
+            - 新設するのグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 新設するグループの電話番号を入力します。
+          contact_fax:
+            - 新設するグループのファックス番号を入力します。
+          contact_email:
+            - 新設するグループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は新設するグループの識別子(DN)を入力します。
+        delete_changesets:
+          name:
+            - 廃止するグループ名を選択します。
+        division_changesets:
+          name:
+            - 分割後ののグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 分割後のグループの電話番号を入力します。
+          contact_fax:
+            - 分割後のグループのファックス番号を入力します。
+          contact_email:
+            - 分割後のグループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は分割後のグループの識別子(DN)を入力します。
+          before_name:
+            - 分割元のグループ名を選択します。
+        move_changesets:
+          name:
+            - 移動先のグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 移動先グループの電話番号を入力します。
+          contact_fax:
+            - 移動先グループのファックス番号を入力します。
+          contact_email:
+            - 移動先グループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は移動先グループの識別子(DN)を入力します。
+          before_name:
+            - 移動元のグループ名を選択します。
+        unify_changesets:
+          name:
+            - 統合先のグループ名を入力します。
+          order:
+            - グループ画面での表示順を入力します。
+            - 数字が小さいほど上位に表示されます。
+          contact_tel:
+            - 統合先グループの電話番号を入力します。
+          contact_fax:
+            - 統合先グループのファックス番号を入力します。
+          contact_email:
+            - 統合先グループのメールアドレスを入力します。
+          ldap_dn:
+            - LDAPを利用している場合は統合先グループの識別子(DN)を入力します。
+          before_name:
+            - 統合元のグループ名を選択します。
+

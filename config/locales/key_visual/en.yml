@@ -1,0 +1,61 @@
+en:
+  key_visual:
+    image: 画像
+    controls:
+      start: 再生
+      stop: 停止
+    options:
+      link_target:
+        self: 同じタブで表示
+        blank: 別のタブで表示
+
+  modules:
+    key_visual: キービジュアル
+    addons:
+      key_visual/page_list: リスト表示
+
+  cms:
+    nodes:
+      key_visual/image: 画像管理
+    parts:
+      key_visual/slide: スライドショー
+
+  cms_role:
+    read_other_key_visual_images: 画像の閲覧（全て）
+    read_private_key_visual_images: 画像の閲覧（所有）
+    edit_other_key_visual_images: 画像の編集（全て）
+    edit_private_key_visual_images: 画像の編集（所有）
+    delete_other_key_visual_images: 画像の削除（全て）
+    delete_private_key_visual_images: 画像の削除（所有）
+
+  mongoid:
+    models:
+      key_visual/image: キービジュアル画像
+    attributes:
+      key_visual/addon/page_list:
+        link_action: リンク動作
+        link_target: リンク表示
+        upper_html: 上部HTML
+        lower_html: 下部HTML
+      key_visual/image:
+        link_url: リンクURL
+        file_id: 画像
+        in_file: 画像
+
+  tooltip:
+    key_visual/image:
+      name:
+        - キービジュアル画像のリンク先のページ名を入力します。
+        - 画像のalt属性にも利用します。
+      link_url:
+        - キービジュアル画像のリンク先のURLを入力します。
+      file_id:
+        - キービジュアル画像に利用する画像を登録します。
+    key_visual/addon/page_list:
+      link_target:
+        - リンクの表示形式を設定します。
+      upper_html:
+        - リスト部分の上部に任意の内容をHTMLで記述することが可能です。
+      lower_html:
+        - リスト部分の下部に任意の内容をHTMLで記述することが可能です。
+
