@@ -13,6 +13,14 @@ module Event::EventHelper
     t("date.abbr_day_names")
   end
 
+  def t_month_name(month)
+    t("date.month_names")[month.to_i]
+  end
+
+  def t_month_names
+    t("date.month_names")
+  end
+
   def event_h1_class(month)
     %w(jan feb mar apr may jun jul aug sep oct nov dec)[month - 1]
   end
@@ -53,7 +61,7 @@ module Event::EventHelper
   def link_to_monthly(date, opts = {})
     year  = date.year
     month = date.month
-    name = opts[:name].present? ? opts[:name] : "#{month}#{t_date('month')}"
+    name = opts[:name].present? ? opts[:name] : t("calendar.formats.month", m: month, month_name: t_month_name(month))
     path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
     enable = (opts[:enable] != nil) ? opts[:enable] : true
 

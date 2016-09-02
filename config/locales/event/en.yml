@@ -4,14 +4,22 @@ en:
     category: カテゴリー
     add_date: 日付フォームを追加する
     del_date: 削除
-    next_month: 次の月へ
-    prev_month: 前の月へ
-    next_day: 次の日へ
-    prev_day: 前の日へ
-    current_month: 今月
-    filter_all: 全て
+    next_month: next
+    prev_month: previous
+    next_day: next
+    prev_day: previous
+    current_month: current
+    filter_all: all
     confirm:
       delete_date: イベント日を削除してよろしいですか？
+
+  calendar:
+    formats:
+      year_month_day: "%{y} %{m}/%{d}"
+      year_month: "%{month_name} %{y}"
+      month_day: "%{m}/%{d}"
+      month: "%{month_name}"
+      wday: "%{w}"
 
   modules:
     event: イベント
