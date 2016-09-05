@@ -1,0 +1,12 @@
+<% message.subject = @subject %>
+<%= @from_user.name %>さんより次の記事について承認依頼が届きました。
+承認作業を行ってください。
+
+- タイトル
+  <%= @page.name %>
+
+- 申請者コメント
+  <%= @comment %>
+
+- 記事URL
+  <%= @url %>
