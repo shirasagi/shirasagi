@@ -1,6 +1,7 @@
 <%
-  request_update_url = "/.s#{@cur_site.id}/workflow#{@cur_node.try(:id)}/pages/#{@item.id}"
-  request_wizard_url = "/.s#{@cur_site.id}/workflow#{@cur_node.try(:id)}/wizard/#{@item.id}"
+  mode = (@ss_mode == :gws) ? "g" : "s"
+  request_update_url = "/.#{mode}#{@cur_site.id}/workflow#{@cur_node.try(:id)}/pages/#{@item.id}"
+  request_wizard_url = "/.#{mode}#{@cur_site.id}/workflow#{@cur_node.try(:id)}/wizard/#{@item.id}"
 %>
 
 <%= coffee do %>
