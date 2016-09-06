@@ -1,0 +1,5 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, { action: :show, id: item.id }, class: "title" %>
+<% end %>
+
+<%= render file: "cms/crud/index" %>
