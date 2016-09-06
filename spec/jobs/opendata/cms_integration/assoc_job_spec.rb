@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Cms::AssocJob, dbscope: :example, tmpdir: true do
+describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
   let(:site) { cms_site }
   let(:article_node) { create :article_node_page, cur_site: site }
   let(:html) do

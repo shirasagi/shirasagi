@@ -1,4 +1,4 @@
-class Opendata::Cms::AssocJob < Cms::ApplicationJob
+class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
   def perform(site_id, node_id, page_id, action)
     return unless self.site.dataset_enabled?
     @dataset_node = Opendata::Node::Dataset.site(self.site).first
