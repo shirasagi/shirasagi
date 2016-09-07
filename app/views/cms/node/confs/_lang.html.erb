@@ -1,0 +1,23 @@
+<% if params[:action] =~ /show|edit|delete/ %>
+
+<% langs = Multilingual::Node::Lang.site(@cur_site).and_public %>
+<% return "" if langs.blank? %>
+<% return "" unless @item.respond_to?(:foreign) %>
+
+<nav class="nav-menu">
+  <% path = @item.private_show_path %>
+  <%= link_to I18n.default_locale, path, request.path.include?(path) ? { class: :current } : {} %>
+
+  <% parent = @cur_node ? @cur_node.parent : nil %>
+  <% langs.each do |item| %>
+    <% if parent %>
+      <% path = multilingual_node_nodes_path(native_id: @item.id, cid: parent.id, lang: item.filename) %>
+    <% else %>
+      <% path = multilingual_nodes_path(native_id: @item.id, lang: item.filename) %>
+    <% end %>
+
+    <%= link_to item.name, path, request.path.include?(path) ? { class: :current } : {} %>
+  <% end %>
+</nav>
+
+<% end %>
