@@ -9,7 +9,7 @@
         <header>
           <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
           <h2><%= link_to item.name, item.url %>
-            <% if item.node.becomes_with_route.try(:show_point?) %>
+            <% if item.parent.becomes_with_route.try(:show_point?) %>
             <span class="point"><%= item.point.to_i %></span>
             <% end %>
           </h2>
