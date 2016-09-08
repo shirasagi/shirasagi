@@ -6,11 +6,16 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
+  concern :deletion_all do
+    get :delete, on: :member
+    delete action: :destroy_all, on: :collection
+  end
+
   content "opendata" do
     get "datasets_approve" => "dataset/datasets#index_approve"
     get "datasets_request" => "dataset/datasets#index_request"
     get "datasets_closed" => "dataset/datasets#index_closed"
-    resources :my_datasets, concerns: :deletion, module: "mypage/dataset"
+    resources :my_datasets, concerns: :deletion_all, module: "mypage/dataset"
   end
 
   node "opendata" do
