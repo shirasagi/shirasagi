@@ -1,0 +1,24 @@
+en:
+  urgency:
+    layout: 緊急災害レイアウト
+    switch_layout: 反映
+    selected_layout: 適用中
+    default_layout: 通常時レイアウト
+    confirm_message: 反映してよろしいですか？
+    errors:
+      index_page_not_found: "同階層にindex.htmlがありません。"
+      default_layout_not_found: "通常時レイアウトが設定されていません。"
+
+  modules:
+    urgency: 緊急災害レイアウト
+    addons:
+      urgency/layout: 緊急災害レイアウト設定
+
+  cms:
+    nodes:
+      urgency/layout: 緊急災害レイアウト
+
+  mongoid:
+    attributes:
+      urgency/node/layout:
+        urgency_default_layout: 通常時レイアウト

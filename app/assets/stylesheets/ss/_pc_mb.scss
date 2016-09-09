@@ -700,6 +700,30 @@ td {
 }
 
 // -------------------------------------------------------------------------------------------------
+// lang
+#lang {
+  .nav-menu {
+    margin: 20px;
+    margin-left: 230px;
+    @include mb {
+      margin: 0;
+      padding: 10px;
+    }
+    a {
+      display: inline-block;
+      margin-right: 24px;
+      @include arrow;
+      color: $black;
+      &:hover { color: $orange;}
+    }
+    a.current {
+      background-color: #dcdcdc;
+      @include border-radius;
+    }
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
 // common view
 
 

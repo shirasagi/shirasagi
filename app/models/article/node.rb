@@ -1,6 +1,7 @@
 module Article::Node
   class Base
     include Cms::Model::Node
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^article\//) }
   end
@@ -16,6 +17,7 @@ module Article::Node
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "article/page") }
   end

@@ -1,0 +1,12 @@
+ja:
+  multilingual:
+    page: ページ
+    node: フォルダー
+    part: パーツ
+
+  modules:
+    multilingual: 多言語
+
+  cms:
+    nodes:
+      multilingual/lang: 多言語

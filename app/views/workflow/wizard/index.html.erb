@@ -1,15 +1,16 @@
+<%
+  mode = (@ss_mode == :gws) ? "g" : "s"
+  request_approver_setting_url = "/.#{mode}#{@cur_site.id}/workflow#{@cur_node.try(:id)}/wizard/#{params[:id]}/approver_setting"
+%>
+
 <%= coffee do %>
 $ ->
 
   $(".workflow-route-start").on "click", (e) ->
-    uri = location.pathname.split("/")
-    uri[2] = "workflow" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "wizard"
-    uri = uri.join("/")  + "/approver_setting"
     route_id = $("#workflow_route").val()
     $.ajax
       type: "post"
-      url: uri
+      url: "<%= request_approver_setting_url %>"
       async: false
       data:
         route_id: route_id

@@ -1,0 +1,95 @@
+en:
+  event:
+    page: イベントページ
+    category: カテゴリー
+    add_date: 日付フォームを追加する
+    del_date: 削除
+    next_month: next
+    prev_month: previous
+    next_day: next
+    prev_day: previous
+    current_month: current
+    filter_all: all
+    confirm:
+      delete_date: イベント日を削除してよろしいですか？
+
+  calendar:
+    formats:
+      year_month_day: "%{y} %{m}/%{d}"
+      year_month: "%{month_name} %{y}"
+      month_day: "%{m}/%{d}"
+      month: "%{month_name}"
+      wday: "%{w}"
+
+  modules:
+    event: イベント
+    addons:
+      event/date: イベント
+      event/page_list: リスト表示
+      event/body: イベント情報
+
+  cms:
+    nodes:
+      event/page: イベントリスト
+    parts:
+      event/calendar: カレンダー
+
+  cms_role:
+    read_other_event_pages: ページの閲覧（全て）
+    read_private_event_pages: ページの閲覧（所有）
+    edit_other_event_pages: ページの編集（全て）
+    edit_private_event_pages: ページの編集（所有）
+    delete_other_event_pages: ページの削除（全て）
+    delete_private_event_pages: ページの削除（所有）
+    move_other_event_pages: ページの移動（全て）
+    move_private_event_pages: ページの移動（所有）
+    release_other_event_pages: ページの公開（全て）
+    release_private_event_pages: ページの公開（所有）
+    approve_other_event_pages: ページの承認（全て）
+    approve_private_event_pages: ページの承認（所有）
+
+  mongoid:
+    models:
+      event/page: イベントページ
+    attributes:
+      cms/model/page:
+        event_name: イベントタイトル
+        event_dates: イベント日
+        schedule: 日時
+        venue: 開催場所
+        content: 内容
+        cost: 費用
+        related_url: URL
+        field: 項目名
+        value: 内容
+        contact: お問い合わせ
+
+  datetime:
+    prompts:
+      wday: 曜日
+
+  errors:
+    messages:
+      too_many_event_dates: の設定日が多すぎます。
+
+  tooltip:
+    event/addon/date:
+      event_name:
+        - イベントページに表示するリンクのタイトルを記入します。
+        - 入力しない場合はこのページのタイトルが継承されます。
+      event_dates:
+        - イベントページにリンクを表示する場合はイベントの期間を入力します。
+        - 「日付フォームを追加する」を選択することで複数の期間を設定することが可能です。
+    event/addon/body:
+      schedule:
+        - イベントの日時をテキスト形式で入力します。
+      venue:
+        - イベントの開催場所を入力します。
+      related_url:
+        - イベントの関連URLを入力します。
+      content:
+        - イベントの内容を入力します。
+      cost:
+        - イベント参加に必要な費用を入力します。
+      contact:
+        - イベントの連絡先を入力します。

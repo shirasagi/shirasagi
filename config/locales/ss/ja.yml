@@ -96,6 +96,7 @@ ja:
       markdown_help: Markdown ヘルプ
       split: 分割する
       integrate: 統合する
+      ja: 日本語
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -253,6 +254,11 @@ ja:
         domains: ドメイン
         https: HTTPS
         group_ids: グループ
+      ss/model/file:
+        in_file: ファイル
+        in_files: ファイル
+        image: 画像
+        download: ダウンロード
       ss/model/user:
         name: 氏名
         kana: カナ

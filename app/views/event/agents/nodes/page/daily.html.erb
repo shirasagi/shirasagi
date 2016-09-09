@@ -3,8 +3,8 @@
 <nav class="event-date">
   <h2 class="<%= event_h1_class(@month) + " " + event_dl_class(@date) %>">
     <%= time_tag(@date) do %>
-      <%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}#{@day}#{t_date('day')}" %>
-      <span class="wday">(<%= t_wday(@date) %><span class="unit"><%= t_date('wday') %></span>)</span>
+      <%= t("calendar.formats.year_month_day", y: @year, m: @month, d: @day) %>
+      <span class="wday">(<%= t("calendar.formats.wday", w: t_wday(@date)) %>)</span>
 
       <% if @date.national_holiday? %>
         <span class="holiday"><%= HolidayJapan.name @date %></span>

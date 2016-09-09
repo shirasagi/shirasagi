@@ -143,6 +143,8 @@ en:
       create: Create %{model}
       submit: Save %{model}
       update: Update %{model}
+      upload: Upload %{model}
+      post: Post %{model}
   number:
     currency:
       format:

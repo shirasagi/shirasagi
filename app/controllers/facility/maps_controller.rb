@@ -6,6 +6,7 @@ class Facility::MapsController < ApplicationController
   model Facility::Map
 
   append_view_path "app/views/cms/pages"
+  lang_view "cms/node/pages/lang"
 
   private
     def fix_params

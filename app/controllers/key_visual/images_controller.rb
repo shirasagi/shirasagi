@@ -6,6 +6,7 @@ class KeyVisual::ImagesController < ApplicationController
 
   prepend_view_path "app/views/cms/pages"
   navi_view "key_visual/main/navi"
+  lang_view "cms/node/pages/lang"
 
   private
     def fix_params

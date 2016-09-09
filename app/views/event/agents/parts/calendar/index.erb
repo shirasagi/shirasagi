@@ -27,7 +27,7 @@
   </nav>
   <table class="calendar">
     <caption>
-      <%= link_to_monthly @current_month_date, name: "#{@year}#{t_date('year')}#{@month}#{t_date('month')}",
+      <%= link_to_monthly @current_month_date, name: t("calendar.formats.year_month", y: @year, m: @month, month_name: t_month_name(@month)),
         path: @cur_part.parent.try(:url).to_s %>
     </caption>
     <thead>

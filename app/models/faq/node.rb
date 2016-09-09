@@ -1,6 +1,7 @@
 module Faq::Node
   class Base
     include Cms::Model::Node
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^faq\//) }
   end
@@ -15,6 +16,7 @@ module Faq::Node
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "faq/page") }
   end
@@ -28,6 +30,7 @@ module Faq::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "faq/search") }
 

@@ -11,7 +11,7 @@
     <%= show_simple_captcha(object: :item, code_type: 'numeric', input_html: { required: nil }) %>
   <% end %>
   <footer class="send">
-    <%= f.submit "投稿" %>
+    <%= f.submit "post" %>
     <%= f.button t("views.button.cancel"), type: :reset, onclick: "location.href='#{@cur_node.url}'; return false;" %>
   </footer>
 </div>

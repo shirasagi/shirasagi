@@ -7,6 +7,7 @@ class Article::PagesController < ApplicationController
 
   append_view_path "app/views/cms/pages"
   navi_view "article/main/navi"
+  lang_view "cms/node/pages/lang"
 
   private
     def fix_params

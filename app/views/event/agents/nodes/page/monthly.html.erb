@@ -18,7 +18,9 @@
 <% end %>
 
 <nav class="event-date">
-  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <h2 class="<%= event_h1_class @month %>">
+    <%= t("calendar.formats.year_month", y: @year, m: @month, month_name: t_month_name(@month)) %>
+  </h2>
   <ul>
     <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1) %></li>
     <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1) %></li>
@@ -30,8 +32,8 @@
   <dl class="<%= event_dl_class date %>">
     <dt>
       <%= time_tag(date) do %>
-      <%= link_to_daily date, name: "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}" %>
-      <span class="wday">(<%= t_wday(date) %><span class="unit"><%= t_date('wday') %></span>)</span>
+      <%= link_to_daily date, name: t("calendar.formats.month_day", m: date.month, d: date.day, month_name: t_month_name(date.month) ) %>
+      <span class="wday">(<%= t("calendar.formats.wday", w: t_wday(date)) %>)</span>
       <% end %>
     </dt>
 

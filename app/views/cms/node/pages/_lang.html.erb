@@ -1,0 +1,18 @@
+<% if params[:action] =~ /show|edit|delete/ %>
+
+<% langs = Multilingual::Node::Lang.site(@cur_site).and_public %>
+<% return "" if langs.blank? %>
+<% return "" unless @item.respond_to?(:foreign) %>
+<% return "" if @item.try(:branch?) %>
+
+<nav class="nav-menu">
+  <% path = @item.private_show_path %>
+  <%= link_to I18n.default_locale, path, request.path.include?(path) ? { class: :current } : {} %>
+
+  <% langs.each do |item| %>
+    <% path = multilingual_node_pages_path(native_id: @item.id, lang: item.filename) %>
+    <%= link_to item.name, path, request.path.include?(path) ? { class: :current } : {} %>
+  <% end %>
+</nav>
+
+<% end %>

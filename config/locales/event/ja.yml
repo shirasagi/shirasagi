@@ -13,6 +13,14 @@ ja:
     confirm:
       delete_date: イベント日を削除してよろしいですか？
 
+  calendar:
+    formats:
+      year_month_day: "%{y}年%{m}月%{d}日"
+      year_month: "%{y}年%{m}月"
+      month_day: "%{m}月%{d}日"
+      month: "%{m}月"
+      wday: "%{w}曜日"
+
   modules:
     event: イベント
     addons:

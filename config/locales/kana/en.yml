@@ -1,0 +1,57 @@
+en:
+  kana:
+    dictionary: かな辞書
+    build_success: 辞書の作成に成功しました。
+    build_fail:
+      no_mecab_indexer: MeCab 辞書ビルドプログラムがインストールされていません。
+      no_mecab_dicdir: MeCab 辞書がインストールされていません。
+      no_content: 登録データが見つかりません。
+      index: かな辞書を作成できません。
+    views:
+      links:
+        build_kana_dictionary: 辞書反映
+      button:
+        build_kana_dictionary: 反映
+      dictionaries/build_confirmation:
+        build_header: 辞書を反映してよろしいですか？
+        build_description: 以下のかな辞書から辞書をビルドし、システムに反映します。
+
+  modules:
+    kana: かな
+
+  cms_role:
+    read_kana_dictionaries: かな辞書の閲覧
+    edit_kana_dictionaries: かな辞書の編集
+    delete_kana_dictionaries: かな辞書の削除
+    build_kana_dictionaries: かな辞書の反映
+
+  mongoid:
+    models:
+      kana/dictionary: かな辞書
+    attributes:
+      kana/dictionary:
+        name: 名前
+        body: 設定
+
+  tooltip:
+    kana/dictionary:
+      name:
+        - 「議会」や「施設」など、かな辞書に登録されている単語の名前を入力します。
+      body:
+        - 単語の表記と読みをカンマで区切って入力します（CSV 形式で入力します）。
+        - 単語を改行で区切って複数個入力することができます。
+        - |-
+          読みは「全角カタカナ」で入力してください。
+          ただし、小さい「ヵ」「ヶ」は使用できません。それぞれ「カ」「ケ」を使用してください。
+        - 先頭が「#」で始まる行はコメントとみなされ、辞書に登録されません。
+        - 空白行は無視します。
+        - |-
+          漢字の入力例：
+          大鷺県, ダイサギケン
+          小鷺町, コサギマチ
+        - |-
+          アルファベットの入力例：
+          SHIRASAGI, シラサギ
+          Shirasagi, シラサギ
+          shirasagi, シラサギ
+        - 英大文字と小文字を区別するので、全部大文字、先頭だけ大文字、全部小文字の 3 つのパターンを登録します。

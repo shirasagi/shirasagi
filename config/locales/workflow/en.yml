@@ -1,0 +1,131 @@
+en:
+  workflow:
+    name: ワークフロー
+    request: 承認申請
+    request_to: 申請先
+    selectable_users: 選択候補
+    pages: 承認
+    user_deleted: 削除ユーザー
+    master_message: 以下の差し替えページが作成されています。
+    master_page: 差し替え元ページ
+    branch_message: このページは差し替えページです。
+    branch_page: 差し替えページ
+    create_branch: 差し替えページを作成する
+    cloned_name_prefix: 複製
+    member: ログインメンバー
+    state:
+      request: 申請中
+      approve: 承認
+      pending: 下位承認待ち
+      remand: 差し戻し
+    button:
+      select: 選択
+      cancel: 取消
+      request: 申請
+      approve: 承認
+      remand: 差し戻し
+    mail:
+      subject:
+        request: 承認申請
+        approve: 最終承認完了
+        remand: 承認差し戻し
+    page:
+      ready: 公開待ち
+      closed: 非公開
+      approve: 依頼されたもの
+      request: 申請したもの
+    route: 承認経路
+    options:
+      required_count:
+        all: 全員
+        minimum: "%{required_count} 人"
+    required_count_label:
+      all: 全員の承認が必要
+      minimum: "%{required_count} 人の承認が必要"
+    search_approvers:
+      index: 承認者を選択する
+      select: 承認者を設定する
+      search: 検索
+
+  views:
+    options:
+      posted_by:
+        member: マイページ投稿
+        admin: 管理側投稿
+
+  modules:
+    workflow: ワークフロー
+    addons:
+      workflow/approver: 承認
+      workflow/branch: 差し替えページ
+
+  cms_role:
+    read_other_workflow_routes: 承認ルートの閲覧（全て）
+    read_private_workflow_routes: 承認ルートの閲覧（所有）
+    edit_other_workflow_routes: 承認ルートの編集（全て）
+    edit_private_workflow_routes: 承認ルートの編集（所有）
+    delete_other_workflow_routes: 承認ルートの削除（全て）
+    delete_private_workflow_routes: 承認ルートの削除（所有）
+
+  mongoid:
+    attributes:
+      workflow/addon/approver:
+        workflow_user_id: 申請者
+        workflow_state: 承認状態
+        workflow_comment: 申請コメント
+        workflow_approvers: 承認者
+        workflow_required_counts: 必要承認数
+        comment: 差し戻しコメント
+        approver_comment: 承認者コメント
+      workflow/model/route:
+        name: 名前
+        approvers: 承認者
+        required_counts: 必要承認数
+        group_ids: グループ
+        level: "%{level} 段目"
+        my_group: "自所属"
+        approver_at: "%{level} 段目の承認者"
+        required_count_at: "%{level} 段目の必要承認数"
+        approvers_level: 段
+        approvers_user_id: 申請者
+
+  errors:
+    messages:
+      not_select: "が選択されていません。"
+      level_blank: "のレベルが設定されていません。"
+      user_id_blank: "のユーザが設定されていません。"
+      state_blank: "の状態が設定されていません。"
+      not_read: "に設定されている %{name} は、閲覧権限がありません。"
+      not_approve: "に設定されている %{name} は、承認権限がありません。"
+      approvers_level_blank: "段が設定されていません。"
+      approvers_level_missing: "%{level} 段目の承認者を設定してください。"
+      approvers_user_id_blank: "ユーザが設定されていません。"
+      approvers_user_missing: "削除ユーザが存在します。"
+      required_count_greater_than_approvers: "%{level} 段目に設定されている承認者が、必要承認数 %{required_count} より少ないです。"
+      route_approver_unable_to_read: "承認経路「%{route}」に設定されているユーザ「%{user} は記事閲覧権がありません。"
+      route_approver_unable_to_approve: "承認経路「%{route}」に設定されているユーザ「%{user}」は記事承認権がありません。"
+      cloned_name: "タイトルに[複製]が含まれています。"
+      invalid_approve_name: "複製後のタイトルを変更し承認申請を行ってください。"
+
+  tooltip:
+    workflow/addon/approver:
+      workflow_comment:
+        - 申請理由など承認者に対するコメントをを記述してください。
+      workflow_approvers:
+        - 承認者を指定する場合は、右欄選択候補よりを対象者をクリックしてください。
+        - 承認者を解除する場合は、左欄申請先よりを対象者をクリックしてください。
+      approve_remand:
+        - 承認依頼が届いています。申請者に対するコメントを入力（任意）の上、承認または差し戻しを選択してください。
+      workflow_routes:
+        - 承認を申請するには承認経路を選択してから、選択ボタンをクリックしてください。
+    workflow/model/route:
+      name:
+        - 承認経路の名前を入力します。
+      approvers:
+        - 承認者を選択します。
+      required_counts:
+        - 必要承認数を入力します。
+        - 「全員」を選択すると、承認者全員の承認が必要となります。
+        - 「n 人」を選択すると、承認者のうち n 人以上の承認が必要となります。
+      group_ids:
+        - この承認経路を利用できるグループを選択します。

@@ -114,6 +114,12 @@
       </ol>
       <% end %>
 
+      <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_lang.html.erb") %>
+      <div id="lang"><%= render partial: "lang" %></div>
+      <% elsif controller.lang_view_file %>
+      <div id="lang"><%= render partial: controller.lang_view_file %></div>
+      <% end %>
+
       <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
       <div id="menu"><%= render partial: "menu" %></div>
       <% elsif controller.menu_view_file %>

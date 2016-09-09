@@ -6,6 +6,7 @@ class Cms::Node::PartsController < ApplicationController
 
   prepend_view_path "app/views/cms/parts"
   navi_view "cms/node/main/navi"
+  lang_view "cms/node/parts/lang"
 
   private
     def fix_params

@@ -33,7 +33,7 @@ class Facility::ImportJob < Cms::ApplicationJob
 
   def update_row(row)
     filename = "#{node.filename}/#{row[@model.t(:filename)]}"
-    item = @model.find_or_create_by filename: filename
+    item = @model.find_or_initialize_by filename: filename
     set_page_attributes(row, item)
     item.site = site
 

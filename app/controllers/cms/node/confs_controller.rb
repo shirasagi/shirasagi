@@ -5,6 +5,7 @@ class Cms::Node::ConfsController < ApplicationController
   model Cms::Node
 
   navi_view "cms/node/main/navi"
+  lang_view "cms/confs/lang"
 
   private
     def set_item

@@ -1,6 +1,7 @@
 module Member::Node
   class Base
     include Cms::Model::Node
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: /^member\//) }
   end
@@ -19,6 +20,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/login") }
   end
@@ -31,6 +33,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/mypage") }
 
@@ -49,6 +52,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/my_profile") }
   end
@@ -64,6 +68,7 @@ module Member::Node
     include Member::Addon::Registration::RequiredFields
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/registration") }
   end
@@ -75,6 +80,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/my_blog") }
 
@@ -94,6 +100,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/my_photo") }
   end
@@ -107,6 +114,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/blog") }
 
@@ -147,6 +155,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/blog_page_location") }
 
@@ -181,6 +190,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/photo") }
   end
@@ -193,6 +203,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/photo_search") }
   end
@@ -205,6 +216,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/photo_spot") }
   end
@@ -217,6 +229,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/photo_category") }
 
@@ -245,6 +258,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/photo_location") }
 
@@ -275,6 +289,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/my_anpi_post") }
   end
@@ -289,6 +304,7 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Multilingual::Addon::Node
 
     default_scope ->{ where(route: "member/my_group") }
   end

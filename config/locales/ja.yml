@@ -114,6 +114,7 @@ ja:
       inclusion: は一覧にありません。
       invalid: は不正な値です。
       invalid_file_type: は不正なファイル形式です。
+      invalid_locale: は不正な言語です。
       duplicate: の重複が存在します。
       less_than: は%{count}より小さい値にしてください。
       less_than_or_equal_to: は%{count}以下の値にしてください。
@@ -137,6 +138,7 @@ ja:
       file_scan_exception: "ウイルススキャンに失敗しました。"
       not_exist: は存在しません。
       not_found_parent_nodes: に親フォルダー「%{name}」がありません。
+      multilingual_content_exist: 他言語コンテンツとファイル名が衝突しました。
     template:
       body: 次の項目を確認してください。
       header:
@@ -152,6 +154,7 @@ ja:
       submit: 保存する
       update: 更新する
       upload: "アップロード"
+      post: 投稿する
   number:
     currency:
       format:

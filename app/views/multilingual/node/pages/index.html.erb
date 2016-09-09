@@ -1,0 +1,80 @@
+<% if @items.count == 0 %>
+
+<div>作成されていません</div>
+
+<% else %>
+
+<div class="index">
+  <ul class="list-items">
+    <% @items.each do |item| %>
+    <% item = @item_decorator.call(item) if @item_decorator %>
+    <li class="list-item">
+      <nav class="tap-menu">
+        <% if @tap_menu %>
+          <% @tap_menu.call item %>
+        <% else %>
+          <%= link_to :show, action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to :edit, action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to :delete, action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+          <% if @model.collection_name == :cms_nodes %>
+            <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
+            <% if @cur_site.mobile_enabled? %>
+              <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+              <%= link_to(:mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank) %>
+            <% else %>
+              <%= link_to :preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+            <% end %>
+          <% elsif @model.collection_name == :cms_pages %>
+            <%= link_to :view_site, item.full_url, target: :_blank if item.public? %>
+            <% if @cur_site.mobile_enabled? %>
+              <%= link_to :pc_preview, cms_preview_path(path: item.filename), target: :_blank %>
+              <%= link_to(:mobile_preview, cms_mobile_preview_path(path: item.filename), target: :_blank) %>
+            <% else %>
+              <%= link_to :preview, cms_preview_path(path: item.filename), target: :_blank %>
+            <% end %>
+          <% end %>
+
+          <% if item.try(:image) %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+          <% elsif item.try(:image?) %>
+            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+          <% end %>
+        <% end %>
+      </nav>
+
+      <div class="info">
+        <% if @index_title %>
+          <% @index_title.call item %>
+        <% else %>
+          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+          <%= link_to title, { action: :show, id: item }, class: "title" %>
+        <% end %>
+
+        <div class="meta">
+          <% if @index_meta %>
+            <% @index_meta.call item %>
+          <% else %>
+            <span class="id">#<%= item.id %></span>
+            <% if item.try(:updated) %>
+              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <% end %>
+            <% if item.try(:filename) %>
+              <span class="filename"><%= File.basename item.filename %></span>
+            <% end %>
+            <% if item.try(:route) %>
+              <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+            <% end %>
+            <% if item.try(:status) %>
+              <span class="state"><%= t "views.state.#{item.status}" %></span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+
+<% end %>

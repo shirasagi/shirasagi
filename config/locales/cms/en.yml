@@ -1,0 +1,1062 @@
+en:
+  cms:
+    alert: 警告
+    config: 設定
+    site_config: サイト設定
+    site_info: サイト情報
+    content: コンテンツ
+    generate_node: フォルダー書き出し
+    generate_page: ページ書き出し
+    import_page: 取り込みページ
+    import: ページ取り込み
+    import_node: フォルダー取り込み
+    all_contents: 全コンテンツ一覧出力
+    all_content:
+      description: サイト内の全コンテンツを出力します。
+    import_page: 取り込みページ
+    group: グループ
+    layout: レイアウト
+    body_layout: 本文レイアウト
+    link_check: リンクチェック
+    source_cleaner: ソースクリーニング
+    preview: プレビュー
+    member: メンバー
+    modules: モジュール
+    node: フォルダー
+    node_config: フォルダー設定
+    page: 固定ページ
+    part: パーツ
+    file: 共有ファイル
+    preview_page: プレビュー
+    preview_pc_page: PCプレビュー
+    preview_mobile_page: 携帯プレビュー
+    preview_site: サイトプレビュー
+    role: 権限/ロール
+    root_menu: メインメニュー
+    search_contents: サイト内検索
+    search_contents_pages: ページ検索
+    search_contents_html: HTML検索と置換
+    site: サイト
+    site_menu: サイトメニュー
+    syntax_check: アクセシビリティチェック
+    user: ユーザー
+    view_page: 公開画面
+    view_site: サイト確認
+    editor_template: テンプレート
+    theme_template: Theme切り替え
+    source_cleaner_template: ソースクリーニング
+    convert_to_cms_page: 固定ページに変換する
+    notice: お知らせ
+    important_notice: 重要なお知らせ
+    page_search: ページ検索
+    roles:
+      admin: 管理者
+      user: 編集者
+    confirm:
+      delete_item: 項目を削除してよろしいですか？
+    messages:
+      import: インポートを開始しました
+    search_contents_condition: "検索条件: %{condition}"
+    search_contents_count: "%{count} 件の検索結果"
+    postal_code: 郵便番号
+    import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
+    postal_code_normalize_city: 以下に掲載がない場合
+    calendar_view: カレンダー表示
+    list_view: リスト表示
+
+    adobe_reader:
+      remark:
+        - <div>
+        - PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
+        - お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
+        - </div>
+        - <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
+    apis:
+      categories:
+        index: カテゴリーを選択する
+        search: カテゴリーを検索
+        select: カテゴリーを設定する
+      contents:
+        page: ページ
+        title: タイトル
+        result: 検索結果
+        keyword: 検索文字
+        replacement: 置換文字
+        option: オプション
+        confirm_message: 全置換を行ってもよろしいですか？
+      nodes:
+        index: フォルダーを選択する
+        search: フォルダーを検索
+        select: フォルダーを設定する
+      pages:
+        index: 関連記事を選択する
+        search: 関連記事を検索
+        select: 関連記事を設定する
+      pages_routes:
+        index: ページ属性を選択する
+        search: ページ属性を検索
+        select: ページ属性を設定する
+      members:
+        index: メンバーを選択する
+        search: メンバーを検索
+        select: メンバーを設定する
+      sites:
+        index: サイトを選択する
+        search: サイトを検索
+        select: サイトを設定する
+    auto_correct:
+      link: 自動修正
+      notice: アクセシビリティチェック（保存時に自動で修正されます）
+      dependent_character: "[機種依存文字]"
+      caption: キャプション
+    links:
+      ruby_on: ふりがなをつける
+      ruby_off: ふりがなをはずす
+      back_to_contents: コンテンツへ戻る
+    move_page:
+      confirm: 確認
+      message: '"%{source}"へのリンクが含まれるページ'
+      link_to_replace: URLを置換する
+    copy_nodes:
+      from: 複製元フォルダー
+      to: 複製先
+      job_history: 実行ログ
+      link_to_job_history: ジョブ実行履歴
+      target_node_name: フォルダー名
+      started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
+    options:
+      sort:
+        name: タイトル
+        filename: ファイル名
+        created: 作成日時
+        updated_1: 更新日時
+        released_1: 公開日時
+        order: 指定順
+      parent_crumb:
+        blank: カテゴリーから選択する
+      notice_severity:
+        normal: ""
+        high: 重要なお知らせ
+      notice_target:
+        all: 全ユーザー
+        same_group: 管理グループ
+      state:
+        enabled: 使用する
+        disabled: 使用しない
+      member_state:
+        enabled: 有効
+        disabled: 無効
+        temporary: 仮登録
+      target_type:
+        tag: タグ
+        attribute: 属性
+        string: 文字列
+        regexp: 正規表現
+      action_type:
+        remove: 削除
+        replace: 置換
+
+    sns_share:
+      fb_like: Facebook いいね！
+      fb_share: Facebook シェア
+      fb_lang: ja_JP
+      twitter: Twitter
+      tweet: ツイート
+      hatena: はてなブックマーク
+      hatena_add: このエントリーをはてなブックマークに追加
+      google: Google+
+      evernote: Evernote
+
+  #cms:
+    nodes:
+      cms/node: フォルダーリスト
+      cms/page: ページリスト
+      cms/import_node: 取り込みページ
+      cms/archive: アーカイブ
+    parts:
+      cms/free: HTML記述
+      cms/node: フォルダーリスト
+      cms/page: ページリスト
+      cms/tabs: 新着タブ
+      cms/crumb: パンくずリスト
+      cms/sns_share: SNSシェアボタン
+      cms/calendar_nav: アーカイブナビ(カレンダー)
+      cms/monthly_nav: アーカイブナビ（月次）
+
+  cms_role:
+    edit_cms_sites: サイトの管理
+    edit_cms_groups: グループの管理
+    edit_cms_users: ユーザーの管理
+    edit_cms_roles: 権限/ロールの管理
+    edit_cms_members: メンバーの管理
+    edit_cms_editor_templates: テンプレートの管理
+    #edit_cms_body_layouts: 本文レイアウトの管理
+    use_cms_tools: 運用ツールの利用
+    use_cms_editor_extensions: エディターの高度な利用
+    read_other_cms_nodes: フォルダーの閲覧（全て）
+    read_private_cms_nodes: フォルダーの閲覧（所有）
+    edit_other_cms_nodes: フォルダーの編集（全て）
+    edit_private_cms_nodes: フォルダーの編集（所有）
+    delete_other_cms_nodes: フォルダーの削除（全て）
+    delete_private_cms_nodes: フォルダーの削除（所有）
+    move_other_cms_nodes: フォルダーの移動（全て）
+    move_private_cms_nodes: フォルダーの移動（所有）
+    read_other_cms_pages: 固定ページの閲覧（全て）
+    read_private_cms_pages: 固定ページの閲覧（所有）
+    edit_other_cms_pages: 固定ページの編集（全て）
+    edit_private_cms_pages: 固定ページの編集（所有）
+    delete_other_cms_pages: 固定ページの削除（全て）
+    delete_private_cms_pages: 固定ページの削除（所有）
+    move_other_cms_pages: 固定ページの移動（全て）
+    move_private_cms_pages: 固定ページの移動（所有）
+    unlock_other_cms_pages: 固定ページのロック解除（全て）
+    release_other_cms_pages: 固定ページの公開（全て）
+    release_private_cms_pages: 固定ページの公開（所有）
+    approve_other_cms_pages: 固定ページの承認（全て）
+    approve_private_cms_pages: 固定ページの承認（所有）
+    read_other_cms_parts: パーツの閲覧（全て）
+    read_private_cms_parts: パーツの閲覧（所有）
+    edit_other_cms_parts: パーツの編集（全て）
+    edit_private_cms_parts: パーツの編集（所有）
+    delete_other_cms_parts: パーツの削除（全て）
+    delete_private_cms_parts: パーツの削除（所有）
+    read_other_cms_layouts: レイアウトの閲覧（全て）
+    read_private_cms_layouts: レイアウトの閲覧（所有）
+    edit_other_cms_layouts: レイアウトの編集（全て）
+    edit_private_cms_layouts: レイアウトの編集（所有）
+    delete_other_cms_layouts: レイアウトの削除（全て）
+    delete_private_cms_layouts: レイアウトの削除（所有）
+    read_other_cms_files: 共有ファイルの閲覧（全て）
+    read_private_cms_files: 共有ファイルの閲覧（所有）
+    edit_other_cms_files: 共有ファイルの編集（全て）
+    edit_private_cms_files: 共有ファイルの編集（所有）
+    delete_other_cms_files: 共有ファイルの削除（全て）
+    delete_private_cms_files: 共有ファイルの削除（所有）
+    read_other_cms_notices: お知らせの閲覧（全て）
+    read_private_cms_notices: お知らせの閲覧（所有）
+    edit_other_cms_notices: お知らせの編集（全て）
+    edit_private_cms_notices: お知らせの編集（所有）
+    delete_other_cms_notices: お知らせの削除（全て）
+    delete_private_cms_notices: お知らせの削除（所有）
+    read_other_cms_page_searches: ページ検索の閲覧（全て）
+    read_private_cms_page_searches: ページ検索の閲覧（所有）
+    edit_other_cms_page_searches: ページ検索の編集（全て）
+    edit_private_cms_page_searches: ページ検索の編集（所有）
+    delete_other_cms_page_searches: ページ検索の削除（全て）
+    delete_private_cms_page_searches: ページ検索の削除（所有）
+
+  modules:
+    cms: 標準機能
+    addons:
+      cms/role: ロール
+      cms/group_permission: 権限
+      cms/node_setting: フォルダー設定
+      cms/meta: メタ情報
+      cms/html: HTML
+      cms/body: 本文
+      cms/body_part: 本文パーツ
+      cms/file: ファイル
+      cms/release: 公開設定
+      cms/release_plan: 公開予約
+      cms/crumb: パンくず設定
+      cms/node_list: リスト表示
+      cms/page_list: リスト表示
+      cms/tabs: タブ表示
+      cms/related_page: 関連記事
+      cms/thumb: サムネイル
+      cms/parent_crumb: パンくず
+      cms/additional_info: 追加情報
+      cms/page_setting: ページ設定
+      cms/import/body: 本文
+      cms/edit_lock: 排他制御
+      cms/sns_share: SNS共有
+      cms/captcha: 認証
+      cms/body_layout_html: HTML
+      cms/default_release_plan: 公開予約の既定値
+      cms/page_search: 検索条件
+      cms/high_contrast_mode: ハイコントラストモード
+      cms/source_cleaner: ソースクリーニング
+      cms/opendata_site: オープンデータサイト
+      cms/opendata: オープンデータ
+      cms/monthly_nav: アーカイブナビ（月次）
+      cms/archive_view_switcher: アーカイブ用表示設定
+
+  mongoid:
+    models:
+      cms/site: サイト
+      cms/user: ユーザー
+      cms/member: メンバー
+      cms/node: フォルダー
+      cms/node/node: フォルダーリスト
+      cms/node/page: ページリスト
+      cms/page: ページ
+      cms/part: パーツ
+      cms/part/free: HTML記述
+      cms/part/node: フォルダーリスト
+      cms/part/page: ページリスト
+      cms/part/tabs: 新着タブ
+      cms/part/crumb: パンくずリスト
+      cms/layout: レイアウト
+      cms/body_layout: レイアウト
+      cms/workflow/route: 承認経路
+      cms/role: ロール
+      cms/editor_template: テンプレート
+      cms/theme_template: Theme切り替え
+      cms/file: 共有ファイル
+      cms/notice: お知らせ
+      cms/page_search: ページ検索
+      cms/postal_code: 郵便番号
+      cms/task: タスク
+      cms/import_page: 取り込みページ
+    attributes:
+      cms/content:
+        released: released
+        name: title
+        index_name: index name
+        depth: depth
+        order: order
+        md5: md5
+      cms/model/node:
+        filename: filename
+        basename: basename
+        route: route
+        view_route: view route
+        summary_html: Summary
+        in_file: file
+      cms/model/page:
+        route: route
+        summary_html: Summary
+        html: html
+        files: files
+        category_ids: categories
+        categories: categories
+        related_pages: related pages
+      cms/model/part:
+        name: name
+        route: route
+        mobile_view: mobile view
+        ajax_view: ajax view
+      cms/layout:
+        name: name
+        html: HTML
+      cms/body_layout:
+        name: name
+        parts: part name
+      cms/page:
+        html: HTML
+      cms/reference/layout:
+        layout_id: layout
+        body_layout_id: body layout
+      cms/reference/page_layout:
+        page_layout_id: page layout
+      cms/site:
+        auto_keywords: auto keywords
+        auto_description: auto description
+        keywords: keywords
+      cms/model/member:
+        name: name
+        email: email
+        email_again: confirmation email
+        password: password
+        in_password: password
+        in_password_again: confirmation password
+        oauth_type: OAuth Type
+        oauth_id: OAuth ID
+        oauth_token: OAuth token
+      cms/editor_template:
+        name: name
+        description: description
+        order: order
+      cms/theme_template:
+        name: name
+        class_name: class attribute
+        order: order
+        css_path: css path
+      cms/source_cleaner_template:
+        name: name
+        order: order
+      cms/addon/crumb:
+        home_label: home label
+      cms/notice:
+        name: title
+        notice_severity: notice severity
+        notice_target: notice target
+      cms/addon/meta:
+        keywords: keywords
+        description: description
+        summary_html: summary
+      cms/addon/release:
+        released: related
+      cms/addon/release_plan:
+        release_date: release date
+        close_date: close date
+      cms/addon/role:
+        cms_role_ids: cms role
+      cms/addon/permission:
+        group_ids: groups
+        permission_level: permission level
+      cms/addon/group_permission:
+        group_ids: groups
+        permission_level: permission level
+      cms/addon/list/model:
+        conditions: conditions(URL)
+        loop_html: loop HTML
+        upper_html: upper HTML
+        lower_html: lower HTML
+        new_days: NEW days
+      cms/addon/tabs:
+        conditions: tab conditions(URL)
+        new_days: NEW days
+      cms/addon/thumb:
+        thumb_id: thumbnail
+      cms/addon/parent_crumb:
+        parent_crumb_urls: parent crumb urls
+      cms/addon/additional_info:
+        field: field
+        value: value
+        add_info: add information
+        del_info: delete information
+      cms/addon/edit_lock:
+        lock_owner: lock owner
+        lock_until: lock until
+      cms/addon/sns_share:
+        sns_share_states: sns share states
+        sns_share_orders: sns share orders
+      cms/addon/import/page:
+        in_file: file
+      cms/addon/import/group:
+        in_file: file
+      cms/addon/import/user:
+        in_file: file
+      cms/addon/default_release_plan:
+        default_release_plan_state: default release plan
+        default_release_days_after: default release days
+        default_close_days_after: default close day
+      cms/page_search:
+        name: name
+        order: order
+      cms/addon/page_search:
+        search_name: title
+        search_filename: filename
+        search_categories: categories
+        search_category_ids: categories
+        search_groups: groups
+        search_group_ids: groups
+        search_nodes: nodes
+        search_node_ids: nodes
+        search_routes: routes
+        search_released: related
+        search_released_start: released start
+        search_released_close: released close
+        search_updated: updated
+        search_updated_start: updated start
+        search_updated_close: updated close
+        search_state: state
+        search_approver_state: approver state
+      cms/task:
+        node_id: node
+      cms/addon/high_contrast_mode:
+        high_contrast_mode: setting
+        font_color: font color
+        background_color: background color
+      cms/copy_nodes_task:
+        target_node_name: target node name
+      cms/addon/source_cleaner:
+        target: target
+        action: action
+        replaced_value: replaced value
+      cms/addon/opendata_site:
+        opendata_site_ids: site
+      cms/addon/opendata:
+        opendata_state: state
+      cms/addon/monthly_nav:
+        periods: periods
+      cms/addon/archive_view_switcher:
+        archive_view: archive view
+
+  errors:
+    messages:
+      set_filename: ファイル名を入力してください。
+      invalid_filename: ファイル名は不正な値です。
+      set_name: タイトルを入力してください。
+      same_filename: 移動先と移動前が同じファイル名です。
+      exist_physical_file: 移動先に物理ファイルが既に存在します。
+      not_found_parent_node: 移動先の親フォルダーが存在しません。
+      subnode_of_itself: 移動先のフォルダーパスに自身のパスが含まれています。
+      not_cms_page_in_root: 固定ページ以外をルートに移動することはできません。
+      not_have_parent_read_permission: 移動先の親フォルダーの閲覧権限がありません。
+      branch_page_can_not_move: 差し替え用ページは移動できません。
+      check_html: 本文のアクセシビリティチェックを確認してください。
+      set_img_alt: 画像の代替テキストを確認してください。
+      invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
+      set_table_caption: 表にキャプションが設定されていません。
+      set_th_scope: 表のヘッダーにスコープ属性が設定されていません。
+      link_check_success: 成功
+      link_check_failure: 失敗
+      link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
+      not_a_child_group: はサイトに所属するグループを設定してください。
+      not_found_parent_group: 親グループが存在しません。
+      invalid_order_of_h: 見出しの順番が不正です。
+      invalid_multibyte_character: 英数字は半角文字を入力してください。
+      invalid_dependent_character: 機種依存文字が含まれています。
+      invalid_kana_character: 半角カナ文字が含まれています。
+      invalid_date_format: 日付の表記は○年○月○日としてください。
+      invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
+      check_interword_space: 単語の文字間のスペースを確認してください。
+      check_link_text: "リンクのテキストを確認してください。"
+      check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      not_found_postal_code: 郵便番号が見つかりません
+      syntax_check_detail:
+        set_img_alt:
+          - 画像の内容を示す代替テキストを設定してください。
+        invalid_img_scheme:
+          - 画像のSRC属性にデータ形式のURIスキームが存在します。
+          - 他のURIスキームを使用してください。
+        set_table_caption:
+          - 表に見出し(CAPTION)が設定されていません
+          - TABLEタグの中にCAPTIONタグを追記してください。
+        set_th_scope:
+          - 表のヘッダー(TH)に見出しの方向であるSCOPE属性が設定されていません。
+          - 行方向であればscope="colを設定してください。
+          - 列方向であればscope="row"を設定してください。
+        invalid_order_of_h:
+          - 見出し(H)の順番が不正です。
+          - 適切な順に配置してください。
+        invalid_multibyte_character:
+          - 本文に全角英数が含まれています。
+          - 半角英数に置き換えるか削除してください。
+        invalid_dependent_character:
+          - 本文に機種依存文字が含まれています。
+          - 他の文字に置き換えるか削除してください。
+        invalid_kana_character:
+          - 本文に半角カナ文字が含まれています。
+          - 全角文字に置き換えるか削除してください。
+        invalid_date_format:
+          - 日付の形式を修正してください。
+        invalid_adjacent_a:
+          - 隣り合うリンク(A)に同じリンク先が設定されています。
+          - 一つのリンク(A)にマークアップしてください。
+        check_interword_space:
+          - 単語の文字間に不要なスペースが含まれている場合は削除してください。
+        check_link_text:
+          - リンク内のテキストは遷移先を表すものを設定してください。
+        check_embedded_media:
+          - 動画や音声を本文に埋め込む場合は説明を記述してください。
+      thums_is_not_an_image: には画像ファイルを指定してください。
+
+    template:
+      no_errors: エラーは見つかりませんでした。
+      no_links: リンクは見つかりませんでした。
+      check_links: 次のリンクを確認しました。
+
+  tooltip:
+    cms/model/page:
+      destination_filename:
+        - ページやフォルダーを移動します。
+        - 移動先をフルパスで設定します。
+        - 例：docs/001.html
+    cms/addon/additional_info:
+      field:
+        - 追加情報の項目名を入力します。
+      value:
+        - 項目の内容を入力します。
+    cms/addon/import/page:
+      in_file:
+        - 取り込むファイルを設定します。
+        - ルートフォルダーが含まれるZIPファイルもしくは単一のHTMLファイルを選択してください。
+        - フォルダー配下に 取り込みページ/フォルダー/アップロードファイル として展開されます。
+
+    cms/addon/captcha:
+      captcha:
+        - フォームに画像認証を利用する場合は「使用する」を選択してください。
+
+    search_contents:
+      html:
+        keyword:
+          - 検索を行う文字列を入力します。
+          - 検索文字をHTMLに含むページ、パーツ、レイアウトを検索します。
+          - "検索と置換の対象となる項目は以下です。\nページ：本文、連絡先、FAQの質問回答\nパーツ：HTML、上部下部HTML\nレイアウト:HTML"
+        replacement:
+          - 置換後の文字列を入力します。
+          - 検索を行った後、置換を行うページ、パーツ、レイアウトにチェックを入れ全置換ボタンをクリックします。
+        option:
+          - "検索時に検索文字の形式を設定します。\n未設定時は通常のテキスト検索となります。"
+          - "URL選択時は \'=\"検索文字\' でテキスト検索を行います"
+    cms/addon/archive_view_switcher:
+      archive_view:
+        - 月次表示の場合、リスト表示またはカレンダー表示が選択できます。
+
+    cms/model/node:
+      route:
+        - 設定した属性に応じたページ(index.html)が自動で生成されます。
+        - |-
+          広告管理/広告バナー
+          広告バナーを管理するフォルダーです。
+        - |-
+          記事/記事リスト
+          フォルダー内の記事ページ一覧を表示します。
+        - |-
+          カテゴリー/カテゴリーリスト
+          ファルダー属性「カテゴリー」を設定したフォルダー一覧を表示します。
+        - |-
+          カテゴリー/ページリスト
+          カテゴリーが設定されているページ一覧を表示します。
+        - |-
+          標準機能/フォルダーリスト
+          フォルダー内のフォルダー一覧を表示します。
+        - |-
+          標準機能/ページリスト
+          フォルダー内のページ一覧を表示します。
+        - |-
+          イベント/イベントリスト
+          イベント日付が設定されたページ一覧をカレンダー形式で表示します。
+        - |-
+          メールマガジン/配信記事一覧
+          メールマガジンの配信登録、変更、停止画面の表示します。
+        - |-
+          メールマガジン/バックナンバー
+          メールマガジンのバックナンバー一覧を表示します。
+        - |-
+          施設/施設リスト
+          フォルダー内の施設情報一覧を表示します。
+        - |-
+          施設/施設情報
+          施設情報を表示します。\nテキスト情報に加え、画像、地図の登録が可能です。
+        - |-
+          施設/施設の種類
+          種類で絞り込んだ施設情報一覧を表示します。
+        - |-
+          施設/施設の用途
+          用途で絞り込んだ施設情報一覧を表示します。
+        - |-
+          施設/施設のある地域
+          地域で絞り込んだ施設情報一覧を表示します。
+        - |-
+          施設/施設検索
+          施設情報の検索画面を表示します。
+        - |-
+          FAQ/FAQ記事リスト
+          フォルダー内のFAQ記事一覧を表示します。
+        - |-
+          FAQ/FAQ記事検索
+          FAQ記事の検索画面を表示します。
+        - |-
+          メールフォーム/フォーム
+          メールフォームを表示します。
+        - |-
+          メールフォーム/フォーム一覧
+          フォルダー内のメールフォーム一覧を表示します。
+        - |-
+          メンバー/ログイン
+          メンバーのログイン画面を表示します。
+        - |-
+          RSS/RSS取込
+          指定したRSSから取り込んだページ一覧を表示します。
+        - |-
+          サイトマップ/サイトマップ
+          サイトマップを表示します。
+        - |-
+          アップローダー/アップローダー
+          ファイルをアップロードするためのフォルダです。
+        - |-
+          緊急災害レイアウト/緊急災害レイアウト
+          緊急災害時にレイアウトを切り替えるためのフォルダです。
+      foldername:
+        - フォルダー名はURLに利用します。
+        - 半角英数字で入力します。
+        - .htmlなどの拡張子の記述は不要です。
+      layout_id:
+        - フォルダーのレイアウトを選択します。
+      page_layout_id:
+        - ページのレイアウトを選択します。
+        - 初期値は上位のフォルダの設定を継承しています。
+      shortcut:
+        - 表示を選択することで管理画面のサイトトップ「コンテンツ」に表示されます。
+      view_route:
+        - サイトトップ「コンテンツ」から遷移したときの「モジュール」を設定します。
+      conditions:
+        - 自フォルダー内のリスト以外で表示するリストのフォルダー名を記述します。
+        - |-
+          改行することで複数のファルダー指定することが可能です。
+          例：
+          oshirase
+          oshirase/event
+          shisei/jinji
+      sort:
+        - どういった順でリストを並べるかを指定します。
+        - タイトル、ファイル名、作成日時、更新日時、公開日時での並び順は昇順です。
+        - 指定順での並び順は降順です
+      limit:
+        - |-
+          リストの表示件数を指定します。
+          指定件数を超えるとページネーションが生成されます。
+      upper_html:
+        - 自動生成されたページの内容の上部に任意の内容のHTMLを記述することが可能です。
+      loop_html:
+        - 自動生成されたページのリスト表示部分のHTMLを指定することが可能です。
+        - |-
+          下記のように記述します。
+          #{class}　リンク先のフォルダー名が表示されます。
+          #{date}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
+          #{date.default}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
+          #{date.iso}　リンク先のページの公開日時が「2015-04-01」の形式で表示されます。
+          #{date.long}　リンク先のページの公開日時が「2015年4月1日」の形式で表示されます。
+          #{date.short}　リンク先のページの公開日時が「4/1」の形式で表示されます。
+          #{time}　リンク先のページの公開日時が「2015/4/1 12:34」の形式で表示されます。
+          #{time.default}　リンク先のページの公開日時が「2015/4/1 12:34」の形式で表示されます。
+          #{time.iso}　リンク先のページの公開日時が「2015-4-1 12:34」の形式で表示されます。
+          #{time.long}　リンク先のページの公開日時が「2015年4月1日 12時34分」の形式で表示されます。
+          #{time.short}　リンク先のページの公開日時が「15/04/01 12:34」の形式で表示されます。
+          #{url}　リンク先ページのURLが表示されます。
+          #{name}　リンク先ページのタイトルが表示されます。
+          #{summary}　リンク先ページのSummaryが表示されます。
+          #{html}　リンク先ページの本文が表示されます。
+          #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
+          #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
+          #{group}　リンク先ページの所有グループが表示されます。
+          #{groups}　リンク先ページの全ての所有グループが表示されます。
+          #{img.src}　リンク先ページ内に画像が存在する場合、リンク先ページの先頭の画像が表示されます。
+          #{categories}　リンク先ページ内がカテゴリに関連付けられている場合、リンク先ページのカテゴリリストが表示されます。
+          #{pages.count}　リンク先ページ内にページが存在する場合、リンク先ページ内のページ数が表示されます。
+
+          使用例：
+          &lt;article class="#{class}">
+            &lt;header>
+              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
+      lower_html:
+        - 自動生成されたページの内容の下部に任意の内容のHTMLを記述することが可能です。
+      st_categories:
+        - フォルダー下で使用するカテゴリーを設定します。
+        - 設定されていない場合は全カテゴリーが対象となります。
+      destination_filename:
+        - ページやフォルダーを移動します。
+        - 移動先をフルパスで設定します。
+
+    cms/site:
+      name:
+        - サイト名を入力します。
+      host:
+        - ホスト名を入力します。
+      domains:
+        - サイトのドメインを入力します。
+      auto_keywords:
+        - ページ、フォルダー保存時にメタ情報のキーワードを入力しない場合、自動で入力するかを選択します。
+        - 自動入力されるキーワードは親フォルダー名と設定カテゴリー名から生成されます。
+      auto_description:
+        - ページ、フォルダー保存時にメタ情報の概要を入力しない場合、自動で入力するかを選択します。
+        - 自動入力される概要は本文から生成されます。
+      keywords:
+        - キーワード自動設定が有効時にこの項目が自動入力に追加されます。
+
+    cms/model/part:
+      route:
+        - |-
+          広告管理/広告バナー
+          広告バナーフォルダーに登録されている広告バナーを表示します。
+        - |-
+          記事/記事リスト
+          フォルダー内の記事リストを表示します。
+        - |-
+          カテゴリー/カテゴリーリスト
+          自フォルダーと同階層にあるカテゴリーを表示します。
+        - |-
+          標準機能/HTML記述
+          HTMLを自由に入力することが可能です。
+        - |-
+          標準機能/フォルダーリスト
+          フォルダー内のフォルダーリストを表示します。
+        - |-
+          標準機能/ページリスト
+          フォルダー内のページリストを表示します。
+        - |-
+          標準機能/新着タブ
+          複数の記事リストをタブ分けで表示します。
+        - |-
+          標準機能/パンくずリスト
+          パンくずリストを自動生成します。
+        - |-
+          標準機能/SNSシェアボタン
+          facebook、Twitter等のSNSシェアボタンを表示します。
+        - |-
+          イベント/カレンダー
+          イベントカレンダーを表示します。
+        - |-
+          FAQ/FAQ記事検索
+          FAQ記事検索欄を表示します。
+      name:
+        - パーツ名を入力します。
+        - 日本語での入力が可能です。
+      basename:
+        - パーツのファイル名を入力します。
+        - 半角英数字で入力します。
+        - .htmlなどの拡張子の記述は不要です。
+      mobile_view:
+        - 携帯画面で表示するか否かを選択します。
+      ajax_view:
+        - パーツを動的に表示するか否かを選択します。
+
+    cms/addon/list/model:
+      conditions:
+        - 自フォルダー内のリスト以外で表示するリストのフォルダー名を記述します。
+        - |-
+          改行することで複数のファルダーを指定することが可能です。
+          例：
+          oshirase
+          oshirase/event
+          shisei/jinji
+      sort:
+        - どういった順でリストの並べるかを指定します。
+        - タイトル、ファイル名、作成日時、更新日時、公開日時での並び順は昇順です。
+        - 指定順での並び順は降順です
+      limit:
+        - リストの表示件数を指定します。
+      upper_html:
+        - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
+      loop_html:
+        - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
+        - |-
+          下記のように記述します。
+          #{class}　リンク先のフォルダー名が表示されます。
+          #{date}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
+          #{date.default}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
+          #{date.iso}　リンク先のページの公開日時が「2015-04-01」の形式で表示されます。
+          #{date.long}　リンク先のページの公開日時が「2015年4月1日」の形式で表示されます。
+          #{date.short}　リンク先のページの公開日時が「4/1」の形式で表示されます。
+          #{time}　リンク先のページの公開日時が「2015/4/1 12:34」の形式で表示されます。
+          #{time.default}　リンク先のページの公開日時が「2015/4/1 12:34」の形式で表示されます。
+          #{time.iso}　リンク先のページの公開日時が「2015-4-1 12:34」の形式で表示されます。
+          #{time.long}　リンク先のページの公開日時が「2015年4月1日 12時34分」の形式で表示されます。
+          #{time.short}　リンク先のページの公開日時が「15/04/01 12:34」の形式で表示されます。
+          #{url}　リンク先ページのURLが表示されます。
+          #{name}　リンク先ページのタイトルが表示されます。
+          #{index_name}　リンク先ページの一覧用タイトルが表示されます。未設定の場合はタイトルが表示されます。
+          #{summary}　リンク先ページのSummaryが表示されます。
+          #{html}　リンク先ページの本文が表示されます。
+          #{current}　現在訪問しているページとURLが同一の場合、classにcurrentが付与されます。
+          #{new}　リンク先のページ公開日時がNEWマーク期間の範囲内の場合、classにnewが付与されます。
+          #{group}　リンク先ページの所有グループが表示されます。
+          #{groups}　リンク先ページの全ての所有グループが表示されます。
+          #{img.src}　リンク先ページ内に画像が存在する場合、リンク先ページの先頭の画像が表示されます。
+          #{categories}　リンク先ページ内がカテゴリに関連付けられている場合、リンク先ページのカテゴリリストが表示されます。
+          #{pages.count}　リンク先ページ内にページが存在する場合、リンク先ページ内のページ数が表示されます。
+
+          使用例：
+          &lt;article class="#{class}">
+            &lt;header>
+              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
+      lower_html:
+        - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
+      new_days:
+        - 設定した期間内に作成されたページへのリンクにNEWマークを付与するためのclassがふられます。
+
+    cms/addon/tabs:
+      conditions:
+        - タブ分けで表示するリストのフォルダー名を記述します。
+        - |-
+          改行することで複数のファルダーを指定することが可能です。
+          例：
+          oshirase
+          oshirase/event
+          shisei/jinji
+      limit:
+        - リストの表示件数を指定します。
+      new_days:
+        - 設定した期間内に作成されたページへのリンクにNEWマークを付与するためのclassがふられます。
+
+    cms/addon/crumb:
+      home_label:
+        - パンくずに表示するサイトトップの名称を記述します。
+
+    cms/addon/thumb:
+      thumb_id:
+        - サムネイル画像を指定します。
+
+    cms/addon/import/group:
+      in_file:
+        - CSVファイルを指定しグループのインポートを行います。
+        - idが記述されていない行は新規作成になります。
+        - nameが記述されていない行は削除となります。
+
+    cms/addon/import/user:
+      in_file:
+        - CSVファイルを指定しユーザーのインポートを行います。
+        - idが記述されていない行は新規作成になります。
+        - emailとuidが記述されていない行は削除となります。
+
+    cms/addon/parent_crumb:
+      parent_crumb_urls:
+        - 親フォルダーのURLを記述します。
+        - 設定しているカテゴリーから選択することも可能です。
+
+    cms/addon/monthly_nav:
+      periods:
+        - アーカイブナビで表示する期間を設定します。
+
+    cms/layout:
+      name:
+        - レイアウト名を入力します。
+        - 日本語での入力が可能です。
+      basename:
+        - レイアウトのファイル名を入力します。
+        - 半角英数字で入力してください。
+        - .htmlなどの拡張子の記述は不要です。
+
+    cms/body_layout:
+      name:
+        - 本文レイアウト名を入力します。
+        - 日本語での入力が可能です。
+      parts:
+        - 本文レイアウトにて展開するパーツ名を入力します。
+        - 複数のパーツ名を改行区切りで記述してください。
+
+    cms/editor_template:
+      name:
+        - テンプレート名を入力します。
+        - 日本語での入力が可能です。
+      description:
+        - テンプレートの説明を入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      thumb_id:
+        - サムネイル画像を指定します。
+        - サムネイル画像は、ご使用のエディターが CKEditor の場合にのみ表示されます。
+
+    cms/theme_template:
+      name:
+        - 名前を入力します。
+        - Theme切り替えリンクのテキストとして表示されます。
+      class_name:
+        - Theme切り替えリンクのclass属性を入力します。
+        - 一意な値である必要があります。
+      css_path:
+        - Theme切り替え時に読み込むcssファイルのパスを入力します。
+      order:
+        - 並び順を入力します。
+        - 数字が小さいほど上位に表示されます。
+      state:
+        - 公開状態を入力します。
+      high_contrast_mode:
+        - ハイコントラストモードの有効/無効を入力します。
+        - 設定を有効にするとTheme切り替え時に、文字色と背景色のstyleを表示HTMLに埋め込みます。
+      font_color:
+        - 文字色を設定します。
+      background_color:
+        - 背景色を設定します。
+
+    cms/addon/role:
+      cms_role_ids:
+        - ユーザーのロール/権限を選択します。
+
+    cms/notice:
+      name:
+        - タイトルを入力します。
+      notice_severity:
+        - 「重要なお知らせ」の場合、チェックをつけます。
+        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
+      notice_target:
+        - 「全ユーザー」に表示するか、「管理グループ」に表示するかを選択します。
+        - 「管理グループ」を選択した場合、「管理グループ」欄に設定したグループに表示されます。
+
+    cms/addon/default_release_plan:
+      default_release_plan_state:
+        - 既定で公開予約を設定するかどうかを選択します。
+        - 「無効]を選択している場合、既定で公開予約を設定しません。
+        - 「有効]を選択している場合、既定で公開予約開始日と公開予約終了日を設定します。
+      default_release_days_after:
+        - 公開開始日を設定します。
+        - 「3 日後」を設定した場合、当日日付＋3日後の0時0分に公開開始日時が設定されます。
+      default_close_days_after:
+        - 公開終了日を設定します。
+        - 「1000 日後」を設定した場合、当日日付＋1,000日後の0時0分に公開開始日時が設定されます。
+
+    cms/page_search:
+      name:
+        - 名前を入力します。
+        - 入力した名前がナビビューに表示されます。
+      order:
+        - 並び順を入力します。
+        - 入力した順でナビビューに表示されます。
+
+    cms/addon/page_search:
+      search_name:
+        - 検索したいページタイトルを入力します。
+      search_filename:
+        - 検索したいファイル名を入力します。
+      search_group_ids:
+        - 検索したい管理グループを選択します。
+        - いずれかのグループに該当するページが検索されます。
+      search_category_ids:
+        - 検索したいカテゴリーを選択します。
+        - いずれかのカテゴリーに該当するページが検索されます。
+      search_node_ids:
+        - 検索したいフォルダーを選択します。
+        - いずれかのフォルダー配下に存在するページが検索されます。
+      search_routes:
+        - 検索したいページ属性を選択します。
+        - いずれかのページ属性に該当するページが検索されます。
+      search_released:
+        - 検索したい公開日時の範囲を入力します。
+      search_updated:
+        - 検索したい更新日時の範囲を入力します。
+      search_state:
+        - 検索したいページのステータスを選択します。
+      search_approver_state:
+        - 検索したいページの承認ステータスを選択します。
+
+    cms/addon/source_cleaner:
+      target:
+        - クリーニングの対象を設定します。
+        - タグ、属性、文字列の中から種別を選択し、右欄に対象を入力します。
+      action:
+        - 対象のクリーニング方法を設定します。
+        - 置換または削除が選択できます。
+        - 置換後のタグや属性の値、文字列を右欄に入力します。
+
+    cms/addon/opendata_site:
+      opendata_site_ids:
+        - オープンデータサイトを設定します。
+        - 設定したサイトのデータセットにページが連携されるようになります。
+
+    cms/addon/opendata:
+      opendata_state:
+        - ページをオープンデータとして公開するかどうかを選択します。
+        - 「公開」を選択するとオープンデータとして公開されます。
+
+  all_content:
+    page_id: ページID
+    node_id: フォルダーID
+    url: URL
+    group_ids: 管理グループID
+    group_names: 管理グループ名
+    file_size: 静的ファイル容量
+    name: タイトル
+    index_name: 一覧用タイトル
+    created: 作成日時
+    released: 公開日時
+    updated: 更新日時
+    close_date: 公開終了日時
+    status: 公開状態
+    route: 登録種別 (ページ属性等)
+    category_ids: カテゴリ
+    use_map: 地図のマーカー座標
+    files: 添付ファイル
+    file_urls: 添付ファイルURL
+
+  job:
+    models:
+      cms/node/generate_job: フォルダー書き出し
+      cms/page/generate_job: ページ書き出し
+      cms/page/release_job: ページ公開
+      cms/page/remove_job: ページ削除
+      cms/page/update_job: ページ更新
+      cms/check_links_job: リンクチェック
+      cms/postal_code/import_job: 郵便番号インポート
+      cms/postal_code/official_csv_import_job: 日本郵便CSVインポート
+      cms/node/copy_nodes_job: フォルダー複製

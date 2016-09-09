@@ -12,6 +12,7 @@ module SS::BaseFilter
     helper SS::JbuilderHelper
     before_action :set_model
     before_action :set_ss_assets
+    before_action :set_multilingual_attribute
     before_action :logged_in?
     after_action :put_history_log, if: ->{ !request.get? && response.code =~ /^3/ }
     rescue_from RuntimeError, with: :rescue_action
@@ -52,6 +53,11 @@ module SS::BaseFilter
       SS.config.ss.stylesheets.each { |m| stylesheet(m) } if SS.config.ss.stylesheets.present?
       SS.config.ss.javascripts.each { |m| javascript(m) } if SS.config.ss.javascripts.present?
       stylesheet("/assets/css/colorbox/colorbox.css")
+    end
+
+    def set_multilingual_attribute
+      I18n.locale = I18n.default_locale
+      Multilingual::Initializer.lang = nil
     end
 
     def logged_in?

@@ -1,0 +1,341 @@
+en:
+  member:
+    my_blog: blog
+    blog_layout: blog layout
+    photo: photo
+    group: group
+    group_member: member
+    login_by:
+      twitter: login by Twitter
+      facebook: login by Facebook
+      yahoojp: login by Yahoo! JAPAN ID
+      google_oauth2: login by Google Account
+      github: login by GitHub Account
+    options:
+      form_auth: &disabled_enabled
+        disabled: disabled
+        enabled: enabled
+      twitter_oauth:
+        <<: *disabled_enabled
+      facebook_oauth:
+        <<: *disabled_enabled
+      yahoojp_oauth:
+        <<: *disabled_enabled
+      google_oauth2_oauth:
+        <<: *disabled_enabled
+      github_oauth:
+        <<: *disabled_enabled
+      sex:
+        male: male
+        female: female
+      license_name:
+        free: free license
+        not_free: license is necessary
+      confirm_personal_data_state:
+        enabled: enabled
+        disabled: disabled
+      group_member_state:
+        admin: administrator
+        user: user
+        inviting: inviting
+        disabled: disabled
+        rejected: rejected
+      member_joins_to_invited_group:
+        manual: manual
+        auto: auto
+    view:
+      email: email
+      password: password
+      browser: browser
+      platform: platform
+      new_password: new password
+      new_password_again: confirmation new password
+      old_password: current password
+      change_password: change password
+      leave: withdrawal from member site
+      mail_subscription: mail subscription
+      retired_member: retired
+      location: location
+      keyword: keyword
+      contributor: contributor
+      category: category
+      select_page: select page
+      blog:
+        genres: genres
+      invited_group:
+        header: invited_group
+        operation: operation
+      registered_person: registered person
+      delete: delete
+    button:
+      register: submit
+      back: back
+      confirm: confirm
+      leave: withdrawal
+      send: send
+      change_password: change password
+      resend_confirmation_mail: resend confirmation mail
+      accept: accept
+      reject: reject
+      address_search: address search
+    links:
+      profile: edit profile
+      leave: withdrawal
+      change_password: change password
+      blog_setting: blog setting
+      search_condition: search conditions
+      invite: invite
+      map: map
+      index: list
+      slide: slide
+      search: search
+      create_unregisted_anpi: create unregisted anpi
+    notice:
+      accepted: accepted
+      rejected: rejected
+      posted_gpf: submit to Google Person Finder
+    confirm:
+      leave: Are you sure want to withdrawal from this member site?
+      group:
+        accept: Join Group?
+        reject: reject？
+      post_gpf: submit to Google Person Finder？
+    units:
+      person: "%{count} person"
+
+  modules:
+    member: member
+    addons:
+      member/redirection: redirection
+      member/form_auth: authentication
+      member/twitter_oauth: Twitter OAuth
+      member/facebook_oauth: Facebook OAuth
+      member/yahoo_jp_oauth: Yahoo! OAuth
+      member/google_oauth: Google OAuth
+      member/github_oauth: GitHub OAuth
+      member/file: file
+      member/blog/body: body
+      member/blog/genre: genre
+      member/blog/location: location
+      member/blog/blog_setting: blog setting
+      member/blog/page_setting: blog setting
+      member/photo/body: photo
+      member/photo/category: category
+      member/photo/location: location
+      member/photo/map: map
+      member/photo/spot: spot
+      member/photo/photo: member photo
+      member/photo/slide: member photo slide
+      member/photo/license: license
+      member/photo/license_setting: license setting
+      member/registration/sender_address: sender address
+      member/registration/confirmation: confirmation
+      member/registration/reply: reply mail
+      member/registration/reset_password_mail: reset password mail
+      member/registration/required_fields: required
+      member/additional_attributes: additional attributes
+      member/group_invitation_setting: group invitation setting
+      member/member_invitation_setting: member invitation setting
+
+  cms:
+    nodes:
+      member/login: login
+      member/registration: registration
+      member/mypage: mypage
+      member/my_profile: my profile
+      member/my_blog: my blog
+      member/blog: blog
+      member/blog_page_location: blog page location
+      member/my_photo: my photo
+      member/my_anpi_post: anpi
+      member/my_group: my group
+      member/photo: photo
+      member/photo_category: photo category
+      member/photo_location: photo location
+      member/photo_search: photo search
+      member/photo_spot: photo spot
+
+    parts:
+      member/blog_page: blog pages
+      member/photo: photos
+      member/photo_search: photo search
+      member/photo_slide: photo slide
+      member/login: login
+      member/invited_group: invited_group
+
+  mongoid:
+    models:
+      member/blog_page: blog page
+      member/photo: photo
+      member/photo_spot: photo spot
+      member/activity_log: activity log
+      member/group: group
+      member/group_member: group member
+    errors:
+      models:
+        member/group:
+          no_admins: 管理者が設定されていません。
+          malformed_email: "%{email} は不正です。"
+    attributes:
+      member/addon/redirection:
+        redirect_url: redirect URL
+      member/addon/form_auth:
+        form_auth: authentication
+      member/addon/twitter_oauth:
+        twitter_oauth: OAuth
+        twitter_client_id: Consumer Key
+        twitter_client_secret: Consumer Secret
+      member/addon/facebook_oauth:
+        facebook_oauth: OAuth
+        facebook_client_id: App ID
+        facebook_client_secret: App Secret
+      member/addon/yahoo_jp_oauth:
+        yahoojp_oauth: OAuth
+        yahoojp_client_id: client ID
+        yahoojp_client_secret: Client secret
+      member/addon/google_oauth:
+        google_oauth2_oauth: OAuth
+        google_oauth2_client_id: client ID
+        google_oauth2_client_secret: client secret
+      member/addon/github_oauth:
+        github_oauth: OAuth
+        github_client_id: Client ID
+        github_client_secret: Client Secret
+      member/activity_log:
+        activity_type: activity type
+        remote_addr: remote address
+        user_agent: user agent
+      member/addon/blog/blog_setting:
+        page_limit: page limit
+      member/addon/blog/page_setting:
+        description: description
+        genres: genres
+        image_id: thumbnail
+        blog_page_location_ids: location setting
+        blog_page_locations: location setting
+      member/node/blog_page:
+        title: blog title
+        basename: URL
+        filename: URL
+        foldername: foldername
+        layout: layout
+      member/blog_page:
+        name: title
+        body: body
+        genres: genres
+        blog_page_locations: location
+      member/photo:
+        listable_state: show list
+        slideable_state: show slide
+        slide_order: slide order
+        image: image
+        image_id: image
+        caption: caption
+        photo_categories: photo categories
+        photo_locations: photo locations
+        map_points: map
+        contributor: contributor
+        keyword: keyword
+      member/addon/photo/license:
+        license_name: license
+      member/addon/photo/license_setting:
+        license_free: license free
+        license_not_free: license not free
+      member/addon/registration/sender_address:
+        sender_name: sender name
+        sender_email: sender email
+      member/addon/registration/confirmation:
+        confirm_personal_data_state: confirm personal data state
+        confirm_personal_data_html: confirm personal data html
+        header_html: header HTML
+        footer_html: footer HTML
+      member/addon/registration/reply:
+        subject: subject
+        reply_upper_text: upper text
+        reply_lower_text: lower text
+        reply_signature: signature
+      member/addon/registration/reset_password_mail:
+        reset_password_subject: subject
+        reset_password_upper_text: upper text
+        reset_password_lower_text: lower text
+        reset_password_signature: signature
+      member/addon/registration/required_fields:
+        kana_required: name(kana)
+        organization_name_required: organization
+        job_required: job
+        tel_required: telephone number
+        postal_code_required: postal code
+        addr_required: address
+        sex_required: sex
+        birthday_required: birthday
+      member/addon/additional_attributes:
+        kana: name(kana)
+        organization_name: organization
+        job: job
+        tel: telephone number
+        postal_code: postal code
+        addr: address
+        sex: sex
+        birthday: birthday
+        in_birth: birthday
+      member/group:
+        name: group name
+        invitation_message: message
+        members: members
+        in_admin_member_ids: administrator
+      member/group_member:
+        state: state
+        member_id: member
+      member/addon/group_invitation_setting:
+        group_invitation_subject: subject
+        group_invitation_template: template
+        group_invitation_signature: signature
+      member/addon/member_invitation_setting:
+        member_invitation_subject: subject
+        member_invitation_template: template
+        member_invitation_signature: signature
+        member_joins_to_invited_group: invited group
+
+  views:
+    registration:
+      confirm_email_address: |-
+        %{sender_email} からメールが届きます。
+        迷惑メールの防止のためメールの受信設定を行っている方は、「 %{sender_domain} 」からのメールが受信できるように、ドメイン指定受信の設定を行ってください。
+      verify_email_address_html: |-
+        <h2>メールアドレスの確認</h2>
+        %{sender_email} から登録案内メールを %{email} に送りました。
+        メールに記載の案内を読み、登録を完了してください。
+        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>から登録案内メールを再送信してください。
+      complete_html: |-
+        会員登録が完了しました
+        登録したメールアドレスとパスワードで、<a href="%{redirect_url}">ログイン</a>してください。
+    reset_password:
+      link_text_html: |-
+        パスワードをお忘れの場合は、<a href="%{reset_password_url}" target="_blank">こちら</a>のリンクからパスワードを再設定してください。
+      description: |-
+        ご登録されている以下のメールアドレスにパスワードの再設定用のURLをお送りします。
+      sent_email: |-
+        %{sender_email} からパスワード再設定の案内を送りました。
+        しばらく待ってもメールが届かない場合は、%{sender_email} からのメールが着信拒否されていないか確認の上、<a href="%{resend_url}" target="_blank">こちら</a>からパスワード再設定案内メールを再送信してください。
+    confirm_password:
+      title: パスワードの変更
+      password_changed: |-
+        パスワードを変更しました。
+        メールアドレスとパスワードで、<a href="%{login_url}">ログイン</a>してください。
+  notice:
+    resend_confirmation_mail: 確認メールを再送しました。
+
+  errors:
+    messages:
+      not_input: を入力してください。
+      input_again: をもう一度入力してください。
+      mismatch: が一致しません。
+      not_registerd: は登録されていません。
+      already_registerd: は、確認済みです。
+      password_short: は6文字以上にしてください。
+      password_alphabet_only: に英字のみの文字は使用できません。
+      password_numeric_only: に数字のみの文字は使用できません。
+      password_include_email: にメールアドレスが含まれています。
+      password_include_name: に氏名が含まれています。
+      password_include_kana: によみがなが含まれています。
+      please_confirm_personal_data_protection: 個人情報の保護に同意してください。

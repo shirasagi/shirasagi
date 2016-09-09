@@ -1,0 +1,54 @@
+en:
+  faq:
+    page: FAQ記事
+    search: 検索
+    reset: リセット
+    result: 検索結果
+    count: 件
+    query:
+      category: カテゴリー
+      keyword: キーワード
+
+  modules:
+    faq: FAQ
+    addons:
+      faq/question: 質問
+      faq/search: FAQ記事検索
+
+  cms:
+    nodes:
+      faq/page: FAQ記事リスト
+      faq/search: FAQ記事検索
+    parts:
+      faq/search: FAQ記事検索
+
+  mongoid:
+    models:
+      faq/page: FAQ記事
+    attributes:
+      cms/model/page:
+        question: 質問
+        answer: 回答
+      faq/part/search:
+        search_node: 検索フォルダー
+
+  cms_role:
+    read_other_faq_pages: ページの閲覧（全て）
+    read_private_faq_pages: ページの閲覧（所有）
+    edit_other_faq_pages: ページの編集（全て）
+    edit_private_faq_pages: ページの編集（所有）
+    delete_other_faq_pages: ページの削除（全て）
+    delete_private_faq_pages: ページの削除（所有）
+    move_other_faq_pages: ページの移動（全て）
+    move_private_faq_pages: ページの移動（所有）
+    unlock_other_faq_pages: ページのロック解除（全て）
+    release_other_faq_pages: ページの公開（全て）
+    release_private_faq_pages: ページの公開（所有）
+    approve_other_faq_pages: ページの承認（全て）
+    approve_private_faq_pages: ページの承認（所有）
+
+  tooltip:
+    faq/part/search:
+      search_node:
+        - 検索先のフォルダーを設定します。
+        - 未入力の場合は自フォルダーを対象にします。

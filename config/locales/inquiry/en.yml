@@ -1,0 +1,220 @@
+en:
+  inquiry:
+    form: mail form
+    nodes: forms
+    column: questions
+    answer: answers
+    result: results
+    feedback: feedback
+    required_field: ※required
+    confirm_message: 下記事項をご確認の上、送信ボタンを押してください。
+    submit: 送信する
+    cancel: 変更する
+    confirm: 確認画面へ
+    notify: 自動通知
+    reply: 自動返信
+    total_count: 総回答数
+    reception_plan: 回答受付期間
+    aggregate: 集計
+    from: から
+    confirm_input: "%{name}確認用"
+    confirm_input_description: "もう一度、同じ%{name}を入力してください。"
+
+    options:
+      state:
+        enabled: 使用する
+        disabled: 使用しない
+      notice_content:
+        link_only: 通知のみ
+        include_answers: 投稿内容含む
+      required:
+        required: 必須
+        optional: 任意
+      input_type:
+        text_field: テキストボックス
+        text_area: テキストエリア
+        email_field: メールアドレス
+        radio_button: ラジオボタン選択
+        select: プルダウン選択
+        check_box: チェックボックス選択
+      input_confirm:
+        disabled: しない
+        enabled: する
+
+    links:
+      back_to_page: 元のページに戻る
+
+  modules:
+    inquiry: メールフォーム
+    addons:
+      inquiry/message: メッセージ
+      inquiry/captcha: 認証
+      inquiry/notice: メール通知
+      inquiry/reply: 自動返信メール
+      inquiry/input_setting: 入力設定
+      inquiry/release_plan: 公開期間
+      inquiry/reception_plan: 回答受付期間
+      inquiry/aggregation: 集計
+      inquiry/feedback_setting: フィードバック設定
+
+  cms:
+    nodes:
+      inquiry/form: フォーム
+      inquiry/node: フォーム一覧
+    parts:
+      inquiry/feedback: フィードバック
+
+  mongoid:
+    attributes:
+      inquiry/addon/message:
+        inquiry_html: 説明テキスト
+        inquiry_sent_html: 送信完了テキスト
+        inquiry_results_html: 集計結果テキスト
+
+      inquiry/addon/captcha:
+        inquiry_captcha: 画像認証
+
+      inquiry/addon/notice:
+        notice_state: 通知設定
+        notice_content: 通知内容
+        notice_email: 通知メールアドレス
+        from_name: 差出人名
+        from_email: 差出人メールアドレス
+
+      inquiry/addon/reply:
+        reply_state: 返信設定
+        reply_subject: 返信件名
+        reply_upper_text: 上部返信テキスト
+        reply_lower_text: 下部返信テキスト
+
+      inquiry/addon/release_plan:
+        release_date: 公開開始日
+        close_date: 公開終了日
+
+      inquiry/addon/reception_plan:
+        reception_start_date: 回答受付開始日
+        reception_close_date: 回答受付終了日
+
+      inquiry/addon/aggregation:
+        aggregation_state: 集計設定
+
+      inquiry/column:
+        name: 項目名
+        html: 説明テキスト
+        state: ステータス
+        order: 並び順
+        input_type: 入力形式
+        select_options: 選択肢
+        required: 必須入力
+        additional_attr: 追加属性
+        input_confirm: 入力確認
+
+      inquiry/answer:
+        remote_addr: IPアドレス
+        user_agent: ユーザーエージェント
+        data_summary: 回答内容
+        captcha: 画像の数字
+        source_url: ページURL
+        source_name: ページタイトル
+
+      inquiry/addon/feedback_setting:
+        upper_html: 上部HTML
+        lower_html: 下部HTML
+        feedback_confirmation: 確認画面
+
+  simple_captcha:
+    placeholder: ""
+    refresh_button_text: 違う画像
+    label: input number
+    message:
+      default: が正しくありません
+
+  tooltip:
+    inquiry/addon/message:
+      inquiry_html:
+        - フォーム画面の上部に表示する説明テキストを入力します。
+      inquiry_sent_html:
+        - 送信完了画面に表示される画面の内容を入力します。
+      inquiry_results_html:
+        - 集計結果画面の上部に表示される内容を入力します。
+    inquiry/addon/captcha:
+      inquiry_captcha:
+        - フォームに画像認証を利用する場合は「使用する」を選択してください。
+    inquiry/addon/notice:
+      notice_state:
+        - フォームへの投稿があったことを通知することが可能です。
+      notice_content:
+        - 通知メールの内容を設定します。
+        - 「通知のみ」 回答へのリンクが記載されます。
+        - 「投稿内容含む」回答へのリンクと回答内容すべてが記載されます。
+      notice_email:
+        - フォームへの投稿があったことを通知する先のメールアドレスを入力します。
+      from_name:
+        - 通知メールに記載される差出人名を入力します。
+      from_email:
+        - 通知メールの差出人メールアドレスを入力します。
+    inquiry/addon/reply:
+      reply_state:
+        - フォームへ投稿した利用者に自動返信メールを送ることが可能です。
+        - 本文にはフォームに入力された内容が記載されます。
+      reply_subject:
+        - 自動返信メールの件名を設定します。
+      reply_upper_text:
+        - 自動返信メールの本文上部のテキストを設定します。
+        - 挨拶文等の記載に利用します。
+      reply_lower_text:
+        - 自動返信メールの本文下部のテキストを設定します。
+        - 署名等の記載に利用します。
+    inquiry/column:
+      name:
+        - 質問項目の名称を入力します。
+      html:
+        - 項目の説明テキストを入力します。
+      state:
+        - 公開画面への公開、非公開を選択します。
+        - 非公開を選択することで公開画面から取り下げることが可能です。
+      order:
+        - 質問項目の並び順を指定します。
+        - 数字が小さいほど上位に表示されます。
+    inquiry/addon/input_setting:
+      input_type:
+        - 回答欄の入力形式を選択します。
+      select_options:
+        - 入力形式で「ラジオボタン選択」「プルダウン選択」「チェックボックス選択」を選択した場合の回答の選択肢を入力します。
+        - 改行で複数の選択肢を入力します。
+      required:
+        - 項目の入力が必須か任意かを選択します。
+      additional_attr:
+        - 出力される入力形式のHTMLに属性を追加することが可能です。
+      input_confirm:
+        - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
+    inquiry/addon/release_plan:
+      release_date:
+        - 公開を開始する日時を指定します。
+        - 指定した日時が来るとメールフォームが公開されます。
+        - 即時公開する場合は指定は不要です。
+      close_date:
+        - 公開を終了する日時を指定します。
+        - 指定した日時が来るとメールフォームが非公開になります。
+    inquiry/addon/release_plan:
+      reception_start_date:
+        - 回答受付開始日時を指定します。
+        - 指定した日時が来ると回答入力フォームが公開されます。
+      reception_close_date:
+        - 回答受付終了日時を指定します。
+        - 指定した日時が来ると回答入力フォームが非公開になります。
+    inquiry/addon/aggregation:
+      aggregation_state:
+        - 公開側で集計機能を使用するかを選択します。
+    inquiry/addon/feedback_setting:
+      upper_html:
+        - 上部に任意の内容をHTMLで記述することが可能です。
+      lower_html:
+        - 下部に任意の内容をHTMLで記述することが可能です。
+      feedback_confirmation:
+        - 確認画面を利用する場合は「使用する」を選択してください。
+
+  errors:
+    messages:
+      invalid_input_type_for_input_confirm: "は、入力形式に「%{input_type}」が選択されている場合、「する」にできません。"
+      input_confirm_not_match: "が一致しません。"

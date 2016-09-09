@@ -28,11 +28,6 @@ ja:
 
   mongoid:
     attributes:
-      ss/model/file: #?
-        in_file: ファイル
-        in_files: ファイル
-        image: 画像
-        download: ダウンロード
       sns/message/thread:
         member_ids: 参加者
         active_member_ids: 参加者

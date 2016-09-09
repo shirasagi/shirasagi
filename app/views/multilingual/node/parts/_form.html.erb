@@ -1,0 +1,18 @@
+<dl class="see">
+  <dt><%= @model.t :route %><%= @model.tt :route %></dt>
+  <dd><%= f.hidden_field :route %><%= @item.label :route %></dd>
+
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
+  <dd><%= @filename %>
+    <%= f.hidden_field :filename, value: @filename %>
+  </dd>
+
+  <dt><%= @model.t :mobile_view %><%= @model.tt :mobile_view %></dt>
+  <dd><%= @item.label :mobile_view %></dd>
+
+  <dt><%= @model.t :ajax_view %><%= @model.tt :ajax_view %></dt>
+  <dd><%= @item.label :ajax_view %></dd>
+</dl>

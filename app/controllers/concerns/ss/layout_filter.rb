@@ -3,6 +3,7 @@ module SS::LayoutFilter
 
   included do
     cattr_accessor(:navi_view_file) { nil }
+    cattr_accessor(:lang_view_file) { nil }
     cattr_accessor(:menu_view_file) { nil }
     before_action { @crumbs = [] }
   end
@@ -15,6 +16,10 @@ module SS::LayoutFilter
 
       def menu_view(file)
         self.menu_view_file = file
+      end
+
+      def lang_view(file)
+        self.lang_view_file = file
       end
   end
 end
