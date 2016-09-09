@@ -6,8 +6,13 @@ SS::Application.routes.draw do
     get :delete, on: :member
   end
 
+  concern :deletion_all do
+    get :delete, on: :member
+    delete action: :destroy_all, on: :collection
+  end
+
   content "opendata" do
-    resources :mypages, concerns: :deletion, module: "mypage"
+    resources :mypages, concerns: :deletion_all, module: "mypage"
   end
 
   node "opendata" do
