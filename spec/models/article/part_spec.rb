@@ -21,46 +21,56 @@ describe Article::Part::Page, type: :model, dbscope: :example do
   end
 
   describe '#render_loop_html - summary' do
-    let(:html) do
-      <<-HTML
-        <!doctype html>
-        <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+    context 'usual case' do
+      let(:html) do
+        <<-HTML
+          <!doctype html>
+          <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
 
-        <head>
-        <meta charset="UTF-8" />
-        <title>自治体サンプル</title>
-        <link rel="stylesheet" media="screen" href="/assets/cms/public.css" />
-        <script src="/assets/cms/public.js"></script>
+          <head>
+          <meta charset="UTF-8" />
+          <title>自治体サンプル</title>
+          <link rel="stylesheet" media="screen" href="/assets/cms/public.css" />
+          <script src="/assets/cms/public.js"></script>
 
-          <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
-          <link href="/css/style.css" media="all" rel="stylesheet" }}
-          <script src="/js/common.js"></script>
-          <!--[if lt IE 9]>
-          <script src="/js/selectivizr.js"></script>
-          <script src="/js/html5shiv.js"></script>
-          <![endif]-->
+            <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+            <link href="/css/style.css" media="all" rel="stylesheet" }}
+            <script src="/js/common.js"></script>
+            <!--[if lt IE 9]>
+            <script src="/js/selectivizr.js"></script>
+            <script src="/js/html5shiv.js"></script>
+            <![endif]-->
 
 
-        </head>
+          </head>
 
-        <body id="body--index" class="">
-        <div id="page">
+          <body id="body--index" class="">
+          <div id="page">
 
-        <div id="tool">
-        <nav>
-          <a id="nocssread" href="#wrap">本文へ</a>
-          <div id="size">文字サイズ<span id="ss-small">小さく</span><span id="ss-medium">標準</span><span id="ss-large">大きく</span></div>
-          <span id="ss-voice">読み上げる</span>
-          <span id="ss-kana">ふりがなをつける</span>
-          <a id="info" href="/use/">ご利用案内</a>
-        </nav>
-        </div>
-      HTML
+          <div id="tool">
+          <nav>
+            <a id="nocssread" href="#wrap">本文へ</a>
+            <div id="size">文字サイズ<span id="ss-small">小さく</span><span id="ss-medium">標準</span><span id="ss-large">大きく</span></div>
+            <span id="ss-voice">読み上げる</span>
+            <span id="ss-kana">ふりがなをつける</span>
+            <a id="info" href="/use/">ご利用案内</a>
+          </nav>
+          </div>
+        HTML
+      end
+      let(:page) { create(:article_page, html: html) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{summary}')).to eq('自治体サンプル 本文へ 文字サイズ小さく標準大きく 読み上げる ふりがなをつける ご利用案内')
+      end
     end
-    let(:page) { create(:article_page, html: html) }
 
-    it do
-      expect(item.render_loop_html(page, html: '#{summary}')).to eq('自治体サンプル 本文へ 文字サイズ小さく標準大きく 読み上げる ふりがなをつける ご利用案内')
+    context 'html and summary is nil' do
+      let(:page) { create(:article_page, summary_html: nil, html: nil) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{summary}')).to eq('')
+      end
     end
   end
 
