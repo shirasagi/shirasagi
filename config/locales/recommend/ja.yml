@@ -1,0 +1,9 @@
+ja:
+  cms:
+    parts:
+      recommend/history: 閲覧履歴
+
+  modules:
+    recommend: レコメンド
+    addons:
+      recommend/content_list: リスト表示

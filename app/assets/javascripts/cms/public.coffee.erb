@@ -26,9 +26,12 @@ $ ->
   SS_AdobeReader.render()
   SS_Mobile.render()
   SS_Voice.render()
+  SS_Theme.render()
+  SS.part = $(".ss-part").length
+  if SS.part == 0
+    SS_Recommend.render()
   $(".ss-part").each ->
     SS.renderPart $(this)
-  SS_Theme.render()
 
 class @SS
   @head = ""
@@ -37,6 +40,7 @@ class @SS
   @siteName = null
   @pageName = null
   @loading  = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+  @parts = null
 
   @load: ->
     #deprecated
@@ -93,6 +97,10 @@ class @SS
         $(elem).replaceWith data
       error: ->
         $(elem).find("img").remove()
+      complete: ->
+        SS.part = SS.part - 1
+        if SS.part == 0
+          SS_Recommend.render()
 
   @renderAjaxBox:(box = null) ->
     if box
@@ -538,3 +546,22 @@ class @SS_VoiceController
       </div>
     </div>
     """
+
+class @SS_Recommend
+  @render: ->
+    recommend = SS.config["recommend"]
+    return unless recommend
+
+    receiver_url = recommend["receiver_url"]
+    path = recommend["path"]
+    return unless receiver_url
+
+    path = encodeURIComponent(path)
+    url = encodeURIComponent(location.href)
+    receiver_url = receiver_url + "?" + "path=" + path + "&" + "url=" + url
+
+    $.ajax {
+      type: 'GET', url: receiver_url, cache: false, dataType: 'json',
+      error: (req, status, error) ->
+        #
+    }
