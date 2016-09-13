@@ -9,7 +9,7 @@
 <% @items.each do |column, data, confirm_data| %>
   <dl class="column">
     <dt>
-    <%= f.label column.id, column.name %>
+    <%= column.name %>
     <% if column.required == "required" %>
       <span class="required"><%= t('inquiry.required_field') %></span>
     <% end %>
@@ -37,6 +37,7 @@
         <% opt = column.additional_attr_to_h %>
         <%= f.send(column.input_type, column.id, column.select_options, { selected: data, include_blank: true }, opt) %>
       <% elsif column.input_type =~ /radio_button/ %>
+        <fieldset>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
           <% opt.merge!(column.additional_attr_to_h) %>
@@ -45,7 +46,9 @@
             <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
           <% end %>
         <% end %>
+        </fieldset>
       <% elsif column.input_type =~ /check_box/ %>
+        <fieldset>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = column.additional_attr_to_h %>
           <% checked = data.try(:[], "#{i}") ? true : false %>
@@ -53,6 +56,7 @@
             <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}][#{i}]", value, checked, opt) %><span><%= value %></span>
           <% end %>
         <% end %>
+        </fieldset>
       <% end %>
     <% end %>
     </dd>
