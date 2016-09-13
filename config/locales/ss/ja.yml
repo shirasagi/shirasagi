@@ -240,7 +240,9 @@ ja:
     errors:
       models:
         ss/model/group:
-          not_found: "%{line_no} 行目: Id %{id} は存在しません。"
+          not_found: "%{line_no} 行目: Id %{id} のグループは存在しません。"
+        ss/model/user:
+          not_found: "%{line_no} 行目: Id %{id} のユーザーは存在しません。"
     attributes:
       ss/document:
         created: 作成日時
