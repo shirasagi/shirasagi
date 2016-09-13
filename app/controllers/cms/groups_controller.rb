@@ -16,8 +16,12 @@ class Cms::GroupsController < ApplicationController
     end
 
     def set_item
-      super
-      raise "403" unless Cms::Group.site(@cur_site).include?(@item)
+      @item = @model.unscoped.site(@cur_site).find params[:id]
+      @item.attributes = fix_params
+      raise "403" unless @model.unscoped.site(@cur_site).include?(@item)
+    rescue Mongoid::Errors::DocumentNotFound => e
+      return render_destroy(true) if params[:action] == 'destroy'
+      raise e
     end
 
   public
