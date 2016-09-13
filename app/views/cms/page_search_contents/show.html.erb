@@ -1,11 +1,14 @@
 <%
-  @results = @item.search.page(params[:page]).per(25)
+  @results = @item.search(params[:s]).page(params[:page]).per(25)
   @result_count = @item.search_count
 %>
 <div class="index">
   <div class="list-head">
     <div class="search-info" style="float: right;"><%= I18n.t("cms.search_contents_condition", condition: truncate(@item.brief_search_condition, length: 60)) %></div>
     <div class="search-count"><%= I18n.t("cms.search_contents_count", count: @result_count) %></div>
+    <% if @list_head_search %>
+      <div class="list-head-search" style="margin-top: 10px;"><%= render partial: "list_head_search"  %></div>
+    <% end %>
   </div>
 
   <ul class="list-items">
@@ -29,7 +32,18 @@
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
             <span class="filename"><%= item.filename %></span>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-            <span class="state"><%= t "views.state.#{item.status}" %></span>
+            <% if item.user %>
+              <span class="user"><%= t item.user.name %></span>
+            <% end %>
+            <span class="state">
+              <%= t("views.state.#{item.status}") %>
+              <%
+                term = []
+                term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.release_date
+                term << "終了:" + item.close_date.strftime("%Y/%m/%d %H:%M") if item.close_date
+              %>
+              <%= "( #{term.join(", ")} )" if term.present? %>
+            </span>
           </div>
         </div>
       </li>

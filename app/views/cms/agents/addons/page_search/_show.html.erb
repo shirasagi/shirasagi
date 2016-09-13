@@ -5,11 +5,17 @@
   <dt><%= @model.t :search_filename %></dt>
   <dd><%= @item.search_filename %></dd>
 
+  <dt><%= @model.t :search_keyword %></dt>
+  <dd><%= @item.search_keyword %></dd>
+
   <dt><%= @model.t :search_category_ids %></dt>
   <dd><%= tryb { @item.search_categories.pluck(:name).join(",") } %></dd>
 
   <dt><%= @model.t :search_group_ids %></dt>
   <dd><%= tryb { @item.search_groups.pluck(:name).join(",") } %></dd>
+
+  <dt><%= @model.t :search_user_ids %></dt>
+  <dd><%= tryb { @item.search_users.pluck(:name).join(",") } %></dd>
 
   <dt><%= @model.t :search_node_ids %></dt>
   <dd><%= tryb { @item.search_nodes.pluck(:name).join(",") } %></dd>
@@ -38,6 +44,12 @@
   <dt><%= @model.t :search_state %></dt>
   <dd><%= @item.label :search_state %></dd>
 
+  <dt><%= @model.t :search_first_released %></dt>
+  <dd><%= @item.label :search_first_released %></dd>
+
   <dt><%= @model.t :search_approver_state %></dt>
   <dd><%= @item.label :search_approver_state %></dd>
+
+  <dt><%= @model.t :search_sort %></dt>
+  <dd><%= @item.label :search_sort %></dd>
 </dl>

@@ -6,6 +6,8 @@ class Cms::PageSearchContentsController < ApplicationController
   menu_view nil
   model Cms::PageSearch
 
+  before_action -> { @list_head_search = true }, only: :show
+
   private
     def set_crumbs
       set_item

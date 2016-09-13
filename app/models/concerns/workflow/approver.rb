@@ -201,4 +201,21 @@ module Workflow::Approver
         end
       end
     end
+
+  module ClassMethods
+    def search(params)
+      return criteria if params.blank?
+
+      criteria = super
+      if params[:status].present?
+        status = params[:status]
+        if %w(public closed ready).include?(status)
+          criteria = criteria.in(state: status)
+        else
+          criteria = criteria.in(workflow_state: status)
+        end
+      end
+      criteria
+    end
+  end
 end

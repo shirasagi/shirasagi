@@ -19,6 +19,7 @@ module Cms::Content
     field :depth, type: Integer
     field :order, type: Integer, default: 0
     field :released, type: DateTime
+    field :first_released, type: DateTime
     field :md5, type: String
 
     permit_params :state, :name, :index_name, :filename, :basename, :order, :released, :route

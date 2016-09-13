@@ -155,6 +155,9 @@ ja:
         none: なし
         summary: サマリー形式
         summary_large_image: 大きな画像形式
+      first_released:
+        published: 公開済み
+        draft: 未公開
 
     state:
       public: 公開中

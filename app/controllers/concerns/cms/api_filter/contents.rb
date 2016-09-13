@@ -2,7 +2,7 @@ module Cms::ApiFilter::Contents
   extend ActiveSupport::Concern
 
   HTML_FIELDS = [
-    :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel, :contact_fax, :contact_email
+    :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel, :contact_fax, :contact_email
   ].freeze
 
   private
