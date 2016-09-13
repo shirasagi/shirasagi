@@ -97,4 +97,45 @@ describe "cms_groups", type: :feature, dbscope: :example do
       expect(groups.map(&:contact_email)).to eq expected_contact_emails
     end
   end
+
+  context "disable group and edit it" do
+    let(:group_name) { unique_id }
+    let!(:group) { create(:cms_group, name: "#{cms_group.name}/#{group_name}", order: 100) }
+    let(:expiration_date) { (Time.zone.now - 1.day).to_date.to_time }
+    let(:contact_tel) { unique_id }
+
+    before do
+      login_cms_user
+    end
+
+    it do
+      visit index_path
+
+      click_on group_name
+      click_on I18n.t("views.links.edit")
+
+      fill_in "item[expiration_date]", with: expiration_date.strftime("%Y/%m/%d %H:%M")
+      click_on I18n.t("views.button.save")
+
+      group.reload
+      expect(group.expiration_date).to eq expiration_date
+
+      visit index_path
+      expect(page).not_to have_css(".expandable", text: group_name)
+
+      select I18n.t("views.options.state.all"), from: "s[state]"
+      click_on I18n.t('views.button.search')
+
+      expect(page).to have_css(".expandable", text: group_name)
+
+      click_on group_name
+      click_on I18n.t("views.links.edit")
+
+      fill_in "item[contact_tel]", with: contact_tel
+      click_on I18n.t("views.button.save")
+
+      group.reload
+      expect(group.contact_tel).to eq contact_tel
+    end
+  end
 end
