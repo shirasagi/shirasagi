@@ -14,6 +14,7 @@ class Cms::User
 
   validate :validate_groups
 
+  default_scope -> { and_enabled }
   scope :site, ->(site, opts = {}) do
     if opts[:state].present?
       self.in(group_ids: Cms::Group.unscoped.site(site).state(opts[:state]).pluck(:id))
