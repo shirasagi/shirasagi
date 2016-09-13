@@ -71,7 +71,7 @@ class Cms::GroupsController < ApplicationController
     end
 
     def download
-      csv = @model.site(@cur_site).order_by(_id: 1).to_csv
+      csv = @model.unscoped.site(@cur_site).order_by(_id: 1).to_csv
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_groups_#{Time.zone.now.to_i}.csv"
     end
 

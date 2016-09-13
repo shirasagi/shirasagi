@@ -12,8 +12,8 @@ module Cms::Addon::Import
 
     module ClassMethods
       def to_csv
-        csv = CSV.generate do |data|
-          data << %w(id name order ldap_dn contact_tel contact_fax contact_email)
+        CSV.generate do |data|
+          data << %w(id name order ldap_dn contact_tel contact_fax contact_email activation_date expiration_date)
           criteria.each do |item|
             line = []
             line << item.id
@@ -23,6 +23,8 @@ module Cms::Addon::Import
             line << item.contact_tel
             line << item.contact_fax
             line << item.contact_email
+            line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
+            line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
             data << line
           end
         end
@@ -36,7 +38,7 @@ module Cms::Addon::Import
 
       table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
       table.each_with_index do |row, i|
-        item = update_row(row, i + 2)
+        update_row(row, i + 2)
       end
       return errors.empty?
     end
@@ -48,7 +50,7 @@ module Cms::Addon::Import
         fname = in_file.original_filename
         return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
         begin
-          table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+          CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
           in_file.rewind
         rescue => e
           errors.add :in_file, :invalid_file_type
@@ -56,19 +58,20 @@ module Cms::Addon::Import
       end
 
       def update_row(row, index)
-        id            = row["id"].to_s.strip
-        name          = row["name"].to_s.strip
-        order         = row["order"].to_s.strip
-        ldap_dn       = row["ldap_dn"].to_s.strip
-        contact_tel   = row["contact_tel"].to_s.strip
-        contact_fax   = row["contact_fax"].to_s.strip
-        contact_email = row["contact_email"].to_s.strip
+        id             = row["id"].to_s.strip
+        name           = row["name"].to_s.strip
+        order          = row["order"].to_s.strip
+        ldap_dn        = row["ldap_dn"].to_s.strip
+        contact_tel    = row["contact_tel"].to_s.strip
+        contact_fax    = row["contact_fax"].to_s.strip
+        contact_email  = row["contact_email"].to_s.strip
+        activation_date = row["activation_date"].to_s.strip
+        expiration_date = row["expiration_date"].to_s.strip
 
         if id.present?
-          item = self.class.where(id: id).first
+          item = self.class.unscoped.where(id: id).first
           if item.blank?
-            e = I18n.t("errors.messages.not_exist")
-            self.errors.add :base, "#{index}: #{t(:id)}#{e}"
+            self.errors.add :base, :not_found, line_no: index, id: id
             return nil
           end
 
@@ -81,12 +84,14 @@ module Cms::Addon::Import
           item = self.class.new
         end
 
-        item.name          = name
-        item.order         = order
-        item.ldap_dn       = ldap_dn
-        item.contact_tel   = contact_tel
-        item.contact_fax   = contact_fax
-        item.contact_email = contact_email
+        item.name            = name
+        item.order           = order
+        item.ldap_dn         = ldap_dn
+        item.contact_tel     = contact_tel
+        item.contact_fax     = contact_fax
+        item.contact_email   = contact_email
+        item.activation_date = activation_date
+        item.expiration_date = expiration_date
 
         if item.save
           @imported += 1

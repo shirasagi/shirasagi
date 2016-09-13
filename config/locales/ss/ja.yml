@@ -237,6 +237,10 @@ ja:
       ss/task: タスク
       ss/max_file_size: 最大ファイルサイズ
       ss/thumb_file: サムネイルファイル
+    errors:
+      models:
+        ss/model/group:
+          not_found: "%{line_no} 行目: Id %{id} は存在しません。"
     attributes:
       ss/document:
         created: 作成日時
