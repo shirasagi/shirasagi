@@ -26,7 +26,8 @@ module Cms::Addon
 
       field :search_routes, type: SS::Extensions::Words, default: []
 
-      permit_params :search_name, :search_filename, :search_keyword, :search_state, :search_approver_state, :search_first_released, :search_sort
+      permit_params :search_name, :search_filename, :search_keyword, :search_state, :search_approver_state
+      permit_params :search_first_released, :search_sort
       permit_params :search_released_start, :search_released_close, :search_updated_start, :search_updated_close
       permit_params search_category_ids: [], search_group_ids: [], search_node_ids: [], search_user_ids: [], search_routes: []
 
@@ -43,7 +44,7 @@ module Cms::Addon
       @search ||= begin
         name       = search_name.present? ? { name: /#{Regexp.escape(search_name)}/ } : {}
         filename   = search_filename.present? ? { filename: /#{Regexp.escape(search_filename)}/ } : {}
-        keyword    = search_keyword.present? ? { "$or" => KEYWORD_FIELDS.map { |field| { field => /#{Regexp.escape(search_keyword)}/ } } } : {}
+        keyword    = build_search_keyword_criteria
         categories = search_category_ids.present? ? { category_ids: search_category_ids } : {}
         groups     = search_group_ids.present? ? { group_ids: search_group_ids } : {}
         users      = search_user_ids.present? ? { user_id: search_user_ids } : {}
@@ -183,6 +184,14 @@ module Cms::Addon
         self.search_routes = search_routes.dup.select(&:present?)
       end
 
+      def build_search_keyword_criteria
+        if search_keyword.present?
+          { "$or" => KEYWORD_FIELDS.map { |field| { field => /#{Regexp.escape(search_keyword)}/ } } }
+        else
+          {}
+        end
+      end
+
       def build_search_nodes_criteria
         if search_node_ids.present?
           { filename: /^#{search_nodes.map { |node| Regexp.escape("#{node.filename}/") }.join("|")}/ }
@@ -248,7 +257,9 @@ module Cms::Addon
       end
 
       def search_first_released_info
-        "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"views.options.state.#{search_first_released}"}" if search_first_released.present?
+        if search_first_released.present?
+          "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"views.options.state.#{search_first_released}"}"
+        end
       end
 
       def search_approver_state_info

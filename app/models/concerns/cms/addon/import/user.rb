@@ -67,21 +67,7 @@ module Cms::Addon::Import
       end
 
       def update_row(row, index)
-        id                       = row["id"].to_s.strip
-        name                     = row["name"].to_s.strip
-        kana                     = row["kana"].to_s.strip
-        uid                      = row["uid"].to_s.strip
-        email                    = row["email"].to_s.strip
-        password                 = row["password"].to_s.strip
-        tel                      = row["tel"].to_s.strip
-        tel_ext                  = row["tel_ext"].to_s.strip
-        account_start_date       = row["account_start_date"].to_s.strip
-        account_expiration_date  = row["account_expiration_date"].to_s.strip
-        initial_password_warning = row["initial_password_warning"].to_s.strip
-        groups                   = row["groups"].to_s.strip.split(/\n/)
-        ldap_dn                  = row["ldap_dn"].to_s.strip
-        cms_roles                = row["cms_roles"].to_s.strip.split(/\n/)
-
+        id = row["id"].to_s.strip
         if id.present?
           item = self.class.unscoped.where(id: id).first
           if item.blank?
@@ -98,18 +84,16 @@ module Cms::Addon::Import
           item = self.class.new
         end
 
-        item.name = name
-        item.kana = kana
-        item.uid = uid
-        item.email = email
+        %w(
+          name kana uid email tel tel_ext account_start_date account_expiration_date initial_password_warning
+          ldap_dn).each do |k|
+          item[k] = row[k].to_s.strip
+        end
+        password = row["password"].to_s.strip
         item.in_password = password if password.present?
-        item.tel = tel
-        item.tel_ext = tel_ext
-        item.account_start_date = account_start_date
-        item.account_expiration_date = account_expiration_date
-        item.initial_password_warning = initial_password_warning
+        groups = row["groups"].to_s.strip.split(/\n/)
         item.group_ids = SS::Group.in(name: groups).map(&:id)
-        item.ldap_dn = ldap_dn
+        cms_roles = row["cms_roles"].to_s.strip.split(/\n/)
         add_cms_roles(item, cms_roles)
         if item.save
           @imported += 1

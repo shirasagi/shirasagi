@@ -17,29 +17,63 @@ describe Category::Addon::Integration, dbscope: :example do
     # mater contents
     let!(:master_node) { create :category_node_node, site: site, user: user, filename: "master", name: "master" }
 
-    let!(:master_child_node_A) { create :category_node_node, site: site, user: user, filename: "master/A", name: "master-A" }
-    let!(:master_child_node_B) { create :category_node_page, site: site, user: user, filename: "master/B", name: "master-B" }
-    let!(:master_child_node_C) { create :category_node_page, site: site, user: user, filename: "master/A/C", name: "master-A-C" }
+    let!(:master_child_node_A) do
+      create :category_node_node, site: site, user: user, filename: "master/A", name: "master-A"
+    end
+    let!(:master_child_node_B) do
+      create :category_node_page, site: site, user: user, filename: "master/B", name: "master-B"
+    end
+    let!(:master_child_node_C) do
+      create :category_node_page, site: site, user: user, filename: "master/A/C", name: "master-A-C"
+    end
 
-    let!(:master_child_page_A) { create :cms_page, site: site, user: user, filename: "master/index.html", name: "master-index" }
-    let!(:master_child_page_B) { create :article_page, site: site, user: user, filename: "master/page.html", name: "master-page" }
-    let!(:master_child_page_C) { create :article_page, site: site, user: user, filename: "master/A/page.html", name: "master-page" }
+    let!(:master_child_page_A) do
+      create :cms_page, site: site, user: user, filename: "master/index.html", name: "master-index"
+    end
+    let!(:master_child_page_B) do
+      create :article_page, site: site, user: user, filename: "master/page.html", name: "master-page"
+    end
+    let!(:master_child_page_C) do
+      create :article_page, site: site, user: user, filename: "master/A/page.html", name: "master-page"
+    end
 
-    let!(:master_child_part_A) { create :cms_part, site: site, user: user, filename: "master/recent.part.html", name: "master-recent" }
-    let!(:master_child_layout_A) { create :cms_layout, site: site, user: user, filename: "master/top.layout.html", name: "master-top" }
+    let!(:master_child_part_A) do
+      create :cms_part, site: site, user: user, filename: "master/recent.part.html", name: "master-recent"
+    end
+    let!(:master_child_layout_A) do
+      create :cms_layout, site: site, user: user, filename: "master/top.layout.html", name: "master-top"
+    end
 
     # partial contents
     let!(:partial_node) { create :category_node_node, site: site, user: user, filename: "partial", name: "partial" }
-    let!(:partial_child_node_D) { create :category_node_node, site: site, user: user, filename: "partial/D", name: "partial-D" }
-    let!(:partial_child_node_E) { create :category_node_page, site: site, user: user, filename: "partial/E", name: "partial-E" }
-    let!(:partial_child_node_F) { create :article_node_page, site: site, user: user, filename: "partial/D/F", name: "partial-D-F", category_ids: [partial_node.id] }
+    let!(:partial_child_node_D) do
+      create :category_node_node, site: site, user: user, filename: "partial/D", name: "partial-D"
+    end
+    let!(:partial_child_node_E) do
+      create :category_node_page, site: site, user: user, filename: "partial/E", name: "partial-E"
+    end
+    let!(:partial_child_node_F) do
+      create :article_node_page, site: site, user: user, filename: "partial/D/F", name: "partial-D-F",
+             category_ids: [partial_node.id]
+    end
 
-    let!(:partial_child_page_D) { create :article_page, site: site, user: user, filename: "partial/page2.html", name: "partial-page2", category_ids: [partial_node.id] }
-    let!(:partial_child_page_E) { create :cms_page, site: site, user: user, filename: "partial/E/index.html", name: "partial-E-index" }
-    let!(:partial_child_page_F) { create :cms_page, site: site, user: user, filename: "partial/D/F/index.html", name: "partial-D-F-index" }
+    let!(:partial_child_page_D) do
+      create :article_page, site: site, user: user, filename: "partial/page2.html", name: "partial-page2",
+             category_ids: [partial_node.id]
+    end
+    let!(:partial_child_page_E) do
+      create :cms_page, site: site, user: user, filename: "partial/E/index.html", name: "partial-E-index"
+    end
+    let!(:partial_child_page_F) do
+      create :cms_page, site: site, user: user, filename: "partial/D/F/index.html", name: "partial-D-F-index"
+    end
 
-    let!(:partial_child_part_B) { create :cms_part, site: site, user: user, filename: "partial/header.part.html", name: "partial-header" }
-    let!(:partial_child_layout_B) { create :cms_layout, site: site, user: user, filename: "partial/one.layout.html", name: "partial-one" }
+    let!(:partial_child_part_B) do
+      create :cms_part, site: site, user: user, filename: "partial/header.part.html", name: "partial-header"
+    end
+    let!(:partial_child_layout_B) do
+      create :cms_layout, site: site, user: user, filename: "partial/one.layout.html", name: "partial-one"
+    end
 
     let!(:expected_integrated_nodes) do
       [
@@ -118,29 +152,65 @@ describe Category::Addon::Integration, dbscope: :example do
     # mater contents
     let!(:master_node) { create :category_node_node, site: site, user: user, filename: "integration/master", name: "master" }
 
-    let!(:master_child_node_A) { create :category_node_node, site: site, user: user, filename: "integration/master/A", name: "master-A" }
-    let!(:master_child_node_B) { create :category_node_page, site: site, user: user, filename: "integration/master/B", name: "master-B" }
-    let!(:master_child_node_C) { create :category_node_page, site: site, user: user, filename: "integration/master/A/C", name: "master-A-C" }
+    let!(:master_child_node_A) do
+      create :category_node_node, site: site, user: user, filename: "integration/master/A", name: "master-A"
+    end
+    let!(:master_child_node_B) do
+      create :category_node_page, site: site, user: user, filename: "integration/master/B", name: "master-B"
+    end
+    let!(:master_child_node_C) do
+      create :category_node_page, site: site, user: user, filename: "integration/master/A/C", name: "master-A-C"
+    end
 
-    let!(:master_child_page_A) { create :cms_page, site: site, user: user, filename: "integration/master/index.html", name: "master-index" }
-    let!(:master_child_page_B) { create :article_page, site: site, user: user, filename: "integration/master/page.html", name: "master-page" }
-    let!(:master_child_page_C) { create :article_page, site: site, user: user, filename: "integration/master/A/page.html", name: "master-page" }
+    let!(:master_child_page_A) do
+      create :cms_page, site: site, user: user, filename: "integration/master/index.html", name: "master-index"
+    end
+    let!(:master_child_page_B) do
+      create :article_page, site: site, user: user, filename: "integration/master/page.html", name: "master-page"
+    end
+    let!(:master_child_page_C) do
+      create :article_page, site: site, user: user, filename: "integration/master/A/page.html", name: "master-page"
+    end
 
-    let!(:master_child_part_A) { create :cms_part, site: site, user: user, filename: "integration/master/recent.part.html", name: "master-recent" }
-    let!(:master_child_layout_A) { create :cms_layout, site: site, user: user, filename: "integration/master/top.layout.html", name: "master-top" }
+    let!(:master_child_part_A) do
+      create :cms_part, site: site, user: user, filename: "integration/master/recent.part.html", name: "master-recent"
+    end
+    let!(:master_child_layout_A) do
+      create :cms_layout, site: site, user: user, filename: "integration/master/top.layout.html", name: "master-top"
+    end
 
     # partial contents
-    let!(:partial_node) { create :category_node_node, site: site, user: user, filename: "integration/partial", name: "partial" }
-    let!(:partial_child_node_D) { create :category_node_node, site: site, user: user, filename: "integration/partial/D", name: "partial-D" }
-    let!(:partial_child_node_E) { create :category_node_page, site: site, user: user, filename: "integration/partial/E", name: "partial-E" }
-    let!(:partial_child_node_F) { create :article_node_page, site: site, user: user, filename: "integration/partial/D/F", name: "partial-D-F", category_ids: [partial_node.id] }
+    let!(:partial_node) do
+      create :category_node_node, site: site, user: user, filename: "integration/partial", name: "partial"
+    end
+    let!(:partial_child_node_D) do
+      create :category_node_node, site: site, user: user, filename: "integration/partial/D", name: "partial-D"
+    end
+    let!(:partial_child_node_E) do
+      create :category_node_page, site: site, user: user, filename: "integration/partial/E", name: "partial-E"
+    end
+    let!(:partial_child_node_F) do
+      create :article_node_page, site: site, user: user, filename: "integration/partial/D/F", name: "partial-D-F",
+             category_ids: [partial_node.id]
+    end
 
-    let!(:partial_child_page_D) { create :article_page, site: site, user: user, filename: "integration/partial/page2.html", name: "partial-page2", category_ids: [partial_node.id] }
-    let!(:partial_child_page_E) { create :cms_page, site: site, user: user, filename: "integration/partial/E/index.html", name: "partial-E-index" }
-    let!(:partial_child_page_F) { create :cms_page, site: site, user: user, filename: "integration/partial/D/F/index.html", name: "partial-D-F-index" }
+    let!(:partial_child_page_D) do
+      create :article_page, site: site, user: user, filename: "integration/partial/page2.html", name: "partial-page2",
+             category_ids: [partial_node.id]
+    end
+    let!(:partial_child_page_E) do
+      create :cms_page, site: site, user: user, filename: "integration/partial/E/index.html", name: "partial-E-index"
+    end
+    let!(:partial_child_page_F) do
+      create :cms_page, site: site, user: user, filename: "integration/partial/D/F/index.html", name: "partial-D-F-index"
+    end
 
-    let!(:partial_child_part_B) { create :cms_part, site: site, user: user, filename: "integration/partial/header.part.html", name: "partial-header" }
-    let!(:partial_child_layout_B) { create :cms_layout, site: site, user: user, filename: "integration/partial/one.layout.html", name: "partial-one" }
+    let!(:partial_child_part_B) do
+      create :cms_part, site: site, user: user, filename: "integration/partial/header.part.html", name: "partial-header"
+    end
+    let!(:partial_child_layout_B) do
+      create :cms_layout, site: site, user: user, filename: "integration/partial/one.layout.html", name: "partial-one"
+    end
 
     let!(:expected_integrated_nodes) do
       [
@@ -219,31 +289,69 @@ describe Category::Addon::Integration, dbscope: :example do
     let!(:root_under_node) { create :cms_node_node, site: site, user: user, filename: "integration/under", name: "under" }
 
     # mater contents
-    let!(:master_node) { create :category_node_node, site: site, user: user, filename: "integration/under/master", name: "master" }
+    let!(:master_node) do
+      create :category_node_node, site: site, user: user, filename: "integration/under/master", name: "master"
+    end
 
-    let!(:master_child_node_A) { create :category_node_node, site: site, user: user, filename: "integration/under/master/A", name: "master-A" }
-    let!(:master_child_node_B) { create :category_node_page, site: site, user: user, filename: "integration/under/master/B", name: "master-B" }
-    let!(:master_child_node_C) { create :category_node_page, site: site, user: user, filename: "integration/under/master/A/C", name: "master-A-C" }
+    let!(:master_child_node_A) do
+      create :category_node_node, site: site, user: user, filename: "integration/under/master/A", name: "master-A"
+    end
+    let!(:master_child_node_B) do
+      create :category_node_page, site: site, user: user, filename: "integration/under/master/B", name: "master-B"
+    end
+    let!(:master_child_node_C) do
+      create :category_node_page, site: site, user: user, filename: "integration/under/master/A/C", name: "master-A-C"
+    end
 
-    let!(:master_child_page_A) { create :cms_page, site: site, user: user, filename: "integration/under/master/index.html", name: "master-index" }
-    let!(:master_child_page_B) { create :article_page, site: site, user: user, filename: "integration/under/master/page.html", name: "master-page" }
-    let!(:master_child_page_C) { create :article_page, site: site, user: user, filename: "integration/under/master/A/page.html", name: "master-page" }
+    let!(:master_child_page_A) do
+      create :cms_page, site: site, user: user, filename: "integration/under/master/index.html", name: "master-index"
+    end
+    let!(:master_child_page_B) do
+      create :article_page, site: site, user: user, filename: "integration/under/master/page.html", name: "master-page"
+    end
+    let!(:master_child_page_C) do
+      create :article_page, site: site, user: user, filename: "integration/under/master/A/page.html", name: "master-page"
+    end
 
-    let!(:master_child_part_A) { create :cms_part, site: site, user: user, filename: "integration/under/master/recent.part.html", name: "master-recent" }
-    let!(:master_child_layout_A) { create :cms_layout, site: site, user: user, filename: "integration/under/master/top.layout.html", name: "master-top" }
+    let!(:master_child_part_A) do
+      create :cms_part, site: site, user: user, filename: "integration/under/master/recent.part.html", name: "master-recent"
+    end
+    let!(:master_child_layout_A) do
+      create :cms_layout, site: site, user: user, filename: "integration/under/master/top.layout.html", name: "master-top"
+    end
 
     # partial contents
-    let!(:partial_node) { create :category_node_node, site: site, user: user, filename: "integration/partial", name: "partial" }
-    let!(:partial_child_node_D) { create :category_node_node, site: site, user: user, filename: "integration/partial/D", name: "partial-D" }
-    let!(:partial_child_node_E) { create :category_node_page, site: site, user: user, filename: "integration/partial/E", name: "partial-E" }
-    let!(:partial_child_node_F) { create :article_node_page, site: site, user: user, filename: "integration/partial/D/F", name: "partial-D-F", category_ids: [partial_node.id] }
+    let!(:partial_node) do
+      create :category_node_node, site: site, user: user, filename: "integration/partial", name: "partial"
+    end
+    let!(:partial_child_node_D) do
+      create :category_node_node, site: site, user: user, filename: "integration/partial/D", name: "partial-D"
+    end
+    let!(:partial_child_node_E) do
+      create :category_node_page, site: site, user: user, filename: "integration/partial/E", name: "partial-E"
+    end
+    let!(:partial_child_node_F) do
+      create :article_node_page, site: site, user: user, filename: "integration/partial/D/F", name: "partial-D-F",
+             category_ids: [partial_node.id]
+    end
 
-    let!(:partial_child_page_D) { create :article_page, site: site, user: user, filename: "integration/partial/page2.html", name: "partial-page2", category_ids: [partial_node.id] }
-    let!(:partial_child_page_E) { create :cms_page, site: site, user: user, filename: "integration/partial/E/index.html", name: "partial-E-index" }
-    let!(:partial_child_page_F) { create :cms_page, site: site, user: user, filename: "integration/partial/D/F/index.html", name: "partial-D-F-index" }
+    let!(:partial_child_page_D) do
+      create :article_page, site: site, user: user, filename: "integration/partial/page2.html", name: "partial-page2",
+             category_ids: [partial_node.id]
+    end
+    let!(:partial_child_page_E) do
+      create :cms_page, site: site, user: user, filename: "integration/partial/E/index.html", name: "partial-E-index"
+    end
+    let!(:partial_child_page_F) do
+      create :cms_page, site: site, user: user, filename: "integration/partial/D/F/index.html", name: "partial-D-F-index"
+    end
 
-    let!(:partial_child_part_B) { create :cms_part, site: site, user: user, filename: "integration/partial/header.part.html", name: "partial-header" }
-    let!(:partial_child_layout_B) { create :cms_layout, site: site, user: user, filename: "integration/partial/one.layout.html", name: "partial-one" }
+    let!(:partial_child_part_B) do
+      create :cms_part, site: site, user: user, filename: "integration/partial/header.part.html", name: "partial-header"
+    end
+    let!(:partial_child_layout_B) do
+      create :cms_layout, site: site, user: user, filename: "integration/partial/one.layout.html", name: "partial-one"
+    end
 
     let!(:expected_integrated_nodes) do
       [
@@ -324,29 +432,65 @@ describe Category::Addon::Integration, dbscope: :example do
     # mater contents
     let!(:master_node) { create :category_node_node, site: site, user: user, filename: "integration/master", name: "master" }
 
-    let!(:master_child_node_A) { create :category_node_node, site: site, user: user, filename: "integration/master/A", name: "master-A" }
-    let!(:master_child_node_B) { create :category_node_page, site: site, user: user, filename: "integration/master/B", name: "master-B" }
-    let!(:master_child_node_C) { create :category_node_page, site: site, user: user, filename: "integration/master/A/C", name: "master-A-C" }
+    let!(:master_child_node_A) do
+      create :category_node_node, site: site, user: user, filename: "integration/master/A", name: "master-A"
+    end
+    let!(:master_child_node_B) do
+      create :category_node_page, site: site, user: user, filename: "integration/master/B", name: "master-B"
+    end
+    let!(:master_child_node_C) do
+      create :category_node_page, site: site, user: user, filename: "integration/master/A/C", name: "master-A-C"
+    end
 
-    let!(:master_child_page_A) { create :cms_page, site: site, user: user, filename: "integration/master/index.html", name: "master-index" }
-    let!(:master_child_page_B) { create :article_page, site: site, user: user, filename: "integration/master/page.html", name: "master-page" }
-    let!(:master_child_page_C) { create :article_page, site: site, user: user, filename: "integration/master/A/page.html", name: "master-page" }
+    let!(:master_child_page_A) do
+      create :cms_page, site: site, user: user, filename: "integration/master/index.html", name: "master-index"
+    end
+    let!(:master_child_page_B) do
+      create :article_page, site: site, user: user, filename: "integration/master/page.html", name: "master-page"
+    end
+    let!(:master_child_page_C) do
+      create :article_page, site: site, user: user, filename: "integration/master/A/page.html", name: "master-page"
+    end
 
-    let!(:master_child_part_A) { create :cms_part, site: site, user: user, filename: "integration/master/recent.part.html", name: "master-recent" }
-    let!(:master_child_layout_A) { create :cms_layout, site: site, user: user, filename: "integration/master/top.layout.html", name: "master-top" }
+    let!(:master_child_part_A) do
+      create :cms_part, site: site, user: user, filename: "integration/master/recent.part.html", name: "master-recent"
+    end
+    let!(:master_child_layout_A) do
+      create :cms_layout, site: site, user: user, filename: "integration/master/top.layout.html", name: "master-top"
+    end
 
     # partial contents
-    let!(:partial_node) { create :category_node_node, site: site, user: user, filename: "integration/master/partial", name: "partial" }
-    let!(:partial_child_node_D) { create :category_node_node, site: site, user: user, filename: "integration/master/partial/D", name: "partial-D" }
-    let!(:partial_child_node_E) { create :category_node_page, site: site, user: user, filename: "integration/master/partial/E", name: "partial-E" }
-    let!(:partial_child_node_F) { create :article_node_page, site: site, user: user, filename: "integration/master/partial/D/F", name: "partial-D-F", category_ids: [partial_node.id] }
+    let!(:partial_node) do
+      create :category_node_node, site: site, user: user, filename: "integration/master/partial", name: "partial"
+    end
+    let!(:partial_child_node_D) do
+      create :category_node_node, site: site, user: user, filename: "integration/master/partial/D", name: "partial-D"
+    end
+    let!(:partial_child_node_E) do
+      create :category_node_page, site: site, user: user, filename: "integration/master/partial/E", name: "partial-E"
+    end
+    let!(:partial_child_node_F) do
+      create :article_node_page, site: site, user: user, filename: "integration/master/partial/D/F", name: "partial-D-F",
+             category_ids: [partial_node.id]
+    end
 
-    let!(:partial_child_page_D) { create :article_page, site: site, user: user, filename: "integration/master/partial/page2.html", name: "partial-page2", category_ids: [partial_node.id] }
-    let!(:partial_child_page_E) { create :cms_page, site: site, user: user, filename: "integration/master/partial/E/index.html", name: "partial-E-index" }
-    let!(:partial_child_page_F) { create :cms_page, site: site, user: user, filename: "integration/master/partial/D/F/index.html", name: "partial-D-F-index" }
+    let!(:partial_child_page_D) do
+      create :article_page, site: site, user: user, filename: "integration/master/partial/page2.html", name: "partial-page2",
+             category_ids: [partial_node.id]
+    end
+    let!(:partial_child_page_E) do
+      create :cms_page, site: site, user: user, filename: "integration/master/partial/E/index.html", name: "partial-E-index"
+    end
+    let!(:partial_child_page_F) do
+      create :cms_page, site: site, user: user, filename: "integration/master/partial/D/F/index.html", name: "partial-D-F-index"
+    end
 
-    let!(:partial_child_part_B) { create :cms_part, site: site, user: user, filename: "integration/master/partial/header.part.html", name: "partial-header" }
-    let!(:partial_child_layout_B) { create :cms_layout, site: site, user: user, filename: "integration/master/partial/one.layout.html", name: "partial-one" }
+    let!(:partial_child_part_B) do
+      create :cms_part, site: site, user: user, filename: "integration/master/partial/header.part.html", name: "partial-header"
+    end
+    let!(:partial_child_layout_B) do
+      create :cms_layout, site: site, user: user, filename: "integration/master/partial/one.layout.html", name: "partial-one"
+    end
 
     let!(:expected_integrated_nodes) do
       [
@@ -424,29 +568,65 @@ describe Category::Addon::Integration, dbscope: :example do
     # mater contents
     let!(:master_node) { create :category_node_node, site: site, user: user, filename: "master", name: "master" }
 
-    let!(:master_child_node_A) { create :category_node_node, site: site, user: user, filename: "master/A", name: "master-A" }
-    let!(:master_child_node_B) { create :category_node_page, site: site, user: user, filename: "master/B", name: "master-B" }
-    let!(:master_child_node_C) { create :category_node_page, site: site, user: user, filename: "master/A/C", name: "master-A-C" }
+    let!(:master_child_node_A) do
+      create :category_node_node, site: site, user: user, filename: "master/A", name: "master-A"
+    end
+    let!(:master_child_node_B) do
+      create :category_node_page, site: site, user: user, filename: "master/B", name: "master-B"
+    end
+    let!(:master_child_node_C) do
+      create :category_node_page, site: site, user: user, filename: "master/A/C", name: "master-A-C"
+    end
 
-    let!(:master_child_page_A) { create :cms_page, site: site, user: user, filename: "master/index.html", name: "master-index" }
-    let!(:master_child_page_B) { create :article_page, site: site, user: user, filename: "master/page.html", name: "master-page" }
-    let!(:master_child_page_C) { create :article_page, site: site, user: user, filename: "master/A/page.html", name: "master-page" }
+    let!(:master_child_page_A) do
+      create :cms_page, site: site, user: user, filename: "master/index.html", name: "master-index"
+    end
+    let!(:master_child_page_B) do
+      create :article_page, site: site, user: user, filename: "master/page.html", name: "master-page"
+    end
+    let!(:master_child_page_C) do
+      create :article_page, site: site, user: user, filename: "master/A/page.html", name: "master-page"
+    end
 
-    let!(:master_child_part_A) { create :cms_part, site: site, user: user, filename: "master/recent.part.html", name: "master-recent" }
-    let!(:master_child_layout_A) { create :cms_layout, site: site, user: user, filename: "master/top.layout.html", name: "master-top" }
+    let!(:master_child_part_A) do
+      create :cms_part, site: site, user: user, filename: "master/recent.part.html", name: "master-recent"
+    end
+    let!(:master_child_layout_A) do
+      create :cms_layout, site: site, user: user, filename: "master/top.layout.html", name: "master-top"
+    end
 
     # partial contents
-    let!(:partial_node) { create :category_node_node, site: site, user: user, filename: "master/partial", name: "partial" }
-    let!(:partial_child_node_D) { create :category_node_node, site: site, user: user, filename: "master/partial/D", name: "partial-D" }
-    let!(:partial_child_node_E) { create :category_node_page, site: site, user: user, filename: "master/partial/E", name: "partial-E" }
-    let!(:partial_child_node_F) { create :article_node_page, site: site, user: user, filename: "master/partial/D/F", name: "partial-D-F", category_ids: [partial_node.id] }
+    let!(:partial_node) do
+      create :category_node_node, site: site, user: user, filename: "master/partial", name: "partial"
+    end
+    let!(:partial_child_node_D) do
+      create :category_node_node, site: site, user: user, filename: "master/partial/D", name: "partial-D"
+    end
+    let!(:partial_child_node_E) do
+      create :category_node_page, site: site, user: user, filename: "master/partial/E", name: "partial-E"
+    end
+    let!(:partial_child_node_F) do
+      create :article_node_page, site: site, user: user, filename: "master/partial/D/F", name: "partial-D-F",
+             category_ids: [partial_node.id]
+    end
 
-    let!(:partial_child_page_D) { create :article_page, site: site, user: user, filename: "master/partial/page2.html", name: "partial-page2", category_ids: [partial_node.id] }
-    let!(:partial_child_page_E) { create :cms_page, site: site, user: user, filename: "master/partial/E/index.html", name: "partial-E-index" }
-    let!(:partial_child_page_F) { create :cms_page, site: site, user: user, filename: "master/partial/D/F/index.html", name: "partial-D-F-index" }
+    let!(:partial_child_page_D) do
+      create :article_page, site: site, user: user, filename: "master/partial/page2.html", name: "partial-page2",
+             category_ids: [partial_node.id]
+    end
+    let!(:partial_child_page_E) do
+      create :cms_page, site: site, user: user, filename: "master/partial/E/index.html", name: "partial-E-index"
+    end
+    let!(:partial_child_page_F) do
+      create :cms_page, site: site, user: user, filename: "master/partial/D/F/index.html", name: "partial-D-F-index"
+    end
 
-    let!(:partial_child_part_B) { create :cms_part, site: site, user: user, filename: "master/partial/header.part.html", name: "partial-header" }
-    let!(:partial_child_layout_B) { create :cms_layout, site: site, user: user, filename: "master/partial/one.layout.html", name: "partial-one" }
+    let!(:partial_child_part_B) do
+      create :cms_part, site: site, user: user, filename: "master/partial/header.part.html", name: "partial-header"
+    end
+    let!(:partial_child_layout_B) do
+      create :cms_layout, site: site, user: user, filename: "master/partial/one.layout.html", name: "partial-one"
+    end
 
     let!(:expected_integrated_nodes) do
       [
