@@ -36,6 +36,7 @@ class Recommend::History::Log
     def to_config(opts = {})
       site = opts[:site]
       path = opts[:path]
+      path = path + "index.html" if path =~ /\/$/
       preview_path = opts[:preview_path]
       receiver_path = Rails.application.routes.url_helpers.recommend_history_receiver_path(site: site.id)
       receiver_url = ::File.join(site.full_url, receiver_path)
