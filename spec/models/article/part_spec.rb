@@ -232,4 +232,34 @@ describe Article::Part::Page, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe '#render_loop_html - img.src' do
+    context 'no html' do
+      let(:page) { create(:article_page) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{img.src}')).to eq('/assets/img/dummy.png')
+      end
+    end
+
+    context 'html contains <img>' do
+      let(:page) { create(:article_page, html: '<img src="/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png" alt="Tiger">')}
+
+      it do
+        expect(item.render_loop_html(page, html: '#{img.src}')).to eq('/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png')
+      end
+    end
+
+    context 'body parts contains <img>' do
+      let(:body_layout) { create(:cms_body_layout)}
+      let(:page) do
+        create(:article_page, body_layout_id: body_layout.id,
+               body_parts: ['<img src="/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png" alt="Tiger">'])
+      end
+
+      it do
+        expect(item.render_loop_html(page, html: '#{img.src}')).to eq('/fs/1/0/2/_/512px-Ghostscript_Tiger_svg.png')
+      end
+    end
+  end
 end

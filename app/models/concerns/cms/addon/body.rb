@@ -21,19 +21,26 @@ module Cms::Addon
       end
     end
 
-    def template_variable_handler_img_src(name, issuer)
-      dummy_source = ERB::Util.html_escape("/assets/img/dummy.png")
+    private
+      def template_variable_handler_img_src(name, issuer)
+        extract_img_src(html) || default_img_src
+      end
 
-      return dummy_source unless html =~ /\<\s*?img\s+[^>]*\/?>/i
+      def default_img_src
+        ERB::Util.html_escape("/assets/img/dummy.png")
+      end
 
-      img_tag = $&
-      return dummy_source unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
+      def extract_img_src(html)
+        return nil unless html =~ /\<\s*?img\s+[^>]*\/?>/i
 
-      img_source = $1
-      img_source = img_source[1..-1] if img_source.start_with?("'", '"')
-      img_source = img_source[0..-2] if img_source.end_with?("'", '"')
-      img_source = img_source.strip
-      img_source
-    end
+        img_tag = $&
+        return nil unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
+
+        img_source = $1
+        img_source = img_source[1..-1] if img_source.start_with?("'", '"')
+        img_source = img_source[0..-2] if img_source.end_with?("'", '"')
+        img_source = img_source.strip
+        img_source
+      end
   end
 end
