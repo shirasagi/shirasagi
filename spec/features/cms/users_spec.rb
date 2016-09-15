@@ -203,7 +203,7 @@ describe "cms_users", type: :feature, dbscope: :example do
   context "disable user and edit it" do
     let(:user_name) { unique_id }
     let!(:test_user) { create(:cms_test_user, group: group, name: user_name) }
-    let(:account_expiration_date) { Time.zone.at((Time.zone.now - 1.day).to_date.to_i) }
+    let(:account_expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
     let(:kana) { unique_id }
 
     before do
@@ -243,7 +243,7 @@ describe "cms_users", type: :feature, dbscope: :example do
   end
 
   context "edit user joined only disabled group" do
-    let(:expiration_date) { Time.zone.at((Time.zone.now - 1.day).to_date.to_i) }
+    let(:expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
     let!(:group1) { create(:cms_group, name: "#{group.name}/#{unique_id}", order: 100, expiration_date: expiration_date) }
     let(:user_name) { unique_id }
     let!(:test_user) { create(:cms_test_user, group: group1, name: user_name) }
@@ -272,7 +272,7 @@ describe "cms_users", type: :feature, dbscope: :example do
   end
 
   context "when user joined only disabled group is logged-in" do
-    let(:expiration_date) { Time.zone.at((Time.zone.now - 1.day).to_date.to_i) }
+    let(:expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
     let!(:group1) { create(:cms_group, name: "#{group.name}/#{unique_id}", order: 100, expiration_date: expiration_date) }
     let!(:test_user) { create(:cms_test_user, group: group1, name: unique_id) }
 
@@ -294,7 +294,7 @@ describe "cms_users", type: :feature, dbscope: :example do
   end
 
   context "when disalbed user is logged-in" do
-    let(:account_expiration_date) { Time.zone.at((Time.zone.now - 1.day).to_date.to_i) }
+    let(:account_expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
     let!(:test_user) { create(:cms_test_user, group: group, name: unique_id, account_expiration_date: account_expiration_date) }
 
     it do

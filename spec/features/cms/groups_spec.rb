@@ -101,7 +101,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
   context "disable group and edit it" do
     let(:group_name) { unique_id }
     let!(:group) { create(:cms_group, name: "#{cms_group.name}/#{group_name}", order: 100) }
-    let(:expiration_date) { Time.zone.at((Time.zone.now - 1.day).to_date.to_i) }
+    let(:expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
     let(:contact_tel) { unique_id }
 
     before do

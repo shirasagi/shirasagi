@@ -43,9 +43,9 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
       click_on "確認画面へ"
 
       expect(page).to have_css("dd", text: page1.name)
-      expect(page).to have_css("label", text: contents_column.name)
-      expect(page).to have_css("label", text: findable_column.name)
-      expect(page).to have_css("label", text: comment_column.name)
+      expect(page).to have_css("dt", text: contents_column.name)
+      expect(page).to have_css("dt", text: findable_column.name)
+      expect(page).to have_css("dt", text: comment_column.name)
       expect(page).to have_css("dd", text: contents_value)
       expect(page).to have_css("dd", text: findable_value)
       expect(page).to have_css("dd", text: comment_value.split("\n")[0])
@@ -76,9 +76,9 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
       click_on "確認画面へ"
 
       expect(page).to have_css("dd", text: page1.name)
-      expect(page).to have_css("label", text: contents_column.name)
-      expect(page).to have_css("label", text: findable_column.name)
-      expect(page).to have_css("label", text: comment_column.name)
+      expect(page).to have_css("dt", text: contents_column.name)
+      expect(page).to have_css("dt", text: findable_column.name)
+      expect(page).to have_css("dt", text: comment_column.name)
       expect(page).to have_css("dd", text: contents_value)
       expect(page).to have_css("dd", text: findable_value)
       expect(page).to have_css("dd", text: comment_value.split("\n")[0])
@@ -109,9 +109,9 @@ describe "inquiry_agents_parts_feedback", dbscope: :example do
       click_on "確認画面へ"
 
       expect(page).to have_css("dd", text: page1.name)
-      expect(page).to have_css("label", text: contents_column.name)
-      expect(page).to have_css("label", text: findable_column.name)
-      expect(page).to have_css("label", text: comment_column.name)
+      expect(page).to have_css("dt", text: contents_column.name)
+      expect(page).to have_css("dt", text: findable_column.name)
+      expect(page).to have_css("dt", text: comment_column.name)
       expect(page).to have_css("dd", text: contents_value)
       expect(page).to have_css("dd", text: findable_value)
       expect(page).to have_css("dd", text: comment_value.split("\n")[0])
