@@ -146,6 +146,10 @@ module Cms::Model::Node
     nil
   end
 
+  def category_node?
+    %w(category/node category/page opendata/category).include?(route)
+  end
+
   private
     def validate_node_filename
       errors.add :basename, :invalid if filename == "fs"
