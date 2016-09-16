@@ -7,7 +7,9 @@ module KeyVisual::Addon
       field :link_target, type: String
       field :upper_html, type: String
       field :lower_html, type: String
-      permit_params :link_target, :upper_html, :lower_html
+      field :kv_speed, type: Integer
+      field :kv_pause, type: Integer
+      permit_params :link_target, :upper_html, :lower_html, :kv_speed, :kv_pause
     end
 
     def link_target_options

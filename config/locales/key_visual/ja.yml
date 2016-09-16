@@ -37,6 +37,8 @@ ja:
         link_target: リンク表示
         upper_html: 上部HTML
         lower_html: 下部HTML
+        kv_speed: スライド時間
+        kv_pause: 静止時間
       key_visual/image:
         link_url: リンクURL
         file_id: 画像
@@ -58,4 +60,8 @@ ja:
         - リスト部分の上部に任意の内容をHTMLで記述することが可能です。
       lower_html:
         - リスト部分の下部に任意の内容をHTMLで記述することが可能です。
-
+      kv_speed:
+        - 1回あたりのスライドにかかる時間を設定します。既定値は 500 ミリ秒です。
+        - 大きな値を設定すると画像がゆっくりスライドします。
+      kv_pause:
+        - 静止時間を設定します。既定値は 4000 ミリ秒です。

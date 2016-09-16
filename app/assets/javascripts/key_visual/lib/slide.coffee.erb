@@ -2,14 +2,15 @@
 //= require_self
 
 class @KeyVisual_Image
-  @slide: (selector) ->
-    slider = $("#{selector} .images").bxSlider
+  @slide: (selector, opts = {}) ->
+    defaultOpts =
       auto: true
       autoControls: true
       startText: "<%= I18n.t 'key_visual.controls.start' %>"
       stopText: "<%= I18n.t 'key_visual.controls.stop' %>"
       controls: false
       pagerCustom: "#{selector} .bx-thumbs"
+    slider = $("#{selector} .images").bxSlider($.extend(defaultOpts, opts))
 
   @randomize: (selector) ->
     wrap = $(selector)

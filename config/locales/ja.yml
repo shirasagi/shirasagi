@@ -97,6 +97,7 @@ ja:
       month: 月
       second: 秒
       year: 年
+      milli_second: ミリ秒
   errors: &errors
     format: ! '%{attribute}%{message}'
     messages:
