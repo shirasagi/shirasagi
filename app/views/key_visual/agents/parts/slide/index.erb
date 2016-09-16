@@ -3,10 +3,12 @@
 return if @items.blank?
 wrap_id = "key_visual-images-#{@items[0].id}"
 target  = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") : nil
-
+opts = {}
+opts['speed'] = @cur_part.kv_speed if @cur_part.kv_speed.present?
+opts['pause'] = @cur_part.kv_pause if @cur_part.kv_pause.present?
 %>
 <%= jquery do %>
-  KeyVisual_Image.slide("#<%= wrap_id %>");
+  KeyVisual_Image.slide("#<%= wrap_id %>", <%== opts.to_json %>);
 <% end %>
 
 <div class="key_visual-slide" id="<%= wrap_id %>">

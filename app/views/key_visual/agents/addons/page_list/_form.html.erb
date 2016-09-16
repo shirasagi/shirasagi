@@ -9,4 +9,10 @@
 
   <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
   <dd><%= f.text_area :lower_html, class: :html %></dd>
+
+  <dt><%= @model.t :kv_speed %><%= @model.tt :kv_speed %></dt>
+  <dd><%= f.number_field :kv_speed %><%= I18n.t("datetime.prompts.milli_second") %></dd>
+
+  <dt><%= @model.t :kv_pause %><%= @model.tt :kv_pause %></dt>
+  <dd><%= f.number_field :kv_pause %><%= I18n.t("datetime.prompts.milli_second") %></dd>
 </dl>
