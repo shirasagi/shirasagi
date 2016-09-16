@@ -136,8 +136,15 @@ module Cms::PublicFilter::Layout
     def javascript_configs
       if @javascript_config.nil?
         @javascript_config = {}
-        @javascript_config.merge!(Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?))
-        @javascript_config.merge!(Recommend::History::Log.to_config(site: @cur_site, path: @cur_path, preview_path: preview_path?))
+
+        conf = Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?)
+        @javascript_config.merge!(conf)
+
+        conf = Recommend::History::Log.to_config(
+          site: @cur_site, item: (@cur_page || @cur_node || @cur_part), path: @cur_path,
+          preview_path: preview_path?
+          )
+        @javascript_config.merge!(conf)
       end
       @javascript_config
     end

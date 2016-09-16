@@ -1,0 +1,13 @@
+# recommend
+
+production: &production
+  disable_recommendify: true
+  redis:
+    host: "localhost"
+    port: 6379
+
+test:
+  <<: *production
+
+development:
+  <<: *production

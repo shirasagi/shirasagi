@@ -6,14 +6,22 @@ class Recommend::History::ReceiverController < ApplicationController
     def index
       token = cookies["_ss_recommend"]
       path = params[:path]
-      url = params[:url]
+      access_url = params[:access_url]
+      target_id = params[:target_id]
+      target_class = params[:target_class]
+      remote_addr = request.env["HTTP_X_REAL_IP"] || request.remote_ip
+      user_agent = request.user_agent
 
       if token && !Recommend::History::Log.site(@cur_site).where(token: token).first
         token = nil
       end
 
-      url = params[:url]
-      log = Recommend::History::Log.new(path: path, url: url, token: token, site: @cur_site)
+      log = Recommend::History::Log.new(
+        token: token, site: @cur_site,
+        path: path, access_url: access_url,
+        target_id: target_id, target_class: target_class,
+        remote_addr: remote_addr, user_agent: user_agent,
+      )
       log.save
 
       cookies.permanent["_ss_recommend"] = log.token

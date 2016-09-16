@@ -353,6 +353,9 @@ GEM
       rdf (~> 1.1)
     rdoc (4.2.2)
       json (~> 1.4)
+    recommendify (0.3.8)
+      redis (>= 2.2.2)
+    redis (3.3.1)
     ref (2.0.0)
     rmagick (2.15.4)
     romaji (0.2.3)
@@ -552,6 +555,8 @@ DEPENDENCIES
   rails_autolink
   rdf-rdfxml
   rdf-turtle
+  recommendify
+  redis
   rmagick
   romaji
   rspec

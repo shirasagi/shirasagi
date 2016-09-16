@@ -69,6 +69,10 @@ gem 'ruby-saml'
 # JWT/JWS
 gem 'json-jwt'
 
+# recommendify
+gem 'redis'
+gem 'recommendify'
+
 # SPARQL/RDF
 gem 'sparql'
 gem 'sparql-client'

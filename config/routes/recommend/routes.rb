@@ -16,6 +16,7 @@ SS::Application.routes.draw do
 
   part "recommend" do
     get "history" => "public#index", cell: "parts/history"
+    get "recommend" => "public#index", cell: "parts/recommend"
   end
 
 end
