@@ -1,9 +1,15 @@
 require 'spec_helper'
 
 describe Facility::ImportJob, dbscope: :example do
-  let!(:sub_site_1) { create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id]) }
-  let!(:sub_site_2) { create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id]) }
-  let!(:sub_site_3) { create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id]) }
+  let!(:sub_site_1) do
+    create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id])
+  end
+  let!(:sub_site_2) do
+    create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id])
+  end
+  let!(:sub_site_3) do
+    create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id])
+  end
   let!(:site) { create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"], group_ids: [group.id]) }
   let!(:layout) { create(:cms_layout, name: "施設レイアウト") }
   let!(:group) { create(:cms_group, name: "地図管理係") }
@@ -30,8 +36,7 @@ describe Facility::ImportJob, dbscope: :example do
       filename: "facilities",
       st_category_ids: [node_category_1.id, node_category_2.id, node_category_3.id],
       st_location_ids: [node_location_1.id, node_location_2.id, node_location_3.id],
-      st_service_ids: [node_service_1.id, node_service_2.id, node_service_3.id]
-      )
+      st_service_ids: [node_service_1.id, node_service_2.id, node_service_3.id])
   end
 
   let!(:file_path) { "#{::Rails.root}/spec/fixtures/facility/import_job/facility_node_pages.csv" }

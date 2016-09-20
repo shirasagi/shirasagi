@@ -177,8 +177,11 @@ describe "cms_users", type: :feature, dbscope: :example do
     let(:site2) { create(:cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp") }
     let(:role) { create(:cms_role, cur_site: site, name: '管理者1', permissions: Cms::Role.permission_names) }
     let(:role2) { create(:cms_role, cur_site: site2, name: '管理者2', permissions: Cms::Role.permission_names) }
-    let(:header) { "id,name,email,password,uid,ldap_dn,groups,cms_roles" }
-    let(:values) { "#{item.id},#{item.name},#{item.email},,#{item.uid},#{item.ldap_dn},#{item.groups.first.name},管理者1\n" }
+    let(:header) do
+      %w(
+        id name kana uid email password tel tel_ext account_start_date account_expiration_date
+        initial_password_warning groups ldap_dn cms_roles).join(",")
+    end
 
     before do
       item.cms_role_ids = [ role.id, role2.id ]
@@ -193,7 +196,120 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       csv = page.html.encode("UTF-8")
       expect(csv).to include(header)
-      expect(csv).to include(values)
+      expect(csv.split("\n").length).to eq 3
+    end
+  end
+
+  context "disable user and edit it" do
+    let(:user_name) { unique_id }
+    let!(:test_user) { create(:cms_test_user, group: group, name: user_name) }
+    let(:account_expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
+    let(:kana) { unique_id }
+
+    before do
+      login_cms_user
+    end
+
+    it do
+      visit index_path
+      expect(page).to have_css(".list-item .title", text: user_name)
+
+      click_on user_name
+      click_on I18n.t("views.links.edit")
+
+      fill_in "item[account_expiration_date]", with: account_expiration_date.strftime("%Y/%m/%d %H:%M")
+      click_on I18n.t("views.button.save")
+
+      test_user.reload
+      expect(test_user.account_expiration_date).to eq account_expiration_date
+
+      visit index_path
+      expect(page).not_to have_css(".list-item .title", text: user_name)
+
+      select I18n.t("views.options.state.all"), from: "s[state]"
+      click_on I18n.t('views.button.search')
+
+      expect(page).to have_css(".list-item .title", text: user_name)
+
+      click_on user_name
+      click_on I18n.t("views.links.edit")
+
+      fill_in "item[kana]", with: kana
+      click_on I18n.t("views.button.save")
+
+      test_user.reload
+      expect(test_user.kana).to eq kana
+    end
+  end
+
+  context "edit user joined only disabled group" do
+    let(:expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
+    let!(:group1) { create(:cms_group, name: "#{group.name}/#{unique_id}", order: 100, expiration_date: expiration_date) }
+    let(:user_name) { unique_id }
+    let!(:test_user) { create(:cms_test_user, group: group1, name: user_name) }
+    let(:kana) { unique_id }
+
+    before do
+      login_cms_user
+    end
+
+    it do
+      expect(group1.active?).to be_falsey
+
+      visit index_path
+      expect(page).to have_css(".list-item .title", text: user_name)
+
+      click_on user_name
+      expect(page).to have_css("#addon-basic dd", text: group1.name)
+      click_on I18n.t("views.links.edit")
+
+      fill_in "item[kana]", with: kana
+      click_on I18n.t("views.button.save")
+
+      test_user.reload
+      expect(test_user.kana).to eq kana
+    end
+  end
+
+  context "when user joined only disabled group is logged-in" do
+    let(:expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
+    let!(:group1) { create(:cms_group, name: "#{group.name}/#{unique_id}", order: 100, expiration_date: expiration_date) }
+    let!(:test_user) { create(:cms_test_user, group: group1, name: unique_id) }
+
+    before do
+      site = cms_site
+      site.add_to_set(group_ids: [group1.id])
+
+      login_user test_user
+    end
+
+    it do
+      visit sns_mypage_path
+      expect(status_code).to eq 200
+      expect(page).not_to have_css(".mypage-sites .title", text: cms_site.name)
+
+      visit cms_contents_path(site)
+      expect(status_code).to eq 403
+    end
+  end
+
+  context "when disalbed user is logged-in" do
+    let(:account_expiration_date) { Time.zone.now.days_ago(1).beginning_of_day }
+    let!(:test_user) { create(:cms_test_user, group: group, name: unique_id, account_expiration_date: account_expiration_date) }
+
+    it do
+      login_user test_user
+      expect(status_code).to eq 200
+      expect(current_path).to eq sns_login_path
+      expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
+
+      visit sns_mypage_path
+      expect(status_code).to eq 200
+      expect(current_path).to eq sns_login_path
+
+      visit cms_contents_path(site)
+      expect(status_code).to eq 200
+      expect(current_path).to eq sns_login_path
     end
   end
 end

@@ -17,16 +17,34 @@ describe Category::Addon::Integration, dbscope: :example do
     # mater contents
     let!(:master_node) { create :category_node_node, site: site, user: user, filename: "master", name: "master" }
 
-    let!(:master_child_node_A) { create :category_node_node, site: site, user: user, filename: "master/A", name: "master-A" }
-    let!(:master_child_node_B) { create :category_node_page, site: site, user: user, filename: "master/B", name: "master-B" }
-    let!(:master_child_node_C) { create :article_node_page, site: site, user: user, filename: "master/A/C", name: "master-A-C", category_ids: [master_node.id] }
+    let!(:master_child_node_A) do
+      create :category_node_node, site: site, user: user, filename: "master/A", name: "master-A"
+    end
+    let!(:master_child_node_B) do
+      create :category_node_page, site: site, user: user, filename: "master/B", name: "master-B"
+    end
+    let!(:master_child_node_C) do
+      create :article_node_page, site: site, user: user, filename: "master/A/C", name: "master-A-C",
+             category_ids: [master_node.id]
+    end
 
-    let!(:master_child_page_A) { create :cms_page, site: site, user: user, filename: "master/index.html", name: "master-index" }
-    let!(:master_child_page_B) { create :article_page, site: site, user: user, filename: "master/page.html", name: "master-page" }
-    let!(:master_child_page_C) { create :article_page, site: site, user: user, filename: "master/A/page.html", name: "master-page", category_ids: [master_node.id] }
+    let!(:master_child_page_A) do
+      create :cms_page, site: site, user: user, filename: "master/index.html", name: "master-index"
+    end
+    let!(:master_child_page_B) do
+      create :article_page, site: site, user: user, filename: "master/page.html", name: "master-page"
+    end
+    let!(:master_child_page_C) do
+      create :article_page, site: site, user: user, filename: "master/A/page.html", name: "master-page",
+             category_ids: [master_node.id]
+    end
 
-    let!(:master_child_part_A) { create :cms_part, site: site, user: user, filename: "master/recent.part.html", name: "master-recent" }
-    let!(:master_child_layout_A) { create :cms_layout, site: site, user: user, filename: "master/top.layout.html", name: "master-top" }
+    let!(:master_child_part_A) do
+      create :cms_part, site: site, user: user, filename: "master/recent.part.html", name: "master-recent"
+    end
+    let!(:master_child_layout_A) do
+      create :cms_layout, site: site, user: user, filename: "master/top.layout.html", name: "master-top"
+    end
 
     let!(:expected_integrated_nodes) do
       [
@@ -75,16 +93,34 @@ describe Category::Addon::Integration, dbscope: :example do
     # mater contents
     let!(:master_node) { create :category_node_node, site: site, user: user, filename: "integration/master", name: "master" }
 
-    let!(:master_child_node_A) { create :category_node_node, site: site, user: user, filename: "integration/master/A", name: "master-A" }
-    let!(:master_child_node_B) { create :category_node_page, site: site, user: user, filename: "integration/master/B", name: "master-B" }
-    let!(:master_child_node_C) { create :article_node_page, site: site, user: user, filename: "integration/master/A/C", name: "master-A-C", category_ids: [master_node.id] }
+    let!(:master_child_node_A) do
+      create :category_node_node, site: site, user: user, filename: "integration/master/A", name: "master-A"
+    end
+    let!(:master_child_node_B) do
+      create :category_node_page, site: site, user: user, filename: "integration/master/B", name: "master-B"
+    end
+    let!(:master_child_node_C) do
+      create :article_node_page, site: site, user: user, filename: "integration/master/A/C", name: "master-A-C",
+             category_ids: [master_node.id]
+    end
 
-    let!(:master_child_page_A) { create :cms_page, site: site, user: user, filename: "integration/master/index.html", name: "master-index" }
-    let!(:master_child_page_B) { create :article_page, site: site, user: user, filename: "integration/master/page.html", name: "master-page" }
-    let!(:master_child_page_C) { create :article_page, site: site, user: user, filename: "integration/master/A/page.html", name: "master-page", category_ids: [master_node.id] }
+    let!(:master_child_page_A) do
+      create :cms_page, site: site, user: user, filename: "integration/master/index.html", name: "master-index"
+    end
+    let!(:master_child_page_B) do
+      create :article_page, site: site, user: user, filename: "integration/master/page.html", name: "master-page"
+    end
+    let!(:master_child_page_C) do
+      create :article_page, site: site, user: user, filename: "integration/master/A/page.html", name: "master-page",
+             category_ids: [master_node.id]
+    end
 
-    let!(:master_child_part_A) { create :cms_part, site: site, user: user, filename: "integration/master/recent.part.html", name: "master-recent" }
-    let!(:master_child_layout_A) { create :cms_layout, site: site, user: user, filename: "integration/master/top.layout.html", name: "master-top" }
+    let!(:master_child_part_A) do
+      create :cms_part, site: site, user: user, filename: "integration/master/recent.part.html", name: "master-recent"
+    end
+    let!(:master_child_layout_A) do
+      create :cms_layout, site: site, user: user, filename: "integration/master/top.layout.html", name: "master-top"
+    end
 
     let!(:expected_integrated_nodes) do
       [

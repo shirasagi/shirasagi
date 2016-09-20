@@ -13,18 +13,26 @@ module Cms::Addon::Import
     module ClassMethods
       def to_csv(opts = {})
         CSV.generate do |data|
-          data << %w(id name email password uid ldap_dn groups cms_roles)
+          data << %w(
+            id name kana uid email password tel tel_ext account_start_date account_expiration_date
+            initial_password_warning groups ldap_dn cms_roles)
           criteria.each do |item|
             roles = item.cms_roles
             roles = roles.site(opts[:site]) if opts[:site]
             line = []
             line << item.id
             line << item.name
+            line << item.kana
+            line << item.uid
             line << item.email
             line << nil
-            line << item.uid
-            line << item.ldap_dn
+            line << item.tel
+            line << item.tel_ext
+            line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
+            line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
+            line << item.initial_password_warning
             line << item.groups.map(&:name).join("\n")
+            line << item.ldap_dn
             line << roles.map(&:name).join("\n")
             data << line
           end
@@ -51,7 +59,7 @@ module Cms::Addon::Import
         fname = in_file.original_filename
         return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
         begin
-          table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+          CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
           in_file.rewind
         rescue => e
           errors.add :in_file, :invalid_file_type
@@ -59,20 +67,11 @@ module Cms::Addon::Import
       end
 
       def update_row(row, index)
-        id        = row["id"].to_s.strip
-        email     = row["email"].to_s.strip
-        name      = row["name"].to_s.strip
-        uid       = row["uid"].to_s.strip
-        ldap_dn   = row["ldap_dn"].to_s.strip
-        groups    = row["groups"].to_s.strip.split(/\n/)
-        cms_roles = row["cms_roles"].to_s.strip.split(/\n/)
-        password  = row["password"].to_s.strip
-
+        id = row["id"].to_s.strip
         if id.present?
-          item = self.class.where(id: id).first
+          item = self.class.unscoped.where(id: id).first
           if item.blank?
-            e = I18n.t("errors.messages.not_exist")
-            self.errors.add :base, "#{index}: #{t(:id)}#{e}"
+            self.errors.add :base, :not_found, line_no: index, id: id
             return nil
           end
 
@@ -85,12 +84,16 @@ module Cms::Addon::Import
           item = self.class.new
         end
 
-        item.email = email
-        item.name = name
-        item.uid = uid
-        item.ldap_dn = ldap_dn
+        %w(
+          name kana uid email tel tel_ext account_start_date account_expiration_date initial_password_warning
+          ldap_dn).each do |k|
+          item[k] = row[k].to_s.strip
+        end
+        password = row["password"].to_s.strip
         item.in_password = password if password.present?
+        groups = row["groups"].to_s.strip.split(/\n/)
         item.group_ids = SS::Group.in(name: groups).map(&:id)
+        cms_roles = row["cms_roles"].to_s.strip.split(/\n/)
         add_cms_roles(item, cms_roles)
         if item.save
           @imported += 1

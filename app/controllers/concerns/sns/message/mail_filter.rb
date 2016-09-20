@@ -9,10 +9,12 @@ module Sns::Message::MailFilter
       thread.other_active_members(@cur_user).each do |user|
         next if user.email.blank?
 
+        subject = "[#{SS.config.ss.application_name}] "
+        subject << I18n.t("sns/message.mail_templates.notification.subject", user: @cur_user.name)
         send_params = {
           from: "shirasagi@#{request.domain}",
           to: user.email,
-          subject: "[#{SS.config.ss.application_name}] " + I18n.t("sns/message.mail_templates.notification.subject", user: @cur_user.name),
+          subject: subject,
           body: I18n.t("sns/message.mail_templates.notification.text", text: post.text, url: url)
         }
         SS::Mailer.new_message(send_params).deliver_now

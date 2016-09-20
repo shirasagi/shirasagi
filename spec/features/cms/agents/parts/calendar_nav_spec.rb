@@ -18,7 +18,8 @@ describe "cms_agents_parts_calendar_nav", type: :feature, dbscope: :example, js:
       click_on I18n.t("event.current_month")
       click_on "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}"
       expect(status_code).to eq 200
-      expect(page).to have_text "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}"
+      expect(page).to have_text(
+        "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}")
     end
   end
 end

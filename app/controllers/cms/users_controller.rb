@@ -17,15 +17,19 @@ class Cms::UsersController < ApplicationController
     end
 
     def set_item
-      super
-      raise "403" unless Cms::User.site(@cur_site).include?(@item)
+      @item = @model.unscoped.site(@cur_site, state: 'all').find params[:id]
+      @item.attributes = fix_params
+      raise "403" unless @model.unscoped.site(@cur_site, state: 'all').include?(@item)
+    rescue Mongoid::Errors::DocumentNotFound => e
+      return render_destroy(true) if params[:action] == 'destroy'
+      raise e
     end
 
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-      @items = @model.site(@cur_site).
+      @items = @model.unscoped.site(@cur_site, state: 'all').
         state(params.dig(:s, :state)).
         allow(:read, @cur_user, site: @cur_site).
         search(params[:s]).
@@ -56,7 +60,7 @@ class Cms::UsersController < ApplicationController
     end
 
     def download
-      csv = @model.site(@cur_site).order_by(_id: 1).to_csv(site: @cur_site)
+      csv = @model.unscoped.site(@cur_site, state: 'all').order_by(_id: 1).to_csv(site: @cur_site)
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_users_#{Time.zone.now.to_i}.csv"
     end
 

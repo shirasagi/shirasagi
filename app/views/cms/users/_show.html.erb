@@ -35,6 +35,7 @@
   <dd><%= @item.label :initial_password_warning %></dd>
   <% end %>
 
+  <% group_ids = Cms::Group.unscoped.site(@cur_site).pluck(:id) %>
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%= br @item.groups.order_by(name: 1).select{ |c| Cms::Group.site(@cur_site).pluck(:id).include?(c.id) }.map{|c| c.name}.join("\n") %></dd>
+  <dd><%= br @item.groups.order_by(name: 1).select{ |c| group_ids.include?(c.id) }.map{|c| c.name}.join("\n") %></dd>
 </dl>

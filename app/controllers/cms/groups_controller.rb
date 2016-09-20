@@ -16,8 +16,12 @@ class Cms::GroupsController < ApplicationController
     end
 
     def set_item
-      super
-      raise "403" unless Cms::Group.site(@cur_site).include?(@item)
+      @item = @model.unscoped.site(@cur_site).find params[:id]
+      @item.attributes = fix_params
+      raise "403" unless @model.unscoped.site(@cur_site).include?(@item)
+    rescue Mongoid::Errors::DocumentNotFound => e
+      return render_destroy(true) if params[:action] == 'destroy'
+      raise e
     end
 
   public
@@ -67,7 +71,7 @@ class Cms::GroupsController < ApplicationController
     end
 
     def download
-      csv = @model.site(@cur_site).order_by(_id: 1).to_csv
+      csv = @model.unscoped.site(@cur_site).order_by(_id: 1).to_csv
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "cms_groups_#{Time.zone.now.to_i}.csv"
     end
 
