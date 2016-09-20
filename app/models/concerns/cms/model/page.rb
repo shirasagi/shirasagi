@@ -146,6 +146,17 @@ module Cms::Model::Page
         html << "</span>"
         html
       end
+
+      p = self.parent
+      if p.try(:category_node?)
+        ret << begin
+          html = "<span class=\"#{p.filename.tr('/', '-')}\">"
+          html << "<a href=\"#{p.url}\">#{ERB::Util.html_escape(p.name)}</a>"
+          html << "</span>"
+          html
+        end
+      end
+
       ret.join("\n").html_safe
     end
 end
