@@ -553,15 +553,13 @@ class @SS_Recommend
     return unless recommend
 
     receiver_url = recommend["receiver_url"]
-    path = recommend["path"]
-    return unless receiver_url
+    params = recommend["params"]
+    return unless (receiver_url && params)
 
-    path = encodeURIComponent(path)
-    url = encodeURIComponent(location.href)
-    receiver_url = receiver_url + "?" + "path=" + path + "&" + "url=" + url
-
+    params["access_url"] = location.href
     $.ajax {
       type: 'GET', url: receiver_url, cache: false, dataType: 'json',
+      data: params,
       error: (req, status, error) ->
         #
     }

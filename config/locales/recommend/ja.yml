@@ -2,6 +2,7 @@ ja:
   cms:
     parts:
       recommend/history: 閲覧履歴
+      recommend/recommend: 関連ページ
 
   modules:
     recommend: レコメンド
