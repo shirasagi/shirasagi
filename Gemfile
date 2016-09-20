@@ -71,7 +71,7 @@ gem 'json-jwt'
 
 # recommendify
 gem 'redis'
-gem 'recommendify'
+gem 'recommendify', git: "git://github.com/paulasmuth/recommendify.git"
 
 # SPARQL/RDF
 gem 'sparql'
