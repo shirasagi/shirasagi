@@ -44,6 +44,7 @@ $ ->
     <select class="workflow-multi-select" multiple="multiple" name="multiselect">
       <% users.each do |user| %>
         <% next unless @item.allowed?(:approve, user, site: @cur_site) %>
+        <% next unless user.enabled? %>
         <option value="1,<%= user._id %>,pending," <%= 'selected="selected"' if userids.index(user._id) %>>
           <%= "#{user.long_name}" %></option>
       <% end %>
