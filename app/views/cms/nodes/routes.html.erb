@@ -1,6 +1,6 @@
 <article class="routes-view">
   <% @items.each do |mod_name, mod| %>
-  <article>
+  <article class="mod-<%= mod_name %>">
     <h1><%= mod[:name] %></h1>
     <div>
       <% mod[:items].each do |name, path| %>
