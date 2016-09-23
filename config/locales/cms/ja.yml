@@ -352,6 +352,7 @@ ja:
       cms/page:
         html: 本文
       cms/reference/layout:
+        layout: レイアウト
         layout_id: レイアウト
         body_layout_id: 本文レイアウト
       cms/reference/page_layout:
@@ -401,9 +402,11 @@ ja:
         cms_role_ids: ロール
       cms/addon/permission:
         group_ids: 管理グループ
+        groups: 管理グループ
         permission_level: 権限レベル
       cms/addon/group_permission:
         group_ids: 管理グループ
+        groups: 管理グループ
         permission_level: 権限レベル
       cms/addon/list/model:
         conditions: 検索条件(URL)
@@ -417,6 +420,7 @@ ja:
       cms/addon/thumb:
         thumb_id: サムネイル画像
       cms/addon/parent_crumb:
+        parent_crumb: パンくず
         parent_crumb_urls: 親フォルダー
       cms/addon/additional_info:
         field: 項目
