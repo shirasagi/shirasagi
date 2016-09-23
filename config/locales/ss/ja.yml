@@ -12,6 +12,7 @@ ja:
     image: 画像
     resize_image: 画像リサイズ
     import: インポート
+    import_log: インポートログ
     login: ログイン
     logout: ログアウト
     module: モジュール
@@ -64,6 +65,7 @@ ja:
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。
+      import: インポートを開始してよろしいですか？
     links:
       cms: サイト管理
       gws: グループ
@@ -99,6 +101,7 @@ ja:
     notice:
       saved: 保存しました。
       deleted: 削除しました。
+      import: インポートを開始しました。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。

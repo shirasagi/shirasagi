@@ -13,10 +13,6 @@ describe Faq::Page::ImportJob, dbscope: :example do
   let!(:file_path) { "#{::Rails.root}/spec/fixtures/faq/import_job/faq_pages.csv" }
   let!(:in_file) { Fs::UploadedFile.create_from_file(file_path) }
   let!(:ss_file) { create(:ss_file, site: site, in_file: in_file ) }
-  let!(:expected_table) do
-    table = CSV.read( "#{::Rails.root}/spec/fixtures/faq/import_job/faq_pages.csv", encoding: 'SJIS:UTF-8')
-    table.map { |row| row.map{ |v| v ? v.split("\n") : v }.flatten.compact }
-  end
 
   describe ".perform_later" do
     context "with site" do

@@ -18,6 +18,7 @@ class Event::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Event::Addon::Csv::Page
 
   set_permission_name "event_pages"
 

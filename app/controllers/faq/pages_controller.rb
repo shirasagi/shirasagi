@@ -27,7 +27,7 @@ class Faq::PagesController < ApplicationController
       begin
         file = params[:item].try(:[], :file)
         if file.nil? || ::File.extname(file.original_filename) != ".csv"
-          raise I18n.t("ss.import.invalid_csv_file")
+          raise I18n.t("errors.messages.invalid_csv")
         end
         CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
 
@@ -39,7 +39,7 @@ class Faq::PagesController < ApplicationController
 
         # call job
         Faq::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
-        flash.now[:notice] = I18n.t("ss.import.start")
+        flash.now[:notice] = I18n.t("views.notice.import")
       rescue => e
         @item.errors.add :base, e.to_s
       end
