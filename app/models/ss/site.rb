@@ -5,4 +5,5 @@ class SS::Site
   include SS::Addon::KanaSetting
   include SS::Addon::FacebookSetting
   include SS::Addon::TwitterSetting
+  include SS::Addon::FileSetting
 end

@@ -217,6 +217,7 @@ ja:
       ss/body: 本文
       ss/markdown: 内容
       ss/mobile_setting: モバイル設定
+      ss/file_setting: ファイル設定
       ss/user_group_history: 異動履歴
       ss/map_setting: 地図設定
       ss/kana_setting: かな設定
@@ -345,6 +346,11 @@ ja:
       ss/addon/twitter_setting:
         twitter_card: カード形式
         twitter_username: ユーザー名
+      ss/addon/file_setting:
+        file_resizing: 添付ファイルリサイズ
+        file_resizing_width: 幅
+        file_resizing_height: 高さ
+        file_resizing_label: "%{size}（サイト設定）"
       ss/max_file_size:
         name: 名前
         extensions: 拡張子
@@ -529,3 +535,6 @@ ja:
       twitter_username:
         - Twitter のユーザー名を設定します。
         - 設定すると「Twitter Card Analytics」でアクセスを解析できるようになります。
+    ss/addon/file_setting:
+      file_resizing:
+        - ページの添付ファイル（アップロード）のリサイズにてデフォルトサイズを設定できます。

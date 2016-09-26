@@ -1,0 +1,16 @@
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-ss-file-setting");
+<% end %>
+<dl class="see mod-ss-file-setting">
+  <dt><%= @model.t :file_resizing %><%= @model.tt :file_resizing %></dt>
+  <dd>
+    <label class="width">
+      <%= @item.t :file_resizing_width %>
+      <%= f.number_field :in_file_resizing_width, value: @item.file_resizing[0] %>
+    </label>
+    <label class="height">
+      <%= @item.t :file_resizing_height %>
+      <%= f.number_field :in_file_resizing_height, value: @item.file_resizing[1] %>
+    </label>
+  </dd>
+</dl>
