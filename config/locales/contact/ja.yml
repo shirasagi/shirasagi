@@ -29,6 +29,7 @@ ja:
       cms/model/page: &cmspage
         contact_state: 表示設定
         contact_group_id: 所属
+        contact_group: 所属
         contact_charge: 担当
         contact_tel: 電話番号
         contact_fax: ファックス番号

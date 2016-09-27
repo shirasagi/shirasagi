@@ -14,9 +14,18 @@ SS::Application.routes.draw do
     put :copy, :on => :member
   end
 
+  concern :download do
+    get :download, :on => :collection
+  end
+
+  concern :import do
+    get :import, :on => :collection
+    post :import, :on => :collection
+  end
+
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud]
+    resources :pages, concerns: [:deletion, :crud, :download, :import]
   end
 
   node "event" do

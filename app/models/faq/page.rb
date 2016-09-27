@@ -18,6 +18,7 @@ class Faq::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Faq::Addon::Csv::Page
 
   set_permission_name "faq_pages"
 

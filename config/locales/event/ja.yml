@@ -64,6 +64,10 @@ ja:
     messages:
       too_many_event_dates: の設定日が多すぎます。
 
+  job:
+    models:
+      event/page/import_job: イベントページインポート
+
   tooltip:
     event/addon/date:
       event_name:

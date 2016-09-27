@@ -52,3 +52,7 @@ ja:
       search_node:
         - 検索先のフォルダーを設定します。
         - 未入力の場合は自フォルダーを対象にします。
+
+  job:
+    models:
+      faq/page/import_job: FAQインポート
