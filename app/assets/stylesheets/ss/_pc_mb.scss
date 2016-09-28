@@ -975,6 +975,9 @@ footer.send {
     a {
       @include btn;
     }
+    a.thumb-paste {
+      margin-top: 4px;
+    }
   }
 }
 

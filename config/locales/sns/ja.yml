@@ -8,6 +8,7 @@ ja:
     account: アカウント
     file_attach: 添付貼付
     image_paste: 画像貼付
+    thumb_paste: サムネイル貼付
     errors:
       invalid_login: ログインできませんでした。
 
