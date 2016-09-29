@@ -80,16 +80,19 @@ class Mobile::Converter < String
   def gsub_img!
     self.gsub!(/<img(.*?)\/?>/) do |match|
       src_attr = s_to_attr $1.to_s
-      dst_attr ={}
       ext = File.extname(src_attr["src"].to_s).downcase
+      href = src_attr["src"].presence
+      name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
+      cls = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
 
       if ext =~ /^\.(jpeg|jpg|bmp)$/
-        href = src_attr["src"].presence
-        name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
-        cls  = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
-
-        html  = name
+        html = name
         html += %( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("views.image")}]</a>) if href
+        html
+      elsif href =~ /^\/fs\/.+?\/\_\/[^\/]+?#{ext}/
+        # ss_file thumb
+        src_attr["src"] = href.sub(/\/\_\//, "/_/thumb/")
+        html = %(<img #{attr_to_s(src_attr)}>)
         html
       else
         match
