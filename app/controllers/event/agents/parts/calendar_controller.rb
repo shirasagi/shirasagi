@@ -42,6 +42,9 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     (start_date...close_date).each do |d|
       @dates.push [ d, events(d) ]
     end
+
+    @render_url = @cur_part.url
+    @render_url = cms_preview_path(preview_date: params[:preview_date], path: @cur_part.url.sub(/^\//, "")) if preview_path?
   end
 
   private
