@@ -5,6 +5,7 @@ class @Cms_Form
     Link_Checker.render()
 
     Form_Alert.addValidation(Form_Alert.clonedName)
+    Form_Alert.addValidation(Form_Alert.closeConfirmation)
     Form_Alert.addValidation(Form_Alert.presence)
     Form_Alert.addValidation(Syntax_Checker.validateHtml)
 
@@ -649,7 +650,8 @@ class @Form_Alert
           div.append('<p>' + addon + '</p>')
           ul = $("<ul>").appendTo(div)
           for field, i in fields
-            ul.append('<li>' + field["msg"] + '</li>')
+            if field["msg"]
+              ul.append('<li>' + field["msg"] + '</li>')
 
         # caution: below IE8, you must use document.createElement() method to create <footer>
         footer = $(document.createElement("footer")).addClass('send')
@@ -706,6 +708,14 @@ class @Form_Alert
       addonName = $(name).closest(".addon-view").find("header").text()
       fieldName = Form_Alert.justText($(name).closest("dd").prev("dt"))
       Form_Alert.add addonName, name, "<%= I18n.t('errors.messages.cloned_name') %>"
+
+  @closeConfirmation: (form, submit)->
+    if $(submit).attr("data-close-confirmation")
+      addonName = '<%= I18n.t("cms.confirm.close") %>'
+      msg = null
+      if $(submit).attr("data-contain-links-path")
+        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank">' + '<%= I18n.t("cms.confirm.check_contain_links") %>' + '</a>'
+      Form_Alert.add addonName, null, msg
 
   @add: (addon, ele, msg)->
     Form_Alert.alerts[addon] ||= []
