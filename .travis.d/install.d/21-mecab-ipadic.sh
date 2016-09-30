@@ -7,7 +7,7 @@ fi
 
 echo "wget -O mecab-ipadic-2.7.0-20070801.tar.gz \"https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM\""
 wget wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM"
-if [ $? -ne 0 ]; then
+if [ ! -e mecab-ipadic-2.7.0-20070801.tar.gz ]; then
   exit 2
 fi
 

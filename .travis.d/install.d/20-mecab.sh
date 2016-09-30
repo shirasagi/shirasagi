@@ -7,7 +7,7 @@ fi
 
 echo "wget -O mecab-0.996.tar.gz \"https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE\""
 wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE"
-if [ $? -ne 0 ]; then
+if [ ! -e mecab-0.996.tar.gz ]; then
   exit 1
 fi
 
