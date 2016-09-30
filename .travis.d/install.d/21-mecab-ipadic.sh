@@ -5,8 +5,8 @@ if [ -f $HOME/.local/lib/mecab/dic/ipadic/matrix.bin ]; then
   exit 0
 fi
 
-echo "wget http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz"
-wget http://mecab.googlecode.com/files/mecab-ipadic-2.7.0-20070801.tar.gz
+echo "wget -O mecab-ipadic-2.7.0-20070801.tar.gz \"https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM\""
+wget wget -O mecab-ipadic-2.7.0-20070801.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7MWVlSDBCSXZMTXM"
 if [ $? -ne 0 ]; then
   exit 2
 fi
