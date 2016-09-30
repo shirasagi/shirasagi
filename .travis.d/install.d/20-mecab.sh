@@ -5,14 +5,8 @@ if [ -f $HOME/.local/bin/mecab ]; then
   exit 0
 fi
 
-echo "wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz"
-wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz
-if [ $? -ne 0 ]; then
-  exit 1
-fi
-
 echo "tar xzf mecab-0.996.tar.gz"
-tar xzf mecab-0.996.tar.gz
+tar xzf vendor/mecab/mecab-0.996.tar.gz
 if [ $? -ne 0 ]; then
   exit 1
 fi
