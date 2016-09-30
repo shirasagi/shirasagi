@@ -78,6 +78,7 @@ class @Syntax_Checker
   @errors
   @errorCount
   @autoCorrect = false
+  @config = {}
 
   @reset: ()->
     @errors = {}
@@ -105,6 +106,7 @@ class @Syntax_Checker
     Syntax_Checker.checkInterwordSpace     html
     Syntax_Checker.checkLinkText           html
     Syntax_Checker.checkEmbeddedMedia      html
+    Syntax_Checker.checkReplaceWords       html
 
     $('#errorSyntaxChecker').remove()
 
@@ -195,7 +197,10 @@ class @Syntax_Checker
         if error["correct"] && error["ele"]
           correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct.link') %>" + '</a>')
           correct.on "click", {error: error}, (e)->
-            html = e.data.error["correct"](e.data.error["ele"])
+            if e.data.error["opts"]
+              html = e.data.error["correct"](e.data.error["ele"], e.data.error["opts"])
+            else
+              html = e.data.error["correct"](e.data.error["ele"])
             Cms_Form.setEditorHtml(html)
             $(Cms_Form.addonSelector).find("button.syntax-check").trigger("click")
             return false
@@ -406,6 +411,35 @@ class @Syntax_Checker
         correct: Syntax_Checker.correctKanaCharacter
       }]
       Syntax_Checker.pushError(errors)
+
+  @checkReplaceWords: (html)->
+    words = Syntax_Checker.config["replace_words"]
+    return unless words
+    for k, v of words
+      c = html.match(///#{k}///g)
+      unless $.isEmptyObject(c)
+        errors = [{
+          code: c[0]
+          msg: "「#{k}」→「#{v}」"
+          ele: html
+          correct: Syntax_Checker.correctReplaceWords,
+          opts: { key: k, value: v},
+        }]
+        Syntax_Checker.pushError(errors)
+
+  @correctReplaceWords: (html, opts = {})->
+    key = opts["key"]
+    value = opts["value"]
+
+    return unless key || value
+    ret = $(html)
+    ret.find(":not(iframe)").addBack().contents().filter ->
+      return this.nodeType == 3
+    .each ->
+      text = this.textContent.replace ///#{key}///g, (c)->
+        value
+      this.textContent = text
+    return ret.html()
 
   @correctKanaCharacter: (html)->
     half = "｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ".split("")

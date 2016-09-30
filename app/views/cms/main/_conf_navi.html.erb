@@ -26,7 +26,7 @@
   <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.theme_template", cms_theme_templates_path %></h3>
   <% end %>
-   <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.source_cleaner_template", cms_source_cleaner_templates_path %></h3>
   <% end %>
   <% if Cms::BodyLayout.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -37,6 +37,9 @@
   <% end %>
   <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"cms.postal_code", cms_postal_codes_path %></h3>
+  <% end %>
+  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"cms.word_dictionary", cms_word_dictionaries_path %></h3>
   <% end %>
   <% if SS.config.kana.disable.blank? && Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"kana.dictionary", kana_dictionaries_path %></h3>

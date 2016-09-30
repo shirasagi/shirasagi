@@ -19,6 +19,7 @@ ja:
     body_layout: 本文レイアウト
     link_check: リンクチェック
     source_cleaner: ソースクリーニング
+    word_dictionary: 単語置換辞書
     preview: プレビュー
     member: メンバー
     modules: モジュール
@@ -348,6 +349,7 @@ ja:
       cms/postal_code: 郵便番号
       cms/task: タスク
       cms/import_page: 取り込みページ
+      cms/word_dictionary: かな辞書
     attributes:
       cms/content:
         released: 公開日時
@@ -424,6 +426,9 @@ ja:
         name: タイトル
         notice_severity: 種別
         notice_target: 公開範囲
+      cms/word_dictionary:
+        name: 名前
+        body: 設定
       cms/addon/meta:
         keywords: キーワード
         description: 概要
