@@ -5,9 +5,9 @@ if [ -f $HOME/.local/bin/mecab ]; then
   exit 0
 fi
 
-echo "wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz"
-wget http://mecab.googlecode.com/files/mecab-0.996.tar.gz
-if [ $? -ne 0 ]; then
+echo "wget -O mecab-0.996.tar.gz \"https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE\""
+wget -O mecab-0.996.tar.gz "https://drive.google.com/uc?export=download&id=0B4y35FiV1wh7cENtOXlicTFaRUE"
+if [ ! -e mecab-0.996.tar.gz ]; then
   exit 1
 fi
 
