@@ -54,9 +54,9 @@ module SS::EditorHelper
   def html_editor_options(opts = {})
     case SS.config.cms.html_editor
     when "ckeditor"
-      ckeditor_editor_options(opts = {})
+      ckeditor_editor_options(opts)
     when "tinymce"
-      tinymce_editor_options(opts = {})
+      tinymce_editor_options(opts)
     when "markdown"
       #html_editor_markdown(elem, opts)
     end
