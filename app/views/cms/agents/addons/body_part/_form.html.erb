@@ -1,3 +1,8 @@
+<%
+  editor_opts = html_editor_options(
+    advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site)
+  )
+%>
 <%= jquery do %>
 if ($("#item_body_layout_id").length == 0) {
   $("#addon-cms-agents-addons-body_part").hide();
@@ -32,7 +37,7 @@ var select_body_layout = function() {
       var body_layout = resp;
       var parts = body_layout["parts"];
       var tags = [];
-      var editor_opts = <%= raw html_editor_options.to_json %>;
+      var editor_opts = <%= raw editor_opts.to_json %>;
       var select = $('<select style="margin-bottom: 5px;">');
 
       $.each(parts, function(i){
