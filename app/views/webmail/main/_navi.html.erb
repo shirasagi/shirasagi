@@ -1,0 +1,18 @@
+<nav class="main-navi">
+  <h2><%= link_to t('webmail.box.inbox'), webmail_mails_path %></h2>
+
+  <% if @imap %>
+  <div class="webmail-mailboxes">
+    <% @imap.mailboxes.each do |box| %>
+      <h3>
+        <%= link_to webmail_mails_path(box: box.original_name) do %>
+          <%== "<span class='pad'></span>" * box.depth %>
+          <%= box.basename %>
+        <% end %>
+      </h3>
+    <% end %>
+  </div>
+  <% end %>
+
+  <h2><%= link_to t('webmail.account_setting'), webmail_account_setting_path, class: 'icon-conf' %></h2>
+</nav>

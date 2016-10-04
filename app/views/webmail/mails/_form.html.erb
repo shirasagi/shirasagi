@@ -1,0 +1,12 @@
+<% if params[:action] =~ /new|create/ %>
+<dl class="see">
+  <dt>To</dt>
+  <dd><%= f.text_field :to, required: true %></dd>
+
+  <dt>Subject</dt>
+  <dd><%= f.text_field :subject %></dd>
+
+  <dt>Body</dt>
+  <dd><%= f.text_area :text, required: true %></dd>
+</dl>
+<% end %>

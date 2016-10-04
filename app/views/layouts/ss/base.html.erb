@@ -39,6 +39,10 @@
     </div>
     <% end %>
 
+    <div class="webmail">
+      <h2><%= link_to t('modules.webmail'), webmail_mails_path %></h2>
+    </div>
+
     <% if Rails.env.development? %>
     <div class="env dev">&lt;Development&gt;</div>
     <% end %>

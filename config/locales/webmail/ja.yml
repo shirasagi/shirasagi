@@ -1,0 +1,18 @@
+ja:
+  modules:
+    webmail: ウェブメール
+
+  webmail:
+    mail: メール
+    account_setting: アカウント設定
+    box:
+      inbox: 受信メール
+
+  mongoid:
+    models:
+    attributes:
+      ss/model/user:
+        imap_host: IMAP/ホスト
+        imap_account: IMAP/ユーザーID
+        imap_password: IMAP/パスワード
+        in_imap_password: IMAP/パスワード

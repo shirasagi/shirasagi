@@ -1,0 +1,33 @@
+<dl class="see">
+  <dt>Subject</dt>
+  <dd><%= @item.subject %></dd>
+
+  <dt>Date</dt>
+  <dd><%= @item.date.strftime("%Y/%m/%d %H:%M") %></dd>
+
+  <dt>From</dt>
+  <dd><%= @item.from %></dd>
+
+  <dt>To</dt>
+  <dd><%= @item.to.join('; ') %></dd>
+
+  <% if @item.cc.present? %>
+  <dt>Cc</dt>
+  <dd><%= @item.cc.join('; ') %></dd>
+  <% end %>
+
+  <% if @item.bcc.present? %>
+  <dt>Bcc</dt>
+  <dd><%= @item.bcc.join('; ') %></dd>
+  <% end %>
+
+  <dt>Body</dt>
+  <dd><%= br @item.text %></dd>
+
+  <% if @item.attachments.present? %>
+  <dt>Attachments</dt>
+  <% @item.attachments.each_with_index do |at, idx| %>
+    <dd><%= link_to at.filename, { action: :attachment, idx: idx } %></dd>
+  <% end %>
+  <% end %>
+</dl>

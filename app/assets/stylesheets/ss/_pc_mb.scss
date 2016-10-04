@@ -114,7 +114,7 @@ td {
       text-indent: -9999px;
     }
   }
-  .cms, .gws, .sns {
+  .cms, .gws, .sns, .webmail {
     @include clear;
     float: left;
     @include mb { display: none; }
@@ -162,6 +162,12 @@ td {
     background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
     &.current, &:hover {
       background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
+    }
+  }
+  .webmail h2 a {
+    padding: 15px 20px 15px 20px;
+    &.current, &:hover {
+      background: $white;
     }
   }
   .env {
