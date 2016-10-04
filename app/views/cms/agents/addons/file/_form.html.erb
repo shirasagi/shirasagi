@@ -16,6 +16,12 @@ $ ->
 <dl class="see">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
+
+    <% if @cur_site.file_resizing.present? %>
+      <% opts = { "id" => "file-resizing", "data-label" => @cur_site.t(:file_resizing_label, size: @cur_site.file_resizing.join("x")) } %>
+      <%= hidden_field_tag "file_resizing", @cur_site.file_resizing.join(","), opts %>
+    <% end %>
+
     <span class="upload-menu-new">
       <%= link_to :upload, sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
     </span>

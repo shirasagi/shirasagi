@@ -1,0 +1,10 @@
+<%= render file: "ss/crud/ajax_files/index" %>
+
+<%= jquery do %>
+var resizing = $("#file-resizing").val();
+var label = $("#file-resizing").attr("data-label");
+if (resizing) {
+  var option = $('<option>').val(resizing).text(label).prop('selected', true);
+  $("select.image-size").append(option);
+}
+<% end %>
