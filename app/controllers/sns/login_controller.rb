@@ -18,12 +18,13 @@ class Sns::LoginController < ApplicationController
 
   public
     def login
+      @notices = Cms::Notice.and_public.
+        and_show_login.
+        limit(5)
+
       if !request.post?
         # retrieve parameters from get parameter. this is bookmark support.
         @item = SS::User.new email: params[:email]
-        @notices = Cms::Notice.and_public.
-          and_show_login.
-          limit(5)
         return
       end
 
