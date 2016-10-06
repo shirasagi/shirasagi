@@ -183,6 +183,7 @@ ja:
       count: 件
       mega_byte: MB
       days_after: 日後
+      mobile_size: KB(キロバイト)
 
   ss:
     views:
@@ -345,6 +346,7 @@ ja:
         html: 内容
       ss/addon/mobile_setting:
         mobile_state: 状態
+        mobile_size: １ページの最大サイズ
         mobile_location: ロケーション
         mobile_css: CSS
       ss/addon/map_setting:
@@ -514,6 +516,9 @@ ja:
     ss/addon/mobile_setting:
       mobile_state:
         - モバイルページの有効無効を設定します。
+      mobile_size:
+        - モバイルページの最大サイズを設定します。
+        - 100kbから1000kbが設定できます。
       mobile_location:
         - モバイルページのパスを設定します。
       mobile_css:

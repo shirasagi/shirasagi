@@ -5,11 +5,15 @@ module SS::Addon
 
     included do
       field :mobile_state, type: String
+      field :mobile_size, type: Integer, default: 500 # 500kb
       field :mobile_location, type: String
       field :mobile_css, type: SS::Extensions::Words
-      permit_params :mobile_state, :mobile_location, :mobile_css
+      permit_params :mobile_state, :mobile_size, :mobile_location, :mobile_css
       before_validation :normalize_mobile_location
       validates :mobile_state, inclusion: { in: %w(disabled enabled) }, if: ->{ mobile_state.present? }
+      validates :mobile_size,
+        numericality: { only_integer: true, greater_than_or_equal_to: 100, less_than_or_equal_to: 1000 },
+        if: ->{ mobile_enabled? }
     end
 
     private
@@ -53,5 +57,6 @@ module SS::Addon
       def mobile_state_options
         %w(disabled enabled).map { |m| [ I18n.t("views.options.state.#{m}"), m ] }.to_a
       end
+
   end
 end
