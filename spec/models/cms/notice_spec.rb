@@ -112,4 +112,34 @@ describe Cms::Notice, dbscope: :example do
       end
     end
   end
+
+  describe ".and_show_login" do
+    let(:site) { cms_site }
+    let(:root_group) { cms_group }
+    let(:user0) { create(:cms_user, group: root_group) }
+
+    context "when notice_target is login_view" do
+      before do
+        create(:cms_notice, notice_target: described_class::NOTICE_TARGET_LOGIN_VIEW, group_ids: root_group.id)
+      end
+
+      it { expect(described_class.and_show_login.count).to eq 1 }
+    end
+
+    context "when notice_target is all" do
+      before do
+        create(:cms_notice, notice_target: described_class::NOTICE_TARGET_ALL, group_ids: root_group.id)
+      end
+
+      it { expect(described_class.and_show_login.count).to eq 0 }
+    end
+
+    context "when notice_target is same_group" do
+      before do
+        create(:cms_notice, notice_target: described_class::NOTICE_TARGET_SAME_GROUP, group_ids: root_group.id)
+      end
+
+      it { expect(described_class.and_show_login.count).to eq 0 }
+    end
+  end
 end

@@ -51,3 +51,28 @@
   </ul>
 <% end %>
 </section>
+
+<% if @notices.present? %>
+<section style="width: 50%; position:absolute; top: 70px; left: 400px" class="main-box">
+  <header>
+    <h2><%= t "cms.notice" %></h2>
+    <div class="version"></div>
+  </header>
+  <div>
+    <ul class="list-items">
+      <% @notices.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span><br>
+          <h3><%= item.name %></h3>
+          <div><%= item.html.html_safe %></div>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+  <footer class="send">
+
+  </footer>
+</section>
+<% end %>

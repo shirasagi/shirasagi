@@ -13,8 +13,9 @@ class Cms::Notice
   NOTICE_SEVERITIES = [ NOTICE_SEVERITY_NORMAL, NOTICE_SEVERITY_HIGH ].freeze
 
   NOTICE_TARGET_ALL = "all".freeze
+  NOTICE_TARGET_LOGIN_VIEW = "login_view".freeze
   NOTICE_TARGET_SAME_GROUP = "same_group".freeze
-  NOTICE_TARGETS = [ NOTICE_TARGET_ALL, NOTICE_TARGET_SAME_GROUP ].freeze
+  NOTICE_TARGETS = [ NOTICE_TARGET_ALL, NOTICE_TARGET_LOGIN_VIEW, NOTICE_TARGET_SAME_GROUP ].freeze
 
   seqid :id
   field :state, type: String, default: "public"
@@ -44,7 +45,13 @@ class Cms::Notice
   scope :target_to, ->(user) {
     where("$or" => [
       { notice_target: NOTICE_TARGET_ALL },
+      { notice_target: NOTICE_TARGET_LOGIN_VIEW },
       { "$and" => [ { notice_target: NOTICE_TARGET_SAME_GROUP }, { :group_ids.in => user.group_ids } ] }
+    ])
+  }
+  scope :and_show_login, ->{
+    where("$and" => [
+      { notice_target: NOTICE_TARGET_LOGIN_VIEW }
     ])
   }
   scope :search, ->(params = {}) {
