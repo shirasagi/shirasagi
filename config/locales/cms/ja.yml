@@ -550,6 +550,7 @@ ja:
     messages:
       set_filename: ファイル名を入力してください。
       invalid_filename: ファイル名は不正な値です。
+      too_bigsize: サイズが大き過ぎます。
       set_name: タイトルを入力してください。
       same_filename: 移動先と移動前が同じファイル名です。
       exist_physical_file: 移動先に物理ファイルが既に存在します。
