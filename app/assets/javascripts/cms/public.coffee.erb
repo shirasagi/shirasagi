@@ -2,7 +2,6 @@
 //= require jquery_ujs
 //= require jquery.cookie
 //= require jquery.form
-//= require jquery.colorbox-min.js
 //= require_self
 //= require ss/lib/module
 //= require ss/lib/mobile
@@ -29,7 +28,6 @@ $ ->
   SS_Voice.render()
   SS_Theme.render()
   SS.part = $(".ss-part").length
-  SS.renderAjaxBox()
   if SS.part == 0
     SS_Recommend.render()
   $(".ss-part").each ->
@@ -103,9 +101,6 @@ class @SS
         SS.part = SS.part - 1
         if SS.part == 0
           SS_Recommend.render()
-
-  @renderAjaxBox:() ->
-    $("#main .ajax-box").colorbox()
 
   @ajaxForm:(elem, params = {}) ->
     elem = $(elem)

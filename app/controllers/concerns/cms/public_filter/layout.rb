@@ -116,10 +116,7 @@ module Cms::PublicFilter::Layout
     end
 
     def stylesheets
-      if @stylesheets.nil?
-        stylesheet("/assets/css/colorbox/colorbox.css")
-      end
-      @stylesheets
+      @stylesheets || []
     end
 
     def stylesheet(path)
