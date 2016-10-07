@@ -34,4 +34,8 @@ FactoryGirl.define do
   factory :cms_node_photo_album, class: Cms::Node::PhotoAlbum, traits: [:cms_node] do
     route "cms/photo_album"
   end
+
+  factory :cms_node_group_page, class: Cms::Node::GroupPage, traits: [:cms_node] do
+    route "cms/group_page"
+  end
 end
