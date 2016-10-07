@@ -19,7 +19,7 @@
     <% if @item.image? %>
       <% content = image_tag @item.url, alt: @item.basename %>
       <%= link_to :"sns.image_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
-      <% content = link_to(file.url, alt: file.name, target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
+      <% content = link_to(@item.url, alt: @item.name, target: "_blank") { image_tag(@item.thumb_url, alt: @item.name) } %>
       <%= link_to :"sns.thumb_paste", "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;", :class => "thumb-paste" %>
     <% end %>
   </div>
