@@ -1,26 +1,13 @@
-<%= code_editor ".mod-event-pagelist .html", mode: :html, readonly: true %>
+<%= code_editor ".mod-event-calendarlist .html", mode: :html, readonly: true %>
 
-<dl class="see mod-event-pagelist">
+<dl class="see mod-event-calendarlist">
   <dt><%= @model.t :conditions %></dt>
   <dd><%=br @item.conditions.join("\n") %></dd>
-
-  <dt><%= @model.t :sort %></dt>
-  <dd><%= @item.label :sort %></dd>
-
-  <dt><%= @model.t :limit %></dt>
-  <dd><%= @item.send :limit %></dd>
 
   <dt><%= @model.t :upper_html %></dt>
   <dd>
     <% if @item.upper_html.present? %>
     <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
-    <% end %>
-  </dd>
-
-  <dt><%= @model.t :loop_html %></dt>
-  <dd>
-    <% if @item.loop_html.present? %>
-    <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>
     <% end %>
   </dd>
 

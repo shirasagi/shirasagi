@@ -9,7 +9,7 @@ module Article::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Cms::Addon::PageList
+    include Event::Addon::PageList
     include Category::Addon::Setting
     include Cms::Addon::OpendataSite
     include Cms::Addon::Release
