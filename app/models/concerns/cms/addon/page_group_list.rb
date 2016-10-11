@@ -10,8 +10,9 @@ module Cms::Addon
     end
 
     public
-      def condition_hash
-        { :group_ids.in => condition_groups.map(&:id) }
+      def condition_hash(opts = {})
+        cond = conditions.present? ? super : {}
+        cond.merge :group_ids.in => condition_groups.map(&:id)
       end
 
       def sort_options

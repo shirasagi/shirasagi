@@ -4,6 +4,9 @@
   <dt><%= @model.t :condition_groups %></dt>
   <dd><%=br @item.condition_groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
 
+  <dt><%= @model.t :conditions %></dt>
+  <dd><%=br @item.conditions.join("\n") %></dd>
+
   <dt><%= @model.t :sort %></dt>
   <dd><%= @item.label :sort %></dd>
 

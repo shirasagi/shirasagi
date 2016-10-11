@@ -1062,6 +1062,17 @@ ja:
         - ページをオープンデータとして公開するかどうかを選択します。
         - 「公開」を選択するとオープンデータとして公開されます。
 
+    cms/addon/page_group_list:
+      conditions:
+        - 表示するリストのフォルダー名を記述します。
+        - 設定されていない場合、すべてのフォルダーからページを検索します。
+        - |-
+          改行することで複数のファルダーを指定することが可能です。
+          例：
+          oshirase
+          oshirase/event
+          shisei/jinji
+
   all_content:
     page_id: ページID
     node_id: フォルダーID
