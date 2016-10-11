@@ -1,0 +1,15 @@
+<%= code_editor ".mod-event-calendarlist .html", mode: :html %>
+
+<dl class="see mod-event-calendarlist">
+  <dt><%= @model.t :conditions %></dt>
+  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :upper_html %></dt>
+  <dd><%= f.text_area :upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :lower_html %></dt>
+  <dd><%= f.text_area :lower_html, class: :html %></dd>
+
+  <dt><%= @model.t :new_days %></dt>
+  <dd><%= f.number_field :new_days %> <%= t "datetime.prompts.day" %></dd>
+</dl>

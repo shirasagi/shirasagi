@@ -23,7 +23,7 @@ module Category::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Cms::Addon::PageList
+    include Event::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
