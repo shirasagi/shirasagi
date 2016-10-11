@@ -1,21 +1,28 @@
 require "net/imap"
 class Webmail::Imap
-  def imap
-    @imap
-  end
+  include ActiveModel::Validations
+
+  attr_accessor :imap, :user, :conf
 
   def login(user)
-    @imap = Net::IMAP.new(user.imap_host)
+    self.user = user
+    self.conf = user.imap_settings
+
+    if conf.blank?
+      errors.add :base, "no settings"
+      return false
+    end
 
     begin
-      @imap.authenticate('LOGIN', user.imap_account, user.imap_password)
-      @logged_in = true
-    rescue Net::IMAP::NoResponseError
-      @logged_in = false
+      self.imap = Net::IMAP.new(conf[:host])
+      imap.authenticate('LOGIN', conf[:account], conf[:password])
+    rescue Net::IMAP::NoResponseError => e
+      errors.add :base, e.to_s
+      return @logged_in = false
     end
 
     initialize_criteria
-    @logged_in
+    @logged_in = true
   end
 
   def logged_in?
@@ -25,7 +32,7 @@ class Webmail::Imap
   def mailboxes
     return @mailboxes if @mailboxes
 
-    list = @imap.list('INBOX', '*')
+    list = imap.list('INBOX', '*')
     return [] unless list
     @mailboxes = list.map { |box| Webmail::Mailbox.new(box) }.sort { |a, b| a.basename <=> b.basename }
   end
@@ -74,15 +81,15 @@ class Webmail::Imap
   end
 
   def mails
-    @imap.examine(@mailbox)
+    imap.examine(@mailbox)
     mids = imap.sort(@sort, @criteria, 'UTF-8')
     size = mids.size
 
     items = []
     mids = mids.slice((@page - 1) * @limit, @limit) || []
     mids.each do |mid|
-      msg = @imap.fetch(mid, list_fields)[0]
-      items << Webmail::Mail.new_message(msg, @imap)
+      msg = imap.fetch(mid, list_fields)[0]
+      items << Webmail::Mail.new_message(msg, imap: imap, conf: conf, user_id: user.id)
     end
     items
 
@@ -90,9 +97,9 @@ class Webmail::Imap
   end
 
   def find(uid)
-    @imap.examine(@mailbox)
+    imap.examine(@mailbox)
 
-    msg = @imap.uid_fetch(uid.to_i, find_fields)[0]
-    Webmail::Mail.new_message(msg, @imap)
+    msg = imap.uid_fetch(uid.to_i, find_fields)[0]
+    Webmail::Mail.new_message(msg, imap: imap, conf: conf, user_id: user.id)
   end
 end

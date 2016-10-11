@@ -9,7 +9,6 @@ ja:
       inbox: 受信メール
 
   mongoid:
-    models:
     attributes:
       ss/model/user:
         imap_host: IMAP/ホスト

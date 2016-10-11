@@ -8,6 +8,8 @@ module Webmail::ImapFilter
   private
     def set_imap
       @imap = Webmail::Imap.new
-      redirect_to webmail_account_setting_path unless @imap.login(@cur_user)
+      return if @imap.login(@cur_user)
+
+      redirect_to webmail_account_setting_path
     end
 end

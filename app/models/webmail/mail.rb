@@ -4,7 +4,7 @@ class Webmail::Mail
   include SS::Document
   include SS::Reference::User
 
-  attr_accessor :imap
+  attr_accessor :imap, :conf, :text, :html
 
   field :uid, type: Integer
   field :message_id, type: String
@@ -19,20 +19,17 @@ class Webmail::Mail
   field :reply_to, type: Array
   field :in_reply_to, type: Array
   field :subject, type: String
-  field :text, type: String
-  field :html, type: String
+  #field :text, type: String
+  #field :html, type: String
   field :attachments, type: Array
 
-  permit_params :text, member_ids: []
+  permit_params :text, :html
 
-  default_scope -> {
-    order_by date: -1
-  }
   scope :search, ->(params) {
     criteria = where({})
     return criteria if params.blank?
 
-    #criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
+    criteria = criteria.keyword_in params[:keyword], :subject, :text, :html if params[:keyword].present?
     criteria
   }
 
@@ -64,7 +61,7 @@ class Webmail::Mail
       end
     end
 
-    def new_message(msg, imap)
+    def new_message(msg, attributes = {})
       envelope = msg.attr["ENVELOPE"]
 
       mail = ::Mail.read_from_string msg.attr['RFC822']
@@ -80,8 +77,7 @@ class Webmail::Mail
         text = mail.body.decoded.toutf8
       end
 
-      self.new({
-        imap: imap,
+      item = self.new({
         uid: msg.attr["UID"],
         message_id: envelope.message_id,
         size: msg.attr['RFC822.SIZE'],
@@ -99,6 +95,8 @@ class Webmail::Mail
         html: html,
         attachments: mail.attachments
       })
+      item.attributes = attributes
+      item
     end
 
     def allowed?(action, user, opts = {})
