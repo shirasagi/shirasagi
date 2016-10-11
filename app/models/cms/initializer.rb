@@ -5,6 +5,7 @@ module Cms
     Cms::Node.plugin "cms/import_node"
     Cms::Node.plugin "cms/archive"
     Cms::Node.plugin "cms/photo_album"
+    Cms::Node.plugin "cms/group_page"
     Cms::Part.plugin "cms/free"
     Cms::Part.plugin "cms/node"
     Cms::Part.plugin "cms/page"
