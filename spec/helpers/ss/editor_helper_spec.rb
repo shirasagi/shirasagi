@@ -23,7 +23,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
       subject { helper.ckeditor_editor_options }
 
       it do
-        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
+        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
         expect(subject.delete(:removePlugins)).to eq ''
         expect(subject.delete(:allowedContent)).to eq true
         expect(subject.delete(:height)).to eq '360px'
@@ -41,7 +41,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
 
       it do
         expect(subject.delete(:readOnly)).to eq true
-        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
+        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
         expect(subject.delete(:removePlugins)).to eq 'toolbar'
         expect(subject.delete(:allowedContent)).to eq true
         expect(subject.delete(:height)).to eq '360px'
@@ -58,7 +58,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
       subject { helper.ckeditor_editor_options(public_side: true) }
 
       it do
-        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
+        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
         expect(subject.delete(:removePlugins)).to eq ''
         expect(subject.delete(:allowedContent)).to eq true
         expect(subject.delete(:height)).to eq '360px'
@@ -76,7 +76,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
 
       it do
         expect(subject.delete(:readOnly)).to eq true
-        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
+        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
         expect(subject.delete(:removePlugins)).to eq 'toolbar'
         expect(subject.delete(:allowedContent)).to eq true
         expect(subject.delete(:height)).to eq '400px'
@@ -95,7 +95,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
       it do
         expect(subject.delete(:enterMode)).to eq 2
         expect(subject.delete(:shiftEnterMode)).to eq 1
-        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
+        expect(subject.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
         expect(subject.delete(:removePlugins)).to eq ''
         expect(subject.delete(:allowedContent)).to eq true
         expect(subject.delete(:height)).to eq '360px'
@@ -126,7 +126,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
       subject(:advanced) { helper.ckeditor_editor_options(advanced: Cms::EditorExtension.allowed?(:use, admin, site: site)) }
 
       it "advanced: false" do
-        expect(standard.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
+        expect(standard.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
         expect(standard.delete(:removePlugins)).to eq ''
         expect(standard.delete(:allowedContent)).to eq true
         expect(standard.delete(:height)).to eq '360px'
@@ -139,7 +139,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
       end
 
       it "advanced: true" do
-        expect(advanced.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font'
+        expect(advanced.delete(:extraPlugins)).to eq 'templates,justify,panelbutton,colorbutton,font,youtube'
         expect(advanced.delete(:removePlugins)).to eq ''
         expect(advanced.delete(:allowedContent)).to eq true
         expect(advanced.delete(:height)).to eq '360px'
