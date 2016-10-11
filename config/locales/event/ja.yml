@@ -10,6 +10,7 @@ ja:
     prev_day: 前の日へ
     current_month: 今月
     filter_all: 全て
+    date_range_delimiter: ～
     confirm:
       delete_date: イベント日を削除してよろしいですか？
 

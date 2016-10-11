@@ -51,28 +51,28 @@ module Event::Addon
 
         html = []
         dates = []
-        term = []
+        range = []
         event_dates.each do |d|
-          if term.blank? || term.last.tomorrow == d
-            term << d
+          if range.blank? || range.last.tomorrow == d
+            range << d
           else
-            dates << term
-            term = []
+            dates << range
+            range = []
           end
         end
-        dates << term if term.present?
-        dates.each do |term|
+        dates << range if range.present?
+        dates.each do |range|
           cls = "event-dates"
 
-          if term.size != 1
-            term = [term.first, term.last]
-            cls = "event-dates period"
+          if range.size != 1
+            range = [range.first, range.last]
+            cls = "event-dates range"
           end
 
-          term = term.map do |d|
+          range = range.map do |d|
             "<time datetime=\"#{I18n.l d.to_date, format: :iso}\">#{I18n.l d.to_date, format: format.to_sym}</time>"
-          end.join(" - ")
-          html << "<span class=\"#{cls}\">#{term}</span>"
+          end.join("<span>#{I18n.t "event.date_range_delimiter"}</span>")
+          html << "<span class=\"#{cls}\">#{range}</span>"
         end
         html.join
       end

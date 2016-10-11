@@ -31,7 +31,7 @@ module Event::Addon
       return { released: -1 } if sort.blank?
 
       if sort == /event_dates/
-        { "event_dates.0"=> 1 }
+        { "event_dates.0" => 1 }
       else
         { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
       end
