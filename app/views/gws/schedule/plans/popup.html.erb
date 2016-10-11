@@ -1,3 +1,12 @@
+<%= jquery do %>
+
+$('.popup-attributes .custom-group-name').click(function() {
+  $(this).parent().find('.custom-group-members').slideToggle('fast');
+  return false;
+});
+
+<% end %>
+
 <div class="popup-title"><%= link_to @item.name, { action: :show } %></div>
 <div class="popup-date"><%= term(@item) %></div>
 
@@ -10,11 +19,21 @@
 <% end %>
 
 <div class="popup-attributes">
-  <% members = @item.member_custom_groups.map(&:name) %>
-  <% members += @item.members.order_by_title(@cur_site).map(&:long_name) %>
   <div class="popup-attr popup-members">
     <div class="popup-label"><%= t("modules.addons.gws/member") %></div>
-    <div class="popup-value"><%= members.join(', ') %></div>
+    <div class="popup-value">
+
+      <% @item.member_custom_groups.each do |c| %>
+      <div class="custom-group">
+        <a class="custom-group-name" href="#"><%= c.name %></a><br />
+        <div class="custom-group-members" id="custom-group-<%= c.id %>">
+          <%= c.members.map(&:long_name).join(', ') %>
+        </div>
+      </div>
+      <% end %>
+
+      <%= @item.members.order_by_title(@cur_site).map(&:long_name).join(', ') %>
+    </div>
   </div>
 
   <% if @item.facilities.present? %>
