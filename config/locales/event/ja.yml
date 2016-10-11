@@ -28,6 +28,7 @@ ja:
     event: イベント
     addons:
       event/date: イベント
+      event/calendar_list: リスト表示
       event/page_list: リスト表示
       event/body: イベント情報
 
