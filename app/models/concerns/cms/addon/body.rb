@@ -46,8 +46,10 @@ module Cms::Addon
       end
 
       def check_mobile_html_size
-        if @cur_site.mobile_enabled?
-          if html_size > @cur_site.mobile_size * 1000
+        return true if self.html.blank?
+
+        if self.site.mobile_enabled?
+          if html_size > self.site.mobile_size * 1000
             errors.add(:html, I18n.t("errors.messages.too_bigsize"))
           end
         end
@@ -55,7 +57,7 @@ module Cms::Addon
 
       def html_size
         size = 0
-        size += self[:html].bytesize
+        size += self.html.bytesize
         if self.try(:files)
           size += file_size
         end
@@ -67,7 +69,7 @@ module Cms::Addon
         html_files.each do |file|
           size += file.size
         end
-        if size > @cur_site.mobile_size * 1000
+        if size > self.site.mobile_size * 1000
           errors.add(:files, I18n.t("errors.messages.too_bigsize"))
         end
         size
@@ -75,7 +77,7 @@ module Cms::Addon
 
       def html_files
         in_html_files = []
-        file_id_str = self[:html].scan(%r{src=\"/fs/(.+?)/_/})
+        file_id_str = self.html.scan(%r{src=\"/fs/(.+?)/_/})
         ids = []
 
         file_id_str.each do |src|
