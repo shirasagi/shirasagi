@@ -102,34 +102,6 @@ class @SS
         if SS.part == 0
           SS_Recommend.render()
 
-  @renderAjaxBox:(box = null) ->
-    if box
-      anchorCallback = ()->
-        $("#cboxLoadedContent a").each ->
-          elem = $(this)
-          elem.addClass("cboxElement")
-          if !elem.attr("target") && !elem.data("target")
-            elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
-
-      $(box).find("a").each ->
-        elem = $(this)
-        if !elem.attr("target") && !elem.data("target")
-          elem.colorbox({ fixed: true, width: "90%", height: "90%", onComplete: anchorCallback })
-
-    # default
-    box = $(document)
-
-    # external links
-    box.find("a[href^=http]").each ->
-      $(this).addClass("external")
-
-    # ajax to (color)box
-    box.find(".ajax-box").each ->
-      elem = $(this)
-      return true if elem.hasClass("cboxElement")
-      if !elem.attr("target") && !elem.data("target")
-        elem.colorbox({ fixed: true, width: "90%", height: "90%" })
-
   @ajaxForm:(elem, params = {}) ->
     elem = $(elem)
     defaults = {
