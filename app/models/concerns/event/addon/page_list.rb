@@ -30,7 +30,7 @@ module Event::Addon
     def sort_hash
       return { released: -1 } if sort.blank?
 
-      if sort == /event_dates/
+      if sort =~ /event_dates/
         { "event_dates.0" => 1 }
       else
         { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
