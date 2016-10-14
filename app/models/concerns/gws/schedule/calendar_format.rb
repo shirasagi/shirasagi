@@ -11,7 +11,10 @@ module Gws::Schedule::CalendarFormat
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")
-    data[:title] = name if data[:readable]
+    if data[:readable]
+      data[:title] = name
+      data[:title] = I18n.t("gws/schedule.private_plan_mark") + name if private_plan?(user)
+    end
 
     #data[:termLabel] = Gws::Schedule::PlansController.helpers.term(self)
     data[:startDateLabel] = date_label(start_at)
