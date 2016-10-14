@@ -1,0 +1,26 @@
+class @SS_Clipboard
+  @renderCopy: ->
+    $('.js-clipboard-copy').each ->
+      label = '<%= I18n.t("views.button.copy") %>'
+      text = $(this).text()
+      $(this).append("<a href='#' class='clipboard-copy-button' data-text='#{text}'>#{label}</a>")
+
+    $('.clipboard-copy-button').click ->
+      $('.clipboard-copy-button').removeClass('copied')
+      rett = false
+      if document.queryCommandSupported('copy')
+        try
+          text = $(this).data('text')
+          copy = $("<textarea>#{text}</textarea>")
+          $('body').append(copy)
+          copy.select()
+          rett = document.execCommand('copy')
+          copy.remove()
+        catch
+          rett = false
+
+      if rett
+        $(this).addClass('copied')
+      else
+        alert('Copy not supported.')
+      return false

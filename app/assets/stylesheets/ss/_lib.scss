@@ -17,3 +17,16 @@
 .ms-list {
   background: $white;
 }
+
+// -------------------------------------------------------------------------------------------------
+// clipboard
+
+.clipboard-copy-button {
+  @include btn;
+  margin-left: 4px;
+  padding: 1px 4px;
+  &.copied {
+    border-color: #0ad;
+    color: #0ad;
+  }
+}
