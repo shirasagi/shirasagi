@@ -3,7 +3,13 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, { action: :new }, class: :new %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+    <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(:download, { action: :download_all }) rescue nil %>
+    <% end %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(:import, { action: :import_csv }) rescue nil %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|download_all|import_csv/ %>
     <%= link_to :back_to_index, { action: :index }, class: "back-to-index" %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>

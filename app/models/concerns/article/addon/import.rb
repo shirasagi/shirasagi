@@ -50,7 +50,7 @@ module Article::Addon
           end
         end
       end
-     
+
     private
       def get_category_tree(item)
         id_list = item.send(:categories).pluck(:_id)
@@ -72,7 +72,7 @@ module Article::Addon
 
   public
 
-    def import
+    def import_csv
       @imported = 0
       validate_import 
       return false unless errors.empty?  
