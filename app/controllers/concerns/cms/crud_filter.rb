@@ -158,6 +158,6 @@ module Cms::CrudFilter
       @item = @model.new get_params
       result = @item.import_csv
       flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
-      render_create result, location: { action: :index }, render: { file: :import }
+      render_create result, location: { action: :index }, render: { file: :import_csv }
     end
 end
