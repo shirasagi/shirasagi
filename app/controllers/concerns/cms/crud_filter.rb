@@ -15,15 +15,15 @@ module Cms::CrudFilter
 
     def set_items
       @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
-        page(params[:page]).per(50)
+        allow(:read, @cur_user, site: @cur_site)
     end
 
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
       set_items
+      @items = @items.search(params[:s])
+        .page(params[:page]).per(50)
     end
 
     def show

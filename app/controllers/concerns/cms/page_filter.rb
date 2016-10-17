@@ -23,15 +23,19 @@ module Cms::PageFilter
       end
     end
 
+    def set_items
+      @items = @model.site(@cur_site).node(@cur_node)
+        .allow(:read, @cur_user)
+        .order_by(updated: -1)
+    end
+
   public
     def index
       if @cur_node
         raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
 
-        @items = @model.site(@cur_site).node(@cur_node).
-          allow(:read, @cur_user).
-          search(params[:s]).
-          order_by(updated: -1).
+        set_items
+        @items = @items.search(params[:s]).
           page(params[:page]).per(50)
       end
     end

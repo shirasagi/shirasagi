@@ -2,8 +2,8 @@
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, { action: :new }, class: :new %>
-      <%= link_to :download, { action: :download } %>
-      <%= link_to :import, { action: :import } %>
+      <%= link_to :download, { action: :download_all } %>
+      <%= link_to :import, { action: :import_csv } %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>
     <%= link_to :back_to_index, { action: :index }, class: "back-to-index" %>
@@ -14,8 +14,8 @@
     <%= link_to :back_to_index, { action: :index }, class: "back-to-index" %>
   <% elsif params[:action] =~ /import/ %>
     <%= link_to :back_to_index, { action: :index } %>
-    <%= link_to :download, { action: :download } %>
-    <%= link_to :import, { action: :import } %>
+    <%= link_to :download, { action: :download_all } %>
+    <%= link_to :import, { action: :import_csv } %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :edit, { action: :edit, id: @item }, class: :edit %>
