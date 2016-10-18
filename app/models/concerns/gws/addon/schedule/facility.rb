@@ -44,7 +44,17 @@ module Gws::Addon::Schedule::Facility
       plans.each { |plan| facilities += (plan.facilities & self.facilities) }
 
       name = facilities.uniq.map(&:name).join(', ')
-      errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility', facility: name)
+
+      errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')
+      plans.each do |plan|
+        msg = Gws::Schedule::PlansController.helpers.term(plan)
+        msg += " " + plan.facilities.map(&:name).join(',')
+        if plan.user.present?
+          msg += " " + plan.user.name
+          msg += " (#{plan.user.t(:tel_ext_short)}:#{plan.user.tel_ext})" if plan.user.tel_ext.present?
+        end
+        errors.add :base, msg
+      end
     end
 
     def validate_facility_hours
