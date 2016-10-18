@@ -102,7 +102,7 @@ describe "inquiry_agents_nodes_form", dbscope: :example do
         expect(notify_mail.to.first).to eq 'notice@example.jp'
         expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に回答がありました。")
+        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
         expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
       end
 
