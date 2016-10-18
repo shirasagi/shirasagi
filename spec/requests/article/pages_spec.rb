@@ -9,7 +9,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   let(:index_path) { article_pages_path(site.id, node, format: :json) }
   let!(:admin_user) { cms_user }
 
-  let(:download_pages_path) { download_article_pages_path(site: site.id, cid: node.id) }
+  let(:download_pages_path) { download_all_article_pages_path(site: site.id, cid: node.id) }
 
   context "admin user" do
     before do
@@ -174,10 +174,9 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         )
       end
 
-      describe "GET /.s{site}/article{cid}/pages/download?ids[]=1" do
+      describe "GET /.s{site}/article{cid}/pages/download_all" do
         it do
-          params = { 'ids[]' => 1 }
-          get download_pages_path, params
+          get download_pages_path
           expect(response.status).to eq 200
 
           expect(response.body).to include "test1_article"
