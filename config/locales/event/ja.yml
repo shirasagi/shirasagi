@@ -11,6 +11,18 @@ ja:
     current_month: 今月
     filter_all: 全て
     date_range_delimiter: ～
+    keyword: 検索キーワード
+    dates:
+      setting: 検索期間設定
+    category:
+      setting: 検索カテゴリー設定
+    search:
+      no-result: 検索結果が見つかりませんでした。
+
+    submit:
+      search: 検索する
+      reset: リセット
+
     confirm:
       delete_date: イベント日を削除してよろしいですか？
 
@@ -36,8 +48,10 @@ ja:
   cms:
     nodes:
       event/page: イベントリスト
+      event/search: イベント検索
     parts:
       event/calendar: カレンダー
+      event/search: イベント検索
 
   cms_role:
     read_other_event_pages: ページの閲覧（全て）
@@ -56,6 +70,7 @@ ja:
   mongoid:
     models:
       event/page: イベントページ
+      event/search: イベント検索ページ
     attributes:
       cms/model/page:
         event_name: イベントタイトル
@@ -68,6 +83,7 @@ ja:
         field: 項目名
         value: 内容
         contact: お問い合わせ
+        event_keyword: イベント検索ワード
 
   datetime:
     prompts:
