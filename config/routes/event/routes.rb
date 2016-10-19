@@ -35,6 +35,7 @@ SS::Application.routes.draw do
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: [:deletion, :crud, :download, :import, :contain_links, :tag]
+    resources :searches, only: [:index]
   end
 
   node "event" do
@@ -43,14 +44,17 @@ SS::Application.routes.draw do
       year: /\d{4}/, month: /\d{2}/
     get "page/:year:month:day.:format" => "public#daily", cell: "nodes/page",
       year: /\d{4}/, month: /\d{2}/, day: /\d{2}/
+    get "search/(index.:format)" => "public#index", cell: "nodes/search"
   end
 
   part "event" do
     get "calendar" => "public#index", cell: "parts/calendar"
+    get "search" => "public#index", cell: "parts/search"
   end
 
   page "event" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
+    get "search/(index.:format)" => "public#index", cell: "node/search"
   end
 
 end
