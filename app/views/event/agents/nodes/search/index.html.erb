@@ -1,0 +1,76 @@
+<%= jquery do %>
+  Event_Form.render();
+  $(".mod-event input.date").datepicker();
+<% end %>
+<h2>イベント検索</h2>
+<%= form_for :item, url: "#{@cur_node.url}", method: "get" do %>
+<div id="addon-event-agents-addons-event-keyword">
+  <dl class="see mod-event_keyword">
+    <dt><%= t("event.keyword") %></dt>
+    <dd><%= text_field_tag :search_keyword %></dd>
+  </dl>
+</div>
+<div id="addon-event-agents-addons-category-setting">
+  <h2></h2>
+  <dl class="see mod-category">
+    <dt><%= t("event.category.setting") %></dt>
+    <dd>
+    <%= hidden_field_tag 'category_ids[]', "" %>
+    <% @cur_node.st_category_ids.each do |cateid| %>
+      <div class="<%= cateid %>">
+        <%= check_box_tag 'category_ids[]', cateid, @category_ids.index(cateid),
+          { :id => "q_category_ids_#{cateid}", :class => "prop"} %>
+        <label for=<%= "q_category_ids_#{cateid}" %>><%= cateid %></label>
+      </div>
+    <% end %>
+    </dd>
+  </dl>
+</div>
+<div id="addon-event-agents-addons-date">
+  <dl class="see mod-event">
+    <dt><%= t("event.dates.setting") %></dt>
+    <dd class="dates">
+      <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
+      - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
+    </dd>
+    <dd style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></dd>
+  </dl>
+</div>
+  <footer class="send">
+    <%= submit_tag t('event.submit.search'), name: nil %>
+    <%= submit_tag t('event.submit.reset'), name: nil, class: :reset %>
+  </footer>
+<% end %>
+
+<div id="event-list">
+  <% @events.each do |date, pages| %>
+  <dl class="<%= event_dl_class date %>">
+    <dt>
+      <%= time_tag(date) do %>
+      <%= link_to_daily date, name: "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}" %>
+      <span class="wday">(<%= t_wday(date) %><span class="unit"><%= t_date('wday') %></span>)</span>
+      <% end %>
+    </dt>
+
+    <% if date.national_holiday? %>
+    <dd class="holiday"><%= HolidayJapan.name date %></dd>
+    <% end %>
+
+    <% pages.each do |page, categories| %>
+    <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
+        <% if categories.present? %>
+          <% cate = categories.entries.sort_by{ |c| c.order }.first %>
+          <div class="<%= cate.basename %>">
+            <%= link_to cate.name, cate.url %>
+          </div>
+        <% end %>
+        <header>
+          <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
+        </header>
+      </article>
+    </dd>
+    <% end %>
+  </dl>
+  <% end %>
+</div>

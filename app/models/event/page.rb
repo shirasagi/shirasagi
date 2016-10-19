@@ -23,4 +23,11 @@ class Event::Page
   set_permission_name "event_pages"
 
   default_scope ->{ where(route: "event/page") }
+
+  class << self
+    def search(params)
+      criteria = super
+      criteria
+    end
+  end
 end
