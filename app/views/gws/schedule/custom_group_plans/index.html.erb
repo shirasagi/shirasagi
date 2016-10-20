@@ -7,6 +7,9 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%==
 <section class="main-box gws-schedule-box">
   <header>
     <h2><%= @group.name %></h2>
+    <% if @group.user %>
+    <span class="group-creator"><%= @group.user.long_name %></span>
+    <% end %>
     <nav><%= render file: '_search' %></nav>
   </header>
 
