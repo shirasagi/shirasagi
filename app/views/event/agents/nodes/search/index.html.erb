@@ -1,13 +1,21 @@
 <%= jquery do %>
-  Event_Form.render();
-  $(".mod-event input.date").datepicker();
+Event_Form.render();
+<% end %>
+<%= coffee do %>
+$ ->
+  $(".reset").on "click", ->
+    $(".prop").prop "checked", false
+    $(".keyword").val("")
+    $(".start").val("")
+    $(".close").val("")
+    return false
 <% end %>
 <h2>イベント検索</h2>
 <%= form_for :item, url: "#{@cur_node.url}", method: "get" do %>
 <div id="addon-event-agents-addons-event-keyword">
   <dl class="see mod-event_keyword">
     <dt><%= t("event.keyword") %></dt>
-    <dd><%= text_field_tag :search_keyword %></dd>
+    <dd><%= text_field_tag :search_keyword, @keyword, class: "keyword" %></dd>
   </dl>
 </div>
 <div id="addon-event-agents-addons-category-setting">
@@ -30,10 +38,10 @@
   <dl class="see mod-event">
     <dt><%= t("event.dates.setting") %></dt>
     <dd class="dates">
-      <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
-      - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
+      <%= text_field_tag "event[][start_date]", @start_date, { id: nil, class: "date js-date start" } %>
+      - <%= text_field_tag "event[][close_date]", @close_date, { id: nil, class: "date js-date close" } %>
     </dd>
-    <dd style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></dd>
+    <dd class="mod-event" style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></dd>
   </dl>
 </div>
   <footer class="send">
@@ -43,6 +51,7 @@
 <% end %>
 
 <div id="event-list">
+  <%= t("event.search.no-result") if @events.blank? %>
   <% @events.each do |date, pages| %>
   <dl class="<%= event_dl_class date %>">
     <dt>

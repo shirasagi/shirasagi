@@ -16,6 +16,8 @@ ja:
       setting: 検索期間設定
     category:
       setting: 検索カテゴリー設定
+    search:
+      no-result: 検索結果が見つかりませんでした。
 
     submit:
       search: 検索する

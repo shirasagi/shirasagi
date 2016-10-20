@@ -5,6 +5,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
 
   def index
     list_events
+    @keyword = params[:search_keyword]
   end
 
   private
@@ -23,15 +24,15 @@ class Event::Agents::Nodes::SearchController < ApplicationController
         days << d
       end
 
-      start_date = days.first
-      close_date = days.last
+      @start_date = days.first
+      @close_date = days.last
 
-      (start_date...close_date).each do |d|
+      (@start_date...@close_date).each do |d|
         list_days[d] = []
       end
 
       search[:list_days] = list_days
-      search[:dates] = (start_date...close_date).map { |m| m.mongoize }
+      search[:dates] = (@start_date...@close_date).map { |m| m.mongoize }
 
       search
     end
