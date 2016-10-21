@@ -13,16 +13,20 @@ class Sys::Db::DocsController < ApplicationController
     end
 
     def set_db
-      @db = SS::User.collection.database
+      @db = Mongoid.default_client
       @coll = @db[params[:coll]]
     end
 
     def set_item
       id = params[:id]
-      id = id.to_i if id =~ /^\d+$/
+      if id =~ /^\d+$/
+        id = id.to_i
+      elsif id.length == 24
+        id = BSON::ObjectId.from_string(id)
+      end
 
-      ## http://rdoc.info/github/mongoid/moped/Moped/Query
-      raise "404" unless @item = @coll.find(_id: id).one
+      ## http://api.mongodb.com/ruby/current/Mongo/Collection.html
+      raise "404" unless @item = @coll.find(_id: id).first
     end
 
   public
