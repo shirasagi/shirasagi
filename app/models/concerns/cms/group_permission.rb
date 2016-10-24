@@ -26,7 +26,8 @@ module Cms::GroupPermission
     node = opts[:node] || @cur_node
 
     action = permission_action || action
-    is_owned = node ? node.owned?(user) : owned?(user)
+    #is_owned = node ? node.owned?(user) : owned?(user)
+    is_owned = owned?(user)
 
     permits = ["#{action}_other_#{self.class.permission_name}"]
     permits << "#{action}_private_#{self.class.permission_name}" if is_owned || new_record?
