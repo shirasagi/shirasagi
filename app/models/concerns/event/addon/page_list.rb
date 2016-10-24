@@ -20,9 +20,9 @@ module Event::Addon
     def condition_hash(opts = {})
       cond = super
       if sort == "event_dates"
-        cond.merge! "event_dates.0" => { "$exists" => true }
+        cond["event_dates.0"] = { "$exists" => true }
       elsif sort == "unfinished_event_dates"
-        cond.merge! "event_dates" => { "$elemMatch" => { "$gte" => Time.zone.today } }
+        cond["event_dates"] = { "$elemMatch" => { "$gte" => Time.zone.today } }
       end
       cond
     end
