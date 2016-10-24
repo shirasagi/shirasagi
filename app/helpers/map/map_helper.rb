@@ -3,10 +3,14 @@ module Map::MapHelper
     map_setting = opts[:site].map_setting rescue {}
 
     key = opts[:api_key] || map_setting[:api_key] || SS.config.map.api_key
+    language = opts[:language] || SS.config.map.language
+    region = opts[:region] || SS.config.map.region
 
     params = {}
     params[:v] = 3
     params[:key] = key if key.present?
+    params[:language] = language if language.present?
+    params[:region] = region if region.present?
     controller.javascript "//maps.googleapis.com/maps/api/js?#{params.to_query}"
   end
 

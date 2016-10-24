@@ -4,6 +4,8 @@ production: &production
   #   openlayers - use openlayers3
   api: googlemaps
   api_key:
+  language: ja
+  region: jp
   layers:
     - source: "XYZ"
       url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
