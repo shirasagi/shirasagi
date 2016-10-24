@@ -7,7 +7,9 @@ describe Faq::Page::ImportJob, dbscope: :example do
   let!(:category_1) { create(:category_node_node, filename: "faq", name: "よくある質問") }
   let!(:category_2) { create(:category_node_page, filename: "faq/c1", name: "くらし・手続き") }
   let!(:category_3) { create(:category_node_page, filename: "faq/c2", name: "子育て・教育") }
-  let!(:node) { create(:faq_node_page, site: site, filename: "faq/docs", st_category_ids: [category_1.id, category_2.id, category_3.id]) }
+  let!(:node) do
+    create(:faq_node_page, site: site, filename: "faq/docs", st_category_ids: [category_1.id, category_2.id, category_3.id])
+  end
   let!(:related_page) { create(:article_page, filename: "docs/page27.html", name: "関連ページ") }
 
   let!(:file_path) { "#{::Rails.root}/spec/fixtures/faq/import_job/faq_pages.csv" }
