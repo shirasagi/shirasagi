@@ -162,13 +162,12 @@ module SS::Model::File
   end
 
   def generate_public_file
-    if site && basename.ascii_only?
-      file = public_path
-      data = self.read
+    return unless site && basename.ascii_only?
 
-      return if Fs.exists?(file) && data == Fs.read(file)
-      Fs.binwrite file, data
-    end
+    file = public_path
+    data = self.read
+    return if Fs.exists?(file) && data == Fs.read(file)
+    Fs.binwrite file, data
   end
 
   def remove_public_file
@@ -203,15 +202,11 @@ module SS::Model::File
             image.strip!
           end
 
-          if resizing
+          if resizing && (image.columns > width || image.rows > height)
             width, height = resizing
-
-            if image.columns > width || image.rows > height
-              image.resize_to_fit! width, height
-            end
+            image.resize_to_fit! width, height
           end
         end
-
         binary = list.to_blob
       else
         binary = in_file.read
