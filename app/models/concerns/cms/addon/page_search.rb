@@ -13,6 +13,44 @@ module Cms::Addon
       info.select(&:present?).join(", ")
     end
 
+    def search_sort_options
+      [
+        [I18n.t('cms.options.sort.filename'), 'filename'],
+        [I18n.t('cms.options.sort.name'), 'name'],
+        [I18n.t('cms.options.sort.created'), 'created'],
+        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
+        [I18n.t('cms.options.sort.released_1'), 'released -1'],
+      ]
+    end
+
+    def search_state_options
+      %w(public closed ready).map do |w|
+        [ I18n.t("views.options.state.#{w}"), w ]
+      end
+    end
+
+    def search_first_released_options
+      %w(draft published).map do |w|
+        [ I18n.t("views.options.first_released.#{w}"), w ]
+      end
+    end
+
+    def search_approver_state_options
+      %w(request approve remand).map do |w|
+        [ I18n.t("workflow.page.#{w}"), w ]
+      end
+    end
+
+    def status_options
+      [
+        [I18n.t('views.options.state.public'), 'public'],
+        [I18n.t('views.options.state.closed'), 'closed'],
+        [I18n.t('views.options.state.ready'), 'ready'],
+        [I18n.t('views.options.state.request'), 'request'],
+        [I18n.t('views.options.state.remand'), 'remand'],
+      ]
+    end
+
     private
       def search_name_info
         "#{Cms::Page.t(:name)}: #{search_name}" if search_name.present?
@@ -122,15 +160,17 @@ module Cms::Addon
 
     def search(opts = {})
       @search ||= begin
-        name       = search_name.present? ? { name: /#{Regexp.escape(search_name)}/ } : {}
-        filename   = search_filename.present? ? { filename: /#{Regexp.escape(search_filename)}/ } : {}
-        keyword    = build_search_keyword_criteria
-        categories = search_category_ids.present? ? { category_ids: search_category_ids } : {}
-        groups     = search_group_ids.present? ? { group_ids: search_group_ids } : {}
-        users      = search_user_ids.present? ? { user_id: search_user_ids } : {}
-        state      = search_state.present? ? { state: search_state } : {}
-        nodes      = build_search_nodes_criteria
-        routes     = build_search_routes_criteria
+        name           = search_name.present? ? { name: /#{Regexp.escape(search_name)}/ } : {}
+        filename       = search_filename.present? ? { filename: /#{Regexp.escape(search_filename)}/ } : {}
+        keyword        = build_search_keyword_criteria
+        categories     = search_category_ids.present? ? { category_ids: search_category_ids } : {}
+        groups         = search_group_ids.present? ? { group_ids: search_group_ids } : {}
+        users          = search_user_ids.present? ? { user_id: search_user_ids } : {}
+        state          = search_state.present? ? { state: search_state } : {}
+        nodes          = build_search_nodes_criteria
+        routes         = build_search_routes_criteria
+        approver       = build_search_approver_criteria
+        first_released = build_search_first_released_criteria
 
         released = []
         released << { :released.gte => search_released_start } if search_released_start.present?
@@ -139,35 +179,6 @@ module Cms::Addon
         updated = []
         updated << { :updated.gte => search_updated_start } if search_updated_start.present?
         updated << { :updated.lte => search_updated_close } if search_updated_close.present?
-
-        approver = []
-        case search_approver_state
-        when 'request'
-          approver << {
-            workflow_state: "request",
-            workflow_user_id: @cur_user._id,
-          }
-        when 'approve'
-          approver << {
-            workflow_state: "request",
-            workflow_approvers: {
-              "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" }
-            }
-          }
-        when 'remand'
-          approver << {
-            workflow_state: "remand",
-            workflow_user_id: @cur_user._id,
-          }
-        end
-
-        if search_first_released == "draft"
-          first_released = { :first_released.exists => false }
-        elsif search_first_released == "published"
-          first_released = { :first_released.exists => true }
-        else
-          first_released = {}
-        end
 
         criteria = Cms::Page.site(@cur_site).
           allow(:read, @cur_user).
@@ -191,16 +202,6 @@ module Cms::Addon
       end
     end
 
-    def search_sort_options
-      [
-        [I18n.t('cms.options.sort.filename'), 'filename'],
-        [I18n.t('cms.options.sort.name'), 'name'],
-        [I18n.t('cms.options.sort.created'), 'created'],
-        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('cms.options.sort.released_1'), 'released -1'],
-      ]
-    end
-
     def search_sort_hash
       return { filename: 1 } if search_sort.blank?
       h = {}
@@ -208,37 +209,9 @@ module Cms::Addon
       h
     end
 
-    def status_options
-      [
-        [I18n.t('views.options.state.public'), 'public'],
-        [I18n.t('views.options.state.closed'), 'closed'],
-        [I18n.t('views.options.state.ready'), 'ready'],
-        [I18n.t('views.options.state.request'), 'request'],
-        [I18n.t('views.options.state.remand'), 'remand'],
-      ]
-    end
-
     def search_count
       search if @search_count.nil?
       @search_count
-    end
-
-    def search_state_options
-      %w(public closed ready).map do |w|
-        [ I18n.t("views.options.state.#{w}"), w ]
-      end
-    end
-
-    def search_first_released_options
-      %w(draft published).map do |w|
-        [ I18n.t("views.options.first_released.#{w}"), w ]
-      end
-    end
-
-    def search_approver_state_options
-      %w(request approve remand).map do |w|
-        [ I18n.t("workflow.page.#{w}"), w ]
-      end
     end
 
     def search_condition?
@@ -273,6 +246,41 @@ module Cms::Addon
       def build_search_routes_criteria
         normalize_search_routes
         search_routes.present? ? { route: search_routes } : {}
+      end
+
+      def build_search_approver_criteria
+        case search_approver_state
+        when 'request'
+          {
+            workflow_state: "request",
+            workflow_user_id: @cur_user._id,
+          }
+        when 'approve'
+          {
+            workflow_state: "request",
+            workflow_approvers: {
+              "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" }
+            }
+          }
+        when 'remand'
+          {
+            workflow_state: "remand",
+            workflow_user_id: @cur_user._id,
+          }
+        else
+          {}
+        end
+      end
+
+      def build_search_first_released_criteria
+        case search_first_released
+        when "draft"
+          { :first_released.exists => false }
+        when "published"
+          { :first_released.exists => true }
+        else
+          {}
+        end
       end
   end
 end
