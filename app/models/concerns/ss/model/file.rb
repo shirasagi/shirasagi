@@ -202,10 +202,9 @@ module SS::Model::File
             image.strip!
           end
 
-          if resizing && (image.columns > width || image.rows > height)
-            width, height = resizing
-            image.resize_to_fit! width, height
-          end
+          next unless resizing
+          width, height = resizing
+          image.resize_to_fit! width, height if image.columns > width || image.rows > height
         end
         binary = list.to_blob
       else
