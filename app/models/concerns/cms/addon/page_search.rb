@@ -1,7 +1,87 @@
 module Cms::Addon
+  module PageSearchInfo
+    extend ActiveSupport::Concern
+    extend SS::Translation
+
+    def brief_search_condition
+      info = [
+        :search_name_info, :search_filename_info, :search_category_ids_info, :search_group_ids_info,
+        :search_node_ids_info, :search_routes_info, :search_released_info, :search_updated_info,
+        :search_state_info, :search_first_released_info, :search_approver_state_info ].map do |m|
+        method(m).call
+      end
+      info.select(&:present?).join(", ")
+    end
+
+    private
+      def search_name_info
+        "#{Cms::Page.t(:name)}: #{search_name}" if search_name.present?
+      end
+
+      def search_filename_info
+        "#{Cms::Page.t(:filename)}: #{search_filename}" if search_filename.present?
+      end
+
+      def search_category_ids_info
+        "#{Cms::Page.t(:category_ids)}: #{search_categories.pluck(:name).join(",")}" if search_category_ids.present?
+      end
+
+      def search_group_ids_info
+        "#{Cms::Page.t(:group_ids)}: #{search_groups.pluck(:name).join(",")}" if search_group_ids.present?
+      end
+
+      def search_node_ids_info
+        "#{I18n.t 'cms.node'}: #{search_nodes.pluck(:name).join(",")}" if search_node_ids.present?
+      end
+
+      def search_routes_info
+        normalize_search_routes
+        if search_routes.present?
+          "#{Cms::Page.t(:route)}: #{search_routes.map { |route| route_name(route) }.join(",")}"
+        end
+      end
+
+      def route_name(route)
+        "#{I18n.t("modules.#{route.sub(/\/.*/, '')}")}/#{I18n.t("mongoid.models.#{route}")}"
+      end
+
+      def search_released_info
+        if search_released_start.present? || search_released_close.present?
+          start = search_released_start.try(:strftime, "%Y/%m/%d %H:%M")
+          close = search_released_close.try(:strftime, "%Y/%m/%d %H:%M")
+          "#{Cms::Page.t(:released)}: #{start}-#{close}"
+        end
+      end
+
+      def search_updated_info
+        if search_updated_start.present? || search_updated_close.present?
+          start = search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")
+          close = search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")
+          "#{Cms::Page.t(:updated)}: #{start}-#{close}"
+        end
+      end
+
+      def search_state_info
+        "#{Cms::Page.t(:state)}: #{I18n.t :"views.options.state.#{search_state}"}" if search_state.present?
+      end
+
+      def search_first_released_info
+        if search_first_released.present?
+          "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"views.options.state.#{search_first_released}"}"
+        end
+      end
+
+      def search_approver_state_info
+        if search_approver_state.present?
+          "#{Cms::Page.t(:workflow_state)}: #{I18n.t :"workflow.page.#{search_approver_state}"}"
+        end
+      end
+  end
+
   module PageSearch
     extend ActiveSupport::Concern
     extend SS::Addon
+    include Cms::Addon::PageSearchInfo
 
     KEYWORD_FIELDS = [
       :name, :html, :question, :upper_html, :lower_html, :contact_charge, :contact_tel, :contact_fax, :contact_email
@@ -111,6 +191,23 @@ module Cms::Addon
       end
     end
 
+    def search_sort_options
+      [
+        [I18n.t('cms.options.sort.filename'), 'filename'],
+        [I18n.t('cms.options.sort.name'), 'name'],
+        [I18n.t('cms.options.sort.created'), 'created'],
+        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
+        [I18n.t('cms.options.sort.released_1'), 'released -1'],
+      ]
+    end
+
+    def search_sort_hash
+      return { filename: 1 } if search_sort.blank?
+      h = {}
+      search_sort.split(" ").each_slice(2) { |k, v| h[k] = (v =~ /-1$/ ? -1 : 1) }
+      h
+    end
+
     def status_options
       [
         [I18n.t('views.options.state.public'), 'public'],
@@ -151,33 +248,6 @@ module Cms::Addon
       end
     end
 
-    def search_sort_options
-      [
-        [I18n.t('cms.options.sort.filename'), 'filename'],
-        [I18n.t('cms.options.sort.name'), 'name'],
-        [I18n.t('cms.options.sort.created'), 'created'],
-        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('cms.options.sort.released_1'), 'released -1'],
-      ]
-    end
-
-    def search_sort_hash
-      return { filename: 1 } if search_sort.blank?
-      h = {}
-      search_sort.split(" ").each_slice(2) { |k, v| h[k] = (v =~ /-1$/ ? -1 : 1) }
-      h
-    end
-
-    def brief_search_condition
-      info = [
-        :search_name_info, :search_filename_info, :search_category_ids_info, :search_group_ids_info,
-        :search_node_ids_info, :search_routes_info, :search_released_info, :search_updated_info,
-        :search_state_info, :search_first_released_info, :search_approver_state_info ].map do |m|
-        method(m).call
-      end
-      info.select(&:present?).join(", ")
-    end
-
     private
       def normalize_search_routes
         return if search_routes.blank?
@@ -203,69 +273,6 @@ module Cms::Addon
       def build_search_routes_criteria
         normalize_search_routes
         search_routes.present? ? { route: search_routes } : {}
-      end
-
-      def search_name_info
-        "#{Cms::Page.t(:name)}: #{search_name}" if search_name.present?
-      end
-
-      def search_filename_info
-        "#{Cms::Page.t(:filename)}: #{search_filename}" if search_filename.present?
-      end
-
-      def search_category_ids_info
-        "#{Cms::Page.t(:category_ids)}: #{search_categories.pluck(:name).join(",")}" if search_category_ids.present?
-      end
-
-      def search_group_ids_info
-        "#{Cms::Page.t(:group_ids)}: #{search_groups.pluck(:name).join(",")}" if search_group_ids.present?
-      end
-
-      def search_node_ids_info
-        "#{I18n.t 'cms.node'}: #{search_nodes.pluck(:name).join(",")}" if search_node_ids.present?
-      end
-
-      def search_routes_info
-        normalize_search_routes
-        if search_routes.present?
-          "#{Cms::Page.t(:route)}: #{search_routes.map { |route| route_name(route) }.join(",")}"
-        end
-      end
-
-      def route_name(route)
-        "#{I18n.t("modules.#{route.sub(/\/.*/, '')}")}/#{I18n.t("mongoid.models.#{route}")}"
-      end
-
-      def search_released_info
-        if search_released_start.present? || search_released_close.present?
-          start = search_released_start.try(:strftime, "%Y/%m/%d %H:%M")
-          close = search_released_close.try(:strftime, "%Y/%m/%d %H:%M")
-          "#{Cms::Page.t(:released)}: #{start}-#{close}"
-        end
-      end
-
-      def search_updated_info
-        if search_updated_start.present? || search_updated_close.present?
-          start = search_updated_start.try(:strftime, "%Y/%m/%d %H:%M")
-          close = search_updated_close.try(:strftime, "%Y/%m/%d %H:%M")
-          "#{Cms::Page.t(:updated)}: #{start}-#{close}"
-        end
-      end
-
-      def search_state_info
-        "#{Cms::Page.t(:state)}: #{I18n.t :"views.options.state.#{search_state}"}" if search_state.present?
-      end
-
-      def search_first_released_info
-        if search_first_released.present?
-          "#{Cms::PageSearch.t(:search_first_released)}: #{I18n.t :"views.options.state.#{search_first_released}"}"
-        end
-      end
-
-      def search_approver_state_info
-        if search_approver_state.present?
-          "#{Cms::Page.t(:workflow_state)}: #{I18n.t :"workflow.page.#{search_approver_state}"}"
-        end
       end
   end
 end
