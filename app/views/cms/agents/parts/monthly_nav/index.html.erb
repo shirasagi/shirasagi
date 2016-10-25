@@ -1,7 +1,16 @@
 <div class="archive-nav">
   <nav class="monthly-nav">
-    <% @months.each do |date, num| %>
-      <p><%= link_to_if(!num.zero?, date.strftime('%Y年%m月'), sprintf("#{@cur_part.parent.url}%04d%02d", date.year, date.month)) %><%= " (" + num.to_s + ")" %></p>
-    <% end %>
+    <ul>
+      <% @months.each do |date, num| %>
+        <% body = "#{date.year}#{t('datetime.prompts.year')}#{date.month}#{t('datetime.prompts.month')}(#{num})" %>
+        <li>
+          <% if num.zero? %>
+            <span><%= body %></span>
+          <% else %>
+            <%= link_to body, sprintf("#{@cur_part.parent.try(:url)}%04d%02d", date.year, date.month) %>
+          <% end %>
+         </li>
+      <% end %>
+    </ul>
   </nav>
 </div>
