@@ -74,7 +74,13 @@ class Faq::Page::ImportJob < Cms::ApplicationJob
 
     # category
     category_names = ary_value(row, :categories)
-    item.category_ids = node.st_categories.in(name: category_names).pluck(:id)
+    categories = Category::Node::Base.site(site).in(name: category_names)
+    if node.st_categories.present?
+      filenames = node.st_categories.pluck(:filename)
+      filenames += node.st_categories.map { |c| /^#{c.filename}\// }
+      categories = categories.in(filename: filenames)
+    end
+    item.category_ids = categories.pluck(:id)
 
     # event
     item.event_name = value(row, :event_name)
