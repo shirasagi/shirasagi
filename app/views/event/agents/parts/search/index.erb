@@ -1,0 +1,41 @@
+<%= jquery do %>
+Event_Form.render();
+<% end %>
+<div class="map" style="overflow: hidden; padding: 10px;">
+<%= form_for :item, url: "#{@cur_part.search_url}", method: "get" do %>
+<div id="addon-event-agents-addons-event-keyword">
+  <dl class="see mod-event_keyword">
+    <dt class="wide"><%= t("event.keyword") %></dt>
+    <dd class="wide"><%= text_field_tag :search_keyword, nil, class: "keyword" %></dd>
+  </dl>
+</div>
+<div id="addon-event-agents-addons-category-setting">
+  <dl class="see mod-category">
+    <dt class="wide"><%= t("event.category.setting") %></dt>
+    <dd class="wide">
+    <% @categories.each do |cate| %>
+      <div class="<%= cate.id %>">
+        <%= check_box_tag 'category_ids[]', cate.id, nil,
+          { :id => "p_category_ids_#{cate.id}", :class => "prop"} %>
+        <label for=<%= "p_category_ids_#{cate.id}" %>><%= cate.name %></label>
+      </div>
+    <% end %>
+    </dd>
+  </dl>
+</div>
+<div id="addon-event-agents-addons-date">
+  <dl class="see mod-event">
+    <dt class="wide"><%= t("event.dates.setting") %></dt>
+    <dd class="wide dates">
+      <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
+      - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
+    </dd>
+    <dd class="mod-event" style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></dd>
+  </dl>
+</div>
+<footer class="send">
+  <%= submit_tag t('event.submit.search'), name: nil %>
+  <%= submit_tag t('event.submit.reset'), name: nil, class: :reset %>
+</footer>
+<% end %>
+</div>

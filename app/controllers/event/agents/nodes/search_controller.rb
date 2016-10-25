@@ -4,8 +4,10 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   helper Event::EventHelper
 
   def index
+    @categories = Cms::Node.site(@cur_site).where({:id.in => @cur_node.parent.st_category_ids}).sort(filename: 1)
     list_events
     @keyword = params[:search_keyword]
+    @category_ids = params[:category_ids].present? ? params[:category_ids] : []
   end
 
   private
@@ -27,12 +29,12 @@ class Event::Agents::Nodes::SearchController < ApplicationController
       @start_date = days.first
       @close_date = days.last
 
-      (@start_date...@close_date).each do |d|
+      (@start_date...@close_date + 1.day).each do |d|
         list_days[d] = []
       end
 
       search[:list_days] = list_days
-      search[:dates] = (@start_date...@close_date).map { |m| m.mongoize }
+      search[:dates] = (@start_date...@close_date + 1.day).map { |m| m.mongoize }
 
       search
     end
@@ -42,7 +44,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
       search = {}
 
       search = search_by_date(params[:event_dates])
-      event_list = Event::Page.site(@cur_site).search(
+      event_list = Event::Page.search(
         keyword: params[:search_keyword],
         categories: params[:category_ids],
         dates: search[:dates]
@@ -59,7 +61,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
           @events[d] = [] if @events[d].blank?
           @events[d] << [
             page,
-            page.categories.in(id: @cur_node.st_categories.pluck(:id)).order_by(order: 1)
+            page.categories.in(id: @cur_node.parent.st_category_ids).order_by(order: 1)
           ]
         end
       end

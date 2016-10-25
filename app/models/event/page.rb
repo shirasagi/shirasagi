@@ -25,18 +25,28 @@ class Event::Page
   default_scope ->{ where(route: "event/page") }
 
   scope :search_by_date, ->(dates){ where({:event_dates.in => dates}) }
-  scope :search_by_categories, ->(categories){ where({:category_ids.in => categories}) }
+  scope :search_by_categories, ->(criteria, cate_ids){
+    cate = cate_ids.map { |e| e.to_i if e.present? }
+    con = []
+    cate.each do |c|
+      con << {:category_ids => c }
+    end
+    criteria = criteria.where({ :$or => con })
+    criteria
+  }
 
   class << self
     def search(params)
+
       criteria = super
+      return criteria if params.blank?
       if params[:dates].present?
         criteria = criteria.search_by_date(params[:dates])
       end
-      #
-      # if params[:categories].present?
-      #   criteria = criteria.search_by_categories(params[:categories])
-      # end
+
+      if params[:categories].present?
+        criteria = search_by_categories(criteria, params[:categories])
+      end
       criteria
     end
   end

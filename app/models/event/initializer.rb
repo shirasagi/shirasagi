@@ -2,6 +2,7 @@ module Event
   class Initializer
     Cms::Node.plugin "event/page"
     Cms::Part.plugin "event/calendar"
+    Cms::Part.plugin "event/search"
     Cms::Node.plugin "event/search"
 
     Cms::Role.permission :read_other_event_pages
