@@ -4,7 +4,10 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   helper Event::EventHelper
 
   def index
-    @categories = Cms::Node.site(@cur_site).where({:id.in => @cur_node.parent.st_category_ids}).sort(filename: 1)
+    @categories = []
+    if @cur_node.parent
+      @categories = Cms::Node.site(@cur_site).where({:id.in => @cur_node.parent.st_category_ids}).sort(filename: 1)
+    end
     list_events
     @keyword = params[:search_keyword]
     @category_ids = params[:category_ids].present? ? params[:category_ids] : []
