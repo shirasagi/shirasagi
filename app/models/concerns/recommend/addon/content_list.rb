@@ -6,7 +6,7 @@ module Recommend::Addon
 
     def limit
       value = self[:limit].to_i
-      (value < 1 || 100 < value) ? 5 : value
+      (value < 1 || 50 < value) ? 5 : value
     end
   end
 end
