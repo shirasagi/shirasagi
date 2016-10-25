@@ -38,6 +38,9 @@ dd {
 #ss-small, #ss-medium, #ss-large, #ss-kana, #ss-pc, #ss-mb {
   display: none;
 }
+.ss-adobe-reader, #month, #calendar {
+  display: none;
+}
 
 /* ---------------------------------- */
 #head {
@@ -105,7 +108,7 @@ dd {
 #safety h2, #attention h2, .cms-tabs h2,
 #useful h2, #population h2, #relations h2, #ranking h2, #topics h2,
 #ss-page-name, #links-life h2, #category-list h2,
-#emergency h2, #announce h2 {
+#emergency h2, #announce h2, .contact h2 {
   margin-bottom: 5px;
   padding: 0 10px;
   border-left: 5px solid #f08300;
@@ -172,6 +175,12 @@ dd {
 .pages .tag-article .tag-time {
   margin: 0px 0px 5px;
   color: #080;
+}
+.contact p, .contact dl {
+  padding: 0 10px;
+}
+.contact dt, .contact dd {
+  display: inline;
 }
 /* ---------------------------------- */
 #recent-oshirase h2 {
