@@ -53,12 +53,11 @@ module Event::Addon
         dates = []
         range = []
         event_dates.each do |d|
-          if range.blank? || range.last.tomorrow == d
-            range << d
-          else
+          if range.present? && range.last.tomorrow != d
             dates << range
             range = []
           end
+          range << d
         end
         dates << range if range.present?
         dates.each do |range|
