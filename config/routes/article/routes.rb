@@ -31,11 +31,15 @@ SS::Application.routes.draw do
     post :import, on: :collection
   end
 
+  concern :opendata_ref do
+    post :update_opendata_resources, on: :member
+  end
+
   content "article" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     get "generate" => "generate#index"
     post "generate" => "generate#run"
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :opendata_ref]
   end
 
   content "article" do

@@ -1,4 +1,4 @@
-module Cms::Addon::OpendataSite
+module Cms::Addon::OpendataRef::Site
   extend SS::Addon
   extend ActiveSupport::Concern
 

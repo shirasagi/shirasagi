@@ -1,0 +1,32 @@
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-body">
+      <% file = @item.assoc_file %>
+      <dl class="see">
+        <% if file.present? %>
+          <dt><%= file.class.t :filename %></dt>
+          <dd><%= file.filename %></dd>
+
+          <dt><%= file.class.t :size %></dt>
+          <dd><%= number_to_human_size(file.size) %></dd>
+
+          <dt><%= file.class.t :updated %></dt>
+          <dd><%= I18n.l(file.updated, format: :long) %></dd>
+        <% end %>
+        <dd class="wide">
+          <% if @item.assoc_filename.blank? %>
+            <span><%= t('opendata.assoc_file_notice.no_assoc_file') %></span>
+          <% else %>
+            <% if file.blank? %>
+              <span><%= t('opendata.assoc_file_notice.assoc_file_is_removed') %></span>
+            <% elsif file.updated > @item.updated %>
+              <span><%= t('opendata.assoc_file_notice.assoc_file_is_updated') %></span>
+            <% else %>
+              <span><%= t('opendata.assoc_file_notice.assoc_file_is_not_updated') %></span>
+            <% end %>
+          <% end %>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>

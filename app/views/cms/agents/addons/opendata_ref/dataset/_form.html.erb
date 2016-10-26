@@ -1,0 +1,60 @@
+<% return "" if @cur_node.becomes_with_route.opendata_site_ids.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-dataset"); <% end %>
+<style type="text/css">
+  .mod-cms-opendata-dataset ul { padding: 0px; }
+  .mod-cms-opendata-dataset li { margin: 10px 0px; }
+  .mod-cms-opendata-dataset table.ajax-selected { margin-top: 10px; }
+  .mod-cms-opendata-dataset select, input, textarea, button {
+    vertical-align: middle;
+  }
+</style>
+
+<dl class="see mod-cms-opendata-dataset">
+  <dt><%= @model.t :opendata_dataset_state %><%= @model.tt :opendata_dataset_state %></dt>
+  <dd>
+    <ul>
+      <li>
+        <label>
+          <%= f.radio_button :opendata_dataset_state, 'none' %>
+          <%= t('cms.options.opendata_dataset.none') %>
+        </label>
+      </li>
+      <li>
+        <label>
+          <%= f.radio_button :opendata_dataset_state, 'public' %>
+          <%= t('cms.options.opendata_dataset.public') %>
+        </label>
+      </li>
+      <li>
+        <label>
+          <%= f.radio_button :opendata_dataset_state, 'closed' %>
+          <%= t('cms.options.opendata_dataset.closed') %>
+        </label>
+      </li>
+      <li>
+        <label>
+          <%= f.radio_button :opendata_dataset_state, 'existance' %>
+          <%= t('cms.options.opendata_dataset.existance') %>
+          <%= f.hidden_field "opendata_dataset_ids[]", value: "", class: "hidden-ids" %>
+          <%= link_to t("cms.apis.opendata_ref.datasets.index"), cms_apis_opendata_ref_datasets_path(single: 1), class: "ajax-box" %>
+          <table class="index ajax-selected">
+            <thead>
+            <tr>
+              <th class="name"><%= t("mongoid.models.opendata/dataset") %></th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @item.opendata_datasets.each do |dataset| %>
+              <tr data-id="<%= dataset.id %>">
+                <td><%= f.hidden_field "opendata_dataset_ids[]", value: dataset.id %> <%= dataset.name %></td>
+                <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </label>
+      </li>
+    </ul>
+  </dd>
+</dl>

@@ -1,0 +1,29 @@
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-body">
+      <% page = @item.assoc_page %>
+      <dl class="see">
+        <% if page.present? %>
+          <dt><%= page.class.t :name %></dt>
+          <dd><%= page.name %></dd>
+
+          <dt><%= page.class.t :updated %></dt>
+          <dd><%= I18n.l(page.updated, format: :long) %></dd>
+        <% end %>
+        <dd class="wide">
+          <% if @item.assoc_page_id.blank? %>
+            <span><%= t('opendata.assoc_page_notice.no_assoc_page') %></span>
+          <% else %>
+            <% if page.blank? %>
+              <span><%= t('opendata.assoc_page_notice.assoc_page_is_removed') %></span>
+            <% elsif page.updated > @item.updated %>
+              <span><%= t('opendata.assoc_page_notice.assoc_page_is_updated') %></span>
+            <% else %>
+              <span><%= t('opendata.assoc_page_notice.assoc_page_is_not_updated') %></span>
+            <% end %>
+          <% end %>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<%= form_for :item, url: { action: :sync }, html: { method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ldap.views.confirm.sync") %></h2></div>
+      <div class="addon-body">
+        <%= render file: "_sync" %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ldap.views.button.sync"), class: 'btn-primary sync' %>
+    <%= f.button t("views.button.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  </footer>
+<% end %>

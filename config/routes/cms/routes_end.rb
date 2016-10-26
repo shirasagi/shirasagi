@@ -136,6 +136,9 @@ SS::Application.routes.draw do
         get :thumb, on: :member
         get :download, on: :member
       end
+      namespace "opendata_ref" do
+        get "datasets:cid" => "datasets#index", as: 'datasets'
+      end
     end
   end
 

@@ -1,0 +1,7 @@
+<% return "" if @item.opendata_area_ids.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-area"); <% end %>
+
+<dl class="see mod-cms-opendata-area">
+  <dt><%= @model.t :opendata_area_ids %></dt>
+  <dd><%= br @item.opendata_areas.pluck(:name).join("\n") %></dd>
+</dl>

@@ -1,7 +1,0 @@
-<% return "" unless @item.opendata_state.present? %>
-<%= jquery do %> SS_AddonTabs.hide("dl.mod-cms-opendata"); <% end %>
-
-<dl class="see mod-cms-opendata">
-  <dt><%= @model.t :opendata_state %></dt>
-  <dd><%= @item.label :opendata_state %></dd>
-</dl>

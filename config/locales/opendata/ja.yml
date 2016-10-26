@@ -14,6 +14,8 @@ ja:
       back_to_resource: リソースへ戻る
       back_to_rdf_class: 戻る
       back_to_column_types: 戻る
+      check_for_update: 更新をチェックする
+      sync: 同期する
     search_datasets:
       index: データセットを選択する
       search: データセットを検索
@@ -173,6 +175,9 @@ ja:
     state_options:
       public: 公開
       closed: 非公開
+    default_state_options:
+      none: ""
+      default: 既定
     search_options:
       all_keywords: すべてのキーワードを含む
       any_keywords: いずれかのキーワードを含む
@@ -180,6 +185,17 @@ ja:
     assoc_job:
       dataset_text: "%{name} の一覧は %{url} でも公開されているので、%{url} もご覧ください。"
       resource_text: "%{name} は %{now} 時点の情報を元に作成しています。"
+    assoc_page_notice:
+      no_assoc_page: 連携ページは設定されていません。
+      assoc_page_is_updated: 連携ページは更新されています。
+      assoc_page_is_not_updated: 連携ページは更新されていません。データセットは最新です。
+      assoc_page_is_removed: 連携ページは削除されています。
+    assoc_file_notice:
+      no_assoc_file: 連携ファイルは設定されていません。
+      assoc_file_is_updated: 連携ファイルは更新されています。
+      assoc_file_is_not_updated: 連携ファイルは更新されていません。リソースは最新です。
+      assoc_file_is_removed: 連携ファイルは削除されています。
+    association_is_removed: 削除されています
 
     # Web API
     api:
@@ -262,7 +278,8 @@ ja:
       opendata/app_page_setting: アプリ詳細ページ設定
       opendata/idea_page_setting: アイデア詳細ページ設定
       opendata/list_node_setting: フォルダー設定
-      opendata/site_association: サイト連携
+      opendata/cms_ref/page: ページ連携
+      opendata/cms_ref/attachment_file: 添付ファイル連携
 
   cms:
     nodes:
@@ -369,6 +386,7 @@ ja:
         in_file: ファイル
         related_url: 関連URL
         order: 並び順
+        default_state: 既定
       opendata/dataset_group:
         name: グループ名
       opendata/dataset:
@@ -480,10 +498,17 @@ ja:
         show_tabs: タブ表示
       opendata/addon/list_node_setting:
         limit: 表示件数
-      opendata/addon/site_association:
+      opendata/addon/cms_ref/page:
         assoc_site_id: 連携サイト
         assoc_node_id: 連携フォルダー
         assoc_page_id: 連携ページ
+        assoc_method: 連携確認方法
+      opendata/addon/cms_ref/attachment_file:
+        assoc_site_id: 連携サイト
+        assoc_node_id: 連携フォルダー
+        assoc_page_id: 連携ページ
+        assoc_method: 連携確認方法
+        assoc_filename: 連携ファイル
 
   tooltip:
     opendata/dataset:
@@ -520,8 +545,13 @@ ja:
         - 関連する単語を登録します。
         - カンマ、スペースで区切ることにより複数の単語を設定することができます。
     opendata/license:
+      name:
+        - ライセンス名を入力します。
       related_url:
         - 登録するライセンスの公式ページや説明ページのURLを登録します。
+      order:
+        - 表示順を入力します。
+        - 数字が小さいほど上位に表示されます。
     opendata/csv2rdf_settings:
       rdf_property:
         - 適切な RDF プロパティを一覧内から選択し、「保存」ボタンをクリックします。
@@ -547,8 +577,14 @@ ja:
       limit:
         - |-
           リストの表示件数を指定します。
+    opendata/cms_ref/page:
+      assoc_method:
+        - 連携確認方法を選択します。
+        - 自動を選択すると、CMS の記事との連携が自動で確認され、記事が削除されたり非公開になったりした場合、自動的にデータセットが非公開になります。また、リソースは自動的に記事の添付ファイルと連動するようになります。
+        - 手動を選択すると、CMS の記事との連携が自動では確認されません。
 
   job:
     models:
       opendata/csv2rdf_converter/job: RDF変換ジョブ
       opendata/facility/assoc_job: 施設CSV取り込みジョブ
+      opendata/cms_integration/assoc_job: 記事連携設定ジョブ

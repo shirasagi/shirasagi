@@ -8,7 +8,7 @@ class Opendata::Dataset
   include Opendata::Addon::DatasetGroup
   include Opendata::Reference::Member
   include Opendata::Common
-  include Opendata::Addon::SiteAssociation
+  include Opendata::Addon::CmsRef::Page
   include Cms::Addon::Release
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
@@ -48,7 +48,6 @@ class Opendata::Dataset
   has_many :ideas, foreign_key: :dataset_ids, class_name: "Opendata::Idea"
 
   validates :text, presence: true
-  validates :category_ids, presence: true
 
   permit_params :text, :tags, tags: []
 

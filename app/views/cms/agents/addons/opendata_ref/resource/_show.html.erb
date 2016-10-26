@@ -1,0 +1,9 @@
+<% return "" if @cur_node.blank? %>
+<% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
+<% return "" if @item.file_ids.blank? %>
+
+<% if @item.allowed?(:edit, @cur_user) %>
+  <%= render partial: 'cms/agents/addons/opendata_ref/resource/show_edit' %>
+<% else %>
+  <%= render partial: 'cms/agents/addons/opendata_ref/resource/show_show' %>
+<% end %>

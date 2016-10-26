@@ -1,0 +1,32 @@
+<% if @item.assoc_site_id.present? && @item.assoc_site_id != @cur_site.id %>
+  <dt><%= @model.t :assoc_site_id %></dt>
+  <dd>
+    <% if @item.assoc_site.present? %>
+      <%= @item.assoc_site.name %>
+    <% else %>
+      <%= t('opendata.association_is_removed') %>
+    <% end %>
+  </dd>
+<% end %>
+
+<% if @item.assoc_node_id.present? %>
+  <dt><%= @model.t :assoc_node_id %></dt>
+  <dd>
+    <% if @item.assoc_node.present? %>
+      <%= @item.assoc_node.name %>
+    <% else %>
+      <%= t('opendata.association_is_removed') %>
+    <% end %>
+  </dd>
+<% end %>
+
+<% if @item.assoc_page_id.present? %>
+  <dt><%= @model.t :assoc_page_id %></dt>
+  <dd>
+    <% if @item.assoc_page.present? %>
+      <%= @item.assoc_page.name %>
+    <% else %>
+      <%= t('opendata.association_is_removed') %>
+    <% end %>
+  </dd>
+<% end %>

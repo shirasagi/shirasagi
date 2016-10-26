@@ -21,4 +21,10 @@ class Opendata::Dataset::DatasetsController < ApplicationController
         order_by(updated: -1).
         page(params[:page]).per(50)
     end
+
+    def check_for_update
+      set_item
+
+      render layout: "ss/ajax"
+    end
 end

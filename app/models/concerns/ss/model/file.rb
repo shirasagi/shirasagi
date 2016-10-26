@@ -157,8 +157,8 @@ module SS::Model::File
     true
   end
 
-  def uploaded_file
-    Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type)
+  def uploaded_file(&block)
+    Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type, &block)
   end
 
   def generate_public_file

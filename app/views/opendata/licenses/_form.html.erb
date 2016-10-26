@@ -1,13 +1,16 @@
 <dl class="see">
-  <dt><%= @model.t :name %></dt>
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :file_id %></dt>
+  <dt><%= @model.t :file_id %><%= @model.tt :file_id %></dt>
   <dd><%= f.file_field :in_file %></dd>
 
   <dt><%= @model.t :related_url %><%= @model.tt :related_url %></dt>
   <dd><%= f.text_field :related_url %></dd>
 
-  <dt><%= @model.t :order %></dt>
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :default_state %><%= @model.tt :default_state %></dt>
+  <dd><%= f.select :default_state, @item.default_state_options, include_blank: true %></dd>
 </dl>

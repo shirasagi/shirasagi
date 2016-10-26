@@ -1,0 +1,7 @@
+<% return "" if @item.opendata_category_ids.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-category"); <% end %>
+
+<dl class="see mod-cms-opendata-category">
+  <dt><%= @model.t :opendata_category_ids %></dt>
+  <dd><%= br @item.opendata_categories.pluck(:name).join("\n") %></dd>
+</dl>

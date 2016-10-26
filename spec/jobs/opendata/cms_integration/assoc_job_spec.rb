@@ -26,7 +26,7 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
 
     article_page.cur_user = cms_user
     article_page.file_ids = [ file.id ]
-    article_page.opendata_state = 'public'
+    article_page.opendata_dataset_state = 'public'
     article_page.save!
 
     path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
@@ -52,7 +52,7 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
       Opendata::Dataset.site(od_site).first.tap do |dataset|
         expect(dataset.name).to eq article_page.name
         expect(dataset.parent.id).to eq dataset_node.id
-        expect(dataset.state).to eq 'closed'
+        expect(dataset.state).to eq 'public'
         expect(dataset.text).to include('ああああ')
         expect(dataset.text).to include('いいい')
         expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
@@ -68,13 +68,8 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
           expect(resource.assoc_site_id).to eq article_page.site.id
           expect(resource.assoc_node_id).to eq article_page.parent.id
           expect(resource.assoc_page_id).to eq article_page.id
-          expect(resource.assoc_file_id).to eq file.id
+          expect(resource.assoc_filename).to eq file.filename
         end
-      end
-
-      Opendata::Dataset.site(od_site).first.tap do |dataset|
-        dataset.state = 'public'
-        dataset.save!
       end
 
       # after dataset is publiced, page is destroyed,

@@ -15,6 +15,7 @@ SS::Application.routes.draw do
     end
     resources :datasets, concerns: :deletion, module: :dataset do
       get "search" => "datasets/search#index", on: :collection
+      get :check_for_update, on: :member
       resources :resources, concerns: :deletion do
         get "file" => "resources#download"
         get "tsv" => "resources#download_tsv"
@@ -30,6 +31,8 @@ SS::Application.routes.draw do
         get "rdf_class_preview" => "csv2rdf_settings#rdf_class_preview"
         get "rdf_prop_select/:column_index" => "csv2rdf_settings#rdf_prop_select"
         post "rdf_prop_select/:column_index" => "csv2rdf_settings#rdf_prop_select"
+        get :check_for_update, on: :member
+        match :sync, on: :member, via: [ :get, :post ]
       end
 
       resources :url_resources, concerns: :deletion do

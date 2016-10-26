@@ -1664,3 +1664,51 @@ form .CodeMirror {
     margin-top: 15px;
   }
 }
+
+// -------------------------------------------------------------------------------------------------
+// addon cms/opendata_ref/resource
+#addon-cms-agents-addons-opendata_ref-resource .see {
+  .od-resource-file {
+    @include clear;
+    width: 240px;
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid $white;
+    vertical-align: top;
+    &:hover {
+      border: 1px solid $gray4;
+    }
+  }
+  .od-resource-file-img {
+    min-height: 110px;
+    border: 1px solid $gray4;
+    text-align: center;
+    line-height: 110px;
+    &:hover {
+      background-color: #eee;
+      text-decoration: none;
+    }
+    img {
+      vertical-align: middle;
+    }
+    .ext {
+      display: block;
+      overflow: hidden;
+      color: $orange;
+      font-size: $px32;
+      font-weight: bold;
+    }
+  }
+  .od-resource-file-name {
+    text-align: center;
+  }
+  .od-resource-file-meta {
+    dt {
+      font-weight: bold;
+    }
+    dd {
+      margin: 0px;
+    }
+  }
+}
