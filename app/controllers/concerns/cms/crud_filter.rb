@@ -13,14 +13,17 @@ module Cms::CrudFilter
       append_view_path "app/views/ss/crud"
     end
 
+    def set_items
+      @items = @model.site(@cur_site).
+        allow(:read, @cur_user, site: @cur_site)
+    end
+
   public
     def index
       raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-
-      @items = @model.site(@cur_site).
-        allow(:read, @cur_user, site: @cur_site).
-        search(params[:s]).
-        page(params[:page]).per(50)
+      set_items
+      @items = @items.search(params[:s])
+        .page(params[:page]).per(50)
     end
 
     def show
@@ -138,5 +141,23 @@ module Cms::CrudFilter
           format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
         end
       end
+    end
+
+    def download_all
+      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+      set_items
+
+      csv = @items.to_csv
+      filename = "#{@model.name.pluralize.underscore.gsub('/', '_')}_#{Time.zone.now.to_i}.csv"
+      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
+    end
+
+    def import_csv
+      return if request.get?
+
+      @item = @model.new get_params
+      result = @item.import_csv
+      flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
+      render_create result, location: { action: :index }, render: { file: :import_csv }
     end
 end

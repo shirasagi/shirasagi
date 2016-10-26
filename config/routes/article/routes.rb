@@ -4,29 +4,38 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, :on => :collection
+    delete action: :destroy_all, on: :collection
   end
 
   concern :copy do
-    get :copy, :on => :member
-    put :copy, :on => :member
+    get :copy, on: :member
+    put :copy, on: :member
   end
 
   concern :move do
-    get :move, :on => :member
-    put :move, :on => :member
+    get :move, on: :member
+    put :move, on: :member
   end
 
   concern :lock do
-    get :lock, :on => :member
-    delete :lock, action: :unlock, :on => :member
+    get :lock, on: :member
+    delete :lock, action: :unlock, on: :member
+  end
+
+  concern :download do
+    get :download_all, on: :collection
+  end
+
+  concern :import do
+    get :import_csv, on: :collection
+    post :import_csv, on: :collection
   end
 
   content "article" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     get "generate" => "generate#index"
     post "generate" => "generate#run"
-    resources :pages, concerns: [:deletion, :copy, :move, :lock]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import]
   end
 
   content "article" do
