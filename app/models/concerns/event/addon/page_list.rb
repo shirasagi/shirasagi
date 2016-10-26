@@ -18,13 +18,14 @@ module Event::Addon
     end
 
     def condition_hash(opts = {})
-      cond = super
+      h = super
       if sort == "event_dates"
-        cond["event_dates.0"] = { "$exists" => true }
+        { "$and" => [ h, { "event_dates.0" => { "$exists" => true } } ] }
       elsif sort == "unfinished_event_dates"
-        cond["event_dates"] = { "$elemMatch" => { "$gte" => Time.zone.today } }
+        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => Time.zone.today } } } ] }
+      else
+        h
       end
-      cond
     end
 
     def sort_hash
