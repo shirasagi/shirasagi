@@ -26,60 +26,64 @@ module Faq::Addon::Csv
         CSV.generate do |data|
           data << csv_headers.map { |k| t k }
           criteria.each do |item|
-            line = []
-
-            # basic
-            line << item.basename
-            line << item.name
-            line << item.index_name
-            line << item.layout.try(:name)
-            line << item.order
-
-            # meta
-            line << item.keywords
-            line << item.description
-            line << item.summary_html
-
-            # body
-            line << item.question
-            line << item.html
-
-            # category
-            line << item.categories.pluck(:name).join("\n")
-
-            # event
-            line << item.event_name
-            line << item.event_dates
-
-            # related pages
-            line << item.related_pages.pluck(:filename).join("\n")
-
-            # crumb
-            line << item.parent_crumb_urls
-
-            # contact
-            line << item.label(:contact_state)
-            line << item.contact_group.try(:name)
-            line << item.contact_charge
-            line << item.contact_tel
-            line << item.contact_fax
-            line << item.contact_email
-
-            # released
-            line << item.released.try(:strftime, "%Y/%m/%d %H:%M")
-            line << item.release_date.try(:strftime, "%Y/%m/%d %H:%M")
-            line << item.close_date.try(:strftime, "%Y/%m/%d %H:%M")
-
-            # groups
-            line << item.groups.pluck(:name).join("\n")
-            line << item.permission_level
-
-            # state
-            line << item.label(:state)
-
-            data << line
+            data << csv_line(item)
           end
         end
+      end
+
+      def csv_line(item)
+        line = []
+
+        # basic
+        line << item.basename
+        line << item.name
+        line << item.index_name
+        line << item.layout.try(:name)
+        line << item.order
+
+        # meta
+        line << item.keywords
+        line << item.description
+        line << item.summary_html
+
+        # body
+        line << item.question
+        line << item.html
+
+        # category
+        line << item.categories.pluck(:name).join("\n")
+
+        # event
+        line << item.event_name
+        line << item.event_dates
+
+        # related pages
+        line << item.related_pages.pluck(:filename).join("\n")
+
+        # crumb
+        line << item.parent_crumb_urls
+
+        # contact
+        line << item.label(:contact_state)
+        line << item.contact_group.try(:name)
+        line << item.contact_charge
+        line << item.contact_tel
+        line << item.contact_fax
+        line << item.contact_email
+
+        # released
+        line << item.released.try(:strftime, "%Y/%m/%d %H:%M")
+        line << item.release_date.try(:strftime, "%Y/%m/%d %H:%M")
+        line << item.close_date.try(:strftime, "%Y/%m/%d %H:%M")
+
+        # groups
+        line << item.groups.pluck(:name).join("\n")
+        line << item.permission_level
+
+        # state
+        line << item.label(:state)
+
+        line
       end
     end
   end

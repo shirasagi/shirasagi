@@ -47,7 +47,7 @@ Gws::User.find_by(uid: "user3").add_to_set(gws_role_ids: r02.id)
 ## -------------------------------------
 puts "# notice"
 
-def create(data)
+def create_notice(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Notice.find_or_create_by(cond)
@@ -56,13 +56,13 @@ def create(data)
   item
 end
 
-create name: "お知らせです。", text: ("お知らせです。\n" * 10)
-create name: "重要なお知らせです。", text: ("重要なお知らせです。\n" * 10), severity: 'high'
+create_notice name: "お知らせです。", text: ("お知らせです。\n" * 10)
+create_notice name: "重要なお知らせです。", text: ("重要なお知らせです。\n" * 10), severity: 'high'
 
 ## -------------------------------------
 puts "# link"
 
-def create(data)
+def create_link(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Link.find_or_create_by(cond)
@@ -71,12 +71,12 @@ def create(data)
   item
 end
 
-create name: "オープンソース", html: %(<a href="http://ss-proj.org/">SHIRASAGI</a>)
+create_link name: "オープンソース", html: %(<a href="http://ss-proj.org/">SHIRASAGI</a>)
 
 ## -------------------------------------
 puts "# facility/category"
 
-def create(data)
+def create_facility_category(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Facility::Category.find_or_create_by(cond)
@@ -86,14 +86,14 @@ def create(data)
 end
 
 @fc_cate = [
-  create(name: "会議室", order: 1),
-  create(name: "公用車", order: 2)
+  create_facility_category(name: "会議室", order: 1),
+  create_facility_category(name: "公用車", order: 2)
 ]
 
 ## -------------------------------------
 puts "# facility/item"
 
-def create(data)
+def create_facility_item(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Facility::Item.find_or_create_by(cond)
@@ -103,16 +103,16 @@ def create(data)
 end
 
 @fc_item = [
-  create(name: "会議室101", order: 1, category_id: @fc_cate[0].id),
-  create(name: "会議室102", order: 2, category_id: @fc_cate[0].id),
-  create(name: "乗用車1", order: 10, category_id: @fc_cate[1].id),
-  create(name: "乗用車2", order: 11, category_id: @fc_cate[1].id)
+  create_facility_item(name: "会議室101", order: 1, category_id: @fc_cate[0].id),
+  create_facility_item(name: "会議室102", order: 2, category_id: @fc_cate[0].id),
+  create_facility_item(name: "乗用車1", order: 10, category_id: @fc_cate[1].id),
+  create_facility_item(name: "乗用車2", order: 11, category_id: @fc_cate[1].id)
 ]
 
 ## -------------------------------------
 puts "# schedule/category"
 
-def create(data)
+def create_schedule_category(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
 
@@ -123,15 +123,15 @@ def create(data)
 end
 
 @sc_cate = [
-  create(name: "会議", color: "#002288"),
-  create(name: "出張", color: "#EE00DD"),
-  create(name: "休暇", color: "#CCCCCC")
+  create_schedule_category(name: "会議", color: "#002288"),
+  create_schedule_category(name: "出張", color: "#EE00DD"),
+  create_schedule_category(name: "休暇", color: "#CCCCCC")
 ]
 
 ## -------------------------------------
 puts "# schedule/plan"
 
-def create(data)
+def create_schedule_plan(data)
   #puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Schedule::Plan.find_or_initialize_by(cond)
@@ -159,10 +159,10 @@ puts "予定1..50"
                   end_on: (date + 1.day).strftime('%Y-%m-%d'),
                   allday: 'allday'
   end
-  create params
+  create_schedule_plan params
 end
 
-create name: "繰り返し予定", member_ids: @users.map(&:id),
+create_schedule_plan name: "繰り返し予定", member_ids: @users.map(&:id),
        start_at: base_date.strftime('%Y-%m-%d 14:00'),
        end_at: base_date.strftime('%Y-%m-%d 16:00'),
        repeat_type: 'weekly', interval: 1, wdays: [],
@@ -172,7 +172,7 @@ create name: "繰り返し予定", member_ids: @users.map(&:id),
 ## -------------------------------------
 puts "# board/category"
 
-def create(data)
+def create_board_category(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Board::Category.find_or_initialize_by(cond)
@@ -182,15 +182,15 @@ def create(data)
 end
 
 @bd_cate = [
-  create(name: "告知", color: "#002288", order: 1),
-  create(name: "質問", color: "#EE00DD", order: 2),
-  create(name: "募集", color: "#CCCCCC", order: 3)
+  create_board_category(name: "告知", color: "#002288", order: 1),
+  create_board_category(name: "質問", color: "#EE00DD", order: 2),
+  create_board_category(name: "募集", color: "#CCCCCC", order: 3)
 ]
 
 ## -------------------------------------
 puts "# board/post"
 
-def create(data)
+def create_board_topic(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Board::Topic.find_or_initialize_by(cond)
@@ -200,11 +200,11 @@ def create(data)
 end
 
 @bd_topic = [
-  create(name: "スレッド形式トピック", text: "内容です。", mode: "thread", category_ids: [@bd_cate[0].id]),
-  create(name: "ツリー形式トピック", text: "内容です。", mode: "tree", category_ids: [@bd_cate[1].id])
+  create_board_topic(name: "スレッド形式トピック", text: "内容です。", mode: "thread", category_ids: [@bd_cate[0].id]),
+  create_board_topic(name: "ツリー形式トピック", text: "内容です。", mode: "tree", category_ids: [@bd_cate[1].id])
 ]
 
-def create(data)
+def create_board_post(data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = Gws::Board::Post.find_or_initialize_by(cond)
@@ -213,9 +213,9 @@ def create(data)
   item
 end
 
-create(name: "返信1", text: "内容です。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
-res = create(name: "返信2", text: "内容です。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
-res = create(name: "返信3", text: "内容です。", topic_id: @bd_topic[1].id, parent_id: res.id)
+create_board_post(name: "返信1", text: "内容です。", topic_id: @bd_topic[0].id, parent_id: @bd_topic[0].id)
+res = create_board_post(name: "返信2", text: "内容です。", topic_id: @bd_topic[1].id, parent_id: @bd_topic[1].id)
+res = create_board_post(name: "返信3", text: "内容です。", topic_id: @bd_topic[1].id, parent_id: res.id)
 
 ## -------------------------------------
 puts "# max file size"
