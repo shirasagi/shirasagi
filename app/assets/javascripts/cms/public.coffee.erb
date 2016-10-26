@@ -27,6 +27,7 @@ $ ->
   SS_Mobile.render()
   SS_Voice.render()
   SS_Theme.render()
+  SS.renderAjaxBox()
   SS.part = $(".ss-part").length
   if SS.part == 0
     SS_Recommend.render()
@@ -115,6 +116,12 @@ class @SS
     elem.on "submit", (e) ->
       $(this).ajaxSubmit $.extend(defaults, params)
       e.preventDefault();
+
+  @renderAjaxBox:() ->
+    try
+      $("#main .ajax-box").colorbox()
+    catch e
+      console.warn(e)
 
   @ajax:(elem, params = {}) ->
     $(elem).click (e) ->
