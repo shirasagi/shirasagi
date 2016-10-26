@@ -101,6 +101,7 @@ ja:
       integrate: 統合する
       download: ダウンロード
       import: インポート
+      resize: リサイズする
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -327,6 +328,7 @@ ja:
         filename: ファイル名
         size: ファイルサイズ
         content_type: Content Type
+        resizing: リサイズ
       ss/model/role:
         name: ロール名
         permission_level: 権限レベル
