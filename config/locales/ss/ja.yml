@@ -66,6 +66,7 @@ ja:
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。
       import: インポートを開始してよろしいですか？
+      download: ダウンロードしてよろしいですか？
     links:
       cms: サイト管理
       gws: グループ
@@ -98,6 +99,8 @@ ja:
       markdown_help: Markdown ヘルプ
       split: 分割する
       integrate: 統合する
+      download: ダウンロード
+      import: インポート
     notice:
       saved: 保存しました。
       deleted: 削除しました。

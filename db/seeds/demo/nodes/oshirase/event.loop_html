@@ -1,0 +1,6 @@
+<article class="#{class}">
+  <header>
+    #{event_dates.long}
+    <h2><a href="#{url}">#{name}</a></h2>
+  </header>
+</article>

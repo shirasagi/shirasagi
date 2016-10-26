@@ -20,6 +20,7 @@ class Article::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Article::Addon::Import
 
   set_permission_name "article_pages"
 

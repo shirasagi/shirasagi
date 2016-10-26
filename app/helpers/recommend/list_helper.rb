@@ -9,9 +9,9 @@ module Recommend::ListHelper
     @items.each do |item|
       content = item.content
       next unless content
-      next if display_list.index(item.url)
+      next if display_list.index(item.path)
 
-      display_list << item.url
+      display_list << item.path
       if cur_item.loop_html.present?
         ih = cur_item.render_loop_html(content)
       else

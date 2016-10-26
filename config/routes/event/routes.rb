@@ -4,23 +4,23 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, :on => :collection
+    delete action: :destroy_all, on: :collection
   end
 
   concern :crud do
-    get :move, :on => :member
-    put :move, :on => :member
-    get :copy, :on => :member
-    put :copy, :on => :member
+    get :move, on: :member
+    put :move, on: :member
+    get :copy, on: :member
+    put :copy, on: :member
   end
 
   concern :download do
-    get :download, :on => :collection
+    get :download_all, on: :collection
   end
 
   concern :import do
-    get :import, :on => :collection
-    post :import, :on => :collection
+    get :import_csv, on: :collection
+    post :import_csv, on: :collection
   end
 
   content "event" do

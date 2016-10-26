@@ -36,15 +36,13 @@ $(function() {
 // navi
   var w = $(window).width();
   var x = 600;
-  if (x <= w) {
-    $("#navi li").hover(function() {
-      $(this).children('ul').show();
-      $(this).children('a').addClass("current");
-    }, function() {
-      $(this).children('ul').hide();
-      $(this).children('a').removeClass("current");
-    });
-  }
+  $('#navi li a').focus(function() {
+    $(this).parent('li').addClass('focus');
+    $(this).closest('ul').parent('li').addClass('focus');
+  }).blur(function() {
+    $(this).parent('li').removeClass('focus');
+    $(this).closest('ul').parent('li').removeClass('focus');
+  });
   var agent = navigator.userAgent;
   if(agent.match(/(iPhone|iPad|Android)/)){
     $('#navi li').children('ul').remove();
