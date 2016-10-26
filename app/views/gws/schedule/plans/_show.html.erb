@@ -9,4 +9,10 @@
   <dt><%= @model.t :category_id %></dt>
   <dd><%= @item.category.name %></dd>
   <% end %>
+
+  <dt><%= @model.t :color %></dt>
+  <dd>
+    <span class="gws-schedule-color-block" style="<%= "background-color: #{@item.color}; color: #{@item.text_color}" %>">
+      <%= @item.name %></span>
+  </dd>
 </dl>

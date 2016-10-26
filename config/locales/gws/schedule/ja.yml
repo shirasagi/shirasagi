@@ -106,6 +106,7 @@ ja:
       gws/schedule/plan:
         repeat_plan_id: 繰り返し
         category_id: 種別
+        color: 表示色
       gws/schedule/repeat_plan: &repeat_plan
         repeat_type: 繰り返し設定
         interval: 繰り返し間隔

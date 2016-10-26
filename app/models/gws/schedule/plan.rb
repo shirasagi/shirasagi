@@ -3,6 +3,7 @@ class Gws::Schedule::Plan
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
@@ -20,8 +21,12 @@ class Gws::Schedule::Plan
   permission_include_custom_groups
   readable_setting_include_custom_groups
 
+  field :color, type: String
+
   # 種別
   belongs_to :category, class_name: 'Gws::Schedule::Category'
+
+  permit_params :color
 
   validate :validate_file_size
 

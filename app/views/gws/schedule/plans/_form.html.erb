@@ -1,6 +1,7 @@
 <%= jquery do %>
   Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
   Gws_Schedule_Plan.renderAlldayForm();
+  $('#item_color').colorPicker().data('colorMode', 'HEX');
 <% end %>
 
 <dl class="see gws-schedule-plan">
@@ -28,4 +29,7 @@
   <dt><%= @model.t :category_id %><%= @model.tt :category_id %></dt>
   <dd><%= f.select :category_id, @item.category_options, include_blank: " " %></dd>
   <% end %>
+
+  <dt><%= @model.t :color %><%= @model.tt :color %></dt>
+  <dd><%= f.text_field :color, style: 'width: 8em' %></dd>
 </dl>

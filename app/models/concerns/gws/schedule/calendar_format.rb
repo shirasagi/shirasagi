@@ -21,13 +21,15 @@ module Gws::Schedule::CalendarFormat
     data[:startTimeLabel] = time_label(start_at)
     data[:allDayLabel] = label(:allday)
 
+    coloring = color.present? ? self : category
+
     if allday? || start_at.to_date != end_at.to_date
       data[:className] = 'fc-event-range'
-      data[:backgroundColor] = category.color if category
-      data[:textColor] = category.text_color if category
+      data[:backgroundColor] = coloring.color if coloring
+      data[:textColor] = coloring.text_color if coloring
     else
       data[:className] = 'fc-event-point'
-      data[:textColor] = category.color if category
+      data[:textColor] = coloring.color if coloring
     end
 
     if allday?
