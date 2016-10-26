@@ -22,10 +22,19 @@
     {{ part "sns" }}
     {{ yield }}
     <nav class="ss-adobe-reader" style="display: none">Adobe Reader</nav>
+    {{ part "history" }}
     {{ part "feedback/feedback" }}
     {{ part "page-top" }}
   </div>
   <div id="side">
+    <section id="month">
+      <header class="title"><h2>月別ページ一覧</h2></header>
+      {{ part "docs/archive/month" }}
+    </section>
+    <section id="calendar">
+      <header class="title"><h2>カレンダー</h2></header>
+      {{ part "docs/archive/calendar" }}
+    </section>
     {{ part "links-life" }}
   </div>
 </div>

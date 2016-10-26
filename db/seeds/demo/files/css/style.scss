@@ -3,7 +3,11 @@
 
 // -----------------------------------------------------------------------------
 // element
-
+@include mb {
+  input[type="submit"], button, select, textarea {
+    -webkit-appearance: none;
+  }
+}
 html {
   height: 100%;
   font-family: $font-base;
@@ -21,7 +25,7 @@ h1, h2, h3, h4, h5 {
 }
 a {
   color: $link;
-  &:hover {
+  &:hover, &:focus {
     color: $hover;
     text-decoration: none;
   }
@@ -67,8 +71,11 @@ img {
       border-right: $border-hgry;
       @include u-arrow;
     }
-    #size, #theme, #ss-voice, #ss-kana, #info {
+    .tools {
       float: right;
+    }
+    #size, #theme, #ss-voice, #ss-kana, #info {
+      float: left;
       border-left: $border-hgry;
     }
     #size {
@@ -80,7 +87,7 @@ img {
         @include border-radius(3px);
         color: $text;
         text-decoration: none;
-        &:hover {
+        &:hover, &:focus {
           @include grd-blue;
           color: $t-white;
         }
@@ -97,7 +104,7 @@ img {
         @include border-radius(3px);
         color: $t-white;
         text-decoration: none;
-        &:hover { opacity: 0.7; }
+        &:hover, &:focus { opacity: 0.7; }
       }
       .white {
         background: $t-white;
@@ -246,7 +253,7 @@ img {
       border-bottom: $border-hblue;
       @include box-sizing(border-box);
     }
-    li {
+    > ul li {
       position: relative;
       float: left;
       color: #202020;
@@ -254,7 +261,7 @@ img {
         width: 50%;
       }
     }
-    a {
+    >ul li a {
       @include inline-block;
       width: 178px;
       padding: 5px 0 4px;
@@ -272,13 +279,9 @@ img {
         border-bottom: $border-lblue;
         font-size: 100%;
       }
-      &:hover {
-        background: $hblue;
-        color: #202020;
-      }
     }
-    .current {
-      background: $hblue;
+    .current, > ul li:hover a, li.focus a {
+      background-color: $hblue;
       color: #202020;
     }
     .sangyo a, .shsiei a {
@@ -296,16 +299,25 @@ img {
 _::content, #navi .wrap .sangyo a:not(*:root) {
   width: 175px;
 }
+#navi .wrap li:hover > ul,
+#navi .wrap .focus > ul {
+  height: auto;
+}
 #navi .wrap li ul, #navi .wrap .current ul {
   position: absolute;
   left: -1px;
-  display: none;
   width: 180px;
+  height: 0;
+  overflow: hidden;
   border-left: $border-lblue;
   border-right: $border-hblue;
   border-bottom: 2px solid $orange;
   background: $hblue;
   z-index: 100;
+  @include mb { display: none; }
+  &.current {
+    display: block;
+  }
   li {
     float: none;
     border: none;
@@ -322,7 +334,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
       color: $link;
       font-size: $px14;
       text-align: left;
-      &:hover {
+      &:hover, &:focus {
         @include li;
         padding: 5px 10px 3px 25px;
         color: $link;
@@ -534,6 +546,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     }
   }
 }
+$guidelist: marriage, pregnancy, child, education, house, work, welfare, death;
 #guide {
   @include mb {margin: 0;}
   h2 {
@@ -542,29 +555,16 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
   ul {
     @include clear;
   }
-  li.kekkon a {
-    background: url(../img/ic-marriage.png) no-repeat 5px center;
+  @each $guide in $guidelist {
+    li.#{$guide} a {
+      background: url(../img/ic-#{$guide}.png) no-repeat 5px center;
+      @include mb {
+        background-size: auto 24px;
+      }
+    }
   }
-  li.ninshin a {
-    background: url(../img/ic-pregnancy.png) no-repeat 9px center;
-  }
-  li.kosodate a {
-    background: url(../img/ic-child.png) no-repeat 9px center;
-  }
-  li.kyoiku a {
-    background: url(../img/ic-education.png) no-repeat 5px center;
-  }
-  li.sumai a {
-    background: url(../img/ic-house.png) no-repeat 7px center;
-  }
-  li.shushoku a {
-    background: url(../img/ic-work.png) no-repeat 7px center;
-  }
-  li.fukushi a {
-    background: url(../img/ic-welfare.png) no-repeat 9px center;
-  }
-  li.okuyami a {
-    background: url(../img/ic-death.png) no-repeat 10px center;
+  li.pregnancy a, li.child a, li.welfare a, li.death a {
+    background-position: 9px center;
   }
   li {
     float: left;
@@ -579,12 +579,13 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
       padding: 8px 0 5px 45px;
       color: $text;
       text-decoration: none;
-      &:hover {
+      &:hover, &:focus {
         background-color: $hblue;
       }
     }
   }
 }
+$aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 #about {
   @include mb {margin: 0;}
   h2 {
@@ -593,29 +594,13 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
   ul {
     @include clear;
   }
-  li.about a {
-    background: url(../img/ic-about.png) no-repeat 5px center;
-  }
-  li.event a {
-    background: url(../img/ic-event.png) no-repeat 5px center;
-  }
-  li.mayor a {
-    background: url(../img/ic-mayor.png) no-repeat 5px center;
-  }
-  li.gikai a {
-    background: url(../img/ic-assembly.png) no-repeat 5px center;
-  }
-  li.shisetsu a {
-    background: url(../img/ic-institution.png) no-repeat 5px center;
-  }
-  li.kanko a {
-    background: url(../img/ic-sight.png) no-repeat 5px center;
-  }
-  li.sodan a {
-    background: url(../img/ic-consultation.png) no-repeat 5px center;
-  }
-  li.faq a {
-    background: url(../img/ic-qa.png) no-repeat 5px center;
+  @each $about in $aboutlist {
+    li.#{$about} a {
+      background: url(../img/ic-#{$about}.png) no-repeat 5px center;
+      @include mb {
+        background-size: auto 24px;
+      }
+    }
   }
   li {
     float: left;
@@ -630,8 +615,35 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
       padding: 8px 0 5px 45px;
       color: $text;
       text-decoration: none;
-      &:hover {
+      &:hover, &:focus {
         background-color: $hblue;
+      }
+    }
+  }
+}
+@include mb {
+  #guide, #about {
+    margin: 0;
+  }
+  #guide ul, #about ul {
+    padding: 10px 10px 0;
+    li {
+      width: 50%;
+      margin-bottom: $smart-margin;
+      padding: 0;
+      border: none;
+      &:nth-child(2n+1) {
+        margin: 0;
+      }
+      &:nth-child(2n+1) a {
+        margin-right: 5px;
+      }
+      &:nth-child(2n) a {
+        margin-left: 5px;
+      }
+      a {
+        border: $border-hgry;
+        padding: 5px 0 2px 40px;
       }
     }
   }
@@ -754,7 +766,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
       text-align: center;
       text-decoration: none;
     }
-    .name:hover, .current {
+    .name:hover, .name:focus, .current {
       border-left: 5px solid $orange;
       @include grd-blue;
       color: $t-white;
@@ -788,22 +800,39 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
   nav {
     @include clear;
     padding: 3px 0;
+    @include mb {
+      padding: 0;
+      background: #ccc;
+    }
   }
   .rss {
     float: left;
     @include inline-block;
     padding-left: 20px;
     background: url(../img/ic-rss.png) no-repeat left center;
+    @include mb {
+      width: 30%;
+      @include inline-block;
+      padding: 3px 0 3px 30px;
+      background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
+      @include box-sizing(border-box);
+    }
   }
   .more {
     float: right;
     @include r-arrow;
+    @include mb {
+      width: 70%;
+      padding: 3px 0 3px 15px;
+      @include r-arrow-s;
+      @include box-sizing(border-box);
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
-// add
-#add {
+// ad
+#ad {
   position: relative;
   @include clear;
   width: $page-width;
@@ -834,6 +863,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
       }
       &:last-child {
         margin: 0;
+        @include mb { margin: 0 0 10px 10px; }
       }
     }
   }
@@ -857,6 +887,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
   position: fixed;
   bottom: 0;
   right: 0;
+  z-index: 100;
   @include border-radius(5px 0 0 0);
   background: rgba(0,0,0,0.6);
   a {
@@ -924,20 +955,38 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
 // feed
 .feed {
   padding: 6px 0 3px;
+  @include mb {
+    @include clear;
+    padding: 0;
+    background: $hgry;
+  }
   .rss {
     @include inline-block;
     padding-left: 20px;
     background: url(../img/ic-rss.png) no-repeat left center;
+    @include mb {
+      float: left;
+      width: 30%;
+      @include inline-block;
+      padding: 3px 0 3px 30px;
+      background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
+    }
   }
   .more {
     float: right;
     @include r-arrow;
+    @include mb {
+      float: left;
+      width: 70%;
+      padding: 3px 0 3px 15px;
+      @include r-arrow-s;
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
-// links-life, side-menu
-#links-life, #side-menu, #recent-photo, #side-blog {
+// links-life, side-menu, #month
+#links-life, #side-menu, #recent-photo, #side-blog, #month {
   margin-bottom: $box-margin;
   h2 {
     padding: 3px 6px 0;
@@ -945,13 +994,13 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     @include grd-blue;
     color: $t-white;
   }
-  li {
+  li, p {
     padding: 3px 0;
     border-bottom: $border-hgry;
-    a {
+    a, span {
       display: block;
       padding: 0 6px;
-      &:hover {
+      &:hover, &:focus {
         background: $hblue;
       }
     }
@@ -973,7 +1022,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     &:nth-child(2n) {
       margin-right: 0;
     }
-    &:hover {
+    &:hover, &:focus {
       background: $hblue;
     }
   }
@@ -981,7 +1030,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
 
 // -----------------------------------------------------------------------------
 // category-pages .article-pages cms-pages faq-search
-.category-pages, .article-pages, .cms-pages, .faq-search {
+.category-pages, .article-pages, .cms-pages, .cms-group-pages, .faq-search {
   margin-bottom: $box-margin;
   a {
     @include r-arrow;
@@ -994,12 +1043,24 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
 }
 .page .category-pages article,
 .page .article-pages article,
-.page .cms-pages article {
+.page .cms-pages article,
+.page .cms-group-pages article {
   padding: 12px 0 9px;
   border-bottom: $border-hgry;
   time {
     @include inline-block;
     width: 120px;
+  }
+  .event-dates {
+    display: inline-block;
+    width: 240px;
+    @include mb {
+      display: block;
+      width: auto;
+    }
+    time {
+      width: auto;
+    }
   }
   h2 {
     display: inline;
@@ -1032,7 +1093,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
       display: block;
       padding: 0 6px;
       background: none;
-      &:hover {
+      &:hover, &:focus {
         background: $hblue;
       }
     }
@@ -1078,7 +1139,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     background: #ededed;
     color: $text;
     text-decoration: none;
-    &:hover {
+    &:hover, &:focus {
       background: $hblue;
     }
   }
@@ -1101,11 +1162,12 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
 }
 .page article, .one article.body,
 .page .related-pages, .page footer.contact,
+#history,
 .page #feedback,
 .inquiry-html, .inquiry-form,
 .faq-question, .faq .body,
 .map-page, .inquiry-nodes, .columns,
-.blog-center article, .mypage-show article,
+.blog-center .blog, .mypage-show article,
 .cke_editable,
 .body--anpi-ezine-anpi article.body, .body--anpi-ezine-event article.body {
   article {
@@ -1333,7 +1395,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     background: $hblue;
     color: $text;
     text-decoration: none;
-    &:hover {
+    &:hover, &:focus {
       background-color: $blue;
       color: $t-white;
     }
@@ -1436,7 +1498,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
         background: $hblue;
         color: $text;
         text-decoration: none;
-        &:hover {
+        &:hover, &:focus {
           background-color: $blue;
           color: $t-white;
         }
@@ -1464,6 +1526,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
   }
 }
 #calendar {
+  margin-bottom: $box-margin;
   border: $border-hgry;
   .title h2 {
     margin-bottom: 6px;
@@ -1833,13 +1896,13 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
         background-color: $hgry;
         color: $text;
         text-decoration: none;
-        &:hover {
+        &:hover, &:focus {
           background-color: $hblue;
         }
         &.clicked {
           background-color: $blue;
           color: $t-white;
-          &:hover {
+          &:hover, &:focus {
             background-color: $hblue;
             color: $text;
           }
@@ -1878,7 +1941,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
             background-color: $hgry;
             color: $text;
             text-decoration: none;
-            &:hover {
+            &:hover, &:focus {
               background-color: $hblue;
             }
           }
@@ -2008,7 +2071,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     &:nth-child(2n) {
       margin-right: 0;
     }
-    &:hover {
+    &:hover, &:focus {
       background: $hblue;
     }
   }
@@ -2178,7 +2241,7 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
         height: auto;
       }
     }
-    a:hover { background: none; }
+    a:hover, a:focus { background: none; }
   }
   .more {
     text-align: right;
@@ -2189,6 +2252,10 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
 }
 .photos {
   @include clear;
+  @include display-flex;
+  @include flex-direction(row);
+  @include flex-wrap(wrap);
+  margin-bottom: $box-margin;
   .photo {
     width: 166px;
     float: left;
@@ -2200,12 +2267,16 @@ _::content, #navi .wrap .sangyo a:not(*:root) {
     }
     a {
       display: block;
+      height: 100%;
       padding: 6px;
-      &:hover { background: $hblue; }
+      &:hover, &:focus { background: $hblue; }
     }
     img {
       max-width: 100%;
       height: auto;
+    }
+    span {
+      display: block;
     }
   }
 }
@@ -2656,7 +2727,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       text-decoration: none;
       text-align: center;
       line-height: 90px;
-      &:hover {
+      &:hover, &:focus {
         background: $hblue;
       }
     }
@@ -2742,7 +2813,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
 }
 // -----------------------------------------------------------------------------
 @include mb {
-  #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
+  #head, #navi .wrap, #wrap, #main, #side, #addition, #ad,
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
   #main .category-nodes article, #main .cms-nodes article {
@@ -2751,47 +2822,14 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     padding: 0;
   }
   #tool, #head .menu .u-menu, #slideshow #slide-controll #pause-play,
-  #population, #add .info, .crumbs {
+  #population, #ad .info, .crumbs {
     display: none;
   }
 
 // -----------------------------------------------------------------------------
-//  guide about
-  #guide, #about {
-    margin: 0;
-  }
-  #guide ul, #about ul {
-    padding: 10px 10px 0;
-    li {
-      width: 50%;
-      margin-bottom: $smart-margin;
-      padding: 0;
-      border: none;
-      &:nth-child(2n+1) {
-        margin: 0;
-      }
-      &:nth-child(2n+1) a {
-        margin-right: 5px;
-      }
-      &:nth-child(2n) a {
-        margin-left: 5px;
-      }
-      a {
-        border: $border-hgry;
-        padding: 5px 0 2px 40px;
-      }
-    }
-    li.kekkon a, li.ninshin a, li.kosodate a, li.kyoiku a, li.sumai a,
-    li.shushoku a, li.fukushi a, li.okuyami a,
-    li.about a, li.event a, li.mayor a, li.gikai a, li.shisetsu a,
-    li.kanko a, li.sodan a, li.faq a {
-      background-size: auto 24px;
-    }
-  }
-// -----------------------------------------------------------------------------
 //  safety online propose attention recent useful relations ranking topics connect add links-life
   #safety, #online, #propose, #attention, #recent, #useful, #connect
-  #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list {
+  #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list, #month {
     margin-bottom: $smart-margin;
     margin-top: 0;
     header h2 {
@@ -2863,7 +2901,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   #useful, #relations, #topics {
     min-height: 0;
   }
-  #connect nav, #add nav {
+  #connect nav, #ad nav {
     padding: 0 10px;
     a {
       @include box-sizing(border-box);
@@ -2878,11 +2916,11 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       }
     }
   }
-  #add nav {
+  #ad nav {
     padding: 10px 10px 0;
     border: none;
   }
-  #links-life li, #category-list h2 {
+  #links-life li, #category-list h2, #month h2 {
     padding: 0;
     a {
       padding: 3px 10px;
@@ -2913,45 +2951,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       padding: 3px 10px;
     }
   }
-// -----------------------------------------------------------------------------
-//  feed
-  .feed {
-    @include clear;
-    padding: 0;
-    background: $hgry;
-    .rss {
-    float: left;
-    width: 30%;
-    @include inline-block;
-    padding: 3px 0 3px 30px;
-    background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
-    }
-    .more {
-      float: left;
-      width: 70%;
-      padding: 3px 0 3px 15px;
-      @include r-arrow-s;
-    }
-  }
-  .cms-tabs {
-    nav {
-      padding: 0;
-      background: #ccc;
-    }
-    .rss {
-      width: 30%;
-      @include inline-block;
-      padding: 3px 0 3px 30px;
-      background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
-      @include box-sizing(border-box);
-    }
-    .more {
-      width: 70%;
-      padding: 3px 0 3px 15px;
-      @include r-arrow-s;
-      @include box-sizing(border-box);
-    }
-  }
+
 // -----------------------------------------------------------------------------
 //  footer
   #foot {
