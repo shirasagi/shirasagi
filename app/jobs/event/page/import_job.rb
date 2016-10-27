@@ -55,6 +55,24 @@ class Event::Page::ImportJob < Cms::ApplicationJob
     item.send("#{key}_options").to_h[value(row, key)]
   end
 
+  def category_name_tree_to_ids(name_trees)
+    category_ids = []
+    name_trees.each do |cate|
+      ct_list = []
+      names = cate.split("/")
+      names.each_with_index do |n, d|
+        ct = Cms::Node.site(site).where(name: n, depth: d + 1).first
+        ct_list << ct if ct
+      end
+
+      if ct_list.present? && ct_list.size == names.size
+        ct = ct_list.last
+        category_ids << ct.id if ct.route =~ /^category\//
+      end
+    end
+    category_ids
+  end
+
   def set_page_attributes(row, item)
     # basic
     layout = Cms::Layout.site(site).where(name: value(row, :layout)).first
@@ -80,13 +98,14 @@ class Event::Page::ImportJob < Cms::ApplicationJob
     item.contact = value(row, :contact)
 
     # category
-    category_names = ary_value(row, :categories)
-    categories = Category::Node::Base.site(site).in(name: category_names)
-    if node.st_categories.present?
-      filenames = node.st_categories.pluck(:filename)
-      filenames += node.st_categories.map { |c| /^#{c.filename}\// }
-      categories = categories.in(filename: filenames)
-    end
+    category_name_tree = ary_value(row, :categories)
+    category_ids = category_name_tree_to_ids(category_name_tree)
+    categories = Category::Node::Base.site(site).in(id: category_ids)
+    #if node.st_categories.present?
+    #  filenames = node.st_categories.pluck(:filename)
+    #  filenames += node.st_categories.map { |c| /^#{c.filename}\// }
+    #  categories = categories.in(filename: filenames)
+    #end
     item.category_ids = categories.pluck(:id)
 
     # event

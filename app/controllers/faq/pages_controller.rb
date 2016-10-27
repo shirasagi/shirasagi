@@ -21,8 +21,8 @@ class Faq::PagesController < ApplicationController
     end
 
     def import
-      return if request.get?
       @item = @model.new
+      return if request.get?
 
       begin
         file = params[:item].try(:[], :file)

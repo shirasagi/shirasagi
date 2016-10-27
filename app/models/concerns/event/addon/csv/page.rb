@@ -5,6 +5,23 @@ module Event::Addon::Csv
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    def category_name_tree
+      id_list = categories.pluck(:id)
+
+      ct_list = []
+      id_list.each do |id|
+        name_list = []
+        filename_str = []
+        filename_array = Cms::Node.where(_id: id).map(&:filename).first.split(/\//)
+        filename_array.each do |filename|
+          filename_str << filename
+          name_list << Cms::Node.where(filename: filename_str.join("/")).map(&:name).first
+        end
+        ct_list << name_list.join("/")
+      end
+      ct_list
+    end
+
     module ClassMethods
       def csv_headers
         %w(
@@ -58,7 +75,7 @@ module Event::Addon::Csv
         line << item.contact
 
         # category
-        line << item.categories.pluck(:name).join("\n")
+        line << item.category_name_tree.join("\n")
 
         # event
         line << item.event_name

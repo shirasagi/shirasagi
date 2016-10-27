@@ -23,12 +23,12 @@ SS::Application.routes.draw do
   end
 
   concern :download do
-    get :download_all, on: :collection
+    get :download, on: :collection
   end
 
   concern :import do
-    get :import_csv, on: :collection
-    post :import_csv, on: :collection
+    get :import, on: :collection
+    post :import, on: :collection
   end
 
   content "article" do

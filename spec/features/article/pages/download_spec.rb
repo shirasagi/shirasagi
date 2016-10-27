@@ -6,7 +6,7 @@ describe "article_pages", dbscope: :example do
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:index_path) { article_pages_path site.id, node }
 
-  feature "#download_all", js: true do
+  feature "#download", js: true do
     background do
       login_cms_user
 

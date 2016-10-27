@@ -1,6 +1,6 @@
 require "csv"
 
-class Faq::Page::ImportJob < Cms::ApplicationJob
+class Article::Page::ImportJob < Cms::ApplicationJob
   def put_log(message)
     Rails.logger.info(message)
   end
@@ -15,7 +15,7 @@ class Faq::Page::ImportJob < Cms::ApplicationJob
   end
 
   def model
-    Faq::Page
+    Article::Page
   end
 
   def import_csv(file)
@@ -87,7 +87,6 @@ class Faq::Page::ImportJob < Cms::ApplicationJob
     item.summary_html = value(row, :summary_html)
 
     # body
-    item.question = value(row, :question)
     item.html = value(row, :html)
 
     # category

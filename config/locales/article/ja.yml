@@ -31,3 +31,7 @@ ja:
       article/page: 記事ページ
       article/node/page: 記事リスト
       article/part/node: 記事リスト
+
+  job:
+    models:
+      article/page/import_job: 記事ページインポート
