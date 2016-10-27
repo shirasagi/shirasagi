@@ -1,60 +1,61 @@
 require "csv"
- 
-module Article::Addon
-  module Import
- 
+
+module Article::Addon::Import
   extend ActiveSupport::Concern
   extend SS::Addon
- 
+
   included do
     attr_accessor :in_file, :imported
     permit_params :in_file
   end
 
   module ClassMethods
-    public
-      def to_csv
-        csv = CSV.generate do |data|
-          data << %w(id name file_name layout order keywords description summary_html html categories parent_crumb_urls event_name event_dates contact_state contact_group contact_charge contact_tel contact_fax contact_email released release_date close_date groups permission_level).map { |k| Article::Page.t k.to_sym }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            line << item.filename
-            line << Cms::Layout.where(_id: item.layout_id).map(&:name).first
-            line << item.order
-            line << item.keywords
-            line << item.description
-            line << item.summary_html
-            line << item.html
-            line << get_category_tree(item)
-            line << item.parent_crumb_urls
-            line << item.event_name
-            line << item.event_dates
-            if item.contact_state == "show"
-              line << I18n.t("views.options.state.show")
-            else
-              line << I18n.t("views.options.state.hide")
-            end
-            line << SS::Group.where(_id: item.contact_group_id).map(&:name).first
-            line << item.contact_charge
-            line << item.contact_tel
-            line << item.contact_fax
-            line << item.contact_email
-            line << item.released
-            line << item.release_date
-            line << item.close_date
-            line << item.groups.map(&:name).join("\n")
-            line << item.permission_level
-            data << line
+    FIELDS = %w(id name file_name layout order keywords description summary_html html categories parent_crumb_urls
+                event_name event_dates contact_state contact_group contact_charge contact_tel contact_fax contact_email
+                released release_date close_date groups permission_level).freeze
+
+    def to_csv
+      CSV.generate do |data|
+        data << FIELDS.map { |k| Article::Page.t k.to_sym }
+        criteria.each do |item|
+          line = []
+          line << item.id
+          line << item.name
+          line << item.filename
+          line << Cms::Layout.where(_id: item.layout_id).map(&:name).first
+          line << item.order
+          line << item.keywords
+          line << item.description
+          line << item.summary_html
+          line << item.html
+          line << get_category_tree(item)
+          line << item.parent_crumb_urls
+          line << item.event_name
+          line << item.event_dates
+          if item.contact_state == "show"
+            line << I18n.t("views.options.state.show")
+          else
+            line << I18n.t("views.options.state.hide")
           end
+          line << SS::Group.where(_id: item.contact_group_id).map(&:name).first
+          line << item.contact_charge
+          line << item.contact_tel
+          line << item.contact_fax
+          line << item.contact_email
+          line << item.released
+          line << item.release_date
+          line << item.close_date
+          line << item.groups.map(&:name).join("\n")
+          line << item.permission_level
+          data << line
         end
       end
+    end
 
     private
       def get_category_tree(item)
         id_list = item.send(:categories).pluck(:_id)
-     
+
         categories = []
         id_list.each do |id|
           name_list = []
@@ -66,23 +67,22 @@ module Article::Addon
           end
           categories << name_list.join("/")
         end
-        return categories.join("\n")
+        categories.join("\n")
       end
   end
 
-  public
+  def import_csv
+    @imported = 0
+    validate_import
+    return false unless errors.empty?
 
-    def import_csv
-      @imported = 0
-      validate_import 
-      return false unless errors.empty?  
-
-      table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
-      table.each_with_index do |row, i|
-        update_row(row, i + 2)
-      end
-      return errors.empty?
+    table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+    table.each_with_index do |row, i|
+      update_row(row, i + 2)
     end
+
+    errors.empty?
+  end
 
   private
     def validate_filename
@@ -92,11 +92,11 @@ module Article::Addon
     def seq_filename
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
     end
-     
+
     def validate_import
-      return errors.add :in_file, :blank if in_file.blank? 
-        
-      fname = in_file.original_filename 
+      return errors.add :in_file, :blank if in_file.blank?
+
+      fname = in_file.original_filename
       return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
       begin
         table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
@@ -105,7 +105,7 @@ module Article::Addon
         errors.add :in_file, :invalid_file_type
       end
     end
-     
+
     def update_row(row, index)
       e = I18n.t("errors.messages.invalid")
 
@@ -137,7 +137,7 @@ module Article::Addon
       else
         self.errors.add :base, "#{index}: contact_state#{e}"
         return nil
-      end 
+      end
       contact_group = row[Article::Page.t "contact_group".to_sym].to_s.strip
       contact_charge = row[Article::Page.t "contact_charge".to_sym].to_s.strip
       contact_tel = row[Article::Page.t "contact_tel".to_sym].to_s.strip
@@ -148,10 +148,10 @@ module Article::Addon
       close_date = row[Article::Page.t "close_date".to_sym].to_s.strip
       groups = row[Article::Page.t "groups".to_sym].to_s.split(/\n/)
       permission_level = row[Article::Page.t "permission_level".to_sym].to_s
- 
+
       if id.present?
         item = self.class.where(id: id).first
-   
+
         if item.blank?
           self.errors.add :base, "#{index}: #{t(:id)}#{e}"
           return nil
@@ -160,7 +160,7 @@ module Article::Addon
         self.errors.add :base, "#{index}: #{t(:id)}#{e}"
         return nil
       end
-   
+
       unless add_order(item, order)
         self.errors.add :base, "#{index}: order#{e}"
         return nil
@@ -204,7 +204,7 @@ module Article::Addon
       item.released = released
       item.release_date = release_date
       item.close_date = close_date
-      item.updated = Time.now
+      item.updated = Time.zone.now
 
       if item.save
         @imported += 1
@@ -231,7 +231,7 @@ module Article::Addon
 
           filename = filename_array[0]
 
-          depth = depth + 1
+          depth += 1
         end
         id = Cms::Node.where(filename: filename).map(&:_id).first
 
@@ -244,7 +244,7 @@ module Article::Addon
 
         ids << id
       end
-      item.category_ids = ids 
+      item.category_ids = ids
       return true
 
     end
@@ -293,7 +293,7 @@ module Article::Addon
         return false
       end
 
-      unless permission_level.to_i >= 1 && permission_level.to_i <=3 
+      unless permission_level.to_i >= 1 && permission_level.to_i <=3
         return false
       end
 
@@ -314,5 +314,4 @@ module Article::Addon
       end
       self.errors.add :base, "#{index}: #{error}"
     end
-  end
-end 
+end

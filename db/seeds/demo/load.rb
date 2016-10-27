@@ -138,7 +138,8 @@ save_part route: "article/page", filename: "oshirase/recent.part.html", name: "�
 save_part route: "article/page", filename: "oshirase/sangyo/recent.part.html", name: "お知らせ", limit: 5
 save_part route: "article/page", filename: "oshirase/shisei/recent.part.html", name: "お知らせ", limit: 5
 save_part route: "cms/crumb", filename: "breadcrumb.part.html", name: "パンくず", mobile_view: "hide"
-save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト", limit: 20, sort: "order"
+save_part route: "category/node", filename: "category-list.part.html", name: "カテゴリーリスト",
+  limit: 20, sort: "order"
 save_part route: "cms/tabs", filename: "recent-tabs.part.html", name: "新着タブ",
   conditions: %w(oshirase oshirase/event shisei/jinji), limit: 6
 save_part route: "cms/free", filename: "urgency-layout/announce.part.html", name: "緊急アナウンス"
@@ -150,18 +151,27 @@ save_part route: "cms/free", filename: "urgency-layout/navi.part.html", name: "�
 save_part route: "article/page", filename: "urgency/recent.part.html", name: "緊急情報", limit: 20
 save_part route: "category/node", filename: "faq/category-list.part.html", name: "カテゴリーリスト", sort: "order"
 save_part route: "faq/search", filename: "faq/faq-search/search.part.html", name: "FAQ記事検索"
-save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー", ajax_view: "enabled"
-save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナー", mobile_view: "hide", with_category: "enabled"
+save_part route: "event/calendar", filename: "calendar/calendar.part.html", name: "カレンダー",
+  ajax_view: "enabled"
+save_part route: "ads/banner", filename: "ad/ad.part.html", name: "広告バナー",
+  mobile_view: "hide", with_category: "enabled"
 save_part route: "cms/sns_share", filename: "sns.part.html", name: "sns", mobile_view: "hide"
-save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー", mobile_view: "hide"
-save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", name: "フィードバック", mobile_view: "hide",
+save_part route: "key_visual/slide", filename: "key_visual/slide.part.html", name: "スライドショー",
+  mobile_view: "hide"
+save_part route: "inquiry/feedback", filename: "feedback/feedback.part.html", name: "フィードバック",
+  mobile_view: "hide",
   upper_html: '<section id="feedback"><h2>この情報は役に立ちましたか？</h2>',
   lower_html: '</section>'
-save_part route: "member/photo", filename: "kanko-info/photo/recent.part.html", name: "新着写真一覧", mobile_view: "hide", limit: 4
-save_part route: "member/photo_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド", mobile_view: "hide"
-save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
-save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
-save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"
+save_part route: "member/photo", filename: "kanko-info/photo/recent.part.html", name: "新着写真一覧",
+  mobile_view: "hide", limit: 4
+save_part route: "member/photo_slide", filename: "kanko-info/photo/slide.part.html", name: "スライド",
+  mobile_view: "hide"
+save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html",
+  name: "スライド", mobile_view: "hide"
+save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ",
+  mobile_view: "hide"
+save_part route: "member/login", filename: "login/login.part.html", name: "ログイン",
+  mobile_view: "hide", ajax_view: "enabled"
 save_part route: "member/invited_group", filename: "invited_group.part.html", name: "招待されたグループ",
   mobile_view: "hide", ajax_view: "enabled"
 save_part route: "cms/calendar_nav", filename: "docs/archive/calendar.part.html", name: "カレンダー"
@@ -350,10 +360,12 @@ save_node route: "cms/node", filename: "use", name: "ご利用案内"
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show"
 
 ## archive
-save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: layouts["pages"].id, conditions: %w(docs)
+save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: layouts["pages"].id,
+  conditions: %w(docs)
 
 ## photo album
-save_node route: "cms/photo_album", filename: "docs/photo", name: "写真一覧", layout_id: layouts["pages"].id, conditions: %w(docs)
+save_node route: "cms/photo_album", filename: "docs/photo", name: "写真一覧", layout_id: layouts["pages"].id,
+  conditions: %w(docs)
 
 ## sitemap
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
@@ -368,8 +380,10 @@ save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "sh
 save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
 
 ## faq
-save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", st_category_ids: [categories["faq"].id]
-save_node route: "faq/search", filename: "faq/faq-search", name: "よくある質問検索", st_category_ids: [categories["faq"].id]
+save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事",
+  st_category_ids: [categories["faq"].id]
+save_node route: "faq/search", filename: "faq/faq-search", name: "よくある質問検索",
+  st_category_ids: [categories["faq"].id]
 
 ## ads
 save_node route: "ads/banner", filename: "ad", name: "広告バナー", shortcut: "show"
@@ -377,10 +391,10 @@ save_node route: "ads/banner", filename: "ad", name: "広告バナー", shortcut
 ## group page
 g_koho = SS::Group.where(name: "シラサギ市/企画政策部/広報課").first
 g_seisaku = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
-save_node route: "cms/group_page", filename: "shisei/soshiki/kikaku/koho", name: "広報課", order: 10, conditions: %w(docs),
-  layout_id: layouts["category-middle"].id, condition_group_ids: [g_koho.id]
-save_node route: "cms/group_page", filename: "shisei/soshiki/kikaku/seisaku", name: "政策課", order: 20, conditions: %w(docs),
-  layout_id: layouts["category-middle"].id, condition_group_ids: [g_seisaku.id]
+save_node route: "cms/group_page", filename: "shisei/soshiki/kikaku/koho", name: "広報課", order: 10,
+  conditions: %w(docs), layout_id: layouts["category-middle"].id, condition_group_ids: [g_koho.id]
+save_node route: "cms/group_page", filename: "shisei/soshiki/kikaku/seisaku", name: "政策課", order: 20,
+  conditions: %w(docs), layout_id: layouts["category-middle"].id, condition_group_ids: [g_seisaku.id]
 
 ## urgency
 save_node route: "urgency/layout", filename: "urgency-layout", name: "緊急災害レイアウト",
@@ -464,7 +478,8 @@ save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_t
   select_options: %w(男性 女性), required: "required", site_id: @site._id
 
 # ezine anpi
-save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン", layout_id: layouts["kanko-info"].id
+save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン",
+  layout_id: layouts["kanko-info"].id
 ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認",
   layout_id: layouts["kanko-info"].id,
   sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
@@ -536,6 +551,7 @@ save_node route: "key_visual/image", filename: "key_visual", name: "キービジ
 ## inquiry
 def save_inquiry_column(data)
   puts data[:name]
+  data[:site_id] ||= @site.id
   cond = { site_id: data[:site_id], node_id: data[:node_id], name: data[:name] }
 
   item = Inquiry::Column.find_or_create_by(cond)
@@ -546,6 +562,8 @@ def save_inquiry_column(data)
 end
 
 def save_inquiry_answer(data)
+  data[:site_id] ||= @site.id
+
   item = Inquiry::Answer.new
   item.set_data(data[:data])
   data.delete(:data)
@@ -566,58 +584,57 @@ column_age_html = File.read("columns/age.html") rescue nil
 column_category_html = File.read("columns/category.html") rescue nil
 column_question_html = File.read("columns/question.html") rescue nil
 save_inquiry_column node_id: inquiry_node.id, name: "お名前", order: 0, input_type: "text_field",
-  html: column_name_html, select_options: [], required: "required", site_id: @site._id
+  html: column_name_html, select_options: [], required: "required"
 save_inquiry_column node_id: inquiry_node.id, name: "企業・団体名", order: 10, input_type: "text_field",
-  html: column_company_html, select_options: [], required: "optional", site_id: @site._id
+  html: column_company_html, select_options: [], required: "optional"
 save_inquiry_column node_id: inquiry_node.id, name: "メールアドレス", order: 20, input_type: "email_field",
-  html: column_email_html, select_options: [], required: "required", input_confirm: "enabled", site_id: @site._id
+  html: column_email_html, select_options: [], required: "required", input_confirm: "enabled"
 save_inquiry_column node_id: inquiry_node.id, name: "性別", order: 30, input_type: "radio_button",
-  html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
+  html: column_gender_html, select_options: %w(男性 女性), required: "required"
 save_inquiry_column node_id: inquiry_node.id, name: "年齢", order: 40, input_type: "select",
-  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required"
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ区分", order: 50, input_type: "check_box",
-  html: column_category_html, select_options: %w(市政について ご意見・ご要望 申請について その他), required: "required", site_id: @site._id
+  html: column_category_html, select_options: %w(市政について ご意見・ご要望 申請について その他), required: "required"
 save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
-  html: column_question_html, select_options: [], required: "required", site_id: @site._id
+  html: column_question_html, select_options: [], required: "required"
 
 puts "# inquiry public comment"
 save_inquiry_column node_id: inquiry_comment_1.id, name: "性別", order: 0, input_type: "radio_button",
-  html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
+  html: column_gender_html, select_options: %w(男性 女性), required: "required"
 save_inquiry_column node_id: inquiry_comment_1.id, name: "年齢", order: 10, input_type: "select",
-  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required"
 save_inquiry_column node_id: inquiry_comment_1.id, name: "意見", order: 20, input_type: "text_area",
-  html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
+  html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required"
 
 column_gender = save_inquiry_column node_id: inquiry_comment_2.id, name: "性別", order: 0, input_type: "radio_button",
-  html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
+  html: column_gender_html, select_options: %w(男性 女性), required: "required"
 column_age = save_inquiry_column node_id: inquiry_comment_2.id, name: "年齢", order: 10, input_type: "select",
-  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required",
-  site_id: @site._id
+  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required"
 column_opinion = save_inquiry_column node_id: inquiry_comment_2.id, name: "意見", order: 20, input_type: "text_area",
-  html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
+  html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required"
 
-save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: inquiry_comment_2.id,
   remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
   data: {
     column_gender.id => "女性",
     column_age.id => "10代",
     column_opinion.id => "意見があります。"
   }
-save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: inquiry_comment_2.id,
   remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
   data: {
     column_gender.id => "女性",
     column_age.id => "80代",
     column_opinion.id => "意見があります。"
   }
-save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: inquiry_comment_2.id,
   remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
   data: {
     column_gender.id => "男性",
     column_age.id => "50代",
     column_opinion.id => "意見があります。"
   }
-save_inquiry_answer node_id: inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: inquiry_comment_2.id,
   remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
   data: {
     column_gender.id => "男性",
@@ -629,15 +646,15 @@ puts "# feedback"
 
 column_feedback_1 = save_inquiry_column node_id: feedback_node.id, name: "このページの内容は役に立ちましたか？",
   order: 10, input_type: "radio_button", select_options: %w(役に立った どちらともいえない 役に立たなかった),
-  required: "required", site_id: @site._id
+  required: "required"
 column_feedback_2 = save_inquiry_column node_id: feedback_node.id, name: "このページの内容は分かりやすかったですか？",
   order: 20, input_type: "radio_button", select_options: %w(分かりやすかった どちらともいえない 分かりにくかった),
-  required: "required", site_id: @site._id
+  required: "required"
 column_feedback_3 = save_inquiry_column node_id: feedback_node.id, name: "このページの情報は見つけやすかったですか？",
   order: 30, input_type: "radio_button", select_options: %w(見つけやすかった どちらともいえない 見つけにくかった),
-  required: "required", site_id: @site._id
+  required: "required"
 
-save_inquiry_answer node_id: feedback_node.id, site_id: @site._id,
+save_inquiry_answer node_id: feedback_node.id,
   remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
   data: {
     column_feedback_1.id => "どちらともいえない",
@@ -821,7 +838,8 @@ save_page route: "article/page", filename: "docs/page4.html", name: "放射性�
   layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   group_ids: [g_seisaku.id]
-save_page route: "article/page", filename: "docs/page5.html", name: "市内の微小粒子状物質（PM2.5）の測定データ（速報値）を公開しています。",
+save_page route: "article/page", filename: "docs/page5.html",
+  name: "市内の微小粒子状物質（PM2.5）の測定データ（速報値）を公開しています。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["attention"].id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   group_ids: [g_seisaku.id]
@@ -830,7 +848,8 @@ save_page route: "article/page", filename: "docs/page6.html", name: "還付金�
   category_ids: [ categories["oshirase"].id, categories["shisei/soshiki"].id, categories["shisei/soshiki/kikaku"].id ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   group_ids: [g_seisaku.id]
-save_page route: "article/page", filename: "docs/page7.html", name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
+save_page route: "article/page", filename: "docs/page7.html",
+  name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id, categories["shisei/soshiki"].id, categories["shisei/soshiki/kikaku"].id ],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
@@ -901,7 +920,8 @@ save_page route: "article/page", filename: "oshirase/kurashi/page20.html", name:
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   group_ids: [g_seisaku.id]
-save_page route: "article/page", filename: "oshirase/kurashi/page21.html", name: "平成26年度住宅補助金の募集について掲載しました。",
+save_page route: "article/page", filename: "oshirase/kurashi/page21.html",
+  name: "平成26年度住宅補助金の募集について掲載しました。",
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   group_ids: [g_seisaku.id]
@@ -918,7 +938,8 @@ save_page route: "article/page", filename: "oshirase/kurashi/page23.html", name:
   layout_id: layouts["oshirase"].id, category_ids: [categories["oshirase"].id, categories["oshirase/kurashi"].id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
   group_ids: [g_seisaku.id]
-save_page route: "article/page", filename: "oshirase/kurashi/page24.html", name: "平成26年4月より国民健康保険税率が改正されます",
+save_page route: "article/page", filename: "oshirase/kurashi/page24.html",
+  name: "平成26年4月より国民健康保険税率が改正されます",
   layout_id: layouts["oshirase"].id,
   category_ids: [ categories["oshirase"].id,
                   categories["oshirase/kurashi"].id,
@@ -935,11 +956,16 @@ save_page route: "article/page", filename: "urgency/page26.html", name: "黒鷺�
   group_ids: [g_seisaku.id]
 
 file_1 = save_ss_files "ss_files/article/pdf_file.pdf", filename: "pdf_file.pdf", model: "article/page"
-file_2 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "画像1", model: "article/page"
-file_3 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "画像2", model: "article/page"
-file_4 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "画像3", model: "article/page"
-file_5 = save_ss_files "ss_files/key_visual/keyvisual04.jpg", filename: "keyvisual04.jpg", name: "画像4", model: "article/page"
-file_6 = save_ss_files "ss_files/key_visual/keyvisual05.jpg", filename: "keyvisual05.jpg", name: "画像5", model: "article/page"
+file_2 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg",
+  name: "画像1", model: "article/page"
+file_3 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg",
+  name: "画像2", model: "article/page"
+file_4 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg",
+  name: "画像3", model: "article/page"
+file_5 = save_ss_files "ss_files/key_visual/keyvisual04.jpg", filename: "keyvisual04.jpg",
+  name: "画像4", model: "article/page"
+file_6 = save_ss_files "ss_files/key_visual/keyvisual05.jpg", filename: "keyvisual05.jpg",
+  name: "画像5", model: "article/page"
 html = []
 html << '<p><a class="icon-pdf" href="' + file_1.url + '">サンプルファイル (PDF 783KB)</a></p>'
 html << '<p>'
@@ -977,7 +1003,8 @@ save_page route: "sitemap/page", filename: "sitemap/index.html", name: "サイ�
 puts "# faq"
 
 save_page route: "faq/page", filename: "faq/docs/page29.html", name: "休日や夜間の戸籍の届出について",
-  layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id], question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
+  layout_id: layouts["faq"].id, category_ids: [categories["faq/kurashi"].id],
+  question: "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
 
 ## -------------------------------------
 puts "# ads"
@@ -1116,21 +1143,31 @@ save_page route: "member/photo_spot", filename: "kanko-info/photo/spot/index.htm
   member_photo_ids: [photo_page_1.id, photo_page_2.id, photo_page_3.id]
 
 puts "# key visual"
-keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", model: "key_visual/image"
-keyvisual2 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", model: "key_visual/image"
-keyvisual3 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", model: "key_visual/image"
-keyvisual4 = save_ss_files "ss_files/key_visual/keyvisual04.jpg", filename: "keyvisual04.jpg", model: "key_visual/image"
-keyvisual5 = save_ss_files "ss_files/key_visual/keyvisual05.jpg", filename: "keyvisual05.jpg", model: "key_visual/image"
+keyvisual1 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg",
+  model: "key_visual/image"
+keyvisual2 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg",
+  model: "key_visual/image"
+keyvisual3 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg",
+  model: "key_visual/image"
+keyvisual4 = save_ss_files "ss_files/key_visual/keyvisual04.jpg", filename: "keyvisual04.jpg",
+  model: "key_visual/image"
+keyvisual5 = save_ss_files "ss_files/key_visual/keyvisual05.jpg", filename: "keyvisual05.jpg",
+  model: "key_visual/image"
 keyvisual1.set(state: "public")
 keyvisual2.set(state: "public")
 keyvisual3.set(state: "public")
 keyvisual4.set(state: "public")
 keyvisual5.set(state: "public")
-save_page route: "key_visual/image", filename: "key_visual/page37.html", name: "キービジュアル1", order: 10, file_id: keyvisual1.id
-save_page route: "key_visual/image", filename: "key_visual/page38.html", name: "キービジュアル2", order: 20, file_id: keyvisual2.id
-save_page route: "key_visual/image", filename: "key_visual/page39.html", name: "キービジュアル3", order: 30, file_id: keyvisual3.id
-save_page route: "key_visual/image", filename: "key_visual/page40.html", name: "キービジュアル4", order: 40, file_id: keyvisual4.id
-save_page route: "key_visual/image", filename: "key_visual/page50.html", name: "キービジュアル5", order: 50, file_id: keyvisual5.id
+save_page route: "key_visual/image", filename: "key_visual/page37.html",
+  name: "キービジュアル1", order: 10, file_id: keyvisual1.id
+save_page route: "key_visual/image", filename: "key_visual/page38.html",
+  name: "キービジュアル2", order: 20, file_id: keyvisual2.id
+save_page route: "key_visual/image", filename: "key_visual/page39.html",
+  name: "キービジュアル3", order: 30, file_id: keyvisual3.id
+save_page route: "key_visual/image", filename: "key_visual/page40.html",
+  name: "キービジュアル4", order: 40, file_id: keyvisual4.id
+save_page route: "key_visual/image", filename: "key_visual/page50.html",
+  name: "キービジュアル5", order: 50, file_id: keyvisual5.id
 
 ## -------------------------------------
 def save_editor_template(data)
@@ -1145,8 +1182,10 @@ def save_editor_template(data)
 end
 
 puts "# editor templates"
-thumb_left  = save_ss_files("editor_templates/float-left.jpg", filename: "float-left.jpg", model: "cms/editor_template")
-thumb_right = save_ss_files("editor_templates/float-right.jpg", filename: "float-right.jpg", model: "cms/editor_template")
+thumb_left  = save_ss_files "editor_templates/float-left.jpg", filename: "float-left.jpg",
+  model: "cms/editor_template"
+thumb_right = save_ss_files "editor_templates/float-right.jpg", filename: "float-right.jpg",
+  model: "cms/editor_template"
 
 editor_template_html = File.read("editor_templates/float-left.html") rescue nil
 save_editor_template name: "画像左回り込み", description: "画像が左に回り込み右側がテキストになります",
@@ -1195,7 +1234,8 @@ end
 
 node = save_node route: "board/post", filename: "board", name: "災害掲示板", layout_id: layouts["one"].id,
   mode: "tree", file_limit: 1, text_size_limit: 400, captcha: "enabled", deletable_post: "enabled",
-  deny_url: "deny", file_size_limit: (1024 * 1024 * 2), file_scan: "disabled", show_email: "enabled", show_url: "enabled"
+  deny_url: "deny", file_size_limit: (1024 * 1024 * 2), file_scan: "disabled", show_email: "enabled",
+  show_url: "enabled"
 topic1 = save_board_post name: "テスト投稿", text: "テスト投稿です。", site_id: @site.id, node_id: node.id,
   poster: "白鷺　太郎", delete_key: 1234
 comment1 = save_board_post name: "Re:テスト投稿", text: "返信します。", site_id: @site.id, node_id: node.id,
@@ -1209,7 +1249,8 @@ save_node route: "board/anpi_post", filename: "anpi", name: "安否掲示板", l
 
 user = Cms::User.first
 if user
-  file = save_ss_files "ss_files/article/pdf_file.pdf", filename: "file.pdf", model: "board/post", site_id: @site.id
+  file = save_ss_files "ss_files/article/pdf_file.pdf", filename: "file.pdf", model: "board/post",
+                       site_id: @site.id
   file.set(state: "public")
   topic3 = save_board_post name: "管理画面から", text: "管理画面からの投稿です。", site_id: @site.id, node_id: node.id,
     user_id: user.id, poster: "管理者", delete_key: 1234, poster_url: " http://demo.ss-proj.org/", file_ids: [file.id]
@@ -1238,10 +1279,13 @@ save_board_anpi_post member_id: @member_2.id, name: @member_2.name, kana: @membe
 
 puts "# cms pages"
 save_page route: "cms/page", filename: "index.html", name: "自治体サンプル", layout_id: layouts["top"].id
-save_page route: "cms/page", filename: "mobile.html", name: "スマートフォン・携帯サイト", layout_id: layouts["pages"].id
+save_page route: "cms/page", filename: "mobile.html", name: "スマートフォン・携帯サイト",
+  layout_id: layouts["pages"].id
 save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: layouts["one"].id
-save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: layouts["one"].id
-save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内", layout_id: layouts["category-middle"].id
+save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found",
+  layout_id: layouts["one"].id
+save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組織案内",
+  layout_id: layouts["category-middle"].id
 
 ## -------------------------------------
 puts "# weather xml"
@@ -1298,13 +1342,20 @@ def save_source_cleaner_template(data)
   item
 end
 
-save_source_cleaner_template name: "<p>&nbsp;</p>", target_type: "string", target_value: "<p>&nbsp;</p>", action_type: "remove", state: "public", order: 10
-save_source_cleaner_template name: "width", target_type: "attribute", target_value: "width", action_type: "remove", state: "public", order: 20
-save_source_cleaner_template name: "height", target_type: "attribute", target_value: "height", action_type: "remove", state: "public", order: 30
-save_source_cleaner_template name: "cellpadding", target_type: "attribute", target_value: "cellpadding", action_type: "remove", state: "public", order: 40
-save_source_cleaner_template name: "cellspacing", target_type: "attribute", target_value: "cellspacing", action_type: "remove", state: "public", order: 50
-save_source_cleaner_template name: "border", target_type: "attribute", target_value: "border", action_type: "remove", state: "public", order: 60
-save_source_cleaner_template name: "style", target_type: "attribute", target_value: "style", action_type: "remove", state: "public", order: 100
+save_source_cleaner_template name: "<p>&nbsp;</p>", target_type: "string", target_value: "<p>&nbsp;</p>",
+  action_type: "remove", state: "public", order: 10
+save_source_cleaner_template name: "width", target_type: "attribute", target_value: "width",
+  action_type: "remove", state: "public", order: 20
+save_source_cleaner_template name: "height", target_type: "attribute", target_value: "height",
+  action_type: "remove", state: "public", order: 30
+save_source_cleaner_template name: "cellpadding", target_type: "attribute", target_value: "cellpadding",
+  action_type: "remove", state: "public", order: 40
+save_source_cleaner_template name: "cellspacing", target_type: "attribute", target_value: "cellspacing",
+  action_type: "remove", state: "public", order: 50
+save_source_cleaner_template name: "border", target_type: "attribute", target_value: "border",
+  action_type: "remove", state: "public", order: 60
+save_source_cleaner_template name: "style", target_type: "attribute", target_value: "style",
+  action_type: "remove", state: "public", order: 100
 
 ## -------------------------------------
 puts "# postal code"
