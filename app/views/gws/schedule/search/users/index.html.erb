@@ -4,11 +4,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
 
 <%= render "gws/schedule/main/tabs" %>
 
-<section class="main-box gws-schedule-box">
-  <header>
-    <h2><%= t('gws/schedule.tabs.search') %></h2>
-  </header>
-
+<section class="main-box gws-schedule-box gws-schedule-search">
   <%= render "search" %>
 
   <% if @items.present? %>

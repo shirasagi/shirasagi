@@ -93,23 +93,26 @@
     }
   }
 }
-.gws-schedule-search-title {
-  margin: 0 0 10px;
-  padding: 0 0 0 8px;
-  border-left: 3px solid #888;
+.gws-schedule-search {
+  .send {
+    padding-top: 0;
+  }
+}
+.gws-schedule-search-field {
+  dt a {
+    font-weight: normal;
+  }
+  .wdays-field {
+    margin-left: 10px;
+    label {
+      margin-right: 2px;
+    }
+  }
 }
 .gws-schedule-search-hr {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #eee;
-}
-.gws-schedule-search-field {
-  dt {
-    margin: 0;
-  }
-  dd {
-    margin: 10px 0 0;
-  }
 }
 .gws-schedule-search-times-result {
   .date {

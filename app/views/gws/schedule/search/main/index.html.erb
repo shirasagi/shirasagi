@@ -1,15 +1,9 @@
 <%= render "gws/schedule/main/tabs" %>
 
-<section class="main-box gws-schedule-box">
-  <header>
-    <h2><%= t('gws/schedule.tabs.search') %></h2>
-  </header>
+<section class="main-box gws-schedule-box gws-schedule-search gws-schedule-search-users">
+  <%= render "gws/schedule/search/users/search" %>
+</section>
 
-  <div class="gws-schedule-search-users">
-    <%= render "gws/schedule/search/users/search" %>
-  </div>
-  <div class="gws-schedule-search-hr"></div>
-  <div class="gws-schedule-search-times">
-    <%= render "gws/schedule/search/times/search" %>
-  </div>
+<section class="main-box gws-schedule-box gws-schedule-search gws-schedule-search-times">
+  <%= render "gws/schedule/search/times/search" %>
 </section>

@@ -1,15 +1,34 @@
+<%= jquery do %>
+  Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
+<% end %>
+
+<header>
+  <h2><%= t("gws/schedule.search_times") %></h2>
+</header>
+
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: gws_schedule_search_times_path, html: { method: :get, class: :search } do |f| %>
-  <h3 class="gws-schedule-search-title">
-    <%= t("gws/schedule.search_times") %>
-  </h3>
+  <dl class="see gws-schedule-search-field">
+    <dt><%= Gws::Schedule::Plan.t :term %></dt>
+    <dd>
+      <div class="dates-field">
+        <%= f.text_field :start_on, class: "date start", value: tryb { @time_search.start_on.strftime("%Y/%m/%d") } %>
+        - <%= f.text_field :end_on, class: "date end", value: tryb { @time_search.end_on.strftime("%Y/%m/%d") } %>
+      </div>
+    </dd>
+    <dd>
+      <div class="wdays-field">
+        <%= f.hidden_field "wdays[]", value: "" %>
+        <% (0..6).each do |i| %>
+        <label><%= f.check_box "wdays[]", {}, i.to_s %> <%= t("date.abbr_day_names")[i] %></label>
+        <% end %>
+      </div>
+    </dd>
 
-  <dl class="gws-schedule-search-field">
     <dt>
       <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box btn" %>
-      <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
-    </dd>
+    </dt>
     <dd>
       <table class="index ajax-selected">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
@@ -21,35 +40,38 @@
           </tr>
           <% end %>
 
-          <% @members.each do |user| %>
+          <% @time_search.members.each do |user| %>
           <tr data-id="<%= user.id %>">
             <td><%= f.hidden_field "member_ids[]", value: user.id %> <%= user.long_name %></td>
             <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
           </tr>
-          <% end if @members.present? %>
+          <% end if @time_search.members.present? %>
         </tbody>
       </table>
     </dd>
   </dl>
 
-  <dl class="gws-schedule-search-field">
+  <dl class="see gws-schedule-search-field">
     <dt>
       <%= f.hidden_field "facility_ids[]", value: "", class: "hidden-ids" %>
       <%= link_to t("gws.apis.facilities.index"), gws_apis_facilities_path, class: "ajax-box btn" %>
-      <input type="submit" value="<%= t('views.button.search') %>" class="btn" />
     </dt>
     <dd>
       <table class="index ajax-selected">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
-          <% @facilities.each do |item| %>
+          <% @time_search.facilities.each do |item| %>
           <tr data-id="<%= item.id %>">
             <td><%= f.hidden_field "facility_ids[]", value: item.id %> <%= item.name %></td>
             <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
           </tr>
-          <% end if @facilities.present? %>
+          <% end if @time_search.facilities.present? %>
         </tbody>
       </table>
     </dd>
   </dl>
+
+  <footer class="send">
+    <%= f.submit t("views.button.search"), name: "search", class: "search btn-primary" %>
+  </footer>
 <% end %>

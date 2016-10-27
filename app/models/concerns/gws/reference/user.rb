@@ -30,7 +30,9 @@ module Gws::Reference
     end
 
     def user_long_name
-      user_uid.present? ? "#{user_name} (#{user_uid})" : user_name
+      return "#{user_name} (#{user_uid})" if user_uid.present?
+      return user.long_name if user.present?
+      user_name
     end
 
     private

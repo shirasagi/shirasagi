@@ -4,11 +4,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
 
 <%= render "gws/schedule/main/tabs" %>
 
-<section class="main-box gws-schedule-box">
-  <header>
-    <h2><%= t('gws/schedule.tabs.search') %></h2>
-  </header>
-
+<section class="main-box gws-schedule-box gws-schedule-search">
   <%= render "search" %>
 
   <% if @items.present? %>
@@ -18,9 +14,9 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
     <div class="date <%= date.strftime('%a').downcase %>">
       <p class="label"><%= l date, format: :full %></p>
 
-      <% @hours.each do |hour| %>
+      <% @time_search.hours.each do |hour| %>
         <% if hours.index(hour) %>
-          <% link_params = @schedule_params.merge(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
+          <% link_params = @s.to_h.merge(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
           <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
         <% else %>
           <span class="hour exist"><%= hour %></span>
