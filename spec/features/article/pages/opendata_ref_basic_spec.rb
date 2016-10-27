@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
+describe "article_pages", dbscope: :example, tmpdir: true, js: true do
   let(:site) { cms_site }
   let(:article_node) { create :article_node_page, cur_site: site }
   let(:html) do
@@ -24,30 +24,44 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
 
     file = tmp_ss_file(contents: '0123456789', user: cms_user)
 
-    article_page.cur_user = cms_user
-    article_page.file_ids = [ file.id ]
-    article_page.opendata_dataset_state = 'public'
-    article_page.save!
-
     path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
     Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-      create :opendata_license, cur_site: od_site, in_file: file
+      create :opendata_license, cur_site: od_site, default_state: 'default', in_file: file
     end
+
+    article_page.cur_user = cms_user
+    article_page.file_ids = [ file.id ]
+    article_page.save!
   end
 
-  describe "#perform" do
-    it do
-      described_class.bind(site_id: od_site).
-        perform_now(article_page.site.id, article_page.parent.id, article_page.id, 'create_or_update')
+  context "opendata_ref/basic" do
+    before { login_cms_user }
 
-      expect(Job::Log.site(site).count).to eq 0
-      expect(Job::Log.site(od_site).count).to eq 1
-      Job::Log.site(od_site).first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+    around do |example|
+      perform_enqueued_jobs do
+        example.run
       end
+    end
 
-      expect(Opendata::Dataset.site(site).count).to eq 0
+    it do
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+
+      #
+      # activate opendata integration
+      #
+      click_on I18n.t('views.links.edit')
+
+      find('#addon-cms-agents-addons-opendata_ref-dataset .addon-head h2').click
+      choose 'item_opendata_dataset_state_public'
+      click_on I18n.t('views.button.publish_save')
+      click_on I18n.t('views.button.ignore_alert')
+
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      article_page.reload
+      expect(article_page.state).to eq 'public'
+      expect(article_page.opendata_dataset_state).to eq 'public'
+
       expect(Opendata::Dataset.site(od_site).count).to eq 1
       Opendata::Dataset.site(od_site).first.tap do |dataset|
         expect(dataset.name).to eq article_page.name
@@ -78,12 +92,36 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
         end
       end
 
-      # after dataset is publiced, page is destroyed,
-      described_class.bind(site_id: od_site).perform_now(article_page.site.id, article_page.parent.id, article_page.id, 'destroy')
+      #
+      # close an article page
+      #
+      visit article_pages_path(site, article_node)
+      click_on article_page.name
+      click_on I18n.t('views.links.edit')
 
-      # dataset's state turns to be closed
+      click_on I18n.t('views.button.draft_save')
+      click_on I18n.t('views.button.ignore_alert')
+
+      expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
+      article_page.reload
+      expect(article_page.state).to eq 'closed'
+      expect(article_page.opendata_dataset_state).to eq 'public'
+
+      expect(Opendata::Dataset.site(od_site).count).to eq 1
       Opendata::Dataset.site(od_site).first.tap do |dataset|
+        expect(dataset.name).to eq article_page.name
+        expect(dataset.parent.id).to eq dataset_node.id
         expect(dataset.state).to eq 'closed'
+        expect(dataset.text).to include('ああああ')
+        expect(dataset.text).to include('いいい')
+        expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
+        expect(dataset.text).not_to include('<p>')
+        expect(dataset.text).not_to include('<a>')
+        expect(dataset.text).not_to include('&nbsp;')
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.resources.count).to eq 0
       end
     end
   end
