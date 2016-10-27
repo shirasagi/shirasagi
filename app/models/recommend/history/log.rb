@@ -50,7 +50,7 @@ class Recommend::History::Log
 
       item = opts[:item]
       path = opts[:path]
-      path = path + "index.html" if path =~ /\/$/
+      path += "index.html" if path =~ /\/$/
       receiver_path = Rails.application.routes.url_helpers.recommend_history_receiver_path(site: site.id)
       receiver_url = ::File.join(site.full_url, receiver_path)
 

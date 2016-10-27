@@ -148,7 +148,7 @@ module Cms::CrudFilter
       set_items
 
       csv = @items.to_csv
-      filename = "#{@model.name.pluralize.underscore.gsub('/', '_')}_#{Time.zone.now.to_i}.csv"
+      filename = "#{@model.name.pluralize.underscore.tr('/', '_')}_#{Time.zone.now.to_i}.csv"
       send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
     end
 

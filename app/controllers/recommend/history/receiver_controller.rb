@@ -2,6 +2,11 @@ class Recommend::History::ReceiverController < ApplicationController
 
   before_action :set_site
 
+  private
+    def set_site
+      @cur_site = Cms::Site.find id: params[:site]
+    end
+
   public
     def index
       token = cookies["_ss_recommend"]
@@ -20,7 +25,7 @@ class Recommend::History::ReceiverController < ApplicationController
         token: token, site: @cur_site,
         path: path, access_url: access_url,
         target_id: target_id, target_class: target_class,
-        remote_addr: remote_addr, user_agent: user_agent,
+        remote_addr: remote_addr, user_agent: user_agent
       )
       log.save
 
@@ -29,10 +34,5 @@ class Recommend::History::ReceiverController < ApplicationController
       respond_to do |format|
         format.json { render json: log.attributes.to_json }
       end
-    end
-
-  private
-    def set_site
-      @cur_site = Cms::Site.find id: params[:site]
     end
 end
