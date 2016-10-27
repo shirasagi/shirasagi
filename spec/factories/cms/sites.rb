@@ -7,4 +7,5 @@ FactoryGirl.define do
     auto_description "disabled"
     #group_id 1
   end
+
 end

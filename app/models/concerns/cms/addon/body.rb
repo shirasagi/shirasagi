@@ -8,8 +8,6 @@ module Cms::Addon
       field :markdown, type: String
       permit_params :html, :markdown
 
-      validate :check_mobile_html_size
-
       if respond_to?(:template_variable_handler)
         template_variable_handler('img.src', :template_variable_handler_img_src)
       end
@@ -21,6 +19,14 @@ module Cms::Addon
       else
         self[:html]
       end
+    end
+
+    def mobile_size_enable?
+      self.site.mobile_enabled?
+    end
+
+    def mobile_size
+      self.site.mobile_size * 1000
     end
 
     private
@@ -43,53 +49,6 @@ module Cms::Addon
         img_source = img_source[0..-2] if img_source.end_with?("'", '"')
         img_source = img_source.strip
         img_source
-      end
-
-      def check_mobile_html_size
-        return true if self.html.blank?
-
-        if self.site.mobile_enabled?
-          if html_size > self.site.mobile_size * 1000
-            errors.add(:html, I18n.t("errors.messages.too_bigsize"))
-          end
-        end
-      end
-
-      def html_size
-        size = 0
-        size += self.html.bytesize
-        if self.try(:files)
-          size += file_size
-        end
-        size
-      end
-
-      def file_size
-        size = 0
-        html_files.each do |file|
-          size += file.size
-        end
-        if size > self.site.mobile_size * 1000
-          errors.add(:files, I18n.t("errors.messages.too_bigsize"))
-        end
-        size
-      end
-
-      def html_files
-        in_html_files = []
-        file_id_str = self.html.scan(%r{src=\"/fs/(.+?)/_/})
-        ids = []
-
-        file_id_str.each do |src|
-          ids << src[0].delete("/").to_i
-        end
-
-        self.files.each do |file|
-          if ids.include?(file.id)
-            in_html_files << file
-          end
-        end
-        in_html_files
       end
   end
 end

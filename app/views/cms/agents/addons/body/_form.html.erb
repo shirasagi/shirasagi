@@ -22,6 +22,8 @@
   <%= jquery do %>
     Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
     Link_Checker.rootUrl           = "<%= @cur_site.full_url %>";
+    Mobile_Size_Checker.enabled    = <%= @cur_site.mobile_enabled? %>;
+    Mobile_Size_Checker.mobile_size = <%= @cur_site.mobile_size * 1000 %>;
     Syntax_Checker.autoCorrect     = <%= SS.config.cms.auto_correct_page_html == true %>;
 
     <% if replace_words_conf[:replace_words].present? %>
@@ -43,6 +45,7 @@
     <dd class="wide"><%= f.text_area :html, class: "html", style: "height: 400px;" %></dd>
     <dd class="wide">
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    <%= button_tag t("cms.mobile_size_check"), { type: :button, class: "btn mobile-size-check" } %>
     <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
     <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? %>
     <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>

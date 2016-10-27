@@ -42,90 +42,136 @@ describe Cms::Page do
   end
 
   # check_mobile_html_size at addon body
-  describe "addon body" do
-    let(:html) { "<p>本文本文</p>" }
-    let(:item) { create(:cms_page, route: "article/page", html: html) }
+  describe "addon body", js:true do
+    let(:site) { cms_site }
     context "check_mobile_html_size" do
+      it "on click check_size_button html_size too big" do
+        site.mobile_size = 1
+        site.save!
 
-      it "html_size too big" do
-        item.site.mobile_size = 1
-        item.site.mobile_state = 'enabled'
-        100.times.each do
-          item.html += "<p>あいうえおカキクケコ</p>"
+        login_cms_user
+        visit new_cms_page_path(site)
+
+        html_text = ""
+        10.times.each do
+          html_text += "<p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p><p>あいうえおカキクケコ</p>"
         end
-        expect(item.save).to be_falsey
 
-        item.site.mobile_state = 'disabled'
-        expect(item.save).to be_truthy
+        fill_in_ckeditor "item_html", with: html_text
+
+        click_on I18n.t("cms.mobile_size_check")
+
+        expect(page).to have_css "form #errorMobileChecker"
+        expect(page).to have_selector "form #errorMobileChecker p.error", text: I18n.t("errors.messages.mobile_size_check_failed_to_size")
       end
 
-      it "html_size ok" do
-        item.site.mobile_size = 1
-        expect(item.valid?).to be_truthy
+      it "on click check_size_button html_size ok" do
 
-        item.html = "<p>あいうえおカキクケコ</p>"
-        expect(item.valid?).to be_truthy
-      end
+        html_text = "<p>あいうえおカキクケコ</p>"
 
-      context "file_size" do
-        let(:test_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-        it "mobile_size 1/1000 and 100" do
-          file = Cms::File.new model: "cms/file", site_id: item.site.id
-          Fs::UploadedFile.create_from_file(test_file_path, basename: "spec") do |test_file|
-            file.in_file = test_file
-            file.save!
-          end
-          item.file_ids = [file.id]
-          item.html += "<img src=\"/fs/#{file.id}/_/\""
-          item.site.mobile_size = 1/1000
-          expect(item.valid?).to be_falsey
+        login_cms_user
+        visit new_cms_page_path(site)
 
-          item.site.mobile_size = 100
-          expect(item.valid?).to be_truthy
-        end
+        fill_in_ckeditor "item_html", with: html_text
 
-        it "many same files in html" do
-          file = Cms::File.new model: "cms/file", site_id: item.site.id
-          Fs::UploadedFile.create_from_file(test_file_path, basename: "spec") do |test_file|
-            file.in_file = test_file
-            file.save!
-          end
-          item.file_ids = [file.id]
-          item.site.mobile_size = 20
-          item.html += "<img src=\"/fs/#{file.id}/_/\">"
-          expect(item.valid?).to be_truthy
-          10.times.each do
-            item.html += "<img src=\"/fs/#{file.id}/_/\">"
-          end
-
-          expect(item.valid?).to be_truthy
-
-        end
-
-        it "many different files in html" do
-          file = Cms::File.new model: "cms/file", site_id: item.site.id
-          Fs::UploadedFile.create_from_file(test_file_path, basename: "spec") do |test_file|
-            file.in_file = test_file
-            file.save!
-          end
-          file2 = Cms::File.new model: "cms/file", site_id: item.site.id
-          file_path = Rails.root.join("spec", "fixtures", "ss", "file", "keyvisual.jpg")
-          Fs::UploadedFile.create_from_file(file_path, basename: "spec") do |test_file|
-            file2.in_file = test_file
-            file2.save!
-          end
-
-          item.file_ids = [file.id, file2.id]
-          item.site.mobile_size = 20
-
-          item.html += "<img src=\"/fs/#{file.id}/_/\">"
-          expect(item.valid?).to be_truthy
-
-          item.html += "<img src=\"/fs/#{file2.id}/_/\">"
-          expect(item.valid?).to be_falsey
-        end
-
+        click_on I18n.t("cms.mobile_size_check")
+        expect(page).to have_css "form #errorMobileChecker"
+        expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
       end
     end
+
+    context "check_file_size" do
+      let(:file) { create(:ss_file, filename: "logo.png") }
+      let(:test_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
+
+      it "mobile_size 1" do
+
+        html_text = ""
+        html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"
+
+        login_cms_user
+        visit new_cms_page_path(site)
+
+        fill_in_ckeditor "item_html", with: html_text
+
+        click_on I18n.t("cms.mobile_size_check")
+        expect(page).to have_css "form #errorMobileChecker"
+        expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.too_bigsize')
+      end
+
+      it "mobile_size 100" do
+        site.mobile_state = "enabled"
+        site.mobile_size = 100
+        site.save!
+        site.reload
+
+        html_text = ""
+        html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"
+
+        login_cms_user
+        visit new_cms_page_path(site)
+
+        fill_in_ckeditor "item_html", with: html_text
+
+        click_on I18n.t("cms.mobile_size_check")
+        expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
+      end
+
+      it "many same files in html" do
+
+        site.mobile_state = "enabled"
+        site.mobile_size = 20
+        site.save!
+        site.reload
+
+        html_text = ""
+        html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"
+
+        login_cms_user
+        visit new_cms_page_path(site)
+
+        fill_in_ckeditor "item_html", with: html_text
+        click_on I18n.t("cms.mobile_size_check")
+        expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
+
+        3.times.each do
+          html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"
+        end
+
+        fill_in_ckeditor "item_html", with: html_text
+        click_on I18n.t("cms.mobile_size_check")
+        expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
+
+      end
+
+      it "many different files in html" do
+
+        file2 = Cms::File.new model: "cms/file", site_id: site.id
+        file_path = Rails.root.join("spec", "fixtures", "ss", "file", "keyvisual.jpg")
+        Fs::UploadedFile.create_from_file(file_path, basename: "spec") do |test_file|
+          file2.in_file = test_file
+          file2.save!
+        end
+
+        html_text = ""
+        html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"
+        html_text += "<img src=\"/fs/#{file2.id}/_/keyvisual.jpg\">"
+
+        login_cms_user
+        visit new_cms_page_path(site)
+
+        fill_in_ckeditor "item_html", with: html_text
+
+        click_on I18n.t("cms.mobile_size_check")
+        expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.too_bigsize')
+      end
+    end
+  end
+  def fill_in_ckeditor(locator, opts)
+    content = opts.fetch(:with).to_json
+    page.execute_script <<-SCRIPT
+      $('textarea##{locator}').text(#{content});
+      CKEDITOR.instances['#{locator}'].setData(#{content});
+    SCRIPT
   end
 end

@@ -12,7 +12,7 @@ module SS::Addon
       before_validation :normalize_mobile_location
       validates :mobile_state, inclusion: { in: %w(disabled enabled) }, if: ->{ mobile_state.present? }
       validates :mobile_size,
-        numericality: { only_integer: true, greater_than_or_equal_to: 100, less_than_or_equal_to: 1000 },
+        numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 1000 },
         if: ->{ mobile_enabled? }
     end
 
