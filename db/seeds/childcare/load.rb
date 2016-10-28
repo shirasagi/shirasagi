@@ -640,9 +640,9 @@ bn_relation2 = save_ss_files "ss_files/ads/bn-relation02.png", filename: "bn-rel
 bn_relation1.set(state: "public")
 bn_relation2.set(state: "public")
 save_page route: "ads/banner", filename: "relation/page1.html", name: "関連サイト",
-  link_url: "#", file_id: bn_relation1.id, order: 10
+  link_url: "/", file_id: bn_relation1.id, order: 10
 save_page route: "ads/banner", filename: "relation/page2.html", name: "関連サイト",
-  link_url: "#", file_id: bn_relation2.id, order: 20
+  link_url: "/", file_id: bn_relation2.id, order: 20
 
 bn_institution = save_ss_files "ss_files/ads/bn-institution.png", filename: "bn-institution.png", model: "ads/banner"
 bn_faq = save_ss_files "ss_files/ads/bn-faq.png", filename: "bn-faq.png", model: "ads/banner"
