@@ -9,39 +9,80 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example do
   let!(:cms_page) { create :article_page, layout_id: layout.id, filename: "node/cms_page.html" }
 
   context "public", js: true do
-
     before do
       Capybara.app_host = "http://#{site.domain}"
     end
 
-    it "#index" do
-      visit node.url
-      expect(status_code).to eq 200
-      expect(page).to have_css(".recommend-history")
-      expect(page).to_not have_link(node.name, href: node.url)
-      expect(page).to_not have_link(article_page.name, href: article_page.url)
-      expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+    context "disable: false" do
+      before do
+        SS.config.replace_value_at(:recommend, :disable, false)
+      end
 
-      visit article_page.url
-      expect(status_code).to eq 200
-      expect(page).to have_css(".recommend-history")
-      expect(page).to have_link(node.name, href: node.url)
-      expect(page).to_not have_link(article_page.name, href: article_page.url)
-      expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+      it "#index" do
+        visit node.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to_not have_link(node.name, href: node.url)
+        expect(page).to_not have_link(article_page.name, href: article_page.url)
+        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
 
-      visit cms_page.url
-      expect(status_code).to eq 200
-      expect(page).to have_css(".recommend-history")
-      expect(page).to have_link(node.name, href: node.url)
-      expect(page).to have_link(article_page.name, href: article_page.url)
-      expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+        visit article_page.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to have_link(node.name, href: node.url)
+        expect(page).to_not have_link(article_page.name, href: article_page.url)
+        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
 
-      visit part.url
-      expect(status_code).to eq 200
-      expect(page).to have_css(".recommend-history")
-      expect(page).to have_link(node.name, href: node.url)
-      expect(page).to have_link(article_page.name, href: article_page.url)
-      expect(page).to have_link(cms_page.name, href: cms_page.url)
+        visit cms_page.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to have_link(node.name, href: node.url)
+        expect(page).to have_link(article_page.name, href: article_page.url)
+        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+
+        visit part.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to have_link(node.name, href: node.url)
+        expect(page).to have_link(article_page.name, href: article_page.url)
+        expect(page).to have_link(cms_page.name, href: cms_page.url)
+      end
+    end
+
+    context "disable: true" do
+      before do
+        SS.config.replace_value_at(:recommend, :disable, true)
+      end
+
+      it "#index" do
+        visit node.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to_not have_link(node.name, href: node.url)
+        expect(page).to_not have_link(article_page.name, href: article_page.url)
+        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+
+        visit article_page.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to_not have_link(node.name, href: node.url)
+        expect(page).to_not have_link(article_page.name, href: article_page.url)
+        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+
+        visit cms_page.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to_not have_link(node.name, href: node.url)
+        expect(page).to_not have_link(article_page.name, href: article_page.url)
+        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+
+        visit part.url
+        expect(status_code).to eq 200
+        expect(page).to have_css(".recommend-history")
+        expect(page).to_not have_link(node.name, href: node.url)
+        expect(page).to_not have_link(article_page.name, href: article_page.url)
+        expect(page).to_not have_link(cms_page.name, href: cms_page.url)
+      end
     end
   end
 end
