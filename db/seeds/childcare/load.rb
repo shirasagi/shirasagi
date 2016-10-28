@@ -152,7 +152,7 @@ save_layout filename: "top.layout.html", name: "トップページ",
     tool.part.html head.part.html navi.part.html
     slide/slide.part.html purpose/birth/folder.part age/zero/folder.part.html
     news/recent.part.html sub-menu/banner.part.html topics/recent.part.html
-    event/calendar.part.html relation/banner.part.html add/banner.part.html
+    event/calendar.part.html relation/banner.part.html ads/banner.part.html
     pagetop.part.html foot.part.html
     )
 
@@ -202,7 +202,7 @@ save_part route: "cms/tabs", filename: "tabs.part.html", name: "新着タブ",
   conditions: %w(news topics know), limit: 10
 save_part route: "cms/free", filename: "tool.part.html", name: "アクセシビリティツール",
   mobile_view: "hide"
-save_part route: "ads/banner", filename: "add/banner.part.html", name: "バナー",
+save_part route: "ads/banner", filename: "ads/banner.part.html", name: "バナー",
   link_action: "direct", sort: "order", mobile_view: "hide"
 save_part route: "cms/node", filename: "age/zero/folder.part.html", name: "フォルダーリスト",
   sort: "order", limit: 100
@@ -346,7 +346,7 @@ save_node route: "event/page", filename: "event", name: "イベント情報",
   st_category_ids: [categories["event/info"].id, categories["event/play"].id, categories["event/study"].id]
 
 ## ads
-save_node route: "ads/banner", filename: "add", name: "広告バナー"
+save_node route: "ads/banner", filename: "ads", name: "広告バナー"
 save_node route: "ads/banner", filename: "relation", name: "関連サイト"
 save_node route: "ads/banner", filename: "sub-menu", name: "サブメニュー"
 
@@ -624,25 +624,25 @@ banner3.set(state: "public")
 banner4.set(state: "public")
 banner5.set(state: "public")
 
-save_page route: "ads/banner", filename: "add/page1.html", name: "バナー画像",
-  link_url: "#", file_id: banner1.id, order: 10
-save_page route: "ads/banner", filename: "add/page2.html", name: "バナー画像",
-  link_url: "#", file_id: banner2.id, order: 20
-save_page route: "ads/banner", filename: "add/page3.html", name: "バナー画像",
-  link_url: "#", file_id: banner3.id, order: 30
-save_page route: "ads/banner", filename: "add/page4.html", name: "バナー画像",
-  link_url: "#", file_id: banner4.id, order: 40
-save_page route: "ads/banner", filename: "add/page5.html", name: "バナー画像",
-  link_url: "#", file_id: banner5.id, order: 50
+save_page route: "ads/banner", filename: "ads/page1.html", name: "バナー画像",
+  link_url: "/", file_id: banner1.id, order: 10
+save_page route: "ads/banner", filename: "ads/page2.html", name: "バナー画像",
+  link_url: "/", file_id: banner2.id, order: 20
+save_page route: "ads/banner", filename: "ads/page3.html", name: "バナー画像",
+  link_url: "/", file_id: banner3.id, order: 30
+save_page route: "ads/banner", filename: "ads/page4.html", name: "バナー画像",
+  link_url: "/", file_id: banner4.id, order: 40
+save_page route: "ads/banner", filename: "ads/page5.html", name: "バナー画像",
+  link_url: "/", file_id: banner5.id, order: 50
 
 bn_relation1 = save_ss_files "ss_files/ads/bn-relation01.png", filename: "bn-relation01.png", model: "ads/banner"
 bn_relation2 = save_ss_files "ss_files/ads/bn-relation02.png", filename: "bn-relation02.png", model: "ads/banner"
 bn_relation1.set(state: "public")
 bn_relation2.set(state: "public")
 save_page route: "ads/banner", filename: "relation/page1.html", name: "関連サイト",
-  link_url: "#", file_id: bn_relation1.id, order: 10
+  link_url: "/", file_id: bn_relation1.id, order: 10
 save_page route: "ads/banner", filename: "relation/page2.html", name: "関連サイト",
-  link_url: "#", file_id: bn_relation2.id, order: 20
+  link_url: "/", file_id: bn_relation2.id, order: 20
 
 bn_institution = save_ss_files "ss_files/ads/bn-institution.png", filename: "bn-institution.png", model: "ads/banner"
 bn_faq = save_ss_files "ss_files/ads/bn-faq.png", filename: "bn-faq.png", model: "ads/banner"
@@ -656,7 +656,7 @@ save_page route: "ads/banner", filename: "sub-menu/page2.html", name: "よくあ
 puts "# sitemap"
 save_page route: "sitemap/page", filename: "sitemap/index.html", name: "サイトマップ",
   layout_id: layouts["folder"].id, sitemap_page_state: "hide", sitemap_depth: 3,
-  sitemap_deny_urls: %w(add css img js relation slide sub-menu)
+  sitemap_deny_urls: %w(ads css img js relation slide sub-menu)
 
 puts "# cms pages"
 file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
