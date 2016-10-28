@@ -43,7 +43,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
       end
     end
 
-    it do
+    xit do
       visit article_pages_path(site, article_node)
       click_on article_page.name
 

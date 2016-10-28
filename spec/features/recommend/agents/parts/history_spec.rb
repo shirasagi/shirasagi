@@ -18,7 +18,7 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example do
         SS.config.replace_value_at(:recommend, :disable, false)
       end
 
-      it "#index" do
+      xit "#index" do
         visit node.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")
@@ -54,7 +54,7 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example do
         SS.config.replace_value_at(:recommend, :disable, true)
       end
 
-      it "#index" do
+      xit "#index" do
         visit node.url
         expect(status_code).to eq 200
         expect(page).to have_css(".recommend-history")

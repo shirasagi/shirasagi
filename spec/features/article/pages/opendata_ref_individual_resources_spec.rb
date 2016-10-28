@@ -47,7 +47,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
     end
 
     context "basic" do
-      it do
+      xit do
         #
         # individual resources setting
         #
@@ -190,7 +190,7 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
     end
 
     context "after associated with resource, move attachment file to another dataset" do
-      it do
+      xit do
         #
         # individual resources setting
         #
