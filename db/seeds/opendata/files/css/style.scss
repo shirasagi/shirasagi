@@ -682,6 +682,13 @@ textarea {
 // -----------------------------------------------------------------------------
 // one
 .dataset .one, .app .one, .idea .one {
+  header .id {
+    float: right;
+    padding: 1em 0 0;
+    &:before {
+      content: "ID:";
+    }
+  }
   h1.name {
     margin: $item-margin 0;
     color: #005c7b;
@@ -734,10 +741,14 @@ textarea {
       }
     }
   }
-  .text {
+  .text, div.idea {
     float: left;
     width: 803px;
     margin-bottom: $box-margin;
+    h2 {
+      font-size: $px18;
+      font-weight: bold;
+    }
   }
   .tabs {
     clear:both;
@@ -1721,6 +1732,9 @@ textarea {
         margin-bottom: 7px;
         padding-bottom: 7px;
         border-bottom: $border-gray2;
+      }
+      ul {
+        margin-left: 15px;
       }
     }
     .field {
