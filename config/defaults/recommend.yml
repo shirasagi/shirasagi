@@ -1,0 +1,11 @@
+# recommend
+
+production: &production
+  # Disable recommend history logs.
+  disable: true
+
+test:
+  <<: *production
+
+development:
+  <<: *production
