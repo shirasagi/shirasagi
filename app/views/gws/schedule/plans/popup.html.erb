@@ -4,7 +4,7 @@
 <% if @item.text.present? %>
 <div class="popup-description">
   <div class="text <%= "markdown-body" if @item.text_type == "markdown" %>">
-    <%== @item.html %>
+    <%= @item.html %>
   </div>
 </div>
 <% end %>
