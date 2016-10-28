@@ -37,7 +37,8 @@ class Recommend::History::Log
 
   class << self
     def enable_access_logging?(site)
-      SS::Config.recommend.disable.blank? && Recommend::Part::Base.site(site).present?
+      SS::Config.recommend.disable.blank?
+      #Recommend::Part::Base.site(site).present?
     end
 
     def to_config(opts = {})
