@@ -8,7 +8,7 @@ if Module.const_defined?(:Unicorn)
   use Unicorn::WorkerKiller::MaxRequests, 3072, 4096
 
   # Max memory size (RSS) per worker
-  use Unicorn::WorkerKiller::Oom, (384*(1024**2)), (448*(1024**2))
+  use Unicorn::WorkerKiller::Oom, (448*(1024**2)), (512*(1024**2))
 end
 
 require ::File.expand_path('../config/environment', __FILE__)
