@@ -46,9 +46,9 @@ describe Sys::SiteCopyJob, dbscope: :example do
       it do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).not_to include(include('WARN'))
-          expect(log.logs).not_to include(include('ERROR'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.log).not_to include('WARN')
+          expect(log.log).not_to include('ERROR')
+          expect(log.log).to include('INFO -- : Completed Job')
         end
 
         dest_site = Cms::Site.find_by(host: target_host_host)
@@ -117,9 +117,9 @@ describe Sys::SiteCopyJob, dbscope: :example do
       it do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).not_to include(include('WARN'))
-          expect(log.logs).not_to include(include('ERROR'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.log).not_to include('WARN')
+          expect(log.log).not_to include('ERROR')
+          expect(log.log).to include('INFO -- : Completed Job')
         end
 
         dest_site = Cms::Site.find_by(host: target_host_host)

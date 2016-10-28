@@ -15,7 +15,7 @@ production: &production
     mode: "on_demand"
 
     # ジョブのログレベルを指定します。規定値は Rails.logger のレベルと同じレベルです。
-    log_level: info
+    log_level: warn
 
     # プールの監視設定です。
     polling:
@@ -38,6 +38,10 @@ production: &production
 
 test:
   <<: *production
+  default:
+    log_level: debug
 
 development:
   <<: *production
+  default:
+    log_level: info

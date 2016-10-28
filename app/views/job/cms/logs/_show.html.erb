@@ -18,5 +18,5 @@
   <dd><%= @item.args %></dd>
 
   <dt><%= @model.t :logs %></dt>
-  <dd><%= text_area_tag :logs, @item.logs.blank? ? "" : safe_join(@item.logs, "\n"), readonly: true, style: "height: 400px" %></dd>
+  <dd><%= text_area_tag :logs, @item.log.presence || @item[:logs].try(:join, "\n"), readonly: true, style: "height: 400px" %></dd>
 </dl>

@@ -80,7 +80,7 @@ module Job::LogsFilter
     def build_csv(items)
       require "csv"
       CSV.generate do |data|
-        data << %w(ClassName Started Closed State Args Logs)
+        data << %w(ClassName Started Closed State Args Log)
         items.each do |item|
           data << [
             t(item.class_name.underscore, scope: "job.models"),
@@ -88,7 +88,7 @@ module Job::LogsFilter
             item.closed_label,
             t(item.state, scope: "job.state"),
             item.args,
-            item.joined_jobs
+            item.log.presence || item[:logs].try(:join, "\n")
           ]
         end
       end
