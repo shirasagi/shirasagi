@@ -9,7 +9,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   let(:index_path) { article_pages_path(site.id, node, format: :json) }
   let!(:admin_user) { cms_user }
 
-  let(:download_pages_path) { download_all_article_pages_path(site: site.id, cid: node.id) }
+  let(:download_pages_path) { download_article_pages_path(site: site.id, cid: node.id) }
 
   context "admin user" do
     before do
@@ -178,30 +178,31 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         it do
           get download_pages_path
           expect(response.status).to eq 200
+          body = response.body.encode("utf-8")
 
-          expect(response.body).to include "test1_article"
-          expect(response.body).to include "test1_filename.html"
-          expect(response.body).to include "記事レイアウト".encode!("Windows-31J")
-          expect(response.body).to include "記事レイアウト,0".encode!("Windows-31J")
-          expect(response.body).to include "test1_keywords"
-          expect(response.body).to include "test1_description"
-          expect(response.body).to include "test1_summary_html"
-          expect(response.body).to include "test1_html"
-          expect(response.body).to include "くらしのガイド".encode!("Windows-31J")
-          expect(response.body).to include "test1_parent_crumb_urls"
-          expect(response.body).to include "test1_event_name"
-          expect(response.body).to include "2016/07/06"
-          expect(response.body).to include "表示".encode!("Windows-31J")
-          expect(response.body).to include "表示,シラサギ市/企画政策部/政策課".encode!("Windows-31J")
-          expect(response.body).to include "test1_contact_charge"
-          expect(response.body).to include "test1_contact_tel"
-          expect(response.body).to include "test1_contact_fax"
-          expect(response.body).to include "test1_contact_email"
-          expect(response.body).to include "2016-07-06T00:00:00+09:00"
-          expect(response.body).to include "2016-07-06T01:01:01+09:00"
-          expect(response.body).to include "2016-07-06T02:02:02+09:00"
-          expect(response.body).to include "09:00,シラサギ市/企画政策部/政策課".encode!("Windows-31J")
-          expect(response.body).to include "政策課,1".encode!("Windows-31J")
+          expect(body).to include "test1_article"
+          expect(body).to include "test1_filename.html"
+          expect(body).to include "記事レイアウト"
+          expect(body).to include "記事レイアウト,0"
+          expect(body).to include "test1_keywords"
+          expect(body).to include "test1_description"
+          expect(body).to include "test1_summary_html"
+          expect(body).to include "test1_html"
+          expect(body).to include "くらしのガイド"
+          expect(body).to include "test1_parent_crumb_urls"
+          expect(body).to include "test1_event_name"
+          expect(body).to include "2016/07/06"
+          expect(body).to include "表示"
+          expect(body).to include "表示,シラサギ市/企画政策部/政策課"
+          expect(body).to include "test1_contact_charge"
+          expect(body).to include "test1_contact_tel"
+          expect(body).to include "test1_contact_fax"
+          expect(body).to include "test1_contact_email"
+          expect(body).to include "2016/07/06 00:00"
+          expect(body).to include "2016/07/06 01:01"
+          expect(body).to include "2016/07/06 02:02"
+          expect(body).to include "02:02,シラサギ市/企画政策部/政策課"
+          expect(body).to include "政策課,1"
         end
       end
     end

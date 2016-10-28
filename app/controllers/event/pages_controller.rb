@@ -14,9 +14,15 @@ class Event::PagesController < ApplicationController
     end
 
   public
-    def import_csv
-      return if request.get?
+    def download
+      csv = @model.site(@cur_site).node(@cur_node).to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+      filename = @model.to_s.tableize.gsub(/\//, "_")
+      send_data csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
+    end
+
+    def import
       @item = @model.new
+      return if request.get?
 
       begin
         file = params[:item].try(:[], :file)

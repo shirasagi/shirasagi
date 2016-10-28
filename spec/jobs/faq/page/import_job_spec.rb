@@ -39,7 +39,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.description).to eq "概要"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
-        expect(item.categories.pluck(:name)).to match_array ["くらし・手続き", "子育て・教育"]
+        expect(item.category_name_tree).to match_array ["よくある質問/くらし・手続き", "よくある質問/子育て・教育"]
         expect(item.event_name).to eq "イベントタイトル"
         expect(item.event_dates).to eq "2016/09/08\r\n2016/09/09\r\n2016/09/10\r\n2016/09/14\r\n2016/09/15\r\n2016/09/16"
         expect(item.related_page_ids).to match_array [related_page.id]
@@ -84,7 +84,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
         expect(item.html).to eq "<p>可能です。</p>"
-        expect(item.categories.pluck(:name)).to match_array ["子育て・教育"]
+        expect(item.category_name_tree).to match_array ["よくある質問/子育て・教育"]
         expect(item.event_name).to eq "イベントタイトル"
         expect(item.event_dates).to eq "2016/09/08\r\n2016/09/09\r\n2016/09/10\r\n2016/09/14\r\n2016/09/15\r\n2016/09/16"
         expect(item.related_page_ids).to match_array [related_page.id]

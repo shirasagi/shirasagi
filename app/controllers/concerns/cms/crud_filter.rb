@@ -142,22 +142,4 @@ module Cms::CrudFilter
         end
       end
     end
-
-    def download_all
-      raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-      set_items
-
-      csv = @items.to_csv
-      filename = "#{@model.name.pluralize.underscore.gsub('/', '_')}_#{Time.zone.now.to_i}.csv"
-      send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
-    end
-
-    def import_csv
-      return if request.get?
-
-      @item = @model.new get_params
-      result = @item.import_csv
-      flash.now[:notice] = t("views.notice.saved") if !result && @item.imported > 0
-      render_create result, location: { action: :index }, render: { file: :import_csv }
-    end
 end
