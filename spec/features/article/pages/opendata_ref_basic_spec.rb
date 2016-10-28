@@ -56,7 +56,8 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
         find('.addon-head h2').click
         # wait for appearing select
         expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
-        choose 'item_opendata_dataset_state_public'
+        # choose 'item_opendata_dataset_state_public'
+        find('input#item_opendata_dataset_state_public').trigger('click')
       end
       click_on I18n.t('views.button.publish_save')
 
