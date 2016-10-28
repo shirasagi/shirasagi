@@ -26,10 +26,14 @@ module Cms::GroupPermission
     node = opts[:node] || @cur_node
 
     action = permission_action || action
-    is_owned = node ? node.owned?(user) : owned?(user)
+    if new_record?
+      is_owned = node ? node.owned?(user) : false
+    else
+      is_owned = owned?(user)
+    end
 
     permits = ["#{action}_other_#{self.class.permission_name}"]
-    permits << "#{action}_private_#{self.class.permission_name}" if is_owned || new_record?
+    permits << "#{action}_private_#{self.class.permission_name}" if is_owned
 
     permits.each do |permit|
       return true if user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
