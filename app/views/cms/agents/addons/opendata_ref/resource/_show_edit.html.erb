@@ -5,18 +5,18 @@
 <div class="see mod-cms-opendata-resource">
   <% @item.files.each do |file| %>
     <div class="od-resource-file" data-file-id="<%= file.id %>">
-      <div class="od-resource-file-img">
-        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+      <%= link_to file.url, class: 'od-resource-file-img', target: "_blank" do %>
+        <div>
           <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.name %>
+            <%= image_tag file.thumb_url, alt: file.name %>
           <% else %>
-              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
           <% end %>
-        <% end %>
-      </div>
-      <div class="od-resource-file-name">
-        <%= file.name %>
-      </div>
+        </div>
+        <div class="od-resource-file-name">
+          <%= file.name %>
+        </div>
+      <% end %>
       <dl class="od-resource-file-meta">
         <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
         <dd>
@@ -29,8 +29,7 @@
         <dt><%= t('cms.opendata_ref/resource.state') %></dt>
         <dd>
           <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(@item.opendata_resource_state_options, @item.opendata_resources_state(file)), class: 'od-resource-file-state', data: { 'file-id' => file.id } %>
-        </dd>
-        <dd class="od-resource-file-datasets">
+
           <%= hidden_field_tag "item[opendata_resources][#{file.id}][dataset_ids][]", "", class: "hidden-ids" %>
           <%= link_to t("cms.apis.opendata_ref.datasets.index"), cms_apis_opendata_ref_datasets_path(single: 1), class: "ajax-box" %>
           <table class="index ajax-selected">
