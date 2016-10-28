@@ -108,6 +108,11 @@ ja:
         index: ユーザーを選択する
         search: ユーザーを検索
         select: ユーザーを設定する
+      opendata_ref:
+        datasets:
+          index: データセットを選択する
+          search: データセットを検索
+          select: データセットを設定する
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
@@ -159,6 +164,15 @@ ja:
       action_type:
         remove: 削除
         replace: 置換
+      opendata_dataset:
+        none: データセットとして登録しない
+        public: データセット（公開）で登録する
+        closed: データセット（非公開）で登録する
+        existance: 既存のデータセットに登録する
+      opendata_resource:
+        none: リソースとして登録しない
+        same: 記事と同じデータセット内
+        existance: 既存のデータセット内
 
     sns_share:
       fb_like: Facebook いいね！
@@ -170,6 +184,14 @@ ja:
       hatena_add: このエントリーをはてなブックマークに追加
       google: Google+
       evernote: Evernote
+
+    opendata_ref/license:
+      ref_opendata: オープンデータ側の設定にしたがう
+    opendata_ref/resource:
+      license_id: ライセンス
+      ref_opendata_license: オープンデータ側の既定値
+      text: 説明
+      state: 登録方法
 
   #cms:
     nodes:
@@ -283,8 +305,13 @@ ja:
       cms/page_search: 検索条件
       cms/high_contrast_mode: ハイコントラストモード
       cms/source_cleaner: ソースクリーニング
-      cms/opendata_site: オープンデータサイト
-      cms/opendata: オープンデータ
+      cms/opendata_ref/site: オープンデータサイト
+      cms/opendata_ref/dataset: オープンデータ/データセット
+      cms/opendata_ref/resource: オープンデータ/リソース
+      cms/opendata_ref/category: オープンデータ/分野
+      cms/opendata_ref/area: オープンデータ/地域
+      cms/opendata_ref/dataset_group: オープンデータ/データセットグループ
+      cms/opendata_ref/license: オープンデータ/ライセンス
       cms/monthly_nav: アーカイブナビ（月次）
       cms/archive_view_switcher: アーカイブ用表示設定
 
@@ -485,10 +512,24 @@ ja:
         target: 対象
         action: 操作
         replaced_value: 置換後の値
-      cms/addon/opendata_site:
+      cms/addon/opendata_ref/site:
         opendata_site_ids: サイト
-      cms/addon/opendata:
-        opendata_state: 公開状態
+      cms/addon/opendata_ref/dataset:
+        opendata_dataset_state: 公開状態
+        opendata_dataset_ids: データセット
+      cms/addon/opendata_ref/resource:
+        opendata_resource_state: 公開状態
+        opendata_dataset_ids: データセット
+        opendata_resource_license_ids: ライセンス
+        opendata_resource_text: 説明
+      cms/addon/opendata_ref/category:
+        opendata_category_ids: カテゴリー
+      cms/addon/opendata_ref/area:
+        opendata_area_ids: 地域
+      cms/addon/opendata_ref/dataset_group:
+        opendata_dataset_group_ids: データセットグループ
+      cms/addon/opendata_ref/license:
+        opendata_license_ids: ライセンス
       cms/addon/monthly_nav:
         periods: 表示期間
       cms/addon/archive_view_switcher:
@@ -1052,15 +1093,34 @@ ja:
         - 置換または削除が選択できます。
         - 置換後のタグや属性の値、文字列を右欄に入力します。
 
-    cms/addon/opendata_site:
+    cms/addon/opendata_ref/site:
       opendata_site_ids:
         - オープンデータサイトを設定します。
         - 設定したサイトのデータセットにページが連携されるようになります。
 
-    cms/addon/opendata:
-      opendata_state:
-        - ページをオープンデータとして公開するかどうかを選択します。
-        - 「公開」を選択するとオープンデータとして公開されます。
+    cms/addon/opendata_ref/dataset:
+      opendata_dataset_state:
+        - ページをオープンデータとして登録するかどうかを選択します。
+
+    cms/addon/opendata_ref/category:
+      opendata_category_ids:
+        - ページをオープンデータとして登録する際、どの分野を使用するかを設定します。
+        - 設定した分野がデータセットに設定されます。
+
+    cms/addon/opendata_ref/area:
+      opendata_area_ids:
+        - ページをオープンデータとして登録する際、どの地域を使用するかを設定します。
+        - 設定した地域がデータセットに設定されます。
+
+    cms/addon/opendata_ref/dataset_group:
+      opendata_dataset_group_ids:
+        - ページをオープンデータとして登録する際、どのデータセット・グループを使用するかを設定します。
+        - 設定したデータセット・グループがデータセットに設定されます。
+
+    cms/addon/opendata_ref/license:
+      opendata_license_ids:
+        - ページをオープンデータとして登録する際、どのライセンスを使用するかを設定します。
+        - 設定したライセンスがデータセット内のリソースに設定されます。
 
     cms/addon/page_group_list:
       conditions:

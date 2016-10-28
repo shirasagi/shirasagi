@@ -1,0 +1,53 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-resource"); <% end %>
+
+<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.opendata_site_ids).and_public.pluck(:name, :id) %>
+<div class="see mod-cms-opendata-resource">
+  <% @item.files.each do |file| %>
+    <div class="od-resource-file" data-file-id="<%= file.id %>">
+      <div class="od-resource-file-img">
+        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+          <% if file.image? %>
+            <%= image_tag file.thumb_url, alt: file.name %>
+          <% else %>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="od-resource-file-name">
+        <%= file.name %>
+      </div>
+      <dl class="od-resource-file-meta">
+        <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
+        <dd>
+          <%= select_tag "item[opendata_resources][#{file.id}][license_id]", options_for_select(licenses, @item.opendata_resources_licenses(file).first.try(:id)), include_blank: t('cms.opendata_ref/resource.ref_opendata_license'), disabled: true %>
+        </dd>
+
+        <dt><%= t('cms.opendata_ref/resource.text') %></dt>
+        <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", @item.opendata_resources_text(file), readonly: true %></dd>
+
+        <dt><%= t('cms.opendata_ref/resource.state') %></dt>
+        <dd>
+          <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(@item.opendata_resource_state_options, @item.opendata_resources_state(file)), disabled: true %>
+        </dd>
+        <% if @item.opendata_resources_state(file) == 'existance' %>
+        <dd>
+          <table class="index">
+            <thead>
+            <tr>
+              <th class="name"><%= t("mongoid.models.opendata/dataset") %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @item.opendata_resources_datasets(file).each do |dataset| %>
+              <tr>
+                <td><%= dataset.name %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </dd>
+        <% end %>
+      </dl>
+    </div>
+  <% end %>
+</div>

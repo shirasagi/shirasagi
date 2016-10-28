@@ -44,11 +44,7 @@ describe "webapi", dbscope: :example, type: :request do
     context "form preview" do
       describe "POST /.s{site}/preview/{path}" do
         it "200" do
-          preview_page          = Cms::Page.new item.attributes
-          preview_page.name     = "preview test"
-          preview_page.basename = "preview_test.html"
-
-          params = { preview_item: { id: preview_page.id } }
+          params = { preview_item: { id: item.id } }
           post form_preview_path, params
           expect(response.status).to eq 200
         end

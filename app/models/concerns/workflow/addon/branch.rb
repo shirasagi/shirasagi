@@ -57,27 +57,30 @@ module Workflow::Addon
     end
 
     def clone_files
-      ids = SS::Extensions::Words.new
-      files.each do |f|
-        attributes = Hash[f.attributes]
-        attributes.select!{ |k| f.fields.keys.include?(k) }
+      run_callbacks(:clone_files) do
+        ids = {}
+        files.each do |f|
+          attributes = Hash[f.attributes]
+          attributes.select!{ |k| f.fields.keys.include?(k) }
 
-        file = SS::File.new(attributes)
-        file.id = nil
-        file.in_file = f.uploaded_file
-        file.user_id = @cur_user.id if @cur_user
+          file = SS::File.new(attributes)
+          file.id = nil
+          file.in_file = f.uploaded_file
+          file.user_id = @cur_user.id if @cur_user
 
-        file.save validate: false
-        ids << file.id.mongoize
+          file.save validate: false
+          ids[f.id] = file.id
 
-        html = self.html
-        next unless html.present?
+          html = self.html
+          next unless html.present?
 
-        html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-        html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-        self.html = html
+          html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
+          html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+          self.html = html
+        end
+        self.file_ids = ids.values
+        ids
       end
-      self.file_ids = ids
     end
 
     def merge(branch)

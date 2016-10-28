@@ -8,8 +8,11 @@
   <% end %>
 
   <dt><%= @model.t :related_url %></dt>
-  <dd><%= @item.send :related_url %></dd>
+  <dd><%= @item.related_url %></dd>
 
   <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :default_state %></dt>
+  <dd><%= @item.label :default_state %></dd>
 </dl>

@@ -1,0 +1,7 @@
+<% return "" if @item.opendata_license_ids.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-license"); <% end %>
+
+<dl class="see mod-cms-opendata-license">
+  <dt><%= @model.t :opendata_license_ids %></dt>
+  <dd><%= br @item.opendata_licenses.pluck(:name).join("\n") %></dd>
+</dl>

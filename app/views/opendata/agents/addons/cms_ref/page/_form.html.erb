@@ -1,0 +1,9 @@
+<% return "" if @item.assoc_site_id.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-opendata-site-association"); <% end %>
+
+<dl class="see mod-opendata-site-association">
+  <%= render partial: 'opendata/agents/addons/cms_ref/page/common' %>
+
+  <dt><%= @model.t :assoc_method %><%= @model.tt :assoc_method %></dt>
+  <dd><%= f.select :assoc_method, @item.assoc_method_options %></dd>
+</dl>

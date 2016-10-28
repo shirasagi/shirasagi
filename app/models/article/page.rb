@@ -15,7 +15,12 @@ class Article::Page
   include Map::Addon::Page
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
-  include Cms::Addon::Opendata
+  include Cms::Addon::OpendataRef::Dataset
+  include Cms::Addon::OpendataRef::Category
+  include Cms::Addon::OpendataRef::Area
+  include Cms::Addon::OpendataRef::DatasetGroup
+  include Cms::Addon::OpendataRef::License
+  include Cms::Addon::OpendataRef::Resource
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission

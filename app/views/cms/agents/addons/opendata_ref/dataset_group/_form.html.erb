@@ -1,0 +1,18 @@
+<% return "" if @cur_node.becomes_with_route.opendata_site_ids.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-dataset-group"); <% end %>
+
+<% dataset_groups = Opendata::DatasetGroup.in(site_id: @cur_node.becomes_with_route.opendata_site_ids).and_public.pluck(:name, :id) %>
+<dl class="see mod-cms-opendata-dataset-group category-form">
+  <dt class="wide"><%= @model.t :opendata_dataset_group_ids %><%= @model.tt :opendata_dataset_group_ids %></dt>
+  <dd class="wide">
+    <%= f.hidden_field 'opendata_dataset_group_ids[]', value: '' %>
+    <% dataset_groups.each do |cate| %>
+      <div class="parent">
+        <%= label_tag do %>
+          <%= f.check_box 'opendata_dataset_group_ids[]', {}, cate[1] %>
+          <%= cate[0] %>
+        <% end %>
+      </div>
+    <% end %>
+  </dd>
+</dl>

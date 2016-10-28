@@ -1,7 +1,11 @@
 <dl class="see">
   <% if @item.image? %>
-  <dt><%= @model.t :image %></dt>
-  <dd><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank" } %></dd>
+    <% img = Magick::ImageList.new(@item.path) %>
+    <dt><%= @model.t :image %></dt>
+    <dd>
+      <div class="img"><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank" } %></div>
+      <div class="properties"><span class="width"><%= img.columns %></span> x <span class="height"><%= img.rows %></span></div>
+    </dd>
   <% end %>
 
   <dt><%= @model.t :name %></dt>
@@ -9,6 +13,12 @@
 
   <dt><%= @model.t :filename %></dt>
   <dd><%= @item.send :filename %></dd>
+
+  <dt><%= @model.t :size %></dt>
+  <dd><%= number_to_human_size(@item.size) %></dd>
+
+  <dt><%= @model.t :content_type %></dt>
+  <dd><%= @item.content_type %></dd>
 
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to :download, { action: :download }, { class: "btn" } %></dd>

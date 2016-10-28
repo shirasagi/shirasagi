@@ -1,0 +1,15 @@
+<% return "" if @item.assoc_site_id.blank? %>
+<%= jquery do %>
+  SS_AddonTabs.hide(".mod-opendata-site-association");
+  $(".mod-opendata-site-association .check-for-update").colorbox();
+<% end %>
+
+<dl class="see mod-opendata-site-association">
+  <%= render partial: 'opendata/agents/addons/cms_ref/page/common' %>
+
+  <dt><%= @model.t :assoc_method %></dt>
+  <dd>
+    <%= @item.label :assoc_method %>
+    <%= link_to(:'opendata.links.check_for_update', { action: :check_for_update }, class: 'check-for-update') if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+  </dd>
+</dl>

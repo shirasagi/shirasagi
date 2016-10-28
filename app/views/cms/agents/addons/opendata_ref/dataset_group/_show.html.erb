@@ -1,0 +1,7 @@
+<% return "" if @item.opendata_dataset_group_ids.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-dataset-group"); <% end %>
+
+<dl class="see mod-cms-opendata-dataset-group">
+  <dt><%= @model.t :opendata_dataset_group_ids %></dt>
+  <dd><%= br @item.opendata_dataset_groups.pluck(:name).join("\n") %></dd>
+</dl>

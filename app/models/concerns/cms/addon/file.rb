@@ -7,6 +7,8 @@ module Cms::Addon
       embeds_ids :files, class_name: "SS::File"
       permit_params file_ids: []
 
+      define_model_callbacks :clone_files
+
       before_save :clone_files, if: ->{ try(:new_clone?) }
       before_save :save_files
       after_destroy :destroy_files

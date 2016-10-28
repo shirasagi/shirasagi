@@ -84,7 +84,7 @@ module Sys::SiteCopy::CmsPages
         dest_resource.assoc_site_id = resource.assoc_site_id
         dest_resource.assoc_node_id = resource.assoc_node_id
         dest_resource.assoc_page_id = resource.assoc_page_id
-        dest_resource.assoc_file_id = resource.assoc_file_id
+        dest_resource.assoc_filename = resource.assoc_filename
         dest_resource.save!(validate: false)
       end
       dest_page.id

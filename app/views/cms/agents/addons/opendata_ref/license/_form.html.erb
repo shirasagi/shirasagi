@@ -1,0 +1,10 @@
+<% return "" if @cur_node.becomes_with_route.opendata_site_ids.blank? %>
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-license"); <% end %>
+
+<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.opendata_site_ids).and_public.pluck(:name, :id) %>
+<dl class="see mod-cms-opendata-license">
+  <dt><%= @model.t :opendata_license_ids %><%= @model.tt :opendata_license_ids %></dt>
+  <dd>
+    <%= select_tag "#{f.object_name}[opendata_license_ids][]", options_for_select(licenses, @item.opendata_licenses.first.try(:id)), include_blank: t('cms.opendata_ref/license.ref_opendata'), id: 'item_opendata_license_ids_1' %>
+  </dd>
+</dl>

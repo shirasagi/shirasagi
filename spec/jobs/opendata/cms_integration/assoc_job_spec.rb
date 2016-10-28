@@ -26,7 +26,7 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
 
     article_page.cur_user = cms_user
     article_page.file_ids = [ file.id ]
-    article_page.opendata_state = 'public'
+    article_page.opendata_dataset_state = 'public'
     article_page.save!
 
     path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
@@ -52,29 +52,30 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example, tmpdir: true do
       Opendata::Dataset.site(od_site).first.tap do |dataset|
         expect(dataset.name).to eq article_page.name
         expect(dataset.parent.id).to eq dataset_node.id
-        expect(dataset.state).to eq 'closed'
+        expect(dataset.state).to eq 'public'
         expect(dataset.text).to include('ああああ')
         expect(dataset.text).to include('いいい')
         expect(dataset.text).to include('添付ファイル (PDF: 36kB)')
         expect(dataset.text).not_to include('<p>')
         expect(dataset.text).not_to include('<a>')
         expect(dataset.text).not_to include('&nbsp;')
+        expect(dataset.assoc_site_id).to eq article_page.site.id
+        expect(dataset.assoc_node_id).to eq article_page.parent.id
+        expect(dataset.assoc_page_id).to eq article_page.id
+        expect(dataset.assoc_method).to eq 'auto'
         expect(dataset.resources.count).to eq 1
         dataset.resources.first.tap do |resource|
           file = article_page.files.first
           expect(resource.name).to eq file.name
           expect(resource.content_type).to eq file.content_type
           expect(resource.file_id).not_to eq file.id
+          expect(resource.license_id).not_to be_nil
           expect(resource.assoc_site_id).to eq article_page.site.id
           expect(resource.assoc_node_id).to eq article_page.parent.id
           expect(resource.assoc_page_id).to eq article_page.id
-          expect(resource.assoc_file_id).to eq file.id
+          expect(resource.assoc_filename).to eq file.filename
+          expect(resource.assoc_method).to eq 'auto'
         end
-      end
-
-      Opendata::Dataset.site(od_site).first.tap do |dataset|
-        dataset.state = 'public'
-        dataset.save!
       end
 
       # after dataset is publiced, page is destroyed,

@@ -1,6 +1,0 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata"); <% end %>
-
-<dl class="see mod-cms-opendata">
-  <dt><%= @model.t :opendata_state %><%= @model.tt :opendata_state %></dt>
-  <dd><%= f.select :opendata_state, @item.opendata_state_options, include_blank: true %></dd>
-</dl>

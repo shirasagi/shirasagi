@@ -1,0 +1,9 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="filename"><%= File.basename item.filename %></span>
+  <span class="content-type"><%= item.content_type %></span>
+  <span class="size"><%= number_to_human_size(item.size) %></span>
+<% end %>
+
+<%= render file: 'cms/crud/index' %>

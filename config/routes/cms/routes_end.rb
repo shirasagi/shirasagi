@@ -94,6 +94,8 @@ SS::Application.routes.draw do
       get :view, on: :member
       get :thumb, on: :member
       get :download, on: :member
+      get :resize, on: :member
+      post :resize, on: :member
     end
 
     resources :page_searches, concerns: :deletion do
@@ -133,6 +135,9 @@ SS::Application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+      end
+      namespace "opendata_ref" do
+        get "datasets:cid" => "datasets#index", as: 'datasets'
       end
     end
   end

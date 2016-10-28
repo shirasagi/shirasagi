@@ -65,4 +65,14 @@ module SS::FileFilter
           disposition: :attachment
       end
     end
+
+    def resize
+      set_item
+      raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+      return if request.get?
+
+      resizer = SS::ImageResizer.new get_params
+      render_update resizer.resize(@item), { file: :resize }
+    end
 end

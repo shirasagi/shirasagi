@@ -1664,3 +1664,63 @@ form .CodeMirror {
     margin-top: 15px;
   }
 }
+
+// -------------------------------------------------------------------------------------------------
+// addon cms/opendata_ref/resource
+#addon-cms-agents-addons-opendata_ref-resource .see {
+  .od-resource-file {
+    @include clear;
+    width: 240px;
+    display: inline-block;
+    margin: 8px;
+    padding: 8px;
+    border: 1px solid $white;
+    vertical-align: top;
+    &:hover {
+      border: 1px solid $gray4;
+    }
+  }
+  .od-resource-file-img {
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    &:hover {
+      background-color: #eee;
+      text-decoration: none;
+    }
+    img {
+      vertical-align: top;
+      min-height: 110px;
+      width: 100%;
+    }
+    .ext {
+      display: block;
+      overflow: hidden;
+      color: $orange;
+      font-size: $px32;
+      font-weight: bold;
+      width: 100%;
+      min-height: 110px;
+    }
+  }
+  .od-resource-file-name {
+    text-align: center;
+  }
+  .od-resource-file-meta {
+    margin: 16px 0px;
+    dt {
+      font-weight: bold;
+      margin: 8px 0px 4px 0px;
+    }
+    dd {
+      margin: 0px;
+      margin: 4px 0px 16px 0px;
+      select, input, a, table {
+        margin: 4px 0px 4px 0px;
+      }
+    }
+  }
+  .od-resource-file-operation {
+    margin: 8px 0px;
+  }
+}

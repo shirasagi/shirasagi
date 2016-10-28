@@ -12,17 +12,30 @@ class Opendata::License
   field :name, type: String
   field :related_url, type: String
   field :order, type: Integer, default: 0
+  field :default_state, type: String
 
   belongs_to_file :file
 
-  permit_params :state, :name, :related_url, :order, file_ids: []
+  permit_params :state, :name, :related_url, :order, :default_state
+  permit_params file_ids: []
 
-  validates :state, presence: true
+  validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :name, presence: true, length: { maximum: 80 }
   validates :in_file, presence: true, if: ->{ file_id.blank? }
+  validates :default_state, inclusion: { in: %w(none default), allow_blank: true }
+
+  scope :and_default, -> { where(default_state: 'default') }
 
   def state_options
-    [[I18n.t("opendata.state_options.public"), "public"], [I18n.t("opendata.state_options.closed"), "closed"]]
+    %w(public closed).map do |v|
+      [ I18n.t("opendata.state_options.#{v}"), v ]
+    end
+  end
+
+  def default_state_options
+    %w(default).map do |v|
+      [ I18n.t("opendata.default_state_options.#{v}"), v ]
+    end
   end
 
   class << self

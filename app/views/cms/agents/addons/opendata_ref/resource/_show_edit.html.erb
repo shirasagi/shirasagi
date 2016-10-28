@@ -1,0 +1,134 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-resource"); <% end %>
+
+<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.opendata_site_ids).and_public.pluck(:name, :id) %>
+
+<div class="see mod-cms-opendata-resource">
+  <% @item.files.each do |file| %>
+    <div class="od-resource-file" data-file-id="<%= file.id %>">
+      <%= link_to file.url, class: 'od-resource-file-img', target: "_blank" do %>
+        <div>
+          <% if file.image? %>
+            <%= image_tag file.thumb_url, alt: file.name %>
+          <% else %>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+          <% end %>
+        </div>
+        <div class="od-resource-file-name">
+          <%= file.name %>
+        </div>
+      <% end %>
+      <dl class="od-resource-file-meta">
+        <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
+        <dd>
+          <%= select_tag "item[opendata_resources][#{file.id}][license_id]", options_for_select(licenses, @item.opendata_resources_licenses(file).first.try(:id)), include_blank: t('cms.opendata_ref/resource.ref_opendata_license') %>
+        </dd>
+
+        <dt><%= t('cms.opendata_ref/resource.text') %></dt>
+        <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", @item.opendata_resources_text(file) %></dd>
+
+        <dt><%= t('cms.opendata_ref/resource.state') %></dt>
+        <dd>
+          <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(@item.opendata_resource_state_options, @item.opendata_resources_state(file)), class: 'od-resource-file-state', data: { 'file-id' => file.id } %>
+
+          <%= hidden_field_tag "item[opendata_resources][#{file.id}][dataset_ids][]", "", class: "hidden-ids" %>
+          <%= link_to t("cms.apis.opendata_ref.datasets.index"), cms_apis_opendata_ref_datasets_path(single: 1), class: "ajax-box" %>
+          <table class="index ajax-selected">
+            <thead>
+            <tr>
+              <th class="name"><%= t("mongoid.models.opendata/dataset") %></th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @item.opendata_resources_datasets(file).each do |dataset| %>
+                <tr data-id="<%= dataset.id %>">
+                  <td><%= hidden_field_tag "item[opendata_resources][#{file.id}][dataset_ids][]", dataset.id %> <%= dataset.name %></td>
+                  <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </dd>
+      </dl>
+      <div class="od-resource-file-operation">
+        <input type="button" value="<%= t('views.button.save') %>" class="btn od-resource-file-save" data-file-id="<%= file.id %>">
+        <span class="od-resource-file-save-status"></span>
+      </div>
+    </div>
+    <% if @item.opendata_resources_state(file) != 'existance' %>
+      <%= jquery do %>
+        $("div.od-resource-file[data-file-id=<%= file.id %>] .od-resource-file-datasets").hide();
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<%
+  update_opendata_resources_path = request.path.dup
+  update_opendata_resources_path << "/" unless update_opendata_resources_path.end_with?("/")
+  update_opendata_resources_path << "update_opendata_resources.json"
+%>
+<%= jquery do %>
+  $('.mod-cms-opendata-resource .od-resource-file-state').on('change', function() {
+    var el = $(this);
+    var fileId = el.data('file-id');
+    var val = el.val();
+    var rootNode = $("div.od-resource-file[data-file-id=" + fileId + "]");
+
+    if (val == 'existance') {
+      rootNode.find(".od-resource-file-datasets").show();
+    } else {
+      rootNode.find(".od-resource-file-datasets").hide();
+    }
+  });
+
+  $('.mod-cms-opendata-resource .od-resource-file-save').on('click', function(e) {
+    var fileId = $(this).data('file-id');
+
+    var rootNode = $("div.od-resource-file[data-file-id=" + fileId + "]");
+    var state = rootNode.find("[name='item[opendata_resources][" + fileId + "][state]']").val();
+    var licenseId = rootNode.find("[name='item[opendata_resources][" + fileId + "][license_id]']").val();
+    var text = rootNode.find("[name='item[opendata_resources][" + fileId + "][text]']").val();
+    var datasetId = [];
+    if (state == 'existance') {
+      datasetId = rootNode.find("[name='item[opendata_resources][" + fileId + "][dataset_ids][]']").map(function () {
+        return $(this).val();
+      }).filter(function() {
+        if (this && this.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }).get()[0];
+    }
+
+    data = { item: {} };
+    data['item']['file_id'] = fileId;
+    data['item']['state'] = state;
+    if (datasetId) {
+      data['item']['dataset_id'] = datasetId;
+    }
+    data['item']['license_id'] = licenseId;
+    data['item']['text'] = text;
+
+    var resultNode = rootNode.find(".od-resource-file-save-status");
+    $.ajax({
+      type: "POST",
+      url: "<%= update_opendata_resources_path %>",
+      dataType: "json",
+      cache: false,
+      data: data,
+      beforeSend: function() {
+        resultNode.html(SS.loading);
+      },
+      success: function (res, status) {
+        resultNode.html("<%= t('views.notice.saved') %>");
+      },
+      error: function (xhr, status, error) {
+        resultNode.html(["== Error =="].concat(xhr.responseJSON).join("<br>"));
+      }
+    });
+
+    e.preventDefault();
+  });
+<% end %>

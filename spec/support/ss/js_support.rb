@@ -30,6 +30,13 @@ module SS
     def wait_for_cbox
       wait_for_selector("div#ajax-box table.index")
     end
+
+    def save_full_screenshot(opts = {})
+      filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_i}"
+      page.save_screenshot(filename, full: true)
+      puts "screenshot: #{filename}"
+    rescue
+    end
   end
 end
 
