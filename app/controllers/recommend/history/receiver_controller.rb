@@ -22,7 +22,7 @@ class Recommend::History::ReceiverController < ApplicationController
         target_id: target_id, target_class: target_class,
         remote_addr: remote_addr, user_agent: user_agent,
       )
-      log.save
+      log.save if log.class.enable_access_logging?(@cur_site)
 
       cookies.permanent["_ss_recommend"] = log.token
 

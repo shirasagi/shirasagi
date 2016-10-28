@@ -37,7 +37,7 @@ class Recommend::History::Log
 
   class << self
     def enable_access_logging?(site)
-      Recommend::Part::Base.site(site).blank?
+      SS::Config.recommend.disable.blank? && Recommend::Part::Base.site(site).present?
     end
 
     def to_config(opts = {})
@@ -46,7 +46,7 @@ class Recommend::History::Log
       preview_path = opts[:preview_path]
 
       return h if preview_path
-      return h if enable_access_logging?(site)
+      return h unless enable_access_logging?(site)
 
       item = opts[:item]
       path = opts[:path]
