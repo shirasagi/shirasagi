@@ -52,10 +52,13 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
       #
       click_on I18n.t('views.links.edit')
 
-      find('#addon-cms-agents-addons-opendata_ref-dataset .addon-head h2').click
-      choose 'item_opendata_dataset_state_public'
+      within '#addon-cms-agents-addons-opendata_ref-dataset' do
+        find('.addon-head h2').click
+        # wait for appearing select
+        expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
+        choose 'item_opendata_dataset_state_public'
+      end
       click_on I18n.t('views.button.publish_save')
-      click_on I18n.t('views.button.ignore_alert')
 
       expect(page).to have_css('#notice', text: I18n.t('views.notice.saved'))
       article_page.reload
@@ -106,7 +109,6 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true do
 
       click_on I18n.t('views.links.edit')
       click_on I18n.t('views.button.publish_save')
-      click_on I18n.t('views.button.ignore_alert')
 
       # completely change file ids
       save_file_ids = article_page.file_ids.dup
