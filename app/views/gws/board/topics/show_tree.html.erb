@@ -16,7 +16,7 @@
       </nav>
     </header>
 
-    <div class="body markdown-body"><%== @item.html %></div>
+    <div class="body markdown-body"><%= @item.html %></div>
 
     <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">

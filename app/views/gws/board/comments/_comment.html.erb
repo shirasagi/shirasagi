@@ -37,7 +37,7 @@ end
   </header>
 
   <div class="toggle-body <%= 'hide' if recursion %>">
-    <div class="body markdown-body"><%== comment.html %></div>
+    <div class="body markdown-body"><%= comment.html %></div>
 
     <% if comment.files.present? %>
     <div class="files">
