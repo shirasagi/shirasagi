@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
 <head>
 <meta charset="UTF-8" />
+<% if @cur_page.link_url != '#' %>
 <meta http-equiv="refresh" content="0; URL=<%= @cur_page.link_url %>">
+<% end %>
 <title><%= @cur_page.name %></title>
 </head>
 <body>

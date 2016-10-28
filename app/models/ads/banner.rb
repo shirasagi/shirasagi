@@ -15,6 +15,7 @@ class Ads::Banner
   belongs_to_file :file
 
   validates :link_url, presence: true
+  validate :validate_link_url
   #validates :file_id, presence: true
 
   permit_params :link_url
@@ -28,4 +29,11 @@ class Ads::Banner
   def count_url
     url.sub(".html", ".html.count")
   end
+
+  private
+    def validate_link_url
+      return if link_url.blank?
+
+      errors.add :link_url, :invalid if link_url == '#'
+    end
 end
