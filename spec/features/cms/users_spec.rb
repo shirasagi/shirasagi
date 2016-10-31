@@ -173,6 +173,58 @@ describe "cms_users", type: :feature, dbscope: :example do
     end
   end
 
+  context "ss-1252" do
+    before(:each) do
+      g1 = create(:cms_group, name: "A", order: 10)
+      g2 = create(:cms_group, name: "A/B", order: 20)
+      g3 = create(:cms_group, name: "A/B/C", order: 30)
+      g4 = create(:cms_group, name: "A/B/D", order: 40)
+      r1 = create(:cms_role, name: "all")
+      r1 = create(:cms_role, name: "edit")
+      cms_site.add_to_set(group_ids: [g1.id, g2.id, g3.id, g4.id])
+    end
+
+    it "#import" do
+      login_cms_user
+      visit import_path
+      within "form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
+        click_button "インポート"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+
+      visit import_path
+      within "form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_2.csv"
+        click_button "インポート"
+      end
+      expect(status_code).to eq 200
+      expect(current_path).to eq index_path
+
+      users = Cms::User.site(cms_site).ne(id: cms_user.id)
+      expected_emails = %w(
+        import_admin_update@example.jp
+        import_sys@example.jp
+      )
+      expected_names = %w(import_admin_update import_sys)
+      expected_uids = [nil, "sys"]
+      expected_groups = [ ["A/B"], ["A"] ]
+      expected_cms_roles = [ %w(all), %w(all edit) ]
+
+      expect(users.map(&:name)).to eq expected_names
+      expect(users.map(&:email)).to eq expected_emails
+      expect(users.map(&:uid)).to eq expected_uids
+      expect(users.map{|u| u.groups.map(&:name)}).to match_array expected_groups
+      expect(users.map{|u| u.cms_roles.order_by(name: 1).map(&:name)}).to eq expected_cms_roles
+
+      user1 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user1").first
+      user2 = Cms::User.site(cms_site).unscoped.ne(id: cms_user.id).where(uid: "user2").first
+      expect(user1).not_to be_nil
+      expect(user2).not_to be_nil
+    end
+  end
+
   context "ss-1075" do
     let(:site2) { create(:cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp") }
     let(:role) { create(:cms_role, cur_site: site, name: '管理者1', permissions: Cms::Role.permission_names) }

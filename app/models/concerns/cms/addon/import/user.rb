@@ -68,6 +68,9 @@ module Cms::Addon::Import
 
       def update_row(row, index)
         id = row["id"].to_s.strip
+        email = row["email"].to_s.strip
+        uid = row["uid"].to_s.strip
+
         if id.present?
           item = self.class.unscoped.where(id: id).first
           if item.blank?
@@ -76,7 +79,7 @@ module Cms::Addon::Import
           end
 
           if email.blank? && uid.blank?
-            item.destroy
+            item.disable
             @imported += 1
             return nil
           end
