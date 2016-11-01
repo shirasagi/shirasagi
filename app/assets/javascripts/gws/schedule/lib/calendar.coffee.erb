@@ -24,7 +24,10 @@ class @Gws_Schedule_Calendar
             "</div></div>"
         $('.gws-schedule-box .calendar:first').before(h)
 
-        for i in [1..4]
+        for i in [0..3]
+          cd = new Date()
+          cd.setMonth(cd.getMonth() + i)
+
           $(".#{name}").append("<div class='#{name}-cal#{i}'></div>")
           $(".#{name}-cal#{i}").datetimepicker
             timepicker: false
@@ -33,7 +36,7 @@ class @Gws_Schedule_Calendar
             scrollInput: false
             scrollMonth: false
             inline: true
-            defaultDate: "+1970/0#{i}/01"
+            defaultDate: sprintf("%d-%02d-%02d", cd.getFullYear(), cd.getMonth() + 1, cd.getDate())
             defaultSelect: false
             todayButton: false
             onGenerate: (time, el) ->

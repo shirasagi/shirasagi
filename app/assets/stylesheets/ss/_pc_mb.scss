@@ -88,6 +88,7 @@ td {
 .dropdown-menu {
   display: none;
   position: absolute;
+  z-index: 500;
   cursor: auto;
   &.active {
     display: block;
