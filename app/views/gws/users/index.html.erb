@@ -1,3 +1,7 @@
+<%= jquery do %>
+SS_Clipboard.renderCopy();
+<% end %>
+
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.uid.presence || item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
@@ -6,7 +10,7 @@
     <span class="user-title"><%= title.name %></span>
   <% end %>
   <% if item.email.present? %>
-    <span class="email"><%= mail_to item.email %></span>
+    <span class="email js-clipboard-copy"><%= mail_to item.email %></span>
   <% end %>
   <% if item.tel_label.present? %>
     <span class="tel"><%= item.tel_label %></span>

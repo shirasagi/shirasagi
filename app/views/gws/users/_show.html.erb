@@ -1,3 +1,7 @@
+<%= jquery do %>
+SS_Clipboard.renderCopy();
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
@@ -9,7 +13,7 @@
   <dd><%= @item.uid %></dd>
 
   <dt><%= @model.t :email %></dt>
-  <dd><%= @item.send :email %></dd>
+  <dd><span class="email js-clipboard-copy"><%= mail_to @item.email %></span></dd>
 
   <dt><%= @model.t :tel %></dt>
   <dd><%= @item.send :tel %></dd>
@@ -38,11 +42,21 @@
   <dd><%= @item.label :initial_password_warning %></dd>
   <% end %>
 
+  <% main_group = @item.gws_main_group(@cur_site) %>
+
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%= br @item.groups.order_by(name: 1).select{ |c| Gws::Group.site(@cur_site).pluck(:id).include?(c.id) }.map{|c| c.name}.join("\n") %></dd>
+  <dd>
+    <% @item.groups.order_by(name: 1).select{ |c| Gws::Group.site(@cur_site).pluck(:id).include?(c.id) }.each do |c| %>
+      <% if main_group && main_group.id == c.id %>
+        <strong><b><%= c.name %></b></strong><br />
+      <% else %>
+        <%= c.name %><br />
+      <% end %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :gws_main_group_ids %></dt>
-  <dd><%= tryb { @item.gws_main_group(@cur_site).name } %></dd>
+  <dd><%= tryb { main_group.name } %></dd>
 
   <% if @item.remark.present? %>
   <dt><%= @model.t :remark %></dt>

@@ -93,23 +93,26 @@
     }
   }
 }
-.gws-schedule-search-title {
-  margin: 0 0 10px;
-  padding: 0 0 0 8px;
-  border-left: 3px solid #888;
+.gws-schedule-search {
+  .send {
+    padding-top: 0;
+  }
+}
+.gws-schedule-search-field {
+  dt a {
+    font-weight: normal;
+  }
+  .wdays-field {
+    margin-left: 10px;
+    label {
+      margin-right: 2px;
+    }
+  }
 }
 .gws-schedule-search-hr {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #eee;
-}
-.gws-schedule-search-field {
-  dt {
-    margin: 0;
-  }
-  dd {
-    margin: 10px 0 0;
-  }
 }
 .gws-schedule-search-times-result {
   .date {
@@ -122,19 +125,22 @@
   .sun {
     color: #e00;
   }
-  .label, .hour {
+  .label, .facility, .hour {
     display: inline-block;
     margin: 1px 0;
   }
-  .label {
+  .label, .facility {
     min-width: 146px;
-    padding: 2px 0;
+    padding: 1px 0;
+  }
+  .facility {
+    min-width: 160px;
   }
   .hour {
     min-width: 2em;
-    padding: 2px 5px;
-    border-radius: 4px;
-    background-color: #ccc;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background-color: #d4d4d4;
     color: #fff;
     text-align: center;
     text-decoration: none;
@@ -438,6 +444,15 @@
       .tel {
         margin-left: 5px;
       }
+    }
+    .custom-group-name {
+      color: #07d;
+    }
+    .custom-group-members {
+      display: none;
+      margin: 2px 0;
+      padding: 5px;
+      border-left: 4px solid #ccc;
     }
   }
   .popup-menu {

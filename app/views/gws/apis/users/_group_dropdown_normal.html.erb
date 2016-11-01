@@ -1,1 +1,3 @@
-<%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id))) %>
+<%= select_tag "s[group]",
+               options_for_select(@groups.to_options, @group.try(:id)),
+               include_blank: "(" + @cur_site.name + ")" %>

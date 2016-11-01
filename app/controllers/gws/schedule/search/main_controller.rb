@@ -4,6 +4,6 @@ class Gws::Schedule::Search::MainController < ApplicationController
   include Gws::Schedule::PlanFilter
 
   def index
-    #
+    @time_search = Gws::Schedule::PlanSearch.new
   end
 end

@@ -3,6 +3,7 @@ class Gws::Schedule::Plan
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Schedule::Colorize
   include Gws::Schedule::Planable
   include Gws::Schedule::CalendarFormat
   include Gws::Addon::Reminder
@@ -20,8 +21,12 @@ class Gws::Schedule::Plan
   permission_include_custom_groups
   readable_setting_include_custom_groups
 
+  field :color, type: String
+
   # 種別
   belongs_to :category, class_name: 'Gws::Schedule::Category'
+
+  permit_params :color
 
   validate :validate_file_size
 
@@ -37,6 +42,14 @@ class Gws::Schedule::Plan
 
   def reminder_user_ids
     member_ids
+  end
+
+  def private_plan?(user)
+    return false if member_custom_group_ids.present?
+    return false if member_ids != [user.id]
+    return false if readable_custom_group_ids.present?
+    return false if readable_group_ids.present?
+    readable_member_ids.blank? || readable_member_ids == [user.id]
   end
 
   def allowed?(action, user, opts = {})
@@ -58,30 +71,4 @@ class Gws::Schedule::Plan
           limit: number_to_human_size(limit))
       end
     end
-
-  class << self
-    def free_times(sdate, edate, min_hour, max_hour)
-      hours = (min_hour..max_hour).to_a
-
-      plan_times = {}
-      self.each do |plan|
-        time = Time.zone.parse plan.start_at.strftime("%Y-%m-%d %H:00:00")
-        while time < plan.end_at
-          hour = time.hour
-          plan_times[time.strftime("%Y-%m-%d #{hour}")] = nil if hour >= min_hour && hour <= max_hour
-          time += 1.hour
-        end
-      end
-
-      free_times = []
-      (sdate..(edate - 1.day)).each do |date|
-        ymd = date.strftime('%Y-%m-%d')
-        hours = []
-        (min_hour..max_hour).each { |i| hours << i unless plan_times.key?("#{ymd} #{i}") }
-        free_times << [date, hours] # if hours.present?
-      end
-
-      return free_times
-    end
-  end
 end
