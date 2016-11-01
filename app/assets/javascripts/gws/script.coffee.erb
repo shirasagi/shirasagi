@@ -27,3 +27,7 @@ $ ->
 
   Gws_Member.render()
 
+class @Gws
+  @renderColorPicker: (opts = {})->
+    sel = opts['selector'] || '#item_color'
+    $(sel).colorPicker().data('colorMode', 'HEX')

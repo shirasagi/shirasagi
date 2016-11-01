@@ -1,7 +1,7 @@
 <%= jquery do %>
   Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
   Gws_Schedule_Plan.renderAlldayForm();
-  $('#item_color').colorPicker().data('colorMode', 'HEX');
+  Gws.renderColorPicker({ clear: true });
 <% end %>
 
 <dl class="see gws-schedule-plan">

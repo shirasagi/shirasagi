@@ -149,6 +149,10 @@ ja:
     gws/schedule/plan:
       category_id:
         - スケジュール種別を選択します。
+      color:
+        - 表示色を入力します。
+        -
+        - 表示色は "#RRGGBB" 形式で入力します（RR, GG, BB はそれぞれ赤、緑、青の成分を16進数で入力）。
     gws/schedule/repeat_plan: &repeat_plan_tooltip
       repeat_type:
         - 繰り返しを選択します。

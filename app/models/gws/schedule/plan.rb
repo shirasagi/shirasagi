@@ -28,6 +28,7 @@ class Gws::Schedule::Plan
 
   permit_params :color
 
+  validate :validate_color
   validate :validate_file_size
 
   def custom_group_member?(user)
@@ -58,6 +59,10 @@ class Gws::Schedule::Plan
   end
 
   private
+    def validate_color
+      self.color = nil if color =~ /^#ffffff$/i
+    end
+
     def validate_file_size
       limit = cur_site.schedule_max_file_size || 0
       return if limit <= 0
