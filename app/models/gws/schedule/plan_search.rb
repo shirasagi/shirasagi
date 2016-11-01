@@ -4,10 +4,10 @@ class Gws::Schedule::PlanSearch
   include Gws::Reference::Site
 
   field :start_on, type: Date, default: ->{ Time.zone.today }
-  field :end_on, type: Date, default: ->{ Time.zone.today + 30.days }
+  field :end_on, type: Date, default: ->{ Time.zone.today + 20.days }
   field :wdays, type: Array, default: []
   field :min_hour, type: Integer, default: 8
-  field :max_hour, type: Integer, default: 21
+  field :max_hour, type: Integer, default: 22
 
   embeds_ids :members, class_name: "Gws::User"
   embeds_ids :facilities, class_name: "Gws::Facility::Item"
@@ -43,7 +43,13 @@ class Gws::Schedule::PlanSearch
 
       while time < plan.end_at
         hour = time.hour
-        plan_times[time.strftime("%Y-%m-%d #{hour}")] = fids if hour >= min_hour && hour <= max_hour
+        #plan_times[time.strftime("%Y-%m-%d #{hour}")] = fids if hour >= min_hour && hour <= max_hour
+        if hour >= min_hour && hour <= max_hour
+          key = time.strftime("%Y-%m-%d #{hour}")
+          plan_times[key] ||= []
+          plan_times[key] += fids
+          plan_times[key].uniq!
+        end
         time += 1.hour
       end
     end
@@ -68,7 +74,7 @@ class Gws::Schedule::PlanSearch
           f_hours[facility.id] << i
         end
       end
-      free_times << [date, [hours, f_hours.presence]] # if hours.present?
+      free_times << [date, [hours, f_hours.presence]] if hours.present? || f_hours.present?
     end
 
     return free_times
