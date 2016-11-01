@@ -81,11 +81,12 @@ module SS::JbuilderHelper
     end
 
     def jsonize_file(file)
-      { name: file.name, filename: file.filename, url: file.url,
+      { name: file.name, filename: file.filename, url: file.full_url,
         content_type: file.content_type, updated: file.updated }
     end
 
     def jsonize_node(node)
-      { name: node.name, filename: node.filename, url: node.url, updated: node.updated }
+      { name: node.name, filename: node.filename, url: node.full_url,
+        path: node.private_show_path, updated: node.updated }
     end
 end
