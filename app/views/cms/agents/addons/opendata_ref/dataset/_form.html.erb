@@ -1,4 +1,4 @@
-<% return "" if @cur_node.becomes_with_route.opendata_site_ids.blank? %>
+<% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
 <%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-dataset"); <% end %>
 <style type="text/css">
   .mod-cms-opendata-dataset ul { padding: 0px; }
