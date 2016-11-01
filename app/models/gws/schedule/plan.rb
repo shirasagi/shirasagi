@@ -46,11 +46,9 @@ class Gws::Schedule::Plan
   end
 
   def private_plan?(user)
-    return false if member_custom_group_ids.present?
-    return false if member_ids != [user.id]
     return false if readable_custom_group_ids.present?
     return false if readable_group_ids.present?
-    readable_member_ids.blank? || readable_member_ids == [user.id]
+    readable_member_ids == [user.id]
   end
 
   def allowed?(action, user, opts = {})
