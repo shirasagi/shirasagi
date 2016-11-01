@@ -18,7 +18,7 @@ module SS::Addon
       if text_type == 'markdown'
         SS::Addon::Markdown.text_to_html(text)
       else
-        text.gsub(/(\r\n?)|(\n)/, "<br />")
+        ApplicationController.helpers.sanitize(text.gsub(/(\r\n?)|(\n)/, "<br />"))
       end
     end
 
