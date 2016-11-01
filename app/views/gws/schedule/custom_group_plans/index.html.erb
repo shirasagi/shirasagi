@@ -1,5 +1,6 @@
 <%= jquery do %>
 Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%== (params[:calendar] || {}).to_json %>);
+SS_Clipboard.renderCopy();
 <% end %>
 
 <%= render "gws/schedule/main/tabs" %>
@@ -27,7 +28,7 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%==
           <span class="user-title"><%= title.name %></span>
         <% end %>
         <% if item.email.present? %>
-          <span class="email"><%= mail_to item.email %></span>
+          <span class="email js-clipboard-copy"><%= mail_to item.email %></span>
         <% end %>
         <% if item.tel_label.present? %>
           <span class="tel"><%= item.tel_label %></span>
