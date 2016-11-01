@@ -8,9 +8,13 @@ class Gws::Schedule::Search::TimesController < ApplicationController
       { cur_user: @cur_user, cur_site: @cur_site }
     end
 
+    def pre_params
+      {}
+    end
+
     def get_params
-      return fix_params if params[:s].blank?
-      params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(fix_params)
+      return pre_params.merge(fix_params) if params[:s].blank?
+      params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(pre_params).merge(fix_params)
     end
 
   public

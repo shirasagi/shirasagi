@@ -12,13 +12,14 @@ class Gws::Schedule::PlanSearch
   embeds_ids :members, class_name: "Gws::User"
   embeds_ids :facilities, class_name: "Gws::Facility::Item"
 
-  permit_params :start_on, :end_on
+  permit_params :start_on, :end_on, :min_hour, :max_hour
   permit_params wdays: [], member_ids: [], facility_ids: []
 
   before_validation :validate_wdays
+  before_validation :validate_hours
 
   def hours
-    (min_hour..max_hour).to_a
+    (min_hour..(max_hour - 1)).to_a
   end
 
   def search
@@ -38,9 +39,11 @@ class Gws::Schedule::PlanSearch
     plan_times = {}
     plans.each do |plan|
       time = Time.zone.parse plan.start_at.strftime("%Y-%m-%d %H:00:00")
+      fids = facility_ids & plan.facility_ids
+
       while time < plan.end_at
         hour = time.hour
-        plan_times[time.strftime("%Y-%m-%d #{hour}")] = nil if hour >= min_hour && hour <= max_hour
+        plan_times[time.strftime("%Y-%m-%d #{hour}")] = fids if hour >= min_hour && hour <= max_hour
         time += 1.hour
       end
     end
@@ -51,8 +54,21 @@ class Gws::Schedule::PlanSearch
 
       ymd = date.strftime('%Y-%m-%d')
       hours = []
-      (min_hour..max_hour).each { |i| hours << i unless plan_times.key?("#{ymd} #{i}") }
-      free_times << [date, hours] # if hours.present?
+      f_hours = {}
+      self.hours.each do |i|
+        if @facilities.blank?
+          hours << i unless plan_times.key?("#{ymd} #{i}")
+          next
+        end
+
+        @facilities.each do |facility|
+          next if plan_times.key?("#{ymd} #{i}") && plan_times["#{ymd} #{i}"].index(facility.id)
+
+          f_hours[facility.id] ||= []
+          f_hours[facility.id] << i
+        end
+      end
+      free_times << [date, [hours, f_hours.presence]] # if hours.present?
     end
 
     return free_times
@@ -61,6 +77,10 @@ class Gws::Schedule::PlanSearch
   private
     def validate_wdays
       self.wdays = wdays.reject(&:blank?).map(&:to_i)
+    end
+
+    def validate_hours
+      self.max_hour = min_hour + 1 if min_hour > max_hour
     end
 
     def set_members_condition
@@ -75,9 +95,9 @@ class Gws::Schedule::PlanSearch
     end
 
     def set_facilities_condition
-      return facility_ids.blank?
+      return if facility_ids.blank?
 
-      facilities = Gws::Facility::Item.site(@cur_site).
+      @facilities = Gws::Facility::Item.site(@cur_site).
         readable(@cur_user, @cur_site).
         active.
         any_in(id: facility_ids)

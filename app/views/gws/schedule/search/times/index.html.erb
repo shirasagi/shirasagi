@@ -11,18 +11,39 @@ Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller');
   <div class="gws-schedule-search-hr"></div>
   <div class="gws-schedule-search-times-result">
     <% @items.each do |date, hours| %>
-    <div class="date <%= date.strftime('%a').downcase %>">
-      <p class="label"><%= l date, format: :full %></p>
 
-      <% @time_search.hours.each do |hour| %>
-        <% if hours.index(hour) %>
-          <% link_params = @s.to_h.merge(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
-          <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
-        <% else %>
-          <span class="hour exist"><%= hour %></span>
+      <% if @time_search.facilities.blank? %>
+      <% next if hours[0].blank? %>
+      <div class="date <%= date.strftime('%a').downcase %>">
+        <p class="label"><%= l date, format: :full %></p>
+
+        <% @time_search.hours.each do |hour| %>
+          <% if hours[0].index(hour) %>
+            <% link_params = @s.to_h.merge(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
+            <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
+          <% else %>
+            <span class="hour exist"><%= hour %></span>
+          <% end %>
         <% end %>
+      </div>
       <% end %>
-    </div>
+
+      <% @time_search.facilities.each do |facility| %>
+      <% next if hours[1][facility.id].blank? %>
+      <div class="date <%= date.strftime('%a').downcase %>">
+        <p class="label"><%= l date, format: :full %></p>
+        <p class="facility"><%= facility.name %></p>
+        <% @time_search.hours.each do |hour| %>
+          <% if hours[1][facility.id].index(hour) %>
+            <% link_params = @s.to_h.merge(start: date.strftime("%Y-%m-%dT#{hour}:00")) %>
+            <% link_params[:facility_ids] = [facility.id] %>
+            <%= link_to hour, new_gws_schedule_plan_path(link_params), class: "hour free" %>
+          <% else %>
+            <span class="hour exist"><%= hour %></span>
+          <% end %>
+        <% end %>
+      </div>
+      <% end %>
     <% end %>
   </div>
   <% end %>

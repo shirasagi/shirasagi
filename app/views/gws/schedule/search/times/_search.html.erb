@@ -14,6 +14,10 @@
       <div class="dates-field">
         <%= f.text_field :start_on, class: "date start", value: tryb { @time_search.start_on.strftime("%Y/%m/%d") } %>
         - <%= f.text_field :end_on, class: "date end", value: tryb { @time_search.end_on.strftime("%Y/%m/%d") } %>
+
+        <% range = (@cur_site.facility_min_hour..@cur_site.facility_max_hour).to_a.map { |i| ["#{i}:00", i] } %>
+        &nbsp; <%= f.select :min_hour, range, selected: @s[:min_hour] %>
+        - <%= f.select :max_hour, range, selected: (@s[:max_hour] || @cur_site.facility_max_hour) %>
       </div>
     </dd>
     <dd>
@@ -33,12 +37,14 @@
       <table class="index ajax-selected">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
+          <!--
           <% if @s[:member_ids].blank? %>
           <tr data-id="<%= @cur_user.id %>">
             <td><%= f.hidden_field "member_ids[]", value: @cur_user.id %> <%= @cur_user.long_name %></td>
             <td><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
+          -->
 
           <% @time_search.members.each do |user| %>
           <tr data-id="<%= user.id %>">

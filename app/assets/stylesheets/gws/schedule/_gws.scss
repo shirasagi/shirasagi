@@ -125,19 +125,22 @@
   .sun {
     color: #e00;
   }
-  .label, .hour {
+  .label, .facility, .hour {
     display: inline-block;
     margin: 1px 0;
   }
-  .label {
+  .label, .facility {
     min-width: 146px;
-    padding: 2px 0;
+    padding: 1px 0;
+  }
+  .facility {
+    min-width: 160px;
   }
   .hour {
     min-width: 2em;
-    padding: 2px 5px;
-    border-radius: 4px;
-    background-color: #ccc;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background-color: #d4d4d4;
     color: #fff;
     text-align: center;
     text-decoration: none;
