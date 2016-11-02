@@ -1149,17 +1149,20 @@ thumb_left  = save_ss_files("editor_templates/float-left.jpg", filename: "float-
 thumb_right = save_ss_files("editor_templates/float-right.jpg", filename: "float-right.jpg", model: "cms/editor_template")
 
 editor_template_html = File.read("editor_templates/float-left.html") rescue nil
-save_editor_template name: "画像左回り込み", description: "画像が左に回り込み右側がテキストになります",
+save_editor_template name: "画像左回り込み",
+  description: "画像が左に回り込み右側がテキストになります",
   html: editor_template_html, thumb_id: thumb_left.id, order: 10, site_id: @site.id
 thumb_left.set(state: "public")
 
 editor_template_html = File.read("editor_templates/float-right.html") rescue nil
-save_editor_template name: "画像右回り込み", description: "画像が右に回り込み左側がテキストになります",
+save_editor_template name: "画像右回り込み",
+  description: "画像が右に回り込み左側がテキストになります",
   html: editor_template_html, thumb_id: thumb_right.id, order: 20, site_id: @site.id
 thumb_right.set(state: "public")
 
 editor_template_html = File.read("editor_templates/clear.html") rescue nil
-save_editor_template name: "回り込み解除", description: "回り込みを解除します",
+save_editor_template name: "回り込み解除",
+  description: "回り込みを解除します",
   html: editor_template_html, order: 30, site_id: @site.id
 
 ## -------------------------------------
@@ -1298,13 +1301,20 @@ def save_source_cleaner_template(data)
   item
 end
 
-save_source_cleaner_template name: "<p>&nbsp;</p>", target_type: "string", target_value: "<p>&nbsp;</p>", action_type: "remove", state: "public", order: 10
-save_source_cleaner_template name: "width", target_type: "attribute", target_value: "width", action_type: "remove", state: "public", order: 20
-save_source_cleaner_template name: "height", target_type: "attribute", target_value: "height", action_type: "remove", state: "public", order: 30
-save_source_cleaner_template name: "cellpadding", target_type: "attribute", target_value: "cellpadding", action_type: "remove", state: "public", order: 40
-save_source_cleaner_template name: "cellspacing", target_type: "attribute", target_value: "cellspacing", action_type: "remove", state: "public", order: 50
-save_source_cleaner_template name: "border", target_type: "attribute", target_value: "border", action_type: "remove", state: "public", order: 60
-save_source_cleaner_template name: "style", target_type: "attribute", target_value: "style", action_type: "remove", state: "public", order: 100
+save_source_cleaner_template name: "<p>&nbsp;</p>", target_type: "string", target_value: "<p>&nbsp;</p>",
+  action_type: "remove", state: "public", order: 10
+save_source_cleaner_template name: "width", target_type: "attribute", target_value: "width",
+  action_type: "remove", state: "public", order: 20
+save_source_cleaner_template name: "height", target_type: "attribute", target_value: "height",
+  action_type: "remove", state: "public", order: 30
+save_source_cleaner_template name: "cellpadding", target_type: "attribute", target_value: "cellpadding",
+  action_type: "remove", state: "public", order: 40
+save_source_cleaner_template name: "cellspacing", target_type: "attribute", target_value: "cellspacing",
+  action_type: "remove", state: "public", order: 50
+save_source_cleaner_template name: "border", target_type: "attribute", target_value: "border",
+  action_type: "remove", state: "public", order: 60
+save_source_cleaner_template name: "style", target_type: "attribute", target_value: "style",
+  action_type: "remove", state: "public", order: 100
 
 ## -------------------------------------
 puts "# postal code"
