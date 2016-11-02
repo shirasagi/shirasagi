@@ -11,11 +11,16 @@ module Cms::Addon::Import
     end
 
     module ClassMethods
+      def csv_headers
+        %w(
+          id name kana uid email password tel tel_ext account_start_date account_expiration_date
+          initial_password_warning groups ldap_dn cms_roles
+        )
+      end
+
       def to_csv(opts = {})
         CSV.generate do |data|
-          data << %w(
-            id name kana uid email password tel tel_ext account_start_date account_expiration_date
-            initial_password_warning groups ldap_dn cms_roles)
+          data << csv_headers.map { |k| t k }
           criteria.each do |item|
             roles = item.cms_roles
             roles = roles.site(opts[:site]) if opts[:site]
@@ -68,8 +73,8 @@ module Cms::Addon::Import
 
       def update_row(row, index)
         id = row["id"].to_s.strip
-        email = row["email"].to_s.strip
-        uid = row["uid"].to_s.strip
+        email = row[t("email")].to_s.strip
+        uid = row[t("uid")].to_s.strip
 
         if id.present?
           item = self.class.unscoped.where(id: id).first
@@ -90,13 +95,13 @@ module Cms::Addon::Import
         %w(
           name kana uid email tel tel_ext account_start_date account_expiration_date initial_password_warning
           ldap_dn).each do |k|
-          item[k] = row[k].to_s.strip
+          item[k] = row[t(k)].to_s.strip
         end
-        password = row["password"].to_s.strip
+        password = row[t("password")].to_s.strip
         item.in_password = password if password.present?
-        groups = row["groups"].to_s.strip.split(/\n/)
+        groups = row[t("groups")].to_s.strip.split(/\n/)
         item.group_ids = SS::Group.in(name: groups).map(&:id)
-        cms_roles = row["cms_roles"].to_s.strip.split(/\n/)
+        cms_roles = row[t("cms_roles")].to_s.strip.split(/\n/)
         add_cms_roles(item, cms_roles)
         if item.save
           @imported += 1

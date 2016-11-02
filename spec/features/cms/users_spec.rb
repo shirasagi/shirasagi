@@ -232,7 +232,8 @@ describe "cms_users", type: :feature, dbscope: :example do
     let(:header) do
       %w(
         id name kana uid email password tel tel_ext account_start_date account_expiration_date
-        initial_password_warning groups ldap_dn cms_roles).join(",")
+        initial_password_warning groups ldap_dn cms_roles
+      ).map { |k| Cms::User.new.t(k) }.join(",")
     end
 
     before do

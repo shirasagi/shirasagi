@@ -1,4 +1,4 @@
-id,name,email,password,uid,ldap_dn,groups,cms_roles
+id,氏名,メールアドレス,パスワード,ユーザーID,DN,グループ,CMSロール
 2,import_admin_update,import_admin_update@example.jp,,,"cn=Manager,dc=city,dc=shirasagi,dc=jp",A/B,all
 3,import_user1,,,,,,
 4,import_user2,,,,,A/B/D,edit
