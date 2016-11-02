@@ -1,0 +1,74 @@
+class @Gws_Schedule_View
+  @getCalendar: ->
+    cal = $('#calendar-controller')
+    cal = $('#calendar') if cal.length == 0
+    return cal if cal.fullCalendar('getView').calendar
+    return null
+
+  @getCalendarDate: ->
+    cal = Gws_Schedule_View.getCalendar()
+    return cal.fullCalendar('getDate').format('YYYY-MM-DD') if cal
+    return null
+
+  # Schedule tabs
+  @renderTabs: (selector)->
+    $(selector).find('a').click ->
+      date = Gws_Schedule_View.getCalendarDate()
+      return true unless date
+
+      url = $(this).attr('href')
+      url = url.replace(/(\?.*)?$/, "?calendar[date]=#{date}")
+      $(this).attr('href', url)
+      return true
+
+  # 4 months calendars
+  @renderSideCalendars: (selector)->
+    $(selector).find('.fc-toolbar h2').click ->
+      name = "gws-schedule-tool-calendars"
+      date = Gws_Schedule_View.getCalendarDate()
+      date = $.fullCalendar.moment(date)
+
+      if $(".#{name}").is(':hidden')
+        $(".#{name}").remove()
+      if $(".#{name}").length == 0
+        Gws_Schedule_View.crenderSideCalendars(name, date)
+
+      $(".#{name}").animate({ width: 'toggle' }, 'fast')
+
+  @crenderSideCalendars: (name, date)->
+    h = "<div class='#{name}'>" +
+        "<div class='xdsoft_datetimepicker controller'>" +
+        "<button type='button' class='xdsoft_prev' />" +
+        "<button type='button' class='xdsoft_next' />" +
+        "</div></div>"
+    $('.gws-schedule-box .calendar:first').before(h)
+
+    for i in [0..3]
+      date.add(1, 'months') if i > 0
+
+      $(".#{name}").append("<div class='#{name}-cal#{i}'></div>")
+      $(".#{name}-cal#{i}").datetimepicker
+        timepicker: false
+        format:'Y/m/d'
+        closeOnDateSelect: true
+        scrollInput: false
+        scrollMonth: false
+        inline: true
+        defaultDate: date.format('YYYY-MM-DD')
+        defaultSelect: false
+        todayButton: false
+        onGenerate: (time, el) ->
+          $(this).find('.xdsoft_today').removeClass('xdsoft_today')
+          $(this).find('.xdsoft_current').removeClass('xdsoft_current')
+        onSelectDate: (ct, i) ->
+          date = sprintf("%d-%02d-%02d", ct.getFullYear(), ct.getMonth() + 1, ct.getDate())
+          $('.calendar').fullCalendar('gotoDate', date)
+
+    $(".#{name}").find(".xdsoft_month, .xdsoft_year").unbind('mousedown').find("i").remove()
+    $(".#{name} .xdsoft_datetimepicker").not(".controller.controller").find(".xdsoft_prev, .xdsoft_next").hide()
+    $(".#{name} .controller .xdsoft_prev").mousedown ->
+      for i in [1..4]
+        $(".#{name} .xdsoft_prev").not(this).mousedown().mouseup()
+    $(".#{name} .controller .xdsoft_next").mousedown ->
+      for i in [1..4]
+        $(".#{name} .xdsoft_next").not(this).mousedown().mouseup()

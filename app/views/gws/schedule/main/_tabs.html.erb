@@ -1,3 +1,7 @@
+<%= jquery do %>
+Gws_Schedule_View.renderTabs('.gws-schedule-tabs');
+<% end %>
+
 <div class="gws-schedule-tabs">
   <%= link_to gws_schedule_plans_path, class: "personal" do %>
     <span class="tab-name"><%= t('gws/schedule.tabs.personal') %></span>
