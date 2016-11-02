@@ -1,6 +1,6 @@
-id,氏名,メールアドレス,パスワード,ユーザーID,DN,グループ,CMSロール
-2,import_admin_update,import_admin_update@example.jp,,,"cn=Manager,dc=city,dc=shirasagi,dc=jp",A/B,all
-3,import_user1,,,,,,
-4,import_user2,,,,,A/B/D,edit
+id,氏名,メールアドレス,パスワード,ユーザーID,DN,グループ,CMSロール,初期パスワード警告
+2,import_admin_update,import_admin_update@example.jp,,,"cn=Manager,dc=city,dc=shirasagi,dc=jp",A/B,all,無効
+3,import_user1,,,,,,,無効
+4,import_user2,,,,,A/B/D,edit,無効
 5,import_sys,import_sys@example.jp,sys,sys,,A,"all
-edit"
+edit",無効

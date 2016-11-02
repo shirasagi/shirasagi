@@ -35,7 +35,7 @@ module Cms::Addon::Import
             line << item.tel_ext
             line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
             line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
-            line << item.initial_password_warning
+            line << (item.initial_password_warning.present? ? I18n.t('views.options.state.enabled') : I18n.t('views.options.state.disabled'))
             line << item.groups.map(&:name).join("\n")
             line << item.ldap_dn
             line << roles.map(&:name).join("\n")
@@ -93,16 +93,31 @@ module Cms::Addon::Import
         end
 
         %w(
-          name kana uid email tel tel_ext account_start_date account_expiration_date initial_password_warning
-          ldap_dn).each do |k|
+          name kana uid email tel tel_ext account_start_date account_expiration_date ldap_dn
+        ).each do |k|
           item[k] = row[t(k)].to_s.strip
         end
+
+        # password
         password = row[t("password")].to_s.strip
         item.in_password = password if password.present?
+
+        # groups
         groups = row[t("groups")].to_s.strip.split(/\n/)
         item.group_ids = SS::Group.in(name: groups).map(&:id)
+
+        # cms_roles
         cms_roles = row[t("cms_roles")].to_s.strip.split(/\n/)
         add_cms_roles(item, cms_roles)
+
+        # initial_password_warning
+        initial_password_warning = row[t("initial_password_warning")].to_s.strip
+        if initial_password_warning == I18n.t('views.options.state.enabled')
+          item.initial_password_warning = 1
+        else
+          item.initial_password_warning = nil
+        end
+
         if item.save
           @imported += 1
         else
