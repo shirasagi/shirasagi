@@ -42,6 +42,7 @@ ja:
       replace: 置換
       replace_all: 全置換
       reset: リセット
+      clear: クリア
       send: 送信
       run: 実行
       stop: 停止

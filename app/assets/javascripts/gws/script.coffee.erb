@@ -8,6 +8,7 @@
 //= require gws/lib/popup
 //= require gws/lib/member
 //= require gws/lib/reminder
+//= require gws/schedule/lib/view
 //= require gws/schedule/lib/calendar
 //= require gws/schedule/lib/calendar_basic_hour_view
 //= require gws/schedule/lib/calendar_list_month_view
@@ -31,3 +32,12 @@ class @Gws
   @renderColorPicker: (opts = {})->
     sel = opts['selector'] || '#item_color'
     $(sel).colorPicker().data('colorMode', 'HEX')
+
+    if opts['clear']
+      btn = $("<input type='button' class='btn' value='<%= I18n.t('views.button.clear') %>' />").uniqueId()
+      $(sel).after(btn).after(' ')
+      $('#' + btn.attr('id')).click ->
+        $(sel).val('#FFFFFF')
+        $(sel).colorPicker({ doRender: true }).data('colorMode', 'HEX')
+        $(sel).val('')
+
