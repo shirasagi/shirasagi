@@ -72,7 +72,7 @@ module Cms::Addon::Import
       end
 
       def update_row(row, index)
-        id = row["id"].to_s.strip
+        id = row[t("id")].to_s.strip
         email = row[t("email")].to_s.strip
         uid = row[t("uid")].to_s.strip
 
