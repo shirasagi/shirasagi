@@ -143,7 +143,7 @@ module Cms::PublicFilter::Layout
         conf = Recommend::History::Log.to_config(
           site: @cur_site, item: (@cur_page || @cur_node || @cur_part), path: @cur_path,
           preview_path: preview_path?
-          )
+        )
         @javascript_config.merge!(conf)
       end
       @javascript_config
