@@ -11,9 +11,13 @@ module Cms::Addon::Import
     end
 
     module ClassMethods
+      def csv_headers
+        %w(id name order ldap_dn contact_tel contact_fax contact_email activation_date expiration_date)
+      end
+
       def to_csv
         CSV.generate do |data|
-          data << %w(id name order ldap_dn contact_tel contact_fax contact_email activation_date expiration_date)
+          data << csv_headers.map { |k| t k }
           criteria.each do |item|
             line = []
             line << item.id
@@ -58,15 +62,15 @@ module Cms::Addon::Import
       end
 
       def update_row(row, index)
-        id             = row["id"].to_s.strip
-        name           = row["name"].to_s.strip
-        order          = row["order"].to_s.strip
-        ldap_dn        = row["ldap_dn"].to_s.strip
-        contact_tel    = row["contact_tel"].to_s.strip
-        contact_fax    = row["contact_fax"].to_s.strip
-        contact_email  = row["contact_email"].to_s.strip
-        activation_date = row["activation_date"].to_s.strip
-        expiration_date = row["expiration_date"].to_s.strip
+        id             = row[t("id")].to_s.strip
+        name           = row[t("name")].to_s.strip
+        order          = row[t("order")].to_s.strip
+        ldap_dn        = row[t("ldap_dn")].to_s.strip
+        contact_tel    = row[t("contact_tel")].to_s.strip
+        contact_fax    = row[t("contact_fax")].to_s.strip
+        contact_email  = row[t("contact_email")].to_s.strip
+        activation_date = row[t("activation_date")].to_s.strip
+        expiration_date = row[t("expiration_date")].to_s.strip
 
         if id.present?
           item = self.class.unscoped.where(id: id).first
@@ -76,7 +80,7 @@ module Cms::Addon::Import
           end
 
           if name.blank?
-            item.destroy
+            item.disable
             @imported += 1
             return nil
           end

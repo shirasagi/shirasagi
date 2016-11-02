@@ -1,7 +1,7 @@
-id,name,email,password,uid,ldap_dn,groups,cms_roles
-,import_admin,import_admin@example.jp,admin,admin,"cn=Manager,dc=city,dc=shirasagi,dc=jp",A/B/C,all
+id,氏名,メールアドレス,パスワード,ユーザーID,DN,グループ,CMSロール,初期パスワード警告
+,import_admin,import_admin@example.jp,admin,admin,"cn=Manager,dc=city,dc=shirasagi,dc=jp",A/B/C,all,有効
 ,import_user1,import_user1@example.jp,user1,user1,,"A/B/C
-A/B/D",edit
-,import_user2,import_user2@example.jp,user2,user2,,A/B/D,edit
+A/B/D",edit,有効
+,import_user2,import_user2@example.jp,user2,user2,,A/B/D,edit,有効
 ,import_sys,import_sys@example.jp,sys,sys,,A,"all
-edit"
+edit",有効

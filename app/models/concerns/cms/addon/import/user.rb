@@ -11,11 +11,16 @@ module Cms::Addon::Import
     end
 
     module ClassMethods
+      def csv_headers
+        %w(
+          id name kana uid email password tel tel_ext account_start_date account_expiration_date
+          initial_password_warning groups ldap_dn cms_roles
+        )
+      end
+
       def to_csv(opts = {})
         CSV.generate do |data|
-          data << %w(
-            id name kana uid email password tel tel_ext account_start_date account_expiration_date
-            initial_password_warning groups ldap_dn cms_roles)
+          data << csv_headers.map { |k| t k }
           criteria.each do |item|
             roles = item.cms_roles
             roles = roles.site(opts[:site]) if opts[:site]
@@ -30,7 +35,7 @@ module Cms::Addon::Import
             line << item.tel_ext
             line << (item.account_start_date.present? ? I18n.l(item.account_start_date) : nil)
             line << (item.account_expiration_date.present? ? I18n.l(item.account_expiration_date) : nil)
-            line << item.initial_password_warning
+            line << (item.initial_password_warning.present? ? I18n.t('views.options.state.enabled') : I18n.t('views.options.state.disabled'))
             line << item.groups.map(&:name).join("\n")
             line << item.ldap_dn
             line << roles.map(&:name).join("\n")
@@ -67,9 +72,9 @@ module Cms::Addon::Import
       end
 
       def update_row(row, index)
-        id = row["id"].to_s.strip
-        email = row["email"].to_s.strip
-        uid = row["uid"].to_s.strip
+        id = row[t("id")].to_s.strip
+        email = row[t("email")].to_s.strip
+        uid = row[t("uid")].to_s.strip
 
         if id.present?
           item = self.class.unscoped.where(id: id).first
@@ -88,16 +93,31 @@ module Cms::Addon::Import
         end
 
         %w(
-          name kana uid email tel tel_ext account_start_date account_expiration_date initial_password_warning
-          ldap_dn).each do |k|
-          item[k] = row[k].to_s.strip
+          name kana uid email tel tel_ext account_start_date account_expiration_date ldap_dn
+        ).each do |k|
+          item[k] = row[t(k)].to_s.strip
         end
-        password = row["password"].to_s.strip
+
+        # password
+        password = row[t("password")].to_s.strip
         item.in_password = password if password.present?
-        groups = row["groups"].to_s.strip.split(/\n/)
+
+        # groups
+        groups = row[t("groups")].to_s.strip.split(/\n/)
         item.group_ids = SS::Group.in(name: groups).map(&:id)
-        cms_roles = row["cms_roles"].to_s.strip.split(/\n/)
+
+        # cms_roles
+        cms_roles = row[t("cms_roles")].to_s.strip.split(/\n/)
         add_cms_roles(item, cms_roles)
+
+        # initial_password_warning
+        initial_password_warning = row[t("initial_password_warning")].to_s.strip
+        if initial_password_warning == I18n.t('views.options.state.enabled')
+          item.initial_password_warning = 1
+        else
+          item.initial_password_warning = nil
+        end
+
         if item.save
           @imported += 1
         else

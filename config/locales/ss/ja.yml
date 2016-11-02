@@ -253,6 +253,7 @@ ja:
           not_found: "%{line_no} 行目: Id %{id} のユーザーは存在しません。"
     attributes:
       ss/document:
+        id: id
         created: 作成日時
         updated: 更新日時
         state: ステータス
@@ -283,6 +284,9 @@ ja:
         title_ids: 役職
         in_title_id: 役職
         group_ids: グループ
+        groups: グループ
+        cms_roles: CMSロール
+        cms_role_ids: CMSロール
         type: ユーザータイプ
         sns: SNSユーザー
         ldap: LDAPユーザー
