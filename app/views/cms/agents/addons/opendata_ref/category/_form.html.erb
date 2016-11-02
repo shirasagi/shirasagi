@@ -1,4 +1,4 @@
-<% return "" if @cur_node.becomes_with_route.opendata_site_ids.blank? %>
+<% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
 <%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-category"); <% end %>
 
 <% categories = Opendata::Node::Category.in(site_id: @cur_node.becomes_with_route.opendata_site_ids).and_public.pluck(:name, :id) %>
