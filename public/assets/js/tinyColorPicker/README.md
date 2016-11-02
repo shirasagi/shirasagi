@@ -2,53 +2,160 @@
 # tinyColorPicker and colors
 
 Looking for mobile first, tiny foot print, fast, scaleable, flexible, pluggable and a rich color model...<br>
-This small (4.9KB gZip, 10.8KB minified, no HTML, images or css needed) HSB color picker is based on a subset of [colors.js](https://github.com/PitPik/colorPicker/blob/master/colors.js) from it's big brother [colorPicker](https://github.com/PitPik/colorPicker/) for a precise and rich color model, supports all modern features like touch and MS pointer, GPU accelerated rendering, battery friendly requestAnimationFrame and provides a lot of hooks for developers to write plugins.
+This small (5.07KB gZip, 11.39KB minified, no extra HTML, images or css needed) HSB colorpicker is based on a subset of [colors.js](https://github.com/PitPik/colorPicker/blob/master/colors.js) from it's big brother [colorPicker](https://github.com/PitPik/colorPicker/) for a precise and rich color model, supports all modern features like touch and MS pointer, GPU accelerated rendering, battery friendly requestAnimationFrame and provides a lot of hooks for developers to write plugins or extend the UI.
 
 ##Demo
 See **demo** at [dematte.at/tinyColorPicker](http://dematte.at/tinyColorPicker)
 
 <img src="development/screen-shot-all.jpg" />
 
-All the WCAG 2.0 calculations for readability are also based on opacity levels of all layers.<br>
-Supported color spaces are: rgb, hsv(b), hsl, HEX
+Supports WCAG 2.0 calculations for readability based on opacity levels of multiple layers.<br>
+Supported color spaces are: rgb, hsv(b), hsl, HEX.<br>
+CMYK, CMY, Lab and XYZ and more standards are supported if using [colors.js](https://github.com/PitPik/colorPicker/blob/master/colors.js) from [github.com/PitPik/colorPicker](https://github.com/PitPik/colorPicker/)
 
 ## Usage
 
 ```javascript
-<script type="text/javascript" src="jqColorPicker.min.js">
+<script type="text/javascript" src="jqColorPicker.min.js"></script>
 <script type="text/javascript">
-    $('.color').colorPicker(); // that's it
-    // $().colorPicker.destroy(); // for singlePageApps
+    $('.color').colorPicker(/* optinal options */); // that's it
+</script>
+```
+```jqColorPicker.min.js``` holds all necessary data such as HTML, CSS and images in one file to run tinyColorPicker. So, it is not needed to include anything else than this single file.<br>
+If you need to debug things for development, you can also use ```colors.js```, the color calculation module, and ```jqColorPicker.js```, the UI and interaction module seperately.
+```javascript
+<script type="text/javascript" src="colors.js"></script>
+<script type="text/javascript" src="jqColorPicker.js"></script>
+<script type="text/javascript">
+    $('.color').colorPicker();
 </script>
 ```
 
-##jqColorPicker.js
+## AMD / CommonJS wrapper
+tinyColorPicker now supports AMD and CommonJS import (thanks to [Munawwar](https://github.com/Munawwar)) in both, the minified version and the single fies (```colors.js``` and ```jqColorPicker.js```).
 
-colorPicker uses an instance of Colors and passes the options to it, so some values are the same...
+```javascript
+// example for requirejs configuration
+requirejs.config({
+    baseUrl: 'scripts',
+    paths: {
+        jquery: 'lib/jquery-2.2.1.min'
+    },
+    shim: {
+        'colorPicker': {
+            deps: [ 'jquery' ],
+            exports: 'jQuery.fn.colorPicker'
+        }
+    }
+});
+
+// then use tinyColorPicker in your module...
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery', 'jqColorPicker'], function (jQuery) {
+            return factory(root, jQuery);
+        });
+    } else {
+        factory(root, root.jQuery);
+    }
+}(this, function(window, $){
+    $('.color').colorPicker(options);
+}));
+```
+
+## Bower support
+tinyColorPicker can be received via bower:
+
+```javascript
+bower install tinyColorPicker
+```
+
+## jqColorPicker.js
+
+```jqColorPicker.js``` is a jQuery plugin including the UI, CSS and images and uses an instance of Colors (from ```colors.js```) for all the color calculations. It passes the options to that instance, so some values might be the same when inspecting...
 
 ```javascript
 $('.color').colorPicker({
-    color: ..., // see Colors...
-    customBG: '#FFF' // see Colors...
+    color: ..., // see Colors below...
+    customBG: '#FFF' // see Colors below...
     animationSpeed: 150, // toggle animation speed
-    GPU: true, // use transform: translate3d
-    doRender: true | 'selector', // manipulate color and bgColor of input field (on certain elements if selector)
+    GPU: true, // use transform: translate3d or regular rendereing (top, left)
+    doRender: true | 'selector', // render color and bgColor of input field (on certain elements if selector)
     opacity: true, // enable / disable alpha slider
-    renderCallback: function($elm, toggled) {}, // this === instance; $elm: the input field;toggle === true -> just appeared; false -> opposite; else -> is rendering on pointer move
-    // toggled true/false can for example be used to check if the $elm has a certain className and then hide alpha,...
-    buildCallback: function($elm) {}, // this === instance; $elm: the UI
-    css: '', // replaces existing css
-    cssAddon: '', // adds css to existing
+    buildCallback: function($elm) {
+         // 'this': colorPicker instance; // will be the same as in positionCallback() and renderCallback();
+         // $elm: the UI (<div class="cp-color-picker"></div>)
+    },
+    renderCallback: function($elm, toggled) {
+        // 'this': current colorPicker instance; // instance has all kinds of information about colorPicker such as $UI including dimensions etc...
+        // $elm: the input field or other element that just toggled the colorPicker;
+        // toggle -> 'true': just appeared; 'false': just closed; 'undefined': is rendering
+    },
+    positionCallback: function($elm) {
+        // 'this': current colorPicker instance;
+        // $elm: the input field or other element that just toggled the colorPicker;
+        // optionally...
+        return {top: y, left: x}; // positions colorPicker before appearing
+    },
+    css: '', // String: replaces existing css
+    cssAddon: '', // String: adds css to existing
     margin: '', // positioning margin (can also be set in cssAddon)
-    scrollResize: true // toggle for reposition colorPicker on window.resize/scroll
+    scrollResize: true // toggle for repositioning colorPicker on window.resize/scroll
     gap: 4 // gap to right and bottom edge of view port if repositioned to fit
+    dark: '#222' // default font color if background is light
+    light: '#DDD' // default font color if background is dark
     preventFocus: false // prevents default on focus of input fields (e.g. no keyboard on mobile)
-    body: document.body // the element where the events are attached to (touchstart, mousedown, pointerdown, focus, click, change)
+    body: document.body // the element where the events are attached to (touchstart, mousedown, pointerdown, focus, click, change),
+    forceAlpha: // force printing alpha channel (undefined = auto; false = never print alpha)
 });
 ```
-##colors.js
+See the following section or the demos on how the callbacks work and what you can do with them...
 
-This section only shows the options for color.js. They are picked up automatically if set in $('.color').colorPicker
+#### Some tips
+
+The positionCallback can be used to optionally position the colorPicker different from its default; in case you want it to also show above or to the left of the input field etc.
+The callback will also be called on scroll.
+If you return an object (```{left: x, top: y}``` to position the colorPicker) then those coordinates will be taken, otherwhise the function just executes (what you need to do: re-append for example) and it takes the internal algorithm to position the color picker. See ./demo/index.js for an example:
+
+```javascript
+positionCallback: function($elm) {
+    var $UI = this.$UI, // this is the instance; this.$UI is the colorPicker DOMElement
+        position = $elm.offset(), // $elm is the current trigger that opened the UI
+        gap = this.color.options.gap, // this.color.options stores all options
+        top = 0,
+        left = 0;
+
+    // $UI.appendTo('#somwhereElse');
+    // do here your calculations with top and left and then...
+    return { // the object will be used as in $('.something').css({...});
+        left: left,
+        top: top
+    }
+}
+```
+This callback is also good if you need to append your colorPicker to a different container than document.body. This way you can then calculate the coordinates relative to the appended container...
+
+
+The renderCallback can be used as openCallback and closeCallback:
+```javascript
+renderCallback: function($elm, toggled) {
+    if (toggled === true) { // simple, lightweight check
+        // ... like an open callback
+    } else if (toggled === false) {
+        // ... like a close callback
+    } else {
+        // rendering...
+    }
+}
+```
+Here you can fire events if necessary or check for a className or data attribute on $elm to see if there is a hint for hiding the opacity slider:
+```javascript
+this.$UI.find('.cp-alpha').toggle(!$elm.hasClass('no-alpha'));
+```
+
+## colors.js
+
+This section only shows the options for color.js. They are picked up automatically if set in ```$('.color').colorPicker({/* options */});```
 
 ```javascript
 Colors({ // all options have a default value...
@@ -61,7 +168,7 @@ Colors({ // all options have a default value...
 });
 ```
 
-##The color model, the methods and more
+## The color model, the methods and more
 
 After initializing Color or ColorPicker you'll get a clean but rhich model of the instance:
 
@@ -69,10 +176,13 @@ After initializing Color or ColorPicker you'll get a clean but rhich model of th
 myColors: {
     colors: { all kinds of color values...  see later},
     options: { all the options you set or that are set as default... },
-    __proto__: { // all methods Color uses
+    __proto__: { // all methods Color uses (See https://github.com/PitPik/colorPicker for details)
         setColor: function(newCol, type, alpha) {},
         setCustomBackground: function(col) {},
         saveAsBackground: function() {},
+        // new method: converts current color to HTML-String like: rgba(123, 234, 0, 0.89)
+        // forceAlpha === true / false -> alway / never print alpha, === undefined -> auto
+        toString: function('rgb' || 'hsl' || 'hex' || '' -> 'rgb', forceAlpha) {},
     }
 }
 ```
@@ -95,7 +205,7 @@ myColorPicker: {
 ```
 
 
-The color model
+## The color model
 
 ```javascript
 HEX: // current color as HEX (upper case, 6 digits)

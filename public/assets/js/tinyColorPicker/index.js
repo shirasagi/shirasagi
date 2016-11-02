@@ -1,4 +1,4 @@
-(function(window, undefined){
+(function(window, $, undefined){
 	'use strict';
 
 	var plugin = {},
@@ -28,7 +28,7 @@
 
 		// demo on how to make plugins... mobile support plugin
 		buildCallback: function($elm) {
-			$elm.prepend('<div class="cp-disp"></div>');
+			this.$colorPatch = $elm.prepend('<div class="cp-disp">').find('.cp-disp');
 			$('.color').on('click', function(e) {
 				e.preventDefault && e.preventDefault();
 			});
@@ -43,14 +43,12 @@
 			'.cp-alpha-cursor{border-width: 8px; margin-left:-8px;}',
 
 		renderCallback: function($elm, toggled) {
-			var colors = this.color.colors,
-				rgb = colors.RND.rgb;
+			var colors = this.color.colors;
 
-			$('.cp-disp').css({
+			this.$colorPatch.css({
 				backgroundColor: '#' + colors.HEX,
 				color: colors.RGBLuminance > 0.22 ? '#222' : '#ddd'
-			}).text('rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b +
-				', ' + (Math.round(colors.alpha * 100) / 100) + ')');
+			}).text(this.color.toString($elm._colorMode)); // $elm.val();
 		}
 	};
 
@@ -410,17 +408,17 @@
 			var that = this;
 
 			$elm.append('<div class="cp-patch"><div></div></div><div class="cp-disp"></div>');
-			$('.trigger').parent().on('click', '.trigger', function(e) {
-				if (e.target === this && $(this).hasClass('active')) {
-					e.cancelBubble = true;
-					e.stopPropagation && e.stopPropagation();
-					that.toggle();
-				}
-			});
+			// $('.trigger').parent().on('click', '.trigger', function(e) {
+			// 	if (e.target === this && $(this).hasClass('active')) {
+			// 		e.cancelBubble = true;
+			// 		e.stopPropagation && e.stopPropagation();
+			// 		that.toggle();
+			// 	}
+			// });
 			// if input type="color"
-			$('.color').on('click', function(e){
-				e.preventDefault && e.preventDefault();
-			});
+			// $('.color').on('click', function(e){
+			// 	e.preventDefault && e.preventDefault();
+			// });
 		},
 
 		cssAddon: // could also be in a css file instead
@@ -478,9 +476,85 @@
 				' inset -1px -1px 6px rgba(0,0,0,.15);'});
 
 
+
+	plugin.dev_skinned_rgb = {
+		customBG: '#222',
+		margin: '5px 0 0',
+		doRender: 'div div',
+		colorNames: plugin.dev_skinned.colorNames,
+		buildCallback: function($elm) {
+			var that = this;
+			var currentRGB = '';
+			var $currentSlider = $();
+			var currentOffset = {};
+			var $window = $(window);
+			var mouseMove = function(e) { // don't render here. Just setColor;
+				var color = {};
+
+				color[currentRGB] = (e.pageX - currentOffset.left) / that.currentWidth * 255;
+				that.color.setColor(color, 'rgb', that.color.colors.alpha);
+				that.render();
+			};
+
+			$elm.append(
+				'<div class="cp-rgb-r"><div class="cp-rgb-r-cursor"></div></div>' +
+				'<div class="cp-rgb-g"><div class="cp-rgb-g-cursor"></div></div>' +
+				'<div class="cp-rgb-b"><div class="cp-rgb-b-cursor"></div></div>' +
+				'<div class="cp-patch"><div></div></div><div class="cp-disp"></div>');
+
+			this.$cursorR = $elm.find('.cp-rgb-r-cursor'); // caching for render renderCallback
+			this.$cursorG = $elm.find('.cp-rgb-g-cursor');
+			this.$cursorB = $elm.find('.cp-rgb-b-cursor');
+
+			$elm.on('mousedown', '.cp-rgb-r, .cp-rgb-g, .cp-rgb-b', function(e) {
+				$currentSlider = $(this);
+				currentRGB = this.className.replace(/cp-rgb-(\D){1}/, "$1");
+				currentOffset = $currentSlider.offset();
+				that.currentWidth = $currentSlider[0].clientWidth;
+				$window.on('mousemove.rgb', mouseMove);
+				e.preventDefault && e.preventDefault();
+				mouseMove(e);
+				return false;
+			});
+			$window.on('mouseup', function(e) {
+				$window.off('mousemove.rgb');
+			});
+		},
+
+		cssAddon: plugin.dev_skinned.cssAddon.replace('152px; margin:10px 0 0', '152px; margin:12px 0 0').
+		replace(
+			'.cp-alpha{', '.cp-alpha, div.cp-rgb-r, div.cp-rgb-g, div.cp-rgb-b{' +
+			'overflow: visible;').
+		replace(
+			'.cp-alpha-cursor{', '.cp-alpha-cursor, .cp-rgb-r-cursor, .cp-rgb-g-cursor, .cp-rgb-b-cursor{' +
+			'box-sizing: border-box; position: absolute;').
+		replace(
+			'.cp-alpha:after{', '.cp-alpha:after, .cp-rgb-r:after, .cp-rgb-g:after, .cp-rgb-b:after{') +
+		
+			'.cp-rgb-r:after{content:"R";}.cp-rgb-g:after{content:"G";}.cp-rgb-b:after{content:"B";}' +
+			'div.cp-rgb-r{background-color: red;}' +
+			'div.cp-rgb-g{background-color: green;}' +
+			'div.cp-rgb-b{background-color: blue;}',
+
+
+		renderCallback: function($elm, toggled) {
+			var colors = this.color.colors,
+				rgb = colors.RND.rgb;
+
+			$('.cp-patch div').css({'background-color': $elm[0].style.backgroundColor});
+			$('.cp-disp').text(this.color.options.colorNames[colors.HEX] || $elm.val());
+
+			this.currentWidth = this.currentWidth || this.$UI.find('.cp-rgb-r')[0].clientWidth;
+			this.$cursorR.css({left: rgb.r / 255 * this.currentWidth});
+			this.$cursorG.css({left: rgb.g / 255 * this.currentWidth});
+			this.$cursorB.css({left: rgb.b / 255 * this.currentWidth});
+		}
+	};
+
+
 	$pluginSelect.val(type || 'desktop').
 	on('change', function(e) {
-		window.location = './?type=' + this.value + '#demo'
+		window.location = 'index.html?type=' + this.value + '#demo'
 	});
 
 
@@ -493,6 +567,6 @@
 	window.myColorPicker = $('.color').colorPicker(
 		plugin[type] || plugin.desktop
 	);
-	$('.trigger').colorPicker();
-	$('pre').colorPicker({doRender: false});
-})(window);
+	$('.trigger').colorPicker(plugin[type] || plugin.desktop);
+	$('pre').colorPicker(plugin[type] || plugin.desktop);
+})(window, jQuery);
