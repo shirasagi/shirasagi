@@ -2,7 +2,10 @@
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <button class="destroy-all btn"><%= t :"views.links.delete" %></button>
+    <%= render file: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <button class="destroy-all btn"><%= t :"views.links.delete" %></button>
+    </div>
   </div>
 
   <%= render file: "_search" %>

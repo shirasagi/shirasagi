@@ -1,0 +1,9 @@
+<% return if @cur_node.blank? %>
+<% return if (st_tags = @cur_node.becomes_with_route.try(:st_tags)).blank? %>
+<% url_for(action: :set_tag_all) rescue return %>
+
+<div class="list-head-action-tag">
+  <%= select_tag(:tag, options_for_select(st_tags), include_blank: true, class: :tag) %>
+  <button class="set-tag-all btn"><%= t :"views.links.set_tag" %></button>
+  <button class="reset-tag-all btn"><%= t :"views.links.reset_tags" %></button>
+</div>
