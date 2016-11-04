@@ -12,6 +12,7 @@ class Faq::Page
   include Category::Addon::Category
   include Cms::Addon::ParentCrumb
   include Event::Addon::Date
+  include Cms::Addon::Tag
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
   include Cms::Addon::Release

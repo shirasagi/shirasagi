@@ -15,6 +15,7 @@ class Article::Page
   include Map::Addon::Page
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
+  include Cms::Addon::Tag
   include Cms::Addon::OpendataRef::Dataset
   include Cms::Addon::OpendataRef::Category
   include Cms::Addon::OpendataRef::Area
