@@ -31,9 +31,14 @@ SS::Application.routes.draw do
     post :import, :on => :collection
   end
 
+  concern :tag do
+    post :tag, action: :set_tag_all, on: :collection
+    delete :tag, action: :reset_tag_all, on: :collection
+  end
+
   content "faq" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :tag]
     resources :searches, concerns: :deletion
   end
 

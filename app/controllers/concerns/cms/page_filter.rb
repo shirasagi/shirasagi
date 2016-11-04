@@ -111,4 +111,34 @@ module Cms::PageFilter
       @copy = @item.new_clone
       render_update @copy.save, location: { action: :index }, render: { file: :copy }
     end
+
+    def set_tag_all
+      if @cur_node
+        safe_params = params.permit(:tag, ids: [])
+        ids = safe_params[:ids].presence || []
+        tag = safe_params[:tag].presence
+        if tag
+          @model.site(@cur_site).node(@cur_node).in(_id: ids).allow(:edit, @cur_user).each do |item|
+            item.add_to_set(tags: [ tag ])
+          end
+        end
+      end
+
+      render_update true, location: { action: :index }, render: { file: :index }
+    end
+
+    def reset_tag_all
+      if @cur_node
+        safe_params = params.permit(:tag, ids: [])
+        ids = safe_params[:ids].presence || []
+        tag = safe_params[:tag].presence
+        if tag
+          @model.site(@cur_site).node(@cur_node).in(_id: ids).allow(:edit, @cur_user).each do |item|
+            item.pull(tags: tag)
+          end
+        end
+      end
+
+      render_update true, location: { action: :index }, render: { file: :index }
+    end
 end
