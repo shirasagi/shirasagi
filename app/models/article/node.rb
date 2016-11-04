@@ -11,6 +11,7 @@ module Article::Node
     include Cms::Addon::Meta
     include Event::Addon::PageList
     include Category::Addon::Setting
+    include Cms::Addon::TagSetting
     include Cms::Addon::OpendataRef::Site
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan

@@ -314,6 +314,8 @@ ja:
       cms/opendata_ref/license: オープンデータ/ライセンス
       cms/monthly_nav: アーカイブナビ（月次）
       cms/archive_view_switcher: アーカイブ用表示設定
+      cms/tag_setting: タグ設定
+      cms/tag: タグ
 
   mongoid:
     models:
@@ -534,6 +536,10 @@ ja:
         periods: 表示期間
       cms/addon/archive_view_switcher:
         archive_view: 表示設定
+      cms/addon/tag_setting:
+        st_tags: タグ
+      cms/addon/tag:
+        tags: タグ
 
   errors:
     messages:
@@ -1132,6 +1138,16 @@ ja:
           oshirase
           oshirase/event
           shisei/jinji
+
+    cms/addon/tag_setting:
+      st_tags:
+        - ページに設定可能なタグを設定します。
+        - スペースやカンマで区切ることで複数のタグを設定できます。
+
+    cms/addon/tag:
+      tags:
+        - ページのタグを設定します。
+        - スペースやカンマで区切ることで複数のタグを設定できます。
 
   all_content:
     page_id: ページID

@@ -11,6 +11,7 @@ module Event::Node
     include Cms::Addon::Meta
     include Category::Addon::Setting
     include Event::Addon::CalendarList
+    include Cms::Addon::TagSetting
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
