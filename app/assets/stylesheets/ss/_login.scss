@@ -76,6 +76,32 @@
   }
 }
 
+#login-notice {
+  width: 50%;
+  position:absolute;
+  top: 70px;
+  left: 400px;
+
+  h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  .main-box {
+    h2 {
+      font-size:1.2em;
+      margin-bottom: 10px;
+    }
+    .datetime{
+       position: absolute;
+       right: 20px;
+       font-size: 0.8em;
+    }
+  }
+
+
+}
+
 @include mb {
   .login-box {
     padding: 10px;

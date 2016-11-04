@@ -25,10 +25,16 @@ SS::Application.routes.draw do
     post "test/mail" => "test/mail#create", as: :send_test_mail
 
     resources :users, concerns: :deletion
+    resources :notice, concerns: :deletion
     resources :groups, concerns: [:deletion, :role]
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
+
+    resources :public_notices, concerns: :deletion do
+      get :copy, :on => :member
+      put :copy, :on => :member
+    end
 
     namespace "apis" do
       get "groups" => "groups#index"

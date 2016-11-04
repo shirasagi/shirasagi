@@ -18,7 +18,7 @@ class Sns::LoginController < ApplicationController
 
   public
     def login
-      @notices = Cms::Notice.and_public.
+      @notices = Sys::Notice.and_public.
         and_show_login.
         limit(5)
 

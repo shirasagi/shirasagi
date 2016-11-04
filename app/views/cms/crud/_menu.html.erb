@@ -1,4 +1,7 @@
 <nav class="nav-menu">
+  <%= puts @item.class
+  binding.pry
+   %>
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to :new, { action: :new }, class: :new %>

@@ -155,8 +155,11 @@ ja:
         high: 重要なお知らせ
       notice_target:
         all: 全ユーザー
+        same_group: 管理グループのみ
         login_view: ログイン画面
-        same_group: 管理グループ
+        cms_admin: cms管理画面
+        gw_admin: グループ管理画面
+        sys_admin: システム管理画面
       state:
         enabled: 使用する
         disabled: 使用しない

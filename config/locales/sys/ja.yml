@@ -2,6 +2,7 @@ ja:
   sys:
     conf: システム設定
     info: システム情報
+    notice: システムのお知らせ
     connect_info: 接続情報
     server_name: サーバー名
     server_addr: サーバーIPアドレス
@@ -35,6 +36,7 @@ ja:
     links:
       new_from_metadata: メタデータ インポート
       new_from_discovery: Discovery から作成
+      back_to_contents: 戻る
     apis:
       sites:
         index: サイトを選択する
@@ -61,7 +63,14 @@ ja:
       sys/user: ユーザー
       sys/role: ロール
       sys/site_copy_task: サイト複製タスク
+      sys/notice: システムのお知らせ
     attributes:
+      sys/notice:
+        html: 本文
+        name: お知らせ見出し
+        notice_severity: 種別
+        notice_target: 表示場所
+
       sys/addon/role:
         sys_role_ids: ロール
       sys/model/auth:

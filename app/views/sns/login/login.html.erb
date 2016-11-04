@@ -53,26 +53,19 @@
 </section>
 
 <% if @notices.present? %>
-<section style="width: 50%; position:absolute; top: 70px; left: 400px" class="main-box">
-  <header>
-    <h2><%= t "cms.notice" %></h2>
-    <div class="version"></div>
-  </header>
-  <div>
-    <ul class="list-items">
-      <% @notices.each do |item| %>
-      <li class="list-item">
-        <div class="info">
-          <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span><br>
-          <h3><%= item.name %></h3>
-          <div><%= item.html.html_safe %></div>
-        </div>
-      </li>
-      <% end %>
-    </ul>
+<section id="login-notice">
+  <h2><%= t('sys.notice') %></h2>
+  <% @notices.each do |item| %>
+  <div class="main-box">
+    <header>
+      <h2><%= item.name %> <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span></h2>
+    </header>
+    <div>
+      <div class="info">
+        <%= item.html.html_safe %>
+      </div>
+    </div>
   </div>
-  <footer class="send">
-
-  </footer>
+<% end %>
 </section>
 <% end %>
