@@ -674,9 +674,11 @@ class @Mobile_Size_Checker
       return
 
     imgs = []
+    isThumb = {}
     for src in $(html).find('img[src]')
       str_src = $(src).attr('src')
       str_id = str_src.match(/^\/fs\/(.+?)\/_\//)
+      isThumb[str_id[1].replace(/\//, "")] = str_src.match(/_\/thumb\//)
 
       imgs.push(
         parseInt(str_id[1].replace(/\//, ""))
@@ -684,7 +686,11 @@ class @Mobile_Size_Checker
 
     $.ajax {
       type: "POST", url: Mobile_Size_Checker.url, cache: false,
-      data: JSON.stringify({img_ids: imgs, mobile_size: mobile_size }),
+      data: JSON.stringify({
+        img_ids: imgs,
+        mobile_size: mobile_size,
+        is_thumb: isThumb
+      }),
       contentType: 'application/json',
       dataType: "json",
       crossDomain: true,
@@ -692,14 +698,13 @@ class @Mobile_Size_Checker
       success: (res, status) ->
         if res["errors"].length > 0
           for err in res["errors"]
-            Mobile_Size_Checker.error = "<p>" + err+ "</p>"
-
-        else
-          for file_name in res["file_name"]
-            Mobile_Size_Checker.addMessage(file_name, true)
+            Mobile_Size_Checker.error += "<li>" + err + "</li>"
 
       error: (xhr, status, error) ->
-        Mobile_Size_Checker.error = "<p>" + Mobile_Size_Checker.message["SizeCheckError"] + "</p>"
+        str_err = "<p>"
+        str_err += Mobile_Size_Checker.message["SizeCheckError"]
+        str_err += "</p>"
+        Mobile_Size_Checker.error = str_err
         return
       complete: (xhr, status) ->
         complete()
@@ -732,7 +737,7 @@ class @Mobile_Size_Checker
           if error["correct"] && Syntax_Checker.autoCorrect
             Form_Alert.add "<%= I18n.t('cms.auto_correct.notice') %>", this, error["msg"]
           else
-            Form_Alert.add "<%= I18n.t('cms.syntax_check') %>", this, error["msg"]
+            Form_Alert.add "<%= I18n.t('cms.mobile_size_check') %>", this, error["msg"]
 
 
 class @Link_Checker

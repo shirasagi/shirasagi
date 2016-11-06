@@ -18,7 +18,6 @@ ja:
     layout: レイアウト
     body_layout: 本文レイアウト
     link_check: リンクチェック
-    mobile_size_check: データサイズチェック
     source_cleaner: ソースクリーニング
     word_dictionary: 単語置換辞書
     preview: プレビュー
@@ -41,6 +40,7 @@ ja:
     site: サイト
     site_menu: サイトメニュー
     syntax_check: アクセシビリティチェック
+    mobile_size_check: 携帯データサイズチェック
     user: ユーザー
     view_page: 公開画面
     view_site: サイト確認
@@ -551,7 +551,8 @@ ja:
     messages:
       set_filename: ファイル名を入力してください。
       invalid_filename: ファイル名は不正な値です。
-      too_bigsize: 本文のファイルサイズが大き過ぎます。
+      too_bigsize: 携帯電話で表示する場合、本文のファイルサイズ合計が大き過ぎます。
+      too_bigfile: 携帯電話で表示する場合、%{filename}(%{filesize})のファイルサイズが大き過ぎます。
       set_name: タイトルを入力してください。
       same_filename: 移動先と移動前が同じファイル名です。
       exist_physical_file: 移動先に物理ファイルが既に存在します。
