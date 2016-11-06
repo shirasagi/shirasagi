@@ -26,7 +26,7 @@ module Cms::Addon
     end
 
     def mobile_size
-      self.site.mobile_size * 1000
+      self.site.mobile_size
     end
 
     private

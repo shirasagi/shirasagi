@@ -698,7 +698,7 @@ class @Mobile_Size_Checker
       success: (res, status) ->
         if res["errors"].length > 0
           for err in res["errors"]
-            Mobile_Size_Checker.error += "<li>" + err + "</li>"
+            Mobile_Size_Checker.error += "<p>" + err + "</p>"
 
       error: (xhr, status, error) ->
         str_err = "<p>"

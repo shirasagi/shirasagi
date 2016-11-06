@@ -46,7 +46,7 @@ describe Cms::Page do
     let(:site) { cms_site }
     context "check_mobile_html_size" do
       it "on click check_size_button html_size too big" do
-        site.mobile_size = 1
+        site.mobile_size = 1_024
         site.save!
 
         login_cms_user
@@ -101,7 +101,7 @@ describe Cms::Page do
 
       it "mobile_size 100" do
         site.mobile_state = "enabled"
-        site.mobile_size = 100
+        site.mobile_size = 100 * 1_024
         site.save!
         site.reload
 
@@ -120,7 +120,7 @@ describe Cms::Page do
       it "many same files in html" do
 
         site.mobile_state = "enabled"
-        site.mobile_size = 20
+        site.mobile_size = 20 * 1_024
         site.save!
         site.reload
 

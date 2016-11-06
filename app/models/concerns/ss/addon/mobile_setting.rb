@@ -4,15 +4,17 @@ module SS::Addon
     extend SS::Addon
 
     included do
+      attr_accessor :in_mobile_size
       field :mobile_state, type: String
-      field :mobile_size, type: Integer, default: 500 # 500kb
+      field :mobile_size, type: Integer, default: 500 * 1_024 # 500kb
       field :mobile_location, type: String
       field :mobile_css, type: SS::Extensions::Words
-      permit_params :mobile_state, :mobile_size, :mobile_location, :mobile_css
+      permit_params :mobile_state, :in_mobile_size, :mobile_location, :mobile_css
       before_validation :normalize_mobile_location
+      before_validation :set_mobile_size
       validates :mobile_state, inclusion: { in: %w(disabled enabled) }, if: ->{ mobile_state.present? }
       validates :mobile_size,
-        numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 1000 },
+        numericality: { only_integer: true, greater_than_or_equal_to: 1_024, less_than_or_equal_to: 1_024_000 },
         if: ->{ mobile_enabled? }
     end
 
@@ -21,6 +23,10 @@ module SS::Addon
         return if mobile_location.blank?
         self.mobile_location = "/#{mobile_location}" unless mobile_location.start_with?('/')
         self.mobile_location = mobile_location[0, mobile_location.length - 1] if mobile_location.end_with?('/')
+      end
+
+      def set_mobile_size
+        self.mobile_size = Integer(in_mobile_size) * 1_024 if in_mobile_size.present?
       end
 
     public

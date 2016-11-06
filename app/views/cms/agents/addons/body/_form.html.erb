@@ -23,7 +23,7 @@
     Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
     Link_Checker.rootUrl           = "<%= @cur_site.full_url %>";
     Mobile_Size_Checker.enabled    = <%= @cur_site.mobile_enabled? %>;
-    Mobile_Size_Checker.mobile_size = <%= @cur_site.mobile_size * 1000 %>;
+    Mobile_Size_Checker.mobile_size = <%= @cur_site.mobile_size %>;
     Syntax_Checker.autoCorrect     = <%= SS.config.cms.auto_correct_page_html == true %>;
 
     <% if replace_words_conf[:replace_words].present? %>
