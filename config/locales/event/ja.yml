@@ -51,6 +51,7 @@ ja:
       event/search: イベント検索
     parts:
       event/calendar: カレンダー
+      event/search: イベント検索
 
   cms_role:
     read_other_event_pages: ページの閲覧（全て）

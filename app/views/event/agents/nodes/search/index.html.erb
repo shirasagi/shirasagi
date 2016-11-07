@@ -1,18 +1,10 @@
 <%= jquery do %>
 Event_Form.render();
 <% end %>
-<%= coffee do %>
-$ ->
-  $(".reset").on "click", ->
-    $(".prop").prop "checked", false
-    $(".keyword").val("")
-    $(".start").val("")
-    $(".close").val("")
-    return false
-<% end %>
-<h2>イベント検索</h2>
+
+<h2><%= t("cms.nodes.event/search") %></h2>
 <%= form_for :item, url: "#{@cur_node.url}", method: "get" do %>
-<div id="addon-event-agents-addons-event-keyword">
+<div id="addon-event-agents-addons-event-keyword" class="mod-event">
   <dl class="see mod-event_keyword">
     <dt><%= t("event.keyword") %></dt>
     <dd><%= text_field_tag :search_keyword, @keyword, class: "keyword" %></dd>
@@ -49,6 +41,8 @@ $ ->
   </footer>
 <% end %>
 
+<% if params.key?(:search_keyword) %>
+
 <div id="event-list">
   <%= t("event.search.no-result") if @events.blank? %>
   <% @events.each do |date, pages| %>
@@ -82,3 +76,4 @@ $ ->
   </dl>
   <% end %>
 </div>
+<% end %>

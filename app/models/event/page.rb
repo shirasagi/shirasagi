@@ -24,7 +24,9 @@ class Event::Page
 
   default_scope ->{ where(route: "event/page") }
 
-  scope :search_by_date, ->(dates){ where({:event_dates.in => dates}) }
+  scope :search_by_date, ->(dates){ where(:event_dates.in => dates) }
+  scope :gt_dates, ->(start_date){ where(:event_dates.gte => start_date) }
+  scope :lt_dates, ->(close_date){ where(:event_dates.lte => close_date) }
   scope :search_by_categories, ->(criteria, cate_ids){
     cate = cate_ids.map { |e| e.to_i if e.present? }
     con = []
@@ -42,6 +44,14 @@ class Event::Page
       return criteria if params.blank?
       if params[:dates].present?
         criteria = criteria.search_by_date(params[:dates])
+      end
+
+      if params[:start_date].present?
+        criteria = criteria.gt_dates(params[:start_date])
+      end
+
+      if params[:close_date].present?
+        criteria = criteria.lt_dates(params[:close_date])
       end
 
       if params[:categories].present?

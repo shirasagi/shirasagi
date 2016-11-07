@@ -8,6 +8,18 @@ class @Event_Form
         if $(".mod-event dd.dates").length < Event_Form.maxTermForm
           Event_Form.cloneTermForm()
         return
+      $("form .reset").click ->
+        $(".prop").prop "checked", false
+        $(".keyword").val("")
+        $(".start").val("")
+        $(".close").val("")
+
+      $("form .search_clear").click ->
+        $(".prop").prop "checked", false
+        $(".keyword").val("")
+        $(".start").val("")
+        $(".close").val("")
+        return false
 
       $(".mod-event button:button.clear").click ->
         start = $(this).parent("dd").find(".start").val()
@@ -36,7 +48,6 @@ class @Event_Form
 
       Event_Form.setStoredDates()
       return
-
   @dateToString: (date)->
     yy = date.getYear()
     mm = date.getMonth() + 1
