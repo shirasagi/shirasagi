@@ -6,5 +6,5 @@
   <dd><%= @item.send :imap_account %></dd>
 
   <dt><%= @model.t :imap_password %></dt>
-  <dd><%= @item.send :imap_password %></dd>
+  <dd><%= @item.send(:imap_password).gsub(/./, '*') %></dd>
 </dl>

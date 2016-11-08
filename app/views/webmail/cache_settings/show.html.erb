@@ -1,0 +1,15 @@
+<div class="main-box">
+  <header><h2><%= t('webmail.mail') %></h2></header>
+  <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+    <%= hidden_field_tag :model, 'mail', id: nil %>
+    <%= f.submit t('webmail.buttons.clear_cache'), class: 'btn-primary save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+  <% end %>
+</div>
+
+<div class="main-box">
+  <header><h2><%= t('webmail.mailbox') %></h2></header>
+  <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+    <%= hidden_field_tag :model, 'mailbox', id: nil %>
+    <%= f.submit t('webmail.buttons.clear_cache'), class: 'btn-primary save', data: { confirm: t('webmail.confirm.clear_cache') } %>
+  <% end %>
+</div>

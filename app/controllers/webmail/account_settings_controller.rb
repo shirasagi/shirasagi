@@ -1,9 +1,6 @@
 class Webmail::AccountSettingsController < ApplicationController
   include Webmail::BaseFilter
-  include Webmail::ImapFilter
   include Sns::CrudFilter
-
-  skip_action_callback :set_imap
 
   model SS::User
 
@@ -11,7 +8,7 @@ class Webmail::AccountSettingsController < ApplicationController
 
   private
     def set_crumbs
-      @crumbs << [:"webmail.account_setting", { action: :show } ]
+      @crumbs << [:"webmail.settings.account", { action: :show } ]
     end
 
     def fix_params

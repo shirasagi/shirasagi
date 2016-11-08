@@ -11,6 +11,10 @@
     <% end %>
   </div>
   <% end %>
+</nav>
 
-  <h2><%= link_to t('webmail.account_setting'), webmail_account_setting_path, class: 'icon-conf' %></h2>
+<nav class="mod-navi">
+  <h2><%= t('views.config') %></h2>
+  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
+  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path %></h3>
 </nav>

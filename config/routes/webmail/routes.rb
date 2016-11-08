@@ -14,8 +14,8 @@ SS::Application.routes.draw do
   namespace "webmail", path: ".webmail" do
     get "/" => redirect { |p, req| "#{req.path}/user_profile" }, as: :cur_user
 
-    resources :mails, concerns: [:deletion, :mail], path: 'mails/:box',
-      box: /[^\/]+/, defaults: { box: 'INBOX' }
+    resources :mails, concerns: [:deletion, :mail], path: 'mails/:box', box: /[^\/]+/, defaults: { box: 'INBOX' }
     resource :account_setting, only: [:show, :edit, :update]
+    resource :cache_setting, only: [:show, :update]
   end
 end

@@ -4,9 +4,18 @@ ja:
 
   webmail:
     mail: メール
-    account_setting: アカウント設定
+    mailbox: フォルダー
     box:
       inbox: 受信メール
+    settings:
+      account: アカウント
+      cache: キャッシュ
+    buttons:
+      clear_cache: キャッシュ クリア
+    confirm:
+      clear_cache: キャッシュを削除してよろしいですか？
+    notice:
+      deleted_cache: キャッシュを削除しました。
 
   mongoid:
     attributes:
