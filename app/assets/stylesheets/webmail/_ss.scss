@@ -1,61 +1,28 @@
-.mypage-box {
-  width: 50%;
-  float: left;
-  margin-top: 10px;
-  @include mb { width: 100%; }
+.webmail-mailboxes {
+  .pad {
+    display: inline-block;
+    width: 12px;
+  }
+  a {
+    display: inline-block;
+    width: 100%;
+    padding: 5px 0 5px 15px;
+    texe-decoration: none;
+  }
 }
-.mypage-sites {
-  min-height: 150px;
-  margin-right:5px;
-}
-.mypage-groups {
-  min-height: 150px;
-  margin-left: 5px;
-}
-.mypage-sites .list-head {
-  padding: 10px 20px 10px 45px;
-  background: url(/assets/img/ic-cms-on.png) no-repeat 18px center;
-}
-.mypage-groups .list-head {
-  padding: 10px 20px 10px 55px;
-  background: url(/assets/img/ic-gws-on.png) no-repeat 18px center;
-}
-
-// Message
-.sns-message-threads .unseen {
-  font-weight: bold;
-}
-.see.sns-message-thread-members {
-  .index {
-    margin-top: 5px;
-    .disabled {
-      border-color: #ccc;
-      color: #ccc;
+.webmail-mails {
+  .unseen {
+    margin-left: -2px;
+    border-left: 2px solid #f94;
+    background-color: #ffffee;
+    font-weight: bold;
+  }
+  .unseen:hover {
+    background: $orange2;
+  }
+  .icon-attachment {
+    &:before {
+      content: 'File) ';
     }
-  }
-}
-.see.sns-message-thread-text {
-  padding: 10px 0 0;
-  border-top: 1px solid #eee;
-  textarea {
-    height: 120px;
-  }
-}
-.sns-message-posts {
-  .info {
-    display: block;
-    .meta {
-      float: right;
-    }
-  }
-  .text {
-    margin: 5px 0 0 35px;
-  }
-}
-.sns-message-post-form {
-  padding: 0 5px;
-  .edit-members{
-    float: right;
-    margin: 0 0 0 10px;
   }
 }

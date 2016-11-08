@@ -15,7 +15,6 @@ class Webmail::MailsController < ApplicationController
 
     def set_mailbox
       @mailbox = params[:box]
-      @imap.mailbox(@mailbox)
     end
 
     def fix_params
@@ -24,7 +23,7 @@ class Webmail::MailsController < ApplicationController
 
     def set_item
       set_mailbox
-      @item = @imap.find params[:id]
+      @item = @model.where(mailbox: @mailbox).imap_find params[:id].to_i
     end
 
     def crud_redirect_url
@@ -33,14 +32,15 @@ class Webmail::MailsController < ApplicationController
 
   public
     def index
-      @items = @imap.
+      @items = @model.
+        where(mailbox: @mailbox).
         page(params[:page]).
         per(50).
-        mails
+        imap_all
     end
 
     def show
-      @item.set_seen if @item.unseen?
+      @item.set_seen
     end
 
     def attachment

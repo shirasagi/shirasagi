@@ -1,15 +1,13 @@
 <nav class="main-navi">
   <h2><%= link_to t('webmail.box.inbox'), webmail_mails_path %></h2>
 
-  <% if @imap %>
+  <% if @imap.try(:logged_in?) %>
   <div class="webmail-mailboxes">
-    <% @imap.mailboxes.each do |box| %>
-      <h3>
-        <%= link_to webmail_mails_path(box: box.original_name) do %>
-          <%== "<span class='pad'></span>" * box.depth %>
-          <%= box.basename %>
-        <% end %>
-      </h3>
+    <% Webmail::Mailbox.imap_all.each do |box| %>
+      <%= link_to webmail_mails_path(box: box.original_name), class: box.css_class do %>
+        <%== "<span class='pad'></span>" * box.depth %>
+        <span class="mailbox-name"><%= box.basename %></span>
+      <% end %>
     <% end %>
   </div>
   <% end %>

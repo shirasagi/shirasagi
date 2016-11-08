@@ -1,19 +1,22 @@
 <div class="index ">
   <%= render file: "_list_head" %>
 
-  <ul class="list-items sns-message-threads">
+  <ul class="list-items webmail-mails">
     <% @items.each do |item| %>
     <li class="list-item <%= 'unseen' if item.unseen? %>">
       <label class="check">
         <input type="checkbox" name="ids[]" value="<%= item.uid %>" />
       </label>
       <div class="info">
+        <% if item.attachments? %>
+          <span class="icon-attachment"></span>
+        <% end %>
         <%= link_to item.subject, { action: :show, id: item.uid }, class: "title" %>
 
         <div class="meta">
           <span class="datetime"><%= item.date.strftime("%Y/%m/%d %H:%M") %></span>
-          <span><%= item.from %></span>
-          <span><%= number_to_human_size(item.size) %></span>
+          <span class="from"><%= item.from %></span>
+          <span class="size"><%= number_to_human_size(item.size) %></span>
         </div>
       </div>
     </li>
