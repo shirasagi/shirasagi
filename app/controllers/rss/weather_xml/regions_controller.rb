@@ -1,8 +1,8 @@
-class Rss::WeatherXmlRegionsController < ApplicationController
+class Rss::WeatherXml::RegionsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Rss::WeatherXmlRegion
+  model Rss::WeatherXml::Region
 
   append_view_path "app/views/cms/pages"
   navi_view "rss/main/navi"

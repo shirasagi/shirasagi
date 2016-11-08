@@ -2,7 +2,8 @@ ja:
   rss:
     page: フィード
     weather_xml_page: 気象庁防災情報XML
-    weather_xml_region: 気象庁地域
+    weather_xml/region: 気象庁地域
+    weather_xml/filter: 気象庁防災情報XMLフィルター
 
     views:
       confirm:
@@ -28,7 +29,7 @@ ja:
         6+: 6強
         '7': 7
     apis:
-      weather_xml_regions:
+      weather_xml/regions:
         index: 地域を選択する
         search: 地域を検索
         select: 地域を設定する
@@ -41,6 +42,7 @@ ja:
       rss/page/weather_xml: 気象庁防災情報XML
       rss/pub_sub_hubbub: PubSubHubbub
       rss/anpi_mail_setting: 安否確認メール設定
+      rss/weather_xml/filter: フィルター
 
   cms:
     nodes:
@@ -51,11 +53,11 @@ ja:
     models:
       rss/page: フィード
       rss/weather_xml_page:  気象庁防災情報XML
-      rss/weather_xml_region: 気象庁地域
+      rss/weather_xml/region: 気象庁地域
     attributes:
       rss/node/page:
       rss/page:
-      rss/weather_xml_region:
+      rss/weather_xml/region:
         name: 名称
         code: コード
         order: 並び順
@@ -89,7 +91,7 @@ ja:
         lower_mail_text: 下部メール
 
   tooltip:
-    rss/weather_xml_region:
+    rss/weather_xml/region:
       name:
         - 地域の名称を指定します。
       code:

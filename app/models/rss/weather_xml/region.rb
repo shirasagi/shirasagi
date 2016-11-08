@@ -1,4 +1,4 @@
-class Rss::WeatherXmlRegion
+class Rss::WeatherXml::Region
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site

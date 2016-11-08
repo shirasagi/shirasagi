@@ -13,7 +13,9 @@ SS::Application.routes.draw do
 
   namespace "rss", path: ".s:site/rss" do
     namespace "apis" do
-      get "weather_xml_regions" => "weather_xml_regions#index"
+      namespace 'weather_xml' do
+        get "regions" => "regions#index"
+      end
     end
   end
 
@@ -21,7 +23,10 @@ SS::Application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     resources :pages, concerns: [:deletion, :import]
     resources :weather_xmls, concerns: [:deletion]
-    resources :weather_xml_regions, concerns: [:deletion]
+    namespace 'weather_xml' do
+      resources :regions, concerns: [:deletion]
+      resources :filters, concerns: [:deletion]
+    end
   end
 
   node "rss" do

@@ -1,0 +1,11 @@
+<% return if @item.action_publish_page.blank? %>
+
+<% @item.action_publish_page.tap do |action| %>
+<dl class="see mod-rss-weather-xml-action-publish-page">
+  <dt><%= Rss::WeatherXml::Action::PublishPage.t :node_id %></dt>
+  <dd><%= action.node.try(:name) %></dd>
+
+  <dt><%= Rss::WeatherXml::Action::PublishPage.t :state %></dt>
+  <dd><%= action.label :state %></dd>
+</dl>
+<% end %>

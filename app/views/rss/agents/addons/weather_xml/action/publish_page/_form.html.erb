@@ -1,0 +1,34 @@
+<% @item.action_publish_page ||= Rss::WeatherXml::Action::PublishPage.new %>
+
+<%= f.fields_for :action_publish_page do |f1| %>
+  <% @item.action_publish_page.tap do |action| %>
+    <dl class="see mod-rss-weather-xml-action-publish-page">
+      <dt><%= Rss::WeatherXml::Action::PublishPage.t :node_id %><%= Rss::WeatherXml::Action::PublishPage.tt :node_id %></dt>
+      <dd>
+        <%= f1.hidden_field "node_id", value: "", class: "hidden-ids" %>
+        <%= link_to :"cms.apis.nodes.index", cms_apis_nodes_path(single: 1), class: "ajax-box" %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead>
+          <tr>
+            <th class="name"><%= Cms::Node.t :name %></th>
+            <th style="width: 20%;"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <% if action.node.present? %>
+            <tr data-id="<%= action.node.id %>">
+              <td><%= f.hidden_field "my_anpi_post_id", value: action.node.id %> <%= action.node.name %></td>
+              <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </dd>
+
+      <dt><%= Rss::WeatherXml::Action::PublishPage.t :state %><%= Rss::WeatherXml::Action::PublishPage.tt :state %></dt>
+      <dd><%= f1.select :state, action.state_options %></dd>
+    </dl>
+  <% end %>
+<% end %>

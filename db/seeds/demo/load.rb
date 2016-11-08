@@ -1252,7 +1252,7 @@ puts "# weather xml"
 def save_rss_weather_xml_region(data)
   # puts data[:name]
   cond = { site_id: @site._id, code: data[:code], name: data[:name] }
-  item = Rss::WeatherXmlRegion.find_or_create_by(cond)
+  item = Rss::WeatherXml::Region.find_or_create_by(cond)
   item.attributes = data
   item.save
 
@@ -1265,7 +1265,7 @@ end
 
 save_node route: "rss/weather_xml", filename: "weather", name: "気象庁防災XML", layout_id: layouts["one"].id,
   page_state: "closed", earthquake_intensity: "5+", anpi_mail_id: ezine_anpi.id, my_anpi_post_id: anpi_node.id,
-  target_region_ids: %w(350 351 352).map { |code| Rss::WeatherXmlRegion.site(@site).find_by(code: code).id }
+  target_region_ids: %w(350 351 352).map { |code| Rss::WeatherXml::Region.site(@site).find_by(code: code).id }
 
 ## -------------------------------------
 puts "# max file size"

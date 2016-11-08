@@ -1,7 +1,7 @@
-class Rss::Apis::WeatherXmlRegionsController < ApplicationController
+class Rss::Apis::WeatherXml::RegionsController < ApplicationController
   include Cms::ApiFilter
 
-  model Rss::WeatherXmlRegion
+  model Rss::WeatherXml::Region
 
   before_action :set_single
 

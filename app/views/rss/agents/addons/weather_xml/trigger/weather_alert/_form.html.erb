@@ -1,0 +1,24 @@
+<% @item.trigger_weather_alert ||= Rss::WeatherXml::Trigger::WeatherAlert.new %>
+
+<%= f.fields_for :trigger_weather_alert do |f1| %>
+  <% @item.trigger_weather_alert.tap do |trigger| %>
+    <dl class="see mod-rss-weather-xml-trigger-weather-alert">
+      <dt><%= Rss::WeatherXml::Trigger::WeatherAlert.t :training_state %><%= Rss::WeatherXml::Trigger::WeatherAlert.tt :training_state %></dt>
+      <dd><%= f1.select :training_state, trigger.training_state_options %></dd>
+
+      <dt><%= Rss::WeatherXml::Trigger::WeatherAlert.t :kind %><%= Rss::WeatherXml::Trigger::WeatherAlert.tt :kind %></dt>
+      <dd>
+        <label for="item_trigger_weather_alert_kind_warning">
+          <%= f1.check_box :kind_warning, { checked: trigger.kind_warning == 'enabled' }, 'enabled', 'disabled' %> 警報
+        </label>
+        <label for="item_trigger_weather_alert_kind_advisory">
+          <%= f1.check_box :kind_advisory, { checked: trigger.kind_advisory == 'enabled' }, 'enabled', 'disabled' %> 注意報
+        </label>
+      </dd>
+
+      <dt><%= Rss::WeatherXml::Trigger::WeatherAlert.t :regions %><%= Rss::WeatherXml::Trigger::WeatherAlert.tt :regions %></dt>
+      <dd>地域選択
+      </dd>
+    </dl>
+  <% end %>
+<% end %>
