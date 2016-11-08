@@ -29,21 +29,30 @@ describe Event::Page, dbscope: :example do
     end
 
     context "when dates is given" do
-      subject { described_class.search(dates: ["#{Time.zone.today}"]) }
-      it { expect(subject.selector.to_h).to include("event_dates" => {"$in"=>["#{Time.zone.today}"]}) }
+      subject { described_class.search(dates: [Time.zone.today.to_s]) }
+      it { expect(subject.selector.to_h).to include("event_dates" => {"$in"=>[Time.zone.today.to_s]}) }
     end
 
     context "when dates is given 2 date" do
-      subject { described_class.search(dates: ["#{Time.zone.today}","#{Time.zone.today + 1}","#{Time.zone.today + 2}"]) }
+      subject { described_class.search(dates: [Time.zone.today.to_s, (Time.zone.today + 1).to_s, (Time.zone.today + 2).to_s]) }
       p {subject.selector.to_h}
-      it { expect(subject.selector.to_h).to include("event_dates" => {
-        "$in"=>
-        [
-          "#{Time.zone.today}",
-          "#{Time.zone.today + 1}",
-          "#{Time.zone.today + 2}"
-        ]
-      })}
+      it do
+        expect(subject.selector.to_h).to include(
+          "event_dates" => {"$in"=>[Time.zone.today.to_s, (Time.zone.today + 1).to_s, (Time.zone.today + 2).to_s]}
+        )
+      end
+    end
+
+    context "when dates start_date is balnk" do
+      subject { described_class.search(close_date: Time.zone.today.to_s) }
+      it { expect(subject.selector.to_h).to include("event_dates" => {"$lte"=>Time.zone.today.to_s})}
+
+    end
+
+    context "when dates close_date is balnk" do
+      subject { described_class.search(start_date: Time.zone.today.to_s) }
+      it { expect(subject.selector.to_h).to include("event_dates" => {"$gte"=>Time.zone.today.to_s})}
+
     end
   end
 end
