@@ -1,6 +1,9 @@
 <%= jquery do %> SS_AddonTabs.hide(".mod-cms-tag"); <% end %>
 
-<% st_tags = @cur_node.attributes[:st_tags] || [] %>
+<%
+  st_tags = @cur_node.attributes[:st_tags] if @cur_node.present?
+  st_tags ||= []
+%>
 
 <dl class="see mod-cms-tag">
   <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
