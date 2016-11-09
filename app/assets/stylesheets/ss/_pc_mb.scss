@@ -1186,6 +1186,13 @@ div.index {
     button { margin: 0; }
   }
 }
+.list-head-action-tag {
+  display: inline-block;
+  margin-right: 8px;
+}
+.list-head-action-destroy {
+  display: inline-block;
+}
 .list-head-search {
   float: right;
   @include mb {

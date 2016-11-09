@@ -68,6 +68,8 @@ ja:
       redirect: 下記のページにアクセスしようとしています。
       import: インポートを開始してよろしいですか？
       download: ダウンロードしてよろしいですか？
+      set_tag: タグを設定してよろしいですか？
+      reset_tag: タグを削除してよろしいですか？
     links:
       cms: サイト管理
       gws: グループ
@@ -103,6 +105,8 @@ ja:
       download: ダウンロード
       import: インポート
       resize: リサイズする
+      set_tag: タグ設定
+      reset_tags: タグ解除
     notice:
       saved: 保存しました。
       deleted: 削除しました。

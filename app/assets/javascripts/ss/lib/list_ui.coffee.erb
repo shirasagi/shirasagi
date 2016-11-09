@@ -28,3 +28,36 @@ class @SS_ListUI
       for id in checked
         form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
       form.appendTo(document.body).submit()
+
+    $(".list-head .set-tag-all").on "click", ->
+      token   = $('meta[name="csrf-token"]').attr('content')
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      tag     = $(".list-head .tag").val()
+      return false if checked.length == 0
+      return false unless tag
+      return false unless confirm("<%= I18n.t("views.confirm.set_tag") %>")
+
+      form = $("<form/>", action: "pages/tag", method: "post")
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden" ))
+      form.append($("<input/>", name: "tag", value: tag, type: "hidden" ))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()
+
+    $(".list-head .reset-tag-all").on "click", ->
+      token   = $('meta[name="csrf-token"]').attr('content')
+      checked = $(".list-item input:checkbox:checked").map ->
+        $(this).val()
+      tag     = $(".list-head .tag").val()
+      return false if checked.length == 0
+      return false unless tag
+      return false unless confirm("<%= I18n.t("views.confirm.reset_tag") %>")
+
+      form = $("<form/>", action: "pages/tag", method: "post")
+      form.append($("<input/>", name: "_method", value: "delete", type: "hidden" ))
+      form.append($("<input/>", name: "authenticity_token", value: token, type: "hidden" ))
+      form.append($("<input/>", name: "tag", value: tag, type: "hidden" ))
+      for id in checked
+        form.append($("<input/>", name: "ids[]", value: id, type: "hidden"))
+      form.appendTo(document.body).submit()

@@ -1,0 +1,22 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-cms-tag"); <% end %>
+
+<%
+  st_tags = @cur_node.attributes[:st_tags] if @cur_node.present?
+  st_tags ||= []
+%>
+
+<dl class="see mod-cms-tag">
+  <dt><%= @model.t :tags %><%= @model.tt :tags %></dt>
+  <dd>
+    <% if st_tags.blank? %>
+      <%= f.text_field(:tags) %>
+    <% else %>
+      <%= f.text_field(:tags, autocomplete: :on, list: :st_tags) %>
+      <datalist id="st_tags">
+        <% st_tags.each do |st_tag| %>
+          <option value="<%= st_tag %>">
+        <% end %>
+      </datalist>
+    <% end %>
+  </dd>
+</dl>
