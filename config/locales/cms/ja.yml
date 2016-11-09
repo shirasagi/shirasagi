@@ -52,6 +52,8 @@ ja:
     roles:
       admin: 管理者
       user: 編集者
+    button:
+      add_crumb: パンくずを追加する
     confirm:
       delete_item: 項目を削除してよろしいですか？
     messages:

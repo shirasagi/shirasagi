@@ -1,9 +1,11 @@
+<div class="crumbs">
+<% @items.each do |crumb| %>
 <%
 
-size = @items.size
+size = crumb.size
 html = []
 
-@items.each_with_index do |item, idx|
+crumb.each_with_index do |item, idx|
   html << "<span class=\"separator\">&rsaquo;</span>".html_safe if idx > 0
 
   if size == idx + 1
@@ -13,6 +15,7 @@ html = []
   end
 end
 
-%><div class="crumbs">
-  <%== html.join %>
+%>
+<div class="crumb"><%== html.join %></div>
+<% end %>
 </div>
