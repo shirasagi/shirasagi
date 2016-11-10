@@ -2,7 +2,7 @@ ja:
   rss:
     page: フィード
     weather_xml_page: 気象庁防災情報XML
-    weather_xml/region: 気象庁地域
+    weather_xml/quake_region: 気象庁地震情報区域
     weather_xml/filter: 気象庁防災情報XMLフィルター
 
     views:
@@ -29,10 +29,10 @@ ja:
         6+: 6強
         '7': 7
     apis:
-      weather_xml/regions:
-        index: 地域を選択する
-        search: 地域を検索
-        select: 地域を設定する
+      weather_xml/quake_regions:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
 
   modules:
     rss: RSS取込
@@ -53,11 +53,11 @@ ja:
     models:
       rss/page: フィード
       rss/weather_xml_page:  気象庁防災情報XML
-      rss/weather_xml/region: 気象庁地域
+      rss/weather_xml/quake_region: 気象庁地震情報区域
     attributes:
       rss/node/page:
       rss/page:
-      rss/weather_xml/region:
+      rss/weather_xml/quake_region:
         name: 名称
         code: コード
         order: 並び順
@@ -91,11 +91,11 @@ ja:
         lower_mail_text: 下部メール
 
   tooltip:
-    rss/weather_xml/region:
+    rss/weather_xml/quake_region:
       name:
-        - 地域の名称を指定します。
+        - 区域の名称を指定します。
       code:
-        - 地域コードを指定します。
+        - 区域コードを指定します。
       order:
         - 並び順を指定します。
         - 数字が小さいほど一覧ページの上位に表示されます。

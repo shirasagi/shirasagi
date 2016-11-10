@@ -1,10 +1,12 @@
-class Rss::WeatherXml::Region
+class Rss::WeatherXml::QuakeRegion
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
   include Cms::SitePermission
 
   set_permission_name "cms_tools", :use
+  # backward compatibility, this model goes to "rss_weather_xml_regions" collection
+  store_in collection: "rss_weather_xml_regions"
 
   seqid :id
   field :name, type: String

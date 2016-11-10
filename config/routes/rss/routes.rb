@@ -14,7 +14,7 @@ SS::Application.routes.draw do
   namespace "rss", path: ".s:site/rss" do
     namespace "apis" do
       namespace 'weather_xml' do
-        get "regions" => "regions#index"
+        get "quake_regions" => "quake_regions#index"
       end
     end
   end
@@ -24,7 +24,7 @@ SS::Application.routes.draw do
     resources :pages, concerns: [:deletion, :import]
     resources :weather_xmls, concerns: [:deletion]
     namespace 'weather_xml' do
-      resources :regions, concerns: [:deletion]
+      resources :quake_regions, concerns: [:deletion]
       resources :filters, concerns: [:deletion]
     end
   end

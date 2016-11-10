@@ -1,8 +1,8 @@
-class Rss::WeatherXml::RegionsController < ApplicationController
+class Rss::WeatherXml::QuakeRegionsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Rss::WeatherXml::Region
+  model Rss::WeatherXml::QuakeRegion
 
   append_view_path "app/views/cms/pages"
   navi_view "rss/main/navi"

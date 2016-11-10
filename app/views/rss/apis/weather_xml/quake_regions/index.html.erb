@@ -3,7 +3,7 @@
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
 <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
   <%= f.text_field :name, value: params[:s].try(:[], :name) %>
-  <%= f.submit  t("rss.apis.weather_xml/regions.search"), class: :btn %>
+  <%= f.submit  t("rss.apis.weather_xml/quake_regions.search"), class: :btn %>
 <% end %>
 </div>
 
@@ -33,7 +33,7 @@
 </table>
 
 <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-  <%= button_tag t("rss.apis.weather_xml/regions.select"), { type: :button, class: "select-items btn" } %>
+  <%= button_tag t("rss.apis.weather_xml/quake_regions.select"), { type: :button, class: "select-items btn" } %>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

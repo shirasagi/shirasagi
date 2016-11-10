@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :rss_weather_xml_region_base, class: Rss::WeatherXml::Region do
+  factory :rss_weather_xml_region_base, class: Rss::WeatherXml::QuakeRegion do
     transient do
       site nil
     end

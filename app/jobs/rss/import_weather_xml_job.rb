@@ -112,7 +112,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
           area_code = area.elements['Code'].text
           area_max_int = area.elements['MaxInt'].text
 
-          region = Rss::WeatherXml::Region.site(site).where(code: area_code).first
+          region = Rss::WeatherXml::QuakeRegion.site(site).where(code: area_code).first
           next if region.blank?
 
           next unless node.target_region_ids.include?(region.id)
