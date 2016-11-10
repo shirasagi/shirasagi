@@ -80,19 +80,19 @@ class Mobile::Converter < String
   def gsub_img!
     self.gsub!(/<img(.*?)\/?>/) do |match|
       src_attr = s_to_attr $1.to_s
-      ext = File.extname(src_attr["src"].to_s).downcase
+      ext = File.extname(src_attr["src"].to_s)
       href = src_attr["src"].presence
       name = src_attr["alt"].presence || src_attr["title"].presence || href.sub(/.*\//, "")
       cls = "tag-img" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
 
-      if ext =~ /^\.(jpeg|jpg|bmp)$/
-        html = name
-        html += %( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("views.image")}]</a>) if href
-        html
-      elsif href =~ /^\/fs\/.+?\/\_\/[^\/]+?#{ext}/
+      if href =~ /^\/fs\/.+?\/\_\/[^\/]+?#{ext}/
         # ss_file thumb
         src_attr["src"] = href.sub(/\/\_\//, "/_/thumb/")
         html = %(<img #{attr_to_s(src_attr)}>)
+        html
+      elsif ext =~ /^\.(jpeg|jpg|bmp)$/i
+        html = name
+        html += %( <a href="#{href}" class="#{cls}" title="#{name}">[#{I18n.t("views.image")}]</a>) if href
         html
       else
         match
