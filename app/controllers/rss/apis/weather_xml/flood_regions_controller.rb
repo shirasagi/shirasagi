@@ -14,8 +14,9 @@ class Rss::Apis::WeatherXml::FloodRegionsController < ApplicationController
   public
     def index
       @items = @model.site(@cur_site).
+        and_enabled.
         search(params[:s]).
-        order_by(order: 1, _id: -1).
+        order_by(order: 1, _id: 1).
         page(params[:page]).per(50)
     end
 end
