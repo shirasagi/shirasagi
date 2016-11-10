@@ -11,6 +11,7 @@ describe "article_pages", dbscope: :example do
   let(:delete_path) { delete_article_page_path site.id, node, item }
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
+  let(:contain_links_path) { contain_links_article_page_path site.id, node, item }
 
   context "basic crud" do
     before { login_cms_user }
@@ -84,6 +85,13 @@ describe "article_pages", dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#contain_links" do
+      visit delete_path
+      click_link "このページへのリンクを確認する。"
+
+      expect(current_path).to eq contain_links_path
     end
   end
 end

@@ -9,6 +9,7 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:contain_links_path) { contain_links_node_page_path site.id, node, item }
 
   it "without login" do
     visit index_path
@@ -63,6 +64,13 @@ describe "cms_node_pages", type: :feature, dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#contain_links" do
+      visit delete_path
+      click_link "このページへのリンクを確認する。"
+
+      expect(current_path).to eq contain_links_path
     end
   end
 end
