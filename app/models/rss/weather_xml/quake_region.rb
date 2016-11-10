@@ -13,10 +13,12 @@ class Rss::WeatherXml::QuakeRegion
   field :name, type: String
   field :order, type: Integer, default: 0
   field :state, type: String, default: 'enabled'
-  validates :code, presence: true, length: { maximum: 40 }
+  validates :code, presence: true, length: { maximum: 40 }, uniqueness: { scope: :site_id }
   validates :name, presence: true, length: { maximum: 40 }
   validates :state, inclusion: { in: %w(enabled disabled), allow_blank: true }
   permit_params :name, :code, :order
+
+  index({ site_id: 1, code: 1 }, { unique: true })
 
   scope :and_enabled, -> { self.in(state: [nil, 'enabled'])}
 

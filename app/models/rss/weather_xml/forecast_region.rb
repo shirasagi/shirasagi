@@ -14,13 +14,15 @@ class Rss::WeatherXml::ForecastRegion
   field :short_yomi, type: String
   field :order, type: Integer, default: 0
   field :state, type: String, default: 'enabled'
-  validates :code, presence: true, length: { maximum: 40 }
+  validates :code, presence: true, length: { maximum: 40 }, uniqueness: { scope: :site_id }
   validates :name, presence: true, length: { maximum: 40 }
   validates :yomi, length: { maximum: 40 }
   validates :short_name, presence: true, length: { maximum: 40 }
   validates :short_yomi, length: { maximum: 40 }
   validates :state, inclusion: { in: %w(enabled disabled), allow_blank: true }
   permit_params :code, :name, :yomi, :short_name, :short_yomi, :order, :state
+
+  index({ site_id: 1, code: 1 }, { unique: true })
 
   scope :and_enabled, -> { self.in(state: [nil, 'enabled'])}
 

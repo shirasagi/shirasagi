@@ -12,11 +12,13 @@ class Rss::WeatherXml::FloodRegion
   field :yomi, type: String
   field :order, type: Integer, default: 0
   field :state, type: String, default: 'enabled'
-  validates :code, presence: true, length: { maximum: 40 }
+  validates :code, presence: true, length: { maximum: 40 }, uniqueness: { scope: :site_id }
   validates :name, presence: true, length: { maximum: 40 }
   validates :yomi, length: { maximum: 40 }
   validates :state, inclusion: { in: %w(enabled disabled), allow_blank: true }
   permit_params :name, :yomi, :code, :order
+
+  index({ site_id: 1, code: 1 }, { unique: true })
 
   scope :and_enabled, -> { self.in(state: [nil, 'enabled'])}
 
@@ -32,6 +34,12 @@ class Rss::WeatherXml::FloodRegion
         criteria = criteria.keyword_in params[:keyword], :code, :name, :yomi
       end
       criteria
+    end
+  end
+
+  def state_options
+    %w(enabled disabled).map do |v|
+      [ I18n.t("views.options.state.#{v}"), v ]
     end
   end
 end

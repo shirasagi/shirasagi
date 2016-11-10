@@ -2,7 +2,10 @@ ja:
   rss:
     page: フィード
     weather_xml_page: 気象庁防災情報XML
-    weather_xml/quake_region: 気象庁地震情報区域
+    weather_xml/region: 気象庁区域
+    weather_xml/quake_region: 地震情報区域
+    weather_xml/forecast_region: 気象情報区域
+    weather_xml/flood_region: 河川洪水予報区域
     weather_xml/filter: 気象庁防災情報XMLフィルター
 
     views:
@@ -33,6 +36,14 @@ ja:
         index: 区域を選択する
         search: 区域を検索
         select: 区域を設定する
+      weather_xml/forecast_regions:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
+      weather_xml/flood_regions:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
 
   modules:
     rss: RSS取込
@@ -54,13 +65,30 @@ ja:
       rss/page: フィード
       rss/weather_xml_page:  気象庁防災情報XML
       rss/weather_xml/quake_region: 気象庁地震情報区域
+      rss/weather_xml/forecast_region: 気象庁気象情報区域
+      rss/weather_xml/flood_region: 気象庁河川洪水予報区域
     attributes:
       rss/node/page:
       rss/page:
       rss/weather_xml/quake_region:
-        name: 名称
         code: コード
+        name: 名称
         order: 並び順
+        state: 状態
+      rss/weather_xml/forecast_region:
+        code: コード
+        name: 名称
+        yomi: よみ
+        short_name: 短い名称
+        short_yomi: 短い名称のよみ
+        order: 並び順
+        state: 状態
+      rss/weather_xml/flood_region:
+        code: コード
+        name: 名称
+        yomi: よみ
+        order: 並び順
+        state: 状態
       rss/addon/import:
         rss_url: RSS配信URL
         rss_max_docs: 最大保存件数
@@ -92,13 +120,45 @@ ja:
 
   tooltip:
     rss/weather_xml/quake_region:
-      name:
-        - 区域の名称を指定します。
       code:
         - 区域コードを指定します。
+      name:
+        - 区域の名称を指定します。
       order:
         - 並び順を指定します。
         - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    rss/weather_xml/forecast_region:
+      code:
+        - 区域コードを指定します。
+      name:
+        - 区域の名称を指定します。
+      yomi:
+        - 区域の名称のよみを指定します。
+      short_name:
+        - 区域の短い名称を指定します。
+      short_yomi:
+        - 区域の短い名称のよみを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    rss/weather_xml/flood_region:
+      code:
+        - 区域コードを指定します。
+      name:
+        - 区域の名称を指定します。
+      yomi:
+        - 区域の名称のよみを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
 
     rss/addon/import:
       rss_url:
