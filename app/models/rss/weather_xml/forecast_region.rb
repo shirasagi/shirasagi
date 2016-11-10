@@ -1,22 +1,26 @@
-class Rss::WeatherXml::QuakeRegion
+class Rss::WeatherXml::ForecastRegion
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
   include Cms::SitePermission
 
   set_permission_name "cms_tools", :use
-  # for backward compatibility, this model goes to "rss_weather_xml_regions" collection
-  store_in collection: "rss_weather_xml_regions"
 
   seqid :id
   field :code, type: String
   field :name, type: String
+  field :yomi, type: String
+  field :short_name, type: String
+  field :short_yomi, type: String
   field :order, type: Integer, default: 0
   field :state, type: String, default: 'enabled'
   validates :code, presence: true, length: { maximum: 40 }
   validates :name, presence: true, length: { maximum: 40 }
+  validates :yomi, length: { maximum: 40 }
+  validates :short_name, presence: true, length: { maximum: 40 }
+  validates :short_yomi, length: { maximum: 40 }
   validates :state, inclusion: { in: %w(enabled disabled), allow_blank: true }
-  permit_params :name, :code, :order
+  permit_params :code, :name, :yomi, :short_name, :short_yomi, :order, :state
 
   scope :and_enabled, -> { self.in(state: [nil, 'enabled'])}
 
@@ -29,7 +33,7 @@ class Rss::WeatherXml::QuakeRegion
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :code, :name
+        criteria = criteria.keyword_in params[:keyword], :code, :name, :yomi
       end
       criteria
     end

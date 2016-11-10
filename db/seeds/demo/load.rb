@@ -1249,19 +1249,9 @@ save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "組�
 ## -------------------------------------
 puts "# weather xml"
 
-def save_rss_weather_xml_region(data)
-  # puts data[:name]
-  cond = { site_id: @site._id, code: data[:code], name: data[:name] }
-  item = Rss::WeatherXml::QuakeRegion.find_or_create_by(cond)
-  item.attributes = data
-  item.save
-
-  item
-end
-
-CSV.table("weather_xml_regions/regions.csv").each do |row|
-  save_rss_weather_xml_region code: row[:code].to_s, name: row[:name], order: row[:code].to_i
-end
+Rss::WeatherXml::QuakeRegionImportJob.import_from_zip("weather_xml_regions/quake_regions.zip", site_id: @site)
+Rss::WeatherXml::ForecastRegionImportJob.import_from_zip("weather_xml_regions/forecaset_regions.zip", site_id: @site)
+Rss::WeatherXml::FloodRegionImportJob.import_from_zip("weather_xml_regions/flood_regions.zip", site_id: @site)
 
 save_node route: "rss/weather_xml", filename: "weather", name: "気象庁防災XML", layout_id: layouts["one"].id,
   page_state: "closed", earthquake_intensity: "5+", anpi_mail_id: ezine_anpi.id, my_anpi_post_id: anpi_node.id,
