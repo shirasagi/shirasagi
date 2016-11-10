@@ -10,6 +10,7 @@ describe "cms_pages" do
   subject(:delete_path) { delete_cms_page_path site.id, item }
   subject(:move_path) { move_cms_page_path site.id, item }
   subject(:copy_path) { copy_cms_page_path site.id, item }
+  subject(:contain_links_path) { contain_links_cms_page_path site.id, item }
 
   it "without login" do
     visit index_path
@@ -94,6 +95,13 @@ describe "cms_pages" do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#contain_links" do
+      visit delete_path
+      click_link "このページへのリンクを確認する。"
+
+      expect(current_path).to eq contain_links_path
     end
   end
 end

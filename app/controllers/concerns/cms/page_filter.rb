@@ -3,7 +3,8 @@ module Cms::PageFilter
   include Cms::CrudFilter
 
   included do
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock, :move, :copy]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :lock, :unlock, :move, :copy, :contain_links]
+    before_action :set_contain_link_items, only: [:contain_links]
   end
 
   private
@@ -27,6 +28,34 @@ module Cms::PageFilter
       @items = @model.site(@cur_site).node(@cur_node)
         .allow(:read, @cur_user)
         .order_by(updated: -1)
+    end
+
+    def set_contain_link_items
+      @contain_link_items = []
+      return unless @item.class.include?(Cms::Model::Page)
+
+      cond = []
+      if @item.respond_to?(:url) && @item.respond_to?(:full_url)
+        urls = [@item.url, @item.full_url]
+        urls.each do |url|
+          cond << { html: /href="#{Regexp.escape(url)}/ }
+        end
+      end
+
+      if @item.respond_to?(:files)
+        @item.files.each do |file|
+          cond << { html: /(href|src)="#{Regexp.escape(file.url)}/ }
+        end
+      end
+
+      if @item.respond_to?(:related_page_ids)
+        cond << { related_page_ids: { '$in' => [ @item.id ] } }
+      end
+
+      if cond.present?
+        @contain_link_items = Cms::Page.site(@cur_site).where(:id.ne => @item.id).or(cond).
+          page(params[:page]).per(50)
+      end
     end
 
   public
@@ -110,5 +139,9 @@ module Cms::PageFilter
       @item.attributes = get_params
       @copy = @item.new_clone
       render_update @copy.save, location: { action: :index }, render: { file: :copy }
+    end
+
+    def contain_links
+      #
     end
 end

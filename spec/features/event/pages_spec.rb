@@ -11,6 +11,7 @@ describe "event_pages" do
   subject(:delete_path) { delete_event_page_path site.id, node, item }
   subject(:move_path) { move_event_page_path site.id, node, item }
   subject(:copy_path) { copy_event_page_path site.id, node, item }
+  subject(:contain_links_path) { contain_links_event_page_path site.id, node, item }
 
   it "without login" do
     visit index_path
@@ -95,6 +96,13 @@ describe "event_pages" do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "#contain_links" do
+      visit delete_path
+      click_link "このページへのリンクを確認する。"
+
+      expect(current_path).to eq contain_links_path
     end
   end
 end

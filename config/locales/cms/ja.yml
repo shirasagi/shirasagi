@@ -54,6 +54,10 @@ ja:
       user: 編集者
     confirm:
       delete_item: 項目を削除してよろしいですか？
+      close: 非公開状態で保存しようとしています
+      check_contain_links: このページへのリンクを確認する。
+      contain_links_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
+      contain_links_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
     messages:
       import: インポートを開始しました
     search_contents_condition: "検索条件: %{condition}"

@@ -23,9 +23,13 @@ SS::Application.routes.draw do
     post :import, on: :collection
   end
 
+  concern :contain_links do
+    get :contain_links, on: :member
+  end
+
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud, :download, :import]
+    resources :pages, concerns: [:deletion, :crud, :download, :import, :contain_links]
   end
 
   node "event" do

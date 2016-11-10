@@ -40,6 +40,10 @@ SS::Application.routes.draw do
     get :index_closed, :on => :collection
   end
 
+  concern :contain_links do
+    get :contain_links, on: :member
+  end
+
   concern :role do
     get "role/edit" => "groups#role_edit", :on => :member
     put "role" => "groups#role_update", :on => :member
@@ -75,7 +79,7 @@ SS::Application.routes.draw do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :lock]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :contain_links]
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
@@ -160,7 +164,7 @@ SS::Application.routes.draw do
       get :delete, :on => :member
     end
     resources :nodes, concerns: :deletion
-    resources :pages, concerns: [:deletion, :copy, :move, :lock]
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :contain_links]
     resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]
     resources :import_nodes, concerns: [:deletion, :copy, :move]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }

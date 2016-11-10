@@ -1,0 +1,66 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t :basic_info %></h2></div>
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @model.t :name %></dt>
+        <dd><%= @item.send :name %></dd>
+
+        <dt><%= @model.t :basename %></dt>
+        <dd><%= @item.send :basename %></dd>
+        <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<div class="index">
+  <div class="list-head">
+    <% if @contain_link_items.present? %>
+      <%= t("cms.confirm.contain_links_exists")%>
+    <% else %>
+      <%= t("cms.confirm.contain_links_not_found")%>
+    <% end %>
+  </div>
+
+  <ul class="list-items">
+    <% @contain_link_items.each do |item| %>
+      <li class="list-item">
+        <nav class="tap-menu">
+          <%= link_to :"cms.content", item.private_show_path %>
+          <%= link_to :view_site, item.full_url, target: :_blank %>
+          <% if @cur_site.mobile_enabled? %>
+            <%= link_to :pc_preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+            <%= link_to(:mobile_preview, cms_mobile_preview_path(path: "#{item.filename}/"), target: :_blank) %>
+          <% else %>
+            <%= link_to :preview, cms_preview_path(path: "#{item.filename}/"), target: :_blank %>
+          <% end %>
+        </nav>
+        <div class="info">
+          <%= link_to item.name, item.private_show_path, class: "title" %>
+
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="filename"><%= item.filename %></span>
+            <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+            <% if item.user %>
+              <span class="user"><%= t item.user.name %></span>
+            <% end %>
+            <span class="state">
+              <%= t("views.state.#{item.status}") %>
+              <%
+                term = []
+                term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.release_date
+                term << "終了:" + item.close_date.strftime("%Y/%m/%d %H:%M") if item.close_date
+              %>
+              <%= "( #{term.join(", ")} )" if term.present? %>
+            </span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @results if @results.try(:current_page) %>
