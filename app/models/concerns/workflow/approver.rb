@@ -1,7 +1,7 @@
 module Workflow::Approver
   extend ActiveSupport::Concern
 
-  attr_accessor :workflow_reset
+  attr_accessor :workflow_reset, :workflow_cancle_request
 
   WORKFLOW_STATE_PUBLIC = "public".freeze
   WORKFLOW_STATE_CLOSED = "closed".freeze
@@ -9,6 +9,7 @@ module Workflow::Approver
   WORKFLOW_STATE_APPROVE = "approve".freeze
   WORKFLOW_STATE_PENDING = "pending".freeze
   WORKFLOW_STATE_REMAND = "remand".freeze
+  WORKFLOW_STATE_CANCELED = "canceled".freeze
 
   included do
     cattr_reader(:approver_user_class) { Cms::User }
@@ -22,13 +23,15 @@ module Workflow::Approver
     permit_params :workflow_user_id, :workflow_state, :workflow_comment
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
-    permit_params :workflow_reset
+    permit_params :workflow_reset, :workflow_cancle_request
 
-    before_validation :reset, if: -> { workflow_reset }
+    before_validation :reset_workflow, if: -> { workflow_reset }
     validate :validate_workflow_approvers_presence, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_level_consecutiveness, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_role, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_required_counts, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
+
+    before_save :cancel_request, if: -> { workflow_cancle_request }
   end
 
   def status
@@ -130,10 +133,18 @@ module Workflow::Approver
   end
 
   private
-    def reset
-      if workflow_reset
-        self.unset(:workflow_user_id, :workflow_state, :workflow_comment, :workflow_approvers)
-      end
+    def reset_workflow
+      self.unset(:workflow_user_id, :workflow_state, :workflow_comment, :workflow_approvers)
+    end
+
+    def cancel_request
+      return if state == "public"
+      return if workflow_state != "request"
+      return if @cur_user.nil? || workflow_user.nil?
+      return if @cur_user.id != workflow_user.id
+
+      reset_workflow
+      self.set(workflow_state: WORKFLOW_STATE_CANCELED)
     end
 
     def validate_workflow_approvers_presence

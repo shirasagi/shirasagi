@@ -100,37 +100,47 @@ $ ->
   <% if @item.workflow_state? %>
   <div class="mod-workflow-view">
     <dl class="see">
-      <dt><%= @model.t :workflow_user_id %></dt>
-      <dd>
-        <% if @item.workflow_member.present? %>
-          <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
-        <% elsif @item.workflow_user.present? %>
-          <%= "#{@item.workflow_user.long_name}" %>
-        <% else %>
-          <%= t("workflow.user_deleted") %>
-        <% end %>
-      </dd>
+      <% if @item.workflow_state == "canceled" %>
 
-      <dt><%= @model.t :workflow_state %></dt>
-      <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
+        <dt><%= @model.t :workflow_state %></dt>
+        <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
+        <dd><%= t("workflow.request_canceled_message") %></dd>
 
-      <% if @item.workflow_comment.present? %>
-        <dt><%= @model.t :workflow_comment %></dt>
-        <dd><%= @item.workflow_comment %></dd>
-      <% end %>
+      <% else %>
 
-      <dt><%= @model.t :workflow_approvers %></dt>
-      <dd>
-        <% @item.workflow_approvers.each do |workflow_approver| %>
-          <% user  = SS::User.where(id: workflow_approver[:user_id]).first %>
-          <% state = t("workflow.state.#{workflow_approver[:state]}") %>
-          <% if user %>
-            <%= "#{workflow_approver[:level]}:#{user.long_name}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+        <dt><%= @model.t :workflow_user_id %></dt>
+        <dd>
+          <% if @item.workflow_member.present? %>
+            <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
+          <% elsif @item.workflow_user.present? %>
+            <%= "#{@item.workflow_user.long_name}" %>
           <% else %>
-            <%= "#{workflow_approver[:level]}:#{t("workflow.user_deleted")}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+            <%= t("workflow.user_deleted") %>
           <% end %>
-        <% end if @item.workflow_approvers.present? %>
-      </dd>
+        </dd>
+
+        <dt><%= @model.t :workflow_state %></dt>
+        <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
+
+        <% if @item.workflow_comment.present? %>
+          <dt><%= @model.t :workflow_comment %></dt>
+          <dd><%= @item.workflow_comment %></dd>
+        <% end %>
+
+        <dt><%= @model.t :workflow_approvers %></dt>
+        <dd>
+          <% @item.workflow_approvers.each do |workflow_approver| %>
+            <% user  = SS::User.where(id: workflow_approver[:user_id]).first %>
+            <% state = t("workflow.state.#{workflow_approver[:state]}") %>
+            <% if user %>
+              <%= "#{workflow_approver[:level]}:#{user.long_name}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+            <% else %>
+              <%= "#{workflow_approver[:level]}:#{t("workflow.user_deleted")}：#{state}" %><br /><%= workflow_approver[:comment] %><br />
+            <% end %>
+          <% end if @item.workflow_approvers.present? %>
+        </dd>
+
+      <% end %>
     </dl>
   </div>
   <% end %>
