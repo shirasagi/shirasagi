@@ -45,11 +45,14 @@ module SS::Model::User
     # 初期パスワード警告 / nil: 無効, 1: 有効
     field :initial_password_warning, type: Integer
 
+    # Session Lifetime in seconds
+    field :session_lifetime, type: Integer
+
     embeds_ids :groups, class_name: "SS::Group"
 
     permit_params :name, :kana, :uid, :email, :password, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
     permit_params :in_password
-    permit_params :account_start_date, :account_expiration_date, :initial_password_warning
+    permit_params :account_start_date, :account_expiration_date, :initial_password_warning, :session_lifetime
 
     before_validation :encrypt_password, if: ->{ in_password.present? }
 
@@ -159,6 +162,10 @@ module SS::Model::User
     true
   end
 
+  def disabled?
+    !enabled?
+  end
+
   def initial_password_warning_options
     [
       [I18n.t('views.options.state.disabled'), ''],
@@ -168,6 +175,12 @@ module SS::Model::User
 
   def root_groups
     groups.active.map(&:root).uniq
+  end
+
+  def session_lifetime_options
+    [5, 15, 30, 60].map do |min|
+      [I18n.t("views.options.session_lifetime.#{min}min"), min * 60]
+    end
   end
 
   private

@@ -42,6 +42,11 @@ SS_Clipboard.renderCopy();
   <dd><%= @item.label :initial_password_warning %></dd>
   <% end %>
 
+  <% if @item.session_lifetime.present? %>
+  <dt><%= @model.t :session_lifetime %></dt>
+  <dd><%= @item.label(:session_lifetime) || I18n.t('datetime.distance_in_words.x_seconds', count: @item.session_lifetime) %></dd>
+  <% end %>
+
   <% main_group = @item.gws_main_group(@cur_site) %>
 
   <dt><%= @model.t :group_ids %></dt>
