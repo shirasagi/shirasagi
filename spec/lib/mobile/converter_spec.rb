@@ -177,6 +177,23 @@ describe Mobile::Converter do
           it { is_expected.to eq '<img src="/fs/1/2/3/_/thumb/sample.png">' }
         end
       end
+
+      context "when ss_file's jpg is given" do
+        context "when alt attribute is given" do
+          subject { do_convert!('<img src="/fs/1/_/sample.jpg" alt="sample">') }
+          it { is_expected.to eq '<img src="/fs/1/_/thumb/sample.jpg" alt="sample">' }
+        end
+
+        context "when title attribute is given" do
+          subject { do_convert!('<img src="/fs/1/2/_/sample.jpg" title="sample">') }
+          it { is_expected.to eq '<img src="/fs/1/2/_/thumb/sample.jpg" title="sample">' }
+        end
+
+        context "when no additoinal attributes is given" do
+          subject { do_convert!('<img src="/fs/1/2/3/_/sample.jpg">') }
+          it { is_expected.to eq '<img src="/fs/1/2/3/_/thumb/sample.jpg">' }
+        end
+      end
     end
   end
 end
