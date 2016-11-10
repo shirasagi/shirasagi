@@ -2,6 +2,9 @@
 
 <% @item.trigger_weather_alert.tap do |trigger| %>
   <dl class="see mod-rss-weather-xml-trigger-weather-alert">
+    <dt><%= Rss::WeatherXml::Trigger::WeatherAlert.t :training_state %></dt>
+    <dd><%= trigger.label :training_state %></dd>
+
     <dt><%= Rss::WeatherXml::Trigger::WeatherAlert.t :kind %></dt>
     <dd>
       <% if trigger.kind_warning == 'enabled' %>
@@ -13,8 +16,6 @@
     </dd>
 
     <dt><%= Rss::WeatherXml::Trigger::WeatherAlert.t :regions %></dt>
-    <dd>
-      地域選択
-    </dd>
+    <dd><%= br trigger.regions.pluck(:name).join("\n") %></dd>
   </dl>
 <% end %>

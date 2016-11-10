@@ -19,7 +19,7 @@
           <tbody>
           <% if action.node.present? %>
             <tr data-id="<%= action.node.id %>">
-              <td><%= f.hidden_field "my_anpi_post_id", value: action.node.id %> <%= action.node.name %></td>
+              <td><%= f.hidden_field "node_id", value: action.node.id %> <%= action.node.name %></td>
               <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
             </tr>
           <% end %>

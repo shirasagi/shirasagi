@@ -4,6 +4,7 @@ class Rss::WeatherXml::Trigger::WeatherAlert
   field :training_state, type: String
   field :kind_warning, type: String
   field :kind_advisory, type: String
+  embeds_ids :regions, class_name: "Rss::WeatherXml::ForecastRegion"
 
   def training_state_options
     %w(disabled enabled).map do |v|
