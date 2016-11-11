@@ -11,12 +11,14 @@ class Rss::WeatherXml::QuakeRegion
   seqid :id
   field :code, type: String
   field :name, type: String
+  field :yomi, type: String
   field :order, type: Integer, default: 0
   field :state, type: String, default: 'enabled'
   validates :code, presence: true, length: { maximum: 40 }, uniqueness: { scope: :site_id }
   validates :name, presence: true, length: { maximum: 40 }
+  validates :yomi, length: { maximum: 40 }
   validates :state, inclusion: { in: %w(enabled disabled), allow_blank: true }
-  permit_params :name, :code, :order
+  permit_params :code, :name, :yomi, :order, :state
 
   index({ site_id: 1, code: 1 }, { unique: true })
 
@@ -31,7 +33,7 @@ class Rss::WeatherXml::QuakeRegion
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :code, :name
+        criteria = criteria.keyword_in params[:keyword], :code, :name, :yomi
       end
       criteria
     end

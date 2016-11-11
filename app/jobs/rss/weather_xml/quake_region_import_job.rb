@@ -13,9 +13,11 @@ class Rss::WeatherXml::QuakeRegionImportJob < Cms::ApplicationJob
     def import_row(row)
       code = row[:code]
       name = row[:name]
+      yomi = row[:yomi]
 
       item = Rss::WeatherXml::QuakeRegion.site(self.site).where(code: code).first_or_create
       item.name = name
+      item.yomi = yomi
       item.order = code.to_i
       item.save!
     end

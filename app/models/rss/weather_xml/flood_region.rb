@@ -16,7 +16,7 @@ class Rss::WeatherXml::FloodRegion
   validates :name, presence: true, length: { maximum: 40 }
   validates :yomi, length: { maximum: 40 }
   validates :state, inclusion: { in: %w(enabled disabled), allow_blank: true }
-  permit_params :name, :yomi, :code, :order
+  permit_params :code, :name, :yomi, :order, :state
 
   index({ site_id: 1, code: 1 }, { unique: true })
 
