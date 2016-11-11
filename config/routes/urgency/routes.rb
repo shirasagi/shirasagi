@@ -18,4 +18,9 @@ SS::Application.routes.draw do
     get "layout/layout-:layout.html" => "public#index", cell: "nodes/layout", layout: /\d+/
   end
 
+  namespace "urgency", path: ".s:site/urgency" do
+    namespace "apis" do
+      get "layouts" => "layouts#index"
+    end
+  end
 end

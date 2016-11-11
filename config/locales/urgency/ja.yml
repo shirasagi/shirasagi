@@ -8,6 +8,11 @@ ja:
     errors:
       index_page_not_found: "同階層にindex.htmlがありません。"
       default_layout_not_found: "通常時レイアウトが設定されていません。"
+    apis:
+      layouts:
+        index: レイアウトを選択する
+        search: レイアウトを検索
+        select: レイアウトを設定する
 
   modules:
     urgency: 緊急災害レイアウト
