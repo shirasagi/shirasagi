@@ -11,13 +11,15 @@ class Rss::WeatherXml::TsunamiRegionImportJob < Cms::ApplicationJob
     end
 
     def import_row(row)
-      code = row[:code]
-      name = row[:name]
-      yomi = row[:yomi]
+      code = row[:code].presence
+      name = row[:name].presence
+      return if code.blank? || name.blank?
 
-      item = Rss::WeatherXml::TsunamiRegion.site(self.site).where(code: code).first_or_create
-      item.name = name
-      item.yomi = yomi
+      item = Rss::WeatherXml::TsunamiRegion.site(self.site).where(code: code, name: name).first_or_create
+      item.name = row[:name].presence
+      item.yomi = row[:yomi].presence
+      item.order = row[:order].presence
+      item.state = row[:state].presence
       item.save!
     end
 end

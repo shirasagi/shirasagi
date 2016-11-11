@@ -68,6 +68,16 @@ ja:
       rss/page: RSS取込
       rss/weather_xml: 気象庁防災情報XML
 
+  job:
+    models:
+      rss/import_job: RSS取込
+      rss/import_from_file_job: RSSファイル取込
+      rss/import_weather_xml_job: 気象庁防災情報XML取込
+      rss/weather_xml/quake_region_import_job: 地震情報区域取込
+      rss/weather_xml/tsunami_region_import_job: 津波予報区取込
+      rss/weather_xml/forecast_region_import_job: 気象情報区域取込
+      rss/weather_xml/flood_region_import_job: 河川洪水予報区域取込
+
   mongoid:
     models:
       rss/page: フィード

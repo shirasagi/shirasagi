@@ -7,6 +7,10 @@ SS::Application.routes.draw do
     delete action: :destroy_all, on: :collection
   end
 
+  concern :download do
+    get :download, on: :collection
+  end
+
   concern :import do
     match :import, via: [:get, :post], on: :collection
   end
@@ -28,7 +32,7 @@ SS::Application.routes.draw do
     resources :weather_xmls, concerns: [:deletion]
     namespace 'weather_xml' do
       resources :quake_regions, concerns: [:deletion]
-      resources :tsunami_regions, concerns: [:deletion]
+      resources :tsunami_regions, concerns: [:deletion, :download, :import]
       resources :forecast_regions, concerns: [:deletion]
       resources :flood_regions, concerns: [:deletion]
       resources :filters, concerns: [:deletion]
