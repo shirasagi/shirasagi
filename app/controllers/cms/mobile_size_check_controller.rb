@@ -45,7 +45,11 @@ class Cms::MobileSizeCheckController < ApplicationController
 
     end
     if size > mobile_size
-      result[:errors] << I18n.t("errors.messages.too_bigsize")
+      result[:errors] << I18n.t(
+        "errors.messages.too_bigsize",
+        total: view_context.number_to_human_size(size),
+        mobile_size: view_context.number_to_human_size(mobile_size)
+      )
     end
     result[:size] = size
 

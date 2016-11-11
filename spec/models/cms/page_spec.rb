@@ -58,11 +58,10 @@ describe Cms::Page do
         end
 
         fill_in_ckeditor "item_html", with: html_text
-
         click_on I18n.t("cms.mobile_size_check")
-
+        sleep 1
         expect(page).to have_css "form #errorMobileChecker"
-        expect(page).to have_selector "form #errorMobileChecker p.error", text: I18n.t("errors.messages.mobile_size_check_failed_to_size")
+        expect(page).to have_selector "form #errorMobileChecker p.error", text: /携帯で表示する場合、本文のデータサイズが大きすぎます。(.+)/i
       end
 
       it "on click check_size_button html_size ok" do
@@ -73,8 +72,9 @@ describe Cms::Page do
         visit new_cms_page_path(site)
 
         fill_in_ckeditor "item_html", with: html_text
-
         click_on I18n.t("cms.mobile_size_check")
+        sleep 1
+
         expect(page).to have_css "form #errorMobileChecker"
         expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
       end
@@ -85,6 +85,9 @@ describe Cms::Page do
       let(:test_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
 
       it "mobile_size 1" do
+        site.mobile_state = "enabled"
+        site.mobile_size = 1_024
+        site.save!
 
         html_text = ""
         html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"
@@ -93,10 +96,11 @@ describe Cms::Page do
         visit new_cms_page_path(site)
 
         fill_in_ckeditor "item_html", with: html_text
-
         click_on I18n.t("cms.mobile_size_check")
+        sleep 1
+
         expect(page).to have_css "form #errorMobileChecker"
-        expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.too_bigsize')
+        expect(page).to have_selector "form #errorMobileChecker p", text: /携帯電話で表示する場合、ファイルサイズ合計(.+)/i
       end
 
       it "mobile_size 100" do
@@ -112,8 +116,8 @@ describe Cms::Page do
         visit new_cms_page_path(site)
 
         fill_in_ckeditor "item_html", with: html_text
-
         click_on I18n.t("cms.mobile_size_check")
+        sleep 1
         expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
       end
 
@@ -132,6 +136,7 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
+        sleep 1
         expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
 
         3.times.each do
@@ -140,11 +145,17 @@ describe Cms::Page do
 
         fill_in_ckeditor "item_html", with: html_text
         click_on I18n.t("cms.mobile_size_check")
+        sleep 1
         expect(page).to have_selector "#errorMobileChecker p", text: I18n.t('errors.messages.mobile_size_check_size')
 
       end
 
       it "many different files in html" do
+
+        site.mobile_state = "enabled"
+        site.mobile_size = 20 * 1_024
+        site.save!
+        site.reload
 
         file2 = Cms::File.new model: "cms/file", site_id: site.id
         file_path = Rails.root.join("spec", "fixtures", "ss", "file", "keyvisual.jpg")
@@ -161,9 +172,9 @@ describe Cms::Page do
         visit new_cms_page_path(site)
 
         fill_in_ckeditor "item_html", with: html_text
-
         click_on I18n.t("cms.mobile_size_check")
-        expect(page).to have_selector "form #errorMobileChecker p", text: I18n.t('errors.messages.too_bigsize')
+        sleep 1
+        expect(page).to have_selector "form #errorMobileChecker p", text: /携帯電話で表示する場合、ファイルサイズ合計(.+)/i
       end
     end
   end
@@ -173,5 +184,8 @@ describe Cms::Page do
       $('textarea##{locator}').text(#{content});
       CKEDITOR.instances['#{locator}'].setData(#{content});
     SCRIPT
+
+    sleep 1
   end
+
 end

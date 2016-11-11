@@ -585,7 +585,7 @@ class @Mobile_Size_Checker
     SizeCheckError    : "<%= I18n.t('errors.messages.mobile_size_check_failed_to_size') %>"
   }
 
-  @error   = ""
+  @error   = []
   @url     = "/.cms/mobile_size_check/check.json"
   @rootUrl = ""
   @imgs    = []
@@ -607,8 +607,10 @@ class @Mobile_Size_Checker
       Mobile_Size_Checker.check html, true, ()->
         result = Mobile_Size_Checker.result_open()
 
-        if Mobile_Size_Checker.error != ""
-          result.append(Mobile_Size_Checker.error)
+        if Mobile_Size_Checker.error.length > 0
+          for err in Mobile_Size_Checker.error
+            result.append("<p>#{err}</p>")
+
         else
           result.append("<p>" + Mobile_Size_Checker.message["mobile_check"] + "</p>")
 
@@ -664,7 +666,14 @@ class @Mobile_Size_Checker
     size = Mobile_Size_Checker.get_str_byte(html)
     console.log("mobile_size=#{mobile_size}, size=#{size}")
     if mobile_size < size
-      Mobile_Size_Checker.error = "<p class=\"error\">" + Mobile_Size_Checker.message["SizeCheckError"] + "</p>"
+      err_str = "<p class=\"error\">"
+      err_str += Mobile_Size_Checker.message["SizeCheckError"]
+      err_str += "(本文サイズ：#{parseInt(size/1024)}KB、"
+      err_str += "制限サイズ：#{Mobile_Size_Checker.check_size})"
+      err_str += "</p>"
+
+      Mobile_Size_Checker.error = [err_str]
+
       complete()
       return
 
@@ -697,14 +706,13 @@ class @Mobile_Size_Checker
       async: async,
       success: (res, status) ->
         if res["errors"].length > 0
-          for err in res["errors"]
-            Mobile_Size_Checker.error += "<p>" + err + "</p>"
+          Mobile_Size_Checker.error = res["errors"]
 
       error: (xhr, status, error) ->
         str_err = "<p>"
         str_err += Mobile_Size_Checker.message["SizeCheckError"]
         str_err += "</p>"
-        Mobile_Size_Checker.error = str_err
+        Mobile_Size_Checker.error = [str_err]
         return
       complete: (xhr, status) ->
         complete()
@@ -716,17 +724,19 @@ class @Mobile_Size_Checker
     Mobile_Size_Checker.reset()
     if Mobile_Size_Checker.enabled
       Mobile_Size_Checker.check html, false, ()->
-        if Mobile_Size_Checker.error != ""
-          errors = [{
-            code: ""
-            msg: Mobile_Size_Checker.error
-            detail: Mobile_Size_Checker.error
-          }]
-          Syntax_Checker.pushError(errors)
+        if Mobile_Size_Checker.error.length > 0
           result = Mobile_Size_Checker.result_open()
-          result.append(Mobile_Size_Checker.error)
-          Mobile_Size_Checker.result_close(result)
+          errors = []
+          for err in Mobile_Size_Checker.error
+            errors.push({
+              code: ""
+              msg: err
+              detail: err
+            })
+            result.append("<p>#{err}</p>")
 
+          Syntax_Checker.pushError(errors)
+          Mobile_Size_Checker.result_close(result)
 
   @validateHtml: (form, submit)->
     count = Syntax_Checker.errorCount
