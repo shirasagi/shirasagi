@@ -4,4 +4,10 @@
 
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :trigger_ids %></dt>
+  <dd><%= @item.triggers.first.try(:name) %></dd>
+
+  <dt><%= @model.t :action_ids %></dt>
+  <dd><%= @item.actions.first.try(:name) %></dd>
 </dl>

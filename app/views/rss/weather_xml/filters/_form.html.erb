@@ -4,4 +4,10 @@
 
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
+
+  <dt><%= @model.t :trigger_ids %><%= @model.tt :trigger_ids %></dt>
+  <dd><%= select_tag "#{f.object_name}[trigger_ids][]", options_for_select(@item.trigger_options, @item.triggers.first.try(:id)), include_blank: true %></dd>
+
+  <dt><%= @model.t :action_ids %><%= @model.tt :action_ids %></dt>
+  <dd><%= select_tag "#{f.object_name}[action_ids][]", options_for_select(@item.action_options, @item.actions.first.try(:id)), include_blank: true %></dd>
 </dl>
