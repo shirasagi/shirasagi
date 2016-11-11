@@ -31,7 +31,7 @@ SS::Application.routes.draw do
     resources :pages, concerns: [:deletion, :import]
     resources :weather_xmls, concerns: [:deletion]
     namespace 'weather_xml' do
-      resources :quake_regions, concerns: [:deletion]
+      resources :quake_regions, concerns: [:deletion, :download, :import]
       resources :tsunami_regions, concerns: [:deletion, :download, :import]
       resources :forecast_regions, concerns: [:deletion]
       resources :flood_regions, concerns: [:deletion]

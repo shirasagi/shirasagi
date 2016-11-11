@@ -15,8 +15,8 @@ class Rss::WeatherXml::TsunamiRegionImportJob < Cms::ApplicationJob
       name = row[:name].presence
       return if code.blank? || name.blank?
 
-      item = Rss::WeatherXml::TsunamiRegion.site(self.site).where(code: code, name: name).first_or_create
-      item.name = row[:name].presence
+      item = Rss::WeatherXml::TsunamiRegion.site(self.site).where(code: code).first_or_create(name: name)
+      item.name = name
       item.yomi = row[:yomi].presence
       item.order = row[:order].presence
       item.state = row[:state].presence
