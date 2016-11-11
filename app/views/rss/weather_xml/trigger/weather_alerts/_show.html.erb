@@ -15,6 +15,6 @@
     <% end %>
   </dd>
 
-  <dt><%= @model.t :regions %></dt>
-  <dd><%= br @item.regions.pluck(:name).join("\n") %></dd>
+  <dt><%= @model.t :target_region_ids %></dt>
+  <dd><%= br @item.target_regions.pluck(:name).join("\n") %></dd>
 </dl>

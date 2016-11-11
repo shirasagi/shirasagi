@@ -7,17 +7,17 @@
 
   <dt><%= @model.t :kind %><%= @model.tt :kind %></dt>
   <dd>
-    <label for="item_trigger_weather_alert_kind_warning">
+    <label for="item_kind_warning">
       <%= f.check_box :kind_warning, { checked: @item.kind_warning == 'enabled' }, 'enabled', 'disabled' %> 警報
     </label>
-    <label for="item_trigger_weather_alert_kind_advisory">
+    <label for="item_kind_advisory">
       <%= f.check_box :kind_advisory, { checked: @item.kind_advisory == 'enabled' }, 'enabled', 'disabled' %> 注意報
     </label>
   </dd>
 
   <dt><%= @model.t :regions %><%= @model.tt :regions %></dt>
   <dd>
-    <%= f.hidden_field "region_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to :"rss.apis.weather_xml/forecast_regions.index", rss_apis_weather_xml_forecast_regions_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -31,7 +31,7 @@
       <tbody>
       <% @item.target_regions.each do |item| %>
         <tr data-id="<%= item.id %>">
-          <td><%= f.hidden_field "region_ids[]", value: item.id %> <%= item.name %></td>
+          <td><%= f.hidden_field "target_region_ids[]", value: item.id %> <%= item.name %></td>
           <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>
