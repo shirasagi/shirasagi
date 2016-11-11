@@ -15,6 +15,7 @@ SS::Application.routes.draw do
     namespace "apis" do
       namespace 'weather_xml' do
         get "quake_regions" => "quake_regions#index"
+        get "tsunami_regions" => "tsunami_regions#index"
         get "forecast_regions" => "forecast_regions#index"
         get "flood_regions" => "flood_regions#index"
       end
