@@ -1250,6 +1250,7 @@ save_page route: "cms/page", filename: "shisei/soshiki/index.html", name: "çµ„ç¹
 puts "# weather xml"
 
 Rss::WeatherXml::QuakeRegionImportJob.import_from_zip("weather_xml_regions/quake_regions.zip", site_id: @site)
+Rss::WeatherXml::TsunamiRegionImportJob.import_from_zip("weather_xml_regions/tsunami_regions.zip", site_id: @site)
 Rss::WeatherXml::ForecastRegionImportJob.import_from_zip("weather_xml_regions/forecaset_regions.zip", site_id: @site)
 Rss::WeatherXml::FloodRegionImportJob.import_from_zip("weather_xml_regions/flood_regions.zip", site_id: @site)
 
