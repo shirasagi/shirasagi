@@ -15,6 +15,7 @@ ja:
         import: 取り込みますが、よろしいですか？
       button:
         import: 取込
+      manage_filter: フィルターを管理する
     messages:
       job_started: |-
         取り込みジョブを開始しました。

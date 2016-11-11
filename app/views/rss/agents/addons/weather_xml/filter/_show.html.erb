@@ -1,6 +1,17 @@
 <dl class="see mod-rss-weather-xml-filter">
   <dt class="wide"></dt>
   <dd class="wide">
-    <%= link_to 'フィルターを管理する', rss_weather_xml_filters_path, class: :btn %>
+    <%= link_to :'rss.views.manage_filter', rss_weather_xml_filters_path, class: :btn %>
+  </dd>
+  <dd class="wide">
+    <table class="index">
+      <tbody>
+      <% @item.filters.each do |filter| %>
+      <tr>
+        <td><%= link_to filter.name, rss_weather_xml_filter_path(id: filter.id) %></td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
   </dd>
 </dl>
