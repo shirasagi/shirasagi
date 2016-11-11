@@ -34,7 +34,7 @@ SS::Application.routes.draw do
       resources :quake_regions, concerns: [:deletion, :download, :import]
       resources :tsunami_regions, concerns: [:deletion, :download, :import]
       resources :forecast_regions, concerns: [:deletion, :download, :import]
-      resources :flood_regions, concerns: [:deletion]
+      resources :flood_regions, concerns: [:deletion, :download, :import]
       resources :filters, concerns: [:deletion]
       namespace 'trigger' do
         resources :bases, concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
