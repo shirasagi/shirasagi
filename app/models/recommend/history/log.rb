@@ -1,6 +1,7 @@
 class Recommend::History::Log
   include SS::Document
   include SS::Reference::Site
+  include Cms::SitePermission
 
   index({ created: -1 })
 
@@ -18,6 +19,8 @@ class Recommend::History::Log
 
   default_scope -> { order_by(created: -1) }
 
+  set_permission_name "cms_sites", :edit
+
   def set_token
     return if token
     self.token = SecureRandom.hex(16)
@@ -26,11 +29,11 @@ class Recommend::History::Log
   def content
     filename = path.sub(/^\//, "")
     page = Cms::Page.site(site).where(filename: filename).first
-    return page if page
+    return page if page && page.public?
 
     filename = filename.sub(/\/index\.html$/, "")
     node = Cms::Node.site(site).where(filename: filename).first
-    return node if node
+    return node if node && node.public?
 
     return nil
   end
@@ -64,6 +67,74 @@ class Recommend::History::Log
       end
 
       h
+    end
+
+    def to_path_axis_aggregation(match = {})
+      pipes = []
+      pipes << { "$match" => match } if match.present?
+      pipes << { "$group" =>
+        {
+          "_id" => { "path" => "$path", "token" => "$token" },
+          "count" => { "$sum" => 1 }
+        }
+      }
+      pipes << { "$group" =>
+        {
+          "_id" => { "path" => "$_id.path" },
+          "tokens" => { "$push" => { token: "$_id.token", count: "$count" } }
+        }
+      }
+      aggregation = Recommend::History::Log.collection.aggregate(pipes)
+
+      prefs = {}
+      aggregation = aggregation.each do |i|
+        path = i["_id"]["path"]
+
+        tokens = {}
+        i["tokens"].each do |h|
+          token = h["token"]
+          count = h["count"]
+          tokens[token] = count
+        end
+
+        prefs[path] = tokens
+      end
+
+      prefs
+    end
+
+    def to_token_axis_aggregation(match = {})
+      pipes = []
+      pipes << { "$match" => match } if match.present?
+      pipes << { "$group" =>
+        {
+          "_id" => { "path" => "$path", "token" => "$token" },
+          "count" => { "$sum" => 1 }
+        }
+      }
+      pipes << { "$group" =>
+        {
+          "_id" => { "token" => "$_id.token" },
+          "paths" => { "$push" => { path: "$_id.path", count: "$count" } }
+        }
+      }
+      aggregation = Recommend::History::Log.collection.aggregate(pipes)
+
+      prefs = {}
+      aggregation = aggregation.each do |i|
+        token = i["_id"]["token"]
+
+        paths = {}
+        i["paths"].each do |h|
+          path = h["path"]
+          count = h["count"]
+          paths[path] = count
+        end
+
+        prefs[token] = paths
+      end
+
+      prefs
     end
   end
 end

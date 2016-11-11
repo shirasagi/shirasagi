@@ -1,9 +1,38 @@
 ja:
+  recommend:
+    main: レコメンド機能
+    tokens: アクセス（トークン）
+    paths: アクセス（パス）
+    scores: 類似度スコア
+
   cms:
     parts:
       recommend/history: 閲覧履歴
+      recommend/similarity: 関連ページ
 
   modules:
     recommend: レコメンド
     addons:
       recommend/content_list: リスト表示
+
+  mongoid:
+    attributes:
+      recommend/addon/content_list:
+        exclude_paths: 除外パス
+
+  tooltip:
+    recommend/addon/content_list:
+      exclude_paths:
+        - 一覧表示から除外するリンクを設定できます。
+        - パスを改行区切りで入力してください。
+        - |-
+        - |-
+          入力例：
+          /page.html
+          /docs/page.html
+
+  job:
+    models:
+      recommend/create_similarity_scores_job: レコメンドスコア計算
+      recommend/destroy_similarity_scores_job: レコメンドスコア削除
+      recommend/destroy_history_logs_job: レコメンドログ削除
