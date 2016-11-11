@@ -4,4 +4,7 @@
 
   <dt><%= @model.t :training_state %></dt>
   <dd><%= @item.label :training_state %></dd>
+
+  <dt><%= @model.t :target_region_ids %></dt>
+  <dd><%= br @item.target_regions.pluck(:name).join("\n") %></dd>
 </dl>
