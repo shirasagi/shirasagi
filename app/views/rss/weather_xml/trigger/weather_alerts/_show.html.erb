@@ -1,0 +1,20 @@
+<dl class="see mod-rss-weather-xml-trigger-weather-alert">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :training_state %></dt>
+  <dd><%= @item.label :training_state %></dd>
+
+  <dt><%= @model.t :kind %></dt>
+  <dd>
+    <% if @item.kind_warning == 'enabled' %>
+      警報
+    <% end %>
+    <% if @item.kind_advisory == 'enabled' %>
+      注意報
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :regions %></dt>
+  <dd><%= br @item.regions.pluck(:name).join("\n") %></dd>
+</dl>

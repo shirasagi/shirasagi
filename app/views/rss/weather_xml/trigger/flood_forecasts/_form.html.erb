@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :training_state %><%= @model.tt :training_state %></dt>
+  <dd><%= f.select :training_state, @item.training_state_options %></dd>
+</dl>

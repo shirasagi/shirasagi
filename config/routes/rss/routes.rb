@@ -26,10 +26,25 @@ SS::Application.routes.draw do
     resources :pages, concerns: [:deletion, :import]
     resources :weather_xmls, concerns: [:deletion]
     namespace 'weather_xml' do
-      resources :quake_regions, concerns: [:deletion, :import]
-      resources :forecast_regions, concerns: [:deletion, :import]
-      resources :flood_regions, concerns: [:deletion, :import]
+      resources :quake_regions, concerns: [:deletion]
+      resources :forecast_regions, concerns: [:deletion]
+      resources :flood_regions, concerns: [:deletion]
       resources :filters, concerns: [:deletion]
+      namespace 'trigger' do
+        resources :bases, concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
+        resources :quake_intensity_flashes, concerns: [:deletion]
+        resources :tsunami_alerts, concerns: [:deletion]
+        resources :flood_forecasts, concerns: [:deletion]
+        resources :weather_alerts, concerns: [:deletion]
+        resources :landslide_infos, concerns: [:deletion]
+        resources :flood_forecasts, concerns: [:deletion]
+      end
+      namespace 'action' do
+        resources :bases, concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
+        resources :change_urgencies, concerns: [:deletion]
+        resources :publish_pages, concerns: [:deletion]
+        resources :send_mails, concerns: [:deletion]
+      end
     end
   end
 

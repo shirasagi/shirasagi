@@ -4,7 +4,6 @@ class Rss::WeatherXml::QuakeRegionsController < ApplicationController
 
   model Rss::WeatherXml::QuakeRegion
 
-  append_view_path "app/views/cms/pages"
   navi_view "rss/main/navi"
 
   private

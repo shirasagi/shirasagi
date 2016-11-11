@@ -1,10 +1,9 @@
-class Rss::WeatherXml::Action::PublishPage
-  include SS::Document
+class Rss::WeatherXml::Action::PublishPage < Rss::WeatherXml::Action::Base
+  belongs_to :publish_to, class_name: "Cms::Node"
+  field :publish_state, type: String
+  permit_params :publish_to_id, :publish_state
 
-  belongs_to :node, class_name: "Cms::Node"
-  field :state, type: String
-
-  def state_options
+  def publish_state_options
     %w(draft public).map { |v| [ I18n.t("views.options.state.#{v}"), v ] }
   end
 end

@@ -7,6 +7,8 @@ ja:
     weather_xml/forecast_region: 気象情報区域
     weather_xml/flood_region: 河川洪水予報区域
     weather_xml/filter: 気象庁防災情報XMLフィルター
+    weather_xml/trigger: 受信条件
+    weather_xml/action: 受信時の動作
 
     views:
       confirm:
@@ -67,6 +69,16 @@ ja:
       rss/weather_xml/quake_region: 気象庁地震情報区域
       rss/weather_xml/forecast_region: 気象庁気象情報区域
       rss/weather_xml/flood_region: 気象庁河川洪水予報区域
+      rss/weather_xml/trigger/base: 受信条件
+      rss/weather_xml/trigger/quake_intensity_flash: 震度速報
+      rss/weather_xml/trigger/tsunami_alert: 津波警報
+      rss/weather_xml/trigger/weather_alert: 気象特別警報・警報
+      rss/weather_xml/trigger/landslide_info: 土砂災害警戒情報
+      rss/weather_xml/trigger/flood_forecast: 指定河川洪水予報
+      rss/weather_xml/action/base: 受信時の動作
+      rss/weather_xml/action/publish_page: 記事ページ作成
+      rss/weather_xml/action/send_mail: メール送信
+      rss/weather_xml/action/change_urgency: 緊急災害レイアウト切替
     attributes:
       rss/node/page:
       rss/page:

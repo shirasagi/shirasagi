@@ -4,7 +4,6 @@ class Rss::WeatherXml::FloodRegionsController < ApplicationController
 
   model Rss::WeatherXml::FloodRegion
 
-  append_view_path "app/views/cms/pages"
   navi_view "rss/main/navi"
 
   private

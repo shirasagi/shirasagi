@@ -31,6 +31,7 @@ ja:
     button:
       login: ログイン
       save: 保存
+      new: 新規作成
       draft_save: 下書き保存
       closed_save: 非公開保存
       publish_save: 公開保存

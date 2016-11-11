@@ -1,14 +1,12 @@
 class Rss::WeatherXml::Filter
   include SS::Document
-  include Rss::Addon::WeatherXml::Trigger::WeatherAlert
-  include Rss::Addon::WeatherXml::Action::PublishPage
 
   embedded_in :node, class_name: "Rss::Node::WeatherXml", inverse_of: :filter
   field :name, type: String
   field :state, type: String
-  field :trigger_type, type: String
-  field :action_type, type: String
-  permit_params :name, :state, :trigger_type, :action_type
+  belongs_to :trigger, class_name: "Rss::WeatherXml::Trigger::Base"
+  belongs_to :action, class_name: "Rss::WeatherXml::Action::Base"
+  permit_params :name, :state, :trigger_id, :action_id
 
   class << self
     def search(params = {})

@@ -1,14 +1,7 @@
-class Rss::WeatherXml::Trigger::WeatherAlert
-  include SS::Document
-
-  field :training_state, type: String
+class Rss::WeatherXml::Trigger::WeatherAlert < Rss::WeatherXml::Trigger::Base
   field :kind_warning, type: String
   field :kind_advisory, type: String
-  embeds_ids :regions, class_name: "Rss::WeatherXml::ForecastRegion"
-
-  def training_state_options
-    %w(disabled enabled).map do |v|
-      [ I18n.t("views.options.state.#{v}"), v ]
-    end
-  end
+  embeds_ids :target_regions, class_name: "Rss::WeatherXml::ForecastRegion"
+  permit_params :kind_warning, :kind_advisory
+  permit_params target_region_ids: []
 end

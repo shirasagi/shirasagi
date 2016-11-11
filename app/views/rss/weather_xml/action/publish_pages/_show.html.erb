@@ -1,0 +1,10 @@
+<dl class="see mod-rss-weather-xml-action-publish-page">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :publish_to_id %></dt>
+  <dd><%= @item.publish_to.try(:name) %></dd>
+
+  <dt><%= @model.t :publish_state %></dt>
+  <dd><%= @item.label :publish_state %></dd>
+</dl>
