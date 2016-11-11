@@ -33,7 +33,7 @@ SS::Application.routes.draw do
     namespace 'weather_xml' do
       resources :quake_regions, concerns: [:deletion, :download, :import]
       resources :tsunami_regions, concerns: [:deletion, :download, :import]
-      resources :forecast_regions, concerns: [:deletion]
+      resources :forecast_regions, concerns: [:deletion, :download, :import]
       resources :flood_regions, concerns: [:deletion]
       resources :filters, concerns: [:deletion]
       namespace 'trigger' do

@@ -17,7 +17,7 @@ class Rss::WeatherXml::ForecastRegion
   validates :code, presence: true, length: { maximum: 40 }, uniqueness: { scope: :site_id }
   validates :name, presence: true, length: { maximum: 40 }
   validates :yomi, length: { maximum: 40 }
-  validates :short_name, presence: true, length: { maximum: 40 }
+  validates :short_name, length: { maximum: 40 }
   validates :short_yomi, length: { maximum: 40 }
   validates :state, inclusion: { in: %w(enabled disabled), allow_blank: true }
   permit_params :code, :name, :yomi, :short_name, :short_yomi, :order, :state
