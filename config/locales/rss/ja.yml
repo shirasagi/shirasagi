@@ -4,6 +4,7 @@ ja:
     weather_xml_page: 気象庁防災情報XML
     weather_xml/region: 気象庁区域
     weather_xml/quake_region: 地震情報区域
+    weather_xml/tsunami_region: 津波予報区
     weather_xml/forecast_region: 気象情報区域
     weather_xml/flood_region: 河川洪水予報区域
     weather_xml/filter: 気象庁防災情報XMLフィルター
