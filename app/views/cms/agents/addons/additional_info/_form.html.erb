@@ -35,6 +35,9 @@ $ ->
     return false
 
 <% end %>
+<%= jquery do %>
+    SS_AddonTabs.hide(".mod-cms-additional-info");
+<% end %>
 
 <dl class="see mod-cms-additional-info">
   <dt class="field"><%= @item.t :field %><%= @item.tt :field %></dt>
