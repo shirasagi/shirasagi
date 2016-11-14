@@ -37,7 +37,8 @@ Event_Form.render();
 </div>
   <footer class="send">
     <%= submit_tag t('event.submit.search'), name: nil %>
-    <%= submit_tag t('event.submit.reset'), name: nil, class: :reset %>
+    <a href="<%= @cur_node.url %>" class="btn">リセット</a>
+    <!-- <%= submit_tag t('event.submit.reset'), name: nil, type: :reset, class: :search_clear %> -->
   </footer>
 <% end %>
 

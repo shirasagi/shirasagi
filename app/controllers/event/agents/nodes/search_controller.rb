@@ -9,7 +9,9 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     if @cur_node.parent
       @categories = Cms::Node.site(@cur_site).where({:id.in => @cur_node.parent.st_category_ids}).sort(filename: 1)
     end
-    if params.has_key?(:search_keyword)
+    if params[:search_keyword].present? ||
+        params[:event_dates].present? ||
+        params[:category_ids].present?
       list_events
     end
     @keyword = params[:search_keyword]

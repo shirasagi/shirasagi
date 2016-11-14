@@ -31,7 +31,7 @@ SS::Application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
 
     resources :pages, concerns: [:deletion, :crud, :download, :import]
-    get "search/(index.:format)" => "search#index", cell: "nodes/search", as: "search"
+    resources :searches, only: [:index]
   end
 
   node "event" do

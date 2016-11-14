@@ -16,14 +16,22 @@ module Event::Part
 
     default_scope ->{ where(route: "event/search") }
 
+    def find_search_node
+      # first, look parent
+      parent = self.parent
+      return parent if parent.route == 'event/search'
+
+      # second, lookup siblings node
+      Event::Node::Search.site(self.site).and_public.
+        where(filename: /^#{Regexp.escape(parent.filename)}/, depth: self.depth).first
+    end
+
     def search_url
-      search_path = Event::Node::Search.where(:route => self.route).first.filename
-      search_url = "/#{search_path}/"
-      search_url
+      find_search_node.try(:url)
     end
 
     def cate_ids
-      Event::Node::Search.where(:route => self.route).first.parent.st_category_ids
+      find_search_node.parent.st_category_ids
     end
   end
 end
