@@ -3,16 +3,18 @@
 
   <ul class="list-items ss-messages webmail-mails">
     <% @items.each do |item| %>
-    <li class="list-item <%= item.unseen? ? 'seen' : 'unseen'%>">
+    <li class="list-item <%= item.seen? ? 'seen' : 'unseen' %>">
       <label class="check">
         <input type="checkbox" name="ids[]" value="<%= item.uid %>" />
       </label>
+      <div class="label-star">
+        <span class="icon-star icon-star--<%= item.star? ? 'on' : 'off' %>"></span>
+      </div>
+      <div class="label-attachment">
+        <span class="icon-attachment icon-attachment--<%= item.attachments? ? 'on' : 'off' %>"></span>
+      </div>
       <div class="info">
-        <% if item.attachments? %>
-          <span class="icon-attachment"></span>
-        <% end %>
         <%= link_to item.subject, { action: :show, id: item.uid }, class: "title" %>
-
         <div class="meta">
           <span class="datetime"><%= item.date.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="from"><%= item.from %></span>

@@ -6,7 +6,8 @@ class Webmail::MailsController < ApplicationController
   model Webmail::Mail
 
   before_action :set_mailbox
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :attachment, :downlowd]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy,
+                                  :attachment, :download, :header_view, :source_view]
 
   private
     def set_crumbs
@@ -40,16 +41,62 @@ class Webmail::MailsController < ApplicationController
     end
 
     def show
-      @item.set_seen
+      @item.set_seen if @item.unseen?
     end
 
     def attachment
       @item.attachments.each_with_index do |at, idx|
         next unless idx == params[:idx].to_i
-        return send_data at.read, filename: at.filename, content_type: at.content_type
+
+        disposition = at.content_type.start_with?('image') ? :inline : :attachment
+        return send_data at.read, filename: at.filename, content_type: at.content_type, disposition: disposition
       end
 
       raise '404'
+    end
+
+    def download
+      data = @item.rfc822
+      name = @item.subject + '.eml'
+      send_data data, filename: name, content_type: 'message/rfc822', disposition: :attachment
+    end
+
+    def header_view
+      data = @item.rfc822.sub(/(\r\n|\n){2}.*/m, '')
+      render inline: ApplicationController.helpers.br(data), layout: false
+    end
+
+    def source_view
+      data = @item.rfc822
+      render inline: ApplicationController.helpers.br(data), layout: false
+    end
+
+    def set_seen
+      change_flag(:set_seen)
+    end
+
+    def unset_seen
+      change_flag(:unset_seen)
+    end
+
+    def set_star
+      change_flag(:set_star)
+    end
+
+    def unset_star
+      change_flag(:unset_star)
+    end
+
+    def change_flag(action)
+      (params[:ids] || [params[:id]]).each do |id|
+        item = @model.where(mailbox: @mailbox).imap_find(id.to_i) rescue nil
+        item.try(action) if item
+      end
+
+      respond_to do |format|
+        format.html { redirect_to({ action: :index }, { notice: t('webmail.notice.changed') }) }
+        format.json { head :no_content }
+      end
     end
 
     def create

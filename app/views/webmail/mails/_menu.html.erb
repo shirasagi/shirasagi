@@ -5,5 +5,14 @@
     <%= link_to(:back_to_index, { action: :index }, class: "back-to-index") %>
   <% elsif params[:action] =~ /edit|update/ %>
     <%= link_to(:back_to_index, sns_message_thread_posts_path(thread_id: @item), class: "back-to-index") %>
+  <% else %>
+    <%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %>
+    <%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %>
+    <%= link_to t('views.download'), { action: :download } %>
+
+    <%= link_to t('webmail.links.set_seen'), { action: :set_seen } %>
+    <%= link_to t('webmail.links.unset_seen'), { action: :unset_seen } %>
+    <%= link_to t('webmail.links.set_star'), { action: :set_star } %>
+    <%= link_to t('webmail.links.unset_star'), { action: :unset_star } %>
   <% end %>
 </nav>

@@ -27,7 +27,8 @@
   <% if @item.attachments.present? %>
   <dt>Attachments</dt>
   <% @item.attachments.each_with_index do |at, idx| %>
-    <dd><%= link_to at.filename, { action: :attachment, idx: idx } %></dd>
+    <% target = at.content_type.start_with?('image') ? '_blank' : nil %>
+    <dd><%= link_to at.filename, { action: :attachment, idx: idx }, target: target %></dd>
   <% end %>
   <% end %>
 </dl>

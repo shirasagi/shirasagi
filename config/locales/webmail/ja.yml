@@ -14,8 +14,17 @@ ja:
       clear_cache: キャッシュ クリア
     confirm:
       clear_cache: キャッシュを削除してよろしいですか？
+    links:
+      download: ダウンロード
+      source_view: ソース表示
+      header_view: ヘッダー表示
+      set_seen: 既読にする
+      unset_seen: 未読にする
+      set_star: スターをつける
+      unset_star: スターをはずす
     notice:
       deleted_cache: キャッシュを削除しました。
+      changed: 変更しました。
 
   mongoid:
     attributes:

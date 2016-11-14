@@ -2,24 +2,50 @@
  // Messages list
 .ss-messages {
   .unseen {
-    //margin-left: -2px;
-    //border-left: 2px solid #f94;
     font-weight: bold;
   }
   .seen {
-    border-color: #ebebeb;
-    background-color: #f6f6f6;
+    border-color: #e8e8e8;
+    background-color: #f4f4f4;
   }
   .seen:hover {
     background: $orange2;
   }
-  .icon-attachment {
-    &:before {
-      content: 'File) ';
+  // star
+  .label-star {
+    float: left;
+    width: 30px;
+    margin-left: -7px;
+  }
+  .icon-star {
+    display: inline-block;
+    margin-top: -4px;
+    font-size: 140%;
+    &:before { content: '★'; }
+    &--on {
+      color: #fb0;
+    }
+    &--off {
+      color: #ccc;
     }
   }
-}
-.webmail-mails {
+  // attachment
+  .label-attachment {
+    float: left;
+    width: 30px;
+  }
+  .icon-attachment {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url(/assets/img/gws/ic-file.png);
+    background-repeat: no-repeat;
+    &--on {
+    }
+    &--off {
+      background-image: none;
+    }
+  }
 }
 
 .webmail-mailboxes {

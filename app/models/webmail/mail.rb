@@ -7,7 +7,7 @@ class Webmail::Mail
   # Webmail::Imap
   cattr_accessor :imap
 
-  attr_accessor :text, :html, :attachments
+  attr_accessor :rfc822, :text, :html, :attachments
 
   field :host, type: String
   field :mailbox, type: String
@@ -48,15 +48,38 @@ class Webmail::Mail
     !seen?
   end
 
+  def star?
+    flags.to_a.include?('Flagged')
+  end
+
   def set_seen
-    return if seen?
     set_flags(['Seen'])
+  end
+
+  def unset_seen
+    unset_flags(['Seen'])
+  end
+
+  def set_star
+    set_flags(['Flagged'])
+  end
+
+  def unset_star
+    unset_flags(['Flagged'])
   end
 
   def set_flags(values)
     self.flags ||= []
-    self.flags += values
-    imap.conn.uid_store(uid, '+FLAGS', values)
+    self.flags = (self.flags + values).uniq
+    self.save if changed?
+    imap.conn.uid_store(uid, '+FLAGS', values.map(&:to_sym)) # required symbole
+  end
+
+  def unset_flags(values)
+    self.flags ||= []
+    self.flags -= values
+    self.save if changed?
+    imap.conn.uid_store(uid, '-FLAGS', values.map(&:to_sym)) # required symbole
   end
 
   def attachments?
@@ -87,7 +110,8 @@ class Webmail::Mail
 
   def fetch_body
     msg = imap.conn.uid_fetch(uid, ['RFC822'])[0]
-    mail = ::Mail.read_from_string msg.attr['RFC822']
+    self.rfc822 = msg.attr['RFC822']
+    mail = ::Mail.read_from_string(rfc822)
 
     if mail.body.multipart?
       mail.body.parts.each do |part|
