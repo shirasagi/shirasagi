@@ -3,6 +3,7 @@ module SS::Model::Notice
   extend SS::Translation
   include SS::Document
   include SS::Reference::User
+  include Sys::Addon::Body
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
 

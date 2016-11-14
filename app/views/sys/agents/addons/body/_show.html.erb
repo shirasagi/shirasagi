@@ -1,0 +1,8 @@
+<% return if @item.send(:html).blank? %>
+
+<dl class="see mod-sys-body">
+  <dd class="wide">
+    <%= sys_html_editor_ckeditor "#mod-sys-body", height: "400px", readonly: true %>
+    <%= text_area_tag "mod-sys-body", @item.html, style: "height: 400px;" %>
+  </dd>
+</dl>

@@ -50,9 +50,11 @@ ja:
       sys/saml_setting: SAML設定
       sys/open_id_connect_setting: OpenId Connect設定
       sys/environment_setting: 環境変数設定
+      sys/body: お知らせ本文
 
   sys_role:
     edit_sys_sites: サイトの管理
+    edit_sys_notices: システムのお知らせ管理
     edit_sys_groups: グループの管理
     edit_sys_users: ユーザーの管理
     edit_sys_roles: 権限/ロールの管理
@@ -70,7 +72,6 @@ ja:
         name: お知らせ見出し
         notice_severity: 種別
         notice_target: 表示場所
-
       sys/addon/role:
         sys_role_ids: ロール
       sys/model/auth:

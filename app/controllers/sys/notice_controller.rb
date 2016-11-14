@@ -15,12 +15,16 @@ class Sys::NoticeController < ApplicationController
       page(params[:page]).per(50)
   end
 
+  def show
+
+  end
+
   private
     def set_crumbs
       @crumbs << [:"sys.notice", action: :index]
     end
 
     def fix_params
-      { cur_user: @cur_user, cur_site: @cur_user }
+      { cur_user: @cur_user }
     end
 end
