@@ -45,7 +45,14 @@ module SS::TemplateVariable
 
     def find_template_variable_handler(name)
       name = name.to_sym
-      handler_def = self.class.template_variable_handlers.find { |handler_name, _| handler_name == name }
+      handler_def = self.class.template_variable_handlers.find do |handler_name, _|
+        case handler_name
+        when ::Regexp
+          handler_name =~ name
+        else
+          handler_name == name
+        end
+      end
       return nil unless handler_def
 
       case handler = handler_def[1]
