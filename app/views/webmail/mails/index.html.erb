@@ -1,9 +1,9 @@
 <div class="index ">
   <%= render file: "_list_head" %>
 
-  <ul class="list-items webmail-mails">
+  <ul class="list-items ss-messages webmail-mails">
     <% @items.each do |item| %>
-    <li class="list-item <%= 'unseen' if item.unseen? %>">
+    <li class="list-item <%= item.unseen? ? 'seen' : 'unseen'%>">
       <label class="check">
         <input type="checkbox" name="ids[]" value="<%= item.uid %>" />
       </label>
