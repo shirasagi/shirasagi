@@ -14,6 +14,7 @@ class Cms::Page
   include Map::Addon::Page
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
+  include Cms::Addon::AdditionalInfo
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
