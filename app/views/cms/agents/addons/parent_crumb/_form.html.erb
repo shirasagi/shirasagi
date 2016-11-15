@@ -1,13 +1,12 @@
 <%= jquery do %>
   SS_AddonTabs.hide(".mod-cms-parent_crumbs");
 
-  var select = $("#parent-crumbs");
-  var blank  = select.first().text();
-
-  $("#parent-crumbs").first().mousedown(function(){
+  var blank = $(".parent-crumbs").first().text();
+  $(".parent-crumbs").mousedown(function(){
     $(this).toggleClass("pulled");
     if (!$(this).hasClass("pulled")) return true;
 
+    var select = $(this);
     select.html('<option value="">' + blank + '</option>');
 
     $("input[type=checkbox][name$='[category_ids][]']").each(function(){
@@ -17,15 +16,78 @@
       var option = $("<option>").val(value).text(label);
       select.append(option);
     });
-    select.change(function() {
+
+    select.change(function(){
       var value = select.find("option:selected").val();
-      $("#item_parent_crumb_urls").val(value);
+      $(this).closest("dd.crumb-categories").prev("dd.crumb-urls").find("input").val(value);
     });
+  });
+
+  $(".delete-crumb").on("click",function(){
+    var dd1 = $(this).closest("dd.crumb-urls");
+    var dd2 = $(dd1).next("dd.crumb-categories");
+
+    var value = dd1.find("input").val();
+    var deletion = true
+
+    if (value) {
+      deletion = confirm("<%= I18n.t("views.confirm.delete") %>");
+    }
+    if (deletion) {
+      if ($(".parent-crumbs").length > 1){
+        dd1.remove();
+        dd2.remove();
+      }
+      else {
+        dd1.find("input").val("");
+        dd2.find("select").val("");
+      }
+      if ($(".parent-crumbs").length < 10){
+        $(".add-crumb").show();
+      }
+    }
+    return false;
+  });
+
+  $(".add-crumb").on("click",function(){
+    if ($(".parent-crumbs").length < 10){
+      var dd = $(this).closest("dd");
+      var dd1 = $(".mod-cms-parent_crumbs .crumb-urls").first().clone(true);
+      var dd2 = $(".mod-cms-parent_crumbs .crumb-categories").first().clone(true);
+
+      dd1.find("input").val("");
+      dd.before(dd1);
+      dd.before(dd2);
+    }
+    if ($(".parent-crumbs").length == 10){
+      $(this).hide();
+    }
+    return false;
   });
 <% end %>
 
 <dl class="see mod-cms-parent_crumbs">
   <dt><%= @model.t :parent_crumb_urls %><%= @model.tt :parent_crumb_urls %></dt>
-  <dd><%= f.text_field :parent_crumb_urls %></dd>
-  <dd><select id="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
+
+  <% if @item.parent_crumb_urls.present? %>
+    <% @item.parent_crumb_urls.each do |url| %>
+
+      <dd class="crumb-urls">
+        <%= text_field_tag "item[parent_crumb_urls][]", url, class: :parent_crumb_urls %>
+        <%= button_tag t("views.button.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
+      </dd>
+      <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
+
+    <% end %>
+  <% else %>
+
+    <dd class="crumb-urls">
+      <%= text_field_tag "item[parent_crumb_urls][]", "", class: :parent_crumb_urls %>
+      <%= button_tag t("views.button.delete"), { type: :button, class: "delete-crumb btn", style: "margin-left: 10px;" } %>
+    </dd>
+    <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
+
+  <% end %>
+
+  <dd><%= button_tag t("cms.button.add_crumb"), { type: :button, class: "add-crumb btn" } %></dd>
 </dl>
