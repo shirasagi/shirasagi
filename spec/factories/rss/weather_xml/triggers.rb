@@ -9,4 +9,6 @@ FactoryGirl.define do
   factory :rss_weather_xml_trigger_quake_intensity_flash, class: Rss::WeatherXml::Trigger::QuakeIntensityFlash, traits: [:rss_weather_xml_trigger_base] do
     earthquake_intensity '5+'
   end
+
+  factory :rss_weather_xml_trigger_tsunami_alert, class: Rss::WeatherXml::Trigger::TsunamiAlert, traits: [:rss_weather_xml_trigger_base]
 end
