@@ -13,13 +13,13 @@ ja:
     create_branch: 差し替えページを作成する
     cloned_name_prefix: 複製
     member: ログインメンバー
-    request_canceled_message: 承認申請は申請者によってキャンセルされました。
+    request_cancelled_message: 承認申請は申請者によってキャンセルされました。
     state:
       request: 申請中
       approve: 承認
       pending: 下位承認待ち
       remand: 差し戻し
-      canceled: 申請キャンセル
+      cancelled: 申請キャンセル
     button:
       select: 選択
       cancel: 取消

@@ -1,7 +1,7 @@
 module Workflow::Approver
   extend ActiveSupport::Concern
 
-  attr_accessor :workflow_reset, :workflow_cancle_request
+  attr_accessor :workflow_reset, :workflow_cancel_request
 
   WORKFLOW_STATE_PUBLIC = "public".freeze
   WORKFLOW_STATE_CLOSED = "closed".freeze
@@ -9,7 +9,7 @@ module Workflow::Approver
   WORKFLOW_STATE_APPROVE = "approve".freeze
   WORKFLOW_STATE_PENDING = "pending".freeze
   WORKFLOW_STATE_REMAND = "remand".freeze
-  WORKFLOW_STATE_CANCELED = "canceled".freeze
+  WORKFLOW_STATE_CANCELLED = "cancelled".freeze
 
   included do
     cattr_reader(:approver_user_class) { Cms::User }
@@ -23,7 +23,7 @@ module Workflow::Approver
     permit_params :workflow_user_id, :workflow_state, :workflow_comment
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
-    permit_params :workflow_reset, :workflow_cancle_request
+    permit_params :workflow_reset, :workflow_cancel_request
 
     before_validation :reset_workflow, if: -> { workflow_reset }
     validate :validate_workflow_approvers_presence, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
@@ -31,7 +31,7 @@ module Workflow::Approver
     validate :validate_workflow_approvers_role, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_required_counts, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
 
-    before_save :cancel_request, if: -> { workflow_cancle_request }
+    before_save :cancel_request, if: -> { workflow_cancel_request }
   end
 
   def status
@@ -144,7 +144,7 @@ module Workflow::Approver
       return if @cur_user.id != workflow_user.id
 
       reset_workflow
-      self.set(workflow_state: WORKFLOW_STATE_CANCELED)
+      self.set(workflow_state: WORKFLOW_STATE_CANCELLED)
     end
 
     def validate_workflow_approvers_presence

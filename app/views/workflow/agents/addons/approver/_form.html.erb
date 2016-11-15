@@ -31,7 +31,7 @@ $ ->
 
     <% if @item.state == "closed" && @item.workflow_state == "request" %>
     $("<input />").attr("type", "hidden")
-      .attr("name", "item[workflow_cancle_request]")
+      .attr("name", "item[workflow_cancel_request]")
       .attr("value", true)
       .appendTo("#item-form")
     <% end %>

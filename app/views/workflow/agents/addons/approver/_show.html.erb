@@ -100,11 +100,11 @@ $ ->
   <% if @item.workflow_state? %>
   <div class="mod-workflow-view">
     <dl class="see">
-      <% if @item.workflow_state == "canceled" %>
+      <% if @item.workflow_state == "cancelled" %>
 
         <dt><%= @model.t :workflow_state %></dt>
         <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>
-        <dd><%= t("workflow.request_canceled_message") %></dd>
+        <dd><%= t("workflow.request_cancelled_message") %></dd>
 
       <% else %>
 
