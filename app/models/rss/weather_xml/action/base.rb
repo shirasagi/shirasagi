@@ -30,11 +30,15 @@ class Rss::WeatherXml::Action::Base
 
   def type_options
     sub_classes = [
-        Rss::WeatherXml::Action::PublishPage,
-        Rss::WeatherXml::Action::SendMail,
-        Rss::WeatherXml::Action::ChangeUrgency ]
+      Rss::WeatherXml::Action::PublishPage,
+      Rss::WeatherXml::Action::SendMail,
+      Rss::WeatherXml::Action::ChangeUrgency ]
     sub_classes.map do |v|
       [ v.model_name.human, v.name ]
     end
+  end
+
+  def execute(page, context)
+    raise NotImplementedError
   end
 end

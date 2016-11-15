@@ -45,4 +45,18 @@ class Rss::WeatherXml::Filter
   def action_options
     Rss::WeatherXml::Action::Base.site(node.site).pluck(:name, :id)
   end
+
+  def execute(page, context)
+    trigger = triggers.first
+    return if trigger.blank?
+    action = actions.first
+    return if action.blank?
+
+    xmldoc = REXML::Document.new(page.xml)
+    context[:xmldoc] = xmldoc
+
+    trigger.verify(page, context) do
+      action.execute(page, context)
+    end
+  end
 end

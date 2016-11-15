@@ -6,14 +6,9 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     set_model Rss::WeatherXmlPage
   end
 
-  class Status
-    NORMAL = "通常".freeze
-    TRAINING = "訓練".freeze
-    TEST = "試験".freeze
-  end
-
   private
     def before_import(file, *args)
+      @weather_xml_page = nil
       super
 
       @cur_file = Rss::TempFile.where(site_id: site.id, id: file).first
@@ -47,6 +42,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         process_earthquake(page)
       end
 
+      execute_weather_xml_filter(page)
       page
     end
 
@@ -87,7 +83,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
       xmldoc = REXML::Document.new(page.xml)
       status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()')
-      return if status != Status::NORMAL
+      return if status != Rss::WeatherXml::Status::NORMAL
 
       info_kind = REXML::XPath.first(xmldoc, '/Report/Head/InfoKind/text()')
       return if info_kind != '震度速報'
@@ -164,5 +160,21 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       ret += 1 if int[1] == '-'
       ret += 9 if int[1] == '+'
       ret
+    end
+
+    def execute_weather_xml_filter(page)
+      return if page.blank?
+      return if node.try(:filters).blank?
+      filters = node.filters
+      return if filters.blank?
+
+      filters.each do |filter|
+        context = OpenStruct.new
+        context[:site] = site
+        context[:user] = user
+        context[:node] = node
+
+        filter.execute(page, context) rescue next
+      end
     end
 end

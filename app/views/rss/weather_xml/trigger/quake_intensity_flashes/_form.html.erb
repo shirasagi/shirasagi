@@ -3,8 +3,11 @@
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :training_state %><%= @model.tt :training_state %></dt>
-  <dd><%= f.select :training_state, @item.training_state_options %></dd>
+  <dt><%= @model.t :training_status %><%= @model.tt :training_status %></dt>
+  <dd><%= f.select :training_status, @item.training_status_options %></dd>
+
+  <dt><%= @model.t :test_status %><%= @model.tt :test_status %></dt>
+  <dd><%= f.select :test_status, @item.test_status_options %></dd>
 
   <dt><%= @model.t :earthquake_intensity %><%= @model.tt :earthquake_intensity %></dt>
   <dd><%= f.select :earthquake_intensity, @item.earthquake_intensity_options %></dd>

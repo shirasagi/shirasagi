@@ -11,10 +11,12 @@ class Rss::WeatherXml::Trigger::Base
   attr_accessor :in_type
 
   field :name, type: String
-  field :training_state, type: String
+  field :training_status, type: String
+  field :test_status, type: String
   validates :name, presence: true, length: { maximum: 40 }
-  validates :training_state, presence: true, inclusion: { in: %w(enabled disabled), allow_blank: true }
-  permit_params :in_type, :name, :training_state
+  validates :training_status, presence: true, inclusion: { in: %w(enabled disabled), allow_blank: true }
+  validates :test_status, presence: true, inclusion: { in: %w(enabled disabled), allow_blank: true }
+  permit_params :in_type, :name, :training_status, :test_status
 
   class << self
     def search(params = {})
@@ -43,9 +45,30 @@ class Rss::WeatherXml::Trigger::Base
     end
   end
 
-  def training_state_options
+  def training_status_options
     %w(disabled enabled).map do |v|
       [ I18n.t("views.options.state.#{v}"), v ]
+    end
+  end
+
+  def test_status_options
+    %w(disabled enabled).map do |v|
+      [ I18n.t("views.options.state.#{v}"), v ]
+    end
+  end
+
+  def verify(page, context, &block)
+    raise NotImplementedError
+  end
+
+  def weather_xml_status_enabled?(status)
+    case status
+    when Rss::WeatherXml::Status::NORMAL
+      return true
+    when Rss::WeatherXml::Status::TRAINING
+      return training_status == 'enabled'
+    when Rss::WeatherXml::Status::TEST
+      return test_status == 'enabled'
     end
   end
 end
