@@ -2,10 +2,11 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
   include Event::EventHelper
   helper Event::EventHelper
+  helper Cms::ListHelper
 
   def index
     @categories = []
-    @events = []
+    @items = []
     if @cur_node.parent
       @categories = Cms::Node.site(@cur_site).where({:id.in => @cur_node.parent.st_category_ids}).sort(filename: 1)
     end
@@ -57,7 +58,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     end
 
     def list_events
-      @events = {}
+      @items = {}
       search = {}
       if lte_close_date?
         key_date = "close_date"
@@ -72,32 +73,34 @@ class Event::Agents::Nodes::SearchController < ApplicationController
         key_date = "dates"
       end
 
-      event_list = Event::Page.site(@cur_site).search(
+      @items = Event::Page.site(@cur_site).search(
         keyword: params[:search_keyword],
         categories: params[:category_ids],
         :"#{key_date}" => search[:dates]
-      ).and_public.entries.sort_by{ |page| page.event_dates.size }
+      ).and_public.page(params[:page]).
+      per(@cur_node.limit).entries.
+      sort_by{ |page| page.event_dates.size }
 
-      event_list.each do |page|
-        page.event_dates.split(/\r\n|\n/).each do |day|
-          d = Date.parse(day)
+      # event_list.each do |page|
+      #   page.event_dates.split(/\r\n|\n/).each do |day|
+      #     d = Date.parse(day)
+      #
+      #     if search[:list_days].present?
+      #       next unless search[:list_days][d]
+      #     elsif lte_close_date?
+      #       next if d > @close_date
+      #     elsif gte_start_date?
+      #       next if d < @start_date
+      #     end
+      #
+      #     @items[d] = [] if @items[d].blank?
+      #     @items[d] << [
+      #       page,
+      #       page.categories.in(id: @cur_node.parent.st_category_ids).order_by(order: 1)
+      #     ]
+      #   end
+      # end
 
-          if search[:list_days].present?
-            next unless search[:list_days][d]
-          elsif lte_close_date?
-            next if d > @close_date
-          elsif gte_start_date?
-            next if d < @start_date
-          end
-
-          @events[d] = [] if @events[d].blank?
-          @events[d] << [
-            page,
-            page.categories.in(id: @cur_node.parent.st_category_ids).order_by(order: 1)
-          ]
-        end
-      end
-
-      @events = @events.sort_by { |key, value| key }
+      @items = @items.sort_by { |key, value| key }
     end
 end

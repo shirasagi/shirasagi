@@ -1,20 +1,13 @@
 <%= jquery do %>
 Event_Form.render();
 <% end %>
-
-<h2><%= t("cms.nodes.event/search") %></h2>
+<div class="mod-event">
 <%= form_for :item, url: "#{@cur_node.url}", method: "get" do %>
-<div id="addon-event-agents-addons-event-keyword" class="mod-event">
-  <dl class="see mod-event_keyword">
-    <dt><%= t("event.keyword") %></dt>
-    <dd><%= text_field_tag :search_keyword, @keyword, class: "keyword" %></dd>
-  </dl>
-</div>
-<div id="addon-event-agents-addons-category-setting">
-  <h2></h2>
-  <dl class="see mod-category">
-    <dt><%= t("event.category.setting") %></dt>
-    <dd>
+    <h2><%= t("event.keyword") %></h2>
+    <div class="keyword"><%= text_field_tag :search_keyword, @keyword, class: "keyword" %></div>
+
+    <h2><%= t("event.category.setting") %></h2>
+    <div class="category">
     <% @categories.each do |cate| %>
       <div class="<%= cate.id %>">
         <%= check_box_tag 'category_ids[]', cate.id, @category_ids.include?(cate.id.to_s) ? {checked: true} : nil,
@@ -22,59 +15,25 @@ Event_Form.render();
         <label for=<%= "q_category_ids_#{cate.id}" %>><%= cate.name %></label>
       </div>
     <% end %>
-    </dd>
-  </dl>
-</div>
-<div id="addon-event-agents-addons-date">
-  <dl class="see mod-event">
-    <dt><%= t("event.dates.setting") %></dt>
-    <dd class="dates">
+    </div>
+
+    <h2><%= t("event.dates.setting") %></h2>
+    <div class="dates location">
       <%= text_field_tag "event[][start_date]", @start_date, { id: nil, class: "date js-date start" } %>
       - <%= text_field_tag "event[][close_date]", @close_date, { id: nil, class: "date js-date close" } %>
-    </dd>
-    <dd class="mod-event" style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></dd>
-  </dl>
-</div>
+    </div>
+    <div class="mod-event" style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></div>
+
   <footer class="send">
     <%= submit_tag t('event.submit.search'), name: nil %>
     <a href="<%= @cur_node.url %>" class="btn">リセット</a>
     <!-- <%= submit_tag t('event.submit.reset'), name: nil, type: :reset, class: :search_clear %> -->
   </footer>
 <% end %>
-
-<% if params.key?(:search_keyword) %>
-
-<div id="event-list">
-  <%= t("event.search.no-result") if @events.blank? %>
-  <% @events.each do |date, pages| %>
-  <dl class="<%= event_dl_class date %>">
-    <dt>
-      <%= time_tag(date) do %>
-      <%= link_to_daily date, name: "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}" %>
-      <span class="wday">(<%= t_wday(date) %><span class="unit"><%= t_date('wday') %></span>)</span>
-      <% end %>
-    </dt>
-
-    <% if date.national_holiday? %>
-    <dd class="holiday"><%= HolidayJapan.name date %></dd>
-    <% end %>
-
-    <% pages.each do |page, categories| %>
-    <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
-      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
-        <% if categories.present? %>
-          <% cate = categories.entries.sort_by{ |c| c.order }.first %>
-          <div class="<%= cate.basename %>">
-            <%= link_to cate.name, cate.url %>
-          </div>
-        <% end %>
-        <header>
-          <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
-        </header>
-      </article>
-    </dd>
-    <% end %>
-  </dl>
-  <% end %>
 </div>
-<% end %>
+<div class="page">
+  <div class="article-pages pages">
+  <%= render_page_list %>
+  </div>
+</div>
+<%= paginate @items if @items.try(:current_page) %>

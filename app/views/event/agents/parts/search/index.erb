@@ -1,18 +1,13 @@
 <%= jquery do %>
 Event_Form.render();
 <% end %>
-<div class="map" style="overflow: hidden; padding: 10px;">
+<div class="mod-event">
 <%= form_for :item, url: "#{@cur_part.search_url}", method: "get" do %>
-<div id="addon-event-agents-addons-event-keyword">
-  <dl class="see mod-event_keyword">
-    <dt class="wide"><%= t("event.keyword") %></dt>
-    <dd class="wide"><%= text_field_tag :search_keyword, nil, class: "keyword" %></dd>
-  </dl>
-</div>
-<div id="addon-event-agents-addons-category-setting">
-  <dl class="see mod-category">
-    <dt class="wide"><%= t("event.category.setting") %></dt>
-    <dd class="wide">
+    <h2 class="wide"><%= t("event.keyword") %></h2>
+    <div class="wide"><%= text_field_tag :search_keyword, nil, class: "keyword" %></div>
+
+    <h2 class="wide"><%= t("event.category.setting") %></h2>
+    <div class="category wide">
     <% @categories.each do |cate| %>
       <div class="<%= cate.id %>">
         <%= check_box_tag 'category_ids[]', cate.id, nil,
@@ -20,22 +15,17 @@ Event_Form.render();
         <label for=<%= "p_category_ids_#{cate.id}" %>><%= cate.name %></label>
       </div>
     <% end %>
-    </dd>
-  </dl>
-</div>
-<div id="addon-event-agents-addons-date">
-  <dl class="see mod-event">
-    <dt class="wide"><%= t("event.dates.setting") %></dt>
-    <dd class="wide dates">
+    </div>
+
+    <h2 class="wide"><%= t("event.dates.setting") %></h2>
+    <div class="wide location dates">
       <%= text_field_tag "event[][start_date]", nil, { id: nil, class: "date js-date start" } %>
       - <%= text_field_tag "event[][close_date]", nil, { id: nil, class: "date js-date close" } %>
-    </dd>
-    <dd class="mod-event" style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></dd>
-  </dl>
-</div>
-<footer class="send">
-  <%= submit_tag t('event.submit.search'), name: nil %>
-  <%= submit_tag t('event.submit.reset'), name: nil, type: :reset, class: :search_clear %>
-</footer>
+    </div>
+    <div class="mod-event" style="display: none;"><%= text_area_tag :event_dates, nil, { class: "event-dates btn" } %></div>
+    <footer class="send">
+      <%= submit_tag t('event.submit.search'), name: nil %>
+      <%= submit_tag t('event.submit.reset'), name: nil, type: :reset, class: :search_clear %>
+    </footer>
 <% end %>
 </div>
