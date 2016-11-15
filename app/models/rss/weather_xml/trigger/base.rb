@@ -37,6 +37,7 @@ class Rss::WeatherXml::Trigger::Base
     sub_classes = [
       Rss::WeatherXml::Trigger::QuakeIntensityFlash,
       Rss::WeatherXml::Trigger::TsunamiAlert,
+      Rss::WeatherXml::Trigger::TsunamiInfo,
       Rss::WeatherXml::Trigger::WeatherAlert,
       Rss::WeatherXml::Trigger::LandslideInfo,
       Rss::WeatherXml::Trigger::FloodForecast ]

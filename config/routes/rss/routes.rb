@@ -37,19 +37,22 @@ SS::Application.routes.draw do
       resources :flood_regions, concerns: [:deletion, :download, :import]
       resources :filters, concerns: [:deletion]
       scope module: :trigger, as: :trigger do
-        resources :bases, path: 'triggers', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
         resources :quake_intensity_flashes, path: 'triggers/quake_intensity_flashes', concerns: [:deletion]
         resources :tsunami_alerts, path: 'triggers/tsunami_alerts', concerns: [:deletion]
+        resources :tsunami_infos, path: 'triggers/tsunami_infos', concerns: [:deletion]
         resources :flood_forecasts, path: 'triggers/flood_forecasts', concerns: [:deletion]
         resources :weather_alerts, path: 'triggers/weather_alerts', concerns: [:deletion]
         resources :landslide_infos, path: 'triggers/landslide_infos', concerns: [:deletion]
         resources :flood_forecasts, path: 'triggers/flood_forecasts', concerns: [:deletion]
+        # put base at last
+        resources :bases, path: 'triggers', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
       end
       scope module: :action, as: :action do
-        resources :bases, path: 'actions', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
         resources :change_urgencies, path: 'actions/change_urgencies', concerns: [:deletion]
         resources :publish_pages, path: 'actions/publish_pages', concerns: [:deletion]
         resources :send_mails, path: 'actions/send_mails', concerns: [:deletion]
+        # put base at last
+        resources :bases, path: 'actions', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
       end
     end
   end

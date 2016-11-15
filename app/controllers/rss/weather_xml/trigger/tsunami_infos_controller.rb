@@ -1,8 +1,8 @@
-class Rss::WeatherXml::Trigger::TsunamiAlertsController < ApplicationController
+class Rss::WeatherXml::Trigger::TsunamiInfosController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Rss::WeatherXml::Trigger::TsunamiAlert
+  model Rss::WeatherXml::Trigger::TsunamiInfo
   navi_view "rss/main/navi"
   append_view_path "app/views/rss/weather_xml/trigger/tsunami_main"
 
