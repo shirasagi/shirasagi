@@ -82,17 +82,17 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       return if node.anpi_mail.blank?
 
       xmldoc = REXML::Document.new(page.xml)
-      status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()')
+      status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()').to_s.strip
       return if status != Rss::WeatherXml::Status::NORMAL
 
-      info_kind = REXML::XPath.first(xmldoc, '/Report/Head/InfoKind/text()')
+      info_kind = REXML::XPath.first(xmldoc, '/Report/Head/InfoKind/text()').to_s.strip
       return if info_kind != '震度速報'
 
-      @report_datetime = REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()')
+      @report_datetime = REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip
       if @report_datetime.present?
         @report_datetime = Time.zone.parse(@report_datetime.to_s) rescue nil
       end
-      @target_datetime = REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()')
+      @target_datetime = REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()').to_s.strip
       if @target_datetime.present?
         @target_datetime = Time.zone.parse(@target_datetime.to_s) rescue nil
       end

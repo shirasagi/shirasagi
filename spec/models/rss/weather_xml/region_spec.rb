@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rss::TempFile, dbscope: :example do
+describe Rss::WeatherXml::QuakeRegion, dbscope: :example do
   let(:site) { cms_site }
 
   describe 'basic attributes' do

@@ -61,14 +61,26 @@ class Rss::WeatherXml::Trigger::Base
     raise NotImplementedError
   end
 
-  def weather_xml_status_enabled?(status)
-    case status
-    when Rss::WeatherXml::Status::NORMAL
-      return true
-    when Rss::WeatherXml::Status::TRAINING
-      return training_status == 'enabled'
-    when Rss::WeatherXml::Status::TEST
-      return test_status == 'enabled'
+  private
+    def weather_xml_status_enabled?(status)
+      case status
+      when Rss::WeatherXml::Status::NORMAL
+        return true
+      when Rss::WeatherXml::Status::TRAINING
+        return training_status == 'enabled'
+      when Rss::WeatherXml::Status::TEST
+        return test_status == 'enabled'
+      end
     end
-  end
+
+    def fresh_xml?(page, context)
+      report_datetime = REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip
+      if report_datetime.present?
+        report_datetime = Time.zone.parse(report_datetime) rescue nil
+      end
+      return if report_datetime.blank?
+
+      diff = Time.zone.now - report_datetime
+      diff.abs <= 1.hour
+    end
 end

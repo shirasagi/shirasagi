@@ -1,0 +1,13 @@
+FactoryGirl.define do
+  trait :rss_weather_xml_action_base do
+    cur_site { cms_site }
+    name { unique_id }
+  end
+
+  factory :rss_weather_xml_action_send_mail, class: Rss::WeatherXml::Action::SendMail, traits: [:rss_weather_xml_action_base] do
+    title_mail_text "\#{target_time} ころ地震がありました"
+    upper_mail_text "\#{target_time} ころ地震がありました。\n\n各地の震度は下記の通りです。\n"
+    loop_mail_text "\#{area_name}：\#{intensity_label}\n"
+    lower_mail_text "下記のアドレスにアクセスし、安否情報を入力してください。\n\#{anpi_post_url}\n"
+  end
+end
