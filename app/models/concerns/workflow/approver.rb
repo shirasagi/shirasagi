@@ -37,6 +37,8 @@ module Workflow::Approver
   def status
     if state == "public" || state == "ready"
       state
+    elsif workflow_state == "cancelled"
+      state
     elsif workflow_state.present?
       workflow_state
     else
