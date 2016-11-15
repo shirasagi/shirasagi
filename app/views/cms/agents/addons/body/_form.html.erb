@@ -1,5 +1,6 @@
 <%
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config
+  replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
 %>
 
 <% if SS.config.cms.html_editor == "markdown" %>
@@ -22,6 +23,11 @@
     Link_Checker.url               = "<%= SS.config.cms.link_check_url %>";
     Link_Checker.rootUrl           = "<%= @cur_site.full_url %>";
     Syntax_Checker.autoCorrect     = <%= SS.config.cms.auto_correct_page_html == true %>;
+
+    <% if replace_words_conf[:replace_words].present? %>
+      Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
+    <% end %>
+
     Form_Preview.page_route        = "<%= @item.try(:route) %>";
     Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";
     Cms_Form.render();

@@ -19,6 +19,7 @@ ja:
     body_layout: 本文レイアウト
     link_check: リンクチェック
     source_cleaner: ソースクリーニング
+    word_dictionary: 単語置換辞書
     preview: プレビュー
     member: メンバー
     modules: モジュール
@@ -348,6 +349,7 @@ ja:
       cms/postal_code: 郵便番号
       cms/task: タスク
       cms/import_page: 取り込みページ
+      cms/word_dictionary: かな辞書
     attributes:
       cms/content:
         released: 公開日時
@@ -424,6 +426,9 @@ ja:
         name: タイトル
         notice_severity: 種別
         notice_target: 公開範囲
+      cms/word_dictionary:
+        name: 名前
+        body: 設定
       cms/addon/meta:
         keywords: キーワード
         description: 概要
@@ -570,8 +575,9 @@ ja:
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
-      check_link_text: "リンクのテキストを確認してください。"
+      check_link_text: リンクのテキストを確認してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      replace_word: 使用が好ましくない単語が含まれています。
       not_found_postal_code: 郵便番号が見つかりません
       syntax_check_detail:
         set_img_alt:
@@ -1018,6 +1024,17 @@ ja:
         - 文字色を設定します。
       background_color:
         - 背景色を設定します。
+
+    cms/word_dictionary:
+      name:
+        - 辞書の名前を入力します。
+      body:
+        - 表記と置換後の表記をカンマで区切って入力します（CSV 形式で入力します）。
+        - 単語を改行で区切って複数個入力することができます。
+        - |-
+        - |-
+          入力例：
+          子供, 子ども
 
     cms/addon/role:
       cms_role_ids:
