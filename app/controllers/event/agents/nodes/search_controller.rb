@@ -81,26 +81,6 @@ class Event::Agents::Nodes::SearchController < ApplicationController
       per(@cur_node.limit).entries.
       sort_by{ |page| page.event_dates.size }
 
-      # event_list.each do |page|
-      #   page.event_dates.split(/\r\n|\n/).each do |day|
-      #     d = Date.parse(day)
-      #
-      #     if search[:list_days].present?
-      #       next unless search[:list_days][d]
-      #     elsif lte_close_date?
-      #       next if d > @close_date
-      #     elsif gte_start_date?
-      #       next if d < @start_date
-      #     end
-      #
-      #     @items[d] = [] if @items[d].blank?
-      #     @items[d] << [
-      #       page,
-      #       page.categories.in(id: @cur_node.parent.st_category_ids).order_by(order: 1)
-      #     ]
-      #   end
-      # end
-
       @items = @items.sort_by { |key, value| key }
     end
 end
