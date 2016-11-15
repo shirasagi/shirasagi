@@ -50,6 +50,7 @@ class @Syntax_Checker
     checkInterwordSpace : "<%= I18n.t('errors.messages.check_interword_space') %>"
     checkLinkText : "<%= I18n.t('errors.messages.check_link_text') %>"
     checkEmbeddedMedia : "<%= I18n.t('errors.messages.check_embedded_media') %>"
+    replaceWord : "<%= I18n.t('errors.messages.replace_word') %>"
   }
 
   @detail = {
@@ -420,7 +421,7 @@ class @Syntax_Checker
       unless $.isEmptyObject(c)
         errors = [{
           code: c[0]
-          msg: "「#{k}」→「#{v}」"
+          msg: Syntax_Checker.message["replaceWord"] + "「#{k}」→「#{v}」"
           ele: html
           correct: Syntax_Checker.correctReplaceWords,
           opts: { key: k, value: v},

@@ -575,8 +575,9 @@ ja:
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
-      check_link_text: "リンクのテキストを確認してください。"
+      check_link_text: リンクのテキストを確認してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      replace_word: 使用が好ましくない単語が含まれています。
       not_found_postal_code: 郵便番号が見つかりません
       syntax_check_detail:
         set_img_alt:
