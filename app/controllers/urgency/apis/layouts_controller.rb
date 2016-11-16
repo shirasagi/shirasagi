@@ -13,9 +13,8 @@ class Urgency::Apis::LayoutsController < ApplicationController
 
   public
     def index
-      node_filenames, default_layout_ids = Urgency::Node::Layout.site(@cur_site).pluck(:filename, :urgency_default_layout_id).transpose
-      Rails.logger.debug("node_filenames=#{node_filenames}")
-      Rails.logger.debug("default_layout_ids=#{default_layout_ids}")
+      criteria = Urgency::Node::Layout.site(@cur_site)
+      node_filenames, default_layout_ids = criteria.pluck(:filename, :urgency_default_layout_id).transpose
 
       @items = @model.site(@cur_site).
         where("$or" => node_filenames.map { |f| { filename: /^#{Regexp.escape(f)}/ } }).

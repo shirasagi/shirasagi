@@ -22,10 +22,10 @@ class Rss::WeatherXml::Action::SendMail < Rss::WeatherXml::Action::Base
 
   def execute(page, context)
     case context.type
-      when Rss::WeatherXml::Type::EARTH_QUAKE
-        execute_earth_quake(page, context)
-      else
-        raise NotImplementedError
+    when Rss::WeatherXml::Type::EARTH_QUAKE
+      execute_earth_quake(page, context)
+    else
+      raise NotImplementedError
     end
   end
 

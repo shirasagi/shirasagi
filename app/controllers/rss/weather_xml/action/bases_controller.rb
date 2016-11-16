@@ -15,14 +15,14 @@ class Rss::WeatherXml::Action::BasesController < ApplicationController
       raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
       case @item.class.name
-        when 'Rss::WeatherXml::Action::PublishPage'
-          redirect_to rss_weather_xml_action_publish_page_path
-        when 'Rss::WeatherXml::Action::ChangeUrgency'
-          redirect_to rss_weather_xml_action_change_urgency_path
-        when 'Rss::WeatherXml::Action::SendMail'
-          redirect_to rss_weather_xml_action_send_mail_path
-        else
-          raise "400"
+      when 'Rss::WeatherXml::Action::PublishPage'
+        redirect_to rss_weather_xml_action_publish_page_path
+      when 'Rss::WeatherXml::Action::ChangeUrgency'
+        redirect_to rss_weather_xml_action_change_urgency_path
+      when 'Rss::WeatherXml::Action::SendMail'
+        redirect_to rss_weather_xml_action_send_mail_path
+      else
+        raise "400"
       end
     end
 
@@ -31,14 +31,14 @@ class Rss::WeatherXml::Action::BasesController < ApplicationController
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
       case @item.in_type
-        when 'Rss::WeatherXml::Action::PublishPage'
-          redirect_to new_rss_weather_xml_action_publish_page_path
-        when 'Rss::WeatherXml::Action::ChangeUrgency'
-          redirect_to new_rss_weather_xml_action_change_urgency_path
-        when 'Rss::WeatherXml::Action::SendMail'
-          redirect_to new_rss_weather_xml_action_send_mail_path
-        else
-          raise "400"
+      when 'Rss::WeatherXml::Action::PublishPage'
+        redirect_to new_rss_weather_xml_action_publish_page_path
+      when 'Rss::WeatherXml::Action::ChangeUrgency'
+        redirect_to new_rss_weather_xml_action_change_urgency_path
+      when 'Rss::WeatherXml::Action::SendMail'
+        redirect_to new_rss_weather_xml_action_send_mail_path
+      else
+        raise "400"
       end
     end
 
@@ -46,14 +46,14 @@ class Rss::WeatherXml::Action::BasesController < ApplicationController
       raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
       case @item.class.name
-        when 'Rss::WeatherXml::Action::PublishPage'
-          redirect_to edit_rss_weather_xml_action_publish_page_path
-        when 'Rss::WeatherXml::Action::ChangeUrgency'
-          redirect_to edit_rss_weather_xml_action_change_urgency_path
-        when 'Rss::WeatherXml::Action::SendMail'
-          redirect_to edit_rss_weather_xml_action_send_mail_path
-        else
-          raise "400"
+      when 'Rss::WeatherXml::Action::PublishPage'
+        redirect_to edit_rss_weather_xml_action_publish_page_path
+      when 'Rss::WeatherXml::Action::ChangeUrgency'
+        redirect_to edit_rss_weather_xml_action_change_urgency_path
+      when 'Rss::WeatherXml::Action::SendMail'
+        redirect_to edit_rss_weather_xml_action_send_mail_path
+      else
+        raise "400"
       end
     end
 
@@ -61,14 +61,14 @@ class Rss::WeatherXml::Action::BasesController < ApplicationController
       raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
 
       case @item.class.name
-        when 'Rss::WeatherXml::Action::PublishPage'
-          redirect_to delete_rss_weather_xml_action_publish_page_path
-        when 'Rss::WeatherXml::Action::ChangeUrgency'
-          redirect_to delete_rss_weather_xml_action_change_urgency_path
-        when 'Rss::WeatherXml::Action::SendMail'
-          redirect_to delete_rss_weather_xml_action_send_mail_path
-        else
-          raise "400"
+      when 'Rss::WeatherXml::Action::PublishPage'
+        redirect_to delete_rss_weather_xml_action_publish_page_path
+      when 'Rss::WeatherXml::Action::ChangeUrgency'
+        redirect_to delete_rss_weather_xml_action_change_urgency_path
+      when 'Rss::WeatherXml::Action::SendMail'
+        redirect_to delete_rss_weather_xml_action_send_mail_path
+      else
+        raise "400"
       end
     end
 end

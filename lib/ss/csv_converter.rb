@@ -22,7 +22,7 @@ class SS::CsvConverter
     field_names = @criteria.klass.fields.keys if @criteria.respond_to?(:klass)
     field_names ||= @criteria.fields.keys if @criteria.respond_to?(:fields)
 
-    field_names - [ "_id", "created", "updated", "text_index" ]
+    field_names - %w(_id text_index)
   end
 
   def enum_csv

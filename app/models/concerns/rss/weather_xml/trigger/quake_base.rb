@@ -55,11 +55,11 @@ module Rss::WeatherXml::Trigger::QuakeBase
           next if region.blank?
 
           region_eq_infos << {
-              pref_name: pref_name,
-              pref_code: pref_code,
-              area_name: area_name,
-              area_code: area_code,
-              area_max_int: area_max_int,
+            pref_name: pref_name,
+            pref_code: pref_code,
+            area_name: area_name,
+            area_code: area_code,
+            area_max_int: area_max_int,
           }
         end
       end
