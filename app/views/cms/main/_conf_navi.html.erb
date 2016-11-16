@@ -56,6 +56,9 @@
   <% if SS.config.voice.disable.blank? && Voice::File.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"voice.file", voice_files_path %></h3>
   <% end %>
+  <% if SS.config.recommend.disable.blank? && Recommend::History::Log.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to :"recommend.main", recommend_history_logs_tokens_path %></h3>
+  <% end %>
   <% if Rdf::Vocab.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to :"rdf.vocabs", rdf_vocabs_path %></h3>
   <% end %>

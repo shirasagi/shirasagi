@@ -1,17 +1,26 @@
 module Recommend::ListHelper
-  def render_content_list(&block)
-    cur_item = @cur_part || @cur_node
+  def render_content_list
+    cur_item = @cur_part
     cur_item.cur_date = @cur_date
 
     h = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
-    display_list = []
+
+    if cur_item.exclude_paths.present?
+      display_list = cur_item.exclude_paths.to_a
+    else
+      display_list = []
+    end
+
+    displayed = 0
     @items.each do |item|
+      next if display_list.index(item.path)
       content = item.content
       next unless content
-      next if display_list.index(item.path)
+      next unless content.public?
 
       display_list << item.path
+      displayed += 1
       if cur_item.loop_html.present?
         ih = cur_item.render_loop_html(content)
       else
@@ -24,7 +33,7 @@ module Recommend::ListHelper
         ih = cur_item.render_loop_html(content, html: ih.join("\n"))
       end
       h << ih.gsub('#{current}', current_url?(content.url).to_s)
-      break if display_list.size >= @limit
+      break if displayed >= @limit
     end
     h << cur_item.lower_html.html_safe if cur_item.lower_html.present?
 

@@ -1,0 +1,11 @@
+<nav class="mod-navi">
+  <h2><%= t "recommend.main" %></h2>
+
+  <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h3><%= link_to t("recommend.tokens"), recommend_history_logs_tokens_path %></h3>
+    <h3><%= link_to t("recommend.paths"), recommend_history_logs_paths_path %></h3>
+    <h3><%= link_to t("recommend.scores"), recommend_similarity_scores_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/conf_navi" %>

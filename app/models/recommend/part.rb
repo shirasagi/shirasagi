@@ -21,4 +21,14 @@ class Recommend::Part
 
     default_scope ->{ where(route: "recommend/history") }
   end
+
+  class Similarity
+    include ::Cms::Model::Part
+    include ::Recommend::Addon::ContentList
+    include ::Cms::Addon::Release
+    include ::Cms::Addon::GroupPermission
+    include ::History::Addon::Backup
+
+    default_scope ->{ where(route: "recommend/similarity") }
+  end
 end

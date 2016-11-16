@@ -24,4 +24,7 @@
     <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
     <% end %>
   </dd>
+
+  <dt><%= @model.t :exclude_paths %></dt>
+  <dd><%=br @item.exclude_paths.join("\n") %></dd>
 </dl>

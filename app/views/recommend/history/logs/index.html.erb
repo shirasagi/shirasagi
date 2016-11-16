@@ -1,0 +1,24 @@
+<section class="main-box">
+  <div class="list-head">
+    <%= render file: "_search" %>
+  </div>
+
+  <div class="recommend-history-log">
+    <% @prefs.each do |key, values| %>
+      <table class="index" style="margin-bottom: 10px;">
+        <tr style="background: #f2f2f2;">
+          <th style="color: #a0522d;"><%= key %></th>
+          <th></th>
+        </tr>
+        <% values.each do |value, count| %>
+          <tr style="background: #ffffff;">
+            <td><%= value %></td>
+            <td><%= count %></td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+</section>
+
+<%= paginate @prefs if @prefs.try(:current_page) %>
