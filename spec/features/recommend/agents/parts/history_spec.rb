@@ -5,7 +5,7 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example do
   let!(:layout) { create_cms_layout [part] }
   let!(:part) { create :recommend_part_history, filename: "node/part" }
   let!(:node) { create :cms_node, layout_id: layout.id, filename: "node" }
-  let!(:article_page) { create :article_page, layout_id: layout.id, filename: "node/article_pag.html" }
+  let!(:article_page) { create :article_page, layout_id: layout.id, filename: "node/article_page.html" }
   let!(:cms_page) { create :article_page, layout_id: layout.id, filename: "node/cms_page.html" }
 
   context "public", js: true do
