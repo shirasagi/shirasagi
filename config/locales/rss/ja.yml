@@ -7,6 +7,7 @@ ja:
     weather_xml/tsunami_region: 津波予報区
     weather_xml/forecast_region: 気象情報区域
     weather_xml/flood_region: 河川洪水予報区域
+    weather_xml/water_level_station: 水位観測所
     weather_xml/filter: 気象庁防災情報XMLフィルター
     weather_xml/trigger: 受信条件
     weather_xml/action: 受信時の動作
@@ -52,6 +53,10 @@ ja:
         index: 区域を選択する
         search: 区域を検索
         select: 区域を設定する
+      weather_xml/water_level_station:
+        index: 区域を選択する
+        search: 区域を検索
+        select: 区域を設定する
 
   modules:
     rss: RSS取込
@@ -77,6 +82,7 @@ ja:
       rss/weather_xml/tsunami_region_import_job: 津波予報区取込
       rss/weather_xml/forecast_region_import_job: 気象情報区域取込
       rss/weather_xml/flood_region_import_job: 河川洪水予報区域取込
+      rss/weather_xml/water_level_station_import_job: 水観測所取込
 
   mongoid:
     models:
@@ -85,6 +91,7 @@ ja:
       rss/weather_xml/quake_region: 気象庁地震情報区域
       rss/weather_xml/forecast_region: 気象庁気象情報区域
       rss/weather_xml/flood_region: 気象庁河川洪水予報区域
+      rss/weather_xml/water_level_station: 気象庁水位観測所
       rss/weather_xml/trigger/base: 受信条件
       rss/weather_xml/trigger/quake_intensity_flash: 震度速報
       rss/weather_xml/trigger/quake_info: 震源・震度に関する情報
@@ -117,6 +124,12 @@ ja:
         code: コード
         name: 名称
         yomi: よみ
+        order: 並び順
+        state: 状態
+      rss/weather_xml/water_level_station:
+        code: コード
+        name: 名称
+        region_name: 予報区域名
         order: 並び順
         state: 状態
       rss/addon/import:
@@ -184,6 +197,19 @@ ja:
         - 区域の名称を指定します。
       yomi:
         - 区域の名称のよみを指定します。
+      order:
+        - 並び順を指定します。
+        - 数字が小さいほど一覧ページの上位に表示されます。
+      state:
+        - 状態を選択します。
+
+    rss/weather_xml/water_level_station:
+      code:
+        - 水位観測所コードを指定します。
+      name:
+        - 水位観測所の名称を指定します。
+      region_name:
+        - 予報区域名を指定します。
       order:
         - 並び順を指定します。
         - 数字が小さいほど一覧ページの上位に表示されます。

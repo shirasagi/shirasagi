@@ -1,4 +1,4 @@
-class Rss::WeatherXml::ForecastRegionImportJob < Cms::ApplicationJob
+class Rss::WeatherXml::WaterLevelStationImportJob < Cms::ApplicationJob
   include SS::ZipFileImport
 
   private
@@ -15,11 +15,9 @@ class Rss::WeatherXml::ForecastRegionImportJob < Cms::ApplicationJob
       name = row[:name].presence
       return if code.blank? || name.blank?
 
-      item = Rss::WeatherXml::ForecastRegion.site(self.site).where(code: code).first_or_create(name: name)
+      item = Rss::WeatherXml::WaterLevelStation.site(self.site).where(code: code).first_or_create(name: name)
       item.name = name
-      item.yomi = row[:yomi].presence if row[:yomi].present?
-      item.short_name = row[:short_name].presence if row[:short_name].present?
-      item.short_yomi = row[:short_yomi].presence if row[:short_yomi].present?
+      item.region_name = row[:region_name].presence if row[:region_name].present?
       item.order = row[:order].presence if row[:order].present?
       item.state = row[:state].presence if row[:state].present?
       item.save!

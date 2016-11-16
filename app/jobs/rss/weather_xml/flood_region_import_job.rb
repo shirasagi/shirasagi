@@ -17,9 +17,9 @@ class Rss::WeatherXml::FloodRegionImportJob < Cms::ApplicationJob
 
       item = Rss::WeatherXml::FloodRegion.site(self.site).where(code: code).first_or_create(name: name)
       item.name = name
-      item.yomi = row[:yomi].presence
-      item.order = row[:order].presence
-      item.state = row[:state].presence
+      item.yomi = row[:yomi].presence if row[:yomi].present?
+      item.order = row[:order].presence if row[:order].present?
+      item.state = row[:state].presence if row[:state].present?
       item.save!
     end
 end
