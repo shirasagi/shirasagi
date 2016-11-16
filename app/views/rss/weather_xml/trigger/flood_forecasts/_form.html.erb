@@ -7,4 +7,28 @@
 
   <dt><%= @model.t :test_status %><%= @model.tt :test_status %></dt>
   <dd><%= f.select :test_status, @item.test_status_options %></dd>
+
+  <dt><%= @model.t :target_regions %><%= @model.tt :target_regions %></dt>
+  <dd>
+    <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to :"rss.apis.weather_xml/water_level_stations.index", rss_apis_weather_xml_water_level_stations_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Rss::WeatherXml::WaterLevelStation.t :name %></th>
+        <th style="width: 20%;"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.target_regions.each do |region| %>
+          <tr data-id="<%= region.id %>">
+            <td><%= f.hidden_field "target_region_ids[]", value: region.id %> <%= region.name %></td>
+            <td style="width: 20%;"><%= link_to t("views.button.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
 </dl>

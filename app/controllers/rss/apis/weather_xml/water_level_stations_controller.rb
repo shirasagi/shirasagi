@@ -1,4 +1,4 @@
-class Rss::Apis::WeatherXml::FloodRegionsController < ApplicationController
+class Rss::Apis::WeatherXml::WaterLevelStationsController < ApplicationController
   include Cms::ApiFilter
 
   model Rss::WeatherXml::WaterLevelStation
@@ -12,11 +12,11 @@ class Rss::Apis::WeatherXml::FloodRegionsController < ApplicationController
     end
 
   public
-  def index
-    @items = @model.site(@cur_site).
-      and_enabled.
-      search(params[:s]).
-      order_by(order: 1, _id: 1).
-      page(params[:page]).per(50)
-  end
+    def index
+      @items = @model.site(@cur_site).
+        and_enabled.
+        search(params[:s]).
+        order_by(order: 1, _id: 1).
+        page(params[:page]).per(50)
+    end
 end

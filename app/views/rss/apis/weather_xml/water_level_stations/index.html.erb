@@ -2,7 +2,7 @@
 
 <div class="search-ui-form">
 <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
-  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+  <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
   <%= f.submit  t("rss.apis.weather_xml/water_level_stations.search"), class: :btn %>
 <% end %>
 </div>
@@ -15,6 +15,7 @@
       <% end %>
       <th class="name"><%= @model.t :name %></th>
       <th class="code"><%= @model.t :code %></th>
+      <th class="code"><%= @model.t :region_name %></th>
     </tr>
   </thead>
   <tbody class="items">
@@ -27,6 +28,7 @@
         <% end %>
         <td><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= item.code %></td>
+        <td><%= item.region_name %></td>
       </tr>
     <% end %>
   </tbody>

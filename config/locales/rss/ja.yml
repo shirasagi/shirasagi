@@ -53,10 +53,10 @@ ja:
         index: 区域を選択する
         search: 区域を検索
         select: 区域を設定する
-      weather_xml/water_level_station:
-        index: 区域を選択する
-        search: 区域を検索
-        select: 区域を設定する
+      weather_xml/water_level_stations:
+        index: 水位観測所を選択する
+        search: 水位観測所を検索
+        select: 水位観測所を設定する
 
   modules:
     rss: RSS取込
