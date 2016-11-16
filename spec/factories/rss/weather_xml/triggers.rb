@@ -27,4 +27,7 @@ FactoryGirl.define do
 
   factory :rss_weather_xml_trigger_landslide_info,
           class: Rss::WeatherXml::Trigger::LandslideInfo, traits: [:rss_weather_xml_trigger_base]
+
+  factory :rss_weather_xml_trigger_flood_forecast,
+          class: Rss::WeatherXml::Trigger::FloodForecast, traits: [:rss_weather_xml_trigger_base]
 end

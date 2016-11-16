@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://xml.kishou.go.jp/jmaxml1/" xmlns:jmx="http://xml.kishou.go.jp/jmaxml1/">
+  <Control>
+    <Title>指定河川洪水予報</Title>
+    <DateTime>2008-09-02T19:15:00Z</DateTime>
+    <Status>通常</Status>
+    <EditorialOffice>岐阜地方気象台</EditorialOffice>
+    <PublishingOffice>木曽川上流河川事務所 岐阜地方気象台</PublishingOffice>
+  </Control>
+  <Head xmlns="http://xml.kishou.go.jp/jmaxml1/informationBasis1/">
+    <Title>揖斐川中流はん濫注意情報</Title>
+    <ReportDateTime>2008-09-03T04:15:00+09:00</ReportDateTime>
+    <TargetDateTime>2008-09-03T04:15:00+09:00</TargetDateTime>
+    <EventID>850509000203</EventID>
+    <InfoType>発表</InfoType>
+    <Serial>1</Serial>
+    <InfoKind>指定河川洪水予報</InfoKind>
+    <InfoKindVersion>1.1_0</InfoKindVersion>
+    <Headline>
+      <Text>揖斐川中流では　はん濫注意水位・流量に到達　水位はさらに上昇</Text>
+      <Information type="指定河川洪水予報（予報区域）">
+        <Item>
+          <Kind>
+            <Name>はん濫注意情報</Name>
+            <Code>00</Code>
+            <Condition>洪水注意報（発表）</Condition>
+          </Kind>
+          <Areas codeType="指定河川洪水予報（予報区域）">
+            <Area>
+              <Name>揖斐川中流</Name>
+              <Code>850509000203</Code>
+            </Area>
+          </Areas>
+        </Item>
+      </Information>
+      <Information type="指定河川洪水予報（河川）">
+        <Item>
+          <Kind>
+            <Name>はん濫注意情報</Name>
+            <Code>00</Code>
+            <Condition>洪水注意報（発表）</Condition>
+          </Kind>
+          <Areas codeType="河川">
+            <Area>
+              <Name>損斐川</Name>
+              <Code>8505090002</Code>
+            </Area>
+            <Area>
+              <Name>根尾川</Name>
+              <Code>8505090035</Code>
+            </Area>
+          </Areas>
+        </Item>
+      </Information>
+      <Information type="指定河川洪水予報（府県予報区等）">
+        <Item>
+          <Kind>
+            <Name>はん濫注意情報</Name>
+            <Code>00</Code>
+            <Condition>洪水注意報（発表）</Condition>
+          </Kind>
+          <Areas codeType="気象情報／府県予報区・細分区域等">
+            <Area>
+              <Name>岐阜県</Name>
+              <Code>210000</Code>
+            </Area>
+          </Areas>
+        </Item>
+      </Information>
+    </Headline>
+  </Head>
+  <Body xmlns="http://xml.kishou.go.jp/jmaxml1/body/meteorology1/" xmlns:jmx_eb="http://xml.kishou.go.jp/jmaxml1/elementBasis1/">
+    <Notice>この電文はテストサンプルです。</Notice> 
+    <Warning type="指定河川洪水予報">
+      <Item>
+        <Kind>
+          <Property>
+            <Type>主文</Type>
+            <Text>揖斐川中流の万石水位観測所では、はん濫注意水位・流量（レベル２）に到達しました。水位・流量はさらに上昇する見込みです。今後の洪水予報に注意して下さい。</Text>
+          </Property>
+        </Kind>
+        <Areas codeType="河川">
+          <Area>
+            <Name>揖斐川</Name>
+            <Code>8505090002</Code>
+          </Area>
+        </Areas>
+        <Stations>
+          <Station>
+            <Name>万石水位観測所</Name>
+            <Code type="水位観測所">85050900020300045</Code>
+            <Location>岐阜県大垣市万石</Location>
+          </Station>
+        </Stations>
+      </Item>
+      <Item>
+        <Kind>
+          <Name>浸水想定地区</Name>
+          <Code>1</Code>
+          <Status>対象地域</Status>
+          <Property>
+            <Type>浸水想定地区</Type>
+            <Text>はん濫による浸水が想定される地区※</Text>
+          </Property>
+        </Kind>
+        <Areas>
+          <Area codeType="水位観測所">
+            <Name>岡島観測所</Name>
+            <Code>85050900020300042</Code>
+            <Prefecture>岐阜県</Prefecture>
+            <PrefectureCode>21000</PrefectureCode>
+            <City>○○市</City>
+            <CityCode>0000000</CityCode>
+            <SubCityList>○○地区 ○○地区 ○○地区</SubCityList>
+          </Area>
+          <Area codeType="水位観測所">
+            <Name>万石水位観測所</Name>
+            <Code>85050900020300045</Code>
+            <Prefecture>岐阜県</Prefecture>
+            <PrefectureCode>21000</PrefectureCode>
+            <City>△△市</City>
+            <CityCode>0000000</CityCode>
+            <SubCityList>△△地区 △△地区 △△地区</SubCityList>
+          </Area>
+          <Area codeType="水位観測所">
+            <Name>山口水位観測所</Name>
+            <Code>85050900020300044</Code>
+            <Prefecture>岐阜県</Prefecture>
+            <PrefectureCode>21000</PrefectureCode>
+            <City>◇◇市</City>
+            <CityCode>0000000</CityCode>
+            <SubCityList>◇◇地区 ◇◇地区 ◇◇地区</SubCityList>
+          </Area>
+        </Areas>
+      </Item>
+    </Warning>
+    <MeteorologicalInfos type="雨量情報">
+      <MeteorologicalInfo>
+        <DateTime>2008-09-03T03:00:00+09:00</DateTime>
+        <Item>
+          <Kind>
+            <Name>雨量</Name>
+            <Property>
+              <Type>雨量</Type>
+              <Text>所により１時間に５０ミリの雨が降っています。この雨は今後次第に弱まるでしょう。</Text>
+            </Property>
+          </Kind>
+        </Item>
+      </MeteorologicalInfo>
+      <TimeSeriesInfo>
+        <TimeDefines>
+          <TimeDefine timeId="1">
+            <DateTime>2008-09-02T08:00:00+09:00</DateTime>
+            <Duration>PT19H</Duration>
+            <Name>２日８時から３日３時までの流域平均雨量</Name>
+          </TimeDefine>
+          <TimeDefine timeId="2">
+            <DateTime>2008-09-03T03:00:00+09:00</DateTime>
+            <Duration>PT3H</Duration>
+            <Name>３日３時から３日６時までの流域平均雨量の見込み</Name>
+          </TimeDefine>
+        </TimeDefines>
+        <Item>
+          <Kind>
+            <Name>雨量</Name>
+            <Property>
+              <Type>雨量</Type>
+              <PrecipitationPart>
+                <jmx_eb:Precipitation type="流域平均雨量" unit="ミリ" refID="1">169</jmx_eb:Precipitation>
+                <jmx_eb:Precipitation type="流域平均雨量" unit="ミリ" refID="2">7</jmx_eb:Precipitation>
+              </PrecipitationPart>
+            </Property>
+          </Kind>
+          <Area>
+            <Name>揖斐川中流</Name>
+          </Area>
+        </Item>
+      </TimeSeriesInfo>
+    </MeteorologicalInfos>
+    <MeteorologicalInfos type="水位・流量情報">
+      <TimeSeriesInfo>
+        <TimeDefines>
+          <TimeDefine timeId="1">
+            <DateTime>2008-09-03T03:20:00+09:00</DateTime>
+            <Name>現況</Name>
+          </TimeDefine>
+          <TimeDefine timeId="2">
+            <DateTime>2008-09-03T04:00:00+09:00</DateTime>
+            <Name>１時間後</Name>
+          </TimeDefine>
+          <TimeDefine timeId="3">
+            <DateTime>2008-09-03T05:00:00+09:00</DateTime>
+            <Name>２時間後</Name>
+          </TimeDefine>
+          <TimeDefine timeId="4">
+            <DateTime>2008-09-03T06:00:00+09:00</DateTime>
+            <Name>３時間後</Name>
+          </TimeDefine>
+        </TimeDefines>
+        <Item>
+          <Kind>
+            <Name>水位</Name>
+            <Property>
+              <Type>水位</Type>
+              <WaterLevelPart>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="1" condition="下降">1.68</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="レベル" refID="1">1</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="2" condition="未計算" />
+                <jmx_eb:WaterLevel type="レベル" refID="2">9</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="3" condition="未計算" />
+                <jmx_eb:WaterLevel type="レベル" refID="3">9</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="4" condition="正常">1.77</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="レベル" refID="4">1</jmx_eb:WaterLevel>
+              </WaterLevelPart>
+            </Property>
+          </Kind>
+          <Station>
+            <Name>岡島観測所</Name>
+            <Code type="水位観測所">85050900020300042</Code>
+            <Location>揖斐郡揖斐川町岡島</Location>
+          </Station>
+        </Item>
+        <Item>
+          <Kind>
+            <Name>水位</Name>
+            <Property>
+              <Type>水位</Type>
+              <WaterLevelPart>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="1" condition="上昇">4.05</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="レベル" refID="1">2</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="2" condition="未計算" />
+                <jmx_eb:WaterLevel type="レベル" refID="2">9</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="3" condition="未計算" />
+                <jmx_eb:WaterLevel type="レベル" refID="3">9</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="4" condition="正常">4.24</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="レベル" refID="4">2</jmx_eb:WaterLevel>
+              </WaterLevelPart>
+            </Property>
+          </Kind>
+          <Station>
+            <Name>万石水位観測所</Name>
+            <Code type="水位観測所">85050900020300045</Code>
+            <Location>大垣市万石</Location>
+          </Station>
+        </Item>
+        <Item>
+          <Kind>
+            <Name>水位</Name>
+            <Property>
+              <Type>水位</Type>
+              <WaterLevelPart>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="1" condition="一定">1.32</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="レベル" refID="1">1</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="2" condition="未計算" />
+                <jmx_eb:WaterLevel type="レベル" refID="2">9</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="3" condition="未計算" />
+                <jmx_eb:WaterLevel type="レベル" refID="3">9</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="水位" unit="m" refID="4" condition="正常">1.55</jmx_eb:WaterLevel>
+                <jmx_eb:WaterLevel type="レベル" refID="4">1</jmx_eb:WaterLevel>
+              </WaterLevelPart>
+            </Property>
+          </Kind>
+          <Station>
+            <Name>山口水位観測所</Name>
+            <Code type="水位観測所">85050900020300044</Code>
+            <Location>本巣市山口</Location>
+          </Station>
+        </Item>
+      </TimeSeriesInfo>
+    </MeteorologicalInfos>
+    <OfficeInfo>
+      <Office type="水位関係">
+        <Name>木曽川上流河川事務所</Name>
+        <Code>85751</Code>
+        <ContactInfo>国土交通省　木曽川上流河川事務所　流水調整課　058-251-3235</ContactInfo>
+        <URI>http://www.river.go.jp/</URI>
+      </Office>
+      <Office type="気象関係">
+        <Name>岐阜地方気象台</Name>
+        <Code>55632</Code>
+        <ContactInfo>気象庁　岐阜地方気象台　技術課　058-271-4107</ContactInfo>
+        <URI>http://www.jma.go.jp/</URI>
+      </Office>
+    </OfficeInfo>
+    <AdditionalInfo>
+      <FloodForecastAddition>
+        <HydrometricStationPart>
+          <Area codeType="水位観測所">
+            <Name>岡島観測所</Name>
+            <Code>85050900020300042</Code>
+            <SubCityList>○○県○○市○○地区 ○○県○○市○○地区 ○○県○○市○○地区</SubCityList>
+            <Location>揖斐郡揖斐川町岡島</Location>
+          </Area>
+          <ChargeSection>揖斐川　
+左岸：揖斐川町、大野町、瑞穂市　
+右岸：揖斐川町、池田町、神戸町、瑞穂市</ChargeSection>
+          <Criteria>
+            <jmx_eb:WaterLevel type="はん濫危険水位" unit="m" condition="有効">3.8</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="避難判断水位" unit="m" condition="有効">3.40</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="水防団待機水位" unit="m" condition="無効" />
+            <jmx_eb:Discharge type="はん濫注意流量" unit="立方メートル毎秒" condition="有効">700.0</jmx_eb:Discharge>
+          </Criteria>
+          <Remark>※はん濫注意流量（警戒流量）及び本文中の流量ｍ3/s表示については、西平ダムの放流量(ｍ3/s)</Remark>
+        </HydrometricStationPart>
+        <HydrometricStationPart>
+          <Area codeType="水位観測所">
+            <Name>万石水位観測所</Name>
+            <Code>85050900020300045</Code>
+            <SubCityList>○○県△△市△△地区 ○○県△△市△△地区 ○○県◇◇市◇◇地区 ○○県◇◇市◇◇地区 ○○県◇◇市◇◇地区 ○○県◇◇市◇◇地区</SubCityList>
+            <Location>大垣市万石</Location>
+          </Area>
+          <ChargeSection>揖斐川　
+左岸：瑞穂市、輪之内町、養老町、安八町　
+右岸：大垣市、輪之内町、養老町</ChargeSection>
+          <Criteria>
+            <jmx_eb:WaterLevel type="はん濫危険水位" unit="m" condition="有効">6.40</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="避難判断水位" unit="m" condition="有効">5.80</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="はん濫注意水位" unit="m" condition="有効">4.00</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="水防団待機水位" unit="m" condition="無効" />
+          </Criteria>
+        </HydrometricStationPart>
+        <HydrometricStationPart>
+          <Area codeType="水位観測所">
+            <Name>山口水位観測所</Name>
+            <Code>85050900020300044</Code>
+            <SubCityList>○○県□□市□□地区 ○○県□□市□□地区 ○○県□□市□□地区</SubCityList>
+            <Location>本巣市山口</Location>
+          </Area>
+          <ChargeSection>根尾川　
+左岸：本巣市、瑞穂市　
+右岸：大野町</ChargeSection>
+          <Criteria>
+            <jmx_eb:WaterLevel type="はん濫危険水位" unit="m" condition="有効">3.80</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="避難判断水位" unit="m" condition="有効">3.20</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="はん濫注意水位" unit="m" condition="有効">2.20</jmx_eb:WaterLevel>
+            <jmx_eb:WaterLevel type="水防団待機水位" unit="m" condition="無効" />
+          </Criteria>
+        </HydrometricStationPart>
+      </FloodForecastAddition>
+    </AdditionalInfo>
+  </Body>
+</Report>
