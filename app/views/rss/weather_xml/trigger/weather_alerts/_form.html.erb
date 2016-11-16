@@ -8,16 +8,6 @@
   <dt><%= @model.t :test_status %><%= @model.tt :test_status %></dt>
   <dd><%= f.select :test_status, @item.test_status_options %></dd>
 
-  <dt><%= @model.t :kind %><%= @model.tt :kind %></dt>
-  <dd>
-    <label for="item_kind_warning">
-      <%= f.check_box :kind_warning, { checked: @item.kind_warning == 'enabled' }, 'enabled', 'disabled' %> 警報
-    </label>
-    <label for="item_kind_advisory">
-      <%= f.check_box :kind_advisory, { checked: @item.kind_advisory == 'enabled' }, 'enabled', 'disabled' %> 注意報
-    </label>
-  </dd>
-
   <dt><%= @model.t :regions %><%= @model.tt :regions %></dt>
   <dd>
     <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>

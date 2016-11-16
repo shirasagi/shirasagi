@@ -8,16 +8,6 @@
   <dt><%= @model.t :test_status %></dt>
   <dd><%= @item.label :test_status %></dd>
 
-  <dt><%= @model.t :kind %></dt>
-  <dd>
-    <% if @item.kind_warning == 'enabled' %>
-      警報
-    <% end %>
-    <% if @item.kind_advisory == 'enabled' %>
-      注意報
-    <% end %>
-  </dd>
-
   <dt><%= @model.t :target_region_ids %></dt>
   <dd><%= br @item.target_regions.pluck(:name).join("\n") %></dd>
 </dl>
