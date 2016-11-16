@@ -7,4 +7,7 @@
 
   <dt><%= @model.t :test_status %></dt>
   <dd><%= @item.label :test_status %></dd>
+
+  <dt><%= @model.t :target_regions %></dt>
+  <dd><%= br @item.target_regions.pluck(:name).join("\n") %></dd>
 </dl>
