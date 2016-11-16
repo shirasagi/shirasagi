@@ -13,11 +13,60 @@ describe Rss::WeatherXml::Trigger::QuakeInfo, dbscope: :example do
   end
 
   describe '#verify' do
+    context 'when info_type=発表 is given' do
+      let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_32-35_06_100915_03zenkokusaisumo1.xml))) }
+      let(:xmldoc) { REXML::Document.new(xml1) }
+      let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
+      let(:page) { create(:rss_weather_xml_page, xml: xml1) }
+      let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
+      subject { create(:rss_weather_xml_trigger_quake_info) }
+
+      before do
+        region_210 = create(:rss_weather_xml_region_210)
+        region_211 = create(:rss_weather_xml_region_211)
+        region_212 = create(:rss_weather_xml_region_212)
+        region_213 = create(:rss_weather_xml_region_213)
+        subject.earthquake_intensity = '4'
+        subject.target_region_ids = [ region_210.id, region_211.id, region_212.id, region_213.id ]
+        subject.save!
+      end
+
+      around do |example|
+        Timecop.travel(report_time) do
+          example.run
+        end
+      end
+
+      it "returns true" do
+        expect(subject.verify(page, context)).to be_truthy
+        expect(context.type).to eq Rss::WeatherXml::Type::EARTH_QUAKE
+        expect(context.region_eq_infos).to include(include({ pref_name: '岩手県' }))
+        expect(context.max_int).to eq '6+'
+      end
+
+      it "calls block" do
+        flag = 0
+        subject.verify(page, context) do
+          flag = 1
+          expect(context.type).to eq Rss::WeatherXml::Type::EARTH_QUAKE
+          expect(context.region_eq_infos).to include(include({ area_code: '212' }))
+          expect(context.max_int).to eq '6+'
+        end
+        expect(flag).to eq 1
+      end
+    end
+  end
+
+  context 'when info_type=取消 is given' do
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_32-35_06_100915_03zenkokusaisumo1.xml))) }
-    let(:xmldoc) { REXML::Document.new(xml1) }
-    let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
-    let(:page) { create(:rss_weather_xml_page, xml: xml1) }
-    let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
+    let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures rss 70_32-35_06_100915_06zenkokusaisumo1.xml))) }
+    let(:xmldoc) { REXML::Document.new(xml2) }
+    let(:report_time) { REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
+    let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
+    let(:node) { create(:rss_node_weather_xml) }
+    let!(:page1) { create(:rss_weather_xml_page, cur_node: node, event_id: event_id, xml: xml1) }
+    let!(:page2) { create(:rss_weather_xml_page, cur_node: node, event_id: event_id, xml: xml2) }
+    let(:context) { OpenStruct.new(site: site, node: node, xmldoc: xmldoc) }
     subject { create(:rss_weather_xml_trigger_quake_info) }
 
     before do
@@ -37,21 +86,25 @@ describe Rss::WeatherXml::Trigger::QuakeInfo, dbscope: :example do
     end
 
     it "returns true" do
-      expect(subject.verify(page, context)).to be_truthy
+      expect(subject.verify(page2, context)).to be_truthy
       expect(context.type).to eq Rss::WeatherXml::Type::EARTH_QUAKE
       expect(context.region_eq_infos).to include(include({ pref_name: '岩手県' }))
       expect(context.max_int).to eq '6+'
+      expect(context.last_page).to eq page1
+      expect(context.last_xmldoc).not_to be_nil
     end
 
     it "calls block" do
       flag = 0
-      subject.verify(page, context) do
+      subject.verify(page2, context) do
         flag = 1
+        expect(context.type).to eq Rss::WeatherXml::Type::EARTH_QUAKE
+        expect(context.region_eq_infos).to include(include({ area_code: '212' }))
+        expect(context.max_int).to eq '6+'
+        expect(context.last_page).to eq page1
+        expect(context.last_xmldoc).not_to be_nil
       end
       expect(flag).to eq 1
-      expect(context.type).to eq Rss::WeatherXml::Type::EARTH_QUAKE
-      expect(context.region_eq_infos).to include(include({ area_code: '212' }))
-      expect(context.max_int).to eq '6+'
     end
   end
 end
