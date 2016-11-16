@@ -17,6 +17,7 @@ module Recommend::ListHelper
       next if display_list.index(item.path)
       content = item.content
       next unless content
+      next unless content.public?
 
       display_list << item.path
       displayed += 1

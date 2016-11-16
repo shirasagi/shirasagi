@@ -29,11 +29,11 @@ class Recommend::History::Log
   def content
     filename = path.sub(/^\//, "")
     page = Cms::Page.site(site).where(filename: filename).first
-    return page if page && page.public?
+    return page if page
 
     filename = filename.sub(/\/index\.html$/, "")
     node = Cms::Node.site(site).where(filename: filename).first
-    return node if node && node.public?
+    return node if node
 
     return nil
   end
