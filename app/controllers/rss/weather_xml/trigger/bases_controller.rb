@@ -29,6 +29,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to rss_weather_xml_trigger_landslide_info_path
       when 'Rss::WeatherXml::Trigger::FloodForecast'
         redirect_to rss_weather_xml_trigger_flood_forecast_path
+      when 'Rss::WeatherXml::Trigger::VolcanoFlash'
+        redirect_to rss_weather_xml_trigger_volcano_flash_path
       else
         raise "400"
       end
@@ -53,6 +55,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to new_rss_weather_xml_trigger_landslide_info_path
       when 'Rss::WeatherXml::Trigger::FloodForecast'
         redirect_to new_rss_weather_xml_trigger_flood_forecast_path
+      when 'Rss::WeatherXml::Trigger::VolcanoFlash'
+        redirect_to new_rss_weather_xml_trigger_volcano_flash_path
       else
         raise "400"
       end
@@ -76,6 +80,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to edit_rss_weather_xml_trigger_landslide_info_path
       when 'Rss::WeatherXml::Trigger::FloodForecast'
         redirect_to edit_rss_weather_xml_trigger_flood_forecast_path
+      when 'Rss::WeatherXml::Trigger::VolcanoFlash'
+        redirect_to edit_rss_weather_xml_trigger_volcano_flash_path
       else
         raise "400"
       end
@@ -99,6 +105,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
         redirect_to delete_rss_weather_xml_trigger_landslide_info_path
       when 'Rss::WeatherXml::Trigger::FloodForecast'
         redirect_to delete_rss_weather_xml_trigger_flood_forecast_path
+      when 'Rss::WeatherXml::Trigger::VolcanoFlash'
+        redirect_to delete_rss_weather_xml_trigger_volcano_flash_path
       else
         raise "400"
       end

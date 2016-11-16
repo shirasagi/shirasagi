@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://xml.kishou.go.jp/jmaxml1/" xmlns:jmx="http://xml.kishou.go.jp/jmaxml1/">
+<Control>
+<Title>噴火速報</Title>
+<DateTime>2014-09-27T03:00:12Z</DateTime>
+<Status>通常</Status>
+<EditorialOffice>気象庁本庁</EditorialOffice>
+<PublishingOffice>気象庁地震火山部</PublishingOffice>
+</Control>
+<Head xmlns="http://xml.kishou.go.jp/jmaxml1/informationBasis1/">
+<Title>火山名　御嶽山　噴火速報</Title>
+<ReportDateTime>2014-09-27T12:00:00+09:00</ReportDateTime>
+<TargetDateTime>2014-09-27T11:53:00+09:00</TargetDateTime>
+<TargetDTDubious>頃</TargetDTDubious>
+<EventID>20140927120000_312</EventID>
+<InfoType>発表</InfoType>
+<Serial />
+<InfoKind>噴火速報</InfoKind>
+<InfoKindVersion>1.2_0</InfoKindVersion>
+<Headline>
+<Text>＜御嶽山で噴火が発生＞</Text>
+<Information type="噴火速報">
+<Item>
+<Kind>
+<Name>噴火</Name>
+<Code>52</Code>
+</Kind>
+<Areas codeType="火山名">
+<Area>
+<Name>御嶽山</Name>
+<Code>312</Code>
+</Area>
+</Areas>
+</Item>
+</Information>
+</Headline>
+</Head>
+<Body xmlns="http://xml.kishou.go.jp/jmaxml1/body/volcanology1/" xmlns:jmx_eb="http://xml.kishou.go.jp/jmaxml1/elementBasis1/">
+<VolcanoInfo type="噴火速報">
+<Item>
+<EventTime>
+<EventDateTime significant="yyyy-mm-ddThh:mm" dubious="頃">2014-09-27T11:53:00+09:00</EventDateTime>
+<EventDateTimeUTC significant="yyyy-mm-ddThh:mm" dubious="頃">2014-09-27T02:53:00Z</EventDateTimeUTC>
+</EventTime>
+<Kind>
+<Name>噴火</Name>
+<Code>52</Code>
+</Kind>
+<Areas codeType="火山名">
+<Area>
+<Name>御嶽山</Name>
+<Code>312</Code>
+</Area>
+</Areas>
+</Item>
+</VolcanoInfo>
+<VolcanoInfo type="噴火速報（対象市町村等）"> 
+<Item> 
+<Kind>
+<Name>噴火</Name>
+<Code>52</Code>
+</Kind>
+<Areas codeType="気象・地震・火山情報／市町村等">
+<Area>
+<Name>長野県王滝村</Name> 
+<Code>2042900</Code> 
+</Area>
+<Area>
+<Name>長野県木曽町</Name>
+<Code>2043200</Code>
+</Area>
+<Area>
+<Name>岐阜県高山市</Name>
+<Code>2120300</Code>
+</Area>
+<Area>
+<Name>岐阜県下呂市</Name>
+<Code>2122000</Code>
+</Area>
+</Areas>
+</Item>
+</VolcanoInfo>
+<VolcanoInfoContent>
+<VolcanoHeadline>＜御嶽山で噴火が発生＞</VolcanoHeadline>
+<VolcanoActivity> 御嶽山で、平成２６年９月２７日１１時５３分頃、噴火が発生しました。</VolcanoActivity>
+</VolcanoInfoContent>
+</Body>
+</Report>

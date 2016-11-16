@@ -47,6 +47,7 @@ SS::Application.routes.draw do
         resources :weather_alerts, path: 'triggers/weather_alerts', concerns: [:deletion]
         resources :landslide_infos, path: 'triggers/landslide_infos', concerns: [:deletion]
         resources :flood_forecasts, path: 'triggers/flood_forecasts', concerns: [:deletion]
+        resources :volcano_flashes, path: 'triggers/volcano_flashes', concerns: [:deletion]
         # put base at last
         resources :bases, path: 'triggers', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
       end

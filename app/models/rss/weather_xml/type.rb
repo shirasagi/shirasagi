@@ -4,4 +4,5 @@ module Rss::WeatherXml::Type
   FLOOD = :flood
   FORECAST = :forecast
   LAND_SLIDE = :land_slide
+  VOLCANO = :volcano
 end
