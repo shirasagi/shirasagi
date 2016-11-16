@@ -664,7 +664,6 @@ class @Mobile_Size_Checker
   @check: (html, async, complete)->
     mobile_size = Mobile_Size_Checker.mobile_size
     size = Mobile_Size_Checker.get_str_byte(html)
-    console.log("mobile_size=#{mobile_size}, size=#{size}")
     if mobile_size < size
       err_str = "<p class=\"error\">"
       err_str += Mobile_Size_Checker.message["SizeCheckError"]
