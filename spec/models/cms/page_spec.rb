@@ -61,7 +61,7 @@ describe Cms::Page do
         click_on I18n.t("cms.mobile_size_check")
         sleep 1
         expect(page).to have_css "form #errorMobileChecker"
-        expect(page).to have_selector "form #errorMobileChecker p.error", text: /携帯で表示する場合、本文のデータサイズが大きすぎます。(.+)/i
+        expect(page).to have_selector "form #errorMobileChecker p.error", text: /携帯で表示する場合、本文のデータサイズが(.+)/i
       end
 
       it "on click check_size_button html_size ok" do

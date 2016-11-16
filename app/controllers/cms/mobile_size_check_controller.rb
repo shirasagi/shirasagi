@@ -25,7 +25,8 @@ class Cms::MobileSizeCheckController < ApplicationController
           result[:errors] << I18n.t(
             "errors.messages.too_bigfile",
             filename: file.name,
-            filesize: view_context.number_to_human_size(file.thumb.size)
+            filesize: view_context.number_to_human_size(file.thumb.size),
+            mobile_size: view_context.number_to_human_size(mobile_size)
           )
         end
 
@@ -35,7 +36,8 @@ class Cms::MobileSizeCheckController < ApplicationController
           result[:errors] << I18n.t(
             "errors.messages.too_bigfile",
             filename: file.name,
-            filesize: view_context.number_to_human_size(file.size)
+            filesize: view_context.number_to_human_size(file.size),
+            mobile_size: view_context.number_to_human_size(mobile_size)
           )
         end
 

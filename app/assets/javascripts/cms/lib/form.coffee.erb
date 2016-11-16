@@ -582,7 +582,7 @@ class @Mobile_Size_Checker
     failure           : "<%= I18n.t('errors.messages.mobile_size_check_failure') %>"
     mobile_disable    : "<%= I18n.t('errors.messages.mobile_size_check_disable') %>"
     mobile_check      : "<%= I18n.t('errors.messages.mobile_size_check_size') %>"
-    SizeCheckError    : "<%= I18n.t('errors.messages.mobile_size_check_failed_to_size') %>"
+    SizeCheckServerError: "<%= I18n.t('errors.messages.mobile_size_check_server_error') %>"
   }
 
   @error   = []
@@ -668,8 +668,7 @@ class @Mobile_Size_Checker
     if mobile_size < size
       err_str = "<p class=\"error\">"
       err_str += Mobile_Size_Checker.message["SizeCheckError"]
-      err_str += "(本文サイズ：#{parseInt(size/1024)}KB、"
-      err_str += "制限サイズ：#{Mobile_Size_Checker.check_size})"
+      err_str += "(本文サイズ：#{parseInt(size/1024)}KB"
       err_str += "</p>"
 
       Mobile_Size_Checker.error = [err_str]
@@ -710,7 +709,7 @@ class @Mobile_Size_Checker
 
       error: (xhr, status, error) ->
         str_err = "<p>"
-        str_err += Mobile_Size_Checker.message["SizeCheckError"]
+        str_err += Mobile_Size_Checker.message["SizeCheckServerError"]
         str_err += "</p>"
         Mobile_Size_Checker.error = [str_err]
         return
