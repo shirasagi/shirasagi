@@ -1,7 +1,7 @@
 class Sns::MypageController < ApplicationController
   include Sns::BaseFilter
 
-  before_action :notices, only: [:index, :cms, :gws]
+  before_action :notices, only: [:index]
 
   private
     def cms_sites
@@ -43,4 +43,5 @@ class Sns::MypageController < ApplicationController
         redirect_to sns_mypage_path
       end
     end
+
 end

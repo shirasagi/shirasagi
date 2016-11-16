@@ -12,6 +12,10 @@ SS::Application.routes.draw do
     put "role" => "groups#role_update", :on => :member
   end
 
+  namespace "sys", path: ".mypage" do
+    resources :public_notices, only: [:index, :show]
+  end
+
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
     get "conf" => "conf#index", as: :conf
@@ -30,11 +34,6 @@ SS::Application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
-
-    resources :public_notices, concerns: :deletion do
-      get :copy, :on => :member
-      put :copy, :on => :member
-    end
 
     namespace "apis" do
       get "groups" => "groups#index"

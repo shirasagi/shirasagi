@@ -3,10 +3,11 @@ class Sys::PublicNoticesController < ApplicationController
   include Sys::CrudFilter
 
   model Sys::Notice
+  skip_action_callback :logged_in?, only: [:show]
 
   private
     def set_crumbs
-      @crumbs << [:"cms.notice", action: :index]
+      @crumbs = []
     end
 
   public
@@ -18,7 +19,7 @@ class Sys::PublicNoticesController < ApplicationController
     end
 
     def show
-      raise "403" unless @model.and_public.find(@item.id)
+      raise "403" unless @item = @model.and_public.find(params[:id])
       render
     end
 end

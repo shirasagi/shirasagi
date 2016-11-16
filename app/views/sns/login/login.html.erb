@@ -54,18 +54,20 @@
 
 <% if @notices.present? %>
 <section id="login-notice">
-  <h2><%= t('sys.notice') %></h2>
-  <% @notices.each do |item| %>
   <div class="main-box">
     <header>
-      <h2><%= item.name %> <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span></h2>
+      <h2><%= t('sys.notice') %></h2>
     </header>
-    <div>
-      <div class="info">
-        <%= item.html.html_safe %>
-      </div>
-    </div>
-  </div>
+    <ul class="list-items">
+  <% @notices.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, sys_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+          <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+        </div>
+      </li>
 <% end %>
+    </ul>
+  </div>
 </section>
 <% end %>
