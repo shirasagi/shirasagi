@@ -41,6 +41,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.name).to eq '福島地方気象台'
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
+      expect(item.event_id).to eq '20160318182200_984'
       expect(item.xml).not_to be_nil
       expect(item.xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
       expect(item.state).to eq 'closed'
@@ -119,6 +120,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.name).to eq '気象庁'
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
+      expect(item.event_id).to eq '20160308133250'
       expect(item.xml).not_to be_nil
       expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
       expect(item.state).to eq 'closed'
@@ -213,6 +215,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.name).to eq '気象庁'
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
+      expect(item.event_id).to eq '20110311144640'
       expect(item.xml).not_to be_nil
       expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
       expect(item.state).to eq 'closed'

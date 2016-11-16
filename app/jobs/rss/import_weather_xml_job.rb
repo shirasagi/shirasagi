@@ -35,6 +35,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       content = download(page.rss_link)
       return page if content.nil?
 
+      page.event_id = extract_event_id(content) rescue nil
       page.xml = content
       page.save!
 
@@ -56,6 +57,11 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       res.body.force_encoding('UTF-8')
     rescue
       nil
+    end
+
+    def extract_event_id(xml)
+      xmldoc = REXML::Document.new(xml)
+      REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip
     end
 
     def process_earthquake(page)
