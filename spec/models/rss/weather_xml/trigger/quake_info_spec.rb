@@ -14,8 +14,10 @@ describe Rss::WeatherXml::Trigger::QuakeInfo, dbscope: :example do
 
   describe '#verify' do
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_32-35_06_100915_03zenkokusaisumo1.xml))) }
+    let(:xmldoc) { REXML::Document.new(xml1) }
+    let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
-    let(:context) { OpenStruct.new(site: site, xmldoc: REXML::Document.new(page.xml)) }
+    let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
     subject { create(:rss_weather_xml_trigger_quake_info) }
 
     before do
@@ -29,13 +31,16 @@ describe Rss::WeatherXml::Trigger::QuakeInfo, dbscope: :example do
     end
 
     around do |example|
-      Timecop.travel('2008-06-14T08:47:00+09:00') do
+      Timecop.travel(report_time) do
         example.run
       end
     end
 
     it "returns true" do
       expect(subject.verify(page, context)).to be_truthy
+      expect(context.type).to eq Rss::WeatherXml::Type::EARTH_QUAKE
+      expect(context.region_eq_infos).to include(include({ pref_name: '岩手県' }))
+      expect(context.max_int).to eq '6+'
     end
 
     it "calls block" do
@@ -44,6 +49,9 @@ describe Rss::WeatherXml::Trigger::QuakeInfo, dbscope: :example do
         flag = 1
       end
       expect(flag).to eq 1
+      expect(context.type).to eq Rss::WeatherXml::Type::EARTH_QUAKE
+      expect(context.region_eq_infos).to include(include({ area_code: '212' }))
+      expect(context.max_int).to eq '6+'
     end
   end
 end

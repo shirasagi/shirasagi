@@ -13,7 +13,7 @@ describe Rss::WeatherXml::Trigger::FloodForecast, dbscope: :example do
 
   describe '#verify' do
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_16_01_100806_kasenkozui1.xml))) }
-    let(:xmldoc) { REXML::Document.new(page.xml) }
+    let(:xmldoc) { REXML::Document.new(xml1) }
     let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
     let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }

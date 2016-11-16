@@ -13,8 +13,10 @@ describe Rss::WeatherXml::Trigger::WeatherAlert, dbscope: :example do
 
   describe '#verify' do
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_15_08_130412_02VPWW53.xml))) }
+    let(:xmldoc) { REXML::Document.new(xml1) }
+    let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
     let(:page) { create(:rss_weather_xml_page, xml: xml1) }
-    let(:context) { OpenStruct.new(site: site, xmldoc: REXML::Document.new(page.xml)) }
+    let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
     subject { create(:rss_weather_xml_trigger_weather_alert) }
 
     before do
@@ -27,7 +29,7 @@ describe Rss::WeatherXml::Trigger::WeatherAlert, dbscope: :example do
     end
 
     around do |example|
-      Timecop.travel('2011-09-04T00:10:00+09:00') do
+      Timecop.travel(report_time) do
         example.run
       end
     end
