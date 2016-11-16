@@ -17,6 +17,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
       case @item.class.name
         when 'Rss::WeatherXml::Trigger::QuakeIntensityFlash'
           redirect_to rss_weather_xml_trigger_quake_intensity_flash_path
+        when 'Rss::WeatherXml::Trigger::QuakeInfo'
+          redirect_to rss_weather_xml_trigger_quake_info_path
         when 'Rss::WeatherXml::Trigger::TsunamiAlert'
           redirect_to rss_weather_xml_trigger_tsunami_alert_path
         when 'Rss::WeatherXml::Trigger::TsunamiInfo'
@@ -39,6 +41,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
       case @item.in_type
         when 'Rss::WeatherXml::Trigger::QuakeIntensityFlash'
           redirect_to new_rss_weather_xml_trigger_quake_intensity_flash_path
+        when 'Rss::WeatherXml::Trigger::QuakeInfo'
+          redirect_to new_rss_weather_xml_trigger_quake_info_path
         when 'Rss::WeatherXml::Trigger::TsunamiAlert'
           redirect_to new_rss_weather_xml_trigger_tsunami_alert_path
         when 'Rss::WeatherXml::Trigger::TsunamiInfo'
@@ -60,6 +64,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
       case @item.class.name
         when 'Rss::WeatherXml::Trigger::QuakeIntensityFlash'
           redirect_to edit_rss_weather_xml_trigger_quake_intensity_flash_path
+        when 'Rss::WeatherXml::Trigger::QuakeInfo'
+          redirect_to edit_rss_weather_xml_trigger_quake_info_path
         when 'Rss::WeatherXml::Trigger::TsunamiAlert'
           redirect_to edit_rss_weather_xml_trigger_tsunami_alert_path
         when 'Rss::WeatherXml::Trigger::TsunamiInfo'
@@ -81,6 +87,8 @@ class Rss::WeatherXml::Trigger::BasesController < ApplicationController
       case @item.class.name
         when 'Rss::WeatherXml::Trigger::QuakeIntensityFlash'
           redirect_to delete_rss_weather_xml_trigger_quake_intensity_flash_path
+        when 'Rss::WeatherXml::Trigger::QuakeInfo'
+          redirect_to delete_rss_weather_xml_trigger_quake_info_path
         when 'Rss::WeatherXml::Trigger::TsunamiAlert'
           redirect_to delete_rss_weather_xml_trigger_tsunami_alert_path
         when 'Rss::WeatherXml::Trigger::TsunamiInfo'

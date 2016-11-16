@@ -38,6 +38,7 @@ SS::Application.routes.draw do
       resources :filters, concerns: [:deletion]
       scope module: :trigger, as: :trigger do
         resources :quake_intensity_flashes, path: 'triggers/quake_intensity_flashes', concerns: [:deletion]
+        resources :quake_infos, path: 'triggers/quake_infos', concerns: [:deletion]
         resources :tsunami_alerts, path: 'triggers/tsunami_alerts', concerns: [:deletion]
         resources :tsunami_infos, path: 'triggers/tsunami_infos', concerns: [:deletion]
         resources :flood_forecasts, path: 'triggers/flood_forecasts', concerns: [:deletion]

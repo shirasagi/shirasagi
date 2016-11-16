@@ -1,8 +1,8 @@
-class Rss::WeatherXml::Trigger::QuakeIntensityFlashesController < ApplicationController
+class Rss::WeatherXml::Trigger::QuakeInfosController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Rss::WeatherXml::Trigger::QuakeIntensityFlash
+  model Rss::WeatherXml::Trigger::QuakeInfo
   navi_view "rss/main/navi"
   append_view_path "app/views/rss/weather_xml/trigger/quake_main"
 
