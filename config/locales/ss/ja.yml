@@ -171,6 +171,9 @@ ja:
         15min: 15分
         30min: 30分
         60min: 60分
+      restriction:
+        none: 制限なし
+        api_only: API利用のみ
 
     state:
       public: 公開中
@@ -300,6 +303,7 @@ ja:
         account_expiration_date: 有効期限（終了）
         initial_password_warning: 初期パスワード警告
         session_lifetime: セッション寿命
+        restriction: 利用制限
         remark: 備考
       ss/model/user_title:
         name: 役職名

@@ -55,6 +55,9 @@
     </datalist>
   </dd>
 
+  <dt><%= @model.t :restriction %><%= @model.tt :restriction %></dt>
+  <dd><%= f.select :restriction, @item.restriction_options %></dd>
+
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>

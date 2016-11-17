@@ -47,6 +47,11 @@ SS_Clipboard.renderCopy();
   <dd><%= @item.label(:session_lifetime) || I18n.t('datetime.distance_in_words.x_seconds', count: @item.session_lifetime) %></dd>
   <% end %>
 
+  <% if @item.restriction.present? %>
+  <dt><%= @model.t :restriction %></dt>
+  <dd><%= @item.label :restriction %></dd>
+  <% end %>
+
   <% main_group = @item.gws_main_group(@cur_site) %>
 
   <dt><%= @model.t :group_ids %></dt>
