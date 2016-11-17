@@ -7,7 +7,7 @@ module Rss::WeatherXml::Type
 
   class Tsunami
     def renderer(page, context)
-      raise NotImplementedError
+      Rss::WeatherXml::Renderer::Tsunami.new(page, context)
     end
   end
 

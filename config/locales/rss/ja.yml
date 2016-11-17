@@ -59,13 +59,68 @@ ja:
         select: 水位観測所を設定する
     templates:
       quake:
-        title: "#{target_time} ころ地震がありました"
-        upper_text: "#{target_time} ころ地震がありました。\n各地の震度は下記の通りです。"
+        title: "#{target_time}ごろ地震がありました"
+        upper_text: "#{target_time}ごろ地震がありました。\n各地の震度は下記の通りです。"
         loop_text: "#{area_name}：震度 #{intensity_label}"
         lower_text: ""
-        upper_html: "<article class=\"jmaxml quake\"><header><h2>#{target_time} ころ地震がありました。</h2>\n<p>各地の震度は下記の通りです。</p></header>\n<ul>"
-        loop_html: "<li>#{area_name}：震度 #{intensity_label}</li>"
-        lower_html: "</ul>\n\n<p>#{forecast_comment}</p></article>"
+        upper_html:
+          - "<article class=\"jmaxml quake\">"
+          - "  <header><h2>#{target_time}ごろ地震がありました。</h2>"
+          - "    <p>各地の震度は下記の通りです。</p>"
+          - "  </header>"
+          - "  <ul>"
+        loop_html:
+          - "    <li>#{area_name}：震度 #{intensity_label}</li>"
+        lower_html:
+          - "  </ul>"
+          - "  <div>"
+          - "    <h2>震源</h2>"
+          - "    <dl>"
+          - "      <dt>震源地</dt><dd>#{hypocenter_area_name} #{hypocenter_area_namefrommark}</dd>"
+          - "      <dt>座標・深さ</dt><dd>#{hypocenter_coordinate}</dd>"
+          - "      <dt>マグニチュード</dt><dd>#{earthquake_magnitude}</dd>"
+          - "    </dl>"
+          - "  </div>"
+          - "  <p>#{forecast_comment}</p>"
+          - "</article>"
+      tsunami:
+        title: "#{title}"
+        upper_text:
+          - "#{headline_text}"
+        loop_text:
+          - "#{area_name}：#{category_name}　第1波 #{first_height_label}　高さ #{tsunami_height}"
+        lower_text:
+          - "関連する地震情報"
+          - "地震発生時刻：#{earthquake_origin_time}"
+          - "震源地：#{hypocenter_area_name} #{hypocenter_name_from_mark}"
+          - "座標・深さ：#{hypocenter_coordinate}"
+          - "マグニチュード：#{earthquake_magnitude}"
+          - ""
+          - "#{warning_comment}"
+        upper_html:
+          - "<article class=\"jmaxml tsunami\">"
+          - "  <p>#{headline_text}</p>"
+          - "  <table>"
+          - "  <thead>"
+          - "    <tr><td>地域</td><td>警報・注意報</td><td>第1波</td><td>高さ</td></tr>"
+          - "  </thead>"
+          - "  <tbody>"
+        loop_html:
+          - "    <tr><td>#{area_name}</td><td>#{category_name}</td><td>#{first_height_label}</td><td>#{tsunami_height}</td></tr>"
+        lower_html:
+          - "  </tbody>"
+          - "  </table>"
+          - "  <div>"
+          - "    <h2>関連する地震情報</h2>"
+          - "    <dl>"
+          - "      <dt>地震発生時刻</dt><dd>#{earthquake_origin_time}</dd>"
+          - "      <dt>震源地</dt><dd>#{hypocenter_area_name} #{hypocenter_name_from_mark}</dd>"
+          - "      <dt>座標・深さ</dt><dd>#{hypocenter_coordinate}</dd>"
+          - "      <dt>マグニチュード</dt><dd>#{earthquake_magnitude}</dd>"
+          - "    </dl>"
+          - "  </div>"
+          - "  <p>#{warning_comment}</p>"
+          - "</article>"
 
   modules:
     rss: RSS取込
