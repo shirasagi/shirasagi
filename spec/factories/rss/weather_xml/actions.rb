@@ -10,4 +10,7 @@ FactoryGirl.define do
     loop_mail_text "\#{area_name}：\#{intensity_label}\n"
     lower_mail_text "下記のアドレスにアクセスし、安否情報を入力してください。\n\#{anpi_post_url}\n"
   end
+
+  factory :rss_weather_xml_action_switch_urgency,
+          class: Rss::WeatherXml::Action::SwitchUrgency, traits: [:rss_weather_xml_action_base]
 end

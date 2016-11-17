@@ -24,7 +24,7 @@ RSpec.configuration.before(:suite) do
 end
 
 RSpec.configuration.after(:suite) do
-  ::FileUtils.rm_rf SS.config.kana.root if ::Dir.exists?(SS.config.kana.root)
+  ::FileUtils.rm_rf(SS.config.kana.root) if SS.config.kana.root.present? && ::Dir.exists?(SS.config.kana.root)
 end
 
 RSpec.configuration.filter_run_excluding(mecab: true) unless can_test_mecab_spec?

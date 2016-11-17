@@ -1,8 +1,8 @@
-class Rss::WeatherXml::Action::ChangeUrgenciesController < ApplicationController
+class Rss::WeatherXml::Action::SwitchUrgenciesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Rss::WeatherXml::Action::ChangeUrgency
+  model Rss::WeatherXml::Action::SwitchUrgency
   navi_view "rss/main/navi"
 
   private

@@ -52,7 +52,7 @@ SS::Application.routes.draw do
         resources :bases, path: 'triggers', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
       end
       scope module: :action, as: :action do
-        resources :change_urgencies, path: 'actions/change_urgencies', concerns: [:deletion]
+        resources :switch_urgencies, path: 'actions/switch_urgencies', concerns: [:deletion]
         resources :publish_pages, path: 'actions/publish_pages', concerns: [:deletion]
         resources :send_mails, path: 'actions/send_mails', concerns: [:deletion]
         # put base at last

@@ -9,5 +9,18 @@ module Urgency::Addon
 
       validates :urgency_default_layout_id, presence: true
     end
+
+    def find_index_page
+      index_page_filename = parent ? "#{parent.filename}/index.html" : "index.html"
+      Cms::Page.site(site).where(filename: /^#{index_page_filename}$/, depth: depth).first
+    end
+
+    def switch_layout(layout)
+      index_page = find_index_page
+      return if index_page.blank?
+
+      index_page.layout_id = layout.id
+      index_page.save
+    end
   end
 end

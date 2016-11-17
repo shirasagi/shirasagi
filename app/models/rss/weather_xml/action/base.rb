@@ -32,7 +32,7 @@ class Rss::WeatherXml::Action::Base
     sub_classes = [
       Rss::WeatherXml::Action::PublishPage,
       Rss::WeatherXml::Action::SendMail,
-      Rss::WeatherXml::Action::ChangeUrgency ]
+      Rss::WeatherXml::Action::SwitchUrgency ]
     sub_classes.map do |v|
       [ v.model_name.human, v.name ]
     end
