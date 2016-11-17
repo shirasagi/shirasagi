@@ -3,7 +3,8 @@ class Cms::CheckLinksNodesController < ApplicationController
   include Cms::CrudFilter
 
   model Cms::Node::CheckLinks
-  #navi_view "cms/search_contents/navi"
+  menu_view  "cms/check_links_contents/menu"
+  navi_view  "cms/check_links_contents/navi"
   append_view_path "app/views/cms/check_links_contents"
 
   public
