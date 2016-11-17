@@ -11,7 +11,8 @@
     <tbody>
       <% @items.each do |item| %>
       <tr class="list-item">
-        <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{item.args.join(",")})", action: :show, id: item) %>
+        <% args = item.args.join(",") rescue nil %>
+        <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", action: :show, id: item) %>
           <nav class="tap-menu">
             <%= link_to :show, action: :show, id: item %>
           </nav>
