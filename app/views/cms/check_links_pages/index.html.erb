@@ -1,0 +1,26 @@
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= @model.t("name") %></th>
+      <th><%= @model.t("check_links_errors_url") %></th>
+      <th><%= @model.t("check_links_errors_updated") %></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @items.each do |item| %>
+    <tr>
+      <td><%= link_to item.name, { action: :show, id: item }, class: "title" %></td>
+      <td>
+        <% if item.public? %>
+          <%= link_to item.full_url, item.full_url, target: :_blank %>
+        <% else %>
+          <%= item.name %>
+        <% end %>
+      </td>
+      <td><%= item.check_links_errors_updated.strftime("%Y/%m/%d %H:%M") %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= paginate @items if @items.try(:current_page) %>
