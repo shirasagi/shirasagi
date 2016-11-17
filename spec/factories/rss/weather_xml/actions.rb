@@ -11,6 +11,11 @@ FactoryGirl.define do
     lower_mail_text "下記のアドレスにアクセスし、安否情報を入力してください。\n\#{anpi_post_url}\n"
   end
 
+  factory :rss_weather_xml_action_publish_page,
+          class: Rss::WeatherXml::Action::PublishPage, traits: [:rss_weather_xml_action_base] do
+    publish_state 'draft'
+  end
+
   factory :rss_weather_xml_action_switch_urgency,
           class: Rss::WeatherXml::Action::SwitchUrgency, traits: [:rss_weather_xml_action_base]
 end

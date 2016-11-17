@@ -6,4 +6,12 @@ class Rss::WeatherXml::Action::PublishPage < Rss::WeatherXml::Action::Base
   def publish_state_options
     %w(draft public).map { |v| [ I18n.t("views.options.state.#{v}"), v ] }
   end
+
+  def execute(page, context)
+    renderer = context.type.renderer(page, context)
+    title = renderer.render_title
+    html = renderer.render_html
+
+    Article::Page.create!(cur_site: context.site, cur_node: publish_to, state: publish_state, name: title, html: html)
+  end
 end
