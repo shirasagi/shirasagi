@@ -58,16 +58,18 @@ ja:
         search: 水位観測所を検索
         select: 水位観測所を設定する
     templates:
+      status: "【#{status}】"
+      info_type: "【#{info_type}】"
+      cancel_html: "<div class=\"jmaxml cancel\">#{headline_text}</div>"
       quake:
-        title: "#{target_time}ごろ地震がありました"
+        title: "#{title}"
         upper_text: "#{target_time}ごろ地震がありました。\n各地の震度は下記の通りです。"
         loop_text: "#{area_name}：震度 #{intensity_label}"
         lower_text: ""
         upper_html:
-          - "<article class=\"jmaxml quake\">"
-          - "  <header><h2>#{target_time}ごろ地震がありました。</h2>"
-          - "    <p>各地の震度は下記の通りです。</p>"
-          - "  </header>"
+          - "<div class=\"jmaxml quake\">"
+          - "  <h2>#{target_time}ごろ地震がありました。</h2>"
+          - "  <p>各地の震度は下記の通りです。</p>"
           - "  <ul>"
         loop_html:
           - "    <li>#{area_name}：震度 #{intensity_label}</li>"
@@ -82,7 +84,7 @@ ja:
           - "    </dl>"
           - "  </div>"
           - "  <p>#{forecast_comment}</p>"
-          - "</article>"
+          - "</div>"
       tsunami:
         title: "#{title}"
         upper_text:
@@ -98,7 +100,7 @@ ja:
           - ""
           - "#{warning_comment}"
         upper_html:
-          - "<article class=\"jmaxml tsunami\">"
+          - "<div class=\"jmaxml tsunami\">"
           - "  <p>#{headline_text}</p>"
           - "  <table>"
           - "  <thead>"
@@ -120,7 +122,7 @@ ja:
           - "    </dl>"
           - "  </div>"
           - "  <p>#{warning_comment}</p>"
-          - "</article>"
+          - "</div>"
 
   modules:
     rss: RSS取込

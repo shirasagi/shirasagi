@@ -4,7 +4,6 @@ module Rss::WeatherXml::Renderer::ControlHandler
   included do
     template_variable_handler(:title, :template_variable_handler_title)
     template_variable_handler(:status, :template_variable_handler_status)
-    template_variable_handler(:status_label, :template_variable_handler_status_label)
   end
 
   def control_title
@@ -22,10 +21,5 @@ module Rss::WeatherXml::Renderer::ControlHandler
 
     def template_variable_handler_status(*_)
       control_status
-    end
-
-    def template_variable_handler_status_label(*_)
-      s = control_status
-      "【#{s}】" if s.present?
     end
 end
