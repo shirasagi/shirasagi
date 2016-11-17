@@ -142,6 +142,7 @@ module Cms::PageFilter
     end
 
     def contain_links
-      #
+      raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+      render
     end
 end

@@ -176,6 +176,11 @@ describe Mobile::Converter do
           subject { do_convert!('<img src="/fs/1/2/3/_/sample.png">') }
           it { is_expected.to eq '<img src="/fs/1/2/3/_/thumb/sample.png">' }
         end
+
+        context "when src is thumb url" do
+          subject { do_convert!('<img src="/fs/1/2/3/4/_/thumb/sample.png" alt="sample">') }
+          it { is_expected.to eq '<img src="/fs/1/2/3/4/_/thumb/sample.png" alt="sample">' }
+        end
       end
 
       context "when ss_file's jpg is given" do
@@ -192,6 +197,11 @@ describe Mobile::Converter do
         context "when no additoinal attributes is given" do
           subject { do_convert!('<img src="/fs/1/2/3/_/sample.jpg">') }
           it { is_expected.to eq '<img src="/fs/1/2/3/_/thumb/sample.jpg">' }
+        end
+
+        context "when src is thumb url" do
+          subject { do_convert!('<img src="/fs/1/2/3/4/_/thumb/sample.jpg" alt="sample">') }
+          it { is_expected.to eq '<img src="/fs/1/2/3/4/_/thumb/sample.jpg" alt="sample">' }
         end
       end
     end
