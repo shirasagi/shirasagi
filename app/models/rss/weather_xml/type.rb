@@ -13,7 +13,7 @@ module Rss::WeatherXml::Type
 
   class Flood
     def renderer(page, context)
-      raise NotImplementedError
+      Rss::WeatherXml::Renderer::Flood.new(page, context)
     end
   end
 

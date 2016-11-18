@@ -149,6 +149,36 @@ ja:
           - "  </tbody>"
           - "  </table>"
           - "</div>"
+      flood:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}発表"
+          - ""
+          - "#{headline_text}"
+          - ""
+        loop_text:
+          - "＜#{river_name}＞#{kind_name}　#{kind_condition}"
+          - "#{main_sentence}"
+          - ""
+          - "水位観測所：#{station_name}（#{station_location}）"
+          - ""
+        lower_text:
+          - "#{rainfall_text}"
+        upper_html:
+          - "<div class=\"jmaxml flood\">"
+          - "  <h2>#{target_time} #{publishing_office}発表</h2>"
+          - "  <p>#{headline_text}</p>"
+        loop_html:
+          - "  <dl>"
+          - "    <dt>河川</dt><dd>#{river_name}</dd>"
+          - "    <dt>発表種別</dt><dd>#{kind_name}</dd>"
+          - "    <dt>洪水予報種別</dt><dd>#{kind_condition}</dd>"
+          - "    <dt>内容</dt><dd>#{main_sentence}</dd>"
+          - "    <dt>水位観測所</dt><dd>#{station_name}（#{station_location}）</dd>"
+          - "  </dl>"
+        lower_html:
+          - "  <p>#{rainfall_text}</p>"
+          - "</div>"
 
   modules:
     rss: RSS取込

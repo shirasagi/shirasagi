@@ -219,6 +219,49 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
             expect(page.html).to include('<tr><td>天理市</td><td>大雨特別警報、雷注意報、強風注意報、洪水注意報</td></tr>')
           end
         end
+
+        context 'when flood forecast is given' do
+          let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_16_01_100806_kasenkozui1.xml))) }
+          let(:trigger) { create(:rss_weather_xml_trigger_flood_forecast) }
+          let(:main_sentence) do
+            %w(
+              揖斐川中流の万石水位観測所では、はん濫注意水位・流量（レベル２）に到達しました。
+              水位・流量はさらに上昇する見込みです。今後の洪水予報に注意して下さい。).join
+          end
+
+          before do
+            region1 = create(:rss_weather_xml_water_level_station_85050900020300042)
+            region2 = create(:rss_weather_xml_water_level_station_85050900020300045)
+            region3 = create(:rss_weather_xml_water_level_station_85050900020300053)
+            trigger.target_region_ids = [ region1.id, region2.id, region3.id ]
+            trigger.save!
+
+            subject.publish_to_id = article_node.id
+            subject.save!
+          end
+
+          it do
+            trigger.verify(page, context) do
+              subject.execute(page, context)
+            end
+
+            expect(Article::Page.count).to eq 1
+            Article::Page.first.tap do |page|
+              expect(page.name).to eq '指定河川洪水予報'
+              expect(page.state).to eq subject.publish_state
+              puts page.html
+              expect(page.html).to include('<div class="jmaxml flood">')
+              expect(page.html).to include('<h2>2008年9月3日 04時15分 木曽川上流河川事務所 岐阜地方気象台発表</h2>')
+              expect(page.html).to include('<p>揖斐川中流では　はん濫注意水位・流量に到達　水位はさらに上昇</p>')
+              expect(page.html).to include('<dt>河川</dt><dd>揖斐川</dd>')
+              expect(page.html).to include('<dt>発表種別</dt><dd>はん濫注意情報</dd>')
+              expect(page.html).to include('<dt>洪水予報種別</dt><dd>洪水注意報（発表）</dd>')
+              expect(page.html).to include("<dt>内容</dt><dd>#{main_sentence}</dd>")
+              expect(page.html).to include('<dt>水位観測所</dt><dd>万石水位観測所（岐阜県大垣市万石）</dd>')
+              expect(page.html).to include('<p>所により１時間に５０ミリの雨が降っています。この雨は今後次第に弱まるでしょう。</p>')
+            end
+          end
+        end
       end
     end
 
