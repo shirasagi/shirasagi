@@ -19,7 +19,7 @@ module Rss::WeatherXml::Type
 
   class Forecast
     def renderer(page, context)
-      raise NotImplementedError
+      Rss::WeatherXml::Renderer::Forecast.new(page, context)
     end
   end
 

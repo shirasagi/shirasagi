@@ -183,6 +183,43 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
           end
         end
       end
+
+      context 'when weather alert is given' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_15_08_130412_02VPWW53.xml))) }
+        let(:trigger) { create(:rss_weather_xml_trigger_weather_alert) }
+
+        before do
+          region_2920100 = create(:rss_weather_xml_forecast_region_2920100)
+          region_2920200 = create(:rss_weather_xml_forecast_region_2920200)
+          region_2920300 = create(:rss_weather_xml_forecast_region_2920300)
+          region_2920400 = create(:rss_weather_xml_forecast_region_2920400)
+          trigger.target_region_ids = [ region_2920100.id, region_2920200.id, region_2920300.id, region_2920400.id ]
+          trigger.save!
+
+          subject.publish_to_id = article_node.id
+          subject.save!
+        end
+
+        it do
+          trigger.verify(page, context) do
+            subject.execute(page, context)
+          end
+
+          expect(Article::Page.count).to eq 1
+          Article::Page.first.tap do |page|
+            expect(page.name).to eq '気象特別警報・警報・注意報'
+            expect(page.state).to eq subject.publish_state
+            puts page.html
+            expect(page.html).to include('<div class="jmaxml forecast">')
+            expect(page.html).to include('<h2>2011年9月4日 00時10分 奈良地方気象台発表</h2>')
+            expect(page.html).to include('<p>【特別警報（大雨）】奈良県では、４日昼過ぎまで土砂災害に、４日朝まで低い土地の浸水や河川の増水に警戒して下さい。</p>')
+            expect(page.html).to include('<tr><td>奈良市</td><td>大雨特別警報、雷注意報、強風注意報、洪水注意報</td></tr>')
+            expect(page.html).to include('<tr><td>大和高田市</td><td>大雨特別警報、洪水警報、雷注意報、強風注意報</td></tr>')
+            expect(page.html).to include('<tr><td>大和郡山市</td><td>大雨特別警報、洪水警報、雷注意報、強風注意報</td></tr>')
+            expect(page.html).to include('<tr><td>天理市</td><td>大雨特別警報、雷注意報、強風注意報、洪水注意報</td></tr>')
+          end
+        end
+      end
     end
 
     context 'when alert/info is canceled' do

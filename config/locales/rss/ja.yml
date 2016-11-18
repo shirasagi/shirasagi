@@ -123,6 +123,32 @@ ja:
           - "  </div>"
           - "  <p>#{warning_comment}</p>"
           - "</div>"
+      forecase:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}発表"
+          - ""
+          - "#{headline_text}"
+          - ""
+        loop_text:
+          - "＜#{area_name}＞"
+          - "#{kind_names}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml forecast\">"
+          - "  <h2>#{target_time} #{publishing_office}発表</h2>"
+          - "  <p>#{headline_text}</p>"
+          - "  <table>"
+          - "  <thead>"
+          - "    <tr><td>市町村</td><td>警報・注意報</td></tr>"
+          - "  </thead>"
+          - "  <tbody>"
+        loop_html:
+          - "    <tr><td>#{area_name}</td><td>#{kind_names}</td></tr>"
+        lower_html:
+          - "  </tbody>"
+          - "  </table>"
+          - "</div>"
 
   modules:
     rss: RSS取込
