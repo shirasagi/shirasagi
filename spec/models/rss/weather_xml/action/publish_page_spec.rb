@@ -299,6 +299,40 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
             end
           end
         end
+
+        context 'when volcano flash is given' do
+          let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_67_01_150514_VFVO56-1.xml))) }
+          let(:trigger) { create(:rss_weather_xml_trigger_volcano_flash) }
+
+          before do
+            region1 = create(:rss_weather_xml_forecast_region_2042900)
+            region2 = create(:rss_weather_xml_forecast_region_2043200)
+            trigger.target_region_ids = [ region1.id, region2.id ]
+            trigger.save!
+
+            subject.publish_to_id = article_node.id
+            subject.save!
+          end
+
+          it do
+            trigger.verify(page, context) do
+              subject.execute(page, context)
+            end
+
+            expect(Article::Page.count).to eq 1
+            Article::Page.first.tap do |page|
+              expect(page.name).to eq '噴火速報'
+              expect(page.state).to eq subject.publish_state
+              puts page.html
+              expect(page.html).to include('<div class="jmaxml volcano">')
+              expect(page.html).to include('<h2>2014年9月27日 11時53分 気象庁地震火山部発表</h2>')
+              expect(page.html).to include('<p>＜御嶽山で噴火が発生＞</p>')
+              expect(page.html).to include('<p>御嶽山で、平成２６年９月２７日１１時５３分頃、噴火が発生しました。</p>')
+              expect(page.html).to include('<li>長野県王滝村</li>')
+              expect(page.html).to include('<li>長野県木曽町</li>')
+            end
+          end
+        end
       end
     end
 
@@ -380,6 +414,36 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
             expect(page.state).to eq subject.publish_state
             puts page.html
             expect(page.html).to include('<div class="jmaxml cancel">震源・震度情報を取り消します。</div>')
+          end
+        end
+      end
+
+      context 'when volcano flash is canceled' do
+        let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_67_01_150514_VFVO56-1.xml))) }
+        let(:xml2) { File.read(Rails.root.join(*%w(spec fixtures rss 70_67_01_150514_VFVO56-4.xml))) }
+        let(:trigger) { create(:rss_weather_xml_trigger_volcano_flash) }
+
+        before do
+          region1 = create(:rss_weather_xml_forecast_region_2042900)
+          region2 = create(:rss_weather_xml_forecast_region_2043200)
+          trigger.target_region_ids = [ region1.id, region2.id ]
+          trigger.save!
+
+          subject.publish_to_id = article_node.id
+          subject.save!
+        end
+
+        it do
+          trigger.verify(rss_page2, context) do
+            subject.execute(rss_page2, context)
+          end
+
+          expect(Article::Page.count).to eq 1
+          Article::Page.first.tap do |page|
+            expect(page.name).to eq '【取消】噴火速報'
+            expect(page.state).to eq subject.publish_state
+            puts page.html
+            expect(page.html).to include('<div class="jmaxml cancel">噴火速報を取り消します。</div>')
           end
         end
       end

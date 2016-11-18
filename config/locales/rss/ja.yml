@@ -126,7 +126,7 @@ ja:
       forecase:
         title: "#{title}"
         upper_text:
-          - "#{target_time} #{publishing_office}発表"
+          - "#{target_time} #{publishing_office}#{info_type}"
           - ""
           - "#{headline_text}"
           - ""
@@ -136,7 +136,7 @@ ja:
         lower_text: ""
         upper_html:
           - "<div class=\"jmaxml forecast\">"
-          - "  <h2>#{target_time} #{publishing_office}発表</h2>"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
           - "  <p>#{headline_text}</p>"
           - "  <table>"
           - "  <thead>"
@@ -152,7 +152,7 @@ ja:
       flood:
         title: "#{title}"
         upper_text:
-          - "#{target_time} #{publishing_office}発表"
+          - "#{target_time} #{publishing_office}#{info_type}"
           - ""
           - "#{headline_text}"
           - ""
@@ -166,7 +166,7 @@ ja:
           - "#{rainfall_text}"
         upper_html:
           - "<div class=\"jmaxml flood\">"
-          - "  <h2>#{target_time} #{publishing_office}発表</h2>"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
           - "  <p>#{headline_text}</p>"
         loop_html:
           - "  <dl>"
@@ -182,7 +182,7 @@ ja:
       landslide:
         title: "#{title}"
         upper_text:
-          - "#{target_time} #{publishing_office}発表"
+          - "#{target_time} #{publishing_office}#{info_type}"
           - ""
           - "#{headline_text}"
           - ""
@@ -191,7 +191,7 @@ ja:
         lower_text: ""
         upper_html:
           - "<div class=\"jmaxml landslide\">"
-          - "  <h2>#{target_time} #{publishing_office}発表</h2>"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
           - "  <p>#{headline_text}</p>"
           - "  <table>"
           - "  <thead>"
@@ -203,6 +203,29 @@ ja:
         lower_html:
           - "  </tbody>"
           - "  </table>"
+          - "</div>"
+      volcano:
+        title: "#{title}"
+        upper_text:
+          - "#{target_time} #{publishing_office}#{info_type}"
+          - "#{volcano_headline}"
+          - "#{volcano_activity}"
+          - ""
+          - "対象市町村"
+        loop_text:
+          - "・#{area_name}"
+        lower_text: ""
+        upper_html:
+          - "<div class=\"jmaxml volcano\">"
+          - "  <h2>#{target_time} #{publishing_office}#{info_type}</h2>"
+          - "  <p>#{volcano_headline}</p>"
+          - "  <p>#{volcano_activity}</p>"
+          - "  <p>対象市町村</p>"
+          - "  <ul>"
+        loop_html:
+          - "    <li>#{area_name}</li>"
+        lower_html:
+          - "  </ul>"
           - "</div>"
 
   modules:

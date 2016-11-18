@@ -31,7 +31,7 @@ module Rss::WeatherXml::Type
 
   class Volcano
     def renderer(page, context)
-      raise NotImplementedError
+      Rss::WeatherXml::Renderer::Volcano.new(page, context)
     end
   end
 
