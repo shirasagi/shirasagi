@@ -25,7 +25,7 @@ module Rss::WeatherXml::Type
 
   class Landslide
     def renderer(page, context)
-      raise NotImplementedError
+      Rss::WeatherXml::Renderer::Landslide.new(page, context)
     end
   end
 

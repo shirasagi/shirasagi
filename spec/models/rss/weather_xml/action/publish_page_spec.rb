@@ -262,6 +262,43 @@ describe Rss::WeatherXml::Action::PublishPage, dbscope: :example do
             end
           end
         end
+
+        context 'when landslide info is given' do
+          let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures rss 70_17_02_130906_VXWW40_03.xml))) }
+          let(:trigger) { create(:rss_weather_xml_trigger_landslide_info) }
+          let(:headline_text) do
+            "《全警戒解除》\n大雨が弱まり、多発的な土砂災害が発生するおそれは少なくなりました。"
+          end
+
+          before do
+            region1 = create(:rss_weather_xml_forecast_region_120200)
+            region2 = create(:rss_weather_xml_forecast_region_123600)
+            region3 = create(:rss_weather_xml_forecast_region_133100)
+            region4 = create(:rss_weather_xml_forecast_region_133200)
+            trigger.target_region_ids = [ region1.id, region2.id, region3.id, region4.id ]
+            trigger.save!
+
+            subject.publish_to_id = article_node.id
+            subject.save!
+          end
+
+          it do
+            trigger.verify(page, context) do
+              subject.execute(page, context)
+            end
+
+            expect(Article::Page.count).to eq 1
+            Article::Page.first.tap do |page|
+              expect(page.name).to eq '土砂災害警戒情報'
+              expect(page.state).to eq subject.publish_state
+              puts page.html
+              expect(page.html).to include('<div class="jmaxml landslide">')
+              expect(page.html).to include('<h2>2013年8月23日 22時15分 北海道渡島総合振興局 函館地方気象台発表</h2>')
+              expect(page.html).to include("<p>#{headline_text}</p>")
+              expect(page.html).to include('<tr><td>解除</td><td>松前町、福島町</td></tr>')
+            end
+          end
+        end
       end
     end
 
