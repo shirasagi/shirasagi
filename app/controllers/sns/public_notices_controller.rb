@@ -1,4 +1,4 @@
-class Sys::PublicNoticesController < ApplicationController
+class Sns::PublicNoticesController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter
 

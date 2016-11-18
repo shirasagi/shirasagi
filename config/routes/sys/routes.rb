@@ -12,10 +12,6 @@ SS::Application.routes.draw do
     put "role" => "groups#role_update", :on => :member
   end
 
-  namespace "sys", path: ".mypage" do
-    resources :public_notices, only: [:index, :show]
-  end
-
   namespace "sys", path: ".sys" do
     get "/" => "main#index", as: :main
     get "conf" => "conf#index", as: :conf

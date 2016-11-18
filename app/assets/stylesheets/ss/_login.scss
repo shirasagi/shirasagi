@@ -25,6 +25,7 @@
   @include border-radius(3px);
   @include box-shadow(0px 1px 3px #ddd);
   background: $white;
+  float: left;
   header {
     h2 {
       display: inline-block;
@@ -77,21 +78,21 @@
 }
 
 #login-notice {
-  width: 50%;
-  position:absolute;
-  top: 70px;
-  left: 400px;
+  float: left;
+  margin: 20px 10px;
 
   h2 {
-    font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 20px;
   }
   .main-box {
     h2 {
-      font-size:1.2em;
       margin-bottom: 10px;
     }
+  }
+  .datetime {
+    margin-left: 5px;
+    color: #888;
   }
 
 

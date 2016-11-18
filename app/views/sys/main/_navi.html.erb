@@ -1,9 +1,8 @@
 <nav class="mod-navi">
-<% if @cur_user.present? %>
   <h2><%= link_to :"sys.conf", sys_sites_path %></h2>
 
   <h3><%= link_to :"sys.info", sys_conf_path %></h3>
-
+<% if @cur_user.present? %>
   <% if Sys::Site.allowed?(:edit, @cur_user) %>
     <h3><%= link_to :"sys.site", sys_sites_path %></h3>
   <% end %>
