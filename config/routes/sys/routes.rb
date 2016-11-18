@@ -25,6 +25,7 @@ SS::Application.routes.draw do
     post "test/mail" => "test/mail#create", as: :send_test_mail
 
     resources :users, concerns: :deletion
+    resources :notice, concerns: :deletion
     resources :groups, concerns: [:deletion, :role]
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion

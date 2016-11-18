@@ -1,3 +1,22 @@
+<% if @sys_notices.present? %>
+<div class="index portal-notice">
+  <div class="list-head"><%= t "sys.notice" %></div>
+  <ul class="list-items">
+    <% @sys_notices.each do |item| %>
+    <li class="list-item">
+      <div class="meta">
+        <%= link_to item.name, sns_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+        <span class="datetime"><%= tryb { item.released.strftime("%Y/%m/%d %H:%M") } %></span>
+
+      </div>
+    </li>
+    <% end %>
+  </ul>
+  <% if @sys_notices.next_page %>
+  <div class="more"><%= link_to I18n.t("views.links.more"), sns_public_notices_path %></div>
+  <% end %>
+</div>
+<% end %>
 <% if @notices.present? %>
 <div class="index portal-notice">
   <div class="list-head"><%= t "mongoid.models.gws/notice" %></div>

@@ -1,8 +1,27 @@
-<% if @notices.present? %>
+<% if @sys_notices.present? %>
+<div class="index notices">
+  <div class="list-head"><%= t "sys.notice" %></div>
+  <ul class="list-items">
+    <% @sys_notices.each do |item| %>
+    <li class="list-item">
+      <div class="info">
+        <%= link_to item.name, sns_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+  <% if @sys_notices.next_page %>
+  <div class="notices-more"><%= link_to I18n.t("views.links.more"), sns_public_notices_path %></div>
+  <% end %>
+</div>
+<% end %>
+
+<% if @cms_notices.present? %>
 <div class="index notices">
   <div class="list-head"><%= t "cms.notice" %></div>
   <ul class="list-items">
-    <% @notices.each do |item| %>
+    <% @cms_notices.each do |item| %>
     <li class="list-item">
       <div class="info">
         <%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
@@ -11,7 +30,7 @@
     </li>
     <% end %>
   </ul>
-  <% if @notices.next_page %>
+  <% if @cms_notices.next_page %>
   <div class="notices-more"><%= link_to I18n.t("views.links.more"), cms_public_notices_path %></div>
   <% end %>
 </div>
