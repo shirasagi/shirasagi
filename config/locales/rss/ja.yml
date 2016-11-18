@@ -274,7 +274,7 @@ ja:
       rss/weather_xml/action/base: 受信時の動作
       rss/weather_xml/action/publish_page: 記事ページ作成
       rss/weather_xml/action/send_mail: メール送信
-      rss/weather_xml/action/change_urgency: 緊急災害レイアウト切替
+      rss/weather_xml/action/switch_urgency: 緊急災害レイアウト切替
     attributes:
       rss/node/page:
       rss/page:
