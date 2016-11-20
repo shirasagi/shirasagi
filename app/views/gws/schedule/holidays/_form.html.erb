@@ -1,6 +1,5 @@
 <%= jquery do %>
   Gws_Schedule_Plan.renderForm();
-  Gws.renderColorPicker();
 <% end %>
 
 <dl class="see">
@@ -16,5 +15,5 @@
   </dd>
 
   <dt><%= @model.t :color %><%= @model.tt :color %></dt>
-  <dd><%= f.text_field :color, style: 'width: 8em' %></dd>
+  <dd><%= f.text_field :color, class: 'js-color' %></dd>
 </dl>

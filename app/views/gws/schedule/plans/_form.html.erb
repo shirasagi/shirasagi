@@ -1,7 +1,6 @@
 <%= jquery do %>
   Gws_Schedule_Plan.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
   Gws_Schedule_Plan.renderAlldayForm();
-  Gws.renderColorPicker({ clear: true });
 <% end %>
 
 <dl class="see gws-schedule-plan">
@@ -31,5 +30,5 @@
   <% end %>
 
   <dt><%= @model.t :color %><%= @model.tt :color %></dt>
-  <dd><%= f.text_field :color, style: 'width: 8em' %></dd>
+  <dd><%= f.text_field :color, class: 'js-color', 'data-clear' => 1 %></dd>
 </dl>

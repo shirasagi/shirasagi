@@ -1432,6 +1432,15 @@ textarea.code {
 form .CodeMirror {
   border: 1px solid #ccc;
 }
+// minicolors
+.minicolors-theme-default {
+  .minicolors-input {
+    height: inherit;
+  }
+  .minicolors-swatch {
+    top: 2px;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // form
