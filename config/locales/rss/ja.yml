@@ -36,6 +36,10 @@ ja:
         6-: 6弱
         6+: 6強
         '7': 7
+      weather_alert_sub_type:
+        special_alert: 特別警報
+        alert: 警報
+        warning: 注意報
       ash_fall_sub_type:
         flash: 速報
         regular: 定時

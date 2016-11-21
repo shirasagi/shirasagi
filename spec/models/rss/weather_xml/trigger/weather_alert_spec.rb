@@ -9,6 +9,7 @@ describe Rss::WeatherXml::Trigger::WeatherAlert, dbscope: :example do
     its(:name) { is_expected.not_to be_nil }
     its(:training_status) { is_expected.to eq 'disabled' }
     its(:test_status) { is_expected.to eq 'disabled' }
+    its(:sub_types) { is_expected.to eq %w(special_alert alert warning) }
   end
 
   describe '#verify' do
@@ -48,6 +49,17 @@ describe Rss::WeatherXml::Trigger::WeatherAlert, dbscope: :example do
         expect(context.area_codes).to eq %w(2920100 2920200 2920300 2920400)
       end
       expect(flag).to eq 1
+    end
+
+    context 'when disable all sub types' do
+      before do
+        subject.sub_types = []
+        subject.save!
+      end
+
+      it "returns false" do
+        expect(subject.verify(page, context)).to be_falsey
+      end
     end
   end
 end

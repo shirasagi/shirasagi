@@ -1,8 +1,8 @@
 # 降灰予報
 class Rss::WeatherXml::Trigger::AshFallForecast < Rss::WeatherXml::Trigger::Base
-  embeds_ids :target_regions, class_name: "Rss::WeatherXml::ForecastRegion"
   field :sub_types, type: SS::Extensions::Words
-  permit_params target_region_ids: [], sub_types: []
+  embeds_ids :target_regions, class_name: "Rss::WeatherXml::ForecastRegion"
+  permit_params sub_types: [], target_region_ids: []
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip

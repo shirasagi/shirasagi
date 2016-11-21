@@ -1,10 +1,8 @@
 # 気象特別警報・警報・注意報
 class Rss::WeatherXml::Trigger::WeatherAlert < Rss::WeatherXml::Trigger::Base
-  # field :kind_warning, type: String
-  # field :kind_advisory, type: String
+  field :sub_types, type: SS::Extensions::Words
   embeds_ids :target_regions, class_name: "Rss::WeatherXml::ForecastRegion"
-  # permit_params :kind_warning, :kind_advisory
-  permit_params target_region_ids: []
+  permit_params sub_types: [], target_region_ids: []
 
   def verify(page, context, &block)
     control_title = REXML::XPath.first(context.xmldoc, '/Report/Control/Title/text()').to_s.strip
@@ -30,6 +28,13 @@ class Rss::WeatherXml::Trigger::WeatherAlert < Rss::WeatherXml::Trigger::Base
     def extract_weather_alert(site, xmldoc)
       area_codes = []
       REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="気象警報・注意報（市町村等）"]/Item').each do |item|
+        kind_names = REXML::XPath.match(item, 'Kind/Name/text()').map { |n| n.to_s.strip }
+        kind_names = kind_names.select do |kind_name|
+          sub_type = sub_types.first { |t| kind_name.include?(I18n.t("rss.options.weather_alert_sub_type.#{t}")) }
+          sub_type.present?
+        end
+        next if kind_names.blank?
+
         area_code = REXML::XPath.first(item, 'Area/Code/text()').to_s.strip
         region = target_regions.site(site).where(code: area_code).first
         next if region.blank?

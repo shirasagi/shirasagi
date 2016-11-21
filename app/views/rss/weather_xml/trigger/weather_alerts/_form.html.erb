@@ -8,7 +8,18 @@
   <dt><%= @model.t :test_status %><%= @model.tt :test_status %></dt>
   <dd><%= f.select :test_status, @item.test_status_options %></dd>
 
-  <dt><%= @model.t :regions %><%= @model.tt :regions %></dt>
+  <dt><%= @model.t :sub_types %><%= @model.tt :sub_types %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[sub_types][]", '' %>
+    <% %w(special_alert alert warning).each do |sub_type| %>
+      <label>
+        <%= check_box_tag "#{f.object_name}[sub_types][]", sub_type, @item.sub_types.include?(sub_type), id: "#{f.object_name}_sub_type_#{sub_type}" %>
+        <%= I18n.t("rss.options.weather_alert_sub_type.#{sub_type}") %>
+      </label>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :target_region_ids %><%= @model.tt :target_region_ids %></dt>
   <dd>
     <%= f.hidden_field "target_region_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to :"rss.apis.weather_xml/forecast_regions.index", rss_apis_weather_xml_forecast_regions_path, class: "ajax-box" %>
